@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agent-preparation-state.v1",
+  "title": "Agent-facing curriculum preparation state",
+  "oneOf": [
+    {"$ref": "#/$defs/roster"},
+    {"$ref": "#/$defs/module"}
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "commitSha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "data_checkout", "service_code", "manifest"],
+      "properties": {
+        "repository": {"type": "string", "pattern": "^[^/\\s]+/[^/\\s]+$"},
+        "data_checkout": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["role", "root", "branch", "head_sha"],
+          "properties": {
+            "role": {"enum": ["live_primary", "dispatch_worktree", "linked_worktree"]},
+            "root": {"type": "string", "minLength": 1},
+            "branch": {"type": ["string", "null"]},
+            "head_sha": {"$ref": "#/$defs/commitSha"}
+          }
+        },
+        "service_code": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "commit_sha", "tree_sha256"],
+          "properties": {
+            "mode": {"enum": ["release", "development"]},
+            "commit_sha": {"$ref": "#/$defs/commitSha"},
+            "tree_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+          }
+        },
+        "manifest": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": {"const": "curriculum/l2-uk-en/curriculum.yaml"},
+            "sha256": {"$ref": "#/$defs/sha256"},
+            "index": {"type": ["integer", "null"], "minimum": 0}
+          }
+        },
+        "readiness": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["profile_id", "profile_version", "family"],
+          "properties": {
+            "profile_id": {"enum": ["core", "seminar", "bio"]},
+            "profile_version": {"type": "string", "minLength": 1},
+            "family": {"enum": ["core", "seminar"]}
+          }
+        }
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "cache", "stale", "source_identity"],
+      "properties": {
+        "mode": {"const": "recompute"},
+        "cache": {"const": "none"},
+        "stale": {"const": false},
+        "source_identity": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "stateCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unbuilt", "partial", "built"],
+      "properties": {
+        "unbuilt": {"type": "integer", "minimum": 0},
+        "partial": {"type": "integer", "minimum": 0},
+        "built": {"type": "integer", "minimum": 0}
+      }
+    },
+    "publicationCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["absent", "generated", "published"],
+      "properties": {
+        "absent": {"type": "integer", "minimum": 0},
+        "generated": {"type": "integer", "minimum": 0},
+        "published": {"type": "integer", "minimum": 0}
+      }
+    },
+    "roster": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version", "kind", "authority_kind", "authority", "field_authority",
+        "tracks", "totals", "diagnostics", "findings", "freshness"
+      ],
+      "properties": {
+        "contract_version": {"const": "agent-preparation-state.v1"},
+        "kind": {"const": "roster"},
+        "authority_kind": {"const": "active-manifest-roster"},
+        "authority": {"$ref": "#/$defs/authority"},
+        "field_authority": {
+          "type": "object",
+          "additionalProperties": {"type": "string"}
+        },
+        "tracks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "track", "type", "manifest_authority", "module_count",
+              "module_state_counts", "publication_state_counts"
+            ],
+            "properties": {
+              "track": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+              "type": {"enum": ["core", "track"]},
+              "manifest_authority": {"const": "active"},
+              "module_count": {"type": "integer", "minimum": 0},
+              "module_state_counts": {"$ref": "#/$defs/stateCounts"},
+              "publication_state_counts": {"$ref": "#/$defs/publicationCounts"}
+            }
+          }
+        },
+        "totals": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "manifest_active_tracks", "manifest_active_modules", "returned_tracks",
+            "returned_modules", "module_state_counts", "publication_state_counts"
+          ],
+          "properties": {
+            "manifest_active_tracks": {"type": "integer", "minimum": 1},
+            "manifest_active_modules": {"type": "integer", "minimum": 1},
+            "returned_tracks": {"type": "integer", "minimum": 1},
+            "returned_modules": {"type": "integer", "minimum": 0},
+            "module_state_counts": {"$ref": "#/$defs/stateCounts"},
+            "publication_state_counts": {"$ref": "#/$defs/publicationCounts"}
+          }
+        },
+        "diagnostics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["authority", "inactive_plan_tracks"],
+          "properties": {
+            "authority": {"const": "diagnostic-only"},
+            "inactive_plan_tracks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["track", "module_count", "manifest_authority", "source"],
+                "properties": {
+                  "track": {"type": "string"},
+                  "module_count": {"type": "integer", "minimum": 1},
+                  "manifest_authority": {"const": "fallback-diagnostic-only"},
+                  "source": {"const": "plans-fallback"}
+                }
+              }
+            }
+          }
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "track", "detail"],
+            "properties": {
+              "id": {"enum": ["BUNDLE_STATE_COUNT_MISMATCH", "PUBLICATION_STATE_COUNT_MISMATCH", "TRACK_COUNT_INVARIANT_FAILED"]},
+              "track": {"type": "string"},
+              "detail": {"type": "string"}
+            }
+          }
+        },
+        "freshness": {"$ref": "#/$defs/freshness"}
+      }
+    },
+    "module": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version", "kind", "authority_kind", "authority", "field_authority",
+        "track", "slug", "manifest_authority", "module_state", "preparation_state",
+        "state", "next_action", "publication", "reason_codes", "owners",
+        "preparation_identity", "source_identities", "evidence", "freshness"
+      ],
+      "properties": {
+        "contract_version": {"const": "agent-preparation-state.v1"},
+        "kind": {"const": "module"},
+        "authority_kind": {"const": "canonical-preparation"},
+        "authority": {"$ref": "#/$defs/authority"},
+        "field_authority": {
+          "type": "object",
+          "additionalProperties": {"type": "string"}
+        },
+        "track": {"type": "string"},
+        "slug": {"type": "string"},
+        "manifest_authority": {"enum": ["active", "off-manifest"]},
+        "module_state": {"enum": ["unbuilt", "partial", "built", "off-manifest"]},
+        "preparation_state": {"enum": ["not-applicable", "missing", "stale", "current"]},
+        "state": {"enum": ["off-manifest", "partial-bundle", "built-current", "built-preparation-drift", "prepared-plan", "missing-plan", "preparation-required"]},
+        "next_action": {"enum": ["stop", "prepare", "plan", "build", "certify"]},
+        "publication": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "surface", "source"],
+          "properties": {
+            "state": {"enum": ["absent", "generated", "published"]},
+            "surface": {"enum": ["none", "legacy_md", "mdx"]},
+            "source": {"oneOf": [{"$ref": "#/$defs/source"}, {"type": "null"}]}
+          }
+        },
+        "reason_codes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "owners": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "preparation_identity": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "source_identities": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["preparation", "learner_bundle", "publication"],
+          "properties": {
+            "preparation": {"$ref": "#/$defs/sha256"},
+            "learner_bundle": {"$ref": "#/$defs/sha256"},
+            "publication": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "evidence": {"enum": ["summary", "expanded"]},
+        "bundle_sources": {"type": "array", "items": {"$ref": "#/$defs/source"}},
+        "publication_sources": {"type": "array", "items": {"$ref": "#/$defs/source"}},
+        "canonical": {"type": "object"},
+        "freshness": {"$ref": "#/$defs/freshness"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"evidence": {"const": "expanded"}}},
+          "then": {"required": ["bundle_sources", "publication_sources", "canonical"]}
+        }
+      ]
+    }
+  }
+}

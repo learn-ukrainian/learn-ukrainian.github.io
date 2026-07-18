@@ -304,7 +304,11 @@ VALIDATORS: dict[str, Validator] = {
 }
 
 
-def load_config(*, repo_root: Path = PROJECT_ROOT) -> dict[str, Any]:
+def load_config(
+    *,
+    repo_root: Path = PROJECT_ROOT,
+    active_tracks: Mapping[str, str] | None = None,
+) -> dict[str, Any]:
     config_path = _repo_file(repo_root, CONFIG_PATH)
     schema = _load_json(_repo_file(repo_root, CONFIG_SCHEMA_PATH))
     try:
@@ -322,13 +326,21 @@ def load_config(*, repo_root: Path = PROJECT_ROOT) -> dict[str, Any]:
             if profile_id not in profiles:
                 raise ReadinessError(f"readiness selector references unknown profile: {profile_id}")
     try:
+        resolved_active_tracks = (
+            dict(active_tracks)
+            if active_tracks is not None
+            else prompt_contracts.load_active_tracks(repo_root)
+        )
         prompt_contracts.resolve_profile_selectors(
             selectors=config["selectors"],
             profile_families={profile_id: str(profile["family"]) for profile_id, profile in profiles.items()},
-            active_tracks=prompt_contracts.load_active_tracks(repo_root),
+            active_tracks=resolved_active_tracks,
             label="curriculum readiness profiles",
         )
-        prompt_contracts.active_track_profiles(repo_root=repo_root)
+        prompt_contracts.active_track_profiles(
+            repo_root=repo_root,
+            active_tracks=resolved_active_tracks,
+        )
     except (prompt_contracts.LifecycleConfigError, prompt_contracts.PromptContractError) as exc:
         raise ReadinessError(str(exc)) from exc
     for profile_id, profile in profiles.items():
@@ -349,35 +361,78 @@ def load_config(*, repo_root: Path = PROJECT_ROOT) -> dict[str, Any]:
     return config
 
 
-def load_manifest_track(
+def load_active_manifest(
     repo_root: Path,
-    track: str,
     manifest_path: Path = MANIFEST_PATH,
-) -> tuple[dict[str, Any], tuple[str, ...]]:
-    """Load one active manifest track and its authoritative module order."""
+) -> dict[str, Any]:
+    """Load and validate the complete active curriculum manifest.
+
+    This is the shared manifest-authority seam for callers that need the
+    active roster without inventing their own YAML parser or plans fallback.
+    Module order is preserved exactly as declared in ``curriculum.yaml``.
+    """
     manifest_path = _repo_file(repo_root, manifest_path)
     try:
         manifest = load_yaml_mapping(manifest_path)
     except RegistryValidationError as exc:
         raise ReadinessError(str(exc)) from exc
     levels = manifest.get("levels")
-    level = levels.get(track) if isinstance(levels, Mapping) else None
-    if not isinstance(level, Mapping):
-        raise ReadinessError(f"curriculum manifest has no active track: {track}")
-    modules = level.get("modules")
-    if not isinstance(modules, list) or not all(isinstance(item, str) and item for item in modules):
-        raise ReadinessError(f"manifest levels.{track}.modules must be a list of non-empty slugs")
-    duplicates = sorted({item for item in modules if modules.count(item) > 1})
-    if duplicates:
-        raise ReadinessError(f"manifest levels.{track}.modules contains duplicate slugs: {duplicates}")
-    manifest_type = level.get("type")
-    if not isinstance(manifest_type, str) or not manifest_type:
-        raise ReadinessError(f"manifest levels.{track}.type must be a non-empty string")
+    if not isinstance(levels, Mapping) or not levels:
+        raise ReadinessError("curriculum manifest levels must be a non-empty mapping")
+
+    tracks: dict[str, dict[str, Any]] = {}
+    for track, level in levels.items():
+        if not isinstance(track, str) or not _TARGET_RE.fullmatch(track):
+            raise ReadinessError(f"curriculum manifest has invalid active track identifier: {track!r}")
+        if not isinstance(level, Mapping):
+            raise ReadinessError(f"manifest levels.{track} must be a mapping")
+        modules = level.get("modules")
+        if not isinstance(modules, list) or not all(
+            isinstance(item, str) and _TARGET_RE.fullmatch(item) for item in modules
+        ):
+            raise ReadinessError(
+                f"manifest levels.{track}.modules must be a list of repository identifiers"
+            )
+        duplicates = sorted({item for item in modules if modules.count(item) > 1})
+        if duplicates:
+            raise ReadinessError(
+                f"manifest levels.{track}.modules contains duplicate slugs: {duplicates}"
+            )
+        manifest_type = level.get("type")
+        if not isinstance(manifest_type, str) or not manifest_type:
+            raise ReadinessError(f"manifest levels.{track}.type must be a non-empty string")
+        tracks[track] = {"type": manifest_type, "modules": tuple(modules)}
+
     return {
-        "type": manifest_type,
         "path": manifest_path,
         "sha256": _sha256_bytes(manifest_path.read_bytes()),
-    }, tuple(modules)
+        "tracks": tracks,
+    }
+
+
+def load_manifest_track(
+    repo_root: Path,
+    track: str,
+    manifest_path: Path = MANIFEST_PATH,
+) -> tuple[dict[str, Any], tuple[str, ...]]:
+    """Load one active manifest track and its authoritative module order."""
+    manifest = load_active_manifest(repo_root, manifest_path)
+    return manifest_track(manifest, track)
+
+
+def manifest_track(
+    manifest: Mapping[str, Any],
+    track: str,
+) -> tuple[dict[str, Any], tuple[str, ...]]:
+    """Select one track from a validated ``load_active_manifest`` result."""
+    level = manifest["tracks"].get(track)
+    if not isinstance(level, Mapping):
+        raise ReadinessError(f"curriculum manifest has no active track: {track}")
+    return {
+        "type": level["type"],
+        "path": manifest["path"],
+        "sha256": manifest["sha256"],
+    }, tuple(level["modules"])
 
 
 def _select_profile(config: Mapping[str, Any], track: str, manifest_type: str) -> tuple[str, Mapping[str, Any]]:
@@ -744,6 +799,7 @@ def evaluate_preparation(
     consumed_preparation_identity: str | None = None,
     repo_root: Path = PROJECT_ROOT,
     validators: Mapping[str, Validator] = VALIDATORS,
+    active_manifest: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Evaluate one manifest target without reading legacy QG state."""
     track = track.lower()
@@ -753,8 +809,15 @@ def evaluate_preparation(
     if consumed_preparation_identity is not None and not _HASH_RE.fullmatch(consumed_preparation_identity):
         raise ReadinessError("consumed preparation identity must be a SHA-256 hex digest")
 
-    config = load_config(repo_root=repo_root)
-    manifest_record, manifest_slugs = load_manifest_track(repo_root, track)
+    manifest = active_manifest if active_manifest is not None else load_active_manifest(repo_root)
+    manifest_record, manifest_slugs = manifest_track(manifest, track)
+    config = load_config(
+        repo_root=repo_root,
+        active_tracks={
+            track_id: str(record["type"])
+            for track_id, record in manifest["tracks"].items()
+        },
+    )
     profile_id, profile = _select_profile(config, track, str(manifest_record["type"]))
     files = _contract_files(repo_root, manifest_record["path"])
 

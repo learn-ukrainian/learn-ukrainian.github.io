@@ -115,6 +115,13 @@ def _init_orient_git_repo(tmp_path: Path) -> Path:
     )
     _git(repo, "config", "user.email", "test@example.com")
     _git(repo, "config", "user.name", "Test")
+    _git(
+        repo,
+        "remote",
+        "add",
+        "origin",
+        "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git",
+    )
     (repo / "tracked.txt").write_text("clean\n", encoding="utf-8")
     _git(repo, "add", "tracked.txt")
     _git(repo, "commit", "-q", "-m", "init")
@@ -161,6 +168,16 @@ def test_parse_orient_sections_explicit_list_overrides_lean():
     assert api_main._parse_orient_sections(None, lean=False) == list(api_main.ORIENT_SECTION_KEYS)
 
 
+def test_orient_lean_route_omits_heavy_sections_and_meets_byte_budget(monkeypatch):
+    _patch_orient_sources(monkeypatch)
+
+    response = client.get("/api/orient?lean=true")
+
+    assert response.status_code == 200
+    assert len(response.content) < 10_000
+    assert not ({"pipeline", "issues", "wiki"} & set(response.json()))
+
+
 def test_orient_git_exposes_primary_checkout_dirty_signal(monkeypatch, tmp_path):
     original_git_collector = api_main._collect_git_orient_data
     repo = _init_orient_git_repo(tmp_path)
@@ -180,6 +197,10 @@ def test_orient_git_exposes_primary_checkout_dirty_signal(monkeypatch, tmp_path)
     assert git_info["primary_checkout"]["checked_cwd"] == str(repo)
     assert git_info["primary_checkout"]["tracked_dirty_count"] == 1
     assert git_info["primary_checkout"]["entries"] == [{"xy": " M", "path": "tracked.txt", "kind": "tracked"}]
+    assert git_info["authority"]["repository"] == "learn-ukrainian/learn-ukrainian.github.io"
+    assert git_info["authority"]["data_checkout"]["root"] == str(repo)
+    assert git_info["authority"]["data_checkout"]["head_sha"] == _git(repo, "rev-parse", "HEAD").stdout.strip()
+    assert git_info["authority"]["service_code"]["mode"] == "development"
 
 
 def test_orient_git_survives_primary_checkout_probe_failure(monkeypatch, tmp_path):

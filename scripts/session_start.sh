@@ -7,7 +7,7 @@
 #   2. Per-track progress (research → content → audit → review)
 #   3. Active builds
 #   4. Failing modules
-#   5. Ready-to-build count
+#   5. Active-manifest learner state
 #   6. Gemini inbox check
 #
 # Issue: #595
@@ -169,18 +169,13 @@ fi
 echo ""
 
 # ---------------------------------------------------------------------------
-# 5. Ready-to-build count
+# 5. Active-manifest learner state
 # ---------------------------------------------------------------------------
-READY=$(curl -s "$API/api/state/ready-to-build")
-ready_count=$(echo "$READY" | jq '.count')
-echo -e "${BOLD}READY TO BUILD${NC}  $ready_count modules (Phase A done, Phase B not started)"
-
-if [ "$ready_count" -gt 0 ]; then
-    # Show per-track breakdown
-    echo "$READY" | jq -r '
-        [.modules[].track] | group_by(.) | map({track: .[0], count: length}) |
-        sort_by(-.count) | .[] | "  \(.track): \(.count)"'
-fi
+PREPARATION=$(curl -s "$API/api/state/preparation")
+echo "$PREPARATION" | jq -r '
+    "\u001b[1mACTIVE MANIFEST\u001b[0m  \(.totals.manifest_active_tracks) tracks · \(.totals.manifest_active_modules) modules",
+    "  learner bundles: \(.totals.module_state_counts.built) built · \(.totals.module_state_counts.partial) partial · \(.totals.module_state_counts.unbuilt) unbuilt",
+    "  publication: \(.totals.publication_state_counts.published) published · \(.totals.publication_state_counts.generated) generated · \(.totals.publication_state_counts.absent) absent"'
 echo ""
 
 # ---------------------------------------------------------------------------
@@ -214,6 +209,6 @@ except Exception as e:
 fi
 
 echo ""
-echo -e "${DIM}Endpoints: $API/api/state/{summary,pipeline/{track},ready-to-build,weak-points,failing}${NC}"
+echo -e "${DIM}Endpoints: $API/api/state/{preparation,summary,pipeline/{track},weak-points,failing}${NC}"
 echo -e "${DIM}Dashboard: $API/ | Docs: $API/docs${NC}"
 echo ""

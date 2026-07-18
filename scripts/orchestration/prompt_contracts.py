@@ -421,14 +421,18 @@ def _profile_families(
     return families
 
 
-def active_track_profiles(*, repo_root: Path = PROJECT_ROOT) -> dict[str, str]:
+def active_track_profiles(
+    *,
+    repo_root: Path = PROJECT_ROOT,
+    active_tracks: Mapping[str, str] | None = None,
+) -> dict[str, str]:
     """Resolve exact semantic profiles from the active curriculum manifest."""
     profiles = load_profiles(repo_root=repo_root)
     try:
         return resolve_profile_selectors(
             selectors=profiles["selectors"],
             profile_families=_profile_families(profiles, repo_root=repo_root),
-            active_tracks=load_active_tracks(repo_root),
+            active_tracks=active_tracks if active_tracks is not None else load_active_tracks(repo_root),
             label="curriculum prompt profiles",
         )
     except LifecycleConfigError as exc:

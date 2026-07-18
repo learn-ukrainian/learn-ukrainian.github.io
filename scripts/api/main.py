@@ -76,6 +76,7 @@ from .issues_router import router as issues_router
 from .knowledge_router import router as knowledge_router
 from .preload import preload_all
 from .rag_router import router as rag_router
+from .repository_authority import build_repository_authority
 from .resilience import get_resilience_snapshot, resilience_middleware
 from .reviewer_ghosts_router import router as reviewer_ghosts_router
 from .rollover_router import collect_rollover_orient_data
@@ -354,13 +355,20 @@ def _collect_git_orient_data() -> dict:
             "error": str(exc),
         }
 
+    branch = branch_proc.stdout.strip()
+    authority = build_repository_authority(
+        project_root=PROJECT_ROOT,
+        live_repo_root=LIVE_REPO_ROOT,
+        data_branch=branch,
+    )
     return {
-        "branch": branch_proc.stdout.strip(),
+        "branch": branch,
         "head": head_proc.stdout.strip(),
         "ahead_of_origin": ahead_value,
         "recent_commits": recent_commits,
         "primary_checkout_dirty": primary_status["dirty"],
         "primary_checkout": primary_status,
+        "authority": authority,
     }
 
 

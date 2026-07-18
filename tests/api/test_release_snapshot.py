@@ -41,6 +41,41 @@ def _run_git(repo_root: Path, *args: str) -> str:
     return result.stdout.strip()
 
 
+def _release_test_sha(repo_root: Path) -> str:
+    """Return HEAD, or an immutable commit for staged release-code changes."""
+    head = _run_git(repo_root, "rev-parse", "HEAD")
+    staged = subprocess.run(
+        ["git", "diff", "--cached", "--quiet", "HEAD", "--", "scripts", "schemas"],
+        cwd=repo_root,
+        check=False,
+        env=sanitized_git_env(),
+    )
+    if staged.returncode == 0:
+        return head
+    if staged.returncode != 1:
+        pytest.fail("could not inspect staged release-code changes")
+
+    tree = _run_git(repo_root, "write-tree")
+    environment = sanitized_git_env() | {
+        "GIT_AUTHOR_NAME": "Release Snapshot Test",
+        "GIT_AUTHOR_EMAIL": "test@example.invalid",
+        "GIT_AUTHOR_DATE": "2000-01-01T00:00:00+00:00",
+        "GIT_COMMITTER_NAME": "Release Snapshot Test",
+        "GIT_COMMITTER_EMAIL": "test@example.invalid",
+        "GIT_COMMITTER_DATE": "2000-01-01T00:00:00+00:00",
+    }
+    result = subprocess.run(
+        ["git", "commit-tree", tree, "-p", head],
+        cwd=repo_root,
+        capture_output=True,
+        check=True,
+        env=environment,
+        input="release snapshot staged test\n",
+        text=True,
+    )
+    return result.stdout.strip()
+
+
 def _create_snapshot_repo(tmp_path: Path, *, api_app: bool = False) -> tuple[Path, str]:
     repo_root = tmp_path / "live"
     (repo_root / "scripts" / "api").mkdir(parents=True)
@@ -368,7 +403,7 @@ def test_real_release_serves_live_data_routers_with_logical_paths(tmp_path: Path
     """Boot a snapshot of this worktree and exercise each live-data route class."""
     created_live_roots = _provision_missing_live_data_roots(PROJECT_ROOT)
     try:
-        sha = _run_git(PROJECT_ROOT, "rev-parse", "HEAD")
+        sha = _release_test_sha(PROJECT_ROOT)
         release_dir, _ = release_snapshot.build_release(PROJECT_ROOT, sha)
         port = _free_port()
         log_path = tmp_path / "release-api.log"
@@ -411,6 +446,10 @@ def test_real_release_serves_live_data_routers_with_logical_paths(tmp_path: Path
                     time.sleep(0.05)
 
                 curriculum_payload = _read_json(f"http://127.0.0.1:{port}/api/blue/live-status")
+                preparation_payload = _read_json(
+                    f"http://127.0.0.1:{port}/api/state/preparation/a1/sounds-letters-and-hello",
+                    timeout=10,
+                )
                 artifact_payload = _read_json(f"http://127.0.0.1:{port}/api/artifacts/html", timeout=10)
                 docs_text = _read_text(
                     "http://127.0.0.1:"
@@ -422,6 +461,9 @@ def test_real_release_serves_live_data_routers_with_logical_paths(tmp_path: Path
 
         key_paths = agent_payload["key_paths"]
         assert curriculum_payload["a1"]["module_count"] >= 0
+        assert preparation_payload["track"] == "a1"
+        assert preparation_payload["authority"]["data_checkout"]["root"] == str(PROJECT_ROOT.resolve())
+        assert preparation_payload["authority"]["service_code"]["mode"] == "release"
         assert key_paths["orchestration_dir"].startswith("curriculum/l2-uk-en/")
         assert not key_paths["orchestration_dir"].startswith(str(release_dir))
         assert artifact_payload["artifacts"]
