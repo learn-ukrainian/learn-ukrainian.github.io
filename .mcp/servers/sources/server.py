@@ -15,7 +15,7 @@ with imports; rename there is a follow-up.
 
 Tools:
     - search_sources, search_text, search_literary, search_external, search_images, get_chunk_context
-    - verify_word, verify_words, verify_lemma (VESUM)
+    - verify_word, verify_words, verify_lemma, vet_vocabulary (VESUM)
     - query_wikipedia, query_pravopys, query_e2u, query_r2u, query_ulif
     - search_definitions, search_grinchenko_1907, search_esum, search_idioms, search_synonyms
     - search_slovnyk_me, search_heritage
@@ -453,6 +453,31 @@ async def list_tools() -> list[Tool]:
                     },
                 },
                 "required": ["words"]
+            },
+        ),
+        Tool(
+            name="vet_vocabulary",
+            description=(
+                "Vet up to 500 Ukrainian vocabulary items in one compact report. "
+                "Batches VESUM validity, PULS CEFR lookup, and Russian-shadow "
+                "suspicion checks; optionally includes the best СУМ-11 gloss. "
+                "A Russian-shadow result is a suspicion signal, not a verdict."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "words": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Ukrainian words to vet. Requests over 500 are truncated with a response note.",
+                    },
+                    "include_definitions": {
+                        "type": "boolean",
+                        "default": False,
+                        "description": "Include the best available one-line СУМ-11 gloss for each word.",
+                    },
+                },
+                "required": ["words"],
             },
         ),
         Tool(
@@ -1284,6 +1309,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "verify_word": lambda: handle_verify_word(arguments),
             "verify_source_attribution": lambda: handle_verify_source_attribution(arguments),
             "verify_words": lambda: handle_verify_words(arguments),
+            "vet_vocabulary": lambda: handle_vet_vocabulary(arguments),
             "verify_lemma": lambda: handle_verify_lemma(arguments),
             "query_wikipedia": lambda: handle_query_wikipedia(arguments),
             "query_grac": lambda: handle_query_grac(arguments),
@@ -1599,6 +1625,104 @@ async def handle_verify_words(args: dict) -> list[TextContent]:
             lines.append(f"- **{word}** — NOT FOUND")
 
     lines.insert(1, f"Found: {found}/{len(words)}\n")
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
+def _compact_vocabulary_value(value: object, *, max_chars: int | None = None) -> str:
+    """Keep a vocabulary-vetting field on one safe, parser-friendly line."""
+    text = re.sub(r"\s+", " ", str(value)).strip()
+    if max_chars is not None and len(text) > max_chars:
+        text = f"{text[:max_chars - 1].rstrip()}…"
+    return text.replace("\\", "\\\\").replace("|", "\\|").replace("`", "\\`")
+
+
+def _preferred_vocabulary_lookup(word: str, matches: list[dict]) -> str:
+    """Prefer the submitted form, then its matching VESUM lemma for dictionaries."""
+    for match in matches:
+        lemma = str(match.get("lemma") or "")
+        if lemma == word:
+            return word
+    for match in matches:
+        lemma = str(match.get("lemma") or "")
+        if lemma:
+            return lemma
+    return word
+
+
+def _format_vocabulary_vesum(matches: list[dict]) -> str:
+    if not matches:
+        return "not found"
+    details = "; ".join(
+        "lemma={lemma}, pos={pos}, tags={tags}".format(
+            lemma=_compact_vocabulary_value(match.get("lemma") or ""),
+            pos=_compact_vocabulary_value(match.get("pos") or ""),
+            tags=_compact_vocabulary_value(match.get("tags") or ""),
+        )
+        for match in matches
+    )
+    return f"valid ({details})"
+
+
+def _format_vocabulary_shadow(result: dict) -> str:
+    if not result.get("matches_russian"):
+        return "not flagged (suspicion only, not a verdict)"
+    lemma = result.get("russian_lemma") or "unknown"
+    confidence = float(result.get("confidence") or 0.0)
+    return (
+        "suspected (suspicion only, not a verdict; "
+        f"russian_lemma={_compact_vocabulary_value(lemma)}, confidence={confidence:.2f})"
+    )
+
+
+async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
+    """Combine the existing vocabulary checks without per-word SQL round trips."""
+    submitted_words = args["words"]
+    words = submitted_words[:500]
+    include_definitions = bool(args.get("include_definitions", False))
+
+    from scripts.verification.check_ru_morph import check_russian_patterns_batch
+    from scripts.verification.vesum import verify_words
+    from wiki import sources_db as sdb
+
+    vesum_results = await asyncio.to_thread(verify_words, words)
+    lookup_terms = list(dict.fromkeys(
+        _preferred_vocabulary_lookup(word, vesum_results.get(word, []))
+        for word in words
+    ))
+    cefr_results = await asyncio.to_thread(sdb.query_cefr_levels, lookup_terms)
+    definition_results = (
+        await asyncio.to_thread(sdb.search_definitions_batch, lookup_terms)
+        if include_definitions else {}
+    )
+    verified_words = {word for word in words if vesum_results.get(word)}
+    shadow_results = await asyncio.to_thread(
+        check_russian_patterns_batch,
+        words,
+        verified_words=verified_words,
+    )
+
+    lines = []
+    if len(submitted_words) > len(words):
+        lines.append(
+            f"Note: received {len(submitted_words)} words; processed the first 500 (hard cap)."
+        )
+
+    for word in words:
+        matches = vesum_results.get(word, [])
+        lookup_term = _preferred_vocabulary_lookup(word, matches)
+        cefr_hit = (cefr_results.get(lookup_term) or [{}])[0]
+        fields = [
+            f"**{_compact_vocabulary_value(word)}**",
+            f"VESUM: {_format_vocabulary_vesum(matches)}",
+            f"CEFR: {_compact_vocabulary_value(cefr_hit.get('level') or 'not listed')}",
+            f"Russian-shadow: {_format_vocabulary_shadow(shadow_results.get(word, {}))}",
+        ]
+        if include_definitions:
+            definition_hit = (definition_results.get(lookup_term) or [{}])[0]
+            gloss = definition_hit.get("definition") or "not found"
+            fields.append(f"Gloss: {_compact_vocabulary_value(gloss, max_chars=240)}")
+        lines.append("- " + " | ".join(fields))
+
     return [TextContent(type="text", text="\n".join(lines))]
 
 

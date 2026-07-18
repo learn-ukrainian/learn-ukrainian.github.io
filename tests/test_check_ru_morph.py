@@ -1,6 +1,10 @@
 from unittest.mock import patch
 
-from scripts.verification.check_ru_morph import get_ru_confidence, is_russian_pattern
+from scripts.verification.check_ru_morph import (
+    check_russian_patterns_batch,
+    get_ru_confidence,
+    is_russian_pattern,
+)
 
 
 def test_get_ru_confidence():
@@ -42,3 +46,20 @@ def test_smoke_cases(mock_verify_word):
     # 4. котрий
     res = is_russian_pattern("котрий")
     assert res["matches_russian"] is False
+
+
+@patch("scripts.verification.vesum.verify_word")
+@patch("scripts.verification.check_ru_morph.get_ru_confidence")
+def test_batch_reuses_preverified_vesum_results(mock_confidence, mock_verify_word):
+    mock_confidence.return_value = (0.91, "выдуманный")
+
+    results = check_russian_patterns_batch(
+        ["привіт", "вигадане"],
+        verified_words={"привіт"},
+    )
+
+    assert results["привіт"]["matches_russian"] is False
+    assert results["вигадане"]["matches_russian"] is True
+    assert results["вигадане"]["russian_lemma"] == "выдуманный"
+    mock_confidence.assert_called_once_with("вигадане")
+    mock_verify_word.assert_not_called()
