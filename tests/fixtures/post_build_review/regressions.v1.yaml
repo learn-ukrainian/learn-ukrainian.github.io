@@ -155,6 +155,12 @@ regressions:
     version_field: track_policy_version
     input: Biographical prose mentions hearing/listeners and text tasks explain that catalog metadata cannot verify video.
     expected: Do not inventory audio or video unless learner-facing language actually requires listening, viewing, or perceptual evidence.
+  - bug_id: audiovisual-medium-misclassified-as-audio-task
+    responsible_layer: track_policy
+    fixed_in_version: 2.0.1
+    version_field: track_policy_version
+    input: Source-criticism prose describes film as an audiovisual medium while refusing analysis without direct access to the film.
+    expected: Do not inventory audio from the adjective audiovisual; genuine audio compounds and explicit listening cues remain inventoried.
   - bug_id: optional-ungraded-media-inventoried-as-required
     responsible_layer: deterministic_code
     fixed_in_version: 1.2.1

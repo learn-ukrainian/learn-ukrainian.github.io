@@ -3186,6 +3186,46 @@ def test_bilash_modality_vocabulary_does_not_create_evidence_requirements() -> N
     assert not [item for item in requirements if item["modality"] in {"audio", "video"}]
 
 
+def test_audiovisual_evidence_boundary_is_not_an_audio_requirement() -> None:
+    policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
+    texts = {
+        "module.md": (
+            "Кіно як аудіовізуальний медіум може додати сценічний контекст.\n"
+            "Без самого аудіовізуального твору цей контекст не перевірити.\n"
+            "Для аналізу потрібен сам фільм, а не лише довідка про нього.\n"
+        ),
+        "activities.yaml": (
+            "instruction: Розрізніть каталог і аудіовізуальний медіум.\n"
+            "answer: Без перегляду стрічки аналізувати її не можна.\n"
+        ),
+    }
+
+    requirements = pbr.inventory_evidence_requirements(
+        texts,
+        policy["mechanical_checks"]["evidence_requirements"],
+    )
+
+    assert not [item for item in requirements if item["modality"] == "audio"]
+
+
+def test_audio_record_compound_remains_an_audio_requirement() -> None:
+    policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
+    texts = {
+        "activities.yaml": "instruction: Порівняйте аудіозапис із текстом.\n",
+    }
+
+    requirements = pbr.inventory_evidence_requirements(
+        texts,
+        policy["mechanical_checks"]["evidence_requirements"],
+    )
+
+    assert [
+        (item["modality"], item["evidence"])
+        for item in requirements
+        if item["modality"] == "audio"
+    ] == [("audio", "аудіозапис")]
+
+
 def test_optional_ungraded_media_does_not_hide_required_listening() -> None:
     policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
     texts = {
@@ -3582,7 +3622,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
     assert catalog["catalog_version"] == "6.0.4"
-    assert len(rows) == 71
+    assert len(rows) == 72
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",

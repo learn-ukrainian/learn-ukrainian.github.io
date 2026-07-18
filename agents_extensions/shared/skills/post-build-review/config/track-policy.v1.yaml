@@ -1,7 +1,7 @@
 review_protocol_version: 6.0.3
 deterministic_contract_version: 2.0.0
 semantic_prompt_version: 6.0.4
-track_policy_version: 2.0.0
+track_policy_version: 2.0.1
 
 score_calibration:
   bands:
@@ -75,7 +75,7 @@ defaults:
     evidence_requirements:
       - id: audio-dependent-task
         modality: audio
-        regex: '(?:прослух(?:ай(?:те)?|овуванн\w*|ати|овуй\w*|овуват\w*)|слухай(?:те)?|аудіо\w*|часов\w*\s+позначк\w*|(?:ви|де|що)\s+чуєте\b|виразно\s+почут\w*\s+(?:слов|звук|нот|фраз|акорд)\w*)'
+        regex: '(?:прослух(?:ай(?:те)?|овуванн\w*|ати|овуй\w*|овуват\w*)|слухай(?:те)?|аудіо(?!візуал)\w*|часов\w*\s+позначк\w*|(?:ви|де|що)\s+чуєте\b|виразно\s+почут\w*\s+(?:слов|звук|нот|фраз|акорд)\w*)'
         exclude_line_regex: '(?:необов''язков\w*|не\s+оціню\w*|не\s+використову\w*\s+в\s+оцінюван\w*\s+завданн\w*)'
       - id: video-dependent-task
         modality: video
