@@ -3,6 +3,7 @@ import { State } from 'ts-fsrs';
 import { act, render, screen, waitFor, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LexiconPractice, { nextMatchingPromptIndex } from '@site/src/components/LexiconPractice';
+import PracticeSessionSummary, { type SessionSummaryStats } from '@site/src/components/PracticeSessionSummary';
 import PracticeErrorBoundary from '@site/src/components/PracticeErrorBoundary';
 import {
   SRS_STORAGE_KEY,
@@ -461,6 +462,190 @@ function seedWeakCaseLog(caseKey: string, total: number, misses: number) {
     state.reviews.push(review);
   }
   saveState(state, localStorage, NOW.getTime());
+}
+
+function smallMatchingDeck(): PracticeDeckData {
+  const lexemes = [
+    lexeme('knyha', 'книга', 'book', { nominative: 'книга', accusative: 'книгу', locative: 'книзі' }),
+    lexeme('robota', 'робота', 'work', { nominative: 'робота', accusative: 'роботу', locative: 'роботі' }),
+    lexeme('misto', 'місто', 'city', { nominative: 'місто', accusative: 'місто', locative: 'місті' }),
+  ];
+  return {
+    deckVersion: 'test-matching-small',
+    level: 'A1',
+    lexemes,
+    index: lexemes.map((entry, index) => ({
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A1',
+      modes: ['matching'],
+      hasCloze: false,
+      clozeIds: [],
+      newOrder: index,
+    })),
+    cloze: [],
+  };
+}
+
+function stressDeck(): PracticeDeckData {
+  const entry = lexeme('kava', 'кава', 'coffee', {
+    nominative: 'кава',
+    accusative: 'каву',
+    locative: 'каві',
+  });
+  return {
+    deckVersion: 'test-stress',
+    level: 'A1',
+    lexemes: [entry],
+    index: [{
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A1',
+      modes: ['stress'],
+      hasCloze: false,
+      clozeIds: [],
+      newOrder: 0,
+    }],
+    cloze: [],
+    stress: [{
+      stressId: 'kava-stress',
+      lemmaId: 'kava',
+      lemma: 'кава',
+      stressed: 'ка́ва',
+      unstressed: 'кава',
+      stressIndex: 1,
+      nuclei: [
+        { index: 0, label: 'а' },
+        { index: 1, label: 'а' },
+      ],
+      source: 'fixture',
+    }],
+    classify: [],
+    paradigm: [],
+    synonym: [],
+  };
+}
+
+function classifyDeck(): PracticeDeckData {
+  const entry = lexeme('kava', 'кава', 'coffee', {
+    nominative: 'кава',
+    accusative: 'каву',
+    locative: 'каві',
+  });
+  return {
+    deckVersion: 'test-classify',
+    level: 'A1',
+    lexemes: [entry],
+    index: [{
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A1',
+      modes: ['classify'],
+      hasCloze: false,
+      clozeIds: [],
+      newOrder: 0,
+    }],
+    cloze: [],
+    stress: [],
+    classify: [{
+      classifyId: 'kava-classify',
+      lemmaId: 'kava',
+      lemma: 'кава',
+      sets: [{
+        setId: 'gender',
+        setLabelUk: 'рід',
+        answer: 'feminine',
+        answerLabelUk: 'жіночий',
+        options: [
+          { value: 'feminine', labelUk: 'жіночий' },
+          { value: 'masculine', labelUk: 'чоловічий' },
+        ],
+      }],
+      source: 'fixture',
+    }],
+    paradigm: [],
+    synonym: [],
+  };
+}
+
+function paradigmDeck(): PracticeDeckData {
+  const entry = lexeme('kava', 'кава', 'coffee', {
+    nominative: 'кава',
+    accusative: 'каву',
+    locative: 'каві',
+  });
+  return {
+    deckVersion: 'test-paradigm',
+    level: 'A1',
+    lexemes: [entry],
+    index: [{
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A1',
+      modes: ['paradigm'],
+      hasCloze: false,
+      clozeIds: [],
+      newOrder: 0,
+    }],
+    cloze: [],
+    stress: [],
+    classify: [],
+    paradigm: [{
+      paradigmId: 'kava-paradigm',
+      lemmaId: 'kava',
+      lemma: 'кава',
+      slot: {
+        case: 'genitive',
+        number: 'singular',
+        labelUk: 'родовий відмінок однини',
+      },
+      form: 'кави',
+      options: [
+        { label: 'кави', kind: 'answer' },
+        { label: 'кава', kind: 'same-paradigm' },
+      ],
+    }],
+    synonym: [],
+  };
+}
+
+function synonymDeck(): PracticeDeckData {
+  const entry = lexeme('kava', 'кава', 'coffee', {
+    nominative: 'кава',
+    accusative: 'каву',
+    locative: 'каві',
+  });
+  return {
+    deckVersion: 'test-synonym',
+    level: 'A1',
+    lexemes: [entry],
+    index: [{
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A1',
+      modes: ['synonym'],
+      hasCloze: false,
+      clozeIds: [],
+      newOrder: 0,
+    }],
+    cloze: [],
+    stress: [],
+    classify: [],
+    paradigm: [],
+    synonym: [{
+      synonymId: 'kava-syn',
+      lemmaId: 'kava',
+      targetLemmaId: 'kava',
+      polarity: 'synonym',
+      prompt: 'кава',
+      answer: 'кава',
+      options: [
+        { label: 'кава', lemmaId: 'kava', kind: 'answer' },
+        { label: 'чай', lemmaId: 'chay', kind: 'distractor' },
+      ],
+      source: 'fixture',
+    }],
+  };
 }
 
 beforeEach(() => {
@@ -1072,9 +1257,9 @@ describe('LexiconPractice', () => {
       render(<LexiconPractice initialDeck={deck} autoStart={false} />);
 
       expect(
-        await screen.findByRole('button', { name: /кафе.*натисніть, щоб перевернути/ }),
+        await screen.findByRole('button', { name: /кафе.*натисніть, щоб перевернути/i }),
       ).toBeInTheDocument();
-      expect(screen.queryByRole('button', { name: /книга.*натисніть, щоб перевернути/ })).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /книга.*натисніть, щоб перевернути/i })).not.toBeInTheDocument();
       expect(screen.queryByTestId('practice-fetch-error')).not.toBeInTheDocument();
     } finally {
       window.location = new URL(originalSearch ? `http://localhost${originalSearch}` : 'http://localhost/') as any;
@@ -1129,7 +1314,7 @@ describe('LexiconPractice', () => {
       render(<LexiconPractice autoStart={false} />);
 
       expect(
-        await screen.findByRole('button', { name: /кафе.*натисніть, щоб перевернути/ }),
+        await screen.findByRole('button', { name: /кафе.*натисніть, щоб перевернути/i }),
       ).toBeInTheDocument();
       expect(screen.queryByTestId('practice-fetch-error')).not.toBeInTheDocument();
       expect(
@@ -1182,7 +1367,7 @@ describe('LexiconPractice', () => {
       render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
 
       expect(
-        await screen.findByRole('button', { name: /кафе.*натисніть, щоб перевернути/ }),
+        await screen.findByRole('button', { name: /кафе.*натисніть, щоб перевернути/i }),
       ).toBeInTheDocument();
       expect(screen.queryByTestId('practice-lemma-missing')).not.toBeInTheDocument();
       expect(screen.queryByTestId('practice-fetch-error')).not.toBeInTheDocument();
@@ -2225,6 +2410,9 @@ describe('LexiconPractice', () => {
       expect(storedState().reviews?.length).toBe(6);
     });
 
+    // The completed board dwells; advance explicitly to the next selection/board.
+    await user.click(screen.getByTestId('practice-advance-button'));
+
     // Clean match on next board for that same distractor (should start with 0 misses, rate as good)
     const newLeftCol = container.querySelector('[data-activity="match-left-column"]');
     const newRightCol = container.querySelector('[data-activity="match-right-column"]');
@@ -2374,5 +2562,147 @@ describe('LexiconPractice', () => {
       // It should rate the original lemma from the pinned board
       expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist0] && r.rating === 'good')).toBe(true);
     });
+  });
+
+  describe('no-auto-advance dwell matrix (Chunk 3)', () => {
+    async function solveMatchingBoard(user: ReturnType<typeof userEvent.setup>, container: HTMLElement) {
+      const leftCol = container.querySelector('[data-activity="match-left-column"]');
+      const rightCol = container.querySelector('[data-activity="match-right-column"]');
+      if (!leftCol || !rightCol) throw new Error('Matching columns not found');
+      const leftButtons = within(leftCol as HTMLElement).getAllByRole('button');
+      const rightButtons = within(rightCol as HTMLElement).getAllByRole('button');
+      for (const left of leftButtons as HTMLButtonElement[]) {
+        if (left.disabled) continue;
+        const originalIndex = leftButtons.indexOf(left);
+        const right = (rightButtons as HTMLButtonElement[]).find(
+          (button) => button.getAttribute('data-original-index') === String(originalIndex),
+        );
+        if (!right || right.disabled) continue;
+        await user.click(left);
+        await user.click(right);
+      }
+    }
+
+    const cases: Array<{
+      mode: string;
+      deck: PracticeDeckData;
+      answer: (user: ReturnType<typeof userEvent.setup>, container: HTMLElement) => Promise<void>;
+    }> = [
+      {
+        mode: 'flashcards',
+        deck: sampleDeckWithOnlyMode('knyha', 'flashcards'),
+        answer: async (user, container) => {
+          const card = container.querySelector<HTMLElement>('[data-activity="flashcard"]')!;
+          await user.click(card);
+          await user.click(container.querySelector<HTMLButtonElement>('[data-rate="good"]')!);
+        },
+      },
+      {
+        mode: 'matching',
+        deck: smallMatchingDeck(),
+        answer: async (user, container) => solveMatchingBoard(user, container),
+      },
+      {
+        mode: 'choice',
+        deck: sampleDeckWithOnlyMode('knyha', 'choice'),
+        answer: async (user) => {
+          await user.click(screen.getByRole('button', { name: /книга/ }));
+        },
+      },
+      {
+        mode: 'cloze',
+        deck: sampleDeck(),
+        answer: async (user) => {
+          const input = screen.getByPlaceholderText(/введіть слово/);
+          await user.type(input, 'книгу');
+          await user.click(screen.getByRole('button', { name: /Перевірити/ }));
+        },
+      },
+      {
+        mode: 'stress',
+        deck: stressDeck(),
+        answer: async (user) => {
+          const buttons = within(screen.getByTestId('practice-stress')).getAllByRole('button');
+          await user.click(buttons[1]!);
+        },
+      },
+      {
+        mode: 'classify',
+        deck: classifyDeck(),
+        answer: async (user) => {
+          await user.click(screen.getByRole('button', { name: /жіночий/ }));
+        },
+      },
+      {
+        mode: 'paradigm',
+        deck: paradigmDeck(),
+        answer: async (user) => {
+          await user.click(screen.getByRole('button', { name: /кави/ }));
+        },
+      },
+      {
+        mode: 'synonym',
+        deck: synonymDeck(),
+        answer: async (user) => {
+          await user.click(screen.getByRole('button', { name: /кава/ }));
+        },
+      },
+      {
+        mode: 'paronym',
+        deck: paronymDeck(),
+        answer: async (user) => {
+          await user.click(screen.getByRole('button', { name: /бігає/ }));
+        },
+      },
+      {
+        mode: 'heritage',
+        deck: heritageDeck(),
+        answer: async (user) => {
+          await user.click(within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дім/ }));
+        },
+      },
+    ];
+
+    test.each(cases)('$mode: answer records and parks until explicit next', async ({ mode, deck, answer }) => {
+      const user = userEvent.setup();
+      const { container } = render(
+        <LexiconPractice initialDeck={deck} autoStart initialMode={mode as any} />,
+      );
+
+      await answer(user, container);
+
+      const advance = await screen.findByTestId('practice-advance-button');
+      expect(advance).toBeInTheDocument();
+      expect(advance).toHaveFocus();
+
+      await user.click(advance);
+
+      await waitFor(() => {
+        expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument();
+      });
+    });
+  });
+
+  test('summary renders score ratio and Ukrainian proverb', () => {
+    const stats: SessionSummaryStats = {
+      correct: 18,
+      lapsed: 2,
+      advancedToReview: [],
+      streak: 5,
+      nextDueLabel: null,
+      deferredLemmas: [],
+    };
+    const { container } = render(
+      <PracticeSessionSummary
+        stats={stats}
+        showEnglishSubtitles={false}
+        onAnotherSession={() => undefined}
+        onDone={() => undefined}
+      />,
+    );
+
+    expect(screen.getByTestId('practice-session-summary')).toHaveTextContent('18/20');
+    expect(container.querySelector('blockquote')).toHaveTextContent('Терпи, козаче — отаманом будеш.');
+    expect(container.querySelector('figcaption')).toHaveTextContent("Українське прислів'я");
   });
 });

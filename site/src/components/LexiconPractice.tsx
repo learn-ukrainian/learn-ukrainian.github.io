@@ -2091,6 +2091,33 @@ function LexiconPracticeIsland({
     completeSelection(current, outcome);
   }
 
+  function handleFlashcardRating(rating: PracticeRating) {
+    if (!selection) return;
+    const outcome = recordReview(selection, rating);
+    setAnswerLocked(true);
+    pendingOutcomeRef.current = outcome;
+    setPendingOutcome(outcome);
+  }
+
+  function handleMatchingComplete() {
+    if (!selection) return;
+    let outcome: CompletionOutcome | null = null;
+    if (sessionCompleted === 0) {
+      const rating = matchedSelectedRatingRef.current || 'good';
+      matchedSelectedRatingRef.current = null;
+      outcome = recordReview(selection, rating);
+    } else {
+      outcome = matchingTargetOutcomeRef.current;
+      matchingTargetOutcomeRef.current = null;
+      if (!outcome) {
+        outcome = recordReview(selection, 'good');
+      }
+    }
+    setAnswerLocked(true);
+    pendingOutcomeRef.current = outcome;
+    setPendingOutcome(outcome);
+  }
+
   /** Complete the parked selection once the learner chooses to advance. */
   function advancePending() {
     // Claim the outcome via the ref FIRST so a second synchronous invocation (a rapid
@@ -2272,13 +2299,23 @@ function LexiconPracticeIsland({
       ? `Mixed · ${MODE_META[visibleStageMode].en}`
       : MODE_META[visibleStageMode].en;
   const progressLabel = `${sessionCompleted}/${effectiveSessionTarget()}`;
+  const dailySnapshotIds = useMemo(
+    () => new Set(dailySnapshot?.items.map((item) => item.lemmaId) ?? []),
+    [dailySnapshot],
+  );
   const summaryStats: SessionSummaryStats = {
     correct: sessionCorrect,
     lapsed: sessionLapsed,
-    advancedToReview,
+    advancedToReview: advancedToReview.filter((lemma) =>
+      dailySnapshotIds.size === 0
+        ? true
+        : Array.from(dailyLexemes.values()).some(
+            (entry) => entry.lemma === lemma && dailySnapshotIds.has(entry.lemmaId),
+          ),
+    ),
     streak: streak.current,
     nextDueLabel: formatNextDueLabel(nextDuePreviewTime()),
-    deferredLemmas,
+    deferredLemmas: deferredLemmas.filter((entry) => dailySnapshotIds.has(entry.lemmaId)),
   };
 
   function finishPractice() {
@@ -2703,22 +2740,13 @@ function LexiconPracticeIsland({
                     heritageFeedback={heritageFeedback}
                     paronymFeedback={paronymFeedback}
                     onClozeInput={setClozeInput}
-                    onFlashcardRating={(rating) => rateAndComplete(selection, rating)}
+                    onFlashcardRating={handleFlashcardRating}
                     onChoice={handleChoice}
-                    onMatchingComplete={() => {
-                      if (sessionCompleted === 0) {
-                        const rating = matchedSelectedRatingRef.current || 'good';
-                        matchedSelectedRatingRef.current = null;
-                        rateAndComplete(selection, rating);
-                      } else {
-                        const outcome = matchingTargetOutcomeRef.current || recordReview(selection, 'good');
-                        matchingTargetOutcomeRef.current = null;
-                        completeSelection(selection, outcome);
-                      }
-                    }}
+                    onMatchingComplete={handleMatchingComplete}
                     onMatchingMatch={handleMatchingMatch}
                     onClozeSubmit={submitCloze}
                     showEnglishSubtitles={showEnglishSubtitles}
+                    chromeLocale={chromeLocale}
                   />
                   {pendingOutcome ? (
                     <div className="lexicon-practice-advance" data-testid="practice-advance">
@@ -2812,6 +2840,7 @@ function PracticeItem({
   onMatchingMatch,
   onClozeSubmit,
   showEnglishSubtitles,
+  chromeLocale,
 }: {
   selection: PracticeSelection;
   deck: PracticeDeckData;
@@ -2829,6 +2858,7 @@ function PracticeItem({
   onMatchingMatch?: (pairIndex: number, rating: PracticeRating) => void;
   onClozeSubmit(value: string, source: 'typed' | 'chip'): void;
   showEnglishSubtitles: boolean;
+  chromeLocale: 'en' | 'uk';
 }) {
   const [matchingPromptIndex, setMatchingPromptIndex] = useState<number | null>(0);
   const matchedPairIndexesRef = useRef<Set<number>>(new Set());
@@ -2846,6 +2876,7 @@ function PracticeItem({
         intervalPreviews={intervalPreviews}
         onRate={onFlashcardRating}
         showEnglishSubtitles={showEnglishSubtitles}
+        chromeLocale={chromeLocale}
       />
     );
   }

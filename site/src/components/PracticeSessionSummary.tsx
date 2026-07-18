@@ -1,3 +1,4 @@
+import ChromeText from '../lib/i18n/ChromeText';
 import type { PracticeLexeme } from '../lib/lexicon/srs';
 
 export interface SessionSummaryStats {
@@ -22,6 +23,7 @@ export default function PracticeSessionSummary({
   onAnotherSession,
   onDone,
 }: PracticeSessionSummaryProps) {
+  const total = stats.correct + stats.lapsed;
   return (
     <div className="lexicon-session-summary" data-testid="practice-session-summary">
       <h2 className="lexicon-session-summary-title">
@@ -57,6 +59,12 @@ export default function PracticeSessionSummary({
             ) : null}
           </dt>
           <dd>🔥 {stats.streak}</dd>
+        </div>
+        <div className="session-score">
+          <dt>
+            <ChromeText k="practice.score" />
+          </dt>
+          <dd>{stats.correct}/{total}</dd>
         </div>
       </dl>
       {stats.advancedToReview.length > 0 ? (
@@ -107,6 +115,10 @@ export default function PracticeSessionSummary({
           {showEnglishSubtitles ? <span className="btn-sub" lang="en">Done</span> : null}
         </button>
       </div>
+      <figure className="lexicon-session-proverb">
+        <blockquote lang="uk">«Терпи, козаче — отаманом будеш.»</blockquote>
+        <figcaption lang="uk">Українське прислів'я</figcaption>
+      </figure>
     </div>
   );
 }

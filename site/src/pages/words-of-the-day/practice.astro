@@ -905,7 +905,7 @@ const frontmatter = {
 
   :global(.lexicon-session-summary-stats) {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.75rem;
     margin: 0;
   }
@@ -923,10 +923,41 @@ const frontmatter = {
     font-weight: 900;
   }
 
+  :global(.session-score dd) {
+    font-size: 1.85rem;
+    color: var(--lu-primary);
+  }
+
   :global(.lexicon-session-summary-actions) {
     display: flex;
     flex-wrap: wrap;
     gap: 0.65rem;
+  }
+
+  :global(.lexicon-session-proverb) {
+    margin: 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--lu-border);
+    color: var(--lu-text-muted);
+    font-style: italic;
+  }
+
+  :global(.lexicon-session-proverb blockquote) {
+    margin: 0 0 0.35rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  :global(.lexicon-session-proverb figcaption) {
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  @media (max-width: 560px) {
+    :global(.lexicon-session-summary-stats) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   /* K3 practice dashboard (Chunk 2) */
