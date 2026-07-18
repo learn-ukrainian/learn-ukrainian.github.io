@@ -27,6 +27,7 @@ Issue: #1184
 
 from __future__ import annotations
 
+import hashlib
 import json as _json
 import logging
 import os
@@ -371,6 +372,11 @@ class CodexAdapter:
           (plus a symlink of the user's ``auth.json``) is the actual
           per-invocation isolation mechanism in codex-cli 0.133.0,
           confirmed via ``ab ask-codex`` 2026-05-22.
+        - ``output_schema_path`` plus ``output_schema_sha256``: absolute path
+          to a readable JSON object and its exact SHA-256 → ``--output-schema
+          <path>``. The adapter validates both again at invocation time so
+          direct runtime callers cannot bypass the dispatch boundary's
+          fail-closed schema checks or race different bytes into the provider.
         """
         flags: list[str] = []
         if not tool_config:
@@ -386,6 +392,30 @@ class CodexAdapter:
             for feature in disable_features:
                 if isinstance(feature, str) and feature:
                     flags.extend(["--disable", feature])
+
+        output_schema_path = tool_config.get("output_schema_path")
+        if output_schema_path is not None:
+            if not isinstance(output_schema_path, str) or not output_schema_path:
+                raise ValueError("CodexAdapter: output_schema_path must be a non-empty absolute path")
+            schema_path = Path(output_schema_path)
+            if not schema_path.is_absolute():
+                raise ValueError("CodexAdapter: output_schema_path must be absolute")
+            if not schema_path.is_file():
+                raise ValueError(f"CodexAdapter: output schema is not a readable file: {schema_path}")
+            expected_sha256 = tool_config.get("output_schema_sha256")
+            if not isinstance(expected_sha256, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_sha256):
+                raise ValueError("CodexAdapter: output_schema_sha256 must be a lowercase SHA-256")
+            try:
+                payload = schema_path.read_bytes()
+                schema = _json.loads(payload.decode("utf-8"))
+            except (OSError, UnicodeDecodeError, _json.JSONDecodeError) as exc:
+                raise ValueError(f"CodexAdapter: invalid output schema JSON: {exc}") from exc
+            if not isinstance(schema, dict):
+                raise ValueError("CodexAdapter: output schema JSON must be an object")
+            actual_sha256 = hashlib.sha256(payload).hexdigest()
+            if actual_sha256 != expected_sha256:
+                raise ValueError("CodexAdapter: output schema SHA-256 changed after dispatch validation")
+            flags.extend(["--output-schema", str(schema_path)])
 
         return flags
 

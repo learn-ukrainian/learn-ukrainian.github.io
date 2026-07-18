@@ -700,6 +700,54 @@ def test_dispatch_parses_max_budget_usd_flag():
     assert args.max_budget_usd == 0.5
 
 
+def test_dispatch_parser_accepts_output_schema(tmp_path):
+    schema_path = tmp_path / "semantic-schema.json"
+    schema_path.write_text('{"type": "object"}', encoding="utf-8")
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "schema-task",
+            "--prompt",
+            "hi",
+            "--output-schema",
+            str(schema_path),
+        ]
+    )
+
+    assert args.output_schema == str(schema_path)
+
+
+def test_resolve_output_schema_returns_absolute_path_and_hash(tmp_path):
+    schema_path = tmp_path / "semantic-schema.json"
+    payload = b'{"type":"object"}'
+    schema_path.write_bytes(payload)
+
+    resolved, digest = delegate._resolve_output_schema(str(schema_path), agent="codex")
+
+    assert resolved == str(schema_path.resolve())
+    assert digest == delegate.hashlib.sha256(payload).hexdigest()
+
+
+def test_resolve_output_schema_rejects_non_codex_agent(tmp_path):
+    schema_path = tmp_path / "semantic-schema.json"
+    schema_path.write_text('{"type": "object"}', encoding="utf-8")
+
+    with pytest.raises(ValueError, match="only with the effective codex agent"):
+        delegate._resolve_output_schema(str(schema_path), agent="gemini")
+
+
+@pytest.mark.parametrize("payload", ["not-json", "[]"])
+def test_resolve_output_schema_rejects_invalid_json_object(tmp_path, payload):
+    schema_path = tmp_path / "semantic-schema.json"
+    schema_path.write_text(payload, encoding="utf-8")
+
+    with pytest.raises(ValueError, match=r"valid UTF-8 JSON|must be an object"):
+        delegate._resolve_output_schema(str(schema_path), agent="codex")
+
+
 def test_worker_parser_accepts_max_budget_usd():
     parser = delegate.build_parser()
     args = parser.parse_args([
@@ -712,6 +760,27 @@ def test_worker_parser_accepts_max_budget_usd():
     ])
 
     assert args.max_budget_usd == 0.5
+
+
+def test_worker_parser_accepts_output_schema(tmp_path):
+    schema_path = tmp_path / "semantic-schema.json"
+    args = delegate.build_parser().parse_args(
+        [
+            "_worker",
+            "--task-id",
+            "schema-task",
+            "--agent",
+            "codex",
+            "--mode",
+            "read-only",
+            "--cwd",
+            "/tmp",
+            "--output-schema",
+            str(schema_path),
+        ]
+    )
+
+    assert args.output_schema == str(schema_path)
 
 
 def test_dispatch_persists_and_forwards_max_budget_usd(tmp_tasks_dir):
@@ -1587,6 +1656,48 @@ def test_run_worker_forwards_max_budget_usd_to_runtime(tmp_tasks_dir, tmp_path):
     assert state["max_budget_usd"] == 0.5
 
 
+def test_run_worker_forwards_output_schema_to_runtime(tmp_tasks_dir, tmp_path):
+    state_path = delegate._state_path("worker-schema")
+    delegate._write_state_atomic(state_path, {"task_id": "worker-schema"})
+    schema_path = tmp_path / "semantic-schema.json"
+    schema_path.write_text('{"type": "object"}', encoding="utf-8")
+    schema_sha256 = delegate.hashlib.sha256(schema_path.read_bytes()).hexdigest()
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "{}",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.6-sol",
+            "effort": "xhigh",
+            "cli_version": "fixture",
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id="worker-schema",
+            agent="codex",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model="gpt-5.6-sol",
+            hard_timeout=60,
+            effort="xhigh",
+            output_schema_path=str(schema_path),
+            output_schema_sha256=schema_sha256,
+        )
+
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"] == {
+        "output_schema_path": str(schema_path),
+        "output_schema_sha256": schema_sha256,
+    }
+
+
 def test_run_worker_silence_timeout_kills_silent_subprocess(
     tmp_tasks_dir,
     tmp_path,
@@ -2068,6 +2179,61 @@ def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
     cmd = recorded["cmd"]
     assert isinstance(cmd, list)
     assert cmd[cmd.index("--runtime-tmp-root") + 1] == str(lease_root)
+
+
+def test_dispatch_persists_and_forwards_output_schema(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    recorded: dict[str, object] = {}
+    schema_path = tmp_path / "semantic-schema.json"
+    payload = b'{"type":"object"}'
+    schema_path.write_bytes(payload)
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 24682
+        stdin = _FakeStdin()
+
+    def fake_popen(cmd, **_kwargs):
+        recorded["cmd"] = cmd
+        return _FakeProc()
+
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "schema-dispatch",
+            "--prompt",
+            "test",
+            "--output-schema",
+            str(schema_path),
+        ]
+    )
+
+    assert delegate.cmd_dispatch(args) == 0
+
+    state = delegate._read_state(delegate._state_path("schema-dispatch"))
+    assert state is not None
+    assert state["output_schema_path"] == str(schema_path.resolve())
+    assert state["output_schema_sha256"] == delegate.hashlib.sha256(payload).hexdigest()
+    cmd = recorded["cmd"]
+    assert isinstance(cmd, list)
+    schema_index = cmd.index("--output-schema")
+    assert cmd[schema_index + 1] == str(schema_path.resolve())
+    hash_index = cmd.index("--output-schema-sha256")
+    assert cmd[hash_index + 1] == delegate.hashlib.sha256(payload).hexdigest()
 
 
 def test_dispatch_dry_run_records_and_reaps_runtime_tmp_lease(
