@@ -42,7 +42,7 @@ from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.verification.vesum import verify_word
 
 SOURCE_ID = "textbook-jsonl-curated-2026-07-19-bulk"
-INV_REL = f"data/lexicon/source-inventory/{SOURCE_ID}.yaml"
+INV_REL = f"data/lexicon/source-inventory/oneshot/{SOURCE_ID}.yaml"
 DEFAULT_INVENTORY = PROJECT_ROOT / INV_REL
 DEFAULT_DECISIONS = (
     PROJECT_ROOT

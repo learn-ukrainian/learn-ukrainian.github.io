@@ -50,7 +50,8 @@ from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.verification.vesum import verify_word
 
 DEFAULT_INVENTORY = (
-    PROJECT_ROOT / "data/lexicon/source-inventory/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
+    PROJECT_ROOT
+    / "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
 )
 DEFAULT_DECISIONS = (
     PROJECT_ROOT
@@ -62,7 +63,7 @@ DEFAULT_PLAN = Path("/tmp/atlas-ohoiko-ulp-curated-plan.json")
 DEFAULT_MANIFEST = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"
 DEFAULT_FINGERPRINT = PROJECT_ROOT / "site/src/data/lexicon-manifest.fingerprint.json"
 SOURCE_ID = "ohoiko-ulp-curated-2026-07-19-bulk"
-INV_REL = "data/lexicon/source-inventory/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
+INV_REL = "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
 
 _STRESS_RE = re.compile("[\u0300\u0301]")
 _TOKEN_RE = re.compile(r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:[ʼ'’`-][А-ЩЬЮЯЄІЇа-яґєіїґ]+)*", re.I)

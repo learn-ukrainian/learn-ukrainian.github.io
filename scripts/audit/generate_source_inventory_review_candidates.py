@@ -18,9 +18,10 @@ from scripts.lexicon.content_lexicon_reconciler import PROJECT_ROOT
 COMMITTED_SOURCE_INVENTORIES: tuple[Path, ...] = (
     PROJECT_ROOT / "data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml",
     PROJECT_ROOT / "data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml",
-    PROJECT_ROOT / "data/lexicon/source-inventory/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/textbook-jsonl-curated-2026-07-19-bulk.yaml",
+    # Note: one-shot bulk inventories (ohoiko-ulp-curated-*, textbook-jsonl-curated-*)
+    # stay on disk for audit trail + decision binding, but are NOT merged into the
+    # ongoing review-candidate generator — they deliberately restate lemmas with
+    # SUM/author glosses that conflict with smaller curated keyword inventories.
     PROJECT_ROOT / "data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml",
     PROJECT_ROOT / "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml",
     PROJECT_ROOT / "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml",
