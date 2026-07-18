@@ -1369,4 +1369,158 @@ const frontmatter = {
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
+
+  /* Chunk 5 — generalized form rail and N-vowel stress */
+  :global(.practice-form-rail) {
+    display: grid;
+    gap: 0.6rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 10px;
+    background: var(--lu-surface-raised);
+  }
+
+  :global(.practice-form-rail-row) {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  :global(.practice-form-rail-cell) {
+    display: grid;
+    gap: 0.15rem;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  :global(.rail-cell-label) {
+    color: var(--lu-text-muted);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  :global(.rail-cell-value) {
+    color: var(--lu-text);
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
+  :global(.practice-form-rail-separator) {
+    color: var(--lu-text-muted);
+    font-size: 1.1rem;
+    font-weight: 900;
+  }
+
+  :global(.practice-form-rail-status) {
+    margin: 0;
+    font-weight: 900;
+  }
+
+  :global(.practice-form-rail.verdict-correct) {
+    border-color: var(--lu-green);
+    background: var(--lu-state-correct-bg);
+  }
+  :global(.practice-form-rail.verdict-correct .practice-form-rail-status),
+  :global(.practice-form-rail.verdict-correct .rail-cell-value) {
+    color: var(--lu-state-correct-fg);
+  }
+
+  :global(.practice-form-rail.verdict-wrong) {
+    border-color: var(--lu-red);
+    background: var(--lu-state-wrong-bg);
+  }
+  :global(.practice-form-rail.verdict-wrong .practice-form-rail-status),
+  :global(.practice-form-rail.verdict-wrong .rail-cell-value) {
+    color: var(--lu-state-wrong-fg);
+  }
+
+  :global(.practice-form-rail.verdict-calque) {
+    border-color: color-mix(in srgb, var(--lu-orange) 50%, transparent);
+    background: var(--lu-orange-light);
+  }
+  :global(.practice-form-rail.verdict-calque .practice-form-rail-status),
+  :global(.practice-form-rail.verdict-calque .rail-cell-value) {
+    color: var(--lu-orange);
+  }
+
+  :global(.lexicon-stress) {
+    display: grid;
+    gap: 1rem;
+  }
+
+  :global(.practice-stress-word) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.1rem;
+    margin: 0;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 14px;
+    background: var(--lu-surface-raised);
+    box-shadow: var(--lu-shadow);
+    color: var(--lu-text);
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.6;
+  }
+
+  :global(.stress-vowel) {
+    min-width: 2.2rem;
+    min-height: 2.6rem;
+    padding: 0 0.35rem;
+    border: 2px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface);
+    color: var(--lu-primary);
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  :global(.stress-vowel:hover:not(:disabled)) {
+    border-color: var(--lu-primary);
+    background: var(--lu-state-active);
+  }
+
+  :global(.stress-vowel:focus-visible) {
+    border-color: var(--lu-primary);
+    outline: 2px solid var(--lu-primary);
+    outline-offset: 2px;
+  }
+
+  :global(.stress-vowel.selected) {
+    border-color: var(--lu-primary);
+    background: var(--lu-primary);
+    color: var(--lu-on-primary);
+  }
+
+  :global(.stress-vowel.correct) {
+    border-color: var(--lu-green);
+    background: var(--lu-state-correct-bg);
+    color: var(--lu-state-correct-fg);
+  }
+
+  :global(.stress-vowel.wrong) {
+    border-color: var(--lu-red);
+    background: var(--lu-state-wrong-bg);
+    color: var(--lu-state-wrong-fg);
+  }
+
+  :global(.practice-stress-verdict) {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-align: center;
+  }
+  :global(.practice-stress-verdict.correct) {
+    color: var(--lu-green);
+  }
+  :global(.practice-stress-verdict.wrong) {
+    color: var(--lu-red);
+  }
 </style>
