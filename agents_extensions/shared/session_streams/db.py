@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import hashlib
+import random
 import sqlite3
 import subprocess
+import time
 from contextlib import suppress
 from dataclasses import dataclass
 from datetime import datetime
@@ -15,6 +17,10 @@ from .model import isoformat_z, utc_now
 DEFAULT_RELATIVE_DATABASE = Path(".agent/session-streams/v1/session-streams.sqlite3")
 MIGRATIONS_DIR = Path(__file__).with_name("migrations")
 BUSY_TIMEOUT_MS = 5_000
+# Bounded serialization for concurrent first-open/migration (see connect()).
+_LOCK_RETRY_ATTEMPTS = 6
+_LOCK_RETRY_BASE_S = 0.25
+_LOCK_RETRY_CAP_S = 4.0
 
 
 class SessionStreamDatabaseError(RuntimeError):
@@ -89,6 +95,35 @@ class SessionStreamDatabase:
         self.path = Path(path).resolve() if path is not None else default_database_path(repo_root)
 
     def connect(self, *, read_only: bool = False, now: datetime | None = None) -> sqlite3.Connection:
+        """Open a configured connection, serializing concurrent first-open.
+
+        Two processes racing to initialize/migrate the database must SERIALIZE,
+        never surface ``database is locked`` (design: concurrent first-open
+        contention resolves with the loser proceeding against the winner's
+        state). ``busy_timeout`` covers in-transaction waits; this bounded
+        retry covers lock windows that exceed it (slow CI disks under xdist,
+        FULL synchronous DDL application).
+        """
+        if read_only:
+            return self._connect_once(read_only=True, now=now)
+        last_error: sqlite3.OperationalError | None = None
+        for attempt in range(_LOCK_RETRY_ATTEMPTS):
+            try:
+                return self._connect_once(read_only=False, now=now)
+            except sqlite3.OperationalError as error:
+                message = str(error).lower()
+                if "locked" not in message and "busy" not in message:
+                    raise
+                last_error = error
+                if attempt == _LOCK_RETRY_ATTEMPTS - 1:
+                    break
+                delay = min(_LOCK_RETRY_BASE_S * (2**attempt), _LOCK_RETRY_CAP_S)
+                time.sleep(delay + random.uniform(0, delay / 2))
+        raise SessionStreamDatabaseError(
+            f"database stayed locked across {_LOCK_RETRY_ATTEMPTS} bounded retries: {self.path}"
+        ) from last_error
+
+    def _connect_once(self, *, read_only: bool, now: datetime | None) -> sqlite3.Connection:
         if read_only:
             if not self.path.is_file():
                 raise SessionStreamDatabaseError(f"session-stream database does not exist: {self.path}")
