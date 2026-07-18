@@ -1013,6 +1013,47 @@ def test_minimum_dimension_score_preserves_pass_backlog_without_averaging(
     assert result["combined_disposition"] == baseline["combined_disposition"]
 
 
+def test_block_score_accepts_high_finding_but_rejects_medium_only(
+    bilash_packet: dict,
+) -> None:
+    semantic = _passing_semantic(bilash_packet)
+    finding = {
+        "id": "high-blocking-gap",
+        "issue_id": "HIGH_BLOCKING_GAP",
+        "category": "pedagogy",
+        "severity": "high",
+        "message": "A high-severity defect blocks publication.",
+        "evidence": "Synthetic evidence-backed blocking gap.",
+        "location": _finding_location(semantic),
+    }
+    semantic["findings"].append(finding)
+    semantic["verdict"] = "BLOCK"
+    semantic["quality_dimensions"]["pedagogical"].update(
+        {
+            "status": "BLOCK",
+            "score": 5.5,
+            "score_rationale": "The high-severity defect blocks publication.",
+            "finding_ids": [finding["id"]],
+        }
+    )
+
+    result = pbr.finalize_review(bilash_packet, _raw(semantic))
+
+    assert result["semantic_response"]["contract_status"] == "valid"
+    assert result["minimum_dimension_score"] == 5.5
+    assert result["combined_disposition"]["status"] == "BLOCK"
+    pbr.validate_result(result)
+
+    finding["severity"] = "medium"
+    invalid = pbr.finalize_review(bilash_packet, _raw(semantic))
+
+    assert invalid["semantic_response"]["contract_status"] == "invalid"
+    assert "BLOCK requires a high or blocker finding" in invalid[
+        "semantic_response"
+    ]["error"]
+    assert invalid["combined_disposition"]["status"] == "INCOMPLETE"
+
+
 def test_subperfect_score_requires_linked_finding_locator_in_dimension_evidence(
     bilash_packet: dict,
 ) -> None:
@@ -3852,8 +3893,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "6.0.6"
-    assert len(rows) == 76
+    assert catalog["catalog_version"] == "6.0.7"
+    assert len(rows) == 77
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
