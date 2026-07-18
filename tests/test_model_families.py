@@ -1,4 +1,4 @@
-"""Tests for the canonical model-family vocabulary (issue #5385).
+"""Tests for the canonical model-family vocabulary (issues #5385, #5293).
 
 The route-refusal chain used to carry TWO divergent family vocabularies
 (live dispatcher vs Layer-B). They now both consume the single
@@ -8,6 +8,7 @@ The route-refusal chain used to carry TWO divergent family vocabularies
 * that both former call sites AGREE on every previously-recognized token;
 * that an UNKNOWN writer propagates to an explicit refusal, never acceptance
   or a crash, on BOTH layers.
+* that formal code-review resolver families consume the same vocabulary.
 """
 
 from __future__ import annotations
@@ -46,6 +47,11 @@ _TOKEN_TO_FAMILY = {
     "grok": "xai",
     "grok-4": "xai",
     "xai": "xai",
+    # formal code-review families
+    "composer-2.5": "moonshot",
+    "kimi-code/k3": "moonshot",
+    "glm-5.2": "zhipu",
+    "poolside/laguna-m.1": "poolside",
     # qwen — restored in Layer-B (was orphaned/None)
     "qwen": "qwen",
     "qwen-2.5": "qwen",
@@ -55,17 +61,16 @@ _TOKEN_TO_FAMILY = {
 }
 
 # Tokens that are UNKNOWN under the unified vocabulary. cursor-Auto is the
-# routing decision (2026-07-17); glm/kimi/pool were raw-passthrough in the old
-# live normalizer and are now first-class UNKNOWN instead.
+# routing decision (2026-07-17); unpinned Cursor/Composer remains UNKNOWN even
+# though the concrete Composer 2.5 model is recognized for formal review.
 _UNKNOWN_TOKENS = (
     "cursor",
     "composer",
     "auto",
     "cursor-fast",
     "mystery-model",
-    "glm",
-    "kimi-k3",
-    "pool",
+    "composer-2.4",
+    "mystery-reviewer",
 )
 
 
@@ -93,6 +98,10 @@ def test_canonical_lineage_prefers_pin_over_cursor_seat() -> None:
     assert (
         model_families.normalize_lineage_family({"family": "cursor", "pin": "claude-opus-4-6"})
         is model_families.Family.ANTHROPIC
+    )
+    assert (
+        model_families.normalize_lineage_family({"family": "cursor", "pin": "composer-2.5"})
+        is model_families.Family.MOONSHOT
     )
     # cursor-Auto (no pin) is UNKNOWN.
     assert model_families.normalize_lineage_family({"family": "cursor"}) is model_families.Family.UNKNOWN
@@ -133,7 +142,7 @@ def test_unknown_writer_refuses_in_layer_b_with_explicit_failure_class() -> None
     # cursor-Auto writer -> UNKNOWN -> no satisfiable route.
     assert _select_route((gemini, claude), writer_family="cursor", reviewer_family="deepseek") is None
     # arbitrary unrecognized writer -> UNKNOWN -> no satisfiable route.
-    assert _select_route((gemini, claude), writer_family="glm", reviewer_family="deepseek") is None
+    assert _select_route((gemini, claude), writer_family="mystery-reviewer", reviewer_family="deepseek") is None
 
 
 def test_unknown_writer_refuses_on_live_path_with_lineage_error() -> None:

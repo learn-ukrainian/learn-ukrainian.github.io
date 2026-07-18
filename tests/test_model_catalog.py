@@ -73,6 +73,7 @@ def test_composer_is_conservatively_moonshot_for_independence():
 def test_gpt_and_grok_formal_routes_are_native_only():
     candidates = load_model_catalog()["review_candidates"]
     assert candidates["openai_frontier"]["transport"] == "native_codex"
+    assert candidates["gpt-5.6-terra"]["transport"] == "native_codex"
     assert candidates["grok-4.5"]["transport"] == "native_grok"
 
 
@@ -81,6 +82,12 @@ def test_bridge_only_reviewers_expose_executable_invocations():
     assert candidates["pool"]["invocation"].endswith("ask-pool")
     assert candidates["glm-5.2"]["invocation"].endswith("ask-glm")
     assert candidates["gemini-3.1-pro"]["health_keys"] == ["gemini"]
+
+
+def test_formal_review_candidates_declare_supported_profiles_and_concrete_cursor_model():
+    candidates = load_model_catalog()["review_candidates"]
+    assert all(candidate["review_profiles"] == ["code", "infra"] for candidate in candidates.values())
+    assert candidates["composer-2.5"]["model_id"] == "composer-2.5"
 
 
 def test_catalog_rejects_unknown_candidate_model_reference():
@@ -101,6 +108,14 @@ def test_catalog_rejects_candidate_transport_not_supported_by_model():
     broken = deepcopy(load_model_catalog())
     broken["review_candidates"]["grok-4.5"]["transport"] = "hermes"
     with pytest.raises(ModelCatalogError, match="is not listed"):
+        validate_catalog(broken)
+
+
+def test_catalog_rejects_bare_cursor_model_identity():
+    broken = deepcopy(load_model_catalog())
+    broken["models"]["auto"] = deepcopy(broken["models"]["composer-2.5"])
+    broken["review_candidates"]["composer-2.5"]["model_id"] = "auto"
+    with pytest.raises(ModelCatalogError, match="concrete Cursor model id"):
         validate_catalog(broken)
 
 
