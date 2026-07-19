@@ -22,6 +22,11 @@ from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
 from ._prompts import build_codex_prompt
+from ._review_safety import (
+    ReviewSafetyError,
+    assert_formal_review_ask_payload,
+    warn_missing_review_target,
+)
 from ._review_worktree import (
     ReviewWorktreeError,
     append_review_prompt_evidence,
@@ -114,6 +119,20 @@ def ask_codex(
     review_pr_number: int | None = None,
 ):
     """Send message to Codex AND invoke Codex to process it."""
+    try:
+        formal_review = assert_formal_review_ask_payload(
+            content,
+            msg_type=msg_type,
+            task_id=task_id,
+            attachment=data,
+            review=review,
+        )
+    except ReviewSafetyError as exc:
+        raise SystemExit(f"ask-codex: {exc}") from exc
+    warn_missing_review_target(
+        formal_review=formal_review,
+        has_target=review_branch is not None or review_pr_number is not None,
+    )
     from_llm = _resolve_codex_from_llm(from_llm)
     msg_id = send_message(
         content,

@@ -35,6 +35,11 @@ from ._config import _PARENT_ENV, CLAUDE_CMD, REPO_ROOT
 from ._db import get_db, get_session, set_session
 from ._messaging import acknowledge, send_message
 from ._prompts import build_claude_prompt
+from ._review_safety import (
+    ReviewSafetyError,
+    assert_formal_review_ask_payload,
+    warn_missing_review_target,
+)
 from ._review_worktree import (
     ReviewWorktreeError,
     append_review_prompt_evidence,
@@ -53,6 +58,20 @@ def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query"
                background: bool = False, review_branch: str | None = None,
                review_pr_number: int | None = None):
     """Send message to Claude AND invoke Claude to process it."""
+    try:
+        formal_review = assert_formal_review_ask_payload(
+            content,
+            msg_type=msg_type,
+            task_id=task_id,
+            attachment=data,
+            review=review,
+        )
+    except ReviewSafetyError as exc:
+        raise SystemExit(f"ask-claude: {exc}") from exc
+    warn_missing_review_target(
+        formal_review=formal_review,
+        has_target=review_branch is not None or review_pr_number is not None,
+    )
     msg_id = send_message(
         content,
         task_id,

@@ -43,11 +43,13 @@ from ._review_safety import (
     ReviewSafetyError,
     assert_attachment_size,
     assert_content_size,
+    assert_formal_review_ask_payload,
     assert_review_cwd_safe,
     hermes_must_use_neutral_cwd,
     is_review_class_ask,
     neutral_review_scratch,
     prepend_read_only_contract,
+    warn_missing_review_target,
 )
 from .routing_guard import assert_model_routing_allowed
 
@@ -172,6 +174,14 @@ def _preflight_hermes_payload(
     data: str | None,
     review: bool,
 ) -> None:
+    formal_review = assert_formal_review_ask_payload(
+        content,
+        msg_type="review" if review else None,
+        task_id=None,
+        attachment=data,
+        review=review,
+    )
+    warn_missing_review_target(formal_review=formal_review, has_target=False)
     limit = MAX_REVIEW_REQUEST_BYTES if review else MAX_ASK_CONTENT_BYTES
     assert_content_size(content, limit=limit, label="ask_content")
     if data:

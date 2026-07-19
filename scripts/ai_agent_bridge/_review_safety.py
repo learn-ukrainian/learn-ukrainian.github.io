@@ -17,6 +17,7 @@ from __future__ import annotations
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -214,6 +215,68 @@ def assert_attachment_size(path: Path) -> None:
         raise ReviewSafetyError(
             f"attachment_exceeds_cap: path={path} bytes={size} "
             f"limit={MAX_ASK_ATTACHMENT_BYTES}. Do not attach multi-MB inventory/YAML."
+        )
+
+
+def is_formal_review_ask(*, msg_type: str | None, task_id: str | None) -> bool:
+    """Return whether an ask is formal review work without prompt heuristics."""
+    return is_review_class_ask(msg_type=msg_type, task_id=task_id)
+
+
+def _attachment_bytes(attachment: str | Path) -> int:
+    """Measure an inline attachment or a file-backed attachment safely."""
+    value = str(attachment)
+    inline_size = len(value.encode("utf-8"))
+    path = Path(value)
+    try:
+        file_size = path.stat().st_size if path.exists() else 0
+    except (OSError, ValueError):
+        file_size = 0
+    return max(inline_size, file_size)
+
+
+def assert_formal_review_ask_payload(
+    content: str,
+    *,
+    msg_type: str | None,
+    task_id: str | None,
+    attachment: str | Path | None = None,
+    review: bool = False,
+) -> bool:
+    """Fail closed before a formal review ask can send a fat payload.
+
+    Returns whether the ask is review-class so callers can share the same
+    classification for the missing-target warning.
+    """
+    formal_review = review or is_formal_review_ask(msg_type=msg_type, task_id=task_id)
+    if not formal_review:
+        return False
+
+    content_size = len(content.encode("utf-8"))
+    if content_size > MAX_REVIEW_REQUEST_BYTES:
+        raise ReviewSafetyError(
+            "review_ask_content_exceeds_cap: "
+            f"bytes={content_size} limit={MAX_REVIEW_REQUEST_BYTES}. "
+            "Use review-pr <N>; it pulls PR evidence instead of accepting pasted review bodies."
+        )
+    if attachment is not None:
+        attachment_size = _attachment_bytes(attachment)
+        if attachment_size > MAX_ASK_ATTACHMENT_BYTES:
+            raise ReviewSafetyError(
+                "review_ask_attachment_exceeds_cap: "
+                f"bytes={attachment_size} limit={MAX_ASK_ATTACHMENT_BYTES}. "
+                "Use review-pr <N>; it pulls PR evidence instead of accepting attachments."
+            )
+    return True
+
+
+def warn_missing_review_target(*, formal_review: bool, has_target: bool) -> None:
+    """Steer manual formal-review asks to the PR-targeted entrypoint."""
+    if formal_review and not has_target:
+        print(
+            "warning: formal review ask has no review target; prefer review-pr <N> "
+            "for sealed, pointer-only review.",
+            file=sys.stderr,
         )
 
 

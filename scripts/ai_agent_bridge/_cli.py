@@ -979,8 +979,10 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     from ._review_pr import register_review_pr_parser
+    from ._review_verdict import register_publish_review_verdict_parser
 
     register_review_pr_parser(subparsers)
+    register_publish_review_verdict_parser(subparsers)
 
     review_deep_parser = subparsers.add_parser(
         "review-deep",
@@ -1260,6 +1262,10 @@ def _dispatch_command(args):
         from ._review_pr import handle_review_pr
 
         sys.exit(handle_review_pr(args))
+    elif args.command == "publish-review-verdict":
+        from ._review_verdict import handle_publish_review_verdict
+
+        sys.exit(handle_publish_review_verdict(args))
     elif args.command == "review-deep":
         sys.exit(handle_review_deep(args))
     elif args.command == "check-model":

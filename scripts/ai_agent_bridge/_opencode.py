@@ -53,6 +53,11 @@ from ._ask_lifecycle import (
     register_ask,
 )
 from ._messaging import acknowledge, send_message
+from ._review_safety import (
+    ReviewSafetyError,
+    assert_formal_review_ask_payload,
+    warn_missing_review_target,
+)
 
 # Default was qwen3.7-max (EXPENSIVE) until 2026-07-05 — a silent money trap
 # for every ask-opencode call without --model. Since 2026-07-07 (user order:
@@ -317,6 +322,16 @@ def ask_glm(
     ``openrouter/z-ai/glm-5.2``). Any override MUST still be a GLM model — the
     China-egress guard above is unconditional.
     """
+    try:
+        formal_review = assert_formal_review_ask_payload(
+            content,
+            msg_type=msg_type,
+            task_id=task_id,
+            attachment=data,
+        )
+    except ReviewSafetyError as exc:
+        raise SystemExit(f"ask-glm: {exc}") from exc
+    warn_missing_review_target(formal_review=formal_review, has_target=False)
     _assert_glm_egress_allowed()
     effective_model = model or GLM_MODEL
     msg_id = send_message(
