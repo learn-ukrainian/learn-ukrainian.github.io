@@ -182,6 +182,19 @@ body over 4 KiB or attach evidence over 64 KiB to an `ask-*` review job; the
 bridge rejects it and points to `review-pr <N>`. Prefer a PR target over a
 manual review ask.
 
+**Phase 5 fail-closed (#5486):** if an `ask-* --review` payload looks like a
+**formal CF PR review** (GitHub PR URL / `PR #N` / cross-family formal wording)
+and has **no** sealed `review_pr` / `review_branch` target, the bridge **refuses**
+with `formal_pr_review_requires_review_pr`. Use `review-pr <N>` then
+`publish-review-verdict`. Curriculum content reviews that use `--review` without
+a PR URL still work. Emergency escape only:
+`BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1`.
+
+**Phase 4 residual (#5485):** migrate runbooks and dispatch briefs that still say
+`ask-agy --review` / `ask-codex --review` for PR gates to `review-pr` +
+`publish-review-verdict`. `scripts/audit/llm_reviewer_dispatch.py` content-review
+routes remain `ask-* --review` (module QG, not PR CF).
+
 After a reviewer writes a short verdict or findings JSON, publish exactly one
 PR comment without relaying the full body through the orchestrator:
 

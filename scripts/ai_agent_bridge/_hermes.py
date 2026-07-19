@@ -180,6 +180,7 @@ def _preflight_hermes_payload(
         task_id=None,
         attachment=data,
         review=review,
+        has_target=False,
     )
     warn_missing_review_target(formal_review=formal_review, has_target=False)
     limit = MAX_REVIEW_REQUEST_BYTES if review else MAX_ASK_CONTENT_BYTES

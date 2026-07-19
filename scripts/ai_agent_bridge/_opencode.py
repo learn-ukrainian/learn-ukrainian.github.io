@@ -328,6 +328,7 @@ def ask_glm(
             msg_type=msg_type,
             task_id=task_id,
             attachment=data,
+            has_target=False,
         )
     except ReviewSafetyError as exc:
         raise SystemExit(f"ask-glm: {exc}") from exc

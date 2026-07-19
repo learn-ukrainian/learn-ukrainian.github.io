@@ -209,3 +209,17 @@ The cost economics above stand regardless: dispatched Claude is far pricier than
 The same table lives in `memory/MEMORY.md` rule #M0; this file is the deploy-rule mirror so it loads via `npm run agents:deploy` into `.claude/rules/`.
 
 </critical>
+
+## Formal PR CF review (fleet-comms Phase 4–5)
+
+For **GitHub PR formal cross-family review**, do **not** use fat `ask-* --review` with a pasted diff or PR URL body.
+
+```bash
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>
+# after sealed review returns a short verdict file:
+.venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict \
+  --pr <N> --verdict-file /tmp/verdict.txt --model <model> --family <family> --harness <harness>
+```
+
+Bridge refuse: `formal_pr_review_requires_review_pr` (#5486). See `docs/best-practices/agent-bridge.md`.
+

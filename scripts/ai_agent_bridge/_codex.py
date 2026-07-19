@@ -120,18 +120,20 @@ def ask_codex(
 ):
     """Send message to Codex AND invoke Codex to process it."""
     try:
+        has_target = review_branch is not None or review_pr_number is not None
         formal_review = assert_formal_review_ask_payload(
             content,
             msg_type=msg_type,
             task_id=task_id,
             attachment=data,
             review=review,
+            has_target=has_target,
         )
     except ReviewSafetyError as exc:
         raise SystemExit(f"ask-codex: {exc}") from exc
     warn_missing_review_target(
         formal_review=formal_review,
-        has_target=review_branch is not None or review_pr_number is not None,
+        has_target=has_target,
     )
     from_llm = _resolve_codex_from_llm(from_llm)
     msg_id = send_message(
