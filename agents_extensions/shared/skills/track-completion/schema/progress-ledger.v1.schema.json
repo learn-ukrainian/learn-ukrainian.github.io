@@ -29,6 +29,7 @@
         "BUILD_REQUIRED",
         "PARTIAL_RECOVERY_REQUIRED",
         "POST_BUILD_REVIEW_REQUIRED",
+        "PREPARATION_BLOCKED",
         "REPAIR_REQUIRED",
         "BLOCKED_BUDGET_EXHAUSTED",
         "AUDIT_TOOLING_REQUIRED",
@@ -46,6 +47,7 @@
       ]
     },
     "current_identity": {"$ref": "#/$defs/identity"},
+    "preparation_block": {"$ref": "#/$defs/preparationBlock"},
     "author_families": {
       "type": "array",
       "uniqueItems": true,
@@ -141,6 +143,16 @@
       ]
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"state": {"const": "PREPARATION_BLOCKED"}},
+        "required": ["state"]
+      },
+      "then": {"required": ["preparation_block"]},
+      "else": {"not": {"required": ["preparation_block"]}}
+    }
+  ],
   "$defs": {
     "timestamp": {"type": "string", "format": "date-time"},
     "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
@@ -165,7 +177,42 @@
         "status": {"enum": ["active", "completed"]},
         "started_at": {"$ref": "#/$defs/timestamp"},
         "updated_at": {"$ref": "#/$defs/timestamp"},
-        "lease_expires_at": {"$ref": "#/$defs/timestamp"}
+        "lease_expires_at": {"$ref": "#/$defs/timestamp"},
+        "lease_released_at": {"$ref": "#/$defs/timestamp"}
+      }
+    },
+    "preparationBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "disposition",
+        "reason_code",
+        "owner",
+        "reason",
+        "finding_ids",
+        "evidence_ids",
+        "unblock_condition",
+        "next_action"
+      ],
+      "properties": {
+        "disposition": {"const": "HOLD"},
+        "reason_code": {"const": "PREPARATION_REBUILD_PRECHECK_INCOMPLETE"},
+        "owner": {"const": "preparation"},
+        "reason": {"type": "string", "minLength": 1},
+        "finding_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "evidence_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "unblock_condition": {"type": "string", "minLength": 1},
+        "next_action": {"const": "stop"}
       }
     },
     "identity": {
@@ -290,7 +337,7 @@
         "deferred_workflow_drift"
       ],
       "properties": {
-        "reason": {"enum": ["legacy-migration", "deferred-protocol-drift"]},
+        "reason": {"enum": ["legacy-migration", "deferred-protocol-drift", "preparation-remediated"]},
         "prior_run": {"$ref": "#/$defs/run"},
         "prior_state": {"type": "string", "minLength": 1},
         "prior_identity": {"$ref": "#/$defs/identity"},
@@ -308,6 +355,12 @@
         "deferred_workflow_drift": {
           "type": "array",
           "items": {"$ref": "#/$defs/deferredWorkflowDrift"}
+        },
+        "preparation_block": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/preparationBlock"}
+          ]
         }
       }
     },

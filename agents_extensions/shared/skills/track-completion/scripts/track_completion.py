@@ -65,6 +65,8 @@ BOUNDED_CONTRACT_PATH = SKILL_ROOT / "contracts" / "bounded-completion.v1.json"
 SELECTOR_RE = re.compile(r"^(?P<track>[a-z0-9-]+)/(?P<slug>[a-z0-9-]+)$")
 MATERIAL_SEVERITIES = frozenset({"blocker", "high", "medium"})
 TERMINAL_GOALS = frozenset({"merge", "certify", "deploy"})
+PREPARATION_BLOCKED_STATE = "PREPARATION_BLOCKED"
+PREPARATION_BLOCK_REASON_CODE = "PREPARATION_REBUILD_PRECHECK_INCOMPLETE"
 MUTATING_STATES = frozenset(
     {
         "PLAN_REPAIR_REQUIRED",
@@ -1013,6 +1015,80 @@ def _renew_lease(ledger: dict[str, Any], config: Mapping[str, Any]) -> None:
     ledger["run"]["lease_expires_at"] = _iso(now + timedelta(seconds=int(config["lease_seconds"])))
 
 
+def _preparation_block_record(readiness: Mapping[str, Any]) -> dict[str, Any]:
+    """Build the durable HOLD record from one canonical readiness result."""
+    finding_ids = sorted(
+        {
+            str(finding["id"])
+            for finding in readiness["findings"]
+            if isinstance(finding, Mapping) and isinstance(finding.get("id"), str)
+        }
+    )
+    evidence_ids = sorted(
+        {
+            f"{source['role']}:{source['path']}:{source['sha256'] or 'missing'}"
+            for source in readiness["sources"]
+            if isinstance(source, Mapping)
+            and isinstance(source.get("role"), str)
+            and isinstance(source.get("path"), str)
+            and (isinstance(source.get("sha256"), str) or source.get("sha256") is None)
+        }
+    )
+    if not finding_ids or not evidence_ids:
+        raise CompletionError("Incomplete preparation has no canonical finding or evidence identity")
+    return {
+        "disposition": "HOLD",
+        "reason_code": PREPARATION_BLOCK_REASON_CODE,
+        "owner": "preparation",
+        "reason": "Preparation requirements are incomplete; do not rebuild or begin post-build review.",
+        "finding_ids": finding_ids,
+        "evidence_ids": evidence_ids,
+        "unblock_condition": (
+            "Resolve every failed preparation requirement and clear any active reviewed preparation hold "
+            "before starting a new completion run."
+        ),
+        "next_action": "stop",
+    }
+
+
+def _terminalize_preparation_block(
+    ledger: dict[str, Any],
+    *,
+    event_id: str,
+    identity: Mapping[str, Any],
+    block: Mapping[str, Any],
+) -> None:
+    """Persist one terminal preparation HOLD and release its completion lease."""
+    existing_event = next((event for event in ledger["history"] if event["event_id"] == event_id), None)
+    if existing_event is not None:
+        if (
+            existing_event["event"] != "PREPARATION_REBUILD_BLOCKED"
+            or existing_event["to_state"] != PREPARATION_BLOCKED_STATE
+            or existing_event["details"] != {"preparation_block": dict(block)}
+        ):
+            raise CompletionError("Preparation-block terminal event conflicts with existing history")
+    else:
+        _append_event(
+            ledger,
+            event_id=event_id,
+            event="PREPARATION_REBUILD_BLOCKED",
+            to_state=PREPARATION_BLOCKED_STATE,
+            identity=identity,
+            details={"preparation_block": dict(block)},
+        )
+    now = _iso(_now())
+    ledger["state"] = PREPARATION_BLOCKED_STATE
+    ledger["current_identity"] = dict(identity)
+    ledger["preparation_block"] = dict(block)
+    ledger["routing"] = None
+    ledger["publication"] = None
+    ledger["production_qg_authorization"] = None
+    ledger["run"]["status"] = "completed"
+    ledger["run"]["updated_at"] = now
+    ledger["run"]["lease_expires_at"] = now
+    ledger["run"]["lease_released_at"] = now
+
+
 def _require_run(ledger: dict[str, Any], run_id: str, config: Mapping[str, Any]) -> None:
     run = ledger["run"]
     if run["run_id"] != run_id:
@@ -1082,6 +1158,84 @@ def _with_lock(path: Path) -> FileLock:
     return FileLock(str(path.with_suffix(path.suffix + ".lock")), timeout=0)
 
 
+def _restart_remediated_preparation_block(
+    ledger: dict[str, Any],
+    *,
+    owner: str,
+    snapshot: TargetSnapshot,
+    identity: Mapping[str, Any],
+    config: Mapping[str, Any],
+    repo_root: Path,
+) -> None:
+    """Archive one remediated preparation HOLD and open its fresh completion run."""
+    try:
+        readiness = curriculum_readiness.evaluate_preparation(
+            snapshot.track,
+            snapshot.slug,
+            consumed_preparation_identity=_consumed_preparation_identity(ledger),
+            repo_root=repo_root,
+        )
+    except curriculum_readiness.ReadinessError as exc:
+        raise CompletionError(f"Current preparation cannot be evaluated: {exc}") from exc
+    if (
+        not readiness["preparation_identity"]
+        or not all(item["passed"] for item in readiness["requirements"])
+        or readiness["next_action"] == "stop"
+    ):
+        raise CompletionError(
+            "Preparation-blocked run remains terminal until canonical preparation is complete and unheld"
+        )
+    prior_run = dict(ledger["run"])
+    archive = {
+        "reason": "preparation-remediated",
+        "prior_run": prior_run,
+        "prior_state": ledger["state"],
+        "prior_identity": dict(ledger["current_identity"]),
+        "reviews": list(ledger["reviews"]),
+        "certification_evidence": list(ledger.get("certification_evidence", [])),
+        "routing": ledger.get("routing"),
+        "publication": ledger.get("publication"),
+        "production_qg_authorization": ledger.get("production_qg_authorization"),
+        "bounded_completion": _bounded_record(ledger),
+        "deferred_workflow_drift": list(ledger.get("deferred_workflow_drift", [])),
+        "preparation_block": dict(ledger["preparation_block"]),
+    }
+    now = _now()
+    fresh_run_id = uuid.uuid4().hex
+    ledger["run"] = {
+        "run_id": fresh_run_id,
+        "owner": owner,
+        "status": "active",
+        "started_at": _iso(now),
+        "updated_at": _iso(now),
+        "lease_expires_at": _iso(now + timedelta(seconds=int(config["lease_seconds"]))),
+    }
+    ledger.setdefault("archived_authority", []).append(archive)
+    ledger["author_families"] = []
+    ledger["reviews"] = []
+    ledger["certification_evidence"] = []
+    ledger["routing"] = None
+    ledger["publication"] = None
+    ledger["production_qg_authorization"] = None
+    ledger["bounded_completion"] = None
+    ledger["deferred_workflow_drift"] = []
+    ledger.pop("preparation_block")
+    _append_event(
+        ledger,
+        event_id=_event_id(
+            "PREPARATION_BLOCK_REMEDIATED", {"prior_run_id": prior_run["run_id"], "run_id": fresh_run_id}
+        ),
+        event="PREPARATION_BLOCK_REMEDIATED",
+        to_state=_initial_state(snapshot.module_state),
+        identity=identity,
+        details={
+            "prior_run_id": prior_run["run_id"],
+            "fresh_run_id": fresh_run_id,
+            "readiness_preparation_identity": readiness["preparation_identity"],
+        },
+    )
+
+
 def start_run(
     selector: str,
     *,
@@ -1111,6 +1265,22 @@ def start_run(
                         f"Existing ledger terminal goal is {existing['terminal_goal']}; refusing {terminal_goal}"
                     )
                 run = existing["run"]
+                if (
+                    run["status"] == "completed"
+                    and existing["state"] == PREPARATION_BLOCKED_STATE
+                    and isinstance(existing.get("preparation_block"), Mapping)
+                ):
+                    _restart_remediated_preparation_block(
+                        existing,
+                        owner=owner,
+                        snapshot=snapshot,
+                        identity=identity,
+                        config=config,
+                        repo_root=repo_root,
+                    )
+                    _validate(existing, LEDGER_SCHEMA_PATH, "track-completion ledger")
+                    _atomic_write_json(path, existing)
+                    return path, existing
                 if run["status"] == "completed" and existing["current_identity"]["sha256"] == identity["sha256"]:
                     return path, existing
                 if run["status"] == "active" and _parse_time(run["lease_expires_at"]) > _now():
@@ -1507,6 +1677,15 @@ def request_preparation_rebuild(
     path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
     try:
         with _with_lock(path):
+            existing = _read_ledger(path)
+            if (
+                existing is not None
+                and existing.get("run", {}).get("run_id") == run_id
+                and existing.get("state") == PREPARATION_BLOCKED_STATE
+                and existing.get("run", {}).get("status") == "completed"
+                and isinstance(existing.get("preparation_block"), Mapping)
+            ):
+                return path, existing
             config, snapshot, identity, path, ledger = _load_for_update(
                 selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
             )
@@ -1549,7 +1728,19 @@ def request_preparation_rebuild(
             if readiness["state"] != "built-preparation-drift":
                 raise CompletionError("Current preparation does not require a rebuild")
             if not current_preparation_identity or not all(item["passed"] for item in readiness["requirements"]):
-                raise CompletionError("Preparation requirements must pass before routing the bundle to rebuild")
+                block = _preparation_block_record(readiness)
+                eid = _event_id(
+                    "PREPARATION_REBUILD_BLOCKED", {"run_id": ledger["run"]["run_id"], "block": block}
+                )
+                _terminalize_preparation_block(
+                    ledger,
+                    event_id=eid,
+                    identity=identity,
+                    block=block,
+                )
+                _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+                _atomic_write_json(path, ledger)
+                return path, ledger
             _append_event(
                 ledger,
                 event_id=eid,
@@ -2849,6 +3040,18 @@ def certification_projection(
             deployment="unknown",
             final="not-certified",
             reason="ledger has no explicit terminal goal",
+        )
+    preparation_block = ledger.get("preparation_block")
+    if ledger["state"] == PREPARATION_BLOCKED_STATE and isinstance(preparation_block, Mapping):
+        return result(
+            PREPARATION_BLOCKED_STATE,
+            post_build="preparation-blocked",
+            independent_review="not-applicable",
+            integration="not-applicable",
+            production_qg="not-applicable",
+            deployment="not-applicable",
+            final="preparation-blocked",
+            reason=str(preparation_block["reason"]),
         )
     bounded = _bounded_record(ledger)
     if (
