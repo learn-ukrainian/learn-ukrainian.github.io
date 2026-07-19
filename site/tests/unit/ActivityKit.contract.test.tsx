@@ -6,7 +6,7 @@ import { describe, expect, test, vi } from 'vitest';
 import fixtures from '../../../packages/activity-kit/src/fixtures/lu.activity.v1.fixtures.json';
 import lessonFixture from '../../../packages/activity-kit/src/fixtures/lu.lesson.v1.fixture.json';
 import { ActivityPlayer } from '../../../packages/activity-kit/src/ActivityPlayer';
-import type { ActivityEditOperation, LuActivityV1, LuLessonV1 } from '../../../packages/activity-kit/src';
+import type { ActivityEditOperation, LuActivityV1, LuLessonV1, LuRejectedDraft } from '../../../packages/activity-kit/src';
 
 const repoRoot = resolve(process.cwd(), '..');
 const kitRoot = join(repoRoot, 'packages/activity-kit');
@@ -80,6 +80,25 @@ function lessonSchemaErrors(fixture: unknown): string {
 
   if (result.error) throw result.error;
   return result.stdout.trim();
+}
+
+type RejectedDraftFixture = {
+  type: string;
+  activity: { answer_key: Record<string, unknown> };
+  reason: string;
+  answer_key?: {
+    items?: string[];
+    corrections?: Array<Record<string, string>>;
+  };
+};
+
+function rejectedDraft(document: { rejected: unknown[] }, type: string): RejectedDraftFixture {
+  const draft = document.rejected.find((candidate) => (
+    typeof candidate === 'object' && candidate !== null && 'type' in candidate && candidate.type === type
+  ));
+
+  expect(draft).toBeDefined();
+  return draft as RejectedDraftFixture;
 }
 
 function sourceFiles(directory: string): string[] {
@@ -207,6 +226,59 @@ describe('lesson document v1 contract', () => {
     expect(lessonSchemaErrors(lessonFixture)).toBe('');
   });
 
+  test('keeps legacy rejected drafts valid without a teacher-only answer key', () => {
+    const document = structuredClone(lessonFixture);
+    const legacyDraft = rejectedDraft(document, 'true-false');
+
+    expect(legacyDraft.answer_key).toBeUndefined();
+    expect(lessonSchemaErrors(document)).toBe('');
+  });
+
+  test('validates an error-correction rejected-draft carrier and preserves duplicate corrections', () => {
+    const document = structuredClone(lessonFixture);
+    const draft = rejectedDraft(document, 'error-correction') as unknown as Extract<LuRejectedDraft, { type: 'error-correction' }>;
+
+    expect(draft.answer_key?.corrections).toHaveLength(2);
+    expect(draft.answer_key?.corrections[0]).toEqual(draft.answer_key?.corrections[1]);
+    expect(lessonSchemaErrors(document)).toBe('');
+  });
+
+  test.each([
+    ['missing items', (draft: RejectedDraftFixture) => delete draft.answer_key?.items],
+    ['missing corrections', (draft: RejectedDraftFixture) => delete draft.answer_key?.corrections],
+    ['missing correction field', (draft: RejectedDraftFixture) => delete draft.answer_key?.corrections?.[0].error],
+    ['blank correction text', (draft: RejectedDraftFixture) => { draft.answer_key!.corrections![0].correction = '   '; }],
+    ['extra correction property', (draft: RejectedDraftFixture) => { draft.answer_key!.corrections![0].extra = 'not allowed'; }],
+    ['empty items', (draft: RejectedDraftFixture) => { draft.answer_key!.items = []; }],
+    ['empty corrections', (draft: RejectedDraftFixture) => { draft.answer_key!.corrections = []; }],
+  ])('rejects an error-correction carrier with %s', (_, mutate) => {
+    const document = structuredClone(lessonFixture);
+    mutate(rejectedDraft(document, 'error-correction'));
+
+    expect(lessonSchemaErrors(document)).not.toBe('');
+  });
+
+  test('rejects a teacher-only carrier on a non-error-correction rejected draft', () => {
+    const document = structuredClone(lessonFixture);
+    const draft = rejectedDraft(document, 'true-false');
+    draft.answer_key = {
+      items: ['Example source sentence.'],
+      corrections: [{ sentence: 'Example source sentence.', error: 'source', correction: 'corrected' }],
+    };
+
+    expect(lessonSchemaErrors(document)).not.toBe('');
+  });
+
+  test('rejects teacher-only correction metadata inside the activity answer key', () => {
+    const document = structuredClone(lessonFixture);
+    const draft = rejectedDraft(document, 'error-correction');
+    draft.activity.answer_key.corrections = [
+      { sentence: 'Example source sentence.', error: 'source', correction: 'corrected' },
+    ];
+
+    expect(lessonSchemaErrors(document)).not.toBe('');
+  });
+
   test('keeps the 90-minute 4·5·3 phase plan', () => {
     const document = lessonFixture as LuLessonV1;
 
@@ -266,8 +338,8 @@ describe('lesson document v1 contract', () => {
   });
 
   test('validates focus_status supported:true with notice_uk:null', () => {
-    const doc = structuredClone(lessonFixture);
-    (doc as any).focus_status = {
+    const doc = structuredClone(lessonFixture) as unknown as LuLessonV1;
+    doc.focus_status = {
       requested: 'вищий ступінь прикметників',
       supported: true,
       notice_uk: null,
@@ -276,8 +348,8 @@ describe('lesson document v1 contract', () => {
   });
 
   test('validates focus_status supported:false with the Ukrainian notice string', () => {
-    const doc = structuredClone(lessonFixture);
-    (doc as any).focus_status = {
+    const doc = structuredClone(lessonFixture) as unknown as LuLessonV1;
+    doc.focus_status = {
       requested: 'вищий ступінь прикметників',
       supported: false,
       notice_uk: 'Опора не містить достатньо перевіреного матеріалу для фокусу «вищий ступінь прикметників». Вправи спираються лише на текст-опору; додайте приклади або змініть фокус.',
@@ -286,8 +358,8 @@ describe('lesson document v1 contract', () => {
   });
 
   test('rejects focus_status supported:true with a non-null notice_uk', () => {
-    const doc = structuredClone(lessonFixture);
-    (doc as any).focus_status = {
+    const doc = structuredClone(lessonFixture) as unknown as LuLessonV1;
+    doc.focus_status = {
       requested: 'вищий ступінь прикметників',
       supported: true,
       notice_uk: 'Опора не містить достатньо перевіреного матеріалу для фокусу «вищий ступінь прикметників». Вправи спираються лише на текст-опору; додайте приклади або змініть фокус.',
@@ -296,8 +368,8 @@ describe('lesson document v1 contract', () => {
   });
 
   test('rejects focus_status supported:false with a null notice_uk', () => {
-    const doc = structuredClone(lessonFixture);
-    (doc as any).focus_status = {
+    const doc = structuredClone(lessonFixture) as unknown as LuLessonV1;
+    doc.focus_status = {
       requested: 'вищий ступінь прикметників',
       supported: false,
       notice_uk: null,
