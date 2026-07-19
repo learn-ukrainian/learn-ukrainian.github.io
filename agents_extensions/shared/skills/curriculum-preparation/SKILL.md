@@ -97,8 +97,8 @@ packet.
 For model-assisted preparation, enforce one shared budget for the exact scope:
 
 Use `scripts/bounded_packet.py` for executable packet admission, exact PASS
-reuse, review-path selection, and compact receipt/HOLD projection only. Drive
-all review, repair, and verification transitions through the canonical
+reuse, hash-derived review scope, and compact receipt/HOLD projection only.
+Drive all review, repair, and verification transitions through the canonical
 `../track-completion/scripts/bounded_completion.py` helper.
 
 1. Before every review dispatch, persist conservative budget evidence in the
