@@ -1,0 +1,5746 @@
+{
+  "schema": "atlas-sentence-inventory",
+  "schemaVersion": 1,
+  "rows": [
+    {
+      "lemma": "Покрова",
+      "lemmaId": "покрова",
+      "sentence": "Хмельницький був обраний для сюжету ікони «Покрова Богородиці»?",
+      "targetForm": "Покрова",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-istoria-ukr-galimov-2025_s0366",
+        "title": "Сторінка 225"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "США",
+      "lemmaId": "сша",
+      "sentence": "США надають політичну підтримку та матеріально-технічну допомогу Україні у протистоянні російській агресії.",
+      "targetForm": "США",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-geografija-bojko-2018_s0367",
+        "title": "Сторінка 200"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "Хрещатик",
+      "lemmaId": "хрещатик",
+      "sentence": "Боно та Едж з U-2 виступають у київському метро на станції «Хрещатик».",
+      "targetForm": "Хрещатик",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-istoriya-ukr-gisem-2024_s0514",
+        "title": "Сторінка 296"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "адміністратор",
+      "lemmaId": "адміністратор",
+      "sentence": "Адміністратор: Сало́н краси́ «Верса́ль».",
+      "targetForm": "адміністратор",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-2-00-lesson-notes_l0068_w003",
+        "title": "Lesson 68: Запис до перукарні Дати та місцевий відмінок Making a hair appointment Dates & Locative case (part 3/11)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "аналогічно",
+      "lemmaId": "аналогічно",
+      "sentence": "Вважатимемо, що x2 > x1 (випадок, коли x2 < x1, розглядається аналогічно).",
+      "targetForm": "аналогічно",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-heometriya-merzliak-2017_s0080",
+        "title": "Сторінка 79"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "апостроф",
+      "lemmaId": "апостроф",
+      "sentence": "Перепишіть слова, поставивши, де потрібно, апостроф.",
+      "targetForm": "апостроф",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-ukrajinska-mova-avramenko-2018_s0141",
+        "title": "Сторінка 91"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "аудиторія",
+      "lemmaId": "аудиторія",
+      "sentence": "Витлумачте пряме й переносне значення слова аудиторія.",
+      "targetForm": "аудиторія",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-ukrmova-glazova-2018_s0087",
+        "title": "Сторінка 60"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "багаж",
+      "lemmaId": "багаж",
+      "sentence": "Зберіть свій багаж знань.",
+      "targetForm": "багаж",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-zdorovia-vorontsova-2022_s0031",
+        "title": "Сторінка 32"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "бажання",
+      "lemmaId": "бажання",
+      "sentence": "25 потреби та бажання Подумайте про те, чого ви дуже хочете.",
+      "targetForm": "бажання",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-zdorovia-vorontsova-2022_s0024",
+        "title": "Сторінка 25"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "батьків",
+      "lemmaId": "батьків",
+      "sentence": "Найбільше проблем може виникнути у ви­ падку, коли один з батьків проживає окремо від дитини.",
+      "targetForm": "батьків",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-pravoznavstvo-narovlianskyi-2019_s0452",
+        "title": "Сторінка 235"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "бачення",
+      "lemmaId": "бачення",
+      "sentence": "Спробуйте за допомоги ШІ створити образ майбутнього людства на основі вашого бачення.",
+      "targetForm": "бачення",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-istoriya-vsesvit-schupak-2024_s0468",
+        "title": "Сторінка 252"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "безкоштовний",
+      "lemmaId": "безкоштовний",
+      "sentence": "Зазвичай компанія, що надає безкоштовний хостинг, заробляє шляхом показу реклами на сторінках, розміщених на ньому.",
+      "targetForm": "безкоштовний",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-informatyka-rudenko-2019_s0311",
+        "title": "Сторінка 205"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "бланк",
+      "lemmaId": "бланк",
+      "sentence": "Дослідіть упаковку засобу побутової хімії та заповніть бланк.",
+      "targetForm": "бланк",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-zdorovia-vorontsova-2023_s0136",
+        "title": "Сторінка 141"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "ближчий",
+      "lemmaId": "ближчий",
+      "sentence": "Рум’янець на українських іконах додавав образам теплішого, більш людяного вигляду, що відбивало ближчий зв’язок між святими й вірянами.",
+      "targetForm": "ближчий",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-mystetstvo-komarovska-2025_s0136",
+        "title": "Сторінка 138"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "варта",
+      "lemmaId": "варта",
+      "sentence": "Прийшло до мене втомлене поліття і роздуми достиглі принесло хвилина щастя варта півстоліття хвилина горя варта півстоліття (І.",
+      "targetForm": "варта",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-ukrajinska-mova-zabolotnij-2017_s0209",
+        "title": "Сторінка 150"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "вартість",
+      "lemmaId": "вартість",
+      "sentence": "вартість виготовлення одного пенні розǸовна назва Ȃента сягала приǭлизно \u0014,\u001a Ȃента.",
+      "targetForm": "вартість",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-finans-plastun-2025_s0021",
+        "title": "Сторінка 22"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "ведення",
+      "lemmaId": "ведення",
+      "sentence": "МГП обмежує законні засоби і методи ведення війни.",
+      "targetForm": "ведення",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-zakhist-vitchizni-gudima-2019-med_s0045",
+        "title": "Сторінка 25"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "великий",
+      "lemmaId": "великий",
+      "sentence": "Іван Франко — Великий Каменяр Іван Якович Франко народився 27 серпня 1856 року на Галичині, в селі Нагуєвичі.",
+      "targetForm": "великий",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0158_w002",
+        "title": "Lesson 158: Іван Франко — Великий Каменяр (part 2/16)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "виглядати",
+      "lemmaId": "виглядати",
+      "sentence": "Інше слово, яке іноді вживають, це «виглядати».",
+      "targetForm": "виглядати",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0128_w010",
+        "title": "Lesson 128: Рослини — символи України (part 10/19)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "вийняти",
+      "lemmaId": "вийняти",
+      "sentence": "Відвести ручку затворної рами і, утримуючи її у задньому положенні, від’єднати магазин і вийняти патрон, що уткнувся.",
+      "targetForm": "вийняти",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-zakhyst-fuka-2023_s0320",
+        "title": "Сторінка 173"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "використовувати",
+      "lemmaId": "використовувати",
+      "sentence": "Вивчила я її тоді, коли вперше почала використовувати англійську мову для конкретних цілей у моєму житті.",
+      "targetForm": "використовувати",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0122_w008",
+        "title": "Lesson 122: Як я вивчала і вивчила англійську мову (part 8/23)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "вилетіти",
+      "lemmaId": "вилетіти",
+      "sentence": "Серед молекул поверхневого шару рідини завжди є такі, що «намагаються» вилетіти з рідини.",
+      "targetForm": "вилетіти",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-fizyka-bariakhtar-2025_s0143",
+        "title": "Сторінка 130"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "вимикати",
+      "lemmaId": "вимикати",
+      "sentence": "Чому важливо вимикати електричну лампу, коли нею не користуєшся?",
+      "targetForm": "вимикати",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "1-klas-bukvar-bolshakova-2018-2_s0041",
+        "title": "Сторінка 42"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "виникати",
+      "lemmaId": "виникати",
+      "sentence": "Які проблеми можуть виникати під час проведення штучного запліднення?",
+      "targetForm": "виникати",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-biologija-i-ekologija-zadorozhnij-2018-stand_s0214",
+        "title": "Сторінка 187"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "вирости",
+      "lemmaId": "вирости",
+      "sentence": "Якось, реагуючи на людську нетерплячість, Блаженніший Любомир Гузар сказав: «Дайте людям вирости у свободі».",
+      "targetForm": "вирости",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-ukrmova-glazova-2018_s0165",
+        "title": "Сторінка 117"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "витратити",
+      "lemmaId": "витратити",
+      "sentence": "А чи однакову кількість теплоти не­ обхідно витратити на плавлення різних речовин однакової маси?",
+      "targetForm": "витратити",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-fizyka-bariakhtar-2025_s0135",
+        "title": "Сторінка 122"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "вишитий",
+      "lemmaId": "вишитий",
+      "sentence": "Що символізує вишитий рушник в українській культурі?",
+      "targetForm": "вишитий",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-ukrlit-zabolotnyi-2024_s0135",
+        "title": "Сторінка 92"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "вище",
+      "lemmaId": "вище",
+      "sentence": "Третє речення: День стає довший, сонце починає підніматися вище.",
+      "targetForm": "вище",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0173_w014",
+        "title": "Lesson 173: Зимовий цикл свят (part 14/22)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "всередині",
+      "lemmaId": "всередині",
+      "sentence": "Тому всередині джерела, крім електричних сил Fкл, діють ще й сторонні сили Fст.",
+      "targetForm": "всередині",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-fizika-astronomiia-zasekina-2019-standart_s0064",
+        "title": "Сторінка 38"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "вчити",
+      "lemmaId": "вчити",
+      "sentence": "вивча́ти = вчи́ти = учи́ти, to learn, to study something ви́вчити (imperfective, perfective) Я вивча́ю (вчу) чудо́ву I am learning the wonderful Ukrainian украї́нську мо́ву.",
+      "targetForm": "вчити",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "anna-ohoiko-1000-words-2nd-ed_e0090",
+        "title": "вивча́ти = вчи́ти = учи́ти,"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "відділ",
+      "lemmaId": "відділ",
+      "sentence": "Позначений цифрою 1 відділ учень назвав стовбуром мозку.",
+      "targetForm": "відділ",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-biolohiya-anderson-2025_s0292",
+        "title": "Сторінка 240"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "відкривати",
+      "lemmaId": "відкривати",
+      "sentence": "Ми любимо подорожувати і відкривати відкрива́ти — 1) to discover; 2) to open нові культури.",
+      "targetForm": "відкривати",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0164_w002",
+        "title": "Lesson 164: Інтерв’ю з Євгеном про життя в Америці (part 2/23)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "відлік",
+      "lemmaId": "відлік",
+      "sentence": "Як ведуть відлік відстаней за паралелями і меридіанами.",
+      "targetForm": "відлік",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-heohrafiya-hilberh-2024_s0020",
+        "title": "Сторінка 23"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "відстань",
+      "lemmaId": "відстань",
+      "sentence": "Яка відстань буде між ними через 35 хв?",
+      "targetForm": "відстань",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-matematyka-ister-2022_s0076",
+        "title": "Сторінка 78"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "відчинити",
+      "lemmaId": "відчинити",
+      "sentence": "Тому вирішив відчинити двері та перевірити, що сталося.",
+      "targetForm": "відчинити",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-zdorovia-vorontsova-2022_s0208",
+        "title": "Сторінка 209"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "відчуження",
+      "lemmaId": "відчуження",
+      "sentence": "Наступне п’яте речення: У Чорнобильській зоні відчуження сталась масштабна лісова пожежа.",
+      "targetForm": "відчуження",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0174_w016",
+        "title": "Lesson 174: Україна в 2020 році: головні новини (part 16/25)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "відчуття",
+      "lemmaId": "відчуття",
+      "sentence": "Через це серотонін і дофамін накопичуються в синаптичній щілині, викликаючи відчуття насолоди.",
+      "targetForm": "відчуття",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-biologiia-i-ekologia-shalamov-2019_s0394",
+        "title": "Сторінка 233"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "відійти",
+      "lemmaId": "відійти",
+      "sentence": "Далі владу поступово перейняли більшовики й, на жаль, поступо́во ― gradually Грушевський змушений був відійти.",
+      "targetForm": "відійти",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-6-00-lesson-notes_l0237_w014",
+        "title": "Lesson 237: Михайло Грушевський — великий історик України (part 14/28)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "вінок",
+      "lemmaId": "вінок",
+      "sentence": "Знаєте вінок, вінки?",
+      "targetForm": "вінок",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0128_w007",
+        "title": "Lesson 128: Рослини — символи України (part 7/19)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "вісім",
+      "lemmaId": "вісім",
+      "sentence": "Вас було троє, — відповів суддя, — а коржи­ ків — вісім.",
+      "targetForm": "вісім",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-etyka-martyniuk-2023_s0022",
+        "title": "Сторінка 23"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "вісімнадцять",
+      "lemmaId": "вісімнадцять",
+      "sentence": "Потреба кохання гостро спалахнула в ньому, як тільки минуло йому вісімнадцять років.",
+      "targetForm": "вісімнадцять",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-ukrajinska-literatura-avramenko-2017_s0206",
+        "title": "Сторінка 160"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "геть",
+      "lemmaId": "геть",
+      "sentence": "Леся Українка «Contra spem spero!» «Геть думи сумні», — у першій строфі Леся звертається до строфа́ ― strophe своїх думок, дум.",
+      "targetForm": "геть",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-6-00-lesson-notes_l0223_w008",
+        "title": "Lesson 223: Українська поезія. Леся Українка «Contra spem spero!» (part 8/36)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "голитися",
+      "lemmaId": "голитися",
+      "sentence": "Коли потрібно починати голитися?",
+      "targetForm": "голитися",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-zdorovia-guschyna-2024_s0120",
+        "title": "Сторінка 112"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "голосування",
+      "lemmaId": "голосування",
+      "sentence": "Голосування проводиться в день вибо­ рів або в день повторного голосування.",
+      "targetForm": "голосування",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-hromadianska-gisem-2018_s0136",
+        "title": "Сторінка 71"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "грамів",
+      "lemmaId": "грамів",
+      "sentence": " ПРИКЛАД 4 Скільки грамів 3 %-го та скільки грамів 8 %-го розчинів солі треба взяти, щоб отримати 500 г 4 %-го розчину?",
+      "targetForm": "грамів",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-algebra-merzliak-2024_s0299",
+        "title": "Сторінка 301"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "гривня",
+      "lemmaId": "гривня",
+      "sentence": "Підбиваємо підсумки Офіційною грошовою одиницею в Україні є гривня.",
+      "targetForm": "гривня",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-finans-plastun-2025_s0037",
+        "title": "Сторінка 38"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "громадський",
+      "lemmaId": "громадський",
+      "sentence": "Публіцистика формує … думку (громадський, громадянський).",
+      "targetForm": "громадський",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrajinska-mova-voron-2019_s0388",
+        "title": "Сторінка 252"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "грубий",
+      "lemmaId": "грубий",
+      "sentence": "Те саме можна сказати й про слова грубий – товстий.",
+      "targetForm": "грубий",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "antonenko-davydovych-yak-my-hovorymo_p138",
+        "title": "Antonenko-Davydovych «Як ми говоримо», p. 138"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "дальший",
+      "lemmaId": "дальший",
+      "sentence": "У тритомному Російсько–українському словнику на першому місці стоїть слово дальший, на другому – подальший, Словник за редакцією А.",
+      "targetForm": "дальший",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "antonenko-davydovych-yak-my-hovorymo_p053",
+        "title": "Antonenko-Davydovych «Як ми говоримо», p. 53"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "дані",
+      "lemmaId": "дані",
+      "sentence": "Складний запит для таблиць МАГАЗИНИ і КАДРИ, за яким формуються дані, наведено в табл.",
+      "targetForm": "дані",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-informatyka-rudenko-2019_s0046",
+        "title": "Сторінка 31"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "дарувати",
+      "lemmaId": "дарувати",
+      "sentence": "дарувати буду дарувати, подарую подарувати даруватиму 2.",
+      "targetForm": "дарувати",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-3-00-lesson-notes_l0099_w019",
+        "title": "Lesson 99: План подорожі (Голосове повідомлення №4) Travel plan (Voice message №4) (part 19/21)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "дата",
+      "lemmaId": "дата",
+      "sentence": "Моволюбка Дата: Четвер, 25.10.2018, 14:48 | Повідомлення # 16 Група: Користувачі Повідомлень: 30 Статус: Offline Не бачу проблем.",
+      "targetForm": "дата",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-ukrmova-glazova-2018_s0038",
+        "title": "Сторінка 29"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "два",
+      "lemmaId": "два",
+      "sentence": "два two Два моро́зива, будь ла́ска.",
+      "targetForm": "два",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "anna-ohoiko-1000-words-2nd-ed_e0192",
+        "title": "два"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "дедалі",
+      "lemmaId": "дедалі",
+      "sentence": "Слово «дедалі» вживайте з прикметником чи прислівником у формі вищого ви́щий сту́пінь порівня́ння — ступеня порівняння.",
+      "targetForm": "дедалі",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0136_w014",
+        "title": "Lesson 136: Екологічні тренди та екологічні традиції в Україні (part 14/19)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "дешевий",
+      "lemmaId": "дешевий",
+      "sentence": "Знання про хімічну рівновагу допомагає організувати більш дешевий і зручний технологічний процес одержання речовин.",
+      "targetForm": "дешевий",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-himia-grygorovych-2019_s0084",
+        "title": "Сторінка 61"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "деякий",
+      "lemmaId": "деякий",
+      "sentence": "Через деякий час це потепління зміниться похолоданням.",
+      "targetForm": "деякий",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-geografija-pestushko-2019_s0052",
+        "title": "Сторінка 31"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "джерело",
+      "lemmaId": "джерело",
+      "sentence": "Вибрати джерело відеозапису.",
+      "targetForm": "джерело",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-informatyka-ryvkind-2024_s0172",
+        "title": "Сторінка 149"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "дивувати",
+      "lemmaId": "дивувати",
+      "sentence": "169 Мистецтво дивувати і радувати Цирк запрошує на свято .",
+      "targetForm": "дивувати",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-mystetstvo-rublia-2022_s0003",
+        "title": "Сторінка 4"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "довкілля",
+      "lemmaId": "довкілля",
+      "sentence": "38 Що я знаю про еколог³ю Поміркуєте про вплив діяльності людини на стан довкілля, про Європейський зелений курс.",
+      "targetForm": "довкілля",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-zdorovia-vasylenko-2025_s0042",
+        "title": "Сторінка 38"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "дозволяти",
+      "lemmaId": "дозволяти",
+      "sentence": "5 пам’ятати — … відлітати — … руйнувати — … нагріватись — … вигравати — … дозволяти — … зустрічати — ...",
+      "targetForm": "дозволяти",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "3-klas-ukrainska-mova-ponomarova-2020-1_s0119",
+        "title": "Сторінка 120"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "дозвілля",
+      "lemmaId": "дозвілля",
+      "sentence": "Як проводили дозвілля робітники й селяни?",
+      "targetForm": "дозвілля",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-istoriya-ukr-hlibovska-2024_s0157",
+        "title": "Сторінка 90"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "доїхати",
+      "lemmaId": "доїхати",
+      "sentence": "А ви не підкажете, як ми можемо доїхати до Чигирина?",
+      "targetForm": "доїхати",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0185_w016",
+        "title": "Lesson 185: «Як іноземці козака рятували» — нова книга від Ukrainian Lessons (part 16/23)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "думати",
+      "lemmaId": "думати",
+      "sentence": "Функція театру в тому, щоб збуджувати людей, змушувати їх думати… Бернард Шоу  Бургтеатр у Відні, де у 1913 р.",
+      "targetForm": "думати",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-zarubizhna-literatura-kovbasenko-2026_s0403",
+        "title": "Сторінка 225"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "діаспора",
+      "lemmaId": "діаспора",
+      "sentence": "Історично українська діаспора формувалася під впливом чотирьох основних міграційних хвиль (див.",
+      "targetForm": "діаспора",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-geografiia-boiko-2026_s0061",
+        "title": "Сторінка 33"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "дівчина",
+      "lemmaId": "дівчина",
+      "sentence": "\u0003  Чому роман має назву «Дівчина з ведмедиком»?",
+      "targetForm": "дівчина",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrlit-borzenko-2019-prof_s0146",
+        "title": "Сторінка 80"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "дідусь",
+      "lemmaId": "дідусь",
+      "sentence": "Ще дідусь і не отримав твого листа, а може, і не зразу відповість.",
+      "targetForm": "дідусь",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-ukrlit-zabolotnyi-2025_s0060",
+        "title": "Сторінка 44"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "дім",
+      "lemmaId": "дім",
+      "sentence": "Шевчука «Дім на горі» якраз і представляє життя людей у такому незвичайному поєднанні.",
+      "targetForm": "дім",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrlit-borzenko-2019-prof_s0401",
+        "title": "Сторінка 211"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "діюча",
+      "lemmaId": "діюча",
+      "sentence": "Перша постійно діюча марксистська група на українських землях під назвою «Російська група соціал-демократів» виникла в 1893 р.",
+      "targetForm": "діюча",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-istorija-ukrajini-gisem-2017_s0293",
+        "title": "Сторінка 162"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "забирати",
+      "lemmaId": "забирати",
+      "sentence": "Іду в садік забирати малу.",
+      "targetForm": "забирати",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0135_w004",
+        "title": "Lesson 135: Суржик в українській мові (part 4/22)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "завгодно",
+      "lemmaId": "завгодно",
+      "sentence": "При необмеженому збільшенні кількості сторін правильного многокутника його периметр буде як завгодно мало відрізнятися від довжини кола.",
+      "targetForm": "завгодно",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-heometriya-merzliak-2017_s0063",
+        "title": "Сторінка 62"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "загадковий",
+      "lemmaId": "загадковий",
+      "sentence": "Фільм розповідає про сучасного школяра Вітькà, який через загадковий портал часу потрапляє в минуле — на тисячу років назад.",
+      "targetForm": "загадковий",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "4-klas-ukrayinska-mova-savchenko-2021-2_s0054",
+        "title": "Сторінка 55"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "заздрість",
+      "lemmaId": "заздрість",
+      "sentence": "45 НАРОДНІ КАЗКИ Прийнято розрізняти заздрість злобну (чорну) і незлобну (білу).",
+      "targetForm": "заздрість",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-ukrlit-zabolotnyi-2022_s0051",
+        "title": "Сторінка 45"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "запис",
+      "lemmaId": "запис",
+      "sentence": "Зупинити запис вибором кнопки .",
+      "targetForm": "запис",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-informatyka-ryvkind-2017_s0135",
+        "title": "Сторінка 86"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "затримка",
+      "lemmaId": "затримка",
+      "sentence": "Якщо затримка не усунулася, то необхідно з’ясувати причину її виникнення й усунути затримку.",
+      "targetForm": "затримка",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-zakhyst-fuka-2023_s0319",
+        "title": "Сторінка 173"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "захист",
+      "lemmaId": "захист",
+      "sentence": "Визнач­те, чи є в запропонованих ситуаціях порушення права на захист.",
+      "targetForm": "захист",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-pravoznavstvo-narovlianskyi-2019_s0194",
+        "title": "Сторінка 103"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "заява",
+      "lemmaId": "заява",
+      "sentence": "Заява може містити перелік документів, що додають до неї.",
+      "targetForm": "заява",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-ukrajinska-mova-avramenko-2017_s0101",
+        "title": "Сторінка 70"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "зберігається",
+      "lemmaId": "зберігається",
+      "sentence": "Подвоєння зберігається у всіх формах слова (п’ять тонн, сім ванн) .",
+      "targetForm": "зберігається",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-ukrmova-litvinova-2022_s0072",
+        "title": "Сторінка 67"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "звичайно",
+      "lemmaId": "звичайно",
+      "sentence": "навести́ при́клад ― to provide an example Олеся: Звичайно, звичайно.",
+      "targetForm": "звичайно",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0195_w007",
+        "title": "Lesson 195: Українці в ПАР: розмова з Олесею Лобшер (part 7/27)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "звідки",
+      "lemmaId": "звідки",
+      "sentence": "У складнопідрядних реченнях з підрядними місця сполучні слова де, куди, звідки є прислівниками й виконують синтаксичну роль обставини.",
+      "targetForm": "звідки",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-ukrajinska-mova-zabolotnij-2017_s0135",
+        "title": "Сторінка 98"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "здебільшого",
+      "lemmaId": "здебільшого",
+      "sentence": "Тому великі міста країни мають, здебільшого, погану якість повітря.",
+      "targetForm": "здебільшого",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-biologiia-i-ekologia-shalamov-2019_s0253",
+        "title": "Сторінка 150"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "здоровий",
+      "lemmaId": "здоровий",
+      "sentence": "Пісня «Будь здоровий!» (музика і слова Сергія Дяченка).",
+      "targetForm": "здоровий",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-mystetstvo-rublia-2022_s0198",
+        "title": "Сторінка 198"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "здійснено",
+      "lemmaId": "здійснено",
+      "sentence": "Петлюри було здійснено низку заходів, покликаних викорінити в Армії УНР отаманщину та перетворити її на регулярне військо.",
+      "targetForm": "здійснено",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-istorija-ukrajiny-gisem-2018_s0125",
+        "title": "Сторінка 68"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "здійснювати",
+      "lemmaId": "здійснювати",
+      "sentence": "Суб’єкти господарювання можуть здійснювати свою діяльність не лише на основі права власності.",
+      "targetForm": "здійснювати",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-pravoznavstvo-narovlianskyi-2019_s0330",
+        "title": "Сторінка 172"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "змінити",
+      "lemmaId": "змінити",
+      "sentence": "Створення закладки на відкриту сторінку: 1 – Панель закладок; 2 – Вікно 2 Закладку додано; 3 – Кнопка 3 Змінити закладку для цієї вкладки 1.",
+      "targetForm": "змінити",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-informatyka-ryvkind-2024_s0012",
+        "title": "Сторінка 14"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "знищити",
+      "lemmaId": "знищити",
+      "sentence": "Радикали прагнули продовжити революцію та знищити самодержавство.",
+      "targetForm": "знищити",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-istorija-ukrajini-gisem-2017_s0394",
+        "title": "Сторінка 218"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "кадр",
+      "lemmaId": "кадр",
+      "sentence": "75 Кадр із фільму «Захар Беркут» Кадр із фільму-серіалу «Роксолана» З історичним жанром кіно часто поєднується пригодницький.",
+      "targetForm": "кадр",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-mystetstvo-rublia-2023_s0076",
+        "title": "Сторінка 77"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "календарний",
+      "lemmaId": "календарний",
+      "sentence": "Чому важливо відрізняти історичний і календарний час?",
+      "targetForm": "календарний",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-istoriya-schupak-2022_s0052",
+        "title": "Сторінка 54"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "камін",
+      "lemmaId": "камін",
+      "sentence": "Коефіцієнт корисної дії нагрівника Багато людей вважають, що в приватному будинку обов’язково має бути камін.",
+      "targetForm": "камін",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-fizyka-bariakhtar-2025_s0160",
+        "title": "Сторінка 146"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "квасоля",
+      "lemmaId": "квасоля",
+      "sentence": "До продуктів з високим вмістом білків належать м’ясо, риба, молоко, квасоля, горох, соя.",
+      "targetForm": "квасоля",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-piznaiemo-pryrodu-korshevniuk-2022_s0199",
+        "title": "Сторінка 200"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "керівний",
+      "lemmaId": "керівний",
+      "sentence": "Квіти щасливі, — сказав керівний робот корабля.",
+      "targetForm": "керівний",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-ukrlit-avramenko-2024_s0317",
+        "title": "Сторінка 223"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "кислий",
+      "lemmaId": "кислий",
+      "sentence": "Червоний укаже на кислий ґрунт, синій – на слабокислий, а зелений – на нейтральний.",
+      "targetForm": "кислий",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-heohrafiya-hilberh-2025_s0193",
+        "title": "Сторінка 139"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "клавіатура",
+      "lemmaId": "клавіатура",
+      "sentence": "КЛАВІАТУРА Поміркуйте ● Значення яких властивостей користувач враховує під час вибору клавіатури для комп’ютера?",
+      "targetForm": "клавіатура",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-informatyka-ryvkind-2025_s0085",
+        "title": "Сторінка 64"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "колего",
+      "lemmaId": "колего",
+      "sentence": "Проте прізвище може набувати форми називного відмінка: колего Євгене Онищук, пане Коваль.",
+      "targetForm": "колего",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-ukrmova-avramenko-2025_s0180",
+        "title": "Сторінка 134"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "кольоровий",
+      "lemmaId": "кольоровий",
+      "sentence": "Виберіть стиль SmartArt — Плоска сцена, кольорову гаму — Кольоровий діапазон — кольори акценту 5–6.",
+      "targetForm": "кольоровий",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-informatyka-ryvkind-2017_s0116",
+        "title": "Сторінка 75"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "кома",
+      "lemmaId": "кома",
+      "sentence": "На місці крапок має стояти А кома Б тире В кома й тире Г крапка й тире 7.",
+      "targetForm": "кома",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrajinska-mova-avramenko-2019_s0206",
+        "title": "Сторінка 147"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "коментар",
+      "lemmaId": "коментар",
+      "sentence": "Ваш коментар \u0007Прочитайте текст, укладіть пам’ятку «Як працювати над основною частиною виступу».",
+      "targetForm": "коментар",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrajinska-mova-voron-2019_s0057",
+        "title": "Сторінка 40"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "контекст",
+      "lemmaId": "контекст",
+      "sentence": "Контекст Основним способом точної передачі значення слова є контекст.",
+      "targetForm": "контекст",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-ukrajinska-mova-zabolotnij-2018_s0023",
+        "title": "Сторінка 18"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "контролювати",
+      "lemmaId": "контролювати",
+      "sentence": "Вміння грати певні ролі важливе й під час конфліктів, коли важ­ ко контролювати свої емоції.",
+      "targetForm": "контролювати",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-zdorovia-vasylenko-2025_s0139",
+        "title": "Сторінка 122"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "кориця",
+      "lemmaId": "кориця",
+      "sentence": "щеплення, гвоздика, кориця, імбир, перець Поєднайте числівники та іменники: 1.",
+      "targetForm": "кориця",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0138_w019",
+        "title": "Lesson 138: Як пережити зиму в Україні? (part 19/20)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "космос",
+      "lemmaId": "космос",
+      "sentence": "Космічні апарати для польоту людей у космос називають кос­ мічними кораблями.",
+      "targetForm": "космос",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-piznaemo-pryrodu-korshevniuk-2023_s0138",
+        "title": "Сторінка 140"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "кошик",
+      "lemmaId": "кошик",
+      "sentence": "Отже, шинку і ковбасу кладуть у кошик, і також можна покласти ще будь-яку їжу, яку готували.",
+      "targetForm": "кошик",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0190_w008",
+        "title": "Lesson 190: Великодній кошик (part 8/22)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "крайній",
+      "lemmaId": "крайній",
+      "sentence": "Пересуватися на скутері, мопеді дозволено тільки по крайній правій смузі, не дозволено на автомагістралях !",
+      "targetForm": "крайній",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-zdorovia-vasylenko-2025_s0040",
+        "title": "Сторінка 36"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "культура",
+      "lemmaId": "культура",
+      "sentence": "У широкому сенсі поняття ● культура означає все, що створене людиною, а не природою.",
+      "targetForm": "культура",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-hromadianska-osvita-vasylkiv-2025_s0006",
+        "title": "Сторінка 6"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "культурний",
+      "lemmaId": "культурний",
+      "sentence": "Чинники ЧИННИКИ, ЩО ВПЛИВАЛИ НА КУЛЬТУРНИЙ ПРОЦЕС НА УКРАЇНСЬКИХ ЗЕМЛЯХ у XIV—XV ст.",
+      "targetForm": "культурний",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-istoria-ukr-galimov-2024_s0285",
+        "title": "Сторінка 193"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "купатися",
+      "lemmaId": "купатися",
+      "sentence": "Купатися можна у вбиральні, на кухні, в кабінеті чи в конторі – за вибором.",
+      "targetForm": "купатися",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-zarlit-voloschuk-2024_s0262",
+        "title": "Сторінка 185"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "кілька",
+      "lemmaId": "кілька",
+      "sentence": "кі́лька = де́кілька some У ме́не є кі́лька (де́кілька) I have some questions.",
+      "targetForm": "кілька",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "anna-ohoiko-1000-words-2nd-ed_e0391",
+        "title": "кі́лька = де́кілька"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "лавка",
+      "lemmaId": "лавка",
+      "sentence": "У посадах поряд із будинком найчастіше розміщувалася реміснича майстерня або торговельна лавка.",
+      "targetForm": "лавка",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-istoria-ukr-galimov-2024_s0112",
+        "title": "Сторінка 76"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "лагідний",
+      "lemmaId": "лагідний",
+      "sentence": "Кетчуп «Лагідний» доповнює будь-який гарнір і м’ясо.",
+      "targetForm": "лагідний",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-ukrajinska-mova-avramenko-2018_s0112",
+        "title": "Сторінка 70"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "лекція",
+      "lemmaId": "лекція",
+      "sentence": "Це монологічний вид виступу, але погано, якщо лекція перетворюється тільки на монолог викладача без зворотного зв’язку з аудиторією.",
+      "targetForm": "лекція",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrajinska-mova-voron-2019_s0119",
+        "title": "Сторінка 82"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "листок",
+      "lemmaId": "листок",
+      "sentence": "Маргарита вирвала з блокнота листок, написала: «ЩО ВСЕ?» – склала його і кинула Флоріанові.",
+      "targetForm": "листок",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-zarubizhna-literatura-kovbasenko-2026_s0136",
+        "title": "Сторінка 76"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "листя",
+      "lemmaId": "листя",
+      "sentence": "Також заборонено спалювати опале листя через небезпеку виникнення пожеж і забруднення повітря.",
+      "targetForm": "листя",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-zdorovia-vorontsova-2022_s0192",
+        "title": "Сторінка 193"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "лице",
+      "lemmaId": "лице",
+      "sentence": "Запалене лице було гарне, але дуже молоде.",
+      "targetForm": "лице",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-ukrlit-avramenko-2025_s0239",
+        "title": "Сторінка 139"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "ложка",
+      "lemmaId": "ложка",
+      "sentence": "Тобі знадобляться: помірно гаряча вода, чашка, секундомір, металева ложка.",
+      "targetForm": "ложка",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-piznaiemo-pryrodu-korshevniuk-2022_s0077",
+        "title": "Сторінка 78"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "люблять",
+      "lemmaId": "люблять",
+      "sentence": "І це сва́рка — quarrel прислів’я говорить про те, що українці не люблять суперечки, не люблять конфлікти.",
+      "targetForm": "люблять",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0133_w008",
+        "title": "Lesson 133: Прислів’я та приказки Частина 2 (part 8/17)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "літр",
+      "lemmaId": "літр",
+      "sentence": "Потрібно одержати в одній із цих посудин 1 літр рідини.",
+      "targetForm": "літр",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-informatyka-ryvkind-2022_s0186",
+        "title": "Сторінка 185"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "лічильник",
+      "lemmaId": "лічильник",
+      "sentence": "Найчастіше первинний ключ складається з одного поля, а в ролі первинного ключа використовується поле типу Лічильник.",
+      "targetForm": "лічильник",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-informatika-rudenko-2018-stand_s0104",
+        "title": "Сторінка 99"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "малі",
+      "lemmaId": "малі",
+      "sentence": "Були ми всі тоді трудящі чи малі.",
+      "targetForm": "малі",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrlit-borzenko-2019-prof_s0271",
+        "title": "Сторінка 140"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "мандрівник",
+      "lemmaId": "мандрівник",
+      "sentence": "Знайдіть інформацію, на що витрачає кошти мандрівник, готуючись до підйому на найвищу вершину світу.",
+      "targetForm": "мандрівник",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-heohrafiya-hilberh-2024_s0048",
+        "title": "Сторінка 50"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "маршрут",
+      "lemmaId": "маршрут",
+      "sentence": "Вам потрібно прокласти маршрут подорожі.",
+      "targetForm": "маршрут",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-istoriya-schupak-2022_s0081",
+        "title": "Сторінка 83"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "мед",
+      "lemmaId": "мед",
+      "sentence": "ДЛЯ ДОПИТЛИВИХ Виявлення глюкози в мед\u0003 Глюкозу виявляють у мед\u0003 так.",
+      "targetForm": "мед",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-khimiya-popel-2017_s0191",
+        "title": "Сторінка 192"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "методологія",
+      "lemmaId": "методологія",
+      "sentence": "Методологія — принципи, сукупність ідей, методів і засобів, які визначають підхід до розробки програмного забезпечення.",
+      "targetForm": "методологія",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-informatyka-rudenko-2019_s0394",
+        "title": "Сторінка 252"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "мешканець",
+      "lemmaId": "мешканець",
+      "sentence": "Плекаймо слово і ЖИТЕЛЬ ЧИ МЕШКАНЕЦЬ?",
+      "targetForm": "мешканець",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-ukrajinska-mova-voron-2017_s0272",
+        "title": "Сторінка 210"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "мило",
+      "lemmaId": "мило",
+      "sentence": "Що таке собаче мило?",
+      "targetForm": "мило",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "3-klas-ukrainska-mova-kravtsova-2020-1_s0049",
+        "title": "Сторінка 51"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "миритися",
+      "lemmaId": "миритися",
+      "sentence": "Прийшов битися чи миритися?",
+      "targetForm": "миритися",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "3-klas-ukrainska-mova-savchenko-2020-2_s0043",
+        "title": "Сторінка 44"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "мислити",
+      "lemmaId": "мислити",
+      "sentence": "Це здатність мислити вільно, знаходити свіжі ідеї та оригінальні рішення, швидко пристосовуватися до змін і нових обставин.",
+      "targetForm": "мислити",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-zdorovia-vorontsova-2023_s0178",
+        "title": "Сторінка 183"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "мох",
+      "lemmaId": "мох",
+      "sentence": "Вербинка обережно підважила мох.",
+      "targetForm": "мох",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-ukrlit-avramenko-2022_s0094",
+        "title": "Сторінка 90"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "музей",
+      "lemmaId": "музей",
+      "sentence": "Пригадай, що таке музей.",
+      "targetForm": "музей",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "4-klas-ukrayinska-mova-savchenko-2021-2_s0045",
+        "title": "Сторінка 46"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "міроприємство",
+      "lemmaId": "міроприємство",
+      "sentence": "Помилку допущено в рядку А ухвалити рішення Б запобігти помилці В здійснити контроль Г відвідати міроприємство 5.",
+      "targetForm": "міроприємство",
+      "cefr": null,
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-ukrajinska-mova-avramenko-2018_s0028",
+        "title": "Сторінка 21"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "місяць",
+      "lemmaId": "місяць",
+      "sentence": "Шляхом тривалих спостережень вони визначили надійні одиниці часу: добу, рік, місяць.",
+      "targetForm": "місяць",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-fizyka-bariakhtar-2024_s0093",
+        "title": "Сторінка 92"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "мішати",
+      "lemmaId": "мішати",
+      "sentence": "Складіть і запишіть по одному реченню з такими словами: пощастить, повезе, заважати, мішати.",
+      "targetForm": "мішати",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-ukrmova-zabolotnyi-2023_s0035",
+        "title": "Сторінка 37"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "наближення",
+      "lemmaId": "наближення",
+      "sentence": "Чому глобалізацію розглядають як «скорочення світу» і «наближення речей»?",
+      "targetForm": "наближення",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-geografiia-boiko-2026_s0163",
+        "title": "Сторінка 87"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "набрати",
+      "lemmaId": "набрати",
+      "sentence": "Набрати з колодязя повне відро води.",
+      "targetForm": "набрати",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-informatyka-ryvkind-2022_s0214",
+        "title": "Сторінка 213"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "наведено",
+      "lemmaId": "наведено",
+      "sentence": "Програму мовою Python обчислення чисел Фібоначчі на основі рекурентного підходу наведено на рис.",
+      "targetForm": "наведено",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-informatyka-rudenko-2019_s0172",
+        "title": "Сторінка 115"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "нагода",
+      "lemmaId": "нагода",
+      "sentence": "І одного разу йому випала нагода поїхати до Петербурга і працювати там при царському дворі.",
+      "targetForm": "нагода",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0155_w008",
+        "title": "Lesson 155: Григорій Сковорода — мандрівний філософ (part 8/16)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "надіслано",
+      "lemmaId": "надіслано",
+      "sentence": "У діловому листуванні трапляється читати: \"Книжки надіслано накладною платою\".",
+      "targetForm": "надіслано",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "antonenko-davydovych-yak-my-hovorymo_p032",
+        "title": "Antonenko-Davydovych «Як ми говоримо», p. 32"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "називний",
+      "lemmaId": "називний",
+      "sentence": "три, третій Відмінок Кількісні числівники Порядкові числівники Однина Множина Називний скільки?",
+      "targetForm": "називний",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-ukrmova-avramenko-2023_s0241",
+        "title": "Сторінка 225"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "найвищий",
+      "lemmaId": "найвищий",
+      "sentence": "137 Прикметник Н Найвищий ступінь порівняння вказує, що певний предмет переважає всі інші за якою-небудь ознакою.",
+      "targetForm": "найвищий",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-ukrmova-zabolotnyi-2020_s0139",
+        "title": "Сторінка 137"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "найняти",
+      "lemmaId": "найняти",
+      "sentence": "Скільки ж необхідно найняти робітників на кухню?",
+      "targetForm": "найняти",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-ekonomika-krupska-2018_s0143",
+        "title": "Сторінка 76"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "наліво",
+      "lemmaId": "наліво",
+      "sentence": "Поверніть ліворуч (наліво), ідіть прямо по вулиці Зеленій.",
+      "targetForm": "наліво",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-1-00-lesson-notes_l0019_w005",
+        "title": "Lesson 19: Asking for a phone number in Ukrainian (part 5/7)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "намалювати",
+      "lemmaId": "намалювати",
+      "sentence": "Операції класу: + намалювати (фігура Прямокутник = квадрат, колірФарбування Соlоr = (255,0,0)) Приклад 5.",
+      "targetForm": "намалювати",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-informatyka-rudenko-2019_s0370",
+        "title": "Сторінка 238"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "напруження",
+      "lemmaId": "напруження",
+      "sentence": "Саме із цієї миті відбувається перелом у сюжеті та спадає напруження, яке збільшувалося постійно впродовж усього твору.",
+      "targetForm": "напруження",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-ukrlit-avramenko-2023_s0248",
+        "title": "Сторінка 188"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "народити",
+      "lemmaId": "народити",
+      "sentence": "Сніг, щука, юнак, берег, рік, книга, радити, Оленка, допомога, їздити, народити, могти.",
+      "targetForm": "народити",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-ukrmova-avramenko-2022_s0117",
+        "title": "Сторінка 114"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "наскільки",
+      "lemmaId": "наскільки",
+      "sentence": "взаємовідно́шення — relationship Наскільки часто ви будете слухати подкаст, настільки добре будете розуміти українську мову.",
+      "targetForm": "наскільки",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0145_w013",
+        "title": "Lesson 145: Українські народні музичні інструменти (part 13/17)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "наступний",
+      "lemmaId": "наступний",
+      "sentence": "Максим: _________________________ (Наступний п’ятниця) ми поїдемо на фестиваль ____________________ (борщ) в Тернопільській області.",
+      "targetForm": "наступний",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-2-00-lesson-notes_l0047_w007",
+        "title": "Lesson 47: Гастрономічні фестивалі Родовий відмінок Food festivals Genitive case (part 7/9)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "натуральний",
+      "lemmaId": "натуральний",
+      "sentence": "Натуральний каучук був уперше описаний французьким астрономом та мандрівником Шарлем Марі де ла Кондоміном 1751 року.",
+      "targetForm": "натуральний",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-himija-grygorovych-2018_s0231",
+        "title": "Сторінка 205"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "недостатньо",
+      "lemmaId": "недостатньо",
+      "sentence": "Цього недостатньо — це особлива структура речення, тому що недоста́тньо — insufficient, not enough ми вживаємо слово «це» в родовому відмінку — цього.",
+      "targetForm": "недостатньо",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0178_w020",
+        "title": "Lesson 178: Як ефективніше вчитися? (part 20/26)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "неістота",
+      "lemmaId": "неістота",
+      "sentence": "Визначте групу за значенням істота/неістота.",
+      "targetForm": "неістота",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-ukrmova-litvinova-2023_s0129",
+        "title": "Сторінка 122"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "нижчий",
+      "lemmaId": "нижчий",
+      "sentence": "З територій, де тиск вищий, повітря переміщується на території, де він нижчий.",
+      "targetForm": "нижчий",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-piznaiemo-pryrodu-korshevniuk-2022_s0114",
+        "title": "Сторінка 115"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "низько",
+      "lemmaId": "низько",
+      "sentence": "Карпо ненавидів тих, хто панові дуже низько кланявся, до землі нагинався.",
+      "targetForm": "низько",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-ukrlit-avramenko-2022_s0012",
+        "title": "Сторінка 12"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "ніби",
+      "lemmaId": "ніби",
+      "sentence": "Працюй так, ніби тобі не потрібні не можна повернути: час, слово і гроші… Танцюй так, ніби можливість.",
+      "targetForm": "ніби",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-3-00-lesson-notes_l0106_w012",
+        "title": "Lesson 106: Події на вихідних Weekend events Negative adverbs and pronouns in Ukrainian (part 12/17)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "ніхто",
+      "lemmaId": "ніхто",
+      "sentence": "ніхто́ nobody, no one Ніхто́ мене́ не зупи́нить.",
+      "targetForm": "ніхто",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "anna-ohoiko-1000-words-2nd-ed_e0518",
+        "title": "ніхто́"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "обманювати",
+      "lemmaId": "обманювати",
+      "sentence": "Вішати на вуха ло5кшину — обманювати, відволікати від суті розмови, вводити в оману.",
+      "targetForm": "обманювати",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrajinska-mova-glazova-2019_s0319",
+        "title": "Сторінка 218"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "оболонка",
+      "lemmaId": "оболонка",
+      "sentence": "Під склерою розташована судинна оболонка, де проходять кровоносні судини.",
+      "targetForm": "оболонка",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-biolohiya-anderson-2025_s0208",
+        "title": "Сторінка 168"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "овес",
+      "lemmaId": "овес",
+      "sentence": "Зеленеє жито ще й овес — Тут зібрався рід наш увесь.",
+      "targetForm": "овес",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-mystetstvo-komarovska-2025_s0014",
+        "title": "Сторінка 16"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "одягатися",
+      "lemmaId": "одягатися",
+      "sentence": "Завоювавши Персію, Александр почав одягатися як перський шахиншах та одружився із двома персіянками.",
+      "targetForm": "одягатися",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-istoriya-gisem-2023_s0187",
+        "title": "Сторінка 140"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "ой",
+      "lemmaId": "ой",
+      "sentence": "Ой радуйся, земле, Син Божий народився.",
+      "targetForm": "ой",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-ukrlit-avramenko-2023_s0014",
+        "title": "Сторінка 14"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "опонент",
+      "lemmaId": "опонент",
+      "sentence": "Домашнє завдання 737 Яким повинен бути ідеальний опонент у дискусії?",
+      "targetForm": "опонент",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-ukrmova-karaman-2018_s0476",
+        "title": "Сторінка 265"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "орендар",
+      "lemmaId": "орендар",
+      "sentence": "Отже, слова орендар, дипломант, касир мають чоловічий рід, але так можна називати й чоловіків, і жінок.",
+      "targetForm": "орендар",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrajinska-mova-avramenko-2019_s0256",
+        "title": "Сторінка 181"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "основа",
+      "lemmaId": "основа",
+      "sentence": "У якому слові основа закінчується на м’який приголосний?",
+      "targetForm": "основа",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "4-klas-ukrayinska-mova-ponomarova-2021-1_s0051",
+        "title": "Сторінка 53"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "основний",
+      "lemmaId": "основний",
+      "sentence": "Це визначає основний метод правового регулювання, який використовує фінансове право, — імперативний метод, або метод субординації, владних приписів.",
+      "targetForm": "основний",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-pravoznavstvo-narovlianskyi-2019_s0043",
+        "title": "Сторінка 24"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "офіс",
+      "lemmaId": "офіс",
+      "sentence": "Ми маєм офіс в Києві і офіс в Торонто.",
+      "targetForm": "офіс",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0199_w013",
+        "title": "Lesson 199: Українці в Канаді: розмова з Оксаною Грициною (part 13/33)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "палати",
+      "lemmaId": "палати",
+      "sentence": "У складі апеляційного суду можуть утворю­ ватися судові палати з розгляду окремих ка­ тегорій справ.",
+      "targetForm": "палати",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-pravoznavstvo-lukianchykov-2018_s0506",
+        "title": "Сторінка 225"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "перевантаження",
+      "lemmaId": "перевантаження",
+      "sentence": "12.11 і зробіть висновки: куди напрямлене прискорення руху тіла, коли тіло зазнає перевантаження?",
+      "targetForm": "перевантаження",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-fizyka-barjakhtar-2018_s0120",
+        "title": "Сторінка 76"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "переглянути",
+      "lemmaId": "переглянути",
+      "sentence": "Звертаємо увагу, що результати заповнення форми можуть переглянути тільки автор/ авторка і користувачі, яким надано доступ редагування форми.",
+      "targetForm": "переглянути",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-informatyka-ryvkind-2024_s0280",
+        "title": "Сторінка 244"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "повідомлення",
+      "lemmaId": "повідомлення",
+      "sentence": "Як людина сприймає повідомлення?",
+      "targetForm": "повідомлення",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-informatyka-ryvkind-2022_s0012",
+        "title": "Сторінка 14"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "покращення",
+      "lemmaId": "покращення",
+      "sentence": "5 порад для покращення української мови Добре, отже, ви розумієте, що я кажу українською на подкасті.",
+      "targetForm": "покращення",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0137_w002",
+        "title": "Lesson 137: 5 порад для покращення української мови (part 2/19)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "полуничний",
+      "lemmaId": "полуничний",
+      "sentence": "Беатріс купила в сільському магазині морозиво і зробила полуничний полуни́чний — strawberry (adjective) коктейль.",
+      "targetForm": "полуничний",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0185_w011",
+        "title": "Lesson 185: «Як іноземці козака рятували» — нова книга від Ukrainian Lessons (part 11/23)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "поліція",
+      "lemmaId": "поліція",
+      "sentence": "У роки революції російські чорносотенні організації вчинили єврейські погроми, причому поліція трималася ­осторонь цих подій.",
+      "targetForm": "поліція",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-istorija-ukrajini-gisem-2017_s0421",
+        "title": "Сторінка 233"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "порівнювати",
+      "lemmaId": "порівнювати",
+      "sentence": "Чи потрібно постійно порівнювати себе з іншими?",
+      "targetForm": "порівнювати",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-ukrlit-zabolotnyi-2022_s0051",
+        "title": "Сторінка 45"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "постійно",
+      "lemmaId": "постійно",
+      "sentence": "Після евакуації пораненого в укриття потрібно постійно дбати про власну безпеку і безпеку пораненого.",
+      "targetForm": "постійно",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-zakhist-vitchizni-gudima-2019-med_s0197",
+        "title": "Сторінка 105"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "початися",
+      "lemmaId": "початися",
+      "sentence": "Причин ритмічності кілька: по-перше, процес не може початися знову, доки не завершено попередній.",
+      "targetForm": "початися",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-biologiia-i-ekologia-shalamov-2019_s0118",
+        "title": "Сторінка 72"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "починати",
+      "lemmaId": "починати",
+      "sentence": "У якому віці можна починати фарбувати волосся?",
+      "targetForm": "починати",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-zdorovia-guschyna-2024_s0120",
+        "title": "Сторінка 112"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "поширити",
+      "lemmaId": "поширити",
+      "sentence": "Із метою відволікти населення від боротьби проти самодержавства царський уряд намагався поширити на українські землі антисемітські настрої.",
+      "targetForm": "поширити",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-istorija-ukrajini-gisem-2017_s0421",
+        "title": "Сторінка 233"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "поїду",
+      "lemmaId": "поїду",
+      "sentence": "Запряжу я козу в віз Та й поїду по рогіз.",
+      "targetForm": "поїду",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-mystetstvo-rublia-2023_s0056",
+        "title": "Сторінка 57"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "правопис",
+      "lemmaId": "правопис",
+      "sentence": "Перевірити правопис слова можна в орфографічному словнику .",
+      "targetForm": "правопис",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-ukrmova-litvinova-2022_s0122",
+        "title": "Сторінка 117"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "працюємо",
+      "lemmaId": "працюємо",
+      "sentence": "Працюємо в малих групах.",
+      "targetForm": "працюємо",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-istoria-ukr-galimov-2025_s0408",
+        "title": "Сторінка 248"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "препарат",
+      "lemmaId": "препарат",
+      "sentence": "Тривимірне зобра­ ження того, як наночастинки, що містять протипухлинний препарат, оточують ракову клітину та вбивають пухлину 111 § 18.",
+      "targetForm": "препарат",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-fizyka-bariakhtar-2025_s0125",
+        "title": "Сторінка 114"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "привезти",
+      "lemmaId": "привезти",
+      "sentence": "Які сувеніри привезти з України?",
+      "targetForm": "привезти",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0130_w016",
+        "title": "Lesson 130: Які сувеніри привезти з України? (part 16/23)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "привітання",
+      "lemmaId": "привітання",
+      "sentence": "Прочитайте фрагмент привітання Президента України з нагоди Дня Соборності.",
+      "targetForm": "привітання",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-ukrmova-zabolotnyi-2025_s0341",
+        "title": "Сторінка 275"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "прийняти",
+      "lemmaId": "прийняти",
+      "sentence": "Для цього їй довелося прийняти іслам.",
+      "targetForm": "прийняти",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0152_w009",
+        "title": "Lesson 152: Роксолана — La Sultana Rossa (part 9/15)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "прикраса",
+      "lemmaId": "прикраса",
+      "sentence": "Д Різдвяна прикраса на палиці, сповіщає про народження Ісуса Христа.",
+      "targetForm": "прикраса",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-6-00-lesson-notes_l0214_w021",
+        "title": "Lesson 214: Символи Різдва в Україні (part 21/24)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "приспів",
+      "lemmaId": "приспів",
+      "sentence": "(Приспів) Та кладіть калачі з ярої пшениці.",
+      "targetForm": "приспів",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-ukrlit-zabolotnyi-2023_s0026",
+        "title": "Сторінка 27"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "приховати",
+      "lemmaId": "приховати",
+      "sentence": "Коли потрібно приховати деякі поля, їх слід виділити й у групі Записи виконати команду Додатково → Приховати поля.",
+      "targetForm": "приховати",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-informatyka-rudenko-2019_s0039",
+        "title": "Сторінка 26"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "приєднати",
+      "lemmaId": "приєднати",
+      "sentence": "Приєднати газову трубку.",
+      "targetForm": "приєднати",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-zakhyst-fuka-2023_s0326",
+        "title": "Сторінка 177"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "приєднатися",
+      "lemmaId": "приєднатися",
+      "sentence": "Приєднатися до такого народу — це гірше, ніж скочити живим у вогонь.",
+      "targetForm": "приєднатися",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-istoria-ukr-galimov-2025_s0230",
+        "title": "Сторінка 140"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "про",
+      "lemmaId": "про",
+      "sentence": "Нузет Умеров ПРО КНИЖКУ Дбайливо тонесеньку книжку гортаю, рядок за рядочком уважно читаю.",
+      "targetForm": "про",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "2-klas-ukrmova-vashulenko-2019-2_s0018",
+        "title": "Сторінка 20"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "провідник",
+      "lemmaId": "провідник",
+      "sentence": "сила аМпЕра Із матеріалу § 1 ви дізналися, що магнітне поле діє на провідник зі струмом із де­ якою силою.",
+      "targetForm": "провідник",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-fizyka-bariakhtar-2022_s0029",
+        "title": "Сторінка 20"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "програвати",
+      "lemmaId": "програвати",
+      "sentence": "Ті не перемагають, хто не вміють програвати.",
+      "targetForm": "програвати",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-fizyka-bariakhtar-2022_s0340",
+        "title": "Сторінка 226"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "продавати",
+      "lemmaId": "продавати",
+      "sentence": "Її не можна було передавати в спадок, продавати тощо.",
+      "targetForm": "продавати",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-istoria-ukr-galimov-2024_s0106",
+        "title": "Сторінка 73"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "продовжувати",
+      "lemmaId": "продовжувати",
+      "sentence": "Однак я досить довго не могла зрозуміти, як (imperfective, perfective) продовжувати подкаст саме в умовах війни.",
+      "targetForm": "продовжувати",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-6-00-lesson-notes_l0201_w005",
+        "title": "Lesson 201: Про шостий сезон подкасту (part 5/21)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "проза",
+      "lemmaId": "проза",
+      "sentence": "­Ораторсько-проповідницька проза включала твори з тлумаченням євангельських текстів і моралістичними повчаннями.",
+      "targetForm": "проза",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-istoriya-ukr-gisem-2021_s0077",
+        "title": "Сторінка 41"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "простір",
+      "lemmaId": "простір",
+      "sentence": "Що таке особистий простір та якими є його складники.",
+      "targetForm": "простір",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-etyka-martyniuk-2023_s0042",
+        "title": "Сторінка 43"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "професія",
+      "lemmaId": "професія",
+      "sentence": "Можна стати по-справжньому щасливим, коли характер і професія перебувають у гармонії.",
+      "targetForm": "професія",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-ukrajinska-mova-zabolotnij-2017_s0272",
+        "title": "Сторінка 190"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "психологічний",
+      "lemmaId": "психологічний",
+      "sentence": "Думаю скласти психологічний портрет людини можна за кількістю і якістю прочитаних і зібраних нею книжок.",
+      "targetForm": "психологічний",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrajinska-mova-glazova-2019_s0221",
+        "title": "Сторінка 157"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "птаха",
+      "lemmaId": "птаха",
+      "sentence": "Персонаж «Синього птаха», якого в українському перекладі названо Душею Світла, в оригіналі – просто Світло.",
+      "targetForm": "птаха",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-zarubizhna-literatura-voloshhuk-2018_s0342",
+        "title": "Сторінка 198"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "півострів",
+      "lemmaId": "півострів",
+      "sentence": "yy Балканський півострів омивається ________________ морями.",
+      "targetForm": "півострів",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-istoriia-shchupak-2023_s0128",
+        "title": "Сторінка 126"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "підліток",
+      "lemmaId": "підліток",
+      "sentence": "В Підліток може висловити свої скарги вчителю, шкільному адміністратору чи батькам.",
+      "targetForm": "підліток",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-zdorovia-guschyna-2024_s0077",
+        "title": "Сторінка 72"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "підряд",
+      "lemmaId": "підряд",
+      "sentence": "Розкажіть про особливості складнопідрядних речень із з’ясувальними підряд ними частинами.",
+      "targetForm": "підряд",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-ukrajinska-mova-zabolotnij-2017_s0182",
+        "title": "Сторінка 131"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "підсилити",
+      "lemmaId": "підсилити",
+      "sentence": "Його потужність, колір, напрям допомагають зробити декорації виразнішими, виділити головне, підсилити враження глядачів/глядачок.",
+      "targetForm": "підсилити",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-mystetstvo-rublia-2023_s0184",
+        "title": "Сторінка 185"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "підтвердження",
+      "lemmaId": "підтвердження",
+      "sentence": "Доберіть історичні факти на підтвердження тези «Самвидав» — зброя в руках дисидентів».",
+      "targetForm": "підтвердження",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-istoriya-ukr-hlibovska-2024_s0320",
+        "title": "Сторінка 175"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "пізно",
+      "lemmaId": "пізно",
+      "sentence": "Мілкіше, мало, довше, дешево, пізно, більше, світло, сумно, близько.",
+      "targetForm": "пізно",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0125",
+        "title": "Сторінка 127"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "разом",
+      "lemmaId": "разом",
+      "sentence": "Далі вона розповідає: Ми далі будемо рухатися по життю разом.",
+      "targetForm": "разом",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0195_w017",
+        "title": "Lesson 195: Українці в ПАР: розмова з Олесею Лобшер (part 17/27)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "рекорд",
+      "lemmaId": "рекорд",
+      "sentence": "Номер 5 ― побити світовий рекорд.",
+      "targetForm": "рекорд",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0141_w012",
+        "title": "Lesson 141: Україна в 2019: головні новини (part 12/20)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "реєструється",
+      "lemmaId": "реєструється",
+      "sentence": "Уявіть, що хтось із ваших знайомих уперше створює електронну пошту чи реєструється в соціальній мережі.",
+      "targetForm": "реєструється",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-ukrmova-zabolotnyi-2023_s0019",
+        "title": "Сторінка 21"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "риса",
+      "lemmaId": "риса",
+      "sentence": "(imperfective, perfective) торту́ри ― torture Очевидно, ця риса — риса стоїцизму — не може бути здава́тися, зда́тися ― to give up притаманною усім людям.",
+      "targetForm": "риса",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-6-00-lesson-notes_l0229_w002",
+        "title": "Lesson 229: Українська поезія. Василь Стус «Господи, гніву пречистого…» (part 2/30)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "родич",
+      "lemmaId": "родич",
+      "sentence": "Моєму родичу випала неймовірна можливість (Мій родич отримав неймовірну можливість) навчатися (вчитися) безкоштовно.",
+      "targetForm": "родич",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0189_w026",
+        "title": "Lesson 189: Вища освіта в Україні та США (part 26/26)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "розмова",
+      "lemmaId": "розмова",
+      "sentence": "за кордо́ном ― abroad Шотла́ндія ― Scotland Ця розмова буде особлива і трошки інша, ніж попередні дві.",
+      "targetForm": "розмова",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0194_w001",
+        "title": "Lesson 194: Українці в Шотландії: розмова з Олексою Курилюком (part 1/21)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "розповісти",
+      "lemmaId": "розповісти",
+      "sentence": "☆☆☆ Я можу розповісти про причини виникнення пожеж.",
+      "targetForm": "розповісти",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-zdorovia-vorontsova-2023_s0163",
+        "title": "Сторінка 168"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "розпорядження",
+      "lemmaId": "розпорядження",
+      "sentence": "\u0007Поясніть поняття «власність», «користування», «володіння», «розпорядження», «сервітут», «суперфіцій», «емфітевзис».",
+      "targetForm": "розпорядження",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-pravoznavstvo-narovlianskyi-2019_s0240",
+        "title": "Сторінка 127"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "розум",
+      "lemmaId": "розум",
+      "sentence": "Маруся не знайшла в собі сили пережити цю зраду і тому вона зовсім втратила розум.",
+      "targetForm": "розум",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0153_w011",
+        "title": "Lesson 153: Маруся Чурай — дівчина з легенди (part 11/17)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "розширювати",
+      "lemmaId": "розширювати",
+      "sentence": "для тих, хто вже добре розуміє українську мову, але хоче розширювати словниковий запас».",
+      "targetForm": "розширювати",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0128_w010",
+        "title": "Lesson 128: Рослини — символи України (part 10/19)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "роль",
+      "lemmaId": "роль",
+      "sentence": "Далі я казала, що Ярослав Мудрий відіграв важливу роль в історії.",
+      "targetForm": "роль",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0151_w010",
+        "title": "Lesson 151: Ярослав Мудрий — «тесть Європи» (part 10/16)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "рости",
+      "lemmaId": "рости",
+      "sentence": "і заспівала: «Плавай, плавай, леб;едонько, По синьому морю – Рости, рости, топ;оленько, Все вгору та вгору!",
+      "targetForm": "рости",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-ukrlit-zabolotnyi-2024_s0211",
+        "title": "Сторінка 144"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "рушник",
+      "lemmaId": "рушник",
+      "sentence": "І в дорогу далеку ти мене на зорі проводжала, І рушник вишиваний на щастя, на долю дала.",
+      "targetForm": "рушник",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-ukrlit-mishhenko-2015_s0407",
+        "title": "Сторінка 246"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "рідко",
+      "lemmaId": "рідко",
+      "sentence": "У формі називного відмінка іменник, яким виражено звертання, уживають рідко — зазвичай у поетичних творах.",
+      "targetForm": "рідко",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrajinska-mova-glazova-2019_s0149",
+        "title": "Сторінка 104"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "різдвяний",
+      "lemmaId": "різдвяний",
+      "sentence": "Узвар, український різдвяний напій, готується із 5.",
+      "targetForm": "різдвяний",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-6-00-lesson-notes_l0214_w022",
+        "title": "Lesson 214: Символи Різдва в Україні (part 22/24)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "сад",
+      "lemmaId": "сад",
+      "sentence": "Пагутяк «Потрапити в сад» за родовою ознакою — епічний.",
+      "targetForm": "сад",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrajinska-literatura-avramenko-2019_s0403",
+        "title": "Сторінка 248"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "садівництво",
+      "lemmaId": "садівництво",
+      "sentence": "Крім землеробства, розвивалися скотарство, городництво, садівництво, бджільництво, рибальство й мисливство.",
+      "targetForm": "садівництво",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-istoria-ukr-galimov-2025_s0027",
+        "title": "Сторінка 20"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "салат",
+      "lemmaId": "салат",
+      "sentence": "Ще був салат мімоза — з вареними мімо́за — mimosa salad яйцями і рибними консервами.",
+      "targetForm": "салат",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0181_w010",
+        "title": "Lesson 181: Українська кухня в радянські часи (part 10/22)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "самостійно",
+      "lemmaId": "самостійно",
+      "sentence": "Початкові значення властивостей напису виберіть самостійно.",
+      "targetForm": "самостійно",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-informatyka-ryvkind-2025_s0167",
+        "title": "Сторінка 120"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "свята",
+      "lemmaId": "свята",
+      "sentence": "Речення номер один: Деякі свята потрохи відходять в історію.",
+      "targetForm": "свята",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0173_w013",
+        "title": "Lesson 173: Зимовий цикл свят (part 13/22)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "свідомість",
+      "lemmaId": "свідомість",
+      "sentence": "Свідомість Прагнення пізнання себе є одним з головних рушіїв розвитку людства.",
+      "targetForm": "свідомість",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-biolohiya-anderson-2025_s0250",
+        "title": "Сторінка 202"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "свіжий",
+      "lemmaId": "свіжий",
+      "sentence": "Взагалі, свіжоспечений ми говоримо про хліб, тобто хліб, який спекли спекти́ — to bake щойно, недавно, цей хліб свіжий, він свіжоспечений.",
+      "targetForm": "свіжий",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-4-00-lesson-notes_l0133_w010",
+        "title": "Lesson 133: Прислів’я та приказки Частина 2 (part 10/17)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "середній",
+      "lemmaId": "середній",
+      "sentence": "Це така відстань, з якої середній радіус земної орбіти видно під кутом 1″ (секунда дуги).",
+      "targetForm": "середній",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-fizika-astronomiia-zasekina-2019-standart_s0387",
+        "title": "Сторінка 240"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "символічно",
+      "lemmaId": "символічно",
+      "sentence": "символічно це показало, що від заходу до сходу Україна одна, символі́чно — symbolically єдина, неподільна, або соборна.",
+      "targetForm": "символічно",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0177_w010",
+        "title": "Lesson 177: День Соборності України (part 10/21)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "скарб",
+      "lemmaId": "скарб",
+      "sentence": "Люди – дуже цікаві створіння!» – думає персонаж твору А «Скарб» В «Мишка» Б «Кольорові миші» Г «Чайка на крижині» 6.",
+      "targetForm": "скарб",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-ukrlit-mishhenko-2015_s0345",
+        "title": "Сторінка 209"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "слюсар",
+      "lemmaId": "слюсар",
+      "sentence": "Учитель, лікар чи геолог, письменник, слюсар чи кресляр — всі називають головною одну професію — школяр!",
+      "targetForm": "слюсар",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "2-klas-ukrmova-vashulenko-2019-2_s0002",
+        "title": "Сторінка 4"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "слідуючий",
+      "lemmaId": "слідуючий",
+      "sentence": "Студенти сіли в потяг, слідуючий до Рівного.",
+      "targetForm": "слідуючий",
+      "cefr": null,
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrmova-zabolotnyi-2019_s0079",
+        "title": "Сторінка 58"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "сніг",
+      "lemmaId": "сніг",
+      "sentence": "\u0007Якими фарбами зображено на картині сніг, небо, дерева?",
+      "targetForm": "сніг",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "3-klas-ukrainska-mova-vashulenko-2020-2_s0067",
+        "title": "Сторінка 69"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "соломка",
+      "lemmaId": "соломка",
+      "sentence": "Так і посипалось на сніг, а соломка й пір’ячко за вітром полетіли.",
+      "targetForm": "соломка",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "2-klas-ukrmova-kravcova-2019-2_s0052",
+        "title": "Сторінка 54"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "сорок",
+      "lemmaId": "сорок",
+      "sentence": "Зверніть увагу на відмінкові закінчення числівника сорок.",
+      "targetForm": "сорок",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-ukrmova-golub-2023_s0164",
+        "title": "Сторінка 161"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "спитати",
+      "lemmaId": "спитати",
+      "sentence": "Міжбанківський валютний ринок (міжбанк) Можете спитати в батьків чи в дорослих, яким довіряєте, як вам купити 100 доларів.",
+      "targetForm": "спитати",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-finans-plastun-2025_s0058",
+        "title": "Сторінка 57"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "споживач",
+      "lemmaId": "споживач",
+      "sentence": "Споживач в економіці 51 кожного додаткового літра значно зменшу­ ється, а кожний додатковий карат алмаза збільшує корисність коштовностей.",
+      "targetForm": "споживач",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-ekonomika-krupska-2018_s0098",
+        "title": "Сторінка 51"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "спортивний",
+      "lemmaId": "спортивний",
+      "sentence": "Підготуйте твір-опис приміщення в художньому стилі на одну з тем: «Наш клас», «Моя кімната», «Улюблений спортивний зал» (усно).",
+      "targetForm": "спортивний",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-ukrmova-avramenko-2023_s0127",
+        "title": "Сторінка 119"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "спостереження",
+      "lemmaId": "спостереження",
+      "sentence": "Пост радіаційного та хімічного спостереження встановлюють на території об’єкта недалеко від пункту управління.",
+      "targetForm": "спостереження",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-zakhist-vitchizni-gudima-2019-med_s0326",
+        "title": "Сторінка 176"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "стадіон",
+      "lemmaId": "стадіон",
+      "sentence": "На стадіон прийшли хлопці, бажаючі грати у футбол.",
+      "targetForm": "стадіон",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-ukrmova-zabolotnyi-2024_s0233",
+        "title": "Сторінка 233"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "стажування",
+      "lemmaId": "стажування",
+      "sentence": "Учасники наукового стажування отримали престижну премію.",
+      "targetForm": "стажування",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-6-00-lesson-notes_l0210_w027",
+        "title": "Lesson 210: Питання-відповіді: частина друга (part 27/27)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "стілець",
+      "lemmaId": "стілець",
+      "sentence": "НУМО ДОСЛІДЖУВАТИ ЯК ОЧІ ОЦІНЮЮТЬ ВІДСТАНЬ Тобі знадобляться: аркуш паперу, олівець, стілець.",
+      "targetForm": "стілець",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-piznaemo-pryrodu-korshevniuk-2023_s0199",
+        "title": "Сторінка 201"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "сума",
+      "lemmaId": "сума",
+      "sentence": "Знайдіть ймовірність того, що: 1) його куб менший за 8000; 2) сума квадратів його цифр менша за 20.",
+      "targetForm": "сума",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-algebra-ister-2019-prof_s0251",
+        "title": "Сторінка 243"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "сумка",
+      "lemmaId": "сумка",
+      "sentence": "Для ваших однокласників у задоволенні цієї по­ треби товарами-субститутами можуть бути портфель, спортивна сумка, сумка-пакет, рюкзак.",
+      "targetForm": "сумка",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-ekonomika-krupska-2018_s0091",
+        "title": "Сторінка 47"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "сумніватися",
+      "lemmaId": "сумніватися",
+      "sentence": "(сумніватися) в тому, що я кажу правду?",
+      "targetForm": "сумніватися",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-3-00-lesson-notes_l0109_w015",
+        "title": "Lesson 109: На побаченні On a date Reflexive verbs (part 15/18)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "суспільство",
+      "lemmaId": "суспільство",
+      "sentence": "Сутність громадянського суспільства та його інститути Чим відрізняється громадянське суспільство від суспільства?",
+      "targetForm": "суспільство",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-hromadianska-osvita-vasylkiv-2025_s0071",
+        "title": "Сторінка 34"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "сусід",
+      "lemmaId": "сусід",
+      "sentence": "Було тій Анні, може, десять рочків, її привів розлючений сусід.",
+      "targetForm": "сусід",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-ukrlit-mishhenko-2015_s0262",
+        "title": "Сторінка 164"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "схвалено",
+      "lemmaId": "схвалено",
+      "sentence": "Верховною Радою схвалено «Основні напрями зовнішньої політики України»; – 5 грудня 1994 р.",
+      "targetForm": "схвалено",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-istoriya-ukr-hlibovska-2024_s0479",
+        "title": "Сторінка 262"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "схильний",
+      "lemmaId": "схильний",
+      "sentence": "Схильний, охочий що-небудь робити; готовий до певних учинків; згоден на певну дію, стан.",
+      "targetForm": "схильний",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-ukrmova-avramenko-2025_s0253",
+        "title": "Сторінка 180"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "сцена",
+      "lemmaId": "сцена",
+      "sentence": "(Лиховісно сміється.) СЦЕНА 3 Покої в королівському палаці.",
+      "targetForm": "сцена",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "3-klas-ukrainska-mova-vashulenko-2020-2_s0060",
+        "title": "Сторінка 62"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "сценарій",
+      "lemmaId": "сценарій",
+      "sentence": "З якою метою створюється режисерський сценарій під час створення фільму за певним літературним твором?",
+      "targetForm": "сценарій",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-informatyka-ryvkind-2024_s0206",
+        "title": "Сторінка 181"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "телебачення",
+      "lemmaId": "телебачення",
+      "sentence": "До яких жанрів телебачення вони належать?",
+      "targetForm": "телебачення",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-mystetstvo-masol-2017_s0184",
+        "title": "Сторінка 163"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "телефонувати",
+      "lemmaId": "телефонувати",
+      "sentence": "дзвіно́к — call Ви можете зідзвонюватись, тобто телефонувати одне одному, телефонува́ти = дзвони́ти — to call дзвонити одне одному.",
+      "targetForm": "телефонувати",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0165_w013",
+        "title": "Lesson 165: Як використовувати смартфон для вивчення мов (part 13/19)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "тема",
+      "lemmaId": "тема",
+      "sentence": "ПОВЕРНЕННЯ ДО ІДЕАЛІВ КРАСИ МИНУЛОГО Тема 1 5 -1 6 .",
+      "targetForm": "тема",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-mystetstvo-masol-2017_s0002",
+        "title": "Сторінка 4"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "тест",
+      "lemmaId": "тест",
+      "sentence": "Тест — це слово, яке часто має негативну конотацію.",
+      "targetForm": "тест",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0178_w007",
+        "title": "Lesson 178: Як ефективніше вчитися? (part 7/26)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "тестувати",
+      "lemmaId": "тестувати",
+      "sentence": "У процесі здійснення тест-дизайну тест-аналітик визначає, ЩО тестувати, а тест-дизайнер — ЯК тестувати.",
+      "targetForm": "тестувати",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-informatyka-rudenko-2019_s0388",
+        "title": "Сторінка 249"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "тисяча",
+      "lemmaId": "тисяча",
+      "sentence": "(на) тисяча дев’ятсот сьомому Кожен компонент складеного числівника відмінюється за своїм правилом.",
+      "targetForm": "тисяча",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrajinska-mova-avramenko-2019_s0054",
+        "title": "Сторінка 38"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "тихо",
+      "lemmaId": "тихо",
+      "sentence": "Ярослав Грицак зазначав: «Можу сказати, що комунізм упав напрочуд тихо.",
+      "targetForm": "тихо",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-istoriya-ukr-gisem-2024_s0310",
+        "title": "Сторінка 173"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "тканина",
+      "lemmaId": "тканина",
+      "sentence": "Скелетна м’язова тканина утворює скелетні м’язи, язик тощо.",
+      "targetForm": "тканина",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-biolohiya-anderson-2025_s0014",
+        "title": "Сторінка 13"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "товариський",
+      "lemmaId": "товариський",
+      "sentence": "Використайте синоніми приятельський, приязний, дружній, товариський.",
+      "targetForm": "товариський",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-ukrmova-avramenko-2022_s0047",
+        "title": "Сторінка 45"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "точний",
+      "lemmaId": "точний",
+      "sentence": "Визначити точний час певної події, тобто її дату, допомагає хронологія.",
+      "targetForm": "точний",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "5-klas-istoriya-schupak-2022_s0053",
+        "title": "Сторінка 55"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "трава",
+      "lemmaId": "трава",
+      "sentence": "трава́ grass Ми лежимо́ на траві́ в па́рку.",
+      "targetForm": "трава",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "anna-ohoiko-1000-words-2nd-ed_e0880",
+        "title": "трава́"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "традиція",
+      "lemmaId": "традиція",
+      "sentence": "А от традиція купання в боягу́з — coward холодній воді не для боягузів, не для тих, хто боїться, так?",
+      "targetForm": "традиція",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0173_w017",
+        "title": "Lesson 173: Зимовий цикл свят (part 17/22)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "тричі",
+      "lemmaId": "тричі",
+      "sentence": "Його тричі обирали до Верховної Ради України (1990, 1994, 1998 рр.).",
+      "targetForm": "тричі",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-istoriya-ukr-gisem-2024_s0283",
+        "title": "Сторінка 157"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "тротуар",
+      "lemmaId": "тротуар",
+      "sentence": "УÑÅ заметено снігом: тротуар, дорога, стадіон.",
+      "targetForm": "тротуар",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-ukrmova-zabolotnyi-2025_s0192",
+        "title": "Сторінка 163"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "трохи",
+      "lemmaId": "трохи",
+      "sentence": "Зобрази його м’язистим, але трохи пере­ більшено кремезним — наче він щойно зліз із коня після десятиліття боїв.",
+      "targetForm": "трохи",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-vsesvitnia-istoriia-pometun-2026_s0121",
+        "title": "Сторінка 87"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "туалет",
+      "lemmaId": "туалет",
+      "sentence": "Туалет • Не куріть, не шуміть, не запалюйте свічки без дозволу відповідальної особи.",
+      "targetForm": "туалет",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-zdorovia-vasylenko-2025_s0024",
+        "title": "Сторінка 22"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "тістечко",
+      "lemmaId": "тістечко",
+      "sentence": "Чоловік ламає те тістечко навпіл, підсовує їй одну частинку, другу з’їдає сам і йде геть.",
+      "targetForm": "тістечко",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-ukrmova-golub-2023_s0200",
+        "title": "Сторінка 197"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "удома",
+      "lemmaId": "удома",
+      "sentence": "Бояри та представники знаті винаймали для своїх дітей приватних учителів, які навчали їх удома.",
+      "targetForm": "удома",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-istoria-ukr-pometun-2024_s0175",
+        "title": "Сторінка 144"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "узимку",
+      "lemmaId": "узимку",
+      "sentence": "Узимку – пом’якшує морози, приносить снігопади, відлиги.",
+      "targetForm": "узимку",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-heohrafiya-hilberh-2025_s0114",
+        "title": "Сторінка 82"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "фінал",
+      "lemmaId": "фінал",
+      "sentence": "У першому виданні твір мав відкритий фінал: груша розросталася, а сварки не припинялись.",
+      "targetForm": "фінал",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-ukrlit-borzenko-2018-prof_s0051",
+        "title": "Сторінка 29"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "фінальний",
+      "lemmaId": "фінальний",
+      "sentence": "Етап 2 На етапі проектування структури інтерфейсу створюють прототип інтерфейсу — зазвичай два: чорновий та фінальний.",
+      "targetForm": "фінальний",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-informatyka-rudenko-2019_s0379",
+        "title": "Сторінка 244"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "ходить",
+      "lemmaId": "ходить",
+      "sentence": "Ходить сон стежками лісовими.",
+      "targetForm": "ходить",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-ukrajinska-mova-zabolotnij-2017_s0140",
+        "title": "Сторінка 101"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "цвісти",
+      "lemmaId": "цвісти",
+      "sentence": "Цвісти або процвітати можуть квіти, коли вони розкриваються, цвісти́ — to bloom, to blossom квіти стають такі гарні квіти.",
+      "targetForm": "цвісти",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0199_w023",
+        "title": "Lesson 199: Українці в Канаді: розмова з Оксаною Грициною (part 23/33)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "часовий",
+      "lemmaId": "часовий",
+      "sentence": "Позаду був часовий стрибок у ранок сьогоднішнього дня.",
+      "targetForm": "часовий",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-ukrlit-avramenko-2023_s0243",
+        "title": "Сторінка 185"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "червень",
+      "lemmaId": "червень",
+      "sentence": "Послухайте ще один уривочок про червень в Україні.",
+      "targetForm": "червень",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0185_w010",
+        "title": "Lesson 185: «Як іноземці козака рятували» — нова книга від Ukrainian Lessons (part 10/23)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "чомусь",
+      "lemmaId": "чомусь",
+      "sentence": "Знатися на чомусь.",
+      "targetForm": "чомусь",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "ulp-5-00-lesson-notes_l0184_w014",
+        "title": "Lesson 184: Кавова культура України (part 14/22)"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "чорна",
+      "lemmaId": "чорна",
+      "sentence": "ПІДНЯТИСЯ НАД БУДЕННІСТЮ здивувати», – повідомляли губи світу, доки Чорна Пані мовчки роздивлялася Софійку.",
+      "targetForm": "чорна",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-ukrlit-zabolotnyi-2024_s0372",
+        "title": "Сторінка 250"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "чорні",
+      "lemmaId": "чорні",
+      "sentence": "Чорні клобуки часом повставали або відходили в степ, відмовляючись нести службу.",
+      "targetForm": "чорні",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "7-klas-istoria-ukr-pometun-2024_s0128",
+        "title": "Сторінка 107"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "чіпати",
+      "lemmaId": "чіпати",
+      "sentence": "Чіпати і їсти їх не (дозволятися).",
+      "targetForm": "чіпати",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "4-klas-ukrayinska-mova-ponomarova-2021-1_s0113",
+        "title": "Сторінка 115"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "швидкий",
+      "lemmaId": "швидкий",
+      "sentence": "Згодом розпочався «промисловий» бум – швидкий розвиток вторинного сектору економіки: металургії, машинобудування, хімічної промисловості.",
+      "targetForm": "швидкий",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-geografiia-boiko-2026_s0548",
+        "title": "Сторінка 289"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "швидко",
+      "lemmaId": "швидко",
+      "sentence": "Б Троянці, в човни посідавши, і швидко їх поодпихавши, по вітру гарно попливли.",
+      "targetForm": "швидко",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-ukrajinska-mova-avramenko-2019_s0179",
+        "title": "Сторінка 127"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "шум",
+      "lemmaId": "шум",
+      "sentence": "Вони в захваті від ритмів пісні «Шум», яку український гурт «Go A» прославив на співочому конкурсі «Євробачення» у 2021 р.",
+      "targetForm": "шум",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-ukrlit-avramenko-2023_s0008",
+        "title": "Сторінка 8"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "щодо",
+      "lemmaId": "щодо",
+      "sentence": "Які заходи щодо подолання дискримінації жінок у суспільно-політичній сфері передбачала Конвенція?",
+      "targetForm": "щодо",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-hromadianska-gisem-2018_s0126",
+        "title": "Сторінка 66"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "якось",
+      "lemmaId": "якось",
+      "sentence": "Якось враз знялася курява й завертівся перед­ грозовий вихор.",
+      "targetForm": "якось",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "9-klas-ukrajinska-mova-voron-2017_s0047",
+        "title": "Сторінка 40"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "інвалідність",
+      "lemmaId": "інвалідність",
+      "sentence": "Альтруїзм та егоїзм у поведінці людини 139 Зараз в Україні живе понад 2,7 млн осіб, які мають інвалідність.",
+      "targetForm": "інвалідність",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "6-klas-etyka-martyniuk-2023_s0140",
+        "title": "Сторінка 141"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "індивідуально",
+      "lemmaId": "індивідуально",
+      "sentence": "Узагалі одяг добирають індивідуально, охопити всі нюанси і тонкощі тих чи інших видів одягу неможливо.",
+      "targetForm": "індивідуально",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-zakhyst-fuka-2023_s0482",
+        "title": "Сторінка 264"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "інтенсивний",
+      "lemmaId": "інтенсивний",
+      "sentence": "У природному русі населення розрізняють також традиційний (екстенсивний) та сучасний (інтенсивний) типи відтворення населення.",
+      "targetForm": "інтенсивний",
+      "cefr": "B1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "11-klas-geografija-pestushko-2019_s0144",
+        "title": "Сторінка 80"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "інтернет",
+      "lemmaId": "інтернет",
+      "sentence": "Використавши мережу Skype, організуйте та проведіть інтернет-дискусію на тему «Інтернет у житті сучасного школяра».",
+      "targetForm": "інтернет",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-ukrmova-glazova-2018_s0058",
+        "title": "Сторінка 43"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "інформація",
+      "lemmaId": "інформація",
+      "sentence": "Із розвитком суспільства інформація стає універсальним ресурсом, який уже не поступається традиційним матеріальним ресурсам (нафта, газ та ін.).",
+      "targetForm": "інформація",
+      "cefr": "A1",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "10-klas-informatika-rudenko-2018-stand_s0002",
+        "title": "Сторінка 4"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    },
+    {
+      "lemma": "інформувати",
+      "lemmaId": "інформувати",
+      "sentence": "• Що робить держава для того, щоб інформувати людей про НС та ліквідувати її наслідки?",
+      "targetForm": "інформувати",
+      "cefr": "A2",
+      "uses": [
+        "example"
+      ],
+      "provenance": {
+        "source": "textbook",
+        "label": "Ukrainian school textbook",
+        "locator": "8-klas-zdorovia-vasylenko-2025_s0023",
+        "title": "Сторінка 21"
+      },
+      "license": {
+        "status": "not_openly_licensed",
+        "useBasis": "short educational quotation with attribution"
+      }
+    }
+  ]
+}

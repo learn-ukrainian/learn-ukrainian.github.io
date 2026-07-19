@@ -35,6 +35,7 @@ from scripts.audit.lexeme_filter import (
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_OUT = Path("site/src/data/lexicon-daily-pool.json")
+DEFAULT_SENTENCE_INVENTORY = Path("site/src/data/lexicon-sentence-inventory.json")
 EARLY_CEFR = {"A1", "A2", "B1"}
 # Derived-form + surzhyk source tags live in scripts.audit.lexeme_filter (single source
 # of truth, shared with the search index, word-page routes, and the practice deck).
@@ -143,7 +144,34 @@ def _first_example(entry: dict[str, Any]) -> tuple[str | None, str | None]:
     return (None, None)
 
 
-def _pool_item(entry: dict[str, Any]) -> dict[str, Any] | None:
+def load_sentence_inventory(path: Path | None) -> dict[str, dict[str, Any]]:
+    """Load the public, provenance-bearing sentence inventory by lemma.
+
+    This is intentionally a sibling artifact rather than a cloze-source entry:
+    daily examples have no blanked form or case-rule contract.
+    """
+    if path is None or not path.exists():
+        return {}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    rows = payload.get("rows", []) if isinstance(payload, dict) else []
+    if not isinstance(rows, list):
+        raise ValueError("sentence inventory rows must be a list")
+    inventory: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        lemma = row.get("lemma")
+        sentence = row.get("sentence")
+        provenance = row.get("provenance")
+        license_info = row.get("license")
+        if _has_text(lemma) and _has_text(sentence) and isinstance(provenance, dict) and isinstance(license_info, dict):
+            inventory[str(lemma)] = row
+    return inventory
+
+
+def _pool_item(
+    entry: dict[str, Any], sentence_inventory: dict[str, dict[str, Any]] | None = None
+) -> dict[str, Any] | None:
     lemma = entry.get("lemma")
     slug = entry.get("url_slug")
     if not _has_text(lemma) or not _has_text(slug):
@@ -164,14 +192,22 @@ def _pool_item(entry: dict[str, Any]) -> dict[str, Any] | None:
     if cefr is not None:
         item["cefr"] = cefr
     example, example_en = _first_example(entry)
+    inventory_row = (sentence_inventory or {}).get(str(lemma))
+    if inventory_row is not None:
+        example = str(inventory_row["sentence"]).strip()
     if example is not None:
         item["example"] = example
     if example_en is not None:
         item["exampleEn"] = example_en
+    if inventory_row is not None:
+        item["exampleProvenance"] = inventory_row["provenance"]
+        item["exampleLicense"] = inventory_row["license"]
     return item
 
 
-def build_pool(entries: list[dict[str, Any]], size: int = 300) -> list[dict[str, Any]]:
+def build_pool(
+    entries: list[dict[str, Any]], size: int = 300, sentence_inventory: dict[str, dict[str, Any]] | None = None
+) -> list[dict[str, Any]]:
     """Build the daily pool and return lemma-sorted JSON rows.
 
     Selection is deterministic but *representative*: within a weight tier we order by a
@@ -188,7 +224,7 @@ def build_pool(entries: list[dict[str, Any]], size: int = 300) -> list[dict[str,
     rest.sort(key=lambda e: (-compute_weight(e), _stable_hash(e["lemma"])))
 
     ordered = surzhyk + rest
-    selected = [item for entry in ordered[:size] if (item := _pool_item(entry)) is not None]
+    selected = [item for entry in ordered[:size] if (item := _pool_item(entry, sentence_inventory)) is not None]
     return sorted(selected, key=lambda item: item["lemma"])
 
 
@@ -237,6 +273,7 @@ def main(argv: list[str] | None = None) -> int:
         help="Build the daily pool from atlas.db (entry-model SSOT) instead of the legacy manifest.",
     )
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY)
     parser.add_argument("--size", type=int, default=300)
     args = parser.parse_args(argv)
 
@@ -247,7 +284,7 @@ def main(argv: list[str] | None = None) -> int:
         entries = manifest.get("entries", [])
         if not isinstance(entries, list):
             raise ValueError("manifest entries must be a list")
-    pool = build_pool(entries, args.size)
+    pool = build_pool(entries, args.size, load_sentence_inventory(args.sentence_inventory))
     write_pool(pool, args.out)
     return 0
 
