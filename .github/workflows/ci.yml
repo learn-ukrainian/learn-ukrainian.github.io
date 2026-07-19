@@ -55,12 +55,14 @@ jobs:
     outputs:
       # code = any high-signal source/config change. Used by the broad secret scan.
       code: ${{ steps.filter.outputs.code }}
-      # python = Python/test paths PLUS the curriculum/site content that tests
-      # read at runtime. Gates pytest + ruff/radon/root guards. curriculum/l2-uk-en/**
+      # python = Python/test paths PLUS learner curriculum/site content that tests
+      # read at runtime. Gates pytest + ruff/radon/root guards. Learner bundles
       # and site/src/content/** are INCLUDED because content-reading tests
       # (citation_resolve, llm_qg_api, reading_coverage, reading_links, parity, ...)
       # load those files at runtime — excluding them let a content-deletion PR
       # (#3867) skip pytest entirely and ship a regression to main (root cause: #3873).
+      # BIO preparation-only data is excluded and routed to the focused preparation
+      # gate below; mixed PRs still match their Python or learner-content paths.
       python: ${{ steps.filter.outputs.python }}
       # frontend = generated site inputs/outputs. Gates the build/vitest job plus
       # MDX source/drift checks, so curriculum source edits cannot leave stale
@@ -77,6 +79,9 @@ jobs:
       # postmortems = bug-autopsy docs + the checker. Gates the postmortem
       # hygiene job so a malformed autopsy or stale INDEX cannot merge (#3725).
       postmortems: ${{ steps.filter.outputs.postmortems }}
+      # preparation = BIO source-preparation surfaces. These are plans/research
+      # evidence, not application code or learner bundles.
+      preparation: ${{ steps.filter.outputs.preparation }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -121,11 +126,17 @@ jobs:
               - 'pyproject.toml'
               - 'scripts/**/*.py'
               - 'tests/**/*.py'
-              # Content that python tests read at runtime — a deletion/edit here
-              # must run pytest, else a content regression reaches main unguarded
+              # Learner content that python tests read at runtime — a deletion/edit
+              # here must run pytest, else a content regression reaches main unguarded
               # (this is the #3873 root cause: #3867 deleted curriculum files,
               # python filter was false, pytest skipped, 4 tests broke on main).
-              - 'curriculum/l2-uk-en/**'
+              # BIO plans/discovery/promotion evidence are preparation data and
+              # take the focused `preparation` lane instead. Picomatch extglobs
+              # preserve broad coverage for all other tracks and BIO learner data.
+              - 'curriculum/l2-uk-en/curriculum.yaml'
+              - 'curriculum/l2-uk-en/!(plans|bio)/**'
+              - 'curriculum/l2-uk-en/plans/!(bio)/**'
+              - 'curriculum/l2-uk-en/bio/!(*promotion-evidence.yaml|discovery)/**'
               - 'site/src/content/**'
               # Schema-validated committed data: pytest validates every file in
               # this directory (test_source_inventory_review_decisions). A
@@ -153,7 +164,12 @@ jobs:
             frontend:
               - '.github/workflows/ci.yml'
               - 'site/**'
-              - 'curriculum/l2-uk-en/**'
+              # BIO preparation data does not feed generated MDX or frontend code.
+              # Keep learner bundles and every non-BIO preparation surface covered.
+              - 'curriculum/l2-uk-en/curriculum.yaml'
+              - 'curriculum/l2-uk-en/!(plans|bio)/**'
+              - 'curriculum/l2-uk-en/plans/!(bio)/**'
+              - 'curriculum/l2-uk-en/bio/!(*promotion-evidence.yaml|discovery)/**'
               # MDX generator entry + package (mdx-generation-drift invokes
               # scripts/generate_mdx.py; mdx-source-parity treats package edits
               # as generator changes). Missing these let generator-only PRs skip
@@ -225,6 +241,184 @@ jobs:
               - '.github/workflows/ci.yml'
               - 'docs/bug-autopsies/**'
               - 'scripts/audit/check_postmortems.py'
+            preparation:
+              - '.github/workflows/ci.yml'
+              - 'curriculum/l2-uk-en/plans/bio/*.yaml'
+              - 'curriculum/l2-uk-en/bio/discovery/*.yaml'
+              - 'curriculum/l2-uk-en/bio/promotion-evidence.yaml'
+              - 'docs/research/bio/*.md'
+              - 'wiki/figures/*.md'
+              - 'wiki/figures/*.sources.yaml'
+
+  bio-preparation-data:
+    name: BIO Preparation Data
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.preparation == 'true'
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.12'
+
+      - name: Install preparation validator dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install PyYAML jsonschema
+
+      - name: Check changed BIO dossier word-count floor
+        run: |
+          git fetch --no-tags --prune origin '+refs/heads/main:refs/remotes/origin/main'
+          .venv/bin/python scripts/audit/check_dossier_wordcount.py --changed
+
+      - name: Validate BIO preparation capsules and active holds
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          .venv/bin/python - <<'PY'
+          from pathlib import Path
+          import os
+          import subprocess
+
+          from scripts.orchestration import curriculum_readiness as readiness
+          from scripts.orchestration.preparation_evidence import load_manual_evidence
+
+          root = Path.cwd()
+          base_sha = os.environ.get("BASE_SHA", "")
+          head_sha = os.environ.get("HEAD_SHA", "HEAD") or "HEAD"
+          if not base_sha or set(base_sha) == {"0"}:
+              base_sha = subprocess.check_output(
+                  ["git", "merge-base", "origin/main", head_sha],
+                  text=True,
+              ).strip()
+          changed = set(
+              subprocess.check_output(
+                  [
+                      "git",
+                      "diff",
+                      "--no-renames",
+                      "--name-only",
+                      "--diff-filter=AM",
+                      base_sha,
+                      head_sha,
+                  ],
+                  text=True,
+              ).splitlines()
+          )
+          deleted = set(
+              subprocess.check_output(
+                  [
+                      "git",
+                      "diff",
+                      "--no-renames",
+                      "--name-only",
+                      "--diff-filter=D",
+                      base_sha,
+                      head_sha,
+                  ],
+                  text=True,
+              ).splitlines()
+          )
+
+          _, manifest_slugs = readiness.load_manifest_track(root, "bio")
+          manifest_set = set(manifest_slugs)
+
+          def is_bio_preparation_path(raw_path: str) -> bool:
+              path = Path(raw_path)
+              parts = path.parts
+              wiki_slug = (
+                  path.name.removesuffix(".sources.yaml")
+                  if raw_path.endswith(".sources.yaml")
+                  else path.stem
+              )
+              return (
+                  parts[:4] == ("curriculum", "l2-uk-en", "plans", "bio")
+                  or parts[:4] == ("curriculum", "l2-uk-en", "bio", "discovery")
+                  or raw_path == "curriculum/l2-uk-en/bio/promotion-evidence.yaml"
+                  or parts[:3] == ("docs", "research", "bio")
+                  or (parts[:2] == ("wiki", "figures") and wiki_slug in manifest_set)
+              )
+
+          deleted_preparation = sorted(path for path in deleted if is_bio_preparation_path(path))
+          if deleted_preparation:
+              raise SystemExit(f"BIO preparation files may not be deleted: {deleted_preparation}")
+
+          registry_path = root / "curriculum/l2-uk-en/bio/promotion-evidence.yaml"
+          evidence = load_manual_evidence(registry_path, manifest_set)
+          active_holds = {
+              slug
+              for slug, gates in evidence.items()
+              if gates.get("hold", {}).get("active") is True
+          }
+
+          changed_slugs = set()
+          for raw_path in changed:
+              path = Path(raw_path)
+              parts = path.parts
+              slug = None
+              if parts[:4] == ("curriculum", "l2-uk-en", "plans", "bio"):
+                  slug = path.stem
+              elif parts[:4] == ("curriculum", "l2-uk-en", "bio", "discovery"):
+                  slug = path.stem
+              elif parts[:3] == ("docs", "research", "bio"):
+                  slug = path.stem
+              elif parts[:2] == ("wiki", "figures"):
+                  slug = path.name.removesuffix(".sources.yaml") if raw_path.endswith(".sources.yaml") else path.stem
+              if slug in manifest_set:
+                  changed_slugs.add(slug)
+
+          if "curriculum/l2-uk-en/bio/promotion-evidence.yaml" in changed:
+              from scripts.orchestration.preparation_evidence import UniqueKeyLoader
+              import yaml
+
+              registry_rel = "curriculum/l2-uk-en/bio/promotion-evidence.yaml"
+              try:
+                  base_registry_text = subprocess.check_output(
+                      ["git", "show", f"{base_sha}:{registry_rel}"],
+                      text=True,
+                      stderr=subprocess.DEVNULL,
+                  )
+              except subprocess.CalledProcessError:
+                  base_registry_text = "version: 1\nentries: {}\n"
+              base_registry = yaml.load(base_registry_text, Loader=UniqueKeyLoader)
+              head_registry = yaml.load(registry_path.read_text(encoding="utf-8"), Loader=UniqueKeyLoader)
+              base_entries = base_registry.get("entries", {})
+              head_entries = head_registry.get("entries", {})
+              registry_changed_slugs = {
+                  slug
+                  for slug in set(base_entries) | set(head_entries)
+                  if base_entries.get(slug) != head_entries.get(slug)
+              }
+              off_manifest_changes = registry_changed_slugs - manifest_set
+              if off_manifest_changes:
+                  raise SystemExit(
+                      f"promotion evidence changed off-manifest slugs: {sorted(off_manifest_changes)}"
+                  )
+              changed_slugs.update(registry_changed_slugs)
+
+          targets = active_holds | changed_slugs
+          for slug in sorted(targets, key=manifest_slugs.index):
+              result = readiness.evaluate_preparation("bio", slug, repo_root=root)
+              finding_ids = {finding["id"] for finding in result["findings"]}
+              if slug in active_holds:
+                  if result["next_action"] != "stop" or "PREPARATION_HOLD_ACTIVE" not in finding_ids:
+                      raise SystemExit(f"active hold does not fail closed for {slug}")
+                  continue
+              failed = [item["id"] for item in result["requirements"] if not item["passed"]]
+              if failed:
+                  raise SystemExit(f"changed BIO capsule is not preparation-ready: {slug}: {failed}")
+
+          print(
+              f"BIO preparation PASS: entries={len(evidence)} "
+              f"changed_slugs={len(changed_slugs)} active_holds={len(active_holds)}"
+          )
+          PY
 
   atlas-freshness:
     name: Atlas Manifest Freshness
@@ -1036,6 +1230,7 @@ jobs:
     if: always()
     needs:
       - changes
+      - bio-preparation-data   # BIO Preparation Data
       - test                  # Test (pytest)
       - lint                  # Lint (ruff)
       - quality-gates         # Quality Gates (radon)

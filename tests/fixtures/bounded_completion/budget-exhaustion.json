@@ -1,0 +1,101 @@
+{
+  "fixture_version": "bounded-completion.fixture.v1",
+  "start": {
+    "target": "bio/budget-exhaustion",
+    "run_id": "22222222222222222222222222222222",
+    "learner_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "review_protocol": {
+      "protocol_version": "5.0.0",
+      "tool_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "prompt_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "schema_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "reviewer_family": "fixture-family",
+      "reviewer_model": "fixture-model"
+    }
+  },
+  "steps": [
+    {
+      "action": "complete_inspection",
+      "needs_build": false,
+      "elapsed_time_ms": 4
+    },
+    {
+      "action": "record_deterministic_verification",
+      "learner_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "passed": true,
+      "elapsed_time_ms": 6
+    },
+    {
+      "action": "record_semantic_review",
+      "learner_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "evidence_id": "initial-review",
+      "reported_disposition": "REVISE",
+      "dimension_scores": {
+        "engagement": 8.0,
+        "pedagogical": 8.1,
+        "naturalness": 8.2,
+        "decolonization": 9.0,
+        "tone": 8.5
+      },
+      "prompt_bytes": 1000,
+      "schema_bytes": 350,
+      "elapsed_time_ms": 10
+    },
+    {
+      "action": "record_consolidated_repair",
+      "learner_source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "elapsed_time_ms": 12
+    },
+    {
+      "action": "record_deterministic_verification",
+      "learner_source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "passed": true,
+      "elapsed_time_ms": 6
+    },
+    {
+      "action": "record_semantic_review",
+      "learner_source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "evidence_id": "final-review",
+      "reported_disposition": "REVISE",
+      "dimension_scores": {
+        "engagement": 8.8,
+        "pedagogical": 8.9,
+        "naturalness": 8.7,
+        "decolonization": 9.2,
+        "tone": 8.9
+      },
+      "prompt_bytes": 1100,
+      "schema_bytes": 350,
+      "elapsed_time_ms": 10
+    },
+    {
+      "action": "record_semantic_review",
+      "learner_source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "evidence_id": "forbidden-third-review",
+      "reported_disposition": "PASS",
+      "dimension_scores": {
+        "engagement": 10.0,
+        "pedagogical": 10.0,
+        "naturalness": 10.0,
+        "decolonization": 10.0,
+        "tone": 10.0
+      },
+      "prompt_bytes": 1,
+      "schema_bytes": 1,
+      "elapsed_time_ms": 1,
+      "expect_error": "SEMANTIC_REVIEW_BUDGET_EXHAUSTED"
+    },
+    {
+      "action": "record_consolidated_repair",
+      "learner_source_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "elapsed_time_ms": 1,
+      "expect_error": "REPAIR_BUDGET_EXHAUSTED"
+    },
+    {
+      "action": "record_publication",
+      "reference": "forbidden-budget-publication",
+      "elapsed_time_ms": 1,
+      "expect_error": "PUBLICATION_BLOCKED"
+    }
+  ]
+}

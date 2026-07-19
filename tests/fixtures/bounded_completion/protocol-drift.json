@@ -1,0 +1,49 @@
+{
+  "fixture_version": "bounded-completion.fixture.v1",
+  "start": {
+    "target": "bio/protocol-drift",
+    "run_id": "33333333333333333333333333333333",
+    "learner_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "review_protocol": {
+      "protocol_version": "5.0.0",
+      "tool_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "prompt_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "schema_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "reviewer_family": "fixture-family",
+      "reviewer_model": "fixture-model"
+    }
+  },
+  "steps": [
+    {
+      "action": "complete_inspection",
+      "needs_build": false,
+      "elapsed_time_ms": 2
+    },
+    {
+      "action": "record_deterministic_verification",
+      "learner_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "passed": true,
+      "elapsed_time_ms": 3
+    },
+    {
+      "action": "record_semantic_review",
+      "learner_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "evidence_id": "drifted-review",
+      "reported_disposition": "PASS",
+      "dimension_scores": {
+        "engagement": 10.0,
+        "pedagogical": 10.0,
+        "naturalness": 10.0,
+        "decolonization": 10.0,
+        "tone": 10.0
+      },
+      "prompt_bytes": 999,
+      "schema_bytes": 999,
+      "elapsed_time_ms": 99,
+      "review_protocol_override": {
+        "prompt_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      "expect_error": "REVIEW_PROTOCOL_DRIFT"
+    }
+  ]
+}
