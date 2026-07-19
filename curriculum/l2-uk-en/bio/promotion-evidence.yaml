@@ -319,3 +319,192 @@ entries:
       reviewer_family: mixed
       date: 2026-07-09
       evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/4845#issuecomment-4929913303
+  knyahynia-olha:
+    hold:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-19
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5013628905
+      active: true
+      reason: >-
+        The second terminal batch review found unsupported source attributions,
+        contradicted chronology, image-rights proof gaps, and teleological
+        framing.
+      owner: bio-preparation-controller
+      checked_evidence:
+        - Immutable packet manifest 474c1e2027c2625070ebcd66bb9fc5b40db1fb56771742b2bff1666827786fe8.
+        - GPT-5.6 Terra result fdb017a26d3f17be2a9cf0162b52da34ba6fe153fb57b7e70272b01222617388.
+      unblock_condition: >-
+        A complete claim-audit receipt must bind every chronology and
+        attribution to an adopted locator and prove an allowed image
+        disposition before a new five-module immutable review.
+  kniaz-sviatoslav:
+    hold:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-19
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5013628905
+      active: true
+      reason: >-
+        The second terminal batch review found nonexistent source citations,
+        false quotation provenance, unresolved rights evidence, and
+        hagiographic framing.
+      owner: bio-preparation-controller
+      checked_evidence:
+        - Immutable packet manifest 474c1e2027c2625070ebcd66bb9fc5b40db1fb56771742b2bff1666827786fe8.
+        - GPT-5.6 Terra result fdb017a26d3f17be2a9cf0162b52da34ba6fe153fb57b7e70272b01222617388.
+      unblock_condition: >-
+        A complete claim-audit receipt must replace every nonexistent locator,
+        close quotation provenance, and prove rights before a new five-module
+        immutable review.
+  volodymyr-velykii:
+    hold:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-19
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5013628905
+      active: true
+      reason: >-
+        The second terminal batch review found unsupported baptism precision,
+        unsupported city claims, unresolved rights evidence, and teleological
+        framing.
+      owner: bio-preparation-controller
+      checked_evidence:
+        - Immutable packet manifest 474c1e2027c2625070ebcd66bb9fc5b40db1fb56771742b2bff1666827786fe8.
+        - GPT-5.6 Terra result fdb017a26d3f17be2a9cf0162b52da34ba6fe153fb57b7e70272b01222617388.
+      unblock_condition: >-
+        A complete claim-audit receipt must qualify baptism chronology, bind
+        city claims to exact locators, and prove rights before a new
+        five-module immutable review.
+  kniaz-yaroslav-mudryi:
+    hold:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-19
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5013628905
+      active: true
+      reason: >-
+        The second terminal batch review found nonexistent citations, law-code
+        attribution overreach, unresolved image provenance and rights, and
+        teleological framing.
+      owner: bio-preparation-controller
+      checked_evidence:
+        - Immutable packet manifest 474c1e2027c2625070ebcd66bb9fc5b40db1fb56771742b2bff1666827786fe8.
+        - GPT-5.6 Terra result fdb017a26d3f17be2a9cf0162b52da34ba6fe153fb57b7e70272b01222617388.
+      unblock_condition: >-
+        A complete claim-audit receipt must replace missing locators, qualify
+        law attribution, and prove an allowed image disposition before a new
+        five-module immutable review.
+  volodymyr-monomakh:
+    hold:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-19
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5013628905
+      active: true
+      reason: >-
+        The second terminal batch review found a Caffa legend/source-role
+        mismatch, unresolved rights evidence, and hagiographic treatment of
+        rule and violence.
+      owner: bio-preparation-controller
+      checked_evidence:
+        - Immutable packet manifest 474c1e2027c2625070ebcd66bb9fc5b40db1fb56771742b2bff1666827786fe8.
+        - GPT-5.6 Terra result fdb017a26d3f17be2a9cf0162b52da34ba6fe153fb57b7e70272b01222617388.
+      unblock_condition: >-
+        A complete claim-audit receipt must separate the Caffa legend from
+        sourced biography, prove rights, and bound violence claims before a
+        new five-module immutable review.
+  severyn-nalyvaiko:
+    hold:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-19
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5013628905
+      active: true
+      reason: >-
+        The second terminal batch review found siege chronology and calendar
+        conflicts plus incorrect EIU licence metadata.
+      owner: bio-preparation-controller
+      checked_evidence:
+        - Immutable packet manifest 7687da6742221a19af4638310d5ec96f410aa0ec92c53d069575717cc060fe6a.
+        - GPT-5.6 Terra result cd0f1a78df89900ce33b0a6219f9d967e4535de441620eb671db262802a8beca.
+      unblock_condition: >-
+        A complete claim-audit receipt must reconcile siege chronology and
+        calendar claims and record exact live EIU rights before a new
+        five-module immutable review.
+  petro-sahaidachny:
+    hold:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-19
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5013628905
+      active: true
+      reason: >-
+        The second terminal batch review found incorrect EIU licence and IEU
+        authorship metadata, unclosed labels, a calendar conflict, and
+        anachronistic imperial terminology.
+      owner: bio-preparation-controller
+      checked_evidence:
+        - Immutable packet manifest 7687da6742221a19af4638310d5ec96f410aa0ec92c53d069575717cc060fe6a.
+        - GPT-5.6 Terra result cd0f1a78df89900ce33b0a6219f9d967e4535de441620eb671db262802a8beca.
+      unblock_condition: >-
+        A complete claim-audit receipt must correct rights and authorship,
+        close quotation labels, reconcile dates, and replace anachronistic
+        terminology before a new five-module immutable review.
+  ivan-mazepa:
+    hold:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-19
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5013628905
+      active: true
+      reason: >-
+        The second terminal batch review found incorrect EIU licence and IEU
+        authorship metadata, calendar conflict, unlocated universal excerpts,
+        and lexical defects.
+      owner: bio-preparation-controller
+      checked_evidence:
+        - Immutable packet manifest 7687da6742221a19af4638310d5ec96f410aa0ec92c53d069575717cc060fe6a.
+        - GPT-5.6 Terra result cd0f1a78df89900ce33b0a6219f9d967e4535de441620eb671db262802a8beca.
+      unblock_condition: >-
+        A complete claim-audit receipt must correct rights and authorship,
+        reconcile dates, close every excerpt locator, and pass local VESUM
+        verification before a new five-module immutable review.
+  pavlo-polubotok:
+    hold:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-19
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5013628905
+      active: true
+      reason: >-
+        The second terminal batch review found incorrect EIU licence and IEU
+        authorship metadata, calendar conflict, an unclosed prison-speech
+        fragment, and hagiographic framing.
+      owner: bio-preparation-controller
+      checked_evidence:
+        - Immutable packet manifest 7687da6742221a19af4638310d5ec96f410aa0ec92c53d069575717cc060fe6a.
+        - GPT-5.6 Terra result cd0f1a78df89900ce33b0a6219f9d967e4535de441620eb671db262802a8beca.
+      unblock_condition: >-
+        A complete claim-audit receipt must correct rights and authorship,
+        reconcile dates, remove or locate the prison speech, and neutralize
+        hagiography before a new five-module immutable review.
+  danylo-apostol:
+    hold:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-19
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5013628905
+      active: true
+      reason: >-
+        The second terminal batch review found incorrect EIU licence and IEU
+        authorship metadata, colonel-term and New Sich chronology conflicts,
+        calendar conflict, and an unclassified lexical defect.
+      owner: bio-preparation-controller
+      checked_evidence:
+        - Immutable packet manifest 7687da6742221a19af4638310d5ec96f410aa0ec92c53d069575717cc060fe6a.
+        - GPT-5.6 Terra result cd0f1a78df89900ce33b0a6219f9d967e4535de441620eb671db262802a8beca.
+      unblock_condition: >-
+        A complete claim-audit receipt must correct rights and authorship,
+        repair office and Sich chronology, reconcile dates, and pass local
+        VESUM verification before a new five-module immutable review.
