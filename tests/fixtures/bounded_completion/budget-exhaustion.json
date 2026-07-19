@@ -90,6 +90,12 @@
       "learner_source_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
       "elapsed_time_ms": 1,
       "expect_error": "REPAIR_BUDGET_EXHAUSTED"
+    },
+    {
+      "action": "record_publication",
+      "reference": "forbidden-budget-publication",
+      "elapsed_time_ms": 1,
+      "expect_error": "PUBLICATION_BLOCKED"
     }
   ]
 }

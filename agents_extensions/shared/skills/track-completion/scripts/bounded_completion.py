@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from collections.abc import Mapping
 from copy import deepcopy
 from pathlib import Path
@@ -31,6 +32,7 @@ _PROTOCOL_FIELDS = (
     "reviewer_family",
     "reviewer_model",
 )
+_SEMANTIC_VERSION_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
 _EXPECTED_TRANSITIONS = {
     "INSPECT": ["BUILD_REBUILD", "DETERMINISTIC_VERIFICATION"],
     "BUILD_REBUILD": ["DETERMINISTIC_VERIFICATION"],
@@ -125,8 +127,11 @@ def make_review_protocol_identity(
 ) -> dict[str, str]:
     """Build the full review-tooling identity pinned at run start."""
 
-    if not isinstance(protocol_version, str) or not protocol_version:
-        raise BoundedCompletionError("PROTOCOL_IDENTITY_INVALID", "protocol_version is required")
+    if not isinstance(protocol_version, str) or _SEMANTIC_VERSION_RE.fullmatch(protocol_version) is None:
+        raise BoundedCompletionError(
+            "PROTOCOL_IDENTITY_INVALID",
+            "protocol_version must use X.Y.Z numeric semantic-version syntax",
+        )
     payload = {
         "protocol_version": protocol_version,
         "tool_sha256": _require_sha256(tool_sha256, "tool_sha256"),
@@ -185,12 +190,48 @@ def _assert_invariants(run: Mapping[str, Any], contract: Mapping[str, Any]) -> N
     disposition = measurements["final_quality_disposition"]
     state = run["state"]
     terminal = run["terminal"]
+    if terminal and state not in {"FINAL_DISPOSITION", "PUBLICATION"}:
+        raise BoundedCompletionError(
+            "RUN_INVARIANT",
+            "Terminal runs must be in FINAL_DISPOSITION or PUBLICATION",
+        )
+    if terminal and disposition == "PENDING":
+        raise BoundedCompletionError(
+            "RUN_INVARIANT",
+            "Terminal runs cannot retain a PENDING quality disposition",
+        )
     if state == "PUBLICATION" and (publication is None or not terminal or disposition != "PUBLISHABLE"):
         raise BoundedCompletionError("RUN_INVARIANT", "Publication must be terminal and publishable")
     if disposition.startswith("BLOCKED_") and (state != "FINAL_DISPOSITION" or not terminal):
         raise BoundedCompletionError("RUN_INVARIANT", "Blocked disposition must be terminal")
     if disposition == "PUBLISHABLE" and state not in {"FINAL_DISPOSITION", "PUBLICATION"}:
         raise BoundedCompletionError("RUN_INVARIANT", "Publishable disposition is in the wrong state")
+    if disposition == "PUBLISHABLE" or state == "PUBLICATION":
+        if (
+            verification is None
+            or not verification["passed"]
+            or verification["learner_source_sha256"] != current_source
+        ):
+            raise BoundedCompletionError(
+                "RUN_INVARIANT",
+                "Publishable runs require a current deterministic PASS",
+            )
+        if not reviews:
+            raise BoundedCompletionError(
+                "RUN_INVARIANT",
+                "Publishable runs require current semantic review evidence",
+            )
+        final_review = reviews[-1]
+        if (
+            not final_review["valid"]
+            or final_review["contract_disposition"] != "PASS"
+            or final_review["learner_source_sha256"] != current_source
+            or final_review["review_protocol_identity_sha256"] != run["review_protocol_identity"]["identity_sha256"]
+        ):
+            raise BoundedCompletionError(
+                "RUN_INVARIANT",
+                "Publishable runs require a current PASS review bound to the active source and protocol",
+            )
     if state == "SEMANTIC_REVIEW" and (verification is None or not verification["passed"]):
         raise BoundedCompletionError("RUN_INVARIANT", "Semantic review requires current deterministic PASS")
 

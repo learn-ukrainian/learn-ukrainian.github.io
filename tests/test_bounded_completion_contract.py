@@ -41,6 +41,21 @@ def _protocol() -> dict[str, str]:
     )
 
 
+def _semantic_review_ready_run() -> dict[str, Any]:
+    run = bc.start_run(
+        target="bio/semantic-ready",
+        run_id="8" * 32,
+        review_protocol_identity=_protocol(),
+        learner_source_sha256=SOURCE_A,
+    )
+    run = bc.complete_inspection(run, needs_build=False)
+    return bc.record_deterministic_verification(
+        run,
+        learner_source_sha256=SOURCE_A,
+        passed=True,
+    )
+
+
 def test_canonical_contract_pins_states_budgets_quality_and_measurements() -> None:
     contract = bc.load_contract()
 
@@ -153,7 +168,7 @@ def test_material_learner_repair_invalidates_prior_review_evidence() -> None:
     ]
 
 
-def test_third_review_and_second_repair_fail_closed_after_terminal_stop() -> None:
+def test_budget_exhaustion_rejects_review_repair_and_publication_without_mutation() -> None:
     result = bc.replay_fixture(FIXTURES / "budget-exhaustion.json")
     run = result["run"]
 
@@ -166,6 +181,11 @@ def test_third_review_and_second_repair_fail_closed_after_terminal_stop() -> Non
         {
             "step": 8,
             "code": "REPAIR_BUDGET_EXHAUSTED",
+            "unchanged": True,
+        },
+        {
+            "step": 9,
+            "code": "PUBLICATION_BLOCKED",
             "unchanged": True,
         },
     ]
@@ -254,6 +274,105 @@ def test_deterministic_failure_is_a_terminal_non_publication_disposition() -> No
     assert run["measurements"]["final_quality_disposition"] == "BLOCKED_DETERMINISTIC"
     assert run["measurements"]["model_call_count"] == 0
     assert run["publication"] is None
+
+    before = deepcopy(run)
+    with pytest.raises(bc.BoundedCompletionError, match="PUBLICATION_BLOCKED"):
+        bc.record_publication(run, reference="forbidden-deterministic-publication")
+    assert run == before
+
+
+@pytest.mark.parametrize(
+    ("state", "terminal", "publication"),
+    [
+        ("FINAL_DISPOSITION", False, None),
+        (
+            "PUBLICATION",
+            True,
+            {
+                "reference": "forged-publication",
+                "learner_source_sha256": SOURCE_A,
+            },
+        ),
+    ],
+)
+def test_forged_publishable_run_without_current_review_evidence_is_rejected(
+    state: str,
+    terminal: bool,
+    publication: dict[str, str] | None,
+) -> None:
+    forged = bc.start_run(
+        target="bio/forged-publishable",
+        run_id="9" * 32,
+        review_protocol_identity=_protocol(),
+        learner_source_sha256=SOURCE_A,
+    )
+    forged["state"] = state
+    forged["terminal"] = terminal
+    forged["publication"] = publication
+    forged["measurements"]["final_quality_disposition"] = "PUBLISHABLE"
+    before = deepcopy(forged)
+
+    with pytest.raises(bc.BoundedCompletionError, match="RUN_INVARIANT"):
+        bc.validate_run(forged)
+    with pytest.raises(bc.BoundedCompletionError, match="RUN_INVARIANT"):
+        bc.record_publication(forged, reference="forged-publication-attempt")
+    assert forged == before
+
+
+def test_terminal_semantic_review_run_rejects_further_action_without_mutation() -> None:
+    forged = _semantic_review_ready_run()
+    forged["terminal"] = True
+    before = deepcopy(forged)
+
+    with pytest.raises(bc.BoundedCompletionError, match="RUN_INVARIANT"):
+        bc.record_semantic_review(
+            forged,
+            review_protocol_identity=_protocol(),
+            learner_source_sha256=SOURCE_A,
+            evidence_id="forbidden-terminal-review",
+            reported_disposition="PASS",
+            dimension_scores={
+                "engagement": 9.0,
+                "pedagogical": 9.0,
+                "naturalness": 9.0,
+                "decolonization": 9.0,
+                "tone": 9.0,
+            },
+            prompt_bytes=1,
+            schema_bytes=1,
+        )
+    assert forged == before
+
+
+def test_terminal_final_disposition_cannot_remain_pending() -> None:
+    forged = bc.start_run(
+        target="bio/terminal-pending",
+        run_id="a" * 32,
+        review_protocol_identity=_protocol(),
+        learner_source_sha256=SOURCE_A,
+    )
+    forged["state"] = "FINAL_DISPOSITION"
+    forged["terminal"] = True
+    before = deepcopy(forged)
+
+    with pytest.raises(bc.BoundedCompletionError, match="RUN_INVARIANT"):
+        bc.validate_run(forged)
+    assert forged == before
+
+
+@pytest.mark.parametrize("protocol_version", ["5", "5.0", "v5.0.0", "5.0.0.1"])
+def test_malformed_semantic_protocol_version_is_rejected_at_identity_boundary(
+    protocol_version: str,
+) -> None:
+    with pytest.raises(bc.BoundedCompletionError, match="PROTOCOL_IDENTITY_INVALID"):
+        bc.make_review_protocol_identity(
+            protocol_version=protocol_version,
+            tool_sha256="1" * 64,
+            prompt_sha256="2" * 64,
+            schema_sha256="3" * 64,
+            reviewer_family="fixture-family",
+            reviewer_model="fixture-model",
+        )
 
 
 def test_tampered_protocol_identity_is_rejected_at_run_start() -> None:
