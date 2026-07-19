@@ -78,6 +78,16 @@ cd "$PROJECT_DIR"
 
 if git rev-parse --git-dir >/dev/null 2>&1; then
   echo "Current branch: $(git branch --show-current 2>/dev/null || echo '?')"
+  # Heal detached/wrong-branch primary so agents never start on a raw SHA (#4857).
+  if [ -x "$PROJECT_DIR/.venv/bin/python" ] \
+      && [ -f "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" ]; then
+    if ! "$PROJECT_DIR/.venv/bin/python" \
+        "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" \
+        --cwd "$PROJECT_DIR" --heal; then
+      echo "Error: primary checkout is not on main and auto-heal failed." >&2
+      exit 1
+    fi
+  fi
   if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
     echo "Uncommitted changes detected (primary checkout is orientation-only; write via worktrees)"
   fi

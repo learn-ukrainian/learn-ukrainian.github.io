@@ -59,7 +59,17 @@ if [ -z "$PROJECT_DIR" ]; then
     exit 1
 fi
 
-if [ "$(git -C "$PROJECT_DIR" branch --show-current)" != "main" ]; then
+# Primary must be *attached* to main (not detached SHA) — #4857.
+if [ -x "$PROJECT_DIR/.venv/bin/python" ] \
+    && [ -f "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" ]; then
+    if ! "$PROJECT_DIR/.venv/bin/python" \
+        "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" \
+        --cwd "$PROJECT_DIR" --heal; then
+        printf 'Error: primary checkout must be on main (heal failed): %s\n' \
+            "$PROJECT_DIR" >&2
+        exit 1
+    fi
+elif [ "$(git -C "$PROJECT_DIR" branch --show-current)" != "main" ]; then
     printf 'Error: canonical checkout must be on main: %s\n' "$PROJECT_DIR" >&2
     exit 1
 fi

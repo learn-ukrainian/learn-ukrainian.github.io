@@ -384,6 +384,22 @@ if [ "${LEARN_UKRAINIAN_COLD_START_PROFILE:-}" != "compact" ]; then
     elif [ "$DIRTY_NONEXEMPT" -gt "$HYGIENE_THRESHOLD_WARN" ]; then
       INFO+=("Git hygiene: $DIRTY_NONEXEMPT dirty files outside exempt paths. Under the issue threshold ($HYGIENE_THRESHOLD_ISSUE) but worth inspecting with \`git status --short | grep -vE ' (wiki/|data/corpus_audit/draft_tickets/)'\`. Policy: docs/best-practices/git-hygiene.md.")
     fi
+
+    # 12b. Primary must stay attached to main (#4857) — auto-heal when possible.
+    if [ -x "$PROJECT_DIR/.venv/bin/python" ] \
+        && [ -f "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" ]; then
+      if ! "$PROJECT_DIR/.venv/bin/python" \
+          "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" \
+          --cwd "$PROJECT_DIR" --quiet 2>/dev/null; then
+        if "$PROJECT_DIR/.venv/bin/python" \
+            "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" \
+            --cwd "$PROJECT_DIR" --heal 2>/dev/null; then
+          INFO+=("PRIMARY HEAD was off main/detached — auto-healed to main (#4857). Prefer worktrees for all branch work.")
+        else
+          ISSUES+=("PRIMARY HEAD is detached or not on main (#4857). Run: .venv/bin/python scripts/guardrails/assert_primary_on_main.py --heal. Never gh pr checkout / git checkout <sha> on primary.")
+        fi
+      fi
+    fi
   fi
 else
   # 9. Compact mode orientation link
