@@ -100,7 +100,7 @@ sources:
     locator: explicit vocabulary table 1 row 180
     context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
       Bulk intake; no AI linguistic review.
-  - lemma: dat + терпець урвався (увірвався)
+  - lemma: терпець урвався (увірвався)
     pos: phrase
     gloss: To be out of patience , to be tired of , to be annoyed
     locator: explicit vocabulary table 1 row 189
@@ -1355,7 +1355,7 @@ sources:
     locator: explicit vocabulary table 2 row 152
     context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
       Bulk intake; no AI linguistic review.
-  - lemma: dat + траплятися + щось робити
+  - lemma: траплятися + щось робити
     pos: phrase
     gloss: To happen to do something
     locator: explicit vocabulary table 2 row 153

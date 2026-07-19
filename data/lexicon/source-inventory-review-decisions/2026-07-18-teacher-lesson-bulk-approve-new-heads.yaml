@@ -206,7 +206,7 @@ decisions:
     source_family: teacher_lesson
   evidence_refs:
   - private teacher-lesson explicit vocabulary table
-- lemma: dat + терпець урвався (увірвався)
+- lemma: терпець урвався (увірвався)
   decision: approve_for_publish
   approved_pos: phrase
   approved_gloss: To be out of patience , to be tired of , to be annoyed
@@ -2924,7 +2924,7 @@ decisions:
     source_family: teacher_lesson
   evidence_refs:
   - private teacher-lesson explicit vocabulary table
-- lemma: dat + траплятися + щось робити
+- lemma: траплятися + щось робити
   decision: approve_for_publish
   approved_pos: phrase
   approved_gloss: To happen to do something
