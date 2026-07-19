@@ -1,0 +1,4 @@
+interface:
+  display_name: "Curriculum Preparation"
+  short_description: "Prepare missing curriculum evidence safely"
+  default_prompt: "Use $curriculum-preparation to prepare failed readiness evidence for bio/example-slug."
