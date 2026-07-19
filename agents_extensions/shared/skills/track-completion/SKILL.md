@@ -16,6 +16,11 @@ the only readiness gate; keep every post-build-review invocation read-only.
 Never run legacy LLM-QG, a separate deterministic audit, or a legacy content
 review as an operator completion gate.
 
+For a normal BIO module request, this ledger is the one authoritative bounded
+module workflow. `$curriculum-lifecycle` may order and acquire the module, but
+it must not reproduce this completion policy. `$local-code-review` is reserved
+for a code/infra diff and never repeats this learner-content semantic gate.
+
 ## Canonical entry paths
 
 New and existing modules use one lifecycle, not separate completion systems:
@@ -110,6 +115,13 @@ and identities into non-authoritative archival ledger storage.
    `migrate-terminal-goal` with the exact old run id and explicit intent; a
    `PBR_PASS_QG_PENDING` migration must also name its exact PR and 40-character
    merge SHA. Never infer a goal from historical cursor state.
+
+   The deterministic module resume command is:
+
+   ```bash
+   .venv/bin/python agents_extensions/shared/skills/track-completion/scripts/track_completion.py \
+     resume <track/slug> --run-id <id>
+   ```
 
 ## Follow the returned state
 
@@ -239,6 +251,11 @@ can merge.
 Do not reopen, retry, or silently replace the run. Preserve the terminal
 ledger and open a later run only after a separately adjudicated source or
 protocol change establishes new scope.
+
+Report the bounded ledger's `elapsed_time_ms`, `model_call_count`,
+`repair_count`, and `final_quality_disposition` with the blocker and next
+action. These counts are authoritative; do not add a hidden retry, stability
+check, semantic review, repair, or quality-gate call outside them.
 
 ### `PUBLISH_REQUIRED`
 

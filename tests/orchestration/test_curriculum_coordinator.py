@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -12,6 +14,14 @@ import yaml
 from scripts.orchestration import curriculum_coordinator as coordinator
 
 BUNDLE_FILES = ("module.md", "activities.yaml", "vocabulary.yaml", "resources.yaml")
+ROOT = Path(__file__).resolve().parents[2]
+BOUNDED_SCRIPT = ROOT / "agents_extensions/shared/skills/track-completion/scripts/bounded_completion.py"
+BOUNDED_FIXTURES = ROOT / "tests/fixtures/bounded_completion"
+BOUNDED_SPEC = importlib.util.spec_from_file_location("bounded_completion_for_coordinator_tests", BOUNDED_SCRIPT)
+assert BOUNDED_SPEC is not None and BOUNDED_SPEC.loader is not None
+bounded_completion = importlib.util.module_from_spec(BOUNDED_SPEC)
+sys.modules[BOUNDED_SPEC.name] = bounded_completion
+BOUNDED_SPEC.loader.exec_module(bounded_completion)
 
 
 @pytest.fixture
@@ -19,6 +29,10 @@ def repo(tmp_path: Path) -> Path:
     root = tmp_path / "repo"
     manifest = {
         "levels": {
+            "a1": {
+                "type": "core",
+                "modules": ["introductions", "family", "daily-routine"],
+            },
             "folk": {"type": "track", "modules": ["alpha", "bravo", "charlie", "delta"]},
             "bio": {
                 "type": "track",
@@ -122,9 +136,7 @@ def _no_change(repo: Path, runtime: Path, run_id: str, evidence: str = "pbr:v1")
     slug = coordinator.derive_state(ledger)["current_module"]
     if slug is None:
         slug = next(
-            event["details"]["slug"]
-            for event in reversed(ledger["history"])
-            if event["event"] == "MODULE_FINISHED"
+            event["details"]["slug"] for event in reversed(ledger["history"]) if event["event"] == "MODULE_FINISHED"
         )
     return coordinator.record_module(
         run_id,
@@ -135,6 +147,64 @@ def _no_change(repo: Path, runtime: Path, run_id: str, evidence: str = "pbr:v1")
         repo_root=repo,
         runtime_root=runtime,
     )
+
+
+def _bounded_protocol() -> dict[str, str]:
+    return bounded_completion.make_review_protocol_identity(
+        protocol_version="5.0.0",
+        tool_sha256="1" * 64,
+        prompt_sha256="2" * 64,
+        schema_sha256="3" * 64,
+        reviewer_family="fixture-family",
+        reviewer_model="fixture-model",
+    )
+
+
+def _incomplete_bounded_run(selector: str, run_id: str) -> dict[str, Any]:
+    run = bounded_completion.start_run(
+        target=selector,
+        run_id=run_id,
+        review_protocol_identity=_bounded_protocol(),
+        learner_source_sha256="a" * 64,
+    )
+    run = bounded_completion.complete_inspection(run, needs_build=False, elapsed_time_ms=5)
+    return bounded_completion.record_deterministic_verification(
+        run,
+        learner_source_sha256="a" * 64,
+        passed=True,
+        elapsed_time_ms=7,
+    )
+
+
+def _terminal_bounded_run(selector: str, run_id: str, fixture: str) -> dict[str, Any]:
+    run = bounded_completion.replay_fixture(BOUNDED_FIXTURES / fixture)["run"]
+    run["target"] = selector
+    run["run_id"] = run_id
+    bounded_completion.validate_run(run)
+    return run
+
+
+def _write_track_ledger(
+    path: Path,
+    *,
+    selector: str,
+    run_id: str,
+    terminal_goal: str,
+    bounded_run: dict[str, Any],
+    outer_state: str,
+    outer_status: str,
+    extra_reviews: int = 0,
+) -> None:
+    model_calls = int(bounded_run["measurements"]["model_call_count"])
+    value = {
+        "target": {"selector": selector},
+        "run": {"run_id": run_id, "status": outer_status},
+        "terminal_goal": terminal_goal,
+        "state": outer_state,
+        "bounded_completion": {"run": bounded_run},
+        "reviews": [{"evidence": f"semantic-{index + 1}"} for index in range(model_calls + extra_reviews)],
+    }
+    path.write_text(json.dumps(value), encoding="utf-8")
 
 
 def test_versioned_config_and_schemas_are_strict() -> None:
@@ -186,6 +256,26 @@ def test_manifest_selectors_ranges_and_prerequisites(repo: Path, tmp_path: Path)
     _path, one = _start(repo, tmp_path / "one", scope="one", module="bravo")
     assert [item["slug"] for item in one["queue"]] == ["bravo"]
 
+    _path, core = _start(
+        repo,
+        tmp_path / "core-order",
+        track="a1",
+        start="introductions",
+        end="daily-routine",
+        wave_size=2,
+    )
+    assert [item["slug"] for item in core["queue"]] == [
+        "introductions",
+        "family",
+        "daily-routine",
+    ]
+    assert [item["prerequisites"] for item in core["queue"]] == [
+        [],
+        ["introductions"],
+        ["family"],
+    ]
+    assert [item["wave"] for item in core["queue"]] == [1, 1, 2]
+
 
 @pytest.mark.parametrize(
     ("kwargs", "message"),
@@ -233,15 +323,11 @@ def test_health_pause_resume_serial_waves_and_no_change(repo: Path, tmp_path: Pa
         snapshot["generated_at"] = f"2026-07-14T12:00:0{polls}Z"
         return snapshot
 
-    _path, paused, item = _acquire(
-        repo, runtime, run_id, health_probe=changing_unhealthy_probe
-    )
+    _path, paused, item = _acquire(repo, runtime, run_id, health_probe=changing_unhealthy_probe)
     assert item is None
     assert coordinator.compact_status(paused)["status"] == "paused"
     pause_count = len(paused["history"])
-    _path, retried, item = _acquire(
-        repo, runtime, run_id, health_probe=changing_unhealthy_probe
-    )
+    _path, retried, item = _acquire(repo, runtime, run_id, health_probe=changing_unhealthy_probe)
     assert item is None
     assert len(retried["history"]) == pause_count
 
@@ -264,8 +350,7 @@ def test_health_pause_resume_serial_waves_and_no_change(repo: Path, tmp_path: Pa
     assert item and item["slug"] == "delta"
     current = json.loads(_path.read_text(encoding="utf-8"))
     assert any(
-        event["event"] == "RUN_RESUMED"
-        and event["details"]["reason"] == "wave-health-restored"
+        event["event"] == "RUN_RESUMED" and event["details"]["reason"] == "wave-health-restored"
         for event in current["history"]
     )
     _no_change(repo, runtime, run_id, evidence="pbr:delta")
@@ -325,9 +410,7 @@ def test_expired_lease_requires_exact_resume_and_is_never_stolen(repo: Path, tmp
     with pytest.raises(coordinator.CoordinatorError, match="stale lease belongs"):
         _start(repo, runtime, owner="terra", scope="one", module="bravo")
 
-    coordinator.resume_run(
-        ledger["run_id"], owner="sol", repo_root=repo, runtime_root=runtime
-    )
+    coordinator.resume_run(ledger["run_id"], owner="sol", repo_root=repo, runtime_root=runtime)
     _path, _ledger, item = _acquire(repo, runtime, ledger["run_id"])
     assert item and item["slug"] == "alpha"
 
@@ -378,73 +461,104 @@ def test_finish_retry_heals_cleanup_after_crash(repo: Path, tmp_path: Path, monk
     assert duplicate == healed
 
 
-def test_conflicting_replay_and_incomplete_repair_identity_fail(repo: Path, tmp_path: Path) -> None:
+def test_bounded_module_ledger_is_authoritative_and_terminal_result_clears_stale_state(
+    repo: Path, tmp_path: Path
+) -> None:
     runtime = tmp_path / "runtime"
-    _path, ledger = _start(repo, runtime, scope="one", module="alpha")
+    _path, ledger = _start(repo, runtime, scope="one", module="alpha", terminal_goal="merge")
     run_id = ledger["run_id"]
     _acquire(repo, runtime, run_id)
-    with pytest.raises(coordinator.CoordinatorError, match="PR number"):
-        coordinator.record_module(
+    track_run_id = "1" * 32
+    track_path = tmp_path / "track-completion.json"
+    incomplete = _incomplete_bounded_run("folk/alpha", track_run_id)
+    _write_track_ledger(
+        track_path,
+        selector="folk/alpha",
+        run_id=track_run_id,
+        terminal_goal="merge",
+        bounded_run=incomplete,
+        outer_state="POST_BUILD_REVIEW_REQUIRED",
+        outer_status="active",
+    )
+
+    with pytest.raises(coordinator.CoordinatorError, match="incomplete"):
+        coordinator.record_bounded_module_result(
             run_id,
             owner="sol",
             slug="alpha",
-            disposition="complete",
-            integration={"issue": 5158, "evidence": "repair:test"},
+            track_ledger=str(track_path),
+            track_run_id=track_run_id,
             repo_root=repo,
             runtime_root=runtime,
         )
-    _no_change(repo, runtime, run_id, evidence="pbr:pass")
-    with pytest.raises(coordinator.CoordinatorError, match="conflicting replay"):
-        _no_change(repo, runtime, run_id, evidence="pbr:different")
+    unchanged = json.loads((runtime / "runs" / f"{run_id}.json").read_text(encoding="utf-8"))
+    assert coordinator.derive_state(unchanged)["current_module"] == "alpha"
 
-
-def test_completed_repair_requires_full_merge_and_cleanup_identity(repo: Path, tmp_path: Path) -> None:
-    runtime = tmp_path / "runtime"
-    _path, ledger = _start(repo, runtime, scope="one", module="alpha")
-    run_id = ledger["run_id"]
-    _acquire(repo, runtime, run_id)
-    _path, complete = coordinator.record_module(
+    terminal = _terminal_bounded_run("folk/alpha", track_run_id, "success.json")
+    _write_track_ledger(
+        track_path,
+        selector="folk/alpha",
+        run_id=track_run_id,
+        terminal_goal="merge",
+        bounded_run=terminal,
+        outer_state="COMPLETE",
+        outer_status="completed",
+    )
+    _path, complete, result = coordinator.record_bounded_module_result(
         run_id,
         owner="sol",
         slug="alpha",
-        disposition="complete",
-        integration={
-            "issue": 6001,
-            "worktree": ".worktrees/dispatch/codex/6001-alpha",
-            "branch": "codex/6001-alpha",
-            "pr": 6002,
-            "merge_sha": "a" * 40,
-            "cleanup": "complete",
-            "evidence": "review:claude-opus",
-        },
+        track_ledger=str(track_path),
+        track_run_id=track_run_id,
         repo_root=repo,
         runtime_root=runtime,
     )
+    assert result == {
+        "elapsed_time_ms": 98,
+        "model_call_count": 2,
+        "repair_count": 1,
+        "disposition": "PUBLISHABLE",
+        "blocker": None,
+        "next_action": "acquire-next",
+    }
     assert coordinator.compact_status(complete)["counts"]["complete"] == 1
+    finished = next(event for event in complete["history"] if event["event"] == "MODULE_FINISHED")
+    integration = finished["details"]["integration"]
+    assert integration["issue"] is None
+    assert integration["pr"] is None
+    assert integration["track_terminal"]["sha256"] in integration["evidence"]
 
 
-def test_completed_repair_rejects_misaligned_branch_identity(repo: Path, tmp_path: Path) -> None:
+def test_unbounded_semantic_evidence_is_rejected_without_coordinator_mutation(repo: Path, tmp_path: Path) -> None:
     runtime = tmp_path / "runtime"
-    _path, ledger = _start(repo, runtime, scope="one", module="alpha")
+    _path, ledger = _start(repo, runtime, scope="one", module="alpha", terminal_goal="merge")
     _acquire(repo, runtime, ledger["run_id"])
-    with pytest.raises(coordinator.CoordinatorError, match="align"):
-        coordinator.record_module(
+    track_run_id = "2" * 32
+    track_path = tmp_path / "track-completion.json"
+    terminal = _terminal_bounded_run("folk/alpha", track_run_id, "success.json")
+    _write_track_ledger(
+        track_path,
+        selector="folk/alpha",
+        run_id=track_run_id,
+        terminal_goal="merge",
+        bounded_run=terminal,
+        outer_state="COMPLETE",
+        outer_status="completed",
+        extra_reviews=1,
+    )
+    coordinator_path = runtime / "runs" / f"{ledger['run_id']}.json"
+    before = coordinator_path.read_bytes()
+    with pytest.raises(coordinator.CoordinatorError, match="outside the bounded budget"):
+        coordinator.record_bounded_module_result(
             ledger["run_id"],
             owner="sol",
             slug="alpha",
-            disposition="complete",
-            integration={
-                "issue": 6001,
-                "worktree": ".worktrees/dispatch/codex/6001-alpha",
-                "branch": "codex/different",
-                "pr": 6002,
-                "merge_sha": "a" * 40,
-                "cleanup": "complete",
-                "evidence": "review:claude-opus",
-            },
+            track_ledger=str(track_path),
+            track_run_id=track_run_id,
             repo_root=repo,
             runtime_root=runtime,
         )
+    assert coordinator_path.read_bytes() == before
 
 
 def test_ledger_tampering_is_detected_by_replay_validation(repo: Path, tmp_path: Path) -> None:
@@ -453,9 +567,7 @@ def test_ledger_tampering_is_detected_by_replay_validation(repo: Path, tmp_path:
     ledger["history"][0]["details"]["request_sha256"] = "0" * 64
     path.write_text(json.dumps(ledger), encoding="utf-8")
     with pytest.raises(coordinator.CoordinatorError, match="identity does not match"):
-        coordinator.status_run(
-            ledger["run_id"], owner="sol", repo_root=repo, runtime_root=runtime
-        )
+        coordinator.status_run(ledger["run_id"], owner="sol", repo_root=repo, runtime_root=runtime)
 
 
 def test_manifest_drift_invalidates_the_durable_queue(repo: Path, tmp_path: Path) -> None:
@@ -466,14 +578,10 @@ def test_manifest_drift_invalidates_the_durable_queue(repo: Path, tmp_path: Path
     manifest["levels"]["folk"]["modules"].append("golf")
     manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False), encoding="utf-8")
 
-    status = coordinator.status_run(
-        ledger["run_id"], owner="sol", repo_root=repo, runtime_root=runtime
-    )
+    status = coordinator.status_run(ledger["run_id"], owner="sol", repo_root=repo, runtime_root=runtime)
     assert status["manifest_current"] is False
     with pytest.raises(coordinator.CoordinatorError, match="manifest changed"):
-        coordinator.resume_run(
-            ledger["run_id"], owner="sol", repo_root=repo, runtime_root=runtime
-        )
+        coordinator.resume_run(ledger["run_id"], owner="sol", repo_root=repo, runtime_root=runtime)
     with pytest.raises(coordinator.CoordinatorError, match="lease belongs"):
         _start(repo, runtime, scope="one", module="bravo")
     _path, abandoned = coordinator.adjudicate_run(
@@ -549,36 +657,39 @@ def test_adjudication_retry_heals_leases_after_crash(
     assert replacement["run_id"] != ledger["run_id"]
 
 
-def test_blocked_integration_identity_is_consistent(repo: Path, tmp_path: Path) -> None:
+def test_terminal_bounded_blocker_updates_coordinator_and_preserves_reacquisition(repo: Path, tmp_path: Path) -> None:
     runtime = tmp_path / "runtime"
-    _path, ledger = _start(repo, runtime, scope="one", module="alpha")
+    _path, ledger = _start(repo, runtime, scope="one", module="alpha", terminal_goal="merge")
     _acquire(repo, runtime, ledger["run_id"])
-    with pytest.raises(coordinator.CoordinatorError, match="must not claim"):
-        coordinator.record_module(
-            ledger["run_id"],
-            owner="sol",
-            slug="alpha",
-            disposition="blocked",
-            integration={"issue": 5158, "evidence": "blocker:test"},
-            repo_root=repo,
-            runtime_root=runtime,
-        )
-    _path, blocked = coordinator.record_module(
+    track_run_id = "3" * 32
+    track_path = tmp_path / "track-completion.json"
+    terminal = _terminal_bounded_run("folk/alpha", track_run_id, "budget-exhaustion.json")
+    _write_track_ledger(
+        track_path,
+        selector="folk/alpha",
+        run_id=track_run_id,
+        terminal_goal="merge",
+        bounded_run=terminal,
+        outer_state="BLOCKED_BUDGET_EXHAUSTED",
+        outer_status="active",
+    )
+    _path, blocked, result = coordinator.record_bounded_module_result(
         ledger["run_id"],
         owner="sol",
         slug="alpha",
-        disposition="blocked",
-        integration={
-            "issue": 5158,
-            "worktree": ".worktrees/dispatch/codex/5158-track-coordinator",
-            "branch": "codex/5158-track-coordinator",
-            "cleanup": "pending",
-            "evidence": "blocker:test",
-        },
+        track_ledger=str(track_path),
+        track_run_id=track_run_id,
         repo_root=repo,
         runtime_root=runtime,
     )
     assert coordinator.compact_status(blocked)["status"] == "blocked"
+    assert result["disposition"] == "BLOCKED_BUDGET_EXHAUSTED"
+    assert result["model_call_count"] == len(terminal["reviews"])
+    assert result["repair_count"] == len(terminal["repairs"])
+    assert result["blocker"] is not None
+    _path, reacquired, item = _acquire(repo, runtime, ledger["run_id"])
+    assert item is not None and item["slug"] == "alpha"
+    assert coordinator.derive_state(reacquired)["current_module"] == "alpha"
 
 
 def test_partial_module_lease_claim_rolls_back_global_lease(repo: Path, tmp_path: Path) -> None:
@@ -615,9 +726,7 @@ def test_recomputed_but_impossible_event_is_rejected(repo: Path, tmp_path: Path)
     )
     path.write_text(json.dumps(ledger), encoding="utf-8")
     with pytest.raises(coordinator.CoordinatorError, match="completion is premature"):
-        coordinator.status_run(
-            ledger["run_id"], owner="sol", repo_root=repo, runtime_root=runtime
-        )
+        coordinator.status_run(ledger["run_id"], owner="sol", repo_root=repo, runtime_root=runtime)
 
 
 def test_one_line_cli_start_and_status_use_compact_contract(
@@ -667,15 +776,9 @@ def test_one_line_cli_start_and_status_use_compact_contract(
     assert status["event_count"] == 1
 
 
-def test_bio_371_deploy_goal_rejects_pending_and_certification_only_track_ledger(
+def test_bio_deploy_goal_waits_for_bounded_terminal_then_records_authoritative_result(
     repo: Path, tmp_path: Path
 ) -> None:
-    incident = {
-        "track_run_id": "0b4b92fcc5ca4653a33fb89b68c7cfc8",
-        "coordinator_run_id": "clc-d571995205b4c2773fc9c2a1",
-        "pr": 5255,
-        "merge_sha": "ba5e43d42922d6c08ec3f4b5e0f558e18ac74041",
-    }
     runtime = tmp_path / "runtime"
     _path, ledger = _start(
         repo,
@@ -687,84 +790,68 @@ def test_bio_371_deploy_goal_rejects_pending_and_certification_only_track_ledger
     )
     run_id = ledger["run_id"]
     _acquire(repo, runtime, run_id)
-    track_run_id = incident["track_run_id"]
+    track_run_id = "0b4b92fcc5ca4653a33fb89b68c7cfc8"
     track_path = tmp_path / "track-completion.json"
-    track_ledger = {
-        "target": {"selector": "bio/andrii-malyshko"},
-        "run": {"run_id": track_run_id, "status": "active"},
-        "terminal_goal": "deploy",
-        "state": "PBR_PASS_QG_PENDING",
-        "publication": {
-            "pr": incident["pr"],
-            "merge_sha": incident["merge_sha"],
-        },
-        "certification_evidence": [],
-    }
-    track_path.write_text(json.dumps(track_ledger), encoding="utf-8")
-    integration = {
-        "evidence": f"BIO-371 coordinator:{incident['coordinator_run_id']}",
-        "track_ledger": str(track_path),
-        "track_run_id": track_run_id,
-    }
-    with pytest.raises(coordinator.CoordinatorError, match="not satisfied"):
-        coordinator.record_module(
+    incomplete = _incomplete_bounded_run("bio/andrii-malyshko", track_run_id)
+    _write_track_ledger(
+        track_path,
+        selector="bio/andrii-malyshko",
+        run_id=track_run_id,
+        terminal_goal="deploy",
+        bounded_run=incomplete,
+        outer_state="AWAITING_PRODUCTION_QG_ARMING",
+        outer_status="active",
+    )
+    with pytest.raises(coordinator.CoordinatorError, match="incomplete"):
+        coordinator.record_bounded_module_result(
             run_id,
             owner="sol",
             slug="andrii-malyshko",
-            disposition="no-change",
-            integration=integration,
+            track_ledger=str(track_path),
+            track_run_id=track_run_id,
             repo_root=repo,
             runtime_root=runtime,
         )
-    track_ledger["run"]["status"] = "completed"
-    track_ledger["state"] = "COMPLETE"
-    track_path.write_text(json.dumps(track_ledger), encoding="utf-8")
-    with pytest.raises(coordinator.CoordinatorError, match="deployment receipt"):
-        coordinator.record_module(
-            run_id,
-            owner="sol",
-            slug="andrii-malyshko",
-            disposition="no-change",
-            integration=integration,
-            repo_root=repo,
-            runtime_root=runtime,
-        )
-    track_ledger["certification_evidence"] = [
-        {"value": {"kind": "deployment"}}
-    ]
-    track_path.write_text(json.dumps(track_ledger), encoding="utf-8")
-    _path, complete = coordinator.record_module(
+
+    terminal = _terminal_bounded_run("bio/andrii-malyshko", track_run_id, "success.json")
+    _write_track_ledger(
+        track_path,
+        selector="bio/andrii-malyshko",
+        run_id=track_run_id,
+        terminal_goal="deploy",
+        bounded_run=terminal,
+        outer_state="COMPLETE",
+        outer_status="completed",
+    )
+    _path, complete, result = coordinator.record_bounded_module_result(
         run_id,
         owner="sol",
         slug="andrii-malyshko",
-        disposition="no-change",
-        integration=integration,
+        track_ledger=str(track_path),
+        track_run_id=track_run_id,
         repo_root=repo,
         runtime_root=runtime,
     )
-    _path, replayed = coordinator.record_module(
+    _path, replayed, replayed_result = coordinator.record_bounded_module_result(
         run_id,
         owner="sol",
         slug="andrii-malyshko",
-        disposition="no-change",
-        integration=integration,
+        track_ledger=str(track_path),
+        track_run_id=track_run_id,
         repo_root=repo,
         runtime_root=runtime,
     )
     assert coordinator.compact_status(complete)["terminal_satisfied"] is True
     assert replayed == complete
+    assert replayed_result == result
 
 
 def test_pages_deploy_installs_audit_import_dependencies() -> None:
-    workflow = (coordinator.PROJECT_ROOT / ".github/workflows/deploy-pages.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (coordinator.PROJECT_ROOT / ".github/workflows/deploy-pages.yml").read_text(encoding="utf-8")
     assert "PyYAML==6.0.3 jsonschema==4.26.0" in workflow
 
 
-def test_legacy_completed_run_migration_reopens_unproven_module(
-    repo: Path, tmp_path: Path
-) -> None:
+def test_legacy_completed_run_migration_reopens_unproven_module(repo: Path, tmp_path: Path) -> None:
     runtime = tmp_path / "runtime"
     _path, ledger = _start(repo, runtime, scope="one", module="alpha")
     run_id = ledger["run_id"]

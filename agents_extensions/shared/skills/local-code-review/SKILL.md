@@ -1,10 +1,17 @@
 ---
 name: local-code-review
-description: Canonical closeout-review workflow — freezes scope, resolves the exact review target (local/commit/branch/PR), runs a non-mutating review, resolves a cross-family reviewer, and requires separate behavior proof for user-visible changes. Use before declaring any change done.
+description: Canonical code/infra closeout workflow — freezes scope, resolves the exact review target (local/commit/branch/PR), runs a non-mutating review, resolves a cross-family reviewer, and requires separate behavior proof for user-visible code or infrastructure changes. Never use as a learner-content semantic gate.
 argument-hint: "[local | commit <sha> | branch <branch> <base> | pr <number>]"
 ---
 
 # Closeout Review: $ARGUMENTS
+
+This skill supports only `code` and `infra` review profiles. A normal BIO
+learner-content request routes to `$curriculum-lifecycle` (or directly to
+`$track-completion` for one module), which owns the single bounded
+`$post-build-review` gate. `resolve-reviewer` fails before route selection for
+any learner-content semantic profile or domain. Do not duplicate post-build
+semantic review here.
 
 > **Scope**: this is the closeout gate for a change you (or another agent)
 > already made — not a PR-comment bot. For posting inline PR comments, use

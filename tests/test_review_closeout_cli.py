@@ -99,13 +99,23 @@ def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
     assert resolution["policy_version"] == "model-catalog.v1"
     assert resolution["resolved_risk"] == "medium"
 
-    raise_proc = _run_cli(state_file, "finding", "raise", "--id", "F1", "--summary", "issue", "--source", "reviewer:grok")
+    raise_proc = _run_cli(
+        state_file, "finding", "raise", "--id", "F1", "--summary", "issue", "--source", "reviewer:grok"
+    )
     assert raise_proc.returncode == 0, raise_proc.stderr
     apply_before_adjudicate = _run_cli(state_file, "finding", "apply", "--id", "F1")
     assert apply_before_adjudicate.returncode != 0
 
     adjudicate_proc = _run_cli(
-        state_file, "finding", "adjudicate", "--id", "F1", "--disposition", "in_scope_blocker", "--rationale", "real bug"
+        state_file,
+        "finding",
+        "adjudicate",
+        "--id",
+        "F1",
+        "--disposition",
+        "in_scope_blocker",
+        "--rationale",
+        "real bug",
     )
     assert adjudicate_proc.returncode == 0, adjudicate_proc.stderr
     apply_proc = _run_cli(state_file, "finding", "apply", "--id", "F1")
@@ -142,6 +152,25 @@ def test_resolve_reviewer_cli_rejects_invalid_risk_and_fail_closed_identity(tmp_
     )
     assert unknown_author.returncode != 0
     assert json.loads(unknown_author.stdout)["selected"] is None
+
+
+def test_resolve_reviewer_cli_rejects_learner_semantic_profile_before_dispatch(tmp_path):
+    state_file = tmp_path / "state.json"
+    unsupported = _run_cli(
+        state_file,
+        "resolve-reviewer",
+        "--author-model",
+        "claude",
+        "--review-profile",
+        "content",
+    )
+
+    assert unsupported.returncode != 0
+    payload = json.loads(unsupported.stdout)
+    assert payload["selected"] is None
+    assert payload["trace"] == []
+    assert "unsupported local-code-review profile" in payload["fail_closed_reason"]
+    assert "post-build-review" in payload["fail_closed_reason"]
 
 
 def test_behavior_proof_recording_round_trips_into_receipt(tmp_path):
@@ -244,9 +273,20 @@ def test_behavior_proof_record_rejects_malformed_proof_and_baseline_before_mutat
     assert _run_cli(state_file, *_freeze_kwargs()).returncode == 0
 
     record_args = (
-        "behavior-proof", "record", "--surface", "source_aware", "--status", "pass",
-        "--step", "open the feature", "--result", "feature opened", "--observation", "visible",
-        "--evidence-ref", "test:manual",
+        "behavior-proof",
+        "record",
+        "--surface",
+        "source_aware",
+        "--status",
+        "pass",
+        "--step",
+        "open the feature",
+        "--result",
+        "feature opened",
+        "--observation",
+        "visible",
+        "--evidence-ref",
+        "test:manual",
     )
     valid_state = json.loads(state_file.read_text(encoding="utf-8"))
     for malformed in (None, [], "not-an-object"):
@@ -295,8 +335,18 @@ def test_behavior_proof_record_rejects_empty_steps_and_emit_before_record(tmp_pa
     assert json.loads(emit.stderr)["error"] == "no behavior proof recorded yet"
 
     common = (
-        "behavior-proof", "record", "--surface", "source_aware", "--status", "pass",
-        "--result", "done", "--observation", "visible", "--evidence-ref", "test:manual",
+        "behavior-proof",
+        "record",
+        "--surface",
+        "source_aware",
+        "--status",
+        "pass",
+        "--result",
+        "done",
+        "--observation",
+        "visible",
+        "--evidence-ref",
+        "test:manual",
     )
     for flag in ("--command", "--step"):
         proc = _run_cli(state_file, *common, flag, "   ")
@@ -311,14 +361,19 @@ def test_behavior_proof_na_is_versioned_and_preserves_explicit_blind_enforcement
     assert _run_cli(state_file, "target", "--mode", "local", "--repo-root", str(repo)).returncode == 0
     assert _run_cli(state_file, *_freeze_kwargs()).returncode == 0
 
-    missing_reason = _run_cli(
-        state_file, "behavior-proof", "record", "--surface", "source_blind", "--status", "n/a"
-    )
+    missing_reason = _run_cli(state_file, "behavior-proof", "record", "--surface", "source_blind", "--status", "n/a")
     assert missing_reason.returncode != 0
     assert json.loads(missing_reason.stderr)["error"] == "n/a proof requires --reason"
     recorded = _run_cli(
-        state_file, "behavior-proof", "record", "--surface", "source_blind", "--status", "n/a",
-        "--reason", "no user-visible surface",
+        state_file,
+        "behavior-proof",
+        "record",
+        "--surface",
+        "source_blind",
+        "--status",
+        "n/a",
+        "--reason",
+        "no user-visible surface",
     )
     assert recorded.returncode == 0, recorded.stderr
     proof = json.loads(recorded.stdout)
@@ -326,8 +381,16 @@ def test_behavior_proof_na_is_versioned_and_preserves_explicit_blind_enforcement
     assert "blind_enforced" not in proof["source_blind"]
 
     explicit = _run_cli(
-        state_file, "behavior-proof", "record", "--surface", "source_blind", "--status", "n/a",
-        "--reason", "isolation unavailable", "--blind-enforced",
+        state_file,
+        "behavior-proof",
+        "record",
+        "--surface",
+        "source_blind",
+        "--status",
+        "n/a",
+        "--reason",
+        "isolation unavailable",
+        "--blind-enforced",
     )
     assert explicit.returncode == 0, explicit.stderr
     assert json.loads(explicit.stdout)["source_blind"]["blind_enforced"] is True

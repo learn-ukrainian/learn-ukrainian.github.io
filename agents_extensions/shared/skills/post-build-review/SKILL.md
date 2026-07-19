@@ -1,6 +1,6 @@
 ---
 name: post-build-review
-description: Run the canonical read-only, versioned review of a built Ukrainian curriculum module by composing deterministic audit evidence, track policy, the correct core or seminar semantic prompt, and fail-closed combined disposition. Use for short requests such as "Use $post-build-review for bio/oleksandr-bilash", for post-build quality gates, for reproducing a prior versioned review, or before declaring a module ready.
+description: Run the canonical read-only, versioned semantic review authorized by one bounded track-completion ledger, or an explicitly diagnostic standalone review that cannot complete a module. A normal BIO completion request routes through track-completion, which owns call and repair budgets.
 ---
 
 # Post-build review
@@ -8,6 +8,21 @@ description: Run the canonical read-only, versioned review of a built Ukrainian 
 Keep all repository files unchanged. Write packets and results only under `/tmp`.
 Do not create curriculum `audit/`, `review/`, `status/`, telemetry, or published
 artifacts. Report findings; do not fix the module during this invocation.
+
+## Completion-bound entry
+
+A short normal BIO completion request routes through `$track-completion`; do
+not start an independent semantic closeout here. Before its provider call,
+`$track-completion` must run `prepare-semantic-review` and return the authorized
+phase and remaining bounded budget. This invocation consumes exactly that one
+authorized model call and returns its unchanged result to the same module
+ledger. No retry, stability check, repair, or second closeout review is hidden
+inside this skill.
+
+Run this skill standalone only when the operator explicitly requests a
+read-only diagnostic review that is not being represented as module
+completion. A standalone result cannot complete a curriculum coordinator or
+track-completion ledger.
 
 ## Workflow
 
@@ -57,10 +72,12 @@ artifacts. Report findings; do not fix the module during this invocation.
 6. Preserve the reviewer's exact response bytes at the emitted
    `<semantic_response_path>`. Do not extract, repair,
    normalize, merge, or reconcile malformed output. A malformed response ends
-   this review as `INCOMPLETE`; any retry is a distinct review with a new
-   packet/result and cannot replace the failed artifact. Allocate a new run
-   directory before every retry. Use `apply_patch`, not a shell heredoc, when
-   the current agent is the reviewer.
+   this review as `INCOMPLETE`. During bounded completion, return that outcome
+   without retrying; the module ledger alone decides whether any later
+   authorized call remains. For an explicit standalone diagnostic, any retry
+   is a distinct review with a new packet/result and cannot replace the failed
+   artifact. Use `apply_patch`, not a shell heredoc, when the current agent is
+   the reviewer.
    When the provider supports schema-constrained structured output, emit its
    provider-compatible transport schema before invoking it. For Codex, the
    provider selector is mandatory:

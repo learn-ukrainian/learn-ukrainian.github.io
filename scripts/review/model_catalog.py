@@ -13,6 +13,7 @@ CATALOG_PATH = Path(__file__).resolve().parents[1] / "config" / "model_catalog.y
 EXPECTED_SCHEMA_VERSION = "model-catalog.v1"
 VALID_LIFECYCLES = frozenset({"active", "fallback", "hold", "retired"})
 VALID_RISKS = frozenset({"low", "medium", "high", "critical"})
+VALID_REVIEW_PROFILES = frozenset({"code", "infra"})
 EXPECTED_SELECTION_ORDER = [
     "independence_and_hard_gates",
     "review_quality_tier",
@@ -38,9 +39,7 @@ def _require_string(value: Any, label: str) -> str:
 
 
 def _require_string_list(value: Any, label: str) -> list[str]:
-    if not isinstance(value, list) or not value or not all(
-        isinstance(item, str) and item.strip() for item in value
-    ):
+    if not isinstance(value, list) or not value or not all(isinstance(item, str) and item.strip() for item in value):
         raise ModelCatalogError(f"{label} must be a non-empty list of strings")
     return [item.strip() for item in value]
 
@@ -53,8 +52,7 @@ def validate_catalog(data: Any) -> dict[str, Any]:
     catalog = _require_mapping(data, "catalog").copy()
     if catalog.get("schema_version") != EXPECTED_SCHEMA_VERSION:
         raise ModelCatalogError(
-            f"schema_version must be {EXPECTED_SCHEMA_VERSION!r}, "
-            f"got {catalog.get('schema_version')!r}"
+            f"schema_version must be {EXPECTED_SCHEMA_VERSION!r}, got {catalog.get('schema_version')!r}"
         )
 
     reviewed_on = catalog.get("reviewed_on")
@@ -79,8 +77,7 @@ def validate_catalog(data: Any) -> dict[str, Any]:
 
     tiers = _require_mapping(catalog.get("quality_tiers"), "quality_tiers")
     if not tiers or not all(
-        isinstance(rank, int) and not isinstance(rank, bool) and rank > 0
-        for rank in tiers.values()
+        isinstance(rank, int) and not isinstance(rank, bool) and rank > 0 for rank in tiers.values()
     ):
         raise ModelCatalogError("quality_tiers must map names to positive integer ranks")
     if len(set(tiers.values())) != len(tiers):
@@ -90,21 +87,13 @@ def validate_catalog(data: Any) -> dict[str, Any]:
     if policy.get("quality_first") is not True:
         raise ModelCatalogError("policy.quality_first must be true")
     if policy.get("selection_order") != EXPECTED_SELECTION_ORDER:
-        raise ModelCatalogError(
-            f"policy.selection_order must be exactly {EXPECTED_SELECTION_ORDER!r}"
-        )
-    risk_floor = _require_mapping(
-        policy.get("risk_quality_floor"), "policy.risk_quality_floor"
-    )
+        raise ModelCatalogError(f"policy.selection_order must be exactly {EXPECTED_SELECTION_ORDER!r}")
+    risk_floor = _require_mapping(policy.get("risk_quality_floor"), "policy.risk_quality_floor")
     if set(risk_floor) != VALID_RISKS:
-        raise ModelCatalogError(
-            f"policy.risk_quality_floor must define exactly {sorted(VALID_RISKS)}"
-        )
+        raise ModelCatalogError(f"policy.risk_quality_floor must define exactly {sorted(VALID_RISKS)}")
     for risk, tier in risk_floor.items():
         if tier not in tiers:
-            raise ModelCatalogError(
-                f"policy.risk_quality_floor.{risk} references unknown tier {tier!r}"
-            )
+            raise ModelCatalogError(f"policy.risk_quality_floor.{risk} references unknown tier {tier!r}")
 
     models = _require_mapping(catalog.get("models"), "models")
     if not models:
@@ -117,25 +106,17 @@ def validate_catalog(data: Any) -> dict[str, Any]:
         tier = _require_string(model.get("tier"), f"models.{model_id}.tier")
         if tier not in tiers:
             raise ModelCatalogError(f"models.{model_id}.tier references unknown tier {tier!r}")
-        lifecycle = _require_string(
-            model.get("lifecycle"), f"models.{model_id}.lifecycle"
-        )
+        lifecycle = _require_string(model.get("lifecycle"), f"models.{model_id}.lifecycle")
         if lifecycle not in VALID_LIFECYCLES:
-            raise ModelCatalogError(
-                f"models.{model_id}.lifecycle must be one of {sorted(VALID_LIFECYCLES)}"
-            )
+            raise ModelCatalogError(f"models.{model_id}.lifecycle must be one of {sorted(VALID_LIFECYCLES)}")
         for field in ("roles", "transports", "strengths", "weaknesses", "sources"):
             values = _require_string_list(model.get(field), f"models.{model_id}.{field}")
             if field == "sources" and any(not source.startswith("https://") for source in values):
                 raise ModelCatalogError(f"models.{model_id}.sources must use https URLs")
         if model["family"] in {"openai", "xai"} and "hermes" in model["transports"]:
-            raise ModelCatalogError(
-                f"models.{model_id}.transports must not route GPT/Grok families through Hermes"
-            )
+            raise ModelCatalogError(f"models.{model_id}.transports must not route GPT/Grok families through Hermes")
         aliases = model.get("aliases", [])
-        if not isinstance(aliases, list) or not all(
-            isinstance(alias, str) and alias.strip() for alias in aliases
-        ):
+        if not isinstance(aliases, list) or not all(isinstance(alias, str) and alias.strip() for alias in aliases):
             raise ModelCatalogError(f"models.{model_id}.aliases must be a list of strings")
         for alias in aliases:
             if alias in models or alias in alias_owner:
@@ -145,55 +126,36 @@ def validate_catalog(data: Any) -> dict[str, Any]:
     candidates = _require_mapping(catalog.get("review_candidates"), "review_candidates")
     for name, raw in candidates.items():
         candidate = _require_mapping(raw, f"review_candidates.{name}")
-        model_id = _require_string(
-            candidate.get("model_id"), f"review_candidates.{name}.model_id"
-        )
+        model_id = _require_string(candidate.get("model_id"), f"review_candidates.{name}.model_id")
         if model_id not in models:
-            raise ModelCatalogError(
-                f"review_candidates.{name}.model_id references unknown model {model_id!r}"
-            )
+            raise ModelCatalogError(f"review_candidates.{name}.model_id references unknown model {model_id!r}")
         if models[model_id]["lifecycle"] != "active":
-            raise ModelCatalogError(
-                f"review candidate {name!r} must reference an active model"
-            )
+            raise ModelCatalogError(f"review candidate {name!r} must reference an active model")
         _require_string(candidate.get("route"), f"review_candidates.{name}.route")
-        transport = _require_string(
-            candidate.get("transport"), f"review_candidates.{name}.transport"
-        )
+        transport = _require_string(candidate.get("transport"), f"review_candidates.{name}.transport")
         if transport not in models[model_id]["transports"]:
             raise ModelCatalogError(
-                f"review_candidates.{name}.transport {transport!r} is not listed in "
-                f"models.{model_id}.transports"
+                f"review_candidates.{name}.transport {transport!r} is not listed in models.{model_id}.transports"
             )
-        _require_string(
-            candidate.get("invocation"), f"review_candidates.{name}.invocation"
-        )
-        profiles = _require_string_list(
-            candidate.get("review_profiles"), f"review_candidates.{name}.review_profiles"
-        )
+        _require_string(candidate.get("invocation"), f"review_candidates.{name}.invocation")
+        profiles = _require_string_list(candidate.get("review_profiles"), f"review_candidates.{name}.review_profiles")
         if any(profile != profile.casefold() for profile in profiles):
+            raise ModelCatalogError(f"review_candidates.{name}.review_profiles must use lowercase profile names")
+        unsupported_profiles = sorted(set(profiles) - VALID_REVIEW_PROFILES)
+        if unsupported_profiles:
             raise ModelCatalogError(
-                f"review_candidates.{name}.review_profiles must use lowercase profile names"
+                f"review_candidates.{name}.review_profiles contains unsupported code-closeout "
+                f"profiles {unsupported_profiles}; expected only {sorted(VALID_REVIEW_PROFILES)}"
             )
         if transport == "cursor" and model_id.casefold() in {"auto", "cursor", "composer"}:
-            raise ModelCatalogError(
-                f"review_candidates.{name} requires a concrete Cursor model id, not {model_id!r}"
-            )
+            raise ModelCatalogError(f"review_candidates.{name} requires a concrete Cursor model id, not {model_id!r}")
         health_keys = candidate.get("health_keys", [])
-        if not isinstance(health_keys, list) or not all(
-            isinstance(item, str) and item.strip() for item in health_keys
-        ):
-            raise ModelCatalogError(
-                f"review_candidates.{name}.health_keys must be a list of strings"
-            )
-        _require_string_list(
-            candidate.get("capabilities"), f"review_candidates.{name}.capabilities"
-        )
+        if not isinstance(health_keys, list) or not all(isinstance(item, str) and item.strip() for item in health_keys):
+            raise ModelCatalogError(f"review_candidates.{name}.health_keys must be a list of strings")
+        _require_string_list(candidate.get("capabilities"), f"review_candidates.{name}.capabilities")
         silence_timeout = candidate.get("requires_silence_timeout", False)
         if not isinstance(silence_timeout, bool):
-            raise ModelCatalogError(
-                f"review_candidates.{name}.requires_silence_timeout must be a boolean"
-            )
+            raise ModelCatalogError(f"review_candidates.{name}.requires_silence_timeout must be a boolean")
         egress_policy = candidate.get("requires_data_egress_policy")
         if egress_policy is not None:
             _require_string(
@@ -202,18 +164,12 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             )
         for field in ("domain_excluded_from", "advisory_only_for_author_families"):
             values = candidate.get(field, [])
-            if not isinstance(values, list) or not all(
-                isinstance(item, str) and item.strip() for item in values
-            ):
-                raise ModelCatalogError(
-                    f"review_candidates.{name}.{field} must be a list of strings"
-                )
+            if not isinstance(values, list) or not all(isinstance(item, str) and item.strip() for item in values):
+                raise ModelCatalogError(f"review_candidates.{name}.{field} must be a list of strings")
 
     ladders = _require_mapping(catalog.get("review_ladders"), "review_ladders")
     if set(ladders) != VALID_RISKS:
-        raise ModelCatalogError(
-            f"review_ladders must define exactly {sorted(VALID_RISKS)}, got {sorted(ladders)}"
-        )
+        raise ModelCatalogError(f"review_ladders must define exactly {sorted(VALID_RISKS)}, got {sorted(ladders)}")
     for risk, rungs in ladders.items():
         if not isinstance(rungs, list) or not rungs:
             raise ModelCatalogError(f"review_ladders.{risk} must be a non-empty list")
@@ -222,35 +178,23 @@ def validate_catalog(data: Any) -> dict[str, Any]:
         floor_rank = tiers[risk_floor[risk]]
         for rung in rungs:
             if not isinstance(rung, list) or not rung:
-                raise ModelCatalogError(
-                    f"review_ladders.{risk} rungs must be non-empty lists"
-                )
+                raise ModelCatalogError(f"review_ladders.{risk} rungs must be non-empty lists")
             rung_ranks: set[int] = set()
             for candidate_name in rung:
                 if candidate_name not in candidates:
-                    raise ModelCatalogError(
-                        f"review_ladders.{risk} references unknown candidate {candidate_name!r}"
-                    )
+                    raise ModelCatalogError(f"review_ladders.{risk} references unknown candidate {candidate_name!r}")
                 if candidate_name in seen:
-                    raise ModelCatalogError(
-                        f"review_ladders.{risk} repeats candidate {candidate_name!r}"
-                    )
+                    raise ModelCatalogError(f"review_ladders.{risk} repeats candidate {candidate_name!r}")
                 seen.add(candidate_name)
                 model_id = candidates[candidate_name]["model_id"]
                 rung_ranks.add(tiers[models[model_id]["tier"]])
             if len(rung_ranks) != 1:
-                raise ModelCatalogError(
-                    f"review_ladders.{risk} mixes quality tiers in one rung"
-                )
+                raise ModelCatalogError(f"review_ladders.{risk} mixes quality tiers in one rung")
             rung_rank = next(iter(rung_ranks))
             if rung_rank < previous_rank:
-                raise ModelCatalogError(
-                    f"review_ladders.{risk} improves quality in a later rung"
-                )
+                raise ModelCatalogError(f"review_ladders.{risk} improves quality in a later rung")
             if rung_rank > floor_rank:
-                raise ModelCatalogError(
-                    f"review_ladders.{risk} falls below its {risk_floor[risk]!r} quality floor"
-                )
+                raise ModelCatalogError(f"review_ladders.{risk} falls below its {risk_floor[risk]!r} quality floor")
             previous_rank = rung_rank
     return catalog
 
@@ -273,9 +217,7 @@ def catalog_age_days(catalog: dict[str, Any], *, as_of: date | None = None) -> i
     reviewed = date.fromisoformat(str(catalog["reviewed_on"]))
     age = (today - reviewed).days
     if age < 0:
-        raise ModelCatalogError(
-            f"reviewed_on {reviewed.isoformat()} is in the future relative to {today.isoformat()}"
-        )
+        raise ModelCatalogError(f"reviewed_on {reviewed.isoformat()} is in the future relative to {today.isoformat()}")
     return age
 
 
