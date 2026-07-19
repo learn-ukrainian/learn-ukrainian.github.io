@@ -293,15 +293,15 @@ rows:
       forbidden: [FOLK seminar direction]
     expected:
       module_state: unbuilt
-      preparation_state: current
-      state: prepared-plan
-      next_action: build
-      disposition: build-required
+      preparation_state: missing
+      state: preparation-required
+      next_action: prepare
+      disposition: preparation-required
       cleanup_state: unchanged
     transitions:
-      - event: PREPARE_PASSED
-        from: prepared-plan
-        to: build-required
+      - event: PREPARATION_REQUIREMENTS_MISSING
+        from: preparation-required
+        to: preparation-required
     resume_evidence: test_prepared_unbuilt_bio_uses_real_validators_and_exact_sources
   - id: c1-unbuilt-shadow
     kind: repository
@@ -316,13 +316,13 @@ rows:
       module_state: unbuilt
       preparation_state: missing
       state: preparation-required
-      next_action: plan
-      disposition: plan-review-required
+      next_action: prepare
+      disposition: preparation-required
       cleanup_state: unchanged
     transitions:
-      - event: PLAN_MISSING
+      - event: PREPARATION_REQUIREMENTS_MISSING
         from: preparation-required
-        to: plan-review-required
+        to: preparation-required
     resume_evidence: test_unbuilt_core_and_generic_seminar_profile_seams
   - id: c2-unbuilt-shadow
     kind: repository
@@ -337,13 +337,13 @@ rows:
       module_state: unbuilt
       preparation_state: missing
       state: preparation-required
-      next_action: plan
-      disposition: plan-review-required
+      next_action: prepare
+      disposition: preparation-required
       cleanup_state: unchanged
     transitions:
-      - event: PLAN_MISSING
+      - event: PREPARATION_REQUIREMENTS_MISSING
         from: preparation-required
-        to: plan-review-required
+        to: preparation-required
     resume_evidence: test_unbuilt_core_and_generic_seminar_profile_seams
   - id: seminar-unbuilt-shadow
     kind: repository
@@ -356,15 +356,15 @@ rows:
       forbidden: ['BIO only: make the learner exposition a sourced life story', FOLK seminar direction]
     expected:
       module_state: unbuilt
-      preparation_state: current
-      state: prepared-plan
-      next_action: build
-      disposition: build-required
+      preparation_state: missing
+      state: preparation-required
+      next_action: prepare
+      disposition: preparation-required
       cleanup_state: unchanged
     transitions:
-      - event: PREPARE_PASSED
-        from: prepared-plan
-        to: build-required
+      - event: PREPARATION_REQUIREMENTS_MISSING
+        from: preparation-required
+        to: preparation-required
     resume_evidence: test_unbuilt_core_and_generic_seminar_profile_seams
   - id: partial-ambiguous-fixture
     kind: fixture

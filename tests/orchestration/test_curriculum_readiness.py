@@ -405,7 +405,7 @@ def test_preparation_change_invalidates_build_pbr_and_qg_identities(tmp_path: Pa
         ("hist", "track", "trypillian-civilization", "plans/hist/trypillian-civilization.yaml", "seminar"),
     ],
 )
-def test_unbuilt_core_and_generic_seminar_cannot_pass_from_plan_alone(
+def test_unbuilt_core_and_generic_seminar_profile_seams(
     tmp_path: Path,
     track: str,
     manifest_type: str,

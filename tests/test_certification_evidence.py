@@ -379,6 +379,23 @@ def _completion_case(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, Any], 
     slug = "adjectives-comparative"
     (repo / "curriculum/l2-uk-en/plans/b1").mkdir(parents=True)
     shutil.copy2(ROOT / f"curriculum/l2-uk-en/plans/b1/{slug}.yaml", repo / f"curriculum/l2-uk-en/plans/b1/{slug}.yaml")
+    plan_path = repo / f"curriculum/l2-uk-en/plans/b1/{slug}.yaml"
+    plan = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
+    plan["readings"] = [
+        {
+            "title": "Перевірене тестове читання",
+            "url": "https://example.test/b1/adjectives-comparative",
+        }
+    ]
+    plan_path.write_text(
+        yaml.safe_dump(plan, allow_unicode=True, sort_keys=False),
+        encoding="utf-8",
+    )
+    wiki_fixture = ROOT / "wiki/grammar/b1/aspect-future-tense.md"
+    wiki_target = repo / f"wiki/grammar/b1/{slug}.md"
+    wiki_target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(wiki_fixture, wiki_target)
+    shutil.copy2(wiki_fixture.with_suffix(".sources.yaml"), wiki_target.with_suffix(".sources.yaml"))
     manifest = {"levels": {"b1": {"type": "core", "modules": [slug]}}}
     (repo / "curriculum/l2-uk-en/curriculum.yaml").write_text(yaml.safe_dump(manifest), encoding="utf-8")
     for relative in (
