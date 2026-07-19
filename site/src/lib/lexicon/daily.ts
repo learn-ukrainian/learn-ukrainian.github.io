@@ -15,6 +15,18 @@ export interface DailyWord {
   example?: string | null;
   /** English rendering of `example` (A1 scaffolding only). */
   exampleEn?: string | null;
+  /** Source attribution preserved with an inventory-backed daily example. */
+  exampleProvenance?: {
+    source: "textbook" | "ulp";
+    label: string;
+    locator?: string;
+    title?: string;
+  };
+  /** Rights status and the documented educational-use basis for that example. */
+  exampleLicense?: {
+    status: string;
+    useBasis?: string;
+  };
 }
 
 export function dateSeed(d: Date): number {

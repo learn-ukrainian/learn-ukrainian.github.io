@@ -99,6 +99,23 @@ def test_build_pool_schema_sorting_and_filters() -> None:
     assert set(by_lemma["добрий день"]) == {"lemma", "slug", "gloss", "k", "weight"}
 
 
+def test_build_pool_prefers_inventory_example_with_provenance() -> None:
+    inventory = {
+        "баба": {
+            "lemma": "баба",
+            "sentence": "Баба читає книжку.",
+            "provenance": {"source": "textbook", "label": "Ukrainian school textbook"},
+            "license": {"status": "not_openly_licensed"},
+        }
+    }
+
+    row = next(item for item in build_pool(fixture_entries(), sentence_inventory=inventory) if item["lemma"] == "баба")
+
+    assert row["example"] == "Баба читає книжку."
+    assert row["exampleProvenance"] == inventory["баба"]["provenance"]
+    assert row["exampleLicense"] == inventory["баба"]["license"]
+
+
 def test_build_pool_top_n_uses_weight_then_lemma() -> None:
     pool = build_pool(fixture_entries(), size=2)
 
@@ -155,7 +172,6 @@ def test_main_writes_deterministic_json_bytes(tmp_path) -> None:
     assert out_one.read_text(encoding="utf-8").endswith("\n")
 
 
-
 def _daily_atlas_db(tmp_path: Path) -> Path:
     """Materialize a fixture atlas.db from a small manifest via the real migrator.
 
@@ -173,9 +189,7 @@ def _daily_atlas_db(tmp_path: Path) -> Path:
                         "url_slug": "baba",
                         "gloss": "grandmother",
                         "primary_source": "course",
-                        "course_usage": [
-                            {"track": "a1", "module_num": 1, "slug": "family", "context": "x"}
-                        ],
+                        "course_usage": [{"track": "a1", "module_num": 1, "slug": "family", "context": "x"}],
                         "enrichment": {"cefr": {"level": "A1", "source": "est", "text": "A1"}},
                     },
                     {
