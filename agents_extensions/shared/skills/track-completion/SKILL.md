@@ -37,6 +37,33 @@ artifact: record the owning source change and rerun a fresh canonical review.
 An unchanged existing module with a current PASS remains idempotent and must not
 be rebuilt or republished without a terminal-goal reason.
 
+## Bounded completion contract
+
+The canonical issue #5452 contract is
+`contracts/bounded-completion.v1.json`. Its strict contract and run schemas are
+`schema/bounded-completion-contract.v1.schema.json` and
+`schema/bounded-completion-run.v1.schema.json`. Validate them without invoking a
+provider:
+
+```bash
+.venv/bin/python \
+  agents_extensions/shared/skills/track-completion/scripts/bounded_completion.py \
+  validate-contract
+```
+
+The standalone helper freezes the review protocol identity at run start and
+enforces one initial semantic review, at most one consolidated learner repair,
+and at most one final semantic review. A third review or second repair is
+rejected before mutation. A material learner-source change invalidates prior
+review evidence, and a final non-PASS exhausts the budget into terminal
+`BLOCKED_BUDGET_EXHAUSTED`. Publication requires every canonical quality
+dimension to remain at or above `9.0`.
+
+This contract slice is not wired into `scripts/track_completion.py`. Issue #5453
+owns production lifecycle integration. Use the helper's `replay` command only
+for deterministic contract fixtures. It has no provider transport and must
+never be treated as semantic review evidence.
+
 ## Start or resume
 
 1. Preserve the legacy parity boundary documented below. Post-build review v5

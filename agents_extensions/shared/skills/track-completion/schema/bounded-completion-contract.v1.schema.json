@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bounded-completion.contract.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "contract_version",
+    "run_schema_version",
+    "states",
+    "transitions",
+    "budgets",
+    "review_protocol_freeze",
+    "learner_source_freshness",
+    "publication_quality",
+    "budget_exhaustion",
+    "measurement_fields"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "../schema/bounded-completion-contract.v1.schema.json"
+    },
+    "schema_version": {
+      "const": "bounded-completion.contract.v1"
+    },
+    "contract_version": {
+      "const": "1.0.0"
+    },
+    "run_schema_version": {
+      "const": "bounded-completion.run.v1"
+    },
+    "states": {
+      "type": "array",
+      "prefixItems": [
+        {"const": "INSPECT"},
+        {"const": "BUILD_REBUILD"},
+        {"const": "DETERMINISTIC_VERIFICATION"},
+        {"const": "SEMANTIC_REVIEW"},
+        {"const": "CONSOLIDATED_REPAIR"},
+        {"const": "FINAL_DISPOSITION"},
+        {"const": "PUBLICATION"}
+      ],
+      "items": false,
+      "minItems": 7,
+      "maxItems": 7
+    },
+    "transitions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "INSPECT",
+        "BUILD_REBUILD",
+        "DETERMINISTIC_VERIFICATION",
+        "SEMANTIC_REVIEW",
+        "CONSOLIDATED_REPAIR",
+        "FINAL_DISPOSITION",
+        "PUBLICATION"
+      ],
+      "properties": {
+        "INSPECT": {
+          "const": ["BUILD_REBUILD", "DETERMINISTIC_VERIFICATION"]
+        },
+        "BUILD_REBUILD": {
+          "const": ["DETERMINISTIC_VERIFICATION"]
+        },
+        "DETERMINISTIC_VERIFICATION": {
+          "const": ["SEMANTIC_REVIEW", "FINAL_DISPOSITION"]
+        },
+        "SEMANTIC_REVIEW": {
+          "const": ["CONSOLIDATED_REPAIR", "FINAL_DISPOSITION"]
+        },
+        "CONSOLIDATED_REPAIR": {
+          "const": ["DETERMINISTIC_VERIFICATION"]
+        },
+        "FINAL_DISPOSITION": {
+          "const": ["PUBLICATION"]
+        },
+        "PUBLICATION": {
+          "const": []
+        }
+      }
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "initial_semantic_reviews",
+        "consolidated_repairs",
+        "final_semantic_reviews",
+        "semantic_reviews_total"
+      ],
+      "properties": {
+        "initial_semantic_reviews": {"const": 1},
+        "consolidated_repairs": {"const": 1},
+        "final_semantic_reviews": {"const": 1},
+        "semantic_reviews_total": {"const": 2}
+      }
+    },
+    "review_protocol_freeze": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pin_at_run_start", "drift_policy"],
+      "properties": {
+        "pin_at_run_start": {"const": true},
+        "drift_policy": {"const": "REJECT_WITHOUT_MUTATION"}
+      }
+    },
+    "learner_source_freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "material_change_invalidates_review_evidence",
+        "post_review_change_counts_as_repair"
+      ],
+      "properties": {
+        "material_change_invalidates_review_evidence": {"const": true},
+        "post_review_change_counts_as_repair": {"const": true}
+      }
+    },
+    "publication_quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimum_per_dimension",
+        "dimensions",
+        "aggregate_override_allowed",
+        "threshold_lowering_allowed"
+      ],
+      "properties": {
+        "minimum_per_dimension": {"const": 9.0},
+        "dimensions": {
+          "type": "array",
+          "prefixItems": [
+            {"const": "engagement"},
+            {"const": "pedagogical"},
+            {"const": "naturalness"},
+            {"const": "decolonization"},
+            {"const": "tone"}
+          ],
+          "items": false,
+          "minItems": 5,
+          "maxItems": 5
+        },
+        "aggregate_override_allowed": {"const": false},
+        "threshold_lowering_allowed": {"const": false}
+      }
+    },
+    "budget_exhaustion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["disposition", "terminal", "looping_allowed"],
+      "properties": {
+        "disposition": {"const": "BLOCKED_BUDGET_EXHAUSTED"},
+        "terminal": {"const": true},
+        "looping_allowed": {"const": false}
+      }
+    },
+    "measurement_fields": {
+      "type": "array",
+      "prefixItems": [
+        {"const": "elapsed_time_ms"},
+        {"const": "model_call_count"},
+        {"const": "repair_count"},
+        {"const": "prompt_bytes"},
+        {"const": "schema_bytes"},
+        {"const": "final_quality_disposition"}
+      ],
+      "items": false,
+      "minItems": 6,
+      "maxItems": 6
+    }
+  }
+}
