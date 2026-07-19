@@ -13,13 +13,13 @@ from typing import Any
 from .db import SessionStreamDatabase
 from .dual_write import (
     ATLAS_HANDOFF_PATH,
-    EPIC_HANDOFF_CANDIDATES,
     list_handoff_candidates,
     mirror_atlas_handoff,
     mirror_handoff_file,
     resolve_handoff_path,
 )
 from .hooks import clean_exit_hook, heartbeat_hook, lease_from_environment
+from .inventory import epic_handoff_map, inventory_covers_issue_streams, load_stream_epic_inventory
 from .model import entry_as_dict
 from .store import NotFoundError, SessionStreamError, SessionStreamStore
 
@@ -302,7 +302,7 @@ def _mirror_handoff(store: SessionStreamStore, args: argparse.Namespace) -> int:
     if source is None:
         resolved = resolve_handoff_path(args.stream, args.repo_root)
         if resolved is None:
-            known = ", ".join(EPIC_HANDOFF_CANDIDATES.get(args.stream, ())) or "(none registered)"
+            known = ", ".join(epic_handoff_map(args.repo_root).get(args.stream, ())) or "(none registered)"
             raise ValueError(
                 f"no existing handoff for {args.stream}; candidates: {known}; pass --source explicitly"
             )
@@ -334,16 +334,22 @@ def _mirror_handoff(store: SessionStreamStore, args: argparse.Namespace) -> int:
 
 def _dual_write_status(args: argparse.Namespace) -> int:
     rows = list_handoff_candidates(args.repo_root)
-    print("stream\texists\tpath")
+    print("stream\tname\texists\tpath")
     for row in rows:
-        print(f"{row.stream_id}\t{int(row.exists)}\t{row.path}")
-    registered = sorted(EPIC_HANDOFF_CANDIDATES)
+        print(f"{row.stream_id}\t{row.stream_name}\t{int(row.exists)}\t{row.path}")
+    inventory = load_stream_epic_inventory(args.repo_root)
+    registered = sorted(r.stream_id for r in inventory)
     present = sorted({r.stream_id for r in rows if r.exists})
+    ok, missing = inventory_covers_issue_streams(args.repo_root)
     print(
         json.dumps(
             {
                 "registered_streams": registered,
+                "epic_count": len(inventory),
                 "streams_with_file": present,
+                "inventory_covers_issue_streams": ok,
+                "missing_epics": missing,
+                "source": "scripts/config/issue_streams.yaml",
                 "cutover": "blocked — dual-write only; file handoffs remain authoritative",
             },
             sort_keys=True,

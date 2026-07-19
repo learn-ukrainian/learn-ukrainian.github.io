@@ -7,33 +7,12 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
+from .inventory import epic_handoff_map, load_stream_epic_inventory
 from .model import Entry, EntryRef, EntryType, Lease
 from .store import SessionStreamStore
 
 ATLAS_PROFILE = "atlas"
 ATLAS_HANDOFF_PATH = Path(".claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md")
-
-# Registry of known epic streams → primary file handoff paths for dual-write.
-# Phase-2 migration: mirror these under an active lease without retiring files.
-# Paths are relative to the repository root. First existing path wins per epic.
-EPIC_HANDOFF_CANDIDATES: dict[str, tuple[str, ...]] = {
-    "epic:4387": (
-        ".claude/atlas-epic/INTERIM-DRIVER-HANDOFF.md",
-        ".claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md",
-    ),
-    "epic:4707": (
-        ".claude/harness-epic/CLAUDE-DRIVER-HANDOFF.md",
-        "docs/session-state/current.claude-infra.md",
-    ),
-    "epic:4542": (
-        ".claude/hramatka-epic/CLAUDE-DRIVER-HANDOFF.md",
-        "docs/session-state/current.claude-hramatka.md",
-    ),
-    "epic:4706": (
-        ".claude/bio-epic/CLAUDE-DRIVER-HANDOFF.md",
-        "docs/session-state/current.claude-bio.md",
-    ),
-}
 
 
 @dataclass(frozen=True)
@@ -51,23 +30,38 @@ class HandoffCandidate:
     stream_id: str
     path: Path
     exists: bool
+    stream_name: str = ""
+    title: str = ""
 
 
 def list_handoff_candidates(repo_root: Path) -> list[HandoffCandidate]:
-    """List configured epic handoff paths and whether each file exists."""
+    """List inventory-derived handoff paths and whether each file exists.
+
+    Inventory covers every epic in ``scripts/config/issue_streams.yaml``
+    (Sol PR-H). No hard-coded four-epic subset remains authoritative.
+    """
     root = repo_root.resolve()
     out: list[HandoffCandidate] = []
-    for stream_id, paths in EPIC_HANDOFF_CANDIDATES.items():
-        for rel in paths:
+    for rec in load_stream_epic_inventory(root):
+        for rel in rec.handoff_candidates:
             path = root / rel
-            out.append(HandoffCandidate(stream_id=stream_id, path=path, exists=path.is_file()))
+            out.append(
+                HandoffCandidate(
+                    stream_id=rec.stream_id,
+                    path=path,
+                    exists=path.is_file(),
+                    stream_name=rec.stream_name,
+                    title=rec.title,
+                )
+            )
     return out
 
 
 def resolve_handoff_path(stream_id: str, repo_root: Path) -> Path | None:
     """Return the first existing handoff path for a stream, if any."""
     root = repo_root.resolve()
-    for rel in EPIC_HANDOFF_CANDIDATES.get(stream_id, ()):
+    candidates = epic_handoff_map(root).get(stream_id, ())
+    for rel in candidates:
         path = root / rel
         if path.is_file():
             return path
