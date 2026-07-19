@@ -132,6 +132,44 @@ def test_safe_ops_allowed(cmd):
     assert _dangerous(cmd) is None
 
 
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "git checkout --detach",
+        "git switch --detach",
+        "git checkout --orphan tmp-orphan",
+        "git checkout abcdef0",
+        "git checkout 9265871162825c0c74a0b03cd2f2440d729b298f",
+        "git checkout origin/main",
+        "git checkout origin/feature",
+        "git checkout refs/heads/feature",
+    ],
+)
+def test_detach_and_raw_object_checkout_blocked(cmd):
+    """Primary must never detach (#4857 recurrence)."""
+    assert _dangerous(cmd) is not None
+
+
+def test_gh_pr_checkout_blocked_in_primary(repos, monkeypatch):
+    """#4857: gh pr checkout on primary is forbidden."""
+    monkeypatch.chdir(repos["public"])
+    reason = guard._command_danger_reason(
+        "gh pr checkout 4849",
+        session_cwd=repos["public"],
+    )
+    assert reason is not None
+    assert "gh pr checkout" in reason
+
+
+def test_gh_pr_checkout_allowed_in_worktree(repos, monkeypatch):
+    monkeypatch.chdir(repos["public_worktree"])
+    reason = guard._command_danger_reason(
+        "gh pr checkout 4849",
+        session_cwd=repos["public_worktree"],
+    )
+    assert reason is None
+
+
 # --- Force-delete / force-rename (new behavior) ----------------------------
 
 

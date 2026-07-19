@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shlex
 import subprocess
 import sys
@@ -49,8 +50,13 @@ SWITCH_VERBS = frozenset({"checkout", "switch"})
 
 # Branch names that are "safe" to switch to in the main worktree
 # (returning to the trunk). `master` kept for older repos; we use main here.
-SAFE_TARGETS = frozenset({"main", "master", "HEAD", "-", "--detach", "--orphan"})
+# NEVER list ``--detach`` / ``--orphan`` here — bare ``git checkout --detach``
+# leaves target=None and was previously allowed (#4857 recurrence class).
+SAFE_TARGETS = frozenset({"main", "master", "HEAD", "-"})
 
+# Full-length or abbreviated object names (SHA-1/SHA-256 hex) that would
+# detach HEAD when used as ``git checkout <sha>``.
+_HEX_OBJECT_RE = re.compile(r"^(?:[0-9a-f]{7,40}|[0-9a-f]{64})$")
 
 def _git_probe_env() -> dict[str, str]:
     """Return an environment that lets git discover the requested repo."""
@@ -482,6 +488,14 @@ def _segment_is_dangerous(
     if "--" in args or "--ours" in args or "--theirs" in args:
         return None
 
+    # Detach / orphan always forbidden on primary (#4857 recurrence: agents
+    # leave the tree on a raw SHA and every service silently reads wrong code).
+    if "--detach" in args or "--orphan" in args:
+        return (
+            f"git {verb} --detach/--orphan detaches HEAD in the main worktree "
+            "(primary must stay attached to main)"
+        )
+
     # Flags we treat as "definitely creates / switches to a new branch":
     if "-b" in args or "--create" in args:
         return f"git {verb} -b creates and switches to a new branch in the main worktree"
@@ -498,10 +512,9 @@ def _segment_is_dangerous(
             skip_next = False
             continue
         if a.startswith("-"):
-            # Switches like `--track`, `--detach` take no value; `-t` takes
-            # one (the upstream). Defensive: treat single-letter flags
-            # other than the known boolean ones as value-taking.
-            if a in {"--detach", "--quiet", "-q", "--force", "-f", "--orphan",
+            # Switches like `--track` take no value here; `-t` takes one.
+            # ``--detach`` / ``--orphan`` already blocked above.
+            if a in {"--quiet", "-q", "--force", "-f",
                      "--no-track", "--guess", "--no-guess", "--progress",
                      "--no-progress", "--merge", "--theirs", "--ours",
                      "--ignore-skip-worktree-bits", "--patch", "-p",
@@ -516,9 +529,58 @@ def _segment_is_dangerous(
         target = a
         break
 
-    if target is None or target in SAFE_TARGETS:
+    if target is None:
+        # e.g. bare `git checkout` (no-op / path help) — allow
         return None
+    if target in SAFE_TARGETS:
+        return None
+    if _HEX_OBJECT_RE.fullmatch(target.lower()):
+        return (
+            f"git {verb} {target} detaches HEAD onto a raw object in the main "
+            "worktree (use a worktree; primary must stay on main)"
+        )
+    # origin/main is a remote-tracking ref → detaches when checked out bare
+    if target.startswith("origin/") or target.startswith("refs/"):
+        return (
+            f"git {verb} {target} switches/detaches the main worktree "
+            "(stay on main; use worktrees for feature refs)"
+        )
     return f"git {verb} {target} switches branch in the main worktree"
+
+
+def _gh_pr_checkout_reason(seg: list[str], effective_cwd: Path) -> str | None:
+    """Block ``gh pr checkout`` in the protected primary (#4857).
+
+    That command moves the primary HEAD onto a PR branch (often ``pr-N``),
+    which is how read-only reviews silently poisoned every local service.
+    """
+    i = _skip_command_prefix(seg, 0)
+    if i >= len(seg) or seg[i] != "gh":
+        return None
+    # ``gh pr checkout <n>`` (with optional global flags before subcommand)
+    rest = seg[i + 1 :]
+    # Skip global gh flags that take a value
+    j = 0
+    while j < len(rest) and rest[j].startswith("-"):
+        flag = rest[j]
+        if flag in {"-R", "--repo", "-h", "--hostname", "--help"} and j + 1 < len(rest):
+            j += 2
+        else:
+            j += 1
+    if j + 1 < len(rest) and rest[j] == "pr" and rest[j + 1] == "checkout":
+        repo_root = _git_repo_root(effective_cwd)
+        if repo_root is None:
+            return None
+        protected_roots = {root.resolve() for root in PROTECTED_ROOTS}
+        if repo_root.resolve() not in protected_roots:
+            return None
+        if not _in_main_worktree(repo_root):
+            return None
+        return (
+            "gh pr checkout moves the primary checkout off main "
+            "(use a dispatch worktree or gh pr diff / review-pr instead)"
+        )
+    return None
 
 
 def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str | None:
@@ -530,6 +592,10 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
         if cd_target is not None and following_operator == "&&":
             effective_cwd = cd_target
             continue
+
+        gh_reason = _gh_pr_checkout_reason(segment, effective_cwd)
+        if gh_reason:
+            return gh_reason
 
         invocation = _git_invocation(segment, effective_cwd)
         if invocation is None:
