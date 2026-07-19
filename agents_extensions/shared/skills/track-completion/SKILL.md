@@ -21,6 +21,16 @@ module workflow. `$curriculum-lifecycle` may order and acquire the module, but
 it must not reproduce this completion policy. `$local-code-review` is reserved
 for a code/infra diff and never repeats this learner-content semantic gate.
 
+`$curriculum-lifecycle` hands a target here only when the latest canonical
+preparation result says `next_action: build` or `next_action: certify`; `plan`,
+`prepare`, and `stop` remain outside this skill. Treat that result only as owner
+routing, never as caller-supplied build or certification authority. Before
+consuming a build, the engine reruns canonical readiness, derives the consumed
+preparation identity from the latest `BUILD_RECORDED` event, and requires every
+current preparation requirement to pass. Missing, incomplete, or stale
+preparation therefore fails closed in standalone use as well; do not weaken or
+bypass this identity-consumption gate.
+
 ## Canonical entry paths
 
 New and existing modules use one lifecycle, not separate completion systems:

@@ -1,6 +1,6 @@
 ---
 name: curriculum-lifecycle
-description: Run or resume the manifest-derived curriculum lifecycle for one active track, using the coordinator for ordered waves and the canonical track-completion engine for exactly one acquired module at a time.
+description: Run or resume the manifest-derived curriculum lifecycle for one active track, using the coordinator for ordered waves and routing each acquired module through the canonical preparation or track-completion owner.
 ---
 
 # Curriculum lifecycle
@@ -14,9 +14,10 @@ Resume $curriculum-lifecycle for bio.
 ```
 
 This skill is the track-level entry point. It composes the deterministic
-coordinator with `$track-completion`; it does not reimplement readiness,
-building, certification, review, integration, or publication policy. Derive
-active tracks and order only from `curriculum/l2-uk-en/curriculum.yaml`.
+coordinator with `$curriculum-preparation` and `$track-completion`; it does not
+reimplement readiness, preparation, building, certification, review,
+integration, or publication policy. Derive active tracks and order only from
+`curriculum/l2-uk-en/curriculum.yaml`.
 For a normal BIO request, this is one serial workflow: the coordinator owns
 manifest order, prerequisites, acquisition, deterministic resume, and the
 hash-bound receipt; the acquired module's `$track-completion` ledger is the
@@ -67,9 +68,34 @@ only bounded-completion authority.
      --run-id <run-id> --owner <agent/task>
    ```
 
-2. Resolve the acquired track's exact registered semantic profile from the
-   manifest. Put the typed context in a gitignored runtime JSON file; never add
-   free-form prompt prose to a profile:
+2. Read the canonical readiness routing snapshot from the latest matching
+   `MODULE_ACQUIRED` event in the returned ledger. Bind it to that event's
+   track, slug, and attempt. Route its exact `next_action` uniformly for CORE,
+   seminar, and BIO targets:
+
+   | `next_action` | Exact next owner |
+   | --- | --- |
+   | `plan` | `$curriculum-preparation` |
+   | `prepare` | `$curriculum-preparation` |
+   | `build` | `$track-completion` |
+   | `certify` | `$track-completion` |
+   | `stop` | Terminal reviewed HOLD |
+
+   For `plan` or `prepare`, call `$curriculum-preparation` once for the exact
+   acquired target and acquisition attempt. Its first canonical evaluation
+   becomes the typed handoff result. Stay inside that preparation scope until
+   it returns a fresh result whose action is `build`, `certify`, or `stop`;
+   preparation never calls lifecycle back. Use the result directly and do not
+   call `acquire-next` again.
+
+   For `stop`, run the canonical evaluator once to validate the full typed
+   result. Accept it only with `PREPARATION_HOLD_ACTIVE`; preserve that reviewed
+   HOLD evidence, leave the acquisition in place, report the terminal hold, and
+   end. Do not record module completion or reacquire the target. Reject an
+   unknown action or an unreviewed stop without mutation or an evaluation loop.
+3. For `build` or `certify`, resolve the acquired track's exact registered
+   semantic profile from the manifest. Put the typed context in a gitignored
+   runtime JSON file; never add free-form prompt prose to a profile:
 
    ```bash
    .venv/bin/python scripts/orchestration/prompt_contracts.py resolve-track \
@@ -79,11 +105,11 @@ only bounded-completion authority.
    Preserve the returned prompt/source identity with the phase evidence. A
    retired or unknown track, stale selector, family mismatch, missing fragment,
    or unresolved input is a fail-closed configuration defect.
-3. Follow `$track-completion` completely for the acquired `track/slug`. Reuse
+4. Follow `$track-completion` completely for the acquired `track/slug`. Reuse
    its exact ledger on resume. It owns plan review, build/recovery, read-only
    `$post-build-review`, repair routing, reviewer-instability handling,
    independent review, PR/CI/merge, publication evidence, and cleanup.
-4. Record the module result from its authoritative ledger. A publishable result
+5. Record the module result from its authoritative ledger. A publishable result
    is accepted only after `$track-completion` reaches `COMPLETE` for the
    coordinator's exact goal; a terminal bounded-budget blocker is recorded as
    blocked rather than left stale:
@@ -101,7 +127,7 @@ only bounded-completion authority.
    blocker, and next action. An incomplete module ledger cannot complete the
    coordinator. A migrated historical module is reacquired until its exact goal
    is proven.
-5. Repeat acquisition serially until the coordinator reports `complete`.
+6. Repeat acquisition serially until the coordinator reports `complete`.
    Module-at-a-time mutation remains mandatory; a wave groups health and review
    capacity but does not authorize concurrent learner writes.
 

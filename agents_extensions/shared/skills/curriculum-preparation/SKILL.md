@@ -10,6 +10,15 @@ engine. Prepare prerequisite evidence only. Produce no learner module bundle and
 never invoke `$curriculum-lifecycle`; that skill may call this one, and this one
 returns its typed result to the caller.
 
+When `$curriculum-lifecycle` delegates an acquired target whose canonical
+`next_action` is `plan` or `prepare`, accept its exact target and acquisition
+binding, run canonical readiness before mutation, and remain inside this
+preparation scope. Never start, resume, or reacquire lifecycle. Rerun canonical
+readiness after each preparation mutation, then return the first fresh `build`,
+`certify`, or reviewed `stop` result to the caller.
+This lets a standalone preparation campaign stop with a build-authorized queue
+without starting lifecycle or building learner modules.
+
 ## Accept one exact scope
 
 Accept exactly one of these operator forms:
@@ -50,17 +59,21 @@ The command emits the schema-validated
 standalone use, omit that option unless the operator supplied an authoritative
 identity; never infer one.
 
-Use the result cell by cell:
+Use the result cell by cell. `plan` and `prepare` are both preparation-scope
+actions, but each failed requirement keeps its declared owner:
 
-- Act only on a failed `requirements[]` item owned by `preparation`, or on the
-  preparation-owned `PREPARATION_IDENTITY_DRIFT` finding.
+- Route a failed `plan` requirement through the registered plan owner,
+  then resume this exact preparation scope; do not absorb or duplicate its
+  plan-review and approval policy.
+- Act directly only on a failed `requirements[]` item owned by `preparation`, or
+  on the preparation-owned `PREPARATION_IDENTITY_DRIFT` finding.
 - When a built result has `next_action: prepare` only because
   `PREPARATION_IDENTITY_MISSING` is owned by `audit_tooling`, return the typed
   result unchanged. Do not regenerate preparation evidence.
 - Leave passing requirements unchanged. Treat an alternative option as
   complete as soon as the evaluator marks its requirement passed.
-- Return `plan`, `build`, `certify`, or `stop` results without performing that
-  work. A partial bundle, off-manifest target, or active hold is not preparation
+- Return `build`, `certify`, or `stop` results without performing that work. A
+  partial bundle, off-manifest target, or active hold is not preparation
   authority.
 - Skip current cells during a missing-only scan. Do not rebuild or recertify a
   learner bundle from this skill.
@@ -117,8 +130,8 @@ result schema.
 
 In standalone use, report the exact result and end at its `next_action`. When
 called by `$curriculum-lifecycle`, return the same result and action to that
-caller, which owns the next transition. Preparation never calls lifecycle in
-either mode.
+caller, which owns the next transition without reacquisition. Preparation never
+calls lifecycle in either mode.
 
 On resume, reuse the exact target scope, typed results, identities, hashes, and
 durable review receipt. Run canonical readiness first, discard stale cells, and
