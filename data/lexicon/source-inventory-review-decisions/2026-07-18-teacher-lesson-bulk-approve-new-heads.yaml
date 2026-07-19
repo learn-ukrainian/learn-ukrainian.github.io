@@ -212,7 +212,7 @@ decisions:
   approved_gloss: To be out of patience , to be tired of , to be annoyed
   sense_note: private teacher-lesson vocabulary; bulk teacher-trust (gloss-conflict-safe)
   source_inventory:
-    key: 79750d868176595d
+    key: ec4c3be92ec93ce1
     path: data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
     locator: explicit vocabulary table 1 row 189
     source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
@@ -274,8 +274,8 @@ decisions:
 - lemma: переливати з пустого в порожнє
   decision: approve_for_publish
   approved_pos: phrase
-  approved_gloss: Repeating the same thing, engaging in unnecessary or meaningless conversations.To engage
-    in unnecessary, futile activities, usually while talking a lot.(to pour something from empty to empty)
+  approved_gloss: Repeating the same thing, engaging in unnecessary or meaningless conversations.To engage in unnecessary,
+    futile activities, usually while talking a lot.(to pour something from empty to empty)
   sense_note: private teacher-lesson vocabulary; bulk teacher-trust (gloss-conflict-safe)
   source_inventory:
     key: 3541ec29f43833b8
@@ -2930,7 +2930,7 @@ decisions:
   approved_gloss: To happen to do something
   sense_note: private teacher-lesson vocabulary; bulk teacher-trust (gloss-conflict-safe)
   source_inventory:
-    key: 95084c788dfd7928
+    key: c63007ef5c00dabf
     path: data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
     locator: explicit vocabulary table 2 row 153
     source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
