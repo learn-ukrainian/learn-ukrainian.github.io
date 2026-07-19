@@ -1034,6 +1034,62 @@ describe('lexicon SRS facade', () => {
     );
   });
 
+  test('B1 sessions prefer B1 due reviews over same-urgency lower-level reviews', () => {
+    const state = loadState(localStorage, NOW);
+    state.cards.set(cardKey('a1-word', 'flashcards'), stateCard({ due: NOW.getTime() - HOUR_MS }));
+    state.cards.set(cardKey('b1-word', 'flashcards'), stateCard({ due: NOW.getTime() - HOUR_MS }));
+    saveState(state, localStorage, NOW.getTime());
+
+    const testDeck = flashcardDeck(
+      [
+        { id: 'a1-word', cefr: 'A1' },
+        { id: 'b1-word', cefr: 'B1' },
+      ],
+      'B1',
+    );
+    const selection = selectNextPracticeItem(testDeck, { now: NOW, modeFilter: 'flashcards' });
+
+    expect(selection?.lemma.lemmaId).toBe('b1-word');
+    expect(selection?.indexItem.cefr).toBe('B1');
+  });
+
+  test('A2 sessions prefer A2 due reviews over same-urgency A1 reviews', () => {
+    const state = loadState(localStorage, NOW);
+    state.cards.set(cardKey('a1-word', 'flashcards'), stateCard({ due: NOW.getTime() - HOUR_MS }));
+    state.cards.set(cardKey('a2-word', 'flashcards'), stateCard({ due: NOW.getTime() - HOUR_MS }));
+    saveState(state, localStorage, NOW.getTime());
+
+    const testDeck = flashcardDeck(
+      [
+        { id: 'a1-word', cefr: 'A1' },
+        { id: 'a2-word', cefr: 'A2' },
+      ],
+      'A2',
+    );
+    const selection = selectNextPracticeItem(testDeck, { now: NOW, modeFilter: 'flashcards' });
+
+    expect(selection?.lemma.lemmaId).toBe('a2-word');
+    expect(selection?.indexItem.cefr).toBe('A2');
+  });
+
+  test('urgency still beats level bias for lower-level overdue cards', () => {
+    const state = loadState(localStorage, NOW);
+    state.cards.set(cardKey('a1-word', 'flashcards'), stateCard({ due: NOW.getTime() - 3 * HOUR_MS }));
+    state.cards.set(cardKey('b1-word', 'flashcards'), stateCard({ due: NOW.getTime() }));
+    saveState(state, localStorage, NOW.getTime());
+
+    const testDeck = flashcardDeck(
+      [
+        { id: 'a1-word', cefr: 'A1' },
+        { id: 'b1-word', cefr: 'B1' },
+      ],
+      'B1',
+    );
+    const selection = selectNextPracticeItem(testDeck, { now: NOW, modeFilter: 'flashcards' });
+
+    expect(selection?.lemma.lemmaId).toBe('a1-word');
+  });
+
   test('seeded answer placement varies correct-answer positions across a session', () => {
     const positions = new Set(
       Array.from({ length: 20 }, (_, index) =>

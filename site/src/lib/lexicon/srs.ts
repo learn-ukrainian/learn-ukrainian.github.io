@@ -1487,9 +1487,18 @@ function urgencyBucket(candidate: PracticeSelection, nowTime: number): number {
   return Math.floor((candidate.due - nowTime) / HOUR_MS);
 }
 
+/**
+ * Prefer items at the selected learner level. The penalty is one rank per CEFR
+ * step below the selected level, so B1 sessions prefer B1 over A2 and A2 over A1
+ * when urgency and variety are otherwise tied. It never applies to items above
+ * the selected level because `levelsUpTo` never loads them, and it is a tiebreak
+ * only — a genuinely more-due lower-level card still wins.
+ */
 function levelMatchBias(candidate: PracticeSelection, deckLevel: string): number {
-  if (candidate.cardState) return 0;
-  return candidate.indexItem.cefr === deckLevel ? 0 : 1;
+  const deckRank = cefrRank(deckLevel);
+  const itemRank = cefrRank(candidate.indexItem.cefr);
+  if (deckRank < 0 || itemRank < 0) return 0;
+  return Math.max(0, deckRank - itemRank);
 }
 
 function applyPoolFilter(
