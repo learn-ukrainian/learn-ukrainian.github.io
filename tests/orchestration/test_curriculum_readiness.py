@@ -217,6 +217,47 @@ def test_missing_bio_evidence_fails_closed_with_preparation_owner(tmp_path: Path
     assert finding["owner"] == "preparation"
 
 
+def test_reviewed_active_hold_is_a_terminal_stop_with_a_blocker_receipt(tmp_path: Path) -> None:
+    repo_root = _bio_fixture(tmp_path)
+    registry_path = repo_root / "curriculum/l2-uk-en/bio/promotion-evidence.yaml"
+    registry = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
+    registry["entries"][BIO_SLUG]["hold"] = {
+        "status": "pass",
+        "reviewer_family": "codex",
+        "date": "2026-07-19",
+        "evidence_url": "https://example.test/reviewed-hold",
+        "active": True,
+        "reason": "The terminal factual review found an unresolved source conflict.",
+        "owner": "bio-preparation-controller",
+        "checked_evidence": ["immutable packet review and adopted source set"],
+        "unblock_condition": "A stable authoritative source resolves the conflict.",
+    }
+    registry_path.write_text(yaml.safe_dump(registry, sort_keys=False), encoding="utf-8")
+
+    result = readiness.evaluate_preparation("bio", BIO_SLUG, repo_root=repo_root)
+
+    assert result["preparation_state"] == "missing"
+    assert result["state"] == "preparation-required"
+    assert result["next_action"] == "stop"
+    assert "PREPARATION_HOLD_ACTIVE" in {item["id"] for item in result["findings"]}
+    readiness.validate_result(result, repo_root=repo_root)
+
+    _create_bundle(repo_root, "bio", BIO_SLUG)
+    built = readiness.evaluate_preparation(
+        "bio",
+        BIO_SLUG,
+        consumed_preparation_identity=result["preparation_identity"],
+        repo_root=repo_root,
+    )
+
+    assert built["module_state"] == "built"
+    assert built["preparation_state"] == "missing"
+    assert built["state"] == "preparation-required"
+    assert built["next_action"] == "stop"
+    assert "PREPARATION_HOLD_ACTIVE" in {item["id"] for item in built["findings"]}
+    readiness.validate_result(built, repo_root=repo_root)
+
+
 def test_missing_plan_routes_to_plan_owner(tmp_path: Path) -> None:
     repo_root = _bio_fixture(tmp_path)
     (repo_root / f"curriculum/l2-uk-en/plans/bio/{BIO_SLUG}.yaml").unlink()

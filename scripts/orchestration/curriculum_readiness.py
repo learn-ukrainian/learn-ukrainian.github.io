@@ -740,6 +740,18 @@ def _lifecycle_decision(
     return LifecycleDecision("missing", "preparation-required", next_action), []
 
 
+def _active_preparation_hold(context: ValidationContext) -> Mapping[str, Any] | None:
+    """Return one strictly validated active hold, if the track registry has one."""
+    path = artifact_path("manual-registry", context.repo_root, context.track, context.slug)
+    if not path.is_file():
+        return None
+    try:
+        record = context.manual_evidence(path).get(context.slug, {}).get("hold")
+    except RegistryValidationError:
+        return None
+    return record if isinstance(record, Mapping) and record.get("active") is True else None
+
+
 def _evaluate_manifest_target(
     *,
     repo_root: Path,
@@ -774,6 +786,19 @@ def _evaluate_manifest_target(
         preparation_identity=preparation_identity,
         consumed_preparation_identity=consumed_preparation_identity,
     )
+    active_hold = _active_preparation_hold(context)
+    if active_hold is not None:
+        state_findings.append(
+            {
+                "id": "PREPARATION_HOLD_ACTIVE",
+                "category": "preparation",
+                "severity": "blocker",
+                "summary": f"Active reviewed preparation hold: {active_hold['reason']}",
+                "owner": "preparation",
+            }
+        )
+        if decision.next_action != "stop":
+            decision = LifecycleDecision("missing", "preparation-required", "stop")
     result = _result_document(
         track=track,
         slug=slug,
