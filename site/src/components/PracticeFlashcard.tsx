@@ -16,7 +16,7 @@ interface PracticeFlashcardProps {
   ratingLabels: Record<PracticeRating, { uk: string; en: string }>;
   intervalPreviews: Record<PracticeRating, string>;
   onRate(rating: PracticeRating): void;
-  showEnglishSubtitles: boolean;
+  /** Pure chrome locale for rating-button labels (#5503). */
   chromeLocale: ChromeLocale;
 }
 
@@ -27,7 +27,6 @@ export default function PracticeFlashcard({
   ratingLabels,
   intervalPreviews,
   onRate,
-  showEnglishSubtitles,
   chromeLocale,
 }: PracticeFlashcardProps) {
   const [flipped, setFlipped] = useState(false);
@@ -146,11 +145,8 @@ export default function PracticeFlashcard({
             onClick={() => handleRate(rating)}
           >
             <span className="rk">{index + 1}</span>
-            <span className="rt">
-              <span lang="uk">{ratingLabels[rating].uk}</span>
-              {showEnglishSubtitles ? (
-                <span className="btn-sub" lang="en">{ratingLabels[rating].en}</span>
-              ) : null}
+            <span className="rt" lang={chromeLocale}>
+              {ratingLabels[rating][chromeLocale]}
             </span>
             {flipped ? <span className="ri">‹{intervalPreviews[rating]}›</span> : null}
           </button>

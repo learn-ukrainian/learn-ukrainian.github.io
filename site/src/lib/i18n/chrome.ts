@@ -311,6 +311,21 @@ const en = {
   'practice.sourcePrefix': 'Source:',
   'practice.orChoose': 'Or choose',
 
+  // Pure-locale chrome residuals (#5503) — one locale at a time, never slash-dual
+  'practice.ariaLabel': 'Words of the Day Practice',
+  'practice.typeWord': 'type the word',
+  'practice.anotherSession': 'Another session',
+  'practice.done': 'Done',
+  'practice.correctCount': 'Correct',
+  'practice.lapsedCount': 'Lapsed',
+  'practice.advancedToReview': 'Advanced to Review',
+  'practice.willRepeatNext': 'will repeat next time',
+  'practice.retry': 'Try again',
+  'practice.loadError': 'We couldn’t load practice.',
+  'practice.loadErrorReload': 'We couldn’t load practice. Try reloading the page.',
+  'practice.poolMiss': 'This word is not in the practice pool yet.',
+  'practice.progress': 'Progress',
+
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Practice this word →',
   'atlas.practiceUnavailable': 'Not in the practice pool yet',
@@ -593,6 +608,21 @@ const uk: Record<ChromeKey, string> = {
   'practice.clozeOptionsFailed': 'Варіанти для пропуску не пройшли перевірку.',
   'practice.sourcePrefix': 'Джерело:',
   'practice.orChoose': 'Або оберіть',
+
+  // Pure-locale chrome residuals (#5503) — one locale at a time, never slash-dual
+  'practice.ariaLabel': 'Практика слів дня',
+  'practice.typeWord': 'введіть слово',
+  'practice.anotherSession': 'Ще одна сесія',
+  'practice.done': 'Готово',
+  'practice.correctCount': 'Правильно',
+  'practice.lapsedCount': 'Помилки',
+  'practice.advancedToReview': 'Перейшли на повторення',
+  'practice.willRepeatNext': 'Повторимо наступного разу',
+  'practice.retry': 'Спробувати ще раз',
+  'practice.loadError': 'Не вдалося завантажити практику.',
+  'practice.loadErrorReload': 'Не вдалося завантажити практику. Спробуйте оновити сторінку.',
+  'practice.poolMiss': 'Це слово ще не в тренажері.',
+  'practice.progress': 'Прогрес',
 
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Практикувати це слово →',

@@ -85,46 +85,16 @@ import {
 } from '../lib/lexicon/levels';
 
 
-/** A1 always bilingual; otherwise pure chrome-locale via CSS (owner #5355 full-switch). */
-function PracticeChromeLabel({
-  k,
-  a1Bilingual,
-}: {
-  k: ChromeKey;
-  a1Bilingual: boolean;
-}): ReactElement {
-  if (a1Bilingual) {
-    return (
-      <>
-        <span lang="uk">{CHROME_STRINGS.uk[k]}</span>
-        <span className="btn-sub" lang="en">
-          / {CHROME_STRINGS.en[k]}
-        </span>
-      </>
-    );
-  }
+/**
+ * Practice chrome labels — pure locale via ChromeText CSS (data-chrome-locale).
+ * A1 English scaffolding is for item content glosses only (#5503), never dual chrome.
+ */
+function PracticeChromeLabel({ k }: { k: ChromeKey }): ReactElement {
   return <ChromeText k={k} />;
 }
 
-function PracticeChromeDual({
-  uk,
-  en,
-  a1Bilingual,
-}: {
-  uk: string;
-  en: string;
-  a1Bilingual: boolean;
-}): ReactElement {
-  if (a1Bilingual) {
-    return (
-      <>
-        <span lang="uk">{uk}</span>
-        <span className="btn-sub" lang="en">
-          / {en}
-        </span>
-      </>
-    );
-  }
+/** Dynamic chrome phrases (interpolated numbers) — pure locale via CSS, never slash-dual. */
+function PracticeChromeDual({ uk, en }: { uk: string; en: string }): ReactElement {
   return <ChromeDual en={en} uk={uk} />;
 }
 
@@ -178,12 +148,7 @@ const STREAK_KEY = 'lu-lexicon-practice-streak';
 const MASTERED_THRESHOLD = 21;
 type SessionPhase = 'idle' | 'active' | 'summary';
 
-const PRACTICE_LOAD_ERROR_UK = 'Не вдалося завантажити практику.';
-const PRACTICE_LOAD_ERROR_EN = 'We couldn’t load practice.';
-const PRACTICE_RETRY_UK = 'Спробувати ще раз';
-const PRACTICE_RETRY_EN = 'Try again';
-const PRACTICE_POOL_MISS_UK = 'Це слово ще не в тренажері.';
-const PRACTICE_POOL_MISS_EN = 'This word is not in the practice pool yet.';
+// Load/error chrome strings live in CHROME_STRINGS (practice.loadError / retry / poolMiss).
 
 function makePracticeSessionSeed(): number {
   return (Date.now() ^ Math.floor(Math.random() * 4294967296)) >>> 0;
@@ -220,7 +185,6 @@ function translateGrammarTerm(ukLabel: string): string {
   if (!ukLabel) return '';
   const norm = ukLabel.toLowerCase().trim();
   const parts = norm.split(/[\s,]+/);
-  
   if (norm.includes('відмінок')) {
     const caseName = parts.find(p => p !== 'відмінок' && p !== 'і' && CASE_GLOSSES[p]);
     const caseEn = caseName ? CASE_GLOSSES[caseName] : '';
@@ -1005,26 +969,9 @@ function resolvePracticeIndexItem(
   );
 }
 
-function BilingualPracticeMessage({
-  uk,
-  en,
-  showEnglishSubtitles,
-}: {
-  uk: string;
-  en: string;
-  showEnglishSubtitles: boolean;
-}) {
-  return (
-    <>
-      <span lang="uk">{uk}</span>
-      {showEnglishSubtitles ? (
-        <>
-          {' '}
-          <span lang="en">/ {en}</span>
-        </>
-      ) : null}
-    </>
-  );
+/** Pure-locale practice chrome message (both locales in DOM; CSS shows one). */
+function PureLocalePracticeMessage({ uk, en }: { uk: string; en: string }) {
+  return <ChromeDual uk={uk} en={en} />;
 }
 
 /** Bare hard-stem adjective case labels (`знахідний`) → «у знахідному відмінку». */
@@ -1197,8 +1144,8 @@ function LexiconPracticeIsland({
     obs.observe(el, { attributes: true, attributeFilter: ['data-chrome-locale'] });
     return () => obs.disconnect();
   }, []);
-  // A1 scaffolding stays bilingual regardless of chrome locale; EN chrome also
-  // dual-labels practice chrome (K3 A1 / Sol-approved data-chrome-locale).
+  // Content glosses only (A1 pedagogy + EN chrome). Practice chrome is pure
+  // chromeLocale via ChromeText/ChromeDual — never slash-dual (#5503).
   const showEnglishSubtitles = learnerLevel === 'A1' || chromeLocale === 'en';
 
   const matchedSelectedRatingRef = useRef<PracticeRating | null>(null);
@@ -1803,7 +1750,7 @@ function LexiconPracticeIsland({
       return nextDeck!;
     } catch {
       if (deckRequestId.current === requestId) {
-        setError(PRACTICE_LOAD_ERROR_UK);
+        setError(CHROME_STRINGS.uk['practice.loadError']);
       }
       return null;
     } finally {
@@ -1861,7 +1808,7 @@ function LexiconPracticeIsland({
       if (!resolvedItem) {
         // An index/lexeme deploy mismatch is a real data-load fault, not a word that
         // simply is not in the learner's available practice pool.
-        setError(PRACTICE_LOAD_ERROR_UK);
+        setError(CHROME_STRINGS.uk['practice.loadError']);
         setSessionPhase('idle');
         return;
       }
@@ -1874,7 +1821,7 @@ function LexiconPracticeIsland({
     } catch {
       // Only request failures reach the load fallback. A completed lookup miss remains
       // a usable hub with a concise bilingual notice.
-      setError(PRACTICE_LOAD_ERROR_UK);
+      setError(CHROME_STRINGS.uk['practice.loadError']);
       setSessionPhase('idle');
     } finally {
       setLoading(false);
@@ -2461,23 +2408,18 @@ function LexiconPracticeIsland({
   }
 
   return (
-    <section className="lexicon-practice" aria-label={showEnglishSubtitles ? "Практика слів дня / Words of the Day Practice" : "Практика слів дня"}>
+    <section className="lexicon-practice" aria-label={CHROME_STRINGS[chromeLocale]['practice.ariaLabel']}>
       {sessionPhase !== 'idle' || feedback ? (
       <p className="lexicon-practice-status" aria-live="polite">
         {feedback ? (
-          <>
-            <span lang="uk">{feedback.uk}</span>
-            {showEnglishSubtitles && feedback.en ? (
-              <span className="btn-sub" lang="en">/ {feedback.en}</span>
-            ) : null}
-          </>
+          <PureLocalePracticeMessage uk={feedback.uk} en={feedback.en ?? feedback.uk} />
         ) : sessionPhase === 'active' ? (
           <>
-            <PracticeChromeDual uk={`Сесія ${progressLabel}`} en={`Session ${progressLabel}`} a1Bilingual={learnerLevel === 'A1'} />
+            <PracticeChromeDual uk={`Сесія ${progressLabel}`} en={`Session ${progressLabel}`} />
           </>
         ) : (
           <>
-            <PracticeChromeLabel k="practice.sessionComplete" a1Bilingual={learnerLevel === 'A1'} />
+            <PracticeChromeLabel k="practice.sessionComplete" />
           </>
         )}
       </p>
@@ -2487,20 +2429,16 @@ function LexiconPracticeIsland({
         const warn = translateStorageWarning(storageWarning);
         return warn ? (
           <p className="lexicon-practice-warning" role="alert">
-            <span lang="uk">{warn.uk}</span>
-            {showEnglishSubtitles && warn.en ? (
-              <span className="btn-sub" lang="en">/ {warn.en}</span>
-            ) : null}
+            <PureLocalePracticeMessage uk={warn.uk} en={warn.en ?? warn.uk} />
           </p>
         ) : null;
       })()}
 
       {focusLookupMiss && (
         <p className="lexicon-practice-warning" role="status" data-testid="practice-lemma-missing">
-          <BilingualPracticeMessage
-            uk={PRACTICE_POOL_MISS_UK}
-            en={PRACTICE_POOL_MISS_EN}
-            showEnglishSubtitles={showEnglishSubtitles}
+          <PureLocalePracticeMessage
+            uk={CHROME_STRINGS.uk['practice.poolMiss']}
+            en={CHROME_STRINGS.en['practice.poolMiss']}
           />
         </p>
       )}
@@ -2524,7 +2462,7 @@ function LexiconPracticeIsland({
             >
               <span>
                 🎯 <strong>
-                  <PracticeChromeLabel k="practice.focusPractice" a1Bilingual={learnerLevel === 'A1'} />
+                  <PracticeChromeLabel k="practice.focusPractice" />
                 </strong> «{focusedLemmaId}»
               </span>
               <button
@@ -2540,7 +2478,7 @@ function LexiconPracticeIsland({
                   cursor: 'pointer'
                 }}
               >
-                <PracticeChromeLabel k="practice.clearFocus" a1Bilingual={learnerLevel === 'A1'} />
+                <PracticeChromeLabel k="practice.clearFocus" />
               </button>
             </div>
           )}
@@ -2774,26 +2712,19 @@ function LexiconPracticeIsland({
       )}
       {loading && (
         <p className="lexicon-practice-muted">
-          <PracticeChromeLabel k="practice.loading" a1Bilingual={learnerLevel === 'A1'} />
+          <PracticeChromeLabel k="practice.loading" />
         </p>
       )}
       {error && !selection && (
         <div className="lexicon-practice-fallback" data-testid="practice-fetch-error">
           <p className="lexicon-practice-warning">
-            <BilingualPracticeMessage
+            <PureLocalePracticeMessage
               uk={error}
-              en={PRACTICE_LOAD_ERROR_EN}
-              showEnglishSubtitles={showEnglishSubtitles}
+              en={CHROME_STRINGS.en['practice.loadError']}
             />
           </p>
           <button type="button" className="btn btn-accent" onClick={() => window.location.reload()}>
-            <span lang="uk">{PRACTICE_RETRY_UK}</span>
-            {showEnglishSubtitles ? (
-              <>
-                {' '}
-                <span className="btn-sub" lang="en">{PRACTICE_RETRY_EN}</span>
-              </>
-            ) : null}
+            <ChromeText k="practice.retry" />
           </button>
         </div>
       )}
@@ -2801,7 +2732,7 @@ function LexiconPracticeIsland({
       {sessionPhase === 'summary' && (
         <PracticeSessionSummary
           stats={summaryStats}
-          showEnglishSubtitles={showEnglishSubtitles}
+          chromeLocale={chromeLocale}
           onAnotherSession={() => {
             // A fresh «another session» is never a focus session — startSession(focus=null)
             // clears any weakness so the next session is the full pool for `mode`.
@@ -2815,17 +2746,14 @@ function LexiconPracticeIsland({
         <div className="lexicon-practice-stage-shell">
           <div className="lexicon-practice-stage-bar">
             <button type="button" className="stage-back" onClick={finishPractice}>
-              <PracticeChromeLabel k="practice.home" a1Bilingual={learnerLevel === 'A1'} />
+              <PracticeChromeLabel k="practice.home" />
             </button>
             <h2>
-              <span lang="uk">{stageTitleUk}</span>
-              {showEnglishSubtitles ? (
-                <span className="btn-sub" lang="en" style={{ fontSize: '0.65em', marginLeft: '8px' }}>/ {stageTitleEn}</span>
-              ) : null}
+              <PracticeChromeDual uk={stageTitleUk} en={stageTitleEn} />
             </h2>
             <span
               className="queue-pill"
-              aria-label={showEnglishSubtitles ? `Прогрес ${progressLabel} / Progress ${progressLabel}` : `Прогрес ${progressLabel}`}
+              aria-label={`${CHROME_STRINGS[chromeLocale]['practice.progress']} ${progressLabel}`}
               data-testid="practice-session-progress"
             >
               {progressLabel}
@@ -2834,7 +2762,7 @@ function LexiconPracticeIsland({
 
           {deck && deck.index.length === 0 && (
             <p className="lexicon-practice-muted">
-              <PracticeChromeLabel k="practice.noCards" a1Bilingual={learnerLevel === 'A1'} />
+              <PracticeChromeLabel k="practice.noCards" />
             </p>
           )}
 
@@ -2877,26 +2805,26 @@ function LexiconPracticeIsland({
                         data-testid="practice-advance-button"
                         onClick={advancePending}
                       >
-                        <PracticeChromeLabel k="practice.nextArrow" a1Bilingual={learnerLevel === 'A1'} />
+                        <PracticeChromeLabel k="practice.nextArrow" />
                       </button>
                     </div>
                   ) : null}
                 </>
               ) : mode === 'cloze' && deck.cloze.length === 0 ? (
                 <p className="lexicon-practice-muted" data-testid="practice-cloze-empty">
-                  <PracticeChromeLabel k="practice.clozePreparing" a1Bilingual={learnerLevel === 'A1'} />
+                  <PracticeChromeLabel k="practice.clozePreparing" />
                 </p>
               ) : mode === 'heritage' && (deck.heritage?.length ?? 0) === 0 ? (
                 <p className="lexicon-practice-muted" data-testid="practice-heritage-empty">
-                  <PracticeChromeLabel k="practice.heritagePreparing" a1Bilingual={learnerLevel === 'A1'} />
+                  <PracticeChromeLabel k="practice.heritagePreparing" />
                 </p>
               ) : mode === 'paronym' && (deck.paronym?.length ?? 0) === 0 ? (
                 <p className="lexicon-practice-muted" data-testid="practice-paronym-empty">
-                  <PracticeChromeLabel k="practice.paronymPreparing" a1Bilingual={learnerLevel === 'A1'} />
+                  <PracticeChromeLabel k="practice.paronymPreparing" />
                 </p>
               ) : (
                 <p className="lexicon-practice-muted">
-                  <PracticeChromeLabel k="practice.allCaughtUp" a1Bilingual={learnerLevel === 'A1'} />
+                  <PracticeChromeLabel k="practice.allCaughtUp" />
                 </p>
               )}
             </div>
@@ -2984,7 +2912,6 @@ function PracticeItem({
         ratingLabels={RATING_LABELS}
         intervalPreviews={intervalPreviews}
         onRate={onFlashcardRating}
-        showEnglishSubtitles={showEnglishSubtitles}
         chromeLocale={chromeLocale}
       />
     );
@@ -3175,7 +3102,7 @@ function PracticeItem({
     if (!pairs.length) {
       return (
         <p className="lexicon-practice-muted">
-          <PracticeChromeLabel k="practice.noMatchCards" a1Bilingual={learnerLevel === 'A1'} />
+          <PracticeChromeLabel k="practice.noMatchCards" />
         </p>
       );
     }
@@ -3192,7 +3119,7 @@ function PracticeItem({
               en={`Match pairs · ${matchedCount} of ${totalPairs}`}
             />
           )}
-          isUkrainian={!showEnglishSubtitles}
+          isUkrainian={chromeLocale === 'uk'}
           matchedPairCoding="semantic-four"
           onComplete={onMatchingComplete}
           onMatch={(pairIndex, rating) => {
@@ -3215,7 +3142,7 @@ function PracticeItem({
   if (!options.length) {
     return (
       <p className="lexicon-practice-muted">
-        <PracticeChromeLabel k="practice.noChoiceCards" a1Bilingual={learnerLevel === 'A1'} />
+        <PracticeChromeLabel k="practice.noChoiceCards" />
       </p>
     );
   }
@@ -3236,7 +3163,7 @@ function PracticeItem({
         ) : null}
       </p>
       <p className="mc-sub">
-        <PracticeChromeLabel k="practice.chooseCorrect" a1Bilingual={learnerLevel === 'A1'} />
+        <PracticeChromeLabel k="practice.chooseCorrect" />
       </p>
       <ul className="lexicon-option-list mc-options">
         {options.map((option, index) => (
@@ -3304,7 +3231,7 @@ function PracticeParonym({
   return (
     <div className="lexicon-paronym" data-testid="practice-paronym">
       <p className="paronym-task">
-        <PracticeChromeLabel k="practice.chooseParonym" a1Bilingual={learnerLevel === 'A1'} />
+        <PracticeChromeLabel k="practice.chooseParonym" />
       </p>
       <p className="paronym-sentence">
         <span>{before}</span>
@@ -3360,7 +3287,7 @@ function PracticeParonym({
               aria-label={CHROME_STRINGS[chromeLocale]['practice.openInAtlasTab']}
               style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
             >
-              <PracticeChromeLabel k="practice.openInAtlasArrow" a1Bilingual={learnerLevel === 'A1'} />
+              <PracticeChromeLabel k="practice.openInAtlasArrow" />
             </a>
           </div>
         </div>
@@ -3396,7 +3323,7 @@ function PracticeHeritage({
   return (
     <div className="lexicon-heritage" data-testid="practice-heritage">
       <p className="heritage-task">
-        <PracticeChromeLabel k="practice.chooseNative" a1Bilingual={learnerLevel === 'A1'} />
+        <PracticeChromeLabel k="practice.chooseNative" />
       </p>
       <p className="heritage-sentence">
         <span>{before}</span>
@@ -3437,7 +3364,7 @@ function PracticeHeritage({
               <PracticeChromeDual
                 uk={`Джерело: ${feedback.citations.join('; ')}`}
                 en={`Source: ${feedback.citations.join('; ')}`}
-                a1Bilingual={learnerLevel === 'A1'}
+               
               />
             </p>
           ) : null}
@@ -3461,7 +3388,7 @@ function PracticeHeritage({
               aria-label={CHROME_STRINGS[chromeLocale]['practice.openInAtlasTab']}
               style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
             >
-              <PracticeChromeLabel k="practice.openInAtlasArrow" a1Bilingual={learnerLevel === 'A1'} />
+              <PracticeChromeLabel k="practice.openInAtlasArrow" />
             </a>
           </div>
         </div>
@@ -3511,7 +3438,7 @@ function PracticeCloze({
         <PracticeChromeDual
           uk={`Поставте слово „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” у правильному відмінку.`}
           en={`Put the word „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” in the correct case.`}
-          a1Bilingual={learnerLevel === 'A1'}
+         
         />
       </p>
       <p className="cz-sentence">
@@ -3524,7 +3451,7 @@ function PracticeCloze({
       ) : null}
       {cloze.attribution ? (
         <p className="lexicon-cloze-attribution">
-          <PracticeChromeLabel k="practice.sentenceWith" a1Bilingual={learnerLevel === 'A1'} />{' '}
+          <PracticeChromeLabel k="practice.sentenceWith" />{' '}
           {cloze.attribution.sourceUrl ? (
             <a href={cloze.attribution.sourceUrl}>{cloze.attribution.source}</a>
           ) : (
@@ -3550,31 +3477,31 @@ function PracticeCloze({
           className="cz-input"
           value={input}
           disabled={answerLocked}
-          placeholder={showEnglishSubtitles ? 'введіть слово / type the word' : 'введіть слово'}
+          placeholder={CHROME_STRINGS[chromeLocale]['practice.typeWord']}
           autoComplete="off"
           autoCapitalize="off"
           autoCorrect="off"
           spellCheck={false}
           lang="uk"
           aria-label={
-            showEnglishSubtitles
-              ? `Відповідь ${casePhraseLocative(cloze.caseRule.caseLabel)} / Answer in ${translateGrammarTerm(cloze.caseRule.caseLabel)}`
+            chromeLocale === 'en'
+              ? `Answer in ${translateGrammarTerm(cloze.caseRule.caseLabel)}`
               : `Відповідь ${casePhraseLocative(cloze.caseRule.caseLabel)}`
           }
           onChange={(event) => onInput(event.currentTarget.value)}
         />
         <button className="btn btn-accent" type="submit" disabled={answerLocked}>
-          <PracticeChromeLabel k="practice.check" a1Bilingual={learnerLevel === 'A1'} />
+          <PracticeChromeLabel k="practice.check" />
         </button>
       </form>
       {optionErrors.length > 0 ? (
         <p className="lexicon-practice-warning">
-          <PracticeChromeLabel k="practice.clozeOptionsFailed" a1Bilingual={learnerLevel === 'A1'} />
+          <PracticeChromeLabel k="practice.clozeOptionsFailed" />
         </p>
       ) : (
         <>
           <div className="cz-or">
-            <PracticeChromeLabel k="practice.orChoose" a1Bilingual={learnerLevel === 'A1'} />
+            <PracticeChromeLabel k="practice.orChoose" />
           </div>
           <ul className="lexicon-option-list lexicon-cloze-options cz-options">
           {cloze.options.map((option) => (
@@ -3612,7 +3539,7 @@ function PracticeCloze({
               aria-label={CHROME_STRINGS[chromeLocale]['practice.openInAtlasTab']}
               style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
             >
-              <PracticeChromeLabel k="practice.openInAtlasArrow" a1Bilingual={learnerLevel === 'A1'} />
+              <PracticeChromeLabel k="practice.openInAtlasArrow" />
             </a>
           </div>
         </div>
