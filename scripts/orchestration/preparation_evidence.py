@@ -119,6 +119,21 @@ def _validated_manual_record(slug: str, name: object, record: object) -> dict:
             or not clean["reason"].strip()
         ):
             raise RegistryValidationError(f"manual evidence {slug}.hold needs active boolean and reason")
+        if clean["active"] is True:
+            checked_evidence = clean.get("checked_evidence")
+            if (
+                not isinstance(clean.get("owner"), str)
+                or not clean["owner"].strip()
+                or not isinstance(clean.get("unblock_condition"), str)
+                or not clean["unblock_condition"].strip()
+                or not isinstance(checked_evidence, list)
+                or not checked_evidence
+                or not all(isinstance(item, str) and item.strip() for item in checked_evidence)
+            ):
+                raise RegistryValidationError(
+                    f"manual evidence {slug}.hold active record needs owner, "
+                    "checked_evidence, and unblock_condition"
+                )
     return clean
 
 

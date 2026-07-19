@@ -276,6 +276,33 @@ entries:
         ledger.load_manual_evidence(off_manifest, {"known"})
 
 
+def test_registry_requires_closure_metadata_for_an_active_hold(tmp_path: Path) -> None:
+    path = tmp_path / "registry.yaml"
+    path.write_text(
+        yaml.safe_dump(
+            {
+                "version": 1,
+                "entries": {
+                    "known": {
+                        "hold": {
+                            "status": "pass",
+                            "reviewer_family": "codex",
+                            "date": "2026-07-19",
+                            "evidence_url": "https://example.test/reviewed-hold",
+                            "active": True,
+                            "reason": "An authoritative source conflict remains unresolved.",
+                        }
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ledger.RegistryValidationError, match="active record needs"):
+        ledger.load_manual_evidence(path, {"known"})
+
+
 @pytest.mark.parametrize(
     ("gate", "status", "disposition"),
     [
