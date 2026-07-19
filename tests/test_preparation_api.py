@@ -206,9 +206,7 @@ def test_module_projection_is_compact_canonical_and_has_no_ready_boolean() -> No
     assert response.headers["etag"].startswith('"')
     assert response.headers["x-source-identity"] == data["freshness"]["source_identity"]
 
-    expanded = CLIENT.get(
-        "/api/state/preparation/a1/sounds-letters-and-hello?evidence=expanded"
-    )
+    expanded = CLIENT.get("/api/state/preparation/a1/sounds-letters-and-hello?evidence=expanded")
     assert expanded.status_code == 200
     VALIDATOR.validate(expanded.json())
     assert expanded.json()["canonical"]["contract_version"] == "curriculum-preparation-result.v1"
@@ -223,8 +221,9 @@ def test_bio_uses_bio_profile_and_dossier_alone_never_means_build() -> None:
     assert data["authority"]["readiness"]["profile_id"] == "bio"
     assert data["module_state"] == "unbuilt"
     assert data["preparation_state"] == "missing"
-    assert data["next_action"] == "prepare"
+    assert data["next_action"] == "stop"
     assert data["next_action"] != "build"
+    assert "PREPARATION_HOLD_ACTIVE" in data["reason_codes"]
     assert data["reason_codes"]
 
 
@@ -363,9 +362,10 @@ def test_etag_changes_when_canonical_manifest_or_profile_sources_change(
         slug="demo",
         expanded=False,
     )
-    assert preparation_state.response_document(manifest_changed)[1] != preparation_state.response_document(
-        profile_changed
-    )[1]
+    assert (
+        preparation_state.response_document(manifest_changed)[1]
+        != preparation_state.response_document(profile_changed)[1]
+    )
 
 
 def test_count_disagreement_emits_finding(tmp_path: Path, monkeypatch) -> None:
