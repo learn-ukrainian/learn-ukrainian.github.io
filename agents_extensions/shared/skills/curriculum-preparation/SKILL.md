@@ -11,11 +11,12 @@ never invoke `$curriculum-lifecycle`; that skill may call this one, and this one
 returns its typed result to the caller.
 
 When `$curriculum-lifecycle` delegates an acquired target whose canonical
-`next_action` is `plan` or `prepare`, accept its exact target and acquisition
-binding, run canonical readiness before mutation, and remain inside this
-preparation scope. Never start, resume, or reacquire lifecycle. Rerun canonical
-readiness after each preparation mutation, then return the first fresh `build`,
-`certify`, or reviewed `stop` result to the caller.
+`next_action` is `plan` or `prepare`, accept and validate its exact full typed
+result bound to the target and acquisition. Remain inside this preparation
+scope. Never start, resume, or reacquire lifecycle. Rerun canonical readiness
+after each preparation mutation, then return the fresh typed result to the
+caller. This may be `build`, `certify`, reviewed `stop`, or the unchanged
+identity-only `prepare` exception described below.
 This lets a standalone preparation campaign stop with a build-authorized queue
 without starting lifecycle or building learner modules.
 
@@ -65,16 +66,18 @@ actions, but each failed requirement keeps its declared owner:
 - Route a failed `plan` requirement through the registered plan owner,
   then resume this exact preparation scope; do not absorb or duplicate its
   plan-review and approval policy.
-- Act directly only on a failed `requirements[]` item owned by `preparation`, or
-  on the preparation-owned `PREPARATION_IDENTITY_DRIFT` finding.
-- When a built result has `next_action: prepare` only because
-  `PREPARATION_IDENTITY_MISSING` is owned by `audit_tooling`, return the typed
-  result unchanged. Do not regenerate preparation evidence.
+- Act directly only on a failed `requirements[]` item owned by `preparation`.
+- When every current requirement passes but a built result has
+  `next_action: prepare` solely because of `PREPARATION_IDENTITY_MISSING` or
+  `PREPARATION_IDENTITY_DRIFT`, return the fresh typed result unchanged to
+  lifecycle. Only `$track-completion` can derive the consumed build identity or
+  record its explicit rebuild. Do not regenerate preparation evidence, loop, or
+  treat this handoff as unfinished preparation work.
 - Leave passing requirements unchanged. Treat an alternative option as
   complete as soon as the evaluator marks its requirement passed.
-- Return `build`, `certify`, or `stop` results without performing that work. A
-  partial bundle, off-manifest target, or active hold is not preparation
-  authority.
+- Return `build`, `certify`, `stop`, or an identity-only `prepare` exception
+  without performing that work. A partial bundle, off-manifest target, or
+  active hold is not preparation authority.
 - Skip current cells during a missing-only scan. Do not rebuild or recertify a
   learner bundle from this skill.
 

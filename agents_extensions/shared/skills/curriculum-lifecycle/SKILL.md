@@ -76,26 +76,34 @@ only bounded-completion authority.
    | `next_action` | Exact next owner |
    | --- | --- |
    | `plan` | `$curriculum-preparation` |
-   | `prepare` | `$curriculum-preparation` |
+   | `prepare` | Requirement- and identity-sensitive; resolve from the full result |
    | `build` | `$track-completion` |
    | `certify` | `$track-completion` |
    | `stop` | Terminal reviewed HOLD |
 
-   For `plan` or `prepare`, call `$curriculum-preparation` once for the exact
-   acquired target and acquisition attempt. Its first canonical evaluation
-   becomes the typed handoff result. Stay inside that preparation scope until
-   it returns a fresh result whose action is `build`, `certify`, or `stop`;
-   preparation never calls lifecycle back. Use the result directly and do not
-   call `acquire-next` again.
+   For `plan` or `prepare`, run the canonical evaluator once for the exact
+   acquired target and use its full typed result to resolve ownership. If any
+   current failed requirement is owned by `plan` or `preparation`, route those
+   cells through `$curriculum-preparation`; accept its returned typed result
+   without calling lifecycle recursively.
+
+   When every current requirement passes but a built result remains `prepare`
+   solely because of `PREPARATION_IDENTITY_MISSING` or
+   `PREPARATION_IDENTITY_DRIFT`, hand the exact target to `$track-completion`.
+   Its authoritative ledger reruns readiness with the consumed identity from
+   `BUILD_RECORDED`, then either certifies or takes its existing explicit rebuild
+   transition. Do not reacquire, repeat the evaluator, or loop through
+   preparation. Fail closed on mixed or unknown combinations.
 
    For `stop`, run the canonical evaluator once to validate the full typed
    result. Accept it only with `PREPARATION_HOLD_ACTIVE`; preserve that reviewed
    HOLD evidence, leave the acquisition in place, report the terminal hold, and
    end. Do not record module completion or reacquire the target. Reject an
    unknown action or an unreviewed stop without mutation or an evaluation loop.
-3. For `build` or `certify`, resolve the acquired track's exact registered
-   semantic profile from the manifest. Put the typed context in a gitignored
-   runtime JSON file; never add free-form prompt prose to a profile:
+3. For `build`, `certify`, or an identity-only `prepare` exception, resolve the
+   acquired track's exact registered semantic profile from the manifest. Put
+   the typed context in a gitignored runtime JSON file; never add free-form
+   prompt prose to a profile:
 
    ```bash
    .venv/bin/python scripts/orchestration/prompt_contracts.py resolve-track \

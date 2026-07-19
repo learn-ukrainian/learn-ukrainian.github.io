@@ -21,15 +21,20 @@ module workflow. `$curriculum-lifecycle` may order and acquire the module, but
 it must not reproduce this completion policy. `$local-code-review` is reserved
 for a code/infra diff and never repeats this learner-content semantic gate.
 
-`$curriculum-lifecycle` hands a target here only when the latest canonical
-preparation result says `next_action: build` or `next_action: certify`; `plan`,
-`prepare`, and `stop` remain outside this skill. Treat that result only as owner
-routing, never as caller-supplied build or certification authority. Before
-consuming a build, the engine reruns canonical readiness, derives the consumed
-preparation identity from the latest `BUILD_RECORDED` event, and requires every
-current preparation requirement to pass. Missing, incomplete, or stale
-preparation therefore fails closed in standalone use as well; do not weaken or
-bypass this identity-consumption gate.
+`$curriculum-lifecycle` hands a target here when the latest canonical result is
+`build` or `certify`, plus one narrow class of `prepare` result: the bundle is
+built, every current requirement passes, and the only remaining reason is
+`PREPARATION_IDENTITY_MISSING` or `PREPARATION_IDENTITY_DRIFT`. `plan`, any
+`prepare` with a failed plan/preparation requirement, and `stop` remain outside
+this skill. Treat every incoming result only as owner routing, never as
+caller-supplied build or certification authority.
+
+For the exception, derive the consumed preparation identity from the latest
+`BUILD_RECORDED` event in this authoritative ledger and rerun canonical
+readiness with it. Continue only from that fresh result: certify when current,
+or take the existing explicit preparation-rebuild transition when the identity
+differs. A failed requirement or mixed/unknown combination fails closed. Do not
+weaken or bypass this identity-consumption gate.
 
 ## Canonical entry paths
 
