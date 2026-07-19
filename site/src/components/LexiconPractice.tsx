@@ -2428,17 +2428,14 @@ function LexiconPracticeIsland({
           </>
         ) : sessionPhase === 'active' ? (
           <>
-            <span lang="uk">Сесія {progressLabel}</span>
-            {showEnglishSubtitles ? (
-              <span className="btn-sub" lang="en">/ Session {progressLabel}</span>
-            ) : null}
+            <ChromeDual
+              uk={`Сесія ${progressLabel}`}
+              en={`Session ${progressLabel}`}
+            />
           </>
         ) : (
           <>
-            <span lang="uk">Сесію завершено</span>
-            {showEnglishSubtitles ? (
-              <span className="btn-sub" lang="en">/ Session complete</span>
-            ) : null}
+            <ChromeText k="practice.sessionComplete" />
           </>
         )}
       </p>
@@ -2485,10 +2482,7 @@ function LexiconPracticeIsland({
             >
               <span>
                 🎯 <strong>
-                  <span lang="uk">Фокусне тренування:</span>
-                  {showEnglishSubtitles ? (
-                    <span className="btn-sub" lang="en">/ Focus Practice:</span>
-                  ) : null}
+                  <ChromeText k="practice.focusPractice" />
                 </strong> «{focusedLemmaId}»
               </span>
               <button
@@ -2504,12 +2498,7 @@ function LexiconPracticeIsland({
                   cursor: 'pointer'
                 }}
               >
-                <span lang="uk">Скинути фокус ×</span>
-                {showEnglishSubtitles ? (
-                  <span lang="en" style={{ marginLeft: '4px', fontSize: '0.9em', opacity: 0.85 }}>
-                    / Clear focus ×
-                  </span>
-                ) : null}
+                <ChromeText k="practice.clearFocus" />
               </button>
             </div>
           )}
@@ -2743,10 +2732,7 @@ function LexiconPracticeIsland({
       )}
       {loading && (
         <p className="lexicon-practice-muted">
-          <span lang="uk">Завантажуємо…</span>
-          {showEnglishSubtitles ? (
-            <span className="btn-sub" lang="en">/ Loading…</span>
-          ) : null}
+          <ChromeText k="practice.loading" />
         </p>
       )}
       {error && !selection && (
@@ -2787,10 +2773,7 @@ function LexiconPracticeIsland({
         <div className="lexicon-practice-stage-shell">
           <div className="lexicon-practice-stage-bar">
             <button type="button" className="stage-back" onClick={finishPractice}>
-              <span lang="uk">← Додому</span>
-              {showEnglishSubtitles ? (
-                <span className="btn-sub" lang="en">/ ← Home</span>
-              ) : null}
+              <ChromeText k="practice.home" />
             </button>
             <h2>
               <span lang="uk">{stageTitleUk}</span>
@@ -2809,10 +2792,7 @@ function LexiconPracticeIsland({
 
           {deck && deck.index.length === 0 && (
             <p className="lexicon-practice-muted">
-              <span lang="uk">Поки що немає карток для практики.</span>
-              {showEnglishSubtitles ? (
-                <span className="btn-sub" lang="en">/ There are no cards for practice yet.</span>
-              ) : null}
+              <ChromeText k="practice.noCards" />
             </p>
           )}
 
@@ -2855,49 +2835,26 @@ function LexiconPracticeIsland({
                         data-testid="practice-advance-button"
                         onClick={advancePending}
                       >
-                        <span lang="uk">Далі →</span>
-                        {showEnglishSubtitles ? (
-                          <span className="btn-sub" lang="en">/ Next →</span>
-                        ) : null}
+                        <ChromeText k="practice.nextArrow" />
                       </button>
                     </div>
                   ) : null}
                 </>
               ) : mode === 'cloze' && deck.cloze.length === 0 ? (
                 <p className="lexicon-practice-muted" data-testid="practice-cloze-empty">
-                  <span lang="uk">Вправи з пропусками для цього рівня ще готуються. Спробуйте флешкартки, добір пар або вибір.</span>
-                  {showEnglishSubtitles ? (
-                    <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', marginTop: '4px' }}>
-                      / Fill-in-the-blank exercises for this level are still being prepared. Try flashcards, matching, or choice.
-                    </span>
-                  ) : null}
+                  <ChromeText k="practice.clozePreparing" />
                 </p>
               ) : mode === 'heritage' && (deck.heritage?.length ?? 0) === 0 ? (
                 <p className="lexicon-practice-muted" data-testid="practice-heritage-empty">
-                  <span lang="uk">Вправи зі спадщини для цього рівня ще готуються.</span>
-                  {showEnglishSubtitles ? (
-                    <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', marginTop: '4px' }}>
-                      / Heritage exercises for this level are still being prepared.
-                    </span>
-                  ) : null}
+                  <ChromeText k="practice.heritagePreparing" />
                 </p>
               ) : mode === 'paronym' && (deck.paronym?.length ?? 0) === 0 ? (
                 <p className="lexicon-practice-muted" data-testid="practice-paronym-empty">
-                  <span lang="uk">Вправи з паронімами для цього рівня ще готуються.</span>
-                  {showEnglishSubtitles ? (
-                    <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', marginTop: '4px' }}>
-                      / Paronym exercises for this level are still being prepared.
-                    </span>
-                  ) : null}
+                  <ChromeText k="practice.paronymPreparing" />
                 </p>
               ) : (
                 <p className="lexicon-practice-muted">
-                  <span lang="uk">Усі картки на зараз повторено.</span>
-                  {showEnglishSubtitles ? (
-                    <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', marginTop: '4px' }}>
-                      / All cards are reviewed for now.
-                    </span>
-                  ) : null}
+                  <ChromeText k="practice.allCaughtUp" />
                 </p>
               )}
             </div>
@@ -3175,7 +3132,7 @@ function PracticeItem({
     if (!pairs.length) {
       return (
         <p className="lexicon-practice-muted">
-          <span lang="uk">Зараз немає карток для добору пар.</span>
+          <ChromeText k="practice.noMatchCards" />
           {showEnglishSubtitles ? (
             <span className="btn-sub" lang="en">/ There are currently no cards for matching pairs.</span>
           ) : null}
@@ -3218,7 +3175,7 @@ function PracticeItem({
   if (!options.length) {
     return (
       <p className="lexicon-practice-muted">
-        <span lang="uk">Зараз немає карток для вибору відповіді.</span>
+        <ChromeText k="practice.noChoiceCards" />
         {showEnglishSubtitles ? (
           <span className="btn-sub" lang="en">/ There are currently no cards for selecting an answer.</span>
         ) : null}
@@ -3242,7 +3199,7 @@ function PracticeItem({
         ) : null}
       </p>
       <p className="mc-sub">
-        <span lang="uk">Оберіть правильну відповідь</span>
+        <ChromeText k="practice.chooseCorrect" />
         {showEnglishSubtitles ? (
           <span className="btn-sub" lang="en">/ Select the correct answer</span>
         ) : null}
@@ -3313,7 +3270,7 @@ function PracticeParonym({
   return (
     <div className="lexicon-paronym" data-testid="practice-paronym">
       <p className="paronym-task">
-        <span lang="uk">Оберіть правильний паронім.</span>
+        <ChromeText k="practice.chooseParonym" />
         {showEnglishSubtitles ? (
           <span className="btn-sub" lang="en">/ Choose the correct paronym.</span>
         ) : null}
@@ -3369,10 +3326,10 @@ function PracticeParonym({
               href={atlasLemmaHref(item.lemmaId)}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Відкрити в Атласі (нова вкладка)"
+              aria-label={CHROME_STRINGS[chromeLocale]['practice.openInAtlasTab']}
               style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
             >
-              <span lang="uk">Відкрити в Атласі →</span>
+              <ChromeText k="practice.openInAtlasArrow" />
               {showEnglishSubtitles ? (
                 <span className="btn-sub" lang="en">/ Open in Atlas →</span>
               ) : null}
@@ -3411,7 +3368,7 @@ function PracticeHeritage({
   return (
     <div className="lexicon-heritage" data-testid="practice-heritage">
       <p className="heritage-task">
-        <span lang="uk">Оберіть питоме українське слово.</span>
+        <ChromeText k="practice.chooseNative" />
         {showEnglishSubtitles ? (
           <span className="btn-sub" lang="en">/ Choose the native Ukrainian word.</span>
         ) : null}
@@ -3452,10 +3409,10 @@ function PracticeHeritage({
           </p>
           {feedback.kind === 'calque' && feedback.citations?.length ? (
             <p className="heritage-citation">
-              <span lang="uk">Джерело: {feedback.citations.join('; ')}</span>
-              {showEnglishSubtitles ? (
-                <span className="btn-sub" lang="en">/ Source: {feedback.citations.join('; ')}</span>
-              ) : null}
+              <ChromeDual
+                uk={`Джерело: ${feedback.citations.join('; ')}`}
+                en={`Source: ${feedback.citations.join('; ')}`}
+              />
             </p>
           ) : null}
           <PracticeFormRail
@@ -3475,10 +3432,10 @@ function PracticeHeritage({
               href={atlasLemmaHref(item.lemmaId)}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Відкрити в Атласі (нова вкладка)"
+              aria-label={CHROME_STRINGS[chromeLocale]['practice.openInAtlasTab']}
               style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
             >
-              <span lang="uk">Відкрити в Атласі →</span>
+              <ChromeText k="practice.openInAtlasArrow" />
               {showEnglishSubtitles ? (
                 <span className="btn-sub" lang="en">/ Open in Atlas →</span>
               ) : null}
@@ -3526,10 +3483,10 @@ function PracticeCloze({
   return (
     <div className="lexicon-cloze" data-testid="practice-cloze">
       <p className="cz-task">
-        <span lang="uk">Поставте слово „{displayPracticeForm(selection.lemma.lemma, learnerLevel)}” у правильному відмінку.</span>
-        {showEnglishSubtitles ? (
-          <span className="btn-sub" lang="en">/ Put the word „{displayPracticeForm(selection.lemma.lemma, learnerLevel)}” in the correct case.</span>
-        ) : null}
+        <ChromeDual
+          uk={`Поставте слово „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” у правильному відмінку.`}
+          en={`Put the word „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” in the correct case.`}
+        />
       </p>
       <p className="cz-sentence">
         <span>{before}</span>
@@ -3541,7 +3498,7 @@ function PracticeCloze({
       ) : null}
       {cloze.attribution ? (
         <p className="lexicon-cloze-attribution">
-          <span lang="uk">Речення з</span>{' '}
+          <ChromeText k="practice.sentenceWith" />{' '}
           {cloze.attribution.sourceUrl ? (
             <a href={cloze.attribution.sourceUrl}>{cloze.attribution.source}</a>
           ) : (
@@ -3581,7 +3538,7 @@ function PracticeCloze({
           onChange={(event) => onInput(event.currentTarget.value)}
         />
         <button className="btn btn-accent" type="submit" disabled={answerLocked}>
-          <span lang="uk">Перевірити</span>
+          <ChromeText k="practice.check" />
           {showEnglishSubtitles ? (
             <span className="btn-sub" lang="en">/ Check</span>
           ) : null}
@@ -3589,7 +3546,7 @@ function PracticeCloze({
       </form>
       {optionErrors.length > 0 ? (
         <p className="lexicon-practice-warning">
-          <span lang="uk">Варіанти для пропуску не пройшли перевірку.</span>
+          <ChromeText k="practice.clozeOptionsFailed" />
           {showEnglishSubtitles ? (
             <span className="btn-sub" lang="en">/ Options for cloze failed validation.</span>
           ) : null}
@@ -3597,10 +3554,7 @@ function PracticeCloze({
       ) : (
         <>
           <div className="cz-or">
-            <span lang="uk">Або оберіть</span>
-            {showEnglishSubtitles ? (
-              <span className="btn-sub" lang="en">/ Or choose</span>
-            ) : null}
+            <ChromeText k="practice.orChoose" />
           </div>
           <ul className="lexicon-option-list lexicon-cloze-options cz-options">
           {cloze.options.map((option) => (
@@ -3635,10 +3589,10 @@ function PracticeCloze({
               href={atlasLemmaHref(selection.lemma.lemmaId)}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Відкрити в Атласі (нова вкладка)"
+              aria-label={CHROME_STRINGS[chromeLocale]['practice.openInAtlasTab']}
               style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
             >
-              <span lang="uk">Відкрити в Атласі →</span>
+              <ChromeText k="practice.openInAtlasArrow" />
               {showEnglishSubtitles ? (
                 <span className="btn-sub" lang="en">/ Open in Atlas →</span>
               ) : null}
