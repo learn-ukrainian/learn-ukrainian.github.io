@@ -426,18 +426,22 @@ def _bounded_protocol_identity(
     result: Mapping[str, Any],
     *,
     workflow_hashes: Mapping[str, str],
+    frozen_schema_sha256: str,
+    frozen_tool_sha256: str | None = None,
 ) -> dict[str, str]:
-    """Bind canonical PBR evidence to its exact declared protocol inputs."""
+    """Bind returned canonical PBR evidence to the pre-call schema digest.
+
+    The result declares the version of its envelope, not a digest of the
+    semantic-output schema supplied to the reviewer.  That schema digest is
+    frozen before the call and is intentionally never reconstructed here.
+    """
 
     reviewer = result["reviewer"]
-    schema_version = str(result.get("schema_version", ""))
-    if not schema_version:
-        raise CompletionError("Canonical post-build result has no schema version")
     return bounded_completion.make_review_protocol_identity(
         protocol_version=str(result["review_protocol_version"]),
-        tool_sha256=_identity(workflow_hashes),
+        tool_sha256=frozen_tool_sha256 or _identity(workflow_hashes),
         prompt_sha256=str(result["prompt_sha256"]),
-        schema_sha256=sha256_bytes(schema_version.encode("utf-8")),
+        schema_sha256=frozen_schema_sha256,
         reviewer_family=str(reviewer["family"]),
         reviewer_model=str(reviewer["model"]),
     )
@@ -486,6 +490,25 @@ def _remaining_bounded_budgets(run: Mapping[str, Any]) -> dict[str, int]:
     }
 
 
+def _protocol_visible_fields_match(expected: Mapping[str, str], requested: Mapping[str, str]) -> bool:
+    """Compare only fields carried by a semantic result or CLI request."""
+
+    return all(
+        expected[key] == requested[key]
+        for key in ("protocol_version", "prompt_sha256", "schema_sha256", "reviewer_family", "reviewer_model")
+    )
+
+
+def _workflow_drift_is_deferred(record: Mapping[str, Any], workflow_hashes: Mapping[str, str]) -> bool:
+    """Require an exact queued audit-tool identity before retaining a frozen call."""
+
+    return any(
+        item.get("classification") == "AUDIT_TOOLING_DEFERRED"
+        and item.get("observed_workflow_hashes") == dict(workflow_hashes)
+        for item in record["deferred_workflow_drift"]
+    )
+
+
 def prepare_semantic_review(
     selector: str,
     *,
@@ -501,36 +524,36 @@ def prepare_semantic_review(
 ) -> tuple[Path, dict[str, Any]]:
     """Freeze and preflight the one permitted next semantic PBR call."""
 
-    _config, snapshot, identity, path, ledger = _load_for_update(
-        selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
-    )
-    if "bounded_completion" not in ledger:
-        raise CompletionError("Legacy ledger requires migrate-bounded-completion before a later bounded run")
-    if ledger["state"] != "POST_BUILD_REVIEW_REQUIRED":
-        raise CompletionError(f"Semantic-review preparation is not allowed from {ledger['state']}")
-    learner_hashes = _learner_hashes(snapshot, repo_root=repo_root)
-    protocol = bounded_completion.make_review_protocol_identity(
-        protocol_version=protocol_version,
-        tool_sha256=_identity(identity["workflow_hashes"]),
-        prompt_sha256=prompt_sha256,
-        schema_sha256=schema_sha256,
-        reviewer_family=reviewer_family,
-        reviewer_model=reviewer_model,
-    )
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
     try:
         with _with_lock(path):
-            _config, _snapshot, identity, path, ledger = _load_for_update(
+            _config, snapshot, identity, path, ledger = _load_for_update(
                 selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
             )
             if "bounded_completion" not in ledger:
-                raise CompletionError("Legacy ledger requires migrate-bounded-completion before a later bounded run")
+                raise CompletionError(
+                    "Legacy ledger requires migrate-bounded-completion then restart-bounded-completion"
+                )
+            if ledger["state"] != "POST_BUILD_REVIEW_REQUIRED":
+                raise CompletionError(f"Semantic-review preparation is not allowed from {ledger['state']}")
+            learner_hashes = _learner_hashes(snapshot, repo_root=repo_root)
+            requested_protocol = bounded_completion.make_review_protocol_identity(
+                protocol_version=protocol_version,
+                tool_sha256=_identity(identity["workflow_hashes"]),
+                prompt_sha256=prompt_sha256,
+                schema_sha256=schema_sha256,
+                reviewer_family=reviewer_family,
+                reviewer_model=reviewer_model,
+            )
             record = _bounded_record(ledger)
             source_identity = _learner_source_identity(learner_hashes)
             if record is None:
                 run = bounded_completion.start_run(
                     target=snapshot.selector,
                     run_id=str(ledger["run"]["run_id"]),
-                    review_protocol_identity=protocol,
+                    review_protocol_identity=requested_protocol,
                     learner_source_sha256=source_identity,
                 )
                 run = bounded_completion.complete_inspection(run, needs_build=False)
@@ -545,21 +568,35 @@ def prepare_semantic_review(
                     "deferred_workflow_drift": [],
                     "semantic_review_reuse": None,
                 }
-            elif (
-                record["frozen_learner_hashes"] != learner_hashes
-                or record["run"]["review_protocol_identity"] != protocol
-            ):
-                raise CompletionError("Frozen semantic-review protocol or learner source differs; start a later run")
+                protocol = requested_protocol
+            else:
+                if record["frozen_learner_hashes"] != learner_hashes:
+                    raise CompletionError(
+                        "Frozen semantic-review protocol or learner source differs; start a later run"
+                    )
+                protocol = record["run"]["review_protocol_identity"]
+                if protocol != requested_protocol and not (
+                    _protocol_visible_fields_match(protocol, requested_protocol)
+                    and _workflow_drift_is_deferred(record, identity["workflow_hashes"])
+                ):
+                    raise CompletionError(
+                        "Frozen semantic-review protocol or learner source differs; start a later run"
+                    )
             if record["run"]["state"] == "DETERMINISTIC_VERIFICATION":
                 record["run"] = bounded_completion.record_deterministic_verification(
                     record["run"], learner_source_sha256=source_identity, passed=True
                 )
                 record["remaining_budgets"] = _remaining_bounded_budgets(record["run"])
-            phase = bounded_completion.semantic_review_phase(
-                record["run"], review_protocol_identity=protocol, learner_source_sha256=source_identity
-            )
+            try:
+                phase = bounded_completion.semantic_review_phase(
+                    record["run"], review_protocol_identity=protocol, learner_source_sha256=source_identity
+                )
+            except bounded_completion.BoundedCompletionError as exc:
+                raise CompletionError(str(exc)) from exc
             ledger["bounded_completion"] = record
             eid = _event_id("SEMANTIC_REVIEW_PREPARED", {"phase": phase, "protocol": protocol["identity_sha256"]})
+            if _event_exists(ledger, eid):
+                return path, ledger
             _append_event(
                 ledger,
                 event_id=eid,
@@ -604,7 +641,73 @@ def migrate_bounded_completion(
                 event="BOUNDED_COMPLETION_MIGRATION_REQUIRED",
                 to_state="MIGRATION_REQUIRED",
                 identity=identity,
-                details={"legacy_review_count": len(ledger["reviews"]), "recovery": "start-later-bounded-run"},
+                details={
+                    "legacy_review_count": len(ledger["reviews"]),
+                    "recovery": "restart-bounded-completion",
+                },
+            )
+            _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+            _atomic_write_json(path, ledger)
+            return path, ledger
+    except Timeout as exc:
+        raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+
+
+def restart_bounded_completion(
+    selector: str,
+    *,
+    run_id: str,
+    owner: str,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger_root: Path | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Quarantine a migrated legacy run and begin a fresh, zero-budget run.
+
+    Historical reviews stay in the durable ledger as provisional evidence, but
+    the new run has no bounded record until it is explicitly prepared.  This
+    prevents a migration from inferring either old semantic calls or repairs.
+    """
+
+    if not owner.strip():
+        raise CompletionError("Ledger owner must be non-empty")
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    try:
+        with _with_lock(path):
+            _config, snapshot, identity, path, ledger = _load_for_update(
+                selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+            )
+            if "bounded_completion" in ledger or ledger["state"] != "MIGRATION_REQUIRED":
+                raise CompletionError("Bounded restart requires a migrated legacy ledger")
+            legacy_run = dict(ledger["run"])
+            now = _now()
+            fresh_run_id = uuid.uuid4().hex
+            ledger["run"] = {
+                "run_id": fresh_run_id,
+                "owner": owner,
+                "status": "active",
+                "started_at": _iso(now),
+                "updated_at": _iso(now),
+                "lease_expires_at": _iso(now + timedelta(seconds=int(_config["lease_seconds"]))),
+            }
+            ledger["bounded_completion"] = None
+            ledger["deferred_workflow_drift"] = []
+            _append_event(
+                ledger,
+                event_id=_event_id(
+                    "BOUNDED_COMPLETION_RESTARTED", {"legacy_run_id": legacy_run["run_id"], "run_id": fresh_run_id}
+                ),
+                event="BOUNDED_COMPLETION_RESTARTED",
+                to_state=_initial_state(snapshot.module_state),
+                identity=identity,
+                details={
+                    "legacy_run_id": legacy_run["run_id"],
+                    "fresh_run_id": fresh_run_id,
+                    "legacy_review_count": len(ledger["reviews"]),
+                    "bounded_history_inferred": False,
+                },
             )
             _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
             _atomic_write_json(path, ledger)
@@ -630,7 +733,6 @@ def _record_bounded_semantic_review(
 
     source_hashes = dict(sorted(learner_hashes.items()))
     source_identity = _learner_source_identity(source_hashes)
-    protocol = _bounded_protocol_identity(result, workflow_hashes=identity["workflow_hashes"])
     record = _bounded_record(ledger)
     if record is None:
         raise CompletionError("Prepare the bounded semantic review before invoking the canonical reviewer")
@@ -638,6 +740,17 @@ def _record_bounded_semantic_review(
         raise CompletionError("Bounded completion contract drift requires a later completion run")
     if record["frozen_learner_hashes"] != source_hashes:
         raise CompletionError("Learner-source change must be recorded as the consolidated repair")
+    frozen_protocol = record["run"]["review_protocol_identity"]
+    if _identity(identity["workflow_hashes"]) != frozen_protocol["tool_sha256"] and not _workflow_drift_is_deferred(
+        record, identity["workflow_hashes"]
+    ):
+        raise CompletionError("Current workflow identity is not the frozen protocol or a queued later-run drift")
+    protocol = _bounded_protocol_identity(
+        result,
+        workflow_hashes=identity["workflow_hashes"],
+        frozen_schema_sha256=str(frozen_protocol["schema_sha256"]),
+        frozen_tool_sha256=str(frozen_protocol["tool_sha256"]),
+    )
     if record["run"]["review_protocol_identity"] != protocol:
         raise CompletionError("Returned review does not match the pre-call frozen protocol identity")
     run = record["run"]
@@ -686,6 +799,44 @@ def _record_bounded_learner_repair(
     record["run"] = run
     record["frozen_learner_hashes"] = source_hashes
     record["remaining_budgets"] = _remaining_bounded_budgets(run)
+
+
+def _semantic_review_identity(
+    ledger: Mapping[str, Any],
+    *,
+    observed_identity: Mapping[str, Any],
+    learner_hashes: Mapping[str, str],
+) -> Mapping[str, Any]:
+    """Select the frozen protocol identity only for a durably deferred drift.
+
+    A post-preparation audit-tool change cannot silently change the call that
+    was already authorized.  It may proceed only when the exact observed
+    workflow identity was durably deferred and the learner bundle is unchanged.
+    """
+
+    recorded_identity = ledger["current_identity"]
+    if observed_identity["sha256"] == recorded_identity["sha256"]:
+        return observed_identity
+    record = _bounded_record(ledger)
+    if record is None or record["frozen_learner_hashes"] != dict(sorted(learner_hashes.items())):
+        raise CompletionError("Unrecorded target/workflow drift makes review evidence stale")
+    if (
+        observed_identity["target_hashes"] != recorded_identity["target_hashes"]
+        or observed_identity["layout"] != recorded_identity["layout"]
+        or observed_identity["module_state"] != recorded_identity["module_state"]
+    ):
+        raise CompletionError("Unrecorded target/workflow drift makes review evidence stale")
+    deferred = {
+        "classification": "AUDIT_TOOLING_DEFERRED",
+        "observed_identity_sha256": observed_identity["sha256"],
+        "observed_workflow_hashes": dict(observed_identity["workflow_hashes"]),
+        "learner_hashes": dict(sorted(learner_hashes.items())),
+    }
+    if not any(
+        all(item.get(key) == value for key, value in deferred.items()) for item in record["deferred_workflow_drift"]
+    ):
+        raise CompletionError("Unrecorded target/workflow drift makes review evidence stale")
+    return recorded_identity
 
 
 def _can_reuse_semantic_review(
@@ -1022,7 +1173,7 @@ def start_run(
                 "reviews": [],
                 "deferred_workflow_drift": [],
                 # A legacy ledger has no key; a new run binds this exactly when
-                # its first canonical post-build semantic result is recorded.
+                # pre-call semantic-review preparation authorizes its first call.
                 "bounded_completion": None,
                 "certification_evidence": [],
                 "production_qg_authorization": None,
@@ -1297,7 +1448,15 @@ def record_change(
                 raise CompletionError("Plan-repair state only accepts plan_workflow changes")
             if ledger["state"] == "REVIEWER_INSTABILITY" and owner_kind != "audit_tooling":
                 raise CompletionError("Reviewer instability only accepts audit_tooling changes")
-            if ledger["routing"] is not None and owner_kind not in ledger["routing"]["owners"]:
+            if (
+                ledger["routing"] is not None
+                and owner_kind not in ledger["routing"]["owners"]
+                and not (
+                    owner_kind == "audit_tooling"
+                    and identity["target_hashes"] == ledger["current_identity"]["target_hashes"]
+                    and identity["workflow_hashes"] != ledger["current_identity"]["workflow_hashes"]
+                )
+            ):
                 raise CompletionError(f"Repair owner {owner_kind} was not routed by the review")
             bounded = _bounded_record(ledger)
             learner_hashes = _learner_hashes(snapshot, repo_root=repo_root)
@@ -1660,22 +1819,23 @@ def record_review(
             }
             if not (allowed_state or stability_state):
                 raise CompletionError(f"Post-build review is not allowed from {ledger['state']}")
-            if identity["sha256"] != ledger["current_identity"]["sha256"]:
-                raise CompletionError("Unrecorded target/workflow drift makes review evidence stale")
             if result["target"]["track"] != snapshot.track or result["target"]["slug"] != snapshot.slug:
                 raise CompletionError("Post-build result target does not match the ledger target")
             if dict(result["target"]["files"]) != snapshot.review_files:
                 raise CompletionError("Post-build result file set is stale or does not match the target")
+            learner_hashes = _learner_hashes(snapshot, repo_root=repo_root)
+            protocol_identity = _semantic_review_identity(
+                ledger, observed_identity=identity, learner_hashes=learner_hashes
+            )
             current_source_hashes = {
                 name: sha256_file(_repo_path(repo_root, raw)) for name, raw in sorted(snapshot.review_files.items())
             }
             if dict(result["source_hashes"]) != current_source_hashes:
                 raise CompletionError("Post-build result source hashes are stale")
-            learner_hashes = _learner_hashes(snapshot, repo_root=repo_root)
             bounded, bounded_reported = _record_bounded_semantic_review(
                 ledger,
                 snapshot=snapshot,
-                identity=identity,
+                identity=protocol_identity,
                 result=result,
                 result_sha256=result_sha,
                 learner_hashes=learner_hashes,
@@ -1694,7 +1854,7 @@ def record_review(
                 ):
                     raise CompletionError("Current PBR result has no exact raw semantic response hash")
 
-            stability_key = _review_stability_key(result, identity["sha256"])
+            stability_key = _review_stability_key(result, protocol_identity["sha256"])
             fingerprint = _material_fingerprint(result)
             reviewer = result["reviewer"]
             review_record = {
@@ -1706,7 +1866,7 @@ def record_review(
                 "status": result["combined_disposition"]["status"],
                 "reviewer_family": reviewer["family"],
                 "reviewer_model": reviewer["model"],
-                "target_identity_sha256": identity["sha256"],
+                "target_identity_sha256": protocol_identity["sha256"],
                 **(
                     {
                         "certification": {
@@ -3087,10 +3247,16 @@ def build_parser() -> argparse.ArgumentParser:
     migrate.add_argument("--pr", type=int)
     migrate.add_argument("--merge-sha")
     bounded_migrate = subparsers.add_parser(
-        "migrate-bounded-completion", help="Quarantine a legacy ledger for a later bounded run"
+        "migrate-bounded-completion", help="Quarantine a legacy ledger before an explicit bounded restart"
     )
     _add_common_options(bounded_migrate)
     bounded_migrate.add_argument("--run-id", required=True)
+    bounded_restart = subparsers.add_parser(
+        "restart-bounded-completion", help="Start a fresh bounded run after legacy migration"
+    )
+    _add_common_options(bounded_restart)
+    bounded_restart.add_argument("--run-id", required=True)
+    bounded_restart.add_argument("--owner", required=True)
     resume = subparsers.add_parser("resume", help="Renew the exact recorded run lease")
     _add_common_options(resume)
     resume.add_argument("--run-id", required=True)
@@ -3214,6 +3380,8 @@ def main(argv: list[str] | None = None) -> int:
             )
         elif args.command == "migrate-bounded-completion":
             path, value = migrate_bounded_completion(args.target, run_id=args.run_id, **common)
+        elif args.command == "restart-bounded-completion":
+            path, value = restart_bounded_completion(args.target, run_id=args.run_id, owner=args.owner, **common)
         elif args.command == "resume":
             path, value = resume_run(args.target, run_id=args.run_id, **common)
         elif args.command == "status":

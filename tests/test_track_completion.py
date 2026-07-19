@@ -278,7 +278,7 @@ def _prepare_review(
         run_id=run_id,
         protocol_version=result["review_protocol_version"],
         prompt_sha256=result["prompt_sha256"],
-        schema_sha256=tc.sha256_bytes(result["schema_version"].encode("utf-8")),
+        schema_sha256="e" * 64,
         reviewer_family=reviewer["family"],
         reviewer_model=reviewer["model"],
         repo_root=repo,
@@ -1207,6 +1207,42 @@ def test_bounded_ledger_records_initial_repair_final_and_one_time_semantic_reuse
         "a1/core-unbuilt", repo_root=repo, config_path=config_path, ledger_root=ledger_root
     )
     assert projection["independent_review"] == "reused-canonical-semantic-review"
+    assert not tc._can_reuse_semantic_review(
+        ledger,
+        reviewer_family="gemini",
+        snapshot=refreshed,
+        config=tc.load_config(config_path),
+    )
+
+    ledger_path = tc.ledger_path_for(
+        refreshed, repo_root=repo, config=tc.load_config(config_path), ledger_root=ledger_root
+    )
+    for mutate in (
+        lambda value: value["bounded_completion"]["semantic_review_reuse"].update({"review_result_sha256": "0" * 64}),
+        lambda value: value["bounded_completion"]["semantic_review_reuse"].update(
+            {"review_protocol_identity_sha256": "0" * 64}
+        ),
+        lambda value: value["author_families"].append("gemini"),
+    ):
+        stale = json.loads(json.dumps(ledger))
+        mutate(stale)
+        tc._atomic_write_json(ledger_path, stale)
+        assert (
+            tc.certification_projection(
+                "a1/core-unbuilt", repo_root=repo, config_path=config_path, ledger_root=ledger_root
+            )["independent_review"]
+            != "reused-canonical-semantic-review"
+        )
+    tc._atomic_write_json(ledger_path, ledger)
+
+    content.write_text(content.read_text(encoding="utf-8") + "Незв'язана зміна джерела.\n", encoding="utf-8")
+    assert (
+        tc.certification_projection(
+            "a1/core-unbuilt", repo_root=repo, config_path=config_path, ledger_root=ledger_root
+        )["independent_review"]
+        != "reused-canonical-semantic-review"
+    )
+    content.write_text(content.read_text(encoding="utf-8").replace("Незв'язана зміна джерела.\n", ""), encoding="utf-8")
 
     (repo / "workflow.txt").write_text("workflow-deferred\n", encoding="utf-8")
     _, ledger = tc.record_change(
@@ -1373,7 +1409,186 @@ def test_legacy_review_history_requires_explicit_bounded_migration(fake_repo: tu
         "bio/seminar-built", run_id=run_id, repo_root=repo, config_path=config_path, ledger_root=ledger_root
     )
     assert migrated["state"] == "MIGRATION_REQUIRED"
-    assert migrated["history"][-1]["details"] == {"legacy_review_count": 1, "recovery": "start-later-bounded-run"}
+    assert migrated["history"][-1]["details"] == {"legacy_review_count": 1, "recovery": "restart-bounded-completion"}
+    _, restarted = tc.restart_bounded_completion(
+        "bio/seminar-built",
+        run_id=run_id,
+        owner="codex",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    fresh_run_id = restarted["run"]["run_id"]
+    assert fresh_run_id != run_id
+    assert restarted["state"] == "POST_BUILD_REVIEW_REQUIRED"
+    assert restarted["bounded_completion"] is None
+    assert restarted["reviews"][0]["result_sha256"] == "a" * 64
+    _prepare_review(
+        "bio/seminar-built",
+        fresh_run_id,
+        _result(snapshot, repo, status="PASS"),
+        repo=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    prepared = tc.read_json(
+        tc.ledger_path_for(snapshot, repo_root=repo, config=tc.load_config(config_path), ledger_root=ledger_root)
+    )
+    assert prepared["bounded_completion"]["run"]["measurements"]["model_call_count"] == 0
+    assert prepared["bounded_completion"]["run"]["measurements"]["repair_count"] == 0
+
+
+def test_semantic_preparation_is_locked_idempotent_and_source_bound(
+    fake_repo: tuple[Path, Path, Path],
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    _, ledger = _start(fake_repo, "bio/seminar-built")
+    run_id = ledger["run"]["run_id"]
+    snapshot = tc.resolve_target("bio/seminar-built", repo_root=repo, config=tc.load_config(config_path))
+    content = repo / snapshot.review_files["content"]
+    content.write_text(content.read_text(encoding="utf-8") + "Зміна до авторизації.\n", encoding="utf-8")
+    result = _result(snapshot, repo, status="PASS")
+    _prepare_review("bio/seminar-built", run_id, result, repo=repo, config_path=config_path, ledger_root=ledger_root)
+    _prepare_review("bio/seminar-built", run_id, result, repo=repo, config_path=config_path, ledger_root=ledger_root)
+    path = tc.ledger_path_for(snapshot, repo_root=repo, config=tc.load_config(config_path), ledger_root=ledger_root)
+    prepared = tc.read_json(path)
+    assert len([event for event in prepared["history"] if event["event"] == "SEMANTIC_REVIEW_PREPARED"]) == 1
+    assert prepared["bounded_completion"]["frozen_learner_hashes"]["content"] == tc.sha256_file(content)
+    assert prepared["bounded_completion"]["run"]["review_protocol_identity"]["schema_sha256"] == "e" * 64
+
+    before = json.loads(json.dumps(prepared))
+    content.write_text(content.read_text(encoding="utf-8") + "Зміна після авторизації.\n", encoding="utf-8")
+    with pytest.raises(tc.CompletionError, match="Frozen semantic-review protocol or learner source differs"):
+        _prepare_review(
+            "bio/seminar-built", run_id, result, repo=repo, config_path=config_path, ledger_root=ledger_root
+        )
+    assert tc.read_json(path) == before
+
+
+def test_deferred_audit_tool_drift_keeps_frozen_semantic_protocol_usable(
+    fake_repo: tuple[Path, Path, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    _, ledger = _start(fake_repo, "bio/seminar-built")
+    run_id = ledger["run"]["run_id"]
+    snapshot = tc.resolve_target("bio/seminar-built", repo_root=repo, config=tc.load_config(config_path))
+    initial = _result(snapshot, repo, status="REVISE")
+    initial_path = _result_file(tmp_path, "drift-initial.json")
+    _prepare_review("bio/seminar-built", run_id, initial, repo=repo, config_path=config_path, ledger_root=ledger_root)
+
+    workflow = repo / "workflow.txt"
+    workflow.write_text("workflow-before-initial\n", encoding="utf-8")
+    _, deferred = tc.record_change(
+        "bio/seminar-built",
+        run_id=run_id,
+        owner_kind="audit_tooling",
+        author_family="codex",
+        summary="Queue workflow drift before the authorized initial semantic call.",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert deferred["state"] == "POST_BUILD_REVIEW_REQUIRED"
+    assert deferred["bounded_completion"]["remaining_budgets"] == {"semantic_reviews": 2, "consolidated_repairs": 1}
+    monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: initial)
+    _, after_initial = tc.record_review(
+        "bio/seminar-built",
+        run_id=run_id,
+        result_path=initial_path,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert after_initial["bounded_completion"]["remaining_budgets"] == {
+        "semantic_reviews": 1,
+        "consolidated_repairs": 1,
+    }
+
+    workflow.write_text("workflow-after-initial\n", encoding="utf-8")
+    _, deferred = tc.record_change(
+        "bio/seminar-built",
+        run_id=run_id,
+        owner_kind="audit_tooling",
+        author_family="codex",
+        summary="Queue workflow drift after the initial semantic result.",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    content = repo / snapshot.review_files["content"]
+    content.write_text(content.read_text(encoding="utf-8") + "Консолідований ремонт.\n", encoding="utf-8")
+    _, repaired = tc.record_change(
+        "bio/seminar-built",
+        run_id=run_id,
+        owner_kind="built_artifact",
+        author_family="codex",
+        summary="Apply the one learner repair while tooling drift stays queued.",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert repaired["bounded_completion"]["remaining_budgets"] == {"semantic_reviews": 1, "consolidated_repairs": 0}
+    refreshed = tc.resolve_target("bio/seminar-built", repo_root=repo, config=tc.load_config(config_path))
+    final = _result(refreshed, repo, status="PASS")
+    final["semantic_response"] = {"raw_sha256": "f" * 64, "contract_status": "valid"}
+    final_path = _result_file(tmp_path, "drift-final.json")
+    _prepare_review("bio/seminar-built", run_id, final, repo=repo, config_path=config_path, ledger_root=ledger_root)
+    monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: final)
+    _, final_ledger = tc.record_review(
+        "bio/seminar-built",
+        run_id=run_id,
+        result_path=final_path,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert final_ledger["bounded_completion"]["remaining_budgets"] == {"semantic_reviews": 0, "consolidated_repairs": 0}
+    assert len(final_ledger["deferred_workflow_drift"]) == 2
+
+
+@pytest.mark.parametrize(
+    ("field", "replacement"),
+    [
+        ("review_protocol_version", "9.9.9"),
+        ("prompt_sha256", "9" * 64),
+        ("reviewer.family", "anthropic"),
+        ("reviewer.model", "different-model"),
+    ],
+)
+def test_returned_semantic_protocol_mismatch_rejects_without_mutation(
+    fake_repo: tuple[Path, Path, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+    replacement: str,
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    _, ledger = _start(fake_repo, "bio/seminar-built")
+    run_id = ledger["run"]["run_id"]
+    snapshot = tc.resolve_target("bio/seminar-built", repo_root=repo, config=tc.load_config(config_path))
+    result = _result(snapshot, repo, status="PASS")
+    _prepare_review("bio/seminar-built", run_id, result, repo=repo, config_path=config_path, ledger_root=ledger_root)
+    mismatched = json.loads(json.dumps(result))
+    if field.startswith("reviewer."):
+        mismatched["reviewer"][field.split(".", 1)[1]] = replacement
+    else:
+        mismatched[field] = replacement
+    result_path = _result_file(tmp_path, f"mismatch-{field.replace('.', '-')}.json")
+    monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: mismatched)
+    path = tc.ledger_path_for(snapshot, repo_root=repo, config=tc.load_config(config_path), ledger_root=ledger_root)
+    before = tc.read_json(path)
+    with pytest.raises(
+        tc.CompletionError, match="Returned review does not match the pre-call frozen protocol identity"
+    ):
+        tc.record_review(
+            "bio/seminar-built",
+            run_id=run_id,
+            result_path=result_path,
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    assert tc.read_json(path) == before
 
 
 def _advance_built_module_to_pending_review_state(

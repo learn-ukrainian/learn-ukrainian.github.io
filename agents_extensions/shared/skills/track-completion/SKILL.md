@@ -52,8 +52,8 @@ provider:
 ```
 
 The canonical engine binds the helper into the durable module ledger when it
-records the first canonical post-build result. It freezes the exact
-versioned protocol identity and learner-source hashes for that active run and
+prepares and authorizes the first canonical post-build semantic call. It
+freezes the exact versioned protocol identity and learner-source hashes for that active run and
 enforces one initial semantic review, at most one consolidated learner repair,
 and at most one final semantic review. A third review or second repair is
 rejected before mutation. A material learner-source change invalidates prior
@@ -66,7 +66,9 @@ review evidence. The durable ledger retains the initial/final review, the
 consolidated repair, remaining canonical budgets, terminal disposition, and
 any deferred audit-tooling drift. A ledger without `bounded_completion` is
 a legacy ledger: its historic reviews remain provisional and it never receives
-an inferred bounded history; start a later run to use the bounded protocol.
+an inferred bounded history. Run `migrate-bounded-completion`, then
+`restart-bounded-completion --run-id <legacy-run-id> --owner <operator>` to
+quarantine that run and create a fresh bounded run without deleting its evidence.
 
 ## Start or resume
 
@@ -149,8 +151,9 @@ any semantic/provider call, freeze and authorize its exact protocol identity:
 
 This command returns the only allowed phase and remaining budget. Do not make a
 semantic call if it rejects. `record-review` accepts only a result bound to that
-pre-existing frozen identity; protocol/tool/source drift is rejected without
-consuming budget. Allocate a
+pre-existing frozen identity; unqueued protocol/tool/source drift is rejected
+without consuming budget, while a durably queued audit-tooling drift remains
+for a later run. Allocate a
 new invocation directory every time. Do not repair, normalize, or retry inside
 that invocation. Use its emitted semantic schema when the provider supports
 structured output; prompt-only JSON compliance is not a reliable automation
@@ -199,9 +202,9 @@ protocol, prompt, and reviewer identity with a different material finding or
 disposition fingerprint is reviewer/tooling instability. Adjudicate the route,
 prompt, evidence access, or reviewer. Record either a real `audit_tooling`
 change with `record-change` or a no-source-change route adjudication with
-`record-instability-adjudication`; the next review must use a materially
-different reviewer identity or the same unstable identity will stop again.
-Never average results or rewrite content to chase the flip.
+`record-instability-adjudication`. Do not commission another semantic review
+in the active bounded run: preserve the instability and route it to a later
+run. Never average results or rewrite content to chase the flip.
 
 ### `INDEPENDENT_REVIEW_REQUIRED`
 
