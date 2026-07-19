@@ -105,20 +105,18 @@ persona:
   voice: Critical-Historian
 phase: BIO.1
 references:
-- title: Volodymyr Monomakh
-  note: Compiled from primary sources and modern historiography (Hrushevsky, Tolochko)
-  path: wiki/bio/volodymyr-monomakh.md
-  type: wiki
-- title: Повчання дітям
-  author: Володимир Мономах
-  note: Оригінальний текст та адаптований переклад. Ключове джерело для розуміння його світогляду.
+- title: ВОЛОДИМИР МОНОМАХ (Енциклопедія історії України)
+  note: Академічний біографічний і хронологічний якір.
+  path: 'http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Volodymyr_Mo'
+  type: reference
+- title: Повчання Володимира Мономаха (Махновець / Лаврентіївська традиція)
+  note: Локатор первинного тексту й сучасного перекладу; використовувати link-only.
+  path: http://izbornyk.org.ua/pvlyar/yar09.htm
   type: primary
-  work: Повчання дітям
-- title: Літопис Руський
-  author: Літопис Руський (за Іпатським списком)
-  note: Основне джерело відомостей про життя та діяльність князя.
-  type: primary
-  work: Літопис Руський
+- title: Volodymyr Monomakh (Internet Encyclopedia of Ukraine)
+  note: Англомовна довідка, що фіксує спірність материнського походження.
+  path: 'https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CO%5CVolodymyrMonomakh.htm'
+  type: reference
 readings:
 - title: ВОЛОДИМИР МОНОМАХ (Енциклопедія історії України)
   source_name: Енциклопедія історії України / Котляр М.Ф.
@@ -159,7 +157,7 @@ sequence: 6
 slug: volodymyr-monomakh
 subtitle: 'Volodymyr Monomakh: Strengthener of Rus'''
 title: 'Володимир Мономах: Укріплювач Русі'
-version: '4.3'
+version: '4.4'
 vocabulary_hints:
 - definition: історичний період ослаблення центральної влади в Київській Русі та зміцнення окремих князівств
   pos: ж.

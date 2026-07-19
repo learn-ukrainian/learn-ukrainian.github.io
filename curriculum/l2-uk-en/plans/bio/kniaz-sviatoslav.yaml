@@ -109,18 +109,18 @@ persona:
   voice: Військовий історик-ревізіоніст
 phase: C1.BIO
 references:
-- title: Святослав Ігорович
-  note: Military campaigns, death, historical significance
-  path: https://uk.wikipedia.org/wiki/Святослав_Ігорович
-  type: wiki
-- title: Повість минулих літ
-  note: Chronicle accounts of campaigns, character descriptions, and direct speech
-  type: primary
-  work: Повість минулих літ
-- title: Хозарський каганат
-  note: Context for Khazar campaign and its geopolitical consequences
+- title: СВЯТОСЛАВ ІГОРЕВИЧ (Енциклопедія історії України)
+  note: Академічний біографічний і хронологічний якір кампаній та загибелі.
+  path: 'http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Sviatoslav_I'
   type: reference
-  work: Хозарський каганат
+- title: Повість врем’яних літ (Махновець) — уривки про Святослава
+  note: Літописна традиція кампаній, зовнішності й прямої мови; не стенограма висловлювань.
+  path: http://izbornyk.org.ua/pvlyar/yar02.htm
+  type: primary
+- title: Sviatoslav I Ihorovych (Internet Encyclopedia of Ukraine)
+  note: Англомовна довідка для незалежного зіставлення хронології та інтерпретацій.
+  path: 'https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CV%5CSviatoslavIIhorovych.htm'
+  type: reference
 readings:
 - title: СВЯТОСЛАВ ІГОРЕВИЧ (Енциклопедія історії України)
   source_name: Енциклопедія історії України / Филипчук О.М.
@@ -160,7 +160,7 @@ sequence: 2
 slug: kniaz-sviatoslav
 subtitle: 'Prince Sviatoslav: The Warrior Conqueror'
 title: 'Князь Святослав: Воїн-завойовник'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: 'у давньоруському контексті: постійне військо князя, його найближчі соратники та радники'
   pos: ж.

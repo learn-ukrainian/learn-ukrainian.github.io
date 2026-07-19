@@ -99,18 +99,18 @@ persona:
   voice: Legal-Historian-Realist
 phase: BIO.1
 references:
-- title: Повість временних літ
-  name: Повість временних літ
-  note: Основне джерело інформації про період, але вимагає критичного аналізу через пізніші редагування.
-  type: primary
-- title: Руська правда (текст)
-  name: Руська правда (текст)
-  note: Аналіз конкретних статей для розуміння правової системи.
-  type: primary
-- title: Yaroslav The Wise
-  note: Систематизована довідка з фактів, дат, імен; hyvä для швидкої перевірки.
-  path: wiki/history/kyivan-rus/yaroslav-the-wise.md
-  type: wiki
+- title: ЯРОСЛАВ МУДРИЙ (Енциклопедія історії України)
+  note: Академічний біографічний і хронологічний якір.
+  path: 'http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Yaroslav_M'
+  type: reference
+- title: Руська Правда та Литовський Статут (Енциклопедія українознавства — II)
+  note: Довідковий текст про правову пам’ятку; не підмінює критичного видання.
+  path: http://izbornyk.org.ua/rizne/pravdstat.htm
+  type: reference
+- title: Місто Ярослава (Енциклопедія сучасної України)
+  note: Інституційний контекст київського містобудування й пам’яток.
+  path: https://esu.com.ua/article-67932
+  type: reference
 readings:
 - title: ЯРОСЛАВ МУДРИЙ (Енциклопедія історії України)
   source_name: Енциклопедія історії України / Котляр М.Ф.
@@ -151,7 +151,7 @@ sequence: 4
 slug: kniaz-yaroslav-mudryi
 subtitle: 'The Lawgiver Prince: Yaroslav the Wise'
 title: 'Князь Ярослав Мудрий: Законодавець'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: внутрішній збройний конфлікт, війна між членами однієї династії або соціальної групи за владу
   pos: ж.

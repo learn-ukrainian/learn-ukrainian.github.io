@@ -7,6 +7,15 @@
 **Researcher:** GPT-5.5 (Codex)
 **Completed:** 2026-06-03
 
+**Adopted external URL set (order fixed; identical in plan, discovery and source registry):**
+
+1. `http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Yaroslav_M`
+2. `http://izbornyk.org.ua/rizne/pravdstat.htm`
+3. `https://esu.com.ua/article-67932`
+
+Усі три сторінки повторно відкрито 2026-07-19 (HTTP 200); учнівські
+`source_url` використовують лише україномовні link-only матеріали.
+
 **Acceptance self-check:**
 - [x] All 10 sections completed
 - [x] >=3 Tier 1/Tier 2 sources cited (ЕІУ, IEU, project textbook corpus, ПВЛ tradition)

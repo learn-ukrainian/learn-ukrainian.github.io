@@ -13,6 +13,22 @@ direct_sources:
 - http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Sviatoslav_I
 - http://izbornyk.org.ua/pvlyar/yar02.htm
 - https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CV%5CSviatoslavIIhorovych.htm
+fetch_disposition:
+- url: http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Sviatoslav_I
+  http_status: 200
+  disposition: adopted
+  verified_on: '2026-07-19'
+  note: ЕІУ; академічний біографічний і хронологічний якір.
+- url: http://izbornyk.org.ua/pvlyar/yar02.htm
+  http_status: 200
+  disposition: adopted
+  verified_on: '2026-07-19'
+  note: Ізборник; літописна традиція, link-only.
+- url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CV%5CSviatoslavIIhorovych.htm
+  http_status: 200
+  disposition: adopted
+  verified_on: '2026-07-19'
+  note: IEU; англомовний незалежний довідковий контроль.
 rag_chunks: []
 rag_literary: []
 warning: 'Direct-source packet for BIO #4431 Queue A packet 1 repair (2026-07-19). Each URL was opened and content-verified

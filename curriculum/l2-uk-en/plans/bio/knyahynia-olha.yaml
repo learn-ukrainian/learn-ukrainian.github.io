@@ -116,20 +116,18 @@ persona:
   voice: State-Historian
 phase: BIO.1
 references:
-- title: Княгиня Ольга
-  note: Основне джерело фактів, дат та альтернативних гіпотез
-  path: https://uk.wikipedia.org/wiki/Княгиня_Ольга
-  type: wiki
-- title: Повість минулих літ
-  note: Літописні легенди про помсту та хрещення Ольги
-  path: http://izbornyk.org.ua/
+- title: ОЛЬГА (Енциклопедія історії України)
+  note: Академічний біографічний і хронологічний якір.
+  path: 'http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Olha'
+  type: reference
+- title: Повість врем’яних літ (Махновець) — уривки про Ольгу
+  note: Літописна традиція про помсту, хрещення та прийом; не незалежне підтвердження легенд.
+  path: http://izbornyk.org.ua/pvlyar/yar02.htm
   type: primary
-  work: Повість минулих літ
-- title: De Ceremoniis
-  author: Костянтин Багрянородний
-  note: Опис прийому Ольги в Константинополі, джерело для реконструкції дипломатичних відносин
-  type: primary
-  work: De Ceremoniis
+- title: Olha, Princess (Internet Encyclopedia of Ukraine)
+  note: Англомовна довідка для зіставлення хронології й рецепції; не учнівське читання.
+  path: 'https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CO%5CL%5COlhaPrincess.htm'
+  type: reference
 readings:
 - title: ОЛЬГА (Енциклопедія історії України)
   source_name: Енциклопедія історії України / Котляр М.Ф.
@@ -172,7 +170,7 @@ sequence: 1
 slug: knyahynia-olha
 subtitle: 'Princess Olha: Architect of a State'
 title: 'Княгиня Ольга: Архітекторка держави'
-version: '4.3'
+version: '4.4'
 vocabulary_hints:
 - definition: архаїчна система збору данини шляхом об'їзду князем та дружиною підвладних територій; буквально «ходіння
     по людях»

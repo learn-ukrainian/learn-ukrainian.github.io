@@ -7,6 +7,16 @@
 **Researcher:** Claude (Opus 4.8)
 **Completed:** 2026-06-03
 
+**Adopted external URL set (order fixed; identical in plan, discovery and source registry):**
+
+1. `http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Volodymyr_Mo`
+2. `http://izbornyk.org.ua/pvlyar/yar09.htm`
+3. `https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CO%5CVolodymyrMonomakh.htm`
+
+Усі три сторінки повторно відкрито 2026-07-19 (HTTP 200). Учнівські
+`source_url` є україномовною підмножиною; IEU використано лише як англомовний
+довідковий контроль.
+
 **Acceptance self-check:**
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (ЕІУ — Котляр; IEU; Літопис Руський / ПВЛ — Лаврентіївський список; Крип'якевич)

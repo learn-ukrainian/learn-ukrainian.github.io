@@ -7,12 +7,22 @@
 **Researcher:** GPT-5.5 (Codex)
 **Completed:** 2026-06-03
 
+**Adopted external URL set (order fixed; identical in plan, discovery and source registry):**
+
+1. `http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Sviatoslav_I`
+2. `http://izbornyk.org.ua/pvlyar/yar02.htm`
+3. `https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CV%5CSviatoslavIIhorovych.htm`
+
+Усі три сторінки повторно відкрито 2026-07-19 (HTTP 200). Учнівські
+`source_url` є україномовною підмножиною; IEU використано лише як англомовний
+довідковий контроль.
+
 **Acceptance self-check:**
 - [x] All 10 sections completed
 - [x] >=3 source families cited (IEU, project textbook corpus, ПВЛ/Літопис Руський, ЕІУ linked context)
 - [x] §2 names the Rus-appropriation mechanism and the later militarized simplifications
 - [x] Primary-source / chronicle quotes are explicitly not treated as autograph speech
-- [x] `verify_quote` attempts for Hrushevsky attributions reported honestly (`matched: false`, confidence 0.0)
+- [x] Непідтверджені дослівні атрибуції Грушевському вилучено або переформульовано як атрибутовані оцінки; літописну формулу звірено за точним локатором Ізборника
 - [x] Cross-track links verified with `test -e`
 - [x] Naming-canonical applied
 - [x] Image candidates identified with caution

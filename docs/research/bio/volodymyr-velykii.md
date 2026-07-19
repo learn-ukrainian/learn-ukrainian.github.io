@@ -7,11 +7,20 @@
 **Researcher:** GPT-5.5 (Codex)
 **Completed:** 2026-06-03
 
+**Adopted external URL set (order fixed; identical in plan, discovery and source registry):**
+
+1. `http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Volodymyr_Sv`
+2. `http://izbornyk.org.ua/pvlyar/yar04.htm`
+3. `https://nmiu.org/qr-codes/1952-zlatnik-volodimira-svyatoslavicha-kop-ya-ta-sr-blyaniki-k-nets-kh-pochatok-kh-st`
+
+Усі три сторінки повторно відкрито 2026-07-19 (HTTP 200); учнівські
+`source_url` використовують лише україномовні link-only матеріали.
+
 **Acceptance self-check:**
 - [x] All 10 sections completed
 - [x] >=3 Tier 1/Tier 2 sources cited (ЕІУ, IEU, `search_text` textbook corpus, ПВЛ/Літопис Руський)
 - [x] §2 names the imperial appropriation mechanism (Синопсис 1674 / translatio imperii) instead of inventing a modern "repression" file
-- [x] Primary-source passages included with real tool status: `verify_quote` on chronicle quote returned `matched: false`, confidence 0.0; support comes from `search_text` / corpus-text retrieval
+- [x] Літописні формули звірено за точним локатором Ізборника; непідтверджені дослівні цитати вилучено або переформульовано як атрибутовані перекази
 - [x] Cross-track links verified with `test -e`
 - [x] Naming-canonical applied
 - [x] Image candidates identified with rights caveat

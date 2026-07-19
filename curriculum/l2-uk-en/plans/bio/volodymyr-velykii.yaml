@@ -106,24 +106,18 @@ persona:
   voice: Critical-Historian
 phase: BIO.1
 references:
-- title: Volodymyr Velykii
-  note: Internal wiki page with compiled research from Hrushevsky, Tolochko, Plokhy.
-  path: wiki/bio/volodymyr-velykii.md
-  type: wiki
-- title: Володимир Святий
-  author: Толочко П. П.
-  note: Академічна біографія, що намагається реконструювати реальну постать князя.
+- title: ВОЛОДИМИР СВЯТОСЛАВИЧ СВЯТИЙ (Енциклопедія історії України)
+  note: Академічний біографічний і хронологічний якір.
+  path: 'http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Volodymyr_Sv'
+  type: reference
+- title: Повість врем’яних літ (Махновець) — уривки про хрещення
+  note: Літописна традиція Корсуня й хрещення; використовувати з джерельною обережністю.
+  path: http://izbornyk.org.ua/pvlyar/yar04.htm
   type: primary
-  work: Володимир Святий
-- title: Історія України-Руси. Том 1
-  author: Грушевський М. С.
-  note: Класична праця, що розглядає правління Володимира в контексті українського державотворення.
-  type: primary
-  work: Історія України-Руси. Том 1
-- title: Володимир Святославич
-  note: Загальна біографія, дати, ключові події.
-  type: external
-  url: https://uk.wikipedia.org/wiki/Володимир_Святославич
+- title: Златник Володимира Святославича та срібляники (НМІУ)
+  note: Музейний матеріальний контекст монет і княжого знака.
+  path: https://nmiu.org/qr-codes/1952-zlatnik-volodimira-svyatoslavicha-kop-ya-ta-sr-blyaniki-k-nets-kh-pochatok-kh-st
+  type: reference
 readings:
 - title: ВОЛОДИМИР СВЯТОСЛАВИЧ СВЯТИЙ (Енциклопедія історії України)
   source_name: Енциклопедія історії України / Вортман Д.Я.
@@ -164,7 +158,7 @@ sequence: 3
 slug: volodymyr-velykii
 subtitle: 'Volodymyr the Great: Saint, Sinner, Architect'
 title: 'Володимир Великий: Святий, грішник, архітектор'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: внутрішній розбрат, збройна боротьба за владу між членами однієї династії чи народу
   pos: ж.
