@@ -1,6 +1,163 @@
 # Tatoeba Cloze Yield Report - Phase 1 (#3797)
 
-Run date: 2026-06-26
+Run date: 2026-06-26 · **Phase 1 retry: 2026-07-19**
+
+## Phase 1 retry (real data, 2026-07-19)
+
+Re-ran the merged generator against fresh Tatoeba weekly exports + the current
+hydrated Atlas manifest + local `data/vesum.db`. This closes the #3797 Phase-1
+gap that earlier explore-only dispatches left without a commit: real yield
+counts, a machine-readable report path, and a loud missing-input CLI.
+
+### Phase 1 retry runbook
+
+Inputs (gitignored / local only):
+
+| Input | Where |
+| --- | --- |
+| Hydrated manifest | `site/src/data/lexicon-manifest.json` (symlink from main checkout or release hydrate) |
+| VESUM | `data/vesum.db` (symlink from main checkout) |
+| Tatoeba UK detailed | `.agent/tmp/tatoeba/ukr_sentences_detailed.tsv` |
+| Tatoeba EN detailed | `.agent/tmp/tatoeba/eng_sentences_detailed.tsv` |
+| Tatoeba links | `.agent/tmp/tatoeba/links.csv` |
+| Tatoeba CC0 IDs | `.agent/tmp/tatoeba/sentences_CC0.csv` |
+
+Download (per-language detailed exports omit license; weekly Saturday UTC refresh):
+
+```bash
+mkdir -p .agent/tmp/tatoeba && cd .agent/tmp/tatoeba
+curl -fLO https://downloads.tatoeba.org/exports/per_language/ukr/ukr_sentences_detailed.tsv.bz2
+curl -fLO https://downloads.tatoeba.org/exports/per_language/eng/eng_sentences_detailed.tsv.bz2
+curl -fLO https://downloads.tatoeba.org/exports/links.tar.bz2
+curl -fLO https://downloads.tatoeba.org/exports/sentences_CC0.tar.bz2
+bunzip2 -kf ukr_sentences_detailed.tsv.bz2 eng_sentences_detailed.tsv.bz2
+tar -xjf links.tar.bz2
+tar -xjf sentences_CC0.tar.bz2
+```
+
+Generate review candidates + yield report (does **not** publish live cloze):
+
+```bash
+.venv/bin/python scripts/audit/generate_tatoeba_cloze_candidates.py \
+  --manifest site/src/data/lexicon-manifest.json \
+  --uk-sentences .agent/tmp/tatoeba/ukr_sentences_detailed.tsv \
+  --en-sentences .agent/tmp/tatoeba/eng_sentences_detailed.tsv \
+  --links .agent/tmp/tatoeba/links.csv \
+  --cc0-sentences .agent/tmp/tatoeba/sentences_CC0.csv \
+  --default-license "CC-BY 2.0 FR" \
+  --out .agent/tmp/tatoeba/candidates-phase1-retry-full.json \
+  --yield-report docs/atlas/tatoeba-cloze-yield-phase1-retry.json \
+  --progress-every 10000
+```
+
+Missing hydrations fail closed with an actionable `FileNotFoundError` (manifest,
+Tatoeba paths, or `data/vesum.db` when `--vesum-json` is omitted).
+
+### Phase 1 retry results
+
+| Metric | Count |
+| --- | ---: |
+| Pairs processed | 217,316 |
+| Target form keys | 6,955 |
+| Target forms | 11,293 |
+| Lemmas with targets | 2,799 |
+| Candidates emitted | 1,981 |
+| Candidate license `CC-BY 2.0 FR` | 1,980 |
+| Candidate license `CC0` | 1 |
+| Wall time | ~223s |
+
+By case rule:
+
+| caseRuleId | Candidates |
+| --- | ---: |
+| `accusative_direct_object` | 1,917 |
+| `locative_static_u` | 41 |
+| `locative_static_na` | 23 |
+
+By emitted sentence CEFR:
+
+| CEFR | Candidates |
+| --- | ---: |
+| A1 | 888 |
+| A2 | 528 |
+| B1 | 349 |
+| B2 | 209 |
+| C1 | 7 |
+| C2 | 0 |
+
+Full rejection breakdown:
+
+| Rejection | Count |
+| --- | ---: |
+| `blocked_register` | 56 |
+| `exact_duplicate` | 424 |
+| `multiword_lemma` | 1,245 |
+| `near_duplicate` | 1,206 |
+| `russianism_prescreen` | 195 |
+| `sentence_cefr_above_word` | 5,422 |
+| `sentence_cefr_unknown` | 2,163 |
+| `sentence_length` | 20,081 |
+| `single_target_occurrence` | 240 |
+| `surface_equals_lemma` | 2,016 |
+| `target_punctuation_or_multiword` | 3,701 |
+| `unsupported_trigger` | 15,864 |
+| `vesum_ambiguous` | 21,550 |
+
+Raw generator stdout:
+
+```text
+loaded entries=8552 pairs=217316 cc0_ids=559260
+progress.start pairs=217316 target_keys=6955 target_forms=11293 lemmas_with_targets=2799
+progress.done pairs=217316 candidates=1981
+wrote yield report to .agent/tmp/tatoeba/yield-phase1-retry-full.json
+targets.keys=6955 forms=11293 lemmas=2799
+wrote 1981 candidates to .agent/tmp/tatoeba/candidates-phase1-retry-full.json
+rejected.blocked_register=56
+rejected.exact_duplicate=424
+rejected.multiword_lemma=1245
+rejected.near_duplicate=1206
+rejected.russianism_prescreen=195
+rejected.sentence_cefr_above_word=5422
+rejected.sentence_cefr_unknown=2163
+rejected.sentence_length=20081
+rejected.single_target_occurrence=240
+rejected.surface_equals_lemma=2016
+rejected.target_punctuation_or_multiword=3701
+rejected.unsupported_trigger=15864
+rejected.vesum_ambiguous=21550
+```
+
+### Deltas vs Phase 1.5 (2026-06-26)
+
+| Metric | Phase 1.5 | Phase 1 retry | Delta |
+| --- | ---: | ---: | ---: |
+| Pairs | 217,297 | 217,316 | +19 |
+| Candidates | 2,070 | 1,981 | −89 |
+| Accusative | 2,000 | 1,917 | −83 |
+| Locative `u` | 37 | 41 | +4 |
+| Locative `na` | 33 | 23 | −10 |
+| A1 | 1,120 | 888 | −232 |
+| A2 | 634 | 528 | −106 |
+| B1+ | 316 | 565 | +249 |
+
+Read: yield remains thousands-scale and strongly accusative-heavy. Manifest
+growth (8,552 entries, 2,799 lemmas with supported targets) and fresher Tatoeba
+exports moved some mass into B1/B2 while A1/A2 stayed the majority (1,416 /
+1,981). Locative remains sparse under the strict `у/в` / `на` triggers.
+
+Committed artifacts from this retry:
+
+* Machine summary: `docs/atlas/tatoeba-cloze-yield-phase1-retry.json`
+* Stratified 30-row quality sample: `docs/atlas/tatoeba-cloze-sample.json`
+* Full candidate JSON stays local under `.agent/tmp/tatoeba/` (review-only; not live)
+
+CLI improvements shipped with this retry (no Phase-3 go-live):
+
+* `--default-license` + `--cc0-sentences` for detailed Tatoeba exports
+* `--yield-report` JSON/Markdown writer
+* `--progress-every` stderr progress
+* Fail-closed missing-path checks (manifest / Tatoeba files / `data/vesum.db`)
+* Faster links streaming for the ~28M-row export
 
 ## Phase 1.5 (post-fix) - 2026-06-26
 

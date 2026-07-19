@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import csv
 import hashlib
 import json
@@ -45,6 +46,7 @@ from generate_practice_deck import (
 from scripts.lexicon.heritage_classifier import _check_russian_shadow
 
 DEFAULT_OUT = Path("site/src/data/lexicon-practice-cloze-tatoeba-review-candidates.json")
+DEFAULT_LICENSE = "CC-BY 2.0 FR"
 SUPPORTED_CASE_RULE_IDS = ("accusative_direct_object", "locative_static_u", "locative_static_na")
 SUPPORTED_CASE_RULE_SET = frozenset(SUPPORTED_CASE_RULE_IDS)
 MANIFEST_CASE_LABEL_BY_RULE_ID = {
@@ -159,12 +161,30 @@ class GeneratorConfig:
 class GenerationReport:
     candidates: list[dict[str, Any]] = field(default_factory=list)
     rejections: Counter[str] = field(default_factory=Counter)
+    pairs_processed: int = 0
+    target_form_keys: int = 0
+    target_forms: int = 0
+    lemma_with_targets: int = 0
 
     def reject(self, reason: str, count: int = 1) -> None:
         self.rejections[reason] += count
 
 
 RussianShadowChecker = Callable[[str], bool]
+
+
+def require_existing_path(path: Path, label: str) -> Path:
+    """Fail closed with an actionable message when a required input is missing."""
+    resolved = path.expanduser()
+    if not resolved.exists():
+        raise FileNotFoundError(
+            f"missing {label}: {resolved}\n"
+            "Hydrate/download the real Phase-1 inputs before generation. "
+            "See docs/atlas/tatoeba-cloze-yield-report.md § Phase 1 retry runbook."
+        )
+    if not resolved.is_file():
+        raise FileNotFoundError(f"{label} is not a file: {resolved}")
+    return resolved
 
 
 def check_russian_shadow(token: str) -> bool:
@@ -211,8 +231,58 @@ def _row_license(values: Iterable[str]) -> str | None:
     return None
 
 
-def read_tatoeba_sentences(path: Path, expected_lang: str) -> dict[int, TatoebaSentence]:
+def read_cc0_sentence_ids(path: Path | None) -> set[int]:
+    """Load Tatoeba sentences_CC0 export IDs (id is the first column)."""
+    if path is None:
+        return set()
+    ids: set[int] = set()
+    for row in _rows_from_csv(path):
+        if isinstance(row, dict):
+            raw_id = _dict_value(row, "id", "sentence_id", "sentence id")
+        else:
+            if not row:
+                continue
+            raw_id = row[0]
+        if not raw_id:
+            continue
+        try:
+            ids.add(int(str(raw_id).strip()))
+        except ValueError:
+            continue
+    return ids
+
+
+def _resolve_sentence_license(
+    path: Path,
+    sentence_id: int,
+    license_value: str | None,
+    *,
+    default_license: str | None,
+    cc0_ids: set[int],
+) -> str:
+    clean_license = _clean_text(license_value)
+    if clean_license:
+        return clean_license
+    if sentence_id in cc0_ids:
+        return "CC0"
+    if default_license:
+        return default_license
+    raise ValueError(
+        f"{path}: sentence {sentence_id} missing per-row license. "
+        "Detailed Tatoeba exports omit license; pass --default-license "
+        f"{DEFAULT_LICENSE!r} and optionally --cc0-sentences sentences_CC0.csv."
+    )
+
+
+def read_tatoeba_sentences(
+    path: Path,
+    expected_lang: str,
+    *,
+    default_license: str | None = None,
+    cc0_ids: set[int] | None = None,
+) -> dict[int, TatoebaSentence]:
     rows: dict[int, TatoebaSentence] = {}
+    cc0_ids = cc0_ids or set()
     for row in _rows_from_csv(path):
         if isinstance(row, dict):
             raw_id = _dict_value(row, "id", "sentence_id", "sentence id")
@@ -230,11 +300,15 @@ def read_tatoeba_sentences(path: Path, expected_lang: str) -> dict[int, TatoebaS
             continue
         sentence_id = int(str(raw_id))
         clean_text = _clean_text(text)
-        clean_license = _clean_text(license_value)
         if not clean_text:
             continue
-        if not clean_license:
-            raise ValueError(f"{path}: sentence {sentence_id} missing per-row license; use the detailed export")
+        clean_license = _resolve_sentence_license(
+            path,
+            sentence_id,
+            license_value,
+            default_license=default_license,
+            cc0_ids=cc0_ids,
+        )
         rows[sentence_id] = TatoebaSentence(
             sentence_id=sentence_id,
             lang=expected_lang,
@@ -245,8 +319,27 @@ def read_tatoeba_sentences(path: Path, expected_lang: str) -> dict[int, TatoebaS
     return rows
 
 
-def read_tatoeba_links(path: Path) -> list[tuple[int, int]]:
-    links: list[tuple[int, int]] = []
+def _iter_tatoeba_link_ids(path: Path) -> Iterable[tuple[int, int]]:
+    # Fast path for the weekly Tatoeba links export (two integer columns, no header).
+    # csv.reader over ~28M rows dominated Phase-1 load time.
+    with path.open(encoding="utf-8") as handle:
+        first = handle.readline()
+        if not first:
+            return
+        first_cells = first.rstrip("\n").split("\t" if "\t" in first else ",")
+        has_header = bool(first_cells) and (not first_cells[0].strip().isdigit())
+        if not has_header and len(first_cells) >= 2:
+            with contextlib.suppress(ValueError):
+                yield int(first_cells[0]), int(first_cells[1])
+            delimiter = "\t" if "\t" in first else ","
+            for line in handle:
+                cells = line.rstrip("\n").split(delimiter)
+                if len(cells) < 2:
+                    continue
+                with contextlib.suppress(ValueError):
+                    yield int(cells[0]), int(cells[1])
+            return
+    # Headered/dict fallback for fixtures and alternate exports.
     for row in _rows_from_csv(path):
         if isinstance(row, dict):
             raw_left = _dict_value(row, "sentence_id", "sentence id", "left_id", "id")
@@ -255,17 +348,41 @@ def read_tatoeba_links(path: Path) -> list[tuple[int, int]]:
             if len(row) < 2:
                 continue
             raw_left, raw_right = row[0], row[1]
-        if raw_left and raw_right:
-            links.append((int(str(raw_left)), int(str(raw_right))))
-    return links
+        if not raw_left or not raw_right:
+            continue
+        with contextlib.suppress(ValueError):
+            yield int(str(raw_left)), int(str(raw_right))
 
 
-def read_tatoeba_pairs(uk_sentences: Path, en_sentences: Path, links: Path) -> list[TatoebaPair]:
-    uk_rows = read_tatoeba_sentences(uk_sentences, "ukr")
-    en_rows = read_tatoeba_sentences(en_sentences, "eng")
+def read_tatoeba_links(path: Path) -> list[tuple[int, int]]:
+    return list(_iter_tatoeba_link_ids(path))
+
+
+def read_tatoeba_pairs(
+    uk_sentences: Path,
+    en_sentences: Path,
+    links: Path,
+    *,
+    default_license: str | None = None,
+    cc0_ids: set[int] | None = None,
+) -> list[TatoebaPair]:
+    uk_rows = read_tatoeba_sentences(
+        uk_sentences,
+        "ukr",
+        default_license=default_license,
+        cc0_ids=cc0_ids,
+    )
+    en_rows = read_tatoeba_sentences(
+        en_sentences,
+        "eng",
+        default_license=default_license,
+        cc0_ids=cc0_ids,
+    )
     pairs: list[TatoebaPair] = []
     seen: set[tuple[int, int]] = set()
-    for left_id, right_id in read_tatoeba_links(links):
+    # Stream links and keep only UK↔EN pairs. Materializing the full 28M-row
+    # links export first dominated Phase-1 wall time on real data.
+    for left_id, right_id in _iter_tatoeba_link_ids(links):
         if left_id in uk_rows and right_id in en_rows:
             pair_key = (left_id, right_id)
             pair = TatoebaPair(uk=uk_rows[left_id], en=en_rows[right_id])
@@ -568,10 +685,15 @@ def generate_tatoeba_cloze_candidates(
     verifier: VesumVerifier,
     config: GeneratorConfig | None = None,
     russian_shadow_checker: RussianShadowChecker = check_russian_shadow,
+    progress_every: int | None = None,
+    progress_stream: Any | None = None,
 ) -> GenerationReport:
     config = config or GeneratorConfig()
     report = GenerationReport()
     target_index = _build_target_index(entries, report)
+    report.target_form_keys = len(target_index)
+    report.target_forms = sum(len(forms) for forms in target_index.values())
+    report.lemma_with_targets = len({form.lemma_id for forms in target_index.values() for form in forms})
     lemma_levels = _build_lemma_levels(entries)
     seen_hashes: set[str] = set()
     seen_frames: list[str] = []
@@ -579,7 +701,23 @@ def generate_tatoeba_cloze_candidates(
     ordered_pairs = sorted(pairs, key=lambda pair: (pair.uk.sentence_id, pair.en.sentence_id))
     if config.limit_pairs is not None:
         ordered_pairs = ordered_pairs[: config.limit_pairs]
-    for pair in ordered_pairs:
+    total_pairs = len(ordered_pairs)
+    report.pairs_processed = total_pairs
+    progress_stream = sys.stderr if progress_stream is None else progress_stream
+    if progress_every:
+        print(
+            f"progress.start pairs={total_pairs} target_keys={report.target_form_keys} "
+            f"target_forms={report.target_forms} lemmas_with_targets={report.lemma_with_targets}",
+            file=progress_stream,
+            flush=True,
+        )
+    for pair_index, pair in enumerate(ordered_pairs, start=1):
+        if progress_every and pair_index % progress_every == 0:
+            print(
+                f"progress.pairs={pair_index}/{total_pairs} accepted={len(accepted)}",
+                file=progress_stream,
+                flush=True,
+            )
         if not _clean_text(pair.en.text):
             report.reject("missing_en_pair")
             continue
@@ -638,12 +776,100 @@ def generate_tatoeba_cloze_candidates(
                 seen_frames.append(frame)
                 accepted.append(candidate)
     report.candidates = _apply_caps(accepted, report, config)
+    if progress_every:
+        print(
+            f"progress.done pairs={total_pairs} candidates={len(report.candidates)}",
+            file=progress_stream,
+            flush=True,
+        )
     return report
 
 
 def write_candidates(candidates: list[dict[str, Any]], path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(candidates, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def build_yield_summary(report: GenerationReport) -> dict[str, Any]:
+    by_case = Counter(str(candidate.get("caseRuleId") or "") for candidate in report.candidates)
+    by_cefr = Counter(str(candidate.get("cefr") or "") for candidate in report.candidates)
+    by_license = Counter(
+        str((candidate.get("provenance") or {}).get("license") or "")
+        if isinstance(candidate.get("provenance"), dict)
+        else ""
+        for candidate in report.candidates
+    )
+    return {
+        "pairs_processed": report.pairs_processed,
+        "candidates": len(report.candidates),
+        "target_form_keys": report.target_form_keys,
+        "target_forms": report.target_forms,
+        "lemmas_with_targets": report.lemma_with_targets,
+        "by_case_rule": dict(sorted(by_case.items())),
+        "by_cefr": dict(sorted(by_cefr.items(), key=lambda item: CEFR_RANK.get(item[0], 99))),
+        "by_license": dict(sorted(by_license.items())),
+        "rejections": dict(sorted(report.rejections.items())),
+    }
+
+
+def format_yield_report_markdown(
+    summary: dict[str, Any],
+    *,
+    title: str = "Tatoeba Cloze Yield Report",
+    run_date: str | None = None,
+    notes: list[str] | None = None,
+) -> str:
+    lines = [f"# {title}", ""]
+    if run_date:
+        lines.extend([f"Run date: {run_date}", ""])
+    if notes:
+        lines.append("## Notes")
+        lines.append("")
+        for note in notes:
+            lines.append(f"- {note}")
+        lines.append("")
+    lines.extend(
+        [
+            "## Summary",
+            "",
+            "| Metric | Count |",
+            "| --- | ---: |",
+            f"| Pairs processed | {summary.get('pairs_processed', 0)} |",
+            f"| Target form keys | {summary.get('target_form_keys', 0)} |",
+            f"| Target forms | {summary.get('target_forms', 0)} |",
+            f"| Lemmas with targets | {summary.get('lemmas_with_targets', 0)} |",
+            f"| Candidates emitted | {summary.get('candidates', 0)} |",
+            "",
+            "By case rule:",
+            "",
+            "| caseRuleId | Candidates |",
+            "| --- | ---: |",
+        ]
+    )
+    for rule_id, count in (summary.get("by_case_rule") or {}).items():
+        lines.append(f"| `{rule_id}` | {count} |")
+    lines.extend(["", "By emitted sentence CEFR:", "", "| CEFR | Candidates |", "| --- | ---: |"])
+    for level, count in (summary.get("by_cefr") or {}).items():
+        lines.append(f"| {level} | {count} |")
+    lines.extend(["", "By license:", "", "| License | Candidates |", "| --- | ---: |"])
+    for license_name, count in (summary.get("by_license") or {}).items():
+        lines.append(f"| {license_name or '(missing)'} | {count} |")
+    lines.extend(["", "Full rejection breakdown:", "", "| Rejection | Count |", "| --- | ---: |"])
+    for reason, count in (summary.get("rejections") or {}).items():
+        lines.append(f"| `{reason}` | {count} |")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def write_yield_report(summary: dict[str, Any], path: Path, *, markdown: bool = True) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.suffix.lower() == ".json" or not markdown:
+        path.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        return
+    path.write_text(
+        format_yield_report_markdown(summary),
+        encoding="utf-8",
+    )
 
 
 def main(
@@ -656,17 +882,70 @@ def main(
     parser.add_argument("--en-sentences", type=Path, required=True)
     parser.add_argument("--links", type=Path, required=True)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    parser.add_argument(
+        "--yield-report",
+        type=Path,
+        help="Write machine yield summary (.json) or markdown report (.md).",
+    )
     parser.add_argument("--vesum-json", type=Path)
+    parser.add_argument(
+        "--default-license",
+        default=None,
+        help=(
+            "Fill missing per-row licenses from detailed Tatoeba exports. "
+            f"Recommended real-data value: {DEFAULT_LICENSE!r}."
+        ),
+    )
+    parser.add_argument(
+        "--cc0-sentences",
+        type=Path,
+        help="Optional sentences_CC0.csv export; those IDs get license CC0 when license is missing.",
+    )
     parser.add_argument("--seed", type=int, default=GeneratorConfig.seed)
     parser.add_argument("--max-per-lemma", type=int, default=GeneratorConfig.max_per_lemma)
     parser.add_argument("--max-per-case-rule", type=int, default=GeneratorConfig.max_per_case_rule)
     parser.add_argument("--max-per-lemma-case-rule", type=int, default=GeneratorConfig.max_per_lemma_case_rule)
     parser.add_argument("--limit-pairs", type=int)
+    parser.add_argument(
+        "--progress-every",
+        type=int,
+        default=0,
+        help="Emit pair progress to stderr every N pairs (0 disables).",
+    )
     args = parser.parse_args(argv)
 
-    entries = read_manifest(args.manifest)
-    pairs = read_tatoeba_pairs(args.uk_sentences, args.en_sentences, args.links)
-    verifier: VesumVerifier = JsonVesumVerifier.from_path(args.vesum_json) if args.vesum_json else RealVesumVerifier()
+    manifest_path = require_existing_path(args.manifest, "Atlas manifest")
+    uk_path = require_existing_path(args.uk_sentences, "Tatoeba UK sentences")
+    en_path = require_existing_path(args.en_sentences, "Tatoeba EN sentences")
+    links_path = require_existing_path(args.links, "Tatoeba links")
+    vesum_json_path = require_existing_path(args.vesum_json, "VESUM JSON fixture") if args.vesum_json else None
+    cc0_path = require_existing_path(args.cc0_sentences, "Tatoeba CC0 sentences") if args.cc0_sentences else None
+
+    if vesum_json_path is None:
+        vesum_db = PROJECT_ROOT / "data" / "vesum.db"
+        if not vesum_db.exists():
+            raise FileNotFoundError(
+                f"missing real VESUM db for generation: {vesum_db}\n"
+                "Symlink or copy the hydrated main-checkout data/vesum.db into this worktree, "
+                "or pass --vesum-json for fixture-only runs."
+            )
+
+    entries = read_manifest(manifest_path)
+    cc0_ids = read_cc0_sentence_ids(cc0_path)
+    pairs = read_tatoeba_pairs(
+        uk_path,
+        en_path,
+        links_path,
+        default_license=args.default_license,
+        cc0_ids=cc0_ids,
+    )
+    print(
+        f"loaded entries={len(entries)} pairs={len(pairs)} cc0_ids={len(cc0_ids)}",
+        flush=True,
+    )
+    verifier: VesumVerifier = (
+        JsonVesumVerifier.from_path(vesum_json_path) if vesum_json_path else RealVesumVerifier()
+    )
     report = generate_tatoeba_cloze_candidates(
         entries,
         pairs,
@@ -679,11 +958,22 @@ def main(
             limit_pairs=args.limit_pairs,
         ),
         russian_shadow_checker=russian_shadow_checker,
+        progress_every=args.progress_every or None,
     )
     write_candidates(report.candidates, args.out)
-    print(f"wrote {len(report.candidates)} candidates to {args.out}")
+    summary = build_yield_summary(report)
+    if args.yield_report:
+        write_yield_report(summary, args.yield_report)
+        print(f"wrote yield report to {args.yield_report}", flush=True)
+    print(
+        "targets."
+        f"keys={report.target_form_keys} forms={report.target_forms} "
+        f"lemmas={report.lemma_with_targets}",
+        flush=True,
+    )
+    print(f"wrote {len(report.candidates)} candidates to {args.out}", flush=True)
     for reason, count in sorted(report.rejections.items()):
-        print(f"rejected.{reason}={count}")
+        print(f"rejected.{reason}={count}", flush=True)
     return 0
 
 

@@ -1,0 +1,41 @@
+{
+  "pairs_processed": 217316,
+  "candidates": 1981,
+  "target_form_keys": 6955,
+  "target_forms": 11293,
+  "lemmas_with_targets": 2799,
+  "by_case_rule": {
+    "accusative_direct_object": 1917,
+    "locative_static_na": 23,
+    "locative_static_u": 41
+  },
+  "by_cefr": {
+    "A1": 888,
+    "A2": 528,
+    "B1": 349,
+    "B2": 209,
+    "C1": 7
+  },
+  "by_license": {
+    "CC-BY 2.0 FR": 1980,
+    "CC0": 1
+  },
+  "rejections": {
+    "blocked_register": 56,
+    "exact_duplicate": 424,
+    "multiword_lemma": 1245,
+    "near_duplicate": 1206,
+    "russianism_prescreen": 195,
+    "sentence_cefr_above_word": 5422,
+    "sentence_cefr_unknown": 2163,
+    "sentence_length": 20081,
+    "single_target_occurrence": 240,
+    "surface_equals_lemma": 2016,
+    "target_punctuation_or_multiword": 3701,
+    "unsupported_trigger": 15864,
+    "vesum_ambiguous": 21550
+  },
+  "run_date": "2026-07-19",
+  "issue": 3797,
+  "note": "real Tatoeba + hydrated manifest + vesum.db; candidates remain local under .agent/tmp/tatoeba/"
+}
