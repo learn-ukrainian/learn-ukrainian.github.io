@@ -8,7 +8,7 @@ sources:
   url: http://history.org.ua/?termin=Mazepa_I_S
   metadata:
     publisher: Енциклопедія історії України
-    author: ЕІУ
+    author: В. В. Станіславський
     language: uk
     verified_on: '2026-07-19'
     factual_role: гетьманат 1687–1709, політика, союз 1708, смерть, анафема
@@ -18,19 +18,19 @@ sources:
     license: Авторське право видавця; використання як зовнішнього посилання / link-only
     attribution: Енциклопедія історії України
 - id: S2
-  file: http://history.org.ua/?termin=baturyna_obloga_i_shturm_1708
+  file: https://www.history.org.ua/?termin=baturyna_obloga_i_shturm_1708
   type: external
   title: Батурина облога і штурм 1708
-  url: http://history.org.ua/?termin=baturyna_obloga_i_shturm_1708
+  url: https://www.history.org.ua/?termin=baturyna_obloga_i_shturm_1708
   metadata:
     publisher: Енциклопедія історії України
-    author: ЕІУ
+    author: А. А. Галушка
     language: uk
     verified_on: '2026-07-19'
     factual_role: Батурин 1708 як імперська каральна відповідь, не декоративний епізод
   rights:
     basis: external-link
-    evidence_url: http://history.org.ua/?termin=baturyna_obloga_i_shturm_1708
+    evidence_url: https://www.history.org.ua/?termin=baturyna_obloga_i_shturm_1708
     license: Авторське право видавця; використання як зовнішнього посилання / link-only
     attribution: Енциклопедія історії України
 - id: S3

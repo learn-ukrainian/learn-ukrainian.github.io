@@ -16,7 +16,7 @@
 ## Adopted sources (ordered; identical across surfaces)
 
 - S1: http://history.org.ua/?termin=Mazepa_I_S
-- S2: http://history.org.ua/?termin=baturyna_obloga_i_shturm_1708
+- S2: https://www.history.org.ua/?termin=baturyna_obloga_i_shturm_1708
 - S3: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CA%5CMazepaIvan.htm
 
 **Learner readings subset (UA only):** S1, S2. English IEU is adopted for grounding but not hosted as learner reading without separate rights/edition claim.
@@ -45,14 +45,14 @@
 
 - Меценатство, церковне й освітнє будівництво, «мазепинське бароко» як культурна політика — за ЕІУ/IEU, без агіографії [S1][S3].
 - IEU підкреслює мету об'єднання українських територій у гетьманській державі європейського зразка зі збереженням козацького устрою [S3].
-- Легенда про «Фабуську»/Pasek (дикий кінь) — IEU прямо: no basis in fact; романтична рецепція (Byron, Hugo, Pushkin, Liszt…) [S3].
+- Легенда про роман із жінкою, яку IEU називає Madame Falbowska, і покарання диким конем не має фактичної основи; це окремий шар романтичної рецепції (Byron, Hugo, Pushkin, Liszt…) [S3].
 
 ## 4. Цитати / source tradition
 
 Дослівної автоцитати Мазепи з exact locator у adopted URL **немає**.
 
 **Парафраз:**
-- «Дума» Мазепи та інші атроибуційні традиції **не** подаються як corpus-verified quote.
+- «Дума» Мазепи та інші атрибуційні традиції **не** подаються як corpus-verified quote.
 - Імперське тавро «зрадник» і романтичний «герой свободи» — обидваreception frames, не біографічний мінімум [S1][S3].
 
 
@@ -89,7 +89,7 @@
 
 ### Adopted
 - [S1] МАЗЕПА Іван Степанович — Енциклопедія історії України; uk; role: гетьманат 1687–1709, політика, союз 1708, смерть, анафема; http://history.org.ua/?termin=Mazepa_I_S
-- [S2] Батурина облога і штурм 1708 — Енциклопедія історії України; uk; role: Батурин 1708 як імперська каральна відповідь, не декоративний епізод; http://history.org.ua/?termin=baturyna_obloga_i_shturm_1708
+- [S2] Батурина облога і штурм 1708 — А. А. Галушка, Енциклопедія історії України; uk; role: Батурин 1708 як імперська каральна відповідь, не декоративний епізод; https://www.history.org.ua/?termin=baturyna_obloga_i_shturm_1708
 - [S3] Mazepa, Ivan — Internet Encyclopedia of Ukraine (CIUS); en; role: незалежна біографія: освіта, гетьманат, 1708–1709, культурне меценатство; https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CA%5CMazepaIvan.htm
 
 ### Rejected / not adopted

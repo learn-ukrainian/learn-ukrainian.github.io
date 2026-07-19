@@ -9,7 +9,7 @@ query_keywords:
 - гетьман 1687–1709; 1708 союз зі Швецією; Батурин; Полтава 1709; вигнання/смерть; анафема
 direct_sources:
 - http://history.org.ua/?termin=Mazepa_I_S
-- http://history.org.ua/?termin=baturyna_obloga_i_shturm_1708
+- https://www.history.org.ua/?termin=baturyna_obloga_i_shturm_1708
 - https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CA%5CMazepaIvan.htm
 fetch_disposition:
 - url: http://history.org.ua/?termin=Mazepa_I_S
@@ -19,16 +19,16 @@ fetch_disposition:
   language: uk
   title: МАЗЕПА Іван Степанович
   institution: Енциклопедія історії України
-  author: ЕІУ
+  author: В. В. Станіславський
   factual_role: гетьманат 1687–1709, політика, союз 1708, смерть, анафема
-- url: http://history.org.ua/?termin=baturyna_obloga_i_shturm_1708
+- url: https://www.history.org.ua/?termin=baturyna_obloga_i_shturm_1708
   disposition: adopted
   http_status: 200
   retrieved_on: '2026-07-19'
   language: uk
   title: Батурина облога і штурм 1708
   institution: Енциклопедія історії України
-  author: ЕІУ
+  author: А. А. Галушка
   factual_role: Батурин 1708 як імперська каральна відповідь, не декоративний епізод
 - url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CA%5CMazepaIvan.htm
   disposition: adopted

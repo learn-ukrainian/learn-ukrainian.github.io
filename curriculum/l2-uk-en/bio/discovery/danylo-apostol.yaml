@@ -1,7 +1,7 @@
 discovered_at: '2026-07-19T12:00:00+00:00'
 error:
 query_keywords:
-- 'Данило Апостол: Останній обраний гетьман'
+- 'Данило Апостол: Виборний гетьман під імперським наглядом'
 - Данило Апостол
 - АПОСТОЛ Данило Павлович
 - Рішительні пункти 1728
@@ -28,7 +28,7 @@ fetch_disposition:
   language: uk
   title: Рішительні пункти 1728
   institution: Енциклопедія історії України
-  author: ЕІУ
+  author: О. В. Кресін
   factual_role: правова рамка обмеженої автономії 1728
 - url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CA%5CP%5CApostolDanylo.htm
   disposition: adopted
