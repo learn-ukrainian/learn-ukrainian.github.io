@@ -1,32 +1,49 @@
-discovered_at: '2026-04-14T10:42:41.430294+00:00'
-error: null
+discovered_at: '2026-07-19T12:00:00+00:00'
+error:
 query_keywords:
 - 'Іван Мазепа: Анатомія вибору'
-- Розминка
-- 'Конфліктна карта: Герой чи зрадник?'
-- 'Формування: Шлях до гетьманства'
-- 'Діяльність: Будівничий держави'
-- 'Тінь: Ціна союзу'
-- 'Дискусія та підсумок: Спадщина'
-- Аналізувати життя та діяльність Івана Мазепи, уникаючи агіографічних або принизливих
-  стереотипів
-- Пояснювати причини та наслідки його союзу зі Швецією, розглядаючи це як складний
-  політичний вибір
-- Характеризувати явище «мазепинського бароко» як результат його культурного меценатства
-- Критично порівнювати образ Мазепи в українській, російській та європейській історіографії
-  та культурі
-- гетьман
-- меценат
-- бароко
-- анафема
-- зрада
-- автономія
-- союз
-- вигнання
-- універсал
-- клейноди
-- старшина
-- резиденція
+- Іван Мазепа
+- МАЗЕПА Іван Степанович
+- Батурина облога і штурм 1708
+- Mazepa, Ivan
+- гетьман 1687–1709; 1708 союз зі Швецією; Батурин; Полтава 1709; вигнання/смерть; анафема
+direct_sources:
+- http://history.org.ua/?termin=Mazepa_I_S
+- http://history.org.ua/?termin=baturyna_obloga_i_shturm_1708
+- https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CA%5CMazepaIvan.htm
+fetch_disposition:
+- url: http://history.org.ua/?termin=Mazepa_I_S
+  disposition: adopted
+  http_status: 200
+  retrieved_on: '2026-07-19'
+  language: uk
+  title: МАЗЕПА Іван Степанович
+  institution: Енциклопедія історії України
+  author: ЕІУ
+  factual_role: гетьманат 1687–1709, політика, союз 1708, смерть, анафема
+- url: http://history.org.ua/?termin=baturyna_obloga_i_shturm_1708
+  disposition: adopted
+  http_status: 200
+  retrieved_on: '2026-07-19'
+  language: uk
+  title: Батурина облога і штурм 1708
+  institution: Енциклопедія історії України
+  author: ЕІУ
+  factual_role: Батурин 1708 як імперська каральна відповідь, не декоративний епізод
+- url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CA%5CMazepaIvan.htm
+  disposition: adopted
+  http_status: 200
+  retrieved_on: '2026-07-19'
+  language: en
+  title: Mazepa, Ivan
+  institution: Internet Encyclopedia of Ukraine (CIUS)
+  author: IEU
+  factual_role: 'незалежна біографія: освіта, гетьманат, 1708–1709, культурне меценатство'
 rag_chunks: []
 rag_literary: []
-warning: Auto-generated from plan
+warning: Subject-first direct-source packet; plan-generated discovery warning removed. Adopted URLs fetched live with
+  HTTP 200 receipts. RAG optional because direct sources complete.
+rejected_candidates:
+- url: https://uk.wikipedia.org/
+  disposition: rejected
+  reason: Wikipedia not used as adopted independent authority for this packet; encyclopedic EIU/IEU preferred.

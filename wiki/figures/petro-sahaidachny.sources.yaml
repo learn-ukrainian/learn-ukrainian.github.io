@@ -1,45 +1,52 @@
 # Source registry for wiki/figures/petro-sahaidachny.md
-# Referenced inline as [S1], [S2], ...
+# Referenced inline as [S1], [S2], ... — independent adopted sources only
 sources:
 - id: S1
-  file: ukrainian_wiki/petro-sahaidachnyi_Історія-України-Петро-Сагайдачний-Гетьман-і-меценат-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Історія України: Петро Сагайдачний: Гетьман і меценат'
-  section_path: 'Історія України: Петро Сагайдачний: Гетьман і меценат > Короткий
-    зміст'
+  file: http://history.org.ua/?termin=Konashevich_Sagaidachny
+  type: external
+  title: КОНАШЕВИЧ-САГАЙДАЧНИЙ Петро Кононович
+  url: http://history.org.ua/?termin=Konashevich_Sagaidachny
+  metadata:
+    publisher: Енциклопедія історії України
+    author: П. М. Сас
+    language: uk
+    verified_on: '2026-07-19'
+    factual_role: біографія гетьмана, реформи, Київське братство, 1620 ієрархія
+  rights:
+    basis: external-link
+    evidence_url: http://history.org.ua/?termin=Konashevich_Sagaidachny
+    license: Авторське право видавця; використання як зовнішнього посилання / link-only
+    attribution: Енциклопедія історії України
 - id: S2
-  file: 8-klas-istoria-ukr-galimov-2025_s4011
-  type: textbook
-  title: Розділ ІІІ. Козацтво від боротьби за станові інтереси до творення держави
-  page: 86
-  grade: 8
+  file: http://history.org.ua/?termin=Khotynska_vijna_1621
+  type: external
+  title: Хотинська війна 1621
+  url: http://history.org.ua/?termin=Khotynska_vijna_1621
+  metadata:
+    publisher: Енциклопедія історії України
+    author: ЕІУ
+    language: uk
+    verified_on: '2026-07-19'
+    factual_role: Хотин 1621 як військова подія, не лише героїчний епізод
+  rights:
+    basis: external-link
+    evidence_url: http://history.org.ua/?termin=Khotynska_vijna_1621
+    license: Авторське право видавця; використання як зовнішнього посилання / link-only
+    attribution: Енциклопедія історії України
 - id: S3
-  file: 8-klas-istoria-ukr-schupak-2025_s4202
-  type: textbook
-  title: РОЗДІЛ 2
-  page: 69
-  grade: 8
-- id: S4
-  file: 8-klas-istoria-ukr-galimov-2025_s4014
-  type: textbook
-  title: § 13. Участь козаків у морських походах, війнах Речі Посполитої та європейських
-    держав
-  page: 91
-  grade: 8
-- id: S5
-  file: 8-klas-istoriya-ukr-gisem-2021_s4281
-  type: textbook
-  title: § 12. Походи козаків першої чверті XVII ст. П. Конашевич-Сагайдачний 65
-  page: 65
-  grade: 8
-- id: S6
-  file: ukrainian_wiki/petro-sahaidachny_Біографія-Петро-Сагайдачний-Гетьман-Державник-Основний-зміст-Політична-візія-та-державотворча-діяльність
-  type: ukrainian_wiki
-  title: 'Біографія: Петро Сагайдачний: Гетьман-Державник'
-  section_path: 'Біографія: Петро Сагайдачний: Гетьман-Державник > Основний зміст
-    > Політична візія та державотворча діяльність'
-- id: S7
-  file: wave8-hrabovych-do-istoriyi_c0361
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKonashevych6SahaidachnyPetro.htm
+  type: external
+  title: Konashevych-Sahaidachny, Petro
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKonashevych6SahaidachnyPetro.htm
+  metadata:
+    publisher: Internet Encyclopedia of Ukraine (CIUS)
+    author: IEU
+    language: en
+    verified_on: '2026-07-19'
+    factual_role: походи, 1618, братство, Хотин, смерть 20.04.1622
+  rights:
+    basis: external-link
+    evidence_url:
+      https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKonashevych6SahaidachnyPetro.htm
+    license: Авторське право видавця; використання як зовнішнього посилання / link-only
+    attribution: Internet Encyclopedia of Ukraine (CIUS)
