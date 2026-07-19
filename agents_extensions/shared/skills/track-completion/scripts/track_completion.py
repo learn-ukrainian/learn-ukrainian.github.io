@@ -1147,6 +1147,84 @@ def _with_lock(path: Path) -> FileLock:
     return FileLock(str(path.with_suffix(path.suffix + ".lock")), timeout=0)
 
 
+def _restart_remediated_preparation_block(
+    ledger: dict[str, Any],
+    *,
+    owner: str,
+    snapshot: TargetSnapshot,
+    identity: Mapping[str, Any],
+    config: Mapping[str, Any],
+    repo_root: Path,
+) -> None:
+    """Archive one remediated preparation HOLD and open its fresh completion run."""
+    try:
+        readiness = curriculum_readiness.evaluate_preparation(
+            snapshot.track,
+            snapshot.slug,
+            consumed_preparation_identity=_consumed_preparation_identity(ledger),
+            repo_root=repo_root,
+        )
+    except curriculum_readiness.ReadinessError as exc:
+        raise CompletionError(f"Current preparation cannot be evaluated: {exc}") from exc
+    if (
+        not readiness["preparation_identity"]
+        or not all(item["passed"] for item in readiness["requirements"])
+        or readiness["next_action"] == "stop"
+    ):
+        raise CompletionError(
+            "Preparation-blocked run remains terminal until canonical preparation is complete and unheld"
+        )
+    prior_run = dict(ledger["run"])
+    archive = {
+        "reason": "preparation-remediated",
+        "prior_run": prior_run,
+        "prior_state": ledger["state"],
+        "prior_identity": dict(ledger["current_identity"]),
+        "reviews": list(ledger["reviews"]),
+        "certification_evidence": list(ledger.get("certification_evidence", [])),
+        "routing": ledger.get("routing"),
+        "publication": ledger.get("publication"),
+        "production_qg_authorization": ledger.get("production_qg_authorization"),
+        "bounded_completion": _bounded_record(ledger),
+        "deferred_workflow_drift": list(ledger.get("deferred_workflow_drift", [])),
+        "preparation_block": dict(ledger["preparation_block"]),
+    }
+    now = _now()
+    fresh_run_id = uuid.uuid4().hex
+    ledger["run"] = {
+        "run_id": fresh_run_id,
+        "owner": owner,
+        "status": "active",
+        "started_at": _iso(now),
+        "updated_at": _iso(now),
+        "lease_expires_at": _iso(now + timedelta(seconds=int(config["lease_seconds"]))),
+    }
+    ledger.setdefault("archived_authority", []).append(archive)
+    ledger["author_families"] = []
+    ledger["reviews"] = []
+    ledger["certification_evidence"] = []
+    ledger["routing"] = None
+    ledger["publication"] = None
+    ledger["production_qg_authorization"] = None
+    ledger["bounded_completion"] = None
+    ledger["deferred_workflow_drift"] = []
+    ledger.pop("preparation_block")
+    _append_event(
+        ledger,
+        event_id=_event_id(
+            "PREPARATION_BLOCK_REMEDIATED", {"prior_run_id": prior_run["run_id"], "run_id": fresh_run_id}
+        ),
+        event="PREPARATION_BLOCK_REMEDIATED",
+        to_state=_initial_state(snapshot.module_state),
+        identity=identity,
+        details={
+            "prior_run_id": prior_run["run_id"],
+            "fresh_run_id": fresh_run_id,
+            "readiness_preparation_identity": readiness["preparation_identity"],
+        },
+    )
+
+
 def start_run(
     selector: str,
     *,
@@ -1176,6 +1254,22 @@ def start_run(
                         f"Existing ledger terminal goal is {existing['terminal_goal']}; refusing {terminal_goal}"
                     )
                 run = existing["run"]
+                if (
+                    run["status"] == "completed"
+                    and existing["state"] == PREPARATION_BLOCKED_STATE
+                    and isinstance(existing.get("preparation_block"), Mapping)
+                ):
+                    _restart_remediated_preparation_block(
+                        existing,
+                        owner=owner,
+                        snapshot=snapshot,
+                        identity=identity,
+                        config=config,
+                        repo_root=repo_root,
+                    )
+                    _validate(existing, LEDGER_SCHEMA_PATH, "track-completion ledger")
+                    _atomic_write_json(path, existing)
+                    return path, existing
                 if run["status"] == "completed" and existing["current_identity"]["sha256"] == identity["sha256"]:
                     return path, existing
                 if run["status"] == "active" and _parse_time(run["lease_expires_at"]) > _now():

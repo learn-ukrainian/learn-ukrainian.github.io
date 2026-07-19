@@ -327,7 +327,7 @@
         "deferred_workflow_drift"
       ],
       "properties": {
-        "reason": {"enum": ["legacy-migration", "deferred-protocol-drift"]},
+        "reason": {"enum": ["legacy-migration", "deferred-protocol-drift", "preparation-remediated"]},
         "prior_run": {"$ref": "#/$defs/run"},
         "prior_state": {"type": "string", "minLength": 1},
         "prior_identity": {"$ref": "#/$defs/identity"},
@@ -345,6 +345,12 @@
         "deferred_workflow_drift": {
           "type": "array",
           "items": {"$ref": "#/$defs/deferredWorkflowDrift"}
+        },
+        "preparation_block": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/preparationBlock"}
+          ]
         }
       }
     },
