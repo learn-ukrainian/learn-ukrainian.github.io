@@ -67,7 +67,7 @@
       "required": ["artifact", "validators"],
       "properties": {
         "artifact": {
-          "enum": ["dossier", "plan", "manual-registry", "wiki-document", "wiki-sources", "discovery"]
+          "enum": ["research", "dossier", "plan", "manual-registry", "wiki-document", "wiki-sources", "discovery"]
         },
         "validators": {
           "type": "array",
@@ -79,7 +79,10 @@
               "yaml-mapping",
               "plan-check",
               "seminar-plan-language",
-              "readings-present",
+              "research-quality",
+              "wiki-sources-registry",
+              "verified-reading-catalog",
+              "bio-reading-policy",
               "bio-dossier-xref",
               "manual-gate",
               "wiki-completeness",

@@ -8,7 +8,7 @@ selectors:
     track: seminar
 profiles:
   core:
-    version: 1.0.0
+    version: 1.1.0
     family: core
     prompt_profile: core
     requirements:
@@ -17,18 +17,33 @@ profiles:
         options:
           - artifact: plan
             validators: [exists, plan-check]
-  seminar:
-    version: 1.0.0
-    family: seminar
-    prompt_profile: seminar
-    requirements:
-      - id: plan
-        owner: plan
+      - id: research-evidence
+        owner: preparation
+        options:
+          - artifact: research
+            validators: [exists, research-quality]
+          - artifact: wiki-sources
+            validators: [exists, wiki-sources-registry]
+      - id: wiki-document
+        owner: preparation
+        options:
+          - artifact: wiki-document
+            validators: [exists, wiki-completeness]
+      - id: wiki-sources
+        owner: preparation
+        options:
+          - artifact: wiki-sources
+            validators: [exists, wiki-sources-registry]
+      - id: reading-or-rights
+        owner: preparation
         options:
           - artifact: plan
-            validators: [exists, plan-check, seminar-plan-language]
-  bio:
-    version: 1.0.0
+            validators: [exists, verified-reading-catalog]
+          - artifact: manual-registry
+            validators: [exists, manual-gate]
+            manual_gate: reading_rights
+  seminar:
+    version: 1.1.0
     family: seminar
     prompt_profile: seminar
     requirements:
@@ -36,7 +51,40 @@ profiles:
         owner: preparation
         options:
           - artifact: dossier
-            validators: [exists, bio-dossier-xref]
+            validators: [exists, research-quality]
+      - id: plan
+        owner: plan
+        options:
+          - artifact: plan
+            validators: [exists, plan-check, seminar-plan-language]
+      - id: wiki-document
+        owner: preparation
+        options:
+          - artifact: wiki-document
+            validators: [exists, wiki-completeness, seminar-wiki-language]
+      - id: wiki-sources
+        owner: preparation
+        options:
+          - artifact: wiki-sources
+            validators: [exists, wiki-sources-registry]
+      - id: reading-or-rights
+        owner: preparation
+        options:
+          - artifact: plan
+            validators: [exists, verified-reading-catalog]
+          - artifact: manual-registry
+            validators: [exists, manual-gate]
+            manual_gate: reading_rights
+  bio:
+    version: 1.1.0
+    family: seminar
+    prompt_profile: seminar
+    requirements:
+      - id: dossier
+        owner: preparation
+        options:
+          - artifact: dossier
+            validators: [exists, bio-dossier-xref, research-quality]
       - id: dossier-grounding
         owner: preparation
         options:
@@ -52,7 +100,7 @@ profiles:
         owner: preparation
         options:
           - artifact: plan
-            validators: [exists, readings-present]
+            validators: [exists, verified-reading-catalog, bio-reading-policy]
           - artifact: manual-registry
             validators: [exists, manual-gate]
             manual_gate: reading_rights
@@ -65,7 +113,7 @@ profiles:
         owner: preparation
         options:
           - artifact: wiki-sources
-            validators: [exists, yaml-mapping]
+            validators: [exists, wiki-sources-registry]
       - id: wiki-grounding
         owner: preparation
         options:

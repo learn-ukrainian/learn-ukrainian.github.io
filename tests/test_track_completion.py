@@ -167,10 +167,29 @@ def fake_repo(tmp_path: Path) -> tuple[Path, Path, Path]:
                             }
                         ],
                         "references": [{"title": "Тестове джерело"}],
+                        **(
+                            {
+                                "readings": [
+                                    {
+                                        "title": "Перевірене тестове читання",
+                                        "url": f"https://example.test/{track}/{slug}",
+                                    }
+                                ]
+                            }
+                            if track == "a1"
+                            else {}
+                        ),
                     },
                     sort_keys=False,
                 ),
             )
+    wiki_fixture = ROOT / "wiki/pedagogy/a1/my-morning.md"
+    wiki_sources_fixture = wiki_fixture.with_suffix(".sources.yaml")
+    for slug in ("core-built", "core-unbuilt"):
+        wiki_target = repo / f"wiki/pedagogy/a1/{slug}.md"
+        wiki_target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(wiki_fixture, wiki_target)
+        shutil.copy2(wiki_sources_fixture, wiki_target.with_suffix(".sources.yaml"))
     for track, slug in (("a1", "core-built"), ("bio", "seminar-built"), ("folk", "folk-built")):
         _write_bundle(
             repo,

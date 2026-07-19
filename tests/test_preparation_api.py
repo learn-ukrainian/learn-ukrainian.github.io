@@ -201,6 +201,7 @@ def test_module_projection_is_compact_canonical_and_has_no_ready_boolean() -> No
     assert data["preparation_state"] == "stale"
     assert data["next_action"] == "prepare"
     assert data["authority"]["readiness"]["profile_id"] == "core"
+    assert "PREPARATION_READING_OR_RIGHTS" in data["reason_codes"]
     assert data["field_authority"]["orchestration_telemetry"] == "not-included"
     assert "ready" not in _all_keys(data)
     assert response.headers["etag"].startswith('"')
