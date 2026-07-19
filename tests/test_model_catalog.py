@@ -9,6 +9,7 @@ import pytest
 
 from scripts.agent_runtime.registry import AGENTS
 from scripts.review.model_catalog import (
+    VALID_REVIEW_PROFILES,
     ModelCatalogError,
     catalog_age_days,
     catalog_is_stale,
@@ -58,8 +59,7 @@ def test_runtime_registry_defaults_resolve_to_catalog_model_or_alias():
     unresolved = {
         agent: entry["default_model"]
         for agent, entry in AGENTS.items()
-        if entry["default_model"] not in {None, "auto"}
-        and entry["default_model"] not in known
+        if entry["default_model"] not in {None, "auto"} and entry["default_model"] not in known
     }
     assert unresolved == {}
 
@@ -86,8 +86,16 @@ def test_bridge_only_reviewers_expose_executable_invocations():
 
 def test_formal_review_candidates_declare_supported_profiles_and_concrete_cursor_model():
     candidates = load_model_catalog()["review_candidates"]
-    assert all(candidate["review_profiles"] == ["code", "infra"] for candidate in candidates.values())
+    assert {"code", "infra"} == VALID_REVIEW_PROFILES
+    assert all(set(candidate["review_profiles"]) == VALID_REVIEW_PROFILES for candidate in candidates.values())
     assert candidates["composer-2.5"]["model_id"] == "composer-2.5"
+
+
+def test_catalog_rejects_learner_content_as_a_code_closeout_profile():
+    broken = deepcopy(load_model_catalog())
+    broken["review_candidates"]["openai_frontier"]["review_profiles"].append("content")
+    with pytest.raises(ModelCatalogError, match="unsupported code-closeout profiles"):
+        validate_catalog(broken)
 
 
 def test_catalog_rejects_unknown_candidate_model_reference():

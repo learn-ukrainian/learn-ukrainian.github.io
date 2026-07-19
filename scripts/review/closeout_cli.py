@@ -21,7 +21,7 @@ from pathlib import Path
 
 from scripts.review.evidence import compute_target_input_fingerprint
 from scripts.review.findings import FindingEvent, FindingsLedger, FindingsLedgerError
-from scripts.review.model_catalog import VALID_RISKS
+from scripts.review.model_catalog import VALID_REVIEW_PROFILES, VALID_RISKS
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.scope_baseline import (
     ScopeBaseline,
@@ -84,9 +84,7 @@ def _target_from_dict(data: object) -> ReviewTarget:
         raise CloseoutStateError("target_mode_invalid")
     if not all(value is None or isinstance(value, str) for value in (base_sha, head_sha)):
         raise CloseoutStateError("target_sha_invalid")
-    if not isinstance(changed_paths, list) or not all(
-        isinstance(path, str) and path for path in changed_paths
-    ):
+    if not isinstance(changed_paths, list) or not all(isinstance(path, str) and path for path in changed_paths):
         raise CloseoutStateError("target_changed_paths_invalid")
     if not isinstance(non_test_loc, int) or isinstance(non_test_loc, bool) or non_test_loc < 0:
         raise CloseoutStateError("target_non_test_loc_invalid")
@@ -161,6 +159,20 @@ def _cmd_target(args: argparse.Namespace) -> int:
 
 
 def _cmd_freeze(args: argparse.Namespace) -> int:
+    if args.review_profile.strip().casefold() not in VALID_REVIEW_PROFILES:
+        print(
+            json.dumps(
+                {
+                    "error": (
+                        f"unsupported local-code-review profile {args.review_profile!r}; "
+                        "learner-content semantic review belongs to track-completion via "
+                        "post-build-review"
+                    )
+                }
+            ),
+            file=sys.stderr,
+        )
+        return 1
     state = _load_state(args.state_file)
     if state.get("baseline"):
         print(
@@ -224,15 +236,9 @@ def _baseline_from_state(state: dict) -> ScopeBaseline:
             raise CloseoutStateError(f"baseline_{key}_invalid")
     frozen_files = data.get("frozen_files")
     frozen_non_test_loc = data.get("frozen_non_test_loc")
-    if not isinstance(frozen_files, list) or not all(
-        isinstance(path, str) and path for path in frozen_files
-    ):
+    if not isinstance(frozen_files, list) or not all(isinstance(path, str) and path for path in frozen_files):
         raise CloseoutStateError("baseline_frozen_files_invalid")
-    if (
-        not isinstance(frozen_non_test_loc, int)
-        or isinstance(frozen_non_test_loc, bool)
-        or frozen_non_test_loc < 0
-    ):
+    if not isinstance(frozen_non_test_loc, int) or isinstance(frozen_non_test_loc, bool) or frozen_non_test_loc < 0:
         raise CloseoutStateError("baseline_frozen_non_test_loc_invalid")
     target = data.get("target")
     if not isinstance(target, dict):
@@ -326,11 +332,30 @@ def _cmd_record_cycle(args: argparse.Namespace) -> int:
     state.setdefault("cycle_outstanding_counts", []).append(args.outstanding_count)
     result = check_cycle_convergence_breaker(state["cycle_outstanding_counts"])
     _save_state(args.state_file, state)
-    print(json.dumps({"triggered": result.triggered, "reason": result.reason, "history": state["cycle_outstanding_counts"]}, indent=2))
+    print(
+        json.dumps(
+            {"triggered": result.triggered, "reason": result.reason, "history": state["cycle_outstanding_counts"]},
+            indent=2,
+        )
+    )
     return 0
 
 
 def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
+    if args.domain.strip().casefold() not in VALID_REVIEW_PROFILES:
+        print(
+            json.dumps(
+                {
+                    "selected": None,
+                    "fail_closed_reason": (
+                        f"unsupported local-code-review domain {args.domain!r}; learner-content "
+                        "semantic review belongs to track-completion via post-build-review"
+                    ),
+                },
+                indent=2,
+            )
+        )
+        return 1
     routing_snapshot = None
     if args.routing_snapshot_file:
         routing_snapshot = json.loads(Path(args.routing_snapshot_file).read_text(encoding="utf-8"))

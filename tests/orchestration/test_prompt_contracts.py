@@ -440,11 +440,7 @@ def test_seminar_profiles_compose_shared_and_exact_direction_without_bio_leakage
     assert all(marker in resolved.rendered_prompt for marker in SHARED_SEMINAR_MARKERS)
     assert direction_marker in resolved.rendered_prompt
     assert discipline_marker in resolved.rendered_prompt
-    other_direction_markers = {
-        profile[2]
-        for profile in SEMINAR_PROFILES
-        if profile[0] != profile_id
-    }
+    other_direction_markers = {profile[2] for profile in SEMINAR_PROFILES if profile[0] != profile_id}
     assert all(marker not in resolved.rendered_prompt for marker in other_direction_markers)
     assert resolved.fragment_ids == (
         "contract.base",
@@ -691,3 +687,25 @@ def test_explicit_historical_version_survives_current_version_change(tmp_path: P
     assert historical.version == "1.0.0"
     assert current.version == "1.1.0"
     assert current.identity_sha256 != historical.identity_sha256
+
+
+def test_four_skill_entrypoints_route_normal_bio_work_to_one_bounded_ledger() -> None:
+    skill_root = REPO_ROOT / "agents_extensions/shared/skills"
+    lifecycle = (skill_root / "curriculum-lifecycle/SKILL.md").read_text(encoding="utf-8")
+    completion = (skill_root / "track-completion/SKILL.md").read_text(encoding="utf-8")
+    post_build = (skill_root / "post-build-review/SKILL.md").read_text(encoding="utf-8")
+    code_review = (skill_root / "local-code-review/SKILL.md").read_text(encoding="utf-8")
+    normalized_code_review = " ".join(code_review.split())
+
+    assert "one serial workflow" in lifecycle
+    assert "--track-ledger <track-completion-ledger>" in lifecycle
+    assert "--disposition <complete|no-change|blocked>" not in lifecycle
+    assert "resume_command" in lifecycle
+    assert "one authoritative bounded" in completion
+    assert "model_call_count" in completion
+    assert "hidden retry" in completion
+    assert "routes through `$track-completion`" in post_build
+    assert "prepare-semantic-review" in post_build
+    assert "without retrying" in post_build
+    assert "supports only `code` and `infra`" in code_review
+    assert "Do not duplicate post-build semantic review" in normalized_code_review

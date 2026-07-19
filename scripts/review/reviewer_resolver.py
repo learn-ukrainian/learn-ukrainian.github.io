@@ -25,11 +25,12 @@ from typing import Literal
 
 from scripts.agent_runtime.agent_identity import normalize_seat, tools_writer_runtime_agent
 from scripts.audit import model_families
-from scripts.review.model_catalog import VALID_RISKS, load_model_catalog
+from scripts.review.model_catalog import VALID_REVIEW_PROFILES, VALID_RISKS, load_model_catalog
 
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
 
 # --- family resolution -------------------------------------------------------
+
 
 def resolve_family(seat_or_model: str) -> str:
     """Resolve a seat/CLI-alias/model-id string to its model family.
@@ -135,6 +136,7 @@ def resolve_author_family(author_model: str, author_family: str | None = None) -
 
 # --- candidates ---------------------------------------------------------------
 
+
 @dataclass(frozen=True)
 class ReviewerCandidate:
     name: str
@@ -183,9 +185,7 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
         review_profiles=frozenset(raw.get("review_profiles", [])),
         capabilities=frozenset(raw.get("capabilities", [])),
         domain_excluded_from=frozenset(raw.get("domain_excluded_from", [])),
-        advisory_only_for_author_families=frozenset(
-            raw.get("advisory_only_for_author_families", [])
-        ),
+        advisory_only_for_author_families=frozenset(raw.get("advisory_only_for_author_families", [])),
     )
 
 
@@ -195,10 +195,7 @@ REVIEW_CANDIDATES: dict[str, ReviewerCandidate] = {
 
 
 def _catalog_ladder(risk: str) -> tuple[tuple[ReviewerCandidate, ...], ...]:
-    return tuple(
-        tuple(REVIEW_CANDIDATES[name] for name in rung)
-        for rung in _MODEL_CATALOG["review_ladders"][risk]
-    )
+    return tuple(tuple(REVIEW_CANDIDATES[name] for name in rung) for rung in _MODEL_CATALOG["review_ladders"][risk])
 
 
 REVIEW_LADDERS: dict[str, tuple[tuple[ReviewerCandidate, ...], ...]] = {
@@ -261,10 +258,7 @@ def _normalize_health_status(value: object, *, label: str) -> str | None:
         raise ValueError(f"{label} health status must be a non-empty string")
     token = value.strip().lower()
     if token not in _HEALTH_ALIASES:
-        raise ValueError(
-            f"{label} has unsupported health status {value!r}; "
-            f"expected one of {sorted(_HEALTH_ALIASES)}"
-        )
+        raise ValueError(f"{label} has unsupported health status {value!r}; expected one of {sorted(_HEALTH_ALIASES)}")
     return _HEALTH_ALIASES[token]
 
 
@@ -297,9 +291,7 @@ def normalize_routing_snapshot(snapshot: Mapping[str, object] | None) -> dict[st
         if status is None and isinstance(health, Mapping) and health.get("healthy") is True:
             normalized[str(route)] = "healthy"
             continue
-        normalized_status = _normalize_health_status(
-            status, label=f"agents.{route}"
-        )
+        normalized_status = _normalize_health_status(status, label=f"agents.{route}")
         if normalized_status is not None:
             normalized[str(route)] = normalized_status
     return normalized
@@ -420,9 +412,7 @@ def evaluate_candidate(
     candidates that aren't in the default ladder (e.g. ``GLM``, ``QWEN``).
     """
     family = (
-        author_family
-        if author_family is not None
-        else resolve_author_family(inputs.author_model, inputs.author_family)
+        author_family if author_family is not None else resolve_author_family(inputs.author_model, inputs.author_family)
     )
     normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
     health = _health_of(candidate, normalized_snapshot)
@@ -518,7 +508,8 @@ def resolve_reviewer(
     :func:`resolve_author_family`.
     """
     risk = (inputs.risk or "").strip().lower()
-    if ladder is None and risk not in VALID_RISKS:
+    review_profile = (inputs.review_profile or "").strip().casefold()
+    if review_profile not in VALID_REVIEW_PROFILES:
         return ReviewerResolution(
             selected=None,
             advisory=(),
@@ -528,8 +519,22 @@ def resolve_reviewer(
             catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
             resolved_risk=risk,
             fail_closed_reason=(
-                f"unsupported review risk {inputs.risk!r}; expected one of {sorted(VALID_RISKS)}"
+                f"unsupported local-code-review profile {inputs.review_profile!r}; "
+                f"expected one of {sorted(VALID_REVIEW_PROFILES)}. Learner-content semantic "
+                "review belongs to track-completion via post-build-review."
             ),
+        )
+    inputs = replace(inputs, review_profile=review_profile)
+    if ladder is None and risk not in VALID_RISKS:
+        return ReviewerResolution(
+            selected=None,
+            advisory=(),
+            trace=(),
+            substitution_note=None,
+            policy_version=_MODEL_CATALOG["schema_version"],
+            catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
+            resolved_risk=risk,
+            fail_closed_reason=(f"unsupported review risk {inputs.risk!r}; expected one of {sorted(VALID_RISKS)}"),
         )
     active_ladder = ladder if ladder is not None else REVIEW_LADDERS[risk]
     try:
@@ -551,8 +556,7 @@ def resolve_reviewer(
     if author_family in UNRESOLVED_AUTHOR_FAMILIES:
         reason = {
             UNKNOWN_AUTHOR_FAMILY: (
-                f"author identity unknown — cannot resolve a model family from "
-                f"author_model={inputs.author_model!r}"
+                f"author identity unknown — cannot resolve a model family from author_model={inputs.author_model!r}"
             ),
             AMBIGUOUS_AUTHOR_FAMILY: (
                 f"author harness is multi-model and ambiguous (author_model={inputs.author_model!r}) — "
@@ -633,8 +637,7 @@ def resolve_reviewer(
         ]
         if unavailable:
             substitution_notes.append(
-                f"selected {selected.name}: same-quality route(s) unavailable by health: "
-                f"{', '.join(unavailable)}"
+                f"selected {selected.name}: same-quality route(s) unavailable by health: {', '.join(unavailable)}"
             )
         if better_health_than:
             substitution_notes.append(

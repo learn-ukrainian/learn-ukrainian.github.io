@@ -60,7 +60,7 @@ never does it.
   --intended-behavior "<what this change is supposed to do>" \
   --non-goals "<what it explicitly does not do>" \
   --owner-boundary "<the paths/surfaces this change owns>" \
-  --review-profile "<code|infra|content|...>" \
+  --review-profile "<code|infra>" \
   --risk "<low|medium|high>"
 ```
 
@@ -70,6 +70,11 @@ non-test LOC count, with no file-extension allowlist: shell scripts,
 workflow YAML, config, schemas, and documentation are changed paths just
 as much as `.py`/`.ts` files, and none of them are silently excluded from
 scope or from review in the steps below.
+
+Learner-content semantic review is unsupported here. A normal BIO request uses
+`$curriculum-lifecycle` / `$track-completion`, with `$post-build-review` as its
+single bounded semantic gate; do not freeze or resolve a content profile in
+this code/infra closeout state.
 
 **Both `target` and `freeze` are one-shot per state file.** Once a baseline
 is frozen, `target` refuses to re-resolve (it would silently swap out what
@@ -112,7 +117,7 @@ curl -s 'http://localhost:8765/api/state/routing-budget?fresh_codexbar=true' \
   --author-model "<the author's actual model/seat, e.g. claude, codex, deepseek-v4-pro>" \
   --review-profile "<same profile as Step 2>" \
   --risk "<same risk as Step 2>" \
-  --domain "<code | folk_content | ... — only set non-default if it applies>" \
+  --domain "<code|infra>" \
   --data-egress-policy "<omit unless this run is genuinely local-interactive>" \
   --routing-snapshot-file /tmp/routing-snapshot.json
 ```
@@ -123,6 +128,10 @@ order alone decides) but **fail-closed on domain/data-egress**: leaving
 `--data-egress-policy` unset excludes any candidate that requires a
 specific egress policy (e.g. a China-hosted lane), it does not admit them
 by default.
+
+`resolve-reviewer` rejects any profile or domain outside `code`/`infra` before
+walking the candidate ladder. That failure is a routing boundary, not an
+invitation to dispatch a semantic reviewer manually.
 
 **Multi-model harnesses (e.g. Cursor) are fail-closed, not a synthetic
 family.** A harness that can run more than one underlying model (Cursor)

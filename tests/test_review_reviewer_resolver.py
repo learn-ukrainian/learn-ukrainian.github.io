@@ -81,10 +81,7 @@ def test_cursor_requires_concrete_model_identity():
 def test_invalid_or_conflicting_author_identity_fails_closed():
     assert resolve_author_family("") == UNKNOWN_AUTHOR_FAMILY
     assert resolve_author_family("unknown-seat") == UNKNOWN_AUTHOR_FAMILY
-    assert (
-        resolve_author_family("cursor:gpt-5.6-sol", author_family="anthropic")
-        == CONFLICTING_AUTHOR_FAMILY
-    )
+    assert resolve_author_family("cursor:gpt-5.6-sol", author_family="anthropic") == CONFLICTING_AUTHOR_FAMILY
     for inputs in (
         ResolverInputs(author_model="cursor"),
         ResolverInputs(author_model="unknown-seat"),
@@ -179,9 +176,7 @@ def test_real_routing_budget_payload_is_normalized_without_crashing():
             "claude": {"status": "warm", "health": {"healthy": True}},
         },
     }
-    resolution = resolve_reviewer(
-        ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot)
-    )
+    resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot))
     assert resolution.selected.name == "claude-fable-5"
     assert resolution.selected.health is None
 
@@ -193,9 +188,7 @@ def test_real_gemini_lane_outage_excludes_agy_candidates():
             "grok": {"status": "cool", "health": {"healthy": True}},
         }
     }
-    resolution = resolve_reviewer(
-        ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot)
-    )
+    resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot))
     assert resolution.selected.name == "claude-fable-5"
     gemini = next(entry for entry in resolution.trace if entry.name == "gemini-3.1-pro")
     assert gemini.health == "unhealthy"
@@ -274,12 +267,8 @@ def test_all_top_tier_routes_unavailable_fall_to_next_quality_tier():
 
 
 def test_missing_health_signal_is_fail_open():
-    empty = resolve_reviewer(
-        ResolverInputs(author_model="codex", risk="low", routing_snapshot={})
-    )
-    absent = resolve_reviewer(
-        ResolverInputs(author_model="codex", risk="low", routing_snapshot=None)
-    )
+    empty = resolve_reviewer(ResolverInputs(author_model="codex", risk="low", routing_snapshot={}))
+    absent = resolve_reviewer(ResolverInputs(author_model="codex", risk="low", routing_snapshot=None))
     assert empty.selected.name == absent.selected.name == "claude-fable-5"
 
 
@@ -394,6 +383,16 @@ def test_review_profile_is_a_hard_eligibility_filter():
     )
     assert result.status == "excluded"
     assert "profile exclusion" in result.reason
+
+
+def test_learner_content_profile_fails_before_reviewer_ladder_resolution():
+    resolution = resolve_reviewer(ResolverInputs(author_model="claude", review_profile="content"))
+
+    assert resolution.selected is None
+    assert resolution.trace == ()
+    assert resolution.advisory == ()
+    assert "unsupported local-code-review profile" in resolution.fail_closed_reason
+    assert "post-build-review" in resolution.fail_closed_reason
 
 
 def test_custom_ladder_still_supported_for_focused_callers():

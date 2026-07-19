@@ -17,6 +17,10 @@ This skill is the track-level entry point. It composes the deterministic
 coordinator with `$track-completion`; it does not reimplement readiness,
 building, certification, review, integration, or publication policy. Derive
 active tracks and order only from `curriculum/l2-uk-en/curriculum.yaml`.
+For a normal BIO request, this is one serial workflow: the coordinator owns
+manifest order, prerequisites, acquisition, deterministic resume, and the
+hash-bound receipt; the acquired module's `$track-completion` ledger is the
+only bounded-completion authority.
 
 ## Start or resume
 
@@ -50,6 +54,9 @@ active tracks and order only from `curriculum/l2-uk-en/curriculum.yaml`.
    adjudication path before starting a fresh run. Never migrate old state by
    hand.
 
+   The coordinator status includes this exact `resume_command`; use it rather
+   than reconstructing or replacing the run.
+
 ## Process one acquired module
 
 1. Acquire the next prerequisite-safe module. The coordinator pauses without
@@ -76,23 +83,24 @@ active tracks and order only from `curriculum/l2-uk-en/curriculum.yaml`.
    its exact ledger on resume. It owns plan review, build/recovery, read-only
    `$post-build-review`, repair routing, reviewer-instability handling,
    independent review, PR/CI/merge, publication evidence, and cleanup.
-4. Record the module outcome only after `$track-completion` reaches `COMPLETE`
-   with `terminal_satisfied=true` for the coordinator's exact goal:
+4. Record the module result from its authoritative ledger. A publishable result
+   is accepted only after `$track-completion` reaches `COMPLETE` for the
+   coordinator's exact goal; a terminal bounded-budget blocker is recorded as
+   blocked rather than left stale:
 
    ```bash
    .venv/bin/python scripts/orchestration/curriculum_coordinator.py record-module \
      --run-id <run-id> --owner <agent/task> --module <slug> \
-     --disposition <complete|no-change|blocked> \
-     --integration-json '<integration JSON including track_ledger and track_run_id>'
+     --track-ledger <track-completion-ledger> --track-run-id <module-run-id>
    ```
 
-   The coordinator reads and hashes the authoritative track ledger; a
-   free-form projection string is not evidence. `complete` requires issue,
-   aligned dispatch worktree/branch, PR, merge SHA, review/CI evidence, and
-   completed cleanup. `no-change` must not fabricate an issue or PR. `blocked`
-   must record the genuine owner and next action. A certification-only track
-   ledger cannot satisfy goal `deploy`, and a migrated historical module is
-   reacquired until its exact goal is proven.
+   Do not supply a coordinator disposition or repeat PR/worktree/cleanup
+   policy. The coordinator validates the bounded run, rejects semantic evidence
+   outside its model-call count, hashes the module ledger, and derives a concise
+   result with elapsed time, model-call count, repair count, disposition,
+   blocker, and next action. An incomplete module ledger cannot complete the
+   coordinator. A migrated historical module is reacquired until its exact goal
+   is proven.
 5. Repeat acquisition serially until the coordinator reports `complete`.
    Module-at-a-time mutation remains mandatory; a wave groups health and review
    capacity but does not authorize concurrent learner writes.
