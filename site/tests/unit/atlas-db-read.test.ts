@@ -4,7 +4,6 @@ import Database from 'better-sqlite3';
 import { describe, expect, test, vi, afterEach, beforeEach } from 'vitest';
 import { resolve } from 'node:path';
 import * as fs from 'node:fs';
-import manifest from '@site/src/data/lexicon-manifest.json';
 import {
   getAtlasPayloadCache,
   resetAtlasPayloadCacheForTests,
@@ -13,6 +12,16 @@ import {
 } from '@site/src/lib/lexicon/atlasDb';
 import { articleProps } from '../helpers/word-atlas-record';
 import { renderWordAtlasArticle } from '../helpers/render-word-atlas-article';
+
+// Static JSON import fails napi string conversion on large hydrated manifests
+// (~15k+ entries after textbook promote). Load with fs + JSON.parse instead.
+const manifest = JSON.parse(
+  fs.readFileSync(resolve(process.cwd(), 'src/data/lexicon-manifest.json'), 'utf8'),
+) as {
+  version: string;
+  generated_at: string;
+  entries: LexiconEntry[];
+};
 
 let mockExistsSync = (p: string): boolean => true;
 let mockReadFileSync = (p: string, encoding: any): string => '';
