@@ -1,0 +1,78 @@
+{
+  "$schema": "../schema/bounded-completion-contract.v1.schema.json",
+  "schema_version": "bounded-completion.contract.v1",
+  "contract_version": "1.0.0",
+  "run_schema_version": "bounded-completion.run.v1",
+  "states": [
+    "INSPECT",
+    "BUILD_REBUILD",
+    "DETERMINISTIC_VERIFICATION",
+    "SEMANTIC_REVIEW",
+    "CONSOLIDATED_REPAIR",
+    "FINAL_DISPOSITION",
+    "PUBLICATION"
+  ],
+  "transitions": {
+    "INSPECT": [
+      "BUILD_REBUILD",
+      "DETERMINISTIC_VERIFICATION"
+    ],
+    "BUILD_REBUILD": [
+      "DETERMINISTIC_VERIFICATION"
+    ],
+    "DETERMINISTIC_VERIFICATION": [
+      "SEMANTIC_REVIEW",
+      "FINAL_DISPOSITION"
+    ],
+    "SEMANTIC_REVIEW": [
+      "CONSOLIDATED_REPAIR",
+      "FINAL_DISPOSITION"
+    ],
+    "CONSOLIDATED_REPAIR": [
+      "DETERMINISTIC_VERIFICATION"
+    ],
+    "FINAL_DISPOSITION": [
+      "PUBLICATION"
+    ],
+    "PUBLICATION": []
+  },
+  "budgets": {
+    "initial_semantic_reviews": 1,
+    "consolidated_repairs": 1,
+    "final_semantic_reviews": 1,
+    "semantic_reviews_total": 2
+  },
+  "review_protocol_freeze": {
+    "pin_at_run_start": true,
+    "drift_policy": "REJECT_WITHOUT_MUTATION"
+  },
+  "learner_source_freshness": {
+    "material_change_invalidates_review_evidence": true,
+    "post_review_change_counts_as_repair": true
+  },
+  "publication_quality": {
+    "minimum_per_dimension": 9.0,
+    "dimensions": [
+      "engagement",
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "tone"
+    ],
+    "aggregate_override_allowed": false,
+    "threshold_lowering_allowed": false
+  },
+  "budget_exhaustion": {
+    "disposition": "BLOCKED_BUDGET_EXHAUSTED",
+    "terminal": true,
+    "looping_allowed": false
+  },
+  "measurement_fields": [
+    "elapsed_time_ms",
+    "model_call_count",
+    "repair_count",
+    "prompt_bytes",
+    "schema_bytes",
+    "final_quality_disposition"
+  ]
+}

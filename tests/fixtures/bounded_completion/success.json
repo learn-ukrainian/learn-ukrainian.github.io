@@ -1,0 +1,77 @@
+{
+  "fixture_version": "bounded-completion.fixture.v1",
+  "start": {
+    "target": "bio/bounded-success",
+    "run_id": "11111111111111111111111111111111",
+    "learner_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "review_protocol": {
+      "protocol_version": "5.0.0",
+      "tool_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "prompt_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "schema_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "reviewer_family": "fixture-family",
+      "reviewer_model": "fixture-model"
+    }
+  },
+  "steps": [
+    {
+      "action": "complete_inspection",
+      "needs_build": false,
+      "elapsed_time_ms": 5
+    },
+    {
+      "action": "record_deterministic_verification",
+      "learner_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "passed": true,
+      "elapsed_time_ms": 7
+    },
+    {
+      "action": "record_semantic_review",
+      "learner_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "evidence_id": "initial-review",
+      "reported_disposition": "REVISE",
+      "dimension_scores": {
+        "engagement": 8.5,
+        "pedagogical": 8.5,
+        "naturalness": 8.5,
+        "decolonization": 9.2,
+        "tone": 9.0
+      },
+      "prompt_bytes": 1200,
+      "schema_bytes": 400,
+      "elapsed_time_ms": 20
+    },
+    {
+      "action": "record_consolidated_repair",
+      "learner_source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "elapsed_time_ms": 30
+    },
+    {
+      "action": "record_deterministic_verification",
+      "learner_source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "passed": true,
+      "elapsed_time_ms": 8
+    },
+    {
+      "action": "record_semantic_review",
+      "learner_source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "evidence_id": "final-review",
+      "reported_disposition": "PASS",
+      "dimension_scores": {
+        "engagement": 9.1,
+        "pedagogical": 9.3,
+        "naturalness": 9.2,
+        "decolonization": 9.4,
+        "tone": 9.0
+      },
+      "prompt_bytes": 1300,
+      "schema_bytes": 400,
+      "elapsed_time_ms": 22
+    },
+    {
+      "action": "record_publication",
+      "reference": "fixture-publication",
+      "elapsed_time_ms": 6
+    }
+  ]
+}

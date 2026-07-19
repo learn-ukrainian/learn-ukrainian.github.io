@@ -1,0 +1,45 @@
+{
+  "fixture_version": "bounded-completion.fixture.v1",
+  "start": {
+    "target": "bio/quality-floor",
+    "run_id": "44444444444444444444444444444444",
+    "learner_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "review_protocol": {
+      "protocol_version": "5.0.0",
+      "tool_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "prompt_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "schema_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "reviewer_family": "fixture-family",
+      "reviewer_model": "fixture-model"
+    }
+  },
+  "steps": [
+    {
+      "action": "complete_inspection",
+      "needs_build": false,
+      "elapsed_time_ms": 1
+    },
+    {
+      "action": "record_deterministic_verification",
+      "learner_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "passed": true,
+      "elapsed_time_ms": 1
+    },
+    {
+      "action": "record_semantic_review",
+      "learner_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "evidence_id": "below-floor-pass",
+      "reported_disposition": "PASS",
+      "dimension_scores": {
+        "engagement": 9.0,
+        "pedagogical": 9.0,
+        "naturalness": 9.0,
+        "decolonization": 9.0,
+        "tone": 8.99
+      },
+      "prompt_bytes": 100,
+      "schema_bytes": 50,
+      "elapsed_time_ms": 2
+    }
+  ]
+}
