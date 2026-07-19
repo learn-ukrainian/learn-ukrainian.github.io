@@ -727,7 +727,7 @@ def test_curriculum_skills_define_one_non_recursive_preparation_handoff() -> Non
         ("`prepare`", "Requirement- and identity-sensitive; resolve from the full result"),
         ("`build`", "`$track-completion`"),
         ("`certify`", "`$track-completion`"),
-        ("`stop`", "Terminal reviewed HOLD"),
+        ("`stop`", "State- and owner-sensitive; reviewed HOLD or partial recovery"),
     ):
         assert f"| {action} | {owner} |" in lifecycle
 
@@ -740,8 +740,13 @@ def test_curriculum_skills_define_one_non_recursive_preparation_handoff() -> Non
     assert "hand the exact target to `$track-completion`" in normalized_lifecycle
     assert "Do not reacquire, repeat the evaluator, or loop through preparation" in normalized_lifecycle
     assert "PREPARATION_HOLD_ACTIVE" in normalized_lifecycle
-    assert "Do not record module completion or reacquire" in normalized_lifecycle
-    assert "without mutation or an evaluation loop" in normalized_lifecycle
+    assert "without a partial-bundle finding is a terminal reviewed HOLD" in normalized_lifecycle
+    assert "do not record module completion or reacquire" in normalized_lifecycle
+    assert "state is `partial-bundle`" in normalized_lifecycle
+    assert "PARTIAL_LEARNER_BUNDLE" in normalized_lifecycle
+    assert "has no active HOLD" in normalized_lifecycle
+    assert "goes once to `$track-completion`" in normalized_lifecycle
+    assert "Reject a result containing both routes" in normalized_lifecycle
     assert "accept and validate its exact full typed result" in normalized_preparation
     assert "Never start, resume, or reacquire lifecycle" in normalized_preparation
     assert "failed `plan` requirement" in normalized_preparation
@@ -761,3 +766,9 @@ def test_curriculum_skills_define_one_non_recursive_preparation_handoff() -> Non
     assert "latest `BUILD_RECORDED` event" in normalized_completion
     assert "identity-consumption gate" in normalized_completion
     assert "`plan`, `prepare`, and `stop` remain outside this skill" not in normalized_completion
+    assert "reviewed HOLD `stop` remain outside this skill" in normalized_completion
+    assert "canonical state `partial-bundle`" in normalized_completion
+    assert "PARTIAL_LEARNER_BUNDLE" in normalized_completion
+    assert "and no `PREPARATION_HOLD_ACTIVE`" in normalized_completion
+    assert "existing `PARTIAL_RECOVERY_REQUIRED` forensic path" in normalized_completion
+    assert "A mixed or unknown stop fails closed" in normalized_completion

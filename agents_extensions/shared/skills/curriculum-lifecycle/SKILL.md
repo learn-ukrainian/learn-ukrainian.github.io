@@ -79,7 +79,7 @@ only bounded-completion authority.
    | `prepare` | Requirement- and identity-sensitive; resolve from the full result |
    | `build` | `$track-completion` |
    | `certify` | `$track-completion` |
-   | `stop` | Terminal reviewed HOLD |
+   | `stop` | State- and owner-sensitive; reviewed HOLD or partial recovery |
 
    For `plan` or `prepare`, run the canonical evaluator once for the exact
    acquired target and use its full typed result to resolve ownership. If any
@@ -96,14 +96,18 @@ only bounded-completion authority.
    preparation. Fail closed on mixed or unknown combinations.
 
    For `stop`, run the canonical evaluator once to validate the full typed
-   result. Accept it only with `PREPARATION_HOLD_ACTIVE`; preserve that reviewed
-   HOLD evidence, leave the acquisition in place, report the terminal hold, and
-   end. Do not record module completion or reacquire the target. Reject an
-   unknown action or an unreviewed stop without mutation or an evaluation loop.
-3. For `build`, `certify`, or an identity-only `prepare` exception, resolve the
-   acquired track's exact registered semantic profile from the manifest. Put
-   the typed context in a gitignored runtime JSON file; never add free-form
-   prompt prose to a profile:
+   result. `PREPARATION_HOLD_ACTIVE` without a partial-bundle finding is a
+   terminal reviewed HOLD: preserve its evidence, leave the acquisition in
+   place, report the hold, and do not record module completion or reacquire. A
+   result whose state is `partial-bundle`, contains `PARTIAL_LEARNER_BUNDLE`
+   owned by `built_artifact`, and has no active HOLD goes once to
+   `$track-completion` for its existing forensic recovery. Do not reacquire.
+   Reject a result containing both routes, or any unknown stop combination,
+   without mutation or an evaluation loop.
+3. For `build`, `certify`, an identity-only `prepare` exception, or the exact
+   partial-bundle `stop` exception, resolve the acquired track's registered
+   semantic profile from the manifest. Put the typed context in a gitignored
+   runtime JSON file; never add free-form prompt prose to a profile:
 
    ```bash
    .venv/bin/python scripts/orchestration/prompt_contracts.py resolve-track \
