@@ -1,76 +1,63 @@
-# Current - Codex Orchestrator Handoff (2026-06-06)
+# Current - Codex / Grok Orchestrator Handoff (2026-07-19)
 
-Latest-Brief: docs/session-state/codex-orchestrator-handoff.md
+Latest-Brief: docs/session-state/2026-07-19-orchestrator-practice-atlas-fleet-comms-finish-brief.md
 
 ## Role
 
-Codex is the A1/A2 retrofit PR gate and orchestrator. Workers open draft PRs
-and stop; the orchestrator checks the queue, reviews, assigns independent
-review, merges only when clean, and cleans up branches/worktrees.
+Orchestrator seat (Codex / Grok / Claude-infra as assigned): drive the product and
+infra queue, keep main clean, open PRs from worktrees only, require cross-family
+`review-pr` before merge, arm auto-merge after the gate, clean worktrees after merge.
+Do not babysit idle green PRs; do not leave draft limbo.
 
-Do not use `docs/session-state/current.md` as scratch space. It is the shared
-router. If it is dirty at startup, restore it from `origin/main` and stop to
-report. Durable orchestrator state lives in this file. Thread rollover packets
-live under `.agent/<agent>-thread-handoff.md`.
+Do not use `docs/session-state/current.md` as scratch space. Durable state lives in
+the Latest-Brief above and this file. Thread rollover packets live under
+`.agent/<agent>-thread-handoff.md` (machine-local).
 
-## Current State
+## Current State (session close 2026-07-19)
 
-- #2717 merged: neutral A1/A2 standards.
-- #2728 merged: A1/A2 retrofit audit protocol and evidence packet template.
-- #2734 merged: A1 M1-M7 retrofit audit/classification report.
-- #2736 merged: A1 M1-M7 plan/wiki/prompt repair.
-- #2736 merge commit: `7ebac72745a0a1dc12c97ee841e1e6c7869570d7`.
-- #2747 cleanup work is complete and merged, including the related cleanup PRs
-  #2767, #2765, #2770, #2771, #2772, and #2773.
-- #2774 merged: worker inbox control plane for orchestrator/delegate results.
+Finish wave **closed**. Main at ~`b845eb95b5` (and successors once this handoff PR merges).
 
-The A1 M1 pilot is still struggling. The current blocker is not "rebuild from
-scratch"; it is that early A1 gates/prompts are asking for mature error
-correction material too early, especially decolonization bad-form pairs. The
-likely direction is pure Ukrainian learner-facing A1 content first, then
-introduce Russianism/Anglicism contrast work later when students have enough
-Ukrainian to benefit from it.
+### Shipped / closed
+
+- Practice chrome dual-locale residuals: **#5479** (#5355)
+- Paronym expansion + apostrophe fix: **#5480**, **#5489** (#4506)
+- Source-backed sentence inventory for daily: **#5487** (#5483 closed)
+- Textbook bulk promote with enrichment floor: **#5477** (#3934); backlog **#5478** open
+- Fleet doctrine + Haiku recon: **#5474**, **#5475**
+- Fleet-comms Sol phases 0–5 epic **#5484** closed via **#5488** (#5485/#5486)
+- Warn-not-reject fat formal PR CF ask (prefer `review-pr`): **#5491**
+
+### Explicit non-goals for next cold-start
+
+- Do not re-litigate closed fleet-comms phases 0–5
+- Do not re-promote unenriched textbook heads without #5478 enrichment work
+- Do not import Clozemaster as a product; inventory is multi-surface / corpus-first
 
 ## Operating Rules
 
-- One active A1/A2 PR maximum.
-- Before dispatching or reviewing, check open PRs and active delegates.
-- Do not start duplicate work if a worker is already running.
-- Do not create a new branch/worktree unless fixing the PR under review.
-- Do not touch generated status/audit/review artifacts unless explicitly in
-  scope.
-- Do not modify `.python-version`, `.yamllint`, or `.markdownlint.json`.
-- Do not use third-party workbook/product/trademark names in repo files,
-  branch names, PR titles/bodies, issue comments, or internal handles.
-- Do not copy, quote, summarize, store, extract, embed, or derive from paid
-  commercial materials.
-- Use `.worktrees/dispatch/<agent>/<task>/` for implementation work.
-- Every commit must carry an `X-Agent` trailer.
-- Use `.venv/bin/python`, not `sys.executable` or system Python.
-
-## Review Policy
-
-Use deterministic checks first. Use Gemini for independent review when required
-by the gate. Add DeepSeek, Claude, or Cursor review when there is meaningful
-language/register/pedagogy/build risk. The orchestrator remains responsible for
-rejecting false positives and fixing or routing valid findings.
+- Implementation only under `.worktrees/dispatch/<agent>/<task>/`
+- Every commit: `X-Agent` trailer
+- Use `.venv/bin/python`, never `sys.executable`
+- Never touch `.python-version`, `.yamllint`, `.markdownlint.json`
+- No status/audit/review artifact dumps in code PRs
+- CF review gate = independent cross-family `review-pr` (discuss ≠ review)
+- Prefer activity/practice product work over textbook re-enrich unless reprioritized
 
 ## Startup Checks
 
 ```bash
 cd /Users/krisztiankoos/projects/learn-ukrainian
 git fetch origin main --prune
-git status --short -- docs/session-state/current.md
-gh pr list --state open --json number,title,isDraft,mergeStateStatus,headRefName,url --limit 50
-gh pr list --search 'A1 A2 in:title,body is:open repo:learn-ukrainian/learn-ukrainian.github.io' --json number,title,isDraft,mergeStateStatus,headRefName,url --limit 50
-curl -sS http://127.0.0.1:8765/api/delegate/active
-.venv/bin/python scripts/orchestration/orchestrator_control.py inbox --recent 20 --include-results
+git status --short --branch
+gh pr list --state open --json number,title,isDraft,mergeStateStatus,headRefName,url --limit 30
+curl -sS --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true" || true
+# Read latest brief:
+# docs/session-state/2026-07-19-orchestrator-practice-atlas-fleet-comms-finish-brief.md
 ```
 
 ## Next Focus
 
-After the handoff split lands, prepare the next worker prompt to adjust the A1
-plan/wiki/gate assumptions so the beginning of A1 teaches clean Ukrainian
-directly and does not require decolonization bad-form contrast inventory in M1.
-The worker should not run a content rebuild until the gating expectation is
-fixed.
+1. Spot-check live daily practice examples (inventory #5487 already merged).
+2. When enrichment capacity is intentional: **#5478** re-enrich held textbook heads.
+3. Atlas/practice depth: #4387, #4700, #4707, #5411 (glosses via enrich, not raw inject).
+4. Infra backlog only when free: #5392, #5400, #5366, #5472 (prep prove-out).
