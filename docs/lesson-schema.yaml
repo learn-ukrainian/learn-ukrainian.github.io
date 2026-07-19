@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 18a580420d00ecb1e5a68065d3a0a742e5597d92edad27be7484619f3ee3d448
+  components_sha256: f84ed75a9c68b08ac614f2b627fc35fd192a1564dc6565cf683fbd362d1a9449
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1657,10 +1657,6 @@ components:
         type: Record<PracticeRating, string>
         description: intervalPreviews prop.
         ukrainian_text: 'false'
-      - name: showEnglishSubtitles
-        type: boolean
-        description: showEnglishSubtitles prop.
-        ukrainian_text: 'false'
       - name: chromeLocale
         type: ChromeLocale
         description: chromeLocale prop.
@@ -1692,7 +1688,6 @@ components:
       card: <PracticeFlashcardData>
       ratingLabels: '<Record<PracticeRating, { uk: string; en: string }>>'
       intervalPreviews: <Record<PracticeRating, string>>
-      showEnglishSubtitles: false
       chromeLocale: <ChromeLocale>
     deprecated: false
     deprecation_reason: null
@@ -1748,9 +1743,9 @@ components:
         type: SessionSummaryStats
         description: stats prop.
         ukrainian_text: 'false'
-      - name: showEnglishSubtitles
-        type: boolean
-        description: showEnglishSubtitles prop.
+      - name: chromeLocale
+        type: ChromeLocale
+        description: chromeLocale prop.
         ukrainian_text: 'false'
       optional: []
     nested_types:
@@ -1781,7 +1776,7 @@ components:
         ukrainian_text: 'false'
     example:
       stats: <SessionSummaryStats>
-      showEnglishSubtitles: false
+      chromeLocale: <ChromeLocale>
     deprecated: false
     deprecation_reason: null
   PracticeStress:

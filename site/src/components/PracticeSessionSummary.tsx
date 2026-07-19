@@ -1,4 +1,5 @@
-import ChromeText from '../lib/i18n/ChromeText';
+import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
+import type { ChromeLocale } from '../lib/i18n/chrome';
 import type { PracticeLexeme } from '../lib/lexicon/srs';
 
 export interface SessionSummaryStats {
@@ -12,51 +13,43 @@ export interface SessionSummaryStats {
 
 interface PracticeSessionSummaryProps {
   stats: SessionSummaryStats;
-  showEnglishSubtitles: boolean;
+  /** Pure chrome locale — summary UI never slash-duals (#5503). */
+  chromeLocale: ChromeLocale;
   onAnotherSession(): void;
   onDone(): void;
 }
 
 export default function PracticeSessionSummary({
   stats,
-  showEnglishSubtitles,
+  chromeLocale,
   onAnotherSession,
   onDone,
 }: PracticeSessionSummaryProps) {
+  // chromeLocale is the caller's pure-locale contract; ChromeText/ChromeDual
+  // render both locales and CSS on html[data-chrome-locale] shows one.
+  void chromeLocale;
   const total = stats.correct + stats.lapsed;
   return (
     <div className="lexicon-session-summary" data-testid="practice-session-summary">
       <h2 className="lexicon-session-summary-title">
-        <span lang="uk">Сесія завершена</span>
+        <ChromeText k="practice.sessionComplete" />
       </h2>
-      {showEnglishSubtitles ? (
-        <p className="lexicon-session-summary-sub" lang="en">Session complete</p>
-      ) : null}
       <dl className="lexicon-session-summary-stats">
         <div>
           <dt>
-            <span lang="uk">Правильно</span>
-            {showEnglishSubtitles ? (
-              <span className="btn-sub" lang="en">/ Correct</span>
-            ) : null}
+            <ChromeText k="practice.correctCount" />
           </dt>
           <dd>{stats.correct}</dd>
         </div>
         <div>
           <dt>
-            <span lang="uk">Помилки</span>
-            {showEnglishSubtitles ? (
-              <span className="btn-sub" lang="en">/ Lapsed</span>
-            ) : null}
+            <ChromeText k="practice.lapsedCount" />
           </dt>
           <dd>{stats.lapsed}</dd>
         </div>
         <div>
           <dt>
-            <span lang="uk">Серія</span>
-            {showEnglishSubtitles ? (
-              <span className="btn-sub" lang="en">/ Streak</span>
-            ) : null}
+            <ChromeText k="practice.streak" />
           </dt>
           <dd>🔥 {stats.streak}</dd>
         </div>
@@ -64,16 +57,15 @@ export default function PracticeSessionSummary({
           <dt>
             <ChromeText k="practice.score" />
           </dt>
-          <dd>{stats.correct}/{total}</dd>
+          <dd>
+            {stats.correct}/{total}
+          </dd>
         </div>
       </dl>
       {stats.advancedToReview.length > 0 ? (
         <section className="lexicon-session-advanced">
           <h3>
-            <span lang="uk">Перейшли на повторення</span>
-            {showEnglishSubtitles ? (
-              <span className="btn-sub" lang="en">/ Advanced to Review</span>
-            ) : null}
+            <ChromeText k="practice.advancedToReview" />
           </h3>
           <ul>
             {stats.advancedToReview.map((lemma) => (
@@ -84,19 +76,13 @@ export default function PracticeSessionSummary({
       ) : null}
       {stats.nextDueLabel ? (
         <p className="lexicon-session-next-due" data-testid="practice-next-due">
-          <span lang="uk">{stats.nextDueLabel.uk}</span>
-          {showEnglishSubtitles ? (
-            <span className="btn-sub" lang="en">/ {stats.nextDueLabel.en}</span>
-          ) : null}
+          <ChromeDual uk={stats.nextDueLabel.uk} en={stats.nextDueLabel.en} />
         </p>
       ) : null}
       {stats.deferredLemmas.length > 0 ? (
         <section className="lexicon-session-deferred" data-testid="practice-deferred-list">
           <h3>
-            <span lang="uk">Повторимо наступного разу</span>
-            {showEnglishSubtitles ? (
-              <span className="btn-sub" lang="en">/ will repeat next time</span>
-            ) : null}
+            <ChromeText k="practice.willRepeatNext" />
           </h3>
           <ul>
             {stats.deferredLemmas.map((lemma) => (
@@ -107,17 +93,15 @@ export default function PracticeSessionSummary({
       ) : null}
       <div className="lexicon-session-summary-actions">
         <button type="button" className="btn btn-accent" onClick={onAnotherSession}>
-          <span lang="uk">Ще одна сесія</span>
-          {showEnglishSubtitles ? <span className="btn-sub" lang="en">Another session</span> : null}
+          <ChromeText k="practice.anotherSession" />
         </button>
         <button type="button" className="btn" onClick={onDone}>
-          <span lang="uk">Готово</span>
-          {showEnglishSubtitles ? <span className="btn-sub" lang="en">Done</span> : null}
+          <ChromeText k="practice.done" />
         </button>
       </div>
       <figure className="lexicon-session-proverb">
         <blockquote lang="uk">«Терпи, козаче — отаманом будеш.»</blockquote>
-        <figcaption lang="uk">Українське прислів'я</figcaption>
+        <figcaption lang="uk">Українське прислів&apos;я</figcaption>
       </figure>
     </div>
   );

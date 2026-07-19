@@ -740,7 +740,7 @@ describe('LexiconPractice', () => {
     expect(enriched.get(clozeOnly.lemmaId)?.exampleEn).toBe('I am reading a book.');
   });
 
-  test('practice render fallback is bilingual', () => {
+  test('practice render fallback dual-renders pure locale chrome (ChromeText/ChromeDual)', () => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
     render(
@@ -750,9 +750,13 @@ describe('LexiconPractice', () => {
     );
 
     const fallback = screen.getByTestId('practice-error-fallback');
+    // Both locales in DOM; CSS on data-chrome-locale shows exactly one (#5503).
     expect(fallback).toHaveTextContent('Не вдалося завантажити практику. Спробуйте оновити сторінку.');
     expect(fallback).toHaveTextContent('We couldn’t load practice. Try reloading the page.');
-    expect(screen.getByRole('button', { name: /Спробувати ще раз\s*Try again/ })).toBeInTheDocument();
+    const retry = screen.getByRole('button', { name: /Try again|Спробувати ще раз/ });
+    expect(retry).toBeInTheDocument();
+    // No slash-dual button chrome.
+    expect(retry.textContent ?? '').not.toMatch(/\/\s*Try again|\/\s*Спробувати/);
   });
 
   test('eager-loads only the index (not lexemes/cloze) before a mode starts', async () => {
@@ -1490,7 +1494,7 @@ describe('LexiconPractice', () => {
     }
   });
 
-  test('a real deep-link fetch failure renders bilingual practice fallback', async () => {
+  test('a real deep-link fetch failure renders pure dual-locale practice fallback', async () => {
     const originalSearch = window.location.search;
     delete (window as any).location;
     window.location = new URL('http://localhost/words-of-the-day/practice/?lemmaId=%D0%BA%D0%B0%D1%84%D0%B5') as any;
@@ -1501,9 +1505,12 @@ describe('LexiconPractice', () => {
       render(<LexiconPractice />);
 
       const fallback = await screen.findByTestId('practice-fetch-error');
+      // ChromeDual/ChromeText put both locales in DOM; CSS shows one (#5503).
       expect(fallback).toHaveTextContent('Не вдалося завантажити практику.');
       expect(fallback).toHaveTextContent('We couldn’t load practice.');
-      expect(screen.getByRole('button', { name: /Спробувати ще раз\s*Try again/ })).toBeInTheDocument();
+      const retry = screen.getByRole('button', { name: /Try again|Спробувати ще раз/ });
+      expect(retry).toBeInTheDocument();
+      expect(retry.textContent ?? '').not.toMatch(/\/\s*Try again|\/\s*Спробувати/);
     } finally {
       window.location = new URL(originalSearch ? `http://localhost${originalSearch}` : 'http://localhost/') as any;
       vi.restoreAllMocks();
@@ -1579,21 +1586,31 @@ describe('LexiconPractice', () => {
     expect(denominator).toBeLessThan(1150);
   });
 
-  test("A1 renders English subtitles on chrome labels; A2 does not when chrome locale is uk", async () => {
+  test("A1 and A2 chrome aria-labels follow pure data-chrome-locale (no slash-dual)", async () => {
     document.documentElement.dataset.chromeLocale = "uk";
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A1");
     const { unmount } = render(<LexiconPractice />);
+    // #5503: A1 chrome is pure UK when locale is uk — English only in item content.
     expect(screen.getByRole("region")).toHaveAttribute(
       "aria-label",
-      "Практика слів дня / Words of the Day Practice",
+      "Практика слів дня",
     );
     unmount();
 
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A2");
-    render(<LexiconPractice />);
+    const { unmount: unmountA2 } = render(<LexiconPractice />);
     expect(screen.getByRole("region")).toHaveAttribute(
       "aria-label",
       "Практика слів дня",
+    );
+    unmountA2();
+
+    document.documentElement.dataset.chromeLocale = "en";
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A1");
+    render(<LexiconPractice />);
+    expect(screen.getByRole("region")).toHaveAttribute(
+      "aria-label",
+      "Words of the Day Practice",
     );
   });
 
@@ -1646,13 +1663,22 @@ describe('LexiconPractice', () => {
     });
   });
 
-  test("cloze placeholder is short and bilingual when chrome locale is en", async () => {
+  test("cloze placeholder is pure EN when chrome locale is en", async () => {
     document.documentElement.dataset.chromeLocale = "en";
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A2");
     const clozeDeck = sampleDeck();
     render(<LexiconPractice initialDeck={clozeDeck} autoStart initialMode="cloze" />);
     const input = await screen.findByRole("textbox");
-    expect(input.getAttribute("placeholder")).toBe("введіть слово / type the word");
+    expect(input.getAttribute("placeholder")).toBe("type the word");
+  });
+
+  test("cloze placeholder is pure UK when chrome locale is uk (including A1)", async () => {
+    document.documentElement.dataset.chromeLocale = "uk";
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A1");
+    const clozeDeck = sampleDeck();
+    render(<LexiconPractice initialDeck={clozeDeck} autoStart initialMode="cloze" />);
+    const input = await screen.findByRole("textbox");
+    expect(input.getAttribute("placeholder")).toBe("введіть слово");
   });
 
   test("atlas links announce new tab for screen readers in EN chrome", async () => {
@@ -3011,7 +3037,7 @@ describe('LexiconPractice', () => {
     const { container } = render(
       <PracticeSessionSummary
         stats={stats}
-        showEnglishSubtitles={false}
+        chromeLocale="uk"
         onAnotherSession={() => undefined}
         onDone={() => undefined}
       />,

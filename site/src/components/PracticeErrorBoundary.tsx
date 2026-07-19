@@ -1,4 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
+import { CHROME_STRINGS } from '../lib/i18n/chrome';
 
 interface PracticeErrorBoundaryProps {
   children: ReactNode;
@@ -27,12 +29,13 @@ export default class PracticeErrorBoundary extends Component<
       return (
         <div className="lexicon-practice-fallback" role="alert" data-testid="practice-error-fallback">
           <p className="lexicon-practice-warning">
-            <span lang="uk">Не вдалося завантажити практику. Спробуйте оновити сторінку.</span>{' '}
-            <span lang="en">/ We couldn’t load practice. Try reloading the page.</span>
+            <ChromeDual
+              uk={CHROME_STRINGS.uk['practice.loadErrorReload']}
+              en={CHROME_STRINGS.en['practice.loadErrorReload']}
+            />
           </p>
           <button type="button" className="btn btn-accent" onClick={() => window.location.reload()}>
-            <span lang="uk">Спробувати ще раз</span>{' '}
-            <span className="btn-sub" lang="en">Try again</span>
+            <ChromeText k="practice.retry" />
           </button>
         </div>
       );
