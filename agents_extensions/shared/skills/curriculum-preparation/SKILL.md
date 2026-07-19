@@ -25,16 +25,17 @@ positive limit, and no more targets than that limit. Evaluate every target
 before mutation and require the same track, `profile_id`, `profile_version`, and
 `family`; reject a mixed packet rather than splitting or expanding it.
 
-For `--missing-only`, preserve active-manifest order. Resolve the roster through
-`load_active_manifest()` and `load_manifest_track()` from
-`scripts.orchestration/curriculum_readiness.py`; do not parse a plans directory,
-dashboard, status cache, or legacy readiness source. Evaluate each manifest
-target and admit only failed or stale preparation work. Never broaden the scan
-to another track.
+Treat `--missing-only` as deterministic, read-only inventory only. Resolve the
+roster with `load_active_manifest()` and `load_manifest_track()` from
+`scripts.orchestration.curriculum_readiness`, evaluate the whole active track
+locally, and return failed or stale candidates in manifest order. Do not mutate,
+call a model, silently select an unbounded work scope, or scan another track.
+Stop after the inventory; actual preparation requires a new explicit one-target
+invocation or finite homogeneous packet with `--limit`.
 
 ## Evaluate before acting
 
-Run the canonical evaluator separately for every admitted target:
+Run the canonical evaluator separately for every target:
 
 ```bash
 .venv/bin/python scripts/orchestration/curriculum_readiness.py \
@@ -51,8 +52,11 @@ identity; never infer one.
 
 Use the result cell by cell:
 
-- Act only on a failed `requirements[]` item owned by `preparation`, or on a
-  stale preparation identity whose exact `next_action` is `prepare`.
+- Act only on a failed `requirements[]` item owned by `preparation`, or on the
+  preparation-owned `PREPARATION_IDENTITY_DRIFT` finding.
+- When a built result has `next_action: prepare` only because
+  `PREPARATION_IDENTITY_MISSING` is owned by `audit_tooling`, return the typed
+  result unchanged. Do not regenerate preparation evidence.
 - Leave passing requirements unchanged. Treat an alternative option as
   complete as soon as the evaluator marks its requirement passed.
 - Return `plan`, `build`, `certify`, or `stop` results without performing that
@@ -66,7 +70,7 @@ evidence or review only when the target, profile, manifest hash, every relevant
 source path and hash, and `preparation_identity` match exactly. Treat any
 mismatch as stale and reevaluate; do not copy an identity into a new result.
 
-## Prepare with a bounded review budget
+## Prepare with a durable review budget
 
 Resolve failed cells with deterministic, local evidence and registered
 validators before any model work. Reuse already passing artifacts by exact
@@ -76,18 +80,31 @@ packet.
 
 For model-assisted preparation, enforce one shared budget for the exact scope:
 
-1. Consolidate the changed preparation evidence and run one semantic review.
-2. If it fails, consolidate all findings into one correction pass and run at
-   most one final semantic review.
-3. If the final review fails, stop. Record an active reviewed `hold` through
-   the existing promotion-evidence registry contract with `status: pass`,
-   reviewer family, date, HTTP(S) evidence URL, reason, owner, checked evidence,
-   and unblock condition. Do not start a third review, reset the budget, or run
-   singleton review loops.
+1. Before every review dispatch, persist conservative budget evidence in the
+   invoking task or controller's existing durable progress ledger or issue
+   receipt. Key it to the ordered exact scope and current
+   `preparation_identity` values; record calls already spent, count the pending
+   dispatch as spent, and set its verdict to pending before dispatch. Update the
+   same receipt with the returned verdict.
+2. Consolidate the changed preparation evidence and run one semantic review.
+   If it fails, consolidate all findings into one correction pass and run at
+   most one final semantic review. Preserve the call count when identities
+   change after correction; a new context, task, provider, or model never resets
+   the scope budget.
+3. On resume, load that receipt before model work. If prior model work is
+   indicated but the receipt is missing or ambiguous, fail closed to reviewed
+   HOLD for every affected still-failing target instead of restarting review 1.
+   Never start a third review or singleton review loop.
 
-After a terminal HOLD, rerun the evaluator and require
-`PREPARATION_HOLD_ACTIVE` with exact `next_action: stop`. Never represent a HOLD
-with a new schema, sidecar, or free-form status.
+Record each active reviewed HOLD at
+`curriculum/l2-uk-en/<track>/promotion-evidence.yaml` under the target slug's
+`hold` entry. Require `status: pass`, `active: true`, `reviewer_family`, `date`,
+`evidence_url` with HTTP(S), `reason`, `owner`, `checked_evidence`, and
+`unblock_condition`. When a packet exhausts its final review, write the HOLD for
+every still-failing admitted target in manifest order, then rerun readiness for
+each. Require `PREPARATION_HOLD_ACTIVE` and exact `next_action: stop`; otherwise
+fail closed. Never represent a HOLD with a new schema, sidecar, or free-form
+status.
 
 ## Return the canonical handoff
 
@@ -104,6 +121,7 @@ caller, which owns the next transition. Preparation never calls lifecycle in
 either mode.
 
 On resume, reuse the exact target scope, typed results, identities, hashes, and
-remaining review budget. Run canonical readiness first, discard stale cells,
-and continue only unfinished preparation-owned work. An exhausted review budget
-resumes at reviewed HOLD, not at a fresh review.
+durable review receipt. Run canonical readiness first, discard stale cells, and
+continue only unfinished preparation-owned work. Treat every active-hold target
+as exhausted and never re-reviewable; an exhausted scope resumes at reviewed
+HOLD, not at a fresh review.
