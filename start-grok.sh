@@ -20,6 +20,10 @@
 #   SESSION_STREAM_ID         epic:<n> from --stream or epic→number map
 #   LEARN_UKRAINIAN_GROK_LAUNCH=1
 #
+# Cold-start: with --epic and no free-text PROMPT, the launcher injects an
+# auto-continue prompt (Grok has no SessionStart hook like Claude). Pass an
+# explicit PROMPT to override. Use --no-always-approve to require tool confirms.
+#
 # Examples:
 #   ./start-grok.sh --epic atlas
 #   ./start-grok.sh --epic atlas --stream epic:4387 --effort high
@@ -254,7 +258,7 @@ if [ "$_always_approve" -eq 1 ]; then
   fi
 fi
 
-# Lane cold-start hint (printed, also useful as first prompt fragment if empty prompt)
+# Lane cold-start hint (printed always when epic is set)
 if [ -n "${SESSION_EPIC:-}" ]; then
   echo ""
   echo "Lane: ${SESSION_EPIC} (you are NOT the main orchestrator)."
@@ -276,6 +280,59 @@ if [ -n "${SESSION_EPIC:-}" ]; then
   echo "  Primary checkout is READ-ONLY for writes → worktrees via scripts/delegate.py"
   echo ""
 fi
+
+# Auto-continue the epic stream when --epic is set and the user did not pass a PROMPT.
+# Grok has no SessionStart hook (Claude does) — without an initial prompt the TUI idles
+# even though SESSION_EPIC / SESSION_STREAM_ID are exported. Root cause of the 2026-07-19
+# "start-grok.sh --epic=atlas did not auto-continue" failure.
+_has_prompt=0
+_expect_value=0
+for a in "${_forward[@]+"${_forward[@]}"}"; do
+  if [ "$_expect_value" -eq 1 ]; then
+    _expect_value=0
+    continue
+  fi
+  case "$a" in
+    --)
+      # everything after -- is prompt material; treat next non-empty as prompt
+      _expect_value=0
+      ;;
+    --*=*)
+      ;;
+    --model|--effort|--cwd|--agent|--agents|--allow|--deny|--disallowed-tools|--debug-file|--json-schema|--leader-socket|--max-turns|--session-id|--resume|--worktree|--output-format|--permission-mode)
+      _expect_value=1
+      ;;
+    -c|--continue|--always-approve|--debug|--disable-web-search|--experimental-memory|--fork-session|--fullscreen|--minimal|--no-alt-screen|--no-memory|--no-plan|--no-subagents|--check|--help|-h)
+      ;;
+    -*)
+      # unknown flag: next token may be its value; do not treat as prompt
+      ;;
+    *)
+      _has_prompt=1
+      ;;
+  esac
+done
+
+if [ -n "${SESSION_EPIC:-}" ] && [ "$_has_prompt" -eq 0 ]; then
+  case "${SESSION_EPIC}" in
+    atlas|practice|practice-hub)
+      _cold_prompt="You are the interim ATLAS lane driver (stream epic:4387). Immediately read and execute .claude/atlas-epic/TAKEOVER-PROMPT.md: tail the session stream, open or resume your lease, reconcile the board against gh/git/worktrees/task files, update INTERIM-DRIVER-HANDOFF.md as dual-write, and drive the next unblocked action without asking for a menu. Primary checkout is read-only — all writes via worktrees."
+      ;;
+    harness|infra)
+      _cold_prompt="You are the INFRA / harness lane driver (stream ${SESSION_STREAM_ID:-epic:4707}). Cold-start from the infra handoff and stream tail; reconcile in-flight work; drive the next unblocked infra action. Do not claim curriculum content lanes. Primary checkout is read-only — writes via worktrees."
+      ;;
+    hramatka)
+      _cold_prompt="You are the hramatka lane driver (stream ${SESSION_STREAM_ID:-epic:4542}). Cold-start from the epic handoff and stream if present; reconcile and drive the next unblocked action. Primary checkout is read-only — writes via worktrees."
+      ;;
+    *)
+      _cold_prompt="You are the ${SESSION_EPIC} lane driver (SESSION_STREAM_ID=${SESSION_STREAM_ID:-unset}). You are NOT the main orchestrator. Cold-start: load the epic handoff under .claude/${SESSION_EPIC}-epic/ (or stream tail if SESSION_STREAM_ID is set), reconcile reality, and drive the next unblocked action without a menu. Primary checkout is read-only — writes via worktrees."
+      ;;
+  esac
+  echo "Cold-start: injecting epic auto-continue prompt (no user PROMPT given)."
+  _forward+=("$_cold_prompt")
+  unset _cold_prompt
+fi
+unset _has_prompt _expect_value
 
 echo "Launching Grok Build TUI..."
 exec "$GROK_BIN" "${_defaults[@]}" "${_forward[@]+"${_forward[@]}"}"
