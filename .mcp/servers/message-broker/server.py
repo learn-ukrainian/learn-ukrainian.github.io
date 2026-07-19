@@ -19,6 +19,7 @@ Tools provided:
 import asyncio
 import json
 import os
+import sqlite3
 import sys
 from contextlib import suppress
 from datetime import UTC, datetime
@@ -26,6 +27,12 @@ from pathlib import Path
 from typing import Any
 
 import aiosqlite
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.fleet_comms.migrations import apply_migrations
 
 # MCP protocol imports
 try:
@@ -137,6 +144,13 @@ async def init_db():
             CREATE INDEX IF NOT EXISTS idx_history_original ON message_history(original_id)
         """)
         await db.commit()
+    # Keep MCP startup and bridge startup on one numbered migration history.
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        conn.execute("PRAGMA foreign_keys=ON")
+        apply_migrations(conn)
+    finally:
+        conn.close()
 
 
 async def get_db() -> aiosqlite.Connection:

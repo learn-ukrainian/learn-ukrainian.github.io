@@ -42,6 +42,8 @@ except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 from pydantic import BaseModel
 
+from scripts.fleet_comms.migrations import apply_migrations
+
 from .config import CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
 from .resilience import connect_sqlite
 from .state_helpers import cache_get, cache_set
@@ -99,6 +101,7 @@ def ensure_broker_db_ready() -> None:
                 spec.loader.exec_module(module)
                 module.apply(conn)
         conn.commit()
+        apply_migrations(conn)
     finally:
         conn.close()
 

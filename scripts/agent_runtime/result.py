@@ -18,6 +18,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from scripts.fleet_comms.contracts import ResponseEnvelope
+
 
 @dataclass(frozen=True)
 class ParseResult:
@@ -61,6 +63,7 @@ class ParseResult:
     tokens: int | None = None
     tool_calls: list[dict[str, Any]] = field(default_factory=list)
     substitution: dict[str, Any] | None = None
+    response_envelope: ResponseEnvelope | None = None
 
 
 @dataclass(frozen=True)
@@ -126,3 +129,4 @@ class Result:
     isolation_capability_digest: str | None = None
     isolation_prompt_digest: str | None = None
     isolation_prompt_transport: str | None = None
+    response_envelope: ResponseEnvelope | None = None

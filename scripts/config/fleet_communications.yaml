@@ -1,0 +1,54 @@
+---
+version: 1
+endpoints:
+  - name: claude
+    aliases: [claude]
+    state: live
+    transports: [native_cli]
+    completion_evidence: [terminal_event]
+    default_ttl_seconds: 3600
+    retry_class: standard
+    concurrency_limit: 1
+    formal_review_eligible: true
+    model_family_resolver: canonical-reviewer-resolver
+  - name: codex
+    aliases: [codex]
+    state: live
+    transports: [native_cli]
+    completion_evidence: [terminal_event]
+    default_ttl_seconds: 3600
+    retry_class: standard
+    concurrency_limit: 1
+    formal_review_eligible: true
+    model_family_resolver: canonical-reviewer-resolver
+  - name: agy
+    aliases: [agy]
+    state: live
+    transports: [project_bridge]
+    completion_evidence: [terminal_event]
+    default_ttl_seconds: 3600
+    retry_class: standard
+    concurrency_limit: 2
+    formal_review_eligible: true
+    model_family_resolver: canonical-reviewer-resolver
+  - name: gemini
+    aliases: [gemini]
+    state: retired
+    successor: agy
+    transports: []
+    completion_evidence: []
+    default_ttl_seconds: 3600
+    retry_class: none
+    concurrency_limit: 0
+    formal_review_eligible: false
+    model_family_resolver: canonical-reviewer-resolver
+  - name: glm-local
+    aliases: [glm-local]
+    state: local_only
+    transports: [local_cli]
+    completion_evidence: [terminal_event]
+    default_ttl_seconds: 1800
+    retry_class: local
+    concurrency_limit: 1
+    formal_review_eligible: false
+    model_family_resolver: canonical-reviewer-resolver
