@@ -1,5 +1,10 @@
 # Agent Bridge — Channel Communication
 
+> **Fleet roles:** operator doctrine and living scorecard live in
+> [`fleet-shared-doctrine.md`](fleet-shared-doctrine.md) and
+> [`fleet-role-scorecard.md`](fleet-role-scorecard.md). Machine routing remains
+> `agents_extensions/shared/rules/model-assignment.md` (takes precedence on conflict).
+
 The agent bridge is how Claude, AGY, and Codex (and you, the
 human) communicate across invocations. The new **channel bridge**
 (added in #1190) replaces the old 1:1 `ask-*` pattern with topic-
