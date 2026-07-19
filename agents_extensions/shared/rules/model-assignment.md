@@ -221,5 +221,7 @@ For **GitHub PR formal cross-family review**, do **not** use fat `ask-* --review
   --pr <N> --verdict-file /tmp/verdict.txt --model <model> --family <family> --harness <harness>
 ```
 
-Bridge refuse: `formal_pr_review_requires_review_pr` (#5486). See `docs/best-practices/agent-bridge.md`.
+Bridge steers with a **warning** (not refuse) if `ask-* --review` looks like PR CF
+without a sealed target — so agent work is not discarded (#5486 warn-not-reject).
+Size caps still fail closed. See `docs/best-practices/agent-bridge.md`.
 

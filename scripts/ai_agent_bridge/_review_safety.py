@@ -253,7 +253,7 @@ def assert_formal_review_ask_payload(
     if not formal_review:
         return False
 
-    assert_pr_cf_review_uses_review_pr(
+    warn_pr_cf_review_prefer_review_pr(
         content, formal_review=True, has_target=has_target
     )
 
@@ -307,29 +307,35 @@ def warn_missing_review_target(*, formal_review: bool, has_target: bool) -> None
         )
 
 
-def assert_pr_cf_review_uses_review_pr(
+def warn_pr_cf_review_prefer_review_pr(
     content: str,
     *,
     formal_review: bool,
     has_target: bool,
 ) -> None:
-    """Phase 5: formal CF PR review without a sealed target is refused.
+    """Phase 5: steer PR CF reviews to review-pr without discarding agent work.
 
-    Curriculum content reviews that pass --review without a PR URL continue to
-    work. Escape: BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1.
+    Rejecting after a model already generated a formal PR review is wasteful when
+    the agent did not know to use review-pr. Emit a strong warning instead; size
+    caps still fail closed for oversized bodies/attachments.
     """
     if not formal_review or has_target:
         return
     if allow_legacy_review_ask_escape():
         return
     if looks_like_pr_cf_review(content):
-        raise ReviewSafetyError(
-            "formal_pr_review_requires_review_pr: use "
-            "`scripts/ai_agent_bridge/__main__.py review-pr <N>` for sealed "
-            "pointer-only CF review, then `publish-review-verdict` for the thin "
-            "GH comment. Fat ask-* --review with a PR URL is refused (fleet-comms "
-            "Phase 5 / #5486). Escape only with BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1."
+        print(
+            "warning: formal CF PR review via ask-* without a sealed target — "
+            "prefer `scripts/ai_agent_bridge/__main__.py review-pr <N>` (pointer-only) "
+            "then `publish-review-verdict`. This ask is allowed so work is not discarded "
+            "(fleet-comms Phase 5 / #5486; warn-not-reject). "
+            "Silence with BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1.",
+            file=sys.stderr,
         )
+
+
+# Back-compat alias used by older call sites / tests.
+assert_pr_cf_review_uses_review_pr = warn_pr_cf_review_prefer_review_pr
 
 
 def allow_primary_hermes_escape() -> bool:

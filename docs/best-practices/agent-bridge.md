@@ -182,13 +182,14 @@ body over 4 KiB or attach evidence over 64 KiB to an `ask-*` review job; the
 bridge rejects it and points to `review-pr <N>`. Prefer a PR target over a
 manual review ask.
 
-**Phase 5 fail-closed (#5486):** if an `ask-* --review` payload looks like a
-**formal CF PR review** (GitHub PR URL / `PR #N` / cross-family formal wording)
-and has **no** sealed `review_pr` / `review_branch` target, the bridge **refuses**
-with `formal_pr_review_requires_review_pr`. Use `review-pr <N>` then
-`publish-review-verdict`. Curriculum content reviews that use `--review` without
-a PR URL still work. Emergency escape only:
-`BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1`.
+**Phase 5 steer (warn-not-reject, #5486):** if an `ask-* --review` payload looks
+like a **formal CF PR review** (GitHub PR URL / `PR #N` / cross-family formal
+wording) and has **no** sealed `review_pr` / `review_branch` target, the bridge
+prints a **warning** and still delivers the ask — rejecting after the agent
+already wrote a formal review wastes work when the agent did not know to use
+`review-pr`. Prefer `review-pr <N>` then `publish-review-verdict` for new work.
+**Size caps remain fail-closed** for oversized bodies/attachments. Silence the
+steering warning with `BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1`.
 
 **Phase 4 residual (#5485):** migrate runbooks and dispatch briefs that still say
 `ask-agy --review` / `ask-codex --review` for PR gates to `review-pr` +

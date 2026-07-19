@@ -1,4 +1,4 @@
-"""Phase 5: formal PR CF review without sealed target is refused (#5486)."""
+"""Phase 5: formal PR CF review without sealed target warns (not reject) (#5486)."""
 
 from __future__ import annotations
 
@@ -11,13 +11,14 @@ def test_looks_like_pr_cf_review_detects_github_pr_url() -> None:
     assert safety.looks_like_pr_cf_review(body) is True
 
 
-def test_assert_pr_cf_review_refuses_without_target() -> None:
+def test_assert_pr_cf_review_warns_without_target(capsys: pytest.CaptureFixture[str]) -> None:
     body = (
         "Formal cross-family PR review for "
         "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/5480\n"
         "VERDICT: APPROVED"
     )
-    with pytest.raises(safety.ReviewSafetyError, match="formal_pr_review_requires_review_pr"):
+    # Warn-not-reject: agent work is not discarded.
+    assert (
         safety.assert_formal_review_ask_payload(
             body,
             msg_type="review",
@@ -25,9 +26,14 @@ def test_assert_pr_cf_review_refuses_without_target() -> None:
             review=True,
             has_target=False,
         )
+        is True
+    )
+    err = capsys.readouterr().err
+    assert "prefer" in err and "review-pr" in err
+    assert "warn-not-reject" in err or "not discarded" in err
 
 
-def test_assert_pr_cf_review_allows_with_target() -> None:
+def test_assert_pr_cf_review_allows_with_target(capsys: pytest.CaptureFixture[str]) -> None:
     body = "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/5480 thin pointer"
     assert (
         safety.assert_formal_review_ask_payload(
@@ -39,9 +45,10 @@ def test_assert_pr_cf_review_allows_with_target() -> None:
         )
         is True
     )
+    assert "prefer" not in capsys.readouterr().err
 
 
-def test_content_review_without_pr_url_still_allowed() -> None:
+def test_content_review_without_pr_url_still_allowed(capsys: pytest.CaptureFixture[str]) -> None:
     body = "Please review this curriculum module for calques and naturalness."
     assert (
         safety.assert_formal_review_ask_payload(
@@ -53,9 +60,12 @@ def test_content_review_without_pr_url_still_allowed() -> None:
         )
         is True
     )
+    assert "prefer" not in capsys.readouterr().err
 
 
-def test_legacy_escape_allows_pr_url_without_target(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_legacy_escape_silences_pr_url_warning(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     monkeypatch.setenv("BRIDGE_ALLOW_LEGACY_REVIEW_ASK", "1")
     body = "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/1"
     assert (
@@ -68,4 +78,5 @@ def test_legacy_escape_allows_pr_url_without_target(monkeypatch: pytest.MonkeyPa
         )
         is True
     )
+    assert "prefer" not in capsys.readouterr().err
     monkeypatch.delenv("BRIDGE_ALLOW_LEGACY_REVIEW_ASK", raising=False)
