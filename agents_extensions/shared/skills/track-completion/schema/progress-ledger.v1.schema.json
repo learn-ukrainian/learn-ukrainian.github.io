@@ -63,6 +63,10 @@
       "type": "array",
       "items": {"$ref": "#/$defs/deferredWorkflowDrift"}
     },
+    "archived_authority": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/archivedAuthority"}
+    },
     "bounded_completion": {
       "oneOf": [
         {"type": "null"},
@@ -266,6 +270,44 @@
             {"type": "null"},
             {"$ref": "#/$defs/semanticReviewReuse"}
           ]
+        }
+      }
+    },
+    "archivedAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reason",
+        "prior_run",
+        "prior_state",
+        "prior_identity",
+        "reviews",
+        "certification_evidence",
+        "routing",
+        "publication",
+        "production_qg_authorization",
+        "bounded_completion",
+        "deferred_workflow_drift"
+      ],
+      "properties": {
+        "reason": {"enum": ["legacy-migration", "deferred-protocol-drift"]},
+        "prior_run": {"$ref": "#/$defs/run"},
+        "prior_state": {"type": "string", "minLength": 1},
+        "prior_identity": {"$ref": "#/$defs/identity"},
+        "reviews": {"type": "array", "items": {"$ref": "#/$defs/review"}},
+        "certification_evidence": {"type": "array", "items": {"type": "object"}},
+        "routing": {},
+        "publication": {},
+        "production_qg_authorization": {},
+        "bounded_completion": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/boundedCompletion"}
+          ]
+        },
+        "deferred_workflow_drift": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/deferredWorkflowDrift"}
         }
       }
     },

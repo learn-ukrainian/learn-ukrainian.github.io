@@ -427,7 +427,6 @@ def _bounded_protocol_identity(
     *,
     workflow_hashes: Mapping[str, str],
     frozen_schema_sha256: str,
-    frozen_tool_sha256: str | None = None,
 ) -> dict[str, str]:
     """Bind returned canonical PBR evidence to the pre-call schema digest.
 
@@ -439,7 +438,7 @@ def _bounded_protocol_identity(
     reviewer = result["reviewer"]
     return bounded_completion.make_review_protocol_identity(
         protocol_version=str(result["review_protocol_version"]),
-        tool_sha256=frozen_tool_sha256 or _identity(workflow_hashes),
+        tool_sha256=_identity(workflow_hashes),
         prompt_sha256=str(result["prompt_sha256"]),
         schema_sha256=frozen_schema_sha256,
         reviewer_family=str(reviewer["family"]),
@@ -490,25 +489,6 @@ def _remaining_bounded_budgets(run: Mapping[str, Any]) -> dict[str, int]:
     }
 
 
-def _protocol_visible_fields_match(expected: Mapping[str, str], requested: Mapping[str, str]) -> bool:
-    """Compare only fields carried by a semantic result or CLI request."""
-
-    return all(
-        expected[key] == requested[key]
-        for key in ("protocol_version", "prompt_sha256", "schema_sha256", "reviewer_family", "reviewer_model")
-    )
-
-
-def _workflow_drift_is_deferred(record: Mapping[str, Any], workflow_hashes: Mapping[str, str]) -> bool:
-    """Require an exact queued audit-tool identity before retaining a frozen call."""
-
-    return any(
-        item.get("classification") == "AUDIT_TOOLING_DEFERRED"
-        and item.get("observed_workflow_hashes") == dict(workflow_hashes)
-        for item in record["deferred_workflow_drift"]
-    )
-
-
 def prepare_semantic_review(
     selector: str,
     *,
@@ -549,6 +529,10 @@ def prepare_semantic_review(
             )
             record = _bounded_record(ledger)
             source_identity = _learner_source_identity(learner_hashes)
+            if record is not None and record["deferred_workflow_drift"]:
+                raise CompletionError(
+                    "Deferred audit-tooling drift requires restart-bounded-completion before a semantic review"
+                )
             if record is None:
                 run = bounded_completion.start_run(
                     target=snapshot.selector,
@@ -575,10 +559,7 @@ def prepare_semantic_review(
                         "Frozen semantic-review protocol or learner source differs; start a later run"
                     )
                 protocol = record["run"]["review_protocol_identity"]
-                if protocol != requested_protocol and not (
-                    _protocol_visible_fields_match(protocol, requested_protocol)
-                    and _workflow_drift_is_deferred(record, identity["workflow_hashes"])
-                ):
+                if protocol != requested_protocol:
                     raise CompletionError(
                         "Frozen semantic-review protocol or learner source differs; start a later run"
                     )
@@ -662,11 +643,11 @@ def restart_bounded_completion(
     config_path: Path = DEFAULT_CONFIG_PATH,
     ledger_root: Path | None = None,
 ) -> tuple[Path, dict[str, Any]]:
-    """Quarantine a migrated legacy run and begin a fresh, zero-budget run.
+    """Quarantine an eligible prior run and begin a fresh, zero-budget run.
 
-    Historical reviews stay in the durable ledger as provisional evidence, but
-    the new run has no bounded record until it is explicitly prepared.  This
-    prevents a migration from inferring either old semantic calls or repairs.
+    Historical authority records are copied into a non-live archive. The new
+    run has no bounded record until explicitly prepared, so neither migration
+    nor deferred-protocol handoff can infer prior calls or repairs.
     """
 
     if not owner.strip():
@@ -679,9 +660,27 @@ def restart_bounded_completion(
             _config, snapshot, identity, path, ledger = _load_for_update(
                 selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
             )
-            if "bounded_completion" in ledger or ledger["state"] != "MIGRATION_REQUIRED":
-                raise CompletionError("Bounded restart requires a migrated legacy ledger")
-            legacy_run = dict(ledger["run"])
+            bounded = _bounded_record(ledger)
+            legacy_restart = "bounded_completion" not in ledger and ledger["state"] == "MIGRATION_REQUIRED"
+            deferred_restart = bounded is not None and bool(bounded["deferred_workflow_drift"])
+            if not (legacy_restart or deferred_restart):
+                raise CompletionError(
+                    "Bounded restart requires a migrated legacy ledger or a bounded run with deferred audit-tooling drift"
+                )
+            prior_run = dict(ledger["run"])
+            archive = {
+                "reason": "legacy-migration" if legacy_restart else "deferred-protocol-drift",
+                "prior_run": prior_run,
+                "prior_state": ledger["state"],
+                "prior_identity": dict(ledger["current_identity"]),
+                "reviews": list(ledger["reviews"]),
+                "certification_evidence": list(ledger.get("certification_evidence", [])),
+                "routing": ledger.get("routing"),
+                "publication": ledger.get("publication"),
+                "production_qg_authorization": ledger.get("production_qg_authorization"),
+                "bounded_completion": bounded,
+                "deferred_workflow_drift": list(ledger.get("deferred_workflow_drift", [])),
+            }
             now = _now()
             fresh_run_id = uuid.uuid4().hex
             ledger["run"] = {
@@ -692,20 +691,27 @@ def restart_bounded_completion(
                 "updated_at": _iso(now),
                 "lease_expires_at": _iso(now + timedelta(seconds=int(_config["lease_seconds"]))),
             }
+            ledger.setdefault("archived_authority", []).append(archive)
+            ledger["reviews"] = []
+            ledger["certification_evidence"] = []
+            ledger["routing"] = None
+            ledger["publication"] = None
+            ledger["production_qg_authorization"] = None
             ledger["bounded_completion"] = None
             ledger["deferred_workflow_drift"] = []
             _append_event(
                 ledger,
                 event_id=_event_id(
-                    "BOUNDED_COMPLETION_RESTARTED", {"legacy_run_id": legacy_run["run_id"], "run_id": fresh_run_id}
+                    "BOUNDED_COMPLETION_RESTARTED", {"prior_run_id": prior_run["run_id"], "run_id": fresh_run_id}
                 ),
                 event="BOUNDED_COMPLETION_RESTARTED",
                 to_state=_initial_state(snapshot.module_state),
                 identity=identity,
                 details={
-                    "legacy_run_id": legacy_run["run_id"],
+                    "prior_run_id": prior_run["run_id"],
                     "fresh_run_id": fresh_run_id,
-                    "legacy_review_count": len(ledger["reviews"]),
+                    "restart_reason": archive["reason"],
+                    "archived_review_count": len(archive["reviews"]),
                     "bounded_history_inferred": False,
                 },
             )
@@ -740,16 +746,15 @@ def _record_bounded_semantic_review(
         raise CompletionError("Bounded completion contract drift requires a later completion run")
     if record["frozen_learner_hashes"] != source_hashes:
         raise CompletionError("Learner-source change must be recorded as the consolidated repair")
+    if record["deferred_workflow_drift"]:
+        raise CompletionError(
+            "Deferred audit-tooling drift requires restart-bounded-completion before a semantic review"
+        )
     frozen_protocol = record["run"]["review_protocol_identity"]
-    if _identity(identity["workflow_hashes"]) != frozen_protocol["tool_sha256"] and not _workflow_drift_is_deferred(
-        record, identity["workflow_hashes"]
-    ):
-        raise CompletionError("Current workflow identity is not the frozen protocol or a queued later-run drift")
     protocol = _bounded_protocol_identity(
         result,
         workflow_hashes=identity["workflow_hashes"],
         frozen_schema_sha256=str(frozen_protocol["schema_sha256"]),
-        frozen_tool_sha256=str(frozen_protocol["tool_sha256"]),
     )
     if record["run"]["review_protocol_identity"] != protocol:
         raise CompletionError("Returned review does not match the pre-call frozen protocol identity")
@@ -799,44 +804,6 @@ def _record_bounded_learner_repair(
     record["run"] = run
     record["frozen_learner_hashes"] = source_hashes
     record["remaining_budgets"] = _remaining_bounded_budgets(run)
-
-
-def _semantic_review_identity(
-    ledger: Mapping[str, Any],
-    *,
-    observed_identity: Mapping[str, Any],
-    learner_hashes: Mapping[str, str],
-) -> Mapping[str, Any]:
-    """Select the frozen protocol identity only for a durably deferred drift.
-
-    A post-preparation audit-tool change cannot silently change the call that
-    was already authorized.  It may proceed only when the exact observed
-    workflow identity was durably deferred and the learner bundle is unchanged.
-    """
-
-    recorded_identity = ledger["current_identity"]
-    if observed_identity["sha256"] == recorded_identity["sha256"]:
-        return observed_identity
-    record = _bounded_record(ledger)
-    if record is None or record["frozen_learner_hashes"] != dict(sorted(learner_hashes.items())):
-        raise CompletionError("Unrecorded target/workflow drift makes review evidence stale")
-    if (
-        observed_identity["target_hashes"] != recorded_identity["target_hashes"]
-        or observed_identity["layout"] != recorded_identity["layout"]
-        or observed_identity["module_state"] != recorded_identity["module_state"]
-    ):
-        raise CompletionError("Unrecorded target/workflow drift makes review evidence stale")
-    deferred = {
-        "classification": "AUDIT_TOOLING_DEFERRED",
-        "observed_identity_sha256": observed_identity["sha256"],
-        "observed_workflow_hashes": dict(observed_identity["workflow_hashes"]),
-        "learner_hashes": dict(sorted(learner_hashes.items())),
-    }
-    if not any(
-        all(item.get(key) == value for key, value in deferred.items()) for item in record["deferred_workflow_drift"]
-    ):
-        raise CompletionError("Unrecorded target/workflow drift makes review evidence stale")
-    return recorded_identity
 
 
 def _can_reuse_semantic_review(
@@ -1172,6 +1139,7 @@ def start_run(
                 "history": [],
                 "reviews": [],
                 "deferred_workflow_drift": [],
+                "archived_authority": [],
                 # A legacy ledger has no key; a new run binds this exactly when
                 # pre-call semantic-review preparation authorizes its first call.
                 "bounded_completion": None,
@@ -1824,9 +1792,14 @@ def record_review(
             if dict(result["target"]["files"]) != snapshot.review_files:
                 raise CompletionError("Post-build result file set is stale or does not match the target")
             learner_hashes = _learner_hashes(snapshot, repo_root=repo_root)
-            protocol_identity = _semantic_review_identity(
-                ledger, observed_identity=identity, learner_hashes=learner_hashes
-            )
+            bounded_record = _bounded_record(ledger)
+            if bounded_record is not None and bounded_record["deferred_workflow_drift"]:
+                raise CompletionError(
+                    "Deferred audit-tooling drift requires restart-bounded-completion before a semantic review"
+                )
+            if identity["sha256"] != ledger["current_identity"]["sha256"]:
+                raise CompletionError("Unrecorded target/workflow drift makes review evidence stale")
+            protocol_identity = identity
             current_source_hashes = {
                 name: sha256_file(_repo_path(repo_root, raw)) for name, raw in sorted(snapshot.review_files.items())
             }

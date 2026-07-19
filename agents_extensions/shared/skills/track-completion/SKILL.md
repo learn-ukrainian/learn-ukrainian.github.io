@@ -69,6 +69,8 @@ a legacy ledger: its historic reviews remain provisional and it never receives
 an inferred bounded history. Run `migrate-bounded-completion`, then
 `restart-bounded-completion --run-id <legacy-run-id> --owner <operator>` to
 quarantine that run and create a fresh bounded run without deleting its evidence.
+The restart moves prior reviews, certification records, publication/QG records,
+and identities into non-authoritative archival ledger storage.
 
 ## Start or resume
 
@@ -151,9 +153,10 @@ any semantic/provider call, freeze and authorize its exact protocol identity:
 
 This command returns the only allowed phase and remaining budget. Do not make a
 semantic call if it rejects. `record-review` accepts only a result bound to that
-pre-existing frozen identity; unqueued protocol/tool/source drift is rejected
-without consuming budget, while a durably queued audit-tooling drift remains
-for a later run. Allocate a
+pre-existing frozen identity; protocol/tool/source drift is rejected without
+consuming budget. A queued audit-tooling drift blocks every further active-run
+semantic prepare or record because no packet provenance proves the result used
+the frozen tooling. Use `restart-bounded-completion` for the later run. Allocate a
 new invocation directory every time. Do not repair, normalize, or retry inside
 that invocation. Use its emitted semantic schema when the provider supports
 structured output; prompt-only JSON compliance is not a reliable automation

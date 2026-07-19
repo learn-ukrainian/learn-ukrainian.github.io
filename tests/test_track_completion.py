@@ -1422,7 +1422,9 @@ def test_legacy_review_history_requires_explicit_bounded_migration(fake_repo: tu
     assert fresh_run_id != run_id
     assert restarted["state"] == "POST_BUILD_REVIEW_REQUIRED"
     assert restarted["bounded_completion"] is None
-    assert restarted["reviews"][0]["result_sha256"] == "a" * 64
+    assert restarted["reviews"] == []
+    assert restarted["archived_authority"][-1]["prior_run"]["run_id"] == run_id
+    assert restarted["archived_authority"][-1]["reviews"][0]["result_sha256"] == "a" * 64
     _prepare_review(
         "bio/seminar-built",
         fresh_run_id,
@@ -1436,6 +1438,123 @@ def test_legacy_review_history_requires_explicit_bounded_migration(fake_repo: tu
     )
     assert prepared["bounded_completion"]["run"]["measurements"]["model_call_count"] == 0
     assert prepared["bounded_completion"]["run"]["measurements"]["repair_count"] == 0
+
+
+def test_restart_rejects_an_active_run_without_migration_or_deferred_protocol(
+    fake_repo: tuple[Path, Path, Path],
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    _, ledger = _start(fake_repo, "bio/seminar-built")
+    with pytest.raises(tc.CompletionError, match="migrated legacy ledger or a bounded run with deferred"):
+        tc.restart_bounded_completion(
+            "bio/seminar-built",
+            run_id=ledger["run"]["run_id"],
+            owner="codex",
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+
+
+def test_restart_quarantines_legacy_authority_from_certification_projection(
+    fake_repo: tuple[Path, Path, Path], tmp_path: Path
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    _, ledger = _start(fake_repo, "a1/core-unbuilt")
+    run_id = ledger["run"]["run_id"]
+    plan_evidence = tmp_path / "legacy-plan.json"
+    plan_evidence.write_text("{}\n", encoding="utf-8")
+    tc.record_plan_review(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        verdict="PASS",
+        evidence=plan_evidence,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    _write_bundle(repo, "a1", "core-unbuilt", "# Модуль\n\nПоточний навчальний текст.\n")
+    _, ledger = tc.record_build(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        author_family="codex",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    snapshot = tc.resolve_target("a1/core-unbuilt", repo_root=repo, config=tc.load_config(config_path))
+    inputs = tc.certification_inputs("a1/core-unbuilt", repo_root=repo, config_path=config_path, ledger=ledger)
+    ledger.pop("bounded_completion")
+    ledger["author_families"] = ["codex"]
+    ledger["reviews"] = [
+        {
+            "result_path": "/outside/current-pbr.json",
+            "result_sha256": "a" * 64,
+            "reproducibility_key": "b" * 64,
+            "stability_key": "c" * 64,
+            "material_fingerprint": "d" * 64,
+            "status": "PASS",
+            "reviewer_family": "gemini",
+            "reviewer_model": "fixture-model",
+            "target_identity_sha256": ledger["current_identity"]["sha256"],
+            "certification": {
+                "profile": inputs["profile"],
+                "preparation_identity": inputs["preparation_identity"],
+                "learner_hashes": inputs["learner_hashes"],
+                "plan_hash": inputs["plan_hash"],
+                "raw_response_sha256": "e" * 64,
+                "dependency_hashes": inputs["workflow_hashes"],
+                "dependency_identity": inputs["pbr_dependency_identity"],
+            },
+        }
+    ]
+    ledger["certification_evidence"] = [
+        {"path": "/outside/independent.json", "sha256": "f" * 64, "value": {"kind": "independent-review"}},
+        {"path": "/outside/integration.json", "sha256": "1" * 64, "value": {"kind": "integration"}},
+    ]
+    ledger["routing"] = {"owners": ["audit_tooling"], "findings": []}
+    ledger["publication"] = {"pr": 5453, "merge_sha": "2" * 40, "recorded_at": "2026-01-01T00:00:00+00:00"}
+    ledger["production_qg_authorization"] = {
+        "qualification_path": "/outside/qg.json",
+        "qualification_sha256": "3" * 64,
+        "human_arming_path": "/outside/arming.json",
+        "human_arming_sha256": "4" * 64,
+        "approval_id": "legacy-qg",
+        "route": {"kind": "human"},
+    }
+    path = tc.ledger_path_for(snapshot, repo_root=repo, config=tc.load_config(config_path), ledger_root=ledger_root)
+    tc._atomic_write_json(path, ledger)
+    tc.migrate_bounded_completion(
+        "a1/core-unbuilt", run_id=run_id, repo_root=repo, config_path=config_path, ledger_root=ledger_root
+    )
+    _, restarted = tc.restart_bounded_completion(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        owner="codex",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    archived = restarted["archived_authority"][-1]
+    assert archived["prior_run"]["run_id"] == run_id
+    assert archived["reviews"][0]["certification"]["dependency_identity"] == inputs["pbr_dependency_identity"]
+    assert [item["value"]["kind"] for item in archived["certification_evidence"]] == [
+        "independent-review",
+        "integration",
+    ]
+    assert archived["publication"]["pr"] == 5453
+    assert archived["production_qg_authorization"]["approval_id"] == "legacy-qg"
+    assert restarted["reviews"] == []
+    assert restarted["certification_evidence"] == []
+    assert restarted["routing"] is None
+    assert restarted["publication"] is None
+    assert restarted["production_qg_authorization"] is None
+    assert (
+        tc.certification_projection(
+            "a1/core-unbuilt", repo_root=repo, config_path=config_path, ledger_root=ledger_root
+        )["state"]
+        == "POST_BUILD_REVIEW_REQUIRED"
+    )
 
 
 def test_semantic_preparation_is_locked_idempotent_and_source_bound(
@@ -1465,7 +1584,7 @@ def test_semantic_preparation_is_locked_idempotent_and_source_bound(
     assert tc.read_json(path) == before
 
 
-def test_deferred_audit_tool_drift_keeps_frozen_semantic_protocol_usable(
+def test_deferred_audit_tool_drift_blocks_active_protocol_and_restarts_cleanly(
     fake_repo: tuple[Path, Path, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repo, config_path, ledger_root = fake_repo
@@ -1490,60 +1609,42 @@ def test_deferred_audit_tool_drift_keeps_frozen_semantic_protocol_usable(
     )
     assert deferred["state"] == "POST_BUILD_REVIEW_REQUIRED"
     assert deferred["bounded_completion"]["remaining_budgets"] == {"semantic_reviews": 2, "consolidated_repairs": 1}
+    path = tc.ledger_path_for(snapshot, repo_root=repo, config=tc.load_config(config_path), ledger_root=ledger_root)
+    before = tc.read_json(path)
+    with pytest.raises(tc.CompletionError, match="Deferred audit-tooling drift requires restart-bounded-completion"):
+        _prepare_review(
+            "bio/seminar-built", run_id, initial, repo=repo, config_path=config_path, ledger_root=ledger_root
+        )
     monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: initial)
-    _, after_initial = tc.record_review(
-        "bio/seminar-built",
-        run_id=run_id,
-        result_path=initial_path,
-        repo_root=repo,
-        config_path=config_path,
-        ledger_root=ledger_root,
-    )
-    assert after_initial["bounded_completion"]["remaining_budgets"] == {
-        "semantic_reviews": 1,
-        "consolidated_repairs": 1,
-    }
+    with pytest.raises(tc.CompletionError, match="Deferred audit-tooling drift requires restart-bounded-completion"):
+        tc.record_review(
+            "bio/seminar-built",
+            run_id=run_id,
+            result_path=initial_path,
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    assert tc.read_json(path) == before
 
-    workflow.write_text("workflow-after-initial\n", encoding="utf-8")
-    _, deferred = tc.record_change(
+    _, restarted = tc.restart_bounded_completion(
         "bio/seminar-built",
         run_id=run_id,
-        owner_kind="audit_tooling",
-        author_family="codex",
-        summary="Queue workflow drift after the initial semantic result.",
+        owner="codex",
         repo_root=repo,
         config_path=config_path,
         ledger_root=ledger_root,
     )
-    content = repo / snapshot.review_files["content"]
-    content.write_text(content.read_text(encoding="utf-8") + "Консолідований ремонт.\n", encoding="utf-8")
-    _, repaired = tc.record_change(
-        "bio/seminar-built",
-        run_id=run_id,
-        owner_kind="built_artifact",
-        author_family="codex",
-        summary="Apply the one learner repair while tooling drift stays queued.",
-        repo_root=repo,
-        config_path=config_path,
-        ledger_root=ledger_root,
+    fresh_run_id = restarted["run"]["run_id"]
+    assert restarted["archived_authority"][-1]["reason"] == "deferred-protocol-drift"
+    assert restarted["archived_authority"][-1]["prior_run"]["run_id"] == run_id
+    assert restarted["deferred_workflow_drift"] == []
+    _prepare_review(
+        "bio/seminar-built", fresh_run_id, initial, repo=repo, config_path=config_path, ledger_root=ledger_root
     )
-    assert repaired["bounded_completion"]["remaining_budgets"] == {"semantic_reviews": 1, "consolidated_repairs": 0}
-    refreshed = tc.resolve_target("bio/seminar-built", repo_root=repo, config=tc.load_config(config_path))
-    final = _result(refreshed, repo, status="PASS")
-    final["semantic_response"] = {"raw_sha256": "f" * 64, "contract_status": "valid"}
-    final_path = _result_file(tmp_path, "drift-final.json")
-    _prepare_review("bio/seminar-built", run_id, final, repo=repo, config_path=config_path, ledger_root=ledger_root)
-    monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: final)
-    _, final_ledger = tc.record_review(
-        "bio/seminar-built",
-        run_id=run_id,
-        result_path=final_path,
-        repo_root=repo,
-        config_path=config_path,
-        ledger_root=ledger_root,
-    )
-    assert final_ledger["bounded_completion"]["remaining_budgets"] == {"semantic_reviews": 0, "consolidated_repairs": 0}
-    assert len(final_ledger["deferred_workflow_drift"]) == 2
+    prepared = tc.read_json(path)
+    assert prepared["bounded_completion"]["run"]["measurements"]["model_call_count"] == 0
+    assert prepared["bounded_completion"]["run"]["measurements"]["repair_count"] == 0
 
 
 @pytest.mark.parametrize(
