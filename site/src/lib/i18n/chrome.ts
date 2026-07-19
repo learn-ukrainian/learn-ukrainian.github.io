@@ -297,7 +297,7 @@ const en = {
   'practice.clozePreparing': 'Cloze exercises for this level are still being prepared. Try flashcards, matching, or multiple choice.',
   'practice.heritagePreparing': 'Heritage exercises for this level are still being prepared.',
   'practice.paronymPreparing': 'Paronym exercises for this level are still being prepared.',
-  'practice.allCaughtUp': 'All cards for now are reviewed.',
+  'practice.allCaughtUp': 'All cards are reviewed for now.',
   'practice.noMatchCards': 'No cards available for matching right now.',
   'practice.noChoiceCards': 'No cards available for multiple choice right now.',
   'practice.chooseCorrect': 'Choose the correct answer',

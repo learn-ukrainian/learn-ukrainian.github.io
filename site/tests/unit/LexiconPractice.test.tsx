@@ -1655,8 +1655,20 @@ describe('LexiconPractice', () => {
     expect(input.getAttribute("placeholder")).toBe("введіть слово / type the word");
   });
 
-  test("atlas links announce нова вкладка for screen readers", async () => {
+  test("atlas links announce new tab for screen readers in EN chrome", async () => {
     document.documentElement.dataset.chromeLocale = "en";
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
+    await user.click(
+      within(screen.getByTestId("practice-heritage")).getByRole("button", { name: /дом/ }),
+    );
+    // Full-switch chrome: EN locale uses English aria-label (owner #5355).
+    const link = await screen.findByRole("link", { name: /new tab/i });
+    expect(link).toHaveAttribute("target", "_blank");
+  });
+
+  test("atlas links announce нова вкладка for screen readers in UK chrome", async () => {
+    document.documentElement.dataset.chromeLocale = "uk";
     const user = userEvent.setup();
     render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
     await user.click(
