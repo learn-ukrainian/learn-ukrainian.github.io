@@ -732,22 +732,59 @@ def test_certification_rejects_built_bundle_without_consumed_preparation_identit
     assert len(inputs["preparation_identity"]) == 64
 
 
-def test_preparation_rebuild_routing_rejects_incomplete_inputs_and_learner_drift(
+def test_preparation_rebuild_terminalizes_incomplete_inputs_and_preserves_learner_drift_rejection(
     fake_repo: tuple[Path, Path, Path],
 ) -> None:
     repo, config_path, ledger_root = fake_repo
-    _, bio_ledger = _start(fake_repo, "bio/seminar-built")
-    with pytest.raises(
-        tc.CompletionError,
-        match="Preparation requirements must pass before routing the bundle to rebuild",
-    ):
-        tc.request_preparation_rebuild(
-            "bio/seminar-built",
-            run_id=bio_ledger["run"]["run_id"],
-            repo_root=repo,
-            config_path=config_path,
-            ledger_root=ledger_root,
-        )
+    path, bio_ledger = _start(fake_repo, "bio/seminar-built")
+    # Regression shape for #5455: a built BIO run began but had only STARTED,
+    # leaving no final event or released lease when its rebuild preflight failed.
+    assert bio_ledger["state"] == "POST_BUILD_REVIEW_REQUIRED"
+    assert [event["event"] for event in bio_ledger["history"]] == ["STARTED"]
+    # The terminal record is optional so pre-existing ledgers remain schema-valid.
+    assert "preparation_block" not in bio_ledger
+    tc._validate(bio_ledger, tc.LEDGER_SCHEMA_PATH, "track-completion legacy ledger")
+
+    _, blocked = tc.request_preparation_rebuild(
+        "bio/seminar-built",
+        run_id=bio_ledger["run"]["run_id"],
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+
+    assert blocked["state"] == "PREPARATION_BLOCKED"
+    assert blocked["run"]["status"] == "completed"
+    assert blocked["run"]["lease_released_at"] == blocked["run"]["lease_expires_at"]
+    assert tc._parse_time(blocked["run"]["lease_expires_at"]) <= tc._now()
+    assert [event["event"] for event in blocked["history"]] == [
+        "STARTED",
+        "PREPARATION_REBUILD_BLOCKED",
+    ]
+    block = blocked["preparation_block"]
+    assert block["disposition"] == "HOLD"
+    assert block["reason_code"] == "PREPARATION_REBUILD_PRECHECK_INCOMPLETE"
+    assert block["owner"] == "preparation"
+    assert block["next_action"] == "stop"
+    assert block["finding_ids"] == sorted(block["finding_ids"])
+    assert block["evidence_ids"] == sorted(block["evidence_ids"])
+    assert blocked["bounded_completion"] is None
+    tc._validate(blocked, tc.LEDGER_SCHEMA_PATH, "track-completion ledger")
+
+    _, replayed = tc.request_preparation_rebuild(
+        "bio/seminar-built",
+        run_id=bio_ledger["run"]["run_id"],
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert replayed == blocked
+    assert json.loads(path.read_text(encoding="utf-8")) == blocked
+    projection = tc.certification_projection(
+        "bio/seminar-built", repo_root=repo, config_path=config_path, ledger_root=ledger_root
+    )
+    assert projection["state"] == "PREPARATION_BLOCKED"
+    assert projection["final"] == "preparation-blocked"
 
     _, core_ledger = _start(fake_repo, "a1/core-built")
     content = repo / "curriculum/l2-uk-en/a1/core-built/module.md"

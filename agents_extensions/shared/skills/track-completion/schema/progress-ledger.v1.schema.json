@@ -29,6 +29,7 @@
         "BUILD_REQUIRED",
         "PARTIAL_RECOVERY_REQUIRED",
         "POST_BUILD_REVIEW_REQUIRED",
+        "PREPARATION_BLOCKED",
         "REPAIR_REQUIRED",
         "BLOCKED_BUDGET_EXHAUSTED",
         "AUDIT_TOOLING_REQUIRED",
@@ -46,6 +47,7 @@
       ]
     },
     "current_identity": {"$ref": "#/$defs/identity"},
+    "preparation_block": {"$ref": "#/$defs/preparationBlock"},
     "author_families": {
       "type": "array",
       "uniqueItems": true,
@@ -165,7 +167,42 @@
         "status": {"enum": ["active", "completed"]},
         "started_at": {"$ref": "#/$defs/timestamp"},
         "updated_at": {"$ref": "#/$defs/timestamp"},
-        "lease_expires_at": {"$ref": "#/$defs/timestamp"}
+        "lease_expires_at": {"$ref": "#/$defs/timestamp"},
+        "lease_released_at": {"$ref": "#/$defs/timestamp"}
+      }
+    },
+    "preparationBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "disposition",
+        "reason_code",
+        "owner",
+        "reason",
+        "finding_ids",
+        "evidence_ids",
+        "unblock_condition",
+        "next_action"
+      ],
+      "properties": {
+        "disposition": {"const": "HOLD"},
+        "reason_code": {"const": "PREPARATION_REBUILD_PRECHECK_INCOMPLETE"},
+        "owner": {"const": "preparation"},
+        "reason": {"type": "string", "minLength": 1},
+        "finding_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "evidence_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "unblock_condition": {"type": "string", "minLength": 1},
+        "next_action": {"const": "stop"}
       }
     },
     "identity": {
