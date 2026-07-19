@@ -1157,7 +1157,12 @@ describe('lexicon SRS facade', () => {
 });
 
 describe('daily practice deck (K3 chunk 1)', () => {
-  test('selects exactly 20 unique lemmas when enough data exists', () => {
+  test('daily deck size is 12 for viewport density (#5502)', () => {
+    // Owner preference: try 12 first among 10/12/15 so the setup list + Start CTA fit.
+    expect(DAILY_PRACTICE_DECK_SIZE).toBe(12);
+  });
+
+  test('selects exactly DAILY_PRACTICE_DECK_SIZE unique lemmas when enough data exists', () => {
     const ids = Array.from({ length: 30 }, (_, index) => `w${String(index).padStart(2, '0')}`);
     const index = dailyIndex(ids);
     const cards = makeCards({});
@@ -1209,7 +1214,7 @@ describe('daily practice deck (K3 chunk 1)', () => {
     expect(ids).toEqual(['due-one', 'new-one']);
   });
 
-  test('uses the actual eligible count as denominator when fewer than 20 lemmas exist', () => {
+  test('uses the actual eligible count as denominator when fewer than daily size lemmas exist', () => {
     const index = dailyIndex(['a', 'b', 'c']);
     const cards = makeCards({});
     const items = selectDailyPracticeDeckItems(index, cards, NOW);

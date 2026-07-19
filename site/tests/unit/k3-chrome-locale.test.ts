@@ -81,6 +81,21 @@ describe("K3 practice dashboard layout and copy (Chunk 2)", () => {
     expect(dailyDeckSource).toContain('onToggle={(event) => setDetailsOpen(event.currentTarget.open)}');
   });
 
+  test("practice.astro styles the primary Daily/Start CTA as a distinct primary control (#5502)", () => {
+    // Generic `.btn-accent` is not a global style; the session primary must force
+    // primary-fill treatment so it is not an "ugly default surface button".
+    expect(practiceSource).toContain("button.k3-session-primary");
+    expect(practiceSource).toMatch(
+      /button\.k3-session-primary[^}]*background:\s*var\(--lu-primary\)/s,
+    );
+    expect(practiceSource).toMatch(
+      /button\.k3-session-primary[^}]*color:\s*var\(--lu-on-primary\)/s,
+    );
+    expect(practiceSource).toMatch(
+      /button\.k3-session-primary[^}]*min-height:\s*46px/s,
+    );
+  });
+
   test("practice.astro removed the superseded static intro", () => {
     expect(practiceSource).not.toContain('<div class="lexicon-practice-intro">');
     expect(practiceSource).not.toContain('lexicon-practice-intro h1');

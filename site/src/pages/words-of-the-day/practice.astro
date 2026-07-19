@@ -25,7 +25,13 @@ const frontmatter = {
   .lexicon-practice-page {
     max-width: 1120px;
     margin: 0 auto;
-    padding: 1rem 1.5rem 4.5rem;
+    padding: 0.5rem 1.5rem 3.5rem;
+  }
+
+  @media (max-width: 760px) {
+    .lexicon-practice-page {
+      padding: 0.5rem 1rem 3rem;
+    }
   }
 
   .lexicon-practice-badge {
@@ -954,7 +960,7 @@ const frontmatter = {
     }
   }
 
-  /* K3 practice dashboard (Chunk 2) */
+  /* K3 practice dashboard (Chunk 2) — density tuned for #5502 above-the-fold CTA */
   :global(.k3-practice-dashboard) {
     display: grid;
     gap: 0.4rem;
@@ -964,21 +970,25 @@ const frontmatter = {
 
   :global(.k3-hero h1) {
     margin: 0;
-    font-size: clamp(1.9rem, 3vw, 2.25rem);
+    font-size: clamp(1.65rem, 3vw, 2.05rem);
     line-height: 1;
   }
   :global(.k3-hero-subtitle) {
-    margin: 0.35rem 0 0;
+    margin: 0.3rem 0 0;
     color: var(--lu-text-muted);
-    font-size: 1.05rem;
+    font-size: 1.02rem;
     font-weight: 800;
   }
   :global(.k3-hero-epigraph) {
-    margin: 0.55rem 0 0;
+    margin: 0.3rem 0 0;
     color: var(--lu-text-muted);
-    font-size: 0.92rem;
+    font-size: 0.86rem;
     font-style: italic;
-    line-height: 1.35;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   :global(.k3-levels) {
@@ -1015,15 +1025,15 @@ const frontmatter = {
   :global(.k3-stats) {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
   :global(.k3-stat) {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0.2rem;
-    min-height: 3.5rem;
-    padding: 0.5rem 0.75rem;
+    gap: 0.15rem;
+    min-height: 3.15rem;
+    padding: 0.4rem 0.65rem;
     border: 1px solid var(--lu-border);
     border-radius: 12px;
     background: var(--lu-surface-raised);
@@ -1031,7 +1041,7 @@ const frontmatter = {
   }
   :global(.k3-stat-value) {
     color: var(--lu-text);
-    font-size: 1.75rem;
+    font-size: 1.55rem;
     font-weight: 900;
     line-height: 1;
   }
@@ -1051,6 +1061,16 @@ const frontmatter = {
   :global(.k3-session) {
     display: grid;
     gap: 0.35rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--lu-primary) 28%, var(--lu-border));
+    border-radius: 14px;
+    background:
+      linear-gradient(
+        165deg,
+        color-mix(in srgb, var(--lu-primary) 8%, var(--lu-surface-raised)) 0%,
+        var(--lu-surface-raised) 55%
+      );
+    box-shadow: var(--lu-shadow);
   }
   :global(.k3-session-overview) {
     display: flex;
@@ -1092,22 +1112,79 @@ const frontmatter = {
     background: var(--lu-primary);
     color: var(--lu-on-primary);
   }
-  :global(.k3-session-primary) {
-    min-height: 48px;
+  /*
+   * Primary Daily/Start CTA (#5502): `.btn-accent` is not a global style, so the
+   * session primary used to render as a generic surface button. Force a distinct
+   * primary treatment that stays readable in light/dark without hunting.
+   */
+  :global(.lexicon-practice button.k3-session-primary) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    min-height: 46px;
     width: 100%;
+    padding: 0 1rem;
+    border: 1px solid var(--lu-primary);
+    border-radius: 12px;
+    background: var(--lu-primary);
+    color: var(--lu-on-primary);
     font-size: 1.05rem;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+    box-shadow:
+      0 1px 0 color-mix(in srgb, var(--lu-on-primary) 18%, transparent) inset,
+      0 4px 14px color-mix(in srgb, var(--lu-primary) 32%, transparent);
+  }
+  :global(.lexicon-practice button.k3-session-primary:hover),
+  :global(.lexicon-practice button.k3-session-primary:focus-visible) {
+    border-color: var(--lu-primary);
+    background: var(--lu-primary);
+    color: var(--lu-on-primary);
+    filter: brightness(1.06);
+    outline: none;
+    box-shadow:
+      0 0 0 3px var(--lu-state-active),
+      0 6px 18px color-mix(in srgb, var(--lu-primary) 38%, transparent);
+  }
+  :global(.lexicon-practice button.k3-session-primary:disabled) {
+    opacity: 0.72;
+    filter: none;
+    cursor: wait;
   }
   :global(.k3-session-resume) {
     justify-self: start;
     min-height: 44px;
-    padding: 0;
+    padding: 0.15rem 0;
     border: 0;
     background: transparent;
-    color: var(--lu-text-muted);
+    color: var(--lu-primary);
     font-weight: 800;
     text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+  :global(.lexicon-practice button.k3-session-resume:hover),
+  :global(.lexicon-practice button.k3-session-resume:focus-visible) {
+    border: 0;
+    background: transparent;
+    color: var(--lu-primary);
+    box-shadow: none;
+    outline: 2px solid var(--lu-primary);
+    outline-offset: 2px;
   }
   @media (max-width: 760px) {
+    :global(.k3-practice-dashboard) {
+      gap: 0.45rem;
+    }
+    :global(.k3-hero-epigraph) {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    :global(.k3-session) {
+      padding: 0.75rem 0.8rem;
+    }
     :global(.k3-session-overview),
     :global(.k3-session-size) {
       align-items: flex-start;
@@ -1122,12 +1199,16 @@ const frontmatter = {
     :global(.k3-session-scope) {
       white-space: normal;
     }
+    :global(.lexicon-practice button.k3-session-primary) {
+      min-height: 50px;
+      font-size: 1.05rem;
+    }
   }
 
   :global(.practice-daily-deck) {
     display: grid;
-    gap: 0.45rem;
-    padding: 0.65rem 0.8rem;
+    gap: 0.4rem;
+    padding: 0.55rem 0.75rem;
     border: 1px solid var(--lu-border);
     border-radius: 14px;
     background: var(--lu-surface-raised);
@@ -1168,7 +1249,7 @@ const frontmatter = {
     font-weight: 900;
   }
   :global(.daily-preview-card) {
-    min-height: 88px;
+    min-height: 76px;
     flex: 1 1 auto;
     cursor: pointer;
   }
