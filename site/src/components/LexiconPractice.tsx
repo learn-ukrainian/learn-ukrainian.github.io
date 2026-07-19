@@ -1,4 +1,4 @@
-import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type CSSProperties, type ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MatchUp from './MatchUp';
 import PracticeDailyDeck from './PracticeDailyDeck';
 import PracticeErrorBoundary from './PracticeErrorBoundary';
@@ -7,7 +7,7 @@ import PracticeFormRail, { type FormRailVerdict } from './PracticeFormRail';
 import PracticeSessionSummary, { type SessionSummaryStats } from './PracticeSessionSummary';
 import PracticeStress from './PracticeStress';
 import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
-import { CHROME_STRINGS } from '../lib/i18n/chrome';
+import { CHROME_STRINGS, type ChromeKey } from '../lib/i18n/chrome';
 import {
   DEFAULT_NEW_PER_DAY,
   DAILY_PRACTICE_DECK_KEY,
@@ -83,6 +83,51 @@ import {
   normalizeCefrLevel,
   type CefrLevel,
 } from '../lib/lexicon/levels';
+
+
+/** A1 always bilingual; otherwise pure chrome-locale via CSS (owner #5355 full-switch). */
+function PracticeChromeLabel({
+  k,
+  a1Bilingual,
+}: {
+  k: ChromeKey;
+  a1Bilingual: boolean;
+}): ReactElement {
+  if (a1Bilingual) {
+    return (
+      <>
+        <span lang="uk">{CHROME_STRINGS.uk[k]}</span>
+        <span className="btn-sub" lang="en">
+          / {CHROME_STRINGS.en[k]}
+        </span>
+      </>
+    );
+  }
+  return <ChromeText k={k} />;
+}
+
+function PracticeChromeDual({
+  uk,
+  en,
+  a1Bilingual,
+}: {
+  uk: string;
+  en: string;
+  a1Bilingual: boolean;
+}): ReactElement {
+  if (a1Bilingual) {
+    return (
+      <>
+        <span lang="uk">{uk}</span>
+        <span className="btn-sub" lang="en">
+          / {en}
+        </span>
+      </>
+    );
+  }
+  return <ChromeDual en={en} uk={uk} />;
+}
+
 
 interface LexiconPracticeProps {
   deckLevel?: string;
@@ -2428,14 +2473,11 @@ function LexiconPracticeIsland({
           </>
         ) : sessionPhase === 'active' ? (
           <>
-            <ChromeDual
-              uk={`Сесія ${progressLabel}`}
-              en={`Session ${progressLabel}`}
-            />
+            <PracticeChromeDual uk={`Сесія ${progressLabel}`} en={`Session ${progressLabel}`} a1Bilingual={learnerLevel === 'A1'} />
           </>
         ) : (
           <>
-            <ChromeText k="practice.sessionComplete" />
+            <PracticeChromeLabel k="practice.sessionComplete" a1Bilingual={learnerLevel === 'A1'} />
           </>
         )}
       </p>
@@ -2482,7 +2524,7 @@ function LexiconPracticeIsland({
             >
               <span>
                 🎯 <strong>
-                  <ChromeText k="practice.focusPractice" />
+                  <PracticeChromeLabel k="practice.focusPractice" a1Bilingual={learnerLevel === 'A1'} />
                 </strong> «{focusedLemmaId}»
               </span>
               <button
@@ -2498,7 +2540,7 @@ function LexiconPracticeIsland({
                   cursor: 'pointer'
                 }}
               >
-                <ChromeText k="practice.clearFocus" />
+                <PracticeChromeLabel k="practice.clearFocus" a1Bilingual={learnerLevel === 'A1'} />
               </button>
             </div>
           )}
@@ -2732,7 +2774,7 @@ function LexiconPracticeIsland({
       )}
       {loading && (
         <p className="lexicon-practice-muted">
-          <ChromeText k="practice.loading" />
+          <PracticeChromeLabel k="practice.loading" a1Bilingual={learnerLevel === 'A1'} />
         </p>
       )}
       {error && !selection && (
@@ -2773,7 +2815,7 @@ function LexiconPracticeIsland({
         <div className="lexicon-practice-stage-shell">
           <div className="lexicon-practice-stage-bar">
             <button type="button" className="stage-back" onClick={finishPractice}>
-              <ChromeText k="practice.home" />
+              <PracticeChromeLabel k="practice.home" a1Bilingual={learnerLevel === 'A1'} />
             </button>
             <h2>
               <span lang="uk">{stageTitleUk}</span>
@@ -2792,7 +2834,7 @@ function LexiconPracticeIsland({
 
           {deck && deck.index.length === 0 && (
             <p className="lexicon-practice-muted">
-              <ChromeText k="practice.noCards" />
+              <PracticeChromeLabel k="practice.noCards" a1Bilingual={learnerLevel === 'A1'} />
             </p>
           )}
 
@@ -2835,26 +2877,26 @@ function LexiconPracticeIsland({
                         data-testid="practice-advance-button"
                         onClick={advancePending}
                       >
-                        <ChromeText k="practice.nextArrow" />
+                        <PracticeChromeLabel k="practice.nextArrow" a1Bilingual={learnerLevel === 'A1'} />
                       </button>
                     </div>
                   ) : null}
                 </>
               ) : mode === 'cloze' && deck.cloze.length === 0 ? (
                 <p className="lexicon-practice-muted" data-testid="practice-cloze-empty">
-                  <ChromeText k="practice.clozePreparing" />
+                  <PracticeChromeLabel k="practice.clozePreparing" a1Bilingual={learnerLevel === 'A1'} />
                 </p>
               ) : mode === 'heritage' && (deck.heritage?.length ?? 0) === 0 ? (
                 <p className="lexicon-practice-muted" data-testid="practice-heritage-empty">
-                  <ChromeText k="practice.heritagePreparing" />
+                  <PracticeChromeLabel k="practice.heritagePreparing" a1Bilingual={learnerLevel === 'A1'} />
                 </p>
               ) : mode === 'paronym' && (deck.paronym?.length ?? 0) === 0 ? (
                 <p className="lexicon-practice-muted" data-testid="practice-paronym-empty">
-                  <ChromeText k="practice.paronymPreparing" />
+                  <PracticeChromeLabel k="practice.paronymPreparing" a1Bilingual={learnerLevel === 'A1'} />
                 </p>
               ) : (
                 <p className="lexicon-practice-muted">
-                  <ChromeText k="practice.allCaughtUp" />
+                  <PracticeChromeLabel k="practice.allCaughtUp" a1Bilingual={learnerLevel === 'A1'} />
                 </p>
               )}
             </div>
@@ -3132,10 +3174,7 @@ function PracticeItem({
     if (!pairs.length) {
       return (
         <p className="lexicon-practice-muted">
-          <ChromeText k="practice.noMatchCards" />
-          {showEnglishSubtitles ? (
-            <span className="btn-sub" lang="en">/ There are currently no cards for matching pairs.</span>
-          ) : null}
+          <PracticeChromeLabel k="practice.noMatchCards" a1Bilingual={learnerLevel === 'A1'} />
         </p>
       );
     }
@@ -3175,10 +3214,7 @@ function PracticeItem({
   if (!options.length) {
     return (
       <p className="lexicon-practice-muted">
-        <ChromeText k="practice.noChoiceCards" />
-        {showEnglishSubtitles ? (
-          <span className="btn-sub" lang="en">/ There are currently no cards for selecting an answer.</span>
-        ) : null}
+        <PracticeChromeLabel k="practice.noChoiceCards" a1Bilingual={learnerLevel === 'A1'} />
       </p>
     );
   }
@@ -3199,10 +3235,7 @@ function PracticeItem({
         ) : null}
       </p>
       <p className="mc-sub">
-        <ChromeText k="practice.chooseCorrect" />
-        {showEnglishSubtitles ? (
-          <span className="btn-sub" lang="en">/ Select the correct answer</span>
-        ) : null}
+        <PracticeChromeLabel k="practice.chooseCorrect" a1Bilingual={learnerLevel === 'A1'} />
       </p>
       <ul className="lexicon-option-list mc-options">
         {options.map((option, index) => (
@@ -3270,10 +3303,7 @@ function PracticeParonym({
   return (
     <div className="lexicon-paronym" data-testid="practice-paronym">
       <p className="paronym-task">
-        <ChromeText k="practice.chooseParonym" />
-        {showEnglishSubtitles ? (
-          <span className="btn-sub" lang="en">/ Choose the correct paronym.</span>
-        ) : null}
+        <PracticeChromeLabel k="practice.chooseParonym" a1Bilingual={learnerLevel === 'A1'} />
       </p>
       <p className="paronym-sentence">
         <span>{before}</span>
@@ -3329,10 +3359,7 @@ function PracticeParonym({
               aria-label={CHROME_STRINGS[chromeLocale]['practice.openInAtlasTab']}
               style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
             >
-              <ChromeText k="practice.openInAtlasArrow" />
-              {showEnglishSubtitles ? (
-                <span className="btn-sub" lang="en">/ Open in Atlas →</span>
-              ) : null}
+              <PracticeChromeLabel k="practice.openInAtlasArrow" a1Bilingual={learnerLevel === 'A1'} />
             </a>
           </div>
         </div>
@@ -3368,10 +3395,7 @@ function PracticeHeritage({
   return (
     <div className="lexicon-heritage" data-testid="practice-heritage">
       <p className="heritage-task">
-        <ChromeText k="practice.chooseNative" />
-        {showEnglishSubtitles ? (
-          <span className="btn-sub" lang="en">/ Choose the native Ukrainian word.</span>
-        ) : null}
+        <PracticeChromeLabel k="practice.chooseNative" a1Bilingual={learnerLevel === 'A1'} />
       </p>
       <p className="heritage-sentence">
         <span>{before}</span>
@@ -3409,9 +3433,10 @@ function PracticeHeritage({
           </p>
           {feedback.kind === 'calque' && feedback.citations?.length ? (
             <p className="heritage-citation">
-              <ChromeDual
+              <PracticeChromeDual
                 uk={`Джерело: ${feedback.citations.join('; ')}`}
                 en={`Source: ${feedback.citations.join('; ')}`}
+                a1Bilingual={learnerLevel === 'A1'}
               />
             </p>
           ) : null}
@@ -3435,10 +3460,7 @@ function PracticeHeritage({
               aria-label={CHROME_STRINGS[chromeLocale]['practice.openInAtlasTab']}
               style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
             >
-              <ChromeText k="practice.openInAtlasArrow" />
-              {showEnglishSubtitles ? (
-                <span className="btn-sub" lang="en">/ Open in Atlas →</span>
-              ) : null}
+              <PracticeChromeLabel k="practice.openInAtlasArrow" a1Bilingual={learnerLevel === 'A1'} />
             </a>
           </div>
         </div>
@@ -3483,9 +3505,10 @@ function PracticeCloze({
   return (
     <div className="lexicon-cloze" data-testid="practice-cloze">
       <p className="cz-task">
-        <ChromeDual
+        <PracticeChromeDual
           uk={`Поставте слово „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” у правильному відмінку.`}
           en={`Put the word „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” in the correct case.`}
+          a1Bilingual={learnerLevel === 'A1'}
         />
       </p>
       <p className="cz-sentence">
@@ -3498,7 +3521,7 @@ function PracticeCloze({
       ) : null}
       {cloze.attribution ? (
         <p className="lexicon-cloze-attribution">
-          <ChromeText k="practice.sentenceWith" />{' '}
+          <PracticeChromeLabel k="practice.sentenceWith" a1Bilingual={learnerLevel === 'A1'} />{' '}
           {cloze.attribution.sourceUrl ? (
             <a href={cloze.attribution.sourceUrl}>{cloze.attribution.source}</a>
           ) : (
@@ -3538,23 +3561,17 @@ function PracticeCloze({
           onChange={(event) => onInput(event.currentTarget.value)}
         />
         <button className="btn btn-accent" type="submit" disabled={answerLocked}>
-          <ChromeText k="practice.check" />
-          {showEnglishSubtitles ? (
-            <span className="btn-sub" lang="en">/ Check</span>
-          ) : null}
+          <PracticeChromeLabel k="practice.check" a1Bilingual={learnerLevel === 'A1'} />
         </button>
       </form>
       {optionErrors.length > 0 ? (
         <p className="lexicon-practice-warning">
-          <ChromeText k="practice.clozeOptionsFailed" />
-          {showEnglishSubtitles ? (
-            <span className="btn-sub" lang="en">/ Options for cloze failed validation.</span>
-          ) : null}
+          <PracticeChromeLabel k="practice.clozeOptionsFailed" a1Bilingual={learnerLevel === 'A1'} />
         </p>
       ) : (
         <>
           <div className="cz-or">
-            <ChromeText k="practice.orChoose" />
+            <PracticeChromeLabel k="practice.orChoose" a1Bilingual={learnerLevel === 'A1'} />
           </div>
           <ul className="lexicon-option-list lexicon-cloze-options cz-options">
           {cloze.options.map((option) => (
@@ -3592,10 +3609,7 @@ function PracticeCloze({
               aria-label={CHROME_STRINGS[chromeLocale]['practice.openInAtlasTab']}
               style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
             >
-              <ChromeText k="practice.openInAtlasArrow" />
-              {showEnglishSubtitles ? (
-                <span className="btn-sub" lang="en">/ Open in Atlas →</span>
-              ) : null}
+              <PracticeChromeLabel k="practice.openInAtlasArrow" a1Bilingual={learnerLevel === 'A1'} />
             </a>
           </div>
         </div>
