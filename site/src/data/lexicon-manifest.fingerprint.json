@@ -1,5 +1,5 @@
 {
-  "fingerprint": "4406cb72333c70b3d69ade0aa262dbfb9636809fe3956706bc166501e4cbe978",
+  "fingerprint": "addd0590e765169cf09eb9a1a5255176160ec1889693bcf8bbefcb0d1a7dec77",
   "inputs": {
     "lexicon_code": [
       {
@@ -20,7 +20,7 @@
       },
       {
         "path": "scripts/lexicon/atlas_intake_core.py",
-        "sha256": "ab5434ee60dc8c5fc4fe1f4d195c89cebb24451b28b0d268b3a20ffda68d4f8a"
+        "sha256": "beb487c52f85dd64949bb7718d88887dbcd254c80d921a6ebf9d86ec95aa5d21"
       },
       {
         "path": "scripts/lexicon/backfill_course_usage.py",
@@ -57,6 +57,14 @@
       {
         "path": "scripts/lexicon/content_lexicon_reconciler.py",
         "sha256": "b2f1b2cab47fe23d34590355ba0c5c67a008bbb4e773852ce37c65aaf3d09a39"
+      },
+      {
+        "path": "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
+        "sha256": "f5fd62e8e4a6aa02dd01d042368c874e56a992fa8e69366148c1cb184430920a"
+      },
+      {
+        "path": "scripts/lexicon/curated_textbook_jsonl_repromote.py",
+        "sha256": "982b29b9df1826b3de02fb35967ba80d587c633e308e497249f2e745c4abfcb0"
       },
       {
         "path": "scripts/lexicon/curriculum_atlas_intake.py",
@@ -203,6 +211,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 49
+    "lexicon_code_files": 51
   }
 }
