@@ -3,9 +3,9 @@ import type { PracticeStressItem } from '../lib/lexicon/srs';
 
 export interface PracticeStressProps {
   item: PracticeStressItem;
-  selectedNucleusIndex: number | null;
+  selectedPosition: number | null;
   answerLocked: boolean;
-  onSelect(nucleusIndex: number): void;
+  onSelect(position: number): void;
 }
 
 interface NucleusInfo {
@@ -15,7 +15,7 @@ interface NucleusInfo {
 
 export default function PracticeStress({
   item,
-  selectedNucleusIndex,
+  selectedPosition,
   answerLocked,
   onSelect,
 }: PracticeStressProps) {
@@ -31,7 +31,7 @@ export default function PracticeStress({
   }, [item.nuclei]);
 
   const codePoints = Array.from(item.unstressed);
-  const isCorrect = selectedNucleusIndex === item.stressIndex;
+  const isCorrect = selectedPosition === item.stressIndex;
 
   return (
     <div className="practice-stress" data-testid="practice-stress" data-locked={answerLocked}>
@@ -39,7 +39,7 @@ export default function PracticeStress({
         {codePoints.map((char, position) => {
           const nucleus = nucleusByPosition.get(position);
           if (nucleus) {
-            const selected = selectedNucleusIndex === nucleus.nucleusIndex;
+            const selected = selectedPosition === position;
             const verdictClass = answerLocked
               ? selected
                 ? isCorrect
@@ -56,7 +56,7 @@ export default function PracticeStress({
                 data-position={position}
                 disabled={answerLocked}
                 aria-pressed={selected}
-                onClick={() => onSelect(nucleus.nucleusIndex)}
+                onClick={() => onSelect(position)}
               >
                 {char}
               </button>
@@ -69,7 +69,7 @@ export default function PracticeStress({
           );
         })}
       </p>
-      {answerLocked && selectedNucleusIndex !== null ? (
+      {answerLocked && selectedPosition !== null ? (
         <p
           className={`practice-stress-verdict ${isCorrect ? 'correct' : 'wrong'}`}
           role="status"

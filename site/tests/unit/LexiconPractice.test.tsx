@@ -518,8 +518,8 @@ function stressDeck(): PracticeDeckData {
       unstressed: 'кава',
       stressIndex: 1,
       nuclei: [
-        { index: 0, label: 'а' },
         { index: 1, label: 'а' },
+        { index: 3, label: 'а' },
       ],
       source: 'fixture',
     }],
@@ -2774,7 +2774,9 @@ describe('LexiconPractice', () => {
         deck: stressDeck(),
         answer: async (user) => {
           const buttons = within(screen.getByTestId('practice-stress')).getAllByRole('button');
-          await user.click(buttons[1]!);
+          const target = buttons.find((button) => button.dataset.position === '1');
+          expect(target).toBeDefined();
+          await user.click(target!);
         },
       },
       {
@@ -2876,9 +2878,9 @@ describe('LexiconPractice', () => {
     }
 
     test.each([
-      { count: 2, word: 'кава', nuclei: [{ index: 0, label: 'а' }, { index: 2, label: 'а' }], stressIndex: 1 },
-      { count: 3, word: 'україна', nuclei: [{ index: 1, label: 'у' }, { index: 3, label: 'а' }, { index: 5, label: 'и' }], stressIndex: 2 },
-      { count: 5, word: 'автентифікація', nuclei: [{ index: 0, label: 'а' }, { index: 2, label: 'е' }, { index: 5, label: 'і' }, { index: 8, label: 'а' }, { index: 11, label: 'і' }], stressIndex: 3 },
+      { count: 2, word: 'кава', nuclei: [{ index: 0, label: 'а' }, { index: 2, label: 'а' }], stressIndex: 2 },
+      { count: 3, word: 'україна', nuclei: [{ index: 1, label: 'у' }, { index: 3, label: 'а' }, { index: 5, label: 'и' }], stressIndex: 5 },
+      { count: 5, word: 'автентифікація', nuclei: [{ index: 0, label: 'а' }, { index: 2, label: 'е' }, { index: 5, label: 'і' }, { index: 8, label: 'а' }, { index: 11, label: 'і' }], stressIndex: 8 },
     ])('renders $count vowel buttons preserving code-point positions', async ({ word, nuclei, stressIndex }) => {
       const user = userEvent.setup();
       render(<LexiconPractice initialDeck={stressDeckWithNuclei(word, nuclei, stressIndex)} autoStart initialMode="stress" />);
@@ -2886,7 +2888,9 @@ describe('LexiconPractice', () => {
       const buttons = within(screen.getByTestId('practice-stress')).getAllByRole('button');
       expect(buttons).toHaveLength(nuclei.length);
 
-      await user.click(buttons[stressIndex]!);
+      const target = buttons.find((button) => button.dataset.position === String(stressIndex));
+      expect(target).toBeDefined();
+      await user.click(target!);
 
       expect(screen.getByTestId('practice-stress-verdict')).toHaveTextContent('✓');
       expect(screen.queryByTestId('practice-form-rail')).not.toBeInTheDocument();
@@ -2898,7 +2902,7 @@ describe('LexiconPractice', () => {
         { index: 2, label: 'а' },
       ];
       const user = userEvent.setup();
-      render(<LexiconPractice initialDeck={stressDeckWithNuclei('кава', nuclei, 1)} autoStart initialMode="stress" />);
+      render(<LexiconPractice initialDeck={stressDeckWithNuclei('кава', nuclei, 2)} autoStart initialMode="stress" />);
 
       const buttons = within(screen.getByTestId('practice-stress')).getAllByRole('button');
       await user.click(buttons[0]!);
@@ -2931,7 +2935,7 @@ describe('LexiconPractice', () => {
         }
       } },
       { mode: 'choice', deck: sampleDeckWithOnlyMode('knyha', 'choice'), expectRail: false, action: async (user: ReturnType<typeof userEvent.setup>) => { await user.click(screen.getByRole('button', { name: /книга/ })); } },
-      { mode: 'stress', deck: stressDeck(), expectRail: false, action: async (user: ReturnType<typeof userEvent.setup>) => { const buttons = within(screen.getByTestId('practice-stress')).getAllByRole('button'); await user.click(buttons[1]!); } },
+      { mode: 'stress', deck: stressDeck(), expectRail: false, action: async (user: ReturnType<typeof userEvent.setup>) => { const buttons = within(screen.getByTestId('practice-stress')).getAllByRole('button'); const target = buttons.find((button) => button.dataset.position === '1'); expect(target).toBeDefined(); await user.click(target!); } },
       { mode: 'classify', deck: classifyDeck(), expectRail: false, action: async (user: ReturnType<typeof userEvent.setup>) => { await user.click(screen.getByRole('button', { name: /жіночий/ })); } },
       { mode: 'synonym', deck: synonymDeck(), expectRail: false, action: async (user: ReturnType<typeof userEvent.setup>) => { await user.click(screen.getByRole('button', { name: /кава/ })); } },
     ])('$mode: rail is $expectRail', async ({ mode, deck, expectRail, action }) => {
