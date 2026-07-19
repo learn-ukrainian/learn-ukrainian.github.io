@@ -91,13 +91,14 @@ finding, while incidental acronyms do not become extra source labels.
 
 The provider-facing v6 schema has explicit transport variants. Codex uses
 `semantic-schema --provider codex`, which stays inside OpenAI Structured Outputs
-limits and supported keywords. It binds the stable object shape, exhaustive
-statement keys, target paths, and valid line ranges without repeating hundreds
-of packet line numbers as enum values. The canonical packet-bound schema still
-revalidates the exact raw bytes before hydration and independently enforces
-eligible evidence lines, exact claim ownership, vocabulary source order, and
-source-resource sets. Any mismatch produces `INCOMPLETE`; transport
-compatibility never weakens the release gate.
+limits and supported keywords. The provider projection renders learner text
+once with inline statement, vocabulary-candidate, and resource IDs; returns a
+compact exhaustive statement partition; and omits model-authored aggregate
+counts. The immutable packet retains the full snapshots and inventories. The
+canonical finalizer validates the partition, derives counts, hydrates exact
+locations/vocabulary/source coverage, and independently enforces every local
+constraint. Any mismatch produces `INCOMPLETE`; transport compatibility never
+weakens the release gate.
 
 For every `FOUND` alignment class other than `VOCABULARY_INTEGRATION`, the
 audit evidence must include each owned finding's exact primary target-file
@@ -128,6 +129,13 @@ Protocol 6.0.7 closes the provider-compatibility gap exposed by BIO-371. The
 Codex schema generator rejects unsupported composition/property keywords and
 the documented OpenAI limits before inference, prunes unused definitions, and
 keeps packet-sized line and claim enumerations in the canonical local validator.
+
+Protocol 6.1.0 makes that transport scale across the curriculum. Provider
+prompts contain one lossless target-text surface instead of a duplicated
+statement inventory plus JSON line objects; statement coverage is two compact
+arrays; source/vocabulary records use packet-bound IDs; and the finalizer alone
+derives canonical claim counts. Deterministic budget tests cap the BIO-371
+prompt and schema before any paid inference.
 
 ## Bug-fix workflow
 

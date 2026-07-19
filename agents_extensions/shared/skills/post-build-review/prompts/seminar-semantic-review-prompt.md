@@ -1,6 +1,6 @@
 # Seminar semantic post-build review prompt
 
-Semantic prompt version: `6.0.7`
+Semantic prompt version: `6.1.0`
 
 Apply this only to FOLK, HIST, BIO, ISTORIO, LIT and subtracks, OES, or RUTH,
 after the common prompt.
@@ -11,10 +11,11 @@ Extract every checkable factual claim into `claim_ledger` as an atomic item:
 people, dates, places, events, works, categories, typologies, periods,
 etymologies, quotations,
 attributions, causal claims presented as fact, image/rights claims, and source
-claims. Verify every item. Derive total, checked, and supported counts from the
-ledger. Any unchecked item makes claim coverage incomplete.
+claims. Verify every item. The finalizer derives total, checked, supported, and
+coverage status from the ledger. Any unchecked item makes claim coverage
+incomplete.
 
-Start from the packet's complete statement inventory rather than deciding which
+Start from the complete ID-bound evidence surface rather than deciding which
 lines to notice. Classify every statement ID exactly once. Split multiple facts
 in one unit into separate claim IDs, and bind every claim back to the same unit.
 Universal and near-universal quantifiers such as **кожен**, **майже кожен**,
@@ -23,8 +24,8 @@ not merely evidence that the general topic occurred. An article discussing many
 letters does not support “every letter” or “almost every letter.”
 
 Classify every ledger item as supported, contradicted, imprecise, unattested,
-or unverifiable and give attributable evidence. Do not emit aggregate counts
-without the ledger that proves them. A contradicted teaching claim is a blocker. Confidently
+or unverifiable and give attributable evidence. Do not emit aggregate counts;
+the ledger itself must prove coverage. A contradicted teaching claim is a blocker. Confidently
 specific but unattested material is at least high and may be a blocker when a
 named source/person/event should be findable.
 
@@ -45,8 +46,8 @@ named source/person/event should be findable.
 - Distinguish source-backed exposition and necessary primary readings from
   authored padding. Quoted refrains are not repetition; repeated authorial
   framing, conclusions, transitions, or definitions without new evidence are.
-- Set `claim_coverage.status` to `complete` only when every extracted claim was
-  checked with attributable evidence.
+- Check every extracted claim with attributable evidence; the finalizer marks
+  coverage complete only when every ledger item was checked.
 - Build `learner_evidence_ledger` for every reading, listening, viewing, image,
   or interactive task. Exact auditory/visual timestamps, transcriptions,
   perceptual descriptions, and model answers require direct modality-capable

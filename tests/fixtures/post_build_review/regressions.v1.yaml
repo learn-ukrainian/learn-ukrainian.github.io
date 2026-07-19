@@ -1,4 +1,4 @@
-catalog_version: 6.0.8
+catalog_version: 6.1.0
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -543,3 +543,41 @@ regressions:
       before inference while the canonical packet-bound finalizer continues to
       reject ineligible lines, wrong claim ownership, and every relaxed
       transport-only constraint without repair.
+  - bug_id: provider-statement-map-scaled-with-lesson-length
+    responsible_layer: schema
+    fixed_in_version: 6.1.0
+    version_field: review_protocol_version
+    input: >-
+      A 526-statement BIO packet repeats learner text in its context and target
+      section while emitting one structured-output property per statement.
+    expected: >-
+      Render learner text once with inline IDs, emit a compact claim-bearing and
+      no-checkable-claim partition, keep the prompt below 120000 characters and
+      the Codex schema below 25000 bytes, and validate every ID locally.
+  - bug_id: provider-authored-claim-count-off-by-one
+    responsible_layer: orchestration
+    fixed_in_version: 6.1.0
+    version_field: review_protocol_version
+    input: >-
+      A reviewer returns 148 atomic claims but declares claims_total as 149.
+    expected: >-
+      Reject aggregate count fields at the provider schema and derive total,
+      checked, supported, and coverage status only from the validated ledger.
+  - bug_id: provider-resource-id-bound-to-nested-yaml-list
+    responsible_layer: schema
+    fixed_in_version: 6.1.0
+    version_field: review_protocol_version
+    input: >-
+      A resources entry contains a nested YAML list before the next root entry.
+    expected: >-
+      Bind R identifiers only to root resource entries so nested metadata cannot
+      shift or invalidate source-order resource identity.
+  - bug_id: provider-source-instruction-forced-to-claim
+    responsible_layer: semantic_prompt
+    fixed_in_version: 6.1.0
+    version_field: semantic_prompt_version
+    input: >-
+      A learner instruction names a source but makes no factual assertion.
+    expected: >-
+      Reserve the !source risk marker for speech-act-aware claim-bearing source
+      statements and permit the instruction's ID in the non-claim partition.

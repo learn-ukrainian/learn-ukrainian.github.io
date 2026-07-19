@@ -96,11 +96,11 @@ artifacts. Report findings; do not fix the module during this invocation.
    constrains cited evidence to target-file paths and valid one-based ranges,
    while the canonical packet-bound validator rejects short/ineligible lines,
    wrong claim ownership, and every other relaxed transport-only constraint
-   before hydration. The finalizer then hydrates the exact Unicode line from
-   the immutable packet. The v6 schema also requires all seven alignment
-   classes, every vocabulary lemma, every learner statement, and every detected
-   seminar source attribution, so omitted audit work fails closed instead of
-   disappearing. Keep
+   before hydration. The finalizer then hydrates the exact Unicode line,
+   vocabulary selection, source binding, statement coverage, and claim counts
+   from the immutable packet. The provider schema requires all seven alignment
+   classes and a compact exhaustive statement partition, so omitted audit work
+   fails closed without hundreds of statement-shaped schema properties. Keep
    provider envelopes and stderr separate. Schema enforcement is preferred over prompt-only JSON
    compliance; it does not authorize extracting an embedded object from an
    unconstrained prose response.
@@ -151,14 +151,18 @@ manually concatenate or substitute other review prompts.
 - Treat `alignment_audit` and `vocabulary_coverage` as required evidence
   ledgers. A prompt claim that a class was checked cannot replace the exact
   seven-class record or the source-order lemma enumeration.
-- Treat `statement_coverage` as an exact packet-bound ledger for both core and
-  seminar modules. Every statement ID must be classified; every claim must
-  belong to one unit and quote a contiguous substring of that unit; every
+- Treat the provider's `claim_bearing_statements` plus
+  `no_checkable_claim_statement_ids` as an exact partition that the finalizer
+  hydrates into canonical `statement_coverage` for both core and seminar
+  modules. Every statement ID must occur exactly once; every claim must belong
+  to one unit and quote a contiguous substring of that unit; every
   universal-quantifier unit must own a full-statement verbatim coverage claim,
-  so near-universal scope cannot be weakened to a bare quantifier.
-  For seminar modules, apply the same exactness to
-  `source_traceability_coverage`; an unmatched named source cannot be cleared
-  by a general quality impression.
+  so near-universal scope cannot be weakened to a bare quantifier. Aggregate
+  claim counts are finalizer-derived and never provider-authored.
+  For seminar modules, apply the same exactness to the canonical
+  `source_traceability_coverage` that the finalizer derives from packet-bound
+  source expectations; an unmatched named source cannot be cleared by a
+  general quality impression.
 - Never infer audio, video, image, text, or interactive content from metadata.
   If the reviewer cannot inspect evidence required by a learner task, record it
   as `reviewer_unverified` and return `INCOMPLETE`.
