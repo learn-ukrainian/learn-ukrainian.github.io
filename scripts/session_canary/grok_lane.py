@@ -42,7 +42,6 @@ import json
 import re
 import subprocess
 import sys
-import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
