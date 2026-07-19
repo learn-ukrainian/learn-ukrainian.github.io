@@ -1153,7 +1153,7 @@ function LexiconPracticeIsland({
   const [clozeAttemptRecorded, setClozeAttemptRecorded] = useState(false);
   const [heritageFeedback, setHeritageFeedback] = useState<HeritageFeedback | null>(null);
   const [paronymFeedback, setParonymFeedback] = useState<ParonymFeedback | null>(null);
-  const [stressSelectedIndex, setStressSelectedIndex] = useState<number | null>(null);
+  const [stressSelectedPosition, setStressSelectedPosition] = useState<number | null>(null);
   const [paradigmSelectedLabel, setParadigmSelectedLabel] = useState<string | null>(null);
   const [paronymSelectedLabel, setParonymSelectedLabel] = useState<string | null>(null);
   const [heritageSelectedLabel, setHeritageSelectedLabel] = useState<string | null>(null);
@@ -1215,7 +1215,7 @@ function LexiconPracticeIsland({
     setClozeAttemptRecorded(false);
     setHeritageFeedback(null);
     setParonymFeedback(null);
-    setStressSelectedIndex(null);
+    setStressSelectedPosition(null);
     setParadigmSelectedLabel(null);
     setParonymSelectedLabel(null);
     setHeritageSelectedLabel(null);
@@ -2253,10 +2253,10 @@ function LexiconPracticeIsland({
     completeSelection(selection, outcome);
   }
 
-  function handleStressSelect(nucleusIndex: number) {
+  function handleStressSelect(position: number) {
     if (!selection?.stress || answerLocked) return;
-    setStressSelectedIndex(nucleusIndex);
-    const correct = nucleusIndex === selection.stress.stressIndex;
+    setStressSelectedPosition(position);
+    const correct = position === selection.stress.stressIndex;
     const rating = correct ? 'good' : 'again';
     const outcome = recordReview(selection, rating);
     setFeedback({
@@ -2853,7 +2853,7 @@ function LexiconPracticeIsland({
                     clozeFeedback={clozeFeedback}
                     heritageFeedback={heritageFeedback}
                     paronymFeedback={paronymFeedback}
-                    stressSelectedIndex={stressSelectedIndex}
+                    stressSelectedPosition={stressSelectedPosition}
                     paradigmSelectedLabel={paradigmSelectedLabel}
                     paronymSelectedLabel={paronymSelectedLabel}
                     heritageSelectedLabel={heritageSelectedLabel}
@@ -2930,7 +2930,7 @@ function PracticeItem({
   clozeFeedback,
   heritageFeedback,
   paronymFeedback,
-  stressSelectedIndex,
+  stressSelectedPosition,
   paradigmSelectedLabel,
   paronymSelectedLabel,
   heritageSelectedLabel,
@@ -2954,14 +2954,14 @@ function PracticeItem({
   clozeFeedback: ClozeFeedback | null;
   heritageFeedback: HeritageFeedback | null;
   paronymFeedback: ParonymFeedback | null;
-  stressSelectedIndex: number | null;
+  stressSelectedPosition: number | null;
   paradigmSelectedLabel: string | null;
   paronymSelectedLabel: string | null;
   heritageSelectedLabel: string | null;
   onClozeInput(value: string): void;
   onFlashcardRating(rating: PracticeRating): void;
   onChoice(option: ChoiceOption): void;
-  onStressSelect(nucleusIndex: number): void;
+  onStressSelect(position: number): void;
   onMatchingComplete(): void;
   onMatchingMatch?: (pairIndex: number, rating: PracticeRating) => void;
   onClozeSubmit(value: string, source: 'typed' | 'chip'): void;
@@ -3025,7 +3025,7 @@ function PracticeItem({
         ) : null}
         <PracticeStress
           item={selection.stress}
-          selectedNucleusIndex={stressSelectedIndex}
+          selectedPosition={stressSelectedPosition}
           answerLocked={answerLocked}
           onSelect={onStressSelect}
         />

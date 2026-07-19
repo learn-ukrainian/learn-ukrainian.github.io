@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 873dd59bced1611f97b1f07c5a217aa3485ca35c41c6f5a47c7fd4d53e4e94df
+  components_sha256: 18a580420d00ecb1e5a68065d3a0a742e5597d92edad27be7484619f3ee3d448
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1795,9 +1795,9 @@ components:
         type: PracticeStressItem
         description: item prop.
         ukrainian_text: 'false'
-      - name: selectedNucleusIndex
+      - name: selectedPosition
         type: number | null
-        description: selectedNucleusIndex prop.
+        description: selectedPosition prop.
         ukrainian_text: 'false'
       - name: answerLocked
         type: boolean
@@ -1807,7 +1807,7 @@ components:
     nested_types: {}
     example:
       item: <PracticeStressItem>
-      selectedNucleusIndex: <number | null>
+      selectedPosition: <number | null>
       answerLocked: false
     deprecated: false
     deprecation_reason: null
