@@ -328,16 +328,17 @@ entries:
       active: true
       reason: >-
         The second terminal batch review found unsupported source attributions,
-        contradicted chronology, image-rights proof gaps, and teleological
-        framing.
+        contradicted chronology, reading-rights (strict-v2) proof gaps for the
+        Махновець translation, and teleological framing.
       owner: bio-preparation-controller
       checked_evidence:
         - Immutable packet manifest 474c1e2027c2625070ebcd66bb9fc5b40db1fb56771742b2bff1666827786fe8.
         - GPT-5.6 Terra result fdb017a26d3f17be2a9cf0162b52da34ba6fe153fb57b7e70272b01222617388.
       unblock_condition: >-
         A complete claim-audit receipt must bind every chronology and
-        attribution to an adopted locator and prove an allowed image
-        disposition before a new five-module immutable review.
+        attribution to an adopted locator and provide verifiable rights
+        evidence for the adopted Ізборник S2 page before a new five-module
+        immutable review.
   kniaz-sviatoslav:
     hold:
       status: pass
