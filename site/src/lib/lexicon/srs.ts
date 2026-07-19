@@ -16,7 +16,15 @@ export const SRS_BACKUP_KEY = 'lu-lexicon-srs.backup';
 export const PRACTICE_NEW_CARDS_KEY = 'lu-practice-newcards';
 export const PRACTICE_SESSION_STORAGE_KEY = 'lu-practice-session';
 export const DAILY_PRACTICE_DECK_KEY = 'lu-daily-practice-deck';
-export const DAILY_PRACTICE_DECK_SIZE = 20;
+/**
+ * Daily practice set size (owner #5502).
+ *
+ * Prefer 10 / 12 / 15 for viewport density; **12** first: enough for a
+ * meaningful day, still keeps the collapsed daily list + primary Start CTA
+ * usable without buried scroll at 1366×768 and common phone widths. localStorage
+ * snapshot shape is unchanged (same key/version; only the item cap changes).
+ */
+export const DAILY_PRACTICE_DECK_SIZE = 12;
 export const DEFAULT_NEW_PER_SESSION = 8;
 export const DEFAULT_NEW_PER_DAY = 20;
 export const SESSION_CLOSURE_EXTENSION_MAX = 5;

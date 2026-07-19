@@ -22,11 +22,12 @@ The following requirements are non-negotiable across all chunks:
   reordering, or filler row.
 - The primary start/resume CTA is visible without scrolling at `1366x768` in
   both Ukrainian and English chrome. Section 8 defines the two owner HARD tests.
-- The daily set contains 20 unique lemmas. Its rows are ordered pending due,
-  pending new, then completed. Completed rows remain visible at full opacity with
-  a green finished tint; their why-line uses a neutral readable token. State is always three
-  channel: boxed glyph (`✦`, `↻`, `✓`), localized text, and the accepted
-  yellow-dark/blue/green semantic color.
+- The daily set contains **12** unique lemmas (`DAILY_PRACTICE_DECK_SIZE`, owner
+  #5502 — try 12 first among 10/12/15 for viewport density). Its rows are ordered
+  pending due, pending new, then completed. Completed rows remain visible at full
+  opacity with a green finished tint; their why-line uses a neutral readable
+  token. State is always three channel: boxed glyph (`✦`, `↻`, `✓`), localized
+  text, and the accepted yellow-dark/blue/green semantic color.
 - The words disclosure is a native `<details>` element, closed on initial setup
   render. Its summary is at least 48 CSS pixels high and exposes the real open
   state through `aria-expanded`.
@@ -82,23 +83,24 @@ are source observations, not proposed names.
 | Locale and theme | `site/src/layouts/CourseLayout.astro` pre-paints `lu-theme` and `lu-chrome-locale` and defines exclusive `.lu-i18n`/`.lu-i18n-block` rendering. `ChromeText` and `ChromeDual` are exported by `site/src/lib/i18n/ChromeText.tsx`. Theme color tokens, including teal, orange, purple, and yellow families in both themes, are in `site/src/styles/course.css`. |
 | Summary | `site/src/components/PracticeSessionSummary.tsx` already accepts counts, streak, a next-due label, deferred lemmas, and start/back actions. It does not yet render the accepted score ratio and closing proverb. |
 | Atlas route | `site/src/pages/lexicon/[lemma].astro` is the lexicon detail route. Existing practice links in `site/src/components/LexiconPractice.tsx` already target `/lexicon/<lemmaId>/`. |
-| Separate daily pool | `site/src/lexicon/DailyWords.astro` and `site/src/lib/lexicon/daily.ts` power a separate date-seeded Atlas daily selection from `/lexicon/daily-pool.json`. That random pool is not the source of the practice 20. |
+| Separate daily pool | `site/src/lexicon/DailyWords.astro` and `site/src/lib/lexicon/daily.ts` power a separate date-seeded Atlas daily selection from `/lexicon/daily-pool.json`. That random pool is not the source of the practice daily set. |
 | Existing tests | Practice coverage lives in `site/tests/unit/LexiconPractice.test.tsx`, `site/tests/unit/lexicon-srs.test.ts`, `site/tests/unit/weak-areas.test.ts`, `site/tests/unit/k3-chrome-locale.test.ts`, and `site/e2e/atlas-practice.spec.ts`. |
 
 ## 3. Daily-set and SRS data contract
 
-### 3.1 Source of the 20 words
+### 3.1 Source of the daily words
 
-The practice 20 are selected from the existing generated practice-index shards,
-not from `/lexicon/daily-pool.json`. The eligible pool is the chosen learner
-level plus every published lower level, matching the cumulative behavior already
+The practice daily set (`DAILY_PRACTICE_DECK_SIZE`, currently **12** per #5502)
+is selected from the existing generated practice-index shards, not from
+`/lexicon/daily-pool.json`. The eligible pool is the chosen learner level plus
+every published lower level, matching the cumulative behavior already
 implemented by `levelsUpTo`, `mergeDecks`, and `ensureDeck` in
 `site/src/components/LexiconPractice.tsx`. C2 remains “soon” because
 `PUBLISHED_PRACTICE_LEVELS` in `site/src/lib/lexicon/srs.ts` ends at C1.
 
 The setup path loads all eligible `practice-index.<level>.json` shards before it
-materializes the daily snapshot. It does not need drill shards. After the 20 IDs
-are known, fetch the `practice-lexemes.<level>.json` core only for levels
+materializes the daily snapshot. It does not need drill shards. After the daily
+IDs are known, fetch the `practice-lexemes.<level>.json` core only for levels
 represented in that set so the dashboard has verified lemma, gloss, part of
 speech, and paradigm data. Preserve the current progressive loading behavior for
 the active exercise's drill shards in `site/src/components/LexiconPractice.tsx`.
@@ -113,9 +115,10 @@ Selection is deterministic for the local date, learner level, and deck version:
 3. A lemma is new when every supported card is absent or satisfies
    `isPracticeNewCard`. Sort new lemmas by CEFR, `newOrder`, and `lemmaId`.
 4. Take unique due lemmas first and then unique new lemmas until the set reaches
-   20. If a synthetic/test deck contains fewer than 20 eligible unique lemmas,
-   use the full eligible set and expose that actual denominator; production
-   acceptance fixtures must contain at least 20.
+   `DAILY_PRACTICE_DECK_SIZE` (12). If a synthetic/test deck contains fewer than
+   that many eligible unique lemmas, use the full eligible set and expose that
+   actual denominator; production acceptance fixtures must contain at least the
+   configured size.
 5. A reviewed-but-not-due lemma that is neither due nor new does not displace a
    due or new candidate. Never use randomness to refill the set.
 
@@ -229,10 +232,10 @@ lemma and form both link through the Atlas scheme in section 3.4.
 | --- | --- | --- |
 | `site/src/lib/lexicon/srs.ts` | CHANGE | Own the versioned daily-snapshot types, storage key, deterministic selection, validation, refill, and row-state derivation. |
 | `site/src/lib/i18n/chrome.ts` | CHANGE | Add typed `practice.*` keys for static redesigned interface copy; preserve the existing English-key/Ukrainian-record compile-time parity contract. Dynamic numeric phrases use `ChromeDual` rather than dictionary keys. |
-| `site/src/components/PracticeDailyDeck.tsx` | **NEW** | Render the 3D daily-card preview and the collapsed 20-row `<details>` disclosure, row markers, counters, Atlas links, voice slot, and open-state accessibility. It receives data; it does not select the set. |
+| `site/src/components/PracticeDailyDeck.tsx` | **NEW** | Render the 3D daily-card preview and the collapsed daily-row `<details>` disclosure, row markers, counters, Atlas links, voice slot, and open-state accessibility. It receives data; it does not select the set. |
 | `site/src/components/PracticeFormRail.tsx` | **NEW** | Render the generalized source-to-actual-form rail and its idle/correct/wrong/calque verdict states for cloze, paradigm, paronym, and heritage only. |
 | `site/src/components/PracticeStress.tsx` | **NEW** | Render arbitrary-length stress choices by iterating the generated `nuclei` positions. It owns no two-vowel special case. |
-| `site/src/components/LexiconPractice.tsx` | CHANGE | Materialize/load the daily set; render the accepted setup dashboard; constrain sessions to the 20 IDs; coordinate mode detail, focus cue, result dwell, explicit next, form rail, level changes, and summary data. |
+| `site/src/components/LexiconPractice.tsx` | CHANGE | Materialize/load the daily set; render the accepted setup dashboard; constrain sessions to the daily IDs; coordinate mode detail, focus cue, result dwell, explicit next, form rail, level changes, and summary data. |
 | `site/src/components/PracticeFlashcard.tsx` | CHANGE | Keep the real `.flashcard`; add a locked rated state and explicit parent-controlled completion. Prevent flip/rating keyboard handlers after lock. |
 | `site/src/components/PracticeSessionSummary.tsx` | CHANGE | Add the accepted completed/total ratio and closing proverb while retaining next-due formatting and existing actions. |
 | `site/src/components/MatchUp.tsx` | CHANGE | Add the documented optional practice-only pair-coding prop to the lesson-schema shim. |
@@ -249,7 +252,7 @@ chunks.
 
 ### Chunk 1 — Daily-set domain and copy inventory
 
-**Goal:** introduce the deterministic 20-lemma contract without changing the
+**Goal:** introduce the deterministic daily-lemma contract without changing the
 current UI.
 
 **Files**
@@ -276,7 +279,7 @@ current UI.
 
 **Acceptance**
 
-- Exactly 20 unique lemmas are selected from a fixture containing enough data;
+- Exactly `DAILY_PRACTICE_DECK_SIZE` (12) unique lemmas are selected from a fixture containing enough data;
   due precedes new, and all deterministic tie-breakers are covered.
 - Multiple due modes for one lemma consume one slot.
 - A valid snapshot is stable after SRS mutations and page reload.
@@ -718,7 +721,7 @@ explicitly approved learning content.
 
 ### HARD-1 — English first viewport
 
-In `site/e2e/atlas-practice.spec.ts`, set a deterministic 20-item fixture and a
+In `site/e2e/atlas-practice.spec.ts`, set a deterministic daily-size fixture and a
 resumable Mixed session, select English chrome and a desktop light theme, set the
 viewport to exactly `1366x768`, open `/words-of-the-day/practice/`, wait for the
 idle dashboard to settle, and make **no scroll call**. Assert:
@@ -743,7 +746,7 @@ mockup, but it does not replace either `1366x768` HARD test.
 | Gate | Required proof |
 | --- | --- |
 | Frozen layout | Centered single-column DOM/focus order; page-growing disclosure; HARD-1 and HARD-2. |
-| Daily 20 | Unique persisted IDs, due/new source counts, stable done state/order, actual denominator for undersized fixtures. |
+| Daily set | Unique persisted IDs, due/new source counts, stable done state/order, actual denominator for undersized fixtures. Size = `DAILY_PRACTICE_DECK_SIZE` (12, #5502). |
 | All modes | Exactly the 11 `MODE_CARD_ORDER` modes, compact titles/steps, one shared focus/hover detail line, no icons. |
 | Real flashcard | Canonical `.flashcard` DOM/CSS, card flip, disabled pre-flip ratings, locked rated state, explicit next. |
 | Honest feedback | Actual submitted value, distinct wrong/calque, relevant four-mode form rail only, heritage labeling touch. |

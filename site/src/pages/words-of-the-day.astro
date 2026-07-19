@@ -26,6 +26,7 @@ const frontmatter = {
       </a>
     </section>
 
+    {/* Atlas daily pool count aligns with practice density (#5502): 12 first. */}
     <DailyWords
       title="Добірка на сьогодні"
       description="Слова оновлюються за календарною датою; кожна картка веде до повної статті Атласу."
@@ -39,12 +40,12 @@ const frontmatter = {
   .words-day-page {
     max-width: 1120px;
     margin: 0 auto;
-    padding: 3.5rem 1.5rem 4.5rem;
+    padding: 2rem 1.5rem 3.5rem;
   }
 
   .words-day-hero {
     max-width: 820px;
-    margin-bottom: 2rem;
+    margin-bottom: 1.35rem;
   }
 
   .words-day-badge {
@@ -62,40 +63,61 @@ const frontmatter = {
   }
 
   .words-day-hero h1 {
-    margin: 0.7rem 0 0;
+    margin: 0.55rem 0 0;
     color: var(--lu-text);
-    font-size: clamp(2.3rem, 4vw, 4rem);
+    font-size: clamp(2rem, 4vw, 3.4rem);
     line-height: 1;
   }
 
   .words-day-hero p {
     max-width: 680px;
-    margin: 1rem 0 0;
+    margin: 0.75rem 0 0;
     color: var(--lu-text-muted);
-    font-size: 1.05rem;
-    line-height: 1.65;
+    font-size: 1.02rem;
+    line-height: 1.55;
   }
 
   /* `.word-atlas.words-day-page` (0,3,0) beats the global `.lu-content .word-atlas a`
-     (0,2,1) link color so the CTA text stays white on the primary fill. */
+     (0,2,1) link color so the CTA text stays dark on the gold accent fill. */
   .word-atlas.words-day-page .words-day-practice-cta {
     display: inline-flex;
     align-items: center;
-    min-height: 2.75rem;
-    margin-top: 1.5rem;
-    padding: 0 1.1rem;
+    justify-content: center;
+    gap: 0.35rem;
+    min-height: 3rem;
+    margin-top: 1.1rem;
+    padding: 0 1.25rem;
     border: 1px solid var(--lu-accent);
-    border-radius: 8px;
+    border-radius: 12px;
     background: var(--lu-accent);
     color: var(--lu-on-accent);
+    font-size: 1.02rem;
     font-weight: 900;
+    letter-spacing: 0.01em;
     text-decoration: none;
+    box-shadow:
+      0 1px 0 color-mix(in srgb, #fff 35%, transparent) inset,
+      0 4px 14px color-mix(in srgb, var(--lu-accent) 45%, transparent);
   }
 
   .words-day-practice-cta:hover,
   .words-day-practice-cta:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px var(--lu-state-active);
+    filter: brightness(1.04);
+    box-shadow:
+      0 0 0 3px var(--lu-state-active),
+      0 6px 18px color-mix(in srgb, var(--lu-accent) 55%, transparent);
+  }
+
+  @media (max-width: 760px) {
+    .words-day-page {
+      padding: 1.25rem 1rem 2.75rem;
+    }
+
+    .word-atlas.words-day-page .words-day-practice-cta {
+      width: 100%;
+      min-height: 3.1rem;
+    }
   }
 
   :global(.words-day-page .lexicon-daily-section) {
