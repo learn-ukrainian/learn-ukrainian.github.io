@@ -180,6 +180,22 @@ effort override is passed, then builds a review prompt from either
 Use it for blocking logic/security/test review, not for stylistic
 preferences. Prefer `review-pr` for ordinary formal CF review.
 
+### Worktree cleanup (post-merge painpoint)
+
+After a PR merges, do **not** leave dispatch worktrees forever:
+
+```bash
+# Safe default (dry-run):
+.venv/bin/python scripts/orchestration/reap_worktrees.py
+
+# Recommended post-merge cleanup (MERGED/CLOSED + dirty auto preserve-then-reap):
+.venv/bin/python scripts/orchestration/reap_worktrees.py --apply --merged
+```
+
+`--merged` enables `--safe-only`, auto preserve-then-reap for dirty MERGED/CLOSED
+trees, and branch prune. Open PRs are never reaped just because HEAD matches
+`origin/<branch>`.
+
 ### Hermes / DeepSeek isolation (Sol #213 class)
 
 `ask-hermes` is tool-capable. It **must not** inherit the operator primary

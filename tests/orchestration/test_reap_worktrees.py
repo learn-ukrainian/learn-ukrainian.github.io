@@ -122,10 +122,11 @@ def test_merged_clean_removes_worktree_and_keeps_branch(
     assert_main_checkout_unchanged(repo)
 
 
-def test_merged_dirty_is_preserved_by_default(
+def test_merged_dirty_auto_preserve_then_reaps(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """MERGED dirty trees auto preserve-then-reap (operator cleanup painpoint)."""
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/dirty")
     (worktree / "dirty.txt").write_text("not committed\n", encoding="utf-8")
@@ -134,10 +135,9 @@ def test_merged_dirty_is_preserved_by_default(
     results = rw.reap_worktrees(repo_root=repo, apply=True)
 
     result = result_for(results, worktree)
-    assert result.action == "skipped"
-    assert "dirty; qualifies for reap because PR #13 MERGED" in result.reason
-    assert worktree.exists()
-    assert git(worktree, "status", "--porcelain")
+    assert result.action == "preserved_then_removed"
+    assert "PR #13 MERGED" in (result.reason or "")
+    assert not worktree.exists()
     assert_main_checkout_unchanged(repo)
 
 
@@ -453,3 +453,40 @@ def test_squash_merge_branch_force_delete(
         text=True,
     )
     assert "codex/squash-merged" not in proc.stdout
+
+
+def test_open_pr_matching_origin_is_not_reaped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Open PR worktrees often match origin/<branch>; must stay mounted."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/open-pr")
+    (worktree / "wip.txt").write_text("wip\n", encoding="utf-8")
+    git(worktree, "add", "wip.txt")
+    git(worktree, "commit", "-m", "wip")
+    git(worktree, "push", "-u", "origin", "codex/open-pr")
+    patch_gh(
+        monkeypatch,
+        {"codex/open-pr": [{"number": 99, "state": "OPEN"}]},
+    )
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True)
+
+    result = result_for(results, worktree)
+    assert result.action == "skipped"
+    assert "no reap condition matched" in (result.reason or "")
+    assert worktree.exists()
+    assert_main_checkout_unchanged(repo)
+
+
+def test_merged_flag_enables_safe_preserve_prune(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/merged-flag")
+    patch_gh(
+        monkeypatch,
+        {"codex/merged-flag": [{"number": 7, "state": "MERGED"}]},
+    )
+    rc = rw.main(["--repo-root", str(repo), "--apply", "--merged"])
+    assert rc == 0
+    assert not worktree.exists()
