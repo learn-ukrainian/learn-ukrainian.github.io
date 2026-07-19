@@ -17,10 +17,19 @@ import { articleProps } from "../helpers/word-atlas-record";
 type AstroComponent = Parameters<AstroContainer["renderToString"]>[0];
 
 const ETY_HANDLER_MARKERS = [
+  // The inline script must exist and be wired to click on etymology stages.
+  "<script",
+  "addEventListener('click'",
+  // Root scope + selector contract.
+  "[data-word-atlas]",
   "[data-ety-note]",
   "[data-ety-note-output]",
-  "data-ety-note",
+  // Output-target traversal contract.
+  "closest('.atlas-section')",
+  // Active-state + content swap contract.
   "classList.remove('active')",
+  "classList.add('active')",
+  "dataset.etyNote",
 ] as const;
 
 const stubRecord = articleProps({
