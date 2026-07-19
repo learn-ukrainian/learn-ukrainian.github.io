@@ -1,9 +1,18 @@
+---
 schema_version: 1
-description: "Curated paronym pairs for the §9.9 confusable-pair drill (#4506). 7 driver-adjudicated pairs: 6 seeds from module contrast_pair activities + вистава//виставка from the #4884 textbook-vein worksheet (Заболотний-10 §7). Frames authored fresh for morpho congruency (anti-gaming §5) and both-direction balance. Learner-facing text Ukrainian only. distinction_gloss_uk natural Ukrainian. Citations trace to adjudication and source module seeds. Fail-closed: curated only, no pool mining."
+description: >-
+  Curated paronym pairs for the §9.9 confusable-pair drill (#4506). 20 driver-adjudicated pairs:
+  6 seeds from module contrast_pair activities, вистава//виставка from the #4884 textbook-vein
+  worksheet (Заболотний-10 §7), and 13 public-Atlas-confirmed worksheet candidates. Frames are
+  authored fresh for morpho congruency (anti-gaming §5) and both-direction balance. Learner-facing
+  text is Ukrainian only. distinction_gloss_uk is natural Ukrainian. Citations trace to adjudication
+  and source module seeds. Fail-closed: curated only, no pool mining.
 pairs:
 - slugA: адресант
   slugB: адресат
-  distinction_gloss_uk: "Адресант — той, хто надсилає кореспонденцію чи документ; адресат — той, кому її адресовано і хто її отримує."
+  distinction_gloss_uk: >-
+    Адресант — той, хто надсилає кореспонденцію чи документ; адресат — той, кому її адресовано і
+    хто її отримує.
   citations:
   - "driver-adjudicated contrast_pair seeds from modules (#4506, 2026-07-06)"
   - "§9.9 PRACTICE-HUB-SPEC"
@@ -20,7 +29,9 @@ pairs:
     origin: authored-grok-build-2026-07-07
 - slugA: біліти
   slugB: білити
-  distinction_gloss_uk: "Біліти — ставати білим (самостійно, з часом); білити — робити щось білим (фарбувати, вибілювати)."
+  distinction_gloss_uk: >-
+    Біліти — ставати білим (самостійно, з часом); білити — робити щось білим (фарбувати,
+    вибілювати).
   citations:
   - "driver-adjudicated contrast_pair seeds from modules (#4506, 2026-07-06)"
   - "§9.9 PRACTICE-HUB-SPEC"
@@ -30,14 +41,17 @@ pairs:
   - sentence_with_slot: "Стіна ___ від часу й сонця."
     answer_form: "біліє"
     confusable_form: "білить"
-    origin: authored-grok-build-2026-07-07  # curator fix: singular subject — plural стіни excluded білить by agreement alone (gameable)
+    # Singular subject prevents agreement from excluding the confusable form.
+    origin: authored-grok-build-2026-07-07
   - sentence_with_slot: "Маляр ___ стіни новою фарбою."
     answer_form: "білить"
     confusable_form: "біліє"
     origin: authored-grok-build-2026-07-07
 - slugA: недооцінити
   slugB: переоцінити
-  distinction_gloss_uk: "Недооцінити — приписати меншу вартість чи здатність, ніж є насправді; переоцінити — приписати більшу, ніж є."
+  distinction_gloss_uk: >-
+    Недооцінити — приписати меншу вартість чи здатність, ніж є насправді; переоцінити —
+    приписати більшу, ніж є.
   citations:
   - "driver-adjudicated contrast_pair seeds from modules (#4506, 2026-07-06)"
   - "§9.9 PRACTICE-HUB-SPEC"
@@ -54,7 +68,9 @@ pairs:
     origin: authored-grok-build-2026-07-07
 - slugA: бігти
   slugB: бігати
-  distinction_gloss_uk: "Бігти — рухатися швидко в одному напрямку (конкретна дія); бігати — займатися бігом регулярно, у різних напрямках або для вправи."
+  distinction_gloss_uk: >-
+    Бігти — рухатися швидко в одному напрямку (конкретна дія); бігати — займатися бігом регулярно,
+    у різних напрямках або для вправи.
   citations:
   - "driver-adjudicated contrast_pair seeds from modules (#4506, 2026-07-06)"
   - "§9.9 PRACTICE-HUB-SPEC"
@@ -71,7 +87,9 @@ pairs:
     origin: authored-grok-build-2026-07-07
 - slugA: нести
   slugB: носити
-  distinction_gloss_uk: "Нести — переміщати щось у конкретному напрямку зараз; носити — регулярно переносити, тримати при собі або вдягати."
+  distinction_gloss_uk: >-
+    Нести — переміщати щось у конкретному напрямку зараз; носити — регулярно переносити, тримати
+    при собі або вдягати.
   citations:
   - "driver-adjudicated contrast_pair seeds from modules (#4506, 2026-07-06)"
   - "§9.9 PRACTICE-HUB-SPEC"
@@ -88,7 +106,9 @@ pairs:
     origin: authored-grok-build-2026-07-07
 - slugA: підпис
   slugB: підписання
-  distinction_gloss_uk: "Підпис — власноручний знак під документом; підписання — процес або акт скріплення документа підписом."
+  distinction_gloss_uk: >-
+    Підпис — власноручний знак під документом; підписання — процес або акт скріплення документа
+    підписом.
   citations:
   - "driver-adjudicated contrast_pair seeds from modules (#4506, 2026-07-06)"
   - "§9.9 PRACTICE-HUB-SPEC"
@@ -98,20 +118,30 @@ pairs:
   - sentence_with_slot: "Він поставив ___ під договором."
     answer_form: "підпис"
     confusable_form: "підписання"
-    origin: authored-grok-build-2026-07-07  # curator fix: dropped «свій» — masc agreement excluded neuter підписання by grammar alone
+    # No possessive modifier: it would reveal the answer through gender agreement.
+    origin: authored-grok-build-2026-07-07
   - sentence_with_slot: "___ угоди заплановано на наступний тиждень."
     answer_form: "Підписання"
     confusable_form: "Підпис"
-    origin: authored-grok-build-2026-07-07  # curator fix: impersonal заплановано — «відбулося» (neuter) excluded masc підпис by agreement alone
+    # Impersonal predicate keeps both options morphosyntactically possible.
+    origin: authored-grok-build-2026-07-07
 - slugA: вистава
   slugB: виставка
-  distinction_gloss_uk: "Вистава — театральне видовище, яке глядачі дивляться в театрі; виставка — показ предметів (картин, книжок), які люди оглядають."
+  distinction_gloss_uk: >-
+    Вистава — театральне видовище, яке глядачі дивляться в театрі; виставка — показ предметів
+    (картин, книжок), які люди оглядають.
   citations:
-  - "textbook: 10-klas-ukrmova-zabolotnyi-2018 §7 Пароніми — «вистава (спектакль) – виставка (показ картин, книжок, квітів тощо)» (chunk s0043)"
-  - "driver-adjudicated from worksheet #4884 (#4506, 2026-07-10); cross-family verified grok-build review-4883-4884-r2 (congruency + VESUM)"
+  - >-
+    textbook: 10-klas-ukrmova-zabolotnyi-2018 §7 Пароніми — «вистава (спектакль) – виставка
+    (показ картин, книжок, квітів тощо)» (chunk s0043)
+  - >-
+    driver-adjudicated from worksheet #4884 (#4506, 2026-07-10); cross-family verified grok-build
+    review-4883-4884-r2 (congruency + VESUM)
   - "§9.9 PRACTICE-HUB-SPEC"
   curator: claude-driver-2026-07-10
-  notes: "both approved public articles (gate verified 2026-07-10); acc.sg and nom.sg congruent frames; forms VESUM-verified independently by worker and driver"
+  notes: >-
+    both approved public articles (gate verified 2026-07-10); acc.sg and nom.sg congruent frames;
+    forms VESUM-verified independently by worker and driver
   frames:
   - sentence_with_slot: "Актори показали глядачам нову ___ на сцені театру."
     answer_form: "виставу"
@@ -121,3 +151,228 @@ pairs:
     answer_form: "виставка"
     confusable_form: "вистава"
     origin: authored-claude-2026-07-10
+- slugA: військовий
+  slugB: воєнний
+  distinction_gloss_uk: "Військовий стосується війська або армії; воєнний стосується війни."
+  citations:
+  - "worksheet: 10-klas-ukrmova-zabolotnyi-2018_s0259 — військовий лікар; воєнний час"
+  - "paronym_candidates_ukrmova.json — військовий/воєнний"
+  curator: codex-4506-2026-07-19
+  notes: "public Atlas url_slugs confirmed; adjective frames keep both options morphosyntactically possible"
+  frames:
+  - sentence_with_slot: "___ лікар оглянув пораненого."
+    answer_form: "Військовий"
+    confusable_form: "Воєнний"
+    origin: authored-codex-4506-2026-07-19
+  - sentence_with_slot: "___ стан тривав кілька місяців."
+    answer_form: "Воєнний"
+    confusable_form: "Військовий"
+    origin: authored-codex-4506-2026-07-19
+- slugA: дружний
+  slugB: дружній
+  distinction_gloss_uk: "Дружний означає злагоджений, спільний; дружній — приязний і доброзичливий."
+  citations:
+  - "worksheet: 10-klas-ukrmova-zabolotnyi-2018_s0259 — дружний, злагоджений, спільний"
+  - "worksheet: 5-klas-ukrmova-litvinova-2022_s0049 — дружний/дружній"
+  curator: codex-4506-2026-07-19
+  notes: "public Atlas url_slugs confirmed; distinct cohesive-action and friendly-attitude contexts"
+  frames:
+  - sentence_with_slot: "Учасники працювали ___ гуртом."
+    answer_form: "дружним"
+    confusable_form: "дружнім"
+    origin: authored-codex-4506-2026-07-19
+  - sentence_with_slot: "Вона зберігала ___ тон розмови."
+    answer_form: "дружній"
+    confusable_form: "дружний"
+    origin: authored-codex-4506-2026-07-19
+- slugA: виборний
+  slugB: виборчий
+  distinction_gloss_uk: "Виборний — той, який обирають голосуванням; виборчий — той, що стосується виборів."
+  citations:
+  - "worksheet: 10-klas-ukrmova-zabolotnyi-2018_s0259 — виборна посада; виборчий"
+  - "paronym_candidates_ukrmova.json — виборний/виборчий"
+  curator: codex-4506-2026-07-19
+  notes: "public Atlas url_slugs confirmed; feminine nominative contexts are congruent"
+  frames:
+  - sentence_with_slot: "___ посада передбачає голосування."
+    answer_form: "Виборна"
+    confusable_form: "Виборча"
+    origin: authored-codex-4506-2026-07-19
+  - sentence_with_slot: "___ комісія перевірила бюлетені."
+    answer_form: "Виборча"
+    confusable_form: "Виборна"
+    origin: authored-codex-4506-2026-07-19
+- slugA: компанія
+  slugB: кампанія
+  distinction_gloss_uk: "Компанія — група людей або підприємство; кампанія — сукупність заходів для певної мети."
+  citations:
+  - "worksheet: 10-klas-ukrmova-zabolotnyi-2018_s0259 — компанія"
+  - "worksheet: 5-klas-ukrmova-litvinova-2022_s0049 — кампанія/компанія"
+  curator: codex-4506-2026-07-19
+  notes: "public Atlas url_slugs confirmed; both feminine noun options remain grammatically possible"
+  frames:
+  - sentence_with_slot: "Наша ___ розробляє програмне забезпечення."
+    answer_form: "компанія"
+    confusable_form: "кампанія"
+    origin: authored-codex-4506-2026-07-19
+  - sentence_with_slot: "Передвиборча ___ почалася у вересні."
+    answer_form: "кампанія"
+    confusable_form: "компанія"
+    origin: authored-codex-4506-2026-07-19
+- slugA: ефективний
+  slugB: ефектний
+  distinction_gloss_uk: "Ефективний означає результативний; ефектний — такий, що справляє сильне враження."
+  citations:
+  - "worksheet: 5-klas-ukrmova-litvinova-2022_s0049 — ефективний/ефектний"
+  - "paronym_candidates_grinchyshyn.json — ефективний/ефектний"
+  curator: codex-4506-2026-07-19
+  notes: "public Atlas url_slugs confirmed; instrumental and nominative frames"
+  frames:
+  - sentence_with_slot: "Новий метод виявився ___ у роботі."
+    answer_form: "ефективним"
+    confusable_form: "ефектним"
+    origin: authored-codex-4506-2026-07-19
+  - sentence_with_slot: "На сцені вона зробила ___ вихід."
+    answer_form: "ефектний"
+    confusable_form: "ефективний"
+    origin: authored-codex-4506-2026-07-19
+- slugA: абонемент
+  slugB: абонент
+  distinction_gloss_uk: >-
+    Абонемент — право або документ на регулярне користування послугою; абонент — той, хто нею
+    користується.
+  citations:
+  - "worksheet: 10-klas-ukrmova-zabolotnyi-2018_s0259 — абонемент"
+  - "worksheet: 5-klas-ukrmova-litvinova-2022_s0049 — абонент/абонемент"
+  curator: codex-4506-2026-07-19
+  notes: "public Atlas url_slugs confirmed; noun frames avoid gender or case giveaways"
+  frames:
+  - sentence_with_slot: "Студент продовжив ___ до басейну."
+    answer_form: "абонемент"
+    confusable_form: "абонента"
+    origin: authored-codex-4506-2026-07-19
+  - sentence_with_slot: "Після дзвінка ___ звернувся до оператора."
+    answer_form: "абонент"
+    confusable_form: "абонемент"
+    origin: authored-codex-4506-2026-07-19
+- slugA: людний
+  slugB: людяний
+  distinction_gloss_uk: "Людний означає багатолюдний; людяний — гуманний, доброзичливий і чуйний до інших."
+  citations:
+  - "worksheet: 10-klas-ukrmova-zabolotnyi-2018_s0259 — людний/людяний"
+  - "paronym_candidates_grinchyshyn.json — людний/людяний"
+  curator: codex-4506-2026-07-19
+  notes: "public Atlas url_slugs confirmed; predicative instrumental frames"
+  frames:
+  - sentence_with_slot: "У вихідні парк буває ___."
+    answer_form: "людним"
+    confusable_form: "людяним"
+    origin: authored-codex-4506-2026-07-19
+  - sentence_with_slot: "Лікар виявився ___ до пацієнтів."
+    answer_form: "людяним"
+    confusable_form: "людним"
+    origin: authored-codex-4506-2026-07-19
+- slugA: лікувати
+  slugB: лічити
+  distinction_gloss_uk: "Лікувати — застосовувати засоби для одужання; лічити — рахувати або називати числа послідовно."
+  citations:
+  - "worksheet: 5-klas-ukrmova-zabolotnyi-2023_s0237 — лікувати"
+  - "paronym_candidates_grinchyshyn.json — лікувати/лічити"
+  curator: codex-4506-2026-07-19
+  notes: "public Atlas url_slugs confirmed; third-person singular verb frames"
+  frames:
+  - sentence_with_slot: "Лікар ___ дитину від застуди."
+    answer_form: "лікує"
+    confusable_form: "лічить"
+    origin: authored-codex-4506-2026-07-19
+  - sentence_with_slot: "Учень швидко ___ монети."
+    answer_form: "лічить"
+    confusable_form: "лікує"
+    origin: authored-codex-4506-2026-07-19
+- slugA: багатир
+  slugB: богатир
+  distinction_gloss_uk: "Багатир — багата людина; богатир — герой або силач, оспіваний у фольклорі."
+  citations:
+  - "worksheet: 5-klas-ukrmova-avramenko-2022_s0056 — багатир/богатир"
+  - "worksheet: 5-klas-ukrmova-litvinova-2022_s0049 — багатир/богатир"
+  curator: codex-4506-2026-07-19
+  notes: "public Atlas url_slugs confirmed; nominative noun frames"
+  frames:
+  - sentence_with_slot: "У казці ___ захищає місто."
+    answer_form: "богатир"
+    confusable_form: "багатир"
+    origin: authored-codex-4506-2026-07-19
+  - sentence_with_slot: "Місцевий ___ купив найбільший будинок."
+    answer_form: "багатир"
+    confusable_form: "богатир"
+    origin: authored-codex-4506-2026-07-19
+- slugA: адрес
+  slugB: адреса
+  distinction_gloss_uk: "Адрес — письмове урочисте привітання; адреса — місце проживання або напис для доставки."
+  citations:
+  - "worksheet: 5-klas-ukrmova-litvinova-2022_s0049 — адрес/адреса"
+  - "paronym_candidates_ukrmova.json — адреса/адрес"
+  curator: codex-4506-2026-07-19
+  notes: "public Atlas url_slugs confirmed; instrumental forms avoid the ambiguous surface адресу"
+  frames:
+  - sentence_with_slot: "Колеги пишалися урочистим ___."
+    answer_form: "адресом"
+    confusable_form: "адресою"
+    origin: authored-codex-4506-2026-07-19
+  - sentence_with_slot: "Він скористався ___, щоб знайти будинок."
+    answer_form: "адресою"
+    confusable_form: "адресом"
+    origin: authored-codex-4506-2026-07-19
+- slugA: пам-ятка
+  slugB: пам-ятник
+  distinction_gloss_uk: >-
+    Пам’ятка — предмет або місце культурної й історичної цінності; пам’ятник — споруда чи
+    скульптура на честь когось або чогось.
+  citations:
+  - "worksheet: 5-klas-ukrmova-litvinova-2022_s0049 — пам’ятка/пам’ятник"
+  - "paronym_candidates_grinchyshyn.json — пам’ятка/пам’ятник"
+  curator: codex-4506-2026-07-19
+  notes: "public Atlas url_slugs confirmed; accusative noun frames avoid gender giveaways"
+  frames:
+  - sentence_with_slot: "Місто охороняє ___ археології."
+    answer_form: "пам'ятку"
+    confusable_form: "пам'ятник"
+    origin: authored-codex-4506-2026-07-19
+  - sentence_with_slot: "На площі встановили ___ на честь поета."
+    answer_form: "пам'ятник"
+    confusable_form: "пам'ятку"
+    origin: authored-codex-4506-2026-07-19
+- slugA: вдача
+  slugB: удача
+  distinction_gloss_uk: "Вдача — характер і звичні риси людини; удача — успіх або щасливий збіг обставин."
+  citations:
+  - "worksheet: 5-klas-ukrmova-golub-2022_s0020 — вдача/удача"
+  - "paronym_candidates_ukrmova.json — удача/вдача"
+  curator: codex-4506-2026-07-19
+  notes: "public Atlas url_slugs confirmed; feminine nominative frames"
+  frames:
+  - sentence_with_slot: "Йому пощастило: ___ була на його боці."
+    answer_form: "удача"
+    confusable_form: "вдача"
+    origin: authored-codex-4506-2026-07-19
+  - sentence_with_slot: "Її спокійна ___ допомагає в роботі."
+    answer_form: "вдача"
+    confusable_form: "удача"
+    origin: authored-codex-4506-2026-07-19
+- slugA: дослід
+  slugB: дослідження
+  distinction_gloss_uk: "Дослід — окремий експеримент або спроба; дослідження — систематичне вивчення питання чи явища."
+  citations:
+  - "worksheet: zno:268 — дослід"
+  - "paronym_candidates_grinchyshyn.json — дослід/дослідження"
+  curator: codex-4506-2026-07-19
+  notes: "public Atlas url_slugs confirmed; accusative noun frames"
+  frames:
+  - sentence_with_slot: "У школі провели ___ з магнітом."
+    answer_form: "дослід"
+    confusable_form: "дослідження"
+    origin: authored-codex-4506-2026-07-19
+  - sentence_with_slot: "Науковці завершили ___ води в річці."
+    answer_form: "дослідження"
+    confusable_form: "дослід"
+    origin: authored-codex-4506-2026-07-19
