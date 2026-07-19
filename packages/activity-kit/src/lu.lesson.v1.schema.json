@@ -121,17 +121,78 @@
       ]
     },
     "rejectedDraft": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "activity", "reason"],
+          "properties": {
+            "type": { "const": "error-correction" },
+            "activity": {
+              "$ref": "https://learn-ukrainian.github.io/packages/activity-kit/lu.activity.v1.schema.json"
+            },
+            "reason": { "type": "string", "minLength": 1 },
+            "answer_key": { "$ref": "#/$defs/rejectedDraftAnswerKey" }
+          },
+          "allOf": [{ "$ref": "#/$defs/typeMatchesActivity" }]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "activity", "reason"],
+          "properties": {
+            "type": {
+              "enum": [
+                "true-false",
+                "cloze",
+                "match-up",
+                "text-questions",
+                "multiple-choice",
+                "quiz",
+                "mark-the-words",
+                "fill-in",
+                "glossary",
+                "form-build",
+                "paraphrase",
+                "continue-sentence",
+                "roleplay-dialog",
+                "short-writing"
+              ]
+            },
+            "activity": {
+              "$ref": "https://learn-ukrainian.github.io/packages/activity-kit/lu.activity.v1.schema.json"
+            },
+            "reason": { "type": "string", "minLength": 1 }
+          },
+          "allOf": [{ "$ref": "#/$defs/typeMatchesActivity" }]
+        }
+      ]
+    },
+    "rejectedDraftAnswerKey": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["type", "activity", "reason"],
+      "required": ["items", "corrections"],
       "properties": {
-        "type": { "$ref": "#/$defs/activityType" },
-        "activity": {
-          "$ref": "https://learn-ukrainian.github.io/packages/activity-kit/lu.activity.v1.schema.json"
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
         },
-        "reason": { "type": "string", "minLength": 1 }
-      },
-      "allOf": [{ "$ref": "#/$defs/typeMatchesActivity" }]
+        "corrections": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["sentence", "error", "correction"],
+            "properties": {
+              "sentence": { "type": "string", "minLength": 1, "pattern": "\\S" },
+              "error": { "type": "string", "minLength": 1, "pattern": "\\S" },
+              "correction": { "type": "string", "minLength": 1, "pattern": "\\S" }
+            }
+          }
+        }
+      }
     },
     "activityType": {
       "enum": [
