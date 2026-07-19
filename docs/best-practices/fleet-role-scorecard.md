@@ -31,7 +31,7 @@
 | Code/security CF review | **Author-family-conditional** (see §3) | — | `high`+ | provisional |
 | Critical CF review | Sol ↔ Fable/Opus **cross-family** | — | `xhigh` | provisional |
 | Ukrainian language | Gemini 3.1 Pro (AGY) | LANGUAGE-LANES: codex/claude/grok-4.5 + sources | `high` | provisional (UA primacy AGY; morphology still VESUM-gated) |
-| Recon / triage | Luna, Gemini 3.5 Flash | — | `medium`–`high`; never sole release | provisional |
+| Recon / triage | Luna, Claude Haiku, Gemini 3.5 Flash | — | `medium`–`high`; never sole release | provisional |
 
 **One orchestrator per stream.** Advisors recommend; orchestrator owns terminal disposition.
 
@@ -46,6 +46,7 @@
 | **Opus 4.8** | Durable long agentic sessions; orchestration; architecture | Costly as bulk worker | Anthropic | Prefer orchestrator |
 | **Terra** | Balanced implementer/orchestrator; strong everyday agentic | Not Sol/Fable ceiling | OpenAI / Codex | Orchestrator + worker |
 | **Luna** | Fast recon, cheap mechanical checks | Never sole architecture/security/language/release authority | OpenAI / Codex | Recon |
+| **Claude Haiku** | Fast cheap recon/triage on Anthropic lane; good for log/search skim | Never sole architecture/security/language/release authority | Anthropic | Recon (with Luna / 3.5 Flash) |
 | **Sonnet 5** | Near-flagship coding at better cost; daily driver agentic | Escalate systemic ambiguity | Anthropic | Default worker |
 | **Grok 4.5** | Strong coding agent; token-efficient; good CF review value | Prefer worker/reviewer not sole orchestrator | xAI; SuperGrok Heavy = capacity entitlement (re-verify) | Worker + CF review |
 | **Gemini 3.5 Flash** | Fast agentic/coding volume | Not release authority | Google / AGY | Volume worker |
@@ -118,7 +119,7 @@ Store bakeoff notes under `docs/best-practices/fleet-bakeoffs/` (create when fir
 ## 5. Escalation ladder (implementation)
 
 ```
-Luna / Gemini 3.5 Flash recon
+Luna / Claude Haiku / Gemini 3.5 Flash recon
   → Sonnet 5 / Grok 4.5 / Terra implement (worktree)
     → escalate immediately if security / high blast radius / unclear invariants / multi-architecture
     → otherwise escalate after evidence-backed root-cause attempts fail
@@ -158,7 +159,7 @@ UI / visual product         → K3 explore → Sonnet/Terra/Grok implement → S
 UA language                 → Gemini 3.1 Pro (AGY) + VESUM/sources
 Security/bug CF             → author-family-conditional (Grok/GLM/DeepSeek/Opus/…)
 Architecture decision       → Sol/Fable advisory → orchestrator decides
-Recon                       → Luna | Gemini 3.5 Flash
+Recon                       → Luna | Claude Haiku | Gemini 3.5 Flash
 ```
 
 ---
@@ -168,5 +169,6 @@ Recon                       → Luna | Gemini 3.5 Flash
 | Date | Change | Confidence note | By |
 |---|---|---|---|
 | 2026-07-19 | Initial scorecard from operator intent + web research + Sol #3588/#3593 | **drafted / provisional** — not full bakeoff-validated | grok/fleet-doctrine-scorecard |
+| 2026-07-19 | Add Claude Haiku to recon seat (with Luna / Gemini 3.5 Flash) | provisional | grok/fleet-scorecard-haiku-recon |
 
 **Approval authority:** operator for ceiling-seat changes; orchestrator may update provisional notes and evidence ledger.

@@ -87,7 +87,7 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 | Terra (orchestrating hard stream) | **`xhigh`** |
 | Terra (routine implement) | **`medium`–`high`**, escalate with risk |
 | Opus orchestrating | **`high`+** |
-| Luna recon | **`medium`** default; never sole authority |
+| Luna / Claude Haiku recon | **`medium`** default; never sole authority |
 
 ---
 
@@ -171,7 +171,7 @@ When a preferred lane is at quota/outage:
 - Sol/Fable for search, format, routine tests, first-pass CRUD.  
 - Sol/Fable only at the end to bless a design they never challenged.  
 - Any single model as sole orchestrator + implementer + CF reviewer on a consequential stream.  
-- Flash/Luna as release authority.  
+- Flash/Luna/Haiku as release authority.  
 - Discuss/panel counted as CF review.  
 - Cursor “review” without **pinned** backing model family.  
 - Unqualified language/folk reviewers.  
@@ -193,3 +193,4 @@ When a preferred lane is at quota/outage:
 | Date | Change | By |
 |---|---|---|
 | 2026-07-19 | Initial doctrine (research + Sol #3588/#3593 amends) | grok/fleet-doctrine-scorecard |
+| 2026-07-19 | Haiku listed with Luna for recon effort guidance / anti-patterns | grok/fleet-scorecard-haiku-recon |
