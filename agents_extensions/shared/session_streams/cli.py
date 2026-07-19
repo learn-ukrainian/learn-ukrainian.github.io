@@ -11,7 +11,14 @@ from pathlib import Path
 from typing import Any
 
 from .db import SessionStreamDatabase
-from .dual_write import ATLAS_HANDOFF_PATH, mirror_atlas_handoff
+from .dual_write import (
+    ATLAS_HANDOFF_PATH,
+    EPIC_HANDOFF_CANDIDATES,
+    list_handoff_candidates,
+    mirror_atlas_handoff,
+    mirror_handoff_file,
+    resolve_handoff_path,
+)
 from .hooks import clean_exit_hook, heartbeat_hook, lease_from_environment
 from .model import entry_as_dict
 from .store import NotFoundError, SessionStreamError, SessionStreamStore
@@ -140,6 +147,52 @@ Related:
             "Default: .claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md."
         ),
     )
+
+    mirror_handoff = subparsers.add_parser(
+        "mirror-handoff",
+        help="Mirror any registered epic file handoff into its stream (dual-write, no cutover).",
+        description=(
+            "Append a stable legacy handoff image under the exact lease. "
+            "Uses EPIC_HANDOFF_CANDIDATES when --source is omitted. Never edits or deletes the file."
+        ),
+    )
+    mirror_handoff.add_argument(
+        "--stream",
+        required=True,
+        help="Stream ID, for example epic:4387.",
+    )
+    mirror_handoff.add_argument(
+        "--repo-root",
+        type=Path,
+        default=Path.cwd(),
+        help="Repository root. Default: current working directory.",
+    )
+    mirror_handoff.add_argument(
+        "--source",
+        type=Path,
+        default=None,
+        help="Optional handoff path (relative to --repo-root). Default: first existing registry path.",
+    )
+    mirror_handoff.add_argument(
+        "--profile",
+        default=None,
+        help="Mirror profile label (default: stream id without epic: prefix).",
+    )
+
+    status = subparsers.add_parser(
+        "dual-write-status",
+        help="List registered epic handoff paths and whether each file exists (no cutover).",
+        description=(
+            "Phase-2 dual-write inventory: which streams have on-disk handoffs ready to mirror. "
+            "Does not mutate the database."
+        ),
+    )
+    status.add_argument(
+        "--repo-root",
+        type=Path,
+        default=Path.cwd(),
+        help="Repository root. Default: current working directory.",
+    )
     return parser
 
 
@@ -156,6 +209,10 @@ def main(argv: list[str] | None = None) -> int:
             return _hook(store, args)
         if args.command == "mirror-atlas":
             return _mirror_atlas(store, args)
+        if args.command == "mirror-handoff":
+            return _mirror_handoff(store, args)
+        if args.command == "dual-write-status":
+            return _dual_write_status(args)
         parser.error(f"unsupported command: {args.command}")
     except NotFoundError as exc:
         print(f"session-streams: {exc}", file=sys.stderr)
@@ -232,6 +289,62 @@ def _mirror_atlas(store: SessionStreamStore, args: argparse.Namespace) -> int:
                 "source_bytes": result.source_bytes,
                 "entry_id": result.entry.entry_id,
                 "mirror_id": result.mirror_id,
+            },
+            sort_keys=True,
+        )
+    )
+    return 0
+
+
+def _mirror_handoff(store: SessionStreamStore, args: argparse.Namespace) -> int:
+    lease = lease_from_environment()
+    source = args.source
+    if source is None:
+        resolved = resolve_handoff_path(args.stream, args.repo_root)
+        if resolved is None:
+            known = ", ".join(EPIC_HANDOFF_CANDIDATES.get(args.stream, ())) or "(none registered)"
+            raise ValueError(
+                f"no existing handoff for {args.stream}; candidates: {known}; pass --source explicitly"
+            )
+        source = resolved
+    profile = args.profile or args.stream.removeprefix("epic:")
+    result = mirror_handoff_file(
+        store,
+        lease,
+        profile=profile,
+        repo_root=args.repo_root,
+        stream_id=args.stream,
+        source_path=source,
+    )
+    print(
+        json.dumps(
+            {
+                "profile": result.profile,
+                "source_path": result.source_path,
+                "source_sha256": result.source_sha256,
+                "source_bytes": result.source_bytes,
+                "entry_id": result.entry.entry_id,
+                "mirror_id": result.mirror_id,
+            },
+            sort_keys=True,
+        )
+    )
+    return 0
+
+
+def _dual_write_status(args: argparse.Namespace) -> int:
+    rows = list_handoff_candidates(args.repo_root)
+    print("stream\texists\tpath")
+    for row in rows:
+        print(f"{row.stream_id}\t{int(row.exists)}\t{row.path}")
+    registered = sorted(EPIC_HANDOFF_CANDIDATES)
+    present = sorted({r.stream_id for r in rows if r.exists})
+    print(
+        json.dumps(
+            {
+                "registered_streams": registered,
+                "streams_with_file": present,
+                "cutover": "blocked — dual-write only; file handoffs remain authoritative",
             },
             sort_keys=True,
         )

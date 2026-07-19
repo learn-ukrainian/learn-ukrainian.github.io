@@ -130,6 +130,11 @@ def process_for_grok_build(
     if not msg:
         return
 
+    from ._ask_lifecycle import assert_ask_content_present
+
+    # #4915: background workers must use the DB-stored body, never empty stdin.
+    assert_ask_content_present(msg, message_id=message_id, target="grok")
+
     _ = new_session  # grok resume_policy="never"; bridge calls are fresh.
     timeout_val = _resolve_grok_build_bridge_timeout(no_timeout)
     model = _extract_target_model(msg) or GROK_BUILD_DEFAULT_MODEL

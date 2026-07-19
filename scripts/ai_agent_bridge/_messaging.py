@@ -107,9 +107,28 @@ def send_message(content: str, task_id: str | None = None, msg_type: str = "resp
                  from_model: str | None = None, to_model: str | None = None,
                  review_target: dict | None = None,
                  quiet: bool = False):
-    """Send a message between agents."""
+    """Send a message between agents.
+
+    Large ``response`` / ``error`` bodies are offloaded to a gitignored sidecar
+    under ``batch_state/asks/`` (#5392). The SQLite row then carries a head
+    excerpt plus an explicit ``TRUNCATED`` footer (path + sha256 + bytes) so
+    consumers never mistake a transport clip for a short model reply.
+    """
     content = redact_text(content) or ""
     data = redact_text(data) if data is not None else None
+
+    # #5392: sidecar large/truncated replies before INSERT so the durable full
+    # body exists even if the row only keeps an excerpt.
+    from ._reply_sidecar import maybe_sidecare_response
+
+    sidecar = maybe_sidecare_response(
+        content,
+        task_id=task_id,
+        from_llm=from_llm,
+        msg_type=msg_type,
+    )
+    content = sidecar.content
+
     conn = get_db()
     cursor = conn.cursor()
 
@@ -128,6 +147,13 @@ def send_message(content: str, task_id: str | None = None, msg_type: str = "resp
         metadata["to_model"] = to_model
     if review_target is not None:
         metadata["review_target"] = review_target
+    if sidecar.truncated and sidecar.sidecar_path:
+        metadata["reply_sidecar"] = {
+            "path": sidecar.sidecar_path,
+            "sha256": sidecar.full_sha256,
+            "bytes": sidecar.full_bytes,
+            "truncated": True,
+        }
 
     metadata = redact_value(metadata)
     data_json = json.dumps(metadata) if metadata else None
