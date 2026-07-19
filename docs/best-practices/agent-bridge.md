@@ -172,6 +172,24 @@ is the **canonical formal PR review entry** (Sol fleet-comms Phase 0–3):
   (GLM-5.2 is **LOCAL-ONLY** / China egress — never CI).
 - Do **not** identify the reviewer as “Hermes”; record model + family + harness.
 
+Formal reviews stay thin in both directions (Phase 4–5). Do not paste a review
+body over 4 KiB or attach evidence over 64 KiB to an `ask-*` review job; the
+bridge rejects it and points to `review-pr <N>`. Prefer a PR target over a
+manual review ask.
+
+After a reviewer writes a short verdict or findings JSON, publish exactly one
+PR comment without relaying the full body through the orchestrator:
+
+```bash
+.venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict \
+  --pr 5458 --verdict-file /tmp/review-verdict.txt \
+  --model gpt-5.6-terra --family openai --harness codex
+```
+
+The comment contains only `VERDICT`, the PR head SHA, and reviewer provenance.
+The command prints a ≤2 KiB status summary; use `--findings-json` for a JSON
+file with a top-level `verdict`, and `--dry-run` to verify the payload locally.
+
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py review-deep <PR-or-path> [--effort xhigh]` dispatches an
 adversarial Claude review run. It hardcodes `--agent claude --mode
 read-only --model claude-opus-4-7 --effort xhigh` unless an explicit
