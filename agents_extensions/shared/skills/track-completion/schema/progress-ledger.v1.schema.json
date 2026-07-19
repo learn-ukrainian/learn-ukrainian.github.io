@@ -30,6 +30,7 @@
         "PARTIAL_RECOVERY_REQUIRED",
         "POST_BUILD_REVIEW_REQUIRED",
         "REPAIR_REQUIRED",
+        "BLOCKED_BUDGET_EXHAUSTED",
         "AUDIT_TOOLING_REQUIRED",
         "REVIEWER_INSTABILITY",
         "INDEPENDENT_REVIEW_REQUIRED",
@@ -57,6 +58,16 @@
     "reviews": {
       "type": "array",
       "items": {"$ref": "#/$defs/review"}
+    },
+    "deferred_workflow_drift": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/deferredWorkflowDrift"}
+    },
+    "bounded_completion": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/boundedCompletion"}
+      ]
     },
     "certification_evidence": {
       "type": "array",
@@ -216,6 +227,93 @@
             "dependency_identity": {"$ref": "#/$defs/sha"}
           }
         }
+      }
+    },
+    "boundedCompletion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_sha256",
+        "run",
+        "frozen_learner_hashes",
+        "remaining_budgets",
+        "deferred_workflow_drift",
+        "semantic_review_reuse"
+      ],
+      "properties": {
+        "contract_sha256": {"$ref": "#/$defs/sha"},
+        "run": {"type": "object"},
+        "frozen_learner_hashes": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {"$ref": "#/$defs/sha"}
+        },
+        "remaining_budgets": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["semantic_reviews", "consolidated_repairs"],
+          "properties": {
+            "semantic_reviews": {"type": "integer", "minimum": 0},
+            "consolidated_repairs": {"type": "integer", "minimum": 0}
+          }
+        },
+        "deferred_workflow_drift": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/deferredWorkflowDrift"}
+        },
+        "semantic_review_reuse": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/semanticReviewReuse"}
+          ]
+        }
+      }
+    },
+    "deferredWorkflowDrift": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "observed_identity_sha256",
+        "observed_workflow_hashes",
+        "learner_hashes",
+        "summary"
+      ],
+      "properties": {
+        "classification": {"const": "AUDIT_TOOLING_DEFERRED"},
+        "observed_identity_sha256": {"$ref": "#/$defs/sha"},
+        "observed_workflow_hashes": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/sha"}
+        },
+        "learner_hashes": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {"$ref": "#/$defs/sha"}
+        },
+        "summary": {"type": "string", "minLength": 1}
+      }
+    },
+    "semanticReviewReuse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_result_sha256",
+        "review_protocol_identity_sha256",
+        "learner_hashes",
+        "reviewer_family",
+        "reviewer_group"
+      ],
+      "properties": {
+        "review_result_sha256": {"$ref": "#/$defs/sha"},
+        "review_protocol_identity_sha256": {"$ref": "#/$defs/sha"},
+        "learner_hashes": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {"$ref": "#/$defs/sha"}
+        },
+        "reviewer_family": {"type": "string", "minLength": 1},
+        "reviewer_group": {"type": "string", "minLength": 1}
       }
     }
   }

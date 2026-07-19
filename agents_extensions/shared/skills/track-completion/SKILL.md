@@ -51,7 +51,9 @@ provider:
   validate-contract
 ```
 
-The standalone helper freezes the review protocol identity at run start and
+The canonical engine binds the helper into the durable module ledger when it
+records the first canonical post-build result. It freezes the exact
+versioned protocol identity and learner-source hashes for that active run and
 enforces one initial semantic review, at most one consolidated learner repair,
 and at most one final semantic review. A third review or second repair is
 rejected before mutation. A material learner-source change invalidates prior
@@ -59,10 +61,12 @@ review evidence, and a final non-PASS exhausts the budget into terminal
 `BLOCKED_BUDGET_EXHAUSTED`. Publication requires every canonical quality
 dimension to remain at or above `9.0`.
 
-This contract slice is not wired into `scripts/track_completion.py`. Issue #5453
-owns production lifecycle integration. Use the helper's `replay` command only
-for deterministic contract fixtures. It has no provider transport and must
-never be treated as semantic review evidence.
+The helper has no provider transport and must never be treated as semantic
+review evidence. The durable ledger retains the initial/final review, the
+consolidated repair, remaining canonical budgets, terminal disposition, and
+any deferred audit-tooling drift. A ledger without `bounded_completion` is
+a legacy ledger: its historic reviews remain provisional and it never receives
+an inferred bounded history; start a later run to use the bounded protocol.
 
 ## Start or resume
 
@@ -93,15 +97,11 @@ never be treated as semantic review evidence.
    gitignored runtime state shared across worktrees. A live per-module lease
    rejects concurrent operators. Use `resume --run-id <id>` after interruption;
    never mint a replacement run merely to bypass a lease or stale evidence.
-   If a versioned review-tooling change lands while the exact run is already in
-   `POST_BUILD_REVIEW_REQUIRED`, record it with `record-change --owner-kind
-   audit_tooling`; that transition is accepted only when the module state,
-   layout, and every target hash are unchanged and the workflow identity
-   actually changed.
-   The same explicit audit-tooling refresh may reopen an exact run from
-   `AWAITING_PRODUCTION_QG_ARMING`; it invalidates the prior publication/QG
-   chain and returns to a fresh post-build review. This is the development
-   route for a stronger gate and does not arm production QG or mint a new run.
+   If review tooling changes while the run is active and learner hashes are
+   unchanged, record it with `record-change --owner-kind audit_tooling`. The
+   engine classifies it as `AUDIT_TOOLING_DEFERRED` and queues it for a later
+   run: it does not reopen this run, consume either bounded budget, or make
+   frozen evidence current under the new tooling.
    A legacy ledger without a goal is non-authoritative. Use
    `migrate-terminal-goal` with the exact old run id and explicit intent; a
    `PBR_PASS_QG_PENDING` migration must also name its exact PR and 40-character
@@ -166,9 +166,13 @@ Use only the returned deterministic owners:
 - `audit_tooling`: repair the audit, prompt, policy, schema, reviewer route, or
   evidence tooling. Do not edit curriculum content to satisfy protocol noise.
 
-An ambiguous finding routes to `audit_tooling`; do not guess. After a real
-change, run `record-change` with the matching owner and author family. The
-helper requires an identity change and returns to a fresh post-build review.
+An ambiguous finding routes to `audit_tooling`; do not guess. After the one
+allowed learner-source change, run `record-change` with owner
+`built_artifact`; the helper invalidates the initial semantic evidence and
+permits the final review only after fresh deterministic verification. A second
+learner repair or third semantic review is rejected without ledger mutation
+and leaves the terminal disposition `BLOCKED_BUDGET_EXHAUSTED`. Audit-tooling
+drift with unchanged learner source is deferred, not repaired inside this run.
 If a non-PASS finding is suspected reviewer noise, do not mutate content first:
 run one distinct review with the exact same reviewer identity and record it
 using `record-review --stability-check`. A material flip enters
@@ -201,6 +205,20 @@ must never remain authoritative merely because it had already reached this gate.
 Record both the process receipt and the strict `independent-review`
 certification artifact. Only the strict current artifact advances to
 `PUBLISH_REQUIRED`.
+
+A qualifying canonical post-build semantic review may satisfy this learner
+content gate once when its reviewer group is outside every recorded learner
+author group and its result, protocol identity, and learner hashes remain
+current. The ledger records that reuse explicitly and fails closed on any
+binding drift. This reuse is only learner-content evidence: a code change still
+requires the repository's separate cross-family code-review gate before its PR
+can merge.
+
+### `BLOCKED_BUDGET_EXHAUSTED`
+
+Do not reopen, retry, or silently replace the run. Preserve the terminal
+ledger and open a later run only after a separately adjudicated source or
+protocol change establishes new scope.
 
 ### `PUBLISH_REQUIRED`
 

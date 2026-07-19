@@ -110,24 +110,16 @@ def _install_lifecycle_contracts(repo: Path) -> None:
         repo / "agents_extensions/shared/prompt-contracts",
     )
     active = set(yaml.safe_load((repo / "curriculum/l2-uk-en/curriculum.yaml").read_text())["levels"])
-    prompt_profiles_path = (
-        repo / "agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml"
-    )
+    prompt_profiles_path = repo / "agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml"
     prompt_profiles = yaml.safe_load(prompt_profiles_path.read_text(encoding="utf-8"))
     prompt_profiles["selectors"]["tracks"] = {
-        track: profile
-        for track, profile in prompt_profiles["selectors"]["tracks"].items()
-        if track in active
+        track: profile for track, profile in prompt_profiles["selectors"]["tracks"].items() if track in active
     }
     prompt_profiles_path.write_text(yaml.safe_dump(prompt_profiles, sort_keys=False), encoding="utf-8")
-    certification_path = (
-        repo / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
-    )
+    certification_path = repo / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
     certification = yaml.safe_load(certification_path.read_text(encoding="utf-8"))
     certification["selectors"]["tracks"] = {
-        track: profile
-        for track, profile in certification["selectors"]["tracks"].items()
-        if track in active
+        track: profile for track, profile in certification["selectors"]["tracks"].items() if track in active
     }
     certification_path.write_text(yaml.safe_dump(certification, sort_keys=False), encoding="utf-8")
 
@@ -237,7 +229,9 @@ def _result(
                 "location": location or snapshot.review_files["content"],
             }
         )
+    quality_score = 10.0 if status == "PASS" else 8.0
     return {
+        "schema_version": "post-build-review.result.v6",
         "review_protocol_version": "4.0.0",
         "deterministic_contract_version": "1.2.1",
         "semantic_prompt_version": "4.0.0",
@@ -258,6 +252,12 @@ def _result(
             "capabilities": ["text"],
         },
         "semantic_response": {"raw_sha256": "3" * 64},
+        "semantic": {
+            "quality_dimensions": {
+                dimension: {"score": quality_score}
+                for dimension in ("pedagogical", "naturalness", "decolonization", "engagement", "tone")
+            }
+        },
         "findings": findings,
         "combined_disposition": {"status": status},
     }
@@ -270,17 +270,13 @@ def _result_file(tmp_path: Path, name: str) -> Path:
 
 
 def test_current_certification_profiles_require_post_build_review_v5() -> None:
-    path = (
-        ROOT
-        / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
-    )
+    path = ROOT / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
     config = yaml.safe_load(path.read_text(encoding="utf-8"))
 
     assert config["profiles"]
-    assert {
-        (profile["version"], profile["pbr"]["adapter"])
-        for profile in config["profiles"].values()
-    } == {("2.0.0", "post-build-review.v5")}
+    assert {(profile["version"], profile["pbr"]["adapter"]) for profile in config["profiles"].values()} == {
+        ("2.0.0", "post-build-review.v5")
+    }
 
 
 def _certification_artifact(
@@ -422,12 +418,8 @@ def test_new_and_existing_modules_converge_on_the_same_post_build_gate(
     )
     assert new["state"] == "POST_BUILD_REVIEW_REQUIRED"
 
-    existing_snapshot = tc.resolve_target(
-        "a1/core-built", repo_root=repo, config=tc.load_config(config_path)
-    )
-    new_snapshot = tc.resolve_target(
-        "a1/core-unbuilt", repo_root=repo, config=tc.load_config(config_path)
-    )
+    existing_snapshot = tc.resolve_target("a1/core-built", repo_root=repo, config=tc.load_config(config_path))
+    new_snapshot = tc.resolve_target("a1/core-unbuilt", repo_root=repo, config=tc.load_config(config_path))
     existing_result_path = _result_file(tmp_path, "existing-post-build-pass.json")
     new_result_path = _result_file(tmp_path, "new-post-build-pass.json")
     results = {
@@ -464,9 +456,7 @@ def test_certification_config_rejects_retired_track_selector(
     fake_repo: tuple[Path, Path, Path],
 ) -> None:
     repo, config_path, _ledger_root = fake_repo
-    certification_path = (
-        repo / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
-    )
+    certification_path = repo / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
     certification = yaml.safe_load(certification_path.read_text(encoding="utf-8"))
     certification["selectors"]["tracks"]["lit-doc"] = "seminar-pending"
     certification_path.write_text(yaml.safe_dump(certification, sort_keys=False), encoding="utf-8")
@@ -621,9 +611,7 @@ def test_unbuilt_plan_build_transitions_are_leased_and_idempotent(
         config_path=config_path,
         ledger=rebuilt,
     )
-    assert rebuilt_inputs["preparation_identity"] == rebuild_event["details"][
-        "current_preparation_identity"
-    ]
+    assert rebuilt_inputs["preparation_identity"] == rebuild_event["details"]["current_preparation_identity"]
 
 
 def test_certification_rejects_built_bundle_without_consumed_preparation_identity(
@@ -918,7 +906,7 @@ def _fresh_fixture_from(tmp_path: Path) -> tuple[Path, Path, Path]:
     return repo, config_path, ledger_root
 
 
-def test_unchanged_source_material_flip_enters_and_exits_instability(
+def test_unchanged_source_stability_repeat_is_rejected_by_bounded_review_budget(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repo, config_path, ledger_root = _fresh_fixture_from(tmp_path)
@@ -947,29 +935,23 @@ def test_unchanged_source_material_flip_enters_and_exits_instability(
         ledger_root=ledger_root,
     )
     assert ledger["state"] == "REPAIR_REQUIRED"
-    _, ledger = tc.record_review(
-        "bio/seminar-built",
-        run_id=run_id,
-        result_path=second_path,
-        stability_check=True,
-        repo_root=repo,
-        config_path=config_path,
-        ledger_root=ledger_root,
+    before = json.loads(json.dumps(ledger))
+    with pytest.raises(tc.CompletionError, match="Bounded semantic review"):
+        tc.record_review(
+            "bio/seminar-built",
+            run_id=run_id,
+            result_path=second_path,
+            stability_check=True,
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    assert (
+        tc.read_json(
+            tc.ledger_path_for(snapshot, repo_root=repo, config=tc.load_config(config_path), ledger_root=ledger_root)
+        )
+        == before
     )
-    assert ledger["state"] == "REVIEWER_INSTABILITY"
-
-    evidence = tmp_path / "adjudication.md"
-    evidence.write_text("Use a different reviewer route.\n", encoding="utf-8")
-    _, ledger = tc.record_instability_adjudication(
-        "bio/seminar-built",
-        run_id=run_id,
-        evidence=evidence,
-        summary="The unchanged-source reviewer identity produced conflicting findings.",
-        repo_root=repo,
-        config_path=config_path,
-        ledger_root=ledger_root,
-    )
-    assert ledger["state"] == "POST_BUILD_REVIEW_REQUIRED"
 
 
 def test_cross_family_review_gate_and_publication(
@@ -1042,9 +1024,7 @@ def test_cross_family_review_gate_and_publication(
         ledger_root=ledger_root,
     )
     assert ledger["state"] == "INDEPENDENT_REVIEW_REQUIRED"
-    inputs = tc.certification_inputs(
-        "a1/core-unbuilt", repo_root=repo, config_path=config_path, ledger=ledger
-    )
+    inputs = tc.certification_inputs("a1/core-unbuilt", repo_root=repo, config_path=config_path, ledger=ledger)
     independent = _certification_artifact(
         tmp_path,
         "strict-independent.json",
@@ -1089,6 +1069,130 @@ def test_cross_family_review_gate_and_publication(
     )
     assert ledger["state"] == "COMPLETE"
     assert ledger["run"]["status"] == "completed"
+
+
+def test_bounded_ledger_records_initial_repair_final_and_one_time_semantic_reuse(
+    fake_repo: tuple[Path, Path, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    _, ledger = _start(fake_repo, "a1/core-unbuilt")
+    run_id = ledger["run"]["run_id"]
+    plan_evidence = tmp_path / "bounded-plan.json"
+    plan_evidence.write_text("{}\n", encoding="utf-8")
+    tc.record_plan_review(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        verdict="PASS",
+        evidence=plan_evidence,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    _write_bundle(repo, "a1", "core-unbuilt", "# Модуль\n\nПочатковий навчальний текст.\n")
+    _, ledger = tc.record_build(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        author_family="codex",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    snapshot = tc.resolve_target("a1/core-unbuilt", repo_root=repo, config=tc.load_config(config_path))
+    initial = _result(snapshot, repo, status="REVISE", reviewer_family="gemini")
+    initial_path = _result_file(tmp_path, "bounded-initial.json")
+    monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: initial)
+    _, ledger = tc.record_review(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        result_path=initial_path,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    bounded = ledger["bounded_completion"]
+    assert bounded["run"]["reviews"][0]["phase"] == "INITIAL"
+    assert bounded["run"]["measurements"]["model_call_count"] == 1
+    assert bounded["run"]["measurements"]["repair_count"] == 0
+    assert bounded["remaining_budgets"] == {"semantic_reviews": 1, "consolidated_repairs": 1}
+
+    content = repo / snapshot.review_files["content"]
+    content.write_text(content.read_text(encoding="utf-8") + "Консолідоване виправлення.\n", encoding="utf-8")
+    _, ledger = tc.record_change(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        owner_kind="built_artifact",
+        author_family="codex",
+        summary="Applied the one consolidated learner repair.",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    bounded = ledger["bounded_completion"]
+    assert bounded["run"]["repairs"][0]["invalidated_evidence_ids"] == [tc.sha256_file(initial_path)]
+    assert bounded["run"]["reviews"][0]["valid"] is False
+    assert bounded["run"]["measurements"]["repair_count"] == 1
+    assert bounded["remaining_budgets"] == {"semantic_reviews": 1, "consolidated_repairs": 0}
+
+    refreshed = tc.resolve_target("a1/core-unbuilt", repo_root=repo, config=tc.load_config(config_path))
+    final = _result(refreshed, repo, status="PASS", reviewer_family="gemini")
+    final["semantic_response"] = {
+        "raw_sha256": "f" * 64,
+        "byte_count": 12,
+        "contract_status": "valid",
+    }
+    final_path = _result_file(tmp_path, "bounded-final.json")
+    monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: final)
+    _, ledger = tc.record_review(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        result_path=final_path,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    bounded = ledger["bounded_completion"]
+    assert [review["phase"] for review in bounded["run"]["reviews"]] == ["INITIAL", "FINAL"]
+    assert bounded["run"]["measurements"]["model_call_count"] == 2
+    assert bounded["remaining_budgets"] == {"semantic_reviews": 0, "consolidated_repairs": 0}
+    assert bounded["semantic_review_reuse"]["review_result_sha256"] == tc.sha256_file(final_path)
+    assert ledger["state"] == "AWAITING_PRODUCTION_QG_ARMING"
+    projection = tc.certification_projection(
+        "a1/core-unbuilt", repo_root=repo, config_path=config_path, ledger_root=ledger_root
+    )
+    assert projection["independent_review"] == "reused-canonical-semantic-review"
+
+    (repo / "workflow.txt").write_text("workflow-deferred\n", encoding="utf-8")
+    _, ledger = tc.record_change(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        owner_kind="audit_tooling",
+        author_family="codex",
+        summary="Queue the post-build workflow revision for a later run.",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert ledger["state"] == "AWAITING_PRODUCTION_QG_ARMING"
+    assert ledger["bounded_completion"]["remaining_budgets"] == {"semantic_reviews": 0, "consolidated_repairs": 0}
+    assert ledger["deferred_workflow_drift"][-1]["classification"] == "AUDIT_TOOLING_DEFERRED"
+
+    before = json.loads(json.dumps(ledger))
+    content.write_text(content.read_text(encoding="utf-8") + "Друге виправлення.\n", encoding="utf-8")
+    with pytest.raises(tc.CompletionError, match="REPAIR_BUDGET_EXHAUSTED"):
+        tc.record_change(
+            "a1/core-unbuilt",
+            run_id=run_id,
+            owner_kind="built_artifact",
+            author_family="codex",
+            summary="Forbidden second learner repair.",
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    persisted = tc.read_json(
+        tc.ledger_path_for(refreshed, repo_root=repo, config=tc.load_config(config_path), ledger_root=ledger_root)
+    )
+    assert persisted == before
 
 
 @pytest.mark.parametrize("repair_state", ["PUBLISH_REQUIRED", "INTEGRATION_REQUIRED"])
@@ -1160,24 +1264,17 @@ def test_post_review_drift_can_be_recorded_and_restarts_post_build_review(
 
     content = repo / snapshot.review_files["content"]
     content.write_text(content.read_text(encoding="utf-8") + "Інтеграційне виправлення.\n", encoding="utf-8")
-    _, ledger = tc.record_change(
-        "a1/core-unbuilt",
-        run_id=run_id,
-        owner_kind="built_artifact",
-        author_family="codex",
-        summary="Regenerated the learner surface after the integration gate exposed drift.",
-        repo_root=repo,
-        config_path=config_path,
-        ledger_root=ledger_root,
-    )
-
-    assert ledger["state"] == "POST_BUILD_REVIEW_REQUIRED"
-    assert ledger["current_identity"]["sha256"] == tc.build_identity(
-        tc.resolve_target("a1/core-unbuilt", repo_root=repo, config=tc.load_config(config_path)),
-        repo_root=repo,
-        config=tc.load_config(config_path),
-    )["sha256"]
-    assert ledger["history"][-1]["event"] == "CHANGE_RECORDED"
+    with pytest.raises(tc.CompletionError, match="Expected state CONSOLIDATED_REPAIR"):
+        tc.record_change(
+            "a1/core-unbuilt",
+            run_id=run_id,
+            owner_kind="built_artifact",
+            author_family="codex",
+            summary="Regenerated the learner surface after the integration gate exposed drift.",
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
 
 
 def test_legacy_qg_sidecar_cannot_advance_completion(fake_repo: tuple[Path, Path, Path]) -> None:
@@ -1237,7 +1334,7 @@ def _advance_built_module_to_pending_review_state(
 
 @pytest.mark.parametrize(
     "pending_state",
-    ["POST_BUILD_REVIEW_REQUIRED", "INDEPENDENT_REVIEW_REQUIRED"],
+    ["POST_BUILD_REVIEW_REQUIRED"],
 )
 def test_pending_review_states_accept_workflow_only_audit_tooling_refresh(
     fake_repo: tuple[Path, Path, Path],
@@ -1246,9 +1343,7 @@ def test_pending_review_states_accept_workflow_only_audit_tooling_refresh(
     pending_state: str,
 ) -> None:
     repo, config_path, ledger_root = fake_repo
-    run_id, ledger = _advance_built_module_to_pending_review_state(
-        fake_repo, tmp_path, monkeypatch, pending_state
-    )
+    run_id, ledger = _advance_built_module_to_pending_review_state(fake_repo, tmp_path, monkeypatch, pending_state)
     original_target_hashes = ledger["current_identity"]["target_hashes"]
 
     workflow = repo / "workflow.txt"
@@ -1264,17 +1359,15 @@ def test_pending_review_states_accept_workflow_only_audit_tooling_refresh(
         ledger_root=ledger_root,
     )
 
-    assert refreshed["state"] == "POST_BUILD_REVIEW_REQUIRED"
+    assert refreshed["state"] == pending_state
     assert refreshed["current_identity"]["target_hashes"] == original_target_hashes
-    assert refreshed["current_identity"]["workflow_hashes"] != ledger["current_identity"][
-        "workflow_hashes"
-    ]
-    assert refreshed["history"][-1]["details"]["owner_kind"] == "audit_tooling"
+    assert refreshed["current_identity"]["workflow_hashes"] == ledger["current_identity"]["workflow_hashes"]
+    assert refreshed["deferred_workflow_drift"][-1]["classification"] == "AUDIT_TOOLING_DEFERRED"
 
 
 @pytest.mark.parametrize(
     "pending_state",
-    ["POST_BUILD_REVIEW_REQUIRED", "INDEPENDENT_REVIEW_REQUIRED"],
+    ["POST_BUILD_REVIEW_REQUIRED"],
 )
 @pytest.mark.parametrize(
     ("drift_kind", "error"),
@@ -1293,9 +1386,7 @@ def test_pending_review_audit_refresh_rejects_non_workflow_drift(
     error: str,
 ) -> None:
     repo, config_path, ledger_root = fake_repo
-    run_id, _ledger = _advance_built_module_to_pending_review_state(
-        fake_repo, tmp_path, monkeypatch, pending_state
-    )
+    run_id, _ledger = _advance_built_module_to_pending_review_state(fake_repo, tmp_path, monkeypatch, pending_state)
     (repo / "workflow.txt").write_text("workflow-refresh\n", encoding="utf-8")
     if drift_kind == "target":
         content = repo / "curriculum/l2-uk-en/bio/seminar-built/module.md"
@@ -1310,10 +1401,7 @@ def test_pending_review_audit_refresh_rejects_non_workflow_drift(
         def drifted_identity(*args: object, **kwargs: object) -> dict[str, Any]:
             identity = real_build_identity(*args, **kwargs)
             identity[drift_kind] = changed_value
-            payload = {
-                key: identity[key]
-                for key in ("module_state", "layout", "target_hashes", "workflow_hashes")
-            }
+            payload = {key: identity[key] for key in ("module_state", "layout", "target_hashes", "workflow_hashes")}
             identity["sha256"] = tc.sha256_bytes(tc.stable_json(payload).encode("utf-8"))
             return identity
 
@@ -1338,9 +1426,7 @@ def test_qg_arming_boundary_accepts_review_tooling_refresh(
     repo, config_path, ledger_root = fake_repo
     _, ledger = _start(fake_repo, "bio/seminar-built")
     run_id = ledger["run"]["run_id"]
-    snapshot = tc.resolve_target(
-        "bio/seminar-built", repo_root=repo, config=tc.load_config(config_path)
-    )
+    snapshot = tc.resolve_target("bio/seminar-built", repo_root=repo, config=tc.load_config(config_path))
     path = tc.ledger_path_for(
         snapshot,
         repo_root=repo,
@@ -1368,11 +1454,11 @@ def test_qg_arming_boundary_accepts_review_tooling_refresh(
         ledger_root=ledger_root,
     )
 
-    assert refreshed["state"] == "POST_BUILD_REVIEW_REQUIRED"
+    assert refreshed["state"] == "AWAITING_PRODUCTION_QG_ARMING"
     assert refreshed["current_identity"]["target_hashes"] == original_target_hashes
-    assert refreshed["publication"] is None
-    assert refreshed["production_qg_authorization"] is None
-    assert refreshed["history"][-1]["details"]["owner_kind"] == "audit_tooling"
+    assert refreshed["publication"] == ledger["publication"]
+    assert refreshed["production_qg_authorization"] == ledger["production_qg_authorization"]
+    assert refreshed["deferred_workflow_drift"][-1]["classification"] == "AUDIT_TOOLING_DEFERRED"
 
 
 def test_historical_post_build_result_cannot_advance_current_ledger() -> None:
