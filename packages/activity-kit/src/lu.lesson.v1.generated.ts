@@ -33,7 +33,19 @@ export type LuLessonBlock = {
 };
 
 export type LuRejectedDraft = {
-  type: "true-false" | "cloze" | "match-up" | "text-questions" | "multiple-choice" | "quiz" | "mark-the-words" | "fill-in" | "glossary" | "form-build" | "error-correction" | "paraphrase" | "continue-sentence" | "roleplay-dialog" | "short-writing";
+  type: "error-correction";
+  activity: LuActivityV1;
+  reason: string;
+  answer_key?: {
+    items: Array<string>;
+    corrections: Array<{
+      sentence: string;
+      error: string;
+      correction: string;
+    }>;
+  };
+} | {
+  type: "true-false" | "cloze" | "match-up" | "text-questions" | "multiple-choice" | "quiz" | "mark-the-words" | "fill-in" | "glossary" | "form-build" | "paraphrase" | "continue-sentence" | "roleplay-dialog" | "short-writing";
   activity: LuActivityV1;
   reason: string;
 };
@@ -73,7 +85,19 @@ export type LuLessonV1 = {
     };
   }>;
   rejected: Array<{
-    type: "true-false" | "cloze" | "match-up" | "text-questions" | "multiple-choice" | "quiz" | "mark-the-words" | "fill-in" | "glossary" | "form-build" | "error-correction" | "paraphrase" | "continue-sentence" | "roleplay-dialog" | "short-writing";
+    type: "error-correction";
+    activity: LuActivityV1;
+    reason: string;
+    answer_key?: {
+      items: Array<string>;
+      corrections: Array<{
+        sentence: string;
+        error: string;
+        correction: string;
+      }>;
+    };
+  } | {
+    type: "true-false" | "cloze" | "match-up" | "text-questions" | "multiple-choice" | "quiz" | "mark-the-words" | "fill-in" | "glossary" | "form-build" | "paraphrase" | "continue-sentence" | "roleplay-dialog" | "short-writing";
     activity: LuActivityV1;
     reason: string;
   }>;

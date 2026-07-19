@@ -426,6 +426,30 @@
         "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["too-easy-for-level"] }
       },
       "reason": "занадто просте: відповідь стоїть у тексті поруч"
+    },
+    {
+      "type": "error-correction",
+      "activity": {
+        "id": "rejected-error-correction-schema-example",
+        "type": "error-correction",
+        "title": "Schema example",
+        "level": "b1",
+        "payload": {
+          "type": "error-correction",
+          "instruction": "Correct the example.",
+          "items": ["Example source sentence."]
+        },
+        "answer_key": { "items": ["Example corrected sentence."] },
+        "provenance": { "source": "teacher-paste", "generator": "schema-fixture", "gates": ["schema-contract"] }
+      },
+      "reason": "Synthetic schema fixture.",
+      "answer_key": {
+        "items": ["Example source sentence."],
+        "corrections": [
+          { "sentence": "Example source sentence.", "error": "source", "correction": "corrected" },
+          { "sentence": "Example source sentence.", "error": "source", "correction": "corrected" }
+        ]
+      }
     }
   ],
   "created_at": "2026-07-10T14:20:00+03:00",

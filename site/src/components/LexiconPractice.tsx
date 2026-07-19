@@ -41,6 +41,7 @@ import {
   selectNextPracticeItem,
   seededAnswerIndex,
   sessionPoolAllowsCandidate,
+  stripStressMarks,
   uaPlural,
   validateClozeOptions,
   writeDailyPracticeDeckSnapshot,
@@ -49,6 +50,7 @@ import {
   type ChoicePolarity,
   type DailyPracticeDeckSnapshot,
   type PracticeClozeItem,
+  type PracticeClozeShard,
   type PracticeDeckData,
   type PracticeHeritageItem,
   type PracticeHeritageShard,
@@ -519,14 +521,57 @@ function heritageTagColor(heritage: string | null): string | undefined {
   return HERITAGE_COLORS[heritage.toLowerCase()] ?? 'var(--lu-text-muted)';
 }
 
-function cardData(entry: PracticeLexeme) {
+function displayPracticeForm(value: string, learnerLevel: CefrLevel): string {
+  return learnerLevel === 'A1' ? value : stripStressMarks(value);
+}
+
+function cardData(entry: PracticeLexeme, learnerLevel: CefrLevel) {
   return {
-    front: entry.lemma,
+    front: displayPracticeForm(entry.lemma, learnerLevel),
     back: entry.gloss,
     subtitle: entry.ipa ?? entry.pos ?? undefined,
     tag: entry.cefr ?? undefined,
     tagColor: heritageTagColor(entry.heritage),
   };
+}
+
+function clozeExample(cloze: PracticeClozeItem): { example: string; exampleEn: string | null } | null {
+  const sentence = cloze.sentence?.trim();
+  const form = cloze.form?.trim();
+  if (!sentence || !form || !/_{3,}/.test(sentence)) return null;
+
+  return {
+    example: sentence.replace(/_{3,}/g, form),
+    exampleEn: cloze.clozeEn?.trim() || null,
+  };
+}
+
+export function addDailyExamples(
+  lexemes: Map<string, PracticeLexeme>,
+  clozeItems: readonly PracticeClozeItem[],
+): Map<string, PracticeLexeme> {
+  const fallbackByLemma = new Map<string, { example: string; exampleEn: string | null }>();
+  for (const item of clozeItems) {
+    if (fallbackByLemma.has(item.lemmaId)) continue;
+    const example = clozeExample(item);
+    if (example) fallbackByLemma.set(item.lemmaId, example);
+  }
+
+  const enriched = new Map<string, PracticeLexeme>();
+  for (const [lemmaId, lexeme] of lexemes) {
+    if (lexeme.example?.trim()) {
+      enriched.set(lemmaId, lexeme);
+      continue;
+    }
+    const fallback = fallbackByLemma.get(lemmaId);
+    enriched.set(
+      lemmaId,
+      fallback
+        ? { ...lexeme, example: fallback.example, exampleEn: lexeme.exampleEn ?? fallback.exampleEn }
+        : lexeme,
+    );
+  }
+  return enriched;
 }
 
 function hasLoadedDrillShards(deck: PracticeDeckData | null): boolean {
@@ -608,15 +653,18 @@ function orderedChoiceOptions(
   deck: PracticeDeckData,
   polarity: ChoicePolarity,
   sessionSeed: number,
+  learnerLevel: CefrLevel,
 ): ChoiceOption[] {
   if (!isMeaningMcEligible(selection.lemma)) return [];
   const distractors = meaningDistractors(selection.lemma, deck, 3);
   if (distractors.length < 3) return [];
-  const answer = polarity === 'word-to-meaning' ? glossLabel(selection.lemma) : selection.lemma.lemma;
+  const answer = polarity === 'word-to-meaning'
+    ? glossLabel(selection.lemma)
+    : displayPracticeForm(selection.lemma.lemma, learnerLevel);
   const options = [
     { label: answer, correct: true },
     ...distractors.map((entry) => ({
-      label: polarity === 'word-to-meaning' ? glossLabel(entry) : entry.lemma,
+      label: polarity === 'word-to-meaning' ? glossLabel(entry) : displayPracticeForm(entry.lemma, learnerLevel),
       correct: false,
     })),
   ];
@@ -669,12 +717,12 @@ function meaningDistractors(
     .slice(0, limit);
 }
 
-function matchingPairs(selection: PracticeSelection, deck: PracticeDeckData) {
+function matchingPairs(selection: PracticeSelection, deck: PracticeDeckData, learnerLevel: CefrLevel) {
   if (!isMeaningMcEligible(selection.lemma)) return [];
   const distractors = meaningDistractors(selection.lemma, deck, 5);
   if (distractors.length < 2) return [];
   return [selection.lemma, ...distractors].map((entry) => ({
-    left: entry.lemma,
+    left: displayPracticeForm(entry.lemma, learnerLevel),
     right: glossLabel(entry),
     lemmaId: entry.lemmaId,
   }));
@@ -694,11 +742,12 @@ export function nextMatchingPromptIndex(
   return null;
 }
 
-function choicePrompt(selection: PracticeSelection): { uk: string; en: string } {
+function choicePrompt(selection: PracticeSelection, learnerLevel: CefrLevel): { uk: string; en: string } {
+  const lemma = displayPracticeForm(selection.lemma.lemma, learnerLevel);
   if (selection.choicePolarity === 'word-to-meaning') {
     return {
-      uk: `Що означає «${selection.lemma.lemma}»?`,
-      en: `What does «${selection.lemma.lemma}» mean?`,
+      uk: `Що означає «${lemma}»?`,
+      en: `What does «${lemma}» mean?`,
     };
   }
   return {
@@ -713,7 +762,11 @@ function classifySet(selection: PracticeSelection): PracticeClassifySet | null {
   return sets.find((set) => set.setId === selection.classifySetId) ?? sets[0] ?? null;
 }
 
-function drillChoiceOptions(selection: PracticeSelection, showEnglishSubtitles: boolean): ChoiceOption[] | null {
+function drillChoiceOptions(
+  selection: PracticeSelection,
+  showEnglishSubtitles: boolean,
+  learnerLevel: CefrLevel,
+): ChoiceOption[] | null {
   const selectedSet = classifySet(selection);
   if (selectedSet) {
     return selectedSet.options.map((option) => ({
@@ -729,13 +782,13 @@ function drillChoiceOptions(selection: PracticeSelection, showEnglishSubtitles: 
   }
   if (selection.paradigm) {
     return selection.paradigm.options.map((option) => ({
-      label: option.label,
+      label: displayPracticeForm(option.label, learnerLevel),
       correct: option.kind === 'answer',
     }));
   }
   if (selection.synonym) {
     return selection.synonym.options.map((option) => ({
-      label: option.label,
+      label: displayPracticeForm(option.label, learnerLevel),
       correct: option.kind === 'answer',
     }));
   }
@@ -779,7 +832,10 @@ function heritageFeedbackFor(item: PracticeHeritageItem, option: ChoiceOption): 
   };
 }
 
-function drillChoicePrompt(selection: PracticeSelection): { promptUk: string; promptEn: string; subtitleUk: string; subtitleEn?: string } | null {
+function drillChoicePrompt(
+  selection: PracticeSelection,
+  learnerLevel: CefrLevel,
+): { promptUk: string; promptEn: string; subtitleUk: string; subtitleEn?: string } | null {
   if (selection.stress) {
     return {
       promptUk: `Де наголос у слові «${selection.stress.unstressed}»?`,
@@ -789,12 +845,13 @@ function drillChoicePrompt(selection: PracticeSelection): { promptUk: string; pr
     };
   }
   const selectedSet = classifySet(selection);
+  const lemma = displayPracticeForm(selection.lemma.lemma, learnerLevel);
   if (selectedSet) {
     const setLabelUk = selectedSet.setLabelUk;
     const setLabelEn = selectedSet.setLabelEn || translateGrammarTerm(setLabelUk);
     return {
-      promptUk: `До якої групи належить «${selection.lemma.lemma}»?`,
-      promptEn: `Which group does «${selection.lemma.lemma}» belong to?`,
+      promptUk: `До якої групи належить «${lemma}»?`,
+      promptEn: `Which group does «${lemma}» belong to?`,
       subtitleUk: setLabelUk,
       subtitleEn: setLabelEn,
     };
@@ -803,8 +860,8 @@ function drillChoicePrompt(selection: PracticeSelection): { promptUk: string; pr
     const slotUk = selection.paradigm.slot.labelUk;
     const slotEn = selection.paradigm.slot.labelEn || translateGrammarTerm(slotUk);
     return {
-      promptUk: `Яка форма від «${selection.lemma.lemma}»?`,
-      promptEn: `Which form is from «${selection.lemma.lemma}»?`,
+      promptUk: `Яка форма від «${lemma}»?`,
+      promptEn: `Which form is from «${lemma}»?`,
       subtitleUk: slotUk,
       subtitleEn: slotEn,
     };
@@ -1329,26 +1386,43 @@ function LexiconPracticeIsland({
             .map((item) => indexSource.find((i) => i.lemmaId === item.lemmaId)?.cefr)
             .filter((cefr): cefr is string => Boolean(cefr)),
         );
-        const levelEntries = await Promise.all(
-          Array.from(representedLevels).map(async (level) => {
-            try {
-              const shard = await getShardJson<PracticeLexemeShard>(
-                `${shardBaseUrl}/practice-lexemes.${level}.json`,
-                shardJsonCacheRef.current,
-              );
-              return shard.lexemes ?? [];
-            } catch {
-              return [];
-            }
-          }),
-        );
+        const levelEntries = deck
+          ? []
+          : await Promise.all(
+              Array.from(representedLevels).map(async (level) => {
+                try {
+                  const [lexemeShard, clozeShard] = await Promise.all([
+                    getShardJson<PracticeLexemeShard>(
+                      `${shardBaseUrl}/practice-lexemes.${level}.json`,
+                      shardJsonCacheRef.current,
+                    ),
+                    getShardJson<PracticeClozeShard>(
+                      `${shardBaseUrl}/practice-cloze.${level}.json`,
+                      shardJsonCacheRef.current,
+                    ).catch(() => null),
+                  ]);
+                  return {
+                    lexemes: lexemeShard.lexemes ?? [],
+                    cloze: clozeShard?.cloze ?? [],
+                  };
+                } catch {
+                  return { lexemes: [], cloze: [] };
+                }
+              }),
+            );
 
         if (cancelled) return;
         const merged = new Map<string, PracticeLexeme>();
-        for (const entry of levelEntries.flat()) {
+        for (const entry of deck?.lexemes ?? []) {
           merged.set(entry.lemmaId, entry);
         }
-        setDailyLexemes(merged);
+        for (const entry of levelEntries.flatMap((batch) => batch.lexemes)) {
+          merged.set(entry.lemmaId, entry);
+        }
+        setDailyLexemes(addDailyExamples(merged, [
+          ...(deck?.cloze ?? []),
+          ...levelEntries.flatMap((batch) => batch.cloze),
+        ]));
       } catch {
         if (!cancelled) setDailySnapshot(null);
       } finally {
@@ -1359,7 +1433,7 @@ function LexiconPracticeIsland({
     return () => {
       cancelled = true;
     };
-  }, [deck?.index, deck?.deckVersion, dueIndex, learnerLevel, sessionPhase, shardBaseUrl]);
+  }, [deck?.index, deck?.deckVersion, deck?.lexemes, deck?.cloze, dueIndex, learnerLevel, sessionPhase, shardBaseUrl]);
 
   const indexForStats = (deck?.index ?? dueIndex ?? []).filter(
     (item) => !focusedLemmaId || item.lemmaId === focusedLemmaId
@@ -1423,11 +1497,11 @@ function LexiconPracticeIsland({
     if (pairsRef.current && pairsRef.current.itemId === selection.itemId) {
       return pairsRef.current.pairs;
     }
-    const computed = matchingPairs(selection, deck);
+    const computed = matchingPairs(selection, deck, learnerLevel);
     pairsRef.current = { itemId: selection.itemId, pairs: computed };
     return computed;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selection?.itemId]);
+  }, [learnerLevel, selection?.itemId]);
 
   useEffect(() => {
     resetItemFeedback();
@@ -2343,6 +2417,7 @@ function LexiconPracticeIsland({
 
   return (
     <section className="lexicon-practice" aria-label={showEnglishSubtitles ? "Практика слів дня / Words of the Day Practice" : "Практика слів дня"}>
+      {sessionPhase !== 'idle' || feedback ? (
       <p className="lexicon-practice-status" aria-live="polite">
         {feedback ? (
           <>
@@ -2358,22 +2433,16 @@ function LexiconPracticeIsland({
               <span className="btn-sub" lang="en">/ Session {progressLabel}</span>
             ) : null}
           </>
-        ) : sessionPhase === 'summary' ? (
+        ) : (
           <>
             <span lang="uk">Сесію завершено</span>
             {showEnglishSubtitles ? (
               <span className="btn-sub" lang="en">/ Session complete</span>
             ) : null}
           </>
-        ) : (
-          <>
-            <span lang="uk">Оберіть сесію практики</span>
-            {showEnglishSubtitles ? (
-              <span className="btn-sub" lang="en">/ Select a practice session</span>
-            ) : null}
-          </>
         )}
       </p>
+      ) : null}
 
       {storageWarning && (() => {
         const warn = translateStorageWarning(storageWarning);
@@ -2446,7 +2515,7 @@ function LexiconPracticeIsland({
           )}
 
           <div className="k3-practice-dashboard">
-            <div className="k3-hero">
+            <div className="k3-hero" data-testid="practice-dashboard-hero">
               <h1><ChromeText k="practice.heroTitle" /></h1>
               <p className="k3-hero-subtitle"><ChromeText k="practice.heroSubtitle" /></p>
               <p className="k3-hero-epigraph" lang="uk">
@@ -2481,7 +2550,7 @@ function LexiconPracticeIsland({
               </div>
             </div>
 
-            <div className="k3-stats" role="group" aria-label={CHROME_STRINGS[chromeLocale]['practice.stats']}>
+            <div className="k3-stats" data-testid="practice-dashboard-stats" role="group" aria-label={CHROME_STRINGS[chromeLocale]['practice.stats']}>
               <div className="k3-stat">
                 <span className="k3-stat-value">{dueReviews}</span>
                 <span className="k3-stat-label"><ChromeText k="practice.statusDue" /></span>
@@ -2500,40 +2569,76 @@ function LexiconPracticeIsland({
               </div>
             </div>
 
-            <div className="k3-session">
-              {homeScope ? (
-                <p className="k3-session-scope" data-testid="practice-session-scope">
-                  <ChromeDual
-                    uk={`${homeScope.dueReviews} до повторення + ${homeScope.plannedNew} нових ≈ ${homeScope.estimatedMinutes} хв`}
-                    en={`${homeScope.dueReviews} due + ${homeScope.plannedNew} new ≈ ${homeScope.estimatedMinutes} min`}
-                  />
-                </p>
-              ) : null}
-              <div
-                className="k3-session-budgets"
-                role="group"
-                aria-label={CHROME_STRINGS[chromeLocale]['practice.sessionTitle']}
-              >
-                {([10, 20, 'until-zero'] as const).map((budget) => (
-                  <button
-                    key={String(budget)}
-                    type="button"
-                    className={sessionBudget === budget ? 'active' : ''}
-                    aria-pressed={sessionBudget === budget}
-                    data-testid={`practice-session-budget-${budget === 'until-zero' ? 'until-zero' : budget}`}
-                    onClick={() => setSessionBudget(budget)}
-                  >
-                    <ChromeText
-                      k={
-                        budget === 10
-                          ? 'practice.sessionSize10'
-                          : budget === 20
-                            ? 'practice.sessionSize20'
-                            : 'practice.sessionSizeUntilZero'
-                      }
+            <div className="k3-words" data-testid="practice-dashboard-words">
+              {dailySnapshotLoading || !dailySnapshot ? (
+                <div className="practice-daily-deck k3-words-loading" data-testid="practice-daily-deck-loading">
+                  <div className="daily-deck-header">
+                    <h2><ChromeText k="practice.wordsTitle" /></h2>
+                  </div>
+                  <div className="daily-deck-preview-shell">
+                    <div className="flashcard daily-preview-card">
+                      <div className="flashcard-inner">
+                        <div className="flashcard-front">
+                          <span className="flashcard-word">—</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <details className="daily-deck-details">
+                    <summary><ChromeText k="practice.showWords" /></summary>
+                  </details>
+                </div>
+              ) : (
+                <PracticeDailyDeck
+                  snapshot={dailySnapshot}
+                  rows={dailyRows}
+                  lexemes={dailyLexemes}
+                  atlasLemmaHref={atlasLemmaHref}
+                  chromeLocale={chromeLocale}
+                  learnerLevel={learnerLevel}
+                />
+              )}
+            </div>
+
+            <div className="k3-session" data-testid="practice-dashboard-session">
+              <div className="k3-session-overview">
+                <div
+                  className="k3-session-size"
+                  role="group"
+                  aria-label={CHROME_STRINGS[chromeLocale]['practice.sessionTitle']}
+                >
+                  <span className="k3-session-label"><ChromeText k="practice.sessionSizeLabel" /></span>
+                  <div className="k3-session-budgets">
+                    {([10, 20, 'until-zero'] as const).map((budget) => (
+                      <button
+                        key={String(budget)}
+                        type="button"
+                        className={sessionBudget === budget ? 'active' : ''}
+                        aria-pressed={sessionBudget === budget}
+                        data-testid={`practice-session-budget-${budget === 'until-zero' ? 'until-zero' : budget}`}
+                        onClick={() => setSessionBudget(budget)}
+                      >
+                        <ChromeText
+                          k={
+                            budget === 10
+                              ? 'practice.sessionSize10'
+                              : budget === 20
+                                ? 'practice.sessionSize20'
+                                : 'practice.sessionSizeUntilZero'
+                          }
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {homeScope ? (
+                  <p className="k3-session-scope" data-testid="practice-session-scope">
+                    <ChromeDual
+                      uk={`${homeScope.dueReviews} до повторення + ${homeScope.plannedNew} нових ≈ ${homeScope.estimatedMinutes} хв`}
+                      en={`${homeScope.dueReviews} due + ${homeScope.plannedNew} new ≈ ${homeScope.estimatedMinutes} min`}
                     />
-                  </button>
-                ))}
+                  </p>
+                ) : null}
               </div>
               <button
                 type="button"
@@ -2563,36 +2668,7 @@ function LexiconPracticeIsland({
               ) : null}
             </div>
 
-            <div className="k3-words">
-              {dailySnapshotLoading || !dailySnapshot ? (
-                <div className="practice-daily-deck k3-words-loading" data-testid="practice-daily-deck-loading">
-                  <div className="daily-deck-header">
-                    <h2><ChromeText k="practice.wordsTitle" /></h2>
-                  </div>
-                  <div className="daily-deck-preview-shell">
-                    <div className="flashcard daily-preview-card">
-                      <div className="flashcard-inner">
-                        <div className="flashcard-front">
-                          <span className="flashcard-word">—</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <details className="daily-deck-details">
-                    <summary><ChromeText k="practice.showWords" /></summary>
-                  </details>
-                </div>
-              ) : (
-                <PracticeDailyDeck
-                  snapshot={dailySnapshot}
-                  rows={dailyRows}
-                  lexemes={dailyLexemes}
-                  atlasLemmaHref={atlasLemmaHref}
-                  chromeLocale={chromeLocale}
-                />
-              )}
-            </div>
-
+            <div className="k3-secondary" data-testid="practice-dashboard-secondary">
             <div className="k3-focus">
               <h2><ChromeText k="practice.focusTitle" /></h2>
               {weakChips.length > 0 ? (
@@ -2660,6 +2736,7 @@ function LexiconPracticeIsland({
                   );
                 })}
               </div>
+            </div>
             </div>
           </div>
         </>
@@ -2767,6 +2844,7 @@ function LexiconPracticeIsland({
                     onClozeSubmit={submitCloze}
                     showEnglishSubtitles={showEnglishSubtitles}
                     chromeLocale={chromeLocale}
+                    learnerLevel={learnerLevel}
                   />
                   {pendingOutcome ? (
                     <div className="lexicon-practice-advance" data-testid="practice-advance">
@@ -2866,6 +2944,7 @@ function PracticeItem({
   onClozeSubmit,
   showEnglishSubtitles,
   chromeLocale,
+  learnerLevel,
 }: {
   selection: PracticeSelection;
   deck: PracticeDeckData;
@@ -2889,6 +2968,7 @@ function PracticeItem({
   onClozeSubmit(value: string, source: 'typed' | 'chip'): void;
   showEnglishSubtitles: boolean;
   chromeLocale: 'en' | 'uk';
+  learnerLevel: CefrLevel;
 }) {
   const [matchingPromptIndex, setMatchingPromptIndex] = useState<number | null>(0);
   const matchedPairIndexesRef = useRef<Set<number>>(new Set());
@@ -2901,7 +2981,7 @@ function PracticeItem({
     );
     return (
       <PracticeFlashcard
-        card={cardData(selection.lemma)}
+        card={cardData(selection.lemma, learnerLevel)}
         ratingLabels={RATING_LABELS}
         intervalPreviews={intervalPreviews}
         onRate={onFlashcardRating}
@@ -2912,7 +2992,7 @@ function PracticeItem({
   }
 
   if (selection.mode === 'stress' && selection.stress) {
-    const drillPrompt = drillChoicePrompt(selection);
+    const drillPrompt = drillChoicePrompt(selection, learnerLevel);
     return (
       <div className="lexicon-stress" data-testid="practice-stress-stage">
         {drillPrompt ? (
@@ -2971,11 +3051,18 @@ function PracticeItem({
           onInput={onClozeInput}
           onSubmit={onClozeSubmit}
           showEnglishSubtitles={showEnglishSubtitles}
+          learnerLevel={learnerLevel}
         />
         {answerLocked ? (
           <PracticeFormRail
-            source={{ label: cloze.form, value: selection.lemma.lemma }}
-            actual={{ label: clozeInput, value: clozeInput }}
+            source={{
+              label: displayPracticeForm(cloze.form, learnerLevel),
+              value: displayPracticeForm(selection.lemma.lemma, learnerLevel),
+            }}
+            actual={{
+              label: displayPracticeForm(clozeInput, learnerLevel),
+              value: displayPracticeForm(clozeInput, learnerLevel),
+            }}
             verdict={railVerdict}
             chromeLocale={chromeLocale}
           />
@@ -2994,6 +3081,7 @@ function PracticeItem({
         chromeLocale={chromeLocale}
         onChoice={onChoice}
         showEnglishSubtitles={showEnglishSubtitles}
+        learnerLevel={learnerLevel}
       />
     );
   }
@@ -3008,12 +3096,13 @@ function PracticeItem({
         chromeLocale={chromeLocale}
         onChoice={onChoice}
         showEnglishSubtitles={showEnglishSubtitles}
+        learnerLevel={learnerLevel}
       />
     );
   }
 
-  const drillOptions = drillChoiceOptions(selection, showEnglishSubtitles);
-  const drillPrompt = drillChoicePrompt(selection);
+  const drillOptions = drillChoiceOptions(selection, showEnglishSubtitles, learnerLevel);
+  const drillPrompt = drillChoicePrompt(selection, learnerLevel);
   if (drillOptions && drillPrompt) {
     return (
       <div className="lexicon-choice" data-testid={`practice-${selection.mode}`}>
@@ -3066,8 +3155,14 @@ function PracticeItem({
         </ul>
         {selection.mode === 'paradigm' && answerLocked && paradigmSelectedLabel !== null ? (
           <PracticeFormRail
-            source={{ label: selection.lemma.lemma, value: selection.lemma.lemma }}
-            actual={{ label: paradigmSelectedLabel, value: paradigmSelectedLabel }}
+            source={{
+              label: displayPracticeForm(selection.lemma.lemma, learnerLevel),
+              value: displayPracticeForm(selection.lemma.lemma, learnerLevel),
+            }}
+            actual={{
+              label: displayPracticeForm(paradigmSelectedLabel, learnerLevel),
+              value: displayPracticeForm(paradigmSelectedLabel, learnerLevel),
+            }}
             verdict={drillOptions.some((o) => o.correct && o.label === paradigmSelectedLabel) ? 'correct' : 'wrong'}
             chromeLocale={chromeLocale}
           />
@@ -3119,7 +3214,7 @@ function PracticeItem({
     );
   }
 
-  const options = orderedChoiceOptions(selection, deck, selection.choicePolarity, sessionSeed);
+  const options = orderedChoiceOptions(selection, deck, selection.choicePolarity, sessionSeed, learnerLevel);
   if (!options.length) {
     return (
       <p className="lexicon-practice-muted">
@@ -3130,7 +3225,7 @@ function PracticeItem({
       </p>
     );
   }
-  const prompt = choicePrompt(selection);
+  const prompt = choicePrompt(selection, learnerLevel);
   return (
     <div className="lexicon-choice" data-testid={`practice-${selection.mode}`}>
       <DigitChoiceShortcuts
@@ -3201,6 +3296,7 @@ function PracticeParonym({
   chromeLocale,
   onChoice,
   showEnglishSubtitles,
+  learnerLevel,
 }: {
   item: PracticeParonymItem;
   feedback: ParonymFeedback | null;
@@ -3209,10 +3305,11 @@ function PracticeParonym({
   chromeLocale: 'en' | 'uk';
   onChoice(option: ChoiceOption): void;
   showEnglishSubtitles: boolean;
+  learnerLevel: CefrLevel;
 }) {
-  const [before, after] = slotPromptParts(item.prompt);
+  const [before, after] = slotPromptParts(item.prompt).map((part) => displayPracticeForm(part, learnerLevel));
   const options = paronymOptions(item);
-  const slotText = feedback?.kind === 'correct' ? item.answer : '___';
+  const slotText = feedback?.kind === 'correct' ? displayPracticeForm(item.answer, learnerLevel) : '___';
   return (
     <div className="lexicon-paronym" data-testid="practice-paronym">
       <p className="paronym-task">
@@ -3237,7 +3334,7 @@ function PracticeParonym({
               disabled={answerLocked}
               onClick={() => onChoice(option)}
             >
-              <span>{option.label}</span>
+              <span>{displayPracticeForm(option.label, learnerLevel)}</span>
             </button>
           </li>
         ))}
@@ -3256,8 +3353,14 @@ function PracticeParonym({
             ) : null}
           </p>
           <PracticeFormRail
-            source={{ label: `${item.lemma} / ${item.confusable}`, value: item.lemma }}
-            actual={{ label: selectedLabel ?? '', value: selectedLabel ?? '' }}
+            source={{
+              label: `${displayPracticeForm(item.lemma, learnerLevel)} / ${displayPracticeForm(item.confusable, learnerLevel)}`,
+              value: displayPracticeForm(item.lemma, learnerLevel),
+            }}
+            actual={{
+              label: displayPracticeForm(selectedLabel ?? '', learnerLevel),
+              value: displayPracticeForm(selectedLabel ?? '', learnerLevel),
+            }}
             verdict={feedback.kind}
             chromeLocale={chromeLocale}
           />
@@ -3289,6 +3392,7 @@ function PracticeHeritage({
   chromeLocale,
   onChoice,
   showEnglishSubtitles,
+  learnerLevel,
 }: {
   item: PracticeHeritageItem;
   feedback: HeritageFeedback | null;
@@ -3297,10 +3401,13 @@ function PracticeHeritage({
   chromeLocale: 'en' | 'uk';
   onChoice(option: ChoiceOption): void;
   showEnglishSubtitles: boolean;
+  learnerLevel: CefrLevel;
 }) {
-  const [before, after] = slotPromptParts(item.prompt);
+  const [before, after] = slotPromptParts(item.prompt).map((part) => displayPracticeForm(part, learnerLevel));
   const options = heritageOptions(item);
-  const slotText = feedback?.kind === 'correct' ? (selectedLabel ?? item.answer) : '___';
+  const slotText = feedback?.kind === 'correct'
+    ? displayPracticeForm(selectedLabel ?? item.answer, learnerLevel)
+    : '___';
   return (
     <div className="lexicon-heritage" data-testid="practice-heritage">
       <p className="heritage-task">
@@ -3325,7 +3432,7 @@ function PracticeHeritage({
               disabled={answerLocked}
               onClick={() => onChoice(option)}
             >
-              <span>{option.label}</span>
+              <span>{displayPracticeForm(option.label, learnerLevel)}</span>
             </button>
           </li>
         ))}
@@ -3352,8 +3459,14 @@ function PracticeHeritage({
             </p>
           ) : null}
           <PracticeFormRail
-            source={{ label: item.nativeLemma ?? item.lemma ?? '', value: item.nativeLemma ?? item.lemma ?? '' }}
-            actual={{ label: item.answer, value: item.answer }}
+            source={{
+              label: displayPracticeForm(item.nativeLemma ?? item.lemma ?? '', learnerLevel),
+              value: displayPracticeForm(item.nativeLemma ?? item.lemma ?? '', learnerLevel),
+            }}
+            actual={{
+              label: displayPracticeForm(item.answer, learnerLevel),
+              value: displayPracticeForm(item.answer, learnerLevel),
+            }}
             verdict={feedback.kind}
             chromeLocale={chromeLocale}
           />
@@ -3385,6 +3498,7 @@ function PracticeCloze({
   onInput,
   onSubmit,
   showEnglishSubtitles,
+  learnerLevel,
 }: {
   selection: PracticeSelection;
   input: string;
@@ -3393,15 +3507,17 @@ function PracticeCloze({
   onInput(value: string): void;
   onSubmit(value: string, source: 'typed' | 'chip'): void;
   showEnglishSubtitles: boolean;
+  learnerLevel: CefrLevel;
 }) {
   const cloze = selection.cloze;
   if (!cloze) return null;
-  const [before, after] = clozeParts(cloze);
+  const [before, after] = clozeParts(cloze).map((part) => displayPracticeForm(part, learnerLevel));
   const optionErrors = validateClozeOptions(cloze);
   const blankText = feedback?.kind === 'correct' ? cloze.form : input.trim() || '?';
+  const displayBlankText = displayPracticeForm(blankText, learnerLevel);
   const blankClass = [
     'cz-blank',
-    blankText !== '?' ? 'filled' : '',
+    displayBlankText !== '?' ? 'filled' : '',
     feedback?.kind === 'wrong-word' ? 'bad' : '',
     feedback?.kind === 'case-miss' ? 'case-miss' : '',
   ]
@@ -3410,14 +3526,14 @@ function PracticeCloze({
   return (
     <div className="lexicon-cloze" data-testid="practice-cloze">
       <p className="cz-task">
-        <span lang="uk">Поставте слово „{selection.lemma.lemma}” у правильному відмінку.</span>
+        <span lang="uk">Поставте слово „{displayPracticeForm(selection.lemma.lemma, learnerLevel)}” у правильному відмінку.</span>
         {showEnglishSubtitles ? (
-          <span className="btn-sub" lang="en">/ Put the word „{selection.lemma.lemma}” in the correct case.</span>
+          <span className="btn-sub" lang="en">/ Put the word „{displayPracticeForm(selection.lemma.lemma, learnerLevel)}” in the correct case.</span>
         ) : null}
       </p>
       <p className="cz-sentence">
         <span>{before}</span>
-        <span className={blankClass}>{blankText}</span>
+        <span className={blankClass}>{displayBlankText}</span>
         <span>{after}</span>
       </p>
       {showEnglishSubtitles ? (
@@ -3495,7 +3611,7 @@ function PracticeCloze({
                 disabled={answerLocked}
                 onClick={() => onSubmit(option.label, 'chip')}
               >
-                {option.label}
+                {displayPracticeForm(option.label, learnerLevel)}
               </button>
             </li>
           ))}

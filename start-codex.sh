@@ -69,6 +69,7 @@ fi
 # ordering. An explicit epic gets a provider-specific handoff namespace; this
 # prevents unrelated Codex epic sessions from sharing one rollover queue.
 FORWARD_ARGS=("$@")
+FORWARD_ARG_COUNT=$#
 HANDOFF_IDENTITY_SH="$PROJECT_DIR/scripts/lib/handoff_identity.sh"
 if [ ! -f "$HANDOFF_IDENTITY_SH" ]; then
     printf 'Error: handoff identity helper is missing: %s\n' "$HANDOFF_IDENTITY_SH" >&2
@@ -96,14 +97,27 @@ if [ -n "$SELECTED_EPIC" ]; then
     export SESSION_EPIC="$SELECTED_EPIC"
     export SESSION_HANDOFF_AGENT="$HANDOFF_SLOT"
     FORWARD_ARGS=()
+    FORWARD_ARG_COUNT=0
     while IFS= read -r -d '' FORWARD_ARG; do
         FORWARD_ARGS+=("$FORWARD_ARG")
+        FORWARD_ARG_COUNT=$((FORWARD_ARG_COUNT + 1))
     done < <(strip_epic_from_argv "$@")
     unset FORWARD_ARG HANDOFF_SLOT
     printf 'Epic assignment: %s.epic\n' "$SESSION_EPIC"
     printf 'Handoff identity: %s\n' "$SESSION_HANDOFF_AGENT"
 fi
 unset HANDOFF_IDENTITY_SH SELECTED_EPIC
+
+# macOS ships Bash 3.2, where expanding an empty indexed array under `set -u`
+# fails even when the array was explicitly initialized. Move the filtered
+# values back into the special positional-parameter array, whose empty
+# expansion is nounset-safe, before any later loops or the final exec.
+if [ "$FORWARD_ARG_COUNT" -gt 0 ]; then
+    set -- "${FORWARD_ARGS[@]}"
+else
+    set --
+fi
+unset FORWARD_ARGS FORWARD_ARG_COUNT
 
 # Keep generated Codex config and the canonical rollover state ready before
 # replacing this wrapper process with the interactive CLI.
@@ -118,7 +132,7 @@ bootstrap_codex_checkout "$PROJECT_DIR" "$PROJECT_DIR" continue
 # reported by the CLI before trusting the profile.
 SELECTED_MODEL=""
 PREVIOUS_ARG=""
-for arg in "${FORWARD_ARGS[@]}"; do
+for arg in "$@"; do
     case "$arg" in
         --model=*)
             SELECTED_MODEL="${arg#--model=}"
@@ -157,4 +171,4 @@ exec codex \
     --search \
     --enable multi_agent \
     -C "$PROJECT_DIR" \
-    "${FORWARD_ARGS[@]}"
+    "$@"
