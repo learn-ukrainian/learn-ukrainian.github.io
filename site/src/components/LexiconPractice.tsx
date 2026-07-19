@@ -3051,6 +3051,7 @@ function PracticeItem({
           onSubmit={onClozeSubmit}
           showEnglishSubtitles={showEnglishSubtitles}
           learnerLevel={learnerLevel}
+          chromeLocale={chromeLocale}
         />
         {answerLocked ? (
           <PracticeFormRail
@@ -3478,6 +3479,7 @@ function PracticeCloze({
   onSubmit,
   showEnglishSubtitles,
   learnerLevel,
+  chromeLocale,
 }: {
   selection: PracticeSelection;
   input: string;
@@ -3487,6 +3489,7 @@ function PracticeCloze({
   onSubmit(value: string, source: 'typed' | 'chip'): void;
   showEnglishSubtitles: boolean;
   learnerLevel: CefrLevel;
+  chromeLocale: 'en' | 'uk';
 }) {
   const cloze = selection.cloze;
   if (!cloze) return null;
