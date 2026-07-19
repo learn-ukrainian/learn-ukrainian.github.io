@@ -21,6 +21,8 @@ from datetime import UTC, datetime
 from importlib import util as importlib_util
 from pathlib import Path
 
+from scripts.fleet_comms.migrations import apply_migrations
+
 from ._config import DB_PATH
 
 # ── Schema definitions ─────────────────────────────────────────────────
@@ -237,6 +239,7 @@ def init_db():
     conn.executescript(_CHANNELS_SCHEMA)
     _apply_broker_index_migration(conn)
     conn.commit()
+    apply_migrations(conn)
     return conn
 
 
@@ -412,6 +415,7 @@ def get_db():
 
         _apply_broker_index_migration(conn)
         conn.commit()
+        apply_migrations(conn)
     except Exception:
         conn.rollback()
         raise
