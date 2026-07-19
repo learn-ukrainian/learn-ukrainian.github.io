@@ -137,7 +137,20 @@ freshness. Record the actual writer/repair author family with `record-build`.
 
 ### `POST_BUILD_REVIEW_REQUIRED`
 
-Read and follow `$post-build-review` completely for the same target. Allocate a
+Read and follow `$post-build-review` completely for the same target. Before
+any semantic/provider call, freeze and authorize its exact protocol identity:
+
+```bash
+.venv/bin/python agents_extensions/shared/skills/track-completion/scripts/track_completion.py \
+  prepare-semantic-review <track/slug> --run-id <id> \
+  --protocol-version <X.Y.Z> --prompt-sha256 <sha256> --schema-sha256 <sha256> \
+  --reviewer-family <family> --reviewer-model <model>
+```
+
+This command returns the only allowed phase and remaining budget. Do not make a
+semantic call if it rejects. `record-review` accepts only a result bound to that
+pre-existing frozen identity; protocol/tool/source drift is rejected without
+consuming budget. Allocate a
 new invocation directory every time. Do not repair, normalize, or retry inside
 that invocation. Use its emitted semantic schema when the provider supports
 structured output; prompt-only JSON compliance is not a reliable automation
@@ -173,10 +186,11 @@ permits the final review only after fresh deterministic verification. A second
 learner repair or third semantic review is rejected without ledger mutation
 and leaves the terminal disposition `BLOCKED_BUDGET_EXHAUSTED`. Audit-tooling
 drift with unchanged learner source is deferred, not repaired inside this run.
-If a non-PASS finding is suspected reviewer noise, do not mutate content first:
-run one distinct review with the exact same reviewer identity and record it
-using `record-review --stability-check`. A material flip enters
-`REVIEWER_INSTABILITY`; a stable result returns the same repair route.
+Do not run an unchanged-source stability retry in a bounded active run: it
+would spend a forbidden semantic call. Preserve the finding and route any
+tooling/reviewer concern to a later run; `REVIEWER_INSTABILITY` remains only
+for already-recorded contradictory evidence, never as authorization for a
+third call.
 
 ### `REVIEWER_INSTABILITY`
 

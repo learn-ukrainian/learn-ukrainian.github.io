@@ -486,6 +486,133 @@ def _remaining_bounded_budgets(run: Mapping[str, Any]) -> dict[str, int]:
     }
 
 
+def prepare_semantic_review(
+    selector: str,
+    *,
+    run_id: str,
+    protocol_version: str,
+    prompt_sha256: str,
+    schema_sha256: str,
+    reviewer_family: str,
+    reviewer_model: str,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger_root: Path | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Freeze and preflight the one permitted next semantic PBR call."""
+
+    _config, snapshot, identity, path, ledger = _load_for_update(
+        selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+    )
+    if "bounded_completion" not in ledger:
+        raise CompletionError("Legacy ledger requires migrate-bounded-completion before a later bounded run")
+    if ledger["state"] != "POST_BUILD_REVIEW_REQUIRED":
+        raise CompletionError(f"Semantic-review preparation is not allowed from {ledger['state']}")
+    learner_hashes = _learner_hashes(snapshot, repo_root=repo_root)
+    protocol = bounded_completion.make_review_protocol_identity(
+        protocol_version=protocol_version,
+        tool_sha256=_identity(identity["workflow_hashes"]),
+        prompt_sha256=prompt_sha256,
+        schema_sha256=schema_sha256,
+        reviewer_family=reviewer_family,
+        reviewer_model=reviewer_model,
+    )
+    try:
+        with _with_lock(path):
+            _config, _snapshot, identity, path, ledger = _load_for_update(
+                selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+            )
+            if "bounded_completion" not in ledger:
+                raise CompletionError("Legacy ledger requires migrate-bounded-completion before a later bounded run")
+            record = _bounded_record(ledger)
+            source_identity = _learner_source_identity(learner_hashes)
+            if record is None:
+                run = bounded_completion.start_run(
+                    target=snapshot.selector,
+                    run_id=str(ledger["run"]["run_id"]),
+                    review_protocol_identity=protocol,
+                    learner_source_sha256=source_identity,
+                )
+                run = bounded_completion.complete_inspection(run, needs_build=False)
+                run = bounded_completion.record_deterministic_verification(
+                    run, learner_source_sha256=source_identity, passed=True
+                )
+                record = {
+                    "contract_sha256": sha256_file(BOUNDED_CONTRACT_PATH),
+                    "run": run,
+                    "frozen_learner_hashes": learner_hashes,
+                    "remaining_budgets": _remaining_bounded_budgets(run),
+                    "deferred_workflow_drift": [],
+                    "semantic_review_reuse": None,
+                }
+            elif (
+                record["frozen_learner_hashes"] != learner_hashes
+                or record["run"]["review_protocol_identity"] != protocol
+            ):
+                raise CompletionError("Frozen semantic-review protocol or learner source differs; start a later run")
+            if record["run"]["state"] == "DETERMINISTIC_VERIFICATION":
+                record["run"] = bounded_completion.record_deterministic_verification(
+                    record["run"], learner_source_sha256=source_identity, passed=True
+                )
+                record["remaining_budgets"] = _remaining_bounded_budgets(record["run"])
+            phase = bounded_completion.semantic_review_phase(
+                record["run"], review_protocol_identity=protocol, learner_source_sha256=source_identity
+            )
+            ledger["bounded_completion"] = record
+            eid = _event_id("SEMANTIC_REVIEW_PREPARED", {"phase": phase, "protocol": protocol["identity_sha256"]})
+            _append_event(
+                ledger,
+                event_id=eid,
+                event="SEMANTIC_REVIEW_PREPARED",
+                to_state=ledger["state"],
+                identity=identity,
+                details={"phase": phase, "remaining_budgets": record["remaining_budgets"]},
+            )
+            _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+            _atomic_write_json(path, ledger)
+            return path, ledger
+    except Timeout as exc:
+        raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+
+
+def migrate_bounded_completion(
+    selector: str,
+    *,
+    run_id: str,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger_root: Path | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Quarantine a legacy ledger; it cannot be granted a retroactive budget."""
+
+    _config, _snapshot, identity, path, ledger = _load_for_update(
+        selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+    )
+    if "bounded_completion" in ledger:
+        raise CompletionError("Bounded-completion migration applies only to legacy ledgers")
+    try:
+        with _with_lock(path):
+            _config, _snapshot, identity, path, ledger = _load_for_update(
+                selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+            )
+            if "bounded_completion" in ledger:
+                raise CompletionError("Bounded-completion migration applies only to legacy ledgers")
+            eid = _event_id("BOUNDED_COMPLETION_MIGRATION_REQUIRED", {"run_id": run_id})
+            _append_event(
+                ledger,
+                event_id=eid,
+                event="BOUNDED_COMPLETION_MIGRATION_REQUIRED",
+                to_state="MIGRATION_REQUIRED",
+                identity=identity,
+                details={"legacy_review_count": len(ledger["reviews"]), "recovery": "start-later-bounded-run"},
+            )
+            _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+            _atomic_write_json(path, ledger)
+            return path, ledger
+    except Timeout as exc:
+        raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+
+
 def _record_bounded_semantic_review(
     ledger: dict[str, Any],
     *,
@@ -506,40 +633,14 @@ def _record_bounded_semantic_review(
     protocol = _bounded_protocol_identity(result, workflow_hashes=identity["workflow_hashes"])
     record = _bounded_record(ledger)
     if record is None:
-        run = bounded_completion.start_run(
-            target=snapshot.selector,
-            run_id=str(ledger["run"]["run_id"]),
-            review_protocol_identity=protocol,
-            learner_source_sha256=source_identity,
-        )
-        run = bounded_completion.complete_inspection(run, needs_build=False)
-        run = bounded_completion.record_deterministic_verification(
-            run,
-            learner_source_sha256=source_identity,
-            passed=True,
-        )
-        record = {
-            "contract_sha256": sha256_file(BOUNDED_CONTRACT_PATH),
-            "run": run,
-            "frozen_learner_hashes": source_hashes,
-            "remaining_budgets": _remaining_bounded_budgets(run),
-            "deferred_workflow_drift": [],
-            "semantic_review_reuse": None,
-        }
-    else:
-        if record["contract_sha256"] != sha256_file(BOUNDED_CONTRACT_PATH):
-            raise CompletionError("Bounded completion contract drift requires a later completion run")
-        if record["frozen_learner_hashes"] != source_hashes:
-            raise CompletionError("Learner-source change must be recorded as the consolidated repair")
-        run = record["run"]
-        if run["state"] == "DETERMINISTIC_VERIFICATION":
-            run = bounded_completion.record_deterministic_verification(
-                run,
-                learner_source_sha256=source_identity,
-                passed=True,
-            )
-        elif run["state"] != "SEMANTIC_REVIEW":
-            raise CompletionError(f"Bounded semantic review is not allowed from {run['state']}")
+        raise CompletionError("Prepare the bounded semantic review before invoking the canonical reviewer")
+    if record["contract_sha256"] != sha256_file(BOUNDED_CONTRACT_PATH):
+        raise CompletionError("Bounded completion contract drift requires a later completion run")
+    if record["frozen_learner_hashes"] != source_hashes:
+        raise CompletionError("Learner-source change must be recorded as the consolidated repair")
+    if record["run"]["review_protocol_identity"] != protocol:
+        raise CompletionError("Returned review does not match the pre-call frozen protocol identity")
+    run = record["run"]
 
     reported = str(result["combined_disposition"]["status"])
     if reported == "INCOMPLETE":
@@ -2985,6 +3086,11 @@ def build_parser() -> argparse.ArgumentParser:
     migrate.add_argument("--terminal-goal", required=True, choices=sorted(TERMINAL_GOALS))
     migrate.add_argument("--pr", type=int)
     migrate.add_argument("--merge-sha")
+    bounded_migrate = subparsers.add_parser(
+        "migrate-bounded-completion", help="Quarantine a legacy ledger for a later bounded run"
+    )
+    _add_common_options(bounded_migrate)
+    bounded_migrate.add_argument("--run-id", required=True)
     resume = subparsers.add_parser("resume", help="Renew the exact recorded run lease")
     _add_common_options(resume)
     resume.add_argument("--run-id", required=True)
@@ -3015,11 +3121,15 @@ def build_parser() -> argparse.ArgumentParser:
     _add_common_options(review)
     review.add_argument("--run-id", required=True)
     review.add_argument("--result", required=True, type=Path)
-    review.add_argument(
-        "--stability-check",
-        action="store_true",
-        help="Compare one unchanged-source repeat after a non-PASS result",
-    )
+    review.add_argument("--stability-check", action="store_true", help=argparse.SUPPRESS)
+    prepare = subparsers.add_parser("prepare-semantic-review", help="Freeze and authorize the next semantic PBR call")
+    _add_common_options(prepare)
+    prepare.add_argument("--run-id", required=True)
+    prepare.add_argument("--protocol-version", required=True)
+    prepare.add_argument("--prompt-sha256", required=True)
+    prepare.add_argument("--schema-sha256", required=True)
+    prepare.add_argument("--reviewer-family", required=True)
+    prepare.add_argument("--reviewer-model", required=True)
     instability = subparsers.add_parser(
         "record-instability-adjudication",
         help="Record evidence that permits a different reviewer route",
@@ -3102,6 +3212,8 @@ def main(argv: list[str] | None = None) -> int:
                 merge_sha=args.merge_sha,
                 **common,
             )
+        elif args.command == "migrate-bounded-completion":
+            path, value = migrate_bounded_completion(args.target, run_id=args.run_id, **common)
         elif args.command == "resume":
             path, value = resume_run(args.target, run_id=args.run_id, **common)
         elif args.command == "status":
@@ -3133,6 +3245,17 @@ def main(argv: list[str] | None = None) -> int:
                 run_id=args.run_id,
                 result_path=args.result,
                 stability_check=args.stability_check,
+                **common,
+            )
+        elif args.command == "prepare-semantic-review":
+            path, value = prepare_semantic_review(
+                args.target,
+                run_id=args.run_id,
+                protocol_version=args.protocol_version,
+                prompt_sha256=args.prompt_sha256,
+                schema_sha256=args.schema_sha256,
+                reviewer_family=args.reviewer_family,
+                reviewer_model=args.reviewer_model,
                 **common,
             )
         elif args.command == "record-instability-adjudication":
