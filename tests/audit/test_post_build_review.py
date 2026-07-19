@@ -610,6 +610,21 @@ def malyshko_packet() -> dict:
     return pbr.prepare_review("bio/andrii-malyshko", _reviewer())
 
 
+@pytest.fixture
+def malyshko_exact_only_packet(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict:
+    empty_checkout = tmp_path / "main-without-vesum"
+    empty_checkout.mkdir()
+    monkeypatch.setattr(pbr, "main_checkout_root", lambda _repo_root: empty_checkout)
+
+    packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
+    rows = packet["vocabulary_surface_candidates"]["lemmas"]
+
+    assert packet["vocabulary_surface_candidates"]["vesum_status"] == "unavailable_exact_only"
+    assert any(row["candidates"] for row in rows)
+    assert any(not row["candidates"] for row in rows)
+    return packet
+
+
 def test_track_resolution_covers_every_versioned_track() -> None:
     policy = pbr.load_track_policy()
     for track, config in policy["tracks"].items():
@@ -3355,7 +3370,12 @@ def _single_integrated_vocabulary_semantic(
 ) -> tuple[dict, dict]:
     semantic = _passing_semantic(packet)
     coverage = copy.deepcopy(next(item for item in semantic["vocabulary_coverage"] if item["status"] == "INTEGRATED"))
-    assert all(item["status"] == "INTEGRATED" for item in semantic["vocabulary_coverage"])
+    alignment = semantic["alignment_audit"]["VOCABULARY_INTEGRATION"]
+    missing_finding_ids = {
+        item["finding_id"] for item in semantic["vocabulary_coverage"] if item["status"] != "INTEGRATED"
+    }
+    assert coverage["finding_id"] is None
+    assert missing_finding_ids.issubset(set(alignment["finding_ids"]))
     finding_id = "fixture-vocabulary-substitution"
     location = coverage["evidence"][0]
     semantic["findings"].append(
@@ -3372,11 +3392,11 @@ def _single_integrated_vocabulary_semantic(
             },
         }
     )
-    semantic["alignment_audit"]["VOCABULARY_INTEGRATION"].update(
+    alignment.update(
         {
             "status": "FOUND",
-            "evidence": copy.deepcopy(coverage["evidence"]),
-            "finding_ids": [finding_id],
+            "evidence": [*alignment["evidence"], *copy.deepcopy(coverage["evidence"])],
+            "finding_ids": [*alignment["finding_ids"], finding_id],
         }
     )
     semantic["verdict"] = verdict
@@ -3384,21 +3404,23 @@ def _single_integrated_vocabulary_semantic(
 
 
 def test_finalize_accepts_integrated_vocabulary_with_broader_alignment_finding(
-    malyshko_packet: dict,
+    malyshko_exact_only_packet: dict,
 ) -> None:
-    semantic, _ = _single_integrated_vocabulary_semantic(
-        malyshko_packet,
+    semantic, coverage = _single_integrated_vocabulary_semantic(
+        malyshko_exact_only_packet,
         severity="medium",
         verdict="REVISE",
     )
 
     result = pbr.finalize_review(
-        malyshko_packet,
-        _provider_raw(malyshko_packet, semantic),
+        malyshko_exact_only_packet,
+        _provider_raw(malyshko_exact_only_packet, semantic),
     )
 
     assert result["semantic_response"]["contract_status"] == "valid"
-    assert result["semantic"]["vocabulary_coverage"][0]["status"] == "INTEGRATED"
+    hydrated_coverage = {item["lemma"]: item for item in result["semantic"]["vocabulary_coverage"]}
+    assert hydrated_coverage[coverage["lemma"]]["status"] == "INTEGRATED"
+    assert any(item["status"] == "MISSING" for item in result["semantic"]["vocabulary_coverage"])
     assert result["semantic"]["alignment_audit"]["VOCABULARY_INTEGRATION"]["status"] == "FOUND"
     assert result["combined_disposition"]["status"] != "PASS"
     pbr.validate_result(result)
@@ -3412,19 +3434,19 @@ def test_finalize_accepts_integrated_vocabulary_with_broader_alignment_finding(
     ],
 )
 def test_finalize_rejects_fail_open_integrated_vocabulary_finding(
-    malyshko_packet: dict,
+    malyshko_exact_only_packet: dict,
     verdict: str,
     severity: str,
     error_fragment: str,
 ) -> None:
     semantic, _ = _single_integrated_vocabulary_semantic(
-        malyshko_packet,
+        malyshko_exact_only_packet,
         severity=severity,
         verdict=verdict,
     )
     result = pbr.finalize_review(
-        malyshko_packet,
-        _provider_raw(malyshko_packet, semantic),
+        malyshko_exact_only_packet,
+        _provider_raw(malyshko_exact_only_packet, semantic),
     )
 
     assert result["semantic_response"]["contract_status"] == "invalid"
