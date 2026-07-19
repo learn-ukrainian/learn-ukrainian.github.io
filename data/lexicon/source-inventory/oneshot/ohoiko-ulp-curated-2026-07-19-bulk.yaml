@@ -19,7 +19,7 @@ sources:
     gloss: or
     locator: ohoiko-1000-words entry 2
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: авто =
+  - lemma: авто
     pos: phrase
     gloss: car
     locator: ohoiko-1000-words entry 4
@@ -309,7 +309,7 @@ sources:
     gloss: 'to build Conjugation: 1st (-ють)'
     locator: ohoiko-500-verbs entry 18
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: будувати, збудувати =
+  - lemma: будувати, збудувати
     pos: phrase
     gloss: to build
     locator: ohoiko-1000-words entry 53
@@ -404,7 +404,7 @@ sources:
     gloss: near, close to
     locator: ohoiko-1000-words entry 40
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: в=у
+  - lemma: в
     pos: noun
     gloss: 1) in, at (location);
     locator: ohoiko-1000-words entry 58
@@ -1214,7 +1214,7 @@ sources:
     gloss: to take into account
     locator: ohoiko-500-verbs entry 88
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: врешті-решт =
+  - lemma: врешті-решт
     pos: phrase
     gloss: eventually, after all
     locator: ohoiko-1000-words entry 132
@@ -1369,7 +1369,7 @@ sources:
     gloss: on time, in time
     locator: ohoiko-1000-words entry 140
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: вчитель, вчителька =
+  - lemma: вчитель, вчителька
     pos: phrase
     gloss: teacher (usually at school)
     locator: ohoiko-1000-words entry 141
@@ -1379,7 +1379,7 @@ sources:
     gloss: to teach something
     locator: ohoiko-1000-words entry 142
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: вчити = учити,
+  - lemma: вчити
     pos: phrase
     gloss: to learn, to study something
     locator: ohoiko-1000-words entry 90
@@ -1684,7 +1684,7 @@ sources:
     gloss: to say; to speak, to talk
     locator: ohoiko-500-verbs entry 102
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: говорити, поговорити =
+  - lemma: говорити, поговорити
     pos: phrase
     gloss: to speak, to talk
     locator: ohoiko-1000-words entry 159
@@ -3344,7 +3344,7 @@ sources:
     gloss: 'to scare, to frighten [to get scared] Conjugation: 1st (-ють)'
     locator: ohoiko-500-verbs entry 243
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: зліва (1) =
+  - lemma: зліва (1)
     pos: phrase
     gloss: 1) on the left, to the left;
     locator: ohoiko-1000-words entry 405
@@ -4369,7 +4369,7 @@ sources:
     gloss: to have (imperfective only)
     locator: ohoiko-1000-words entry 437
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: мати = матір
+  - lemma: мати
     pos: phrase
     gloss: mother, mom
     locator: ohoiko-1000-words entry 435
@@ -5344,7 +5344,7 @@ sources:
     gloss: 'to describe Conjugation: 1st (-ють) | 1st (-уть)'
     locator: ohoiko-500-verbs entry 290
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: оранжевий =
+  - lemma: оранжевий
     pos: phrase
     gloss: orange (color)
     locator: ohoiko-1000-words entry 555
@@ -6834,7 +6834,7 @@ sources:
     gloss: to begin sth, to start sth [to begin, to start (off)]
     locator: ohoiko-500-verbs entry 354
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: починати, почати =
+  - lemma: починати, почати
     pos: phrase
     gloss: to begin, to start
     locator: ohoiko-1000-words entry 649
@@ -8399,7 +8399,7 @@ sources:
     gloss: to sleep
     locator: ohoiko-1000-words entry 796
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: спекотно = жарко hot (weather)
+  - lemma: спекотно
     pos: phrase
     gloss: ohoiko 1000-words entry
     locator: ohoiko-1000-words entry 152
@@ -8469,7 +8469,7 @@ sources:
     gloss: at first
     locator: ohoiko-1000-words entry 804
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: справа (1) =
+  - lemma: справа (1)
     pos: phrase
     gloss: 1) on the right, to the right;
     locator: ohoiko-1000-words entry 658
@@ -9279,12 +9279,12 @@ sources:
     gloss: in the evening
     locator: ohoiko-1000-words entry 68
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: угору = вверх =
+  - lemma: угору
     pos: phrase
     gloss: up, upwards (direction)
     locator: ohoiko-1000-words entry 70
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: угорі = зве рху
+  - lemma: угорі
     pos: phrase
     gloss: 1) up, above (location);
     locator: ohoiko-1000-words entry 69
@@ -9424,12 +9424,12 @@ sources:
     gloss: student, students
     locator: ohoiko-1000-words entry 903
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: учити = навчати,
+  - lemma: учити
     pos: phrase
     gloss: to teach something
     locator: ohoiko-1000-words entry 142
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: учитися =
+  - lemma: учитися
     pos: phrase
     gloss: to study (somewhere or in
     locator: ohoiko-1000-words entry 143
@@ -10064,7 +10064,7 @@ sources:
     gloss: and
     locator: ohoiko-1000-words entry 311
     context: Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.
-  - lemma: і (1) = але (2)
+  - lemma: і (1)
     pos: phrase
     gloss: 1) and; 2) but
     locator: ohoiko-1000-words entry 839
