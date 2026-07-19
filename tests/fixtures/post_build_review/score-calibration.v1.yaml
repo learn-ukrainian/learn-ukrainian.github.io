@@ -224,8 +224,8 @@ cases:
       documented_semantic_cap: 6.0
 comparability:
   - id: identical-review-identity-is-comparable
-    left: [6.0.7, fixture, fixture-model, high]
-    right: [6.0.7, fixture, fixture-model, high]
+    left: [6.1.0, fixture, fixture-model, high]
+    right: [6.1.0, fixture, fixture-model, high]
     expected: true
   - id: prompt-or-reviewer-identity-drift-is-not-comparable
     left: [6.0.7, fixture, fixture-model, high]
