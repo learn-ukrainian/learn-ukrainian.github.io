@@ -63,7 +63,7 @@ test('practice mode switch starts the selected mode without inheriting the unfin
 
   await page.locator('button[data-mode="matching"]').click();
   await expect(page.locator('[data-testid="practice-matching"]')).toBeVisible();
-  await page.getByRole('button', { name: /Додому/ }).click();
+  await page.getByRole('button', { name: /Додому|Home/ }).click();
 
   // The K3 dashboard preserves mode snapshots but exposes only the primary mixed resume CTA.
   // Switching to a different mode starts fresh instead of inheriting the unfinished session.
