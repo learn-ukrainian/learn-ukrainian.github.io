@@ -24,6 +24,7 @@ from filelock import FileLock, Timeout
 from jsonschema import Draft202012Validator
 
 try:  # The script is also loaded directly by focused tests.
+    from . import bounded_completion
     from . import certification_evidence as certification
 except ImportError:
     import importlib.util
@@ -36,6 +37,14 @@ except ImportError:
     certification = importlib.util.module_from_spec(_CERTIFICATION_SPEC)
     sys.modules[_CERTIFICATION_SPEC.name] = certification
     _CERTIFICATION_SPEC.loader.exec_module(certification)
+    _BOUNDED_SPEC = importlib.util.spec_from_file_location(
+        "track_completion_bounded_completion",
+        Path(__file__).with_name("bounded_completion.py"),
+    )
+    assert _BOUNDED_SPEC is not None and _BOUNDED_SPEC.loader is not None
+    bounded_completion = importlib.util.module_from_spec(_BOUNDED_SPEC)
+    sys.modules[_BOUNDED_SPEC.name] = bounded_completion
+    _BOUNDED_SPEC.loader.exec_module(bounded_completion)
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 PROJECT_ROOT = Path(__file__).resolve().parents[5]
@@ -51,6 +60,7 @@ from scripts.orchestration.prompt_contracts import (
 DEFAULT_CONFIG_PATH = SKILL_ROOT / "config" / "track-completion.v1.yaml"
 CONFIG_SCHEMA_PATH = SKILL_ROOT / "schema" / "track-completion-config.v1.schema.json"
 LEDGER_SCHEMA_PATH = SKILL_ROOT / "schema" / "progress-ledger.v1.schema.json"
+BOUNDED_CONTRACT_PATH = SKILL_ROOT / "contracts" / "bounded-completion.v1.json"
 
 SELECTOR_RE = re.compile(r"^(?P<track>[a-z0-9-]+)/(?P<slug>[a-z0-9-]+)$")
 MATERIAL_SEVERITIES = frozenset({"blocker", "high", "medium"})
@@ -349,10 +359,7 @@ def certification_profile_for(
     try:
         resolved = resolve_profile_selectors(
             selectors=value["selectors"],
-            profile_families={
-                profile_id: str(profile["family"])
-                for profile_id, profile in value["profiles"].items()
-            },
+            profile_families={profile_id: str(profile["family"]) for profile_id, profile in value["profiles"].items()},
             active_tracks=load_active_tracks(repo_root, str(config["manifest_path"])),
             label="curriculum certification profiles",
         )
@@ -394,6 +401,439 @@ def _declared_hashes(repo_root: Path, paths: Sequence[str], *, label: str) -> di
 
 def _identity(hashes: Mapping[str, str]) -> str:
     return sha256_bytes(stable_json(dict(sorted(hashes.items()))).encode("utf-8"))
+
+
+def _learner_hashes(snapshot: TargetSnapshot, *, repo_root: Path) -> dict[str, str]:
+    """Hash exactly the learner-source bundle, excluding the immutable plan."""
+
+    hashes = {
+        name: sha256_file(_repo_path(repo_root, raw))
+        for name, raw in sorted(snapshot.review_files.items())
+        if name != "plan"
+    }
+    if not hashes:
+        raise CompletionError("Bounded completion requires a complete learner bundle")
+    return hashes
+
+
+def _learner_source_identity(hashes: Mapping[str, str]) -> str:
+    """Use the canonical helper's stable JSON identity for learner-source freshness."""
+
+    return bounded_completion.sha256_json(dict(sorted(hashes.items())))
+
+
+def _bounded_protocol_identity(
+    result: Mapping[str, Any],
+    *,
+    workflow_hashes: Mapping[str, str],
+    frozen_schema_sha256: str,
+) -> dict[str, str]:
+    """Bind returned canonical PBR evidence to the pre-call schema digest.
+
+    The result declares the version of its envelope, not a digest of the
+    semantic-output schema supplied to the reviewer.  That schema digest is
+    frozen before the call and is intentionally never reconstructed here.
+    """
+
+    reviewer = result["reviewer"]
+    return bounded_completion.make_review_protocol_identity(
+        protocol_version=str(result["review_protocol_version"]),
+        tool_sha256=_identity(workflow_hashes),
+        prompt_sha256=str(result["prompt_sha256"]),
+        schema_sha256=frozen_schema_sha256,
+        reviewer_family=str(reviewer["family"]),
+        reviewer_model=str(reviewer["model"]),
+    )
+
+
+def _bounded_dimension_scores(result: Mapping[str, Any]) -> dict[str, float]:
+    """Extract the canonical per-dimension scores; missing scores fail closed."""
+
+    semantic = result.get("semantic")
+    dimensions = semantic.get("quality_dimensions") if isinstance(semantic, Mapping) else None
+    if not isinstance(dimensions, Mapping):
+        raise CompletionError("Canonical post-build result has no quality-dimension scores")
+    scores: dict[str, float] = {}
+    for dimension in bounded_completion.load_contract()["publication_quality"]["dimensions"]:
+        entry = dimensions.get(dimension)
+        if (
+            not isinstance(entry, Mapping)
+            or isinstance(entry.get("score"), bool)
+            or not isinstance(entry.get("score"), (int, float))
+        ):
+            raise CompletionError(f"Canonical post-build result lacks a numeric {dimension} score")
+        scores[dimension] = float(entry["score"])
+    return scores
+
+
+def _bounded_record(ledger: Mapping[str, Any]) -> dict[str, Any] | None:
+    value = ledger.get("bounded_completion")
+    if value is None:
+        return None
+    if not isinstance(value, dict):
+        raise CompletionError("Bounded completion ledger record is malformed")
+    try:
+        bounded_completion.validate_run(value["run"])
+    except (KeyError, bounded_completion.BoundedCompletionError) as exc:
+        raise CompletionError(f"Bounded completion ledger record is invalid: {exc}") from exc
+    return value
+
+
+def _remaining_bounded_budgets(run: Mapping[str, Any]) -> dict[str, int]:
+    """Derive remaining capacity only from the canonical bounded contract."""
+
+    budgets = bounded_completion.load_contract()["budgets"]
+    return {
+        "semantic_reviews": budgets["semantic_reviews_total"] - len(run["reviews"]),
+        "consolidated_repairs": budgets["consolidated_repairs"] - len(run["repairs"]),
+    }
+
+
+def prepare_semantic_review(
+    selector: str,
+    *,
+    run_id: str,
+    protocol_version: str,
+    prompt_sha256: str,
+    schema_sha256: str,
+    reviewer_family: str,
+    reviewer_model: str,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger_root: Path | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Freeze and preflight the one permitted next semantic PBR call."""
+
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    try:
+        with _with_lock(path):
+            _config, snapshot, identity, path, ledger = _load_for_update(
+                selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+            )
+            if "bounded_completion" not in ledger:
+                raise CompletionError(
+                    "Legacy ledger requires migrate-bounded-completion then restart-bounded-completion"
+                )
+            if ledger["state"] != "POST_BUILD_REVIEW_REQUIRED":
+                raise CompletionError(f"Semantic-review preparation is not allowed from {ledger['state']}")
+            learner_hashes = _learner_hashes(snapshot, repo_root=repo_root)
+            requested_protocol = bounded_completion.make_review_protocol_identity(
+                protocol_version=protocol_version,
+                tool_sha256=_identity(identity["workflow_hashes"]),
+                prompt_sha256=prompt_sha256,
+                schema_sha256=schema_sha256,
+                reviewer_family=reviewer_family,
+                reviewer_model=reviewer_model,
+            )
+            record = _bounded_record(ledger)
+            source_identity = _learner_source_identity(learner_hashes)
+            if ledger["deferred_workflow_drift"] or (record is not None and record["deferred_workflow_drift"]):
+                raise CompletionError(
+                    "Deferred audit-tooling drift requires restart-bounded-completion before a semantic review"
+                )
+            if record is None:
+                run = bounded_completion.start_run(
+                    target=snapshot.selector,
+                    run_id=str(ledger["run"]["run_id"]),
+                    review_protocol_identity=requested_protocol,
+                    learner_source_sha256=source_identity,
+                )
+                run = bounded_completion.complete_inspection(run, needs_build=False)
+                run = bounded_completion.record_deterministic_verification(
+                    run, learner_source_sha256=source_identity, passed=True
+                )
+                record = {
+                    "contract_sha256": sha256_file(BOUNDED_CONTRACT_PATH),
+                    "run": run,
+                    "frozen_learner_hashes": learner_hashes,
+                    "remaining_budgets": _remaining_bounded_budgets(run),
+                    "deferred_workflow_drift": [],
+                    "semantic_review_reuse": None,
+                }
+                protocol = requested_protocol
+            else:
+                if record["frozen_learner_hashes"] != learner_hashes:
+                    raise CompletionError(
+                        "Frozen semantic-review protocol or learner source differs; start a later run"
+                    )
+                protocol = record["run"]["review_protocol_identity"]
+                if protocol != requested_protocol:
+                    raise CompletionError(
+                        "Frozen semantic-review protocol or learner source differs; start a later run"
+                    )
+            if record["run"]["state"] == "DETERMINISTIC_VERIFICATION":
+                record["run"] = bounded_completion.record_deterministic_verification(
+                    record["run"], learner_source_sha256=source_identity, passed=True
+                )
+                record["remaining_budgets"] = _remaining_bounded_budgets(record["run"])
+            try:
+                phase = bounded_completion.semantic_review_phase(
+                    record["run"], review_protocol_identity=protocol, learner_source_sha256=source_identity
+                )
+            except bounded_completion.BoundedCompletionError as exc:
+                raise CompletionError(str(exc)) from exc
+            ledger["bounded_completion"] = record
+            eid = _event_id("SEMANTIC_REVIEW_PREPARED", {"phase": phase, "protocol": protocol["identity_sha256"]})
+            if _event_exists(ledger, eid):
+                return path, ledger
+            _append_event(
+                ledger,
+                event_id=eid,
+                event="SEMANTIC_REVIEW_PREPARED",
+                to_state=ledger["state"],
+                identity=identity,
+                details={"phase": phase, "remaining_budgets": record["remaining_budgets"]},
+            )
+            _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+            _atomic_write_json(path, ledger)
+            return path, ledger
+    except Timeout as exc:
+        raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+
+
+def migrate_bounded_completion(
+    selector: str,
+    *,
+    run_id: str,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger_root: Path | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Quarantine a legacy ledger; it cannot be granted a retroactive budget."""
+
+    _config, _snapshot, identity, path, ledger = _load_for_update(
+        selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+    )
+    if "bounded_completion" in ledger:
+        raise CompletionError("Bounded-completion migration applies only to legacy ledgers")
+    try:
+        with _with_lock(path):
+            _config, _snapshot, identity, path, ledger = _load_for_update(
+                selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+            )
+            if "bounded_completion" in ledger:
+                raise CompletionError("Bounded-completion migration applies only to legacy ledgers")
+            eid = _event_id("BOUNDED_COMPLETION_MIGRATION_REQUIRED", {"run_id": run_id})
+            _append_event(
+                ledger,
+                event_id=eid,
+                event="BOUNDED_COMPLETION_MIGRATION_REQUIRED",
+                to_state="MIGRATION_REQUIRED",
+                identity=identity,
+                details={
+                    "legacy_review_count": len(ledger["reviews"]),
+                    "recovery": "restart-bounded-completion",
+                },
+            )
+            _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+            _atomic_write_json(path, ledger)
+            return path, ledger
+    except Timeout as exc:
+        raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+
+
+def restart_bounded_completion(
+    selector: str,
+    *,
+    run_id: str,
+    owner: str,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger_root: Path | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Quarantine an eligible prior run and begin a fresh, zero-budget run.
+
+    Historical authority records are copied into a non-live archive. The new
+    run has no bounded record until explicitly prepared, so neither migration
+    nor deferred-protocol handoff can infer prior calls or repairs.
+    """
+
+    if not owner.strip():
+        raise CompletionError("Ledger owner must be non-empty")
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    try:
+        with _with_lock(path):
+            _config, snapshot, identity, path, ledger = _load_for_update(
+                selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+            )
+            bounded = _bounded_record(ledger)
+            legacy_restart = "bounded_completion" not in ledger and ledger["state"] == "MIGRATION_REQUIRED"
+            deferred_restart = bool(ledger["deferred_workflow_drift"]) or (
+                bounded is not None and bool(bounded["deferred_workflow_drift"])
+            )
+            if not (legacy_restart or deferred_restart):
+                raise CompletionError(
+                    "Bounded restart requires a migrated legacy ledger or a bounded run with deferred audit-tooling drift"
+                )
+            prior_run = dict(ledger["run"])
+            archive = {
+                "reason": "legacy-migration" if legacy_restart else "deferred-protocol-drift",
+                "prior_run": prior_run,
+                "prior_state": ledger["state"],
+                "prior_identity": dict(ledger["current_identity"]),
+                "reviews": list(ledger["reviews"]),
+                "certification_evidence": list(ledger.get("certification_evidence", [])),
+                "routing": ledger.get("routing"),
+                "publication": ledger.get("publication"),
+                "production_qg_authorization": ledger.get("production_qg_authorization"),
+                "bounded_completion": bounded,
+                "deferred_workflow_drift": list(ledger.get("deferred_workflow_drift", [])),
+            }
+            now = _now()
+            fresh_run_id = uuid.uuid4().hex
+            ledger["run"] = {
+                "run_id": fresh_run_id,
+                "owner": owner,
+                "status": "active",
+                "started_at": _iso(now),
+                "updated_at": _iso(now),
+                "lease_expires_at": _iso(now + timedelta(seconds=int(_config["lease_seconds"]))),
+            }
+            ledger.setdefault("archived_authority", []).append(archive)
+            ledger["reviews"] = []
+            ledger["certification_evidence"] = []
+            ledger["routing"] = None
+            ledger["publication"] = None
+            ledger["production_qg_authorization"] = None
+            ledger["bounded_completion"] = None
+            ledger["deferred_workflow_drift"] = []
+            _append_event(
+                ledger,
+                event_id=_event_id(
+                    "BOUNDED_COMPLETION_RESTARTED", {"prior_run_id": prior_run["run_id"], "run_id": fresh_run_id}
+                ),
+                event="BOUNDED_COMPLETION_RESTARTED",
+                to_state=_initial_state(snapshot.module_state),
+                identity=identity,
+                details={
+                    "prior_run_id": prior_run["run_id"],
+                    "fresh_run_id": fresh_run_id,
+                    "restart_reason": archive["reason"],
+                    "archived_review_count": len(archive["reviews"]),
+                    "bounded_history_inferred": False,
+                },
+            )
+            _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+            _atomic_write_json(path, ledger)
+            return path, ledger
+    except Timeout as exc:
+        raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+
+
+def _record_bounded_semantic_review(
+    ledger: dict[str, Any],
+    *,
+    snapshot: TargetSnapshot,
+    identity: Mapping[str, Any],
+    result: Mapping[str, Any],
+    result_sha256: str,
+    learner_hashes: Mapping[str, str],
+) -> tuple[dict[str, Any], str]:
+    """Advance the one canonical bounded run for an accepted PBR result.
+
+    The outer ledger owns leases and certification; this helper owns only the
+    fixed INITIAL -> repair -> FINAL semantic budget and its source bindings.
+    """
+
+    source_hashes = dict(sorted(learner_hashes.items()))
+    source_identity = _learner_source_identity(source_hashes)
+    record = _bounded_record(ledger)
+    if record is None:
+        raise CompletionError("Prepare the bounded semantic review before invoking the canonical reviewer")
+    if record["contract_sha256"] != sha256_file(BOUNDED_CONTRACT_PATH):
+        raise CompletionError("Bounded completion contract drift requires a later completion run")
+    if record["frozen_learner_hashes"] != source_hashes:
+        raise CompletionError("Learner-source change must be recorded as the consolidated repair")
+    if record["deferred_workflow_drift"]:
+        raise CompletionError(
+            "Deferred audit-tooling drift requires restart-bounded-completion before a semantic review"
+        )
+    frozen_protocol = record["run"]["review_protocol_identity"]
+    protocol = _bounded_protocol_identity(
+        result,
+        workflow_hashes=identity["workflow_hashes"],
+        frozen_schema_sha256=str(frozen_protocol["schema_sha256"]),
+    )
+    if record["run"]["review_protocol_identity"] != protocol:
+        raise CompletionError("Returned review does not match the pre-call frozen protocol identity")
+    run = record["run"]
+
+    reported = str(result["combined_disposition"]["status"])
+    if reported == "INCOMPLETE":
+        reported = "BLOCK"
+    if reported not in {"PASS", "REVISE", "BLOCK"}:
+        raise CompletionError("Canonical post-build result has an unknown disposition")
+    try:
+        run = bounded_completion.record_semantic_review(
+            run,
+            review_protocol_identity=protocol,
+            learner_source_sha256=source_identity,
+            evidence_id=result_sha256,
+            reported_disposition=reported,
+            dimension_scores=_bounded_dimension_scores(result),
+            prompt_bytes=int(result.get("semantic_response", {}).get("byte_count", 0)),
+            schema_bytes=0,
+        )
+    except bounded_completion.BoundedCompletionError as exc:
+        raise CompletionError(str(exc)) from exc
+    record["run"] = run
+    record["remaining_budgets"] = _remaining_bounded_budgets(run)
+    ledger["bounded_completion"] = record
+    return record, reported
+
+
+def _record_bounded_learner_repair(
+    ledger: dict[str, Any],
+    *,
+    learner_hashes: Mapping[str, str],
+) -> None:
+    """Consume the single repair only for an actual learner-source mutation."""
+
+    record = _bounded_record(ledger)
+    if record is None:
+        return
+    source_hashes = dict(sorted(learner_hashes.items()))
+    try:
+        run = bounded_completion.record_consolidated_repair(
+            record["run"], learner_source_sha256=_learner_source_identity(source_hashes)
+        )
+    except bounded_completion.BoundedCompletionError as exc:
+        raise CompletionError(str(exc)) from exc
+    record["run"] = run
+    record["frozen_learner_hashes"] = source_hashes
+    record["remaining_budgets"] = _remaining_bounded_budgets(run)
+
+
+def _can_reuse_semantic_review(
+    ledger: Mapping[str, Any],
+    *,
+    reviewer_family: str,
+    snapshot: TargetSnapshot,
+    config: Mapping[str, Any],
+) -> bool:
+    """Allow one PBR reuse only when the content reviewer is cross-family."""
+
+    record = _bounded_record(ledger)
+    if record is None or record["semantic_review_reuse"] is not None:
+        return False
+    reviewer_group = _review_group(reviewer_family, config)
+    author_groups = {
+        _review_group(family, config)
+        for family in ledger["author_families"]
+        if _review_group(family, config) != "human"
+    }
+    if not author_groups or reviewer_group in author_groups:
+        return False
+    _require_track_reviewer_policy(
+        reviewer_family=reviewer_family,
+        reviewer_group=reviewer_group,
+        track_policy=snapshot.track_policy,
+    )
+    return True
 
 
 def _consumed_preparation_identity(ledger: Mapping[str, Any] | None) -> str | None:
@@ -443,12 +883,10 @@ def certification_inputs(
     ):
         raise CompletionError("Readiness profile contradicts the completion target family/profile")
     if readiness["state"] != "built-current" or readiness["next_action"] != "certify":
-        findings = ", ".join(
-            f"{item['id']}:{item['owner']}" for item in readiness["findings"]
-        ) or "no-readiness-finding"
-        raise CompletionError(
-            f"Current preparation is not certification-ready ({readiness['state']}; {findings})"
+        findings = (
+            ", ".join(f"{item['id']}:{item['owner']}" for item in readiness["findings"]) or "no-readiness-finding"
         )
+        raise CompletionError(f"Current preparation is not certification-ready ({readiness['state']}; {findings})")
     if not readiness["preparation_identity"] or not all(item["passed"] for item in readiness["requirements"]):
         raise CompletionError("Current declared preparation and plan requirements must pass")
     learner_hashes = {
@@ -667,9 +1105,7 @@ def start_run(
             existing = _read_ledger(path)
             if existing is not None:
                 if existing.get("terminal_goal") is None:
-                    raise CompletionError(
-                        "Existing ledger has no terminal goal; run migrate-terminal-goal"
-                    )
+                    raise CompletionError("Existing ledger has no terminal goal; run migrate-terminal-goal")
                 if existing["terminal_goal"] != terminal_goal:
                     raise CompletionError(
                         f"Existing ledger terminal goal is {existing['terminal_goal']}; refusing {terminal_goal}"
@@ -704,6 +1140,11 @@ def start_run(
                 "author_families": [],
                 "history": [],
                 "reviews": [],
+                "deferred_workflow_drift": [],
+                "archived_authority": [],
+                # A legacy ledger has no key; a new run binds this exactly when
+                # pre-call semantic-review preparation authorizes its first call.
+                "bounded_completion": None,
                 "certification_evidence": [],
                 "production_qg_authorization": None,
                 "routing": None,
@@ -767,11 +1208,7 @@ def resume_run(
             "AUDIT_TOOLING_REQUIRED",
         }:
             reopening_state = candidate
-    elif (
-        matching_prior
-        and prior["run"].get("status") == "active"
-        and prior["state"] == "PRODUCTION_QG_REQUIRED"
-    ):
+    elif matching_prior and prior["run"].get("status") == "active" and prior["state"] == "PRODUCTION_QG_REQUIRED":
         projection = certification_projection(
             selector, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
         )
@@ -791,18 +1228,16 @@ def resume_run(
             )
             if ledger["run"]["status"] != "active":
                 if reopening_state is None:
-                    raise CompletionError("Completed runs are non-authoritative; start a new run or resume after fresh certification evidence")
+                    raise CompletionError(
+                        "Completed runs are non-authoritative; start a new run or resume after fresh certification evidence"
+                    )
                 ledger["run"]["status"] = "active"
                 resumed_state = reopening_state
             elif reconcile_qg_rearming:
                 resumed_state = reopening_state
                 ledger["production_qg_authorization"] = None
             drifted = ledger["current_identity"]["sha256"] != identity["sha256"]
-            if (
-                drifted
-                and ledger["state"] not in MUTATING_STATES
-                and not reconcile_qg_rearming
-            ):
+            if drifted and ledger["state"] not in MUTATING_STATES and not reconcile_qg_rearming:
                 raise CompletionError("Unrecorded identity drift outside a mutation state; adjudicate stale evidence")
             _renew_lease(ledger, config)
             eid = _event_id(
@@ -815,11 +1250,7 @@ def resume_run(
                     event_id=eid,
                     event="CERTIFICATION_RESUMED" if reopening_state else "RESUMED",
                     to_state=resumed_state,
-                    identity=(
-                        identity
-                        if reconcile_qg_rearming or not drifted
-                        else ledger["current_identity"]
-                    ),
+                    identity=(identity if reconcile_qg_rearming or not drifted else ledger["current_identity"]),
                     details={
                         "pending_identity_drift": drifted and not reconcile_qg_rearming,
                         "reconciled_qg_rearming": reconcile_qg_rearming,
@@ -964,13 +1395,13 @@ def record_change(
             )
             if ledger["state"] not in allowed_states and not workflow_only_audit_refresh:
                 raise CompletionError(f"A repair change is not allowed from {ledger['state']}")
-            if (
-                ledger["state"] == "AWAITING_PRODUCTION_QG_ARMING"
-                and not workflow_only_audit_refresh
-            ):
-                raise CompletionError(
-                    "Production-QG arming boundary accepts only an audit_tooling workflow refresh"
-                )
+            if ledger["state"] == "AWAITING_PRODUCTION_QG_ARMING" and not workflow_only_audit_refresh:
+                if owner_kind == "built_artifact" and _bounded_record(ledger) is not None:
+                    _record_bounded_learner_repair(
+                        ledger,
+                        learner_hashes=_learner_hashes(snapshot, repo_root=repo_root),
+                    )
+                raise CompletionError("Production-QG arming boundary accepts only an audit_tooling workflow refresh")
             if identity["sha256"] == ledger["current_identity"]["sha256"]:
                 raise CompletionError("No target or workflow identity changed; refusing a no-op repair")
             if workflow_only_audit_refresh:
@@ -978,24 +1409,67 @@ def record_change(
                     identity["layout"] != ledger["current_identity"]["layout"]
                     or identity["module_state"] != ledger["current_identity"]["module_state"]
                 ):
-                    raise CompletionError(
-                        "An audit_tooling refresh accepts only unchanged module layout and state"
-                    )
+                    raise CompletionError("An audit_tooling refresh accepts only unchanged module layout and state")
                 if identity["target_hashes"] != ledger["current_identity"]["target_hashes"]:
-                    raise CompletionError(
-                        "An audit_tooling refresh accepts only unchanged target hashes"
-                    )
+                    raise CompletionError("An audit_tooling refresh accepts only unchanged target hashes")
                 if identity["workflow_hashes"] == ledger["current_identity"]["workflow_hashes"]:
-                    raise CompletionError(
-                        "An audit_tooling refresh requires workflow identity drift"
-                    )
+                    raise CompletionError("An audit_tooling refresh requires workflow identity drift")
             if ledger["state"] == "PLAN_REPAIR_REQUIRED" and owner_kind != "plan_workflow":
                 raise CompletionError("Plan-repair state only accepts plan_workflow changes")
             if ledger["state"] == "REVIEWER_INSTABILITY" and owner_kind != "audit_tooling":
                 raise CompletionError("Reviewer instability only accepts audit_tooling changes")
-            if ledger["routing"] is not None and owner_kind not in ledger["routing"]["owners"]:
+            if (
+                ledger["routing"] is not None
+                and owner_kind not in ledger["routing"]["owners"]
+                and not (
+                    owner_kind == "audit_tooling"
+                    and identity["target_hashes"] == ledger["current_identity"]["target_hashes"]
+                    and identity["workflow_hashes"] != ledger["current_identity"]["workflow_hashes"]
+                )
+            ):
                 raise CompletionError(f"Repair owner {owner_kind} was not routed by the review")
+            bounded = _bounded_record(ledger)
+            learner_hashes = _learner_hashes(snapshot, repo_root=repo_root)
+            if (
+                bounded is not None
+                and owner_kind == "audit_tooling"
+                and identity["target_hashes"] == ledger["current_identity"]["target_hashes"]
+                and identity["workflow_hashes"] != ledger["current_identity"]["workflow_hashes"]
+                and bounded["frozen_learner_hashes"] == learner_hashes
+            ) or (
+                bounded is None
+                and owner_kind == "audit_tooling"
+                and identity["target_hashes"] == ledger["current_identity"]["target_hashes"]
+                and identity["workflow_hashes"] != ledger["current_identity"]["workflow_hashes"]
+            ):
+                # Tooling changed after this run's protocol was frozen. Keep the
+                # active learner run and its budgets intact; a later run consumes
+                # the queued tooling revision after this run is disposed.
+                deferred = {
+                    "classification": "AUDIT_TOOLING_DEFERRED",
+                    "observed_identity_sha256": identity["sha256"],
+                    "observed_workflow_hashes": dict(identity["workflow_hashes"]),
+                    "learner_hashes": learner_hashes,
+                    "summary": summary.strip(),
+                }
+                if deferred not in ledger.setdefault("deferred_workflow_drift", []):
+                    ledger["deferred_workflow_drift"].append(deferred)
+                if bounded is not None and deferred not in bounded["deferred_workflow_drift"]:
+                    bounded["deferred_workflow_drift"].append(deferred)
+                _append_event(
+                    ledger,
+                    event_id=eid,
+                    event="AUDIT_TOOLING_DEFERRED",
+                    to_state=ledger["state"],
+                    identity=ledger["current_identity"],
+                    details={"owner_kind": owner_kind, "deferred": deferred},
+                )
+                _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+                _atomic_write_json(path, ledger)
+                return path, ledger
             _record_author(ledger, author_family, config)
+            if owner_kind == "built_artifact" and bounded is not None:
+                _record_bounded_learner_repair(ledger, learner_hashes=learner_hashes)
             to_state = "PLAN_REVIEW_REQUIRED" if owner_kind == "plan_workflow" else "POST_BUILD_REVIEW_REQUIRED"
             _append_event(
                 ledger,
@@ -1065,9 +1539,7 @@ def request_preparation_rebuild(
                 "AWAITING_PRODUCTION_QG_ARMING",
             }
             if ledger["state"] not in allowed_states:
-                raise CompletionError(
-                    f"Preparation rebuild routing is not allowed from {ledger['state']}"
-                )
+                raise CompletionError(f"Preparation rebuild routing is not allowed from {ledger['state']}")
             if snapshot.module_state != "BUILT":
                 raise CompletionError("Preparation rebuild routing requires a complete built bundle")
             if identity["target_hashes"] != ledger["current_identity"]["target_hashes"]:
@@ -1076,12 +1548,8 @@ def request_preparation_rebuild(
                 )
             if readiness["state"] != "built-preparation-drift":
                 raise CompletionError("Current preparation does not require a rebuild")
-            if not current_preparation_identity or not all(
-                item["passed"] for item in readiness["requirements"]
-            ):
-                raise CompletionError(
-                    "Preparation requirements must pass before routing the bundle to rebuild"
-                )
+            if not current_preparation_identity or not all(item["passed"] for item in readiness["requirements"]):
+                raise CompletionError("Preparation requirements must pass before routing the bundle to rebuild")
             _append_event(
                 ledger,
                 event_id=eid,
@@ -1091,10 +1559,7 @@ def request_preparation_rebuild(
                 details={
                     "consumed_preparation_identity": consumed_preparation_identity,
                     "current_preparation_identity": current_preparation_identity,
-                    "findings": [
-                        {"id": item["id"], "owner": item["owner"]}
-                        for item in readiness["findings"]
-                    ],
+                    "findings": [{"id": item["id"], "owner": item["owner"]} for item in readiness["findings"]],
                 },
             )
             ledger["routing"] = None
@@ -1131,9 +1596,7 @@ def record_build(
             except curriculum_readiness.ReadinessError as exc:
                 raise CompletionError(f"Built preparation cannot be evaluated: {exc}") from exc
             preparation_identity = readiness["preparation_identity"]
-            if not preparation_identity or not all(
-                item["passed"] for item in readiness["requirements"]
-            ):
+            if not preparation_identity or not all(item["passed"] for item in readiness["requirements"]):
                 raise CompletionError("Build cannot consume incomplete preparation requirements")
             eid = _event_id(
                 "BUILD_RECORDED",
@@ -1262,10 +1725,7 @@ def route_findings(
         source = str(finding.get("source") or "")
         if category in plan_categories:
             owner = "plan_workflow"
-        elif (
-            category in tooling_categories
-            or finding_id.startswith(tooling_prefixes)
-        ):
+        elif category in tooling_categories or finding_id.startswith(tooling_prefixes):
             owner = "audit_tooling"
         elif category in built_categories:
             owner = "built_artifact"
@@ -1329,17 +1789,34 @@ def record_review(
             }
             if not (allowed_state or stability_state):
                 raise CompletionError(f"Post-build review is not allowed from {ledger['state']}")
-            if identity["sha256"] != ledger["current_identity"]["sha256"]:
-                raise CompletionError("Unrecorded target/workflow drift makes review evidence stale")
             if result["target"]["track"] != snapshot.track or result["target"]["slug"] != snapshot.slug:
                 raise CompletionError("Post-build result target does not match the ledger target")
             if dict(result["target"]["files"]) != snapshot.review_files:
                 raise CompletionError("Post-build result file set is stale or does not match the target")
+            learner_hashes = _learner_hashes(snapshot, repo_root=repo_root)
+            bounded_record = _bounded_record(ledger)
+            if ledger["deferred_workflow_drift"] or (
+                bounded_record is not None and bounded_record["deferred_workflow_drift"]
+            ):
+                raise CompletionError(
+                    "Deferred audit-tooling drift requires restart-bounded-completion before a semantic review"
+                )
+            if identity["sha256"] != ledger["current_identity"]["sha256"]:
+                raise CompletionError("Unrecorded target/workflow drift makes review evidence stale")
+            protocol_identity = identity
             current_source_hashes = {
                 name: sha256_file(_repo_path(repo_root, raw)) for name, raw in sorted(snapshot.review_files.items())
             }
             if dict(result["source_hashes"]) != current_source_hashes:
                 raise CompletionError("Post-build result source hashes are stale")
+            bounded, bounded_reported = _record_bounded_semantic_review(
+                ledger,
+                snapshot=snapshot,
+                identity=protocol_identity,
+                result=result,
+                result_sha256=result_sha,
+                learner_hashes=learner_hashes,
+            )
             semantic = result.get("semantic_response")
             inputs: dict[str, Any] | None = None
             if result["combined_disposition"]["status"] == "PASS":
@@ -1354,7 +1831,7 @@ def record_review(
                 ):
                     raise CompletionError("Current PBR result has no exact raw semantic response hash")
 
-            stability_key = _review_stability_key(result, identity["sha256"])
+            stability_key = _review_stability_key(result, protocol_identity["sha256"])
             fingerprint = _material_fingerprint(result)
             reviewer = result["reviewer"]
             review_record = {
@@ -1366,7 +1843,7 @@ def record_review(
                 "status": result["combined_disposition"]["status"],
                 "reviewer_family": reviewer["family"],
                 "reviewer_model": reviewer["model"],
-                "target_identity_sha256": identity["sha256"],
+                "target_identity_sha256": protocol_identity["sha256"],
                 **(
                     {
                         "certification": {
@@ -1394,7 +1871,34 @@ def record_review(
                 routing = {"owners": ["audit_tooling"], "findings": []}
             elif status == "PASS":
                 routing = None
-                if ledger["author_families"]:
+                if (
+                    isinstance(semantic, Mapping)
+                    and semantic.get("contract_status") == "valid"
+                    and _can_reuse_semantic_review(
+                        ledger,
+                        reviewer_family=str(reviewer["family"]),
+                        snapshot=snapshot,
+                        config=config,
+                    )
+                ):
+                    reviewer_group = _review_group(str(reviewer["family"]), config)
+                    bounded["semantic_review_reuse"] = {
+                        "review_result_sha256": result_sha,
+                        "review_protocol_identity_sha256": bounded["run"]["review_protocol_identity"][
+                            "identity_sha256"
+                        ],
+                        "learner_hashes": learner_hashes,
+                        "reviewer_family": str(reviewer["family"]),
+                        "reviewer_group": reviewer_group,
+                    }
+                    if ledger["terminal_goal"] == "merge":
+                        to_state = "COMPLETE"
+                        ledger["run"]["status"] = "completed"
+                    elif ledger["terminal_goal"] == "deploy":
+                        to_state = "PUBLISH_REQUIRED"
+                    else:
+                        to_state = "AWAITING_PRODUCTION_QG_ARMING"
+                elif ledger["author_families"]:
                     to_state = "INDEPENDENT_REVIEW_REQUIRED"
                 else:
                     if ledger["terminal_goal"] == "merge":
@@ -1406,7 +1910,11 @@ def record_review(
                         to_state = "AWAITING_PRODUCTION_QG_ARMING"
             else:
                 routing = route_findings(result, config=config)
-                to_state = "AUDIT_TOOLING_REQUIRED" if routing["owners"] == ["audit_tooling"] else "REPAIR_REQUIRED"
+                if bounded["run"]["measurements"]["final_quality_disposition"] == "BLOCKED_BUDGET_EXHAUSTED":
+                    to_state = "BLOCKED_BUDGET_EXHAUSTED"
+                    routing = None
+                else:
+                    to_state = "AUDIT_TOOLING_REQUIRED" if routing["owners"] == ["audit_tooling"] else "REPAIR_REQUIRED"
             ledger["routing"] = routing
             _append_event(
                 ledger,
@@ -1416,6 +1924,8 @@ def record_review(
                 identity=identity,
                 details={
                     "result": review_record,
+                    "bounded_phase": bounded["run"]["reviews"][-1]["phase"],
+                    "bounded_reported_disposition": bounded_reported,
                     "reviewer_instability": unstable,
                     "stability_check": stability_check,
                     "routing": routing,
@@ -1439,17 +1949,9 @@ def _review_group(family: str, config: Mapping[str, Any]) -> str:
 def _require_track_reviewer_policy(
     *, reviewer_family: str, reviewer_group: str, track_policy: Mapping[str, Any]
 ) -> None:
-    forbidden = {
-        str(item).strip().lower()
-        for item in track_policy.get("forbidden_reviewer_families", [])
-    }
-    allowed = {
-        str(item).strip().lower()
-        for item in track_policy.get("allowed_reviewer_groups", [])
-    }
-    if reviewer_family.strip().lower() in forbidden or (
-        allowed and reviewer_group.strip().lower() not in allowed
-    ):
+    forbidden = {str(item).strip().lower() for item in track_policy.get("forbidden_reviewer_families", [])}
+    allowed = {str(item).strip().lower() for item in track_policy.get("allowed_reviewer_groups", [])}
+    if reviewer_family.strip().lower() in forbidden or (allowed and reviewer_group.strip().lower() not in allowed):
         raise CompletionError("Reviewer violates the track reviewer policy")
 
 
@@ -1673,9 +2175,7 @@ def migrate_terminal_goal(
         raise CompletionError("Terminal goal must be one of merge, certify, or deploy")
     if (pr is None) != (merge_sha is None):
         raise CompletionError("Legacy publication migration requires both PR and merge SHA")
-    if merge_sha is not None and (
-        pr is None or pr < 1 or re.fullmatch(r"[0-9a-f]{40}", merge_sha) is None
-    ):
+    if merge_sha is not None and (pr is None or pr < 1 or re.fullmatch(r"[0-9a-f]{40}", merge_sha) is None):
         raise CompletionError("Legacy publication migration requires an exact PR and merge SHA")
     config = load_config(config_path)
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
@@ -1688,19 +2188,13 @@ def migrate_terminal_goal(
                 raise CompletionError("No matching legacy completion run to migrate")
             existing_goal = ledger.get("terminal_goal")
             if existing_goal is not None and existing_goal != terminal_goal:
-                raise CompletionError(
-                    f"Ledger terminal goal is already {existing_goal}; refusing {terminal_goal}"
-                )
+                raise CompletionError(f"Ledger terminal goal is already {existing_goal}; refusing {terminal_goal}")
             if existing_goal is not None:
                 if ledger["state"] != "MIGRATION_REQUIRED":
                     return path, ledger
                 publication = ledger.get("publication")
-                if publication is not None and (
-                    pr != publication["pr"] or merge_sha != publication["merge_sha"]
-                ):
-                    raise CompletionError(
-                        "Migration replay must repeat the exact publication PR and merge SHA"
-                    )
+                if publication is not None and (pr != publication["pr"] or merge_sha != publication["merge_sha"]):
+                    raise CompletionError("Migration replay must repeat the exact publication PR and merge SHA")
                 # Re-run the pre-cursor portion idempotently after a crash. The
                 # existing migration event prevents a duplicate history entry.
                 ledger.pop("terminal_goal")
@@ -1761,9 +2255,7 @@ def migrate_terminal_goal(
         selector,
         run_id=run_id,
         evidence_sha256=sha256_bytes(
-            stable_json({"terminal_goal": terminal_goal, "pr": pr, "merge_sha": merge_sha}).encode(
-                "utf-8"
-            )
+            stable_json({"terminal_goal": terminal_goal, "pr": pr, "merge_sha": merge_sha}).encode("utf-8")
         ),
         evidence_kind="migration",
         repo_root=repo_root,
@@ -1782,9 +2274,7 @@ def production_qg_decision_card(
     ledger_root: Path | None = None,
 ) -> dict[str, Any]:
     """Return the exact card a human must approve; do not arm the route."""
-    _require_outside_common_repository(
-        qualification, repo_root=repo_root, label="Production-QG qualification"
-    )
+    _require_outside_common_repository(qualification, repo_root=repo_root, label="Production-QG qualification")
     config = load_config(config_path)
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
     path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
@@ -1793,9 +2283,7 @@ def production_qg_decision_card(
         raise CompletionError("No matching completion run for the QG decision card")
     if ledger["state"] != "AWAITING_PRODUCTION_QG_ARMING":
         raise CompletionError(f"Production-QG decision card is not allowed from {ledger['state']}")
-    inputs = certification_inputs(
-        selector, repo_root=repo_root, config_path=config_path, ledger=ledger
-    )
+    inputs = certification_inputs(selector, repo_root=repo_root, config_path=config_path, ledger=ledger)
     card = certification.qg_decision_card(
         qualification,
         target=snapshot.selector,
@@ -1803,9 +2291,7 @@ def production_qg_decision_card(
         expected_identity=inputs["qg_identity"],
     )
     reviewer_group = _review_group(card["proposed_reviewer"]["family"], config)
-    author_groups = {
-        _review_group(family, config) for family in ledger.get("author_families", [])
-    }
+    author_groups = {_review_group(family, config) for family in ledger.get("author_families", [])}
     if reviewer_group in author_groups:
         raise CompletionError("Production-QG proposed reviewer is from an author model family")
     _require_track_reviewer_policy(
@@ -1844,9 +2330,7 @@ def record_qg_authorization(
                 config_path=config_path,
                 ledger_root=ledger_root,
             )
-            inputs = certification_inputs(
-                selector, repo_root=repo_root, config_path=config_path, ledger=ledger
-            )
+            inputs = certification_inputs(selector, repo_root=repo_root, config_path=config_path, ledger=ledger)
             authorization = certification.load_runtime_authorization(
                 qualification,
                 human_arming,
@@ -1855,13 +2339,9 @@ def record_qg_authorization(
                 expected_identity=inputs["qg_identity"],
             )
             reviewer_group = _review_group(authorization["route"]["family"], config)
-            author_groups = {
-                _review_group(family, config) for family in ledger.get("author_families", [])
-            }
+            author_groups = {_review_group(family, config) for family in ledger.get("author_families", [])}
             if reviewer_group in author_groups:
-                raise CompletionError(
-                    "Production-QG reviewer must be independent of every author model family"
-                )
+                raise CompletionError("Production-QG reviewer must be independent of every author model family")
             _require_track_reviewer_policy(
                 reviewer_family=authorization["route"]["family"],
                 reviewer_group=reviewer_group,
@@ -1875,16 +2355,11 @@ def record_qg_authorization(
                     "approval_id": authorization["approval_id"],
                 },
             )
-            already_recorded = (
-                _event_exists(ledger, eid)
-                and ledger.get("production_qg_authorization") == authorization
-            )
+            already_recorded = _event_exists(ledger, eid) and ledger.get("production_qg_authorization") == authorization
             if already_recorded and ledger["state"] != "AWAITING_PRODUCTION_QG_ARMING":
                 return path, ledger
             if ledger["state"] != "AWAITING_PRODUCTION_QG_ARMING":
-                raise CompletionError(
-                    f"Production-QG authorization is not allowed from {ledger['state']}"
-                )
+                raise CompletionError(f"Production-QG authorization is not allowed from {ledger['state']}")
             if not already_recorded:
                 ledger["production_qg_authorization"] = authorization
                 _append_event(
@@ -1930,9 +2405,7 @@ def verify_deployment_receipt(
         raise CompletionError("Deployment verification requires a workflow run id")
     if not url.startswith("https://learn-ukrainian.github.io/"):
         raise CompletionError("Deployment verification requires the canonical production URL")
-    _require_outside_common_repository(
-        out, repo_root=repo_root, label="Deployment receipt"
-    )
+    _require_outside_common_repository(out, repo_root=repo_root, label="Deployment receipt")
     config = load_config(config_path)
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
     path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
@@ -1970,9 +2443,7 @@ def verify_deployment_receipt(
         text=True,
     )
     if completed.returncode != 0:
-        raise CompletionError(
-            f"Cannot verify deployment workflow run {workflow_run_id}: {completed.stderr.strip()}"
-        )
+        raise CompletionError(f"Cannot verify deployment workflow run {workflow_run_id}: {completed.stderr.strip()}")
     try:
         workflow = json.loads(completed.stdout)
     except json.JSONDecodeError as exc:
@@ -1985,9 +2456,7 @@ def verify_deployment_receipt(
         or workflow.get("head_branch") != "main"
         or workflow.get("conclusion") != "success"
     ):
-        raise CompletionError(
-            "Deployment workflow is not the successful canonical run for the recorded merge SHA"
-        )
+        raise CompletionError("Deployment workflow is not the successful canonical run for the recorded merge SHA")
     created_at = workflow.get("created_at")
     try:
         workflow_created_at = _parse_time(str(created_at))
@@ -1999,10 +2468,7 @@ def verify_deployment_receipt(
     compare_command = [
         "gh",
         "api",
-        (
-            "repos/{owner}/{repo}/compare/"
-            f"{publication['merge_sha']}...{workflow['head_sha']}"
-        ),
+        (f"repos/{{owner}}/{{repo}}/compare/{publication['merge_sha']}...{workflow['head_sha']}"),
     ]
     compared = subprocess.run(
         compare_command,
@@ -2012,9 +2478,7 @@ def verify_deployment_receipt(
         text=True,
     )
     if compared.returncode != 0:
-        raise CompletionError(
-            f"Cannot verify deployment ancestry: {compared.stderr.strip()}"
-        )
+        raise CompletionError(f"Cannot verify deployment ancestry: {compared.stderr.strip()}")
     try:
         comparison = json.loads(compared.stdout)
     except json.JSONDecodeError as exc:
@@ -2023,12 +2487,9 @@ def verify_deployment_receipt(
         comparison.get("status") not in {"ahead", "identical"}
         or comparison.get("merge_base_commit", {}).get("sha") != publication["merge_sha"]
     ):
-        raise CompletionError(
-            "Deployment workflow head does not contain the recorded publication merge"
-        )
+        raise CompletionError("Deployment workflow head does not contain the recorded publication merge")
     deployment_marker_url = (
-        "https://learn-ukrainian.github.io/.well-known/"
-        f"learn-ukrainian-deployment-{workflow['head_sha']}.txt"
+        f"https://learn-ukrainian.github.io/.well-known/learn-ukrainian-deployment-{workflow['head_sha']}.txt"
     )
     marker_request = urllib.request.Request(
         deployment_marker_url,
@@ -2042,9 +2503,7 @@ def verify_deployment_receipt(
         raise CompletionError(f"Cannot fetch the immutable deployment marker: {exc}") from exc
     expected_marker_body = f"{workflow['head_sha']}\n".encode()
     if marker_status != 200 or deployment_marker_body != expected_marker_body:
-        raise CompletionError(
-            "Production does not expose the immutable marker for the exact workflow head"
-        )
+        raise CompletionError("Production does not expose the immutable marker for the exact workflow head")
     request = urllib.request.Request(
         url,
         headers={"User-Agent": "learn-ukrainian-deployment-verifier/1"},
@@ -2057,12 +2516,8 @@ def verify_deployment_receipt(
         raise CompletionError(f"Cannot fetch the production deployment URL: {exc}") from exc
     marker = selector
     if status != 200 or marker.encode("utf-8") not in body:
-        raise CompletionError(
-            "Production response must be HTTP 200 and contain the exact module target marker"
-        )
-    inputs = certification_inputs(
-        selector, repo_root=repo_root, config_path=config_path, ledger=ledger
-    )
+        raise CompletionError("Production response must be HTTP 200 and contain the exact module target marker")
+    inputs = certification_inputs(selector, repo_root=repo_root, config_path=config_path, ledger=ledger)
     receipt = {
         "schema_version": "certification-evidence.v1",
         "kind": "deployment",
@@ -2150,15 +2605,12 @@ def record_certification_evidence(
                     "deployment": "DEPLOYMENT_REQUIRED",
                 }[artifact.value["kind"]]
                 if ledger["state"] != allowed_state:
-                    raise CompletionError(
-                        f"{artifact.value['kind']} evidence is not allowed from {ledger['state']}"
-                    )
+                    raise CompletionError(f"{artifact.value['kind']} evidence is not allowed from {ledger['state']}")
                 if artifact.value["kind"] == "integration":
                     publication = ledger.get("publication")
                     integration = artifact.value["integration"]
                     if publication is None or (
-                        integration["pr"] != publication["pr"]
-                        or integration["merge_sha"] != publication["merge_sha"]
+                        integration["pr"] != publication["pr"] or integration["merge_sha"] != publication["merge_sha"]
                     ):
                         raise CompletionError(
                             "Integration evidence must bind the recorded publication PR and merge SHA"
@@ -2287,6 +2739,61 @@ def _current_pbr_reviews(ledger: Mapping[str, Any], inputs: Mapping[str, Any]) -
     return passed, state, any(len(values) > 1 for values in fingerprints.values())
 
 
+def _semantic_review_reuse_is_current(
+    ledger: Mapping[str, Any],
+    *,
+    inputs: Mapping[str, Any],
+    snapshot: TargetSnapshot,
+    config: Mapping[str, Any],
+) -> bool:
+    """Fail closed when the one permitted learner-content reuse loses a binding."""
+
+    record = _bounded_record(ledger)
+    if record is None:
+        return False
+    reuse = record["semantic_review_reuse"]
+    if not isinstance(reuse, Mapping) or record["frozen_learner_hashes"] != inputs["learner_hashes"]:
+        return False
+    run = record["run"]
+    if (
+        run["measurements"]["final_quality_disposition"] != "PUBLISHABLE"
+        or reuse.get("review_protocol_identity_sha256") != run["review_protocol_identity"]["identity_sha256"]
+        or reuse.get("learner_hashes") != inputs["learner_hashes"]
+    ):
+        return False
+    reviewer_family = str(reuse.get("reviewer_family", ""))
+    try:
+        reviewer_group = _review_group(reviewer_family, config)
+        _require_track_reviewer_policy(
+            reviewer_family=reviewer_family,
+            reviewer_group=reviewer_group,
+            track_policy=snapshot.track_policy,
+        )
+    except CompletionError:
+        return False
+    if reuse.get("reviewer_group") != reviewer_group:
+        return False
+    author_groups = {
+        _review_group(family, config)
+        for family in ledger["author_families"]
+        if _review_group(family, config) != "human"
+    }
+    if not author_groups or reviewer_group in author_groups:
+        return False
+    for review in ledger["reviews"]:
+        binding = review.get("certification")
+        if (
+            review.get("result_sha256") == reuse.get("review_result_sha256")
+            and review.get("status") == "PASS"
+            and review.get("reviewer_family") == reviewer_family
+            and isinstance(binding, Mapping)
+            and binding.get("learner_hashes") == inputs["learner_hashes"]
+            and binding.get("dependency_identity") == inputs["pbr_dependency_identity"]
+        ):
+            return True
+    return False
+
+
 def certification_projection(
     selector: str,
     *,
@@ -2343,10 +2850,22 @@ def certification_projection(
             final="not-certified",
             reason="ledger has no explicit terminal goal",
         )
-    try:
-        inputs = certification_inputs(
-            selector, repo_root=repo_root, config_path=config_path, ledger=ledger
+    bounded = _bounded_record(ledger)
+    if (
+        bounded is not None
+        and bounded["run"]["measurements"]["final_quality_disposition"] == "BLOCKED_BUDGET_EXHAUSTED"
+    ):
+        return result(
+            "BLOCKED_BUDGET_EXHAUSTED",
+            post_build="budget-exhausted",
+            independent_review="not-applicable",
+            integration="not-applicable",
+            production_qg="not-applicable",
+            final="blocked-budget-exhausted",
+            reason="The canonical bounded completion contract exhausted its semantic review/repair budget.",
         )
+    try:
+        inputs = certification_inputs(selector, repo_root=repo_root, config_path=config_path, ledger=ledger)
     except CompletionError as exc:
         return result(
             "POST_BUILD_REVIEW_REQUIRED",
@@ -2358,10 +2877,7 @@ def certification_projection(
             reason=str(exc),
         )
     profile = inputs["profile_config"]
-    expected = {
-        key: inputs[key]
-        for key in ("target", "profile", "preparation_identity", "learner_hashes")
-    }
+    expected = {key: inputs[key] for key in ("target", "profile", "preparation_identity", "learner_hashes")}
     pbr_ok, pbr_state, pbr_unstable = _current_pbr_reviews(ledger, inputs)
     if pbr_unstable:
         return result(
@@ -2385,16 +2901,23 @@ def certification_projection(
     mutation_required = bool(ledger.get("author_families"))
     author_families = set(ledger.get("author_families", []))
     author_groups = {_review_group(family, config) for family in author_families}
-    independent_ok = not mutation_required
-    independent_state = "not-required" if not mutation_required else "pending"
+    semantic_reuse_ok = mutation_required and _semantic_review_reuse_is_current(
+        ledger, inputs=inputs, snapshot=snapshot, config=config
+    )
+    independent_ok = not mutation_required or semantic_reuse_ok
+    independent_state = (
+        "not-required"
+        if not mutation_required
+        else "reused-canonical-semantic-review"
+        if semantic_reuse_ok
+        else "pending"
+    )
     independent_shas: dict[str, str] = {}
-    if mutation_required:
+    if mutation_required and not semantic_reuse_ok:
         unresolved_material = False
         for artifact in _ledger_artifacts(ledger, "independent-review"):
             try:
-                certification.require_current(
-                    artifact, kind="independent-review", expected=expected
-                )
+                certification.require_current(artifact, kind="independent-review", expected=expected)
                 if artifact.value.get("mutation_identity") != inputs["mutation_identity"]:
                     independent_state = "stale"
                     continue
@@ -2455,9 +2978,7 @@ def certification_projection(
                     and recorded["pr"] == publication["pr"]
                     and recorded["merge_sha"] == publication["merge_sha"]
                     and certification.integration_passes(artifact)
-                    and independent_shas.get(
-                        artifact.value.get("independent_evidence_sha256")
-                    )
+                    and independent_shas.get(artifact.value.get("independent_evidence_sha256"))
                     == artifact.value.get("diff_sha256")
                 ):
                     integration_ok, integration_state = True, "current"
@@ -2495,14 +3016,10 @@ def certification_projection(
             # this immutable authorization was committed to the validated ledger. Keep
             # it resumable after ephemeral evidence is cleaned up, but never carry it
             # across a changed prompt/gate/budget/circuit/resume contract.
-            if certification.runtime_authorization_is_current(
-                runtime_authorization, inputs["qg_identity"]
-            ):
+            if certification.runtime_authorization_is_current(runtime_authorization, inputs["qg_identity"]):
                 authorization = runtime_authorization
             else:
-                authorization_reason = (
-                    "recorded production-QG authorization does not bind the current QG contract"
-                )
+                authorization_reason = "recorded production-QG authorization does not bind the current QG contract"
         elif qg["mode"] == "armed-canary":
             authorization = certification.load_authorization(
                 qg,
@@ -2515,10 +3032,7 @@ def certification_projection(
         if authorization is not None:
             route_family = str(authorization["route"]["family"])
             route_group = _review_group(route_family, config)
-            forbidden = {
-                str(item).lower()
-                for item in snapshot.track_policy.get("forbidden_reviewer_families", [])
-            }
+            forbidden = {str(item).lower() for item in snapshot.track_policy.get("forbidden_reviewer_families", [])}
             allowed = set(snapshot.track_policy.get("allowed_reviewer_groups", []))
             if (
                 route_group in author_groups
@@ -2548,26 +3062,20 @@ def certification_projection(
     fingerprints: dict[str, set[str]] = {}
     module_dir = repo_root / "curriculum" / "l2-uk-en" / snapshot.track / snapshot.slug
     try:
-        qg_facts = certification.current_qg_facts(
-            target=snapshot.selector, module_dir=module_dir
-        )
+        qg_facts = certification.current_qg_facts(target=snapshot.selector, module_dir=module_dir)
     except certification.CertificationEvidenceError:
         qg_facts = None
     for artifact in _ledger_artifacts(ledger, "production-qg"):
         try:
             certification.require_current(artifact, kind="production-qg", expected=expected)
             if (
-                artifact.value["authorization"]["qualification_sha256"]
-                != authorization["qualification_sha256"]
-                or artifact.value["authorization"]["human_arming_sha256"]
-                != authorization["human_arming_sha256"]
+                artifact.value["authorization"]["qualification_sha256"] != authorization["qualification_sha256"]
+                or artifact.value["authorization"]["human_arming_sha256"] != authorization["human_arming_sha256"]
             ):
                 qg_state = "stale"
                 continue
             qg_key = certification.production_qg_stability_key(artifact)
-            fingerprints.setdefault(qg_key, set()).add(
-                certification.production_qg_material_fingerprint(artifact)
-            )
+            fingerprints.setdefault(qg_key, set()).add(certification.production_qg_material_fingerprint(artifact))
             if qg_facts is not None and certification.production_qg_passes(
                 artifact,
                 expected_identity=inputs["qg_identity"],
@@ -2638,9 +3146,7 @@ def certification_projection(
             if publication is not None and certification.deployment_passes(
                 artifact,
                 publication=publication,
-                expected_workflow_identity=sha256_file(
-                    repo_root / ".github/workflows/deploy-pages.yml"
-                ),
+                expected_workflow_identity=sha256_file(repo_root / ".github/workflows/deploy-pages.yml"),
             ):
                 deployment_state = "current"
                 return result(
@@ -2711,14 +3217,23 @@ def build_parser() -> argparse.ArgumentParser:
     _add_common_options(start)
     start.add_argument("--owner", required=True)
     start.add_argument("--terminal-goal", required=True, choices=sorted(TERMINAL_GOALS))
-    migrate = subparsers.add_parser(
-        "migrate-terminal-goal", help="Explicitly migrate one legacy provisional ledger"
-    )
+    migrate = subparsers.add_parser("migrate-terminal-goal", help="Explicitly migrate one legacy provisional ledger")
     _add_common_options(migrate)
     migrate.add_argument("--run-id", required=True)
     migrate.add_argument("--terminal-goal", required=True, choices=sorted(TERMINAL_GOALS))
     migrate.add_argument("--pr", type=int)
     migrate.add_argument("--merge-sha")
+    bounded_migrate = subparsers.add_parser(
+        "migrate-bounded-completion", help="Quarantine a legacy ledger before an explicit bounded restart"
+    )
+    _add_common_options(bounded_migrate)
+    bounded_migrate.add_argument("--run-id", required=True)
+    bounded_restart = subparsers.add_parser(
+        "restart-bounded-completion", help="Start a fresh bounded run after legacy migration"
+    )
+    _add_common_options(bounded_restart)
+    bounded_restart.add_argument("--run-id", required=True)
+    bounded_restart.add_argument("--owner", required=True)
     resume = subparsers.add_parser("resume", help="Renew the exact recorded run lease")
     _add_common_options(resume)
     resume.add_argument("--run-id", required=True)
@@ -2749,11 +3264,15 @@ def build_parser() -> argparse.ArgumentParser:
     _add_common_options(review)
     review.add_argument("--run-id", required=True)
     review.add_argument("--result", required=True, type=Path)
-    review.add_argument(
-        "--stability-check",
-        action="store_true",
-        help="Compare one unchanged-source repeat after a non-PASS result",
-    )
+    review.add_argument("--stability-check", action="store_true", help=argparse.SUPPRESS)
+    prepare = subparsers.add_parser("prepare-semantic-review", help="Freeze and authorize the next semantic PBR call")
+    _add_common_options(prepare)
+    prepare.add_argument("--run-id", required=True)
+    prepare.add_argument("--protocol-version", required=True)
+    prepare.add_argument("--prompt-sha256", required=True)
+    prepare.add_argument("--schema-sha256", required=True)
+    prepare.add_argument("--reviewer-family", required=True)
+    prepare.add_argument("--reviewer-model", required=True)
     instability = subparsers.add_parser(
         "record-instability-adjudication",
         help="Record evidence that permits a different reviewer route",
@@ -2771,9 +3290,7 @@ def build_parser() -> argparse.ArgumentParser:
     independent.add_argument("--verdict", required=True, choices=("PASS", "CHANGES_REQUESTED"))
     independent.add_argument("--evidence", required=True, type=Path)
     independent.add_argument("--owner-kind", choices=("built_artifact", "plan_workflow", "audit_tooling"))
-    published = subparsers.add_parser(
-        "record-published", help="Record merged PR evidence before integration"
-    )
+    published = subparsers.add_parser("record-published", help="Record merged PR evidence before integration")
     _add_common_options(published)
     published.add_argument("--run-id", required=True)
     published.add_argument("--pr", required=True, type=int)
@@ -2782,9 +3299,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_common_options(evidence)
     evidence.add_argument("--run-id", required=True)
     evidence.add_argument("--evidence", required=True, type=Path)
-    decision = subparsers.add_parser(
-        "qg-decision-card", help="Render the exact human arming decision card"
-    )
+    decision = subparsers.add_parser("qg-decision-card", help="Render the exact human arming decision card")
     _add_common_options(decision)
     decision.add_argument("--run-id", required=True)
     decision.add_argument("--qualification", required=True, type=Path)
@@ -2830,9 +3345,7 @@ def main(argv: list[str] | None = None) -> int:
             value = inspect_target(args.target, repo_root=common["repo_root"], config_path=common["config_path"])
             path = None
         elif args.command == "start":
-            path, value = start_run(
-                args.target, owner=args.owner, terminal_goal=args.terminal_goal, **common
-            )
+            path, value = start_run(args.target, owner=args.owner, terminal_goal=args.terminal_goal, **common)
         elif args.command == "migrate-terminal-goal":
             path, value = migrate_terminal_goal(
                 args.target,
@@ -2842,6 +3355,10 @@ def main(argv: list[str] | None = None) -> int:
                 merge_sha=args.merge_sha,
                 **common,
             )
+        elif args.command == "migrate-bounded-completion":
+            path, value = migrate_bounded_completion(args.target, run_id=args.run_id, **common)
+        elif args.command == "restart-bounded-completion":
+            path, value = restart_bounded_completion(args.target, run_id=args.run_id, owner=args.owner, **common)
         elif args.command == "resume":
             path, value = resume_run(args.target, run_id=args.run_id, **common)
         elif args.command == "status":
@@ -2873,6 +3390,17 @@ def main(argv: list[str] | None = None) -> int:
                 run_id=args.run_id,
                 result_path=args.result,
                 stability_check=args.stability_check,
+                **common,
+            )
+        elif args.command == "prepare-semantic-review":
+            path, value = prepare_semantic_review(
+                args.target,
+                run_id=args.run_id,
+                protocol_version=args.protocol_version,
+                prompt_sha256=args.prompt_sha256,
+                schema_sha256=args.schema_sha256,
+                reviewer_family=args.reviewer_family,
+                reviewer_model=args.reviewer_model,
                 **common,
             )
         elif args.command == "record-instability-adjudication":

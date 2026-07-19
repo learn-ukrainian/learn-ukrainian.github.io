@@ -467,7 +467,7 @@ rows:
       - event: UNCHANGED_SOURCE_DISAGREEMENT
         from: post-build-review-required
         to: reviewer-instability
-    resume_evidence: test_unchanged_source_material_flip_enters_and_exits_instability
+    resume_evidence: test_unchanged_source_stability_repeat_is_rejected_by_bounded_review_budget
   - id: crash-resume-fixture
     kind: fixture
     scenario: crash-resume
