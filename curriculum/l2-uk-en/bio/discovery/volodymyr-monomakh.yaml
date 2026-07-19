@@ -1,27 +1,23 @@
-discovered_at: '2026-04-14T10:42:41.430294+00:00'
+discovered_at: '2026-07-19T00:00:00+00:00'
 error: null
 query_keywords:
-- 'Володимир Мономах: Укріплювач Русі'
-- Розминка
-- 'Конфліктна карта: Князь-миротворець чи князь-популіст?'
-- 'Формування: Шлях до київського престолу'
-- 'Діяльність: Законодавець і полководець'
-- 'Тінь: Ціна єдності'
-- 'Дискусія та підсумок: Спадщина'
-- Критично аналізувати літописні джерела, відрізняючи історичний факт від ідеологічної
-  інтерпретації
-- Оцінювати політичну стратегію Мономаха в контексті боротьби з половецькою загрозою
-  та удільною роздробленістю
-- Аналізувати "Повчання дітям" як унікальний етичний та політичний документ епохи
-- Розвінчувати російські імперські міфи, зокрема міф про "Шапку Мономаха", та утверджувати
-  українську ідентичність Русі
-- удільна роздробленість
+- Володимир Мономах
+- Повчання дітям
+- 1113 віче
+- Любецький зʼїзд
 - половці
-- статут
-- повчання
-- лихварство
-- віче
-- самодержець
+- Константин IX спірне походження
+- Устав Мономаха
+direct_sources:
+- http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Volodymyr_Mo
+- http://izbornyk.org.ua/pvlyar/yar09.htm
+- https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CO%5CVolodymyrMonomakh.htm
 rag_chunks: []
 rag_literary: []
-warning: Auto-generated from plan
+warning: 'Direct-source packet for BIO #4431 Queue A packet 1 repair (2026-07-19). Each URL was opened
+  and content-verified in this repair pass; campaign history is not used as proof. Plan-generated empty
+  discovery replaced. Primary academic spine: ЕІУ (resource.history.org.ua). Primary/chronicle texts via
+  Ізборник (Махновець) are link-only because the modern Ukrainian translation is not free to host. IEU
+  pages are English reference-only where present. Image disposition is an explicit individual-file decision,
+  not a Phase-4 deferral. Image: https://commons.wikimedia.org/wiki/File:Vladimir_monomakh.jpg | licence:
+  Public domain | disposition: reuse-approved-with-caption-caveat.'

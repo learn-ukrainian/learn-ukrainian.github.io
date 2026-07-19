@@ -1,42 +1,47 @@
 # Source registry for wiki/figures/kniaz-yaroslav-mudryi.md
-# Referenced inline as [S1], [S2], ...
+# Referenced inline as [S1], [S2], ... — independent sources only (no ukrainian_wiki self-citations).
+# Adopted URL set matches plan readings + discovery.direct_sources (verified 2026-07-19).
 sources:
 - id: S1
-  file: 7-klas-istoria-ukr-galimov-2024_s3441
-  type: textbook
-  title: § 8. Русь за правління князя Ярослава Мудрого
-  page: 54
-  grade: 7
-- id: S2
-  file: wave4-hrushevsky-iur-t1_c1212
-  type: literary
-  title: Грушевський — Історія України-Руси, т.1
-  author: Грушевський М.
-- id: S3
-  file: https://www.youtube.com/watch?v=QR2bdvGoaBA
+  file: http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Yaroslav_M
   type: external
-  title: Хто Був Головним На Русі? | Історія України від імені Т.Г. Шевченка | Русь
-  url: https://www.youtube.com/watch?v=QR2bdvGoaBA
-- id: S4
-  file: ukrainian_wiki/kniaz-yaroslav-mudryi_Біографія-Князь-Ярослав-Мудрий-Законодавець-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Князь Ярослав Мудрий: Законодавець'
-  section_path: 'Біографія: Князь Ярослав Мудрий: Законодавець > Короткий зміст'
-- id: S5
-  file: 7-klas-istoria-ukr-pometun-2024_s3559
-  type: textbook
-  title: § 6. Київська держава за часів
-  page: 48
-  grade: 7
-- id: S6
-  file: ukrainian_wiki/kniaz-yaroslav-mudryi_Біографія-Князь-Ярослав-Мудрий-Законодавець-Основний-зміст-Руська-правда-кодифікація-звичаєвого-права
-  type: ukrainian_wiki
-  title: 'Біографія: Князь Ярослав Мудрий: Законодавець'
-  section_path: 'Біографія: Князь Ярослав Мудрий: Законодавець > Основний зміст >
-    «Руська правда»: кодифікація звичаєвого права'
-- id: S7
-  file: 7-klas-istoria-ukr-galimov-2024_s3442
-  type: textbook
-  title: § 9. Русь у 1054—1132 рр
-  page: 61
-  grade: 7
+  title: ЯРОСЛАВ МУДРИЙ (Енциклопедія історії України)
+  url: http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Yaroslav_M
+  metadata:
+    publisher: Енциклопедія історії України / Котляр М.Ф.
+    language: uk
+    verified_on: '2026-07-19'
+    source_role: академічна біографія; Судислав 1036 = увʼязнення; Правда як традиція
+    hosting: link-only
+    rights_basis: external-link
+    image_candidate:
+      file_page: https://commons.wikimedia.org/wiki/File:Coin_of_Yaroslav_the_Wise_with_his_lifetime_image.jpg
+      title: Coin of Yaroslav the Wise with his lifetime image.jpg
+      creator_provenance: невідомий гравер монети / файл на Commons
+      licence: CC BY-SA 4.0
+      disposition: reuse-approved-with-attribution
+      note: Монета з lifetime-зображенням; CC BY-SA 4.0 — атрибуція обовʼязкова. Перевірено Commons 2026-07-19.
+- id: S2
+  file: http://izbornyk.org.ua/rizne/pravdstat.htm
+  type: external
+  title: Руська Правда та Литовський Статут (Енциклопедія українознавства — II)
+  url: http://izbornyk.org.ua/rizne/pravdstat.htm
+  metadata:
+    publisher: Ізборник / Енциклопедія українознавства — II (Т. 7)
+    language: uk
+    verified_on: '2026-07-19'
+    source_role: енциклопедична довідка про «Руську Правду» (не критичне видання тексту)
+    hosting: link-only
+    rights_basis: external-link
+- id: S3
+  file: https://esu.com.ua/article-67932
+  type: external
+  title: Місто Ярослава (Енциклопедія сучасної України)
+  url: https://esu.com.ua/article-67932
+  metadata:
+    publisher: Енциклопедія сучасної України
+    language: uk
+    verified_on: '2026-07-19'
+    source_role: міський/архітектурний контекст Києва Ярослава
+    hosting: link-only
+    rights_basis: external-link

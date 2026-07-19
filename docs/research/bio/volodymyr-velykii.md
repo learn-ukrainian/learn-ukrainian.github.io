@@ -48,19 +48,22 @@
 - `кінець X - поч. XI ст.` — Десятинна церква, перші школи, оборонні лінії проти печенігів, міста-фортеці. [T1: ЕІУ; T1: IEU]
 - `1015` — смерть і початок усобиці Володимировичів, з якої Ярослав вийде переможцем у 1019 р. [T1: ЕІУ — Ярослав Мудрий]
 
-## 4. Primary-source quotes
+## 4. Primary-source quotes / source hierarchy
 
-**Quote 1 — ПВЛ / підручниковий витяг про примусову рамку хрещення киян (tool status explicit):**
+**1. Джерельна база (ЕІУ, Вортман) — спростування «лише ченці»:**
+ЕІУ прямо називає сучасні свідчення: Яхʼя Антіохійський, Бруно Квертфуртський, Тітмар Мерзебурзький — поряд із ПВЛ і агіографією.
+Локатор: EIU `Volodymyr_Sv` (2026-07-19). **Заборонено** твердження, ніби свідчення написали «лише пізні монахи».
 
-> «Якщо не з'явиться хто завтра на ріці — багатий, чи убогий, чи старець, чи раб, — то мені той противником буде».
+**2. Корсунь / примус (ЕІУ):**
+ЕІУ описує облогу Херсонеса (Корсуня) 989 як тиск на Василія II щодо шлюбу з Анною; християнізація — політичний вузол 987–989, не лише «добровільна сцена».
+Непевність особистих обставин хрещення зберігати.
 
-Tool status: `verify_quote(author="Літопис Руський", ...)` returned **matched: false, best_confidence 0.0** because the verifier is tuned for literary-author corpora, not chronicle/textbook excerpts. The passage is nevertheless tool-backed by `search_text` result `7-klas-istoria-ukr-hlibovska-2024_s0041`, which reproduces the ПВЛ excerpt. Pedagogically: this prevents hagiography; хрещення 988 was a state act with coercive force, not a purely voluntary scene.
+**3. Літописний ультиматум (ПВЛ, Махновець, yar04.htm):**
+Традиція про примус киян до хрещення — у http://izbornyk.org.ua/pvlyar/yar04.htm. Цитувати лише як **літописну традицію** (link-only edition), не як стенограму.
 
-**Quote 2 — coin inscriptions, material primary text (numismatic):**
+**4. Монети (НМІУ):**
+https://nmiu.org/qr-codes/1952-zlatnik-volodimira-svyatoslavicha-kop-ya-ta-sr-blyaniki-k-nets-kh-pochatok-kh-st — речове джерело (златники/срібляники), не гасло ідентичності.
 
-> «Володимир на столі»; «Володимир, а це його срібло»; «Володимир, а це його золото».
-
-Tool status: not suitable for `verify_quote` (coin legends, not literary corpus); verified via `search_text` result `7-klas-istoria-ukr-hlibovska-2024_s0037` and corroborated by IEU *Trident* for Volodymyr's gold/silver coinage. Pedagogically: the phrase "на столі" anchors medieval political vocabulary (княжий стіл) and the trident in state practice.
 
 ## 5. Language register
 
@@ -104,12 +107,13 @@ Tool status: not suitable for `verify_quote` (coin legends, not literary corpus)
 - **Aliases (for `aliases:`):** Володимир Святославич; Володимир Великий; Володимир Святий; Володимир-Василій; Volodymyr the Great.
 - **Forbidden forms (Russian-imperial / Russified):** Vladimir the Great; Владимир Святой; Saint Vladimir of Kiev; "Kievan" when the local style requires Kyiv/Kyivan.
 
-## 9. Image candidates
+## 9. Image candidates — disposition: REUSE-APPROVED (one file)
 
-- **No lifetime portrait exists**; every image is later iconography, coinage, sculpture, or manuscript art.
-- **Best PD/CC candidates:** zlatnyk/sribnyk images showing Volodymyr and the trident; Radziwill Chronicle miniatures of baptism; Kyiv monument if rights-clear.
-- **Commemorative context:** London Saint Volodymyr statue by **Leo Mol**, erected 1988; URL verified through London Remembers, but image reuse requires separate license review. [T5: London Remembers — Saint Volodymyr]
-- **Fallback:** use a coin/trident image rather than a romanticized portrait; it directly supports the dossier's source argument.
+- **Selected file:** [File:Zlatniks of prince Vladimir.jpg](https://commons.wikimedia.org/wiki/File:Zlatniks_of_prince_Vladimir.jpg)
+- **Creator / provenance:** фото — Петров Едуард; обʼєкт — златники кн. Володимира (X–XI ст.).
+- **Licence:** CC0 — verified Commons 2026-07-19.
+- **Use disposition:** `reuse-approved`; prefer coin image over romantic portrait or London statue (statue reuse not cleared).
+
 
 ## 10. Sources used
 
