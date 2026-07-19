@@ -214,7 +214,10 @@ def test_module_projection_is_compact_canonical_and_has_no_ready_boolean() -> No
     assert expanded.json()["canonical"]["contract_version"] == "curriculum-preparation-result.v1"
 
 
-def test_bio_uses_bio_profile_and_dossier_alone_never_means_build() -> None:
+def test_bio_uses_bio_profile_and_dossier_alone_never_means_build(monkeypatch) -> None:
+    # This test isolates the dossier-only preparation state. Source-controlled
+    # holds are an independent terminal override covered by the readiness tests.
+    monkeypatch.setattr(curriculum_readiness, "_active_preparation_hold", lambda _context: None)
     response = CLIENT.get("/api/state/preparation/bio/knyahynia-olha")
 
     assert response.status_code == 200
