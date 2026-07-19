@@ -92,7 +92,7 @@ describe("K3 practice dashboard layout and copy (Chunk 2)", () => {
       /button\.k3-session-primary[^}]*color:\s*var\(--lu-on-primary\)/s,
     );
     expect(practiceSource).toMatch(
-      /button\.k3-session-primary[^}]*min-height:\s*52px/s,
+      /button\.k3-session-primary[^}]*min-height:\s*46px/s,
     );
   });
 
