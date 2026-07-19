@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import shutil
+from collections.abc import Mapping
 from pathlib import Path
 
 import pytest
@@ -46,6 +47,45 @@ def _bio_fixture(tmp_path: Path) -> Path:
         f"wiki/figures/{BIO_SLUG}.sources.yaml",
     ):
         _copy(repo_root, relative)
+    dossier = repo_root / f"docs/research/bio/{BIO_SLUG}.md"
+    dossier.write_text(
+        dossier.read_text(encoding="utf-8")
+        + """
+
+## Використані джерела
+
+1. https://history.org.ua/fixture-one
+2. https://uk.wikipedia.org/wiki/Fixture_two
+3. https://esu.com.ua/fixture-three
+4. https://litopys.org.ua/fixture-four
+
+## Хронологія
+
+- 1900 — fixture event.
+- 1910 — fixture event.
+
+## Engagement Hooks
+
+- [!history] Fixture hook one.
+- [!context] Fixture hook two.
+- [!analysis] Fixture hook three.
+
+## Section-Mapped Research Notes
+
+### Section one
+
+Fixture note.
+
+### Section two
+
+Fixture note.
+
+### Section three
+
+Fixture note.
+""",
+        encoding="utf-8",
+    )
     return repo_root
 
 
@@ -89,6 +129,18 @@ def _create_bundle(repo_root: Path, track: str, slug: str) -> None:
         (directory / filename).write_text(f"fixture: {filename}\n", encoding="utf-8")
 
 
+def _requirement(result: Mapping, requirement_id: str) -> Mapping:
+    return next(item for item in result["requirements"] if item["id"] == requirement_id)
+
+
+def _write_readings(repo_root: Path, track: str, slug: str, readings: list[dict]) -> Path:
+    path = repo_root / f"curriculum/l2-uk-en/plans/{track}/{slug}.yaml"
+    plan = yaml.safe_load(path.read_text(encoding="utf-8"))
+    plan["readings"] = readings
+    path.write_text(yaml.safe_dump(plan, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    return path
+
+
 def test_bio_profile_expresses_complete_preparation_without_track_branches() -> None:
     config = readiness.load_config(repo_root=REPO_ROOT)
     bio = config["profiles"]["bio"]
@@ -115,13 +167,31 @@ def test_bio_profile_expresses_complete_preparation_without_track_branches() -> 
     assert {
         "bio-dossier-xref",
         "plan-check",
-        "readings-present",
+        "research-quality",
+        "verified-reading-catalog",
+        "bio-reading-policy",
+        "wiki-sources-registry",
         "manual-gate",
         "wiki-completeness",
         "bio-wiki-subject",
         "bio-discovery-integrity",
     } <= validators
     assert set(config["profiles"]) == {"core", "seminar", "bio"}
+    assert {profile["version"] for profile in config["profiles"].values()} == {"1.1.0"}
+    assert {item["id"] for item in config["profiles"]["core"]["requirements"]} == {
+        "plan",
+        "research-evidence",
+        "wiki-document",
+        "wiki-sources",
+        "reading-or-rights",
+    }
+    assert {item["id"] for item in config["profiles"]["seminar"]["requirements"]} == {
+        "dossier",
+        "plan",
+        "wiki-document",
+        "wiki-sources",
+        "reading-or-rights",
+    }
     assert all("certification" not in profile for profile in config["profiles"].values())
     engine_source = (REPO_ROOT / "scripts/orchestration/curriculum_readiness.py").read_text(encoding="utf-8")
     assert 'track == "bio"' not in engine_source
@@ -161,6 +231,7 @@ def test_all_active_tracks_resolve_readiness_certification_and_prompt_profiles()
     assert set(certification_profiles) == set(active)
     assert set(semantic_profiles) == set(active)
     assert readiness_profiles["bio"] == "bio"
+    assert all(readiness_config["profiles"][profile_id]["version"] == "1.1.0" for profile_id in readiness_profiles.values())
     assert certification_profiles["bio"] == "bio-pending"
     assert semantic_profiles["a1"] == "core-a1"
     assert semantic_profiles["folk"] == "seminar-folk"
@@ -334,7 +405,7 @@ def test_preparation_change_invalidates_build_pbr_and_qg_identities(tmp_path: Pa
         ("hist", "track", "trypillian-civilization", "plans/hist/trypillian-civilization.yaml", "seminar"),
     ],
 )
-def test_unbuilt_core_and_generic_seminar_profile_seams(
+def test_unbuilt_core_and_generic_seminar_cannot_pass_from_plan_alone(
     tmp_path: Path,
     track: str,
     manifest_type: str,
@@ -351,8 +422,203 @@ def test_unbuilt_core_and_generic_seminar_profile_seams(
 
     assert result["profile_id"] == expected_profile
     assert result["module_state"] == "unbuilt"
-    assert result["state"] == "prepared-plan"
-    assert result["next_action"] == "build"
+    assert result["state"] == "preparation-required"
+    assert result["next_action"] == "prepare"
+    assert _requirement(result, "reading-or-rights")["passed"] is False
+    assert _requirement(result, "wiki-document")["passed"] is False
+    assert _requirement(result, "wiki-sources")["passed"] is False
+    research_id = "research-evidence" if expected_profile == "core" else "dossier"
+    assert _requirement(result, research_id)["passed"] is False
+
+
+def test_core_research_requirement_accepts_explicit_packet_or_wiki_registry(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    track = "a1"
+    slug = "sounds-letters-and-hello"
+
+    packet_root = tmp_path / "packet"
+    _copy_contracts(packet_root)
+    _write_manifest(packet_root, track, "core", slug)
+    _copy(packet_root, f"curriculum/l2-uk-en/plans/{track}/{slug}.yaml")
+    packet_path = packet_root / f"curriculum/l2-uk-en/{track}/research/{slug}-research.md"
+    packet_path.parent.mkdir(parents=True, exist_ok=True)
+    packet_path.write_text("# Deterministic research packet\n", encoding="utf-8")
+    monkeypatch.setattr(
+        readiness.research_quality,
+        "assess_research_compat",
+        lambda *_args, **_kwargs: {"quality": "solid", "score": 7},
+    )
+
+    packet_result = readiness.evaluate_preparation(track, slug, repo_root=packet_root)
+    packet_requirement = _requirement(packet_result, "research-evidence")
+    assert packet_requirement["passed"] is True
+    assert [option["passed"] for option in packet_requirement["options"]] == [True, False]
+
+    registry_root = tmp_path / "registry"
+    _copy_contracts(registry_root)
+    _write_manifest(registry_root, track, "core", slug)
+    for relative in (
+        f"curriculum/l2-uk-en/plans/{track}/{slug}.yaml",
+        f"wiki/pedagogy/{track}/{slug}.md",
+        f"wiki/pedagogy/{track}/{slug}.sources.yaml",
+    ):
+        _copy(registry_root, relative)
+
+    registry_result = readiness.evaluate_preparation(track, slug, repo_root=registry_root)
+    registry_requirement = _requirement(registry_result, "research-evidence")
+    assert registry_requirement["passed"] is True
+    assert [option["passed"] for option in registry_requirement["options"]] == [False, True]
+
+
+@pytest.mark.parametrize(
+    ("score", "quality", "expected"),
+    [(6, "adequate", False), (7, "solid", True)],
+)
+def test_research_quality_uses_existing_solid_score_floor(
+    tmp_path: Path,
+    monkeypatch,
+    score: int,
+    quality: str,
+    expected: bool,
+) -> None:
+    repo_root = tmp_path / "repo"
+    path = repo_root / "docs/research/hist/demo.md"
+    path.parent.mkdir(parents=True)
+    path.write_text("# Research fixture\n", encoding="utf-8")
+    context = readiness.ValidationContext(repo_root, "hist", "demo", ("demo",))
+    monkeypatch.setattr(
+        readiness.research_quality,
+        "assess_research_compat",
+        lambda *_args, **_kwargs: {"quality": quality, "score": score},
+    )
+
+    result = readiness._research_quality(path, {}, context)
+
+    assert result.passed is expected
+    assert f"({score}/10)" in result.detail
+
+
+@pytest.mark.parametrize(
+    ("registry_text", "expected_detail"),
+    [
+        ("sources: []\n", "non-empty sources list"),
+        ("plain: mapping\n", "non-empty sources list"),
+        ("sources:\n  - id: S1\n", "invalid wiki source registry"),
+    ],
+)
+def test_wiki_source_registry_fails_closed_when_empty_or_malformed(
+    tmp_path: Path,
+    registry_text: str,
+    expected_detail: str,
+) -> None:
+    repo_root = tmp_path / "repo"
+    article = repo_root / "wiki/pedagogy/a1/demo.md"
+    registry = article.with_suffix(".sources.yaml")
+    article.parent.mkdir(parents=True)
+    article.write_text("# Demo\n\nGrounded claim [S1].\n", encoding="utf-8")
+    registry.write_text(registry_text, encoding="utf-8")
+    context = readiness.ValidationContext(repo_root, "a1", "demo", ("demo",))
+
+    result = readiness._wiki_sources_registry(registry, {}, context)
+
+    assert result.passed is False
+    assert expected_detail in result.detail
+
+
+def test_verified_reading_catalog_and_reviewed_rights_are_explicit_alternatives(tmp_path: Path) -> None:
+    track = "a1"
+    slug = "sounds-letters-and-hello"
+    repo_root = tmp_path / "repo"
+    _copy_contracts(repo_root)
+    _write_manifest(repo_root, track, "core", slug)
+    _copy(repo_root, f"curriculum/l2-uk-en/plans/{track}/{slug}.yaml")
+    plan_path = _write_readings(
+        repo_root,
+        track,
+        slug,
+        [{"title": "Internal packet", "source_locator": "corpus:fixture-a1"}],
+    )
+    context = readiness.ValidationContext(repo_root, track, slug, (slug,))
+
+    verified = readiness._verified_reading_catalog(plan_path, {}, context)
+    assert verified.passed is True
+
+    _write_readings(
+        repo_root,
+        track,
+        slug,
+        [{"source_name": "External packet", "source": "https://example.test/reading"}],
+    )
+    source_alias = readiness._verified_reading_catalog(plan_path, {}, context)
+    assert source_alias.passed is True
+
+    _write_readings(
+        repo_root,
+        track,
+        slug,
+        [{"source_name": "Provider label", "source": "Archive provider prose"}],
+    )
+    provider_prose = readiness._verified_reading_catalog(plan_path, {}, context)
+    assert provider_prose.passed is False
+    assert "HTTP(S) URL or explicit internal source locator" in provider_prose.detail
+
+    _write_readings(
+        repo_root,
+        track,
+        slug,
+        [{"title": "Placeholder", "source_url": "reading-needed"}],
+    )
+    registry_path = repo_root / f"curriculum/l2-uk-en/{track}/promotion-evidence.yaml"
+    registry_path.parent.mkdir(parents=True, exist_ok=True)
+    registry_path.write_text(
+        """version: 1
+entries:
+  sounds-letters-and-hello:
+    reading_rights:
+      status: pass
+      reviewer_family: human
+      date: 2026-07-19
+      evidence_url: https://example.test/reviewed-rights
+      disposition: link-only-approved
+""",
+        encoding="utf-8",
+    )
+
+    result = readiness.evaluate_preparation(track, slug, repo_root=repo_root)
+    requirement = _requirement(result, "reading-or-rights")
+    assert requirement["passed"] is True
+    assert [option["passed"] for option in requirement["options"]] == [False, True]
+
+
+def test_bio_reading_policy_is_ukrainian_only_and_requires_two_candidate_roles(tmp_path: Path) -> None:
+    repo_root = _bio_fixture(tmp_path)
+    plan_path = repo_root / f"curriculum/l2-uk-en/plans/bio/{BIO_SLUG}.yaml"
+    context = readiness.ValidationContext(repo_root, "bio", BIO_SLUG, (BIO_SLUG,))
+
+    passing = readiness._bio_reading_policy(plan_path, {}, context)
+    assert passing.passed is True
+
+    plan = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
+    plan["readings"][0]["language"] = "en"
+    plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    non_ukrainian = readiness._bio_reading_policy(plan_path, {}, context)
+    assert non_ukrainian.passed is False
+    assert "language: uk" in non_ukrainian.detail
+
+    plan["readings"] = [
+        {
+            "title": "Context only",
+            "language": "uk",
+            "source_type": "encyclopedia",
+            "source_url": "https://example.test/context",
+        }
+    ]
+    plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    incomplete = readiness._bio_reading_policy(plan_path, {}, context)
+    assert incomplete.passed is False
+    assert "distinct reference/context" in incomplete.detail
 
 
 def test_off_manifest_target_fails_with_authority_owner(tmp_path: Path) -> None:

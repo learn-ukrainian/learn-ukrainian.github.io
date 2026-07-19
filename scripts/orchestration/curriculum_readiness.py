@@ -12,6 +12,7 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 from jsonschema import Draft202012Validator
 
@@ -28,8 +29,10 @@ from scripts.orchestration.preparation_evidence import (
     load_manual_evidence,
     load_yaml_mapping,
 )
+from scripts.research import research_quality
 from scripts.validate import check_discovery_integrity, check_wiki_subject, lint_seminar_quality
 from scripts.wiki.domains import resolve_write_domain
+from scripts.wiki.sources_schema import load_sources_registry, validate_sources_registry
 
 CONFIG_PATH = Path("agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml")
 CONFIG_SCHEMA_PATH = Path(
@@ -43,6 +46,36 @@ MODULE_BUNDLE_FILES = ("module.md", "activities.yaml", "vocabulary.yaml", "resou
 DEPENDENT_EVIDENCE_CLASSES = frozenset({"build", "post-build", "production-qg"})
 _TARGET_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 _HASH_RE = re.compile(r"^[0-9a-f]{64}$")
+_RESEARCH_PASS_QUALITIES = frozenset({"solid", "exemplary"})
+_READING_PLACEHOLDERS = frozenset({"needed", "reading-needed", "tbd", "todo"})
+_READING_URL_FIELDS = ("url", "source_url", "source")
+_READING_INTERNAL_FIELDS = (
+    "source_locator",
+    "corpus_id",
+    "internal_source",
+    "internal_source_id",
+)
+_BIO_REFERENCE_ROLES = frozenset({"reference", "context", "source-critical"})
+_BIO_REFERENCE_TYPES = frozenset(
+    {"reference", "encyclopedia", "scholarly", "institutional", "wikipedia"}
+)
+_BIO_DEPTH_ROLES = frozenset({"required-reading", "primary-voice", "primary"})
+_BIO_DEPTH_TYPES = frozenset(
+    {
+        "primary",
+        "near-primary",
+        "primary-source",
+        "primary-text",
+        "textbook",
+        "scholarly",
+        "institutional",
+        "archive",
+        "museum",
+        "media",
+        "article",
+        "academic-article",
+    }
+)
 
 
 class ReadinessError(ValueError):
@@ -167,10 +200,23 @@ def _source(role: str, path: Path, repo_root: Path) -> dict[str, Any]:
     }
 
 
+def _research_path(repo_root: Path, track: str, slug: str) -> Path:
+    """Resolve the existing research/knowledge-packet path shapes deterministically."""
+    candidates = (
+        repo_root / "curriculum" / "l2-uk-en" / track / "research" / f"{slug}-research.md",
+        repo_root / "curriculum" / "l2-uk-en" / track / "research" / f"{slug}-knowledge-packet.md",
+        repo_root / "docs" / "research" / track / f"{slug}.md",
+        repo_root / "docs" / "research" / track / f"{slug}-research.md",
+        repo_root / "docs" / "research" / track / f"{slug}-knowledge-packet.md",
+    )
+    return next((path for path in candidates if path.is_file()), candidates[0])
+
+
 def artifact_path(artifact: str, repo_root: Path, track: str, slug: str) -> Path:
     """Resolve a registered artifact ID without track-name branches."""
     curriculum = repo_root / "curriculum" / "l2-uk-en"
     resolvers: dict[str, Callable[[], Path]] = {
+        "research": lambda: _research_path(repo_root, track, slug),
         "dossier": lambda: repo_root / "docs" / "research" / track / f"{slug}.md",
         "plan": lambda: curriculum / "plans" / track / f"{slug}.yaml",
         "manual-registry": lambda: curriculum / track / "promotion-evidence.yaml",
@@ -218,14 +264,143 @@ def _seminar_plan_language(
     return ValidationResult(not findings, f"{len(findings)} high seminar-language finding(s)")
 
 
-def _readings_present(path: Path, _option: Mapping[str, Any], _context: ValidationContext) -> ValidationResult:
+def _research_quality(
+    path: Path,
+    _option: Mapping[str, Any],
+    context: ValidationContext,
+) -> ValidationResult:
+    discovery_path = artifact_path("discovery", context.repo_root, context.track, context.slug)
+    assessment = research_quality.assess_research_compat(
+        path,
+        context.track,
+        discovery_path=discovery_path if discovery_path.is_file() else None,
+    )
+    if not isinstance(assessment, Mapping):
+        return ValidationResult(False, "research quality assessment is unavailable")
+    quality = assessment.get("quality")
+    score = assessment.get("score")
+    passed = (
+        quality in _RESEARCH_PASS_QUALITIES
+        and isinstance(score, (int, float))
+        and not isinstance(score, bool)
+        and score >= 7
+    )
+    return ValidationResult(
+        passed,
+        f"research quality {quality or 'unrated'} ({score if score is not None else 'unrated'}/10)",
+    )
+
+
+def _wiki_sources_registry(
+    path: Path,
+    _option: Mapping[str, Any],
+    context: ValidationContext,
+) -> ValidationResult:
+    try:
+        raw = load_yaml_mapping(path)
+        raw_sources = raw.get("sources")
+        if not isinstance(raw_sources, list) or not raw_sources:
+            return ValidationResult(False, "wiki source registry needs a non-empty sources list")
+        if not all(isinstance(item, Mapping) for item in raw_sources):
+            return ValidationResult(False, "wiki source registry entries must be mappings")
+        registry = load_sources_registry(path)
+        if not registry.sources:
+            return ValidationResult(False, "wiki source registry has no valid entries")
+        article_path = artifact_path("wiki-document", context.repo_root, context.track, context.slug)
+        article_text = article_path.read_text(encoding="utf-8", errors="strict")
+        issues = validate_sources_registry(article_text, registry)
+    except (KeyError, OSError, TypeError, UnicodeDecodeError, ValueError) as exc:
+        return ValidationResult(False, f"invalid wiki source registry: {exc}")
+    if issues:
+        return ValidationResult(False, issues[0])
+    return ValidationResult(True, f"valid source-backed wiki registry ({len(registry.sources)} entries)")
+
+
+def _normalized_category(value: object) -> str:
+    return re.sub(r"[_\s]+", "-", str(value or "").strip().casefold())
+
+
+def _usable_reading_value(value: object) -> bool:
+    if not isinstance(value, str) or not value.strip():
+        return False
+    normalized = value.strip().casefold()
+    return normalized not in _READING_PLACEHOLDERS and "reading-needed" not in normalized
+
+
+def _http_url(value: object) -> bool:
+    if not _usable_reading_value(value):
+        return False
+    parsed = urlparse(str(value).strip())
+    return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
+
+
+def _reading_catalog(path: Path) -> tuple[list[Mapping[str, Any]] | None, str]:
     try:
         plan = load_yaml_mapping(path)
     except RegistryValidationError as exc:
-        return ValidationResult(False, str(exc))
+        return None, str(exc)
     readings = plan.get("readings")
-    passed = isinstance(readings, list) and bool(readings)
-    return ValidationResult(passed, "plan reading packet is present" if passed else "plan has no reading packet")
+    if not isinstance(readings, list) or not readings:
+        return None, "plan needs a non-empty readings list"
+    entries: list[Mapping[str, Any]] = []
+    for index, raw_entry in enumerate(readings, start=1):
+        if not isinstance(raw_entry, Mapping):
+            return None, f"reading {index} must be a mapping"
+        if not any(
+            _usable_reading_value(raw_entry.get(field))
+            for field in ("title", "name", "source_name")
+        ):
+            return None, f"reading {index} needs a usable title, name, or source_name"
+        has_url = any(_http_url(raw_entry.get(field)) for field in _READING_URL_FIELDS)
+        has_internal = any(
+            _usable_reading_value(raw_entry.get(field)) for field in _READING_INTERNAL_FIELDS
+        )
+        if not has_url and not has_internal:
+            return None, f"reading {index} needs an HTTP(S) URL or explicit internal source locator"
+        entries.append(raw_entry)
+    return entries, f"verified reading catalog ({len(entries)} entries)"
+
+
+def _verified_reading_catalog(
+    path: Path,
+    _option: Mapping[str, Any],
+    _context: ValidationContext,
+) -> ValidationResult:
+    entries, detail = _reading_catalog(path)
+    return ValidationResult(entries is not None, detail)
+
+
+def _bio_reading_policy(
+    path: Path,
+    _option: Mapping[str, Any],
+    _context: ValidationContext,
+) -> ValidationResult:
+    entries, detail = _reading_catalog(path)
+    if entries is None:
+        return ValidationResult(False, detail)
+    non_ukrainian = [
+        index
+        for index, entry in enumerate(entries, start=1)
+        if _normalized_category(entry.get("language")) != "uk"
+    ]
+    if non_ukrainian:
+        return ValidationResult(False, f"BIO readings must all use language: uk; invalid: {non_ukrainian}")
+
+    reference_indexes: set[int] = set()
+    depth_indexes: set[int] = set()
+    for index, entry in enumerate(entries):
+        role = _normalized_category(entry.get("role"))
+        source_type = _normalized_category(entry.get("source_type", entry.get("type")))
+        if role in _BIO_REFERENCE_ROLES or source_type in _BIO_REFERENCE_TYPES:
+            reference_indexes.add(index)
+        if role in _BIO_DEPTH_ROLES or source_type in _BIO_DEPTH_TYPES:
+            depth_indexes.add(index)
+    if not any(reference != depth for reference in reference_indexes for depth in depth_indexes):
+        return ValidationResult(
+            False,
+            "BIO readings need distinct reference/context and primary/near-primary/textbook/article entries",
+        )
+    return ValidationResult(True, f"Ukrainian-only BIO reading minimum passed ({len(entries)} entries)")
 
 
 def _bio_dossier_xref(
@@ -294,7 +469,10 @@ VALIDATORS: dict[str, Validator] = {
     "yaml-mapping": _yaml_mapping,
     "plan-check": _plan_check,
     "seminar-plan-language": _seminar_plan_language,
-    "readings-present": _readings_present,
+    "research-quality": _research_quality,
+    "wiki-sources-registry": _wiki_sources_registry,
+    "verified-reading-catalog": _verified_reading_catalog,
+    "bio-reading-policy": _bio_reading_policy,
     "bio-dossier-xref": _bio_dossier_xref,
     "manual-gate": _manual_gate,
     "wiki-completeness": _wiki_completeness,
