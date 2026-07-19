@@ -76,6 +76,7 @@ _BIO_DEPTH_TYPES = frozenset(
         "academic-article",
     }
 )
+_INVENTORY_PREPARATION_REASON_CODES = frozenset({"PREPARATION_HOLD_ACTIVE", "PREPARATION_IDENTITY_DRIFT"})
 
 
 class ReadinessError(ValueError):
@@ -175,19 +176,34 @@ def _load_json(path: Path) -> dict[str, Any]:
     return value
 
 
-def _validate(document: Mapping[str, Any], schema: Mapping[str, Any], label: str) -> None:
+def _compile_validator(
+    schema: Mapping[str, Any],
+    label: str,
+) -> Draft202012Validator:
     try:
         Draft202012Validator.check_schema(schema)
     except Exception as exc:  # jsonschema exposes multiple schema exception subclasses
         raise ReadinessError(f"invalid JSON schema for {label}: {exc}") from exc
+    return Draft202012Validator(schema)
+
+
+def _validate_with(
+    document: Mapping[str, Any],
+    validator: Draft202012Validator,
+    label: str,
+) -> None:
     errors = sorted(
-        Draft202012Validator(schema).iter_errors(document),
+        validator.iter_errors(document),
         key=lambda error: tuple(str(part) for part in error.path),
     )
     if errors:
         error = errors[0]
         location = ".".join(str(part) for part in error.absolute_path) or "<root>"
         raise ReadinessError(f"{label} failed schema validation at {location}: {error.message}")
+
+
+def _validate(document: Mapping[str, Any], schema: Mapping[str, Any], label: str) -> None:
+    _validate_with(document, _compile_validator(schema, label), label)
 
 
 def _source(role: str, path: Path, repo_root: Path) -> dict[str, Any]:
@@ -941,10 +957,17 @@ def _evaluate_manifest_target(
     files: ContractFiles,
     validators: Mapping[str, Validator],
     consumed_preparation_identity: str | None,
+    contract_sources: Sequence[Mapping[str, Any]] | None = None,
+    result_validator: Draft202012Validator | None = None,
 ) -> dict[str, Any]:
     context = ValidationContext(repo_root, track, slug, manifest_slugs)
     requirements, findings, artifact_sources = _evaluate_requirements(profile, context, validators)
-    sources = [*_contract_sources(files, repo_root), *artifact_sources]
+    base_sources = (
+        [dict(source) for source in contract_sources]
+        if contract_sources is not None
+        else _contract_sources(files, repo_root)
+    )
+    sources = [*base_sources, *artifact_sources]
     manifest_index = manifest_slugs.index(slug)
     preparation_identity = _preparation_identity(
         track=track,
@@ -991,7 +1014,7 @@ def _evaluate_manifest_target(
         preparation_identity=preparation_identity,
         consumed_preparation_identity=consumed_preparation_identity,
     )
-    validate_result(result, repo_root=repo_root)
+    validate_result(result, repo_root=repo_root, validator=result_validator)
     return result
 
 
@@ -1048,9 +1071,162 @@ def evaluate_preparation(
     )
 
 
-def validate_result(result: Mapping[str, Any], *, repo_root: Path = PROJECT_ROOT) -> None:
-    schema = _load_json(_repo_file(repo_root, RESULT_SCHEMA_PATH))
-    _validate(result, schema, "preparation result")
+def validate_result(
+    result: Mapping[str, Any],
+    *,
+    repo_root: Path = PROJECT_ROOT,
+    validator: Draft202012Validator | None = None,
+) -> None:
+    if validator is None:
+        schema = _load_json(_repo_file(repo_root, RESULT_SCHEMA_PATH))
+        _validate(result, schema, "preparation result")
+        return
+    _validate_with(result, validator, "preparation result")
+
+
+def _inventory_missing_row(result: Mapping[str, Any]) -> dict[str, Any] | None:
+    if result["preparation_state"] == "current":
+        return None
+    failed_requirements = [
+        {"id": requirement["id"], "owner": requirement["owner"]}
+        for requirement in result["requirements"]
+        if not requirement["passed"]
+    ]
+    preparation_reason_codes = [
+        finding["id"]
+        for finding in result["findings"]
+        if finding["owner"] == "preparation" and finding["id"] in _INVENTORY_PREPARATION_REASON_CODES
+    ]
+    if not failed_requirements and not preparation_reason_codes:
+        return None
+    return {
+        "track": result["track"],
+        "slug": result["slug"],
+        "profile_id": result["profile_id"],
+        "profile_version": result["profile_version"],
+        "module_state": result["module_state"],
+        "preparation_state": result["preparation_state"],
+        "state": result["state"],
+        "next_action": result["next_action"],
+        "failed_requirements": failed_requirements,
+        "preparation_reason_codes": preparation_reason_codes,
+    }
+
+
+def evaluate_inventory(
+    *,
+    mode: str,
+    track: str | None = None,
+    repo_root: Path = PROJECT_ROOT,
+    validators: Mapping[str, Validator] = VALIDATORS,
+) -> dict[str, Any]:
+    """Evaluate a deterministic compact view over active manifest results."""
+    if mode not in {"summary", "missing-only"}:
+        raise ReadinessError(f"unsupported readiness inventory mode: {mode}")
+    if track is not None:
+        track = track.lower()
+        if not _TARGET_RE.fullmatch(track):
+            raise ReadinessError("track must be a lowercase repository identifier")
+
+    manifest = load_active_manifest(repo_root)
+    selected_tracks = tuple(manifest["tracks"]) if track is None else (track,)
+    if track is not None and track not in manifest["tracks"]:
+        raise ReadinessError(f"curriculum manifest has no active track: {track}")
+    config = load_config(
+        repo_root=repo_root,
+        active_tracks={track_id: str(record["type"]) for track_id, record in manifest["tracks"].items()},
+    )
+    files = _contract_files(repo_root, manifest["path"])
+    contract_sources = _contract_sources(files, repo_root)
+    result_schema = _load_json(_repo_file(repo_root, RESULT_SCHEMA_PATH))
+    result_validator = _compile_validator(result_schema, "preparation result")
+
+    track_counts: dict[str, int] = {}
+    profile_counts: dict[tuple[str, str], int] = {}
+    requirement_counts: dict[tuple[str, str], dict[str, Any]] = {}
+    next_action_counts: dict[str, int] = {}
+    module_state_counts: dict[str, int] = {}
+    missing_rows: list[dict[str, Any]] = []
+    module_count = 0
+
+    for track_id in selected_tracks:
+        manifest_record, manifest_slugs = manifest_track(manifest, track_id)
+        profile_id, profile = _select_profile(config, track_id, str(manifest_record["type"]))
+        profile_version = str(profile["version"])
+        track_counts[track_id] = 0
+        profile_counts.setdefault((profile_id, profile_version), 0)
+        for requirement in profile["requirements"]:
+            requirement_counts.setdefault(
+                (str(requirement["id"]), str(requirement["owner"])),
+                {
+                    "requirement_id": str(requirement["id"]),
+                    "owner": str(requirement["owner"]),
+                    "passed": 0,
+                    "failed": 0,
+                },
+            )
+        for slug in manifest_slugs:
+            result = _evaluate_manifest_target(
+                repo_root=repo_root,
+                track=track_id,
+                slug=slug,
+                profile_id=profile_id,
+                profile=profile,
+                manifest_slugs=manifest_slugs,
+                files=files,
+                validators=validators,
+                consumed_preparation_identity=None,
+                contract_sources=contract_sources,
+                result_validator=result_validator,
+            )
+            module_count += 1
+            track_counts[track_id] += 1
+            profile_counts[(profile_id, profile_version)] += 1
+            next_action = str(result["next_action"])
+            next_action_counts[next_action] = next_action_counts.get(next_action, 0) + 1
+            module_state = str(result["module_state"])
+            module_state_counts[module_state] = module_state_counts.get(module_state, 0) + 1
+            for requirement in result["requirements"]:
+                key = (str(requirement["id"]), str(requirement["owner"]))
+                counts = requirement_counts[key]
+                outcome = "passed" if requirement["passed"] else "failed"
+                counts[outcome] += 1
+            if mode == "missing-only":
+                row = _inventory_missing_row(result)
+                if row is not None:
+                    missing_rows.append(row)
+
+    scope = {"all": True} if track is None else {"track": track}
+    if mode == "missing-only":
+        return {
+            "mode": mode,
+            "scope": scope,
+            "candidate_count": len(missing_rows),
+            "rows": missing_rows,
+        }
+    return {
+        "mode": mode,
+        "scope": scope,
+        "module_count": module_count,
+        "counts": {
+            "track": [{"track": track_id, "count": count} for track_id, count in track_counts.items()],
+            "profile": [
+                {
+                    "profile_id": profile_id,
+                    "profile_version": profile_version,
+                    "count": count,
+                }
+                for (profile_id, profile_version), count in profile_counts.items()
+            ],
+            "requirement": list(requirement_counts.values()),
+            "next_action": [
+                {"next_action": next_action, "count": count} for next_action, count in next_action_counts.items()
+            ],
+            "module_state": [
+                {"module_state": module_state, "count": count} for module_state, count in module_state_counts.items()
+            ],
+        },
+    }
 
 
 def dependent_evidence_identity(
@@ -1075,24 +1251,52 @@ def dependent_evidence_identity(
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--track", required=True)
-    parser.add_argument("--slug", required=True)
+    scope = parser.add_mutually_exclusive_group(required=True)
+    scope.add_argument("--all", dest="all_tracks", action="store_true")
+    scope.add_argument("--track")
+    inventory_mode = parser.add_mutually_exclusive_group()
+    inventory_mode.add_argument("--summary", action="store_true")
+    inventory_mode.add_argument("--missing-only", action="store_true")
+    parser.add_argument("--slug")
     parser.add_argument("--consumed-preparation-identity")
     return parser
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    inventory_mode = "summary" if args.summary else "missing-only" if args.missing_only else None
+    if args.all_tracks:
+        if inventory_mode is None:
+            parser.error("--all requires exactly one of --summary or --missing-only")
+        if args.slug is not None or args.consumed_preparation_identity is not None:
+            parser.error("--all inventory cannot be combined with target-only arguments")
+    elif args.slug is None and inventory_mode is None:
+        parser.error("--track requires --slug, --summary, or --missing-only")
+    elif args.slug is not None and inventory_mode is not None:
+        parser.error("--slug cannot be combined with an inventory mode")
+    elif args.slug is None and args.consumed_preparation_identity is not None:
+        parser.error("--consumed-preparation-identity requires --slug")
+
     try:
-        result = evaluate_preparation(
-            args.track,
-            args.slug,
-            consumed_preparation_identity=args.consumed_preparation_identity,
-        )
+        if inventory_mode is not None:
+            result = evaluate_inventory(
+                mode=inventory_mode,
+                track=None if args.all_tracks else args.track,
+            )
+        else:
+            result = evaluate_preparation(
+                args.track,
+                args.slug,
+                consumed_preparation_identity=args.consumed_preparation_identity,
+            )
     except (ReadinessError, RegistryValidationError, OSError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
-    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    if inventory_mode is not None:
+        print(json.dumps(result, ensure_ascii=False, separators=(",", ":")))
+    else:
+        print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 
 
