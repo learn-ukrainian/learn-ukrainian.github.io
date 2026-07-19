@@ -978,6 +978,10 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Write the prompt/state preview and print the delegate.py command without dispatching.",
     )
 
+    from ._review_pr import register_review_pr_parser
+
+    register_review_pr_parser(subparsers)
+
     review_deep_parser = subparsers.add_parser(
         "review-deep",
         help="Dispatch an adversarial Claude Opus read-only review run",
@@ -1252,6 +1256,10 @@ def _dispatch_command(args):
         _handle_codex_usage(args)
     elif args.command == "dispatch-fix":
         sys.exit(handle_dispatch_fix(args))
+    elif args.command == "review-pr":
+        from ._review_pr import handle_review_pr
+
+        sys.exit(handle_review_pr(args))
     elif args.command == "review-deep":
         sys.exit(handle_review_deep(args))
     elif args.command == "check-model":

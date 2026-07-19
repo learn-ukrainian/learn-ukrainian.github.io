@@ -162,13 +162,36 @@ brief includes the commit, push, and PR checklist. If `--brief-file`
 is omitted, the wrapper builds `/tmp/dispatch-fix-<task-id>.md` from
 `gh issue view <issue> --json title,body`.
 
+`.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR> [--reviewer auto|codex|glm|claude]`
+is the **canonical formal PR review entry** (Sol fleet-comms Phase 0–3):
+
+- **Pointer-only** prompt (PR URL + checklist + mandatory read-only contract).
+- Hard size caps — refuse fat pasted diffs/inventory YAML.
+- Default `--reviewer auto` → **Codex sealed `--review --pr`** (#5285 isolation).
+- Claude dark + local: `--reviewer glm` or `--reviewer auto --no-claude-available`
+  (GLM-5.2 is **LOCAL-ONLY** / China egress — never CI).
+- Do **not** identify the reviewer as “Hermes”; record model + family + harness.
+
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py review-deep <PR-or-path> [--effort xhigh]` dispatches an
 adversarial Claude review run. It hardcodes `--agent claude --mode
 read-only --model claude-opus-4-7 --effort xhigh` unless an explicit
 effort override is passed, then builds a review prompt from either
 `gh pr view` plus `gh pr diff` or the target file/directory contents.
 Use it for blocking logic/security/test review, not for stylistic
-preferences.
+preferences. Prefer `review-pr` for ordinary formal CF review.
+
+### Hermes / DeepSeek isolation (Sol #213 class)
+
+`ask-hermes` is tool-capable. It **must not** inherit the operator primary
+checkout as `cwd`. Review-class asks always:
+
+1. run under a **neutral temp scratch** (or sealed snapshot for Codex path);
+2. prepend the **READ-ONLY REVIEW CONTRACT**;
+3. enforce content/attachment size caps.
+
+Escape hatch `BRIDGE_ALLOW_PRIMARY_HERMES=1` is **non-review only** and
+logged. A red-team test proves a hostile hermes that only attacks `cwd`
+cannot change primary `HEAD`/`status`.
 
 Both wrappers support `--dry-run`, which writes the prompt and a
 `batch_state/tasks/<task-id>.json` preview without launching the
@@ -204,7 +227,8 @@ and you have another way to detect parked sessions.
 | Sustained discussion on a topic | `.venv/bin/python scripts/ai_agent_bridge/__main__.py post` to a channel |
 | Need a 2-3 agent debate on a design | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` |
 | Sharing context across many delegations | Pin it in `docs/agent-channels/{topic}/context.md` |
-| Code review with adversarial feedback | `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews ...` |
+| Formal PR review (CF gate) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>` |
+| Code review discussion (non-gate) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews ...` |
 | Want the post visible in the dashboard | Channels only (the legacy `messages` table has its own UI) |
 
 ## The hygiene rule
