@@ -8,6 +8,13 @@ export interface DailyWord {
   lessonTag?: string;
   cefr?: string;
   weight?: number;
+  /**
+   * #5434 verified example sentence for the word of the day.
+   * Absent until the sentence corpus lands — the UI omits the slot quietly.
+   */
+  example?: string | null;
+  /** English rendering of `example` (A1 scaffolding only). */
+  exampleEn?: string | null;
 }
 
 export function dateSeed(d: Date): number {
