@@ -35,6 +35,9 @@ outputs:
   postmortems:
     description: 'Whether postmortems files changed'
     value: ${{ steps.set-outputs.outputs.postmortems }}
+  preparation:
+    description: 'Whether BIO preparation data changed'
+    value: ${{ steps.set-outputs.outputs.preparation }}
 
 runs:
   using: 'composite'
@@ -90,6 +93,7 @@ runs:
         F1_LESSON_SCHEMA: ${{ steps.filter1.outputs.lesson_schema }}
         F1_ATLAS: ${{ steps.filter1.outputs.atlas }}
         F1_POSTMORTEMS: ${{ steps.filter1.outputs.postmortems }}
+        F1_PREPARATION: ${{ steps.filter1.outputs.preparation }}
         F2_CONTENT: ${{ steps.filter2.outputs.content }}
         F2_FRAMING: ${{ steps.filter2.outputs.framing }}
         F2_PROMOTE: ${{ steps.filter2.outputs.promote }}
@@ -100,6 +104,7 @@ runs:
         F2_LESSON_SCHEMA: ${{ steps.filter2.outputs.lesson_schema }}
         F2_ATLAS: ${{ steps.filter2.outputs.atlas }}
         F2_POSTMORTEMS: ${{ steps.filter2.outputs.postmortems }}
+        F2_PREPARATION: ${{ steps.filter2.outputs.preparation }}
         F3_CONTENT: ${{ steps.filter3.outputs.content }}
         F3_FRAMING: ${{ steps.filter3.outputs.framing }}
         F3_PROMOTE: ${{ steps.filter3.outputs.promote }}
@@ -110,6 +115,7 @@ runs:
         F3_LESSON_SCHEMA: ${{ steps.filter3.outputs.lesson_schema }}
         F3_ATLAS: ${{ steps.filter3.outputs.atlas }}
         F3_POSTMORTEMS: ${{ steps.filter3.outputs.postmortems }}
+        F3_PREPARATION: ${{ steps.filter3.outputs.preparation }}
       run: |
         emit() {
           {
@@ -123,19 +129,23 @@ runs:
             echo "lesson_schema=$8"
             echo "atlas=$9"
             echo "postmortems=${10}"
+            echo "preparation=${11}"
           } >> "$GITHUB_OUTPUT"
         }
         if [ "$FILTER1_OUTCOME" = "success" ]; then
           emit "$F1_CONTENT" "$F1_FRAMING" "$F1_PROMOTE" "$F1_CODE" "$F1_PYTHON" \
-            "$F1_FRONTEND" "$F1_AGENT_CONFIG" "$F1_LESSON_SCHEMA" "$F1_ATLAS" "$F1_POSTMORTEMS"
+            "$F1_FRONTEND" "$F1_AGENT_CONFIG" "$F1_LESSON_SCHEMA" "$F1_ATLAS" "$F1_POSTMORTEMS" \
+            "$F1_PREPARATION"
         elif [ "$FILTER2_OUTCOME" = "success" ]; then
           emit "$F2_CONTENT" "$F2_FRAMING" "$F2_PROMOTE" "$F2_CODE" "$F2_PYTHON" \
-            "$F2_FRONTEND" "$F2_AGENT_CONFIG" "$F2_LESSON_SCHEMA" "$F2_ATLAS" "$F2_POSTMORTEMS"
+            "$F2_FRONTEND" "$F2_AGENT_CONFIG" "$F2_LESSON_SCHEMA" "$F2_ATLAS" "$F2_POSTMORTEMS" \
+            "$F2_PREPARATION"
         elif [ "$FILTER3_OUTCOME" = "success" ]; then
           emit "$F3_CONTENT" "$F3_FRAMING" "$F3_PROMOTE" "$F3_CODE" "$F3_PYTHON" \
-            "$F3_FRONTEND" "$F3_AGENT_CONFIG" "$F3_LESSON_SCHEMA" "$F3_ATLAS" "$F3_POSTMORTEMS"
+            "$F3_FRONTEND" "$F3_AGENT_CONFIG" "$F3_LESSON_SCHEMA" "$F3_ATLAS" "$F3_POSTMORTEMS" \
+            "$F3_PREPARATION"
         else
           echo "::warning::path classification unavailable — running everything"
-          emit true true true true true true true true true true
+          emit true true true true true true true true true true true
         fi
       shell: bash
