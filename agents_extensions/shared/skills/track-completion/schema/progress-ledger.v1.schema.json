@@ -143,6 +143,16 @@
       ]
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"state": {"const": "PREPARATION_BLOCKED"}},
+        "required": ["state"]
+      },
+      "then": {"required": ["preparation_block"]},
+      "else": {"not": {"required": ["preparation_block"]}}
+    }
+  ],
   "$defs": {
     "timestamp": {"type": "string", "format": "date-time"},
     "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},

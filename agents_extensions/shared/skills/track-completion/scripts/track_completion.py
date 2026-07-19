@@ -1059,15 +1059,26 @@ def _terminalize_preparation_block(
     block: Mapping[str, Any],
 ) -> None:
     """Persist one terminal preparation HOLD and release its completion lease."""
-    _append_event(
-        ledger,
-        event_id=event_id,
-        event="PREPARATION_REBUILD_BLOCKED",
-        to_state=PREPARATION_BLOCKED_STATE,
-        identity=identity,
-        details={"preparation_block": dict(block)},
-    )
+    existing_event = next((event for event in ledger["history"] if event["event_id"] == event_id), None)
+    if existing_event is not None:
+        if (
+            existing_event["event"] != "PREPARATION_REBUILD_BLOCKED"
+            or existing_event["to_state"] != PREPARATION_BLOCKED_STATE
+            or existing_event["details"] != {"preparation_block": dict(block)}
+        ):
+            raise CompletionError("Preparation-block terminal event conflicts with existing history")
+    else:
+        _append_event(
+            ledger,
+            event_id=event_id,
+            event="PREPARATION_REBUILD_BLOCKED",
+            to_state=PREPARATION_BLOCKED_STATE,
+            identity=identity,
+            details={"preparation_block": dict(block)},
+        )
     now = _iso(_now())
+    ledger["state"] = PREPARATION_BLOCKED_STATE
+    ledger["current_identity"] = dict(identity)
     ledger["preparation_block"] = dict(block)
     ledger["routing"] = None
     ledger["publication"] = None
@@ -1718,7 +1729,9 @@ def request_preparation_rebuild(
                 raise CompletionError("Current preparation does not require a rebuild")
             if not current_preparation_identity or not all(item["passed"] for item in readiness["requirements"]):
                 block = _preparation_block_record(readiness)
-                eid = _event_id("PREPARATION_REBUILD_BLOCKED", block)
+                eid = _event_id(
+                    "PREPARATION_REBUILD_BLOCKED", {"run_id": ledger["run"]["run_id"], "block": block}
+                )
                 _terminalize_preparation_block(
                     ledger,
                     event_id=eid,

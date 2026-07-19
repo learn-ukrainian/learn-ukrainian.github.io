@@ -849,6 +849,27 @@ def test_preparation_rebuild_terminalizes_incomplete_inputs_and_preserves_learne
     assert resumed["run"]["run_id"] == remediated["run"]["run_id"]
     assert resumed["history"] == history
 
+    (repo / "curriculum/l2-uk-en/bio/promotion-evidence.yaml").unlink()
+    _, blocked_again = tc.request_preparation_rebuild(
+        "bio/seminar-built",
+        run_id=remediated["run"]["run_id"],
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    terminal_events = [event for event in blocked_again["history"] if event["event"] == "PREPARATION_REBUILD_BLOCKED"]
+    assert len(terminal_events) == 2
+    assert terminal_events[0]["event_id"] != terminal_events[1]["event_id"]
+    assert blocked_again["state"] == "PREPARATION_BLOCKED"
+    assert blocked_again["run"]["status"] == "completed"
+    assert blocked_again["run"]["lease_released_at"] == blocked_again["run"]["lease_expires_at"]
+
+    _write_bio_dossier_grounding(repo)
+    _, remediated_again = _start(fake_repo, "bio/seminar-built", owner="codex/remediation-2")
+    assert remediated_again["run"]["run_id"] != remediated["run"]["run_id"]
+    assert remediated_again["run"]["status"] == "active"
+    assert remediated_again["state"] == "POST_BUILD_REVIEW_REQUIRED"
+
     _, core_ledger = _start(fake_repo, "a1/core-built")
     content = repo / "curriculum/l2-uk-en/a1/core-built/module.md"
     content.write_text(content.read_text(encoding="utf-8") + "Незаписана зміна.\n", encoding="utf-8")
@@ -863,6 +884,41 @@ def test_preparation_rebuild_terminalizes_incomplete_inputs_and_preserves_learne
             config_path=config_path,
             ledger_root=ledger_root,
         )
+
+
+def test_preparation_block_state_pair_is_schema_enforced_and_consumers_fail_closed(
+    fake_repo: tuple[Path, Path, Path],
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    path, ledger = _start(fake_repo, "a1/core-built")
+    ledger["state"] = "PREPARATION_BLOCKED"
+    tc._atomic_write_json(path, ledger)
+
+    with pytest.raises(tc.CompletionError, match="Invalid track-completion ledger"):
+        tc.certification_projection(
+            "a1/core-built", repo_root=repo, config_path=config_path, ledger_root=ledger_root
+        )
+    with pytest.raises(tc.CompletionError, match="Invalid track-completion ledger"):
+        _start(fake_repo, "a1/core-built")
+
+    ledger["state"] = "POST_BUILD_REVIEW_REQUIRED"
+    ledger["preparation_block"] = {
+        "disposition": "HOLD",
+        "reason_code": "PREPARATION_REBUILD_PRECHECK_INCOMPLETE",
+        "owner": "preparation",
+        "reason": "fixture",
+        "finding_ids": ["PREPARATION_FIXTURE"],
+        "evidence_ids": ["fixture:evidence:missing"],
+        "unblock_condition": "fixture",
+        "next_action": "stop",
+    }
+    tc._atomic_write_json(path, ledger)
+    with pytest.raises(tc.CompletionError, match="Invalid track-completion ledger"):
+        tc.certification_projection(
+            "a1/core-built", repo_root=repo, config_path=config_path, ledger_root=ledger_root
+        )
+    with pytest.raises(tc.CompletionError, match="Invalid track-completion ledger"):
+        _start(fake_repo, "a1/core-built")
 
 
 def test_preparation_rebuild_from_awaiting_production_qg_arming_clears_stale_fields(
