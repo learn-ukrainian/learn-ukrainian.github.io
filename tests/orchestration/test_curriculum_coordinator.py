@@ -372,27 +372,7 @@ def test_global_mutation_lease_blocks_cross_track_work(repo: Path, tmp_path: Pat
     with pytest.raises(coordinator.CoordinatorError, match="lease belongs"):
         _acquire(repo, runtime, bio["run_id"])
 
-    coordinator.record_module(
-        folk["run_id"],
-        owner="sol",
-        slug="alpha",
-        disposition="blocked",
-        integration={"evidence": "blocker:source-rights"},
-        repo_root=repo,
-        runtime_root=runtime,
-    )
-    _path, retried, item = _acquire(repo, runtime, folk["run_id"])
-    assert item and item["slug"] == "alpha"
-    assert coordinator.derive_state(retried)["modules"]["alpha"] == "active"
-    coordinator.record_module(
-        folk["run_id"],
-        owner="sol",
-        slug="alpha",
-        disposition="blocked",
-        integration={"evidence": "blocker:source-rights"},
-        repo_root=repo,
-        runtime_root=runtime,
-    )
+    _no_change(repo, runtime, folk["run_id"])
     _path, _ledger, item = _acquire(repo, runtime, bio["run_id"])
     assert item and item["slug"] == "echo"
 
@@ -849,6 +829,41 @@ def test_bio_deploy_goal_waits_for_bounded_terminal_then_records_authoritative_r
 def test_pages_deploy_installs_audit_import_dependencies() -> None:
     workflow = (coordinator.PROJECT_ROOT / ".github/workflows/deploy-pages.yml").read_text(encoding="utf-8")
     assert "PyYAML==6.0.3 jsonschema==4.26.0" in workflow
+
+
+@pytest.mark.parametrize("disposition", ["complete", "blocked"])
+def test_legacy_run_requires_terminal_goal_migration_for_policy_dispositions(
+    repo: Path, tmp_path: Path, disposition: str
+) -> None:
+    runtime = tmp_path / "runtime"
+    path, ledger = _start(repo, runtime, scope="one", module="alpha")
+    _acquire(repo, runtime, ledger["run_id"])
+    before = path.read_bytes()
+
+    with pytest.raises(coordinator.CoordinatorError, match="migrate-terminal-goal"):
+        coordinator.record_module(
+            ledger["run_id"],
+            owner="sol",
+            slug="alpha",
+            disposition=disposition,
+            integration={"evidence": f"legacy:{disposition}"},
+            repo_root=repo,
+            runtime_root=runtime,
+        )
+
+    assert path.read_bytes() == before
+
+
+def test_legacy_no_change_with_evidence_remains_replayable(repo: Path, tmp_path: Path) -> None:
+    runtime = tmp_path / "runtime"
+    _path, ledger = _start(repo, runtime, scope="one", module="alpha")
+    _acquire(repo, runtime, ledger["run_id"])
+
+    _path, completed = _no_change(repo, runtime, ledger["run_id"], evidence="legacy:pbr-v1")
+    _path, replayed = _no_change(repo, runtime, ledger["run_id"], evidence="legacy:pbr-v1")
+
+    assert coordinator.compact_status(completed)["status"] == "complete"
+    assert replayed == completed
 
 
 def test_legacy_completed_run_migration_reopens_unproven_module(repo: Path, tmp_path: Path) -> None:

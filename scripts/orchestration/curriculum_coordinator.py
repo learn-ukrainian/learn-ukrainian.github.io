@@ -1356,9 +1356,10 @@ def _record_module(
                     repo_root=repo_root,
                 )
             else:
-                if disposition is None:
+                if disposition != "no-change":
                     raise CoordinatorError(
-                        "legacy coordinator run must migrate-terminal-goal before recording a bounded result"
+                        "legacy coordinator run only permits no-change; run migrate-terminal-goal "
+                        "before recording complete or blocked results"
                     )
                 identity = _integration_record(integration)
                 _validate_legacy_integration(identity)
