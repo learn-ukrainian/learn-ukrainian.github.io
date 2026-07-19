@@ -1,51 +1,42 @@
 # Source registry for wiki/figures/ivan-mazepa.md
-# Referenced inline as [S1], [S2], ... — independent adopted sources only
+# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: http://history.org.ua/?termin=Mazepa_I_S
-  type: external
-  title: МАЗЕПА Іван Степанович
-  url: http://history.org.ua/?termin=Mazepa_I_S
-  metadata:
-    publisher: Енциклопедія історії України
-    author: В. В. Станіславський
-    language: uk
-    verified_on: '2026-07-19'
-    factual_role: гетьманат 1687–1709, політика, союз 1708, смерть, анафема
-  rights:
-    basis: external-link
-    evidence_url: http://history.org.ua/?termin=Mazepa_I_S
-    license: Авторське право видавця; використання як зовнішнього посилання / link-only
-    attribution: Енциклопедія історії України
+  file: ukrainian_wiki/ivan-mazepa_Біографія-Іван-Мазепа-Анатомія-вибору-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Іван Мазепа: Анатомія вибору'
+  section_path: 'Біографія: Іван Мазепа: Анатомія вибору > Короткий зміст'
 - id: S2
-  file: https://www.history.org.ua/?termin=baturyna_obloga_i_shturm_1708
-  type: external
-  title: Батурина облога і штурм 1708
-  url: https://www.history.org.ua/?termin=baturyna_obloga_i_shturm_1708
-  metadata:
-    publisher: Енциклопедія історії України
-    author: А. А. Галушка
-    language: uk
-    verified_on: '2026-07-19'
-    factual_role: Батурин 1708 як імперська каральна відповідь, не декоративний епізод
-  rights:
-    basis: external-link
-    evidence_url: https://www.history.org.ua/?termin=baturyna_obloga_i_shturm_1708
-    license: Авторське право видавця; використання як зовнішнього посилання / link-only
-    attribution: Енциклопедія історії України
+  file: 8-klas-istoria-ukr-schupak-2025_s4224
+  type: textbook
+  title: РОЗДІЛ 4. Правобережне козацтво
+  page: 173
+  grade: 8
 - id: S3
-  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CA%5CMazepaIvan.htm
-  type: external
-  title: Mazepa, Ivan
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CA%5CMazepaIvan.htm
-  metadata:
-    publisher: Internet Encyclopedia of Ukraine (CIUS)
-    author: IEU
-    language: en
-    verified_on: '2026-07-19'
-    factual_role: 'незалежна біографія: освіта, гетьманат, 1708–1709, культурне меценатство'
-  rights:
-    basis: external-link
-    evidence_url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CA%5CMazepaIvan.htm
-    license: Авторське право видавця; використання як зовнішнього посилання / link-only
-    attribution: Internet Encyclopedia of Ukraine (CIUS)
+  file: wikipedia/Іван Мазепа
+  type: wikipedia
+  title: Іван Мазепа
+  url: https://uk.wikipedia.org/wiki/%D0%86%D0%B2%D0%B0%D0%BD%20%D0%9C%D0%B0%D0%B7%D0%B5%D0%BF%D0%B0
+- id: S4
+  file: ukrainian_wiki/ivan-mazepa_Біографія-Іван-Мазепа-Анатомія-вибору-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Іван Мазепа: Анатомія вибору'
+  section_path: 'Біографія: Іван Мазепа: Анатомія вибору > Деколонізаційна перспектива'
+- id: S5
+  file: ukrainian_wiki/lysty-mazepy_Історіографія-спадщини-Івана-Мазепи-Дипломат-меценат-і-державотворець-Основний-зміст-Меценатство-як-фундамент-Мазепинського-ренесансу
+  type: ukrainian_wiki
+  title: 'Історіографія спадщини Івана Мазепи: Дипломат, меценат і державотворець'
+  section_path: 'Історіографія спадщини Івана Мазепи: Дипломат, меценат і державотворець
+    > Основний зміст > Меценатство як фундамент «Мазепинського ренесансу»'
+- id: S6
+  file: ukrainian_wiki/lysty-mazepy_Історіографія-спадщини-Івана-Мазепи-Дипломат-меценат-і-державотворець-Основний-зміст-Еволюція-історіографічних-парадигм-від-анафеми-до-державного-діяча
+  type: ukrainian_wiki
+  title: 'Історіографія спадщини Івана Мазепи: Дипломат, меценат і державотворець'
+  section_path: 'Історіографія спадщини Івана Мазепи: Дипломат, меценат і державотворець
+    > Основний зміст > Еволюція історіографічних парадигм: від анафеми до державного
+    діяча'
+- id: S7
+  file: wave4-ohloblyn-mazepa_c0674
+  type: literary
+  title: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.

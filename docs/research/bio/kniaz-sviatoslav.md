@@ -7,22 +7,12 @@
 **Researcher:** GPT-5.5 (Codex)
 **Completed:** 2026-06-03
 
-**Adopted external URL set (order fixed; identical in plan, discovery and source registry):**
-
-1. `http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Sviatoslav_I`
-2. `http://izbornyk.org.ua/pvlyar/yar02.htm`
-3. `https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CV%5CSviatoslavIIhorovych.htm`
-
-Усі три сторінки повторно відкрито 2026-07-19 (HTTP 200). Учнівські
-`source_url` є україномовною підмножиною; IEU використано лише як англомовний
-довідковий контроль.
-
 **Acceptance self-check:**
 - [x] All 10 sections completed
 - [x] >=3 source families cited (IEU, project textbook corpus, ПВЛ/Літопис Руський, ЕІУ linked context)
 - [x] §2 names the Rus-appropriation mechanism and the later militarized simplifications
 - [x] Primary-source / chronicle quotes are explicitly not treated as autograph speech
-- [x] Непідтверджені дослівні атрибуції Грушевському вилучено або переформульовано як атрибутовані оцінки; літописну формулу звірено за точним локатором Ізборника
+- [x] `verify_quote` attempts for Hrushevsky attributions reported honestly (`matched: false`, confidence 0.0)
 - [x] Cross-track links verified with `test -e`
 - [x] Naming-canonical applied
 - [x] Image candidates identified with caution
@@ -58,20 +48,25 @@
 - `970` — appointment of sons as governors: Yaropolk in Kyiv, Oleh in the Derevlian land/Ovruch, Volodymyr in Novgorod. [T1: IEU; EIU context — Yaropolk/Oleh entries]
 - `spring 972` — death at the Dnipro rapids in Kurya's ambush. [T1: IEU; T2: `search_text` results above]
 
-## 4. Primary-source quotes / attributed labels (verified or paraphrased)
+## 4. Primary-source quotes
 
-**1. Літописна формула попередження (НЕ модерне «Іду на ви!»):**
-На http://izbornyk.org.ua/pvlyar/yar02.htm (відкрито 2026-07-19) у перекладі Махновця: «І посилав у інші землі, кажучи: «Хочу на ви іти»»; у давньому тексті — «хочю на вы ити».
-**Педагогічно:** популярне «Іду на ви!» — пізня стилізація; у курсі подавати як **парафраз/модернізацію**, а цитувати точну формулу з локатором.
+**Quote 1 — the challenge formula attributed by the Primary Chronicle:**
 
-**2. Загибель 972 (ЕІУ, Филипчук):**
-ЕІУ: весна 972, дніпрові пороги, поразка від печенізького хана Курі; мотив чаші з черепа.
-Локатор: EIU `Sviatoslav_I` (відкрито 2026-07-19). **Не додаємо** «таємне візантійське посольство» чи «поранену виснажену силу» — ЕІУ цього не дає.
+> «Іду на ви!»
 
-**3. Ярлики, атрибутовані Грушевському (підручникова рецепція, не verify_quote):**
-Підручники цитують «давньоруський спартанець» / «перший запорожець…» / «чистий запорожець на київськім столі» як слова Грушевського (напр. corpus `11-klas-ukrajinska-mova-voron-2019_s0143`, `7-klas-istoria-ukr-pometun-2024_s0050`).
-**Статус:** історіографічний ярлик через підручник; `verify_quote` matched:false. Подавати як **атрибутовану рецепцію**, не як корпусно-підтверджену дослівну цитату з повного тексту Грушевського.
+Tool status: `verify_quote(author="Літопис Руський", ...)` returned **matched: false, best_confidence 0.0**. IEU notes the Primary Chronicle's report of Sviatoslav's practice of warning enemies with this message; the OES module `pvl-sviatoslav` should verify against the selected ПВЛ edition before lesson build. Pedagogically: the line is useful only if taught as stylized chronicle speech, not a stenographic battlefield recording. [T1: IEU; Existing OES plan `pvl-sviatoslav`]
 
+**Quote 2 — chronicle death passage in textbook/corpus form:**
+
+> «У літо 972-го, коли настала весна, поплив Святослав через пороги. І напав на нього Куря, князь печенізький. Убили Святослава».
+
+Tool status: `verify_quote(author="Літопис Руський", ...)` returned **matched: false, best_confidence 0.0**. The passage is tool-backed by `search_text` result `5-klas-ukrlit-zabolotnyi-2022_s0143` and repeated in `5-klas-ukrlit-avramenko-2022_s0158`. Pedagogically: anchors the death to **spring 972** and Kurya; the skull-cup should be introduced only as a later chronicle motif, not as a verified physical fact.
+
+**Quote 3 — Hrushevsky attribution, honestly scored:**
+
+> «чистий запорожець на київському престолі» / variants in audit shorthand: «давньоруський спартанець», «перший запорожець на київськім столі».
+
+Tool status: `verify_quote(author="Грушевський", "чистий запорожець на київському престолі")` returned **matched: false, confidence 0.0**; the same for «давньоруський спартанець» and «перший запорожець...». The attribution is supported here only by `search_text` result `7-klas-istoria-ukr-pometun-2024_s0048`, which quotes a textbook's Hrushevsky excerpt. Treat as a textbook-cited historiographic label, not a corpus-verified quotation.
 
 ## 5. Language register
 
@@ -115,13 +110,12 @@
 - **Aliases:** Святослав Хоробрий; Святослав Завойовник; Sviatoslav I Ihorovych.
 - **Forbidden forms:** Святослав Игоревич; Svyatoslav Igorevich; "Russian Svyatoslav"; "Old Russian prince" without Kyivan Rus explanation.
 
-## 9. Image candidates — disposition: REUSE-APPROVED (one file)
+## 9. Image candidates
 
-- **Selected file:** [File:RadzivillChronicleFol39v.jpg](https://commons.wikimedia.org/wiki/File:RadzivillChronicleFol39v.jpg)
-- **Creator / provenance:** невідомий мініатюрист Радзивіллівського літопису (середньовічна копія).
-- **Licence:** Public domain — verified Commons 2026-07-19.
-- **Use disposition:** `reuse-approved`; caption: літописна мініатюра, не прижиттєвий портрет.
-
+- **No lifetime portrait exists.**
+- **Best PD/CC candidates:** Radziwill Chronicle miniatures of Sviatoslav; public-domain manuscript imagery; map of campaigns if rights-clear.
+- **Backup:** modern monuments/paintings only after license and claim verification; do not present them as evidence for appearance or battle details.
+- **Context image:** Dnipro rapids / Khortytsia historical map, if rights-clear, to explain the death geography.
 
 ## 10. Sources used
 

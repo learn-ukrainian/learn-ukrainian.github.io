@@ -7,15 +7,6 @@
 **Researcher:** GPT-5.5 (Codex)
 **Completed:** 2026-06-03
 
-**Adopted external URL set (order fixed; identical in plan, discovery and source registry):**
-
-1. `http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Yaroslav_M`
-2. `http://izbornyk.org.ua/rizne/pravdstat.htm`
-3. `https://esu.com.ua/article-67932`
-
-Усі три сторінки повторно відкрито 2026-07-19 (HTTP 200); учнівські
-`source_url` використовують лише україномовні link-only матеріали.
-
 **Acceptance self-check:**
 - [x] All 10 sections completed
 - [x] >=3 Tier 1/Tier 2 sources cited (ЕІУ, IEU, project textbook corpus, ПВЛ tradition)
@@ -58,20 +49,21 @@
 - `1051` — support for Ilarion as metropolitan of Kyiv, an assertion of local church authority inside the Byzantine Christian world. [T1: IEU]
 - `1054` — **«Ярославів ряд»**: succession settlement placing Iziaslav in Kyiv/Novgorod; Sviatoslav in Chernihiv; Vsevolod in Pereiaslav/Rostov; Ihor in Volodymyr; Viacheslav in Smolensk. [T1: IEU; T1: ЕІУ — «Ряд Ярослава 1054» linked]
 
-## 4. Primary-source quotes / legal-text status
+## 4. Primary-source quotes
 
-**1. Судислав 1036 (ЕІУ, Котляр) — факт увʼязнення, НЕ осліплення:**
-ЕІУ: «Того ж року Я.М. схопив і увʼязнив Судислава Володимировича…».
-Локатор: EIU `Yaroslav_M` (2026-07-19). **Вилучено** твердження про осліплення.
+**Quote 1 — "Yaroslav's row" / succession speech tradition (chronicle, quoted in modern translation):**
 
-**2. «Руська правда» — атрибуція й статус тексту:**
-ЕІУ: традиція повʼязує з іменем Ярослава «Руську Правду» / «Правду Ярослава» як найдавнішу частину.
-ЕУ-II на http://izbornyk.org.ua/rizne/pravdstat.htm — **енциклопедична довідка** про редакції/списки (коротка, широка…), **не** критичне видання статей для дослівного цитування «закону».
-**Права:** link-only; не public_domain host claim.
+> «Осе я одходжу зі світу сього. А ви, сини мої, майте межи собою любов, бо ви єсте брати, від одного отця і одної матері».
 
-**3. Будівництво / Софія:**
-ЕІУ + ЕСУ «Місто Ярослава» (https://esu.com.ua/article-67932) — міський контекст; без етнічної «власності» памʼятки сучасним народом.
+Tool status: `verify_quote(author="Літопис Руський", ...)` returned **matched: false, best_confidence 0.0**. Use as ПВЛ / Літопис Руський tradition and verify in Phase 4 against the selected edition. Pedagogically: this is the cleanest primary-text doorway into the failed succession design.
 
+**Quote 2 — legal formula from the Ruska Pravda tradition:**
+
+> «Аще убьєть мужь мужа, то мьстити брату брата...»
+
+Tool status: `verify_quote(author="Руська Правда", ...)` returned **matched: false, best_confidence 0.0**. Use for OES/legal close reading only with a selected edition. Pedagogically: the line lets students see the transition from blood vengeance to regulated compensation, but it must not be overmodernized as "rule of law" in the modern sense.
+
+**Quote-verification note:** Unlike Franko/Shevchenko dossiers, Yaroslav left no literary corpus of "own works." §4 therefore uses chronicle/legal primary voices attributed to his reign, reports the failed corpus-verifier scores, and states the limitation directly.
 
 ## 5. Language register
 
@@ -114,13 +106,12 @@
 - **Aliases:** Ярослав Мудрий; Ярослав Володимирович; Yaroslav the Wise; Jarisleif/Jarizleifr (saga context only).
 - **Forbidden forms:** Ярослав Мудрый; Yaroslav of Kiev; "Russian prince Yaroslav"; "Old Russian law" for «Руська Правда» without explanation.
 
-## 9. Image candidates — disposition: REUSE-APPROVED WITH ATTRIBUTION (one file)
+## 9. Image candidates
 
-- **Selected file:** [File:Coin of Yaroslav the Wise with his lifetime image.jpg](https://commons.wikimedia.org/wiki/File:Coin_of_Yaroslav_the_Wise_with_his_lifetime_image.jpg)
-- **Creator / provenance:** невідомий гравер монети; файл на Wikimedia Commons.
-- **Licence:** CC BY-SA 4.0 — attribution required; verified Commons 2026-07-19.
-- **Use disposition:** `reuse-approved-with-attribution`.
-
+- **No lifetime portrait exists**; do not use later romantic portraits as documentary likenesses.
+- **Best PD/CC candidates:** Saint Sophia Cathedral / Golden Gate images; manuscript miniatures; seal/coin imagery if license-cleared.
+- **Context image:** page/edition of «Руська Правда» or Saint Sophia graffiti tied to the 11th-century scribal environment.
+- **Rights caveat:** select individual Wikimedia/collection file pages in Phase 4; this dossier does not certify image licenses.
 
 ## 10. Sources used
 

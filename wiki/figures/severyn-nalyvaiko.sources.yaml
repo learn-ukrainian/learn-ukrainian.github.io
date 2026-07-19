@@ -1,51 +1,57 @@
 # Source registry for wiki/figures/severyn-nalyvaiko.md
-# Referenced inline as [S1], [S2], ... — independent adopted sources only
+# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: http://history.org.ua/?termin=Nalyvajko_S
-  type: external
-  title: НАЛИВАЙКО Семерій
-  url: http://history.org.ua/?termin=Nalyvajko_S
-  metadata:
-    publisher: Енциклопедія історії України (Інститут історії України НАН України)
-    author: С. А. Леп'явко
-    language: uk
-    verified_on: '2026-07-19'
-    factual_role: "біографічний каркас: ім'я/варіанти, дати, Солониця, страта"
-  rights:
-    basis: external-link
-    evidence_url: http://history.org.ua/?termin=Nalyvajko_S
-    license: Авторське право видавця; використання як зовнішнього посилання / link-only
-    attribution: Енциклопедія історії України (Інститут історії України НАН України)
+  file: ukrainian_wiki/severyn-nalyvaiko_Біографія-Северин-Наливайко-Лідер-козацького-повстання-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Северин Наливайко: Лідер козацького повстання'
+  section_path: 'Біографія: Северин Наливайко: Лідер козацького повстання > Короткий
+    зміст'
 - id: S2
-  file: http://history.org.ua/?termin=Nalyvajka_povstannia_1594
-  type: external
-  title: Наливайка повстання 1594–1596
-  url: http://history.org.ua/?termin=Nalyvajka_povstannia_1594
-  metadata:
-    publisher: Енциклопедія історії України
-    author: С. А. Леп'явко
-    language: uk
-    verified_on: '2026-07-19'
-    factual_role: перебіг повстання, соціальний/політичний контекст
-  rights:
-    basis: external-link
-    evidence_url: http://history.org.ua/?termin=Nalyvajka_povstannia_1594
-    license: Авторське право видавця; використання як зовнішнього посилання / link-only
-    attribution: Енциклопедія історії України
+  file: ukrainian_wiki/severyn-nalyvaiko_Біографія-Северин-Наливайко-Лідер-козацького-повстання-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Северин Наливайко: Лідер козацького повстання'
+  section_path: 'Біографія: Северин Наливайко: Лідер козацького повстання > Деколонізаційна
+    перспектива'
 - id: S3
-  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CN%5CA%5CNalyvaikoSeveryn.htm
-  type: external
-  title: Nalyvaiko, Severyn
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CN%5CA%5CNalyvaikoSeveryn.htm
-  metadata:
-    publisher: Internet Encyclopedia of Ukraine (CIUS)
-    author: IEU
-    language: en
-    verified_on: '2026-07-19'
-    factual_role: незалежна англомовна енциклопедична синхронізація дат і Солониці
-  rights:
-    basis: external-link
-    evidence_url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CN%5CA%5CNalyvaikoSeveryn.htm
-    license: Авторське право видавця; використання як зовнішнього посилання / link-only
-    attribution: Internet Encyclopedia of Ukraine (CIUS)
+  file: 8-klas-istoria-ukr-galimov-2025_s4011
+  type: textbook
+  title: Розділ ІІІ. Козацтво від боротьби за станові інтереси до творення держави
+  page: 86
+  grade: 8
+- id: S4
+  file: 8-klas-istoria-ukr-schupak-2025_s4203
+  type: textbook
+  title: § 1. 2 Козацькі повстання кінця XVI ст
+  page: 80
+  grade: 8
+- id: S5
+  file: wave5-suspilna-dumka-xvi-xvii_c0093
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S6
+  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t1_c0339
+  type: literary
+  title: 'Дорошенко — Нарис історії України, том 1: До половини XVII століття'
+  author: Дорошенко Д.
+- id: S7
+  file: wave7-holobutsky-zaporizhzhia_c0232
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S8
+  file: wave7-istkult-t2-xiii-xvii_c0914
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S9
+  file: wikipedia/Повстання Косинського
+  type: wikipedia
+  title: Повстання Косинського
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D0%B2%D1%81%D1%82%D0%B0%D0%BD%D0%BD%D1%8F%20%D0%9A%D0%BE%D1%81%D0%B8%D0%BD%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE
+- id: S10
+  file: wave5-suspilna-dumka-xvi-xvii_c0417
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія

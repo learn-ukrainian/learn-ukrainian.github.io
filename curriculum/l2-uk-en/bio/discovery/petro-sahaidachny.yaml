@@ -1,49 +1,27 @@
-discovered_at: '2026-07-19T12:00:00+00:00'
-error:
+discovered_at: '2026-04-14T10:42:41.430294+00:00'
+error: null
 query_keywords:
 - 'Петро Сагайдачний: Гетьман-Державник'
-- Петро Конашевич-Сагайдачний
-- КОНАШЕВИЧ-САГАЙДАЧНИЙ Петро Кононович
-- Хотинська війна 1621
-- Konashevych-Sahaidachny, Petro
-- гетьманські роки бл. 1614–1622; 1618 похід; 1620 ієрархія; Хотин 1621
-direct_sources:
-- http://history.org.ua/?termin=Konashevich_Sagaidachny
-- http://history.org.ua/?termin=Khotynska_vijna_1621
-- https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKonashevych6SahaidachnyPetro.htm
-fetch_disposition:
-- url: http://history.org.ua/?termin=Konashevich_Sagaidachny
-  disposition: adopted
-  http_status: 200
-  retrieved_on: '2026-07-19'
-  language: uk
-  title: КОНАШЕВИЧ-САГАЙДАЧНИЙ Петро Кононович
-  institution: Енциклопедія історії України
-  author: П. М. Сас
-  factual_role: біографія гетьмана, реформи, Київське братство, 1620 ієрархія
-- url: http://history.org.ua/?termin=Khotynska_vijna_1621
-  disposition: adopted
-  http_status: 200
-  retrieved_on: '2026-07-19'
-  language: uk
-  title: Хотинська війна 1621
-  institution: Енциклопедія історії України
-  author: П. М. Сас
-  factual_role: Хотин 1621 як військова подія, не лише героїчний епізод
-- url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKonashevych6SahaidachnyPetro.htm
-  disposition: adopted
-  http_status: 200
-  retrieved_on: '2026-07-19'
-  language: en
-  title: Konashevych-Sahaidachny, Petro
-  institution: Internet Encyclopedia of Ukraine (CIUS)
-  author: IEU
-  factual_role: походи, 1618, братство, Хотин, смерть 20.04.1622
+- Розминка
+- 'Конфліктна карта: Лояліст чи державотворець?'
+- 'Формування: Шляхтич з Острозької академії'
+- 'Діяльність: Меч, Хрест і Мушкет'
+- 'Тінь: Похід на Москву та ціна компромісу'
+- 'Дискусія та підсумок: Спадщина'
+- Аналізувати реформи козацького війська, проведені Сагайдачним
+- Оцінювати значення відновлення православної ієрархії у 1620 році
+- Обговорювати роль козаків у Хотинській битві 1621 року
+- Критично аналізувати похід на Москву 1618 року як приклад політичного прагматизму
+- реєстр
+- ієрархія
+- патріарх
+- братство
+- облога
+- невільник
+- меценат
+- дисципліна
+- штурм
+- чайка
 rag_chunks: []
 rag_literary: []
-warning: Subject-first direct-source packet; plan-generated discovery warning removed. Adopted URLs fetched live with
-  HTTP 200 receipts. RAG optional because direct sources complete.
-rejected_candidates:
-- url: https://uk.wikipedia.org/
-  disposition: rejected
-  reason: Wikipedia not used as adopted independent authority for this packet; encyclopedic EIU/IEU preferred.
+warning: Auto-generated from plan

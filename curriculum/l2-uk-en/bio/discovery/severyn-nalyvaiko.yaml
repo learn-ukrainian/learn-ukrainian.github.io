@@ -1,49 +1,28 @@
-discovered_at: '2026-07-19T12:00:00+00:00'
-error:
+discovered_at: '2026-04-14T10:42:41.430294+00:00'
+error: null
 query_keywords:
 - 'Северин Наливайко: Лідер козацького повстання'
-- Северин (Семерій) Наливайко
-- НАЛИВАЙКО Семерій
-- Наливайка повстання 1594–1596
-- Nalyvaiko, Severyn
-- повстання 1594–1596; облога біля Лубен/Солониці з 26.05.1596; видача 7.07.1596 (IEU)
-direct_sources:
-- http://history.org.ua/?termin=Nalyvajko_S
-- http://history.org.ua/?termin=Nalyvajka_povstannia_1594
-- https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CN%5CA%5CNalyvaikoSeveryn.htm
-fetch_disposition:
-- url: http://history.org.ua/?termin=Nalyvajko_S
-  disposition: adopted
-  http_status: 200
-  retrieved_on: '2026-07-19'
-  language: uk
-  title: НАЛИВАЙКО Семерій
-  institution: Енциклопедія історії України (Інститут історії України НАН України)
-  author: С. А. Леп'явко
-  factual_role: "біографічний каркас: ім'я/варіанти, дати, Солониця, страта"
-- url: http://history.org.ua/?termin=Nalyvajka_povstannia_1594
-  disposition: adopted
-  http_status: 200
-  retrieved_on: '2026-07-19'
-  language: uk
-  title: Наливайка повстання 1594–1596
-  institution: Енциклопедія історії України
-  author: С. А. Леп'явко
-  factual_role: перебіг повстання, соціальний/політичний контекст
-- url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CN%5CA%5CNalyvaikoSeveryn.htm
-  disposition: adopted
-  http_status: 200
-  retrieved_on: '2026-07-19'
-  language: en
-  title: Nalyvaiko, Severyn
-  institution: Internet Encyclopedia of Ukraine (CIUS)
-  author: IEU
-  factual_role: незалежна англомовна енциклопедична синхронізація дат і Солониці
+- Розминка
+- 'Конфліктна карта: Герой чи бандит?'
+- 'Формування: Шлях від найманця до повстанця'
+- 'Діяльність: Повстання 1594-1596 років'
+- 'Тінь: Жорстокість і трагедія'
+- 'Дискусія та підсумок: Спадщина'
+- Аналізувати причини, перебіг та наслідки першого великого козацького повстання в
+  Речі Посполитій
+- Давати критичну оцінку постаті Северина Наливайка, розрізняючи історичні факти,
+  міфи та ідеологічні інтерпретації
+- Пояснювати роль повстання Наливайка у формуванні козацтва як політичної сили та
+  його вплив на подальшу історію України
+- повстання
+- найманець
+- ватажок
+- табір
+- облога
+- страта
+- зрада
+- поразка
+- бунт
 rag_chunks: []
 rag_literary: []
-warning: Subject-first direct-source packet; plan-generated discovery warning removed. Adopted URLs fetched live with
-  HTTP 200 receipts. RAG optional because direct sources complete.
-rejected_candidates:
-- url: https://uk.wikipedia.org/
-  disposition: rejected
-  reason: Wikipedia not used as adopted independent authority for this packet; encyclopedic EIU/IEU preferred.
+warning: Auto-generated from plan

@@ -1,39 +1,28 @@
-discovered_at: '2026-07-19T00:00:00+00:00'
+discovered_at: '2026-04-14T10:42:41.430294+00:00'
 error: null
 query_keywords:
-- Ярослав Мудрий
-- Руська Правда
-- Софія Київська
-- Судислав увʼязнення 1036
-- Анна Ярославна
-- Іларіон
-- Золоті ворота
-direct_sources:
-- http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Yaroslav_M
-- http://izbornyk.org.ua/rizne/pravdstat.htm
-- https://esu.com.ua/article-67932
-fetch_disposition:
-- url: http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Yaroslav_M
-  http_status: 200
-  disposition: adopted
-  verified_on: '2026-07-19'
-  note: ЕІУ; академічний біографічний і хронологічний якір.
-- url: http://izbornyk.org.ua/rizne/pravdstat.htm
-  http_status: 200
-  disposition: adopted
-  verified_on: '2026-07-19'
-  note: Енциклопедія українознавства — II; довідковий правовий контекст.
-- url: https://esu.com.ua/article-67932
-  http_status: 200
-  disposition: adopted
-  verified_on: '2026-07-19'
-  note: ЕСУ; інституційний контекст міста Ярослава.
+- 'Князь Ярослав Мудрий: Законодавець'
+- Розминка
+- 'Конфліктна карта: Святий, мудрець чи вбивця брата?'
+- 'Формування: Шлях від кульгавого вигнанця до київського столу'
+- 'Діяльність: «Руська правда» та золотий вік Києва'
+- 'Тінь: Ціна влади та «Окаянні дні»'
+- 'Дискусія та підсумок: Спадщина'
+- Аналізувати «Руську правду» як ключову правову пам''ятку, що змінила соціальні відносини
+  на Русі
+- Критично оцінювати спадщину Ярослава, розрізняючи історичний факт, агіографію та
+  пізніші ідеологічні міфи (включно з російськими імперськими)
+- Порівнювати зовнішню політику Ярослава (династичну дипломатію) з аналогічними практиками
+  в середньовічній Європі
+- Формулювати збалансовану оцінку постаті Ярослава, інтегруючи його досягнення та
+  морально неоднозначні вчинки
+- усобиця
+- віра
+- скрипторій
+- культуртрегер
+- династичний шлюб
+- агіографія
+- заповіт
 rag_chunks: []
 rag_literary: []
-warning: 'Direct-source packet for BIO #4431 Queue A packet 1 repair (2026-07-19). Each URL was opened
-  and content-verified in this repair pass; campaign history is not used as proof. Plan-generated empty
-  discovery replaced. Primary academic spine: ЕІУ (resource.history.org.ua). Primary/chronicle texts via
-  Ізборник (Махновець) are link-only because the modern Ukrainian translation is not free to host. IEU
-  pages are English reference-only where present. Image disposition is an explicit individual-file decision,
-  not a Phase-4 deferral. Image: https://commons.wikimedia.org/wiki/File:Coin_of_Yaroslav_the_Wise_with_his_lifetime_image.jpg
-  | licence: CC BY-SA 4.0 | disposition: reuse-approved-with-attribution.'
+warning: Auto-generated from plan

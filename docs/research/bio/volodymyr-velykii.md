@@ -7,20 +7,11 @@
 **Researcher:** GPT-5.5 (Codex)
 **Completed:** 2026-06-03
 
-**Adopted external URL set (order fixed; identical in plan, discovery and source registry):**
-
-1. `http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Volodymyr_Sv`
-2. `http://izbornyk.org.ua/pvlyar/yar04.htm`
-3. `https://nmiu.org/qr-codes/1952-zlatnik-volodimira-svyatoslavicha-kop-ya-ta-sr-blyaniki-k-nets-kh-pochatok-kh-st`
-
-Усі три сторінки повторно відкрито 2026-07-19 (HTTP 200); учнівські
-`source_url` використовують лише україномовні link-only матеріали.
-
 **Acceptance self-check:**
 - [x] All 10 sections completed
 - [x] >=3 Tier 1/Tier 2 sources cited (ЕІУ, IEU, `search_text` textbook corpus, ПВЛ/Літопис Руський)
 - [x] §2 names the imperial appropriation mechanism (Синопсис 1674 / translatio imperii) instead of inventing a modern "repression" file
-- [x] Літописні формули звірено за точним локатором Ізборника; непідтверджені дослівні цитати вилучено або переформульовано як атрибутовані перекази
+- [x] Primary-source passages included with real tool status: `verify_quote` on chronicle quote returned `matched: false`, confidence 0.0; support comes from `search_text` / corpus-text retrieval
 - [x] Cross-track links verified with `test -e`
 - [x] Naming-canonical applied
 - [x] Image candidates identified with rights caveat
@@ -57,22 +48,19 @@
 - `кінець X - поч. XI ст.` — Десятинна церква, перші школи, оборонні лінії проти печенігів, міста-фортеці. [T1: ЕІУ; T1: IEU]
 - `1015` — смерть і початок усобиці Володимировичів, з якої Ярослав вийде переможцем у 1019 р. [T1: ЕІУ — Ярослав Мудрий]
 
-## 4. Primary-source quotes / source hierarchy
+## 4. Primary-source quotes
 
-**1. Джерельна база (ЕІУ, Вортман) — спростування «лише ченці»:**
-ЕІУ прямо називає сучасні свідчення: Яхʼя Антіохійський, Бруно Квертфуртський, Тітмар Мерзебурзький — поряд із ПВЛ і агіографією.
-Локатор: EIU `Volodymyr_Sv` (2026-07-19). **Заборонено** твердження, ніби свідчення написали «лише пізні монахи».
+**Quote 1 — ПВЛ / підручниковий витяг про примусову рамку хрещення киян (tool status explicit):**
 
-**2. Корсунь / примус (ЕІУ):**
-ЕІУ описує облогу Херсонеса (Корсуня) 989 як тиск на Василія II щодо шлюбу з Анною; християнізація — політичний вузол 987–989, не лише «добровільна сцена».
-Непевність особистих обставин хрещення зберігати.
+> «Якщо не з'явиться хто завтра на ріці — багатий, чи убогий, чи старець, чи раб, — то мені той противником буде».
 
-**3. Літописний ультиматум (ПВЛ, Махновець, yar04.htm):**
-Традиція про примус киян до хрещення — у http://izbornyk.org.ua/pvlyar/yar04.htm. Цитувати лише як **літописну традицію** (link-only edition), не як стенограму.
+Tool status: `verify_quote(author="Літопис Руський", ...)` returned **matched: false, best_confidence 0.0** because the verifier is tuned for literary-author corpora, not chronicle/textbook excerpts. The passage is nevertheless tool-backed by `search_text` result `7-klas-istoria-ukr-hlibovska-2024_s0041`, which reproduces the ПВЛ excerpt. Pedagogically: this prevents hagiography; хрещення 988 was a state act with coercive force, not a purely voluntary scene.
 
-**4. Монети (НМІУ):**
-https://nmiu.org/qr-codes/1952-zlatnik-volodimira-svyatoslavicha-kop-ya-ta-sr-blyaniki-k-nets-kh-pochatok-kh-st — речове джерело (златники/срібляники), не гасло ідентичності.
+**Quote 2 — coin inscriptions, material primary text (numismatic):**
 
+> «Володимир на столі»; «Володимир, а це його срібло»; «Володимир, а це його золото».
+
+Tool status: not suitable for `verify_quote` (coin legends, not literary corpus); verified via `search_text` result `7-klas-istoria-ukr-hlibovska-2024_s0037` and corroborated by IEU *Trident* for Volodymyr's gold/silver coinage. Pedagogically: the phrase "на столі" anchors medieval political vocabulary (княжий стіл) and the trident in state practice.
 
 ## 5. Language register
 
@@ -116,13 +104,12 @@ https://nmiu.org/qr-codes/1952-zlatnik-volodimira-svyatoslavicha-kop-ya-ta-sr-bl
 - **Aliases (for `aliases:`):** Володимир Святославич; Володимир Великий; Володимир Святий; Володимир-Василій; Volodymyr the Great.
 - **Forbidden forms (Russian-imperial / Russified):** Vladimir the Great; Владимир Святой; Saint Vladimir of Kiev; "Kievan" when the local style requires Kyiv/Kyivan.
 
-## 9. Image candidates — disposition: REUSE-APPROVED (one file)
+## 9. Image candidates
 
-- **Selected file:** [File:Zlatniks of prince Vladimir.jpg](https://commons.wikimedia.org/wiki/File:Zlatniks_of_prince_Vladimir.jpg)
-- **Creator / provenance:** фото — Петров Едуард; обʼєкт — златники кн. Володимира (X–XI ст.).
-- **Licence:** CC0 — verified Commons 2026-07-19.
-- **Use disposition:** `reuse-approved`; prefer coin image over romantic portrait or London statue (statue reuse not cleared).
-
+- **No lifetime portrait exists**; every image is later iconography, coinage, sculpture, or manuscript art.
+- **Best PD/CC candidates:** zlatnyk/sribnyk images showing Volodymyr and the trident; Radziwill Chronicle miniatures of baptism; Kyiv monument if rights-clear.
+- **Commemorative context:** London Saint Volodymyr statue by **Leo Mol**, erected 1988; URL verified through London Remembers, but image reuse requires separate license review. [T5: London Remembers — Saint Volodymyr]
+- **Fallback:** use a coin/trident image rather than a romanticized portrait; it directly supports the dossier's source argument.
 
 ## 10. Sources used
 

@@ -1,39 +1,29 @@
-discovered_at: '2026-07-19T00:00:00+00:00'
+discovered_at: '2026-04-14T10:42:41.430294+00:00'
 error: null
 query_keywords:
-- Князь Святослав
-- Святослав Ігоревич
-- Хоробрий
-- Хазарія Саркел
-- Болгарія Доростол
-- печеніги Куря
-- дніпрові пороги 972
-- Лев Диякон
-direct_sources:
-- http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Sviatoslav_I
-- http://izbornyk.org.ua/pvlyar/yar02.htm
-- https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CV%5CSviatoslavIIhorovych.htm
-fetch_disposition:
-- url: http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Sviatoslav_I
-  http_status: 200
-  disposition: adopted
-  verified_on: '2026-07-19'
-  note: ЕІУ; академічний біографічний і хронологічний якір.
-- url: http://izbornyk.org.ua/pvlyar/yar02.htm
-  http_status: 200
-  disposition: adopted
-  verified_on: '2026-07-19'
-  note: Ізборник; літописна традиція, link-only.
-- url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CV%5CSviatoslavIIhorovych.htm
-  http_status: 200
-  disposition: adopted
-  verified_on: '2026-07-19'
-  note: IEU; англомовний незалежний довідковий контроль.
+- 'Князь Святослав: Воїн-завойовник'
+- Розминка
+- 'Конфліктна карта: Творець чи руйнівник?'
+- 'Формування: Виховання вовченяти'
+- 'Діяльність: Злам Сходу та мрія про Дунай'
+- 'Тінь: Ціна перемоги'
+- 'Дискусія та підсумок: Спадщина'
+- Аналізувати геополітичну стратегію Святослава Ігоровича, розрізняючи її причини
+  та наслідки
+- Оцінювати вплив знищення Хазарського каганату на історію Східної Європи
+- Володіти біографічною та військовою лексикою на рівні С1 для обговорення історії
+  Русі
+- Порівнювати та протиставляти стилі лідерства та державні підходи Ольги та Святослава
+- дружина
+- похід
+- пороги
+- печеніги
+- каганат
+- засідка
+- договір
+- облога
+- спадщина
+- завойовник
 rag_chunks: []
 rag_literary: []
-warning: 'Direct-source packet for BIO #4431 Queue A packet 1 repair (2026-07-19). Each URL was opened and content-verified
-  in this repair pass; campaign history is not used as proof. Plan-generated empty discovery replaced. Primary academic
-  spine: ЕІУ (resource.history.org.ua). Primary/chronicle texts via Ізборник (Махновець) are link-only because the
-  modern Ukrainian translation is not free to host. IEU pages are English reference-only where present. Image disposition
-  is an explicit individual-file decision, not a Phase-4 deferral. Image: https://commons.wikimedia.org/wiki/File:RadzivillChronicleFol39v.jpg
-  | licence: Public domain | disposition: reuse-approved.'
+warning: Auto-generated from plan

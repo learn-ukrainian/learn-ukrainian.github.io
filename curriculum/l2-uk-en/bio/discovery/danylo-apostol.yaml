@@ -1,49 +1,28 @@
-discovered_at: '2026-07-19T12:00:00+00:00'
-error:
+discovered_at: '2026-04-14T10:42:41.430294+00:00'
+error: null
 query_keywords:
-- 'Данило Апостол: Виборний гетьман під імперським наглядом'
-- Данило Апостол
-- АПОСТОЛ Данило Павлович
-- Рішительні пункти 1728
-- Apostol, Danylo
-- гетьман 1727–1734; Рішительні пункти 1728; Генеральне слідство про маєтності 1729–30
-direct_sources:
-- http://history.org.ua/?termin=Apostol_D
-- http://history.org.ua/?termin=rishytelni_punkty_1728
-- https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CA%5CP%5CApostolDanylo.htm
-fetch_disposition:
-- url: http://history.org.ua/?termin=Apostol_D
-  disposition: adopted
-  http_status: 200
-  retrieved_on: '2026-07-19'
-  language: uk
-  title: АПОСТОЛ Данило Павлович
-  institution: Енциклопедія історії України
-  author: В. М. Горобець
-  factual_role: гетьман 1727–1734, реформи, військова служба, маєтності
-- url: http://history.org.ua/?termin=rishytelni_punkty_1728
-  disposition: adopted
-  http_status: 200
-  retrieved_on: '2026-07-19'
-  language: uk
-  title: Рішительні пункти 1728
-  institution: Енциклопедія історії України
-  author: О. В. Кресін
-  factual_role: правова рамка обмеженої автономії 1728
-- url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CA%5CP%5CApostolDanylo.htm
-  disposition: adopted
-  http_status: 200
-  retrieved_on: '2026-07-19'
-  language: en
-  title: Apostol, Danylo
-  institution: Internet Encyclopedia of Ukraine (CIUS)
-  author: IEU
-  factual_role: 'незалежна біографія: Коломацькі чолобитні, Reshitelnye Punkty, реформи'
+- 'Данило Апостол: Останній обраний гетьман'
+- Розминка
+- 'Конфліктна карта: Прагматизм чи капітуляція?'
+- 'Формування: Полковник, воїн, в''язень'
+- 'Діяльність: Будівничий інституцій'
+- 'Тінь: Ціна стабілізації'
+- 'Дискусія та підсумок: Спадщина'
+- Оцінити реформаторську діяльність Данила Апостола в економічній, судовій та адміністративній
+  сферах
+- Проаналізувати правовий статус Гетьманщини за «Рішительними пунктами» як інструмент
+  компромісу та імперського контролю
+- Дослідити економічне та культурне відродження Гетьманщини у 1727–1734 рр.
+- Критично аналізувати компроміси та моральні неоднозначності в діяльності історичних
+  постатей на прикладі Данила Апостола
+- Рішительні пункти
+- Генеральне слідство про маєтності
+- казначейство
+- автономія
+- компроміс
+- інституція
+- стабілізація
+- реформа
 rag_chunks: []
 rag_literary: []
-warning: Subject-first direct-source packet; plan-generated discovery warning removed. Adopted URLs fetched live with
-  HTTP 200 receipts. RAG optional because direct sources complete.
-rejected_candidates:
-- url: https://uk.wikipedia.org/
-  disposition: rejected
-  reason: Wikipedia not used as adopted independent authority for this packet; encyclopedic EIU/IEU preferred.
+warning: Auto-generated from plan

@@ -1,39 +1,23 @@
-discovered_at: '2026-07-19T00:00:00+00:00'
+discovered_at: '2026-04-14T10:42:41.430294+00:00'
 error: null
 query_keywords:
-- Княгиня Ольга
-- Ольга Єлена
-- погости уроки
-- древляни 945
-- Константин VII Про церемонії
-- хрещення Ольги
-- Оттон I посольство
-direct_sources:
-- http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Olha
-- http://izbornyk.org.ua/pvlyar/yar02.htm
-- https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CO%5CL%5COlhaPrincess.htm
-fetch_disposition:
-- url: http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Olha
-  http_status: 200
-  disposition: adopted
-  verified_on: '2026-07-19'
-  note: ЕІУ; академічний біографічний і хронологічний якір.
-- url: http://izbornyk.org.ua/pvlyar/yar02.htm
-  http_status: 200
-  disposition: adopted
-  verified_on: '2026-07-19'
-  note: Ізборник; літописна традиція, link-only.
-- url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CO%5CL%5COlhaPrincess.htm
-  http_status: 200
-  disposition: adopted
-  verified_on: '2026-07-19'
-  note: IEU; англомовний незалежний довідковий контроль.
+- 'Княгиня Ольга: Архітекторка держави'
+- Розминка
+- 'Конфліктна карта: Свята чи тиранка?'
+- 'Формування: Від Helgi до Ольги'
+- 'Діяльність: Народження держави'
+- 'Тінь: Чотири помсти'
+- 'Дискусія та підсумок: Спадщина'
+- Аналізувати адміністративні реформи Ольги як основу державності
+- Оцінювати її дипломатичні маневри між Візантією та Західною Європою
+- Досліджувати причини та наслідки її хрещення для майбутнього Русі
+- Критично аналізувати образ Ольги, протиставляючи літописну легенду про помсту та
+  агіографічний образ святої
+- полюддя
+- погост
+- урок
+- тризна
+- регент
 rag_chunks: []
 rag_literary: []
-warning: 'Direct-source packet for BIO #4431 Queue A packet 1 repair (2026-07-19). Each URL was opened
-  and content-verified in this repair pass; campaign history is not used as proof. Plan-generated empty
-  discovery replaced. Primary academic spine: ЕІУ (resource.history.org.ua). Primary/chronicle texts via
-  Ізборник (Махновець) are link-only because the modern Ukrainian translation is not free to host. IEU
-  pages are English reference-only where present. Image disposition is an explicit individual-file decision,
-  not a Phase-4 deferral. Image: https://commons.wikimedia.org/wiki/File:Radziwi%C5%82%C5%82_Chronicle_(miniature_of_Olga_of_Kiev_received_in_Constantinople).jpg
-  | licence: Public domain (Commons: PD-old / CC-PD-Mark) | disposition: reuse-approved.'
+warning: Auto-generated from plan

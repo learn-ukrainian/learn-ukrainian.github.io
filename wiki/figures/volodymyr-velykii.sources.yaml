@@ -1,47 +1,38 @@
 # Source registry for wiki/figures/volodymyr-velykii.md
-# Referenced inline as [S1], [S2], ... — independent sources only (no ukrainian_wiki self-citations).
-# Adopted URL set matches plan readings + discovery.direct_sources (verified 2026-07-19).
+# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Volodymyr_Sv
-  type: external
-  title: ВОЛОДИМИР СВЯТОСЛАВИЧ СВЯТИЙ (Енциклопедія історії України)
-  url: http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Volodymyr_Sv
-  metadata:
-    publisher: Енциклопедія історії України / Вортман Д.Я.
-    language: uk
-    verified_on: '2026-07-19'
-    source_role: академічна біографія; джерела (ПВЛ + сучасники); Корсунь/хрещення
-    hosting: link-only
-    rights_basis: external-link
-    image_candidate:
-      file_page: https://commons.wikimedia.org/wiki/File:Zlatniks_of_prince_Vladimir.jpg
-      title: Zlatniks of prince Vladimir.jpg
-      creator_provenance: Петров Едуард (фото; монети X–XI ст.)
-      licence: CC0
-      disposition: reuse-approved
-      note: Фото златників; речове джерело, не романтичний портрет. Перевірено Commons 2026-07-19.
+  file: 7-klas-istoria-ukr-pometun-2024_s3559
+  type: textbook
+  title: § 6. Київська держава за часів
+  page: 48
+  grade: 7
 - id: S2
-  file: http://izbornyk.org.ua/pvlyar/yar04.htm
-  type: external
-  title: Повість врем’яних літ (Махновець) — уривки про хрещення
-  url: http://izbornyk.org.ua/pvlyar/yar04.htm
-  metadata:
-    publisher: Ізборник / переклад Л. Махновця (видання ПВЛ)
-    language: uk
-    verified_on: '2026-07-19'
-    source_role: літописна традиція вибору віри та примусового хрещення киян
-    hosting: link-only
-    rights_basis: external-link
+  file: 7-klas-istoria-ukr-galimov-2024_s3440
+  type: textbook
+  title: Розділ ІІІ. Русь у період розквіту. Початок децентралізації
+  page: 47
+  grade: 7
 - id: S3
-  file: https://nmiu.org/qr-codes/1952-zlatnik-volodimira-svyatoslavicha-kop-ya-ta-sr-blyaniki-k-nets-kh-pochatok-kh-st
-  type: external
-  title: Златник Володимира Святославича та срібляники (НМІУ)
-  url: https://nmiu.org/qr-codes/1952-zlatnik-volodimira-svyatoslavicha-kop-ya-ta-sr-blyaniki-k-nets-kh-pochatok-kh-st
-  metadata:
-    publisher: Національний музей історії України
-    language: uk
-    verified_on: '2026-07-19'
-    source_role: речове джерело (монети) з інституційним локатором НМІУ
-    hosting: link-only
-    rights_basis: external-link
+  file: ukrainian_wiki/volodymyr-velykii_Біографія-Володимир-Великий-Святий-грішник-архітектор-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Володимир Великий: Святий, грішник, архітектор'
+  section_path: 'Біографія: Володимир Великий: Святий, грішник, архітектор > Деколонізаційна
+    перспектива'
+- id: S4
+  file: wikipedia/Київська Русь
+  type: wikipedia
+  title: Київська Русь
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B0%20%D0%A0%D1%83%D1%81%D1%8C
+- id: S5
+  file: 7-klas-istoria-ukr-galimov-2024_s3433
+  type: textbook
+  title: § 5. Русь за князювання Ольги та Святослава
+  page: 32
+  grade: 7
+- id: S6
+  file: 7-klas-istoria-ukr-pometun-2024_s3554
+  type: textbook
+  title: Розділ 1. ВИНИКНЕННЯ ТА СТАНОВЛЕННЯ. КИЇВСЬКОЇ ДЕРЖАВИ
+  page: 15
+  grade: 7

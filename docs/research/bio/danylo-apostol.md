@@ -1,108 +1,157 @@
-# Данило Апостол — дослідницьке досьє
+# Данило Павлович Апостол — Research Dossier
 
 **Slug:** `danylo-apostol`
-**Потік:** BIO #4431 (Queue A packet 2 preflight repair)
-**Підготовлено / переперевірено:** 2026-07-19
+**Block:** G (politically charged Hetmanate-autonomy figure; pragmatic reform under imperial restriction)
+**Tier:** 1a
+**Issue:** #2535 (original-180 ghost-wiki dossier uplift — Wave H)
+**Researcher:** GPT-5.5 (Codex)
+**Completed:** 2026-06-03
 
-## Acceptance self-check
-
-- [x] Усі 10 секцій заповнені
-- [x] Прийняті джерела живі (HTTP 200), записані з роллю й датою
-- [x] Упорядкований adopted URL set ідентичний у плані, discovery, registry і нижче
-- [x] Немає нерозв'язаних квитків невдалої верифікації цитат
-- [x] Image rights: text-only `portrait_fallback` (немає доведеного individual Commons File:)
-- [x] Learner readings = українська підмножина adopted set: S1, S2
-
-## Adopted sources (ordered; identical across surfaces)
-
-- S1: http://history.org.ua/?termin=Apostol_D
-- S2: http://history.org.ua/?termin=rishytelni_punkty_1728
-- S3: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CA%5CP%5CApostolDanylo.htm
-
-**Learner readings subset (UA only):** S1, S2. English IEU is adopted for grounding but not hosted as learner reading without separate rights/edition claim.
-
-**Fetch receipts:** every adopted URL retrieved 2026-07-19 with HTTP 200 (see discovery `fetch_disposition`).
+**Acceptance self-check:**
+- [x] All 10 sections completed
+- [x] ≥3 Tier 1/Tier 2 sources cited (ЕІУ Apostol, ЕІУ Reshytelni punkty, Doroshenko/Hrushevsky/Dzhydzhora/Horobets bibliography; Wikipedia as T3)
+- [x] Oppression/appropriation mechanism is specific (§2: imprisonment after Kolomak petitions, election under imperial permission, 1728 Reshytelni punkty)
+- [x] §4 includes 2 document excerpts; [N/A] for secure first-person quotations because no direct Apostol quote was verified in this pass
+- [x] Age-at-election warning resolved precisely: elected in 1727 at 72 completed years, in his 73rd year
+- [x] Cross-track links: every "Existing" path verified with `test -e` on 2026-06-03
+- [x] Naming-canonical applied
+- [x] Image candidate(s) identified
+- [x] Decolonization checklist self-applied
 
 ---
 
-## 1. Перевірені факти
+## 1. Verified facts
 
-- **Ім'я:** Данило Павлович Апостол [S1][S3].
-- **Дати:** ЕІУ 14(04).12.1654 – 29(17).01.1734, Сорочинці [S1]. IEU: 14 Dec 1654 – 28 Jan 1734 [S3].
-- **Гетьман:** 1727–1734, Лівобережна Україна [S1][S3].
-- **Попередня кар'єра:** миргородський полковник (з перервами); військова служба (Азовсько-Дніпровські походи тощо) [S1].
+- **Full name (UA, canonical):** Данило Павлович Апостол. [T1: ЕІУ — Горобець; T3: uk.wikipedia]
+- **Pseudonyms / aliases:** гетьман Данило Апостол; Миргородський полковник. Forbidden body-text forms: Даниил Апостол.
+- **Born:** **4 December 1654 O.S. = 14 December 1654 N.S.** | Великі Сорочинці / Полтавщина, Cossack Hetmanate context. [T1: ЕІУ; T3]
+- **Died:** **17 January 1734 O.S. = 29 January 1734 N.S.** | Великі Сорочинці; buried in the Spaso-Preobrazhensky church he built. [T1: ЕІУ; T3]
+- **Family / education key facts:** from the Cossack starshyna Apostol family of Moldavian/Wallachian origin; Mirhorod colonel in 1682-1686 and 1693-1727; experienced military commander before becoming hetman. [T1: ЕІУ; T3]
 
-## 2. Імперські рамки й переговори
+**Source disagreement / precision note:**
 
-- Спочатку опозиція до Мазепи, потім підтримка; у листопаді 1708 перейшов на бік Петра I [S3].
-- Участь у Прутському (1711) і Перському (1722) походах Росії [S3].
-- Після Полтави — обмеження автономії, Малоросійська колегія; Апостол на боці старшини під проводом Полуботка; ініціатор Коломацьких чолобитень 1723; висилка, згодом повернення [S3].
-- Обрання гетьманом 1 October 1727 за підтримки інтересів Меншикова [S3].
-- **Рішительні пункти 1728** (Authoritative Ordinances / Reshitelnye Punkty) суттєво обмежували гетьманську владу [S2][S3].
+1. **Election age:** he was elected at Hlukhiv on **1 October 1727 O.S. = 12 October 1727 N.S.**. Born in December 1654, he had **72 completed years** and was **in his 73rd year**. This is the precise way to satisfy the "age 73" warning without arithmetic slippage.
+2. **Office:** he was hetman **1727-1734**, not an unrestricted restorer of full autonomy. The **Рішительні пункти 1728** limited his power.
+3. **Reform record:** General Investigation of Estates **1729-1731**; court instruction **1730**; fiscal and administrative reforms under imperial resident oversight. [T1: ЕІУ]
 
-## 3. Реформи й інтереси
+## 2. Oppression / appropriation mechanism
 
-- Удосконалення козацької адміністрації; судова реформа (указ 1730) [S3].
-- Генеральне слідство про маєтності 1729–1730 [S3].
-- Захист інтересів українських купців проти системи, вигідної російським купцям/державі; опір іноземним полковникам у низці полків [S3].
-- Водночас — великий землевласник, купець-експортер, підприємець [S3]. Не малювати ні «суверенного будівничого держави», ні «безвільного виконавця».
+**What happened:** Apostol was a signer/participant in the **Kolomak petitions** of 1723, which demanded liquidation of the Little Russian Collegium and restoration of Hetmanate rights. He was arrested in 1724 and imprisoned in the Peter-and-Paul Fortress; after Peter I's death he was released but kept under guard in Saint Petersburg for roughly a year. In 1727, the empire permitted a hetman election for its own strategic reasons, and Apostol was elected at Hlukhiv under the eye of imperial authority. [T1: ЕІУ; T3]
 
-## 4. Цитати / source tradition
+**By whom:** Peter I's imperial government in the repression phase; Peter II's government in the controlled-restoration phase; Russian resident/central ministries in the restriction phase. [T1: ЕІУ; T1: ЕІУ — Рішительні пункти]
 
-Дослівної автоцитати Апостола з exact locator у adopted URL **немає**.
+**Document references:** **Рішительні пункти 1728**, a normative act of the Russian imperial upper authority issued as an answer to Apostol's petition. ЕІУ states it had 28 points and substantially limited the hetman government's functions. [T1: ЕІУ — Рішительні пункти]
 
-**Парафраз правової рамки:**
-- Рішительні пункти 1728 — імперський документ, що замінив практику двосторонніх гетьманських статей обмеженими «пунктами» [S2][S3].
-- Не вигадувати дослівно «заборони дипломатії» без locator; описувати як **обмежену/наглядову автономію** за ЕІУ/IEU.
+**Mechanism specifics:** Apostol's biography is a controlled-autonomy case. The empire first jailed the petitioners, then restored the hetmanate only when war and diplomacy made Cossack cooperation useful. The "grant" of rights came as **Reshytelni punkty**, not a treaty between equals. The restored office worked through Russian oversight, limits on foreign relations, and a resident at the hetman's side. [T1: ЕІУ; T1: ЕІУ — Рішительні пункти]
 
+**What survived / what was distorted:** his reforms survived in legal, fiscal, and land-administration memory; imperial framing can make him look like a loyal administrator. The decolonized reading is narrower: a pragmatic institutional builder inside a shrinking corridor of autonomy.
 
-## 5. Мовний регістр
+## 3. Major works / legacy
 
-- Реєстр семінару: сучасна академічна українська (C1), з історичною термінологією Гетьманщини / козацтва.
-- Ключові лексеми звіряти з VESUM; власні імена й топоніми — поза морфологічною нормалізацією.
-- Не піднімати частку англійської в learner surfaces.
+- `1682-1686; 1693-1727` — **Mirhorod colonelship**, long administrative/military formation. [T1: ЕІУ]
+- `1723` — **Kolomak petitions**, shared legal resistance to the Little Russian Collegium. [T3; T1 Polubotok/Apostol context]
+- `1724-1725` — **imprisonment / guarded release** after the petition campaign. [T1: ЕІУ; T3]
+- `1/12 October 1727` — **Hlukhiv election as hetman**, at 72 completed years/in his 73rd year. [T1: ЕІУ]
+- `1728` — **Рішительні пункти**, the defining restriction document. [T1: ЕІУ]
+- `1729-1731` — **Генеральне слідство про маєтності**, a land-rights investigation returning some lands to state/rank use. [T1: ЕІУ]
+- `1730` — **Інструкція українським судам**, court reform / appeal order. [T1: ЕІУ; T3]
+- `1734` — death in Great Sorochyntsi; institutional reforms outlasted him but full autonomy did not. [T1: ЕІУ]
 
-## 6. Суперечливі пункти
+## 4. Primary-source quotes (≥2 required)
 
-не спрощувати образ ні до «повного суверенітету», ні до «повної пасивності»
+> **Honest tool note (#M-4):** no direct Apostol first-person quote was verified in this pass. The quotes below are document-clause anchors from the Reshytelni-punkty context as summarized by ЕІУ.
+
+**Excerpt 1 — foreign-policy restriction:**
+
+> "заборонялися будь-які дипломатичні відносини"
+
+Context: this is the core sovereignty limit: no independent diplomacy. `verify_quote(author="Рішительні пункти")` returned **matched: false, best_confidence: 0.0, matched_lines: []**.
+
+**Excerpt 2 — resident oversight:**
+
+> "посада російського резидента при гетьманові"
+
+Context: autonomy became supervised autonomy. `verify_quote(author="Рішительні пункти")` returned **matched: false, best_confidence: 0.0, matched_lines: []**.
+
+## 5. Language register
+
+- **Register:** bureaucratic-legal and institutional reform vocabulary; useful for C1 discussions of autonomy, law, and imperial administration.
+- **CEFR readiness for full reading:** B2-C1 for adapted biography; C1-C2 for Reshytelni punkty and legal documents.
+- **Lexicon notes:** `Рішительні пункти`, `Генеральне слідство про маєтності`, `казначейство`, `резидент`, `автономія`, `інституція`, `компроміс`. VESUM batch verified `слідство`, `маєтності`, `резидент`, `автономія`, `інституція`; `search_text` retrieved textbook passages on Reshytelni punkty and the Little Russian Collegium for pedagogical alignment.
+- **Stylistic features:** teach through contrast between reform verbs ("упорядкувати", "повернути", "реорганізувати") and control verbs ("обмежити", "наглядати", "заборонити").
+
+## 6. Contested points
+
+- **Pragmatist or collaborator?** Apostol accepted a hetmancy under imperial restriction. That does not make him a simple collaborator; it also does not make him a restorer of sovereignty. He operated in a narrow corridor after the Polubotok repression.
+- **Victory or defeat in 1728?** Reshytelni punkty restored some administrative room while fixing imperial limits. Teach as a constrained settlement, not a constitutional triumph.
+- **Reforms and incorporation:** better land/court/fiscal order can strengthen a polity, but it can also make it more governable by an empire. This is the central anti-hagiographic point.
+- **Mazepa connection:** Apostol first joined Mazepa's Swedish alliance and then returned to Peter I. Avoid simplistic "traitor" or "loyalist" labels; teach elite survival under military uncertainty.
+- **Russian disinformation / imperial framing:** imperial narratives present the 1727 election as benevolent permission. A decolonized reading asks why a Ukrainian hetman election required imperial permission at all.
 
 ## 7. Cross-track links
 
-- План: `curriculum/l2-uk-en/plans/bio/danylo-apostol.yaml`
-- Discovery: `curriculum/l2-uk-en/bio/discovery/danylo-apostol.yaml`
-- Wiki: `wiki/figures/danylo-apostol.md`
-- Суміжні BIO: сусідні постаті козацької/гетьманської доби в тому ж prep-хвилі.
+> Every path under **Existing** below was verified with `test -e` on 2026-06-03.
+
+- **Existing BIO plans (VERIFIED present):**
+  - `curriculum/l2-uk-en/plans/bio/danylo-apostol.yaml`
+  - `curriculum/l2-uk-en/plans/bio/pavlo-polubotok.yaml`
+  - `curriculum/l2-uk-en/plans/bio/ivan-mazepa.yaml`
+  - `curriculum/l2-uk-en/plans/bio/pylyp-orlyk.yaml`
+- **Existing HIST modules (VERIFIED present):**
+  - `curriculum/l2-uk-en/plans/hist/danylo-apostol.yaml`
+  - `curriculum/l2-uk-en/plans/hist/pavlo-polubotok.yaml`
+  - `curriculum/l2-uk-en/plans/hist/hryhorii-skovoroda.yaml`
+  - `curriculum/l2-uk-en/plans/hist/kinets-hetmanshchyny.yaml`
+- **Candidate cross-track connections (Phase 2+, NOT existing files):**
+  - `rishytelni-punkty-1728` — legal-source lesson.
+  - `generalne-slidstvo-pro-maietnosti` — land, rank estates, and fiscal reform.
+- **Potential LIT additions surfaced by this research:**
+  - None; this is primarily HIST/BIO/legal-source material.
 
 ## 8. Naming-canonical
 
 - **Slug:** `danylo-apostol`
-- **UA:** Данило Апостол
-- Заборонені імперські русифіковані форми в body text (лише як об'єкт критики, якщо потрібно).
+- **EN canonical (BGN/PCGN-style project spelling):** Danylo Apostol
+- **UA canonical (with patronymic):** Данило Павлович Апостол
+- **Aliases (track these for `aliases:` YAML field):** Данило Апостол; гетьман Данило Апостол; Danylo Apostol.
+- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Даниил Апостол; малороссийский гетман as normalized identity.
 
-## 9. Image candidates / rights
+## 9. Image candidates
 
-- Окремої Wikimedia Commons **File:** сторінки з перевіреними creator/provenance/licence для навчального портрета **не** підтверджено в цьому проході.
-- Категорія, «старе зображення» чи наявність ілюстрації на енциклопедичній сторінці **не** є доказом прав.
-- У плані зафіксовано `portrait_fallback`: `type: text-only`, `license: not-applicable`, `verified_on: 2026-07-19`.
+- **Best PD/CC portrait:** Wikimedia Commons portrait of Danylo Apostol, pending individual license check.
+- **Backup candidates:** Spaso-Preobrazhensky church in Velyki Sorochyntsi; Hlukhiv context image; image of Reshytelni-punkty document if a rights-clear facsimile is located.
+- **If no PD/CC portrait exists:** use a CC/PD image of the Sorochyntsi church or Hlukhiv, labeled as context.
+- **Era-appropriate context image:** Hlukhiv or Sorochyntsi rather than generic Cossack artwork.
 
-## 10. Sources used & rejections
+## 10. Sources used
 
-### Adopted
-- [S1] АПОСТОЛ Данило Павлович — Енциклопедія історії України; uk; role: гетьман 1727–1734, реформи, військова служба, маєтності; http://history.org.ua/?termin=Apostol_D
-- [S2] Рішительні пункти 1728 — Енциклопедія історії України; uk; role: правова рамка обмеженої автономії 1728; http://history.org.ua/?termin=rishytelni_punkty_1728
-- [S3] Apostol, Danylo — Internet Encyclopedia of Ukraine (CIUS); en; role: незалежна біографія: Коломацькі чолобитні, Reshitelnye Punkty, реформи; https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CA%5CP%5CApostolDanylo.htm
+**Tier 1 (authoritative):**
+- [T1] Горобець В. М. "Апостол Данило Павлович" // Енциклопедія історії України. URL: https://www.history.org.ua/?termin=Apostol_D | resolved HTTP 200, accessed 2026-06-03.
+- [T1] "Рішительні пункти 1728" // Енциклопедія історії України. URL: https://www.history.org.ua/?termin=rishytelni_punkty_1728 | resolved HTTP 200, accessed 2026-06-03.
+- [T1] Дорошенко Д.; Грушевський М.; Джиджора І.; Горобець В. (bibliographic anchors requested for this figure).
 
-### Rejected / not adopted
-- uk.wikipedia.org article pages: navigation-only; not part of the ordered adopted set for this packet.
-- Circular `ukrainian_wiki/*` registry rows: removed (self-citation).
-- YouTube / unlocated quote traditions without exact locator: not used as biography.
+**Tier 2 (institutional):**
+- [T2] Ukrainian textbook/source alignment via `search_text` for Reshytelni punkty and Little Russian Collegium pedagogy.
 
-### Conflicts noted
-- Дати й місця народження/смерті можуть різнитися між ЕІУ та IEU на 1 день (юліанський/григоріанський рахунок) — подавати з атрибуцією, не згладжувати.
+**Tier 3 (encyclopedic):**
+- [T3] "Данило Апостол" // Ukrainian Wikipedia via `query_wikipedia`, URL resolved HTTP 200, accessed 2026-06-03.
+
+**Tier 4 (modern scholarly post-1991):**
+- [T4] Крупницький Б. *Гетьман Данило Апостол і його доба (1727-1734)*.
+- [T4] Горобець В. works on post-Mazepa Hetmanate context.
+
+**Tier 5 (general web):**
+- None used as load-bearing evidence.
+
+**Primary-source documents accessed / verification notes:**
+- Reshytelni punkty clause excerpts: `verify_quote` returned 0.0 for both selected excerpts.
+
+---
 
 ## Decolonization self-check
 
-- [x] Антиімперська оптика без сучасної національної телеології
-- [x] Без агіографії й без інверсії в «демонізацію»
-- [x] Механізм тиску названо конкретно (інституція/дата), не «доля нації»
-- [x] Легенди відокремлено від документованої біографії
+- [x] No Russocentric framing; imperial permission/control is named directly.
+- [x] No Russian-imperial transliterations in body text except forbidden forms in §8.
+- [x] Election age/date is precise and not conflated.
+- [x] Reshytelni punkty are treated as an imperial restriction document, not a gift.
+- [x] Ukrainian place and institution names are canonical.

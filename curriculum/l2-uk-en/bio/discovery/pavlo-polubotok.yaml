@@ -1,49 +1,28 @@
-discovered_at: '2026-07-19T12:00:00+00:00'
-error:
+discovered_at: '2026-04-14T10:42:41.430294+00:00'
+error: null
 query_keywords:
 - 'Павло Полуботок: Мученик за автономію'
-- Павло Полуботок
-- ПОЛУБОТОК Павло Леонтійович
+- Розминка
+- 'Конфліктна карта: Законник чи бунтар?'
+- 'Формування: Шлях магната і полковника'
+- 'Діяльність: Коломацькі чолобитні та опір Колегії'
+- 'Тінь: Ціна непоступливості'
+- 'Дискусія та підсумок: Спадщина'
+- Аналізувати юридичні та політичні форми опору української еліти імперському тиску
+  в першій чверті XVIII ст.
+- Розрізняти історичну постать Павла Полуботка та його міфологічний образ, включно
+  з легендою про "золото Полуботка"
+- Критично оцінювати переваги та недоліки стратегії непоступливого опору авторитарній
+  владі
+- Пояснювати роль Малоросійської колегії як інструменту ліквідації української автономії
+- наказний гетьман
+- Коломацькі чолобитні
+- каземат
 - Малоросійська колегія
-- Polubotok, Pavlo
-- наказний гетьман 1722–1724; Малоросійська колегія 1722; арешт XI.1723
-direct_sources:
-- http://history.org.ua/?termin=Polubotok_P
-- http://history.org.ua/?termin=Malorosiyska_kolegiya
-- https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CP%5CO%5CPolubotokPavlo.htm
-fetch_disposition:
-- url: http://history.org.ua/?termin=Polubotok_P
-  disposition: adopted
-  http_status: 200
-  retrieved_on: '2026-07-19'
-  language: uk
-  title: ПОЛУБОТОК Павло Леонтійович
-  institution: Енциклопедія історії України
-  author: В. М. Горобець
-  factual_role: наказний гетьман 1722–1724, опір Колегії, арешт, смерть
-- url: http://history.org.ua/?termin=Malorosiyska_kolegiya
-  disposition: adopted
-  http_status: 200
-  retrieved_on: '2026-07-19'
-  language: uk
-  title: Малоросійська колегія
-  institution: Енциклопедія історії України
-  author: В. М. Горобець
-  factual_role: інституційний механізм імперського контролю від 1722
-- url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CP%5CO%5CPolubotokPavlo.htm
-  disposition: adopted
-  http_status: 200
-  retrieved_on: '2026-07-19'
-  language: en
-  title: Polubotok, Pavlo
-  institution: Internet Encyclopedia of Ukraine (CIUS)
-  author: IEU
-  factual_role: незалежна біографія; легенда vs документ; Історія Русів як міфотворчість
+- автономія
+- чолобитна
+- скарб
+- непоступливість
 rag_chunks: []
 rag_literary: []
-warning: Subject-first direct-source packet; plan-generated discovery warning removed. Adopted URLs fetched live with
-  HTTP 200 receipts. RAG optional because direct sources complete.
-rejected_candidates:
-- url: https://uk.wikipedia.org/
-  disposition: rejected
-  reason: Wikipedia not used as adopted independent authority for this packet; encyclopedic EIU/IEU preferred.
+warning: Auto-generated from plan
