@@ -94,12 +94,22 @@ const dailyCount = Math.max(1, Math.floor(count));
     return chips.length > 0 ? `<span class="lexicon-daily-chips">${chips.join("")}</span>` : "";
   };
 
+  const renderExample = (word: DailyWord): string => {
+    const example = word.example?.trim();
+    if (!example) return "";
+    const exampleEn = word.exampleEn?.trim();
+    return `<span class="lexicon-daily-example" data-testid="daily-example-${dwEsc(word.slug)}" lang="uk">
+      ${dwEsc(example)}${exampleEn ? `<span class="lexicon-daily-example-en" lang="en">${dwEsc(exampleEn)}</span>` : ""}
+    </span>`;
+  };
+
   const renderCard = (word: DailyWord): string => {
     const href = `/lexicon/${encodeURIComponent(String(word.slug))}/`;
     return `<li class="lexicon-daily-item">
       <a class="lexicon-daily-card" href="${href}">
         <span class="lexicon-daily-lemma">${dwEsc(word.lemma)}</span>
         ${word.gloss ? `<span class="lexicon-daily-gloss">${dwEsc(word.gloss)}</span>` : ""}
+        ${renderExample(word)}
         ${renderChips(word)}
       </a>
     </li>`;
@@ -329,6 +339,23 @@ const dailyCount = Math.max(1, Math.floor(count));
     color: var(--lu-text-muted);
     font-size: 0.92rem;
     line-height: 1.45;
+  }
+
+  :global(.lexicon-daily-example) {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--lu-text);
+    font-size: 0.95rem;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  :global(.lexicon-daily-example-en) {
+    display: block;
+    margin-top: 0.15rem;
+    color: var(--lu-text-muted);
+    font-size: 0.85rem;
+    font-style: normal;
   }
 
   :global(.lexicon-daily-chips) {

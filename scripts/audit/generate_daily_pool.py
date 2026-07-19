@@ -111,6 +111,38 @@ def _stable_hash(text: str) -> str:
     return hashlib.sha1(text.encode("utf-8")).hexdigest()
 
 
+def _first_example(entry: dict[str, Any]) -> tuple[str | None, str | None]:
+    """Return the first verified example sentence and optional English gloss.
+
+    Looks in common manifest/article payload shapes so the daily pool can carry
+    one short example per word without a second large shard. Returns (None, None)
+    when no usable sentence is present.
+    """
+    enrichment = entry.get("enrichment") if isinstance(entry.get("enrichment"), dict) else {}
+
+    # Prefer a single verified example with English scaffolding.
+    single = enrichment.get("example") or entry.get("example")
+    if isinstance(single, dict):
+        uk = single.get("uk") or single.get("sentence") or single.get("text")
+        en = single.get("en") or single.get("translation") or single.get("gloss")
+        if _has_text(uk):
+            return (str(uk).strip(), str(en).strip() if _has_text(en) else None)
+
+    # Fall back to an array of examples.
+    examples = enrichment.get("examples") or entry.get("examples") or []
+    if isinstance(examples, list) and examples:
+        first = examples[0]
+        if isinstance(first, dict):
+            uk = first.get("uk") or first.get("sentence") or first.get("text")
+            en = first.get("en") or first.get("translation") or first.get("gloss")
+            if _has_text(uk):
+                return (str(uk).strip(), str(en).strip() if _has_text(en) else None)
+        if _has_text(first):
+            return (str(first).strip(), None)
+
+    return (None, None)
+
+
 def _pool_item(entry: dict[str, Any]) -> dict[str, Any] | None:
     lemma = entry.get("lemma")
     slug = entry.get("url_slug")
@@ -131,6 +163,11 @@ def _pool_item(entry: dict[str, Any]) -> dict[str, Any] | None:
     cefr = _early_cefr(entry)
     if cefr is not None:
         item["cefr"] = cefr
+    example, example_en = _first_example(entry)
+    if example is not None:
+        item["example"] = example
+    if example_en is not None:
+        item["exampleEn"] = example_en
     return item
 
 
