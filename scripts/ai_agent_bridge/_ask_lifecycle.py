@@ -193,6 +193,24 @@ def maybe_print_timeout_notice() -> None:
         conn.close()
 
 
+def assert_ask_content_present(msg: dict[str, Any], *, message_id: int, target: str) -> str:
+    """Return non-empty ask content or record a transport-leg failure (#4915).
+
+    Background workers must feed the model from the *stored* message body,
+    never from inherited stdin. An empty body is a transport bug, not a model
+    stall — surface that distinction so failover logic does not misattribute.
+    """
+    content = msg.get("content") if isinstance(msg, dict) else None
+    if isinstance(content, str) and content.strip():
+        return content
+    reason = (
+        f"transport empty-ask-body: message #{message_id} target={target} "
+        f"has no stored content (stdin was not re-read; body must come from DB)"
+    )
+    record_ask_failure(message_id, reason)
+    raise ValueError(reason)
+
+
 def fetch_ask_message(message_id: int, target: str) -> dict[str, Any] | None:
     """Load the original ask payload for one-shot processors."""
     conn = get_db()

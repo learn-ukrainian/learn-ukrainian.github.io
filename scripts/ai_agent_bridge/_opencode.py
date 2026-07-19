@@ -470,16 +470,20 @@ def process_for_opencode(
     msg = fetch_ask_message(message_id, target)
     if not msg:
         return
+    from ._ask_lifecycle import assert_ask_content_present
+
+    # #4915: feed the model from the stored message body only (never inherited stdin).
+    content = assert_ask_content_present(msg, message_id=message_id, target=target)
     model = ask_target_model(msg)
     if not model:
         raise ValueError(f"ask #{message_id} has no target model")
 
     kwargs: dict[str, object] = {"data": ask_attachment(msg), "no_timeout": no_timeout}
     if target == "opencode":
-        response = _invoke_opencode(msg["content"], model, **kwargs)
+        response = _invoke_opencode(content, model, **kwargs)
     elif target == "pool":
         response = _invoke_opencode(
-            msg["content"],
+            content,
             model,
             variant=variant or POOL_DEFAULT_VARIANT,
             output_format="json",
@@ -489,7 +493,7 @@ def process_for_opencode(
     elif target == "glm":
         _assert_glm_egress_allowed("process background ask-glm")
         response = _invoke_opencode(
-            msg["content"],
+            content,
             model,
             output_format="json",
             default_timeout_s=GLM_DEFAULT_TIMEOUT_S,
@@ -498,7 +502,7 @@ def process_for_opencode(
     elif target == "gemma":
         response = _strip_gemma_thought(
             _invoke_opencode(
-                msg["content"],
+                content,
                 model,
                 output_format="json",
                 default_timeout_s=GEMMA_DEFAULT_TIMEOUT_S,

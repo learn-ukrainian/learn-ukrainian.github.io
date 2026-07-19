@@ -83,6 +83,10 @@ def ask_cursor(
 def process_for_cursor(message_id: int, *, no_timeout: bool = False) -> None:
     """Process an existing Cursor ask, shared by sync and detached paths."""
     msg = fetch_ask_message(message_id, "cursor")
+    if msg is not None:
+        from ._ask_lifecycle import assert_ask_content_present
+
+        assert_ask_content_present(msg, message_id=message_id, target="cursor")
     if not msg:
         return
     model = ask_target_model(msg) or CURSOR_DEFAULT_MODEL

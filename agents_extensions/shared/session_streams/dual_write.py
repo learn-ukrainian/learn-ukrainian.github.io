@@ -13,6 +13,28 @@ from .store import SessionStreamStore
 ATLAS_PROFILE = "atlas"
 ATLAS_HANDOFF_PATH = Path(".claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md")
 
+# Registry of known epic streams → primary file handoff paths for dual-write.
+# Phase-2 migration: mirror these under an active lease without retiring files.
+# Paths are relative to the repository root. First existing path wins per epic.
+EPIC_HANDOFF_CANDIDATES: dict[str, tuple[str, ...]] = {
+    "epic:4387": (
+        ".claude/atlas-epic/INTERIM-DRIVER-HANDOFF.md",
+        ".claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md",
+    ),
+    "epic:4707": (
+        ".claude/harness-epic/CLAUDE-DRIVER-HANDOFF.md",
+        "docs/session-state/current.claude-infra.md",
+    ),
+    "epic:4542": (
+        ".claude/hramatka-epic/CLAUDE-DRIVER-HANDOFF.md",
+        "docs/session-state/current.claude-hramatka.md",
+    ),
+    "epic:4706": (
+        ".claude/bio-epic/CLAUDE-DRIVER-HANDOFF.md",
+        "docs/session-state/current.claude-bio.md",
+    ),
+}
+
 
 @dataclass(frozen=True)
 class MirrorResult:
@@ -22,6 +44,34 @@ class MirrorResult:
     source_bytes: int
     entry: Entry
     mirror_id: int
+
+
+@dataclass(frozen=True)
+class HandoffCandidate:
+    stream_id: str
+    path: Path
+    exists: bool
+
+
+def list_handoff_candidates(repo_root: Path) -> list[HandoffCandidate]:
+    """List configured epic handoff paths and whether each file exists."""
+    root = repo_root.resolve()
+    out: list[HandoffCandidate] = []
+    for stream_id, paths in EPIC_HANDOFF_CANDIDATES.items():
+        for rel in paths:
+            path = root / rel
+            out.append(HandoffCandidate(stream_id=stream_id, path=path, exists=path.is_file()))
+    return out
+
+
+def resolve_handoff_path(stream_id: str, repo_root: Path) -> Path | None:
+    """Return the first existing handoff path for a stream, if any."""
+    root = repo_root.resolve()
+    for rel in EPIC_HANDOFF_CANDIDATES.get(stream_id, ()):
+        path = root / rel
+        if path.is_file():
+            return path
+    return None
 
 
 def mirror_atlas_handoff(

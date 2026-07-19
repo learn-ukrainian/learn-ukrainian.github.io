@@ -845,9 +845,15 @@ def _query_inbox_show(agent: str) -> dict[str, Any]:
 
 
 def _pending_backlog_rows() -> list[dict[str, Any]]:
-    """Return pending-delivery backlog rows used for the warning banner."""
+    """Return pending-delivery backlog rows used for the warning banner.
+
+    Dead lanes (e.g. retired ``gemini`` → ``agy``) are excluded: they never
+    get drained by ``ab inbox run``, and nagging every CLI invocation is
+    pure noise (#5113). Expire them via ``ab cleanup --expire`` instead.
+    """
     from ._db import get_db
 
+    dead = _channels.dead_lane_agents()
     conn = get_db()
     try:
         rows = conn.execute(
@@ -870,12 +876,12 @@ def _pending_backlog_rows() -> list[dict[str, Any]]:
             "oldest_created_at": str(row["oldest_created_at"]),
         }
         for row in rows
-        if row["oldest_created_at"]
+        if row["oldest_created_at"] and str(row["to_agent"]) not in dead
     ]
 
 
 def _maybe_print_backlog_warnings() -> None:
-    """Emit one stderr warning per agent with stale pending deliveries.
+    """Emit one stderr warning per *live* agent with stale pending deliveries.
 
     Intentionally read-only — see ``run_delivery_expiry_cleanup`` (``ab
     cleanup --expire``) and the Monitor API server's periodic sweep
@@ -885,6 +891,9 @@ def _maybe_print_backlog_warnings() -> None:
     including e.g. ``ab cleanup --dry-run`` — would be a surprising,
     hard-to-predict side effect and would break dry-run's no-mutation
     contract.
+
+    Dead-lane queues are never warned here (#5113); run
+    ``ab cleanup --expire`` (or the Monitor sweep) to bulk-expire them.
     """
     threshold = timedelta(hours=_parse_backlog_warn_hours())
     now = _now_utc()
