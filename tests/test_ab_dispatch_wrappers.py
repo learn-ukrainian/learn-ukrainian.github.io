@@ -103,15 +103,14 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
     monkeypatch.setenv("LU_RUNTIME_TMP_ROOT", str(lease_root))
 
     def fake_run(command, **kwargs):
-        if command == ["gh", "pr", "view", "1740", "--json", "title,body,files"]:
+        if command == ["gh", "pr", "view", "1740", "--json", "title,files,url,headRefOid"]:
             payload = {
                 "title": "Wrapper PR",
-                "body": "Review this behavior.",
+                "url": "https://example.com/pull/1740",
+                "headRefOid": "deadbeef",
                 "files": [{"path": "scripts/ai_agent_bridge/_cli.py", "additions": 10, "deletions": 2}],
             }
             return subprocess.CompletedProcess(command, 0, stdout=json.dumps(payload))
-        if command == ["gh", "pr", "diff", "1740"]:
-            return subprocess.CompletedProcess(command, 0, stdout="diff --git a/file b/file\n+change\n")
         raise AssertionError(f"unexpected command: {command}")
 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
@@ -136,8 +135,12 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
     assert prompt_path.parent == lease_root
     prompt = prompt_path.read_text(encoding="utf-8")
     assert wrappers.REVIEW_DEEP_INSTRUCTIONS in prompt
-    assert "Review this behavior." in prompt
-    assert "diff --git" in prompt
+    assert "READ-ONLY REVIEW CONTRACT" in prompt
+    assert "deadbeef" in prompt
+    assert "scripts/ai_agent_bridge/_cli.py" in prompt
+    # Pointer-only: no embedded PR body or unified diff
+    assert "Review this behavior." not in prompt
+    assert "diff --git" not in prompt
 
 
 def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch, tmp_path):
@@ -167,6 +170,11 @@ def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch
     assert _option(command, "--model") == "claude-opus-4-8"
     assert _option(command, "--effort") == "high"
     assert _option(command, "--task-id").startswith("review-")
-    assert wrappers.REVIEW_DEEP_INSTRUCTIONS in str(captured_prompt["text"])
-    assert "def broken()" in str(captured_prompt["text"])
+    text = str(captured_prompt["text"])
+    assert wrappers.REVIEW_DEEP_INSTRUCTIONS in text
+    assert "READ-ONLY REVIEW CONTRACT" in text
+    assert "target.py" in text
+    # Pointer-only: file *names*, not full source paste
+    assert "def broken()" not in text
+    assert "missing_name" not in text
     assert not Path(captured_prompt["path"]).exists()

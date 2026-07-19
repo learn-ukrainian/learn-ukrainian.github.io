@@ -327,7 +327,11 @@ def _qualifying_reason(
                 if age_hours is not None and age_hours > build_age_hours:
                     return f"build branch age {age_hours:.1f}h > {build_age_hours:g}h"
 
-            if _origin_matches_head(info.path, info.branch):
+            # Never treat "matches remote tip" as reaped-while-OPEN: open PR
+            # worktrees commonly match origin/<branch> and must stay mounted.
+            if (pr_state is None or pr_state.state != "OPEN") and _origin_matches_head(
+                info.path, info.branch
+            ):
                 return f"HEAD matches origin/{info.branch}"
 
     # Class B: detached-HEAD worktrees under .worktrees/
@@ -447,7 +451,12 @@ def _reap_qualified_worktree(
             dirty=None,
             pr=_pr_dict(pr_state),
         )
-    if dirty and not preserve_then_reap:
+    # Operator pain: MERGED/CLOSED worktrees often dirty with local notes.
+    # Auto-enable preserve-then-reap for those classes so cleanup does not
+    # require remembering an extra flag.
+    merged_or_closed = "MERGED" in reason or "CLOSED" in reason
+    effective_preserve = bool(preserve_then_reap or (dirty and merged_or_closed))
+    if dirty and not effective_preserve:
         return ReapResult(
             path=str(info.path),
             branch=info.branch,
@@ -456,6 +465,7 @@ def _reap_qualified_worktree(
             dirty=True,
             pr=_pr_dict(pr_state),
         )
+    preserve_then_reap = effective_preserve
 
     if not apply:
         action = "would_preserve_then_remove" if dirty else "would_remove"
@@ -749,6 +759,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="Restrict reaping to provably-safe classes (merged PRs + settled dispatches + detached-HEAD ancestors).",
     )
     parser.add_argument(
+        "--merged",
+        action="store_true",
+        help=(
+            "Convenience for post-PR cleanup: enables --safe-only, "
+            "--preserve-then-reap, and --prune-merged-branches. "
+            "Dirty trees whose PR is MERGED/CLOSED are local-committed then removed."
+        ),
+    )
+    parser.add_argument(
         "--worktree",
         action="append",
         type=Path,
@@ -767,14 +786,18 @@ def main(argv: list[str] | None = None) -> int:
         else primary_checkout_root(resolve_repo_root())
     )
     apply = bool(args.apply)
+    merged_mode = bool(getattr(args, "merged", False))
+    preserve = bool(args.preserve_then_reap) or merged_mode
+    prune = bool(args.prune_merged_branches) or merged_mode
+    safe_only = bool(args.safe_only) or merged_mode
     results = reap_worktrees(
         repo_root=repo_root,
         apply=apply,
         build_age_hours=args.build_age_hours,
-        preserve_then_reap=bool(args.preserve_then_reap),
-        prune_merged_branches=bool(args.prune_merged_branches),
+        preserve_then_reap=preserve,
+        prune_merged_branches=prune,
         target_paths=args.worktree,
-        safe_only=bool(args.safe_only),
+        safe_only=safe_only,
     )
     if args.json:
         print(json.dumps([_result_payload(result) for result in results], indent=2))
