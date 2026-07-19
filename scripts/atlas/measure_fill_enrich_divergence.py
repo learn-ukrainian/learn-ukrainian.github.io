@@ -1,36 +1,30 @@
 #!/usr/bin/env python3
-"""Measure fill_local vs full-enrich CEFR / relation divergence (#5331).
+"""Measure fill_local vs full-enrich CEFR / relation alignment (#5331).
 
-Two LIVE path divergences:
+Historical LIVE path divergences (pre-fix):
 
-1. **CEFR** — ``scripts/atlas/fill_local.py`` clears
-   ``enrich_manifest._CEFR_ESTIMATE_LEVEL_BY_KEY`` and never rebuilds it.
+1. **CEFR** — ``scripts/atlas/fill_local.py`` cleared
+   ``enrich_manifest._CEFR_ESTIMATE_LEVEL_BY_KEY`` and never rebuilt it.
    Full ``enrich()`` runs ``_prepare_cefr_estimates`` (or the sealed CEFR phase)
    over the cohort, so non-PULS lemmas get GRAC quantile bands.
 
 2. **Relations** — full ``enrich()`` precomputes pointer maps with reciprocal
-   closure and passes them into ``enrich_entry``. ``fill_local`` calls
+   closure and passes them into ``enrich_entry``. Pre-fix ``fill_local`` called
    ``enrich_entry`` without pointer args, so only per-lemma forward extractors
-   run (reciprocal edges onto other cohort headwords are absent).
+   ran (reciprocal edges onto other cohort headwords were absent).
+
+3. **Synonym kwarg** — ``enrich_entry`` accepted ``pointer_synonym_relations``
+   but did not merge them (mphdict-only) until the #5331 wire-up.
 
 This module measures those gaps **offline** on a fixed synthetic cohort (≤50
 lemmas by default) without rewriting the live gitignored manifest. Prefer the
 committed hermetic builder over live ``data/`` so CI stays OOM-safe.
 
-Fix shape for a follow-up (owned by the #5230 chunked-runner arc; do not partial-fix
-single-slug fills without a sealed full-cohort relation map):
-
-1. In ``fill_local._fill_local``, replace bare ``_CEFR_ESTIMATE_LEVEL_BY_KEY.clear()``
-   with ``_prepare_cefr_estimates(sources_conn, cohort_manifest)`` (or load a
-   sealed CEFR map) before the article loop.
-2. Precompute ``_*_relations_by_headword`` (or load sealed relations.sqlite) over
-   the fill cohort / full atlas headwords and pass
-   ``pointer_{synonym,antonym,homonym,paronym}_relations`` into each
-   ``enrich_entry`` call (mirror ``enrich()`` / ``worker_enrich``).
-3. Wire ``pointer_synonym_relations`` through ``_merge_synonym_relations`` inside
-   ``enrich_entry`` — the kwarg is currently accepted but unused (mphdict-only
-   synonyms), so even full enrich drops definition-pointer synonym edges from
-   the rendered section until that merge lands.
+After the fill_local + enrich_entry fix, the **fixed** path (prepare CEFR +
+closed pointer maps, matching live ``fill_local``) should report zero
+``missing_on_fill`` and zero ``only_on_enrich`` edge deltas for the synthetic
+cohort. The **legacy** path is retained so the pre-fix divergence remains
+reproducible for regression notes.
 
 Usage::
 
@@ -227,7 +221,7 @@ def fill_local_style_relations(
     *,
     has_sum11_flags: bool,
 ) -> dict[str, dict[str, list[dict[str, Any]]]]:
-    """Per-lemma extractors only — what ``enrich_entry`` uses when pointer_* is None."""
+    """Per-lemma extractors only — pre-fix fill_local / enrich_entry None-pointer path."""
     out: dict[str, dict[str, list[dict[str, Any]]]] = {kind: {} for kind in RELATION_KINDS}
     for entry in entries:
         lemma = str(entry.get("lemma") or "")
@@ -259,7 +253,7 @@ def enrich_style_relations(
     *,
     has_sum11_flags: bool,
 ) -> dict[str, dict[str, list[dict[str, Any]]]]:
-    """Run-level by_headword maps with reciprocal closure (full enrich path)."""
+    """Run-level by_headword maps with reciprocal closure (full enrich / fixed fill_local)."""
     return {
         "synonym": em._definition_pointer_relations_by_headword(
             conn, manifest, has_sum11_flags=has_sum11_flags
@@ -272,75 +266,35 @@ def enrich_style_relations(
     }
 
 
-def measure_divergence(
-    entries: list[dict[str, Any]],
-    sources_db: Path,
-    grac_cache: dict[str, Any],
+def _cefr_delta(
+    lemmas: list[str],
+    fill_cefr: dict[str, dict[str, str] | None],
+    enrich_cefr: dict[str, dict[str, str] | None],
     *,
-    open_conn: Callable[[Path], sqlite3.Connection] | None = None,
+    prepared_estimate_keys: int,
 ) -> dict[str, Any]:
-    """Compare fill_local-style vs full-enrich-style CEFR + relation precomputes.
-
-    Returns a JSON-serializable summary. Numbers come only from the executed paths.
-    """
-    if not entries:
-        raise ValueError("entries must be non-empty")
-    if len(entries) > 50:
-        raise ValueError("measure at most 50 lemmas (CI-safe cohort cap)")
-
-    manifest = {"entries": [dict(entry) for entry in entries]}
-    lemmas = [str(entry.get("lemma") or "") for entry in entries]
-    connect = open_conn or (lambda path: sqlite3.connect(f"file:{path.resolve().as_posix()}?mode=ro", uri=True))
-
-    with _engine_state(grac_cache):
-        conn = connect(sources_db)
-        try:
-            has_sum11 = em._sum11_has_flag_columns(conn)
-
-            # --- fill_local CEFR path: clear estimates, do not rebuild ---
-            em._CEFR_ESTIMATE_LEVEL_BY_KEY.clear()
-            fill_cefr: dict[str, dict[str, str] | None] = {}
-            for lemma in lemmas:
-                fill_cefr[lemma] = em._cefr(conn, lemma)
-
-            # --- full enrich CEFR path: prepare cohort quantiles ---
-            em._prepare_cefr_estimates(conn, manifest)
-            enrich_cefr: dict[str, dict[str, str] | None] = {}
-            for lemma in lemmas:
-                enrich_cefr[lemma] = em._cefr(conn, lemma)
-
-            fill_relations = fill_local_style_relations(
-                conn, entries, has_sum11_flags=has_sum11
-            )
-            enrich_relations = enrich_style_relations(
-                conn, manifest, has_sum11_flags=has_sum11
-            )
-            prepared_estimate_keys = len(em._CEFR_ESTIMATE_LEVEL_BY_KEY)
-        finally:
-            conn.close()
-
-    cefr_missing_on_fill: list[str] = []
-    cefr_level_divergent: list[dict[str, Any]] = []
-    cefr_fill_present = 0
-    cefr_enrich_present = 0
-    cefr_enrich_estimated = 0
+    missing_on_fill: list[str] = []
+    level_divergent: list[dict[str, Any]] = []
+    fill_present = 0
+    enrich_present = 0
+    enrich_estimated = 0
     for lemma in lemmas:
         fill_block = fill_cefr.get(lemma)
         enrich_block = enrich_cefr.get(lemma)
         if fill_block:
-            cefr_fill_present += 1
+            fill_present += 1
         if enrich_block:
-            cefr_enrich_present += 1
+            enrich_present += 1
             if str(enrich_block.get("source") or "") == em._CEFR_ESTIMATED_SOURCE:
-                cefr_enrich_estimated += 1
+                enrich_estimated += 1
         if enrich_block and not fill_block:
-            cefr_missing_on_fill.append(lemma)
+            missing_on_fill.append(lemma)
         elif (
             fill_block
             and enrich_block
             and str(fill_block.get("level") or "") != str(enrich_block.get("level") or "")
         ):
-            cefr_level_divergent.append(
+            level_divergent.append(
                 {
                     "lemma": lemma,
                     "fill_level": fill_block.get("level"),
@@ -349,7 +303,22 @@ def measure_divergence(
                     "enrich_source": enrich_block.get("source"),
                 }
             )
+    return {
+        "fill_present": fill_present,
+        "enrich_present": enrich_present,
+        "enrich_estimated": enrich_estimated,
+        "missing_on_fill_count": len(missing_on_fill),
+        "missing_on_fill_lemmas": missing_on_fill,
+        "level_divergent_count": len(level_divergent),
+        "level_divergent": level_divergent,
+        "prepared_estimate_keys": prepared_estimate_keys,
+    }
 
+
+def _relation_delta(
+    fill_relations: dict[str, dict[str, list[dict[str, Any]]]],
+    enrich_relations: dict[str, dict[str, list[dict[str, Any]]]],
+) -> dict[str, Any]:
     relation_delta: dict[str, Any] = {}
     for kind in RELATION_KINDS:
         fill_stats = _edge_stats(fill_relations.get(kind, {}))
@@ -366,47 +335,111 @@ def measure_divergence(
             "reciprocal_only_on_enrich": sum(
                 1 for _s, _t, direction in only_enrich if direction == "reciprocal"
             ),
-            # Sample keys for debugging (cap keeps JSON small).
             "sample_only_on_enrich": [
                 {"source": s, "target": t, "direction": d} for s, t, d in only_enrich[:8]
             ],
         }
+    return relation_delta
+
+
+def measure_divergence(
+    entries: list[dict[str, Any]],
+    sources_db: Path,
+    grac_cache: dict[str, Any],
+    *,
+    open_conn: Callable[[Path], sqlite3.Connection] | None = None,
+) -> dict[str, Any]:
+    """Compare fill_local paths vs full-enrich-style CEFR + relation precomputes.
+
+    Returns a JSON-serializable summary. Numbers come only from the executed paths.
+
+    ``fixed`` mirrors post-#5331 ``fill_local`` (prepare CEFR + closed pointer maps).
+    ``legacy`` mirrors the pre-fix clear-only / per-lemma-extractor path.
+    """
+    if not entries:
+        raise ValueError("entries must be non-empty")
+    if len(entries) > 50:
+        raise ValueError("measure at most 50 lemmas (CI-safe cohort cap)")
+
+    manifest = {"entries": [dict(entry) for entry in entries]}
+    lemmas = [str(entry.get("lemma") or "") for entry in entries]
+    connect = open_conn or (lambda path: sqlite3.connect(f"file:{path.resolve().as_posix()}?mode=ro", uri=True))
+
+    with _engine_state(grac_cache):
+        conn = connect(sources_db)
+        try:
+            has_sum11 = em._sum11_has_flag_columns(conn)
+
+            # --- legacy fill_local CEFR path: clear estimates, do not rebuild ---
+            em._CEFR_ESTIMATE_LEVEL_BY_KEY.clear()
+            legacy_fill_cefr: dict[str, dict[str, str] | None] = {}
+            for lemma in lemmas:
+                legacy_fill_cefr[lemma] = em._cefr(conn, lemma)
+
+            # --- fixed fill_local / full enrich CEFR path: prepare cohort quantiles ---
+            em._prepare_cefr_estimates(conn, manifest)
+            fixed_fill_cefr: dict[str, dict[str, str] | None] = {}
+            enrich_cefr: dict[str, dict[str, str] | None] = {}
+            for lemma in lemmas:
+                block = em._cefr(conn, lemma)
+                fixed_fill_cefr[lemma] = block
+                enrich_cefr[lemma] = block
+
+            legacy_fill_relations = fill_local_style_relations(
+                conn, entries, has_sum11_flags=has_sum11
+            )
+            fixed_fill_relations = enrich_style_relations(
+                conn, manifest, has_sum11_flags=has_sum11
+            )
+            enrich_relations = fixed_fill_relations
+            prepared_estimate_keys = len(em._CEFR_ESTIMATE_LEVEL_BY_KEY)
+        finally:
+            conn.close()
+
+    legacy_cefr = _cefr_delta(
+        lemmas,
+        legacy_fill_cefr,
+        enrich_cefr,
+        prepared_estimate_keys=0,
+    )
+    fixed_cefr = _cefr_delta(
+        lemmas,
+        fixed_fill_cefr,
+        enrich_cefr,
+        prepared_estimate_keys=prepared_estimate_keys,
+    )
+    legacy_relations = _relation_delta(legacy_fill_relations, enrich_relations)
+    fixed_relations = _relation_delta(fixed_fill_relations, enrich_relations)
 
     return {
-        "schema": "fill-enrich-divergence-v1",
+        "schema": "fill-enrich-divergence-v2",
         "issue": 5331,
         "lemmas_compared": len(lemmas),
         "lemmas": lemmas,
-        "cefr": {
-            "fill_present": cefr_fill_present,
-            "enrich_present": cefr_enrich_present,
-            "enrich_estimated": cefr_enrich_estimated,
-            "missing_on_fill_count": len(cefr_missing_on_fill),
-            "missing_on_fill_lemmas": cefr_missing_on_fill,
-            "level_divergent_count": len(cefr_level_divergent),
-            "level_divergent": cefr_level_divergent,
-            "prepared_estimate_keys": prepared_estimate_keys,
+        # Top-level keys keep the fixed path (post-#5331 fill_local) as primary.
+        "cefr": fixed_cefr,
+        "relations": fixed_relations,
+        "legacy": {
+            "cefr": legacy_cefr,
+            "relations": legacy_relations,
         },
-        "relations": relation_delta,
         "notes": {
-            "fill_local_cefr": (
-                "fill_local clears _CEFR_ESTIMATE_LEVEL_BY_KEY and never calls "
-                "_prepare_cefr_estimates; only PULS CEFR survives on the fill path."
+            "fixed_path": (
+                "Post-#5331 fill_local prepares _CEFR_ESTIMATE_LEVEL_BY_KEY via "
+                "_prepare_cefr_estimates and passes closed pointer maps into "
+                "enrich_entry; synonym pointers merge via _merge_synonym_relations. "
+                "On the same cohort as full enrich, missing_on_fill and "
+                "only_on_enrich should be zero."
             ),
-            "fill_local_relations": (
-                "fill_local calls enrich_entry without pointer_* maps; per-lemma "
-                "forward extractors run, reciprocal cohort edges do not."
+            "legacy_path": (
+                "Pre-fix fill_local cleared CEFR estimates without rebuild and "
+                "called enrich_entry without pointer_* maps (forward extractors only). "
+                "legacy.* preserves those pre-fix numbers for regression notes."
             ),
-            "pointer_synonym_dead_kwarg": (
-                "enrich_entry accepts pointer_synonym_relations but does not merge "
-                "them into sections (mphdict-only). Measurement still counts the "
-                "precompute-map delta; rendered synonym fix is a separate wire-up."
-            ),
-            "follow_up_fix_shape": (
-                "Prepare CEFR for the fill cohort (or load sealed CEFR); pass closed "
-                "pointer maps into enrich_entry; wire pointer_synonym_relations via "
-                "_merge_synonym_relations. Prefer #5230 sealed run-level phases over "
-                "ad-hoc single-slug reciprocity."
+            "single_slug_residual": (
+                "Single-slug fill_local only closes relations within the fill "
+                "cohort (that slug set). Full-atlas reciprocity still needs a "
+                "full-cohort or #5230 sealed relation map."
             ),
         },
     }
@@ -426,24 +459,39 @@ def run_default_measurement(cohort_size: int = DEFAULT_COHORT_SIZE) -> dict[str,
 def format_summary(result: dict[str, Any]) -> str:
     """Human-readable one-screen summary of a measurement result."""
     cefr = result["cefr"]
+    legacy_cefr = result.get("legacy", {}).get("cefr", {})
     lines = [
         f"lemmas_compared {result['lemmas_compared']}",
         (
-            f"cefr missing_on_fill={cefr['missing_on_fill_count']} "
+            f"cefr(fixed) missing_on_fill={cefr['missing_on_fill_count']} "
             f"fill_present={cefr['fill_present']} enrich_present={cefr['enrich_present']} "
             f"enrich_estimated={cefr['enrich_estimated']} "
             f"level_divergent={cefr['level_divergent_count']}"
         ),
     ]
+    if legacy_cefr:
+        lines.append(
+            f"cefr(legacy) missing_on_fill={legacy_cefr['missing_on_fill_count']} "
+            f"fill_present={legacy_cefr['fill_present']} "
+            f"enrich_present={legacy_cefr['enrich_present']}"
+        )
     for kind in RELATION_KINDS:
         rel = result["relations"][kind]
         lines.append(
-            f"relations.{kind} "
+            f"relations.{kind}(fixed) "
             f"fill_edges={rel['fill_local']['edges']} "
             f"enrich_edges={rel['enrich']['edges']} "
             f"only_on_enrich={rel['edges_only_on_enrich']} "
             f"reciprocal_only_on_enrich={rel['reciprocal_only_on_enrich']}"
         )
+        legacy_rel = result.get("legacy", {}).get("relations", {}).get(kind)
+        if legacy_rel:
+            lines.append(
+                f"relations.{kind}(legacy) "
+                f"fill_edges={legacy_rel['fill_local']['edges']} "
+                f"enrich_edges={legacy_rel['enrich']['edges']} "
+                f"only_on_enrich={legacy_rel['edges_only_on_enrich']}"
+            )
     return "\n".join(lines)
 
 

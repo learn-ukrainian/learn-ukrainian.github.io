@@ -5901,6 +5901,20 @@ def enrich_entry(
         synonyms = _synonyms_mphdict(fallback_base)
         if synonyms:
             synonyms = _with_base_source_label(synonyms, fallback_base)
+    # Definition-pointer / closed-map synonyms (#5331): when the caller precomputed
+    # reciprocal maps (enrich / worker_enrich / fill_local), merge them; otherwise
+    # fall back to the per-lemma forward extractor (same contract as antonyms).
+    synonym_relations = (
+        pointer_synonym_relations
+        if pointer_synonym_relations is not None
+        else _definition_pointer_relations(
+            conn,
+            lemma,
+            has_sum11_flags=has_sum11_flags,
+            cache=slovnyk_cache,
+        )
+    )
+    synonyms = _merge_synonym_relations(synonyms, synonym_relations)
     _apply_section("synonyms", synonyms, gate_ran=synonyms_gate_ran)
     antonyms = _antonyms_wiktionary(conn, base, entry_pos=entry_pos)
     if not antonyms and fallback_base:
