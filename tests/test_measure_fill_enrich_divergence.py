@@ -1,4 +1,4 @@
-"""Fixture-backed measurement of fill_local vs enrich divergence (#5331)."""
+"""Fixture-backed measurement of fill_local vs enrich alignment (#5331)."""
 
 from __future__ import annotations
 
@@ -21,52 +21,59 @@ def cohort(tmp_path: Path) -> dict[str, object]:
     return {"entries": entries, "sources": sources, "grac": grac}
 
 
-def test_measure_reports_cefr_missing_on_fill(cohort: dict[str, object]) -> None:
+def test_fixed_path_reports_zero_cefr_and_relation_delta(cohort: dict[str, object]) -> None:
+    """Post-#5331 fill_local path must match full enrich on the synthetic cohort."""
     result = measure.measure_divergence(
         cohort["entries"],  # type: ignore[arg-type]
         cohort["sources"],  # type: ignore[arg-type]
         cohort["grac"],  # type: ignore[arg-type]
     )
 
+    assert result["schema"] == "fill-enrich-divergence-v2"
     assert result["lemmas_compared"] == 50
-    assert result["cefr"]["fill_present"] == 10  # PULS only after clear
-    assert result["cefr"]["enrich_estimated"] > 0
-    assert result["cefr"]["missing_on_fill_count"] == result["cefr"]["enrich_estimated"]
-    assert result["cefr"]["missing_on_fill_count"] == 40
-    assert result["cefr"]["prepared_estimate_keys"] == 40
+    assert result["cefr"]["fill_present"] == 50
+    assert result["cefr"]["enrich_present"] == 50
+    assert result["cefr"]["enrich_estimated"] == 40
+    assert result["cefr"]["missing_on_fill_count"] == 0
     assert result["cefr"]["level_divergent_count"] == 0
+    assert result["cefr"]["prepared_estimate_keys"] == 40
+
+    for kind in measure.RELATION_KINDS:
+        rel = result["relations"][kind]
+        assert rel["edges_only_on_enrich"] == 0, kind
+        assert rel["edges_only_on_fill"] == 0, kind
+        assert rel["reciprocal_only_on_enrich"] == 0, kind
+        assert rel["fill_local"]["edges"] == rel["enrich"]["edges"], kind
 
 
-def test_measure_reports_reciprocal_relation_delta(cohort: dict[str, object]) -> None:
+def test_legacy_path_still_shows_pre_fix_divergence(cohort: dict[str, object]) -> None:
+    """legacy.* preserves the pre-fix clear-only / forward-only numbers."""
     result = measure.measure_divergence(
         cohort["entries"],  # type: ignore[arg-type]
         cohort["sources"],  # type: ignore[arg-type]
         cohort["grac"],  # type: ignore[arg-type]
     )
 
-    syn = result["relations"]["synonym"]
-    ant = result["relations"]["antonym"]
+    legacy_cefr = result["legacy"]["cefr"]
+    assert legacy_cefr["fill_present"] == 10  # PULS only after clear
+    assert legacy_cefr["missing_on_fill_count"] == 40
+    assert legacy_cefr["enrich_estimated"] == 40
 
-    # Synonym pairs are bidirectional in sum11, so fill already has both directions
-    # as forward edges; by_headword adds explicit direction=reciprocal copies.
+    syn = result["legacy"]["relations"]["synonym"]
+    ant = result["legacy"]["relations"]["antonym"]
     assert syn["enrich"]["edges"] > syn["fill_local"]["edges"]
     assert syn["edges_only_on_enrich"] > 0
     assert syn["reciprocal_only_on_enrich"] > 0
-
-    # Antonym pointers are one-way in fixtures; enrich adds reciprocal edges.
     assert ant["fill_local"]["edges"] > 0
     assert ant["enrich"]["edges"] > ant["fill_local"]["edges"]
     assert ant["reciprocal_only_on_enrich"] == ant["fill_local"]["edges"]
     assert ant["edges_only_on_enrich"] == ant["reciprocal_only_on_enrich"]
 
-    for kind in ("homonym", "paronym"):
-        assert result["relations"][kind]["edges_only_on_enrich"] == 0
-
 
 def test_fill_local_style_matches_enrich_entry_none_pointer_fallback(
     cohort: dict[str, object], monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """fill_local-style maps must equal per-lemma extractors enrich_entry uses."""
+    """Legacy per-lemma maps must equal extractors enrich_entry uses when pointer_* is None."""
     entries = cohort["entries"]
     sources = cohort["sources"]
     assert isinstance(entries, list)
@@ -98,12 +105,13 @@ def test_fill_local_style_matches_enrich_entry_none_pointer_fallback(
 def test_run_default_measurement_cli_path_is_deterministic() -> None:
     first = measure.run_default_measurement(50)
     second = measure.run_default_measurement(50)
-    # Drop non-semantic samples if present; full dict should match for hermetic run.
     assert first == second
     assert first["lemmas_compared"] == 50
     text = measure.format_summary(first)
-    assert "missing_on_fill=40" in text
-    assert "relations.antonym" in text
+    assert "missing_on_fill=0" in text
+    assert "relations.antonym(fixed)" in text
+    assert "only_on_enrich=0" in text
+    assert "cefr(legacy) missing_on_fill=40" in text
 
 
 def test_cohort_size_guards() -> None:
@@ -123,4 +131,5 @@ def test_json_roundtrip(tmp_path: Path, cohort: dict[str, object]) -> None:
     path.write_text(json.dumps(result, ensure_ascii=False, sort_keys=True), encoding="utf-8")
     loaded = json.loads(path.read_text(encoding="utf-8"))
     assert loaded["issue"] == 5331
-    assert loaded["cefr"]["missing_on_fill_count"] == 40
+    assert loaded["cefr"]["missing_on_fill_count"] == 0
+    assert loaded["legacy"]["cefr"]["missing_on_fill_count"] == 40

@@ -5,6 +5,12 @@ each attached field as a resumable row in ``enrichment``. Phase 1 is forced
 offline with ``LEXICON_SLOVNYK_OFFLINE=1``: existing local caches may be read,
 but cache misses must stay absent and never open a socket.
 
+Before the per-article loop, the fill cohort gets the same run-level
+precomputes as full ``enrich()`` / ``worker_enrich`` (#5331): CEFR quantile
+estimates via ``_prepare_cefr_estimates`` and closed
+``pointer_{synonym,antonym,homonym,paronym}_relations`` maps (reciprocal
+within the fill cohort).
+
 Absent-vs-uncovered rule:
 
 - Phase-2-fillable sections stay absent when Phase 1 has no payload:
@@ -347,6 +353,44 @@ def fill_local(
         )
 
 
+def _cohort_manifest(articles: list[sqlite3.Row]) -> dict[str, Any]:
+    """Build a mini-manifest for CEFR quantiles + closed pointer maps (#5331)."""
+    return {
+        "entries": [
+            {
+                "lemma": row["lemma"],
+                "url_slug": row["slug"],
+                "pos": row["pos"],
+                "gloss": row["gloss"],
+            }
+            for row in articles
+        ]
+    }
+
+
+def _pointer_relation_maps(
+    sources_conn: sqlite3.Connection,
+    cohort_manifest: dict[str, Any],
+    *,
+    has_sum11_flags: bool,
+) -> dict[str, dict[str, list[dict[str, Any]]]]:
+    """Precompute reciprocal pointer maps over the fill cohort (mirror enrich())."""
+    return {
+        "synonym": enrich_manifest._definition_pointer_relations_by_headword(
+            sources_conn, cohort_manifest, has_sum11_flags=has_sum11_flags
+        ),
+        "antonym": enrich_manifest._definition_antonym_relations_by_headword(
+            sources_conn, cohort_manifest, has_sum11_flags=has_sum11_flags
+        ),
+        "homonym": enrich_manifest._homonym_relations_by_headword(
+            sources_conn, cohort_manifest
+        ),
+        "paronym": enrich_manifest._paronym_relations_by_headword(
+            sources_conn, cohort_manifest
+        ),
+    }
+
+
 def _fill_local(
     db_path: Path = DEFAULT_DB,
     sources_db_path: Path = DEFAULT_SOURCES_DB,
@@ -355,9 +399,6 @@ def _fill_local(
     slug: str | None = None,
     refresh: bool = False,
 ) -> FillResult:
-    if hasattr(enrich_manifest, "_CEFR_ESTIMATE_LEVEL_BY_KEY"):
-        enrich_manifest._CEFR_ESTIMATE_LEVEL_BY_KEY.clear()
-
     with _connect(db_path) as atlas_conn, sqlite3.connect(sources_db_path) as sources_conn:
         articles = _article_rows(atlas_conn, slug)
         if slug and not articles:
@@ -367,6 +408,17 @@ def _fill_local(
         before = _coverage(atlas_conn)
         kaikki_lookup = enrich_manifest._load_kaikki_lookup(kaikki_lookup_path)
         has_sum11_flags = enrich_manifest._sum11_has_flag_columns(sources_conn)
+
+        # Align with full enrich / worker_enrich (#5331): prepare cohort CEFR
+        # estimates and closed pointer maps before the per-article loop. Single-slug
+        # fills only close relations within that slug set; full-atlas fills get
+        # cohort-wide reciprocity. Sealed full-cohort maps remain the #5230 path.
+        cohort_manifest = _cohort_manifest(articles)
+        enrich_manifest._prepare_cefr_estimates(sources_conn, cohort_manifest)
+        pointer_maps = _pointer_relation_maps(
+            sources_conn, cohort_manifest, has_sum11_flags=has_sum11_flags
+        )
+
         filled_at = _iso_now()
         inserted = 0
         skipped_existing = 0
@@ -374,8 +426,18 @@ def _fill_local(
         for article in articles:
             entry = _entry_from_article(atlas_conn, article)
             existing_payloads = {} if refresh else _existing_payloads(atlas_conn, article["slug"])
+            entry_key = enrich_manifest._canonical_synonym_term(str(entry.get("lemma") or "")) or ""
             with _skip_existing_extractors(existing_payloads):
-                enrich_entry(entry, sources_conn, kaikki_lookup, has_sum11_flags=has_sum11_flags)
+                enrich_entry(
+                    entry,
+                    sources_conn,
+                    kaikki_lookup,
+                    has_sum11_flags=has_sum11_flags,
+                    pointer_synonym_relations=pointer_maps["synonym"].get(entry_key, []),
+                    pointer_antonym_relations=pointer_maps["antonym"].get(entry_key, []),
+                    pointer_homonym_relations=pointer_maps["homonym"].get(entry_key, []),
+                    pointer_paronym_relations=pointer_maps["paronym"].get(entry_key, []),
+                )
             payloads = entry_payloads(entry)
             uncovered = set(_uncovered_sections(payloads))
             for section in uncovered:
