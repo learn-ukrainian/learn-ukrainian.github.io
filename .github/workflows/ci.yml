@@ -299,13 +299,29 @@ jobs:
               ).strip()
           changed = set(
               subprocess.check_output(
-                  ["git", "diff", "--name-only", "--diff-filter=AMR", base_sha, head_sha],
+                  [
+                      "git",
+                      "diff",
+                      "--no-renames",
+                      "--name-only",
+                      "--diff-filter=AM",
+                      base_sha,
+                      head_sha,
+                  ],
                   text=True,
               ).splitlines()
           )
           deleted = set(
               subprocess.check_output(
-                  ["git", "diff", "--name-only", "--diff-filter=D", base_sha, head_sha],
+                  [
+                      "git",
+                      "diff",
+                      "--no-renames",
+                      "--name-only",
+                      "--diff-filter=D",
+                      base_sha,
+                      head_sha,
+                  ],
                   text=True,
               ).splitlines()
           )
@@ -356,6 +372,35 @@ jobs:
                   slug = path.name.removesuffix(".sources.yaml") if raw_path.endswith(".sources.yaml") else path.stem
               if slug in manifest_set:
                   changed_slugs.add(slug)
+
+          if "curriculum/l2-uk-en/bio/promotion-evidence.yaml" in changed:
+              from scripts.orchestration.preparation_evidence import UniqueKeyLoader
+              import yaml
+
+              registry_rel = "curriculum/l2-uk-en/bio/promotion-evidence.yaml"
+              try:
+                  base_registry_text = subprocess.check_output(
+                      ["git", "show", f"{base_sha}:{registry_rel}"],
+                      text=True,
+                      stderr=subprocess.DEVNULL,
+                  )
+              except subprocess.CalledProcessError:
+                  base_registry_text = "version: 1\nentries: {}\n"
+              base_registry = yaml.load(base_registry_text, Loader=UniqueKeyLoader)
+              head_registry = yaml.load(registry_path.read_text(encoding="utf-8"), Loader=UniqueKeyLoader)
+              base_entries = base_registry.get("entries", {})
+              head_entries = head_registry.get("entries", {})
+              registry_changed_slugs = {
+                  slug
+                  for slug in set(base_entries) | set(head_entries)
+                  if base_entries.get(slug) != head_entries.get(slug)
+              }
+              off_manifest_changes = registry_changed_slugs - manifest_set
+              if off_manifest_changes:
+                  raise SystemExit(
+                      f"promotion evidence changed off-manifest slugs: {sorted(off_manifest_changes)}"
+                  )
+              changed_slugs.update(registry_changed_slugs)
 
           targets = active_holds | changed_slugs
           for slug in sorted(targets, key=manifest_slugs.index):
