@@ -284,6 +284,10 @@ const en = {
   'practice.verdict.wrong': 'Wrong',
   'practice.verdict.calque': 'Calque',
   'practice.wordsTitle': 'Words of the day',
+
+  // Word Atlas entry chrome (#5435 reverse habit loop)
+  'atlas.practiceThisWord': 'Practice this word →',
+  'atlas.practiceUnavailable': 'Not in the practice pool yet',
 } as const;
 
 export type ChromeKey = keyof typeof en;
@@ -537,6 +541,10 @@ const uk: Record<ChromeKey, string> = {
   'practice.verdict.wrong': 'Неправильно',
   'practice.verdict.calque': 'Калька',
   'practice.wordsTitle': 'Слова дня',
+
+  // Word Atlas entry chrome (#5435 reverse habit loop)
+  'atlas.practiceThisWord': 'Практикувати це слово →',
+  'atlas.practiceUnavailable': 'Ще немає в наборі практики',
 };
 
 export const CHROME_STRINGS = { en, uk } satisfies Record<ChromeLocale, Record<ChromeKey, string>>;

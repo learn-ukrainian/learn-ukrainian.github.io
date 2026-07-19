@@ -357,6 +357,43 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Atlas → Practice CTA sits in the teal word hero; keep white chrome for contrast. */
+.word-hero .practice-cta-hero {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.3rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.word-hero .practice-cta-hero:hover,
+.word-hero .practice-cta-hero:focus-visible {
+  background: rgba(255, 255, 255, 0.28);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35);
+}
+
+.word-hero .practice-cta-hero--disabled {
+  opacity: 0.78;
+  cursor: not-allowed;
+  border-style: dashed;
+  pointer-events: none;
+}
+
+html[data-theme='dark'] .word-hero .practice-cta-hero {
+  border-color: rgba(255, 255, 255, 0.75);
+  background: rgba(0, 0, 0, 0.18);
 }
 
 .status-badge {

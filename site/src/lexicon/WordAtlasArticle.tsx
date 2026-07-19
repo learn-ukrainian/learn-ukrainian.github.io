@@ -1,5 +1,6 @@
 import { Fragment, type ReactNode } from "react";
 import type { EntryRecord } from "../lib/lexicon/atlas-data-source";
+import { atlasPracticeHref } from "../lib/lexicon/atlas-practice-link";
 import { safeHref } from "../lib/lexicon/safe-url";
 import {
   buildWordAtlasArticleView,
@@ -14,6 +15,8 @@ import {
   TRACK_LABELS_UK,
 } from "../lib/lexicon/word-atlas-article-model";
 import { morphologyFormCountLabel } from "../lib/lexicon/register-markers";
+import ChromeText from "../lib/i18n/ChromeText";
+import { CHROME_STRINGS } from "../lib/i18n/chrome";
 import styles from "./WordAtlasArticle.module.css";
 
 export interface WordAtlasArticleProps {
@@ -194,14 +197,25 @@ export default function WordAtlasArticle({
               {statusBadges.map((badge) => (
                 <span key={badge.label} className={`status-badge ${badge.className}`} title={badge.title}>{badge.label}</span>
               ))}
-              {hasPractice && (
+              {hasPractice ? (
                 <a
-                  href={safeHref(`/words-of-the-day/practice/?lemmaId=${entry.url_slug}`) ?? undefined}
-                  className="practice-link-hero"
-                  style={{marginLeft: "0.75rem", display: "inline-flex", alignItems: "center", color: "var(--lu-primary, #146e78)", fontWeight: "800", fontSize: "0.9rem", textDecoration: "underline"}}
+                  href={safeHref(atlasPracticeHref(entry.url_slug)) ?? undefined}
+                  className="practice-cta-hero"
+                  data-testid="atlas-practice-cta"
+                  data-practice-available="true"
                 >
-                  Практикувати це слово →
+                  <ChromeText k="atlas.practiceThisWord" />
                 </a>
+              ) : (
+                <span
+                  className="practice-cta-hero practice-cta-hero--disabled"
+                  role="status"
+                  data-testid="atlas-practice-cta-unavailable"
+                  data-practice-available="false"
+                  title={`${CHROME_STRINGS.uk["atlas.practiceUnavailable"]} / ${CHROME_STRINGS.en["atlas.practiceUnavailable"]}`}
+                >
+                  <ChromeText k="atlas.practiceUnavailable" />
+                </span>
               )}
             </div>
           </div>
