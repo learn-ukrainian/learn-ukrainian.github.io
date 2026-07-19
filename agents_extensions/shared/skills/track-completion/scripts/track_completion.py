@@ -529,7 +529,7 @@ def prepare_semantic_review(
             )
             record = _bounded_record(ledger)
             source_identity = _learner_source_identity(learner_hashes)
-            if record is not None and record["deferred_workflow_drift"]:
+            if ledger["deferred_workflow_drift"] or (record is not None and record["deferred_workflow_drift"]):
                 raise CompletionError(
                     "Deferred audit-tooling drift requires restart-bounded-completion before a semantic review"
                 )
@@ -662,7 +662,9 @@ def restart_bounded_completion(
             )
             bounded = _bounded_record(ledger)
             legacy_restart = "bounded_completion" not in ledger and ledger["state"] == "MIGRATION_REQUIRED"
-            deferred_restart = bounded is not None and bool(bounded["deferred_workflow_drift"])
+            deferred_restart = bool(ledger["deferred_workflow_drift"]) or (
+                bounded is not None and bool(bounded["deferred_workflow_drift"])
+            )
             if not (legacy_restart or deferred_restart):
                 raise CompletionError(
                     "Bounded restart requires a migrated legacy ledger or a bounded run with deferred audit-tooling drift"
@@ -1793,7 +1795,9 @@ def record_review(
                 raise CompletionError("Post-build result file set is stale or does not match the target")
             learner_hashes = _learner_hashes(snapshot, repo_root=repo_root)
             bounded_record = _bounded_record(ledger)
-            if bounded_record is not None and bounded_record["deferred_workflow_drift"]:
+            if ledger["deferred_workflow_drift"] or (
+                bounded_record is not None and bounded_record["deferred_workflow_drift"]
+            ):
                 raise CompletionError(
                     "Deferred audit-tooling drift requires restart-bounded-completion before a semantic review"
                 )

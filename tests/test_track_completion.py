@@ -1647,6 +1647,73 @@ def test_deferred_audit_tool_drift_blocks_active_protocol_and_restarts_cleanly(
     assert prepared["bounded_completion"]["run"]["measurements"]["repair_count"] == 0
 
 
+def test_prebind_deferred_tooling_drift_blocks_semantic_entrypoints_and_restarts(
+    fake_repo: tuple[Path, Path, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    _, ledger = _start(fake_repo, "bio/seminar-built")
+    run_id = ledger["run"]["run_id"]
+    snapshot = tc.resolve_target("bio/seminar-built", repo_root=repo, config=tc.load_config(config_path))
+    result = _result(snapshot, repo, status="PASS")
+    result_path = _result_file(tmp_path, "prebind-deferred.json")
+    (repo / "workflow.txt").write_text("prebind-workflow-drift\n", encoding="utf-8")
+    _, deferred = tc.record_change(
+        "bio/seminar-built",
+        run_id=run_id,
+        owner_kind="audit_tooling",
+        author_family="codex",
+        summary="Queue tooling drift before the first semantic authorization.",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert deferred["bounded_completion"] is None
+    assert len(deferred["deferred_workflow_drift"]) == 1
+    path = tc.ledger_path_for(snapshot, repo_root=repo, config=tc.load_config(config_path), ledger_root=ledger_root)
+    before = tc.read_json(path)
+    with pytest.raises(tc.CompletionError, match="Deferred audit-tooling drift requires restart-bounded-completion"):
+        _prepare_review(
+            "bio/seminar-built", run_id, result, repo=repo, config_path=config_path, ledger_root=ledger_root
+        )
+    monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: result)
+    with pytest.raises(tc.CompletionError, match="Deferred audit-tooling drift requires restart-bounded-completion"):
+        tc.record_review(
+            "bio/seminar-built",
+            run_id=run_id,
+            result_path=result_path,
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    assert tc.read_json(path) == before
+
+    _, restarted = tc.restart_bounded_completion(
+        "bio/seminar-built",
+        run_id=run_id,
+        owner="codex",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    fresh_run_id = restarted["run"]["run_id"]
+    assert fresh_run_id != run_id
+    assert restarted["state"] == "POST_BUILD_REVIEW_REQUIRED"
+    assert restarted["reviews"] == []
+    assert restarted["certification_evidence"] == []
+    assert restarted["bounded_completion"] is None
+    assert restarted["deferred_workflow_drift"] == []
+    archived = restarted["archived_authority"][-1]
+    assert archived["reason"] == "deferred-protocol-drift"
+    assert archived["prior_run"]["run_id"] == run_id
+    assert archived["deferred_workflow_drift"] == before["deferred_workflow_drift"]
+    _prepare_review(
+        "bio/seminar-built", fresh_run_id, result, repo=repo, config_path=config_path, ledger_root=ledger_root
+    )
+    prepared = tc.read_json(path)
+    assert prepared["bounded_completion"]["run"]["measurements"]["model_call_count"] == 0
+    assert prepared["bounded_completion"]["run"]["measurements"]["repair_count"] == 0
+
+
 @pytest.mark.parametrize(
     ("field", "replacement"),
     [
