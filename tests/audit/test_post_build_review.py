@@ -2054,6 +2054,7 @@ def test_packet_bound_contract_finalizes_short_supplied_finding(
     assert 2 not in content_choice["properties"]["line"]["enum"]
 
     semantic = _passing_semantic(packet)
+    semantic["verdict"] = "REVISE"
     result = pbr.finalize_review(packet, _raw(semantic))
     audit = result["semantic"]["alignment_audit"]["LEARNER_LEVEL_META_LEAKAGE"]
 

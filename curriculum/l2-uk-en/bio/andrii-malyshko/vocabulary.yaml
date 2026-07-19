@@ -6,7 +6,7 @@
 - lemma: фронтовий кореспондент
   translation: war correspondent
   pos: noun phrase
-  usage: Під час війни Малишко працював як фронтовий кореспондент у кількох газетах.
+  usage: Під час війни Малишко працював фронтовим кореспондентом у кількох газетах.
 - lemma: відповідальний редактор
   translation: responsible editor
   pos: noun phrase
@@ -63,10 +63,10 @@
   translation: legislative representative activity
   pos: noun phrase
   usage: Депутатська діяльність Малишка включала роботу зі зверненнями громадян та установ.
-- lemma: громадянське звернення
+- lemma: звернення громадянина
   translation: citizen petition
   pos: noun phrase
-  usage: Громадянське звернення могло стосуватися житла, податків або господарської потреби.
+  usage: Звернення громадянина могло стосуватися житла, податків або господарської потреби.
 - lemma: інтерпретація
   translation: interpretation
   pos: noun
