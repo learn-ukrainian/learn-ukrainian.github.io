@@ -683,47 +683,61 @@ function orderedChoiceOptions(
   return options;
 }
 
-function meaningDistractors(
+function cefrRank(level: string): number {
+  return CEFR_LEVELS.indexOf(level as CefrLevel);
+}
+
+export function meaningDistractors(
   answer: PracticeLexeme,
   deck: PracticeDeckData,
   limit: number,
 ): PracticeLexeme[] {
   const answerHeadword = glossHeadword(answer);
   const answerLength = glossLabel(answer).length;
+  const answerRank = cefrRank(answer.cefr ?? 'A1');
   const candidatePool = deck.lexemes.filter(
     (candidate) =>
       candidate.lemmaId !== answer.lemmaId &&
       isMeaningMcEligible(candidate) &&
       glossHeadword(candidate) !== answerHeadword,
   );
-  const sameLevel = candidatePool.filter((candidate) => candidate.cefr === answer.cefr);
-  const candidates =
-    sameLevel.length >= limit
-      ? sameLevel
-      : [
-        ...sameLevel,
-        ...candidatePool.filter((candidate) => candidate.cefr !== answer.cefr),
-      ];
-  // PRIORITIZE same-POS + comparable gloss length via sort keys — never hard-filter
-  // the candidate pool down to a subset, which would starve distractors when a word
-  // has fewer than 3 same-POS peers even though hundreds of valid candidates exist.
+
+  // Build concentric CEFR rings around the answer. Distractors stay
+  // semantically comparable because we exhaust the closest ring before
+  // moving outward; this prevents a B1 answer from being undermined by A1
+  // distractors or an A1 answer from being ambushed by C1 vocabulary.
+  const rings = new Map<number, PracticeLexeme[]>();
+  for (const candidate of candidatePool) {
+    const gap = Math.abs(cefrRank(candidate.cefr ?? 'A1') - answerRank);
+    const bucket = rings.get(gap) ?? [];
+    bucket.push(candidate);
+    rings.set(gap, bucket);
+  }
+  const sortedGaps = [...rings.keys()].sort((left, right) => left - right);
+
   const seenLabels = new Set<string>();
-  return candidates
-    .sort((left, right) => {
-      const leftPos = left.pos === answer.pos ? 0 : 1;
-      const rightPos = right.pos === answer.pos ? 0 : 1;
-      if (leftPos !== rightPos) return leftPos - rightPos;
-      const leftLen = Math.abs(glossLabel(left).length - answerLength);
-      const rightLen = Math.abs(glossLabel(right).length - answerLength);
-      return leftLen - rightLen || left.lemmaId.localeCompare(right.lemmaId);
-    })
-    .filter((entry) => {
-      const key = glossLabel(entry).toLocaleLowerCase('en-US');
-      if (seenLabels.has(key)) return false;
-      seenLabels.add(key);
-      return true;
-    })
-    .slice(0, limit);
+  const result: PracticeLexeme[] = [];
+  for (const gap of sortedGaps) {
+    const ring = rings.get(gap) ?? [];
+    const picked = ring
+      .sort((left, right) => {
+        const leftPos = left.pos === answer.pos ? 0 : 1;
+        const rightPos = right.pos === answer.pos ? 0 : 1;
+        if (leftPos !== rightPos) return leftPos - rightPos;
+        const leftLen = Math.abs(glossLabel(left).length - answerLength);
+        const rightLen = Math.abs(glossLabel(right).length - answerLength);
+        return leftLen - rightLen || left.lemmaId.localeCompare(right.lemmaId);
+      })
+      .filter((entry) => {
+        const key = glossLabel(entry).toLocaleLowerCase('en-US');
+        if (seenLabels.has(key)) return false;
+        seenLabels.add(key);
+        return true;
+      });
+    result.push(...picked);
+    if (result.length >= limit) break;
+  }
+  return result.slice(0, limit);
 }
 
 function matchingPairs(selection: PracticeSelection, deck: PracticeDeckData, learnerLevel: CefrLevel) {
