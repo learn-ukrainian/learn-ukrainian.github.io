@@ -1,42 +1,51 @@
 # Source registry for wiki/figures/knyahynia-olha.md
-# Referenced inline as [S1], [S2], ...
+# Referenced inline as [S1], [S2], ... — independent sources only (no ukrainian_wiki self-citations).
+# Adopted URL set matches plan readings + discovery.direct_sources (verified 2026-07-19).
 sources:
 - id: S1
-  file: ukrainian_wiki/knyahynia-olha_Біографія-Княгиня-Ольга-Архітекторка-держави-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Княгиня Ольга: Архітекторка держави'
-  section_path: 'Біографія: Княгиня Ольга: Архітекторка держави > Деколонізаційна
-    перспектива'
+  file: http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Olha
+  type: external
+  title: ОЛЬГА (Енциклопедія історії України)
+  url: http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Olha
+  metadata:
+    publisher: Енциклопедія історії України / Котляр М.Ф.
+    language: uk
+    verified_on: '2026-07-19'
+    source_role: академічна біографія; адміністративні реформи; візит/«Про церемонії»; хрещення; посольство
+      до Оттона I
+    hosting: link-only
+    rights_basis: external-link
+    image_candidate:
+      file_page: https://commons.wikimedia.org/wiki/File:Radziwi%C5%82%C5%82_Chronicle_(miniature_of_Olga_of_Kiev_received_in_Constantinople).jpg
+      title: Radziwiłł Chronicle (miniature of Olga of Kiev received in Constantinople).jpg
+      creator_provenance: невідомий мініатюрист (Радзивіллівський літопис; середньовічна копія)
+      licence: 'Public domain (Commons: PD-old / CC-PD-Mark)'
+      disposition: reuse-approved
+      note: Пізніша літописна мініатюра прийому в Константинополі — ілюстрація рецепції, не lifetime-портрет.
+        Перевірено API Commons 2026-07-19.
 - id: S2
-  file: 7-klas-istoria-ukr-pometun-2024_s3554
-  type: textbook
-  title: Розділ 1. ВИНИКНЕННЯ ТА СТАНОВЛЕННЯ. КИЇВСЬКОЇ ДЕРЖАВИ
-  page: 15
-  grade: 7
+  file: http://izbornyk.org.ua/pvlyar/yar02.htm
+  type: external
+  title: Повість врем’яних літ (Махновець) — уривки про Ольгу
+  url: http://izbornyk.org.ua/pvlyar/yar02.htm
+  metadata:
+    publisher: Ізборник / переклад Л. Махновця (видання ПВЛ)
+    language: uk
+    verified_on: '2026-07-19'
+    source_role: літописна традиція помсти й хрещення (ПВЛ, вид. Махновець) — не незалежне підтвердження
+      дипломатії
+    hosting: link-only
+    rights_basis: external-link
 - id: S3
-  file: 7-klas-istoria-ukr-galimov-2024_s3433
-  type: textbook
-  title: § 5. Русь за князювання Ольги та Святослава
-  page: 32
-  grade: 7
-- id: S4
-  file: https://www.youtube.com/watch?v=vUd9ZmvXHHU
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CO%5CL%5COlhaPrincess.htm
   type: external
-  title: ULP 6-231 | Княгиня Ольга — хитра правителька Русі | Ukrainian Lessons Podcast
-    Season 6
-  url: https://www.youtube.com/watch?v=vUd9ZmvXHHU
-- id: S5
-  file: ukrainian_wiki/knyahynia-olha_Біографія-Княгиня-Ольга-Архітекторка-держави-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Княгиня Ольга: Архітекторка держави'
-  section_path: 'Біографія: Княгиня Ольга: Архітекторка держави > Короткий зміст'
-- id: S6
-  file: ukrainian_wiki/knyahynia-olha_Біографія-Княгиня-Ольга-Архітекторка-держави-Мовні-зразки
-  type: ukrainian_wiki
-  title: 'Біографія: Княгиня Ольга: Архітекторка держави'
-  section_path: 'Біографія: Княгиня Ольга: Архітекторка держави > Мовні зразки'
-- id: S7
-  file: https://www.youtube.com/watch?v=GxdZAhusOA0
-  type: external
-  title: 'княгиня Ольга: жінка головнокомандувач'
-  url: https://www.youtube.com/watch?v=GxdZAhusOA0
+  title: Olha, Princess (Internet Encyclopedia of Ukraine)
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CO%5CL%5COlhaPrincess.htm
+  metadata:
+    publisher: Internet Encyclopedia of Ukraine / CIUS
+    language: en
+    verified_on: '2026-07-19'
+    source_role: англомовний референс CIUS; не учнівське читання
+    hosting: link-only
+    rights_basis: external-link
+    reference_only: англомовний референс; не учнівське читання
