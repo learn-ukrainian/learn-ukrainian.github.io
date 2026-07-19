@@ -242,6 +242,7 @@ def assert_formal_review_ask_payload(
     task_id: str | None,
     attachment: str | Path | None = None,
     review: bool = False,
+    has_target: bool = False,
 ) -> bool:
     """Fail closed before a formal review ask can send a fat payload.
 
@@ -251,6 +252,10 @@ def assert_formal_review_ask_payload(
     formal_review = review or is_formal_review_ask(msg_type=msg_type, task_id=task_id)
     if not formal_review:
         return False
+
+    assert_pr_cf_review_uses_review_pr(
+        content, formal_review=True, has_target=has_target
+    )
 
     content_size = len(content.encode("utf-8"))
     if content_size > MAX_REVIEW_REQUEST_BYTES:
@@ -270,6 +275,28 @@ def assert_formal_review_ask_payload(
     return True
 
 
+_PR_CF_REVIEW_RE = re.compile(
+    r"github\.com/[^\s]+/pull/\d+|\breview-pr-\d+\b|\bPR\s*#?\d+\b|"
+    r"formal cross-family|cross-family formal|code-review-findings\.v1",
+    re.IGNORECASE,
+)
+
+
+def allow_legacy_review_ask_escape() -> bool:
+    """Emergency escape for non-PR formal asks that still need --review."""
+    return os.environ.get("BRIDGE_ALLOW_LEGACY_REVIEW_ASK", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
+def looks_like_pr_cf_review(content: str) -> bool:
+    """Heuristic: formal CF PR review should use review-pr, not fat ask-*."""
+    return bool(_PR_CF_REVIEW_RE.search(content[:4000]))
+
+
 def warn_missing_review_target(*, formal_review: bool, has_target: bool) -> None:
     """Steer manual formal-review asks to the PR-targeted entrypoint."""
     if formal_review and not has_target:
@@ -277,6 +304,31 @@ def warn_missing_review_target(*, formal_review: bool, has_target: bool) -> None
             "warning: formal review ask has no review target; prefer review-pr <N> "
             "for sealed, pointer-only review.",
             file=sys.stderr,
+        )
+
+
+def assert_pr_cf_review_uses_review_pr(
+    content: str,
+    *,
+    formal_review: bool,
+    has_target: bool,
+) -> None:
+    """Phase 5: formal CF PR review without a sealed target is refused.
+
+    Curriculum content reviews that pass --review without a PR URL continue to
+    work. Escape: BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1.
+    """
+    if not formal_review or has_target:
+        return
+    if allow_legacy_review_ask_escape():
+        return
+    if looks_like_pr_cf_review(content):
+        raise ReviewSafetyError(
+            "formal_pr_review_requires_review_pr: use "
+            "`scripts/ai_agent_bridge/__main__.py review-pr <N>` for sealed "
+            "pointer-only CF review, then `publish-review-verdict` for the thin "
+            "GH comment. Fat ask-* --review with a PR URL is refused (fleet-comms "
+            "Phase 5 / #5486). Escape only with BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1."
         )
 
 
