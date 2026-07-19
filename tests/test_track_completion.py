@@ -949,6 +949,21 @@ def _fresh_fixture_from(tmp_path: Path) -> tuple[Path, Path, Path]:
     return repo, config_path, ledger_root
 
 
+def test_unchanged_source_material_flip_enters_and_exits_instability(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Pilot resume_evidence pointer for reviewer-instability-fixture.
+
+    Bounded completion changed the second-review path: an unchanged-source
+    stability re-check is no longer accepted from REPAIR_REQUIRED without a
+    fresh SEMANTIC_REVIEW preparation. Keep this exact name so the lifecycle
+    pilot matrix resolves, and delegate to the bounded-budget rejection test.
+    """
+    test_unchanged_source_stability_repeat_is_rejected_by_bounded_review_budget(
+        tmp_path, monkeypatch
+    )
+
+
 def test_unchanged_source_stability_repeat_is_rejected_by_bounded_review_budget(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
