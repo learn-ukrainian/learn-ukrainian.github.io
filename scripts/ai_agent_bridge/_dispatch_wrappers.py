@@ -172,47 +172,75 @@ def _serialize_files(files: Any) -> str:
 
 
 def _write_review_deep_pr_prompt(pr_number: str, prompt_directory: Path) -> Path:
-    pr = _run_json_command(["gh", "pr", "view", pr_number, "--json", "title,body,files"])
-    diff = _run_text_command(["gh", "pr", "diff", pr_number])
+    """Pointer-only PR review prompt (Sol fleet-comms Phase 2).
+
+    Never embed full PR body or diff — worker/delegate pulls evidence under
+    read-only mode. Prefer ``review-pr`` for formal CF gates.
+    """
+    from ._review_safety import (
+        MAX_REVIEW_REQUEST_BYTES,
+        assert_content_size,
+        prepend_read_only_contract,
+    )
+
+    pr = _run_json_command(["gh", "pr", "view", pr_number, "--json", "title,files,url,headRefOid"])
     title = str(pr.get("title") or "").strip()
-    body = str(pr.get("body") or "").strip()
+    url = str(pr.get("url") or f"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/{pr_number}")
+    head = str(pr.get("headRefOid") or "").strip()
     files = _serialize_files(pr.get("files"))
-    prompt = (
+    prompt = prepend_read_only_contract(
         f"{REVIEW_DEEP_INSTRUCTIONS}\n\n"
         f"## PR #{pr_number}: {title}\n\n"
-        f"### Body\n\n{body}\n\n"
-        f"### Files\n\n{files}\n\n"
-        f"### Diff\n\n```diff\n{diff}\n```\n"
+        f"**URL:** {url}\n"
+        f"**Expected head SHA:** `{head}`\n\n"
+        f"### Changed files (names only — pull the diff yourself)\n\n{files}\n\n"
+        "Do **not** ask the operator to paste the diff. Use `gh pr diff` / sealed "
+        "snapshot in the read-only dispatch worktree.\n\n"
+        "End with exactly one line: `VERDICT: APPROVED` or "
+        "`VERDICT: CHANGES_REQUESTED` or `VERDICT: BLOCKED`.\n"
     )
+    assert_content_size(prompt, limit=MAX_REVIEW_REQUEST_BYTES, label="review_deep_prompt")
     prompt_path = prompt_directory / f"review-deep-pr-{_safe_path_component(pr_number)}.md"
     prompt_path.write_text(prompt, encoding="utf-8")
     return prompt_path
 
 
-def _read_review_path(target: Path) -> str:
+def _list_review_path_names(target: Path, *, max_files: int = 80) -> str:
+    """List paths only — never dump full file contents into the prompt."""
     if target.is_file():
-        return target.read_text(encoding="utf-8", errors="replace")
-    chunks = []
+        return f"- {target.name}"
+    lines: list[str] = []
     for path in sorted(p for p in target.rglob("*") if p.is_file()):
         if ".git" in path.parts or "__pycache__" in path.parts:
             continue
-        rel = path.relative_to(target)
-        content = path.read_text(encoding="utf-8", errors="replace")
-        chunks.append(f"### {rel}\n\n```text\n{content}\n```")
-    return "\n\n".join(chunks)
+        lines.append(f"- {path.relative_to(target)}")
+        if len(lines) >= max_files:
+            lines.append(f"- … truncated after {max_files} paths")
+            break
+    return "\n".join(lines) if lines else "(no files)"
 
 
 def _write_review_deep_path_prompt(target: str, prompt_directory: Path) -> Path:
+    from ._review_safety import (
+        MAX_REVIEW_REQUEST_BYTES,
+        assert_content_size,
+        prepend_read_only_contract,
+    )
+
     path = Path(target).expanduser()
     if not path.exists():
         raise SystemExit(f"review-deep target is not a PR number or existing path: {target}")
     resolved = path.resolve()
-    content = _read_review_path(resolved)
-    prompt = (
+    listing = _list_review_path_names(resolved)
+    prompt = prepend_read_only_contract(
         f"{REVIEW_DEEP_INSTRUCTIONS}\n\n"
-        f"## Path target\n\n{resolved}\n\n"
-        f"## Contents\n\n{content}\n"
+        f"## Path target\n\n`{resolved}`\n\n"
+        f"### Paths (names only — open files in the read-only worktree)\n\n{listing}\n\n"
+        "Do not request bulk paste of file contents into the prompt.\n\n"
+        "End with exactly one line: `VERDICT: APPROVED` or "
+        "`VERDICT: CHANGES_REQUESTED` or `VERDICT: BLOCKED`.\n"
     )
+    assert_content_size(prompt, limit=MAX_REVIEW_REQUEST_BYTES, label="review_deep_prompt")
     prompt_path = prompt_directory / f"review-deep-path-{_safe_path_component(target)}.md"
     prompt_path.write_text(prompt, encoding="utf-8")
     return prompt_path
