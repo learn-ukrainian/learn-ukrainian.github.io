@@ -29,7 +29,10 @@ endpoints:
     default_ttl_seconds: 3600
     retry_class: standard
     concurrency_limit: 2
-    formal_review_eligible: true
+    # Sealed formal CF isolation not proven (project instructions / MCP / hooks /
+    # nested reviewers). Use claude|glm|codex via review-pr. AGY stays live for
+    # advisory bridge asks without --review.
+    formal_review_eligible: false
     model_family_resolver: canonical-reviewer-resolver
   - name: gemini
     aliases: [gemini]

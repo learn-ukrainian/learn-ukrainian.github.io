@@ -63,6 +63,11 @@ from . import preparation_state
 from .codexbar_usage import get_provider_usage_data, refresh_provider_usage_data
 from .config import CURRICULUM_ROOT, LEVELS, LIVE_REPO_ROOT, PROJECT_ROOT
 from .lane_health import compute_lane_health
+
+try:
+    from agent_runtime.usage import summarize_lane_runtime
+except ImportError:
+    from scripts.agent_runtime.usage import summarize_lane_runtime
 from .repository_authority import (
     RepositoryAuthorityError,
     build_repository_authority,
@@ -881,6 +886,65 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 agents[lane]["interactive"]["status"] = "unknown"
                 agents[lane]["interactive"]["burn_pct_7d"] = None
 
+    # Hybrid overlay: agent-runtime JSONL burn (rate-limits / outcomes).
+    # CodexBar remains authoritative for subscription allotment %; this layer
+    # surfaces reactive 429/burn so a dashboard-green lane that is actively
+    # rate-limiting still demotes in ranking and warnings.
+    runtime_sourced_any = False
+    for lane in SUBSCRIPTION_LANES:
+        if lane not in agents:
+            continue
+        try:
+            runtime = summarize_lane_runtime(lane)
+        except Exception as exc:  # never break routing-budget on telemetry I/O
+            logging.getLogger("state_router").debug(
+                "lane runtime summary failed for %s: %s", lane, exc
+            )
+            runtime = {
+                "source": "agent_runtime_jsonl",
+                "window_s": 300,
+                "ok": 0,
+                "error": 0,
+                "rate_limited": 0,
+                "timeout": 0,
+                "other": 0,
+                "total": 0,
+                "last_outcome_at": None,
+                "last_rate_limited_at": None,
+                "models_rate_limited": [],
+                "headroom_blocked": False,
+                "headroom_reason": "",
+                "summary_error": str(exc),
+            }
+        agents[lane]["runtime"] = runtime
+        if runtime.get("total"):
+            runtime_sourced_any = True
+        if runtime.get("headroom_blocked"):
+            reason = runtime.get("headroom_reason") or "recent rate_limited cluster"
+            warnings.append(
+                f"lane {lane} runtime headroom blocked ({reason}) — "
+                f"prefer another seat even if CodexBar window looks free"
+            )
+            # Soft demote: never invent allotment %, but mark status at least hot
+            # when the account meter still looks cool/warm.
+            current = agents[lane].get("status")
+            if current in {None, "cool", "warm", "unknown"}:
+                agents[lane]["status"] = "hot"
+            if lane == "claude":
+                interactive = agents[lane].get("interactive")
+                if isinstance(interactive, dict) and interactive.get("status") in {
+                    None,
+                    "cool",
+                    "warm",
+                    "unknown",
+                }:
+                    interactive["status"] = "hot"
+        elif int(runtime.get("rate_limited") or 0) > 0:
+            warnings.append(
+                f"lane {lane} saw {runtime['rate_limited']} rate_limited outcome(s) "
+                f"in last {runtime.get('window_s', 300)}s (agent JSONL; allotment still from CodexBar)"
+            )
+
     if cb_sourced_any:
         is_stale = cb_stale
         data_age_s = cb_max_age_s
@@ -1000,6 +1064,19 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
     unhealthy_lanes = [x for x in ranked if not x.get("health", {}).get("healthy", True)]
     ranked = healthy_lanes + unhealthy_lanes
 
+    # Runtime headroom-blocked subscription lanes sink after healthy free seats
+    # (still above API-unknown if already ranked, but after non-blocked subs).
+    def _runtime_blocked(item: dict[str, Any]) -> bool:
+        lane = item.get("lane")
+        if not lane or item.get("type") != "subscription":
+            return False
+        runtime = agents.get(str(lane), {}).get("runtime") or {}
+        return bool(runtime.get("headroom_blocked"))
+
+    free_ranked = [x for x in ranked if not _runtime_blocked(x)]
+    blocked_ranked = [x for x in ranked if _runtime_blocked(x)]
+    ranked = free_ranked + blocked_ranked
+
     return {
         "generated_at": _isoformat_z(current_time),
         "agents": agents,
@@ -1015,6 +1092,11 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
             "reset_imminent_hours": reset_hours,
             "codexbar_data_available": cb_sourced_any,
             "fresh_codexbar_requested": fresh_codexbar,
+            "runtime_data_available": runtime_sourced_any,
+            "usage_sources": {
+                "allotment": "codexbar",
+                "burn_rate_limit": "agent_runtime_jsonl",
+            },
         },
         "ranked_by_headroom": ranked,
     }

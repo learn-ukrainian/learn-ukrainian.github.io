@@ -80,6 +80,19 @@ def _resolve_agy_bridge_timeout(no_timeout: bool = False) -> int:
     return timeout
 
 
+# Sealed formal CF isolation is not proven for AGY (project instructions, MCP,
+# hooks, nested reviewers cannot yet be suppressed). Fail closed *before*
+# provisioning a review worktree so operators get a substitute path immediately.
+AGY_SEALED_REVIEW_UNSUPPORTED = (
+    "agy_isolated_review_unsupported: AGY cannot yet prove native "
+    "project-instruction, MCP, hook, and nested-reviewer suppression for "
+    "sealed formal CF review. "
+    "Use: `.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> "
+    "--reviewer claude|glm|codex`. "
+    "AGY remains fine for advisory ask-agy *without* --review."
+)
+
+
 def ask_agy(
     content: str,
     task_id: str | None = None,
@@ -100,6 +113,9 @@ def ask_agy(
     """Send message to Agy AND invoke Agy to process it (one-shot)."""
     if background and (stdout_only or output_path):
         raise ValueError("ask-agy --background cannot be combined with --stdout-only or --output-path")
+    if review or review_branch is not None or review_pr_number is not None:
+        # Refuse formal/exact-target review on AGY before any worktree or send.
+        raise ValueError(AGY_SEALED_REVIEW_UNSUPPORTED)
     msg_id = send_message(
         content,
         task_id,
@@ -159,6 +175,9 @@ def process_for_agy(
     model = _extract_target_model(msg) or _DEFAULT_AGY_MODEL
 
     review_target = review_target_from_message(msg) if review else None
+    if review or review_target is not None:
+        # Defense in depth: process-ask may re-enter with review=true.
+        raise ValueError(AGY_SEALED_REVIEW_UNSUPPORTED)
 
     if not stdout_only:
         print(f"📨 Message #{msg['id']}")
