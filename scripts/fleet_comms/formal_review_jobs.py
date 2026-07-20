@@ -1,7 +1,7 @@
 """Formal review job skeleton (Fleet Comms Sol PR-F first slice / #5512).
 
 Durable SQLite usage of ``formal_review_jobs`` / ``formal_review_attempts``
-(schema from fleet_comms migrations). Unique active key:
+(schema from fleet_comms migrations). Unique key (one job per head; attempts accumulate):
 
     (repository, pr_number, head_sha, gate_kind)
 
@@ -131,7 +131,7 @@ class FormalReviewJobService:
         state: str = "open",
         review_id: str | None = None,
     ) -> FormalReviewJob:
-        """Create a formal review job under the unique active key.
+        """Create a formal review job under the unique key (one job per head).
 
         Parameters
         ----------
@@ -159,7 +159,7 @@ class FormalReviewJobService:
         if existing is not None:
             raise FormalReviewJobsError(
                 "concurrent duplicate formal review job rejected: "
-                f"active key {(repo, pr_number, sha, gate)} already held by "
+                f"unique job key {(repo, pr_number, sha, gate)} already held by "
                 f"{existing.review_id} (state={existing.state})"
             )
 
@@ -181,7 +181,7 @@ class FormalReviewJobService:
             if raced is not None:
                 raise FormalReviewJobsError(
                     "concurrent duplicate formal review job rejected: "
-                    f"active key {(repo, pr_number, sha, gate)} already held by "
+                    f"unique job key {(repo, pr_number, sha, gate)} already held by "
                     f"{raced.review_id} (state={raced.state})"
                 ) from exc
             raise FormalReviewJobsError(f"failed to create formal review job: {exc}") from exc
@@ -322,7 +322,7 @@ class FormalReviewJobService:
         *,
         include_attempts: bool = True,
     ) -> FormalReviewJob | None:
-        """Lookup by unique active key; ``None`` if no job exists."""
+        """Lookup by unique key (one job per head); ``None`` if no job exists."""
         return self._find_by_key(
             self._require_nonempty(repository, "repository"),
             self._require_pr(pr),
