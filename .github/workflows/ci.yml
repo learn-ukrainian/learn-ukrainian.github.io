@@ -656,7 +656,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6 — SHA-pinned per supply-chain hardening 2026-05-19
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6 — SHA-pinned per supply-chain hardening 2026-05-19
         with:
           node-version: '22'
           cache: 'npm'
@@ -881,7 +881,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6 — SHA-pinned per supply-chain hardening 2026-05-19
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6 — SHA-pinned per supply-chain hardening 2026-05-19
         with:
           node-version: '22'
           cache: 'npm'
@@ -1079,7 +1079,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6 — SHA-pinned per supply-chain hardening 2026-05-19
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6 — SHA-pinned per supply-chain hardening 2026-05-19
         with:
           node-version: '22'
           cache: 'npm'
@@ -1138,7 +1138,7 @@ jobs:
       with:
         persist-credentials: false
 
-    - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6 — SHA-pinned per supply-chain hardening 2026-05-19
+    - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6 — SHA-pinned per supply-chain hardening 2026-05-19
       with:
         node-version: '22'
         cache: 'npm'
@@ -1201,7 +1201,7 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - uses: trufflesecurity/trufflehog@00155c9dc586f34d189adc83d3ac2698c2ec551f # v3.95.8
+      - uses: trufflesecurity/trufflehog@27b0417c16317ca9a472a9a8092acce143b49c55 # v3.95.9
         with:
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore
 
