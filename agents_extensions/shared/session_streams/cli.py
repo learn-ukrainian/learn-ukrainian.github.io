@@ -19,8 +19,18 @@ from .dual_write import (
     resolve_handoff_path,
 )
 from .hooks import clean_exit_hook, heartbeat_hook, lease_from_environment
-from .inventory import epic_handoff_map, inventory_covers_issue_streams, load_stream_epic_inventory
+from .inventory import (
+    epic_handoff_map,
+    inventory_covers_issue_streams,
+    inventory_snapshot,
+    load_stream_epic_inventory,
+)
 from .model import entry_as_dict
+from .receipts import (
+    inventory_registration_summary,
+    list_migration_state,
+    register_manifest_inventory,
+)
 from .store import NotFoundError, SessionStreamError, SessionStreamStore
 
 
@@ -153,7 +163,8 @@ Related:
         help="Mirror any registered epic file handoff into its stream (dual-write, no cutover).",
         description=(
             "Append a stable legacy handoff image under the exact lease. "
-            "Uses EPIC_HANDOFF_CANDIDATES when --source is omitted. Never edits or deletes the file."
+            "Uses inventory-derived handoff candidates from issue_streams.yaml when "
+            "--source is omitted. Never edits or deletes the file."
         ),
     )
     mirror_handoff.add_argument(
@@ -192,6 +203,36 @@ Related:
         type=Path,
         default=Path.cwd(),
         help="Repository root. Default: current working directory.",
+    )
+
+    inventory = subparsers.add_parser(
+        "inventory",
+        help="List every epic from issue_streams.yaml (manifest authority; no hard-coded subset).",
+        description=(
+            "Print sorted unique epic numbers and the stream→epic map derived from "
+            "scripts/config/issue_streams.yaml. Optional --register writes inventory and "
+            "import receipts into the session-stream DB at mode=inventory without cutover."
+        ),
+    )
+    inventory.add_argument(
+        "--repo-root",
+        type=Path,
+        default=Path.cwd(),
+        help="Repository root. Default: current working directory.",
+    )
+    inventory.add_argument(
+        "--format",
+        choices=("json", "table"),
+        default="json",
+        help="Output rendering. Default: json.",
+    )
+    inventory.add_argument(
+        "--register",
+        action="store_true",
+        help=(
+            "Register every manifest epic into the session-stream DB with inventory "
+            "and import receipts (mode stays inventory; cutover blocked)."
+        ),
     )
 
     handoff_status = subparsers.add_parser(
@@ -276,6 +317,8 @@ def main(argv: list[str] | None = None) -> int:
             return _mirror_handoff(store, args)
         if args.command == "dual-write-status":
             return _dual_write_status(args)
+        if args.command == "inventory":
+            return _inventory(store, args)
         if args.command == "handoff-status":
             return _handoff_status(store, args)
         if args.command == "handoff-claim":
@@ -471,6 +514,45 @@ def _dual_write_status(args: argparse.Namespace) -> int:
             sort_keys=True,
         )
     )
+    return 0
+
+
+def _inventory(store: SessionStreamStore, args: argparse.Namespace) -> int:
+    snap = inventory_snapshot(args.repo_root)
+    registration: dict[str, Any] | None = None
+    if args.register:
+        result = register_manifest_inventory(store, args.repo_root)
+        registration = {
+            "source": result.source,
+            "source_sha256": result.source_sha256,
+            "epic_count": result.epic_count,
+            "registered_stream_ids": list(result.registered_stream_ids),
+            "new_inventory_receipts": result.new_inventory_receipts,
+            "import_receipts_written": result.import_receipts_written,
+            "modes": result.modes,
+            "db_summary": inventory_registration_summary(store),
+            "migration_state": list_migration_state(store),
+        }
+    if args.format == "table":
+        print("stream_id\tstream_name\tepic\ttitle")
+        for rec in snap["records"]:
+            print(
+                f"{rec['stream_id']}\t{rec['stream_name']}\t"
+                f"{rec['epic_number']}\t{rec['title']}"
+            )
+        print(f"epic_count\t{snap['epic_count']}")
+        print(f"source\t{snap['source']}")
+        print(f"source_sha256\t{snap['source_sha256']}")
+        if registration is not None:
+            print(
+                f"registered_new_receipts\t{registration['new_inventory_receipts']}\t"
+                f"import_receipts_written\t{registration['import_receipts_written']}"
+            )
+        return 0
+    payload = dict(snap)
+    if registration is not None:
+        payload["registration"] = registration
+    print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 
 

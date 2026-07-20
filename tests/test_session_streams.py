@@ -64,10 +64,18 @@ def test_schema_migration_wal_and_fingerprint(tmp_path: Path) -> None:
     database = SessionStreamDatabase(tmp_path / "streams.sqlite3")
     connection = database.connect(now=NOW)
     try:
-        migration = load_migrations()[0]
+        migrations = load_migrations()
+        migration = migrations[0]
         receipt = connection.execute(
-            "SELECT version, name, ddl_sha256 FROM schema_migrations"
+            "SELECT version, name, ddl_sha256 FROM schema_migrations WHERE version = 1"
         ).fetchone()
+        versions = [
+            int(row[0])
+            for row in connection.execute(
+                "SELECT version FROM schema_migrations ORDER BY version"
+            ).fetchall()
+        ]
+        assert versions == [m.version for m in migrations]
         assert str(connection.execute("PRAGMA journal_mode").fetchone()[0]).lower() == "wal"
         assert connection.execute("PRAGMA foreign_keys").fetchone()[0] == 1
         assert connection.execute("PRAGMA synchronous").fetchone()[0] == 2
@@ -82,7 +90,7 @@ def test_schema_migration_wal_and_fingerprint(tmp_path: Path) -> None:
     assert SessionStreamStore(database).audit() == {
         "integrity_check": "ok",
         "foreign_key_violations": [],
-        "schema_versions": [1],
+        "schema_versions": [m.version for m in load_migrations()],
     }
 
 
@@ -133,7 +141,9 @@ def test_concurrent_first_open_serializes_migration_and_session_contention(tmp_p
     assert results.count("lifecycle-conflict") == 7
     connection = SessionStreamDatabase(database_path).connect(read_only=True)
     try:
-        assert connection.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == 1
+        assert connection.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == len(
+            load_migrations()
+        )
     finally:
         connection.close()
 
