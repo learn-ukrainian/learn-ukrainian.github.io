@@ -338,3 +338,157 @@ def test_heredoc_body_not_write_targets(command, expected):
 )
 def test_heredoc_failclosed_on_unclosed(command, expected):
     assert hook.bash_write_targets(command) == expected
+
+
+# --- #5396: git-mediated primary-checkout mutations -------------------------
+
+
+@pytest.mark.parametrize(
+    "command, kind",
+    [
+        ("git apply /tmp/worker.diff", "apply"),
+        ("git am /tmp/mbox", "am"),
+        ("git add curriculum/tracked.md", "add"),
+        ("git stash pop", "stash_apply"),
+        ("git stash apply", "stash_apply"),
+        ("git checkout HEAD -- curriculum/tracked.md", "path_checkout"),
+        ("git restore --source=HEAD~1 -- curriculum/tracked.md", "restore_source"),
+    ],
+)
+def test_bash_git_write_intents_blocked_kinds(command, kind):
+    intents = hook.bash_git_write_intents(command)
+    assert len(intents) == 1
+    assert intents[0]["kind"] == kind
+    assert intents[0]["allowlisted"] is False
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git checkout -- curriculum/tracked.md",
+        "git restore curriculum/tracked.md",
+        "git status",
+        "git log --oneline",
+        "git stash list",
+        "git checkout -b feature",
+    ],
+)
+def test_bash_git_write_intents_allowlisted_or_ignored(command):
+    intents = hook.bash_git_write_intents(command)
+    # No blocking intents: either empty or allowlisted-only.
+    assert all(i.get("allowlisted") for i in intents)
+
+
+def test_bash_git_write_intents_honors_dash_c():
+    intents = hook.bash_git_write_intents(
+        "git -C .worktrees/dispatch/claude/task-1 apply /tmp/x.diff"
+    )
+    assert len(intents) == 1
+    assert intents[0]["c_path"] == ".worktrees/dispatch/claude/task-1"
+    assert intents[0]["kind"] == "apply"
+
+
+def test_git_apply_on_primary_blocked(repo: Path):
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {"command": "git apply /tmp/worker.diff"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+    assert "#5396" in result.stderr
+    assert "git apply" in result.stderr
+
+
+def test_git_stash_pop_on_primary_blocked(repo: Path):
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {"command": "git stash pop"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+
+
+def test_git_add_tracked_on_primary_blocked(repo: Path):
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {"command": "git add curriculum/tracked.md"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+
+
+def test_git_checkout_ref_path_on_primary_blocked(repo: Path):
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {"command": "git checkout HEAD -- curriculum/tracked.md"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+
+
+def test_git_checkout_clean_on_primary_allowed(repo: Path):
+    """Rescue pattern: discard dirt without a tree-ish."""
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {"command": "git checkout -- curriculum/tracked.md"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 0, result.stderr
+
+
+def test_git_apply_via_dash_c_worktree_allowed(repo: Path):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {"command": f"git -C {worktree} apply /tmp/worker.diff"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 0, result.stderr
+
+
+def test_git_apply_from_worktree_cwd_allowed(repo: Path):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(worktree),
+        "tool_input": {"command": "git apply /tmp/worker.diff"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 0, result.stderr
+
+
+def test_git_apply_dash_c_primary_from_worktree_blocked(repo: Path):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(worktree),
+        "tool_input": {"command": f"git -C {repo} apply /tmp/worker.diff"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+
+
+def test_git_apply_override_env_allows(repo: Path, monkeypatch: pytest.MonkeyPatch):
+    env = _clean_env()
+    env["LEARN_UK_ALLOW_PRIMARY_GIT_WRITE"] = "1"
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {"command": "git apply /tmp/worker.diff"},
+    }
+    result = subprocess.run(
+        [_python(), str(HOOK_PATH)],
+        input=json.dumps(payload),
+        cwd=repo,
+        check=False,
+        capture_output=True,
+        text=True,
+        env=env,
+    )
+    assert result.returncode == 0, result.stderr
