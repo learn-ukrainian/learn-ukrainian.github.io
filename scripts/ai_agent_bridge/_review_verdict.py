@@ -1,4 +1,11 @@
-"""Publish a deliberately thin formal-review verdict to one GitHub PR comment."""
+"""Publish a deliberately thin formal-review verdict to one GitHub PR comment.
+
+PR-G cutover note: the eventual ``publish-review-verdict --review-id`` path
+(sealed job reload, stale-head check, idempotent status/comment) is prepared in
+``scripts/fleet_comms/review_publication.py``. Full default cutover waits for
+PR-F formal-jobs table writers; this CLI remains the temporary file/flag-based
+poster and must not switch defaults until then.
+"""
 
 from __future__ import annotations
 
