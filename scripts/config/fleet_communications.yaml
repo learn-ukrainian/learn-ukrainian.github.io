@@ -1,5 +1,9 @@
 ---
 version: 1
+# formal_review_eligible is fail-closed until sealed CF isolation is proven and
+# the matching isolation issue closes (#5555 AGY, #5556 Kimi, #5557 Grok). Only
+# claude|codex are proven formal CF seats today; unproven live lanes stay
+# eligible for advisory/implement work with formal_review_eligible: false.
 endpoints:
   - name: claude
     aliases: [claude]
@@ -31,7 +35,44 @@ endpoints:
     concurrency_limit: 2
     # Sealed formal CF isolation not proven (project instructions / MCP / hooks /
     # nested reviewers). Use claude|glm|codex via review-pr. AGY stays live for
-    # advisory bridge asks without --review.
+    # advisory bridge asks without --review. See #5555.
+    formal_review_eligible: false
+    model_family_resolver: canonical-reviewer-resolver
+  - name: grok
+    aliases: [grok]
+    state: live
+    transports: [native_cli]
+    completion_evidence: [terminal_event]
+    default_ttl_seconds: 3600
+    retry_class: standard
+    concurrency_limit: 1
+    # Sealed formal CF isolation not proven (OAuth / tool credential surface).
+    # Live for implement/advisory work; formal CF via review-pr claude|glm|codex.
+    # See #5557.
+    formal_review_eligible: false
+    model_family_resolver: canonical-reviewer-resolver
+  - name: kimi
+    aliases: [kimi]
+    state: live
+    transports: [project_bridge]
+    completion_evidence: [terminal_event]
+    default_ttl_seconds: 3600
+    retry_class: standard
+    concurrency_limit: 1
+    # Sealed formal CF isolation not proven. Live for implement/advisory bridge
+    # asks; formal CF via review-pr claude|glm|codex. See #5556.
+    formal_review_eligible: false
+    model_family_resolver: canonical-reviewer-resolver
+  - name: cursor
+    aliases: [cursor]
+    state: live
+    transports: [native_cli]
+    completion_evidence: [terminal_event]
+    default_ttl_seconds: 3600
+    retry_class: standard
+    concurrency_limit: 1
+    # Harness multi-model seat; not a sealed formal CF identity. Cursor auto is
+    # never a model identity for formal review (model_catalog policy).
     formal_review_eligible: false
     model_family_resolver: canonical-reviewer-resolver
   - name: gemini
