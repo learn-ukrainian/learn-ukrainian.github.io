@@ -147,6 +147,48 @@ def publish_review_verdict(
     return summary
 
 
+def _emit_publication_result(args: argparse.Namespace, result: Any) -> int:
+    if args.json:
+        print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+    else:
+        summary = result.summary
+        if len(summary.encode("utf-8")) > MAX_VERDICT_SUMMARY_BYTES:
+            print("publish-review-verdict: verdict_summary_exceeds_cap", file=sys.stderr)
+            return 2
+        print(summary)
+    if result.plan.action == "refuse_stale":
+        return 3
+    return 0
+
+
+def _handle_review_id_only(args: argparse.Namespace) -> int:
+    """PR-F+G path: load sealed verdict from durable job; no CLI provenance."""
+    from scripts.fleet_comms.formal_review_jobs import (
+        FormalReviewJobsError,
+        FormalReviewJobService,
+    )
+    from scripts.fleet_comms.review_publisher import (
+        ReviewPublisherError,
+        publish_sealed_verdict,
+    )
+
+    plane_root = Path(args.plane_root).expanduser() if args.plane_root else None
+    try:
+        with FormalReviewJobService(root=plane_root) as service:
+            sealed = service.load_sealed_verdict(args.review_id)
+            result = publish_sealed_verdict(
+                sealed,
+                mutate=not args.dry_run,
+                # Formal --review-id path always records github_publications receipts.
+                require_receipt=True,
+                store=service.store,
+            )
+    except (FormalReviewJobsError, ReviewPublisherError) as exc:
+        print(f"publish-review-verdict: {exc}", file=sys.stderr)
+        return 2
+    return _emit_publication_result(args, result)
+
+
 def _handle_sealed_path(args: argparse.Namespace) -> int:
     """PR-G sealed path: pure plan + optional GitHub mutate + receipts."""
     from scripts.fleet_comms.artifacts import ArtifactStore
@@ -193,6 +235,16 @@ def _handle_sealed_path(args: argparse.Namespace) -> int:
             except ReviewPublisherError as exc:
                 print(f"publish-review-verdict: {exc}", file=sys.stderr)
                 return 2
+            # Persist sealed verdict if not already (enables future --review-id alone).
+            try:
+                service.accept_sealed_verdict(
+                    job.review_id,
+                    sealed,
+                    record_complete_attempt=not job.has_sealed_verdict,
+                )
+            except FormalReviewJobsError as exc:
+                print(f"publish-review-verdict: {exc}", file=sys.stderr)
+                return 2
             store = service.store
         elif plane_root is not None or args.require_receipt:
             store = ArtifactStore(root=plane_root)
@@ -212,24 +264,18 @@ def _handle_sealed_path(args: argparse.Namespace) -> int:
         elif store is not None:
             store.close()
 
-    if args.json:
-        print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
-    else:
-        summary = result.summary
-        if len(summary.encode("utf-8")) > MAX_VERDICT_SUMMARY_BYTES:
-            print("publish-review-verdict: verdict_summary_exceeds_cap", file=sys.stderr)
-            return 2
-        print(summary)
-
-    # Non-zero when plan refused to publish (stale head) so orchestrators fail closed.
-    if result.plan.action == "refuse_stale":
-        return 3
-    return 0
+    return _emit_publication_result(args, result)
 
 
 def handle_publish_review_verdict(args: argparse.Namespace) -> int:
     """CLI handler for ``publish-review-verdict``."""
-    if getattr(args, "sealed_payload", None):
+    has_legacy_file = bool(getattr(args, "verdict_file", None) or getattr(args, "findings_json", None))
+    has_sealed_file = bool(getattr(args, "sealed_payload", None))
+    has_review_id = bool(getattr(args, "review_id", None))
+
+    if has_review_id and not has_sealed_file and not has_legacy_file:
+        return _handle_review_id_only(args)
+    if has_sealed_file:
         return _handle_sealed_path(args)
 
     # Legacy path: require CLI provenance flags.
@@ -242,13 +288,14 @@ def handle_publish_review_verdict(args: argparse.Namespace) -> int:
         print(
             "publish-review-verdict: legacy path requires "
             + ", ".join(f"--{m}" for m in missing)
-            + " (or use --sealed-payload)",
+            + " (or use --sealed-payload / --review-id)",
             file=sys.stderr,
         )
         return 2
-    if not args.verdict_file and not args.findings_json:
+    if not has_legacy_file:
         print(
-            "publish-review-verdict: provide --verdict-file, --findings-json, or --sealed-payload",
+            "publish-review-verdict: provide --verdict-file, --findings-json, "
+            "--sealed-payload, or --review-id",
             file=sys.stderr,
         )
         return 2
@@ -279,11 +326,11 @@ def register_publish_review_verdict_parser(subparsers: Any) -> None:
     parser = subparsers.add_parser(
         "publish-review-verdict",
         help=(
-            "Post one thin formal-review verdict (legacy file path, or PR-G "
-            "--sealed-payload with commit status + receipts)"
+            "Post one thin formal-review verdict (legacy file path, "
+            "--sealed-payload, or --review-id alone after PR-F accept)"
         ),
     )
-    source = parser.add_mutually_exclusive_group(required=True)
+    source = parser.add_mutually_exclusive_group(required=False)
     source.add_argument("--verdict-file", help="Short text containing a VERDICT line (legacy)")
     source.add_argument(
         "--findings-json",
@@ -300,8 +347,8 @@ def register_publish_review_verdict_parser(subparsers: Any) -> None:
     parser.add_argument(
         "--review-id",
         help=(
-            "Optional durable formal-job id to bind against --sealed-payload "
-            "(identity check + publication receipt). Job must already exist (PR-F)."
+            "PR-F durable formal-job id. Alone: reload sealed verdict from the job "
+            "and publish (no CLI provenance). With --sealed-payload: bind + accept."
         ),
     )
     parser.add_argument(

@@ -232,3 +232,39 @@ def test_sealed_payload_file_round_trip(tmp_path: Path) -> None:
     assert result.plan.verdict == "BLOCKED"
     assert result.plan.status_state == STATUS_ERROR
     assert result.status_posted is True
+
+
+def test_publish_from_review_id_via_accept_sealed(tmp_path: Path) -> None:
+    """Sol milestone 2: publish without CLI-supplied provenance after accept."""
+    from scripts.fleet_comms.formal_review_jobs import FormalReviewJobService
+
+    root = tmp_path / "plane"
+    gh = FakeGh(head=_SHA_A)
+    with FormalReviewJobService(root=root) as svc:
+        job = svc.create_job(_REPO, 5512, _SHA_A, "cross-family-review")
+        svc.accept_sealed_verdict(
+            job.review_id,
+            {
+                "review_id": job.review_id,
+                "repository": _REPO,
+                "pr_number": 5512,
+                "head_sha": _SHA_A,
+                "gate_kind": "cross-family-review",
+                "verdict": "APPROVED",
+                "model": "gpt-5.6-terra",
+                "family": "openai",
+                "harness": "codex",
+            },
+        )
+        sealed = svc.load_sealed_verdict(job.review_id)
+        result = publish_sealed_verdict(
+            sealed,
+            current_head_sha=_SHA_A,
+            mutate=True,
+            runner=gh,
+            store=svc.store,
+            require_receipt=True,
+        )
+    assert result.status_posted is True
+    assert result.plan.verdict == "APPROVED"
+    assert result.publication_id is not None

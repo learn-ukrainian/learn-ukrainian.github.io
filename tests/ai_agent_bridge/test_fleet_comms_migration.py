@@ -25,7 +25,7 @@ def test_bridge_upgrades_legacy_copy_without_mutating_legacy_rows(tmp_path, monk
     migrated = _db.get_db()
     try:
         assert migrated.execute("SELECT content FROM messages WHERE task_id = 'legacy'").fetchone()[0] == "body"
-        assert migrated.execute("SELECT MAX(version) FROM comms_schema_migrations").fetchone()[0] == 1
+        assert migrated.execute("SELECT MAX(version) FROM comms_schema_migrations").fetchone()[0] == 2
         tables = {row[0] for row in migrated.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
         assert {"comms_messages", "requests", "artifacts", "formal_review_jobs"}.issubset(tables)
     finally:
