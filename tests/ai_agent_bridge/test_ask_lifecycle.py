@@ -189,3 +189,98 @@ def test_every_ask_command_accepts_background(command):
 def test_asks_parser_accepts_task_filter():
     args = _build_parser().parse_args(["asks", "--task-id", "task-4837"])
     assert args.task_id == "task-4837"
+
+
+def _reply_for(message_id: int, *, task_id: str = "task-4837", from_llm: str = "agy") -> int:
+    return send_message(
+        "answer",
+        task_id=task_id,
+        msg_type="response",
+        from_llm=from_llm,
+        to_llm="codex",
+        quiet=True,
+    )
+
+
+def _enable_plane(monkeypatch, tmp_path, mode: str) -> None:
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", mode)
+    monkeypatch.setattr(lifecycle, "_PLANE_ROOT_OVERRIDE", tmp_path / "fleet-comms-v1")
+
+
+def test_message_plane_off_is_noop_for_register_and_reply(bridge_db, monkeypatch, tmp_path):
+    """Default off: no fleet_request_id, reply path unchanged."""
+    _enable_plane(monkeypatch, tmp_path, "off")
+    message_id = _send_ask()
+    assert lifecycle._load_fleet_request_id(message_id) is None
+    reply_id = _reply_for(message_id)
+    assert lifecycle.record_ask_reply(message_id, reply_id) is True
+    assert _status(message_id) == f"replied:{reply_id}"
+    assert not (tmp_path / "fleet-comms-v1" / "comms.sqlite3").exists()
+
+
+def test_message_plane_shadow_does_not_block_legacy_replied(bridge_db, monkeypatch, tmp_path):
+    """Shadow records a durable request but never blocks legacy replied."""
+    _enable_plane(monkeypatch, tmp_path, "shadow")
+    message_id = _send_ask()
+    request_id = lifecycle._load_fleet_request_id(message_id)
+    assert request_id is not None
+    # Incomplete capture must still allow legacy replied under shadow.
+    incomplete_stdout = json.dumps({"type": "agent_message", "text": "partial"})
+    assert lifecycle.note_ask_plane_capture(
+        message_id,
+        adapter="agy",
+        stdout=incomplete_stdout,
+        returncode=0,
+    )
+    reply_id = _reply_for(message_id)
+    assert lifecycle.record_ask_reply(message_id, reply_id) is True
+    assert _status(message_id) == f"replied:{reply_id}"
+
+
+def test_message_plane_dual_write_blocks_reply_when_incomplete(bridge_db, monkeypatch, tmp_path):
+    """dual_write refuses record_ask_reply while the durable request is incomplete."""
+    _enable_plane(monkeypatch, tmp_path, "dual_write")
+    message_id = _send_ask()
+    assert lifecycle._load_fleet_request_id(message_id) is not None
+    incomplete_stdout = json.dumps({"type": "agent_message", "text": "no terminal"})
+    assert lifecycle.note_ask_plane_capture(
+        message_id,
+        adapter="agy",
+        stdout=incomplete_stdout,
+        returncode=0,
+    )
+    reply_id = _reply_for(message_id)
+    assert lifecycle.record_ask_reply(message_id, reply_id) is False
+    assert _status(message_id) == "sent"
+
+
+def test_message_plane_dual_write_allows_reply_when_complete(bridge_db, monkeypatch, tmp_path):
+    """dual_write projects replied only after proven complete capture."""
+    _enable_plane(monkeypatch, tmp_path, "dual_write")
+    message_id = _send_ask()
+    complete_stdout = "\n".join(
+        [
+            json.dumps({"type": "agent_message", "text": "done"}),
+            json.dumps({"type": "result", "subtype": "success"}),
+        ]
+    )
+    assert lifecycle.note_ask_plane_capture(
+        message_id,
+        adapter="agy",
+        stdout=complete_stdout,
+        returncode=0,
+    )
+    reply_id = _reply_for(message_id)
+    assert lifecycle.record_ask_reply(message_id, reply_id) is True
+    assert _status(message_id) == f"replied:{reply_id}"
+
+
+def test_message_plane_import_error_fail_open(bridge_db, monkeypatch, tmp_path):
+    """Plane import failures must not break legacy register/reply."""
+    _enable_plane(monkeypatch, tmp_path, "dual_write")
+    monkeypatch.setattr(lifecycle, "_import_message_plane", lambda: None)
+    message_id = _send_ask()
+    assert lifecycle._load_fleet_request_id(message_id) is None
+    reply_id = _reply_for(message_id)
+    assert lifecycle.record_ask_reply(message_id, reply_id) is True
+    assert _status(message_id) == f"replied:{reply_id}"
