@@ -704,7 +704,14 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     ask_agy_parser.add_argument("--output-path", dest="output_path", help="Write Agy response body to a file")
     ask_agy_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout")
-    ask_agy_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
+    ask_agy_parser.add_argument(
+        "--review",
+        action="store_true",
+        help=(
+            "Formal sealed CF review (NOT supported on AGY — exits 2 with "
+            "substitute: review-pr --reviewer claude|glm|codex)"
+        ),
+    )
 
     # ask-hermes
     ask_hermes_parser = subparsers.add_parser(
@@ -1439,21 +1446,28 @@ def _handle_ask_agy(args):
     kwargs = {"review": True} if getattr(args, "review", False) else {}
     kwargs.update(_review_target_kwargs(args))
     from_llm = _resolve_from_llm(args)
-    ask_agy(
-        content,
-        args.task_id,
-        args.type,
-        data,
-        args.new_session,
-        from_llm,
-        args.from_model,
-        args.to_model,
-        args.no_timeout,
-        stdout_only=getattr(args, "stdout_only", False),
-        output_path=getattr(args, "output_path", None),
-        **kwargs,
-        **_background_kwargs(args),
-    )
+    try:
+        ask_agy(
+            content,
+            args.task_id,
+            args.type,
+            data,
+            args.new_session,
+            from_llm,
+            args.from_model,
+            args.to_model,
+            args.no_timeout,
+            stdout_only=getattr(args, "stdout_only", False),
+            output_path=getattr(args, "output_path", None),
+            **kwargs,
+            **_background_kwargs(args),
+        )
+    except ValueError as exc:
+        # Surface sealed-review refusal as a clean CLI error with substitute path.
+        if "agy_isolated_review_unsupported" in str(exc):
+            print(f"❌ {exc}", file=sys.stderr)
+            raise SystemExit(2) from exc
+        raise
 
 
 def _handle_ask_hermes(args):

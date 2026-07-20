@@ -13,6 +13,8 @@ import sys
 from contextlib import contextmanager
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from agent_runtime.result import Result
@@ -165,6 +167,7 @@ def test_agy_branch_review_fails_closed_until_native_isolation_exists(monkeypatc
         ),
     )
 
-    assert process_for_agy(9, review=True, stdout_only=True) is None
+    with pytest.raises(ValueError, match="agy_isolated_review_unsupported"):
+        process_for_agy(9, review=True, stdout_only=True)
     assert captured == {}
     assert binder.expected_engine is None

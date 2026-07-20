@@ -59,6 +59,24 @@ def _record(agent: str, cost_usd: float, mtime: datetime) -> CostRecord:
     )
 
 
+def _empty_runtime(agent: str) -> dict:
+    return {
+        "source": "agent_runtime_jsonl",
+        "window_s": 300,
+        "ok": 0,
+        "error": 0,
+        "rate_limited": 0,
+        "timeout": 0,
+        "other": 0,
+        "total": 0,
+        "last_outcome_at": None,
+        "last_rate_limited_at": None,
+        "models_rate_limited": [],
+        "headroom_blocked": False,
+        "headroom_reason": "",
+    }
+
+
 def _configure(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> None:
     monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", _write_budget_config(tmp_path))
     monkeypatch.setattr(state_router, "load_cost_records", lambda: records)
@@ -66,6 +84,7 @@ def _configure(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> None:
     # lifespan refreshes CodexBar in a background thread, so isolate that live
     # provider state here; overlay-specific tests replace this stub explicitly.
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda _provider: None)
+    monkeypatch.setattr(state_router, "summarize_lane_runtime", _empty_runtime)
     monkeypatch.setattr(
         state_router.delegate_api,
         "list_delegate_tasks",
@@ -83,6 +102,60 @@ def test_endpoint_returns_documented_shape(monkeypatch, tmp_path):
     assert response.status_code == 200
     data = response.json()
     assert {"agents", "in_flight", "recommendation", "diagnostics", "generated_at"} <= data.keys()
+    assert data["diagnostics"]["usage_sources"]["allotment"] == "codexbar"
+    assert data["diagnostics"]["usage_sources"]["burn_rate_limit"] == "agent_runtime_jsonl"
+    assert "runtime" in data["agents"]["codex"]
+
+
+def test_runtime_headroom_blocked_demotes_lane(monkeypatch, tmp_path):
+    """Agent JSONL rate-limit cluster demotes a CodexBar-cool lane."""
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    _configure(monkeypatch, tmp_path, [_record("codex (gpt-5.5)", 10.0, now)])
+
+    def _runtime(agent: str) -> dict:
+        base = _empty_runtime(agent)
+        if agent == "codex":
+            base.update(
+                {
+                    "ok": 1,
+                    "rate_limited": 2,
+                    "total": 3,
+                    "headroom_blocked": True,
+                    "headroom_reason": "rate_limited 5s ago (2 events in last 5min)",
+                    "models_rate_limited": ["gpt-5.5"],
+                }
+            )
+        return base
+
+    monkeypatch.setattr(state_router, "summarize_lane_runtime", _runtime)
+    monkeypatch.setattr(
+        state_router,
+        "get_provider_usage_data",
+        lambda provider: {
+            "lane": provider,
+            "primary_used_pct": 5.0,
+            "weekly_used_pct": 10.0,
+            "weekly_pace_delta_pct": -20.0,
+            "will_last_to_reset": True,
+            "pace_summary": "ok",
+            "stale": False,
+            "age_s": 1.0,
+        }
+        if provider == "codex"
+        else None,
+    )
+
+    data = state_router.compute_routing_budget(now)
+
+    assert data["agents"]["codex"]["status"] == "hot"
+    assert data["agents"]["codex"]["runtime"]["headroom_blocked"] is True
+    assert any("runtime headroom blocked" in w for w in data["recommendation"]["warnings"])
+    ranked = data["ranked_by_headroom"]
+    # blocked codex should not lead healthy free seats when others exist
+    first_sub = next(r for r in ranked if r["type"] == "subscription")
+    # at least diagnostics declare hybrid sources
+    assert data["diagnostics"]["usage_sources"]["burn_rate_limit"] == "agent_runtime_jsonl"
+    assert first_sub["lane"]  # smoke
 
 
 def test_status_cool_when_burn_under_50(monkeypatch, tmp_path):

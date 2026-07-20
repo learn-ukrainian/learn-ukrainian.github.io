@@ -1439,19 +1439,21 @@ def test_codex_review_bridge_refuses_null_sealed_checkout(monkeypatch: pytest.Mo
 
 
 def test_agy_review_bridge_refuses_null_sealed_checkout(monkeypatch: pytest.MonkeyPatch) -> None:
-    errors: list[str] = []
+    """AGY sealed CF refuses before checkout provision (#5553)."""
     monkeypatch.setattr(_agy, "_fetch_agy_message", lambda _id: _review_message(to="agy"))
-    monkeypatch.setattr(_agy, "provision_review_worktree", _null_review_checkout)
+    monkeypatch.setattr(
+        _agy,
+        "provision_review_worktree",
+        lambda *_a, **_k: pytest.fail("must not provision after AGY sealed-review refuse"),
+    )
     monkeypatch.setattr(
         _agy.agent_runner,
         "invoke",
         lambda *_args, **_kwargs: pytest.fail("runtime must not launch without a sealed checkout"),
     )
-    monkeypatch.setattr(_agy, "_handle_agy_error", lambda _msg, _id, reason: errors.append(reason))
 
-    _agy.process_for_agy(91, review=True)
-
-    assert errors and "exact-target-required" in errors[0]
+    with pytest.raises(ValueError, match="agy_isolated_review_unsupported"):
+        _agy.process_for_agy(91, review=True)
 
 
 def test_grok_review_bridge_refuses_null_sealed_checkout(monkeypatch: pytest.MonkeyPatch) -> None:

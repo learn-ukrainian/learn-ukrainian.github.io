@@ -160,6 +160,121 @@ def write_record(record: dict[str, Any]) -> None:
         )
 
 
+# Window used by routing-budget hybrid overlay (CodexBar allotment + agent burn).
+# Matches has_headroom's operational window so dashboards and dispatch agree.
+LANE_RUNTIME_WINDOW_S = _RATE_LIMIT_WINDOW_S
+
+
+def summarize_lane_runtime(
+    agent: str,
+    *,
+    window_s: float = LANE_RUNTIME_WINDOW_S,
+    usage_dir: Path | None = None,
+    now: float | None = None,
+) -> dict[str, Any]:
+    """Summarize recent invocation outcomes for one agent lane from JSONL logs.
+
+    This is **not** subscription allotment (that comes from CodexBar). It is
+    reactive burn/rate-limit signal from our own runtime records so routing
+    can demote a lane that is actively 429-ing even if the dashboard still
+    shows free window %.
+    """
+    now_ts = time.time() if now is None else now
+    cutoff = now_ts - float(window_s)
+    root = usage_dir if usage_dir is not None else _usage_dir()
+    counts = {"ok": 0, "error": 0, "rate_limited": 0, "timeout": 0, "other": 0}
+    rate_limit_events: list[float] = []
+    last_outcome_at: float | None = None
+    models_limited: set[str] = set()
+
+    if root.is_dir():
+        for file_path in root.glob(f"usage_{agent}-*.jsonl"):
+            try:
+                if file_path.stat().st_mtime < cutoff:
+                    continue
+                with open(file_path, encoding="utf-8") as handle:
+                    for raw in handle:
+                        raw = raw.strip()
+                        if not raw:
+                            continue
+                        try:
+                            rec = json.loads(raw)
+                        except json.JSONDecodeError:
+                            continue
+                        ts_str = rec.get("ts")
+                        if not ts_str:
+                            continue
+                        try:
+                            ts = datetime.fromisoformat(
+                                str(ts_str).replace("Z", "+00:00")
+                            ).timestamp()
+                        except (ValueError, AttributeError, TypeError):
+                            continue
+                        if ts < cutoff:
+                            continue
+                        outcome = str(rec.get("outcome") or "other")
+                        if outcome in counts:
+                            counts[outcome] += 1
+                        else:
+                            counts["other"] += 1
+                        if last_outcome_at is None or ts > last_outcome_at:
+                            last_outcome_at = ts
+                        if outcome == "rate_limited":
+                            rate_limit_events.append(ts)
+                            model = rec.get("model")
+                            if isinstance(model, str) and model:
+                                models_limited.add(model)
+            except OSError:
+                continue
+
+    # Merge in-process cache (may be ahead of disk).
+    for (cached_agent, cached_model), cached_ts in list(_RATE_LIMIT_CACHE.items()):
+        if cached_agent != agent:
+            continue
+        if cached_ts >= cutoff:
+            if cached_ts not in rate_limit_events:
+                rate_limit_events.append(cached_ts)
+                counts["rate_limited"] += 1
+            if cached_model:
+                models_limited.add(str(cached_model))
+        else:
+            _RATE_LIMIT_CACHE.pop((cached_agent, cached_model), None)
+
+    headroom_blocked = False
+    headroom_reason = ""
+    if len(rate_limit_events) >= _MIN_EVENTS_TO_BLOCK:
+        most_recent = max(rate_limit_events)
+        age_s = int(now_ts - most_recent)
+        if age_s < _RECENCY_BLOCK_THRESHOLD_S:
+            headroom_blocked = True
+            headroom_reason = (
+                f"rate_limited {age_s}s ago "
+                f"({len(rate_limit_events)} events in last {int(window_s) // 60}min)"
+            )
+
+    def _iso(ts: float | None) -> str | None:
+        if ts is None:
+            return None
+        return datetime.fromtimestamp(ts, tz=UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    total = sum(counts.values())
+    return {
+        "source": "agent_runtime_jsonl",
+        "window_s": int(window_s),
+        "ok": counts["ok"],
+        "error": counts["error"],
+        "rate_limited": counts["rate_limited"],
+        "timeout": counts["timeout"],
+        "other": counts["other"],
+        "total": total,
+        "last_outcome_at": _iso(last_outcome_at),
+        "last_rate_limited_at": _iso(max(rate_limit_events) if rate_limit_events else None),
+        "models_rate_limited": sorted(models_limited),
+        "headroom_blocked": headroom_blocked,
+        "headroom_reason": headroom_reason,
+    }
+
+
 def has_headroom(agent: str, model: str) -> tuple[bool, str]:
     """Check whether (agent, model) has quota headroom for a new call.
 
