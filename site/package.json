@@ -55,7 +55,7 @@
     "@types/better-sqlite3": "^7.6.13",
     "@vitest/coverage-v8": "^4.1.10",
     "happy-dom": "^20.10.6",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.10"
   },
   "overrides": {
     "yaml-language-server": "1.23.0",
