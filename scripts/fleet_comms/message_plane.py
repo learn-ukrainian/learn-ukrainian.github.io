@@ -30,8 +30,14 @@ from scripts.fleet_comms.request_executor import RequestExecutor, RequestRecord
 
 PlaneMode = Literal["off", "shadow", "dual_write"]
 ENV_MODE = "FLEET_COMMS_MESSAGE_PLANE"
+ENV_ROOT = "FLEET_COMMS_ROOT"
+ENV_TELEMETRY = "FLEET_COMMS_PLANE_TELEMETRY"
 # Max centrally configured continuation segments for length_limited (Sol).
 MAX_CONTINUATIONS = 2
+# Conventional relative layout under the plane root (batch_state/fleet-comms/v1).
+DEFAULT_ROOT_REL = Path("batch_state") / "fleet-comms" / "v1"
+DEFAULT_TELEMETRY_NAME = Path("telemetry") / "plane-parity.jsonl"
+_TELEMETRY_SUMMARY_LIMIT = 50
 
 
 def resolve_plane_mode(raw: str | None = None) -> PlaneMode:
@@ -43,6 +49,24 @@ def resolve_plane_mode(raw: str | None = None) -> PlaneMode:
     if value in {"dual-write", "dualwrite"}:
         return "dual_write"
     raise ValueError(f"invalid FLEET_COMMS_MESSAGE_PLANE={value!r} (use off|shadow|dual_write)")
+
+
+def default_plane_root(*, repo_root: Path | None = None) -> Path:
+    """Resolve plane storage root (env override or batch_state/fleet-comms/v1)."""
+    env = os.environ.get(ENV_ROOT)
+    if env:
+        return Path(env).expanduser()
+    base = repo_root if repo_root is not None else Path.cwd()
+    return (base / DEFAULT_ROOT_REL).resolve()
+
+
+def default_parity_telemetry_path(root: Path | None = None) -> Path:
+    """Optional parity JSONL path under the plane root (or env override)."""
+    env = os.environ.get(ENV_TELEMETRY)
+    if env:
+        return Path(env).expanduser()
+    base = root if root is not None else default_plane_root()
+    return Path(base) / DEFAULT_TELEMETRY_NAME
 
 
 def _utc_now() -> str:
@@ -424,3 +448,122 @@ def open_message_plane(
         legacy_db=legacy_db,
         telemetry_path=telemetry_path,
     )
+
+
+def _read_applied_schema_version(db_path: Path) -> dict[str, Any]:
+    """Read comms_schema_migrations without writing or migrating."""
+    from scripts.fleet_comms.migrations import MIGRATIONS
+
+    known = MIGRATIONS[-1].version if MIGRATIONS else 0
+    payload: dict[str, Any] = {
+        "known_version": known,
+        "applied_version": None,
+        "applied_name": None,
+        "db_path": str(db_path),
+        "db_exists": db_path.is_file(),
+    }
+    if not db_path.is_file():
+        return payload
+    try:
+        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        try:
+            row = conn.execute(
+                "SELECT version, name FROM comms_schema_migrations ORDER BY version DESC LIMIT 1"
+            ).fetchone()
+            if row is not None:
+                payload["applied_version"] = int(row[0])
+                payload["applied_name"] = str(row[1]) if row[1] is not None else None
+        finally:
+            conn.close()
+    except sqlite3.Error as exc:
+        payload["db_error"] = str(exc)
+    return payload
+
+
+def _summarize_parity_telemetry(
+    path: Path,
+    *,
+    limit: int = _TELEMETRY_SUMMARY_LIMIT,
+) -> dict[str, Any]:
+    """Read-only tail summary of plane parity JSONL (missing file is fine)."""
+    summary: dict[str, Any] = {
+        "path": str(path),
+        "exists": path.is_file(),
+        "event_count": 0,
+        "parity_ok_count": 0,
+        "parity_fail_count": 0,
+        "recent": [],
+        "summary_window": limit,
+    }
+    if not path.is_file():
+        return summary
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError as exc:
+        summary["read_error"] = str(exc)
+        return summary
+    events: list[dict[str, Any]] = []
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        try:
+            loaded = json.loads(stripped)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(loaded, dict):
+            events.append(loaded)
+    summary["event_count"] = len(events)
+    ok = 0
+    fail = 0
+    for event in events:
+        flag = event.get("parity_ok")
+        if flag is True:
+            ok += 1
+        elif flag is False:
+            fail += 1
+    summary["parity_ok_count"] = ok
+    summary["parity_fail_count"] = fail
+    summary["recent"] = events[-limit:]
+    return summary
+
+
+def read_plane_status(
+    *,
+    repo_root: Path | None = None,
+    root: Path | None = None,
+    telemetry_path: Path | None = None,
+    recent_limit: int = _TELEMETRY_SUMMARY_LIMIT,
+) -> dict[str, Any]:
+    """Read-only message-plane status for Monitor API (no writer side effects).
+
+    Returns mode from ``FLEET_COMMS_MESSAGE_PLANE`` (default ``off``), schema
+    migration version when the plane DB exists, and an optional parity telemetry
+    summary when the JSONL file is present under batch_state (or env override).
+    """
+    mode_error: str | None = None
+    try:
+        mode: PlaneMode | str = resolve_plane_mode()
+    except ValueError as exc:
+        mode = "invalid"
+        mode_error = str(exc)
+
+    plane_root = Path(root) if root is not None else default_plane_root(repo_root=repo_root)
+    db_path = plane_root / "comms.sqlite3"
+    tele_path = (
+        Path(telemetry_path)
+        if telemetry_path is not None
+        else default_parity_telemetry_path(plane_root)
+    )
+
+    payload: dict[str, Any] = {
+        "mode": mode,
+        "enabled": mode not in {"off", "invalid"},
+        "read_only": True,
+        "plane_root": str(plane_root),
+        "schema": _read_applied_schema_version(db_path),
+        "parity_telemetry": _summarize_parity_telemetry(tele_path, limit=recent_limit),
+    }
+    if mode_error is not None:
+        payload["mode_error"] = mode_error
+    return payload
