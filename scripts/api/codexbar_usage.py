@@ -181,19 +181,45 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
     if not weekly_win:
         weekly_win = usage.get("secondary") or openai_db.get("secondaryLimit") or primary_win
 
-    primary_used_pct = None
-    if primary_win and "usedPercent" in primary_win:
-        primary_used_pct = float(primary_win["usedPercent"])
+    def _used_pct(win: dict[str, Any] | None) -> float | None:
+        if not win or "usedPercent" not in win:
+            return None
+        return float(win["usedPercent"])
 
-    weekly_used_pct = None
-    if weekly_win and "usedPercent" in weekly_win:
-        weekly_used_pct = float(weekly_win["usedPercent"])
+    def _remaining_pct(used: float | None) -> float | None:
+        if used is None:
+            return None
+        return max(0.0, min(100.0, 100.0 - used))
+
+    # Named windows from the provider payload (Cursor: primary=allotment-A,
+    # secondary=allotment-B / plan included, tertiary=API / on-demand).
+    named_primary = usage.get("primary") if isinstance(usage.get("primary"), dict) else None
+    named_secondary = usage.get("secondary") if isinstance(usage.get("secondary"), dict) else None
+    named_tertiary = usage.get("tertiary") if isinstance(usage.get("tertiary"), dict) else None
+
+    primary_used_pct = _used_pct(primary_win) if primary_win else _used_pct(named_primary)
+    if primary_used_pct is None:
+        primary_used_pct = _used_pct(named_primary)
+
+    weekly_used_pct = _used_pct(weekly_win) if weekly_win else _used_pct(named_secondary)
+    if weekly_used_pct is None:
+        weekly_used_pct = _used_pct(named_secondary)
+
+    secondary_used_pct = _used_pct(named_secondary)
+    if secondary_used_pct is None and weekly_used_pct is not None:
+        secondary_used_pct = weekly_used_pct
+
+    tertiary_used_pct = _used_pct(named_tertiary)
 
     weekly_resets_at = None
     if weekly_win:
         weekly_resets_at = weekly_win.get("resetsAt")
     if not weekly_resets_at and primary_win:
         weekly_resets_at = primary_win.get("resetsAt")
+    if not weekly_resets_at and named_secondary:
+        weekly_resets_at = named_secondary.get("resetsAt")
+    if not weekly_resets_at and named_primary:
+        weekly_resets_at = named_primary.get("resetsAt")
 
     monthly_cap_usd = None
     monthly_used_usd = None
@@ -249,10 +275,31 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
             except Exception:
                 pass
 
+    def _window_block(win: dict[str, Any] | None, used: float | None) -> dict[str, Any]:
+        return {
+            "used_pct": used,
+            "remaining_pct": _remaining_pct(used),
+            "resets_at": (win or {}).get("resetsAt") if isinstance(win, dict) else None,
+            "window_minutes": (win or {}).get("windowMinutes") if isinstance(win, dict) else None,
+            "reset_description": (win or {}).get("resetDescription") if isinstance(win, dict) else None,
+        }
+
     return {
         "lane": lane,
         "primary_used_pct": primary_used_pct,
+        "primary_remaining_pct": _remaining_pct(primary_used_pct),
+        "secondary_used_pct": secondary_used_pct,
+        "secondary_remaining_pct": _remaining_pct(secondary_used_pct),
+        "tertiary_used_pct": tertiary_used_pct,
+        "tertiary_remaining_pct": _remaining_pct(tertiary_used_pct),
+        # Back-compat aliases: weekly ≈ secondary allotment for most providers.
         "weekly_used_pct": weekly_used_pct,
+        "weekly_remaining_pct": _remaining_pct(weekly_used_pct),
+        "windows": {
+            "primary": _window_block(named_primary or primary_win, primary_used_pct),
+            "secondary": _window_block(named_secondary or weekly_win, secondary_used_pct),
+            "tertiary": _window_block(named_tertiary, tertiary_used_pct),
+        },
         "monthly_cap_usd": monthly_cap_usd,
         "monthly_used_usd": monthly_used_usd,
         "weekly_resets_at": weekly_resets_at,
@@ -298,10 +345,24 @@ def _normalize_provider_error(provider: str, error: Any) -> dict[str, Any]:
         code = error.get("code")
         kind = error.get("kind")
 
+    empty_win = {
+        "used_pct": None,
+        "remaining_pct": None,
+        "resets_at": None,
+        "window_minutes": None,
+        "reset_description": None,
+    }
     return {
         "lane": lane,
         "primary_used_pct": None,
+        "primary_remaining_pct": None,
+        "secondary_used_pct": None,
+        "secondary_remaining_pct": None,
+        "tertiary_used_pct": None,
+        "tertiary_remaining_pct": None,
         "weekly_used_pct": None,
+        "weekly_remaining_pct": None,
+        "windows": {"primary": dict(empty_win), "secondary": dict(empty_win), "tertiary": dict(empty_win)},
         "monthly_cap_usd": None,
         "monthly_used_usd": None,
         "weekly_resets_at": None,
@@ -371,10 +432,24 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
 
     # Completely unknown fallback
     lane = PROVIDER_TO_LANE.get(provider, provider)
+    empty_win = {
+        "used_pct": None,
+        "remaining_pct": None,
+        "resets_at": None,
+        "window_minutes": None,
+        "reset_description": None,
+    }
     return {
         "lane": lane,
         "primary_used_pct": None,
+        "primary_remaining_pct": None,
+        "secondary_used_pct": None,
+        "secondary_remaining_pct": None,
+        "tertiary_used_pct": None,
+        "tertiary_remaining_pct": None,
         "weekly_used_pct": None,
+        "weekly_remaining_pct": None,
+        "windows": {"primary": dict(empty_win), "secondary": dict(empty_win), "tertiary": dict(empty_win)},
         "monthly_cap_usd": None,
         "monthly_used_usd": None,
         "weekly_resets_at": None,
