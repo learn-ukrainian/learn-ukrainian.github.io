@@ -1,10 +1,18 @@
 """Publish a deliberately thin formal-review verdict to one GitHub PR comment.
 
-PR-G cutover note: the eventual ``publish-review-verdict --review-id`` path
-(sealed job reload, stale-head check, idempotent status/comment) is prepared in
-``scripts/fleet_comms/review_publication.py``. Full default cutover waits for
-PR-F formal-jobs table writers; this CLI remains the temporary file/flag-based
-poster and must not switch defaults until then.
+Two paths:
+
+1. **Legacy (temporary)** — ``--pr`` + ``--verdict-file``/``--findings-json`` + CLI
+   provenance flags. Posts a comment only (no commit status, no receipts).
+
+2. **PR-G sealed path** — ``--sealed-payload`` (JSON matching
+   ``scripts.fleet_comms.review_publication.SealedVerdict``). Optionally bind
+   ``--review-id`` to a durable formal-job row (identity check only; PR-F still
+   owns sealed-job writers). Posts thin comment + ``fleet/cross-family-review``
+   commit status, with stale-head / idempotent receipt handling.
+
+Full default cutover of all formal CF to ``--review-id`` alone waits for PR-F
+to store sealed verdict provenance on the job. Do not invent that as landed.
 """
 
 from __future__ import annotations
@@ -99,7 +107,7 @@ def publish_review_verdict(
     dry_run: bool = False,
     runner: Runner = subprocess.run,
 ) -> str:
-    """Post one comment and return a bounded, body-free orchestrator summary."""
+    """Legacy path: post one comment and return a bounded, body-free summary."""
     if pr <= 0:
         raise ReviewSafetyError(f"invalid_pr: {pr}")
     head = runner(
@@ -139,8 +147,112 @@ def publish_review_verdict(
     return summary
 
 
+def _handle_sealed_path(args: argparse.Namespace) -> int:
+    """PR-G sealed path: pure plan + optional GitHub mutate + receipts."""
+    from scripts.fleet_comms.artifacts import ArtifactStore
+    from scripts.fleet_comms.formal_review_jobs import (
+        FormalReviewJobsError,
+        FormalReviewJobService,
+    )
+    from scripts.fleet_comms.review_publisher import (
+        ReviewPublisherError,
+        load_sealed_payload_file,
+        publish_sealed_verdict,
+        sealed_matches_job,
+    )
+
+    payload_path = Path(args.sealed_payload)
+    try:
+        sealed = load_sealed_payload_file(payload_path)
+    except ReviewPublisherError as exc:
+        print(f"publish-review-verdict: {exc}", file=sys.stderr)
+        return 2
+
+    plane_root = Path(args.plane_root).expanduser() if args.plane_root else None
+    store: ArtifactStore | None = None
+    service: FormalReviewJobService | None = None
+
+    try:
+        if args.review_id:
+            # Bind sealed payload identity to durable job row (fail closed).
+            try:
+                service = FormalReviewJobService(root=plane_root)
+                job = service.get_job(args.review_id, include_attempts=False)
+            except FormalReviewJobsError as exc:
+                print(f"publish-review-verdict: {exc}", file=sys.stderr)
+                return 2
+            try:
+                sealed_matches_job(
+                    sealed,
+                    review_id=job.review_id,
+                    repository=job.repository,
+                    pr_number=job.pr_number,
+                    head_sha=job.head_sha,
+                    gate_kind=job.gate_kind,
+                )
+            except ReviewPublisherError as exc:
+                print(f"publish-review-verdict: {exc}", file=sys.stderr)
+                return 2
+            store = service.store
+        elif plane_root is not None or args.require_receipt:
+            store = ArtifactStore(root=plane_root)
+
+        result = publish_sealed_verdict(
+            sealed,
+            mutate=not args.dry_run,
+            require_receipt=bool(args.require_receipt),
+            store=store,
+        )
+    except ReviewPublisherError as exc:
+        print(f"publish-review-verdict: {exc}", file=sys.stderr)
+        return 2
+    finally:
+        if service is not None:
+            service.close()
+        elif store is not None:
+            store.close()
+
+    if args.json:
+        print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+    else:
+        summary = result.summary
+        if len(summary.encode("utf-8")) > MAX_VERDICT_SUMMARY_BYTES:
+            print("publish-review-verdict: verdict_summary_exceeds_cap", file=sys.stderr)
+            return 2
+        print(summary)
+
+    # Non-zero when plan refused to publish (stale head) so orchestrators fail closed.
+    if result.plan.action == "refuse_stale":
+        return 3
+    return 0
+
+
 def handle_publish_review_verdict(args: argparse.Namespace) -> int:
     """CLI handler for ``publish-review-verdict``."""
+    if getattr(args, "sealed_payload", None):
+        return _handle_sealed_path(args)
+
+    # Legacy path: require CLI provenance flags.
+    missing = [
+        name
+        for name in ("pr", "model", "family", "harness")
+        if getattr(args, name, None) in (None, "")
+    ]
+    if missing:
+        print(
+            "publish-review-verdict: legacy path requires "
+            + ", ".join(f"--{m}" for m in missing)
+            + " (or use --sealed-payload)",
+            file=sys.stderr,
+        )
+        return 2
+    if not args.verdict_file and not args.findings_json:
+        print(
+            "publish-review-verdict: provide --verdict-file, --findings-json, or --sealed-payload",
+            file=sys.stderr,
+        )
+        return 2
+
     try:
         verdict = (
             verdict_from_findings_json(Path(args.findings_json))
@@ -149,7 +261,7 @@ def handle_publish_review_verdict(args: argparse.Namespace) -> int:
         )
         print(
             publish_review_verdict(
-                pr=args.pr,
+                pr=int(args.pr),
                 verdict=verdict,
                 model=args.model,
                 family=args.family,
@@ -166,13 +278,53 @@ def handle_publish_review_verdict(args: argparse.Namespace) -> int:
 def register_publish_review_verdict_parser(subparsers: Any) -> None:
     parser = subparsers.add_parser(
         "publish-review-verdict",
-        help="Post one thin formal-review verdict comment to a PR",
+        help=(
+            "Post one thin formal-review verdict (legacy file path, or PR-G "
+            "--sealed-payload with commit status + receipts)"
+        ),
     )
-    parser.add_argument("--pr", type=int, required=True, help="Pull request number")
     source = parser.add_mutually_exclusive_group(required=True)
-    source.add_argument("--verdict-file", help="Short text containing a VERDICT line")
-    source.add_argument("--findings-json", help="Findings JSON with a top-level verdict field")
-    parser.add_argument("--model", required=True, help="Exact reviewer model ID")
-    parser.add_argument("--family", required=True, help="Reviewer model family")
-    parser.add_argument("--harness", required=True, help="Reviewer harness")
-    parser.add_argument("--dry-run", action="store_true", help="Resolve head SHA without posting")
+    source.add_argument("--verdict-file", help="Short text containing a VERDICT line (legacy)")
+    source.add_argument(
+        "--findings-json",
+        help="Findings JSON with a top-level verdict field (legacy)",
+    )
+    source.add_argument(
+        "--sealed-payload",
+        help=(
+            "PR-G sealed verdict JSON (review_id, repository, pr_number, head_sha, "
+            "gate_kind, verdict, model, family, harness). Provenance is never taken "
+            "from CLI flags on this path."
+        ),
+    )
+    parser.add_argument(
+        "--review-id",
+        help=(
+            "Optional durable formal-job id to bind against --sealed-payload "
+            "(identity check + publication receipt). Job must already exist (PR-F)."
+        ),
+    )
+    parser.add_argument(
+        "--plane-root",
+        help="Fleet-comms ArtifactStore root for receipts / formal jobs (optional)",
+    )
+    parser.add_argument(
+        "--require-receipt",
+        action="store_true",
+        help="Refuse live sealed publish when no plane DB is available for receipts",
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="On sealed path, emit full PublicationResult JSON",
+    )
+    # Legacy-only flags (optional at parse time; validated in handler).
+    parser.add_argument("--pr", type=int, help="Pull request number (legacy path)")
+    parser.add_argument("--model", help="Exact reviewer model ID (legacy path)")
+    parser.add_argument("--family", help="Reviewer model family (legacy path)")
+    parser.add_argument("--harness", help="Reviewer harness (legacy path)")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Plan / resolve head without posting comment or commit status",
+    )
