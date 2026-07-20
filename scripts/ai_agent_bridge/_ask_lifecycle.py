@@ -1,24 +1,38 @@
-"""Lifecycle state and detached workers for one-shot bridge asks (#4837)."""
+"""Lifecycle state and detached workers for one-shot bridge asks (#4837).
+
+Optional Fleet Comms message-plane hook (PR-E / #5512): when
+``FLEET_COMMS_MESSAGE_PLANE`` is ``shadow`` or ``dual_write``, register a durable
+request and gate legacy ``replied`` projection via ``may_mark_legacy_replied``.
+Default remains ``off`` (no production cutover). Plane import/runtime errors
+fail open so the legacy bridge never breaks on the opt-in path.
+"""
 
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
+from pathlib import Path
 from typing import Any
 
 from agent_runtime.errors import AgentStalledError, AgentTimeoutError
 
 from ._broker import _remove_pid_file, _write_pid_file
-from ._config import _PARENT_ENV, PID_DIR, REPO_ROOT
+from ._config import _PARENT_ENV, DB_PATH, PID_DIR, REPO_ROOT
 from ._db import get_db
 
 _ASK_AGENT = "ask"
+# Stored on the legacy messages.data JSON so reply completion can reload by id.
+_FLEET_REQUEST_ID_KEY = "fleet_request_id"
+# Tests may point plane storage at a tmp root without touching batch_state/.
+_PLANE_ROOT_OVERRIDE: Path | None = None
 
 
 def register_ask(message_id: int) -> None:
     """Record a newly sent ask using the legacy table's existing status field."""
     _set_ask_status(message_id, "sent")
+    _plane_try_open_ask(message_id)
 
 
 def mark_ask_processing(message_id: int) -> None:
@@ -32,6 +46,10 @@ def record_ask_reply(message_id: int, reply_id: int) -> bool:
     The response must belong to this exact query's task and transport pair.
     This guards concurrent detached asks from ever displaying another ask's
     reply ID when a transport or database call misreports an insert ID.
+
+    When ``FLEET_COMMS_MESSAGE_PLANE=dual_write`` and a durable request exists
+    that is not proven complete, refuse to mark legacy ``replied`` (incomplete
+    never becomes replied). ``shadow`` / ``off`` never block this path.
     """
     conn = get_db()
     try:
@@ -55,11 +73,61 @@ def record_ask_reply(message_id: int, reply_id: int) -> bool:
         )
         if not matches:
             return False
+        if not _plane_may_mark_legacy_replied(message_id):
+            return False
         conn.execute("UPDATE messages SET status = ? WHERE id = ?", (f"replied:{reply_id}", message_id))
         conn.commit()
         return True
     finally:
         conn.close()
+
+
+def note_ask_plane_capture(
+    message_id: int,
+    *,
+    adapter: str | None = None,
+    stdout: str = "",
+    stderr: str = "",
+    returncode: int | None = 0,
+    events: tuple[dict[str, Any], ...] = (),
+    raw_bytes: bytes | None = None,
+    session_id: str | None = None,
+) -> bool:
+    """Feed an adapter capture into the opt-in message plane (shadow/dual_write).
+
+    Process paths call this after a harness run so dual_write can prove
+    completion before ``record_ask_reply``. Fail-open: returns False on off mode
+    or any plane error; never raises into the legacy bridge.
+    """
+    try:
+        plane_mod = _import_message_plane()
+        if plane_mod is None:
+            return False
+        mode = plane_mod.resolve_plane_mode()
+        if mode == "off":
+            return False
+        request_id = _load_fleet_request_id(message_id)
+        if not request_id:
+            return False
+        with plane_mod.open_message_plane(
+            mode=mode,
+            root=_plane_root(),
+            legacy_db=DB_PATH,
+        ) as plane:
+            plane.complete_ask(
+                request_id,
+                adapter=adapter,
+                stdout=stdout,
+                stderr=stderr,
+                returncode=returncode,
+                events=events,
+                raw_bytes=raw_bytes,
+                session_id=session_id,
+                legacy_message_id=message_id,
+            )
+        return True
+    except Exception:
+        return False
 
 
 def record_ask_failure(message_id: int, reason: str, *, timed_out: bool = False) -> None:
@@ -352,3 +420,143 @@ def _display_status(status: str) -> str:
 def _looks_like_timeout(detail: str) -> bool:
     lowered = detail.lower()
     return "timeout" in lowered or "timed out" in lowered or "stalled" in lowered
+
+
+def _import_message_plane() -> Any | None:
+    """Load message_plane fail-open (missing package/import must not break bridge)."""
+    try:
+        from scripts.fleet_comms import message_plane as plane_mod
+
+        return plane_mod
+    except Exception:
+        return None
+
+
+def _plane_root() -> Path:
+    if _PLANE_ROOT_OVERRIDE is not None:
+        return _PLANE_ROOT_OVERRIDE
+    env = os.environ.get("FLEET_COMMS_ROOT")
+    if env:
+        return Path(env)
+    return REPO_ROOT / "batch_state" / "fleet-comms" / "v1"
+
+
+def _plane_try_open_ask(message_id: int) -> None:
+    """Create a durable plane request for shadow/dual_write; no-op when off."""
+    try:
+        plane_mod = _import_message_plane()
+        if plane_mod is None:
+            return
+        mode = plane_mod.resolve_plane_mode()
+        if mode == "off":
+            return
+        row = _load_ask_row(message_id)
+        if row is None:
+            return
+        task_id, from_llm, to_llm, content, data_raw = row
+        model = None
+        try:
+            meta = json.loads(data_raw) if data_raw else {}
+            if isinstance(meta, dict):
+                model = meta.get("to_model")
+                if model is not None:
+                    model = str(model)
+        except (TypeError, json.JSONDecodeError):
+            model = None
+        with plane_mod.open_message_plane(
+            mode=mode,
+            root=_plane_root(),
+            legacy_db=DB_PATH,
+        ) as plane:
+            req = plane.open_ask(
+                recipient=str(to_llm or "unknown"),
+                body=str(content or ""),
+                sender=str(from_llm or "bridge"),
+                legacy_message_id=message_id,
+                task_id=str(task_id) if task_id else None,
+                model=model,
+                transport_mode="bridge-ask",
+            )
+            if req is not None:
+                _store_fleet_request_id(message_id, req.request_id)
+    except Exception:
+        return
+
+
+def _plane_may_mark_legacy_replied(message_id: int) -> bool:
+    """Gate dual_write legacy replied; shadow/off always allow (fail-open)."""
+    try:
+        plane_mod = _import_message_plane()
+        if plane_mod is None:
+            return True
+        mode = plane_mod.resolve_plane_mode()
+        if mode != "dual_write":
+            # off + shadow: plane does not control legacy status
+            return True
+        request_id = _load_fleet_request_id(message_id)
+        if not request_id:
+            # No durable request was recorded — fail open (plane open failed).
+            return True
+        with plane_mod.open_message_plane(
+            mode=mode,
+            root=_plane_root(),
+            legacy_db=DB_PATH,
+        ) as plane:
+            return bool(plane.may_mark_legacy_replied(request_id))
+    except Exception:
+        return True
+
+
+def _load_ask_row(
+    message_id: int,
+) -> tuple[Any, Any, Any, Any, Any] | None:
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT task_id, from_llm, to_llm, content, data FROM messages WHERE id = ?",
+            (message_id,),
+        ).fetchone()
+        if not row:
+            return None
+        return (row[0], row[1], row[2], row[3], row[4])
+    finally:
+        conn.close()
+
+
+def _load_fleet_request_id(message_id: int) -> str | None:
+    conn = get_db()
+    try:
+        row = conn.execute("SELECT data FROM messages WHERE id = ?", (message_id,)).fetchone()
+        if not row or not row[0]:
+            return None
+        try:
+            meta = json.loads(str(row[0]))
+        except (TypeError, json.JSONDecodeError):
+            return None
+        if not isinstance(meta, dict):
+            return None
+        value = meta.get(_FLEET_REQUEST_ID_KEY)
+        return str(value) if value else None
+    finally:
+        conn.close()
+
+
+def _store_fleet_request_id(message_id: int, request_id: str) -> None:
+    conn = get_db()
+    try:
+        row = conn.execute("SELECT data FROM messages WHERE id = ?", (message_id,)).fetchone()
+        metadata: dict[str, Any] = {}
+        if row and row[0]:
+            try:
+                loaded = json.loads(str(row[0]))
+                metadata = loaded if isinstance(loaded, dict) else {"raw": row[0]}
+            except (TypeError, json.JSONDecodeError):
+                metadata = {"raw": row[0]}
+        metadata[_FLEET_REQUEST_ID_KEY] = request_id
+        conn.execute(
+            "UPDATE messages SET data = ? WHERE id = ?",
+            (json.dumps(metadata, sort_keys=True), message_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
