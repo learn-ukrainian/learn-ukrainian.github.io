@@ -31,7 +31,7 @@ pytest>=9.0.3
 pytest-cov>=7.0
 
 # Linting
-ruff>=0.15.20
+ruff>=0.15.21
 
 # Database
 aiosqlite>=0.22
