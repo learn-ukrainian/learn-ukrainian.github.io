@@ -18,8 +18,9 @@ from typing import Any
 
 from agent_runtime.errors import AgentStalledError, AgentTimeoutError
 
+from . import _config
 from ._broker import _remove_pid_file, _write_pid_file
-from ._config import _PARENT_ENV, DB_PATH, PID_DIR, REPO_ROOT
+from ._config import _PARENT_ENV, PID_DIR, REPO_ROOT
 from ._db import get_db
 
 _ASK_AGENT = "ask"
@@ -112,7 +113,7 @@ def note_ask_plane_capture(
         with plane_mod.open_message_plane(
             mode=mode,
             root=_plane_root(),
-            legacy_db=DB_PATH,
+            legacy_db=_config.DB_PATH,
         ) as plane:
             plane.complete_ask(
                 request_id,
@@ -466,7 +467,7 @@ def _plane_try_open_ask(message_id: int) -> None:
         with plane_mod.open_message_plane(
             mode=mode,
             root=_plane_root(),
-            legacy_db=DB_PATH,
+            legacy_db=_config.DB_PATH,
         ) as plane:
             req = plane.open_ask(
                 recipient=str(to_llm or "unknown"),
@@ -500,7 +501,7 @@ def _plane_may_mark_legacy_replied(message_id: int) -> bool:
         with plane_mod.open_message_plane(
             mode=mode,
             root=_plane_root(),
-            legacy_db=DB_PATH,
+            legacy_db=_config.DB_PATH,
         ) as plane:
             return bool(plane.may_mark_legacy_replied(request_id))
     except Exception:
