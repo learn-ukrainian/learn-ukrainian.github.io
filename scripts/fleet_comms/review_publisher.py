@@ -8,10 +8,13 @@ Sol fleet-comms (#5512) PR-G owns the GitHub side of formal review publication:
   and one commit status under ``fleet/cross-family-review``
 * record a durable row in ``github_publications`` (schema v1)
 
-This module still does **not** create formal jobs, seal snapshots, or cut over
-``review-pr``. Those remain PR-F / later wiring. Callers that only have a sealed
-payload (not a stored job) can publish without a plane DB; receipt recording
-requires an open plane store.
+**Formal-job boundary (honest):** when a plane store is used and the plan is a
+live ``publish``, this module may **materialize the FK-parent**
+``formal_review_jobs`` row from sealed-payload identity fields only (so
+``github_publications.review_id`` can satisfy the schema FK). That is *not* a
+PR-F seal cutover: PR-F still owns attempts, snapshot sealing, reviewer
+resolution, lifecycle transitions, and ``review-pr`` wiring. This module does
+not seal snapshots and does not cut over ``review-pr``.
 """
 
 from __future__ import annotations
@@ -474,9 +477,6 @@ def publish_sealed_verdict(
     if store is not None:
         conn = store.connection
         apply_migrations(conn)
-        if mutate:
-            # Materialize FK parent before any GitHub post when receipts are on.
-            ensure_job_row_for_receipt(store, sealed)
         already_key = already_published_key_for_job(
             conn, sealed, status_context=status_context
         )
@@ -488,6 +488,13 @@ def publish_sealed_verdict(
         mutate=mutate,
         status_context=status_context,
     )
+    # Materialize FK parent only when we are about to post (not on stale/skip/dry-run).
+    if (
+        store is not None
+        and plan.action == "publish"
+        and plan.mutate
+    ):
+        ensure_job_row_for_receipt(store, sealed)
     return execute_publication(
         plan,
         runner=runner,

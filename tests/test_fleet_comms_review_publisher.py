@@ -125,10 +125,19 @@ def test_stale_head_refuses_without_github_mutation(tmp_path: Path) -> None:
             runner=gh,
             store=store,
         )
+        # Stale path must not materialize formal_review_jobs or publications.
+        jobs = store.connection.execute(
+            "SELECT COUNT(*) FROM formal_review_jobs"
+        ).fetchone()[0]
+        pubs = store.connection.execute(
+            "SELECT COUNT(*) FROM github_publications"
+        ).fetchone()[0]
     assert result.plan.action == "refuse_stale"
     assert result.status_posted is False
     assert result.publication_id is None
     assert gh.calls == []
+    assert jobs == 0
+    assert pubs == 0
 
 
 def test_repeat_publish_is_idempotent(tmp_path: Path) -> None:
