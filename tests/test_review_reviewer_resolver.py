@@ -122,9 +122,40 @@ def test_high_risk_anthropic_author_gets_sol_as_formal_gate():
 def test_high_risk_openai_author_gets_claude_and_sol_is_advisory():
     resolution = resolve_reviewer(ResolverInputs(author_model="gpt-5.6-terra", risk="high"))
     assert resolution.selected.name == "claude-fable-5"
-    assert resolution.selected.transport == "cursor"
+    assert resolution.selected.transport == "native_claude"
     assert [entry.name for entry in resolution.advisory] == ["openai_frontier"]
     assert resolution.advisory[0].status == "advisory_only"
+
+
+def test_fable_uses_cursor_only_when_native_claude_is_unhealthy():
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-5.6-terra",
+            risk="high",
+            routing_snapshot={"claude": "unhealthy", "cursor": "healthy"},
+        )
+    )
+
+    assert resolution.selected.name == "claude-fable-5-cursor-fallback"
+    assert resolution.selected.concrete_model == "claude-fable-5"
+    assert resolution.selected.transport == "cursor"
+    native = next(entry for entry in resolution.trace if entry.name == "claude-fable-5")
+    assert native.status == "excluded"
+    assert "unhealthy" in native.reason
+
+
+def test_fable_keeps_native_claude_when_native_health_is_degraded():
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-5.6-terra",
+            risk="high",
+            routing_snapshot={"claude": "degraded", "cursor": "healthy"},
+        )
+    )
+
+    assert resolution.selected.name == "claude-fable-5"
+    assert resolution.selected.transport == "native_claude"
+    assert resolution.selected.health == "degraded"
 
 
 def test_high_risk_kimi_author_gets_claude_not_composer():
@@ -178,7 +209,7 @@ def test_real_routing_budget_payload_is_normalized_without_crashing():
     }
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot))
     assert resolution.selected.name == "claude-fable-5"
-    assert resolution.selected.health is None
+    assert resolution.selected.health == "degraded"
 
 
 def test_real_gemini_lane_outage_excludes_agy_candidates():
@@ -417,6 +448,7 @@ def test_binding_quality_prior_matches_issue_5293_order():
     expected = [
         "openai_frontier",
         "claude-fable-5",
+        "claude-fable-5-cursor-fallback",
         "claude-opus-4-8",
         "gpt-5.6-terra",
         "grok-4.5",
@@ -425,7 +457,7 @@ def test_binding_quality_prior_matches_issue_5293_order():
         "gemini-3.1-pro",
     ]
     for ladder in REVIEW_LADDERS.values():
-        assert [rung[0].name for rung in ladder[:8]] == expected
+        assert [rung[0].name for rung in ladder[:9]] == expected
 
 
 def test_candidate_constants_preserve_expected_identity():
