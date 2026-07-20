@@ -191,41 +191,42 @@ def finalize_formal_review_verdict(
 
     job_created = False
     with FormalReviewJobService(root=plane_root) as service:
-        existing = service.find_job(
-            repository, pr_number, sha, gate_kind, include_attempts=False
-        )
-        if existing is None:
-            job = service.create_job(
-                repository,
-                pr_number,
-                sha,
-                gate_kind,
-                review_id=review_id,
-                state="running",
-            )
-            job_created = True
-        else:
-            job = existing
-            if review_id and review_id != job.review_id:
-                raise FormalReviewFinalizeError(
-                    f"review_id_mismatch: requested={review_id!r} "
-                    f"existing={job.review_id!r}"
-                )
-
-        sealed = build_sealed_verdict(
-            review_id=job.review_id,
-            repository=repository,
-            pr_number=pr_number,
-            head_sha=sha,
-            gate_kind=gate_kind,
-            verdict=resolved_verdict,
-            model=model.strip(),
-            family=family.strip(),
-            harness=harness.strip(),
-        )
         try:
+            existing = service.find_job(
+                repository, pr_number, sha, gate_kind, include_attempts=False
+            )
+            if existing is None:
+                job = service.create_job(
+                    repository,
+                    pr_number,
+                    sha,
+                    gate_kind,
+                    review_id=review_id,
+                    state="running",
+                )
+                job_created = True
+            else:
+                job = existing
+                if review_id and review_id != job.review_id:
+                    raise FormalReviewFinalizeError(
+                        f"review_id_mismatch: requested={review_id!r} "
+                        f"existing={job.review_id!r}"
+                    )
+
+            sealed = build_sealed_verdict(
+                review_id=job.review_id,
+                repository=repository,
+                pr_number=pr_number,
+                head_sha=sha,
+                gate_kind=gate_kind,
+                verdict=resolved_verdict,
+                model=model.strip(),
+                family=family.strip(),
+                harness=harness.strip(),
+            )
             service.accept_sealed_verdict(job.review_id, sealed)
         except FormalReviewJobsError as exc:
+            # Includes concurrent create races and accept failures.
             raise FormalReviewFinalizeError(str(exc)) from exc
 
         refreshed = service.get_job(job.review_id, include_attempts=False)
