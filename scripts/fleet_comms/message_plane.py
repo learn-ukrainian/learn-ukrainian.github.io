@@ -25,7 +25,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
-from scripts.fleet_comms.contracts import CompletionState, new_id
+from scripts.fleet_comms.contracts import CompletionState
 from scripts.fleet_comms.request_executor import RequestExecutor, RequestRecord
 
 PlaneMode = Literal["off", "shadow", "dual_write"]
