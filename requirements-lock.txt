@@ -150,7 +150,7 @@ pytest-cov==7.1.0
 pytest-xdist==3.8.0
 pytest==9.0.3
 python-dateutil==2.9.0.post0
-python-discovery==1.1.0
+python-discovery==1.4.4
 python-docx==1.2.0
 python-dotenv==1.2.2
 python-jose==3.5.0
