@@ -5,7 +5,8 @@ endpoint (incl. permanent Gemini→AGY retirement), run adapter conformance on a
 raw capture, store the raw artifact, and advance request state only on proven
 completion.
 
-This is not production cutover — bridge still uses legacy ask paths until PR-E.
+Bridge defaults remain legacy. Opt-in message plane (PR-E) may shadow/dual_write
+via ``scripts.fleet_comms.message_plane`` without flipping production defaults.
 """
 
 from __future__ import annotations
