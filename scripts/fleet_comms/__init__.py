@@ -3,6 +3,13 @@
 from scripts.fleet_comms.adapter_conformance import CaptureInput, conform
 from scripts.fleet_comms.artifacts import ArtifactRecord, ArtifactStore
 from scripts.fleet_comms.contracts import AssistantSegment, CompletionState, ResponseEnvelope, new_id
+from scripts.fleet_comms.formal_review_jobs import (
+    FormalReviewAttempt,
+    FormalReviewJob,
+    FormalReviewJobsError,
+    FormalReviewJobService,
+    open_formal_review_jobs,
+)
 from scripts.fleet_comms.message_plane import (
     MessagePlane,
     open_message_plane,
@@ -17,12 +24,17 @@ __all__ = [
     "AssistantSegment",
     "CaptureInput",
     "CompletionState",
+    "FormalReviewAttempt",
+    "FormalReviewJob",
+    "FormalReviewJobService",
+    "FormalReviewJobsError",
     "MessagePlane",
     "RequestExecutor",
     "RequestRecord",
     "ResponseEnvelope",
     "conform",
     "new_id",
+    "open_formal_review_jobs",
     "open_message_plane",
     "read_plane_status",
     "resolve_plane_mode",
