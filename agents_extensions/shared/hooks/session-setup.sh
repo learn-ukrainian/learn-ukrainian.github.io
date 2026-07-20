@@ -462,20 +462,44 @@ Do not dump or rewrite docs/session-state/current.md. For thread rollover, run:
 EOF
 }
 
+# Optional task-family filter from launcher epic (#5398). SESSION_EPIC is the
+# epic name (hramatka, atlas, harness); task_family on packets usually matches.
+TASK_FAMILY_ARGS=()
+if [ -n "${SESSION_EPIC:-}" ]; then
+  case "${SESSION_EPIC}" in
+    harness|infra) : ;; # do not over-filter infra packets
+    *) TASK_FAMILY_ARGS=(--task-family "$SESSION_EPIC") ;;
+  esac
+fi
+
 if ! DETECT_OUTPUT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
   --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
-  --current-thread-id "$CURRENT_THREAD_ID" --format json 2>&1); then
-  HANDOFF_CONTEXT="ERROR: thread_handoff.py detect failed. Stop.
+  --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" --format json 2>&1); then
+  # Exit 2 may be multi-packet ambiguity (#5398) — surface candidates, never cold-start.
+  DETECT_ERR_CODE=$(printf '%s' "$DETECT_OUTPUT" | "$ROLLOVER_PYTHON" -c 'import json,sys
+try:
+  d=json.loads(sys.stdin.read()); print(d.get("error_code") or "")
+except Exception:
+  print("")' 2>/dev/null || true)
+  if [ "$DETECT_ERR_CODE" = "MULTIPLE_LIVE_PENDING_ROLLOVERS" ]; then
+    HANDOFF_CONTEXT="ERROR: MULTIPLE live pending rollovers — do not cold-start; bind one exact candidate.
+$DETECT_OUTPUT"
+  else
+    HANDOFF_CONTEXT="ERROR: thread_handoff.py detect failed. Stop.
 Output:
 $DETECT_OUTPUT"
+  fi
 elif ! DETECT_STATUS=$(printf '%s' "$DETECT_OUTPUT" | "$ROLLOVER_PYTHON" -c 'import json,sys; print(json.loads(sys.stdin.read()).get("status", ""), end="")'); then
   HANDOFF_CONTEXT="ERROR: thread_handoff.py detect output could not be parsed. Stop.
 Output:
 $DETECT_OUTPUT"
+elif [ "$DETECT_STATUS" = "ambiguous" ]; then
+  HANDOFF_CONTEXT="ERROR: MULTIPLE live pending rollovers — do not cold-start; bind one exact candidate.
+$DETECT_OUTPUT"
 elif [ "$DETECT_STATUS" = "pending_start" ] || [ "$DETECT_STATUS" = "resumed" ]; then
   if ! HANDOFF_CONTEXT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
     --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
-    --current-thread-id "$CURRENT_THREAD_ID" --format session-start 2>&1); then
+    --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" --format session-start 2>&1); then
     HANDOFF_CONTEXT="ERROR: thread_handoff.py detect failed. Stop.
 Output:
 $HANDOFF_CONTEXT"

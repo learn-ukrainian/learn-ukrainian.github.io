@@ -2328,6 +2328,7 @@ def test_detect_rejects_bad_or_ambiguous_engine_leases(tmp_path: Path, capsys, m
     payload = json.loads(capsys.readouterr().out)
     if mutation == "ambiguous":
         assert payload["error_code"] == "MULTIPLE_LIVE_PENDING_ROLLOVERS"
+        assert payload["status"] == "ambiguous"
         assert payload["candidate_count"] == 2
         assert "filesystem order" in payload["resolution_policy"]
         for candidate in payload["candidates"]:
@@ -2346,6 +2347,84 @@ def test_detect_rejects_bad_or_ambiguous_engine_leases(tmp_path: Path, capsys, m
                 "title_confirmation_state",
                 "safe_recommended_resolution",
             }
+
+
+def test_detect_task_family_filter_selects_one_of_many(tmp_path: Path, capsys, monkeypatch) -> None:
+    """#5398: --task-family must disambiguate multi-packet detect to one lane."""
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    for thread_id, family, title in (
+        ("old-a", "hramatka", "Ship hramatka lessons"),
+        ("old-b", "thread-rollover", "Repair infra PR"),
+    ):
+        assert (
+            th.main(
+                [
+                    "--repo-root",
+                    str(tmp_path),
+                    "prepare",
+                    "--agent",
+                    "claude",
+                    "--active-thread-id",
+                    thread_id,
+                    "--task-family",
+                    family,
+                    "--semantic-title",
+                    title,
+                    "--terminal-goal",
+                    "merge",
+                    "--role",
+                    f"{family} driver",
+                ]
+            )
+            == 0
+        )
+        capsys.readouterr()
+
+    # Without filter: ambiguous exit 2.
+    assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "claude"]) == 2
+    multi = json.loads(capsys.readouterr().out)
+    assert multi["error_code"] == "MULTIPLE_LIVE_PENDING_ROLLOVERS"
+    assert multi["candidate_count"] == 2
+
+    # With filter: single hramatka packet selected.
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "detect",
+                "--agent",
+                "claude",
+                "--task-family",
+                "hramatka",
+            ]
+        )
+        == 0
+    )
+    selected = json.loads(capsys.readouterr().out)
+    assert selected["status"] == "pending_start"
+    assert selected["task_family_filter"] == "hramatka"
+    identity = selected.get("identity") or {}
+    assert identity.get("task_family") == "hramatka" or "hramatka" in str(selected).lower()
+
+    # Epic slot claude-hramatka scans bare claude namespace with filter (#5398 slot trap).
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "detect",
+                "--agent",
+                "claude-hramatka",
+                "--task-family",
+                "hramatka",
+            ]
+        )
+        == 0
+    )
+    epic_slot = json.loads(capsys.readouterr().out)
+    assert epic_slot["status"] == "pending_start"
+    assert epic_slot.get("packet_agent") == "claude"
 
 
 def test_epic_harness_session_start_surfaces_claude_infra_pending_packet(tmp_path: Path, capsys, monkeypatch) -> None:
