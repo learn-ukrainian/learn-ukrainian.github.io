@@ -67,24 +67,30 @@ def test_background_ask_sends_immediately_and_mocks_detached_spawn(bridge_db, mo
     )
 
 
-def test_background_branch_review_persists_target_in_message_metadata(bridge_db, monkeypatch):
-    monkeypatch.setattr("ai_agent_bridge._agy.launch_background_ask", Mock(return_value=4321))
+def test_background_branch_review_agy_refuses_sealed_cf(bridge_db, monkeypatch):
+    """AGY sealed formal review is fail-closed before send (#5553 / #5555)."""
+    spawn = Mock(return_value=4321)
+    monkeypatch.setattr("ai_agent_bridge._agy.launch_background_ask", spawn)
 
-    message_id = ask_agy(
-        "Review the branch.",
-        task_id="review-5150",
-        review=True,
-        review_branch="feature/review",
-        background=True,
-    )
+    with pytest.raises(ValueError, match="agy_isolated_review_unsupported"):
+        ask_agy(
+            "Review the branch.",
+            task_id="review-5150",
+            review=True,
+            review_branch="feature/review",
+            background=True,
+        )
 
+    spawn.assert_not_called()
     conn = get_db()
     try:
-        row = conn.execute("SELECT data FROM messages WHERE id = ?", (message_id,)).fetchone()
+        row = conn.execute(
+            "SELECT id FROM messages WHERE task_id = ?",
+            ("review-5150",),
+        ).fetchone()
     finally:
         conn.close()
-    assert row is not None
-    assert json.loads(row[0])["review_target"] == {"branch": "feature/review"}
+    assert row is None
 
 
 def test_launch_background_ask_writes_state_and_uses_detached_popen(bridge_db, monkeypatch, tmp_path):
