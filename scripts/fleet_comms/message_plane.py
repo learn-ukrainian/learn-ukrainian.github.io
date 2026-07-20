@@ -316,16 +316,17 @@ class MessagePlane:
             if legacy_status.startswith("replied:"):
                 if req.state != "complete" or req.completion_state != CompletionState.COMPLETE.value:
                     parity_ok = False
-                    notes.append("legacy_replied_but_request_not_complete")
-            elif req.state == "complete" and req.completion_state == CompletionState.COMPLETE.value:
-                if self.mode == "dual_write":
-                    notes.append("legacy_not_yet_projected")
-                    # Not a hard fail in shadow; dual_write may lag one tick
-                    if self.mode == "shadow":
-                        pass
-            elif req.state in {"incomplete", "failed"} and legacy_status.startswith("replied:"):
-                parity_ok = False
-                notes.append("incomplete_classified_as_replied")
+                    if req.state in {"incomplete", "failed"}:
+                        notes.append("incomplete_classified_as_replied")
+                    else:
+                        notes.append("legacy_replied_but_request_not_complete")
+            elif (
+                req.state == "complete"
+                and req.completion_state == CompletionState.COMPLETE.value
+                and self.mode == "dual_write"
+            ):
+                # dual_write may lag one tick before projection
+                notes.append("legacy_not_yet_projected")
 
         if req.completion_state in {
             CompletionState.UNKNOWN.value,
