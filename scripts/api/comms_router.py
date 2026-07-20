@@ -11,6 +11,7 @@ Endpoints:
   GET /api/comms/zombies               Stuck patterns
   GET /api/comms/stats                 Rate, latency, error %
   GET /api/comms/health                Broker DB health
+  GET /api/comms/v1/plane-status       Message-plane mode + schema + parity (read-only)
   GET /api/comms/agent-activity        Compact channel activity by agent
   GET /api/comms/batch-progress        Live preseed/batch progress per track
   POST /api/comms/cleanup              Force-ack zombies
@@ -42,6 +43,7 @@ except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 from pydantic import BaseModel
 
+from scripts.fleet_comms.message_plane import read_plane_status
 from scripts.fleet_comms.migrations import apply_migrations
 
 from .config import CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
@@ -770,6 +772,18 @@ async def broker_health():
                 pass
 
     return health
+
+
+@router.get("/v1/plane-status")
+async def message_plane_status():
+    """Read-only fleet message-plane status (PR-K-ish / #5512 parity surface).
+
+    Reports ``FLEET_COMMS_MESSAGE_PLANE`` mode (default off), schema migration
+    version when ``batch_state/fleet-comms/v1/comms.sqlite3`` exists, and a
+    recent parity telemetry summary when the optional JSONL file is present.
+    Never writes or migrates.
+    """
+    return read_plane_status(repo_root=PROJECT_ROOT)
 
 
 # ==================== BATCH PROGRESS ====================
