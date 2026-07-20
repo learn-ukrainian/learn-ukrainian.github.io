@@ -65,6 +65,10 @@ def _matches_etag(if_none_match: str | None, digest: str) -> bool:
 # then the mandatory workflow and remaining always-load rules. Changing
 # this order is a user-visible contract change — agents that cache the
 # concatenated blob by hash will see a new hash and refetch.
+#
+# Fleet doctrine + living role scorecard (#5529 / #5474) ship AFTER
+# model-assignment so machine routing remains earlier in the blob while
+# cold-start agents still receive the scoreboard without hunting docs/.
 RULE_SOURCES: tuple[str, ...] = (
     "agents_extensions/shared/rules/operator-expectations.md",
     "agents_extensions/shared/rules/critical-rules.md",
@@ -73,6 +77,8 @@ RULE_SOURCES: tuple[str, ...] = (
     "agents_extensions/shared/rules/delegate-must-use-worktree.md",
     "agents_extensions/shared/rules/cli-help-standard.md",
     "agents_extensions/shared/rules/model-assignment.md",
+    "docs/best-practices/fleet-shared-doctrine.md",
+    "docs/best-practices/fleet-role-scorecard.md",
 )
 
 # Separator between files. Explicit so the concatenation is stable
