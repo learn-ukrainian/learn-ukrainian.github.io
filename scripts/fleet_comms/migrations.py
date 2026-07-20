@@ -142,7 +142,21 @@ _V1_STATEMENTS = (
     )""",
 )
 
-MIGRATIONS = (Migration(version=1, name="fleet-comms-v1-contracts", statements=_V1_STATEMENTS),)
+# PR-F slice 2: durable sealed verdict blob on the formal job (Sol milestone 2 —
+# publish without manually supplied CLI provenance).
+_V2_STATEMENTS = (
+    """ALTER TABLE formal_review_jobs
+       ADD COLUMN sealed_verdict_artifact_id TEXT""",
+)
+
+MIGRATIONS = (
+    Migration(version=1, name="fleet-comms-v1-contracts", statements=_V1_STATEMENTS),
+    Migration(
+        version=2,
+        name="fleet-comms-v2-sealed-verdict-artifact",
+        statements=_V2_STATEMENTS,
+    ),
+)
 
 
 def _table_exists(conn: sqlite3.Connection, table: str) -> bool:

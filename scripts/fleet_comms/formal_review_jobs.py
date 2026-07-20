@@ -1,18 +1,25 @@
-"""Formal review job skeleton (Fleet Comms Sol PR-F first slice / #5512).
+"""Formal review jobs (Fleet Comms Sol PR-F / #5512).
 
 Durable SQLite usage of ``formal_review_jobs`` / ``formal_review_attempts``
 (schema from fleet_comms migrations). Unique key (one job per head; attempts accumulate):
 
     (repository, pr_number, head_sha, gate_kind)
 
-Concurrent duplicate creates are rejected. This module does **not** cut over
-``review-pr``, seal snapshots, resolve reviewers, validate verdicts, or publish
-to GitHub (those are later PR-F / PR-G slices).
+Concurrent duplicate creates are rejected.
+
+PR-F slice 2 (sealed verdict acceptance): store a content-addressed sealed
+verdict payload on the job so PR-G can publish with
+``publish-review-verdict --review-id`` alone (no CLI-supplied provenance).
+
+This module still does **not** cut over ``review-pr``, create reviewer-neutral
+snapshots, or resolve reviewers (later PR-F slices / Terra ownership).
 """
 
 from __future__ import annotations
 
+import json
 import sqlite3
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -21,8 +28,12 @@ from typing import Any
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.contracts import CompletionState, new_id
 from scripts.fleet_comms.migrations import apply_migrations
+from scripts.fleet_comms.review_publication import (
+    ReviewPublicationError,
+    SealedVerdict,
+    parse_sealed_verdict_payload,
+)
 
-# Job lifecycle for this skeleton. Publication / sealed verdict acceptance land later.
 JOB_STATES = frozenset({"open", "running", "complete", "failed", "blocked"})
 ACTIVE_JOB_STATES = frozenset({"open", "running"})
 
@@ -73,12 +84,17 @@ class FormalReviewJob:
     gate_kind: str
     state: str
     snapshot_artifact_id: str | None
+    sealed_verdict_artifact_id: str | None
     created_at: str
     attempts: tuple[FormalReviewAttempt, ...] = field(default_factory=tuple)
 
     @property
     def unique_key(self) -> tuple[str, int, str, str]:
         return (self.repository, self.pr_number, self.head_sha, self.gate_kind)
+
+    @property
+    def has_sealed_verdict(self) -> bool:
+        return self.sealed_verdict_artifact_id is not None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -89,6 +105,7 @@ class FormalReviewJob:
             "gate_kind": self.gate_kind,
             "state": self.state,
             "snapshot_artifact_id": self.snapshot_artifact_id,
+            "sealed_verdict_artifact_id": self.sealed_verdict_artifact_id,
             "created_at": self.created_at,
             "attempts": [attempt.to_dict() for attempt in self.attempts],
         }
@@ -251,6 +268,126 @@ class FormalReviewJobService:
             created_at=created,
         )
 
+    def accept_sealed_verdict(
+        self,
+        review_id: str,
+        sealed: SealedVerdict | Mapping[str, Any] | str | bytes,
+        *,
+        record_complete_attempt: bool = True,
+        raw_capture_artifact_id: str | None = None,
+    ) -> SealedVerdict:
+        """Accept a schema-valid sealed verdict and bind it to the job (fail closed).
+
+        Provenance (model/family/harness/verdict) is taken **only** from the
+        sealed payload. The payload's repository/pr/head/gate/review_id must
+        match the durable job row exactly.
+        """
+        job = self.get_job(review_id, include_attempts=False)
+        try:
+            if not isinstance(sealed, SealedVerdict):
+                sealed = parse_sealed_verdict_payload(sealed)
+        except ReviewPublicationError as exc:
+            raise FormalReviewJobsError(f"sealed_verdict_invalid: {exc}") from exc
+
+        if sealed.review_id != job.review_id:
+            raise FormalReviewJobsError(
+                f"sealed_job_mismatch: review_id sealed={sealed.review_id!r} "
+                f"job={job.review_id!r}"
+            )
+        if sealed.repository != job.repository:
+            raise FormalReviewJobsError(
+                f"sealed_job_mismatch: repository sealed={sealed.repository!r} "
+                f"job={job.repository!r}"
+            )
+        if sealed.pr_number != job.pr_number:
+            raise FormalReviewJobsError(
+                f"sealed_job_mismatch: pr sealed={sealed.pr_number} job={job.pr_number}"
+            )
+        if sealed.head_sha.lower() != job.head_sha.lower():
+            raise FormalReviewJobsError(
+                f"sealed_job_mismatch: head_sha sealed={sealed.head_sha!r} "
+                f"job={job.head_sha!r}"
+            )
+        if sealed.gate_kind != job.gate_kind:
+            raise FormalReviewJobsError(
+                f"sealed_job_mismatch: gate_kind sealed={sealed.gate_kind!r} "
+                f"job={job.gate_kind!r}"
+            )
+
+        if job.sealed_verdict_artifact_id is not None:
+            # Idempotent re-accept of identical payload only.
+            existing = self.load_sealed_verdict(job.review_id)
+            if existing.to_dict() != sealed.to_dict():
+                raise FormalReviewJobsError(
+                    f"sealed_verdict_already_set: job {job.review_id} already holds a "
+                    "different sealed verdict; refuse overwrite"
+                )
+            return existing
+
+        payload = json.dumps(sealed.to_dict(), sort_keys=True, separators=(",", ":"))
+        artifact = self.store.store_text(
+            payload,
+            producer="formal-review-jobs",
+            retention_class="sealed-verdict",
+            logical_filename=f"{job.review_id}.sealed-verdict.json",
+            mime_type="application/json; charset=utf-8",
+        )
+        try:
+            self._conn.execute(
+                """UPDATE formal_review_jobs
+                   SET sealed_verdict_artifact_id = ?, state = ?
+                   WHERE review_id = ?""",
+                (artifact.artifact_id, "complete", job.review_id),
+            )
+            self._conn.commit()
+        except sqlite3.Error as exc:
+            self._conn.rollback()
+            raise FormalReviewJobsError(
+                f"failed to bind sealed verdict for {job.review_id}: {exc}"
+            ) from exc
+
+        if record_complete_attempt:
+            self.record_attempt(
+                job.review_id,
+                completion_state=CompletionState.COMPLETE,
+                raw_capture_artifact_id=raw_capture_artifact_id or artifact.artifact_id,
+            )
+        return sealed
+
+    def load_sealed_verdict(self, review_id: str) -> SealedVerdict:
+        """Reload the durable sealed verdict for PR-G ``--review-id`` publish."""
+        job = self.get_job(review_id, include_attempts=False)
+        if job.sealed_verdict_artifact_id is None:
+            raise FormalReviewJobsError(
+                f"sealed_verdict_missing: job {job.review_id} has no accepted sealed "
+                "verdict (call accept_sealed_verdict first)"
+            )
+        try:
+            raw = self.store.read_bytes(job.sealed_verdict_artifact_id)
+        except Exception as exc:
+            raise FormalReviewJobsError(
+                f"sealed_verdict_artifact_unreadable: {job.sealed_verdict_artifact_id}: {exc}"
+            ) from exc
+        try:
+            sealed = parse_sealed_verdict_payload(raw)
+        except ReviewPublicationError as exc:
+            raise FormalReviewJobsError(
+                f"sealed_verdict_corrupt: {job.sealed_verdict_artifact_id}: {exc}"
+            ) from exc
+        # Re-validate binding on every load (fail closed if DB/job drifted).
+        if (
+            sealed.review_id != job.review_id
+            or sealed.repository != job.repository
+            or sealed.pr_number != job.pr_number
+            or sealed.head_sha.lower() != job.head_sha.lower()
+            or sealed.gate_kind != job.gate_kind
+        ):
+            raise FormalReviewJobsError(
+                f"sealed_verdict_job_drift: artifact for {job.review_id} does not "
+                "match durable job identity"
+            )
+        return sealed
+
     def get_job(self, review_id: str, *, include_attempts: bool = True) -> FormalReviewJob:
         rid = self._require_nonempty(review_id, "review_id")
         row = self._conn.execute(
@@ -381,6 +518,10 @@ class FormalReviewJobService:
         *,
         attempts: tuple[FormalReviewAttempt, ...],
     ) -> FormalReviewJob:
+        keys = set(row.keys()) if hasattr(row, "keys") else set()
+        sealed_id = None
+        if "sealed_verdict_artifact_id" in keys and row["sealed_verdict_artifact_id"] is not None:
+            sealed_id = str(row["sealed_verdict_artifact_id"])
         return FormalReviewJob(
             review_id=str(row["review_id"]),
             repository=str(row["repository"]),
@@ -391,6 +532,7 @@ class FormalReviewJobService:
             snapshot_artifact_id=(
                 str(row["snapshot_artifact_id"]) if row["snapshot_artifact_id"] is not None else None
             ),
+            sealed_verdict_artifact_id=sealed_id,
             created_at=str(row["created_at"]),
             attempts=attempts,
         )

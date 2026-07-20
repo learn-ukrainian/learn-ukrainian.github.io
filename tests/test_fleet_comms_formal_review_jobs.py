@@ -164,3 +164,79 @@ def test_snapshot_artifact_id_must_exist(tmp_path: Path) -> None:
                     GATE,
                     snapshot_artifact_id="artifact_nope",
                 )
+
+
+_SHA = "a" * 40
+
+
+def _sealed_payload(review_id: str, **overrides: object) -> dict[str, object]:
+    base: dict[str, object] = {
+        "review_id": review_id,
+        "repository": REPO,
+        "pr_number": 5512,
+        "head_sha": _SHA,
+        "gate_kind": GATE,
+        "verdict": "APPROVED",
+        "model": "claude-opus-4-6",
+        "family": "anthropic",
+        "harness": "claude",
+    }
+    base.update(overrides)
+    return base
+
+
+def test_accept_and_load_sealed_verdict(tmp_path: Path) -> None:
+    with _service(tmp_path) as svc:
+        job = svc.create_job(REPO, 5512, _SHA, GATE)
+        assert job.sealed_verdict_artifact_id is None
+        sealed = svc.accept_sealed_verdict(job.review_id, _sealed_payload(job.review_id))
+        assert sealed.verdict == "APPROVED"
+        loaded_job = svc.get_job(job.review_id)
+        assert loaded_job.has_sealed_verdict
+        assert loaded_job.state == "complete"
+        again = svc.load_sealed_verdict(job.review_id)
+        assert again.to_dict() == sealed.to_dict()
+        # Idempotent re-accept of identical payload
+        same = svc.accept_sealed_verdict(job.review_id, _sealed_payload(job.review_id))
+        assert same.verdict == "APPROVED"
+
+
+def test_accept_sealed_verdict_rejects_identity_mismatch(tmp_path: Path) -> None:
+    with _service(tmp_path) as svc:
+        job = svc.create_job(REPO, 5512, _SHA, GATE)
+        with pytest.raises(FormalReviewJobsError, match="sealed_job_mismatch"):
+            svc.accept_sealed_verdict(
+                job.review_id,
+                _sealed_payload(job.review_id, pr_number=9999),
+            )
+
+
+def test_accept_sealed_verdict_refuses_overwrite(tmp_path: Path) -> None:
+    with _service(tmp_path) as svc:
+        job = svc.create_job(REPO, 5512, _SHA, GATE)
+        svc.accept_sealed_verdict(job.review_id, _sealed_payload(job.review_id))
+        with pytest.raises(FormalReviewJobsError, match="sealed_verdict_already_set"):
+            svc.accept_sealed_verdict(
+                job.review_id,
+                _sealed_payload(job.review_id, verdict="CHANGES_REQUESTED"),
+            )
+
+
+def test_load_sealed_verdict_missing(tmp_path: Path) -> None:
+    with _service(tmp_path) as svc:
+        job = svc.create_job(REPO, 42, _SHA, GATE)
+        with pytest.raises(FormalReviewJobsError, match="sealed_verdict_missing"):
+            svc.load_sealed_verdict(job.review_id)
+
+
+def test_migration_v2_adds_sealed_column(tmp_path: Path) -> None:
+    import sqlite3
+
+    from scripts.fleet_comms.migrations import apply_migrations
+
+    db = tmp_path / "c.sqlite3"
+    conn = sqlite3.connect(str(db))
+    assert apply_migrations(conn) == 2
+    cols = {row[1] for row in conn.execute("PRAGMA table_info(formal_review_jobs)")}
+    assert "sealed_verdict_artifact_id" in cols
+    conn.close()
