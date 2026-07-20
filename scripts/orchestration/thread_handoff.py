@@ -3308,6 +3308,73 @@ def render_session_start_context(candidate: dict[str, Any] | None, *, agent: str
     return "\n".join(lines)
 
 
+def _candidate_task_family(state: dict[str, Any], replacement: dict[str, Any]) -> str:
+    """Extract task_family from lease state / replacement identity blobs."""
+    for blob in (replacement, state):
+        if not isinstance(blob, dict):
+            continue
+        identity = blob.get("identity") or blob.get("task_identity") or {}
+        if isinstance(identity, dict):
+            family = str(identity.get("task_family") or "").strip().lower()
+            if family:
+                return family
+        family = str(blob.get("task_family") or "").strip().lower()
+        if family:
+            return family
+    return ""
+
+
+def _filter_live_leases_by_task_family(
+    live_leases: list[tuple[Path, dict[str, Any], dict[str, Any]]],
+    task_family: str,
+) -> list[tuple[Path, dict[str, Any], dict[str, Any]]]:
+    wanted = task_family.strip().lower()
+    if not wanted:
+        return live_leases
+    matched = [
+        item
+        for item in live_leases
+        if _candidate_task_family(item[1], item[2]) == wanted
+    ]
+    return matched
+
+
+def _render_multiple_pending_session_start(
+    *,
+    agent: str,
+    candidates: list[dict[str, Any]],
+    task_family_filter: str,
+) -> str:
+    lines = [
+        f"MULTIPLE LIVE PENDING ROLLOVERS for agent `{agent}` (#5398 class).",
+        "Do NOT cold-start. Do NOT pick by title or filesystem order.",
+        f"Candidate count: {len(candidates)}.",
+    ]
+    if task_family_filter:
+        lines.append(f"Task-family filter applied: `{task_family_filter}` (still ambiguous).")
+    lines.append("")
+    for i, cand in enumerate(candidates, start=1):
+        lines.append(
+            f"{i}. lineage_id={cand.get('lineage_id')} rollover_id={cand.get('rollover_id')} "
+            f"family={cand.get('task_family')} title={cand.get('visible_title')!r}"
+        )
+        issue = cand.get("issue") or {}
+        if isinstance(issue, dict) and issue.get("number"):
+            lines.append(f"   issue=#{issue.get('number')} {issue.get('url') or ''}".rstrip())
+        lines.append(
+            f"   bind: .venv/bin/python scripts/orchestration/thread_handoff.py bind-replacement "
+            f"--agent {agent} --lineage-id {cand.get('lineage_id')} "
+            f"--rollover-id {cand.get('rollover_id')} "
+            f"--replacement-task-id <this-thread-id> --evidence <harness-binding>"
+        )
+        lines.append("")
+    lines.append(
+        "Resolution: bind the exact candidate for THIS lane (or re-run detect with "
+        "`--task-family <family>` / launch with `--epic <name>`)."
+    )
+    return "\n".join(lines)
+
+
 def cmd_detect(args: argparse.Namespace) -> int:
     try:
         _, state_root = resolve_roots(args.repo_root)
@@ -3315,9 +3382,34 @@ def cmd_detect(args: argparse.Namespace) -> int:
         print(json.dumps({"error": str(exc)}, indent=2))
         return 2
     agent = normalize_agent_name(args.agent)
+    task_family_filter = str(getattr(args, "task_family", "") or "").strip().lower()
 
-    agent_dir = state_root / ".agent" / "thread-rollovers" / agent
-    if not agent_dir.exists():
+    # Agent directories to scan. Epic slots like claude-hramatka often have packets
+    # prepared under the bare `claude` namespace (#5398 / hramatka interim).
+    scan_agents = [agent]
+    # Epic slots (claude-hramatka, codex-folk, …) often have packets prepared under
+    # the bare provider namespace — scan both (#5398 slot trap).
+    if agent.startswith("claude-") and agent not in {"claude-infra", "claude-atlas"}:
+        scan_agents.append("claude")
+    elif agent.startswith("codex-") and agent not in {"codex-infra"}:
+        scan_agents.append("codex")
+
+    live_leases: list[tuple[Path, dict[str, Any], dict[str, Any], str]] = []
+
+    for scan_agent in scan_agents:
+        agent_dir = state_root / ".agent" / "thread-rollovers" / scan_agent
+        if not agent_dir.exists():
+            continue
+        for path in sorted(agent_dir.glob("*/lease.json")):
+            state = load_state(path)
+            replacement, error = validate_live_lease(state, agent=scan_agent, state_path=path)
+            if error:
+                print(json.dumps({"error": f"invalid rollover lease {rel(path, state_root)}: {error}"}, indent=2))
+                return 2
+            if replacement is not None and replacement["status"] in {"pending_start", "resumed"}:
+                live_leases.append((path, state, replacement, scan_agent))
+
+    if not live_leases:
         output: dict[str, Any] = {"agent": agent, "status": "none"}
         print(
             render_session_start_context(None, agent=agent, current_thread_id=args.current_thread_id)
@@ -3326,25 +3418,20 @@ def cmd_detect(args: argparse.Namespace) -> int:
         )
         return 0
 
-    live_leases: list[tuple[Path, dict[str, Any], dict[str, Any]]] = []
-
-    for path in sorted(agent_dir.glob("*/lease.json")):
-        state = load_state(path)
-        replacement, error = validate_live_lease(state, agent=agent, state_path=path)
-        if error:
-            print(json.dumps({"error": f"invalid rollover lease {rel(path, state_root)}: {error}"}, indent=2))
-            return 2
-        if replacement is not None and replacement["status"] in {"pending_start", "resumed"}:
-            live_leases.append((path, state, replacement))
-
-    if not live_leases:
-        output = {"agent": agent, "status": "none"}
-        print(
-            render_session_start_context(None, agent=agent, current_thread_id=args.current_thread_id)
-            if args.format == "session-start"
-            else json.dumps(output, indent=2)
-        )
-        return 0
+    # Narrow multi-packet sets by task family when the launcher knows the epic (#5398).
+    if task_family_filter and len(live_leases) > 1:
+        filtered = [
+            item
+            for item in live_leases
+            if _candidate_task_family(item[1], item[2]) == task_family_filter
+            or (
+                # Epic name often matches task_family (hramatka, folk, atlas, …).
+                task_family_filter in str(item[2].get("role") or "").lower()
+            )
+        ]
+        if len(filtered) == 1 or len(filtered) > 1:
+            live_leases = filtered
+        # If filter matches zero, keep full list so the operator sees everything.
 
     if len(live_leases) > 1:
         candidates = [
@@ -3353,24 +3440,35 @@ def cmd_detect(args: argparse.Namespace) -> int:
                 replacement,
                 state_file=rel(path, state_root),
             )
-            for path, state, replacement in live_leases
+            for path, state, replacement, _scan_agent in live_leases
         ]
-        print(
-            json.dumps(
-                {
-                    "error_code": "MULTIPLE_LIVE_PENDING_ROLLOVERS",
-                    "error": f"Multiple live pending rollovers found for agent {agent}.",
-                    "agent": agent,
-                    "candidate_count": len(candidates),
-                    "candidates": candidates,
-                    "resolution_policy": "Use exact candidate identifiers and receipts; never select by filesystem order, visible title, or automatic supersession.",
-                },
-                indent=2,
+        payload = {
+            "error_code": "MULTIPLE_LIVE_PENDING_ROLLOVERS",
+            "error": f"Multiple live pending rollovers found for agent {agent}.",
+            "agent": agent,
+            "status": "ambiguous",
+            "candidate_count": len(candidates),
+            "candidates": candidates,
+            "task_family_filter": task_family_filter or None,
+            "resolution_policy": (
+                "Use exact candidate identifiers and receipts; never select by filesystem "
+                "order, visible title, or automatic supersession. Prefer --task-family / "
+                "--epic launch filter when the lane is known."
+            ),
+        }
+        if args.format == "session-start":
+            print(
+                _render_multiple_pending_session_start(
+                    agent=agent,
+                    candidates=candidates,
+                    task_family_filter=task_family_filter,
+                )
             )
-        )
+        else:
+            print(json.dumps(payload, indent=2))
         return 2
 
-    path, state, replacement = live_leases[0]
+    path, state, replacement, scan_agent = live_leases[0]
     if (
         replacement["status"] == "resumed"
         and args.current_thread_id
@@ -3389,6 +3487,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
 
     output = {
         "agent": agent,
+        "packet_agent": scan_agent,
         "lineage_id": state.get("lineage_id"),
         "rollover_id": replacement.get("rollover_id"),
         "status": replacement.get("status"),
@@ -3408,6 +3507,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
         "identity_receipt_path": replacement.get("identity_receipt_path"),
         "identity": replacement.get("identity"),
         "title_transition": replacement.get("title_transition"),
+        "task_family_filter": task_family_filter or None,
     }
     print(
         render_session_start_context(output, agent=agent, current_thread_id=args.current_thread_id)
@@ -3614,6 +3714,15 @@ def build_parser() -> argparse.ArgumentParser:
     )
     detect.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
     detect.add_argument("--current-thread-id", default="")
+    detect.add_argument(
+        "--task-family",
+        default="",
+        help=(
+            "When multiple live packets exist, keep only candidates whose task_family "
+            "matches this value (e.g. hramatka). Prefer launching with --epic so "
+            "SessionStart can pass SESSION_EPIC here (#5398)."
+        ),
+    )
     detect.add_argument("--format", choices=("json", "session-start"), default="json")
     detect.set_defaults(func=cmd_detect)
     return parser
