@@ -39,8 +39,28 @@ def test_rule_sources_includes_all_unscoped_files():
         "agents_extensions/shared/rules/delegate-must-use-worktree.md",
         "agents_extensions/shared/rules/cli-help-standard.md",
         "agents_extensions/shared/rules/model-assignment.md",
+        "docs/best-practices/fleet-shared-doctrine.md",
+        "docs/best-practices/fleet-role-scorecard.md",
     }
     assert set(rules_router.RULE_SOURCES) == expected
+    # Order: machine routing before living scorecard (#5529).
+    assert rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/model-assignment.md"
+    ) < rules_router.RULE_SOURCES.index("docs/best-practices/fleet-role-scorecard.md")
+
+
+def test_rules_live_assembly_includes_fleet_scorecard():
+    """Live PROJECT_ROOT must serve doctrine + scorecard so cold-starts see them."""
+    resp = client.get("/api/rules?format=json")
+    assert resp.status_code == 200
+    body = resp.json()
+    sources = body["sources"]
+    assert "docs/best-practices/fleet-shared-doctrine.md" in sources
+    assert "docs/best-practices/fleet-role-scorecard.md" in sources
+    md = body["markdown"]
+    assert "Fleet role scorecard" in md
+    assert "Fleet topology" in md or "orchestrator" in md.lower()
+    assert body["hash"] == hashlib.sha256(md.encode("utf-8")).hexdigest()
 
 
 def test_rules_markdown_default(monkeypatch, tmp_path):

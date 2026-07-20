@@ -1982,10 +1982,22 @@ hashes against its local cache and only refetches what changed.
 
 ### `GET /api/rules?format={markdown,json}`
 
-Condensed rule text from `claude_extensions/rules/` (critical +
-non-negotiable + workflow, in that order). Source of truth is the
-checked-in files so a fresh clone or worktree that hasn't deployed
-to `.claude/rules/` still gets correct content.
+Condensed always-load rule text for agent cold-start. Source of truth is
+the checked-in paths in `scripts/api/rules_router.RULE_SOURCES` (not the
+deployed `.claude/rules/` copies), so a fresh clone or worktree that
+hasn't run `npm run agents:deploy` still gets correct content.
+
+Assembly order (stable; hash changes if this list or any file changes):
+
+1. Operator expectations + critical + non-negotiable + workflow
+2. Worktree / CLI hygiene rules
+3. **`model-assignment.md`** — machine routing + fleet topology ladder
+4. **`docs/best-practices/fleet-shared-doctrine.md`** — doctrine (#5474)
+5. **`docs/best-practices/fleet-role-scorecard.md`** — living role scoreboard (#5474 / #5529)
+
+Machine routing (`model-assignment.md`) wins on conflict with the living
+scorecard. Agents that previously only saw topology via rules now also
+receive the scoreboard without a second file read.
 
 - `format=markdown` (default) → `text/markdown; charset=utf-8` with
   an `X-Rules-Hash` header. Drop-in for a system prompt. With telemetry
