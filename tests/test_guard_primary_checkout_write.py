@@ -492,3 +492,76 @@ def test_git_apply_override_env_allows(repo: Path, monkeypatch: pytest.MonkeyPat
         env=env,
     )
     assert result.returncode == 0, result.stderr
+
+
+# --- #5517: checkout without -- ; git mv / git rm -------------------------
+
+
+def test_bash_git_write_intents_checkout_no_dashdash():
+    intents = hook.bash_git_write_intents("git checkout HEAD~1 curriculum/tracked.md")
+    assert len(intents) == 1
+    assert intents[0]["kind"] == "path_checkout"
+    assert intents[0]["allowlisted"] is False
+    assert intents[0]["paths"] == ["curriculum/tracked.md"]
+
+
+def test_bash_git_write_intents_mv_rm():
+    mv = hook.bash_git_write_intents("git mv a.py b.py")
+    assert len(mv) == 1 and mv[0]["kind"] == "mv" and mv[0]["paths"] == ["a.py", "b.py"]
+    rm = hook.bash_git_write_intents("git rm -f curriculum/tracked.md")
+    assert len(rm) == 1 and rm[0]["kind"] == "rm" and rm[0]["paths"] == ["curriculum/tracked.md"]
+
+
+def test_git_checkout_treeish_path_no_dashdash_blocked(repo: Path):
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {"command": "git checkout HEAD~1 curriculum/tracked.md"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+
+
+def test_git_mv_on_primary_blocked(repo: Path):
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {"command": "git mv curriculum/tracked.md curriculum/renamed.md"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+
+
+def test_git_rm_on_primary_blocked(repo: Path):
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {"command": "git rm curriculum/tracked.md"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+
+
+def test_git_mv_via_dash_c_worktree_allowed(repo: Path):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {
+            "command": f"git -C {worktree} mv curriculum/tracked.md curriculum/renamed.md"
+        },
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 0, result.stderr
+
+
+def test_git_checkout_branch_only_not_blocked_by_git_guard(repo: Path):
+    """Branch switch has no pathspecs — left to the branch-switch guard."""
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {"command": "git checkout -b feature-x"},
+    }
+    result = _run(repo, payload)
+    # No git-mediated path intent → this hook allows (other hooks may still fire).
+    assert result.returncode == 0, result.stderr

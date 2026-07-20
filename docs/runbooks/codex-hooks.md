@@ -44,8 +44,8 @@ exits 2 and tells the agent to create/`cd` into
   editors (`sed -i` / `perl -i`). Read-only preflight (`git status`, `git log`,
   `rg`, `cat`, …) exposes no write target and is never blocked.
 - `Bash` git-mediated working-tree writes (**#5396**): `git apply` / `git am`,
-  `git add`, `git stash pop|apply`, and `git checkout <ref> -- <path>` /
-  `git restore --source=…` when the effective worktree (payload cwd or
+  `git add`, `git stash pop|apply`, and `git checkout <ref> -- <path>` / `git checkout <ref> <path>` /
+  `git mv` / `git rm` / `git restore --source=…` (#5517) when the effective worktree (payload cwd or
   `git -C`) is the protected primary checkout. Honors `git -C <worktree>` so
   apply-from-primary-shell into a worktree stays allowed. Rescue clean forms
   `git checkout -- <path>` and plain `git restore <path>` remain allowed.

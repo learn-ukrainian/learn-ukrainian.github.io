@@ -31,13 +31,13 @@ Covered write surfaces
   in-place editors (``sed -i`` / ``perl -i``). Quote-aware tokenization keeps a
   ``>`` inside a quoted string (e.g. a commit message) from reading as a
   redirect.
-* ``Bash`` git-mediated working-tree writes (issue #5396) — ``git apply`` /
-  ``git am``, ``git add``, ``git stash pop|apply``, and
-  ``git checkout <ref> -- <path>`` / ``git restore --source=…`` when the
-  effective git worktree (payload cwd or ``git -C``) is the protected primary
-  checkout. Rescue clean forms ``git checkout -- <path>`` and plain
-  ``git restore <path>`` (no ``--source``) remain allowed so operators can
-  discard accidental dirt.
+* ``Bash`` git-mediated working-tree writes (issues #5396 / #5517) — ``git apply`` /
+  ``git am``, ``git add``, ``git stash pop|apply``, ``git mv`` / ``git rm``,
+  ``git checkout <ref> -- <path>``, ``git checkout <ref> <path>`` (no ``--``),
+  and ``git restore --source=…`` when the effective git worktree (payload cwd
+  or ``git -C``) is the protected primary checkout. Rescue clean forms
+  ``git checkout -- <path>`` and plain ``git restore <path>`` (no ``--source``)
+  remain allowed so operators can discard accidental dirt.
 
 Coverage limitations (documented, by design)
 --------------------------------------------
@@ -577,12 +577,14 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
 
         if sub == "checkout":
             # Allowlist: `git checkout -- <paths>` (restore from index/HEAD).
-            # Block: `git checkout <tree-ish> -- <paths>` (writes tree content).
+            # Block: `git checkout <tree-ish> -- <paths>` and the no-dashdash
+            # form `git checkout <tree-ish> <path>…` (#5517).
+            # Branch-only checkouts (single non-flag arg, no paths) stay out —
+            # other guards own branch switches.
             if "--" in sub_args:
                 dd = sub_args.index("--")
                 before = sub_args[:dd]
                 after = sub_args[dd + 1 :]
-                # Drop flags from `before`.
                 treeish = [t for t in before if not t.startswith("-")]
                 if not treeish:
                     intents.append(
@@ -604,7 +606,22 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
                             "allowlisted": False,
                         }
                     )
-            # Branch switches / plain checkout have no pathspecs → other guards.
+            else:
+                positionals = [t for t in sub_args if not t.startswith("-")]
+                if len(positionals) >= 2:
+                    # tree-ish + one or more pathspecs (no `--` separator).
+                    intents.append(
+                        {
+                            "kind": "path_checkout",
+                            "c_path": c_path,
+                            "paths": positionals[1:],
+                            "summary": (
+                                f"git checkout {positionals[0]} "
+                                + " ".join(positionals[1:])
+                            ),
+                            "allowlisted": False,
+                        }
+                    )
             continue
 
         if sub == "restore":
@@ -649,6 +666,31 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
                         "allowlisted": False,
                     }
                 )
+            continue
+
+        if sub in {"mv", "rm"}:
+            # Both mutate the index and the working tree (#5517).
+            paths: list[str] = []
+            i = 0
+            while i < len(sub_args):
+                tok = sub_args[i]
+                if tok == "--":
+                    paths.extend(sub_args[i + 1 :])
+                    break
+                if tok.startswith("-"):
+                    i += 1
+                    continue
+                paths.append(tok)
+                i += 1
+            intents.append(
+                {
+                    "kind": "mv" if sub == "mv" else "rm",
+                    "c_path": c_path,
+                    "paths": paths,
+                    "summary": f"git {sub}" + (f" {' '.join(paths)}" if paths else ""),
+                    "allowlisted": False,
+                }
+            )
             continue
 
     return intents
