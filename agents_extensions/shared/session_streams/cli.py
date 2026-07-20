@@ -193,6 +193,69 @@ Related:
         default=Path.cwd(),
         help="Repository root. Default: current working directory.",
     )
+
+    handoff_status = subparsers.add_parser(
+        "handoff-status",
+        help="Diagnose whether an epic stream is claimable by a successor driver (#5530).",
+        description=(
+            "Read-only: report open session, lease TTL, holder PID liveness, and whether "
+            "proof-gated force-close + claim is allowed. See docs/runbooks/epic-stream-handoff.md."
+        ),
+    )
+    handoff_status.add_argument(
+        "--stream",
+        required=True,
+        help="Exact stream ID, for example epic:4542.",
+    )
+    handoff_status.add_argument(
+        "--format",
+        choices=("json", "text"),
+        default="text",
+        help="Output format. Default: text.",
+    )
+
+    handoff_claim = subparsers.add_parser(
+        "handoff-claim",
+        help="Force-close expired dead holder if needed, open a new session, pin new driver (#5530).",
+        description=(
+            "Cross-agent epic-stream claim. Refuses if a live unexpired lease exists. "
+            "Claimer process must be live and instance_id must differ from the expired holder."
+        ),
+    )
+    handoff_claim.add_argument("--stream", required=True, help="Exact stream ID, for example epic:4542.")
+    handoff_claim.add_argument("--agent", required=True, help="Successor agent identity, for example claude.")
+    handoff_claim.add_argument(
+        "--harness",
+        required=True,
+        help="Successor harness identity, for example claude-code or grok-tui.",
+    )
+    handoff_claim.add_argument(
+        "--instance-id",
+        default=None,
+        help="Distinct runtime instance id (default: auto-generated).",
+    )
+    handoff_claim.add_argument(
+        "--process-id",
+        type=int,
+        default=None,
+        help="Claimer process id (default: current PID).",
+    )
+    handoff_claim.add_argument(
+        "--lineage-id",
+        default=None,
+        help="Session lineage id (default: lineage-<stream>-<agent>-<date>).",
+    )
+    handoff_claim.add_argument(
+        "--ttl-seconds",
+        type=int,
+        default=6 * 3600,
+        help="Lease TTL for the new session. Default: 21600.",
+    )
+    handoff_claim.add_argument(
+        "--task-id",
+        default=None,
+        help="Optional task id for the lease holder.",
+    )
     return parser
 
 
@@ -213,6 +276,10 @@ def main(argv: list[str] | None = None) -> int:
             return _mirror_handoff(store, args)
         if args.command == "dual-write-status":
             return _dual_write_status(args)
+        if args.command == "handoff-status":
+            return _handoff_status(store, args)
+        if args.command == "handoff-claim":
+            return _handoff_claim(store, args)
         parser.error(f"unsupported command: {args.command}")
     except NotFoundError as exc:
         print(f"session-streams: {exc}", file=sys.stderr)
@@ -224,6 +291,55 @@ def main(argv: list[str] | None = None) -> int:
         print(f"session-streams: unexpected failure: {exc}", file=sys.stderr)
         return 5
     return 5
+
+
+def _handoff_status(store: SessionStreamStore, args: argparse.Namespace) -> int:
+    from .handoff import diagnose_handoff
+
+    status = diagnose_handoff(store, args.stream)
+    if args.format == "json":
+        print(json.dumps(status.as_dict(), ensure_ascii=False, indent=2, sort_keys=True))
+        return 0
+    print(f"stream:              {status.stream_id}")
+    print(f"session_id:          {status.session_id or '—'}")
+    print(f"session_state:       {status.session_state or '—'}")
+    print(f"lease_state:         {status.lease_state or '—'}")
+    print(f"lease_expired:       {status.lease_expired}")
+    print(f"holder:              {status.holder_agent or '—'}/{status.holder_harness or '—'}")
+    print(f"holder_instance_id:  {status.holder_instance_id or '—'}")
+    print(f"holder_process_id:   {status.holder_process_id or '—'} alive={status.holder_process_alive}")
+    print(f"expires_at:          {status.expires_at or '—'}")
+    print(f"heartbeat_at:        {status.heartbeat_at or '—'}")
+    print(f"claimable_force_close: {status.claimable_force_close}")
+    print(f"reason:              {status.reason}")
+    return 0
+
+
+def _handoff_claim(store: SessionStreamStore, args: argparse.Namespace) -> int:
+    from datetime import datetime
+
+    from .handoff import claim_stream, default_instance_id
+
+    stream = args.stream
+    agent = args.agent
+    instance_id = args.instance_id or default_instance_id(agent)
+    process_id = args.process_id or os.getpid()
+    lineage = args.lineage_id or (
+        f"lineage-{stream.replace(':', '-')}-{agent}-{datetime.now().strftime('%Y%m%d')}"
+    )
+    receipt = claim_stream(
+        store,
+        stream_id=stream,
+        agent=agent,
+        harness=args.harness,
+        instance_id=instance_id,
+        process_id=process_id,
+        lineage_id=lineage,
+        ttl_seconds=args.ttl_seconds,
+        task_id=args.task_id,
+    )
+    print(json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
 
 
 def _tail(store: SessionStreamStore, args: argparse.Namespace) -> int:
