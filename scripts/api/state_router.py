@@ -790,10 +790,17 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
             if age is not None and (cb_max_age_s is None or age > cb_max_age_s):
                 cb_max_age_s = age
 
-            # Build codexbar metadata dict
+            # Build codexbar metadata dict (multi-window remaining for Cursor etc.)
             agents[lane]["codexbar"] = {
                 "primary_used_pct": cb_data.get("primary_used_pct"),
+                "primary_remaining_pct": cb_data.get("primary_remaining_pct"),
+                "secondary_used_pct": cb_data.get("secondary_used_pct"),
+                "secondary_remaining_pct": cb_data.get("secondary_remaining_pct"),
+                "tertiary_used_pct": cb_data.get("tertiary_used_pct"),
+                "tertiary_remaining_pct": cb_data.get("tertiary_remaining_pct"),
                 "weekly_used_pct": cb_data.get("weekly_used_pct"),
+                "weekly_remaining_pct": cb_data.get("weekly_remaining_pct"),
+                "windows": cb_data.get("windows"),
                 "monthly_cap_usd": cb_data.get("monthly_cap_usd"),
                 "monthly_used_usd": cb_data.get("monthly_used_usd"),
                 "weekly_resets_at": cb_data.get("weekly_resets_at"),
@@ -849,7 +856,14 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
             agents[lane]["remaining_pct"] = None
             agents[lane]["codexbar"] = {
                 "primary_used_pct": None,
+                "primary_remaining_pct": None,
+                "secondary_used_pct": None,
+                "secondary_remaining_pct": None,
+                "tertiary_used_pct": None,
+                "tertiary_remaining_pct": None,
                 "weekly_used_pct": None,
+                "weekly_remaining_pct": None,
+                "windows": None,
                 "monthly_cap_usd": None,
                 "monthly_used_usd": None,
                 "weekly_resets_at": None,

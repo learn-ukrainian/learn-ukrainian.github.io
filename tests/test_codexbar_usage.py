@@ -169,6 +169,8 @@ def test_normalize_claude_shape():
     assert res["lane"] == "claude"
     assert res["primary_used_pct"] == 7.0
     assert res["weekly_used_pct"] == 74.0
+    assert res["primary_remaining_pct"] == 93.0
+    assert res["weekly_remaining_pct"] == 26.0
     assert res["monthly_cap_usd"] == 20.0
     assert res["monthly_used_usd"] == 0.0
     assert res["weekly_resets_at"] == "2026-07-13T06:59:59Z"
@@ -177,6 +179,46 @@ def test_normalize_claude_shape():
     assert "27% in deficit" in res["pace_summary"]
     assert res["source"] == "codexbar"
     assert res["fetched_at"] is not None
+
+
+def test_normalize_cursor_three_windows():
+    """Cursor Pro exposes primary/secondary/tertiary allotments (API = tertiary)."""
+    raw = {
+        "provider": "cursor",
+        "source": "web",
+        "usage": {
+            "primary": {
+                "usedPercent": 44.7,
+                "resetsAt": "2026-08-01T09:58:38Z",
+                "windowMinutes": 44640,
+                "resetDescription": "Resets Aug 1",
+            },
+            "secondary": {
+                "usedPercent": 36.0,
+                "resetsAt": "2026-08-01T09:58:38Z",
+                "windowMinutes": 44640,
+            },
+            "tertiary": {
+                "usedPercent": 100.0,
+                "resetsAt": "2026-08-01T09:58:38Z",
+                "windowMinutes": 44640,
+            },
+        },
+    }
+    res = _normalize_provider_data("cursor", raw)
+    assert res["lane"] == "cursor"
+    assert res["primary_used_pct"] == 44.7
+    assert abs(res["primary_remaining_pct"] - 55.3) < 0.01
+    assert res["secondary_used_pct"] == 36.0
+    assert res["secondary_remaining_pct"] == 64.0
+    assert res["tertiary_used_pct"] == 100.0
+    assert res["tertiary_remaining_pct"] == 0.0
+    # weekly alias tracks secondary allotment for Cursor-style plans
+    assert res["weekly_used_pct"] == 36.0
+    assert res["weekly_remaining_pct"] == 64.0
+    assert res["windows"]["tertiary"]["used_pct"] == 100.0
+    assert res["windows"]["tertiary"]["remaining_pct"] == 0.0
+    assert res["windows"]["primary"]["resets_at"] == "2026-08-01T09:58:38Z"
 
 
 def test_normalize_codex_shape():
