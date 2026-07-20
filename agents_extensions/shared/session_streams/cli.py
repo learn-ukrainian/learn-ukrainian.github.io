@@ -26,6 +26,7 @@ from .inventory import (
     load_stream_epic_inventory,
 )
 from .model import entry_as_dict
+from .projection import detect_projection_drift, project_inventory_streams
 from .receipts import (
     inventory_registration_summary,
     list_migration_state,
@@ -235,6 +236,84 @@ Related:
         ),
     )
 
+    project = subparsers.add_parser(
+        "project",
+        help="Record DB-first projection receipts for inventoried epics (no file rewrite).",
+        description=(
+            "After inventory, write legacy_projection_receipts for each epic handoff path. "
+            "Detects unrecorded file mutation / dual-write projection failure as drift or "
+            "failed status. Does not open leases, rewrite handoffs, or advance cutover."
+        ),
+    )
+    project.add_argument(
+        "--repo-root",
+        type=Path,
+        default=Path.cwd(),
+        help="Repository root. Default: current working directory.",
+    )
+    project.add_argument(
+        "--stream",
+        action="append",
+        default=None,
+        dest="streams",
+        help="Optional stream ID filter (repeatable), for example epic:1001.",
+    )
+    project.add_argument(
+        "--format",
+        choices=("json", "table"),
+        default="json",
+        help="Output rendering. Default: json.",
+    )
+    project.add_argument(
+        "--no-register-inventory",
+        action="store_true",
+        help="Skip ensure-inventory step (fails closed if import receipts are missing).",
+    )
+    project.add_argument(
+        "--agent",
+        default="system",
+        help="Agent identity recorded on control events. Default: system.",
+    )
+
+    check_drift = subparsers.add_parser(
+        "check-drift",
+        help="Projection drift hook: record receipts and surface unrecorded file mutations.",
+        description=(
+            "Structure-only drift detection hook for dual-write. Same receipt path as "
+            "'project'; named for startup wiring later. Does not change SessionStart, "
+            "open leases, or flip cutover modes."
+        ),
+    )
+    check_drift.add_argument(
+        "--repo-root",
+        type=Path,
+        default=Path.cwd(),
+        help="Repository root. Default: current working directory.",
+    )
+    check_drift.add_argument(
+        "--stream",
+        action="append",
+        default=None,
+        dest="streams",
+        help="Optional stream ID filter (repeatable).",
+    )
+    check_drift.add_argument(
+        "--format",
+        choices=("json", "table"),
+        default="json",
+        help="Output rendering. Default: json.",
+    )
+    check_drift.add_argument(
+        "--register-inventory",
+        action="store_true",
+        help="Register inventory first when receipts are not yet seeded.",
+    )
+    check_drift.add_argument(
+        "--agent",
+        default="system",
+        help="Agent identity recorded on control events. Default: system.",
+    )
+
     handoff_status = subparsers.add_parser(
         "handoff-status",
         help="Diagnose whether an epic stream is claimable by a successor driver (#5530).",
@@ -319,6 +398,10 @@ def main(argv: list[str] | None = None) -> int:
             return _dual_write_status(args)
         if args.command == "inventory":
             return _inventory(store, args)
+        if args.command == "project":
+            return _project(store, args)
+        if args.command == "check-drift":
+            return _check_drift(store, args)
         if args.command == "handoff-status":
             return _handoff_status(store, args)
         if args.command == "handoff-claim":
@@ -554,6 +637,54 @@ def _inventory(store: SessionStreamStore, args: argparse.Namespace) -> int:
         payload["registration"] = registration
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
+
+
+def _print_projection_result(
+    store: SessionStreamStore,
+    result: Any,
+    *,
+    fmt: str,
+) -> int:
+    payload = result.as_dict()
+    payload["db_summary"] = inventory_registration_summary(store)
+    if fmt == "table":
+        print("stream_id\ttarget_path\tstatus\tunrecorded_mutation\tsource\terror")
+        for row in payload["streams"]:
+            print(
+                f"{row['stream_id']}\t{row['target_path']}\t{row['status']}\t"
+                f"{row['unrecorded_mutation']}\t{row['source']}\t{row['error']}"
+            )
+        print(
+            f"epic_count\t{payload['epic_count']}\tok\t{payload['ok']}\t"
+            f"drift\t{payload['drift']}\tfailed\t{payload['failed']}\t"
+            f"receipts_written\t{payload['receipts_written']}"
+        )
+        print(f"cutover\t{payload['cutover']}")
+        return 0
+    print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _project(store: SessionStreamStore, args: argparse.Namespace) -> int:
+    result = project_inventory_streams(
+        store,
+        args.repo_root,
+        stream_ids=args.streams,
+        ensure_inventory=not args.no_register_inventory,
+        agent=args.agent,
+    )
+    return _print_projection_result(store, result, fmt=args.format)
+
+
+def _check_drift(store: SessionStreamStore, args: argparse.Namespace) -> int:
+    result = detect_projection_drift(
+        store,
+        args.repo_root,
+        stream_ids=args.streams,
+        ensure_inventory=args.register_inventory,
+        agent=args.agent,
+    )
+    return _print_projection_result(store, result, fmt=args.format)
 
 
 def _dump_jsonl(payload: dict[str, Any]) -> str:

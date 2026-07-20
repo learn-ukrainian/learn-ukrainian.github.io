@@ -35,6 +35,10 @@ just because the inline body looks short.
 
 ```bash
 .venv/bin/python -m agents_extensions.shared.session_streams dual-write-status
+.venv/bin/python -m agents_extensions.shared.session_streams inventory --register
+# DB-first projection receipts + drift detection (no file rewrite / no cutover):
+.venv/bin/python -m agents_extensions.shared.session_streams project
+.venv/bin/python -m agents_extensions.shared.session_streams check-drift
 # under an active lease (SESSION_STREAM_* env):
 .venv/bin/python -m agents_extensions.shared.session_streams mirror-handoff \
   --stream epic:4387
@@ -42,7 +46,8 @@ just because the inline body looks short.
 
 Registry: manifest inventory from `scripts/config/issue_streams.yaml` via
 `agents_extensions/shared/session_streams/inventory.py` (Sol PR-H; not a hard-coded
-epic subset).
+epic subset). Projection receipts land in `legacy_projection_receipts` after
+inventory; unrecorded file mutation is flagged as `drift` without flipping modes.
 
 **Still blocked for cutover:** operator gate after per-harness acceptance;
 file handoffs remain authoritative until then.

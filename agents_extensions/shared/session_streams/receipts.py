@@ -183,9 +183,15 @@ def record_projection_receipt(
     status: str,
     high_water_entry_id: int | None = None,
     error: str = "",
+    agent: str = "system",
     now: datetime | None = None,
 ) -> int:
-    """Append one legacy projection receipt (ok / failed / drift)."""
+    """Append one legacy projection receipt (ok / failed / drift).
+
+    Idempotent for the unique key
+    ``(stream_id, target_path, projection_hash, status)``. Drift/failed control
+    events are only inserted when a new receipt row is written.
+    """
     if status not in {"ok", "failed", "drift"}:
         raise ValueError(f"invalid projection status: {status}")
     if target_sha256 and len(target_sha256) != 64:
@@ -194,8 +200,8 @@ def record_projection_receipt(
     timestamp = isoformat_z(now or utc_now())
     with store._transaction(now=now) as connection:
         store._ensure_stream(connection, stream_id=stream_id, created_at=timestamp)
-        connection.execute(
-            "INSERT INTO legacy_projection_receipts("
+        cursor = connection.execute(
+            "INSERT OR IGNORE INTO legacy_projection_receipts("
             "stream_id, target_path, target_sha256, high_water_entry_id, "
             "projection_hash, status, recorded_at, error"
             ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -210,6 +216,7 @@ def record_projection_receipt(
                 error,
             ),
         )
+        inserted = bool(cursor.rowcount)
         row = connection.execute(
             "SELECT projection_id FROM legacy_projection_receipts "
             "WHERE stream_id = ? AND target_path = ? AND projection_hash = ? AND status = ? "
@@ -217,12 +224,12 @@ def record_projection_receipt(
             (stream_id, target_path, projection_hash, status),
         ).fetchone()
         assert row is not None
-        if status in {"failed", "drift"}:
+        if inserted and status in {"failed", "drift"}:
             connection.execute(
                 "INSERT INTO stream_control_events("
                 "stream_id, event_type, from_mode, to_mode, proof_json, "
                 "recorded_at, agent, reason"
-                ") VALUES (?, 'drift_detected', NULL, NULL, ?, ?, 'system', ?)",
+                ") VALUES (?, 'drift_detected', NULL, NULL, ?, ?, ?, ?)",
                 (
                     stream_id,
                     json.dumps(
@@ -236,6 +243,7 @@ def record_projection_receipt(
                         sort_keys=True,
                     ),
                     timestamp,
+                    agent,
                     f"projection {status} for {target_path}",
                 ),
             )
