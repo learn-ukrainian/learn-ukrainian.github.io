@@ -457,9 +457,82 @@ def cmd_score(args: argparse.Namespace) -> int:
     }
     verdict_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"verdict -> {verdict_path}")
-    if verdict == "FAIL-HANDOFF":
-        print("ACTION: FAIL-HANDOFF — dual-write STATE AT HANDBACK, close stream, end session now.")
+
+    # Diary dual-write: always stamp canary line; on FAIL write STATE AT HANDBACK template.
+    try:
+        from scripts.session_canary import diary as diary_mod
+
+        handoff_path = diary_mod.resolve_handoff_path(repo, epic, getattr(args, "handoff", None))
+        canary_line = diary_mod.format_canary_score_line(
+            verdict=verdict,
+            score_line=score_line,
+            context_tokens=int(args.context_tokens),
+            pass_ratio=pass_ratio,
+        )
+        stream_id = EPIC_STREAM_DEFAULTS.get(epic, "epic:N")
+        meta_path = out_dir / "mint_meta.json"
+        if meta_path.is_file():
+            import contextlib
+            with contextlib.suppress(json.JSONDecodeError, OSError):
+                stream_id = json.loads(meta_path.read_text(encoding="utf-8")).get("stream_id") or stream_id
+
+        if verdict == "FAIL-HANDOFF":
+            next_drive = _split_csv_lines(getattr(args, "next_drive", "") or "")
+            if not next_drive:
+                next_drive = [
+                    "Load STATE AT HANDBACK + stream tail; re-mint canary",
+                    "Resume only from dual-write Next Drive bullets",
+                ]
+            diary_mod.append_handback(
+                handoff_path,
+                epic=epic,
+                stream_id=stream_id,
+                reason="canary FAIL-HANDOFF",
+                pins=_split_csv_lines(getattr(args, "pins", "") or ""),
+                open_prs=_split_csv_lines(getattr(args, "open_prs", "") or ""),
+                next_drive=next_drive,
+                hands_off=_split_csv_lines(getattr(args, "hands_off", "") or "")
+                or ["Foreign lanes", "Primary checkout product writes"],
+                pending_user=_split_csv_lines(getattr(args, "pending_user", "") or ""),
+                worktrees=_split_csv_lines(getattr(args, "worktrees", "") or ""),
+                canary_line=canary_line,
+                notes=["Auto-written by grok_lane score on FAIL-HANDOFF"],
+            )
+            print(f"diary handback -> {handoff_path}")
+            diary_mod.try_stream_state_note(
+                stream_id,
+                f"STATE AT HANDBACK (canary FAIL-HANDOFF): {canary_line}",
+                idempotency_key=f"handback-{_utc_now()}",
+            )
+            print("ACTION: FAIL-HANDOFF — STATE AT HANDBACK written; close stream lease; /quit now.")
+        else:
+            diary_mod.append_diary_stamp(
+                handoff_path,
+                title="canary score PASS",
+                bullets=[canary_line, "Continue drive; dual-write after next batch."],
+            )
+            print(f"diary stamp -> {handoff_path}")
+            diary_mod.try_stream_state_note(
+                stream_id,
+                f"Canary PASS: {canary_line}",
+                idempotency_key=f"canary-pass-{_utc_now()}",
+            )
+    except Exception as exc:  # fail-open: never block score exit codes
+        print(f"warning: diary dual-write skipped ({type(exc).__name__}: {exc})", file=sys.stderr)
+
     return 0 if proc.returncode == 0 else (2 if proc.returncode == 2 else proc.returncode)
+
+
+def _split_csv_lines(raw: str) -> list[str]:
+    """Split ';' or newline separated bullets from CLI flags."""
+    if not raw or not raw.strip():
+        return []
+    parts: list[str] = []
+    for chunk in raw.replace("\n", ";").split(";"):
+        chunk = chunk.strip()
+        if chunk:
+            parts.append(chunk)
+    return parts
 
 
 def cmd_status(args: argparse.Namespace) -> int:
@@ -484,20 +557,35 @@ def cmd_protocol(args: argparse.Namespace) -> int:
     epic = args.epic.strip().lower()
     stream = args.stream or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")
     canary = f".claude/{epic}-epic/canary"
-    text = f"""## Grok lane session canary (operational)
+    handoff = f".claude/{epic}-epic/INTERIM-DRIVER-HANDOFF.md"
+    text = f"""## Grok lane session canary + diary (operational)
 
 You are bound to epic **{epic}** / stream **{stream}**.
 
-### SSOT (survives compact)
+### SSOT (survives compact) — chat does not
 - Session stream dual-write (typed entries)
-- `{canary.replace('canary', 'INTERIM-DRIVER-HANDOFF.md')}` or CLAUDE-DRIVER-HANDOFF.md (read-only if not interim)
+- Dual-write **diary handoff** (prefer `{handoff}` / CLAUDE-DRIVER-HANDOFF.md)
+- Canary probe under `{canary}/` — rot measurement only, **not** the board
+
+### Handoff = DIARY (required)
+After every real batch (merge, issue close, dispatch start, advisor note, block):
+```bash
+.venv/bin/python -m scripts.session_canary.grok_lane stamp --epic {epic} \\
+  --title "short what changed" \\
+  --bullet "fact 1" --bullet "fact 2" \\
+  --next "next action 1" --next "next action 2"
+```
+Keep **## Next Drive** as short numbered bullets (canary mints these). No secrets/PII.
 
 ### End signal = canary score, NOT compact count
 - Auto-compact is lossy for working memory. Disk logs ≠ model brain.
 - **First auto-compact ⇒ re-score**, do not auto-quit solely because compact fired.
 - **FAIL-HANDOFF (&lt; 8/10 at pass-ratio 0.8) ⇒ end now** regardless of token %.
 
-### Cold-start (after stream open + handoff load)
+### Cold-start (order is load-bearing)
+1. Open/claim stream lease for `{stream}`
+2. **Read diary handoff + stream tail first** (do not invent queue from chat)
+3. Only then mint:
 ```bash
 .venv/bin/python -m scripts.session_canary.grok_lane mint --epic {epic} --stream {stream}
 .venv/bin/python -m scripts.session_canary.grok_lane questions --epic {epic}
@@ -519,7 +607,14 @@ Do not open `probe.json` when later scoring from memory.
   --answers {canary}/answers.json \\
   --context-tokens <N> --model grok-4.5
 ```
-4. rc 0 = PASS (continue). rc 2 = FAIL-HANDOFF → dual-write STATE AT HANDBACK, close stream, `/quit`.
+4. rc 0 = PASS → auto diary stamp with canary line.
+   rc 2 = FAIL-HANDOFF → auto **STATE AT HANDBACK** block; close stream; `/quit`.
+
+### Clean close (optional while still PASS)
+```bash
+.venv/bin/python -m scripts.session_canary.grok_lane handback --epic {epic} \\
+  --reason "clean end" --next "..." --bullet "..."
+```
 
 ### Operator compact config (optional)
 In `~/.grok/config.toml`:
@@ -534,6 +629,67 @@ Strict 10/10 identity rollover still uses:
 `scripts/context_canary.py mint --snapshot …` + score — not this operational lane canary.
 """
     print(text)
+    return 0
+
+
+def cmd_stamp(args: argparse.Namespace) -> int:
+    """Append a diary stamp + optional Next Drive refresh."""
+    from scripts.session_canary import diary as diary_mod
+
+    repo = Path(args.repo).resolve()
+    epic = args.epic.strip().lower()
+    stream = args.stream or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")
+    path = diary_mod.resolve_handoff_path(repo, epic, args.handoff)
+    bullets = list(args.bullet or [])
+    if args.title and not bullets:
+        bullets = [args.title]
+    if not bullets:
+        print("error: provide --bullet at least once (or a meaningful --title)", file=sys.stderr)
+        return 2
+    next_drive = list(args.next) if args.next else None
+    stamp = diary_mod.append_diary_stamp(
+        path,
+        title=args.title or "batch",
+        bullets=bullets,
+        next_drive=next_drive,
+    )
+    print(f"diary stamp {stamp} -> {path}")
+    note = f"DIARY {stamp}: {args.title or 'batch'}; " + "; ".join(bullets[:5])
+    if diary_mod.try_stream_state_note(stream, note[:500], idempotency_key=f"diary-{stamp}-{epic}"):
+        print(f"stream state noted on {stream}")
+    return 0
+
+
+def cmd_handback(args: argparse.Namespace) -> int:
+    """Write STATE AT HANDBACK (clean close or manual FAIL close)."""
+    from scripts.session_canary import diary as diary_mod
+
+    repo = Path(args.repo).resolve()
+    epic = args.epic.strip().lower()
+    stream = args.stream or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")
+    path = diary_mod.resolve_handoff_path(repo, epic, args.handoff)
+    next_drive = list(args.next or []) or ["Load STATE AT HANDBACK + stream; mint canary; resume"]
+    canary_line = args.canary_line or "canary not scored this close"
+    stamp = diary_mod.append_handback(
+        path,
+        epic=epic,
+        stream_id=stream,
+        reason=args.reason or "clean close",
+        pins=list(args.pin or []),
+        open_prs=list(args.open_pr or []),
+        next_drive=next_drive,
+        hands_off=list(args.hands_off or []) or ["Foreign lanes"],
+        pending_user=list(args.pending_user or []),
+        worktrees=list(args.worktree or []),
+        canary_line=canary_line,
+        notes=list(args.note or []),
+    )
+    print(f"STATE AT HANDBACK {stamp} -> {path}")
+    diary_mod.try_stream_state_note(
+        stream,
+        f"STATE AT HANDBACK ({args.reason or 'clean close'}): {canary_line}",
+        idempotency_key=f"handback-cmd-{stamp}",
+    )
     return 0
 
 
@@ -567,6 +723,13 @@ def build_parser() -> argparse.ArgumentParser:
     score.add_argument("--model", default="grok-4.5")
     score.add_argument("--pass-ratio", type=float, default=DEFAULT_PASS_RATIO, help="Default 0.8 (8/10)")
     score.add_argument("--threshold", type=float, default=DEFAULT_SIM_THRESHOLD, help="Per-anchor sim threshold")
+    score.add_argument("--handoff", default=None, help="Dual-write diary path override")
+    score.add_argument("--next-drive", default="", help="On FAIL: Next Drive bullets separated by ';'")
+    score.add_argument("--pins", default="", help="On FAIL: pin bullets separated by ';'")
+    score.add_argument("--open-prs", default="", help="On FAIL: open PR bullets separated by ';'")
+    score.add_argument("--hands-off", default="", help="On FAIL: hands-off bullets separated by ';'")
+    score.add_argument("--pending-user", default="", help="On FAIL: pending-user bullets separated by ';'")
+    score.add_argument("--worktrees", default="", help="On FAIL: worktree bullets separated by ';'")
     score.set_defaults(func=cmd_score)
 
     status = sub.add_parser("status", help="Show canary artifact presence + last verdict")
@@ -578,6 +741,30 @@ def build_parser() -> argparse.ArgumentParser:
     protocol.add_argument("--epic", default="atlas")
     protocol.add_argument("--stream", default=None)
     protocol.set_defaults(func=cmd_protocol)
+
+    stamp = sub.add_parser("stamp", help="Append diary stamp (+ optional Next Drive refresh)")
+    stamp.add_argument("--epic", required=True)
+    stamp.add_argument("--stream", default=None)
+    stamp.add_argument("--handoff", default=None)
+    stamp.add_argument("--title", default="batch", help="Diary entry title")
+    stamp.add_argument("--bullet", action="append", default=[], help="Diary bullet (repeatable)")
+    stamp.add_argument("--next", action="append", default=[], help="Replace Next Drive bullets (repeatable)")
+    stamp.set_defaults(func=cmd_stamp)
+
+    handback = sub.add_parser("handback", help="Write STATE AT HANDBACK (clean close or manual fail)")
+    handback.add_argument("--epic", required=True)
+    handback.add_argument("--stream", default=None)
+    handback.add_argument("--handoff", default=None)
+    handback.add_argument("--reason", default="clean close")
+    handback.add_argument("--canary-line", default="")
+    handback.add_argument("--pin", action="append", default=[])
+    handback.add_argument("--open-pr", action="append", default=[])
+    handback.add_argument("--next", action="append", default=[])
+    handback.add_argument("--hands-off", action="append", default=[])
+    handback.add_argument("--pending-user", action="append", default=[])
+    handback.add_argument("--worktree", action="append", default=[])
+    handback.add_argument("--note", action="append", default=[])
+    handback.set_defaults(func=cmd_handback)
 
     return p
 
