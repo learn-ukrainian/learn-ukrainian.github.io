@@ -172,3 +172,6 @@ def register_review_pr_parser(subparsers: Any) -> None:
     parser.add_argument("--background", action="store_true")
     parser.add_argument("--no-timeout", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
+    # Post-reply finalize is a separate CLI so review-pr stays pointer-only:
+    #   .venv/bin/python -m scripts.fleet_comms formal-job accept \
+    #       --pr N --verdict APPROVED --model M --family F --harness H [--publish]
