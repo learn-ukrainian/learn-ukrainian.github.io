@@ -197,6 +197,10 @@ export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
 # handoff. Without --epic the hook tells the session to ASK the user instead of
 # defaulting to a lane — the 2026-07-13 atlas/hramatka/main lane collision is
 # the reason this exists.
+#
+# PR-J2 (Claude SessionStart) will integrate the common session supervisor here
+# so --epic claims/resumes the stream lease before SessionStart binds it. For
+# now, SessionStart continues to own lease open/close via the hook.
 _forward_args=("$@")
 if [ -f "$PROJECT_DIR/scripts/lib/handoff_identity.sh" ]; then
     # shellcheck source=scripts/lib/handoff_identity.sh

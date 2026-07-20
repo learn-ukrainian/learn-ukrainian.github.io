@@ -107,13 +107,16 @@ Artifacts live under gitignored `.claude/<epic>-epic/canary/`.
 ## Lifecycle
 
 ```
-START  → open stream lease → load diary + stream → mint canary
+START  → start-grok.sh --epic <name> claims stream lease via common supervisor
+         → load diary + stream → mint canary
 DRIVE  → stamp diary after each batch
          at ~60–70% context OR after auto-compact → score from memory
          PASS → diary canary line; continue
          FAIL → STATE AT HANDBACK + close stream + quit
 END    → handback while PASS (optional) before forced compact
 ```
+
+The launcher owns lease open/close for Grok. The cold-start prompt explicitly tells the model not to open or resume the lease itself.
 
 ## SSOT
 
