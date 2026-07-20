@@ -665,6 +665,40 @@ class SessionStreamStore:
                         (stream_id,),
                     ).fetchall()
                 ),
+                "stream_migration_state": self._row_as_dict(
+                    connection.execute(
+                        "SELECT * FROM stream_migration_state WHERE stream_id = ?",
+                        (stream_id,),
+                    ).fetchone()
+                ),
+                "stream_inventory_receipts": self._rows_as_dicts(
+                    connection.execute(
+                        "SELECT * FROM stream_inventory_receipts WHERE stream_id = ? "
+                        "ORDER BY receipt_id",
+                        (stream_id,),
+                    ).fetchall()
+                ),
+                "legacy_import_receipts": self._rows_as_dicts(
+                    connection.execute(
+                        "SELECT * FROM legacy_import_receipts WHERE stream_id = ? "
+                        "ORDER BY import_id",
+                        (stream_id,),
+                    ).fetchall()
+                ),
+                "legacy_projection_receipts": self._rows_as_dicts(
+                    connection.execute(
+                        "SELECT * FROM legacy_projection_receipts WHERE stream_id = ? "
+                        "ORDER BY projection_id",
+                        (stream_id,),
+                    ).fetchall()
+                ),
+                "stream_control_events": self._rows_as_dicts(
+                    connection.execute(
+                        "SELECT * FROM stream_control_events WHERE stream_id = ? "
+                        "ORDER BY event_id",
+                        (stream_id,),
+                    ).fetchall()
+                ),
             }
 
     def record_legacy_mirror(

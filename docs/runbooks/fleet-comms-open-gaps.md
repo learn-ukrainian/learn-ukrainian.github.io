@@ -40,8 +40,9 @@ just because the inline body looks short.
   --stream epic:4387
 ```
 
-Registry: `EPIC_HANDOFF_CANDIDATES` in
-`agents_extensions/shared/session_streams/dual_write.py`.
+Registry: manifest inventory from `scripts/config/issue_streams.yaml` via
+`agents_extensions/shared/session_streams/inventory.py` (Sol PR-H; not a hard-coded
+epic subset).
 
 **Still blocked for cutover:** operator gate after per-harness acceptance;
 file handoffs remain authoritative until then.
