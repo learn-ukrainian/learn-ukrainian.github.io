@@ -31,6 +31,13 @@ Covered write surfaces
   in-place editors (``sed -i`` / ``perl -i``). Quote-aware tokenization keeps a
   ``>`` inside a quoted string (e.g. a commit message) from reading as a
   redirect.
+* ``Bash`` git-mediated working-tree writes (issue #5396) — ``git apply`` /
+  ``git am``, ``git add``, ``git stash pop|apply``, and
+  ``git checkout <ref> -- <path>`` / ``git restore --source=…`` when the
+  effective git worktree (payload cwd or ``git -C``) is the protected primary
+  checkout. Rescue clean forms ``git checkout -- <path>`` and plain
+  ``git restore <path>`` (no ``--source``) remain allowed so operators can
+  discard accidental dirt.
 
 Coverage limitations (documented, by design)
 --------------------------------------------
@@ -45,6 +52,10 @@ Coverage limitations (documented, by design)
 
 The hook fails **open**: any parse/import/git error exits 0 (allow). It is a
 safety net, not a chokepoint — physical isolation is the real guarantee.
+
+Emergency override (explicit operator only): set
+``LEARN_UK_ALLOW_PRIMARY_GIT_WRITE=1`` to skip the git-mediated primary block
+for one shell invocation. Prefer fixing the cwd / using a worktree instead.
 """
 from __future__ import annotations
 
@@ -430,6 +441,246 @@ def bash_write_targets(command: str) -> list[str]:
 
 
 # ---------------------------------------------------------------------------
+# git-mediated working-tree writes (issue #5396)
+# ---------------------------------------------------------------------------
+
+
+def _git_global_prefix(args: list[str]) -> tuple[str | None, list[str]]:
+    """Strip git global options; return optional ``-C`` path and remaining args.
+
+    Handles ``-C <path>``, ``-C<path>``, and common no-arg globals (``-c`` is
+    two-token). Unknown long options with ``=`` are skipped; bare long options
+    that take a value are not fully modeled — fail-open if we cannot parse.
+    """
+    c_path: str | None = None
+    i = 0
+    n = len(args)
+    while i < n:
+        tok = args[i]
+        if tok == "-C" and i + 1 < n:
+            c_path = args[i + 1]
+            i += 2
+            continue
+        if tok.startswith("-C") and len(tok) > 2:
+            c_path = tok[2:]
+            i += 1
+            continue
+        if tok in {"-c", "--config-env", "--exec-path", "--git-dir", "--work-tree",
+                   "--namespace", "--super-prefix", "--list-cmds"} and i + 1 < n:
+            i += 2
+            continue
+        if tok.startswith("-c") and len(tok) > 2 and "=" in tok:
+            i += 1
+            continue
+        if tok.startswith("--") and "=" in tok:
+            i += 1
+            continue
+        if tok in {"--bare", "--no-replace-objects", "--literal-pathspecs",
+                   "--glob-pathspecs", "--noglob-pathspecs", "--icase-pathspecs",
+                   "--no-optional-locks", "-p", "--paginate", "-P", "--no-pager"}:
+            i += 1
+            continue
+        # Subcommand or unknown option starts the remainder.
+        break
+    return c_path, args[i:]
+
+
+def _is_git_binary(cmd: str) -> bool:
+    return cmd in {"git", "git.exe"} or cmd.endswith("/git")
+
+
+def bash_git_write_intents(command: str) -> list[dict[str, object]]:
+    """Parse Bash for git-mediated working-tree mutations (issue #5396).
+
+    Each intent is a dict::
+
+        {
+          "kind": "apply"|"add"|"stash_apply"|"path_checkout"|"restore_source",
+          "c_path": str|None,          # from git -C
+          "paths": list[str],          # pathspecs when known (may be empty)
+          "summary": str,              # human-readable for the block message
+          "allowlisted": bool,         # True → never block (rescue clean)
+        }
+
+    Allowlisted: ``git checkout -- <paths>`` and ``git restore <paths>`` without
+    ``--source`` (discard dirt / restore from index — rescue pattern).
+    """
+    intents: list[dict[str, object]] = []
+    for segment in _segments(_tokenize(command)):
+        if not segment:
+            continue
+        cmd, idx = _command_word(segment)
+        if not _is_git_binary(cmd):
+            continue
+        c_path, rest = _git_global_prefix(segment[idx + 1 :])
+        if not rest:
+            continue
+        sub = rest[0]
+        sub_args = rest[1:]
+
+        if sub in {"apply", "am"}:
+            intents.append(
+                {
+                    "kind": "apply" if sub == "apply" else "am",
+                    "c_path": c_path,
+                    "paths": [],
+                    "summary": f"git {sub}",
+                    "allowlisted": False,
+                }
+            )
+            continue
+
+        if sub == "add":
+            # Drop flags; remaining positionals are pathspecs (may be empty = all).
+            paths: list[str] = []
+            i = 0
+            while i < len(sub_args):
+                tok = sub_args[i]
+                if tok == "--":
+                    paths.extend(sub_args[i + 1 :])
+                    break
+                if tok.startswith("-"):
+                    # Value-taking short options we care about: -u is flag-only.
+                    if tok in {"-C"}:  # not expected after subcommand
+                        i += 2
+                        continue
+                    i += 1
+                    continue
+                paths.append(tok)
+                i += 1
+            intents.append(
+                {
+                    "kind": "add",
+                    "c_path": c_path,
+                    "paths": paths,
+                    "summary": "git add" + (f" {' '.join(paths)}" if paths else ""),
+                    "allowlisted": False,
+                }
+            )
+            continue
+
+        if sub == "stash":
+            if not sub_args:
+                continue
+            action = sub_args[0]
+            if action in {"pop", "apply"}:
+                intents.append(
+                    {
+                        "kind": "stash_apply",
+                        "c_path": c_path,
+                        "paths": [],
+                        "summary": f"git stash {action}",
+                        "allowlisted": False,
+                    }
+                )
+            continue
+
+        if sub == "checkout":
+            # Allowlist: `git checkout -- <paths>` (restore from index/HEAD).
+            # Block: `git checkout <tree-ish> -- <paths>` (writes tree content).
+            if "--" in sub_args:
+                dd = sub_args.index("--")
+                before = sub_args[:dd]
+                after = sub_args[dd + 1 :]
+                # Drop flags from `before`.
+                treeish = [t for t in before if not t.startswith("-")]
+                if not treeish:
+                    intents.append(
+                        {
+                            "kind": "path_checkout",
+                            "c_path": c_path,
+                            "paths": after,
+                            "summary": "git checkout -- " + " ".join(after),
+                            "allowlisted": True,
+                        }
+                    )
+                else:
+                    intents.append(
+                        {
+                            "kind": "path_checkout",
+                            "c_path": c_path,
+                            "paths": after,
+                            "summary": f"git checkout {treeish[0]} -- " + " ".join(after),
+                            "allowlisted": False,
+                        }
+                    )
+            # Branch switches / plain checkout have no pathspecs → other guards.
+            continue
+
+        if sub == "restore":
+            source = None
+            paths: list[str] = []
+            i = 0
+            while i < len(sub_args):
+                tok = sub_args[i]
+                if tok == "--":
+                    paths.extend(sub_args[i + 1 :])
+                    break
+                if tok.startswith("--source="):
+                    source = tok.split("=", 1)[1]
+                    i += 1
+                    continue
+                if tok == "--source" and i + 1 < len(sub_args):
+                    source = sub_args[i + 1]
+                    i += 2
+                    continue
+                if tok.startswith("-"):
+                    i += 1
+                    continue
+                paths.append(tok)
+                i += 1
+            if source is None:
+                intents.append(
+                    {
+                        "kind": "restore_source",
+                        "c_path": c_path,
+                        "paths": paths,
+                        "summary": "git restore " + " ".join(paths),
+                        "allowlisted": True,
+                    }
+                )
+            else:
+                intents.append(
+                    {
+                        "kind": "restore_source",
+                        "c_path": c_path,
+                        "paths": paths,
+                        "summary": f"git restore --source={source} " + " ".join(paths),
+                        "allowlisted": False,
+                    }
+                )
+            continue
+
+    return intents
+
+
+def _effective_git_cwd(intent: dict[str, object], payload_cwd: str) -> Path:
+    """Resolve the worktree a git intent would mutate."""
+    c_path = intent.get("c_path")
+    if isinstance(c_path, str) and c_path:
+        return _resolve(c_path, payload_cwd)
+    return Path(payload_cwd).expanduser().resolve()
+
+
+def _block_git_mediated(summary: str, main_root: Path, reason: str) -> int:
+    sys.stderr.write(
+        f"BLOCKED by guard-primary-checkout-write: git-mediated write "
+        f"'{summary}' would mutate the protected primary checkout "
+        f"({main_root}) [{reason}] (issue #5396).\n\n"
+        "Silent shell cwd resets have applied worker patches into primary "
+        "before — never run git apply/add/stash-pop or path-checkout against "
+        "the primary tree. Use an explicit worktree:\n\n"
+        "  git -C .worktrees/dispatch/<agent>/<task> apply /tmp/worker.diff\n"
+        "  # or: cd .worktrees/dispatch/<agent>/<task> && git apply …\n\n"
+        "Rescue clean (allowed): git checkout -- <path>  or  git restore <path>\n"
+        "Emergency override (one-shot): LEARN_UK_ALLOW_PRIMARY_GIT_WRITE=1\n\n"
+        "Hook source: agents_extensions/shared/hooks/"
+        "guard-primary-checkout-write.py\n"
+    )
+    return 2
+
+
+# ---------------------------------------------------------------------------
 # decision
 # ---------------------------------------------------------------------------
 
@@ -454,6 +705,7 @@ def main() -> int:
 
     tool_input = _tool_input(payload)
     cwd = _payload_cwd(payload)
+    command = ""
 
     if tool_name == "Bash":
         command = str(tool_input.get("command") or "")
@@ -463,9 +715,6 @@ def main() -> int:
     else:
         raw_targets = write_tool_targets(tool_input)
 
-    if not raw_targets:
-        return 0
-
     # Enforce only while the primary checkout sits on a protected branch. If the
     # human has deliberately checked the primary tree onto a feature branch, git
     # can't resolve it, or any classification errors, this hook stays out of the
@@ -474,6 +723,44 @@ def main() -> int:
         main_root = wc.resolve_main_root(cwd)
         if not wc.is_protected_branch(main_root):
             return 0
+    except Exception:  # pragma: no cover - defensive fail-open
+        return 0
+
+    # --- #5396: git-mediated mutations against the primary worktree ----------
+    allow_primary_git = os.environ.get("LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "") == "1"
+    if tool_name == "Bash" and command and not allow_primary_git:
+        try:
+            for intent in bash_git_write_intents(command):
+                if intent.get("allowlisted"):
+                    continue
+                git_cwd = _effective_git_cwd(intent, cwd)
+                # Only care when the effective git worktree *is* the primary.
+                try:
+                    if not wc.is_primary_checkout(git_cwd):
+                        continue
+                except Exception:
+                    continue
+                paths = list(intent.get("paths") or [])
+                summary = str(intent.get("summary") or "git write")
+                if not paths:
+                    # Whole-tree mutator (apply / am / stash pop|apply / bare add).
+                    return _block_git_mediated(
+                        summary, main_root, reason="git_mediated_primary_worktree"
+                    )
+                # Path-scoped mutators: block if any path is a protected primary write.
+                for raw in paths:
+                    decision = wc.evaluate_write(_resolve(raw, str(git_cwd)), cwd=str(git_cwd))
+                    if not decision.allowed:
+                        return _block_git_mediated(
+                            summary, main_root, reason=decision.reason
+                        )
+        except Exception:  # pragma: no cover - defensive fail-open
+            pass
+
+    if not raw_targets:
+        return 0
+
+    try:
         decisions = [
             (raw, wc.evaluate_write(_resolve(raw, cwd), cwd=cwd)) for raw in raw_targets
         ]
