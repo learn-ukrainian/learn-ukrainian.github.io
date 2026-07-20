@@ -44,6 +44,12 @@ updates:
           - "@astrojs/*"
     # Only security updates — we don't want churn on minor bumps
     open-pull-requests-limit: 5
+    ignore:
+      # @astrojs/check@0.9.9 peers typescript@"^5.0.0 || ^6.0.0"; typescript 7
+      # fails npm ci with ERESOLVE. Block >=7 until @astrojs/check accepts it —
+      # REMOVE this entry then. Closed PR: #5527.
+      - dependency-name: "typescript"
+        versions: [">=7.0.0"]
 
   # pip (Python scripts)
   - package-ecosystem: "pip"
