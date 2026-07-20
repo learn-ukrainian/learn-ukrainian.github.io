@@ -95,7 +95,7 @@ MarkupSafe==3.0.3
 mcp-memory-service==10.74.1
 mcp==1.28.1
 mdurl==0.1.2
-more-itertools==11.0.2
+more-itertools==11.1.0
 mpmath==1.4.1
 multidict==6.7.1
 multiprocess==0.70.19
