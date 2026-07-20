@@ -73,9 +73,9 @@ models:
     tier: frontier_authority
     lifecycle: active
     roles: [architecture, critical_review, long_horizon_coding]
-    transports: [cursor, native_claude]
+    transports: [native_claude, cursor]
     strengths: [highest_anthropic_capability, long_horizon_work]
-    weaknesses: [stricter_refusal_surface, cursor_route_no_zdr]
+    weaknesses: [stricter_refusal_surface, cursor_fallback_no_zdr]
     sources:
       - https://www.anthropic.com/news/claude-fable-5-mythos-5
   claude-opus-4-8:
@@ -294,6 +294,13 @@ review_candidates:
     capabilities: [code_review]
   claude-fable-5:
     model_id: claude-fable-5
+    route: claude
+    transport: native_claude
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5
+    review_profiles: [code, infra]
+    capabilities: [code_review]
+  claude-fable-5-cursor-fallback:
+    model_id: claude-fable-5
     route: cursor
     transport: cursor
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-fable-5
@@ -384,6 +391,7 @@ review_ladders:
   critical: &quality_first_code_review
     - [openai_frontier]
     - [claude-fable-5]
+    - [claude-fable-5-cursor-fallback]
     - [claude-opus-4-8]
     - [gpt-5.6-terra]
     - [grok-4.5]

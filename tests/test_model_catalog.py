@@ -77,6 +77,24 @@ def test_gpt_and_grok_formal_routes_are_native_only():
     assert candidates["grok-4.5"]["transport"] == "native_grok"
 
 
+def test_fable_routes_native_claude_before_pinned_cursor_fallback():
+    catalog = load_model_catalog()
+    candidates = catalog["review_candidates"]
+    ladder = catalog["review_ladders"]["high"]
+
+    assert candidates["claude-fable-5"]["transport"] == "native_claude"
+    assert candidates["claude-fable-5"]["invocation"].endswith(
+        "--agent claude --model claude-fable-5"
+    )
+    assert candidates["claude-fable-5-cursor-fallback"]["transport"] == "cursor"
+    assert candidates["claude-fable-5-cursor-fallback"]["invocation"].endswith(
+        "--agent cursor --model claude-fable-5"
+    )
+    assert ladder.index(["claude-fable-5"]) < ladder.index(
+        ["claude-fable-5-cursor-fallback"]
+    )
+
+
 def test_bridge_only_reviewers_expose_executable_invocations():
     candidates = load_model_catalog()["review_candidates"]
     assert candidates["pool"]["invocation"].endswith("ask-pool")
