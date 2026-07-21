@@ -206,39 +206,54 @@ export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
 # defaulting to a lane — the 2026-07-13 atlas/hramatka/main lane collision is
 # the reason this exists.
 #
-# PR-J2 (Claude SessionStart) will integrate the common session supervisor here
-# so --epic claims/resumes the stream lease before SessionStart binds it. For
-# now, SessionStart continues to own lease open/close via the hook.
+# PR-J2: common session supervisor claims/resumes the stream lease when --epic
+# is set (mirror start-grok.sh / start-kimi.sh). SessionStart binds the native
+# Claude session id to the already-open lease and never opens a second lease.
 _forward_args=("$@")
 if [ -f "$PROJECT_DIR/scripts/lib/handoff_identity.sh" ]; then
     # shellcheck source=scripts/lib/handoff_identity.sh
     source "$PROJECT_DIR/scripts/lib/handoff_identity.sh"
+fi
+if [ -f "$PROJECT_DIR/scripts/lib/session_supervisor.sh" ]; then
+    # shellcheck source=scripts/lib/session_supervisor.sh
+    source "$PROJECT_DIR/scripts/lib/session_supervisor.sh"
+fi
 
+_selected_epic=""
+if command -v handoff_epic_from_argv >/dev/null 2>&1; then
     _selected_epic="$(handoff_epic_from_argv "$@")"
-    if [ -z "$_selected_epic" ] && epic_flag_present "$@"; then
+    if [ -z "$_selected_epic" ] && command -v epic_flag_present >/dev/null 2>&1 && epic_flag_present "$@"; then
         echo "Error: --epic flag present but no usable value (dangling --epic, --epic=, or empty value)."
         echo "   Refusing to launch — pass --epic <name> (e.g. --epic atlas) or drop the flag."
         exit 1
     fi
     if [ -n "$_selected_epic" ]; then
-        if ! epic_name_valid "$_selected_epic"; then
+        if command -v epic_name_valid >/dev/null 2>&1 && ! epic_name_valid "$_selected_epic"; then
             echo "Error: invalid --epic name '$_selected_epic' (allowed: lowercase alnum + inner hyphens, e.g. atlas, lit-war)."
             echo "   Refusing to launch with an ambiguous lane — fix the flag and retry."
             exit 1
         fi
         export SESSION_EPIC="$_selected_epic"
-        _forward_args=()
-        while IFS= read -r -d '' _fwd_arg; do
-            _forward_args+=("$_fwd_arg")
-        done < <(strip_epic_from_argv "$@")
-        unset _fwd_arg
+        if command -v strip_epic_from_argv >/dev/null 2>&1; then
+            _forward_args=()
+            while IFS= read -r -d '' _fwd_arg; do
+                _forward_args+=("$_fwd_arg")
+            done < <(strip_epic_from_argv "$@")
+            unset _fwd_arg
+        fi
         echo "Epic assignment: ${SESSION_EPIC}.epic"
     fi
 
     if [ -z "${SESSION_HANDOFF_AGENT:-}" ]; then
-        _selected_agent="$(handoff_agent_from_argv "$@")"
-        _handoff_slot="$(handoff_identity_for_epic "${_selected_epic:-}")"
-        if [ -z "$_handoff_slot" ]; then
+        _selected_agent=""
+        if command -v handoff_agent_from_argv >/dev/null 2>&1; then
+            _selected_agent="$(handoff_agent_from_argv "$@")"
+        fi
+        _handoff_slot=""
+        if command -v handoff_identity_for_epic >/dev/null 2>&1; then
+            _handoff_slot="$(handoff_identity_for_epic "${_selected_epic:-}")"
+        fi
+        if [ -z "$_handoff_slot" ] && command -v handoff_identity_for_agent >/dev/null 2>&1; then
             _handoff_slot="$(handoff_identity_for_agent "$_selected_agent")"
         fi
         if [ -n "$_handoff_slot" ]; then
@@ -247,8 +262,21 @@ if [ -f "$PROJECT_DIR/scripts/lib/handoff_identity.sh" ]; then
         fi
         unset _selected_agent _handoff_slot
     fi
-    unset _selected_epic
 fi
+
+# Claim/resume the stream lease through the common supervisor when an epic is pinned.
+if [ -n "${_selected_epic:-}" ] && command -v claim_session_supervisor_env >/dev/null 2>&1; then
+    _selected_stream="$(stream_id_for_epic "$_selected_epic")"
+    if [ -z "$_selected_stream" ]; then
+        echo "Error: cannot resolve stream id for epic '${_selected_epic}'." >&2
+        exit 1
+    fi
+    _launcher_task_id="${SESSION_TASK_ID:-${LEARN_UK_LAUNCHER_TASK_ID:-5512-pr-j2-sessionstart}}"
+    _launcher_instance_id="${SESSION_INSTANCE_ID:-claude-$$}"
+    claim_session_supervisor_env         "$_selected_stream"         "claude"         "claude-code"         "$_launcher_task_id"         "$_launcher_instance_id"         "$PROJECT_DIR"         "start-claude.sh"         "$_selected_epic"
+    unset _launcher_task_id _launcher_instance_id _selected_stream
+fi
+unset _selected_epic
 
 echo "Launching Claude Code (native install)..."
 exec "$CLAUDE_BIN" --chrome --permission-mode bypassPermissions "${_forward_args[@]}"
