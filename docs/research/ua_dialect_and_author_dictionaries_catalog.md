@@ -46,7 +46,7 @@ These resources fall into two primary categories:
 | Repository | URL / Source | Included Dictionaries / Content | License & Reusability |
 | :--- | :--- | :--- | :--- |
 | **r2u.org.ua** | `r2u.org.ua` | Aggregates pre-Soviet dictionaries: Hrinchenko (1907), Krymsky (1924–1933), Sheludko (1928), Nikovsky (1927). | Open academic / CC-BY compatible. |
-| **Litopys.org.ua / Izbornyk** | `litopys.org.ua` | *Словник мови Шевченка*, Old Ruthenian dictionaries (Berynda 1627, Zizaniy 1596), Cossack chronicles. | Public domain / Open educational. |
+| **Litopys.org.ua / Izbornyk** | `litopys.org.ua` | *Словник мови Шевченка* (1964 editorial compilation - academic use only), Old Ruthenian dictionaries (Berynda 1627, Zizaniy 1596 - Public Domain), Cossack chronicles (Public Domain). | Mixed (Old texts Public Domain; 1964 dictionary academic educational use). |
 | **Chtyvo.org.ua** | `chtyvo.org.ua` | PDF/DJVU library of NASU dialect dictionaries and monographs. | Open educational resource. |
 | **ULIF NASU (СУМ-20 / DictUA)** | `ulif.org.ua` | Modern 20-volume dictionary of Ukrainian (*СУМ-20*). | Public search API / Academic. |
 

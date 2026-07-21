@@ -25,10 +25,9 @@ import sys
 import urllib.request
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any
 
-LEMKO_DICT_URL = "http://lemko.org/slownik/lesow.html"
-SHEVCHENKO_DICT_BASE_URL = "http://litopys.org.ua/shevchenko/shev.htm"
+LEMKO_DICT_URL = "https://lemko.org/slownik/lesow.html"
+SHEVCHENKO_DICT_BASE_URL = "https://litopys.org.ua/shevchenko/shev.htm"
 
 
 @dataclass(frozen=True)
@@ -58,14 +57,16 @@ def parse_lemko_org_dictionary() -> list[DialectDictEntry]:
     try:
         html = fetch_url_text(LEMKO_DICT_URL)
         lines = html.splitlines()
-        for line in lines:
+        for raw_line in lines:
+            line_clean = re.sub(r"<[^>]+>", "", raw_line).strip()
             # Match word - definition format
-            if "-" in line or "—" in line:
-                parts = re.split(r"[-—]", line, maxsplit=1)
+            if "-" in line_clean or "—" in line_clean:
+                parts = re.split(r"[-—]", line_clean, maxsplit=1)
                 if len(parts) == 2:
                     lemma = parts[0].strip()
                     definition = parts[1].strip()
-                    if lemma and definition and len(lemma) < 50:
+                    # Validate Cyrillic lemma and reasonable length
+                    if lemma and definition and len(lemma) < 50 and re.search(r"[\u0400-\u04FF]", lemma):
                         entries.append(
                             DialectDictEntry(
                                 lemma=lemma,
@@ -94,7 +95,7 @@ def parse_shevchenko_concordance() -> list[DialectDictEntry]:
         for lemma_raw, def_raw in matches:
             lemma = re.sub(r"<[^>]+>", "", lemma_raw).strip()
             definition = re.sub(r"<[^>]+>", "", def_raw).strip()
-            if lemma and definition and len(lemma) < 50:
+            if lemma and definition and len(lemma) < 50 and re.search(r"[\u0400-\u04FF]", lemma):
                 entries.append(
                     DialectDictEntry(
                         lemma=lemma,
