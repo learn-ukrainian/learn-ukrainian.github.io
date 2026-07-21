@@ -44,21 +44,20 @@ class DialectDictEntry:
 
 def fetch_url_text(url: str, timeout: int = 30, delay: float = DEFAULT_DELAY_SECONDS) -> str:
     """Fetch URL content politely with rate-limiting delay and exponential backoff."""
-    ctx = ssl.create_default_context()
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
-
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
 
-    # Polite rate limiting delay before request
     if delay > 0:
         time.sleep(delay)
 
     max_retries = 3
     backoff = 2.0
+
+    # Primary attempt using standard TLS context
+    standard_ctx = ssl.create_default_context()
+
     for attempt in range(max_retries):
         try:
-            with urllib.request.urlopen(req, context=ctx, timeout=timeout) as resp:
+            with urllib.request.urlopen(req, context=standard_ctx, timeout=timeout) as resp:
                 content = resp.read()
                 try:
                     return content.decode("utf-8")
@@ -71,6 +70,18 @@ def fetch_url_text(url: str, timeout: int = 30, delay: float = DEFAULT_DELAY_SEC
                 backoff *= 2.0
             else:
                 raise
+        except (urllib.error.URLError, ssl.SSLError):
+            # Fallback for uncertified legacy academic sites (e.g. litopys.org.ua HTTP/TLS mismatch)
+            if attempt == max_retries - 1:
+                fallback_ctx = ssl.create_default_context()
+                fallback_ctx.check_hostname = False
+                fallback_ctx.verify_mode = ssl.CERT_NONE
+                with urllib.request.urlopen(req, context=fallback_ctx, timeout=timeout) as resp:
+                    content = resp.read()
+                    try:
+                        return content.decode("utf-8")
+                    except UnicodeDecodeError:
+                        return content.decode("windows-1251", errors="replace")
 
     raise RuntimeError(f"Failed to fetch {url} after {max_retries} attempts.")
 
@@ -84,24 +95,22 @@ def parse_lemko_org_dictionary() -> list[DialectDictEntry]:
         lines = html.splitlines()
         for raw_line in lines:
             line_clean = re.sub(r"<[^>]+>", "", raw_line).strip()
-            # Match word - definition format
-            if "-" in line_clean or "—" in line_clean:
-                parts = re.split(r"\s*[-—]\s*", line_clean, maxsplit=1)
-                if len(parts) == 2:
-                    lemma = parts[0].strip()
-                    definition = parts[1].strip()
-                    # Validate Cyrillic lemma and reasonable headword length
-                    if lemma and definition and len(lemma) < 50 and re.search(r"[\u0400-\u04FF]", lemma):
-                        entries.append(
-                            DialectDictEntry(
-                                lemma=lemma,
-                                source_name="Короткий словник лемківських говірок",
-                                category="lemko",
-                                definition=definition,
-                                sample_quote="",
-                                provenance_url=LEMKO_DICT_URL,
-                            )
+            # Match strictly anchored Cyrillic headword - definition entries
+            m = re.match(r"^([А-Яа-яІіЇїЄєҐґ'\-]+)\s*[-—]\s*(.+)", line_clean)
+            if m:
+                lemma = m.group(1).strip()
+                definition = m.group(2).strip()
+                if lemma and definition and len(lemma) < 50:
+                    entries.append(
+                        DialectDictEntry(
+                            lemma=lemma,
+                            source_name="Короткий словник лемківських говірок",
+                            category="lemko",
+                            definition=definition,
+                            sample_quote="",
+                            provenance_url=LEMKO_DICT_URL,
                         )
+                    )
     except Exception as e:
         print(f"⚠️ Error fetching Lemko dictionary: {e}", file=sys.stderr)
 
