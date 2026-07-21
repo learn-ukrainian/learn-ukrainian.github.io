@@ -1,7 +1,7 @@
 """Sol PR-M residual: reconcile PR open→merge metrics from GitHub (no content).
 
-Uses ``gh api`` only. Never stores PR bodies or review text — numbers and
-timestamps only.
+Uses ``gh pr list --json`` only. Never stores PR bodies or review text —
+numbers and timestamps only.
 """
 
 from __future__ import annotations
