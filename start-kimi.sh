@@ -5,7 +5,8 @@
 #   --epic <name> | --epic=<name>     Pin lane (atlas, hramatka, harness, …)
 #   --stream <id> | --stream=<id>     Explicit session-stream id (e.g. epic:4387)
 #   --handoff-agent <id>              Override SESSION_HANDOFF_AGENT
-#   --model <id>                      Kimi model (default: k2.7-coding)
+#   --model <id>                      Kimi model: k3 (default), k2.7, k2.7-highspeed
+#                                     (mapped to the kimi-code/* aliases in config.toml)
 #   --help-launcher                   This help (does not start kimi)
 #
 # Environment exported for hooks / dual-write / session streams:
@@ -18,11 +19,18 @@
 # stream lease through the common supervisor, writes a capsule, and injects an
 # auto-continue prompt. Pass an explicit PROMPT to override.
 #
+# Launch modes:
+#   no PROMPT, no --epic   interactive Kimi TUI (never passes an empty -p)
+#   PROMPT / epic cold-start
+#                          headless one-shot (-p); stream-json only when
+#                          stdout is piped (fleet capture), plain text on a TTY
+#
 # Examples:
+#   ./start-kimi.sh                                 # interactive TUI
 #   ./start-kimi.sh --epic atlas
 #   ./start-kimi.sh --epic atlas --stream epic:4387 --model k3
 #   ./start-kimi.sh --epic harness "continue the infra queue"
-#   ./start-kimi.sh --model k2.7-coding "review the open PR"
+#   ./start-kimi.sh --model k2.7 "review the open PR"
 
 set -euo pipefail
 
@@ -30,6 +38,9 @@ export PATH="${HOME}/.local/bin:/opt/homebrew/bin:${HOME}/.kimi-code/bin:${PATH:
 hash -r 2>/dev/null || true
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Absolute path to THIS script, captured before any cd: usage_launcher reads
+# its own header, and the worktree redirect below changes cwd.
+SCRIPT_PATH="$PROJECT_DIR/$(basename "${BASH_SOURCE[0]}")"
 # Prefer the main worktree root when this script is run from a git worktree copy.
 if git -C "$PROJECT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   _git_common="$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
@@ -43,10 +54,9 @@ if git -C "$PROJECT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
 fi
 
 usage_launcher() {
-  sed -n '2,33p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,33p' "$SCRIPT_PATH" | sed 's/^# \{0,1\}//'
   exit 0
 }
-
 # --- locate kimi binary ---
 KIMI_BIN="${LEARN_UK_KIMI_BIN:-}"
 if [ -z "$KIMI_BIN" ] || [ ! -x "$KIMI_BIN" ]; then
@@ -256,9 +266,35 @@ if [ -n "${SESSION_EPIC:-}" ] && [ -x "$PROJECT_DIR/.venv/bin/python" ] \
   fi
 fi
 
-# Defaults for kimi CLI
-if [ "$_has_model" -eq 0 ]; then
-  _selected_model="k2.7-coding"
+# Model resolution: friendly aliases → the aliases configured in
+# ~/.kimi-code/config.toml. Bare names like "k3"/"k2.7-coding" are rejected by
+# the CLI ("not configured in config.toml"), so map them here. Without --model
+# we pass no -m at all and let config.toml default_model decide.
+resolve_kimi_model() {
+  case "$1" in
+    k3|kimi-k3|kimi-code/k3)
+      printf '%s\n' 'kimi-code/k3'
+      ;;
+    k2.7|k2.7-coding|kimi-for-coding|kimi-k2.7-code|kimi-code/kimi-for-coding)
+      printf '%s\n' 'kimi-code/kimi-for-coding'
+      ;;
+    k2.7-highspeed|k2.7-coding-highspeed|kimi-for-coding-highspeed|kimi-k2.7-code-highspeed|kimi-code/kimi-for-coding-highspeed)
+      printf '%s\n' 'kimi-code/kimi-for-coding-highspeed'
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+_model_args=()
+if [ "$_has_model" -eq 1 ]; then
+  if ! _resolved_model="$(resolve_kimi_model "$_selected_model")"; then
+    echo "Error: unknown --model '$_selected_model' (use k3, k2.7, k2.7-highspeed, or a configured kimi-code/* alias)." >&2
+    exit 1
+  fi
+  _model_args=(-m "$_resolved_model")
+  unset _resolved_model
 fi
 
 # Lane cold-start hint (printed always when epic is set)
@@ -307,4 +343,16 @@ if [ -n "${SESSION_EPIC:-}" ] && [ "${#_forward[@]}" -eq 0 ]; then
 fi
 
 echo "Launching Kimi Code..."
-exec "$KIMI_BIN" -p "${_forward[*]}" -m "$_selected_model" --output-format stream-json
+if [ "${#_forward[@]}" -eq 0 ]; then
+  # Interactive TUI: no prompt anywhere (bare launch, no --epic). The kimi CLI
+  # rejects an empty -p, so never pass one.
+  exec "$KIMI_BIN" ${_model_args[@]+"${_model_args[@]}"}
+fi
+# Headless one-shot (explicit PROMPT or epic cold-start). stream-json is for
+# machine consumers (piped stdout, e.g. fleet capture); a human on a TTY gets
+# the default plain-text response.
+_out_args=()
+if [ ! -t 1 ]; then
+  _out_args=(--output-format stream-json)
+fi
+exec "$KIMI_BIN" -p "${_forward[*]}" ${_model_args[@]+"${_model_args[@]}"} ${_out_args[@]+"${_out_args[@]}"}

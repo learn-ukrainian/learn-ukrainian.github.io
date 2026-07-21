@@ -6,6 +6,8 @@ import os
 import subprocess
 from pathlib import Path
 
+import pytest
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _LAUNCHER = _REPO_ROOT / "start-kimi.sh"
 
@@ -225,7 +227,10 @@ def test_epic_harness_exports_env_and_claims_lease(tmp_path: Path) -> None:
     parts = [p for p in argv_blob.split("\0") if p]
     assert parts[0] == "-p"
     assert "do NOT open or resume it yourself" in parts[1]
-    assert "k2.7-coding" in parts
+    # No --model given: no -m at all (config.toml default_model decides).
+    assert "-m" not in parts
+    assert "k2.7-coding" not in parts
+    # stdout is piped in tests → machine format.
     assert "--output-format" in parts
     assert "stream-json" in parts
 
@@ -240,7 +245,8 @@ def test_explicit_prompt_and_model_override(tmp_path: Path) -> None:
     parts = [p for p in argv_blob.split("\0") if p]
     assert parts[0] == "-p"
     assert parts[1] == "review the open PR"
-    assert "k3" in parts
+    # Friendly alias maps to the configured config.toml alias.
+    assert parts[parts.index("-m") + 1] == "kimi-code/k3"
     assert "k2.7-coding" not in parts
 
 
@@ -254,3 +260,43 @@ def test_no_epic_no_supervisor_call(tmp_path: Path) -> None:
     parts = [p for p in argv_blob.split("\0") if p]
     assert parts[0] == "-p"
     assert parts[1] == "hello world"
+    assert "-m" not in parts
+
+
+def test_bare_launch_is_interactive_tui(tmp_path: Path) -> None:
+    """No prompt and no --epic: the kimi CLI rejects an empty -p, so the
+    launcher must exec the interactive TUI with no prompt/format flags."""
+    values, argv_blob, result, _project, supervisor_capture = _run_launcher(tmp_path, [])
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert values["session_epic"] == "unset"
+    assert not supervisor_capture.exists()
+    parts = [p for p in argv_blob.split("\0") if p]
+    assert parts == []
+
+
+@pytest.mark.parametrize(
+    ("alias", "resolved"),
+    [
+        ("k2.7", "kimi-code/kimi-for-coding"),
+        ("k2.7-coding", "kimi-code/kimi-for-coding"),
+        ("kimi-code/kimi-for-coding", "kimi-code/kimi-for-coding"),
+        ("k2.7-highspeed", "kimi-code/kimi-for-coding-highspeed"),
+        ("k3", "kimi-code/k3"),
+        ("kimi-code/k3", "kimi-code/k3"),
+    ],
+)
+def test_model_alias_mapping(tmp_path: Path, alias: str, resolved: str) -> None:
+    _values, argv_blob, result, _project, _supervisor_capture = _run_launcher(
+        tmp_path, ["--model", alias, "hi"]
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    parts = [p for p in argv_blob.split("\0") if p]
+    assert parts[parts.index("-m") + 1] == resolved
+
+
+def test_unknown_model_rejected_before_launch(tmp_path: Path) -> None:
+    _values, _argv_blob, result, _project, _supervisor_capture = _run_launcher(
+        tmp_path, ["--model", "bogus-9", "hi"]
+    )
+    assert result.returncode == 1
+    assert "unknown --model" in result.stderr
