@@ -300,3 +300,35 @@ def test_unknown_model_rejected_before_launch(tmp_path: Path) -> None:
     )
     assert result.returncode == 1
     assert "unknown --model" in result.stderr
+
+
+def test_hermes_install_preferred_over_legacy_binary(tmp_path: Path) -> None:
+    """With no kimi on PATH, the launcher must pick ~/.hermes/node/bin/kimi
+    (maintained npm install) over the legacy ~/.kimi-code/bin/kimi binary."""
+    project, _supervisor_capture = _build_fake_project(tmp_path)
+    home = tmp_path / "home"
+    hermes_bin = home / ".hermes" / "node" / "bin"
+    legacy_bin = home / ".kimi-code" / "bin"
+    hermes_bin.mkdir(parents=True)
+    legacy_bin.mkdir(parents=True)
+    capture = tmp_path / "which-kimi.txt"
+    _write_executable(hermes_bin / "kimi", f'#!/usr/bin/env bash\necho hermes > "{capture}"\n')
+    _write_executable(legacy_bin / "kimi", f'#!/usr/bin/env bash\necho legacy > "{capture}"\n')
+
+    env = _clean_environ()
+    env.pop("LEARN_UK_KIMI_BIN", None)
+    env["HOME"] = os.fspath(home)
+    # Deliberately no kimi anywhere on PATH: forces the explicit fallback chain.
+    env["PATH"] = "/usr/bin:/bin:/opt/homebrew/bin"
+
+    result = subprocess.run(
+        [os.fspath(project / "start-kimi.sh"), "hi"],
+        cwd=project,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert capture.read_text(encoding="utf-8").strip() == "hermes"

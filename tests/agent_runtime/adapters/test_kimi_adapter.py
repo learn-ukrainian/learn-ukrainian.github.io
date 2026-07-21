@@ -227,3 +227,38 @@ def test_invocation_telemetry_is_model_aware_and_reports_native_cli_version(tmp_
 
     assert coding_telemetry.model == KIMI_MODEL_ALIASES[KIMI_DEFAULT_MODEL]
     assert coding_telemetry.effort == "not-exposed"  # k2.7 models have no effort knob
+
+
+def test_binary_resolution_prefers_hermes_over_legacy(tmp_path, monkeypatch):
+    """No override + nothing on PATH: hermes npm install beats the legacy binary."""
+    from scripts.agent_runtime.adapters import kimi as kimi_adapter
+
+    home = tmp_path / "home"
+    hermes = home / ".hermes" / "node" / "bin" / "kimi"
+    legacy = home / ".kimi-code" / "bin" / "kimi"
+    for path in (hermes, legacy):
+        path.parent.mkdir(parents=True)
+        path.write_text("#!/bin/sh\n", encoding="utf-8")
+        path.chmod(0o755)
+
+    monkeypatch.delenv("LEARN_UK_KIMI_BIN", raising=False)
+    monkeypatch.setattr(kimi_adapter.shutil, "which", lambda _name: None)
+    monkeypatch.setattr(kimi_adapter.Path, "home", lambda: home)
+
+    assert kimi_adapter._resolve_kimi_binary() == str(hermes)
+
+
+def test_binary_resolution_falls_back_to_legacy_when_hermes_absent(tmp_path, monkeypatch):
+    from scripts.agent_runtime.adapters import kimi as kimi_adapter
+
+    home = tmp_path / "home"
+    legacy = home / ".kimi-code" / "bin" / "kimi"
+    legacy.parent.mkdir(parents=True)
+    legacy.write_text("#!/bin/sh\n", encoding="utf-8")
+    legacy.chmod(0o755)
+
+    monkeypatch.delenv("LEARN_UK_KIMI_BIN", raising=False)
+    monkeypatch.setattr(kimi_adapter.shutil, "which", lambda _name: None)
+    monkeypatch.setattr(kimi_adapter.Path, "home", lambda: home)
+
+    assert kimi_adapter._resolve_kimi_binary() == str(legacy)
