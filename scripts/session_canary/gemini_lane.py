@@ -7,7 +7,7 @@ Mint/score reuse the operational 8/10 canary policy and artifacts under
 
 Usage
 -----
-  .venv/bin/python -m scripts.session_canary.gemini_lane bootstrap --epic harness --holder-pid $$
+  .venv/bin/python -m scripts.session_canary.gemini_lane bootstrap --epic harness
   .venv/bin/python -m scripts.session_canary.gemini_lane mint --epic atlas
   .venv/bin/python -m scripts.session_canary.gemini_lane protocol --epic atlas
 """
@@ -15,12 +15,9 @@ Usage
 from __future__ import annotations
 
 import argparse
-import os
 import sys
-import uuid
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
@@ -102,6 +99,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Gemini session canary & stream bootstrap helper.")
     subparsers = parser.add_subparsers(dest="subcommand", required=True)
 
+    boot_p = subparsers.add_parser("bootstrap", help="Bootstrap cold-start board for epic")
+    boot_p.add_argument("--epic", required=True, help="Epic slug (atlas, harness, etc.)")
+    boot_p.add_argument("--stream", help="Override stream id")
+    boot_p.add_argument("--holder-pid", type=int, help="Process ID of the launcher/holder")
+
     mint_p = subparsers.add_parser("mint", help="Mint canary probe for epic")
     mint_p.add_argument("--epic", required=True, help="Epic slug (atlas, harness, etc.)")
     mint_p.add_argument("--stream", help="Override stream id")
@@ -114,7 +116,28 @@ def main(argv: list[str] | None = None) -> int:
 
     args = parser.parse_args(argv)
 
-    if args.subcommand == "mint":
+    stream_id = args.stream or EPIC_STREAM_DEFAULTS.get(args.epic, f"epic:{args.epic}")
+
+    if args.subcommand == "bootstrap":
+        epic_path = _epic_dir(ROOT, args.epic)
+        epic_path.mkdir(parents=True, exist_ok=True)
+        board_path = epic_path / "GEMINI-COLD-START.md"
+        handoffs = _handoff_candidates(ROOT, args.epic)
+        handoff_rel = (
+            str(handoffs[0].relative_to(ROOT))
+            if handoffs[0].exists()
+            else f".claude/{args.epic}-epic/GEMINI-DRIVER-HANDOFF.md"
+        )
+        content = _cold_start_body(
+            epic=args.epic,
+            stream_id=stream_id,
+            handoff_rel=handoff_rel,
+            lease_summary=f"active stream {stream_id} (holder: {_HOLDER_AGENT}/{_HOLDER_HARNESS})",
+        )
+        board_path.write_text(content, encoding="utf-8")
+        print(f"Bootstrapped Gemini cold-start board: {board_path.relative_to(ROOT)}")
+        return 0
+    elif args.subcommand == "mint":
         print(f"Minted Gemini canary probe for epic {args.epic}")
         return 0
     elif args.subcommand == "protocol":
