@@ -145,7 +145,7 @@ fi
   printf 'session_instance=%s\\n' "${{SESSION_STREAM_INSTANCE_ID-unset}}"
   printf 'session_process=%s\\n' "${{SESSION_STREAM_PROCESS_ID-unset}}"
   printf 'handoff=%s\\n' "${{SESSION_HANDOFF_AGENT-unset}}"
-  printf 'launch=%s\\n' "${{LEARN_UKRAINE_KIMI_LAUNCH-unset}}"
+  printf 'launch=%s\\n' "${{LEARN_UKRAINIAN_KIMI_LAUNCH-unset}}"
   printf 'capsule=%s\\n' "${{SESSION_SUPERVISOR_CAPSULE_PATH-unset}}"
   printf 'argv='
   printf '%s\\0' "$@"
@@ -165,7 +165,7 @@ fi
         "SESSION_STREAM_INSTANCE_ID",
         "SESSION_STREAM_PROCESS_ID",
         "SESSION_HANDOFF_AGENT",
-        "LEARN_UKRAINE_KIMI_LAUNCH",
+        "LEARN_UKRAINIAN_KIMI_LAUNCH",
         "SESSION_SUPERVISOR_CAPSULE_PATH",
     ):
         env.pop(name, None)
