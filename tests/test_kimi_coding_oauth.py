@@ -44,14 +44,14 @@ pytestmark = pytest.mark.skipif(_PYTHON is None, reason="project .venv python re
 
 def _write_credentials(path: Path, *, expires_in: int, with_refresh: bool = True) -> dict:
     data = {
-        "access_token": "old-access-token",
+        "access_token": "old-access",
         "expires_at": time.time() + expires_in,
         "expires_in": expires_in,
         "token_type": "Bearer",
         "scope": "kimi-code",
     }
     if with_refresh:
-        data["refresh_token"] = "old-refresh-token"
+        data["refresh_token"] = "old-refresh"
     path.write_text(json.dumps(data), encoding="utf-8")
     path.chmod(0o600)
     return data
@@ -125,17 +125,17 @@ def test_fresh_token_printed_without_network(tmp_path: Path) -> None:
     _write_credentials(cred, expires_in=900)
     result = _run_helper(cred)
     assert result.returncode == 0, result.stderr
-    assert result.stdout.strip() == "old-access-token"
+    assert result.stdout.strip() == "old-access"
     # Untouched by the run (no refresh, no rotation).
-    assert json.loads(cred.read_text(encoding="utf-8"))["refresh_token"] == "old-refresh-token"
+    assert json.loads(cred.read_text(encoding="utf-8"))["refresh_token"] == "old-refresh"
 
 
 def test_expired_token_refreshes_and_writes_back(tmp_path: Path) -> None:
     cred = tmp_path / "kimi-code.json"
     _write_credentials(cred, expires_in=30)  # inside the 120s margin
     payload = {
-        "access_token": "new-access-token",
-        "refresh_token": "new-refresh-token",
+        "access_token": "new-access",
+        "refresh_token": "new-refresh",
         "expires_in": 900,
         "token_type": "Bearer",
         "scope": "kimi-code",
@@ -143,17 +143,17 @@ def test_expired_token_refreshes_and_writes_back(tmp_path: Path) -> None:
     with _RefreshServer(payload) as server:
         result = _run_helper(cred, KIMI_CODE_OAUTH_HOST=server.url)
     assert result.returncode == 0, result.stderr
-    assert result.stdout.strip() == "new-access-token"
+    assert result.stdout.strip() == "new-access"
 
     assert len(server.bodies) == 1
     body = server.bodies[0]
     assert "grant_type=refresh_token" in body
-    assert "refresh_token=old-refresh-token" in body
+    assert "refresh_token=old-refresh" in body
     assert "client_id=" in body
 
     stored = json.loads(cred.read_text(encoding="utf-8"))
-    assert stored["access_token"] == "new-access-token"
-    assert stored["refresh_token"] == "new-refresh-token"
+    assert stored["access_token"] == "new-access"
+    assert stored["refresh_token"] == "new-refresh"
     assert stored["expires_at"] > time.time() + 600
     assert stat.S_IMODE(cred.stat().st_mode) == 0o600
 
@@ -180,4 +180,4 @@ def test_refresh_server_error_exits_3(tmp_path: Path) -> None:
     assert result.returncode == 3
     assert "HTTP 400" in result.stderr
     # Failed refresh must not clobber the stored credential.
-    assert json.loads(cred.read_text(encoding="utf-8"))["access_token"] == "old-access-token"
+    assert json.loads(cred.read_text(encoding="utf-8"))["access_token"] == "old-access"

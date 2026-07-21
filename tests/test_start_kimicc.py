@@ -347,8 +347,8 @@ def _write_oauth_credentials(tmp_path: Path, *, expires_in: int = 900) -> Path:
     cred.write_text(
         json.dumps(
             {
-                "access_token": "oauth-access-token",
-                "refresh_token": "oauth-refresh-token",
+                "access_token": "oauth-acc",
+                "refresh_token": "oauth-ref",
                 "expires_at": time.time() + expires_in,
                 "expires_in": expires_in,
                 "token_type": "Bearer",
@@ -383,7 +383,7 @@ def test_coding_endpoint_falls_back_to_kimi_login_oauth(tmp_path: Path) -> None:
     )
     assert result.returncode == 0, result.stderr
     assert "base=https://api.kimi.com/coding" in output
-    assert "auth=oauth-access-token" in output
+    assert "auth=oauth-acc" in output
     assert "model=k3" in output
     assert "oauth(kimi login)" in result.stdout
     assert "short-lived" in result.stdout
