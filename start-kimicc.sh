@@ -11,6 +11,10 @@
 # - Original Anthropic Claude config stays untouched; run native Claude in another terminal.
 # - Refuses to launch if settings.json already pins route env keys (cc-switch hazard).
 # - Compaction comes from scripts/config/context_profiles.yaml (1M for K3, 256K for K2.7).
+# - Subscription auth: the `kimi login` OAuth credential (scripts/lib/kimi_coding_oauth.py)
+#   is used for --endpoint coding when no API key is set; with --isolate-config an
+#   apiKeyHelper is written into the isolated settings.json (never the operator's)
+#   so the ~15-min access token is refreshed on Claude Code's schedule.
 #
 # Official references:
 # - https://platform.kimi.ai/docs/guide/claude-code-kimi
@@ -19,6 +23,20 @@
 set -euo pipefail
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Prefer the main worktree root when launched from a git worktree copy, so the
+# apiKeyHelper path baked into the isolated Claude config survives worktree
+# cleanup (same pattern as start-kimi.sh). Ambient GIT_DIR/GIT_WORK_TREE (e.g.
+# from a pre-commit hook) must not leak into these lookups.
+if env -u GIT_DIR -u GIT_WORK_TREE -u GIT_COMMON_DIR git -C "$PROJECT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  _git_common="$(env -u GIT_DIR -u GIT_WORK_TREE -u GIT_COMMON_DIR git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+  if [ -n "${_git_common:-}" ] && [ -d "$(dirname "$_git_common")" ]; then
+    _main_wt="$(dirname "$_git_common")"
+    if [ -f "$_main_wt/start-kimicc.sh" ]; then
+      PROJECT_DIR="$_main_wt"
+    fi
+  fi
+  unset _git_common _main_wt
+fi
 export PATH="${HOME}/.local/bin:${PATH:-}"
 hash -r 2>/dev/null || true
 
@@ -46,18 +64,28 @@ Options:
 
 Environment:
   KIMICC_MODEL / KIMICC_ENDPOINT     Defaults for --model / --endpoint
-  MOONSHOT_API_KEY / KIMI_API_KEY    Platform API key (preferred)
+  MOONSHOT_API_KEY / KIMI_API_KEY    Platform API key (preferred for platform)
   KIMICC_AUTH_TOKEN                  Explicit auth token override
   KIMICC_BASE_URL                    Override Anthropic-compatible base URL
+  KIMICC_DRY_RUN=1                   Resolve route + auth, print summary, exit before launch
+  KIMICC_API_KEY_HELPER_TTL_MS       apiKeyHelper re-invoke interval (default 300000)
   CLAUDE_CONFIG_DIR                  Isolated Claude config directory
   CLAUDE_ROUTE_GUARD_ALLOW_SETTINGS_ENV=1
                                      Bypass settings.json env conflict check (emergency)
+
+Subscription auth (no API key needed):
+  Run `kimi login` once. With --endpoint coding the launcher picks up the
+  OAuth credential automatically and refreshes it. Access tokens live ~15 min:
+  without --isolate-config the token is fixed at launch (short sessions);
+  with --isolate-config an apiKeyHelper is installed that auto-refreshes
+  (long sessions).
 
 Examples:
   ./start-kimicc.sh
   ./start-kimicc.sh --model k2.7
   ./start-kimicc.sh --model k2.7-highspeed --epic harness
   MOONSHOT_API_KEY=<your-key> ./start-kimicc.sh --model k3
+  ./start-kimicc.sh --endpoint coding --isolate-config   # subscription, long session
 
 Headless / native Kimi (not this launcher):
   scripts/delegate.py dispatch --agent kimi --model k3 …
@@ -120,22 +148,32 @@ default_base_url() {
   esac
 }
 
+# Resolve the auth credential into globals (no command substitution, so
+# AUTH_SOURCE survives in the caller's shell).
+_resolved_auth=""
+AUTH_SOURCE=""
 resolve_auth_token() {
+  _resolved_auth=""
+  AUTH_SOURCE=""
   if [ -n "${KIMICC_AUTH_TOKEN:-}" ]; then
-    printf '%s\n' "$KIMICC_AUTH_TOKEN"
+    _resolved_auth="$KIMICC_AUTH_TOKEN"
+    AUTH_SOURCE="KIMICC_AUTH_TOKEN"
     return 0
   fi
   if [ -n "${MOONSHOT_API_KEY:-}" ]; then
-    printf '%s\n' "$MOONSHOT_API_KEY"
+    _resolved_auth="$MOONSHOT_API_KEY"
+    AUTH_SOURCE="MOONSHOT_API_KEY"
     return 0
   fi
   if [ -n "${KIMI_API_KEY:-}" ]; then
-    printf '%s\n' "$KIMI_API_KEY"
+    _resolved_auth="$KIMI_API_KEY"
+    AUTH_SOURCE="KIMI_API_KEY"
     return 0
   fi
   if [ -n "${ANTHROPIC_AUTH_TOKEN:-}" ] && [ "${ENDPOINT}" = "coding" ]; then
     # Allow an already-exported coding token when operator sets it intentionally.
-    printf '%s\n' "$ANTHROPIC_AUTH_TOKEN"
+    _resolved_auth="$ANTHROPIC_AUTH_TOKEN"
+    AUTH_SOURCE="ANTHROPIC_AUTH_TOKEN"
     return 0
   fi
   return 1
@@ -217,11 +255,26 @@ if ! assert_claude_settings_route_clean "KimiCC"; then
   exit 1
 fi
 
-if ! _resolved_auth="$(resolve_auth_token)"; then
+# Explicit credentials win. For --endpoint coding, fall back to the
+# `kimi login` OAuth credential (subscription route): the helper prints a
+# fresh access token, refreshing it via the refresh_token grant when needed.
+KIMI_OAUTH_PY="$PROJECT_DIR/.venv/bin/python"
+KIMI_OAUTH_HELPER="$PROJECT_DIR/scripts/lib/kimi_coding_oauth.py"
+AUTH_VIA_OAUTH=0
+if ! resolve_auth_token; then
+  if [ "$ENDPOINT" = "coding" ] && [ -f "$KIMI_OAUTH_HELPER" ] && [ -x "$KIMI_OAUTH_PY" ]; then
+    if _resolved_auth="$("$KIMI_OAUTH_PY" "$KIMI_OAUTH_HELPER" token 2>/dev/null)" \
+        && [ -n "$_resolved_auth" ]; then
+      AUTH_VIA_OAUTH=1
+      AUTH_SOURCE="oauth(kimi login)"
+    fi
+  fi
+fi
+if [ -z "$_resolved_auth" ]; then
   echo "Error: no Kimi API credential found for the kimicc route." >&2
-  echo "  Set one of: MOONSHOT_API_KEY, KIMI_API_KEY, or KIMICC_AUTH_TOKEN" >&2
+  echo "  Platform (pay-as-you-go): set MOONSHOT_API_KEY, KIMI_API_KEY, or KIMICC_AUTH_TOKEN" >&2
   echo "  Platform keys: https://platform.kimi.ai/console/api-keys" >&2
-  echo "  Native Kimi OAuth (kimi login) is for ./start-kimi.sh / headless kimi — not Claude Code." >&2
+  echo "  Subscription: run \`kimi login\`, then use --endpoint coding (OAuth is picked up automatically)." >&2
   exit 1
 fi
 
@@ -242,8 +295,57 @@ export LEARN_UKRAINIAN_TRANSPORT=kimicc
 
 # Moonshot Anthropic-compatible routing (process-scoped only).
 export ANTHROPIC_BASE_URL="$BASE_URL"
-export ANTHROPIC_AUTH_TOKEN="$_resolved_auth"
 unset ANTHROPIC_API_KEY
+
+# OAuth (`kimi login`) access tokens expire after ~15 minutes. With an
+# isolated config we install an apiKeyHelper that re-mints the token on Claude
+# Code's schedule (long-session mode); without isolation the current token can
+# only be exported into the process env, which is fixed at launch.
+if [ "$AUTH_VIA_OAUTH" = "1" ] && [ "$ISOLATE_CONFIG" = "1" ]; then
+  _helper_cmd="$KIMI_OAUTH_PY $KIMI_OAUTH_HELPER token"
+  if ! KIMICC_SETTINGS_PATH="$CLAUDE_CONFIG_DIR/settings.json" KIMICC_API_KEY_HELPER="$_helper_cmd" \
+      "$KIMI_OAUTH_PY" - <<'PY'
+import json
+import os
+import sys
+
+path = os.environ["KIMICC_SETTINGS_PATH"]
+helper = os.environ["KIMICC_API_KEY_HELPER"]
+data = {}
+if os.path.exists(path):
+    with open(path, encoding="utf-8") as fh:
+        try:
+            data = json.load(fh)
+        except json.JSONDecodeError as exc:
+            print(f"Error: {path} is not valid JSON ({exc}); refusing to modify it.", file=sys.stderr)
+            sys.exit(1)
+    if not isinstance(data, dict):
+        print(f"Error: {path} is not a JSON object; refusing to modify it.", file=sys.stderr)
+        sys.exit(1)
+data["apiKeyHelper"] = helper
+os.makedirs(os.path.dirname(path), exist_ok=True)
+with open(path, "w", encoding="utf-8") as fh:
+    json.dump(data, fh, indent=2)
+    fh.write("\n")
+PY
+  then
+    echo "Error: could not install apiKeyHelper into $CLAUDE_CONFIG_DIR/settings.json" >&2
+    exit 1
+  fi
+  unset _helper_cmd
+  # Re-invoke the helper well inside the ~15 min token lifetime.
+  export CLAUDE_CODE_API_KEY_HELPER_TTL_MS="${KIMICC_API_KEY_HELPER_TTL_MS:-300000}"
+  unset ANTHROPIC_AUTH_TOKEN
+  AUTH_NOTE="oauth(kimi login) via apiKeyHelper (auto-refresh, ttl=${CLAUDE_CODE_API_KEY_HELPER_TTL_MS}ms)"
+else
+  export ANTHROPIC_AUTH_TOKEN="$_resolved_auth"
+  if [ "$AUTH_VIA_OAUTH" = "1" ]; then
+    AUTH_NOTE="oauth(kimi login) — short-lived token (~15 min); for long sessions relaunch with --isolate-config"
+  else
+    AUTH_NOTE="$AUTH_SOURCE"
+  fi
+fi
+unset _resolved_auth
 
 export ANTHROPIC_MODEL="$LEAD_MODEL"
 export ANTHROPIC_DEFAULT_OPUS_MODEL="$LEAD_MODEL"
@@ -271,6 +373,7 @@ fi
 echo "KimiCC: model=$LEAD_MODEL alias=$MODEL_ALIAS endpoint=$ENDPOINT profile=$PROFILE_ID"
 echo "        window=$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS compact=$CLAUDE_CODE_AUTO_COMPACT_WINDOW"
 echo "        base=$ANTHROPIC_BASE_URL (env-only; ~/.claude/settings.json not modified)"
+echo "        auth=$AUTH_NOTE"
 echo "        tip: keep ./start-claude.sh in another terminal for native Anthropic Claude"
 if [ "$MODEL_ALIAS" != "k3" ]; then
   echo "        note: k2.7 requires Thinking ON in the TUI (Tab) or requests are rejected"
@@ -293,6 +396,11 @@ for arg in "${FORWARD_ARGS[@]+"${FORWARD_ARGS[@]}"}"; do
   _cleaned+=("$arg")
   _prev="$arg"
 done
+
+if [ "${KIMICC_DRY_RUN:-0}" = "1" ]; then
+  echo "KIMICC_DRY_RUN=1: would exec $PROJECT_DIR/start-claude.sh --model $LEAD_MODEL ${_cleaned[*]+"${_cleaned[*]}"}"
+  exit 0
+fi
 
 if ((${#_cleaned[@]})); then
   exec "$PROJECT_DIR/start-claude.sh" --model "$LEAD_MODEL" "${_cleaned[@]}"

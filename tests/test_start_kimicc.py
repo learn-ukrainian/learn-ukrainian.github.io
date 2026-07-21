@@ -5,12 +5,36 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import time
 from pathlib import Path
 
 import pytest
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _LAUNCHER = _REPO_ROOT / "start-kimicc.sh"
+
+
+def _resolve_venv_python() -> Path | None:
+    """Project venv; falls back to the main worktree when run from a linked worktree."""
+    candidates = [_REPO_ROOT / ".venv" / "bin" / "python"]
+    try:
+        common = subprocess.run(
+            ["git", "-C", str(_REPO_ROOT), "rev-parse", "--path-format=absolute", "--git-common-dir"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        if common.returncode == 0 and common.stdout.strip():
+            candidates.append(Path(common.stdout.strip()).parent / ".venv" / "bin" / "python")
+    except (OSError, subprocess.SubprocessError):
+        pass
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+_VENV_PYTHON = _resolve_venv_python()
 
 
 def _write_executable(path: Path, body: str) -> None:
@@ -25,6 +49,7 @@ def _require_launcher_sources() -> None:
         _REPO_ROOT / "scripts" / "lib" / "claude_route_guard.sh",
         _REPO_ROOT / "scripts" / "lib" / "profile_resolver.sh",
         _REPO_ROOT / "scripts" / "lib" / "context_profiles.py",
+        _REPO_ROOT / "scripts" / "lib" / "kimi_coding_oauth.py",
     ) if not path.is_file()]
     if missing:
         names = ", ".join(str(path.relative_to(_REPO_ROOT)) for path in missing)
@@ -46,7 +71,7 @@ def _seed_fake_project(tmp_path: Path) -> Path:
         project / "start-claude.sh",
         "#!/usr/bin/env bash\n# Test stub: kimicc already exported env; exec fake claude from PATH.\nexec claude \"$@\"\n",
     )
-    for name in ("claude_route_guard.sh", "profile_resolver.sh", "context_profiles.py"):
+    for name in ("claude_route_guard.sh", "profile_resolver.sh", "context_profiles.py", "kimi_coding_oauth.py"):
         src = _REPO_ROOT / "scripts" / "lib" / name
         dest = lib / name
         dest.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
@@ -56,10 +81,9 @@ def _seed_fake_project(tmp_path: Path) -> Path:
     if profiles.is_file():
         (cfg / "context_profiles.yaml").write_text(profiles.read_text(encoding="utf-8"), encoding="utf-8")
     # Point profile resolver at a real Python that has project deps if present.
-    real_py = _REPO_ROOT / ".venv" / "bin" / "python"
     py_body = (
-        f"#!/usr/bin/env bash\nexec {real_py} \"$@\"\n"
-        if real_py.is_file()
+        f'#!/usr/bin/env bash\nexec "{_VENV_PYTHON}" "$@"\n'
+        if _VENV_PYTHON is not None
         else "#!/usr/bin/env bash\nexec /usr/bin/env python3 \"$@\"\n"
     )
     _write_executable(venv_bin / "python", py_body)
@@ -106,6 +130,7 @@ fi
     printf 'tool_search=%s\\n' "${ENABLE_TOOL_SEARCH-unset}"
     printf 'effort=%s\\n' "${CLAUDE_CODE_EFFORT_LEVEL-unset}"
     printf 'auto_compact=%s\\n' "${CLAUDE_CODE_AUTO_COMPACT_WINDOW-unset}"
+    printf 'helper_ttl=%s\\n' "${CLAUDE_CODE_API_KEY_HELPER_TTL_MS-unset}"
     printf 'profile=%s\\n' "$LEARN_UKRAINIAN_PROFILE_ID"
     printf 'transport=%s\\n' "$LEARN_UKRAINIAN_TRANSPORT"
     printf 'main_window=%s\\n' "$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS"
@@ -134,6 +159,12 @@ fi
             "KIMICC_BASE_URL",
             "KIMICC_MODEL",
             "KIMICC_ENDPOINT",
+            "KIMICC_DRY_RUN",
+            "KIMICC_API_KEY_HELPER_TTL_MS",
+            "CLAUDE_CODE_API_KEY_HELPER_TTL_MS",
+            "KIMI_CODE_CREDENTIALS_PATH",
+            "KIMI_CODE_OAUTH_HOST",
+            "KIMI_CODE_OAUTH_MARGIN",
             "CLAUDE_CONFIG_DIR",
             "SESSION_EPIC",
             "SESSION_HANDOFF_AGENT",
@@ -308,3 +339,102 @@ def test_help_mentions_native_kimi_headless_separation(tmp_path: Path) -> None:
     assert result.returncode == 0
     assert "ask-kimi" in result.stdout
     assert "settings.json" in result.stdout
+
+
+def _write_oauth_credentials(tmp_path: Path, *, expires_in: int = 900) -> Path:
+    cred = tmp_path / "oauth-creds" / "kimi-code.json"
+    cred.parent.mkdir(parents=True)
+    cred.write_text(
+        json.dumps(
+            {
+                "access_token": "oauth-acc",
+                "refresh_token": "oauth-ref",
+                "expires_at": time.time() + expires_in,
+                "expires_in": expires_in,
+                "token_type": "Bearer",
+                "scope": "kimi-code",
+            }
+        ),
+        encoding="utf-8",
+    )
+    cred.chmod(0o600)
+    return cred
+
+
+_OAUTH_ENV_CLEAR = {
+    "MOONSHOT_API_KEY": "",
+    "KIMI_API_KEY": "",
+    "KIMICC_AUTH_TOKEN": "",
+    "ANTHROPIC_AUTH_TOKEN": "",
+}
+
+
+def test_coding_endpoint_falls_back_to_kimi_login_oauth(tmp_path: Path) -> None:
+    cred = _write_oauth_credentials(tmp_path)
+    output, result = _run_with_fakes(
+        tmp_path,
+        ["--endpoint", "coding"],
+        env_overrides={
+            **_OAUTH_ENV_CLEAR,
+            "KIMI_CODE_CREDENTIALS_PATH": str(cred),
+            # Fresh stored token (900s > 120s margin): no network needed.
+            "KIMI_CODE_OAUTH_HOST": "http://127.0.0.1:9",
+        },
+    )
+    assert result.returncode == 0, result.stderr
+    assert "base=https://api.kimi.com/coding" in output
+    assert "auth=oauth-acc" in output
+    assert "model=k3" in output
+    assert "oauth(kimi login)" in result.stdout
+    assert "short-lived" in result.stdout
+
+
+def test_coding_oauth_isolate_config_installs_api_key_helper(tmp_path: Path) -> None:
+    cred = _write_oauth_credentials(tmp_path)
+    output, result = _run_with_fakes(
+        tmp_path,
+        ["--endpoint", "coding", "--isolate-config"],
+        env_overrides={
+            **_OAUTH_ENV_CLEAR,
+            "KIMI_CODE_CREDENTIALS_PATH": str(cred),
+            "KIMI_CODE_OAUTH_HOST": "http://127.0.0.1:9",
+        },
+    )
+    assert result.returncode == 0, result.stderr
+    # apiKeyHelper mode: no static token is exported into the process env.
+    assert "auth=unset" in output
+    assert "helper_ttl=300000" in output
+    assert "apiKeyHelper" in result.stdout
+    settings_path = tmp_path / "home" / ".claude-kimicc" / "settings.json"
+    settings = json.loads(settings_path.read_text(encoding="utf-8"))
+    helper = settings.get("apiKeyHelper", "")
+    assert "kimi_coding_oauth.py token" in helper
+    # Operator's live config is never touched.
+    assert not (tmp_path / "home" / ".claude" / "settings.json").exists()
+
+
+def test_coding_oauth_missing_credentials_mentions_kimi_login(tmp_path: Path) -> None:
+    _, result = _run_with_fakes(
+        tmp_path,
+        ["--endpoint", "coding"],
+        env_overrides={
+            **_OAUTH_ENV_CLEAR,
+            "KIMI_CODE_CREDENTIALS_PATH": str(tmp_path / "does-not-exist.json"),
+        },
+    )
+    assert result.returncode == 1
+    assert "no Kimi API credential" in result.stderr
+    assert "kimi login" in result.stderr
+
+
+def test_dry_run_resolves_route_without_launching(tmp_path: Path) -> None:
+    output, result = _run_with_fakes(
+        tmp_path,
+        [],
+        env_overrides={"KIMICC_DRY_RUN": "1"},
+    )
+    assert result.returncode == 0, result.stderr
+    assert "KIMICC_DRY_RUN=1: would exec" in result.stdout
+    assert "auth=MOONSHOT_API_KEY" in result.stdout
+    # Fake claude was never executed.
+    assert output == ""
