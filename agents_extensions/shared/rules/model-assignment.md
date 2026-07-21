@@ -187,7 +187,7 @@ Operator directive: **Gemini 3.6 Flash is the AGY top default** (agentic workhor
 
 ## GPT-5.6 family (Sol · Terra · Luna) — onboarded 2026-07-09 (user directive)
 
-All three tiers expose **372K context (~353K effectively usable before the context-management margin)** on the native route and accept text+image input. Cursor may advertise a larger hosted window; do not use that picker label to size native Codex prompts. Tier choice = capability/cost routing, not context size. Effort levels apply on every tier.
+All three tiers expose **272K context (~258.4K effectively usable before the context-management margin)** on the native Codex route and accept text+image input. This matches the [corrected Codex CLI 0.144.6 model metadata](https://learn.chatgpt.com/docs/changelog#month-2026-07) (2026-07-18). Cursor and the direct OpenAI API may advertise larger windows; do not use those route-specific limits to size native Codex or CLIProxyAPI-over-Codex-OAuth prompts. Tier choice = capability/cost routing, not context size. Effort levels apply on every tier.
 
 | Tier | Model id | Use for | Effort policy |
 | --- | --- | --- | --- |

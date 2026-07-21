@@ -51,7 +51,9 @@ fi
     printf 'cold_start=%s\n' "$LEARN_UKRAINIAN_COLD_START_PROFILE"
     printf 'cold_budget=%s\n' "$LEARN_UKRAINIAN_COLD_START_BUDGET_TOKENS"
     printf 'profile_auto_compact=%s\n' "$LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS"
+    printf 'claude_max_context=%s\n' "$CLAUDE_CODE_MAX_CONTEXT_TOKENS"
     printf 'claude_auto_compact=%s\n' "$CLAUDE_CODE_AUTO_COMPACT_WINDOW"
+    printf 'effort_level=%s\n' "$CLAUDE_CODE_EFFORT_LEVEL"
     printf 'profile_reason=%s\n' "$LEARN_UKRAINIAN_RESOLUTION_REASON"
     printf 'profile_trusted=%s\n' "$LEARN_UKRAINIAN_TRUSTED"
     printf 'arg=%s\n' "$@"
@@ -69,6 +71,9 @@ fi
         "CLAUDEX_BASE_URL",
         "CLAUDEX_AUTH_TOKEN",
         "CLAUDEX_SUBAGENT",
+        "CLAUDE_CODE_MAX_CONTEXT_TOKENS",
+        "CLAUDE_CODE_AUTO_COMPACT_WINDOW",
+        "CLAUDE_CODE_EFFORT_LEVEL",
     ):
         env.pop(variable, None)
     env.update(
@@ -123,11 +128,13 @@ def test_routes_lead_and_subagent_models(tmp_path: Path, arguments: list[str], e
     assert "profile=sol_lead" in output
     assert "requested_profile=sol_lead" in output
     assert "main_model=gpt-5.6-sol" in output
-    assert "main_window=372000" in output
+    assert "main_window=272000" in output
     assert "cold_start=compact" in output
-    assert "cold_budget=37200" in output
-    assert "profile_auto_compact=353000" in output
-    assert "claude_auto_compact=353000" in output
+    assert "cold_budget=27200" in output
+    assert "profile_auto_compact=258400" in output
+    assert "claude_max_context=272000" in output
+    assert "claude_auto_compact=258400" in output
+    assert "effort_level=high" in output
     assert "profile_reason=explicit-profile" in output
     assert "profile_trusted=1" in output
     assert "arg=--model" in output
@@ -241,6 +248,30 @@ def test_reports_missing_curl(tmp_path: Path) -> None:
 
     assert result.returncode == 1
     assert "curl is required" in result.stderr
+
+
+def test_rejects_settings_max_context_override(tmp_path: Path) -> None:
+    settings = tmp_path / "settings.json"
+    settings.write_text(
+        '{"env":{"CLAUDE_CODE_MAX_CONTEXT_TOKENS":"1000000"}}',
+        encoding="utf-8",
+    )
+    env = os.environ.copy()
+    env.pop("CLAUDE_CONFIG_DIR", None)
+    env["CLAUDE_SETTINGS_PATH"] = os.fspath(settings)
+
+    result = subprocess.run(
+        [str(_LAUNCHER)],
+        cwd=_REPO_ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+
+    assert result.returncode == 1
+    assert "CLAUDE_CODE_MAX_CONTEXT_TOKENS" in result.stderr
+    assert "settings.json env OVER process environment" in result.stderr
 
 
 @pytest.mark.parametrize("argument", ["-h", "--help"])

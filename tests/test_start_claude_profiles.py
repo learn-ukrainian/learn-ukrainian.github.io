@@ -39,6 +39,7 @@ fi
     printf 'claudex_run_id=%s\n' "${LEARN_UKRAINIAN_CLAUDEX_RUN_ID-unset}"
     printf 'claudex_generation=%s\n' "${LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION-unset}"
     printf 'managed_launch=%s\n' "${LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH-unset}"
+    printf 'max_context=%s\n' "${CLAUDE_CODE_MAX_CONTEXT_TOKENS-unset}"
     printf 'auto_compact=%s\n' "${CLAUDE_CODE_AUTO_COMPACT_WINDOW-unset}"
     printf 'profile=%s\n' "$LEARN_UKRAINIAN_PROFILE_ID"
     printf 'requested_profile=%s\n' "${LEARN_UKRAINIAN_REQUESTED_PROFILE_ID:-}"
@@ -61,6 +62,7 @@ fi
     for name in tuple(env):
         if name.startswith("LEARN_UKRAINIAN_") or name in {
             "CLAUDE_CODE_AUTO_COMPACT_WINDOW",
+            "CLAUDE_CODE_MAX_CONTEXT_TOKENS",
             "CLAUDE_CODE_SUBAGENT_MODEL",
             "SESSION_EPIC",
             "SESSION_HANDOFF_AGENT",
@@ -102,7 +104,8 @@ def test_certified_native_route_keeps_native_capacity_and_clears_proxy_flags(
             "ANTHROPIC_AUTH_TOKEN": "not-a-real-token",
             "ANTHROPIC_API_KEY": "test-native-key",
             "CLAUDE_CODE_SUBAGENT_MODEL": "gpt-5.6-terra",
-            "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "353000",
+            "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "258400",
+            "CLAUDE_CODE_MAX_CONTEXT_TOKENS": "272000",
         },
     )
 
@@ -115,6 +118,7 @@ def test_certified_native_route_keeps_native_capacity_and_clears_proxy_flags(
         "claudex_run_id": "unset",
         "claudex_generation": "unset",
         "managed_launch": "unset",
+        "max_context": "unset",
         "auto_compact": "unset",
         "profile": "native_claude",
         "requested_profile": "native_claude",
@@ -165,7 +169,10 @@ def test_custom_non_claude_model_without_route_metadata_fails_closed(
     values, result = _run_native_wrapper(
         tmp_path,
         ["--model=gpt-5.6-sol"],
-        {"CLAUDE_CODE_AUTO_COMPACT_WINDOW": "1000000"},
+        {
+            "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "1000000",
+            "CLAUDE_CODE_MAX_CONTEXT_TOKENS": "1000000",
+        },
     )
 
     assert values["profile"] == "fallback"
@@ -174,6 +181,7 @@ def test_custom_non_claude_model_without_route_metadata_fails_closed(
     assert values["main_window"] == "0"
     assert values["cold_start"] == "compact"
     assert values["auto_compact"] == "unset"
+    assert values["max_context"] == "unset"
     assert values["reason"] == "model-mismatch"
     assert values["trusted"] == "0"
     assert "using compact fallback" in result.stderr

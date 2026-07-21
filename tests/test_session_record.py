@@ -78,9 +78,9 @@ def test_update_session_writes_private_atomic_sol_record(tmp_path: Path) -> None
     assert stat.S_IMODE(path.parent.stat().st_mode) == 0o700
     assert not list(path.parent.glob("*.tmp"))
     assert record["effective_profile_id"] == "sol_lead"
-    assert record["effective_context_window_tokens"] == 372_000
-    assert record["auto_compact_capacity_tokens"] == 353_000
-    assert record["actual_context_window_tokens"] == 372_000
+    assert record["effective_context_window_tokens"] == 272_000
+    assert record["auto_compact_capacity_tokens"] == 258_400
+    assert record["actual_context_window_tokens"] == 272_000
     assert record["actual_context_window_provenance"] == "declared-profile"
     assert record["transcript_path"] == os.fspath(transcript)
     assert record["transcript_path_provenance"] == "session-start.transcript_path"
@@ -242,4 +242,4 @@ def test_cli_round_trip_uses_explicit_state_root(tmp_path: Path) -> None:
     )
 
     assert json.loads(update.stdout)["effective_profile_id"] == "sol_lead"
-    assert get.stdout.strip() == "372000"
+    assert get.stdout.strip() == "272000"

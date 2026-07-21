@@ -46,7 +46,9 @@ wrapper is present) — not `start-kimicc.sh`.
 `start-claudex.sh` keeps Claude Code's interface while routing the lead model
 to GPT-5.6 Sol through a local CLIProxyAPI server. **Interactive only** —
 headless GPT work stays on `./start-codex.sh` / bridge. Compaction is certified
-by the `sol_lead` profile: **372k window, 353k auto-compact**.
+by the `sol_lead` profile: **272k window, 258.4k auto-compact**. The launcher
+passes both values to Claude Code so an unrecognized gateway model does not
+fall back to Claude Code's default assumed window.
 
 Subagents default to Sol; select a lower-cost tier without changing the lead:
 

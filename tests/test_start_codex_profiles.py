@@ -180,7 +180,7 @@ def test_launcher_targets_canonical_main_without_creating_worktree(tmp_path: Pat
         "requested_profile": "native_codex",
         "transport": "native_codex",
         "main_model": "gpt-5.6-sol",
-        "main_window": "372000",
+        "main_window": "272000",
         "reason": "explicit-profile",
         "trusted": "1",
         "epic": "",

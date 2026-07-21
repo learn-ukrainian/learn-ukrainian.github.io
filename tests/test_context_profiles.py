@@ -56,10 +56,10 @@ def test_production_registry_separates_sol_capacity_values() -> None:
         "transport": "native_codex",
         "main_model_id": "gpt-5.6-sol",
         "model_id_patterns": [r"^gpt-5\.6-sol$"],
-        "main_context_window_tokens": 372_000,
-        "auto_compact_capacity_tokens": 353_000,
+        "main_context_window_tokens": 272_000,
+        "auto_compact_capacity_tokens": 258_400,
         "cold_start_profile": "compact",
-        "cold_start_budget_tokens": 37_200,
+        "cold_start_budget_tokens": 27_200,
         "rollover_warning_percentages": [75.0, 85.0, 92.0],
     }
     assert profiles["sol_lead"] == {
@@ -67,10 +67,10 @@ def test_production_registry_separates_sol_capacity_values() -> None:
         "transport": "claudex",
         "main_model_id": "gpt-5.6-sol",
         "model_id_patterns": [r"^gpt-5\.6-sol$"],
-        "main_context_window_tokens": 372_000,
-        "auto_compact_capacity_tokens": 353_000,
+        "main_context_window_tokens": 272_000,
+        "auto_compact_capacity_tokens": 258_400,
         "cold_start_profile": "compact",
-        "cold_start_budget_tokens": 37_200,
+        "cold_start_budget_tokens": 27_200,
         "rollover_warning_percentages": [75.0, 85.0, 92.0],
     }
     assert profiles["native_claude"]["auto_compact_capacity_tokens"] is None
@@ -97,7 +97,7 @@ def test_native_codex_profile_accepts_sol_and_rejects_other_models() -> None:
     assert trusted["profile_id"] == "native_codex"
     assert trusted["transport"] == "native_codex"
     assert trusted["trusted"]
-    assert trusted["main_context_window_tokens"] == 372_000
+    assert trusted["main_context_window_tokens"] == 272_000
     assert mismatch["profile_id"] == "fallback"
     assert mismatch["resolution_reason"] == "model-mismatch"
     assert mismatch["expected_profile_id"] == "native_codex"
@@ -152,7 +152,7 @@ def test_get_profile_uses_validated_fallback_for_unknown_id() -> None:
 
 def test_registry_rejects_compact_budget_over_ten_percent(tmp_path: Path) -> None:
     profiles = load_registry(CONFIG_PATH)["profiles"]
-    profiles["sol_lead"]["cold_start_budget_tokens"] = 37_201
+    profiles["sol_lead"]["cold_start_budget_tokens"] = 27_201
     path = _write_registry(tmp_path, profiles)
 
     with pytest.raises(ContextProfileError, match="cannot exceed 10%"):
@@ -191,8 +191,8 @@ def test_env0_output_is_exact_allow_list() -> None:
 
     assert {key.decode() for key in pairs} == EXPECTED_ENV0_KEYS
     assert pairs[b"PROFILE_ID"] == b"sol_lead"
-    assert pairs[b"MAIN_CONTEXT_WINDOW_TOKENS"] == b"372000"
-    assert pairs[b"AUTO_COMPACT_CAPACITY_TOKENS"] == b"353000"
+    assert pairs[b"MAIN_CONTEXT_WINDOW_TOKENS"] == b"272000"
+    assert pairs[b"AUTO_COMPACT_CAPACITY_TOKENS"] == b"258400"
     assert pairs[b"TRUSTED"] == b"1"
     assert b"export " not in result.stdout
 
@@ -240,5 +240,5 @@ def test_shell_resolver_exports_only_project_private_fields() -> None:
     assert set(after) - set(before) == set(exported)
     assert set(exported) == {f"LEARN_UKRAINIAN_{key}" for key in EXPECTED_ENV0_KEYS}
     assert exported["LEARN_UKRAINIAN_PROFILE_ID"] == "sol_lead"
-    assert exported["LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS"] == "372000"
+    assert exported["LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS"] == "272000"
     assert "eval " not in SHELL_RESOLVER.read_text(encoding="utf-8")
