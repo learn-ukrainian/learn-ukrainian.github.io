@@ -88,6 +88,16 @@ export MOONSHOT_API_KEY=sk-…   # https://platform.kimi.ai/console/api-keys
 ./start-kimicc.sh --isolate-config   # optional CLAUDE_CONFIG_DIR=$HOME/.claude-kimicc
 ```
 
+**Subscription auth (no platform API key):** run `kimi login` once, then use
+`--endpoint coding` — the launcher picks up the OAuth credential automatically
+(`scripts/lib/kimi_coding_oauth.py`, refresh_token grant against
+`https://auth.kimi.com/api/oauth/token`). OAuth access tokens live ~15 minutes,
+so for sessions longer than that add `--isolate-config`: an `apiKeyHelper` is
+then written into the **isolated** settings.json and Claude Code re-mints the
+token on a schedule (`CLAUDE_CODE_API_KEY_HELPER_TTL_MS`, default 300000).
+Without isolation the token is fixed at launch — fine for short sessions.
+`KIMICC_DRY_RUN=1` prints the resolved route/auth and exits before launch.
+
 | Model alias | Platform model id | Context | Auto-compact |
 | --- | --- | --- | --- |
 | `k3` (default) | `kimi-k3[1m]` | 1 048 576 | 996 147 |
