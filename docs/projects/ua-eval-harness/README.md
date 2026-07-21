@@ -1,6 +1,6 @@
 # Project: Ukrainian Calque + Grammar Evaluation Harness
 
-> **Status (2026-07-05):** Curriculum-facing machinery Phases 1–4 MERGED — schema (#4322/#4307), F/Calque gold curation (#4306), 3-tier scorer adapters (#4308), LLM reviewer prompt+evaluator (#4309), cost-aware workflow (#4310), calibration scaffolding (#4370), reviewer-dispatch (#4311a), corpus report (#4311b). **Active now: tool-augmenting the reviewer** (grounded fact-checking via opencode + sources MCP; fleet-reviewed design v2, 2026-07-05) → then the seminar tier bakeoff. Note: the live Tier-2 reviewer itself remains flag-off until #4370 calibration completes (`DEFAULT_REVIEWER_MODEL_ID = "llm-reviewer-disabled-until-4370"`); the workflow gate version is `qg_workflow.v1` today and bumps to v2 with the tooling PRs. Publication target: **UNLP 2027**.
+> **Status (2026-07-22):** Implementation sub-issue **[#5608](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5608)** filed for the `compile_evalset.py` gold extractor pipeline. Per UNLP leadership feedback (Oleksiy), **Priority #1 is the Gold Evalset**, with zero active human/teacher bottlenecks required to construct or run. Regionalisms vs. calques empirically checked against VESUM + Grinchenko + SUM-11 (`is_regionalism` safeguard). Publication target: **UNLP 2027**.
 
 > **For future sessions: this is the canonical pick-up entrypoint.** When the user says "let's continue the eval harness work" or asks about the UNLP project, read this file first.
 
