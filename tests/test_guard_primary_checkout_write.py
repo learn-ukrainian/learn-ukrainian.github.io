@@ -565,3 +565,76 @@ def test_git_checkout_branch_only_not_blocked_by_git_guard(repo: Path):
     result = _run(repo, payload)
     # No git-mediated path intent → this hook allows (other hooks may still fire).
     assert result.returncode == 0, result.stderr
+
+
+def test_bash_shell_var_to_gitignored_allowed(repo: Path):
+    """#5404: A=gitignored/path; echo x > $A must be allowed after expansion."""
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {
+            "command": "A=local_state/from_var.log; echo x > $A",
+        },
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 0, result.stderr
+
+
+def test_bash_unresolved_shell_var_blocked_with_distinct_reason(repo: Path):
+    """#5404: bare $A without assignment is not treated as a path under primary."""
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {"command": "echo x > $A"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+    assert "unresolved_shell_variable" in result.stderr
+
+
+def test_bash_redirect_to_claude_epic_archive_from_subdir_allowed(repo: Path):
+    """#5404: cwd inside gitignored epic dir + relative archive path allowed."""
+    epic = repo / ".claude" / "atlas-epic"
+    epic.mkdir(parents=True, exist_ok=True)
+    (epic / "archive").mkdir(exist_ok=True)
+    # Ensure .claude is ignored like production (fixture may already ignore local_state only)
+    gitignore = repo / ".gitignore"
+    gi = gitignore.read_text(encoding="utf-8") if gitignore.is_file() else ""
+    if ".claude/" not in gi:
+        gitignore.write_text(gi.rstrip() + "\n.claude/\n", encoding="utf-8")
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(epic),
+        "tool_input": {"command": "echo x > archive/t.md"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 0, result.stderr
+
+
+def test_bash_untracked_non_ignored_still_blocked(repo: Path):
+    (repo / "docs").mkdir(exist_ok=True)
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {"command": "echo x > docs/brand-new-untracked.md"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+    assert "untracked_primary_checkout" in result.stderr
+
+
+def test_bash_shell_var_reassignment_not_expanded(repo: Path):
+    """#5404 CF F001: multi-assign $A must not expand to last (benign) value."""
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {
+            "command": (
+                "A=curriculum/tracked.md; echo x > $A; A=local_state/ok.log"
+            ),
+        },
+    }
+    result = _run(repo, payload)
+    # Must not allow (would dirty tracked file under bash's true binding).
+    assert result.returncode == 2, result.stderr
+    assert "unresolved_shell_variable" in result.stderr or "tracked_primary" in result.stderr

@@ -276,3 +276,14 @@ def test_module_is_robust_to_hostile_git_env(layout: Layout, monkeypatch):
         False,
         "tracked_primary_checkout",
     )
+
+
+def test_relative_gitignored_path_resolved_against_cwd(layout: Layout):
+    """#5404: relative write under a gitignored subdir cwd must be allowed."""
+    ignored_dir = layout.main / "local_state" / "nested"
+    ignored_dir.mkdir(parents=True, exist_ok=True)
+    # ensure local_state is gitignored in fixture (test_gitignored_local_state uses local_state/)
+    rel = "nested/out.log"
+    decision = wc.evaluate_write(rel, cwd=ignored_dir)
+    assert decision.allowed is True, decision
+    assert decision.reason == "gitignored_local_state"
