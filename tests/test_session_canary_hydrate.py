@@ -111,3 +111,113 @@ def test_hydrate_cli_stdout(tmp_path: Path, monkeypatch) -> None:
     written = Path(ns.out_dir) / "hydrate.md"
     assert written.is_file()
     assert "HYDRATE CAPSULE" in written.read_text(encoding="utf-8")
+
+
+def test_score_auto_hydrates_on_pass(tmp_path: Path, monkeypatch, capsys) -> None:
+    """score PASS prints AUTO-HYDRATE capsule without a separate hydrate call."""
+    from scripts.session_canary import grok_lane
+
+    epic_dir = tmp_path / ".claude" / "harness-epic"
+    epic_dir.mkdir(parents=True)
+    handoff = epic_dir / "INTERIM-DRIVER-HANDOFF.md"
+    handoff.write_text(_diary(), encoding="utf-8")
+    canary = tmp_path / ".claude" / "harness-epic" / "canary"
+    canary.mkdir(parents=True)
+    # Minimal probe + perfect answers so score returns PASS
+    probe = {
+        "anchors": [
+            {"id": "a1", "q": "Q1", "a": "answer-one"},
+            {"id": "a2", "q": "Q2", "a": "answer-two"},
+        ]
+    }
+    import json as _json
+    (canary / "probe.json").write_text(_json.dumps(probe), encoding="utf-8")
+    answers = canary / "answers.json"
+    answers.write_text(_json.dumps({"a1": "answer-one", "a2": "answer-two"}), encoding="utf-8")
+
+    # Point canary dir via --out-dir and monkeypatch epic stream defaults
+    class NS:
+        pass
+
+    ns = NS()
+    ns.repo = str(tmp_path)
+    ns.epic = "harness"
+    ns.out_dir = str(canary)
+    ns.answers = str(answers)
+    ns.pass_ratio = 0.5  # 1/2 enough if threshold loose; use 0.5 with 2 anchors
+    ns.threshold = 0.5
+    ns.context_tokens = 1000
+    ns.model = "test"
+    ns.handoff = str(handoff)
+    ns.next_drive = ""
+    ns.pins = ""
+    ns.open_prs = ""
+    ns.hands_off = ""
+    ns.pending_user = ""
+    ns.worktrees = ""
+    ns.no_hydrate = False
+    ns.hydrate_write = False
+    ns.hydrate_max_tokens = 1400
+
+    # context_canary score subprocess — stub to PASS
+    def fake_run(cmd, **kwargs):
+        class R:
+            returncode = 0
+            stdout = "SCORE 2/2 = 1.00  ->  PASS\n"
+            stderr = ""
+        return R()
+
+    monkeypatch.setattr(grok_lane.subprocess, "run", fake_run)
+    rc = grok_lane.cmd_score(ns)
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "AUTO-HYDRATE" in out
+    assert "HYDRATE CAPSULE" in out
+
+
+def test_score_no_hydrate_flag_skips(tmp_path: Path, monkeypatch, capsys) -> None:
+    import json as _json
+
+    from scripts.session_canary import grok_lane
+
+    epic_dir = tmp_path / ".claude" / "harness-epic"
+    epic_dir.mkdir(parents=True)
+    handoff = epic_dir / "INTERIM-DRIVER-HANDOFF.md"
+    handoff.write_text(_diary(), encoding="utf-8")
+    canary = epic_dir / "canary"
+    canary.mkdir(parents=True)
+    probe = {"anchors": [{"id": "a1", "q": "Q1", "a": "answer-one"}]}
+    (canary / "probe.json").write_text(_json.dumps(probe), encoding="utf-8")
+    answers = canary / "answers.json"
+    answers.write_text(_json.dumps({"a1": "answer-one"}), encoding="utf-8")
+
+    class NS:
+        pass
+
+    ns = NS()
+    ns.repo = str(tmp_path)
+    ns.epic = "harness"
+    ns.out_dir = str(canary)
+    ns.answers = str(answers)
+    ns.pass_ratio = 0.5
+    ns.threshold = 0.5
+    ns.context_tokens = 1000
+    ns.model = "test"
+    ns.handoff = str(handoff)
+    ns.next_drive = ns.pins = ns.open_prs = ns.hands_off = ns.pending_user = ns.worktrees = ""
+    ns.no_hydrate = True
+    ns.hydrate_write = False
+    ns.hydrate_max_tokens = 1400
+
+    def fake_run(cmd, **kwargs):
+        class R:
+            returncode = 0
+            stdout = "SCORE 1/1 = 1.00  ->  PASS\n"
+            stderr = ""
+        return R()
+
+    monkeypatch.setattr(grok_lane.subprocess, "run", fake_run)
+    rc = grok_lane.cmd_score(ns)
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "AUTO-HYDRATE" not in out

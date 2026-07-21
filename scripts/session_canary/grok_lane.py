@@ -14,6 +14,9 @@ Policy (operational, not production-rollover)
 - Score with legacy ``context_canary``: ``--pass-ratio`` default **0.8** (8/10).
 - FAIL-HANDOFF (rc 2) ⇒ write STATE AT HANDBACK, close stream lease, ``/quit``.
 - First auto-compact is a **re-score trigger**, not an end signal by itself.
+- ``score`` **auto-hydrates on PASS** (Sol Option D) so the operator never
+  has to remember hydrate/restart for diary load; use ``--no-hydrate`` only
+  for tests/debugging.
 - Production identity rollover remains ``context_canary mint --snapshot`` (strict 10/10).
 
 Paths (gitignored local; under ``.claude/<epic>-epic/canary/``)
@@ -509,7 +512,11 @@ def cmd_score(args: argparse.Namespace) -> int:
             diary_mod.append_diary_stamp(
                 handoff_path,
                 title="canary score PASS",
-                bullets=[canary_line, "Continue drive; dual-write after next batch."],
+                bullets=[
+                    canary_line,
+                    "Continue drive; dual-write after next batch.",
+                    "Auto-hydrate runs after PASS (operator need not invoke hydrate).",
+                ],
             )
             print(f"diary stamp -> {handoff_path}")
             diary_mod.try_stream_state_note(
@@ -517,6 +524,29 @@ def cmd_score(args: argparse.Namespace) -> int:
                 f"Canary PASS: {canary_line}",
                 idempotency_key=f"canary-pass-{_utc_now()}",
             )
+            # Sol Option D: score first (done), then hydrate once automatically.
+            # Operator never has to remember hydrate / restart for diary load.
+            if not getattr(args, "no_hydrate", False):
+                try:
+                    emit_hydrate_capsule(
+                        repo=repo,
+                        epic=epic,
+                        stream_id=stream_id,
+                        handoff=getattr(args, "handoff", None),
+                        out_dir=out_dir,
+                        max_tokens=int(getattr(args, "hydrate_max_tokens", 1400)),
+                        write=bool(getattr(args, "hydrate_write", False)),
+                        print_stdout=True,
+                        banner=(
+                            "=== AUTO-HYDRATE (post canary PASS) — restore board from diary; "
+                            "do not ask the operator to restart or re-load diary ==="
+                        ),
+                    )
+                except Exception as hexc:  # fail-open: score already succeeded
+                    print(
+                        f"warning: auto-hydrate skipped ({type(hexc).__name__}: {hexc})",
+                        file=sys.stderr,
+                    )
     except Exception as exc:  # fail-open: never block score exit codes
         print(f"warning: diary dual-write skipped ({type(exc).__name__}: {exc})", file=sys.stderr)
 
@@ -536,62 +566,100 @@ def _split_csv_lines(raw: str) -> list[str]:
 
 
 
-def cmd_hydrate(args: argparse.Namespace) -> int:
-    """Print a Sol Option-D post-compact hydrate capsule (bounded; stdout-first).
+def emit_hydrate_capsule(
+    *,
+    repo: Path,
+    epic: str,
+    stream_id: str | None = None,
+    handoff: str | Path | None = None,
+    out_dir: Path | None = None,
+    max_tokens: int = 1400,
+    max_stamps: int = 3,
+    stream_limit: int = 5,
+    no_stream: bool = False,
+    write: bool = False,
+    print_stdout: bool = True,
+    banner: str | None = None,
+) -> tuple[int, dict]:
+    """Build and optionally print/write a Sol Option-D hydrate capsule.
 
-    Protocol: score canary FROM MEMORY first, then hydrate once. Capsule is a
-    recovery aid — dual-write diary + stream remain SSOT.
+    Returns ``(rc, meta)``. ``rc`` is 0 on success, 1 on missing diary, 2 on
+    visible identity/next-drive gap. Fail-open callers may ignore rc.
     """
     from scripts.session_canary import diary as diary_mod
 
-    repo = Path(args.repo).resolve()
-    epic = args.epic.strip().lower()
-    stream_id = (args.stream or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")).strip()
-    handoff_path = diary_mod.resolve_handoff_path(repo, epic, getattr(args, "handoff", None))
+    epic = epic.strip().lower()
+    stream_id = (stream_id or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")).strip()
+    handoff_path = diary_mod.resolve_handoff_path(repo, epic, handoff)
     if not handoff_path.is_file():
         print(f"error: diary handoff missing: {handoff_path}", file=sys.stderr)
-        return 1
+        return 1, {"error": "missing_handoff", "handoff": str(handoff_path)}
     diary_text = handoff_path.read_text(encoding="utf-8", errors="replace")
     stream_tail = ""
-    if not getattr(args, "no_stream", False):
-        stream_tail = diary_mod.try_stream_tail_text(stream_id, limit=int(args.stream_limit))
-    max_tokens = int(args.max_tokens)
+    if not no_stream:
+        stream_tail = diary_mod.try_stream_tail_text(stream_id, limit=int(stream_limit))
     capsule, meta = diary_mod.build_hydrate_capsule(
         diary_text,
         epic=epic,
         stream_id=stream_id,
         stream_tail=stream_tail,
-        max_tokens=max_tokens,
-        max_stamps=int(args.max_stamps),
+        max_tokens=int(max_tokens),
+        max_stamps=int(max_stamps),
     )
-    # stdout is the primary product (Sol: do not also force hydrate.md into context)
-    sys.stdout.write(capsule)
-    if not capsule.endswith("\n"):
-        sys.stdout.write("\n")
-    # meta on stderr so piping stdout stays clean
+    meta = dict(meta)
+    meta["handoff"] = str(handoff_path)
+    if print_stdout:
+        if banner:
+            print(banner)
+            print()
+        sys.stdout.write(capsule)
+        if not capsule.endswith("\n"):
+            sys.stdout.write("\n")
     print(
         f"hydrate_meta: tokens≈{meta.get('approx_tokens')} chars={meta.get('chars')} "
         f"sha={meta.get('capsule_sha256')} dropped={meta.get('dropped_sections')} "
         f"gap={meta.get('visible_gap')}",
         file=sys.stderr,
     )
-    if getattr(args, "write", False):
-        out_dir = Path(args.out_dir) if args.out_dir else _canary_dir(repo, epic)
-        out_dir.mkdir(parents=True, exist_ok=True)
-        out_path = out_dir / "hydrate.md"
+    if write:
+        dest = out_dir if out_dir is not None else _canary_dir(repo, epic)
+        dest.mkdir(parents=True, exist_ok=True)
+        out_path = dest / "hydrate.md"
         tmp = out_path.with_suffix(".md.tmp")
         tmp.write_text(capsule, encoding="utf-8")
-        meta_path = out_dir / "hydrate_meta.json"
+        meta_path = dest / "hydrate_meta.json"
         meta_path.write_text(
-            json.dumps({"written_at": _utc_now(), **meta, "handoff": str(handoff_path)}, indent=2)
-            + "\n",
+            json.dumps({"written_at": _utc_now(), **meta}, indent=2) + "\n",
             encoding="utf-8",
         )
         tmp.replace(out_path)
         print(f"hydrate receipt -> {out_path}", file=sys.stderr)
-    if meta.get("visible_gap"):
-        return 2
-    return 0
+        meta["receipt"] = str(out_path)
+    rc = 2 if meta.get("visible_gap") else 0
+    return rc, meta
+
+
+def cmd_hydrate(args: argparse.Namespace) -> int:
+    """Print a Sol Option-D post-compact hydrate capsule (bounded; stdout-first).
+
+    Prefer ``score`` (auto-hydrates on PASS) so the operator never has to
+    remember hydrate. Capsule is a recovery aid — diary + stream remain SSOT.
+    """
+    repo = Path(args.repo).resolve()
+    rc, _meta = emit_hydrate_capsule(
+        repo=repo,
+        epic=args.epic,
+        stream_id=getattr(args, "stream", None),
+        handoff=getattr(args, "handoff", None),
+        out_dir=Path(args.out_dir) if getattr(args, "out_dir", None) else None,
+        max_tokens=int(getattr(args, "max_tokens", 1400)),
+        max_stamps=int(getattr(args, "max_stamps", 3)),
+        stream_limit=int(getattr(args, "stream_limit", 5)),
+        no_stream=bool(getattr(args, "no_stream", False)),
+        write=bool(getattr(args, "write", False)),
+        print_stdout=True,
+    )
+    return rc
 
 
 def cmd_status(args: argparse.Namespace) -> int:
@@ -620,6 +688,8 @@ def cmd_protocol(args: argparse.Namespace) -> int:
     text = f"""## Grok lane session canary + diary (operational)
 
 You are bound to epic **{epic}** / stream **{stream}**.
+
+**Operator is not the recovery driver.** After compact or rot risk, you score + auto-hydrate yourself. Do not ask whether to restart for diary load.
 
 ### SSOT (survives compact) — chat does not
 - Session stream dual-write (typed entries)
@@ -656,14 +726,17 @@ Do not open `probe.json` when later scoring from memory.
 2. Around **60–70%** context (`/session-info` or `/context`)
 3. After a big merge/gate wave if still long-running
 
-### Post-compact (Sol Option D — score first, then hydrate)
-1. **Score canary FROM MEMORY** (do not open diary/stream/probe answers)
-2. If FAIL-HANDOFF → handback + quit
-3. If PASS → hydrate **once** (bounded capsule; do **not** load full diary):
+### Post-compact (automatic — operator is not involved)
+You own compact recovery. **Never ask the operator** whether to restart, hydrate, or re-load the diary.
+
+1. **Score canary FROM MEMORY** (do not open diary/stream/probe answers first):
 ```bash
-.venv/bin/python -m scripts.session_canary.grok_lane hydrate --epic {epic} --stream {stream}
+.venv/bin/python -m scripts.session_canary.grok_lane score --epic {epic} \
+  --answers .claude/{epic}-epic/canary/answers.json --context-tokens <N>
 ```
-4. Resume drive from capsule Next Drive / pins. Optional `--write` writes a receipt under canary/ (do not also paste hydrate.md into chat).
+2. If FAIL-HANDOFF → handback is already written → close stream + `/quit` (new session via launcher).
+3. If PASS → **auto-hydrate is already printed** by `score` (bounded capsule + stream tail). Read it; resume from Next Drive / pins. Do **not** load the full diary.
+4. Only use standalone `hydrate` if you need a re-print; default path is score→auto-hydrate.
 
 ### Score procedure (from memory — no re-read of probe answers)
 1. `.venv/bin/python -m scripts.session_canary.grok_lane questions --epic {epic}`
@@ -798,6 +871,22 @@ def build_parser() -> argparse.ArgumentParser:
     score.add_argument("--hands-off", default="", help="On FAIL: hands-off bullets separated by ';'")
     score.add_argument("--pending-user", default="", help="On FAIL: pending-user bullets separated by ';'")
     score.add_argument("--worktrees", default="", help="On FAIL: worktree bullets separated by ';'")
+    score.add_argument(
+        "--no-hydrate",
+        action="store_true",
+        help="Skip automatic post-PASS hydrate capsule (default: hydrate on PASS)",
+    )
+    score.add_argument(
+        "--hydrate-write",
+        action="store_true",
+        help="Also write canary/hydrate.md receipt when auto-hydrating",
+    )
+    score.add_argument(
+        "--hydrate-max-tokens",
+        type=int,
+        default=1400,
+        help="Auto-hydrate capsule budget (default 1400; hard ceiling 1600)",
+    )
     score.set_defaults(func=cmd_score)
 
     status = sub.add_parser("status", help="Show canary artifact presence + last verdict")
