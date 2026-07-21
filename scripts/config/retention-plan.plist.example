@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Sol PR-L example launchd job: DRY-RUN retention plan only.
+
+  Gate 5: do NOT enable --apply on a schedule until the operator has
+  confirmed seven days of stable dry-run plans, archive root, and restore
+  drills. This example only runs `retention_engine.py plan`.
+
+  Install (optional, operator):
+    cp scripts/config/retention-plan.plist.example ~/Library/LaunchAgents/com.learn-ukrainian.retention-plan.plist
+    # edit WorkingDirectory / ProgramArguments paths
+    launchctl load ~/Library/LaunchAgents/com.learn-ukrainian.retention-plan.plist
+-->
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.learn-ukrainian.retention-plan</string>
+    <key>WorkingDirectory</key>
+    <string>/Users/REPLACE/projects/learn-ukrainian</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>/Users/REPLACE/projects/learn-ukrainian/.venv/bin/python</string>
+      <string>scripts/hygiene/retention_engine.py</string>
+      <string>plan</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+      <key>Hour</key>
+      <integer>4</integer>
+      <key>Minute</key>
+      <integer>15</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/Users/REPLACE/projects/learn-ukrainian/logs/retention-plan.stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/REPLACE/projects/learn-ukrainian/logs/retention-plan.stderr.log</string>
+    <key>RunAtLoad</key>
+    <false/>
+  </dict>
+</plist>
