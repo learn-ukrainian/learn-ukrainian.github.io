@@ -393,9 +393,31 @@ def primary_checkout_dirty_status(start: Path | str | None = None) -> dict:
     count as dirty. Tracked modifications/deletions and untracked non-ignored
     files both count because either would pollute the primary checkout for the
     next dispatched writer.
+
+    Bare primary repositories (no work tree) cannot hold a dirty working tree
+    for product files — ``git status`` fails with "must be run in a work tree".
+    Treat bare primary as clean so write-capable dispatch can run from
+    worktrees without false-blocking the fleet.
     """
     main_root = resolve_main_root(start)
     branch = current_branch(main_root)
+    bare_proc = _run_git(main_root, "rev-parse", "--is-bare-repository")
+    is_bare = bare_proc.returncode == 0 and bare_proc.stdout.strip().lower() == "true"
+    if is_bare:
+        return {
+            "main_root": str(main_root),
+            "branch": branch,
+            "protected_branch": branch in PROTECTED_BRANCHES if branch else False,
+            "dirty": False,
+            "dirty_count": 0,
+            "tracked_dirty_count": 0,
+            "untracked_dirty_count": 0,
+            "entries": [],
+            "checked_cwd": str(main_root),
+            "checked_command": "git rev-parse --is-bare-repository",
+            "bare_primary": True,
+        }
+
     command = ("git", "status", "--porcelain=v1", "-z", "--untracked-files=all")
     proc = _run_git(main_root, *command[1:])
     if proc.returncode != 0:
@@ -419,6 +441,7 @@ def primary_checkout_dirty_status(start: Path | str | None = None) -> dict:
         "entries": entries,
         "checked_cwd": str(main_root),
         "checked_command": " ".join(command),
+        "bare_primary": False,
     }
 
 
