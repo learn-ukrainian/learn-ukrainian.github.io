@@ -46,8 +46,10 @@ if git -C "$PROJECT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   unset _git_common _main_wt
 fi
 
+SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+
 usage_launcher() {
-  sed -n '2,35p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,29p' "$SCRIPT_PATH" | sed 's/^# \{0,1\}//'
   exit 0
 }
 
