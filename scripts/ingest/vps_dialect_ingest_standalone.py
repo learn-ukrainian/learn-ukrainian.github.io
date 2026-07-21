@@ -2,12 +2,8 @@
 """VPS Standalone Ingestion Script for Ukrainian Author & Dialect Dictionaries.
 
 Designed to run independently on a remote VPS without consuming local workstation compute.
-Scrapes, parses, and structures dialect and author concordances from public academic sources:
-- Lemko Dialect Dictionary (lemko.org)
-- Shevchenko Concordance (Litopys.org.ua)
-
-Outputs a compressed JSONL artifact `data/ingest/vps_dialect_dicts.jsonl.gz` that can
-be rsynced into the local `data/sources.db` database.
+Enforces polite crawling standards (1.5s inter-request delay, educational User-Agent, exponential backoff)
+to ensure zero server burden on public academic resources.
 
 Usage on VPS
 ------------
@@ -22,12 +18,18 @@ import json
 import re
 import ssl
 import sys
+import time
+import urllib.error
 import urllib.request
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
 LEMKO_DICT_URL = "http://lemko.org/slownik/lesow.htm"
 SHEVCHENKO_DICT_BASE_URL = "http://litopys.org.ua/shevchenko/shev.htm"
+
+# Polite crawling defaults
+DEFAULT_DELAY_SECONDS = 1.5
+USER_AGENT = "LearnUkrainianEduBot/1.0 (+https://learn-ukrainian.github.io)"
 
 
 @dataclass(frozen=True)
@@ -40,23 +42,42 @@ class DialectDictEntry:
     provenance_url: str
 
 
-def fetch_url_text(url: str, timeout: int = 30) -> str:
+def fetch_url_text(url: str, timeout: int = 30, delay: float = DEFAULT_DELAY_SECONDS) -> str:
+    """Fetch URL content politely with rate-limiting delay and exponential backoff."""
     ctx = ssl.create_default_context()
     ctx.check_hostname = False
     ctx.verify_mode = ssl.CERT_NONE
 
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
-    with urllib.request.urlopen(req, context=ctx, timeout=timeout) as resp:
-        content = resp.read()
+    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+
+    # Polite rate limiting delay before request
+    if delay > 0:
+        time.sleep(delay)
+
+    max_retries = 3
+    backoff = 2.0
+    for attempt in range(max_retries):
         try:
-            return content.decode("utf-8")
-        except UnicodeDecodeError:
-            return content.decode("windows-1251", errors="replace")
+            with urllib.request.urlopen(req, context=ctx, timeout=timeout) as resp:
+                content = resp.read()
+                try:
+                    return content.decode("utf-8")
+                except UnicodeDecodeError:
+                    return content.decode("windows-1251", errors="replace")
+        except urllib.error.HTTPError as e:
+            if e.code in (429, 503) and attempt < max_retries - 1:
+                print(f"⚠️ Rate limited ({e.code}). Backing off {backoff}s...", file=sys.stderr)
+                time.sleep(backoff)
+                backoff *= 2.0
+            else:
+                raise
+
+    raise RuntimeError(f"Failed to fetch {url} after {max_retries} attempts.")
 
 
 def parse_lemko_org_dictionary() -> list[DialectDictEntry]:
-    """Parse Lemko dialect dictionary entries from lemko.org."""
-    print("🌐 Fetching Lemko dialect dictionary from lemko.org...")
+    """Parse Lemko dialect dictionary entries from lemko.org politely."""
+    print("🌐 Fetching Lemko dialect dictionary from lemko.org (polite mode)...")
     entries: list[DialectDictEntry] = []
     try:
         html = fetch_url_text(LEMKO_DICT_URL)
@@ -89,8 +110,8 @@ def parse_lemko_org_dictionary() -> list[DialectDictEntry]:
 
 
 def parse_shevchenko_concordance() -> list[DialectDictEntry]:
-    """Parse Shevchenko concordance entries from Litopys.org.ua."""
-    print("🌐 Fetching Shevchenko dictionary entries from Litopys.org.ua...")
+    """Parse Shevchenko concordance entries from Litopys.org.ua politely."""
+    print("🌐 Fetching Shevchenko dictionary entries from Litopys.org.ua (polite mode)...")
     entries: list[DialectDictEntry] = []
     try:
         html = fetch_url_text(SHEVCHENKO_DICT_BASE_URL)
