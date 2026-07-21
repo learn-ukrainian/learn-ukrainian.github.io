@@ -112,7 +112,8 @@ refreshes CLI-owned credentials): the launchd agent
 `~/Library/LaunchAgents/com.learnukrainian.kimi-coding-oauth.plist` runs
 `scripts/lib/kimi_coding_oauth.py token` every 10 minutes (stdout to
 /dev/null, errors to `~/.kimi-code/logs/oauth-refresh.log`). Manage with
-`launchctl bootout|bootstrap gui/$(id -u)/com.learnukrainian.kimi-coding-oauth`.
+`launchctl bootout gui/$(id -u)/com.learnukrainian.kimi-coding-oauth` (unload)
+and `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.learnukrainian.kimi-coding-oauth.plist` (load).
 
 | Model alias | Platform model id | Context | Auto-compact |
 | --- | --- | --- | --- |
