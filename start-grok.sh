@@ -17,10 +17,11 @@
 # Environment exported for hooks / dual-write / session streams:
 #   SESSION_EPIC              from --epic
 #   SESSION_HANDOFF_AGENT     grok-<epic> (or override / harness→grok-infra)
-#   SESSION_STREAM_ID         epic:<n> from --stream or epic→number map
+#   SESSION_STREAM_*          from the common session supervisor (scripts.session_supervisor)
 #   LEARN_UKRAINIAN_GROK_LAUNCH=1
 #
-# Cold-start: with --epic and no free-text PROMPT, the launcher injects an
+# Cold-start: with --epic and no free-text PROMPT, the launcher claims the
+# stream lease through the common supervisor, writes a capsule, and injects an
 # auto-continue prompt (Grok has no SessionStart hook like Claude). Pass an
 # explicit PROMPT to override. Use --no-always-approve to require tool confirms.
 #
@@ -191,36 +192,27 @@ if [ "$_prev" = "--epic" ] || [ "$_prev" = "--stream" ] || [ "$_prev" = "--hando
   exit 1
 fi
 
-# Validate epic via shared helper when present
+# Load shared helpers.
 if [ -f "$PROJECT_DIR/scripts/lib/handoff_identity.sh" ]; then
   # shellcheck source=scripts/lib/handoff_identity.sh
   source "$PROJECT_DIR/scripts/lib/handoff_identity.sh"
-  if [ -n "$_selected_epic" ]; then
-    if ! epic_name_valid "$_selected_epic"; then
-      echo "Error: invalid --epic name '${_selected_epic}' (lowercase alnum + inner hyphens)." >&2
-      exit 1
-    fi
-  fi
+fi
+if [ -f "$PROJECT_DIR/scripts/lib/session_supervisor.sh" ]; then
+  # shellcheck source=scripts/lib/session_supervisor.sh
+  source "$PROJECT_DIR/scripts/lib/session_supervisor.sh"
 fi
 
-# Epic → default stream id (override with --stream)
-_stream_for_epic() {
-  case "${1:-}" in
-    atlas|practice|practice-hub) printf '%s' 'epic:4387' ;;
-    harness|infra) printf '%s' 'epic:4707' ;;
-    hramatka) printf '%s' 'epic:4542' ;;
-    folk|seminars-folk) printf '%s' 'epic:2836' ;;
-    bio|seminars-bio) printf '%s' 'epic:4431' ;;
-    *) ;;
-  esac
-}
+# Validate epic name when the helper is present.
+if command -v epic_name_valid >/dev/null 2>&1 && [ -n "$_selected_epic" ]; then
+  if ! epic_name_valid "$_selected_epic"; then
+    echo "Error: invalid --epic name '${_selected_epic}' (lowercase alnum + inner hyphens)." >&2
+    exit 1
+  fi
+fi
 
 if [ -n "$_selected_epic" ]; then
   export SESSION_EPIC="$_selected_epic"
   echo "Epic assignment: ${SESSION_EPIC}.epic"
-  if [ -z "$_selected_stream" ]; then
-    _selected_stream="$(_stream_for_epic "$_selected_epic")"
-  fi
   # Grok-specific handoff slot (not claude-<epic>)
   if [ -z "${SESSION_HANDOFF_AGENT:-}" ] && [ -z "$_handoff_override" ]; then
     case "$_selected_epic" in
@@ -234,9 +226,28 @@ if [ -n "$_handoff_override" ]; then
   export SESSION_HANDOFF_AGENT="$_handoff_override"
 fi
 
-if [ -n "$_selected_stream" ]; then
-  export SESSION_STREAM_ID="$_selected_stream"
-  echo "Session stream: $SESSION_STREAM_ID"
+# Claim/resume the stream lease through the common supervisor when an epic is pinned.
+if [ -n "$_selected_epic" ]; then
+  if [ -z "$_selected_stream" ]; then
+    _selected_stream="$(stream_id_for_epic "$_selected_epic")"
+  fi
+  if [ -z "$_selected_stream" ]; then
+    echo "Error: cannot resolve stream id for epic '${_selected_epic}'." >&2
+    exit 1
+  fi
+
+  _launcher_task_id="${SESSION_TASK_ID:-${LEARN_UK_LAUNCHER_TASK_ID:-5512-pr-j1-launchers}}"
+  _launcher_instance_id="${SESSION_INSTANCE_ID:-grok-$$}"
+  claim_session_supervisor_env \
+    "$_selected_stream" \
+    "grok" \
+    "grok-tui" \
+    "$_launcher_task_id" \
+    "$_launcher_instance_id" \
+    "$PROJECT_DIR" \
+    "start-grok.sh" \
+    "$_selected_epic"
+  unset _launcher_task_id _launcher_instance_id
 fi
 
 if [ -n "${SESSION_HANDOFF_AGENT:-}" ]; then
@@ -274,7 +285,7 @@ if [ -n "${SESSION_EPIC:-}" ]; then
   echo "Lane: ${SESSION_EPIC} (you are NOT the main orchestrator)."
   case "${SESSION_EPIC}" in
     atlas)
-      echo "  Stream SSOT: epic:4387  (session_streams tail --stream epic:4387)"
+      echo "  Stream SSOT: ${SESSION_STREAM_ID:-epic:4387}  (session_streams tail --stream ${SESSION_STREAM_ID:-epic:4387})"
       echo "  File dual-write: .claude/atlas-epic/INTERIM-DRIVER-HANDOFF.md (or CLAUDE-DRIVER-HANDOFF.md read-only)"
       echo "  TAKEOVER: .claude/atlas-epic/TAKEOVER-PROMPT.md"
       echo "  Canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas"
@@ -286,7 +297,7 @@ if [ -n "${SESSION_EPIC:-}" ]; then
       echo "  Canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic harness"
       ;;
     *)
-      echo "  Open stream if known: SESSION_STREAM_ID=${SESSION_STREAM_ID:-unset}"
+      echo "  Open stream: SESSION_STREAM_ID=${SESSION_STREAM_ID:-unset}"
       echo "  Epic dir (if any): .claude/${SESSION_EPIC}-epic/"
       echo "  Canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic ${SESSION_EPIC}"
       ;;
@@ -331,16 +342,16 @@ done
 if [ -n "${SESSION_EPIC:-}" ] && [ "$_has_prompt" -eq 0 ]; then
   case "${SESSION_EPIC}" in
     atlas|practice|practice-hub)
-      _cold_prompt="You are the interim ATLAS lane driver (stream epic:4387). Immediately: (1) read/execute .claude/atlas-epic/TAKEOVER-PROMPT.md — tail stream, open/resume lease, reconcile board, dual-write INTERIM-DRIVER-HANDOFF.md; (2) mint the session canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas --stream epic:4387 (see docs/runbooks/grok-session-canary.md). Drive the next unblocked action without a menu. End session on canary FAIL-HANDOFF (<8/10), not on compact count; after any auto-compact re-score from memory. Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the interim ATLAS lane driver (stream ${SESSION_STREAM_ID:-epic:4387}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) read/execute .claude/atlas-epic/TAKEOVER-PROMPT.md — tail stream, reconcile board, dual-write INTERIM-DRIVER-HANDOFF.md; (2) mint the session canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas --stream ${SESSION_STREAM_ID:-epic:4387} (see docs/runbooks/grok-session-canary.md). Drive the next unblocked action without a menu. End session on canary FAIL-HANDOFF (<8/10), not on compact count; after any auto-compact re-score from memory. Primary checkout is read-only — writes via worktrees."
       ;;
     harness|infra)
-      _cold_prompt="You are the INFRA / harness lane driver (stream ${SESSION_STREAM_ID:-epic:4707}). Cold-start from the infra handoff and stream tail; mint canary (.venv/bin/python -m scripts.session_canary.grok_lane mint --epic harness); reconcile in-flight work; drive the next unblocked infra action. End on canary FAIL-HANDOFF not compact count (docs/runbooks/grok-session-canary.md). Do not claim curriculum content lanes. Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the INFRA / harness lane driver (stream ${SESSION_STREAM_ID:-epic:4707}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start from the infra handoff and stream tail; mint canary (.venv/bin/python -m scripts.session_canary.grok_lane mint --epic harness); reconcile in-flight work; drive the next unblocked infra action. End on canary FAIL-HANDOFF not compact count (docs/runbooks/grok-session-canary.md). Do not claim curriculum content lanes. Primary checkout is read-only — writes via worktrees."
       ;;
     hramatka)
-      _cold_prompt="You are the hramatka lane driver (stream ${SESSION_STREAM_ID:-epic:4542}). Cold-start from the epic handoff and stream if present; mint canary (.venv/bin/python -m scripts.session_canary.grok_lane mint --epic hramatka); reconcile and drive the next unblocked action. End on canary FAIL-HANDOFF (docs/runbooks/grok-session-canary.md). Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the hramatka lane driver (stream ${SESSION_STREAM_ID:-epic:4542}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start from the epic handoff and stream if present; mint canary (.venv/bin/python -m scripts.session_canary.grok_lane mint --epic hramatka); reconcile and drive the next unblocked action. End on canary FAIL-HANDOFF (docs/runbooks/grok-session-canary.md). Primary checkout is read-only — writes via worktrees."
       ;;
     *)
-      _cold_prompt="You are the ${SESSION_EPIC} lane driver (SESSION_STREAM_ID=${SESSION_STREAM_ID:-unset}). You are NOT the main orchestrator. Cold-start: load the epic handoff under .claude/${SESSION_EPIC}-epic/ (or stream tail if SESSION_STREAM_ID is set), mint canary via .venv/bin/python -m scripts.session_canary.grok_lane mint --epic ${SESSION_EPIC}, reconcile reality, and drive the next unblocked action without a menu. End on canary FAIL-HANDOFF not compact count (docs/runbooks/grok-session-canary.md). Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the ${SESSION_EPIC} lane driver (SESSION_STREAM_ID=${SESSION_STREAM_ID:-unset}). You are NOT the main orchestrator. The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start: load the epic handoff under .claude/${SESSION_EPIC}-epic/ (or stream tail if SESSION_STREAM_ID is set), mint canary via .venv/bin/python -m scripts.session_canary.grok_lane mint --epic ${SESSION_EPIC}, reconcile reality, and drive the next unblocked action without a menu. End on canary FAIL-HANDOFF not compact count (docs/runbooks/grok-session-canary.md). Primary checkout is read-only — writes via worktrees."
       ;;
   esac
   echo "Cold-start: injecting epic auto-continue prompt (no user PROMPT given)."

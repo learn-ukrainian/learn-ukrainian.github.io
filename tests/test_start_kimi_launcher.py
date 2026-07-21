@@ -1,4 +1,4 @@
-"""start-grok.sh launcher: --epic env export + supervisor claim + cold-start prompt."""
+"""start-kimi.sh launcher: --epic env export + supervisor claim + launch argv."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import subprocess
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-_LAUNCHER = _REPO_ROOT / "start-grok.sh"
+_LAUNCHER = _REPO_ROOT / "start-kimi.sh"
 
 _GIT_REDIRECT_VARS = frozenset(
     {
@@ -48,8 +48,8 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:
     "lease": {{
       "session_id": "{session_id}",
       "lease_id": "{lease_id}",
-      "generation": 1,
-      "fencing_token": 1,
+      "generation": 2,
+      "fencing_token": 2,
       "expires_at": "2026-07-21T03:00:00Z"
     }},
     "lease_credentials_exported": false
@@ -87,8 +87,7 @@ def _build_fake_project(tmp_path: Path) -> tuple[Path, Path]:
     guard_dir = project / "scripts" / "guardrails"
     guard_dir.mkdir(parents=True)
 
-    # Copy launcher and shell helpers so PROJECT_DIR resolution stays inside the fake root.
-    _write_executable(project / "start-grok.sh", _LAUNCHER.read_text(encoding="utf-8"))
+    _write_executable(project / "start-kimi.sh", _LAUNCHER.read_text(encoding="utf-8"))
     (lib_dir / "session_supervisor.sh").write_text(
         (_REPO_ROOT / "scripts" / "lib" / "session_supervisor.sh").read_text(encoding="utf-8"),
         encoding="utf-8",
@@ -103,10 +102,9 @@ def _build_fake_project(tmp_path: Path) -> tuple[Path, Path]:
     capture = tmp_path / "supervisor_capture.txt"
     _write_executable(
         venv_bin / "python",
-        _supervisor_body(capture, "epic:4387", "sess-grok-123", "lease-grok-123"),
+        _supervisor_body(capture, "epic:4707", "sess-kimi-456", "lease-kimi-456"),
     )
 
-    # Git repo so session_supervisor.sh can resolve a canonical state root.
     env = _clean_environ()
     subprocess.run(["git", "init", "--quiet", str(project)], check=True, env=env)
     subprocess.run(["git", "-C", str(project), "config", "user.email", "test@example.com"], check=True, env=env)
@@ -123,18 +121,18 @@ def _run_launcher(
     tmp_path: Path,
     arguments: list[str],
 ) -> tuple[dict[str, str], str, subprocess.CompletedProcess[str], Path, Path]:
-    """Run start-grok.sh with a fake grok binary that captures env + argv."""
+    """Run start-kimi.sh with a fake kimi binary that captures env + argv."""
     project, supervisor_capture = _build_fake_project(tmp_path)
     home = tmp_path / "home"
-    grok_bin_dir = home / ".grok" / "bin"
-    grok_bin_dir.mkdir(parents=True)
+    kimi_bin_dir = home / ".kimi-code" / "bin"
+    kimi_bin_dir.mkdir(parents=True)
     capture = tmp_path / "capture.txt"
 
     _write_executable(
-        grok_bin_dir / "grok",
+        kimi_bin_dir / "kimi",
         f"""#!/usr/bin/env bash
 if [[ "${{1:-}}" == "--version" ]]; then
-  echo "test-grok 0.0.0"
+  echo "test-kimi 0.0.0"
   exit 0
 fi
 {{
@@ -147,7 +145,7 @@ fi
   printf 'session_instance=%s\\n' "${{SESSION_STREAM_INSTANCE_ID-unset}}"
   printf 'session_process=%s\\n' "${{SESSION_STREAM_PROCESS_ID-unset}}"
   printf 'handoff=%s\\n' "${{SESSION_HANDOFF_AGENT-unset}}"
-  printf 'launch=%s\\n' "${{LEARN_UKRAINIAN_GROK_LAUNCH-unset}}"
+  printf 'launch=%s\\n' "${{LEARN_UKRAINE_KIMI_LAUNCH-unset}}"
   printf 'capsule=%s\\n' "${{SESSION_SUPERVISOR_CAPSULE_PATH-unset}}"
   printf 'argv='
   printf '%s\\0' "$@"
@@ -167,15 +165,15 @@ fi
         "SESSION_STREAM_INSTANCE_ID",
         "SESSION_STREAM_PROCESS_ID",
         "SESSION_HANDOFF_AGENT",
-        "LEARN_UKRAINIAN_GROK_LAUNCH",
+        "LEARN_UKRAINE_KIMI_LAUNCH",
         "SESSION_SUPERVISOR_CAPSULE_PATH",
     ):
         env.pop(name, None)
     env["HOME"] = os.fspath(home)
-    env["PATH"] = f"{grok_bin_dir}:{env.get('PATH', '')}"
+    env["PATH"] = f"{kimi_bin_dir}:{env.get('PATH', '')}"
 
     result = subprocess.run(
-        [os.fspath(project / "start-grok.sh"), *arguments],
+        [os.fspath(project / "start-kimi.sh"), *arguments],
         cwd=project,
         env=env,
         text=True,
@@ -196,76 +194,63 @@ fi
     return values, argv_blob, result, project, supervisor_capture
 
 
-def test_epic_atlas_exports_env_and_claims_lease(tmp_path: Path) -> None:
-    values, argv_blob, result, _project, supervisor_capture = _run_launcher(tmp_path, ["--epic", "atlas"])
+def test_epic_harness_exports_env_and_claims_lease(tmp_path: Path) -> None:
+    values, argv_blob, result, _project, supervisor_capture = _run_launcher(
+        tmp_path, ["--epic", "harness"]
+    )
     assert result.returncode == 0, result.stderr + result.stdout
-    assert values["session_epic"] == "atlas"
-    assert values["session_stream"] == "epic:4387"
-    assert values["session_session"] == "sess-grok-123"
-    assert values["session_lease"] == "lease-grok-123"
-    assert values["session_agent"] == "grok"
-    assert values["session_harness"] == "grok-tui"
-    assert values["session_instance"].startswith("grok-")
+    assert values["session_epic"] == "harness"
+    assert values["session_stream"] == "epic:4707"
+    assert values["session_session"] == "sess-kimi-456"
+    assert values["session_lease"] == "lease-kimi-456"
+    assert values["session_agent"] == "kimi"
+    assert values["session_harness"] == "kimi-code"
+    assert values["session_instance"].startswith("kimi-")
     assert values["session_process"].isdigit()
-    assert values["handoff"] == "grok-atlas"
+    assert values["handoff"] == "kimi-infra"
     assert values["launch"] == "1"
     assert values["capsule"] != "unset"
     assert Path(values["capsule"]).exists()
 
-    # Supervisor was invoked for the expected stream/agent/harness.
     supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
     assert "scripts.session_supervisor" in supervisor_args
     assert "open" in supervisor_args
     assert "--role" in supervisor_args and "driver" in supervisor_args
-    assert "--stream" in supervisor_args and "epic:4387" in supervisor_args
-    assert "--agent" in supervisor_args and "grok" in supervisor_args
-    assert "--harness" in supervisor_args and "grok-tui" in supervisor_args
+    stream_index = supervisor_args.index("--stream")
+    assert supervisor_args[stream_index + 1] == "epic:4707"
+    assert supervisor_args[supervisor_args.index("--agent") + 1] == "kimi"
+    assert supervisor_args[supervisor_args.index("--harness") + 1] == "kimi-code"
     assert "--task-id" in supervisor_args
 
-    # Null-separated argv from fake grok; last non-empty token is the prompt.
     parts = [p for p in argv_blob.split("\0") if p]
-    assert parts, "expected grok argv"
-    prompt = parts[-1]
-    assert "ATLAS" in prompt or "atlas" in prompt.lower()
-    assert "TAKEOVER-PROMPT.md" in prompt
-    assert "epic:4387" in prompt
-    assert "open/resume lease" not in prompt.lower()
-    assert "do NOT open or resume it yourself" in prompt
-    assert "--model" in parts
-    assert "grok-4.5" in parts
-    assert "--always-approve" in parts
+    assert parts[0] == "-p"
+    assert "do NOT open or resume it yourself" in parts[1]
+    assert "k2.7-coding" in parts
+    assert "--output-format" in parts
+    assert "stream-json" in parts
 
 
-def test_epic_equals_form_and_explicit_prompt_skips_inject(tmp_path: Path) -> None:
+def test_explicit_prompt_and_model_override(tmp_path: Path) -> None:
     values, argv_blob, result, _project, _supervisor_capture = _run_launcher(
         tmp_path,
-        ["--epic=atlas", "only do the cloze batch"],
+        ["--epic", "atlas", "--model", "k3", "review the open PR"],
     )
     assert result.returncode == 0, result.stderr + result.stdout
     assert values["session_epic"] == "atlas"
     parts = [p for p in argv_blob.split("\0") if p]
-    # Grok launcher keeps the single explicit prompt as argv[-1].
-    assert parts[-1] == "only do the cloze batch"
-    assert "TAKEOVER-PROMPT.md" not in parts[-1]
+    assert parts[0] == "-p"
+    assert parts[1] == "review the open PR"
+    assert "k3" in parts
+    assert "k2.7-coding" not in parts
 
 
 def test_no_epic_no_supervisor_call(tmp_path: Path) -> None:
-    values, argv_blob, result, _project, supervisor_capture = _run_launcher(tmp_path, [])
-    assert result.returncode == 0, result.stderr + result.stdout
-    assert values["session_epic"] == "unset"
-    assert values["session_stream"] == "unset"
-    assert not supervisor_capture.exists()
-    parts = [p for p in argv_blob.split("\0") if p]
-    # Flags only — no free-text cold-start prompt.
-    assert all(p.startswith("-") or p in {"grok-4.5", "high"} or Path(p).is_absolute() for p in parts)
-
-
-def test_stream_override_is_used_by_supervisor(tmp_path: Path) -> None:
-    _values, _argv_blob, result, _project, supervisor_capture = _run_launcher(
-        tmp_path,
-        ["--epic", "atlas", "--stream", "epic:4707"],
+    values, argv_blob, result, _project, supervisor_capture = _run_launcher(
+        tmp_path, ["hello world"]
     )
     assert result.returncode == 0, result.stderr + result.stdout
-    supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
-    stream_index = supervisor_args.index("--stream")
-    assert supervisor_args[stream_index + 1] == "epic:4707"
+    assert values["session_epic"] == "unset"
+    assert not supervisor_capture.exists()
+    parts = [p for p in argv_blob.split("\0") if p]
+    assert parts[0] == "-p"
+    assert parts[1] == "hello world"
