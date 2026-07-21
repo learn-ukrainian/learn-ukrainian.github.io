@@ -32,8 +32,14 @@ def _repo_root() -> Path:
     return primary_checkout_root(Path(PROJECT_ROOT))
 
 
+def _db_path() -> Path:
+    return _repo_root() / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3"
+
+
 def _store() -> SessionStreamStore:
-    db_path = _repo_root() / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3"
+    db_path = _db_path()
+    if not db_path.is_file():
+        raise FileNotFoundError(f"session-stream database does not exist: {db_path}")
     return SessionStreamStore(SessionStreamDatabase(db_path))
 
 
@@ -41,7 +47,7 @@ def _store() -> SessionStreamStore:
 def session_streams_health() -> dict[str, Any]:
     """Liveness for the session-streams monitor surface (no cutover)."""
     root = _repo_root()
-    db_path = root / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3"
+    db_path = _db_path()
     return {
         "ok": True,
         "repo_root": str(root),
@@ -58,7 +64,7 @@ def session_stream_status(stream_id: str) -> dict[str, Any]:
         raise HTTPException(status_code=400, detail="stream_id must look like epic:N")
     try:
         status = diagnose_handoff(_store(), stream_id)
-    except NotFoundError as exc:
+    except (NotFoundError, FileNotFoundError) as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except Exception as exc:  # pragma: no cover - defensive API boundary
         raise HTTPException(status_code=500, detail=f"status_failed:{exc}") from exc
@@ -75,7 +81,7 @@ def session_stream_digest(
         raise HTTPException(status_code=400, detail="stream_id must look like epic:N")
     try:
         digest = _store().load_digest(stream_id, limit=limit)
-    except NotFoundError as exc:
+    except (NotFoundError, FileNotFoundError) as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except Exception as exc:  # pragma: no cover
         raise HTTPException(status_code=500, detail=f"digest_failed:{exc}") from exc
