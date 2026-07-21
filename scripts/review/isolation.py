@@ -3135,6 +3135,12 @@ def prepare_isolated_review_launch(
     :func:`apply_review_isolation_to_invocation` which delegates here).
     """
     engine_key = normalize_engine_name(engine)
+    if engine_key == "kimi":
+        raise ReviewIsolationError(
+            "kimi_isolated_review_unsupported: sealed formal CF isolation is not proven "
+            "for native Kimi Code (project instructions / MCP / hooks / nested reviewers). "
+            "Use review-pr --reviewer claude|glm|codex. See #5556 / docs/runbooks/kimi-formal-cf-isolation.md."
+        )
     if engine_key == "agy":
         raise ReviewIsolationError(
             "agy_isolated_review_unsupported: native project-instruction, MCP, "
