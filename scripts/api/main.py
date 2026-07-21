@@ -74,6 +74,7 @@ from .hermes_cron_router import router as hermes_cron_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
 from .knowledge_router import router as knowledge_router
+from .ops_router import router as ops_router
 from .preload import preload_all
 from .rag_router import router as rag_router
 from .repository_authority import build_repository_authority
@@ -160,6 +161,7 @@ app.include_router(docs_router, prefix="/artifacts")
 app.include_router(docs_router, prefix="/files")
 app.include_router(discussions_router, prefix="/api/discussions", tags=["discussions"])
 app.include_router(git_hygiene_router, prefix="/api/git", tags=["git"])
+app.include_router(ops_router, prefix="/api/ops", tags=["ops"])
 app.include_router(gold_router, prefix="/api/gold")
 app.include_router(governance_router, prefix="/api/state/governance", tags=["governance"])
 app.include_router(hermes_cron_router, prefix="/api/hermes-cron", tags=["hermes-cron"])
