@@ -6,21 +6,35 @@ Usage::
     .venv/bin/python -m scripts.fleet_comms formal-job get <review_id>
     .venv/bin/python -m scripts.fleet_comms formal-job accept \\
         --pr 5571 --verdict APPROVED --model M --family F --harness H
+    .venv/bin/python -m scripts.fleet_comms metrics
+    .venv/bin/python -m scripts.fleet_comms backlog
+    .venv/bin/python -m scripts.fleet_comms dead-letters
+    .venv/bin/python -m scripts.fleet_comms github-metrics
 
 ``formal-job accept`` is the post-``review-pr`` glue (create/reuse job + sealed
 verdict accept). Optional ``--publish`` posts GitHub comment/status via PR-G.
 Does not cut over ``review-pr`` itself.
+
+``metrics`` / ``backlog`` / ``dead-letters`` are Sol PR-M efficiency surfaces
+(metadata only; never message content).
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import sqlite3
 import sys
 from pathlib import Path
 from typing import Any
 
+from scripts.fleet_comms.efficiency_metrics import (
+    collect_dead_letters,
+    collect_delivery_backlog,
+    collect_efficiency_metrics,
+)
+from scripts.fleet_comms.github_pr_metrics import collect_github_pr_metrics
 from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
 from scripts.fleet_comms.review_publication import DEFAULT_GATE_KIND
 
@@ -50,6 +64,83 @@ def cmd_plane_status(args: argparse.Namespace) -> int:
         recent_limit=args.recent_limit,
     )
     sys.stdout.write(_json_dump(status))
+    return EXIT_OK
+
+
+def _default_message_db() -> Path:
+    env = os.environ.get("AB_DB_PATH")
+    if env:
+        return Path(env).expanduser()
+    # Prefer cwd-relative broker path (matches Monitor API MESSAGE_DB default).
+    return Path(".mcp/servers/message-broker/messages.db")
+
+
+def _resolve_message_db(args: argparse.Namespace) -> Path:
+    if getattr(args, "db", None):
+        return Path(args.db).expanduser()
+    return _default_message_db()
+
+
+def cmd_metrics(args: argparse.Namespace) -> int:
+    """Efficiency metrics from durable timestamps (no content)."""
+    db = _resolve_message_db(args)
+    if not db.is_file():
+        sys.stdout.write(_json_dump({"content_included": False, "db_missing": True, "db_path": str(db)}))
+        return EXIT_OK
+    payload = collect_efficiency_metrics(db)
+    payload["db_path"] = str(db)
+    sys.stdout.write(_json_dump(payload))
+    return EXIT_OK
+
+
+def cmd_backlog(args: argparse.Namespace) -> int:
+    """Pending delivery backlog excluding retired endpoints by default."""
+    db = _resolve_message_db(args)
+    if not db.is_file():
+        sys.stdout.write(
+            _json_dump(
+                {
+                    "total": 0,
+                    "by_agent": {},
+                    "by_status": {},
+                    "rows": [],
+                    "db_missing": True,
+                    "db_path": str(db),
+                }
+            )
+        )
+        return EXIT_OK
+    payload = collect_delivery_backlog(
+        db,
+        limit=args.limit,
+        exclude_retired=not args.include_retired,
+    )
+    payload["db_path"] = str(db)
+    payload["content_included"] = False
+    sys.stdout.write(_json_dump(payload))
+    return EXIT_OK
+
+
+def cmd_dead_letters(args: argparse.Namespace) -> int:
+    """Dead-letter inventory (metadata only)."""
+    db = _resolve_message_db(args)
+    if not db.is_file():
+        sys.stdout.write(
+            _json_dump(
+                {
+                    "total": 0,
+                    "by_reason": {},
+                    "rows": [],
+                    "db_missing": True,
+                    "db_path": str(db),
+                }
+            )
+        )
+        return EXIT_OK
+    payload = collect_dead_letters(db, limit=args.limit)
+    payload["db_path"] = str(db)
+    payload["content_included"] = False
+    sys.stdout.write(_json_dump(payload))
     return EXIT_OK
 
 
@@ -184,12 +275,25 @@ def cmd_formal_job_accept(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+
+def cmd_github_metrics(args: argparse.Namespace) -> int:
+    """PR open→merge latency from GitHub (metadata only; Sol PR-M residual)."""
+    payload = collect_github_pr_metrics(
+        repo=args.repo,
+        search=args.search,
+        limit=args.limit,
+    )
+    sys.stdout.write(_json_dump(payload))
+    return EXIT_OK if payload.get("ok", True) else EXIT_ERROR
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.fleet_comms",
         description=(
             "Fleet-comms CLI: plane-status, formal-job get (read-only), "
-            "formal-job accept (writer + optional GitHub publish)."
+            "formal-job accept (writer + optional GitHub publish), "
+            "metrics/backlog/dead-letters (Sol PR-M)."
         ),
     )
     sub = parser.add_subparsers(dest="command", required=True)
@@ -303,6 +407,74 @@ def build_parser() -> argparse.ArgumentParser:
         help="Plan publication without mutating GitHub (still accepts sealed verdict)",
     )
     formal_accept.set_defaults(func=cmd_formal_job_accept)
+
+    metrics = sub.add_parser(
+        "metrics",
+        help="Efficiency metrics from durable timestamps (no content; Sol PR-M)",
+    )
+    metrics.add_argument(
+        "--db",
+        default=None,
+        help="Broker SQLite path (default: AB_DB_PATH or .mcp/servers/message-broker/messages.db)",
+    )
+    metrics.set_defaults(func=cmd_metrics)
+
+    backlog = sub.add_parser(
+        "backlog",
+        help="Pending/dispatched delivery backlog without bodies (Sol PR-M)",
+    )
+    backlog.add_argument(
+        "--db",
+        default=None,
+        help="Broker SQLite path (default: AB_DB_PATH or .mcp/servers/message-broker/messages.db)",
+    )
+    backlog.add_argument(
+        "--limit",
+        type=int,
+        default=100,
+        help="Max backlog rows (default: 100)",
+    )
+    backlog.add_argument(
+        "--include-retired",
+        action="store_true",
+        help="Include retired endpoints such as gemini (default: exclude)",
+    )
+    backlog.set_defaults(func=cmd_backlog)
+
+    dead = sub.add_parser(
+        "dead-letters",
+        help="Dead-letter inventory metadata only (Sol PR-M)",
+    )
+    dead.add_argument(
+        "--db",
+        default=None,
+        help="Broker SQLite path (default: AB_DB_PATH or .mcp/servers/message-broker/messages.db)",
+    )
+    dead.add_argument(
+        "--limit",
+        type=int,
+        default=100,
+        help="Max dead-letter rows (default: 100)",
+    )
+    dead.set_defaults(func=cmd_dead_letters)
+
+
+    gh_metrics = sub.add_parser(
+        "github-metrics",
+        help="PR open→merge latency from GitHub (metadata only; Sol PR-M residual)",
+    )
+    gh_metrics.add_argument(
+        "--repo",
+        default="learn-ukrainian/learn-ukrainian.github.io",
+        help="owner/repo",
+    )
+    gh_metrics.add_argument(
+        "--search",
+        default="fleet-comms",
+        help="GitHub PR search filter (default: fleet-comms)",
+    )
+    gh_metrics.add_argument("--limit", type=int, default=30, help="Max merged PRs")
+    gh_metrics.set_defaults(func=cmd_github_metrics)
 
     return parser
 
