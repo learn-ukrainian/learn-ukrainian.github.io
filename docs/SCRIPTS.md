@@ -31,9 +31,10 @@ wrapper is present) — not `start-kimicc.sh`.
 
 ### Parallel routes and original Claude config
 
-`start-claudex.sh` and `start-kimicc.sh` route **only via process environment**
-(Moonshot Method 1 / CLIProxyAPI pattern). They **never rewrite**
-`~/.claude/settings.json`. That means:
+`start-claudex.sh` and `start-kimicc.sh` route through process-scoped
+configuration (Moonshot Method 1 / CLIProxyAPI pattern). They **never rewrite**
+`~/.claude/settings.json`; Claudex additionally passes a checked-in status-line
+overlay with `--settings`. That means:
 
 - `./start-claude.sh` always keeps the original Anthropic / Claude Code setup
 - You can run native Claude and KimiCC (or Claudex) in **parallel terminals**
@@ -50,9 +51,10 @@ by the `sol_lead` profile: **272k window, 258.4k auto-compact**. The launcher
 passes both values to Claude Code so an unrecognized gateway model does not
 fall back to Claude Code's default assumed window.
 
-Subagents default to Sol; select a lower-cost tier without changing the lead:
+Subagents default to Terra; select another tier without changing the Sol lead:
 
 ```bash
+./start-claudex.sh
 ./start-claudex.sh --subagent terra
 ./start-claudex.sh --subagent luna --epic harness
 CLAUDEX_SUBAGENT=terra ./start-claudex.sh
@@ -74,6 +76,11 @@ client token by default. Override them with `CLAUDEX_BASE_URL` and
 `CLAUDEX_AUTH_TOKEN`; credentials are inherited only by the launched process
 and are never written to the repository. `--subagent` accepts `sol`, `terra`,
 or `luna` (and their full `gpt-5.6-*` model IDs).
+
+Claudex forces the project status overlay for that process so an unrelated
+user-level status line cannot mask it. The main row shows model, repository,
+branch, observed context usage/window, effort, and route mismatches. Background
+subagents get one live row each with state, task description, and token count.
 
 ### KimiCC (Kimi via Claude Code UI, interactive)
 
@@ -105,13 +112,23 @@ rejects requests. Official guide: [Use Kimi in Claude Code](https://platform.kim
 `start-codex.sh` launches Codex with:
 
 - interactive Codex in dangerous bypass mode
-- live web search and multi-agent support enabled
+- live web search and Codex 0.145 multi-agent V2 enabled
+- at most three spawned children (four active agents including the root), with
+  Terra/medium as the default child route and visible spawn metadata
+- a footer showing model/reasoning, run state, context usage and window, 5-hour
+  and weekly limits, branch, and current plan progress
 - `CODEX_SESSION=1` so repo scripts can detect an interactive Codex session
 - the canonical `main` checkout as its working root; the launcher does not create or refresh a detached interactive worktree
 - generated Codex config and rollover state bootstrapped before launch
 - an explicit native-Codex context profile, validated against `--model`/`-m`
   immediately and against the CLI-reported model at `SessionStart`
 - repo subprocess defaults unchanged unless you explicitly override env vars
+
+The V2 concurrency value under `[agents]` counts spawned children; Codex adds
+the root slot internally. V2 ignores the legacy `agents.max_depth`, so LU keeps
+nested fan-out bounded through its agent instructions and the three-child cap.
+Native Codex children remain OpenAI-family and do not satisfy the repository's
+independent cross-family review gate.
 
 Bind a Codex session to one epic at launch so SessionStart loads only that
 lane's handoff and rollover namespace:

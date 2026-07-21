@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import os
+import shlex
 import shutil
 import subprocess
 from pathlib import Path
@@ -11,6 +13,9 @@ import pytest
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _LAUNCHER = _REPO_ROOT / "start-claudex.sh"
+_STATUS_SETTINGS = (
+    _REPO_ROOT / "agents_extensions/shared/statusline/claudex-settings.json"
+)
 
 
 def _write_executable(path: Path, body: str) -> None:
@@ -108,7 +113,7 @@ fi
 @pytest.mark.parametrize(
     ("arguments", "expected"),
     [
-        ([], "gpt-5.6-sol"),
+        ([], "gpt-5.6-terra"),
         (["--subagent", "sol"], "gpt-5.6-sol"),
         (["--subagent=terra"], "gpt-5.6-terra"),
         (["--subagent", "luna"], "gpt-5.6-luna"),
@@ -139,8 +144,74 @@ def test_routes_lead_and_subagent_models(tmp_path: Path, arguments: list[str], e
     assert "profile_trusted=1" in output
     assert "arg=--model" in output
     assert "arg=gpt-5.6-sol" in output
+    assert "arg=--settings" in output
+    assert f"arg={_STATUS_SETTINGS}" in output
     assert "arg=session-id" in output
     assert "arg=harness" not in output
+
+
+def test_claudex_status_settings_cover_main_and_subagent_visibility() -> None:
+    settings = json.loads(_STATUS_SETTINGS.read_text(encoding="utf-8"))
+
+    assert settings["statusLine"]["refreshInterval"] == 2
+    assert "statusline/statusline.sh" in settings["statusLine"]["command"]
+    assert "subagent-statusline.sh" in settings["subagentStatusLine"]["command"]
+
+    main = subprocess.run(
+        shlex.split(settings["statusLine"]["command"]),
+        input=json.dumps(
+            {
+                "model": {"display_name": "GPT-5.6 Sol"},
+                "workspace": {
+                    "current_dir": os.fspath(_REPO_ROOT),
+                    "project_dir": os.fspath(_REPO_ROOT),
+                },
+                "context_window": {
+                    "total_input_tokens": 68_000,
+                    "context_window_size": 272_000,
+                    "used_percentage": 25,
+                },
+                "effort": {"level": "high"},
+            }
+        ),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=_REPO_ROOT,
+    )
+    assert "[GPT-5.6 Sol]" in main.stdout
+    assert "[ctx: 68K/272K (25%)]" in main.stdout
+    assert "[effort: high]" in main.stdout
+
+    subagent = subprocess.run(
+        shlex.split(settings["subagentStatusLine"]["command"]),
+        input=json.dumps(
+            {
+                "workspace": {
+                    "current_dir": os.fspath(_REPO_ROOT),
+                    "project_dir": os.fspath(_REPO_ROOT),
+                },
+                "columns": 100,
+                "tasks": [
+                    {
+                        "id": "agent-1",
+                        "name": "repo-map",
+                        "status": "running",
+                        "description": "Inspect launchers",
+                        "tokenCount": 4_200,
+                    }
+                ],
+            }
+        ),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=_REPO_ROOT,
+    )
+    assert json.loads(subagent.stdout) == {
+        "id": "agent-1",
+        "content": "[running] repo-map: Inspect launchers · 4K tok",
+    }
 
 
 def test_forwards_proxy_overrides_without_anthropic_api_key(tmp_path: Path) -> None:

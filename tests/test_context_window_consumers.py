@@ -11,6 +11,9 @@ import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 STATUSLINE = PROJECT_ROOT / "agents_extensions/shared/statusline/statusline.sh"
+SUBAGENT_STATUSLINE = (
+    PROJECT_ROOT / "agents_extensions/shared/statusline/subagent-statusline.sh"
+)
 CONTEXT_MONITOR = PROJECT_ROOT / "agents_extensions/shared/hooks/context-monitor.sh"
 
 
@@ -197,6 +200,45 @@ def test_statusline_unknown_capacity_does_not_use_auto_compact_fallback(
 
     assert "[ctx:" not in completed.stdout
     assert "1000K" not in completed.stdout
+
+
+def test_subagent_statusline_reports_progress_and_tokens(tmp_path: Path) -> None:
+    payload = {
+        "columns": 120,
+        "tasks": [
+            {
+                "id": "task-1",
+                "name": "repo-map",
+                "status": "running",
+                "description": "Trace launcher configuration",
+                "tokenCount": 12_345,
+            },
+            {
+                "id": "task-2",
+                "label": "tests",
+                "status": "completed",
+                "tokenCount": 980,
+            },
+        ],
+    }
+
+    completed = subprocess.run(
+        [os.fspath(SUBAGENT_STATUSLINE)],
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=tmp_path,
+    )
+
+    rows = [json.loads(line) for line in completed.stdout.splitlines()]
+    assert rows == [
+        {
+            "id": "task-1",
+            "content": "[running] repo-map: Trace launcher configuration · 12K tok",
+        },
+        {"id": "task-2", "content": "[completed] tests · 980 tok"},
+    ]
 
 
 def test_context_monitor_uses_record_tiers_and_excludes_output_tokens(

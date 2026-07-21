@@ -179,6 +179,12 @@ printf 'Starting Codex in %s\n' "$PROJECT_DIR"
 exec codex \
     --dangerously-bypass-approvals-and-sandbox \
     --search \
-    --enable multi_agent \
+    --enable multi_agent_v2 \
+    -c agents.max_concurrent_threads_per_session=3 \
+    -c 'agents.default_subagent_model="gpt-5.6-terra"' \
+    -c 'agents.default_subagent_reasoning_effort="medium"' \
+    -c agents.interrupt_message=true \
+    -c features.multi_agent_v2.hide_spawn_agent_metadata=false \
+    -c 'tui.status_line=["model-with-reasoning","status","context-used","context-window-size","five-hour-limit","weekly-limit","git-branch","task-progress"]' \
     -C "$PROJECT_DIR" \
     "$@"

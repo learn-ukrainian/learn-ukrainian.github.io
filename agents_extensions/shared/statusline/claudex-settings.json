@@ -1,0 +1,12 @@
+{
+  "statusLine": {
+    "type": "command",
+    "command": "bash -lc 'command -v jq >/dev/null 2>&1 || exit 0; input=$(cat); project_dir=$(printf \"%s\" \"$input\" | jq -r \".workspace.project_dir // .workspace.current_dir // .cwd // empty\"); script=\"$project_dir/agents_extensions/shared/statusline/statusline.sh\"; if [ -n \"$project_dir\" ] && [ -f \"$script\" ]; then printf \"%s\" \"$input\" | bash \"$script\"; fi'",
+    "padding": 0,
+    "refreshInterval": 2
+  },
+  "subagentStatusLine": {
+    "type": "command",
+    "command": "bash -lc 'command -v jq >/dev/null 2>&1 || exit 0; input=$(cat); project_dir=$(printf \"%s\" \"$input\" | jq -r \".workspace.project_dir // .workspace.current_dir // .cwd // empty\"); script=\"$project_dir/agents_extensions/shared/statusline/subagent-statusline.sh\"; if [ -n \"$project_dir\" ] && [ -f \"$script\" ]; then printf \"%s\" \"$input\" | bash \"$script\"; fi'"
+  }
+}
