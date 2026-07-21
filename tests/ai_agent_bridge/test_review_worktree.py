@@ -1574,6 +1574,7 @@ def test_review_response_schema_is_canonical_strict_and_surface_bound(tmp_path: 
     payload["findings"][0]["location"]["path"] = "src/app.py"
     payload["findings"][0]["location"]["start_line"] = 999
     payload["findings"][0]["location"]["end_line"] = 999
+    payload["findings"][0]["verbatim"] = "not_present_in_file = True"
     with pytest.raises(review_worktree.ReviewWorktreeError, match="review_response_evidence"):
         review_worktree.validate_code_review_response(
             json.dumps(payload),
@@ -1584,6 +1585,22 @@ def test_review_response_schema_is_canonical_strict_and_surface_bound(tmp_path: 
             evidence_root=evidence_root,
             changed_lines={"src/app.py": frozenset({1})},
         )
+
+    # Quote exists at line 2 but model claimed line 1 → relocate + accept (sealed CF).
+    (evidence_root / "src" / "app.py").write_text("keep = 1\nbad = True\n", encoding="utf-8")
+    payload["findings"][0]["location"]["start_line"] = 1
+    payload["findings"][0]["location"]["end_line"] = 1
+    payload["findings"][0]["verbatim"] = "bad = True"
+    relocated_digest = review_worktree.validate_code_review_response(
+        json.dumps(payload),
+        base_sha=base,
+        head_sha=head,
+        patch_sha256=patch,
+        changed_paths=("src/app.py",),
+        evidence_root=evidence_root,
+        changed_lines={"src/app.py": frozenset({1, 2})},
+    )
+    assert len(relocated_digest) == 64
 
     legacy = {
         "schema_version": "code-review-findings.v1",

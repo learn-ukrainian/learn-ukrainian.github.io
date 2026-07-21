@@ -36,7 +36,9 @@ if str(_REPO_ROOT) not in sys.path:
 
 from scripts.orchestration.task_identity import DEFAULT_REPOSITORY
 from scripts.review.evidence import (
+    OUTCOME_LINE_MISMATCH,
     OUTCOME_VERIFIED,
+    expected_end_line_for_quote,
     split_lines_preserve_content,
     verify_finding_evidence,
 )
@@ -1341,6 +1343,30 @@ def _deleted_file_evidence(manifest: dict[str, Any]) -> dict[str, str]:
     return evidence
 
 
+def _relocate_finding_to_matched_line(
+    finding: dict[str, Any],
+    matched_line: int,
+) -> dict[str, Any] | None:
+    """Return a copy of *finding* with location shifted to *matched_line*.
+
+    Used when sealed-review evidence finds the verbatim quote on a different
+    line than the model claimed (``line_mismatch:matched_at_line:N``). Inflated
+    or shortened ranges are not relocated — those stay fail-closed.
+    """
+    if matched_line < 1:
+        return None
+    location = finding.get("location")
+    verbatim = finding.get("verbatim")
+    if not isinstance(location, dict) or not isinstance(verbatim, str) or not verbatim:
+        return None
+    relocated = dict(finding)
+    new_loc = dict(location)
+    new_loc["start_line"] = matched_line
+    new_loc["end_line"] = expected_end_line_for_quote(matched_line, verbatim)
+    relocated["location"] = new_loc
+    return relocated
+
+
 def validate_code_review_response(
     response: str,
     *,
@@ -1417,6 +1443,7 @@ def validate_code_review_response(
                         target=target,
                         changed_lines=finding_lines,
                     )
+                    evidence_for_relocate = deleted_root
             else:
                 result = verify_finding_evidence(
                     finding,
@@ -1424,6 +1451,26 @@ def validate_code_review_response(
                     target=target,
                     changed_lines=finding_lines,
                 )
+                evidence_for_relocate = evidence_root
+            # Sealed CF path: if the quote is real but the claimed line is off,
+            # relocate to the matched line and re-verify. Prevents hard-fail on
+            # honest findings with drifted line numbers (Codex line_mismatch F001).
+            # Inflated ranges / missing quotes still fail closed.
+            if (
+                result.outcome == OUTCOME_LINE_MISMATCH
+                and isinstance(finding, dict)
+                and result.matched_line is not None
+                and "matched_at_line:" in (result.detail or "")
+                and "range_span_mismatch" not in (result.detail or "")
+            ):
+                relocated = _relocate_finding_to_matched_line(finding, result.matched_line)
+                if relocated is not None:
+                    result = verify_finding_evidence(
+                        relocated,
+                        repo_root=evidence_for_relocate,
+                        target=target,
+                        changed_lines=finding_lines,
+                    )
             if result.outcome != OUTCOME_VERIFIED:
                 finding_id = finding.get("id", "unknown") if isinstance(finding, dict) else "unknown"
                 raise ReviewWorktreeError(
