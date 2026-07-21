@@ -175,7 +175,7 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
                 weekly_win = cand
                 best_dist = dist
 
-    # Absolute fallback
+    # Absolute fallback (Claude/Codex-shaped providers).
     if not primary_win:
         primary_win = usage.get("primary") or openai_db.get("primaryLimit")
     if not weekly_win:
@@ -191,11 +191,23 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
             return None
         return max(0.0, min(100.0, 100.0 - used))
 
-    # Named windows from the provider payload (Cursor: primary=allotment-A,
-    # secondary=allotment-B / plan included, tertiary=API / on-demand).
+    # Named windows from the provider payload.
+    # Cursor Pro+ CodexBar text labels (live-verified 2026-07-21):
+    #   primary   = Total  (account-level scarcity → burn/status)
+    #   secondary = Auto
+    #   tertiary  = API / on-demand
+    # All three share the billing-cycle window (~44640 min), not 5h+weekly.
     named_primary = usage.get("primary") if isinstance(usage.get("primary"), dict) else None
     named_secondary = usage.get("secondary") if isinstance(usage.get("secondary"), dict) else None
     named_tertiary = usage.get("tertiary") if isinstance(usage.get("tertiary"), dict) else None
+
+    cursor_window_labels: dict[str, str] | None = None
+    if lane == "cursor":
+        # Burn/status must track Total, not Auto. The generic absolute fallback
+        # wrongly promoted secondary→weekly and understated account pressure.
+        primary_win = named_primary or primary_win
+        weekly_win = named_primary or weekly_win
+        cursor_window_labels = {"primary": "Total", "secondary": "Auto", "tertiary": "API"}
 
     primary_used_pct = _used_pct(primary_win) if primary_win else _used_pct(named_primary)
     if primary_used_pct is None:
@@ -204,9 +216,12 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
     weekly_used_pct = _used_pct(weekly_win) if weekly_win else _used_pct(named_secondary)
     if weekly_used_pct is None:
         weekly_used_pct = _used_pct(named_secondary)
+    if lane == "cursor" and primary_used_pct is not None:
+        # Prefer Total even when a leftover weekly_win still points elsewhere.
+        weekly_used_pct = primary_used_pct
 
     secondary_used_pct = _used_pct(named_secondary)
-    if secondary_used_pct is None and weekly_used_pct is not None:
+    if secondary_used_pct is None and lane != "cursor" and weekly_used_pct is not None:
         secondary_used_pct = weekly_used_pct
 
     tertiary_used_pct = _used_pct(named_tertiary)
@@ -219,6 +234,8 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
     if not weekly_resets_at and named_secondary:
         weekly_resets_at = named_secondary.get("resetsAt")
     if not weekly_resets_at and named_primary:
+        weekly_resets_at = named_primary.get("resetsAt")
+    if lane == "cursor" and named_primary and named_primary.get("resetsAt"):
         weekly_resets_at = named_primary.get("resetsAt")
 
     monthly_cap_usd = None
@@ -257,6 +274,8 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
                 win_mins = 10080
                 if weekly_win and weekly_win.get("windowMinutes") is not None:
                     win_mins = int(weekly_win["windowMinutes"])
+                elif lane == "cursor" and named_primary and named_primary.get("windowMinutes") is not None:
+                    win_mins = int(named_primary["windowMinutes"])
 
                 window_duration_seconds = win_mins * 60
                 window_start_dt = resets_at_dt - timedelta(seconds=window_duration_seconds)
@@ -275,15 +294,24 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
             except Exception:
                 pass
 
-    def _window_block(win: dict[str, Any] | None, used: float | None) -> dict[str, Any]:
-        return {
+    def _window_block(
+        win: dict[str, Any] | None,
+        used: float | None,
+        *,
+        label: str | None = None,
+    ) -> dict[str, Any]:
+        block = {
             "used_pct": used,
             "remaining_pct": _remaining_pct(used),
             "resets_at": (win or {}).get("resetsAt") if isinstance(win, dict) else None,
             "window_minutes": (win or {}).get("windowMinutes") if isinstance(win, dict) else None,
             "reset_description": (win or {}).get("resetDescription") if isinstance(win, dict) else None,
         }
+        if label is not None:
+            block["label"] = label
+        return block
 
+    labels = cursor_window_labels or {}
     return {
         "lane": lane,
         "primary_used_pct": primary_used_pct,
@@ -292,13 +320,19 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         "secondary_remaining_pct": _remaining_pct(secondary_used_pct),
         "tertiary_used_pct": tertiary_used_pct,
         "tertiary_remaining_pct": _remaining_pct(tertiary_used_pct),
-        # Back-compat aliases: weekly ≈ secondary allotment for most providers.
+        # Back-compat: weekly ≈ secondary for Claude/Codex; Cursor weekly ≈ Total (primary).
         "weekly_used_pct": weekly_used_pct,
         "weekly_remaining_pct": _remaining_pct(weekly_used_pct),
         "windows": {
-            "primary": _window_block(named_primary or primary_win, primary_used_pct),
-            "secondary": _window_block(named_secondary or weekly_win, secondary_used_pct),
-            "tertiary": _window_block(named_tertiary, tertiary_used_pct),
+            "primary": _window_block(
+                named_primary or primary_win, primary_used_pct, label=labels.get("primary")
+            ),
+            "secondary": _window_block(
+                named_secondary or (None if lane == "cursor" else weekly_win),
+                secondary_used_pct,
+                label=labels.get("secondary"),
+            ),
+            "tertiary": _window_block(named_tertiary, tertiary_used_pct, label=labels.get("tertiary")),
         },
         "monthly_cap_usd": monthly_cap_usd,
         "monthly_used_usd": monthly_used_usd,

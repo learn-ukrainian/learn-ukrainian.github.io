@@ -34,8 +34,8 @@ grok:
   # cap value not duplicated here to avoid drift with user's live tracking.
 # grok-hermes is API/Hermes-path and intentionally ABSENT from subscription caps.
 cursor:
-  # cursor composer subscription lane
-  # cap value not duplicated here to avoid drift with user's live tracking.
+  # Cursor Pro+ subscription lane (CodexBar: Total / Auto / API).
+  # Burn/status tracks Total; do not invent a synthetic dollar cap here.
 kimi:
   # Native Kimi Code OAuth subscription lane (K3). CodexBar exposes request
   # windows directly; do not duplicate a synthetic dollar cap here.
