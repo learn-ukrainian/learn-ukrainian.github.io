@@ -66,6 +66,14 @@ eq "$(handoff_identity_for_codex_epic harness)" "codex-infra" "Codex harness →
 eq "$(handoff_identity_for_codex_epic infra)" "codex-infra" "Codex infra → codex-infra alias"
 eq "$(handoff_identity_for_codex_epic)" "" "Codex no epic → empty slot"
 
+# Gemini uses provider-specific per-epic slots; harness/infra share one alias.
+eq "$(handoff_identity_for_gemini_epic atlas)" "gemini-atlas" "Gemini atlas → gemini-atlas"
+eq "$(handoff_identity_for_gemini_epic hramatka)" "gemini-hramatka" "Gemini hramatka → gemini-hramatka"
+eq "$(handoff_identity_for_gemini_epic harness)" "gemini-infra" "Gemini harness → gemini-infra"
+eq "$(handoff_identity_for_gemini_epic infra)" "gemini-infra" "Gemini infra → gemini-infra alias"
+eq "$(handoff_identity_for_gemini_epic)" "" "Gemini no epic → empty slot"
+
+
 # --- e2e: --epic harness resolves the infra lane slot (not phantom claude-harness) ---
 epic="$(handoff_epic_from_argv --epic harness --agent infra-orchestrator)"
 eq "$(handoff_identity_for_epic "$epic")" "claude-infra" "e2e: --epic harness → claude-infra"
