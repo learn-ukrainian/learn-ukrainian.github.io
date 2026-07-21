@@ -82,9 +82,8 @@ def load_taxonomy(taxonomy_path: Path = DEFAULT_TAXONOMY_PATH) -> dict[str, Any]
 def check_heritage_safeguard(error_word: str, correction_word: str) -> DialectVerdict:
     """Evaluate whether error_word is an authentic regionalism/archaism rather than a true Russianism.
 
-    Heritage Safeguard precedence:
-    1. VESUM validity check
-    2. Grinchenko 1907 / ESUM / SUM-11 dialect attestation
+    Pilot implementation: Uses a initial seed set of attested Ukrainian regionalisms.
+    Future iterations integrate full VESUM + Grinchenko 1907 + ESUM DB lookups.
     """
     known_regionalisms = {"бутелька", "кнайпа", "фірка", "файно", "тельбух"}
     if error_word.lower() in known_regionalisms:
@@ -110,6 +109,10 @@ def compile_evalset(
 ) -> int:
     if not gold_path.exists():
         print(f"Error: Gold fixture file not found: {gold_path}", file=sys.stderr)
+        return 1
+
+    if not taxonomy_path.exists():
+        print(f"Error: Taxonomy specification file not found: {taxonomy_path}", file=sys.stderr)
         return 1
 
     taxonomy = load_taxonomy(taxonomy_path)

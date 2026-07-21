@@ -47,8 +47,9 @@ def test_compile_evalset_creates_jsonl(tmp_path: Path) -> None:
     assert res == 0
     assert output_file.exists()
 
+    expected_count = len(json.loads(DEFAULT_GOLD_FIXTURE.read_text(encoding="utf-8")).get("items", []))
     lines = output_file.read_text(encoding="utf-8").strip().splitlines()
-    assert len(lines) == 52
+    assert len(lines) == expected_count
 
     first_item = json.loads(lines[0])
     assert first_item["lang"] == "uk"
@@ -57,3 +58,11 @@ def test_compile_evalset_creates_jsonl(tmp_path: Path) -> None:
     assert "provenance" in first_item
     assert first_item["provenance"]["taxonomy_version"] == "1.0.0"
     assert first_item["edits"][0]["category"] in ("F/Calque", "G/Case", "G/Gender")
+
+
+def test_compile_evalset_missing_taxonomy_returns_error(tmp_path: Path) -> None:
+    output_file = tmp_path / "evalset_test.jsonl"
+    missing_tax = tmp_path / "non_existent_taxonomy.yaml"
+    res = compile_evalset(gold_path=DEFAULT_GOLD_FIXTURE, output_path=output_file, taxonomy_path=missing_tax)
+    assert res == 1
+
