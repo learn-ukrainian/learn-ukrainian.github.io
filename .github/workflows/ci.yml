@@ -14,7 +14,10 @@ on:
       - 'scripts/check_rules_deployment.sh'
       - 'scripts/deploy_prompts.sh'
       - 'start-claude.sh'
+      - 'start-claudex.sh'
+      - 'start-kimicc.sh'
       - 'scripts/lib/handoff_identity.sh'
+      - 'scripts/lib/claude_route_guard.sh'
       - 'start-codex.sh'
       - 'tests/**/*.py'
       - 'pyproject.toml'
@@ -676,8 +679,11 @@ jobs:
         run: |
           bash -n \
             start-claude.sh \
+            start-claudex.sh \
+            start-kimicc.sh \
             start-codex.sh \
             scripts/lib/handoff_identity.sh \
+            scripts/lib/claude_route_guard.sh \
             scripts/deploy_prompts.sh \
             scripts/check_rules_deployment.sh
 

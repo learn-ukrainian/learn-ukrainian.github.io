@@ -1,0 +1,301 @@
+#!/usr/bin/env bash
+# Interactive Claude Code UI routed to Kimi (K3 / K2.7) via Anthropic-compatible API.
+#
+# This is NOT the native Kimi Code TUI. For headless / native Kimi use:
+#   kimi                       # interactive native Kimi Code CLI (OAuth)
+#   delegate.py --agent kimi   # headless fleet lane (default)
+#   ab ask-kimi                # bridge one-shot
+#
+# Design (parallel-safe with ./start-claude.sh):
+# - Process-scoped env only (Moonshot Method 1). Never writes ~/.claude/settings.json.
+# - Original Anthropic Claude config stays untouched; run native Claude in another terminal.
+# - Refuses to launch if settings.json already pins route env keys (cc-switch hazard).
+# - Compaction comes from scripts/config/context_profiles.yaml (1M for K3, 256K for K2.7).
+#
+# Official references:
+# - https://platform.kimi.ai/docs/guide/claude-code-kimi
+# - https://github.com/farion1231/cc-switch  (do NOT use it to rewrite project Claude config)
+
+set -euo pipefail
+
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export PATH="${HOME}/.local/bin:${PATH:-}"
+hash -r 2>/dev/null || true
+
+# Default: Kimi Open Platform Anthropic endpoint (pay-as-you-go API key).
+# Use --endpoint coding for the Kimi Code subscription Anthropic base URL.
+ENDPOINT="${KIMICC_ENDPOINT:-platform}"
+MODEL_ALIAS="${KIMICC_MODEL:-k3}"
+FORWARD_ARGS=()
+ISOLATE_CONFIG=0
+
+usage() {
+  cat <<'EOF'
+Usage: ./start-kimicc.sh [options] [CLAUDE_ARGS...]
+
+Launch Claude Code with Kimi as the lead model (interactive only).
+Does not rewrite ~/.claude/settings.json — original Claude config stays intact.
+
+Options:
+  --model ALIAS     k3 (default) | k2.7 | k2.7-highspeed
+                    Also accepts full IDs: kimi-k3[1m], kimi-k2.7-code, …
+  --endpoint NAME   platform (default, api.moonshot.ai/anthropic)
+                    coding   (Kimi Code subscription, api.kimi.com/coding)
+  --isolate-config  Use CLAUDE_CONFIG_DIR=$HOME/.claude-kimicc (separate sessions)
+  -h, --help        Show this help
+
+Environment:
+  KIMICC_MODEL / KIMICC_ENDPOINT     Defaults for --model / --endpoint
+  MOONSHOT_API_KEY / KIMI_API_KEY    Platform API key (preferred)
+  KIMICC_AUTH_TOKEN                  Explicit auth token override
+  KIMICC_BASE_URL                    Override Anthropic-compatible base URL
+  CLAUDE_CONFIG_DIR                  Isolated Claude config directory
+  CLAUDE_ROUTE_GUARD_ALLOW_SETTINGS_ENV=1
+                                     Bypass settings.json env conflict check (emergency)
+
+Examples:
+  ./start-kimicc.sh
+  ./start-kimicc.sh --model k2.7
+  ./start-kimicc.sh --model k2.7-highspeed --epic harness
+  MOONSHOT_API_KEY=<your-key> ./start-kimicc.sh --model k3
+
+Headless / native Kimi (not this launcher):
+  scripts/delegate.py dispatch --agent kimi --model k3 …
+  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-kimi …
+EOF
+}
+
+resolve_model_alias() {
+  # Bracketed IDs (kimi-k3[1m]) cannot live in bash `case` arms — [ is a char class.
+  local raw="$1"
+  case "$raw" in
+    'kimi-k3[1m]'|k3|kimi-k3|kimi-code/k3)
+      printf '%s\n' 'k3'
+      ;;
+    k2.7|k2.7-coding|kimi-k2.7-code|kimi-for-coding|kimi-code/kimi-for-coding)
+      printf '%s\n' 'k2.7'
+      ;;
+    k2.7-highspeed|k2.7-coding-highspeed|kimi-k2.7-code-highspeed|kimi-for-coding-highspeed|kimi-code/kimi-for-coding-highspeed)
+      printf '%s\n' 'k2.7-highspeed'
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+platform_model_id() {
+  case "$1" in
+    k3) printf '%s\n' 'kimi-k3[1m]' ;;
+    k2.7) printf '%s\n' 'kimi-k2.7-code' ;;
+    k2.7-highspeed) printf '%s\n' 'kimi-k2.7-code-highspeed' ;;
+    *) return 1 ;;
+  esac
+}
+
+coding_model_id() {
+  # Kimi Code subscription Anthropic surface uses the managed seat names.
+  case "$1" in
+    k3) printf '%s\n' 'k3' ;;
+    k2.7) printf '%s\n' 'kimi-for-coding' ;;
+    k2.7-highspeed) printf '%s\n' 'kimi-for-coding-highspeed' ;;
+    *) return 1 ;;
+  esac
+}
+
+profile_for_alias() {
+  case "$1" in
+    k3) printf '%s\n' 'kimicc_k3' ;;
+    k2.7) printf '%s\n' 'kimicc_k27' ;;
+    k2.7-highspeed) printf '%s\n' 'kimicc_k27_highspeed' ;;
+    *) return 1 ;;
+  esac
+}
+
+default_base_url() {
+  case "$1" in
+    platform) printf '%s\n' 'https://api.moonshot.ai/anthropic' ;;
+    coding) printf '%s\n' 'https://api.kimi.com/coding' ;;
+    *) return 1 ;;
+  esac
+}
+
+resolve_auth_token() {
+  if [ -n "${KIMICC_AUTH_TOKEN:-}" ]; then
+    printf '%s\n' "$KIMICC_AUTH_TOKEN"
+    return 0
+  fi
+  if [ -n "${MOONSHOT_API_KEY:-}" ]; then
+    printf '%s\n' "$MOONSHOT_API_KEY"
+    return 0
+  fi
+  if [ -n "${KIMI_API_KEY:-}" ]; then
+    printf '%s\n' "$KIMI_API_KEY"
+    return 0
+  fi
+  if [ -n "${ANTHROPIC_AUTH_TOKEN:-}" ] && [ "${ENDPOINT}" = "coding" ]; then
+    # Allow an already-exported coding token when operator sets it intentionally.
+    printf '%s\n' "$ANTHROPIC_AUTH_TOKEN"
+    return 0
+  fi
+  return 1
+}
+
+while (($#)); do
+  case "$1" in
+    --model)
+      if (($# < 2)); then
+        echo "Error: --model requires k3, k2.7, or k2.7-highspeed." >&2
+        exit 2
+      fi
+      MODEL_ALIAS="$2"
+      shift 2
+      ;;
+    --model=*)
+      MODEL_ALIAS="${1#*=}"
+      shift
+      ;;
+    --endpoint)
+      if (($# < 2)); then
+        echo "Error: --endpoint requires platform or coding." >&2
+        exit 2
+      fi
+      ENDPOINT="$2"
+      shift 2
+      ;;
+    --endpoint=*)
+      ENDPOINT="${1#*=}"
+      shift
+      ;;
+    --isolate-config)
+      ISOLATE_CONFIG=1
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      FORWARD_ARGS+=("$1")
+      shift
+      ;;
+  esac
+done
+
+if ! MODEL_ALIAS="$(resolve_model_alias "$MODEL_ALIAS")"; then
+  echo "Error: unsupported model '$MODEL_ALIAS' (use k3, k2.7, k2.7-highspeed)." >&2
+  exit 2
+fi
+
+case "$ENDPOINT" in
+  platform|coding) ;;
+  *)
+    echo "Error: unsupported endpoint '$ENDPOINT' (use platform or coding)." >&2
+    exit 2
+    ;;
+esac
+
+if [ "$ENDPOINT" = "platform" ]; then
+  LEAD_MODEL="$(platform_model_id "$MODEL_ALIAS")"
+else
+  LEAD_MODEL="$(coding_model_id "$MODEL_ALIAS")"
+fi
+PROFILE_ID="$(profile_for_alias "$MODEL_ALIAS")"
+BASE_URL="${KIMICC_BASE_URL:-$(default_base_url "$ENDPOINT")}"
+BASE_URL="${BASE_URL%/}"
+
+# shellcheck source=scripts/lib/claude_route_guard.sh
+source "$PROJECT_DIR/scripts/lib/claude_route_guard.sh"
+
+if [ "$ISOLATE_CONFIG" = "1" ] && [ -z "${CLAUDE_CONFIG_DIR:-}" ]; then
+  export CLAUDE_CONFIG_DIR="${HOME}/.claude-kimicc"
+  mkdir -p "$CLAUDE_CONFIG_DIR"
+  echo "Isolated Claude config: $CLAUDE_CONFIG_DIR (original ~/.claude untouched)"
+fi
+
+if ! assert_claude_settings_route_clean "KimiCC"; then
+  exit 1
+fi
+
+if ! _resolved_auth="$(resolve_auth_token)"; then
+  echo "Error: no Kimi API credential found for the kimicc route." >&2
+  echo "  Set one of: MOONSHOT_API_KEY, KIMI_API_KEY, or KIMICC_AUTH_TOKEN" >&2
+  echo "  Platform keys: https://platform.kimi.ai/console/api-keys" >&2
+  echo "  Native Kimi OAuth (kimi login) is for ./start-kimi.sh / headless kimi — not Claude Code." >&2
+  exit 1
+fi
+
+# shellcheck source=scripts/lib/profile_resolver.sh
+source "$PROJECT_DIR/scripts/lib/profile_resolver.sh"
+if ! resolve_context_profile "$PROFILE_ID" "$LEAD_MODEL"; then
+  echo "Error: could not resolve kimicc profile '$PROFILE_ID' for model '$LEAD_MODEL'." >&2
+  exit 1
+fi
+if [ "$LEARN_UKRAINIAN_TRUSTED" != "1" ] || [ "$LEARN_UKRAINIAN_PROFILE_ID" != "$PROFILE_ID" ]; then
+  echo "Error: kimicc profile did not resolve to a trusted contract ($LEARN_UKRAINIAN_RESOLUTION_REASON)." >&2
+  exit 1
+fi
+
+export LEARN_UKRAINIAN_REQUESTED_PROFILE_ID="$PROFILE_ID"
+export LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH=1
+export LEARN_UKRAINIAN_TRANSPORT=kimicc
+
+# Moonshot Anthropic-compatible routing (process-scoped only).
+export ANTHROPIC_BASE_URL="$BASE_URL"
+export ANTHROPIC_AUTH_TOKEN="$_resolved_auth"
+unset ANTHROPIC_API_KEY
+
+export ANTHROPIC_MODEL="$LEAD_MODEL"
+export ANTHROPIC_DEFAULT_OPUS_MODEL="$LEAD_MODEL"
+export ANTHROPIC_DEFAULT_SONNET_MODEL="$LEAD_MODEL"
+export ANTHROPIC_DEFAULT_HAIKU_MODEL="$LEAD_MODEL"
+export ANTHROPIC_DEFAULT_FABLE_MODEL="$LEAD_MODEL"
+export CLAUDE_CODE_SUBAGENT_MODEL="$LEAD_MODEL"
+
+# Kimi endpoint does not support Claude Code tool-search yet (official guide).
+export ENABLE_TOOL_SEARCH=false
+
+# Compaction: certified profile capacity (below true window; emergency rollover first).
+export CLAUDE_CODE_AUTO_COMPACT_WINDOW="$LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS"
+
+# K3 defaults to max effort on the platform guide; k2.7 always-thinks (Tab thinking in UI).
+if [ "$MODEL_ALIAS" = "k3" ]; then
+  export CLAUDE_CODE_EFFORT_LEVEL="${KIMICC_EFFORT_LEVEL:-max}"
+else
+  # Leave effort unset for k2.7 unless operator overrides; thinking must stay on in the TUI.
+  if [ -n "${KIMICC_EFFORT_LEVEL:-}" ]; then
+    export CLAUDE_CODE_EFFORT_LEVEL="$KIMICC_EFFORT_LEVEL"
+  fi
+fi
+
+echo "KimiCC: model=$LEAD_MODEL alias=$MODEL_ALIAS endpoint=$ENDPOINT profile=$PROFILE_ID"
+echo "        window=$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS compact=$CLAUDE_CODE_AUTO_COMPACT_WINDOW"
+echo "        base=$ANTHROPIC_BASE_URL (env-only; ~/.claude/settings.json not modified)"
+echo "        tip: keep ./start-claude.sh in another terminal for native Anthropic Claude"
+if [ "$MODEL_ALIAS" != "k3" ]; then
+  echo "        note: k2.7 requires Thinking ON in the TUI (Tab) or requests are rejected"
+fi
+
+# Strip any ambient --model from forwarded args; lead model is owned by this launcher.
+_cleaned=()
+_prev=""
+for arg in "${FORWARD_ARGS[@]+"${FORWARD_ARGS[@]}"}"; do
+  if [ "$_prev" = "--model" ]; then
+    _prev=""
+    continue
+  fi
+  case "$arg" in
+    --model|--model=*)
+      echo "Error: KimiCC owns the lead model ($LEAD_MODEL); drop --model from the command line." >&2
+      exit 2
+      ;;
+  esac
+  _cleaned+=("$arg")
+  _prev="$arg"
+done
+
+if ((${#_cleaned[@]})); then
+  exec "$PROJECT_DIR/start-claude.sh" --model "$LEAD_MODEL" "${_cleaned[@]}"
+else
+  exec "$PROJECT_DIR/start-claude.sh" --model "$LEAD_MODEL"
+fi
