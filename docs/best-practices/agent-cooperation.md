@@ -44,6 +44,172 @@ Self-review produces inflated scores. Observed in production: Gemini reviewing i
 
 ---
 
+## Native Codex multi-agent V2
+
+### What V2 is for
+
+Native V2 delegation keeps one Codex root responsible for the outcome while
+bounded child threads perform independent investigation, validation, or
+mechanical work. It is most useful when parallelism shortens the critical path
+or keeps noisy evidence out of the root context. It is not a substitute for a
+clear owner, deterministic local tools, or the independent cross-family review
+gate.
+
+The repository launcher enables V2 with at most three spawned children in
+addition to the root. Descendants count toward that shared concurrency limit.
+Prefer direct children. Use a parent → grandchild hierarchy only when one
+bounded workstream genuinely needs its own coordinator.
+
+### Operator shorthand
+
+When the operator asks any repository agent to create, write, or improve a
+Codex delegation/orchestration prompt, produce a copy/paste-ready V2 prompt
+using the contract below. If the operator names another harness or explicitly
+asks for a single-agent prompt, follow that request instead. Treat a bare
+"create a prompt" as V2 only when the active conversation is already about
+Codex delegation or orchestration; otherwise create the requested prompt type
+or clarify the target. Do not apply this shorthand to curriculum copy, image
+prompts, learner exercises, or other non-agent prompts.
+
+### V2 child-brief contract
+
+Each spawned child receives a deliberately bounded brief containing:
+
+1. **Identity:** unique `task_name` plus functional role.
+2. **Research classification:** task family, track, and owned paths when known;
+   a genuinely generic task remains unclassified and pointer-free.
+3. **Objective:** one independently completable deliverable.
+4. **Inputs:** exact files, refs, commands, or facts it may rely on.
+5. **Authority:** read-only or explicit edit scope; prohibited actions.
+6. **Coordination boundary:** files and decisions owned elsewhere, plus a clear
+   instruction not to revert or overwrite other work.
+7. **Verification:** concrete checks and evidence expected from the child.
+8. **Return contract:** concise result shape, findings, changed files when any,
+   verification evidence, blockers, and terminal status.
+
+Default to `fork_turns="none"` so each child starts clean. A clean-context brief
+must be self-contained because the child cannot infer the user's request,
+repository rules, prior decisions, or sibling assignments. Inherit turns only
+when conversation history is itself a necessary input; state why in the root
+prompt.
+
+### Copy/paste V2 orchestration template
+
+Replace every brace-delimited field before using this prompt. Remove unused
+worker blocks instead of leaving placeholders for the model to guess.
+
+```text
+You are the single accountable root orchestrator for {objective}.
+
+Outcome:
+- {user-visible terminal outcome}
+
+Scope and constraints:
+- Repository/root: {path or environment}
+- Functional role: {role}
+- Task family: {task family or genuinely generic}
+- Track/epic: {track, epic, or not applicable}
+- Allowed mutations: {read-only or exact write authority}
+- Owned paths: {paths}
+- Editing worktree/branch: {exact dispatch worktree and branch, or none}
+- Prohibited actions: {secrets, destructive actions, gh/merge, shared files, etc.}
+- Required verification: {checks and evidence}
+
+Native Codex multi-agent V2 procedure:
+1. Call list_agents before delegation and record the initial active set.
+2. Create a requested-agent ledger containing task_name, expected parent,
+   objective, expected terminal condition, returned canonical path, and
+   observed final status.
+3. Keep architecture, sequencing, integration, and final judgment with the root.
+4. Spawn only the independent workers defined below. Use each exact task_name
+   with fork_turns="none" and pass its complete self-contained brief. Keep no
+   more than three non-root agents active at once across the whole tree;
+   descendants consume the same shared child capacity. Before starting a
+   nested parent, reserve enough active slots for its authorized descendants
+   or delay conflicting siblings; never strand the parent behind a full cap.
+5. Run independent workers in parallel. Do not duplicate a healthy lane or let
+   siblings edit the same file or worktree. Implementation edits are forbidden
+   in the primary checkout; give each editing worker an exact dispatch
+   worktree/branch and disjoint file ownership.
+6. Continue useful root-owned critical-path work while children run.
+7. Use messages to correct or narrow active work. Interrupt a child only when
+   its task is obsolete, unsafe, or outside scope.
+8. Wait for every requested child and descendant to reach a terminal state.
+   Record completion notifications and parent reports in the ledger; do not
+   treat a final list_agents snapshot as the only historical status evidence.
+9. Inspect returned evidence and every worker diff. Reconcile disagreements;
+   do not combine incompatible conclusions by vote.
+10. Run integrated verification from the root-owned worktree or read-only scope.
+11. Call list_agents again and reconcile it with the ledger. Report every
+    canonical task path and final status, including failed, cancelled, missing,
+    or still-running work.
+12. Return one self-contained final result with findings, changed files,
+    verification, unresolved blockers, and final git status when repository
+    files were involved.
+
+Worker {N}:
+- task_name: {lowercase_unique_name}
+- role: {functional role}
+- task family: {task family}
+- track: {track or not applicable}
+- owned paths: {exact paths or none}
+- authority: {read-only or exact edit authority}
+- editing worktree/branch: {exact dispatch worktree and branch, or none}
+- objective: {one independently completable deliverable}
+- inputs: {exact context, files, refs, or commands}
+- constraints: {must/must-not rules, including no primary-checkout edits, no
+  sibling worktree access, and no unrelated changes}
+- verification: {checks to run or evidence to gather}
+- return: {concise structured result expected by the root}
+
+{Repeat only for genuinely independent workers.}
+
+Independent review boundary:
+- Native Codex children are OpenAI-family helpers and do not satisfy the
+  repository's independent cross-family review gate.
+- If that gate applies, the root must route a separate read-only review through
+  the approved non-Codex path and treat unresolved material findings as
+  blockers.
+```
+
+### Nested V2 block
+
+Add this block only when a child must coordinate descendants:
+
+```text
+Worker {N} is a bounded sub-orchestrator. It must:
+1. Call list_agents, then spawn only the following named descendants with
+   fork_turns="none": {names and complete briefs}. Keep the full root tree at
+   no more than three concurrently active non-root agents; descendants consume
+   that same capacity. If the root's siblings temporarily occupy the reserved
+   capacity, wait for a slot and notify the root instead of exceeding the cap
+   or silently dropping the descendant.
+2. Remain accountable for that sub-workstream; descendants must have disjoint
+   scopes and may not expand it.
+3. Wait for every descendant to terminate, inspect their returns, and report
+   each canonical path and status—including failures, cancellations, or missing
+   descendants—to the root's requested-agent ledger.
+4. Return only after its entire descendant tree is terminal.
+```
+
+The root still performs the final `list_agents` check. A completed parent is
+not enough evidence if a requested descendant is absent, failed, cancelled, or
+still running.
+
+### Prompt quality check
+
+Before handing a V2 prompt to the operator, verify that:
+
+- every worker can act from its own brief without access to parent history
+- all worker scopes are independent and no file has two owners
+- the prompt says who waits, integrates, verifies, and decides
+- terminal output is evidence-oriented rather than a bare success token unless
+  an exact-string protocol proof was explicitly requested
+- nesting has a real coordination purpose and stays within the active child cap
+- same-family helper review is not represented as independent review
+
+---
+
 ## Communication Channels
 
 ### GitHub-first (primary)
