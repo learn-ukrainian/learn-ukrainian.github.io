@@ -376,6 +376,46 @@ Cost controls:
 - Do not let subagents read secrets, source `.envrc`, call `gh`, request reviews, or merge PRs.
 - Do not delegate independent review requirement. Internal GPT helper swarms Codex self-review do not satisfy external gate. Request one read-only review through an independent non-Codex route and treat unresolved findings as blockers. The reviewer must come from OUTSIDE the author's model family (cross-family; discussion/panel input does not satisfy this gate). Current lanes and per-task routing: `agents_extensions/shared/rules/model-assignment.md` (served at `/api/rules`) — the harness-vs-model table there explains which models each harness (hermes, opencode, native CLIs) can reach; never block on a single unavailable lane (Claude/Codex budget buckets at near_cap substitute per `scripts/config/agent_fallback_substitutions.yaml`; other lanes reroute via the harness table, noting the substitution). If AGY is used as that route, call it through the explicit bridge, example `printf '%s\n' "<review prompt>" | .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - --task-id review-<id> --to-model gemini-3.1-pro-high --review`.
 
+### Native Codex multi-agent V2 prompt contract
+
+When the operator asks any repository agent to create, write, or improve a
+Codex delegation/orchestration prompt, produce a native multi-agent V2 prompt
+by default unless the operator names another harness or explicitly asks for a
+single-agent prompt. This default applies to agent-work prompts, not unrelated
+prompts such as lesson copy, image generation, or learner exercises.
+
+Every V2 prompt must:
+
+- appoint exactly one accountable root orchestrator that owns scope,
+  sequencing, integration, validation, and the final disposition
+- tell the root to call `list_agents` before spawning and again after all
+  requested agents reach terminal states
+- give each child a unique `task_name`, an explicit functional role, task
+  family, track when applicable, owned paths, read/write authority, inputs,
+  constraints, expected evidence, and return contract
+- default to `fork_turns="none"` with a self-contained child brief; inherit
+  conversation turns only when the child materially needs them
+- parallelize only independent work, prohibit duplicate lanes and shared-file
+  contention, and keep useful critical-path work with the root
+- keep no more than three non-root agents active across the entire tree at
+  once; nested descendants consume the same shared child capacity, so the root
+  must reserve their required slots before starting a nested parent or delay
+  conflicting siblings
+- require the root to wait for every requested result, inspect worker output
+  and diffs, reconcile disagreements, run integrated verification, and report
+  canonical agent paths plus final statuses from a requested-agent ledger,
+  including failures, cancellations, or missing descendants
+- use nested parent → grandchild delegation only when a bounded sub-workstream
+  needs its own coordinator; the parent must receive explicit spawn authority,
+  wait for all descendants, and return their status to the root
+- preserve the repository's worktree, research-classification, quota-routing,
+  tool-backed-evidence, and cross-family review requirements
+
+Native Codex children are same-family helpers. Their review or consensus never
+satisfies the independent cross-family review gate. The canonical copy/paste
+template and examples live in
+[`docs/best-practices/agent-cooperation.md`](docs/best-practices/agent-cooperation.md#native-codex-multi-agent-v2).
+
 Module-build PRs must persist token telemetry through
 `POST /api/telemetry/module-builds` and include the same summary in the PR body
 or final orchestration note. Every record must explicitly say whether a swarm
