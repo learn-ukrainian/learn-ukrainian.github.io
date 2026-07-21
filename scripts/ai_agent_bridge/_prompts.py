@@ -299,7 +299,11 @@ OPERATOR_CONTRACT_DIGEST = """Operator contract (binding; full text: agents_exte
 quality over shortcuts - root-cause fixes - tool-backed claims only (Ukrainian word/stress/
 morphology facts VESUM/`sources`-verified, never guessed) - max UA immersion EXCEPT A1 (its
 English scaffolding is by design; from A2 never raise English) - reviews need an independent
-cross-family reviewer (discussion does not satisfy the gate) - note any lane substitution."""
+cross-family reviewer (discussion does not satisfy the gate) - note any lane substitution -
+layout A: primary non-bare on main (human+services); agents only under
+.worktrees/dispatch/<agent>/<task>/ - bare primary is a bug to heal - **no architecture/
+layout/process decisions without present-tense operator or advisor approval** (current
+advisors: Fable, Sol; roster may change)."""
 
 
 def build_agy_prompt(

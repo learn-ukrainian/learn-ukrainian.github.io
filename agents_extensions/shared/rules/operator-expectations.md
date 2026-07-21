@@ -16,11 +16,16 @@ tie-breakers.
 2. **Best practices.** Research the established best practice BEFORE implementing or deciding —
    `docs/best-practices/`, prior art, authoritative sources, current standards. Never ship the
    first thing that works. Fix root causes, not symptoms.
-3. **Git & GitHub hygiene.** Worktrees for all branch work (main checkout stays on `main`,
-   clean). PRs for everything — no direct commits to main. After merge: delete branch local +
-   remote, remove worktree. Close issues when acceptance criteria are met, with tool-backed
-   evidence. `X-Agent` trailer on every commit. Session start/end: sweep worktrees, branches,
-   open PRs — a dangling ref reads as unfinished work to the rest of the fleet.
+3. **Git & GitHub hygiene (layout A — Fable 2026-07-21).** One sentence: **root is the human's
+   and the services'; agents live under `.worktrees/`.** Primary
+   `~/projects/learn-ukrainian` is a **normal non-bare** checkout, pinned to `main`, where
+   `git status` works; agents implement only in `.worktrees/dispatch/<agent>/<task>/`.
+   `core.bare=true` on primary is a **bug** to heal (`git config core.bare false` +
+   `extensions.worktreeConfig=true`), never an intentional mode. PRs for everything — no
+   direct commits to main. After merge: delete branch local + remote, remove worktree. Close
+   issues when acceptance criteria are met, with tool-backed evidence. `X-Agent` trailer on
+   every commit. Session start/end: sweep worktrees, branches, open PRs — a dangling ref
+   reads as unfinished work to the rest of the fleet.
 4. **Utilize the whole fleet — together you are stronger.** Substantive design/decisions get
    ≥1 other agent BEFORE committing; solo only for trivial work. Two distinct duties, don't
    conflate them: (a) *discussion/panel input* improves the work but does NOT satisfy the
@@ -61,11 +66,12 @@ tie-breakers.
    effectively full. NEVER propose raising English / lowering immersion at A2+; equally,
    never strip A1's designed English support. The per-band `forbid` rules in
    `IMMERSION_POLICIES` are binding.
-10. **Drive, don't defer.** When the next action is determinable — from the queue, an order, or
-    your own recommendation — EXECUTE and report past-tense. Options-menus and "should I?"
-    are disobedience, not caution. Stop only for: the operator's accounts/credentials, a
-    deploy only they trigger, system-config changes without a present-tense go, or a direct
-    conflict you cannot resolve.
+10. **Drive, don't defer — within approved scope.** When the next action is determinable from
+    the queue, an order, or an already-approved design — EXECUTE and report past-tense.
+    Options-menus and "should I?" on *implementation* of decided work are disobedience.
+    **Stop and get approval** for: the operator's accounts/credentials; deploys only they
+    trigger; system-config changes without a present-tense go; **and any architecture,
+    process, or working-model decision** (see item 12).
 11. **Repo mechanics are part of the contract.** The hard gates codified in `AGENTS.md` and
     `/api/rules` bind as if written here — notably: dispatch worktree subtree layout
     (`.worktrees/dispatch/<agent>/<task>/`); `.venv/bin/python` only (never bare
@@ -74,6 +80,14 @@ tie-breakers.
     worktrees; `Monitor` for event streams (never polling loops); never print secrets.
     This contract references them instead of duplicating them; violating them violates the
     contract.
+12. **Advisor / operator approval gate (binding).** Agents must **not** invent or unilaterally
+    adopt architecture, local layout, process, or policy without **present-tense approval**
+    from the **operator** or a designated **advisor**. Current advisors: **Fable** and **Sol**
+    (roster may change — do not hard-code forever; confirm via `/api/rules` /
+    `model-assignment.md` when unsure). Discussion/panels improve quality but do **not**
+    replace advisor approval for design. Routine implementation of already-queued work does
+    not need a new advisor turn. Violations: shipping helpers/layouts/process "for now",
+    redefining primary-checkout semantics, or flipping gates without an advisor record.
 
 ## Precedence
 

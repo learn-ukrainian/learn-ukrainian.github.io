@@ -13,17 +13,16 @@ The operator's working contract is `agents_extensions/shared/rules/operator-expe
 `GET http://localhost:8765/api/rules`). Its items are the tie-breakers when instructions
 conflict. Digest — read the full file for the binding wording:
 **1** Quality: no shortcuts, no threshold-lowering, no "for now" · **2** Best practices +
-root-cause fixes · **3** Git/GitHub hygiene: worktrees, PRs only, post-merge cleanup,
-`X-Agent` trailer · **4** Use the whole fleet; the review gate needs an independent
-**cross-family** reviewer (discussion/panels do NOT satisfy it) · **5** Route by
-model × harness fit (`model-assignment.md` § Harness vs model) · **6** Limits are normal:
-substitute lanes and NOTE the substitution in the artifact · **7** No claims without
-tool-backed proof; Ukrainian word/stress/morphology facts VESUM/`sources`-verified, never
-guessed · **8** Clean code, current docs; prune stale context when touched · **9** Max UA
-immersion EXCEPT A1 (its English scaffolding is by design; from A2 never raise English) ·
-**10** Drive, don't defer: execute determinable next actions, report past-tense ·
-**11** Repo hard gates (worktree layout, `.venv/bin/python`, artifact hygiene, no secrets)
-bind as part of this contract.
+root-cause fixes · **3** Git/GitHub hygiene (**layout A**): primary non-bare on `main`
+(human + services); agents only in `.worktrees/dispatch/<agent>/<task>/`; bare primary =
+heal-as-bug; PRs + `X-Agent` · **4** Use the whole fleet; review gate = independent
+**cross-family** reviewer (discussion ≠ review) · **5** Route by model × harness fit ·
+**6** Limits: substitute lanes, NOTE substitutions · **7** Tool-backed claims only;
+UA word/stress/morphology VESUM/`sources`-verified · **8** Clean code + current docs ·
+**9** Max UA immersion EXCEPT A1 · **10** Drive within approved scope · **11** Repo hard
+gates bind · **12** **Advisor/operator approval gate**: no architecture, layout, or
+process decisions without present-tense **operator** or designated **advisor** approval
+(current advisors: **Fable**, **Sol** — roster may change; check `/api/rules`).
 
 ---
 
@@ -195,9 +194,18 @@ One PR = one concern. Do NOT:
 
 If you find something unrelated that needs fixing, create a separate issue.
 
-### 10. ALWAYS Use the Worktree Subtree Layout
+### 10. ALWAYS Use the Worktree Subtree Layout (layout A)
 
-When you create a worktree (whether the orchestrator set it up for you or you're acting directly), use the **subtree layout**:
+**Mental model (Fable 2026-07-21):** *Root is the human's and the services'; agents live under `.worktrees/`.*
+
+| Who | Path | Notes |
+| --- | --- | --- |
+| **Human + services** | repo root (`~/projects/learn-ukrainian`) | Normal **non-bare** checkout, pinned to **`main`**. `git status` works. |
+| **Agents** | `.worktrees/dispatch/<agent>/<task>/` | All implementation. Never commit on primary. |
+
+Primary `core.bare=true` is a **bug** (heal with `git config core.bare false`; keep `extensions.worktreeConfig=true`). Do not invent alternate human homes (e.g. `.worktrees/main`) or layout helpers without **operator or advisor** approval.
+
+When you create a worktree (orchestrator or self), use the **subtree layout**:
 
 ```
 .worktrees/dispatch/<agent>/<task>/

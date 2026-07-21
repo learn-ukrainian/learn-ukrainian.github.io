@@ -25,43 +25,148 @@ health check.
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
+
+# Git commit hooks inject GIT_DIR / GIT_INDEX_FILE / etc. into the environment.
+# Config checks must not inherit those or they inspect the outer repo, not the
+# fixture / --repo path under test.
+_GIT_REDIRECT_KEYS = frozenset(
+    {
+        "GIT_DIR",
+        "GIT_WORK_TREE",
+        "GIT_INDEX_FILE",
+        "GIT_OBJECT_DIRECTORY",
+        "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+        "GIT_COMMON_DIR",
+        "GIT_PREFIX",
+        "GIT_NAMESPACE",
+    }
+)
+
+
+def _clean_git_env() -> dict[str, str]:
+    return {k: v for k, v in os.environ.items() if k not in _GIT_REDIRECT_KEYS}
+
+
+def _git_config_cmd_prefix(repo: Path) -> list[str]:
+    """Build a git prefix that can read/write config even when core.bare=true.
+
+    Prefer ``--git-dir=<repo>/.git`` (normal checkout). Fall back to bare-root
+    ``--git-dir=<repo>`` or ``-C <repo>``.
+    """
+    git_path = repo / ".git"
+    if git_path.is_file():
+        text = git_path.read_text(encoding="utf-8").strip()
+        if text.startswith("gitdir:"):
+            target = Path(text.split(":", 1)[1].strip())
+            if not target.is_absolute():
+                target = (repo / target).resolve()
+            return ["git", f"--git-dir={target}"]
+    if git_path.is_dir():
+        return ["git", f"--git-dir={git_path}"]
+    if (repo / "HEAD").is_file() and (repo / "objects").is_dir():
+        return ["git", f"--git-dir={repo}"]
+    return ["git", "-C", str(repo)]
 
 
 def _git_config_get(repo: Path, key: str) -> str | None:
     """Return the effective git config value for ``key``, or None if unset."""
     proc = subprocess.run(
-        ["git", "-C", str(repo), "config", "--get", key],
+        [*_git_config_cmd_prefix(repo), "config", "--get", key],
         capture_output=True,
         text=True,
+        env=_clean_git_env(),
     )
     if proc.returncode != 0:
         return None
     return proc.stdout.strip()
 
 
+def _git_config_set(repo: Path, key: str, value: str) -> None:
+    subprocess.run(
+        [*_git_config_cmd_prefix(repo), "config", key, value],
+        check=True,
+        env=_clean_git_env(),
+    )
+
+
+def _config_file_says_bare(repo: Path) -> bool:
+    """Parse ``.git/config`` directly (works when git CLI is confused)."""
+    cfg = repo / ".git" / "config"
+    if not cfg.is_file():
+        # bare-root layout
+        cfg = repo / "config"
+    if not cfg.is_file():
+        return False
+    try:
+        text = cfg.read_text(encoding="utf-8")
+    except OSError:
+        return False
+    # crude but reliable: core.bare true in the common config file
+    for line in text.splitlines():
+        stripped = line.strip().lower().replace(" ", "")
+        if stripped in {"bare=true", "bare=1"}:
+            return True
+    return False
+
+
+def _is_bare_broken(repo: Path) -> bool:
+    """True when primary is bare (config CLI, config file, and/or rev-parse)."""
+    if _git_config_get(repo, "core.bare") == "true":
+        return True
+    if _config_file_says_bare(repo):
+        return True
+    proc = subprocess.run(
+        [*_git_config_cmd_prefix(repo), "rev-parse", "--is-bare-repository"],
+        capture_output=True,
+        text=True,
+        env=_clean_git_env(),
+    )
+    return proc.returncode == 0 and proc.stdout.strip().lower() == "true"
+
+
 def check_core_bare(repo: Path, *, fix: bool) -> tuple[bool, str]:
-    """Check ``core.bare`` on ``repo``.
+    """Check ``core.bare`` on ``repo`` (layout A: bare is a bug to heal).
 
     Returns ``(ok, message)``. ``ok`` is True when ``core.bare`` is false/unset,
     or when it was true and ``fix`` reset it. ``ok`` is False when it is true and
     ``fix`` is not set (the repo's work tree is broken and needs repair).
+
+    Also asserts ``extensions.worktreeConfig=true`` when ``fix`` is set so
+    worktree-local config cannot re-pollute shared ``core.bare`` (#2842 / Fable A).
     """
+    parts: list[str] = []
     value = _git_config_get(repo, "core.bare")
-    if value != "true":
-        return True, f"core.bare={value or 'unset'} (ok)"
-    if not fix:
-        return False, (
-            "core.bare=true — every git work tree on this repo is BROKEN. "
-            "Re-run with --fix (or `git config --local core.bare false`); see #2842"
-        )
-    subprocess.run(
-        ["git", "-C", str(repo), "config", "--local", "core.bare", "false"],
-        check=True,
-    )
-    return True, "core.bare reset true→false (repo work tree was broken; see #2842)"
+    bare_broken = _is_bare_broken(repo)
+    if bare_broken:
+        if not fix:
+            return False, (
+                "core.bare=true — primary is BROKEN (layout A: bare is a bug). "
+                "Re-run with --fix (or `git config --local core.bare false`); see #2842"
+            )
+        _git_config_set(repo, "core.bare", "false")
+        parts.append("core.bare reset true→false")
+    else:
+        parts.append(f"core.bare={value or 'unset'} (ok)")
+
+    wtc = _git_config_get(repo, "extensions.worktreeConfig")
+    if wtc != "true":
+        if fix:
+            _git_config_set(repo, "extensions.worktreeConfig", "true")
+            parts.append("extensions.worktreeConfig set true")
+        else:
+            # Check-only: do not fail healthy non-bare clones (SessionStart canary
+            # would go red). Prefer --fix to pin worktreeConfig.
+            parts.append(
+                "extensions.worktreeConfig missing (recommend --fix; #2842)"
+            )
+    else:
+        parts.append("extensions.worktreeConfig=true (ok)")
+
+    return True, "; ".join(parts)
 
 
 def main(argv: list[str] | None = None) -> int:
