@@ -1,0 +1,49 @@
+# Controlled Error Taxonomy for Ukrainian Calque & Grammar Eval Harness (UNLP 2027)
+# Canonical schema shared between compile_evalset.py and evaluate_model.py
+
+version: "1.0.0"
+categories:
+  F/Calque:
+    title: "Russian Calque / Russianism"
+    description: "Literal semantic or syntactic translation from Russian into Ukrainian."
+    subtypes:
+      - verb_government_calque    # e.g., приймати участь -> брати участь
+      - noun_choice_calque        # e.g., слідуючий -> наступний
+      - prepositional_calque      # e.g., по питанням -> з питань
+      - false_friend_calque       # e.g., лук -> цибуля
+
+  G/Case:
+    title: "Case Agreement Error"
+    description: "Incorrect Ukrainian case inflection."
+
+  G/Gender:
+    title: "Gender Agreement Error"
+    description: "Incorrect noun-adjective or noun-verb gender agreement."
+
+  G/Number:
+    title: "Number Agreement Error"
+    description: "Incorrect singular/plural agreement."
+
+  G/Verb:
+    title: "Verb Conjugation / Form Error"
+    description: "Incorrect verbal aspect, tense, or conjugation form."
+
+  G/Aspect:
+    title: "Verbal Aspect Error"
+    description: "Incorrect perfective vs imperfective aspect usage."
+
+  VESUM/OOV:
+    title: "Out of Vocabulary / Non-Word Error"
+    description: "Wordform failing VESUM morphological dictionary validation."
+
+dialect_safeguard:
+  sources:
+    - vesum.db
+    - sources.db (Grinchenko 1907)
+    - sources.db (ESUM)
+    - sources.db (SUM-11)
+  verdicts:
+    - cleared           # Fully validated modern standard Ukrainian
+    - heritage_protected # Dialectal / archaic Ukrainian word (not a Russianism calque)
+    - calque_flagged     # Confirmed calque / Russianism
+    - ambiguous          # Needs linguistic review
