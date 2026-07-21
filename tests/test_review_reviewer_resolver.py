@@ -505,3 +505,8 @@ def test_candidate_constants_preserve_expected_identity():
     assert GLM.requires_data_egress_policy == "local_interactive"
     assert GLM.invocation.endswith("ask-glm")
     assert GROK_4_5.transport == "native_grok"
+    from scripts.review.reviewer_resolver import GROK_4_5_CURSOR_FALLBACK, SONNET_5
+
+    assert GROK_4_5_CURSOR_FALLBACK.transport == "cursor"
+    assert GROK_4_5_CURSOR_FALLBACK.concrete_model == "grok-4.5"
+    assert SONNET_5.concrete_model == "claude-sonnet-5"
