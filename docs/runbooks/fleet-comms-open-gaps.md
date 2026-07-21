@@ -101,7 +101,7 @@ Practical seats @ **high** — not Sol/Fable on routine PRs:
 - [x] #5392 — green tests for sidecar + TRUNCATED footer (`tests/test_reply_sidecar.py` 8/8, 2026-07-22)
 - [x] dual-write-status returns registered streams (`inventory --register` → 17/17 ok, drift=0; cutover still blocked by operator gate)
 - [x] backlog warning does not mention `gemini` when it is a dead lane (`fleet_comms backlog` exclude_retired includes gemini; total=0)
-- [ ] empty-body process-ask records `transport empty-ask-body` (code path present; re-smoke if regressions)
+- [x] empty-body process-ask records `transport empty-ask-body` (`tests/test_reply_sidecar.py` asserts raise + status)
 - [x] formal CF model+effort pins + practical ladders (2026-07-21)
 - [x] efficiency CLI: `fleet_comms metrics` / `github-metrics` / `dead-letters` (PR-M on main)
 - [x] isolation runbooks AGY/Kimi/Grok (#5555–#5557 fail-closed residual documented)
