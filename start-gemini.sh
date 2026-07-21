@@ -338,7 +338,8 @@ for a in "${_forward[@]+"${_forward[@]}"}"; do
 done
 
 if [ -n "${SESSION_EPIC:-}" ] && [ "$_has_prompt" -eq 0 ]; then
-  _cold_prompt="You are the Gemini ${SESSION_EPIC} lane orchestrator (stream ${SESSION_STREAM_ID:-unset}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) Check stream state in .agent/gemini-${SESSION_EPIC}-thread-handoff.md or docs/session-state/; (2) Run 'codexbar usage' to monitor fleet quota/limits; (3) Assess tasks, pick the optimal model/agent from the capability matrix (AGENTS.md, model-assignment.md); (4) Dispatch worker sub-tasks via worktrees using 'scripts/delegate.py dispatch ...'; (5) Obey advisor approval gate (Fable / Sol) for architecture/process changes; (6) Enforce independent cross-family review before PR merges. Primary checkout is read-only — all edits belong in worktrees."
+  _handoff_path=".agent/${SESSION_HANDOFF_AGENT:-gemini-${SESSION_EPIC}}-thread-handoff.md"
+  _cold_prompt="You are the Gemini ${SESSION_EPIC} lane orchestrator (stream ${SESSION_STREAM_ID:-unset}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) Check stream state in ${_handoff_path} or docs/session-state/; (2) Run 'codexbar usage' to monitor fleet quota/limits; (3) Assess tasks, pick the optimal model/agent from the capability matrix (AGENTS.md, model-assignment.md); (4) Dispatch worker sub-tasks via worktrees using 'scripts/delegate.py dispatch ...'; (5) Obey advisor approval gate (Fable / Sol) for architecture/process changes; (6) Enforce independent cross-family review before PR merges. Primary checkout is read-only — all edits belong in worktrees."
   echo "Cold-start: injecting epic orchestrator auto-continue prompt."
   if [ "$_has_print" -eq 1 ]; then
     _forward+=("$_cold_prompt")

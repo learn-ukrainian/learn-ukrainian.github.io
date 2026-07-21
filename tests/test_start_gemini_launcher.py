@@ -233,10 +233,23 @@ def test_epic_atlas_exports_env_and_claims_lease(tmp_path: Path) -> None:
     i_idx = parts.index("-i")
     prompt = parts[i_idx + 1]
     assert "Gemini" in prompt and "orchestrator" in prompt
+    assert ".agent/gemini-atlas-thread-handoff.md" in prompt
     assert "codexbar usage" in prompt
     assert "--model" in parts
     assert "gemini-3.6-flash-high" in parts
     assert "--dangerously-skip-permissions" in parts
+
+
+def test_epic_harness_derives_gemini_infra_handoff(tmp_path: Path) -> None:
+    values, argv_blob, result, _project, _supervisor_capture = _run_launcher(tmp_path, ["--epic", "harness"])
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert values["session_epic"] == "harness"
+    assert values["handoff"] == "gemini-infra"
+    parts = [p for p in argv_blob.split("\0") if p]
+    i_idx = parts.index("-i")
+    prompt = parts[i_idx + 1]
+    assert ".agent/gemini-infra-thread-handoff.md" in prompt
+
 
 
 def test_epic_equals_form_and_explicit_prompt_uses_interactive_prompt(tmp_path: Path) -> None:
