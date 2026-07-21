@@ -109,6 +109,14 @@ token on a schedule (`CLAUDE_CODE_API_KEY_HELPER_TTL_MS`, default 300000).
 Without isolation the token is fixed at launch — fine for short sessions.
 `KIMICC_DRY_RUN=1` prints the resolved route/auth and exits before launch.
 
+The same helper also keeps CodexBar's Kimi tile alive (CodexBar never
+refreshes CLI-owned credentials): the launchd agent
+`~/Library/LaunchAgents/com.learnukrainian.kimi-coding-oauth.plist` runs
+`scripts/lib/kimi_coding_oauth.py token` every 10 minutes (stdout to
+/dev/null, errors to `~/.kimi-code/logs/oauth-refresh.log`). Manage with
+`launchctl bootout gui/$(id -u)/com.learnukrainian.kimi-coding-oauth` (unload)
+and `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.learnukrainian.kimi-coding-oauth.plist` (load).
+
 | Model alias | Platform model id | Context | Auto-compact |
 | --- | --- | --- | --- |
 | `k3` (default) | `kimi-k3[1m]` | 1 048 576 | 996 147 |
