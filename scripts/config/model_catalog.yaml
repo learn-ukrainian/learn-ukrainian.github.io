@@ -423,6 +423,28 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review]
 
+# Fleet-comms stream orchestrator seats (#5512 / #4707). These lanes may own a
+# cold-start loop (prioritize → delegate → CF → merge-in-lane). Formal *sealed*
+# CF remains fail-closed on agy|kimi|grok until #5555–#5557; orchestrators still
+# *request* CF via review-pr codex|claude|glm.
+orchestrator_seats:
+  claude:
+    model_id: claude-sonnet-5
+    effort: high
+    note: practical default for routine orchestrator judgment; escalate to Fable/Opus only when needed
+  codex:
+    model_id: gpt-5.6-terra
+    effort: high
+  grok:
+    model_id: grok-4.5
+    effort: high
+    fallback_transport: cursor
+    fallback_model_id: grok-4.5
+  agy:
+    model_id: gemini-3.6-flash-high
+    effort: high
+    note: Google-family orchestrator (user 2026-07-21); Pro only for deep single-shot, not default loop
+
 # Formal CF transport defaults for review-pr (model + effort). Authority seats
 # (Sol/Fable/Opus) are critical-ladder only — not routine review-pr pins.
 formal_cf_defaults:
@@ -443,6 +465,14 @@ formal_cf_defaults:
     effort: high
     fallback_transport: cursor
     fallback_model_id: grok-4.5
+  agy:
+    # Orchestrator pin + ladder seat; not a review-pr --reviewer transport until
+    # sealed isolation (#5555). When AGY is the formal candidate, resolve-reviewer
+    # selects gemini-3.6-flash-high via the practical ladder.
+    model_id: gemini-3.6-flash-high
+    effort: high
+    formal_review_eligible: false
+    isolation_issue: 5555
 
 review_ladders:
   # #5293 quality-first: never let a later rung improve quality tier.

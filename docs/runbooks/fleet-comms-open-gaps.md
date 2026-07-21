@@ -60,6 +60,27 @@ file handoffs remain authoritative until then.
 | **#4915** empty body on background process | `assert_ask_content_present` on process paths — empty DB body fails as **transport**, not model stall. |
 | **#4956** disk retention | Read-only scanner: `.venv/bin/python scripts/hygiene/lane_disk_retention.py [--include-home] [--json]` |
 
+## Orchestrator seats (fleet-comms stream)
+
+Any of these may own a cold-start / drive-board loop. Pins live in
+`scripts/config/model_catalog.yaml` → `orchestrator_seats`.
+
+| Seat | Model | Effort | Sealed formal CF as *reviewer* |
+| --- | --- | --- | --- |
+| **claude** | `claude-sonnet-5` | high | yes (`review-pr --reviewer claude`) |
+| **codex** | `gpt-5.6-terra` | high | yes (default `review-pr`) |
+| **grok** | `grok-4.5` (Cursor explicit if native dark) | high | no until #5557 |
+| **agy** | **`gemini-3.6-flash-high`** | **high** | no until #5555 — still *requests* CF via review-pr |
+
+AGY start (orchestrator loop, not sealed reviewer):
+
+```bash
+.venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.6-flash-high \
+  --mode danger --worktree --task-id <stream-task> --prompt-file BRIEF
+# or interactive / bridge:
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - --task-id agy-orch --to-model gemini-3.6-flash-high
+```
+
 ## Formal CF defaults (orchestrator-ready)
 
 Practical seats @ **high** — not Sol/Fable on routine PRs:
@@ -71,8 +92,8 @@ Practical seats @ **high** — not Sol/Fable on routine PRs:
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ...                     # laguna-s-2.1 @ high
 ```
 
-- Resolve-reviewer: **critical** keeps Sol/Fable authority first; **high/medium/low** walk Terra → Sonnet 5 → 3.6 Flash → Grok (native then Cursor explicit `grok-4.5`) → K3 → GLM → DS-Pro → pool S 2.1 …
-- #5555–#5557 still fail-closed for formal_review_eligible on AGY/Kimi/Grok.
+- Resolve-reviewer: **critical** keeps Sol/Fable authority first; **high/medium/low** walk Terra → Sonnet 5 → **Gemini 3.6 Flash (agy)** → Grok (native then Cursor explicit `grok-4.5`) → K3 → GLM → DS-Pro → pool S 2.1 …
+- #5555–#5557 still fail-closed for formal_review_eligible on AGY/Kimi/Grok (orchestrator seats can still *drive* and *request* CF).
 
 ## Closeout checklist
 

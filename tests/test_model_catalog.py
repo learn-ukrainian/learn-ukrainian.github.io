@@ -115,6 +115,19 @@ def test_formal_cf_defaults_pin_practical_seats_at_high_effort():
     assert defaults["pool"]["model_id"] == "poolside/laguna-s-2.1"
     assert defaults["grok"]["fallback_transport"] == "cursor"
     assert defaults["grok"]["fallback_model_id"] == "grok-4.5"
+    assert defaults["agy"]["model_id"] == "gemini-3.6-flash-high"
+    assert defaults["agy"]["effort"] == "high"
+    assert defaults["agy"]["formal_review_eligible"] is False
+
+
+def test_orchestrator_seats_include_agy_flash_36_high():
+    seats = load_model_catalog()["orchestrator_seats"]
+    assert set(seats) >= {"claude", "codex", "grok", "agy"}
+    assert seats["agy"]["model_id"] == "gemini-3.6-flash-high"
+    assert seats["agy"]["effort"] == "high"
+    assert seats["codex"]["model_id"] == "gpt-5.6-terra"
+    assert seats["claude"]["model_id"] == "claude-sonnet-5"
+    assert seats["grok"]["fallback_model_id"] == "grok-4.5"
 
 
 def test_practical_ladders_exclude_authority_seats():

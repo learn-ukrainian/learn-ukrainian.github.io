@@ -80,19 +80,32 @@ K3 is **not a QG judge**; the standing judge pairing remains Gemini↔GPT.
 eligible for automatic cross-family code-review ladders. This replaces the 2026-07-16 canary-only /
 zero-automatic-weight restriction; continued local bakeoffs refine its ordering but do not erase it.
 
-## Fleet topology — orchestrator · advisor · workers (user directive 2026-07-11)
+## Fleet topology — orchestrator · advisor · workers (user directive 2026-07-11; multi-orchestrator 2026-07-21)
 
-Standing role assignment for orchestrated sessions (names rotate; route by the role, not the label):
+Standing role assignment for orchestrated sessions (names rotate; route by the role, not the label).
+Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_seats` + `formal_cf_defaults`.
 
-- **Orchestrator = the interactive Claude seat (`claude-infra`).** Owns the loop: prioritize, delegate,
-  decide, review in-the-loop, merge in-lane. Drive the high-judgment work in-context, but do **not** run
-  worker-level implementation on the orchestrator seat — delegate it (>50 LOC non-test, mechanical,
-  fixtures, or anything parallelizable → a worker). "Make good use of them" (user).
+- **Orchestrator seats (fleet-comms stream #5512 / #4707)** — any of these may own a cold-start /
+  drive-board loop (prioritize → delegate → request CF → merge-in-lane). Do **not** run worker-level
+  implementation on the orchestrator seat — delegate it (>50 LOC non-test, mechanical, fixtures, or
+  anything parallelizable → a worker).
+
+  | Seat | Default model | Effort | Notes |
+  | --- | --- | --- | --- |
+  | **claude** | `claude-sonnet-5` | high | Practical orchestrator default; escalate Fable/Opus only when judgment requires it |
+  | **codex** | `gpt-5.6-terra` | high | Native sealed formal CF default for `review-pr` |
+  | **grok** | `grok-4.5` | high | Native first; Cursor **explicit** `grok-4.5` if native dark |
+  | **agy** | **`gemini-3.6-flash-high`** | **high** | **Google-family orchestrator (user 2026-07-21).** Pro only for deep single-shot, not the default loop |
+
+  When an orchestrator needs **formal sealed CF**, request it via
+  `review-pr --reviewer codex|claude|glm` (agy|kimi|grok remain `formal_review_eligible: false`
+  until #5555–#5557). AGY as *orchestrator* is live now; AGY as *sealed formal reviewer* is not.
+
 - **Advisor = `gpt-5.6-sol` @ `xhigh` (on-demand, NOT a standing worker).** Convene for the hard,
   high-judgment calls only: architecture, high-stakes design/spec/ADR review, difficult debugging, final
   synthesis. Consult BEFORE committing a substantive design; do not use for routine work.
-- **Workers = every other lane** — `gpt-5.6-terra` + `gpt-5.6-luna` (make active use of BOTH), `agy`,
-  `cursor`, `grok`, `kimi`, `deepseek`, `pool`, `gemma`, `glm` (LOCAL-ONLY). They do the build /
+- **Workers = every other lane** — `gpt-5.6-luna`, `cursor`, `kimi`, `deepseek`, `pool` (laguna-s-2.1),
+  `gemma`, `glm` (LOCAL-ONLY), plus non-orchestrating use of the seats above. They do the build /
   implementation / mechanical / review work. Keep lanes busy; queue rather than idle.
 
 This names who orchestrates vs advises vs works. The cross-family review gate, the per-task routing rows
@@ -122,9 +135,9 @@ Route by FIT, then shed from HOT lanes — consult **CodexBar** `/api/state/rout
 Drive high-judgment work (design, architecture, in-the-loop review, brief authoring) YOURSELF in-context — the frontier Claude lane does not brain-rot in-session (canary-verified on Opus 4.8; Fable 5 improvised 10/10 @ ~500K/1M 2026-07-07; a NEWLY rotated model must mint its own canary at cold-start per workflow.md — rot evidence is per-model, names rotate). But for any SUBSTANTIVE design / decision, **actively DISCUSS + cross-verify with the fleet BEFORE committing** — not solo dispatch-and-merge. Default to ≥1 other agent per substantive task; solo only for trivial work. Convene by lane:
 
 - **Module-content panel** (writers, content review — LANGUAGE-LANES RULE binds): **agy** (Gemini 3.6 Flash default; Gemini 3.1 Pro for deep) · **GPT-5.6 Terra/Sol by risk** · **claude** · **grok-4.5**. ~~cursor seat~~ removed (excluded from language seats, user 2026-07-17). Prefer a bake-off + cross-family verification. Folk content review stays **cross-family (GPT↔Claude)** per `docs/folk-epic/folk-review-rubric.md` — **NO DeepSeek for folk culture** (lacks intrinsic Ukrainian-culture knowledge).
-- **Infra panel** (code, gates, pipeline, tooling, schemas, Atlas/lexicon): **agy** (Gemini 3.6 Flash top default / agentic; 3.1 Pro deep; 3.5 Flash back-compat) · **GPT-5.6 Terra/Sol** · **cursor Composer 2.5** · **native Grok 4.5** · **Kimi K3** · **DeepSeek V4 Pro** · **Pool Laguna M.1** (free review volume) · **GLM-5.2** (deep security/bug review + large-context coherence; LOCAL-ONLY) · **Gemma 4** (surface review only). Pin Cursor's concrete model whenever family independence matters.
+- **Infra panel** (code, gates, pipeline, tooling, schemas, Atlas/lexicon): **agy** (Gemini 3.6 Flash top default / agentic / **orchestrator seat**; 3.1 Pro deep; 3.5 Flash back-compat) · **GPT-5.6 Terra/Sol** · **cursor Composer 2.5** · **native Grok 4.5** · **Kimi K3** · **DeepSeek V4 Pro** · **Pool Laguna S 2.1** (free review volume) · **GLM-5.2** (deep security/bug review + large-context coherence; LOCAL-ONLY) · **Gemma 4** (surface review only). Pin Cursor's concrete model whenever family independence matters.
 
-Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to-model gemini-3.1-pro-high` · `ask-cursor --model auto` (or `--model composer-2.5`) · `ask-grok` (alias `ask-grok-build`) · `ask-pool [--variant high|max]` · `ask-glm` (LOCAL-ONLY) · `ask-gemma` (cheap; ⚠️ not a sole seminar writer / factual reviewer) · `discuss <channel> "<topic>" --with <a,b,c>` for a bounded multi-round. **deepseek has NO `ask-*`** — route it via `delegate.py dispatch --agent deepseek --model deepseek-v4-pro` (first-party by default; `--provider openrouter` for opt-in per #4358). Bridge `ask-*` replies arrive as INBOX MESSAGES (`ab read <id>`), not stdout.
+Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to-model gemini-3.6-flash-high` (orchestrator/routine default; `--to-model gemini-3.1-pro-high` only for deep) · `ask-cursor --model auto` (or `--model composer-2.5`) · `ask-grok` (alias `ask-grok-build`) · `ask-pool [--variant high|max]` · `ask-glm` (LOCAL-ONLY) · `ask-gemma` (cheap; ⚠️ not a sole seminar writer / factual reviewer) · `discuss <channel> "<topic>" --with <a,b,c>` for a bounded multi-round. **deepseek has NO `ask-*`** — route it via `delegate.py dispatch --agent deepseek --model deepseek-v4-pro` (first-party by default; `--provider openrouter` for opt-in per #4358). Bridge `ask-*` replies arrive as INBOX MESSAGES (`ab read <id>`), not stdout.
 
 **opencode-routed cross-family reviewers (pool · glm · gemma):** opencode is a multi-provider ROUTER — the fleet member is the MODEL, not "opencode" (`ask-opencode <model>` is the generic escape hatch; `ask-pool`/`ask-glm`/`ask-gemma` are the named members). **Live web fact-checking is a HARNESS property (opencode + lightpanda MCP), NOT a model trait — any opencode-hosted model browses** (kubedojo-verified incl. deepseek); don't treat it as unique to pool/glm. Since the coding floor is uniformly high across the fleet, route by the DIFFERENTIATOR (kubedojo 5-agent scorecard 2026-07-04): **pool** = **free** cross-family code review + web-verify *volume*; **glm** = deep security/bug review + **large-context cross-file coherence audits**; grok = sharpest final code-review gate; deepseek = cheap all-rounder (+ browses when opencode-hosted); **gemma** (Google Gemma 4 via **`google-ais/gemma-4-31b-it`, $0 DEFAULT** — AIS-direct with the user's key, no paid SKU exists for Gemma on the Gemini API; TOOLLESS `chat` agent; paid OR `-it` via `--model` fallback only, note the spend; OR `:free` pool-starved, avoid) = a metered-lane OFFLOAD for **(a) cheap SURFACE review** — reliably flags russicisms/calques, Latin-letter leakage, imperial/decolonization framing — — **(b) wiki drafting RETIRED from gemma (LANGUAGE-LANES RULE 2026-07-17: wiki prose is language work → agy/codex/claude/grok-4.5 only; the 2026-07-05 source-citation probe evidence stands in `docs/projects/ua-eval-harness/model-evidence.md`). ** ⚠️ it is **NOT a sole seminar writer** (adds unsupported details beyond the source packet) and **NOT a sole factual reviewer** (not trustworthy on accuracy yet) — gate seminar/factual work behind a **non-Gemma** source/factual check; Google-family → not a clean reviewer of agy/Gemini work. **pool and glm are NOT for Ukrainian content / prose / pedagogy** — both are code models (glm anglicizes/code-switches, pool is worse); for UK content see the "Ukrainian CONTENT" row above (we author, not translate; cursor is NOT russicism-safe on long UK text). **pool** = poolside.ai `laguna-m.1`, **free** (watch weekly limits on bursts). ⚠️ **glm** = Zhipu `glm-5.2`, **China-hosted (Zhipu/z.ai) → prompt data egresses to China → LOCAL-ONLY: never in CI / automated pipelines or with sensitive data** (`ask-glm` refuses under any CI env var as a backstop); prefer a Western-lab reviewer for top-stakes. Bridge (consult/review) only today — no `delegate.py --agent pool|glm|gemma` dispatch adapter yet, and no V7 `--writer gemma-tools` yet (the opencode→delegate adapter + tool-calling writer harness are scoped follow-ups; a plain OpenRouter chat model has no `sources`-MCP harness).
 
@@ -235,10 +248,15 @@ For **GitHub PR formal cross-family review**, do **not** use fat `ask-* --review
 
 ```bash
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>
+# pins: codex→gpt-5.6-terra@high · --reviewer claude→claude-sonnet-5@high · --reviewer glm→glm-5.2
 # after sealed review returns a short verdict file:
 .venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict \
   --pr <N> --verdict-file /tmp/verdict.txt --model <model> --family <family> --harness <harness>
 ```
+
+**AGY orchestrator** (`gemini-3.6-flash-high` @ high) runs the loop and still *requests* CF with
+`review-pr` above — do not treat `ask-agy --review` as sealed formal CF until #5555 flips
+`formal_review_eligible`.
 
 Bridge steers with a **warning** (not refuse) if `ask-* --review` looks like PR CF
 without a sealed target — so agent work is not discarded (#5486 warn-not-reject).
