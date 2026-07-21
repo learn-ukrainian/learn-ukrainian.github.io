@@ -362,4 +362,4 @@ fi
 unset _has_prompt _expect_value _user_prompt
 
 echo "Launching Gemini AGY Build TUI..."
-exec "$AGY_BIN" "${_defaults[@]}" "${_forward[@]+"${_forward[@]}"}"
+exec "$AGY_BIN" "${_defaults[@]+"${_defaults[@]}"}" "${_forward[@]+"${_forward[@]}"}"
