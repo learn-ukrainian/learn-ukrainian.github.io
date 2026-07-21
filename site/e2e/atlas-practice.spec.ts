@@ -119,11 +119,16 @@ test('practice page shows UA fallback when LexiconPractice island chunk fails to
   // builds) to simulate the exact astro-island pre-React failure mode:
   // "Failed to fetch dynamically imported module". This fires the 'astro:hydration-error'
   // event (and/or watchdog) before any React code or its error boundary can run.
-  await page.route('**/*LexiconPractice*.js', (route) => route.abort());
+  //
+  // Astro 7.1+ retries a failed island import once with `?astro-retry=<ts>` after 1s
+  // (importWithRetry). A glob ending in `.js` misses that retry URL and the island
+  // hydrates successfully — match on the LexiconPractice stem with or without query.
+  await page.route(/LexiconPractice[^/]*\.js(?:\?|$)/, (route) => route.abort());
 
   await page.goto('/words-of-the-day/practice/');
 
   // Expect the static UA fallback (error listener path is fast; no reliance on 10s timeout).
+  // Allow for Astro's 1s import retry before hydration-error fires.
   const fallback = page.locator('#lexicon-practice-fallback');
   await expect(fallback).toBeVisible({ timeout: 8000 });
   await expect(fallback).toContainText('Не вдалося завантажити практику');
