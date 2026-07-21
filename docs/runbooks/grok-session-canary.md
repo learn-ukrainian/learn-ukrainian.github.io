@@ -8,6 +8,11 @@ Ending a session *only because compact fired* is too early if recall is still sh
 
 ## Policy
 
+**Operator is not the recovery driver.** Agents own compact recovery
+(score → auto-hydrate on PASS). Do not ask the human whether to restart,
+hydrate, or re-load the diary. Restart only when FAIL-HANDOFF ends the seat
+(or the operator deliberately starts a new session).
+
 | Signal | Meaning |
 | --- | --- |
 | Auto-compact | **Re-score** canary; keep driving only if PASS |
@@ -49,13 +54,13 @@ Never put API keys, private teacher PII, or private-repo secrets in the diary.
 ### CLI
 
 ```bash
-# Post-compact (Sol Option D): score FROM MEMORY first, then hydrate once
+# Post-compact (automatic): score FROM MEMORY — PASS auto-prints hydrate capsule
 .venv/bin/python -m scripts.session_canary.grok_lane score \
   --epic harness --answers .claude/harness-epic/canary/answers.json \
   --context-tokens 250000
-.venv/bin/python -m scripts.session_canary.grok_lane hydrate --epic harness
-# optional receipt only (do not also paste hydrate.md into chat):
-#   ... hydrate --epic harness --write
+# Optional: --no-hydrate to skip; --hydrate-write for canary/hydrate.md receipt
+# Standalone hydrate only if you need a re-print:
+#   .venv/bin/python -m scripts.session_canary.grok_lane hydrate --epic harness
 
 # Mid-batch diary stamp + refresh Next Drive
 .venv/bin/python -m scripts.session_canary.grok_lane stamp --epic harness \
@@ -119,7 +124,7 @@ START  → start-grok.sh --epic <name> claims stream lease via common supervisor
          → load diary + stream → mint canary
 DRIVE  → stamp diary after each batch
          at ~60–70% context OR after auto-compact → score from memory
-         PASS → hydrate once (bounded capsule + stream tail); continue
+         PASS → auto-hydrate printed by score; continue (no operator prompt)
          FAIL → STATE AT HANDBACK + close stream + quit
 END    → handback while PASS (optional) before forced compact
 ```
