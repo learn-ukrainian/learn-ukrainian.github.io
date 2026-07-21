@@ -104,7 +104,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 - **Advisor = `gpt-5.6-sol` @ `xhigh` (on-demand, NOT a standing worker).** Convene for the hard,
   high-judgment calls only: architecture, high-stakes design/spec/ADR review, difficult debugging, final
   synthesis. Consult BEFORE committing a substantive design; do not use for routine work.
-- **Workers = every other lane** — `gpt-5.6-luna`, `cursor`, `kimi`, `deepseek`, `pool` (laguna-s-2.1),
+- **Workers = every other lane** — `gpt-5.6-luna`, `cursor`, `kimi`, `deepseek`, `pool` (**Laguna family exact IDs:** default **`laguna-s-2.1`** gen-2 S; light **`laguna-xs-2.1`** gen-2 XS; fallback only **`laguna-m.1`** gen-1 — never invent s2/m2 orthography),
   `gemma`, `glm` (LOCAL-ONLY), plus non-orchestrating use of the seats above. They do the build /
   implementation / mechanical / review work. Keep lanes busy; queue rather than idle.
 

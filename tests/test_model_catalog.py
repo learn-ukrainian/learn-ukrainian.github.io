@@ -45,13 +45,42 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
         "deepseek-v4-pro",
         "deepseek-v4-flash",
         "poolside/laguna-s-2.1",
+        "poolside/laguna-xs-2.1",
         "poolside/laguna-m.1",
         "composer-2.5",
     }
     assert required <= set(models)
     assert models["poolside/laguna-s-2.1"]["lifecycle"] == "active"
+    assert models["poolside/laguna-xs-2.1"]["lifecycle"] == "active"
     assert models["poolside/laguna-m.1"]["lifecycle"] == "fallback"
     assert "pool" in models["poolside/laguna-s-2.1"].get("aliases", [])
+
+
+def test_poolside_laguna_family_exact_ids_and_roles():
+    """Vendor IDs are laguna-{s,xs}-2.1 and laguna-m.1 — not s2/m2 orthography."""
+    catalog = load_model_catalog()
+    models = catalog["models"]
+    candidates = catalog["review_candidates"]
+    assert set(models) >= {
+        "poolside/laguna-s-2.1",
+        "poolside/laguna-xs-2.1",
+        "poolside/laguna-m.1",
+    }
+    assert candidates["pool"]["model_id"] == "poolside/laguna-s-2.1"
+    assert candidates["pool-xs"]["model_id"] == "poolside/laguna-xs-2.1"
+    # Gen-1 must not be the formal default pin.
+    assert catalog["formal_cf_defaults"]["pool"]["model_id"] == "poolside/laguna-s-2.1"
+    family = catalog["formal_cf_defaults"]["pool"]["family_models"]
+    assert family == [
+        "poolside/laguna-s-2.1",
+        "poolside/laguna-xs-2.1",
+        "poolside/laguna-m.1",
+    ]
+    # Ladder includes both gen-2 seats.
+    for risk in ("high", "medium", "low", "critical"):
+        names = {n for rung in catalog["review_ladders"][risk] for n in rung}
+        assert "pool" in names
+        assert "pool-xs" in names
 
 
 def test_runtime_registry_defaults_resolve_to_catalog_model_or_alias():

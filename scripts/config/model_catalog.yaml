@@ -206,29 +206,49 @@ models:
     sources:
       - https://api-docs.deepseek.com/news/news260424/
       - https://api-docs.deepseek.com/quick_start/pricing
+  # Poolside Laguna family (exact vendor IDs — do not invent "laguna-s2" / "laguna.m1"):
+  #   Gen-1:  laguna-m.1   (prior; technical report M.1 / XS.2 era)
+  #   Gen-2:  laguna-s-2.1 (strongest current — pool formal/volume default)
+  #           laguna-xs-2.1 (light/fast 2nd gen — rapid iteration / cheap volume)
+  #   Not out: Laguna M 2.x
+  # API (poolside inference): poolside/laguna-s-2.1 · poolside/laguna-xs-2.1
+  # opencode native path often: poolside/poolside/<id>
   poolside/laguna-s-2.1:
     family: poolside
     tier: frontier_practical
     lifecycle: active
-    aliases: [laguna-s-2.1, pool, laguna-s]
+    aliases: [laguna-s-2.1, pool, laguna-s, Laguna-S-2.1]
     roles: [routine_review, high_volume_dissent, web_fact_check, free_lane_code_review]
     transports: [opencode]
-    strengths: [free_current_subscription, second_gen_laguna, coding_specialization, review_volume]
+    strengths: [free_current_subscription, second_gen_laguna_s, coding_specialization, review_volume]
     weaknesses: [not_sole_critical_gate, opencode_catalog_may_lag_native_slug]
     sources:
       - https://poolside.ai/models
       - https://poolside.ai/blog/introducing-laguna-s-2-1
+  poolside/laguna-xs-2.1:
+    family: poolside
+    tier: strong_efficient
+    lifecycle: active
+    aliases: [laguna-xs-2.1, laguna-xs, Laguna-XS-2.1]
+    roles: [rapid_agentic_iteration, cheap_volume_review, web_fact_check]
+    transports: [opencode]
+    strengths: [second_gen_laguna_xs, speed, free_subscription_path]
+    weaknesses: [not_sole_critical_gate, lighter_than_s_2_1]
+    sources:
+      - https://poolside.ai/models
+      - https://poolside.ai/blog/introducing-laguna-xs-2-1
   poolside/laguna-m.1:
     family: poolside
     tier: strong_efficient
     lifecycle: fallback
-    aliases: [laguna-m.1]
+    aliases: [laguna-m.1, laguna-m1, Laguna-M.1]
     roles: [compatibility_only, prior_gen_pool]
     transports: [opencode]
     strengths: [free_subscription_back_compat]
-    weaknesses: [superseded_by_laguna_s_2_1, not_sole_critical_gate]
+    weaknesses: [superseded_by_laguna_s_2_1_and_xs_2_1, not_sole_critical_gate]
     sources:
       - https://poolside.ai/assets/laguna/laguna-m1-xs2-technical-report.pdf
+      - https://poolside.ai/models
   composer-2.5:
     family: moonshot
     lab: cursor
@@ -399,10 +419,19 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review]
   pool:
+    # Default pool formal/volume seat = Laguna S 2.1 (strongest gen-2).
     model_id: poolside/laguna-s-2.1
     route: pool
     transport: opencode
     invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool
+    review_profiles: [code, infra]
+    capabilities: [code_review]
+  pool-xs:
+    # Gen-2 light: Laguna XS 2.1 — ask-pool --model poolside/poolside/laguna-xs-2.1
+    model_id: poolside/laguna-xs-2.1
+    route: pool
+    transport: opencode
+    invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool --model poolside/poolside/laguna-xs-2.1
     review_profiles: [code, infra]
     capabilities: [code_review]
   deepseek-v4-flash:
@@ -460,7 +489,15 @@ formal_cf_defaults:
     model_id: glm-5.2
     effort: high
   pool:
+    # Laguna S 2.1 — gen-2 strongest (not m.1; not xs)
     model_id: poolside/laguna-s-2.1
+    effort: high
+    family_models:
+      - poolside/laguna-s-2.1   # gen-2 default (S)
+      - poolside/laguna-xs-2.1  # gen-2 light (XS)
+      - poolside/laguna-m.1     # gen-1 fallback only
+  pool_xs:
+    model_id: poolside/laguna-xs-2.1
     effort: high
   grok:
     model_id: grok-4.5
@@ -497,7 +534,7 @@ review_ladders:
     - [composer-2.5]
     - [gemini-3.1-pro]
     - [pool]
-    - [gemini-3.5-flash]
+    - [pool-xs, gemini-3.5-flash]
     - [deepseek-v4-flash]
   high: &practical_first_code_review
     - [gpt-5.6-terra]
@@ -511,7 +548,7 @@ review_ladders:
     - [composer-2.5]
     - [gemini-3.1-pro]
     - [pool]
-    - [gemini-3.5-flash]
+    - [pool-xs, gemini-3.5-flash]
     - [deepseek-v4-flash]
   medium: *practical_first_code_review
   low: *practical_first_code_review

@@ -89,10 +89,22 @@ Practical seats @ **high** — not Sol/Fable on routine PRs:
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>              # codex / gpt-5.6-terra @ high
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude  # claude-sonnet-5 @ high
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer glm     # glm-5.2 LOCAL-ONLY
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ...                     # laguna-s-2.1 @ high
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ...  # default Laguna S 2.1
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ... --model poolside/poolside/laguna-xs-2.1  # XS 2.1 light
 ```
 
-- Resolve-reviewer: **critical** keeps Sol/Fable authority first; **high/medium/low** walk Terra → Sonnet 5 → **Gemini 3.6 Flash (agy)** → Grok (native then Cursor explicit `grok-4.5`) → K3 → GLM → DS-Pro → pool S 2.1 …
+### Poolside Laguna model types (exact IDs)
+
+| Generation | Vendor name | Catalog / API id | Fleet role |
+| --- | --- | --- | --- |
+| **Gen-2 (current)** | **Laguna S 2.1** | `poolside/laguna-s-2.1` | **Default** pool formal/volume (`ask-pool`, ladder `pool`) |
+| **Gen-2 (current)** | **Laguna XS 2.1** | `poolside/laguna-xs-2.1` | Light/fast volume (`pool-xs` ladder; `--model …/laguna-xs-2.1`) |
+| **Gen-1 (prior)** | **Laguna M.1** | `poolside/laguna-m.1` | Fallback only — superseded by S/XS 2.1 |
+| **Not released** | Laguna M 2.x | — | Do not invent IDs |
+
+Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and the `m.1` minor are load-bearing.
+
+- Resolve-reviewer: **critical** keeps Sol/Fable authority first; **high/medium/low** walk Terra → Sonnet 5 → **Gemini 3.6 Flash (agy)** → Grok (native then Cursor explicit `grok-4.5`) → K3 → GLM → DS-Pro → pool **S 2.1** → pool **XS 2.1** / 3.5 Flash …
 - #5555–#5557 still fail-closed for formal_review_eligible on AGY/Kimi/Grok (orchestrator seats can still *drive* and *request* CF).
 - Isolation runbooks: `docs/runbooks/agy-formal-cf-isolation.md` · `kimi-formal-cf-isolation.md` · `grok-formal-cf-isolation.md`
 

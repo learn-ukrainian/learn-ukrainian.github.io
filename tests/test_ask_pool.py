@@ -24,8 +24,13 @@ from scripts.ai_agent_bridge._opencode import (
 
 def test_pool_model_is_native_poolside_provider():
     # NOT the openrouter/* path (that one cannot browse). S 2.1 is the pin.
+    from scripts.ai_agent_bridge._opencode import POOL_MODEL_M1_LEGACY, POOL_MODEL_XS
+
     assert POOL_MODEL == "poolside/poolside/laguna-s-2.1"
     assert "laguna-s-2.1" in POOL_MODEL
+    # Exact gen-2 / gen-1 IDs — never invent laguna-s2 or laguna-m2.
+    assert POOL_MODEL_XS == "poolside/poolside/laguna-xs-2.1"
+    assert POOL_MODEL_M1_LEGACY == "poolside/poolside/laguna-m.1"
 
 
 def test_glm_model_is_zai_coding_plan():
