@@ -98,8 +98,14 @@ Practical seats @ **high** — not Sol/Fable on routine PRs:
 
 ## Closeout checklist
 
-- [ ] #5392 — green tests for sidecar + TRUNCATED footer
-- [ ] dual-write-status returns registered streams
-- [ ] backlog warning does not mention `gemini` when it is a dead lane
-- [ ] empty-body process-ask records `transport empty-ask-body`
+- [x] #5392 — green tests for sidecar + TRUNCATED footer (`tests/test_reply_sidecar.py` 8/8, 2026-07-22)
+- [x] dual-write-status returns registered streams (`inventory --register` → 17/17 ok, drift=0; cutover still blocked by operator gate)
+- [x] backlog warning does not mention `gemini` when it is a dead lane (`fleet_comms backlog` exclude_retired includes gemini; total=0)
+- [ ] empty-body process-ask records `transport empty-ask-body` (code path present; re-smoke if regressions)
 - [x] formal CF model+effort pins + practical ladders (2026-07-21)
+- [x] efficiency CLI: `fleet_comms metrics` / `github-metrics` / `dead-letters` (PR-M on main)
+- [x] isolation runbooks AGY/Kimi/Grok (#5555–#5557 fail-closed residual documented)
+- [ ] operator: message-plane dual_write cutover flip after parity receipt
+- [ ] operator: retention plan dry-run × ≥7 days before scheduled apply
+- [ ] operator: Claude + Grok + Codex + AGY cold-start stream smoke
+- [ ] operator: AGY orchestrator self-setup review
