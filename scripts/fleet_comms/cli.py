@@ -9,6 +9,7 @@ Usage::
     .venv/bin/python -m scripts.fleet_comms metrics
     .venv/bin/python -m scripts.fleet_comms backlog
     .venv/bin/python -m scripts.fleet_comms dead-letters
+    .venv/bin/python -m scripts.fleet_comms github-metrics
 
 ``formal-job accept`` is the post-``review-pr`` glue (create/reuse job + sealed
 verdict accept). Optional ``--publish`` posts GitHub comment/status via PR-G.
@@ -33,6 +34,7 @@ from scripts.fleet_comms.efficiency_metrics import (
     collect_delivery_backlog,
     collect_efficiency_metrics,
 )
+from scripts.fleet_comms.github_pr_metrics import collect_github_pr_metrics
 from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
 from scripts.fleet_comms.review_publication import DEFAULT_GATE_KIND
 
@@ -273,6 +275,18 @@ def cmd_formal_job_accept(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+
+def cmd_github_metrics(args: argparse.Namespace) -> int:
+    """PR open→merge latency from GitHub (metadata only; Sol PR-M residual)."""
+    payload = collect_github_pr_metrics(
+        repo=args.repo,
+        search=args.search,
+        limit=args.limit,
+    )
+    sys.stdout.write(_json_dump(payload))
+    return EXIT_OK if payload.get("ok", True) else EXIT_ERROR
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.fleet_comms",
@@ -443,6 +457,24 @@ def build_parser() -> argparse.ArgumentParser:
         help="Max dead-letter rows (default: 100)",
     )
     dead.set_defaults(func=cmd_dead_letters)
+
+
+    gh_metrics = sub.add_parser(
+        "github-metrics",
+        help="PR open→merge latency from GitHub (metadata only; Sol PR-M residual)",
+    )
+    gh_metrics.add_argument(
+        "--repo",
+        default="learn-ukrainian/learn-ukrainian.github.io",
+        help="owner/repo",
+    )
+    gh_metrics.add_argument(
+        "--search",
+        default="fleet-comms",
+        help="GitHub PR search filter (default: fleet-comms)",
+    )
+    gh_metrics.add_argument("--limit", type=int, default=30, help="Max merged PRs")
+    gh_metrics.set_defaults(func=cmd_github_metrics)
 
     return parser
 
