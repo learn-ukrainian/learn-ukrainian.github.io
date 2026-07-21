@@ -167,3 +167,16 @@ handoff_identity_for_kimi_epic() {
     *) printf 'kimi-%s' "$epic" ;;
   esac
 }
+
+# handoff_identity_for_gemini_epic "<epic-name>"
+# Echo the per-epic Gemini / Antigravity orchestrator rollover slot. Provider-specific so
+# a Gemini seat never adopts Claude/Codex/Grok/Kimi packets. harness/infra → gemini-infra.
+handoff_identity_for_gemini_epic() {
+  local epic="${1:-}"
+  [ -n "$epic" ] || return 0
+  case "$epic" in
+    harness|infra) printf '%s' 'gemini-infra' ;;
+    *) printf 'gemini-%s' "$epic" ;;
+  esac
+}
+

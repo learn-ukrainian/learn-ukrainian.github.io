@@ -22,6 +22,7 @@ Project-local wrappers for interactive agent sessions:
 ./start-kimicc.sh      # Claude Code UI → Kimi K3 / K2.7 (interactive)
 ./start-codex.sh       # native Codex
 ./start-grok.sh        # native Grok Build TUI
+./start-gemini.sh      # native Gemini / Antigravity AGY Build TUI
 ```
 
 Native Kimi Code (separate app/CLI, OAuth subscription) is the **headless / fleet**
