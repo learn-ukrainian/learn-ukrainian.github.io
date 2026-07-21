@@ -399,17 +399,18 @@ def heal_primary_bare_if_needed(main_root: Path) -> dict:
     cfg_proc = _run_git(main_root, "config", "--get", "core.bare")
     cfg_bare = (cfg_proc.stdout or "").strip().lower() == "true"
     if not is_bare and not cfg_bare:
-        # Keep worktreeConfig asserted so re-clones / drift stay closed.
-        _run_git(main_root, "config", "extensions.worktreeConfig", "true")
+        # Healthy path is read-only — do not mutate config on every dirty-check.
         return {"healed": False, "was_bare": False}
 
     # Heal shared config (must be non-bare for human + services home).
-    fix = _run_git(main_root, "config", "--local", "core.bare", "false")
+    fix = _run_git(main_root, "config", "core.bare", "false")
     if fix.returncode != 0:
         raise RuntimeError(
             f"primary was bare and heal failed (cwd={main_root}): "
             f"{(fix.stderr or fix.stdout or 'git config failed').strip()}"
         )
+    # Only when healing bare: pin worktreeConfig so linked worktrees cannot
+    # re-pollute shared core.bare (#2842).
     _run_git(main_root, "config", "extensions.worktreeConfig", "true")
     return {
         "healed": True,

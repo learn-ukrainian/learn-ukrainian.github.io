@@ -108,10 +108,10 @@ def test_fix_resets_core_bare_true(tmp_path):
     assert wtc == "true"
 
 
-def test_detects_missing_worktree_config_without_fix(tmp_path):
+def test_missing_worktree_config_ok_without_fix_when_not_bare(tmp_path):
     repo = _init_repo(tmp_path)
     ok, message = check_core_bare(repo, fix=False)
-    assert not ok
+    assert ok
     assert "worktreeConfig" in message
 
 

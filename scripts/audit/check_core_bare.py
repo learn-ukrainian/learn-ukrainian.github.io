@@ -158,9 +158,10 @@ def check_core_bare(repo: Path, *, fix: bool) -> tuple[bool, str]:
             _git_config_set(repo, "extensions.worktreeConfig", "true")
             parts.append("extensions.worktreeConfig set true")
         else:
-            return False, (
-                "extensions.worktreeConfig is not true — worktree config can pollute "
-                "shared core.bare (#2842). Re-run with --fix."
+            # Check-only: do not fail healthy non-bare clones (SessionStart canary
+            # would go red). Prefer --fix to pin worktreeConfig.
+            parts.append(
+                "extensions.worktreeConfig missing (recommend --fix; #2842)"
             )
     else:
         parts.append("extensions.worktreeConfig=true (ok)")
