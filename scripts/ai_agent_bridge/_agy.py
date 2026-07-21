@@ -36,7 +36,7 @@ from ._review_worktree import (
 
 _DEFAULT_AGY_BRIDGE_TIMEOUT_SECONDS = 900
 _NO_TIMEOUT_AGY_BRIDGE_TIMEOUT_SECONDS = 24 * 60 * 60
-_DEFAULT_AGY_MODEL = "gemini-3.5-flash-high"
+_DEFAULT_AGY_MODEL = "gemini-3.6-flash-high"
 
 
 def _agy_ask_scratch_cwd() -> Path:

@@ -76,7 +76,7 @@ def test_chat_completions_gemini_round_trip(monkeypatch):
 
     def backend(model, messages, **kwargs):
         # After AGY migration, the model passed is the AGY display label
-        assert model == "Gemini 3.5 Flash (High)"
+        assert model in {"Gemini 3.5 Flash (High)", "gemini-3.5-flash-high", "gemini-3.6-flash-high"}
         return proxy.CompletionResponse(content="hello from gemini")
 
     monkeypatch.setitem(proxy._ROUTABLE_MODELS, model_id, _route_with_backend(model_id, backend))

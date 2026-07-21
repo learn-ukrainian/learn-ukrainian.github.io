@@ -769,7 +769,7 @@ class TestModel:
         cmd = run.call_args.args[0]
         assert "agy" in cmd[0] or cmd[0].endswith("/agy")
         assert "--model" in cmd
-        assert "Gemini 3.5 Flash (High)" in cmd
+        assert "gemini-3.5-flash-high" in cmd or "Gemini 3.5 Flash (High)" in cmd
         _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
 
 

@@ -315,3 +315,206 @@ def try_stream_state_note(stream_id: str, body: str, *, idempotency_key: str) ->
         return True
     except Exception:
         return False
+
+
+def _section_from_heading(text: str, heading_re: str, stop_res: Sequence[str]) -> str:
+    """Return text from a heading match until the next stop heading."""
+    m = re.search(heading_re, text, re.MULTILINE | re.IGNORECASE)
+    if not m:
+        return ""
+    start = m.start()
+    rest = text[m.end() :]
+    end = len(text)
+    for stop in stop_res:
+        m2 = re.search(stop, rest, re.MULTILINE | re.IGNORECASE)
+        if m2:
+            end = m.end() + m2.start()
+            break
+    return text[start:end].strip()
+
+
+def _recent_diary_stamps(text: str, *, max_stamps: int) -> str:
+    """Newest N diary stamp bodies under the Diary heading."""
+    m = re.search(r"^##\s+.*Diary[^\n]*\n", text, re.MULTILINE | re.IGNORECASE)
+    if not m:
+        return ""
+    body = text[m.end() :]
+    # stop at next top-level ## that is not a stamp
+    parts = re.split(r"(?=^###\s+)", body, flags=re.MULTILINE)
+    stamps: list[str] = []
+    for part in parts:
+        if re.match(r"^###\s+", part):
+            stamps.append(part.strip())
+        if len(stamps) >= max_stamps:
+            break
+    return "\n\n".join(stamps).strip()
+
+
+def _latest_handback_block(text: str) -> str:
+    """Most recent STATE AT HANDBACK block if present."""
+    matches = list(re.finditer(r"^##\s+STATE AT HANDBACK[^\n]*\n", text, re.MULTILINE | re.IGNORECASE))
+    if not matches:
+        return ""
+    m = matches[-1]
+    rest = text[m.end() :]
+    m2 = re.search(r"^##\s+", rest, re.MULTILINE)
+    end = m.end() + (m2.start() if m2 else len(rest))
+    return text[m.start() : end].strip()
+
+
+def approx_tokens(text: str) -> int:
+    """Cheap token estimate (chars/4). Deterministic; no external tokenizer."""
+    return max(0, (len(text) + 3) // 4)
+
+
+def build_hydrate_capsule(
+    diary_text: str,
+    *,
+    epic: str,
+    stream_id: str,
+    stream_tail: str = "",
+    max_tokens: int = 1400,
+    max_stamps: int = 3,
+    stamp_token_cap: int = 250,
+    stream_token_cap: int = 300,
+) -> tuple[str, dict[str, object]]:
+    """Build a Sol Option-D post-compact hydrate capsule (bounded).
+
+    Packs whole sections by priority; drops lowest-priority whole items when
+    over budget. Never silently truncates mid-item. Returns (capsule, meta).
+    """
+    max_tokens = max(200, min(int(max_tokens), 1600))
+    char_ceiling = max_tokens * 4  # 6400 chars at 1600 tok
+
+    session = _section_from_heading(
+        diary_text,
+        r"^##\s+.*SESSION HANDOFF[^\n]*\n",
+        [r"^##\s+📌", r"^##\s+Standing", r"^##\s+.*Diary", r"^##\s+STATE AT HANDBACK"],
+    )
+    handback = _latest_handback_block(diary_text)
+    # Prefer newest handback for identity if session block is stale? Sol order:
+    # identity from handback OR session — include handback only if no session,
+    # else prefer session as live board and handback only when session missing.
+    identity_block = session or handback
+    if not identity_block:
+        identity_block = (
+            f"# HYDRATE — epic `{epic}` / stream `{stream_id}`\n"
+            "(no SESSION HANDOFF or STATE AT HANDBACK found — treat as FAIL-visible)\n"
+        )
+
+    pins = _section_from_heading(
+        diary_text,
+        r"^##\s+📌\s*Standing pins[^\n]*\n|^##\s+Standing pins[^\n]*\n",
+        [r"^##\s+.*Diary", r"^##\s+STATE AT HANDBACK", r"^##\s+Next Drive"],
+    )
+    next_drive = _section_from_heading(
+        diary_text,
+        r"^###\s+Next drive[^\n]*\n|^##\s+Next Drive[^\n]*\n",
+        [r"^###\s+", r"^##\s+"],
+    )
+    hands_off = _section_from_heading(
+        diary_text,
+        r"^##\s+Hands-off[^\n]*\n",
+        [r"^##\s+"],
+    )
+    stamps = _recent_diary_stamps(diary_text, max_stamps=max_stamps)
+    if stamps and approx_tokens(stamps) > stamp_token_cap:
+        # drop oldest among selected stamps until under cap
+        parts = re.split(r"(?=^###\s+)", stamps, flags=re.MULTILINE)
+        kept: list[str] = []
+        for part in parts:
+            if not part.strip():
+                continue
+            trial = "\n\n".join([*kept, part.strip()]).strip()
+            if approx_tokens(trial) > stamp_token_cap and kept:
+                break
+            kept.append(part.strip())
+        stamps = "\n\n".join(kept).strip()
+
+    stream = (stream_tail or "").strip()
+    if stream and approx_tokens(stream) > stream_token_cap:
+        # keep header + drop trailing lines whole
+        lines = stream.splitlines()
+        kept_lines: list[str] = []
+        for line in lines:
+            trial = "\n".join([*kept_lines, line])
+            if approx_tokens(trial) > stream_token_cap and kept_lines:
+                break
+            kept_lines.append(line)
+        stream = "\n".join(kept_lines).strip()
+
+    # Priority pack (Sol order): identity → next drive → pins → hands-off → stamps → stream
+    header = (
+        f"# HYDRATE CAPSULE (post-compact)\n"
+        f"**Epic / stream:** `{epic}` / `{stream_id}`\n"
+        f"**Provenance:** diary dual-write + optional stream tail · "
+        f"not a new SSOT · max_tokens={max_tokens}\n"
+        f"**Protocol:** score canary FROM MEMORY first; hydrate once; do not re-mint from chat.\n"
+    )
+    sections: list[tuple[str, str]] = [
+        ("identity", identity_block),
+        ("next_drive", next_drive),
+        ("pins", pins),
+        ("hands_off", hands_off),
+        ("recent_stamps", f"## Recent diary stamps (newest first)\n\n{stamps}" if stamps else ""),
+        ("stream_tail", f"## Stream tail (bounded)\n\n{stream}" if stream else ""),
+    ]
+
+    included: list[str] = [header]
+    dropped: list[str] = []
+    for name, body in sections:
+        body = body.strip()
+        if not body:
+            continue
+        trial = "\n\n".join([*included, body]).strip() + "\n"
+        if approx_tokens(trial) > max_tokens or len(trial) > char_ceiling:
+            # never drop identity
+            if name == "identity":
+                included.append(body)
+            else:
+                dropped.append(name)
+            continue
+        included.append(body)
+
+    capsule = "\n\n".join(included).strip() + "\n"
+    meta: dict[str, object] = {
+        "epic": epic,
+        "stream_id": stream_id,
+        "max_tokens": max_tokens,
+        "approx_tokens": approx_tokens(capsule),
+        "chars": len(capsule),
+        "dropped_sections": dropped,
+        "has_identity": bool(session or handback),
+        "has_next_drive": bool(next_drive),
+        "capsule_sha256": __import__("hashlib").sha256(capsule.encode("utf-8")).hexdigest()[:16],
+    }
+    if not meta["has_identity"] or not meta["has_next_drive"]:
+        meta["visible_gap"] = (
+            "missing SESSION HANDOFF/STATE AT HANDBACK and/or Next Drive — "
+            "do not invent queue; fix diary before driving"
+        )
+    return capsule, meta
+
+
+def try_stream_tail_text(stream_id: str, *, limit: int = 5) -> str:
+    """Best-effort formatted stream tail for hydrate. Fail-open to empty."""
+    try:
+        from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+        from agents_extensions.shared.session_streams.model import entry_as_dict
+        from agents_extensions.shared.session_streams.store import SessionStreamStore
+
+        store = SessionStreamStore(SessionStreamDatabase())
+        digest = store.load_digest(stream_id, limit=limit)
+        lines = [f"stream={stream_id} pinned={len(digest.pinned)} recent={len(digest.recent)}"]
+        # Prefer recent state/next_action; include pin count only as summary
+        for e in digest.recent[-limit:]:
+            d = entry_as_dict(e) if not isinstance(e, dict) else e
+            et = d.get("type") or d.get("entry_type") or "?"
+            body = (d.get("body") or "").replace("\n", " ").strip()
+            if len(body) > 220:
+                body = body[:217] + "..."
+            lines.append(f"- [{et}] {body}")
+        return "\n".join(lines)
+    except Exception:
+        return ""
+

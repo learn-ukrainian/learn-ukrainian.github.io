@@ -312,7 +312,7 @@ class TestDispatchAgent:
 
         mock_invoke.side_effect = [
             RateLimitedError("gemini", "gemini-3.1-pro-preview", "429 quota"),
-            RateLimitedError("agy", "gemini-3.5-flash-high", "agy 429"),
+            RateLimitedError("agy", "gemini-3.6-flash-high", "agy 429"),
             Result(
                 ok=True,
                 agent="gemini",
@@ -351,7 +351,7 @@ class TestDispatchAgent:
             "auth_mode": "subscription",
         }
         # Rung 2: agy-cli (the new rung) — tool_config is None, agent is "agy"
-        assert second_call["model"] == "gemini-3.5-flash-high"
+        assert second_call["model"] == "gemini-3.6-flash-high"
         assert mock_invoke.call_args_list[1].args[0] == "agy"
         assert second_call["tool_config"] is None
         # Rung 3: gemini-cli flash + oauth

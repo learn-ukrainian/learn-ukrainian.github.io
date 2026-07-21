@@ -74,7 +74,9 @@ _CALLER_IDENTITY_ENV_HINTS = (
 
 _LEGACY_GEMINI_TO_AGY_MODEL = {
     "gemini-3.1-pro-preview": "gemini-3.1-pro-high",
-    "gemini-3.0-flash-preview": "gemini-3.5-flash-high",
+    "gemini-3.0-flash-preview": "gemini-3.6-flash-high",
+    "gemini-3.5-flash": "gemini-3.5-flash-high",
+    "gemini-3.6-flash": "gemini-3.6-flash-high",
 }
 
 
@@ -680,7 +682,7 @@ def _build_parser() -> argparse.ArgumentParser:
     # ask-agy
     ask_agy_parser = subparsers.add_parser(
         "ask-agy",
-        help="Send message AND invoke Agy (Antigravity CLI, Gemini-3.5-Flash-High)",
+        help="Send message AND invoke Agy (Antigravity CLI, Gemini-3.6-Flash-High)",
     )
     ask_agy_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_agy_parser.add_argument("--task-id", help="Task ID for session tracking")
@@ -694,7 +696,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     ask_agy_parser.add_argument("--from-model", dest="from_model", help="Exact sender model ID")
     ask_agy_parser.add_argument(
-        "--to-model", dest="to_model", help="Target Agy model ID (default: gemini-3.5-flash-high)"
+        "--to-model", dest="to_model", help="Target Agy model ID (default: gemini-3.6-flash-high)"
     )
     ask_agy_parser.add_argument(
         "--stdout-only",
@@ -1640,7 +1642,7 @@ def _handle_ask_gemini(args):
         new_session=False,
         from_llm=from_llm,
         from_model=getattr(args, "from_model", None),
-        to_model=_map_legacy_gemini_model_to_agy(getattr(args, "model", None)) or "gemini-3.5-flash-high",
+        to_model=_map_legacy_gemini_model_to_agy(getattr(args, "model", None)) or "gemini-3.6-flash-high",
         no_timeout=False,
         stdout_only=getattr(args, "stdout_only", False),
         output_path=getattr(args, "output_path", None),

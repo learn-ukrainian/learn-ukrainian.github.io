@@ -180,7 +180,7 @@ def test_low_risk_pool_author_keeps_sol_before_economical_routes():
 def test_policy_receipt_exposes_catalog_version_date_and_risk():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="high"))
     assert resolution.policy_version == "model-catalog.v1"
-    assert resolution.catalog_reviewed_on == "2026-07-17"
+    assert resolution.catalog_reviewed_on == "2026-07-21"
     assert resolution.resolved_risk == "high"
 
 
@@ -454,7 +454,7 @@ def test_binding_quality_prior_matches_issue_5293_order():
         "grok-4.5",
         "composer-2.5",
         "glm-5.2",
-        "gemini-3.1-pro",
+        "kimi-k3",  # co-tier with sonnet-5 / gemini-3.6-flash / deepseek-v4-pro
     ]
     for ladder in REVIEW_LADDERS.values():
         assert [rung[0].name for rung in ladder[:9]] == expected

@@ -2,7 +2,7 @@
 
 Ported from `kubedojo/scripts/agent_runtime/adapters/agy.py` for the
 2026-05-20 seminar-writer evaluation. `agy` ships Gemini Flash 3.5
-("gemini-3.5-flash-high") on a separate meter from gemini-cli; the
+("gemini-3.6-flash-high" default; was 3.5 Flash) on a separate meter from gemini-cli; the
 seminar-track writer ADR at
 `docs/decisions/pending/2026-05-20-seminar-track-writer-assignment.md`
 adds it as candidate D pending empirical testing.
@@ -92,21 +92,38 @@ _MAX_INLINE_TOOL_RESULT_BYTES = 1_000_000
 # ABI if a future shared contract revision carries runner guard values.
 _AGY_PRINT_TIMEOUT = "120m"
 
-# Canonical model display strings accepted by ``agy --model`` (verbatim from
-# ``agy models``). A caller may pass a slug (``gemini-3.1-pro-high``) or the
-# display string; ``_normalize_model`` collapses both to the same key so either
-# form resolves here. Empirically (2026-06-05 probe) passing the display label
-# to ``agy -p --model`` OVERRIDES the TUI selection: the log emits a benign
-# ``resolver.go ... defaulting to CCPA`` line, then ``Propagating selected model
-# override to backend: label="<name>"`` with the requested model. The bare slug
-# is NOT accepted by ``--model`` (the real #2731 bug), so we always map to the
-# display string before passing it.
-_AGY_MODEL_NAMES: tuple[str, ...] = (
-    "Gemini 3.5 Flash (Medium)",
+# Canonical ``agy --model`` values (verbatim from ``agy models`` as of
+# 2026-07-21). Callers may pass a slug (``gemini-3.6-flash-high``) or a legacy
+# display string (``Gemini 3.6 Flash (High)``); ``_normalize_model`` collapses
+# both to the same key. We always emit the slug form because ``agy models``
+# now lists slugs and headless ``--model <slug>`` is the proven path for 3.6.
+#
+# Historical note: earlier AGY builds wanted display labels (#2731 slug bug).
+# Live probe 2026-07-21: ``agy -p --model gemini-3.6-flash-high`` succeeds.
+_AGY_MODEL_SLUGS: tuple[str, ...] = (
+    "gemini-3.6-flash-high",
+    "gemini-3.6-flash-medium",
+    "gemini-3.6-flash-low",
+    "gemini-3.5-flash-high",
+    "gemini-3.5-flash-medium",
+    "gemini-3.5-flash-low",
+    "gemini-3.1-pro-high",
+    "gemini-3.1-pro-low",
+    "claude-sonnet-4-6",
+    "claude-opus-4-6-thinking",
+    "gpt-oss-120b-medium",
+)
+
+# Legacy display labels still accepted as input (normalize → same key as slug).
+_AGY_MODEL_LEGACY_LABELS: tuple[str, ...] = (
+    "Gemini 3.6 Flash (High)",
+    "Gemini 3.6 Flash (Medium)",
+    "Gemini 3.6 Flash (Low)",
     "Gemini 3.5 Flash (High)",
+    "Gemini 3.5 Flash (Medium)",
     "Gemini 3.5 Flash (Low)",
-    "Gemini 3.1 Pro (Low)",
     "Gemini 3.1 Pro (High)",
+    "Gemini 3.1 Pro (Low)",
     "Claude Sonnet 4.6 (Thinking)",
     "Claude Opus 4.6 (Thinking)",
     "GPT-OSS 120B (Medium)",
@@ -115,20 +132,39 @@ _AGY_MODEL_NAMES: tuple[str, ...] = (
 
 def _normalize_model(value: str) -> str:
     """Collapse a model identifier to its alphanumeric-lowercase form so a slug
-    (``gemini-3.1-pro-high``) and the CLI display string (``Gemini 3.1 Pro
+    (``gemini-3.6-flash-high``) and the CLI display string (``Gemini 3.6 Flash
     (High)``) map to the same key."""
     return re.sub(r"[^a-z0-9]", "", value.lower())
 
 
-# normalized identifier -> canonical ``agy --model`` display string
-_AGY_MODEL_BY_NORMALIZED: dict[str, str] = {_normalize_model(name): name for name in _AGY_MODEL_NAMES}
+def _build_agy_model_map() -> dict[str, str]:
+    """normalized key → slug passed to ``agy --model``."""
+    out: dict[str, str] = {}
+    for slug in _AGY_MODEL_SLUGS:
+        out[_normalize_model(slug)] = slug
+    # Legacy labels that share a normalize key with a slug resolve automatically.
+    # Claude/GPT-OSS thinking labels normalize differently — map them explicitly.
+    legacy_to_slug = {
+        "Claude Sonnet 4.6 (Thinking)": "claude-sonnet-4-6",
+        "Claude Opus 4.6 (Thinking)": "claude-opus-4-6-thinking",
+        "GPT-OSS 120B (Medium)": "gpt-oss-120b-medium",
+    }
+    for label in _AGY_MODEL_LEGACY_LABELS:
+        key = _normalize_model(label)
+        if key not in out:
+            out[key] = legacy_to_slug.get(label, label)
+    return out
+
+
+# normalized identifier -> canonical ``agy --model`` slug
+_AGY_MODEL_BY_NORMALIZED: dict[str, str] = _build_agy_model_map()
 
 
 class AgyAdapter:
     """Adapter for the ``agy`` Antigravity CLI."""
 
     name: str = "agy"
-    default_model: str = os.environ.get("LEARN_UK_AGY_MODEL", "gemini-3.5-flash-high")
+    default_model: str = os.environ.get("LEARN_UK_AGY_MODEL", "gemini-3.6-flash-high")
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(
@@ -260,7 +296,7 @@ class AgyAdapter:
 
     def _resolve_model_flag(self, model: str | None) -> str | None:
         """Map a runtime model slug (or display string) to the canonical
-        ``agy --model`` display value.
+        ``agy --model`` slug (from ``agy models``).
 
         Tries the caller's ``model`` first, then ``default_model``, so a stale
         placeholder or an empty value degrades to the adapter default rather

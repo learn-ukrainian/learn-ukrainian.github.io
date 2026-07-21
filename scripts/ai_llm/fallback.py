@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Literal
 
 PRIMARY_GEMINI_MODEL = "gemini-3.1-pro-preview"
-AGY_GEMINI_MODEL = "gemini-3.5-flash-high"
+AGY_GEMINI_MODEL = "gemini-3.6-flash-high"
 FLASH_GEMINI_MODEL = "gemini-3-flash-preview"
 FINAL_GEMINI_MODEL = "gemini-2.5-pro"
 GEMINI_MODEL_LADDER = (
@@ -764,7 +764,7 @@ def _short_model_label(model: str) -> str:
     if model == PRIMARY_GEMINI_MODEL:
         return "3.1-pro"
     if model == AGY_GEMINI_MODEL:
-        return "agy-3.5-flash-high"
+        return "agy-3.6-flash-high"
     if model == FLASH_GEMINI_MODEL:
         return "3-flash"
     if model == FINAL_GEMINI_MODEL:
