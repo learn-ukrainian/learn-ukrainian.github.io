@@ -13,18 +13,20 @@ set -euo pipefail
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LEAD_MODEL="gpt-5.6-sol"
-SUBAGENT="${CLAUDEX_SUBAGENT:-sol}"
+SUBAGENT="${CLAUDEX_SUBAGENT:-terra}"
+STATUS_SETTINGS="$PROJECT_DIR/agents_extensions/shared/statusline/claudex-settings.json"
 FORWARD_ARGS=()
 
 usage() {
     cat <<'EOF'
 Usage: ./start-claudex.sh [--subagent sol|terra|luna] [CLAUDE_ARGS...]
 
-Interactive Claude Code with GPT-5.6 Sol lead (272k context / 258.4k compact)
-and a configurable GPT-5.6 subagent. Does not rewrite ~/.claude/settings.json.
+Interactive Claude Code with GPT-5.6 Sol lead (272k context / 258.4k compact),
+a configurable GPT-5.6 subagent, and live main/subagent status rows. Does not
+rewrite ~/.claude/settings.json.
 
 Options:
-  --subagent MODEL  Subagent tier: sol (default), terra, or luna
+  --subagent MODEL  Subagent tier: terra (default), sol, or luna
   -h, --help        Show this help
 
 Environment:
@@ -103,6 +105,11 @@ if ! SUBAGENT_MODEL="$(resolve_model "$SUBAGENT")"; then
     exit 2
 fi
 
+if [ ! -f "$STATUS_SETTINGS" ]; then
+    echo "Error: Claudex status settings are missing: $STATUS_SETTINGS" >&2
+    exit 1
+fi
+
 export ANTHROPIC_BASE_URL="${CLAUDEX_BASE_URL:-http://127.0.0.1:8317}"
 ANTHROPIC_BASE_URL="${ANTHROPIC_BASE_URL%/}"
 # CLIProxyAPI's documented public placeholder, not a repository credential.
@@ -130,5 +137,5 @@ if ! curl --fail --silent --show-error --output /dev/null --header @- \
 fi
 
 echo "Claudex: lead=$LEAD_MODEL subagent=$SUBAGENT_MODEL profile=$LEARN_UKRAINIAN_PROFILE_ID"
-echo "         window=$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS compact=$CLAUDE_CODE_AUTO_COMPACT_WINDOW effort=$CLAUDE_CODE_EFFORT_LEVEL (env-only; settings.json untouched)"
-exec "$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/orchestration/claudex_supervisor.py" "$PROJECT_DIR/start-claude.sh" --model "$LEAD_MODEL" "${FORWARD_ARGS[@]}"
+echo "         window=$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS compact=$CLAUDE_CODE_AUTO_COMPACT_WINDOW effort=$CLAUDE_CODE_EFFORT_LEVEL (process-scoped; user settings untouched)"
+exec "$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/orchestration/claudex_supervisor.py" "$PROJECT_DIR/start-claude.sh" --model "$LEAD_MODEL" --settings "$STATUS_SETTINGS" "${FORWARD_ARGS[@]}"
