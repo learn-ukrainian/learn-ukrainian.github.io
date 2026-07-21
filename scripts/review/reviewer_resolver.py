@@ -12,9 +12,15 @@ signals only break ties among candidates in the same quality rung; they never
 demote a model into a lower-quality rung.
 
 The model inventory, candidate routes, and risk ladders are loaded from the
-versioned ``scripts/config/model_catalog.yaml`` catalog. Its separate freshness
-lint forces a provider/CLI/source review every 30 days without making a stale
-catalog an operational outage at runtime.
+versioned ``scripts/config/model_catalog.yaml`` catalog at import time
+(``REVIEW_CANDIDATES`` / ``REVIEW_LADDERS`` via ``_catalog_candidate`` /
+``_catalog_ladder``). **Policy changes to ladder order or formal CF seats are
+YAML edits** — this module must not hard-code a second ladder. As of the
+fleet-comms practical-CF pin (#5512): ``critical`` keeps authority-first
+(Sol/Fable/Opus); ``high|medium|low`` walk practical seats (Terra, Sonnet 5,
+Gemini 3.6 Flash, Grok native + Cursor-explicit ``grok-4.5`` fallback, …).
+Its separate freshness lint forces a provider/CLI/source review every 30 days
+without making a stale catalog an operational outage at runtime.
 """
 
 from __future__ import annotations
@@ -208,12 +214,17 @@ CLAUDE_OPUS_4_8 = REVIEW_CANDIDATES["claude-opus-4-8"]
 OPENAI_FRONTIER = REVIEW_CANDIDATES["openai_frontier"]
 TERRA = REVIEW_CANDIDATES["gpt-5.6-terra"]
 GROK_4_5 = REVIEW_CANDIDATES["grok-4.5"]
+GROK_4_5_CURSOR_FALLBACK = REVIEW_CANDIDATES["grok-4.5-cursor-fallback"]
+SONNET_5 = REVIEW_CANDIDATES["claude-sonnet-5"]
+GEMINI_3_6_FLASH = REVIEW_CANDIDATES["gemini-3.6-flash"]
 KIMI_K3 = REVIEW_CANDIDATES["kimi-k3"]
 DEEPSEEK_V4_PRO = REVIEW_CANDIDATES["deepseek-v4-pro"]
 DEEPSEEK_V4_FLASH = REVIEW_CANDIDATES["deepseek-v4-flash"]
 POOL = REVIEW_CANDIDATES["pool"]
 GLM = REVIEW_CANDIDATES["glm-5.2"]
+# Medium = practical formal CF default ladder (not authority-first).
 DEFAULT_CODE_LADDER = REVIEW_LADDERS["medium"]
+CRITICAL_CODE_LADDER = REVIEW_LADDERS["critical"]
 
 # Known hard-filtered candidates outside the default ladder — kept here so the
 # fail-closed exclusion logic is directly testable even where model-assignment.md

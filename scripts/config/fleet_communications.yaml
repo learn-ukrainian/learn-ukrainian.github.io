@@ -4,6 +4,18 @@ version: 1
 # the matching isolation issue closes (#5555 AGY, #5556 Kimi, #5557 Grok). Only
 # claude|codex are proven formal CF seats today; unproven live lanes stay
 # eligible for advisory/implement work with formal_review_eligible: false.
+#
+# Formal CF model+effort pins (review-pr / model_catalog formal_cf_defaults):
+#   codex → gpt-5.6-terra @ high · claude → claude-sonnet-5 @ high · glm → glm-5.2
+#   pool volume → Laguna S 2.1 (laguna-s-2.1); also XS 2.1 / M.1 in catalog
+#   grok dark → Cursor explicit grok-4.5
+#   agy → gemini-3.6-flash-high @ high (orchestrator seat; formal seal still #5555)
+# Authority Sol/Fable only on critical resolve-reviewer ladder.
+#
+# Orchestrator seats for this stream (model_catalog.orchestrator_seats):
+#   claude · codex · grok · agy(gemini-3.6-flash-high @ high)
+# Each may own cold-start / drive-board loops. Sealed formal CF requests still
+# go through review-pr codex|claude|glm until #5555–#5557 flip eligibility.
 endpoints:
   - name: claude
     aliases: [claude]
@@ -33,9 +45,11 @@ endpoints:
     default_ttl_seconds: 3600
     retry_class: standard
     concurrency_limit: 2
+    # Orchestrator seat (user 2026-07-21): gemini-3.6-flash-high @ high — peer
+    # cold-start / drive-board driver alongside claude|codex|grok.
     # Sealed formal CF isolation not proven (project instructions / MCP / hooks /
-    # nested reviewers). Use claude|glm|codex via review-pr. AGY stays live for
-    # advisory bridge asks without --review. See #5555.
+    # nested reviewers). When AGY *orchestrates*, request CF via review-pr
+    # claude|glm|codex; AGY itself stays advisory for --review until #5555.
     formal_review_eligible: false
     model_family_resolver: canonical-reviewer-resolver
   - name: grok

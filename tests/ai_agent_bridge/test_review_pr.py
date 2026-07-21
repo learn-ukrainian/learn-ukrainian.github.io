@@ -21,7 +21,15 @@ def test_resolve_reviewer_auto() -> None:
 
 
 def test_build_review_pr_prompt_has_contract_and_cap() -> None:
-    prompt = review_pr.build_review_pr_prompt(5443)
+    model, effort = review_pr.formal_cf_pin("codex")
+    prompt = review_pr.build_review_pr_prompt(
+        5443,
+        reviewer="codex",
+        model=model,
+        effort=effort,
+    )
     assert "READ-ONLY REVIEW CONTRACT" in prompt
     assert "pull/5443" in prompt
     assert "VERDICT:" in prompt
+    assert "gpt-5.6-terra" in prompt
+    assert "effort=high" in prompt

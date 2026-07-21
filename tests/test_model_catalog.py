@@ -44,10 +44,43 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
         "glm-5.2",
         "deepseek-v4-pro",
         "deepseek-v4-flash",
+        "poolside/laguna-s-2.1",
+        "poolside/laguna-xs-2.1",
         "poolside/laguna-m.1",
         "composer-2.5",
     }
     assert required <= set(models)
+    assert models["poolside/laguna-s-2.1"]["lifecycle"] == "active"
+    assert models["poolside/laguna-xs-2.1"]["lifecycle"] == "active"
+    assert models["poolside/laguna-m.1"]["lifecycle"] == "fallback"
+    assert "pool" in models["poolside/laguna-s-2.1"].get("aliases", [])
+
+
+def test_poolside_laguna_family_exact_ids_and_roles():
+    """Vendor IDs are laguna-{s,xs}-2.1 and laguna-m.1 — not s2/m2 orthography."""
+    catalog = load_model_catalog()
+    models = catalog["models"]
+    candidates = catalog["review_candidates"]
+    assert set(models) >= {
+        "poolside/laguna-s-2.1",
+        "poolside/laguna-xs-2.1",
+        "poolside/laguna-m.1",
+    }
+    assert candidates["pool"]["model_id"] == "poolside/laguna-s-2.1"
+    assert candidates["pool-xs"]["model_id"] == "poolside/laguna-xs-2.1"
+    # Gen-1 must not be the formal default pin.
+    assert catalog["formal_cf_defaults"]["pool"]["model_id"] == "poolside/laguna-s-2.1"
+    family = catalog["formal_cf_defaults"]["pool"]["family_models"]
+    assert family == [
+        "poolside/laguna-s-2.1",
+        "poolside/laguna-xs-2.1",
+        "poolside/laguna-m.1",
+    ]
+    # Ladder includes both gen-2 seats.
+    for risk in ("high", "medium", "low", "critical"):
+        names = {n for rung in catalog["review_ladders"][risk] for n in rung}
+        assert "pool" in names
+        assert "pool-xs" in names
 
 
 def test_runtime_registry_defaults_resolve_to_catalog_model_or_alias():
@@ -71,17 +104,24 @@ def test_composer_is_conservatively_moonshot_for_independence():
     assert composer["lab"] == "cursor"
 
 
-def test_gpt_and_grok_formal_routes_are_native_only():
+def test_gpt_and_grok_primary_formal_routes_are_native():
     candidates = load_model_catalog()["review_candidates"]
     assert candidates["openai_frontier"]["transport"] == "native_codex"
     assert candidates["gpt-5.6-terra"]["transport"] == "native_codex"
     assert candidates["grok-4.5"]["transport"] == "native_grok"
+    # Explicit Cursor pin when native grok is dark — never Cursor auto.
+    assert candidates["grok-4.5-cursor-fallback"]["transport"] == "cursor"
+    assert candidates["grok-4.5-cursor-fallback"]["model_id"] == "grok-4.5"
+    assert candidates["grok-4.5-cursor-fallback"]["invocation"].endswith(
+        "--agent cursor --model grok-4.5"
+    )
 
 
 def test_fable_routes_native_claude_before_pinned_cursor_fallback():
     catalog = load_model_catalog()
     candidates = catalog["review_candidates"]
-    ladder = catalog["review_ladders"]["high"]
+    # Authority seats live on the critical ladder only.
+    ladder = catalog["review_ladders"]["critical"]
 
     assert candidates["claude-fable-5"]["transport"] == "native_claude"
     assert candidates["claude-fable-5"]["invocation"].endswith(
@@ -94,6 +134,46 @@ def test_fable_routes_native_claude_before_pinned_cursor_fallback():
     assert ladder.index(["claude-fable-5"]) < ladder.index(
         ["claude-fable-5-cursor-fallback"]
     )
+
+
+def test_formal_cf_defaults_pin_practical_seats_at_high_effort():
+    defaults = load_model_catalog()["formal_cf_defaults"]
+    assert defaults["codex"] == {"model_id": "gpt-5.6-terra", "effort": "high"}
+    assert defaults["claude"] == {"model_id": "claude-sonnet-5", "effort": "high"}
+    assert defaults["glm"]["model_id"] == "glm-5.2"
+    assert defaults["pool"]["model_id"] == "poolside/laguna-s-2.1"
+    assert defaults["grok"]["fallback_transport"] == "cursor"
+    assert defaults["grok"]["fallback_model_id"] == "grok-4.5"
+    assert defaults["agy"]["model_id"] == "gemini-3.6-flash-high"
+    assert defaults["agy"]["effort"] == "high"
+    assert defaults["agy"]["formal_review_eligible"] is False
+
+
+def test_orchestrator_seats_include_agy_flash_36_high():
+    seats = load_model_catalog()["orchestrator_seats"]
+    assert set(seats) >= {"claude", "codex", "grok", "agy"}
+    assert seats["agy"]["model_id"] == "gemini-3.6-flash-high"
+    assert seats["agy"]["effort"] == "high"
+    assert seats["agy"]["escalate_model_id"] == "gemini-3.1-pro-high"
+    assert seats["codex"]["model_id"] == "gpt-5.6-terra"
+    assert seats["claude"]["model_id"] == "claude-sonnet-5"
+    assert seats["grok"]["fallback_model_id"] == "grok-4.5"
+
+
+def test_practical_ladders_exclude_authority_seats():
+    ladders = load_model_catalog()["review_ladders"]
+    for risk in ("high", "medium", "low"):
+        names = {name for rung in ladders[risk] for name in rung}
+        assert "openai_frontier" not in names
+        assert "claude-fable-5" not in names
+        assert "claude-opus-4-8" not in names
+        assert "gpt-5.6-terra" in names
+        assert "claude-sonnet-5" in names
+        assert "pool" in names
+        assert "grok-4.5-cursor-fallback" in names
+    critical = {name for rung in ladders["critical"] for name in rung}
+    assert "openai_frontier" in critical
+    assert "claude-fable-5" in critical
 
 
 def test_bridge_only_reviewers_expose_executable_invocations():

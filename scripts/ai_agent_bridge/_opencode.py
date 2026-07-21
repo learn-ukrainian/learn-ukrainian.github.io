@@ -6,12 +6,12 @@ this transport:
 
 - ``ask-opencode`` — generic escape hatch to ANY opencode-reachable model
   (e.g. ``openrouter/qwen/qwen3.7-max``) for one-off cross-model reviews.
-- ``ask-pool`` — the first-class **poolside.ai** fleet member (model
-  ``poolside/poolside/laguna-m.1``): a clean cross-family CODE + web-
-  verification specialist. Rides opencode with reasoning-effort control
-  (``--variant``) and NDJSON parsing, and fact-checks the live web via the
-  lightpanda MCP server wired into ``~/.config/opencode/opencode.jsonc``.
-  See ``ask_pool`` below.
+- ``ask-pool`` — the first-class **poolside.ai** fleet member. Default model
+  ``poolside/poolside/laguna-s-2.1`` (Laguna **S 2.1**, gen-2 strongest). Also
+  ship gen-2 light ``laguna-xs-2.1`` and gen-1 fallback ``laguna-m.1`` (not
+  "laguna-s2" / not M 2.x). Clean cross-family CODE + web-verify specialist.
+  Rides opencode with ``--variant`` effort + NDJSON; browses via lightpanda MCP
+  in ``~/.config/opencode/opencode.jsonc``. See ``ask_pool`` below.
 - ``ask-glm`` — the first-class **Zhipu GLM** fleet member (model
   ``zai-coding-plan/glm-5.2``): strong code authoring + review (its top axis)
   and live web fact-checking, its own (China-lab) family. ⚠️ China-hosted →
@@ -72,7 +72,17 @@ OPENCODE_DEFAULT_TIMEOUT_S = 900
 # via the lightpanda MCP; the ``openrouter/poolside/*`` path CANNOT browse.
 # Runs on the poolside subscription ("free" lane) — watch weekly limits on
 # parallel bursts.
-POOL_MODEL = "poolside/poolside/laguna-m.1"
+#
+# Laguna family (exact IDs — vendor spelling uses hyphen + minor "m.1"):
+#   poolside/laguna-s-2.1   — gen-2 strongest (DEFAULT formal/volume pin)
+#   poolside/laguna-xs-2.1  — gen-2 light/fast
+#   poolside/laguna-m.1     — gen-1 prior (fallback only; not "m2")
+# opencode route form is often poolside/poolside/<id>.
+# If the local opencode catalog lags, override --model (e.g. opencode/laguna-s-2.1-free).
+POOL_MODEL = "poolside/poolside/laguna-s-2.1"
+POOL_MODEL_S = POOL_MODEL  # alias: Laguna S 2.1
+POOL_MODEL_XS = "poolside/poolside/laguna-xs-2.1"
+POOL_MODEL_M1_LEGACY = "poolside/poolside/laguna-m.1"
 POOL_DEFAULT_VARIANT = "high"  # reasoning effort: minimal | high | max
 POOL_DEFAULT_TIMEOUT_S = 1800  # browsing + high-effort reasoning runs long
 POOL_VARIANTS = frozenset({"minimal", "high", "max"})
@@ -212,7 +222,7 @@ def ask_pool(
     no_timeout: bool = False,
     background: bool = False,
 ) -> int:
-    """Send a message AND invoke poolside.ai (laguna-m.1) one-shot via opencode.
+    """Send a message AND invoke poolside.ai (laguna-s-2.1) one-shot via opencode.
 
     ``pool`` is a cross-family CODE + web-verification reviewer: use it for
     cross-family code review, live web fact-checking (version/pricing/URL/

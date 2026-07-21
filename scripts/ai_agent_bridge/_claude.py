@@ -54,7 +54,8 @@ VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query",
                data: str | None = None, new_session: bool = False,
                from_llm: str = "gemini", from_model: str | None = None,
-               to_model: str | None = None, review: bool = False,
+               to_model: str | None = None, effort: str | None = None,
+               review: bool = False,
                background: bool = False, review_branch: str | None = None,
                review_pr_number: int | None = None):
     """Send message to Claude AND invoke Claude to process it."""
@@ -83,6 +84,7 @@ def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query"
         to_llm="claude",
         from_model=from_model,
         to_model=to_model,
+        effort=effort,
         review_target=review_target_payload(review_branch, review_pr_number),
     )
     register_ask(msg_id)
@@ -187,6 +189,7 @@ def _run_claude_sync_via_runtime(
     _response_sent = False
     try:
         target_model = _extract_target_model(msg)
+        effort = _extract_effort(msg)
         review_target = review_target_from_message(msg) if review else None
         with provision_review_worktree(
             review_target,
@@ -220,6 +223,7 @@ def _run_claude_sync_via_runtime(
                 mode="read-only",
                 cwd=checkout.path if checkout is not None else REPO_ROOT,
                 model=target_model,
+                effort=effort,
                 task_id=msg.get('task_id'),
                 session_id=session_id_to_pass,
                 tool_config=tool_config,
@@ -346,16 +350,27 @@ def _fetch_claude_message(message_id: int) -> dict | None:
     }
 
 
-def _extract_target_model(msg: dict) -> str | None:
-    """Read optional to_model from message metadata JSON."""
+def _extract_message_metadata(msg: dict) -> dict:
+    """Parse optional JSON metadata blob from a bridge message row."""
     data = msg.get("data")
     if not data:
-        return None
+        return {}
     try:
         payload = json.loads(data)
-    except json.JSONDecodeError:
-        return None
-    value = payload.get("to_model")
+    except (json.JSONDecodeError, TypeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _extract_target_model(msg: dict) -> str | None:
+    """Read optional to_model from message metadata JSON."""
+    value = _extract_message_metadata(msg).get("to_model")
+    return str(value) if value else None
+
+
+def _extract_effort(msg: dict) -> str | None:
+    """Read optional effort from message metadata JSON."""
+    value = _extract_message_metadata(msg).get("effort")
     return str(value) if value else None
 
 
@@ -365,6 +380,12 @@ def _print_claude_message_info(msg, fire_and_forget, no_timeout, claude_session_
     print(f"   From: {msg['from']} → To: {msg['to']}")
     print(f"   Type: {msg['type']}")
     print(f"   Task: {msg['task_id'] or 'N/A'}")
+    target_model = _extract_target_model(msg)
+    effort = _extract_effort(msg)
+    if target_model:
+        print(f"   Model: {target_model}")
+    if effort:
+        print(f"   Effort: {effort}")
     print(f"   Mode: {'🚀 async (bridge bg)' if fire_and_forget else '⏳ sync' + (' (no timeout)' if no_timeout else '')}")
     print(f"   Session: {claude_session_id[:8] + '...' if claude_session_id else 'NEW'}")
 

@@ -112,6 +112,7 @@ def ask_codex(
     from_llm: str | None = None,
     from_model: str | None = None,
     to_model: str | None = None,
+    effort: str | None = None,
     no_timeout: bool = False,
     review: bool = False,
     background: bool = False,
@@ -145,6 +146,7 @@ def ask_codex(
         to_llm="codex",
         from_model=from_model,
         to_model=to_model,
+        effort=effort,
         review_target=review_target_payload(review_branch, review_pr_number),
     )
     register_ask(msg_id)
@@ -270,6 +272,7 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
     _ = new_session  # No-op: Codex always starts fresh (resume_policy="never")
     timeout_val = _resolve_codex_bridge_timeout(no_timeout)
     model = _extract_target_model(msg)
+    effort = _extract_effort(msg)
     has_room, reason = has_codex_headroom(model)
     if not has_room:
         _handle_codex_rate_limited(msg, message_id, reason)
@@ -279,6 +282,10 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
     print(f"   From: {msg['from']} → To: {msg['to']}")
     print(f"   Type: {msg['type']}")
     print(f"   Task: {msg['task_id'] or 'N/A'}")
+    if model:
+        print(f"   Model: {model}")
+    if effort:
+        print(f"   Effort: {effort}")
     print("   Session: NEW (Codex runtime always fresh)")
     if timeout_val == _NO_TIMEOUT_CODEX_BRIDGE_TIMEOUT_SECONDS:
         print("   Hard timeout: no-timeout requested (24h ceiling)")
@@ -320,6 +327,7 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
                 mode="read-only" if review else _codex_bridge_runtime_mode(),
                 cwd=checkout.path if checkout is not None else REPO_ROOT,
                 model=model,
+                effort=effort,
                 task_id=msg["task_id"],
                 session_id=None,  # Codex resume_policy="never"
                 tool_config=review_tool_config,
@@ -412,16 +420,28 @@ def _fetch_codex_message(message_id: int) -> dict | None:
     }
 
 
-def _extract_target_model(msg: dict) -> str | None:
-    """Read optional to_model from message metadata JSON."""
+def _extract_message_metadata(msg: dict) -> dict:
+    """Parse optional JSON metadata blob from a bridge message row."""
     data = msg.get("data")
     if not data:
-        return None
+        return {}
     try:
         payload = json.loads(data)
-    except json.JSONDecodeError:
-        return None
-    return payload.get("to_model")
+    except (json.JSONDecodeError, TypeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _extract_target_model(msg: dict) -> str | None:
+    """Read optional to_model from message metadata JSON."""
+    value = _extract_message_metadata(msg).get("to_model")
+    return str(value) if value else None
+
+
+def _extract_effort(msg: dict) -> str | None:
+    """Read optional effort from message metadata JSON."""
+    value = _extract_message_metadata(msg).get("effort")
+    return str(value) if value else None
 
 
 def _handle_codex_error(msg: dict, message_id: int, error_msg: str) -> None:

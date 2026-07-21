@@ -3144,12 +3144,16 @@ def prepare_isolated_review_launch(
     if engine_key == "agy":
         raise ReviewIsolationError(
             "agy_isolated_review_unsupported: native project-instruction, MCP, "
-            "hook, and nested-reviewer suppression is not proven"
+            "hook, and nested-reviewer suppression is not proven. "
+            "AGY may orchestrate (gemini-3.6-flash-high) but must request formal CF via "
+            "review-pr --reviewer claude|glm|codex. See #5555 / docs/runbooks/agy-formal-cf-isolation.md."
         )
     if engine_key == "grok":
         raise ReviewIsolationError(
             "grok_isolated_review_unsupported: native OAuth credentials cannot "
-            "be hidden from the required Read/Grep/Glob tools"
+            "be hidden from the required Read/Grep/Glob tools. "
+            "Use review-pr --reviewer claude|glm|codex. "
+            "See #5557 / docs/runbooks/grok-formal-cf-isolation.md."
         )
     snap = snapshot_root.resolve()
     reject = reject_root.resolve()
