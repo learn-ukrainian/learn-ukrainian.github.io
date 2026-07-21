@@ -26,8 +26,9 @@ Project-local wrappers for interactive agent sessions:
 
 Native Kimi Code (separate app/CLI, OAuth subscription) is the **headless / fleet**
 lane via `scripts/delegate.py --agent kimi` and `ab ask-kimi`. Interactive native
-Kimi is `kimi` from `~/.kimi-code/bin` (or a dedicated `start-kimi.sh` when that
-wrapper is present) — not `start-kimicc.sh`.
+Kimi is `kimi` (the hermes npm install at `~/.hermes/node/bin/kimi` is preferred;
+`~/.kimi-code/bin/kimi` is the legacy standalone binary and last-resort fallback)
+or a dedicated `start-kimi.sh` when that wrapper is present — not `start-kimicc.sh`.
 
 ### Parallel routes and original Claude config
 

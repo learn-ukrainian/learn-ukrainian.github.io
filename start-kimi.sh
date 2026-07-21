@@ -34,7 +34,7 @@
 
 set -euo pipefail
 
-export PATH="${HOME}/.local/bin:/opt/homebrew/bin:${HOME}/.kimi-code/bin:${PATH:-}"
+export PATH="${HOME}/.local/bin:/opt/homebrew/bin:${HOME}/.hermes/node/bin:${PATH:-}"
 hash -r 2>/dev/null || true
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -58,11 +58,15 @@ usage_launcher() {
   exit 0
 }
 # --- locate kimi binary ---
+# Preference order: explicit override → ambient PATH (the hermes npm install,
+# ~/.hermes/node/bin, is the maintained one) → hermes explicit → legacy
+# standalone binary at ~/.kimi-code/bin (last resort; often stale).
 KIMI_BIN="${LEARN_UK_KIMI_BIN:-}"
 if [ -z "$KIMI_BIN" ] || [ ! -x "$KIMI_BIN" ]; then
   KIMI_BIN=""
   for cand in \
     "$(command -v kimi 2>/dev/null || true)" \
+    "${HOME}/.hermes/node/bin/kimi" \
     "${HOME}/.kimi-code/bin/kimi"
   do
     if [ -n "$cand" ] && [ -x "$cand" ]; then
