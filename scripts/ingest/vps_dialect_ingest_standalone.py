@@ -5,14 +5,13 @@ Designed to run independently on a remote VPS without consuming local workstatio
 Scrapes, parses, and structures dialect and author concordances from public academic sources:
 - Lemko Dialect Dictionary (lemko.org)
 - Shevchenko Concordance (Litopys.org.ua)
-- Franko / Lesya Ukrainka literary glossaries
 
 Outputs a compressed JSONL artifact `data/ingest/vps_dialect_dicts.jsonl.gz` that can
 be rsynced into the local `data/sources.db` database.
 
 Usage on VPS
 ------------
-    python3 vps_dialect_ingest_standalone.py --source all --output vps_dialect_dicts.jsonl.gz
+    python3 vps_dialect_ingest_standalone.py --sources all --output vps_dialect_dicts.jsonl.gz
 """
 
 from __future__ import annotations
@@ -21,13 +20,14 @@ import argparse
 import gzip
 import json
 import re
+import ssl
 import sys
 import urllib.request
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-LEMKO_DICT_URL = "https://lemko.org/slownik/lesow.html"
-SHEVCHENKO_DICT_BASE_URL = "https://litopys.org.ua/shevchenko/shev.htm"
+LEMKO_DICT_URL = "http://lemko.org/slownik/lesow.htm"
+SHEVCHENKO_DICT_BASE_URL = "http://litopys.org.ua/shevchenko/shev.htm"
 
 
 @dataclass(frozen=True)
@@ -41,8 +41,12 @@ class DialectDictEntry:
 
 
 def fetch_url_text(url: str, timeout: int = 30) -> str:
-    req = urllib.request.Request(url, headers={"User-Agent": "LearnUkrainianBot/1.0"})
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+    with urllib.request.urlopen(req, context=ctx, timeout=timeout) as resp:
         content = resp.read()
         try:
             return content.decode("utf-8")
@@ -61,11 +65,11 @@ def parse_lemko_org_dictionary() -> list[DialectDictEntry]:
             line_clean = re.sub(r"<[^>]+>", "", raw_line).strip()
             # Match word - definition format
             if "-" in line_clean or "—" in line_clean:
-                parts = re.split(r"[-—]", line_clean, maxsplit=1)
+                parts = re.split(r"\s*[-—]\s*", line_clean, maxsplit=1)
                 if len(parts) == 2:
                     lemma = parts[0].strip()
                     definition = parts[1].strip()
-                    # Validate Cyrillic lemma and reasonable length
+                    # Validate Cyrillic lemma and reasonable headword length
                     if lemma and definition and len(lemma) < 50 and re.search(r"[\u0400-\u04FF]", lemma):
                         entries.append(
                             DialectDictEntry(
@@ -90,7 +94,7 @@ def parse_shevchenko_concordance() -> list[DialectDictEntry]:
     entries: list[DialectDictEntry] = []
     try:
         html = fetch_url_text(SHEVCHENKO_DICT_BASE_URL)
-        # Extract dictionary links or terms
+        # Extract dictionary links or bold headword terms
         matches = re.findall(r'<b[^>]*>(.*?)</b>\s*[-—]?\s*(.*?)(?=<br|<p|</td)', html, re.DOTALL)
         for lemma_raw, def_raw in matches:
             lemma = re.sub(r"<[^>]+>", "", lemma_raw).strip()
@@ -121,6 +125,10 @@ def run_vps_ingestion(output_path: Path, sources: list[str]) -> int:
 
     if "all" in sources or "shevchenko" in sources:
         all_entries.extend(parse_shevchenko_concordance())
+
+    if not all_entries:
+        print("❌ Error: Zero entries were scraped. Failing ingestion run.", file=sys.stderr)
+        return 1
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     print(f"💾 Saving {len(all_entries)} parsed dictionary entries to {output_path}...")
