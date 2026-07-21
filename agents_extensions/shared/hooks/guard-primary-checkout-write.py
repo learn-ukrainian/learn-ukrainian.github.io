@@ -738,9 +738,15 @@ _SHELL_ASSIGN_RE = re.compile(
 _SHELL_VAR_RE = re.compile(r"^\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?$")
 
 
-def parse_shell_assignments(command: str) -> dict[str, str]:
-    """Best-effort VAR=value map from a Bash command string (issue #5404)."""
+def parse_shell_assignments(command: str) -> tuple[dict[str, str], set[str]]:
+    """Best-effort VAR=value map from a Bash command string (issue #5404).
+
+    Returns ``(assignments, ambiguous_names)``. A name is ambiguous when it is
+    assigned more than one distinct value in the command — last-wins expansion
+    would disagree with bash ordering at the write site (Claude CF F001).
+    """
     out: dict[str, str] = {}
+    ambiguous: set[str] = set()
     for m in _SHELL_ASSIGN_RE.finditer(command or ""):
         name = m.group(1)
         if m.group(2) is not None:
@@ -749,16 +755,29 @@ def parse_shell_assignments(command: str) -> dict[str, str]:
             val = m.group(3)
         else:
             val = m.group(4) or ""
+        if name in out and out[name] != val:
+            ambiguous.add(name)
         out[name] = val
-    return out
+    return out, ambiguous
 
 
-def expand_shell_target(target: str, assignments: dict[str, str]) -> str:
-    """Expand a pure ``$VAR`` / ``${VAR}`` write target when assignment is known."""
+def expand_shell_target(
+    target: str,
+    assignments: dict[str, str],
+    *,
+    ambiguous: set[str] | None = None,
+) -> str:
+    """Expand a pure ``$VAR`` / ``${VAR}`` write target when assignment is known.
+
+    Ambiguous multi-assign names are left unexpanded so the caller blocks with
+    ``unresolved_shell_variable`` rather than allowing a reassignment bypass.
+    """
     m = _SHELL_VAR_RE.match((target or "").strip())
     if not m:
         return target
     name = m.group(1)
+    if ambiguous and name in ambiguous:
+        return target
     if assignments.get(name):
         return assignments[name]
     return target
@@ -845,12 +864,15 @@ def main() -> int:
 
     # #5404: expand $VAR write targets from same-command assignments so
     # gitignored lane-state is not mis-classified against the literal "$A".
-    assignments = parse_shell_assignments(command) if tool_name == "Bash" else {}
+    if tool_name == "Bash":
+        assignments, ambiguous = parse_shell_assignments(command)
+    else:
+        assignments, ambiguous = {}, set()
 
     try:
         decisions: list[tuple[str, object]] = []
         for raw in raw_targets:
-            expanded = expand_shell_target(raw, assignments)
+            expanded = expand_shell_target(raw, assignments, ambiguous=ambiguous)
             if is_unresolved_shell_var(expanded):
                 decisions.append(
                     (

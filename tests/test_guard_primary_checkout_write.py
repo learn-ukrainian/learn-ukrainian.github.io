@@ -621,3 +621,20 @@ def test_bash_untracked_non_ignored_still_blocked(repo: Path):
     result = _run(repo, payload)
     assert result.returncode == 2, result.stderr
     assert "untracked_primary_checkout" in result.stderr
+
+
+def test_bash_shell_var_reassignment_not_expanded(repo: Path):
+    """#5404 CF F001: multi-assign $A must not expand to last (benign) value."""
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {
+            "command": (
+                "A=curriculum/tracked.md; echo x > $A; A=local_state/ok.log"
+            ),
+        },
+    }
+    result = _run(repo, payload)
+    # Must not allow (would dirty tracked file under bash's true binding).
+    assert result.returncode == 2, result.stderr
+    assert "unresolved_shell_variable" in result.stderr or "tracked_primary" in result.stderr
