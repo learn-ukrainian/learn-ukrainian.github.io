@@ -1,4 +1,4 @@
-"""Bare primary checkout is not dirty-checkable via git status."""
+"""Primary bare drift: heal-then-proceed (Fable layout A; #5578 inverted)."""
 
 from __future__ import annotations
 
@@ -25,25 +25,87 @@ def _clean_env() -> dict[str, str]:
     return {k: v for k, v in os.environ.items() if k not in _GIT_REDIRECT}
 
 
-def _git(*args: str) -> None:
+def _git(*args: str, cwd: Path | None = None) -> None:
     subprocess.run(
         ["git", *args],
         check=True,
         capture_output=True,
         text=True,
+        cwd=str(cwd) if cwd else None,
         env=_clean_env(),
     )
 
 
-def test_primary_checkout_dirty_status_treats_bare_as_clean(tmp_path: Path, monkeypatch) -> None:
-    bare = tmp_path / "primary.git"
-    _git("init", "--bare", str(bare))
-    monkeypatch.setattr(wc, "resolve_main_root", lambda start=None: bare)
-    monkeypatch.setattr(wc, "current_branch", lambda root: "main")
+def test_heal_primary_bare_if_needed_resets_core_bare(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git("init", "-b", "main", str(repo))
+    _git("-C", str(repo), "config", "core.bare", "true")
+    assert (
+        subprocess.run(
+            ["git", "-C", str(repo), "config", "--get", "core.bare"],
+            capture_output=True,
+            text=True,
+            env=_clean_env(),
+            check=False,
+        ).stdout.strip()
+        == "true"
+    )
 
-    # _run_git uses sanitized_git_env — still pass bare path via resolve_main_root.
-    status = wc.primary_checkout_dirty_status(bare)
-    assert status["dirty"] is False
-    assert status["dirty_count"] == 0
-    assert status["entries"] == []
-    assert status.get("bare_primary") is True
+    result = wc.heal_primary_bare_if_needed(repo)
+    assert result["healed"] is True
+    assert result["was_bare"] is True
+    assert (
+        subprocess.run(
+            ["git", "-C", str(repo), "config", "--get", "core.bare"],
+            capture_output=True,
+            text=True,
+            env=_clean_env(),
+            check=False,
+        ).stdout.strip()
+        == "false"
+    )
+    # worktreeConfig asserted
+    assert (
+        subprocess.run(
+            ["git", "-C", str(repo), "config", "--get", "extensions.worktreeConfig"],
+            capture_output=True,
+            text=True,
+            env=_clean_env(),
+            check=False,
+        ).stdout.strip()
+        == "true"
+    )
+
+
+def test_primary_checkout_dirty_status_heals_bare_then_reports_status(
+    tmp_path: Path,
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git("init", "-b", "main", str(repo))
+    (repo / "README").write_text("x\n", encoding="utf-8")
+    _git("-C", str(repo), "add", "README")
+    _git("-C", str(repo), "config", "user.email", "t@example.com")
+    _git("-C", str(repo), "config", "user.name", "t")
+    _git("-C", str(repo), "commit", "-m", "init")
+    # Dirty after commit
+    (repo / "README").write_text("dirty\n", encoding="utf-8")
+    # Simulate bare pollution
+    _git("-C", str(repo), "config", "core.bare", "true")
+
+    status = wc.primary_checkout_dirty_status(repo)
+    assert status["bare_primary"] is False
+    assert status["bare_healed"] is True
+    assert status["dirty"] is True
+    assert status["dirty_count"] >= 1
+    assert (
+        subprocess.run(
+            ["git", "-C", str(repo), "config", "--get", "core.bare"],
+            capture_output=True,
+            text=True,
+            env=_clean_env(),
+            check=False,
+        ).stdout.strip()
+        == "false"
+    )

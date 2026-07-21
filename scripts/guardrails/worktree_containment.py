@@ -59,6 +59,7 @@ __all__ = [
     "classify_repo_path",
     "current_branch",
     "evaluate_write",
+    "heal_primary_bare_if_needed",
     "is_dispatch_worktree",
     "is_ignored",
     "is_primary_checkout",
@@ -385,6 +386,41 @@ def _parse_status_porcelain_z(stdout: str) -> list[dict[str, str]]:
     return entries
 
 
+def heal_primary_bare_if_needed(main_root: Path) -> dict:
+    """If primary ``core.bare``/is-bare drifted true, heal to non-bare (Fable layout A).
+
+    Bare primary is a **bug** (pollution class #2842), not an intentional mode.
+    Root mitigation is ``extensions.worktreeConfig=true`` so worktree-local
+    config cannot flip the shared primary. Any residual bare state is healed
+    loudly so dispatch continues without treating bare as "clean by design".
+    """
+    bare_proc = _run_git(main_root, "rev-parse", "--is-bare-repository")
+    is_bare = bare_proc.returncode == 0 and bare_proc.stdout.strip().lower() == "true"
+    cfg_proc = _run_git(main_root, "config", "--get", "core.bare")
+    cfg_bare = (cfg_proc.stdout or "").strip().lower() == "true"
+    if not is_bare and not cfg_bare:
+        # Keep worktreeConfig asserted so re-clones / drift stay closed.
+        _run_git(main_root, "config", "extensions.worktreeConfig", "true")
+        return {"healed": False, "was_bare": False}
+
+    # Heal shared config (must be non-bare for human + services home).
+    fix = _run_git(main_root, "config", "--local", "core.bare", "false")
+    if fix.returncode != 0:
+        raise RuntimeError(
+            f"primary was bare and heal failed (cwd={main_root}): "
+            f"{(fix.stderr or fix.stdout or 'git config failed').strip()}"
+        )
+    _run_git(main_root, "config", "extensions.worktreeConfig", "true")
+    return {
+        "healed": True,
+        "was_bare": True,
+        "message": (
+            "healed primary core.bare true→false (layout A: bare is a bug; "
+            "see #2842 / Fable fable-git-layout-best-practice)"
+        ),
+    }
+
+
 def primary_checkout_dirty_status(start: Path | str | None = None) -> dict:
     """Return dirty-state detail for the protected primary checkout.
 
@@ -394,29 +430,13 @@ def primary_checkout_dirty_status(start: Path | str | None = None) -> dict:
     files both count because either would pollute the primary checkout for the
     next dispatched writer.
 
-    Bare primary repositories (no work tree) cannot hold a dirty working tree
-    for product files — ``git status`` fails with "must be run in a work tree".
-    Treat bare primary as clean so write-capable dispatch can run from
-    worktrees without false-blocking the fleet.
+    **Layout A (Fable):** primary is a normal non-bare worktree (human +
+    services home). If bare drift is detected, heal-then-proceed — never treat
+    bare as intentionally clean (#5578 inverted).
     """
     main_root = resolve_main_root(start)
     branch = current_branch(main_root)
-    bare_proc = _run_git(main_root, "rev-parse", "--is-bare-repository")
-    is_bare = bare_proc.returncode == 0 and bare_proc.stdout.strip().lower() == "true"
-    if is_bare:
-        return {
-            "main_root": str(main_root),
-            "branch": branch,
-            "protected_branch": branch in PROTECTED_BRANCHES if branch else False,
-            "dirty": False,
-            "dirty_count": 0,
-            "tracked_dirty_count": 0,
-            "untracked_dirty_count": 0,
-            "entries": [],
-            "checked_cwd": str(main_root),
-            "checked_command": "git rev-parse --is-bare-repository",
-            "bare_primary": True,
-        }
+    heal = heal_primary_bare_if_needed(main_root)
 
     command = ("git", "status", "--porcelain=v1", "-z", "--untracked-files=all")
     proc = _run_git(main_root, *command[1:])
@@ -442,6 +462,8 @@ def primary_checkout_dirty_status(start: Path | str | None = None) -> dict:
         "checked_cwd": str(main_root),
         "checked_command": " ".join(command),
         "bare_primary": False,
+        "bare_healed": bool(heal.get("healed")),
+        "bare_heal_message": heal.get("message"),
     }
 
 

@@ -15,12 +15,14 @@ This project will not be commercialized. It is and will remain a free, open-sour
 The operator's working contract is `agents_extensions/shared/rules/operator-expectations.md`
 (digest also in `AGENTS.md` § Operator Contract; deploy copy `.gemini/rules/`). Its items are
 the tie-breakers. Core: quality over shortcuts · root-cause fixes · git/PR hygiene with
+layout A (primary non-bare on main; agents under `.worktrees/dispatch/…`; bare=bug) ·
 `X-Agent` trailers · use the whole fleet, review gate = independent CROSS-FAMILY reviewer
 (discussion ≠ review) · route by model × harness fit · handle limits, NOTE substitutions ·
 no claims without tool-backed proof (Ukrainian word/stress/morphology facts VESUM/`sources`-
 verified, never guessed) · clean code + current docs · **max UA immersion EXCEPT A1** (its
-English scaffolding is by design; from A2 never raise English) · drive, don't defer · repo
-hard gates bind.
+English scaffolding is by design; from A2 never raise English) · drive within approved scope ·
+**no architecture/layout/process decisions without operator or advisor approval (Fable, Sol;
+roster may change)** · repo hard gates bind.
 
 ## Project Research Registry — Orchestrator Duty (binding)
 
