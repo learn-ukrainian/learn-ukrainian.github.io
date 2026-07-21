@@ -160,18 +160,26 @@ if [ "$LEARN_UKRAINIAN_TRUSTED" != "1" ]; then
 fi
 
 # The certified native route must not inherit Claudex/KimiCC proxy, delegation,
-# deferred-tool, effort, or supervisor identity state.
+# deferred-tool, effort, context-capacity, or supervisor identity state.
 if [ "$LEARN_UKRAINIAN_TRANSPORT" = "native" ]; then
     unset ANTHROPIC_BASE_URL ANTHROPIC_AUTH_TOKEN CLAUDE_CODE_SUBAGENT_MODEL
     unset ANTHROPIC_MODEL ANTHROPIC_DEFAULT_OPUS_MODEL ANTHROPIC_DEFAULT_SONNET_MODEL
     unset ANTHROPIC_DEFAULT_HAIKU_MODEL ANTHROPIC_DEFAULT_FABLE_MODEL
     unset ENABLE_TOOL_SEARCH CLAUDE_CODE_EFFORT_LEVEL
+    unset CLAUDE_CODE_MAX_CONTEXT_TOKENS
     unset LEARN_UKRAINIAN_CLAUDEX_RUN_ID
     unset LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION
 fi
 
-# Only a trusted gateway contract may override Claude Code's compaction point.
-if [ "$LEARN_UKRAINIAN_TRUSTED" = "1" ] && [ -n "$LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS" ]; then
+# Only a trusted non-native gateway contract may override Claude Code's assumed
+# context window and compaction point. The assumed window is required for
+# unrecognized gateway model IDs; the compact capacity is capped against it.
+if [ "$LEARN_UKRAINIAN_TRUSTED" = "1" ] && [ "$LEARN_UKRAINIAN_TRANSPORT" != "native" ] && [ "$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS" -gt 0 ]; then
+    export CLAUDE_CODE_MAX_CONTEXT_TOKENS="$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS"
+else
+    unset CLAUDE_CODE_MAX_CONTEXT_TOKENS
+fi
+if [ "$LEARN_UKRAINIAN_TRUSTED" = "1" ] && [ "$LEARN_UKRAINIAN_TRANSPORT" != "native" ] && [ -n "$LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS" ]; then
     export CLAUDE_CODE_AUTO_COMPACT_WINDOW="$LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS"
 else
     unset CLAUDE_CODE_AUTO_COMPACT_WINDOW

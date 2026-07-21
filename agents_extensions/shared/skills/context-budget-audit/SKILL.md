@@ -87,7 +87,7 @@ For each phase, compute `prompt_chars / model_context_chars`. Model context wind
 | `gemini-3.1-pro-preview` | 4,000,000 (1M tokens) |
 | `gemini-3-flash` | 4,000,000 |
 | `claude-fable-5` / `claude-opus-4-8` / `claude-sonnet-5` | 4,000,000 (1M tokens) |
-| `gpt-5.6-sol` / `-terra` / `-luna` | 1,488,000 (372K tokens; ~353K usable before context-mgmt margin) |
+| `gpt-5.6-sol` / `-terra` / `-luna` | 1,088,000 (272K tokens; ~258.4K usable before context-mgmt margin) |
 | `gpt-5.5` (Codex, legacy pinned) | 1,088,000 (272K tokens) |
 
 Flag any phase where prompt_chars exceeds 50% of the model's window — that's a hard rule for this skill. (For all current pipelines, this is ~500K+ chars, which should NEVER happen for a single v6 phase. If it does, something is badly wrong.)

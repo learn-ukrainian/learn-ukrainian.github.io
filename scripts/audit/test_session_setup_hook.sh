@@ -544,9 +544,9 @@ sol_hook_json=$(jq -nc \
   '{session_id: $session_id, transcript_path: $transcript_path, source: "startup", model: "gpt-5.6-sol", agent_type: "infra-orchestrator"}')
 output="$(run_hook "$fixture_root" 0 claude-infra stale-codex-session "$sol_hook_json" sol_lead "$supervisor_run_id" 0)"
 assert_contains "$output" "Profile: sol_lead" "supervised Sol profile"
-assert_contains "$output" "Declared Window: 372000" "supervised Sol window"
+assert_contains "$output" "Declared Window: 272000" "supervised Sol window"
 assert_contains "$output" "Cold Start: compact" "supervised Sol compact startup"
-assert_contains "$output" "Budget: 37200" "supervised Sol budget"
+assert_contains "$output" "Budget: 27200" "supervised Sol budget"
 assert_contains "$output" "api/orient?lean=true&session=official-sol-session" "supervised Sol lean orientation"
 assert_not_contains "$output" "CLAUDEX SUPERVISOR BIND FAILED" "supervised Sol binding"
 supervisor_runtime="$fixture_root/.agent/claudex-supervisors/$supervisor_run_id/runtime.json"

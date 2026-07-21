@@ -126,7 +126,7 @@ def test_session_record_drives_capacity_provenance_and_mismatch(
     assert telemetry["transcript"] == "sol.jsonl"
     assert telemetry["declared_model"] == "gpt-5.6-sol"
     assert telemetry["observed_model"] == "gpt-5.6-sol"
-    assert telemetry["declared_context_limit"] == 372_000
+    assert telemetry["declared_context_limit"] == 272_000
     assert telemetry["actual_context_limit"] == 360_000
     assert telemetry["selected_profile"] == "sol_lead"
     assert telemetry["percentage"] == pytest.approx(187_000 * 100 / 360_000)
@@ -171,7 +171,7 @@ def test_linked_worktree_reads_record_from_canonical_primary_checkout(
     assert telemetry["caller_match"] is True
     assert telemetry["ctx"] == 144_000
     assert telemetry["transcript"] == "linked.jsonl"
-    assert telemetry["actual_context_limit"] == 372_000
+    assert telemetry["actual_context_limit"] == 272_000
     assert telemetry["selected_profile"] == "sol_lead"
 
 

@@ -5,7 +5,7 @@
 # bridge. Process-scoped env only: never rewrites ~/.claude/settings.json, so
 # ./start-claude.sh (native Anthropic) remains available in parallel.
 #
-# Compaction: sol_lead profile = 372k window, 353k auto-compact capacity
+# Compaction: sol_lead profile = 272k window, 258.4k auto-compact capacity
 # (scripts/config/context_profiles.yaml). Do not raise English immersion policy
 # via this launcher — it only changes the model route.
 
@@ -20,7 +20,7 @@ usage() {
     cat <<'EOF'
 Usage: ./start-claudex.sh [--subagent sol|terra|luna] [CLAUDE_ARGS...]
 
-Interactive Claude Code with GPT-5.6 Sol lead (372k context / 353k compact)
+Interactive Claude Code with GPT-5.6 Sol lead (272k context / 258.4k compact)
 and a configurable GPT-5.6 subagent. Does not rewrite ~/.claude/settings.json.
 
 Options:
@@ -94,7 +94,8 @@ if [ "$LEARN_UKRAINIAN_TRUSTED" != "1" ] || [ "$LEARN_UKRAINIAN_PROFILE_ID" != "
     exit 1
 fi
 export LEARN_UKRAINIAN_REQUESTED_PROFILE_ID="sol_lead"
-# 372k Sol window → 353k certified auto-compact (emergency rollover fires first).
+# The nested start-claude.sh exports the certified assumed window and compact
+# capacity from this profile. Keep the value here for the preflight diagnostic.
 export CLAUDE_CODE_AUTO_COMPACT_WINDOW="$LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS"
 
 if ! SUBAGENT_MODEL="$(resolve_model "$SUBAGENT")"; then
@@ -109,8 +110,9 @@ export ANTHROPIC_AUTH_TOKEN="${CLAUDEX_AUTH_TOKEN:-sk-dummy}"
 unset ANTHROPIC_API_KEY
 export CLAUDE_CODE_SUBAGENT_MODEL="$SUBAGENT_MODEL"
 export CLAUDE_CODE_ALWAYS_ENABLE_EFFORT=1
+export CLAUDE_CODE_EFFORT_LEVEL=high
 export CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY=3
-# Defer MCP schemas so the 372k Sol route does not preload every tool definition.
+# Defer MCP schemas so the Sol route does not preload every tool definition.
 export ENABLE_TOOL_SEARCH=true
 
 if ! command -v curl >/dev/null 2>&1; then
@@ -128,5 +130,5 @@ if ! curl --fail --silent --show-error --output /dev/null --header @- \
 fi
 
 echo "Claudex: lead=$LEAD_MODEL subagent=$SUBAGENT_MODEL profile=$LEARN_UKRAINIAN_PROFILE_ID"
-echo "         window=$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS compact=$CLAUDE_CODE_AUTO_COMPACT_WINDOW (env-only; settings.json untouched)"
+echo "         window=$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS compact=$CLAUDE_CODE_AUTO_COMPACT_WINDOW effort=$CLAUDE_CODE_EFFORT_LEVEL (env-only; settings.json untouched)"
 exec "$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/orchestration/claudex_supervisor.py" "$PROJECT_DIR/start-claude.sh" --model "$LEAD_MODEL" "${FORWARD_ARGS[@]}"

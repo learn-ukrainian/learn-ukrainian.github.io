@@ -14,15 +14,15 @@ STATUSLINE = PROJECT_ROOT / "agents_extensions/shared/statusline/statusline.sh"
 CONTEXT_MONITOR = PROJECT_ROOT / "agents_extensions/shared/hooks/context-monitor.sh"
 
 
-def _record(*, actual_window: int | None = 372_000) -> dict[str, object]:
+def _record(*, actual_window: int | None = 272_000) -> dict[str, object]:
     return {
         "schema_version": 1,
         "session_id": "status-session",
         "effective_profile_id": "sol_lead" if actual_window else "fallback",
         "effective_model_id": "gpt-5.6-sol" if actual_window else "unknown",
-        "effective_context_window_tokens": 372_000 if actual_window else 0,
+        "effective_context_window_tokens": 272_000 if actual_window else 0,
         "expected_model_id": "gpt-5.6-sol" if actual_window else None,
-        "expected_context_window_tokens": 372_000 if actual_window else None,
+        "expected_context_window_tokens": 272_000 if actual_window else None,
         "observed_model_id": "gpt-5.6-sol",
         "observed_context_window_tokens": None,
         "actual_context_window_tokens": actual_window,
@@ -141,8 +141,8 @@ def test_statusline_prefers_official_usage_and_observed_capacity(tmp_path: Path)
         "model": {"id": "gpt-5.6-sol", "display_name": "GPT-5.6 Sol"},
         "workspace": {"current_dir": os.fspath(tmp_path)},
         "context_window": {
-            "context_window_size": 360_000,
-            "total_input_tokens": 180_000,
+            "context_window_size": 260_000,
+            "total_input_tokens": 130_000,
             "current_usage": {
                 "input_tokens": 1,
                 "cache_read_input_tokens": 2,
@@ -161,11 +161,11 @@ def test_statusline_prefers_official_usage_and_observed_capacity(tmp_path: Path)
         env=_environment(project, record_path),
     )
 
-    assert "[ctx: 180K/360K (50%)]" in completed.stdout
-    assert "MISMATCH WINDOW: 360000 vs 372000" in completed.stdout
+    assert "[ctx: 130K/260K (50%)]" in completed.stdout
+    assert "MISMATCH WINDOW: 260000 vs 272000" in completed.stdout
     assert "999999" not in completed.stdout
     persisted = json.loads(record_path.read_text(encoding="utf-8"))
-    assert persisted["actual_context_window_tokens"] == 360_000
+    assert persisted["actual_context_window_tokens"] == 260_000
     assert persisted["actual_context_window_provenance"] == (
         "statusline.context_window.context_window_size"
     )

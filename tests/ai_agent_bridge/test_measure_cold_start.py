@@ -97,7 +97,7 @@ def test_compact_and_full_budgets_are_enforced(
     assert compact.within_budget is False
     assert full.estimated_input_tokens < full.cold_start_budget_tokens
     assert full.within_budget is True
-    assert compact.main_context_window_tokens == 372_000
+    assert compact.main_context_window_tokens == 272_000
     assert full.main_context_window_tokens == 1_000_000
 
 
