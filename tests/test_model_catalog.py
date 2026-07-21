@@ -21,10 +21,10 @@ from scripts.review.model_catalog import (
 def test_committed_catalog_is_structurally_valid_and_current():
     catalog = load_model_catalog()
     assert catalog["schema_version"] == "model-catalog.v1"
-    assert catalog["reviewed_on"] == "2026-07-17"
-    assert catalog_age_days(catalog, as_of=date(2026, 7, 17)) == 0
-    assert not catalog_is_stale(catalog, as_of=date(2026, 8, 16))
-    assert catalog_is_stale(catalog, as_of=date(2026, 8, 17))
+    assert catalog["reviewed_on"] == "2026-07-21"
+    assert catalog_age_days(catalog, as_of=date(2026, 7, 21)) == 0
+    assert not catalog_is_stale(catalog, as_of=date(2026, 8, 20))
+    assert catalog_is_stale(catalog, as_of=date(2026, 8, 21))
 
 
 def test_catalog_covers_current_preferred_frontier_and_efficient_models():
@@ -37,6 +37,7 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
         "claude-opus-4-8",
         "claude-sonnet-5",
         "gemini-3.1-pro-high",
+        "gemini-3.6-flash-high",
         "gemini-3.5-flash-high",
         "grok-4.5",
         "kimi-code/k3",

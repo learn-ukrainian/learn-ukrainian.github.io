@@ -322,7 +322,7 @@ def build_agy_prompt(
     may read the precise repository files needed to answer, but must not
     broaden that into an exploratory or write-capable task.
     """
-    prompt = f"""You are Agy (Antigravity CLI, Gemini-3.5-Flash-High), receiving a message from {msg['from'].title()} via the message broker.
+    prompt = f"""You are Agy (Antigravity CLI, Gemini-3.6-Flash-High), receiving a message from {msg['from'].title()} via the message broker.
 
 {OPERATOR_CONTRACT_DIGEST}
 

@@ -373,28 +373,25 @@ def test_build_invocation_sets_print_timeout(tmp_path: Path) -> None:
 
 
 def test_build_invocation_maps_model_slug(tmp_path: Path) -> None:
-    # A runtime slug is mapped to agy's --model display string. agy accepts the
-    # display label (verified 2026-06-05) but NOT the bare slug, so the adapter
-    # must translate. (Corrects the #2731/#2735 saga: the slug was the bug, not
-    # the flag.)
-    plan = _build(tmp_path, model="gemini-3.1-pro-high")
-    assert _model_after_flag(plan) == "Gemini 3.1 Pro (High)"
+    # Runtime slugs pass through as ``agy models`` ids (verified 2026-07-21 for 3.6).
+    plan = _build(tmp_path, model="gemini-3.6-flash-high")
+    assert _model_after_flag(plan) == "gemini-3.6-flash-high"
 
 
 def test_build_invocation_accepts_display_string(tmp_path: Path) -> None:
-    # Passing the canonical display string maps to itself (idempotent).
+    # Legacy display labels normalize to the slug form.
     plan = _build(tmp_path, model="Gemini 3.5 Flash (High)")
-    assert _model_after_flag(plan) == "Gemini 3.5 Flash (High)"
+    assert _model_after_flag(plan) == "gemini-3.5-flash-high"
 
 
 def test_build_invocation_unknown_model_falls_back_to_default(tmp_path: Path) -> None:
     # A stale/unknown identifier degrades to the adapter default rather than
     # passing an invalid --model value.
     plan = _build(tmp_path, model="tui-controlled")
-    assert _model_after_flag(plan) == "Gemini 3.5 Flash (High)"
+    assert _model_after_flag(plan) == "gemini-3.6-flash-high"
 
 
 def test_build_invocation_none_model_falls_back_to_default(tmp_path: Path) -> None:
-    # No model -> resolves the adapter default to its display string.
+    # No model -> resolves the adapter default slug.
     plan = _build(tmp_path, model=None)
-    assert _model_after_flag(plan) == "Gemini 3.5 Flash (High)"
+    assert _model_after_flag(plan) == "gemini-3.6-flash-high"

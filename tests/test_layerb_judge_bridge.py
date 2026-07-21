@@ -47,7 +47,7 @@ def _config(family: str = "codex") -> layerb_judge_bridge.BridgeConfig:
     model = {
         "codex": PINNED_CODEX_MODEL,
         "grok": PINNED_GROK_MODEL,
-        "gemini": "gemini-3.5-flash-high",
+        "gemini": "gemini-3.6-flash-high",
     }[family]
     return layerb_judge_bridge.BridgeConfig(
         family=family,

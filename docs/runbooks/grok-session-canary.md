@@ -49,6 +49,14 @@ Never put API keys, private teacher PII, or private-repo secrets in the diary.
 ### CLI
 
 ```bash
+# Post-compact (Sol Option D): score FROM MEMORY first, then hydrate once
+.venv/bin/python -m scripts.session_canary.grok_lane score \
+  --epic harness --answers .claude/harness-epic/canary/answers.json \
+  --context-tokens 250000
+.venv/bin/python -m scripts.session_canary.grok_lane hydrate --epic harness
+# optional receipt only (do not also paste hydrate.md into chat):
+#   ... hydrate --epic harness --write
+
 # Mid-batch diary stamp + refresh Next Drive
 .venv/bin/python -m scripts.session_canary.grok_lane stamp --epic harness \
   --title "merged continuity PRs" \
@@ -111,7 +119,7 @@ START  → start-grok.sh --epic <name> claims stream lease via common supervisor
          → load diary + stream → mint canary
 DRIVE  → stamp diary after each batch
          at ~60–70% context OR after auto-compact → score from memory
-         PASS → diary canary line; continue
+         PASS → hydrate once (bounded capsule + stream tail); continue
          FAIL → STATE AT HANDBACK + close stream + quit
 END    → handback while PASS (optional) before forced compact
 ```
@@ -128,7 +136,7 @@ The launcher owns lease open/close for Grok. The cold-start prompt explicitly te
 
 ## Related
 
-- `scripts/session_canary/diary.py` — stamp / handback helpers
+- `scripts/session_canary/diary.py` — stamp / handback / hydrate capsule helpers
 - `docs/runbooks/epic-stream-handoff.md` — cross-agent stream claim
 - `scripts/context_canary.py` — shared mint/score engine
 - `docs/best-practices/codex-thread-handoff.md` — strict rollover canary

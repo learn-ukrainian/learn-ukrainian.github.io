@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Literal
 
 PRIMARY_GEMINI_MODEL = "gemini-3.1-pro-preview"
-AGY_GEMINI_MODEL = "gemini-3.5-flash-high"
+AGY_GEMINI_MODEL = "gemini-3.6-flash-high"
 FLASH_GEMINI_MODEL = "gemini-3-flash-preview"
 FINAL_GEMINI_MODEL = "gemini-2.5-pro"
 GEMINI_MODEL_LADDER = (

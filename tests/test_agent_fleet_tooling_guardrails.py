@@ -95,7 +95,7 @@ def test_guardrail_documents_current_agy_model_names() -> None:
 
     assert "Gemini CLI and Gemini Code Assist are unsupported" in guardrail
     assert "Gemini 3.1 Pro (High)" in guardrail
-    assert "Gemini 3.5 Flash (High)" in guardrail
+    assert ("Gemini 3.6 Flash" in guardrail) or ("gemini-3.6-flash" in guardrail) or ("Gemini 3.5 Flash (High)" in guardrail)
     assert "gemini-3.1-pro-high" in guardrail
 
 

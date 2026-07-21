@@ -114,7 +114,7 @@ _TRANSIENT_PATTERNS = [
 
 _LEGACY_GEMINI_TO_AGY_MODEL = {
     "gemini-3.1-pro-preview": "gemini-3.1-pro-high",
-    "gemini-3.0-flash-preview": "gemini-3.5-flash-high",
+    "gemini-3.0-flash-preview": "gemini-3.6-flash-high",
 }
 
 
