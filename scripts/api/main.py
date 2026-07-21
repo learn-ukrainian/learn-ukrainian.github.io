@@ -85,6 +85,7 @@ from .route_contracts import router as contracts_router
 from .rules_router import router as rules_router
 from .runtime_router import router as runtime_router
 from .session_router import router as session_router
+from .session_streams_router import router as session_streams_router
 from .site_router import router as site_router
 from .state_helpers import cache_get, cache_invalidate, cache_set
 from .state_router import router as state_router
@@ -146,6 +147,7 @@ app.include_router(agent_router, prefix="/api/agent", tags=["agent"])
 app.include_router(artifacts_router, prefix="/api/artifacts", tags=["artifacts"])
 app.include_router(blue_router, prefix="/api/blue")
 app.include_router(comms_router, prefix="/api/comms")
+app.include_router(session_streams_router, prefix="/api/session-streams", tags=["session-streams"])
 app.include_router(coordination_router, prefix="/api/coordination")
 app.include_router(consultation_router, prefix="/api/consultation")
 app.include_router(cost_router, prefix="/api/cost")
