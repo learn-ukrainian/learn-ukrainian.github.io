@@ -20,16 +20,27 @@ from agents_extensions.shared.session_streams.projection import (
     list_projection_receipts,
 )
 from agents_extensions.shared.session_streams.store import NotFoundError, SessionStreamStore
-from scripts.orchestration.reap_worktrees import primary_checkout_root
 
-from .config import PROJECT_ROOT
+from .config import LIVE_REPO_ROOT, PROJECT_ROOT
+from .repository_authority import preparation_data_root
 
 router = APIRouter(tags=["session-streams"])
 
 
 def _repo_root() -> Path:
-    """Prefer the primary checkout that owns shared .agent/ state."""
-    return primary_checkout_root(Path(PROJECT_ROOT))
+    """Live-data checkout that owns shared .agent/ + dual-write handoffs.
+
+    Release-mode API code roots under ``.runtime/api/releases/<sha>`` have no
+    ``.git`` and do not symlink ``.agent`` / ``.claude`` (see LIVE_DATA_PATHS).
+    ``primary_checkout_root(PROJECT_ROOT)`` therefore returns the release path
+    and PR-K surfaces 404 for a DB that only exists on the live primary.
+    Use the same authority helper as state_router: when PROJECT_ROOT is a
+    release snapshot, read mutable continuity state from LIVE_REPO_ROOT.
+    """
+    return preparation_data_root(
+        project_root=Path(PROJECT_ROOT),
+        live_repo_root=Path(LIVE_REPO_ROOT),
+    )
 
 
 def _db_path() -> Path:

@@ -36,6 +36,9 @@ def _supervisor_body(capture: Path, stream_id: str, session_id: str, lease_id: s
 if [[ "$1" == *"assert_primary_on_main.py" ]]; then
   exit 0
 fi
+if [[ "$1" == *"check_core_bare.py" ]]; then
+  exit 0
+fi
 if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "open" ]]; then
   {{
     printf '%s\\n' "$@" > "{capture}"
@@ -99,6 +102,11 @@ def _build_fake_project(tmp_path: Path) -> tuple[Path, Path]:
     )
     (guard_dir / "assert_primary_on_main.py").write_text("#!/usr/bin/env python3\nraise SystemExit(0)\n")
     (guard_dir / "assert_primary_on_main.py").chmod(0o755)
+    audit_dir = project / "scripts" / "audit"
+    audit_dir.mkdir(parents=True, exist_ok=True)
+    (audit_dir / "check_core_bare.py").write_text(
+        "#!/usr/bin/env python3\nraise SystemExit(0)\n", encoding="utf-8"
+    )
 
     capture = tmp_path / "supervisor_capture.txt"
     _write_executable(

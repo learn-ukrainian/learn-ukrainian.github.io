@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
+import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -52,3 +55,36 @@ def test_session_stream_status_rejects_bad_id() -> None:
     client = _client()
     r = client.get("/api/session-streams/v1/status/not-an-epic")
     assert r.status_code == 400
+
+
+def test_session_streams_repo_root_uses_live_primary_under_release(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """PR-K residual: release code root must not own .agent/session-streams."""
+    from scripts.api import session_streams_router as ssr
+
+    live = tmp_path / "live"
+    live.mkdir()
+    db_dir = live / ".agent" / "session-streams" / "v1"
+    db_dir.mkdir(parents=True)
+    db = db_dir / "session-streams.sqlite3"
+    db.write_bytes(b"")
+
+    # Synthetic release path shape: .runtime/api/releases/<40-hex>
+    release = (
+        tmp_path
+        / ".runtime"
+        / "api"
+        / "releases"
+        / ("a" * 40)
+    )
+    release.mkdir(parents=True)
+
+    monkeypatch.setattr(ssr, "PROJECT_ROOT", release)
+    monkeypatch.setattr(ssr, "LIVE_REPO_ROOT", live)
+
+    assert ssr._repo_root() == live
+    assert ssr._db_path() == db
+    health = ssr.session_streams_health()
+    assert health["db_exists"] is True
+    assert health["repo_root"] == str(live)

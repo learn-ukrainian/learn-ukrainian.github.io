@@ -89,6 +89,14 @@ if git rev-parse --git-dir >/dev/null 2>&1; then
       exit 1
     fi
   fi
+  # Layout A: bare primary is a bug — heal before agents drive (#2842 / #5587).
+  # Grok has no SessionStart hook (Claude uses heal-core-bare PreToolUse).
+  if [ -x "$PROJECT_DIR/.venv/bin/python" ] \
+      && [ -f "$PROJECT_DIR/scripts/audit/check_core_bare.py" ]; then
+    "$PROJECT_DIR/.venv/bin/python" \
+      "$PROJECT_DIR/scripts/audit/check_core_bare.py" --fix --repo "$PROJECT_DIR" \
+      || echo "Warning: check_core_bare --fix failed (continuing launch)." >&2
+  fi
   if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
     echo "Uncommitted changes detected (primary checkout is orientation-only; write via worktrees)"
   fi
