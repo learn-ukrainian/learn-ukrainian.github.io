@@ -43,6 +43,11 @@ except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 from pydantic import BaseModel
 
+from scripts.fleet_comms.efficiency_metrics import (
+    collect_dead_letters,
+    collect_delivery_backlog,
+    collect_efficiency_metrics,
+)
 from scripts.fleet_comms.message_plane import read_plane_status
 from scripts.fleet_comms.migrations import apply_migrations
 
@@ -1949,3 +1954,40 @@ def comms_inbox(
         "truncated": truncated,
         "limit": limit,
     }
+
+
+@router.get("/v1/backlog")
+async def comms_v1_backlog(
+    limit: int = Query(100, ge=1, le=500),
+    exclude_retired: bool = Query(True),
+) -> dict:
+    """Pending delivery backlog (no message content). Sol PR-M."""
+    if not MESSAGE_DB.exists():
+        return {"total": 0, "by_agent": {}, "by_status": {}, "rows": [], "db_missing": True}
+    payload = collect_delivery_backlog(
+        MESSAGE_DB, limit=limit, exclude_retired=exclude_retired
+    )
+    payload["db_path"] = str(MESSAGE_DB)
+    payload["content_included"] = False
+    return payload
+
+
+@router.get("/v1/dead-letters")
+async def comms_v1_dead_letters(limit: int = Query(100, ge=1, le=500)) -> dict:
+    """Dead-letter inventory (metadata only). Sol PR-M."""
+    if not MESSAGE_DB.exists():
+        return {"total": 0, "by_reason": {}, "rows": [], "db_missing": True}
+    payload = collect_dead_letters(MESSAGE_DB, limit=limit)
+    payload["db_path"] = str(MESSAGE_DB)
+    payload["content_included"] = False
+    return payload
+
+
+@router.get("/v1/metrics")
+async def comms_v1_metrics() -> dict:
+    """Efficiency metrics from durable timestamps (no content). Sol PR-M."""
+    if not MESSAGE_DB.exists():
+        return {"content_included": False, "db_missing": True}
+    payload = collect_efficiency_metrics(MESSAGE_DB)
+    payload["db_path"] = str(MESSAGE_DB)
+    return payload
