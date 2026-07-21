@@ -12,7 +12,7 @@ from scripts.fleet_comms.efficiency_metrics import (
 )
 
 
-def _mini_db(path: Path) -> None:
+def _mini_db(path: Path, *, legacy_messages: bool = False) -> None:
     conn = sqlite3.connect(path)
     conn.executescript(
         """
@@ -56,6 +56,22 @@ def _mini_db(path: Path) -> None:
            '2026-07-21T09:00:00','2026-07-21T09:00:00');
         """
     )
+    if legacy_messages:
+        # Classic broker schema: message_type present, no status column.
+        conn.executescript(
+            """
+            CREATE TABLE messages (
+              id INTEGER PRIMARY KEY,
+              task_id TEXT,
+              message_type TEXT,
+              content TEXT
+            );
+            INSERT INTO messages VALUES
+              (1,'t1','ask','ignored body'),
+              (2,'t1','reply','ignored body'),
+              (3,'t2','review',NULL);
+            """
+        )
     conn.commit()
     conn.close()
 
@@ -83,3 +99,14 @@ def test_dead_letters_and_metrics(tmp_path: Path) -> None:
     assert m["deliveries"]["delivered"] == 1
     assert m["retired_endpoint_pending"]["gemini"] == 1
     assert m["latency_seconds"]["delivery_dispatch_to_done"]["n"] == 1
+
+
+def test_legacy_messages_without_status_column(tmp_path: Path) -> None:
+    """Codex CF F001: metrics must not require messages.status."""
+    db = tmp_path / "legacy.db"
+    _mini_db(db, legacy_messages=True)
+    m = collect_efficiency_metrics(db)
+    assert m["messages_legacy"]["by_message_type"]["ask"] == 1
+    assert m["messages_legacy"]["by_message_type"]["reply"] == 1
+    assert m["messages_legacy"]["distinct_task_ids"] == 2
+    assert "by_status" not in m["messages_legacy"]

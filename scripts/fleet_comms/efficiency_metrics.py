@@ -179,19 +179,36 @@ def collect_efficiency_metrics(db_path: Path) -> dict[str, Any]:
                 metrics["requests"][str(r["state"])] = int(r["c"])
 
         if _table_exists(conn, "messages"):
-            for r in conn.execute(
-                "SELECT status, COUNT(*) AS c FROM messages GROUP BY status"
-            ):
-                metrics["messages_legacy"][str(r["status"])] = int(r["c"])
-            # ask/reply pairs by task_id count only
-            pair = conn.execute(
-                """
-                SELECT COUNT(DISTINCT task_id) AS tasks
-                FROM messages
-                WHERE task_id IS NOT NULL AND task_id != ''
-                """
-            ).fetchone()
-            metrics["messages_legacy"]["distinct_task_ids"] = int(pair["tasks"] or 0)
+            msg_cols = _column_names(conn, "messages")
+            # Legacy broker schema uses message_type (+ optional status lifecycle).
+            # Never assume status alone — schemas without it must still return metrics.
+            if "message_type" in msg_cols:
+                by_type: dict[str, int] = {}
+                for r in conn.execute(
+                    "SELECT message_type, COUNT(*) AS c FROM messages GROUP BY message_type"
+                ):
+                    by_type[str(r["message_type"] or "")] = int(r["c"])
+                metrics["messages_legacy"]["by_message_type"] = by_type
+            if "status" in msg_cols:
+                by_status: dict[str, int] = {}
+                for r in conn.execute(
+                    "SELECT status, COUNT(*) AS c FROM messages GROUP BY status"
+                ):
+                    # Truncate long free-form failure strings (not content, but keep compact).
+                    key = str(r["status"] or "")
+                    if len(key) > 80:
+                        key = key[:77] + "..."
+                    by_status[key] = int(r["c"])
+                metrics["messages_legacy"]["by_status"] = by_status
+            if "task_id" in msg_cols:
+                pair = conn.execute(
+                    """
+                    SELECT COUNT(DISTINCT task_id) AS tasks
+                    FROM messages
+                    WHERE task_id IS NOT NULL AND task_id != ''
+                    """
+                ).fetchone()
+                metrics["messages_legacy"]["distinct_task_ids"] = int(pair["tasks"] or 0)
 
         if _table_exists(conn, "dead_letters"):
             metrics["dead_letters"] = int(
