@@ -443,7 +443,9 @@ orchestrator_seats:
   agy:
     model_id: gemini-3.6-flash-high
     effort: high
-    note: Google-family orchestrator (user 2026-07-21); Pro only for deep single-shot, not default loop
+    escalate_model_id: gemini-3.1-pro-high
+    escalate_when: deep_single_shot_or_architecture
+    note: Google-family orchestrator (user 2026-07-21); Flash default loop; Pro escalate only
 
 # Formal CF transport defaults for review-pr (model + effort). Authority seats
 # (Sol/Fable/Opus) are critical-ladder only — not routine review-pr pins.

@@ -4,29 +4,46 @@
 
 | Capability | Native Grok CLI | Formal CF sealed path |
 | --- | --- | --- |
-| OAuth / tool credentials | Required for Read/Grep/Glob; isolation cannot hide OAuth store from those tools | **Fail-closed** (`grok_isolated_review_unsupported`) |
-| Project instructions suppress | N/A relative to OAuth residual | Fail-closed |
-| Sealed snapshot cwd | Not a proven formal transport while OAuth is tool-visible | Fail-closed |
-| Registry `formal_review_eligible` | `false` | Correct |
+| OAuth / session auth staged without tool-visible credentials | **Fails** — native OAuth store cannot be hidden from required Read/Grep/Glob tools while still authenticating | Fail-closed |
+| Auth never staged into model-read scope | **Proven** (tests: `test_grok_oauth_store_is_never_staged_*`) | Correct refusal, not a silent leak |
+| Sealed snapshot cwd + OS sandbox | Not reached for `engine=grok` | Hard raise before launch |
+| `review-pr --reviewer grok` | **Not implemented** (reviewers: `auto\|codex\|glm\|claude` only) | Use substitute seats |
+| Registry `formal_review_eligible` | `false` for `grok` in `scripts/config/fleet_communications.yaml` | Correct until proof |
+| Cursor explicit `grok-4.5` | Live for **orchestrator / implement / advisory** when native dark | **Not** sealed formal CF (Cursor harness identity + no grok seal) |
 
-## Decision (provisional)
+## Written decision (stream #5512)
 
-**Keep permanent fail-closed for sealed formal CF** until xAI tooling supports a review-only credential profile that cannot reach primary checkout / ambient project state while still allowing sealed Read/Grep/Glob on a snapshot.
+**Option C for now (fail-closed residual), not permanent wontfix.**
 
-Option A (preferred if vendor supports later): review-only OAuth profile scoped to snapshot roots.  
-Option B (current): document residual; formal CF via `review-pr --reviewer claude|glm|codex` only.  
-Option C: Grok as advisory/implement lane only for CF-adjacent work (already true for formal gate).
+1. Inventory + fail-closed tests landed via **#5582** (merged).
+2. Until OAuth can be scoped/proxied so tools only see the sealed snapshot (options A/B on #5557), **do not** flip `formal_review_eligible`.
+3. **Do not** treat Cursor-pinned `grok-4.5` as sealed formal CF — it is the native-dark **orchestrator/implement** fallback only (`model_catalog` `orchestrator_seats.grok` / `grok-4.5-cursor-fallback` review ladder for *resolve-reviewer* when native is unhealthy is still subject to isolation if used as formal launch).
+4. Substitute formal CF path remains the product default (below).
+
+Revisit when: Grok CLI gains a review-only credential profile, or a proxy can mint tool-scoped tokens that cannot read host OAuth stores / primary checkout.
 
 ## Live lane (non-formal)
 
-- Implement + advisory: `start-grok.sh`, `delegate --agent grok`, bridge asks
-- Formal CF substitute seats: Claude / Codex / GLM
+- `delegate.py --agent grok --model grok-4.5`
+- `ai_agent_bridge ask-grok` / `ask-grok-build`
+- Native Grok Build TUI / CLI cold-start
+- Cursor **explicit** `--model grok-4.5` if native path dark (never Cursor `auto` as identity)
+- **Orchestrator seat** (fleet-comms): same pin; requests CF via `review-pr`, does not self-seal
 
-## Flip criteria
+## Substitute formal CF
 
-1. Secure design that hides OAuth from tools **or** a proxy that only serves sealed snapshot bytes.
-2. Isolation tests: credentials not visible to tools; ambient instruction negative.
-3. Smoke formal CF via Grok transport.
-4. Then flip `formal_review_eligible: true`.
+```bash
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>              # codex / gpt-5.6-terra @ high
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude  # claude-sonnet-5 @ high
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer glm     # LOCAL-ONLY
+```
+
+## Flip criteria (do not skip)
+
+1. Proven separation: auth works for the engine **without** tools reading host OAuth / ambient project credentials.
+2. `prepare_isolated_review_launch(engine="grok")` positive path + negative tests (no auth in model-read scope; no primary checkout).
+3. `review-pr --reviewer grok` **or** sealed transport registration with receipt fields (model, family=xai, harness, effort).
+4. Real smoke formal CF on a non-Grok-authored PR (cross-family).
+5. Then flip `formal_review_eligible: true` and enablement PR CF'd by a **non-Grok** family.
 
 Parent: #5557 · stream #4707 · product #5512.

@@ -94,6 +94,7 @@ Practical seats @ **high** — not Sol/Fable on routine PRs:
 
 - Resolve-reviewer: **critical** keeps Sol/Fable authority first; **high/medium/low** walk Terra → Sonnet 5 → **Gemini 3.6 Flash (agy)** → Grok (native then Cursor explicit `grok-4.5`) → K3 → GLM → DS-Pro → pool S 2.1 …
 - #5555–#5557 still fail-closed for formal_review_eligible on AGY/Kimi/Grok (orchestrator seats can still *drive* and *request* CF).
+- Isolation runbooks: `docs/runbooks/agy-formal-cf-isolation.md` · `kimi-formal-cf-isolation.md` · `grok-formal-cf-isolation.md`
 
 ## Closeout checklist
 

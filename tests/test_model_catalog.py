@@ -125,6 +125,7 @@ def test_orchestrator_seats_include_agy_flash_36_high():
     assert set(seats) >= {"claude", "codex", "grok", "agy"}
     assert seats["agy"]["model_id"] == "gemini-3.6-flash-high"
     assert seats["agy"]["effort"] == "high"
+    assert seats["agy"]["escalate_model_id"] == "gemini-3.1-pro-high"
     assert seats["codex"]["model_id"] == "gpt-5.6-terra"
     assert seats["claude"]["model_id"] == "claude-sonnet-5"
     assert seats["grok"]["fallback_model_id"] == "grok-4.5"
