@@ -113,7 +113,7 @@ pandas==3.0.1
 pathspec==1.1.1
 pdftext==0.6.3
 peft==0.19.1
-pillow==12.2.0
+pillow==12.3.0
 platformdirs==4.9.6
 playwright==1.59.0
 pluggy==1.6.0
