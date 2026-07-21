@@ -217,7 +217,7 @@ if ! assert_claude_settings_route_clean "KimiCC"; then
   exit 1
 fi
 
-if ! AUTH_TOKEN="$(resolve_auth_token)"; then
+if ! _resolved_auth="$(resolve_auth_token)"; then
   echo "Error: no Kimi API credential found for the kimicc route." >&2
   echo "  Set one of: MOONSHOT_API_KEY, KIMI_API_KEY, or KIMICC_AUTH_TOKEN" >&2
   echo "  Platform keys: https://platform.kimi.ai/console/api-keys" >&2
@@ -242,7 +242,7 @@ export LEARN_UKRAINIAN_TRANSPORT=kimicc
 
 # Moonshot Anthropic-compatible routing (process-scoped only).
 export ANTHROPIC_BASE_URL="$BASE_URL"
-export ANTHROPIC_AUTH_TOKEN="$AUTH_TOKEN"
+export ANTHROPIC_AUTH_TOKEN="$_resolved_auth"
 unset ANTHROPIC_API_KEY
 
 export ANTHROPIC_MODEL="$LEAD_MODEL"
