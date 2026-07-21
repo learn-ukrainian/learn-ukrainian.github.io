@@ -57,7 +57,7 @@ Examples:
   ./start-kimicc.sh
   ./start-kimicc.sh --model k2.7
   ./start-kimicc.sh --model k2.7-highspeed --epic harness
-  MOONSHOT_API_KEY=sk-… ./start-kimicc.sh --model k3
+  MOONSHOT_API_KEY=<your-key> ./start-kimicc.sh --model k3
 
 Headless / native Kimi (not this launcher):
   scripts/delegate.py dispatch --agent kimi --model k3 …
