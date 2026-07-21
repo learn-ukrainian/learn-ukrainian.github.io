@@ -155,3 +155,15 @@ handoff_identity_for_codex_epic() {
     *) printf 'codex-%s' "$epic" ;;
   esac
 }
+
+# handoff_identity_for_kimi_epic "<epic-name>"
+# Echo the per-epic Kimi Code orchestrator rollover slot. Provider-specific so
+# a Kimi seat never adopts Claude/Codex/Grok packets. harness/infra → kimi-infra.
+handoff_identity_for_kimi_epic() {
+  local epic="${1:-}"
+  [ -n "$epic" ] || return 0
+  case "$epic" in
+    harness|infra) printf '%s' 'kimi-infra' ;;
+    *) printf 'kimi-%s' "$epic" ;;
+  esac
+}

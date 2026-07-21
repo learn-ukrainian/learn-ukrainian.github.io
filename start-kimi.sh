@@ -12,7 +12,7 @@
 #   SESSION_EPIC              from --epic
 #   SESSION_HANDOFF_AGENT     kimi-<epic> (or override / harness→kimi-infra)
 #   SESSION_STREAM_*          from the common session supervisor (scripts.session_supervisor)
-#   LEARN_UKRAINE_KIMI_LAUNCH=1
+#   LEARN_UKRAINIAN_KIMI_LAUNCH=1
 #
 # Cold-start: with --epic and no free-text PROMPT, the launcher claims the
 # stream lease through the common supervisor, writes a capsule, and injects an
@@ -201,10 +201,14 @@ if [ -n "$_selected_epic" ]; then
   echo "Epic assignment: ${SESSION_EPIC}.epic"
   # Kimi-specific handoff slot (not claude-<epic>)
   if [ -z "${SESSION_HANDOFF_AGENT:-}" ] && [ -z "$_handoff_override" ]; then
-    case "$_selected_epic" in
-      harness|infra) export SESSION_HANDOFF_AGENT='kimi-infra' ;;
-      *) export SESSION_HANDOFF_AGENT="kimi-${_selected_epic}" ;;
-    esac
+    if type handoff_identity_for_kimi_epic >/dev/null 2>&1; then
+      export SESSION_HANDOFF_AGENT="$(handoff_identity_for_kimi_epic "$_selected_epic")"
+    else
+      case "$_selected_epic" in
+        harness|infra) export SESSION_HANDOFF_AGENT='kimi-infra' ;;
+        *) export SESSION_HANDOFF_AGENT="kimi-${_selected_epic}" ;;
+      esac
+    fi
   fi
 fi
 
@@ -240,8 +244,17 @@ if [ -n "${SESSION_HANDOFF_AGENT:-}" ]; then
   echo "Handoff identity: $SESSION_HANDOFF_AGENT"
 fi
 
-export LEARN_UKRAINE_KIMI_LAUNCH=1
+export LEARN_UKRAINIAN_KIMI_LAUNCH=1
 export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
+
+# Optional canary mint + KIMI-COLD-START dual-write (non-fatal if module absent).
+if [ -n "${SESSION_EPIC:-}" ] && [ -x "$PROJECT_DIR/.venv/bin/python" ] \
+    && [ -f "$PROJECT_DIR/scripts/session_canary/kimi_lane.py" ]; then
+  if ! (cd "$PROJECT_DIR" && .venv/bin/python -m scripts.session_canary.kimi_lane \
+      mint --epic "$SESSION_EPIC" 2>/dev/null); then
+    echo "Warning: kimi canary mint skipped/failed (continuing launch)." >&2
+  fi
+fi
 
 # Defaults for kimi CLI
 if [ "$_has_model" -eq 0 ]; then
