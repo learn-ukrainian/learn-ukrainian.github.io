@@ -3,6 +3,10 @@
 Pointer-only: no embedded diffs or inventory YAML. Prefer sealed Codex
 ``--review --pr`` isolation (#5285). Claude-dark local default for
 opencode-family reviewers is GLM-5.2 (LOCAL-ONLY — never CI).
+
+Formal CF model + effort pins (operator 2026-07-21): practical seats @ high
+— Terra / Sonnet 5 / GLM — not Sol/Fable on routine PRs. Authority seats
+remain on the critical review ladder only (see model_catalog.yaml).
 """
 
 from __future__ import annotations
@@ -27,10 +31,23 @@ REVIEWER_GLM = "glm"
 REVIEWER_CLAUDE = "claude"
 REVIEWER_AUTO = "auto"
 
+# Practical formal CF pins — keep in sync with model_catalog formal_cf_defaults.
+FORMAL_CF_MODEL: dict[str, str] = {
+    REVIEWER_CODEX: "gpt-5.6-terra",
+    REVIEWER_CLAUDE: "claude-sonnet-5",
+    REVIEWER_GLM: "glm-5.2",
+}
+FORMAL_CF_EFFORT: dict[str, str] = {
+    REVIEWER_CODEX: "high",
+    REVIEWER_CLAUDE: "high",
+    REVIEWER_GLM: "high",
+}
+
 _DEFAULT_CHECKLIST = """\
 ## Formal cross-family PR review (pointer-only)
 
 **PR:** https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/{pr}
+**Reviewer seat:** {reviewer_model} @ effort={reviewer_effort} (transport={reviewer})
 **Expected:** pull the PR evidence yourself (sealed snapshot / gh). Do not request
 the operator to paste the diff.
 
@@ -50,8 +67,20 @@ def parse_pr_number(raw: str) -> int:
     return int(match.group("num"))
 
 
-def build_review_pr_prompt(pr: int, *, extra: str | None = None) -> str:
-    body = _DEFAULT_CHECKLIST.format(pr=pr)
+def build_review_pr_prompt(
+    pr: int,
+    *,
+    reviewer: str,
+    model: str,
+    effort: str,
+    extra: str | None = None,
+) -> str:
+    body = _DEFAULT_CHECKLIST.format(
+        pr=pr,
+        reviewer=reviewer,
+        reviewer_model=model,
+        reviewer_effort=effort,
+    )
     if extra and extra.strip():
         body = f"{body}\n\n## Additional scope\n{extra.strip()}\n"
     body = prepend_read_only_contract(body)
@@ -75,19 +104,40 @@ def resolve_reviewer(selection: str, *, claude_available: bool | None = None) ->
     )
 
 
+def formal_cf_pin(reviewer: str) -> tuple[str, str]:
+    """Return (model_id, effort) for a formal CF transport."""
+    model = FORMAL_CF_MODEL[reviewer]
+    effort = FORMAL_CF_EFFORT[reviewer]
+    return model, effort
+
+
 def handle_review_pr(args: argparse.Namespace) -> int:
     """CLI handler for ``review-pr``."""
     try:
         pr = parse_pr_number(str(args.pr))
         reviewer = resolve_reviewer(args.reviewer, claude_available=args.claude_available)
-        prompt = build_review_pr_prompt(pr, extra=args.extra)
+        model, effort = formal_cf_pin(reviewer)
+        if getattr(args, "model", None):
+            model = str(args.model).strip()
+        if getattr(args, "effort", None):
+            effort = str(args.effort).strip()
+        prompt = build_review_pr_prompt(
+            pr,
+            reviewer=reviewer,
+            model=model,
+            effort=effort,
+            extra=args.extra,
+        )
     except ReviewSafetyError as exc:
         print(f"review-pr: {exc}", file=sys.stderr)
         return 2
 
     task_id = args.task_id or f"review-pr-{pr}"
     if args.dry_run:
-        print(f"review-pr dry-run pr={pr} reviewer={reviewer} task_id={task_id}")
+        print(
+            f"review-pr dry-run pr={pr} reviewer={reviewer} "
+            f"model={model} effort={effort} task_id={task_id}"
+        )
         print(f"prompt_bytes={len(prompt.encode('utf-8'))}")
         print("--- prompt ---")
         print(prompt)
@@ -102,6 +152,8 @@ def handle_review_pr(args: argparse.Namespace) -> int:
             task_id=task_id,
             msg_type="review",
             from_llm=from_llm,
+            to_model=model,
+            effort=effort,
             review=True,
             review_pr_number=pr,
             background=bool(args.background),
@@ -116,6 +168,8 @@ def handle_review_pr(args: argparse.Namespace) -> int:
             task_id=task_id,
             msg_type="review",
             from_llm=from_llm,
+            to_model=model,
+            effort=effort,
             review=True,
             review_pr_number=pr,
             background=bool(args.background),
@@ -148,8 +202,9 @@ def register_review_pr_parser(subparsers: Any) -> None:
         description=(
             "Canonical formal code-review entrypoint. Builds a thin pointer-only "
             "prompt with a mandatory read-only contract. Default transport is "
-            "Codex sealed --review --pr. When Claude is unavailable, use "
-            "--reviewer glm (LOCAL-ONLY) or --reviewer auto with "
+            "Codex sealed --review --pr with model gpt-5.6-terra @ high. "
+            "Claude path pins claude-sonnet-5 @ high. When Claude is unavailable, "
+            "use --reviewer glm (LOCAL-ONLY) or --reviewer auto with "
             "--claude-available false."
         ),
     )
@@ -158,6 +213,19 @@ def register_review_pr_parser(subparsers: Any) -> None:
         "--reviewer",
         default=REVIEWER_AUTO,
         help="auto|codex|glm|claude (default: auto → codex sealed path)",
+    )
+    parser.add_argument(
+        "--model",
+        default=None,
+        help=(
+            "Override formal CF model pin "
+            "(default: codex→gpt-5.6-terra, claude→claude-sonnet-5, glm→glm-5.2)"
+        ),
+    )
+    parser.add_argument(
+        "--effort",
+        default=None,
+        help="Override formal CF effort pin (default: high for codex/claude)",
     )
     parser.add_argument(
         "--claude-available",

@@ -206,15 +206,27 @@ models:
     sources:
       - https://api-docs.deepseek.com/news/news260424/
       - https://api-docs.deepseek.com/quick_start/pricing
+  poolside/laguna-s-2.1:
+    family: poolside
+    tier: frontier_practical
+    lifecycle: active
+    aliases: [laguna-s-2.1, pool, laguna-s]
+    roles: [routine_review, high_volume_dissent, web_fact_check, free_lane_code_review]
+    transports: [opencode]
+    strengths: [free_current_subscription, second_gen_laguna, coding_specialization, review_volume]
+    weaknesses: [not_sole_critical_gate, opencode_catalog_may_lag_native_slug]
+    sources:
+      - https://poolside.ai/models
+      - https://poolside.ai/blog/introducing-laguna-s-2-1
   poolside/laguna-m.1:
     family: poolside
     tier: strong_efficient
-    lifecycle: active
-    aliases: [laguna-m.1, pool]
-    roles: [routine_review, high_volume_dissent, web_fact_check]
+    lifecycle: fallback
+    aliases: [laguna-m.1]
+    roles: [compatibility_only, prior_gen_pool]
     transports: [opencode]
-    strengths: [free_current_subscription, coding_specialization, review_volume]
-    weaknesses: [not_sole_critical_gate]
+    strengths: [free_subscription_back_compat]
+    weaknesses: [superseded_by_laguna_s_2_1, not_sole_critical_gate]
     sources:
       - https://poolside.ai/assets/laguna/laguna-m1-xs2-technical-report.pdf
   composer-2.5:
@@ -340,6 +352,14 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent grok --model grok-4.5
     review_profiles: [code, infra]
     capabilities: [code_review]
+  grok-4.5-cursor-fallback:
+    # Explicit Cursor pin — never Cursor auto. Used when native grok is dark.
+    model_id: grok-4.5
+    route: cursor
+    transport: cursor
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model grok-4.5
+    review_profiles: [code, infra]
+    capabilities: [code_review]
   kimi-k3:
     model_id: kimi-code/k3
     route: kimi
@@ -379,7 +399,7 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review]
   pool:
-    model_id: poolside/laguna-m.1
+    model_id: poolside/laguna-s-2.1
     route: pool
     transport: opencode
     invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool
@@ -403,23 +423,63 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review]
 
+# Formal CF transport defaults for review-pr (model + effort). Authority seats
+# (Sol/Fable/Opus) are critical-ladder only — not routine review-pr pins.
+formal_cf_defaults:
+  codex:
+    model_id: gpt-5.6-terra
+    effort: high
+  claude:
+    model_id: claude-sonnet-5
+    effort: high
+  glm:
+    model_id: glm-5.2
+    effort: high
+  pool:
+    model_id: poolside/laguna-s-2.1
+    effort: high
+  grok:
+    model_id: grok-4.5
+    effort: high
+    fallback_transport: cursor
+    fallback_model_id: grok-4.5
+
 review_ladders:
-  # #5293: a formal review always walks this quality prior after hard filters.
-  # A risk remains recorded in the receipt, but it cannot let a cheap route
-  # leapfrog an eligible higher-quality reviewer.
-  critical: &quality_first_code_review
+  # #5293 quality-first: never let a later rung improve quality tier.
+  # critical keeps frontier_authority first (false APPROVED is expensive).
+  # high/medium/low use frontier_practical defaults (Terra / Sonnet 5 / 3.6 Flash /
+  # Grok / K3 / GLM / DS-Pro / pool S 2.1) — not Sol/Fable on routine PRs.
+  critical:
     - [openai_frontier]
     - [claude-fable-5]
     - [claude-fable-5-cursor-fallback]
     - [claude-opus-4-8]
     - [gpt-5.6-terra]
+    - [claude-sonnet-5]
+    - [gemini-3.6-flash]
     - [grok-4.5]
-    - [composer-2.5]
+    - [grok-4.5-cursor-fallback]
+    - [kimi-k3]
     - [glm-5.2]
-    - [kimi-k3, claude-sonnet-5, gemini-3.6-flash, deepseek-v4-pro]
+    - [deepseek-v4-pro]
+    - [composer-2.5]
     - [gemini-3.1-pro]
-    - [pool, gemini-3.5-flash]
+    - [pool]
+    - [gemini-3.5-flash]
     - [deepseek-v4-flash]
-  high: *quality_first_code_review
-  medium: *quality_first_code_review
-  low: *quality_first_code_review
+  high: &practical_first_code_review
+    - [gpt-5.6-terra]
+    - [claude-sonnet-5]
+    - [gemini-3.6-flash]
+    - [grok-4.5]
+    - [grok-4.5-cursor-fallback]
+    - [kimi-k3]
+    - [glm-5.2]
+    - [deepseek-v4-pro]
+    - [composer-2.5]
+    - [gemini-3.1-pro]
+    - [pool]
+    - [gemini-3.5-flash]
+    - [deepseek-v4-flash]
+  medium: *practical_first_code_review
+  low: *practical_first_code_review

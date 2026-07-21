@@ -753,10 +753,10 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_opencode_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_opencode_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
-    # ask-pool (poolside.ai laguna-m.1 — cross-family CODE + web-verify specialist)
+    # ask-pool (poolside.ai laguna-s-2.1 — cross-family CODE + web-verify specialist)
     ask_pool_parser = subparsers.add_parser(
         "ask-pool",
-        help="Send message AND invoke poolside.ai (laguna-m.1) via the opencode router (use '-' for stdin)",
+        help="Send message AND invoke poolside.ai (laguna-s-2.1) via the opencode router (use '-' for stdin)",
     )
     ask_pool_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_pool_parser.add_argument("--task-id", required=True, help="Task ID")

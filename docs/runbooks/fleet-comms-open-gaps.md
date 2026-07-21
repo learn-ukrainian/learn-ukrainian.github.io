@@ -60,9 +60,24 @@ file handoffs remain authoritative until then.
 | **#4915** empty body on background process | `assert_ask_content_present` on process paths — empty DB body fails as **transport**, not model stall. |
 | **#4956** disk retention | Read-only scanner: `.venv/bin/python scripts/hygiene/lane_disk_retention.py [--include-home] [--json]` |
 
+## Formal CF defaults (orchestrator-ready)
+
+Practical seats @ **high** — not Sol/Fable on routine PRs:
+
+```bash
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>              # codex / gpt-5.6-terra @ high
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude  # claude-sonnet-5 @ high
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer glm     # glm-5.2 LOCAL-ONLY
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ...                     # laguna-s-2.1 @ high
+```
+
+- Resolve-reviewer: **critical** keeps Sol/Fable authority first; **high/medium/low** walk Terra → Sonnet 5 → 3.6 Flash → Grok (native then Cursor explicit `grok-4.5`) → K3 → GLM → DS-Pro → pool S 2.1 …
+- #5555–#5557 still fail-closed for formal_review_eligible on AGY/Kimi/Grok.
+
 ## Closeout checklist
 
 - [ ] #5392 — green tests for sidecar + TRUNCATED footer
 - [ ] dual-write-status returns registered streams
 - [ ] backlog warning does not mention `gemini` when it is a dead lane
 - [ ] empty-body process-ask records `transport empty-ask-body`
+- [x] formal CF model+effort pins + practical ladders (2026-07-21)

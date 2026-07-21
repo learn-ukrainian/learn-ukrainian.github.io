@@ -94,7 +94,8 @@ def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
     reviewer_proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "claude")
     assert reviewer_proc.returncode == 0, reviewer_proc.stderr
     resolution = json.loads(reviewer_proc.stdout)
-    assert resolution["selected"]["name"] == "openai_frontier"
+    # Practical formal CF default: Terra @ medium risk (Sol only on critical).
+    assert resolution["selected"]["name"] == "gpt-5.6-terra"
     assert resolution["selected"]["route"] == "codex"
     assert resolution["policy_version"] == "model-catalog.v1"
     assert resolution["resolved_risk"] == "medium"

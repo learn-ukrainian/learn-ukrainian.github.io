@@ -1,6 +1,6 @@
 """Tests for ab ask-pool / ask-glm bridge subcommands (opencode-routed fleet).
 
-pool = poolside.ai laguna-m.1 (free code + web-verify specialist).
+pool = poolside.ai laguna-s-2.1 (free code + web-verify specialist).
 glm  = Zhipu glm-5.2 (code + review; ⚠️ China-hosted → LOCAL-ONLY, no CI).
 """
 
@@ -23,8 +23,9 @@ from scripts.ai_agent_bridge._opencode import (
 
 
 def test_pool_model_is_native_poolside_provider():
-    # NOT the openrouter/* path (that one cannot browse).
-    assert POOL_MODEL == "poolside/poolside/laguna-m.1"
+    # NOT the openrouter/* path (that one cannot browse). S 2.1 is the pin.
+    assert POOL_MODEL == "poolside/poolside/laguna-s-2.1"
+    assert "laguna-s-2.1" in POOL_MODEL
 
 
 def test_glm_model_is_zai_coding_plan():
@@ -173,8 +174,8 @@ def test_ask_pool_honors_model_override():
         patch("scripts.ai_agent_bridge._opencode.acknowledge"),
         patch("scripts.ai_agent_bridge._opencode._invoke_opencode", return_value="ok") as inv,
     ):
-        ask_pool("hi", task_id="t", model="openrouter/poolside/laguna-m.1")
-        assert inv.call_args[0][1] == "openrouter/poolside/laguna-m.1"
+        ask_pool("hi", task_id="t", model="openrouter/poolside/laguna-s-2.1")
+        assert inv.call_args[0][1] == "openrouter/poolside/laguna-s-2.1"
 
 
 def test_ask_glm_honors_model_override_when_not_ci(monkeypatch):
@@ -244,7 +245,7 @@ def test_get_max_output_tokens_defaults_for_glm_pool():
     assert _get_max_output_tokens(POOL_MODEL) == POOL_DEFAULT_MAX_OUTPUT_TOKENS
     # also matches on prefix variants
     assert _get_max_output_tokens("openrouter/z-ai/glm-5.2") == GLM_DEFAULT_MAX_OUTPUT_TOKENS
-    assert _get_max_output_tokens("poolside/poolside/laguna-m.1") == POOL_DEFAULT_MAX_OUTPUT_TOKENS
+    assert _get_max_output_tokens("poolside/poolside/laguna-s-2.1") == POOL_DEFAULT_MAX_OUTPUT_TOKENS
 
 
 def test_invoke_opencode_glm_pool_sets_experimental_output_token_env(monkeypatch):
