@@ -40,6 +40,7 @@ from scripts.hygiene.lane_disk_retention import (
     scan_home_session_hints,
 )
 from scripts.orchestration.reap_worktrees import (
+    DEFAULT_BUILD_AGE_HOURS,
     ReapResult,
     primary_checkout_root,
     reap_worktrees,
@@ -87,7 +88,7 @@ def build_plan(
     repo_root: Path,
     archive_root: Path,
     stale_hours: float = 72.0,
-    build_age_hours: float = 6.0,
+    build_age_hours: float = DEFAULT_BUILD_AGE_HOURS,
     include_home: bool = False,
     safe_only: bool = True,
 ) -> dict[str, Any]:
@@ -200,7 +201,7 @@ def apply_plan(
         repo_root=root,
         archive_root=Path(plan.get("archive_root") or DEFAULT_ARCHIVE_ROOT),
         stale_hours=float(policy.get("stale_hours", 72.0)),
-        build_age_hours=float(policy.get("build_age_hours", 6.0)),
+        build_age_hours=float(policy.get("build_age_hours", DEFAULT_BUILD_AGE_HOURS)),
         include_home=bool(policy.get("include_home", False)),
         safe_only=bool(policy.get("safe_only", True)),
     )
@@ -233,7 +234,7 @@ def apply_plan(
     results = reap_worktrees(
         repo_root=primary_checkout_root(root),
         apply=True,
-        build_age_hours=float(policy.get("build_age_hours", 6.0)),
+        build_age_hours=float(policy.get("build_age_hours", DEFAULT_BUILD_AGE_HOURS)),
         preserve_then_reap=False,
         prune_merged_branches=False,
         target_paths=target_paths,
@@ -326,7 +327,7 @@ def build_parser() -> argparse.ArgumentParser:
     plan.add_argument("--plan-dir", type=Path, default=DEFAULT_PLAN_DIR)
     plan.add_argument("--archive-root", type=Path, default=DEFAULT_ARCHIVE_ROOT)
     plan.add_argument("--stale-hours", type=float, default=72.0)
-    plan.add_argument("--build-age-hours", type=float, default=6.0)
+    plan.add_argument("--build-age-hours", type=float, default=DEFAULT_BUILD_AGE_HOURS)
     plan.add_argument("--include-home", action="store_true")
     plan.add_argument(
         "--unsafe",
