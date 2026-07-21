@@ -265,16 +265,32 @@ if command -v handoff_epic_from_argv >/dev/null 2>&1; then
 fi
 
 # Claim/resume the stream lease through the common supervisor when an epic is pinned.
+# Skip when a lease envelope is already exported (nested launchers / tests).
+# Soft-fail when LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH=1 or CLAUDEX_TEST_CAPTURE is set
+# (start-claudex nested path); hard-fail for normal interactive epic launches.
 if [ -n "${_selected_epic:-}" ] && command -v claim_session_supervisor_env >/dev/null 2>&1; then
-    _selected_stream="$(stream_id_for_epic "$_selected_epic")"
-    if [ -z "$_selected_stream" ]; then
-        echo "Error: cannot resolve stream id for epic '${_selected_epic}'." >&2
-        exit 1
+    if [ -n "${SESSION_STREAM_ID:-}" ] && [ -n "${SESSION_STREAM_SESSION_ID:-}" ] && [ -n "${SESSION_STREAM_LEASE_ID:-}" ]; then
+        echo "Session supervisor: using pre-exported lease ${SESSION_STREAM_ID} (${SESSION_STREAM_SESSION_ID})"
+    else
+        _selected_stream="$(stream_id_for_epic "$_selected_epic")"
+        if [ -z "$_selected_stream" ]; then
+            echo "Error: cannot resolve stream id for epic '${_selected_epic}'." >&2
+            exit 1
+        fi
+        _launcher_task_id="${SESSION_TASK_ID:-${LEARN_UK_LAUNCHER_TASK_ID:-5512-pr-j2-sessionstart}}"
+        _launcher_instance_id="${SESSION_INSTANCE_ID:-claude-$$}"
+        if claim_session_supervisor_env             "$_selected_stream"             "claude"             "claude-code"             "$_launcher_task_id"             "$_launcher_instance_id"             "$PROJECT_DIR"             "start-claude.sh"             "$_selected_epic"; then
+            :
+        else
+            if [ -n "${LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH:-}" ] || [ -n "${CLAUDEX_TEST_CAPTURE:-}" ]; then
+                echo "Warning: session supervisor claim failed for ${_selected_stream} (managed/nested launch continues)." >&2
+            else
+                echo "Error: session supervisor claim failed for ${_selected_stream}." >&2
+                exit 1
+            fi
+        fi
+        unset _launcher_task_id _launcher_instance_id _selected_stream
     fi
-    _launcher_task_id="${SESSION_TASK_ID:-${LEARN_UK_LAUNCHER_TASK_ID:-5512-pr-j2-sessionstart}}"
-    _launcher_instance_id="${SESSION_INSTANCE_ID:-claude-$$}"
-    claim_session_supervisor_env         "$_selected_stream"         "claude"         "claude-code"         "$_launcher_task_id"         "$_launcher_instance_id"         "$PROJECT_DIR"         "start-claude.sh"         "$_selected_epic"
-    unset _launcher_task_id _launcher_instance_id _selected_stream
 fi
 unset _selected_epic
 
