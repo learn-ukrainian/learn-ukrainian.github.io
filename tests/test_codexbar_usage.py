@@ -182,7 +182,7 @@ def test_normalize_claude_shape():
 
 
 def test_normalize_cursor_three_windows():
-    """Cursor Pro exposes primary/secondary/tertiary allotments (API = tertiary)."""
+    """Cursor Pro+ exposes Total/Auto/API as primary/secondary/tertiary."""
     raw = {
         "provider": "cursor",
         "source": "web",
@@ -213,12 +213,18 @@ def test_normalize_cursor_three_windows():
     assert res["secondary_remaining_pct"] == 64.0
     assert res["tertiary_used_pct"] == 100.0
     assert res["tertiary_remaining_pct"] == 0.0
-    # weekly alias tracks secondary allotment for Cursor-style plans
-    assert res["weekly_used_pct"] == 36.0
-    assert res["weekly_remaining_pct"] == 64.0
+    # Burn/status alias tracks Total (primary), not Auto (secondary).
+    assert res["weekly_used_pct"] == 44.7
+    assert abs(res["weekly_remaining_pct"] - 55.3) < 0.01
+    assert res["weekly_resets_at"] == "2026-08-01T09:58:38Z"
+    assert res["windows"]["primary"]["label"] == "Total"
+    assert res["windows"]["secondary"]["label"] == "Auto"
+    assert res["windows"]["tertiary"]["label"] == "API"
     assert res["windows"]["tertiary"]["used_pct"] == 100.0
     assert res["windows"]["tertiary"]["remaining_pct"] == 0.0
     assert res["windows"]["primary"]["resets_at"] == "2026-08-01T09:58:38Z"
+    # Must not quietly copy Total into the Auto window block.
+    assert res["windows"]["secondary"]["used_pct"] == 36.0
 
 
 def test_normalize_codex_shape():
@@ -343,6 +349,88 @@ def test_routing_budget_surfaces_deficit_warnings(monkeypatch):
     assert "5h window 10% used" in deficit_warnings[0]
     assert "90% reserve" in deficit_warnings[0]
     assert "weekly-pace signal" in deficit_warnings[0]
+
+
+def test_routing_budget_cursor_burns_total_and_warns_on_api(monkeypatch):
+    """Cursor burn tracks Total; exhausted API allotment emits an advisory warning."""
+    cursor_row = {
+        "lane": "cursor",
+        "primary_used_pct": 44.7,
+        "primary_remaining_pct": 55.3,
+        "secondary_used_pct": 36.0,
+        "secondary_remaining_pct": 64.0,
+        "tertiary_used_pct": 100.0,
+        "tertiary_remaining_pct": 0.0,
+        "weekly_used_pct": 44.7,
+        "weekly_remaining_pct": 55.3,
+        "windows": {
+            "primary": {
+                "used_pct": 44.7,
+                "remaining_pct": 55.3,
+                "resets_at": "2026-08-01T09:58:38Z",
+                "window_minutes": 44640,
+                "label": "Total",
+            },
+            "secondary": {
+                "used_pct": 36.0,
+                "remaining_pct": 64.0,
+                "resets_at": "2026-08-01T09:58:38Z",
+                "window_minutes": 44640,
+                "label": "Auto",
+            },
+            "tertiary": {
+                "used_pct": 100.0,
+                "remaining_pct": 0.0,
+                "resets_at": "2026-08-01T09:58:38Z",
+                "window_minutes": 44640,
+                "label": "API",
+            },
+        },
+        "monthly_cap_usd": None,
+        "monthly_used_usd": None,
+        "weekly_resets_at": "2026-08-01T09:58:38Z",
+        "weekly_pace_delta_pct": -20.0,
+        "will_last_to_reset": True,
+        "pace_summary": "-20% pace delta",
+        "source": "codexbar",
+        "fetched_at": "2026-07-21T19:00:00Z",
+        "stale": False,
+        "age_s": 1.0,
+        "status": "healthy",
+        "auth_error": None,
+    }
+
+    def mock_usage(provider):
+        if provider == "cursor":
+            return dict(cursor_row)
+        return {
+            "lane": provider,
+            "primary_used_pct": None,
+            "weekly_used_pct": None,
+            "monthly_cap_usd": None,
+            "monthly_used_usd": None,
+            "weekly_resets_at": None,
+            "weekly_pace_delta_pct": None,
+            "will_last_to_reset": None,
+            "pace_summary": None,
+            "source": "codexbar",
+            "fetched_at": None,
+            "stale": False,
+            "age_s": None,
+            "status": "unknown",
+        }
+
+    monkeypatch.setattr(state_router, "get_provider_usage_data", mock_usage)
+    monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+
+    res = state_router.compute_routing_budget(datetime(2026, 7, 21, 19, 0, tzinfo=UTC))
+    cursor = res["agents"]["cursor"]
+    assert cursor["burn_pct_7d"] == 44.7
+    assert cursor["status"] == "cool"
+    assert cursor["codexbar"]["windows"]["primary"]["label"] == "Total"
+    api_warnings = [w for w in res["recommendation"]["warnings"] if "API/on-demand" in w]
+    assert api_warnings
+    assert "100% used" in api_warnings[0]
 
 
 def test_monthly_window_only_does_not_mislabel_weekly_used_pct():

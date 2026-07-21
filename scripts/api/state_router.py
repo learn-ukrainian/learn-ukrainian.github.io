@@ -973,18 +973,49 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 pace_sum = f"burn pct {burn_pct}%" if burn_pct is not None else "unknown"
 
             if is_in_deficit:
-                # Deficit is a WEEKLY-pace signal. Quote the 5h window too:
-                # a lane can be week-deficit yet have full 5h reserve for
-                # normal work now — weekly-only wording misled toward
-                # over-restriction (user correction 2026-07-09).
-                five_h_pct = cb.get("primary_used_pct") if cb else None
-                if five_h_pct is not None:
+                # Deficit is a plan-period pace signal. Quote the short/primary
+                # window too — but only call it "5h" when that window is ≤5h.
+                # Cursor primary is Total (billing cycle), not a 5h window.
+                primary_pct = cb.get("primary_used_pct") if cb else None
+                primary_mins = None
+                if cb:
+                    primary_mins = ((cb.get("windows") or {}).get("primary") or {}).get("window_minutes")
+                if primary_pct is not None:
+                    if lane == "cursor":
+                        auto_pct = cb.get("secondary_used_pct")
+                        api_pct = cb.get("tertiary_used_pct")
+                        short_bit = (
+                            f"Total {primary_pct:.0f}% used"
+                            + (f", Auto {auto_pct:.0f}%" if auto_pct is not None else "")
+                            + (f", API {api_pct:.0f}%" if api_pct is not None else "")
+                        )
+                    elif primary_mins is None or int(primary_mins) <= 300:
+                        # Claude/Codex primary is the ≤5h window; mocks may omit minutes.
+                        short_bit = (
+                            f"5h window {primary_pct:.0f}% used, {100 - primary_pct:.0f}% reserve"
+                        )
+                    else:
+                        short_bit = (
+                            f"primary window {primary_pct:.0f}% used, "
+                            f"{100 - primary_pct:.0f}% reserve"
+                        )
                     warnings.append(
-                        f"lane {lane} is in deficit ({pace_sum}; weekly-pace signal — "
-                        f"5h window {five_h_pct:.0f}% used, {100 - five_h_pct:.0f}% reserve)"
+                        f"lane {lane} is in deficit ({pace_sum}; weekly-pace signal — {short_bit})"
                     )
                 else:
                     warnings.append(f"lane {lane} is in deficit ({pace_sum})")
+
+            if (
+                lane == "cursor"
+                and cb
+                and cb.get("tertiary_used_pct") is not None
+                and float(cb["tertiary_used_pct"]) >= 90.0
+            ):
+                warnings.append(
+                    "lane cursor API/on-demand allotment near empty "
+                    f"({cb['tertiary_used_pct']:.0f}% used); "
+                    "included Total/Auto still from CodexBar — prefer Auto/Composer, not API"
+                )
 
     # Legacy Claude Interactive warning
     if "claude" in agents:
