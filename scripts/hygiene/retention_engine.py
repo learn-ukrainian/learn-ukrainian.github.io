@@ -174,6 +174,8 @@ def load_plan(path: Path) -> dict[str, Any]:
         raise ValueError("plan must be a JSON object")
     if payload.get("schema") != "fleet-comms.retention.plan.v1":
         raise ValueError(f"unsupported plan schema: {payload.get('schema')!r}")
+    if not payload.get("digest"):
+        raise ValueError("plan missing digest")
     return payload
 
 
@@ -277,10 +279,10 @@ def cmd_apply(args: argparse.Namespace) -> int:
     plan_path = Path(args.plan)
     try:
         plan = load_plan(plan_path)
+        receipt = apply_plan(plan, dry_run=args.dry_run)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
-        sys.stderr.write(f"failed to load plan: {exc}\n")
+        sys.stderr.write(f"failed to apply plan: {exc}\n")
         return EXIT_ERROR
-    receipt = apply_plan(plan, dry_run=args.dry_run)
     # Persist receipt next to plan
     receipt_path = plan_path.with_suffix(".receipt.json")
     if receipt.get("ok"):
