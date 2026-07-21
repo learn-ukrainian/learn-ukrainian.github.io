@@ -131,12 +131,17 @@ for arg in "$@"; do
     _prev="$arg"
 done
 
-# Direct use of this certified wrapper is the native-Claude route. The Claudex
-# supervisor marks only the process it owns; the marker is consumed here so a
-# later nested native launch cannot inherit the proxy route by ambient state.
+# Direct use of this certified wrapper is the native-Claude route. Claudex and
+# KimiCC mark only the process they own; markers are consumed here so a later
+# nested native launch cannot inherit an alternate route by ambient state.
 _claudex_managed_launch="${LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH:-0}"
+_kimicc_managed_launch="${LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH:-0}"
 unset LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH
+unset LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH
 if [ "$_claudex_managed_launch" != "1" ] && [ "${LEARN_UKRAINIAN_TRANSPORT:-}" = "claudex" ]; then
+    unset LEARN_UKRAINIAN_REQUESTED_PROFILE_ID
+fi
+if [ "$_kimicc_managed_launch" != "1" ] && [ "${LEARN_UKRAINIAN_TRANSPORT:-}" = "kimicc" ]; then
     unset LEARN_UKRAINIAN_REQUESTED_PROFILE_ID
 fi
 _requested_profile="${LEARN_UKRAINIAN_REQUESTED_PROFILE_ID:-native_claude}"
@@ -154,11 +159,14 @@ if [ "$LEARN_UKRAINIAN_TRUSTED" != "1" ]; then
     fi
 fi
 
-# The certified native route must not inherit Claudex's proxy, delegation,
-# deferred-tool, or supervisor identity state.
+# The certified native route must not inherit Claudex/KimiCC proxy, delegation,
+# deferred-tool, effort, or supervisor identity state.
 if [ "$LEARN_UKRAINIAN_TRANSPORT" = "native" ]; then
     unset ANTHROPIC_BASE_URL ANTHROPIC_AUTH_TOKEN CLAUDE_CODE_SUBAGENT_MODEL
-    unset ENABLE_TOOL_SEARCH LEARN_UKRAINIAN_CLAUDEX_RUN_ID
+    unset ANTHROPIC_MODEL ANTHROPIC_DEFAULT_OPUS_MODEL ANTHROPIC_DEFAULT_SONNET_MODEL
+    unset ANTHROPIC_DEFAULT_HAIKU_MODEL ANTHROPIC_DEFAULT_FABLE_MODEL
+    unset ENABLE_TOOL_SEARCH CLAUDE_CODE_EFFORT_LEVEL
+    unset LEARN_UKRAINIAN_CLAUDEX_RUN_ID
     unset LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION
 fi
 
@@ -171,7 +179,7 @@ fi
 
 # One concise diagnostic; no endpoint, authorization, or forwarded arguments.
 echo "Context profile: id=$LEARN_UKRAINIAN_PROFILE_ID model=$LEARN_UKRAINIAN_MAIN_MODEL_ID window=$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS budget=$LEARN_UKRAINIAN_COLD_START_BUDGET_TOKENS compact=${LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS:-native} reason=$LEARN_UKRAINIAN_RESOLUTION_REASON"
-unset _claudex_managed_launch _requested_profile _prev
+unset _claudex_managed_launch _kimicc_managed_launch _requested_profile _prev
 
 export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
 

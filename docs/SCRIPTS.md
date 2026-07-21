@@ -17,14 +17,38 @@ meet it so agents can use them without source-diving.
 Project-local wrappers for interactive agent sessions:
 
 ```bash
-./start-claude.sh
-./start-claudex.sh
-./start-codex.sh
+./start-claude.sh      # native Anthropic Claude Code (original config)
+./start-claudex.sh     # Claude Code UI → GPT-5.6 Sol via CLIProxyAPI (interactive)
+./start-kimicc.sh      # Claude Code UI → Kimi K3 / K2.7 (interactive)
+./start-codex.sh       # native Codex
+./start-grok.sh        # native Grok Build TUI
 ```
 
+Native Kimi Code (separate app/CLI, OAuth subscription) is the **headless / fleet**
+lane via `scripts/delegate.py --agent kimi` and `ab ask-kimi`. Interactive native
+Kimi is `kimi` from `~/.kimi-code/bin` (or a dedicated `start-kimi.sh` when that
+wrapper is present) — not `start-kimicc.sh`.
+
+### Parallel routes and original Claude config
+
+`start-claudex.sh` and `start-kimicc.sh` route **only via process environment**
+(Moonshot Method 1 / CLIProxyAPI pattern). They **never rewrite**
+`~/.claude/settings.json`. That means:
+
+- `./start-claude.sh` always keeps the original Anthropic / Claude Code setup
+- You can run native Claude and KimiCC (or Claudex) in **parallel terminals**
+- Tools like [cc-switch](https://github.com/farion1231/cc-switch) that pin
+  `ANTHROPIC_*` into `settings.json env` will **block** these launchers until
+  those keys are removed (or you use `--isolate-config` / `CLAUDE_CONFIG_DIR`)
+
+### Claudex (GPT-5.6 interactive)
+
 `start-claudex.sh` keeps Claude Code's interface while routing the lead model
-to GPT-5.6 Sol through a local CLIProxyAPI server. Its subagents default to Sol;
-select a lower-cost tier without changing the lead:
+to GPT-5.6 Sol through a local CLIProxyAPI server. **Interactive only** —
+headless GPT work stays on `./start-codex.sh` / bridge. Compaction is certified
+by the `sol_lead` profile: **372k window, 353k auto-compact**.
+
+Subagents default to Sol; select a lower-cost tier without changing the lead:
 
 ```bash
 ./start-claudex.sh --subagent terra
@@ -48,6 +72,33 @@ client token by default. Override them with `CLAUDEX_BASE_URL` and
 `CLAUDEX_AUTH_TOKEN`; credentials are inherited only by the launched process
 and are never written to the repository. `--subagent` accepts `sol`, `terra`,
 or `luna` (and their full `gpt-5.6-*` model IDs).
+
+### KimiCC (Kimi via Claude Code UI, interactive)
+
+`start-kimicc.sh` is **Claude Code UI + Kimi models** (not the native Kimi TUI).
+Use it when you want Claude Code ergonomics with K3 or K2.7 in a second
+terminal while native Claude runs in the first.
+
+```bash
+export MOONSHOT_API_KEY=sk-…   # https://platform.kimi.ai/console/api-keys
+./start-kimicc.sh                    # K3, 1M window / ~996k compact
+./start-kimicc.sh --model k2.7       # K2.7 Code, 256k / ~249k compact
+./start-kimicc.sh --model k2.7-highspeed
+./start-kimicc.sh --endpoint coding  # Kimi Code subscription base URL
+./start-kimicc.sh --isolate-config   # optional CLAUDE_CONFIG_DIR=$HOME/.claude-kimicc
+```
+
+| Model alias | Platform model id | Context | Auto-compact |
+| --- | --- | --- | --- |
+| `k3` (default) | `kimi-k3[1m]` | 1 048 576 | 996 147 |
+| `k2.7` | `kimi-k2.7-code` | 262 144 | 249 036 |
+| `k2.7-highspeed` | `kimi-k2.7-code-highspeed` | 262 144 | 249 036 |
+
+**Headless / fleet Kimi stays on the native Kimi Code app** (`delegate.py --agent kimi`,
+`ab ask-kimi`, or bare `kimi`). Do not point headless jobs at kimicc.
+
+K2.7 requires **Thinking ON** in the Claude Code TUI (`Tab`) or the endpoint
+rejects requests. Official guide: [Use Kimi in Claude Code](https://platform.kimi.ai/docs/guide/claude-code-kimi).
 
 `start-codex.sh` launches Codex with:
 

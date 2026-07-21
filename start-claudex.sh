@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
-# Run Claude Code on GPT-5.6 Sol through CLIProxyAPI.
+# Interactive Claude Code UI on GPT-5.6 Sol through CLIProxyAPI.
+#
+# Interactive only — headless GPT/Codex work stays on ./start-codex.sh or the
+# bridge. Process-scoped env only: never rewrites ~/.claude/settings.json, so
+# ./start-claude.sh (native Anthropic) remains available in parallel.
+#
+# Compaction: sol_lead profile = 372k window, 353k auto-compact capacity
+# (scripts/config/context_profiles.yaml). Do not raise English immersion policy
+# via this launcher — it only changes the model route.
 
 set -euo pipefail
 
@@ -12,8 +20,8 @@ usage() {
     cat <<'EOF'
 Usage: ./start-claudex.sh [--subagent sol|terra|luna] [CLAUDE_ARGS...]
 
-Launch Claude Code with GPT-5.6 Sol as the lead model and a configurable
-GPT-5.6 subagent model. Other arguments are forwarded to start-claude.sh.
+Interactive Claude Code with GPT-5.6 Sol lead (372k context / 353k compact)
+and a configurable GPT-5.6 subagent. Does not rewrite ~/.claude/settings.json.
 
 Options:
   --subagent MODEL  Subagent tier: sol (default), terra, or luna
@@ -23,6 +31,9 @@ Environment:
   CLAUDEX_SUBAGENT   Default subagent tier
   CLAUDEX_BASE_URL   CLIProxyAPI URL (default: http://127.0.0.1:8317)
   CLAUDEX_AUTH_TOKEN CLIProxyAPI token (default: sk-dummy)
+
+Parallel native Claude: ./start-claude.sh in another terminal (original config).
+Headless GPT: ./start-codex.sh or ab ask-codex — not this launcher.
 EOF
 }
 
@@ -64,6 +75,12 @@ while (($#)); do
     esac
 done
 
+# shellcheck source=scripts/lib/claude_route_guard.sh
+source "$PROJECT_DIR/scripts/lib/claude_route_guard.sh"
+if ! assert_claude_settings_route_clean "Claudex"; then
+    exit 1
+fi
+
 # Resolve the Sol lead contract before delegated-model selection. The delegated
 # model must not influence any main-session capacity or cold-start field.
 # shellcheck source=scripts/lib/profile_resolver.sh
@@ -77,6 +94,7 @@ if [ "$LEARN_UKRAINIAN_TRUSTED" != "1" ] || [ "$LEARN_UKRAINIAN_PROFILE_ID" != "
     exit 1
 fi
 export LEARN_UKRAINIAN_REQUESTED_PROFILE_ID="sol_lead"
+# 372k Sol window → 353k certified auto-compact (emergency rollover fires first).
 export CLAUDE_CODE_AUTO_COMPACT_WINDOW="$LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS"
 
 if ! SUBAGENT_MODEL="$(resolve_model "$SUBAGENT")"; then
@@ -110,4 +128,5 @@ if ! curl --fail --silent --show-error --output /dev/null --header @- \
 fi
 
 echo "Claudex: lead=$LEAD_MODEL subagent=$SUBAGENT_MODEL profile=$LEARN_UKRAINIAN_PROFILE_ID"
+echo "         window=$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS compact=$CLAUDE_CODE_AUTO_COMPACT_WINDOW (env-only; settings.json untouched)"
 exec "$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/orchestration/claudex_supervisor.py" "$PROJECT_DIR/start-claude.sh" --model "$LEAD_MODEL" "${FORWARD_ARGS[@]}"

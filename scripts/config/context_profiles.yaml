@@ -37,6 +37,51 @@ profiles:
     cold_start_budget_tokens: 100000
     rollover_warning_percentages: [75.0, 85.0, 95.0]
 
+  # Interactive Claude Code + Kimi Anthropic-compatible endpoint (start-kimicc.sh).
+  # Compaction must stay below the true window (schema + Sol-pattern ~95% margin).
+  # Official Moonshot guide uses full-window CLAUDE_CODE_AUTO_COMPACT_WINDOW; we keep
+  # a small headroom so emergency rollover can still fire first.
+  kimicc_k3:
+    profile_id: kimicc_k3
+    transport: kimicc
+    main_model_id: kimi-k3[1m]
+    model_id_patterns:
+      - '^kimi-k3(\[1m\])?$'
+      - '^k3$'
+    main_context_window_tokens: 1048576
+    auto_compact_capacity_tokens: 996147
+    cold_start_profile: compact
+    cold_start_budget_tokens: 104857
+    rollover_warning_percentages: [75.0, 85.0, 92.0]
+
+  kimicc_k27:
+    profile_id: kimicc_k27
+    transport: kimicc
+    main_model_id: kimi-k2.7-code
+    model_id_patterns:
+      - '^kimi-k2\.7-code$'
+      - '^kimi-for-coding$'
+      - '^k2\.7(-coding)?$'
+    main_context_window_tokens: 262144
+    auto_compact_capacity_tokens: 249036
+    cold_start_profile: compact
+    cold_start_budget_tokens: 26214
+    rollover_warning_percentages: [75.0, 85.0, 92.0]
+
+  kimicc_k27_highspeed:
+    profile_id: kimicc_k27_highspeed
+    transport: kimicc
+    main_model_id: kimi-k2.7-code-highspeed
+    model_id_patterns:
+      - '^kimi-k2\.7-code-highspeed$'
+      - '^kimi-for-coding-highspeed$'
+      - '^k2\.7(-coding)?-highspeed$'
+    main_context_window_tokens: 262144
+    auto_compact_capacity_tokens: 249036
+    cold_start_profile: compact
+    cold_start_budget_tokens: 26214
+    rollover_warning_percentages: [75.0, 85.0, 92.0]
+
   fallback:
     profile_id: fallback
     transport: unknown
