@@ -456,25 +456,40 @@ review_candidates:
 # cold-start loop (prioritize → delegate → CF → merge-in-lane). Formal *sealed*
 # CF remains fail-closed on agy|kimi|grok until #5555–#5557; orchestrators still
 # *request* CF via review-pr codex|claude|glm.
+# Parallel escalate ladder (user 2026-07-22): practical default + authority deep.
+# Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
   claude:
     model_id: claude-sonnet-5
     effort: high
-    note: practical default for routine orchestrator judgment; escalate to Fable/Opus only when needed
+    escalate_model_id: claude-fable-5
+    escalate_effort: xhigh
+    escalate_when: deep_single_shot_or_architecture
+    note: default Sonnet 5 @ high; escalate Fable 5 @ xhigh (Opus only if Fable unavailable)
   codex:
     model_id: gpt-5.6-terra
     effort: high
+    escalate_model_id: gpt-5.6-sol
+    escalate_effort: xhigh
+    escalate_when: deep_single_shot_or_architecture
+    note: default Terra @ high; escalate Sol @ xhigh for architecture / hard judgment
   grok:
     model_id: grok-4.5
     effort: high
+    # No higher Grok SKU in catalog yet — keep native pin; Cursor pin is availability fallback only.
+    escalate_model_id: grok-4.5
+    escalate_effort: high
+    escalate_when: n/a_same_sku
     fallback_transport: cursor
     fallback_model_id: grok-4.5
+    note: native grok-4.5; Cursor explicit grok-4.5 if native dark (not a quality escalate)
   agy:
     model_id: gemini-3.6-flash-high
     effort: high
     escalate_model_id: gemini-3.1-pro-high
+    escalate_effort: high
     escalate_when: deep_single_shot_or_architecture
-    note: Google-family orchestrator (user 2026-07-21); Flash default loop; Pro escalate only
+    note: Google-family orchestrator; Flash default loop; Pro escalate only
 
 # Formal CF transport defaults for review-pr (model + effort). Authority seats
 # (Sol/Fable/Opus) are critical-ladder only — not routine review-pr pins.
@@ -482,9 +497,14 @@ formal_cf_defaults:
   codex:
     model_id: gpt-5.6-terra
     effort: high
+    # Authority escalate for critical / hard CF (review-pr --model gpt-5.6-sol --effort xhigh)
+    escalate_model_id: gpt-5.6-sol
+    escalate_effort: xhigh
   claude:
     model_id: claude-sonnet-5
     effort: high
+    escalate_model_id: claude-fable-5
+    escalate_effort: xhigh
   glm:
     model_id: glm-5.2
     effort: high

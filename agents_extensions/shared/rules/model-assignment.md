@@ -90,18 +90,25 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   implementation on the orchestrator seat — delegate it (>50 LOC non-test, mechanical, fixtures, or
   anything parallelizable → a worker).
 
-  | Seat | Default model | Effort | Notes |
+  | Seat | Default (loop) | Escalate (deep) | Notes |
   | --- | --- | --- | --- |
-  | **claude** | `claude-sonnet-5` | high | Practical orchestrator default; escalate Fable/Opus only when judgment requires it |
-  | **codex** | `gpt-5.6-terra` | high | Native sealed formal CF default for `review-pr` |
-  | **grok** | `grok-4.5` | high | Native first; Cursor **explicit** `grok-4.5` if native dark |
-  | **agy** | **`gemini-3.6-flash-high`** | **high** | **Google-family orchestrator (user 2026-07-21).** Pro only for deep single-shot, not the default loop |
+  | **claude** | `claude-sonnet-5` @ high | **`claude-fable-5` @ xhigh** | Same pattern as AGY Flash→Pro |
+  | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | Terra loop; Sol for architecture / hard judgment |
+  | **grok** | `grok-4.5` @ high | same SKU (no higher pin yet) | Cursor **explicit** `grok-4.5` = availability fallback, not quality escalate |
+  | **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | Flash loop; Pro deep single-shot |
+
+  **Escalate when:** deep single-shot, architecture, hard multi-file judgment, high-stakes synthesis —
+  not for routine queue grind. Machine fields: `escalate_model_id` / `escalate_effort` /
+  `escalate_when` on each seat in `model_catalog.yaml`.
 
   When an orchestrator needs **formal sealed CF**, request it via
   `review-pr --reviewer codex|claude|glm` (agy|kimi|grok remain `formal_review_eligible: false`
-  until #5555–#5557). AGY as *orchestrator* is live now; AGY as *sealed formal reviewer* is not.
+  until #5555–#5557). Authority CF escalate:
+  `review-pr <N> --model gpt-5.6-sol --effort xhigh` or
+  `review-pr <N> --reviewer claude --model claude-fable-5 --effort xhigh`.
 
-- **Advisor = `gpt-5.6-sol` @ `xhigh` (on-demand, NOT a standing worker).** Convene for the hard,
+- **Advisor = `gpt-5.6-sol` @ `xhigh` (on-demand, NOT a standing worker).** Same as codex
+  orchestrator escalate — convene for the hard,
   high-judgment calls only: architecture, high-stakes design/spec/ADR review, difficult debugging, final
   synthesis. Consult BEFORE committing a substantive design; do not use for routine work.
 - **Workers = every other lane** — `gpt-5.6-luna`, `cursor`, `kimi`, `deepseek`, `pool` (**Laguna family exact IDs:** default **`laguna-s-2.1`** gen-2 S; light **`laguna-xs-2.1`** gen-2 XS; fallback only **`laguna-m.1`** gen-1 — never invent s2/m2 orthography),
