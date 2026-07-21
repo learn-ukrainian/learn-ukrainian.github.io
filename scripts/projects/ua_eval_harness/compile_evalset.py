@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Compile the Ukrainian Calque + Grammar Evaluation Dataset (UNLP 2027 target).
 
-Reads curated gold UA-GEC entries, applies the taxonomy specification from
+Reads curated gold UA-GEC entries, loads and applies the taxonomy specification from
 ``docs/projects/ua-eval-harness/taxonomy.yaml``, executes the Heritage Dialect
 Safeguard check, and outputs a HuggingFace-compatible JSONL evalset.
 
@@ -19,6 +19,8 @@ import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
+
+import yaml
 
 ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
@@ -50,6 +52,7 @@ class DialectVerdict:
     is_regionalism: bool
     verdict: str
     evidence: list[str]
+    authority: list[str]
 
 
 @dataclass(frozen=True)
@@ -68,6 +71,14 @@ def generate_item_id(text: str, source_span: str, category: str) -> str:
     return f"eval-{category.lower().replace('/', '_')}-{digest}"
 
 
+def load_taxonomy(taxonomy_path: Path = DEFAULT_TAXONOMY_PATH) -> dict[str, Any]:
+    """Load and return the taxonomy specification dictionary from YAML."""
+    if not taxonomy_path.exists():
+        raise FileNotFoundError(f"Taxonomy specification file not found: {taxonomy_path}")
+    with taxonomy_path.open("r", encoding="utf-8") as f:
+        return yaml.safe_load(f) or {}
+
+
 def check_heritage_safeguard(error_word: str, correction_word: str) -> DialectVerdict:
     """Evaluate whether error_word is an authentic regionalism/archaism rather than a true Russianism.
 
@@ -75,29 +86,34 @@ def check_heritage_safeguard(error_word: str, correction_word: str) -> DialectVe
     1. VESUM validity check
     2. Grinchenko 1907 / ESUM / SUM-11 dialect attestation
     """
-    # Specific known regionalisms / dialect words that are not Russianisms
-    known_regionalisms = {"бутелька", "кнайпа", "фирка", "файно", "тельбух"}
+    known_regionalisms = {"бутелька", "кнайпа", "фірка", "файно", "тельбух"}
     if error_word.lower() in known_regionalisms:
         return DialectVerdict(
             is_regionalism=True,
             verdict="heritage_protected",
             evidence=[f"attested_regionalism:{error_word}"],
+            authority=["ua-gec", "heritage_dict"],
         )
 
     return DialectVerdict(
         is_regionalism=False,
         verdict="cleared",
         evidence=[f"ua_gec_pair:{error_word}->{correction_word}"],
+        authority=["ua-gec"],
     )
 
 
 def compile_evalset(
     gold_path: Path = DEFAULT_GOLD_FIXTURE,
     output_path: Path = DEFAULT_OUTPUT_JSONL,
+    taxonomy_path: Path = DEFAULT_TAXONOMY_PATH,
 ) -> int:
     if not gold_path.exists():
         print(f"Error: Gold fixture file not found: {gold_path}", file=sys.stderr)
         return 1
+
+    taxonomy = load_taxonomy(taxonomy_path)
+    allowed_categories = set(taxonomy.get("categories", {}).keys())
 
     with gold_path.open("r", encoding="utf-8") as f:
         data = json.load(f)
@@ -114,9 +130,19 @@ def compile_evalset(
         correction_word = item.get("correction", "")
         category = item.get("tag", "F/Calque")
 
+        if allowed_categories and category not in allowed_categories:
+            print(f"Warning: Category '{category}' not found in taxonomy.yaml", file=sys.stderr)
+
         span_info = item.get("spans", {}).get("source", {})
         start_char = span_info.get("start", 0)
         end_char = span_info.get("end", start_char + len(error_word))
+
+        # Re-verify and adjust span character offsets if excerpt text diverges
+        if source_text and error_word and source_text[start_char:end_char] != error_word:
+            found_idx = source_text.find(error_word)
+            if found_idx != -1:
+                start_char = found_idx
+                end_char = found_idx + len(error_word)
 
         verdict = check_heritage_safeguard(error_word, correction_word)
         if verdict.is_regionalism:
@@ -130,7 +156,7 @@ def compile_evalset(
             category=category,
             subtype="calque" if "Calque" in category else "grammar",
             is_regionalism=verdict.is_regionalism,
-            authority=["ua-gec", "vesum"],
+            authority=verdict.authority,
             explanation=f"UA-GEC edit: '{error_word}' -> '{correction_word}' ({category})",
         )
 
@@ -141,12 +167,17 @@ def compile_evalset(
             target=target_text,
             lang="uk",
             edits=[asdict(edit)],
-            dialect=asdict(verdict),
+            dialect={
+                "is_regionalism": verdict.is_regionalism,
+                "verdict": verdict.verdict,
+                "evidence": verdict.evidence,
+            },
             provenance={
                 "dataset": "learn-ukrainian/ua-gec-calque-eval",
                 "license": "CC-BY-4.0",
                 "source": "UA-GEC v2 (Grammarly Ukraine)",
                 "ua_gec_error_id": item.get("ua_gec_error_id"),
+                "taxonomy_version": taxonomy.get("version", "1.0.0"),
                 "version": "1.0.0",
             },
         )
@@ -169,10 +200,11 @@ def compile_evalset(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Compile Ukrainian Calque + Grammar Evalset (UNLP 2027 target)")
     parser.add_argument("--gold-fixture", type=Path, default=DEFAULT_GOLD_FIXTURE, help="Path to ua-gec-gold.json")
+    parser.add_argument("--taxonomy", type=Path, default=DEFAULT_TAXONOMY_PATH, help="Path to taxonomy.yaml")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT_JSONL, help="Output JSONL path")
     args = parser.parse_args(argv)
 
-    return compile_evalset(gold_path=args.gold_fixture, output_path=args.output)
+    return compile_evalset(gold_path=args.gold_fixture, output_path=args.output, taxonomy_path=args.taxonomy)
 
 
 if __name__ == "__main__":
