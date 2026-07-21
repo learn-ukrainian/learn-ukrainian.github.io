@@ -61,6 +61,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shlex
 import sys
 from pathlib import Path
@@ -726,6 +727,46 @@ def _block_git_mediated(summary: str, main_root: Path, reason: str) -> int:
 # decision
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# shell variable expansion for Bash write targets (issue #5404)
+# ---------------------------------------------------------------------------
+
+_SHELL_ASSIGN_RE = re.compile(
+    r"(?:^|[;\n&|]\s*|\(\s*)([A-Za-z_][A-Za-z0-9_]*)="
+    r"(?:'([^']*)'|\"([^\"]*)\"|([^\s;|&]+))"
+)
+_SHELL_VAR_RE = re.compile(r"^\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?$")
+
+
+def parse_shell_assignments(command: str) -> dict[str, str]:
+    """Best-effort VAR=value map from a Bash command string (issue #5404)."""
+    out: dict[str, str] = {}
+    for m in _SHELL_ASSIGN_RE.finditer(command or ""):
+        name = m.group(1)
+        if m.group(2) is not None:
+            val = m.group(2)
+        elif m.group(3) is not None:
+            val = m.group(3)
+        else:
+            val = m.group(4) or ""
+        out[name] = val
+    return out
+
+
+def expand_shell_target(target: str, assignments: dict[str, str]) -> str:
+    """Expand a pure ``$VAR`` / ``${VAR}`` write target when assignment is known."""
+    m = _SHELL_VAR_RE.match((target or "").strip())
+    if not m:
+        return target
+    name = m.group(1)
+    if assignments.get(name):
+        return assignments[name]
+    return target
+
+
+def is_unresolved_shell_var(target: str) -> bool:
+    return bool(_SHELL_VAR_RE.match((target or "").strip()))
+
 
 def _resolve(path_str: str, cwd: str) -> Path:
     """Resolve a possibly-relative target against the payload cwd."""
@@ -802,10 +843,39 @@ def main() -> int:
     if not raw_targets:
         return 0
 
+    # #5404: expand $VAR write targets from same-command assignments so
+    # gitignored lane-state is not mis-classified against the literal "$A".
+    assignments = parse_shell_assignments(command) if tool_name == "Bash" else {}
+
     try:
-        decisions = [
-            (raw, wc.evaluate_write(_resolve(raw, cwd), cwd=cwd)) for raw in raw_targets
-        ]
+        decisions: list[tuple[str, object]] = []
+        for raw in raw_targets:
+            expanded = expand_shell_target(raw, assignments)
+            if is_unresolved_shell_var(expanded):
+                decisions.append(
+                    (
+                        raw,
+                        type(
+                            "_UnresolvedVar",
+                            (),
+                            {
+                                "allowed": False,
+                                "reason": "unresolved_shell_variable",
+                                "message": (
+                                    "Shell variable write target is unresolved. "
+                                    "Expand it in the same command "
+                                    '(A=.claude/<epic>/file; echo x > "$A") '
+                                    "or use a literal gitignored path."
+                                ),
+                            },
+                        )(),
+                    )
+                )
+                continue
+            label = raw if expanded == raw else f"{raw}→{expanded}"
+            decisions.append(
+                (label, wc.evaluate_write(_resolve(expanded, cwd), cwd=cwd))
+            )
     except Exception:  # pragma: no cover - defensive fail-open
         return 0
 

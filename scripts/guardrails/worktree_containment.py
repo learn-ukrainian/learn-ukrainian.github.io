@@ -145,6 +145,20 @@ def canonicalize(path: Path | str) -> Path:
     return Path(path).expanduser().resolve()
 
 
+def absolute_path(path: Path | str, cwd: Path | str | None = None) -> Path:
+    """Absolute-ize ``path`` against ``cwd`` (default process cwd) then canonicalize.
+
+    Relative write targets from hooks/agents are always cwd-relative (issue
+    #5404). Classifying bare relative pathspecs against process cwd mis-labels
+    gitignored lane-state under a different working directory.
+    """
+    p = Path(path).expanduser()
+    if not p.is_absolute():
+        base = Path(cwd) if cwd is not None else Path.cwd()
+        p = Path(base).expanduser() / p
+    return canonicalize(p)
+
+
 class NotAGitRepositoryError(RuntimeError):
     """Raised by :func:`resolve_main_root` when ``start`` is not in a repo."""
 
@@ -254,7 +268,7 @@ def classify_repo_path(path: Path | str, cwd: Path | str | None = None) -> PathC
     the primary root from; the classification is about ``path`` itself. Returns
     one of :data:`PathClass`.
     """
-    target = canonicalize(path)
+    target = absolute_path(path, cwd=cwd)
     anchor = canonicalize(cwd) if cwd is not None else Path.cwd().resolve()
     main_root = _resolve_main_root_or_none(anchor)
     if main_root is None:
@@ -493,17 +507,18 @@ def evaluate_write(path: Path | str, cwd: Path | str | None = None) -> WriteDeci
         return WriteDecision(allowed=True, reason=path_class, path_class=path_class)
 
     # class == primary_checkout guarantees the target resolved under a real
-    # primary root; resolve it once and reuse for both plumbing calls.
-    anchor = canonicalize(cwd) if cwd is not None else canonicalize(path)
-    main_root = _resolve_main_root_or_none(anchor) or _resolve_main_root_or_none(canonicalize(path))
-    if is_tracked(path, main_root):
+    # primary root; resolve the write target once against cwd (#5404).
+    target = absolute_path(path, cwd=cwd)
+    anchor = canonicalize(cwd) if cwd is not None else target
+    main_root = _resolve_main_root_or_none(anchor) or _resolve_main_root_or_none(target)
+    if is_tracked(target, main_root):
         return WriteDecision(
             allowed=False,
             reason="tracked_primary_checkout",
             path_class=path_class,
             message=_WORKTREE_HINT,
         )
-    if is_ignored(path, main_root):
+    if is_ignored(target, main_root):
         return WriteDecision(
             allowed=True,
             reason="gitignored_local_state",
