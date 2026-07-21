@@ -18,6 +18,54 @@ def _write_executable(path: Path, body: str) -> None:
     path.chmod(0o755)
 
 
+def _require_launcher_sources() -> None:
+    """Seed from checkout once; do not depend on root scripts surviving full CI suite."""
+    missing = [path for path in (
+        _LAUNCHER,
+        _REPO_ROOT / "scripts" / "lib" / "claude_route_guard.sh",
+        _REPO_ROOT / "scripts" / "lib" / "profile_resolver.sh",
+        _REPO_ROOT / "scripts" / "lib" / "context_profiles.py",
+    ) if not path.is_file()]
+    if missing:
+        names = ", ".join(str(path.relative_to(_REPO_ROOT)) for path in missing)
+        raise FileNotFoundError(f"kimicc launcher sources missing: {names}")
+
+
+def _seed_fake_project(tmp_path: Path) -> Path:
+    """Copy launcher + sourced helpers into an isolated project root."""
+    _require_launcher_sources()
+    project = tmp_path / "project"
+    lib = project / "scripts" / "lib"
+    lib.mkdir(parents=True)
+    cfg = project / "scripts" / "config"
+    cfg.mkdir(parents=True)
+    venv_bin = project / ".venv" / "bin"
+    venv_bin.mkdir(parents=True)
+    _write_executable(project / "start-kimicc.sh", _LAUNCHER.read_text(encoding="utf-8"))
+    _write_executable(
+        project / "start-claude.sh",
+        "#!/usr/bin/env bash\n# Test stub: kimicc already exported env; exec fake claude from PATH.\nexec claude \"$@\"\n",
+    )
+    for name in ("claude_route_guard.sh", "profile_resolver.sh", "context_profiles.py"):
+        src = _REPO_ROOT / "scripts" / "lib" / name
+        dest = lib / name
+        dest.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+        if name.endswith(".py"):
+            dest.chmod(0o755)
+    profiles = _REPO_ROOT / "scripts" / "config" / "context_profiles.yaml"
+    if profiles.is_file():
+        (cfg / "context_profiles.yaml").write_text(profiles.read_text(encoding="utf-8"), encoding="utf-8")
+    # Point profile resolver at a real Python that has project deps if present.
+    real_py = _REPO_ROOT / ".venv" / "bin" / "python"
+    py_body = (
+        f"#!/usr/bin/env bash\nexec {real_py} \"$@\"\n"
+        if real_py.is_file()
+        else "#!/usr/bin/env bash\nexec /usr/bin/env python3 \"$@\"\n"
+    )
+    _write_executable(venv_bin / "python", py_body)
+    return project
+
+
 def _run_with_fakes(
     tmp_path: Path,
     arguments: list[str],
@@ -101,9 +149,10 @@ fi
     )
     env.update(env_overrides or {})
 
+    project = _seed_fake_project(tmp_path)
     result = subprocess.run(
-        [str(_LAUNCHER), *arguments],
-        cwd=_REPO_ROOT,
+        [str(project / "start-kimicc.sh"), *arguments],
+        cwd=project,
         env=env,
         capture_output=True,
         text=True,
