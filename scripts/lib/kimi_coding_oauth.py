@@ -148,11 +148,13 @@ def _refresh(data: dict) -> dict:
 
 
 def _write_credentials(path: Path, data: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     backup = path.with_suffix(path.suffix + ".bak")
     # Backup is best-effort; the atomic replace below is the real guard.
+    # It holds the same tokens, so it gets the same owner-only permissions.
     with contextlib.suppress(OSError):
         backup.write_bytes(path.read_bytes())
+        os.chmod(backup, 0o600)
     fd, tmp_name = tempfile.mkstemp(dir=str(path.parent), prefix=path.name + ".", suffix=".tmp")
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as handle:

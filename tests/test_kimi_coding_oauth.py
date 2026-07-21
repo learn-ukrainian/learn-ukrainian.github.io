@@ -156,6 +156,10 @@ def test_expired_token_refreshes_and_writes_back(tmp_path: Path) -> None:
     assert stored["refresh_token"] == "new-refresh"
     assert stored["expires_at"] > time.time() + 600
     assert stat.S_IMODE(cred.stat().st_mode) == 0o600
+    # Backup holds the same tokens and must be owner-only too (review F001).
+    backup = cred.with_suffix(cred.suffix + ".bak")
+    assert backup.is_file()
+    assert stat.S_IMODE(backup.stat().st_mode) == 0o600
 
 
 def test_missing_credential_file_exits_2(tmp_path: Path) -> None:
