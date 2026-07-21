@@ -138,8 +138,10 @@ def test_fable_routes_native_claude_before_pinned_cursor_fallback():
 
 def test_formal_cf_defaults_pin_practical_seats_at_high_effort():
     defaults = load_model_catalog()["formal_cf_defaults"]
-    assert defaults["codex"] == {"model_id": "gpt-5.6-terra", "effort": "high"}
-    assert defaults["claude"] == {"model_id": "claude-sonnet-5", "effort": "high"}
+    assert defaults["codex"]["model_id"] == "gpt-5.6-terra"
+    assert defaults["codex"]["effort"] == "high"
+    assert defaults["claude"]["model_id"] == "claude-sonnet-5"
+    assert defaults["claude"]["effort"] == "high"
     assert defaults["glm"]["model_id"] == "glm-5.2"
     assert defaults["pool"]["model_id"] == "poolside/laguna-s-2.1"
     assert defaults["grok"]["fallback_transport"] == "cursor"
@@ -158,6 +160,21 @@ def test_orchestrator_seats_include_agy_flash_36_high():
     assert seats["codex"]["model_id"] == "gpt-5.6-terra"
     assert seats["claude"]["model_id"] == "claude-sonnet-5"
     assert seats["grok"]["fallback_model_id"] == "grok-4.5"
+
+
+def test_orchestrator_escalate_pins_parallel_sol_fable_pro():
+    """Each seat has default + escalate like AGY Flash→Pro (user 2026-07-22)."""
+    seats = load_model_catalog()["orchestrator_seats"]
+    assert seats["codex"]["escalate_model_id"] == "gpt-5.6-sol"
+    assert seats["codex"]["escalate_effort"] == "xhigh"
+    assert seats["claude"]["escalate_model_id"] == "claude-fable-5"
+    assert seats["claude"]["escalate_effort"] == "xhigh"
+    assert seats["agy"]["escalate_model_id"] == "gemini-3.1-pro-high"
+    assert seats["agy"]["escalate_effort"] == "high"
+    # formal CF authority escalate mirrors orchestrator escalate
+    fc = load_model_catalog()["formal_cf_defaults"]
+    assert fc["codex"]["escalate_model_id"] == "gpt-5.6-sol"
+    assert fc["claude"]["escalate_model_id"] == "claude-fable-5"
 
 
 def test_practical_ladders_exclude_authority_seats():

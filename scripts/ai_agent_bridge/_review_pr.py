@@ -219,13 +219,16 @@ def register_review_pr_parser(subparsers: Any) -> None:
         default=None,
         help=(
             "Override formal CF model pin "
-            "(default: codex→gpt-5.6-terra, claude→claude-sonnet-5, glm→glm-5.2)"
+            "(default: codex→gpt-5.6-terra, claude→claude-sonnet-5, glm→glm-5.2; "
+            "authority escalate: gpt-5.6-sol / claude-fable-5)"
         ),
     )
     parser.add_argument(
         "--effort",
         default=None,
-        help="Override formal CF effort pin (default: high for codex/claude)",
+        help=(
+            "Override formal CF effort pin (default: high; authority escalate: xhigh)"
+        ),
     )
     parser.add_argument(
         "--claude-available",

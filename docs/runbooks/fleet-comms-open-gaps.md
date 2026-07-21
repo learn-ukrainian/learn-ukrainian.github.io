@@ -65,20 +65,23 @@ file handoffs remain authoritative until then.
 Any of these may own a cold-start / drive-board loop. Pins live in
 `scripts/config/model_catalog.yaml` → `orchestrator_seats`.
 
-| Seat | Model | Effort | Sealed formal CF as *reviewer* |
+| Seat | Default (loop) | Escalate (deep) | Sealed formal CF as *reviewer* |
 | --- | --- | --- | --- |
-| **claude** | `claude-sonnet-5` | high | yes (`review-pr --reviewer claude`) |
-| **codex** | `gpt-5.6-terra` | high | yes (default `review-pr`) |
-| **grok** | `grok-4.5` (Cursor explicit if native dark) | high | no until #5557 |
-| **agy** | **`gemini-3.6-flash-high`** | **high** | no until #5555 — still *requests* CF via review-pr |
+| **claude** | `claude-sonnet-5` @ high | **`claude-fable-5` @ xhigh** | yes (`review-pr --reviewer claude`) |
+| **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | yes (default `review-pr`) |
+| **grok** | `grok-4.5` @ high | same SKU (Cursor = avail. fallback) | no until #5557 |
+| **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | no until #5555 — still *requests* CF |
 
-AGY start (orchestrator loop, not sealed reviewer):
+Escalate when: architecture, hard multi-file judgment, high-stakes synthesis — not routine queue.
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.6-flash-high \
-  --mode danger --worktree --task-id <stream-task> --prompt-file BRIEF
-# or interactive / bridge:
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - --task-id agy-orch --to-model gemini-3.6-flash-high
+# AGY default / escalate
+.venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.6-flash-high ...
+.venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.1-pro-high ...
+# Codex escalate
+.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-5.6-sol ...
+# Claude escalate
+.venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5 ...
 ```
 
 ## Formal CF defaults (orchestrator-ready)
@@ -89,6 +92,9 @@ Practical seats @ **high** — not Sol/Fable on routine PRs:
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>              # codex / gpt-5.6-terra @ high
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude  # claude-sonnet-5 @ high
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer glm     # glm-5.2 LOCAL-ONLY
+# Authority escalate (critical / hard judgment only):
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --model gpt-5.6-sol --effort xhigh
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude --model claude-fable-5 --effort xhigh
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ...  # default Laguna S 2.1
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ... --model poolside/poolside/laguna-xs-2.1  # XS 2.1 light
 ```
