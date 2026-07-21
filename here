@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Thin root wrapper — works from bare primary: ./here status
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+exec bash "$ROOT/scripts/here.sh" "$@"
