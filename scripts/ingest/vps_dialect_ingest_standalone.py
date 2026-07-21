@@ -43,7 +43,7 @@ class DialectDictEntry:
 
 
 def fetch_url_text(url: str, timeout: int = 30, delay: float = DEFAULT_DELAY_SECONDS) -> str:
-    """Fetch URL content politely with rate-limiting delay and exponential backoff."""
+    """Fetch URL content politely with rate-limiting delay, standard TLS, and exponential backoff."""
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
 
     if delay > 0:
@@ -51,13 +51,11 @@ def fetch_url_text(url: str, timeout: int = 30, delay: float = DEFAULT_DELAY_SEC
 
     max_retries = 3
     backoff = 2.0
-
-    # Primary attempt using standard TLS context
-    standard_ctx = ssl.create_default_context()
+    ssl_context = ssl.create_default_context()
 
     for attempt in range(max_retries):
         try:
-            with urllib.request.urlopen(req, context=standard_ctx, timeout=timeout) as resp:
+            with urllib.request.urlopen(req, context=ssl_context, timeout=timeout) as resp:
                 content = resp.read()
                 try:
                     return content.decode("utf-8")
@@ -70,18 +68,13 @@ def fetch_url_text(url: str, timeout: int = 30, delay: float = DEFAULT_DELAY_SEC
                 backoff *= 2.0
             else:
                 raise
-        except (urllib.error.URLError, ssl.SSLError):
-            # Fallback for uncertified legacy academic sites (e.g. litopys.org.ua HTTP/TLS mismatch)
-            if attempt == max_retries - 1:
-                fallback_ctx = ssl.create_default_context()
-                fallback_ctx.check_hostname = False
-                fallback_ctx.verify_mode = ssl.CERT_NONE
-                with urllib.request.urlopen(req, context=fallback_ctx, timeout=timeout) as resp:
-                    content = resp.read()
-                    try:
-                        return content.decode("utf-8")
-                    except UnicodeDecodeError:
-                        return content.decode("windows-1251", errors="replace")
+        except (urllib.error.URLError, ssl.SSLError) as e:
+            if attempt < max_retries - 1:
+                print(f"⚠️ Network/TLS error ({e}). Retrying in {backoff}s...", file=sys.stderr)
+                time.sleep(backoff)
+                backoff *= 2.0
+            else:
+                raise
 
     raise RuntimeError(f"Failed to fetch {url} after {max_retries} attempts.")
 
@@ -149,15 +142,24 @@ def parse_shevchenko_concordance() -> list[DialectDictEntry]:
 
 def run_vps_ingestion(output_path: Path, sources: list[str]) -> int:
     all_entries: list[DialectDictEntry] = []
+    per_source_counts: dict[str, int] = {}
 
     if "all" in sources or "lemko" in sources:
-        all_entries.extend(parse_lemko_org_dictionary())
+        lemko_entries = parse_lemko_org_dictionary()
+        per_source_counts["lemko"] = len(lemko_entries)
+        all_entries.extend(lemko_entries)
 
     if "all" in sources or "shevchenko" in sources:
-        all_entries.extend(parse_shevchenko_concordance())
+        shev_entries = parse_shevchenko_concordance()
+        per_source_counts["shevchenko"] = len(shev_entries)
+        all_entries.extend(shev_entries)
+
+    failed_sources = [src for src, count in per_source_counts.items() if count == 0]
+    if failed_sources:
+        print(f"⚠️ Warning: The following requested sources produced 0 entries: {failed_sources}", file=sys.stderr)
 
     if not all_entries:
-        print("❌ Error: Zero entries were scraped. Failing ingestion run.", file=sys.stderr)
+        print("❌ Error: All requested sources yielded 0 entries. Failing ingestion run.", file=sys.stderr)
         return 1
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
