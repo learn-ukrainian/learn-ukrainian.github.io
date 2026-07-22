@@ -111,7 +111,6 @@ def get_monitor_status() -> dict[str, Any]:
             continue
         except psutil.AccessDenied:
             pass
-            continue
 
         active_leases.append(
             {
