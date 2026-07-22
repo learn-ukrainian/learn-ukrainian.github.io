@@ -1,6 +1,6 @@
 # Project: Ukrainian Calque + Grammar Evaluation Harness
 
-> **Status (2026-07-22):** Implementation sub-issue **[#5608](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5608)** filed for the `compile_evalset.py` gold extractor pipeline. Per UNLP leadership feedback (Oleksiy), **Priority #1 is the Gold Evalset**, with zero active human/teacher bottlenecks required to construct or run. Regionalisms vs. calques empirically checked against VESUM + Grinchenko + SUM-11 (`is_regionalism` safeguard). Publication target: **UNLP 2027**.
+> **Status (2026-07-22):** Implementation sub-issue **[#5608](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5608)** active. Delivered **[PR #5610](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/5610)** (`compile_evalset.py` & `taxonomy.yaml`) and **[PR #5612](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/5612)** (`vps_dialect_ingest_standalone.py` & dialect catalog doc). Remote VPS ingestion host verified & deployed. Publication target: **UNLP 2027**.
 
 > **For future sessions: this is the canonical pick-up entrypoint.** When the user says "let's continue the eval harness work" or asks about the UNLP project, read this file first.
 
