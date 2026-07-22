@@ -14,7 +14,7 @@ import uuid
 from typing import Any
 
 import psutil
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel, Field
 
 from .config import BATCH_STATE_DIR
@@ -22,6 +22,26 @@ from .config import BATCH_STATE_DIR
 logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["agent-monitor"])
+
+MONITOR_AUTH_TOKEN = os.environ.get("AGENT_MONITOR_TOKEN", "local-operator-secret")
+
+
+def _verify_auth(
+    x_agent_monitor_token: str | None = Header(None, alias="X-Agent-Monitor-Token"),
+    authorization: str | None = Header(None),
+) -> None:
+    expected = os.environ.get("AGENT_MONITOR_TOKEN", "local-operator-secret")
+    if not expected:
+        return
+    token = x_agent_monitor_token
+    if not token and authorization and authorization.startswith("Bearer "):
+        token = authorization[7:].strip()
+    if token != expected:
+        raise HTTPException(
+            status_code=401,
+            detail="Unauthorized agent monitor request: invalid or missing authentication token",
+        )
+
 
 DB_PATH = BATCH_STATE_DIR / "agent_monitor.sqlite3"
 HOST_RESERVED_RAM_MB = 1250  # Reserved for OS and core services
@@ -187,7 +207,12 @@ def preflight_check(req: PreflightRequest) -> dict[str, Any]:
 
 
 @router.post("/register")
-def register_agent_lease(req: LeaseRegisterRequest) -> dict[str, Any]:
+def register_agent_lease(
+    req: LeaseRegisterRequest,
+    x_agent_monitor_token: str | None = Header(None, alias="X-Agent-Monitor-Token"),
+    authorization: str | None = Header(None),
+) -> dict[str, Any]:
+    _verify_auth(x_agent_monitor_token, authorization)
     try:
         proc = psutil.Process(req.pid)
         if abs(proc.create_time() - req.process_create_time) > 5.0:
@@ -275,7 +300,12 @@ def register_agent_lease(req: LeaseRegisterRequest) -> dict[str, Any]:
 
 
 @router.post("/heartbeat")
-def heartbeat_agent_lease(req: HeartbeatRequest) -> dict[str, Any]:
+def heartbeat_agent_lease(
+    req: HeartbeatRequest,
+    x_agent_monitor_token: str | None = Header(None, alias="X-Agent-Monitor-Token"),
+    authorization: str | None = Header(None),
+) -> dict[str, Any]:
+    _verify_auth(x_agent_monitor_token, authorization)
     conn = _get_db()
     cur = conn.cursor()
     cur.execute(
@@ -312,7 +342,12 @@ def heartbeat_agent_lease(req: HeartbeatRequest) -> dict[str, Any]:
 
 
 @router.post("/release")
-def release_agent_lease(lease_token: str) -> dict[str, Any]:
+def release_agent_lease(
+    lease_token: str,
+    x_agent_monitor_token: str | None = Header(None, alias="X-Agent-Monitor-Token"),
+    authorization: str | None = Header(None),
+) -> dict[str, Any]:
+    _verify_auth(x_agent_monitor_token, authorization)
     conn = _get_db()
     cur = conn.cursor()
     cur.execute(

@@ -6,6 +6,7 @@ from fastapi.testclient import TestClient
 from scripts.api.main import app
 
 client = TestClient(app)
+AUTH_HEADERS = {"X-Agent-Monitor-Token": "local-operator-secret"}
 
 
 def test_agent_monitor_status():
@@ -27,6 +28,21 @@ def test_agent_monitor_preflight():
     assert data["verdict"] in ["APPROVED", "REJECTED"]
 
 
+def test_agent_monitor_unauthorized():
+    res = client.post(
+        "/api/agent-monitor/register",
+        json={
+            "agent_id": "gemini/unauth",
+            "task_name": "test",
+            "pid": os.getpid(),
+            "process_create_time": psutil.Process(os.getpid()).create_time(),
+            "reserved_ram_mb": 256,
+        },
+        headers={"X-Agent-Monitor-Token": "invalid-token"},
+    )
+    assert res.status_code == 401
+
+
 def test_agent_monitor_register_heartbeat_release():
     current_pid = os.getpid()
     proc = psutil.Process(current_pid)
@@ -41,6 +57,7 @@ def test_agent_monitor_register_heartbeat_release():
             "process_create_time": create_time,
             "reserved_ram_mb": 256,
         },
+        headers=AUTH_HEADERS,
     )
     assert reg.status_code == 200
     data = reg.json()
@@ -48,11 +65,18 @@ def test_agent_monitor_register_heartbeat_release():
     token = data["lease_token"]
 
     # Heartbeat
-    hb = client.post("/api/agent-monitor/heartbeat", json={"lease_token": token, "pid": current_pid})
+    hb = client.post(
+        "/api/agent-monitor/heartbeat",
+        json={"lease_token": token, "pid": current_pid},
+        headers=AUTH_HEADERS,
+    )
     assert hb.status_code == 200
 
     # Release
-    rel = client.post(f"/api/agent-monitor/release?lease_token={token}")
+    rel = client.post(
+        f"/api/agent-monitor/release?lease_token={token}",
+        headers=AUTH_HEADERS,
+    )
     assert rel.status_code == 200
 
 
@@ -69,11 +93,11 @@ def test_agent_monitor_register_idempotent():
         "reserved_ram_mb": 256,
     }
 
-    reg1 = client.post("/api/agent-monitor/register", json=payload)
+    reg1 = client.post("/api/agent-monitor/register", json=payload, headers=AUTH_HEADERS)
     assert reg1.status_code == 200
     token1 = reg1.json()["lease_token"]
 
-    reg2 = client.post("/api/agent-monitor/register", json=payload)
+    reg2 = client.post("/api/agent-monitor/register", json=payload, headers=AUTH_HEADERS)
     assert reg2.status_code == 200
     token2 = reg2.json()["lease_token"]
 
