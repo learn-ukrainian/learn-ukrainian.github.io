@@ -124,18 +124,20 @@ operation for launcher integration tests.
 ## Error behavior
 
 - Unknown epic → launcher fails before calling the supervisor.
-- Supervisor refuses (live unexpired lease, claimer PID not live, etc.) →
+- Supervisor refuses (live holder process, claimer PID not live, etc.) →
   launcher exits with an error; no session is started.
 - Incomplete supervisor output → launcher fails closed.
 
-### Stale expired lease (no operator memory required)
+### Stale dead-holder lease (no operator memory required)
 
 If a previous driver crashed without `hook close`, the stream can keep an
-`open` session with an **expired** lease and a **dead** holder PID. On the next
+`open` session with an **active** lease and a **dead** holder PID — even while
+the wall-clock TTL (often 6h from the launcher) has not yet expired. On the next
 `open`, the supervisor **automatically** proof-gated force-closes that session
-and opens a new one (same gates as `handoff-claim` / #5530).
+and opens a new one when the holder PID is gone (same gates as `handoff-claim`
+/ #5530, plus dead-unexpired reclaim).
 
-You do **not** need a manual recover step for that case. Just relaunch:
+You do **not** need to wait for lease expiry. Just relaunch:
 
 ```bash
 ./start-grok.sh --epic=harness
@@ -144,8 +146,8 @@ You do **not** need a manual recover step for that case. Just relaunch:
 
 Still refused (by design):
 
-- live unexpired lease held by another running process
-- expired lease whose holder PID is still alive
+- lease held by a process that is still running (`alive=True`)
+- force-close candidate that reuses the dead holder's `instance_id`
 
 Diagnose only when a launch still fails:
 

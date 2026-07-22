@@ -334,7 +334,8 @@ def test_valid_lease_untouchable_and_crash_force_close_opens_distinct_session(tm
             session_id="session-two",
             now=NOW + timedelta(seconds=1),
         )
-    with pytest.raises(LeaseConflictError, match="untouchable"):
+    # Live holder is never force-closed, before or after wall-clock TTL.
+    with pytest.raises(LeaseConflictError, match="still live"):
         store.force_close_expired_session(
             stream_id="epic:4707",
             session_id="session-one",
@@ -349,25 +350,26 @@ def test_valid_lease_untouchable_and_crash_force_close_opens_distinct_session(tm
             now=NOW + timedelta(seconds=31),
         )
 
+    # Dead holder is force-closable even while TTL is still unexpired.
     process_state[41001] = False
-    proof = store.force_close_expired_session(
+    proof_early = store.force_close_expired_session(
         stream_id="epic:4707",
         session_id="session-one",
         candidate=candidate,
-        now=NOW + timedelta(seconds=31),
+        now=NOW + timedelta(seconds=5),
     )
-    assert proof.heartbeat_age_seconds == 31
-    assert proof.holder_process_id == 41001
-    assert proof.candidate_instance_id == "runtime-2"
+    assert proof_early.heartbeat_age_seconds == 5
+    assert proof_early.holder_process_id == 41001
+    assert proof_early.candidate_instance_id == "runtime-2"
     with pytest.raises(LeaseConflictError):
-        store.heartbeat(original, now=NOW + timedelta(seconds=32))
+        store.heartbeat(original, now=NOW + timedelta(seconds=6))
     with pytest.raises(LeaseConflictError):
         store.append_entry(
             original,
             entry_type=EntryType.NOTE,
             body="Old holder fenced.",
             idempotency_key="old-holder",
-            now=NOW + timedelta(seconds=32),
+            now=NOW + timedelta(seconds=6),
         )
 
     successor = store.open_session(
@@ -377,7 +379,7 @@ def test_valid_lease_untouchable_and_crash_force_close_opens_distinct_session(tm
         ttl_seconds=30,
         session_id="session-two",
         lease_id="lease-two",
-        now=NOW + timedelta(seconds=32),
+        now=NOW + timedelta(seconds=7),
     )
     assert successor.session_id != original.session_id
     assert successor.generation == original.generation + 1

@@ -130,6 +130,46 @@ def test_open_driver_auto_recovers_expired_dead_holder(tmp_path: Path) -> None:
     assert successor.session_id != "session-stale"
 
 
+def test_open_driver_auto_recovers_unexpired_dead_holder(tmp_path: Path) -> None:
+    """Dead PID with remaining TTL must not block relaunch for hours (user-visible #5630 gap)."""
+    from datetime import timedelta
+
+    from agents_extensions.shared.session_streams.model import utc_now
+
+    supervisor = _supervisor(tmp_path)
+    dead_pid = 999_999_003
+    assert not _pid_alive(dead_pid)
+
+    # Opened moments ago with 6h launcher TTL; process already gone.
+    supervisor.store.open_session(
+        stream_id="epic:4707",
+        holder=LeaseHolder(
+            agent="grok",
+            harness="grok-tui",
+            instance_id="grok-crash-unexpired",
+            process_id=dead_pid,
+            task_id="crashed",
+        ),
+        lineage_id="lineage-crash",
+        ttl_seconds=6 * 3600,
+        now=utc_now() - timedelta(seconds=20),
+    )
+    successor = supervisor.open_driver(
+        role="driver",
+        stream_id="epic:4707",
+        holder=LeaseHolder(
+            agent="grok",
+            harness="grok-tui",
+            instance_id="grok-relaunch",
+            process_id=os.getpid(),
+            task_id="relaunch",
+        ),
+        lineage_id="lineage-relaunch",
+        ttl_seconds=6 * 3600,
+    )
+    assert successor.holder.instance_id == "grok-relaunch"
+
+
 def test_open_driver_refuses_live_unexpired_holder(tmp_path: Path) -> None:
     supervisor = _supervisor(tmp_path)
     live = supervisor.open_driver(

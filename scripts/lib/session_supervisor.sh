@@ -136,12 +136,13 @@ claim_session_supervisor_env() {
   if ! "$python_bin" "${supervisor_args[@]}" > "$supervisor_tmp" 2>&1; then
     echo "Error: session supervisor failed to claim ${stream}" >&2
     sed 's/^/  supervisor: /' "$supervisor_tmp" >&2
-    # Expired dead-holder leases auto-recover on open. Remaining failures are
-    # almost always a *live* holder — diagnose, do not invent a force-close.
+    # Dead-holder leases (expired or not) auto-recover on open. Remaining
+    # failures are almost always a *live* holder — diagnose, do not invent a
+    # force-close against a running process.
     if grep -q "already has live session" "$supervisor_tmp" 2>/dev/null; then
       echo "  hint: another process still holds this epic stream." >&2
       echo "  diagnose: .venv/bin/python -m agents_extensions.shared.session_streams handoff-status --stream ${stream}" >&2
-      echo "  if that holder is dead+expired, relaunch (open recovers automatically)." >&2
+      echo "  if that holder PID is dead (alive=False), relaunch — open recovers automatically even before TTL expiry." >&2
     fi
     return 1
   fi

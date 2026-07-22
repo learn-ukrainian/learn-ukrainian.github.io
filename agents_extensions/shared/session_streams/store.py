@@ -433,7 +433,14 @@ class SessionStreamStore:
         now: datetime | None = None,
         reason: str = "proof-gated crashed-holder force close",
     ) -> ForceCloseProof:
-        """Force-close only an expired session whose exact holder process is absent."""
+        """Force-close a crashed session whose exact holder process is absent.
+
+        The holder PID must be proven dead (``os.kill(pid, 0)`` → ProcessLookupError).
+        TTL expiry is **not** required: a dead local process cannot renew the lease,
+        and waiting for a multi-hour launcher TTL blocked relaunch after crash (#5630
+        only covered expired+dead). A still-live holder process is never force-closed,
+        whether or not the wall-clock TTL has elapsed.
+        """
         stream_id = validate_stream_id(stream_id)
         candidate.validate()
         current_time = now or utc_now()
@@ -448,12 +455,12 @@ class SessionStreamStore:
             ).fetchone()
             if row is None or row["state"] != "active":
                 raise LeaseConflictError("crashed session has no exact active lease to prove and close")
-            expires_at = parse_timestamp(str(row["expires_at"]))
-            if current_time < expires_at:
-                raise LeaseConflictError("valid live lease is untouchable until its TTL expires")
             holder_pid = int(row["holder_process_id"])
             if self._process_probe(holder_pid):
-                raise LeaseConflictError("expired lease holder process is still live; force-close refused")
+                raise LeaseConflictError(
+                    "holder process is still live; force-close refused "
+                    "(only the holder may close, or wait until the process is gone)"
+                )
             if candidate.instance_id == row["holder_instance_id"]:
                 raise LeaseConflictError("force-close candidate must be a distinct runtime instance")
             if not self._process_probe(candidate.process_id):
@@ -481,7 +488,7 @@ class SessionStreamStore:
                 event_type="stale_observed",
                 timestamp=timestamp,
                 proof=proof_payload,
-                reason="expired heartbeat and absent exact holder process observed",
+                reason="absent exact holder process observed (dead PID proof)",
             )
             force_event_id = self._insert_lease_event_from_row(
                 connection,
