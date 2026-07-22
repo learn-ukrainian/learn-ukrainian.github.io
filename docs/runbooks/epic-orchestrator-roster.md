@@ -44,11 +44,10 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
 **Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
 - **Opus 4.8** — hardest judgment + the cross-family review of record. Don't burn it on a polling loop.
 - **Codex (GPT-5.6)** 272K + **Kimi K2.7** 256K — under the ~500K window we want for a driver.
-  ⚠️ **Conflict to resolve:** `model_catalog.orchestrator_seats` + `fleet_communications.yaml`
-  currently list **codex** as a valid orchestrator seat (`claude · codex · grok · agy`). This
-  runbook recommends against it on the 272K rationale, but **the machine policy wins until
-  reconciled** — if codex is intentionally dropped as a driver, update the catalog + served
-  rule in the same change.
+  **Codex was dropped from `model_catalog.orchestrator_seats` + `fleet_communications.yaml`
+  (user, 2026-07-22)** — the 272K window is not worth the session-start/end rollover-token
+  overhead. Codex remains a formal-CF **review** seat + coding lane (`formal_cf_defaults.codex`
+  and the codex comms endpoint) — it just no longer owns a driver loop.
 - **Kimi K3** — frontier coder/reviewer + cross-family escalation authority (`max-effort-only` makes a continuous loop costly).
 
 ---
