@@ -914,12 +914,16 @@ jobs:
           git diff --exit-code docs/lesson-schema.yaml
 
   test:
-    name: Test (pytest)
+    name: Test (pytest) [${{ matrix.shard }}/4]
     runs-on: ubuntu-latest
     permissions:
       contents: read
       actions: write
     needs: [changes, lint]
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     # Per Gemini cross-review on #1644: top-level `if:` MUST NOT exclude
     # lint=failure cases — Test (pytest) is a required status check; if the
     # job is skipped because lint failed, the required check never reports
@@ -978,45 +982,38 @@ jobs:
             torch==2.13.0 torchvision==0.28.0
           .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
 
-      - name: Run tests
+      - name: Restore latest pytest duration estimates
+        if: needs.changes.outputs.python == 'true'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .ci/pytest-durations.json
+          key: pytest-shard-durations-v1-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            pytest-shard-durations-v1-main-
+
+      - name: Plan deterministic pytest shard
+        if: needs.changes.outputs.python == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped')
+        run: |
+          .venv/bin/python scripts/ci/pytest_shards.py plan --shard-id "${{ matrix.shard }}" \
+            --durations .ci/pytest-durations.json --output .ci/plan.json --args-output .ci/test-nodeids.txt
+
+      - name: Run pytest shard
         if: needs.changes.outputs.python == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && (github.event_name != 'push' || github.ref != 'refs/heads/main')
         run: |
-          playground_perf_test="tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast"
-          common_args=(
-            tests/
-            -n auto
-            -v
-            --tb=short
-            -k "not slow and not website"
-            --ignore=tests/test_rag.py
-            --ignore=tests/test_a1_review_scores.py
-            --ignore=tests/test_agent_runtime.py
-            --ignore=tests/test_channels_registry.py
-            --ignore=tests/test_convergence_loop.py
-            --ignore=tests/test_morphological_validator.py
-            --ignore=tests/test_plan_hash.py
-            --ignore=tests/test_scrape_diasporiana.py
-            --ignore=tests/test_v6_plan_hash_drift.py
-            --ignore=tests/test_vocab_gen.py
-            --ignore=tests/test_wiki_channels.py
-            --ignore=tests/test_wiki_enrichment.py
-            --ignore=tests/wiki/test_grade_filter.py
-            --ignore=tests/wiki/test_mlx_fault_injection.py
-            --ignore=tests/wiki/test_t1_t2_pipeline.py
-            --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix
-            --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all
-            --deselect="$playground_perf_test"
-          )
-          # These tests assert exact invalidation counts for a module-global cache.
-          # Run them in a fresh process so earlier orient API tests cannot leak keys.
-          .venv/bin/python -m pytest \
-            tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
-            tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
-            -v --tb=short
-          # This wall-clock smoke test is intentionally serial: xdist worker
-          # contention turns its endpoint latency budget into a runner-load probe.
-          .venv/bin/python -m pytest "$playground_perf_test" -v --tb=short
-          .venv/bin/python -m pytest "${common_args[@]}"
+          if [ "${{ matrix.shard }}" = "1" ]; then
+            # These cache-invalidating tests need a fresh process before the shard body.
+            .venv/bin/python -m pytest \
+              tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
+              tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
+              -v --tb=short --junitxml=.ci/cache-junit.xml
+            # This wall-clock smoke test is serial; xdist would measure runner contention.
+            .venv/bin/python -m pytest \
+              tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
+              -v --tb=short --junitxml=.ci/playground-junit.xml
+          fi
+          set -o pipefail
+          .venv/bin/python -m pytest -n auto --junitxml=.ci/main-junit.xml --durations=0 \
+            @.ci/test-nodeids.txt 2>&1 | tee .ci/main.log
 
       - name: Run tests with coverage
         if: needs.changes.outputs.python == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -1027,58 +1024,116 @@ jobs:
           # coverage would break CI, so we nudge the minimum and track the
           # trend. Re-measure after each new batch of tests and raise the floor.
           #
-          # Keep the required PR gate hermetic: these ignored files depend on
-          # local corpora, generated review/orchestration artifacts, or sidecar
-          # binaries/CLIs that are not provisioned on GitHub-hosted runners.
-          playground_perf_test="tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast"
-          common_args=(
-            tests/
-            -n auto
-            -v
-            --tb=short
-            -k "not slow and not website"
-            --ignore=tests/test_rag.py
-            --ignore=tests/test_a1_review_scores.py
-            --ignore=tests/test_agent_runtime.py
-            --ignore=tests/test_channels_registry.py
-            --ignore=tests/test_convergence_loop.py
-            --ignore=tests/test_morphological_validator.py
-            --ignore=tests/test_plan_hash.py
-            --ignore=tests/test_scrape_diasporiana.py
-            --ignore=tests/test_v6_plan_hash_drift.py
-            --ignore=tests/test_vocab_gen.py
-            --ignore=tests/test_wiki_channels.py
-            --ignore=tests/test_wiki_enrichment.py
-            --ignore=tests/wiki/test_grade_filter.py
-            --ignore=tests/wiki/test_mlx_fault_injection.py
-            --ignore=tests/wiki/test_t1_t2_pipeline.py
-            --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix
-            --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all
-            --deselect="$playground_perf_test"
-          )
-          coverage_args=(
-            --cov=scripts
-            --cov-append
-            --cov-report=term-missing
-            --cov-report=xml:coverage.xml
-            --cov-fail-under=35
-          )
-          .venv/bin/python -m pytest \
-            tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
-            tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
-            -v --tb=short --cov=scripts --cov-append --cov-report=
-          # This wall-clock smoke test is intentionally outside coverage:
-          # coverage instrumentation skews the endpoint latency budget.
-          .venv/bin/python -m pytest "$playground_perf_test" \
-            -v --tb=short
-          .venv/bin/python -m pytest "${common_args[@]}" "${coverage_args[@]}"
+          if [ "${{ matrix.shard }}" = "1" ]; then
+            .venv/bin/python -m pytest \
+              tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
+              tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
+              -v --tb=short --junitxml=.ci/cache-junit.xml --cov=scripts --cov-append --cov-report=
+            # Coverage instrumentation skews this endpoint latency budget, so it stays outside coverage.
+            .venv/bin/python -m pytest \
+              tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
+              -v --tb=short --junitxml=.ci/playground-junit.xml
+          fi
+          set -o pipefail
+          .venv/bin/python -m pytest -n auto --junitxml=.ci/main-junit.xml --durations=0 \
+            --cov=scripts --cov-append --cov-report= @.ci/test-nodeids.txt 2>&1 | tee .ci/main.log
 
-      - name: Upload coverage
+      - name: Upload pytest shard plan and results
+        if: always() && needs.changes.outputs.python == 'true' && (needs.lint.result == 'success' || needs.lint.result == 'skipped')
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-shard-${{ matrix.shard }}
+          path: .ci/
+          if-no-files-found: error
+
+      - name: Save coverage data for aggregation
+        if: always() && needs.changes.outputs.python == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          test -f .coverage
+          mkdir -p coverage
+          mv .coverage coverage/.coverage.shard-${{ matrix.shard }}
+
+      - name: Upload coverage shard
+        if: always() && needs.changes.outputs.python == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-coverage-${{ matrix.shard }}
+          path: coverage/
+          include-hidden-files: true
+          if-no-files-found: error
+
+  pytest-shard-artifacts:
+    name: Pytest shard artifacts
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [changes, lint, test]
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.12'
+
+      - name: Download pytest shard artifacts
+        if: needs.changes.outputs.python == 'true' && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && needs.test.result == 'success'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v7.0.0
+        with:
+          pattern: pytest-shard-*
+          path: pytest-artifacts
+
+      - name: Verify complete pytest selection and execution counts
+        if: needs.changes.outputs.python == 'true' && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && needs.test.result == 'success'
+        run: |
+          python -m venv .venv
+          .venv/bin/python scripts/ci/pytest_shards.py verify-artifacts --artifact-dir pytest-artifacts
+
+      - name: Download coverage shards
+        if: needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v7.0.0
+        with:
+          pattern: pytest-coverage-*
+          path: coverage-artifacts
+
+      - name: Combine coverage once and enforce the floor
+        if: needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install --no-deps -r requirements-lock.txt
+          .venv/bin/python -m coverage combine coverage-artifacts/pytest-coverage-*/coverage
+          .venv/bin/python -m coverage report --fail-under=35
+          .venv/bin/python -m coverage xml -o coverage.xml
+
+      - name: Publish next-run duration estimates
+        if: needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          python -m venv .venv
+          .venv/bin/python scripts/ci/pytest_shards.py parse-durations \
+            --log pytest-artifacts/pytest-shard-1/main.log \
+            --log pytest-artifacts/pytest-shard-2/main.log \
+            --log pytest-artifacts/pytest-shard-3/main.log \
+            --log pytest-artifacts/pytest-shard-4/main.log \
+            --output .ci/pytest-durations.json
+
+      - name: Save next-run duration estimates
+        if: needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .ci/pytest-durations.json
+          key: pytest-shard-durations-v1-main-${{ github.sha }}
+
+      - name: Upload combined coverage
         if: always() && needs.changes.outputs.python == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: coverage-report
           path: coverage.xml
+          if-no-files-found: error
 
   frontend:
     name: Frontend (build + vitest)
@@ -1245,7 +1300,8 @@ jobs:
     needs:
       - changes
       - bio-preparation-data   # BIO Preparation Data
-      - test                  # Test (pytest)
+      - test                  # Test (pytest) [1/4] ... [4/4]
+      - pytest-shard-artifacts # Pytest selection/count and coverage aggregation
       - lint                  # Lint (ruff)
       - quality-gates         # Quality Gates (radon)
       - lint-prompts          # Lint Prompts
@@ -1264,6 +1320,11 @@ jobs:
           RESULTS: ${{ join(needs.*.result, ',') }}
         run: |
           echo "required job results: $RESULTS"
+      - name: Fail if required pytest matrix did not complete
+        if: needs.changes.outputs.python == 'true' && needs.test.result != 'success'
+        run: |
+          echo "::error::A required pytest shard failed, was cancelled, or was unexpectedly skipped."
+          exit 1
       - name: Fail if any required job failed or was cancelled
         if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
         run: |
