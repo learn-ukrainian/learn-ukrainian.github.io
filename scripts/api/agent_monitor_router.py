@@ -207,8 +207,8 @@ def register_agent_lease(req: LeaseRegisterRequest) -> dict[str, Any]:
 
     # Idempotency check: return existing lease if already registered
     cur.execute(
-        "SELECT lease_token, reserved_ram_mb FROM agent_leases WHERE agent_id=? AND task_name=? AND pid=? AND process_create_time=? AND status='APPROVED'",
-        (req.agent_id, req.task_name, req.pid, req.process_create_time),
+        "SELECT lease_token, reserved_ram_mb FROM agent_leases WHERE agent_id=? AND task_name=? AND pid=? AND process_create_time=? AND status='APPROVED' AND last_heartbeat >= ?",
+        (req.agent_id, req.task_name, req.pid, req.process_create_time, now - 300.0),
     )
     existing = cur.fetchone()
     if existing:
