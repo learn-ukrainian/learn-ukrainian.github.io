@@ -967,6 +967,7 @@ jobs:
       # Pip/torch wheel cache (Sol #5657 follow-up): 4 shards each reinstall torch;
       # caching the download directory cuts multi-GB cold installs on cache hit.
       - name: Restore pip wheel cache
+        id: pip-wheel-cache
         if: needs.changes.outputs.python == 'true'
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -990,7 +991,8 @@ jobs:
           .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
 
       - name: Save pip wheel cache
-        if: needs.changes.outputs.python == 'true' && always()
+        # Only save on exact-key miss (Atlas pattern) — avoids redundant writes on hit.
+        if: needs.changes.outputs.python == 'true' && steps.pip-wheel-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/pip
