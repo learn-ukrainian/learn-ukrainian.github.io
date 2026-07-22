@@ -545,4 +545,26 @@ def test_empty_kimicc_agent_inherits_project_default(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     assert "arg=--agent" not in output
     assert "arg=infra-orchestrator" not in output
+
+
+def test_ddash_passthrough_forwards_colliding_flags(tmp_path: Path) -> None:
+    """Args after -- reach Claude Code verbatim, even ones colliding with
+    launcher flags (a bare --endpoint would otherwise be consumed by it)."""
+    output, result = _run_with_fakes(
+        tmp_path,
+        ["--endpoint", "platform", "--no-isolate-config", "--", "--verbose", "--endpoint"],
+    )
+    assert result.returncode == 0, result.stderr
+    assert "arg=--verbose" in output
+    assert "arg=--endpoint" in output
+
+
+def test_ddash_forwarded_model_still_rejected(tmp_path: Path) -> None:
+    """-- does not smuggle a lead-model override past the launcher."""
+    _, result = _run_with_fakes(
+        tmp_path,
+        ["--endpoint", "platform", "--no-isolate-config", "--", "--model", "opus"],
+    )
+    assert result.returncode == 2
+    assert "owns the lead model" in result.stderr
     assert "default; override with --agent" not in result.stdout

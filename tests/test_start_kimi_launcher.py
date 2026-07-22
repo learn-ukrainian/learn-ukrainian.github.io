@@ -332,3 +332,50 @@ def test_hermes_install_preferred_over_legacy_binary(tmp_path: Path) -> None:
     )
     assert result.returncode == 0, result.stderr + result.stdout
     assert capture.read_text(encoding="utf-8").strip() == "hermes"
+
+
+def test_passthrough_flags_only_launch_interactive_tui(tmp_path: Path) -> None:
+    """`-- <flags>` with no prompt: interactive TUI, flags reach the CLI verbatim."""
+    values, argv_blob, result, _project, supervisor_capture = _run_launcher(
+        tmp_path, ["--", "-y"]
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert values["session_epic"] == "unset"
+    assert not supervisor_capture.exists()
+    parts = [p for p in argv_blob.split("\0") if p]
+    assert parts == ["-y"]
+
+
+def test_passthrough_flags_appended_after_prompt(tmp_path: Path) -> None:
+    """Prompt stays the prompt; flags after -- come last so they win ties."""
+    _values, argv_blob, result, _project, _supervisor_capture = _run_launcher(
+        tmp_path,
+        ["--model", "k3", "do the thing", "--", "-y", "--plan"],
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    parts = [p for p in argv_blob.split("\0") if p]
+    assert parts[0] == "-p"
+    assert parts[1] == "do the thing"
+    assert parts[-2:] == ["-y", "--plan"]
+
+
+def test_passthrough_after_epic_cold_start(tmp_path: Path) -> None:
+    """`--epic harness -- -y`: cold-start prompt injected AND flag forwarded."""
+    values, argv_blob, result, _project, _supervisor_capture = _run_launcher(
+        tmp_path, ["--epic", "harness", "--", "-y"]
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert values["session_epic"] == "harness"
+    parts = [p for p in argv_blob.split("\0") if p]
+    assert parts[0] == "-p"
+    assert "do NOT open or resume it yourself" in parts[1]
+    assert parts[-1] == "-y"
+
+
+def test_dangling_launcher_flag_before_passthrough_rejected(tmp_path: Path) -> None:
+    """`--epic -- -y` must fail: --epic would otherwise swallow '--' as its value."""
+    _values, _argv_blob, result, _project, _supervisor_capture = _run_launcher(
+        tmp_path, ["--epic", "--", "-y"]
+    )
+    assert result.returncode == 1
+    assert "dangling launcher flag" in result.stderr
