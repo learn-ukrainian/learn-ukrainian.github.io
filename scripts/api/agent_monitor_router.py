@@ -106,8 +106,10 @@ def get_monitor_status() -> dict[str, Any]:
             if abs(proc.create_time() - proc_create_time) > 5.0:
                 expired_tokens.append(lease_tok)
                 continue
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
+        except psutil.NoSuchProcess:
             expired_tokens.append(lease_tok)
+        except psutil.AccessDenied:
+            pass
             continue
 
         active_leases.append(
