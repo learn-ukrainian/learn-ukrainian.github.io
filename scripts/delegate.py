@@ -2429,13 +2429,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # the shared ownership ledger entirely (Claude CF #5649 r11).
     if not bool(getattr(args, "dry_run", False)):
         try:
-            from scripts.delegate_ownership import (
+            from scripts.guardrails.delegate_ownership import (
                 GuardMode,
                 admit_write_paths,
                 env_guard_mode,
             )
         except ImportError:  # pragma: no cover - flat script path
-            from delegate_ownership import (  # type: ignore
+            from guardrails.delegate_ownership import (  # type: ignore
                 GuardMode,
                 admit_write_paths,
                 env_guard_mode,
@@ -2908,9 +2908,9 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         # short-lived dispatch CLI). Best-effort: WARN path must not fail spawn.
         if str(args.mode) in _WRITE_CAPABLE_MODES:
             try:
-                from scripts.delegate_ownership import update_write_claim_pid
+                from scripts.guardrails.delegate_ownership import update_write_claim_pid
             except ImportError:  # pragma: no cover
-                from delegate_ownership import update_write_claim_pid  # type: ignore
+                from guardrails.delegate_ownership import update_write_claim_pid  # type: ignore
 
             try:
                 update_write_claim_pid(task_id, int(proc.pid))

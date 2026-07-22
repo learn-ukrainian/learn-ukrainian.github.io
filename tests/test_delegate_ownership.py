@@ -1,4 +1,4 @@
-"""Tests for scripts/delegate_ownership.py (#5643 Δ2-A WARN)."""
+"""Tests for scripts/guardrails/delegate_ownership.py (#5643 Δ2-A WARN)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import json
 import os
 from pathlib import Path
 
-from scripts.delegate_ownership import (
+from scripts.guardrails.delegate_ownership import (
     ClaimKind,
     GuardMode,
     OwnershipLedger,
@@ -423,7 +423,7 @@ def test_live_ledger_pid_keeps_claim_despite_terminal_state(tmp_path: Path):
 
 def test_same_task_id_live_pid_does_not_replace_claims(tmp_path: Path, monkeypatch):
     """Concurrent same task_id: second admission must not clobber first claims (CF r7)."""
-    import scripts.delegate_ownership as own_mod
+    import scripts.guardrails.delegate_ownership as own_mod
 
     ledger = tmp_path / "own.sqlite3"
     state_dir = tmp_path / "tasks"

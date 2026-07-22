@@ -29,7 +29,8 @@ try:
 except ImportError:  # pragma: no cover - flat script path
     from common.repo_root import resolve_repo_root  # type: ignore
 
-_REPO_ROOT = resolve_repo_root(Path(__file__), 1)
+# File lives at scripts/guardrails/… → parents[2] is the checkout root.
+_REPO_ROOT = resolve_repo_root(Path(__file__), 2)
 DEFAULT_LEDGER_PATH = _REPO_ROOT / "batch_state" / "tasks" / "write-ownership.sqlite3"
 DEFAULT_TASK_STATE_DIR = _REPO_ROOT / "batch_state" / "tasks"
 # Admission uses the short-lived CLI PID until the worker PID is written.
