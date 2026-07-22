@@ -24,14 +24,18 @@ gates bind · **12** **Advisor/operator approval gate**: no architecture, layout
 process decisions without present-tense **operator** or designated **advisor** approval
 (current advisors: **Fable**, **Sol** — roster may change; check `/api/rules`).
 
-### Fleet-comms mid-cutover (binding for standalone TUI/UI drivers; #5512)
+### Fleet-comms mid-cutover (binding for standalone TUI/UI drivers; #5512 / #5632)
 
 Full text: `agents_extensions/shared/rules/fleet-comms-coordination.md` (also in
-`GET /api/rules`). Digest: prefer `.venv/bin/python -m scripts.fleet_comms plane-status` +
-`review-pr` / `publish-review-verdict` for topology and formal CF; while plane
-`mode=off`, **file dual-write remains authoritative** — do not invent a competing
-design or flip dual_write / stream authority / `formal_review_eligible` without
-operator/advisor GO. Stream leases are already claimed by launchers.
+`GET /api/rules`). Method: skill **`drive-epic`**; operator seats:
+`docs/runbooks/epic-orchestrator-roster.md` + `./start-<model>-drive.sh <epic>`.
+Digest: prefer `.venv/bin/python -m scripts.fleet_comms plane-status` +
+`review-pr <PR_NUMBER>` / `publish-review-verdict` for topology and formal CF.
+Plane modes are only `off|shadow|dual_write` — **file dual-write stays authoritative
+in every mode** (`dual_write` is shadow/mirror, not authority cutover). Do not invent
+a competing design or flip plane / retention apply / `formal_review_eligible` without
+operator/advisor GO. Codex is a review/coding seat, **not** an epic-driver loop.
+Stream leases are already claimed by launchers.
 
 ---
 

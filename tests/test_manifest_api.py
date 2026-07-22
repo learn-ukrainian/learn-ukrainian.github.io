@@ -87,6 +87,9 @@ def test_rules_live_assembly_includes_fleet_comms_coordination():
     assert "review-pr" in md
     assert "dual_write" in md or "dual-write" in md
     assert "do not invent a competing design" in md.lower() or "competing design" in md
+    # Sol #5632 F003: no false "post-cutover drop file handoffs" doctrine.
+    assert "authoritative in every" in md.lower() or "stays authoritative" in md.lower()
+    assert "drive-epic" in md
 
 
 def test_rules_markdown_default(monkeypatch, tmp_path):
