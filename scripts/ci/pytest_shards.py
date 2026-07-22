@@ -217,6 +217,22 @@ def parse_durations(log_paths: Sequence[Path], output: Path) -> None:
     _write_json(output, durations)
 
 
+def run_nodeids(nodeids_path: Path, pytest_args: Sequence[str]) -> int:
+    """Run pytest on an explicit node-id list (no shell @file; pytest does not support it)."""
+    import pytest
+
+    nodeids = [line.strip() for line in nodeids_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    if not nodeids:
+        raise RuntimeError(f"node-id file {nodeids_path} is empty")
+    if len(set(nodeids)) != len(nodeids):
+        raise RuntimeError(f"node-id file {nodeids_path} contains duplicates")
+    # Drop a leading bare "--" separator from argparse.REMAINDER callers.
+    args = list(pytest_args)
+    if args and args[0] == "--":
+        args = args[1:]
+    return int(pytest.main([*args, *nodeids]))
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -232,6 +248,9 @@ def _parser() -> argparse.ArgumentParser:
     durations = commands.add_parser("parse-durations")
     durations.add_argument("--log", type=Path, action="append", required=True)
     durations.add_argument("--output", type=Path, required=True)
+    run = commands.add_parser("run", help="Invoke pytest with node IDs from a file (not shell @file)")
+    run.add_argument("--nodeids", type=Path, required=True)
+    run.add_argument("pytest_args", nargs=argparse.REMAINDER)
     return parser
 
 
@@ -248,8 +267,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
         elif args.command == "verify-artifacts":
             verify_artifacts(args.artifact_dir, args.shard_count)
-        else:
+        elif args.command == "parse-durations":
             parse_durations(args.log, args.output)
+        elif args.command == "run":
+            return run_nodeids(args.nodeids, args.pytest_args)
+        else:
+            raise RuntimeError(f"unknown command: {args.command}")
     except (OSError, RuntimeError, ValueError, element_tree.ParseError) as error:
         print(f"pytest shard error: {error}", file=sys.stderr)
         return 1

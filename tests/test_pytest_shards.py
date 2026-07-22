@@ -92,3 +92,31 @@ def test_parse_durations_accumulates_per_test_timings(tmp_path: Path) -> None:
     pytest_shards.parse_durations([log], output)
 
     assert json.loads(output.read_text(encoding="utf-8")) == {"tests/test_a.py::test_a": 2.0}
+
+
+def test_run_nodeids_rejects_empty_file(tmp_path: Path) -> None:
+    empty = tmp_path / "nodeids.txt"
+    empty.write_text("", encoding="utf-8")
+    try:
+        pytest_shards.run_nodeids(empty, ["-q"])
+    except RuntimeError as error:
+        assert "empty" in str(error)
+    else:
+        raise AssertionError("empty node-id file must fail closed")
+
+
+def test_run_nodeids_passes_nodeids_to_pytest_main(tmp_path: Path, monkeypatch) -> None:
+    nodeids = tmp_path / "nodeids.txt"
+    nodeids.write_text("tests/test_a.py::test_a\ntests/test_b.py::test_b\n", encoding="utf-8")
+    captured: list[list[str]] = []
+
+    def fake_main(args):
+        captured.append(list(args))
+        return 7
+
+    import pytest as real_pytest
+
+    monkeypatch.setattr(real_pytest, "main", fake_main)
+    rc = pytest_shards.run_nodeids(nodeids, ["--", "-q", "-n", "auto"])
+    assert rc == 7
+    assert captured == [["-q", "-n", "auto", "tests/test_a.py::test_a", "tests/test_b.py::test_b"]]

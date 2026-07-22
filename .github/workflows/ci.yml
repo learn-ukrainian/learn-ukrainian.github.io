@@ -1011,8 +1011,9 @@ jobs:
               -v --tb=short --junitxml=ci-artifacts/cache-junit.xml || status=$?
           fi
           set -o pipefail
-          .venv/bin/python -m pytest -n auto --junitxml=ci-artifacts/main-junit.xml --durations=0 \
-            @ci-artifacts/test-nodeids.txt 2>&1 | tee ci-artifacts/main.log || status=$?
+          .venv/bin/python scripts/ci/pytest_shards.py run --nodeids ci-artifacts/test-nodeids.txt -- \
+            -n auto --junitxml=ci-artifacts/main-junit.xml --durations=0 \
+            2>&1 | tee ci-artifacts/main.log || status=$?
           if [ "${{ matrix.shard }}" = "1" ]; then
             # Wall-clock smoke last so an FTS/race flake does not skip the bulk shard body.
             .venv/bin/python -m pytest \
@@ -1038,8 +1039,10 @@ jobs:
               -v --tb=short --junitxml=ci-artifacts/cache-junit.xml --cov=scripts --cov-append --cov-report= || status=$?
           fi
           set -o pipefail
-          .venv/bin/python -m pytest -n auto --junitxml=ci-artifacts/main-junit.xml --durations=0 \
-            --cov=scripts --cov-append --cov-report= @ci-artifacts/test-nodeids.txt 2>&1 | tee ci-artifacts/main.log || status=$?
+          .venv/bin/python scripts/ci/pytest_shards.py run --nodeids ci-artifacts/test-nodeids.txt -- \
+            -n auto --junitxml=ci-artifacts/main-junit.xml --durations=0 \
+            --cov=scripts --cov-append --cov-report= \
+            2>&1 | tee ci-artifacts/main.log || status=$?
           if [ "${{ matrix.shard }}" = "1" ]; then
             # Coverage instrumentation skews this endpoint latency budget, so it stays outside coverage.
             .venv/bin/python -m pytest \
