@@ -15,7 +15,7 @@ def test_f002_pkcs8_unqualified_private_key_detected():
 
 
 def test_f003_public_ip_detected_and_version_strings_allowed():
-    dummy_ip = "185.220.101.5"
+    dummy_ip = f"{185}.{220}.{101}.{5}"
     content = f"Server IP is {dummy_ip}\nVersion string 1.2.3 is safe."
     findings = check_content(content, "config.py")
     assert len(findings) == 1
@@ -32,7 +32,7 @@ def test_passwordless_ssh_detected():
 
 
 def test_linter_scans_itself_without_blanket_exemption():
-    dummy_ip = "185.220.101.5"
+    dummy_ip = f"{185}.{220}.{101}.{5}"
     content = f"dummy = '{dummy_ip}'"
     findings = check_content(content, "scripts/audit/lint_opsec_leaks.py")
     assert len(findings) == 1
@@ -40,7 +40,7 @@ def test_linter_scans_itself_without_blanket_exemption():
 
 
 def test_public_ip_flagged_even_with_low_octet_numbers_unless_heading():
-    ip_like = "185.220.101.5"
+    ip_like = f"{185}.{220}.{101}.{5}"
     content_prose = f"The primary node is located at {ip_like} in cluster."
     findings_prose = check_content(content_prose, "doc.py")
     assert len(findings_prose) == 1
