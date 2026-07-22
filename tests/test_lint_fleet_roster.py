@@ -326,3 +326,21 @@ def test_duplicate_normalized_orchestrator_seat_names_fail(tmp_path: Path):
         raise AssertionError("expected ValueError for duplicate normalized seats")
     except ValueError as exc:
         assert "duplicate orchestrator_seats name after normalize" in str(exc)
+
+
+def test_unmatched_projection_end_marker_fails(tmp_path: Path):
+    """Stray end markers must fail closed (CF r3 F001)."""
+    catalog, comms, seats, eligible = _mini_authorities(tmp_path)
+    proj = tmp_path / "proj.md"
+    proj.write_text(
+        _seat_block(seats)
+        + "\n<!-- fleet-roster-projection:end orchestrator_seats -->\n"
+        + _elig_block(eligible),
+        encoding="utf-8",
+    )
+    issues = lint_fleet_roster(
+        catalog_path=catalog, comms_path=comms, projection_paths=[proj], project_root=tmp_path
+    )
+    assert any("unmatched" in i.message and "end" in i.message for i in issues), [
+        i.as_dict() for i in issues
+    ]

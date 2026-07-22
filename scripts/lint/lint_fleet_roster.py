@@ -158,29 +158,37 @@ def parse_markdown_table(block: str) -> tuple[tuple[str, ...], list[dict[str, st
 
 
 def extract_projection_blocks(text: str, kind: str) -> list[str]:
-    """Return body text of every matching begin/end marker pair for *kind*."""
+    """Return body text of every matching begin/end marker pair for *kind*.
+
+    Fail-closed on unmatched ends, unclosed begins, nesting, and kind mismatches.
+    Markers for *other* kinds are ignored for this extraction (each kind is scanned
+    independently by the caller).
+    """
+    # Collect only markers for this kind, in document order.
+    events: list[tuple[int, str, re.Match[str]]] = []
+    for m in BEGIN_RE.finditer(text):
+        if m.group("kind") == kind:
+            events.append((m.start(), "begin", m))
+    for m in END_RE.finditer(text):
+        if m.group("kind") == kind:
+            events.append((m.start(), "end", m))
+    events.sort(key=lambda item: item[0])
+
     bodies: list[str] = []
-    pos = 0
-    while True:
-        begin = BEGIN_RE.search(text, pos)
-        if begin is None:
-            break
-        if begin.group("kind") != kind:
-            pos = begin.end()
+    open_begin: re.Match[str] | None = None
+    for _pos, etype, match in events:
+        if etype == "begin":
+            if open_begin is not None:
+                raise ValueError(f"nested fleet-roster-projection for {kind}")
+            open_begin = match
             continue
-        end = END_RE.search(text, begin.end())
-        if end is None:
-            raise ValueError(f"unclosed fleet-roster-projection:begin {kind}")
-        if end.group("kind") != kind:
-            raise ValueError(
-                f"mismatched end marker: expected {kind}, got {end.group('kind')}"
-            )
-        # Reject nested begins of same kind before end.
-        nested = BEGIN_RE.search(text, begin.end())
-        if nested is not None and nested.start() < end.start() and nested.group("kind") == kind:
-            raise ValueError(f"nested fleet-roster-projection for {kind}")
-        bodies.append(text[begin.end() : end.start()])
-        pos = end.end()
+        # end
+        if open_begin is None:
+            raise ValueError(f"unmatched fleet-roster-projection:end {kind}")
+        bodies.append(text[open_begin.end() : match.start()])
+        open_begin = None
+    if open_begin is not None:
+        raise ValueError(f"unclosed fleet-roster-projection:begin {kind}")
     return bodies
 
 
