@@ -964,6 +964,18 @@ jobs:
           path: site/src/data/lexicon-manifest.json
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
+      # Pip/torch wheel cache (Sol #5657 follow-up): 4 shards each reinstall torch;
+      # caching the download directory cuts multi-GB cold installs on cache hit.
+      - name: Restore pip wheel cache
+        if: needs.changes.outputs.python == 'true'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/pip
+          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch2.13.0cpu
+          restore-keys: |
+            pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-
+            pip-wheels-${{ runner.os }}-py3.12-
+
       - name: Install dependencies
         if: needs.changes.outputs.python == 'true'
         run: |
@@ -976,6 +988,13 @@ jobs:
             --index-url https://download.pytorch.org/whl/cpu \
             torch==2.13.0 torchvision==0.28.0
           .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
+
+      - name: Save pip wheel cache
+        if: needs.changes.outputs.python == 'true' && always()
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/pip
+          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch2.13.0cpu
 
       - name: Restore latest pytest duration estimates
         if: needs.changes.outputs.python == 'true'
