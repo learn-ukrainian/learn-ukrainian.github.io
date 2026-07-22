@@ -123,7 +123,7 @@ def _update_outcome_bucket(bucket: dict[str, Any], record: dict[str, Any]) -> No
 def list_runtime_agents() -> list[dict[str, Any]]:
     agents: list[dict[str, Any]] = []
     for path in sorted(ADAPTERS_DIR.glob("*.py")):
-        if path.stem in {"__init__", "base"} or path.stem.startswith("_"):
+        if path.stem in {"__init__", "base", "hermes_grok", "hermes_qwen"} or path.stem.startswith("_"):
             continue
         try:
             module = importlib.import_module(f"agent_runtime.adapters.{path.stem}")

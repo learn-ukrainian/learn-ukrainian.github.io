@@ -185,10 +185,9 @@ def test_registry_has_known_agents():
         "gemini",
         "grok",
         "grok-build",
-        "grok-hermes",
+        "glm",
         "kimi",
         "deepseek",
-        "qwen",
         "agy",
         "cursor",
     }
@@ -367,11 +366,11 @@ def test_load_adapter_grok_native_seat():
     assert adapter.default_model == "grok-4.5"
 
 
-def test_load_adapter_grok_hermes_demoted_seat():
-    adapter = _load_adapter("grok-hermes")
-    assert adapter.__class__.__name__ == "HermesGrokAdapter"
-    assert adapter.name == "grok-hermes"
-    assert adapter.default_model == "grok-4.5"
+def test_load_adapter_glm():
+    adapter = _load_adapter("glm")
+    assert adapter.__class__.__name__ == "GlmAdapter"
+    assert adapter.name == "glm"
+    assert adapter.default_model == "glm-5.2"
 
 
 def test_load_adapter_cached():

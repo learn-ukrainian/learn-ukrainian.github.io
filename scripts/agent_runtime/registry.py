@@ -149,24 +149,6 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "never",
     },
-    "grok-hermes": {
-        # Hermes-backed Grok 4.5 via the OAuth API path (disfavored for judges;
-        # looser, more false-ACCEPTs). Demoted from the clean name "grok" so
-        # that name can mean the preferred native CLI seat. V7 grok-tools
-        # still routes here explicitly (content writer path).
-        "adapter": "scripts.agent_runtime.adapters.hermes_grok:HermesGrokAdapter",
-        "default_model": "grok-4.5",
-        "cost_tier": "low",
-        "capabilities": frozenset(
-            {
-                "content_writing",
-                "content_review",
-                "adversarial_review",
-            }
-        ),
-        "cli_available": True,
-        "resume_policy": "never",
-    },
     "grok-build": {
         # PERMANENT alias for the native "grok" seat. Keep forever so old
         # X-Agent trailers, inbox rows, budget usage, and `--agent grok-build`
@@ -203,14 +185,14 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "never",
     },
-    "qwen": {
-        "adapter": "scripts.agent_runtime.adapters.hermes_qwen:HermesQwenAdapter",
-        "default_model": "qwen/qwen3.6-plus",
+    "glm": {
+        "adapter": "scripts.agent_runtime.adapters.glm:GlmAdapter",
+        "default_model": "glm-5.2",
         "cost_tier": "low",
         "capabilities": frozenset(
             {
-                "content_writing",
-                "content_review",
+                "code_writing",
+                "code_review",
                 "adversarial_review",
             }
         ),
