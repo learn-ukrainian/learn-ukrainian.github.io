@@ -919,19 +919,14 @@ jobs:
     permissions:
       contents: read
       actions: write
-    needs: [changes, lint]
+    # Sol #5657 step 6: run pytest concurrent with lint. CI Gate still needs
+    # both lint and test — lint failure fails the required gate without serializing
+    # the pytest matrix behind ruff. Job still uses !cancelled() (#1644 class).
+    needs: [changes]
     strategy:
       fail-fast: false
       matrix:
         shard: [1, 2, 3, 4]
-    # Per Gemini cross-review on #1644: top-level `if:` MUST NOT exclude
-    # lint=failure cases — Test (pytest) is a required status check; if the
-    # job is skipped because lint failed, the required check never reports
-    # and the PR blocks indefinitely. Use `!cancelled()` so the job always
-    # runs (unless the workflow itself is cancelled). Inner steps below
-    # gate on `needs.changes.outputs.python` and `needs.lint.result` to skip
-    # the pytest body cleanly when not needed; the job still exits success
-    # → required check satisfied.
     if: '!cancelled()'
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -992,14 +987,14 @@ jobs:
             pytest-shard-durations-v1-main-
 
       - name: Plan deterministic pytest shard
-        if: needs.changes.outputs.python == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped')
+        if: needs.changes.outputs.python == 'true' && !cancelled()
         run: |
           mkdir -p ci-artifacts
           .venv/bin/python scripts/ci/pytest_shards.py plan --shard-id "${{ matrix.shard }}" \
             --durations ci-artifacts/pytest-durations.json --output ci-artifacts/plan.json --args-output ci-artifacts/test-nodeids.txt
 
       - name: Run pytest shard
-        if: needs.changes.outputs.python == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && (github.event_name != 'push' || github.ref != 'refs/heads/main')
+        if: needs.changes.outputs.python == 'true' && !cancelled() && (github.event_name != 'push' || github.ref != 'refs/heads/main')
         run: |
           # Track failures without aborting mid-step so main-shard artifacts still upload.
           status=0
@@ -1034,7 +1029,7 @@ jobs:
           exit "$status"
 
       - name: Run tests with coverage
-        if: needs.changes.outputs.python == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: needs.changes.outputs.python == 'true' && !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           # Gradual path: 30 (2025) → 35 (now, 2026-04) → 50 (mid-2026) → 80 on
           # critical paths (dispatch, activity_repair, audit/core). Measured
@@ -1073,7 +1068,7 @@ jobs:
           exit "$status"
 
       - name: Upload pytest shard plan and results
-        if: always() && needs.changes.outputs.python == 'true' && (needs.lint.result == 'success' || needs.lint.result == 'skipped')
+        if: always() && needs.changes.outputs.python == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: pytest-shard-${{ matrix.shard }}
@@ -1081,14 +1076,14 @@ jobs:
           if-no-files-found: error
 
       - name: Save coverage data for aggregation
-        if: always() && needs.changes.outputs.python == 'true' && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: always() && needs.changes.outputs.python == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           test -f .coverage
           mkdir -p coverage
           mv .coverage coverage/.coverage.shard-${{ matrix.shard }}
 
       - name: Upload coverage shard
-        if: always() && needs.changes.outputs.python == 'true' && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: always() && needs.changes.outputs.python == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: pytest-coverage-${{ matrix.shard }}
@@ -1100,7 +1095,7 @@ jobs:
     name: Pytest shard artifacts
     runs-on: ubuntu-latest
     if: always()
-    needs: [changes, lint, test]
+    needs: [changes, test]
     permissions:
       contents: read
       actions: write
@@ -1114,27 +1109,27 @@ jobs:
           python-version: '3.12'
 
       - name: Download pytest shard artifacts
-        if: needs.changes.outputs.python == 'true' && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && needs.test.result == 'success'
+        if: needs.changes.outputs.python == 'true' && needs.test.result == 'success'
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v7.0.0
         with:
           pattern: pytest-shard-*
           path: pytest-artifacts
 
       - name: Verify complete pytest selection and execution counts
-        if: needs.changes.outputs.python == 'true' && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && needs.test.result == 'success'
+        if: needs.changes.outputs.python == 'true' && needs.test.result == 'success'
         run: |
           python -m venv .venv
           .venv/bin/python scripts/ci/pytest_shards.py verify-artifacts --artifact-dir pytest-artifacts
 
       - name: Download coverage shards
-        if: needs.changes.outputs.python == 'true' && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v7.0.0
         with:
           pattern: pytest-coverage-*
           path: coverage-artifacts
 
       - name: Combine coverage once and enforce the floor
-        if: needs.changes.outputs.python == 'true' && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
@@ -1147,7 +1142,7 @@ jobs:
 
       # Duration cache must not be blocked by a coverage combine failure (CF r2).
       - name: Publish next-run duration estimates
-        if: always() && needs.changes.outputs.python == 'true' && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: always() && needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           python -m venv .venv
           .venv/bin/python scripts/ci/pytest_shards.py parse-durations \
@@ -1158,7 +1153,7 @@ jobs:
             --output ci-artifacts/pytest-durations.json
 
       - name: Save next-run duration estimates
-        if: always() && needs.changes.outputs.python == 'true' && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: always() && needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ci-artifacts/pytest-durations.json
