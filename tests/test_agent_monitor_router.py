@@ -3,10 +3,13 @@ import os
 import psutil
 from fastapi.testclient import TestClient
 
+TEST_TOKEN = "test-agent-monitor-token-5652"
+os.environ["AGENT_MONITOR_TOKEN"] = TEST_TOKEN
+
 from scripts.api.main import app
 
 client = TestClient(app)
-AUTH_HEADERS = {"X-Agent-Monitor-Token": "local-operator-secret"}
+AUTH_HEADERS = {"X-Agent-Monitor-Token": TEST_TOKEN}
 
 
 def test_agent_monitor_status():

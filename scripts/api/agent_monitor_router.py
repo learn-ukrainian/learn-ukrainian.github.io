@@ -23,20 +23,16 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["agent-monitor"])
 
-MONITOR_AUTH_TOKEN = os.environ.get("AGENT_MONITOR_TOKEN", "local-operator-secret")
-
 
 def _verify_auth(
     x_agent_monitor_token: str | None = Header(None, alias="X-Agent-Monitor-Token"),
     authorization: str | None = Header(None),
 ) -> None:
-    expected = os.environ.get("AGENT_MONITOR_TOKEN", "local-operator-secret")
-    if not expected:
-        return
+    expected = os.environ.get("AGENT_MONITOR_TOKEN", "agent-monitor-token-required")
     token = x_agent_monitor_token
     if not token and authorization and authorization.startswith("Bearer "):
         token = authorization[7:].strip()
-    if token != expected:
+    if not token or token != expected:
         raise HTTPException(
             status_code=401,
             detail="Unauthorized agent monitor request: invalid or missing authentication token",
