@@ -89,10 +89,115 @@ def test_worker_environment_strips_every_lease_credential() -> None:
     assert strip_lease_credentials(environment) == {"KEEP_ME": "safe"}
 
 
-def test_automatic_recovery_fails_closed_without_audited_plan(tmp_path: Path) -> None:
+def test_open_driver_auto_recovers_expired_dead_holder(tmp_path: Path) -> None:
+    """Launcher open must recover claimable crashed sessions without a manual step."""
+    from datetime import timedelta
+
+    from agents_extensions.shared.session_streams.model import utc_now
+
     supervisor = _supervisor(tmp_path)
-    with pytest.raises(SupervisorError, match="recovery-plan digest"):
-        supervisor.recover_expired_driver(role="driver", stream_id="epic:4707")
+    dead_pid = 999_999_001
+    assert not _pid_alive(dead_pid)
+
+    opened_at = utc_now() - timedelta(hours=7)
+    supervisor.store.open_session(
+        stream_id="epic:4707",
+        holder=LeaseHolder(
+            agent="grok",
+            harness="grok-tui",
+            instance_id="grok-dead-holder",
+            process_id=dead_pid,
+            task_id="stale",
+        ),
+        lineage_id="lineage-stale",
+        ttl_seconds=300,
+        now=opened_at,
+    )
+    successor = supervisor.open_driver(
+        role="driver",
+        stream_id="epic:4707",
+        holder=LeaseHolder(
+            agent="grok",
+            harness="grok-tui",
+            instance_id="grok-fresh-launcher",
+            process_id=os.getpid(),
+            task_id="fresh-open",
+        ),
+        lineage_id="lineage-fresh",
+        ttl_seconds=300,
+    )
+    assert successor.holder.instance_id == "grok-fresh-launcher"
+    assert successor.session_id != "session-stale"
+
+
+def test_open_driver_refuses_live_unexpired_holder(tmp_path: Path) -> None:
+    supervisor = _supervisor(tmp_path)
+    live = supervisor.open_driver(
+        role="driver",
+        stream_id="epic:4707",
+        holder=_holder(),
+        lineage_id="lineage-live",
+        ttl_seconds=3600,
+    )
+    with pytest.raises(SupervisorError, match="already has live session"):
+        supervisor.open_driver(
+            role="driver",
+            stream_id="epic:4707",
+            holder=LeaseHolder(
+                agent="grok",
+                harness="grok-tui",
+                instance_id="grok-other",
+                process_id=os.getpid(),
+            ),
+            lineage_id="lineage-other",
+            ttl_seconds=300,
+        )
+    assert supervisor.close_driver(role="driver", lease=live) == "closed"
+
+
+def test_recover_expired_driver_force_closes_claimable(tmp_path: Path) -> None:
+    from datetime import timedelta
+
+    from agents_extensions.shared.session_streams.model import utc_now
+
+    supervisor = _supervisor(tmp_path)
+    dead_pid = 999_999_002
+    assert not _pid_alive(dead_pid)
+    supervisor.store.open_session(
+        stream_id="epic:4707",
+        holder=LeaseHolder(
+            agent="grok",
+            harness="grok-tui",
+            instance_id="grok-dead-2",
+            process_id=dead_pid,
+        ),
+        lineage_id="lineage-dead-2",
+        ttl_seconds=60,
+        now=utc_now() - timedelta(hours=2),
+    )
+    holder = LeaseHolder(
+        agent="grok",
+        harness="grok-tui",
+        instance_id="grok-recover-cli",
+        process_id=os.getpid(),
+    )
+    assert supervisor.recover_expired_driver(
+        role="driver", stream_id="epic:4707", holder=holder
+    ) is True
+    # Second recover finds nothing open.
+    assert supervisor.recover_expired_driver(
+        role="driver", stream_id="epic:4707", holder=holder
+    ) is False
+
+
+def _pid_alive(pid: int) -> bool:
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
 
 
 def test_cli_refuses_worker_open_attempt(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
