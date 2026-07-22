@@ -256,3 +256,35 @@ def test_simultaneous_admission_one_conflict_visible(tmp_path: Path):
     )
     assert r1.admitted is True
     assert r2.admitted is False
+
+
+def test_slashful_task_id_state_file_sanitized(tmp_path: Path):
+    """task_id with slashes must resolve to underscore state files (CF F001)."""
+    ledger = tmp_path / "own.sqlite3"
+    state_dir = tmp_path / "tasks"
+    state_dir.mkdir()
+    pid = os.getpid()
+    # delegate.py stores codex/5643 as codex_5643.json
+    (state_dir / "codex_5643.json").write_text(
+        json.dumps({"status": "running", "pid": pid}), encoding="utf-8"
+    )
+    first = admit_write_paths(
+        task_id="codex/5643",
+        mode="workspace-write",
+        owned_paths=["scripts/x.py"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+    )
+    assert first.admitted is True
+    second = admit_write_paths(
+        task_id="other",
+        mode="workspace-write",
+        owned_paths=["scripts/x.py"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+        guard_mode=GuardMode.WARN,
+    )
+    assert second.would_refuse is True
+    assert second.conflicts

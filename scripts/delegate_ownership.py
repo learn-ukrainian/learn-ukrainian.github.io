@@ -151,9 +151,14 @@ def _pid_alive(pid: int) -> bool:
         return True
 
 
+def _safe_task_state_name(task_id: str) -> str:
+    """Match scripts/delegate.py::_state_path sanitization for slashful task ids."""
+    return task_id.replace("/", "_").replace("\\", "_")
+
+
 def _task_still_active(task_id: str, pid: int | None, state_dir: Path) -> bool:
     """True if task state is non-terminal and pid (when known) is alive."""
-    state_path = state_dir / f"{task_id}.json"
+    state_path = state_dir / f"{_safe_task_state_name(task_id)}.json"
     status = None
     state_pid: int | None = None
     if state_path.is_file():
