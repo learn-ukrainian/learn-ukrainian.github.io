@@ -2425,31 +2425,34 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
     # Runs before task-state write / worktree / branch side effects so a refuse
     # leaves no residue. Read-only modes are exempt inside the helper.
-    try:
-        from scripts.delegate_ownership import admit_write_paths, env_guard_mode
-    except ImportError:  # pragma: no cover - flat script path
-        from delegate_ownership import admit_write_paths, env_guard_mode  # type: ignore
+    # Dry-run must leave zero residue (same contract as tmp-lease reap) — skip
+    # the shared ownership ledger entirely (Claude CF #5649 r11).
+    if not bool(getattr(args, "dry_run", False)):
+        try:
+            from scripts.delegate_ownership import admit_write_paths, env_guard_mode
+        except ImportError:  # pragma: no cover - flat script path
+            from delegate_ownership import admit_write_paths, env_guard_mode  # type: ignore
 
-    ownership = admit_write_paths(
-        task_id=task_id,
-        mode=str(args.mode),
-        owned_paths=getattr(args, "research_owned_path", None),
-        allow_path_overlap=getattr(args, "allow_path_overlap", None),
-        pid=os.getpid(),
-        guard_mode=env_guard_mode(),
-    )
-    if ownership.would_refuse or ownership.override_reason:
-        print(
-            f"⚠️  write-path ownership: {ownership.reason} "
-            f"(conflicts={len(ownership.conflicts)})",
-            file=sys.stderr,
+        ownership = admit_write_paths(
+            task_id=task_id,
+            mode=str(args.mode),
+            owned_paths=getattr(args, "research_owned_path", None),
+            allow_path_overlap=getattr(args, "allow_path_overlap", None),
+            pid=os.getpid(),
+            guard_mode=env_guard_mode(),
         )
-    if not ownership.admitted:
-        print(
-            f"❌ write-path ownership refused for task_id={task_id!r}: {ownership.reason}",
-            file=sys.stderr,
-        )
-        return 2
+        if ownership.would_refuse or ownership.override_reason:
+            print(
+                f"⚠️  write-path ownership: {ownership.reason} "
+                f"(conflicts={len(ownership.conflicts)})",
+                file=sys.stderr,
+            )
+        if not ownership.admitted:
+            print(
+                f"❌ write-path ownership refused for task_id={task_id!r}: {ownership.reason}",
+                file=sys.stderr,
+            )
+            return 2
 
     # Resolve prompt: literal --prompt, or - for stdin, or --prompt-file.
     if args.prompt_file:
