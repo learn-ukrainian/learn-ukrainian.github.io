@@ -11,6 +11,7 @@ import os
 import sqlite3
 import time
 import uuid
+from typing import Any
 
 import psutil
 from fastapi import APIRouter, HTTPException
@@ -145,14 +146,9 @@ def preflight_check(req: PreflightRequest) -> dict[str, Any]:
     active_reserved_mb = cur.fetchone()[0]
     conn.close()
 
-    safe_capacity_mb = (
-        int(total_ram_mb * (MAX_SAFE_RAM_PERCENT / 100.0))
-        - HOST_RESERVED_RAM_MB
-    )
+    safe_capacity_mb = int(total_ram_mb * (MAX_SAFE_RAM_PERCENT / 100.0)) - HOST_RESERVED_RAM_MB
 
-    if (
-        active_reserved_mb + req.required_ram_mb
-    ) > safe_capacity_mb or available_ram_mb < (req.required_ram_mb + 256):
+    if (active_reserved_mb + req.required_ram_mb) > safe_capacity_mb or available_ram_mb < (req.required_ram_mb + 256):
         return {
             "verdict": "REJECTED",
             "reason": "Host memory capacity limit reached.",
@@ -175,13 +171,9 @@ def register_agent_lease(req: LeaseRegisterRequest) -> dict[str, Any]:
     try:
         proc = psutil.Process(req.pid)
         if abs(proc.create_time() - req.process_create_time) > 5.0:
-            raise HTTPException(
-                status_code=400, detail="Process creation time mismatch"
-            )
+            raise HTTPException(status_code=400, detail="Process creation time mismatch")
     except (psutil.NoSuchProcess, psutil.AccessDenied):
-        raise HTTPException(
-            status_code=400, detail="Process ID does not exist on host"
-        ) from None
+        raise HTTPException(status_code=400, detail="Process ID does not exist on host") from None
 
     mem = psutil.virtual_memory()
     total_ram_mb = int(mem.total / (1024 * 1024))
@@ -219,14 +211,9 @@ def register_agent_lease(req: LeaseRegisterRequest) -> dict[str, Any]:
     )
     active_reserved_mb = cur.fetchone()[0]
 
-    safe_capacity_mb = (
-        int(total_ram_mb * (MAX_SAFE_RAM_PERCENT / 100.0))
-        - HOST_RESERVED_RAM_MB
-    )
+    safe_capacity_mb = int(total_ram_mb * (MAX_SAFE_RAM_PERCENT / 100.0)) - HOST_RESERVED_RAM_MB
 
-    if (
-        active_reserved_mb + req.reserved_ram_mb
-    ) > safe_capacity_mb or available_ram_mb < (req.reserved_ram_mb + 256):
+    if (active_reserved_mb + req.reserved_ram_mb) > safe_capacity_mb or available_ram_mb < (req.reserved_ram_mb + 256):
         conn.rollback()
         conn.close()
         return {
