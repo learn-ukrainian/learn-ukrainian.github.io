@@ -316,9 +316,14 @@ def release_agent_lease(lease_token: str) -> dict[str, Any]:
     conn = _get_db()
     cur = conn.cursor()
     cur.execute(
-        "UPDATE agent_leases SET status='RELEASED' WHERE lease_token=?",
+        "UPDATE agent_leases SET status='RELEASED' WHERE lease_token=? AND status='APPROVED'",
         (lease_token,),
     )
+    released = cur.rowcount
     conn.commit()
     conn.close()
+
+    if released == 0:
+        raise HTTPException(status_code=404, detail="Active lease token not found")
+
     return {"status": "RELEASED", "lease_token": lease_token}
