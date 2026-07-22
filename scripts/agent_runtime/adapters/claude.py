@@ -169,7 +169,7 @@ class ClaudeAdapter:
     """Adapter for the ``claude`` CLI in print mode (local binary preferred)."""
 
     name: str = "claude"
-    default_model: str = "claude-opus-4-8"
+    default_model: str = "claude-sonnet-5"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(
