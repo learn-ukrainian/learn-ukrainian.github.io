@@ -175,6 +175,7 @@ def register_agent_lease(req: LeaseRegisterRequest) -> dict[str, Any]:
     available_ram_mb = int(mem.available / (1024 * 1024))
 
     conn = _get_db()
+    conn.execute("BEGIN IMMEDIATE")
     cur = conn.cursor()
     now = time.time()
 
@@ -187,6 +188,7 @@ def register_agent_lease(req: LeaseRegisterRequest) -> dict[str, Any]:
     safe_capacity_mb = int(total_ram_mb * (MAX_SAFE_RAM_PERCENT / 100.0)) - HOST_RESERVED_RAM_MB
 
     if (active_reserved_mb + req.reserved_ram_mb) > safe_capacity_mb or available_ram_mb < (req.reserved_ram_mb + 256):
+        conn.rollback()
         conn.close()
         return {
             "verdict": "REJECTED",
