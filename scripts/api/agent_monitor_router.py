@@ -310,7 +310,7 @@ def heartbeat_agent_lease(
     conn = _get_db()
     cur = conn.cursor()
     cur.execute(
-        "SELECT process_create_time FROM agent_leases WHERE lease_token=? AND pid=? AND status='APPROVED'",
+        "SELECT process_create_time, last_heartbeat FROM agent_leases WHERE lease_token=? AND pid=? AND status='APPROVED'",
         (req.lease_token, req.pid),
     )
     row = cur.fetchone()
@@ -321,7 +321,19 @@ def heartbeat_agent_lease(
             detail="Active lease token not found or process mismatch",
         )
 
-    stored_create_time = row[0]
+    stored_create_time, last_hb = row[0], row[1]
+    now = time.time()
+    if now - last_hb > 300.0:
+        cur.execute(
+            "UPDATE agent_leases SET status='EXPIRED' WHERE lease_token=? AND pid=?",
+            (req.lease_token, req.pid),
+        )
+        conn.commit()
+        conn.close()
+        raise HTTPException(
+            status_code=404,
+            detail="Lease has expired due to heartbeat TTL timeout",
+        )
     try:
         proc = psutil.Process(req.pid)
         if abs(proc.create_time() - stored_create_time) > 5.0:
