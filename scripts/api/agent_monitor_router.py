@@ -28,7 +28,12 @@ def _verify_auth(
     x_agent_monitor_token: str | None = Header(None, alias="X-Agent-Monitor-Token"),
     authorization: str | None = Header(None),
 ) -> None:
-    expected = os.environ.get("AGENT_MONITOR_TOKEN", "agent-monitor-token-required")
+    expected = os.environ.get("AGENT_MONITOR_TOKEN")
+    if not expected:
+        raise HTTPException(
+            status_code=401,
+            detail="Unauthorized agent monitor request: AGENT_MONITOR_TOKEN environment variable is not configured",
+        )
     token = x_agent_monitor_token
     if not token and authorization and authorization.startswith("Bearer "):
         token = authorization[7:].strip()
