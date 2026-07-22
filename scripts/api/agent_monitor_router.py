@@ -94,16 +94,15 @@ def get_monitor_status() -> dict[str, Any]:
     conn.commit()
 
     cur.execute(
-        "SELECT lease_token, agent_id, task_name, pid, reserved_ram_mb, last_heartbeat FROM agent_leases WHERE status='APPROVED'"
+        "SELECT agent_id, task_name, pid, reserved_ram_mb, last_heartbeat FROM agent_leases WHERE status='APPROVED'"
     )
     active_leases = [
         {
-            "lease_token": row[0],
-            "agent_id": row[1],
-            "task_name": row[2],
-            "pid": row[3],
-            "reserved_ram_mb": row[4],
-            "last_heartbeat": row[5],
+            "agent_id": row[0],
+            "task_name": row[1],
+            "pid": row[2],
+            "reserved_ram_mb": row[3],
+            "last_heartbeat": row[4],
         }
         for row in cur.fetchall()
     ]
@@ -170,6 +169,13 @@ def preflight_check(req: PreflightRequest) -> dict[str, Any]:
 
 @router.post("/register")
 def register_agent_lease(req: LeaseRegisterRequest) -> dict[str, Any]:
+    try:
+        proc = psutil.Process(req.pid)
+        if abs(proc.create_time() - req.process_create_time) > 5.0:
+            raise HTTPException(status_code=400, detail="Process creation time mismatch")
+    except (psutil.NoSuchProcess, psutil.AccessDenied):
+        raise HTTPException(status_code=400, detail="Process ID does not exist on host") from None
+
     mem = psutil.virtual_memory()
     total_ram_mb = int(mem.total / (1024 * 1024))
     available_ram_mb = int(mem.available / (1024 * 1024))

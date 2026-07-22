@@ -1,5 +1,6 @@
-import time
+import os
 
+import psutil
 from fastapi.testclient import TestClient
 
 from scripts.api.main import app
@@ -27,14 +28,17 @@ def test_agent_monitor_preflight():
 
 
 def test_agent_monitor_register_heartbeat_release():
-    now = time.time()
+    current_pid = os.getpid()
+    proc = psutil.Process(current_pid)
+    create_time = proc.create_time()
+
     reg = client.post(
         "/api/agent-monitor/register",
         json={
             "agent_id": "gemini/test-register",
             "task_name": "unit_test",
-            "pid": 88888,
-            "process_create_time": now,
+            "pid": current_pid,
+            "process_create_time": create_time,
             "reserved_ram_mb": 256,
         },
     )
@@ -44,7 +48,7 @@ def test_agent_monitor_register_heartbeat_release():
     token = data["lease_token"]
 
     # Heartbeat
-    hb = client.post("/api/agent-monitor/heartbeat", json={"lease_token": token, "pid": 88888})
+    hb = client.post("/api/agent-monitor/heartbeat", json={"lease_token": token, "pid": current_pid})
     assert hb.status_code == 200
 
     # Release
