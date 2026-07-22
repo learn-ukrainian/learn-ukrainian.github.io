@@ -4,23 +4,33 @@ on:
   pull_request:
     paths:
       - 'scripts/config/model_catalog.yaml'
+      - 'scripts/config/fleet_communications.yaml'
       - 'scripts/review/model_catalog.py'
       - 'scripts/review/reviewer_resolver.py'
       - 'scripts/agent_runtime/registry.py'
       - 'scripts/lint/lint_model_catalog.py'
+      - 'scripts/lint/lint_fleet_roster.py'
       - 'agents_extensions/shared/rules/model-assignment.md'
+      - 'docs/runbooks/fleet-comms-open-gaps.md'
+      - 'docs/runbooks/epic-orchestrator-roster.md'
       - 'docs/best-practices/agent-activity-matrix.md'
+      - 'tests/test_lint_fleet_roster.py'
       - '.github/workflows/model-catalog-freshness.yml'
   push:
     branches: [main]
     paths:
       - 'scripts/config/model_catalog.yaml'
+      - 'scripts/config/fleet_communications.yaml'
       - 'scripts/review/model_catalog.py'
       - 'scripts/review/reviewer_resolver.py'
       - 'scripts/agent_runtime/registry.py'
       - 'scripts/lint/lint_model_catalog.py'
+      - 'scripts/lint/lint_fleet_roster.py'
       - 'agents_extensions/shared/rules/model-assignment.md'
+      - 'docs/runbooks/fleet-comms-open-gaps.md'
+      - 'docs/runbooks/epic-orchestrator-roster.md'
       - 'docs/best-practices/agent-activity-matrix.md'
+      - 'tests/test_lint_fleet_roster.py'
       - '.github/workflows/model-catalog-freshness.yml'
   schedule:
     - cron: '17 7 * * 1'
@@ -48,3 +58,6 @@ jobs:
 
       - name: Validate catalog structure and freshness
         run: .venv/bin/python scripts/lint/lint_model_catalog.py
+
+      - name: Validate fleet roster + formal-CF eligibility projections
+        run: .venv/bin/python scripts/lint/lint_fleet_roster.py
