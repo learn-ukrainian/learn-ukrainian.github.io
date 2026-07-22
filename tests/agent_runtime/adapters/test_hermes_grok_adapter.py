@@ -8,6 +8,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
 
+from agent_runtime import registry
 from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.adapters.hermes_grok import HermesGrokAdapter
 from agent_runtime.errors import AgentTimeoutError, AgentUnavailableError
@@ -72,6 +73,7 @@ def test_grok_adapter_tool_calls_total_is_none_not_zero():
 
 def test_grok_adapter_handles_missing_hermes_binary(tmp_path):
     with (
+        patch.dict(registry.AGENTS["grok-hermes"], {"cli_available": True}),
         patch("agent_runtime.runner.has_headroom", return_value=(True, "")),
         patch("agent_runtime.runner.write_record"),
         patch(
