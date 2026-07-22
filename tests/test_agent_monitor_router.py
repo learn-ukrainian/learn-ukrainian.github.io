@@ -18,7 +18,8 @@ def test_agent_monitor_status():
     data = res.json()
     assert data["host"] == "local_fleet"
     assert "ram" in data
-    assert "active_leases" in data
+    assert "capacity_reservations" in data
+    assert data["capacity_reservations"]["active_leases_count"] >= 0
 
 
 def test_agent_monitor_preflight():
