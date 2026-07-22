@@ -11,6 +11,8 @@ on:
       - 'requirements*.txt'
       - 'requirements.lock'
       - 'scripts/**/*.py'
+      # Config YAML is runtime input for catalog/fleet tests (CF F001 on #5638).
+      - 'scripts/config/**'
       - 'scripts/check_rules_deployment.sh'
       - 'scripts/deploy_prompts.sh'
       - 'start-claude.sh'
@@ -129,6 +131,12 @@ jobs:
               - 'pyproject.toml'
               - 'scripts/**/*.py'
               - 'tests/**/*.py'
+              # Config with test fixture mirrors: test_model_catalog reads
+              # model_catalog.yaml + fleet_communications.yaml; a config-only edit
+              # (no .py) must run pytest, else an orchestrator_seats / model-pin
+              # regression reaches main unguarded (same #3873/#4888/#4936 class —
+              # a yaml change that skipped pytest would ship broken routing to main).
+              - 'scripts/config/**'
               # Learner content that python tests read at runtime — a deletion/edit
               # here must run pytest, else a content regression reaches main unguarded
               # (this is the #3873 root cause: #3867 deleted curriculum files,
