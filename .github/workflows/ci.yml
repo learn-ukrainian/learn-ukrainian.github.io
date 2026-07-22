@@ -11,6 +11,8 @@ on:
       - 'requirements*.txt'
       - 'requirements.lock'
       - 'scripts/**/*.py'
+      # Config YAML is runtime input for catalog/fleet tests (CF F001 on #5638).
+      - 'scripts/config/**'
       - 'scripts/check_rules_deployment.sh'
       - 'scripts/deploy_prompts.sh'
       - 'start-claude.sh'
