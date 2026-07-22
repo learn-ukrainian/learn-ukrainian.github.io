@@ -98,11 +98,8 @@ def _calculate_severity(used_percent: float) -> str:
 
 
 @router.get("/status")
-def get_monitor_status(
-    x_agent_monitor_token: str | None = Header(None, alias="X-Agent-Monitor-Token"),
-    authorization: str | None = Header(None),
-) -> dict[str, Any]:
-    _verify_auth(x_agent_monitor_token, authorization)
+def get_monitor_status() -> dict[str, Any]:
+    """Aggregate-only capacity metrics for the local dashboard (omits sensitive process list)."""
     mem = psutil.virtual_memory()
     load = os.getloadavg() if hasattr(os, "getloadavg") else (0.0, 0.0, 0.0)
 
@@ -170,8 +167,41 @@ def get_monitor_status(
             "total_reserved_ram_mb": total_reserved_mb,
             "host_reserved_ram_mb": HOST_RESERVED_RAM_MB,
         },
-        "active_leases": active_leases,
     }
+
+
+@router.get("/status/details")
+def get_monitor_status_details(
+    x_agent_monitor_token: str | None = Header(None, alias="X-Agent-Monitor-Token"),
+    authorization: str | None = Header(None),
+) -> dict[str, Any]:
+    """Detailed host capacity status including active lease process listings (requires auth)."""
+    _verify_auth(x_agent_monitor_token, authorization)
+    status_data = get_monitor_status()
+    conn = _get_db()
+    cur = conn.cursor()
+    cur.execute(
+        """
+        SELECT lease_token, agent_id, task_name, pid, process_create_time, reserved_ram_mb, last_heartbeat
+        FROM agent_leases
+        WHERE status='APPROVED'
+        """
+    )
+    leases = [
+        {
+            "lease_token": row[0],
+            "agent_id": row[1],
+            "task_name": row[2],
+            "pid": row[3],
+            "process_create_time": row[4],
+            "reserved_ram_mb": row[5],
+            "last_heartbeat": row[6],
+        }
+        for row in cur.fetchall()
+    ]
+    conn.close()
+    status_data["active_leases"] = leases
+    return status_data
 
 
 @router.post("/preflight")

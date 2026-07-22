@@ -13,13 +13,21 @@ AUTH_HEADERS = {"X-Agent-Monitor-Token": TEST_TOKEN}
 
 
 def test_agent_monitor_status():
-    res = client.get("/api/agent-monitor/status", headers=AUTH_HEADERS)
+    res = client.get("/api/agent-monitor/status")
     assert res.status_code == 200
     data = res.json()
     assert data["host"] == "local_fleet"
     assert "ram" in data
     assert "capacity_reservations" in data
-    assert data["capacity_reservations"]["active_leases_count"] >= 0
+    assert "active_leases_count" in data["capacity_reservations"]
+    assert "active_leases" not in data
+
+
+def test_agent_monitor_status_details():
+    res = client.get("/api/agent-monitor/status/details", headers=AUTH_HEADERS)
+    assert res.status_code == 200
+    data = res.json()
+    assert "active_leases" in data
 
 
 def test_agent_monitor_preflight():
