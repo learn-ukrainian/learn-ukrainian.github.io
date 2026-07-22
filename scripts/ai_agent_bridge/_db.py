@@ -157,6 +157,26 @@ CREATE TABLE IF NOT EXISTS channel_events (
 
 CREATE INDEX IF NOT EXISTS idx_channel_events_thread_event
     ON channel_events(thread_id, event_id);
+
+-- Durable, metadata-only alert state.  The alert body stays solely in the
+-- channel log; this table carries no prompt or message content.
+CREATE TABLE IF NOT EXISTS bottleneck_alert_state (
+    stream_epic TEXT NOT NULL,
+    span TEXT NOT NULL,
+    active INTEGER NOT NULL DEFAULT 0,
+    rearm_level INTEGER NOT NULL DEFAULT 1,
+    last_alert_age_s REAL,
+    last_alert_at TEXT,
+    message_id TEXT,
+    last_delivery_error TEXT,
+    delivery_failure_reported INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (stream_epic, span)
+);
+
+CREATE TABLE IF NOT EXISTS bottleneck_alert_scan_control (
+    control_key TEXT PRIMARY KEY,
+    last_scanned_at TEXT NOT NULL
+);
 """
 
 
@@ -410,6 +430,41 @@ def get_db():
                         """
                         CREATE INDEX IF NOT EXISTS idx_channel_events_thread_event
                         ON channel_events(thread_id, event_id)
+                        """
+                    )
+
+                # #5646 alert state is deliberately part of the existing
+                # channel/inbox broker, not a second scheduler or database.
+                cursor.execute(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='bottleneck_alert_state'"
+                )
+                if not cursor.fetchone():
+                    conn.execute(
+                        """
+                        CREATE TABLE IF NOT EXISTS bottleneck_alert_state (
+                            stream_epic TEXT NOT NULL,
+                            span TEXT NOT NULL,
+                            active INTEGER NOT NULL DEFAULT 0,
+                            rearm_level INTEGER NOT NULL DEFAULT 1,
+                            last_alert_age_s REAL,
+                            last_alert_at TEXT,
+                            message_id TEXT,
+                            last_delivery_error TEXT,
+                            delivery_failure_reported INTEGER NOT NULL DEFAULT 0,
+                            PRIMARY KEY (stream_epic, span)
+                        )
+                        """
+                    )
+                cursor.execute(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='bottleneck_alert_scan_control'"
+                )
+                if not cursor.fetchone():
+                    conn.execute(
+                        """
+                        CREATE TABLE IF NOT EXISTS bottleneck_alert_scan_control (
+                            control_key TEXT PRIMARY KEY,
+                            last_scanned_at TEXT NOT NULL
+                        )
                         """
                     )
 

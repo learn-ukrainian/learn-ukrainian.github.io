@@ -10,6 +10,7 @@ that thread on the next wake. See #1192.
 
 from __future__ import annotations
 
+import logging
 import sys
 import threading
 import time
@@ -105,6 +106,8 @@ from ._gemini_session_link import (
 from ._orphan_recovery import RecoveryCandidate, RecoveryResult, recover_orphan_commit
 from ._prompts import review_protocol_prefix
 from ._reconcile import reconcile_deliveries
+
+logger = logging.getLogger(__name__)
 
 _DEFAULT_HARD_TIMEOUT_SECONDS = 900
 _DEFAULT_STALL_TIMEOUT_SECONDS = 600
@@ -890,6 +893,14 @@ def run_inbox(
     if stop_after_seconds is not None and stop_after_seconds <= 0:
         raise ValueError("stop_after_seconds must be > 0 when provided")
     _validate_hard_timeout_seconds(hard_timeout, field_name="hard_timeout")
+    # #5646: a bounded, durable diagnostic checkpoint, not a daemon and never
+    # a dispatch/merge gate.  The scanner self-rate-limits across all workers.
+    try:
+        from scripts.fleet_comms.bottleneck_alerts import scan_bottlenecks_at_inbox_checkpoint
+
+        scan_bottlenecks_at_inbox_checkpoint(repo_root=REPO_ROOT)
+    except Exception:
+        logger.exception("bottleneck alert checkpoint failed; continuing inbox drain")
     _channels.expire_stale_deliveries()
 
     claimed_total = 0
