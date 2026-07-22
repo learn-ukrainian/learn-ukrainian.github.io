@@ -91,22 +91,31 @@ Use it when you want Claude Code ergonomics with K3 or K2.7 in a second
 terminal while native Claude runs in the first.
 
 ```bash
-export MOONSHOT_API_KEY=sk-…   # https://platform.kimi.ai/console/api-keys
-./start-kimicc.sh                    # K3, 1M window / ~996k compact
+./start-kimicc.sh                    # defaults: coding endpoint + isolated config
+                                     # + infra-orchestrator agent, K3, 1M / ~996k compact
 ./start-kimicc.sh --model k2.7       # K2.7 Code, 256k / ~249k compact
 ./start-kimicc.sh --model k2.7-highspeed
-./start-kimicc.sh --endpoint coding  # Kimi Code subscription base URL
-./start-kimicc.sh --isolate-config   # optional CLAUDE_CONFIG_DIR=$HOME/.claude-kimicc
+./start-kimicc.sh --agent curriculum-orchestrator   # explicit --agent always wins
+./start-kimicc.sh --endpoint platform               # pay-as-you-go (needs MOONSHOT_API_KEY)
+./start-kimicc.sh --no-isolate-config               # use live ~/.claude config
 ```
 
-**Subscription auth (no platform API key):** run `kimi login` once, then use
-`--endpoint coding` — the launcher picks up the OAuth credential automatically
+**Defaults (operator lane):** `--endpoint coding` (subscription),
+`--isolate-config` (CLAUDE_CONFIG_DIR=$HOME/.claude-kimicc), and
+`--agent infra-orchestrator` **when no `--epic` is given** (an epic already
+implies the lane identity). Overrides: `--endpoint platform`,
+`--no-isolate-config`, `--agent NAME` (explicit always wins); env:
+`KIMICC_ENDPOINT`, `KIMICC_ISOLATE_CONFIG=0`, `KIMICC_AGENT` (empty string
+inherits the project settings.json default, curriculum-orchestrator).
+
+**Subscription auth (no platform API key):** run `kimi login` once — the
+launcher picks up the OAuth credential automatically
 (`scripts/lib/kimi_coding_oauth.py`, refresh_token grant against
-`https://auth.kimi.com/api/oauth/token`). OAuth access tokens live ~15 minutes,
-so for sessions longer than that add `--isolate-config`: an `apiKeyHelper` is
-then written into the **isolated** settings.json and Claude Code re-mints the
-token on a schedule (`CLAUDE_CODE_API_KEY_HELPER_TTL_MS`, default 300000).
-Without isolation the token is fixed at launch — fine for short sessions.
+`https://auth.kimi.com/api/oauth/token`). OAuth access tokens live ~15 minutes;
+with the default isolated config an `apiKeyHelper` is written into the
+**isolated** settings.json and Claude Code re-mints the token on a schedule
+(`CLAUDE_CODE_API_KEY_HELPER_TTL_MS`, default 300000). With
+`--no-isolate-config` the token is fixed at launch — fine for short sessions.
 `KIMICC_DRY_RUN=1` prints the resolved route/auth and exits before launch.
 
 The same helper also keeps CodexBar's Kimi tile alive (CodexBar never
