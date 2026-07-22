@@ -529,9 +529,19 @@ def test_admit_write_paths_default_follows_env_refuse(
     assert refused.would_refuse is True
 
 
-def test_ownership_ledger_default_mode_follows_env(monkeypatch) -> None:
+def test_ownership_ledger_default_mode_follows_env(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Default mode follows env; paths must stay tmp-scoped (CF #5662 r4 P2)."""
     monkeypatch.delenv("DELEGATE_OWNERSHIP_MODE", raising=False)
-    assert OwnershipLedger().mode is GuardMode.REFUSE
+    ledger = tmp_path / "own.sqlite3"
+    state = tmp_path / "tasks"
+    assert (
+        OwnershipLedger(ledger, task_state_dir=state).mode is GuardMode.REFUSE
+    )
     monkeypatch.setenv("DELEGATE_OWNERSHIP_MODE", "warn")
-    assert OwnershipLedger().mode is GuardMode.WARN
-    assert OwnershipLedger(mode=GuardMode.REFUSE).mode is GuardMode.REFUSE
+    assert OwnershipLedger(ledger, task_state_dir=state).mode is GuardMode.WARN
+    assert (
+        OwnershipLedger(ledger, task_state_dir=state, mode=GuardMode.REFUSE).mode
+        is GuardMode.REFUSE
+    )
