@@ -86,6 +86,7 @@ eats it. Full protocol: `agents_extensions/shared/rules/workflow.md` § Work int
 - [ ] Every changed file is directly related to the task
 - [ ] Total files changed < 20 (if more, you likely included artifacts)
 - [ ] Code runs without `NameError`, `KeyError`, or `ImportError`
+- [ ] OPSEC check passed: zero raw IP addresses, SSH keys, or infrastructure secrets in diff (`.venv/bin/python scripts/audit/lint_opsec_leaks.py`)
 
 **If you cannot check every box, your PR WILL be rejected.**
 

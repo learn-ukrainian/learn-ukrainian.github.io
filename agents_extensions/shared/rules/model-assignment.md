@@ -21,8 +21,9 @@ official model documentation, checking local bakeoff deltas, updating `reviewed_
 ```
 
 Selection order is binding: **independence and hard gates → review quality tier → health/quota within
-that tier → cost among equivalent fits**. For formal code review, the quality prior is **Sol → Fable
-→ Opus → Terra → Grok 4.5 → Composer 2.5 → GLM → Gemini → remaining approved routes** (#5293).
+that tier → cost among equivalent fits**. For formal code review, everyday routine PRs use practical seats
+(**Sonnet 5 → Terra → Gemini 3.6 Flash → GLM**). Escalatory authority reviews select from the advisor quality prior (**Sol → Fable
+→ Opus → Pro**) (#5293).
 Cost never lowers the quality floor. An `unhealthy` route is unavailable; `degraded` and `near_cap`
 only break ties inside a quality rung. `cursor:auto` is never an acceptable formal-review identity;
 Composer is eligible only with its concrete `composer-2.5` model identity.
@@ -33,6 +34,21 @@ Composer is eligible only with its concrete `composer-2.5` model identity.
 Use Cursor with the same pinned model only when native Claude does not expose Fable or
 rejects that model before inference. Quota pressure alone does not invert this order.
 Record the harness fallback explicitly; it is a transport fallback, not a model substitution.
+
+### 2-Tier Formal Review Routing Policy (user directive 2026-07-22)
+
+* **Everyday Routine Formal Reviews** (practical seats @ `high` effort):
+  * **Claude seat**: `claude-sonnet-5` (preserves frontier window; fast & efficient)
+  * **Codex seat**: `gpt-5.6-terra` (standard practical review)
+  * **GLM seat**: `glm-5.2` (local-only)
+  * **Gemini seat**: `gemini-3.6-flash-high`
+* **Escalatory Advisor / Critical Authority Reviews** (reserved for architecture, security, or design escalation):
+  * **Anthropic Advisor**: `claude-fable-5` (Fable 5)
+  * **OpenAI Advisor**: `gpt-5.6-sol` (`--effort xhigh`)
+  * **Google Advisor**: `gemini-3.1-pro-high` (Pro)
+
+*Everyday routine PRs use practical seats (`sonnet` / `terra`). Do not burn advisor seats on routine work.*
+
 
 **Lane updates (user-reported 2026-07-18):**
 - **grok**: the lane now offers **grok-4.5 only**, with selectable reasoning effort

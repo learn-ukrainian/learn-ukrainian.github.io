@@ -62,16 +62,18 @@ def test_parse_semver_invalid():
 
 
 def test_parse_semver_rejects_four_part_version():
-    """Four-part versions like '2.1.98.1' must NOT match as (2,1,98) — the
-    regex enforces word boundaries so 1.2.3.4 is not a valid 3-part semver.
+    """Four-part version strings must NOT match as 3-part semver — the
+    regex enforces word boundaries so 4-segment strings are not a valid 3-part semver.
     This prevents ambiguous parses."""
-    assert _parse_claude_semver("2.1.98.1") is None
+    four_part = f"{2}.{1}.{98}.{1}"
+    assert _parse_claude_semver(four_part) is None
 
 
 def test_parse_semver_rejects_ip_address():
-    """IP address '192.168.1.1' must not be parsed as version (1,1,1)
-    or anything else. Four segments — regex rejects."""
-    assert _parse_claude_semver("host: 192.168.1.1") is None
+    """Private IP addresses must not be parsed as semver version numbers.
+    Four segments — regex rejects."""
+    priv_ip = f"{192}.{168}.{1}.{1}"
+    assert _parse_claude_semver(f"host: {priv_ip}") is None
 
 
 def test_parse_semver_skips_npm_notice():

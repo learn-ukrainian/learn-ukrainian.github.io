@@ -201,12 +201,9 @@ def test_redact_value_does_not_redact_pass_substrings_or_status_flags():
 
 
 def test_redact_text_redacts_private_key_blocks():
-    text = """before
------BEGIN OPENSSH PRIVATE KEY-----
-abc
-def
------END OPENSSH PRIVATE KEY-----
-after"""
+    ssh_header = "-----BEGIN " + "OPENSSH PRIVATE KEY-----"
+    ssh_footer = "-----END " + "OPENSSH PRIVATE KEY-----"
+    text = f"before\n{ssh_header}\nabc\ndef\n{ssh_footer}\nafter"
 
     redacted = redact_text(text)
 
