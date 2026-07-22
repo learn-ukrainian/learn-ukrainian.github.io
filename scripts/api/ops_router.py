@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 
 from fastapi import APIRouter
 
 from .config import PROJECT_ROOT
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["ops"])
 
@@ -29,11 +32,12 @@ async def retention_latest() -> dict:
         }
     try:
         payload = json.loads(latest.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, json.JSONDecodeError):
+        # Do not return exception text to HTTP clients (CodeQL py/stack-trace-exposure).
+        logger.exception("retention plan unreadable: %s", latest)
         return {
             "schema": "fleet-comms.retention.plan.v1",
             "error": "unreadable_plan",
-            "detail": str(exc),
             "plan_path": str(latest),
         }
     if isinstance(payload, dict):

@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import sqlite3
 from dataclasses import dataclass
@@ -27,6 +28,8 @@ from typing import Any, Literal
 
 from scripts.fleet_comms.contracts import CompletionState
 from scripts.fleet_comms.request_executor import RequestExecutor, RequestRecord
+
+logger = logging.getLogger(__name__)
 
 PlaneMode = Literal["off", "shadow", "dual_write"]
 ENV_MODE = "FLEET_COMMS_MESSAGE_PLANE"
@@ -475,8 +478,11 @@ def _read_applied_schema_version(db_path: Path) -> dict[str, Any]:
                 payload["applied_name"] = str(row[1]) if row[1] is not None else None
         finally:
             conn.close()
-    except sqlite3.Error as exc:
-        payload["db_error"] = str(exc)
+    except sqlite3.Error:
+        # Opaque code only — exception text must not reach HTTP clients
+        # (CodeQL py/stack-trace-exposure via /api/comms/v1/plane-status).
+        logger.exception("plane schema read failed: %s", db_path)
+        payload["db_error"] = "schema_read_failed"
     return payload
 
 
@@ -499,8 +505,9 @@ def _summarize_parity_telemetry(
         return summary
     try:
         lines = path.read_text(encoding="utf-8").splitlines()
-    except OSError as exc:
-        summary["read_error"] = str(exc)
+    except OSError:
+        logger.exception("parity telemetry unreadable: %s", path)
+        summary["read_error"] = "telemetry_read_failed"
         return summary
     events: list[dict[str, Any]] = []
     for line in lines:
@@ -544,9 +551,13 @@ def read_plane_status(
     mode_error: str | None = None
     try:
         mode: PlaneMode | str = resolve_plane_mode()
-    except ValueError as exc:
+    except ValueError:
+        # Opaque code — do not echo exception / env value to HTTP clients.
+        logger.warning(
+            "invalid FLEET_COMMS_MESSAGE_PLANE value; reporting mode=invalid"
+        )
         mode = "invalid"
-        mode_error = str(exc)
+        mode_error = "invalid_mode"
 
     plane_root = Path(root) if root is not None else default_plane_root(repo_root=repo_root)
     db_path = plane_root / "comms.sqlite3"

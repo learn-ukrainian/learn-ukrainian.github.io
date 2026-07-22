@@ -102,4 +102,4 @@ def test_api_plane_status_invalid_mode(monkeypatch) -> None:
     data = response.json()
     assert data["mode"] == "invalid"
     assert data["enabled"] is False
-    assert "mode_error" in data
+    assert data["mode_error"] == "invalid_mode"
