@@ -61,7 +61,7 @@
     "yaml-language-server": "1.23.0",
     "esbuild": ">=0.28.1",
     "vite": ">=8.0.13",
-    "js-yaml": ">=4.2.0",
+    "js-yaml": "^4.3.0",
     "markdown-it": ">=14.2.0"
   },
   "allowScripts": {
