@@ -2877,6 +2877,21 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         state_with_pid = _read_state(state_path) or initial_state
         state_with_pid["pid"] = proc.pid
         _write_state_atomic(state_path, state_with_pid)
+        # Bind ownership ledger rows to the long-lived worker PID (not the
+        # short-lived dispatch CLI). Best-effort: WARN path must not fail spawn.
+        if str(args.mode) in _WRITE_CAPABLE_MODES:
+            try:
+                from scripts.delegate_ownership import update_write_claim_pid
+            except ImportError:  # pragma: no cover
+                from delegate_ownership import update_write_claim_pid  # type: ignore
+
+            try:
+                update_write_claim_pid(task_id, int(proc.pid))
+            except Exception as own_exc:
+                print(
+                    f"⚠️  write-path ownership: failed to bind worker pid: {own_exc}",
+                    file=sys.stderr,
+                )
 
         assert proc.stdin is not None  # we passed stdin=PIPE
         try:

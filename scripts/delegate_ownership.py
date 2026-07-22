@@ -25,6 +25,9 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_LEDGER_PATH = _REPO_ROOT / "batch_state" / "tasks" / "write-ownership.sqlite3"
 DEFAULT_TASK_STATE_DIR = _REPO_ROOT / "batch_state" / "tasks"
+# Admission uses the short-lived CLI PID until the worker PID is written.
+# Live-PID fast path only applies inside this grace window (seconds).
+ADMISSION_PID_GRACE_S = 180.0
 
 WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
 TERMINAL_TASK_STATUSES = frozenset(
@@ -168,13 +171,21 @@ def _safe_task_state_name(task_id: str) -> str:
     return task_id.replace("/", "_").replace("\\", "_")
 
 
-def _task_still_active(task_id: str, pid: int | None, state_dir: Path) -> bool:
+def _task_still_active(
+    task_id: str,
+    pid: int | None,
+    state_dir: Path,
+    *,
+    created_at: float | None = None,
+    now: float | None = None,
+) -> bool:
     """True if the ownership claim should still be considered held.
 
-    Prefer a *live ledger PID* over a terminal state file: admission reserves
-    claims before the new spawning state is written, so a reused task_id can
-    briefly show terminal status while the admitting process is still alive
-    (#5643 CF r6 F001).
+    Admission records the short-lived CLI PID first; the worker PID is patched
+    in after Popen. Live-PID trust is therefore limited to
+    ``ADMISSION_PID_GRACE_S`` so a recycled CLI PID cannot pin claims forever
+    (Claude CF #5649 F001). Outside the grace window, task-state + worker PID
+    are authoritative.
     """
     state_path = state_dir / f"{_safe_task_state_name(task_id)}.json"
     status = None
@@ -192,14 +203,20 @@ def _task_still_active(task_id: str, pid: int | None, state_dir: Path) -> bool:
             elif isinstance(raw_pid, str) and raw_pid.isdigit():
                 state_pid = int(raw_pid)
 
-    # Ledger PID alive → hold claim (covers admission→state-write race).
-    if pid is not None and pid > 0 and _pid_alive(pid):
+    clock = time.time() if now is None else now
+    in_grace = (
+        created_at is not None and (clock - float(created_at)) <= ADMISSION_PID_GRACE_S
+    )
+
+    # Within grace only: live ledger PID holds claim (admission→state-write race).
+    if in_grace and pid is not None and pid > 0 and _pid_alive(pid):
         return True
 
     if status in TERMINAL_TASK_STATUSES:
         return False
 
-    check_pid = state_pid if state_pid is not None else pid
+    # Prefer state worker PID once present (long-lived).
+    check_pid = state_pid if state_pid is not None else (pid if in_grace else None)
     if check_pid is not None and check_pid > 0 and not _pid_alive(check_pid):
         return False
     # No state file and no pid → treat as stale (cannot prove active).
@@ -259,13 +276,17 @@ class OwnershipLedger:
     def _reconcile_stale(self, conn: sqlite3.Connection) -> list[str]:
         released: list[str] = []
         rows = conn.execute(
-            "SELECT DISTINCT task_id, pid FROM write_claims"
+            "SELECT task_id, pid, MIN(created_at) AS created_at "
+            "FROM write_claims GROUP BY task_id, pid"
         ).fetchall()
         for row in rows:
             task_id = str(row["task_id"])
             pid = row["pid"]
             pid_i = int(pid) if pid is not None else None
-            if not _task_still_active(task_id, pid_i, self.task_state_dir):
+            created = float(row["created_at"]) if row["created_at"] is not None else None
+            if not _task_still_active(
+                task_id, pid_i, self.task_state_dir, created_at=created
+            ):
                 conn.execute("DELETE FROM write_claims WHERE task_id = ?", (task_id,))
                 released.append(task_id)
         return released
@@ -274,6 +295,16 @@ class OwnershipLedger:
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
             conn.execute("DELETE FROM write_claims WHERE task_id = ?", (task_id,))
+            conn.execute("COMMIT")
+
+    def update_claim_pid(self, task_id: str, new_pid: int) -> None:
+        """Patch ledger PID after the long-lived worker is spawned."""
+        with self._connect() as conn:
+            conn.execute("BEGIN IMMEDIATE")
+            conn.execute(
+                "UPDATE write_claims SET pid = ? WHERE task_id = ?",
+                (int(new_pid), task_id),
+            )
             conn.execute("COMMIT")
 
     def admit(
@@ -552,3 +583,16 @@ def env_guard_mode() -> GuardMode:
     if raw in {"refuse", "deny", "fail"}:
         return GuardMode.REFUSE
     return GuardMode.WARN
+
+
+def update_write_claim_pid(
+    task_id: str,
+    new_pid: int,
+    *,
+    ledger_path: Path = DEFAULT_LEDGER_PATH,
+    task_state_dir: Path = DEFAULT_TASK_STATE_DIR,
+) -> None:
+    """Public helper: bind claim rows to the detached worker PID after Popen."""
+    OwnershipLedger(ledger_path, task_state_dir=task_state_dir).update_claim_pid(
+        task_id, new_pid
+    )
