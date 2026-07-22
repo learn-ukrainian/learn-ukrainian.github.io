@@ -30,6 +30,7 @@ UNSCOPED_RULE_FILES = (
     "critical-rules.md",
     "non-negotiable-rules.md",
     "workflow.md",
+    "fleet-comms-coordination.md",
     "delegate-must-use-worktree.md",
     "cli-help-standard.md",
     "model-assignment.md",
