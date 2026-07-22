@@ -277,6 +277,17 @@ class OwnershipLedger:
             )
 
         claims = [normalize_claim(p) for p in (owned_paths or ())]
+        # Deduplicate by normalized ledger identity (kind+norm) so repeatable
+        # CLI flags / equivalent spellings do not crash on PRIMARY KEY.
+        seen: set[tuple[str, str]] = set()
+        deduped: list[PathClaim] = []
+        for claim in claims:
+            key = (claim.kind.value, claim.norm)
+            if key in seen:
+                continue
+            seen.add(key)
+            deduped.append(claim)
+        claims = deduped
         unknown = [c for c in claims if c.kind == ClaimKind.UNKNOWN]
         concrete = [c for c in claims if c.kind != ClaimKind.UNKNOWN]
         # No declared paths still participate in the ledger when peers are active

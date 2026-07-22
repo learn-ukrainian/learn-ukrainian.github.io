@@ -354,3 +354,20 @@ def test_no_claims_with_active_peer_is_unprovable(tmp_path: Path):
     )
     assert blank.admitted is True
     assert blank.would_refuse is True
+
+
+def test_duplicate_equivalent_claims_do_not_crash(tmp_path: Path):
+    """Repeatable / equivalent owned paths must not hit PRIMARY KEY (CF r5)."""
+    ledger = tmp_path / "own.sqlite3"
+    state_dir = tmp_path / "tasks"
+    state_dir.mkdir()
+    result = admit_write_paths(
+        task_id="dup",
+        mode="workspace-write",
+        owned_paths=["scripts/a.py", "scripts//a.py", "scripts/./a.py"],
+        pid=os.getpid(),
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+    )
+    assert result.admitted is True
+    assert len(result.claims) == 1
