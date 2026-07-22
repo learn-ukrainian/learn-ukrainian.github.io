@@ -258,20 +258,35 @@ def register_agent_lease(req: LeaseRegisterRequest) -> dict[str, Any]:
 def heartbeat_agent_lease(req: HeartbeatRequest) -> dict[str, Any]:
     conn = _get_db()
     cur = conn.cursor()
+    cur.execute(
+        "SELECT process_create_time FROM agent_leases WHERE lease_token=? AND pid=? AND status='APPROVED'",
+        (req.lease_token, req.pid),
+    )
+    row = cur.fetchone()
+    if not row:
+        conn.close()
+        raise HTTPException(
+            status_code=404,
+            detail="Active lease token not found or process mismatch",
+        )
+
+    stored_create_time = row[0]
+    try:
+        proc = psutil.Process(req.pid)
+        if abs(proc.create_time() - stored_create_time) > 5.0:
+            conn.close()
+            raise HTTPException(status_code=400, detail="Process creation time mismatch on heartbeat")
+    except (psutil.NoSuchProcess, psutil.AccessDenied):
+        conn.close()
+        raise HTTPException(status_code=400, detail="Process ID does not exist on host") from None
+
     now = time.time()
     cur.execute(
         "UPDATE agent_leases SET last_heartbeat=? WHERE lease_token=? AND pid=? AND status='APPROVED'",
         (now, req.lease_token, req.pid),
     )
-    updated = cur.rowcount
     conn.commit()
     conn.close()
-
-    if updated == 0:
-        raise HTTPException(
-            status_code=404,
-            detail="Active lease token not found or process mismatch",
-        )
 
     return {"status": "OK", "lease_token": req.lease_token, "timestamp": now}
 
