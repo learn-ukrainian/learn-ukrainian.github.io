@@ -389,6 +389,8 @@ if [ -n "${SESSION_EPIC:-}" ] && [ "$_has_prompt" -eq 0 ]; then
       _cold_prompt="You are the ${SESSION_EPIC} lane driver (SESSION_STREAM_ID=${SESSION_STREAM_ID:-unset}). You are NOT the main orchestrator. The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start: load the epic handoff dual-write under .claude/${SESSION_EPIC}-epic/ (or stream tail if SESSION_STREAM_ID is set), mint canary via .venv/bin/python -m scripts.session_canary.grok_lane mint --epic ${SESSION_EPIC}, reconcile reality, and drive the next unblocked action without a menu. ${_fc} End on canary FAIL-HANDOFF not compact count (docs/runbooks/grok-session-canary.md). Primary checkout is read-only — writes via worktrees."
       ;;
   esac
+  # Wire the drive-epic playbook into every epic's cold prompt (Sol review #5632 F005).
+  _cold_prompt="${_cold_prompt} Your orchestration playbook is agents_extensions/shared/skills/drive-epic/SKILL.md (invoke \$drive-epic if your harness exposes skills) — load it before acting; it defines the topology→route→dispatch→cross-family-review→merge→handoff loop and the escalation triggers."
   _forward+=("$_cold_prompt")
   unset _cold_prompt _fc
 fi

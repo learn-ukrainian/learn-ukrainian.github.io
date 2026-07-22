@@ -381,6 +381,8 @@ if [ -n "${SESSION_EPIC:-}" ] && [ "${#_forward[@]}" -eq 0 ]; then
       ;;
   esac
   echo "Cold-start: injecting epic auto-continue prompt (no user PROMPT given)."
+  # Wire the drive-epic playbook into every epic's cold prompt (Sol review #5632 F005).
+  _cold_prompt="${_cold_prompt} Your orchestration playbook is agents_extensions/shared/skills/drive-epic/SKILL.md (invoke \$drive-epic if your harness exposes skills) — load it before acting; it defines the topology→route→dispatch→cross-family-review→merge→handoff loop and the escalation triggers."
   _forward=("$_cold_prompt")
   unset _cold_prompt _fc
 fi
