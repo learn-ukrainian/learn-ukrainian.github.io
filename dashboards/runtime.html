@@ -339,7 +339,7 @@ async function refreshAgentMonitor() {
     const badge = document.getElementById('agent-monitor-status-badge');
     if (badge) {
       badge.textContent = data.severity.toUpperCase();
-      badge.style.color = data.severity === 'healthy' ? 'var(--green)' : 'var(--yellow)';
+      badge.style.color = data.severity === 'healthy' ? 'var(--green)' : (data.severity === 'critical' ? 'var(--red)' : 'var(--yellow)');
     }
     const ram = document.getElementById('ram-avail');
     if (ram) ram.textContent = `${data.ram.available_mb} MB / ${data.ram.total_mb} MB (${data.ram.used_percent.toFixed(0)}% used)`;
