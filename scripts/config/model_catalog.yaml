@@ -466,13 +466,10 @@ orchestrator_seats:
     escalate_effort: xhigh
     escalate_when: deep_single_shot_or_architecture
     note: default Sonnet 5 @ high; escalate Fable 5 @ xhigh (Opus only if Fable unavailable)
-  codex:
-    model_id: gpt-5.6-terra
-    effort: high
-    escalate_model_id: gpt-5.6-sol
-    escalate_effort: xhigh
-    escalate_when: deep_single_shot_or_architecture
-    note: default Terra @ high; escalate Sol @ xhigh for architecture / hard judgment
+  # codex REMOVED as an orchestrator seat (user 2026-07-22): the 272K window is not
+  # worth the session-start/end rollover-token overhead relative to its small context.
+  # Codex stays a first-class CODING + formal-CF REVIEW seat (see formal_cf_defaults.codex
+  # and the codex comms endpoint) — it simply does not own a cold-start driver loop.
   grok:
     model_id: grok-4.5
     effort: high
