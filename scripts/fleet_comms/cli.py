@@ -99,26 +99,17 @@ def cmd_bottleneck_metrics(args: argparse.Namespace) -> int:
     tasks_dir = Path(args.tasks_dir).expanduser()
     plane_root = Path(args.root).expanduser() if args.root else default_plane_root()
     plane_db = plane_root / "comms.sqlite3"
-    # Match sibling cmds: never let sqlite3.connect create an empty plane DB
-    # as a side effect of a metadata-only command (Claude CF #5653 F001).
-    if not plane_db.is_file():
-        sys.stdout.write(
-            _json_dump(
-                {
-                    "content_included": False,
-                    "db_missing": True,
-                    "plane_db": str(plane_db),
-                    "tasks_dir": str(tasks_dir),
-                }
-            )
-        )
-        return EXIT_OK
+    # Always call the collector: it is fail-open per source and refuses to
+    # sqlite3.connect-create a missing plane DB (is_file guard inside). Skipping
+    # here would drop valid dispatch metrics when plane is uninit (Claude CF r4).
     payload = collect_stream_bottleneck_metrics(
         tasks_dir=tasks_dir,
         plane_db=plane_db,
     )
     payload["tasks_dir"] = str(tasks_dir)
     payload["plane_db"] = str(plane_db)
+    if not plane_db.is_file():
+        payload["db_missing"] = True
     sys.stdout.write(_json_dump(payload))
     return EXIT_OK
 
