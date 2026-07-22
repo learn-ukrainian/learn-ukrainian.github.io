@@ -67,6 +67,9 @@ These are NOT the harness, but they are the scorer-side foundation:
   5-class variety taxonomy, GRAC pointer-only fixture policy, IAA pilot gate.
 - [PL/EN borrowing eval scoping](pl-en-borrowing-scoping.md) — #4288 fleet-reviewed lexical-borrowing
   boundary (syntactic EN calques stay in #2156), harmful-vs-accepted decision rule, source landscape.
+- **[Issue #5634](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5634)**: Synthetic error corrupter script (`corrupter.py`) & DPO preference dataset (`dpo_preference_v1.jsonl`).
+- **[Issue #5635](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5635)**: Grammar & VESUM morphological agreement verification engine (`evaluate_grammar.py` using `vesum.db`).
+- **[Issue #5636](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5636)**: EleutherAI `lm-evaluation-harness` task adapter & benchmark emitter (`lm_eval_adapter/`).
 
 ## Design TBD (these are the questions next session should answer)
 
