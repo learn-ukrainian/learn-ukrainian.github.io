@@ -129,11 +129,37 @@ def assign_shards(nodeids: Sequence[str], shard_count: int, durations: dict[str,
     return shards
 
 
-def write_plan(*, shard_id: int, shard_count: int, durations_path: Path | None, output: Path, args_output: Path) -> None:
+def write_plan(
+    *,
+    shard_id: int,
+    shard_count: int,
+    durations_path: Path | None,
+    output: Path,
+    args_output: Path,
+    use_lpt_durations: bool = False,
+) -> None:
+    """Write one shard's plan.
+
+    Default partition is **equal-weight LPT** (all weights 1.0 / median of empty),
+    which is deterministic across concurrent matrix workers that independently
+    ``pytest --collect-only``. Duration-weighted LPT is opt-in via
+    ``use_lpt_durations=True`` / ``--use-lpt-durations`` and is only safe when a
+    **single** planner produces all shard plans (or every worker loads the
+    identical durations file). Prefix-matched cache restores under
+    ``restore-keys: pytest-shard-durations-v1-main-`` can hand different
+    workers different duration blobs, which previously caused
+    ``a collected test was assigned to more than one shard`` at verify time.
+    """
     if not 1 <= shard_id <= shard_count:
         raise ValueError(f"shard_id must be between 1 and {shard_count}")
     nodeids = collect_nodeids()
-    durations = load_durations(durations_path)
+    if use_lpt_durations:
+        durations = load_durations(durations_path)
+        partition_mode = "lpt-durations"
+    else:
+        # Ignore restored duration caches in the multi-worker matrix path.
+        durations = {}
+        partition_mode = "equal-weight"
     shards = assign_shards(nodeids, shard_count, durations)
     assigned = shards[shard_id - 1]
     if not assigned:
@@ -149,6 +175,7 @@ def write_plan(*, shard_id: int, shard_count: int, durations_path: Path | None, 
             "assigned_digest": _digest(assigned),
             "collected_count": len(nodeids),
             "collected_digest": _digest(nodeids),
+            "partition_mode": partition_mode,
             "serial_nodeids": list(SERIAL_TESTS) if shard_id == 1 else [],
             "shard_count": shard_count,
             "shard_id": shard_id,
@@ -199,9 +226,16 @@ def verify_artifacts(artifact_dir: Path, shard_count: int) -> None:
     collected_digests = {plan["collected_digest"] for plan in plans}
     if len(collected_counts) != 1 or len(collected_digests) != 1:
         raise RuntimeError("shards disagree about the collected selection")
+    modes = {plan.get("partition_mode", "unspecified") for plan in plans}
+    if len(modes) != 1:
+        raise RuntimeError(f"shards disagree about partition_mode: {sorted(modes)}")
     assigned = [nodeid for plan in plans for nodeid in plan["assigned_nodeids"]]
     if len(assigned) != len(set(assigned)):
-        raise RuntimeError("a collected test was assigned to more than one shard")
+        raise RuntimeError(
+            "a collected test was assigned to more than one shard "
+            f"(partition_mode={modes.pop()!r}; usually divergent LPT duration caches "
+            "across matrix workers — use equal-weight plan or a single planner job)"
+        )
     if set(assigned).intersection(SERIAL_TESTS):
         raise RuntimeError("a serial test was also assigned to a parallel shard")
     if len(assigned) != collected_counts.pop() or _digest(assigned) != collected_digests.pop():
@@ -244,6 +278,14 @@ def _parser() -> argparse.ArgumentParser:
     plan.add_argument("--shard-id", type=int, required=True)
     plan.add_argument("--shard-count", type=int, default=SHARD_COUNT)
     plan.add_argument("--durations", type=Path)
+    plan.add_argument(
+        "--use-lpt-durations",
+        action="store_true",
+        help=(
+            "Apply duration-weighted LPT (unsafe under concurrent matrix workers "
+            "with divergent duration-cache restores; default is equal-weight)"
+        ),
+    )
     plan.add_argument("--output", type=Path, required=True)
     plan.add_argument("--args-output", type=Path, required=True)
     verify = commands.add_parser("verify-artifacts")
@@ -268,6 +310,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 durations_path=args.durations,
                 output=args.output,
                 args_output=args.args_output,
+                use_lpt_durations=bool(args.use_lpt_durations),
             )
         elif args.command == "verify-artifacts":
             verify_artifacts(args.artifact_dir, args.shard_count)
