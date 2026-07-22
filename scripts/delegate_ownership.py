@@ -22,7 +22,14 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
 
-_REPO_ROOT = Path(__file__).resolve().parents[1]
+# Anchor ledger + task-state to the PRIMARY checkout (not a worktree copy),
+# matching scripts/delegate.py (Claude CF #5649 r12 F001).
+try:
+    from scripts.common.repo_root import resolve_repo_root
+except ImportError:  # pragma: no cover - flat script path
+    from common.repo_root import resolve_repo_root  # type: ignore
+
+_REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 DEFAULT_LEDGER_PATH = _REPO_ROOT / "batch_state" / "tasks" / "write-ownership.sqlite3"
 DEFAULT_TASK_STATE_DIR = _REPO_ROOT / "batch_state" / "tasks"
 # Admission uses the short-lived CLI PID until the worker PID is written.
