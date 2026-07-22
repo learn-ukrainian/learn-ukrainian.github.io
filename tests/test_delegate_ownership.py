@@ -403,3 +403,61 @@ def test_live_ledger_pid_keeps_claim_despite_terminal_state(tmp_path: Path):
         guard_mode=GuardMode.WARN,
     )
     assert peer.would_refuse is True
+
+
+def test_same_task_id_live_pid_does_not_replace_claims(tmp_path: Path, monkeypatch):
+    """Concurrent same task_id: second admission must not clobber first claims (CF r7)."""
+    import scripts.delegate_ownership as own_mod
+
+    ledger = tmp_path / "own.sqlite3"
+    state_dir = tmp_path / "tasks"
+    state_dir.mkdir()
+    holder_pid = os.getpid()
+    first = admit_write_paths(
+        task_id="same",
+        mode="workspace-write",
+        owned_paths=["scripts/held.py"],
+        pid=holder_pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+    )
+    assert first.admitted is True
+
+    real_alive = own_mod._pid_alive
+
+    def fake_alive(pid: int) -> bool:
+        if pid == 424242:
+            return True
+        return real_alive(pid)
+
+    monkeypatch.setattr(own_mod, "_pid_alive", fake_alive)
+    second = admit_write_paths(
+        task_id="same",
+        mode="workspace-write",
+        owned_paths=["scripts/other.py"],
+        pid=424242,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+        guard_mode=GuardMode.WARN,
+    )
+    assert second.admitted is True
+    assert second.would_refuse is True
+    # Original claim retained
+    import sqlite3
+
+    rows = list(sqlite3.connect(ledger).execute("SELECT claim_json FROM write_claims"))
+    assert any("held.py" in r[0] for r in rows)
+    assert not any("other.py" in r[0] for r in rows)
+
+    # Same-pid retry still allowed
+    monkeypatch.setattr(own_mod, "_pid_alive", real_alive)
+    retry = admit_write_paths(
+        task_id="same",
+        mode="workspace-write",
+        owned_paths=["scripts/held.py", "scripts/extra.py"],
+        pid=holder_pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+    )
+    assert retry.admitted is True
+    assert retry.would_refuse is False

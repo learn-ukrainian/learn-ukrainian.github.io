@@ -312,6 +312,81 @@ class OwnershipLedger:
             conn.execute("BEGIN IMMEDIATE")
             self._reconcile_stale(conn)
 
+            # Same-task_id live reservation: concurrent duplicate dispatch race
+            # between admission and state write (CF r7 F001). Refuse if another
+            # live PID already holds claims for this task_id.
+            same_rows = conn.execute(
+                "SELECT DISTINCT pid FROM write_claims WHERE task_id = ?",
+                (task_id,),
+            ).fetchall()
+            for row in same_rows:
+                other_pid = int(row["pid"]) if row["pid"] is not None else None
+                if other_pid is None or other_pid <= 0:
+                    continue
+                if pid is not None and other_pid == pid:
+                    continue  # same process re-admit / retry
+                if _pid_alive(other_pid):
+                    event = {
+                        "task_id": task_id,
+                        "other_pid": other_pid,
+                        "caller": caller,
+                    }
+                    if self.mode == GuardMode.REFUSE:
+                        conn.execute(
+                            "INSERT INTO admission_events (ts, task_id, event, payload) "
+                            "VALUES (?,?,?,?)",
+                            (
+                                time.time(),
+                                task_id,
+                                "refused_same_task",
+                                json.dumps(event, sort_keys=True),
+                            ),
+                        )
+                        conn.execute("COMMIT")
+                        return AdmissionResult(
+                            admitted=False,
+                            mode=self.mode,
+                            would_refuse=True,
+                            reason=(
+                                f"task_id already admitted by live pid={other_pid} (REFUSE)"
+                            ),
+                            conflicts=[
+                                {
+                                    "other_task_id": task_id,
+                                    "other_pid": other_pid,
+                                    "our_claim": {"raw": "(same-task race)"},
+                                }
+                            ],
+                        )
+                    # WARN: keep existing claim; do not replace; admit with would_refuse
+                    conn.execute(
+                        "INSERT INTO admission_events (ts, task_id, event, payload) "
+                        "VALUES (?,?,?,?)",
+                        (
+                            time.time(),
+                            task_id,
+                            "would_refuse_same_task",
+                            json.dumps(event, sort_keys=True),
+                        ),
+                    )
+                    conn.execute("COMMIT")
+                    return AdmissionResult(
+                        admitted=True,
+                        mode=self.mode,
+                        would_refuse=True,
+                        reason=(
+                            f"would-refuse same task_id held by live pid={other_pid}; "
+                            f"admitted under {self.mode.value} without replacing claims"
+                        ),
+                        conflicts=[
+                            {
+                                "other_task_id": task_id,
+                                "other_pid": other_pid,
+                                "our_claim": {"raw": "(same-task race)"},
+                            }
+                        ],
+                    )
+
             active_rows = conn.execute(
                 "SELECT task_id, claim_json, pid FROM write_claims WHERE task_id != ?",
                 (task_id,),
