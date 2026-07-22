@@ -287,6 +287,20 @@ def test_no_epic_no_supervisor_call(tmp_path: Path) -> None:
     assert all(p.startswith("-") or p in {"grok-4.5", "high"} or Path(p).is_absolute() for p in parts)
 
 
+def test_handoff_agent_without_epic_still_prints_identity(tmp_path: Path) -> None:
+    """CF F001: --handoff-agent without --epic must remain operator-visible."""
+    values, _argv_blob, result, _project, supervisor_capture = _run_launcher(
+        tmp_path,
+        ["--handoff-agent", "grok-custom"],
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert values["handoff"] == "grok-custom"
+    assert values["session_epic"] == "unset"
+    assert not supervisor_capture.exists()
+    assert "handoff=grok-custom" in result.stdout
+    assert "no --epic" in result.stdout
+
+
 def test_stream_override_is_used_by_supervisor(tmp_path: Path) -> None:
     _values, _argv_blob, result, _project, supervisor_capture = _run_launcher(
         tmp_path,

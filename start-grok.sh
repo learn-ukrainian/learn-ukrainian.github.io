@@ -354,7 +354,8 @@ if [ -n "${SESSION_EPIC:-}" ]; then
   esac
   echo "  writes: worktrees only · end on canary FAIL-HANDOFF (docs/runbooks/grok-session-canary.md)"
 else
-  echo "Grok ${_grok_ver}${_branch:+ · ${_branch}} · no --epic (stream lease not claimed)"
+  # Preserve handoff confirmation when --handoff-agent is used without --epic (CF F001).
+  echo "Grok ${_grok_ver}${_branch:+ · ${_branch}}${SESSION_HANDOFF_AGENT:+ · handoff=${SESSION_HANDOFF_AGENT}} · no --epic (stream lease not claimed)"
 fi
 unset _grok_ver _branch
 
