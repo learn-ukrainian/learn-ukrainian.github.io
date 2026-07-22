@@ -522,3 +522,27 @@ def test_epic_plus_explicit_agent_keeps_agent(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     assert "arg=--epic" in output
     assert "arg=infra-orchestrator" in output
+
+
+def test_isolate_config_env_rejects_invalid_value(tmp_path: Path) -> None:
+    _, result = _run_with_fakes(
+        tmp_path,
+        [],
+        env_overrides={"KIMICC_ISOLATE_CONFIG": "2"},
+    )
+    assert result.returncode == 2
+    assert "KIMICC_ISOLATE_CONFIG must be 0 or 1" in result.stderr
+
+
+def test_empty_kimicc_agent_inherits_project_default(tmp_path: Path) -> None:
+    """KIMICC_AGENT='' (set but empty) suppresses the default --agent injection,
+    so Claude Code falls back to the project settings.json default agent."""
+    output, result = _run_with_fakes(
+        tmp_path,
+        ["--endpoint", "platform", "--no-isolate-config"],
+        env_overrides={"KIMICC_AGENT": ""},
+    )
+    assert result.returncode == 0, result.stderr
+    assert "arg=--agent" not in output
+    assert "arg=infra-orchestrator" not in output
+    assert "default; override with --agent" not in result.stdout
