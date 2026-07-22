@@ -240,6 +240,27 @@ def test_malformed_or_missing_markers_fail(tmp_path: Path):
     )
     assert any("header must be" in i.message for i in issues)
 
+    # Short separator row (CF F001): header has 5 cols but separator is 1 cell.
+    data_rows = "\n".join(
+        f"| {seat} | {r['model_id']} | {r['effort']} | {r['escalate_model_id']} | {r['escalate_effort']} |"
+        for seat, r in sorted(seats.items())
+    )
+    proj.write_text(
+        "<!-- fleet-roster-projection:begin orchestrator_seats -->\n"
+        "| seat | model_id | effort | escalate_model_id | escalate_effort |\n"
+        "| --- |\n"
+        f"{data_rows}\n"
+        "<!-- fleet-roster-projection:end orchestrator_seats -->\n"
+        + _elig_block(eligible),
+        encoding="utf-8",
+    )
+    issues = lint_fleet_roster(
+        catalog_path=catalog, comms_path=comms, projection_paths=[proj], project_root=tmp_path
+    )
+    assert any("invalid table separator" in i.message for i in issues), [
+        i.as_dict() for i in issues
+    ]
+
 
 def test_parsers_strip_markdown_emphasis():
     block = dedent(

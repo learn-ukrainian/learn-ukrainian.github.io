@@ -131,8 +131,10 @@ def parse_markdown_table(block: str) -> tuple[tuple[str, ...], list[dict[str, st
     if not header:
         raise ValueError("invalid table header")
     sep = _split_row(lines[1])
-    if not sep or not _is_separator_row(sep):
-        raise ValueError("invalid table separator")
+    if not sep or not _is_separator_row(sep) or len(sep) != len(header):
+        raise ValueError(
+            f"invalid table separator (need {len(header)} columns of ---, got {len(sep) if sep else 0})"
+        )
     rows: list[dict[str, str]] = []
     for line in lines[2:]:
         cells = _split_row(line)
