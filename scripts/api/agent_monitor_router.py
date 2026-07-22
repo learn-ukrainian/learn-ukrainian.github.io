@@ -108,6 +108,7 @@ def get_monitor_status() -> dict[str, Any]:
                 continue
         except psutil.NoSuchProcess:
             expired_tokens.append(lease_tok)
+            continue
         except psutil.AccessDenied:
             pass
             continue
