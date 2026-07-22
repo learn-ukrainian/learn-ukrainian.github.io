@@ -120,3 +120,24 @@ def test_run_nodeids_passes_nodeids_to_pytest_main(tmp_path: Path, monkeypatch) 
     rc = pytest_shards.run_nodeids(nodeids, ["--", "-q", "-n", "auto"])
     assert rc == 7
     assert captured == [["-q", "-n", "auto", "tests/test_a.py::test_a", "tests/test_b.py::test_b"]]
+
+
+def test_write_plan_rejects_empty_shard(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(pytest_shards, "collect_nodeids", lambda args=(): ["only-one"])
+    monkeypatch.setattr(
+        pytest_shards,
+        "assign_shards",
+        lambda nodeids, shard_count, durations: [[], ["only-one"], [], []],
+    )
+    try:
+        pytest_shards.write_plan(
+            shard_id=1,
+            shard_count=4,
+            durations_path=None,
+            output=tmp_path / "plan.json",
+            args_output=tmp_path / "nodeids.txt",
+        )
+    except RuntimeError as error:
+        assert "zero assigned" in str(error)
+    else:
+        raise AssertionError("empty shard must fail at plan time")
