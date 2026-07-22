@@ -1105,12 +1105,15 @@ jobs:
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
           .venv/bin/python -m pip install --no-deps -r requirements-lock.txt
-          .venv/bin/python -m coverage combine coverage-artifacts/pytest-coverage-*/coverage
+          # upload-artifact strips the coverage/ LCA; download lands files at
+          # coverage-artifacts/pytest-coverage-N/.coverage.shard-N
+          .venv/bin/python -m coverage combine coverage-artifacts/pytest-coverage-*/.coverage.shard-*
           .venv/bin/python -m coverage report --fail-under=35
           .venv/bin/python -m coverage xml -o coverage.xml
 
+      # Duration cache must not be blocked by a coverage combine failure (CF r2).
       - name: Publish next-run duration estimates
-        if: needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: always() && needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           python -m venv .venv
           .venv/bin/python scripts/ci/pytest_shards.py parse-durations \
@@ -1121,7 +1124,7 @@ jobs:
             --output .ci/pytest-durations.json
 
       - name: Save next-run duration estimates
-        if: needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: always() && needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .ci/pytest-durations.json
