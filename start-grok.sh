@@ -19,6 +19,15 @@
 #   SESSION_HANDOFF_AGENT     grok-<epic> (or override / harness→grok-infra)
 #   SESSION_STREAM_*          from the common session supervisor (scripts.session_supervisor)
 #   LEARN_UKRAINIAN_GROK_LAUNCH=1
+#   FLEET_COMMS_PLANE_MODE    resolved at launch (off|shadow|dual_write); fail-open off
+#
+# Fleet-comms (#5512) — dual-aware mid-cutover (not pure rot):
+#   Wired already: session-stream lease claim via claim_session_supervisor_env,
+#   canary mint, stream dual-write diary. Message-plane default is still off
+#   until parity receipt + operator/advisor GO — launchers must prefer plane
+#   surfaces when mode != off and fall back to file dual-write while off.
+#   Cold-prompts point at fleet_comms + review-pr / publish-review-verdict,
+#   not file-handoff folklore alone.
 #
 # Cold-start: with --epic and no free-text PROMPT, the launcher claims the
 # stream lease through the common supervisor, writes a capsule, and injects an
@@ -50,8 +59,37 @@ if git -C "$PROJECT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
 fi
 
 usage_launcher() {
-  sed -n '2,35p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,42p' "$0" | sed 's/^# \{0,1\}//'
   exit 0
+}
+
+# Compact dual-aware fleet-comms clause for cold-start prompts (#5512 mid-cutover).
+# Prefer plane + CF primitives; file dual-write is fallback while plane mode is off.
+_fleet_comms_cold_clause() {
+  local plane_mode="${FLEET_COMMS_PLANE_MODE:-off}"
+  printf '%s' \
+    "Fleet-comms (#5512) mid-cutover: prefer message-plane + CF surfaces; fall back to file dual-write while plane mode is ${plane_mode} (do not flip cutovers without operator/advisor GO; do not invent a competing design). " \
+    "Topology/metrics: \`.venv/bin/python -m scripts.fleet_comms plane-status\` (+ metrics/backlog/dead-letters as needed). " \
+    "Formal CF: \`.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>\` then publish-review-verdict (cross-family; never self-seal). " \
+    "Continuity: stream lease already claimed; dual-write diary under \`.claude/<epic>-epic/*-DRIVER-HANDOFF.md\` remains authoritative until stream-authority cutover."
+}
+
+# Resolve plane mode once (fail-open → off). Used for banner + cold-prompt wording.
+_resolve_fleet_comms_plane_mode() {
+  local mode="off"
+  if [ -x "$PROJECT_DIR/.venv/bin/python" ] \
+      && [ -f "$PROJECT_DIR/scripts/fleet_comms/message_plane.py" ]; then
+    mode="$(
+      "$PROJECT_DIR/.venv/bin/python" -c \
+        'from scripts.fleet_comms.message_plane import resolve_plane_mode; print(resolve_plane_mode(None))' \
+        2>/dev/null || true
+    )"
+    case "${mode}" in
+      off|shadow|dual_write) ;;
+      *) mode="off" ;;
+    esac
+  fi
+  printf '%s' "$mode"
 }
 
 # --- locate grok binary ---
@@ -71,20 +109,16 @@ if [ -z "$GROK_BIN" ]; then
   exit 1
 fi
 
-echo "Starting Grok in Learn Ukrainian project..."
-echo "Project: $PROJECT_DIR"
-echo "Grok: $("$GROK_BIN" --version 2>/dev/null || echo "$GROK_BIN")"
-
 cd "$PROJECT_DIR"
 
+# Quiet success path for preflight heals (errors still print on stderr).
 if git rev-parse --git-dir >/dev/null 2>&1; then
-  echo "Current branch: $(git branch --show-current 2>/dev/null || echo '?')"
   # Heal detached/wrong-branch primary so agents never start on a raw SHA (#4857).
   if [ -x "$PROJECT_DIR/.venv/bin/python" ] \
       && [ -f "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" ]; then
     if ! "$PROJECT_DIR/.venv/bin/python" \
         "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" \
-        --cwd "$PROJECT_DIR" --heal; then
+        --cwd "$PROJECT_DIR" --heal >/dev/null; then
       echo "Error: primary checkout is not on main and auto-heal failed." >&2
       exit 1
     fi
@@ -93,21 +127,26 @@ if git rev-parse --git-dir >/dev/null 2>&1; then
   # Grok has no SessionStart hook (Claude uses heal-core-bare PreToolUse).
   if [ -x "$PROJECT_DIR/.venv/bin/python" ] \
       && [ -f "$PROJECT_DIR/scripts/audit/check_core_bare.py" ]; then
-    "$PROJECT_DIR/.venv/bin/python" \
-      "$PROJECT_DIR/scripts/audit/check_core_bare.py" --fix --repo "$PROJECT_DIR" \
-      || echo "Warning: check_core_bare --fix failed (continuing launch)." >&2
-  fi
-  if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
-    echo "Uncommitted changes detected (primary checkout is orientation-only; write via worktrees)"
+    if ! "$PROJECT_DIR/.venv/bin/python" \
+        "$PROJECT_DIR/scripts/audit/check_core_bare.py" --fix --repo "$PROJECT_DIR" \
+        >/dev/null; then
+      echo "Warning: check_core_bare --fix failed (continuing launch)." >&2
+    fi
   fi
 fi
 
-# Optional deploy of shared extensions (fail-open — grok does not require .claude/ the same way).
+# Optional deploy of shared extensions (fail-open; quiet on success).
 if [ -f "$PROJECT_DIR/scripts/lib/deploy_extensions.sh" ]; then
   # shellcheck source=scripts/lib/deploy_extensions.sh
   source "$PROJECT_DIR/scripts/lib/deploy_extensions.sh"
-  deploy_agent_extensions "$PROJECT_DIR" agents:deploy \
-    || echo "Continuing launch despite deploy failure (see banner above)."
+  _deploy_out=""
+  _deploy_rc=0
+  _deploy_out="$(deploy_agent_extensions "$PROJECT_DIR" agents:deploy 2>&1)" || _deploy_rc=$?
+  if [ "$_deploy_rc" -ne 0 ]; then
+    printf '%s\n' "$_deploy_out" >&2
+    echo "Continuing launch despite deploy failure." >&2
+  fi
+  unset _deploy_out _deploy_rc
 fi
 
 # --- parse launcher-only flags; build forward argv ---
@@ -220,7 +259,6 @@ fi
 
 if [ -n "$_selected_epic" ]; then
   export SESSION_EPIC="$_selected_epic"
-  echo "Epic assignment: ${SESSION_EPIC}.epic"
   # Grok-specific handoff slot (not claude-<epic>)
   if [ -z "${SESSION_HANDOFF_AGENT:-}" ] && [ -z "$_handoff_override" ]; then
     case "$_selected_epic" in
@@ -258,12 +296,9 @@ if [ -n "$_selected_epic" ]; then
   unset _launcher_task_id _launcher_instance_id
 fi
 
-if [ -n "${SESSION_HANDOFF_AGENT:-}" ]; then
-  echo "Handoff identity: $SESSION_HANDOFF_AGENT"
-fi
-
 export LEARN_UKRAINIAN_GROK_LAUNCH=1
 export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
+export FLEET_COMMS_PLANE_MODE="$(_resolve_fleet_comms_plane_mode)"
 
 # Defaults for grok CLI
 _defaults=()
@@ -287,33 +322,41 @@ if [ "$_always_approve" -eq 1 ]; then
   fi
 fi
 
-# Lane cold-start hint (printed always when epic is set)
+# Compact launch banner (one line + short lane block when epic set).
+_grok_ver="$("$GROK_BIN" --version 2>/dev/null | head -1 || echo grok)"
+_branch=""
+if git rev-parse --git-dir >/dev/null 2>&1; then
+  _branch="$(git branch --show-current 2>/dev/null || true)"
+fi
 if [ -n "${SESSION_EPIC:-}" ]; then
-  echo ""
-  echo "Lane: ${SESSION_EPIC} (you are NOT the main orchestrator)."
-  case "${SESSION_EPIC}" in
-    atlas)
-      echo "  Stream SSOT: ${SESSION_STREAM_ID:-epic:4387}  (session_streams tail --stream ${SESSION_STREAM_ID:-epic:4387})"
-      echo "  File dual-write: .claude/atlas-epic/INTERIM-DRIVER-HANDOFF.md (or CLAUDE-DRIVER-HANDOFF.md read-only)"
-      echo "  TAKEOVER: .claude/atlas-epic/TAKEOVER-PROMPT.md"
-      echo "  Canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas"
-      echo "          docs/runbooks/grok-session-canary.md  (end on <8/10; score auto-hydrates on PASS)"
+  echo "Grok ${_grok_ver} · epic=${SESSION_EPIC} stream=${SESSION_STREAM_ID:-unset} handoff=${SESSION_HANDOFF_AGENT:-unset} plane=${FLEET_COMMS_PLANE_MODE}${_branch:+ · ${_branch}}"
+  case "${FLEET_COMMS_PLANE_MODE}" in
+    off)
+      echo "  fleet-comms: plane off → file dual-write fallback; CF via review-pr/publish-review-verdict"
       ;;
-    harness|infra)
-      echo "  Stream: ${SESSION_STREAM_ID:-epic:4707}"
-      echo "  Infra handoff: docs/session-state/ + .agent/claude-infra-thread-handoff.md (read; write your own grok slot)"
-      echo "  Canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic harness"
-      ;;
-    *)
-      echo "  Open stream: SESSION_STREAM_ID=${SESSION_STREAM_ID:-unset}"
-      echo "  Epic dir (if any): .claude/${SESSION_EPIC}-epic/"
-      echo "  Canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic ${SESSION_EPIC}"
+    shadow|dual_write)
+      echo "  fleet-comms: plane ${FLEET_COMMS_PLANE_MODE} → prefer plane; keep diary dual-write until authority cutover"
       ;;
   esac
-  echo "  Primary checkout is READ-ONLY for writes → worktrees via scripts/delegate.py"
-  echo "  Session canary protocol: docs/runbooks/grok-session-canary.md"
-  echo ""
+  case "${SESSION_EPIC}" in
+    atlas)
+      echo "  canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas"
+      echo "  board:  .claude/atlas-epic/TAKEOVER-PROMPT.md + INTERIM-DRIVER-HANDOFF.md (fallback while plane off)"
+      ;;
+    harness|infra)
+      echo "  canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic harness"
+      echo "  board:  .claude/harness-epic/*-DRIVER-HANDOFF.md + docs/session-state/ (fallback while plane off)"
+      ;;
+    *)
+      echo "  canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic ${SESSION_EPIC}"
+      echo "  board:  .claude/${SESSION_EPIC}-epic/ (fallback while plane off)"
+      ;;
+  esac
+  echo "  writes: worktrees only · end on canary FAIL-HANDOFF (docs/runbooks/grok-session-canary.md)"
+else
+  echo "Grok ${_grok_ver}${_branch:+ · ${_branch}} · no --epic (stream lease not claimed)"
 fi
+unset _grok_ver _branch
 
 # Auto-continue the epic stream when --epic is set and the user did not pass a PROMPT.
 # Grok has no SessionStart hook (Claude does) — without an initial prompt the TUI idles
@@ -348,25 +391,24 @@ for a in "${_forward[@]+"${_forward[@]}"}"; do
 done
 
 if [ -n "${SESSION_EPIC:-}" ] && [ "$_has_prompt" -eq 0 ]; then
+  _fc="$(_fleet_comms_cold_clause)"
   case "${SESSION_EPIC}" in
     atlas|practice|practice-hub)
-      _cold_prompt="You are the interim ATLAS lane driver (stream ${SESSION_STREAM_ID:-epic:4387}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) read/execute .claude/atlas-epic/TAKEOVER-PROMPT.md — tail stream, reconcile board, dual-write INTERIM-DRIVER-HANDOFF.md; (2) mint the session canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas --stream ${SESSION_STREAM_ID:-epic:4387} (see docs/runbooks/grok-session-canary.md). Drive the next unblocked action without a menu. End session on canary FAIL-HANDOFF (<8/10), not on compact count; after any auto-compact re-score from memory. Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the interim ATLAS lane driver (stream ${SESSION_STREAM_ID:-epic:4387}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) read/execute .claude/atlas-epic/TAKEOVER-PROMPT.md — tail stream, reconcile board, dual-write INTERIM-DRIVER-HANDOFF.md while plane is off; (2) mint the session canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas --stream ${SESSION_STREAM_ID:-epic:4387} (docs/runbooks/grok-session-canary.md). ${_fc} Drive the next unblocked action without a menu. End session on canary FAIL-HANDOFF (<8/10), not on compact count; after any auto-compact re-score from memory then AUTO-HYDRATE on PASS — never ask the operator to restart. Primary checkout is read-only — writes via worktrees."
       ;;
     harness|infra)
-      _cold_prompt="You are the INFRA / harness lane driver (stream ${SESSION_STREAM_ID:-epic:4707}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start from the infra handoff and stream tail; mint canary (.venv/bin/python -m scripts.session_canary.grok_lane mint --epic harness); reconcile in-flight work; drive the next unblocked infra action. End on canary FAIL-HANDOFF not compact count (docs/runbooks/grok-session-canary.md). After auto-compact you own recovery: score canary FROM MEMORY then read the AUTO-HYDRATE capsule score prints on PASS — never ask the operator to restart or re-load the diary. Do not claim curriculum content lanes. Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the INFRA / harness lane driver (stream ${SESSION_STREAM_ID:-epic:4707}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start from the infra handoff dual-write (.claude/harness-epic/*-DRIVER-HANDOFF.md) and stream tail; mint canary (.venv/bin/python -m scripts.session_canary.grok_lane mint --epic harness); reconcile in-flight work; drive the next unblocked infra action. ${_fc} End on canary FAIL-HANDOFF not compact count (docs/runbooks/grok-session-canary.md). After auto-compact you own recovery: score canary FROM MEMORY then read the AUTO-HYDRATE capsule score prints on PASS — never ask the operator to restart or re-load the diary. Do not claim curriculum content lanes. Primary checkout is read-only — writes via worktrees."
       ;;
     hramatka)
-      _cold_prompt="You are the hramatka lane driver (stream ${SESSION_STREAM_ID:-epic:4542}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start from the epic handoff and stream if present; mint canary (.venv/bin/python -m scripts.session_canary.grok_lane mint --epic hramatka); reconcile and drive the next unblocked action. End on canary FAIL-HANDOFF (docs/runbooks/grok-session-canary.md). After auto-compact you own recovery: score FROM MEMORY then AUTO-HYDRATE from score PASS output — never ask the operator to restart/hydrate/diary. Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the hramatka lane driver (stream ${SESSION_STREAM_ID:-epic:4542}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start from the epic handoff dual-write and stream if present; mint canary (.venv/bin/python -m scripts.session_canary.grok_lane mint --epic hramatka); reconcile and drive the next unblocked action. ${_fc} End on canary FAIL-HANDOFF (docs/runbooks/grok-session-canary.md). After auto-compact you own recovery: score FROM MEMORY then AUTO-HYDRATE from score PASS output — never ask the operator to restart/hydrate/diary. Primary checkout is read-only — writes via worktrees."
       ;;
     *)
-      _cold_prompt="You are the ${SESSION_EPIC} lane driver (SESSION_STREAM_ID=${SESSION_STREAM_ID:-unset}). You are NOT the main orchestrator. The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start: load the epic handoff under .claude/${SESSION_EPIC}-epic/ (or stream tail if SESSION_STREAM_ID is set), mint canary via .venv/bin/python -m scripts.session_canary.grok_lane mint --epic ${SESSION_EPIC}, reconcile reality, and drive the next unblocked action without a menu. End on canary FAIL-HANDOFF not compact count (docs/runbooks/grok-session-canary.md). Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the ${SESSION_EPIC} lane driver (SESSION_STREAM_ID=${SESSION_STREAM_ID:-unset}). You are NOT the main orchestrator. The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start: load the epic handoff dual-write under .claude/${SESSION_EPIC}-epic/ (or stream tail if SESSION_STREAM_ID is set), mint canary via .venv/bin/python -m scripts.session_canary.grok_lane mint --epic ${SESSION_EPIC}, reconcile reality, and drive the next unblocked action without a menu. ${_fc} End on canary FAIL-HANDOFF not compact count (docs/runbooks/grok-session-canary.md). Primary checkout is read-only — writes via worktrees."
       ;;
   esac
-  echo "Cold-start: injecting epic auto-continue prompt (no user PROMPT given)."
   _forward+=("$_cold_prompt")
-  unset _cold_prompt
+  unset _cold_prompt _fc
 fi
 unset _has_prompt _expect_value
 
-echo "Launching Grok Build TUI..."
 exec "$GROK_BIN" "${_defaults[@]}" "${_forward[@]+"${_forward[@]}"}"

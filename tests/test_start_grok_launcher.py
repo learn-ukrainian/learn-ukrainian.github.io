@@ -157,6 +157,7 @@ fi
   printf 'handoff=%s\\n' "${{SESSION_HANDOFF_AGENT-unset}}"
   printf 'launch=%s\\n' "${{LEARN_UKRAINIAN_GROK_LAUNCH-unset}}"
   printf 'capsule=%s\\n' "${{SESSION_SUPERVISOR_CAPSULE_PATH-unset}}"
+  printf 'plane_mode=%s\\n' "${{FLEET_COMMS_PLANE_MODE-unset}}"
   printf 'argv='
   printf '%s\\0' "$@"
   printf '\\n'
@@ -177,6 +178,8 @@ fi
         "SESSION_HANDOFF_AGENT",
         "LEARN_UKRAINIAN_GROK_LAUNCH",
         "SESSION_SUPERVISOR_CAPSULE_PATH",
+        "FLEET_COMMS_PLANE_MODE",
+        "FLEET_COMMS_MESSAGE_PLANE",
     ):
         env.pop(name, None)
     env["HOME"] = os.fspath(home)
@@ -219,6 +222,8 @@ def test_epic_atlas_exports_env_and_claims_lease(tmp_path: Path) -> None:
     assert values["launch"] == "1"
     assert values["capsule"] != "unset"
     assert Path(values["capsule"]).exists()
+    # Mid-cutover fail-open: plane mode resolves to off when fleet_comms is absent.
+    assert values["plane_mode"] == "off"
 
     # Supervisor was invoked for the expected stream/agent/harness.
     supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
@@ -230,6 +235,14 @@ def test_epic_atlas_exports_env_and_claims_lease(tmp_path: Path) -> None:
     assert "--harness" in supervisor_args and "grok-tui" in supervisor_args
     assert "--task-id" in supervisor_args
 
+    # Compact banner: no multi-line folklore dump; dual-aware fleet-comms line present.
+    out = result.stdout + result.stderr
+    assert "Starting Grok in Learn Ukrainian project..." not in out
+    assert "Launching Grok Build TUI..." not in out
+    assert "plane=off" in out
+    assert "fleet-comms" in out.lower()
+    assert "review-pr" in out
+
     # Null-separated argv from fake grok; last non-empty token is the prompt.
     parts = [p for p in argv_blob.split("\0") if p]
     assert parts, "expected grok argv"
@@ -239,6 +252,12 @@ def test_epic_atlas_exports_env_and_claims_lease(tmp_path: Path) -> None:
     assert "epic:4387" in prompt
     assert "open/resume lease" not in prompt.lower()
     assert "do NOT open or resume it yourself" in prompt
+    # Dual-aware: plane + CF surfaces preferred; file dual-write is fallback.
+    assert "Fleet-comms" in prompt or "fleet-comms" in prompt.lower() or "#5512" in prompt
+    assert "plane-status" in prompt
+    assert "review-pr" in prompt
+    assert "publish-review-verdict" in prompt
+    assert "dual-write" in prompt.lower() or "dual write" in prompt.lower()
     assert "--model" in parts
     assert "grok-4.5" in parts
     assert "--always-approve" in parts
@@ -277,3 +296,27 @@ def test_stream_override_is_used_by_supervisor(tmp_path: Path) -> None:
     supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
     stream_index = supervisor_args.index("--stream")
     assert supervisor_args[stream_index + 1] == "epic:4707"
+
+
+def test_epic_harness_cold_prompt_is_fleet_comms_dual_aware(tmp_path: Path) -> None:
+    values, argv_blob, result, _project, _supervisor_capture = _run_launcher(
+        tmp_path,
+        ["--epic", "harness"],
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert values["session_epic"] == "harness"
+    assert values["handoff"] == "grok-infra"
+    assert values["plane_mode"] == "off"
+    parts = [p for p in argv_blob.split("\0") if p]
+    prompt = parts[-1]
+    assert "INFRA" in prompt or "harness" in prompt.lower()
+    assert "do NOT open or resume it yourself" in prompt
+    assert "plane-status" in prompt
+    assert "review-pr" in prompt
+    assert "publish-review-verdict" in prompt
+    assert "session_canary.grok_lane mint --epic harness" in prompt
+    # File dual-write remains the mid-cutover fallback, not the only coordination path.
+    assert "DRIVER-HANDOFF" in prompt or "dual-write" in prompt.lower()
+    out = result.stdout
+    assert "Starting Grok in Learn Ukrainian project..." not in out
+    assert "plane=off" in out
