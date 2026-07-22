@@ -294,3 +294,35 @@ def test_missing_projection_file_fails(tmp_path: Path):
         project_root=tmp_path,
     )
     assert any(i.kind == "io" and "missing" in i.message for i in issues)
+
+
+def test_duplicate_normalized_orchestrator_seat_names_fail(tmp_path: Path):
+    """Whitespace-distinct YAML keys must not silently collapse (CF r2 F001)."""
+    catalog = tmp_path / "model_catalog.yaml"
+    # PyYAML cannot emit two keys that only differ by surrounding spaces via a
+    # normal dump; write the ambiguous authority textually.
+    catalog.write_text(
+        dedent(
+            """\
+            orchestrator_seats:
+              claude:
+                model_id: claude-sonnet-5
+                effort: high
+                escalate_model_id: claude-fable-5
+                escalate_effort: xhigh
+              " claude":
+                model_id: claude-sonnet-5
+                effort: high
+                escalate_model_id: claude-fable-5
+                escalate_effort: xhigh
+            """
+        ),
+        encoding="utf-8",
+    )
+    from scripts.lint.lint_fleet_roster import load_orchestrator_seats
+
+    try:
+        load_orchestrator_seats(catalog)
+        raise AssertionError("expected ValueError for duplicate normalized seats")
+    except ValueError as exc:
+        assert "duplicate orchestrator_seats name after normalize" in str(exc)

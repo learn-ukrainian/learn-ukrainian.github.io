@@ -70,6 +70,13 @@ def load_orchestrator_seats(catalog_path: Path = CATALOG_PATH) -> dict[str, dict
     for seat, body in raw.items():
         if not isinstance(seat, str) or not isinstance(body, dict):
             raise ValueError(f"{catalog_path}: invalid orchestrator_seats entry {seat!r}")
+        key = seat.strip()
+        if not key:
+            raise ValueError(f"{catalog_path}: empty orchestrator_seats key {seat!r}")
+        if key in seats:
+            raise ValueError(
+                f"{catalog_path}: duplicate orchestrator_seats name after normalize: {key!r}"
+            )
         row: dict[str, str] = {}
         for field in SEAT_FIELDS:
             value = body.get(field)
@@ -78,7 +85,7 @@ def load_orchestrator_seats(catalog_path: Path = CATALOG_PATH) -> dict[str, dict
                     f"{catalog_path}: orchestrator_seats.{seat}.{field} must be a non-empty string"
                 )
             row[field] = value.strip()
-        seats[seat.strip()] = row
+        seats[key] = row
     return seats
 
 
