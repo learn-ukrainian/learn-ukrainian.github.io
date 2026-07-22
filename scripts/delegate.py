@@ -2429,30 +2429,54 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # the shared ownership ledger entirely (Claude CF #5649 r11).
     if not bool(getattr(args, "dry_run", False)):
         try:
-            from scripts.delegate_ownership import admit_write_paths, env_guard_mode
+            from scripts.delegate_ownership import (
+                GuardMode,
+                admit_write_paths,
+                env_guard_mode,
+            )
         except ImportError:  # pragma: no cover - flat script path
-            from delegate_ownership import admit_write_paths, env_guard_mode  # type: ignore
+            from delegate_ownership import (  # type: ignore
+                GuardMode,
+                admit_write_paths,
+                env_guard_mode,
+            )
 
-        ownership = admit_write_paths(
-            task_id=task_id,
-            mode=str(args.mode),
-            owned_paths=getattr(args, "research_owned_path", None),
-            allow_path_overlap=getattr(args, "allow_path_overlap", None),
-            pid=os.getpid(),
-            guard_mode=env_guard_mode(),
-        )
-        if ownership.would_refuse or ownership.override_reason:
+        guard_mode = env_guard_mode()
+        try:
+            ownership = admit_write_paths(
+                task_id=task_id,
+                mode=str(args.mode),
+                owned_paths=getattr(args, "research_owned_path", None),
+                allow_path_overlap=getattr(args, "allow_path_overlap", None),
+                pid=os.getpid(),
+                guard_mode=guard_mode,
+            )
+        except Exception as own_exc:
+            # WARN (default): never crash dispatch on ledger I/O/lock errors.
+            # REFUSE: fail closed so conflicts cannot silently proceed.
             print(
-                f"⚠️  write-path ownership: {ownership.reason} "
-                f"(conflicts={len(ownership.conflicts)})",
+                f"⚠️  write-path ownership: ledger error: {own_exc}",
                 file=sys.stderr,
             )
-        if not ownership.admitted:
-            print(
-                f"❌ write-path ownership refused for task_id={task_id!r}: {ownership.reason}",
-                file=sys.stderr,
-            )
-            return 2
+            if guard_mode == GuardMode.REFUSE:
+                print(
+                    f"❌ write-path ownership refused (ledger error) for task_id={task_id!r}",
+                    file=sys.stderr,
+                )
+                return 2
+        else:
+            if ownership.would_refuse or ownership.override_reason:
+                print(
+                    f"⚠️  write-path ownership: {ownership.reason} "
+                    f"(conflicts={len(ownership.conflicts)})",
+                    file=sys.stderr,
+                )
+            if not ownership.admitted:
+                print(
+                    f"❌ write-path ownership refused for task_id={task_id!r}: {ownership.reason}",
+                    file=sys.stderr,
+                )
+                return 2
 
     # Resolve prompt: literal --prompt, or - for stdin, or --prompt-file.
     if args.prompt_file:
