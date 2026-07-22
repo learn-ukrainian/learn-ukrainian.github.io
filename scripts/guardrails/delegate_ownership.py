@@ -245,11 +245,12 @@ class OwnershipLedger:
         path: Path = DEFAULT_LEDGER_PATH,
         *,
         task_state_dir: Path = DEFAULT_TASK_STATE_DIR,
-        mode: GuardMode = GuardMode.WARN,
+        mode: GuardMode | None = None,
     ) -> None:
         self.path = Path(path)
         self.task_state_dir = Path(task_state_dir)
-        self.mode = mode
+        # Default follows env (REFUSE after #5645 soak). Explicit mode still wins.
+        self.mode = mode if mode is not None else env_guard_mode()
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
     def _connect(self) -> sqlite3.Connection:
@@ -572,9 +573,15 @@ def admit_write_paths(
     pid: int | None = None,
     ledger_path: Path = DEFAULT_LEDGER_PATH,
     task_state_dir: Path = DEFAULT_TASK_STATE_DIR,
-    guard_mode: GuardMode | str = GuardMode.WARN,
+    guard_mode: GuardMode | str | None = None,
 ) -> AdmissionResult:
-    gm = GuardMode(guard_mode) if not isinstance(guard_mode, GuardMode) else guard_mode
+    """Admit writable paths. ``guard_mode=None`` → :func:`env_guard_mode` (default REFUSE)."""
+    if guard_mode is None:
+        gm = env_guard_mode()
+    elif isinstance(guard_mode, GuardMode):
+        gm = guard_mode
+    else:
+        gm = GuardMode(guard_mode)
     ledger = OwnershipLedger(ledger_path, task_state_dir=task_state_dir, mode=gm)
     return ledger.admit(
         task_id=task_id,

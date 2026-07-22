@@ -2452,8 +2452,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 guard_mode=guard_mode,
             )
         except Exception as own_exc:
-            # WARN (default): never crash dispatch on ledger I/O/lock errors.
-            # REFUSE: fail closed so conflicts cannot silently proceed.
+            # WARN (opt-in via DELEGATE_OWNERSHIP_MODE=warn): never crash on ledger I/O.
+            # REFUSE (default after #5645): fail closed so conflicts cannot proceed.
             print(
                 f"⚠️  write-path ownership: ledger error: {own_exc}",
                 file=sys.stderr,

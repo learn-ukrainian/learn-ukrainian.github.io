@@ -493,3 +493,45 @@ def test_env_guard_mode_warn_opt_in(monkeypatch):
 def test_env_guard_mode_unknown_fails_closed_to_refuse(monkeypatch):
     monkeypatch.setenv("DELEGATE_OWNERSHIP_MODE", "maybe")
     assert env_guard_mode() is GuardMode.REFUSE
+
+
+def test_admit_write_paths_default_follows_env_refuse(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Library default is env_guard_mode(), not hardcoded WARN (CF #5662 F001)."""
+    monkeypatch.delenv("DELEGATE_OWNERSHIP_MODE", raising=False)
+    ledger = tmp_path / "own.sqlite3"
+    state_dir = tmp_path / "tasks"
+    state_dir.mkdir()
+    pid = os.getpid()
+    (state_dir / "h.json").write_text(
+        json.dumps({"status": "running", "pid": pid}), encoding="utf-8"
+    )
+    admit_write_paths(
+        task_id="h",
+        mode="workspace-write",
+        owned_paths=["same.py"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+    )
+    # No guard_mode kwarg → must refuse on conflict (default REFUSE).
+    refused = admit_write_paths(
+        task_id="c",
+        mode="workspace-write",
+        owned_paths=["same.py"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+    )
+    assert refused.mode is GuardMode.REFUSE
+    assert refused.admitted is False
+    assert refused.would_refuse is True
+
+
+def test_ownership_ledger_default_mode_follows_env(monkeypatch) -> None:
+    monkeypatch.delenv("DELEGATE_OWNERSHIP_MODE", raising=False)
+    assert OwnershipLedger().mode is GuardMode.REFUSE
+    monkeypatch.setenv("DELEGATE_OWNERSHIP_MODE", "warn")
+    assert OwnershipLedger().mode is GuardMode.WARN
+    assert OwnershipLedger(mode=GuardMode.REFUSE).mode is GuardMode.REFUSE
