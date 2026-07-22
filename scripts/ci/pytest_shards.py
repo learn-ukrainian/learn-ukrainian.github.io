@@ -136,6 +136,10 @@ def write_plan(*, shard_id: int, shard_count: int, durations_path: Path | None, 
     durations = load_durations(durations_path)
     shards = assign_shards(nodeids, shard_count, durations)
     assigned = shards[shard_id - 1]
+    if not assigned:
+        raise RuntimeError(
+            f"shard {shard_id} received zero assigned tests out of {len(nodeids)} collected"
+        )
     args_output.parent.mkdir(parents=True, exist_ok=True)
     args_output.write_text("\n".join(assigned) + "\n", encoding="utf-8")
     _write_json(
