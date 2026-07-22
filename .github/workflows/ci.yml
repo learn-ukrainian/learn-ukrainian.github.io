@@ -939,10 +939,8 @@ jobs:
         if: needs.changes.outputs.python == 'true'
         with:
           python-version: '3.12'
-          cache: 'pip'
-          cache-dependency-path: |
-            requirements-lock.txt
-            pyproject.toml
+          # No cache: 'pip' here — sole owner of ~/.cache/pip is the manual
+          # Restore/Save pip wheel cache below (torch CPU pin in key; CF #5663 F001).
 
       - name: Restore Atlas lexicon manifest cache
         if: needs.changes.outputs.python == 'true'
@@ -966,6 +964,7 @@ jobs:
 
       # Pip/torch wheel cache (Sol #5657 follow-up): 4 shards each reinstall torch;
       # caching the download directory cuts multi-GB cold installs on cache hit.
+      # Sole manager of ~/.cache/pip for this job (setup-python cache disabled above).
       - name: Restore pip wheel cache
         id: pip-wheel-cache
         if: needs.changes.outputs.python == 'true'
