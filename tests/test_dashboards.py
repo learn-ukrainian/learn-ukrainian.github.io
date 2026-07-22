@@ -116,6 +116,7 @@ class TestApiEndpoints:
 
     # All endpoints referenced in dashboard HTML files
     EXPECTED_ENDPOINTS: ClassVar[set[str]] = {
+        "/api/agent-monitor/status",
         "/api/artifacts/html",
         "/api/build/events/active",
         "/api/build/events/recent",
