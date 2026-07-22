@@ -986,7 +986,7 @@ jobs:
         if: needs.changes.outputs.python == 'true'
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: .ci/pytest-durations.json
+          path: ci-artifacts/pytest-durations.json
           key: pytest-shard-durations-v1-${{ github.ref_name }}-${{ github.sha }}
           restore-keys: |
             pytest-shard-durations-v1-main-
@@ -994,26 +994,32 @@ jobs:
       - name: Plan deterministic pytest shard
         if: needs.changes.outputs.python == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped')
         run: |
+          mkdir -p ci-artifacts
           .venv/bin/python scripts/ci/pytest_shards.py plan --shard-id "${{ matrix.shard }}" \
-            --durations .ci/pytest-durations.json --output .ci/plan.json --args-output .ci/test-nodeids.txt
+            --durations ci-artifacts/pytest-durations.json --output ci-artifacts/plan.json --args-output ci-artifacts/test-nodeids.txt
 
       - name: Run pytest shard
         if: needs.changes.outputs.python == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && (github.event_name != 'push' || github.ref != 'refs/heads/main')
         run: |
+          # Track failures without aborting mid-step so main-shard artifacts still upload.
+          status=0
           if [ "${{ matrix.shard }}" = "1" ]; then
-            # These cache-invalidating tests need a fresh process before the shard body.
+            # Cache-invalidating tests need a fresh process before the shard body.
             .venv/bin/python -m pytest \
               tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
               tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
-              -v --tb=short --junitxml=.ci/cache-junit.xml
-            # This wall-clock smoke test is serial; xdist would measure runner contention.
-            .venv/bin/python -m pytest \
-              tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
-              -v --tb=short --junitxml=.ci/playground-junit.xml
+              -v --tb=short --junitxml=ci-artifacts/cache-junit.xml || status=$?
           fi
           set -o pipefail
-          .venv/bin/python -m pytest -n auto --junitxml=.ci/main-junit.xml --durations=0 \
-            @.ci/test-nodeids.txt 2>&1 | tee .ci/main.log
+          .venv/bin/python -m pytest -n auto --junitxml=ci-artifacts/main-junit.xml --durations=0 \
+            @ci-artifacts/test-nodeids.txt 2>&1 | tee ci-artifacts/main.log || status=$?
+          if [ "${{ matrix.shard }}" = "1" ]; then
+            # Wall-clock smoke last so an FTS/race flake does not skip the bulk shard body.
+            .venv/bin/python -m pytest \
+              tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
+              -v --tb=short --junitxml=ci-artifacts/playground-junit.xml || status=$?
+          fi
+          exit "$status"
 
       - name: Run tests with coverage
         if: needs.changes.outputs.python == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -1024,26 +1030,30 @@ jobs:
           # coverage would break CI, so we nudge the minimum and track the
           # trend. Re-measure after each new batch of tests and raise the floor.
           #
+          status=0
           if [ "${{ matrix.shard }}" = "1" ]; then
             .venv/bin/python -m pytest \
               tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
               tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
-              -v --tb=short --junitxml=.ci/cache-junit.xml --cov=scripts --cov-append --cov-report=
+              -v --tb=short --junitxml=ci-artifacts/cache-junit.xml --cov=scripts --cov-append --cov-report= || status=$?
+          fi
+          set -o pipefail
+          .venv/bin/python -m pytest -n auto --junitxml=ci-artifacts/main-junit.xml --durations=0 \
+            --cov=scripts --cov-append --cov-report= @ci-artifacts/test-nodeids.txt 2>&1 | tee ci-artifacts/main.log || status=$?
+          if [ "${{ matrix.shard }}" = "1" ]; then
             # Coverage instrumentation skews this endpoint latency budget, so it stays outside coverage.
             .venv/bin/python -m pytest \
               tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
-              -v --tb=short --junitxml=.ci/playground-junit.xml
+              -v --tb=short --junitxml=ci-artifacts/playground-junit.xml || status=$?
           fi
-          set -o pipefail
-          .venv/bin/python -m pytest -n auto --junitxml=.ci/main-junit.xml --durations=0 \
-            --cov=scripts --cov-append --cov-report= @.ci/test-nodeids.txt 2>&1 | tee .ci/main.log
+          exit "$status"
 
       - name: Upload pytest shard plan and results
         if: always() && needs.changes.outputs.python == 'true' && (needs.lint.result == 'success' || needs.lint.result == 'skipped')
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: pytest-shard-${{ matrix.shard }}
-          path: .ci/
+          path: ci-artifacts/
           if-no-files-found: error
 
       - name: Save coverage data for aggregation
@@ -1121,13 +1131,13 @@ jobs:
             --log pytest-artifacts/pytest-shard-2/main.log \
             --log pytest-artifacts/pytest-shard-3/main.log \
             --log pytest-artifacts/pytest-shard-4/main.log \
-            --output .ci/pytest-durations.json
+            --output ci-artifacts/pytest-durations.json
 
       - name: Save next-run duration estimates
         if: always() && needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: .ci/pytest-durations.json
+          path: ci-artifacts/pytest-durations.json
           key: pytest-shard-durations-v1-main-${{ github.sha }}
 
       - name: Upload combined coverage

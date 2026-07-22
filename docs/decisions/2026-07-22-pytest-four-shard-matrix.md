@@ -16,7 +16,7 @@ for the first run and immediately publishes measured durations for the next
 run. The fresh-process cache-invalidating pair and the playground wall-clock
 smoke remain serial on shard 1.
 
-Every shard uploads its planned node IDs and JUnit result. The aggregate job
+Every shard uploads its planned node IDs and JUnit result from non-hidden `ci-artifacts/` (not `.ci/`, which upload-artifact skips by default). The aggregate job
 rejects missing artifacts, duplicate node IDs, an incomplete partition, or a
 JUnit execution count that differs from its plan. On `push` to `main`, it also
 combines the four coverage data files and enforces `--cov-fail-under=35` once.
