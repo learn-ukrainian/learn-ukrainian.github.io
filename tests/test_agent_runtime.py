@@ -2341,7 +2341,7 @@ def test_invoke_gemini_runtime_reports_actual_fallback_model(tmp_path):
     assert result.model == "gemini-3-flash-preview"
     assert result.usage_record["model"] == "gemini-3-flash-preview"
     attempted_models = [call.args[0][2] for call in mock_popen.call_args_list]
-    assert attempted_models == ["gemini-3.1-pro-preview", "gemini-3-flash-preview"]
+    assert attempted_models == ["gemini-3.1-pro-high", "gemini-3-flash-preview"]
 
 
 def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
@@ -2476,7 +2476,7 @@ def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
 
     written = mock_write.call_args.args[0]
     assert written["outcome"] == "hard_timeout"
-    assert written["model"] == "gemini-3.1-pro-preview"
+    assert written["model"] == "gemini-3.1-pro-high"
 
 
 # ---------------------------------------------------------------------------
@@ -3311,7 +3311,7 @@ def test_gemini_liveness_paths_missing_dir_returns_empty(tmp_path, monkeypatch):
 def test_claude_adapter_attributes():
     adapter = ClaudeAdapter()
     assert adapter.name == "claude"
-    assert adapter.default_model == "claude-opus-4-8"
+    assert adapter.default_model == "claude-sonnet-5"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 
