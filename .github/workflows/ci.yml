@@ -977,6 +977,9 @@ jobs:
             torch==2.13.0 torchvision==0.28.0
           .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
 
+      # Duration cache still collected post-run for a future single-planner LPT job.
+      # Matrix workers must NOT feed divergent prefix-matched restores into plan:
+      # that produced "assigned to more than one shard" at verify (#5664).
       - name: Restore latest pytest duration estimates
         if: needs.changes.outputs.python == 'true'
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -990,8 +993,10 @@ jobs:
         if: needs.changes.outputs.python == 'true' && !cancelled()
         run: |
           mkdir -p ci-artifacts
+          # Default equal-weight partition (no --use-lpt-durations). Safe under
+          # concurrent matrix workers even when duration cache restores diverge.
           .venv/bin/python scripts/ci/pytest_shards.py plan --shard-id "${{ matrix.shard }}" \
-            --durations ci-artifacts/pytest-durations.json --output ci-artifacts/plan.json --args-output ci-artifacts/test-nodeids.txt
+            --output ci-artifacts/plan.json --args-output ci-artifacts/test-nodeids.txt
 
       - name: Run pytest shard
         if: needs.changes.outputs.python == 'true' && !cancelled() && (github.event_name != 'push' || github.ref != 'refs/heads/main')
