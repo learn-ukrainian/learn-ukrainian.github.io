@@ -114,8 +114,16 @@ def normalize_claim(raw: str) -> PathClaim:
     if norm in {"", "."}:
         return PathClaim(raw=raw, kind=ClaimKind.UNKNOWN, norm=text)
 
-    # Reject absolute / parent escapes as unknown (not comparable safely).
-    if norm.startswith("/") or norm.startswith("../") or norm == ".." or "/../" in f"/{norm}/":
+    # Reject absolute / parent escapes / drive-qualified paths as unknown
+    # (not comparable safely as repo-relative claims).
+    drive_qualified = len(norm) >= 2 and norm[0].isalpha() and norm[1] == ":"
+    if (
+        norm.startswith("/")
+        or norm.startswith("../")
+        or norm == ".."
+        or "/../" in f"/{norm}/"
+        or drive_qualified
+    ):
         return PathClaim(raw=raw, kind=ClaimKind.UNKNOWN, norm=text)
 
     if is_double_star or is_subtree_slash:
