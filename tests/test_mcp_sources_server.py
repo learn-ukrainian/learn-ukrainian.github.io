@@ -13,6 +13,7 @@ Covers:
 """
 
 import asyncio
+import importlib.util
 import inspect
 import json
 import sys
@@ -21,16 +22,16 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-# Add the server directory to path so we can import it
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources"))
+SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 
 
 @pytest.fixture
 def server_module():
     """Import the server module fresh."""
-    if "server" in sys.modules:
-        del sys.modules["server"]
-    import server as srv
+    spec = importlib.util.spec_from_file_location("sources_server", SOURCES_SERVER_PATH)
+    srv = importlib.util.module_from_spec(spec)
+    sys.modules["sources_server"] = srv
+    spec.loader.exec_module(srv)
     return srv
 
 
