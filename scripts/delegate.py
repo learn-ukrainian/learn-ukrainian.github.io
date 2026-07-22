@@ -2401,6 +2401,35 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print(dirty_primary_error, file=sys.stderr)
         return 2
 
+    # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
+    # Runs before task-state write / worktree / branch side effects so a refuse
+    # leaves no residue. Read-only modes are exempt inside the helper.
+    try:
+        from scripts.delegate_ownership import admit_write_paths, env_guard_mode
+    except ImportError:  # pragma: no cover - flat script path
+        from delegate_ownership import admit_write_paths, env_guard_mode  # type: ignore
+
+    ownership = admit_write_paths(
+        task_id=task_id,
+        mode=str(args.mode),
+        owned_paths=getattr(args, "research_owned_path", None),
+        allow_path_overlap=getattr(args, "allow_path_overlap", None),
+        pid=os.getpid(),
+        guard_mode=env_guard_mode(),
+    )
+    if ownership.would_refuse or ownership.override_reason:
+        print(
+            f"⚠️  write-path ownership: {ownership.reason} "
+            f"(conflicts={len(ownership.conflicts)})",
+            file=sys.stderr,
+        )
+    if not ownership.admitted:
+        print(
+            f"❌ write-path ownership refused for task_id={task_id!r}: {ownership.reason}",
+            file=sys.stderr,
+        )
+        return 2
+
     # Refuse to clobber a task that's still alive — whether it's in
     # "running" (worker up and executing) OR "spawning" (worker created
     # but not yet past its own state-update step). Without the
@@ -3604,7 +3633,18 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="GLOB",
         help=(
             "ADR-011 P3 research context: an owned/changed path for the task. "
-            "Repeatable. Matched against each record's owned_paths globs."
+            "Repeatable. Matched against each record's owned_paths globs. "
+            "Also feeds the writable-path admission guard (#5643)."
+        ),
+    )
+    d.add_argument(
+        "--allow-path-overlap",
+        default=None,
+        metavar="REASON",
+        help=(
+            "Explicitly admit a write-capable dispatch that intersects another "
+            "active claim. Records task, conflicts, reason, and caller in the "
+            "ownership ledger. Required text reason; empty string is ignored."
         ),
     )
     d.set_defaults(func=cmd_dispatch)
