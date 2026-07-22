@@ -319,15 +319,15 @@ if [ -n "${SESSION_EPIC:-}" ]; then
   case "${SESSION_EPIC}" in
     atlas)
       echo "  canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas"
-      echo "  board:  .claude/atlas-epic/TAKEOVER-PROMPT.md + INTERIM-DRIVER-HANDOFF.md (fallback while plane off)"
+      echo "  board:  .claude/atlas-epic/TAKEOVER-PROMPT.md + INTERIM-DRIVER-HANDOFF.md (diary authoritative every plane mode)"
       ;;
     harness|infra)
       echo "  canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic harness"
-      echo "  board:  .claude/harness-epic/*-DRIVER-HANDOFF.md + docs/session-state/ (fallback while plane off)"
+      echo "  board:  .claude/harness-epic/*-DRIVER-HANDOFF.md + docs/session-state/ (diary authoritative every plane mode)"
       ;;
     *)
       echo "  canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic ${SESSION_EPIC}"
-      echo "  board:  .claude/${SESSION_EPIC}-epic/ (fallback while plane off)"
+      echo "  board:  .claude/${SESSION_EPIC}-epic/ (diary authoritative every plane mode)"
       ;;
   esac
   echo "  writes: worktrees only · end on canary FAIL-HANDOFF (docs/runbooks/grok-session-canary.md)"
@@ -373,11 +373,11 @@ if [ -n "${SESSION_EPIC:-}" ] && [ "$_has_prompt" -eq 0 ]; then
   if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
     _fc="$(fleet_comms_cold_clause)"
   else
-    _fc="Fleet-comms (#5512) mid-cutover: obey agents_extensions/shared/rules/fleet-comms-coordination.md; plane-status then review-pr; file dual-write while plane off."
+    _fc="Fleet-comms (#5512) mid-cutover: obey agents_extensions/shared/rules/fleet-comms-coordination.md; plane-status then review-pr; file dual-write stays authoritative in every plane mode (dual_write=shadow/mirror)."
   fi
   case "${SESSION_EPIC}" in
     atlas|practice|practice-hub)
-      _cold_prompt="You are the interim ATLAS lane driver (stream ${SESSION_STREAM_ID:-epic:4387}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) read/execute .claude/atlas-epic/TAKEOVER-PROMPT.md — tail stream, reconcile board, dual-write INTERIM-DRIVER-HANDOFF.md while plane is off; (2) mint the session canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas --stream ${SESSION_STREAM_ID:-epic:4387} (docs/runbooks/grok-session-canary.md). ${_fc} Drive the next unblocked action without a menu. End session on canary FAIL-HANDOFF (<8/10), not on compact count; after any auto-compact re-score from memory then AUTO-HYDRATE on PASS — never ask the operator to restart. Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the interim ATLAS lane driver (stream ${SESSION_STREAM_ID:-epic:4387}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) read/execute .claude/atlas-epic/TAKEOVER-PROMPT.md — tail stream, reconcile board, dual-write INTERIM-DRIVER-HANDOFF.md in every plane mode; (2) mint the session canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas --stream ${SESSION_STREAM_ID:-epic:4387} (docs/runbooks/grok-session-canary.md). ${_fc} Drive the next unblocked action without a menu. End session on canary FAIL-HANDOFF (<8/10), not on compact count; after any auto-compact re-score from memory then AUTO-HYDRATE on PASS — never ask the operator to restart. Primary checkout is read-only — writes via worktrees."
       ;;
     harness|infra)
       _cold_prompt="You are the INFRA / harness lane driver (stream ${SESSION_STREAM_ID:-epic:4707}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start from the infra handoff dual-write (.claude/harness-epic/*-DRIVER-HANDOFF.md) and stream tail; mint canary (.venv/bin/python -m scripts.session_canary.grok_lane mint --epic harness); reconcile in-flight work; drive the next unblocked infra action. ${_fc} End on canary FAIL-HANDOFF not compact count (docs/runbooks/grok-session-canary.md). After auto-compact you own recovery: score canary FROM MEMORY then read the AUTO-HYDRATE capsule score prints on PASS — never ask the operator to restart or re-load the diary. Do not claim curriculum content lanes. Primary checkout is read-only — writes via worktrees."

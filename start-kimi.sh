@@ -320,12 +320,12 @@ if [ -n "${SESSION_EPIC:-}" ]; then
   case "${SESSION_EPIC}" in
     atlas)
       echo "  Stream SSOT: ${SESSION_STREAM_ID:-epic:4387}  (session_streams tail --stream ${SESSION_STREAM_ID:-epic:4387})"
-      echo "  File dual-write (fallback while plane off): .claude/atlas-epic/INTERIM-DRIVER-HANDOFF.md"
+      echo "  File dual-write (diary authoritative every plane mode): .claude/atlas-epic/INTERIM-DRIVER-HANDOFF.md"
       echo "  TAKEOVER: .claude/atlas-epic/TAKEOVER-PROMPT.md"
       ;;
     harness|infra)
       echo "  Stream: ${SESSION_STREAM_ID:-epic:4707}"
-      echo "  Infra diary (fallback while plane off): .claude/harness-epic/*-DRIVER-HANDOFF.md"
+      echo "  Infra diary (diary authoritative every plane mode): .claude/harness-epic/*-DRIVER-HANDOFF.md"
       ;;
     *)
       echo "  Open stream: SESSION_STREAM_ID=${SESSION_STREAM_ID:-unset}"
@@ -342,11 +342,11 @@ if [ -n "${SESSION_EPIC:-}" ] && [ "${#_forward[@]}" -eq 0 ]; then
   if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
     _fc="$(fleet_comms_cold_clause)"
   else
-    _fc="Fleet-comms (#5512): obey agents_extensions/shared/rules/fleet-comms-coordination.md; plane-status + review-pr; file dual-write while plane off."
+    _fc="Fleet-comms (#5512): obey agents_extensions/shared/rules/fleet-comms-coordination.md; plane-status + review-pr; file dual-write stays authoritative in every plane mode (dual_write=shadow/mirror)."
   fi
   case "${SESSION_EPIC}" in
     atlas|practice|practice-hub)
-      _cold_prompt="You are the interim ATLAS lane driver (stream ${SESSION_STREAM_ID:-epic:4387}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) read/execute .claude/atlas-epic/TAKEOVER-PROMPT.md — tail stream, reconcile board, dual-write INTERIM-DRIVER-HANDOFF.md while plane is off; (2) load the session stream digest and mint a canary if one is required. ${_fc} Drive the next unblocked action without a menu. End on canary FAIL-HANDOFF (<8/10). Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the interim ATLAS lane driver (stream ${SESSION_STREAM_ID:-epic:4387}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) read/execute .claude/atlas-epic/TAKEOVER-PROMPT.md — tail stream, reconcile board, dual-write INTERIM-DRIVER-HANDOFF.md in every plane mode; (2) load the session stream digest and mint a canary if one is required. ${_fc} Drive the next unblocked action without a menu. End on canary FAIL-HANDOFF (<8/10). Primary checkout is read-only — writes via worktrees."
       ;;
     harness|infra)
       _cold_prompt="You are the INFRA / harness lane driver (stream ${SESSION_STREAM_ID:-epic:4707}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start from the infra handoff dual-write and stream tail; reconcile in-flight work; drive the next unblocked infra action. ${_fc} End on canary FAIL-HANDOFF. Do not claim curriculum content lanes. Primary checkout is read-only — writes via worktrees."

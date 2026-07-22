@@ -358,7 +358,7 @@ if [ -n "${SESSION_EPIC:-}" ] && [ "$_has_prompt" -eq 0 ]; then
   if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
     _fc="$(fleet_comms_cold_clause)"
   else
-    _fc="Fleet-comms (#5512): obey agents_extensions/shared/rules/fleet-comms-coordination.md; plane-status + review-pr; file dual-write while plane off."
+    _fc="Fleet-comms (#5512): obey agents_extensions/shared/rules/fleet-comms-coordination.md; plane-status + review-pr; file dual-write stays authoritative in every plane mode (dual_write=shadow/mirror)."
   fi
   _cold_prompt="You are the Gemini ${SESSION_EPIC} lane orchestrator (stream ${SESSION_STREAM_ID:-unset}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) Check stream state in ${_handoff_path} or docs/session-state/; (2) Run 'codexbar usage' to monitor fleet quota/limits; (3) Assess tasks, pick the optimal model/agent from the capability matrix (AGENTS.md, model-assignment.md via /api/rules); (4) Dispatch worker sub-tasks via worktrees using 'scripts/delegate.py dispatch ...'; (5) Obey advisor approval gate (Fable / Sol) for architecture/process changes; (6) Enforce independent cross-family review via review-pr / publish-review-verdict before PR merges. ${_fc} Primary checkout is read-only — all edits belong in worktrees."
   echo "Cold-start: injecting epic orchestrator auto-continue prompt."
