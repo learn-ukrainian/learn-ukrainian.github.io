@@ -34,7 +34,7 @@ REVIEWER_AUTO = "auto"
 # Practical formal CF pins — keep in sync with model_catalog formal_cf_defaults.
 FORMAL_CF_MODEL: dict[str, str] = {
     REVIEWER_CODEX: "gpt-5.6-terra",
-    REVIEWER_CLAUDE: "claude-sonnet-5",
+    REVIEWER_CLAUDE: "claude-fable-5",
     REVIEWER_GLM: "glm-5.2",
 }
 FORMAL_CF_EFFORT: dict[str, str] = {
@@ -203,7 +203,7 @@ def register_review_pr_parser(subparsers: Any) -> None:
             "Canonical formal code-review entrypoint. Builds a thin pointer-only "
             "prompt with a mandatory read-only contract. Default transport is "
             "Codex sealed --review --pr with model gpt-5.6-terra @ high. "
-            "Claude path pins claude-sonnet-5 @ high. When Claude is unavailable, "
+            "Claude path pins claude-fable-5 @ high. When Claude is unavailable, "
             "use --reviewer glm (LOCAL-ONLY) or --reviewer auto with "
             "--claude-available false."
         ),
@@ -219,7 +219,7 @@ def register_review_pr_parser(subparsers: Any) -> None:
         default=None,
         help=(
             "Override formal CF model pin "
-            "(default: codex→gpt-5.6-terra, claude→claude-sonnet-5, glm→glm-5.2; "
+            "(default: codex→gpt-5.6-terra, claude→claude-fable-5, glm→glm-5.2; "
             "authority escalate: gpt-5.6-sol / claude-fable-5)"
         ),
     )
