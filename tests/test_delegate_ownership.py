@@ -12,6 +12,7 @@ from scripts.guardrails.delegate_ownership import (
     OwnershipLedger,
     admit_write_paths,
     claims_conflict,
+    env_guard_mode,
     normalize_claim,
 )
 
@@ -477,3 +478,13 @@ def test_same_task_id_live_pid_does_not_replace_claims(tmp_path: Path, monkeypat
     )
     assert retry.admitted is True
     assert retry.would_refuse is False
+
+
+def test_env_guard_mode_defaults_to_refuse(monkeypatch):
+    monkeypatch.delenv("DELEGATE_OWNERSHIP_MODE", raising=False)
+    assert env_guard_mode() is GuardMode.REFUSE
+
+
+def test_env_guard_mode_warn_opt_in(monkeypatch):
+    monkeypatch.setenv("DELEGATE_OWNERSHIP_MODE", "warn")
+    assert env_guard_mode() is GuardMode.WARN

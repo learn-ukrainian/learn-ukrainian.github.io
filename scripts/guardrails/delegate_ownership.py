@@ -3,7 +3,8 @@
 
 Local single-host ledger (`batch_state/tasks/write-ownership.sqlite3`) with
 ``BEGIN IMMEDIATE`` atomic reconcile → compare → reserve. Read-only modes are
-exempt. WARN mode (default) admits on conflict but records would-refuse;
+exempt. REFUSE mode (default after #5645 soak) blocks conflicting writable admits;
+WARN mode admits on conflict but records would-refuse;
 REFUSE mode is armed later (#5645).
 
 Claims come from normalized ``--research-owned-path`` values but are stored
@@ -586,11 +587,21 @@ def admit_write_paths(
 
 
 def env_guard_mode() -> GuardMode:
-    """Resolve guard mode from env (default WARN). REFUSE only after soak (#5645)."""
-    raw = (os.environ.get("DELEGATE_OWNERSHIP_MODE") or "warn").strip().lower()
-    if raw in {"refuse", "deny", "fail"}:
+    """Resolve guard mode from env.
+
+    Default **REFUSE** after soak (#5645, receipt batch_state/fleet-comms/ownership-soak-5645.json).
+    Solo dispatch with no owned-path claims still admits (sentinel reservation; refuse only when
+    disjointness is unprovable vs an **active** writer, or concrete paths conflict).
+
+    Set ``DELEGATE_OWNERSHIP_MODE=warn`` to restore pre-soak admit-with-warn behavior.
+    """
+    raw = (os.environ.get("DELEGATE_OWNERSHIP_MODE") or "refuse").strip().lower()
+    if raw in {"warn", "warning", "soft"}:
+        return GuardMode.WARN
+    if raw in {"refuse", "deny", "fail", ""}:
         return GuardMode.REFUSE
-    return GuardMode.WARN
+    # Unknown values fail closed to REFUSE (do not silently soft-admit).
+    return GuardMode.REFUSE
 
 
 def update_write_claim_pid(
