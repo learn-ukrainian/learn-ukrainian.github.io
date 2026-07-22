@@ -300,6 +300,18 @@ if [ -n "${_selected_epic:-}" ] && command -v claim_session_supervisor_env >/dev
         unset _launcher_task_id _launcher_instance_id _selected_stream
     fi
 fi
+
+# Fleet-comms dual-aware banner (Claude loads /api/rules for full doctrine; cold-prompt is SessionStart).
+if [ -n "${SESSION_EPIC:-}" ] && [ -f "$PROJECT_DIR/scripts/lib/fleet_comms_cold_start.sh" ]; then
+    # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
+    source "$PROJECT_DIR/scripts/lib/fleet_comms_cold_start.sh"
+    if command -v fleet_comms_resolve_plane_mode >/dev/null 2>&1; then
+        export FLEET_COMMS_PLANE_MODE="$(fleet_comms_resolve_plane_mode)"
+    fi
+    if command -v fleet_comms_print_banner_line >/dev/null 2>&1; then
+        fleet_comms_print_banner_line
+    fi
+fi
 unset _selected_epic
 
 echo "Launching Claude Code (native install)..."

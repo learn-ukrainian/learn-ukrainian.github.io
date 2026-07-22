@@ -100,6 +100,10 @@ def _build_fake_project(tmp_path: Path) -> tuple[Path, Path]:
         (_REPO_ROOT / "scripts" / "lib" / "handoff_identity.sh").read_text(encoding="utf-8"),
         encoding="utf-8",
     )
+    (lib_dir / "fleet_comms_cold_start.sh").write_text(
+        (_REPO_ROOT / "scripts" / "lib" / "fleet_comms_cold_start.sh").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
     (guard_dir / "assert_primary_on_main.py").write_text("#!/usr/bin/env python3\nraise SystemExit(0)\n")
     (guard_dir / "assert_primary_on_main.py").chmod(0o755)
     audit_dir = project / "scripts" / "audit"

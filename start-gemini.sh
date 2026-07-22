@@ -232,6 +232,10 @@ if [ -f "$PROJECT_DIR/scripts/lib/session_supervisor.sh" ]; then
   # shellcheck source=scripts/lib/session_supervisor.sh
   source "$PROJECT_DIR/scripts/lib/session_supervisor.sh"
 fi
+if [ -f "$PROJECT_DIR/scripts/lib/fleet_comms_cold_start.sh" ]; then
+  # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
+  source "$PROJECT_DIR/scripts/lib/fleet_comms_cold_start.sh"
+fi
 
 # Validate epic name when the helper is present.
 if command -v epic_name_valid >/dev/null 2>&1 && [ -n "$_selected_epic" ]; then
@@ -338,15 +342,28 @@ for a in "${_forward[@]+"${_forward[@]}"}"; do
 done
 
 if [ -n "${SESSION_EPIC:-}" ] && [ "$_has_prompt" -eq 0 ]; then
+  if command -v fleet_comms_resolve_plane_mode >/dev/null 2>&1; then
+    export FLEET_COMMS_PLANE_MODE="$(fleet_comms_resolve_plane_mode)"
+  else
+    export FLEET_COMMS_PLANE_MODE="off"
+  fi
+  if command -v fleet_comms_print_banner_line >/dev/null 2>&1; then
+    fleet_comms_print_banner_line
+  fi
   _handoff_path=".agent/${SESSION_HANDOFF_AGENT:-gemini-${SESSION_EPIC}}-thread-handoff.md"
-  _cold_prompt="You are the Gemini ${SESSION_EPIC} lane orchestrator (stream ${SESSION_STREAM_ID:-unset}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) Check stream state in ${_handoff_path} or docs/session-state/; (2) Run 'codexbar usage' to monitor fleet quota/limits; (3) Assess tasks, pick the optimal model/agent from the capability matrix (AGENTS.md, model-assignment.md); (4) Dispatch worker sub-tasks via worktrees using 'scripts/delegate.py dispatch ...'; (5) Obey advisor approval gate (Fable / Sol) for architecture/process changes; (6) Enforce independent cross-family review before PR merges. Primary checkout is read-only — all edits belong in worktrees."
+  if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
+    _fc="$(fleet_comms_cold_clause)"
+  else
+    _fc="Fleet-comms (#5512): obey agents_extensions/shared/rules/fleet-comms-coordination.md; plane-status + review-pr; file dual-write while plane off."
+  fi
+  _cold_prompt="You are the Gemini ${SESSION_EPIC} lane orchestrator (stream ${SESSION_STREAM_ID:-unset}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) Check stream state in ${_handoff_path} or docs/session-state/; (2) Run 'codexbar usage' to monitor fleet quota/limits; (3) Assess tasks, pick the optimal model/agent from the capability matrix (AGENTS.md, model-assignment.md via /api/rules); (4) Dispatch worker sub-tasks via worktrees using 'scripts/delegate.py dispatch ...'; (5) Obey advisor approval gate (Fable / Sol) for architecture/process changes; (6) Enforce independent cross-family review via review-pr / publish-review-verdict before PR merges. ${_fc} Primary checkout is read-only — all edits belong in worktrees."
   echo "Cold-start: injecting epic orchestrator auto-continue prompt."
   if [ "$_has_print" -eq 1 ]; then
     _forward+=("$_cold_prompt")
   else
     _defaults+=("-i" "$_cold_prompt")
   fi
-  unset _cold_prompt
+  unset _cold_prompt _fc
 elif [ "$_has_prompt" -eq 1 ] && [ "$_has_print" -eq 0 ]; then
   # If a positional prompt is given for interactive mode, pass it via -i
   _forward_without_prompt=()

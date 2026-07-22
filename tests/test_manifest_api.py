@@ -36,6 +36,7 @@ def test_rule_sources_includes_all_unscoped_files():
         "agents_extensions/shared/rules/critical-rules.md",
         "agents_extensions/shared/rules/non-negotiable-rules.md",
         "agents_extensions/shared/rules/workflow.md",
+        "agents_extensions/shared/rules/fleet-comms-coordination.md",
         "agents_extensions/shared/rules/delegate-must-use-worktree.md",
         "agents_extensions/shared/rules/cli-help-standard.md",
         "agents_extensions/shared/rules/model-assignment.md",
@@ -47,6 +48,17 @@ def test_rule_sources_includes_all_unscoped_files():
     assert rules_router.RULE_SOURCES.index(
         "agents_extensions/shared/rules/model-assignment.md"
     ) < rules_router.RULE_SOURCES.index("docs/best-practices/fleet-role-scorecard.md")
+    # Fleet-comms mid-cutover rule sits with operational workflow, before model table.
+    assert rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/workflow.md"
+    ) < rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/fleet-comms-coordination.md"
+    )
+    assert rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/fleet-comms-coordination.md"
+    ) < rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/model-assignment.md"
+    )
 
 
 def test_rules_live_assembly_includes_fleet_scorecard():
@@ -61,6 +73,20 @@ def test_rules_live_assembly_includes_fleet_scorecard():
     assert "Fleet role scorecard" in md
     assert "Fleet topology" in md or "orchestrator" in md.lower()
     assert body["hash"] == hashlib.sha256(md.encode("utf-8")).hexdigest()
+
+
+def test_rules_live_assembly_includes_fleet_comms_coordination():
+    """Standalone TUI/UI drivers must receive dual-aware fleet-comms mid-cutover SSOT."""
+    resp = client.get("/api/rules?format=json")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert "agents_extensions/shared/rules/fleet-comms-coordination.md" in body["sources"]
+    md = body["markdown"]
+    assert "Fleet-comms coordination" in md or "fleet-comms coordination" in md.lower()
+    assert "plane-status" in md
+    assert "review-pr" in md
+    assert "dual_write" in md or "dual-write" in md
+    assert "do not invent a competing design" in md.lower() or "competing design" in md
 
 
 def test_rules_markdown_default(monkeypatch, tmp_path):

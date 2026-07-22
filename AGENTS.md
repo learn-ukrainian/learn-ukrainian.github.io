@@ -24,6 +24,15 @@ gates bind · **12** **Advisor/operator approval gate**: no architecture, layout
 process decisions without present-tense **operator** or designated **advisor** approval
 (current advisors: **Fable**, **Sol** — roster may change; check `/api/rules`).
 
+### Fleet-comms mid-cutover (binding for standalone TUI/UI drivers; #5512)
+
+Full text: `agents_extensions/shared/rules/fleet-comms-coordination.md` (also in
+`GET /api/rules`). Digest: prefer `python -m scripts.fleet_comms plane-status` +
+`review-pr` / `publish-review-verdict` for topology and formal CF; while plane
+`mode=off`, **file dual-write remains authoritative** — do not invent a competing
+design or flip dual_write / stream authority / `formal_review_eligible` without
+operator/advisor GO. Stream leases are already claimed by launchers.
+
 ---
 
 ## Project Research Registry — Orchestrator Duty (binding)
