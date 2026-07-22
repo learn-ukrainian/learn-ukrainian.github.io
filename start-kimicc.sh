@@ -73,6 +73,13 @@ Options:
                     infra-orchestrator when no --epic is given (an epic already
                     implies the lane identity); explicit --agent wins
   -h, --help        Show this help
+  -- [CLAUDE_ARGS...]
+                    Everything after -- is forwarded verbatim to Claude Code,
+                    even args that collide with launcher flags above
+                    (e.g. -- --help shows Claude Code's help, not this one).
+                    Unrecognized args BEFORE -- are already forwarded too;
+                    -- exists for the colliding ones. A forwarded --model is
+                    still rejected: KimiCC owns the lead model.
 
 Environment:
   KIMICC_MODEL / KIMICC_ENDPOINT     Defaults for --model / --endpoint
@@ -101,6 +108,7 @@ Examples:
   ./start-kimicc.sh --model k2.7-highspeed --epic harness
   MOONSHOT_API_KEY=<your-key> ./start-kimicc.sh --model k3
   ./start-kimicc.sh --endpoint coding --isolate-config   # subscription, long session
+  ./start-kimicc.sh -- --verbose --help                  # flags for Claude Code itself
 
 Headless / native Kimi (not this launcher):
   scripts/delegate.py dispatch --agent kimi --model k3 …
@@ -196,6 +204,15 @@ resolve_auth_token() {
 
 while (($#)); do
   case "$1" in
+    --)
+      # Explicit passthrough: forward the rest verbatim (still subject to the
+      # forwarded --model rejection below — KimiCC owns the lead model).
+      shift
+      while (($#)); do
+        FORWARD_ARGS+=("$1")
+        shift
+      done
+      ;;
     --model)
       if (($# < 2)); then
         echo "Error: --model requires k3, k2.7, or k2.7-highspeed." >&2

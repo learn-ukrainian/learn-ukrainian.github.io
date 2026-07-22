@@ -8,6 +8,10 @@
 #   --model <id>                      Kimi model: k3 (default), k2.7, k2.7-highspeed
 #                                     (mapped to the kimi-code/* aliases in config.toml)
 #   --help-launcher                   This help (does not start kimi)
+#   -- <kimi-cli flags...>            Everything after -- is passed verbatim to
+#                                     the kimi CLI (e.g. -- -y, -- --plan).
+#                                     Unrecognized args BEFORE -- are joined
+#                                     into the prompt text, as before.
 #
 # Environment exported for hooks / dual-write / session streams:
 #   SESSION_EPIC              from --epic
@@ -31,6 +35,8 @@
 #   ./start-kimi.sh --epic atlas --stream epic:4387 --model k3
 #   ./start-kimi.sh --epic harness "continue the infra queue"
 #   ./start-kimi.sh --model k2.7 "review the open PR"
+#   ./start-kimi.sh -- -y                           # interactive TUI with --yolo
+#   ./start-kimi.sh "triage the queue" -- -y --plan # headless prompt + CLI flags
 
 set -euo pipefail
 
@@ -54,7 +60,7 @@ if git -C "$PROJECT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
 fi
 
 usage_launcher() {
-  sed -n '2,33p' "$SCRIPT_PATH" | sed 's/^# \{0,1\}//'
+  sed -n '2,39p' "$SCRIPT_PATH" | sed 's/^# \{0,1\}//'
   exit 0
 }
 # --- locate kimi binary ---
@@ -113,6 +119,10 @@ fi
 
 # --- parse launcher-only flags; build forward argv and prompt ---
 _forward=()
+# CLI passthrough: everything after a literal `--` is forwarded verbatim to the
+# kimi binary (appended last, so user flags can override launcher defaults).
+_cli_flags=()
+_past_ddash=0
 _selected_epic=""
 _selected_stream=""
 _handoff_override=""
@@ -121,6 +131,18 @@ _has_model=0
 _prev=""
 
 for arg in "$@"; do
+  if [ "$_past_ddash" = "1" ]; then
+    _cli_flags+=("$arg")
+    continue
+  fi
+  if [ "$arg" = "--" ]; then
+    if [ -n "$_prev" ]; then
+      echo "Error: dangling launcher flag '$_prev' without a value before '--'." >&2
+      exit 1
+    fi
+    _past_ddash=1
+    continue
+  fi
   if [ "$_prev" = "--epic" ]; then
     _selected_epic="${arg%.epic}"
     _prev=""
@@ -349,14 +371,14 @@ fi
 echo "Launching Kimi Code..."
 if [ "${#_forward[@]}" -eq 0 ]; then
   # Interactive TUI: no prompt anywhere (bare launch, no --epic). The kimi CLI
-  # rejects an empty -p, so never pass one.
-  exec "$KIMI_BIN" ${_model_args[@]+"${_model_args[@]}"}
+  # rejects an empty -p, so never pass one. Passthrough flags (-- ...) apply.
+  exec "$KIMI_BIN" ${_model_args[@]+"${_model_args[@]}"} ${_cli_flags[@]+"${_cli_flags[@]}"}
 fi
 # Headless one-shot (explicit PROMPT or epic cold-start). stream-json is for
 # machine consumers (piped stdout, e.g. fleet capture); a human on a TTY gets
-# the default plain-text response.
+# the default plain-text response. Passthrough flags come last and win ties.
 _out_args=()
 if [ ! -t 1 ]; then
   _out_args=(--output-format stream-json)
 fi
-exec "$KIMI_BIN" -p "${_forward[*]}" ${_model_args[@]+"${_model_args[@]}"} ${_out_args[@]+"${_out_args[@]}"}
+exec "$KIMI_BIN" -p "${_forward[*]}" ${_model_args[@]+"${_model_args[@]}"} ${_out_args[@]+"${_out_args[@]}"} ${_cli_flags[@]+"${_cli_flags[@]}"}
