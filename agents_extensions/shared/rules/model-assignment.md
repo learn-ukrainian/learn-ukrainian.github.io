@@ -104,14 +104,25 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 - **Orchestrator seats (fleet-comms stream #5512 / #4707)** — any of these may own a cold-start /
   drive-board loop (prioritize → delegate → request CF → merge-in-lane). Do **not** run worker-level
   implementation on the orchestrator seat — delegate it (>50 LOC non-test, mechanical, fixtures, or
-  anything parallelizable → a worker).
+  anything parallelizable → a worker). **Codex is not a driver seat** (user 2026-07-22): it remains a
+  first-class coding lane + sealed formal-CF reviewer; the 272K window is not worth driver rollover
+  overhead. Machine authority: `model_catalog.yaml` → `orchestrator_seats` (lint: #5642).
+
+  Human-readable summary (pins must match the marked projection below):
 
   | Seat | Default (loop) | Escalate (deep) | Notes |
   | --- | --- | --- | --- |
   | **claude** | `claude-sonnet-5` @ high | **`claude-fable-5` @ xhigh** | Same pattern as AGY Flash→Pro |
-  | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | Terra loop; Sol for architecture / hard judgment |
   | **grok** | `grok-4.5` @ high | same SKU (no higher pin yet) | Cursor **explicit** `grok-4.5` = availability fallback, not quality escalate |
   | **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | Flash loop; Pro deep single-shot |
+
+  <!-- fleet-roster-projection:begin orchestrator_seats -->
+  | seat | model_id | effort | escalate_model_id | escalate_effort |
+  | --- | --- | --- | --- | --- |
+  | agy | gemini-3.6-flash-high | high | gemini-3.1-pro-high | high |
+  | claude | claude-sonnet-5 | high | claude-fable-5 | xhigh |
+  | grok | grok-4.5 | high | grok-4.5 | high |
+  <!-- fleet-roster-projection:end orchestrator_seats -->
 
   **Escalate when:** deep single-shot, architecture, hard multi-file judgment, high-stakes synthesis —
   not for routine queue grind. Machine fields: `escalate_model_id` / `escalate_effort` /
@@ -123,11 +134,25 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   `review-pr <N> --model gpt-5.6-sol --effort xhigh` or
   `review-pr <N> --reviewer claude --model claude-fable-5 --effort xhigh`.
 
+  <!-- fleet-roster-projection:begin formal_review_eligible -->
+  | endpoint | formal_review_eligible |
+  | --- | --- |
+  | agy | false |
+  | claude | true |
+  | codex | true |
+  | cursor | false |
+  | gemini | false |
+  | glm-local | false |
+  | grok | false |
+  | kimi | false |
+  <!-- fleet-roster-projection:end formal_review_eligible -->
+
 - **Advisor = `gpt-5.6-sol` @ `xhigh` (on-demand, NOT a standing worker).** Same as codex
-  orchestrator escalate — convene for the hard,
+  formal-CF / authority escalate (coding + sealed review seat — not a driver) — convene for the hard,
   high-judgment calls only: architecture, high-stakes design/spec/ADR review, difficult debugging, final
   synthesis. Consult BEFORE committing a substantive design; do not use for routine work.
-- **Workers = every other lane** — `gpt-5.6-luna`, `cursor`, `kimi`, `deepseek`, `pool` (**Laguna family exact IDs:** default **`laguna-s-2.1`** gen-2 S; light **`laguna-xs-2.1`** gen-2 XS; fallback only **`laguna-m.1`** gen-1 — never invent s2/m2 orthography),
+- **Workers = every other lane** — `gpt-5.6-terra` / `gpt-5.6-luna` (codex coding, not driver),
+  `cursor`, `kimi`, `deepseek`, `pool` (**Laguna family exact IDs:** default **`laguna-s-2.1`** gen-2 S; light **`laguna-xs-2.1`** gen-2 XS; fallback only **`laguna-m.1`** gen-1 — never invent s2/m2 orthography),
   `gemma`, `glm` (LOCAL-ONLY), plus non-orchestrating use of the seats above. They do the build /
   implementation / mechanical / review work. Keep lanes busy; queue rather than idle.
 

@@ -50,6 +50,33 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
   and the codex comms endpoint) — it just no longer owns a driver loop.
 - **Kimi K3** — frontier coder/reviewer + cross-family escalation authority (`max-effort-only` makes a continuous loop costly).
 
+### Machine-authority projection (lint #5642)
+
+Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestrator_seats` and
+`scripts/config/fleet_communications.yaml` → `endpoints[*].formal_review_eligible`. Enforced by
+`.venv/bin/python scripts/lint/lint_fleet_roster.py` (never rewrites prose).
+
+<!-- fleet-roster-projection:begin orchestrator_seats -->
+| seat | model_id | effort | escalate_model_id | escalate_effort |
+| --- | --- | --- | --- | --- |
+| agy | gemini-3.6-flash-high | high | gemini-3.1-pro-high | high |
+| claude | claude-sonnet-5 | high | claude-fable-5 | xhigh |
+| grok | grok-4.5 | high | grok-4.5 | high |
+<!-- fleet-roster-projection:end orchestrator_seats -->
+
+<!-- fleet-roster-projection:begin formal_review_eligible -->
+| endpoint | formal_review_eligible |
+| --- | --- |
+| agy | false |
+| claude | true |
+| codex | true |
+| cursor | false |
+| gemini | false |
+| glm-local | false |
+| grok | false |
+| kimi | false |
+<!-- fleet-roster-projection:end formal_review_eligible -->
+
 ---
 
 ## Why these seats (the "least-bite" logic)
