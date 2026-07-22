@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import os
+import posixpath
 import sqlite3
 import time
 from collections.abc import Sequence
@@ -87,37 +88,40 @@ class AdmissionResult:
         }
 
 
+def _posix_norm(path: str) -> str:
+    """Collapse // and . segments; leave .. rejection to the caller."""
+    cleaned = path.replace("\\", "/")
+    # posixpath.normpath keeps a leading /; for relative paths it collapses // and .
+    return posixpath.normpath(cleaned)
+
+
 def normalize_claim(raw: str) -> PathClaim:
     """Normalize a single --research-owned-path value into a claim."""
     text = (raw or "").strip().replace("\\", "/")
     if not text or text in {".", "./"}:
         return PathClaim(raw=raw, kind=ClaimKind.UNKNOWN, norm="")
 
-    # Drop leading ./
-    while text.startswith("./"):
-        text = text[2:]
+    # Preserve subtree intent before normpath (which strips trailing /).
+    is_double_star = text.endswith("/**")
+    is_subtree_slash = text.endswith("/") and not is_double_star
+    body = text[: -len("/**")] if is_double_star else text.rstrip("/") if is_subtree_slash else text
+
+    # Any wildcard in the body (or non-/** wildcards) → unknown before norm.
+    if any(ch in body for ch in "*?[") or ("*" in text and not is_double_star):
+        return PathClaim(raw=raw, kind=ClaimKind.UNKNOWN, norm=text)
+
+    norm = _posix_norm(body)
+    if norm in {"", "."}:
+        return PathClaim(raw=raw, kind=ClaimKind.UNKNOWN, norm=text)
 
     # Reject absolute / parent escapes as unknown (not comparable safely).
-    if text.startswith("/") or text.startswith("../") or "/../" in f"/{text}/":
+    if norm.startswith("/") or norm.startswith("../") or norm == ".." or "/../" in f"/{norm}/":
         return PathClaim(raw=raw, kind=ClaimKind.UNKNOWN, norm=text)
 
-    # Subtree forms: path/ or path/**
-    if text.endswith("/**"):
-        base = text[: -len("/**")].rstrip("/")
-        if not base or "*" in base or "?" in base or "[" in base:
-            return PathClaim(raw=raw, kind=ClaimKind.UNKNOWN, norm=text)
-        return PathClaim(raw=raw, kind=ClaimKind.SUBTREE, norm=base)
-    if text.endswith("/"):
-        base = text.rstrip("/")
-        if not base or "*" in base or "?" in base or "[" in base:
-            return PathClaim(raw=raw, kind=ClaimKind.UNKNOWN, norm=text)
-        return PathClaim(raw=raw, kind=ClaimKind.SUBTREE, norm=base)
+    if is_double_star or is_subtree_slash:
+        return PathClaim(raw=raw, kind=ClaimKind.SUBTREE, norm=norm)
 
-    # Any other wildcard → unknown
-    if any(ch in text for ch in "*?["):
-        return PathClaim(raw=raw, kind=ClaimKind.UNKNOWN, norm=text)
-
-    return PathClaim(raw=raw, kind=ClaimKind.FILE, norm=text.rstrip("/"))
+    return PathClaim(raw=raw, kind=ClaimKind.FILE, norm=norm)
 
 
 def claims_conflict(a: PathClaim, b: PathClaim) -> bool:

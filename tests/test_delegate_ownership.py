@@ -22,6 +22,12 @@ def test_normalize_file_subtree_unknown():
     assert normalize_claim("scripts/**").kind == ClaimKind.SUBTREE
     assert normalize_claim("scripts/**/*.py").kind == ClaimKind.UNKNOWN
     assert normalize_claim("../escape").kind == ClaimKind.UNKNOWN
+    # Canonicalize equivalent spellings (CF r4 F001)
+    a = normalize_claim("scripts/delegate.py")
+    b = normalize_claim("scripts//delegate.py")
+    c = normalize_claim("scripts/./delegate.py")
+    assert a.norm == b.norm == c.norm
+    assert claims_conflict(a, b) and claims_conflict(a, c)
 
 
 def test_claims_conflict_matrix():
