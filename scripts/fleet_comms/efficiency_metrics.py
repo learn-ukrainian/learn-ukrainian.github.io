@@ -333,12 +333,16 @@ def _github_merged_at(
     gh_bin: str = "gh",
 ) -> tuple[datetime | None, str | None]:
     """Fetch a PR merge timestamp only; no body, title, or review text."""
-    proc = subprocess.run(
-        [gh_bin, "pr", "view", str(pr_number), "--repo", repo, "--json", "mergedAt"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        proc = subprocess.run(
+            [gh_bin, "pr", "view", str(pr_number), "--repo", repo, "--json", "mergedAt"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except subprocess.TimeoutExpired:
+        return None, "gh pr view timed out after 30s"
     if proc.returncode != 0:
         return None, (proc.stderr or proc.stdout or "gh failed").strip()[:300]
     try:
@@ -474,12 +478,25 @@ def collect_stream_bottleneck_metrics(
                 )
                 if published is None:
                     continue
-                repo, pr_number = str(record["repository"]), int(record["pr_number"])
+                repo = str(record.get("repository") or "")
+                try:
+                    pr_number = int(record["pr_number"])
+                except (KeyError, TypeError, ValueError) as exc:
+                    errors.append(
+                        {
+                            "source": "github",
+                            "error": f"invalid pr_number {record.get('pr_number')!r}: {exc}",
+                        }
+                    )
+                    continue
+                if not repo:
+                    errors.append({"source": "github", "error": "missing repository for gate_to_merge"})
+                    continue
                 cache_key = (repo, pr_number)
                 if cache_key not in merged_cache:
                     try:
                         merged_cache[cache_key] = github_lookup(repo=repo, pr_number=pr_number)
-                    except (OSError, ValueError, TypeError) as exc:
+                    except (OSError, ValueError, TypeError, subprocess.TimeoutExpired) as exc:
                         merged_cache[cache_key] = (None, str(exc))
                 merged, lookup_error = merged_cache[cache_key]
                 if lookup_error:
