@@ -1574,6 +1574,7 @@ def test_review_response_schema_is_canonical_strict_and_surface_bound(tmp_path: 
     payload["findings"][0]["location"]["path"] = "src/app.py"
     payload["findings"][0]["location"]["start_line"] = 999
     payload["findings"][0]["location"]["end_line"] = 999
+    payload["findings"][0]["verbatim"] = "not_present_in_file = True"
     with pytest.raises(review_worktree.ReviewWorktreeError, match="review_response_evidence"):
         review_worktree.validate_code_review_response(
             json.dumps(payload),
@@ -1584,6 +1585,22 @@ def test_review_response_schema_is_canonical_strict_and_surface_bound(tmp_path: 
             evidence_root=evidence_root,
             changed_lines={"src/app.py": frozenset({1})},
         )
+
+    # Quote exists at line 2 but model claimed line 1 → relocate + accept (sealed CF).
+    (evidence_root / "src" / "app.py").write_text("keep = 1\nbad = True\n", encoding="utf-8")
+    payload["findings"][0]["location"]["start_line"] = 1
+    payload["findings"][0]["location"]["end_line"] = 1
+    payload["findings"][0]["verbatim"] = "bad = True"
+    relocated_digest = review_worktree.validate_code_review_response(
+        json.dumps(payload),
+        base_sha=base,
+        head_sha=head,
+        patch_sha256=patch,
+        changed_paths=("src/app.py",),
+        evidence_root=evidence_root,
+        changed_lines={"src/app.py": frozenset({1, 2})},
+    )
+    assert len(relocated_digest) == 64
 
     legacy = {
         "schema_version": "code-review-findings.v1",
@@ -1675,6 +1692,70 @@ def test_deleted_file_finding_uses_hash_bound_old_side_evidence(tmp_path: Path) 
             evidence_root=evidence_root,
             changed_lines={"src/registry.py": frozenset()},
         )
+
+
+def test_deleted_file_line_mismatch_relocates_while_temp_root_alive(tmp_path: Path) -> None:
+    """Multi-line deleted old_text + wrong claim line still relocates inside TemporaryDirectory."""
+    evidence_root = tmp_path / "evidence"
+    bundle = evidence_root / ".review-bundle"
+    bundle.mkdir(parents=True)
+    old_content = "header()\nrequired_registration()\nfooter()\n"
+    encoded = old_content.encode("utf-8")
+    (bundle / "manifest.json").write_text(
+        json.dumps(
+            {
+                "deleted_files": [
+                    {
+                        "path": "src/registry.py",
+                        "mode": 0o644,
+                        "sha256": hashlib.sha256(encoded).hexdigest(),
+                        "bytes": len(encoded),
+                        "content": old_content,
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    payload = {
+        "schema_version": "code-review-findings.v1",
+        "overall": {
+            "correctness": "incorrect",
+            "explanation": "A required registration was deleted.",
+            "confidence": 0.95,
+        },
+        "findings": [
+            {
+                "id": "F001",
+                "title": "Restore the required registration",
+                "body": "Deleting the registration breaks startup.",
+                "priority": "P1",
+                "confidence": 0.95,
+                "category": "regression",
+                "location": {
+                    "path": "src/registry.py",
+                    # Claim line 1; quote actually lives on line 2 of old_text.
+                    "start_line": 1,
+                    "end_line": 1,
+                    "claim_type": "present",
+                },
+                "verbatim": "required_registration()",
+                "why_wrong": "The startup path still requires this registration.",
+                "smallest_fix": "Restore the deleted registration.",
+                "sources": ["none"],
+            }
+        ],
+    }
+    digest = review_worktree.validate_code_review_response(
+        json.dumps(payload),
+        base_sha="b" * 40,
+        head_sha="a" * 40,
+        patch_sha256="c" * 64,
+        changed_paths=("src/registry.py",),
+        evidence_root=evidence_root,
+        changed_lines={"src/registry.py": frozenset()},
+    )
+    assert len(digest) == 64
 
 
 def test_provision_review_worktree_fetches_origin_head_and_reaps_on_error(

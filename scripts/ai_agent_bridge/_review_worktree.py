@@ -36,7 +36,9 @@ if str(_REPO_ROOT) not in sys.path:
 
 from scripts.orchestration.task_identity import DEFAULT_REPOSITORY
 from scripts.review.evidence import (
+    OUTCOME_LINE_MISMATCH,
     OUTCOME_VERIFIED,
+    expected_end_line_for_quote,
     split_lines_preserve_content,
     verify_finding_evidence,
 )
@@ -1341,6 +1343,65 @@ def _deleted_file_evidence(manifest: dict[str, Any]) -> dict[str, str]:
     return evidence
 
 
+def _relocate_finding_to_matched_line(
+    finding: dict[str, Any],
+    matched_line: int,
+) -> dict[str, Any] | None:
+    """Return a copy of *finding* with location shifted to *matched_line*.
+
+    Used when sealed-review evidence finds the verbatim quote on a different
+    line than the model claimed (``line_mismatch:matched_at_line:N``). Inflated
+    or shortened ranges are not relocated — those stay fail-closed.
+    """
+    if matched_line < 1:
+        return None
+    location = finding.get("location")
+    verbatim = finding.get("verbatim")
+    if not isinstance(location, dict) or not isinstance(verbatim, str) or not verbatim:
+        return None
+    relocated = dict(finding)
+    new_loc = dict(location)
+    new_loc["start_line"] = matched_line
+    new_loc["end_line"] = expected_end_line_for_quote(matched_line, verbatim)
+    relocated["location"] = new_loc
+    return relocated
+
+
+def _verify_finding_with_optional_line_relocate(
+    finding: dict[str, Any],
+    *,
+    repo_root: Path,
+    target: CanonicalReviewTarget,
+    changed_lines: dict[str, set[int]],
+):
+    """Verify finding; if quote exists on another line, relocate and re-verify.
+
+    Must be called while *repo_root* still exists (deleted-file temp dirs must
+    stay open for both passes).
+    """
+    result = verify_finding_evidence(
+        finding,
+        repo_root=repo_root,
+        target=target,
+        changed_lines=changed_lines,
+    )
+    if (
+        result.outcome == OUTCOME_LINE_MISMATCH
+        and result.matched_line is not None
+        and "matched_at_line:" in (result.detail or "")
+        and "range_span_mismatch" not in (result.detail or "")
+    ):
+        relocated = _relocate_finding_to_matched_line(finding, result.matched_line)
+        if relocated is not None:
+            result = verify_finding_evidence(
+                relocated,
+                repo_root=repo_root,
+                target=target,
+                changed_lines=changed_lines,
+            )
+    return result
+
+
 def validate_code_review_response(
     response: str,
     *,
@@ -1399,6 +1460,8 @@ def validate_code_review_response(
             ):
                 old_text = deleted_evidence.get(path)
             finding_lines = canonical_lines
+            if not isinstance(finding, dict):
+                raise ReviewWorktreeError("review_response_evidence:unknown:malformed:finding_not_object")
             if old_text is not None:
                 finding_lines = dict(canonical_lines)
                 old_line_count = len(split_lines_preserve_content(old_text))
@@ -1411,14 +1474,15 @@ def validate_code_review_response(
                     deleted_path.parent.mkdir(parents=True, exist_ok=True)
                     deleted_path.write_text(old_text, encoding="utf-8")
                     deleted_path.chmod(0o400)
-                    result = verify_finding_evidence(
+                    # Both verify + optional relocate while temp root is alive.
+                    result = _verify_finding_with_optional_line_relocate(
                         finding,
                         repo_root=deleted_root,
                         target=target,
                         changed_lines=finding_lines,
                     )
             else:
-                result = verify_finding_evidence(
+                result = _verify_finding_with_optional_line_relocate(
                     finding,
                     repo_root=evidence_root,
                     target=target,
