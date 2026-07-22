@@ -161,7 +161,13 @@ def _safe_task_state_name(task_id: str) -> str:
 
 
 def _task_still_active(task_id: str, pid: int | None, state_dir: Path) -> bool:
-    """True if task state is non-terminal and pid (when known) is alive."""
+    """True if the ownership claim should still be considered held.
+
+    Prefer a *live ledger PID* over a terminal state file: admission reserves
+    claims before the new spawning state is written, so a reused task_id can
+    briefly show terminal status while the admitting process is still alive
+    (#5643 CF r6 F001).
+    """
     state_path = state_dir / f"{_safe_task_state_name(task_id)}.json"
     status = None
     state_pid: int | None = None
@@ -177,8 +183,14 @@ def _task_still_active(task_id: str, pid: int | None, state_dir: Path) -> bool:
                 state_pid = raw_pid
             elif isinstance(raw_pid, str) and raw_pid.isdigit():
                 state_pid = int(raw_pid)
+
+    # Ledger PID alive → hold claim (covers admission→state-write race).
+    if pid is not None and pid > 0 and _pid_alive(pid):
+        return True
+
     if status in TERMINAL_TASK_STATUSES:
         return False
+
     check_pid = state_pid if state_pid is not None else pid
     if check_pid is not None and check_pid > 0 and not _pid_alive(check_pid):
         return False

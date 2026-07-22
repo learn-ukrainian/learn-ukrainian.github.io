@@ -371,3 +371,35 @@ def test_duplicate_equivalent_claims_do_not_crash(tmp_path: Path):
     )
     assert result.admitted is True
     assert len(result.claims) == 1
+
+
+def test_live_ledger_pid_keeps_claim_despite_terminal_state(tmp_path: Path):
+    """Admission→state-write race: terminal state must not drop live PID claim (CF r6)."""
+    ledger = tmp_path / "own.sqlite3"
+    state_dir = tmp_path / "tasks"
+    state_dir.mkdir()
+    pid = os.getpid()
+    # Stale terminal file for reused task_id, but ledger PID is this live process.
+    (state_dir / "reuse.json").write_text(
+        json.dumps({"status": "done", "pid": 1}), encoding="utf-8"
+    )
+    first = admit_write_paths(
+        task_id="reuse",
+        mode="workspace-write",
+        owned_paths=["scripts/x.py"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+    )
+    assert first.admitted is True
+    # Concurrent peer must still see the claim (would_refuse), not reconcile it away.
+    peer = admit_write_paths(
+        task_id="peer2",
+        mode="workspace-write",
+        owned_paths=["scripts/x.py"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+        guard_mode=GuardMode.WARN,
+    )
+    assert peer.would_refuse is True
