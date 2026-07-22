@@ -98,7 +98,11 @@ def _calculate_severity(used_percent: float) -> str:
 
 
 @router.get("/status")
-def get_monitor_status() -> dict[str, Any]:
+def get_monitor_status(
+    x_agent_monitor_token: str | None = Header(None, alias="X-Agent-Monitor-Token"),
+    authorization: str | None = Header(None),
+) -> dict[str, Any]:
+    _verify_auth(x_agent_monitor_token, authorization)
     mem = psutil.virtual_memory()
     load = os.getloadavg() if hasattr(os, "getloadavg") else (0.0, 0.0, 0.0)
 

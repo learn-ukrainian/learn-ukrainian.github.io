@@ -13,7 +13,7 @@ AUTH_HEADERS = {"X-Agent-Monitor-Token": TEST_TOKEN}
 
 
 def test_agent_monitor_status():
-    res = client.get("/api/agent-monitor/status")
+    res = client.get("/api/agent-monitor/status", headers=AUTH_HEADERS)
     assert res.status_code == 200
     data = res.json()
     assert data["host"] == "local_fleet"
