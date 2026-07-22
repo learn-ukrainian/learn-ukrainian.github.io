@@ -53,6 +53,45 @@ def test_verify_artifacts_rejects_an_omitted_selected_test(tmp_path: Path) -> No
         raise AssertionError("an omitted selected test must fail artifact verification")
 
 
+def test_verify_artifacts_rejects_partition_mode_mismatch(tmp_path: Path) -> None:
+    selected = ["tests/test_a.py::t", "tests/test_b.py::t"]
+    digest = pytest_shards._digest(selected)
+    for shard_id, (nodeid, mode) in enumerate(
+        zip(selected, ("equal-weight", "lpt-durations"), strict=True), start=1
+    ):
+        shard = tmp_path / f"pytest-shard-{shard_id}"
+        shard.mkdir()
+        (shard / "plan.json").write_text(
+            json.dumps(
+                {
+                    "assigned_nodeids": [nodeid],
+                    "assigned_digest": pytest_shards._digest([nodeid]),
+                    "collected_count": len(selected),
+                    "collected_digest": digest,
+                    "partition_mode": mode,
+                    "serial_nodeids": list(pytest_shards.SERIAL_TESTS)
+                    if shard_id == 1
+                    else [],
+                    "shard_count": 2,
+                    "shard_id": shard_id,
+                }
+            ),
+            encoding="utf-8",
+        )
+        (shard / "main-junit.xml").write_text('<testsuite tests="1" />', encoding="utf-8")
+        if shard_id == 1:
+            (shard / "cache-junit.xml").write_text('<testsuite tests="2" />', encoding="utf-8")
+            (shard / "playground-junit.xml").write_text(
+                '<testsuite tests="1" />', encoding="utf-8"
+            )
+    try:
+        pytest_shards.verify_artifacts(tmp_path, 2)
+    except RuntimeError as error:
+        assert "partition_mode" in str(error)
+    else:
+        raise AssertionError("partition_mode mismatch must fail closed")
+
+
 def test_verify_artifacts_accepts_a_complete_disjoint_partition(tmp_path: Path) -> None:
     selected = [f"tests/test_{number}.py::test_case" for number in range(4)]
     digest = pytest_shards._digest(selected)
@@ -141,3 +180,75 @@ def test_write_plan_rejects_empty_shard(tmp_path: Path, monkeypatch) -> None:
         assert "zero assigned" in str(error)
     else:
         raise AssertionError("empty shard must fail at plan time")
+
+
+def test_write_plan_default_ignores_divergent_duration_caches(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Equal-weight default: two workers with different duration files still match."""
+    nodeids = [f"tests/test_{n}.py::t" for n in range(12)]
+    monkeypatch.setattr(pytest_shards, "collect_nodeids", lambda args=(): list(nodeids))
+
+    hot = tmp_path / "hot.json"
+    cold = tmp_path / "cold.json"
+    hot.write_text(
+        json.dumps({nodeids[0]: 99.0, nodeids[1]: 0.1}), encoding="utf-8"
+    )
+    cold.write_text(json.dumps({nodeids[5]: 50.0}), encoding="utf-8")
+
+    plans = []
+    for idx, dur_path in enumerate((hot, cold), start=1):
+        out = tmp_path / f"plan-{idx}.json"
+        args_out = tmp_path / f"ids-{idx}.txt"
+        pytest_shards.write_plan(
+            shard_id=1,
+            shard_count=4,
+            durations_path=dur_path,
+            output=out,
+            args_output=args_out,
+            use_lpt_durations=False,
+        )
+        plans.append(json.loads(out.read_text(encoding="utf-8")))
+
+    assert plans[0]["partition_mode"] == "equal-weight"
+    assert plans[0]["assigned_digest"] == plans[1]["assigned_digest"]
+    assert plans[0]["assigned_nodeids"] == plans[1]["assigned_nodeids"]
+
+
+def test_write_plan_lpt_opt_in_uses_durations(tmp_path: Path, monkeypatch) -> None:
+    nodeids = [f"tests/test_{n}.py::t" for n in range(8)]
+    monkeypatch.setattr(pytest_shards, "collect_nodeids", lambda args=(): list(nodeids))
+    dur = tmp_path / "d.json"
+    # One very heavy test changes LPT packing vs equal-weight across shards.
+    dur.write_text(
+        json.dumps({nid: (100.0 if i == 0 else 1.0) for i, nid in enumerate(nodeids)}),
+        encoding="utf-8",
+    )
+    equal_sets: list[set[str]] = []
+    lpt_sets: list[set[str]] = []
+    for shard_id in range(1, 5):
+        eq_out = tmp_path / f"eq-{shard_id}.json"
+        lpt_out = tmp_path / f"lpt-{shard_id}.json"
+        pytest_shards.write_plan(
+            shard_id=shard_id,
+            shard_count=4,
+            durations_path=dur,
+            output=eq_out,
+            args_output=tmp_path / f"eq-{shard_id}.txt",
+            use_lpt_durations=False,
+        )
+        pytest_shards.write_plan(
+            shard_id=shard_id,
+            shard_count=4,
+            durations_path=dur,
+            output=lpt_out,
+            args_output=tmp_path / f"lpt-{shard_id}.txt",
+            use_lpt_durations=True,
+        )
+        eq = json.loads(eq_out.read_text(encoding="utf-8"))
+        lpt = json.loads(lpt_out.read_text(encoding="utf-8"))
+        assert eq["partition_mode"] == "equal-weight"
+        assert lpt["partition_mode"] == "lpt-durations"
+        equal_sets.append(set(eq["assigned_nodeids"]))
+        lpt_sets.append(set(lpt["assigned_nodeids"]))
+    assert equal_sets != lpt_sets

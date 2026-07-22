@@ -46,3 +46,10 @@ Sol #5657 step 6: after sharding landed, pytest matrix `needs: [changes]` only
 so it starts concurrent with lint. `CI Gate` remains the sole required check and
 still depends on both `lint` and `test` (plus shard-artifacts). Lint failure no
 longer serializes the matrix; it still blocks merge via CI Gate.
+
+
+## Follow-up: pip/torch wheel cache
+
+Each of the four pytest shards reinstalls torch CPU wheels. Cache `~/.cache/pip`
+keyed on `requirements-lock.txt` + torch 2.13.0 CPU so cache hits skip multi-GB
+downloads (install still runs; download is the wall-clock cost).

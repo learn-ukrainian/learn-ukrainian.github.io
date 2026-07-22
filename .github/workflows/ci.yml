@@ -939,10 +939,8 @@ jobs:
         if: needs.changes.outputs.python == 'true'
         with:
           python-version: '3.12'
-          cache: 'pip'
-          cache-dependency-path: |
-            requirements-lock.txt
-            pyproject.toml
+          # No cache: 'pip' here — sole owner of ~/.cache/pip is the manual
+          # Restore/Save pip wheel cache below (torch CPU pin in key; CF #5663 F001).
 
       - name: Restore Atlas lexicon manifest cache
         if: needs.changes.outputs.python == 'true'
@@ -964,6 +962,20 @@ jobs:
           path: site/src/data/lexicon-manifest.json
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
+      # Pip/torch wheel cache (Sol #5657 follow-up): 4 shards each reinstall torch;
+      # caching the download directory cuts multi-GB cold installs on cache hit.
+      # Sole manager of ~/.cache/pip for this job (setup-python cache disabled above).
+      - name: Restore pip wheel cache
+        id: pip-wheel-cache
+        if: needs.changes.outputs.python == 'true'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/pip
+          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch2.13.0cpu
+          restore-keys: |
+            pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-
+            pip-wheels-${{ runner.os }}-py3.12-
+
       - name: Install dependencies
         if: needs.changes.outputs.python == 'true'
         run: |
@@ -977,21 +989,26 @@ jobs:
             torch==2.13.0 torchvision==0.28.0
           .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
 
-      - name: Restore latest pytest duration estimates
-        if: needs.changes.outputs.python == 'true'
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      - name: Save pip wheel cache
+        # Only shard 1 saves on exact-key miss — avoids 4-way matrix save races (CF F001).
+        if: needs.changes.outputs.python == 'true' && matrix.shard == 1 && steps.pip-wheel-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: ci-artifacts/pytest-durations.json
-          key: pytest-shard-durations-v1-${{ github.ref_name }}-${{ github.sha }}
-          restore-keys: |
-            pytest-shard-durations-v1-main-
+          path: ~/.cache/pip
+          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch2.13.0cpu
+
+      # Duration estimates are still *saved* post-run (parse-durations) for a future
+      # single-planner LPT job. Matrix workers do not restore/feed them into plan
+      # (equal-weight partition; #5664).
 
       - name: Plan deterministic pytest shard
         if: needs.changes.outputs.python == 'true' && !cancelled()
         run: |
           mkdir -p ci-artifacts
+          # Default equal-weight partition (no --use-lpt-durations). Safe under
+          # concurrent matrix workers even when duration cache restores diverge.
           .venv/bin/python scripts/ci/pytest_shards.py plan --shard-id "${{ matrix.shard }}" \
-            --durations ci-artifacts/pytest-durations.json --output ci-artifacts/plan.json --args-output ci-artifacts/test-nodeids.txt
+            --output ci-artifacts/plan.json --args-output ci-artifacts/test-nodeids.txt
 
       - name: Run pytest shard
         if: needs.changes.outputs.python == 'true' && !cancelled() && (github.event_name != 'push' || github.ref != 'refs/heads/main')
