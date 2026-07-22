@@ -3,12 +3,13 @@
 
 Reads the compiled HuggingFace-compatible JSONL dataset (e.g. ``evalset_v1.jsonl``),
 queries the target model via AI Agent Bridge or mock baseline, and computes
-per-category and overall Precision, Recall, F1 score, and Exact Match accuracy.
+per-category and overall Exact Match Accuracy, Source Span Elimination Rate,
+Target Span Retention Rate, and Composite Span Correction Score.
 
 Usage
 -----
     .venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py --model mock
-    .venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py --model gemini-3.6-flash-high --limit 10
+    .venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py --model mock --limit 10
 """
 
 from __future__ import annotations
@@ -51,9 +52,9 @@ class MetricSummary:
     total_items: int
     exact_match_count: int
     exact_match_accuracy: float
-    span_elimination_precision: float
-    span_elimination_recall: float
-    span_elimination_f1: float
+    source_elimination_rate: float
+    target_retention_rate: float
+    composite_span_score: float
     category_breakdown: dict[str, dict[str, Any]]
 
 
@@ -72,7 +73,6 @@ def load_evalset(evalset_path: Path) -> list[dict[str, Any]]:
 
 def mock_generate_correction(text: str, target: str, edits: list[dict[str, Any]]) -> str:
     """Mock generator simulating a high-quality LLM correction baseline."""
-    # Apply standard corrections directly for mock evaluation
     corrected = text
     for edit in edits:
         src = edit.get("source_span", "")
@@ -130,15 +130,15 @@ def evaluate_item(item: dict[str, Any], model_output: str) -> ItemResult:
 
 
 def compute_metrics(results: list[ItemResult]) -> MetricSummary:
-    """Compute overall and category-level precision, recall, and F1 metrics."""
+    """Compute overall and category-level exact match, span elimination, and span retention metrics."""
     if not results:
         return MetricSummary(
             total_items=0,
             exact_match_count=0,
             exact_match_accuracy=0.0,
-            span_elimination_precision=0.0,
-            span_elimination_recall=0.0,
-            span_elimination_f1=0.0,
+            source_elimination_rate=0.0,
+            target_retention_rate=0.0,
+            composite_span_score=0.0,
             category_breakdown={},
         )
 
@@ -147,9 +147,9 @@ def compute_metrics(results: list[ItemResult]) -> MetricSummary:
     eliminated_count = sum(1 for r in results if r.source_span_eliminated)
     retained_count = sum(1 for r in results if r.target_span_retained)
 
-    precision = eliminated_count / total
-    recall = retained_count / total
-    f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
+    elim_rate = eliminated_count / total
+    ret_rate = retained_count / total
+    composite = (2 * elim_rate * ret_rate / (elim_rate + ret_rate)) if (elim_rate + ret_rate) > 0 else 0.0
 
     cat_groups: dict[str, list[ItemResult]] = {}
     for r in results:
@@ -161,25 +161,25 @@ def compute_metrics(results: list[ItemResult]) -> MetricSummary:
         c_exact = sum(1 for i in items if i.exact_match)
         c_elim = sum(1 for i in items if i.source_span_eliminated)
         c_ret = sum(1 for i in items if i.target_span_retained)
-        c_p = c_elim / c_total
-        c_r = c_ret / c_total
-        c_f1 = (2 * c_p * c_r / (c_p + c_r)) if (c_p + c_r) > 0 else 0.0
+        c_e_rate = c_elim / c_total
+        c_r_rate = c_ret / c_total
+        c_comp = (2 * c_e_rate * c_r_rate / (c_e_rate + c_r_rate)) if (c_e_rate + c_r_rate) > 0 else 0.0
 
         cat_breakdown[cat] = {
             "total": c_total,
             "exact_match_acc": round(c_exact / c_total, 4),
-            "precision": round(c_p, 4),
-            "recall": round(c_r, 4),
-            "f1": round(c_f1, 4),
+            "source_elimination_rate": round(c_e_rate, 4),
+            "target_retention_rate": round(c_r_rate, 4),
+            "composite_span_score": round(c_comp, 4),
         }
 
     return MetricSummary(
         total_items=total,
         exact_match_count=exact_matches,
         exact_match_accuracy=round(exact_matches / total, 4),
-        span_elimination_precision=round(precision, 4),
-        span_elimination_recall=round(recall, 4),
-        span_elimination_f1=round(f1, 4),
+        source_elimination_rate=round(elim_rate, 4),
+        target_retention_rate=round(ret_rate, 4),
+        composite_span_score=round(composite, 4),
         category_breakdown=cat_breakdown,
     )
 
@@ -196,8 +196,10 @@ def run_evaluation(model: str, evalset_path: Path, limit: int | None = None) -> 
         if model == "mock":
             output = mock_generate_correction(item["text"], item.get("target", ""), item.get("edits", []))
         else:
-            # Future real model integration point via AI Agent Bridge
-            output = mock_generate_correction(item["text"], item.get("target", ""), item.get("edits", []))
+            raise NotImplementedError(
+                f"Live model evaluation for '{model}' is not yet connected to the bridge runtime. "
+                "Use '--model mock' for baseline harness verification."
+            )
 
         result = evaluate_item(item, output)
         results.append(result)
@@ -237,10 +239,10 @@ def main() -> int:
 
     print(f"\n✅ Evaluation complete in {elapsed:.2f}s!")
     print(f"📊 Overall Exact Match Accuracy: {summary.exact_match_accuracy * 100:.1f}% ({summary.exact_match_count}/{summary.total_items})")
-    print(f"🎯 F1 Score: {summary.span_elimination_f1:.4f} (Precision: {summary.span_elimination_precision:.4f}, Recall: {summary.span_elimination_recall:.4f})")
+    print(f"🎯 Composite Span Score: {summary.composite_span_score:.4f} (Elimination: {summary.source_elimination_rate:.4f}, Retention: {summary.target_retention_rate:.4f})")
     print("\n📂 Category Breakdown:")
     for cat, cat_m in summary.category_breakdown.items():
-        print(f"  - {cat:12s}: Acc={cat_m['exact_match_acc']*100:5.1f}%, F1={cat_m['f1']:.4f} (n={cat_m['total']})")
+        print(f"  - {cat:12s}: Acc={cat_m['exact_match_acc']*100:5.1f}%, Composite={cat_m['composite_span_score']:.4f} (n={cat_m['total']})")
 
     print(f"\n💾 Results written to: {out_file}")
     return 0

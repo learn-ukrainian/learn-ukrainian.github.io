@@ -1,10 +1,19 @@
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts/projects/ua_eval_harness"))
 
-from evaluate_model import ItemResult, compute_metrics, evaluate_item, mock_generate_correction, normalize_text
+from evaluate_model import (
+    ItemResult,
+    compute_metrics,
+    evaluate_item,
+    mock_generate_correction,
+    normalize_text,
+    run_evaluation,
+)
 
 
 def test_normalize_text_strips_punctuation_and_whitespace():
@@ -43,6 +52,14 @@ def test_compute_metrics_summary():
     assert metrics.total_items == 2
     assert metrics.exact_match_count == 1
     assert metrics.exact_match_accuracy == 0.5
-    assert metrics.span_elimination_precision == 1.0
+    assert metrics.source_elimination_rate == 1.0
     assert "F/Calque" in metrics.category_breakdown
     assert "G/Case" in metrics.category_breakdown
+
+
+def test_run_evaluation_raises_not_implemented_for_non_mock_models(tmp_path: Path):
+    evalset_file = tmp_path / "evalset.jsonl"
+    evalset_file.write_text('{"id":"1","text":"a","target":"b","edits":[]}\n', encoding="utf-8")
+
+    with pytest.raises(NotImplementedError, match="Live model evaluation"):
+        run_evaluation("gemini-3.6-flash-high", evalset_file)
