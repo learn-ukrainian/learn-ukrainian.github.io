@@ -55,10 +55,12 @@ def _canonical_agent_name(agent: str) -> str | None:
     if agent.startswith("grok"):
         # Bare / versioned labels such as "grok-4.5-tools" → native seat.
         return NATIVE_GROK_SEAT
+    if agent.startswith("glm"):
+        return "glm"
     if agent.startswith("deepseek"):
         return "deepseek"
     if agent.startswith("qwen"):
-        return "qwen"
+        return "glm"
     if agent.startswith("agy"):
         return "agy"
     if agent.startswith("cursor"):
@@ -73,6 +75,7 @@ def _canonical_agent_name(agent: str) -> str | None:
         NATIVE_GROK_SEAT,
         HERMES_GROK_SEAT,
         "deepseek",
+        "glm",
         "qwen",
         "agy",
         "cursor",
@@ -409,13 +412,12 @@ def build_mcp_tool_config(
             ),
         )
 
-    if canonical_agent == "grok":
-        # Native grok CLI seat reads MCP servers from its own local config
-        # (`grok mcp list`), not Hermes. The adapter only needs the requested
-        # names for observability and to opt into non-interactive approval.
+    if canonical_agent in ("grok", "glm"):
+        # Native grok CLI seat and glm read MCP servers from local config / environment.
+        # The adapter only needs the requested names for observability and to opt into non-interactive approval.
         if not mcp_servers:
             return None, _basic_diagnostics(
-                mcp_config_path=Path.home() / ".grok" / "mcp.json",
+                mcp_config_path=Path.home() / f".{canonical_agent}" / "mcp.json",
                 requested_servers=mcp_servers,
                 resolved_servers=None,
                 resolution_status="config_empty",
@@ -426,7 +428,7 @@ def build_mcp_tool_config(
                 "mcp_server_names": mcp_servers,
             },
             _basic_diagnostics(
-                mcp_config_path=Path.home() / ".grok" / "mcp.json",
+                mcp_config_path=Path.home() / f".{canonical_agent}" / "mcp.json",
                 requested_servers=mcp_servers,
                 resolved_servers=mcp_servers,
                 resolution_status="ok",

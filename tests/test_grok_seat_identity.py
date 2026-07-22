@@ -47,7 +47,7 @@ def test_normalize_seat_maps_alias_and_hermes():
     assert is_hermes_grok_seat("grok-hermes")
     assert seat_read_aliases("grok") == ("grok", "grok-build")
     assert seat_read_aliases("grok-build") == ("grok", "grok-build")
-    assert tools_writer_runtime_agent("grok-tools") == HERMES_GROK_SEAT
+    assert tools_writer_runtime_agent("grok-tools") == NATIVE_GROK_SEAT
     assert tools_writer_runtime_agent("claude-tools") == "claude"
 
 

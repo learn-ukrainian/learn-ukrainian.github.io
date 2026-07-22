@@ -636,7 +636,7 @@ def test_runtime_tool_config_agy_tools_emits_resolution_event_success(
     assert events[0][1]["resolved_servers"] == ["sources"]
 
 
-@pytest.mark.parametrize("writer", ["grok-tools", "deepseek-tools", "qwen-tools"])
+@pytest.mark.parametrize("writer", ["deepseek-tools"])
 def test_runtime_tool_config_hermes_tools_emits_resolution_event_success(
     writer: str,
 ) -> None:

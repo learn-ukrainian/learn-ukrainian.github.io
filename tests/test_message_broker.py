@@ -4,6 +4,7 @@ Uses asyncio.run() wrappers to avoid needing pytest-asyncio.
 """
 
 import asyncio
+import importlib.util
 import json
 import sys
 from pathlib import Path
@@ -11,18 +12,16 @@ from pathlib import Path
 import aiosqlite
 
 # Path to the broker module
-SERVER_DIR = Path(__file__).resolve().parent.parent / ".mcp" / "servers" / "message-broker"
+BROKER_SERVER_PATH = Path(__file__).resolve().parent.parent / ".mcp" / "servers" / "message-broker" / "server.py"
 
 
 def _get_broker(tmp_path):
     """Import broker with patched DB_PATH pointing to a temp file."""
     db_path = tmp_path / "test_messages.db"
-    sys.path.insert(0, str(SERVER_DIR))
-
-    # Force reimport
-    if "server" in sys.modules:
-        del sys.modules["server"]
-    import server as broker
+    spec = importlib.util.spec_from_file_location("message_broker_server", BROKER_SERVER_PATH)
+    broker = importlib.util.module_from_spec(spec)
+    sys.modules["message_broker_server"] = broker
+    spec.loader.exec_module(broker)
     broker.DB_PATH = db_path
     # Reset write lock for each test (new event loop)
     broker._write_lock = asyncio.Lock()

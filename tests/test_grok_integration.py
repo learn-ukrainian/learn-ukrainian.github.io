@@ -30,8 +30,8 @@ def test_registry_exposes_native_and_hermes_grok_seats():
     assert "grok_build:GrokBuildAdapter" in AGENTS["grok"]["adapter"]
     assert "hermes_grok:HermesGrokAdapter" in AGENTS["grok-hermes"]["adapter"]
     assert AGENTS["grok"]["cli_available"] is True
-    assert AGENTS["grok-hermes"]["cli_available"] is True
-    for name in ("grok", "grok-build", "grok-hermes"):
+    assert AGENTS["grok-hermes"]["cli_available"] is False
+    for name in ("grok", "grok-build"):
         assert name in available_agents()
 
 
@@ -85,8 +85,9 @@ def test_ab_channels_cli_marks_grok_cli_available():
         sys.path.insert(0, scripts_dir)
     from ai_agent_bridge import _channels_cli
 
-    for name in ("grok", "grok-build", "grok-hermes"):
-        assert _channels_cli._cli_available_agent(name) is True
+    assert _channels_cli._cli_available_agent("grok") is True
+    assert _channels_cli._cli_available_agent("grok-build") is True
+    assert _channels_cli._cli_available_agent("grok-hermes") is False
 
 
 def test_lint_agent_trailer_accepts_grok_and_alias():

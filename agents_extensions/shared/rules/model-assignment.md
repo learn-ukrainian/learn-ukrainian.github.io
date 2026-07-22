@@ -209,7 +209,7 @@ as attributed on 2026-07-07) or `ask-opencode deepseek-direct/<deepseek-model>`;
 2026-07-07 — the OR account was drained by deepseek bakeoff cells; deepseek runs FIRST-PARTY only.
 The user's OR BYOK now bills deepseek underneath, so transport-comparison runs (#4321/#4358) are
 billing-safe behind `LU_ROUTING_GUARD_OVERRIDE=1` — deliberate, user-authorized only).
-² qwen is reachable but EXCLUDED from routine routing (cost, user 2026-05-29) — reachable ≠ routable.
+² Qwen is excluded from routine routing; `glm-5.2` (Zhipu/opencode) is used for cross-family code and review.
 
 Consequences:
 - **A model "lacking" a capability may just be in the wrong harness** — deepseek can't browse
@@ -217,7 +217,7 @@ Consequences:
 - **Limits are per-harness-credential, not per-model**: when a lane quotas out, the same model is
   often reachable through another harness (e.g. deepseek via delegate-hermes ↔ opencode), but
   **Grok and GPT/Codex are hard exceptions**: keep both on their native CLIs and never substitute
-  `grok-hermes`, `grok-tools`, or a Codex OAuth-backed Hermes model. Check `hermes auth list` +
+  `grok-hermes`, `grok-tools`, or a Codex OAuth-backed Hermes model (Grok routes strictly to native `grok` CLI or Cursor fallback). Check `hermes auth list` +
   `/api/orient` headroom.
   For Claude/Codex budget buckets at `near_cap`, substitute per
   `scripts/config/agent_fallback_substitutions.yaml` (that file is the budget-bucket map, not a

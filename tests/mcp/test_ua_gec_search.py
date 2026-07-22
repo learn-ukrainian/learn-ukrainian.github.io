@@ -5,9 +5,7 @@ from pathlib import Path
 
 import pytest
 
-# Add the server directory to path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(PROJECT_ROOT / ".mcp" / "servers" / "sources"))
 
 # CI's sources.db doesn't ship the ua_gec_errors_fts table (the ingest is
 # run locally + the table is committed in the canonical sources.db via
@@ -39,11 +37,17 @@ requires_ua_gec_data = pytest.mark.skipif(
     reason="ua_gec_errors_fts not present in sources.db (CI / fresh checkout)",
 )
 
+import importlib.util
+
+SOURCES_SERVER_PATH = PROJECT_ROOT / ".mcp" / "servers" / "sources" / "server.py"
+
+
 @pytest.fixture
 def server_module():
-    if "server" in sys.modules:
-        del sys.modules["server"]
-    import server as srv
+    spec = importlib.util.spec_from_file_location("sources_server", SOURCES_SERVER_PATH)
+    srv = importlib.util.module_from_spec(spec)
+    sys.modules["sources_server"] = srv
+    spec.loader.exec_module(srv)
     return srv
 
 def _run(coro):
