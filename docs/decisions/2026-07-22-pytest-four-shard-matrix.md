@@ -39,3 +39,10 @@ Rollback is a single focused revert that restores the former one-job
 `Test (pytest)` implementation and removes the shard artifact aggregation.
 The separate follow-up may start pytest concurrently with lint and tune the
 torch cache; neither change is part of this decision.
+
+## Follow-up (2026-07-22): lint ∥ pytest
+
+Sol #5657 step 6: after sharding landed, pytest matrix `needs: [changes]` only
+so it starts concurrent with lint. `CI Gate` remains the sole required check and
+still depends on both `lint` and `test` (plus shard-artifacts). Lint failure no
+longer serializes the matrix; it still blocks merge via CI Gate.
