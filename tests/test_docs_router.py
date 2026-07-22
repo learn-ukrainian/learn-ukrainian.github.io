@@ -124,9 +124,12 @@ def docs_tree_with_md(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[s
     (dashboards / "artifacts.html").write_text("<!doctype html><title>Artifacts</title>", encoding="utf-8")
 
     monkeypatch.setattr(docs_router, "PROJECT_ROOT", tmp_path)
-    # Clear ALLOWED_ROOTS so _build_effective_roots only discovers tmp_path dirs
+    # Clear ALLOWED_ROOTS so _build_effective_roots only discovers tmp_path dirs.
+    # CRITICAL: EFFECTIVE_ROOTS must be monkeypatched (not assigned) so xdist
+    # workers restore module state — a bare assignment poisons later tests
+    # with 403 "Path not under an approved documentation root".
     monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", {})
-    docs_router.EFFECTIVE_ROOTS = docs_router._build_effective_roots()
+    monkeypatch.setattr(docs_router, "EFFECTIVE_ROOTS", docs_router._build_effective_roots())
     monkeypatch.setattr(docs_router, "DISCOVERY_ROOTS", (tmp_path / "docs",))
     monkeypatch.setattr(docs_router, "DISCOVERY_EXCLUDES", ("docs/archive", "docs/resources/podcasts/raw"))
 

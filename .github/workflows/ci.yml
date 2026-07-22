@@ -1012,7 +1012,7 @@ jobs:
           fi
           set -o pipefail
           .venv/bin/python scripts/ci/pytest_shards.py run --nodeids ci-artifacts/test-nodeids.txt -- \
-            -n auto --junitxml=ci-artifacts/main-junit.xml --durations=0 \
+            -v --tb=short -n auto --junitxml=ci-artifacts/main-junit.xml --durations=0 \
             2>&1 | tee ci-artifacts/main.log || status=$?
           if [ "${{ matrix.shard }}" = "1" ]; then
             # Wall-clock smoke last so an FTS/race flake does not skip the bulk shard body.
@@ -1040,7 +1040,7 @@ jobs:
           fi
           set -o pipefail
           .venv/bin/python scripts/ci/pytest_shards.py run --nodeids ci-artifacts/test-nodeids.txt -- \
-            -n auto --junitxml=ci-artifacts/main-junit.xml --durations=0 \
+            -v --tb=short -n auto --junitxml=ci-artifacts/main-junit.xml --durations=0 \
             --cov=scripts --cov-append --cov-report= \
             2>&1 | tee ci-artifacts/main.log || status=$?
           if [ "${{ matrix.shard }}" = "1" ]; then
