@@ -11,11 +11,9 @@ import os
 import sqlite3
 import time
 import uuid
-from pathlib import Path
-from typing import Any
 
 import psutil
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from .config import BATCH_STATE_DIR
@@ -147,9 +145,14 @@ def preflight_check(req: PreflightRequest) -> dict[str, Any]:
     active_reserved_mb = cur.fetchone()[0]
     conn.close()
 
-    safe_capacity_mb = int(total_ram_mb * (MAX_SAFE_RAM_PERCENT / 100.0)) - HOST_RESERVED_RAM_MB
+    safe_capacity_mb = (
+        int(total_ram_mb * (MAX_SAFE_RAM_PERCENT / 100.0))
+        - HOST_RESERVED_RAM_MB
+    )
 
-    if (active_reserved_mb + req.required_ram_mb) > safe_capacity_mb or available_ram_mb < (req.required_ram_mb + 256):
+    if (
+        active_reserved_mb + req.required_ram_mb
+    ) > safe_capacity_mb or available_ram_mb < (req.required_ram_mb + 256):
         return {
             "verdict": "REJECTED",
             "reason": "Host memory capacity limit reached.",
@@ -172,9 +175,13 @@ def register_agent_lease(req: LeaseRegisterRequest) -> dict[str, Any]:
     try:
         proc = psutil.Process(req.pid)
         if abs(proc.create_time() - req.process_create_time) > 5.0:
-            raise HTTPException(status_code=400, detail="Process creation time mismatch")
+            raise HTTPException(
+                status_code=400, detail="Process creation time mismatch"
+            )
     except (psutil.NoSuchProcess, psutil.AccessDenied):
-        raise HTTPException(status_code=400, detail="Process ID does not exist on host") from None
+        raise HTTPException(
+            status_code=400, detail="Process ID does not exist on host"
+        ) from None
 
     mem = psutil.virtual_memory()
     total_ram_mb = int(mem.total / (1024 * 1024))
@@ -185,15 +192,41 @@ def register_agent_lease(req: LeaseRegisterRequest) -> dict[str, Any]:
     cur = conn.cursor()
     now = time.time()
 
+    # Idempotency check: return existing lease if already registered
+    cur.execute(
+        "SELECT lease_token, reserved_ram_mb FROM agent_leases WHERE agent_id=? AND task_name=? AND pid=? AND process_create_time=? AND status='APPROVED'",
+        (req.agent_id, req.task_name, req.pid, req.process_create_time),
+    )
+    existing = cur.fetchone()
+    if existing:
+        conn.commit()
+        conn.close()
+        return {
+            "verdict": "APPROVED",
+            "lease_token": existing[0],
+            "agent_id": req.agent_id,
+            "task_name": req.task_name,
+            "pid": req.pid,
+            "reserved_ram_mb": existing[1],
+            "heartbeat_interval_seconds": 30,
+            "lease_timeout_seconds": 300,
+            "idempotent_reattach": True,
+        }
+
     cur.execute(
         "SELECT COALESCE(SUM(reserved_ram_mb), 0) FROM agent_leases WHERE status='APPROVED' AND last_heartbeat >= ?",
         (now - 300,),
     )
     active_reserved_mb = cur.fetchone()[0]
 
-    safe_capacity_mb = int(total_ram_mb * (MAX_SAFE_RAM_PERCENT / 100.0)) - HOST_RESERVED_RAM_MB
+    safe_capacity_mb = (
+        int(total_ram_mb * (MAX_SAFE_RAM_PERCENT / 100.0))
+        - HOST_RESERVED_RAM_MB
+    )
 
-    if (active_reserved_mb + req.reserved_ram_mb) > safe_capacity_mb or available_ram_mb < (req.reserved_ram_mb + 256):
+    if (
+        active_reserved_mb + req.reserved_ram_mb
+    ) > safe_capacity_mb or available_ram_mb < (req.reserved_ram_mb + 256):
         conn.rollback()
         conn.close()
         return {
@@ -249,7 +282,7 @@ def heartbeat_agent_lease(req: HeartbeatRequest) -> dict[str, Any]:
 
     if updated == 0:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code=404,
             detail="Active lease token not found or process mismatch",
         )
 
@@ -260,7 +293,10 @@ def heartbeat_agent_lease(req: HeartbeatRequest) -> dict[str, Any]:
 def release_agent_lease(lease_token: str) -> dict[str, Any]:
     conn = _get_db()
     cur = conn.cursor()
-    cur.execute("UPDATE agent_leases SET status='RELEASED' WHERE lease_token=?", (lease_token,))
+    cur.execute(
+        "UPDATE agent_leases SET status='RELEASED' WHERE lease_token=?",
+        (lease_token,),
+    )
     conn.commit()
     conn.close()
     return {"status": "RELEASED", "lease_token": lease_token}

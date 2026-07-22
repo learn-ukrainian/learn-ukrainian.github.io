@@ -54,3 +54,28 @@ def test_agent_monitor_register_heartbeat_release():
     # Release
     rel = client.post(f"/api/agent-monitor/release?lease_token={token}")
     assert rel.status_code == 200
+
+
+def test_agent_monitor_register_idempotent():
+    current_pid = os.getpid()
+    proc = psutil.Process(current_pid)
+    create_time = proc.create_time()
+
+    payload = {
+        "agent_id": "gemini/test-idem",
+        "task_name": "unit_test",
+        "pid": current_pid,
+        "process_create_time": create_time,
+        "reserved_ram_mb": 256,
+    }
+
+    reg1 = client.post("/api/agent-monitor/register", json=payload)
+    assert reg1.status_code == 200
+    token1 = reg1.json()["lease_token"]
+
+    reg2 = client.post("/api/agent-monitor/register", json=payload)
+    assert reg2.status_code == 200
+    token2 = reg2.json()["lease_token"]
+
+    assert token1 == token2
+    assert reg2.json().get("idempotent_reattach") is True
