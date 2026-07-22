@@ -20,6 +20,10 @@
 3. Use the validated automatic SessionStart rollover output as authoritative. Do not manually parse flat handoff files or leases if a rollover packet was surfaced at startup.
 4. If the SessionStart hook output is unavailable, or the API is down, or the hook explicitly surfaces the legacy file, use the legacy flat file fallback: `.agent/claude-infra-thread-handoff.md` (gitignored, machine-local).
 5. Orient via Monitor API (lean cold-start mode): `curl -s --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true&session=$LEARN_UKRAINIAN_SESSION_ID"`
+6. **BINDING queue (2026-07-22):** read and execute  
+   `docs/session-state/2026-07-22-fleet-comms-cutover-handoff.md`  
+   — fleet-comms **#5512** operator cutovers first (dual_write · retention Gate 5 · cold-start smoke).  
+   Isolation fan-out #5614–#5622 parallel. Do not wait for the operator to restate targets.
 
 
 ## Lane boundaries
