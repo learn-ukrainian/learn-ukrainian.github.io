@@ -423,6 +423,7 @@ data/lexicon/needs-review-triage-summary.md
 data/lexicon/source-inventory/ohoiko-corpus-intake.json
 data/lexicon/source-inventory/curriculum-full-text-intake.json
 data/eval-archive/
+data/projects/ua_eval_harness/results_*.json
 
 # clawpatch tool output (config + findings + locks + patches — regenerable)
 .clawpatch/
