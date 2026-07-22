@@ -89,9 +89,8 @@ def tools_writer_runtime_agent(writer_or_reviewer: str) -> str:
         "cursor-tools": "cursor",
         "agy-tools": "agy",
         "deepseek-tools": "deepseek",
-        "qwen-tools": "qwen",
-        # Hermes content/writer path — NOT the native CLI seat.
-        "grok-tools": HERMES_GROK_SEAT,
+        "qwen-tools": "glm",
+        "grok-tools": NATIVE_GROK_SEAT,
     }
     if label in explicit:
         return explicit[label]

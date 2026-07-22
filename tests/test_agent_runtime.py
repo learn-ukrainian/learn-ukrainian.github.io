@@ -185,9 +185,11 @@ def test_registry_has_known_agents():
         "gemini",
         "grok",
         "grok-build",
+        "grok-hermes",
         "glm",
         "kimi",
         "deepseek",
+        "qwen",
         "agy",
         "cursor",
     }

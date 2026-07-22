@@ -52,12 +52,10 @@ def _seed_sources_mcp_config(
         ("claude-tools", "claude"),
         ("gemini-tools", "gemini"),
         ("codex-tools", "codex"),
-        # The grok WRITER uses the Hermes seat (renamed grok → grok-hermes in
-        # #5251); the native grok CLI seat is a separate coding/review/judge lane.
-        ("grok-tools", "grok-hermes"),
+        ("grok-tools", "grok"),
         ("cursor-tools", "cursor"),
         ("deepseek-tools", "deepseek"),
-        ("qwen-tools", "qwen"),
+        ("qwen-tools", "glm"),
     ],
 )
 def test_v7_writer_choices_resolve_to_runtime_adapters(
@@ -104,7 +102,7 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
             (tmp_path / ".mcp.json").resolve()
         )
         assert calls[0][2]["tool_config"]["allowed_tools"] == "mcp__sources__*"
-    elif writer == "gemini-tools":
+    elif writer in {"gemini-tools", "grok-tools", "qwen-tools"}:
         assert calls[0][2]["tool_config"]["mcp_server_names"] == ["sources"]
     elif writer == "cursor-tools":
         assert calls[0][2]["tool_config"]["cursor_mode"] == "plan"

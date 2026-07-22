@@ -185,6 +185,40 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "never",
     },
+    "grok-hermes": {
+        # Hermes-backed Grok path (DISABLED per user directive 2026-07-22:
+        # "not routing grok towards hermes anymore"). Kept in registry for
+        # backwards-compatibility lookups, but cli_available is False.
+        "adapter": "scripts.agent_runtime.adapters.hermes_grok:HermesGrokAdapter",
+        "default_model": "grok-4.5",
+        "cost_tier": "low",
+        "capabilities": frozenset(
+            {
+                "content_writing",
+                "content_review",
+                "adversarial_review",
+            }
+        ),
+        "cli_available": False,
+        "resume_policy": "never",
+    },
+    "qwen": {
+        # Qwen path (DISABLED per user directive 2026-07-22: "we dont use qwen,
+        # but we use glm-5.2"). Kept in registry for historical lookups, but
+        # cli_available is False.
+        "adapter": "scripts.agent_runtime.adapters.hermes_qwen:HermesQwenAdapter",
+        "default_model": "qwen/qwen3.6-plus",
+        "cost_tier": "low",
+        "capabilities": frozenset(
+            {
+                "content_writing",
+                "content_review",
+                "adversarial_review",
+            }
+        ),
+        "cli_available": False,
+        "resume_policy": "never",
+    },
     "glm": {
         "adapter": "scripts.agent_runtime.adapters.glm:GlmAdapter",
         "default_model": "glm-5.2",

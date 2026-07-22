@@ -563,10 +563,9 @@ def test_sync_all_iterates_known_agents(monkeypatch, capsys):
         "codex",
         "grok",
         "grok-build",
-        "grok-hermes",
+        "glm",
         "kimi",
         "deepseek",
-        "qwen",
         "cursor",
     ]
 

@@ -204,7 +204,8 @@ def test_registry_native_grok_distinct_from_hermes_grok():
     assert "code_writing" in native["capabilities"]
     assert "grok" in registry.available_agents()
     assert "grok-build" in registry.available_agents()
-    assert "grok-hermes" in registry.available_agents()
+    assert "grok-hermes" not in registry.available_agents()
+    assert "grok-hermes" in registry.AGENTS
 
 
 def test_grok_build_lane_defaults_to_grok_45():
