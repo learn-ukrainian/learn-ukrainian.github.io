@@ -38,6 +38,15 @@ BEGIN_RE = re.compile(
 END_RE = re.compile(
     r"<!--\s*fleet-roster-projection:end\s+(?P<kind>orchestrator_seats|formal_review_eligible)\s*-->"
 )
+# Any HTML comment that mentions the projection namespace must be an exact supported form.
+ANY_PROJECTION_COMMENT_RE = re.compile(
+    r"<!--\s*fleet-roster-projection:[^>]*-->",
+    re.IGNORECASE,
+)
+SUPPORTED_MARKER_RE = re.compile(
+    r"<!--\s*fleet-roster-projection:(?:begin|end)\s+"
+    r"(?:orchestrator_seats|formal_review_eligible)\s*-->"
+)
 
 SEAT_FIELDS = ("model_id", "effort", "escalate_model_id", "escalate_effort")
 SEAT_HEADER = ("seat", *SEAT_FIELDS)
@@ -157,12 +166,21 @@ def parse_markdown_table(block: str) -> tuple[tuple[str, ...], list[dict[str, st
     return tuple(header), rows
 
 
+def assert_no_malformed_projection_markers(text: str) -> None:
+    """Fail closed if any fleet-roster-projection HTML comment is not a supported marker."""
+    for match in ANY_PROJECTION_COMMENT_RE.finditer(text):
+        token = match.group(0)
+        if SUPPORTED_MARKER_RE.fullmatch(token) is None:
+            raise ValueError(f"malformed fleet-roster-projection marker: {token!r}")
+
+
 def extract_projection_blocks(text: str, kind: str) -> list[str]:
     """Return body text of every matching begin/end marker pair for *kind*.
 
     Fail-closed on unmatched ends, unclosed begins, nesting, and kind mismatches.
     Markers for *other* kinds are ignored for this extraction (each kind is scanned
-    independently by the caller).
+    independently by the caller). Callers must run
+    ``assert_no_malformed_projection_markers`` first so typoed markers cannot hide.
     """
     # Collect only markers for this kind, in document order.
     events: list[tuple[int, str, re.Match[str]]] = []
@@ -264,6 +282,12 @@ def check_file_projections(
         text = path.read_text(encoding="utf-8")
     except OSError as exc:
         return [LintIssue(label, "io", f"cannot read file: {exc}")]
+
+    try:
+        assert_no_malformed_projection_markers(text)
+    except ValueError as exc:
+        issues.append(LintIssue(label, "markers", f"malformed markers: {exc}"))
+        return issues
 
     for kind, expected, parser in (
         ("orchestrator_seats", seats, parse_seat_projection),

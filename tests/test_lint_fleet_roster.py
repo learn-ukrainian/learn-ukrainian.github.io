@@ -344,3 +344,21 @@ def test_unmatched_projection_end_marker_fails(tmp_path: Path):
     assert any("unmatched" in i.message and "end" in i.message for i in issues), [
         i.as_dict() for i in issues
     ]
+
+
+def test_typoed_projection_marker_fails(tmp_path: Path):
+    """Unknown/typoed fleet-roster-projection comments fail closed (CF r4 F001)."""
+    catalog, comms, seats, eligible = _mini_authorities(tmp_path)
+    proj = tmp_path / "proj.md"
+    proj.write_text(
+        _seat_block(seats)
+        + "\n<!-- fleet-roster-projection:begin orchestrator_seatz -->\n"
+        + _elig_block(eligible),
+        encoding="utf-8",
+    )
+    issues = lint_fleet_roster(
+        catalog_path=catalog, comms_path=comms, projection_paths=[proj], project_root=tmp_path
+    )
+    assert any(i.kind == "markers" and "malformed" in i.message for i in issues), [
+        i.as_dict() for i in issues
+    ]
