@@ -178,7 +178,22 @@ def test_lemma_in_vesum_allowlist_is_offline_fallback_when_no_heritage():
     assert _gates_for(entry, vesum=set(), heritage=None) == []
 
 
-@pytest.mark.skipif(not SOURCES_PATH.exists(), reason="needs gitignored data/sources.db")
+def _sources_has_grinchenko_table() -> bool:
+    if not SOURCES_PATH.exists():
+        return False
+    import sqlite3
+
+    try:
+        with sqlite3.connect(f"file:{SOURCES_PATH}?mode=ro", uri=True) as conn:
+            row = conn.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='grinchenko' LIMIT 1"
+            ).fetchone()
+        return row is not None
+    except sqlite3.Error:
+        return False
+
+
+@pytest.mark.skipif(not _sources_has_grinchenko_table(), reason="needs data/sources.db with grinchenko table")
 def test_heritage_lemma_lookup_attests_grinchenko_word_real_db():
     # #3211: real Грінченко/ЕСУМ lookup — хвастливий is attested (Грінченко headword),
     # nonsense is not. Proves the live fallback resolves the VESUM gap without an allowlist.
