@@ -264,6 +264,18 @@ if [ -n "$_handoff_override" ]; then
   export SESSION_HANDOFF_AGENT="$_handoff_override"
 fi
 
+# Fleet-comms plane mode + banner whenever epic is set (including explicit PROMPT paths).
+if [ -n "${SESSION_EPIC:-}" ]; then
+  if command -v fleet_comms_resolve_plane_mode >/dev/null 2>&1; then
+    export FLEET_COMMS_PLANE_MODE="$(fleet_comms_resolve_plane_mode)"
+  else
+    export FLEET_COMMS_PLANE_MODE="off"
+  fi
+  if command -v fleet_comms_print_banner_line >/dev/null 2>&1; then
+    fleet_comms_print_banner_line
+  fi
+fi
+
 # Claim/resume the stream lease through the common supervisor when an epic is pinned.
 if [ -n "$_selected_epic" ]; then
   if [ -z "$_selected_stream" ]; then
@@ -342,14 +354,6 @@ for a in "${_forward[@]+"${_forward[@]}"}"; do
 done
 
 if [ -n "${SESSION_EPIC:-}" ] && [ "$_has_prompt" -eq 0 ]; then
-  if command -v fleet_comms_resolve_plane_mode >/dev/null 2>&1; then
-    export FLEET_COMMS_PLANE_MODE="$(fleet_comms_resolve_plane_mode)"
-  else
-    export FLEET_COMMS_PLANE_MODE="off"
-  fi
-  if command -v fleet_comms_print_banner_line >/dev/null 2>&1; then
-    fleet_comms_print_banner_line
-  fi
   _handoff_path=".agent/${SESSION_HANDOFF_AGENT:-gemini-${SESSION_EPIC}}-thread-handoff.md"
   if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
     _fc="$(fleet_comms_cold_clause)"
