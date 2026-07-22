@@ -410,17 +410,6 @@ class OwnershipLedger:
                     )
                 )
 
-            # Truly solo + no claims → admit without ledger noise (Fable note).
-            if not claims and not active:
-                conn.execute("COMMIT")
-                return AdmissionResult(
-                    admitted=True,
-                    mode=self.mode,
-                    would_refuse=False,
-                    reason="no owned-path claims; solo admit",
-                    claims=[],
-                )
-
             conflicts: list[dict[str, object]] = []
             for other_task, other_claim, other_pid in active:
                 for mine in concrete:
@@ -470,7 +459,9 @@ class OwnershipLedger:
                     unknown_claims=unknown,
                 )
 
-            # Admit: replace this task's claims.
+            # Admit: replace this task's claims. Always leave a ledger footprint for
+            # write-capable no-path tasks so later writers can see unprovable peers
+            # (CF r8 F001) — solo still admitted with would_refuse=False.
             conn.execute("DELETE FROM write_claims WHERE task_id = ?", (task_id,))
             now = time.time()
             for claim in concrete:
@@ -478,9 +469,8 @@ class OwnershipLedger:
                     "INSERT INTO write_claims (task_id, claim_json, pid, created_at) VALUES (?,?,?,?)",
                     (task_id, json.dumps(claim.as_dict(), sort_keys=True), pid, now),
                 )
-            # Also store UNKNOWN claims so concurrent writers can see unprovable intent.
             store_unknown = list(unknown)
-            if not claims and active:
+            if not claims:
                 store_unknown = [no_claim_sentinel]
             for claim in store_unknown:
                 conn.execute(
@@ -509,6 +499,8 @@ class OwnershipLedger:
                 reason = (
                     f"would-refuse recorded ({event_name}); admitted under {self.mode.value}"
                 )
+            elif not claims:
+                reason = "no owned-path claims; solo admit with sentinel reservation"
             else:
                 reason = "admitted; paths disjoint"
 

@@ -59,15 +59,30 @@ def test_read_only_exempt(tmp_path: Path):
 
 def test_solo_no_claims_admitted(tmp_path: Path):
     ledger = tmp_path / "own.sqlite3"
+    state_dir = tmp_path / "tasks"
+    state_dir.mkdir()
+    pid = os.getpid()
     result = admit_write_paths(
         task_id="solo",
         mode="workspace-write",
         owned_paths=[],
+        pid=pid,
         ledger_path=ledger,
-        task_state_dir=tmp_path,
+        task_state_dir=state_dir,
     )
     assert result.admitted is True
     assert result.would_refuse is False
+    # Sentinel reserved so a later peer is unprovable (CF r8)
+    later = admit_write_paths(
+        task_id="later",
+        mode="workspace-write",
+        owned_paths=["scripts/a.py"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+        guard_mode=GuardMode.WARN,
+    )
+    assert later.would_refuse is True
 
 
 def test_exact_file_conflict_warn(tmp_path: Path):
