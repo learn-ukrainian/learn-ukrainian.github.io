@@ -315,5 +315,49 @@ document.addEventListener('visibilitychange', () => {
 loadRuntime();
 startRefresh();
 </script>
+
+  <div style="background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin: 16px 24px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 style="margin:0; font-size:16px; color:var(--text);">⚡ Agent Process & Host Capacity Monitor</h3>
+      <span id="agent-monitor-status-badge" style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600; background:var(--bg3); color:var(--green);">Checking...</span>
+    </div>
+    <div id="agent-monitor-details" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; font-size:13px;">
+      <div>Available RAM: <strong id="ram-avail">-</strong></div>
+      <div>System Load: <strong id="sys-load">-</strong></div>
+      <div>Active Agent Leases: <strong id="active-leases-count">-</strong></div>
+      <div>Reserved RAM: <strong id="reserved-ram">-</strong></div>
+    </div>
+  </div>
+
+
+<script>
+async function refreshAgentMonitor() {
+  try {
+    const res = await fetch('/api/agent-monitor/status');
+    if (!res.ok) return;
+    const data = await res.json();
+    const badge = document.getElementById('agent-monitor-status-badge');
+    if (badge) {
+      badge.textContent = data.severity.toUpperCase();
+      badge.style.color = data.severity === 'healthy' ? 'var(--green)' : (data.severity === 'critical' ? 'var(--red)' : 'var(--yellow)');
+    }
+    const ram = document.getElementById('ram-avail');
+    if (ram) ram.textContent = `${data.ram.available_mb} MB / ${data.ram.total_mb} MB (${data.ram.used_percent.toFixed(0)}% used)`;
+    const load = document.getElementById('sys-load');
+    if (load) load.textContent = data.load_1m_5m_15m.slice(0, 2).map(n => n.toFixed(2)).join(' / ');
+    const leases = document.getElementById('active-leases-count');
+    if (leases) leases.textContent = data.capacity_reservations.active_leases_count;
+    const reserved = document.getElementById('reserved-ram');
+    if (reserved) reserved.textContent = `${data.capacity_reservations.total_reserved_ram_mb} MB`;
+  } catch (e) {
+    console.error('Agent monitor fetch failed', e);
+  }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  refreshAgentMonitor();
+  setInterval(refreshAgentMonitor, 15000);
+});
+</script>
+
 </body>
 </html>
