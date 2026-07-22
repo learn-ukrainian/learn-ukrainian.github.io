@@ -43,6 +43,7 @@ from . import state_router as state_api
 from . import wiki_router as wiki_api
 from ._signal_log import install_signal_logging
 from .admin_router import router as admin_router
+from .agent_monitor_router import router as agent_monitor_router
 from .agent_router import router as agent_router
 from .artifacts_router import router as artifacts_router
 from .blue_router import router as blue_router
@@ -145,6 +146,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 # Mount team routers — each team owns their own file
 app.include_router(admin_router, prefix="/api/admin")
 app.include_router(agent_router, prefix="/api/agent", tags=["agent"])
+app.include_router(agent_monitor_router, prefix="/api/agent-monitor")
 app.include_router(artifacts_router, prefix="/api/artifacts", tags=["artifacts"])
 app.include_router(blue_router, prefix="/api/blue")
 app.include_router(comms_router, prefix="/api/comms")
@@ -459,9 +461,7 @@ def _maybe_run_worktree_gc_sweep() -> None:
     with _gc_sweep_lock:
         if _gc_sweep_thread is not None and _gc_sweep_thread.is_alive():
             return
-        _gc_sweep_thread = threading.Thread(
-            target=_run_worktree_gc_sweep, daemon=True
-        )
+        _gc_sweep_thread = threading.Thread(target=_run_worktree_gc_sweep, daemon=True)
         _gc_sweep_thread.start()
 
 
@@ -487,10 +487,7 @@ def _run_worktree_gc_sweep() -> None:
             "skipped": skipped,
             "errors": errors,
         }
-        logger.info(
-            "worktree GC sweep: removed=%d, skipped=%d, errors=%d",
-            removed, skipped, errors
-        )
+        logger.info("worktree GC sweep: removed=%d, skipped=%d, errors=%d", removed, skipped, errors)
     except Exception as exc:
         logger.exception("worktree GC sweep failed: %s", exc)
 
