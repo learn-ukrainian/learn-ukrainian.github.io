@@ -4,9 +4,8 @@ Pointer-only: no embedded diffs or inventory YAML. Prefer sealed Codex
 ``--review --pr`` isolation (#5285). Claude-dark local default for
 opencode-family reviewers is GLM-5.2 (LOCAL-ONLY — never CI).
 
-Formal CF model + effort pins (operator 2026-07-21): practical seats @ high
-— Terra / Sonnet 5 / GLM — not Sol/Fable on routine PRs. Authority seats
-remain on the critical review ladder only (see model_catalog.yaml).
+Formal CF model + effort pins: Claude path routes to designated Anthropic advisor
+Fable 5 (claude-fable-5).
 """
 
 from __future__ import annotations
