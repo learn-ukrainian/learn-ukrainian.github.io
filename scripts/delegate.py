@@ -2408,6 +2408,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # between Popen and _run_worker's first state write could overwrite
     # state and launch a duplicate worker for the same task_id.
     # Codex 2026-04-10 review finding.
+    # Must run BEFORE ownership admission so a rejected duplicate cannot
+    # DELETE/replace the live task's write claims (#5643 CF F001).
     existing = _read_state(state_path)
     if existing and existing.get("status") in ("running", "spawning"):
         pid = existing.get("pid")
@@ -2419,6 +2421,62 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 file=sys.stderr,
             )
             return 2
+
+    # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
+    # Runs before task-state write / worktree / branch side effects so a refuse
+    # leaves no residue. Read-only modes are exempt inside the helper.
+    # Dry-run must leave zero residue (same contract as tmp-lease reap) — skip
+    # the shared ownership ledger entirely (Claude CF #5649 r11).
+    if not bool(getattr(args, "dry_run", False)):
+        try:
+            from scripts.guardrails.delegate_ownership import (
+                GuardMode,
+                admit_write_paths,
+                env_guard_mode,
+            )
+        except ImportError:  # pragma: no cover - flat script path
+            from guardrails.delegate_ownership import (  # type: ignore
+                GuardMode,
+                admit_write_paths,
+                env_guard_mode,
+            )
+
+        guard_mode = env_guard_mode()
+        try:
+            ownership = admit_write_paths(
+                task_id=task_id,
+                mode=str(args.mode),
+                owned_paths=getattr(args, "research_owned_path", None),
+                allow_path_overlap=getattr(args, "allow_path_overlap", None),
+                pid=os.getpid(),
+                guard_mode=guard_mode,
+            )
+        except Exception as own_exc:
+            # WARN (default): never crash dispatch on ledger I/O/lock errors.
+            # REFUSE: fail closed so conflicts cannot silently proceed.
+            print(
+                f"⚠️  write-path ownership: ledger error: {own_exc}",
+                file=sys.stderr,
+            )
+            if guard_mode == GuardMode.REFUSE:
+                print(
+                    f"❌ write-path ownership refused (ledger error) for task_id={task_id!r}",
+                    file=sys.stderr,
+                )
+                return 2
+        else:
+            if ownership.would_refuse or ownership.override_reason:
+                print(
+                    f"⚠️  write-path ownership: {ownership.reason} "
+                    f"(conflicts={len(ownership.conflicts)})",
+                    file=sys.stderr,
+                )
+            if not ownership.admitted:
+                print(
+                    f"❌ write-path ownership refused for task_id={task_id!r}: {ownership.reason}",
+                    file=sys.stderr,
+                )
+                return 2
 
     # Resolve prompt: literal --prompt, or - for stdin, or --prompt-file.
     if args.prompt_file:
@@ -2846,6 +2904,21 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         state_with_pid = _read_state(state_path) or initial_state
         state_with_pid["pid"] = proc.pid
         _write_state_atomic(state_path, state_with_pid)
+        # Bind ownership ledger rows to the long-lived worker PID (not the
+        # short-lived dispatch CLI). Best-effort: WARN path must not fail spawn.
+        if str(args.mode) in _WRITE_CAPABLE_MODES:
+            try:
+                from scripts.guardrails.delegate_ownership import update_write_claim_pid
+            except ImportError:  # pragma: no cover
+                from guardrails.delegate_ownership import update_write_claim_pid  # type: ignore
+
+            try:
+                update_write_claim_pid(task_id, int(proc.pid))
+            except Exception as own_exc:
+                print(
+                    f"⚠️  write-path ownership: failed to bind worker pid: {own_exc}",
+                    file=sys.stderr,
+                )
 
         assert proc.stdin is not None  # we passed stdin=PIPE
         try:
@@ -3604,7 +3677,18 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="GLOB",
         help=(
             "ADR-011 P3 research context: an owned/changed path for the task. "
-            "Repeatable. Matched against each record's owned_paths globs."
+            "Repeatable. Matched against each record's owned_paths globs. "
+            "Also feeds the writable-path admission guard (#5643)."
+        ),
+    )
+    d.add_argument(
+        "--allow-path-overlap",
+        default=None,
+        metavar="REASON",
+        help=(
+            "Explicitly admit a write-capable dispatch that intersects another "
+            "active claim. Records task, conflicts, reason, and caller in the "
+            "ownership ledger. Required text reason; empty string is ignored."
         ),
     )
     d.set_defaults(func=cmd_dispatch)
