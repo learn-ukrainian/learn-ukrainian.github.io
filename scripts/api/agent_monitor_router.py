@@ -93,18 +93,36 @@ def get_monitor_status() -> dict[str, Any]:
     conn.commit()
 
     cur.execute(
-        "SELECT agent_id, task_name, pid, reserved_ram_mb, last_heartbeat FROM agent_leases WHERE status='APPROVED'"
+        "SELECT lease_token, agent_id, task_name, pid, process_create_time, reserved_ram_mb, last_heartbeat FROM agent_leases WHERE status='APPROVED'"
     )
-    active_leases = [
-        {
-            "agent_id": row[0],
-            "task_name": row[1],
-            "pid": row[2],
-            "reserved_ram_mb": row[3],
-            "last_heartbeat": row[4],
-        }
-        for row in cur.fetchall()
-    ]
+    rows = cur.fetchall()
+    active_leases = []
+    expired_tokens = []
+
+    for row in rows:
+        lease_tok, agent_id, task_name, pid, proc_create_time, reserved_ram_mb, last_hb = row
+        try:
+            proc = psutil.Process(pid)
+            if abs(proc.create_time() - proc_create_time) > 5.0:
+                expired_tokens.append(lease_tok)
+                continue
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            expired_tokens.append(lease_tok)
+            continue
+
+        active_leases.append(
+            {
+                "agent_id": agent_id,
+                "task_name": task_name,
+                "pid": pid,
+                "reserved_ram_mb": reserved_ram_mb,
+                "last_heartbeat": last_hb,
+            }
+        )
+
+    if expired_tokens:
+        cur.executemany("UPDATE agent_leases SET status='EXPIRED' WHERE lease_token=?", [(t,) for t in expired_tokens])
+        conn.commit()
     conn.close()
 
     total_reserved_mb = sum(l["reserved_ram_mb"] for l in active_leases)
