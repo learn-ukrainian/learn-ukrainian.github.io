@@ -318,3 +318,33 @@ def test_active_unknown_claim_makes_later_concrete_unprovable(tmp_path: Path):
     )
     assert later.admitted is True
     assert later.would_refuse is True
+
+
+def test_no_claims_with_active_peer_is_unprovable(tmp_path: Path):
+    """Write-capable dispatch without owned paths vs active peer (CF r3 F002)."""
+    ledger = tmp_path / "own.sqlite3"
+    state_dir = tmp_path / "tasks"
+    state_dir.mkdir()
+    pid = os.getpid()
+    (state_dir / "peer.json").write_text(
+        json.dumps({"status": "running", "pid": pid}), encoding="utf-8"
+    )
+    admit_write_paths(
+        task_id="peer",
+        mode="workspace-write",
+        owned_paths=["scripts/a.py"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+    )
+    blank = admit_write_paths(
+        task_id="blank",
+        mode="workspace-write",
+        owned_paths=[],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+        guard_mode=GuardMode.WARN,
+    )
+    assert blank.admitted is True
+    assert blank.would_refuse is True

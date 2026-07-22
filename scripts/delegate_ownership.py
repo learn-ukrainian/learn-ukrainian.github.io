@@ -275,16 +275,11 @@ class OwnershipLedger:
         claims = [normalize_claim(p) for p in (owned_paths or ())]
         unknown = [c for c in claims if c.kind == ClaimKind.UNKNOWN]
         concrete = [c for c in claims if c.kind != ClaimKind.UNKNOWN]
-
-        # Solo dispatch with no claims stays admitted (Fable note).
-        if not claims:
-            return AdmissionResult(
-                admitted=True,
-                mode=self.mode,
-                would_refuse=False,
-                reason="no owned-path claims; solo admit",
-                claims=[],
-            )
+        # No declared paths still participate in the ledger when peers are active
+        # (cannot prove disjointness — Fable solo-admit only when truly alone).
+        no_claim_sentinel = PathClaim(
+            raw="*", kind=ClaimKind.UNKNOWN, norm="*"
+        )
 
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
@@ -313,6 +308,17 @@ class OwnershipLedger:
                     )
                 )
 
+            # Truly solo + no claims → admit without ledger noise (Fable note).
+            if not claims and not active:
+                conn.execute("COMMIT")
+                return AdmissionResult(
+                    admitted=True,
+                    mode=self.mode,
+                    would_refuse=False,
+                    reason="no owned-path claims; solo admit",
+                    claims=[],
+                )
+
             conflicts: list[dict[str, object]] = []
             for other_task, other_claim, other_pid in active:
                 for mine in concrete:
@@ -332,7 +338,7 @@ class OwnershipLedger:
                 other_claim.kind == ClaimKind.UNKNOWN for _, other_claim, _ in active
             )
             unprovable = bool(active) and (
-                not concrete or bool(unknown) or active_unknown
+                not concrete or bool(unknown) or active_unknown or not claims
             )
             would_refuse = bool(conflicts) or unprovable
 
@@ -371,7 +377,10 @@ class OwnershipLedger:
                     (task_id, json.dumps(claim.as_dict(), sort_keys=True), pid, now),
                 )
             # Also store UNKNOWN claims so concurrent writers can see unprovable intent.
-            for claim in unknown:
+            store_unknown = list(unknown)
+            if not claims and active:
+                store_unknown = [no_claim_sentinel]
+            for claim in store_unknown:
                 conn.execute(
                     "INSERT INTO write_claims (task_id, claim_json, pid, created_at) VALUES (?,?,?,?)",
                     (task_id, json.dumps(claim.as_dict(), sort_keys=True), pid, now),
@@ -383,7 +392,7 @@ class OwnershipLedger:
             event = {
                 "task_id": task_id,
                 "conflicts": conflicts,
-                "unknown": [c.as_dict() for c in unknown],
+                "unknown": [c.as_dict() for c in store_unknown],
                 "override_reason": override,
                 "caller": caller,
                 "mode": self.mode.value,
@@ -408,7 +417,7 @@ class OwnershipLedger:
                 reason=reason,
                 conflicts=conflicts,
                 claims=concrete,
-                unknown_claims=unknown,
+                unknown_claims=store_unknown,
                 override_reason=override,
             )
 

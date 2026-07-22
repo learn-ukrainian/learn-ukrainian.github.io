@@ -2401,6 +2401,27 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print(dirty_primary_error, file=sys.stderr)
         return 2
 
+    # Refuse to clobber a task that's still alive — whether it's in
+    # "running" (worker up and executing) OR "spawning" (worker created
+    # but not yet past its own state-update step). Without the
+    # "spawning" check, a fast second dispatch during the tiny window
+    # between Popen and _run_worker's first state write could overwrite
+    # state and launch a duplicate worker for the same task_id.
+    # Codex 2026-04-10 review finding.
+    # Must run BEFORE ownership admission so a rejected duplicate cannot
+    # DELETE/replace the live task's write claims (#5643 CF F001).
+    existing = _read_state(state_path)
+    if existing and existing.get("status") in ("running", "spawning"):
+        pid = existing.get("pid")
+        if pid and _pid_alive(int(pid)):
+            print(
+                f"❌ task_id {task_id!r} is already {existing['status']} "
+                f"(pid={pid}). Use 'delegate.py status {task_id}' to check, "
+                f"or pick a different task-id.",
+                file=sys.stderr,
+            )
+            return 2
+
     # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
     # Runs before task-state write / worktree / branch side effects so a refuse
     # leaves no residue. Read-only modes are exempt inside the helper.
@@ -2429,25 +2450,6 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 2
-
-    # Refuse to clobber a task that's still alive — whether it's in
-    # "running" (worker up and executing) OR "spawning" (worker created
-    # but not yet past its own state-update step). Without the
-    # "spawning" check, a fast second dispatch during the tiny window
-    # between Popen and _run_worker's first state write could overwrite
-    # state and launch a duplicate worker for the same task_id.
-    # Codex 2026-04-10 review finding.
-    existing = _read_state(state_path)
-    if existing and existing.get("status") in ("running", "spawning"):
-        pid = existing.get("pid")
-        if pid and _pid_alive(int(pid)):
-            print(
-                f"❌ task_id {task_id!r} is already {existing['status']} "
-                f"(pid={pid}). Use 'delegate.py status {task_id}' to check, "
-                f"or pick a different task-id.",
-                file=sys.stderr,
-            )
-            return 2
 
     # Resolve prompt: literal --prompt, or - for stdin, or --prompt-file.
     if args.prompt_file:
