@@ -507,3 +507,18 @@ def test_epic_flag_is_forwarded(tmp_path: Path) -> None:
     )
     assert result.returncode == 0, result.stderr
     assert "arg=--epic=atlas" in output
+    # Epic implies the lane identity: the infra-orchestrator default must NOT
+    # be injected (an infra persona on the atlas lane would be a mismatch).
+    assert "arg=--agent" not in output
+    assert "arg=infra-orchestrator" not in output
+    assert "identity derives from --epic" in result.stdout
+
+
+def test_epic_plus_explicit_agent_keeps_agent(tmp_path: Path) -> None:
+    output, result = _run_with_fakes(
+        tmp_path,
+        ["--endpoint", "platform", "--no-isolate-config", "--epic", "atlas", "--agent", "infra-orchestrator"],
+    )
+    assert result.returncode == 0, result.stderr
+    assert "arg=--epic" in output
+    assert "arg=infra-orchestrator" in output

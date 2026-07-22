@@ -102,10 +102,11 @@ terminal while native Claude runs in the first.
 
 **Defaults (operator lane):** `--endpoint coding` (subscription),
 `--isolate-config` (CLAUDE_CONFIG_DIR=$HOME/.claude-kimicc), and
-`--agent infra-orchestrator`. Overrides: `--endpoint platform`,
-`--no-isolate-config`, `--agent NAME`; env: `KIMICC_ENDPOINT`,
-`KIMICC_ISOLATE_CONFIG=0`, `KIMICC_AGENT` (empty string inherits the project
-settings.json default, curriculum-orchestrator).
+`--agent infra-orchestrator` **when no `--epic` is given** (an epic already
+implies the lane identity). Overrides: `--endpoint platform`,
+`--no-isolate-config`, `--agent NAME` (explicit always wins); env:
+`KIMICC_ENDPOINT`, `KIMICC_ISOLATE_CONFIG=0`, `KIMICC_AGENT` (empty string
+inherits the project settings.json default, curriculum-orchestrator).
 
 **Subscription auth (no platform API key):** run `kimi login` once — the
 launcher picks up the OAuth credential automatically

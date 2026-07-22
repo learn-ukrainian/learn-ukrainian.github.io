@@ -70,7 +70,8 @@ Options:
   --no-isolate-config
                     Use the operator's live ~/.claude config instead
   --agent NAME      Session agent (forwarded to Claude Code). Default:
-                    infra-orchestrator; explicit --agent wins
+                    infra-orchestrator when no --epic is given (an epic already
+                    implies the lane identity); explicit --agent wins
   -h, --help        Show this help
 
 Environment:
@@ -423,22 +424,29 @@ for arg in "${FORWARD_ARGS[@]+"${FORWARD_ARGS[@]}"}"; do
   _prev="$arg"
 done
 
-# Default the session agent to the infra lane (kimicc is the infra UI); an
-# explicit --agent on the command line always wins.
+# Default the session agent to the infra lane (kimicc is the infra UI), but
+# only when no epic lane is pinned: an epic already implies the lane identity,
+# and an infra persona on e.g. the atlas lane would be a mismatch. An explicit
+# --agent on the command line always wins.
 _has_agent=0
+_has_epic=0
 for arg in ${_cleaned[@]+"${_cleaned[@]}"}; do
   case "$arg" in
     --agent|--agent=*)
       _has_agent=1
-      break
+      ;;
+    --epic|--epic=*)
+      _has_epic=1
       ;;
   esac
 done
-if [ "$_has_agent" -eq 0 ] && [ -n "$DEFAULT_AGENT" ]; then
+if [ "$_has_agent" -eq 0 ] && [ "$_has_epic" -eq 0 ] && [ -n "$DEFAULT_AGENT" ]; then
   _cleaned+=(--agent "$DEFAULT_AGENT")
   echo "        agent=$DEFAULT_AGENT (default; override with --agent)"
+elif [ "$_has_agent" -eq 0 ] && [ "$_has_epic" -eq 1 ]; then
+  echo "        agent=(epic lane set; identity derives from --epic, no default agent)"
 fi
-unset _has_agent
+unset _has_agent _has_epic
 
 if [ "${KIMICC_DRY_RUN:-0}" = "1" ]; then
   echo "KIMICC_DRY_RUN=1: would exec $PROJECT_DIR/start-claude.sh --model $LEAD_MODEL ${_cleaned[*]+"${_cleaned[*]}"}"
