@@ -43,7 +43,7 @@ class DialectDictEntry:
 
 
 def fetch_url_text(url: str, timeout: int = 30, delay: float = DEFAULT_DELAY_SECONDS) -> str:
-    """Fetch URL content politely with rate-limiting delay, standard TLS, and exponential backoff."""
+    """Fetch URL content politely with rate-limiting delay, robust decoding, and exponential backoff."""
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
 
     if delay > 0:

@@ -72,7 +72,6 @@ graph TD
     - Ingest Hutsul dictionary"] --> Integration["Integrated Heritage Safeguard Engine
     (data/sources.db + vesum.db)"]
 ```
-```
 
 ### Next Decision Points
 1. **Decision A**: Start Phase 2 by parsing *Словник мови Шевченка* & *Словник мови Франка* text from `Litopys.org.ua` into `data/sources.db` table `author_dictionaries`.
