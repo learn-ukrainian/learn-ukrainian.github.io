@@ -131,10 +131,11 @@ class SessionSupervisor:
     ) -> Lease:
         """Open one exact fenced driver lease before a harness is started.
 
-        If the stream has an expired lease whose holder PID is dead, proof-gated
-        force-close runs automatically so launchers do not need a manual recovery
-        step (same safety gates as handoff-claim / #5530). Live unexpired holders
-        still refuse.
+        If the stream has an active lease whose holder PID is dead, proof-gated
+        force-close runs automatically (even when wall-clock TTL has not expired)
+        so launchers do not need a manual recovery step or multi-hour wait.
+        Same safety gates as handoff-claim / #5530, plus dead-unexpired reclaim.
+        Live holder processes still refuse.
         """
         self._require_driver(role)
         try:
@@ -183,10 +184,10 @@ class SessionSupervisor:
         stream_id: str,
         holder: LeaseHolder,
     ) -> bool:
-        """Proof-gated force-close of an expired dead-holder session.
+        """Proof-gated force-close of a dead-holder session (TTL need not have expired).
 
         Returns True when a session was force-closed. Raises SupervisorError when
-        the stream is held by a live unexpired lease or is otherwise not claimable.
+        the stream is held by a live process or is otherwise not claimable.
         Returns False when there is no open/rolling session to recover.
         """
         self._require_driver(role)
@@ -236,8 +237,8 @@ class SessionSupervisor:
                 session_id=status.session_id,
                 candidate=holder,
                 reason=(
-                    f"session supervisor open: proof-gated recover expired dead holder "
-                    f"({status.session_id})"
+                    f"session supervisor open: proof-gated recover dead holder "
+                    f"({status.session_id}; expired={status.lease_expired})"
                 ),
             )
             return True
@@ -248,8 +249,8 @@ class SessionSupervisor:
             f"holder {status.holder_agent or '?'}/{status.holder_harness or '?'} "
             f"pid={status.holder_process_id} alive={status.holder_process_alive}. "
             f"{status.reason}. "
-            f"If that process is yours, exit it cleanly or wait for lease expiry; "
-            f"do not force-close a live unexpired holder."
+            f"If that process is yours, exit it cleanly; do not force-close a live holder. "
+            f"Dead holders auto-recover on relaunch even before TTL expiry."
         ) from conflict
 
     def build_capsule(

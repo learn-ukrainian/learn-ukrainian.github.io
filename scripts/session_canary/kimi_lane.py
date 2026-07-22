@@ -273,40 +273,50 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
                     repo=repo,
                 )
                 return 2
-        elif now < expires_at and not prior_alive:
-            # Store only force-closes after TTL; dead holder still blocks open.
-            # Soft-continue: mint canary + cold-start; stream writes wait for expiry.
-            lease_summary = (
-                f"STALE_DEAD: prior {prior_agent}/{row['holder_harness']} pid={prior_pid} "
-                f"dead but TTL until {row['expires_at']} — stream writes blocked until then "
-                f"(or prior seat hook close)"
-            )
-            print(f"bootstrap: {lease_summary}", file=sys.stderr)
-            _write_lease_env_from_row(epic_dir / "session-lease.env", row)
-            blocked = True  # skip open_session; still mint + cold-start below
-        else:
+        elif not prior_alive:
+            # Dead holder PID is reclaimable even before wall-clock TTL expires.
             try:
                 store.force_close_expired_session(
                     stream_id=stream_id,
                     session_id=str(row["session_id"]),
                     candidate=holder,
                     reason=(
-                        "kimi bootstrap reclaim: prior holder process dead or TTL expired"
+                        "kimi bootstrap reclaim: prior holder process dead "
+                        f"(expires_at={row['expires_at']})"
                     ),
                 )
                 print(
-                    f"bootstrap: force-closed expired session {row['session_id']} "
-                    f"(agent={prior_agent} pid={prior_pid})"
+                    f"bootstrap: force-closed dead-holder session {row['session_id']} "
+                    f"(agent={prior_agent} pid={prior_pid} "
+                    f"ttl_remaining={'yes' if now < expires_at else 'no'})"
                 )
             except (LeaseConflictError, LifecycleError) as exc:
                 print(f"bootstrap: force-close refused: {exc}", file=sys.stderr)
                 return 2
+        else:
+            # Live process past TTL — still refuse steal; holder must exit.
+            blocked = True
+            lease_summary = (
+                f"BLOCKED: expired lease but holder pid={prior_pid} still live "
+                f"(agent={prior_agent}/{row['holder_harness']})"
+            )
+            print(
+                f"bootstrap: refusing to steal live stream {stream_id} ({lease_summary})",
+                file=sys.stderr,
+            )
+            _write_cold_start(
+                epic_dir,
+                epic=epic,
+                stream_id=stream_id,
+                lease_summary=lease_summary,
+                repo=repo,
+            )
+            return 2
 
     if (
         not blocked
         and lease is None
         and not lease_summary.startswith("LIVE")
-        and not lease_summary.startswith("STALE_DEAD")
     ):
         try:
             lease = store.open_session(
@@ -404,9 +414,6 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
         print(f"bootstrap: created {kimi_handoff.relative_to(repo)}")
 
     print(f"bootstrap: ok epic={epic} stream={stream_id}")
-    if lease_summary.startswith("STALE_DEAD"):
-        # Soft success: orchestrator can still run; stream dual-write after TTL.
-        return 0 if mint_rc == 0 else mint_rc
     if blocked and lease_summary.startswith("BLOCKED"):
         return 2
     return 0 if mint_rc == 0 else mint_rc

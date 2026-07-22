@@ -16,8 +16,8 @@ driver (e.g. Codex on hramatka) leaves, content dual-write alone is not enough:
 ## Contract (v0)
 
 1. **Predecessor** clean-exits (`hook close`) **or** successor runs **proof-gated
-   force-close** (lease expired **and** holder PID dead **and** claimer is a
-   distinct live instance).
+   force-close** (holder PID dead **and** claimer is a distinct live instance;
+   wall-clock TTL need not have expired — a dead process cannot renew).
 2. **Successor opens a NEW session/lease** on the same `epic:N` — never reopens a
    closed session.
 3. **Pin transfer:** append a binding order that names the new driver; do not leave
@@ -51,8 +51,9 @@ PID still up, etc.) · `5` unexpected.
 ## Manual checklist (until CLI is habitual)
 
 1. `handoff-status --stream epic:N`
-2. If expired + dead PID → `handoff-claim` (or force-close then open)
-3. If live foreign holder → **stop** — ask that harness to close
+2. If dead PID (`alive=False`) → `handoff-claim` / relaunch (or force-close then open);
+   no need to wait for `expires_at`
+3. If live foreign holder (`alive=True`) → **stop** — ask that harness to close
 4. Tail stream + dual-write board; fold into your handoff file
 5. Launch with `--epic <name>` and bind exact rollover if any
 6. Drive; dual-write after each batch; clean close on end

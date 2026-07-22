@@ -68,6 +68,25 @@ def test_diagnose_expired_dead_holder_claimable(tmp_path: Path) -> None:
     assert status.claimable_force_close is True
 
 
+def test_diagnose_unexpired_dead_holder_claimable(tmp_path: Path) -> None:
+    """Crash before TTL: dead PID must be reclaimable without waiting hours."""
+    state = {1001: True}
+    store = _store(tmp_path, state)
+    store.open_session(
+        stream_id="epic:4707",
+        holder=_holder(pid=1001),
+        lineage_id="lineage-a",
+        ttl_seconds=6 * 3600,
+        now=NOW,
+    )
+    state[1001] = False
+    status = diagnose_handoff(store, "epic:4707", now=NOW + timedelta(seconds=30))
+    assert status.lease_expired is False
+    assert status.holder_process_alive is False
+    assert status.claimable_force_close is True
+    assert "dead holder" in status.reason
+
+
 def test_claim_force_closes_and_opens(tmp_path: Path) -> None:
     state = {1001: True, 2002: True}
     store = _store(tmp_path, state)
@@ -96,6 +115,33 @@ def test_claim_force_closes_and_opens(tmp_path: Path) -> None:
     assert status.holder_agent == "claude"
     assert status.claimable_force_close is False
     assert status.lease_expired is False
+
+
+def test_claim_force_closes_unexpired_dead_holder(tmp_path: Path) -> None:
+    state = {1001: True, 2002: True}
+    store = _store(tmp_path, state)
+    store.open_session(
+        stream_id="epic:4707",
+        holder=_holder(pid=1001, instance="grok-dead"),
+        lineage_id="lineage-grok",
+        ttl_seconds=6 * 3600,
+        now=NOW,
+    )
+    state[1001] = False
+    receipt = claim_stream(
+        store,
+        stream_id="epic:4707",
+        agent="grok",
+        harness="grok-tui",
+        instance_id="grok-fresh",
+        process_id=2002,
+        lineage_id="lineage-grok-2",
+        ttl_seconds=6 * 3600,
+        now=NOW + timedelta(seconds=45),
+    )
+    assert receipt["force_closed"] is not None
+    assert receipt["prior_status"]["lease_expired"] is False
+    assert receipt["lease"]["holder"]["agent"] == "grok"
 
 
 def test_claim_refuses_live_lease(tmp_path: Path) -> None:

@@ -336,10 +336,10 @@ Related:
 
     handoff_claim = subparsers.add_parser(
         "handoff-claim",
-        help="Force-close expired dead holder if needed, open a new session, pin new driver (#5530).",
+        help="Force-close dead holder if needed (TTL need not expire), open a new session, pin new driver (#5530).",
         description=(
-            "Cross-agent epic-stream claim. Refuses if a live unexpired lease exists. "
-            "Claimer process must be live and instance_id must differ from the expired holder."
+            "Cross-agent epic-stream claim. Refuses if a live holder process exists. "
+            "Claimer process must be live and instance_id must differ from the dead holder."
         ),
     )
     handoff_claim.add_argument("--stream", required=True, help="Exact stream ID, for example epic:4542.")

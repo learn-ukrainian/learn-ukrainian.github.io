@@ -126,13 +126,19 @@ def diagnose_handoff(
     alive = bool(probe(pid)) if callable(probe) else _process_alive(pid)
 
     lease_state = str(lease.get("state") or "")
-    claimable = lease_state == "active" and expired and not alive
-    if lease_state == "active" and not expired:
+    # Dead holder PID is claimable even before wall-clock TTL expires. A crashed
+    # local process cannot renew; requiring expiry left launchers blocked for the
+    # full launcher TTL (often 6h). Live holders remain untouchable.
+    claimable = lease_state == "active" and not alive
+    if lease_state == "active" and alive and not expired:
         reason = "live unexpired lease — only the holder may close; claim refused"
-    elif lease_state == "active" and expired and alive:
+    elif lease_state == "active" and alive and expired:
         reason = "lease expired but holder PID still live — claim refused"
     elif claimable:
-        reason = "expired lease + dead holder PID — claimable via force-close then open"
+        if expired:
+            reason = "expired lease + dead holder PID — claimable via force-close then open"
+        else:
+            reason = "dead holder PID (lease unexpired) — claimable via force-close then open"
     else:
         reason = f"lease state {lease_state!r}; inspect dump before claim"
     return HandoffStatus(
