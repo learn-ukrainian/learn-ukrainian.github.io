@@ -159,6 +159,8 @@ fi
             "KIMICC_BASE_URL",
             "KIMICC_MODEL",
             "KIMICC_ENDPOINT",
+            "KIMICC_AGENT",
+            "KIMICC_ISOLATE_CONFIG",
             "KIMICC_DRY_RUN",
             "KIMICC_API_KEY_HELPER_TTL_MS",
             "CLAUDE_CODE_API_KEY_HELPER_TTL_MS",
@@ -218,7 +220,11 @@ def test_routes_models_and_compaction(
     compact: str,
     effort: str,
 ) -> None:
-    output, result = _run_with_fakes(tmp_path, arguments)
+    # Explicitly pin the platform endpoint and live config: the launcher
+    # defaults are now coding + isolated config.
+    output, result = _run_with_fakes(
+        tmp_path, ["--endpoint", "platform", "--no-isolate-config", *arguments]
+    )
     assert result.returncode == 0, result.stderr
     assert "base=https://api.moonshot.ai/anthropic" in output
     assert "auth=sk-test-moonshot" in output
@@ -255,7 +261,7 @@ def test_coding_endpoint_uses_subscription_base_and_model_ids(tmp_path: Path) ->
 def test_refuses_settings_json_route_env_pins(tmp_path: Path) -> None:
     output, result = _run_with_fakes(
         tmp_path,
-        [],
+        ["--endpoint", "platform", "--no-isolate-config"],
         settings_env={"ANTHROPIC_BASE_URL": "https://evil.example/anthropic"},
     )
     assert result.returncode == 1
@@ -274,7 +280,7 @@ def test_isolate_config_bypasses_live_settings_pins(tmp_path: Path) -> None:
         settings_env={"ANTHROPIC_BASE_URL": "https://evil.example/anthropic"},
     )
     assert result.returncode == 0, result.stderr
-    assert "base=https://api.moonshot.ai/anthropic" in output
+    assert "base=https://api.kimi.com/coding" in output
     assert str(tmp_path / "home" / ".claude-kimicc") in output or "config_dir=" in output
     assert "config_dir=" in output
     assert "evil.example" not in output
@@ -373,7 +379,7 @@ def test_coding_endpoint_falls_back_to_kimi_login_oauth(tmp_path: Path) -> None:
     cred = _write_oauth_credentials(tmp_path)
     output, result = _run_with_fakes(
         tmp_path,
-        ["--endpoint", "coding"],
+        ["--endpoint", "coding", "--no-isolate-config"],
         env_overrides={
             **_OAUTH_ENV_CLEAR,
             "KIMI_CODE_CREDENTIALS_PATH": str(cred),
@@ -438,3 +444,66 @@ def test_dry_run_resolves_route_without_launching(tmp_path: Path) -> None:
     assert "auth=MOONSHOT_API_KEY" in result.stdout
     # Fake claude was never executed.
     assert output == ""
+
+
+def test_defaults_are_coding_isolated_infra_agent(tmp_path: Path) -> None:
+    """Bare launch: coding endpoint + isolated config + infra-orchestrator agent."""
+    cred = _write_oauth_credentials(tmp_path)
+    output, result = _run_with_fakes(
+        tmp_path,
+        [],
+        env_overrides={
+            **_OAUTH_ENV_CLEAR,
+            "KIMI_CODE_CREDENTIALS_PATH": str(cred),
+            "KIMI_CODE_OAUTH_HOST": "http://127.0.0.1:9",
+        },
+    )
+    assert result.returncode == 0, result.stderr
+    assert "base=https://api.kimi.com/coding" in output
+    # OAuth + isolation → apiKeyHelper mode, no static token exported.
+    assert "auth=unset" in output
+    assert "helper_ttl=300000" in output
+    assert "config_dir=" in output
+    assert ".claude-kimicc" in output
+    # Default agent injected and forwarded.
+    assert "arg=--agent" in output
+    assert "arg=infra-orchestrator" in output
+    assert "agent=infra-orchestrator (default; override with --agent)" in result.stdout
+
+
+def test_explicit_agent_overrides_default(tmp_path: Path) -> None:
+    output, result = _run_with_fakes(
+        tmp_path,
+        ["--endpoint", "platform", "--no-isolate-config", "--agent", "curriculum-orchestrator"],
+    )
+    assert result.returncode == 0, result.stderr
+    assert "arg=curriculum-orchestrator" in output
+    assert "arg=infra-orchestrator" not in output
+    assert "default; override with --agent" not in result.stdout
+
+
+def test_no_isolate_config_uses_live_config_dir(tmp_path: Path) -> None:
+    cred = _write_oauth_credentials(tmp_path)
+    output, result = _run_with_fakes(
+        tmp_path,
+        ["--no-isolate-config"],
+        env_overrides={
+            **_OAUTH_ENV_CLEAR,
+            "KIMI_CODE_CREDENTIALS_PATH": str(cred),
+            "KIMI_CODE_OAUTH_HOST": "http://127.0.0.1:9",
+        },
+    )
+    assert result.returncode == 0, result.stderr
+    assert "config_dir=unset" in output
+    # Without isolation the OAuth token is exported directly (short-session mode).
+    assert "auth=oauth-acc" in output
+    assert "helper_ttl=unset" in output
+
+
+def test_epic_flag_is_forwarded(tmp_path: Path) -> None:
+    output, result = _run_with_fakes(
+        tmp_path,
+        ["--endpoint", "platform", "--no-isolate-config", "--epic=atlas"],
+    )
+    assert result.returncode == 0, result.stderr
+    assert "arg=--epic=atlas" in output

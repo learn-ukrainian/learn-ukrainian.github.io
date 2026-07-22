@@ -41,11 +41,17 @@ export PATH="${HOME}/.local/bin:${PATH:-}"
 hash -r 2>/dev/null || true
 
 # Default: Kimi Open Platform Anthropic endpoint (pay-as-you-go API key).
-# Use --endpoint coding for the Kimi Code subscription Anthropic base URL.
-ENDPOINT="${KIMICC_ENDPOINT:-platform}"
+# Defaults: Kimi Code subscription endpoint (OAuth via kimi login), isolated
+# Claude config (apiKeyHelper auto-refresh), infra-lane agent. The pay-as-you-go
+# platform endpoint stays available via --endpoint platform.
+ENDPOINT="${KIMICC_ENDPOINT:-coding}"
 MODEL_ALIAS="${KIMICC_MODEL:-k3}"
 FORWARD_ARGS=()
-ISOLATE_CONFIG=0
+ISOLATE_CONFIG="${KIMICC_ISOLATE_CONFIG:-1}"
+# Default session agent (kimicc is the infra-lane UI). An explicit --agent on
+# the command line always wins; set KIMICC_AGENT="" to inherit the project's
+# settings.json default (curriculum-orchestrator) instead.
+DEFAULT_AGENT="${KIMICC_AGENT-infra-orchestrator}"
 
 usage() {
   cat <<'EOF'
@@ -57,13 +63,21 @@ Does not rewrite ~/.claude/settings.json — original Claude config stays intact
 Options:
   --model ALIAS     k3 (default) | k2.7 | k2.7-highspeed
                     Also accepts full IDs: kimi-k3[1m], kimi-k2.7-code, …
-  --endpoint NAME   platform (default, api.moonshot.ai/anthropic)
-                    coding   (Kimi Code subscription, api.kimi.com/coding)
-  --isolate-config  Use CLAUDE_CONFIG_DIR=$HOME/.claude-kimicc (separate sessions)
+  --endpoint NAME   coding (default; Kimi Code subscription, api.kimi.com/coding)
+                    platform (pay-as-you-go, api.moonshot.ai/anthropic)
+  --isolate-config  Use CLAUDE_CONFIG_DIR=$HOME/.claude-kimicc (DEFAULT; separate
+                    sessions, apiKeyHelper auto-refresh for OAuth)
+  --no-isolate-config
+                    Use the operator's live ~/.claude config instead
+  --agent NAME      Session agent (forwarded to Claude Code). Default:
+                    infra-orchestrator; explicit --agent wins
   -h, --help        Show this help
 
 Environment:
   KIMICC_MODEL / KIMICC_ENDPOINT     Defaults for --model / --endpoint
+  KIMICC_AGENT                     Default agent (default infra-orchestrator;
+                                   empty string = inherit project settings.json default)
+  KIMICC_ISOLATE_CONFIG=0          Same as --no-isolate-config
   MOONSHOT_API_KEY / KIMI_API_KEY    Platform API key (preferred for platform)
   KIMICC_AUTH_TOKEN                  Explicit auth token override
   KIMICC_BASE_URL                    Override Anthropic-compatible base URL
@@ -209,6 +223,10 @@ while (($#)); do
       ISOLATE_CONFIG=1
       shift
       ;;
+    --no-isolate-config)
+      ISOLATE_CONFIG=0
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -229,6 +247,14 @@ case "$ENDPOINT" in
   platform|coding) ;;
   *)
     echo "Error: unsupported endpoint '$ENDPOINT' (use platform or coding)." >&2
+    exit 2
+    ;;
+esac
+
+case "$ISOLATE_CONFIG" in
+  0|1) ;;
+  *)
+    echo "Error: KIMICC_ISOLATE_CONFIG must be 0 or 1 (got '$ISOLATE_CONFIG')." >&2
     exit 2
     ;;
 esac
@@ -396,6 +422,23 @@ for arg in "${FORWARD_ARGS[@]+"${FORWARD_ARGS[@]}"}"; do
   _cleaned+=("$arg")
   _prev="$arg"
 done
+
+# Default the session agent to the infra lane (kimicc is the infra UI); an
+# explicit --agent on the command line always wins.
+_has_agent=0
+for arg in ${_cleaned[@]+"${_cleaned[@]}"}; do
+  case "$arg" in
+    --agent|--agent=*)
+      _has_agent=1
+      break
+      ;;
+  esac
+done
+if [ "$_has_agent" -eq 0 ] && [ -n "$DEFAULT_AGENT" ]; then
+  _cleaned+=(--agent "$DEFAULT_AGENT")
+  echo "        agent=$DEFAULT_AGENT (default; override with --agent)"
+fi
+unset _has_agent
 
 if [ "${KIMICC_DRY_RUN:-0}" = "1" ]; then
   echo "KIMICC_DRY_RUN=1: would exec $PROJECT_DIR/start-claude.sh --model $LEAD_MODEL ${_cleaned[*]+"${_cleaned[*]}"}"
