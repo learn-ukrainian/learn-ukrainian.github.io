@@ -115,6 +115,17 @@ if [ -n "$SELECTED_EPIC" ]; then
     unset FORWARD_ARG HANDOFF_SLOT
     printf 'Epic assignment: %s.epic\n' "$SESSION_EPIC"
     printf 'Handoff identity: %s\n' "$SESSION_HANDOFF_AGENT"
+    # Fleet-comms dual-aware banner (Codex loads AGENTS.md + /api/rules for full doctrine).
+    if [ -f "$PROJECT_DIR/scripts/lib/fleet_comms_cold_start.sh" ]; then
+        # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
+        source "$PROJECT_DIR/scripts/lib/fleet_comms_cold_start.sh"
+        if command -v fleet_comms_resolve_plane_mode >/dev/null 2>&1; then
+            export FLEET_COMMS_PLANE_MODE="$(fleet_comms_resolve_plane_mode)"
+        fi
+        if command -v fleet_comms_print_banner_line >/dev/null 2>&1; then
+            fleet_comms_print_banner_line
+        fi
+    fi
 fi
 unset HANDOFF_IDENTITY_SH SELECTED_EPIC
 

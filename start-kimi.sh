@@ -201,6 +201,10 @@ if [ -f "$PROJECT_DIR/scripts/lib/session_supervisor.sh" ]; then
   # shellcheck source=scripts/lib/session_supervisor.sh
   source "$PROJECT_DIR/scripts/lib/session_supervisor.sh"
 fi
+if [ -f "$PROJECT_DIR/scripts/lib/fleet_comms_cold_start.sh" ]; then
+  # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
+  source "$PROJECT_DIR/scripts/lib/fleet_comms_cold_start.sh"
+fi
 
 # Validate epic name when the helper is present.
 if command -v epic_name_valid >/dev/null 2>&1 && [ -n "$_selected_epic" ]; then
@@ -303,17 +307,25 @@ fi
 
 # Lane cold-start hint (printed always when epic is set)
 if [ -n "${SESSION_EPIC:-}" ]; then
+  if command -v fleet_comms_resolve_plane_mode >/dev/null 2>&1; then
+    export FLEET_COMMS_PLANE_MODE="$(fleet_comms_resolve_plane_mode)"
+  else
+    export FLEET_COMMS_PLANE_MODE="off"
+  fi
   echo ""
   echo "Lane: ${SESSION_EPIC} (you are NOT the main orchestrator)."
+  if command -v fleet_comms_print_banner_line >/dev/null 2>&1; then
+    fleet_comms_print_banner_line
+  fi
   case "${SESSION_EPIC}" in
     atlas)
       echo "  Stream SSOT: ${SESSION_STREAM_ID:-epic:4387}  (session_streams tail --stream ${SESSION_STREAM_ID:-epic:4387})"
-      echo "  File dual-write: .claude/atlas-epic/INTERIM-DRIVER-HANDOFF.md (or CLAUDE-DRIVER-HANDOFF.md read-only)"
+      echo "  File dual-write (diary authoritative every plane mode): .claude/atlas-epic/INTERIM-DRIVER-HANDOFF.md"
       echo "  TAKEOVER: .claude/atlas-epic/TAKEOVER-PROMPT.md"
       ;;
     harness|infra)
       echo "  Stream: ${SESSION_STREAM_ID:-epic:4707}"
-      echo "  Infra handoff: docs/session-state/ + .agent/claude-infra-thread-handoff.md (read; write your own kimi slot)"
+      echo "  Infra diary (diary authoritative every plane mode): .claude/harness-epic/*-DRIVER-HANDOFF.md"
       ;;
     *)
       echo "  Open stream: SESSION_STREAM_ID=${SESSION_STREAM_ID:-unset}"
@@ -327,23 +339,28 @@ fi
 
 # Auto-continue the epic stream when --epic is set and the user did not pass a PROMPT.
 if [ -n "${SESSION_EPIC:-}" ] && [ "${#_forward[@]}" -eq 0 ]; then
+  if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
+    _fc="$(fleet_comms_cold_clause)"
+  else
+    _fc="Fleet-comms (#5512): obey agents_extensions/shared/rules/fleet-comms-coordination.md; plane-status + review-pr; file dual-write stays authoritative in every plane mode (dual_write=shadow/mirror)."
+  fi
   case "${SESSION_EPIC}" in
     atlas|practice|practice-hub)
-      _cold_prompt="You are the interim ATLAS lane driver (stream ${SESSION_STREAM_ID:-epic:4387}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) read/execute .claude/atlas-epic/TAKEOVER-PROMPT.md — tail stream, reconcile board, dual-write INTERIM-DRIVER-HANDOFF.md; (2) load the session stream digest and mint a canary if one is required. Drive the next unblocked action without a menu. End on canary FAIL-HANDOFF (<8/10). Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the interim ATLAS lane driver (stream ${SESSION_STREAM_ID:-epic:4387}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) read/execute .claude/atlas-epic/TAKEOVER-PROMPT.md — tail stream, reconcile board, dual-write INTERIM-DRIVER-HANDOFF.md in every plane mode; (2) load the session stream digest and mint a canary if one is required. ${_fc} Drive the next unblocked action without a menu. End on canary FAIL-HANDOFF (<8/10). Primary checkout is read-only — writes via worktrees."
       ;;
     harness|infra)
-      _cold_prompt="You are the INFRA / harness lane driver (stream ${SESSION_STREAM_ID:-epic:4707}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start from the infra handoff and stream tail; reconcile in-flight work; drive the next unblocked infra action. End on canary FAIL-HANDOFF. Do not claim curriculum content lanes. Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the INFRA / harness lane driver (stream ${SESSION_STREAM_ID:-epic:4707}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start from the infra handoff dual-write and stream tail; reconcile in-flight work; drive the next unblocked infra action. ${_fc} End on canary FAIL-HANDOFF. Do not claim curriculum content lanes. Primary checkout is read-only — writes via worktrees."
       ;;
     hramatka)
-      _cold_prompt="You are the hramatka lane driver (stream ${SESSION_STREAM_ID:-epic:4542}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start from the epic handoff and stream if present; reconcile and drive the next unblocked action. End on canary FAIL-HANDOFF. Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the hramatka lane driver (stream ${SESSION_STREAM_ID:-epic:4542}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start from the epic handoff dual-write and stream if present; reconcile and drive the next unblocked action. ${_fc} End on canary FAIL-HANDOFF. Primary checkout is read-only — writes via worktrees."
       ;;
     *)
-      _cold_prompt="You are the ${SESSION_EPIC} lane driver (SESSION_STREAM_ID=${SESSION_STREAM_ID:-unset}). You are NOT the main orchestrator. The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start: load the epic handoff under .claude/${SESSION_EPIC}-epic/ (or stream tail if SESSION_STREAM_ID is set), reconcile reality, and drive the next unblocked action without a menu. End on canary FAIL-HANDOFF. Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the ${SESSION_EPIC} lane driver (SESSION_STREAM_ID=${SESSION_STREAM_ID:-unset}). You are NOT the main orchestrator. The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start: load the epic handoff under .claude/${SESSION_EPIC}-epic/ (or stream tail if SESSION_STREAM_ID is set), reconcile reality, and drive the next unblocked action without a menu. ${_fc} End on canary FAIL-HANDOFF. Primary checkout is read-only — writes via worktrees."
       ;;
   esac
   echo "Cold-start: injecting epic auto-continue prompt (no user PROMPT given)."
   _forward=("$_cold_prompt")
-  unset _cold_prompt
+  unset _cold_prompt _fc
 fi
 
 echo "Launching Kimi Code..."

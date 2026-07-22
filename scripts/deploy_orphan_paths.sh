@@ -72,6 +72,7 @@ CLAUDE_RULE_AUTOLOAD_EXCLUDES=(
     "rules/critical-rules.md"
     "rules/non-negotiable-rules.md"
     "rules/workflow.md"
+    "rules/fleet-comms-coordination.md"
     "rules/delegate-must-use-worktree.md"
     "rules/cli-help-standard.md"
     "rules/model-assignment.md"

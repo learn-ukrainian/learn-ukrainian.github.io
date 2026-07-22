@@ -63,34 +63,11 @@ usage_launcher() {
   exit 0
 }
 
-# Compact dual-aware fleet-comms clause for cold-start prompts (#5512 mid-cutover).
-# Prefer plane + CF primitives; file dual-write is fallback while plane mode is off.
-_fleet_comms_cold_clause() {
-  local plane_mode="${FLEET_COMMS_PLANE_MODE:-off}"
-  printf '%s' \
-    "Fleet-comms (#5512) mid-cutover: prefer message-plane + CF surfaces; fall back to file dual-write while plane mode is ${plane_mode} (do not flip cutovers without operator/advisor GO; do not invent a competing design). " \
-    "Topology/metrics: \`.venv/bin/python -m scripts.fleet_comms plane-status\` (+ metrics/backlog/dead-letters as needed). " \
-    "Formal CF: \`.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>\` then publish-review-verdict (cross-family; never self-seal). " \
-    "Continuity: stream lease already claimed; dual-write diary under \`.claude/<epic>-epic/*-DRIVER-HANDOFF.md\` remains authoritative until stream-authority cutover."
-}
-
-# Resolve plane mode once (fail-open → off). Used for banner + cold-prompt wording.
-_resolve_fleet_comms_plane_mode() {
-  local mode="off"
-  if [ -x "$PROJECT_DIR/.venv/bin/python" ] \
-      && [ -f "$PROJECT_DIR/scripts/fleet_comms/message_plane.py" ]; then
-    mode="$(
-      "$PROJECT_DIR/.venv/bin/python" -c \
-        'from scripts.fleet_comms.message_plane import resolve_plane_mode; print(resolve_plane_mode(None))' \
-        2>/dev/null || true
-    )"
-    case "${mode}" in
-      off|shadow|dual_write) ;;
-      *) mode="off" ;;
-    esac
-  fi
-  printf '%s' "$mode"
-}
+# Shared dual-aware fleet-comms helpers (SSOT rule: fleet-comms-coordination.md).
+if [ -f "$PROJECT_DIR/scripts/lib/fleet_comms_cold_start.sh" ]; then
+  # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
+  source "$PROJECT_DIR/scripts/lib/fleet_comms_cold_start.sh"
+fi
 
 # --- locate grok binary ---
 GROK_BIN=""
@@ -298,7 +275,11 @@ fi
 
 export LEARN_UKRAINIAN_GROK_LAUNCH=1
 export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
-export FLEET_COMMS_PLANE_MODE="$(_resolve_fleet_comms_plane_mode)"
+if command -v fleet_comms_resolve_plane_mode >/dev/null 2>&1; then
+  export FLEET_COMMS_PLANE_MODE="$(fleet_comms_resolve_plane_mode)"
+else
+  export FLEET_COMMS_PLANE_MODE="off"
+fi
 
 # Defaults for grok CLI
 _defaults=()
@@ -330,26 +311,23 @@ if git rev-parse --git-dir >/dev/null 2>&1; then
 fi
 if [ -n "${SESSION_EPIC:-}" ]; then
   echo "Grok ${_grok_ver} · epic=${SESSION_EPIC} stream=${SESSION_STREAM_ID:-unset} handoff=${SESSION_HANDOFF_AGENT:-unset} plane=${FLEET_COMMS_PLANE_MODE}${_branch:+ · ${_branch}}"
-  case "${FLEET_COMMS_PLANE_MODE}" in
-    off)
-      echo "  fleet-comms: plane off → file dual-write fallback; CF via review-pr/publish-review-verdict"
-      ;;
-    shadow|dual_write)
-      echo "  fleet-comms: plane ${FLEET_COMMS_PLANE_MODE} → prefer plane; keep diary dual-write until authority cutover"
-      ;;
-  esac
+  if command -v fleet_comms_print_banner_line >/dev/null 2>&1; then
+    fleet_comms_print_banner_line
+  else
+    echo "  fleet-comms: plane=${FLEET_COMMS_PLANE_MODE} (shared helper missing — treat dual-aware)"
+  fi
   case "${SESSION_EPIC}" in
     atlas)
       echo "  canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas"
-      echo "  board:  .claude/atlas-epic/TAKEOVER-PROMPT.md + INTERIM-DRIVER-HANDOFF.md (fallback while plane off)"
+      echo "  board:  .claude/atlas-epic/TAKEOVER-PROMPT.md + INTERIM-DRIVER-HANDOFF.md (diary authoritative every plane mode)"
       ;;
     harness|infra)
       echo "  canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic harness"
-      echo "  board:  .claude/harness-epic/*-DRIVER-HANDOFF.md + docs/session-state/ (fallback while plane off)"
+      echo "  board:  .claude/harness-epic/*-DRIVER-HANDOFF.md + docs/session-state/ (diary authoritative every plane mode)"
       ;;
     *)
       echo "  canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic ${SESSION_EPIC}"
-      echo "  board:  .claude/${SESSION_EPIC}-epic/ (fallback while plane off)"
+      echo "  board:  .claude/${SESSION_EPIC}-epic/ (diary authoritative every plane mode)"
       ;;
   esac
   echo "  writes: worktrees only · end on canary FAIL-HANDOFF (docs/runbooks/grok-session-canary.md)"
@@ -392,10 +370,14 @@ for a in "${_forward[@]+"${_forward[@]}"}"; do
 done
 
 if [ -n "${SESSION_EPIC:-}" ] && [ "$_has_prompt" -eq 0 ]; then
-  _fc="$(_fleet_comms_cold_clause)"
+  if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
+    _fc="$(fleet_comms_cold_clause)"
+  else
+    _fc="Fleet-comms (#5512) mid-cutover: obey agents_extensions/shared/rules/fleet-comms-coordination.md; plane-status then review-pr; file dual-write stays authoritative in every plane mode (dual_write=shadow/mirror)."
+  fi
   case "${SESSION_EPIC}" in
     atlas|practice|practice-hub)
-      _cold_prompt="You are the interim ATLAS lane driver (stream ${SESSION_STREAM_ID:-epic:4387}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) read/execute .claude/atlas-epic/TAKEOVER-PROMPT.md — tail stream, reconcile board, dual-write INTERIM-DRIVER-HANDOFF.md while plane is off; (2) mint the session canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas --stream ${SESSION_STREAM_ID:-epic:4387} (docs/runbooks/grok-session-canary.md). ${_fc} Drive the next unblocked action without a menu. End session on canary FAIL-HANDOFF (<8/10), not on compact count; after any auto-compact re-score from memory then AUTO-HYDRATE on PASS — never ask the operator to restart. Primary checkout is read-only — writes via worktrees."
+      _cold_prompt="You are the interim ATLAS lane driver (stream ${SESSION_STREAM_ID:-epic:4387}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Immediately: (1) read/execute .claude/atlas-epic/TAKEOVER-PROMPT.md — tail stream, reconcile board, dual-write INTERIM-DRIVER-HANDOFF.md in every plane mode; (2) mint the session canary: .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas --stream ${SESSION_STREAM_ID:-epic:4387} (docs/runbooks/grok-session-canary.md). ${_fc} Drive the next unblocked action without a menu. End session on canary FAIL-HANDOFF (<8/10), not on compact count; after any auto-compact re-score from memory then AUTO-HYDRATE on PASS — never ask the operator to restart. Primary checkout is read-only — writes via worktrees."
       ;;
     harness|infra)
       _cold_prompt="You are the INFRA / harness lane driver (stream ${SESSION_STREAM_ID:-epic:4707}). The launcher has already claimed the stream lease; do NOT open or resume it yourself. Cold-start from the infra handoff dual-write (.claude/harness-epic/*-DRIVER-HANDOFF.md) and stream tail; mint canary (.venv/bin/python -m scripts.session_canary.grok_lane mint --epic harness); reconcile in-flight work; drive the next unblocked infra action. ${_fc} End on canary FAIL-HANDOFF not compact count (docs/runbooks/grok-session-canary.md). After auto-compact you own recovery: score canary FROM MEMORY then read the AUTO-HYDRATE capsule score prints on PASS — never ask the operator to restart or re-load the diary. Do not claim curriculum content lanes. Primary checkout is read-only — writes via worktrees."
