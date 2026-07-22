@@ -488,3 +488,8 @@ def test_env_guard_mode_defaults_to_refuse(monkeypatch):
 def test_env_guard_mode_warn_opt_in(monkeypatch):
     monkeypatch.setenv("DELEGATE_OWNERSHIP_MODE", "warn")
     assert env_guard_mode() is GuardMode.WARN
+
+
+def test_env_guard_mode_unknown_fails_closed_to_refuse(monkeypatch):
+    monkeypatch.setenv("DELEGATE_OWNERSHIP_MODE", "maybe")
+    assert env_guard_mode() is GuardMode.REFUSE

@@ -4,8 +4,7 @@
 Local single-host ledger (`batch_state/tasks/write-ownership.sqlite3`) with
 ``BEGIN IMMEDIATE`` atomic reconcile → compare → reserve. Read-only modes are
 exempt. REFUSE mode (default after #5645 soak) blocks conflicting writable admits;
-WARN mode admits on conflict but records would-refuse;
-REFUSE mode is armed later (#5645).
+WARN mode admits on conflict but records would-refuse (opt-in via DELEGATE_OWNERSHIP_MODE=warn).
 
 Claims come from normalized ``--research-owned-path`` values but are stored
 separately from the fail-open research registry.
