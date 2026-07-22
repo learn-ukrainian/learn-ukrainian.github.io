@@ -33,6 +33,7 @@ from scripts.fleet_comms.efficiency_metrics import (
     collect_dead_letters,
     collect_delivery_backlog,
     collect_efficiency_metrics,
+    collect_stream_bottleneck_metrics,
 )
 from scripts.fleet_comms.github_pr_metrics import collect_github_pr_metrics
 from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
@@ -89,6 +90,26 @@ def cmd_metrics(args: argparse.Namespace) -> int:
         return EXIT_OK
     payload = collect_efficiency_metrics(db)
     payload["db_path"] = str(db)
+    sys.stdout.write(_json_dump(payload))
+    return EXIT_OK
+
+
+def cmd_bottleneck_metrics(args: argparse.Namespace) -> int:
+    """Per-stream lifecycle bottlenecks from task, plane, and GitHub metadata."""
+    tasks_dir = Path(args.tasks_dir).expanduser()
+    plane_root = Path(args.root).expanduser() if args.root else default_plane_root()
+    plane_db = plane_root / "comms.sqlite3"
+    # Always call the collector: it is fail-open per source and refuses to
+    # sqlite3.connect-create a missing plane DB (is_file guard inside). Skipping
+    # here would drop valid dispatch metrics when plane is uninit (Claude CF r4).
+    payload = collect_stream_bottleneck_metrics(
+        tasks_dir=tasks_dir,
+        plane_db=plane_db,
+    )
+    payload["tasks_dir"] = str(tasks_dir)
+    payload["plane_db"] = str(plane_db)
+    if not plane_db.is_file():
+        payload["db_missing"] = True
     sys.stdout.write(_json_dump(payload))
     return EXIT_OK
 
@@ -418,6 +439,22 @@ def build_parser() -> argparse.ArgumentParser:
         help="Broker SQLite path (default: AB_DB_PATH or .mcp/servers/message-broker/messages.db)",
     )
     metrics.set_defaults(func=cmd_metrics)
+
+    bottlenecks = sub.add_parser(
+        "bottleneck-metrics",
+        help="Per-stream dispatch/review/merge bottlenecks (metadata only)",
+    )
+    bottlenecks.add_argument(
+        "--tasks-dir",
+        default="batch_state/tasks",
+        help="Delegate task-state directory (default: batch_state/tasks)",
+    )
+    bottlenecks.add_argument(
+        "--root",
+        default=None,
+        help="Plane storage root (default: FLEET_COMMS_ROOT or batch_state/fleet-comms/v1)",
+    )
+    bottlenecks.set_defaults(func=cmd_bottleneck_metrics)
 
     backlog = sub.add_parser(
         "backlog",

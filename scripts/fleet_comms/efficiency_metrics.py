@@ -2,11 +2,20 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
-from collections.abc import Iterator
+import subprocess
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+# Alert thresholds are intentionally reported, not enforced here. #5646 owns
+# consuming them. Dispatch uses the delegate default floor of 7,200 seconds.
+DISPATCH_BOTTLENECK_THRESHOLD_S = 7_200
+FORMAL_CF_PUBLICATION_THRESHOLD_S = 3_600
+GATE_TO_MERGE_THRESHOLD_S = 3_600
 
 
 @contextmanager
@@ -235,3 +244,298 @@ def collect_efficiency_metrics(db_path: Path) -> dict[str, Any]:
             }
 
         return metrics
+
+
+def _parse_timestamp(value: object) -> datetime | None:
+    """Parse an ISO-8601 lifecycle timestamp as an aware UTC value."""
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)
+
+
+def _identity(record: dict[str, Any]) -> tuple[str | None, str | None]:
+    """Read only explicit lifecycle identity fields; never infer from labels."""
+    stream_epic = record.get("stream_epic")
+    task_family = record.get("task_family")
+    stream = str(stream_epic).strip() if stream_epic is not None else ""
+    family = str(task_family).strip() if task_family is not None else ""
+    return (stream or None, family or None)
+
+
+def _percentile(samples: list[float], percentile: float) -> float:
+    """Linearly interpolate sorted samples at index ``(n - 1) * percentile``."""
+    ordered = sorted(samples)
+    index = (len(ordered) - 1) * percentile
+    lower = int(index)
+    upper = min(lower + 1, len(ordered) - 1)
+    return ordered[lower] + (ordered[upper] - ordered[lower]) * (index - lower)
+
+
+def _span_summary(durations: list[float], backlog_ages: list[float]) -> dict[str, Any]:
+    """Summarize one span without emitting individual events or content."""
+    summary: dict[str, Any] = {
+        "n": len(durations),
+        "backlog_age_s": round(max(backlog_ages), 3) if backlog_ages else None,
+        "raw": {
+            "event_count": len(durations) + len(backlog_ages),
+            "duration_count": len(durations),
+            "unfinished_count": len(backlog_ages),
+        },
+        "duration_s": {},
+    }
+    if durations:
+        summary["duration_s"] = {
+            "min": round(min(durations), 3),
+            "max": round(max(durations), 3),
+            "avg": round(sum(durations) / len(durations), 3),
+        }
+        if len(durations) >= 20:
+            summary["duration_s"]["p50"] = round(_percentile(durations, 0.50), 3)
+            summary["duration_s"]["p95"] = round(_percentile(durations, 0.95), 3)
+    return summary
+
+
+def _new_buckets() -> dict[str, dict[str, list[float]]]:
+    return {
+        "dispatch": {"durations": [], "backlog_ages": []},
+        "formal_cf_publication": {"durations": [], "backlog_ages": []},
+        "gate_to_merge": {"durations": [], "backlog_ages": []},
+    }
+
+
+def _add_event(
+    buckets: dict[str, dict[str, dict[str, list[float]]]],
+    *,
+    dimension: str,
+    identity: str | None,
+    span: str,
+    duration: float | None,
+    backlog_age: float | None,
+) -> None:
+    key = identity or "unclassified"
+    group = buckets[dimension].setdefault(key, _new_buckets())
+    if duration is not None:
+        group[span]["durations"].append(duration)
+    if backlog_age is not None:
+        group[span]["backlog_ages"].append(backlog_age)
+
+
+def _github_merged_at(
+    *,
+    repo: str,
+    pr_number: int,
+    gh_bin: str = "gh",
+) -> tuple[datetime | None, str | None]:
+    """Fetch a PR merge timestamp only; no body, title, or review text."""
+    try:
+        proc = subprocess.run(
+            [gh_bin, "pr", "view", str(pr_number), "--repo", repo, "--json", "mergedAt"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except subprocess.TimeoutExpired:
+        return None, "gh pr view timed out after 30s"
+    if proc.returncode != 0:
+        return None, (proc.stderr or proc.stdout or "gh failed").strip()[:300]
+    try:
+        payload = json.loads(proc.stdout or "{}")
+    except json.JSONDecodeError as exc:
+        return None, f"json_decode: {exc}"
+    merged_at = _parse_timestamp(payload.get("mergedAt"))
+    if payload.get("mergedAt") and merged_at is None:
+        return None, "invalid mergedAt timestamp"
+    return merged_at, None
+
+
+def collect_stream_bottleneck_metrics(
+    *,
+    tasks_dir: Path,
+    plane_db: Path,
+    now: datetime | None = None,
+    github_lookup: Callable[..., tuple[datetime | None, str | None]] = _github_merged_at,
+) -> dict[str, Any]:
+    """Collect lifecycle-only per-stream bottlenecks from independent sources.
+
+    Percentiles use linear interpolation of the sorted samples at ``(n - 1) * p``
+    and are intentionally omitted until a span has at least twenty durations.
+    Each source is fail-open: its errors are reported while other sources continue.
+    """
+    clock = (now or datetime.now(UTC)).astimezone(UTC)
+    buckets: dict[str, dict[str, dict[str, list[float]]]] = {
+        "by_stream_epic": {},
+        "by_task_family": {},
+    }
+    errors: list[dict[str, str]] = []
+    dispatch_hard_timeouts: list[int] = []
+
+    def add(
+        identity: tuple[str | None, str | None],
+        span: str,
+        duration: float | None,
+        backlog_age: float | None,
+    ) -> None:
+        _add_event(
+            buckets,
+            dimension="by_stream_epic",
+            identity=identity[0],
+            span=span,
+            duration=duration,
+            backlog_age=backlog_age,
+        )
+        _add_event(
+            buckets,
+            dimension="by_task_family",
+            identity=identity[1],
+            span=span,
+            duration=duration,
+            backlog_age=backlog_age,
+        )
+
+    try:
+        task_paths = sorted(tasks_dir.glob("*.json"))
+        if not tasks_dir.is_dir():
+            raise FileNotFoundError(tasks_dir)
+        for path in task_paths:
+            try:
+                record = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                errors.append({"source": "dispatch", "error": f"{path.name}: {exc}"})
+                continue
+            if not isinstance(record, dict):
+                errors.append({"source": "dispatch", "error": f"{path.name}: expected object"})
+                continue
+            hard_timeout = record.get("hard_timeout")
+            if isinstance(hard_timeout, int) and hard_timeout >= 0:
+                dispatch_hard_timeouts.append(hard_timeout)
+            started = _parse_timestamp(record.get("started_at"))
+            if started is None:
+                errors.append({"source": "dispatch", "error": f"{path.name}: invalid started_at"})
+                continue
+            finished_raw = record.get("finished_at")
+            finished = _parse_timestamp(finished_raw)
+            if finished_raw not in (None, "") and finished is None:
+                errors.append({"source": "dispatch", "error": f"{path.name}: invalid finished_at"})
+                continue
+            if finished is not None and finished < started:
+                errors.append({"source": "dispatch", "error": f"{path.name}: negative duration"})
+                continue
+            add(
+                _identity(record),
+                "dispatch",
+                (finished - started).total_seconds() if finished else None,
+                max(0.0, (clock - started).total_seconds()) if finished is None else None,
+            )
+    except OSError as exc:
+        errors.append({"source": "dispatch", "error": str(exc)})
+
+    merged_cache: dict[tuple[str, int], tuple[datetime | None, str | None]] = {}
+    try:
+        if not plane_db.is_file():
+            raise FileNotFoundError(f"plane DB missing: {plane_db}")
+        with _connect(plane_db) as conn:
+            if not (_table_exists(conn, "formal_review_jobs") and _table_exists(conn, "github_publications")):
+                raise sqlite3.DatabaseError("required formal_review_jobs/github_publications tables missing")
+            columns = _column_names(conn, "formal_review_jobs")
+            publication_columns = _column_names(conn, "github_publications")
+            optional_identity = [name for name in ("stream_epic", "task_family") if name in columns]
+            publication_join = "p.review_id = j.review_id"
+            if "status_context" in publication_columns:
+                publication_join += " AND p.status_context = 'fleet/cross-family-review'"
+            rows = conn.execute(
+                "SELECT j.review_id, j.repository, j.pr_number, j.created_at, "
+                "p.published_at"
+                + "".join(f", j.{name}" for name in optional_identity)
+                + f" FROM formal_review_jobs j LEFT JOIN github_publications p ON {publication_join}"
+            ).fetchall()
+            for row in rows:
+                record = dict(row)
+                identity = _identity(record)
+                created = _parse_timestamp(record.get("created_at"))
+                if created is None:
+                    errors.append({"source": "formal_cf", "error": "invalid formal_review_jobs.created_at"})
+                    continue
+                published_raw = record.get("published_at")
+                published = _parse_timestamp(published_raw)
+                if published_raw not in (None, "") and published is None:
+                    errors.append({"source": "formal_cf", "error": "invalid github_publications.published_at"})
+                    continue
+                if published is not None and published < created:
+                    errors.append({"source": "formal_cf", "error": "negative publication duration"})
+                    continue
+                add(
+                    identity,
+                    "formal_cf_publication",
+                    (published - created).total_seconds() if published else None,
+                    max(0.0, (clock - created).total_seconds()) if published is None else None,
+                )
+                if published is None:
+                    continue
+                repo = str(record.get("repository") or "")
+                try:
+                    pr_number = int(record["pr_number"])
+                except (KeyError, TypeError, ValueError) as exc:
+                    errors.append(
+                        {
+                            "source": "github",
+                            "error": f"invalid pr_number {record.get('pr_number')!r}: {exc}",
+                        }
+                    )
+                    continue
+                if not repo:
+                    errors.append({"source": "github", "error": "missing repository for gate_to_merge"})
+                    continue
+                cache_key = (repo, pr_number)
+                if cache_key not in merged_cache:
+                    try:
+                        merged_cache[cache_key] = github_lookup(repo=repo, pr_number=pr_number)
+                    except (OSError, ValueError, TypeError, subprocess.TimeoutExpired) as exc:
+                        merged_cache[cache_key] = (None, str(exc))
+                merged, lookup_error = merged_cache[cache_key]
+                if lookup_error:
+                    errors.append({"source": "github", "error": f"PR {pr_number}: {lookup_error}"})
+                    continue
+                if merged is not None and merged < published:
+                    errors.append({"source": "github", "error": f"PR {pr_number}: negative merge duration"})
+                    continue
+                add(
+                    identity,
+                    "gate_to_merge",
+                    (merged - published).total_seconds() if merged else None,
+                    max(0.0, (clock - published).total_seconds()) if merged is None else None,
+                )
+    except (OSError, sqlite3.Error) as exc:
+        errors.append({"source": "formal_cf", "error": str(exc)})
+
+    def summarize(groups: dict[str, dict[str, dict[str, list[float]]]]) -> dict[str, Any]:
+        return {
+            name: {span: _span_summary(**samples) for span, samples in spans.items()}
+            for name, spans in sorted(groups.items())
+        }
+
+    by_stream = summarize(buckets["by_stream_epic"])
+    by_family = summarize(buckets["by_task_family"])
+    empty_spans = {span: _span_summary(**samples) for span, samples in _new_buckets().items()}
+    return {
+        "content_included": False,
+        "threshold_seconds": {
+            "dispatch": max([DISPATCH_BOTTLENECK_THRESHOLD_S, *dispatch_hard_timeouts]),
+            "formal_cf_publication": FORMAL_CF_PUBLICATION_THRESHOLD_S,
+            "gate_to_merge": GATE_TO_MERGE_THRESHOLD_S,
+        },
+        "percentile_method": "linear interpolation at sorted index (n - 1) * p; emitted only when n >= 20",
+        "by_stream_epic": {key: value for key, value in by_stream.items() if key != "unclassified"},
+        "by_task_family": {key: value for key, value in by_family.items() if key != "unclassified"},
+        "unclassified": {
+            "by_stream_epic": by_stream.get("unclassified", empty_spans),
+            "by_task_family": by_family.get("unclassified", empty_spans),
+        },
+        "source_errors": errors,
+    }
