@@ -22,20 +22,33 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.5 | `./start-grok-drive.sh atlas` |
 | **hramatka** (teacher lesson service) | Grok 4.5 · Sonnet-5 if judgment-heavy | `./start-grok-drive.sh hramatka` |
 | **folk** (curriculum track) | Grok 4.5 † | `./start-grok-drive.sh folk` |
-| **bio** (curriculum track) | Claude | `./start-claude-drive.sh bio` |
+| **bio** (curriculum track) | Grok 4.5 | `./start-grok-drive.sh bio` |
 | **any epic** — incident · architecture cutover · contested review | Sonnet-5 (Opus for the hardest) | `./start-sonnet-drive.sh <epic>` |
 
 **Per-model launcher convention:** `./start-<model>-drive.sh <epic>` where `<model>` ∈
-`grok · gemini · sonnet · claude`. Epic is the first arg; extra flags forward
-(e.g. `--agent curriculum-track-orchestrator`). Every one runs the `drive-epic` skill.
+`grok · gemini · sonnet`. Epic is the first arg; extra flags forward
+(e.g. `--agent curriculum-track-orchestrator`). Each **launches the lane**; the driver
+then loads `$drive-epic` — automatically once the cold-prompt wiring lands (follow-up PR),
+and by manual `$drive-epic` invocation until then. **Today the wrappers do not yet
+auto-load the skill.**
+
+**Sonnet-5 is the sole Anthropic driver seat** — there is deliberately no Opus "drive"
+wrapper (Opus is reserved; see below). For the rare hardest-session Opus-in-seat, use the
+raw `./start-claude.sh --epic <x>`. The legacy `scripts/start-bio-driver.sh` runs Claude +
+the `curriculum-track-orchestrator` agent-def if you specifically want that agent.
 
 † **folk carve-out:** the *driver* may be Grok, but folk content **review** stays
 cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) — the
 `drive-epic` skill enforces this.
 
-**Reserved — do NOT use as a driver seat:**
+**Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
 - **Opus 4.8** — hardest judgment + the cross-family review of record. Don't burn it on a polling loop.
-- **Codex (GPT-5.6)** 272K window + **Kimi K2.7** 256K — under the ~500K orchestrator floor → coding/review pool.
+- **Codex (GPT-5.6)** 272K + **Kimi K2.7** 256K — under the ~500K window we want for a driver.
+  ⚠️ **Conflict to resolve:** `model_catalog.orchestrator_seats` + `fleet_communications.yaml`
+  currently list **codex** as a valid orchestrator seat (`claude · codex · grok · agy`). This
+  runbook recommends against it on the 272K rationale, but **the machine policy wins until
+  reconciled** — if codex is intentionally dropped as a driver, update the catalog + served
+  rule in the same change.
 - **Kimi K3** — frontier coder/reviewer + cross-family escalation authority (`max-effort-only` makes a continuous loop costly).
 
 ---
@@ -58,13 +71,15 @@ language + review lanes free and puts the loop on the most replaceable capacity:
 
 ## What each driver does on cold-start
 
-1. Launcher pins `SESSION_EPIC`, claims the stream lease, mints the session canary.
+1. Launcher pins `SESSION_EPIC`, claims the stream lease, and — for grok/gemini/kimi —
+   mints the session canary; Claude/Sonnet use the SessionStart hook chain (no canary lane).
 2. Driver runs **`drive-epic`** (invoke `$drive-epic`, or the launcher cold-prompt does it
    once wiring lands — see "Rollout" below).
 3. Driver reads live routing from `/api/rules` + `model_catalog.yaml` (never hard-codes the
    roster), then runs the loop: topology → route → dispatch → Monitor settle → cross-family
    `review-pr` → arm auto-merge after gate + green CI → dual-write handoff.
-4. Driver ends on canary **FAIL-HANDOFF** (< 8/10), not on a compact count.
+4. Driver ends on its seat's handoff signal (canary **FAIL-HANDOFF** < 8/10 for
+   grok/gemini/kimi; the thread-handoff for Claude/Sonnet), not on a compact count.
 
 ---
 
@@ -77,10 +92,12 @@ The launchers already speak the **session-stream/lease** half of fleet-comms (#5
 - `dual_write` is an operator/advisor-gated flip **owned by the infra/harness lane**
   (parity receipt → approved enable). Check state:
   `.venv/bin/python -m scripts.fleet_comms plane-status` (currently `mode: off`).
-- Until it flips, **file handoffs stay authoritative** and the skill dual-writes.
-- After the infra lane flips it, the plane becomes authoritative — a **one-line config
-  change** in `fleet_communications.yaml`, not a skill rewrite. So you do **not** need to
-  wait for the rollout to start using these drivers.
+- Plane modes are only `off → shadow → dual_write`; in **all** of them **file handoffs
+  stay authoritative** and the skill dual-writes. `dual_write` is shadow/mirror, **not**
+  cutover — there is **no implemented post-cutover authority state** yet.
+- Retiring file handoffs is a future infra step gated on an implemented authority signal
+  (not a `fleet_communications.yaml` edit a driver makes). Because the drivers work today
+  on the file path, you do **not** need to wait for the rollout to start using them.
 
 ---
 

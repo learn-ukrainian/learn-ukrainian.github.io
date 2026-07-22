@@ -35,8 +35,11 @@ curl -sS --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true" || true
 .venv/bin/python -m scripts.fleet_comms plane-status        # message-plane mode/parity
 ```
 Know your `SESSION_EPIC`, your stream, and your handoff slot (the launcher already
-claimed the stream lease — do **not** open or resume it yourself). Mint your session
-canary: `.venv/bin/python -m scripts.session_canary.<model>_lane mint --epic <epic>`.
+claimed the stream lease — do **not** open or resume it yourself). Establish your
+session-health signal **by seat**: **grok / gemini / kimi** have a canary lane —
+`.venv/bin/python -m scripts.session_canary.{grok,gemini,kimi}_lane mint --epic <epic>`;
+**Claude / Sonnet** have **no** canary lane and use the native SessionStart / PostCompact
+hook chain + thread-handoff instead (do not call a non-existent `<model>_lane`).
 
 ### 1. Read topology + metrics (don't hold state — query it)
 ```bash
@@ -82,12 +85,15 @@ first, then check the worktree for finished-but-unpushed work.
 A review of record is **independent and cross-family** (outside the author's model
 family; never self-review, never same-family). Route it:
 ```bash
-.venv/bin/python -m scripts.ai_agent_bridge review-pr --reviewer <cross-family-lane>   # claude|glm|codex|...
-.venv/bin/python -m scripts.ai_agent_bridge publish-review-verdict ...                 # publish the sealed verdict
+# PR number is REQUIRED and positional (omitting it exits with a usage error):
+.venv/bin/python -m scripts.ai_agent_bridge review-pr <PR_NUMBER> --reviewer <cross-family-lane>   # e.g. review-pr 5632 --reviewer codex
+.venv/bin/python -m scripts.ai_agent_bridge publish-review-verdict ...                             # publish the sealed verdict
 ```
 Pick the reviewer family from the served reviewer-seat rule; the writer's family is
-never eligible. Read the review CONTENT (not just pass/fail), apply the deltas, re-probe
-gate-driving data yourself before trusting "verified".
+never eligible. For a hard / non-routine change, escalate the seat with
+`--model gpt-5.6-sol` (or `claude-fable-5`) `--effort xhigh`. Read the review CONTENT
+(not just pass/fail), apply the deltas, re-probe gate-driving data yourself before
+trusting "verified".
 
 ### 7. Merge discipline
 PRs only — never commit or merge to `main` directly. **Arm auto-merge the moment the
@@ -102,8 +108,9 @@ own lane's PR** after the cross-family gate + green CI (lane model — there is 
 orchestrator). Flag another lane's PR with `needs=merge` rather than merging it.
 
 ### 8. Handoff — dual-write, cutover-aware (see §Fleet-comms state below)
-End the session on canary FAIL-HANDOFF, not on a compact count. Write your handoff to
-both surfaces while the plane is in dual-write phase.
+End the session on your seat's handoff signal (canary FAIL-HANDOFF for grok/gemini/kimi;
+the SessionStart / thread-handoff for Claude/Sonnet), not on a compact count. Keep the
+file handoff current — it stays authoritative through every plane mode (below).
 
 ---
 
@@ -120,9 +127,12 @@ not use it to cut over or retire file handoffs").
   the file handoff current (`.claude/<epic>-epic/*DRIVER-HANDOFF.md` where the epic uses
   one — gitignored local state; or `docs/session-state/` for infra). Successor-claim
   diagnostics: `session_streams handoff-status` / `handoff-claim` (#5530).
-- **After the infra lane flips the cutover:** the plane becomes authoritative; the file
-  fallback is dropped. That is a one-line config change (`fleet_communications.yaml`),
-  not a rewrite of this skill.
+- **Plane modes are only `off → shadow → dual_write`** (`plane-status`). In **all** of
+  them the file handoff stays authoritative — `dual_write` is shadow/mirror, **not**
+  cutover, and there is **no implemented post-cutover authority state** today. **Never
+  drop the file handoff on your own.** Retiring file handoffs is a future infra step
+  gated on an implemented authority signal the plane does not yet expose — not a config
+  edit a driver makes.
 - **Never** flip the plane, enable retention apply, or invent a competing comms design
   from this skill — those are the infra lane's gated actions.
 
