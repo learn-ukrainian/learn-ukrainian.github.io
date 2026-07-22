@@ -98,12 +98,27 @@ def cmd_bottleneck_metrics(args: argparse.Namespace) -> int:
     """Per-stream lifecycle bottlenecks from task, plane, and GitHub metadata."""
     tasks_dir = Path(args.tasks_dir).expanduser()
     plane_root = Path(args.root).expanduser() if args.root else default_plane_root()
+    plane_db = plane_root / "comms.sqlite3"
+    # Match sibling cmds: never let sqlite3.connect create an empty plane DB
+    # as a side effect of a metadata-only command (Claude CF #5653 F001).
+    if not plane_db.is_file():
+        sys.stdout.write(
+            _json_dump(
+                {
+                    "content_included": False,
+                    "db_missing": True,
+                    "plane_db": str(plane_db),
+                    "tasks_dir": str(tasks_dir),
+                }
+            )
+        )
+        return EXIT_OK
     payload = collect_stream_bottleneck_metrics(
         tasks_dir=tasks_dir,
-        plane_db=plane_root / "comms.sqlite3",
+        plane_db=plane_db,
     )
     payload["tasks_dir"] = str(tasks_dir)
-    payload["plane_db"] = str(plane_root / "comms.sqlite3")
+    payload["plane_db"] = str(plane_db)
     sys.stdout.write(_json_dump(payload))
     return EXIT_OK
 

@@ -434,6 +434,8 @@ def collect_stream_bottleneck_metrics(
 
     merged_cache: dict[tuple[str, int], tuple[datetime | None, str | None]] = {}
     try:
+        if not plane_db.is_file():
+            raise FileNotFoundError(f"plane DB missing: {plane_db}")
         with _connect(plane_db) as conn:
             if not (_table_exists(conn, "formal_review_jobs") and _table_exists(conn, "github_publications")):
                 raise sqlite3.DatabaseError("required formal_review_jobs/github_publications tables missing")
