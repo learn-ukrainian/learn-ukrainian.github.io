@@ -327,7 +327,13 @@ class OwnershipLedger:
                         )
 
             # Missing/unknown claims cannot prove disjointness against an active writer.
-            unprovable = bool(active) and (not concrete or bool(unknown))
+            # Also: an active peer with UNKNOWN intent blocks proof of disjointness.
+            active_unknown = any(
+                other_claim.kind == ClaimKind.UNKNOWN for _, other_claim, _ in active
+            )
+            unprovable = bool(active) and (
+                not concrete or bool(unknown) or active_unknown
+            )
             would_refuse = bool(conflicts) or unprovable
 
             override = (allow_path_overlap or "").strip() or None

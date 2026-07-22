@@ -288,3 +288,33 @@ def test_slashful_task_id_state_file_sanitized(tmp_path: Path):
     )
     assert second.would_refuse is True
     assert second.conflicts
+
+
+def test_active_unknown_claim_makes_later_concrete_unprovable(tmp_path: Path):
+    """Active wildcard claim blocks proof of disjointness for later writers (CF r2)."""
+    ledger = tmp_path / "own.sqlite3"
+    state_dir = tmp_path / "tasks"
+    state_dir.mkdir()
+    pid = os.getpid()
+    (state_dir / "wild.json").write_text(
+        json.dumps({"status": "running", "pid": pid}), encoding="utf-8"
+    )
+    admit_write_paths(
+        task_id="wild",
+        mode="workspace-write",
+        owned_paths=["scripts/**/*.py"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+    )
+    later = admit_write_paths(
+        task_id="concrete",
+        mode="workspace-write",
+        owned_paths=["scripts/delegate.py"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+        guard_mode=GuardMode.WARN,
+    )
+    assert later.admitted is True
+    assert later.would_refuse is True
