@@ -20,6 +20,7 @@ from typing import Any
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.dual_write import resolve_handoff_path
+from agents_extensions.shared.session_streams.handoff import diagnose_handoff
 from agents_extensions.shared.session_streams.hooks import clean_exit_hook, lease_from_environment
 from agents_extensions.shared.session_streams.inventory import epic_handoff_map
 from agents_extensions.shared.session_streams.model import (
@@ -31,7 +32,11 @@ from agents_extensions.shared.session_streams.model import (
     sha256_text,
 )
 from agents_extensions.shared.session_streams.receipts import list_migration_state
-from agents_extensions.shared.session_streams.store import SessionStreamError, SessionStreamStore
+from agents_extensions.shared.session_streams.store import (
+    LifecycleError,
+    SessionStreamError,
+    SessionStreamStore,
+)
 
 CAPSULE_SCHEMA = "session-supervisor-bootstrap.v1"
 LEASE_ENV_PREFIX = "SESSION_STREAM_"
@@ -124,15 +129,37 @@ class SessionSupervisor:
         lineage_id: str,
         ttl_seconds: int,
     ) -> Lease:
-        """Open one exact fenced driver lease before a harness is started."""
+        """Open one exact fenced driver lease before a harness is started.
+
+        If the stream has an expired lease whose holder PID is dead, proof-gated
+        force-close runs automatically so launchers do not need a manual recovery
+        step (same safety gates as handoff-claim / #5530). Live unexpired holders
+        still refuse.
+        """
         self._require_driver(role)
-        return self.store.open_session(
-            stream_id=stream_id,
-            holder=holder,
-            lineage_id=lineage_id,
-            ttl_seconds=ttl_seconds,
-            reason="common session supervisor driver open",
-        )
+        try:
+            return self.store.open_session(
+                stream_id=stream_id,
+                holder=holder,
+                lineage_id=lineage_id,
+                ttl_seconds=ttl_seconds,
+                reason="common session supervisor driver open",
+            )
+        except LifecycleError as exc:
+            recovered = self._recover_claimable_expired_session(
+                stream_id=stream_id,
+                holder=holder,
+                conflict=exc,
+            )
+            if not recovered:
+                raise
+            return self.store.open_session(
+                stream_id=stream_id,
+                holder=holder,
+                lineage_id=lineage_id,
+                ttl_seconds=ttl_seconds,
+                reason="common session supervisor driver open after proof-gated recover",
+            )
 
     def resume_driver(self, *, role: LaunchRole | str, lease: Lease) -> Lease:
         """Resume only the exact pre-existing lease envelope by heartbeating it."""
@@ -149,12 +176,81 @@ class SessionSupervisor:
         self._require_driver(role)
         return clean_exit_hook(self.store, lease).state
 
-    def recover_expired_driver(self, *, role: LaunchRole | str, stream_id: str) -> None:
-        """Fail closed until recovery-plan receipts bind the full PR-I proof set."""
+    def recover_expired_driver(
+        self,
+        *,
+        role: LaunchRole | str,
+        stream_id: str,
+        holder: LeaseHolder,
+    ) -> bool:
+        """Proof-gated force-close of an expired dead-holder session.
+
+        Returns True when a session was force-closed. Raises SupervisorError when
+        the stream is held by a live unexpired lease or is otherwise not claimable.
+        Returns False when there is no open/rolling session to recover.
+        """
         self._require_driver(role)
-        raise SupervisorError(
-            "automatic recovery is unavailable: require an audited recovery-plan digest and exact receipts"
+        status = diagnose_handoff(self.store, stream_id)
+        if not status.session_id or status.session_state not in {"open", "rolling"}:
+            return False
+        if not status.claimable_force_close:
+            raise SupervisorError(
+                f"stream {stream_id} is not claimable for recovery: {status.reason}"
+            )
+        if status.holder_instance_id and status.holder_instance_id == holder.instance_id:
+            raise SupervisorError(
+                f"stream {stream_id}: recovery candidate instance_id must differ from "
+                f"dead holder ({holder.instance_id})"
+            )
+        self.store.force_close_expired_session(
+            stream_id=stream_id,
+            session_id=status.session_id,
+            candidate=holder,
+            reason=(
+                f"session supervisor proof-gated recover by "
+                f"{holder.agent}/{holder.harness}"
+            ),
         )
+        return True
+
+    def _recover_claimable_expired_session(
+        self,
+        *,
+        stream_id: str,
+        holder: LeaseHolder,
+        conflict: LifecycleError,
+    ) -> bool:
+        """On open conflict, force-close only when handoff diagnosis says claimable."""
+        message = str(conflict)
+        if "already has live session" not in message and "unreleased lease" not in message:
+            return False
+        status = diagnose_handoff(self.store, stream_id)
+        if status.claimable_force_close and status.session_id:
+            if status.holder_instance_id and status.holder_instance_id == holder.instance_id:
+                raise SupervisorError(
+                    f"stream {stream_id}: recovery candidate instance_id must differ from "
+                    f"dead holder ({holder.instance_id})"
+                ) from conflict
+            self.store.force_close_expired_session(
+                stream_id=stream_id,
+                session_id=status.session_id,
+                candidate=holder,
+                reason=(
+                    f"session supervisor open: proof-gated recover expired dead holder "
+                    f"({status.session_id})"
+                ),
+            )
+            return True
+        raise SupervisorError(
+            f"stream {stream_id} already has live session "
+            f"{status.session_id or 'unknown'} "
+            f"({status.session_state or 'unknown'}); "
+            f"holder {status.holder_agent or '?'}/{status.holder_harness or '?'} "
+            f"pid={status.holder_process_id} alive={status.holder_process_alive}. "
+            f"{status.reason}. "
+            f"If that process is yours, exit it cleanly or wait for lease expiry; "
+            f"do not force-close a live unexpired holder."
+        ) from conflict
 
     def build_capsule(
         self,

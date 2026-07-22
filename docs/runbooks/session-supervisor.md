@@ -128,6 +128,32 @@ operation for launcher integration tests.
   launcher exits with an error; no session is started.
 - Incomplete supervisor output → launcher fails closed.
 
+### Stale expired lease (no operator memory required)
+
+If a previous driver crashed without `hook close`, the stream can keep an
+`open` session with an **expired** lease and a **dead** holder PID. On the next
+`open`, the supervisor **automatically** proof-gated force-closes that session
+and opens a new one (same gates as `handoff-claim` / #5530).
+
+You do **not** need a manual recover step for that case. Just relaunch:
+
+```bash
+./start-grok.sh --epic=harness
+# same for start-kimi.sh / other launchers that use the common supervisor
+```
+
+Still refused (by design):
+
+- live unexpired lease held by another running process
+- expired lease whose holder PID is still alive
+
+Diagnose only when a launch still fails:
+
+```bash
+.venv/bin/python -m agents_extensions.shared.session_streams handoff-status \
+  --stream epic:4707
+```
+
 ## Claude
 
 Claude's SessionStart hook currently owns its own lease binding. PR-J2 will
