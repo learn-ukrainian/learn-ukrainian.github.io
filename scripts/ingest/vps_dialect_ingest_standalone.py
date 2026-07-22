@@ -76,7 +76,7 @@ def fetch_url_text(url: str, timeout: int = 30, delay: float = DEFAULT_DELAY_SEC
             else:
                 raise
 
-    raise RuntimeError(f"Failed to fetch {url} after {max_retries} attempts.")
+    return ""
 
 
 def parse_lemko_org_dictionary() -> list[DialectDictEntry]:
@@ -117,8 +117,12 @@ def parse_shevchenko_concordance() -> list[DialectDictEntry]:
     entries: list[DialectDictEntry] = []
     try:
         html = fetch_url_text(SHEVCHENKO_DICT_BASE_URL)
-        # Extract dictionary links or bold headword terms
-        matches = re.findall(r'<b[^>]*>(.*?)</b>\s*[-—]?\s*(.*?)(?=<br|<p|</td)', html, re.DOTALL)
+        # Case-insensitive robust tag matching supporting <b/B>, <br/BR/br/>, <p/P>, </td>
+        matches = re.findall(
+            r'<b[^>]*>(.*?)</b>\s*[-—]?\s*(.*?)(?=<br/?>|<p/?>|</td|</p>)',
+            html,
+            re.DOTALL | re.IGNORECASE,
+        )
         for lemma_raw, def_raw in matches:
             lemma = re.sub(r"<[^>]+>", "", lemma_raw).strip()
             definition = re.sub(r"<[^>]+>", "", def_raw).strip()
@@ -156,7 +160,8 @@ def run_vps_ingestion(output_path: Path, sources: list[str]) -> int:
 
     failed_sources = [src for src, count in per_source_counts.items() if count == 0]
     if failed_sources:
-        print(f"⚠️ Warning: The following requested sources produced 0 entries: {failed_sources}", file=sys.stderr)
+        print(f"❌ Error: The following requested sources produced 0 entries: {failed_sources}", file=sys.stderr)
+        return 2
 
     if not all_entries:
         print("❌ Error: All requested sources yielded 0 entries. Failing ingestion run.", file=sys.stderr)

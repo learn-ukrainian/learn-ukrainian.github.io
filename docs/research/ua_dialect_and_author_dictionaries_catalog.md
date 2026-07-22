@@ -66,11 +66,12 @@ graph TD
     - Ingest 'Словник мови Шевченка' (Izbornyk text)
     - Ingest 'Словник мови Франка' (LNU text)
     - Ingest 'Словник мови Лесі Українки'"]
-    Phase3["Phase 3: Digital Dialect Aggregators
+    Phase2 --> Phase3["Phase 3: Digital Dialect Aggregators
     - Ingest Lemko dictionary (lemko.org plain text)
     - Ingest Boyko dictionary (Onyshkevych)
     - Ingest Hutsul dictionary"] --> Integration["Integrated Heritage Safeguard Engine
     (data/sources.db + vesum.db)"]
+```
 ```
 
 ### Next Decision Points
