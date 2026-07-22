@@ -19,8 +19,6 @@ from collections.abc import Iterable, Sequence
 from pathlib import Path
 from typing import Any
 
-import pytest
-
 SHARD_COUNT = 4
 PLAYGROUND_PERF_TEST = "tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast"
 SERIAL_TESTS = (
@@ -74,12 +72,15 @@ class _NodeidCollector:
     def __init__(self) -> None:
         self.nodeids: list[str] = []
 
-    def pytest_collection_finish(self, session: pytest.Session) -> None:
+    def pytest_collection_finish(self, session: Any) -> None:
         self.nodeids = [item.nodeid for item in session.items]
 
 
 def collect_nodeids(args: Sequence[str] = COMMON_ARGS) -> list[str]:
     """Collect the exact selection used by the sharded main pytest invocation."""
+    # Lazy import: verify-artifacts / parse-durations run in bare venvs without pytest.
+    import pytest
+
     collector = _NodeidCollector()
     exit_code = pytest.main([*args, "--collect-only", "-q"], plugins=[collector])
     if exit_code != pytest.ExitCode.OK:
