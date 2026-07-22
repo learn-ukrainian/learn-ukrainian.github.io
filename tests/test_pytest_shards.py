@@ -53,6 +53,45 @@ def test_verify_artifacts_rejects_an_omitted_selected_test(tmp_path: Path) -> No
         raise AssertionError("an omitted selected test must fail artifact verification")
 
 
+def test_verify_artifacts_rejects_partition_mode_mismatch(tmp_path: Path) -> None:
+    selected = ["tests/test_a.py::t", "tests/test_b.py::t"]
+    digest = pytest_shards._digest(selected)
+    for shard_id, (nodeid, mode) in enumerate(
+        zip(selected, ("equal-weight", "lpt-durations"), strict=True), start=1
+    ):
+        shard = tmp_path / f"pytest-shard-{shard_id}"
+        shard.mkdir()
+        (shard / "plan.json").write_text(
+            json.dumps(
+                {
+                    "assigned_nodeids": [nodeid],
+                    "assigned_digest": pytest_shards._digest([nodeid]),
+                    "collected_count": len(selected),
+                    "collected_digest": digest,
+                    "partition_mode": mode,
+                    "serial_nodeids": list(pytest_shards.SERIAL_TESTS)
+                    if shard_id == 1
+                    else [],
+                    "shard_count": 2,
+                    "shard_id": shard_id,
+                }
+            ),
+            encoding="utf-8",
+        )
+        (shard / "main-junit.xml").write_text('<testsuite tests="1" />', encoding="utf-8")
+        if shard_id == 1:
+            (shard / "cache-junit.xml").write_text('<testsuite tests="2" />', encoding="utf-8")
+            (shard / "playground-junit.xml").write_text(
+                '<testsuite tests="1" />', encoding="utf-8"
+            )
+    try:
+        pytest_shards.verify_artifacts(tmp_path, 2)
+    except RuntimeError as error:
+        assert "partition_mode" in str(error)
+    else:
+        raise AssertionError("partition_mode mismatch must fail closed")
+
+
 def test_verify_artifacts_accepts_a_complete_disjoint_partition(tmp_path: Path) -> None:
     selected = [f"tests/test_{number}.py::test_case" for number in range(4)]
     digest = pytest_shards._digest(selected)

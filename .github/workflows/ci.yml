@@ -997,17 +997,9 @@ jobs:
           path: ~/.cache/pip
           key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch2.13.0cpu
 
-      # Duration cache still collected post-run for a future single-planner LPT job.
-      # Matrix workers must NOT feed divergent prefix-matched restores into plan:
-      # that produced "assigned to more than one shard" at verify (#5664).
-      - name: Restore latest pytest duration estimates
-        if: needs.changes.outputs.python == 'true'
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ci-artifacts/pytest-durations.json
-          key: pytest-shard-durations-v1-${{ github.ref_name }}-${{ github.sha }}
-          restore-keys: |
-            pytest-shard-durations-v1-main-
+      # Duration estimates are still *saved* post-run (parse-durations) for a future
+      # single-planner LPT job. Matrix workers do not restore/feed them into plan
+      # (equal-weight partition; #5664).
 
       - name: Plan deterministic pytest shard
         if: needs.changes.outputs.python == 'true' && !cancelled()
