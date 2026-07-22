@@ -27,7 +27,7 @@ process decisions without present-tense **operator** or designated **advisor** a
 ### Fleet-comms mid-cutover (binding for standalone TUI/UI drivers; #5512)
 
 Full text: `agents_extensions/shared/rules/fleet-comms-coordination.md` (also in
-`GET /api/rules`). Digest: prefer `python -m scripts.fleet_comms plane-status` +
+`GET /api/rules`). Digest: prefer `.venv/bin/python -m scripts.fleet_comms plane-status` +
 `review-pr` / `publish-review-verdict` for topology and formal CF; while plane
 `mode=off`, **file dual-write remains authoritative** — do not invent a competing
 design or flip dual_write / stream authority / `formal_review_eligible` without
