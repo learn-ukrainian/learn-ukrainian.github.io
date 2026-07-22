@@ -19,10 +19,12 @@ Every strong long-context model is load-bearing somewhere else, so every orchest
 pick "bites a hand." This roster bites the **least**: it keeps the scarce authority +
 language + review lanes free, and puts the loop on the most replaceable capacity.
 
-| Lane / epic | Driver model | Launch | Why this seat |
+| Lane / epic | Driver model | Named launch | Why this seat |
 | --- | --- | --- | --- |
-| **Harness / infra** | Gemini 3.6 Flash (AGY) | `./start-gemini.sh --epic harness` | 1M window, MCP-leading tool use, token-efficient, cheap. Ideal infra driver. **Never claims content lanes.** Already the #5512 orchestrator seat. |
-| **Curriculum / track** (atlas, hramatka, folk, bio, …) | Grok 4.5 | `./start-grok.sh --epic <track>` | Best-on-board agentic tool use, cheap, on its **own** subscription window → steals the least. Coordination-dense driving. |
+| **Harness / infra** | Gemini 3.6 Flash (AGY) | `./start-harness-driver.sh` | 1M window, MCP-leading tool use, token-efficient, cheap. Ideal infra driver. **Never claims content lanes.** Already the #5512 orchestrator seat. |
+| **Atlas** (Word Atlas + Practice Hub product) | Grok 4.5 | `./start-atlas-driver.sh` | Best-on-board agentic tool use, cheap, on its **own** subscription window → steals the least. Coordination-dense product driving. |
+| **Hramatka** (teacher lesson service) | Grok 4.5 | `./start-hramatka-driver.sh` | Same — coordination-dense delivery driving on Grok's own window. |
+| **Bio** (curriculum track) | Claude (curriculum-track-orchestrator) | `./scripts/start-bio-driver.sh` | Pre-existing track driver. |
 | **Judgment-dense sessions** (incidents, architecture cutovers, contested reviews) | Sonnet-5 | `./start-sonnet-driver.sh --epic <epic> [--agent <type>]` | 1M window, near-Opus judgment at much lower cost. **Extra Anthropic capacity — does not consume the Opus review seat.** |
 | **Reserved — NOT orchestrator loops** | Opus 4.8 · Codex (GPT-5.6) · Kimi K3 | — | Opus = hardest judgment + CF review of record. Codex (272K window) + Kimi K2.7 (256K) → coding/review pool. K3 = frontier coder/reviewer + cross-family escalation authority. |
 
@@ -35,6 +37,25 @@ fleet state). That is why Codex (272K) and Kimi **K2.7** (256K) are ruled out as
 and Grok (500K), Sonnet-5/Opus/Gemini/K3 (1M) qualify.
 
 ---
+
+## Named driver scripts — just run the one that says what you want
+
+No `--epic` to remember: the script name **is** the lane. Each is a thin wrapper over
+the right `start-<model>.sh` with the epic + default seat baked in; extra flags forward.
+
+| Run this | Drives | Default seat |
+| --- | --- | --- |
+| `./start-harness-driver.sh` | harness / infra | Gemini (AGY) |
+| `./start-atlas-driver.sh` | atlas (Word Atlas + Practice Hub) | Grok 4.5 |
+| `./start-hramatka-driver.sh` | hramatka (teacher lesson service) | Grok 4.5 |
+| `./start-sonnet-driver.sh --epic <epic>` | any epic, judgment-dense | Sonnet-5 |
+| `./scripts/start-bio-driver.sh` | bio track | Claude |
+
+To drive a lane on a **different** seat, drop to the base launcher:
+`./start-<model>.sh --epic <name>`. The default seat is a one-line change in the named
+wrapper if you want to move a lane permanently (e.g. atlas → Sonnet-5).
+
+Add a new lane the same way: a 3-line wrapper `exec start-<model>.sh --epic <name> "$@"`.
 
 ## What each driver does on cold-start
 
