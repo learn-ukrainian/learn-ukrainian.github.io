@@ -9,6 +9,7 @@ from scripts.hygiene.retention_engine import (
     apply_plan,
     build_plan,
     plan_digest,
+    record_gate5_observation,
     write_plan,
 )
 from scripts.orchestration.reap_worktrees import ReapResult
@@ -71,6 +72,87 @@ def test_plan_digest_stable_and_apply_rejects_mismatch(tmp_path: Path) -> None:
         assert receipt2["ok"] is False
         assert receipt2["error"] == "plan_digest_mismatch"
         assert receipt2["mutations"] == 0
+
+
+def test_record_gate5_observation_one_day_per_calendar_label(tmp_path: Path) -> None:
+    from scripts.hygiene.retention_engine import _gate5_ready_for_apply_go
+
+    plan_dir = tmp_path / "retention"
+    plan = {
+        "schema": "fleet-comms.retention.plan.v1",
+        "mode": "dry-run",
+        "created_at": "2026-07-24T12:00:00Z",
+        "digest": "abc123",
+        "mutations": 0,
+        "counts": {"would_reap": 0, "scanner_stale": 0},
+    }
+    path = write_plan(plan, plan_dir)
+    log1 = record_gate5_observation(plan, plan_path=path, log_path=plan_dir / "gate5-observation-log.json")
+    assert log1["days_count"] == 1
+    assert log1["observation_days_recorded"] == ["2026-07-24"]
+    assert log1["apply_armed"] is False
+    assert log1["ready_for_apply_go"] is False
+
+    # Same calendar day, second plan — day count stays 1
+    plan2 = dict(plan)
+    plan2["created_at"] = "2026-07-24T18:00:00Z"
+    plan2["digest"] = "def456"
+    path2 = write_plan(plan2, plan_dir)
+    log2 = record_gate5_observation(plan2, plan_path=path2, log_path=plan_dir / "gate5-observation-log.json")
+    assert log2["days_count"] == 1
+    assert len(log2["plans"]) == 2
+
+    # Contiguous new day → ready at target_days=2
+    plan3 = dict(plan)
+    plan3["created_at"] = "2026-07-25T01:00:00Z"
+    plan3["digest"] = "ghi789"
+    path3 = write_plan(plan3, plan_dir)
+    with patch(
+        "scripts.hygiene.retention_engine._utc_now",
+        return_value="2026-07-25T02:00:00Z",
+    ):
+        log3 = record_gate5_observation(
+            plan3,
+            plan_path=path3,
+            log_path=plan_dir / "gate5-observation-log.json",
+            target_days=2,
+        )
+    assert log3["days_count"] == 2
+    assert log3["ready_for_apply_go"] is True
+    assert log3["apply_armed"] is False
+
+    # Sparse days are not contiguous → not ready (CF #5667 P1)
+    assert (
+        _gate5_ready_for_apply_go(
+            ["2026-01-01", "2026-03-01", "2026-07-25"],
+            target_days=3,
+            now_utc="2026-07-25T00:00:00Z",
+        )
+        is False
+    )
+    # Contiguous tail of length 3 is ready
+    assert (
+        _gate5_ready_for_apply_go(
+            ["2026-07-23", "2026-07-24", "2026-07-25"],
+            target_days=3,
+            now_utc="2026-07-25T00:00:00Z",
+        )
+        is True
+    )
+
+    # Stale latest day → not ready even if day count is high
+    with patch(
+        "scripts.hygiene.retention_engine._utc_now",
+        return_value="2026-08-10T00:00:00Z",
+    ):
+        log4 = record_gate5_observation(
+            plan3,
+            plan_path=path3,
+            log_path=plan_dir / "gate5-observation-log.json",
+            target_days=2,
+        )
+    assert log4["days_count"] == 2
+    assert log4["ready_for_apply_go"] is False
 
 
 def test_apply_runs_reaper_only_when_digest_matches(tmp_path: Path) -> None:

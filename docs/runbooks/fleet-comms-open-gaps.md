@@ -148,7 +148,8 @@ Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and
 - [x] formal CF model+effort pins + practical ladders (2026-07-21)
 - [x] efficiency CLI: `fleet_comms metrics` / `github-metrics` / `dead-letters` (PR-M on main)
 - [x] isolation runbooks AGY/Kimi/Grok (#5555–#5557 fail-closed residual documented)
-- [ ] operator: message-plane dual_write cutover flip after parity receipt
-- [ ] operator: retention plan dry-run × ≥7 days before scheduled apply
-- [ ] operator: Claude + Grok + Codex + AGY cold-start stream smoke
-- [ ] operator: AGY orchestrator self-setup review
+- [x] operator finish-mode: message-plane **shadow** default after parity (#5666; dual_write still opt-in)
+- [ ] operator: retention plan dry-run × ≥7 days before scheduled apply (auto-logged by `retention_engine.py plan`; apply still OFF; 3/7 as of 2026-07-23)
+- [x] isolation residual closeout Option C (#5555–57 / wire issues closed; formal CF = claude|codex|glm)
+- [ ] operator: Claude + Grok + Codex + AGY cold-start stream smoke (launchers dual-aware; live multi-CLI soak optional)
+- [ ] optional later: dual_write plane default after longer shadow soak
