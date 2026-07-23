@@ -11,6 +11,9 @@ import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 STATUSLINE = PROJECT_ROOT / "agents_extensions/shared/statusline/statusline.sh"
+GEMINI_STATUSLINE = (
+    PROJECT_ROOT / "agents_extensions/gemini/statusline/statusline.sh"
+)
 SUBAGENT_STATUSLINE = (
     PROJECT_ROOT / "agents_extensions/shared/statusline/subagent-statusline.sh"
 )
@@ -332,7 +335,7 @@ def test_context_monitor_unknown_capacity_emits_no_warning(tmp_path: Path) -> No
     assert completed.stdout == ""
 
 
-@pytest.mark.parametrize("script", [STATUSLINE, CONTEXT_MONITOR])
+@pytest.mark.parametrize("script", [STATUSLINE, GEMINI_STATUSLINE, CONTEXT_MONITOR])
 def test_context_consumer_shell_syntax(script: Path) -> None:
     completed = subprocess.run(
         ["bash", "-n", os.fspath(script)],
