@@ -89,7 +89,13 @@ def sample_data(tmp_path):
         ("ukrajinet", [{"synset_id": "s1", "words": "великий, здоровий, чималий", "text": "великий синонім", "source": "UNet"}]),
         ("wiktionary", [{"word": "кіт", "definitions": "Домашня тварина", "synonyms": "", "antonyms": "", "text": "кіт", "source": "Wikt"}]),
         ("frazeolohichnyi", [{"word": "вода", "definition": "Не розлий вода", "text": "вода — фразеологізм", "source": "Фраз"}]),
-        ("antonenko-davydovych", [{"word": "процент", "section": "Лексика", "text": "Кажіть відсоток", "source": "АД"}]),
+        ("antonenko-davydovych", [
+            {"word": "процент", "section": "Лексика", "text": "Кажіть відсоток", "source": "АД"},
+            {"word": "Приймати участь", "section": "Лексика",
+             "text": "Приймати участь — калька з рос. Кажіть: брати участь.", "source": "АД"},
+            {"word": "На протязі", "section": "Прийменники",
+             "text": "На протязі — калька з рос. 'в течение'. Кажіть: протягом.", "source": ""},
+        ]),
     ]:
         d = gdrive / name
         d.mkdir(parents=True)
@@ -142,7 +148,7 @@ class TestBuildSourcesDb:
         assert conn.execute("SELECT COUNT(*) FROM ukrajinet").fetchone()[0] == 1
         assert conn.execute("SELECT COUNT(*) FROM wiktionary").fetchone()[0] == 1
         assert conn.execute("SELECT COUNT(*) FROM frazeolohichnyi").fetchone()[0] == 1
-        assert conn.execute("SELECT COUNT(*) FROM style_guide").fetchone()[0] == 1
+        assert conn.execute("SELECT COUNT(*) FROM style_guide").fetchone()[0] == 3
 
         # FTS works
         fts = conn.execute(
@@ -333,6 +339,38 @@ class TestSourcesDb:
         from wiki.sources_db import search_style_guide
         results = search_style_guide("процент")
         assert len(results) == 1
+
+    def test_search_style_guide_lowercase_phrase_matches_capitalized_headword(
+        self, sample_data, monkeypatch
+    ):
+        self._build_and_patch(sample_data, monkeypatch)
+        from wiki.sources_db import search_style_guide
+
+        results = search_style_guide("приймати участь")
+        assert len(results) == 1
+        assert results[0]["word"] == "Приймати участь"
+        assert results[0]["source"] == "АД"
+
+    def test_search_style_guide_substring_matches_multiword_headword(
+        self, sample_data, monkeypatch
+    ):
+        self._build_and_patch(sample_data, monkeypatch)
+        from wiki.sources_db import search_style_guide
+
+        results = search_style_guide("протязі")
+        assert len(results) == 1
+        assert results[0]["word"] == "На протязі"
+        # The fixture's `source` field is empty — search_style_guide fills
+        # in the canonical attribution rather than returning "".
+        assert results[0]["source"] == "Антоненко-Давидович"
+
+    def test_search_style_guide_nonexistent_query_returns_empty(
+        self, sample_data, monkeypatch
+    ):
+        self._build_and_patch(sample_data, monkeypatch)
+        from wiki.sources_db import search_style_guide
+
+        assert search_style_guide("нежиттєздатнийтермін") == []
 
     def test_lookup_by_url(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)

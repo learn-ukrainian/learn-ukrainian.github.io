@@ -1792,14 +1792,68 @@ def search_wikipedia(ukr_keywords: set[str], max_total: int = 10) -> list[dict]:
 # ── Dictionary lookup functions (indexed tables) ────────────────
 
 
+def _fold_dict_key(value: str) -> str:
+    """Case-fold a headword/query for Cyrillic-safe matching.
+
+    SQLite's `COLLATE NOCASE` only folds ASCII A-Z, so a lowercase Cyrillic
+    query (e.g. "приймати") never matches a capitalized headword (e.g.
+    "Приймати") through SQL alone. Python's Unicode-aware `.lower()` does,
+    and stripping the combining acute (U+0301) also lets stressed and
+    unstressed forms match each other.
+    """
+    return value.replace("\u0301", "").strip().lower()
+
+
+def _dict_lookup_contains(
+    conn: sqlite3.Connection,
+    table: str,
+    word: str,
+    limit: int,
+) -> list[dict]:
+    """Case-fold + substring headword match for small multi-word tables.
+
+    Loads the full table (e.g. `style_guide`'s ~340 rows) since headwords
+    there are phrases rather than single tokens — a SQL prefix `LIKE` would
+    match "Приймати" but miss "На протязі" for a "протязі" query. Exact
+    (case-folded) matches are ranked ahead of substring matches.
+    """
+    query_key = _fold_dict_key(word)
+    if not query_key:
+        return []
+
+    try:
+        rows = conn.execute(f"SELECT * FROM {table}").fetchall()
+    except sqlite3.OperationalError:
+        return []
+
+    exact: list[dict] = []
+    partial: list[dict] = []
+    for row in rows:
+        item = dict(row)
+        headword_key = _fold_dict_key(str(item.get("word", "")))
+        if not headword_key:
+            continue
+        if headword_key == query_key:
+            exact.append(item)
+        elif query_key in headword_key or headword_key in query_key:
+            partial.append(item)
+
+    return (exact + partial)[:limit]
+
+
 def _dict_lookup(
     table: str,
     word: str,
     limit: int = 10,
     *,
     db_path: str | Path | None = None,
+    contains: bool = False,
 ) -> list[dict]:
-    """Generic headword lookup on an indexed dictionary table."""
+    """Generic headword lookup on an indexed dictionary table.
+
+    Pass ``contains=True`` for tables whose headwords are multi-word
+    phrases — see :func:`_dict_lookup_contains`.
+    """
     conn = None
     try:
         conn = _get_conn_for(db_path)
@@ -1807,6 +1861,9 @@ def _dict_lookup(
         return []
 
     try:
+        if contains:
+            return _dict_lookup_contains(conn, table, word, limit)
+
         # Exact match first, then prefix match
         try:
             rows = conn.execute(
@@ -2401,8 +2458,17 @@ def search_style_guide(
     *,
     db_path: str | Path | None = None,
 ) -> list[dict]:
-    """Look up calques/Russianisms in Антоненко-Давидович style guide."""
-    return _dict_lookup("style_guide", word, limit, db_path=db_path)
+    """Look up calques/Russianisms in Антоненко-Давидович style guide.
+
+    Headwords are often multi-word phrases ("Приймати участь", "На
+    протязі"), so matching is case-insensitive (Cyrillic-safe, unlike SQL
+    `COLLATE NOCASE`) and phrase-substring in either direction — see
+    :func:`_dict_lookup_contains`.
+    """
+    rows = _dict_lookup("style_guide", word, limit, db_path=db_path, contains=True)
+    for row in rows:
+        row["source"] = row.get("source") or "Антоненко-Давидович"
+    return rows
 
 
 def search_ua_gec_errors(
