@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import time
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
@@ -17,6 +18,9 @@ router = APIRouter(tags=["delegate"])
 
 TASKS_DIR = BATCH_STATE_DIR / "tasks"
 RESULT_BYTES_LIMIT = 64 * 1024
+TASK_READ_RETRIES = 2
+TASK_READ_RETRY_SECONDS = 0.01
+ACTIVE_TASK_STATUSES = {"running", "spawning"}
 
 
 def _parse_iso_datetime(value: str | None) -> datetime | None:
@@ -37,13 +41,16 @@ def _task_state_path(task_id: str) -> Path:
 
 
 def _read_task_state(path: Path) -> dict[str, Any] | None:
-    if not path.exists():
-        return None
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return None
-    return data if isinstance(data, dict) else None
+    for attempt in range(TASK_READ_RETRIES):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            if attempt + 1 == TASK_READ_RETRIES:
+                return None
+            time.sleep(TASK_READ_RETRY_SECONDS)
+            continue
+        return data if isinstance(data, dict) else None
+    return None
 
 
 def _pid_alive(pid: int | None) -> bool:
@@ -76,12 +83,7 @@ def _derived_task_status(task: dict[str, Any]) -> tuple[str, bool]:
     return status, alive
 
 
-def list_delegate_tasks(
-    *,
-    status: Literal["running", "done", "failed", "timeout", "spawning", "all"] = "all",
-    limit: int = 50,
-) -> dict[str, Any]:
-    task_limit = min(max(1, int(limit)), 500)
+def _delegate_task_rows(statuses: set[str] | None = None) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     if TASKS_DIR.exists():
         for path in sorted(TASKS_DIR.glob("*.json")):
@@ -89,7 +91,7 @@ def list_delegate_tasks(
             if task is None:
                 continue
             derived_status, alive = _derived_task_status(task)
-            if status != "all" and derived_status != status:
+            if statuses is not None and derived_status not in statuses:
                 continue
             rows.append({
                 "task_id": task.get("task_id") or path.stem,
@@ -108,6 +110,17 @@ def list_delegate_tasks(
         key=lambda item: _parse_iso_datetime(item.get("started_at")) or datetime.min.replace(tzinfo=UTC),
         reverse=True,
     )
+    return rows
+
+
+def list_delegate_tasks(
+    *,
+    status: Literal["running", "done", "failed", "timeout", "spawning", "all"] = "all",
+    limit: int = 50,
+) -> dict[str, Any]:
+    task_limit = min(max(1, int(limit)), 500)
+    statuses = None if status == "all" else {status}
+    rows = _delegate_task_rows(statuses)
     return {"total": len(rows), "tasks": rows[:task_limit]}
 
 
@@ -142,17 +155,11 @@ def get_delegate_task_detail(task_id: str) -> tuple[dict[str, Any] | None, dict[
 
 
 def active_delegate_count() -> int:
-    tasks = list_delegate_tasks(status="all", limit=500)["tasks"]
-    return sum(1 for task in tasks if task["status"] in {"running", "spawning"})
+    return len(_delegate_task_rows(ACTIVE_TASK_STATUSES))
 
 
 def active_delegate_tasks() -> dict[str, Any]:
-    tasks = list_delegate_tasks(status="all", limit=500)["tasks"]
-    active = [
-        task
-        for task in tasks
-        if task["status"] in {"running", "spawning"}
-    ]
+    active = _delegate_task_rows(ACTIVE_TASK_STATUSES)
     return {"total": len(active), "tasks": active}
 
 

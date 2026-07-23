@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 from fastapi.testclient import TestClient
 
@@ -117,3 +118,78 @@ def test_delegate_active_includes_spawning_task_without_pid(tmp_path, monkeypatc
     assert [task["task_id"] for task in active["tasks"]] == ["spawning", "running"]
     assert active["tasks"][0]["status"] == "spawning"
     assert active["tasks"][0]["alive"] is False
+
+
+def test_delegate_active_filters_before_limit_truncation(tmp_path, monkeypatch):
+    tasks_dir = tmp_path / "tasks"
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+
+    def fake_kill(pid: int, sig: int) -> None:
+        if pid != 111:
+            raise ProcessLookupError
+
+    monkeypatch.setattr(delegate_router.os, "kill", fake_kill)
+    now = datetime.now(UTC)
+    for index in range(600):
+        _write_task(
+            tasks_dir / f"done-{index:03d}.json",
+            _task_payload(
+                f"done-{index:03d}",
+                started_at=_iso(now - timedelta(minutes=index)),
+            ),
+        )
+    _write_task(
+        tasks_dir / "running.json",
+        _task_payload(
+            "running",
+            status="running",
+            pid=111,
+            started_at=_iso(now - timedelta(days=1)),
+        ),
+    )
+    _write_task(
+        tasks_dir / "spawning.json",
+        _task_payload(
+            "spawning",
+            status="spawning",
+            pid=None,
+            started_at=_iso(now - timedelta(days=1, minutes=1)),
+        ),
+    )
+
+    response = client.get("/api/delegate/active")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == 2
+    assert [task["task_id"] for task in data["tasks"]] == ["running", "spawning"]
+    assert delegate_router.active_delegate_count() == 2
+
+
+def test_delegate_active_retries_transient_invalid_json(tmp_path, monkeypatch):
+    tasks_dir = tmp_path / "tasks"
+    task_path = tasks_dir / "running.json"
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _write_task(task_path, _task_payload("running", status="running", pid=111))
+
+    original_read_text = Path.read_text
+    read_attempts = 0
+    retry_delays = []
+
+    def flaky_read_text(path: Path, *args, **kwargs) -> str:
+        nonlocal read_attempts
+        if path == task_path and read_attempts == 0:
+            read_attempts += 1
+            return "{"
+        return original_read_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", flaky_read_text)
+    monkeypatch.setattr(delegate_router.time, "sleep", retry_delays.append)
+    monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
+
+    response = client.get("/api/delegate/active")
+
+    assert response.status_code == 200
+    assert response.json()["total"] == 1
+    assert response.json()["tasks"][0]["task_id"] == "running"
+    assert retry_delays == [delegate_router.TASK_READ_RETRY_SECONDS]
