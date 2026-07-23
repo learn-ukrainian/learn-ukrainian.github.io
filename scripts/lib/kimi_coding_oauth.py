@@ -16,6 +16,7 @@ Stdlib-only: safe to run with any Python 3.9+.
 
 Usage:
     kimi_coding_oauth.py token
+    kimi_coding_oauth.py refresh
 
 Exit codes:
     0  token printed on stdout
@@ -168,6 +169,40 @@ def _write_credentials(path: Path, data: dict) -> None:
         raise
 
 
+def force_refresh_token() -> str:
+    """Refresh the stored OAuth credential even when its access token is fresh.
+
+    This is intentionally separate from :func:`cmd_token`: consumers that only
+    need a usable token should preserve the current token until its safety
+    margin. A health canary, however, must prove the refresh-token grant and
+    token rotation still work. The complete read → refresh → atomic write
+    sequence stays under the same lock as ``cmd_token`` so a concurrent
+    ``apiKeyHelper`` process cannot use or overwrite a stale refresh token.
+
+    The returned token is for trusted in-process callers only. Callers that
+    report health must never log or otherwise expose it.
+    """
+    path = _credentials_path()
+    if not path.is_file():
+        raise NoCredentialsError(f"credential file not found: {path}")
+
+    lock_path = path.with_suffix(path.suffix + ".lock")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a") as lock_handle:
+        fcntl.flock(lock_handle.fileno(), fcntl.LOCK_EX)
+        try:
+            data = _read_credentials(path)
+        except (OSError, ValueError) as exc:
+            raise NoCredentialsError(f"cannot read credentials: {exc}") from exc
+
+        merged = _refresh(data)
+        _write_credentials(path, merged)
+        token = _fresh_token(merged, 0)
+        if token is None:
+            raise RefreshFailedError("refreshed token is already expired")
+        return token
+
+
 def cmd_token() -> int:
     path = _credentials_path()
     margin = _margin_seconds()
@@ -215,11 +250,28 @@ def cmd_token() -> int:
         return 0
 
 
+def cmd_refresh() -> int:
+    """Force one refresh-token grant for diagnostics and trusted automation."""
+    try:
+        token = force_refresh_token()
+    except NoCredentialsError as exc:
+        print(f"kimi-coding-oauth: {exc}", file=sys.stderr)
+        return 2
+    except RefreshFailedError as exc:
+        print(f"kimi-coding-oauth: {exc}", file=sys.stderr)
+        return 3
+    except OSError as exc:
+        print(f"kimi-coding-oauth: cannot write credentials: {exc}", file=sys.stderr)
+        return 3
+    print(token)
+    return 0
+
+
 def main(argv: list[str]) -> int:
-    if len(argv) != 2 or argv[1] != "token":
+    if len(argv) != 2 or argv[1] not in {"token", "refresh"}:
         print(__doc__, file=sys.stderr)
         return 64
-    return cmd_token()
+    return cmd_token() if argv[1] == "token" else cmd_refresh()
 
 
 if __name__ == "__main__":
