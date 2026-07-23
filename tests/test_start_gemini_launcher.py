@@ -251,6 +251,15 @@ def test_epic_harness_derives_gemini_infra_handoff(tmp_path: Path) -> None:
     assert ".agent/gemini-infra-thread-handoff.md" in prompt
 
 
+def test_epic_devops_uses_canonical_infra_stream_and_handoff(tmp_path: Path) -> None:
+    values, _argv_blob, result, _project, supervisor_capture = _run_launcher(tmp_path, ["--epic", "devops"])
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert values["session_epic"] == "devops"
+    assert values["handoff"] == "gemini-infra"
+    supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
+    stream_index = supervisor_args.index("--stream")
+    assert supervisor_args[stream_index + 1] == "epic:4707"
+
 
 def test_epic_equals_form_and_explicit_prompt_uses_interactive_prompt(tmp_path: Path) -> None:
     values, argv_blob, result, _project, _supervisor_capture = _run_launcher(

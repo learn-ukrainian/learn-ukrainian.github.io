@@ -12,7 +12,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ $# -lt 1 ]; then
   echo "usage: $(basename "$0") <epic> [flags]" >&2
-  echo "  epics: harness  atlas  hramatka  bio  folk  corpus  (see docs/runbooks/epic-orchestrator-roster.md)" >&2
+  echo "  epics: harness  infra  devops  atlas  hramatka  bio  folk  corpus  (see docs/runbooks/epic-orchestrator-roster.md)" >&2
   exit 2
 fi
 EPIC="$1"; shift

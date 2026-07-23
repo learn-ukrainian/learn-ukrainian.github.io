@@ -253,7 +253,7 @@ if [ -n "$_selected_epic" ]; then
       export SESSION_HANDOFF_AGENT="$(handoff_identity_for_gemini_epic "$_selected_epic")"
     else
       case "$_selected_epic" in
-        harness|infra) export SESSION_HANDOFF_AGENT='gemini-infra' ;;
+        harness|infra|devops) export SESSION_HANDOFF_AGENT='gemini-infra' ;;
         *) export SESSION_HANDOFF_AGENT="gemini-${_selected_epic}" ;;
       esac
     fi

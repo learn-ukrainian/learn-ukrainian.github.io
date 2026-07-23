@@ -239,7 +239,7 @@ if [ -n "$_selected_epic" ]; then
   # Grok-specific handoff slot (not claude-<epic>)
   if [ -z "${SESSION_HANDOFF_AGENT:-}" ] && [ -z "$_handoff_override" ]; then
     case "$_selected_epic" in
-      harness|infra) export SESSION_HANDOFF_AGENT='grok-infra' ;;
+      harness|infra|devops) export SESSION_HANDOFF_AGENT='grok-infra' ;;
       *) export SESSION_HANDOFF_AGENT="grok-${_selected_epic}" ;;
     esac
   fi

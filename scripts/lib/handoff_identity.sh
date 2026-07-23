@@ -131,13 +131,13 @@ epic_name_valid() {
 # Canonical-slot aliases: some epics are NOT free-standing lanes — they already
 # have a durable handoff identity elsewhere. Mapping them to a phantom
 # claude-<epic> slot hides live packets and causes silent cold starts (#5201).
-# harness (infra & fleet reliability / --epic harness) → claude-infra, the same
+# harness/infra/devops (infra, DevOps & fleet reliability) → claude-infra, the same
 # slot as --agent infra-orchestrator (lineage dir, session-state, inbox).
 handoff_identity_for_epic() {
   local epic="${1:-}"
   [ -n "$epic" ] || return 0
   case "$epic" in
-    harness|infra) printf '%s' 'claude-infra' ;;
+    harness|infra|devops) printf '%s' 'claude-infra' ;;
     *) printf 'claude-%s' "$epic" ;;
   esac
 }
@@ -151,32 +151,31 @@ handoff_identity_for_codex_epic() {
   local epic="${1:-}"
   [ -n "$epic" ] || return 0
   case "$epic" in
-    harness|infra) printf '%s' 'codex-infra' ;;
+    harness|infra|devops) printf '%s' 'codex-infra' ;;
     *) printf 'codex-%s' "$epic" ;;
   esac
 }
 
 # handoff_identity_for_kimi_epic "<epic-name>"
 # Echo the per-epic Kimi Code orchestrator rollover slot. Provider-specific so
-# a Kimi seat never adopts Claude/Codex/Grok packets. harness/infra → kimi-infra.
+# a Kimi seat never adopts Claude/Codex/Grok packets. harness/infra/devops → kimi-infra.
 handoff_identity_for_kimi_epic() {
   local epic="${1:-}"
   [ -n "$epic" ] || return 0
   case "$epic" in
-    harness|infra) printf '%s' 'kimi-infra' ;;
+    harness|infra|devops) printf '%s' 'kimi-infra' ;;
     *) printf 'kimi-%s' "$epic" ;;
   esac
 }
 
 # handoff_identity_for_gemini_epic "<epic-name>"
 # Echo the per-epic Gemini / Antigravity orchestrator rollover slot. Provider-specific so
-# a Gemini seat never adopts Claude/Codex/Grok/Kimi packets. harness/infra → gemini-infra.
+# a Gemini seat never adopts Claude/Codex/Grok/Kimi packets. harness/infra/devops → gemini-infra.
 handoff_identity_for_gemini_epic() {
   local epic="${1:-}"
   [ -n "$epic" ] || return 0
   case "$epic" in
-    harness|infra) printf '%s' 'gemini-infra' ;;
+    harness|infra|devops) printf '%s' 'gemini-infra' ;;
     *) printf 'gemini-%s' "$epic" ;;
   esac
 }
-

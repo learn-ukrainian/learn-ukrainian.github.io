@@ -246,7 +246,7 @@ if [ -n "$_selected_epic" ]; then
       export SESSION_HANDOFF_AGENT="$(handoff_identity_for_kimi_epic "$_selected_epic")"
     else
       case "$_selected_epic" in
-        harness|infra) export SESSION_HANDOFF_AGENT='kimi-infra' ;;
+        harness|infra|devops) export SESSION_HANDOFF_AGENT='kimi-infra' ;;
         *) export SESSION_HANDOFF_AGENT="kimi-${_selected_epic}" ;;
       esac
     fi

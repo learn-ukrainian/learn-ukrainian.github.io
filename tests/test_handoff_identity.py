@@ -19,6 +19,7 @@ import pytest
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _HOOK_TEST = _REPO_ROOT / "scripts" / "audit" / "test_handoff_identity.sh"
+_HANDOFF_IDENTITY = _REPO_ROOT / "scripts" / "lib" / "handoff_identity.sh"
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
@@ -36,3 +37,24 @@ def test_handoff_identity_fixtures() -> None:
         f"--- stdout ---\n{result.stdout}\n--- stderr ---\n{result.stderr}"
     )
     assert "ok - handoff identity fixtures passed" in result.stdout
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+@pytest.mark.parametrize(
+    ("resolver", "expected"),
+    [
+        ("handoff_identity_for_epic", "claude-infra"),
+        ("handoff_identity_for_gemini_epic", "gemini-infra"),
+        ("handoff_identity_for_codex_epic", "codex-infra"),
+    ],
+)
+def test_devops_alias_resolves_to_canonical_infra_slot(resolver: str, expected: str) -> None:
+    result = subprocess.run(
+        ["bash", "-c", 'source "$1"; "$2" devops', "bash", str(_HANDOFF_IDENTITY), resolver],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == expected

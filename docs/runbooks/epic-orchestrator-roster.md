@@ -17,7 +17,7 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 
 | Epic | Recommended seat | Run |
 | --- | --- | --- |
-| **harness / infra** | Gemini (AGY) | `./start-gemini-drive.sh harness` |
+| **harness / infra / devops** | Gemini (AGY) | `./start-gemini-drive.sh devops` |
 | **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-drive.sh corpus` |
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.5 | `./start-grok-drive.sh atlas` |
 | **hramatka** (teacher lesson service) | Grok 4.5 · Sonnet-5 if judgment-heavy | `./start-grok-drive.sh hramatka` |

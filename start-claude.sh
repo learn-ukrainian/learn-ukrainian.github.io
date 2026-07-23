@@ -207,7 +207,7 @@ export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
 # a LAUNCHER-ONLY flag (stripped before exec — the claude CLI does not know it).
 # It pins the session to one epic lane: SESSION_EPIC is exported for the
 # SessionStart hook to print a binding assignment banner, and the handoff slot
-# becomes claude-<epic> (with canonical aliases: harness/infra → claude-infra
+# becomes claude-<epic> (with canonical aliases: harness/infra/devops → claude-infra
 # so packets under the durable infra slot surface — #5201) so two sessions of
 # the SAME agent type on DIFFERENT epics never share (or clobber) a thread
 # handoff. Without --epic the hook tells the session to ASK the user instead of
