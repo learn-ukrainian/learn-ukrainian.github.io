@@ -212,12 +212,42 @@ if [ -n "$ctx_pct" ]; then
   fi
 fi
 
+# Execution mode segment
+mode_seg=""
+mode=$(json_get '.mode // .execution_mode // .agent_mode // .task_mode')
+if [ -n "$mode" ]; then
+  case "$mode" in
+    plan)         mode_seg="\033[1;33m[mode: ${mode}]\033[0m" ;;
+    accept-edits) mode_seg="\033[1;32m[mode: ${mode}]\033[0m" ;;
+    *)            mode_seg="[mode: ${mode}]" ;;
+  esac
+fi
+
 # ── Steps & Compactions Telemetry ─────────────────────────────
 steps_seg=""
 compacts_seg=""
 handoff_seg=""
 steps_count=0
 compacts_count=0
+
+# Fallback transcript resolution for AGY / Antigravity CLI / Claude Code paths
+if [ -n "$transcript_path" ] && [ ! -f "$transcript_path" ]; then
+  alt_path=$(printf '%s' "$transcript_path" | sed 's#/\.gemini/antigravity/#/.gemini/antigravity-cli/#')
+  [ -f "$alt_path" ] && transcript_path="$alt_path"
+fi
+if [ -z "$transcript_path" ] || [ ! -f "$transcript_path" ]; then
+  if [ -n "$session_id" ]; then
+    for cand in \
+      "$HOME/.gemini/antigravity-cli/brain/$session_id/.system_generated/logs/transcript.jsonl" \
+      "$HOME/.gemini/antigravity/brain/$session_id/.system_generated/logs/transcript.jsonl" \
+      "$HOME/.claude/transcripts/$session_id.jsonl"; do
+      if [ -f "$cand" ]; then
+        transcript_path="$cand"
+        break
+      fi
+    done
+  fi
+fi
 
 if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
   steps_count=$(wc -l < "$transcript_path" 2>/dev/null | tr -d ' ')
@@ -227,26 +257,35 @@ if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
     steps_count=0
   fi
 
-  compacts_count=$(grep -i -c 'compact' "$transcript_path" 2>/dev/null || true)
-  if is_positive_integer "$compacts_count"; then
+  strict_compacts=$(jq -r 'select(.type == "compact" or .type == "COMPACT" or .type == "CONTEXT_COMPACT" or .subtype == "compact" or (.type == "SYSTEM_MESSAGE" and (.content | type == "string") and (.content | test("history compacted|context window compacted|auto-compacted"; "i")))) | .type' "$transcript_path" 2>/dev/null | wc -l | tr -d ' ')
+  if is_positive_integer "$strict_compacts"; then
+    compacts_count="$strict_compacts"
     if [ "$compacts_count" -ge 2 ]; then
       compacts_seg="\033[31m[compacts: ${compacts_count}]\033[0m"
     else
       compacts_seg="\033[33m[compacts: ${compacts_count}]\033[0m"
     fi
-  else
-    compacts_count=0
   fi
 fi
 
-# Handoff recommendation badge based on context %, step count, and compaction count
-# Policy: Prefer handoff over compaction. A single compaction warns; 2+ compactions require immediate handoff.
-if [ -n "${ctx_int:-}" ] && is_positive_integer "$ctx_int" && [ "$ctx_int" -ge 80 ] \
-   || [ "$compacts_count" -ge 2 ] || [ "$steps_count" -ge 80 ]; then
-  handoff_seg="\033[1;41;37m[HANDOFF NOW (prefer handoff over compact)]\033[0m"
-elif [ -n "${ctx_int:-}" ] && is_positive_integer "$ctx_int" && [ "$ctx_int" -ge 70 ] \
-     || [ "$compacts_count" -ge 1 ] || [ "$steps_count" -ge 60 ]; then
-  handoff_seg="\033[1;33m[HANDOFF SUGGESTED]\033[0m"
+if [ -z "$steps_seg" ]; then
+  direct_steps=$(json_get '.steps // .step_count // .step')
+  if is_positive_integer "$direct_steps"; then
+    steps_seg="[steps: ${direct_steps}]"
+  fi
+fi
+
+# Handoff recommendation badge: warn to prepare for session handoff at 725K+ tokens.
+# Policy: Hand off at 725K+ tokens to avoid compactions, or if an actual compaction occurs.
+handoff_seg=""
+if is_positive_integer "$ctx_used" && [ "$ctx_used" -ge 850000 ] \
+   || [ -n "${ctx_int:-}" ] && is_positive_integer "$ctx_int" && [ "$ctx_int" -ge 85 ] \
+   || [ "$compacts_count" -ge 2 ]; then
+  handoff_seg="\033[1;41;37m[HANDOFF NOW]\033[0m"
+elif is_positive_integer "$ctx_used" && [ "$ctx_used" -ge 725000 ] \
+     || [ -n "${ctx_int:-}" ] && is_positive_integer "$ctx_int" && [ "$ctx_int" -ge 70 ] \
+     || [ "$compacts_count" -ge 1 ]; then
+  handoff_seg="\033[1;33m[HANDOFF SUGGESTED (725K+)]\033[0m"
 fi
 # Effort level
 effort_seg=""
@@ -287,6 +326,7 @@ parts=()
 parts+=("$cwd_name")
 [ -n "$wt_seg" ]       && parts+=("$wt_seg")
 [ -n "$branch_seg" ]   && parts+=("$branch_seg")
+[ -n "$mode_seg" ]     && parts+=("$mode_seg")
 [ -n "$ctx_seg" ]      && parts+=("$ctx_seg")
 [ -n "$steps_seg" ]    && parts+=("$steps_seg")
 [ -n "$compacts_seg" ] && parts+=("$compacts_seg")

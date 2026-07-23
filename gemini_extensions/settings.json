@@ -17,5 +17,9 @@
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash -lc 'SCRIPT=\"${CLAUDE_PROJECT_DIR:-$(pwd)}/agents_extensions/gemini/statusline/statusline.sh\"; if [ ! -f \"$SCRIPT\" ]; then SCRIPT=\"$(git rev-parse --show-toplevel 2>/dev/null)/agents_extensions/gemini/statusline/statusline.sh\"; fi; exec bash \"$SCRIPT\"'"
   }
 }

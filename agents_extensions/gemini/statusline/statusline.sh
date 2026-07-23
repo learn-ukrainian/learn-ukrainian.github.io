@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Gemini / Antigravity CLI statusline — learn-ukrainian project.
+# Claude Code statusline — learn-ukrainian project.
 #
-# Dedicated statusline for Gemini harness in ~/.gemini/ / agents_extensions/gemini/
-# Reads status JSON from stdin and renders:
-#   [Gemini MODEL] cwd-basename [wt:worktree-name] (branch*) [ctx: N%] [steps: N] [compacts: C] [HANDOFF BADGE]
+# Reads Claude Code status JSON from stdin and renders:
+#   [MODEL] cwd-basename [wt:worktree-name] (branch*) [ctx: N%]
+#   [effort: level] [think] [5h: N%] [7d: N%]
 #
 # Segments:
 #   [MODEL]        .model.display_name, omitted if missing
@@ -212,6 +212,81 @@ if [ -n "$ctx_pct" ]; then
   fi
 fi
 
+# Execution mode segment
+mode_seg=""
+mode=$(json_get '.mode // .execution_mode // .agent_mode // .task_mode')
+if [ -n "$mode" ]; then
+  case "$mode" in
+    plan)         mode_seg="\033[1;33m[mode: ${mode}]\033[0m" ;;
+    accept-edits) mode_seg="\033[1;32m[mode: ${mode}]\033[0m" ;;
+    *)            mode_seg="[mode: ${mode}]" ;;
+  esac
+fi
+
+# ── Steps & Compactions Telemetry ─────────────────────────────
+steps_seg=""
+compacts_seg=""
+handoff_seg=""
+steps_count=0
+compacts_count=0
+
+# Fallback transcript resolution for AGY / Antigravity CLI / Claude Code paths
+if [ -n "$transcript_path" ] && [ ! -f "$transcript_path" ]; then
+  alt_path=$(printf '%s' "$transcript_path" | sed 's#/\.gemini/antigravity/#/.gemini/antigravity-cli/#')
+  [ -f "$alt_path" ] && transcript_path="$alt_path"
+fi
+if [ -z "$transcript_path" ] || [ ! -f "$transcript_path" ]; then
+  if [ -n "$session_id" ]; then
+    for cand in \
+      "$HOME/.gemini/antigravity-cli/brain/$session_id/.system_generated/logs/transcript.jsonl" \
+      "$HOME/.gemini/antigravity/brain/$session_id/.system_generated/logs/transcript.jsonl" \
+      "$HOME/.claude/transcripts/$session_id.jsonl"; do
+      if [ -f "$cand" ]; then
+        transcript_path="$cand"
+        break
+      fi
+    done
+  fi
+fi
+
+if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
+  steps_count=$(wc -l < "$transcript_path" 2>/dev/null | tr -d ' ')
+  if is_positive_integer "$steps_count"; then
+    steps_seg="[steps: ${steps_count}]"
+  else
+    steps_count=0
+  fi
+
+  strict_compacts=$(jq -r 'select(.type == "compact" or .type == "COMPACT" or .type == "CONTEXT_COMPACT" or .subtype == "compact" or (.type == "SYSTEM_MESSAGE" and (.content | type == "string") and (.content | test("history compacted|context window compacted|auto-compacted"; "i")))) | .type' "$transcript_path" 2>/dev/null | wc -l | tr -d ' ')
+  if is_positive_integer "$strict_compacts"; then
+    compacts_count="$strict_compacts"
+    if [ "$compacts_count" -ge 2 ]; then
+      compacts_seg="\033[31m[compacts: ${compacts_count}]\033[0m"
+    else
+      compacts_seg="\033[33m[compacts: ${compacts_count}]\033[0m"
+    fi
+  fi
+fi
+
+if [ -z "$steps_seg" ]; then
+  direct_steps=$(json_get '.steps // .step_count // .step')
+  if is_positive_integer "$direct_steps"; then
+    steps_seg="[steps: ${direct_steps}]"
+  fi
+fi
+
+# Handoff recommendation badge: warn to prepare for session handoff at 725K+ tokens.
+# Policy: Hand off at 725K+ tokens to avoid compactions, or if an actual compaction occurs.
+handoff_seg=""
+if is_positive_integer "$ctx_used" && [ "$ctx_used" -ge 850000 ] \
+   || [ -n "${ctx_int:-}" ] && is_positive_integer "$ctx_int" && [ "$ctx_int" -ge 85 ] \
+   || [ "$compacts_count" -ge 2 ]; then
+  handoff_seg="\033[1;41;37m[HANDOFF NOW]\033[0m"
+elif is_positive_integer "$ctx_used" && [ "$ctx_used" -ge 725000 ] \
+     || [ -n "${ctx_int:-}" ] && is_positive_integer "$ctx_int" && [ "$ctx_int" -ge 70 ] \
+     || [ "$compacts_count" -ge 1 ]; then
+  handoff_seg="\033[1;33m[HANDOFF SUGGESTED (725K+)]\033[0m"
+fi
 # Effort level
 effort_seg=""
 effort_level=$(json_get '.effort.level')
@@ -247,16 +322,21 @@ rl7d_seg=$(rate_limit_seg "7d" ".rate_limits.seven_day.used_percentage")
 # ── Assemble ────────────────────────────────────────────────────
 
 parts=()
-[ -n "$model" ]      && parts+=("[$model]")
+[ -n "$model" ]        && parts+=("[$model]")
 parts+=("$cwd_name")
-[ -n "$wt_seg" ]     && parts+=("$wt_seg")
-[ -n "$branch_seg" ] && parts+=("$branch_seg")
-[ -n "$ctx_seg" ]    && parts+=("$ctx_seg")
+[ -n "$wt_seg" ]       && parts+=("$wt_seg")
+[ -n "$branch_seg" ]   && parts+=("$branch_seg")
+[ -n "$mode_seg" ]     && parts+=("$mode_seg")
+[ -n "$ctx_seg" ]      && parts+=("$ctx_seg")
+[ -n "$steps_seg" ]    && parts+=("$steps_seg")
+[ -n "$compacts_seg" ] && parts+=("$compacts_seg")
+[ -n "$handoff_seg" ]  && parts+=("$handoff_seg")
 [ -n "$mismatch_seg" ] && parts+=("$mismatch_seg")
-[ -n "$effort_seg" ] && parts+=("$effort_seg")
+[ -n "$effort_seg" ]   && parts+=("$effort_seg")
 [ -n "$thinking_seg" ] && parts+=("$thinking_seg")
-[ -n "$rl5h_seg" ]   && parts+=("$rl5h_seg")
-[ -n "$rl7d_seg" ]   && parts+=("$rl7d_seg")
+[ -n "$rl5h_seg" ]     && parts+=("$rl5h_seg")
+[ -n "$rl7d_seg" ]     && parts+=("$rl7d_seg")
 
 # %b interprets the ANSI escape codes embedded in coloured segments.
 printf '%b\n' "${parts[*]}"
+
