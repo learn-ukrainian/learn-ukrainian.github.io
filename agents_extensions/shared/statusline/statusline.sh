@@ -227,14 +227,12 @@ if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
     steps_count=0
   fi
 
-  compacts_count=$(grep -c -E '"(compact|compacted|is_compacted|subtype":"compact"|CONVERSATION_HISTORY)' "$transcript_path" 2>/dev/null || true)
+  compacts_count=$(grep -i -c 'compact' "$transcript_path" 2>/dev/null || true)
   if is_positive_integer "$compacts_count"; then
-    if [ "$compacts_count" -ge 3 ]; then
+    if [ "$compacts_count" -ge 2 ]; then
       compacts_seg="\033[31m[compacts: ${compacts_count}]\033[0m"
-    elif [ "$compacts_count" -ge 2 ]; then
-      compacts_seg="\033[33m[compacts: ${compacts_count}]\033[0m"
     else
-      compacts_seg="[compacts: ${compacts_count}]"
+      compacts_seg="\033[33m[compacts: ${compacts_count}]\033[0m"
     fi
   else
     compacts_count=0
@@ -242,14 +240,14 @@ if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
 fi
 
 # Handoff recommendation badge based on context %, step count, and compaction count
-if [ -n "${ctx_int:-}" ] && is_positive_integer "$ctx_int" && [ "$ctx_int" -ge 85 ] \
-   || [ "$compacts_count" -ge 3 ] || [ "$steps_count" -ge 100 ]; then
-  handoff_seg="\033[1;41;37m[HANDOFF NOW (rot risk)]\033[0m"
-elif [ -n "${ctx_int:-}" ] && is_positive_integer "$ctx_int" && [ "$ctx_int" -ge 75 ] \
-     || [ "$compacts_count" -ge 2 ] || [ "$steps_count" -ge 70 ]; then
+# Policy: Prefer handoff over compaction. A single compaction warns; 2+ compactions require immediate handoff.
+if [ -n "${ctx_int:-}" ] && is_positive_integer "$ctx_int" && [ "$ctx_int" -ge 80 ] \
+   || [ "$compacts_count" -ge 2 ] || [ "$steps_count" -ge 80 ]; then
+  handoff_seg="\033[1;41;37m[HANDOFF NOW (prefer handoff over compact)]\033[0m"
+elif [ -n "${ctx_int:-}" ] && is_positive_integer "$ctx_int" && [ "$ctx_int" -ge 70 ] \
+     || [ "$compacts_count" -ge 1 ] || [ "$steps_count" -ge 60 ]; then
   handoff_seg="\033[1;33m[HANDOFF SUGGESTED]\033[0m"
 fi
-
 # Effort level
 effort_seg=""
 effort_level=$(json_get '.effort.level')
