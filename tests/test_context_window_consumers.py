@@ -341,3 +341,40 @@ def test_context_consumer_shell_syntax(script: Path) -> None:
         check=False,
     )
     assert completed.returncode == 0, completed.stderr
+
+
+def test_statusline_reports_steps_compacts_and_handoff_warning(tmp_path: Path) -> None:
+    project, record_path = _fake_project(tmp_path, _record())
+    transcript = tmp_path / "transcript_test.jsonl"
+    lines = []
+    for i in range(75):
+        lines.append(json.dumps({"type": "user", "step_index": i}))
+    lines.append(json.dumps({"type": "system", "subtype": "compact"}))
+    lines.append(json.dumps({"type": "system", "subtype": "compact"}))
+    transcript.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    payload = {
+        "session_id": "status-session",
+        "transcript_path": os.fspath(transcript),
+        "model": {"id": "gpt-5.6-sol", "display_name": "GPT-5.6 Sol"},
+        "workspace": {"current_dir": os.fspath(tmp_path)},
+        "context_window": {
+            "context_window_size": 260_000,
+            "total_input_tokens": 50_000,
+        },
+    }
+
+    completed = subprocess.run(
+        [os.fspath(STATUSLINE)],
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=tmp_path,
+        env=_environment(project, record_path),
+    )
+
+    assert "[steps: 77]" in completed.stdout
+    assert "[compacts: 2]" in completed.stdout
+    assert "HANDOFF SUGGESTED" in completed.stdout
+
