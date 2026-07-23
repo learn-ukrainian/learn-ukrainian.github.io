@@ -344,6 +344,8 @@ test_*.db-wal
 # (e.g. eval results pending validation) live under a `private/` subdir,
 # matching the existing `docs/references/private/` convention.
 docs/session-state/private/
+# Active driver handoffs are local session state, not PR deliverables.
+docs/session-state/current.*
 
 # the native reviewer's teaching material (large, local-only, IP-sensitive)
 data/native-reviewer-lessons/
