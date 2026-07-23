@@ -19,8 +19,10 @@ operator approval after seven days of dry-run evidence.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
+import os
 import sys
 from dataclasses import asdict
 from datetime import UTC, date, datetime, timedelta
@@ -243,10 +245,16 @@ def record_gate5_observation(
         }
     )
     log_path.parent.mkdir(parents=True, exist_ok=True)
-    log_path.write_text(
-        json.dumps(log, indent=2, sort_keys=True, default=str) + "\n",
-        encoding="utf-8",
-    )
+    payload = json.dumps(log, indent=2, sort_keys=True, default=str) + "\n"
+    # Atomic replace so concurrent plan jobs never leave a truncated log (CF P2).
+    tmp_path = log_path.with_suffix(log_path.suffix + f".tmp.{os.getpid()}")
+    try:
+        tmp_path.write_text(payload, encoding="utf-8")
+        os.replace(tmp_path, log_path)
+    finally:
+        if tmp_path.exists():
+            with contextlib.suppress(OSError):
+                tmp_path.unlink()
     return log
 
 
