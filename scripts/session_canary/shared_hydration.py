@@ -137,8 +137,12 @@ def _normalize_path(value: str, *, repo_root: Path) -> str:
         except ValueError as exc:
             raise HydrationSanitizationError("out-of-repo-path") from exc
     looks_like_path = (
-        value.startswith(("./", "../", ".agent/", ".claude/", "agents_extensions/", "docs/", "scripts/", "tests/"))
-        or (" " not in value and "://" not in value and "/" in value)
+        " " not in value
+        and "://" not in value
+        and (
+            value.startswith(("./", "../", ".agent/", ".claude/", "agents_extensions/", "docs/", "scripts/", "tests/"))
+            or "/" in value
+        )
     )
     if looks_like_path:
         normalized = (repo_root / candidate).resolve()

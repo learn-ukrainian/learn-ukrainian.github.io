@@ -142,6 +142,17 @@ def test_sanitizer_normalizes_repo_relative_paths(value: dict[str, object]) -> N
 @pytest.mark.parametrize(
     "value",
     [
+        "./this sentence has spaces /.. and is not a file path",
+        ".agent/this sentence has spaces /.. and is not a file path",
+    ],
+)
+def test_sanitizer_preserves_sentence_like_strings_with_slashes(value: str) -> None:
+    assert hydration.sanitize_hydration_value(value) == value
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
         {"raw_stdout": "not allowed"},
         {"credential": "ghp_" + ("a" * 26)},
         {"path": "/tmp/not-in-repository"},

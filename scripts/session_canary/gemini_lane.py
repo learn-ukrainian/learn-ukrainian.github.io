@@ -249,6 +249,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    args.epic = args.epic.strip().lower()
     return int(args.func(args))
 
 

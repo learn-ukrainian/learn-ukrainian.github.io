@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 import pytest
@@ -67,6 +68,30 @@ def test_lease_environment_parser_accepts_launcher_quotes(tmp_path: Path) -> Non
         "SESSION_STREAM_PROCESS_ID": "1234",
         "SESSION_STREAM_GENERATION": "2",
     }
+
+
+@pytest.mark.parametrize(
+    ("argv", "handler_name"),
+    [
+        (["bootstrap", "--epic", "Harness"], "cmd_bootstrap"),
+        (["status", "--epic", "Harness"], "cmd_status"),
+        (["hydrate", "--epic", "Harness"], "cmd_hydrate"),
+        (["score", "--epic", "Harness", "--answers", "answers.json"], "cmd_score"),
+    ],
+)
+def test_main_normalizes_epic_across_canary_subcommands(
+    monkeypatch: pytest.MonkeyPatch, argv: list[str], handler_name: str
+) -> None:
+    observed: list[str] = []
+
+    def record_epic(args: argparse.Namespace) -> int:
+        observed.append(args.epic)
+        return 0
+
+    monkeypatch.setattr(gemini_lane, handler_name, record_epic)
+
+    assert gemini_lane.main(argv) == 0
+    assert observed == ["harness"]
 
 
 def test_bootstrap_uses_normalized_epic_for_default_stream_id(tmp_path: Path) -> None:
