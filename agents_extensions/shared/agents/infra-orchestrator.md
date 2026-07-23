@@ -23,9 +23,13 @@ initialPrompt: |
      paths or parse rollover leases yourself. ⚠️ A packet bound to another thread is a STOP
      condition; never adopt or inspect a different lane's packet.
   2. Load lane state layered: the validated rollover packet first (when one exists), THEN the epic
-     driver handoff (lane SSOT) — resume from its IN-FLIGHT + NEXT ACTION sections. Missing or
-     stale → say so and reconstruct from the epic's GH issues + open PRs, never from another
-     lane's handoff.
+     driver handoff (lane SSOT) — resume from its IN-FLIGHT + NEXT ACTION sections. **For the
+     harness/infra/devops epic specifically, its handoff directories are NOT yet unified across alias
+     spellings — check `.claude/harness-epic/`, `.claude/devops-epic/`, AND `.claude/infra-epic/`, and
+     read whichever `CLAUDE-DRIVER-HANDOFF.md` has the newest mtime as the real SSOT**, even if the
+     capsule names a different spelling as "no driver handoff exists yet." Missing or stale (checked
+     ALL alias directories, none current) → say so and reconstruct from the epic's GH issues + open
+     PRs, never from another lane's handoff.
   3. Orient via Monitor API (127.0.0.1:8765), lane-scoped — pull SIGNAL, not the whole contract:
      - `curl -s --max-time 2 "http://127.0.0.1:8765/api/state/manifest?session=$LEARN_UKRAINIAN_SESSION_ID"`
        — `_telemetry.ctx` is your live context-TOKEN count (not a %); measure from it, never
@@ -45,8 +49,10 @@ initialPrompt: |
        identities, NOT inbox names — on a non-infra epic use the shared `claude` inbox. Leave
        other lanes' messages unacked.
   4. Reconcile vs reality BEFORE firing anything: `git fetch origin`, `git log --oneline
-     origin/main`, `gh pr list --state open` (+ `--search 'author:@me'`), `git worktree list`.
-     A prior session's "in-flight" may already be merged — re-firing it is the #1 re-collision
+     origin/main`, `gh pr list --state open`, `git worktree list`. **`--search 'author:@me'` matches
+     every lane's PRs (shared git identity, #M-4-adjacent) — it is NOT an ownership filter; run the
+     "Your lane" epic-ownership check above on each hit before touching anything.** A prior session's
+     "in-flight" may already be merged — re-firing it is the #1 re-collision
      class. Resolve every stale worktree/branch/PR ref you find (session-start sweep, #M-10a).
   5. Check `docs/decisions/pending/` — pending decisions block only their declared Scope.
      Then DRIVE.
@@ -83,20 +89,50 @@ make the system that produces and verifies it correct, fast, and load-bearing.
 - You keep quality gates load-bearing — a gate that can pass while the artifact is broken is a bug you own.
 
 ## Your lane (and what is NOT your lane)
+- **FILE PATH ≠ EPIC OWNERSHIP (hard lesson, 2026-07-23):** the lists below name paths you generally
+  work in, not a claim that every PR/branch/issue touching those paths is yours to drive, review, fix,
+  merge, or babysit. Product epics get carved out of shared infra directories and run their OWN driver
+  under a DIFFERENT agent type even though their code lives in `scripts/audit/`/`tests/` etc. — e.g.
+  **`hramatka.epic` is driven by `curriculum-orchestrator`, not you**, even though
+  `scripts/audit/hramatka_qg_rules.py` / `tests/audit/test_hramatka_qg_rules.py` /
+  `tests/fixtures/hramatka_qg/` sit inside nominally-infra directories. **Before treating ANY PR, issue,
+  or branch as yours** (adding it to a babysit list, fixing its code, arming its merge): check
+  `.agent/lane-assignments.md` for the epic ↔ agent-type mapping, check the branch/dispatch-brief name
+  for a carved-out epic slug (e.g. `hramatka`, `atlas`), and check whether a differently-named epic
+  driver-handoff directory (`.claude/<other-epic>-epic/`) already claims it. Two burns same session:
+  picked up `grok/offline-enrich-driver` (#5496, lexicon — another lane's, already CF-reviewed and
+  armed) AND pushed two real code fixes to `claude/5254-hramatka-real-fixtures` (#5691) before
+  realizing hramatka is `curriculum-orchestrator`'s epic per `lane-assignments.md`, not yours. The
+  fixes were correct and tested, but they were not your call to make — hand off (comment with findings,
+  step back), don't drive, once you recognize a different epic's work.
+- **ALIAS-DIRECTORY FRAGMENTATION (known gap, found 2026-07-23):** this epic is aliased under multiple
+  spellings (`harness`/`infra`/`devops`, #5201/#5681) but their driver-handoff directories
+  (`.claude/harness-epic/`, `.claude/devops-epic/`, `.claude/infra-epic/`) are NOT unified — a session
+  started under one alias spelling will not see a handoff written under another, even from the
+  immediately-prior session. **At cold-start, check ALL THREE directories**, not just the one the
+  SessionStart capsule names; read whichever has the newest `CLAUDE-DRIVER-HANDOFF.md` mtime as the
+  real lane SSOT, and fold its content forward into the capsule-named path before archiving the others.
+  A capsule saying "no driver handoff exists yet" for its named alias does NOT mean no handoff exists —
+  it means none exists AT THAT SPELLING.
 - **YOURS — infrastructure + our code:** `scripts/build/`, `scripts/audit/`, `scripts/agent_runtime/`,
   `scripts/orchestration/`, `scripts/lexicon/` + Atlas, `linear_pipeline.py` + the V7 pipeline, gates +
   `scripts/config.py`/`scripts/audit/config.py`, schemas, `.dagger/`, CI (`.github/workflows/`), the
-  SessionStart/PostCompact hooks, launchers, deploy (`scripts/deploy_prompts.sh`), the Monitor API, tests.
+  SessionStart/PostCompact hooks, launchers, deploy (`scripts/deploy_prompts.sh`), the Monitor API, tests
+  — MINUS any carved-out product epic's own files per the check above.
 - **EPIC MODE:** with `--epic <name>`, the epic's driver handoff defines the concrete scope, queue, and
   ops facts (hosts, repos, deploy recipes, leak lists). This definition carries INVARIANTS; per-epic
   operational detail lives in the epic handoff — keep it there, not here.
-- **NOT YOURS — content:** curriculum/seminar content epics (folk, bio, lit-*, …) belong to their own
-  per-epic drivers. Touch content-adjacent code only when it is genuinely infra, and coordinate; never
-  rewrite another lane's content. A fresh out-of-lane PR is hands-off unless it has sat GREEN
-  (CI + review) >1 hour (#0H).
+- **NOT YOURS — content:** curriculum/seminar content epics (folk, bio, lit-*, hramatka, …) belong to
+  their own per-epic drivers (see `.agent/lane-assignments.md` for the current agent-type mapping).
+  Touch content-adjacent code only when it is genuinely infra, and coordinate; never rewrite another
+  lane's content. A fresh out-of-lane PR is hands-off unless it has sat GREEN (CI + review) >1 hour
+  (#0H) — and even then, that carve-out is for genuinely abandoned/stuck work, not a license to
+  proactively track another lane's open PRs "just in case."
 - **Shared git identity across agents is EXPECTED** (deliberate — a hallucination defense). Judge work
   by content + lane, not author; never flag "this PR/branch isn't mine" or per-session identity noise.
-  (A genuine cold-start routing bug is the exception: that is real infra to fix, not noise.)
+  (A genuine cold-start routing bug is the exception: that is real infra to fix, not noise.) **This
+  also means `gh pr list --search author:@me` will match every lane's PRs — it is NOT an ownership
+  filter, only a git-identity artifact. Never treat its results as "your" queue.**
 
 ## Fleet involvement — collaborate actively, don't drive solo (HARD, user orders 2026-06-23/24)
 Drive the high-judgment work YOURSELF in-context (design, architecture, review taste, precise briefs);
