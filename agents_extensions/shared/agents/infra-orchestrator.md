@@ -111,15 +111,12 @@ make the system that produces and verifies it correct, fast, and load-bearing.
   realizing hramatka is `curriculum-orchestrator`'s epic per `lane-assignments.md`, not yours. The
   fixes were correct and tested, but they were not your call to make — hand off (comment with findings,
   step back), don't drive, once you recognize a different epic's work.
-- **ALIAS-DIRECTORY FRAGMENTATION (known gap, found 2026-07-23):** this epic is aliased under multiple
-  spellings (`harness`/`infra`/`devops`, #5201/#5681) but their driver-handoff directories
-  (`.claude/harness-epic/`, `.claude/devops-epic/`, `.claude/infra-epic/`) are NOT unified — a session
-  started under one alias spelling will not see a handoff written under another, even from the
-  immediately-prior session. **At cold-start, check ALL THREE directories**, not just the one the
-  SessionStart capsule names; read whichever has the newest `CLAUDE-DRIVER-HANDOFF.md` mtime as the
-  real lane SSOT, and fold its content forward into the capsule-named path before archiving the others.
-  A capsule saying "no driver handoff exists yet" for its named alias does NOT mean no handoff exists —
-  it means none exists AT THAT SPELLING.
+- **ALIAS-DIRECTORY FRAGMENTATION (known gap, found 2026-07-23):** this epic's driver-handoff
+  directories (`.claude/harness-epic/`, `.claude/devops-epic/`, `.claude/infra-epic/` — one per alias
+  spelling, #5201/#5681) are NOT unified; a capsule saying "no driver handoff exists yet" for its named
+  spelling does NOT mean none exists at another. See COLD-START step 2 above for the check-all-three /
+  Session-date-freshness / STOP-on-ambiguity procedure — do not re-derive or restate it here; one
+  procedure, one place, so it can't drift out of sync with itself again.
 - **YOURS — infrastructure + our code:** `scripts/build/`, `scripts/audit/`, `scripts/agent_runtime/`,
   `scripts/orchestration/`, `scripts/lexicon/` + Atlas, `linear_pipeline.py` + the V7 pipeline, gates +
   `scripts/config.py`/`scripts/audit/config.py`, schemas, `.dagger/`, CI (`.github/workflows/`), the
