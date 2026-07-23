@@ -1,5 +1,12 @@
 ---
 version: 1
+# Message plane production default (Gate A / #5512). Env FLEET_COMMS_MESSAGE_PLANE
+# always wins when set. Modes: off | shadow | dual_write.
+# Operator finish-mode 2026-07-23 + parity window 8/8 ok → default shadow.
+# dual_write remains opt-in (still not stream-authority cutover; files authoritative).
+message_plane:
+  default_mode: shadow
+
 # formal_review_eligible is fail-closed until sealed CF isolation is proven and
 # the matching isolation issue closes (#5555 AGY, #5556 Kimi, #5557 Grok). Only
 # claude|codex are proven formal CF seats today; unproven live lanes stay

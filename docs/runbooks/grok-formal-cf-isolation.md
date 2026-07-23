@@ -1,6 +1,9 @@
 # Grok sealed formal CF isolation (#5557)
 
-## Status (2026-07-21)
+## Status (2026-07-23 — v1 residual Option C)
+
+Design spikes closed **Option C fail-closed residual**. For **fleet-comms v1 (#5512)**,
+Grok is a live **orchestrator / implement** seat and is **not** a sealed formal CF reviewer.
 
 | Capability | Native Grok CLI | Formal CF sealed path |
 | --- | --- | --- |
@@ -8,8 +11,15 @@
 | Auth never staged into model-read scope | **Proven** (tests: `test_grok_oauth_store_is_never_staged_*`) | Correct refusal, not a silent leak |
 | Sealed snapshot cwd + OS sandbox | Not reached for `engine=grok` | Hard raise before launch |
 | `review-pr --reviewer grok` | **Not implemented** (reviewers: `auto\|codex\|glm\|claude` only) | Use substitute seats |
-| Registry `formal_review_eligible` | `false` for `grok` in `scripts/config/fleet_communications.yaml` | Correct until proof |
-| Cursor explicit `grok-4.5` | Live for **orchestrator / implement / advisory** when native dark | **Not** sealed formal CF (Cursor harness identity + no grok seal) |
+| Registry `formal_review_eligible` | `false` for `grok` | **v1 complete residual** |
+| Wire #5621 / enable #5622 | Residual closeout | Reopen only with Option A/B proof |
+| Cursor explicit `grok-4.5` | Live for **orchestrator / implement / advisory** when native dark | **Not** sealed formal CF |
+
+**Proof command:**
+
+```bash
+.venv/bin/python -m pytest tests/test_review_isolation.py -k 'grok_isolated or oauth_store_is_never_staged' -q
+```
 
 ## Written decision (stream #5512)
 

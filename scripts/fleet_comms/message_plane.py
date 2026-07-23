@@ -3,15 +3,19 @@
 Routes ask/reply work through the canonical request plane **when enabled**,
 while legacy bridge tables remain the default writer until operator cutover.
 
-Modes (env ``FLEET_COMMS_MESSAGE_PLANE`` or constructor):
+Modes (env ``FLEET_COMMS_MESSAGE_PLANE``, config ``message_plane.default_mode``,
+or constructor):
 
-- ``off`` (default) — no-op; legacy bridge unchanged
+- ``off`` — no-op; legacy bridge unchanged
 - ``shadow`` — create durable requests + capture completion; never change
-  legacy status; emit parity telemetry only
+  legacy status; emit parity telemetry only (production default after Gate A
+  parity + operator finish GO 2026-07-23)
 - ``dual_write`` — same as shadow, and only project ``replied`` to legacy
   when completion is proven ``complete`` (incomplete never becomes replied)
 
-No silent global flip. Background workers may reload by ``request_id`` only.
+Resolution: explicit constructor/raw → env → config default → off.
+File dual-write diaries stay authoritative in every mode. Background workers
+may reload by ``request_id`` only.
 """
 
 from __future__ import annotations
@@ -43,8 +47,53 @@ DEFAULT_TELEMETRY_NAME = Path("telemetry") / "plane-parity.jsonl"
 _TELEMETRY_SUMMARY_LIMIT = 50
 
 
+def _configured_default_plane_mode() -> PlaneMode:
+    """Read message_plane.default_mode from fleet_communications.yaml (fail-open off).
+
+    Uses this checkout's config path (not primary-only) so worktree PRs that
+    change the default are testable before merge.
+    """
+    try:
+        import yaml
+    except ImportError:  # pragma: no cover
+        return "off"
+
+    # scripts/fleet_comms/message_plane.py → parents[2] = checkout root
+    cfg_path = Path(__file__).resolve().parents[2] / "scripts" / "config" / "fleet_communications.yaml"
+    if not cfg_path.is_file():
+        return "off"
+    try:
+        data = yaml.safe_load(cfg_path.read_text(encoding="utf-8")) or {}
+    except OSError:
+        return "off"
+    if not isinstance(data, dict):
+        return "off"
+    plane = data.get("message_plane") or {}
+    if not isinstance(plane, dict):
+        return "off"
+    raw = plane.get("default_mode", "off")
+    if raw is None:
+        return "off"
+    value = str(raw).strip().lower()
+    if value in {"", "0", "false", "off", "disabled"}:
+        return "off"
+    if value in {"shadow", "dual_write"}:
+        return value  # type: ignore[return-value]
+    if value in {"dual-write", "dualwrite"}:
+        return "dual_write"
+    # Unknown config value: fail closed to off (do not invent modes).
+    return "off"
+
+
 def resolve_plane_mode(raw: str | None = None) -> PlaneMode:
-    value = (raw if raw is not None else os.environ.get(ENV_MODE, "off")).strip().lower()
+    """Resolve plane mode: explicit raw → env → configured default → off."""
+    if raw is not None:
+        value = raw.strip().lower()
+    else:
+        env = os.environ.get(ENV_MODE)
+        if env is None or not str(env).strip():
+            return _configured_default_plane_mode()
+        value = str(env).strip().lower()
     if value in {"", "0", "false", "off", "disabled"}:
         return "off"
     if value in {"shadow", "dual_write", "off"}:

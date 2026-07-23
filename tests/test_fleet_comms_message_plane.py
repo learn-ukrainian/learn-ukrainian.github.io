@@ -25,6 +25,19 @@ def test_resolve_plane_mode() -> None:
         resolve_plane_mode("production")
 
 
+def test_resolve_plane_mode_env_unset_uses_configured_default(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Gate A: production default is config message_plane.default_mode (shadow)."""
+    monkeypatch.delenv("FLEET_COMMS_MESSAGE_PLANE", raising=False)
+    # Config on main/this PR pins shadow after parity window + operator finish GO.
+    assert resolve_plane_mode(None) == "shadow"
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
+    assert resolve_plane_mode(None) == "off"
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "dual_write")
+    assert resolve_plane_mode(None) == "dual_write"
+
+
 def test_invocation_digest_stable_for_fg_bg_parity() -> None:
     a = invocation_digest(recipient="codex", body="hello", model="m", mode="read-only", cwd="/tmp/x")
     b = invocation_digest(recipient="codex", body="hello", model="m", mode="read-only", cwd="/tmp/x")

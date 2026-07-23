@@ -41,7 +41,9 @@ Launchers already claim leases. Drivers must **also** speak the message-plane + 
 .venv/bin/python -m scripts.fleet_comms plane-status
 ```
 
-Implemented modes are **only** `off` | `shadow` | `dual_write` (default **`off`**).
+Implemented modes are **only** `off` | `shadow` | `dual_write`. Production default is
+**`shadow`** after Gate A parity + operator finish GO (2026-07-23); override with
+`FLEET_COMMS_MESSAGE_PLANE=off|dual_write`.
 
 | Fact | Binding |
 | --- | --- |
