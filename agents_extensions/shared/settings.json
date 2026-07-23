@@ -799,7 +799,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash -lc 'command -v jq >/dev/null 2>&1 || exit 0; input=$(cat); project_dir=$(printf \"%s\" \"$input\" | jq -r \".workspace.project_dir // empty\"); script=\"$project_dir/.claude/statusline/statusline.sh\"; if [ -n \"$project_dir\" ] && [ -f \"$script\" ]; then printf \"%s\" \"$input\" | bash \"$script\"; fi'"
+    "command": "bash -lc 'command -v jq >/dev/null 2>&1 || exit 0; input=$(cat); project_dir=$(printf \"%s\" \"$input\" | jq -r \".workspace.current_dir // .workspace.project_dir // .cwd // empty\"); [ -z \"$project_dir\" ] && project_dir=\"$CLAUDE_PROJECT_DIR\"; [ -z \"$project_dir\" ] && project_dir=\"$(pwd)\"; script=\"$project_dir/.claude/statusline/statusline.sh\"; if [ -n \"$project_dir\" ] && [ -f \"$script\" ]; then printf \"%s\" \"$input\" | bash \"$script\"; fi'"
   },
   "worktree": {
     "sparsePaths": [
