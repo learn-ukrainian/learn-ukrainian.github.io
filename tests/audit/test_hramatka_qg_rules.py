@@ -274,6 +274,7 @@ def test_hramatka_fixture_suite_load_bearing() -> None:
     assert by_id["real-degenerate-distractor-reuse"]["actual_verdict"] == "FAIL"
     assert by_id["real-hyphen-compound-clean"]["actual_verdict"] == "PASS"
     assert by_id["real-stress-mark-clean"]["actual_verdict"] == "PASS"
+    assert by_id["distractor-reuse-block-level-key-clean"]["actual_verdict"] == "PASS"
 
 
 def test_real_generated_defects_are_caught() -> None:
@@ -301,6 +302,26 @@ def test_real_generated_defects_are_caught() -> None:
         assert all_findings(clean_evidence) == [], (
             f"{real_clean_id} must have zero findings, got {all_findings(clean_evidence)}"
         )
+
+
+def test_iter_mc_items_sees_block_level_answer_key() -> None:
+    """Distractor-reuse detector must resolve `correct` via a BLOCK-level answer_key.
+
+    Three questions sharing one 3-option pool with a DIFFERENT correct answer
+    each is a legitimate activity shape. Before the fix, _iter_mc_items only
+    read activity.answer_key; a block-level-only key left `correct` as None for
+    every item, which recorded every option (including the true answer) as a
+    distractor and false-fired DEGENERATE_DISTRACTOR_REUSE on all three
+    questions sharing the same underlying option set (cross-family review
+    finding on #5691).
+    """
+    report = run_fixtures(FIXTURE_FILE)
+    by_id = _by_id(report)
+    evidence = by_id["distractor-reuse-block-level-key-clean"]["evidence"]
+    assert evidence["verdict"] == "PASS"
+    assert all_findings(evidence) == [], (
+        f"expected zero findings, got {all_findings(evidence)}"
+    )
 
 
 def test_hyphen_compound_all_attested_helper() -> None:

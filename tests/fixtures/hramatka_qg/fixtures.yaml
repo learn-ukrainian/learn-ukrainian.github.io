@@ -429,6 +429,53 @@ fixtures:
         dimension: distractor_quality
         severity: critical
 
+  # False-positive fix: the distractor-reuse detector must see a BLOCK-level
+  # answer_key, not just an activity-level one. Three questions here legitimately
+  # share the same 3-option pool while each targets a DIFFERENT correct answer —
+  # a normal, valid activity shape, not the model-filler-repeat defect above.
+  # Before the fix, _iter_mc_items only read activity.answer_key (absent here —
+  # this lesson stores it on the enclosing block instead), so `correct` resolved
+  # to None for every item and every option — including the true answer — was
+  # recorded as a distractor, making all three questions look like the SAME
+  # 3-way distractor set and false-firing DEGENERATE_DISTRACTOR_REUSE
+  # (cross-family review finding on #5691, not a soak observation).
+  - id: distractor-reuse-block-level-key-clean
+    level: b1
+    slug: distractor-reuse-block-level-key-clean
+    expected_verdict: PASS
+    lesson_json:
+      title: Слова уроку
+      level: B1
+      anchor:
+        text: >
+          На уроці ми читаємо текст, складаємо речення й шукаємо опору для
+          власних думок. Текст дає факти, речення передає завершену думку,
+          а опора допомагає висловитися впевнено.
+      blocks:
+        - type: quiz
+          activity:
+            type: quiz
+            title: Тест
+            payload:
+              type: quiz
+              instruction: Оберіть правильне слово за визначенням.
+              items:
+                - question: Яке слово означає писемний матеріал для читання?
+                  options: [текст, речення, опора]
+                - question: Яке слово означає граматично завершену думку?
+                  options: [текст, речення, опора]
+                - question: Яке слово означає підтримку чи основу для думки?
+                  options: [текст, речення, опора]
+          answer_key:
+            items:
+              - index: 0
+                correct: 0
+              - index: 1
+                correct: 1
+              - index: 2
+                correct: 2
+    expected_findings: []
+
   # Real false-positive fix: hyphenated appositive noun+noun compounds
   # (тексті-опорі / речення-опора / держав-учасниць) are not VESUM lemmas as a
   # whole, but every half independently is. Before the fix these critical-failed

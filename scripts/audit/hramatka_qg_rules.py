@@ -53,6 +53,8 @@ from scripts.lexicon.heritage_classifier import (
 )
 from scripts.verification.vesum import verify_word
 
+_UNSET = object()  # distinguishes "caller passed nothing" from "caller resolved to None"
+
 RULE_SET_ID = "hramatka"
 CHECKER_VERSION = "hramatka_ua_qg_rules.v2"
 EVIDENCE_SCHEMA_VERSION = "hramatka_ua_qg_evidence.v1"
@@ -1094,13 +1096,25 @@ def check_invented_forms(ctx: _ScanContext) -> list[dict[str, Any]]:
     return findings
 
 
-def _iter_mc_items(activity: Mapping[str, Any]) -> Iterable[tuple[str, list[str], Any]]:
-    """Yield (prompt, options, correct_answer) for multiple-choice style items."""
+def _iter_mc_items(
+    activity: Mapping[str, Any], answer_key: Any = _UNSET
+) -> Iterable[tuple[str, list[str], Any]]:
+    """Yield (prompt, options, correct_answer) for multiple-choice style items.
+
+    ``answer_key`` should be the caller's already-resolved key (prefer
+    ``_answer_key_for(entry, activity)`` so a BLOCK-level answer_key is visible
+    here too, not just an activity-level one). Omitting it falls back to
+    ``activity.get("answer_key")`` only, for backward compatibility — that
+    fallback silently loses every item's `correct` on lessons that store the
+    answer key on the enclosing block, which then makes every option (the
+    correct one included) look like a distractor to callers (#5691 review).
+    """
     payload = _payload(activity)
     items = payload.get("items") or activity.get("items") or []
     if not isinstance(items, list):
         return
-    answer_key = activity.get("answer_key")
+    if answer_key is _UNSET:
+        answer_key = activity.get("answer_key")
     key_items: list[Any] = []
     if isinstance(answer_key, Mapping) and isinstance(answer_key.get("items"), list):
         key_items = list(answer_key["items"])
@@ -1175,7 +1189,10 @@ def check_invalid_distractors(ctx: _ScanContext) -> list[dict[str, Any]]:
 
     for act_idx, entry in enumerate(ctx.activities):
         activity = _activity_body(entry)
-        for item_idx, (_prompt, options, correct) in enumerate(_iter_mc_items(activity)):
+        resolved_answer_key = _answer_key_for(entry, activity)
+        for item_idx, (_prompt, options, correct) in enumerate(
+            _iter_mc_items(activity, resolved_answer_key)
+        ):
             if len(options) < 2:
                 continue
             correct_opt = _resolve_correct_option(options, correct)
