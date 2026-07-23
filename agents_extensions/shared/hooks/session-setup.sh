@@ -414,6 +414,73 @@ ROLLOVER_SCRIPT="${THREAD_ROLLOVER_SCRIPT:-$PROJECT_DIR/scripts/orchestration/th
 HANDOFF_CONTEXT=""
 HANDOFF_WARNINGS=""
 
+# A Codex driver launcher may select exactly one fresh, unbound CLI rollover
+# before starting the TUI. SessionStart is the first boundary with the new
+# task UUID, so bind and resume only that exported identity here. Re-run the
+# lane-scoped preflight immediately before mutation to catch ambiguity or
+# replacement drift that appeared while Codex was starting.
+if [ "${CODEX_SESSION:-0}" = "1" ] \
+  && [ -n "${CODEX_LAUNCHER_ROLLOVER_AGENT:-}${CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID:-}${CODEX_LAUNCHER_ROLLOVER_ID:-}" ]; then
+  ROLLOVER_LINK_HELPER="$PROJECT_DIR/scripts/lib/thread_rollover_link.sh"
+  if [ -z "${CODEX_LAUNCHER_ROLLOVER_AGENT:-}" ] \
+    || [ -z "${CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID:-}" ] \
+    || [ -z "${CODEX_LAUNCHER_ROLLOVER_ID:-}" ]; then
+    HANDOFF_CONTEXT="ERROR: INCOMPLETE CODEX LAUNCHER ROLLOVER IDENTITY — stop; no rollover was mutated."
+  elif [ -z "$CURRENT_THREAD_ID" ]; then
+    HANDOFF_CONTEXT="ERROR: CODEX LAUNCHER ROLLOVER HAS NO SESSION ID — stop; no rollover was mutated."
+  elif [ ! -f "$ROLLOVER_LINK_HELPER" ]; then
+    HANDOFF_CONTEXT="ERROR: CODEX LAUNCHER ROLLOVER HELPER MISSING — stop; no rollover was mutated."
+  else
+    # shellcheck disable=SC1090
+    source "$ROLLOVER_LINK_HELPER"
+    VERIFY_OUTPUT=""
+    if ! VERIFY_OUTPUT=$(verify_codex_pending_rollover \
+      "$CANONICAL_ROOT" \
+      "$HANDOFF_AGENT" \
+      "$CODEX_LAUNCHER_ROLLOVER_AGENT" \
+      "$CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID" \
+      "$CODEX_LAUNCHER_ROLLOVER_ID" 2>&1); then
+      HANDOFF_CONTEXT="ERROR: CODEX LAUNCHER ROLLOVER PREFLIGHT CHANGED — stop; no rollover was mutated.
+Output:
+$VERIFY_OUTPUT"
+    else
+      EXACT_ROLLOVER_COMMON=(
+        --agent "$CODEX_LAUNCHER_ROLLOVER_AGENT"
+        --lineage-id "$CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID"
+        --rollover-id "$CODEX_LAUNCHER_ROLLOVER_ID"
+      )
+      BIND_OUTPUT=""
+      if ! BIND_OUTPUT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" --repo-root "$CANONICAL_ROOT" \
+        bind-replacement "${EXACT_ROLLOVER_COMMON[@]}" \
+        --replacement-task-id "$CURRENT_THREAD_ID" \
+        --evidence "Codex launcher SessionStart bound the exact fresh CLI task ID" 2>&1); then
+        HANDOFF_CONTEXT="ERROR: CODEX LAUNCHER EXACT ROLLOVER BIND FAILED — stop.
+Output:
+$BIND_OUTPUT"
+      else
+        RESUME_OUTPUT=""
+        if ! RESUME_OUTPUT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" --repo-root "$CANONICAL_ROOT" \
+          resume "${EXACT_ROLLOVER_COMMON[@]}" \
+          --replacement-thread-id "$CURRENT_THREAD_ID" 2>&1); then
+          HANDOFF_CONTEXT="ERROR: CODEX LAUNCHER EXACT ROLLOVER RESUME FAILED — stop.
+Output:
+$RESUME_OUTPUT"
+        elif ! HANDOFF_CONTEXT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" --repo-root "$CANONICAL_ROOT" \
+          detect --agent "$CODEX_LAUNCHER_ROLLOVER_AGENT" \
+          --current-thread-id "$CURRENT_THREAD_ID" --format session-start 2>&1); then
+          HANDOFF_CONTEXT="ERROR: CODEX LAUNCHER EXACT ROLLOVER READBACK FAILED — stop.
+Output:
+$HANDOFF_CONTEXT"
+        fi
+        unset RESUME_OUTPUT
+      fi
+      unset BIND_OUTPUT EXACT_ROLLOVER_COMMON
+    fi
+    unset VERIFY_OUTPUT
+  fi
+  unset ROLLOVER_LINK_HELPER
+fi
+
 # Rollover packets are lineage-scoped and may legitimately coexist. A driver
 # cold-start is different: only one live Claude session may own a handoff slot
 # at a time. Claim the flat durable lease before reading any queue guidance so
@@ -621,6 +688,24 @@ Do NOT default to 'main orchestrator'. Resolve your lane in this order:
    claiming any lane, reading any thread handoff as your own, or touching queues."
 fi
 
+# The Codex driver board is generated only after the launcher owns its exact
+# stream lease and has completed rollover preflight. Inject it into the actual
+# SessionStart context so the operator never has to paste or re-request it.
+CODEX_COLD_START_BOARD=""
+case "$HANDOFF_AGENT" in
+  codex|codex-*)
+    if [ -n "${SESSION_EPIC:-}" ]; then
+      CODEX_COLD_START_PATH="$PROJECT_DIR/.claude/${SESSION_EPIC}-epic/CODEX-COLD-START.md"
+      if [ -f "$CODEX_COLD_START_PATH" ]; then
+        CODEX_COLD_START_BOARD=$(<"$CODEX_COLD_START_PATH")
+      else
+        ISSUES+=("CODEX COLD-START BOARD MISSING: launcher must bootstrap and inject $CODEX_COLD_START_PATH before driving.")
+      fi
+      unset CODEX_COLD_START_PATH
+    fi
+    ;;
+esac
+
 # Build Profile Capsule
 CAPSULE_ORIENTATION_URL="http://localhost:8765/api/orient?session=${SESSION_ID:-}"
 if [ "${LEARN_UKRAINIAN_COLD_START_PROFILE:-}" = "compact" ]; then
@@ -653,6 +738,12 @@ if [ -n "$HANDOFF_CONTEXT" ]; then
   CONTEXT="$CONTEXT
 
 $HANDOFF_CONTEXT"
+fi
+if [ -n "$CODEX_COLD_START_BOARD" ]; then
+  CONTEXT="$CONTEXT
+
+CODEX COLD-START BOARD (launcher-injected)
+$CODEX_COLD_START_BOARD"
 fi
 
 CONTEXT="$CONTEXT

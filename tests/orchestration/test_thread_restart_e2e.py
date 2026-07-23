@@ -16,6 +16,10 @@ from pathlib import Path
 
 import pytest
 
+from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+from agents_extensions.shared.session_streams.model import EntryType, LeaseHolder
+from agents_extensions.shared.session_streams.store import SessionStreamStore
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 REPO_PYTHON = REPO_ROOT / ".venv/bin/python"
 HANDOFF = REPO_ROOT / "scripts/orchestration/thread_handoff.py"
@@ -95,12 +99,27 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
     if bootstrap_sources:
         sources.extend(
             [
+                "start-codex.sh",
+                "start-codex-drive.sh",
                 "scripts/lib/thread_rollover_link.sh",
                 "scripts/lib/deploy_extensions.sh",
+                "scripts/lib/handoff_identity.sh",
                 "scripts/lib/profile_resolver.sh",
+                "scripts/lib/session_supervisor.sh",
+                "scripts/config/issue_streams.yaml",
                 "agents_extensions/codex/hooks.json",
                 "agents_extensions/shared/hooks/session-setup.sh",
             ]
+        )
+        sources.extend(
+            str(path.relative_to(REPO_ROOT))
+            for source_dir in (
+                REPO_ROOT / "scripts/session_canary",
+                REPO_ROOT / "scripts/session_supervisor",
+                REPO_ROOT / "agents_extensions/shared/session_streams",
+            )
+            for path in sorted(source_dir.rglob("*"))
+            if path.is_file() and path.suffix in {".py", ".sql"}
         )
         (primary / "package.json").write_text(
             '{"scripts":{"agents:deploy":"scripts/deploy_prompts.sh"}}\n',
@@ -155,6 +174,73 @@ def prepare(primary: Path, *, active_thread_id: str = SOURCE_THREAD_ID) -> dict:
         check=True,
     )
     return json.loads(completed.stdout)
+
+
+def prepare_cli_driver_rollover(primary: Path, *, active_thread_id: str) -> dict:
+    completed = run(
+        handoff_command(
+            primary,
+            "prepare",
+            "--agent",
+            "codex-infra",
+            "--harness",
+            "codex-cli",
+            "--active-thread-id",
+            active_thread_id,
+            "--stream-epic",
+            "4707",
+            "--semantic-title",
+            "Continue the isolated Codex DevOps launcher test",
+            "--task-family",
+            "infra",
+            "--role",
+            "devops-driver",
+            "--terminal-goal",
+            "merge",
+        ),
+        cwd=primary,
+        check=True,
+    )
+    return json.loads(completed.stdout)
+
+
+def seed_driver_stream(primary: Path) -> SessionStreamStore:
+    store = SessionStreamStore(
+        SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3")
+    )
+    lease = store.open_session(
+        stream_id="epic:4707",
+        holder=LeaseHolder(
+            agent="fixture",
+            harness="pytest",
+            instance_id="fixture-seed",
+            process_id=os.getpid(),
+            task_id="fixture-seed",
+        ),
+        lineage_id="lineage-fixture-seed",
+        ttl_seconds=60,
+        session_id="session-fixture-seed",
+        lease_id="lease-fixture-seed",
+    )
+    entries = [
+        (EntryType.BINDING_ORDER, "Drive only the isolated DevOps launcher acceptance lane."),
+        (EntryType.BINDING_ORDER, "Use the exact fresh rollover selected before launch."),
+        (EntryType.BINDING_ORDER, "Keep the primary checkout read-only for product changes."),
+        (EntryType.NEGATIVE_CONSTRAINT, "Never resume provider conversation history."),
+        (EntryType.NEGATIVE_CONSTRAINT, "Never select a rollover by title or filesystem order."),
+        (EntryType.NEXT_ACTION, "Inject the generated Codex cold-start board."),
+        (EntryType.NEXT_ACTION, "Bind the exact new SessionStart task identifier."),
+        (EntryType.NEXT_ACTION, "Close the fixture stream lease after the launcher exits."),
+    ]
+    for index, (entry_type, body) in enumerate(entries, start=1):
+        store.append_entry(
+            lease,
+            entry_type=entry_type,
+            body=body,
+            idempotency_key=f"fixture-entry-{index}",
+        )
+    store.close_session(lease)
+    return store
 
 
 def load_lease(primary: Path, packet: dict) -> dict:
@@ -732,3 +818,140 @@ def test_app_style_worktree_bootstrap_deploys_hook_and_discovers_canonical_packe
     assert "--replacement-thread-id fresh-app-thread" in started.stdout
     assert_cleanup_locked(primary, packet)
     assert git(replacement, "status", "--short", "--untracked-files=all").stdout == ""
+
+
+def test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover(
+    tmp_path: Path,
+) -> None:
+    primary, _ = init_repo(tmp_path, bootstrap_sources=True)
+    store = seed_driver_stream(primary)
+    packet = prepare_cli_driver_rollover(primary, active_thread_id=SOURCE_THREAD_ID)
+    fake_bin = tmp_path / "bin"
+    fake_home_bin = tmp_path / "home" / ".local" / "bin"
+    fake_bin.mkdir(parents=True)
+    fake_home_bin.mkdir(parents=True)
+    hook_capture = tmp_path / "session-start.json"
+    argv_capture = tmp_path / "codex-argv.txt"
+    replacement_thread_id = "00000000-0000-4000-8000-0000000000c1"
+
+    fake_npm = fake_home_bin / "npm"
+    fake_npm.write_text(
+        "#!/bin/bash\n"
+        "set -e\n"
+        "mkdir -p .codex/hooks\n"
+        "cp agents_extensions/codex/hooks.json .codex/hooks.json\n"
+        "cp agents_extensions/shared/hooks/session-setup.sh .codex/hooks/session-setup.sh\n",
+        encoding="utf-8",
+    )
+    fake_npm.chmod(0o755)
+    fake_codex = fake_home_bin / "codex"
+    fake_codex.write_text(
+        "#!/bin/bash\n"
+        "set -e\n"
+        f"printf '%s\\n' \"$@\" > {os.fspath(argv_capture)!r}\n"
+        f"printf '%s\\n' '{{\"session_id\":\"{replacement_thread_id}\","
+        "\"source\":\"startup\",\"model\":\"gpt-5.6-sol\","
+        "\"agent_type\":\"orchestrator\"}' | "
+        f"CLAUDE_PROJECT_DIR=\"$PWD\" bash .codex/hooks/session-setup.sh > {os.fspath(hook_capture)!r}\n"
+        ".venv/bin/python -m agents_extensions.shared.session_streams hook close >/dev/null\n",
+        encoding="utf-8",
+    )
+    fake_codex.chmod(0o755)
+
+    env = os.environ.copy()
+    for key in tuple(env):
+        if key.startswith("SESSION_") or key.startswith("LEARN_UKRAINIAN_") or key.startswith(
+            "CODEX_LAUNCHER_ROLLOVER_"
+        ) or key in {"CODEX_CANONICAL_REPO_ROOT", "CODEX_SESSION"}:
+            env.pop(key, None)
+    env.update(
+        {
+            "HOME": os.fspath(tmp_path / "home"),
+            "PATH": f"{fake_bin}:{fake_home_bin}:/usr/bin:/bin",
+            "PYENV_ROOT": os.fspath(tmp_path / "pyenv"),
+            "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS": "32000",
+        }
+    )
+    launched = run(
+        [primary / "start-codex-drive.sh", "devops", "--model", "gpt-5.6-sol"],
+        cwd=primary,
+        env=env,
+    )
+
+    assert launched.returncode == 0, launched.stderr + launched.stdout
+    assert "Rollover preflight: exact fresh packet" in launched.stdout
+    hook_payload = json.loads(hook_capture.read_text(encoding="utf-8"))
+    context = hook_payload["hookSpecificOutput"]["additionalContext"]
+    assert "CODEX COLD-START BOARD (launcher-injected)" in context
+    assert "RESUMED THREAD ROLLOVER DETECTED" in context
+    assert packet["lineage_id"] in context
+    assert packet["rollover_id"] in context
+    assert "never invoke `codex resume`, `codex fork`" in context
+    assert "lease-" not in context
+    lease = load_lease(primary, packet)
+    assert lease["replacement"]["status"] == "resumed"
+    assert lease["replacement"]["resumed_thread_id"] == replacement_thread_id
+    assert lease["replacement"]["identity"]["replacement_task_id"] == replacement_thread_id
+    argv = argv_capture.read_text(encoding="utf-8").splitlines()
+    assert "resume" not in argv
+    assert "fork" not in argv
+    assert store.dump_stream("epic:4707")["sessions"][-1]["state"] == "closed"
+    assert git(primary, "status", "--short", "--untracked-files=all").stdout == ""
+
+
+def test_real_codex_devops_launcher_fails_before_lease_on_rollover_ambiguity(
+    tmp_path: Path,
+) -> None:
+    primary, _ = init_repo(tmp_path, bootstrap_sources=True)
+    store = seed_driver_stream(primary)
+    first = prepare_cli_driver_rollover(primary, active_thread_id=SOURCE_THREAD_ID)
+    second = prepare_cli_driver_rollover(primary, active_thread_id=SECOND_SOURCE_THREAD_ID)
+    fake_bin = tmp_path / "bin"
+    fake_home_bin = tmp_path / "home" / ".local" / "bin"
+    fake_bin.mkdir(parents=True)
+    fake_home_bin.mkdir(parents=True)
+    started = tmp_path / "codex-started"
+
+    fake_npm = fake_home_bin / "npm"
+    fake_npm.write_text(
+        "#!/bin/bash\n"
+        "set -e\n"
+        "mkdir -p .codex/hooks\n"
+        "cp agents_extensions/codex/hooks.json .codex/hooks.json\n"
+        "cp agents_extensions/shared/hooks/session-setup.sh .codex/hooks/session-setup.sh\n",
+        encoding="utf-8",
+    )
+    fake_npm.chmod(0o755)
+    fake_codex = fake_home_bin / "codex"
+    fake_codex.write_text(
+        f"#!/bin/bash\ntouch {os.fspath(started)!r}\n",
+        encoding="utf-8",
+    )
+    fake_codex.chmod(0o755)
+
+    env = os.environ.copy()
+    for key in tuple(env):
+        if key.startswith("SESSION_") or key.startswith("LEARN_UKRAINIAN_") or key.startswith(
+            "CODEX_LAUNCHER_ROLLOVER_"
+        ) or key in {"CODEX_CANONICAL_REPO_ROOT", "CODEX_SESSION"}:
+            env.pop(key, None)
+    env.update(
+        {
+            "HOME": os.fspath(tmp_path / "home"),
+            "PATH": f"{fake_bin}:{fake_home_bin}:/usr/bin:/bin",
+            "PYENV_ROOT": os.fspath(tmp_path / "pyenv"),
+        }
+    )
+    launched = run(
+        [primary / "start-codex-drive.sh", "devops", "--model", "gpt-5.6-sol"],
+        cwd=primary,
+        env=env,
+    )
+
+    assert launched.returncode == 1
+    assert "MULTIPLE_LIVE_PENDING_ROLLOVERS" in launched.stderr
+    assert not started.exists()
+    assert load_lease(primary, first)["replacement"]["status"] == "pending_start"
+    assert load_lease(primary, second)["replacement"]["status"] == "pending_start"
+    assert len(store.dump_stream("epic:4707")["sessions"]) == 1
+    assert store.dump_stream("epic:4707")["sessions"][0]["state"] == "closed"

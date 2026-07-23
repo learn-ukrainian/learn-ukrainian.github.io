@@ -99,5 +99,37 @@ def test_bootstrap_uses_normalized_epic_for_default_stream_id(tmp_path: Path) ->
 
     board = (tmp_path / ".claude" / "harness-epic" / "CODEX-COLD-START.md").read_text(encoding="utf-8")
     assert "**Stream:** `epic:4707`" in board
+    assert "none selected; start fresh and do not resume historical packets" in board
+    assert "never invoke `codex resume`, `codex fork`" in board
+    assert "launcher already minted the canary" in board
     assert "no Monitor-equivalent background capability" in board
     assert "never on compact count" in board
+
+
+def test_bootstrap_records_exact_rollover_without_rendering_lease_credentials(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("SESSION_STREAM_LEASE_ID", "lease-must-not-render")
+    monkeypatch.setenv("CODEX_LAUNCHER_ROLLOVER_AGENT", "codex-infra")
+    monkeypatch.setenv("CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID", "lineage-launcher-fresh")
+    monkeypatch.setenv("CODEX_LAUNCHER_ROLLOVER_ID", "rollover-launcher-fresh")
+
+    assert codex_lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", "infra"]) == 0
+
+    board = (tmp_path / ".claude" / "infra-epic" / "CODEX-COLD-START.md").read_text(encoding="utf-8")
+    assert "lineage-launcher-fresh" in board
+    assert "rollover-launcher-fresh" in board
+    assert "SessionStart must bind this task" in board
+    assert "lease-must-not-render" not in board
+    assert "credentials not rendered" in board
+
+
+def test_bootstrap_rejects_partial_rollover_environment(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID", "lineage-partial")
+    monkeypatch.delenv("CODEX_LAUNCHER_ROLLOVER_AGENT", raising=False)
+    monkeypatch.delenv("CODEX_LAUNCHER_ROLLOVER_ID", raising=False)
+
+    assert codex_lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", "infra"]) == 2
+    assert not (tmp_path / ".claude" / "infra-epic" / "CODEX-COLD-START.md").exists()
