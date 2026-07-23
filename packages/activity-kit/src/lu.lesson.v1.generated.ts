@@ -17,7 +17,7 @@ export type LuLessonBlockProvenance = {
 export type LuLessonBlock = {
   id: string;
   phase: 1 | 2 | 3;
-  type: "true-false" | "cloze" | "match-up" | "text-questions" | "multiple-choice" | "quiz" | "mark-the-words" | "fill-in" | "glossary" | "form-build" | "error-correction" | "paraphrase" | "continue-sentence" | "roleplay-dialog" | "short-writing";
+  type: "true-false" | "cloze" | "match-up" | "text-questions" | "multiple-choice" | "quiz" | "mark-the-words" | "fill-in" | "glossary" | "form-build" | "error-correction" | "paraphrase" | "continue-sentence" | "roleplay-dialog" | "short-writing" | "audio-listen-repeat" | "model-answer-discussion" | "sentence-transformation";
   mode: "усно" | "письмово" | "вдома";
   activity: LuActivityV1;
   answer_key: string | Record<string, unknown> | Array<unknown> | null;
@@ -45,7 +45,7 @@ export type LuRejectedDraft = {
     }>;
   };
 } | {
-  type: "true-false" | "cloze" | "match-up" | "text-questions" | "multiple-choice" | "quiz" | "mark-the-words" | "fill-in" | "glossary" | "form-build" | "paraphrase" | "continue-sentence" | "roleplay-dialog" | "short-writing";
+  type: "true-false" | "cloze" | "match-up" | "text-questions" | "multiple-choice" | "quiz" | "mark-the-words" | "fill-in" | "glossary" | "form-build" | "paraphrase" | "continue-sentence" | "roleplay-dialog" | "short-writing" | "audio-listen-repeat" | "model-answer-discussion" | "sentence-transformation";
   activity: LuActivityV1;
   reason: string;
 };
@@ -70,7 +70,7 @@ export type LuLessonV1 = {
   blocks: Array<{
     id: string;
     phase: 1 | 2 | 3;
-    type: "true-false" | "cloze" | "match-up" | "text-questions" | "multiple-choice" | "quiz" | "mark-the-words" | "fill-in" | "glossary" | "form-build" | "error-correction" | "paraphrase" | "continue-sentence" | "roleplay-dialog" | "short-writing";
+    type: "true-false" | "cloze" | "match-up" | "text-questions" | "multiple-choice" | "quiz" | "mark-the-words" | "fill-in" | "glossary" | "form-build" | "error-correction" | "paraphrase" | "continue-sentence" | "roleplay-dialog" | "short-writing" | "audio-listen-repeat" | "model-answer-discussion" | "sentence-transformation";
     mode: "усно" | "письмово" | "вдома";
     activity: LuActivityV1;
     answer_key: string | Record<string, unknown> | Array<unknown> | null;
@@ -97,7 +97,7 @@ export type LuLessonV1 = {
       }>;
     };
   } | {
-    type: "true-false" | "cloze" | "match-up" | "text-questions" | "multiple-choice" | "quiz" | "mark-the-words" | "fill-in" | "glossary" | "form-build" | "paraphrase" | "continue-sentence" | "roleplay-dialog" | "short-writing";
+    type: "true-false" | "cloze" | "match-up" | "text-questions" | "multiple-choice" | "quiz" | "mark-the-words" | "fill-in" | "glossary" | "form-build" | "paraphrase" | "continue-sentence" | "roleplay-dialog" | "short-writing" | "audio-listen-repeat" | "model-answer-discussion" | "sentence-transformation";
     activity: LuActivityV1;
     reason: string;
   }>;

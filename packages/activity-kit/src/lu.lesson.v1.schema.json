@@ -156,7 +156,10 @@
                 "paraphrase",
                 "continue-sentence",
                 "roleplay-dialog",
-                "short-writing"
+                "short-writing",
+                "audio-listen-repeat",
+                "model-answer-discussion",
+                "sentence-transformation"
               ]
             },
             "activity": {
@@ -210,7 +213,10 @@
         "paraphrase",
         "continue-sentence",
         "roleplay-dialog",
-        "short-writing"
+        "short-writing",
+        "audio-listen-repeat",
+        "model-answer-discussion",
+        "sentence-transformation"
       ]
     },
     "blockProvenance": {
@@ -240,7 +246,8 @@
               "fill-in",
               "form-build",
               "error-correction",
-              "paraphrase"
+              "paraphrase",
+              "sentence-transformation"
             ]
           }
         }
@@ -261,63 +268,129 @@
       "allOf": [
         {
           "if": { "properties": { "type": { "const": "true-false" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "true-false" } } } } }
+          "then": {
+            "properties": { "activity": { "properties": { "type": { "const": "true-false" } } } }
+          }
         },
         {
           "if": { "properties": { "type": { "const": "cloze" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "cloze" } } } } }
+          "then": {
+            "properties": { "activity": { "properties": { "type": { "const": "cloze" } } } }
+          }
         },
         {
           "if": { "properties": { "type": { "const": "match-up" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "match-up" } } } } }
+          "then": {
+            "properties": { "activity": { "properties": { "type": { "const": "match-up" } } } }
+          }
         },
         {
           "if": { "properties": { "type": { "const": "text-questions" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "text-questions" } } } } }
+          "then": {
+            "properties": {
+              "activity": { "properties": { "type": { "const": "text-questions" } } }
+            }
+          }
         },
         {
           "if": { "properties": { "type": { "const": "multiple-choice" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "multiple-choice" } } } } }
+          "then": {
+            "properties": {
+              "activity": { "properties": { "type": { "const": "multiple-choice" } } }
+            }
+          }
         },
         {
           "if": { "properties": { "type": { "const": "quiz" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "quiz" } } } } }
+          "then": {
+            "properties": { "activity": { "properties": { "type": { "const": "quiz" } } } }
+          }
         },
         {
           "if": { "properties": { "type": { "const": "mark-the-words" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "mark-the-words" } } } } }
+          "then": {
+            "properties": {
+              "activity": { "properties": { "type": { "const": "mark-the-words" } } }
+            }
+          }
         },
         {
           "if": { "properties": { "type": { "const": "fill-in" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "fill-in" } } } } }
+          "then": {
+            "properties": { "activity": { "properties": { "type": { "const": "fill-in" } } } }
+          }
         },
         {
           "if": { "properties": { "type": { "const": "glossary" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "glossary" } } } } }
+          "then": {
+            "properties": { "activity": { "properties": { "type": { "const": "glossary" } } } }
+          }
         },
         {
           "if": { "properties": { "type": { "const": "form-build" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "form-build" } } } } }
+          "then": {
+            "properties": { "activity": { "properties": { "type": { "const": "form-build" } } } }
+          }
         },
         {
           "if": { "properties": { "type": { "const": "error-correction" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "error-correction" } } } } }
+          "then": {
+            "properties": {
+              "activity": { "properties": { "type": { "const": "error-correction" } } }
+            }
+          }
         },
         {
           "if": { "properties": { "type": { "const": "paraphrase" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "paraphrase" } } } } }
+          "then": {
+            "properties": { "activity": { "properties": { "type": { "const": "paraphrase" } } } }
+          }
         },
         {
           "if": { "properties": { "type": { "const": "continue-sentence" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "continue-sentence" } } } } }
+          "then": {
+            "properties": {
+              "activity": { "properties": { "type": { "const": "continue-sentence" } } }
+            }
+          }
         },
         {
           "if": { "properties": { "type": { "const": "roleplay-dialog" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "roleplay-dialog" } } } } }
+          "then": {
+            "properties": {
+              "activity": { "properties": { "type": { "const": "roleplay-dialog" } } }
+            }
+          }
         },
         {
           "if": { "properties": { "type": { "const": "short-writing" } } },
-          "then": { "properties": { "activity": { "properties": { "type": { "const": "short-writing" } } } } }
+          "then": {
+            "properties": { "activity": { "properties": { "type": { "const": "short-writing" } } } }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "audio-listen-repeat" } } },
+          "then": {
+            "properties": {
+              "activity": { "properties": { "type": { "const": "audio-listen-repeat" } } }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "model-answer-discussion" } } },
+          "then": {
+            "properties": {
+              "activity": { "properties": { "type": { "const": "model-answer-discussion" } } }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "sentence-transformation" } } },
+          "then": {
+            "properties": {
+              "activity": { "properties": { "type": { "const": "sentence-transformation" } } }
+            }
+          }
         }
       ]
     }

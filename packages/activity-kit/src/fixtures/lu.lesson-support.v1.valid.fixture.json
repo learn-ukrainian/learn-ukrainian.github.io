@@ -1,0 +1,38 @@
+{
+  "schema": "lu.lesson-support.v1",
+  "vocabulary": [
+    {
+      "surface": "книги",
+      "lemma": "книга",
+      "stress": "кни́ги",
+      "pos": "noun",
+      "gloss": "books",
+      "vesum_analysis": {
+        "lemma": "книга",
+        "tag": "noun:inanim:f:np"
+      }
+    },
+    {
+      "surface": "читаємо",
+      "lemma": "читати",
+      "stress": "чита́ємо",
+      "pos": "verb",
+      "gloss": "we read",
+      "vesum_analysis": "verb:imperf:pres:1p"
+    }
+  ],
+  "theory": [
+    {
+      "id": "noun-plural-nominative",
+      "body": "У називному відмінку множини іменник називає кілька предметів.",
+      "callouts": ["книга → книги"]
+    }
+  ],
+  "assets": [
+    {
+      "id": "books-listen-repeat",
+      "transcript": "Ми читаємо книги.",
+      "sha256": "b4007c41194a1ada94aa329edb27d692591d1080ca7ac78e177e215b081c6b96"
+    }
+  ]
+}

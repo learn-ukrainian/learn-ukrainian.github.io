@@ -1,0 +1,66 @@
+[
+  {
+    "id": "invalid-audio-listen-repeat",
+    "type": "audio-listen-repeat",
+    "title": "Слухайте й повторюйте",
+    "level": "b1",
+    "payload": {
+      "type": "audio-listen-repeat",
+      "instruction": "Прослухайте фрагмент.",
+      "asset_id": "books-listen-repeat",
+      "segments": []
+    },
+    "answer_key": { "score": null },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "hramatka-contract-golden-fixture",
+      "gates": ["schema"]
+    }
+  },
+  {
+    "id": "invalid-model-answer-discussion",
+    "type": "model-answer-discussion",
+    "title": "Обговоріть відповідь",
+    "level": "b1",
+    "payload": {
+      "type": "model-answer-discussion",
+      "instruction": "Напишіть відповідь.",
+      "prompt": "Чому читання важливе?",
+      "rubric_checklist": ["Відповідь повна."]
+    },
+    "answer_key": {
+      "model_answer": "Бо воно показує мову в контексті.",
+      "score": 1
+    },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "hramatka-contract-golden-fixture",
+      "gates": ["schema"]
+    }
+  },
+  {
+    "id": "invalid-sentence-transformation",
+    "type": "sentence-transformation",
+    "title": "Перетворіть речення",
+    "level": "b1",
+    "payload": {
+      "type": "sentence-transformation",
+      "instruction": "Перетворіть речення.",
+      "items": [
+        {
+          "id": "transform-1",
+          "source": "Я читаю книгу.",
+          "prompt": "Поставте підмет у множину."
+        }
+      ]
+    },
+    "answer_key": {
+      "items": [{ "id": "transform-1", "accepted_answers": [] }]
+    },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "hramatka-contract-golden-fixture",
+      "gates": ["schema"]
+    }
+  }
+]

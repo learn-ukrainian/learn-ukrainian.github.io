@@ -1,0 +1,20 @@
+{
+  "schema": "lu.lesson-support.v1",
+  "vocabulary": [
+    {
+      "surface": "книги",
+      "lemma": "книга",
+      "stress": "кни́ги",
+      "pos": "noun",
+      "gloss": "books"
+    }
+  ],
+  "theory": [],
+  "assets": [
+    {
+      "id": "books-listen-repeat",
+      "transcript": "Ми читаємо книги.",
+      "sha256": "not-a-sha256"
+    }
+  ]
+}
