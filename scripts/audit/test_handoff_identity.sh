@@ -44,20 +44,27 @@ eq "$(handoff_identity_for_agent "$agent")" "claude-infra" "e2e: --agent infra-o
 agent="$(handoff_agent_from_argv --chrome --agent curriculum-orchestrator)"
 eq "$(handoff_identity_for_agent "$agent")" "" "e2e: --agent curriculum-orchestrator → default claude"
 
-# --- epic argv extraction: spaced + equals forms, .epic suffix normalized ---
+# --- epic argv extraction: spaced + equals forms; legacy suffix remains supported ---
 eq "$(handoff_epic_from_argv --agent curriculum-orchestrator --epic atlas)" "atlas" "spaced --epic"
 eq "$(handoff_epic_from_argv --epic=hramatka)" "hramatka" "equals --epic"
-eq "$(handoff_epic_from_argv --epic atlas.epic)" "atlas" "spaced --epic with .epic suffix"
-eq "$(handoff_epic_from_argv --epic=harness.epic)" "harness" "equals --epic with .epic suffix"
+eq "$(handoff_epic_from_argv --epic atlas.epic)" "atlas" "spaced --epic with legacy suffix"
+eq "$(handoff_epic_from_argv --epic=harness.epic)" "harness" "equals --epic with legacy suffix"
 eq "$(handoff_epic_from_argv --agent curriculum-orchestrator)" "" "no --epic flag"
 eq "$(handoff_epic_from_argv)" "" "empty argv (epic)"
 
-# --- epic → slot mapping: epic beats agent-type; empty epic maps to nothing ---
+# --- selector → canonical lane, stream, and provider slot mapping ---
+eq "$(launcher_selector_lane infra.fleet-comms)" "infra" "fleet-comms resolves to infra"
+eq "$(launcher_selector_stream infra.devops)" "epic:4707" "devops resolves to infra stream"
+eq "$(launcher_selector_lane atlas.practice)" "atlas" "atlas practice resolves to atlas"
+eq "$(launcher_selector_stream hramatka.lessons)" "epic:4542" "hramatka lessons resolves"
+launcher_selector_resolve unknown && fail "unknown selector must fail closed"
+
+# --- selector → slot mapping: selector beats agent-type; empty selector maps to nothing ---
 eq "$(handoff_identity_for_epic atlas)" "claude-atlas" "epic atlas → claude-atlas"
 eq "$(handoff_identity_for_epic hramatka)" "claude-hramatka" "epic hramatka → claude-hramatka"
 eq "$(handoff_identity_for_epic harness)" "claude-infra" "epic harness → claude-infra (#5201)"
 eq "$(handoff_identity_for_epic infra)" "claude-infra" "epic infra → claude-infra alias"
-eq "$(handoff_identity_for_epic devops)" "claude-infra" "epic devops → claude-infra alias"
+eq "$(handoff_identity_for_epic infra.devops)" "claude-infra" "dot devops → claude-infra alias"
 eq "$(handoff_identity_for_epic)" "" "no epic → empty slot"
 
 # Codex uses provider-specific per-epic slots; harness/infra/devops share one alias.
@@ -65,7 +72,7 @@ eq "$(handoff_identity_for_codex_epic atlas)" "codex-atlas" "Codex atlas → cod
 eq "$(handoff_identity_for_codex_epic hramatka)" "codex-hramatka" "Codex hramatka → codex-hramatka"
 eq "$(handoff_identity_for_codex_epic harness)" "codex-infra" "Codex harness → codex-infra"
 eq "$(handoff_identity_for_codex_epic infra)" "codex-infra" "Codex infra → codex-infra alias"
-eq "$(handoff_identity_for_codex_epic devops)" "codex-infra" "Codex devops → codex-infra alias"
+eq "$(handoff_identity_for_codex_epic infra.devops)" "codex-infra" "Codex dot devops → codex-infra alias"
 eq "$(handoff_identity_for_codex_epic)" "" "Codex no epic → empty slot"
 
 # Gemini uses provider-specific per-epic slots; harness/infra/devops share one alias.
@@ -73,7 +80,7 @@ eq "$(handoff_identity_for_gemini_epic atlas)" "gemini-atlas" "Gemini atlas → 
 eq "$(handoff_identity_for_gemini_epic hramatka)" "gemini-hramatka" "Gemini hramatka → gemini-hramatka"
 eq "$(handoff_identity_for_gemini_epic harness)" "gemini-infra" "Gemini harness → gemini-infra"
 eq "$(handoff_identity_for_gemini_epic infra)" "gemini-infra" "Gemini infra → gemini-infra alias"
-eq "$(handoff_identity_for_gemini_epic devops)" "gemini-infra" "Gemini devops → gemini-infra alias"
+eq "$(handoff_identity_for_gemini_epic infra.devops)" "gemini-infra" "Gemini dot devops → gemini-infra alias"
 eq "$(handoff_identity_for_gemini_epic)" "" "Gemini no epic → empty slot"
 
 

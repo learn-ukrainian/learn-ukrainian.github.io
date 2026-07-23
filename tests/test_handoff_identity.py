@@ -50,7 +50,7 @@ def test_handoff_identity_fixtures() -> None:
 )
 def test_devops_alias_resolves_to_canonical_infra_slot(resolver: str, expected: str) -> None:
     result = subprocess.run(
-        ["bash", "-c", 'source "$1"; "$2" devops', "bash", str(_HANDOFF_IDENTITY), resolver],
+        ["bash", "-c", 'source "$1"; "$2" infra.devops', "bash", str(_HANDOFF_IDENTITY), resolver],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,
@@ -58,3 +58,99 @@ def test_devops_alias_resolves_to_canonical_infra_slot(resolver: str, expected: 
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == expected
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+@pytest.mark.parametrize(
+    ("selector", "lane", "stream", "claude_slot", "gemini_slot", "grok_slot"),
+    [
+        ("infra.fleet-comms", "infra", "epic:4707", "claude-infra", "gemini-infra", "grok-infra"),
+        ("infra.devops", "infra", "epic:4707", "claude-infra", "gemini-infra", "grok-infra"),
+        ("atlas.practice", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas"),
+        ("hramatka.lessons", "hramatka", "epic:4542", "claude-hramatka", "gemini-hramatka", "grok-hramatka"),
+    ],
+)
+def test_dot_notation_selector_resolves_stream_and_provider_handoff(
+    selector: str,
+    lane: str,
+    stream: str,
+    claude_slot: str,
+    gemini_slot: str,
+    grok_slot: str,
+) -> None:
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source "$1"; printf "%s|%s|%s|%s|%s|%s" "$(launcher_selector_lane "$2")" "$(launcher_selector_stream "$2")" "$(handoff_identity_for_epic "$2")" "$(handoff_identity_for_gemini_epic "$2")" "$(handoff_identity_for_grok_epic "$2")" "$(handoff_identity_for_codex_epic "$2")"',
+            "bash",
+            str(_HANDOFF_IDENTITY),
+            selector,
+        ],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == f"{lane}|{stream}|{claude_slot}|{gemini_slot}|{grok_slot}|codex-{lane}"
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+def test_unknown_selector_fails_closed() -> None:
+    result = subprocess.run(
+        ["bash", "-c", 'source "$1"; launcher_selector_resolve unknown', "bash", str(_HANDOFF_IDENTITY)],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 1
+    assert result.stdout == ""
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+@pytest.mark.parametrize(
+    "launcher",
+    [
+        "start-gemini-drive.sh",
+        "start-grok-drive.sh",
+        "start-sonnet-drive.sh",
+        "start-claude.sh",
+    ],
+)
+def test_launcher_help_documents_allowlisted_dot_notation(launcher: str) -> None:
+    result = subprocess.run(
+        ["bash", str(_REPO_ROOT / launcher), "--help"],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "Valid lane selectors:" in result.stdout
+    assert "infra.fleet-comms" in result.stdout
+    assert "atlas.practice" in result.stdout
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+@pytest.mark.parametrize(
+    ("launcher", "arguments", "expected_code"),
+    [
+        ("start-gemini-drive.sh", ["unknown"], 2),
+        ("start-grok-drive.sh", ["unknown"], 2),
+        ("start-sonnet-drive.sh", ["unknown"], 2),
+        ("start-claude.sh", ["--epic", "unknown"], 1),
+    ],
+)
+def test_launcher_unknown_selector_fails_closed(launcher: str, arguments: list[str], expected_code: int) -> None:
+    result = subprocess.run(
+        ["bash", str(_REPO_ROOT / launcher), *arguments],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == expected_code
+    assert "unknown lane selector 'unknown'" in result.stderr
+    assert "Valid lane selectors:" in result.stderr

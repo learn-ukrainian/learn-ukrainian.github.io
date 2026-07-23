@@ -11,6 +11,46 @@ hash -r 2>/dev/null || true  # Clear command cache
 # Get script directory (project root)
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+launcher_usage() {
+    cat <<'EOF'
+Usage: ./start-claude.sh [Claude flags] [--epic <lane-or-lane.topic>]
+
+`--epic` is launcher-only and is removed before Claude starts.
+Valid lane selectors:
+  infra | harness | infra.fleet-comms | infra.devops
+  atlas | practice | atlas.practice
+  hramatka | hramatka.lessons
+  folk | seminars-folk
+  bio | seminars-bio
+EOF
+}
+
+case "${1:-}" in
+    --help|--help-launcher|-h)
+        launcher_usage
+        exit 0
+        ;;
+esac
+
+# Parse launcher-private epic selection before expensive launch preflight.  This
+# gives typos the same fail-closed diagnostic whether or not Claude is installed.
+# shellcheck source=scripts/lib/handoff_identity.sh
+source "$PROJECT_DIR/scripts/lib/handoff_identity.sh"
+if epic_flag_present "$@"; then
+    _early_selector="$(handoff_epic_from_argv "$@")"
+    if [ -z "$_early_selector" ]; then
+        echo "Error: --epic flag present but no usable value." >&2
+        launcher_selector_help >&2
+        exit 1
+    fi
+    if ! launcher_selector_resolve "$_early_selector" >/dev/null; then
+        echo "Error: unknown lane selector '$_early_selector'." >&2
+        launcher_selector_help >&2
+        exit 1
+    fi
+    unset _early_selector
+fi
+
 echo "Starting Claude in Learn Ukrainian project..."
 echo "Project: $PROJECT_DIR"
 
@@ -207,9 +247,8 @@ export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
 # a LAUNCHER-ONLY flag (stripped before exec — the claude CLI does not know it).
 # It pins the session to one epic lane: SESSION_EPIC is exported for the
 # SessionStart hook to print a binding assignment banner, and the handoff slot
-# becomes claude-<epic> (with canonical aliases: harness/infra/devops → claude-infra
-# so packets under the durable infra slot surface — #5201) so two sessions of
-# the SAME agent type on DIFFERENT epics never share (or clobber) a thread
+# becomes the canonical claude-<lane> slot (for example all infra selectors map
+# to claude-infra) so two sessions on different lanes never share (or clobber) a thread
 # handoff. Without --epic the hook tells the session to ASK the user instead of
 # defaulting to a lane — the 2026-07-13 atlas/hramatka/main lane collision is
 # the reason this exists.
@@ -236,11 +275,16 @@ if command -v handoff_epic_from_argv >/dev/null 2>&1; then
         exit 1
     fi
     if [ -n "$_selected_epic" ]; then
-        if command -v epic_name_valid >/dev/null 2>&1 && ! epic_name_valid "$_selected_epic"; then
-            echo "Error: invalid --epic name '$_selected_epic' (allowed: lowercase alnum + inner hyphens, e.g. atlas, lit-war)."
-            echo "   Refusing to launch with an ambiguous lane — fix the flag and retry."
+        _requested_selector="$_selected_epic"
+        if ! _canonical_lane="$(launcher_selector_lane "$_requested_selector")"; then
+            echo "Error: unknown lane selector '$_requested_selector'." >&2
+            launcher_selector_help >&2
             exit 1
         fi
+        case "$_requested_selector" in
+            *.*) _selected_epic="$_canonical_lane" ;;
+        esac
+        unset _requested_selector _canonical_lane
         export SESSION_EPIC="$_selected_epic"
         if command -v strip_epic_from_argv >/dev/null 2>&1; then
             _forward_args=()

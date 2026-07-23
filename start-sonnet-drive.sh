@@ -1,7 +1,7 @@
 #!/bin/bash
-# Sonnet-5 in DRIVER mode for an epic lane (judgment-dense sessions: incidents,
+# Sonnet-5 in DRIVER mode for an allowlisted lane selector (judgment-dense sessions: incidents,
 # architecture cutovers, contested reviews).
-#   ./start-sonnet-drive.sh <epic> [extra flags]    e.g.  ./start-sonnet-drive.sh hramatka
+#   ./start-sonnet-drive.sh <lane-or-lane.topic> [extra flags]
 # Which epic routes to which model? -> docs/runbooks/epic-orchestrator-roster.md
 # Thin wrapper over start-claude.sh pinned to Sonnet-5 (does NOT consume the Opus
 # review seat). The driver should load the `drive-epic` skill — automatic once the
@@ -10,10 +10,26 @@
 # Claude CLI expects a different id.
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/lib/handoff_identity.sh
+source "$ROOT/scripts/lib/handoff_identity.sh"
+usage() {
+  echo "Usage: $(basename "$0") <lane-or-lane.topic> [Claude flags]"
+  launcher_selector_help
+}
 if [ $# -lt 1 ]; then
-  echo "usage: $(basename "$0") <epic> [flags]" >&2
-  echo "  epics: harness  infra  devops  atlas  hramatka  bio  folk  corpus  (see docs/runbooks/epic-orchestrator-roster.md)" >&2
+  usage >&2
   exit 2
 fi
-EPIC="$1"; shift
-exec "$ROOT/start-claude.sh" --model "${SONNET_DRIVER_MODEL:-claude-sonnet-5}" --epic "$EPIC" "$@"
+case "$1" in
+  --help|--help-launcher|-h)
+    usage
+    exit 0
+    ;;
+esac
+SELECTOR="$1"; shift
+if ! launcher_selector_resolve "$SELECTOR" >/dev/null; then
+  echo "Error: unknown lane selector '$SELECTOR'." >&2
+  launcher_selector_help >&2
+  exit 2
+fi
+exec "$ROOT/start-claude.sh" --model "${SONNET_DRIVER_MODEL:-claude-sonnet-5}" --epic "$SELECTOR" "$@"

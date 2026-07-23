@@ -340,13 +340,35 @@ def test_epic_harness_cold_prompt_is_fleet_comms_dual_aware(tmp_path: Path) -> N
     assert "plane=off" in out
 
 
-def test_epic_devops_uses_canonical_infra_stream_and_handoff(tmp_path: Path) -> None:
+def test_dot_notation_atlas_practice_uses_canonical_stream_and_handoff(tmp_path: Path) -> None:
     values, _argv_blob, result, _project, supervisor_capture = _run_launcher(
-        tmp_path,
-        ["--epic", "devops"],
+        tmp_path, ["--epic", "atlas.practice"]
     )
     assert result.returncode == 0, result.stderr + result.stdout
-    assert values["session_epic"] == "devops"
+    assert values["session_epic"] == "atlas"
+    assert values["handoff"] == "grok-atlas"
+    supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
+    stream_index = supervisor_args.index("--stream")
+    assert supervisor_args[stream_index + 1] == "epic:4387"
+
+
+def test_unknown_epic_selector_fails_closed_with_help(tmp_path: Path) -> None:
+    _values, _argv_blob, result, _project, supervisor_capture = _run_launcher(
+        tmp_path, ["--epic", "unknown"]
+    )
+    assert result.returncode == 1
+    assert not supervisor_capture.exists()
+    assert "unknown lane selector 'unknown'" in result.stderr
+    assert "Valid lane selectors:" in result.stderr
+
+
+def test_dot_notation_infra_devops_uses_canonical_stream_and_handoff(tmp_path: Path) -> None:
+    values, _argv_blob, result, _project, supervisor_capture = _run_launcher(
+        tmp_path,
+        ["--epic", "infra.devops"],
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert values["session_epic"] == "infra"
     assert values["handoff"] == "grok-infra"
     supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
     stream_index = supervisor_args.index("--stream")
