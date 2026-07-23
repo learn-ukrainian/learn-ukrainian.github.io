@@ -208,10 +208,14 @@ def test_formal_cf_defaults_pin_practical_seats_at_high_effort():
 
 def test_orchestrator_seats_include_agy_flash_36_high():
     seats = load_model_catalog()["orchestrator_seats"]
-    assert set(seats) >= {"claude", "grok", "agy"}
-    # codex dropped as a DRIVER 2026-07-22 (272K window not worth session rollover
-    # overhead); it stays a formal-CF review seat + coding lane, not an orchestrator seat.
-    assert "codex" not in seats
+    assert set(seats) >= {"claude", "grok", "agy", "codex"}
+    # codex was dropped as a DRIVER 2026-07-22 (272K window not worth session rollover
+    # overhead), then re-added 2026-07-23 as the named harness/infra/devops alternate:
+    # HydrationCapsuleV1's score-from-memory + ~100ms capsule hydrate changed that
+    # calculus. It remains a formal-CF review seat + coding lane too.
+    assert seats["codex"]["model_id"] == "gpt-5.6-terra"
+    assert seats["codex"]["effort"] == "high"
+    assert seats["codex"]["escalate_model_id"] == "gpt-5.6-sol"
     assert seats["agy"]["model_id"] == "gemini-3.6-flash-high"
     assert seats["agy"]["effort"] == "high"
     assert seats["agy"]["escalate_model_id"] == "gemini-3.1-pro-high"
