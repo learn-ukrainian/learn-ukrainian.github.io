@@ -119,4 +119,3 @@ Audit report at `audit/sum11_sovietization_scan_<DATE>.md`.
 | **Stress dictionary** | 2.7M forms | Word stress for annotation | via `ukrainian-word-stress` |
 
 Source: [bakustarver/ukr-dictionaries-list-opensource](https://github.com/bakustarver/ukr-dictionaries-list-opensource) (СУМ-11, Балла, Фразеологічний)
-kr-dictionaries-list-opensource) (СУМ-11, Балла, Фразеологічний)
