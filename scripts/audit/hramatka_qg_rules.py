@@ -663,8 +663,12 @@ def _hyphen_compound_all_attested(token: str) -> bool:
     """
     if "-" not in token:
         return False
-    parts = [p for p in token.split("-") if p]
-    if len(parts) < 2:
+    parts = token.split("-")
+    # Reject empty segments (leading/trailing/repeated hyphens, e.g. "текст--опора"):
+    # filtering them out would let a malformed token slip through as a valid
+    # two-part compound whenever the surviving fragments happen to be VESUM-real,
+    # bypassing the Russianism/invented-form check it exists to protect (#5691 review).
+    if len(parts) < 2 or not all(parts):
         return False
     return all(_vesum_hits(part) for part in parts)
 

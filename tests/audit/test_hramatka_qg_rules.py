@@ -312,6 +312,13 @@ def test_hyphen_compound_all_attested_helper() -> None:
     assert not hq._hyphen_compound_all_attested("текст-жмурклея")
     # No hyphen at all → not a compound, nothing to split.
     assert not hq._hyphen_compound_all_attested("жмурклея")
+    # Malformed repeated/leading/trailing hyphens must NOT be rescued even when
+    # every surviving non-empty fragment is independently VESUM-real — an empty
+    # segment is evidence of a broken token, not a clean two-part compound
+    # (cross-family review finding on #5691).
+    assert not hq._hyphen_compound_all_attested("текст--опора")
+    assert not hq._hyphen_compound_all_attested("-текст-опора")
+    assert not hq._hyphen_compound_all_attested("текст-опора-")
     status = hq._classify_token("тексті-опорі")
     assert status["vesum_attested"] is True
     assert not hq._is_russianism_token("тексті-опорі", status)
