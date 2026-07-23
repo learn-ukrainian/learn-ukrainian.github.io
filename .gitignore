@@ -35,9 +35,10 @@ api_keys.*
 service-account*.json
 
 # AI assistant configs
-#.gemini/
+.gemini/
 .claude/
 .codex/
+gemini_extensions/settings.json
 # Cursor IDE local state — keep project-level mcp.json committed (parallel to .mcp.json)
 .cursor/*
 !.cursor/mcp.json
@@ -130,6 +131,7 @@ temp/
 # Temporary/sample images in docs (textbook screenshots, vision test outputs)
 docs/temp_*.png
 docs/bolshakova_*.png
+docs/session-state/
 
 gha-creds-*.json
 .pytest_cache/
@@ -331,19 +333,12 @@ data/corpus_audit/*
 !data/corpus_audit/draft_tickets/*.md
 
 
-.gemini/
-
 # SQLite WAL/SHM sidecars — same exclusion as the .db files themselves.
 data/*.db-shm
 data/*.db-wal
 # Test-only SQLite WAL/SHM sidecars (e.g. test_wal.db-* from pytest fixtures)
 test_*.db-shm
 test_*.db-wal
-
-# Session-state handoffs that authors marked KEEP_UNTRACKED_UNTIL_PUBLIC_OK
-# (e.g. eval results pending validation) live under a `private/` subdir,
-# matching the existing `docs/references/private/` convention.
-docs/session-state/private/
 
 # the native reviewer's teaching material (large, local-only, IP-sensitive)
 data/native-reviewer-lessons/
