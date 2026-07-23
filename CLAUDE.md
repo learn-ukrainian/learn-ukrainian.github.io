@@ -116,34 +116,9 @@ For shared delegation, artifact hygiene, Python invocation, worktree layout, com
 
 | Feature | How | When |
 | --- | --- | --- |
-| `Monitor` tool | Stream stdout events as notifications | **Build monitoring.** Agents may run V7 builds during autonomous orchestration (per user direction 2026-05-13) — always pass `--worktree`. Filter JSONL events with `grep --line-buffered '^{\"event\"'`. See below. |
+| `Monitor` tool | Stream stdout events as notifications | **Build monitoring — NEVER poll with ScheduleWakeup or manual loops.** How-to (command template, `--worktree` requirement, JSONL event fields, Monitor API state queries): see the `build-monitoring` skill. |
 | `/effort` | Set model effort dynamically mid-session | Levels: `low` / `medium` / `high` / `xhigh` / `max`, by TASK TIER (model-agnostic — the Claude lane rotates, verify per active model via `claude-api` skill / release notes): `low`: config/typo fixes. `medium`: routine code fixes. `high`: frontier-model default — intelligence-sensitive work. `xhigh`: coding/agentic, content review, plan review, module building, linguistic analysis. `max`: deep architecture / adversarial reviews where correctness outweighs cost. Effort sensitivity DIFFERS per model (it mattered more on Opus 4.8 than prior Opus) — **sweep `medium`/`high`/`xhigh` per route on each newly rotated model** rather than porting the old defaults. |
-| Transcript search | `Ctrl+O` then `/` to search, `n`/`N` to navigate | Finding previous discussions in long sessions |
 | `--bare` flag | `claude -p "..." --bare` | Scripted calls (agent bridge) — skips hooks/LSP/plugins for speed |
 | `worktree.sparsePaths` | Configured in settings.json | Subagent worktrees exclude `node_modules/`, `data/` for speed |
-| `PostCompact` hook | Auto-runs after context compaction | Restores current task, open issues, key reminders |
-| `FileChanged` hook | Auto-runs when `curriculum/**/*.md` changes | Triggers audit on module file edits |
 | `effort: xhigh` on skills | Frontmatter in review skills | `content-review`, `plan-review`, `plan-review-seminar`, `batch-review`, `prompt-review` — forces deep analysis. Set `xhigh` 2026-04-21; retained for Opus 4.8 — Anthropic recommends `xhigh` for coding/review and a minimum of `high` for intelligence-sensitive work. |
 | `paths:` scoping on rules | Frontmatter in rule files | `ukrainian-linguistics.md` only active for curriculum/orchestration work |
-
-### Build Monitoring (MANDATORY)
-
-**NEVER poll builds with ScheduleWakeup or manual loops.** Use the `Monitor` tool:
-
-Agents may run V7 builds during autonomous orchestration — always pass `--worktree` (PR #1952) so the build runs in `.worktrees/builds/{level}-{slug}-{stamp}/` and main stays clean.
-
-```
-Monitor(
-    command=".venv/bin/python -u scripts/build/v7_build.py {level} {slug} 2>&1 | grep --line-buffered '^{\"event\"'",
-    description="V7 build events for {level}/{slug}",
-    persistent=True,
-    timeout_ms=3600000
-)
-```
-
-`v7_build.py` emits JSONL events from the wrapper and `linear_pipeline.py`: single-module lifecycle notifications such as `phase_done`, `review_score`, and `module_done`; writer/reviewer telemetry such as `writer_cot_emit`, `writer_tool_call`, `writer_end_gate`, `writer_tool_theatre`, `phase_writer_summary`, `mcp_config_resolved`, `reviewer_dim_evidence`, `reviewer_audit_call`, and `phase_review_summary`; and correction diagnostics `writer_correction_unparseable`, `reviewer_fixes_unparseable`, `reviewer_fixes_anchor_unmatched`. Each line becomes a notification — zero polling overhead.
-
-For state queries without running builds, use the Monitor API (`docs/MONITOR-API.md`):
-- Track health: `/api/state/track-health/a1`
-- Failing modules: `/api/state/failing?track=a2`
-- Build status: `/api/state/build-status/a1`
