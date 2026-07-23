@@ -39,6 +39,7 @@ def _write_executable(path: Path, body: str) -> None:
         ("practice-hub", "atlas", "epic:4387", "claude-atlas"),
         ("seminars-folk", "folk", "epic:2836", "claude-folk"),
         ("seminars-bio", "bio", "epic:4431", "claude-bio"),
+        ("corpus-channels", "corpus", "epic:4706", "claude-corpus"),
     ],
 )
 def test_epic_selector_claims_supervisor_and_strips_flag(

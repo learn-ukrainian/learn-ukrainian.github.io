@@ -258,6 +258,7 @@ def test_legacy_epic_suffix_normalizes_to_atlas(tmp_path: Path, arguments: list[
         ("practice-hub", "atlas", "epic:4387", "gemini-atlas"),
         ("seminars-folk", "folk", "epic:2836", "gemini-folk"),
         ("seminars-bio", "bio", "epic:4431", "gemini-bio"),
+        ("corpus-channels", "corpus", "epic:4706", "gemini-corpus"),
     ],
 )
 def test_alias_normalizes_to_canonical_lane(
