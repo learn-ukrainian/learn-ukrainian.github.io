@@ -17,18 +17,28 @@
 # The helper fails the launch closed (exit 1) if the supervisor returns an
 # error or if the exported lease envelope is incomplete.
 
-# stream_id_for_epic <epic-name>
-# Return the canonical session stream id (epic:<n>) for a launcher shorthand.
-# This is intentionally a small, stable launcher lookup; the authoritative
-# stream→epic mapping lives in scripts/config/issue_streams.yaml.
+# Load the selector SSOT when this helper is sourced independently.  The
+# launcher normally sources handoff_identity.sh first; this guarded import also
+# keeps stream resolution available to direct session-supervisor consumers.
+if ! declare -F launcher_selector_stream >/dev/null 2>&1; then
+  _session_supervisor_lib_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  if [ -f "$_session_supervisor_lib_dir/handoff_identity.sh" ]; then
+    # shellcheck source=scripts/lib/handoff_identity.sh
+    source "$_session_supervisor_lib_dir/handoff_identity.sh"
+  fi
+  unset _session_supervisor_lib_dir
+fi
+
+# stream_id_for_epic <lane-or-lane.topic>
+# Return the canonical session stream id.  The exact allowlist lives in
+# launcher_selector_resolve in handoff_identity.sh; unknown selectors return
+# empty and must be rejected by callers.
 stream_id_for_epic() {
-  case "${1:-}" in
-    atlas|practice|practice-hub) printf '%s' 'epic:4387' ;;
-    harness|infra|devops) printf '%s' 'epic:4707' ;;
-    hramatka) printf '%s' 'epic:4542' ;;
-    folk|seminars-folk) printf '%s' 'epic:2836' ;;
-    bio|seminars-bio) printf '%s' 'epic:4431' ;;
-  esac
+  if declare -F launcher_selector_stream >/dev/null 2>&1; then
+    launcher_selector_stream "${1:-}"
+  else
+    return 1
+  fi
 }
 
 # _git_env

@@ -12,8 +12,68 @@
 # selected --agent, so each lane reads/writes its OWN slot and we don't maintain
 # a per-lane wrapper script.
 #
-# Add a new lane by adding ONE case arm to handoff_identity_for_agent below.
-# Unknown / absent agents fall back to the default `claude` slot (echo nothing).
+# Launcher lane selectors are intentionally allowlisted below.  Do not derive a
+# slot or stream id from arbitrary user input: that creates phantom handoff
+# files and can silently attach a session to the wrong stream.
+
+# launcher_selector_resolve "<lane-or-lane.topic>"
+# Print the canonical lane and stream id, separated by a tab.  This is the
+# single selector table shared by handoff identities and session supervision.
+# Unknown selectors return 1 and print nothing, so callers can fail closed.
+launcher_selector_resolve() {
+  case "${1:-}" in
+    infra|harness|devops|infra.fleet-comms|infra.devops)
+      printf 'infra\tepic:4707\n'
+      ;;
+    atlas|practice|practice-hub|atlas.practice)
+      printf 'atlas\tepic:4387\n'
+      ;;
+    hramatka|hramatka.lessons)
+      printf 'hramatka\tepic:4542\n'
+      ;;
+    folk|seminars-folk)
+      printf 'folk\tepic:2836\n'
+      ;;
+    bio|seminars-bio)
+      printf 'bio\tepic:4431\n'
+      ;;
+    corpus|corpus-channels)
+      printf 'corpus\tepic:4706\n'
+      ;;
+    *) return 1 ;;
+  esac
+}
+
+# launcher_selector_lane "<selector>"
+# Print the canonical lane for a selector.
+launcher_selector_lane() {
+  local resolved=''
+  resolved="$(launcher_selector_resolve "${1:-}")" || return 1
+  printf '%s' "${resolved%%$'\t'*}"
+}
+
+# launcher_selector_stream "<selector>"
+# Print the canonical stream id for a selector.
+launcher_selector_stream() {
+  local resolved=''
+  resolved="$(launcher_selector_resolve "${1:-}")" || return 1
+  printf '%s' "${resolved#*$'\t'}"
+}
+
+# launcher_selector_help
+# Keep launcher diagnostics in one place so every entry point documents the
+# exact same public selector surface.
+launcher_selector_help() {
+  cat <<'EOF'
+Valid lane selectors:
+  infra | harness | infra.fleet-comms | infra.devops
+  atlas | practice | atlas.practice
+  hramatka | hramatka.lessons
+  folk | seminars-folk
+  bio | seminars-bio
+  corpus | corpus-channels
+EOF
+}
 
 # handoff_agent_from_argv "$@"
 # Echo the value of `--agent <v>` / `--agent=<v>` from an argv list, or nothing.
@@ -50,8 +110,8 @@ handoff_identity_for_agent() {
 # handoff_epic_from_argv "$@"
 # Echo the value of `--epic <v>` / `--epic=<v>` from an argv list, or nothing.
 # `--epic` is a LAUNCHER flag, not a claude CLI flag: the caller must ALSO
-# strip it from the argv it forwards (see strip_epic_from_argv). Accepts both
-# `atlas` and `atlas.epic` spellings; a `.epic` suffix is dropped.
+# strip it from the argv it forwards (see strip_epic_from_argv).  The legacy
+# `.epic` display suffix is removed before launchers resolve the selector.
 # First occurrence wins.
 handoff_epic_from_argv() {
   local prev='' arg='' value=''
@@ -123,23 +183,14 @@ epic_name_valid() {
 }
 
 # handoff_identity_for_epic "<epic-name>"
-# Echo the per-epic SESSION_HANDOFF_AGENT slot, or nothing when no epic is given.
-# Default: claude-<epic>. An explicit epic BEATS the agent-type mapping so two
-# sessions of the same agent type on different epics never share a handoff slot
-# (root cause of the 2026-07-13 atlas/hramatka/main lane collision).
-#
-# Canonical-slot aliases: some epics are NOT free-standing lanes — they already
-# have a durable handoff identity elsewhere. Mapping them to a phantom
-# claude-<epic> slot hides live packets and causes silent cold starts (#5201).
-# harness/infra/devops (infra, DevOps & fleet reliability) → claude-infra, the same
-# slot as --agent infra-orchestrator (lineage dir, session-state, inbox).
+# Echo the allowlisted per-lane SESSION_HANDOFF_AGENT slot, or nothing when no
+# selector is given. An explicit selector beats the agent-type mapping so two
+# sessions on different lanes never share a handoff slot.
 handoff_identity_for_epic() {
-  local epic="${1:-}"
-  [ -n "$epic" ] || return 0
-  case "$epic" in
-    harness|infra|devops) printf '%s' 'claude-infra' ;;
-    *) printf 'claude-%s' "$epic" ;;
-  esac
+  local lane=''
+  [ -n "${1:-}" ] || return 0
+  lane="$(launcher_selector_lane "$1")" || return 1
+  printf 'claude-%s' "$lane"
 }
 
 # handoff_identity_for_codex_epic "<epic-name>"
@@ -148,34 +199,37 @@ handoff_identity_for_epic() {
 # never adopts a Claude packet. The infra alias mirrors the canonical
 # claude-infra convention and avoids inventing parallel harness/infra slots.
 handoff_identity_for_codex_epic() {
-  local epic="${1:-}"
-  [ -n "$epic" ] || return 0
-  case "$epic" in
-    harness|infra|devops) printf '%s' 'codex-infra' ;;
-    *) printf 'codex-%s' "$epic" ;;
-  esac
+  local lane=''
+  [ -n "${1:-}" ] || return 0
+  lane="$(launcher_selector_lane "$1")" || return 1
+  printf 'codex-%s' "$lane"
 }
 
 # handoff_identity_for_kimi_epic "<epic-name>"
 # Echo the per-epic Kimi Code orchestrator rollover slot. Provider-specific so
 # a Kimi seat never adopts Claude/Codex/Grok packets. harness/infra/devops → kimi-infra.
 handoff_identity_for_kimi_epic() {
-  local epic="${1:-}"
-  [ -n "$epic" ] || return 0
-  case "$epic" in
-    harness|infra|devops) printf '%s' 'kimi-infra' ;;
-    *) printf 'kimi-%s' "$epic" ;;
-  esac
+  local lane=''
+  [ -n "${1:-}" ] || return 0
+  lane="$(launcher_selector_lane "$1")" || return 1
+  printf 'kimi-%s' "$lane"
 }
 
 # handoff_identity_for_gemini_epic "<epic-name>"
 # Echo the per-epic Gemini / Antigravity orchestrator rollover slot. Provider-specific so
 # a Gemini seat never adopts Claude/Codex/Grok/Kimi packets. harness/infra/devops → gemini-infra.
 handoff_identity_for_gemini_epic() {
-  local epic="${1:-}"
-  [ -n "$epic" ] || return 0
-  case "$epic" in
-    harness|infra|devops) printf '%s' 'gemini-infra' ;;
-    *) printf 'gemini-%s' "$epic" ;;
-  esac
+  local lane=''
+  [ -n "${1:-}" ] || return 0
+  lane="$(launcher_selector_lane "$1")" || return 1
+  printf 'gemini-%s' "$lane"
+}
+
+# handoff_identity_for_grok_epic "<selector>"
+# Grok uses the same canonical selector table as the other launchers.
+handoff_identity_for_grok_epic() {
+  local lane=''
+  [ -n "${1:-}" ] || return 0
+  lane="$(launcher_selector_lane "$1")" || return 1
+  printf 'grok-%s' "$lane"
 }

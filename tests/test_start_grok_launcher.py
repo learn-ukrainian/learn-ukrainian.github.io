@@ -6,6 +6,8 @@ import os
 import subprocess
 from pathlib import Path
 
+import pytest
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _LAUNCHER = _REPO_ROOT / "start-grok.sh"
 
@@ -267,6 +269,40 @@ def test_epic_atlas_exports_env_and_claims_lease(tmp_path: Path) -> None:
     assert "--always-approve" in parts
 
 
+@pytest.mark.parametrize("arguments", [["--epic", "atlas.epic"], ["--epic=atlas.epic"]])
+def test_legacy_epic_suffix_normalizes_to_atlas(tmp_path: Path, arguments: list[str]) -> None:
+    values, _argv_blob, result, _project, supervisor_capture = _run_launcher(tmp_path, arguments)
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert values["session_epic"] == "atlas"
+    assert values["session_stream"] == "epic:4387"
+    assert values["handoff"] == "grok-atlas"
+    assert supervisor_capture.exists()
+
+
+@pytest.mark.parametrize(
+    ("selector", "canonical_lane", "stream", "handoff"),
+    [
+        ("devops", "infra", "epic:4707", "grok-infra"),
+        ("practice-hub", "atlas", "epic:4387", "grok-atlas"),
+        ("seminars-folk", "folk", "epic:2836", "grok-folk"),
+        ("seminars-bio", "bio", "epic:4431", "grok-bio"),
+        ("corpus-channels", "corpus", "epic:4706", "grok-corpus"),
+    ],
+)
+def test_alias_normalizes_to_canonical_lane(
+    tmp_path: Path, selector: str, canonical_lane: str, stream: str, handoff: str
+) -> None:
+    values, _argv_blob, result, _project, supervisor_capture = _run_launcher(tmp_path, ["--epic", selector])
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert values["session_epic"] == canonical_lane
+    assert values["session_stream"] == stream
+    assert values["handoff"] == handoff
+    assert supervisor_capture.exists()
+    supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
+    stream_index = supervisor_args.index("--stream")
+    assert supervisor_args[stream_index + 1] == stream
+
+
 def test_epic_equals_form_and_explicit_prompt_skips_inject(tmp_path: Path) -> None:
     values, argv_blob, result, _project, _supervisor_capture = _run_launcher(
         tmp_path,
@@ -340,13 +376,35 @@ def test_epic_harness_cold_prompt_is_fleet_comms_dual_aware(tmp_path: Path) -> N
     assert "plane=off" in out
 
 
-def test_epic_devops_uses_canonical_infra_stream_and_handoff(tmp_path: Path) -> None:
+def test_dot_notation_atlas_practice_uses_canonical_stream_and_handoff(tmp_path: Path) -> None:
     values, _argv_blob, result, _project, supervisor_capture = _run_launcher(
-        tmp_path,
-        ["--epic", "devops"],
+        tmp_path, ["--epic", "atlas.practice"]
     )
     assert result.returncode == 0, result.stderr + result.stdout
-    assert values["session_epic"] == "devops"
+    assert values["session_epic"] == "atlas"
+    assert values["handoff"] == "grok-atlas"
+    supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
+    stream_index = supervisor_args.index("--stream")
+    assert supervisor_args[stream_index + 1] == "epic:4387"
+
+
+def test_unknown_epic_selector_fails_closed_with_help(tmp_path: Path) -> None:
+    _values, _argv_blob, result, _project, supervisor_capture = _run_launcher(
+        tmp_path, ["--epic", "unknown"]
+    )
+    assert result.returncode == 1
+    assert not supervisor_capture.exists()
+    assert "unknown lane selector 'unknown'" in result.stderr
+    assert "Valid lane selectors:" in result.stderr
+
+
+def test_dot_notation_infra_devops_uses_canonical_stream_and_handoff(tmp_path: Path) -> None:
+    values, _argv_blob, result, _project, supervisor_capture = _run_launcher(
+        tmp_path,
+        ["--epic", "infra.devops"],
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert values["session_epic"] == "infra"
     assert values["handoff"] == "grok-infra"
     supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
     stream_index = supervisor_args.index("--stream")

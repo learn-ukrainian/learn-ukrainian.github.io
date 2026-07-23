@@ -237,12 +237,18 @@ if [ -f "$PROJECT_DIR/scripts/lib/fleet_comms_cold_start.sh" ]; then
   source "$PROJECT_DIR/scripts/lib/fleet_comms_cold_start.sh"
 fi
 
-# Validate epic name when the helper is present.
-if command -v epic_name_valid >/dev/null 2>&1 && [ -n "$_selected_epic" ]; then
-  if ! epic_name_valid "$_selected_epic"; then
-    echo "Error: invalid --epic name '${_selected_epic}' (lowercase alnum + inner hyphens)." >&2
+# Resolve the public selector exactly once, before deriving state or identities.
+if [ -n "$_selected_epic" ]; then
+  _requested_selector="$_selected_epic"
+  if ! _canonical_lane="$(launcher_selector_lane "$_requested_selector")"; then
+    echo "Error: unknown lane selector '${_requested_selector}'." >&2
+    launcher_selector_help >&2
     exit 1
   fi
+  case "$_requested_selector" in
+    *.*|devops|practice|practice-hub|seminars-folk|seminars-bio|corpus-channels) _selected_epic="$_canonical_lane" ;;
+  esac
+  unset _requested_selector _canonical_lane
 fi
 
 if [ -n "$_selected_epic" ]; then

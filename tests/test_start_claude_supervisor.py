@@ -6,6 +6,8 @@ import os
 import subprocess
 from pathlib import Path
 
+import pytest
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _LAUNCHER = _REPO_ROOT / "start-claude.sh"
 _GIT_REDIRECT = frozenset(
@@ -30,7 +32,20 @@ def _write_executable(path: Path, body: str) -> None:
     path.chmod(0o755)
 
 
-def test_epic_harness_claims_supervisor_and_strips_flag(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    ("selector", "canonical_lane", "stream", "handoff"),
+    [
+        ("harness", "harness", "epic:4707", "claude-infra"),
+        ("devops", "infra", "epic:4707", "claude-infra"),
+        ("practice-hub", "atlas", "epic:4387", "claude-atlas"),
+        ("seminars-folk", "folk", "epic:2836", "claude-folk"),
+        ("seminars-bio", "bio", "epic:4431", "claude-bio"),
+        ("corpus-channels", "corpus", "epic:4706", "claude-corpus"),
+    ],
+)
+def test_epic_selector_claims_supervisor_and_strips_flag(
+    tmp_path: Path, selector: str, canonical_lane: str, stream: str, handoff: str
+) -> None:
     project = tmp_path / "project"
     project.mkdir()
     lib = project / "scripts" / "lib"
@@ -75,7 +90,7 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:
   "schema": "session-supervisor-bootstrap.v1",
   "identity": {{
     "role": "driver",
-    "stream_id": "epic:4707",
+    "stream_id": "{stream}",
     "lease": {{
       "session_id": "sess-claude-j2",
       "lease_id": "lease-claude-j2",
@@ -154,7 +169,7 @@ fi
     subprocess.run(["git", "-C", str(project), "branch", "-M", "main"], check=True, env=env)
 
     result = subprocess.run(
-        [str(project / "start-claude.sh"), "--epic", "harness"],
+        [str(project / "start-claude.sh"), "--epic", selector],
         cwd=project,
         env=env,
         text=True,
@@ -169,12 +184,24 @@ fi
     assert "open" in sup
     assert "claude" in sup
     assert "claude-code" in sup
-    assert "epic:4707" in sup
+    assert stream in sup
 
     raw = capture.read_text(encoding="utf-8")
-    assert "epic=harness" in raw
-    assert "stream=epic:4707" in raw
+    assert f"epic={canonical_lane}" in raw
+    assert f"stream={stream}" in raw
     assert "session=sess-claude-j2" in raw
     assert "lease=lease-claude-j2" in raw
-    assert "handoff=claude-infra" in raw
+    assert f"handoff={handoff}" in raw
     assert "--epic" not in raw.split("argv=", 1)[-1]
+
+
+def test_help_lists_corpus_channel_selectors() -> None:
+    result = subprocess.run(
+        ["bash", str(_LAUNCHER), "--help"],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "corpus | corpus-channels" in result.stdout
