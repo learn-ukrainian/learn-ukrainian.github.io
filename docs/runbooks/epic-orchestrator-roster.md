@@ -18,6 +18,7 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | Epic | Recommended seat | Run |
 | --- | --- | --- |
 | **harness / infra / devops** | Gemini (AGY) | `./start-gemini-drive.sh devops` |
+| **harness / infra / devops** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-drive.sh devops` |
 | **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-drive.sh corpus` |
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.5 | `./start-grok-drive.sh atlas` |
 | **hramatka** (teacher lesson service) | Grok 4.5 · Sonnet-5 if judgment-heavy | `./start-grok-drive.sh hramatka` |
@@ -26,7 +27,7 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **any epic** — incident · architecture cutover · contested review | Sonnet-5 (Opus for the hardest) | `./start-sonnet-drive.sh <epic>` |
 
 **Per-model launcher convention:** `./start-<model>-drive.sh <epic>` where `<model>` ∈
-`grok · gemini · sonnet`. Epic is the first arg; extra flags forward
+`codex · grok · gemini · sonnet`. Epic is the first arg; extra flags forward
 (e.g. `--agent curriculum-track-orchestrator`). Each **launches the lane**; the driver
 then loads `$drive-epic` — automatically once the cold-prompt wiring lands (follow-up PR),
 and by manual `$drive-epic` invocation until then. **Today the wrappers do not yet
@@ -43,11 +44,11 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
 
 **Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
 - **Opus 4.8** — hardest judgment + the cross-family review of record. Don't burn it on a polling loop.
-- **Codex (GPT-5.6)** 272K + **Kimi K2.7** 256K — under the ~500K window we want for a driver.
-  **Codex was dropped from `model_catalog.orchestrator_seats` + `fleet_communications.yaml`
-  (user, 2026-07-22)** — the 272K window is not worth the session-start/end rollover-token
-  overhead. Codex remains a formal-CF **review** seat + coding lane (`formal_cf_defaults.codex`
-  and the codex comms endpoint) — it just no longer owns a driver loop.
+- **Kimi K2.7** 256K — under the ~500K window we want for a driver. **Codex (GPT-5.6)** was
+  dropped on 2026-07-22 for its 272K window, then **re-added on 2026-07-23** as the named
+  harness / infra / devops alternate: HydrationCapsuleV1's score-from-memory and small capsule
+  hydrate change the rollover-cost calculus. Codex remains a formal-CF **review** seat + coding lane;
+  the shared lease prevents concurrent co-ownership.
 - **Kimi K3** — frontier coder/reviewer + cross-family escalation authority (`max-effort-only` makes a continuous loop costly).
 
 ### Machine-authority projection (lint #5642)
@@ -61,6 +62,7 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.6-flash-high | high | gemini-3.1-pro-high | high |
 | claude | claude-sonnet-5 | high | claude-fable-5 | xhigh |
+| codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
 | grok | grok-4.5 | high | grok-4.5 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 
@@ -90,8 +92,8 @@ language + review lanes free and puts the loop on the most replaceable capacity:
   subscription window, so driving it doesn't steal review or writing capacity.
 - **Sonnet-5** → judgment-dense: near-Opus judgment at much lower cost, and it's *extra*
   Anthropic capacity that does **not** consume the Opus review-of-record seat.
-- **Context-window floor ~500K+** (thread long sessions + query fleet state) is why Codex
-  (272K) and Kimi K2.7 (256K) can't drive; Grok (500K) and the 1M-window models can.
+- **HydrationCapsuleV1** gives Codex (272K) a measured, low-overhead score-and-hydrate path, so it
+  can serve as the harness / infra / devops alternate without co-owning Gemini's stream lease.
 
 ---
 

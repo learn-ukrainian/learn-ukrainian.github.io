@@ -63,13 +63,15 @@ file handoffs remain authoritative until then.
 ## Orchestrator seats (fleet-comms stream)
 
 Any of these may own a cold-start / drive-board loop. Pins live in
-`scripts/config/model_catalog.yaml` → `orchestrator_seats`. **Codex is not a driver**
-(user 2026-07-22) — coding + sealed formal CF only. Drift lint: #5642 /
-`scripts/lint/lint_fleet_roster.py`.
+`scripts/config/model_catalog.yaml` → `orchestrator_seats`. **Codex was re-added as a driver**
+(user 2026-07-23), reversing the 2026-07-22 removal because HydrationCapsuleV1 reduces rollover
+overhead; it is the named harness / infra / devops alternate, never a concurrent co-owner. Drift
+lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 
 | Seat | Default (loop) | Escalate (deep) | Sealed formal CF as *reviewer* |
 | --- | --- | --- | --- |
 | **claude** | `claude-sonnet-5` @ high | **`claude-fable-5` @ xhigh** | yes (`review-pr --reviewer claude`) |
+| **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | yes (`review-pr --reviewer codex`) |
 | **grok** | `grok-4.5` @ high | same SKU (Cursor = avail. fallback) | no until #5557 |
 | **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | no until #5555 — still *requests* CF |
 
@@ -78,6 +80,7 @@ Any of these may own a cold-start / drive-board loop. Pins live in
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.6-flash-high | high | gemini-3.1-pro-high | high |
 | claude | claude-sonnet-5 | high | claude-fable-5 | xhigh |
+| codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
 | grok | grok-4.5 | high | grok-4.5 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 
@@ -89,7 +92,7 @@ Escalate when: architecture, hard multi-file judgment, high-stakes synthesis —
 .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.1-pro-high ...
 # Claude escalate
 .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5 ...
-# Codex coding / formal-CF authority escalate (NOT a driver seat)
+# Codex named alternate / formal-CF authority escalate
 .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-5.6-sol ...
 ```
 

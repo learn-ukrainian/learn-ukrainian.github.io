@@ -6,6 +6,8 @@ import os
 import subprocess
 from pathlib import Path
 
+from scripts.session_canary import codex_lane, gemini_lane
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 # Git redirection variables inherited from the outer test runner (e.g. a git
@@ -160,6 +162,21 @@ printf 'CAPSULE=%s\\n' "$SESSION_SUPERVISOR_CAPSULE_PATH"
     assert supervisor_args[supervisor_args.index("--role") + 1] == "driver"
     assert "scripts.session_supervisor" in supervisor_args
     assert "open" in supervisor_args
+
+    receipt_path = project / ".claude" / "hramatka-epic" / "session-lease.env"
+    assert receipt_path.is_file()
+    expected_receipt = {
+        "SESSION_STREAM_ID": "epic:4542",
+        "SESSION_STREAM_SESSION_ID": "sess-shell-789",
+        "SESSION_STREAM_LEASE_ID": "lease-shell-789",
+        "SESSION_STREAM_AGENT": "test-agent",
+        "SESSION_STREAM_HARNESS": "test-harness",
+        "SESSION_STREAM_INSTANCE_ID": "test-instance",
+        "SESSION_STREAM_GENERATION": "3",
+        "SESSION_STREAM_FENCING_TOKEN": "3",
+    }
+    assert {key: gemini_lane._read_lease_environment(receipt_path)[key] for key in expected_receipt} == expected_receipt
+    assert {key: codex_lane._read_lease_environment(receipt_path)[key] for key in expected_receipt} == expected_receipt
 
 
 def test_claim_uses_default_instance_id_when_empty(tmp_path: Path) -> None:

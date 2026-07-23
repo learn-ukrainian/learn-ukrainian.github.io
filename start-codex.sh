@@ -85,7 +85,7 @@ if [ ! -f "$HANDOFF_IDENTITY_SH" ]; then
     printf 'Error: handoff identity helper is missing: %s\n' "$HANDOFF_IDENTITY_SH" >&2
     exit 1
 fi
-# shellcheck source=scripts/lib/handoff_identity.sh
+# shellcheck disable=SC1090,SC1091
 source "$HANDOFF_IDENTITY_SH"
 
 SELECTED_EPIC="$(handoff_epic_from_argv "$@")"
@@ -97,6 +97,11 @@ if [ -n "$SELECTED_EPIC" ]; then
     if ! epic_name_valid "$SELECTED_EPIC"; then
         printf "Error: invalid --epic name '%s' (use lowercase letters, digits, and inner hyphens).\n" \
             "$SELECTED_EPIC" >&2
+        exit 1
+    fi
+    if ! SELECTED_EPIC="$(launcher_selector_lane "$SELECTED_EPIC")"; then
+        printf "Error: unknown lane selector '%s'.\n" "$SELECTED_EPIC" >&2
+        launcher_selector_help >&2
         exit 1
     fi
     HANDOFF_SLOT="$(handoff_identity_for_codex_epic "$SELECTED_EPIC")"
@@ -117,10 +122,11 @@ if [ -n "$SELECTED_EPIC" ]; then
     printf 'Handoff identity: %s\n' "$SESSION_HANDOFF_AGENT"
     # Fleet-comms dual-aware banner (Codex loads AGENTS.md + /api/rules for full doctrine).
     if [ -f "$PROJECT_DIR/scripts/lib/fleet_comms_cold_start.sh" ]; then
-        # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
+        # shellcheck disable=SC1091
         source "$PROJECT_DIR/scripts/lib/fleet_comms_cold_start.sh"
         if command -v fleet_comms_resolve_plane_mode >/dev/null 2>&1; then
-            export FLEET_COMMS_PLANE_MODE="$(fleet_comms_resolve_plane_mode)"
+            FLEET_COMMS_PLANE_MODE="$(fleet_comms_resolve_plane_mode)"
+            export FLEET_COMMS_PLANE_MODE
         fi
         if command -v fleet_comms_print_banner_line >/dev/null 2>&1; then
             fleet_comms_print_banner_line
@@ -175,6 +181,44 @@ fi
 if [ "$LEARN_UKRAINIAN_TRUSTED" != "1" ]; then
     printf 'Warning: untrusted Codex route (%s); using compact fallback without a fabricated context window.\n' \
         "$LEARN_UKRAINIAN_RESOLUTION_REASON" >&2
+fi
+
+# An epic driver lease belongs to the trusted native Codex route only. The
+# profile resolver above is authoritative for that trust decision; untrusted
+# fallbacks still launch interactively without claiming a stream or canary.
+if [ -n "${SESSION_EPIC:-}" ]; then
+    # shellcheck disable=SC1091
+    source "$PROJECT_DIR/scripts/lib/session_supervisor.sh"
+    if [ "$LEARN_UKRAINIAN_TRUSTED" = "1" ]; then
+        _selected_stream="$(launcher_selector_stream "$SESSION_EPIC")"
+        if [ -z "$_selected_stream" ]; then
+            printf "Error: cannot resolve stream id for epic '%s'.\n" "$SESSION_EPIC" >&2
+            exit 1
+        fi
+        _launcher_task_id="${SESSION_TASK_ID:-${LEARN_UK_LAUNCHER_TASK_ID:-5512-codex-orchestrator-seat}}"
+        _launcher_instance_id="${SESSION_INSTANCE_ID:-codex-$$}"
+        claim_session_supervisor_env \
+            "$_selected_stream" \
+            "codex" \
+            "codex-cli" \
+            "$_launcher_task_id" \
+            "$_launcher_instance_id" \
+            "$PROJECT_DIR" \
+            "start-codex.sh" \
+            "$SESSION_EPIC"
+        unset _launcher_task_id _launcher_instance_id _selected_stream
+
+        if ! "$PROJECT_DIR/.venv/bin/python" -m scripts.session_canary.codex_lane \
+            mint --epic "$SESSION_EPIC"; then
+            echo "Warning: Codex canary mint skipped/failed (continuing launch)." >&2
+        fi
+        if ! "$PROJECT_DIR/.venv/bin/python" -m scripts.session_canary.codex_lane \
+            bootstrap --epic "$SESSION_EPIC"; then
+            echo "Warning: Codex cold-start board bootstrap skipped/failed (continuing launch)." >&2
+        fi
+    else
+        echo "Skipping stream lease (untrusted Codex route)." >&2
+    fi
 fi
 
 export CODEX_SESSION=1

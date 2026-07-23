@@ -18,6 +18,7 @@ _LAUNCHER_FILES = (
     Path("scripts/lib/deploy_extensions.sh"),
     Path("scripts/lib/handoff_identity.sh"),
     Path("scripts/lib/profile_resolver.sh"),
+    Path("scripts/lib/session_supervisor.sh"),
     Path("scripts/lib/thread_rollover_link.sh"),
 )
 
@@ -65,7 +66,18 @@ def _prepare_repo(
     venv_bin.mkdir(parents=True)
     _write_executable(
         venv_bin / "python",
-        f'#!/usr/bin/env bash\nexec {os.fspath(_PROJECT_PYTHON)!r} "$@"\n',
+        f'''#!/usr/bin/env bash
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" ]]; then
+  cat <<'JSON'
+{{"identity":{{"lease":{{"session_id":"session-test","lease_id":"lease-test","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
+JSON
+  exit 0
+fi
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_canary.codex_lane" ]]; then
+  exit 0
+fi
+exec {os.fspath(_PROJECT_PYTHON)!r} "$@"
+''',
     )
 
     init_command = ["git", "init", "-b", "main"]

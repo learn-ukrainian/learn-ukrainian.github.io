@@ -484,10 +484,22 @@ orchestrator_seats:
     escalate_effort: xhigh
     escalate_when: deep_single_shot_or_architecture
     note: default Sonnet 5 @ high; escalate Fable 5 @ xhigh (Opus only if Fable unavailable)
-  # codex REMOVED as an orchestrator seat (user 2026-07-22): the 272K window is not
-  # worth the session-start/end rollover-token overhead relative to its small context.
-  # Codex stays a first-class CODING + formal-CF REVIEW seat (see formal_cf_defaults.codex
-  # and the codex comms endpoint) — it simply does not own a cold-start driver loop.
+  codex:
+    model_id: gpt-5.6-terra
+    effort: high
+    escalate_model_id: gpt-5.6-sol
+    escalate_effort: xhigh
+    escalate_when: deep_single_shot_or_architecture
+    note: >
+      Re-added as orchestrator seat 2026-07-23 (reverses the 2026-07-22 removal) specifically for
+      HydrationCapsuleV1 long-horizon support — score-from-memory + a ~100ms capsule hydrate is
+      designed to minimize the rollover-token overhead the prior removal objected to. Named
+      alternate/overflow on the harness/infra/devops stream (epic:4707) alongside Gemini — never a
+      concurrent co-owner; the shared session-stream lease already fails closed on a live foreign
+      holder, so no new exclusivity logic is needed.
+  # 2026-07-22 removal note retained for history: "the 272K window is not worth the session-
+  # start/end rollover-token overhead relative to its small context" — see the 2026-07-23 note
+  # above for why that calculus changed.
   grok:
     model_id: grok-4.5
     effort: high

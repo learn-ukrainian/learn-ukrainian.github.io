@@ -58,6 +58,12 @@ def _mini_authorities(tmp: Path) -> tuple[Path, Path, dict, dict]:
             "escalate_model_id": "claude-fable-5",
             "escalate_effort": "xhigh",
         },
+        "codex": {
+            "model_id": "gpt-5.6-terra",
+            "effort": "high",
+            "escalate_model_id": "gpt-5.6-sol",
+            "escalate_effort": "xhigh",
+        },
         "grok": {
             "model_id": "grok-4.5",
             "effort": "high",
@@ -96,8 +102,8 @@ def test_committed_projections_match_machine_authorities():
     issues = lint_fleet_roster()
     assert issues == [], [i.as_dict() for i in issues]
     seats = load_orchestrator_seats()
-    assert "codex" not in seats
-    assert set(seats) == {"claude", "grok", "agy"}
+    assert "codex" in seats
+    assert set(seats) == {"claude", "codex", "grok", "agy"}
     eligible = load_formal_review_eligible()
     assert eligible["codex"] is True
     assert eligible["claude"] is True
@@ -130,19 +136,13 @@ def test_seat_add_remove_pin_and_eligibility_flip_fail(tmp_path: Path):
     )
     assert any("missing seat(s): grok" in i.message for i in issues)
 
-    # Seat add (codex as fake driver in projection only).
-    with_codex = dict(seats)
-    with_codex["codex"] = {
-        "model_id": "gpt-5.6-terra",
-        "effort": "high",
-        "escalate_model_id": "gpt-5.6-sol",
-        "escalate_effort": "xhigh",
-    }
-    _write_projection(proj, with_codex, eligible)
+    # Seat remove (Codex is a required HydrationCapsuleV1 driver).
+    without_codex = {k: v for k, v in seats.items() if k != "codex"}
+    _write_projection(proj, without_codex, eligible)
     issues = lint_fleet_roster(
         catalog_path=catalog, comms_path=comms, projection_paths=[proj], project_root=tmp_path
     )
-    assert any("extra seat(s): codex" in i.message for i in issues)
+    assert any("missing seat(s): codex" in i.message for i in issues)
 
     # Pin change.
     pin_changed = {k: dict(v) for k, v in seats.items()}
@@ -163,32 +163,33 @@ def test_seat_add_remove_pin_and_eligibility_flip_fail(tmp_path: Path):
     assert any("agy" in i.message and "False" in i.message for i in issues)
 
 
-def test_codex_rejected_as_driver_but_cf_eligible(tmp_path: Path):
+def test_codex_required_as_driver_and_cf_eligible(tmp_path: Path):
     catalog, comms, seats, eligible = _mini_authorities(tmp_path)
-    # Authority wrongly lists codex as driver → lint fails hard.
-    bad_seats = dict(seats)
-    bad_seats["codex"] = {
-        "model_id": "gpt-5.6-terra",
-        "effort": "high",
-        "escalate_model_id": "gpt-5.6-sol",
-        "escalate_effort": "xhigh",
-    }
+    # Authority missing Codex as a driver → lint fails hard.
+    missing_codex = {key: value for key, value in seats.items() if key != "codex"}
     catalog.write_text(
-        yaml.safe_dump({"orchestrator_seats": bad_seats}, sort_keys=True),
+        yaml.safe_dump({"orchestrator_seats": missing_codex}, sort_keys=True),
         encoding="utf-8",
     )
     proj = tmp_path / "proj.md"
-    _write_projection(proj, bad_seats, eligible)
+    _write_projection(proj, missing_codex, eligible)
     issues = lint_fleet_roster(
         catalog_path=catalog, comms_path=comms, projection_paths=[proj], project_root=tmp_path
     )
-    assert any("codex must not be an orchestrator_seats driver" in i.message for i in issues)
+    assert any("codex must be an orchestrator_seats driver" in i.message for i in issues)
 
-    # Restore seats; strip codex CF eligibility → fails.
+    valid_seats = dict(seats)
     catalog.write_text(
-        yaml.safe_dump({"orchestrator_seats": seats}, sort_keys=True),
+        yaml.safe_dump({"orchestrator_seats": valid_seats}, sort_keys=True),
         encoding="utf-8",
     )
+    _write_projection(proj, valid_seats, eligible)
+    issues = lint_fleet_roster(
+        catalog_path=catalog, comms_path=comms, projection_paths=[proj], project_root=tmp_path
+    )
+    assert issues == []
+
+    # Strip Codex CF eligibility → fails.
     bad_elig = dict(eligible)
     bad_elig["codex"] = False
     endpoints = [
@@ -199,7 +200,7 @@ def test_codex_rejected_as_driver_but_cf_eligible(tmp_path: Path):
         yaml.safe_dump({"version": 1, "endpoints": endpoints}, sort_keys=False),
         encoding="utf-8",
     )
-    _write_projection(proj, seats, bad_elig)
+    _write_projection(proj, valid_seats, bad_elig)
     issues = lint_fleet_roster(
         catalog_path=catalog, comms_path=comms, projection_paths=[proj], project_root=tmp_path
     )
