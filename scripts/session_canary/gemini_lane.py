@@ -116,7 +116,9 @@ def main(argv: list[str] | None = None) -> int:
 
     args = parser.parse_args(argv)
 
-    stream_id = args.stream or EPIC_STREAM_DEFAULTS.get(args.epic, f"epic:{args.epic}")
+    stream_id = getattr(args, "stream", None) or EPIC_STREAM_DEFAULTS.get(
+        args.epic, f"epic:{args.epic}"
+    )
 
     if args.subcommand == "bootstrap":
         epic_path = _epic_dir(ROOT, args.epic)
