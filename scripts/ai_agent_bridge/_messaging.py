@@ -190,8 +190,10 @@ def send_message(content: str, task_id: str | None = None, msg_type: str = "resp
 
 
 def detect_sender() -> str:
-    """Detect if the current process is running as Gemini or Claude."""
-    if (os.environ.get("GEMINI_SESSION") or
+    """Detect if the current process is running as Gemini/AGY, Claude, or Codex."""
+    if (os.environ.get("ANTIGRAVITY_AGENT") or
+        os.environ.get("ANTIGRAVITY_AGENTAPI_EXE") or
+        os.environ.get("GEMINI_SESSION") or
         os.environ.get("GOOGLE_API_KEY")):
         return "gemini"
     if (os.environ.get("CLAUDE_PROJECT_DIR") or
@@ -199,7 +201,7 @@ def detect_sender() -> str:
         return "claude"
     if os.environ.get("CODEX_SESSION"):
         return "codex"
-    if Path(".gemini").exists():
+    if Path(".gemini").exists() or Path("gemini_extensions").exists():
         return "gemini"
     return "claude"
 

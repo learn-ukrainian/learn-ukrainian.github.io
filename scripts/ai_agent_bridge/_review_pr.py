@@ -143,7 +143,11 @@ def handle_review_pr(args: argparse.Namespace) -> int:
         print(prompt)
         return 0
 
-    from_llm = getattr(args, "from_llm", None) or "grok"
+    from_llm = getattr(args, "from_llm", None)
+    if not from_llm:
+        from ._messaging import detect_sender
+
+        from_llm = detect_sender()
     if reviewer == REVIEWER_CODEX:
         from ._codex import ask_codex
 
