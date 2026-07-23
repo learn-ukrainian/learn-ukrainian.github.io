@@ -21,6 +21,8 @@ import shutil
 from pathlib import Path
 from typing import Any
 
+from scripts.review.model_catalog import kimi_model_aliases
+
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from .base import InvocationPlan
@@ -30,30 +32,24 @@ _logger = logging.getLogger(__name__)
 KIMI_DEFAULT_MODEL = "k2.7-coding"
 KIMI_BRIDGE_DEFAULT_MODEL = "k3"
 KIMI_DEFAULT_EFFORT = "max"
-# Fleet short names -> kimi-code CLI aliases. The managed seat's usage window
-# depletes fast (operator, 2026-07-16), so dispatch defaults to the coding
-# model; K3 (always-max reasoning) is reserved for deep asks.
-KIMI_MODEL_ALIASES: dict[str, str] = {
-    "k3": "kimi-code/k3",
-    "k2.7-coding": "kimi-code/kimi-for-coding",
-    "k2.7-coding-highspeed": "kimi-code/kimi-for-coding-highspeed",
-}
-KIMI_ALLOWED_MODELS: frozenset[str] = frozenset(KIMI_MODEL_ALIASES) | frozenset(
-    KIMI_MODEL_ALIASES.values()
-)
+# Catalog-backed aliases keep dispatch, the native launcher, and KimiCC in
+# lockstep. The managed seat's usage window depletes fast (operator,
+# 2026-07-16), so dispatch defaults to the coding model; K3 (always-max
+# reasoning) is reserved for deep asks.
+KIMI_MODEL_ALIASES: dict[str, str] = kimi_model_aliases()
+KIMI_ALLOWED_MODELS: frozenset[str] = frozenset(KIMI_MODEL_ALIASES)
 
 
 def resolve_kimi_model(model: str | None) -> str:
     """Map a fleet short name or full CLI alias; reject unregistered names."""
     requested = model or KIMI_DEFAULT_MODEL
-    if requested in KIMI_MODEL_ALIASES:
+    try:
         return KIMI_MODEL_ALIASES[requested]
-    if requested in KIMI_MODEL_ALIASES.values():
-        return requested
-    raise ValueError(
-        f"KimiAdapter: unsupported Kimi model {requested!r}; "
-        f"allowed: {sorted(KIMI_ALLOWED_MODELS)}"
-    )
+    except KeyError as exc:
+        raise ValueError(
+            f"KimiAdapter: unsupported Kimi model {requested!r}; "
+            f"allowed: {sorted(KIMI_ALLOWED_MODELS)}"
+        ) from exc
 
 _RATE_LIMIT_RE = re.compile(
     r"rate limit|rate_limit|usage limit|quota exceeded|too many requests|\b429\b",

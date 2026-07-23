@@ -145,7 +145,15 @@ models:
     family: moonshot
     tier: frontier_practical
     lifecycle: active
-    aliases: [k3]
+    # Every Kimi launcher/runtime input is listed here. The canonical model id
+    # above is also accepted implicitly; consumers resolve aliases through
+    # scripts.review.model_catalog rather than carrying local maps.
+    aliases: [k3, kimi-k3, "kimi-k3[1m]"]
+    kimi_routes:
+      kimicc_alias: k3
+      platform_model_id: "kimi-k3[1m]"
+      coding_model_id: k3
+      context_profile: kimicc_k3
     roles: [consequential_coding, strong_review, long_context_debugging, multimodal_analysis]
     transports: [native_kimi]
     strengths: [strong_agentic_coding, max_effort, image_video_tools]
@@ -156,7 +164,12 @@ models:
     family: moonshot
     tier: economical
     lifecycle: active
-    aliases: [k2.7-coding]
+    aliases: [k2.7, k2.7-coding, kimi-for-coding, kimi-k2.7-code]
+    kimi_routes:
+      kimicc_alias: k2.7
+      platform_model_id: kimi-k2.7-code
+      coding_model_id: kimi-for-coding
+      context_profile: kimicc_k27
     roles: [routine_coding, bounded_implementation]
     transports: [native_kimi]
     strengths: [coding_specialization, subscription_capacity]
@@ -167,7 +180,12 @@ models:
     family: moonshot
     tier: economical
     lifecycle: active
-    aliases: [k2.7-coding-highspeed]
+    aliases: [k2.7-highspeed, k2.7-coding-highspeed, kimi-for-coding-highspeed, kimi-k2.7-code-highspeed]
+    kimi_routes:
+      kimicc_alias: k2.7-highspeed
+      platform_model_id: kimi-k2.7-code-highspeed
+      coding_model_id: kimi-for-coding-highspeed
+      context_profile: kimicc_k27_highspeed
     roles: [fast_routine_coding]
     transports: [native_kimi]
     strengths: [speed]

@@ -50,6 +50,8 @@ def _require_launcher_sources() -> None:
         _REPO_ROOT / "scripts" / "lib" / "profile_resolver.sh",
         _REPO_ROOT / "scripts" / "lib" / "context_profiles.py",
         _REPO_ROOT / "scripts" / "lib" / "kimi_coding_oauth.py",
+        _REPO_ROOT / "scripts" / "review" / "model_catalog.py",
+        _REPO_ROOT / "scripts" / "config" / "model_catalog.yaml",
     ) if not path.is_file()]
     if missing:
         names = ", ".join(str(path.relative_to(_REPO_ROOT)) for path in missing)
@@ -63,7 +65,9 @@ def _seed_fake_project(tmp_path: Path) -> Path:
     lib = project / "scripts" / "lib"
     lib.mkdir(parents=True)
     cfg = project / "scripts" / "config"
+    review = project / "scripts" / "review"
     cfg.mkdir(parents=True)
+    review.mkdir(parents=True)
     venv_bin = project / ".venv" / "bin"
     venv_bin.mkdir(parents=True)
     _write_executable(project / "start-kimicc.sh", _LAUNCHER.read_text(encoding="utf-8"))
@@ -80,6 +84,14 @@ def _seed_fake_project(tmp_path: Path) -> Path:
     profiles = _REPO_ROOT / "scripts" / "config" / "context_profiles.yaml"
     if profiles.is_file():
         (cfg / "context_profiles.yaml").write_text(profiles.read_text(encoding="utf-8"), encoding="utf-8")
+    (cfg / "model_catalog.yaml").write_text(
+        (_REPO_ROOT / "scripts" / "config" / "model_catalog.yaml").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    (review / "model_catalog.py").write_text(
+        (_REPO_ROOT / "scripts" / "review" / "model_catalog.py").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
     # Point profile resolver at a real Python that has project deps if present.
     py_body = (
         f'#!/usr/bin/env bash\nexec "{_VENV_PYTHON}" "$@"\n'
@@ -256,6 +268,29 @@ def test_coding_endpoint_uses_subscription_base_and_model_ids(tmp_path: Path) ->
     assert "auth=sk-coding-token" in output
     assert "model=kimi-for-coding" in output
     assert "profile=kimicc_k27" in output
+
+
+@pytest.mark.parametrize(
+    ("alias", "model", "profile"),
+    [
+        ("kimi-k3", "kimi-k3[1m]", "kimicc_k3"),
+        ("kimi-code/k3", "kimi-k3[1m]", "kimicc_k3"),
+        ("kimi-k3[1m]", "kimi-k3[1m]", "kimicc_k3"),
+        ("k2.7-coding", "kimi-k2.7-code", "kimicc_k27"),
+        ("kimi-for-coding", "kimi-k2.7-code", "kimicc_k27"),
+        ("kimi-code/kimi-for-coding", "kimi-k2.7-code", "kimicc_k27"),
+        ("k2.7-coding-highspeed", "kimi-k2.7-code-highspeed", "kimicc_k27_highspeed"),
+        ("kimi-for-coding-highspeed", "kimi-k2.7-code-highspeed", "kimicc_k27_highspeed"),
+        ("kimi-code/kimi-for-coding-highspeed", "kimi-k2.7-code-highspeed", "kimicc_k27_highspeed"),
+    ],
+)
+def test_catalog_aliases_route_identically(tmp_path: Path, alias: str, model: str, profile: str) -> None:
+    output, result = _run_with_fakes(
+        tmp_path, ["--endpoint", "platform", "--no-isolate-config", "--model", alias]
+    )
+    assert result.returncode == 0, result.stderr
+    assert f"model={model}" in output
+    assert f"profile={profile}" in output
 
 
 def test_refuses_settings_json_route_env_pins(tmp_path: Path) -> None:

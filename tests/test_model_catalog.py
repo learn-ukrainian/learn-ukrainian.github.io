@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 from datetime import date
+from pathlib import Path
 
 import pytest
 
@@ -13,8 +14,11 @@ from scripts.review.model_catalog import (
     ModelCatalogError,
     catalog_age_days,
     catalog_is_stale,
+    kimi_model_aliases,
     load_model_catalog,
+    resolve_kimi_model,
     validate_catalog,
+    validate_kimi_alias_consumers,
 )
 
 
@@ -54,6 +58,57 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
     assert models["poolside/laguna-xs-2.1"]["lifecycle"] == "active"
     assert models["poolside/laguna-m.1"]["lifecycle"] == "fallback"
     assert "pool" in models["poolside/laguna-s-2.1"].get("aliases", [])
+
+
+def test_kimi_aliases_and_routes_are_catalog_backed() -> None:
+    aliases = kimi_model_aliases()
+    expected = {
+        "k3": "kimi-code/k3",
+        "kimi-k3": "kimi-code/k3",
+        "kimi-k3[1m]": "kimi-code/k3",
+        "k2.7": "kimi-code/kimi-for-coding",
+        "k2.7-coding": "kimi-code/kimi-for-coding",
+        "kimi-for-coding": "kimi-code/kimi-for-coding",
+        "kimi-k2.7-code": "kimi-code/kimi-for-coding",
+        "k2.7-highspeed": "kimi-code/kimi-for-coding-highspeed",
+        "k2.7-coding-highspeed": "kimi-code/kimi-for-coding-highspeed",
+        "kimi-for-coding-highspeed": "kimi-code/kimi-for-coding-highspeed",
+        "kimi-k2.7-code-highspeed": "kimi-code/kimi-for-coding-highspeed",
+    }
+    assert expected.items() <= aliases.items()
+    model_id, routes = resolve_kimi_model("kimi-k3[1m]")
+    assert model_id == "kimi-code/k3"
+    assert routes == {
+        "kimicc_alias": "k3",
+        "platform_model_id": "kimi-k3[1m]",
+        "coding_model_id": "k3",
+        "context_profile": "kimicc_k3",
+    }
+    validate_kimi_alias_consumers()
+
+
+def test_catalog_rejects_kimi_route_without_its_friendly_alias():
+    broken = deepcopy(load_model_catalog())
+    broken["models"]["kimi-code/k3"]["aliases"].remove("k3")
+    with pytest.raises(ModelCatalogError, match="kimicc_alias must be listed"):
+        validate_catalog(broken)
+
+
+def test_kimi_alias_lint_rejects_a_reintroduced_local_adapter_map(tmp_path: Path) -> None:
+    project_root = tmp_path / "project"
+    (project_root / "scripts" / "agent_runtime" / "adapters").mkdir(parents=True)
+    for relative_path in ("start-kimi.sh", "start-kimicc.sh", "scripts/agent_runtime/adapters/kimi.py"):
+        source = (Path(__file__).resolve().parents[1] / relative_path).read_text(encoding="utf-8")
+        destination = project_root / relative_path
+        destination.write_text(source, encoding="utf-8")
+    adapter_path = project_root / "scripts" / "agent_runtime" / "adapters" / "kimi.py"
+    adapter_path.write_text(
+        adapter_path.read_text(encoding="utf-8").replace("kimi_model_aliases()", "{}", 1),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ModelCatalogError, match=r"must resolve Kimi aliases through model_catalog\.yaml"):
+        validate_kimi_alias_consumers(project_root)
 
 
 def test_poolside_laguna_family_exact_ids_and_roles():

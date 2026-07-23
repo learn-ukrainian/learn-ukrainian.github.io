@@ -16,7 +16,9 @@ from scripts.review.model_catalog import (
     ModelCatalogError,
     catalog_age_days,
     catalog_is_stale,
+    kimi_model_aliases,
     load_model_catalog,
+    validate_kimi_alias_consumers,
 )
 
 
@@ -28,6 +30,7 @@ def main() -> int:
     try:
         load_model_catalog.cache_clear()
         catalog = load_model_catalog(args.catalog.resolve())
+        validate_kimi_alias_consumers()
         age_days = catalog_age_days(catalog, as_of=args.as_of)
         stale = catalog_is_stale(catalog, as_of=args.as_of)
     except ModelCatalogError as exc:
@@ -41,6 +44,10 @@ def main() -> int:
         "age_days": age_days,
         "refresh_after_days": catalog["refresh_after_days"],
         "model_count": len(catalog["models"]),
+        "kimi_alias_count": len(kimi_model_aliases(catalog)),
+        "kimi_alias_model_count": len(
+            [model for model in catalog["models"].values() if "native_kimi" in model["transports"]]
+        ),
         "review_candidate_count": len(catalog["review_candidates"]),
     }
     if stale:

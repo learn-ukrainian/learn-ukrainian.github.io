@@ -23,6 +23,7 @@
 set -euo pipefail
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$PROJECT_DIR"
 # Prefer the main worktree root when launched from a git worktree copy, so the
 # apiKeyHelper path baked into the isolated Claude config survives worktree
 # cleanup (same pattern as start-kimi.sh). Ambient GIT_DIR/GIT_WORK_TREE (e.g.
@@ -114,53 +115,6 @@ Headless / native Kimi (not this launcher):
   scripts/delegate.py dispatch --agent kimi --model k3 …
   .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-kimi …
 EOF
-}
-
-resolve_model_alias() {
-  # Bracketed IDs (kimi-k3[1m]) cannot live in bash `case` arms — [ is a char class.
-  local raw="$1"
-  case "$raw" in
-    'kimi-k3[1m]'|k3|kimi-k3|kimi-code/k3)
-      printf '%s\n' 'k3'
-      ;;
-    k2.7|k2.7-coding|kimi-k2.7-code|kimi-for-coding|kimi-code/kimi-for-coding)
-      printf '%s\n' 'k2.7'
-      ;;
-    k2.7-highspeed|k2.7-coding-highspeed|kimi-k2.7-code-highspeed|kimi-for-coding-highspeed|kimi-code/kimi-for-coding-highspeed)
-      printf '%s\n' 'k2.7-highspeed'
-      ;;
-    *)
-      return 1
-      ;;
-  esac
-}
-
-platform_model_id() {
-  case "$1" in
-    k3) printf '%s\n' 'kimi-k3[1m]' ;;
-    k2.7) printf '%s\n' 'kimi-k2.7-code' ;;
-    k2.7-highspeed) printf '%s\n' 'kimi-k2.7-code-highspeed' ;;
-    *) return 1 ;;
-  esac
-}
-
-coding_model_id() {
-  # Kimi Code subscription Anthropic surface uses the managed seat names.
-  case "$1" in
-    k3) printf '%s\n' 'k3' ;;
-    k2.7) printf '%s\n' 'kimi-for-coding' ;;
-    k2.7-highspeed) printf '%s\n' 'kimi-for-coding-highspeed' ;;
-    *) return 1 ;;
-  esac
-}
-
-profile_for_alias() {
-  case "$1" in
-    k3) printf '%s\n' 'kimicc_k3' ;;
-    k2.7) printf '%s\n' 'kimicc_k27' ;;
-    k2.7-highspeed) printf '%s\n' 'kimicc_k27_highspeed' ;;
-    *) return 1 ;;
-  esac
 }
 
 default_base_url() {
@@ -256,10 +210,17 @@ while (($#)); do
   esac
 done
 
-if ! MODEL_ALIAS="$(resolve_model_alias "$MODEL_ALIAS")"; then
+if ! _kimicc_route="$("$SCRIPT_DIR/.venv/bin/python" "$SCRIPT_DIR/scripts/review/model_catalog.py" \
+    --resolve-kimi-model "$MODEL_ALIAS" --format kimicc 2>/dev/null)"; then
   echo "Error: unsupported model '$MODEL_ALIAS' (use k3, k2.7, k2.7-highspeed)." >&2
   exit 2
 fi
+IFS=$'\t' read -r MODEL_ALIAS _platform_model _coding_model PROFILE_ID <<< "$_kimicc_route"
+if [ -z "$MODEL_ALIAS" ] || [ -z "$_platform_model" ] || [ -z "$_coding_model" ] || [ -z "$PROFILE_ID" ]; then
+  echo "Error: invalid Kimi route in scripts/config/model_catalog.yaml." >&2
+  exit 1
+fi
+unset _kimicc_route
 
 case "$ENDPOINT" in
   platform|coding) ;;
@@ -278,11 +239,11 @@ case "$ISOLATE_CONFIG" in
 esac
 
 if [ "$ENDPOINT" = "platform" ]; then
-  LEAD_MODEL="$(platform_model_id "$MODEL_ALIAS")"
+  LEAD_MODEL="$_platform_model"
 else
-  LEAD_MODEL="$(coding_model_id "$MODEL_ALIAS")"
+  LEAD_MODEL="$_coding_model"
 fi
-PROFILE_ID="$(profile_for_alias "$MODEL_ALIAS")"
+unset _platform_model _coding_model
 BASE_URL="${KIMICC_BASE_URL:-$(default_base_url "$ENDPOINT")}"
 BASE_URL="${BASE_URL%/}"
 
