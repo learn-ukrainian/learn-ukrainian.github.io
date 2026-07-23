@@ -24,7 +24,7 @@
 stream_id_for_epic() {
   case "${1:-}" in
     atlas|practice|practice-hub) printf '%s' 'epic:4387' ;;
-    harness|infra) printf '%s' 'epic:4707' ;;
+    harness|infra|devops) printf '%s' 'epic:4707' ;;
     hramatka) printf '%s' 'epic:4542' ;;
     folk|seminars-folk) printf '%s' 'epic:2836' ;;
     bio|seminars-bio) printf '%s' 'epic:4431' ;;

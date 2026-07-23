@@ -338,3 +338,16 @@ def test_epic_harness_cold_prompt_is_fleet_comms_dual_aware(tmp_path: Path) -> N
     out = result.stdout
     assert "Starting Grok in Learn Ukrainian project..." not in out
     assert "plane=off" in out
+
+
+def test_epic_devops_uses_canonical_infra_stream_and_handoff(tmp_path: Path) -> None:
+    values, _argv_blob, result, _project, supervisor_capture = _run_launcher(
+        tmp_path,
+        ["--epic", "devops"],
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert values["session_epic"] == "devops"
+    assert values["handoff"] == "grok-infra"
+    supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
+    stream_index = supervisor_args.index("--stream")
+    assert supervisor_args[stream_index + 1] == "epic:4707"

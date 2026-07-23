@@ -58,7 +58,7 @@ K3 is always max effort; an explicit `--effort` is ignored for K3.
 | Epic | `SESSION_HANDOFF_AGENT` |
 | --- | --- |
 | atlas, hramatka, folk, bio, … | `kimi-<epic>` |
-| harness / infra | `kimi-infra` |
+| harness / infra / devops | `kimi-infra` |
 
 ## Session lifecycle
 

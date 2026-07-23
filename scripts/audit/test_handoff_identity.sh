@@ -57,20 +57,23 @@ eq "$(handoff_identity_for_epic atlas)" "claude-atlas" "epic atlas → claude-at
 eq "$(handoff_identity_for_epic hramatka)" "claude-hramatka" "epic hramatka → claude-hramatka"
 eq "$(handoff_identity_for_epic harness)" "claude-infra" "epic harness → claude-infra (#5201)"
 eq "$(handoff_identity_for_epic infra)" "claude-infra" "epic infra → claude-infra alias"
+eq "$(handoff_identity_for_epic devops)" "claude-infra" "epic devops → claude-infra alias"
 eq "$(handoff_identity_for_epic)" "" "no epic → empty slot"
 
-# Codex uses provider-specific per-epic slots; harness/infra share one alias.
+# Codex uses provider-specific per-epic slots; harness/infra/devops share one alias.
 eq "$(handoff_identity_for_codex_epic atlas)" "codex-atlas" "Codex atlas → codex-atlas"
 eq "$(handoff_identity_for_codex_epic hramatka)" "codex-hramatka" "Codex hramatka → codex-hramatka"
 eq "$(handoff_identity_for_codex_epic harness)" "codex-infra" "Codex harness → codex-infra"
 eq "$(handoff_identity_for_codex_epic infra)" "codex-infra" "Codex infra → codex-infra alias"
+eq "$(handoff_identity_for_codex_epic devops)" "codex-infra" "Codex devops → codex-infra alias"
 eq "$(handoff_identity_for_codex_epic)" "" "Codex no epic → empty slot"
 
-# Gemini uses provider-specific per-epic slots; harness/infra share one alias.
+# Gemini uses provider-specific per-epic slots; harness/infra/devops share one alias.
 eq "$(handoff_identity_for_gemini_epic atlas)" "gemini-atlas" "Gemini atlas → gemini-atlas"
 eq "$(handoff_identity_for_gemini_epic hramatka)" "gemini-hramatka" "Gemini hramatka → gemini-hramatka"
 eq "$(handoff_identity_for_gemini_epic harness)" "gemini-infra" "Gemini harness → gemini-infra"
 eq "$(handoff_identity_for_gemini_epic infra)" "gemini-infra" "Gemini infra → gemini-infra alias"
+eq "$(handoff_identity_for_gemini_epic devops)" "gemini-infra" "Gemini devops → gemini-infra alias"
 eq "$(handoff_identity_for_gemini_epic)" "" "Gemini no epic → empty slot"
 
 
