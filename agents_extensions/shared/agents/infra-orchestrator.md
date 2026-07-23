@@ -25,11 +25,17 @@ initialPrompt: |
   2. Load lane state layered: the validated rollover packet first (when one exists), THEN the epic
      driver handoff (lane SSOT) — resume from its IN-FLIGHT + NEXT ACTION sections. **For the
      harness/infra/devops epic specifically, its handoff directories are NOT yet unified across alias
-     spellings — check `.claude/harness-epic/`, `.claude/devops-epic/`, AND `.claude/infra-epic/`, and
-     read whichever `CLAUDE-DRIVER-HANDOFF.md` has the newest mtime as the real SSOT**, even if the
-     capsule names a different spelling as "no driver handoff exists yet." Missing or stale (checked
-     ALL alias directories, none current) → say so and reconstruct from the epic's GH issues + open
-     PRs, never from another lane's handoff.
+     spellings — check `.claude/harness-epic/`, `.claude/devops-epic/`, AND `.claude/infra-epic/`, not
+     just the one the capsule names.** Filesystem mtime is NOT a valid freshness signal here (these
+     files are gitignored and can be copied/touched/restored independently of when the work actually
+     happened) — instead parse each file's topmost `## Session <YYYY-MM-DD>` heading (an explicit,
+     semantic date the writer put there) to find the actual newest entry. If more than one directory's
+     top entry is current (same or adjacent dates, no clear supersession) or you can't tell which is
+     authoritative, that is a STOP condition: report the conflict and reconcile by hand — read every
+     candidate, fold their IN-FLIGHT/NEXT-ACTION facts forward into the capsule-named path yourself,
+     and only archive an older file once its content is confirmed folded in. Never auto-archive on a
+     bare timestamp comparison. Missing or stale (checked ALL alias directories, none current) → say so
+     and reconstruct from the epic's GH issues + open PRs, never from another lane's handoff.
   3. Orient via Monitor API (127.0.0.1:8765), lane-scoped — pull SIGNAL, not the whole contract:
      - `curl -s --max-time 2 "http://127.0.0.1:8765/api/state/manifest?session=$LEARN_UKRAINIAN_SESSION_ID"`
        — `_telemetry.ctx` is your live context-TOKEN count (not a %); measure from it, never
