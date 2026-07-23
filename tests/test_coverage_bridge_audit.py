@@ -465,6 +465,7 @@ class TestMessaging:
             task_id TEXT, from_llm TEXT NOT NULL, to_llm TEXT NOT NULL,
             message_type TEXT DEFAULT 'message', content TEXT NOT NULL,
             data TEXT, timestamp TEXT NOT NULL, acknowledged INTEGER DEFAULT 0,
+            consumed_by_live_driver INTEGER DEFAULT 0, consumed_at TEXT,
             status TEXT DEFAULT 'pending'
         )""")
         conn.commit()
@@ -562,7 +563,9 @@ class TestMessaging:
     def test_check_inbox_empty(self, msg_db, capsys):
         from scripts.ai_agent_bridge._messaging import check_inbox
         check_inbox("gemini")
-        assert "No unread" in capsys.readouterr().out
+        # check_inbox now shows all consumption states, not just unread, so an
+        # empty inbox is worded "No messages" rather than "No unread messages".
+        assert "No messages" in capsys.readouterr().out
 
     def test_check_inbox_with_messages(self, msg_db, capsys):
         from scripts.ai_agent_bridge._messaging import check_inbox
