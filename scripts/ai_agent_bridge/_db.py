@@ -39,6 +39,8 @@ CREATE TABLE IF NOT EXISTS messages (
     data TEXT,
     timestamp TEXT NOT NULL,
     acknowledged INTEGER DEFAULT 0,
+    consumed_by_live_driver INTEGER DEFAULT 0,
+    consumed_at TEXT,
     status TEXT DEFAULT 'pending'
 );
 
@@ -315,9 +317,19 @@ def get_db():
         if not columns:
             # Table doesn't exist yet — create everything from scratch
             conn.executescript(_LEGACY_SCHEMA)
-        elif "status" not in columns:
-            print("🔧 Migrating database: adding 'status' column to 'messages' table")
-            _add_column_racesafe(conn, "ALTER TABLE messages ADD COLUMN status TEXT DEFAULT 'pending'")
+        else:
+            if "status" not in columns:
+                print("🔧 Migrating database: adding 'status' column to 'messages' table")
+                _add_column_racesafe(conn, "ALTER TABLE messages ADD COLUMN status TEXT DEFAULT 'pending'")
+            if "consumed_by_live_driver" not in columns:
+                print("🔧 Migrating database: adding 'consumed_by_live_driver' column to 'messages' table")
+                _add_column_racesafe(
+                    conn,
+                    "ALTER TABLE messages ADD COLUMN consumed_by_live_driver INTEGER DEFAULT 0",
+                )
+            if "consumed_at" not in columns:
+                print("🔧 Migrating database: adding 'consumed_at' column to 'messages' table")
+                _add_column_racesafe(conn, "ALTER TABLE messages ADD COLUMN consumed_at TEXT")
         _ensure_legacy_indexes(conn)
 
         # --- Sessions table migration (#604) ---
