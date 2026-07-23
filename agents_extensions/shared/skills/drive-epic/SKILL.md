@@ -41,6 +41,17 @@ session-health signal **by seat**: **grok / gemini / kimi** have a canary lane �
 **Claude / Sonnet** have **no** canary lane and use the native SessionStart / PostCompact
 hook chain + thread-handoff instead (do not call a non-existent `<model>_lane`).
 
+### 0a. Required live-driver inbox drain — cycle start
+At the start of **every** cycle, inspect this driver's legacy inbox. The live loop —
+not a detached `process-*` / `ask-*` worker — must read and apply every message marked
+`unread` or `read-but-not-live-consumed`, then record that consumption explicitly:
+```bash
+.venv/bin/python -m scripts.ai_agent_bridge inbox --for "$SESSION_HANDOFF_AGENT"
+.venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <message-id> [<message-id> ...]
+```
+Never use a plain `ack` for messages this live loop has consumed: plain acknowledgement
+also records one-shot/headless processing and is not delivery proof for the live driver.
+
 ### 1. Read topology + metrics (don't hold state — query it)
 ```bash
 .venv/bin/python -m scripts.fleet_comms metrics        # efficiency metrics (no content)
@@ -72,6 +83,15 @@ the worker**) and the `#M-4` evidence preamble (each claim + its deterministic t
 quoted raw evidence). Classify the task and pass the research flags
 (`--research-role/-task-family/-track/-owned-path`). Stagger same-lane spawns ~10s.
 
+### 4a. Required live-driver inbox drain — immediately before dispatch
+Immediately before each dispatch, repeat the drain so new instructions or a reply cannot
+be missed between routing and worker launch. Read and apply every `unread` or
+`read-but-not-live-consumed` entry before dispatching, then run:
+```bash
+.venv/bin/python -m scripts.ai_agent_bridge inbox --for "$SESSION_HANDOFF_AGENT"
+.venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <message-id> [<message-id> ...]
+```
+
 ### 5. Settle-loop (never poll by hand)
 Watch the task's `batch_state/tasks/<id>.json` `status` with the **Monitor** tool.
 Terminal vocab (match `scripts/delegate.py`): **`done` = SUCCESS** (NOT "completed");
@@ -80,6 +100,14 @@ crashed | dry_run` (dry_run is terminal, not success) + `needs_finalize`. Emit o
 status NOT in `{spawning, running, ""}`. The task file is truth; `/api/delegate/active`
 can omit live tasks. **Before declaring a dispatch dead:** `gh pr list --state open`
 first, then check the worktree for finished-but-unpushed work.
+
+### 5a. Required live-driver inbox drain — after settle
+Once the settle-loop reaches its decision point, drain again before choosing the next
+action. Read and apply every `unread` or `read-but-not-live-consumed` entry, then run:
+```bash
+.venv/bin/python -m scripts.ai_agent_bridge inbox --for "$SESSION_HANDOFF_AGENT"
+.venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <message-id> [<message-id> ...]
+```
 
 ### 6. Cross-family review gate (load-bearing — discussion ≠ review)
 A review of record is **independent and cross-family** (outside the author's model
@@ -93,7 +121,15 @@ Pick the reviewer family from the served reviewer-seat rule; the writer's family
 never eligible. For a hard / non-routine change, escalate the seat with
 `--model gpt-5.6-sol` (or `claude-fable-5`) `--effort xhigh`. Read the review CONTENT
 (not just pass/fail), apply the deltas, re-probe gate-driving data yourself before
-trusting "verified".
+trusting "verified". A review request is not a passive notification: after invoking
+`review-pr <PR_NUMBER>`, the requester owns its request state and must explicitly poll
+it on each subsequent cycle with:
+```bash
+.venv/bin/python -m scripts.ai_agent_bridge asks --task-id review-pr-<PR_NUMBER>
+```
+Wait for that request to show `replied`; treat `sent`, `processing`, `timed-out`, or
+`failed` as its actual state and act on it. Do not assume a disconnected reply will
+surface in the live driver's context.
 
 ### 7. Merge discipline
 PRs only — never commit or merge to `main` directly. **Arm auto-merge the moment the
@@ -111,6 +147,16 @@ orchestrator). Flag another lane's PR with `needs=merge` rather than merging it.
 End the session on your seat's handoff signal (canary FAIL-HANDOFF for grok/gemini/kimi;
 the SessionStart / thread-handoff for Claude/Sonnet), not on a compact count. Keep the
 file handoff current — it stays authoritative through every plane mode (below).
+
+### 8a. Required live-driver inbox drain — before handoff
+Immediately before writing or signalling handoff, make one final live-loop drain. Read
+and apply every `unread` or `read-but-not-live-consumed` entry, then run:
+```bash
+.venv/bin/python -m scripts.ai_agent_bridge inbox --for "$SESSION_HANDOFF_AGENT"
+.venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <message-id> [<message-id> ...]
+```
+Record any action or unresolved request in the authoritative file handoff after this
+drain; never claim the handoff is complete because a one-shot worker acknowledged it.
 
 ---
 

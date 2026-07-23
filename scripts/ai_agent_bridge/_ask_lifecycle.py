@@ -216,7 +216,7 @@ def print_asks(task_id: str | None = None) -> None:
     try:
         rows = conn.execute(
             f"""
-            SELECT id, task_id, to_llm, status, timestamp
+            SELECT id, task_id, to_llm, status, timestamp, acknowledged, consumed_by_live_driver
             FROM messages
             WHERE {where}
             ORDER BY id DESC
@@ -231,10 +231,11 @@ def print_asks(task_id: str | None = None) -> None:
         print("No tracked asks.")
         return
 
-    print("ID  TASK  TO  STATUS  SENT")
+    print("ID  TASK  TO  STATUS  CONSUMPTION  SENT")
     for row in rows:
         status = _display_status(str(row[3] or "sent"))
-        print(f"{row[0]}  {row[1] or '-'}  {row[2]}  {status}  {row[4]}")
+        consumption = _message_consumption_state(row[5], row[6])
+        print(f"{row[0]}  {row[1] or '-'}  {row[2]}  {status}  {consumption}  {row[4]}")
 
 
 def maybe_print_timeout_notice() -> None:
@@ -416,6 +417,15 @@ def _display_status(status: str) -> str:
     if status.startswith("failed:"):
         return "failed"
     return status
+
+
+def _message_consumption_state(acknowledged: int, consumed_by_live_driver: int) -> str:
+    """Return the legacy-message consumption state shown by ``asks``."""
+    if consumed_by_live_driver:
+        return "live-consumed"
+    if acknowledged:
+        return "read-but-not-live-consumed"
+    return "unread"
 
 
 def _looks_like_timeout(detail: str) -> bool:

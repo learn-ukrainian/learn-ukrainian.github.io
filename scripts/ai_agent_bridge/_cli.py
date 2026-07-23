@@ -495,10 +495,20 @@ def _build_parser() -> argparse.ArgumentParser:
     # ack
     ack_parser = subparsers.add_parser("ack", help="Acknowledge message(s)")
     ack_parser.add_argument("message_ids", type=int, nargs="+", help="Message ID(s) to acknowledge")
+    ack_parser.add_argument(
+        "--consumed-by-live-driver",
+        action="store_true",
+        help="Record that this live driver's own loop consumed the message(s)",
+    )
 
     # ack-all
     ack_all_parser = subparsers.add_parser("ack-all", help="Acknowledge ALL unread messages for an agent")
     ack_all_parser.add_argument("agent", choices=recipient_choices, help="Agent whose inbox to clear")
+    ack_all_parser.add_argument(
+        "--consumed-by-live-driver",
+        action="store_true",
+        help="Record that this live driver's own loop consumed the unread messages",
+    )
 
     # conversation
     conv_parser = subparsers.add_parser("conversation", help="Get conversation history")
@@ -1218,9 +1228,15 @@ def _dispatch_command(args):
             args.content, args.task_id, args.type, data, args.from_llm, args.to_llm, args.from_model, args.to_model
         )
     elif args.command == "ack":
-        acknowledge(args.message_ids)
+        acknowledge(
+            args.message_ids,
+            consumed_by_live_driver=getattr(args, "consumed_by_live_driver", False),
+        )
     elif args.command == "ack-all":
-        acknowledge_all(args.agent)
+        acknowledge_all(
+            args.agent,
+            consumed_by_live_driver=getattr(args, "consumed_by_live_driver", False),
+        )
     elif args.command == "conversation":
         get_conversation(args.task_id)
     elif args.command == "thread":

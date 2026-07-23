@@ -30,9 +30,10 @@ def check_inbox(for_llm: str = "gemini"):
     placeholders = ", ".join("?" for _ in recipients)
     cursor.execute(
         f"""
-        SELECT id, from_llm, message_type, substr(content, 1, 100), timestamp
+        SELECT id, from_llm, message_type, substr(content, 1, 100), timestamp,
+               acknowledged, consumed_by_live_driver
         FROM messages
-        WHERE to_llm IN ({placeholders}) AND acknowledged = 0
+        WHERE to_llm IN ({placeholders})
         ORDER BY id ASC
         """,
         recipients,
@@ -42,16 +43,24 @@ def check_inbox(for_llm: str = "gemini"):
     conn.close()
 
     if not rows:
-        print(f"📭 No unread messages for {for_llm}")
+        print(f"📭 No messages for {for_llm}")
         return
 
-    print(f"📬 {len(rows)} unread message(s) for {for_llm}:\n")
+    states = [_message_consumption_state(row[5], row[6]) for row in rows]
+    unread = states.count("unread")
+    read_not_live = states.count("read-but-not-live-consumed")
+    live_consumed = states.count("live-consumed")
+    print(
+        f"📬 Inbox for {for_llm}: {unread} unread | "
+        f"{read_not_live} read-but-not-live-consumed | {live_consumed} live-consumed\n"
+    )
     for row in rows:
-        msg_id, from_llm, msg_type, preview, timestamp = row
+        msg_id, from_llm, msg_type, preview, timestamp, acknowledged, consumed_by_live_driver = row
         preview = (redact_text(preview) or "").replace('\n', ' ')
         if len(preview) >= 100:
             preview += "..."
-        print(f"  [{msg_id}] From: {from_llm} | Type: {msg_type} | {timestamp}")
+        state = _message_consumption_state(acknowledged, consumed_by_live_driver)
+        print(f"  [{msg_id}] [{state}] From: {from_llm} | Type: {msg_type} | {timestamp}")
         print(f"      {preview}\n")
 
 
@@ -220,28 +229,51 @@ def send_to_codex(content: str, task_id: str | None = None, msg_type: str = "que
                         to_llm="codex", from_model=from_model, to_model=to_model, quiet=quiet)
 
 
-def acknowledge(message_ids: list[int] | int, quiet: bool = False):
-    """Mark message(s) as acknowledged."""
+def acknowledge(
+    message_ids: list[int] | int,
+    quiet: bool = False,
+    *,
+    consumed_by_live_driver: bool = False,
+):
+    """Mark message(s) as acknowledged, optionally as live-driver consumed."""
     if isinstance(message_ids, int):
         message_ids = [message_ids]
 
     conn = get_db()
     cursor = conn.cursor()
 
-    for msg_id in message_ids:
-        cursor.execute("UPDATE messages SET acknowledged = 1 WHERE id = ?", (msg_id,))
+    if consumed_by_live_driver:
+        consumed_at = datetime.now(UTC).isoformat()
+        for msg_id in message_ids:
+            cursor.execute(
+                """
+                UPDATE messages
+                SET acknowledged = 1,
+                    consumed_by_live_driver = 1,
+                    consumed_at = COALESCE(consumed_at, ?)
+                WHERE id = ?
+                """,
+                (consumed_at, msg_id),
+            )
+    else:
+        for msg_id in message_ids:
+            cursor.execute("UPDATE messages SET acknowledged = 1 WHERE id = ?", (msg_id,))
 
     conn.commit()
     conn.close()
 
     if not quiet:
+        suffix = " as consumed by live driver" if consumed_by_live_driver else ""
         if len(message_ids) == 1:
-            print(f"✓ Message {message_ids[0]} acknowledged")
+            print(f"✓ Message {message_ids[0]} acknowledged{suffix}")
         else:
-            print(f"✓ {len(message_ids)} messages acknowledged: {', '.join(map(str, message_ids))}")
+            print(
+                f"✓ {len(message_ids)} messages acknowledged{suffix}: "
+                f"{', '.join(map(str, message_ids))}"
+            )
 
 
-def acknowledge_all(for_llm: str):
+def acknowledge_all(for_llm: str, *, consumed_by_live_driver: bool = False):
     """Acknowledge ALL unread messages for a given agent (dual-READ aliases)."""
     try:
         from agent_runtime.agent_identity import seat_read_aliases
@@ -272,18 +304,40 @@ def acknowledge_all(for_llm: str):
 
     msg_ids = [row[0] for row in rows]
 
-    cursor.execute(
-        f"""
-        UPDATE messages SET acknowledged = 1
-        WHERE to_llm IN ({placeholders}) AND acknowledged = 0
-        """,
-        recipients,
-    )
+    if consumed_by_live_driver:
+        cursor.execute(
+            f"""
+            UPDATE messages
+            SET acknowledged = 1,
+                consumed_by_live_driver = 1,
+                consumed_at = COALESCE(consumed_at, ?)
+            WHERE to_llm IN ({placeholders}) AND acknowledged = 0
+            """,
+            (datetime.now(UTC).isoformat(), *recipients),
+        )
+    else:
+        cursor.execute(
+            f"""
+            UPDATE messages SET acknowledged = 1
+            WHERE to_llm IN ({placeholders}) AND acknowledged = 0
+            """,
+            recipients,
+        )
 
     conn.commit()
     conn.close()
 
-    print(f"✓ Acknowledged {len(msg_ids)} messages for {for_llm}: {', '.join(map(str, msg_ids))}")
+    suffix = " as consumed by live driver" if consumed_by_live_driver else ""
+    print(f"✓ Acknowledged {len(msg_ids)} messages{suffix} for {for_llm}: {', '.join(map(str, msg_ids))}")
+
+
+def _message_consumption_state(acknowledged: int, consumed_by_live_driver: int) -> str:
+    """Return the live-driver consumption state displayed by bridge commands."""
+    if consumed_by_live_driver:
+        return "live-consumed"
+    if acknowledged:
+        return "read-but-not-live-consumed"
+    return "unread"
 
 
 def get_conversation(task_id: str):

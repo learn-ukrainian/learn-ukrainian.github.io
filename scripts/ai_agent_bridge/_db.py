@@ -39,6 +39,8 @@ CREATE TABLE IF NOT EXISTS messages (
     data TEXT,
     timestamp TEXT NOT NULL,
     acknowledged INTEGER DEFAULT 0,
+    consumed_by_live_driver INTEGER DEFAULT 0,
+    consumed_at TEXT,
     status TEXT DEFAULT 'pending'
 );
 
@@ -315,9 +317,36 @@ def get_db():
         if not columns:
             # Table doesn't exist yet — create everything from scratch
             conn.executescript(_LEGACY_SCHEMA)
-        elif "status" not in columns:
-            print("🔧 Migrating database: adding 'status' column to 'messages' table")
-            _add_column_racesafe(conn, "ALTER TABLE messages ADD COLUMN status TEXT DEFAULT 'pending'")
+        else:
+            if "status" not in columns:
+                print("🔧 Migrating database: adding 'status' column to 'messages' table")
+                _add_column_racesafe(conn, "ALTER TABLE messages ADD COLUMN status TEXT DEFAULT 'pending'")
+            if "consumed_by_live_driver" not in columns:
+                print("🔧 Migrating database: adding 'consumed_by_live_driver' column to 'messages' table")
+                _add_column_racesafe(
+                    conn,
+                    "ALTER TABLE messages ADD COLUMN consumed_by_live_driver INTEGER DEFAULT 0",
+                )
+                # Backfill: every message that was already acknowledged before this
+                # column existed predates the live-driver-consumption concept entirely.
+                # Without this, adding the column retroactively turns the fleet's
+                # entire acknowledged history into "read-but-not-live-consumed"
+                # backlog that every live driver would be required to wade through
+                # on its very next inbox drain (verified: 3103 messages fleet-wide
+                # as of 2026-07-23 — claude alone had 1119). Grandfather pre-existing
+                # acknowledged rows in as already handled; consumed_at stays NULL
+                # for them since the real consumption time is unknown, not "now".
+                conn.execute(
+                    "UPDATE messages SET consumed_by_live_driver = 1 "
+                    "WHERE acknowledged = 1 AND consumed_by_live_driver = 0"
+                )
+                # Explicit commit: don't rely on the next ALTER TABLE's implicit
+                # DDL-commit behavior to persist this DML — that's an incidental
+                # side effect of statement ordering, not a guarantee.
+                conn.commit()
+            if "consumed_at" not in columns:
+                print("🔧 Migrating database: adding 'consumed_at' column to 'messages' table")
+                _add_column_racesafe(conn, "ALTER TABLE messages ADD COLUMN consumed_at TEXT")
         _ensure_legacy_indexes(conn)
 
         # --- Sessions table migration (#604) ---
