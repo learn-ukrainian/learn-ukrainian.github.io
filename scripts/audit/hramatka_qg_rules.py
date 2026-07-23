@@ -4,10 +4,11 @@
 Deterministic ($0, no-LLM) checks for generative hramatka lesson_json artifacts.
 Call local Python APIs only — never shell out to MCP.
 
-Tier-1: russianism/surzhyk/calque · invalid distractor · answer-key placeholder
+Tier-1: russianism/surzhyk/calque · invalid distractor (incl. degenerate reuse) · answer-key placeholder
 Tier-2: structural activity integrity · empty learner surface · task-language CEFR · invented form
 
-Issue: load-bearing QG for hramatka (#5187 feedback).
+Issue: load-bearing QG for hramatka (#5187 feedback). Calibrated against real
+generated-lesson defects, not just synthetic planted faults (#5254).
 """
 
 from __future__ import annotations
@@ -52,8 +53,10 @@ from scripts.lexicon.heritage_classifier import (
 )
 from scripts.verification.vesum import verify_word
 
+_UNSET = object()  # distinguishes "caller passed nothing" from "caller resolved to None"
+
 RULE_SET_ID = "hramatka"
-CHECKER_VERSION = "hramatka_ua_qg_rules.v1"
+CHECKER_VERSION = "hramatka_ua_qg_rules.v2"
 EVIDENCE_SCHEMA_VERSION = "hramatka_ua_qg_evidence.v1"
 FIXTURE_SCHEMA_VERSION = "hramatka_ua_qg_fixtures.v1"
 
@@ -139,6 +142,12 @@ _ACTIVITY_KEEP_KEYS = frozenset(
 )
 
 _CYRILLIC_TOKEN_RE = re.compile(r"[А-Яа-яЁёІіЇїЄєҐґ][А-Яа-яЁёІіЇїЄєҐґ'ʼ’\-]*")
+# Pedagogical stress annotation (наголос) — combining acute/grave accent after a
+# vowel, e.g. "соро́чка". Real hramatka anchors carry these; stripped before
+# tokenizing so a stressed word attests against VESUM as one token instead of
+# shattering into fragments ("соро" + "чка") that false-fire NON_VESUM_FORM /
+# RUSSIAN_SHADOW_RUSSICISM. Verified against real generated soak lessons (#5254).
+_STRESS_MARK_RE = re.compile("[\u0300\u0301]")
 # Whole-value placeholders only — ellipsis inside a real answer is not a placeholder.
 _PLACEHOLDER_EXACT_RE = re.compile(
     r"(?:"
@@ -231,6 +240,7 @@ def checker_config_hash() -> str:
         "checks": [
             "russianism_calque",
             "invalid_distractor",
+            "degenerate_distractor_reuse",
             "answer_key_placeholder",
             "structural_activity_integrity",
             "empty_learner_surface",
@@ -477,8 +487,12 @@ def adapt_lesson_json_to_module_dir(
 # ---------------------------------------------------------------------------
 
 
+def _strip_stress_marks(text: str) -> str:
+    return _STRESS_MARK_RE.sub("", text)
+
+
 def _cyrillic_tokens(text: str) -> list[str]:
-    return _CYRILLIC_TOKEN_RE.findall(text)
+    return _CYRILLIC_TOKEN_RE.findall(_strip_stress_marks(text))
 
 
 def _apostrophe_variants(token: str) -> list[str]:
@@ -640,12 +654,33 @@ def _unknown_token_status() -> dict[str, Any]:
     }
 
 
+def _hyphen_compound_all_attested(token: str) -> bool:
+    """True when every hyphen-separated part of a compound is its own VESUM word.
+
+    Appositive noun+noun compounds (текст-опора, речення-опора, держав-учасниць)
+    are not VESUM lemmas as a whole, but both halves independently are. Without
+    this check the per-token russian-shadow / invented-form pass sees one
+    VESUM-absent blob and misfires — a real false-fail found on real generated
+    hramatka content (#5254).
+    """
+    if "-" not in token:
+        return False
+    parts = token.split("-")
+    # Reject empty segments (leading/trailing/repeated hyphens, e.g. "текст--опора"):
+    # filtering them out would let a malformed token slip through as a valid
+    # two-part compound whenever the surviving fragments happen to be VESUM-real,
+    # bypassing the Russianism/invented-form check it exists to protect (#5691 review).
+    if len(parts) < 2 or not all(parts):
+        return False
+    return all(_vesum_hits(part) for part in parts)
+
+
 def _classify_token(token: str) -> dict[str, Any]:
     """Classify with VESUM-first short-circuit (performance + apostrophe tolerance).
 
     Partial sources.db / missing VESUM → degrade to unknown (no crash).
     """
-    if _vesum_hits(token):
+    if _vesum_hits(token) or _hyphen_compound_all_attested(token):
         return {
             "classification": "standard",
             "attestations": [{"source": "vesum", "ref": token}],
@@ -1061,13 +1096,25 @@ def check_invented_forms(ctx: _ScanContext) -> list[dict[str, Any]]:
     return findings
 
 
-def _iter_mc_items(activity: Mapping[str, Any]) -> Iterable[tuple[str, list[str], Any]]:
-    """Yield (prompt, options, correct_answer) for multiple-choice style items."""
+def _iter_mc_items(
+    activity: Mapping[str, Any], answer_key: Any = _UNSET
+) -> Iterable[tuple[str, list[str], Any]]:
+    """Yield (prompt, options, correct_answer) for multiple-choice style items.
+
+    ``answer_key`` should be the caller's already-resolved key (prefer
+    ``_answer_key_for(entry, activity)`` so a BLOCK-level answer_key is visible
+    here too, not just an activity-level one). Omitting it falls back to
+    ``activity.get("answer_key")`` only, for backward compatibility — that
+    fallback silently loses every item's `correct` on lessons that store the
+    answer key on the enclosing block, which then makes every option (the
+    correct one included) look like a distractor to callers (#5691 review).
+    """
     payload = _payload(activity)
     items = payload.get("items") or activity.get("items") or []
     if not isinstance(items, list):
         return
-    answer_key = activity.get("answer_key")
+    if answer_key is _UNSET:
+        answer_key = activity.get("answer_key")
     key_items: list[Any] = []
     if isinstance(answer_key, Mapping) and isinstance(answer_key.get("items"), list):
         key_items = list(answer_key["items"])
@@ -1084,6 +1131,19 @@ def _iter_mc_items(activity: Mapping[str, Any]) -> Iterable[tuple[str, list[str]
             entry = key_items[idx]
             correct = entry.get("correct") if isinstance(entry, Mapping) else entry
         yield str(item.get("prompt") or item.get("question") or item.get("stem") or ""), options, correct
+
+    # Cloze blanks carry their own per-blank distractor options — same shape,
+    # answer already resolved (no answer_key fallback needed).
+    blanks = payload.get("blanks")
+    if isinstance(blanks, list):
+        for idx, blank in enumerate(blanks):
+            if not isinstance(blank, Mapping):
+                continue
+            options_raw = blank.get("options") or []
+            if not isinstance(options_raw, list) or not options_raw:
+                continue
+            options = [str(o) for o in options_raw]
+            yield str(blank.get("id") or f"blank[{idx}]"), options, blank.get("answer")
 
 
 def _resolve_correct_option(options: Sequence[str], correct: Any) -> str | None:
@@ -1120,10 +1180,19 @@ def check_invalid_distractors(ctx: _ScanContext) -> list[dict[str, Any]]:
     """Tier-1: distractors must be real VESUM forms, distinct, non-duplicate, non-synonym."""
     findings: list[dict[str, Any]] = []
     file_text = ctx.texts.get("activities.yaml") or ctx.texts.get("module.md") or ""
+    # Same distractor set reused verbatim across items — a real generation defect
+    # (soak-verified, #5254): the model gets stuck and copy-pastes one "filler"
+    # pair everywhere, so the learner can answer by pattern-matching the filler
+    # instead of reading the text. Tracked across the whole lesson, not just one
+    # activity, because the real defect repeats across activity boundaries too.
+    distractor_set_locations: dict[tuple[str, ...], list[tuple[int, int]]] = {}
 
     for act_idx, entry in enumerate(ctx.activities):
         activity = _activity_body(entry)
-        for item_idx, (_prompt, options, correct) in enumerate(_iter_mc_items(activity)):
+        resolved_answer_key = _answer_key_for(entry, activity)
+        for item_idx, (_prompt, options, correct) in enumerate(
+            _iter_mc_items(activity, resolved_answer_key)
+        ):
             if len(options) < 2:
                 continue
             correct_opt = _resolve_correct_option(options, correct)
@@ -1132,6 +1201,7 @@ def check_invalid_distractors(ctx: _ScanContext) -> list[dict[str, Any]]:
             correct_lemma = correct_tokens[0] if len(correct_tokens) == 1 else correct_norm
 
             seen_norms: set[str] = set()
+            item_distractor_norms: set[str] = set()
             for opt in options:
                 norm = _normalize_option(opt)
                 if not norm:
@@ -1175,6 +1245,7 @@ def check_invalid_distractors(ctx: _ScanContext) -> list[dict[str, Any]]:
                     )
                     continue
                 seen_norms.add(norm.casefold())
+                item_distractor_norms.add(norm.casefold())
 
                 tokens = _cyrillic_tokens(norm)
                 # Single-token distractors: require VESUM form
@@ -1262,6 +1333,32 @@ def check_invalid_distractors(ctx: _ScanContext) -> list[dict[str, Any]]:
                             text=file_text,
                         )
                     )
+
+            if len(item_distractor_norms) >= 2:
+                key = tuple(sorted(item_distractor_norms))
+                distractor_set_locations.setdefault(key, []).append((act_idx, item_idx))
+
+    for distractor_set, locations in distractor_set_locations.items():
+        if len(locations) < 3:
+            continue
+        first_act, first_item = locations[0]
+        findings.append(
+            _finding(
+                issue_id="DEGENERATE_DISTRACTOR_REUSE",
+                rule_id="hramatka_degenerate_distractor_reuse",
+                dimension="distractor_quality",
+                severity="critical",
+                file="activities.yaml",
+                line=1,
+                excerpt=" / ".join(distractor_set)[:160],
+                message=(
+                    f"Distractor set {list(distractor_set)} is reused verbatim across "
+                    f"{len(locations)} items (first: activity[{first_act}] item[{first_item}]) — "
+                    "learner can answer by pattern-matching the filler, not by reading the text."
+                ),
+                text=file_text,
+            )
+        )
     return findings
 
 

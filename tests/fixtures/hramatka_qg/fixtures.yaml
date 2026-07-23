@@ -362,3 +362,196 @@ fixtures:
       - issue_id: MC_TOO_FEW_OPTIONS
         dimension: activity_structure
         severity: critical
+
+  # ---------------------------------------------------------------------
+  # REAL calibration fixtures (#5254) — sourced from actually-generated
+  # hramatka lesson artifacts (retained local/ab soak runs, google/gemma-4-31b-it
+  # + deepseek-v4 lanes), not hand-planted faults. Trimmed for test size but the
+  # defect-bearing text is verbatim/near-verbatim from the real generated output.
+  # ---------------------------------------------------------------------
+
+  # Real generated defect: the model reused the SAME distractor pair verbatim
+  # across every quiz item instead of drawing fresh wrong answers — the learner
+  # can answer by pattern-matching "not ла, not київський" without reading the
+  # text. Observed in 100% of retained real "ready" soak lessons (5/5), always
+  # >=7 repeats; threshold here is 3. Trimmed from a real Києво-Печерська лавра
+  # B1 lesson (generator: google/gemma-4-31b-it).
+  - id: real-degenerate-distractor-reuse
+    level: b1
+    slug: real-degenerate-distractor-reuse
+    expected_verdict: FAIL
+    lesson_json:
+      title: "Ки́єво-Пече́рська ла́вра — київський православний монастирський комплекс"
+      level: B1
+      anchor:
+        text: >
+          Ки́єво-Пече́рська ла́вра — київський православний монастирський комплекс.
+          Один із найбільших християнських центрів України. Лавра належить державі,
+          а релігійні організації користуються нею на правах оренди. Заснована 1051
+          року як печерний монастир за межами Києва.
+      blocks:
+        - type: quiz
+          activity:
+            type: quiz
+            title: Тест
+            payload:
+              type: quiz
+              instruction: Оберіть правильну відповідь за текстом.
+              items:
+                - question: Яке з цих слів зустрічається в реченні про християнські центри України?
+                  options: [із, ла, київський]
+                  correct: 0
+                - question: Яке з цих слів зустрічається в реченні про власність лаври?
+                  options: [належить, ла, київський]
+                  correct: 0
+                - question: Яке з цих слів зустрічається в реченні про заснування монастиря?
+                  options: [печерний, ла, київський]
+                  correct: 0
+            answer_key:
+              items:
+                - index: 0
+                  correct: 0
+                - index: 1
+                  correct: 0
+                - index: 2
+                  correct: 0
+          answer_key:
+            items:
+              - index: 0
+                correct: 0
+              - index: 1
+                correct: 0
+              - index: 2
+                correct: 0
+    expected_findings:
+      - issue_id: DEGENERATE_DISTRACTOR_REUSE
+        excerpt: "ла"
+        dimension: distractor_quality
+        severity: critical
+
+  # False-positive fix: the distractor-reuse detector must see a BLOCK-level
+  # answer_key, not just an activity-level one. Three questions here legitimately
+  # share the same 3-option pool while each targets a DIFFERENT correct answer —
+  # a normal, valid activity shape, not the model-filler-repeat defect above.
+  # Before the fix, _iter_mc_items only read activity.answer_key (absent here —
+  # this lesson stores it on the enclosing block instead), so `correct` resolved
+  # to None for every item and every option — including the true answer — was
+  # recorded as a distractor, making all three questions look like the SAME
+  # 3-way distractor set and false-firing DEGENERATE_DISTRACTOR_REUSE
+  # (cross-family review finding on #5691, not a soak observation).
+  - id: distractor-reuse-block-level-key-clean
+    level: b1
+    slug: distractor-reuse-block-level-key-clean
+    expected_verdict: PASS
+    lesson_json:
+      title: Слова уроку
+      level: B1
+      anchor:
+        text: >
+          На уроці ми читаємо текст, складаємо речення й шукаємо опору для
+          власних думок. Текст дає факти, речення передає завершену думку,
+          а опора допомагає висловитися впевнено.
+      blocks:
+        - type: quiz
+          activity:
+            type: quiz
+            title: Тест
+            payload:
+              type: quiz
+              instruction: Оберіть правильне слово за визначенням.
+              items:
+                - question: Яке слово означає писемний матеріал для читання?
+                  options: [текст, речення, опора]
+                - question: Яке слово означає граматично завершену думку?
+                  options: [текст, речення, опора]
+                - question: Яке слово означає підтримку чи основу для думки?
+                  options: [текст, речення, опора]
+          answer_key:
+            items:
+              - index: 0
+                correct: 0
+              - index: 1
+                correct: 1
+              - index: 2
+                correct: 2
+    expected_findings: []
+
+  # Real false-positive fix: hyphenated appositive noun+noun compounds
+  # (тексті-опорі / речення-опора / держав-учасниць) are not VESUM lemmas as a
+  # whole, but every half independently is. Before the fix these critical-failed
+  # legitimate Ukrainian. тексті-опорі / речення-опора are the exact forms
+  # reported against real generated content on issue #5254; держав-учасниць
+  # ("представники держав-учасниць Конвенції ЮНЕСКО") is verbatim from a real
+  # generated borsch-heritage lesson anchor.
+  - id: real-hyphen-compound-clean
+    level: b1
+    slug: real-hyphen-compound-clean
+    expected_verdict: PASS
+    lesson_json:
+      title: Урок про текст-опору
+      level: B1
+      anchor:
+        text: >
+          Учитель обирає короткий текст і зберігає в ньому опору для кожного уроку:
+          у тексті є факти, а в опорі — приклади. Опора завжди спирається на
+          реальний текст. Кожне речення в тексті важливе. У тексті-опорі завжди є
+          щось корисне для учня, а кожне речення-опора береться з тексту, а не
+          вигадується. У світі є багато держав, і в кожному міжнародному проєкті
+          було багато учасниць. Міжурядовий комітет з охорони нематеріальної
+          культурної спадщини, до складу якого увійшли представники
+          держав-учасниць Конвенції ЮНЕСКО, вніс культуру приготування
+          українського борщу до Списку нематеріальної культурної спадщини ЮНЕСКО.
+      blocks:
+        - type: true-false
+          activity:
+            type: true-false
+            title: Перевірка
+            payload:
+              type: true-false
+              instruction: Позначте, чи правильні твердження за текстом.
+              items:
+                - statement: Кожне речення-опора береться з тексту.
+                  correct: true
+            answer_key:
+              items:
+                - index: 0
+                  correct: true
+          answer_key: "1 П"
+
+  # Real false-positive fix: pedagogical stress annotation (наголос, combining
+  # acute accent) shatters real words into meaningless fragments under the old
+  # tokenizer ("соро́чка" -> "соро" + "чка"), false-firing NON_VESUM_FORM on
+  # completely legitimate Ukrainian. Title/anchor/statement text below is
+  # verbatim from a real generated "Вишиванка" B1 lesson (generator:
+  # google/gemma-4-31b-it).
+  - id: real-stress-mark-clean
+    level: b1
+    slug: real-stress-mark-clean
+    expected_verdict: PASS
+    lesson_json:
+      title: "Виши́ва́нка — новітня назва народної руської сорочки"
+      level: B1
+      anchor:
+        text: >
+          Виши́ва́нка — новітня назва народної руської (української та білоруської)
+          сорочки, прикрашеної орнаментованою вишивкою. Важлива складова
+          українського національного вбрання. Поділяється на жіночі й чоловічі
+          сорочки. Має спільне походження з вишитими сорочками слов'янських
+          народів Східної та Центральної Європи.
+      blocks:
+        - type: fill-in
+          activity:
+            type: fill-in
+            title: Оберіть правильну форму
+            payload:
+              type: fill-in
+              instruction: Оберіть правильну форму.
+              items:
+                - sentence: "Традиційні назви — ____, вишита сорочка, вишивана сорочка."
+                  answer: соро́чка
+                  options: [соро́чка, вишита, вишивана]
+            answer_key:
+              items:
+                - index: 0
+                  answer: соро́чка
+          answer_key: "1 сорочка"
