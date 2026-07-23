@@ -20,6 +20,7 @@ _LAUNCHER_FILES = (
     Path("scripts/lib/profile_resolver.sh"),
     Path("scripts/lib/session_supervisor.sh"),
     Path("scripts/lib/thread_rollover_link.sh"),
+    Path("scripts/orchestration/thread_handoff.py"),
 )
 
 
@@ -67,6 +68,10 @@ def _prepare_repo(
     _write_executable(
         venv_bin / "python",
         f'''#!/usr/bin/env bash
+if [[ "${{1:-}}" == */scripts/orchestration/thread_handoff.py && "$*" == *" detect "* ]]; then
+  printf '%s\\n' '{{"agent":"codex-test","status":"none"}}'
+  exit 0
+fi
 if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" ]]; then
   cat <<'JSON'
 {{"identity":{{"lease":{{"session_id":"session-test","lease_id":"lease-test","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
@@ -144,6 +149,9 @@ def _launch(
         if name.startswith("LEARN_UKRAINIAN_") or name in {
             "CODEX_CANONICAL_REPO_ROOT",
             "CODEX_SESSION",
+            "CODEX_LAUNCHER_ROLLOVER_AGENT",
+            "CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID",
+            "CODEX_LAUNCHER_ROLLOVER_ID",
             "SESSION_EPIC",
             "SESSION_HANDOFF_AGENT",
         }:

@@ -151,7 +151,12 @@ unset FORWARD_ARGS FORWARD_ARG_COUNT
 # PROJECT_DIR is resolved dynamically.
 # shellcheck disable=SC1091
 source "$PROJECT_DIR/scripts/lib/thread_rollover_link.sh"
-bootstrap_codex_checkout "$PROJECT_DIR" "$PROJECT_DIR" continue
+clear_codex_launcher_rollover_env
+if [ -n "${SESSION_EPIC:-}" ]; then
+    bootstrap_codex_checkout "$PROJECT_DIR" "$PROJECT_DIR" fail
+else
+    bootstrap_codex_checkout "$PROJECT_DIR" "$PROJECT_DIR" continue
+fi
 
 # Resolve the native Codex route before SessionStart so context-budget hooks
 # receive an explicit, model-checked denominator. An explicit --model/-m is
@@ -190,6 +195,9 @@ if [ -n "${SESSION_EPIC:-}" ]; then
     # shellcheck disable=SC1091
     source "$PROJECT_DIR/scripts/lib/session_supervisor.sh"
     if [ "$LEARN_UKRAINIAN_TRUSTED" = "1" ]; then
+        if ! resolve_codex_pending_rollover "$PROJECT_DIR" "$SESSION_HANDOFF_AGENT"; then
+            exit 1
+        fi
         _selected_stream="$(launcher_selector_stream "$SESSION_EPIC")"
         if [ -z "$_selected_stream" ]; then
             printf "Error: cannot resolve stream id for epic '%s'.\n" "$SESSION_EPIC" >&2
@@ -208,14 +216,25 @@ if [ -n "${SESSION_EPIC:-}" ]; then
             "$SESSION_EPIC"
         unset _launcher_task_id _launcher_instance_id _selected_stream
 
+        _close_failed_codex_driver_lease() {
+            if ! "$PROJECT_DIR/.venv/bin/python" \
+                -m agents_extensions.shared.session_streams hook close >/dev/null 2>&1; then
+                echo "Warning: failed to close the exact Codex launcher lease after cold-start failure." >&2
+            fi
+        }
         if ! "$PROJECT_DIR/.venv/bin/python" -m scripts.session_canary.codex_lane \
             mint --epic "$SESSION_EPIC"; then
-            echo "Warning: Codex canary mint skipped/failed (continuing launch)." >&2
+            echo "Error: Codex canary mint failed; refusing a driver without a cold-start canary." >&2
+            _close_failed_codex_driver_lease
+            exit 1
         fi
         if ! "$PROJECT_DIR/.venv/bin/python" -m scripts.session_canary.codex_lane \
             bootstrap --epic "$SESSION_EPIC"; then
-            echo "Warning: Codex cold-start board bootstrap skipped/failed (continuing launch)." >&2
+            echo "Error: Codex cold-start board bootstrap failed; refusing an uninjected driver." >&2
+            _close_failed_codex_driver_lease
+            exit 1
         fi
+        unset -f _close_failed_codex_driver_lease
     else
         echo "Skipping stream lease (untrusted Codex route)." >&2
     fi

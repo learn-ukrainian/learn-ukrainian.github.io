@@ -30,8 +30,9 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 `codex · grok · gemini · sonnet`. Epic is the first arg; extra flags forward
 (e.g. `--agent curriculum-track-orchestrator`). Each **launches the lane**; the driver
 then loads `$drive-epic` — automatically once the cold-prompt wiring lands (follow-up PR),
-and by manual `$drive-epic` invocation until then. **Today the wrappers do not yet
-auto-load the skill.**
+and by manual `$drive-epic` invocation until then. The Codex DevOps alternate is the
+first zero-touch path: its generated board is injected into SessionStart and explicitly
+directs the task to load `$drive-epic`; the other wrappers do not yet auto-load the skill.
 
 **Sonnet-5 is the sole Anthropic driver seat** — there is deliberately no Opus "drive"
 wrapper (Opus is reserved; see below). For the rare hardest-session Opus-in-seat, use the
@@ -101,6 +102,11 @@ language + review lanes free and puts the loop on the most replaceable capacity:
 
 1. Launcher pins `SESSION_EPIC`, claims the stream lease, and — for grok/gemini/kimi —
    mints the session canary; Claude/Sonnet use the SessionStart hook chain (no canary lane).
+   The Codex DevOps alternate preflights its lane-scoped rollover namespace before the
+   lease: zero packets starts fresh, one fresh unbound CLI packet exports exact IDs, and
+   ambiguity, an already-resumed packet, or a native-app packet fails closed. After the
+   lease and canary are ready, SessionStart binds the official new task ID and injects
+   `CODEX-COLD-START.md`.
 2. Driver runs **`drive-epic`** (invoke `$drive-epic`, or the launcher cold-prompt does it
    once wiring lands — see "Rollout" below).
 3. Driver reads live routing from `/api/rules` + `model_catalog.yaml` (never hard-codes the

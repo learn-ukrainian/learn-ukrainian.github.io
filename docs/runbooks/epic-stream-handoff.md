@@ -29,6 +29,16 @@ driver (e.g. Codex on hramatka) leaves, content dual-write alone is not enough:
 6. **Launcher:** `--epic <name>` must set stream id + handoff slot. Note the
    slot trap: a packet under `claude/` may not appear under `claude-hramatka`.
 
+### Codex DevOps zero-touch boundary
+
+`./start-codex-drive.sh devops` scans only its assigned `codex-infra` rollover
+namespace before acquiring `epic:4707`. It starts a fresh task when no packet
+exists, or exports one exact fresh unbound `codex-cli` packet for SessionStart
+to bind to the newly created task ID. Multiple packets, an already-resumed
+packet, and a packet requiring the native Codex app adapter all stop the
+launcher before lease acquisition. The launcher never invokes `codex resume`
+or selects a packet by title, age, or filesystem order.
+
 ## CLI
 
 ```bash

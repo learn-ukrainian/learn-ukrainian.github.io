@@ -219,6 +219,7 @@ model-specific section — everything above is identical across seats.
 | **Gemini / AGY (gemini-3.6-flash-high)** | Harness/infra scope. MCP-leading tool use + 1M window + low cost = ideal infra driver. **Do not claim curriculum content lanes.** Route UK-language work to the sanctioned language lanes, not to yourself. |
 | **Kimi K3** | Frontier coder/reviewer + cross-family escalation authority (independent of Anthropic & OpenAI). `max-effort-only` makes a continuous loop costly — drive when assigned, else stay a reviewer/escalation seat. |
 | **Claude (when driving a track)** | Reserve the Opus seat for the hardest judgment + the CF review of record; prefer Sonnet-5 for routine track driving so Opus quota stays free. |
+| **Codex / GPT-5.6 Terra** | Named alternate only for harness / infra / devops. The launcher injects the HydrationCapsuleV1 cold-start board and binds at most one exact fresh CLI rollover; stop on any SessionStart setup error. Codex has no Monitor-equivalent watcher, so use bounded foreground waits and escalate hard judgment to Sol. |
 
 ---
 
