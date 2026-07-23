@@ -183,7 +183,6 @@ _SLOVNYK_DICT_LABELS: dict[str, str] = dict(SLUG_ACADEMIC_LABELS)
 _SLOVNYK_LOOKUP_SLUGS = tuple(
     slug for slug in _SLOVNYK_DICT_LABELS if slug not in {"synonyms", "synonyms_karavansky"}
 )
-_SLOVNYK_SYNONYM_SLUGS = ("synonyms_karavansky", "synonyms")
 _SLOVNYK_IDIOM_SLUGS = ("phraseology",)
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
 _SLOVNYK_UKRENG_SLUG = "ukreng"
@@ -1557,63 +1556,6 @@ def _synonyms_from_slovnyk_row(
 
 def _base_word(term: str) -> str:
     return term.split(" (")[0]
-
-
-def _synonyms_slovnyk(
-    lemma: str,
-    cache: dict[str, Any] | None = None,
-    *,
-    entry_pos: str | None = None,
-) -> dict[str, Any] | None:
-    """Synonym chips from slovnyk.me synonyms dictionaries, omitted when empty."""
-    lookup_lemma = _slovnyk_lookup_word(_base_lemma(lemma))
-    if not lookup_lemma or _has_whitespace(lookup_lemma):
-        return None
-    headword_pos = _headword_pos_for_synonyms(lookup_lemma, entry_pos)
-    if not headword_pos:
-        return None
-    cache = cache if cache is not None else _slovnyk_cache(lookup_lemma)
-    items: list[str] = []
-    seen: set[str] = set()
-    sources: list[str] = []
-    urls: list[str] = []
-    for slug in _SLOVNYK_SYNONYM_SLUGS:
-        row = _cache_lookup(cache, slug)
-        if not row:
-            continue
-        row_items = _synonyms_from_slovnyk_row(row, lookup_lemma, headword_pos)
-        row_bases = [_base_word(item) for item in row_items]
-        if slug == "synonyms" and row_items:
-            group_head = _slovnyk_synonym_group_head(row, lookup_lemma)
-            allowlisted = _safe_synonym_set(lookup_lemma)
-            if (
-                group_head != lookup_lemma.casefold()
-                and not seen.intersection(row_bases)
-                and not allowlisted.intersection(row_bases)
-            ):
-                continue
-        if not row_items:
-            continue
-        for synonym in row_items:
-            base = _base_word(synonym)
-            if base not in seen:
-                seen.add(base)
-                items.append(synonym)
-        sources.append(str(row.get("dictionary_label") or _SLOVNYK_DICT_LABELS[slug]))
-        if row.get("source_url"):
-            urls.append(str(row["source_url"]))
-    if not items:
-        return None
-    official_urls, mirror_urls = remap_url_list(list(dict.fromkeys(urls)))
-    block: dict[str, Any] = {
-        "items": items[:24],
-        "source": join_academic_source_labels(sources),
-    }
-    if official_urls:
-        block["source_urls"] = official_urls
-    if mirror_urls:
-        block["mirror_source_urls"] = mirror_urls
-    return block
 
 
 def _synonyms_mphdict(lemma: str) -> dict[str, Any] | None:
@@ -4286,115 +4228,6 @@ def _missing_table(exc: sqlite3.OperationalError) -> bool:
     return "no such table" in str(exc).casefold()
 
 
-def _goroh_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
-    """Goroh cached etymology, by requested Atlas lemma then canonical headword."""
-    variants = _etymology_lookup_variants(lemma)
-    row = None
-    try:
-        for variant in variants:
-            row = conn.execute(
-                "SELECT etymology_text, source_url FROM goroh_etymology "
-                "WHERE requested_lemma = ? AND etymology_text != '' LIMIT 1",
-                (variant,),
-            ).fetchone()
-            if row:
-                break
-        if not row:
-            for variant in variants:
-                row = conn.execute(
-                    "SELECT etymology_text, source_url FROM goroh_etymology "
-                    "WHERE headword = ? AND etymology_text != '' LIMIT 1",
-                    (_lookup_key(variant),),
-                ).fetchone()
-                if row:
-                    break
-    except sqlite3.OperationalError as exc:
-        if _missing_table(exc):
-            return None
-        raise
-    if not row or not row[0]:
-        return None
-    return {
-        "text": clean_html_entities(trim_curated_goroh_text(row[0].strip()[:600], lemma)),
-        "source": "Горох (за ЕСУМ)",
-        "source_url": row[1],
-    }
-
-
-def _esum_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
-    """ЕСУМ etymology (А–Г PoC coverage), by lemma."""
-    word = lemma.strip()
-    if _has_whitespace(word):
-        return None
-    row = None
-    try:
-        for variant in _etymology_lookup_variants(word):
-            row = conn.execute(
-                "SELECT etymology_text, vol, page FROM esum_etymology WHERE lemma = ? AND etymology_text != '' LIMIT 1",
-                (variant,),
-            ).fetchone()
-            if row:
-                break
-    except sqlite3.OperationalError as exc:
-        if _missing_table(exc):
-            return None
-        raise
-    if not row or not row[0]:
-        return None
-    cite = "ЕСУМ"
-    if row[1]:
-        cite += f", т. {row[1]}"
-    if row[2]:
-        cite += f", с. {row[2]}"
-    text = clean_html_entities(row[0].strip()[:600])
-    if garbled_esum_entry(word):
-        text = clean_html_entities(strip_garbled_tail(text, word))
-        cite += " (garbled tail stripped)"
-    if has_mojibake_marker(text):
-        return None
-    if not text:
-        return None
-    return {"text": text, "source": cite}
-
-
-def _wiktionary_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
-    """uk.wiktionary dump fallback, by requested Atlas lemma and variants."""
-    word = lemma.strip()
-    if _has_whitespace(word):
-        return None
-    row = None
-    variants = _etymology_lookup_variants(word)
-    try:
-        for variant in variants:
-            row = conn.execute(
-                "SELECT etymology_text, source_url FROM wiktionary_etymology "
-                "WHERE requested_lemma = ? AND etymology_text != '' LIMIT 1",
-                (variant,),
-            ).fetchone()
-            if row:
-                break
-        if not row:
-            for variant in variants:
-                row = conn.execute(
-                    "SELECT etymology_text, source_url FROM wiktionary_etymology "
-                    "WHERE headword = ? AND etymology_text != '' LIMIT 1",
-                    (variant,),
-                ).fetchone()
-                if row:
-                    break
-    except sqlite3.OperationalError as exc:
-        if _missing_table(exc):
-            return None
-        raise
-    if not row or not row[0]:
-        return None
-    return {
-        "text": clean_html_entities(row[0].strip()[:600]),
-        "source": "Вікісловник (uk.wiktionary)",
-        "source_url": row[1],
-    }
-
-
 def _load_kaikki_lookup(path: Path = KAIKKI_LOOKUP) -> dict[str, dict[str, Any]]:
     """Load the compact Kaikki lookup if it has been preprocessed.
 
@@ -4584,19 +4417,6 @@ def _kaikki_translation(lookup: dict[str, dict[str, Any]], lemma: str) -> dict[s
     if not english:
         return None
     return {"en": english[:6], "source": KAIKKI_SOURCE}
-
-
-def _source_etymology(
-    conn: sqlite3.Connection,
-    lemma: str,
-    kaikki_lookup: dict[str, dict[str, Any]] | None = None,
-) -> dict | None:
-    return (
-        _goroh_etymology(conn, lemma)
-        or _esum_etymology(conn, lemma)
-        or _wiktionary_etymology(conn, lemma)
-        or _kaikki_etymology(kaikki_lookup or {}, lemma)
-    )
 
 
 def _mphdict_etymology(lemma: str) -> dict[str, Any] | None:
