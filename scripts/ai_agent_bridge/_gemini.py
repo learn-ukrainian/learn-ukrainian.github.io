@@ -26,6 +26,7 @@ from agent_runtime.runner import invoke as runtime_invoke
 from batch_gemini_config import FALLBACK_MODEL, PRO_MODEL
 from secret_redactor import redact_text
 
+from ._ask_lifecycle import register_ask
 from ._broker import (
     _git_status_snapshot,
     _is_task_locked,
@@ -176,6 +177,7 @@ def _send_gemini_message(content, task_id, msg_type, data, from_llm, from_model,
                                     quiet=stdout_only)
         if stdout_only:
             acknowledge(msg_id, quiet=stdout_only)
+    register_ask(msg_id)
     return msg_id
 
 
