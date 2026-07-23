@@ -252,13 +252,26 @@ def test_legacy_epic_suffix_normalizes_to_atlas(tmp_path: Path, arguments: list[
     assert supervisor_capture.exists()
 
 
-def test_practice_hub_alias_normalizes_to_atlas(tmp_path: Path) -> None:
-    values, _argv_blob, result, _project, supervisor_capture = _run_launcher(tmp_path, ["--epic", "practice-hub"])
+@pytest.mark.parametrize(
+    ("selector", "canonical_lane", "stream", "handoff"),
+    [
+        ("practice-hub", "atlas", "epic:4387", "gemini-atlas"),
+        ("seminars-folk", "folk", "epic:2836", "gemini-folk"),
+        ("seminars-bio", "bio", "epic:4431", "gemini-bio"),
+    ],
+)
+def test_alias_normalizes_to_canonical_lane(
+    tmp_path: Path, selector: str, canonical_lane: str, stream: str, handoff: str
+) -> None:
+    values, _argv_blob, result, _project, supervisor_capture = _run_launcher(tmp_path, ["--epic", selector])
     assert result.returncode == 0, result.stderr + result.stdout
-    assert values["session_epic"] == "atlas"
-    assert values["session_stream"] == "epic:4387"
-    assert values["handoff"] == "gemini-atlas"
+    assert values["session_epic"] == canonical_lane
+    assert values["session_stream"] == stream
+    assert values["handoff"] == handoff
     assert supervisor_capture.exists()
+    supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
+    stream_index = supervisor_args.index("--stream")
+    assert supervisor_args[stream_index + 1] == stream
 
 
 def test_epic_harness_derives_gemini_infra_handoff(tmp_path: Path) -> None:
