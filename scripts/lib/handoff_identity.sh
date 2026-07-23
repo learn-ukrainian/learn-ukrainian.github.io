@@ -37,6 +37,9 @@ launcher_selector_resolve() {
     bio|seminars-bio)
       printf 'bio\tepic:4431\n'
       ;;
+    corpus|corpus-channels)
+      printf 'corpus\tepic:4706\n'
+      ;;
     *) return 1 ;;
   esac
 }
@@ -68,6 +71,7 @@ Valid lane selectors:
   hramatka | hramatka.lessons
   folk | seminars-folk
   bio | seminars-bio
+  corpus | corpus-channels
 EOF
 }
 

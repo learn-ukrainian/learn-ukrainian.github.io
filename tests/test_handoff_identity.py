@@ -69,6 +69,8 @@ def test_devops_alias_resolves_to_canonical_infra_slot(resolver: str, expected: 
         ("atlas.practice", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas"),
         ("practice-hub", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas"),
         ("hramatka.lessons", "hramatka", "epic:4542", "claude-hramatka", "gemini-hramatka", "grok-hramatka"),
+        ("corpus", "corpus", "epic:4706", "claude-corpus", "gemini-corpus", "grok-corpus"),
+        ("corpus-channels", "corpus", "epic:4706", "claude-corpus", "gemini-corpus", "grok-corpus"),
     ],
 )
 def test_dot_notation_selector_resolves_stream_and_provider_handoff(
