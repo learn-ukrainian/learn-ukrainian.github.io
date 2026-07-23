@@ -340,7 +340,15 @@ def test_epic_harness_cold_prompt_is_fleet_comms_dual_aware(tmp_path: Path) -> N
     assert "plane=off" in out
 
 
-def test_epic_devops_uses_canonical_infra_stream_and_handoff(tmp_path: Path) -> None:
+def test_epic_devops_uses_dedicated_stream_without_harness_lease_collision(tmp_path: Path) -> None:
+    harness_tmp = tmp_path / "harness"
+    harness_tmp.mkdir()
+    harness_values, _argv_blob, harness_result, _project, harness_capture = _run_launcher(
+        harness_tmp,
+        ["--epic", "harness"],
+    )
+    assert harness_result.returncode == 0, harness_result.stderr + harness_result.stdout
+
     values, _argv_blob, result, _project, supervisor_capture = _run_launcher(
         tmp_path,
         ["--epic", "devops"],
@@ -348,6 +356,11 @@ def test_epic_devops_uses_canonical_infra_stream_and_handoff(tmp_path: Path) -> 
     assert result.returncode == 0, result.stderr + result.stdout
     assert values["session_epic"] == "devops"
     assert values["handoff"] == "grok-infra"
+    assert harness_values["session_stream"] == "epic:4707"
+    assert values["session_stream"] == "epic:5512"
+    assert values["session_stream"] != harness_values["session_stream"]
+    harness_args = harness_capture.read_text(encoding="utf-8").splitlines()
+    assert harness_args[harness_args.index("--stream") + 1] == "epic:4707"
     supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
     stream_index = supervisor_args.index("--stream")
-    assert supervisor_args[stream_index + 1] == "epic:4707"
+    assert supervisor_args[stream_index + 1] == "epic:5512"

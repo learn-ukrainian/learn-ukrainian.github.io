@@ -131,13 +131,14 @@ epic_name_valid() {
 # Canonical-slot aliases: some epics are NOT free-standing lanes — they already
 # have a durable handoff identity elsewhere. Mapping them to a phantom
 # claude-<epic> slot hides live packets and causes silent cold starts (#5201).
-# harness/infra/devops (infra, DevOps & fleet reliability) → claude-infra, the same
-# slot as --agent infra-orchestrator (lineage dir, session-state, inbox).
+# harness/infra → claude-infra, the same slot as --agent infra-orchestrator
+# (lineage dir, session-state, inbox). devops/fleet-comms use the Fleet-Comms
+# stream (epic:5512) but deliberately retain that canonical infra handoff slot.
 handoff_identity_for_epic() {
   local epic="${1:-}"
   [ -n "$epic" ] || return 0
   case "$epic" in
-    harness|infra|devops) printf '%s' 'claude-infra' ;;
+    harness|infra|devops|fleet-comms) printf '%s' 'claude-infra' ;;
     *) printf 'claude-%s' "$epic" ;;
   esac
 }

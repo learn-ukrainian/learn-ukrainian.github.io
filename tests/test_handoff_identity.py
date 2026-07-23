@@ -58,3 +58,22 @@ def test_devops_alias_resolves_to_canonical_infra_slot(resolver: str, expected: 
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == expected
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+def test_fleet_comms_alias_resolves_to_canonical_infra_slot() -> None:
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source "$1"; handoff_identity_for_epic fleet-comms',
+            "bash",
+            str(_HANDOFF_IDENTITY),
+        ],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "claude-infra"

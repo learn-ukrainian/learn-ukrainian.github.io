@@ -58,6 +58,7 @@ eq "$(handoff_identity_for_epic hramatka)" "claude-hramatka" "epic hramatka → 
 eq "$(handoff_identity_for_epic harness)" "claude-infra" "epic harness → claude-infra (#5201)"
 eq "$(handoff_identity_for_epic infra)" "claude-infra" "epic infra → claude-infra alias"
 eq "$(handoff_identity_for_epic devops)" "claude-infra" "epic devops → claude-infra alias"
+eq "$(handoff_identity_for_epic fleet-comms)" "claude-infra" "epic fleet-comms → claude-infra alias"
 eq "$(handoff_identity_for_epic)" "" "no epic → empty slot"
 
 # Codex uses provider-specific per-epic slots; harness/infra/devops share one alias.
