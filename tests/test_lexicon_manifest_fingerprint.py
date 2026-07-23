@@ -1,7 +1,13 @@
 import json
+import os
+import subprocess
 from pathlib import Path
 
-from scripts.lexicon.check_manifest_freshness import check_freshness
+from scripts.lexicon.check_manifest_freshness import (
+    GIT_SCOPE_ENV_VARS,
+    check_freshness,
+    pr_touches_manifest_scope,
+)
 from scripts.lexicon.check_manifest_vocabulary_coverage import check_vocabulary_coverage
 from scripts.lexicon.manifest_fingerprint import build_fingerprint, write_fingerprint
 
@@ -21,6 +27,29 @@ def _fixture_repo(tmp_path: Path) -> Path:
         encoding="utf-8",
     )
     return root
+
+
+def _git(root: Path, *args: str) -> None:
+    env = os.environ.copy()
+    for name in GIT_SCOPE_ENV_VARS:
+        env.pop(name, None)
+    subprocess.run(
+        ["git", *args],
+        cwd=root,
+        check=True,
+        capture_output=True,
+        text=True,
+        env=env,
+    )
+
+
+def _commit_fixture_repo(root: Path) -> None:
+    _git(root, "init", "--quiet", "-b", "main")
+    _git(root, "config", "user.email", "test@example.com")
+    _git(root, "config", "user.name", "Test")
+    _git(root, "add", ".")
+    _git(root, "commit", "--quiet", "-m", "base")
+    _git(root, "branch", "base")
 
 
 def _write_manifest(root: Path, entries: list[dict]) -> Path:
@@ -134,6 +163,64 @@ def test_manifest_freshness_check_fails_on_mismatched_sidecar(tmp_path: Path, ca
     output = capsys.readouterr().out
     assert "Atlas manifest stale vs lexicon code" in output
     assert "dictionary DB/cache version drift is out of scope" in output
+
+
+def test_pr_scoped_freshness_allows_unrelated_drift(tmp_path: Path, capsys) -> None:
+    root = _fixture_repo(tmp_path)
+    sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
+    write_fingerprint(sidecar, root=root)
+    _commit_fixture_repo(root)
+    (root / "README.md").write_text("unrelated PR change\n", encoding="utf-8")
+    _git(root, "add", "README.md")
+    _git(root, "commit", "--quiet", "-m", "docs change")
+    (root / "scripts" / "lexicon" / "beta.py").write_text("VALUE = 200\n", encoding="utf-8")
+
+    assert pr_touches_manifest_scope(root=root, base_ref="base") is False
+    assert check_freshness(
+        root=root,
+        fingerprint_path=sidecar,
+        pr_scoped=True,
+        base_ref="base",
+    ) == 0
+    assert "allowing unrelated drift" in capsys.readouterr().out
+
+
+def test_pr_scoped_freshness_fails_when_pr_changes_lexicon(tmp_path: Path, capsys) -> None:
+    root = _fixture_repo(tmp_path)
+    sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
+    write_fingerprint(sidecar, root=root)
+    _commit_fixture_repo(root)
+    (root / "scripts" / "lexicon" / "beta.py").write_text("VALUE = 200\n", encoding="utf-8")
+    _git(root, "add", "scripts/lexicon/beta.py")
+    _git(root, "commit", "--quiet", "-m", "lexicon change")
+
+    assert pr_touches_manifest_scope(root=root, base_ref="base") is True
+    assert check_freshness(
+        root=root,
+        fingerprint_path=sidecar,
+        pr_scoped=True,
+        base_ref="base",
+    ) == 2
+    assert "Atlas manifest stale vs lexicon code" in capsys.readouterr().out
+
+
+def test_pr_scoped_freshness_fails_when_pr_changes_sidecar(tmp_path: Path, capsys) -> None:
+    root = _fixture_repo(tmp_path)
+    sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
+    write_fingerprint(sidecar, root=root)
+    _commit_fixture_repo(root)
+    sidecar.write_text('{"fingerprint": "stale"}\n', encoding="utf-8")
+    _git(root, "add", sidecar.relative_to(root).as_posix())
+    _git(root, "commit", "--quiet", "-m", "sidecar change")
+
+    assert pr_touches_manifest_scope(root=root, base_ref="base") is True
+    assert check_freshness(
+        root=root,
+        fingerprint_path=sidecar,
+        pr_scoped=True,
+        base_ref="base",
+    ) == 2
+    assert "Atlas manifest stale vs lexicon code" in capsys.readouterr().out
 
 
 def test_manifest_vocabulary_coverage_fails_when_new_vocab_lemma_missing(

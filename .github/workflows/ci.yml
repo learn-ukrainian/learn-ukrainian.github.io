@@ -472,7 +472,15 @@ jobs:
           .venv/bin/python -m pip install PyYAML
 
       - name: Check DB-free Atlas manifest freshness
-        run: .venv/bin/python scripts/lexicon/check_manifest_freshness.py
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            .venv/bin/python scripts/lexicon/check_manifest_freshness.py \
+              --pr-scoped \
+              --base-ref "${{ github.event.pull_request.base.sha }}" \
+              --head-ref "${{ github.event.pull_request.head.sha }}"
+          else
+            .venv/bin/python scripts/lexicon/check_manifest_freshness.py
+          fi
 
       # Root-cause guard for the #3631 empty-atlas regression: a manifest committed
       # without enrichment (enrichment_generated False / ~0 enriched entries) renders
