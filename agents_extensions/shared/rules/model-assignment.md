@@ -104,15 +104,16 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 - **Orchestrator seats (fleet-comms stream #5512 / #4707)** — any of these may own a cold-start /
   drive-board loop (prioritize → delegate → request CF → merge-in-lane). Do **not** run worker-level
   implementation on the orchestrator seat — delegate it (>50 LOC non-test, mechanical, fixtures, or
-  anything parallelizable → a worker). **Codex is not a driver seat** (user 2026-07-22): it remains a
-  first-class coding lane + sealed formal-CF reviewer; the 272K window is not worth driver rollover
-  overhead. Machine authority: `model_catalog.yaml` → `orchestrator_seats` (lint: #5642).
+  anything parallelizable → a worker). **Codex was re-added as a driver seat** (user 2026-07-23),
+  reversing the 2026-07-22 removal: HydrationCapsuleV1 makes its rollover cost acceptable. Machine
+  authority: `model_catalog.yaml` → `orchestrator_seats` (lint: #5642).
 
   Human-readable summary (pins must match the marked projection below):
 
   | Seat | Default (loop) | Escalate (deep) | Notes |
   | --- | --- | --- | --- |
   | **claude** | `claude-sonnet-5` @ high | **`claude-fable-5` @ xhigh** | Same pattern as AGY Flash→Pro |
+  | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | Named alternate for harness / infra / devops; never co-owns a live lease |
   | **grok** | `grok-4.5` @ high | same SKU (no higher pin yet) | Cursor **explicit** `grok-4.5` = availability fallback, not quality escalate |
   | **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | Flash loop; Pro deep single-shot |
 
@@ -121,6 +122,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | --- | --- | --- | --- | --- |
   | agy | gemini-3.6-flash-high | high | gemini-3.1-pro-high | high |
   | claude | claude-sonnet-5 | high | claude-fable-5 | xhigh |
+  | codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
   | grok | grok-4.5 | high | grok-4.5 | high |
   <!-- fleet-roster-projection:end orchestrator_seats -->
 

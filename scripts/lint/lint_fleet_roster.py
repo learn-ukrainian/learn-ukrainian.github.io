@@ -344,13 +344,14 @@ def lint_fleet_roster(
     except (OSError, ValueError, yaml.YAMLError) as exc:
         return [LintIssue(str(comms_path), "authority", f"formal_review_eligible: {exc}")]
 
-    # Hard acceptance pin from Sol/Fable: Codex is not a driver; remains CF-eligible.
-    if "codex" in seats:
+    # Hard acceptance pin from the 2026-07-23 re-onboarding: Codex is a
+    # HydrationCapsuleV1 driver seat and remains sealed-CF eligible.
+    if "codex" not in seats:
         issues.append(
             LintIssue(
                 str(catalog_path),
                 "orchestrator_seats",
-                "codex must not be an orchestrator_seats driver (coding + formal CF only)",
+                "codex must be an orchestrator_seats driver (HydrationCapsuleV1 seat)",
             )
         )
     if eligible.get("codex") is not True:

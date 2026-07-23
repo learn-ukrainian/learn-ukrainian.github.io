@@ -20,9 +20,9 @@ message_plane:
 # Authority Sol/Fable only on critical resolve-reviewer ladder.
 #
 # Orchestrator seats for this stream (model_catalog.orchestrator_seats):
-#   claude · grok · agy(gemini-3.6-flash-high @ high)
-#   (codex dropped as a DRIVER 2026-07-22 — 272K window not worth rollover overhead;
-#    codex remains a formal-CF review seat + coding lane, see the codex endpoint below)
+#   claude · codex(gpt-5.6-terra @ high) · grok · agy(gemini-3.6-flash-high @ high)
+#   (codex was dropped as a driver on 2026-07-22, then re-added on 2026-07-23 because
+#    HydrationCapsuleV1 reduces rollover overhead; formal-CF eligibility is unchanged.)
 # Each may own cold-start / drive-board loops. Sealed formal CF requests still
 # go through review-pr codex|claude|glm until #5555–#5557 flip eligibility.
 endpoints:
@@ -55,7 +55,7 @@ endpoints:
     retry_class: standard
     concurrency_limit: 2
     # Orchestrator seat (user 2026-07-21): gemini-3.6-flash-high @ high — peer
-    # cold-start / drive-board driver alongside claude|grok (codex dropped 2026-07-22).
+    # cold-start / drive-board driver alongside claude|grok|codex (Codex re-added 2026-07-23).
     # Sealed formal CF isolation not proven (project instructions / MCP / hooks /
     # nested reviewers). When AGY *orchestrates*, request CF via review-pr
     # claude|glm|codex; AGY itself stays advisory for --review until #5555.

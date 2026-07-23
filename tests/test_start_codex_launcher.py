@@ -1,0 +1,189 @@
+"""start-codex.sh stream-lease and canary wiring."""
+
+from __future__ import annotations
+
+import os
+import shutil
+import subprocess
+from pathlib import Path
+
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+_PROJECT_PYTHON = _REPO_ROOT / ".venv" / "bin" / "python"
+_GIT_REDIRECT_VARS = frozenset(
+    {
+        "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+        "GIT_COMMON_DIR",
+        "GIT_DIR",
+        "GIT_INDEX_FILE",
+        "GIT_OBJECT_DIRECTORY",
+        "GIT_PREFIX",
+        "GIT_WORK_TREE",
+    }
+)
+
+
+def _clean_environ() -> dict[str, str]:
+    return {key: value for key, value in os.environ.items() if key not in _GIT_REDIRECT_VARS}
+
+
+def _write_executable(path: Path, body: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(body, encoding="utf-8")
+    path.chmod(0o755)
+
+
+def _build_project(tmp_path: Path) -> tuple[Path, Path, Path]:
+    project = tmp_path / "project"
+    project.mkdir()
+    for relative in (
+        "start-codex.sh",
+        "scripts/config/context_profiles.yaml",
+        "scripts/lib/context_profiles.py",
+        "scripts/lib/handoff_identity.sh",
+        "scripts/lib/profile_resolver.sh",
+        "scripts/lib/session_supervisor.sh",
+        "scripts/lib/thread_rollover_link.sh",
+        "scripts/session_canary/codex_lane.py",
+    ):
+        target = project / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(_REPO_ROOT / relative, target)
+    _write_executable(
+        project / "scripts" / "lib" / "deploy_extensions.sh",
+        "#!/usr/bin/env bash\ndeploy_agent_extensions() { return 0; }\n",
+    )
+    supervisor_capture = tmp_path / "supervisor.txt"
+    canary_capture = tmp_path / "canary.txt"
+    _write_executable(
+        project / ".venv" / "bin" / "python",
+        f'''#!/usr/bin/env bash
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" ]]; then
+  printf '%s\\n' "$@" > {os.fspath(supervisor_capture)!r}
+  cat <<'JSON'
+{{"identity":{{"lease":{{"session_id":"sess-codex","lease_id":"lease-codex","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
+JSON
+  exit 0
+fi
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_canary.codex_lane" ]]; then
+  printf '%s\\n' "$@" >> {os.fspath(canary_capture)!r}
+  if [[ "${{CODEX_LAUNCHER_TEST_CANARY_FAIL:-}}" == "1" ]]; then
+    exit 1
+  fi
+  if [[ "${{3:-}}" == "bootstrap" ]]; then
+    mkdir -p ".claude/${{SESSION_EPIC}}-epic"
+    : > ".claude/${{SESSION_EPIC}}-epic/CODEX-COLD-START.md"
+    echo "Bootstrapped Codex cold-start board: .claude/${{SESSION_EPIC}}-epic/CODEX-COLD-START.md"
+  fi
+  exit 0
+fi
+exec {os.fspath(_PROJECT_PYTHON)!r} "$@"
+''',
+    )
+    codex_capture = tmp_path / "codex.txt"
+    _write_executable(
+        tmp_path / "home" / ".local" / "bin" / "codex",
+        f'''#!/usr/bin/env bash
+printf 'stream=%s\\nagent=%s\\nharness=%s\\n' \\
+  "${{SESSION_STREAM_ID:-unset}}" "${{SESSION_STREAM_AGENT:-unset}}" \\
+  "${{SESSION_STREAM_HARNESS:-unset}}" > {os.fspath(codex_capture)!r}
+''',
+    )
+    git_env = _clean_environ()
+    subprocess.run(["git", "init", "-q", "-b", "main", os.fspath(project)], check=True, env=git_env)
+    subprocess.run(
+        ["git", "-C", os.fspath(project), "config", "user.email", "test@example.com"],
+        check=True,
+        env=git_env,
+    )
+    subprocess.run(
+        ["git", "-C", os.fspath(project), "config", "user.name", "Test"],
+        check=True,
+        env=git_env,
+    )
+    subprocess.run(["git", "-C", os.fspath(project), "add", "."], check=True, env=git_env)
+    subprocess.run(["git", "-C", os.fspath(project), "commit", "-qm", "init"], check=True, env=git_env)
+    return project, supervisor_capture, canary_capture
+
+
+def _run(
+    project: Path, tmp_path: Path, *arguments: str, canary_fail: bool = False
+) -> subprocess.CompletedProcess[str]:
+    env = _clean_environ()
+    env["HOME"] = os.fspath(tmp_path / "home")
+    env["PATH"] = f"{tmp_path / 'home' / '.local' / 'bin'}:{env.get('PATH', '')}"
+    for key in tuple(env):
+        if key.startswith("SESSION_") or key.startswith("LEARN_UKRAINIAN_") or key in {
+            "CODEX_CANONICAL_REPO_ROOT",
+            "CODEX_SESSION",
+        }:
+            env.pop(key, None)
+    if canary_fail:
+        env["CODEX_LAUNCHER_TEST_CANARY_FAIL"] = "1"
+    return subprocess.run(
+        [os.fspath(project / "start-codex.sh"), *arguments],
+        cwd=project,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+
+def test_trusted_epic_claims_codex_lease_then_runs_canary_steps(tmp_path: Path) -> None:
+    project, supervisor_capture, canary_capture = _build_project(tmp_path)
+
+    result = _run(project, tmp_path, "--epic", "devops", "--model", "gpt-5.6-sol")
+
+    assert result.returncode == 0, result.stderr + result.stdout
+    supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
+    assert supervisor_args[supervisor_args.index("--agent") + 1] == "codex"
+    assert supervisor_args[supervisor_args.index("--harness") + 1] == "codex-cli"
+    assert supervisor_args[supervisor_args.index("--stream") + 1] == "epic:4707"
+    assert canary_capture.read_text(encoding="utf-8").splitlines() == [
+        "-m",
+        "scripts.session_canary.codex_lane",
+        "mint",
+        "--epic",
+        "infra",
+        "-m",
+        "scripts.session_canary.codex_lane",
+        "bootstrap",
+        "--epic",
+        "infra",
+    ]
+    assert "CODEX-COLD-START.md" in result.stdout
+
+
+def test_untrusted_route_skips_lease_and_canary(tmp_path: Path) -> None:
+    project, supervisor_capture, canary_capture = _build_project(tmp_path)
+
+    result = _run(project, tmp_path, "--epic", "harness", "--model", "gpt-5.6-terra")
+
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert not supervisor_capture.exists()
+    assert not canary_capture.exists()
+    assert "Skipping stream lease (untrusted Codex route)." in result.stderr
+
+
+def test_canary_failures_warn_without_preventing_trusted_launch(tmp_path: Path) -> None:
+    project, supervisor_capture, canary_capture = _build_project(tmp_path)
+
+    result = _run(project, tmp_path, "--epic", "harness", "--model", "gpt-5.6-sol", canary_fail=True)
+
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert supervisor_capture.exists()
+    assert canary_capture.read_text(encoding="utf-8").splitlines() == [
+        "-m",
+        "scripts.session_canary.codex_lane",
+        "mint",
+        "--epic",
+        "infra",
+        "-m",
+        "scripts.session_canary.codex_lane",
+        "bootstrap",
+        "--epic",
+        "infra",
+    ]
+    assert "Codex canary mint skipped/failed" in result.stderr
+    assert "Codex cold-start board bootstrap skipped/failed" in result.stderr

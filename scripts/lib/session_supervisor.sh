@@ -23,7 +23,7 @@
 if ! declare -F launcher_selector_stream >/dev/null 2>&1; then
   _session_supervisor_lib_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   if [ -f "$_session_supervisor_lib_dir/handoff_identity.sh" ]; then
-    # shellcheck source=scripts/lib/handoff_identity.sh
+    # shellcheck disable=SC1091
     source "$_session_supervisor_lib_dir/handoff_identity.sh"
   fi
   unset _session_supervisor_lib_dir
@@ -211,7 +211,8 @@ PY
   stream_safe="${stream_safe// /-}"
   local capsule_dir="$state_root/.agent/session-capsules/$stream_safe"
   mkdir -p "$capsule_dir"
-  local capsule_name="$(_iso_timestamp)-$$.json"
+  local capsule_name
+  capsule_name="$(_iso_timestamp)-$$.json"
   # Normalize to a safe filename (replace colons and spaces).
   capsule_name="${capsule_name//:/-}"
   capsule_name="${capsule_name// /-}"
@@ -240,6 +241,17 @@ PY
   "task_id": $task_id_json
 }
 EOF
+
+  # FAIL-HANDOFF lanes close the *exact* launcher-owned lease later by reading
+  # this receipt. Keep it derived from the export payload above so the running
+  # environment, diagnostic capsule, and close receipt cannot drift.
+  local lease_receipt_dir="$project_dir/.claude/${epic}-epic"
+  local lease_receipt_path="$lease_receipt_dir/session-lease.env"
+  if ! mkdir -p "$lease_receipt_dir"; then
+    echo "Warning: could not create session lease receipt directory: ${lease_receipt_dir}" >&2
+  elif ! printf '%s\n' "$exports" > "$lease_receipt_path"; then
+    echo "Warning: could not write session lease receipt: ${lease_receipt_path}" >&2
+  fi
 
   echo "Session supervisor: claimed ${SESSION_STREAM_ID} session ${SESSION_STREAM_SESSION_ID}"
   echo "Session capsule: ${capsule_path#"$state_root/"}"
