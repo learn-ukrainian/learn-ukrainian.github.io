@@ -141,6 +141,7 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
     """Write a non-authoritative cold-start board; launchers own lease acquisition."""
     repo = Path(args.repo).resolve()
     epic = args.epic.strip().lower()
+    args.epic = epic
     stream_id = _stream_id(args)
     epic_path = _epic_dir(repo, epic)
     epic_path.mkdir(parents=True, exist_ok=True)

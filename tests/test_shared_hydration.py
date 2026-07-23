@@ -57,6 +57,21 @@ def test_unavailable_critical_evidence_fails_closed(monkeypatch: pytest.MonkeyPa
     assert capsule["lease_state"]["status"] != "ok"
 
 
+def test_unsafe_stream_evidence_resets_driver_identity(monkeypatch: pytest.MonkeyPatch) -> None:
+    unsafe_evidence = _evidence()
+    unsafe_evidence["driver_identity"] = {
+        "agent": "gemini",
+        "harness": "agy",
+        "instance_id": "ghp_" + ("a" * 26),
+    }
+    monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id: unsafe_evidence)
+
+    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+
+    for field in ("driver_identity", "lease_state", "fencing_token", "next_drive_boundary"):
+        assert capsule[field] == {"status": "unavailable", "reason": "unsafe-stream-evidence"}
+
+
 def test_terminating_process_group_reaps_child_without_zombie(monkeypatch: pytest.MonkeyPatch) -> None:
     class Process:
         pid = 4242

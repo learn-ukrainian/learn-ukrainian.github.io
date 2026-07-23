@@ -327,7 +327,7 @@ def build_hydration_capsule(stream_id: str, lane_name: str) -> dict[str, Any]:
                 fields[field] = _ok(evidence[field])
         except HydrationSanitizationError:
             degradations.append("unsafe-stream-evidence")
-            for field in ("lease_state", "fencing_token", "next_drive_boundary"):
+            for field in ("driver_identity", "lease_state", "fencing_token", "next_drive_boundary"):
                 fields[field] = _unavailable("unsafe-stream-evidence")
         except (LookupError, OSError, RuntimeError, ValueError):
             for field in ("lease_state", "fencing_token", "next_drive_boundary"):

@@ -67,3 +67,10 @@ def test_lease_environment_parser_accepts_launcher_quotes(tmp_path: Path) -> Non
         "SESSION_STREAM_PROCESS_ID": "1234",
         "SESSION_STREAM_GENERATION": "2",
     }
+
+
+def test_bootstrap_uses_normalized_epic_for_default_stream_id(tmp_path: Path) -> None:
+    assert gemini_lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", " HARNESS "]) == 0
+
+    board = (tmp_path / ".claude" / "harness-epic" / "GEMINI-COLD-START.md").read_text(encoding="utf-8")
+    assert "**Stream:** `epic:4707`" in board
