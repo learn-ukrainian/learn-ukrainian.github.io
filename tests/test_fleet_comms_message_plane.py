@@ -25,6 +25,40 @@ def test_resolve_plane_mode() -> None:
         resolve_plane_mode("production")
 
 
+def test_resolve_plane_mode_env_unset_uses_configured_default(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Gate A: production default is config message_plane.default_mode (shadow)."""
+    monkeypatch.delenv("FLEET_COMMS_MESSAGE_PLANE", raising=False)
+    # Config on main/this PR pins shadow after parity window + operator finish GO.
+    assert resolve_plane_mode(None) == "shadow"
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
+    assert resolve_plane_mode(None) == "off"
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "dual_write")
+    assert resolve_plane_mode(None) == "dual_write"
+
+
+def test_configured_default_fail_open_on_malformed_yaml(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Malformed fleet_communications.yaml must not crash resolve (CF #5666 F001)."""
+    import scripts.fleet_comms.message_plane as mp
+
+    checkout = tmp_path / "repo"
+    cfg_dir = checkout / "scripts" / "config"
+    cfg_dir.mkdir(parents=True)
+    (cfg_dir / "fleet_communications.yaml").write_text(
+        "message_plane: [\n  not: valid\n", encoding="utf-8"
+    )
+    fake_file = checkout / "scripts" / "fleet_comms" / "message_plane.py"
+    fake_file.parent.mkdir(parents=True)
+    fake_file.write_text("# stub\n", encoding="utf-8")
+    monkeypatch.delenv("FLEET_COMMS_MESSAGE_PLANE", raising=False)
+    monkeypatch.setattr(mp, "__file__", str(fake_file))
+    assert mp._configured_default_plane_mode() == "off"
+    assert mp.resolve_plane_mode(None) == "off"
+
+
 def test_invocation_digest_stable_for_fg_bg_parity() -> None:
     a = invocation_digest(recipient="codex", body="hello", model="m", mode="read-only", cwd="/tmp/x")
     b = invocation_digest(recipient="codex", body="hello", model="m", mode="read-only", cwd="/tmp/x")

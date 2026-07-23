@@ -21,13 +21,14 @@ def _client() -> TestClient:
     return TestClient(app)
 
 
-def test_read_plane_status_defaults_off(tmp_path: Path, monkeypatch) -> None:
+def test_read_plane_status_defaults_to_configured_mode(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.delenv("FLEET_COMMS_MESSAGE_PLANE", raising=False)
     monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
     monkeypatch.delenv("FLEET_COMMS_PLANE_TELEMETRY", raising=False)
     status = read_plane_status(repo_root=tmp_path)
-    assert status["mode"] == "off"
-    assert status["enabled"] is False
+    # Config default is shadow (Gate A finish); env still wins when set.
+    assert status["mode"] == "shadow"
+    assert status["enabled"] is True
     assert status["read_only"] is True
     assert status["schema"]["known_version"] == 2
     assert status["schema"]["applied_version"] is None

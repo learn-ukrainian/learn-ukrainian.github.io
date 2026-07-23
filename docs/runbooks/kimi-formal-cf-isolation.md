@@ -1,6 +1,9 @@
 # Kimi sealed formal CF isolation (#5556)
 
-## Status (2026-07-21)
+## Status (2026-07-23 — v1 residual Option C)
+
+Design spikes closed **Option C fail-closed residual**. For **fleet-comms v1 (#5512)**,
+Kimi is not a sealed formal CF reviewer; substitute seats remain the product path.
 
 | Capability | Native Kimi Code CLI | Formal CF sealed path |
 | --- | --- | --- |
@@ -9,7 +12,8 @@
 | Hooks / nested reviewers | **Unproven** | Fail-closed |
 | Sealed snapshot cwd only | Not wired through `prepare_isolated_review_launch` for engine `kimi` | Absent → refuse |
 | `review-pr --reviewer kimi` | **Not implemented** (reviewers: auto\|codex\|glm\|claude only) | Use substitute seats |
-| Registry `formal_review_eligible` | `false` in `scripts/config/fleet_communications.yaml` | Correct until proof |
+| Registry `formal_review_eligible` | `false` | **v1 complete residual** |
+| Wire #5618 / enable #5619 | Residual closeout | Reopen only with Option A/B proof |
 
 ## Live lane (non-formal)
 

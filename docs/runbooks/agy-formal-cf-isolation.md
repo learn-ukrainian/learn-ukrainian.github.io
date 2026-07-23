@@ -1,6 +1,10 @@
 # AGY sealed formal CF isolation (#5555)
 
-## Status (2026-07-21)
+## Status (2026-07-23 — v1 residual Option C)
+
+Design spikes closed **Option C fail-closed residual** (not permanent wontfix for
+future isolation engineering). For **fleet-comms v1 (#5512)**, AGY remains a live
+**orchestrator** seat and is **not** a sealed formal CF reviewer.
 
 | Capability | AGY (Antigravity / Gemini) | Formal CF sealed path |
 | --- | --- | --- |
@@ -8,7 +12,15 @@
 | Ambient MCP / hooks / nested reviewers | **Unproven** | Fail-closed |
 | Sealed snapshot cwd only | Hard raise in `prepare_isolated_review_launch` | Refuse |
 | `review-pr --reviewer agy` | **Not implemented** | Use substitute seats |
-| Registry `formal_review_eligible` | `false` for `agy` | Correct until proof |
+| Registry `formal_review_eligible` | `false` for `agy` | **v1 complete residual** |
+| Wire #5615 / enable #5616 | Residual closeout | Reopen only with Option A/B proof |
+
+**Proof command (must stay green):**
+
+```bash
+.venv/bin/python -m pytest tests/test_review_isolation.py -k agy_isolated -q
+# expect: ReviewIsolationError agy_isolated_review_unsupported
+```
 
 ## Orchestrator vs formal reviewer (do not conflate)
 
