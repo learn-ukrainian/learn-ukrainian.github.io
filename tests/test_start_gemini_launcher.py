@@ -255,6 +255,7 @@ def test_legacy_epic_suffix_normalizes_to_atlas(tmp_path: Path, arguments: list[
 @pytest.mark.parametrize(
     ("selector", "canonical_lane", "stream", "handoff"),
     [
+        ("devops", "infra", "epic:4707", "gemini-infra"),
         ("practice-hub", "atlas", "epic:4387", "gemini-atlas"),
         ("seminars-folk", "folk", "epic:2836", "gemini-folk"),
         ("seminars-bio", "bio", "epic:4431", "gemini-bio"),

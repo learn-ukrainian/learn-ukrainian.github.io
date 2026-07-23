@@ -235,7 +235,7 @@ if [ -n "$_selected_epic" ]; then
     exit 1
   fi
   case "$_requested_selector" in
-    *.*|practice|practice-hub|seminars-folk|seminars-bio|corpus-channels) _selected_epic="$_canonical_lane" ;;
+    *.*|devops|practice|practice-hub|seminars-folk|seminars-bio|corpus-channels) _selected_epic="$_canonical_lane" ;;
   esac
   unset _requested_selector _canonical_lane
 fi
