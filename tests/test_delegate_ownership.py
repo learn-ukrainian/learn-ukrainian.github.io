@@ -12,6 +12,7 @@ from scripts.guardrails.delegate_ownership import (
     OwnershipLedger,
     admit_write_paths,
     claims_conflict,
+    env_guard_mode,
     normalize_claim,
 )
 
@@ -477,3 +478,70 @@ def test_same_task_id_live_pid_does_not_replace_claims(tmp_path: Path, monkeypat
     )
     assert retry.admitted is True
     assert retry.would_refuse is False
+
+
+def test_env_guard_mode_defaults_to_refuse(monkeypatch):
+    monkeypatch.delenv("DELEGATE_OWNERSHIP_MODE", raising=False)
+    assert env_guard_mode() is GuardMode.REFUSE
+
+
+def test_env_guard_mode_warn_opt_in(monkeypatch):
+    monkeypatch.setenv("DELEGATE_OWNERSHIP_MODE", "warn")
+    assert env_guard_mode() is GuardMode.WARN
+
+
+def test_env_guard_mode_unknown_fails_closed_to_refuse(monkeypatch):
+    monkeypatch.setenv("DELEGATE_OWNERSHIP_MODE", "maybe")
+    assert env_guard_mode() is GuardMode.REFUSE
+
+
+def test_admit_write_paths_default_follows_env_refuse(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Library default is env_guard_mode(), not hardcoded WARN (CF #5662 F001)."""
+    monkeypatch.delenv("DELEGATE_OWNERSHIP_MODE", raising=False)
+    ledger = tmp_path / "own.sqlite3"
+    state_dir = tmp_path / "tasks"
+    state_dir.mkdir()
+    pid = os.getpid()
+    (state_dir / "h.json").write_text(
+        json.dumps({"status": "running", "pid": pid}), encoding="utf-8"
+    )
+    admit_write_paths(
+        task_id="h",
+        mode="workspace-write",
+        owned_paths=["same.py"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+    )
+    # No guard_mode kwarg → must refuse on conflict (default REFUSE).
+    refused = admit_write_paths(
+        task_id="c",
+        mode="workspace-write",
+        owned_paths=["same.py"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+    )
+    assert refused.mode is GuardMode.REFUSE
+    assert refused.admitted is False
+    assert refused.would_refuse is True
+
+
+def test_ownership_ledger_default_mode_follows_env(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Default mode follows env; paths must stay tmp-scoped (CF #5662 r4 P2)."""
+    monkeypatch.delenv("DELEGATE_OWNERSHIP_MODE", raising=False)
+    ledger = tmp_path / "own.sqlite3"
+    state = tmp_path / "tasks"
+    assert (
+        OwnershipLedger(ledger, task_state_dir=state).mode is GuardMode.REFUSE
+    )
+    monkeypatch.setenv("DELEGATE_OWNERSHIP_MODE", "warn")
+    assert OwnershipLedger(ledger, task_state_dir=state).mode is GuardMode.WARN
+    assert (
+        OwnershipLedger(ledger, task_state_dir=state, mode=GuardMode.REFUSE).mode
+        is GuardMode.REFUSE
+    )

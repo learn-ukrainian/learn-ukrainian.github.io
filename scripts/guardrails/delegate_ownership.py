@@ -3,8 +3,8 @@
 
 Local single-host ledger (`batch_state/tasks/write-ownership.sqlite3`) with
 ``BEGIN IMMEDIATE`` atomic reconcile → compare → reserve. Read-only modes are
-exempt. WARN mode (default) admits on conflict but records would-refuse;
-REFUSE mode is armed later (#5645).
+exempt. REFUSE mode (default after #5645 soak) blocks conflicting writable admits;
+WARN mode admits on conflict but records would-refuse (opt-in via DELEGATE_OWNERSHIP_MODE=warn).
 
 Claims come from normalized ``--research-owned-path`` values but are stored
 separately from the fail-open research registry.
@@ -245,11 +245,12 @@ class OwnershipLedger:
         path: Path = DEFAULT_LEDGER_PATH,
         *,
         task_state_dir: Path = DEFAULT_TASK_STATE_DIR,
-        mode: GuardMode = GuardMode.WARN,
+        mode: GuardMode | None = None,
     ) -> None:
         self.path = Path(path)
         self.task_state_dir = Path(task_state_dir)
-        self.mode = mode
+        # Default follows env (REFUSE after #5645 soak). Explicit mode still wins.
+        self.mode = mode if mode is not None else env_guard_mode()
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
     def _connect(self) -> sqlite3.Connection:
@@ -572,9 +573,15 @@ def admit_write_paths(
     pid: int | None = None,
     ledger_path: Path = DEFAULT_LEDGER_PATH,
     task_state_dir: Path = DEFAULT_TASK_STATE_DIR,
-    guard_mode: GuardMode | str = GuardMode.WARN,
+    guard_mode: GuardMode | str | None = None,
 ) -> AdmissionResult:
-    gm = GuardMode(guard_mode) if not isinstance(guard_mode, GuardMode) else guard_mode
+    """Admit writable paths. ``guard_mode=None`` → :func:`env_guard_mode` (default REFUSE)."""
+    if guard_mode is None:
+        gm = env_guard_mode()
+    elif isinstance(guard_mode, GuardMode):
+        gm = guard_mode
+    else:
+        gm = GuardMode(guard_mode)
     ledger = OwnershipLedger(ledger_path, task_state_dir=task_state_dir, mode=gm)
     return ledger.admit(
         task_id=task_id,
@@ -586,11 +593,21 @@ def admit_write_paths(
 
 
 def env_guard_mode() -> GuardMode:
-    """Resolve guard mode from env (default WARN). REFUSE only after soak (#5645)."""
-    raw = (os.environ.get("DELEGATE_OWNERSHIP_MODE") or "warn").strip().lower()
-    if raw in {"refuse", "deny", "fail"}:
+    """Resolve guard mode from env.
+
+    Default **REFUSE** after soak (#5645, receipt batch_state/fleet-comms/ownership-soak-5645.json).
+    Solo dispatch with no owned-path claims still admits (sentinel reservation; refuse only when
+    disjointness is unprovable vs an **active** writer, or concrete paths conflict).
+
+    Set ``DELEGATE_OWNERSHIP_MODE=warn`` to restore pre-soak admit-with-warn behavior.
+    """
+    raw = (os.environ.get("DELEGATE_OWNERSHIP_MODE") or "refuse").strip().lower()
+    if raw in {"warn", "warning", "soft"}:
+        return GuardMode.WARN
+    if raw in {"refuse", "deny", "fail", ""}:
         return GuardMode.REFUSE
-    return GuardMode.WARN
+    # Unknown values fail closed to REFUSE (do not silently soft-admit).
+    return GuardMode.REFUSE
 
 
 def update_write_claim_pid(
