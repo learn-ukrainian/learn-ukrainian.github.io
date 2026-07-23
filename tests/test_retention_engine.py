@@ -105,15 +105,34 @@ def test_record_gate5_observation_one_day_per_calendar_label(tmp_path: Path) -> 
     plan3["created_at"] = "2026-07-25T01:00:00Z"
     plan3["digest"] = "ghi789"
     path3 = write_plan(plan3, plan_dir)
-    log3 = record_gate5_observation(
-        plan3,
-        plan_path=path3,
-        log_path=plan_dir / "gate5-observation-log.json",
-        target_days=2,
-    )
+    # Pin "today" so readiness uses recency (CF P2), not wall-clock alone.
+    with patch(
+        "scripts.hygiene.retention_engine._utc_now",
+        return_value="2026-07-25T02:00:00Z",
+    ):
+        log3 = record_gate5_observation(
+            plan3,
+            plan_path=path3,
+            log_path=plan_dir / "gate5-observation-log.json",
+            target_days=2,
+        )
     assert log3["days_count"] == 2
     assert log3["ready_for_apply_go"] is True
     assert log3["apply_armed"] is False
+
+    # Stale latest day → not ready even if day count is high
+    with patch(
+        "scripts.hygiene.retention_engine._utc_now",
+        return_value="2026-08-10T00:00:00Z",
+    ):
+        log4 = record_gate5_observation(
+            plan3,
+            plan_path=path3,
+            log_path=plan_dir / "gate5-observation-log.json",
+            target_days=2,
+        )
+    assert log4["days_count"] == 2
+    assert log4["ready_for_apply_go"] is False
 
 
 def test_apply_runs_reaper_only_when_digest_matches(tmp_path: Path) -> None:

@@ -23,7 +23,7 @@ import hashlib
 import json
 import sys
 from dataclasses import asdict
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -215,20 +215,31 @@ def record_gate5_observation(
     ):
         plans.append(entry)
 
+    # Ready only with enough distinct UTC days AND a fresh latest sample (not a
+    # stale multi-year log that happens to have ≥ target_days labels — CF P2).
+    ready = False
+    if len(days) >= target_days:
+        try:
+            latest = date.fromisoformat(max(days))
+            today = date.fromisoformat(_utc_now()[:10])
+            ready = (today - latest) <= timedelta(days=1)
+        except ValueError:
+            ready = False
+
     log.update(
         {
             "schema": "fleet-comms.retention.gate5-observation.v1",
             "updated_at": _utc_now(),
             "policy_note": (
                 f"{target_days}d observation before scheduled apply; "
-                "apply OFF until day count met + operator GO"
+                "apply OFF until day count met + recent sample + operator GO"
             ),
             "apply_armed": False,
             "observation_days_recorded": days,
             "days_count": len(days),
             "target_days": target_days,
             "plans": plans[-50:],  # bound growth
-            "ready_for_apply_go": len(days) >= target_days,
+            "ready_for_apply_go": ready,
         }
     )
     log_path.parent.mkdir(parents=True, exist_ok=True)
