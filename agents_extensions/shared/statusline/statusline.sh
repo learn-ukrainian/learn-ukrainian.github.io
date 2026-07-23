@@ -212,6 +212,43 @@ if [ -n "$ctx_pct" ]; then
   fi
 fi
 
+# ── Steps & Compactions Telemetry ─────────────────────────────
+steps_seg=""
+compacts_seg=""
+handoff_seg=""
+steps_count=0
+compacts_count=0
+
+if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
+  steps_count=$(wc -l < "$transcript_path" 2>/dev/null | tr -d ' ')
+  if is_positive_integer "$steps_count"; then
+    steps_seg="[steps: ${steps_count}]"
+  else
+    steps_count=0
+  fi
+
+  compacts_count=$(grep -i -c 'compact' "$transcript_path" 2>/dev/null || true)
+  if is_positive_integer "$compacts_count"; then
+    if [ "$compacts_count" -ge 2 ]; then
+      compacts_seg="\033[31m[compacts: ${compacts_count}]\033[0m"
+    else
+      compacts_seg="\033[33m[compacts: ${compacts_count}]\033[0m"
+    fi
+  else
+    compacts_count=0
+  fi
+fi
+
+# Handoff recommendation badge based on context %, step count, and compaction count
+# Policy: Prefer handoff over compaction. A single compaction warns; 2+ compactions require immediate handoff.
+if [ -n "${ctx_int:-}" ] && is_positive_integer "$ctx_int" && [ "$ctx_int" -ge 80 ] \
+   || [ "$compacts_count" -ge 2 ] || [ "$steps_count" -ge 80 ]; then
+  handoff_seg="\033[1;41;37m[HANDOFF NOW (prefer handoff over compact)]\033[0m"
+elif [ -n "${ctx_int:-}" ] && is_positive_integer "$ctx_int" && [ "$ctx_int" -ge 70 ] \
+     || [ "$compacts_count" -ge 1 ] || [ "$steps_count" -ge 60 ]; then
+  handoff_seg="\033[1;33m[HANDOFF SUGGESTED]\033[0m"
+fi
+
 # Effort level
 effort_seg=""
 effort_level=$(json_get '.effort.level')
@@ -247,16 +284,19 @@ rl7d_seg=$(rate_limit_seg "7d" ".rate_limits.seven_day.used_percentage")
 # ── Assemble ────────────────────────────────────────────────────
 
 parts=()
-[ -n "$model" ]      && parts+=("[$model]")
+[ -n "$model" ]        && parts+=("[$model]")
 parts+=("$cwd_name")
-[ -n "$wt_seg" ]     && parts+=("$wt_seg")
-[ -n "$branch_seg" ] && parts+=("$branch_seg")
-[ -n "$ctx_seg" ]    && parts+=("$ctx_seg")
+[ -n "$wt_seg" ]       && parts+=("$wt_seg")
+[ -n "$branch_seg" ]   && parts+=("$branch_seg")
+[ -n "$ctx_seg" ]      && parts+=("$ctx_seg")
+[ -n "$steps_seg" ]    && parts+=("$steps_seg")
+[ -n "$compacts_seg" ] && parts+=("$compacts_seg")
+[ -n "$handoff_seg" ]  && parts+=("$handoff_seg")
 [ -n "$mismatch_seg" ] && parts+=("$mismatch_seg")
-[ -n "$effort_seg" ] && parts+=("$effort_seg")
+[ -n "$effort_seg" ]   && parts+=("$effort_seg")
 [ -n "$thinking_seg" ] && parts+=("$thinking_seg")
-[ -n "$rl5h_seg" ]   && parts+=("$rl5h_seg")
-[ -n "$rl7d_seg" ]   && parts+=("$rl7d_seg")
+[ -n "$rl5h_seg" ]     && parts+=("$rl5h_seg")
+[ -n "$rl7d_seg" ]     && parts+=("$rl7d_seg")
 
 # %b interprets the ANSI escape codes embedded in coloured segments.
 printf '%b\n' "${parts[*]}"
