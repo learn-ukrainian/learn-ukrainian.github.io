@@ -54,7 +54,19 @@ _PLANTED_NON_VESUM = frozenset(
 )
 _OVERLEVEL_TOKEN = "чигати"
 
-_CYR_TOKEN_RE = re.compile(r"[А-Яа-яЁёІіЇїЄєҐґ][А-Яа-яЁёІіЇїЄєҐґ'ʼ’\-]*")
+# Hyphenated appositive compounds that must resolve via _hyphen_compound_all_attested
+# (each half independently VESUM-real), not via a literal whole-compound VESUM row.
+# Excluded from controlled-VESUM auto-population so the real-fixture tests below
+# actually exercise the split-and-verify fallback instead of accidentally passing
+# because the compound itself got auto-inserted as one form. Real false-positive
+# documented against generated content (#5254).
+_HYPHEN_COMPOUND_WHOLE_EXCLUDED = frozenset(
+    {
+        "тексті-опорі",
+        "речення-опора",
+        "держав-учасниць",
+    }
+)
 
 
 def _by_id(report: dict) -> dict[str, dict]:
@@ -66,14 +78,18 @@ def _issue_ids(evidence: dict) -> set[str]:
 
 
 def _collect_fixture_tokens() -> set[str]:
-    """Surface tokens from synthetic fixtures + hard-coded clean lessons in this file."""
+    """Surface tokens from synthetic fixtures + hard-coded clean lessons in this file.
+
+    Uses hq._cyrillic_tokens (not a locally-drifted regex) so stress-mark
+    stripping stays in sync with what the checks themselves see (#5254).
+    """
     data = yaml.safe_load(FIXTURE_FILE.read_text(encoding="utf-8"))
     tokens: set[str] = set()
     for entry in data.get("fixtures") or []:
         lesson = entry.get("lesson_json") or {}
         adapted = adapt_lesson_json(lesson, slug=str(entry.get("id") or "x"))
         for _path, text in adapted.learner_strings:
-            for tok in _CYR_TOKEN_RE.findall(text or ""):
+            for tok in hq._cyrillic_tokens(text or ""):
                 tokens.add(tok.casefold())
     # Hard-coded clean lessons used by CLI / dispatch / direct-scan tests.
     extras = (
@@ -99,7 +115,7 @@ def _collect_fixture_tokens() -> set[str]:
         "НАТО",
     )
     for text in extras:
-        for tok in _CYR_TOKEN_RE.findall(text):
+        for tok in hq._cyrillic_tokens(text):
             tokens.add(tok.casefold())
     return tokens
 
@@ -109,7 +125,9 @@ def _build_controlled_vesum(path: Path) -> None:
     tokens = sorted(
         t
         for t in _collect_fixture_tokens()
-        if t not in _PLANTED_NON_VESUM and not re.fullmatch(r"ф+", t)
+        if t not in _PLANTED_NON_VESUM
+        and t not in _HYPHEN_COMPOUND_WHOLE_EXCLUDED
+        and not re.fullmatch(r"ф+", t)
     )
     conn = sqlite3.connect(str(path))
     try:
@@ -239,7 +257,7 @@ def test_hramatka_fixture_suite_load_bearing() -> None:
         for row in report["results"]
         if not row["passed"]
     }
-    assert report["summary"]["total"] >= 10
+    assert report["summary"]["total"] >= 13
 
     by_id = _by_id(report)
     assert by_id["clean-b1-lesson"]["actual_verdict"] == "PASS"
@@ -252,6 +270,52 @@ def test_hramatka_fixture_suite_load_bearing() -> None:
     assert by_id["planted-invented-form"]["actual_verdict"] == "WARN"
     assert by_id["planted-empty-surface"]["actual_verdict"] == "FAIL"
     assert by_id["planted-mc-too-few"]["actual_verdict"] == "FAIL"
+    # Real (soak-generated, not planted) fixtures — #5254.
+    assert by_id["real-degenerate-distractor-reuse"]["actual_verdict"] == "FAIL"
+    assert by_id["real-hyphen-compound-clean"]["actual_verdict"] == "PASS"
+    assert by_id["real-stress-mark-clean"]["actual_verdict"] == "PASS"
+
+
+def test_real_generated_defects_are_caught() -> None:
+    """Real (soak-generated) known-bad lessons must be caught — the #5254 bar.
+
+    catches-planted-faults (#5253) is necessary but not sufficient: a gate is
+    only load-bearing once proven against an artifact a real run actually
+    produced. real-degenerate-distractor-reuse is trimmed from a real
+    Києво-Печерська лавра B1 lesson (generator: google/gemma-4-31b-it) where
+    the SAME distractor pair was reused verbatim across every quiz item —
+    observed in 5/5 retained real "ready" soak lessons, not a synthetic plant.
+    """
+    report = run_fixtures(FIXTURE_FILE)
+    by_id = _by_id(report)
+
+    evidence = by_id["real-degenerate-distractor-reuse"]["evidence"]
+    assert evidence["verdict"] == "FAIL"
+    assert "DEGENERATE_DISTRACTOR_REUSE" in _issue_ids(evidence)
+
+    # And the two real false-positive fixes hold on the real content that
+    # exposed them (both reported as false-fails against real generated output).
+    for real_clean_id in ("real-hyphen-compound-clean", "real-stress-mark-clean"):
+        clean_evidence = by_id[real_clean_id]["evidence"]
+        assert clean_evidence["verdict"] == "PASS"
+        assert all_findings(clean_evidence) == [], (
+            f"{real_clean_id} must have zero findings, got {all_findings(clean_evidence)}"
+        )
+
+
+def test_hyphen_compound_all_attested_helper() -> None:
+    """Direct unit coverage: split-and-verify only when EVERY half is VESUM-real."""
+    assert hq._hyphen_compound_all_attested("тексті-опорі")
+    assert hq._hyphen_compound_all_attested("речення-опора")
+    assert hq._hyphen_compound_all_attested("держав-учасниць")
+    # A hyphenated token with a genuinely-invented half must NOT be rescued.
+    assert not hq._hyphen_compound_all_attested("текст-жмурклея")
+    # No hyphen at all → not a compound, nothing to split.
+    assert not hq._hyphen_compound_all_attested("жмурклея")
+    status = hq._classify_token("тексті-опорі")
+    assert status["vesum_attested"] is True
+    assert not hq._is_russianism_token("тексті-опорі", status)
+    assert not hq._is_invented_form("тексті-опорі", status)
 
 
 def test_each_check_fires_on_planted_fault() -> None:
