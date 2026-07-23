@@ -139,7 +139,7 @@ _prev=""
 
 for arg in "$@"; do
   if [ "$_prev" = "--epic" ]; then
-    _selected_epic="$arg"
+    _selected_epic="${arg%.epic}"
     _prev=""
     continue
   fi
@@ -164,6 +164,7 @@ for arg in "$@"; do
       ;;
     --epic=*)
       _selected_epic="${arg#--epic=}"
+      _selected_epic="${_selected_epic%.epic}"
       continue
       ;;
     --stream)
@@ -234,7 +235,7 @@ if [ -n "$_selected_epic" ]; then
     exit 1
   fi
   case "$_requested_selector" in
-    *.*) _selected_epic="$_canonical_lane" ;;
+    *.*|practice|practice-hub) _selected_epic="$_canonical_lane" ;;
   esac
   unset _requested_selector _canonical_lane
 fi

@@ -25,7 +25,7 @@ launcher_selector_resolve() {
     infra|harness|infra.fleet-comms|infra.devops)
       printf 'infra\tepic:4707\n'
       ;;
-    atlas|practice|atlas.practice)
+    atlas|practice|practice-hub|atlas.practice)
       printf 'atlas\tepic:4387\n'
       ;;
     hramatka|hramatka.lessons)

@@ -6,6 +6,8 @@ import os
 import subprocess
 from pathlib import Path
 
+import pytest
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _LAUNCHER = _REPO_ROOT / "start-grok.sh"
 
@@ -265,6 +267,25 @@ def test_epic_atlas_exports_env_and_claims_lease(tmp_path: Path) -> None:
     assert "--model" in parts
     assert "grok-4.5" in parts
     assert "--always-approve" in parts
+
+
+@pytest.mark.parametrize("arguments", [["--epic", "atlas.epic"], ["--epic=atlas.epic"]])
+def test_legacy_epic_suffix_normalizes_to_atlas(tmp_path: Path, arguments: list[str]) -> None:
+    values, _argv_blob, result, _project, supervisor_capture = _run_launcher(tmp_path, arguments)
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert values["session_epic"] == "atlas"
+    assert values["session_stream"] == "epic:4387"
+    assert values["handoff"] == "grok-atlas"
+    assert supervisor_capture.exists()
+
+
+def test_practice_hub_alias_normalizes_to_atlas(tmp_path: Path) -> None:
+    values, _argv_blob, result, _project, supervisor_capture = _run_launcher(tmp_path, ["--epic", "practice-hub"])
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert values["session_epic"] == "atlas"
+    assert values["session_stream"] == "epic:4387"
+    assert values["handoff"] == "grok-atlas"
+    assert supervisor_capture.exists()
 
 
 def test_epic_equals_form_and_explicit_prompt_skips_inject(tmp_path: Path) -> None:

@@ -67,6 +67,7 @@ def test_devops_alias_resolves_to_canonical_infra_slot(resolver: str, expected: 
         ("infra.fleet-comms", "infra", "epic:4707", "claude-infra", "gemini-infra", "grok-infra"),
         ("infra.devops", "infra", "epic:4707", "claude-infra", "gemini-infra", "grok-infra"),
         ("atlas.practice", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas"),
+        ("practice-hub", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas"),
         ("hramatka.lessons", "hramatka", "epic:4542", "claude-hramatka", "gemini-hramatka", "grok-hramatka"),
     ],
 )
@@ -94,6 +95,27 @@ def test_dot_notation_selector_resolves_stream_and_provider_handoff(
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == f"{lane}|{stream}|{claude_slot}|{gemini_slot}|{grok_slot}|codex-{lane}"
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+@pytest.mark.parametrize("arguments", [["--epic", "atlas.epic"], ["--epic=atlas.epic"]])
+def test_legacy_epic_suffix_normalizes_before_selector_resolution(arguments: list[str]) -> None:
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source "$1"; epic="$(handoff_epic_from_argv "${@:2}")"; printf "%s|%s" "$epic" "$(launcher_selector_lane "$epic")"',
+            "bash",
+            str(_HANDOFF_IDENTITY),
+            *arguments,
+        ],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "atlas|atlas"
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
