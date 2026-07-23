@@ -143,7 +143,13 @@ def handle_review_pr(args: argparse.Namespace) -> int:
         print(prompt)
         return 0
 
-    from_llm = getattr(args, "from_llm", None) or "grok"
+    import os
+    from_llm = (
+        getattr(args, "from_llm", None)
+        or os.environ.get("SESSION_HANDOFF_AGENT")
+        or os.environ.get("LEARN_UKRAINIAN_AGENT_NAME")
+        or "gemini"
+    )
     if reviewer == REVIEWER_CODEX:
         from ._codex import ask_codex
 
