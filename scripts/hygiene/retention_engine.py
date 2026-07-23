@@ -29,7 +29,9 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PLAN_DIR = REPO_ROOT / "batch_state" / "fleet-comms" / "retention"
+DEFAULT_OBSERVATION_LOG = DEFAULT_PLAN_DIR / "gate5-observation-log.json"
 DEFAULT_ARCHIVE_ROOT = Path.home() / "Library" / "Application Support" / "learn-ukrainian" / "retention-archives"
+GATE5_TARGET_DAYS = 7
 
 # Ensure repo scripts/ is importable when invoked as a file path.
 if str(REPO_ROOT) not in sys.path:
@@ -169,6 +171,74 @@ def write_plan(plan: dict[str, Any], plan_dir: Path) -> Path:
     return path
 
 
+def record_gate5_observation(
+    plan: dict[str, Any],
+    *,
+    plan_path: Path,
+    log_path: Path = DEFAULT_OBSERVATION_LOG,
+    target_days: int = GATE5_TARGET_DAYS,
+) -> dict[str, Any]:
+    """Append Gate 5 dry-run evidence. One calendar day (UTC) per unique day label.
+
+    Does **not** arm apply. ``apply_armed`` stays false until an explicit operator
+    GO after ``target_days`` observation days (Sol Gate 5).
+    """
+    day = str(plan.get("created_at") or _utc_now())[:10]
+    entry = {
+        "file": plan_path.name,
+        "created_at": plan.get("created_at"),
+        "digest": plan.get("digest"),
+        "mode": plan.get("mode", "dry-run"),
+        "mutations": int(plan.get("mutations") or 0),
+        "would_reap": int((plan.get("counts") or {}).get("would_reap") or 0),
+        "scanner_stale": int((plan.get("counts") or {}).get("scanner_stale") or 0),
+    }
+    log: dict[str, Any]
+    if log_path.is_file():
+        try:
+            raw = json.loads(log_path.read_text(encoding="utf-8"))
+            log = raw if isinstance(raw, dict) else {}
+        except (OSError, json.JSONDecodeError, UnicodeError):
+            log = {}
+    else:
+        log = {}
+
+    days = [str(d) for d in (log.get("observation_days_recorded") or []) if d]
+    if day not in days:
+        days.append(day)
+    days = sorted(set(days))
+
+    plans = list(log.get("plans") or [])
+    if not any(
+        isinstance(p, dict) and p.get("file") == entry["file"] and p.get("digest") == entry["digest"]
+        for p in plans
+    ):
+        plans.append(entry)
+
+    log.update(
+        {
+            "schema": "fleet-comms.retention.gate5-observation.v1",
+            "updated_at": _utc_now(),
+            "policy_note": (
+                f"{target_days}d observation before scheduled apply; "
+                "apply OFF until day count met + operator GO"
+            ),
+            "apply_armed": False,
+            "observation_days_recorded": days,
+            "days_count": len(days),
+            "target_days": target_days,
+            "plans": plans[-50:],  # bound growth
+            "ready_for_apply_go": len(days) >= target_days,
+        }
+    )
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    log_path.write_text(
+        json.dumps(log, indent=2, sort_keys=True, default=str) + "\n",
+        encoding="utf-8",
+    )
+    return log
+
+
 def load_plan(path: Path) -> dict[str, Any]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -270,8 +340,24 @@ def cmd_plan(args: argparse.Namespace) -> int:
         include_home=args.include_home,
         safe_only=not args.unsafe,
     )
-    path = write_plan(plan, Path(args.plan_dir))
-    out = {**plan, "plan_path": str(path)}
+    plan_dir = Path(args.plan_dir)
+    path = write_plan(plan, plan_dir)
+    observation = record_gate5_observation(
+        plan,
+        plan_path=path,
+        log_path=plan_dir / "gate5-observation-log.json",
+    )
+    out = {
+        **plan,
+        "plan_path": str(path),
+        "gate5_observation": {
+            "days_count": observation.get("days_count"),
+            "target_days": observation.get("target_days"),
+            "ready_for_apply_go": observation.get("ready_for_apply_go"),
+            "apply_armed": observation.get("apply_armed"),
+            "log_path": str(plan_dir / "gate5-observation-log.json"),
+        },
+    }
     sys.stdout.write(json.dumps(out, indent=2, sort_keys=True, default=str) + "\n")
     return EXIT_OK
 
