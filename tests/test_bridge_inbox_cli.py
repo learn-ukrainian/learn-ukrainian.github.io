@@ -817,6 +817,16 @@ def test_detect_caller_identity_honors_session_handoff_agent(monkeypatch):
     assert _cli._detect_caller_identity_from_env() == "claude-infra"
 
 
+def test_explicit_from_mismatch_with_handoff_agent_is_warning_tagged(monkeypatch, capsys):
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "claude-folk")
+
+    sender = _cli._resolve_from_llm(SimpleNamespace(from_llm="claude-infra"))
+
+    assert sender == "claude-infra"
+    assert "[SENDER_IDENTITY_MISMATCH]" in capsys.readouterr().err
+
+
 def test_detect_caller_identity_unknown_handoff_falls_through(monkeypatch):
     # Clear GROK_AGENT etc. first: when this suite runs under the native grok
     # CLI (export GROK_AGENT=1), the sentinel would otherwise win over the soft

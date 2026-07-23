@@ -125,6 +125,15 @@ def _resolve_from_llm(args) -> str:
     """Return explicit --from or fail loudly if caller identity is unknown."""
     explicit = getattr(args, "from_llm", None)
     if explicit:
+        handoff_agent = os.environ.get("SESSION_HANDOFF_AGENT")
+        if handoff_agent and explicit.strip().lower() != handoff_agent.strip().lower():
+            print(
+                "[SENDER_IDENTITY_MISMATCH] "
+                f"asserted --from={explicit!r} disagrees with "
+                f"SESSION_HANDOFF_AGENT={handoff_agent!r}; "
+                "the ask sender assertion is not validated by the active handoff slot.",
+                file=sys.stderr,
+            )
         return explicit
     detected = _detect_caller_identity_from_env()
     if detected:

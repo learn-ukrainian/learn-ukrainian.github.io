@@ -84,6 +84,12 @@ run_hook() {
   local supervisor_generation="${8:-}"
   local session_epic="${9:-}"
 
+  # Native SessionStart always supplies an official session id. Keep fixtures
+  # equally realistic so the durable Claude slot lease can be exercised.
+  if [ -z "$current_thread_id" ]; then
+    current_thread_id="fixture-session-${handoff_agent}"
+  fi
+
   printf '%s' "$hook_json" | \
     HOME="$TMP_ROOT/home" XDG_CONFIG_HOME="$TMP_ROOT/xdg-config" XDG_CACHE_HOME="$TMP_ROOT/xdg-cache" XDG_DATA_HOME="$TMP_ROOT/xdg-data" XDG_STATE_HOME="$TMP_ROOT/xdg-state" GH_CONFIG_DIR="$TMP_ROOT/gh" PATH="/usr/bin:/bin" \
     CLAUDE_PROJECT_DIR="$root" \
