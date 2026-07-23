@@ -64,7 +64,8 @@ def _configured_default_plane_mode() -> PlaneMode:
         return "off"
     try:
         data = yaml.safe_load(cfg_path.read_text(encoding="utf-8")) or {}
-    except OSError:
+    except (OSError, yaml.YAMLError, UnicodeError):
+        # Fail-open to off: never crash plane-status / MessagePlane on bad config.
         return "off"
     if not isinstance(data, dict):
         return "off"
