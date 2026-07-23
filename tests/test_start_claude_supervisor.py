@@ -36,6 +36,7 @@ def _write_executable(path: Path, body: str) -> None:
     ("selector", "canonical_lane", "stream", "handoff"),
     [
         ("harness", "harness", "epic:4707", "claude-infra"),
+        ("devops", "infra", "epic:4707", "claude-infra"),
         ("practice-hub", "atlas", "epic:4387", "claude-atlas"),
         ("seminars-folk", "folk", "epic:2836", "claude-folk"),
         ("seminars-bio", "bio", "epic:4431", "claude-bio"),
@@ -192,3 +193,15 @@ fi
     assert "lease=lease-claude-j2" in raw
     assert f"handoff={handoff}" in raw
     assert "--epic" not in raw.split("argv=", 1)[-1]
+
+
+def test_help_lists_corpus_channel_selectors() -> None:
+    result = subprocess.run(
+        ["bash", str(_LAUNCHER), "--help"],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "corpus | corpus-channels" in result.stdout

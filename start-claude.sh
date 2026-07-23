@@ -22,6 +22,7 @@ Valid lane selectors:
   hramatka | hramatka.lessons
   folk | seminars-folk
   bio | seminars-bio
+  corpus | corpus-channels
 EOF
 }
 
@@ -282,7 +283,7 @@ if command -v handoff_epic_from_argv >/dev/null 2>&1; then
             exit 1
         fi
         case "$_requested_selector" in
-            *.*|practice|practice-hub|seminars-folk|seminars-bio|corpus-channels) _selected_epic="$_canonical_lane" ;;
+            *.*|devops|practice|practice-hub|seminars-folk|seminars-bio|corpus-channels) _selected_epic="$_canonical_lane" ;;
         esac
         unset _requested_selector _canonical_lane
         export SESSION_EPIC="$_selected_epic"

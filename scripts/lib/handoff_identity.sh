@@ -22,7 +22,7 @@
 # Unknown selectors return 1 and print nothing, so callers can fail closed.
 launcher_selector_resolve() {
   case "${1:-}" in
-    infra|harness|infra.fleet-comms|infra.devops)
+    infra|harness|devops|infra.fleet-comms|infra.devops)
       printf 'infra\tepic:4707\n'
       ;;
     atlas|practice|practice-hub|atlas.practice)

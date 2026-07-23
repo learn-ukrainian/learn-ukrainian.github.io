@@ -50,7 +50,7 @@ def test_handoff_identity_fixtures() -> None:
 )
 def test_devops_alias_resolves_to_canonical_infra_slot(resolver: str, expected: str) -> None:
     result = subprocess.run(
-        ["bash", "-c", 'source "$1"; "$2" infra.devops', "bash", str(_HANDOFF_IDENTITY), resolver],
+        ["bash", "-c", 'source "$1"; "$2" devops', "bash", str(_HANDOFF_IDENTITY), resolver],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,
@@ -66,6 +66,7 @@ def test_devops_alias_resolves_to_canonical_infra_slot(resolver: str, expected: 
     [
         ("infra.fleet-comms", "infra", "epic:4707", "claude-infra", "gemini-infra", "grok-infra"),
         ("infra.devops", "infra", "epic:4707", "claude-infra", "gemini-infra", "grok-infra"),
+        ("devops", "infra", "epic:4707", "claude-infra", "gemini-infra", "grok-infra"),
         ("atlas.practice", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas"),
         ("practice-hub", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas"),
         ("hramatka.lessons", "hramatka", "epic:4542", "claude-hramatka", "gemini-hramatka", "grok-hramatka"),
