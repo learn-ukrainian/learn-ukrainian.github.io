@@ -52,6 +52,29 @@ not a detached `process-*` / `ask-*` worker — must read and apply every messag
 Never use a plain `ack` for messages this live loop has consumed: plain acknowledgement
 also records one-shot/headless processing and is not delivery proof for the live driver.
 
+### 0b. Optional Monitor inbox-watcher wakeup — cold start only
+
+At cold-start, **if your harness has a Monitor-equivalent**, invoke it once with that
+harness's `persistent`/timeout option, pointed at this one shell command:
+
+```bash
+scripts/ai_agent_bridge/inbox_watch.sh "$SESSION_HANDOFF_AGENT"
+```
+
+This is a **wakeup signal only**: each stdout line says that an unconsumed legacy
+message exists, with its id, sender, request id, and a bounded preview. It never reads
+the full body into your context and never marks a message consumed. You still must run
+the existing required `0a` / `4a` / `5a` / `8a` inbox-drain steps to read, apply, and
+explicitly live-consume everything the signal points at; those steps remain the
+universal fallback for every seat, watcher or not.
+
+Direct confirmation exists only for **Claude Code, Gemini/AGY, and Grok CLI**. For any
+other harness, ask the running agent directly whether it has an equivalent before using
+one; do not infer it from documentation or `--help`. Stop a running watcher cleanly
+with `scripts/ai_agent_bridge/inbox_watch.sh --stop "$SESSION_HANDOFF_AGENT"`; if a
+crashed process leaves a stale pidfile, the operating system releases its advisory lock
+and the next watcher replaces the recorded pid safely.
+
 ### 1. Read topology + metrics (don't hold state — query it)
 ```bash
 .venv/bin/python -m scripts.fleet_comms metrics        # efficiency metrics (no content)
