@@ -414,6 +414,24 @@ ROLLOVER_SCRIPT="${THREAD_ROLLOVER_SCRIPT:-$PROJECT_DIR/scripts/orchestration/th
 HANDOFF_CONTEXT=""
 HANDOFF_WARNINGS=""
 
+# Rollover packets are lineage-scoped and may legitimately coexist. A driver
+# cold-start is different: only one live Claude session may own a handoff slot
+# at a time. Claim the flat durable lease before reading any queue guidance so
+# a duplicate SessionStart stops before it can double-drive work.
+case "$HANDOFF_AGENT" in
+  claude|claude-*)
+    if [ -z "$CURRENT_THREAD_ID" ]; then
+      HANDOFF_CONTEXT="ERROR: Cannot acquire durable thread lease: SessionStart did not provide a current thread id. Stop; do not drive this queue."
+    elif ! THREAD_LEASE_OUTPUT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+      --repo-root "$CANONICAL_ROOT" claim-thread-lease --agent "$HANDOFF_AGENT" \
+      --current-thread-id "$CURRENT_THREAD_ID" 2>&1); then
+      HANDOFF_CONTEXT="ERROR: DURABLE THREAD LEASE CONFLICT — stop; do not cold-start or drive this queue.
+Output:
+$THREAD_LEASE_OUTPUT"
+    fi
+    ;;
+esac
+
 build_handoff_pointer() {
   local brief_path="$1"
   cat <<EOF
@@ -472,7 +490,7 @@ if [ -n "${SESSION_EPIC:-}" ]; then
   esac
 fi
 
-if ! DETECT_OUTPUT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+if [ -z "$HANDOFF_CONTEXT" ] && ! DETECT_OUTPUT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
   --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
   --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" --format json 2>&1); then
   # Exit 2 may be multi-packet ambiguity (#5398) — surface candidates, never cold-start.
@@ -489,6 +507,8 @@ $DETECT_OUTPUT"
 Output:
 $DETECT_OUTPUT"
   fi
+elif [ -n "$HANDOFF_CONTEXT" ]; then
+  : # Lease failure above is authoritative; never replace it with detect output.
 elif ! DETECT_STATUS=$(printf '%s' "$DETECT_OUTPUT" | "$ROLLOVER_PYTHON" -c 'import json,sys; print(json.loads(sys.stdin.read()).get("status", ""), end="")'); then
   HANDOFF_CONTEXT="ERROR: thread_handoff.py detect output could not be parsed. Stop.
 Output:
@@ -565,7 +585,7 @@ Output:
 $HANDOFF_CONTEXT"
     fi
   fi
-else
+elif [ -z "$HANDOFF_CONTEXT" ]; then
   HANDOFF_CONTEXT="ERROR: Unexpected detect status: $DETECT_STATUS"
 fi
 

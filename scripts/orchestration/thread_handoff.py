@@ -59,6 +59,11 @@ ORCHESTRATOR_HANDOFF_PATH = Path("docs/session-state/codex-orchestrator-handoff.
 DEFAULT_STALE_HOURS = 12
 # Default warning threshold (percentage of window)
 DEFAULT_CONTEXT_THRESHOLD = 88.0
+THREAD_LEASE_SCHEMA_VERSION = 1
+# A session's lease is refreshed at each SessionStart. Keep a conservative
+# takeover window: a live driver can work for hours between compaction events,
+# while a crashed session can still be deliberately recovered after this age.
+DEFAULT_THREAD_LEASE_FRESH_SECONDS = DEFAULT_STALE_HOURS * 60 * 60
 
 
 @dataclass(frozen=True)
@@ -157,6 +162,16 @@ def runtime_dir(agent: str, lineage_id: str, generation: int, rollover_id: str) 
 
 def default_state_path(agent: str, lineage_id: str) -> Path:
     return Path(".agent/thread-rollovers") / agent / lineage_id / "lease.json"
+
+
+def default_thread_lease_path(agent: str) -> Path:
+    """Return the single-writer lease for one cold-start handoff slot.
+
+    Rollover packets intentionally permit distinct lineages for the same agent.
+    That is correct for replacement-thread history, but it cannot arbitrate two
+    independently launched driver sessions.  This flat, per-slot lease does.
+    """
+    return Path(".agent") / f"{agent}-thread-lease.json"
 
 
 def default_bootstrap_path(agent: str, lineage_id: str, generation: int, rollover_id: str) -> Path:
@@ -611,6 +626,122 @@ def write_json_atomic(path: Path, payload: dict[str, Any]) -> None:
     tmp = path.with_suffix(path.suffix + f".tmp.{os.getpid()}")
     tmp.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     os.replace(tmp, path)
+
+
+def _load_thread_lease(path: Path) -> dict[str, Any] | None:
+    """Load one durable cold-start lease without accepting malformed state."""
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"unreadable thread lease: {type(exc).__name__}: {exc}") from exc
+    if not isinstance(payload, dict):
+        raise ValueError("thread lease is not a JSON object")
+    return payload
+
+
+def _validate_thread_lease(lease: Mapping[str, Any], *, agent: str) -> dict[str, Any]:
+    """Validate the immutable ownership facts needed to block a second start."""
+    if lease.get("schema_version") != THREAD_LEASE_SCHEMA_VERSION:
+        raise ValueError(f"thread lease schema_version must be {THREAD_LEASE_SCHEMA_VERSION}")
+    if lease.get("agent") != agent:
+        raise ValueError(f"thread lease agent {lease.get('agent')!r} does not match requested agent {agent!r}")
+    owner_thread_id = lease.get("owner_thread_id")
+    if not isinstance(owner_thread_id, str) or not owner_thread_id.strip():
+        raise ValueError("thread lease owner_thread_id is missing or malformed")
+    generation = lease.get("generation")
+    if not isinstance(generation, int) or generation < 1:
+        raise ValueError("thread lease generation is missing or malformed")
+    heartbeat_at = parse_iso_datetime(lease.get("heartbeat_at"))
+    if heartbeat_at is None:
+        raise ValueError("thread lease heartbeat_at is missing or malformed")
+    acquired_at = parse_iso_datetime(lease.get("acquired_at"))
+    if acquired_at is None:
+        raise ValueError("thread lease acquired_at is missing or malformed")
+    return dict(lease)
+
+
+def claim_thread_lease(
+    *,
+    state_root: Path,
+    agent: str,
+    current_thread_id: str,
+    now: datetime,
+    fresh_after: timedelta,
+) -> dict[str, Any]:
+    """Atomically claim or refresh a driver-session lease for ``agent``.
+
+    A fresh lease owned by a different SessionStart identity is a hard conflict:
+    callers must stop rather than guess which live session owns the queue.  A
+    stale lease is reclaimable and its generation advances, leaving durable
+    evidence of the takeover in the replacement lease.
+    """
+    owner_thread_id = current_thread_id.strip()
+    if not owner_thread_id:
+        raise ValueError("current thread id is required to claim a durable thread lease")
+    if fresh_after <= timedelta(0):
+        raise ValueError("thread lease freshness must be positive")
+
+    lease_path = repo_local_path(state_root, default_thread_lease_path(agent))
+    lock_path = lease_path.with_suffix(lease_path.suffix + ".lock")
+    with task_family_advisory_lock(lock_path):
+        existing = _load_thread_lease(lease_path)
+        if existing is not None:
+            validated = _validate_thread_lease(existing, agent=agent)
+            heartbeat_at = parse_iso_datetime(str(validated["heartbeat_at"]))
+            assert heartbeat_at is not None  # validated above
+            held_by = str(validated["owner_thread_id"])
+            fresh = now - heartbeat_at <= fresh_after
+            if held_by != owner_thread_id and fresh:
+                return {
+                    "status": "conflict",
+                    "lease_path": lease_path,
+                    "owner_thread_id": held_by,
+                    "generation": validated["generation"],
+                    "heartbeat_at": isoformat_z(heartbeat_at),
+                    "fresh_after_seconds": int(fresh_after.total_seconds()),
+                }
+            if held_by == owner_thread_id:
+                refreshed = {
+                    **validated,
+                    "heartbeat_at": isoformat_z(now),
+                }
+                write_json_atomic(lease_path, refreshed)
+                return {
+                    "status": "refreshed",
+                    "lease_path": lease_path,
+                    "owner_thread_id": owner_thread_id,
+                    "generation": refreshed["generation"],
+                    "heartbeat_at": refreshed["heartbeat_at"],
+                    "fresh_after_seconds": int(fresh_after.total_seconds()),
+                }
+            generation = int(validated["generation"]) + 1
+            previous_owner = held_by
+        else:
+            generation = 1
+            previous_owner = None
+
+        acquired = {
+            "schema_version": THREAD_LEASE_SCHEMA_VERSION,
+            "agent": agent,
+            "generation": generation,
+            "owner_thread_id": owner_thread_id,
+            "acquired_at": isoformat_z(now),
+            "heartbeat_at": isoformat_z(now),
+        }
+        if previous_owner is not None:
+            acquired["replaced_owner_thread_id"] = previous_owner
+        write_json_atomic(lease_path, acquired)
+        return {
+            "status": "acquired",
+            "lease_path": lease_path,
+            "owner_thread_id": owner_thread_id,
+            "generation": generation,
+            "heartbeat_at": acquired["heartbeat_at"],
+            "fresh_after_seconds": int(fresh_after.total_seconds()),
+            "replaced_owner_thread_id": previous_owner,
+        }
 
 
 def write_text_atomic(path: Path, text: str) -> None:
@@ -3517,6 +3648,42 @@ def cmd_detect(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_claim_thread_lease(args: argparse.Namespace) -> int:
+    """Claim the durable single-driver lease used during SessionStart."""
+    try:
+        _, state_root = resolve_roots(args.repo_root)
+        agent = normalize_agent_name(args.agent)
+        result = claim_thread_lease(
+            state_root=state_root,
+            agent=agent,
+            current_thread_id=args.current_thread_id,
+            now=utc_now(),
+            fresh_after=timedelta(seconds=args.fresh_after_seconds),
+        )
+    except ValueError as exc:
+        print(json.dumps({"error": str(exc)}, indent=2))
+        return 2
+
+    lease_path = result.pop("lease_path")
+    payload = {
+        "agent": agent,
+        "lease_file": rel(lease_path, state_root),
+        **result,
+    }
+    if payload["status"] == "conflict":
+        payload.update(
+            {
+                "error_code": "THREAD_LEASE_CONFLICT",
+                "error": "durable thread lease is held by another fresh session; stop to avoid double-driving",
+                "resolution": "Wait for the owner heartbeat to become stale, or verify that the owner session stopped before retrying.",
+            }
+        )
+        print(json.dumps(payload, indent=2))
+        return 2
+    print(json.dumps(payload, indent=2))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path)
@@ -3725,6 +3892,20 @@ def build_parser() -> argparse.ArgumentParser:
     )
     detect.add_argument("--format", choices=("json", "session-start"), default="json")
     detect.set_defaults(func=cmd_detect)
+
+    claim_thread_lease_parser = subparsers.add_parser(
+        "claim-thread-lease",
+        help="Atomically claim or refresh one agent slot's durable cold-start lease.",
+    )
+    claim_thread_lease_parser.add_argument("--agent", type=argparse_agent_name, required=True)
+    claim_thread_lease_parser.add_argument("--current-thread-id", required=True)
+    claim_thread_lease_parser.add_argument(
+        "--fresh-after-seconds",
+        type=int,
+        default=DEFAULT_THREAD_LEASE_FRESH_SECONDS,
+        help=f"Treat another owner heartbeat as live for this many seconds (default: {DEFAULT_THREAD_LEASE_FRESH_SECONDS}).",
+    )
+    claim_thread_lease_parser.set_defaults(func=cmd_claim_thread_lease)
     return parser
 
 

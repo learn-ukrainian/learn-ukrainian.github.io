@@ -642,6 +642,56 @@ def test_default_agent_paths_are_agent_specific():
     assert th.default_handoff_path("claude") == Path("docs/session-state/current.claude.md")
 
 
+def test_fresh_thread_lease_blocks_a_second_claude_infra_session(tmp_path: Path):
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    first = th.claim_thread_lease(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="infra-session-one",
+        now=now,
+        fresh_after=timedelta(minutes=15),
+    )
+    second = th.claim_thread_lease(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="infra-session-two",
+        now=now + timedelta(minutes=1),
+        fresh_after=timedelta(minutes=15),
+    )
+
+    lease_path = tmp_path / ".agent/claude-infra-thread-lease.json"
+    assert first["status"] == "acquired"
+    assert second == {
+        "status": "conflict",
+        "lease_path": lease_path,
+        "owner_thread_id": "infra-session-one",
+        "generation": 1,
+        "heartbeat_at": "2026-07-23T10:00:00Z",
+        "fresh_after_seconds": 900,
+    }
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "infra-session-one"
+
+
+def test_claim_thread_lease_command_reports_a_clear_double_launch_conflict(tmp_path: Path, capsys):
+    command = [
+        "--repo-root",
+        str(tmp_path),
+        "claim-thread-lease",
+        "--agent",
+        "claude-infra",
+        "--current-thread-id",
+    ]
+
+    assert th.main([*command, "first-session"]) == 0
+    capsys.readouterr()
+    assert th.main([*command, "second-session"]) == 2
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["error_code"] == "THREAD_LEASE_CONFLICT"
+    assert payload["owner_thread_id"] == "first-session"
+    assert "stop to avoid double-driving" in payload["error"]
+
+
 def test_checkout_continuity_requires_clean_source_binding_and_same_clean_head():
     clean = sample_snapshot(Path("."))["git"]
     assert th.parse_status("M tracked.txt\n?? untracked.txt") == [
