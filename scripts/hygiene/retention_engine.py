@@ -173,6 +173,33 @@ def write_plan(plan: dict[str, Any], plan_dir: Path) -> Path:
     return path
 
 
+def _gate5_ready_for_apply_go(
+    days: list[str],
+    *,
+    target_days: int,
+    now_utc: str,
+) -> bool:
+    """True when the trailing ``target_days`` labels are contiguous and fresh.
+
+    Sparse multi-year samples must not report ready (CF #5667 P1). Latest day
+    must be within 1 calendar day of ``now_utc``.
+    """
+    if target_days < 1 or len(days) < target_days:
+        return False
+    try:
+        parsed = sorted({date.fromisoformat(d) for d in days})
+        today = date.fromisoformat(now_utc[:10])
+    except ValueError:
+        return False
+    if not parsed:
+        return False
+    latest = parsed[-1]
+    if (today - latest) > timedelta(days=1):
+        return False
+    tail = parsed[-target_days:]
+    return all((tail[i] - tail[i - 1]).days == 1 for i in range(1, len(tail)))
+
+
 def record_gate5_observation(
     plan: dict[str, Any],
     *,
@@ -183,7 +210,7 @@ def record_gate5_observation(
     """Append Gate 5 dry-run evidence. One calendar day (UTC) per unique day label.
 
     Does **not** arm apply. ``apply_armed`` stays false until an explicit operator
-    GO after ``target_days`` observation days (Sol Gate 5).
+    GO after ``target_days`` *contiguous* observation days (Sol Gate 5).
     """
     day = str(plan.get("created_at") or _utc_now())[:10]
     entry = {
@@ -195,66 +222,76 @@ def record_gate5_observation(
         "would_reap": int((plan.get("counts") or {}).get("would_reap") or 0),
         "scanner_stale": int((plan.get("counts") or {}).get("scanner_stale") or 0),
     }
-    log: dict[str, Any]
-    if log_path.is_file():
-        try:
-            raw = json.loads(log_path.read_text(encoding="utf-8"))
-            log = raw if isinstance(raw, dict) else {}
-        except (OSError, json.JSONDecodeError, UnicodeError):
-            log = {}
-    else:
-        log = {}
 
-    days = [str(d) for d in (log.get("observation_days_recorded") or []) if d]
-    if day not in days:
-        days.append(day)
-    days = sorted(set(days))
-
-    plans = list(log.get("plans") or [])
-    if not any(
-        isinstance(p, dict) and p.get("file") == entry["file"] and p.get("digest") == entry["digest"]
-        for p in plans
-    ):
-        plans.append(entry)
-
-    # Ready only with enough distinct UTC days AND a fresh latest sample (not a
-    # stale multi-year log that happens to have ≥ target_days labels — CF P2).
-    ready = False
-    if len(days) >= target_days:
-        try:
-            latest = date.fromisoformat(max(days))
-            today = date.fromisoformat(_utc_now()[:10])
-            ready = (today - latest) <= timedelta(days=1)
-        except ValueError:
-            ready = False
-
-    log.update(
-        {
-            "schema": "fleet-comms.retention.gate5-observation.v1",
-            "updated_at": _utc_now(),
-            "policy_note": (
-                f"{target_days}d observation before scheduled apply; "
-                "apply OFF until day count met + recent sample + operator GO"
-            ),
-            "apply_armed": False,
-            "observation_days_recorded": days,
-            "days_count": len(days),
-            "target_days": target_days,
-            "plans": plans[-50:],  # bound growth
-            "ready_for_apply_go": ready,
-        }
-    )
     log_path.parent.mkdir(parents=True, exist_ok=True)
-    payload = json.dumps(log, indent=2, sort_keys=True, default=str) + "\n"
-    # Atomic replace so concurrent plan jobs never leave a truncated log (CF P2).
-    tmp_path = log_path.with_suffix(log_path.suffix + f".tmp.{os.getpid()}")
-    try:
-        tmp_path.write_text(payload, encoding="utf-8")
-        os.replace(tmp_path, log_path)
-    finally:
-        if tmp_path.exists():
-            with contextlib.suppress(OSError):
-                tmp_path.unlink()
+    lock_path = log_path.with_suffix(log_path.suffix + ".lock")
+    # Exclusive lock around read-modify-write (CF concurrent-plan safety).
+    with lock_path.open("a+", encoding="utf-8") as lock_fh:
+        try:
+            import fcntl
+
+            fcntl.flock(lock_fh.fileno(), fcntl.LOCK_EX)
+        except (ImportError, OSError):
+            pass  # Windows / exotic FS: best-effort without lock
+
+        log: dict[str, Any]
+        if log_path.is_file():
+            try:
+                raw = json.loads(log_path.read_text(encoding="utf-8"))
+                log = raw if isinstance(raw, dict) else {}
+            except (OSError, json.JSONDecodeError, UnicodeError):
+                log = {}
+        else:
+            log = {}
+
+        days = [str(d) for d in (log.get("observation_days_recorded") or []) if d]
+        if day not in days:
+            days.append(day)
+        days = sorted(set(days))
+
+        plans = list(log.get("plans") or [])
+        if not any(
+            isinstance(p, dict)
+            and p.get("file") == entry["file"]
+            and p.get("digest") == entry["digest"]
+            for p in plans
+        ):
+            plans.append(entry)
+
+        now = _utc_now()
+        ready = _gate5_ready_for_apply_go(days, target_days=target_days, now_utc=now)
+
+        log.update(
+            {
+                "schema": "fleet-comms.retention.gate5-observation.v1",
+                "updated_at": now,
+                "policy_note": (
+                    f"{target_days}d contiguous observation before scheduled apply; "
+                    "apply OFF until contiguous days + recent sample + operator GO"
+                ),
+                "apply_armed": False,
+                "observation_days_recorded": days,
+                "days_count": len(days),
+                "target_days": target_days,
+                "plans": plans[-50:],  # bound growth
+                "ready_for_apply_go": ready,
+            }
+        )
+        payload = json.dumps(log, indent=2, sort_keys=True, default=str) + "\n"
+        tmp_path = log_path.with_suffix(log_path.suffix + f".tmp.{os.getpid()}")
+        try:
+            tmp_path.write_text(payload, encoding="utf-8")
+            os.replace(tmp_path, log_path)
+        finally:
+            if tmp_path.exists():
+                with contextlib.suppress(OSError):
+                    tmp_path.unlink()
+        try:
+            import fcntl
+
+            fcntl.flock(lock_fh.fileno(), fcntl.LOCK_UN)
+        except (ImportError, OSError):
+            pass
     return log
 
 

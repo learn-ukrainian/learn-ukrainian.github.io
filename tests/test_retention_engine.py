@@ -75,6 +75,8 @@ def test_plan_digest_stable_and_apply_rejects_mismatch(tmp_path: Path) -> None:
 
 
 def test_record_gate5_observation_one_day_per_calendar_label(tmp_path: Path) -> None:
+    from scripts.hygiene.retention_engine import _gate5_ready_for_apply_go
+
     plan_dir = tmp_path / "retention"
     plan = {
         "schema": "fleet-comms.retention.plan.v1",
@@ -100,12 +102,11 @@ def test_record_gate5_observation_one_day_per_calendar_label(tmp_path: Path) -> 
     assert log2["days_count"] == 1
     assert len(log2["plans"]) == 2
 
-    # New day advances count
+    # Contiguous new day → ready at target_days=2
     plan3 = dict(plan)
     plan3["created_at"] = "2026-07-25T01:00:00Z"
     plan3["digest"] = "ghi789"
     path3 = write_plan(plan3, plan_dir)
-    # Pin "today" so readiness uses recency (CF P2), not wall-clock alone.
     with patch(
         "scripts.hygiene.retention_engine._utc_now",
         return_value="2026-07-25T02:00:00Z",
@@ -119,6 +120,25 @@ def test_record_gate5_observation_one_day_per_calendar_label(tmp_path: Path) -> 
     assert log3["days_count"] == 2
     assert log3["ready_for_apply_go"] is True
     assert log3["apply_armed"] is False
+
+    # Sparse days are not contiguous → not ready (CF #5667 P1)
+    assert (
+        _gate5_ready_for_apply_go(
+            ["2026-01-01", "2026-03-01", "2026-07-25"],
+            target_days=3,
+            now_utc="2026-07-25T00:00:00Z",
+        )
+        is False
+    )
+    # Contiguous tail of length 3 is ready
+    assert (
+        _gate5_ready_for_apply_go(
+            ["2026-07-23", "2026-07-24", "2026-07-25"],
+            target_days=3,
+            now_utc="2026-07-25T00:00:00Z",
+        )
+        is True
+    )
 
     # Stale latest day → not ready even if day count is high
     with patch(
