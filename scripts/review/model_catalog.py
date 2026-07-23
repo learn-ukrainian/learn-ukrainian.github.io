@@ -10,6 +10,7 @@ from typing import Any
 import yaml
 
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "config" / "model_catalog.yaml"
+PROJECT_ROOT = CATALOG_PATH.parents[2]
 EXPECTED_SCHEMA_VERSION = "model-catalog.v1"
 VALID_LIFECYCLES = frozenset({"active", "fallback", "hold", "retired"})
 VALID_RISKS = frozenset({"low", "medium", "high", "critical"})
@@ -20,6 +21,12 @@ EXPECTED_SELECTION_ORDER = [
     "health_and_quota_within_tier",
     "cost_within_equivalent_fit",
 ]
+KIMI_ROUTE_FIELDS = (
+    "kimicc_alias",
+    "platform_model_id",
+    "coding_model_id",
+    "context_profile",
+)
 
 
 class ModelCatalogError(ValueError):
@@ -122,6 +129,14 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             if alias in models or alias in alias_owner:
                 raise ModelCatalogError(f"duplicate model alias {alias!r}")
             alias_owner[alias] = model_id
+        if "native_kimi" in model["transports"]:
+            routes = _require_mapping(model.get("kimi_routes"), f"models.{model_id}.kimi_routes")
+            for field in KIMI_ROUTE_FIELDS:
+                _require_string(routes.get(field), f"models.{model_id}.kimi_routes.{field}")
+            if routes["kimicc_alias"] not in aliases:
+                raise ModelCatalogError(
+                    f"models.{model_id}.kimi_routes.kimicc_alias must be listed in models.{model_id}.aliases"
+                )
 
     candidates = _require_mapping(catalog.get("review_candidates"), "review_candidates")
     for name, raw in candidates.items():
@@ -211,6 +226,84 @@ def load_model_catalog(path: Path = CATALOG_PATH) -> dict[str, Any]:
     return validate_catalog(raw)
 
 
+def kimi_model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
+    """Return every supported Kimi input alias mapped to its native CLI model id."""
+    models = (catalog or load_model_catalog())["models"]
+    aliases: dict[str, str] = {}
+    for model_id, model in models.items():
+        if "native_kimi" not in model["transports"]:
+            continue
+        aliases[model_id] = model_id
+        aliases.update({alias: model_id for alias in model.get("aliases", [])})
+    return aliases
+
+
+def resolve_kimi_model(model: str, catalog: dict[str, Any] | None = None) -> tuple[str, dict[str, str]]:
+    """Resolve one Kimi input alias to native and KimiCC route metadata."""
+    source = catalog or load_model_catalog()
+    aliases = kimi_model_aliases(source)
+    try:
+        model_id = aliases[model]
+    except KeyError as exc:
+        raise ModelCatalogError(f"unsupported Kimi model {model!r}; allowed: {sorted(aliases)}") from exc
+    return model_id, source["models"][model_id]["kimi_routes"]
+
+
+def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
+    """Reject local alias maps so all Kimi surfaces stay catalog-backed."""
+    consumers = {
+        "start-kimi.sh": ("--resolve-kimi-model", "--format native"),
+        "start-kimicc.sh": ("--resolve-kimi-model", "--format kimicc"),
+        "scripts/agent_runtime/adapters/kimi.py": ("kimi_model_aliases()",),
+    }
+    for relative_path, required_snippets in consumers.items():
+        path = project_root / relative_path
+        try:
+            source = path.read_text(encoding="utf-8")
+        except OSError as exc:
+            raise ModelCatalogError(f"cannot read Kimi alias consumer {relative_path}: {exc}") from exc
+        missing = [snippet for snippet in required_snippets if snippet not in source]
+        if missing:
+            raise ModelCatalogError(
+                f"{relative_path} must resolve Kimi aliases through model_catalog.yaml; missing {missing}"
+            )
+
+    native_launcher = (project_root / "start-kimi.sh").read_text(encoding="utf-8")
+    if 'resolve_kimi_model() {\n  case' in native_launcher:
+        raise ModelCatalogError("start-kimi.sh contains a local Kimi alias case map")
+    adapter = (project_root / "scripts/agent_runtime/adapters/kimi.py").read_text(encoding="utf-8")
+    if "KIMI_MODEL_ALIASES: dict[str, str] = {" in adapter:
+        raise ModelCatalogError("KimiAdapter contains a local Kimi alias map")
+
+
+def _main() -> int:
+    """Expose catalog-backed Kimi resolution for shell launchers."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--resolve-kimi-model", metavar="ALIAS", required=True)
+    parser.add_argument("--format", choices=("native", "kimicc"), default="native")
+    args = parser.parse_args()
+    try:
+        model_id, routes = resolve_kimi_model(args.resolve_kimi_model)
+    except ModelCatalogError as exc:
+        parser.error(str(exc))
+    if args.format == "native":
+        print(model_id)
+    else:
+        print(
+            "\t".join(
+                (
+                    routes["kimicc_alias"],
+                    routes["platform_model_id"],
+                    routes["coding_model_id"],
+                    routes["context_profile"],
+                )
+            )
+        )
+    return 0
+
+
 def catalog_age_days(catalog: dict[str, Any], *, as_of: date | None = None) -> int:
     """Return non-negative catalog age; future review dates fail structurally."""
     today = as_of or date.today()
@@ -223,3 +316,7 @@ def catalog_age_days(catalog: dict[str, Any], *, as_of: date | None = None) -> i
 
 def catalog_is_stale(catalog: dict[str, Any], *, as_of: date | None = None) -> bool:
     return catalog_age_days(catalog, as_of=as_of) > int(catalog["refresh_after_days"])
+
+
+if __name__ == "__main__":
+    raise SystemExit(_main())

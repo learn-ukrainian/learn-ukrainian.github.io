@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shlex
 import subprocess
 from pathlib import Path
 
@@ -37,6 +38,9 @@ def _supervisor_body(capture: Path, stream_id: str, session_id: str, lease_id: s
     return f"""#!/usr/bin/env bash
 if [[ "$1" == *"assert_primary_on_main.py" ]]; then
   exit 0
+fi
+if [[ "$1" == *"scripts/review/model_catalog.py" ]]; then
+  exec {shlex.quote(str(_REPO_ROOT / ".venv" / "bin" / "python"))} "$@"
 fi
 if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "open" ]]; then
   {{
@@ -87,7 +91,11 @@ def _build_fake_project(tmp_path: Path) -> tuple[Path, Path]:
     lib_dir = project / "scripts" / "lib"
     lib_dir.mkdir(parents=True)
     guard_dir = project / "scripts" / "guardrails"
+    review_dir = project / "scripts" / "review"
+    config_dir = project / "scripts" / "config"
     guard_dir.mkdir(parents=True)
+    review_dir.mkdir(parents=True)
+    config_dir.mkdir(parents=True)
 
     _write_executable(project / "start-kimi.sh", _LAUNCHER.read_text(encoding="utf-8"))
     (lib_dir / "session_supervisor.sh").write_text(
@@ -100,6 +108,14 @@ def _build_fake_project(tmp_path: Path) -> tuple[Path, Path]:
     )
     (guard_dir / "assert_primary_on_main.py").write_text("#!/usr/bin/env python3\nraise SystemExit(0)\n")
     (guard_dir / "assert_primary_on_main.py").chmod(0o755)
+    (review_dir / "model_catalog.py").write_text(
+        (_REPO_ROOT / "scripts" / "review" / "model_catalog.py").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    (config_dir / "model_catalog.yaml").write_text(
+        (_REPO_ROOT / "scripts" / "config" / "model_catalog.yaml").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
 
     capture = tmp_path / "supervisor_capture.txt"
     _write_executable(
@@ -277,11 +293,18 @@ def test_bare_launch_is_interactive_tui(tmp_path: Path) -> None:
 @pytest.mark.parametrize(
     ("alias", "resolved"),
     [
+        ("kimi-k3[1m]", "kimi-code/k3"),
         ("k2.7", "kimi-code/kimi-for-coding"),
         ("k2.7-coding", "kimi-code/kimi-for-coding"),
+        ("kimi-for-coding", "kimi-code/kimi-for-coding"),
+        ("kimi-k2.7-code", "kimi-code/kimi-for-coding"),
         ("kimi-code/kimi-for-coding", "kimi-code/kimi-for-coding"),
         ("k2.7-highspeed", "kimi-code/kimi-for-coding-highspeed"),
+        ("k2.7-coding-highspeed", "kimi-code/kimi-for-coding-highspeed"),
+        ("kimi-for-coding-highspeed", "kimi-code/kimi-for-coding-highspeed"),
+        ("kimi-k2.7-code-highspeed", "kimi-code/kimi-for-coding-highspeed"),
         ("k3", "kimi-code/k3"),
+        ("kimi-k3", "kimi-code/k3"),
         ("kimi-code/k3", "kimi-code/k3"),
     ],
 )

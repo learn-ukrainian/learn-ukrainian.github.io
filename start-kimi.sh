@@ -47,6 +47,7 @@ PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Absolute path to THIS script, captured before any cd: usage_launcher reads
 # its own header, and the worktree redirect below changes cwd.
 SCRIPT_PATH="$PROJECT_DIR/$(basename "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 # Prefer the main worktree root when this script is run from a git worktree copy.
 if git -C "$PROJECT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   _git_common="$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
@@ -296,25 +297,13 @@ if [ -n "${SESSION_EPIC:-}" ] && [ -x "$PROJECT_DIR/.venv/bin/python" ] \
   fi
 fi
 
-# Model resolution: friendly aliases → the aliases configured in
-# ~/.kimi-code/config.toml. Bare names like "k3"/"k2.7-coding" are rejected by
-# the CLI ("not configured in config.toml"), so map them here. Without --model
-# we pass no -m at all and let config.toml default_model decide.
+# Model resolution is catalog-backed. Bare names like "k3"/"k2.7-coding" are
+# rejected by the CLI ("not configured in config.toml"), so resolve every
+# historical alias to the configured native model ID. Without --model we pass
+# no -m at all and let config.toml default_model decide.
 resolve_kimi_model() {
-  case "$1" in
-    k3|kimi-k3|kimi-code/k3)
-      printf '%s\n' 'kimi-code/k3'
-      ;;
-    k2.7|k2.7-coding|kimi-for-coding|kimi-k2.7-code|kimi-code/kimi-for-coding)
-      printf '%s\n' 'kimi-code/kimi-for-coding'
-      ;;
-    k2.7-highspeed|k2.7-coding-highspeed|kimi-for-coding-highspeed|kimi-k2.7-code-highspeed|kimi-code/kimi-for-coding-highspeed)
-      printf '%s\n' 'kimi-code/kimi-for-coding-highspeed'
-      ;;
-    *)
-      return 1
-      ;;
-  esac
+  "$SCRIPT_DIR/.venv/bin/python" "$SCRIPT_DIR/scripts/review/model_catalog.py" \
+    --resolve-kimi-model "$1" --format native 2>/dev/null
 }
 
 _model_args=()

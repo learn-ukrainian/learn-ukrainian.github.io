@@ -76,8 +76,16 @@ def test_read_only_refuses_before_kimi_binary_resolution(tmp_path, monkeypatch):
 def test_short_names_and_full_aliases_resolve_and_unknown_models_reject(tmp_path, monkeypatch):
     for requested, resolved in (
         ("k3", "kimi-code/k3"),
+        ("kimi-k3", "kimi-code/k3"),
+        ("kimi-k3[1m]", "kimi-code/k3"),
         ("k2.7-coding", "kimi-code/kimi-for-coding"),
+        ("k2.7", "kimi-code/kimi-for-coding"),
+        ("kimi-for-coding", "kimi-code/kimi-for-coding"),
+        ("kimi-k2.7-code", "kimi-code/kimi-for-coding"),
         ("k2.7-coding-highspeed", "kimi-code/kimi-for-coding-highspeed"),
+        ("k2.7-highspeed", "kimi-code/kimi-for-coding-highspeed"),
+        ("kimi-for-coding-highspeed", "kimi-code/kimi-for-coding-highspeed"),
+        ("kimi-k2.7-code-highspeed", "kimi-code/kimi-for-coding-highspeed"),
         ("kimi-code/k3", "kimi-code/k3"),
     ):
         plan = _build(tmp_path, monkeypatch, model=requested)
