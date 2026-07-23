@@ -184,14 +184,14 @@ def _gate5_ready_for_apply_go(
     Sparse multi-year samples must not report ready (CF #5667 P1). Latest day
     must be within 1 calendar day of ``now_utc``.
     """
-    if target_days < 1 or len(days) < target_days:
+    if target_days < 1:
         return False
     try:
         parsed = sorted({date.fromisoformat(d) for d in days})
         today = date.fromisoformat(now_utc[:10])
     except ValueError:
         return False
-    if not parsed:
+    if len(parsed) < target_days:
         return False
     latest = parsed[-1]
     if (today - latest) > timedelta(days=1):
