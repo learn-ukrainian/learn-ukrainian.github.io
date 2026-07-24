@@ -569,10 +569,24 @@ def build_hydrate_capsule(
     included.append(reground)
 
     capsule = "\n\n".join(included).strip() + "\n"
-    # Final bound: if still over (huge identity), keep header + reground only.
+    # Final bound: hard-cap at max_tokens (footer first, then minimal header).
     if approx_tokens(capsule) > max_tokens:
-        capsule = "\n\n".join([header, reground]).strip() + "\n"
-        dropped = list(dict.fromkeys([*dropped, "all_sections_over_budget"]))
+        mini_header = (
+            f"# HYDRATE CAPSULE (post-compact)\n"
+            f"**Epic / stream:** `{epic}` / `{stream_id}`\n"
+            f"**Note:** budget-tight capsule; re-read diary Next Drive + Active Working Set.\n"
+        )
+        mini_reground = (
+            "## RE-GROUND CHECKLIST (mandatory after every compact)\n\n"
+            "1. Canary PASS = anchors only.\n"
+            "2. Re-read Next Drive + Active Working Set from diary.\n"
+            "3. Open active phase receipt; stop inventing if open task missing.\n"
+        )
+        capsule = "\n\n".join([mini_header, mini_reground]).strip() + "\n"
+        # If still over pathological tiny budgets, keep only reground lines that fit.
+        while approx_tokens(capsule) > max_tokens and len(capsule) > 80:
+            capsule = "\n".join(capsule.splitlines()[:-1]).strip() + "\n"
+        dropped = list(dict.fromkeys([*dropped, "budget_tight_minimal_reground"]))
     meta: dict[str, object] = {
         "epic": epic,
         "stream_id": stream_id,
