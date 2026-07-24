@@ -88,6 +88,11 @@ tie-breakers.
     replace advisor approval for design. Routine implementation of already-queued work does
     not need a new advisor turn. Violations: shipping helpers/layouts/process "for now",
     redefining primary-checkout semantics, or flipping gates without an advisor record.
+13. **Adversarial quality & constructive criticism (No happy-path nonsense).** Every status
+    report, architecture review, and code audit MUST lead with potential failure modes, missing
+    edge cases, race conditions, and un-tested codepaths. Never output superficial praise or
+    "happy path" cheerleading. Default to rigorous constructive critique: identify structural
+    fragility, demand empirical proof, and surface hidden risks before reporting past-tense execution.
 
 ## Precedence
 
