@@ -13,7 +13,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 INTAKE_JSON = REPO_ROOT / "data/lexicon/intake/private_teacher_lesson_intake_candidates.json"
 SOURCES_DB = REPO_ROOT / "data/sources.db"
-OUTPUT_JSON = REPO_ROOT / "site/public/lexicon/practice-cloze.teacher.json"
+OUTPUT_PUBLIC_JSON = REPO_ROOT / "site/public/lexicon/practice-cloze.teacher.json"
+OUTPUT_SRC_JSON = REPO_ROOT / "site/src/data/lexicon-teacher-cloze.json"
 
 def main():
     if not INTAKE_JSON.exists() or not SOURCES_DB.exists():
@@ -111,11 +112,17 @@ def main():
                 }
             )
 
-    OUTPUT_JSON.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
-        json.dump({"cloze": extracted_cloze}, f, ensure_ascii=False, indent=2)
+    payload = {"cloze": extracted_cloze}
 
-    print(f"Successfully generated {len(extracted_cloze)} Cloze items -> {OUTPUT_JSON}")
+    OUTPUT_PUBLIC_JSON.parent.mkdir(parents=True, exist_ok=True)
+    with open(OUTPUT_PUBLIC_JSON, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+
+    OUTPUT_SRC_JSON.parent.mkdir(parents=True, exist_ok=True)
+    with open(OUTPUT_SRC_JSON, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+
+    print(f"Successfully generated {len(extracted_cloze)} Cloze items -> {OUTPUT_PUBLIC_JSON} and {OUTPUT_SRC_JSON}")
 
 if __name__ == "__main__":
     main()
