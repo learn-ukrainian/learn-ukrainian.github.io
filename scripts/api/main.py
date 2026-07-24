@@ -14,6 +14,7 @@ import json
 import logging
 import os
 import socket
+import sqlite3
 import subprocess
 import threading
 from collections.abc import Awaitable, Callable
@@ -72,6 +73,8 @@ from .gold_router import router as gold_router
 from .governance_router import collect_governance_summary
 from .governance_router import router as governance_router
 from .hermes_cron_router import router as hermes_cron_router
+from .hramatka_router import initialize_hramatka_store
+from .hramatka_router import router as hramatka_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
 from .knowledge_router import router as knowledge_router
@@ -107,6 +110,10 @@ async def _lifespan(_app: FastAPI):
     preload_all()
     install_signal_logging()
     ensure_broker_db_ready()
+    try:
+        initialize_hramatka_store()
+    except (OSError, RuntimeError, sqlite3.Error) as exc:
+        logger.error("Hramatka store initialization failed; readyz will remain unhealthy: %s", exc)
     yield
 
 
@@ -167,6 +174,7 @@ app.include_router(ops_router, prefix="/api/ops", tags=["ops"])
 app.include_router(gold_router, prefix="/api/gold")
 app.include_router(governance_router, prefix="/api/state/governance", tags=["governance"])
 app.include_router(hermes_cron_router, prefix="/api/hermes-cron", tags=["hermes-cron"])
+app.include_router(hramatka_router)
 app.include_router(build_events_router, prefix="/api/build/events")
 app.include_router(images_router, prefix="/api/images")
 app.include_router(issues_router, prefix="/api/issues", tags=["issues"])
