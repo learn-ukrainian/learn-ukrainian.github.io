@@ -17,8 +17,10 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 
 | Epic | Recommended seat | Run |
 | --- | --- | --- |
-| **harness / infra / devops** | Gemini (AGY) | `./start-gemini-drive.sh devops` |
-| **harness / infra / devops** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-drive.sh devops` |
+| **harness / infra** | Gemini (AGY) | `./start-gemini-drive.sh infra` |
+| **harness / infra** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-drive.sh infra` |
+| **devops** | Gemini (AGY) | `./start-gemini-drive.sh devops` |
+| **devops** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-drive.sh devops` |
 | **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-drive.sh corpus` |
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.5 | `./start-grok-drive.sh atlas` |
 | **hramatka** (teacher lesson service) | Grok 4.5 · Sonnet-5 if judgment-heavy | `./start-grok-drive.sh hramatka` |
@@ -49,7 +51,7 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
   dropped on 2026-07-22 for its 272K window, then **re-added on 2026-07-23** as the named
   harness / infra / devops alternate: HydrationCapsuleV1's score-from-memory and small capsule
   hydrate change the rollover-cost calculus. Codex remains a formal-CF **review** seat + coding lane;
-  the shared lease prevents concurrent co-ownership.
+  each stream's lease prevents concurrent co-ownership.
 - **Kimi K3** — frontier coder/reviewer + cross-family escalation authority (`max-effort-only` makes a continuous loop costly).
 
 ### Machine-authority projection (lint #5642)
@@ -95,6 +97,8 @@ language + review lanes free and puts the loop on the most replaceable capacity:
   Anthropic capacity that does **not** consume the Opus review-of-record seat.
 - **HydrationCapsuleV1** gives Codex (272K) a measured, low-overhead score-and-hydrate path, so it
   can serve as the harness / infra / devops alternate without co-owning Gemini's stream lease.
+  Infra (`epic:4707`) and DevOps (`epic:5703`) are independent streams: one live driver does
+  not block the other, while a second driver on either same stream still fails closed.
 
 ---
 
@@ -102,8 +106,10 @@ language + review lanes free and puts the loop on the most replaceable capacity:
 
 1. Launcher pins `SESSION_EPIC`, claims the stream lease, and — for grok/gemini/kimi —
    mints the session canary; Claude/Sonnet use the SessionStart hook chain (no canary lane).
-   The Codex DevOps alternate preflights its lane-scoped rollover namespace before the
-   lease: zero packets starts fresh, one fresh unbound CLI packet exports exact IDs, and
+   The Codex DevOps alternate preflights its dedicated `codex-devops` rollover namespace
+   before acquiring `epic:5703`, independently of Infra's `codex-infra` / `epic:4707`
+   ownership. It then selects at most one applicable rollover: zero packets starts fresh,
+   one fresh unbound CLI packet exports exact IDs, and
    ambiguity, an already-resumed packet, or a native-app packet fails closed. After the
    lease and canary are ready, SessionStart binds the official new task ID and injects
    `CODEX-COLD-START.md`.

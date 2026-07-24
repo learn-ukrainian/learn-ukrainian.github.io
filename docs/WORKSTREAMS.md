@@ -29,7 +29,8 @@ The registry `scripts/config/issue_streams.yaml` is the single source of truth (
 | atlas-practice | #4387 → #4700 | Word Atlas + Practice Hub product & UX |
 | atlas-intake | #4220, #4378 | Full-corpus intake into the Atlas |
 | corpus-channels | #4706 | Acquisition & ingestion (textbooks · ZNO · Ohoiko-media · press · academic) |
-| infra-harness | #4707 | Infra, DevOps & fleet reliability (hooks, deps, dispatch, routing) |
+| infra-harness | #4707 | Infra & fleet reliability (hooks, dispatch, routing) |
+| devops | #5703 | DevOps automation, CI, release & launcher reliability |
 | eval-harness | #4913 | UA eval harness: QG grounding/entailment gates, grammar-lexical gate, annotation, bakeoffs, cutovers |
 | benchmark-2156 | #4639 | UA LLM factuality benchmark community release |
 | core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |

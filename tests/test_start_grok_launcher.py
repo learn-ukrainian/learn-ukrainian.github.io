@@ -282,7 +282,7 @@ def test_legacy_epic_suffix_normalizes_to_atlas(tmp_path: Path, arguments: list[
 @pytest.mark.parametrize(
     ("selector", "canonical_lane", "stream", "handoff"),
     [
-        ("devops", "infra", "epic:4707", "grok-infra"),
+        ("devops", "devops", "epic:5703", "grok-devops"),
         ("practice-hub", "atlas", "epic:4387", "grok-atlas"),
         ("seminars-folk", "folk", "epic:2836", "grok-folk"),
         ("seminars-bio", "bio", "epic:4431", "grok-bio"),
@@ -404,8 +404,8 @@ def test_dot_notation_infra_devops_uses_canonical_stream_and_handoff(tmp_path: P
         ["--epic", "infra.devops"],
     )
     assert result.returncode == 0, result.stderr + result.stdout
-    assert values["session_epic"] == "infra"
-    assert values["handoff"] == "grok-infra"
+    assert values["session_epic"] == "devops"
+    assert values["handoff"] == "grok-devops"
     supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
     stream_index = supervisor_args.index("--stream")
-    assert supervisor_args[stream_index + 1] == "epic:4707"
+    assert supervisor_args[stream_index + 1] == "epic:5703"

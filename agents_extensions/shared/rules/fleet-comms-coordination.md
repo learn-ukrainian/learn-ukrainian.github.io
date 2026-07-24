@@ -110,12 +110,13 @@ Every epic driver session (any harness) MUST:
 - Seat routing reminder: `docs/runbooks/epic-orchestrator-roster.md` (Gemini→harness/corpus,
   Grok→atlas/tracks, Sonnet-5→judgment-dense). **Live policy** is still
   `model_catalog.orchestrator_seats` + `/api/rules`.
-- **Codex is the named alternate for the harness / infra / devops stream** (re-added
+- **Codex is the named alternate for the harness / infra and DevOps streams** (re-added
   2026-07-23 after HydrationCapsuleV1 changed the rollover-cost calculus). Its launcher
   fails closed before lease acquisition on ambiguous, already-resumed, or native-app
   rollover packets; a fresh CLI packet is bound to the exact SessionStart task ID and
-  the generated cold-start board is injected automatically. Codex never concurrently
-  co-owns the stream and remains a formal-CF **review** + coding lane.
+  the generated cold-start board is injected automatically. Infra uses `epic:4707`;
+  DevOps independently uses `epic:5703`. Codex never concurrently co-owns a same-stream
+  lease and remains a formal-CF **review** + coding lane.
 
 ## Offline fallback path
 

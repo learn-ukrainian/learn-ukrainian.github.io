@@ -12,8 +12,9 @@ initialPrompt: |
     report the conflict to the user in one sentence, and do not drive it as this agent type regardless
     of what the SESSION PROFILE CAPSULE's banner says. Only once `lane-assignments.md` confirms (or is
     silent on) this agent type does the SESSION PROFILE CAPSULE's "ASSIGNED EPIC" banner BIND: you are
-    the <epic> lane; handoff slot `claude-<epic>` (canonical aliases: `harness`|`infra`|`devops` →
-    `claude-infra`, #5201/#5681); lane SSOT = `.claude/<epic>-epic/CLAUDE-DRIVER-HANDOFF.md`
+    the <epic> lane; handoff slot `claude-<epic>` (canonical aliases: `harness`|`infra` →
+    `claude-infra`, #5201/#5681; `devops` is the independent `claude-devops` slot);
+    lane SSOT = `.claude/<epic>-epic/CLAUDE-DRIVER-HANDOFF.md`
     (gitignored local — check ALL alias-spelled `<epic>-epic/` directories per COLD-START step 2, not
     just the capsule-named one). Stay in that epic's scope; other lanes' queues are hands-off.
   - No `--epic` → do NOT default-claim a lane. Resolve in the capsule's NO-EPIC order: (1) the
@@ -30,9 +31,10 @@ initialPrompt: |
      condition; never adopt or inspect a different lane's packet.
   2. Load lane state layered: the validated rollover packet first (when one exists), THEN the epic
      driver handoff (lane SSOT) — resume from its IN-FLIGHT + NEXT ACTION sections. **For the
-     harness/infra/devops epic specifically, its handoff directories are NOT yet unified across alias
-     spellings — check `.claude/harness-epic/`, `.claude/devops-epic/`, AND `.claude/infra-epic/`, not
-     just the one the capsule names.** Filesystem mtime is NOT a valid freshness signal here (these
+     harness/infra epic specifically, its handoff directories are NOT yet unified across alias
+     spellings — check `.claude/harness-epic/` and `.claude/infra-epic/`, not just the one the
+     capsule names. DevOps is an independent stream; never inspect or adopt
+     `.claude/devops-epic/` from an Infra session.** Filesystem mtime is NOT a valid freshness signal here (these
      files are gitignored and can be copied/touched/restored independently of when the work actually
      happened) — instead parse each file's topmost `## Session <YYYY-MM-DD>` heading (an explicit,
      semantic date the writer put there) to find the actual newest entry. If more than one directory's
@@ -120,10 +122,11 @@ and load-bearing.
   fixes were correct and tested, but they were not your call to make — hand off (comment with findings,
   step back), don't drive, once you recognize a different epic's work.
 - **ALIAS-DIRECTORY FRAGMENTATION (known gap, found 2026-07-23):** this epic's driver-handoff
-  directories (`.claude/harness-epic/`, `.claude/devops-epic/`, `.claude/infra-epic/` — one per alias
+  directories (`.claude/harness-epic/` and `.claude/infra-epic/` — one per Infra alias
   spelling, #5201/#5681) are NOT unified; a capsule saying "no driver handoff exists yet" for its named
-  spelling does NOT mean none exists at another. See COLD-START step 2 above for the check-all-three /
-  Session-date-freshness / STOP-on-ambiguity procedure — do not re-derive or restate it here; one
+  spelling does NOT mean none exists at another. See COLD-START step 2 above for the check-both /
+  Session-date-freshness / STOP-on-ambiguity procedure. `.claude/devops-epic/` belongs to the
+  independent DevOps stream and is outside this recovery search. Do not re-derive or restate it here; one
   procedure, one place, so it can't drift out of sync with itself again.
 - **YOURS — infrastructure + our code:** `scripts/build/`, `scripts/audit/`, `scripts/agent_runtime/`,
   `scripts/orchestration/`, `scripts/lexicon/` + Atlas, `linear_pipeline.py` + the V7 pipeline, gates +

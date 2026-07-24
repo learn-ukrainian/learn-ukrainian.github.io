@@ -106,6 +106,20 @@ def test_bootstrap_uses_normalized_epic_for_default_stream_id(tmp_path: Path) ->
     assert "never on compact count" in board
 
 
+def test_bootstrap_uses_dedicated_devops_stream(tmp_path: Path) -> None:
+    assert codex_lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", "devops"]) == 0
+
+    board = (tmp_path / ".claude" / "devops-epic" / "CODEX-COLD-START.md").read_text(
+        encoding="utf-8"
+    )
+    assert "**Stream:** `epic:5703`" in board
+
+
+def test_stream_defaults_require_canonical_devops_selector() -> None:
+    assert codex_lane.EPIC_STREAM_DEFAULTS["devops"] == "epic:5703"
+    assert "infra.devops" not in codex_lane.EPIC_STREAM_DEFAULTS
+
+
 def test_bootstrap_records_exact_rollover_without_rendering_lease_credentials(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

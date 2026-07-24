@@ -182,13 +182,13 @@ def prepare_cli_driver_rollover(primary: Path, *, active_thread_id: str) -> dict
             primary,
             "prepare",
             "--agent",
-            "codex-infra",
+            "codex-devops",
             "--harness",
             "codex-cli",
             "--active-thread-id",
             active_thread_id,
             "--stream-epic",
-            "4707",
+            "5703",
             "--semantic-title",
             "Continue the isolated Codex DevOps launcher test",
             "--task-family",
@@ -204,23 +204,29 @@ def prepare_cli_driver_rollover(primary: Path, *, active_thread_id: str) -> dict
     return json.loads(completed.stdout)
 
 
-def seed_driver_stream(primary: Path) -> SessionStreamStore:
+def seed_driver_stream(
+    primary: Path,
+    *,
+    stream_id: str,
+    close: bool,
+    instance_id: str = "fixture-seed",
+) -> SessionStreamStore:
     store = SessionStreamStore(
         SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3")
     )
     lease = store.open_session(
-        stream_id="epic:4707",
+        stream_id=stream_id,
         holder=LeaseHolder(
             agent="fixture",
             harness="pytest",
-            instance_id="fixture-seed",
+            instance_id=instance_id,
             process_id=os.getpid(),
-            task_id="fixture-seed",
+            task_id=instance_id,
         ),
-        lineage_id="lineage-fixture-seed",
+        lineage_id=f"lineage-{instance_id}",
         ttl_seconds=60,
-        session_id="session-fixture-seed",
-        lease_id="lease-fixture-seed",
+        session_id=f"session-{instance_id}",
+        lease_id=f"lease-{instance_id}",
     )
     entries = [
         (EntryType.BINDING_ORDER, "Drive only the isolated DevOps launcher acceptance lane."),
@@ -237,9 +243,10 @@ def seed_driver_stream(primary: Path) -> SessionStreamStore:
             lease,
             entry_type=entry_type,
             body=body,
-            idempotency_key=f"fixture-entry-{index}",
+            idempotency_key=f"{instance_id}-entry-{index}",
         )
-    store.close_session(lease)
+    if close:
+        store.close_session(lease)
     return store
 
 
@@ -824,7 +831,18 @@ def test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover
     tmp_path: Path,
 ) -> None:
     primary, _ = init_repo(tmp_path, bootstrap_sources=True)
-    store = seed_driver_stream(primary)
+    store = seed_driver_stream(
+        primary,
+        stream_id="epic:4707",
+        close=False,
+        instance_id="live-infra",
+    )
+    seed_driver_stream(
+        primary,
+        stream_id="epic:5703",
+        close=True,
+        instance_id="devops-history",
+    )
     packet = prepare_cli_driver_rollover(primary, active_thread_id=SOURCE_THREAD_ID)
     fake_bin = tmp_path / "bin"
     fake_home_bin = tmp_path / "home" / ".local" / "bin"
@@ -895,7 +913,8 @@ def test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover
     argv = argv_capture.read_text(encoding="utf-8").splitlines()
     assert "resume" not in argv
     assert "fork" not in argv
-    assert store.dump_stream("epic:4707")["sessions"][-1]["state"] == "closed"
+    assert store.dump_stream("epic:4707")["sessions"][-1]["state"] == "open"
+    assert store.dump_stream("epic:5703")["sessions"][-1]["state"] == "closed"
     assert git(primary, "status", "--short", "--untracked-files=all").stdout == ""
 
 
@@ -903,7 +922,7 @@ def test_real_codex_devops_launcher_fails_before_lease_on_rollover_ambiguity(
     tmp_path: Path,
 ) -> None:
     primary, _ = init_repo(tmp_path, bootstrap_sources=True)
-    store = seed_driver_stream(primary)
+    store = seed_driver_stream(primary, stream_id="epic:5703", close=True)
     first = prepare_cli_driver_rollover(primary, active_thread_id=SOURCE_THREAD_ID)
     second = prepare_cli_driver_rollover(primary, active_thread_id=SECOND_SOURCE_THREAD_ID)
     fake_bin = tmp_path / "bin"
@@ -953,5 +972,65 @@ def test_real_codex_devops_launcher_fails_before_lease_on_rollover_ambiguity(
     assert not started.exists()
     assert load_lease(primary, first)["replacement"]["status"] == "pending_start"
     assert load_lease(primary, second)["replacement"]["status"] == "pending_start"
-    assert len(store.dump_stream("epic:4707")["sessions"]) == 1
-    assert store.dump_stream("epic:4707")["sessions"][0]["state"] == "closed"
+    assert len(store.dump_stream("epic:5703")["sessions"]) == 1
+    assert store.dump_stream("epic:5703")["sessions"][0]["state"] == "closed"
+
+
+def test_real_codex_devops_launcher_refuses_second_live_devops_driver(
+    tmp_path: Path,
+) -> None:
+    primary, _ = init_repo(tmp_path, bootstrap_sources=True)
+    store = seed_driver_stream(
+        primary,
+        stream_id="epic:5703",
+        close=False,
+        instance_id="live-devops",
+    )
+    fake_bin = tmp_path / "bin"
+    fake_home_bin = tmp_path / "home" / ".local" / "bin"
+    fake_bin.mkdir(parents=True)
+    fake_home_bin.mkdir(parents=True)
+    started = tmp_path / "codex-started"
+
+    fake_npm = fake_home_bin / "npm"
+    fake_npm.write_text(
+        "#!/bin/bash\n"
+        "set -e\n"
+        "mkdir -p .codex/hooks\n"
+        "cp agents_extensions/codex/hooks.json .codex/hooks.json\n"
+        "cp agents_extensions/shared/hooks/session-setup.sh .codex/hooks/session-setup.sh\n",
+        encoding="utf-8",
+    )
+    fake_npm.chmod(0o755)
+    fake_codex = fake_home_bin / "codex"
+    fake_codex.write_text(
+        f"#!/bin/bash\ntouch {os.fspath(started)!r}\n",
+        encoding="utf-8",
+    )
+    fake_codex.chmod(0o755)
+
+    env = os.environ.copy()
+    for key in tuple(env):
+        if key.startswith("SESSION_") or key.startswith("LEARN_UKRAINIAN_") or key.startswith(
+            "CODEX_LAUNCHER_ROLLOVER_"
+        ) or key in {"CODEX_CANONICAL_REPO_ROOT", "CODEX_SESSION"}:
+            env.pop(key, None)
+    env.update(
+        {
+            "HOME": os.fspath(tmp_path / "home"),
+            "PATH": f"{fake_bin}:{fake_home_bin}:/usr/bin:/bin",
+            "PYENV_ROOT": os.fspath(tmp_path / "pyenv"),
+        }
+    )
+    launched = run(
+        [primary / "start-codex-drive.sh", "devops", "--model", "gpt-5.6-sol"],
+        cwd=primary,
+        env=env,
+    )
+
+    assert launched.returncode == 1
+    assert "already has live session" in launched.stderr
+    assert not started.exists()
+    assert len(store.dump_stream("epic:5703")["sessions"]) == 1
+    assert store.dump_stream("epic:5703")["sessions"][0]["state"] == "open"
+    assert git(primary, "status", "--short", "--untracked-files=all").stdout == ""

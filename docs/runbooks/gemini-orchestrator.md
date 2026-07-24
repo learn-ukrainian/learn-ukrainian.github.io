@@ -54,7 +54,8 @@ The cold-start prompt explicitly tells Gemini **not** to open or resume the leas
 | Epic | `SESSION_HANDOFF_AGENT` |
 | --- | --- |
 | atlas, hramatka, folk, bio, … | `gemini-<epic>` |
-| harness / infra / devops | `gemini-infra` |
+| harness / infra | `gemini-infra` |
+| devops | `gemini-devops` |
 
 ## Fleet Management & Rate Limits (`codexbar`)
 

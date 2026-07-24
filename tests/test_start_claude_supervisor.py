@@ -36,7 +36,7 @@ def _write_executable(path: Path, body: str) -> None:
     ("selector", "canonical_lane", "stream", "handoff"),
     [
         ("harness", "harness", "epic:4707", "claude-infra"),
-        ("devops", "infra", "epic:4707", "claude-infra"),
+        ("devops", "devops", "epic:5703", "claude-devops"),
         ("practice-hub", "atlas", "epic:4387", "claude-atlas"),
         ("seminars-folk", "folk", "epic:2836", "claude-folk"),
         ("seminars-bio", "bio", "epic:4431", "claude-bio"),

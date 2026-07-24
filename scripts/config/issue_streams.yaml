@@ -19,8 +19,11 @@ streams:
     title: "Corpus channels — acquisition & ingestion"
     epics: [4706]
   infra-harness:
-    title: "Infra, DevOps & fleet reliability (hooks, deps, dispatch, routing)"
+    title: "Infra & fleet reliability (hooks, dispatch, routing)"
     epics: [4707]
+  devops:
+    title: "DevOps automation, CI, release & launcher reliability"
+    epics: [5703]
   eval-harness:
     title: "UA eval harness — QG gates, grammar-lexical gate, annotation, bakeoffs"
     epics: [4913]
