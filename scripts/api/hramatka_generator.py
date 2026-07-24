@@ -138,6 +138,23 @@ def passes_all_hramatka_qg_rules(evidence: Mapping[str, Any]) -> bool:
     return True
 
 
+_LEVEL_ALIASES: dict[str, str] = {
+    "beginner": "a1",
+    "elementary": "a2",
+    "intermediate": "b1",
+    "upper-intermediate": "b2",
+    "advanced": "c1",
+    "mastery": "c2",
+}
+
+
+def normalize_hramatka_level(level: Any) -> str:
+    """Normalize CEFR level strings and common aliases into canonical CEFR codes."""
+
+    val = str(level or "b1").strip().lower()
+    return _LEVEL_ALIASES.get(val, val)
+
+
 def generate_qualified_lesson(
     request: Mapping[str, Any],
     *,
@@ -192,8 +209,11 @@ def generate_qualified_lesson(
             )
             return _failed(attempts, "invalid_provider_payload")
 
+        normalized_lesson = dict(lesson)
+        normalized_lesson["level"] = normalize_hramatka_level(lesson.get("level"))
+
         try:
-            evidence = qg_scan(lesson)
+            evidence = qg_scan(normalized_lesson)
         except Exception as error:
             attempts.append(
                 GenerationAttempt(

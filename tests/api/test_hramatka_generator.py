@@ -14,6 +14,7 @@ from scripts.api.hramatka_generator import (
     ProviderHTTPError,
     generate_qualified_lesson,
     is_transient_provider_failure,
+    normalize_hramatka_level,
 )
 from scripts.audit.hramatka_qg_rules import DIMENSION_ORDER
 
@@ -58,7 +59,7 @@ def test_primary_route_success_uses_gemini_36_flash_and_marks_ready() -> None:
     assert result.lesson == lesson
     assert result.failure_reason is None
     assert transport.models == [PRIMARY_MODEL]
-    assert qg_calls == [lesson]
+    assert qg_calls == [{"title": "Чистий урок", "blocks": [{"id": "b1", "type": "intro"}], "level": "b1"}]
     assert [attempt.outcome for attempt in result.attempts] == ["ready"]
 
 
@@ -180,4 +181,13 @@ def test_urllib_http_error_handling_differentiates_4xx_and_5xx() -> None:
 
     assert is_transient_provider_failure(error_401) is False
     assert is_transient_provider_failure(error_502) is True
+
+
+def test_normalize_hramatka_level_handles_aliases_and_missing_levels() -> None:
+    assert normalize_hramatka_level("Intermediate") == "b1"
+    assert normalize_hramatka_level("Beginner") == "a1"
+    assert normalize_hramatka_level(None) == "b1"
+    assert normalize_hramatka_level("") == "b1"
+    assert normalize_hramatka_level("A2") == "a2"
+
 
