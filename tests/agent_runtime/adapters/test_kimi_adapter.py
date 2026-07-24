@@ -415,3 +415,70 @@ def test_no_credential_value_written_to_cmd_log_or_telemetry(tmp_path, monkeypat
     assert secret_token not in telemetry.model
     assert secret_token not in telemetry.effort
     assert secret_token not in telemetry.cli_version
+
+
+def _kimicc_plan(tmp_path, monkeypatch, *, session_id=None):
+    """Build a KimiCC-route plan (native binary absent, credential present)."""
+    monkeypatch.delenv("LEARN_UK_KIMI_BIN", raising=False)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimi._resolve_kimi_binary", lambda: None)
+    claude_bin = tmp_path / "claude"
+    claude_bin.write_text("#!/bin/sh\n", encoding="utf-8")
+    claude_bin.chmod(0o755)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimi._resolve_claude_binary", lambda: str(claude_bin))
+    monkeypatch.setenv("KIMICC_AUTH_TOKEN", "token-for-session-test")
+    return KimiAdapter().build_invocation(
+        prompt="Inspect kimicc.",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="k3",
+        task_id="kimicc-session-test",
+        session_id=session_id,
+        tool_config=None,
+    )
+
+
+def test_kimicc_resumes_supplied_session_id(tmp_path, monkeypatch):
+    """CF F002: the KimiCC route must honour session_id, like the native --session path.
+
+    Without this the adapter parses a session id out of the stream but never sends one
+    back, so every follow-up call silently starts a cold conversation.
+    """
+    plan = _kimicc_plan(tmp_path, monkeypatch, session_id="sess-abc-123")
+    assert "--resume" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--resume") + 1] == "sess-abc-123"
+    # The prompt must remain the terminal argument after the `--` separator.
+    assert plan.cmd[-1] == "Inspect kimicc."
+    assert plan.cmd[-2] == "--"
+
+
+def test_kimicc_omits_resume_when_no_session(tmp_path, monkeypatch):
+    plan = _kimicc_plan(tmp_path, monkeypatch, session_id=None)
+    assert "--resume" not in plan.cmd
+
+
+def test_stream_result_event_does_not_duplicate_assistant_text(tmp_path):
+    """CF F001: stream-json carries the answer twice (incremental + terminal result).
+
+    Appending both duplicated every response. The terminal result wins.
+    """
+    stdout = "\n".join(
+        [
+            json.dumps({"type": "assistant", "message": {"content": [{"type": "text", "text": "MODEL_OK"}]}}),
+            json.dumps({"type": "result", "result": "MODEL_OK"}),
+        ]
+    )
+    parsed = KimiAdapter().parse_response(
+        stdout=stdout, stderr="", returncode=0, output_file=None
+    )
+    assert parsed.response == "MODEL_OK", f"expected single copy, got {parsed.response!r}"
+
+
+def test_stream_falls_back_to_accumulated_text_when_no_result_event(tmp_path):
+    """A truncated/aborted stream has no terminal result — keep what we streamed."""
+    stdout = json.dumps(
+        {"type": "assistant", "message": {"content": [{"type": "text", "text": "partial answer"}]}}
+    )
+    parsed = KimiAdapter().parse_response(
+        stdout=stdout, stderr="", returncode=0, output_file=None
+    )
+    assert parsed.response == "partial answer"

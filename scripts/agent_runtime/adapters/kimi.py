@@ -197,6 +197,13 @@ class KimiAdapter:
         if mode == "danger":
             cmd.append("--dangerously-skip-permissions")
 
+        # Session continuity (CF F002). The native route preserves conversation state via
+        # `--session`; without the equivalent here every KimiCC follow-up would start cold,
+        # discarding context the caller explicitly asked us to resume. We parse a session id
+        # out of the stream below, so failing to send one back is a silent regression.
+        if session_id:
+            cmd.extend(["--resume", session_id])
+
         cmd.extend(["--", prompt])
 
         env_overrides = {
@@ -254,21 +261,27 @@ class KimiAdapter:
         _ = (output_file, plan, call_start_time)
 
         events = parse_json_events(stdout, source="kimi stream-json", logger=_logger)
-        response_parts: list[str] = []
+        # CF F001: a stream-json transcript carries the assistant text TWICE — once as
+        # incremental message/assistant events, then again in full in the terminal `result`
+        # event. Appending both duplicated every response. Track them separately and prefer
+        # the terminal result (it is the completed text); fall back to the accumulated
+        # stream only when no non-empty result event arrived (truncated/aborted stream).
+        streamed_parts: list[str] = []
+        final_result: str | None = None
         session_id: str | None = None
         for event in events:
             if event.get("role") == "assistant":
                 content = _assistant_text(event.get("content"))
                 if content:
-                    response_parts.append(content)
+                    streamed_parts.append(content)
             elif isinstance(event.get("result"), str) and event.get("result").strip():
-                response_parts.append(event["result"].strip())
+                final_result = event["result"].strip()
             elif isinstance(event.get("message"), dict):
                 content = event["message"].get("content")
                 if isinstance(content, list):
                     for item in content:
                         if isinstance(item, dict) and item.get("type") == "text" and isinstance(item.get("text"), str):
-                            response_parts.append(item["text"].strip())
+                            streamed_parts.append(item["text"].strip())
             if event.get("role") == "meta" and event.get("type") == "session.resume_hint":
                 raw_session_id = event.get("session_id")
                 if isinstance(raw_session_id, str) and raw_session_id.strip():
@@ -277,7 +290,7 @@ class KimiAdapter:
             if isinstance(sid, str) and sid.strip() and not session_id:
                 session_id = sid.strip()
 
-        response = "\n".join(response_parts).strip()
+        response = (final_result or "\n".join(streamed_parts)).strip()
         combined = f"{stderr or ''}\n{stdout or ''}"
         call_failed = returncode != 0 or not response
         rate_limited = call_failed and bool(_RATE_LIMIT_RE.search(combined))
