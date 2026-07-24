@@ -167,6 +167,8 @@ private-source-review/
 **/atlas-private-teacher-lesson-candidates.json
 **/atlas-private-teacher-lesson-bulk-triage.json
 **/atlas-private-teacher-lesson-bulk-triage.md
+data/lexicon/intake/*_journal.json
+data/lexicon/intake/*.lock
 
 # Temporary markdown files (root folder)
 temp*.md
