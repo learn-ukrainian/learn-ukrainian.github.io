@@ -66,11 +66,9 @@ def test_mode_flag_mapping_is_empty_for_all_headless_modes():
     }
 
 
-def test_read_only_refuses_before_kimi_binary_resolution(tmp_path, monkeypatch):
-    with patch("scripts.agent_runtime.adapters.kimi._resolve_kimi_binary") as resolve_binary:
-        with pytest.raises(ValueError, match=re.escape(_READ_ONLY_REFUSAL)):
-            _build(tmp_path, monkeypatch, mode="read-only")
-    resolve_binary.assert_not_called()
+def test_read_only_refuses_on_native_path(tmp_path, monkeypatch):
+    with pytest.raises(ValueError, match=re.escape(_READ_ONLY_REFUSAL)):
+        _build(tmp_path, monkeypatch, mode="read-only")
 
 
 def test_short_names_and_full_aliases_resolve_and_unknown_models_reject(tmp_path, monkeypatch):
@@ -270,3 +268,150 @@ def test_binary_resolution_falls_back_to_legacy_when_hermes_absent(tmp_path, mon
     monkeypatch.setattr(kimi_adapter.Path, "home", lambda: home)
 
     assert kimi_adapter._resolve_kimi_binary() == str(legacy)
+
+
+def test_native_binary_present_selects_native_path(tmp_path, monkeypatch):
+    binary = tmp_path / "kimi"
+    binary.write_text("#!/bin/sh\n", encoding="utf-8")
+    binary.chmod(0o755)
+    monkeypatch.setenv("LEARN_UK_KIMI_BIN", str(binary))
+
+    plan = KimiAdapter().build_invocation(
+        prompt="Inspect native.",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="k3",
+        task_id="native-test",
+        session_id=None,
+        tool_config=None,
+    )
+
+    assert plan.cmd[0] == str(binary)
+    assert "-m" in plan.cmd
+    assert plan.cmd[plan.cmd.index("-m") + 1] == "kimi-code/k3"
+    assert "ANTHROPIC_BASE_URL" not in plan.env_overrides
+
+
+def test_native_absent_credential_available_selects_kimicc_path(tmp_path, monkeypatch):
+    monkeypatch.delenv("LEARN_UK_KIMI_BIN", raising=False)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimi._resolve_kimi_binary", lambda: None)
+
+    claude_bin = tmp_path / "claude"
+    claude_bin.write_text("#!/bin/sh\n", encoding="utf-8")
+    claude_bin.chmod(0o755)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimi._resolve_claude_binary", lambda: str(claude_bin))
+
+    monkeypatch.setenv("KIMICC_AUTH_TOKEN", "token-from-kimicc-env")
+
+    plan = KimiAdapter().build_invocation(
+        prompt="Inspect kimicc.",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="k3",
+        task_id="kimicc-test",
+        session_id=None,
+        tool_config=None,
+    )
+
+    assert plan.cmd[0] == str(claude_bin)
+    assert "--model" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--model") + 1] == "k3"
+    assert plan.env_overrides["ANTHROPIC_BASE_URL"] == "https://api.kimi.com/coding"
+    assert plan.env_overrides["ANTHROPIC_AUTH_TOKEN"] == "token-from-kimicc-env"
+    assert plan.env_overrides["LEARN_UKRAINIAN_TRANSPORT"] == "kimicc"
+
+
+def test_native_absent_no_credential_raises_typed_unavailability_error(tmp_path, monkeypatch):
+    monkeypatch.delenv("LEARN_UK_KIMI_BIN", raising=False)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimi._resolve_kimi_binary", lambda: None)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimi._resolve_claude_binary", lambda: "/usr/local/bin/claude")
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimi._resolve_kimicc_auth", lambda _ep: None)
+
+    with pytest.raises(RuntimeError, match="Kimi lane unavailable: no Kimi API credential found"):
+        KimiAdapter().build_invocation(
+            prompt="Test no cred.",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model="k3",
+            task_id="no-cred-test",
+            session_id=None,
+            tool_config=None,
+        )
+
+
+def test_auth_precedence_order_matches_start_kimicc_sh(monkeypatch):
+    from scripts.agent_runtime.adapters.kimi import _resolve_kimicc_auth
+
+    monkeypatch.setenv("KIMICC_AUTH_TOKEN", "token-kimicc")
+    monkeypatch.setenv("MOONSHOT_API_KEY", "token-moonshot")
+    monkeypatch.setenv("KIMI_API_KEY", "token-kimi")
+    monkeypatch.setenv("ANTHROPIC_AUTH_TOKEN", "token-anthropic")
+    monkeypatch.setattr("scripts.lib.kimi_coding_oauth.get_oauth_token", lambda: "token-oauth")
+
+    # 1. KIMICC_AUTH_TOKEN wins over all
+    auth = _resolve_kimicc_auth("coding")
+    assert auth == ("token-kimicc", "KIMICC_AUTH_TOKEN")
+
+    # 2. MOONSHOT_API_KEY wins over remaining
+    monkeypatch.delenv("KIMICC_AUTH_TOKEN")
+    auth = _resolve_kimicc_auth("coding")
+    assert auth == ("token-moonshot", "MOONSHOT_API_KEY")
+
+    # 3. KIMI_API_KEY wins over remaining
+    monkeypatch.delenv("MOONSHOT_API_KEY")
+    auth = _resolve_kimicc_auth("coding")
+    assert auth == ("token-kimi", "KIMI_API_KEY")
+
+    # 4. ANTHROPIC_AUTH_TOKEN wins over OAuth on coding endpoint
+    monkeypatch.delenv("KIMI_API_KEY")
+    auth = _resolve_kimicc_auth("coding")
+    assert auth == ("token-anthropic", "ANTHROPIC_AUTH_TOKEN")
+
+    # 5. OAuth helper used when no env keys are set on coding endpoint
+    monkeypatch.delenv("ANTHROPIC_AUTH_TOKEN")
+    auth = _resolve_kimicc_auth("coding")
+    assert auth == ("token-oauth", "oauth(kimi login)")
+
+    # On platform endpoint, ANTHROPIC_AUTH_TOKEN and OAuth are NOT used
+    auth_platform = _resolve_kimicc_auth("platform")
+    assert auth_platform is None
+
+
+def test_no_credential_value_written_to_cmd_log_or_telemetry(tmp_path, monkeypatch, caplog):
+    caplog.set_level(logging.DEBUG)
+    secret_token = "SECRET_TOKEN_VALUE_XYZ_999"
+
+    monkeypatch.delenv("LEARN_UK_KIMI_BIN", raising=False)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimi._resolve_kimi_binary", lambda: None)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimi._resolve_claude_binary", lambda: "/usr/local/bin/claude")
+    monkeypatch.setenv("KIMICC_AUTH_TOKEN", secret_token)
+
+    plan = KimiAdapter().build_invocation(
+        prompt="Inspect secret safety.",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="k3",
+        task_id="secret-test",
+        session_id=None,
+        tool_config=None,
+    )
+
+    # Secret is in env_overrides (passed safely to subprocess environment)
+    assert plan.env_overrides["ANTHROPIC_AUTH_TOKEN"] == secret_token
+
+    # Secret is NEVER in cmd argv
+    assert secret_token not in " ".join(plan.cmd)
+
+    # Secret is NEVER in log output
+    assert secret_token not in caplog.text
+
+    # Secret is NEVER in resolved telemetry
+    telemetry = resolve_invocation_telemetry(
+        agent_name="kimi",
+        plan=plan,
+        requested_model="k3",
+        requested_effort="max",
+    )
+    assert secret_token not in telemetry.model
+    assert secret_token not in telemetry.effort
+    assert secret_token not in telemetry.cli_version

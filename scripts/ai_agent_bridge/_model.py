@@ -44,14 +44,14 @@ def _build_agy_probe_plan(model: str, task_id: str = "check-model"):
 
 
 def _build_kimi_probe_plan(model: str, task_id: str = "check-model"):
-    """Build a native Kimi probe plan without executing a live request."""
+    """Build a Kimi probe plan (native or KimiCC) without executing a live request."""
     try:
         resolve_kimi_model(model)
     except ValueError:
         return None
     return _KIMI_ADAPTER.build_invocation(
         prompt="Reply with exactly: MODEL_OK",
-        mode="read-only",
+        mode="danger",
         cwd=_REPO_ROOT,
         model=model,
         task_id=task_id,
@@ -90,7 +90,13 @@ def check_model(
             print(f"🔍 Model '{model}': {status} (cached {int(age)}s ago)")
             return available
 
-    plan = _build_agy_probe_plan(model) if agent == "agy" else _build_kimi_probe_plan(model)
+    try:
+        plan = _build_agy_probe_plan(model) if agent == "agy" else _build_kimi_probe_plan(model)
+    except (RuntimeError, ValueError) as exc:
+        print(f"❌ {agent.upper()} lane unavailable: {exc}")
+        _MODEL_CACHE[cache_key] = (False, _time.time())
+        return False
+
     if plan is None:
         model_source = "AGY" if agent == "agy" else "Kimi"
         print(

@@ -194,7 +194,8 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
         # K3 is always-max; the k2.7 coding models expose no effort knob.
         # Read the resolved model off the plan so telemetry never mislabels
         # an ignored caller request as effective (#5326 multi-model lane).
-        return "max" if _arg_after(plan.cmd, "-m") == "kimi-code/k3" else _NOT_EXPOSED
+        model = _arg_after(plan.cmd, "-m", "--model")
+        return "max" if model in ("kimi-code/k3", "k3", "kimi-k3[1m]") else _NOT_EXPOSED
     return None
 
 

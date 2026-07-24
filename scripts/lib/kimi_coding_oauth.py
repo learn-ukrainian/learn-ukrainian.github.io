@@ -203,16 +203,52 @@ def force_refresh_token() -> str:
         return token
 
 
-def cmd_token() -> int:
+def get_oauth_token() -> str | None:
+    """Return a fresh Kimi Code OAuth access token without printing to stdout.
+
+    Returns None if credentials are missing or cannot be refreshed.
+    """
     path = _credentials_path()
     margin = _margin_seconds()
+    if not path.is_file():
+        return None
+
+    lock_path = path.with_suffix(path.suffix + ".lock")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a") as lock_handle:
+        fcntl.flock(lock_handle.fileno(), fcntl.LOCK_EX)
+        try:
+            data = _read_credentials(path)
+        except (OSError, ValueError):
+            return None
+
+        token = _fresh_token(data, margin)
+        if token is not None:
+            return token
+
+        try:
+            merged = _refresh(data)
+        except (NoCredentialsError, RefreshFailedError):
+            return None
+        try:
+            _write_credentials(path, merged)
+        except OSError:
+            return None
+
+        return _fresh_token(merged, 0)
+
+
+def cmd_token() -> int:
+    token = get_oauth_token()
+    if token is not None:
+        print(token)
+        return 0
+
+    path = _credentials_path()
     if not path.is_file():
         print(f"kimi-coding-oauth: credential file not found: {path} (run `kimi login`)", file=sys.stderr)
         return 2
 
-    # Serialize refreshes across concurrent apiKeyHelper invocations. The lock
-    # file is ours; the kimi CLI does not take it, so after acquiring we
-    # re-read and re-check in case another process already refreshed.
     lock_path = path.with_suffix(path.suffix + ".lock")
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     with lock_path.open("a") as lock_handle:
@@ -222,11 +258,6 @@ def cmd_token() -> int:
         except (OSError, ValueError) as exc:
             print(f"kimi-coding-oauth: cannot read credentials: {exc}", file=sys.stderr)
             return 2
-
-        token = _fresh_token(data, margin)
-        if token is not None:
-            print(token)
-            return 0
 
         try:
             merged = _refresh(data)

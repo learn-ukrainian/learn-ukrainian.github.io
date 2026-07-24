@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.review.model_catalog import kimi_model_aliases
+from scripts.review.model_catalog import resolve_kimi_model as resolve_kimi_catalog_route
 
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
@@ -68,7 +69,7 @@ _READ_ONLY_REFUSAL = (
 
 
 class KimiAdapter:
-    """Adapter for native ``kimi`` prompt mode using the K3 model."""
+    """Adapter for native ``kimi`` or KimiCC (Claude Code host binary)."""
 
     name: str = "kimi"
     default_model: str = KIMI_DEFAULT_MODEL
@@ -92,60 +93,151 @@ class KimiAdapter:
                 f"KimiAdapter: unsupported mode {mode!r} "
                 f"(supported: {sorted(self.supported_modes)})"
             )
-        if mode == "read-only":
-            raise ValueError(_READ_ONLY_REFUSAL)
 
-        requested_model = resolve_kimi_model(model)
+        requested_alias = model or KIMI_DEFAULT_MODEL
+        try:
+            canonical_model_id, routes = resolve_kimi_catalog_route(requested_alias)
+        except Exception as exc:
+            raise ValueError(
+                f"KimiAdapter: unsupported Kimi model {requested_alias!r}; "
+                f"allowed: {sorted(KIMI_ALLOWED_MODELS)}"
+            ) from exc
 
-        if effort and requested_model == KIMI_MODEL_ALIASES["k3"] and effort != self.default_effort:
-            _logger.warning(
-                "Kimi K3 exposes max effort only; ignoring requested effort=%s",
-                effort,
+        native_bin = _resolve_kimi_binary()
+        if native_bin is not None:
+            if mode == "read-only":
+                raise ValueError(_READ_ONLY_REFUSAL)
+
+            if effort and canonical_model_id == KIMI_MODEL_ALIASES["k3"] and effort != self.default_effort:
+                _logger.warning(
+                    "Kimi K3 exposes max effort only; ignoring requested effort=%s",
+                    effort,
+                )
+
+            cmd: list[str] = [
+                native_bin,
+                "-p",
+                prompt,
+                "-m",
+                canonical_model_id,
+                "--output-format",
+                "stream-json",
+                *_MODE_FLAGS[mode],
+            ]
+
+            if session_id:
+                cmd.extend(["--session", session_id])
+
+            config = tool_config or {}
+            for skills_dir in _as_string_list(config.get("kimi_skills_dirs")):
+                cmd.extend(["--skills-dir", skills_dir])
+            for add_dir in _as_string_list(config.get("kimi_add_dirs")):
+                cmd.extend(["--add-dir", add_dir])
+
+            _logger.debug(
+                "kimi native invocation: task=%s mode=%s model=%s effort=%s",
+                task_id,
+                mode,
+                canonical_model_id,
+                self.default_effort,
             )
 
-        kimi_bin = _resolve_kimi_binary()
-        cmd: list[str] = [
-            kimi_bin,
+            liveness_paths = tuple(
+                path
+                for path in (
+                    Path.home() / ".kimi-code" / "logs" / "kimi-code.log",
+                    Path.home() / ".kimi-code" / "session_index.jsonl",
+                )
+                if path.exists()
+            )
+            return InvocationPlan(
+                cmd=cmd,
+                cwd=cwd,
+                stdin_payload="",
+                output_file=None,
+                env_overrides={},
+                liveness_paths=liveness_paths,
+            )
+
+        # KimiCC fallback route (Claude Code host binary pointed at Kimi endpoint)
+        claude_bin = _resolve_claude_binary()
+        if not claude_bin:
+            raise RuntimeError(
+                "Kimi lane unavailable: no native `kimi` binary found and `claude` binary for KimiCC is not on PATH."
+            )
+
+        endpoint = os.environ.get("KIMICC_ENDPOINT", "coding")
+        if endpoint not in ("coding", "platform"):
+            raise ValueError(f"KimiAdapter: unsupported endpoint {endpoint!r} (use 'coding' or 'platform')")
+
+        auth = _resolve_kimicc_auth(endpoint)
+        if not auth:
+            raise RuntimeError(
+                "Kimi lane unavailable: no Kimi API credential found for KimiCC route. "
+                "Set KIMICC_AUTH_TOKEN, MOONSHOT_API_KEY, KIMI_API_KEY, ANTHROPIC_AUTH_TOKEN, or run `kimi login`."
+            )
+
+        token, auth_source = auth
+        lead_model = routes["platform_model_id"] if endpoint == "platform" else routes["coding_model_id"]
+
+        base_url = os.environ.get("KIMICC_BASE_URL") or (
+            "https://api.moonshot.ai/anthropic" if endpoint == "platform" else "https://api.kimi.com/coding"
+        )
+        base_url = base_url.rstrip("/")
+
+        cmd = [
+            claude_bin,
             "-p",
-            prompt,
-            "-m",
-            requested_model,
+            "--model",
+            lead_model,
             "--output-format",
             "stream-json",
-            *_MODE_FLAGS[mode],
+            "--verbose",
         ]
+        if mode == "danger":
+            cmd.append("--dangerously-skip-permissions")
 
-        if session_id:
-            cmd.extend(["--session", session_id])
+        cmd.extend(["--", prompt])
 
-        config = tool_config or {}
-        for skills_dir in _as_string_list(config.get("kimi_skills_dirs")):
-            cmd.extend(["--skills-dir", skills_dir])
-        for add_dir in _as_string_list(config.get("kimi_add_dirs")):
-            cmd.extend(["--add-dir", add_dir])
+        env_overrides = {
+            "ANTHROPIC_BASE_URL": base_url,
+            "ANTHROPIC_AUTH_TOKEN": token,
+            "ANTHROPIC_MODEL": lead_model,
+            "ANTHROPIC_DEFAULT_OPUS_MODEL": lead_model,
+            "ANTHROPIC_DEFAULT_SONNET_MODEL": lead_model,
+            "ANTHROPIC_DEFAULT_HAIKU_MODEL": lead_model,
+            "ANTHROPIC_DEFAULT_FABLE_MODEL": lead_model,
+            "CLAUDE_CODE_SUBAGENT_MODEL": lead_model,
+            "ENABLE_TOOL_SEARCH": "false",
+            "LEARN_UKRAINIAN_TRANSPORT": "kimicc",
+        }
+        if "ANTHROPIC_API_KEY" in os.environ:
+            env_overrides["ANTHROPIC_API_KEY"] = ""
+
+        if routes.get("kimicc_alias") == "k3":
+            env_overrides["CLAUDE_CODE_EFFORT_LEVEL"] = effort or self.default_effort
+        elif effort:
+            env_overrides["CLAUDE_CODE_EFFORT_LEVEL"] = effort
 
         _logger.debug(
-            "kimi invocation: task=%s mode=%s model=%s effort=%s",
+            "kimicc invocation: task=%s mode=%s endpoint=%s model=%s auth_source=%s",
             task_id,
             mode,
-            requested_model,
-            self.default_effort,
+            endpoint,
+            lead_model,
+            auth_source,
         )
 
         liveness_paths = tuple(
-            path
-            for path in (
-                Path.home() / ".kimi-code" / "logs" / "kimi-code.log",
-                Path.home() / ".kimi-code" / "session_index.jsonl",
-            )
-            if path.exists()
+            p for p in (Path.home() / ".claude-kimicc", Path.home() / ".claude" / "projects") if p.exists()
         )
+
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
             stdin_payload="",
             output_file=None,
-            env_overrides={},
+            env_overrides=env_overrides,
             liveness_paths=liveness_paths,
         )
 
@@ -169,10 +261,21 @@ class KimiAdapter:
                 content = _assistant_text(event.get("content"))
                 if content:
                     response_parts.append(content)
+            elif isinstance(event.get("result"), str) and event.get("result").strip():
+                response_parts.append(event["result"].strip())
+            elif isinstance(event.get("message"), dict):
+                content = event["message"].get("content")
+                if isinstance(content, list):
+                    for item in content:
+                        if isinstance(item, dict) and item.get("type") == "text" and isinstance(item.get("text"), str):
+                            response_parts.append(item["text"].strip())
             if event.get("role") == "meta" and event.get("type") == "session.resume_hint":
                 raw_session_id = event.get("session_id")
                 if isinstance(raw_session_id, str) and raw_session_id.strip():
                     session_id = raw_session_id.strip()
+            sid = event.get("session_id") or event.get("sessionId")
+            if isinstance(sid, str) and sid.strip() and not session_id:
+                session_id = sid.strip()
 
         response = "\n".join(response_parts).strip()
         combined = f"{stderr or ''}\n{stdout or ''}"
@@ -201,7 +304,7 @@ class KimiAdapter:
         return tuple(plan.liveness_paths)
 
 
-def _resolve_kimi_binary() -> str:
+def _resolve_kimi_binary() -> str | None:
     override = os.environ.get("LEARN_UK_KIMI_BIN")
     # The hermes npm install (@moonshot-ai/kimi-code) is the maintained one;
     # ~/.kimi-code/bin/kimi is the legacy standalone binary and is often stale.
@@ -214,10 +317,49 @@ def _resolve_kimi_binary() -> str:
     for candidate in candidates:
         if candidate and Path(candidate).is_file() and os.access(candidate, os.X_OK):
             return str(Path(candidate))
-    raise RuntimeError(
-        "Kimi Code CLI not found. Install it so `kimi` is on PATH or set "
-        "LEARN_UK_KIMI_BIN to the executable path."
-    )
+    return None
+
+
+def _resolve_claude_binary() -> str | None:
+    found = shutil.which("claude")
+    if found:
+        return found
+    default = Path.home() / ".local" / "bin" / "claude"
+    if default.is_file() and os.access(default, os.X_OK):
+        return str(default)
+    return None
+
+
+def _resolve_kimicc_auth(endpoint: str) -> tuple[str, str] | None:
+    """Resolve KimiCC auth token and its source name without logging the token.
+
+    Precedence matching start-kimicc.sh:
+    1. KIMICC_AUTH_TOKEN
+    2. MOONSHOT_API_KEY
+    3. KIMI_API_KEY
+    4. ANTHROPIC_AUTH_TOKEN (coding endpoint only)
+    5. OAuth credential via get_oauth_token() (coding endpoint only)
+    """
+    for env_var in ("KIMICC_AUTH_TOKEN", "MOONSHOT_API_KEY", "KIMI_API_KEY"):
+        val = os.environ.get(env_var)
+        if val and val.strip():
+            return val.strip(), env_var
+
+    if endpoint == "coding":
+        val = os.environ.get("ANTHROPIC_AUTH_TOKEN")
+        if val and val.strip():
+            return val.strip(), "ANTHROPIC_AUTH_TOKEN"
+
+        try:
+            from scripts.lib.kimi_coding_oauth import get_oauth_token
+
+            oauth_token = get_oauth_token()
+            if oauth_token and oauth_token.strip():
+                return oauth_token.strip(), "oauth(kimi login)"
+        except Exception as exc:
+            _logger.debug("KimiCC OAuth credential lookup failed: %s", exc)
+
+    return None
 
 
 def _as_string_list(value: Any) -> list[str]:

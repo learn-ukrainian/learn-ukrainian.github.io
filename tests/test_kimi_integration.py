@@ -7,8 +7,6 @@ from contextlib import contextmanager
 from pathlib import Path
 from types import SimpleNamespace
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from scripts.ai_agent_bridge import _channels, _cli, _kimi
@@ -148,12 +146,11 @@ def test_fetch_kimi_message_returns_none_for_an_unaddressed_row(monkeypatch, cap
     assert "not addressed to kimi" in capsys.readouterr().out
 
 
-def test_check_model_refuses_read_only_native_kimi_probe():
-    with pytest.raises(
-        ValueError,
-        match=r"kimi headless auto-approves mutations; read-only cannot be guaranteed on CLI 0.27",
-    ):
-        _build_kimi_probe_plan("k3")
+def test_build_kimi_probe_plan_returns_valid_plan(monkeypatch):
+    monkeypatch.setenv("KIMICC_AUTH_TOKEN", "test-token")
+    plan = _build_kimi_probe_plan("k3")
+    assert plan is not None
+    assert plan.cmd[0].endswith("kimi") or plan.cmd[0].endswith("claude")
 
 
 def test_kimi_trailer_is_accepted():
