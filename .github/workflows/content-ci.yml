@@ -8,9 +8,17 @@ permissions:
   contents: read
 
 on:
-  # Advisory content gates intentionally avoid a global path filter.
-  # See ci.yml #1641/#1644: filtered required checks can wedge PRs as "expected".
   pull_request:
+    paths:
+      - 'docs/research/**'
+      - 'curriculum/**'
+      - 'plans/**'
+      - 'site/src/content/docs/**'
+      - 'scripts/audit/lint_bio_dossier_xref.py'
+      - 'scripts/audit/check_dossier_wordcount.py'
+      - 'scripts/audit/check_promote_quality_changed.py'
+      - 'scripts/audit/check_framing_compliance_changed.py'
+      - '.github/workflows/content-ci.yml'
 
 jobs:
   changes:

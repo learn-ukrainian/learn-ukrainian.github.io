@@ -67,12 +67,12 @@ def test_preparation_output_and_required_gate_are_wired_end_to_end() -> None:
 
     jobs = _workflow()["jobs"]
     assert jobs["changes"]["outputs"]["preparation"] == "${{ steps.filter.outputs.preparation }}"
-    assert jobs["bio-preparation-data"]["if"] == "needs.changes.outputs.preparation == 'true'"
-    assert "bio-preparation-data" in jobs["ci-gate"]["needs"]
+    assert "needs.changes.outputs.preparation == 'true'" in jobs["content-schema-checks"]["if"]
+    assert "content-schema-checks" in jobs["ci-gate"]["needs"]
 
 
 def test_preparation_gate_tracks_registry_entry_changes_and_decomposes_renames() -> None:
-    steps = _workflow()["jobs"]["bio-preparation-data"]["steps"]
+    steps = _workflow()["jobs"]["content-schema-checks"]["steps"]
     validator = next(step for step in steps if step.get("name") == "Validate BIO preparation capsules and active holds")
     script = validator["run"]
 

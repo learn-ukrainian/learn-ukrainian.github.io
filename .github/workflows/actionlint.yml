@@ -14,6 +14,10 @@ name: actionlint
 # check). The pinned version + checksums live in scripts/audit/check_workflows.sh,
 # which both this job and local devs invoke (single source of truth).
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
