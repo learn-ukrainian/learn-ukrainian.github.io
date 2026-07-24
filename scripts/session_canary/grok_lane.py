@@ -168,16 +168,27 @@ def _build_facts(
     facts: list[dict[str, str]] = []
     used_answers: set[str] = set()
 
-    def add(fid: str, q: str, a: str) -> None:
+    # Pre-extract working set so we can reserve probe slots (CF F001 on #5716).
+    working_set = _extract_handoff_bullets(
+        handoff_text,
+        heading_substrings=("active working set", "working set"),
+    )
+    workset_reserve = min(2, len(working_set))
+
+    def add(fid: str, q: str, a: str, *, reserve: int = 0) -> bool:
+        """Add a fact if unique. Respect optional slot reservation for later workset."""
+        if len(facts) >= N_ANCHORS - max(0, reserve):
+            return False
         a_norm = _clip(a, 280)
         if not a_norm or a_norm in used_answers:
-            return
+            return False
         if any(f["id"] == fid for f in facts):
-            return
+            return False
         used_answers.add(a_norm)
         facts.append({"id": fid, "q": q, "a": a_norm})
+        return True
 
-    # 1) Session identity (always)
+    # 1) Session identity (always; never reserved against)
     add(
         "lane-stream",
         "What session stream id is this Grok lane driving?",
@@ -189,46 +200,49 @@ def _build_facts(
         epic,
     )
 
-    # 2) Pinned binding orders from stream
+    # 2) Pinned binding orders from stream (leave room for workset when present)
     pinned_orders = [e for e in stream_entries if e["type"] == "binding_order"]
     for i, entry in enumerate(pinned_orders[:4], start=1):
-        add(
+        if not add(
             f"bind-{i}",
             f"What is binding order #{i} for this lane (plain paraphrase of the frozen stream pin)?",
             entry["body"],
-        )
+            reserve=workset_reserve,
+        ):
+            break
 
     # 3) Negative constraints from stream
     negs = [e for e in stream_entries if e["type"] == "negative_constraint"]
     for i, entry in enumerate(negs[:2], start=1):
-        add(
+        if not add(
             f"neg-{i}",
             f"What is negative constraint #{i} pinned on this stream?",
             entry["body"],
-        )
+            reserve=workset_reserve,
+        ):
+            break
 
-    # 4) Handoff dual-write first (survives compact only if written): Next Drive + Working Set
-    # before lower-priority stream next_action spam so workset is not truncated out of 10.
+    # 4) Handoff dual-write: Next Drive (reserve workset slots after these)
     next_bullets = _extract_handoff_bullets(
         handoff_text,
         heading_substrings=("next drive", "next after", "next action", "in flight", "live session"),
     )
     for i, bullet in enumerate(next_bullets[:3], start=1):
-        add(
+        if not add(
             f"next-handoff-{i}",
             f"According to the dual-write handoff ({handoff_rel}), what is next-item #{i}?",
             bullet,
-        )
+            reserve=workset_reserve,
+        ):
+            break
 
-    working_set = _extract_handoff_bullets(
-        handoff_text,
-        heading_substrings=("active working set", "working set"),
-    )
+    # 4b) Active Working Set — reserved slots (load-bearing mid-flight facts)
     for i, bullet in enumerate(working_set[:2], start=1):
         add(
             f"workset-{i}",
             f"According to the dual-write handoff, what is active working-set fact #{i}?",
             bullet,
+            reserve=0,
         )
 
     hands_off = _extract_handoff_bullets(
@@ -236,44 +250,43 @@ def _build_facts(
         heading_substrings=("hands-off", "handsoff", "do not", "out of scope"),
     )
     for i, bullet in enumerate(hands_off[:2], start=1):
-        add(
+        if not add(
             f"handsoff-{i}",
             f"According to the dual-write handoff, what is hands-off rule #{i}?",
             bullet,
-        )
+            reserve=0,
+        ):
+            break
 
-    # 5) Stream next_action only after diary mintables (fill remaining slots)
+    # 5) Stream next_action fill remaining slots
     nexts = [e for e in stream_entries if e["type"] == "next_action"]
     for i, entry in enumerate(nexts[:3], start=1):
-        if len(facts) >= N_ANCHORS:
-            break
-        add(
+        if not add(
             f"next-stream-{i}",
             f"What next-action entry #{i} was recorded on the stream?",
             entry["body"],
-        )
+        ):
+            break
 
     # 6) Recent durable decisions from stream if still short
     decisions = [e for e in stream_entries if e["type"] == "decision"]
     for i, entry in enumerate(decisions[:3], start=1):
-        if len(facts) >= N_ANCHORS:
-            break
-        add(
+        if not add(
             f"decision-{i}",
             f"What decision #{i} was recorded on the stream?",
             entry["body"],
-        )
+        ):
+            break
 
     # 7) Recent state if still short (still dual-written stream entries — durable)
     states = [e for e in stream_entries if e["type"] == "state"]
     for i, entry in enumerate(reversed(states[-6:]), start=1):
-        if len(facts) >= N_ANCHORS:
-            break
-        add(
+        if not add(
             f"state-{i}",
             f"What recent state note #{i} is on the stream (paraphrase the frozen text)?",
             entry["body"],
-        )
+        ):
+            break
 
     if len(facts) < N_ANCHORS:
         raise SystemExit(

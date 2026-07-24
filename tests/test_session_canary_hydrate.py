@@ -239,3 +239,40 @@ def test_score_no_hydrate_flag_skips(tmp_path: Path, monkeypatch, capsys) -> Non
     assert rc == 0
     out = capsys.readouterr().out
     assert "AUTO-HYDRATE" not in out
+
+
+def test_mint_reserves_working_set_under_saturated_stream_pins() -> None:
+    """When stream pins fill the budget, diary Active Working Set still mints."""
+    from scripts.session_canary.grok_lane import _build_facts
+
+    stream_entries = []
+    for i in range(4):
+        stream_entries.append({"type": "binding_order", "body": f"binding order pin number {i} unique"})
+    for i in range(2):
+        stream_entries.append({"type": "negative_constraint", "body": f"negative constraint pin {i} unique"})
+    for i in range(3):
+        stream_entries.append({"type": "next_action", "body": f"stream next action {i} unique"})
+
+    handoff = """# diary
+## Next Drive
+1. first next action unique
+2. second next action unique
+3. third next action unique
+
+## Active Working Set
+- pilot clone path must survive compact unique-ws-1
+- deny guard installed unique-ws-2
+
+## Hands-off
+- foreign lanes unique-ho
+"""
+    facts = _build_facts(
+        epic="devops",
+        stream_id="epic:5703",
+        stream_entries=stream_entries,
+        handoff_text=handoff,
+        handoff_rel=".claude/devops-epic/CLAUDE-DRIVER-HANDOFF.md",
+    )
+    ids = [f["id"] for f in facts]
+    assert len(facts) == 10
+    assert any(i.startswith("workset-") for i in ids), ids
