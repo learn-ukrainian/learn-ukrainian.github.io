@@ -7,6 +7,8 @@ export { default as luLessonSupportV1Schema } from './lu.lesson-support.v1.schem
 export { ActivityPlayer } from './ActivityPlayer';
 export { TeacherDashboard } from './components/TeacherDashboard';
 export type { TeacherDashboardProps, DashboardState, LessonSummary } from './components/TeacherDashboard';
+export { LessonViewer, sanitizeLessonForStudent } from './components/LessonViewer';
+export type { LessonViewerProps, LessonViewerMode } from './components/LessonViewer';
 export type {
   ActivityPlayerActivity,
   ActivityCompletionEvent,
