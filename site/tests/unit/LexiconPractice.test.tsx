@@ -3080,6 +3080,11 @@ describe('LexiconPractice', () => {
       const user = userEvent.setup();
       render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
 
+      const customBtn = screen.getByRole('button', { name: /Моя тестова колода/i });
+      expect(customBtn).toBeInTheDocument();
+      await user.click(customBtn);
+      expect(customBtn).toHaveClass('btn-primary');
+
       const startBtn = await screen.findByTestId('practice-start-session');
       await user.click(startBtn);
 

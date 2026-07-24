@@ -32,16 +32,33 @@ export function getDeviceId(): string {
   return deviceId;
 }
 
+import teacherClozeData from '../../data/lexicon-teacher-cloze.json';
+
+const defaultTeacherLemmas: string[] = Array.from(
+  new Set(
+    ((teacherClozeData as { cloze?: Array<{ lemmaId?: string; lemma?: string }> }).cloze ?? [])
+      .map((c) => c.lemmaId || c.lemma)
+      .filter((k): k is string => Boolean(k)),
+  ),
+);
+
 /**
  * Returns the built-in, read-only Virtual Special Deck for Teacher Lesson Intake.
  * Derived dynamically from manifest metadata — 0 KB extra user storage.
  */
 export function getTeacherLessonVirtualDeck(
-  entries: Array<{ lemma: string; sources?: string[] }>
+  entries?: Array<{ lemma: string; sources?: string[] }>,
 ): CustomSet {
-  const teacherLemmas = entries
-    .filter((e) => e.sources && (e.sources.includes('teacher_lesson') || e.sources.includes('private_teacher_lesson')))
-    .map((e) => e.lemma);
+  const teacherLemmas =
+    entries && entries.length > 0
+      ? entries
+          .filter(
+            (e) =>
+              e.sources &&
+              (e.sources.includes('teacher_lesson') || e.sources.includes('private_teacher_lesson')),
+          )
+          .map((e) => e.lemma)
+      : defaultTeacherLemmas;
 
   return {
     id: 'virtual_teacher_lesson',
