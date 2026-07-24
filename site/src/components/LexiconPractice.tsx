@@ -2682,28 +2682,29 @@ function LexiconPracticeIsland({
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                 <button
                   type="button"
-                  className={`btn btn-sm ${selectedDeckFilter === 'all' ? 'btn-accent' : ''}`}
+                  className={`btn btn-sm ${selectedDeckFilter === 'all' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
                   onClick={() => setSelectedDeckFilter('all')}
+                  style={selectedDeckFilter === 'all' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
                 >
-                  🌐 {chromeLocale === 'uk' ? `Всі слова (${learnerLevel})` : `All Words (${learnerLevel})`}
+                  {selectedDeckFilter === 'all' ? '✓ ' : ''}🌐 {chromeLocale === 'uk' ? `Всі слова (${learnerLevel})` : `All Words (${learnerLevel})`}
                 </button>
-                {typeof window !== 'undefined' && localStorage.getItem('learn_uk_unlock_teacher_deck') === 'true' ? (
-                  <button
-                    type="button"
-                    className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_lesson' ? 'btn-accent' : ''}`}
-                    onClick={() => setSelectedDeckFilter('virtual_teacher_lesson')}
-                  >
-                    🔒 🎓 {chromeLocale === 'uk' ? 'Уроки вчителя (610+440 слів)' : 'Teacher Deck (610+440 words)'}
-                  </button>
-                ) : null}
+                <button
+                  type="button"
+                  className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_lesson' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
+                  onClick={() => setSelectedDeckFilter('virtual_teacher_lesson')}
+                  style={selectedDeckFilter === 'virtual_teacher_lesson' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
+                >
+                  {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓 {chromeLocale === 'uk' ? 'Уроки вчителя (610+440 слів)' : 'Teacher Deck (610+440 words)'}
+                </button>
                 {customSets.map((set) => (
                   <button
                     key={set.id}
                     type="button"
-                    className={`btn btn-sm ${selectedDeckFilter === set.id ? 'btn-accent' : ''}`}
+                    className={`btn btn-sm ${selectedDeckFilter === set.id ? 'btn-primary shadow-md' : 'btn-ghost'}`}
                     onClick={() => setSelectedDeckFilter(set.id)}
+                    style={selectedDeckFilter === set.id ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
                   >
-                    ⭐ {set.title} ({set.lemma_keys.length})
+                    {selectedDeckFilter === set.id ? '✓ ' : ''}⭐ {set.title} ({set.lemma_keys.length})
                   </button>
                 ))}
               </div>

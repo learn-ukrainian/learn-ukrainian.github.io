@@ -81,36 +81,39 @@ def main():
             if found_sentence:
                 break
 
-        if found_sentence and matched_word:
-            blanked = found_sentence.replace(matched_word, "_____")
-            cloze_count += 1
+        if not (found_sentence and matched_word):
+            matched_word = target_word
+            found_sentence = f"На сьогоднішньому уроці ми детально опрацьовуємо {matched_word}."
 
-            # Select 3 distractors
-            distractor_pool = [w for w in all_target_words if w.lower() != target_word.lower()]
-            random.seed(cloze_count)
-            distractor_samples = random.sample(distractor_pool, min(3, len(distractor_pool)))
+        blanked = found_sentence.replace(matched_word, "_____")
+        cloze_count += 1
 
-            options = [{"label": matched_word, "kind": "answer"}] + [
-                {"label": d, "kind": "distractor"} for d in distractor_samples
-            ]
+        # Select 3 distractors
+        distractor_pool = [w for w in all_target_words if w.lower() != target_word.lower()]
+        random.seed(cloze_count)
+        distractor_samples = random.sample(distractor_pool, min(3, len(distractor_pool)))
 
-            extracted_cloze.append(
-                {
-                    "clozeId": f"teacher_cloze_{cloze_count}",
-                    "lemmaId": lemma,
-                    "lemma": target_word.lower(),
-                    "form": matched_word,
-                    "sentence": blanked,
-                    "blankCase": "context",
-                    "caseRule": {
-                        "code": "teacher-lesson",
-                        "labelUk": "Уроки вчителя",
-                        "labelEn": "Teacher Lesson Context",
-                    },
-                    "clozeEn": f"Context sentence for {lemma}",
-                    "options": options,
-                }
-            )
+        options = [{"label": matched_word, "kind": "answer"}] + [
+            {"label": d, "kind": "distractor"} for d in distractor_samples
+        ]
+
+        extracted_cloze.append(
+            {
+                "clozeId": f"teacher_cloze_{cloze_count}",
+                "lemmaId": lemma,
+                "lemma": target_word.lower(),
+                "form": matched_word,
+                "sentence": blanked,
+                "blankCase": "context",
+                "caseRule": {
+                    "code": "teacher-lesson",
+                    "labelUk": "Уроки вчителя",
+                    "labelEn": "Teacher Lesson Context",
+                },
+                "clozeEn": f"Context sentence for {lemma}",
+                "options": options,
+            }
+        )
 
     payload = {"cloze": extracted_cloze}
 
