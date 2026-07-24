@@ -1135,7 +1135,7 @@ jobs:
 
       - name: Download pytest shard artifacts
         if: needs.changes.outputs.python == 'true' && needs.test.result == 'success'
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v7.0.0
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           pattern: pytest-shard-*
           path: pytest-artifacts
@@ -1148,7 +1148,7 @@ jobs:
 
       - name: Download coverage shards
         if: needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v7.0.0
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           pattern: pytest-coverage-*
           path: coverage-artifacts

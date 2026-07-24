@@ -206,7 +206,7 @@ def _patch_enrich_entry_heavy_helpers(monkeypatch) -> None:
     monkeypatch.setattr(enrich_manifest_module, "_curated_calque", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_reverse_calques", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_kaikki_pronunciation", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_synonyms_slovnyk", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_synonyms_mphdict", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_antonyms_wiktionary", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_idioms", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda *args, **kwargs: "")

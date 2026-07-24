@@ -117,10 +117,25 @@ def test_active_lists_only_live_running_tasks(tmp_path, monkeypatch):
     assert data["tasks"][0]["task_id"] == "running"
 
 
+def test_task_state_path_stays_under_tasks_dir(tmp_path, monkeypatch):
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+
+    for task_id in ("normal", "agent/task", "../../etc/passwd", r"..\..\windows"):
+        path = delegate_router._task_state_path(task_id)
+        resolved = path.resolve()
+        assert resolved == tasks_dir.resolve() / resolved.name
+        assert resolved.is_relative_to(tasks_dir.resolve())
+
+
 def test_task_detail_truncates_large_result(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
     monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
-    result_file = tmp_path / "big.result"
+    # Production writes ``.result`` siblings under TASKS_DIR; reads are
+    # containment-checked there (CodeQL py/path-injection).
+    result_file = tasks_dir / "large.result"
     result_file.write_text("x" * (70 * 1024), encoding="utf-8")
     _write_task(
         tasks_dir / "large.json",
@@ -133,6 +148,24 @@ def test_task_detail_truncates_large_result(tmp_path, monkeypatch):
     data = response.json()
     assert data["result_truncated"] is True
     assert len(data["result"].encode("utf-8")) <= delegate_router.RESULT_BYTES_LIMIT
+
+
+def test_task_detail_rejects_result_outside_tasks_dir(tmp_path, monkeypatch):
+    tasks_dir = tmp_path / "tasks"
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    escape = tmp_path / "outside.result"
+    escape.write_text("secret", encoding="utf-8")
+    _write_task(
+        tasks_dir / "escape.json",
+        _task_payload("escape", result_file=str(escape), status="done"),
+    )
+
+    response = client.get("/api/delegate/tasks/escape")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["result"] is None
+    assert data["result_truncated"] is False
 
 
 def test_zombie_detection_works_on_dead_pid(tmp_path, monkeypatch):
