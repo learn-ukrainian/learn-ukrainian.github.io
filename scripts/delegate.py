@@ -1024,8 +1024,10 @@ def _release_stale_branch_holders(
             )
             released.append(path)
             continue
+        # No --force: if the tree went dirty after the cleanliness check
+        # (TOCTOU), git refuses removal and we leave the holder mounted (#5708 CF).
         proc = subprocess.run(
-            ["git", "worktree", "remove", "--force", str(path)],
+            ["git", "worktree", "remove", str(path)],
             cwd=_REPO_ROOT,
             capture_output=True,
             text=True,
