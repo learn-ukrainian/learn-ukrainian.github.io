@@ -64,7 +64,7 @@ class HramatkaGenerationCache:
         policy_version: str,
     ) -> str:
         """Return the required SHA-256 cache key for one generation request."""
-        parts = (
+        parts = [
             owner_id,
             anchor_hash,
             normalized_request,
@@ -73,8 +73,9 @@ class HramatkaGenerationCache:
             data_manifest_sha,
             model_id,
             policy_version,
-        )
-        return hashlib.sha256(":".join(parts).encode("utf-8")).hexdigest()
+        ]
+        payload = json.dumps(parts, ensure_ascii=False, separators=(",", ":"))
+        return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
     make_key = build_key
 

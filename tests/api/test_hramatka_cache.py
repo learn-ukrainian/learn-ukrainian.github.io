@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import sqlite3
 from datetime import UTC, datetime, timedelta
 
@@ -44,13 +45,38 @@ def test_cache_key_is_sha256_of_all_generation_inputs() -> None:
         "policy_version": "2026-07",
     }
     key = HramatkaGenerationCache.build_key(**inputs)
-    expected = hashlib.sha256(":".join(inputs.values()).encode("utf-8")).hexdigest()
+    payload = json.dumps(list(inputs.values()), ensure_ascii=False, separators=(",", ":"))
+    expected = hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
     assert key == expected
 
     for dimension in ("prompt_sha", "schema_sha", "data_manifest_sha", "model_id"):
         changed = inputs | {dimension: f"changed-{inputs[dimension]}"}
         assert HramatkaGenerationCache.build_key(**changed) != key
+
+
+def test_cache_key_prevents_delimiter_collision() -> None:
+    inputs1 = {
+        "owner_id": "teacher:17",
+        "anchor_hash": "anchor-a",
+        "normalized_request": '{"topic":"verbs"}',
+        "prompt_sha": "prompt-a",
+        "schema_sha": "schema-a",
+        "data_manifest_sha": "manifest-a",
+        "model_id": "gemini-3.6-flash",
+        "policy_version": "2026-07",
+    }
+    inputs2 = {
+        "owner_id": "teacher",
+        "anchor_hash": "17:anchor-a",
+        "normalized_request": '{"topic":"verbs"}',
+        "prompt_sha": "prompt-a",
+        "schema_sha": "schema-a",
+        "data_manifest_sha": "manifest-a",
+        "model_id": "gemini-3.6-flash",
+        "policy_version": "2026-07",
+    }
+    assert HramatkaGenerationCache.build_key(**inputs1) != HramatkaGenerationCache.build_key(**inputs2)
 
 
 def test_cache_expires_entries_after_fourteen_days_and_cleans_them_up(tmp_path) -> None:
