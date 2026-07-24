@@ -1514,9 +1514,24 @@ function LexiconPracticeIsland({
       // A weak-area focus session narrows the pool to items matching the tapped
       // weakness on top of the normal §6b session constraints (no parallel path).
       if (focusWeakness && !matchesWeakness(candidate, focusWeakness)) return false;
+
+      // Filter by Selected Deck (Teacher Lesson 610+440 or Custom Set)
+      if (selectedDeckFilter === 'virtual_teacher_lesson') {
+        const teacherDeck = getTeacherLessonVirtualDeck();
+        if (!teacherDeck.lemma_keys.includes(candidate.lemmaId) && !teacherDeck.lemma_keys.includes(candidate.lemma)) {
+          return false;
+        }
+      } else if (selectedDeckFilter !== 'all') {
+        const customSet = customSets.find((s) => s.id === selectedDeckFilter);
+        if (customSet) {
+          if (!customSet.lemma_keys.includes(candidate.lemmaId) && !customSet.lemma_keys.includes(candidate.lemma)) {
+            return false;
+          }
+        }
+      }
       return true;
     },
-    [focusWeakness, sessionPoolConstraints],
+    [focusWeakness, sessionPoolConstraints, selectedDeckFilter, customSets],
   );
 
   const weakChips = useMemo(() => weakCaseChips(reviewLog), [reviewLog]);
