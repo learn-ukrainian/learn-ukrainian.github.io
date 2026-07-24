@@ -926,19 +926,21 @@ def _task_status_for_worktree(path: Path) -> str | None:
         except OSError:
             continue
 
-    # 2) Fallback candidates from path layout.
+    # 2) Fallback candidates from path layout — only if state records an
+    # exact worktree_path/cwd match. Never accept path-less legacy states
+    # (CF F001 #5708): a shared path-component name must not authorize remove.
     for task_id in _task_status_candidates_for_worktree(path):
         state = _read_state(_state_path(task_id))
         if not isinstance(state, dict):
             continue
-        # Prefer states that either match path or omit path (legacy).
         wt = state.get("worktree_path") or state.get("cwd")
-        if wt:
-            try:
-                if Path(str(wt)).resolve() != resolved:
-                    continue
-            except OSError:
+        if not wt:
+            continue
+        try:
+            if Path(str(wt)).resolve() != resolved:
                 continue
+        except OSError:
+            continue
         status = state.get("status")
         if status is not None:
             return str(status)
