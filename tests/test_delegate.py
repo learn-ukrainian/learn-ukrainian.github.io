@@ -2575,10 +2575,12 @@ def test_branch_reuse_refuses_protected_branch_before_git_calls(tmp_path, monkey
 
 
 def test_branch_reuse_refuses_branch_checked_out_in_another_worktree(tmp_path, monkeypatch):
+    """Dirty holders still hard-refuse (#5340 keeps safety for live trees)."""
     target = tmp_path / "target"
     occupied = tmp_path / "occupied"
     branch = "cursor/follow-up"
-    _, base_stub = _make_run_stub()
+    # Dirty porcelain => not auto-releasable; keep refuse behavior.
+    _, base_stub = _make_run_stub(status_porcelain=" M dirty.txt")
 
     def fake_run(cmd, **kwargs):
         if cmd[:3] == ["git", "worktree", "list"]:
@@ -2591,6 +2593,114 @@ def test_branch_reuse_refuses_branch_checked_out_in_another_worktree(tmp_path, m
         return base_stub(cmd, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    with pytest.raises(delegate.WorktreeBranchMismatch, match="already checked out"):
+        delegate._ensure_worktree(
+            agent="cursor",
+            task_id="follow-up",
+            raw_path=str(target),
+            branch=branch,
+        )
+
+
+def test_branch_reuse_releases_clean_terminal_holder_then_attaches(
+    tmp_path, monkeypatch, tmp_tasks_dir
+):
+    """#5340: clean + synced + terminal-task holder is released, not a bounce."""
+    target = tmp_path / "target"
+    # Layout matches .worktrees/dispatch/<agent>/<task>/
+    occupied = (
+        Path(delegate._REPO_ROOT)
+        / ".worktrees"
+        / "dispatch"
+        / "deepseek"
+        / "review-5338-deepseek"
+    )
+    branch = "grok-build/atlas-slice3-vendoring-retry"
+    calls, base_stub = _make_run_stub(
+        status_porcelain="",
+        rev_parse_head_sha="same-sha",
+    )
+    list_hits = {"n": 0}
+    removes: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        if cmd[:3] == ["git", "worktree", "list"]:
+            list_hits["n"] += 1
+            # First list: still occupied. After remove: free.
+            body = (
+                f"worktree {occupied}\nbranch refs/heads/{branch}\n\n"
+                if list_hits["n"] == 1
+                else ""
+            )
+            return subprocess.CompletedProcess(cmd, 0, body, "")
+        if cmd[:3] == ["git", "worktree", "remove"]:
+            removes.append(list(cmd))
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        # Local branch may already exist after a prior worktree held it.
+        if cmd[:2] == ["git", "rev-parse"] and cmd[-1] == f"refs/heads/{branch}":
+            return subprocess.CompletedProcess(cmd, 0, "same-sha", "")
+        # Avoid double-recording when base_stub also appends.
+        calls.pop()
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    # Owning task is terminal (done review).
+    delegate._write_state_atomic(
+        delegate._state_path("review-5338-deepseek"),
+        {"task_id": "review-5338-deepseek", "agent": "deepseek", "status": "done"},
+    )
+
+    _, actual_branch, telemetry = delegate._ensure_worktree(
+        agent="cursor",
+        task_id="follow-up-retry",
+        raw_path=str(target),
+        branch=branch,
+    )
+
+    assert actual_branch == branch
+    assert telemetry["reused"] is False
+    assert list_hits["n"] >= 2
+    assert removes and removes[0][:3] == ["git", "worktree", "remove"]
+    assert str(occupied) in removes[0]
+    assert any(c[:3] == ["git", "worktree", "add"] for c in calls)
+
+
+def test_branch_reuse_refuses_clean_holder_with_active_task(
+    tmp_path, monkeypatch, tmp_tasks_dir
+):
+    """#5340: clean synced holder with running task still refuses."""
+    target = tmp_path / "target"
+    occupied = (
+        Path(delegate._REPO_ROOT)
+        / ".worktrees"
+        / "dispatch"
+        / "cursor"
+        / "atlas-5230-runner-pr1-delta"
+    )
+    branch = "cursor/atlas-5230"
+    _, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+
+    def fake_run(cmd, **kwargs):
+        if cmd[:3] == ["git", "worktree", "list"]:
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                f"worktree {occupied}\nbranch refs/heads/{branch}\n\n",
+                "",
+            )
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    delegate._write_state_atomic(
+        delegate._state_path("atlas-5230-runner-pr1-delta"),
+        {
+            "task_id": "atlas-5230-runner-pr1-delta",
+            "agent": "cursor",
+            "status": "running",
+        },
+    )
 
     with pytest.raises(delegate.WorktreeBranchMismatch, match="already checked out"):
         delegate._ensure_worktree(

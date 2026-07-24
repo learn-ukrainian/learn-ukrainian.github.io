@@ -856,6 +856,131 @@ def _branch_worktree_paths(branch: str) -> list[Path]:
     return matches
 
 
+def _dispatch_task_id_from_worktree(path: Path) -> str | None:
+    """Return task-id when ``path`` is ``.worktrees/dispatch/<agent>/<task>/``."""
+    try:
+        rel = path.resolve().relative_to((_REPO_ROOT / ".worktrees" / "dispatch").resolve())
+    except ValueError:
+        return None
+    if len(rel.parts) >= 2:
+        return rel.parts[1]
+    return None
+
+
+def _task_status_for_worktree(path: Path) -> str | None:
+    """Load batch_state status for a dispatch worktree, or None if unknown."""
+    task_id = _dispatch_task_id_from_worktree(path)
+    if not task_id:
+        return None
+    state = _read_state(_state_path(task_id))
+    if not isinstance(state, dict):
+        return None
+    status = state.get("status")
+    return str(status) if status is not None else None
+
+
+def _worktree_is_clean(path: Path) -> bool:
+    proc = subprocess.run(
+        ["git", "status", "--porcelain"],
+        cwd=path,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_sanitized_git_env(),
+    )
+    if proc.returncode != 0:
+        return False
+    return not bool((proc.stdout or "").strip())
+
+
+def _worktree_matches_origin_branch(path: Path, branch: str) -> bool:
+    """True when HEAD and origin/<branch> point at the same commit."""
+    head = _resolve_sha(path, "HEAD")
+    remote = _resolve_sha(_REPO_ROOT, f"origin/{branch}")
+    if not head or not remote:
+        # origin may only be resolvable from the worktree after local fetch
+        remote = _resolve_sha(path, f"origin/{branch}")
+    return bool(head and remote and head == remote)
+
+
+# Terminal statuses that mean a prior dispatch no longer needs the worktree
+# mounted. Includes failure modes — a crashed review worktree should not
+# permanently pin a PR branch for follow-up dispatches (#5340).
+_BRANCH_HOLDER_RELEASABLE_STATUSES = frozenset(
+    {"done", "failed", "timeout", "rate_limited", "crashed", "cancelled", "dry_run", "needs_finalize"}
+)
+
+
+def _stale_branch_holder_releasable(path: Path, branch: str) -> tuple[bool, str]:
+    """Return (ok, reason) for auto-releasing a worktree holding ``branch`` (#5340).
+
+    Safe only when clean, fully pushed (HEAD == origin/<branch>), and any
+    resolvable owning task is terminal. Live/running tasks and dirty trees
+    keep today's hard refuse.
+    """
+    if not _worktree_is_clean(path):
+        return False, "dirty"
+    if not _worktree_matches_origin_branch(path, branch):
+        return False, "HEAD != origin/<branch>"
+    status = _task_status_for_worktree(path)
+    if status is None:
+        return True, "clean+synced; no resolvable task state"
+    if status in _BRANCH_HOLDER_RELEASABLE_STATUSES:
+        return True, f"clean+synced; task status={status}"
+    return False, f"task still active (status={status})"
+
+
+def _release_stale_branch_holders(
+    *,
+    branch: str,
+    holders: list[Path],
+    dry_run: bool,
+) -> list[Path]:
+    """Remove releasable holders of ``branch`` so a new worktree can attach.
+
+    Returns paths successfully released (or that would be released in dry-run).
+    Non-releasable holders are left in place for the caller to refuse on.
+    """
+    released: list[Path] = []
+    for path in holders:
+        ok, reason = _stale_branch_holder_releasable(path, branch)
+        if not ok:
+            print(
+                f"ℹ️  branch {branch!r} held by {path} not auto-releasable ({reason})",
+                file=sys.stderr,
+            )
+            continue
+        if dry_run:
+            print(
+                f"🌲 dry-run: would release stale branch holder {path} ({reason})",
+                file=sys.stderr,
+            )
+            released.append(path)
+            continue
+        proc = subprocess.run(
+            ["git", "worktree", "remove", "--force", str(path)],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+        )
+        if proc.returncode != 0:
+            print(
+                f"⚠️  failed to release stale branch holder {path}: "
+                f"{_format_process_failure(proc)}",
+                file=sys.stderr,
+            )
+            continue
+        print(
+            f"🌲 released stale branch holder {path} ({reason}) so "
+            f"{branch!r} can attach to a new dispatch worktree",
+            file=sys.stderr,
+        )
+        released.append(path)
+    return released
+
+
 def _resolve_sha(path: Path, ref: str = "HEAD") -> str | None:
     """Return the commit SHA at ``ref`` in ``path``, or None if unresolvable."""
     proc = subprocess.run(
@@ -1634,11 +1759,30 @@ def _ensure_worktree(
         occupied_paths = _branch_worktree_paths(requested_branch)
         elsewhere = [path for path in occupied_paths if path != worktree_path]
         if elsewhere:
-            locations = ", ".join(str(path) for path in elsewhere)
-            raise WorktreeBranchMismatch(
-                f"branch {requested_branch!r} is already checked out in {locations}; "
-                "refusing to attach it to another worktree"
+            # #5340: clean+synced+terminal holders are pure friction — release
+            # them instead of bouncing the dispatch. Live/dirty holders still refuse.
+            _release_stale_branch_holders(
+                branch=requested_branch,
+                holders=elsewhere,
+                dry_run=dry_run,
             )
+            occupied_paths = _branch_worktree_paths(requested_branch)
+            elsewhere = [path for path in occupied_paths if path != worktree_path]
+            # dry-run treats releasable holders as free without mutating
+            if dry_run:
+                still_blocking = [
+                    path
+                    for path in elsewhere
+                    if not _stale_branch_holder_releasable(path, requested_branch)[0]
+                ]
+            else:
+                still_blocking = elsewhere
+            if still_blocking:
+                locations = ", ".join(str(path) for path in still_blocking)
+                raise WorktreeBranchMismatch(
+                    f"branch {requested_branch!r} is already checked out in {locations}; "
+                    "refusing to attach it to another worktree"
+                )
 
     if worktree_path.exists():
         if not worktree_path.is_dir():
