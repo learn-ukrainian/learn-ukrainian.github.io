@@ -1,0 +1,111 @@
+"""Tests for bounded, quality-qualified Hramatka generation routing."""
+
+from __future__ import annotations
+
+from collections.abc import Mapping
+from typing import Any
+
+from scripts.api.hramatka_generator import (
+    MAX_PROVIDER_ATTEMPTS,
+    PRIMARY_MODEL,
+    SECONDARY_MODEL,
+    GenerationState,
+    ProviderHTTPError,
+    generate_qualified_lesson,
+)
+from scripts.audit.hramatka_qg_rules import DIMENSION_ORDER
+
+
+def _passing_evidence() -> dict[str, Any]:
+    return {
+        "verdict": "PASS",
+        "terminal_verdict": "PASS",
+        "detector_status": {},
+        "dimensions": {
+            dimension: {"verdict": "PASS", "score": 10.0} for dimension in DIMENSION_ORDER
+        },
+    }
+
+
+class RecordingTransport:
+    def __init__(self, outcomes: list[object]) -> None:
+        self.outcomes = iter(outcomes)
+        self.models: list[str] = []
+
+    def generate(self, *, model: str, request: Mapping[str, Any]) -> Mapping[str, Any]:
+        self.models.append(model)
+        outcome = next(self.outcomes)
+        if isinstance(outcome, Exception):
+            raise outcome
+        assert isinstance(outcome, Mapping)
+        return outcome
+
+
+def test_primary_route_success_uses_gemini_36_flash_and_marks_ready() -> None:
+    lesson = {"title": "Чистий урок", "blocks": []}
+    transport = RecordingTransport([lesson])
+    qg_calls: list[Mapping[str, Any]] = []
+
+    def qg_scan(candidate: Mapping[str, Any]) -> Mapping[str, Any]:
+        qg_calls.append(candidate)
+        return _passing_evidence()
+
+    result = generate_qualified_lesson({"prompt": "Створіть урок"}, transport=transport, qg_scan=qg_scan)
+
+    assert result.state is GenerationState.READY
+    assert result.lesson == lesson
+    assert result.failure_reason is None
+    assert transport.models == [PRIMARY_MODEL]
+    assert qg_calls == [lesson]
+    assert [attempt.outcome for attempt in result.attempts] == ["ready"]
+
+
+def test_5xx_primary_failure_uses_secondary_route_once() -> None:
+    lesson = {"title": "Резервний урок", "blocks": []}
+    transport = RecordingTransport([ProviderHTTPError(503), lesson])
+
+    result = generate_qualified_lesson(
+        {"prompt": "Створіть урок"},
+        transport=transport,
+        qg_scan=lambda _lesson: _passing_evidence(),
+    )
+
+    assert result.state is GenerationState.READY
+    assert transport.models == [PRIMARY_MODEL, SECONDARY_MODEL]
+    assert [attempt.outcome for attempt in result.attempts] == ["transient_failure", "ready"]
+
+
+def test_timeout_retries_never_exceed_four_provider_calls() -> None:
+    transport = RecordingTransport([TimeoutError("provider timeout")] * MAX_PROVIDER_ATTEMPTS)
+
+    result = generate_qualified_lesson(
+        {"prompt": "Створіть урок"},
+        transport=transport,
+        qg_scan=lambda _lesson: _passing_evidence(),
+    )
+
+    assert result.state is GenerationState.FAILED
+    assert result.failure_reason == "provider_retry_budget_exhausted"
+    assert len(result.attempts) == MAX_PROVIDER_ATTEMPTS
+    assert transport.models == [PRIMARY_MODEL, SECONDARY_MODEL, PRIMARY_MODEL, SECONDARY_MODEL]
+
+
+def test_qg_warning_cannot_transition_generated_lesson_to_ready() -> None:
+    lesson = {"title": "Урок із попередженням", "blocks": []}
+    transport = RecordingTransport([lesson])
+    evidence = _passing_evidence()
+    evidence["dimensions"][DIMENSION_ORDER[0]] = {"verdict": "WARN", "score": 9.2}
+    evidence["verdict"] = "WARN"
+
+    result = generate_qualified_lesson(
+        {"prompt": "Створіть урок"},
+        transport=transport,
+        qg_scan=lambda _lesson: evidence,
+    )
+
+    assert result.state is GenerationState.FAILED
+    assert result.lesson is None
+    assert result.qg_evidence == evidence
+    assert result.failure_reason == "qg_rejected"
+    assert transport.models == [PRIMARY_MODEL]
+    assert [attempt.outcome for attempt in result.attempts] == ["qg_rejected"]
