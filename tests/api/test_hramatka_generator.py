@@ -92,6 +92,21 @@ def test_empty_blocks_payload_fails_validation_without_ready() -> None:
     assert result.lesson is None
 
 
+def test_malformed_block_payload_fails_validation_without_ready() -> None:
+    lesson = {"title": "Зламаний урок", "blocks": [{}]}
+    transport = RecordingTransport([lesson])
+
+    result = generate_qualified_lesson(
+        {"prompt": "Створіть урок"},
+        transport=transport,
+        qg_scan=lambda _lesson: _passing_evidence(),
+    )
+
+    assert result.state is GenerationState.FAILED
+    assert result.failure_reason == "invalid_provider_payload"
+    assert result.lesson is None
+
+
 def test_timeout_retries_never_exceed_four_provider_calls() -> None:
     transport = RecordingTransport([TimeoutError("provider timeout")] * MAX_PROVIDER_ATTEMPTS)
 
