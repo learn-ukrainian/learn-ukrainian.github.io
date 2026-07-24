@@ -108,8 +108,14 @@ from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import primary_synonym_sense_text
 
 MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
-SOURCES_DB = ROOT / "data" / "sources.db"
+_PRIMARY_ROOT = Path("/Users/krisztiankoos/projects/learn-ukrainian")
+_SOURCES_DB_CANDIDATE = ROOT / "data" / "sources.db"
+if (not _SOURCES_DB_CANDIDATE.is_file() or _SOURCES_DB_CANDIDATE.stat().st_size < 1_000_000) and (_PRIMARY_ROOT / "data" / "sources.db").is_file():
+    _SOURCES_DB_CANDIDATE = _PRIMARY_ROOT / "data" / "sources.db"
+SOURCES_DB = Path(os.environ.get("SOURCES_DB_PATH", str(_SOURCES_DB_CANDIDATE)))
 KAIKKI_LOOKUP = ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json"
+if not KAIKKI_LOOKUP.is_file() and (_PRIMARY_ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json").is_file():
+    KAIKKI_LOOKUP = _PRIMARY_ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json"
 WIKI_REFERENCE_CACHE = ROOT / "data" / "lexicon" / "cache" / "wiki_reference.json"
 GRAC_FREQUENCY_CACHE = ROOT / "data" / "lexicon" / "cache" / "grac_frequency.json"
 
