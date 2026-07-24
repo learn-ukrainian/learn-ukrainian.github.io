@@ -38,6 +38,7 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
         "gpt-5.6-terra",
         "gpt-5.6-luna",
         "claude-fable-5",
+        "claude-opus-5",
         "claude-opus-4-8",
         "claude-sonnet-5",
         "gemini-3.1-pro-high",
@@ -189,6 +190,8 @@ def test_fable_routes_native_claude_before_pinned_cursor_fallback():
     assert ladder.index(["claude-fable-5"]) < ladder.index(
         ["claude-fable-5-cursor-fallback"]
     )
+    assert ladder.index(["claude-opus-5"]) < ladder.index(["claude-fable-5"])
+    assert ladder.index(["claude-fable-5"]) < ladder.index(["claude-opus-4-8"])
 
 
 def test_formal_cf_defaults_pin_practical_seats_at_high_effort():
@@ -226,7 +229,10 @@ def test_orchestrator_seats_include_agy_flash_36_high():
 def test_orchestrator_escalate_pins_parallel_sol_fable_pro():
     """Each seat has default + escalate like AGY Flash→Pro (user 2026-07-22)."""
     seats = load_model_catalog()["orchestrator_seats"]
-    assert seats["claude"]["escalate_model_id"] == "claude-fable-5"
+    assert seats["claude"]["escalate_model_id"] == "claude-opus-5"
+    assert seats["claude"]["advisory_model_id"] == "claude-opus-5"
+    assert seats["claude"]["advisory_fallback_model_id"] == "claude-fable-5"
+    assert seats["claude"]["escalate_fallback_model_id"] == "claude-opus-4-8"
     assert seats["claude"]["escalate_effort"] == "xhigh"
     assert seats["agy"]["escalate_model_id"] == "gemini-3.1-pro-high"
     assert seats["agy"]["escalate_effort"] == "high"
@@ -234,7 +240,9 @@ def test_orchestrator_escalate_pins_parallel_sol_fable_pro():
     # formal-CF review seat whose authority escalate is still Sol.
     fc = load_model_catalog()["formal_cf_defaults"]
     assert fc["codex"]["escalate_model_id"] == "gpt-5.6-sol"
-    assert fc["claude"]["escalate_model_id"] == "claude-fable-5"
+    assert fc["claude"]["escalate_model_id"] == "claude-opus-5"
+    assert fc["claude"]["advisory_fallback_model_id"] == "claude-fable-5"
+    assert fc["claude"]["escalate_fallback_model_id"] == "claude-opus-4-8"
 
 
 def test_practical_ladders_exclude_authority_seats():
@@ -243,6 +251,7 @@ def test_practical_ladders_exclude_authority_seats():
         names = {name for rung in ladders[risk] for name in rung}
         assert "openai_frontier" not in names
         assert "claude-fable-5" not in names
+        assert "claude-opus-5" not in names
         assert "claude-opus-4-8" not in names
         assert "gpt-5.6-terra" in names
         assert "claude-sonnet-5" in names
@@ -250,6 +259,7 @@ def test_practical_ladders_exclude_authority_seats():
         assert "grok-4.5-cursor-fallback" in names
     critical = {name for rung in ladders["critical"] for name in rung}
     assert "openai_frontier" in critical
+    assert "claude-opus-5" in critical
     assert "claude-fable-5" in critical
 
 

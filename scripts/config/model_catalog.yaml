@@ -78,14 +78,25 @@ models:
     weaknesses: [stricter_refusal_surface, cursor_fallback_no_zdr]
     sources:
       - https://www.anthropic.com/news/claude-fable-5-mythos-5
+  claude-opus-5:
+    family: anthropic
+    tier: frontier_authority
+    lifecycle: active
+    roles: [architecture, critical_review, long_horizon_coding, advisory, hard_coding]
+    transports: [native_claude, cursor]
+    strengths: [opus_tier_coding, long_horizon_agents, professional_work]
+    weaknesses: [frontier_quota_cost, may_be_unavailable_in_some_orgs]
+    sources:
+      - https://platform.claude.com/docs/en/about-claude/models/overview
+      - https://www.anthropic.com/claude/opus
   claude-opus-4-8:
     family: anthropic
     tier: frontier_authority
     lifecycle: active
-    roles: [architecture, critical_review, security_review, orchestration]
+    roles: [architecture, critical_review, security_review, orchestration, hard_coding_fallback]
     transports: [native_claude, cursor]
     strengths: [production_judgment, adversarial_review, reliable_long_horizon_coding]
-    weaknesses: [frontier_quota_cost]
+    weaknesses: [frontier_quota_cost, superseded_for_primary_hard_coding_by_opus_5]
     sources:
       - https://www.anthropic.com/news/claude-opus-4-8
   claude-sonnet-5:
@@ -360,6 +371,13 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5
     review_profiles: [code, infra]
     capabilities: [code_review]
+  claude-opus-5:
+    model_id: claude-opus-5
+    route: claude
+    transport: native_claude
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-5
+    review_profiles: [code, infra]
+    capabilities: [code_review]
   claude-fable-5-cursor-fallback:
     model_id: claude-fable-5
     route: cursor
@@ -487,10 +505,16 @@ orchestrator_seats:
   claude:
     model_id: claude-sonnet-5
     effort: high
-    escalate_model_id: claude-fable-5
+    escalate_model_id: claude-opus-5
     escalate_effort: xhigh
-    escalate_when: deep_single_shot_or_architecture
-    note: default Sonnet 5 @ high; escalate Fable 5 @ xhigh (Opus only if Fable unavailable)
+    escalate_when: hard_coding_or_architecture
+    escalate_fallback_model_id: claude-opus-4-8
+    advisory_model_id: claude-opus-5
+    advisory_fallback_model_id: claude-fable-5
+    note: >
+      Operator 2026-07-24: daily workload + formal review stay Sonnet 5 @ high.
+      Advisory seat + hard-task coder = Opus 5 @ xhigh. If Opus 5 unavailable:
+      advisory → Fable 5; hard tasks → Opus 4.8.
   codex:
     model_id: gpt-5.6-terra
     effort: high
@@ -527,7 +551,7 @@ orchestrator_seats:
     note: Google-family orchestrator; Flash default loop; Pro escalate only
 
 # Formal CF transport defaults for review-pr (model + effort). Authority seats
-# (Sol/Fable/Opus) are critical-ladder only — not routine review-pr pins.
+# (Sol / Opus 5 / Fable / Opus 4.8) are critical-ladder only — not routine review-pr pins.
 formal_cf_defaults:
   codex:
     model_id: gpt-5.6-terra
@@ -538,8 +562,12 @@ formal_cf_defaults:
   claude:
     model_id: claude-sonnet-5
     effort: high
-    escalate_model_id: claude-fable-5
+    # Routine formal CF stays Sonnet 5; authority escalate = Opus 5 (hard/critical)
+    escalate_model_id: claude-opus-5
     escalate_effort: xhigh
+    escalate_fallback_model_id: claude-opus-4-8
+    advisory_model_id: claude-opus-5
+    advisory_fallback_model_id: claude-fable-5
   glm:
     model_id: glm-5.2
     effort: high
@@ -575,6 +603,7 @@ review_ladders:
   # Grok / K3 / GLM / DS-Pro / pool S 2.1) — not Sol/Fable on routine PRs.
   critical:
     - [openai_frontier]
+    - [claude-opus-5]
     - [claude-fable-5]
     - [claude-fable-5-cursor-fallback]
     - [claude-opus-4-8]

@@ -70,7 +70,7 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 
 | Seat | Default (loop) | Escalate (deep) | Sealed formal CF as *reviewer* |
 | --- | --- | --- | --- |
-| **claude** | `claude-sonnet-5` @ high | **`claude-fable-5` @ xhigh** | yes (`review-pr --reviewer claude`) |
+| **claude** | `claude-sonnet-5` @ high | **`claude-opus-5` @ xhigh** | yes (`review-pr --reviewer claude`) |
 | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | yes (`review-pr --reviewer codex`) |
 | **grok** | `grok-4.5` @ high | same SKU (Cursor = avail. fallback) | no until #5557 |
 | **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | no until #5555 — still *requests* CF |
@@ -79,7 +79,7 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.6-flash-high | high | gemini-3.1-pro-high | high |
-| claude | claude-sonnet-5 | high | claude-fable-5 | xhigh |
+| claude | claude-sonnet-5 | high | claude-opus-5 | xhigh |
 | codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
 | grok | grok-4.5 | high | grok-4.5 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
@@ -91,7 +91,7 @@ Escalate when: architecture, hard multi-file judgment, high-stakes synthesis —
 .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.6-flash-high ...
 .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.1-pro-high ...
 # Claude escalate
-.venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5 ...
+.venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-5 ...
 # Codex named alternate / formal-CF authority escalate
 .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-5.6-sol ...
 ```
@@ -122,7 +122,7 @@ Practical seats @ **high** — not Sol/Fable on routine PRs:
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer glm     # glm-5.2 LOCAL-ONLY
 # Authority escalate (critical / hard judgment only):
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --model gpt-5.6-sol --effort xhigh
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude --model claude-fable-5 --effort xhigh
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude --model claude-opus-5 --effort xhigh
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ...  # default Laguna S 2.1
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ... --model poolside/poolside/laguna-xs-2.1  # XS 2.1 light
 ```

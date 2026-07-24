@@ -43,9 +43,9 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
   * **GLM seat**: `glm-5.2` (local-only)
   * **Gemini seat**: `gemini-3.6-flash-high`
 * **Complex Non-Advisory Tasks & Deep Reviews**:
-  * **Anthropic Opus seat**: `claude-opus-4-8` (complex coding, deep reasoning, adversarial review)
+  * **Anthropic Opus seat**: `claude-opus-5` (advisory + hard-task coding; fallback hard tasks → `claude-opus-4-8` if Opus 5 unavailable)
 * **Escalatory Advisor / Critical Authority Reviews** (reserved for architecture, security, or design escalation):
-  * **Anthropic Advisor**: `claude-fable-5` (Fable 5)
+  * **Anthropic Advisor**: `claude-opus-5` (primary); fallback → `claude-fable-5` if Opus 5 unavailable
   * **OpenAI Advisor**: `gpt-5.6-sol` (`--effort xhigh`)
   * **Google Advisor**: `gemini-3.1-pro-high` (Pro)
 
@@ -114,7 +114,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 
   | Seat | Default (loop) | Escalate (deep) | Notes |
   | --- | --- | --- | --- |
-  | **claude** | `claude-sonnet-5` @ high | **`claude-fable-5` @ xhigh** | Same pattern as AGY Flash→Pro |
+  | **claude** | `claude-sonnet-5` @ high | **`claude-opus-5` @ xhigh** (hard/advisory; Fable if Opus 5 dark; hard fallback Opus 4.8) | Daily/review Sonnet; escalate Opus 5 |
   | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | Named alternate for harness / infra / devops; never co-owns a live lease |
   | **grok** | `grok-4.5` @ high | same SKU (no higher pin yet) | Cursor **explicit** `grok-4.5` = availability fallback, not quality escalate |
   | **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | Flash loop; Pro deep single-shot |
@@ -123,7 +123,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | seat | model_id | effort | escalate_model_id | escalate_effort |
   | --- | --- | --- | --- | --- |
   | agy | gemini-3.6-flash-high | high | gemini-3.1-pro-high | high |
-  | claude | claude-sonnet-5 | high | claude-fable-5 | xhigh |
+  | claude | claude-sonnet-5 | high | claude-opus-5 | xhigh |
   | codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
   | grok | grok-4.5 | high | grok-4.5 | high |
   <!-- fleet-roster-projection:end orchestrator_seats -->
@@ -136,7 +136,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   `review-pr --reviewer codex|claude|glm` (agy|kimi|grok remain `formal_review_eligible: false`
   until #5555–#5557). Authority CF escalate:
   `review-pr <N> --model gpt-5.6-sol --effort xhigh` or
-  `review-pr <N> --reviewer claude --model claude-fable-5 --effort xhigh`.
+  `review-pr <N> --reviewer claude --model claude-opus-5 --effort xhigh`.
 
   <!-- fleet-roster-projection:begin formal_review_eligible -->
   | endpoint | formal_review_eligible |
