@@ -5,6 +5,10 @@ description: Prepare, audit, or resume missing or stale prerequisite evidence fo
 
 # Curriculum preparation
 
+Run repository commands from the repository root. Use canonical resource paths
+under `agents_extensions/shared/skills/`; provider-specific skill directories
+are deploy mirrors, not alternate sources.
+
 Use `scripts/orchestration/curriculum_readiness.py` as the only readiness
 engine. Prepare prerequisite evidence only. Produce no learner module bundle and
 never invoke `$curriculum-lifecycle`; that skill may call this one, and this one
@@ -38,8 +42,11 @@ before mutation and require the same track, `profile_id`, `profile_version`, and
 Treat `--missing-only` as deterministic, read-only inventory only. Resolve the
 roster with `load_active_manifest()` and `load_manifest_track()` from
 `scripts.orchestration.curriculum_readiness`, evaluate the whole active track
-locally, and return failed or stale candidates in manifest order. Do not mutate,
-call a model, silently select an unbounded work scope, or scan another track.
+locally, and return the evaluator's preparation-owned missing or stale
+candidates in manifest order. This inventory intentionally excludes an
+identity-missing built module whose requirements otherwise pass; that route
+belongs to `$track-completion`. Do not mutate, call a model, silently broaden
+the canonical inventory, select an unbounded work scope, or scan another track.
 Stop after the inventory; actual preparation requires a new explicit one-target
 invocation or finite homogeneous packet with `--limit`.
 
@@ -96,10 +103,15 @@ packet.
 
 For model-assisted preparation, enforce one shared budget for the exact scope:
 
-Use `scripts/bounded_packet.py` for executable packet admission, exact PASS
-reuse, hash-derived review scope, and compact receipt/HOLD projection only.
-Drive all review, repair, and verification transitions through the canonical
-`../track-completion/scripts/bounded_completion.py` helper.
+Import the functions in
+`agents_extensions/shared/skills/curriculum-preparation/scripts/bounded_packet.py`
+for packet admission, exact PASS reuse, hash-derived review scope, and compact
+receipt/HOLD projection. Use its `admit_packet`,
+`pending_dispatch_receipt`, and `terminal_hold_receipt` APIs; it is a pure
+library, not a CLI or controller. Those projections load the canonical
+`agents_extensions/shared/skills/track-completion/scripts/bounded_completion.py`
+state-machine helper. Neither helper provides semantic-review transport, and
+executing either file is not review evidence.
 
 1. Before every review dispatch, persist conservative budget evidence in the
    invoking task or controller's existing durable progress ledger or issue

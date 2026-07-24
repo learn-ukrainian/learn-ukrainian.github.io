@@ -35,10 +35,18 @@ closed.
 
 For the exception, derive the consumed preparation identity from the latest
 `BUILD_RECORDED` event in this authoritative ledger and rerun canonical
-readiness with it. Continue only from that fresh result: certify when current,
-or take the existing explicit preparation-rebuild transition when the identity
-differs. A failed requirement or mixed/unknown combination fails closed. Do not
-weaken or bypass this identity-consumption gate.
+readiness with it. Before any post-build review, take the explicit transition:
+
+```bash
+.venv/bin/python \
+  agents_extensions/shared/skills/track-completion/scripts/track_completion.py \
+  request-preparation-rebuild <track/slug> --run-id <id>
+```
+
+Continue only from its fresh result: rebuild from `BUILD_REQUIRED`, or preserve
+and report `PREPARATION_BLOCKED`. A failed requirement or mixed/unknown
+combination fails closed. Do not weaken or bypass this identity-consumption
+gate.
 
 ## Canonical entry paths
 
@@ -90,16 +98,27 @@ review evidence. The durable ledger retains the initial/final review, the
 consolidated repair, remaining canonical budgets, terminal disposition, and
 any deferred audit-tooling drift. A ledger without `bounded_completion` is
 a legacy ledger: its historic reviews remain provisional and it never receives
-an inferred bounded history. Run `migrate-bounded-completion`, then
-`restart-bounded-completion --run-id <legacy-run-id> --owner <operator>` to
-quarantine that run and create a fresh bounded run without deleting its evidence.
+an inferred bounded history. Quarantine it and create a fresh bounded run
+without deleting its evidence:
+
+```bash
+.venv/bin/python \
+  agents_extensions/shared/skills/track-completion/scripts/track_completion.py \
+  migrate-bounded-completion <track/slug> --run-id <legacy-run-id>
+.venv/bin/python \
+  agents_extensions/shared/skills/track-completion/scripts/track_completion.py \
+  restart-bounded-completion <track/slug> --run-id <legacy-run-id> \
+  --owner <agent/task>
+```
+
 The restart moves prior reviews, certification records, publication/QG records,
 and identities into non-authoritative archival ledger storage.
 
 ## Start or resume
 
-1. Preserve the legacy parity boundary documented below. Post-build review v5
-   owns semantic readiness; the outer skill owns lifecycle and persistence.
+1. Preserve the legacy parity boundary documented below. The current versioned
+   post-build review owns semantic readiness; the outer skill owns lifecycle
+   and persistence.
 2. Satisfy repository issue, stream, worktree, research-classification, and
    pending-decision preflight before mutation. Work in the existing scoped
    issue worktree; do not ask V7 to create another worktree.
@@ -130,10 +149,19 @@ and identities into non-authoritative archival ledger storage.
    engine classifies it as `AUDIT_TOOLING_DEFERRED` and queues it for a later
    run: it does not reopen this run, consume either bounded budget, or make
    frozen evidence current under the new tooling.
-   A legacy ledger without a goal is non-authoritative. Use
-   `migrate-terminal-goal` with the exact old run id and explicit intent; a
-   `PBR_PASS_QG_PENDING` migration must also name its exact PR and 40-character
-   merge SHA. Never infer a goal from historical cursor state.
+   A legacy ledger without a goal is non-authoritative. Migrate it with explicit
+   intent:
+
+   ```bash
+   .venv/bin/python \
+     agents_extensions/shared/skills/track-completion/scripts/track_completion.py \
+     migrate-terminal-goal <track/slug> --run-id <legacy-run-id> \
+     --terminal-goal <merge|certify|deploy>
+   ```
+
+   A `PBR_PASS_QG_PENDING` migration must also supply `--pr <number>` and
+   `--merge-sha <40-character-sha>`. Never infer a goal from historical cursor
+   state.
 
    The deterministic module resume command is:
 

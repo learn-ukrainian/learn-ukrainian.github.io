@@ -1,0 +1,4 @@
+interface:
+  display_name: "Curriculum Lifecycle"
+  short_description: "Coordinate one curriculum track safely"
+  default_prompt: "Use $curriculum-lifecycle for c1, scope unbuilt, terminal goal merge."

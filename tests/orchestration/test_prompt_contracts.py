@@ -762,7 +762,9 @@ def test_curriculum_skills_define_one_non_recursive_preparation_handoff() -> Non
     assert "PREPARATION_IDENTITY_DRIFT" in normalized_completion
     assert "any `prepare` with a failed plan/preparation requirement" in normalized_completion
     assert "rerun canonical readiness with it" in normalized_completion
-    assert "existing explicit preparation-rebuild transition" in normalized_completion
+    assert "Before any post-build review, take the explicit transition" in normalized_completion
+    assert "request-preparation-rebuild <track/slug> --run-id <id>" in normalized_completion
+    assert "rebuild from `BUILD_REQUIRED`, or preserve and report `PREPARATION_BLOCKED`" in normalized_completion
     assert "latest `BUILD_RECORDED` event" in normalized_completion
     assert "identity-consumption gate" in normalized_completion
     assert "`plan`, `prepare`, and `stop` remain outside this skill" not in normalized_completion
