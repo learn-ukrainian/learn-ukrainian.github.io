@@ -17,18 +17,8 @@ export async function parseDocumentFile(file: File): Promise<ImportedDeck> {
   const filename = file.name.replace(/\.[^/.]+$/, '');
   const title = formatTitleFromFilename(filename);
 
-  let lemmaKeys: string[] = [];
-
-  if (file.name.endsWith('.json')) {
-    lemmaKeys = parseJSONFile(text);
-  } else if (file.name.endsWith('.csv') || file.name.endsWith('.tsv')) {
-    lemmaKeys = parseCSVFile(text);
-  } else {
-    // Plain text, markdown, or yaml
-    lemmaKeys = parsePlainText(text);
-  }
-
-  const clozeItems = extractDocumentClozeItems(text, lemmaKeys);
+  const { lemmaKeys, wordTranslations } = parsePlainTextWithTranslations(text);
+  const clozeItems = extractDocumentClozeItems(text, lemmaKeys, wordTranslations);
 
   return {
     title,
@@ -36,6 +26,38 @@ export async function parseDocumentFile(file: File): Promise<ImportedDeck> {
     lemma_keys: lemmaKeys,
     cloze_items: clozeItems,
   };
+}
+
+export function parsePlainTextWithTranslations(text: string): { lemmaKeys: string[]; wordTranslations: Map<string, string> } {
+  const set = new Set<string>();
+  const wordTranslations = new Map<string, string>();
+  const lines = text.split(/\r?\n/);
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    // Check for delimiter pairs like "слово - translation", "слово : translation", "слово = translation"
+    const delimiterMatch = trimmed.match(/^([а-щьюяєіїґА-ЩЬЮЯЄІЇҐ'’ʼ\-\s]+)\s*[\-:=—\t]\s*([a-zA-Z0-9\s,;'.()]+)$/);
+    if (delimiterMatch) {
+      const ukPart = delimiterMatch[1].trim();
+      const enPart = delimiterMatch[2].trim();
+      const words = ukPart.match(UKRAINIAN_WORD_REGEX);
+      if (words) {
+        for (const w of words) {
+          const lemma = w.toLowerCase().replace(/['’ʼ]/g, "’").trim();
+          if (lemma.length >= 2) {
+            set.add(lemma);
+            if (enPart) wordTranslations.set(lemma, enPart);
+          }
+        }
+      }
+    } else {
+      extractUkrainianWords(trimmed, set);
+    }
+  }
+
+  return { lemmaKeys: Array.from(set), wordTranslations };
 }
 
 function formatTitleFromFilename(name: string): string {
@@ -63,7 +85,7 @@ function parseJSONFile(text: string): string[] {
   } catch {
     // Fallback to text scan if invalid JSON
   }
-  return parsePlainText(text);
+  return parsePlainTextWithTranslations(text).lemmaKeys;
 }
 
 function parseCSVFile(text: string): string[] {
@@ -79,9 +101,7 @@ function parseCSVFile(text: string): string[] {
 }
 
 function parsePlainText(text: string): string[] {
-  const set = new Set<string>();
-  extractUkrainianWords(text, set);
-  return Array.from(set);
+  return parsePlainTextWithTranslations(text).lemmaKeys;
 }
 
 function extractUkrainianWords(input: string, set: Set<string>): void {
@@ -98,11 +118,17 @@ function extractUkrainianWords(input: string, set: Set<string>): void {
 
 /**
  * Extract verbatim sentences containing vocabulary words and build cloze fill-in-the-blank items.
+ * Supports inflected form stem matching (e.g. книжка -> книжку, книжкою).
  */
-export function extractDocumentClozeItems(text: string, lemmaKeys: string[]): PracticeClozeItem[] {
+export function extractDocumentClozeItems(text: string, lemmaKeys: string[], wordTranslations: Map<string, string> = new Map()): PracticeClozeItem[] {
   const sentences = text.split(/(?<=[.!?])\s+/).filter((s) => s.trim().length > 10);
   const clozeItems: PracticeClozeItem[] = [];
   const setKeys = new Set(lemmaKeys);
+
+  const lemmaStems = new Map<string, string>();
+  for (const key of lemmaKeys) {
+    lemmaStems.set(key, getUkrainianStem(key));
+  }
 
   let clozeCount = 0;
   for (const rawSentence of sentences) {
@@ -111,24 +137,38 @@ export function extractDocumentClozeItems(text: string, lemmaKeys: string[]): Pr
     if (!words) continue;
 
     for (const rawWord of words) {
-      const lemma = rawWord.toLowerCase().replace(/['’ʼ]/g, "’").trim();
-      if (setKeys.has(lemma)) {
+      const wordLower = rawWord.toLowerCase().replace(/['’ʼ]/g, "’").trim();
+      const wordStem = getUkrainianStem(wordLower);
+
+      let matchedLemma = setKeys.has(wordLower) ? wordLower : null;
+      if (!matchedLemma && wordStem.length >= 3) {
+        for (const [lemma, stem] of lemmaStems.entries()) {
+          if (stem.length >= 3 && (wordStem.startsWith(stem) || stem.startsWith(wordStem))) {
+            matchedLemma = lemma;
+            break;
+          }
+        }
+      }
+
+      if (matchedLemma) {
         const blanked = cleanSentence.replace(rawWord, '_____');
         const distractors = Array.from(setKeys)
-          .filter((w) => w !== lemma)
+          .filter((w) => w !== matchedLemma)
           .slice(0, 3)
           .map((w) => ({ label: w, kind: 'distractor' }));
 
+        const translation = wordTranslations.get(matchedLemma);
+
         clozeItems.push({
-          clozeId: `doc_cloze_${++clozeCount}_${lemma}`,
-          lemmaId: lemma,
+          clozeId: `doc_cloze_${++clozeCount}_${matchedLemma}`,
+          lemmaId: matchedLemma,
           sentenceFrameId: `doc_frame_${clozeCount}`,
           sentence: blanked,
           blankCase: 'context',
           form: rawWord,
-          lemma: lemma,
+          lemma: matchedLemma,
           caseRule: { code: 'document-context', labelUk: 'Контекст з документа', labelEn: 'Document Sentence' },
-          clozeEn: 'Sentence from your imported document',
+          clozeEn: translation ? `Translation: ${translation}` : 'Sentence from your imported text',
           options: [
             { label: rawWord, kind: 'answer' },
             ...distractors,
@@ -140,6 +180,12 @@ export function extractDocumentClozeItems(text: string, lemmaKeys: string[]): Pr
   }
 
   return clozeItems;
+}
+
+function getUkrainianStem(word: string): string {
+  const clean = word.toLowerCase().replace(/['’ʼ]/g, "’").trim();
+  if (clean.length <= 3) return clean;
+  return clean.replace(/(ами|ями|ах|ях|ом|ем|єю|ою|ів|ев|єв|а|я|у|ю|е|є|и|і|ї)$/u, '');
 }
 
 // File extension helper extension on File prototype for clean reading

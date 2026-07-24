@@ -15,7 +15,7 @@ import {
   saveLocalCustomSet,
   deleteLocalCustomSet,
 } from '../lib/lexicon/custom-decks';
-import { parseDocumentFile, extractDocumentClozeItems, type ImportedDeck } from '../lib/lexicon/document-importer';
+import { parseDocumentFile, extractDocumentClozeItems, parsePlainTextWithTranslations, type ImportedDeck } from '../lib/lexicon/document-importer';
 import type { PracticeClozeItem } from '../lib/lexicon/srs';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
 
@@ -146,14 +146,10 @@ export function LexiconCustomDeckManager({
 
   const handlePasteSubmit = useCallback(() => {
     if (!pastedText.trim()) return;
-    const words = pastedText
-      .split(/[\n,;\t\s]+/)
-      .map((w) => w.trim().toLowerCase())
-      .filter((w) => w.length >= 2);
-
-    const clozes = extractDocumentClozeItems(pastedText, words);
+    const { lemmaKeys, wordTranslations } = parsePlainTextWithTranslations(pastedText);
+    const clozes = extractDocumentClozeItems(pastedText, lemmaKeys, wordTranslations);
     setImportedClozeItems(clozes);
-    processTextToCandidates(words, chromeLocale === 'uk' ? 'Моя імпортована колода' : 'My Imported Deck');
+    processTextToCandidates(lemmaKeys, chromeLocale === 'uk' ? 'Моя імпортована колода' : 'My Imported Deck');
   }, [pastedText, processTextToCandidates, chromeLocale]);
 
   // CEFR Distribution Counts
