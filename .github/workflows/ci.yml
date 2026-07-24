@@ -61,6 +61,7 @@ on:
 jobs:
   changes:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     outputs:
       # code = any high-signal source/config change. Used by the broad secret scan.
       code: ${{ steps.filter.outputs.code }}
@@ -268,6 +269,7 @@ jobs:
   static-checks:
     name: Static & Agent Checks
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: changes
     if: needs.changes.outputs.python == 'true' || needs.changes.outputs.agent_config == 'true' || needs.changes.outputs.postmortems == 'true'
     steps:
@@ -463,6 +465,7 @@ jobs:
   content-schema-checks:
     name: Content & Schema Checks
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     needs: changes
     permissions:
       contents: read
@@ -735,6 +738,7 @@ jobs:
   test:
     name: Test (pytest)
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     permissions:
       contents: read
       actions: write
@@ -916,6 +920,7 @@ jobs:
   frontend:
     name: Frontend (build + vitest)
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: read
       actions: write
@@ -975,6 +980,7 @@ jobs:
   frontend-e2e:
     name: Frontend E2E (playwright)
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     permissions:
       contents: read
       actions: write
@@ -1040,6 +1046,7 @@ jobs:
   secret-scan:
     name: Secret Scanning (gitleaks)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: changes
     if: needs.changes.outputs.code == 'true'
     steps:
@@ -1055,6 +1062,7 @@ jobs:
   ci-gate:
     name: CI Gate
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     if: always()
     needs:
       - changes
