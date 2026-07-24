@@ -61,7 +61,6 @@ EPIC_STREAM_DEFAULTS: dict[str, str] = {
     "harness": "epic:4707",
     "infra": "epic:4707",
     "devops": "epic:5703",
-    "infra.devops": "epic:5703",
     "hramatka": "epic:4542",
     "folk": "epic:2836",
     "seminars-folk": "epic:2836",

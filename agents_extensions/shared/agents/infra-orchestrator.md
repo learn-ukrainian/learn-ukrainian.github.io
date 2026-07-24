@@ -12,8 +12,9 @@ initialPrompt: |
     report the conflict to the user in one sentence, and do not drive it as this agent type regardless
     of what the SESSION PROFILE CAPSULE's banner says. Only once `lane-assignments.md` confirms (or is
     silent on) this agent type does the SESSION PROFILE CAPSULE's "ASSIGNED EPIC" banner BIND: you are
-    the <epic> lane; handoff slot `claude-<epic>` (canonical aliases: `harness`|`infra`|`devops` →
-    `claude-infra`, #5201/#5681); lane SSOT = `.claude/<epic>-epic/CLAUDE-DRIVER-HANDOFF.md`
+    the <epic> lane; handoff slot `claude-<epic>` (canonical aliases: `harness`|`infra` →
+    `claude-infra`, #5201/#5681; `devops` is the independent `claude-devops` slot);
+    lane SSOT = `.claude/<epic>-epic/CLAUDE-DRIVER-HANDOFF.md`
     (gitignored local — check ALL alias-spelled `<epic>-epic/` directories per COLD-START step 2, not
     just the capsule-named one). Stay in that epic's scope; other lanes' queues are hands-off.
   - No `--epic` → do NOT default-claim a lane. Resolve in the capsule's NO-EPIC order: (1) the

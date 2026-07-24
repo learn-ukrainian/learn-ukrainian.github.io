@@ -115,6 +115,11 @@ def test_bootstrap_uses_dedicated_devops_stream(tmp_path: Path) -> None:
     assert "**Stream:** `epic:5703`" in board
 
 
+def test_stream_defaults_require_canonical_devops_selector() -> None:
+    assert codex_lane.EPIC_STREAM_DEFAULTS["devops"] == "epic:5703"
+    assert "infra.devops" not in codex_lane.EPIC_STREAM_DEFAULTS
+
+
 def test_bootstrap_records_exact_rollover_without_rendering_lease_credentials(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

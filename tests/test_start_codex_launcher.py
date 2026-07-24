@@ -64,18 +64,18 @@ def _build_project(tmp_path: Path) -> tuple[Path, Path, Path]:
 if [[ "${{1:-}}" == */scripts/orchestration/thread_handoff.py && "$*" == *" detect "* ]]; then
   case "${{CODEX_LAUNCHER_TEST_ROLLOVER:-none}}" in
     none)
-      printf '%s\\n' '{{"agent":"codex-infra","status":"none"}}'
+      printf '%s\\n' '{{"agent":"codex-devops","status":"none"}}'
       exit 0
       ;;
     pending)
       cat <<'JSON'
-{{"agent":"codex-infra","packet_agent":"codex-infra","lineage_id":"lineage-launcher-fresh","rollover_id":"rollover-launcher-fresh","status":"pending_start","identity":{{"replacement_task_id":null}},"title_transition":{{"native_title_supported":false,"state":"awaiting_replacement_binding"}}}}
+{{"agent":"codex-devops","packet_agent":"codex-devops","lineage_id":"lineage-launcher-fresh","rollover_id":"rollover-launcher-fresh","status":"pending_start","identity":{{"replacement_task_id":null}},"title_transition":{{"native_title_supported":false,"state":"awaiting_replacement_binding"}}}}
 JSON
       exit 0
       ;;
     resumed)
       cat <<'JSON'
-{{"agent":"codex-infra","packet_agent":"codex-infra","lineage_id":"lineage-launcher-old","rollover_id":"rollover-launcher-old","status":"resumed","identity":{{"replacement_task_id":"old-task"}},"title_transition":{{"native_title_supported":false,"state":"fallback_recorded"}}}}
+{{"agent":"codex-devops","packet_agent":"codex-devops","lineage_id":"lineage-launcher-old","rollover_id":"rollover-launcher-old","status":"resumed","identity":{{"replacement_task_id":"old-task"}},"title_transition":{{"native_title_supported":false,"state":"fallback_recorded"}}}}
 JSON
       exit 0
       ;;
@@ -245,7 +245,7 @@ def test_fresh_exact_rollover_is_exported_to_new_codex_task(tmp_path: Path) -> N
     assert result.returncode == 0, result.stderr + result.stdout
     assert supervisor_capture.exists()
     assert (tmp_path / "codex.txt").read_text(encoding="utf-8").splitlines()[-3:] == [
-        "rollover_agent=codex-infra",
+        "rollover_agent=codex-devops",
         "lineage=lineage-launcher-fresh",
         "rollover=rollover-launcher-fresh",
     ]
