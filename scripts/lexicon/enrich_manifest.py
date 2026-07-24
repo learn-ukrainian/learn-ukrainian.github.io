@@ -5905,7 +5905,10 @@ def enrich_entry(
     return bool(block or sections or pronunciation or wiki_ref or filled_anchor)
 
 
-def enrich() -> tuple[int, int]:
+def enrich(
+    manifest_path: Path | None = None,
+    fingerprint_path: Path | None = None,
+) -> tuple[int, int]:
     """Enrich the Atlas manifest.
 
     When ``LEXICON_USE_RUNNER=1``, delegates to the PR1 offline runner (streaming
@@ -5913,6 +5916,7 @@ def enrich() -> tuple[int, int]:
     uses the sealed CEFR + relation phases in-process (same semantics; foundation
     for #5331) with optional side DBs under ``data/lexicon/side/``.
     """
+    target_manifest = Path(manifest_path) if manifest_path is not None else MANIFEST
     if os.environ.get("LEXICON_USE_RUNNER", "").strip() in {"1", "true", "yes", "on"}:
         from scripts.lexicon.runner.memory import MemoryPolicy
         from scripts.lexicon.runner.offline_engine import enrich_offline_slice
@@ -5920,11 +5924,11 @@ def enrich() -> tuple[int, int]:
         work = ROOT / "data" / "lexicon" / "runner_work"
         # offline_engine warms GRAC via ``_ensure_grac_frequency_cache`` before seal.
         result = enrich_offline_slice(
-            manifest_path=MANIFEST,
+            manifest_path=target_manifest,
             sources_db=SOURCES_DB,
             kaikki_json=KAIKKI_LOOKUP,
             work_dir=work,
-            output_path=MANIFEST,
+            output_path=target_manifest,
             grac_cache=_load_grac_frequency_cache(),
             memory_policy=MemoryPolicy(),
             require_memory_self_test=True,

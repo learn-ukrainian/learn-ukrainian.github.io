@@ -22,9 +22,14 @@ Run from the repository root after building an explicit VESUM shadow database::
 from __future__ import annotations
 
 import argparse
+import fcntl
+import hashlib
 import json
+import os
 import sqlite3
 import sys
+import tempfile
+import uuid
 from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
@@ -39,6 +44,38 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.audit import apply_source_inventory_promotion as apply
 from scripts.audit import plan_source_inventory_promotion as planner
+from scripts.lexicon import enrich_manifest as enrich_module
+from scripts.lexicon import verify_manifest
+
+DEFAULT_INTAKE_DIR = PROJECT_ROOT / "data" / "lexicon" / "intake"
+DEFAULT_JOURNAL = DEFAULT_INTAKE_DIR / "private_teacher_lesson_intake_journal.json"
+DEFAULT_LOCK = DEFAULT_INTAKE_DIR / "promotion.lock"
+STAGED_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.staged.json"
+STAGED_FINGERPRINT = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.staged.fingerprint.json"
+
+
+def _atomic_write_file(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_dir = path.parent
+    with tempfile.NamedTemporaryFile("w", dir=temp_dir, delete=False, encoding="utf-8") as tf:
+        tf.write(content)
+        tf.flush()
+        os.fsync(tf.fileno())
+        temp_name = tf.name
+    os.replace(temp_name, path)
+
+
+def _atomic_write_json(path: Path, data: Any) -> None:
+    content = json.dumps(data, ensure_ascii=False, indent=2) + "\n"
+    _atomic_write_file(path, content)
+
+
+def _sha256_file(path: Path) -> str:
+    if not path.is_file():
+        return ""
+    h = hashlib.sha256()
+    h.update(path.read_bytes())
+    return h.hexdigest()
 from scripts.audit.source_inventory_intake import read_source_inventory, source_inventory_candidates
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
 from scripts.lexicon.build_data_manifest import _lemma_key
@@ -472,14 +509,71 @@ def promote(
     if not write:
         return result
 
-    manifest_payload = json.loads(manifest.read_text(encoding="utf-8"))
-    applied = apply.apply_promotion_plan(manifest_payload, plan, source_family="teacher_lesson")
-    if applied["counts"]["promoted"]:
-        manifest.write_text(json.dumps(manifest_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        from scripts.lexicon import enrich_manifest as enrich_module
-        enrich_module.enrich()
-    result.update({"applied": applied["counts"], "wrote": bool(applied["counts"]["promoted"])})
-    return result
+    DEFAULT_INTAKE_DIR.mkdir(parents=True, exist_ok=True)
+    with open(DEFAULT_LOCK, "w") as lock_fd:
+        fcntl.flock(lock_fd, fcntl.LOCK_EX)
+        try:
+            base_sha256 = _sha256_file(manifest)
+            tx_id = str(uuid.uuid4())
+            journal_record: dict[str, Any] = {
+                "schema_version": "promotion-journal.v1",
+                "tx_id": tx_id,
+                "base_sha256": base_sha256,
+                "phase": "PREPARED",
+                "promoted_count": len(candidates),
+            }
+            _atomic_write_json(DEFAULT_JOURNAL, journal_record)
+
+            # PHASE 1: STAGE MANIFEST
+            manifest_payload = json.loads(manifest.read_text(encoding="utf-8"))
+            applied = apply.apply_promotion_plan(manifest_payload, plan, source_family="teacher_lesson")
+            _atomic_write_json(STAGED_MANIFEST, manifest_payload)
+            staged_sha256 = _sha256_file(STAGED_MANIFEST)
+            journal_record.update({
+                "phase": "MANIFEST_STAGED",
+                "staged_sha256": staged_sha256,
+                "promoted": applied["counts"]["promoted"],
+            })
+            _atomic_write_json(DEFAULT_JOURNAL, journal_record)
+
+            # PHASE 2: ENRICH STAGED MANIFEST
+            if applied["counts"]["promoted"]:
+                enrich_module.enrich(manifest_path=STAGED_MANIFEST, fingerprint_path=STAGED_FINGERPRINT)
+            enriched_sha256 = _sha256_file(STAGED_MANIFEST)
+            journal_record.update({
+                "phase": "ENRICHED",
+                "enriched_sha256": enriched_sha256,
+            })
+            _atomic_write_json(DEFAULT_JOURNAL, journal_record)
+
+            # PHASE 3: VERIFY STAGED MANIFEST
+            verify_code = verify_manifest.main(["--manifest", str(STAGED_MANIFEST)])
+            if verify_code != 0:
+                raise RuntimeError(f"staged manifest failed verification with exit code {verify_code}")
+            journal_record.update({
+                "phase": "VERIFIED",
+            })
+            _atomic_write_json(DEFAULT_JOURNAL, journal_record)
+
+            # PHASE 4: PUBLISH (Compare-And-Swap + Atomic Replace)
+            current_sha256 = _sha256_file(manifest)
+            if current_sha256 != base_sha256:
+                raise RuntimeError("Production manifest mutated concurrently; aborting promotion CAS publish")
+            os.replace(STAGED_MANIFEST, manifest)
+            if STAGED_FINGERPRINT.is_file():
+                os.replace(STAGED_FINGERPRINT, fingerprint)
+
+            # PHASE 5: PUBLISHED
+            journal_record.update({
+                "phase": "PUBLISHED",
+                "final_sha256": _sha256_file(manifest),
+            })
+            _atomic_write_json(DEFAULT_JOURNAL, journal_record)
+
+            result.update({"applied": applied["counts"], "wrote": bool(applied["counts"]["promoted"]), "journal": journal_record})
+            return result
+        finally:
+            fcntl.flock(lock_fd, fcntl.LOCK_UN)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
