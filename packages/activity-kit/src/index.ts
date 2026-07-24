@@ -5,6 +5,8 @@ export { default as luLessonV1Schema } from './lu.lesson.v1.schema.json';
 export { default as luLessonSupportV1Schema } from './lu.lesson-support.v1.schema.json';
 
 export { ActivityPlayer } from './ActivityPlayer';
+export { TeacherDashboard } from './components/TeacherDashboard';
+export type { TeacherDashboardProps, DashboardState, LessonSummary } from './components/TeacherDashboard';
 export type {
   ActivityPlayerActivity,
   ActivityCompletionEvent,
