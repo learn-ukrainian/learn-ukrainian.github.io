@@ -189,5 +189,22 @@ def test_normalize_hramatka_level_handles_aliases_and_missing_levels() -> None:
     assert normalize_hramatka_level(None) == "b1"
     assert normalize_hramatka_level("") == "b1"
     assert normalize_hramatka_level("A2") == "a2"
+    assert normalize_hramatka_level("c3") is None
+    assert normalize_hramatka_level("   ") is None
+
+
+def test_unrecognized_or_whitespace_level_fails_validation_without_ready() -> None:
+    lesson = {"title": "Урок з невідомим рівнем", "level": "c3", "blocks": [{"id": "b1", "type": "intro"}]}
+    transport = RecordingTransport([lesson])
+
+    result = generate_qualified_lesson(
+        {"prompt": "Створіть урок"},
+        transport=transport,
+        qg_scan=lambda _lesson: _passing_evidence(),
+    )
+
+    assert result.state is GenerationState.FAILED
+    assert result.failure_reason == "invalid_provider_payload"
+    assert result.lesson is None
 
 

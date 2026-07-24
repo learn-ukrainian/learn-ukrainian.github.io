@@ -138,6 +138,7 @@ def passes_all_hramatka_qg_rules(evidence: Mapping[str, Any]) -> bool:
     return True
 
 
+_CANONICAL_CEFR_LEVELS: set[str] = {"a1", "a2", "b1", "b2", "c1", "c2"}
 _LEVEL_ALIASES: dict[str, str] = {
     "beginner": "a1",
     "elementary": "a2",
@@ -148,11 +149,14 @@ _LEVEL_ALIASES: dict[str, str] = {
 }
 
 
-def normalize_hramatka_level(level: Any) -> str:
+def normalize_hramatka_level(level: Any) -> str | None:
     """Normalize CEFR level strings and common aliases into canonical CEFR codes."""
 
-    val = str(level or "b1").strip().lower()
-    return _LEVEL_ALIASES.get(val, val)
+    if level is None or level == "":
+        return "b1"
+    val = str(level).strip().lower()
+    resolved = _LEVEL_ALIASES.get(val, val)
+    return resolved if resolved in _CANONICAL_CEFR_LEVELS else None
 
 
 def generate_qualified_lesson(
@@ -203,14 +207,15 @@ def generate_qualified_lesson(
                 for block in blocks
             )
         )
-        if not isinstance(lesson, Mapping) or not valid_blocks:
+        normalized_level = normalize_hramatka_level(lesson.get("level") if isinstance(lesson, Mapping) else None)
+        if not isinstance(lesson, Mapping) or not valid_blocks or normalized_level is None:
             attempts.append(
                 GenerationAttempt(number=number, model=model, outcome="invalid_provider_payload")
             )
             return _failed(attempts, "invalid_provider_payload")
 
         normalized_lesson = dict(lesson)
-        normalized_lesson["level"] = normalize_hramatka_level(lesson.get("level"))
+        normalized_lesson["level"] = normalized_level
 
         try:
             evidence = qg_scan(normalized_lesson)
