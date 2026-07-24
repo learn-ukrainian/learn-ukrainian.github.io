@@ -9,10 +9,16 @@ name: GitHub Actions Security Analysis with zizmor 🌈
 # credential-persistence + 4 secrets-inherit). See follow-up issue for the
 # triage plan — some checkouts legitimately need credentials.
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: ['main']
-  pull_request: {}
+  pull_request:
+    paths:
+      - '.github/workflows/**'
   schedule:
     # Weekly run on Mondays at 09:00 UTC catches new audit rules that ship
     # in zizmor releases between user-triggered runs.
