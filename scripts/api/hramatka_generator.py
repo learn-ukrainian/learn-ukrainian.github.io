@@ -7,11 +7,22 @@ this public module makes the routing policy deterministic and testable.
 
 from __future__ import annotations
 
+import sys
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from enum import StrEnum
 from typing import Any, Protocol
 from urllib.error import HTTPError, URLError
+
+try:
+    from enum import StrEnum
+except ImportError:
+    from enum import Enum
+
+    class StrEnum(str, Enum):  # noqa: UP042
+        """Fallback StrEnum implementation for Python 3.10 support."""
+
+        def __str__(self) -> str:
+            return str(self.value)
 
 from scripts.audit.hramatka_qg_rules import DIMENSION_ORDER, scan_hramatka_lesson
 
