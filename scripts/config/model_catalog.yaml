@@ -413,6 +413,13 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review]
     requires_data_egress_policy: local_interactive
+  claude-opus-4-8:
+    model_id: claude-opus-4-8
+    route: claude
+    transport: native_claude
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-4-8
+    review_profiles: [code, infra]
+    capabilities: [code_review]
   claude-sonnet-5:
     model_id: claude-sonnet-5
     route: claude

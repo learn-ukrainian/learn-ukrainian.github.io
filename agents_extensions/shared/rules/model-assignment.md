@@ -42,6 +42,8 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
   * **Codex seat**: `gpt-5.6-terra` (standard practical review)
   * **GLM seat**: `glm-5.2` (local-only)
   * **Gemini seat**: `gemini-3.6-flash-high`
+* **Complex Non-Advisory Tasks & Deep Reviews**:
+  * **Anthropic Opus seat**: `claude-opus-4-8` (complex coding, deep reasoning, adversarial review)
 * **Escalatory Advisor / Critical Authority Reviews** (reserved for architecture, security, or design escalation):
   * **Anthropic Advisor**: `claude-fable-5` (Fable 5)
   * **OpenAI Advisor**: `gpt-5.6-sol` (`--effort xhigh`)
