@@ -391,7 +391,11 @@ def compute_warning_severity(
 
 
 def _source_db_path(db_path: str | Path | None = None) -> Path:
-    return Path(db_path) if db_path is not None else SOURCES_DB
+    target = Path(db_path) if db_path is not None else SOURCES_DB
+    primary = Path("/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db")
+    if (not target.is_file() or target.stat().st_size < 1_000_000) and primary.is_file():
+        return primary
+    return target
 
 
 def _source_conn(db_path: str | Path | None = None) -> sqlite3.Connection:
