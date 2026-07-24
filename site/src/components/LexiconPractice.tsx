@@ -2728,83 +2728,6 @@ function LexiconPracticeIsland({
               </div>
             </div>
 
-            {/* Google Drive Sync Bar */}
-            <div className="k3-drive-sync-bar" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '0.75rem 0 1rem 0' }}>
-              <button
-                type="button"
-                className="btn btn-sm"
-                style={{ background: 'var(--lu-accent-blue, #2563eb)', color: '#fff', borderRadius: '8px', padding: '0.4rem 0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-                onClick={handleGoogleDriveSync}
-                disabled={isDriveSyncing}
-              >
-                <span>☁️</span>
-                <span>{isDriveSyncing ? 'Синхронізація...' : 'Увійти та синхронізувати з Google Drive'}</span>
-              </button>
-              {driveSyncMsg ? <span style={{ fontSize: '0.85rem', color: 'var(--lu-text-muted)' }}>{driveSyncMsg}</span> : null}
-            </div>
-
-            {/* Custom Decks & Special Deck Filter Bar */}
-            <div className="k3-deck-filter-bar" style={{ margin: '1rem 0', padding: '0.75rem 1rem', background: 'var(--lu-bg-card, rgba(255,255,255,0.05))', borderRadius: '12px', border: '1px solid var(--lu-border, rgba(255,255,255,0.1))' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
-                  {chromeLocale === 'uk' ? '📚 Колоди та добірки слів' : '📚 Word Decks & Collections'}
-                </span>
-                <button
-                  type="button"
-                  className="btn btn-sm btn-accent"
-                  onClick={() => setShowCreateModal(true)}
-                  style={{ fontSize: '0.8rem', padding: '0.25rem 0.6rem' }}
-                >
-                  ⚙️ {chromeLocale === 'uk' ? 'Менеджер колод / Імпорт' : 'Manage Decks / Import'}
-                </button>
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                <button
-                  type="button"
-                  className={`btn btn-sm ${selectedDeckFilter === 'all' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
-                  onClick={() => setSelectedDeckFilter('all')}
-                  style={selectedDeckFilter === 'all' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
-                >
-                  {selectedDeckFilter === 'all' ? '✓ ' : ''}🌐 {chromeLocale === 'uk' ? `Всі слова (${learnerLevel})` : `All Words (${learnerLevel})`}
-                </button>
-                <button
-                  type="button"
-                  className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_lesson' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
-                  onClick={() => setSelectedDeckFilter('virtual_teacher_lesson')}
-                  style={selectedDeckFilter === 'virtual_teacher_lesson' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
-                >
-                  {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓 {chromeLocale === 'uk' ? 'Уроки вчителя (610+440 слів)' : 'Teacher Deck (610+440 words)'}
-                </button>
-                {customSets.map((set) => (
-                  <button
-                    key={set.id}
-                    type="button"
-                    className={`btn btn-sm ${selectedDeckFilter === set.id ? 'btn-primary shadow-md' : 'btn-ghost'}`}
-                    onClick={() => setSelectedDeckFilter(set.id)}
-                    style={selectedDeckFilter === set.id ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
-                  >
-                    {selectedDeckFilter === set.id ? '✓ ' : ''}⭐ {set.title} ({set.lemma_keys.length})
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Custom Deck Manager & Document Importer Modal */}
-            {showCreateModal ? (
-              <LexiconCustomDeckManager
-                chromeLocale={chromeLocale}
-                activeDeckFilter={selectedDeckFilter}
-                onSelectDeckFilter={(id) => {
-                  setSelectedDeckFilter(id);
-                  setCustomSets(readLocalCustomSets());
-                }}
-                onClose={() => {
-                  setShowCreateModal(false);
-                  setCustomSets(readLocalCustomSets());
-                }}
-              />
-            ) : null}
-
             <div className="k3-words" data-testid="practice-dashboard-words">
               {dailySnapshotLoading || !dailySnapshot ? (
                 <div className="practice-daily-deck k3-words-loading" data-testid="practice-daily-deck-loading">
@@ -2903,6 +2826,87 @@ function LexiconPracticeIsland({
                 </button>
               ) : null}
             </div>
+
+            <details className="k3-practice-sources">
+              <summary>
+                {chromeLocale === 'uk' ? 'Колоди та синхронізація' : 'Decks & sync'}
+              </summary>
+              <div className="k3-practice-sources-content">
+                <div className="k3-drive-sync-bar" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <button
+                    type="button"
+                    className="btn btn-sm"
+                    style={{ background: 'var(--lu-accent-blue, #2563eb)', color: '#fff', borderRadius: '8px', padding: '0.4rem 0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                    onClick={handleGoogleDriveSync}
+                    disabled={isDriveSyncing}
+                  >
+                    <span>☁️</span>
+                    <span>{isDriveSyncing ? 'Синхронізація...' : 'Увійти та синхронізувати з Google Drive'}</span>
+                  </button>
+                  {driveSyncMsg ? <span style={{ fontSize: '0.85rem', color: 'var(--lu-text-muted)' }}>{driveSyncMsg}</span> : null}
+                </div>
+
+                <div className="k3-deck-filter-bar" style={{ padding: '0.75rem 1rem', background: 'var(--lu-bg-card, rgba(255,255,255,0.05))', borderRadius: '12px', border: '1px solid var(--lu-border, rgba(255,255,255,0.1))' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                    <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
+                      {chromeLocale === 'uk' ? '📚 Колоди та добірки слів' : '📚 Word Decks & Collections'}
+                    </span>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-accent"
+                      onClick={() => setShowCreateModal(true)}
+                      style={{ fontSize: '0.8rem', padding: '0.25rem 0.6rem' }}
+                    >
+                      ⚙️ {chromeLocale === 'uk' ? 'Менеджер колод / Імпорт' : 'Manage Decks / Import'}
+                    </button>
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    <button
+                      type="button"
+                      className={`btn btn-sm ${selectedDeckFilter === 'all' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
+                      onClick={() => setSelectedDeckFilter('all')}
+                      style={selectedDeckFilter === 'all' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
+                    >
+                      {selectedDeckFilter === 'all' ? '✓ ' : ''}🌐 {chromeLocale === 'uk' ? `Всі слова (${learnerLevel})` : `All Words (${learnerLevel})`}
+                    </button>
+                    <button
+                      type="button"
+                      className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_lesson' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
+                      onClick={() => setSelectedDeckFilter('virtual_teacher_lesson')}
+                      style={selectedDeckFilter === 'virtual_teacher_lesson' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
+                    >
+                      {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓 {chromeLocale === 'uk' ? 'Уроки вчителя (610+440 слів)' : 'Teacher Deck (610+440 words)'}
+                    </button>
+                    {customSets.map((set) => (
+                      <button
+                        key={set.id}
+                        type="button"
+                        className={`btn btn-sm ${selectedDeckFilter === set.id ? 'btn-primary shadow-md' : 'btn-ghost'}`}
+                        onClick={() => setSelectedDeckFilter(set.id)}
+                        style={selectedDeckFilter === set.id ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
+                      >
+                        {selectedDeckFilter === set.id ? '✓ ' : ''}⭐ {set.title} ({set.lemma_keys.length})
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            {showCreateModal ? (
+              <LexiconCustomDeckManager
+                chromeLocale={chromeLocale}
+                activeDeckFilter={selectedDeckFilter}
+                onSelectDeckFilter={(id) => {
+                  setSelectedDeckFilter(id);
+                  setCustomSets(readLocalCustomSets());
+                }}
+                onClose={() => {
+                  setShowCreateModal(false);
+                  setCustomSets(readLocalCustomSets());
+                }}
+              />
+            ) : null}
 
             <div className="k3-secondary" data-testid="practice-dashboard-secondary">
             <div className="k3-focus">
