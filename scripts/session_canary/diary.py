@@ -541,8 +541,9 @@ def build_hydrate_capsule(
         "5. Anything not dual-written before compact is **allowed to have evaporated**.\n"
     )
     # Reserve budget for footer so it is never squeezed out by stamps/stream.
+    # Do not re-floor pack_max to 200: that can push final capsule over max_tokens.
     reground_tok = approx_tokens(reground)
-    pack_max = max(200, max_tokens - reground_tok)
+    pack_max = max(0, int(max_tokens) - reground_tok)
     pack_char_ceiling = pack_max * 4
 
     included: list[str] = [header]
@@ -553,9 +554,13 @@ def build_hydrate_capsule(
             continue
         trial = "\n\n".join([*included, body]).strip() + "\n"
         if approx_tokens(trial) > pack_max or len(trial) > pack_char_ceiling:
-            # never drop identity
+            # Prefer keeping identity even if pack_max is tight; may still fit with footer.
             if name == "identity":
-                included.append(body)
+                with_id = "\n\n".join([*included, body, reground]).strip() + "\n"
+                if approx_tokens(with_id) <= max_tokens:
+                    included.append(body)
+                else:
+                    dropped.append("identity_truncated")
             else:
                 dropped.append(name)
             continue
@@ -564,6 +569,10 @@ def build_hydrate_capsule(
     included.append(reground)
 
     capsule = "\n\n".join(included).strip() + "\n"
+    # Final bound: if still over (huge identity), keep header + reground only.
+    if approx_tokens(capsule) > max_tokens:
+        capsule = "\n\n".join([header, reground]).strip() + "\n"
+        dropped = list(dict.fromkeys([*dropped, "all_sections_over_budget"]))
     meta: dict[str, object] = {
         "epic": epic,
         "stream_id": stream_id,
