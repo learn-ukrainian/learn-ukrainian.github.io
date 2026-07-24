@@ -183,18 +183,18 @@ def test_trusted_epic_claims_codex_lease_then_runs_canary_steps(tmp_path: Path) 
     supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
     assert supervisor_args[supervisor_args.index("--agent") + 1] == "codex"
     assert supervisor_args[supervisor_args.index("--harness") + 1] == "codex-cli"
-    assert supervisor_args[supervisor_args.index("--stream") + 1] == "epic:4707"
+    assert supervisor_args[supervisor_args.index("--stream") + 1] == "epic:5703"
     assert canary_capture.read_text(encoding="utf-8").splitlines() == [
         "-m",
         "scripts.session_canary.codex_lane",
         "mint",
         "--epic",
-        "infra",
+        "devops",
         "-m",
         "scripts.session_canary.codex_lane",
         "bootstrap",
         "--epic",
-        "infra",
+        "devops",
     ]
     assert "CODEX-COLD-START.md" in result.stdout
 

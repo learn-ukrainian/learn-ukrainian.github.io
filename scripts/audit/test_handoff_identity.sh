@@ -54,7 +54,8 @@ eq "$(handoff_epic_from_argv)" "" "empty argv (epic)"
 
 # --- selector → canonical lane, stream, and provider slot mapping ---
 eq "$(launcher_selector_lane infra.fleet-comms)" "infra" "fleet-comms resolves to infra"
-eq "$(launcher_selector_stream infra.devops)" "epic:4707" "devops resolves to infra stream"
+eq "$(launcher_selector_lane devops)" "devops" "devops resolves to dedicated lane"
+eq "$(launcher_selector_stream infra.devops)" "epic:5703" "devops resolves to dedicated stream"
 eq "$(launcher_selector_lane atlas.practice)" "atlas" "atlas practice resolves to atlas"
 eq "$(launcher_selector_stream hramatka.lessons)" "epic:4542" "hramatka lessons resolves"
 # corpus is a documented, currently-recommended driver epic
@@ -69,23 +70,23 @@ eq "$(handoff_identity_for_epic atlas)" "claude-atlas" "epic atlas → claude-at
 eq "$(handoff_identity_for_epic hramatka)" "claude-hramatka" "epic hramatka → claude-hramatka"
 eq "$(handoff_identity_for_epic harness)" "claude-infra" "epic harness → claude-infra (#5201)"
 eq "$(handoff_identity_for_epic infra)" "claude-infra" "epic infra → claude-infra alias"
-eq "$(handoff_identity_for_epic infra.devops)" "claude-infra" "dot devops → claude-infra alias"
+eq "$(handoff_identity_for_epic infra.devops)" "claude-devops" "dot devops → claude-devops"
 eq "$(handoff_identity_for_epic)" "" "no epic → empty slot"
 
-# Codex uses provider-specific per-epic slots; harness/infra/devops share one alias.
+# Codex uses provider-specific per-epic slots; DevOps is independent from Infra.
 eq "$(handoff_identity_for_codex_epic atlas)" "codex-atlas" "Codex atlas → codex-atlas"
 eq "$(handoff_identity_for_codex_epic hramatka)" "codex-hramatka" "Codex hramatka → codex-hramatka"
 eq "$(handoff_identity_for_codex_epic harness)" "codex-infra" "Codex harness → codex-infra"
 eq "$(handoff_identity_for_codex_epic infra)" "codex-infra" "Codex infra → codex-infra alias"
-eq "$(handoff_identity_for_codex_epic infra.devops)" "codex-infra" "Codex dot devops → codex-infra alias"
+eq "$(handoff_identity_for_codex_epic infra.devops)" "codex-devops" "Codex dot devops → codex-devops"
 eq "$(handoff_identity_for_codex_epic)" "" "Codex no epic → empty slot"
 
-# Gemini uses provider-specific per-epic slots; harness/infra/devops share one alias.
+# Gemini uses provider-specific per-epic slots; DevOps is independent from Infra.
 eq "$(handoff_identity_for_gemini_epic atlas)" "gemini-atlas" "Gemini atlas → gemini-atlas"
 eq "$(handoff_identity_for_gemini_epic hramatka)" "gemini-hramatka" "Gemini hramatka → gemini-hramatka"
 eq "$(handoff_identity_for_gemini_epic harness)" "gemini-infra" "Gemini harness → gemini-infra"
 eq "$(handoff_identity_for_gemini_epic infra)" "gemini-infra" "Gemini infra → gemini-infra alias"
-eq "$(handoff_identity_for_gemini_epic infra.devops)" "gemini-infra" "Gemini dot devops → gemini-infra alias"
+eq "$(handoff_identity_for_gemini_epic infra.devops)" "gemini-devops" "Gemini dot devops → gemini-devops"
 eq "$(handoff_identity_for_gemini_epic)" "" "Gemini no epic → empty slot"
 
 

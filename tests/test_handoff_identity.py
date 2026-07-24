@@ -16,10 +16,12 @@ import subprocess
 from pathlib import Path
 
 import pytest
+import yaml
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _HOOK_TEST = _REPO_ROOT / "scripts" / "audit" / "test_handoff_identity.sh"
 _HANDOFF_IDENTITY = _REPO_ROOT / "scripts" / "lib" / "handoff_identity.sh"
+_ISSUE_STREAMS = _REPO_ROOT / "scripts" / "config" / "issue_streams.yaml"
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
@@ -43,12 +45,12 @@ def test_handoff_identity_fixtures() -> None:
 @pytest.mark.parametrize(
     ("resolver", "expected"),
     [
-        ("handoff_identity_for_epic", "claude-infra"),
-        ("handoff_identity_for_gemini_epic", "gemini-infra"),
-        ("handoff_identity_for_codex_epic", "codex-infra"),
+        ("handoff_identity_for_epic", "claude-devops"),
+        ("handoff_identity_for_gemini_epic", "gemini-devops"),
+        ("handoff_identity_for_codex_epic", "codex-devops"),
     ],
 )
-def test_devops_alias_resolves_to_canonical_infra_slot(resolver: str, expected: str) -> None:
+def test_devops_resolves_to_dedicated_provider_slot(resolver: str, expected: str) -> None:
     result = subprocess.run(
         ["bash", "-c", 'source "$1"; "$2" devops', "bash", str(_HANDOFF_IDENTITY), resolver],
         cwd=_REPO_ROOT,
@@ -65,8 +67,8 @@ def test_devops_alias_resolves_to_canonical_infra_slot(resolver: str, expected: 
     ("selector", "lane", "stream", "claude_slot", "gemini_slot", "grok_slot"),
     [
         ("infra.fleet-comms", "infra", "epic:4707", "claude-infra", "gemini-infra", "grok-infra"),
-        ("infra.devops", "infra", "epic:4707", "claude-infra", "gemini-infra", "grok-infra"),
-        ("devops", "infra", "epic:4707", "claude-infra", "gemini-infra", "grok-infra"),
+        ("infra.devops", "devops", "epic:5703", "claude-devops", "gemini-devops", "grok-devops"),
+        ("devops", "devops", "epic:5703", "claude-devops", "gemini-devops", "grok-devops"),
         ("atlas.practice", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas"),
         ("practice-hub", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas"),
         ("hramatka.lessons", "hramatka", "epic:4542", "claude-hramatka", "gemini-hramatka", "grok-hramatka"),
@@ -132,6 +134,13 @@ def test_unknown_selector_fails_closed() -> None:
     )
     assert result.returncode == 1
     assert result.stdout == ""
+
+
+def test_devops_epic_is_registered_separately_from_infra() -> None:
+    registry = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]
+
+    assert registry["infra-harness"]["epics"] == [4707]
+    assert registry["devops"]["epics"] == [5703]
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")

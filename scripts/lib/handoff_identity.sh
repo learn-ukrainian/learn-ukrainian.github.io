@@ -22,8 +22,11 @@
 # Unknown selectors return 1 and print nothing, so callers can fail closed.
 launcher_selector_resolve() {
   case "${1:-}" in
-    infra|harness|devops|infra.fleet-comms|infra.devops)
+    infra|harness|infra.fleet-comms)
       printf 'infra\tepic:4707\n'
+      ;;
+    devops|infra.devops)
+      printf 'devops\tepic:5703\n'
       ;;
     atlas|practice|practice-hub|atlas.practice)
       printf 'atlas\tepic:4387\n'
@@ -66,7 +69,8 @@ launcher_selector_stream() {
 launcher_selector_help() {
   cat <<'EOF'
 Valid lane selectors:
-  infra | harness | infra.fleet-comms | infra.devops
+  infra | harness | infra.fleet-comms
+  devops | infra.devops
   atlas | practice | atlas.practice
   hramatka | hramatka.lessons
   folk | seminars-folk
@@ -196,8 +200,8 @@ handoff_identity_for_epic() {
 # handoff_identity_for_codex_epic "<epic-name>"
 # Echo the per-epic Codex rollover slot. Codex needs the same lane separation
 # as Claude, but its namespaces must remain provider-specific so a Codex launch
-# never adopts a Claude packet. The infra alias mirrors the canonical
-# claude-infra convention and avoids inventing parallel harness/infra slots.
+# never adopts a Claude packet. Infra aliases share the canonical infra slot;
+# DevOps has its own slot because it owns an independent stream lease.
 handoff_identity_for_codex_epic() {
   local lane=''
   [ -n "${1:-}" ] || return 0
@@ -207,7 +211,7 @@ handoff_identity_for_codex_epic() {
 
 # handoff_identity_for_kimi_epic "<epic-name>"
 # Echo the per-epic Kimi Code orchestrator rollover slot. Provider-specific so
-# a Kimi seat never adopts Claude/Codex/Grok packets. harness/infra/devops → kimi-infra.
+# a Kimi seat never adopts Claude/Codex/Grok packets.
 handoff_identity_for_kimi_epic() {
   local lane=''
   [ -n "${1:-}" ] || return 0
@@ -217,7 +221,7 @@ handoff_identity_for_kimi_epic() {
 
 # handoff_identity_for_gemini_epic "<epic-name>"
 # Echo the per-epic Gemini / Antigravity orchestrator rollover slot. Provider-specific so
-# a Gemini seat never adopts Claude/Codex/Grok/Kimi packets. harness/infra/devops → gemini-infra.
+# a Gemini seat never adopts Claude/Codex/Grok/Kimi packets.
 handoff_identity_for_gemini_epic() {
   local lane=''
   [ -n "${1:-}" ] || return 0
