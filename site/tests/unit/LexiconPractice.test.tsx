@@ -675,7 +675,6 @@ describe('LexiconPractice', () => {
     ).toEqual([
       'practice-dashboard-hero',
       'practice-dashboard-stats',
-      'practice-dashboard-decks',
       'practice-dashboard-words',
       'practice-dashboard-session',
       'practice-dashboard-secondary',
