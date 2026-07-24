@@ -56,7 +56,7 @@ def test_primary_route_success_uses_gemini_36_flash_and_marks_ready() -> None:
     result = generate_qualified_lesson({"prompt": "Створіть урок"}, transport=transport, qg_scan=qg_scan)
 
     assert result.state is GenerationState.READY
-    assert result.lesson == lesson
+    assert result.lesson == {"title": "Чистий урок", "blocks": [{"id": "b1", "type": "intro"}], "level": "b1"}
     assert result.failure_reason is None
     assert transport.models == [PRIMARY_MODEL]
     assert qg_calls == [{"title": "Чистий урок", "blocks": [{"id": "b1", "type": "intro"}], "level": "b1"}]

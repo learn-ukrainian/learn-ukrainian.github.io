@@ -243,7 +243,7 @@ def generate_qualified_lesson(
         attempts.append(GenerationAttempt(number=number, model=model, outcome="ready"))
         return GenerationResult(
             state=GenerationState.READY,
-            lesson=lesson,
+            lesson=normalized_lesson,
             qg_evidence=evidence,
             attempts=tuple(attempts),
         )
