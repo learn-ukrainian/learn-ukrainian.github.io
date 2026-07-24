@@ -22,6 +22,9 @@ def test_zero_answer_leakage_sanitizer_contract():
     component_path = PROJECT_ROOT / "packages/activity-kit/src/components/LessonViewer.tsx"
     content = component_path.read_text(encoding="utf-8")
 
-    # Ensure sanitizer explicitly strips answer_key and note
+    # Ensure sanitizer explicitly strips answer_key, note, and nested activity model answers
     assert "answer_key: null" in content
     assert "note: null" in content
+    assert "model_answer: undefined" in content
+    assert "guidance: undefined" in content
+    assert "rubric: undefined" in content

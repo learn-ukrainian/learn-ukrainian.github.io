@@ -20,15 +20,30 @@ export interface LessonViewerProps {
 export function sanitizeLessonForStudent(lesson: LuLessonV1): LuLessonV1 {
   return {
     ...lesson,
-    blocks: lesson.blocks.map((block) => ({
-      ...block,
-      answer_key: null,
-      note: null,
-      provenance: {
-        ...block.provenance,
-        external_options: false,
-      },
-    })),
+    blocks: lesson.blocks.map((block) => {
+      const sanitizedActivity = block.activity ? {
+        ...block.activity,
+        answer_key: null,
+        payload: block.activity.payload ? {
+          ...block.activity.payload,
+          model_answer: undefined,
+          guidance: undefined,
+          rubric: undefined,
+          answer_key: undefined,
+        } : block.activity.payload,
+      } : block.activity;
+
+      return {
+        ...block,
+        answer_key: null,
+        note: null,
+        activity: sanitizedActivity as any,
+        provenance: {
+          ...block.provenance,
+          external_options: false,
+        },
+      };
+    }),
   };
 }
 
