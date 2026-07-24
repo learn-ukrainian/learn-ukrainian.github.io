@@ -247,15 +247,6 @@ def _load_support_schema() -> dict[str, Any]:
     return json.loads(LESSON_SUPPORT_SCHEMA_PATH.read_text(encoding="utf-8"))
 
 
-def _support_path(lesson_id: UUID) -> str:
-    """Resolve support sidecar path under ``SUPPORT_DIR`` (CodeQL-safe string)."""
-    root = os.path.realpath(str(SUPPORT_DIR))
-    fullpath = os.path.realpath(os.path.join(root, f"{lesson_id}.json"))
-    if not fullpath.startswith(root + os.sep):
-        raise HTTPException(status_code=400, detail="invalid lesson support path")
-    return fullpath
-
-
 @router.get("/lessons/{lesson_id}/support")
 def lesson_support(lesson_id: UUID, x_hramatka_owner: str = Header(...)) -> dict[str, Any]:
     """Return a schema-valid sidecar only after the corresponding job is ready."""
@@ -269,7 +260,12 @@ def lesson_support(lesson_id: UUID, x_hramatka_owner: str = Header(...)) -> dict
         raise HTTPException(status_code=409, detail="lesson is not ready")
 
     try:
-        with open(_support_path(lesson_id), encoding="utf-8") as handle:
+        # Containment check must sit in the same function as ``open`` for CodeQL (#319).
+        root = os.path.realpath(str(SUPPORT_DIR))
+        fullpath = os.path.realpath(os.path.join(root, f"{lesson_id}.json"))
+        if not fullpath.startswith(root + os.sep):
+            raise HTTPException(status_code=400, detail="invalid lesson support path")
+        with open(fullpath, encoding="utf-8") as handle:
             sidecar = json.loads(handle.read())
         errors = list(Draft7Validator(_load_support_schema()).iter_errors(sidecar))
     except (OSError, json.JSONDecodeError) as exc:
