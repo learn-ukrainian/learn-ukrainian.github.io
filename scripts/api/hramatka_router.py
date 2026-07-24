@@ -15,6 +15,7 @@ import os
 import sqlite3
 from contextlib import closing
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
@@ -181,11 +182,13 @@ def create_lesson_job(
 
     initialize_hramatka_store(db_path)
     with closing(_connect(db_path)) as conn:
+        conn.execute("BEGIN IMMEDIATE")
         row = conn.execute(
             "SELECT lesson_id, owner_id, state FROM hramatka_lesson_jobs WHERE lesson_id = ?",
             (parsed_id,),
         ).fetchone()
         if row is not None:
+            conn.rollback()
             if row[1] != owner_id:
                 raise LessonOwnershipError("lesson id belongs to another owner")
             return LessonJob(row[0], row[1], LessonJobState(row[2]))
@@ -329,6 +332,15 @@ def _check_baker() -> tuple[bool, str]:
         return False, "baker state file unreadable or invalid"
     if state.get("state") != "active":
         return False, "baker state is not active"
+    updated_at = state.get("updated_at") or state.get("timestamp")
+    if updated_at is not None:
+        try:
+            dt = datetime.fromisoformat(str(updated_at).replace("Z", "+00:00"))
+            age_s = (datetime.now(UTC) - dt).total_seconds()
+            if age_s > 300:
+                return False, f"baker heartbeat stale ({int(age_s)}s old)"
+        except ValueError:
+            pass
     return True, "baker state is active"
 
 
