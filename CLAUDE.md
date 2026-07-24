@@ -117,8 +117,30 @@ For shared delegation, artifact hygiene, Python invocation, worktree layout, com
 | Feature | How | When |
 | --- | --- | --- |
 | `Monitor` tool | Stream stdout events as notifications | **Build monitoring — NEVER poll with ScheduleWakeup or manual loops.** How-to (command template, `--worktree` requirement, JSONL event fields, Monitor API state queries): see the `build-monitoring` skill. |
-| `/effort` | Set model effort dynamically mid-session | Levels: `low` / `medium` / `high` / `xhigh` / `max`, by TASK TIER (model-agnostic — the Claude lane rotates, verify per active model via `claude-api` skill / release notes): `low`: config/typo fixes. `medium`: routine code fixes. `high`: frontier-model default — intelligence-sensitive work. `xhigh`: coding/agentic, content review, plan review, module building, linguistic analysis. `max`: deep architecture / adversarial reviews where correctness outweighs cost. Effort sensitivity DIFFERS per model (it mattered more on Opus 4.8 than prior Opus) — **sweep `medium`/`high`/`xhigh` per route on each newly rotated model** rather than porting the old defaults. |
+| `/effort` | Set model effort dynamically mid-session | Levels `low` / `medium` / `high` / `xhigh` / `max` by TASK TIER. **Tuned for Opus 5** (the Claude lane rotates — re-verify per active model via the `claude-api` skill / release notes; never port the previous model's defaults). `low`: config/typo fixes. `medium`: routine code fixes, dispatch briefs, PR / merge-train babysitting. `high`: floor for anything intelligence-sensitive; first-pass code review (find, before verify). `xhigh`: **start here** — orchestration and epic driving, coding/agentic work, content review, plan review, module building, linguistic analysis. `max`: deep architecture, adversarial review of record, contested verdicts. **Opus 5 vs 4.8:** on 4.8 the guidance was to start at `high` and not reach for `xhigh` reflexively; on Opus 5 `xhigh` is the documented starting point for coding/agentic work and `high` is the floor, so the seat sits higher by default. Conversely `low`/`medium` are unusually strong on Opus 5 — that is where the load-spreading headroom is, so sweep downward per route and step down wherever evals hold. **Two Opus 5 gotchas:** thinking-off is valid only at `high` or below (`thinking: disabled` + `xhigh`/`max` is a rejected request), and effort does **not** control response length — see Concise by default below. |
 | `--bare` flag | `claude -p "..." --bare` | Scripted calls (agent bridge) — skips hooks/LSP/plugins for speed |
 | `worktree.sparsePaths` | Configured in settings.json | Subagent worktrees exclude `node_modules/`, `data/` for speed |
-| `effort: xhigh` on skills | Frontmatter in review skills | `content-review`, `plan-review`, `plan-review-seminar`, `batch-review`, `prompt-review` — forces deep analysis. Set `xhigh` 2026-04-21; retained for Opus 4.8 — Anthropic recommends `xhigh` for coding/review and a minimum of `high` for intelligence-sensitive work. |
+| `effort: xhigh` on skills | Frontmatter in review skills | `content-review`, `plan-review`, `plan-review-seminar`, `batch-review`, `prompt-review` — forces deep analysis. Set `xhigh` 2026-04-21; retained through Opus 5 — Anthropic recommends `xhigh` for coding/review and a minimum of `high` for intelligence-sensitive work. Curriculum/linguistic review stays `xhigh`: these skills judge Ukrainian content, where a miss is a durable learner error. (CODE review is the one place a cheaper first pass is defensible — Opus 5 keeps high precision *and* recall at lower effort — but that is a dispatch-routing choice, not a change to these skills.) |
 | `paths:` scoping on rules | Frontmatter in rule files | `ukrainian-linguistics.md` only active for curriculum/orchestration work |
+
+### Concise by default
+
+Keep responses focused, brief, and concise to avoid overwhelming the person. Disclaimers and
+caveats stay brief, with most of the response on the main answer; when asked to explain
+something, give a high-level summary unless an in-depth one is specifically requested. Lead
+with the outcome — the first sentence should answer "what happened" or "what did you find",
+with supporting detail after.
+
+Being readable and being concise are different things, and readable matters more. Keep output
+short by being selective about what you include — drop details that do not change what the
+reader would do next — never by compressing prose into fragments, abbreviations, arrow chains,
+or jargon. This does not license terseness that costs clarity (`#0I`: plain language always),
+and it never applies to curriculum content, where word targets are MINIMUMS.
+
+The same applies to files written to disk: match the length of a written deliverable to what
+the task needs. Do not pad reports or handoffs with filler sections, redundant summaries, or
+boilerplate.
+
+**Length is a prompting concern, not an effort concern.** Lowering `/effort` does not reliably
+shorten user-facing output on Opus 5 — it changes how much the model thinks, not how much it
+writes. Reach for this section, not the effort dial.
