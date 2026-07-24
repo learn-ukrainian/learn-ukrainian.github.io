@@ -267,7 +267,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                         border: '1px solid #e2e8f0',
                         backgroundColor: '#ffffff',
                         display: 'flex',
-                        justify: 'space-between',
+                        justifyContent: 'space-between',
                         alignItems: 'center',
                         cursor: lesson.status === 'ready' ? 'pointer' : 'default',
                         transition: 'border-color 0.15s ease',
