@@ -228,6 +228,18 @@ def _build_facts(
             bullet,
         )
 
+    # Active Working Set — load-bearing mid-flight facts promoted before compact.
+    working_set = _extract_handoff_bullets(
+        handoff_text,
+        heading_substrings=("active working set", "working set"),
+    )
+    for i, bullet in enumerate(working_set[:2], start=1):
+        add(
+            f"workset-{i}",
+            f"According to the dual-write handoff, what is active working-set fact #{i}?",
+            bullet,
+        )
+
     hands_off = _extract_handoff_bullets(
         handoff_text,
         heading_substrings=("hands-off", "handsoff", "do not", "out of scope"),
@@ -515,8 +527,8 @@ def cmd_score(args: argparse.Namespace) -> int:
                 title="canary score PASS",
                 bullets=[
                     canary_line,
-                    "Continue drive; dual-write after next batch.",
-                    "Auto-hydrate runs after PASS (operator need not invoke hydrate).",
+                    "PASS = anchors only — not full working memory.",
+                    "Auto-hydrate + RE-GROUND checklist printed; dual-write after next batch.",
                 ],
             )
             print(f"diary stamp -> {handoff_path}")
@@ -526,7 +538,7 @@ def cmd_score(args: argparse.Namespace) -> int:
                 idempotency_key=f"canary-pass-{_utc_now()}",
             )
             # Sol Option D: score first (done), then hydrate once automatically.
-            # Operator never has to remember hydrate / restart for diary load.
+            # After hydrate: RE-GROUND (Next Drive / Active Working Set / phase receipt).
             if not getattr(args, "no_hydrate", False):
                 try:
                     emit_hydrate_capsule(
@@ -542,6 +554,15 @@ def cmd_score(args: argparse.Namespace) -> int:
                             "=== AUTO-HYDRATE (post canary PASS) — restore board from diary; "
                             "do not ask the operator to restart or re-load diary ==="
                         ),
+                    )
+                    print(
+                        "\n=== POST-COMPACT RE-GROUND (mandatory) ===\n"
+                        "Canary PASS ≠ full memory. From the capsule above:\n"
+                        "  1) Re-read Next Drive + Active Working Set\n"
+                        "  2) Open the active phase receipt named there\n"
+                        "  3) If open task is missing from dual-write: STOP inventing — stamp or hand off\n"
+                        "  4) Anything not dual-written before compact may have evaporated\n"
+                        "=== END RE-GROUND ===\n"
                     )
                 except Exception as hexc:  # fail-open: score already succeeded
                     print(
@@ -706,10 +727,14 @@ After every real batch (merge, issue close, dispatch start, advisor note, block)
   --next "next action 1" --next "next action 2"
 ```
 Keep **## Next Drive** as short numbered bullets (canary mints these). No secrets/PII.
+Keep **## Active Working Set** for load-bearing mid-flight facts (also mintable).
+**Promote before compact risk** (~60–70% context or before a big batch): if it is not in
+Next Drive / Active Working Set / a stamp, it is allowed to evaporate on compact.
 
 ### End signal = canary score, NOT compact count
 - Auto-compact is lossy for working memory. Disk logs ≠ model brain.
 - **First auto-compact ⇒ re-score**, do not auto-quit solely because compact fired.
+- **Canary PASS = durable anchors only** — not proof the mid-flight working set survived.
 - **FAIL-HANDOFF (&lt; 8/10 at pass-ratio 0.8) ⇒ end now** regardless of token %.
 
 ### Cold-start (order is load-bearing)
@@ -736,8 +761,12 @@ You own compact recovery. **Never ask the operator** whether to restart, hydrate
   --answers .claude/{epic}-epic/canary/answers.json --context-tokens <N>
 ```
 2. If FAIL-HANDOFF → handback is already written → close stream + `/quit` (new session via launcher).
-3. If PASS → **auto-hydrate is already printed** by `score` (bounded capsule + stream tail). Read it; resume from Next Drive / pins. Do **not** load the full diary.
-4. Only use standalone `hydrate` if you need a re-print; default path is score→auto-hydrate.
+3. If PASS → **auto-hydrate is already printed** by `score` (bounded capsule + stream tail + **RE-GROUND checklist**).
+4. **RE-GROUND (mandatory after every compact, even on PASS):**
+   - Re-read Next Drive + Active Working Set from the capsule
+   - Open the active phase receipt named there (do not resume from vibe)
+   - If the open task is not spelled in dual-write: **STOP inventing** — stamp or hand off
+5. Only use standalone `hydrate` if you need a re-print; default path is score→auto-hydrate→re-ground.
 
 ### Score procedure (from memory — no re-read of probe answers)
 1. `.venv/bin/python -m scripts.session_canary.grok_lane questions --epic {epic}`
@@ -789,11 +818,13 @@ def cmd_stamp(args: argparse.Namespace) -> int:
         print("error: provide --bullet at least once (or a meaningful --title)", file=sys.stderr)
         return 2
     next_drive = list(args.next) if args.next else None
+    working_set = list(args.workset) if getattr(args, "workset", None) else None
     stamp = diary_mod.append_diary_stamp(
         path,
         title=args.title or "batch",
         bullets=bullets,
         next_drive=next_drive,
+        working_set=working_set,
     )
     print(f"diary stamp {stamp} -> {path}")
     note = f"DIARY {stamp}: {args.title or 'batch'}; " + "; ".join(bullets[:5])
@@ -907,6 +938,12 @@ def build_parser() -> argparse.ArgumentParser:
     stamp.add_argument("--title", default="batch", help="Diary entry title")
     stamp.add_argument("--bullet", action="append", default=[], help="Diary bullet (repeatable)")
     stamp.add_argument("--next", action="append", default=[], help="Replace Next Drive bullets (repeatable)")
+    stamp.add_argument(
+        "--workset",
+        action="append",
+        default=[],
+        help="Replace Active Working Set bullets (repeatable; promote before compact)",
+    )
     stamp.set_defaults(func=cmd_stamp)
 
 

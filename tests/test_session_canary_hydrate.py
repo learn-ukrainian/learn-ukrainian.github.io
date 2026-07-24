@@ -63,10 +63,26 @@ def test_hydrate_capsule_bounded_and_includes_next_drive() -> None:
     assert "HYDRATE CAPSULE" in capsule
     assert "Next drive" in capsule or "next drive" in capsule.lower()
     assert "Standing pins" in capsule or "Layout A" in capsule
+    assert "RE-GROUND CHECKLIST" in capsule
+    assert meta["has_reground_checklist"] is True
     assert meta["approx_tokens"] <= 1600
     assert meta["has_identity"] is True
     assert meta["has_next_drive"] is True
     assert approx_tokens(capsule) == meta["approx_tokens"]
+
+
+def test_hydrate_includes_active_working_set_when_present() -> None:
+    diary = _diary() + "\n## Active Working Set\n- pilot clone at /tmp/x\n- PR #274 merged\n"
+    capsule, meta = build_hydrate_capsule(
+        diary,
+        epic="harness",
+        stream_id="epic:4707",
+        max_tokens=1400,
+    )
+    assert "Active Working Set" in capsule
+    assert "pilot clone" in capsule
+    assert meta["has_working_set"] is True
+    assert "RE-GROUND CHECKLIST" in capsule
 
 
 def test_hydrate_drops_low_priority_whole_sections_under_tiny_budget() -> None:
@@ -173,6 +189,8 @@ def test_score_auto_hydrates_on_pass(tmp_path: Path, monkeypatch, capsys) -> Non
     out = capsys.readouterr().out
     assert "AUTO-HYDRATE" in out
     assert "HYDRATE CAPSULE" in out
+    assert "POST-COMPACT RE-GROUND" in out
+    assert "RE-GROUND CHECKLIST" in out
 
 
 def test_score_no_hydrate_flag_skips(tmp_path: Path, monkeypatch, capsys) -> None:
