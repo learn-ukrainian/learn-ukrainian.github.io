@@ -1770,6 +1770,18 @@ function LexiconPracticeIsland({
           paronym: [...(nextDeck!.paronym ?? []), ...((paronymR as { paronym?: any[] }).paronym ?? [])],
           heritage: [...(nextDeck!.heritage ?? []), ...((heritageR as { heritage?: any[] }).heritage ?? [])],
         };
+
+        // Merge custom set document cloze items if active
+        if (selectedDeckFilter !== 'all' && selectedDeckFilter !== 'virtual_teacher_lesson') {
+          const activeSet = customSets.find((s) => s.id === selectedDeckFilter);
+          if (activeSet?.cloze_items && activeSet.cloze_items.length > 0) {
+            nextDeck = {
+              ...nextDeck,
+              cloze: [...(nextDeck.cloze ?? []), ...activeSet.cloze_items],
+            };
+          }
+        }
+
         nextClozeLoaded = true;
         if (deckRequestId.current === requestId) {
           setDeck(nextDeck);

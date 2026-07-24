@@ -4,11 +4,14 @@
  * See ADR-015 for design specification.
  */
 
+import type { PracticeClozeItem } from './srs';
+
 export interface CustomSet {
   id: string;
   title: string;
   description?: string;
   lemma_keys: string[];
+  cloze_items?: PracticeClozeItem[];
   created_at: string;
   updated_at: string;
   deleted_at?: string;
@@ -77,6 +80,7 @@ export function saveLocalCustomSet(set: Omit<CustomSet, 'device_id' | 'revision'
     title: set.title,
     description: set.description || '',
     lemma_keys: set.lemma_keys,
+    cloze_items: set.cloze_items || (existingIdx >= 0 ? all[existingIdx].cloze_items : undefined),
     created_at: existingIdx >= 0 ? all[existingIdx].created_at : now,
     updated_at: now,
     device_id: deviceId,

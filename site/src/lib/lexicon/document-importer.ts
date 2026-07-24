@@ -1,19 +1,16 @@
-/**
- * Zero-Backend Document Importer for Practice Hub Custom Sets.
- * Client-side file parsing using FileReader API (txt, csv, tsv, json, yaml, md).
- * Zero server dependencies — 100% client-side.
- */
+import type { PracticeClozeItem } from './srs';
 
 export interface ImportedDeck {
   title: string;
   description: string;
   lemma_keys: string[];
+  cloze_items?: PracticeClozeItem[];
 }
 
 const UKRAINIAN_WORD_REGEX = /[а-щьюяєіїґА-ЩЬЮЯЄІЇҐ'’ʼ\-]+/g;
 
 /**
- * Parse client-side File object and extract Ukrainian vocabulary items.
+ * Parse client-side File object and extract Ukrainian vocabulary items & sentence cloze drills.
  */
 export async function parseDocumentFile(file: File): Promise<ImportedDeck> {
   const text = await file.readAsText();
@@ -31,10 +28,13 @@ export async function parseDocumentFile(file: File): Promise<ImportedDeck> {
     lemmaKeys = parsePlainText(text);
   }
 
+  const clozeItems = extractDocumentClozeItems(text, lemmaKeys);
+
   return {
     title,
-    description: `Imported from ${file.name} (${lemmaKeys.length} words)`,
+    description: `Imported from ${file.name} (${lemmaKeys.length} words, ${clozeItems.length} sentences)`,
     lemma_keys: lemmaKeys,
+    cloze_items: clozeItems,
   };
 }
 
@@ -94,6 +94,52 @@ function extractUkrainianWords(input: string, set: Set<string>): void {
       }
     }
   }
+}
+
+/**
+ * Extract verbatim sentences containing vocabulary words and build cloze fill-in-the-blank items.
+ */
+export function extractDocumentClozeItems(text: string, lemmaKeys: string[]): PracticeClozeItem[] {
+  const sentences = text.split(/(?<=[.!?])\s+/).filter((s) => s.trim().length > 10);
+  const clozeItems: PracticeClozeItem[] = [];
+  const setKeys = new Set(lemmaKeys);
+
+  let clozeCount = 0;
+  for (const rawSentence of sentences) {
+    const cleanSentence = rawSentence.trim();
+    const words = cleanSentence.match(UKRAINIAN_WORD_REGEX);
+    if (!words) continue;
+
+    for (const rawWord of words) {
+      const lemma = rawWord.toLowerCase().replace(/['’ʼ]/g, "’").trim();
+      if (setKeys.has(lemma)) {
+        const blanked = cleanSentence.replace(rawWord, '_____');
+        const distractors = Array.from(setKeys)
+          .filter((w) => w !== lemma)
+          .slice(0, 3)
+          .map((w) => ({ label: w, kind: 'distractor' }));
+
+        clozeItems.push({
+          clozeId: `doc_cloze_${++clozeCount}_${lemma}`,
+          lemmaId: lemma,
+          sentenceFrameId: `doc_frame_${clozeCount}`,
+          sentence: blanked,
+          blankCase: 'context',
+          form: rawWord,
+          lemma: lemma,
+          caseRule: { code: 'document-context', labelUk: 'Контекст з документа', labelEn: 'Document Sentence' },
+          clozeEn: 'Sentence from your imported document',
+          options: [
+            { label: rawWord, kind: 'answer' },
+            ...distractors,
+          ],
+        });
+        break; // Max 1 cloze item per sentence
+      }
+    }
+  }
+
+  return clozeItems;
 }
 
 // File extension helper extension on File prototype for clean reading

@@ -15,7 +15,8 @@ import {
   saveLocalCustomSet,
   deleteLocalCustomSet,
 } from '../lib/lexicon/custom-decks';
-import { parseDocumentFile, type ImportedDeck } from '../lib/lexicon/document-importer';
+import { parseDocumentFile, extractDocumentClozeItems, type ImportedDeck } from '../lib/lexicon/document-importer';
+import type { PracticeClozeItem } from '../lib/lexicon/srs';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
 
 interface LexiconCustomDeckManagerProps {
@@ -127,11 +128,16 @@ export function LexiconCustomDeckManager({
     setWizardStep(2);
   }, [deckTitle]);
 
+  const [importedClozeItems, setImportedClozeItems] = useState<PracticeClozeItem[]>([]);
+
   // Handle File Input or Drop
   const handleFileRead = useCallback(async (file: File) => {
     setParseError(null);
     try {
       const parsed: ImportedDeck = await parseDocumentFile(file);
+      if (parsed.cloze_items) {
+        setImportedClozeItems(parsed.cloze_items);
+      }
       processTextToCandidates(parsed.lemma_keys, parsed.title);
     } catch (err: any) {
       setParseError(err?.message || 'Failed to read document');
@@ -144,6 +150,9 @@ export function LexiconCustomDeckManager({
       .split(/[\n,;\t\s]+/)
       .map((w) => w.trim().toLowerCase())
       .filter((w) => w.length >= 2);
+
+    const clozes = extractDocumentClozeItems(pastedText, words);
+    setImportedClozeItems(clozes);
     processTextToCandidates(words, chromeLocale === 'uk' ? 'Моя імпортована колода' : 'My Imported Deck');
   }, [pastedText, processTextToCandidates, chromeLocale]);
 
@@ -185,13 +194,14 @@ export function LexiconCustomDeckManager({
         title: deckTitle.trim(),
         description: deckDescription.trim(),
         lemma_keys: selectedWords,
+        cloze_items: importedClozeItems.length > 0 ? importedClozeItems : undefined,
       });
 
       setCustomSets(readLocalCustomSets());
       onSelectDeckFilter(saved.id);
       onClose();
     },
-    [candidates, deckTitle, deckDescription, editingSetId, onSelectDeckFilter, onClose]
+    [candidates, deckTitle, deckDescription, editingSetId, importedClozeItems, onSelectDeckFilter, onClose]
   );
 
   const handleDeleteDeck = useCallback((id: string) => {
