@@ -14,6 +14,7 @@ from pathlib import Path
 
 DIARY_MARKER = "## 📔 Diary — reverse chrono (newest first)"
 NEXT_DRIVE_MARKER = "## Next Drive"
+WORKING_SET_MARKER = "## Active Working Set"
 HANDS_OFF_MARKER = "## Hands-off"
 HANDBACK_MARKER = "## STATE AT HANDBACK"
 
@@ -76,6 +77,11 @@ def ensure_diary_skeleton(text: str, *, epic: str, stream_id: str) -> str:
         NEXT_DRIVE_MARKER,
         "1. (update after each batch — short bullets only; canary mints these)\n",
     )
+    text = _ensure_section(
+        text,
+        WORKING_SET_MARKER,
+        "- (promote load-bearing mid-flight facts here before compact risk)\n",
+    )
     # Accept either "## Hands-off" or "## Hands-off / Out of scope"
     if not re.search(r"^##\s+Hands-off", text, re.MULTILINE | re.IGNORECASE):
         text = text.rstrip() + f"\n\n{HANDS_OFF_MARKER}\n- (lane boundaries)\n"
@@ -102,9 +108,10 @@ def append_diary_stamp(
     title: str,
     bullets: Sequence[str],
     next_drive: Sequence[str] | None = None,
+    working_set: Sequence[str] | None = None,
     stamp: str | None = None,
 ) -> str:
-    """Prepend a diary entry; optionally replace Next Drive bullets. Returns stamp used."""
+    """Prepend a diary entry; optionally replace Next Drive / Active Working Set. Returns stamp used."""
     stamp = stamp or utc_stamp()
     path.parent.mkdir(parents=True, exist_ok=True)
     text = path.read_text(encoding="utf-8", errors="replace") if path.is_file() else ""
@@ -131,36 +138,83 @@ def append_diary_stamp(
 
     if next_drive is not None:
         text = replace_next_drive_bullets(text, next_drive)
+    if working_set is not None:
+        text = replace_working_set_bullets(text, working_set)
 
     path.write_text(text if text.endswith("\n") else text + "\n", encoding="utf-8")
     return stamp
 
 
-def replace_next_drive_bullets(text: str, bullets: Sequence[str]) -> str:
-    """Replace content under ## Next Drive until next ## heading."""
+def _replace_h2_section_bullets(
+    text: str,
+    *,
+    heading_re: str,
+    bullets: Sequence[str],
+    numbered: bool,
+) -> str:
+    """Replace body under a ## heading until the next ## heading."""
     lines = text.splitlines(keepends=True)
     out: list[str] = []
     i = 0
+    matched = False
     while i < len(lines):
         out.append(lines[i])
-        if re.match(r"^##\s+Next Drive\b", lines[i], re.IGNORECASE):
+        if re.match(heading_re, lines[i], re.IGNORECASE):
+            matched = True
             i += 1
-            # skip old body until next ##
             while i < len(lines) and not re.match(r"^##\s+", lines[i]):
                 i += 1
             for n, b in enumerate(bullets, start=1):
                 b = b.strip()
                 if not b:
                     continue
-                # Prefer numbered list for mint friendliness
-                if re.match(r"^\d+\.", b):
-                    out.append(b + "\n")
+                if numbered:
+                    if re.match(r"^\d+\.", b):
+                        out.append(b + "\n")
+                    else:
+                        out.append(f"{n}. {b}\n")
                 else:
-                    out.append(f"{n}. {b}\n")
+                    if re.match(r"^[-*]\s+", b):
+                        out.append(b + "\n")
+                    else:
+                        out.append(f"- {b}\n")
             out.append("\n")
             continue
         i += 1
+    if not matched:
+        # Append section so promotion never silently no-ops on old diaries.
+        label = "Next Drive" if numbered else "Active Working Set"
+        out.append(f"\n## {label}\n")
+        for n, b in enumerate(bullets, start=1):
+            b = b.strip()
+            if not b:
+                continue
+            if numbered:
+                out.append(f"{n}. {b}\n" if not re.match(r"^\d+\.", b) else b + "\n")
+            else:
+                out.append(f"- {b}\n" if not re.match(r"^[-*]\s+", b) else b + "\n")
+        out.append("\n")
     return "".join(out)
+
+
+def replace_next_drive_bullets(text: str, bullets: Sequence[str]) -> str:
+    """Replace content under ## Next Drive until next ## heading."""
+    return _replace_h2_section_bullets(
+        text,
+        heading_re=r"^##\s+Next Drive\b",
+        bullets=bullets,
+        numbered=True,
+    )
+
+
+def replace_working_set_bullets(text: str, bullets: Sequence[str]) -> str:
+    """Replace content under ## Active Working Set until next ## heading."""
+    return _replace_h2_section_bullets(
+        text,
+        heading_re=r"^##\s+Active Working Set\b",
+        bullets=bullets,
+        numbered=False,
+    )
 
 
 def format_canary_score_line(
@@ -384,7 +438,6 @@ def build_hydrate_capsule(
     over budget. Never silently truncates mid-item. Returns (capsule, meta).
     """
     max_tokens = max(200, min(int(max_tokens), 1600))
-    char_ceiling = max_tokens * 4  # 6400 chars at 1600 tok
 
     session = _section_from_heading(
         diary_text,
@@ -443,22 +496,54 @@ def build_hydrate_capsule(
             kept_lines.append(line)
         stream = "\n".join(kept_lines).strip()
 
-    # Priority pack (Sol order): identity → next drive → pins → hands-off → stamps → stream
+    working_set = _section_from_heading(
+        diary_text,
+        r"^##\s+Active Working Set[^\n]*\n|^###\s+Active Working Set[^\n]*\n",
+        [r"^##\s+", r"^###\s+"],
+    )
+
+    # Priority pack: identity → next drive → active working set → pins → hands-off → stamps → stream
+    # Canary PASS only proves anchors; this capsule is not full session memory.
     header = (
         f"# HYDRATE CAPSULE (post-compact)\n"
         f"**Epic / stream:** `{epic}` / `{stream_id}`\n"
         f"**Provenance:** diary dual-write + optional stream tail · "
         f"not a new SSOT · max_tokens={max_tokens}\n"
-        f"**Protocol:** score canary FROM MEMORY first; hydrate once; do not re-mint from chat.\n"
+        f"**Protocol:** score canary FROM MEMORY first; hydrate once; "
+        f"**then RE-GROUND** (see footer) — do not invent from chat.\n"
+        f"**Canary scope:** PASS = durable anchors OK · **not** proof the mid-flight "
+        f"working set survived compact.\n"
     )
     sections: list[tuple[str, str]] = [
         ("identity", identity_block),
         ("next_drive", next_drive),
+        (
+            "working_set",
+            f"## Active Working Set (load-bearing; mintable)\n\n{working_set}"
+            if working_set
+            else "",
+        ),
         ("pins", pins),
         ("hands_off", hands_off),
         ("recent_stamps", f"## Recent diary stamps (newest first)\n\n{stamps}" if stamps else ""),
         ("stream_tail", f"## Stream tail (bounded)\n\n{stream}" if stream else ""),
     ]
+
+    # Mandatory re-ground footer: always pack (never drop) so PASS cannot mean blind continue.
+    reground = (
+        "## RE-GROUND CHECKLIST (mandatory after every compact — canary PASS is not enough)\n\n"
+        "1. **Canary PASS** only proves durable anchors (identity / mintable Next Drive / Hands-off).\n"
+        "2. Re-read **Next Drive** + **Active Working Set** from this capsule (or diary if missing).\n"
+        "3. Open the **active phase receipt** named in Next Drive / Working Set "
+        "(private `docs/entire/...` or stream pin) — do not resume from vibe.\n"
+        "4. If the open task is **not** spelled in Next Drive or Active Working Set: "
+        "**STOP inventing** — stamp dual-write or hand off / re-mint.\n"
+        "5. Anything not dual-written before compact is **allowed to have evaporated**.\n"
+    )
+    # Reserve budget for footer so it is never squeezed out by stamps/stream.
+    reground_tok = approx_tokens(reground)
+    pack_max = max(200, max_tokens - reground_tok)
+    pack_char_ceiling = pack_max * 4
 
     included: list[str] = [header]
     dropped: list[str] = []
@@ -467,7 +552,7 @@ def build_hydrate_capsule(
         if not body:
             continue
         trial = "\n\n".join([*included, body]).strip() + "\n"
-        if approx_tokens(trial) > max_tokens or len(trial) > char_ceiling:
+        if approx_tokens(trial) > pack_max or len(trial) > pack_char_ceiling:
             # never drop identity
             if name == "identity":
                 included.append(body)
@@ -475,6 +560,8 @@ def build_hydrate_capsule(
                 dropped.append(name)
             continue
         included.append(body)
+
+    included.append(reground)
 
     capsule = "\n\n".join(included).strip() + "\n"
     meta: dict[str, object] = {
@@ -486,6 +573,8 @@ def build_hydrate_capsule(
         "dropped_sections": dropped,
         "has_identity": bool(session or handback),
         "has_next_drive": bool(next_drive),
+        "has_working_set": bool(working_set),
+        "has_reground_checklist": True,
         "capsule_sha256": __import__("hashlib").sha256(capsule.encode("utf-8")).hexdigest()[:16],
     }
     if not meta["has_identity"] or not meta["has_next_drive"]:
