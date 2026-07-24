@@ -7,7 +7,6 @@ this public module makes the routing policy deterministic and testable.
 
 from __future__ import annotations
 
-import sys
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any, Protocol
