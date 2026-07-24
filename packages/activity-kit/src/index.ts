@@ -9,6 +9,10 @@ export { TeacherDashboard } from './components/TeacherDashboard';
 export type { TeacherDashboardProps, DashboardState, LessonSummary } from './components/TeacherDashboard';
 export { LessonViewer, sanitizeLessonForStudent } from './components/LessonViewer';
 export type { LessonViewerProps, LessonViewerMode } from './components/LessonViewer';
+export { VocabularyDrawer } from './components/VocabularyDrawer';
+export type { VocabularyDrawerProps } from './components/VocabularyDrawer';
+export { TheoryCallout } from './components/TheoryCallout';
+export type { TheoryCalloutProps } from './components/TheoryCallout';
 export type {
   ActivityPlayerActivity,
   ActivityCompletionEvent,
