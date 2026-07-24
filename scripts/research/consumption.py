@@ -163,8 +163,9 @@ def _persist_200_evidence(task_id: str, research_id: str, etag: str) -> None:
             evidence = {}
         evidence[research_id] = etag
         state[_EVIDENCE_FIELD] = evidence
-        tmp = path.with_suffix(f".json.tmp.{os.getpid()}")
-        tmp.write_text(json.dumps(state, indent=2, default=str))
+        tmp = f"{path}.tmp.{os.getpid()}"
+        with open(tmp, "w", encoding="utf-8") as handle:
+            handle.write(json.dumps(state, indent=2, default=str))
         os.replace(tmp, path)
     except Exception:
         pass

@@ -35,37 +35,39 @@ def _parse_iso_datetime(value: str | None) -> datetime | None:
     return parsed.astimezone(UTC)
 
 
-def _task_state_path(task_id: str) -> Path:
+def _task_state_path(task_id: str) -> str:
     """Resolve ``task_id`` to a state JSON path under ``TASKS_DIR``.
 
-    Slash/backslash sanitization alone is not a CodeQL-recognized barrier
-    (``py/path-injection`` alert #317). Use the ``os.path.realpath`` +
-    ``startswith(root + os.sep)`` idiom that the analyzer accepts as a
-    sanitizer — same pattern as ``session_router._safe_project_path``.
-    Escapes collapse to a guaranteed-nonexistent path inside the root so
-    callers that treat missing state as ``None`` keep working.
+    CodeQL ``py/path-injection`` (#317) only treats the checked *string* as
+    sanitized when the sink is ``open(fullpath)`` — wrapping in ``Path`` and
+    calling ``read_text()`` re-taints the flow (same false-negative on
+    ``session_router``). Return the realpath string after a
+    ``startswith(root + os.sep)`` check; escapes collapse to a guaranteed-
+    nonexistent path inside the root so missing-state callers keep working.
     """
     safe = task_id.replace("/", "_").replace("\\", "_")
     root = os.path.realpath(str(TASKS_DIR))
-    candidate = os.path.realpath(os.path.join(root, f"{safe}.json"))
-    if not candidate.startswith(root + os.sep):
-        candidate = os.path.join(root, "__rejected__.json")
-    return Path(candidate)
+    fullpath = os.path.realpath(os.path.join(root, f"{safe}.json"))
+    if not fullpath.startswith(root + os.sep):
+        fullpath = os.path.join(root, "__rejected__.json")
+    return fullpath
 
 
-def _safe_result_path(result_file: str) -> Path | None:
+def _safe_result_path(result_file: str) -> str | None:
     """Allow result reads only under ``TASKS_DIR`` (delegate writes ``.result`` siblings)."""
     root = os.path.realpath(str(TASKS_DIR))
-    candidate = os.path.realpath(result_file)
-    if not candidate.startswith(root + os.sep):
+    fullpath = os.path.realpath(result_file)
+    if not fullpath.startswith(root + os.sep):
         return None
-    return Path(candidate)
+    return fullpath
 
 
-def _read_task_state(path: Path) -> dict[str, Any] | None:
+def _read_task_state(path: str) -> dict[str, Any] | None:
     for attempt in range(TASK_READ_RETRIES):
         try:
-            data = json.loads(path.read_text(encoding="utf-8"))
+            # ``open`` on the containment-checked string is the CodeQL-recognized sink form.
+            with open(path, encoding="utf-8") as handle:
+                data = json.loads(handle.read())
         except (OSError, json.JSONDecodeError):
             if attempt + 1 == TASK_READ_RETRIES:
                 return None
@@ -109,7 +111,7 @@ def _delegate_task_rows(statuses: set[str] | None = None) -> list[dict[str, Any]
     rows: list[dict[str, Any]] = []
     if TASKS_DIR.exists():
         for path in sorted(TASKS_DIR.glob("*.json")):
-            task = _read_task_state(path)
+            task = _read_task_state(str(path))
             if task is None:
                 continue
             derived_status, alive = _derived_task_status(task)

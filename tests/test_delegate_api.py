@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 from fastapi.testclient import TestClient
 
@@ -123,7 +124,7 @@ def test_task_state_path_stays_under_tasks_dir(tmp_path, monkeypatch):
     monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
 
     for task_id in ("normal", "agent/task", "../../etc/passwd", r"..\..\windows"):
-        path = delegate_router._task_state_path(task_id)
+        path = Path(delegate_router._task_state_path(task_id))
         resolved = path.resolve()
         assert resolved == tasks_dir.resolve() / resolved.name
         assert resolved.is_relative_to(tasks_dir.resolve())
