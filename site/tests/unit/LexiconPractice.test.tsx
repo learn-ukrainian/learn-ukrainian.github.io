@@ -668,6 +668,7 @@ describe('LexiconPractice', () => {
 
     await screen.findByTestId('practice-daily-deck');
     const dashboard = container.querySelector('.k3-practice-dashboard')!;
+    // Ignore anonymous wrappers (drive sync / deck filter bars have no data-testid).
     expect(
       Array.from(dashboard.children)
         .map((child) => child.getAttribute('data-testid'))
@@ -675,8 +676,6 @@ describe('LexiconPractice', () => {
     ).toEqual([
       'practice-dashboard-hero',
       'practice-dashboard-stats',
-      null, // k3-drive-sync-bar
-      null, // k3-deck-filter-bar
       'practice-dashboard-words',
       'practice-dashboard-session',
       'practice-dashboard-secondary',
