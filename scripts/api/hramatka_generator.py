@@ -174,7 +174,8 @@ def generate_qualified_lesson(
                 continue
             return _failed(attempts, f"provider_{'retry_budget_exhausted' if transient else 'failure'}")
 
-        if not isinstance(lesson, Mapping):
+        blocks = lesson.get("blocks") if isinstance(lesson, Mapping) else None
+        if not isinstance(lesson, Mapping) or not isinstance(blocks, list) or not blocks:
             attempts.append(
                 GenerationAttempt(number=number, model=model, outcome="invalid_provider_payload")
             )

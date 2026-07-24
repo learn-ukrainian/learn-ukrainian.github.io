@@ -44,7 +44,7 @@ class RecordingTransport:
 
 
 def test_primary_route_success_uses_gemini_36_flash_and_marks_ready() -> None:
-    lesson = {"title": "Чистий урок", "blocks": []}
+    lesson = {"title": "Чистий урок", "blocks": [{"id": "b1", "type": "intro"}]}
     transport = RecordingTransport([lesson])
     qg_calls: list[Mapping[str, Any]] = []
 
@@ -63,7 +63,7 @@ def test_primary_route_success_uses_gemini_36_flash_and_marks_ready() -> None:
 
 
 def test_5xx_primary_failure_uses_secondary_route_once() -> None:
-    lesson = {"title": "Резервний урок", "blocks": []}
+    lesson = {"title": "Резервний урок", "blocks": [{"id": "b1", "type": "intro"}]}
     transport = RecordingTransport([ProviderHTTPError(503), lesson])
 
     result = generate_qualified_lesson(
@@ -75,6 +75,21 @@ def test_5xx_primary_failure_uses_secondary_route_once() -> None:
     assert result.state is GenerationState.READY
     assert transport.models == [PRIMARY_MODEL, SECONDARY_MODEL]
     assert [attempt.outcome for attempt in result.attempts] == ["transient_failure", "ready"]
+
+
+def test_empty_blocks_payload_fails_validation_without_ready() -> None:
+    lesson = {"title": "Порожній урок", "blocks": []}
+    transport = RecordingTransport([lesson])
+
+    result = generate_qualified_lesson(
+        {"prompt": "Створіть урок"},
+        transport=transport,
+        qg_scan=lambda _lesson: _passing_evidence(),
+    )
+
+    assert result.state is GenerationState.FAILED
+    assert result.failure_reason == "invalid_provider_payload"
+    assert result.lesson is None
 
 
 def test_timeout_retries_never_exceed_four_provider_calls() -> None:
@@ -108,7 +123,7 @@ def test_4xx_provider_failure_fails_closed_without_fallback() -> None:
 
 
 def test_qg_warning_cannot_transition_generated_lesson_to_ready() -> None:
-    lesson = {"title": "Урок із попередженням", "blocks": []}
+    lesson = {"title": "Урок із попередженням", "blocks": [{"id": "b1", "type": "intro"}]}
     transport = RecordingTransport([lesson])
     evidence = _passing_evidence()
     evidence["dimensions"][DIMENSION_ORDER[0]] = {"verdict": "WARN", "score": 9.2}
