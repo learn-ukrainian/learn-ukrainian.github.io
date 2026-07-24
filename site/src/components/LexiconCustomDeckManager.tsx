@@ -1,0 +1,621 @@
+/**
+ * LexiconCustomDeckManager.tsx — Premium Custom Deck Studio & Document Importer Wizard.
+ * Implements Sol (gpt-5.6-sol) & Fable (claude-fable-5) UI/UX Design System:
+ * - 3-Step Interactive Import Wizard (Upload -> Inspect & Filter -> Save & Cloud Sync)
+ * - CEFR Distribution Bar (A1, A2, B1, B2)
+ * - Interactive Word Inspector Chips with CEFR Level Badges & Bulk Filters
+ * - Glassmorphic visual panel, backdrop blur, smooth micro-interactions
+ * - Zero-backend client-side execution & Google Drive AppData Sync
+ */
+
+import React, { useState, useCallback, useRef, useMemo } from 'react';
+import {
+  type CustomSet,
+  readLocalCustomSets,
+  saveLocalCustomSet,
+  deleteLocalCustomSet,
+} from '../lib/lexicon/custom-decks';
+import { parseDocumentFile, type ImportedDeck } from '../lib/lexicon/document-importer';
+import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
+
+interface LexiconCustomDeckManagerProps {
+  chromeLocale: 'en' | 'uk';
+  activeDeckFilter: string;
+  onSelectDeckFilter(filterId: string): void;
+  onClose(): void;
+}
+
+interface CandidateWord {
+  text: string;
+  level: 'A1' | 'A2' | 'B1' | 'B2';
+  selected: boolean;
+}
+
+export function LexiconCustomDeckManager({
+  chromeLocale,
+  activeDeckFilter,
+  onSelectDeckFilter,
+  onClose,
+}: LexiconCustomDeckManagerProps) {
+  const [customSets, setCustomSets] = useState<CustomSet[]>(() => readLocalCustomSets());
+  const [activeTab, setActiveTab] = useState<'decks' | 'wizard'>('decks');
+
+  // Wizard state: 1 = Upload/Paste, 2 = Inspect & Filter, 3 = Save & Sync
+  const [wizardStep, setWizardStep] = useState<1 | 2 | 3>(1);
+  const [uploadMode, setUploadMode] = useState<'file' | 'paste'>('file');
+  const [pastedText, setPastedText] = useState('');
+
+  // Editing set state
+  const [editingSetId, setEditingSetId] = useState<string | null>(null);
+  const [deckTitle, setDeckTitle] = useState('');
+  const [deckDescription, setDeckDescription] = useState('');
+
+  // Candidates extracted from document or paste
+  const [candidates, setCandidates] = useState<CandidateWord[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [levelFilter, setLevelFilter] = useState<'ALL' | 'A1' | 'A2' | 'B1' | 'B2'>('ALL');
+
+  // Drive sync state
+  const [isDriveSyncing, setIsDriveSyncing] = useState(false);
+  const [syncStatusMsg, setSyncStatusMsg] = useState<string | null>(null);
+  const [driveConnected, setDriveConnected] = useState<boolean>(() => Boolean(getInMemoryAccessToken()));
+
+  // Drag-and-drop state
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [parseError, setParseError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Private Teacher Deck unlock gate
+  const [teacherDeckUnlocked, setTeacherDeckUnlocked] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('learn_uk_unlock_teacher_deck') === 'true';
+  });
+
+  const toggleTeacherDeckUnlock = useCallback(() => {
+    const next = !teacherDeckUnlocked;
+    setTeacherDeckUnlocked(next);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('learn_uk_unlock_teacher_deck', String(next));
+    }
+  }, [teacherDeckUnlocked]);
+
+  // Handle Google Drive Sync via Google Identity Services (GIS) Popup Auth
+  const handleDriveSync = useCallback(async () => {
+    setIsDriveSyncing(true);
+    setSyncStatusMsg(chromeLocale === 'uk' ? 'Авторизація через Google...' : 'Authenticating with Google...');
+    try {
+      let token = getInMemoryAccessToken();
+      if (!token) {
+        token = await requestGoogleAccessToken();
+      }
+      setSyncStatusMsg(chromeLocale === 'uk' ? 'Синхронізація з Google Drive...' : 'Syncing with Google Drive...');
+      const res = await syncCustomSetsToDrive(token);
+      setIsDriveSyncing(false);
+      if (res.success) {
+        setDriveConnected(true);
+        setSyncStatusMsg(
+          chromeLocale === 'uk'
+            ? `Успішно! Синхронізовано колод: ${res.customSetsSynced}`
+            : `Success! Synced ${res.customSetsSynced} decks.`
+        );
+        setCustomSets(readLocalCustomSets());
+      } else {
+        setSyncStatusMsg(`Error: ${res.message}`);
+      }
+    } catch (err: any) {
+      setIsDriveSyncing(false);
+      setSyncStatusMsg(err?.message || 'Google Auth Error');
+    }
+  }, [chromeLocale]);
+
+  // Process raw text into candidate words with CEFR heuristics
+  const processTextToCandidates = useCallback((words: string[], defaultTitle = ''): void => {
+    const uniqueWords = Array.from(new Set(words.map((w) => w.toLowerCase().trim()).filter((w) => w.length >= 2)));
+    const parsedCandidates: CandidateWord[] = uniqueWords.map((word) => {
+      // Basic CEFR level distribution heuristic
+      let level: 'A1' | 'A2' | 'B1' | 'B2' = 'A1';
+      if (word.length > 8) level = 'B2';
+      else if (word.length > 6) level = 'B1';
+      else if (word.length > 4) level = 'A2';
+      return { text: word, level, selected: true };
+    });
+
+    setCandidates(parsedCandidates);
+    if (defaultTitle && !deckTitle) {
+      setDeckTitle(defaultTitle);
+    }
+    setWizardStep(2);
+  }, [deckTitle]);
+
+  // Handle File Input or Drop
+  const handleFileRead = useCallback(async (file: File) => {
+    setParseError(null);
+    try {
+      const parsed: ImportedDeck = await parseDocumentFile(file);
+      processTextToCandidates(parsed.lemma_keys, parsed.title);
+    } catch (err: any) {
+      setParseError(err?.message || 'Failed to read document');
+    }
+  }, [processTextToCandidates]);
+
+  const handlePasteSubmit = useCallback(() => {
+    if (!pastedText.trim()) return;
+    const words = pastedText
+      .split(/[\n,;\t\s]+/)
+      .map((w) => w.trim().toLowerCase())
+      .filter((w) => w.length >= 2);
+    processTextToCandidates(words, chromeLocale === 'uk' ? 'Моя імпортована колода' : 'My Imported Deck');
+  }, [pastedText, processTextToCandidates, chromeLocale]);
+
+  // CEFR Distribution Counts
+  const cefrCounts = useMemo(() => {
+    const counts = { A1: 0, A2: 0, B1: 0, B2: 0, total: candidates.length, selected: 0 };
+    for (const c of candidates) {
+      if (c.selected) {
+        counts.selected++;
+        counts[c.level]++;
+      }
+    }
+    return counts;
+  }, [candidates]);
+
+  // Toggle individual word selection
+  const toggleCandidateSelection = useCallback((index: number) => {
+    setCandidates((prev) =>
+      prev.map((item, idx) => (idx === index ? { ...item, selected: !item.selected } : item))
+    );
+  }, []);
+
+  // Bulk level toggles
+  const toggleLevelSelection = useCallback((level: 'A1' | 'A2' | 'B1' | 'B2', enable: boolean) => {
+    setCandidates((prev) =>
+      prev.map((item) => (item.level === level ? { ...item, selected: enable } : item))
+    );
+  }, []);
+
+  // Save Deck
+  const handleSaveDeck = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      const selectedWords = candidates.filter((c) => c.selected).map((c) => c.text);
+      if (selectedWords.length === 0 || !deckTitle.trim()) return;
+
+      const saved = saveLocalCustomSet({
+        id: editingSetId || undefined,
+        title: deckTitle.trim(),
+        description: deckDescription.trim(),
+        lemma_keys: selectedWords,
+      });
+
+      setCustomSets(readLocalCustomSets());
+      onSelectDeckFilter(saved.id);
+      onClose();
+    },
+    [candidates, deckTitle, deckDescription, editingSetId, onSelectDeckFilter, onClose]
+  );
+
+  const handleDeleteDeck = useCallback((id: string) => {
+    if (confirm(chromeLocale === 'uk' ? 'Видалити цю колоду?' : 'Delete this deck?')) {
+      deleteLocalCustomSet(id);
+      setCustomSets(readLocalCustomSets());
+      if (activeDeckFilter === id) {
+        onSelectDeckFilter('all');
+      }
+    }
+  }, [activeDeckFilter, chromeLocale, onSelectDeckFilter]);
+
+  // Filtered Candidates for Grid View
+  const filteredCandidates = useMemo(() => {
+    return candidates.map((item, originalIdx) => ({ ...item, originalIdx })).filter((item) => {
+      if (levelFilter !== 'ALL' && item.level !== levelFilter) return false;
+      if (searchQuery && !item.text.includes(searchQuery.toLowerCase().trim())) return false;
+      return true;
+    });
+  }, [candidates, levelFilter, searchQuery]);
+
+  return (
+    <div
+      tabIndex={-1}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="deck-studio-title"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'rgba(7, 11, 24, 0.88)',
+        backdropFilter: 'blur(16px)',
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '1rem',
+      }}
+    >
+      <div
+        className="deck-studio-shell deck-glass-panel"
+        style={{
+          maxWidth: '740px',
+          width: '100%',
+          maxHeight: '92vh',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          color: '#f8fafc',
+        }}
+      >
+        {/* Header Ribbon */}
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h2 id="deck-studio-title" style={{ margin: 0, fontSize: '1.35rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span>🎨</span>
+              <span>{chromeLocale === 'uk' ? 'Студія власних колод' : 'Custom Deck Studio'}</span>
+            </h2>
+            <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.2rem' }}>
+              {chromeLocale === 'uk' ? 'Створення, імпорт документів та синхронізація з Google Drive' : 'Creation, document import & Google Drive sync'}
+            </div>
+          </div>
+          <button
+            type="button"
+            className="btn btn-sm"
+            onClick={onClose}
+            style={{ background: 'transparent', border: 'none', color: '#94a3b8', fontSize: '1.5rem', cursor: 'pointer' }}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Google Drive Status Bar */}
+        <div style={{ background: 'rgba(37, 99, 235, 0.12)', padding: '0.6rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: driveConnected ? '#22c55e' : '#94a3b8' }} />
+            <span>{syncStatusMsg || (driveConnected ? (chromeLocale === 'uk' ? 'Синхронізовано з Google Drive AppData' : 'Synced to Google Drive AppData') : (chromeLocale === 'uk' ? 'Локальне збереження (0 KB backend)' : 'Local storage (Zero backend)'))}</span>
+          </div>
+          <button
+            type="button"
+            className="btn btn-sm"
+            onClick={handleDriveSync}
+            disabled={isDriveSyncing}
+            style={{ background: '#2563eb', color: '#fff', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600 }}
+          >
+            {isDriveSyncing ? '...' : driveConnected ? (chromeLocale === 'uk' ? 'Синхронізувати' : 'Sync Now') : (chromeLocale === 'uk' ? 'Увійти в Google' : 'Sign in Google')}
+          </button>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div style={{ padding: '0.75rem 1.5rem 0 1.5rem', display: 'flex', gap: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+          <button
+            type="button"
+            className={`btn btn-sm ${activeTab === 'decks' ? 'btn-accent' : ''}`}
+            onClick={() => setActiveTab('decks')}
+            style={{ borderRadius: '8px 8px 0 0', padding: '0.5rem 1rem' }}
+          >
+            📋 {chromeLocale === 'uk' ? 'Мої колоди' : 'My Decks'} ({customSets.length})
+          </button>
+          <button
+            type="button"
+            className={`btn btn-sm ${activeTab === 'wizard' ? 'btn-accent' : ''}`}
+            onClick={() => {
+              setEditingSetId(null);
+              setDeckTitle('');
+              setDeckDescription('');
+              setWizardStep(1);
+              setActiveTab('wizard');
+            }}
+            style={{ borderRadius: '8px 8px 0 0', padding: '0.5rem 1rem' }}
+          >
+            🪄 {chromeLocale === 'uk' ? 'Майстер імпорту / Створити' : 'Import Wizard / Create'}
+          </button>
+        </div>
+
+        {/* Content Body */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '1.25rem 1.5rem' }}>
+          {/* VIEW 1: MY DECKS LIST */}
+          {activeTab === 'decks' ? (
+            <div>
+              {/* Private Teacher Deck Unlock Toggle */}
+              <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '12px', padding: '0.85rem 1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: '0.9rem', color: '#fef08a' }}>
+                    🔒 {chromeLocale === 'uk' ? 'Приватна добірка вчителя (610+440 слів)' : 'Private Teacher Collection (610+440 words)'}
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: '#cbd5e1', marginTop: '0.2rem' }}>
+                    {chromeLocale === 'uk' ? 'Схована від публічних відвідувачів сайту за замовчуванням' : 'Protected and hidden from general public visitors'}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className={`btn btn-sm ${teacherDeckUnlocked ? 'btn-accent' : ''}`}
+                  onClick={toggleTeacherDeckUnlock}
+                >
+                  {teacherDeckUnlocked ? '🟢 Unlocked' : '🔑 Unlock'}
+                </button>
+              </div>
+
+              {customSets.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#94a3b8' }}>
+                  <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>📚</div>
+                  <p style={{ margin: '0 0 1rem 0' }}>{chromeLocale === 'uk' ? 'У вас ще немає створених колод.' : 'No custom decks found.'}</p>
+                  <button
+                    type="button"
+                    className="btn btn-accent"
+                    onClick={() => {
+                      setWizardStep(1);
+                      setActiveTab('wizard');
+                    }}
+                  >
+                    🪄 {chromeLocale === 'uk' ? 'Імпортувати перший документ' : 'Import First Document'}
+                  </button>
+                </div>
+              ) : (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                  {customSets.map((set) => (
+                    <div
+                      key={set.id}
+                      style={{
+                        background: activeDeckFilter === set.id ? 'rgba(59, 130, 246, 0.25)' : 'rgba(255, 255, 255, 0.04)',
+                        border: activeDeckFilter === set.id ? '1px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.08)',
+                        borderRadius: '14px',
+                        padding: '1rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justify: 'space-between',
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: '1rem', color: '#f8fafc' }}>{set.title}</div>
+                        {set.description ? <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.2rem' }}>{set.description}</div> : null}
+                        <div style={{ fontSize: '0.8rem', color: '#38bdf8', marginTop: '0.5rem', fontWeight: 600 }}>
+                          {set.lemma_keys.length} {chromeLocale === 'uk' ? 'слів' : 'words'}
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.4rem', marginTop: '1rem' }}>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-accent"
+                          style={{ flex: 1 }}
+                          onClick={() => {
+                            onSelectDeckFilter(set.id);
+                            onClose();
+                          }}
+                        >
+                          ▶️ {chromeLocale === 'uk' ? 'Практика' : 'Practice'}
+                        </button>
+                        <button type="button" className="btn btn-sm" onClick={() => handleDeleteDeck(set.id)}>
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : null}
+
+          {/* VIEW 2: 3-STEP IMPORT WIZARD */}
+          {activeTab === 'wizard' ? (
+            <div>
+              {/* Stepper Rail */}
+              <div className="deck-wizard-stepper">
+                <div className={`deck-wizard-step ${wizardStep >= 1 ? 'active' : ''} ${wizardStep > 1 ? 'completed' : ''}`}>
+                  <span className="deck-wizard-step-num">1</span>
+                  <span>{chromeLocale === 'uk' ? 'Файл / Текст' : 'Upload / Paste'}</span>
+                </div>
+                <div className={`deck-wizard-step ${wizardStep >= 2 ? 'active' : ''} ${wizardStep > 2 ? 'completed' : ''}`}>
+                  <span className="deck-wizard-step-num">2</span>
+                  <span>{chromeLocale === 'uk' ? 'Перегляд слів' : 'Inspect Words'}</span>
+                </div>
+                <div className={`deck-wizard-step ${wizardStep >= 3 ? 'active' : ''}`}>
+                  <span className="deck-wizard-step-num">3</span>
+                  <span>{chromeLocale === 'uk' ? 'Збереження' : 'Save & Sync'}</span>
+                </div>
+              </div>
+
+              {/* STEP 1: UPLOAD / PASTE */}
+              {wizardStep === 1 ? (
+                <div>
+                  <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+                    <button
+                      type="button"
+                      className={`btn btn-sm ${uploadMode === 'file' ? 'btn-accent' : ''}`}
+                      onClick={() => setUploadMode('file')}
+                    >
+                      📁 {chromeLocale === 'uk' ? 'Файл (.txt, .csv, .json, .md)' : 'File (.txt, .csv, .json, .md)'}
+                    </button>
+                    <button
+                      type="button"
+                      className={`btn btn-sm ${uploadMode === 'paste' ? 'btn-accent' : ''}`}
+                      onClick={() => setUploadMode('paste')}
+                    >
+                      📝 {chromeLocale === 'uk' ? 'Вставити текст' : 'Paste Text'}
+                    </button>
+                  </div>
+
+                  {uploadMode === 'file' ? (
+                    <div>
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        accept=".txt,.csv,.tsv,.json,.yaml,.yml,.md"
+                        style={{ display: 'none' }}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) void handleFileRead(file);
+                        }}
+                      />
+                      <div
+                        className={`importer-dropzone ${isDragOver ? 'drag-active' : ''}`}
+                        onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+                        onDragLeave={() => setIsDragOver(false)}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          setIsDragOver(false);
+                          const file = e.dataTransfer.files?.[0];
+                          if (file) void handleFileRead(file);
+                        }}
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>📄</div>
+                        <div style={{ fontWeight: 700, fontSize: '1.1rem' }}>
+                          {chromeLocale === 'uk' ? 'Перетягніть файл сюди або натисніть для вибору' : 'Drag & drop file here or click to browse'}
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.4rem' }}>
+                          Підтримуються TXT, CSV, JSON, Markdown (100% браузерна обробка)
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <textarea
+                        rows={7}
+                        placeholder={chromeLocale === 'uk' ? 'Вставте текст або список слів тут...' : 'Paste Ukrainian text or word list here...'}
+                        value={pastedText}
+                        onChange={(e) => setPastedText(e.target.value)}
+                        style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }}
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-accent"
+                        onClick={handlePasteSubmit}
+                        style={{ marginTop: '0.75rem', width: '100%' }}
+                      >
+                        ⚡ {chromeLocale === 'uk' ? 'Витягнути слова' : 'Extract Words'}
+                      </button>
+                    </div>
+                  )}
+
+                  {parseError ? <p style={{ color: '#ef4444', fontSize: '0.85rem', marginTop: '0.5rem' }}>{parseError}</p> : null}
+                </div>
+              ) : null}
+
+              {/* STEP 2: WORD INSPECTOR & CEFR BREAKDOWN */}
+              {wizardStep === 2 ? (
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>
+                      {chromeLocale === 'uk'
+                        ? `Знайдено слів: ${cefrCounts.selected} з ${cefrCounts.total}`
+                        : `Selected words: ${cefrCounts.selected} of ${cefrCounts.total}`}
+                    </div>
+                    <div style={{ display: 'flex', gap: '0.3rem' }}>
+                      <button type="button" className="btn btn-sm" onClick={() => setCandidates((prev) => prev.map((c) => ({ ...c, selected: true })))}>
+                        {chromeLocale === 'uk' ? 'Обрати всі' : 'Select All'}
+                      </button>
+                      <button type="button" className="btn btn-sm" onClick={() => setCandidates((prev) => prev.map((c) => ({ ...c, selected: false })))}>
+                        {chromeLocale === 'uk' ? 'Очистити' : 'Clear'}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* CEFR Distribution Bar */}
+                  <div className="cefr-distribution-bar">
+                    <div className="cefr-seg-a1" style={{ width: `${(cefrCounts.A1 / (cefrCounts.selected || 1)) * 100}%` }} title={`A1: ${cefrCounts.A1}`} />
+                    <div className="cefr-seg-a2" style={{ width: `${(cefrCounts.A2 / (cefrCounts.selected || 1)) * 100}%` }} title={`A2: ${cefrCounts.A2}`} />
+                    <div className="cefr-seg-b1" style={{ width: `${(cefrCounts.B1 / (cefrCounts.selected || 1)) * 100}%` }} title={`B1: ${cefrCounts.B1}`} />
+                    <div className="cefr-seg-b2" style={{ width: `${(cefrCounts.B2 / (cefrCounts.selected || 1)) * 100}%` }} title={`B2: ${cefrCounts.B2}`} />
+                  </div>
+
+                  {/* Level Filters & Search */}
+                  <div style={{ display: 'flex', gap: '0.4rem', margin: '0.75rem 0', flexWrap: 'wrap' }}>
+                    <input
+                      type="text"
+                      placeholder={chromeLocale === 'uk' ? 'Пошук слова...' : 'Search word...'}
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', fontSize: '0.8rem', flex: 1 }}
+                    />
+                    {(['ALL', 'A1', 'A2', 'B1', 'B2'] as const).map((lvl) => (
+                      <button
+                        key={lvl}
+                        type="button"
+                        className={`btn btn-sm ${levelFilter === lvl ? 'btn-accent' : ''}`}
+                        onClick={() => setLevelFilter(lvl)}
+                        style={{ fontSize: '0.75rem' }}
+                      >
+                        {lvl}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Word Chips Grid */}
+                  <div className="word-chip-grid">
+                    {filteredCandidates.map((item) => (
+                      <div
+                        key={item.originalIdx}
+                        className={`word-inspector-chip ${item.selected ? 'selected' : 'excluded'}`}
+                        onClick={() => toggleCandidateSelection(item.originalIdx)}
+                      >
+                        <span>{item.selected ? '✓' : '✗'}</span>
+                        <span>{item.text}</span>
+                        <span className={`word-chip-badge badge-${item.level.toLowerCase()}`}>{item.level}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Step 2 Actions */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+                    <button type="button" className="btn" onClick={() => setWizardStep(1)}>
+                      ← {chromeLocale === 'uk' ? 'Назад' : 'Back'}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-accent"
+                      disabled={cefrCounts.selected === 0}
+                      onClick={() => setWizardStep(3)}
+                    >
+                      {chromeLocale === 'uk' ? 'Далі →' : 'Next →'}
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+
+              {/* STEP 3: SAVE & CLOUD SYNC */}
+              {wizardStep === 3 ? (
+                <form onSubmit={handleSaveDeck}>
+                  <div style={{ marginBottom: '1rem' }}>
+                    <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem' }}>
+                      {chromeLocale === 'uk' ? 'Назва колоди:' : 'Deck Title:'}
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Мої особливі 600 слів"
+                      value={deckTitle}
+                      onChange={(e) => setDeckTitle(e.target.value)}
+                      style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff' }}
+                    />
+                  </div>
+                  <div style={{ marginBottom: '1.25rem' }}>
+                    <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem' }}>
+                      {chromeLocale === 'uk' ? 'Опис (необов\'язково):' : 'Description (optional):'}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Уроки з вчителем"
+                      value={deckDescription}
+                      onChange={(e) => setDeckDescription(e.target.value)}
+                      style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff' }}
+                    />
+                  </div>
+
+                  <div style={{ background: 'rgba(255,255,255,0.05)', padding: '0.85rem 1rem', borderRadius: '10px', marginBottom: '1.25rem', fontSize: '0.85rem', color: '#cbd5e1' }}>
+                    <div>📊 {chromeLocale === 'uk' ? `Вибрано слів до збереження: ${cefrCounts.selected}` : `Words to save: ${cefrCounts.selected}`}</div>
+                    <div>☁️ {chromeLocale === 'uk' ? 'Збереження локально + синхронізація в Google Drive AppData' : 'Local save + Google Drive AppData sync'}</div>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <button type="button" className="btn" onClick={() => setWizardStep(2)}>
+                      ← {chromeLocale === 'uk' ? 'Назад' : 'Back'}
+                    </button>
+                    <button type="submit" className="btn btn-accent">
+                      💾 {chromeLocale === 'uk' ? 'Зберегти колоду' : 'Save Deck'}
+                    </button>
+                  </div>
+                </form>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
