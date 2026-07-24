@@ -331,7 +331,7 @@ def run(
     return 2 if failed else 0
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Verify the Atlas lexicon manifest before promote (#M-11).")
     p.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST, help="Manifest JSON to verify.")
     p.add_argument(
@@ -360,7 +360,7 @@ def main() -> int:
         default=DEFAULT_SHRINK_ALLOWLIST,
         help="Curated (lemma, section) retractions the #5077 shrink gate permits.",
     )
-    args = p.parse_args()
+    args = p.parse_args(argv)
     return run(
         args.manifest,
         args.sample,
