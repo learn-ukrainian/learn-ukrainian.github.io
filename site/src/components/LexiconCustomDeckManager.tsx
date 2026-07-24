@@ -22,8 +22,8 @@ import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken
 interface LexiconCustomDeckManagerProps {
   chromeLocale: 'en' | 'uk';
   activeDeckFilter: string;
-  onSelectDeckFilter(filterId: string): void;
-  onClose(): void;
+  onSelectDeckFilter: (filterId: string) => void;
+  onClose: () => void;
 }
 
 interface CandidateWord {

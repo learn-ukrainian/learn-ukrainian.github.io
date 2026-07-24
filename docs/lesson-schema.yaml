@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 0761d51a0b7e07b7a4e4090356223a41ce73476b175898fd5460bd1d29571b52
+  components_sha256: 975d0cef459388d5b71e74b8930984d7026346f7116408a7ede4abda3abafe49
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1092,11 +1092,21 @@ components:
         type: string
         description: activeDeckFilter prop.
         ukrainian_text: 'false'
+      - name: onSelectDeckFilter
+        type: '(filterId: string) => void'
+        description: onSelectDeckFilter prop.
+        ukrainian_text: 'false'
+      - name: onClose
+        type: () => void
+        description: onClose prop.
+        ukrainian_text: 'false'
       optional: []
     nested_types: {}
     example:
       chromeLocale: <'en' | 'uk'>
       activeDeckFilter: Приклад
+      onSelectDeckFilter: '<(filterId: string) => void>'
+      onClose: <() => void>
     deprecated: false
     deprecation_reason: null
   LexiconPractice:
