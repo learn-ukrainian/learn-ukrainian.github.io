@@ -82,6 +82,18 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "keep",
     ),
     RouteContract(
+        "/api/hramatka",
+        "prefix",
+        "http",
+        "Hramatka lesson support retrieval, VESUM form attestation, and service readiness.",
+        "Hramatka SQLite/WAL job store, baker-written lesson-support.v1 sidecars, activity-kit schemas, and VESUM dictionary.",
+        "No response cache; readiness performs live bounded local dependency checks and lesson support is read only after a ready job state.",
+        ("Hramatka teacher app", "lesson baker", "operations"),
+        "Distinct from the curriculum Monitor API: it owns teacher lesson-engine state rather than curriculum build telemetry.",
+        "high if a client consumes a queued or baking lesson as ready",
+        "keep; clients must use readyz before relying on lesson-engine dependencies",
+    ),
+    RouteContract(
         "/api/state/reviewer-ghosts",
         "prefix",
         "http",
