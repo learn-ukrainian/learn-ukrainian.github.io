@@ -11,7 +11,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from enum import StrEnum
 from typing import Any, Protocol
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 
 from scripts.audit.hramatka_qg_rules import DIMENSION_ORDER, scan_hramatka_lesson
 
@@ -88,6 +88,9 @@ def is_transient_provider_failure(error: BaseException) -> bool:
     retryable. Authentication, validation, rate-limit, and provider 4xx errors
     deliberately fail closed rather than consuming the retry budget.
     """
+
+    if isinstance(error, HTTPError):
+        return 500 <= error.code <= 599
 
     if isinstance(error, (ConnectionError, TimeoutError, URLError)):
         return True

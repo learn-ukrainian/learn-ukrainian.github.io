@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from typing import Any
+from urllib.error import HTTPError
 
 from scripts.api.hramatka_generator import (
     MAX_PROVIDER_ATTEMPTS,
@@ -12,6 +13,7 @@ from scripts.api.hramatka_generator import (
     GenerationState,
     ProviderHTTPError,
     generate_qualified_lesson,
+    is_transient_provider_failure,
 )
 from scripts.audit.hramatka_qg_rules import DIMENSION_ORDER
 
@@ -124,3 +126,12 @@ def test_qg_warning_cannot_transition_generated_lesson_to_ready() -> None:
     assert result.failure_reason == "qg_rejected"
     assert transport.models == [PRIMARY_MODEL]
     assert [attempt.outcome for attempt in result.attempts] == ["qg_rejected"]
+
+
+def test_urllib_http_error_handling_differentiates_4xx_and_5xx() -> None:
+    error_401 = HTTPError("http://example.com", 401, "Unauthorized", {}, None)  # type: ignore[arg-type]
+    error_502 = HTTPError("http://example.com", 502, "Bad Gateway", {}, None)  # type: ignore[arg-type]
+
+    assert is_transient_provider_failure(error_401) is False
+    assert is_transient_provider_failure(error_502) is True
+
