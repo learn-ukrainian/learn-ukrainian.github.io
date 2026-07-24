@@ -418,8 +418,12 @@ if hasattr(os, "register_at_fork"):
 def _source_db_path(db_path: str | Path | None = None) -> Path:
     target = Path(db_path) if db_path is not None else SOURCES_DB
     primary = ROOT / "data" / "sources.db"
-    if (not target.is_file() or target.stat().st_size < 1_000_000) and primary.is_file():
-        return primary
+    abs_primary = Path("/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db")
+    if not target.is_file() or target.stat().st_size < 1_000_000:
+        if primary.is_file() and primary.stat().st_size >= 1_000_000:
+            return primary
+        if abs_primary.is_file() and abs_primary.stat().st_size >= 1_000_000:
+            return abs_primary
     return target
 
 
