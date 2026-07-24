@@ -4,14 +4,24 @@ import { join, relative, resolve } from 'node:path';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
 import fixtures from '../../../packages/activity-kit/src/fixtures/lu.activity.v1.fixtures.json';
+import signatureFixtures from '../../../packages/activity-kit/src/fixtures/lu.activity.v1.signature.valid.fixtures.json';
+import invalidSignatureFixtures from '../../../packages/activity-kit/src/fixtures/lu.activity.v1.signature.invalid.fixtures.json';
 import lessonFixture from '../../../packages/activity-kit/src/fixtures/lu.lesson.v1.fixture.json';
+import lessonSupportFixture from '../../../packages/activity-kit/src/fixtures/lu.lesson-support.v1.valid.fixture.json';
+import invalidLessonSupportFixture from '../../../packages/activity-kit/src/fixtures/lu.lesson-support.v1.invalid.fixture.json';
 import { ActivityPlayer } from '../../../packages/activity-kit/src/ActivityPlayer';
-import type { ActivityEditOperation, LuActivityV1, LuLessonV1, LuRejectedDraft } from '../../../packages/activity-kit/src';
+import type {
+  ActivityEditOperation,
+  LuActivityV1,
+  LuLessonV1,
+  LuRejectedDraft,
+} from '../../../packages/activity-kit/src';
 
 const repoRoot = resolve(process.cwd(), '..');
 const kitRoot = join(repoRoot, 'packages/activity-kit');
 const schemaPath = join(kitRoot, 'src/lu.activity.v1.schema.json');
 const lessonSchemaPath = join(kitRoot, 'src/lu.lesson.v1.schema.json');
+const lessonSupportSchemaPath = join(kitRoot, 'src/lu.lesson-support.v1.schema.json');
 const pythonPath = join(repoRoot, '.venv/bin/python');
 
 const GOLDEN_TYPES = [
@@ -82,6 +92,16 @@ function lessonSchemaErrors(fixture: unknown): string {
   return result.stdout.trim();
 }
 
+function lessonSupportSchemaErrors(fixture: unknown): string {
+  const result = spawnSync(pythonPath, ['-c', validator, lessonSupportSchemaPath], {
+    encoding: 'utf8',
+    input: JSON.stringify(fixture),
+  });
+
+  if (result.error) throw result.error;
+  return result.stdout.trim();
+}
+
 type RejectedDraftFixture = {
   type: string;
   activity: { answer_key: Record<string, unknown> };
@@ -93,9 +113,13 @@ type RejectedDraftFixture = {
 };
 
 function rejectedDraft(document: { rejected: unknown[] }, type: string): RejectedDraftFixture {
-  const draft = document.rejected.find((candidate) => (
-    typeof candidate === 'object' && candidate !== null && 'type' in candidate && candidate.type === type
-  ));
+  const draft = document.rejected.find(
+    (candidate) =>
+      typeof candidate === 'object' &&
+      candidate !== null &&
+      'type' in candidate &&
+      candidate.type === type,
+  );
 
   expect(draft).toBeDefined();
   return draft as RejectedDraftFixture;
@@ -113,11 +137,19 @@ describe('activity-kit contract', () => {
     execFileSync('node', ['scripts/generate-types.mjs'], { cwd: kitRoot });
     const generated = readFileSync(join(kitRoot, 'src/lu.activity.v1.generated.ts'), 'utf8');
     const lessonGenerated = readFileSync(join(kitRoot, 'src/lu.lesson.v1.generated.ts'), 'utf8');
+    const lessonSupportGenerated = readFileSync(
+      join(kitRoot, 'src/lu.lesson-support.v1.generated.ts'),
+      'utf8',
+    );
 
-    expect(generated).toContain('"quiz" | "mark-the-words" | "fill-in"');
+    expect(generated).toContain(
+      '"audio-listen-repeat" | "model-answer-discussion" | "sentence-transformation"',
+    );
     expect(generated).toContain('export type LuActivityV1 =');
     expect(lessonGenerated).toContain('export type LuLessonV1 =');
     expect(lessonGenerated).toContain('activity: LuActivityV1;');
+    expect(lessonSupportGenerated).toContain('export type LuLessonSupportV1 =');
+    expect(lessonSupportGenerated).toContain('vocabulary: Array<LuLessonSupportVocabularyItem>;');
   });
 
   test('golden fixture covers all nine player-backed engine types', () => {
@@ -125,8 +157,27 @@ describe('activity-kit contract', () => {
     expect(fixtures.map((fixture) => fixture.type).sort()).toEqual([...GOLDEN_TYPES].sort());
   });
 
-  test.each(fixtures)('$id validates against lu.activity.v1 without upstream schema refs', (fixture) => {
+  test.each(fixtures)(
+    '$id validates against lu.activity.v1 without upstream schema refs',
+    (fixture) => {
+      expect(schemaErrors(fixture)).toBe('');
+    },
+  );
+
+  test('signature fixture covers the three frozen wire types', () => {
+    expect(signatureFixtures.map((fixture) => fixture.type).sort()).toEqual([
+      'audio-listen-repeat',
+      'model-answer-discussion',
+      'sentence-transformation',
+    ]);
+  });
+
+  test.each(signatureFixtures)('$id validates against lu.activity.v1', (fixture) => {
     expect(schemaErrors(fixture)).toBe('');
+  });
+
+  test.each(invalidSignatureFixtures)('$id is rejected by lu.activity.v1', (fixture) => {
+    expect(schemaErrors(fixture)).not.toBe('');
   });
 
   test.each(fixtures)('$id renders through its dispatched widget', (fixture) => {
@@ -221,6 +272,16 @@ describe('activity-kit contract', () => {
   });
 });
 
+describe('lesson-support.v1 contract', () => {
+  test('validates the golden lesson support sidecar', () => {
+    expect(lessonSupportSchemaErrors(lessonSupportFixture)).toBe('');
+  });
+
+  test('rejects a sidecar without a VESUM analysis or a SHA-256 transcript hash', () => {
+    expect(lessonSupportSchemaErrors(invalidLessonSupportFixture)).not.toBe('');
+  });
+});
+
 describe('lesson document v1 contract', () => {
   test('validates the canonical 12-block flagship fixture', () => {
     expect(lessonSchemaErrors(lessonFixture)).toBe('');
@@ -236,7 +297,10 @@ describe('lesson document v1 contract', () => {
 
   test('validates an error-correction rejected-draft carrier and preserves duplicate corrections', () => {
     const document = structuredClone(lessonFixture);
-    const draft = rejectedDraft(document, 'error-correction') as unknown as Extract<LuRejectedDraft, { type: 'error-correction' }>;
+    const draft = rejectedDraft(document, 'error-correction') as unknown as Extract<
+      LuRejectedDraft,
+      { type: 'error-correction' }
+    >;
 
     expect(draft.answer_key?.corrections).toHaveLength(2);
     expect(draft.answer_key?.corrections[0]).toEqual(draft.answer_key?.corrections[1]);
@@ -246,11 +310,34 @@ describe('lesson document v1 contract', () => {
   test.each([
     ['missing items', (draft: RejectedDraftFixture) => delete draft.answer_key?.items],
     ['missing corrections', (draft: RejectedDraftFixture) => delete draft.answer_key?.corrections],
-    ['missing correction field', (draft: RejectedDraftFixture) => delete draft.answer_key?.corrections?.[0].error],
-    ['blank correction text', (draft: RejectedDraftFixture) => { draft.answer_key!.corrections![0].correction = '   '; }],
-    ['extra correction property', (draft: RejectedDraftFixture) => { draft.answer_key!.corrections![0].extra = 'not allowed'; }],
-    ['empty items', (draft: RejectedDraftFixture) => { draft.answer_key!.items = []; }],
-    ['empty corrections', (draft: RejectedDraftFixture) => { draft.answer_key!.corrections = []; }],
+    [
+      'missing correction field',
+      (draft: RejectedDraftFixture) => delete draft.answer_key?.corrections?.[0].error,
+    ],
+    [
+      'blank correction text',
+      (draft: RejectedDraftFixture) => {
+        draft.answer_key!.corrections![0].correction = '   ';
+      },
+    ],
+    [
+      'extra correction property',
+      (draft: RejectedDraftFixture) => {
+        draft.answer_key!.corrections![0].extra = 'not allowed';
+      },
+    ],
+    [
+      'empty items',
+      (draft: RejectedDraftFixture) => {
+        draft.answer_key!.items = [];
+      },
+    ],
+    [
+      'empty corrections',
+      (draft: RejectedDraftFixture) => {
+        draft.answer_key!.corrections = [];
+      },
+    ],
   ])('rejects an error-correction carrier with %s', (_, mutate) => {
     const document = structuredClone(lessonFixture);
     mutate(rejectedDraft(document, 'error-correction'));
@@ -263,7 +350,9 @@ describe('lesson document v1 contract', () => {
     const draft = rejectedDraft(document, 'true-false');
     draft.answer_key = {
       items: ['Example source sentence.'],
-      corrections: [{ sentence: 'Example source sentence.', error: 'source', correction: 'corrected' }],
+      corrections: [
+        { sentence: 'Example source sentence.', error: 'source', correction: 'corrected' },
+      ],
     };
 
     expect(lessonSchemaErrors(document)).not.toBe('');
@@ -283,7 +372,9 @@ describe('lesson document v1 contract', () => {
     const document = lessonFixture as LuLessonV1;
 
     expect(document.blocks).toHaveLength(12);
-    expect([1, 2, 3].map((phase) => document.blocks.filter((block) => block.phase === phase))).toHaveLength(3);
+    expect(
+      [1, 2, 3].map((phase) => document.blocks.filter((block) => block.phase === phase)),
+    ).toHaveLength(3);
     expect(document.blocks.filter((block) => block.phase === 1)).toHaveLength(4);
     expect(document.blocks.filter((block) => block.phase === 2)).toHaveLength(5);
     expect(document.blocks.filter((block) => block.phase === 3)).toHaveLength(3);
@@ -352,7 +443,8 @@ describe('lesson document v1 contract', () => {
     doc.focus_status = {
       requested: 'вищий ступінь прикметників',
       supported: false,
-      notice_uk: 'Опора не містить достатньо перевіреного матеріалу для фокусу «вищий ступінь прикметників». Вправи спираються лише на текст-опору; додайте приклади або змініть фокус.',
+      notice_uk:
+        'Опора не містить достатньо перевіреного матеріалу для фокусу «вищий ступінь прикметників». Вправи спираються лише на текст-опору; додайте приклади або змініть фокус.',
     };
     expect(lessonSchemaErrors(doc)).toBe('');
   });
@@ -362,7 +454,8 @@ describe('lesson document v1 contract', () => {
     doc.focus_status = {
       requested: 'вищий ступінь прикметників',
       supported: true,
-      notice_uk: 'Опора не містить достатньо перевіреного матеріалу для фокусу «вищий ступінь прикметників». Вправи спираються лише на текст-опору; додайте приклади або змініть фокус.',
+      notice_uk:
+        'Опора не містить достатньо перевіреного матеріалу для фокусу «вищий ступінь прикметників». Вправи спираються лише на текст-опору; додайте приклади або змініть фокус.',
     };
     expect(lessonSchemaErrors(doc)).not.toBe('');
   });

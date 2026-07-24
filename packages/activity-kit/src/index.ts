@@ -1,5 +1,9 @@
 import './components/Activities.module.css';
 
+export { default as luActivityV1Schema } from './lu.activity.v1.schema.json';
+export { default as luLessonV1Schema } from './lu.lesson.v1.schema.json';
+export { default as luLessonSupportV1Schema } from './lu.lesson-support.v1.schema.json';
+
 export { ActivityPlayer } from './ActivityPlayer';
 export type {
   ActivityPlayerActivity,
@@ -8,11 +12,7 @@ export type {
   ActivityPlayerProps,
 } from './ActivityPlayer';
 export { default as TrueFalse, TrueFalseQuestion } from './components/TrueFalse';
-export type {
-  TrueFalseItem,
-  TrueFalseProps,
-  TrueFalseQuestionProps,
-} from './components/TrueFalse';
+export type { TrueFalseItem, TrueFalseProps, TrueFalseQuestionProps } from './components/TrueFalse';
 export { default as Cloze, ClozePassage } from './components/Cloze';
 export type { ClozeBlank, ClozePassageProps, ClozeProps } from './components/Cloze';
 export { default as MatchUp } from './components/MatchUp';
@@ -75,3 +75,9 @@ export type {
   LuLessonV1,
   LuRejectedDraft,
 } from './lu.lesson.v1.generated';
+export type {
+  LuLessonSupportAssetItem,
+  LuLessonSupportTheoryItem,
+  LuLessonSupportV1,
+  LuLessonSupportVocabularyItem,
+} from './lu.lesson-support.v1.generated';

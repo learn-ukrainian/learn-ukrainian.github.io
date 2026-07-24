@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://learn-ukrainian.github.io/packages/activity-kit/lu.lesson-support.v1.schema.json",
+  "title": "Learn Ukrainian Lesson Support v1",
+  "description": "Sidecar data for lesson vocabulary, theory, and text-anchored audio assets.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "vocabulary", "theory", "assets"],
+  "properties": {
+    "schema": { "const": "lu.lesson-support.v1" },
+    "vocabulary": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/vocabularyItem" }
+    },
+    "theory": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/theoryItem" }
+    },
+    "assets": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/assetItem" }
+    }
+  },
+  "$defs": {
+    "vocabularyItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["surface", "lemma", "stress", "pos", "gloss", "vesum_analysis"],
+      "properties": {
+        "surface": { "type": "string", "minLength": 1 },
+        "lemma": { "type": "string", "minLength": 1 },
+        "stress": { "type": "string", "minLength": 1 },
+        "pos": { "type": "string", "minLength": 1 },
+        "gloss": { "type": "string", "minLength": 1 },
+        "vesum_analysis": { "type": ["object", "string"] }
+      }
+    },
+    "theoryItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "body", "callouts"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "body": { "type": "string", "minLength": 1 },
+        "callouts": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "assetItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "transcript", "sha256"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "transcript": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" }
+      }
+    }
+  }
+}

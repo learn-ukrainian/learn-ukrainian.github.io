@@ -3,10 +3,13 @@ import { URL } from 'node:url';
 
 const activitySchemaUrl = new URL('../src/lu.activity.v1.schema.json', import.meta.url);
 const lessonSchemaUrl = new URL('../src/lu.lesson.v1.schema.json', import.meta.url);
+const lessonSupportSchemaUrl = new URL('../src/lu.lesson-support.v1.schema.json', import.meta.url);
 const activityOutputUrl = new URL('../src/lu.activity.v1.generated.ts', import.meta.url);
 const lessonOutputUrl = new URL('../src/lu.lesson.v1.generated.ts', import.meta.url);
+const lessonSupportOutputUrl = new URL('../src/lu.lesson-support.v1.generated.ts', import.meta.url);
 const activitySchema = JSON.parse(await readFile(activitySchemaUrl, 'utf8'));
 const lessonSchema = JSON.parse(await readFile(lessonSchemaUrl, 'utf8'));
+const lessonSupportSchema = JSON.parse(await readFile(lessonSupportSchemaUrl, 'utf8'));
 
 function dereferenceActivity(reference) {
   const [url, fragment = ''] = reference.split('#');
@@ -16,7 +19,10 @@ function dereferenceActivity(reference) {
     throw new Error(`Unsupported activity schema reference: ${reference}`);
   }
 
-  return fragment.slice(1).split('/').reduce((value, key) => value[key], document);
+  return fragment
+    .slice(1)
+    .split('/')
+    .reduce((value, key) => value[key], document);
 }
 
 function dereferenceLesson(reference) {
@@ -27,7 +33,24 @@ function dereferenceLesson(reference) {
     throw new Error(`Unsupported lesson schema reference: ${reference}`);
   }
 
-  return fragment.slice(1).split('/').reduce((value, key) => value[key], document);
+  return fragment
+    .slice(1)
+    .split('/')
+    .reduce((value, key) => value[key], document);
+}
+
+function dereferenceLessonSupport(reference) {
+  const [url, fragment = ''] = reference.split('#');
+  const document = !url || url === lessonSupportSchema.$id ? lessonSupportSchema : null;
+
+  if (!document || !fragment.startsWith('/')) {
+    throw new Error(`Unsupported lesson-support schema reference: ${reference}`);
+  }
+
+  return fragment
+    .slice(1)
+    .split('/')
+    .reduce((value, key) => value[key], document);
 }
 
 function mergeSchema(node, dereference) {
@@ -35,12 +58,15 @@ function mergeSchema(node, dereference) {
   if (!node.allOf) return node;
 
   const { allOf, ...base } = node;
-  return [base, ...allOf.map((part) => mergeSchema(part, dereference))].reduce((merged, part) => ({
-    ...merged,
-    ...part,
-    properties: { ...merged.properties, ...part.properties },
-    required: [...new Set([...(merged.required ?? []), ...(part.required ?? [])])],
-  }), {});
+  return [base, ...allOf.map((part) => mergeSchema(part, dereference))].reduce(
+    (merged, part) => ({
+      ...merged,
+      ...part,
+      properties: { ...merged.properties, ...part.properties },
+      required: [...new Set([...(merged.required ?? []), ...(part.required ?? [])])],
+    }),
+    {},
+  );
 }
 
 function primitiveType(type) {
@@ -62,18 +88,29 @@ function typeFor(node, depth = 0, { dereference, externalRefs = {} }) {
 
   if (resolved.const !== undefined) return JSON.stringify(resolved.const);
   if (resolved.enum) return resolved.enum.map((value) => JSON.stringify(value)).join(' | ');
-  if (resolved.oneOf) return resolved.oneOf.map((option) => typeFor(option, depth, { dereference, externalRefs })).join(' | ');
+  if (resolved.oneOf)
+    return resolved.oneOf
+      .map((option) => typeFor(option, depth, { dereference, externalRefs }))
+      .join(' | ');
   if (Array.isArray(resolved.type)) return resolved.type.map(primitiveType).join(' | ');
-  if (resolved.type === 'string' || resolved.type === 'boolean' || resolved.type === 'integer' || resolved.type === 'number' || resolved.type === 'null') {
+  if (
+    resolved.type === 'string' ||
+    resolved.type === 'boolean' ||
+    resolved.type === 'integer' ||
+    resolved.type === 'number' ||
+    resolved.type === 'null'
+  ) {
     return primitiveType(resolved.type);
   }
-  if (resolved.type === 'array') return `Array<${typeFor(resolved.items, depth, { dereference, externalRefs })}>`;
+  if (resolved.type === 'array')
+    return `Array<${typeFor(resolved.items, depth, { dereference, externalRefs })}>`;
 
   if (resolved.type === 'object' || resolved.properties) {
     const required = new Set(resolved.required ?? []);
-    const properties = Object.entries(resolved.properties ?? {}).map(([name, property]) => (
-      `${childIndent}${name}${required.has(name) ? '' : '?'}: ${typeFor(property, depth + 1, { dereference, externalRefs })};`
-    ));
+    const properties = Object.entries(resolved.properties ?? {}).map(
+      ([name, property]) =>
+        `${childIndent}${name}${required.has(name) ? '' : '?'}: ${typeFor(property, depth + 1, { dereference, externalRefs })};`,
+    );
     return `{\n${properties.join('\n')}\n${indent}}`;
   }
 
@@ -85,10 +122,9 @@ function pascalCase(value) {
 }
 
 const activityTypes = activitySchema.properties.type.enum;
-const constraints = new Map(activitySchema.allOf.map((rule) => [
-  rule.if.properties.type.const,
-  rule.then.properties,
-]));
+const constraints = new Map(
+  activitySchema.allOf.map((rule) => [rule.if.properties.type.const, rule.then.properties]),
+);
 
 if (activityTypes.length !== constraints.size) {
   throw new Error('Each activity type needs a payload and answer-key constraint.');
@@ -103,9 +139,15 @@ const variants = activityTypes.map((activityType) => {
   return { activityType, name, payload, answerKey };
 });
 
-const activityProvenance = typeFor(activitySchema.properties.provenance, 0, { dereference: dereferenceActivity });
-const activityType = typeFor(activitySchema.properties.type, 0, { dereference: dereferenceActivity });
-const activityLevel = typeFor(activitySchema.properties.level, 0, { dereference: dereferenceActivity });
+const activityProvenance = typeFor(activitySchema.properties.provenance, 0, {
+  dereference: dereferenceActivity,
+});
+const activityType = typeFor(activitySchema.properties.type, 0, {
+  dereference: dereferenceActivity,
+});
+const activityLevel = typeFor(activitySchema.properties.level, 0, {
+  dereference: dereferenceActivity,
+});
 const activitySource = `// This file is generated by scripts/generate-types.mjs from lu.activity.v1.schema.json.
 // Do not edit directly.
 
@@ -161,7 +203,44 @@ export type LuRejectedDraft = ${rejectedDraft};
 export type LuLessonV1 = ${lessonType};
 `;
 
+const lessonSupportOptions = { dereference: dereferenceLessonSupport };
+const lessonSupportVocabularyItem = typeFor(
+  lessonSupportSchema.$defs.vocabularyItem,
+  0,
+  lessonSupportOptions,
+);
+const lessonSupportTheoryItem = typeFor(
+  lessonSupportSchema.$defs.theoryItem,
+  0,
+  lessonSupportOptions,
+);
+const lessonSupportAssetItem = typeFor(
+  lessonSupportSchema.$defs.assetItem,
+  0,
+  lessonSupportOptions,
+);
+const lessonSupportType = typeFor(lessonSupportSchema, 0, {
+  ...lessonSupportOptions,
+  externalRefs: {
+    '#/$defs/vocabularyItem': 'LuLessonSupportVocabularyItem',
+    '#/$defs/theoryItem': 'LuLessonSupportTheoryItem',
+    '#/$defs/assetItem': 'LuLessonSupportAssetItem',
+  },
+});
+const lessonSupportSource = `// This file is generated by scripts/generate-types.mjs from lu.lesson-support.v1.schema.json.
+// Do not edit directly.
+
+export type LuLessonSupportVocabularyItem = ${lessonSupportVocabularyItem};
+
+export type LuLessonSupportTheoryItem = ${lessonSupportTheoryItem};
+
+export type LuLessonSupportAssetItem = ${lessonSupportAssetItem};
+
+export type LuLessonSupportV1 = ${lessonSupportType};
+`;
+
 await Promise.all([
   writeFile(activityOutputUrl, activitySource),
   writeFile(lessonOutputUrl, lessonSource),
+  writeFile(lessonSupportOutputUrl, lessonSupportSource),
 ]);

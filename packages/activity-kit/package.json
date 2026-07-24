@@ -12,6 +12,8 @@
     "./fixtures": "./src/fixtures/lu.activity.v1.fixtures.json",
     "./lesson-schema": "./src/lu.lesson.v1.schema.json",
     "./lesson-fixture": "./src/fixtures/lu.lesson.v1.fixture.json",
+    "./lesson-support-schema": "./src/lu.lesson-support.v1.schema.json",
+    "./lesson-support-fixture": "./src/fixtures/lu.lesson-support.v1.valid.fixture.json",
     "./styles.css": "./src/components/Activities.module.css"
   },
   "files": [
