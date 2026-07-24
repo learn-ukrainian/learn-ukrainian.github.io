@@ -158,6 +158,22 @@ def test_qg_warning_cannot_transition_generated_lesson_to_ready() -> None:
     assert [attempt.outcome for attempt in result.attempts] == ["qg_rejected"]
 
 
+def test_absent_or_malformed_detector_status_fails_qualification() -> None:
+    lesson = {"title": "Урок без статусу детекторів", "blocks": [{"id": "b1", "type": "intro"}]}
+    transport = RecordingTransport([lesson])
+    evidence = _passing_evidence()
+    del evidence["detector_status"]
+
+    result = generate_qualified_lesson(
+        {"prompt": "Створіть урок"},
+        transport=transport,
+        qg_scan=lambda _lesson: evidence,
+    )
+
+    assert result.state is GenerationState.FAILED
+    assert result.failure_reason == "qg_rejected"
+
+
 def test_urllib_http_error_handling_differentiates_4xx_and_5xx() -> None:
     error_401 = HTTPError("http://example.com", 401, "Unauthorized", {}, None)  # type: ignore[arg-type]
     error_502 = HTTPError("http://example.com", 502, "Bad Gateway", {}, None)  # type: ignore[arg-type]

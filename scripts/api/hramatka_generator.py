@@ -122,7 +122,8 @@ def passes_all_hramatka_qg_rules(evidence: Mapping[str, Any]) -> bool:
 
     if evidence.get("verdict") != "PASS" or evidence.get("terminal_verdict") != "PASS":
         return False
-    if evidence.get("detector_status"):
+    detector_status = evidence.get("detector_status")
+    if not isinstance(detector_status, Mapping) or len(detector_status) != 0:
         return False
 
     dimensions = evidence.get("dimensions")
