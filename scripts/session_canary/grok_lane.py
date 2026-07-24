@@ -168,16 +168,27 @@ def _build_facts(
     facts: list[dict[str, str]] = []
     used_answers: set[str] = set()
 
-    def add(fid: str, q: str, a: str) -> None:
+    # Pre-extract working set so we can reserve probe slots (CF F001 on #5716).
+    working_set = _extract_handoff_bullets(
+        handoff_text,
+        heading_substrings=("active working set", "working set"),
+    )
+    workset_reserve = min(2, len(working_set))
+
+    def add(fid: str, q: str, a: str, *, reserve: int = 0) -> bool:
+        """Add a fact if unique. Respect optional slot reservation for later workset."""
+        if len(facts) >= N_ANCHORS - max(0, reserve):
+            return False
         a_norm = _clip(a, 280)
         if not a_norm or a_norm in used_answers:
-            return
+            return False
         if any(f["id"] == fid for f in facts):
-            return
+            return False
         used_answers.add(a_norm)
         facts.append({"id": fid, "q": q, "a": a_norm})
+        return True
 
-    # 1) Session identity (always)
+    # 1) Session identity (always; never reserved against)
     add(
         "lane-stream",
         "What session stream id is this Grok lane driving?",
@@ -189,43 +200,49 @@ def _build_facts(
         epic,
     )
 
-    # 2) Pinned binding orders from stream
+    # 2) Pinned binding orders from stream (leave room for workset when present)
     pinned_orders = [e for e in stream_entries if e["type"] == "binding_order"]
     for i, entry in enumerate(pinned_orders[:4], start=1):
-        add(
+        if not add(
             f"bind-{i}",
             f"What is binding order #{i} for this lane (plain paraphrase of the frozen stream pin)?",
             entry["body"],
-        )
+            reserve=workset_reserve,
+        ):
+            break
 
     # 3) Negative constraints from stream
     negs = [e for e in stream_entries if e["type"] == "negative_constraint"]
     for i, entry in enumerate(negs[:2], start=1):
-        add(
+        if not add(
             f"neg-{i}",
             f"What is negative constraint #{i} pinned on this stream?",
             entry["body"],
-        )
+            reserve=workset_reserve,
+        ):
+            break
 
-    # 4) Next actions from stream (prefer typed next_action)
-    nexts = [e for e in stream_entries if e["type"] == "next_action"]
-    for i, entry in enumerate(nexts[:3], start=1):
-        add(
-            f"next-stream-{i}",
-            f"What next-action entry #{i} was recorded on the stream?",
-            entry["body"],
-        )
-
-    # 5) Handoff dual-write: next drive / in-flight / hands-off
+    # 4) Handoff dual-write: Next Drive (reserve workset slots after these)
     next_bullets = _extract_handoff_bullets(
         handoff_text,
         heading_substrings=("next drive", "next after", "next action", "in flight", "live session"),
     )
     for i, bullet in enumerate(next_bullets[:3], start=1):
-        add(
+        if not add(
             f"next-handoff-{i}",
             f"According to the dual-write handoff ({handoff_rel}), what is next-item #{i}?",
             bullet,
+            reserve=workset_reserve,
+        ):
+            break
+
+    # 4b) Active Working Set — reserved slots (load-bearing mid-flight facts)
+    for i, bullet in enumerate(working_set[:2], start=1):
+        add(
+            f"workset-{i}",
+            f"According to the dual-write handoff, what is active working-set fact #{i}?",
+            bullet,
+            reserve=0,
         )
 
     hands_off = _extract_handoff_bullets(
@@ -233,33 +250,43 @@ def _build_facts(
         heading_substrings=("hands-off", "handsoff", "do not", "out of scope"),
     )
     for i, bullet in enumerate(hands_off[:2], start=1):
-        add(
+        if not add(
             f"handsoff-{i}",
             f"According to the dual-write handoff, what is hands-off rule #{i}?",
             bullet,
-        )
+            reserve=0,
+        ):
+            break
+
+    # 5) Stream next_action fill remaining slots
+    nexts = [e for e in stream_entries if e["type"] == "next_action"]
+    for i, entry in enumerate(nexts[:3], start=1):
+        if not add(
+            f"next-stream-{i}",
+            f"What next-action entry #{i} was recorded on the stream?",
+            entry["body"],
+        ):
+            break
 
     # 6) Recent durable decisions from stream if still short
     decisions = [e for e in stream_entries if e["type"] == "decision"]
     for i, entry in enumerate(decisions[:3], start=1):
-        if len(facts) >= N_ANCHORS:
-            break
-        add(
+        if not add(
             f"decision-{i}",
             f"What decision #{i} was recorded on the stream?",
             entry["body"],
-        )
+        ):
+            break
 
     # 7) Recent state if still short (still dual-written stream entries — durable)
     states = [e for e in stream_entries if e["type"] == "state"]
     for i, entry in enumerate(reversed(states[-6:]), start=1):
-        if len(facts) >= N_ANCHORS:
-            break
-        add(
+        if not add(
             f"state-{i}",
             f"What recent state note #{i} is on the stream (paraphrase the frozen text)?",
             entry["body"],
-        )
+        ):
+            break
 
     if len(facts) < N_ANCHORS:
         raise SystemExit(
@@ -515,8 +542,8 @@ def cmd_score(args: argparse.Namespace) -> int:
                 title="canary score PASS",
                 bullets=[
                     canary_line,
-                    "Continue drive; dual-write after next batch.",
-                    "Auto-hydrate runs after PASS (operator need not invoke hydrate).",
+                    "PASS = anchors only — not full working memory.",
+                    "Auto-hydrate + RE-GROUND checklist printed; dual-write after next batch.",
                 ],
             )
             print(f"diary stamp -> {handoff_path}")
@@ -526,7 +553,7 @@ def cmd_score(args: argparse.Namespace) -> int:
                 idempotency_key=f"canary-pass-{_utc_now()}",
             )
             # Sol Option D: score first (done), then hydrate once automatically.
-            # Operator never has to remember hydrate / restart for diary load.
+            # After hydrate: RE-GROUND (Next Drive / Active Working Set / phase receipt).
             if not getattr(args, "no_hydrate", False):
                 try:
                     emit_hydrate_capsule(
@@ -542,6 +569,15 @@ def cmd_score(args: argparse.Namespace) -> int:
                             "=== AUTO-HYDRATE (post canary PASS) — restore board from diary; "
                             "do not ask the operator to restart or re-load diary ==="
                         ),
+                    )
+                    print(
+                        "\n=== POST-COMPACT RE-GROUND (mandatory) ===\n"
+                        "Canary PASS ≠ full memory. From the capsule above:\n"
+                        "  1) Re-read Next Drive + Active Working Set\n"
+                        "  2) Open the active phase receipt named there\n"
+                        "  3) If open task is missing from dual-write: STOP inventing — stamp or hand off\n"
+                        "  4) Anything not dual-written before compact may have evaporated\n"
+                        "=== END RE-GROUND ===\n"
                     )
                 except Exception as hexc:  # fail-open: score already succeeded
                     print(
@@ -706,10 +742,14 @@ After every real batch (merge, issue close, dispatch start, advisor note, block)
   --next "next action 1" --next "next action 2"
 ```
 Keep **## Next Drive** as short numbered bullets (canary mints these). No secrets/PII.
+Keep **## Active Working Set** for load-bearing mid-flight facts (also mintable).
+**Promote before compact risk** (~60–70% context or before a big batch): if it is not in
+Next Drive / Active Working Set / a stamp, it is allowed to evaporate on compact.
 
 ### End signal = canary score, NOT compact count
 - Auto-compact is lossy for working memory. Disk logs ≠ model brain.
 - **First auto-compact ⇒ re-score**, do not auto-quit solely because compact fired.
+- **Canary PASS = durable anchors only** — not proof the mid-flight working set survived.
 - **FAIL-HANDOFF (&lt; 8/10 at pass-ratio 0.8) ⇒ end now** regardless of token %.
 
 ### Cold-start (order is load-bearing)
@@ -736,8 +776,12 @@ You own compact recovery. **Never ask the operator** whether to restart, hydrate
   --answers .claude/{epic}-epic/canary/answers.json --context-tokens <N>
 ```
 2. If FAIL-HANDOFF → handback is already written → close stream + `/quit` (new session via launcher).
-3. If PASS → **auto-hydrate is already printed** by `score` (bounded capsule + stream tail). Read it; resume from Next Drive / pins. Do **not** load the full diary.
-4. Only use standalone `hydrate` if you need a re-print; default path is score→auto-hydrate.
+3. If PASS → **auto-hydrate is already printed** by `score` (bounded capsule + stream tail + **RE-GROUND checklist**).
+4. **RE-GROUND (mandatory after every compact, even on PASS):**
+   - Re-read Next Drive + Active Working Set from the capsule
+   - Open the active phase receipt named there (do not resume from vibe)
+   - If the open task is not spelled in dual-write: **STOP inventing** — stamp or hand off
+5. Only use standalone `hydrate` if you need a re-print; default path is score→auto-hydrate→re-ground.
 
 ### Score procedure (from memory — no re-read of probe answers)
 1. `.venv/bin/python -m scripts.session_canary.grok_lane questions --epic {epic}`
@@ -789,11 +833,13 @@ def cmd_stamp(args: argparse.Namespace) -> int:
         print("error: provide --bullet at least once (or a meaningful --title)", file=sys.stderr)
         return 2
     next_drive = list(args.next) if args.next else None
+    working_set = list(args.workset) if getattr(args, "workset", None) else None
     stamp = diary_mod.append_diary_stamp(
         path,
         title=args.title or "batch",
         bullets=bullets,
         next_drive=next_drive,
+        working_set=working_set,
     )
     print(f"diary stamp {stamp} -> {path}")
     note = f"DIARY {stamp}: {args.title or 'batch'}; " + "; ".join(bullets[:5])
@@ -907,6 +953,12 @@ def build_parser() -> argparse.ArgumentParser:
     stamp.add_argument("--title", default="batch", help="Diary entry title")
     stamp.add_argument("--bullet", action="append", default=[], help="Diary bullet (repeatable)")
     stamp.add_argument("--next", action="append", default=[], help="Replace Next Drive bullets (repeatable)")
+    stamp.add_argument(
+        "--workset",
+        action="append",
+        default=[],
+        help="Replace Active Working Set bullets (repeatable; promote before compact)",
+    )
     stamp.set_defaults(func=cmd_stamp)
 
 

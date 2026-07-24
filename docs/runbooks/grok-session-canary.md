@@ -15,10 +15,32 @@ hydrate, or re-load the diary. Restart only when FAIL-HANDOFF ends the seat
 
 | Signal | Meaning |
 | --- | --- |
-| Auto-compact | **Re-score** canary; keep driving only if PASS |
+| Auto-compact | **Re-score** canary → on PASS **auto-hydrate + RE-GROUND** (not blind continue) |
+| Canary **PASS** | Durable **anchors** OK only — **not** proof mid-flight working memory survived |
 | Canary **&lt; 8/10** (`pass-ratio` 0.8) | **FAIL-HANDOFF** → auto **STATE AT HANDBACK** on diary + stream note → close stream → `/quit` |
 | Compact count / “compactions remaining” | **Not** an end criterion |
 | First compact | **Not** required before you may end; **not** a reason to delay a clean end |
+
+### Working-set honesty (canary is not full memory)
+
+Promote load-bearing mid-flight facts **before** compact risk (~60–70% context or after each batch):
+
+```bash
+.venv/bin/python -m scripts.session_canary.grok_lane stamp --epic <epic> \
+  --title "pre-compact promote" \
+  --bullet "what just finished" \
+  --next "concrete next action" \
+  --workset "open blocker / phase receipt path / pilot clone path"
+```
+
+Mintable sections: **## Next Drive**, **## Active Working Set**, **## Hands-off**.
+
+After every compact (including when canary still PASSes):
+
+1. Score from memory → auto-hydrate capsule (includes **RE-GROUND CHECKLIST** footer)
+2. Re-read Next Drive + Active Working Set
+3. Open the active phase receipt named there
+4. If open task is missing from dual-write → **STOP inventing** — stamp or hand off
 
 Production **thread rollover** still uses strict **10/10** via `scripts/context_canary.py mint --snapshot` (separate protocol).
 
@@ -35,12 +57,16 @@ The dual-write board under `.claude/<epic>-epic/*-DRIVER-HANDOFF.md` is a **diar
 
 ### Mintable sections (keep short)
 
-Canary mint pulls bullets from headings matching **Next Drive** / **Hands-off** (see `scripts/session_canary/grok_lane.py`). Prefer:
+Canary mint pulls bullets from headings matching **Next Drive** / **Active Working Set** /
+**Hands-off** (see `scripts/session_canary/grok_lane.py`). Prefer:
 
 ```markdown
 ## Next Drive
 1. Concrete next action
 2. Another action
+
+## Active Working Set
+- Load-bearing mid-flight facts (paths, PR numbers, open blockers)
 
 ## Hands-off
 - Foreign lanes
