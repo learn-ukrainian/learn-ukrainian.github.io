@@ -1518,13 +1518,19 @@ function LexiconPracticeIsland({
       // Filter by Selected Deck (Teacher Lesson 610+440 or Custom Set)
       if (selectedDeckFilter === 'virtual_teacher_lesson') {
         const teacherDeck = getTeacherLessonVirtualDeck();
-        if (!teacherDeck.lemma_keys.includes(candidate.lemmaId) && !teacherDeck.lemma_keys.includes(candidate.lemma)) {
+        const keysLower = new Set(teacherDeck.lemma_keys.map((k) => k.toLowerCase()));
+        const candIdLower = (candidate.lemmaId || '').toLowerCase();
+        const candLemmaLower = (candidate.lemma || '').toLowerCase();
+        if (!keysLower.has(candIdLower) && !keysLower.has(candLemmaLower)) {
           return false;
         }
       } else if (selectedDeckFilter !== 'all') {
         const customSet = customSets.find((s) => s.id === selectedDeckFilter);
         if (customSet) {
-          if (!customSet.lemma_keys.includes(candidate.lemmaId) && !customSet.lemma_keys.includes(candidate.lemma)) {
+          const keysLower = new Set(customSet.lemma_keys.map((k) => k.toLowerCase()));
+          const candIdLower = (candidate.lemmaId || '').toLowerCase();
+          const candLemmaLower = (candidate.lemma || '').toLowerCase();
+          if (!keysLower.has(candIdLower) && !keysLower.has(candLemmaLower)) {
             return false;
           }
         }
