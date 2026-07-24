@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import sqlite3
 from contextlib import closing
@@ -18,6 +19,8 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any
 from uuid import UUID
+
+logger = logging.getLogger(__name__)
 
 from fastapi import APIRouter, Header, HTTPException
 from fastapi.responses import JSONResponse
@@ -297,7 +300,8 @@ def _check_database() -> tuple[bool, str]:
             conn.rollback()
         return True, "SQLite WAL database accepted a write reservation"
     except (sqlite3.Error, OSError) as exc:
-        return False, str(exc)
+        logger.warning("database probe failed: %s", exc)
+        return False, "database probe failed"
 
 
 def _check_migrations() -> tuple[bool, str]:
@@ -308,7 +312,8 @@ def _check_migrations() -> tuple[bool, str]:
                 (MIGRATION_ID,),
             ).fetchone()
     except (sqlite3.Error, OSError) as exc:
-        return False, str(exc)
+        logger.warning("migration check failed: %s", exc)
+        return False, "migration check failed"
     if row is None:
         return False, "required Hramatka migration is not applied"
     if row[0] != MIGRATION_CHECKSUM:
@@ -320,7 +325,8 @@ def _check_baker() -> tuple[bool, str]:
     try:
         state = json.loads(BAKER_STATE_PATH.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        return False, str(exc)
+        logger.warning("baker state check failed: %s", exc)
+        return False, "baker state file unreadable or invalid"
     if state.get("state") != "active":
         return False, "baker state is not active"
     return True, "baker state is active"
@@ -331,7 +337,8 @@ def _check_schemas() -> tuple[bool, str]:
         for schema_path in SCHEMA_PATHS:
             Draft7Validator.check_schema(json.loads(schema_path.read_text(encoding="utf-8")))
     except Exception as exc:  # jsonschema has several schema-specific exception classes.
-        return False, str(exc)
+        logger.warning("schema check failed: %s", exc)
+        return False, "schema validation failed"
     return True, f"{len(SCHEMA_PATHS)} JSON schemas are valid"
 
 
@@ -340,7 +347,8 @@ def _check_vesum() -> tuple[bool, str]:
         conn = vesum.get_vesum_conn(VESUM_DB_PATH)
         count = int(conn.execute("SELECT COUNT(*) FROM forms").fetchone()[0])
     except (FileNotFoundError, OSError, sqlite3.Error) as exc:
-        return False, str(exc)
+        logger.warning("vesum check failed: %s", exc)
+        return False, "vesum dictionary unreadable or invalid"
     if count < 1:
         return False, "VESUM dictionary has no forms"
     return True, f"VESUM dictionary loaded with {count} forms"
