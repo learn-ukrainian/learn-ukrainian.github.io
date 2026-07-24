@@ -48,6 +48,13 @@ on:
       - 'docs/references/research-registry.yaml'
       - 'docs/references/research-digests/**'
       - 'schemas/research_registry.schema.json'
+  # CI/docs-only required-check note:
+  # Keep PRs unfiltered so the required `Test (pytest)` check is always emitted.
+  # Docs-only PRs otherwise leave branch protection stuck on "expected" (#1641).
+  # Earlier path widenings only fixed individual recurrences (#1544, #1546);
+  # #1644 moves the anti-whack-a-mole path list into `dorny/paths-filter`:
+  # non-required jobs skip cleanly on docs-only PRs, while `Test (pytest)`
+  # still emits the required check and skips its inner pytest body.
   pull_request:
   workflow_dispatch:
 
@@ -55,13 +62,34 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
+      # code = any high-signal source/config change. Used by the broad secret scan.
       code: ${{ steps.filter.outputs.code }}
+      # python = Python/test paths PLUS learner curriculum/site content that tests
+      # read at runtime. Gates pytest + ruff/radon/root guards. Learner bundles
+      # and site/src/content/** are INCLUDED because content-reading tests
+      # (citation_resolve, llm_qg_api, reading_coverage, reading_links, parity, ...)
+      # load those files at runtime — excluding them let a content-deletion PR
+      # (#3867) skip pytest entirely and ship a regression to main (root cause: #3873).
+      # BIO preparation-only data is excluded and routed to the focused preparation
+      # gate below; mixed PRs still match their Python or learner-content paths.
       python: ${{ steps.filter.outputs.python }}
+      # frontend = generated site inputs/outputs. Gates the build/vitest job plus
+      # MDX source/drift checks, so curriculum source edits cannot leave stale
+      # committed MDX.
       frontend: ${{ steps.filter.outputs.frontend }}
+      # agent_config = agent/MCP/prompt deployment config. Gates lightweight
+      # JSON/shell/deploy checks without forcing the full pytest suite.
       agent_config: ${{ steps.filter.outputs.agent_config }}
+      # lesson_schema = schema contract inputs. Gates only the schema drift job.
       lesson_schema: ${{ steps.filter.outputs.lesson_schema }}
+      # atlas = inputs that can stale the committed DB-enriched Word Atlas
+      # manifest but are available on CI.
       atlas: ${{ steps.filter.outputs.atlas }}
+      # postmortems = bug-autopsy docs + the checker. Gates the postmortem
+      # hygiene job so a malformed autopsy or stale INDEX cannot merge (#3725).
       postmortems: ${{ steps.filter.outputs.postmortems }}
+      # preparation = BIO source-preparation surfaces. These are plans/research
+      # evidence, not application code or learner bundles.
       preparation: ${{ steps.filter.outputs.preparation }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -107,26 +135,61 @@ jobs:
               - 'pyproject.toml'
               - 'scripts/**/*.py'
               - 'tests/**/*.py'
+              # Config with test fixture mirrors: test_model_catalog reads
+              # model_catalog.yaml + fleet_communications.yaml; a config-only edit
+              # (no .py) must run pytest, else an orchestrator_seats / model-pin
+              # regression reaches main unguarded (same #3873/#4888/#4936 class —
+              # a yaml change that skipped pytest would ship broken routing to main).
               - 'scripts/config/**'
+              # Learner content that python tests read at runtime — a deletion/edit
+              # here must run pytest, else a content regression reaches main unguarded
+              # (this is the #3873 root cause: #3867 deleted curriculum files,
+              # python filter was false, pytest skipped, 4 tests broke on main).
+              # BIO plans/discovery/promotion evidence are preparation data and
+              # take the focused `preparation` lane instead. Picomatch extglobs
+              # preserve broad coverage for all other tracks and BIO learner data.
               - 'curriculum/l2-uk-en/curriculum.yaml'
               - 'curriculum/l2-uk-en/!(plans|bio)/**'
               - 'curriculum/l2-uk-en/plans/!(bio)/**'
               - 'curriculum/l2-uk-en/bio/!(*promotion-evidence.yaml|discovery)/**'
               - 'site/src/content/**'
+              # Schema-validated committed data: pytest validates every file in
+              # this directory (test_source_inventory_review_decisions). A
+              # data-only PR here skipped pytest and turned main red for every
+              # subsequent code PR (2026-07-10, #4888 — same class as #3873).
               - 'data/lexicon/source-inventory-review-decisions/**'
+              # Same class (#4894, review-4893 sibling sweep):
+              # test_source_inventory_intake::test_committed_source_inventory_files_are_valid
+              # globs every file here — data-only edits must run pytest too.
               - 'data/lexicon/source-inventory/**'
+              # Same class again (2026-07-10, #4936 — 3rd manifestation after
+              # #3873/#4888): test_atlas_conformance reads the committed Atlas
+              # manifest; a data(atlas) publish PR skipped pytest and turned
+              # main red for every subsequent code PR.
               - 'site/src/data/lexicon-manifest.json'
               - 'site/src/data/lexicon-manifest.fingerprint.json'
+              # Research registry data (ADR-011): the P1 validator + P2–P4 tests
+              # read these committed files at runtime, so a data-only edit must
+              # run pytest/ruff (same #3873/#4888/#4936 class — a registry/digest
+              # edit that skipped pytest would ship an unvalidated content_hash or
+              # a rot-monitor regression to main).
               - 'docs/references/research-registry.yaml'
               - 'docs/references/research-digests/**'
               - 'schemas/research_registry.schema.json'
             frontend:
               - '.github/workflows/ci.yml'
               - 'site/**'
+              # BIO preparation data does not feed generated MDX or frontend code.
+              # Keep learner bundles and every non-BIO preparation surface covered.
               - 'curriculum/l2-uk-en/curriculum.yaml'
               - 'curriculum/l2-uk-en/!(plans|bio)/**'
               - 'curriculum/l2-uk-en/plans/!(bio)/**'
               - 'curriculum/l2-uk-en/bio/!(*promotion-evidence.yaml|discovery)/**'
+              # MDX generator entry + package (mdx-generation-drift invokes
+              # scripts/generate_mdx.py; mdx-source-parity treats package edits
+              # as generator changes). Missing these let generator-only PRs skip
+              # both drift/parity gates (#5354; class: #5351/#3873/#4888/#4936).
+              # tests/test_mdx_atlas_filter_coverage.py enforces coverage.
               - 'scripts/generate_mdx.py'
               - 'scripts/generate_mdx/**'
               - 'scripts/yaml_activities.py'
@@ -159,6 +222,10 @@ jobs:
               - 'docs/lesson-schema.yaml'
               - 'scripts/build/contracts/**/*.md'
               - 'scripts/build/generate_lesson_schema.py'
+              # Generator INPUTS (hashed into generated_from / shaping output).
+              # Missing these let drift accumulate silently on main and red
+              # unrelated ci.yml-touching PRs (#5351; class: #3873/#4888/#4936).
+              # tests/test_lesson_schema_filter_coverage.py enforces coverage.
               - 'site/src/components/**'
               - 'scripts/pipeline/config_tables.py'
               - 'scripts/build/lesson_schema_extractor.mjs'
@@ -175,9 +242,13 @@ jobs:
               - 'site/src/data/lexicon-daily-pool.json'
               - 'site/src/data/lexicon-manifest.json'
               - 'site/src/data/lexicon-manifest.fingerprint.json'
+              # hashFiles + load_manifest read the pointer; missing it let
+              # pointer-only edits skip atlas-freshness (#5354; class: #5351).
+              # tests/test_mdx_atlas_filter_coverage.py enforces coverage.
               - 'site/src/data/lexicon-manifest.pointer.json'
               - 'site/src/data/lexicon-practice-deck.pointer.json'
               - 'site/src/data/lexicon-practice-reviewed-sources.json'
+              # check_static_practice_assets.py DEFAULT_PRACTICE_DIR
               - 'site/public/lexicon/**'
               - 'site/scripts/hydrate-practice-deck.mjs'
               - 'site/scripts/hydrate-lexicon-api-shards.ts'
@@ -669,6 +740,31 @@ jobs:
       actions: write
     needs: [changes]
     if: '!cancelled()'
+    env:
+      # SINGLE SOURCE OF TRUTH for the CI-only pytest exclusions.
+      # These 15 files need corpus/model data the GitHub runner does not have —
+      # they pass on a dev machine and fail on CI, which is exactly why the list
+      # exists. It previously lived in scripts/ci/pytest_shards.py::COMMON_ARGS;
+      # when the shard planner was retired the list was inlined into BOTH the PR
+      # step and the main-push coverage step. Two copies silently drift (add an
+      # exclusion to one and main-push CI diverges from PR CI), so both steps now
+      # expand this one variable. Change the set HERE and nowhere else.
+      PYTEST_CI_IGNORES: >-
+        --ignore=tests/test_rag.py
+        --ignore=tests/test_a1_review_scores.py
+        --ignore=tests/test_agent_runtime.py
+        --ignore=tests/test_channels_registry.py
+        --ignore=tests/test_convergence_loop.py
+        --ignore=tests/test_morphological_validator.py
+        --ignore=tests/test_plan_hash.py
+        --ignore=tests/test_scrape_diasporiana.py
+        --ignore=tests/test_v6_plan_hash_drift.py
+        --ignore=tests/test_vocab_gen.py
+        --ignore=tests/test_wiki_channels.py
+        --ignore=tests/test_wiki_enrichment.py
+        --ignore=tests/wiki/test_grade_filter.py
+        --ignore=tests/wiki/test_mlx_fault_injection.py
+        --ignore=tests/wiki/test_t1_t2_pipeline.py
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         if: needs.changes.outputs.python == 'true'
@@ -740,22 +836,9 @@ jobs:
             tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
             -v --tb=short --junitxml=ci-artifacts/cache-junit.xml || status=$?
           set -o pipefail
+          read -ra ignore_args <<< "$PYTEST_CI_IGNORES"
           .venv/bin/python -m pytest tests/ -v --tb=short -k "not slow and not website" \
-            --ignore=tests/test_rag.py \
-            --ignore=tests/test_a1_review_scores.py \
-            --ignore=tests/test_agent_runtime.py \
-            --ignore=tests/test_channels_registry.py \
-            --ignore=tests/test_convergence_loop.py \
-            --ignore=tests/test_morphological_validator.py \
-            --ignore=tests/test_plan_hash.py \
-            --ignore=tests/test_scrape_diasporiana.py \
-            --ignore=tests/test_v6_plan_hash_drift.py \
-            --ignore=tests/test_vocab_gen.py \
-            --ignore=tests/test_wiki_channels.py \
-            --ignore=tests/test_wiki_enrichment.py \
-            --ignore=tests/wiki/test_grade_filter.py \
-            --ignore=tests/wiki/test_mlx_fault_injection.py \
-            --ignore=tests/wiki/test_t1_t2_pipeline.py \
+            "${ignore_args[@]}" \
             --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
             --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
             --deselect=tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
@@ -786,22 +869,9 @@ jobs:
             tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
             -v --tb=short --junitxml=ci-artifacts/cache-junit.xml --cov=scripts --cov-append --cov-report= || status=$?
           set -o pipefail
+          read -ra ignore_args <<< "$PYTEST_CI_IGNORES"
           .venv/bin/python -m pytest tests/ -v --tb=short -k "not slow and not website" \
-            --ignore=tests/test_rag.py \
-            --ignore=tests/test_a1_review_scores.py \
-            --ignore=tests/test_agent_runtime.py \
-            --ignore=tests/test_channels_registry.py \
-            --ignore=tests/test_convergence_loop.py \
-            --ignore=tests/test_morphological_validator.py \
-            --ignore=tests/test_plan_hash.py \
-            --ignore=tests/test_scrape_diasporiana.py \
-            --ignore=tests/test_v6_plan_hash_drift.py \
-            --ignore=tests/test_vocab_gen.py \
-            --ignore=tests/test_wiki_channels.py \
-            --ignore=tests/test_wiki_enrichment.py \
-            --ignore=tests/wiki/test_grade_filter.py \
-            --ignore=tests/wiki/test_mlx_fault_injection.py \
-            --ignore=tests/wiki/test_t1_t2_pipeline.py \
+            "${ignore_args[@]}" \
             --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
             --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
             --deselect=tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
