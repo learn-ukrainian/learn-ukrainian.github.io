@@ -2,7 +2,7 @@
 
 <critical>
 
-**Product epic:** #5512 · **Stream:** #4707 (infra-harness) · **Sol memo:** `SHIP-THIS-ARCHITECTURE`  
+**Product epic:** #5512 · **Stream:** #4707 (infra-harness) · **Sol memo:** `SHIP-THIS-ARCHITECTURE`
 **Applies to:** every standalone TUI/UI and epic-driver seat (Claude/Sonnet, Grok, AGY/Gemini, Kimi, Cursor, wrappers) — not only agents that load a skill.
 
 This is the **shared-context SSOT** for coordination during the fleet-comms cutover. It is
@@ -106,9 +106,11 @@ Every epic driver session (any harness) MUST:
 ## Operator launch surface (#5632)
 
 - Per-model driver: `./start-grok-drive.sh <epic>`, `./start-gemini-drive.sh <epic>`,
-  `./start-sonnet-drive.sh <epic>` (thin wrappers over `start-*.sh --epic`).
+  `./start-sonnet-drive.sh <epic>`, `./start-opus-drive.sh <epic>` (thin wrappers over
+  `start-*.sh --epic`).
 - Seat routing reminder: `docs/runbooks/epic-orchestrator-roster.md` (Gemini→harness/corpus,
-  Grok→atlas/tracks, Sonnet-5→judgment-dense). **Live policy** is still
+  Grok→atlas/tracks, Sonnet-5→judgment-dense, Opus→hardest-judgment exception only — it
+  spends the cross-family review-of-record seat). **Live policy** is still
   `model_catalog.orchestrator_seats` + `/api/rules`.
 - **Codex is the named alternate for the harness / infra and DevOps streams** (re-added
   2026-07-23 after HydrationCapsuleV1 changed the rollover-cost calculus). Its launcher
@@ -120,7 +122,7 @@ Every epic driver session (any harness) MUST:
 
 ## Offline fallback path
 
-`agents_extensions/shared/rules/fleet-comms-coordination.md` (this file).  
+`agents_extensions/shared/rules/fleet-comms-coordination.md` (this file).
 Served in `GET /api/rules` (`scripts/api/rules_router.py` `RULE_SOURCES`).
 
 </critical>

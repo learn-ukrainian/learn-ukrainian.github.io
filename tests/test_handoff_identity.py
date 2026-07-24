@@ -150,6 +150,7 @@ def test_devops_epic_is_registered_separately_from_infra() -> None:
         "start-gemini-drive.sh",
         "start-grok-drive.sh",
         "start-sonnet-drive.sh",
+        "start-opus-drive.sh",
         "start-claude.sh",
     ],
 )
@@ -174,6 +175,7 @@ def test_launcher_help_documents_allowlisted_dot_notation(launcher: str) -> None
         ("start-gemini-drive.sh", ["unknown"], 2),
         ("start-grok-drive.sh", ["unknown"], 2),
         ("start-sonnet-drive.sh", ["unknown"], 2),
+        ("start-opus-drive.sh", ["unknown"], 2),
         ("start-claude.sh", ["--epic", "unknown"], 1),
     ],
 )
