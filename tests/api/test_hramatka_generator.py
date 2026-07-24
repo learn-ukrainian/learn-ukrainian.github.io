@@ -90,6 +90,21 @@ def test_timeout_retries_never_exceed_four_provider_calls() -> None:
     assert transport.models == [PRIMARY_MODEL, SECONDARY_MODEL, PRIMARY_MODEL, SECONDARY_MODEL]
 
 
+def test_4xx_provider_failure_fails_closed_without_fallback() -> None:
+    transport = RecordingTransport([ProviderHTTPError(404)])
+
+    result = generate_qualified_lesson(
+        {"prompt": "Створіть урок"},
+        transport=transport,
+        qg_scan=lambda _lesson: _passing_evidence(),
+    )
+
+    assert result.state is GenerationState.FAILED
+    assert result.failure_reason == "provider_failure"
+    assert transport.models == [PRIMARY_MODEL]
+    assert [attempt.outcome for attempt in result.attempts] == ["provider_failure"]
+
+
 def test_qg_warning_cannot_transition_generated_lesson_to_ready() -> None:
     lesson = {"title": "Урок із попередженням", "blocks": []}
     transport = RecordingTransport([lesson])
