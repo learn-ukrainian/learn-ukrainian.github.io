@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { PracticeStressItem } from '../lib/lexicon/srs';
+import { type PracticeStressItem, stripStressMarks } from '../lib/lexicon/srs';
 
 export interface PracticeStressProps {
   item: PracticeStressItem;
@@ -19,6 +19,8 @@ export default function PracticeStress({
   answerLocked,
   onSelect,
 }: PracticeStressProps) {
+  const cleanUnstressed = useMemo(() => stripStressMarks(item.unstressed), [item.unstressed]);
+
   const nucleusByPosition = useMemo(() => {
     const map = new Map<number, NucleusInfo>();
     for (let index = 0; index < item.nuclei.length; index += 1) {
@@ -30,7 +32,7 @@ export default function PracticeStress({
     return map;
   }, [item.nuclei]);
 
-  const codePoints = Array.from(item.unstressed);
+  const codePoints = Array.from(cleanUnstressed);
   const isCorrect = selectedPosition === item.stressIndex;
 
   return (
@@ -40,13 +42,15 @@ export default function PracticeStress({
           const nucleus = nucleusByPosition.get(position);
           if (nucleus) {
             const selected = selectedPosition === position;
-            const verdictClass = answerLocked
-              ? selected
-                ? isCorrect
-                  ? ' correct'
-                  : ' wrong'
-                : ''
-              : '';
+            const isTargetStressed = position === item.stressIndex;
+            let verdictClass = '';
+            if (answerLocked) {
+              if (selected) {
+                verdictClass = isCorrect ? ' correct' : ' wrong';
+              } else if (isTargetStressed) {
+                verdictClass = ' correct';
+              }
+            }
             return (
               <button
                 key={`nucleus-${position}`}
