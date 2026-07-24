@@ -1771,6 +1771,24 @@ function LexiconPracticeIsland({
           heritage: [...(nextDeck!.heritage ?? []), ...((heritageR as { heritage?: any[] }).heritage ?? [])],
         };
 
+        // Merge teacher deck pre-generated cloze items if active
+        if (selectedDeckFilter === 'virtual_teacher_lesson') {
+          try {
+            const teacherClozeShard = await getShardJson<{ cloze?: PracticeClozeItem[] }>(
+              `${shardBaseUrl}/practice-cloze.teacher.json`,
+              shardJsonCacheRef.current,
+            );
+            if (teacherClozeShard?.cloze && teacherClozeShard.cloze.length > 0) {
+              nextDeck = {
+                ...nextDeck!,
+                cloze: [...(nextDeck!.cloze ?? []), ...teacherClozeShard.cloze],
+              };
+            }
+          } catch {
+            // Degrades gracefully if teacher cloze shard is missing
+          }
+        }
+
         // Merge custom set document cloze items if active
         if (selectedDeckFilter !== 'all' && selectedDeckFilter !== 'virtual_teacher_lesson') {
           const activeSet = customSets.find((s) => s.id === selectedDeckFilter);
