@@ -15,7 +15,9 @@ import os
 import re
 import sqlite3
 import sys
-from contextlib import closing
+import threading
+from collections.abc import Iterator
+from contextlib import contextmanager, suppress
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -214,7 +216,7 @@ def _classify(
 
     attestations: list[dict[str, Any]] = []
     classification = "unknown"
-    with closing(_source_conn(db_path)) as conn:
+    with _source_conn(db_path) as conn:
         auth_hits = _strict_heritage_attestations(conn, term, surface=surface)
         has_standard_hit = any(hit["classification"] == "standard" for hit in auth_hits)
         for hit in auth_hits:
@@ -390,21 +392,56 @@ def compute_warning_severity(
     return "none"
 
 
+_THREAD_LOCAL = threading.local()
+
+
+def close_cached_connections() -> None:
+    """Close and clear all thread-local source DB connections on current thread."""
+    conns = getattr(_THREAD_LOCAL, "conns", None)
+    if conns:
+        for conn in list(conns.values()):
+            with suppress(Exception):
+                conn.close()
+        conns.clear()
+
+
+def _clear_thread_local_cache_in_child() -> None:
+    if hasattr(_THREAD_LOCAL, "conns"):
+        _THREAD_LOCAL.conns = {}
+
+
+if hasattr(os, "register_at_fork"):
+    with suppress(Exception):
+        os.register_at_fork(after_in_child=_clear_thread_local_cache_in_child)
+
+
 def _source_db_path(db_path: str | Path | None = None) -> Path:
     target = Path(db_path) if db_path is not None else SOURCES_DB
-    primary = Path("/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db")
+    primary = ROOT / "data" / "sources.db"
     if (not target.is_file() or target.stat().st_size < 1_000_000) and primary.is_file():
         return primary
     return target
 
 
-def _source_conn(db_path: str | Path | None = None) -> sqlite3.Connection:
+def _get_thread_local_conn(source_db: Path) -> sqlite3.Connection:
+    if not hasattr(_THREAD_LOCAL, "conns"):
+        _THREAD_LOCAL.conns = {}
+    key = str(source_db.resolve())
+    conn = _THREAD_LOCAL.conns.get(key)
+    if conn is None:
+        conn = sqlite3.connect(f"file:{source_db.resolve()}?mode=ro", uri=True)
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA query_only = 1")
+        _THREAD_LOCAL.conns[key] = conn
+    return conn
+
+
+@contextmanager
+def _source_conn(db_path: str | Path | None = None) -> Iterator[sqlite3.Connection]:
     source_db = _source_db_path(db_path)
     if not source_db.exists():
         raise FileNotFoundError(f"local sources database not found: {source_db}")
-    conn = sqlite3.connect(f"file:{source_db}?mode=ro", uri=True)
-    conn.row_factory = sqlite3.Row
-    return conn
+    yield _get_thread_local_conn(source_db)
 
 
 def _normalize_word(word: str) -> str:
@@ -921,7 +958,7 @@ def _sum11_sovietization_risk_for_term(
 ) -> int:
     try:
         has_flag_columns = _source_sum11_has_flag_columns(db_path)
-        with closing(_source_conn(db_path)) as conn:
+        with _source_conn(db_path) as conn:
             if has_flag_columns:
                 risk = 0
                 for variant in _apostrophe_variants(term):
