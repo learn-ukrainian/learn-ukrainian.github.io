@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: cb13611723173f08fd9ab53448230f54fc2a771f525772ed72323b23de4f0e4a
+  components_sha256: 0761d51a0b7e07b7a4e4090356223a41ce73476b175898fd5460bd1d29571b52
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1075,6 +1075,28 @@ components:
       letters:
       - <LetterEntry>
       title: Приклад
+    deprecated: false
+    deprecation_reason: null
+  LexiconCustomDeckManager:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: chromeLocale
+        type: '''en'' | ''uk'''
+        description: chromeLocale prop.
+        ukrainian_text: 'false'
+      - name: activeDeckFilter
+        type: string
+        description: activeDeckFilter prop.
+        ukrainian_text: 'false'
+      optional: []
+    nested_types: {}
+    example:
+      chromeLocale: <'en' | 'uk'>
+      activeDeckFilter: Приклад
     deprecated: false
     deprecation_reason: null
   LexiconPractice:

@@ -675,6 +675,8 @@ describe('LexiconPractice', () => {
     ).toEqual([
       'practice-dashboard-hero',
       'practice-dashboard-stats',
+      null, // k3-drive-sync-bar
+      null, // k3-deck-filter-bar
       'practice-dashboard-words',
       'practice-dashboard-session',
       'practice-dashboard-secondary',
