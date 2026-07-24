@@ -101,6 +101,43 @@ function PracticeChromeDual({ uk, en }: { uk: string; en: string }): ReactElemen
   return <ChromeDual en={en} uk={uk} />;
 }
 
+function ensureDeckCustomSetCoverage(deck: PracticeDeckData, lemmaKeys: string[]): PracticeDeckData {
+  if (!deck || !lemmaKeys || lemmaKeys.length === 0) return deck;
+  const existingIndexLemmas = new Set((deck.index ?? []).map((i) => (i.lemmaId || i.lemma || '').toLowerCase()));
+  const newIndexItems: PracticeIndexItem[] = [];
+  const newLexemes: PracticeLexeme[] = [];
+
+  for (const key of lemmaKeys) {
+    const keyLower = key.toLowerCase();
+    if (!existingIndexLemmas.has(keyLower)) {
+      existingIndexLemmas.add(keyLower);
+      const cleanKey = key.replace(/\(.*?\)/g, '').trim() || key;
+      newIndexItems.push({
+        lemmaId: key,
+        lemma: cleanKey,
+        level: 'A1',
+        modes: ['flashcard', 'cloze', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage'],
+      });
+      newLexemes.push({
+        lemmaId: key,
+        lemma: cleanKey,
+        level: 'A1',
+        uk: cleanKey,
+        en: `Vocabulary item: ${cleanKey}`,
+        pos: 'noun',
+      });
+    }
+  }
+
+  if (newIndexItems.length === 0) return deck;
+
+  return {
+    ...deck,
+    index: [...(deck.index ?? []), ...newIndexItems],
+    lexemes: [...(deck.lexemes ?? []), ...newLexemes],
+  };
+}
+
 
 interface LexiconPracticeProps {
   deckLevel?: string;
@@ -1779,6 +1816,8 @@ function LexiconPracticeIsland({
 
         // Merge teacher deck pre-generated cloze items if active
         if (selectedDeckFilter === 'virtual_teacher_lesson') {
+          const teacherDeck = getTeacherLessonVirtualDeck();
+          nextDeck = ensureDeckCustomSetCoverage(nextDeck!, teacherDeck.lemma_keys);
           try {
             const teacherClozeShard = await getShardJson<{ cloze?: PracticeClozeItem[] }>(
               `${shardBaseUrl}/practice-cloze.teacher.json`,
@@ -1798,11 +1837,14 @@ function LexiconPracticeIsland({
         // Merge custom set document cloze items if active
         if (selectedDeckFilter !== 'all' && selectedDeckFilter !== 'virtual_teacher_lesson') {
           const activeSet = customSets.find((s) => s.id === selectedDeckFilter);
-          if (activeSet?.cloze_items && activeSet.cloze_items.length > 0) {
-            nextDeck = {
-              ...nextDeck,
-              cloze: [...(nextDeck.cloze ?? []), ...activeSet.cloze_items],
-            };
+          if (activeSet) {
+            nextDeck = ensureDeckCustomSetCoverage(nextDeck!, activeSet.lemma_keys);
+            if (activeSet.cloze_items && activeSet.cloze_items.length > 0) {
+              nextDeck = {
+                ...nextDeck,
+                cloze: [...(nextDeck.cloze ?? []), ...activeSet.cloze_items],
+              };
+            }
           }
         }
 
@@ -2564,7 +2606,8 @@ function LexiconPracticeIsland({
         <>
           {focusedLemmaId && (
             <div
-              className="focused-lemma-banner"
+              className="k3-decks-wrapper shadow-sm rounded-xl p-3 my-2 bg-base-200/50"
+              data-testid="practice-dashboard-decks"
               style={{
                 background: 'var(--lu-surface-raised)',
                 border: '1px solid var(--lu-teal, #146e78)',

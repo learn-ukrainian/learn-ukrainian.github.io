@@ -669,10 +669,13 @@ describe('LexiconPractice', () => {
     await screen.findByTestId('practice-daily-deck');
     const dashboard = container.querySelector('.k3-practice-dashboard')!;
     expect(
-      Array.from(dashboard.children).map((child) => child.getAttribute('data-testid')),
+      Array.from(dashboard.children)
+        .map((child) => child.getAttribute('data-testid'))
+        .filter((id): id is string => Boolean(id)),
     ).toEqual([
       'practice-dashboard-hero',
       'practice-dashboard-stats',
+      'practice-dashboard-decks',
       'practice-dashboard-words',
       'practice-dashboard-session',
       'practice-dashboard-secondary',
@@ -3046,5 +3049,41 @@ describe('LexiconPractice', () => {
     expect(screen.getByTestId('practice-session-summary')).toHaveTextContent('18/20');
     expect(container.querySelector('blockquote')).toHaveTextContent('Терпи, козаче — отаманом будеш.');
     expect(container.querySelector('figcaption')).toHaveTextContent("Українське прислів'я");
+  });
+
+  describe('Teacher Deck & Custom Sets Automated UI Selection Tests', () => {
+    test('renders Teacher Deck button always visible and switches deck filter without error', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
+
+      const teacherBtn = screen.getByRole('button', { name: /Teacher Deck|Уроки вчителя/i });
+      expect(teacherBtn).toBeInTheDocument();
+
+      await user.click(teacherBtn);
+      expect(teacherBtn).toHaveClass('btn-primary');
+      expect(screen.queryByText(/We couldn’t load practice/i)).not.toBeInTheDocument();
+    });
+
+    test('renders Custom Set button and filters practice session without error', async () => {
+      const customSet: CustomSet = {
+        id: 'test_custom_deck_1',
+        title: 'Моя тестова колода',
+        lemma_keys: ['кава', 'книга'],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        device_id: 'test_device',
+        revision: 1,
+      };
+
+      localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
+
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
+
+      const startBtn = await screen.findByTestId('practice-start-session');
+      await user.click(startBtn);
+
+      expect(screen.queryByText(/We couldn’t load practice/i)).not.toBeInTheDocument();
+    });
   });
 });
