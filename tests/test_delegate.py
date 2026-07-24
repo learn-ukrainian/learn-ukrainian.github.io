@@ -2649,7 +2649,12 @@ def test_branch_reuse_releases_clean_terminal_holder_then_attaches(
     # Owning task is terminal (done review).
     delegate._write_state_atomic(
         delegate._state_path("review-5338-deepseek"),
-        {"task_id": "review-5338-deepseek", "agent": "deepseek", "status": "done"},
+        {
+            "task_id": "review-5338-deepseek",
+            "agent": "deepseek",
+            "status": "done",
+            "worktree_path": str(occupied),
+        },
     )
 
     _, actual_branch, telemetry = delegate._ensure_worktree(
@@ -2699,6 +2704,7 @@ def test_branch_reuse_refuses_clean_holder_with_active_task(
             "task_id": "atlas-5230-runner-pr1-delta",
             "agent": "cursor",
             "status": "running",
+            "worktree_path": str(occupied),
         },
     )
 
@@ -2709,6 +2715,99 @@ def test_branch_reuse_refuses_clean_holder_with_active_task(
             raw_path=str(target),
             branch=branch,
         )
+
+
+def test_branch_reuse_fail_closed_when_owner_unresolvable(tmp_path, monkeypatch, tmp_tasks_dir):
+    """#5340 CF F001: clean synced holder without resolvable task must refuse."""
+    target = tmp_path / "target"
+    occupied = (
+        Path(delegate._REPO_ROOT)
+        / ".worktrees"
+        / "dispatch"
+        / "codex"
+        / "foo"
+    )
+    branch = "codex/foo"
+    _, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+
+    def fake_run(cmd, **kwargs):
+        if cmd[:3] == ["git", "worktree", "list"]:
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                f"worktree {occupied}\nbranch refs/heads/{branch}\n\n",
+                "",
+            )
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    # No batch_state entry at all — fail closed.
+
+    with pytest.raises(delegate.WorktreeBranchMismatch, match="already checked out"):
+        delegate._ensure_worktree(
+            agent="cursor",
+            task_id="follow-up",
+            raw_path=str(target),
+            branch=branch,
+        )
+
+
+def test_branch_reuse_resolves_owner_via_worktree_path_when_ids_diverge(
+    tmp_path, monkeypatch, tmp_tasks_dir
+):
+    """#5340 CF F001: state key codex_foo vs path component foo still finds owner."""
+    target = tmp_path / "target"
+    occupied = (
+        Path(delegate._REPO_ROOT)
+        / ".worktrees"
+        / "dispatch"
+        / "codex"
+        / "foo"
+    )
+    branch = "codex/foo-followup"
+    calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+    list_hits = {"n": 0}
+    removes: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        if cmd[:3] == ["git", "worktree", "list"]:
+            list_hits["n"] += 1
+            body = (
+                f"worktree {occupied}\nbranch refs/heads/{branch}\n\n"
+                if list_hits["n"] == 1
+                else ""
+            )
+            return subprocess.CompletedProcess(cmd, 0, body, "")
+        if cmd[:3] == ["git", "worktree", "remove"]:
+            removes.append(list(cmd))
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:2] == ["git", "rev-parse"] and cmd[-1] == f"refs/heads/{branch}":
+            return subprocess.CompletedProcess(cmd, 0, "same-sha", "")
+        calls.pop()
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    # State file is slash-sanitized original task id, not path component alone.
+    delegate._write_state_atomic(
+        delegate._state_path("codex/foo"),
+        {
+            "task_id": "codex/foo",
+            "agent": "codex",
+            "status": "done",
+            "worktree_path": str(occupied),
+        },
+    )
+
+    _, actual_branch, telemetry = delegate._ensure_worktree(
+        agent="cursor",
+        task_id="retry",
+        raw_path=str(target),
+        branch=branch,
+    )
+    assert actual_branch == branch
+    assert telemetry["reused"] is False
+    assert removes and str(occupied) in removes[0]
 
 
 # ---------------------------------------------------------------------------

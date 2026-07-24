@@ -856,27 +856,93 @@ def _branch_worktree_paths(branch: str) -> list[Path]:
     return matches
 
 
-def _dispatch_task_id_from_worktree(path: Path) -> str | None:
-    """Return task-id when ``path`` is ``.worktrees/dispatch/<agent>/<task>/``."""
+def _dispatch_layout_parts(path: Path) -> tuple[str, str] | None:
+    """Return ``(agent, path_component)`` for ``.worktrees/dispatch/<agent>/<task>/``."""
     try:
         rel = path.resolve().relative_to((_REPO_ROOT / ".worktrees" / "dispatch").resolve())
     except ValueError:
         return None
     if len(rel.parts) >= 2:
-        return rel.parts[1]
+        return rel.parts[0], rel.parts[1]
     return None
 
 
+def _task_status_candidates_for_worktree(path: Path) -> list[str]:
+    """Candidate task IDs that may own a dispatch worktree path.
+
+    Path components are *normalized* (agent prefix stripped, non-alnum flattened)
+    while state files keep the original task_id with ``/`` → ``_``. Prefer an
+    exact ``worktree_path`` match in batch_state; candidates are a fallback only.
+    """
+    parts = _dispatch_layout_parts(path)
+    if parts is None:
+        return []
+    agent, component = parts
+    candidates = [
+        component,
+        f"{agent}-{component}",
+        f"{agent}/{component}",
+        f"{agent}_{component}",
+    ]
+    # Preserve order, drop duplicates.
+    seen: set[str] = set()
+    out: list[str] = []
+    for cand in candidates:
+        if cand not in seen:
+            seen.add(cand)
+            out.append(cand)
+    return out
+
+
 def _task_status_for_worktree(path: Path) -> str | None:
-    """Load batch_state status for a dispatch worktree, or None if unknown."""
-    task_id = _dispatch_task_id_from_worktree(path)
-    if not task_id:
-        return None
-    state = _read_state(_state_path(task_id))
-    if not isinstance(state, dict):
-        return None
-    status = state.get("status")
-    return str(status) if status is not None else None
+    """Load batch_state status for a worktree, or None if owner cannot be resolved.
+
+    Resolution order:
+    1. Exact ``worktree_path`` match in any task state (authoritative).
+    2. Candidate task IDs reconstructed from the dispatch layout.
+
+    Fail closed: callers must not treat ``None`` as releasable for dispatch
+    holders (#5340 CF F001).
+    """
+    resolved = path.resolve()
+    # 1) Authoritative: scan states for worktree_path match.
+    try:
+        state_files = list(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else []
+    except OSError:
+        state_files = []
+    for state_file in state_files:
+        if state_file.name.endswith(".tmp") or ".tmp." in state_file.name:
+            continue
+        state = _read_state(state_file)
+        if not isinstance(state, dict):
+            continue
+        wt = state.get("worktree_path") or state.get("cwd")
+        if not wt:
+            continue
+        try:
+            if Path(str(wt)).resolve() == resolved:
+                status = state.get("status")
+                return str(status) if status is not None else None
+        except OSError:
+            continue
+
+    # 2) Fallback candidates from path layout.
+    for task_id in _task_status_candidates_for_worktree(path):
+        state = _read_state(_state_path(task_id))
+        if not isinstance(state, dict):
+            continue
+        # Prefer states that either match path or omit path (legacy).
+        wt = state.get("worktree_path") or state.get("cwd")
+        if wt:
+            try:
+                if Path(str(wt)).resolve() != resolved:
+                    continue
+            except OSError:
+                continue
+        status = state.get("status")
+        if status is not None:
+            return str(status)
+    return None
 
 
 def _worktree_is_clean(path: Path) -> bool:
@@ -914,9 +980,10 @@ _BRANCH_HOLDER_RELEASABLE_STATUSES = frozenset(
 def _stale_branch_holder_releasable(path: Path, branch: str) -> tuple[bool, str]:
     """Return (ok, reason) for auto-releasing a worktree holding ``branch`` (#5340).
 
-    Safe only when clean, fully pushed (HEAD == origin/<branch>), and any
-    resolvable owning task is terminal. Live/running tasks and dirty trees
-    keep today's hard refuse.
+    Safe only when clean, fully pushed (HEAD == origin/<branch>), and the
+    owning task is known and terminal. Unresolvable owners fail closed so a
+    running dispatch whose state key does not match the path component cannot
+    be force-removed (CF F001 on PR #5708).
     """
     if not _worktree_is_clean(path):
         return False, "dirty"
@@ -924,7 +991,7 @@ def _stale_branch_holder_releasable(path: Path, branch: str) -> tuple[bool, str]
         return False, "HEAD != origin/<branch>"
     status = _task_status_for_worktree(path)
     if status is None:
-        return True, "clean+synced; no resolvable task state"
+        return False, "owner task unresolvable (fail-closed)"
     if status in _BRANCH_HOLDER_RELEASABLE_STATUSES:
         return True, f"clean+synced; task status={status}"
     return False, f"task still active (status={status})"
