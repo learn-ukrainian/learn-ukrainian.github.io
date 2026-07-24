@@ -3064,11 +3064,31 @@ describe('LexiconPractice', () => {
       expect(screen.queryByText(/We couldn’t load practice/i)).not.toBeInTheDocument();
     });
 
-    test('renders Custom Set button and filters practice session without error', async () => {
+    test('renders Custom Set button and filters practice session with reachable cloze items', async () => {
       const customSet: CustomSet = {
         id: 'test_custom_deck_1',
         title: 'Моя тестова колода',
         lemma_keys: ['кава', 'книга'],
+        cloze_items: [
+          {
+            clozeId: 'test_cloze_1',
+            lemmaId: 'кава',
+            lemma: 'кава',
+            form: 'каву',
+            sentence: 'Я п’ю _____ зранку.',
+            blankCase: 'accusative',
+            caseRule: {
+              code: 'acc_sg',
+              labelUk: 'знахідний відмінок',
+              labelEn: 'accusative singular',
+            },
+            clozeEn: 'I drink coffee in the morning.',
+            options: [
+              { label: 'каву', kind: 'answer' },
+              { label: 'каві', kind: 'decoy-oblique' },
+            ],
+          },
+        ],
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         device_id: 'test_device',
@@ -3078,17 +3098,18 @@ describe('LexiconPractice', () => {
       localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
 
       const user = userEvent.setup();
-      render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
+      const { container } = render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} initialMode="cloze" />);
 
       const customBtn = screen.getByRole('button', { name: /Моя тестова колода/i });
       expect(customBtn).toBeInTheDocument();
       await user.click(customBtn);
       expect(customBtn).toHaveClass('btn-primary');
 
-      const startBtn = await screen.findByTestId('practice-start-session');
-      await user.click(startBtn);
+      const clozeCard = container.querySelector<HTMLButtonElement>('[data-mode="cloze"]')!;
+      await user.click(clozeCard);
 
       expect(screen.queryByText(/We couldn’t load practice/i)).not.toBeInTheDocument();
+      expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
     });
   });
 });

@@ -1847,7 +1847,6 @@ function LexiconPracticeIsland({
         // Merge teacher deck pre-generated cloze items if active
         if (selectedDeckFilter === 'virtual_teacher_lesson') {
           const teacherDeck = getTeacherLessonVirtualDeck();
-          nextDeck = ensureDeckCustomSetCoverage(nextDeck!, teacherDeck.lemma_keys);
           try {
             const teacherClozeShard = await getShardJson<{ cloze?: PracticeClozeItem[] }>(
               `${shardBaseUrl}/practice-cloze.teacher.json`,
@@ -1862,19 +1861,20 @@ function LexiconPracticeIsland({
           } catch {
             // Degrades gracefully if teacher cloze shard is missing
           }
+          nextDeck = ensureDeckCustomSetCoverage(nextDeck!, teacherDeck.lemma_keys);
         }
 
         // Merge custom set document cloze items if active
         if (selectedDeckFilter !== 'all' && selectedDeckFilter !== 'virtual_teacher_lesson') {
           const activeSet = customSets.find((s) => s.id === selectedDeckFilter);
           if (activeSet) {
-            nextDeck = ensureDeckCustomSetCoverage(nextDeck!, activeSet.lemma_keys);
             if (activeSet.cloze_items && activeSet.cloze_items.length > 0) {
               nextDeck = {
                 ...nextDeck,
                 cloze: [...(nextDeck.cloze ?? []), ...activeSet.cloze_items],
               };
             }
+            nextDeck = ensureDeckCustomSetCoverage(nextDeck!, activeSet.lemma_keys);
           }
         }
 
