@@ -83,6 +83,8 @@ import {
   normalizeCefrLevel,
   type CefrLevel,
 } from '../lib/lexicon/levels';
+import { getTeacherLessonVirtualDeck, readLocalCustomSets, saveLocalCustomSet, deleteLocalCustomSet, type CustomSet } from '../lib/lexicon/custom-decks';
+import { syncCustomSetsToDrive, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
 
 
 /**

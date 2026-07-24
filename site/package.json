@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "atlas:build-db": "cd .. && .venv/bin/python -m scripts.atlas.atlas_db --db data/atlas.db",
-    "atlas:build-search": "cd .. && python3 scripts/audit/generate_search_index.py --db data/atlas.db",
+    "atlas:build-search": "cd .. && .venv/bin/python scripts/audit/generate_search_index.py --db data/atlas.db",
     "atlas:build-daily": "cd .. && .venv/bin/python -m scripts.audit.generate_daily_pool --db data/atlas.db",
     "atlas:perf": "node ./scripts/benchmark-atlas-db.mjs",
     "atlas:validate-aliases": "cd .. && .venv/bin/python -m scripts.atlas.atlas_db --db data/atlas.db --validate-aliases-only",

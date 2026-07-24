@@ -62,7 +62,7 @@ SVC_LOG[astro]="$LOGS_DIR/astro.log"
 SVC_DESC[astro]="Astro Course UI Dev Server"
 SVC_HEALTH[astro]="http://127.0.0.1:4321/"
 SVC_HEALTH_ALT[astro]="http://localhost:4321/"
-SVC_MATCH[astro]="site/node_modules/.bin/astro dev --host 127.0.0.1"
+SVC_MATCH[astro]="astro.mjs dev"
 
 ALL_SERVICES="sources api astro"
 
