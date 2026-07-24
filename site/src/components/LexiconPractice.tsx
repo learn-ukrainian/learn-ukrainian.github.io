@@ -1120,6 +1120,51 @@ function LexiconPracticeIsland({
   const [paradigmSelectedLabel, setParadigmSelectedLabel] = useState<string | null>(null);
   const [paronymSelectedLabel, setParonymSelectedLabel] = useState<string | null>(null);
   const [heritageSelectedLabel, setHeritageSelectedLabel] = useState<string | null>(null);
+  const [customSets, setCustomSets] = useState<CustomSet[]>(() => readLocalCustomSets());
+  const [selectedDeckFilter, setSelectedDeckFilter] = useState<string>('all');
+  const [isDriveSyncing, setIsDriveSyncing] = useState(false);
+  const [driveSyncMsg, setDriveSyncMsg] = useState<string | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newSetTitle, setNewSetTitle] = useState('');
+  const [newSetLemmas, setNewSetLemmas] = useState('');
+
+  const handleGoogleDriveSync = useCallback(async () => {
+    let token = getInMemoryAccessToken();
+    if (!token) {
+      token = prompt('Введіть ваш Google Access Token (або увійдіть через Google):');
+      if (!token) return;
+      setInMemoryAccessToken(token);
+    }
+    setIsDriveSyncing(true);
+    setDriveSyncMsg('Синхронізація з Google Drive...');
+    const result = await syncCustomSetsToDrive(token);
+    setIsDriveSyncing(false);
+    if (result.success) {
+      setDriveSyncMsg(`Успішно! Синхронізовано колод: ${result.customSetsSynced}`);
+      setCustomSets(readLocalCustomSets());
+    } else {
+      setDriveSyncMsg(`Помилка: ${result.message}`);
+    }
+  }, []);
+
+  const handleCreateCustomSetSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newSetTitle.trim()) return;
+    const lemmas = newSetLemmas
+      .split(/[\n,;]+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const created = saveLocalCustomSet({
+      title: newSetTitle.trim(),
+      lemma_keys: lemmas,
+    });
+    setCustomSets(readLocalCustomSets());
+    setSelectedDeckFilter(created.id);
+    setShowCreateModal(false);
+    setNewSetTitle('');
+    setNewSetLemmas('');
+  }, [newSetTitle, newSetLemmas]);
+
   const [dueIndex, setDueIndex] = useState<PracticeIndexItem[] | null>(null);
   const [dailySnapshot, setDailySnapshot] = useState<DailyPracticeDeckSnapshot | null>(null);
   const [dailyLexemes, setDailyLexemes] = useState<Map<string, PracticeLexeme>>(() => new Map());
@@ -2553,6 +2598,98 @@ function LexiconPracticeIsland({
                 <span className="k3-stat-label"><ChromeText k="practice.streak" /></span>
               </div>
             </div>
+
+            {/* Google Drive Sync Bar */}
+            <div className="k3-drive-sync-bar" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '0.75rem 0 1rem 0' }}>
+              <button
+                type="button"
+                className="btn btn-sm"
+                style={{ background: 'var(--lu-accent-blue, #2563eb)', color: '#fff', borderRadius: '8px', padding: '0.4rem 0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                onClick={handleGoogleDriveSync}
+                disabled={isDriveSyncing}
+              >
+                <span>☁️</span>
+                <span>{isDriveSyncing ? 'Синхронізація...' : 'Увійти та синхронізувати з Google Drive'}</span>
+              </button>
+              {driveSyncMsg ? <span style={{ fontSize: '0.85rem', color: 'var(--lu-text-muted)' }}>{driveSyncMsg}</span> : null}
+            </div>
+
+            {/* Custom Decks & Special Deck Filter Bar */}
+            <div className="k3-deck-filter-bar" style={{ margin: '1rem 0', padding: '0.75rem 1rem', background: 'var(--lu-bg-card, rgba(255,255,255,0.05))', borderRadius: '12px', border: '1px solid var(--lu-border, rgba(255,255,255,0.1))' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>📚 Колоди та добірки слів / Word Decks:</span>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-accent"
+                  onClick={() => setShowCreateModal(true)}
+                  style={{ fontSize: '0.8rem', padding: '0.25rem 0.6rem' }}
+                >
+                  + Створити власний набір / + Create Set
+                </button>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <button
+                  type="button"
+                  className={`btn btn-sm ${selectedDeckFilter === 'all' ? 'btn-accent' : ''}`}
+                  onClick={() => setSelectedDeckFilter('all')}
+                >
+                  🌐 Всі слова ({learnerLevel})
+                </button>
+                <button
+                  type="button"
+                  className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_lesson' ? 'btn-accent' : ''}`}
+                  onClick={() => setSelectedDeckFilter('virtual_teacher_lesson')}
+                >
+                  🎓 Уроки вчителя (610+440 слів)
+                </button>
+                {customSets.map((set) => (
+                  <button
+                    key={set.id}
+                    type="button"
+                    className={`btn btn-sm ${selectedDeckFilter === set.id ? 'btn-accent' : ''}`}
+                    onClick={() => setSelectedDeckFilter(set.id)}
+                  >
+                    ⭐ {set.title} ({set.lemma_keys.length})
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Create Custom Set Modal */}
+            {showCreateModal ? (
+              <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+                <div style={{ background: 'var(--lu-bg-elevated, #1e293b)', color: '#fff', padding: '1.5rem', borderRadius: '16px', maxWidth: '500px', width: '100%', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  <h3 style={{ marginTop: 0 }}>Створити власний набір / Create Custom Deck</h3>
+                  <form onSubmit={handleCreateCustomSetSubmit}>
+                    <div style={{ marginBottom: '1rem' }}>
+                      <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.85rem' }}>Назва набору / Title:</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="напр. Мої особливі 600 слів"
+                        value={newSetTitle}
+                        onChange={(e) => setNewSetTitle(e.target.value)}
+                        style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff' }}
+                      />
+                    </div>
+                    <div style={{ marginBottom: '1rem' }}>
+                      <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.85rem' }}>Список слів (через кому або з нового рядка) / Words:</label>
+                      <textarea
+                        rows={5}
+                        placeholder="добрий, день, кава, старшина..."
+                        value={newSetLemmas}
+                        onChange={(e) => setNewSetLemmas(e.target.value)}
+                        style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff' }}
+                      />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                      <button type="button" className="btn" onClick={() => setShowCreateModal(false)}>Скасувати</button>
+                      <button type="submit" className="btn btn-accent">Зберегти набір</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            ) : null}
 
             <div className="k3-words" data-testid="practice-dashboard-words">
               {dailySnapshotLoading || !dailySnapshot ? (
