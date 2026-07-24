@@ -168,8 +168,6 @@ def _skip_existing_extractors(existing_payloads: dict[str, Any]) -> Iterator[Non
     replacements: dict[str, Callable[..., Any]] = {}
     if "pronunciation" in existing_payloads:
         replacements["_kaikki_pronunciation"] = lambda *args, **kwargs: None
-    if "synonyms" in existing_payloads:
-        replacements["_synonyms_slovnyk"] = lambda *args, **kwargs: None
     if "antonyms" in existing_payloads:
         replacements["_antonyms_wiktionary"] = lambda *args, **kwargs: None
     if "idioms" in existing_payloads:
