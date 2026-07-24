@@ -321,3 +321,49 @@ def test_compute_warning_severity_is_pure(
         )
         == expected
     )
+
+
+def test_connection_pooling_same_thread_reuses_connection() -> None:
+    from scripts.lexicon.heritage_classifier import _source_conn, close_cached_connections
+    close_cached_connections()
+    with _source_conn(DB) as conn1:
+        with _source_conn(DB) as conn2:
+            assert conn1 is conn2
+    close_cached_connections()
+
+
+def test_connection_pooling_usable_after_context_exit() -> None:
+    from scripts.lexicon.heritage_classifier import _source_conn, close_cached_connections
+    close_cached_connections()
+    with _source_conn(DB) as conn:
+        pass
+    # Connection remains open and cached for future queries
+    with _source_conn(DB) as conn2:
+        row = conn2.execute("SELECT 1").fetchone()
+        assert row[0] == 1
+    close_cached_connections()
+
+
+def test_connection_pooling_close_cached_connections() -> None:
+    from scripts.lexicon.heritage_classifier import _source_conn, close_cached_connections
+    with _source_conn(DB) as conn1:
+        pass
+    close_cached_connections()
+    with _source_conn(DB) as conn2:
+        assert conn1 is not conn2
+    close_cached_connections()
+
+
+def test_connection_pooling_query_only_mode() -> None:
+    import sqlite3
+
+    import pytest
+
+    from scripts.lexicon.heritage_classifier import _source_conn, close_cached_connections
+    with _source_conn(DB) as conn:
+        try:
+            conn.execute("CREATE TABLE _test_ro_fail (id INT)")
+            pytest.fail("Should have raised OperationalError in query_only mode")
+        except sqlite3.OperationalError:
+            pass
+    close_cached_connections()
