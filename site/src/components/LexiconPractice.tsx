@@ -85,6 +85,7 @@ import {
 } from '../lib/lexicon/levels';
 import { getTeacherLessonVirtualDeck, readLocalCustomSets, saveLocalCustomSet, deleteLocalCustomSet, type CustomSet } from '../lib/lexicon/custom-decks';
 import { syncCustomSetsToDrive, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
+import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
 
 
 /**
@@ -2617,14 +2618,16 @@ function LexiconPracticeIsland({
             {/* Custom Decks & Special Deck Filter Bar */}
             <div className="k3-deck-filter-bar" style={{ margin: '1rem 0', padding: '0.75rem 1rem', background: 'var(--lu-bg-card, rgba(255,255,255,0.05))', borderRadius: '12px', border: '1px solid var(--lu-border, rgba(255,255,255,0.1))' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>📚 Колоди та добірки слів / Word Decks:</span>
+                <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
+                  {chromeLocale === 'uk' ? '📚 Колоди та добірки слів' : '📚 Word Decks & Collections'}
+                </span>
                 <button
                   type="button"
                   className="btn btn-sm btn-accent"
                   onClick={() => setShowCreateModal(true)}
                   style={{ fontSize: '0.8rem', padding: '0.25rem 0.6rem' }}
                 >
-                  + Створити власний набір / + Create Set
+                  ⚙️ {chromeLocale === 'uk' ? 'Менеджер колод / Імпорт' : 'Manage Decks / Import'}
                 </button>
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -2633,15 +2636,17 @@ function LexiconPracticeIsland({
                   className={`btn btn-sm ${selectedDeckFilter === 'all' ? 'btn-accent' : ''}`}
                   onClick={() => setSelectedDeckFilter('all')}
                 >
-                  🌐 Всі слова ({learnerLevel})
+                  🌐 {chromeLocale === 'uk' ? `Всі слова (${learnerLevel})` : `All Words (${learnerLevel})`}
                 </button>
-                <button
-                  type="button"
-                  className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_lesson' ? 'btn-accent' : ''}`}
-                  onClick={() => setSelectedDeckFilter('virtual_teacher_lesson')}
-                >
-                  🎓 Уроки вчителя (610+440 слів)
-                </button>
+                {typeof window !== 'undefined' && localStorage.getItem('learn_uk_unlock_teacher_deck') === 'true' ? (
+                  <button
+                    type="button"
+                    className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_lesson' ? 'btn-accent' : ''}`}
+                    onClick={() => setSelectedDeckFilter('virtual_teacher_lesson')}
+                  >
+                    🔒 🎓 {chromeLocale === 'uk' ? 'Уроки вчителя (610+440 слів)' : 'Teacher Deck (610+440 words)'}
+                  </button>
+                ) : null}
                 {customSets.map((set) => (
                   <button
                     key={set.id}
@@ -2655,40 +2660,20 @@ function LexiconPracticeIsland({
               </div>
             </div>
 
-            {/* Create Custom Set Modal */}
+            {/* Custom Deck Manager & Document Importer Modal */}
             {showCreateModal ? (
-              <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-                <div style={{ background: 'var(--lu-bg-elevated, #1e293b)', color: '#fff', padding: '1.5rem', borderRadius: '16px', maxWidth: '500px', width: '100%', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <h3 style={{ marginTop: 0 }}>Створити власний набір / Create Custom Deck</h3>
-                  <form onSubmit={handleCreateCustomSetSubmit}>
-                    <div style={{ marginBottom: '1rem' }}>
-                      <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.85rem' }}>Назва набору / Title:</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="напр. Мої особливі 600 слів"
-                        value={newSetTitle}
-                        onChange={(e) => setNewSetTitle(e.target.value)}
-                        style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff' }}
-                      />
-                    </div>
-                    <div style={{ marginBottom: '1rem' }}>
-                      <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.85rem' }}>Список слів (через кому або з нового рядка) / Words:</label>
-                      <textarea
-                        rows={5}
-                        placeholder="добрий, день, кава, старшина..."
-                        value={newSetLemmas}
-                        onChange={(e) => setNewSetLemmas(e.target.value)}
-                        style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff' }}
-                      />
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-                      <button type="button" className="btn" onClick={() => setShowCreateModal(false)}>Скасувати</button>
-                      <button type="submit" className="btn btn-accent">Зберегти набір</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
+              <LexiconCustomDeckManager
+                chromeLocale={chromeLocale}
+                activeDeckFilter={selectedDeckFilter}
+                onSelectDeckFilter={(id) => {
+                  setSelectedDeckFilter(id);
+                  setCustomSets(readLocalCustomSets());
+                }}
+                onClose={() => {
+                  setShowCreateModal(false);
+                  setCustomSets(readLocalCustomSets());
+                }}
+              />
             ) : null}
 
             <div className="k3-words" data-testid="practice-dashboard-words">

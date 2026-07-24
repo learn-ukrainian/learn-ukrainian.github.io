@@ -70,3 +70,18 @@ def test_custom_decks_3way_merge_logic() -> None:
 
     # Deck 3 added
     assert any(d["id"] == "deck_3" for d in merged)
+
+
+def test_ukrainian_word_extraction_regex() -> None:
+    import re
+
+    regex = re.compile(r"[а-щьюяєіїґА-ЩЬЮЯЄІЇҐ'’ʼ\-]+")
+    text = "Уроки вчителя: кава, старшина, добрий день! (610+440 слов)."
+    matches = [m.lower().strip() for m in regex.findall(text) if len(m) >= 2]
+
+    assert "кава" in matches
+    assert "старшина" in matches
+    assert "добрий" in matches
+    assert "день" in matches
+    assert "уроки" in matches
+    assert "вчителя" in matches
