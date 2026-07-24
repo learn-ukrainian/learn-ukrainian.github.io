@@ -234,16 +234,16 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
               </div>
 
               <div style={{ display: 'flex', gap: '12px', fontSize: '14px', color: '#475569', marginBottom: '20px' }}>
-                <span><strong>CEFR:</strong> {selectedLesson.cefr_level.toUpperCase()}</span>
+                <span><strong>CEFR:</strong> {(selectedLesson.level || 'B1').toUpperCase()}</span>
                 <span>•</span>
-                <span><strong>Blocks:</strong> {selectedLesson.blocks.length}</span>
+                <span><strong>Blocks:</strong> {selectedLesson.blocks?.length || 0}</span>
                 <span>•</span>
                 <span><strong>Support Vocab:</strong> {selectedSupport?.vocabulary?.length || 0} lemmas</span>
               </div>
 
               <div style={{ backgroundColor: '#f8fafc', padding: '16px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                <h4 style={{ margin: '0 0 8px', color: '#334155' }}>Lesson Summary</h4>
-                <p style={{ margin: 0, fontSize: '14px', color: '#475569' }}>{selectedLesson.summary || 'No summary provided.'}</p>
+                <h4 style={{ margin: '0 0 8px', color: '#334155' }}>Lesson Focus</h4>
+                <p style={{ margin: 0, fontSize: '14px', color: '#475569' }}>{selectedLesson.focus || 'No focus specified.'}</p>
               </div>
             </div>
           )}
