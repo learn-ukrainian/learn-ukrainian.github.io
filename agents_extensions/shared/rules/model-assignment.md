@@ -22,8 +22,9 @@ official model documentation, checking local bakeoff deltas, updating `reviewed_
 
 Selection order is binding: **independence and hard gates → review quality tier → health/quota within
 that tier → cost among equivalent fits**. For formal code review, everyday routine PRs use practical seats
-(**Sonnet 5 → Terra → Gemini 3.6 Flash → GLM**). Escalatory authority reviews select from the advisor quality prior (**Sol → Fable
-→ Opus → Pro**) (#5293).
+(**Sonnet 5 → Terra → Gemini 3.6 Flash → GLM**). Escalatory authority reviews select from the advisor quality prior (**Sol → Opus
+→ Pro**) (#5293); **Fable is off the default ladder** (usage cost, user 2026-07-24) — reach for it
+only when Opus 5 has already failed the case.
 Cost never lowers the quality floor. An `unhealthy` route is unavailable; `degraded` and `near_cap`
 only break ties inside a quality rung. `cursor:auto` is never an acceptable formal-review identity;
 Composer is eligible only with its concrete `composer-2.5` model identity.
@@ -43,9 +44,11 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
   * **GLM seat**: `glm-5.2` (local-only)
   * **Gemini seat**: `gemini-3.6-flash-high`
 * **Complex Non-Advisory Tasks & Deep Reviews**:
-  * **Anthropic Opus seat**: `claude-opus-4-8` (complex coding, deep reasoning, adversarial review)
+  * **Anthropic Opus seat**: `claude-opus-5` (complex coding, deep reasoning, adversarial review)
 * **Escalatory Advisor / Critical Authority Reviews** (reserved for architecture, security, or design escalation):
-  * **Anthropic Advisor**: `claude-fable-5` (Fable 5)
+  * **Anthropic Advisor**: `claude-opus-5` (`--effort xhigh`) — replaced Fable 5 on 2026-07-24.
+    Fable remains the top capability tier, but it burns subscription usage the fleet needs
+    elsewhere; reserve it for a case Opus 5 has already failed, not as the default advisor.
   * **OpenAI Advisor**: `gpt-5.6-sol` (`--effort xhigh`)
   * **Google Advisor**: `gemini-3.1-pro-high` (Pro)
 
@@ -114,7 +117,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 
   | Seat | Default (loop) | Escalate (deep) | Notes |
   | --- | --- | --- | --- |
-  | **claude** | `claude-sonnet-5` @ high | **`claude-fable-5` @ xhigh** | Same pattern as AGY Flash→Pro |
+  | **claude** | `claude-opus-5` @ high | **`gpt-5.6-sol` @ xhigh** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Other lanes escalate **to** Claude (`claude-opus-5` @ xhigh) or to Sol — pick by CodexBar headroom |
   | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | Named alternate for harness / infra / devops; never co-owns a live lease |
   | **grok** | `grok-4.5` @ high | same SKU (no higher pin yet) | Cursor **explicit** `grok-4.5` = availability fallback, not quality escalate |
   | **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | Flash loop; Pro deep single-shot |
@@ -123,7 +126,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | seat | model_id | effort | escalate_model_id | escalate_effort |
   | --- | --- | --- | --- | --- |
   | agy | gemini-3.6-flash-high | high | gemini-3.1-pro-high | high |
-  | claude | claude-sonnet-5 | high | claude-fable-5 | xhigh |
+  | claude | claude-opus-5 | high | gpt-5.6-sol | xhigh |
   | codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
   | grok | grok-4.5 | high | grok-4.5 | high |
   <!-- fleet-roster-projection:end orchestrator_seats -->

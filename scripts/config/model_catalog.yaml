@@ -485,12 +485,19 @@ review_candidates:
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
   claude:
-    model_id: claude-sonnet-5
+    model_id: claude-opus-5
     effort: high
-    escalate_model_id: claude-fable-5
+    escalate_model_id: gpt-5.6-sol
     escalate_effort: xhigh
     escalate_when: deep_single_shot_or_architecture
-    note: default Sonnet 5 @ high; escalate Fable 5 @ xhigh (Opus only if Fable unavailable)
+    note: >-
+      Opus 5 @ high drives the lane; escalation is CROSS-FAMILY to Sol @ xhigh
+      (user 2026-07-24). Claude is an escalation TARGET, not an escalator — other
+      lanes escalate to Claude or Sol by whichever has CodexBar headroom. Fable is
+      NOT the default Anthropic advisor: it is the top capability tier but burns
+      subscription usage the fleet needs elsewhere; reserve it for a case Opus 5
+      has already failed. Driving is `high`, not `xhigh` — xhigh is the documented
+      START for agentic work, and the same docs say sweep down from it.
   codex:
     model_id: gpt-5.6-terra
     effort: high
@@ -527,7 +534,8 @@ orchestrator_seats:
     note: Google-family orchestrator; Flash default loop; Pro escalate only
 
 # Formal CF transport defaults for review-pr (model + effort). Authority seats
-# (Sol/Fable/Opus) are critical-ladder only — not routine review-pr pins.
+# (Sol/Opus) are critical-ladder only — not routine review-pr pins. Fable is no
+# longer on the routine ladder at all (usage cost, user 2026-07-24).
 formal_cf_defaults:
   codex:
     model_id: gpt-5.6-terra
@@ -538,7 +546,9 @@ formal_cf_defaults:
   claude:
     model_id: claude-sonnet-5
     effort: high
-    escalate_model_id: claude-fable-5
+    # Others escalate TO Claude: Opus 5 @ xhigh is the Anthropic advisor seat
+    # (replaced Fable 5 on 2026-07-24 — same authority role, half the burn).
+    escalate_model_id: claude-opus-5
     escalate_effort: xhigh
   glm:
     model_id: glm-5.2
