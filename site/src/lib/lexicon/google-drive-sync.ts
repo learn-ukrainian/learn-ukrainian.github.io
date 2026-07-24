@@ -38,6 +38,23 @@ export function loadGoogleIdentitySdk(): Promise<void> {
   });
 }
 
+export function getGoogleClientId(): string | null {
+  if (typeof window !== 'undefined') {
+    const stored = localStorage.getItem('learn_uk_google_client_id');
+    if (stored) return stored;
+  }
+  if (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_GOOGLE_CLIENT_ID) {
+    return import.meta.env.PUBLIC_GOOGLE_CLIENT_ID;
+  }
+  return null;
+}
+
+export function setGoogleClientId(clientId: string): void {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('learn_uk_google_client_id', clientId.trim());
+  }
+}
+
 /**
  * Launch official Google Identity Services Token Client OAuth Popup for drive.appdata.
  * Zero manual token prompt — 100% browser popup authentication handled by Google.
@@ -47,10 +64,20 @@ export async function requestGoogleAccessToken(
 ): Promise<string> {
   await loadGoogleIdentitySdk();
 
-  const clientId =
-    customClientId ||
-    (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_GOOGLE_CLIENT_ID) ||
-    '1084224765714-learn-ukrainian-drive-appdata.apps.googleusercontent.com';
+  let clientId = customClientId || getGoogleClientId();
+
+  if (!clientId) {
+    clientId = prompt(
+      'Введіть ваш Google Cloud OAuth Client ID (напр. XXXXX.apps.googleusercontent.com):\n\n' +
+      'Для створення безкоштовного Client ID:\n' +
+      '1. Перейдіть на https://console.cloud.google.com/apis/credentials\n' +
+      '2. Створіть OAuth 2.0 Client ID (Web Application) з походженням http://127.0.0.1:4321'
+    );
+    if (!clientId) {
+      throw new Error('Google OAuth Client ID не вказано');
+    }
+    setGoogleClientId(clientId);
+  }
 
   return new Promise((resolve, reject) => {
     try {
@@ -59,7 +86,10 @@ export async function requestGoogleAccessToken(
         scope: DRIVE_APPDATA_SCOPE,
         callback: (response: any) => {
           if (response.error) {
-            reject(new Error(`Google Auth error: ${response.error}`));
+            if (response.error === 'invalid_client') {
+              localStorage.removeItem('learn_uk_google_client_id');
+            }
+            reject(new Error(`Google Auth Error (${response.error}): Перевірте ваш Google OAuth Client ID`));
           } else if (response.access_token) {
             setInMemoryAccessToken(response.access_token);
             resolve(response.access_token);
