@@ -1,0 +1,52 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c2309488b66f",
+  "session_id": "988e8ad4-a952-419d-80d9-1ff397cc8c7f",
+  "strategy": "manual-commit",
+  "created_at": "2026-07-24T20:37:51.216319Z",
+  "branch": "entire/phase1-pilot-land",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "docs/entire/phase1/evidence/CLAUDE-PROBE.md"
+  ],
+  "agent": "Claude Code",
+  "model": "",
+  "turn_id": "9b4cb6c40cf2",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 6,
+    "cache_creation_tokens": 11899,
+    "cache_read_tokens": 93579,
+    "output_tokens": 338,
+    "api_call_count": 3
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-07-24T20:37:51.213259Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 1,
+    "total_committed": 1,
+    "total_lines_changed": 1,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 81,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "docs/entire/phase1/evidence/AGY-ENTIRE-PROBE.md": 40,
+        "scripts/entire/install_entire_ref_deny_guard.sh.bak-pre-linear": 41
+      }
+    }
+  ]
+}

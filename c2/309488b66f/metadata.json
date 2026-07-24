@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c2309488b66f",
+  "strategy": "manual-commit",
+  "branch": "entire/phase1-pilot-land",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/entire/phase1/evidence/CLAUDE-PROBE.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/c2/309488b66f/0/metadata.json",
+      "transcript": "/c2/309488b66f/0/full.jsonl",
+      "compact_transcript": "/c2/309488b66f/0/transcript.jsonl",
+      "content_hash": "/c2/309488b66f/0/content_hash.txt",
+      "prompt": "/c2/309488b66f/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 6,
+    "cache_creation_tokens": 11899,
+    "cache_read_tokens": 93579,
+    "output_tokens": 338,
+    "api_call_count": 3
+  }
+}

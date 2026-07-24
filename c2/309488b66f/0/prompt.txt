@@ -1,0 +1,1 @@
+In this repo only: create docs/entire/phase1/evidence/CLAUDE-PROBE.md with exactly one line: claude Entire probe OK at 20260724T203737Z. Do not commit. Do not push.
