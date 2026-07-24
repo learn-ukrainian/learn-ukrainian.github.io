@@ -207,16 +207,8 @@ def _build_facts(
             entry["body"],
         )
 
-    # 4) Next actions from stream (prefer typed next_action)
-    nexts = [e for e in stream_entries if e["type"] == "next_action"]
-    for i, entry in enumerate(nexts[:3], start=1):
-        add(
-            f"next-stream-{i}",
-            f"What next-action entry #{i} was recorded on the stream?",
-            entry["body"],
-        )
-
-    # 5) Handoff dual-write: next drive / in-flight / hands-off
+    # 4) Handoff dual-write first (survives compact only if written): Next Drive + Working Set
+    # before lower-priority stream next_action spam so workset is not truncated out of 10.
     next_bullets = _extract_handoff_bullets(
         handoff_text,
         heading_substrings=("next drive", "next after", "next action", "in flight", "live session"),
@@ -228,7 +220,6 @@ def _build_facts(
             bullet,
         )
 
-    # Active Working Set — load-bearing mid-flight facts promoted before compact.
     working_set = _extract_handoff_bullets(
         handoff_text,
         heading_substrings=("active working set", "working set"),
@@ -249,6 +240,17 @@ def _build_facts(
             f"handsoff-{i}",
             f"According to the dual-write handoff, what is hands-off rule #{i}?",
             bullet,
+        )
+
+    # 5) Stream next_action only after diary mintables (fill remaining slots)
+    nexts = [e for e in stream_entries if e["type"] == "next_action"]
+    for i, entry in enumerate(nexts[:3], start=1):
+        if len(facts) >= N_ANCHORS:
+            break
+        add(
+            f"next-stream-{i}",
+            f"What next-action entry #{i} was recorded on the stream?",
+            entry["body"],
         )
 
     # 6) Recent durable decisions from stream if still short
