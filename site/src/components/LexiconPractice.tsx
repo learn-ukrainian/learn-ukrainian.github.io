@@ -84,7 +84,7 @@ import {
   type CefrLevel,
 } from '../lib/lexicon/levels';
 import { getTeacherLessonVirtualDeck, readLocalCustomSets, saveLocalCustomSet, deleteLocalCustomSet, type CustomSet } from '../lib/lexicon/custom-decks';
-import { syncCustomSetsToDrive, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
+import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
 
 
@@ -1130,21 +1130,25 @@ function LexiconPracticeIsland({
   const [newSetLemmas, setNewSetLemmas] = useState('');
 
   const handleGoogleDriveSync = useCallback(async () => {
-    let token = getInMemoryAccessToken();
-    if (!token) {
-      token = prompt('Введіть ваш Google Access Token (або увійдіть через Google):');
-      if (!token) return;
-      setInMemoryAccessToken(token);
-    }
     setIsDriveSyncing(true);
-    setDriveSyncMsg('Синхронізація з Google Drive...');
-    const result = await syncCustomSetsToDrive(token);
-    setIsDriveSyncing(false);
-    if (result.success) {
-      setDriveSyncMsg(`Успішно! Синхронізовано колод: ${result.customSetsSynced}`);
-      setCustomSets(readLocalCustomSets());
-    } else {
-      setDriveSyncMsg(`Помилка: ${result.message}`);
+    setDriveSyncMsg('Авторизація через Google...');
+    try {
+      let token = getInMemoryAccessToken();
+      if (!token) {
+        token = await requestGoogleAccessToken();
+      }
+      setDriveSyncMsg('Синхронізація з Google Drive...');
+      const result = await syncCustomSetsToDrive(token);
+      setIsDriveSyncing(false);
+      if (result.success) {
+        setDriveSyncMsg(`Успішно! Синхронізовано колод: ${result.customSetsSynced}`);
+        setCustomSets(readLocalCustomSets());
+      } else {
+        setDriveSyncMsg(`Помилка: ${result.message}`);
+      }
+    } catch (err: any) {
+      setIsDriveSyncing(false);
+      setDriveSyncMsg(err?.message || 'Google Auth Error');
     }
   }, []);
 

@@ -20,6 +20,62 @@ export function getInMemoryAccessToken(): string | null {
   return _inMemoryAccessToken;
 }
 
+/**
+ * Load Google Identity Services SDK script dynamically if not already present.
+ */
+export function loadGoogleIdentitySdk(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (typeof window === 'undefined') return resolve();
+    if ((window as any).google?.accounts?.oauth2) return resolve();
+
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Failed to load Google Identity Services SDK'));
+    document.head.appendChild(script);
+  });
+}
+
+/**
+ * Launch official Google Identity Services Token Client OAuth Popup for drive.appdata.
+ * Zero manual token prompt — 100% browser popup authentication handled by Google.
+ */
+export async function requestGoogleAccessToken(
+  customClientId?: string
+): Promise<string> {
+  await loadGoogleIdentitySdk();
+
+  const clientId =
+    customClientId ||
+    (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_GOOGLE_CLIENT_ID) ||
+    '1084224765714-learn-ukrainian-drive-appdata.apps.googleusercontent.com';
+
+  return new Promise((resolve, reject) => {
+    try {
+      const tokenClient = (window as any).google.accounts.oauth2.initTokenClient({
+        client_id: clientId,
+        scope: DRIVE_APPDATA_SCOPE,
+        callback: (response: any) => {
+          if (response.error) {
+            reject(new Error(`Google Auth error: ${response.error}`));
+          } else if (response.access_token) {
+            setInMemoryAccessToken(response.access_token);
+            resolve(response.access_token);
+          } else {
+            reject(new Error('No access token returned by Google'));
+          }
+        },
+      });
+
+      tokenClient.requestAccessToken({ prompt: 'consent' });
+    } catch (err: any) {
+      reject(err);
+    }
+  });
+}
+
 export interface SyncResult {
   success: boolean;
   message: string;
