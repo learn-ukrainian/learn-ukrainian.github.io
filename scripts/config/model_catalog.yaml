@@ -470,7 +470,7 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review]
 
-# Fleet-comms stream orchestrator seats (#5512 / #4707). These lanes may own a
+# Fleet-comms stream orchestrator seats (#5512 / #4707 / #5703). These lanes may own a
 # cold-start loop (prioritize → delegate → CF → merge-in-lane). Formal *sealed*
 # CF remains fail-closed on agy|kimi|grok until #5555–#5557; orchestrators still
 # *request* CF via review-pr codex|claude|glm.
@@ -494,9 +494,10 @@ orchestrator_seats:
       Re-added as orchestrator seat 2026-07-23 (reverses the 2026-07-22 removal) specifically for
       HydrationCapsuleV1 long-horizon support — score-from-memory + a ~100ms capsule hydrate is
       designed to minimize the rollover-token overhead the prior removal objected to. Named
-      alternate/overflow on the harness/infra/devops stream (epic:4707) alongside Gemini — never a
-      concurrent co-owner; the shared session-stream lease already fails closed on a live foreign
-      holder, so no new exclusivity logic is needed.
+      alternate/overflow on harness/infra (epic:4707) and the independent DevOps stream
+      (epic:5703) alongside Gemini — never a concurrent same-stream co-owner; each
+      session-stream lease already fails closed on a live foreign holder, so no new
+      exclusivity logic is needed.
   # 2026-07-22 removal note retained for history: "the 272K window is not worth the session-
   # start/end rollover-token overhead relative to its small context" — see the 2026-07-23 note
   # above for why that calculus changed.

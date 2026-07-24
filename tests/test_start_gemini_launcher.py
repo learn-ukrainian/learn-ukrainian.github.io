@@ -255,7 +255,7 @@ def test_legacy_epic_suffix_normalizes_to_atlas(tmp_path: Path, arguments: list[
 @pytest.mark.parametrize(
     ("selector", "canonical_lane", "stream", "handoff"),
     [
-        ("devops", "infra", "epic:4707", "gemini-infra"),
+        ("devops", "devops", "epic:5703", "gemini-devops"),
         ("practice-hub", "atlas", "epic:4387", "gemini-atlas"),
         ("seminars-folk", "folk", "epic:2836", "gemini-folk"),
         ("seminars-bio", "bio", "epic:4431", "gemini-bio"),
@@ -292,11 +292,11 @@ def test_dot_notation_infra_devops_uses_canonical_stream_and_handoff(tmp_path: P
         tmp_path, ["--epic", "infra.devops"]
     )
     assert result.returncode == 0, result.stderr + result.stdout
-    assert values["session_epic"] == "infra"
-    assert values["handoff"] == "gemini-infra"
+    assert values["session_epic"] == "devops"
+    assert values["handoff"] == "gemini-devops"
     supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
     stream_index = supervisor_args.index("--stream")
-    assert supervisor_args[stream_index + 1] == "epic:4707"
+    assert supervisor_args[stream_index + 1] == "epic:5703"
 
 
 def test_unknown_epic_selector_fails_closed_with_help(tmp_path: Path) -> None:
