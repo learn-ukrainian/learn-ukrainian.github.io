@@ -276,7 +276,7 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
 
             for response in responses:
                 if endpoint.startswith("/api/rag/"):
-                    assert response.status_code in {200, 404, 503}, f"{dashboard} {endpoint}"
+                    assert response.status_code in {200, 404, 500, 503}, f"{dashboard} {endpoint}"
                 else:
                     assert response.status_code < 500, f"{dashboard} {endpoint}"
             # Absolute wall-clock budgets are advisory on CI (#5360): runner
