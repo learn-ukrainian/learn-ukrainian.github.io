@@ -1380,6 +1380,118 @@ def test_run_worker_marks_needs_finalize_for_dirty_danger_worktree(
     assert state["auto_finalize"]["error"] == "simulated finalize failure"
 
 
+def _init_git_repo_for_test(path, monkeypatch):
+    """Minimal git repo used by the dirty-worktree finalize tests."""
+    _sanitize_git_env_for_test(monkeypatch)
+    subprocess.run(["git", "init"], cwd=path, check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"],
+        cwd=path,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "test"],
+        cwd=path,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+
+def _finalize_mock_result():
+    return type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "grok-4.5",
+            "effort": "high",
+            "cli_version": "0.2.111",
+        },
+    )()
+
+
+@pytest.mark.parametrize(
+    "commits_ahead,case",
+    [
+        (0, "zero-commits"),
+        (None, "unknown-commit-count"),
+    ],
+)
+def test_run_worker_marks_needs_finalize_for_dirty_workspace_write_worktree(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    commits_ahead,
+    case,
+):
+    """A dirty ``workspace-write`` worktree must NOT settle as ``done``.
+
+    Regression for 2026-07-25: the dirty-worktree safety net was gated on
+    ``mode == "danger"``, so three ``workspace-write`` dispatches
+    (``timeouts-B3``, ``timeouts-B6``, ``timeouts-B4-orig``) each left finished
+    work uncommitted and still reported ``status: done`` — three real failures
+    read as three successes, with 31 files one agent restart from being lost.
+
+    The ``None`` case is the second half of the same bug: ``_count_commits_ahead``
+    returns None when it cannot count, and the old ``commits_ahead == 0`` test
+    skipped that path, which is exactly how the B4 dispatch
+    (``commits_ahead: None``, ``worktree_dirty_on_exit: True``) escaped as ``done``.
+    Unknown plus dirty cannot prove the work was committed, so it fails closed.
+    """
+    task_id = f"needs-finalize-ws-{case}"
+    state_path = delegate._state_path(task_id)
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    delegate._write_state_atomic(state_path, {
+        "task_id": task_id,
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+    (tmp_path / "finished_work.txt").write_text("uncommitted", encoding="utf-8")
+
+    auto_finalize_calls = []
+
+    def _record_auto_finalize(**kwargs):
+        auto_finalize_calls.append(kwargs)
+        raise AssertionError("auto-finalize must stay scoped to danger mode")
+
+    monkeypatch.setattr(delegate, "_auto_finalize_dirty_worktree", _record_auto_finalize)
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=_finalize_mock_result()),
+        patch.object(delegate, "_count_commits_ahead", return_value=commits_ahead),
+    ):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="bound the subprocess calls",
+            mode="workspace-write",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            effort="high",
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "needs_finalize", (
+        f"dirty workspace-write worktree reported {state['status']!r}; a dispatch that "
+        "produced no commit must never settle as done"
+    )
+    assert state["needs_finalize"] is True
+    assert state["worktree_dirty_on_exit"] is True
+    assert rc == 1
+    # The riskier auto-commit/push/PR action stays scoped to danger mode.
+    assert auto_finalize_calls == []
+    assert state.get("auto_finalize") is None
+
+
 def test_run_worker_auto_finalizes_dirty_agy_worktree(
     tmp_tasks_dir,
     tmp_path,

@@ -2416,17 +2416,30 @@ def _run_worker(
     commits_ahead: int | None = None
     needs_finalize = False
     auto_finalize: AutoFinalizeResult | None = None
-    if worktree_path and mode == "danger":
+    # The dirty-worktree safety net must cover EVERY write-capable mode, not just
+    # ``danger``. It was gated on ``danger`` alone, so a ``workspace-write``
+    # dispatch that left finished work uncommitted settled as ``done`` — a real
+    # failure reported as success. On 2026-07-25 three lanes did exactly that
+    # (``timeouts-B3``, ``timeouts-B6``, ``timeouts-B4-orig``: dirty worktrees,
+    # zero commits, ``status: done``) and 31 files of finished work were one agent
+    # restart away from being lost. Detection now runs for the whole write-capable
+    # set; the riskier auto-finalize action stays scoped to ``danger``.
+    if worktree_path and mode in _WRITE_CAPABLE_MODES:
         base_branch = str(final_state.get("worktree_base") or "main")
         base_ref = _origin_base_ref(base_branch)
         commits_ahead = _count_commits_ahead(
             Path(worktree_path),
             base_ref,
         )
-        if commits_ahead == 0 and dirty_on_exit:
+        # Fail CLOSED when the count is unknown. ``_count_commits_ahead`` returns
+        # None when it cannot count, and ``commits_ahead == 0`` silently skipped
+        # that case — which is how the B4 dispatch (commits_ahead=None,
+        # dirty_on_exit=True) still reported ``done``. Unknown plus dirty means we
+        # cannot prove the work was committed, so surface it for finalization.
+        if dirty_on_exit and commits_ahead in (0, None):
             needs_finalize = True
 
-        if needs_finalize and returncode == 0:
+        if needs_finalize and returncode == 0 and mode == "danger":
             auto_finalize = _auto_finalize_dirty_worktree(
                 worktree=Path(worktree_path),
                 task_id=task_id,
