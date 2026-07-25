@@ -182,6 +182,7 @@ def test_cli_module_help() -> None:
         capture_output=True,
         text=True,
         check=False,
+        timeout=15,
     )
     assert proc.returncode == 0
     assert "mint" in proc.stdout

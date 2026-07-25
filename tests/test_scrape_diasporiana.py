@@ -40,6 +40,7 @@ def _find_unicode_font() -> str:
         capture_output=True,
         text=True,
         check=False,
+        timeout=10,
     )
     font_path = result.stdout.strip().splitlines()[0] if result.stdout.strip() else ""
     if font_path and Path(font_path).exists():
