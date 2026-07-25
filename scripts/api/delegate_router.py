@@ -35,37 +35,36 @@ def _parse_iso_datetime(value: str | None) -> datetime | None:
     return parsed.astimezone(UTC)
 
 
-def _task_state_path(task_id: str) -> Path:
+def _tasks_root() -> str:
+    return os.path.realpath(str(TASKS_DIR))
+
+
+def _task_state_path(task_id: str) -> str:
     """Resolve ``task_id`` to a state JSON path under ``TASKS_DIR``.
 
-    Slash/backslash sanitization alone is not a CodeQL-recognized barrier
-    (``py/path-injection`` alert #317). Use the ``os.path.realpath`` +
-    ``startswith(root + os.sep)`` idiom that the analyzer accepts as a
-    sanitizer — same pattern as ``session_router._safe_project_path``.
-    Escapes collapse to a guaranteed-nonexistent path inside the root so
-    callers that treat missing state as ``None`` keep working.
+    Slash/backslash sanitization alone is not enough. Callers that ``open``
+    must re-check ``startswith(root + os.sep)`` in the *same* function as the
+    sink — CodeQL does not treat a previously returned path as sanitized
+    (#317). Escapes collapse to a guaranteed-nonexistent path inside the root.
     """
     safe = task_id.replace("/", "_").replace("\\", "_")
-    root = os.path.realpath(str(TASKS_DIR))
-    candidate = os.path.realpath(os.path.join(root, f"{safe}.json"))
-    if not candidate.startswith(root + os.sep):
-        candidate = os.path.join(root, "__rejected__.json")
-    return Path(candidate)
+    root = _tasks_root()
+    fullpath = os.path.realpath(os.path.join(root, f"{safe}.json"))
+    if not fullpath.startswith(root + os.sep):
+        fullpath = os.path.join(root, "__rejected__.json")
+    return fullpath
 
 
-def _safe_result_path(result_file: str) -> Path | None:
-    """Allow result reads only under ``TASKS_DIR`` (delegate writes ``.result`` siblings)."""
-    root = os.path.realpath(str(TASKS_DIR))
-    candidate = os.path.realpath(result_file)
-    if not candidate.startswith(root + os.sep):
+def _read_task_state(path: str) -> dict[str, Any] | None:
+    """Read task JSON only after a local containment check (CodeQL sink guard)."""
+    root = _tasks_root()
+    fullpath = os.path.realpath(path)
+    if not fullpath.startswith(root + os.sep):
         return None
-    return Path(candidate)
-
-
-def _read_task_state(path: Path) -> dict[str, Any] | None:
     for attempt in range(TASK_READ_RETRIES):
         try:
-            data = json.loads(path.read_text(encoding="utf-8"))
+            with open(fullpath, encoding="utf-8") as handle:
+                data = json.loads(handle.read())
         except (OSError, json.JSONDecodeError):
             if attempt + 1 == TASK_READ_RETRIES:
                 return None
@@ -73,6 +72,19 @@ def _read_task_state(path: Path) -> dict[str, Any] | None:
             continue
         return data if isinstance(data, dict) else None
     return None
+
+
+def _read_result_file(result_file: str) -> str | None:
+    """Read a ``.result`` sibling under ``TASKS_DIR`` (check + open colocated)."""
+    root = _tasks_root()
+    fullpath = os.path.realpath(result_file)
+    if not fullpath.startswith(root + os.sep):
+        return None
+    try:
+        with open(fullpath, encoding="utf-8") as handle:
+            return handle.read(RESULT_BYTES_LIMIT + 1)
+    except OSError:
+        return None
 
 
 def _pid_alive(pid: int | None) -> bool:
@@ -109,7 +121,7 @@ def _delegate_task_rows(statuses: set[str] | None = None) -> list[dict[str, Any]
     rows: list[dict[str, Any]] = []
     if TASKS_DIR.exists():
         for path in sorted(TASKS_DIR.glob("*.json")):
-            task = _read_task_state(path)
+            task = _read_task_state(str(path))
             if task is None:
                 continue
             derived_status, alive = _derived_task_status(task)
@@ -157,17 +169,12 @@ def get_delegate_task_detail(task_id: str) -> tuple[dict[str, Any] | None, dict[
     truncated = False
     if task.get("status") != "running":
         result_file = task.get("result_file")
-        safe_result = _safe_result_path(str(result_file)) if result_file else None
-        if safe_result is not None:
-            try:
-                with open(safe_result, encoding="utf-8") as handle:
-                    result_text = handle.read(RESULT_BYTES_LIMIT + 1)
-                if result_text is not None and len(result_text.encode("utf-8")) > RESULT_BYTES_LIMIT:
-                    while len(result_text.encode("utf-8")) > RESULT_BYTES_LIMIT:
-                        result_text = result_text[:-1]
-                    truncated = True
-            except OSError:
-                result_text = None
+        if result_file:
+            result_text = _read_result_file(str(result_file))
+            if result_text is not None and len(result_text.encode("utf-8")) > RESULT_BYTES_LIMIT:
+                while len(result_text.encode("utf-8")) > RESULT_BYTES_LIMIT:
+                    result_text = result_text[:-1]
+                truncated = True
 
     return task, {
         "task": task,
