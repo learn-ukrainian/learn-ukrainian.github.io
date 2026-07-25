@@ -32,6 +32,7 @@ def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
         capture_output=True,
         text=True,
         env=sanitized_git_env(),
+        timeout=30,
     )
 
 

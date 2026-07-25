@@ -1,5 +1,5 @@
 #!/bin/bash
-# Hook: Stop — /goal driver async-dispatch awareness.
+# Hook: Stop — /goal driver async-dispatch awareness + thread-lease heartbeat.
 #
 # Reads the Stop-event JSON on stdin and asks scripts/goal_driver/stop_hook.py
 # to inspect the transcript's last status line. The Python module emits
@@ -9,6 +9,18 @@
 # This hook NEVER blocks Stop. /goal's native predicate enforcement is
 # unchanged; this hook only annotates state so the next turn's counters
 # stay honest under async-heavy work. See issue #1933.
+#
+# It also best-effort refreshes this session's durable thread-lease heartbeat
+# (see refresh_thread_lease_heartbeat in scripts/orchestration/
+# thread_handoff.py). This is diagnostic only — claim_thread_lease never
+# takes an uncheckable owner over on clock age at all, so there is no window
+# left for a fresh heartbeat to protect. The refresh is a no-op unless this
+# exact session already owns the lease at the exact generation it claimed
+# (LEARN_UKRAINIAN_THREAD_LEASE_GENERATION, exported by session-setup.sh) and
+# its process identity can be reconfirmed, so it can never steal or clobber
+# another session's lease. This refresh is unconditional (unthrottled) since
+# Stop only fires once per turn; the throttled per-tool-call companion is
+# thread-lease-heartbeat.sh (PostToolUse, issue #5759).
 #
 # Skip in non-interactive / pipeline contexts to avoid latency in batch jobs.
 
@@ -30,4 +42,40 @@ fi
 # root first; fail open if it is unreachable. (cwd-drift bug family: #4912/#4899.)
 cd "$PROJECT_DIR" || exit 0
 
-exec "$PYTHON" -m scripts.goal_driver.stop_hook
+# Read stdin exactly once — both the heartbeat refresh below and the exec'd
+# stop_hook module need the same session_id / transcript payload.
+STDIN_JSON=""
+if [ ! -t 0 ]; then
+  STDIN_JSON=$(cat)
+fi
+
+HANDOFF_AGENT="${SESSION_HANDOFF_AGENT:-claude}"
+case "$HANDOFF_AGENT" in
+  claude|claude-*)
+    if [ -n "$STDIN_JSON" ]; then
+      SESSION_ID=$(printf '%s' "$STDIN_JSON" | jq -r '.session_id // empty' 2>/dev/null)
+      if [ -n "$SESSION_ID" ] && [ -n "${LEARN_UKRAINIAN_THREAD_LEASE_GENERATION:-}" ]; then
+        if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
+          CANONICAL_ROOT="$CODEX_CANONICAL_REPO_ROOT"
+        else
+          GIT_COMMON_DIR=$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+          if [ -n "$GIT_COMMON_DIR" ] && [ "$(basename "$GIT_COMMON_DIR")" = ".git" ]; then
+            CANONICAL_ROOT=$(dirname "$GIT_COMMON_DIR")
+          else
+            CANONICAL_ROOT="$PROJECT_DIR"
+          fi
+        fi
+        "$PYTHON" "$PROJECT_DIR/scripts/orchestration/thread_handoff.py" \
+          --repo-root "$CANONICAL_ROOT" refresh-thread-lease-heartbeat \
+          --agent "$HANDOFF_AGENT" --current-thread-id "$SESSION_ID" \
+          --generation "$LEARN_UKRAINIAN_THREAD_LEASE_GENERATION" \
+          >/dev/null 2>&1 || true
+        unset CANONICAL_ROOT GIT_COMMON_DIR
+      fi
+      unset SESSION_ID
+    fi
+    ;;
+esac
+unset HANDOFF_AGENT
+
+exec "$PYTHON" -m scripts.goal_driver.stop_hook <<<"$STDIN_JSON"

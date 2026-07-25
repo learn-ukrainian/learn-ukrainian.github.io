@@ -159,6 +159,7 @@ def test_audit_cli_runs_as_direct_script(tmp_path) -> None:
         check=True,
         capture_output=True,
         text=True,
+        timeout=60,
     )
 
     assert json.loads(result.stdout)["total_entries"] == 1
@@ -210,6 +211,7 @@ def test_audit_cli_enforces_explicit_max_counts(tmp_path) -> None:
         check=False,
         capture_output=True,
         text=True,
+        timeout=60,
     )
     assert blocked.returncode == 1
     assert "search_no_visible_gloss: 1 exceeds max 0" in blocked.stdout
@@ -231,6 +233,7 @@ def test_audit_cli_enforces_explicit_max_counts(tmp_path) -> None:
         check=True,
         capture_output=True,
         text=True,
+        timeout=60,
     )
 
 

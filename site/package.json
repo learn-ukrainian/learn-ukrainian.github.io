@@ -63,7 +63,7 @@
     "vite": ">=8.0.13",
     "js-yaml": "^4.3.0",
     "markdown-it": ">=14.2.0",
-    "postcss": "8.5.18"
+    "postcss": "8.5.23"
   },
   "allowScripts": {
     "better-sqlite3@12.11.1": true,
