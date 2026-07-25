@@ -1172,6 +1172,26 @@ const frontmatter = {
     outline: 2px solid var(--lu-primary);
     outline-offset: 2px;
   }
+  :global(.k3-practice-sources) {
+    border: 1px solid var(--lu-border);
+    border-radius: 12px;
+    background: var(--lu-surface-raised);
+  }
+  :global(.k3-practice-sources summary) {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 0.75rem;
+    color: var(--lu-text-muted);
+    cursor: pointer;
+    font-size: 0.84rem;
+    font-weight: 800;
+  }
+  :global(.k3-practice-sources-content) {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0 0.75rem 0.75rem;
+  }
   @media (max-width: 760px) {
     :global(.k3-practice-dashboard) {
       gap: 0.45rem;
