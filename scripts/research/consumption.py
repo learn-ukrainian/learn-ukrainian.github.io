@@ -152,9 +152,12 @@ def _persist_200_evidence(task_id: str, research_id: str, etag: str) -> None:
     for this record isn't attributable, which is the safe (fail-closed) direction.
     """
     try:
-        from scripts.api.delegate_router import _read_task_state, _task_state_path
+        from scripts.api.delegate_router import TASKS_DIR, _read_task_state, _task_state_path
 
-        path = _task_state_path(task_id)
+        root = os.path.realpath(str(TASKS_DIR))
+        path = os.path.realpath(_task_state_path(task_id))
+        if not path.startswith(root + os.sep):
+            return
         state = _read_task_state(path)
         if not isinstance(state, dict):
             return
@@ -163,8 +166,12 @@ def _persist_200_evidence(task_id: str, research_id: str, etag: str) -> None:
             evidence = {}
         evidence[research_id] = etag
         state[_EVIDENCE_FIELD] = evidence
-        tmp = path.with_suffix(f".json.tmp.{os.getpid()}")
-        tmp.write_text(json.dumps(state, indent=2, default=str))
+        # Re-check tmp under the same root — concat alone does not sanitize for CodeQL.
+        tmp = os.path.realpath(f"{path}.tmp.{os.getpid()}")
+        if not tmp.startswith(root + os.sep):
+            return
+        with open(tmp, "w", encoding="utf-8") as handle:
+            handle.write(json.dumps(state, indent=2, default=str))
         os.replace(tmp, path)
     except Exception:
         pass

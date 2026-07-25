@@ -17,6 +17,7 @@ import argparse
 import json
 import sys
 import time
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
@@ -38,7 +39,11 @@ def _event(name: str, **fields: Any) -> None:
 def _run(args: argparse.Namespace) -> int:
     repo = args.repo.resolve()
     _load_repo(repo)
-    from scripts.lexicon.runner.memory import MemoryPolicy, apply_worker_memory_limit
+    from scripts.lexicon.runner.memory import (
+        MemoryPolicy,
+        require_hard_cap_protection,
+        run_startup_self_test,
+    )
     from scripts.lexicon.runner.offline_reduce import reduce_offline_slice
 
     work_dir = args.work_dir.resolve()
@@ -48,15 +53,22 @@ def _run(args: argparse.Namespace) -> int:
         high_bytes=int(args.memory_high_mib) * 1024**2,
         max_bytes=int(args.memory_max_mib) * 1024**2,
     )
-    enforcement = apply_worker_memory_limit(memory_policy)
+    # Proof runs in a disposable child (see memory.run_startup_self_test) — the
+    # coordinator itself is never RLIMIT'd/cgroup-capped here. The reduce loop
+    # below runs in this same process (no forked worker), so self-applying a
+    # hard cap would land on whatever process drives _run() — production
+    # coordinator or, in-process, pytest itself (#5776/#5786).
+    proof = run_startup_self_test(test_max_bytes=min(64 * 1024 * 1024, memory_policy.max_bytes))
     _event(
         "memory_policy",
-        enforcement=enforcement,
+        enforcement=proof.kind,
+        enforced=proof.enforced,
+        scope="coordinator_self_test",
         high_bytes=memory_policy.high_bytes,
         max_bytes=memory_policy.max_bytes,
     )
-    if args.require_memory_cap and enforcement == "none":
-        raise RuntimeError("MemoryPolicy could not enforce a hard cap")
+    if args.require_memory_cap:
+        require_hard_cap_protection(proof)
 
     lemmas: list[str] | None = None
     expected_sha = EXPECTED_COHORT_SHA256 if not args.skip_cohort_pin else None
@@ -162,7 +174,7 @@ def _maybe_enrich(
     return 0
 
 
-def main() -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path.cwd())
     parser.add_argument(
@@ -227,7 +239,7 @@ def main() -> int:
     )
     parser.add_argument("--enrich-chunk-size", type=int, default=25)
     parser.add_argument("--enrich-stop-after-chunks", type=int, default=None)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     if args.network_cache is None:
         args.network_cache = args.work_dir / "network-cache.sqlite"
     if args.with_offline_enrich:

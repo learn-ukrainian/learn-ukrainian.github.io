@@ -26,27 +26,34 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **hramatka** (teacher lesson service) | Grok 4.5 · Sonnet-5 if judgment-heavy | `./start-grok-drive.sh hramatka` |
 | **folk** (curriculum track) | Grok 4.5 † | `./start-grok-drive.sh folk` |
 | **bio** (curriculum track) | Grok 4.5 | `./start-grok-drive.sh bio` |
-| **any epic** — incident · architecture cutover · contested review | Sonnet-5 (Opus for the hardest) | `./start-sonnet-drive.sh <epic>` |
+| **any epic** — incident · architecture cutover · contested review | Sonnet-5 | `./start-sonnet-drive.sh <epic>` |
+| **any epic** — hardest judgment only (see the reserved-seat cost below) | Opus | `./start-opus-drive.sh <epic>` |
 
 **Per-model launcher convention:** `./start-<model>-drive.sh <epic>` where `<model>` ∈
-`codex · grok · gemini · sonnet`. Epic is the first arg; extra flags forward
+`codex · grok · gemini · sonnet · opus`. Epic is the first arg; extra flags forward
 (e.g. `--agent curriculum-track-orchestrator`). Each **launches the lane**; the driver
 then loads `$drive-epic` — automatically once the cold-prompt wiring lands (follow-up PR),
 and by manual `$drive-epic` invocation until then. The Codex DevOps alternate is the
 first zero-touch path: its generated board is injected into SessionStart and explicitly
 directs the task to load `$drive-epic`; the other wrappers do not yet auto-load the skill.
 
-**Sonnet-5 is the sole Anthropic driver seat** — there is deliberately no Opus "drive"
-wrapper (Opus is reserved; see below). For the rare hardest-session Opus-in-seat, use the
-raw `./start-claude.sh --epic <x>`. The legacy `scripts/start-bio-driver.sh` runs Claude +
-the `curriculum-track-orchestrator` agent-def if you specifically want that agent.
+**Sonnet-5 is the DEFAULT Anthropic driver seat** — near-Opus judgment without spending the
+Opus review-of-record capacity. `./start-opus-drive.sh <epic>` exists for the rare
+hardest-judgment session (live incident, architecture cutover, contested verdict) and prints
+a reserved-seat notice on launch so the cost is never spent by habit; it replaces the older
+"use raw `./start-claude.sh --epic <x>`" advice, which skipped that notice and left the model
+pin implicit. Both Anthropic wrappers resolve to the same `claude-<lane>` handoff slot, so the
+stream lease still allows only one Anthropic driver per lane. The legacy
+`scripts/start-bio-driver.sh` runs Claude + the `curriculum-track-orchestrator` agent-def if
+you specifically want that agent.
 
 † **folk carve-out:** the *driver* may be Grok, but folk content **review** stays
 cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) — the
 `drive-epic` skill enforces this.
 
 **Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
-- **Opus 4.8** — hardest judgment + the cross-family review of record. Don't burn it on a polling loop.
+- **Opus** (current Anthropic frontier) — hardest judgment + the cross-family review of record.
+  Don't burn it on a polling loop. `./start-opus-drive.sh` exists for the exceptions, not the default.
 - **Kimi K2.7** 256K — under the ~500K window we want for a driver. **Codex (GPT-5.6)** was
   dropped on 2026-07-22 for its 272K window, then **re-added on 2026-07-23** as the named
   harness / infra / devops alternate: HydrationCapsuleV1's score-from-memory and small capsule
@@ -155,8 +162,9 @@ Everything else the driver runs to completion and reports past-tense — no "sho
 ## Rollout (sequencing)
 
 1. **This PR:** the `drive-epic` skill, this runbook, and the per-model driver launchers
-   (`start-grok-drive.sh` / `start-gemini-drive.sh` / `start-sonnet-drive.sh` /
-   `start-claude-drive.sh`). Cross-family reviewed; advisor-looped on the skill contract.
+   (`start-grok-drive.sh` / `start-gemini-drive.sh` / `start-sonnet-drive.sh`;
+   `start-codex-drive.sh` and `start-opus-drive.sh` landed after). Cross-family reviewed;
+   advisor-looped on the skill contract.
 2. **Follow-up PR:** rewire the `start-grok.sh` / `start-gemini.sh` / `start-kimi.sh`
    cold-prompt `case` blocks to invoke `$drive-epic` (replacing the hand-written per-epic
    prose), so the playbook loads automatically. Held separate so the skill is reviewed
