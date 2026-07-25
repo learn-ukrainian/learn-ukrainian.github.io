@@ -229,6 +229,40 @@ def _payload_cwd(payload: dict) -> str:
     return str(cwd) if cwd else os.getcwd()
 
 
+def _git_dir_override(seg: list[str]) -> str | None:
+    """A `-C <path>` / `--work-tree=<path>` on the git invocation itself.
+
+    Cross-family review P1 (round 4): `git -C /main push origin main` runs the push
+    against /main with no `cd` anywhere. Breaking at the push segment and keeping the
+    payload cwd therefore judged the wrong tree and would wave an untested main push
+    through. `-C` is an ordinary, common invocation, not an exotic evasion.
+    """
+    i = 0
+    while i < len(seg) and (
+        seg[i] in WRAPPERS or seg[i] in {"command", "exec", "{"} or _is_env_assignment(seg[i])
+    ):
+        i += 1
+    if i >= len(seg) or seg[i] != "git":
+        return None
+    i += 1
+    target: str | None = None
+    while i < len(seg) and seg[i].startswith("-"):
+        if seg[i] == "-C" and i + 1 < len(seg):
+            target = seg[i + 1]  # last -C wins, as git itself applies them in order
+            i += 2
+        elif seg[i].startswith("--work-tree="):
+            target = seg[i].split("=", 1)[1]
+            i += 1
+        elif seg[i] == "--work-tree" and i + 1 < len(seg):
+            target = seg[i + 1]
+            i += 2
+        elif seg[i] in {"-c", "--git-dir"} and i + 1 < len(seg):
+            i += 2
+        else:
+            i += 1
+    return target
+
+
 def _effective_cwd(command: str, base: str) -> str:
     """Directory the push runs in, following EVERY cd that precedes it.
 
@@ -259,7 +293,19 @@ def _effective_cwd(command: str, base: str) -> str:
         if not tokens:
             continue
         if _git_push_args(tokens) is not None:
-            break
+            override = _git_dir_override(tokens)
+            if override is None:
+                break
+            if override.startswith(("$", "-", "`")) or '"$' in override or "'$" in override:
+                return base
+            path = Path(override.strip("\"'")).expanduser()
+            if not path.is_absolute():
+                path = Path(current) / path
+            try:
+                resolved = path.resolve()
+            except OSError:
+                return base
+            return str(resolved) if resolved.is_dir() else base
         verb = tokens[0]
         if verb == "popd":
             # Cross-family review P1 (round 3): the directory stack moves the shell

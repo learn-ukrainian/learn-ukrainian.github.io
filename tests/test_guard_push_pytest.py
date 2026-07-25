@@ -492,3 +492,32 @@ def test_popd_without_a_matching_pushd_is_not_modelled(monkeypatch, repo_with_wo
     """An unbalanced popd is unmodellable; fall back rather than guess a directory."""
     main_co, _worktree = repo_with_worktree
     assert _run_real(monkeypatch, "popd && git push origin main", main_co) == 2
+
+
+def test_git_dash_C_re_homes_the_push(monkeypatch, repo_with_worktree):
+    """Cross-family review P1 (round 4): `git -C <main> push` needs no cd at all.
+
+    An ordinary invocation — not an exotic evasion — that runs the push in another
+    directory. Breaking at the push segment kept the worktree cwd and permitted an
+    untested push to main.
+    """
+    main_co, worktree = repo_with_worktree
+    assert _run_real(monkeypatch, f"git -C {main_co} push origin main", worktree) == 2
+
+
+def test_git_work_tree_flag_re_homes_the_push(monkeypatch, repo_with_worktree):
+    """`--work-tree=<main>` is the same hazard in a different spelling."""
+    main_co, worktree = repo_with_worktree
+    assert _run_real(monkeypatch, f"git --work-tree={main_co} push origin main", worktree) == 2
+
+
+def test_git_dash_C_into_a_worktree_is_not_flagged(monkeypatch, repo_with_worktree):
+    """The converse: -C into a feature worktree must NOT be judged as main."""
+    main_co, worktree = repo_with_worktree
+    assert _run_real(monkeypatch, f"git -C {worktree} push origin HEAD:claude/feature", main_co) == 0
+
+
+def test_unresolvable_git_dash_C_falls_back(monkeypatch, repo_with_worktree):
+    """`git -C $VAR` is ambiguous — fall back to the payload cwd, never guess."""
+    main_co, _worktree = repo_with_worktree
+    assert _run_real(monkeypatch, "git -C $TARGET push origin main", main_co) == 2
