@@ -188,6 +188,7 @@ def test_cli_can_fail_on_unclassified_gaps(tmp_path) -> None:
         check=False,
         capture_output=True,
         text=True,
+        timeout=60,
     )
 
     assert blocked.returncode == 1
@@ -206,6 +207,7 @@ def test_cli_can_fail_on_unclassified_gaps(tmp_path) -> None:
         check=True,
         capture_output=True,
         text=True,
+        timeout=60,
     )
 
 
@@ -231,6 +233,7 @@ def test_cli_emits_machine_readable_formats(tmp_path) -> None:
         check=True,
         capture_output=True,
         text=True,
+        timeout=60,
     )
     payload = json.loads(json_result.stdout)
     assert payload["unclassified_source_gap_rows"] == 5
@@ -251,6 +254,7 @@ def test_cli_emits_machine_readable_formats(tmp_path) -> None:
         check=True,
         capture_output=True,
         text=True,
+        timeout=60,
     )
     lines = tsv_result.stdout.strip().splitlines()
     assert lines[0] == "lemma\turl_slug\tpos\tcefr\tsection\tstatus\tsource\tnote\tprimary_source"
@@ -277,6 +281,7 @@ def test_cli_rejects_negative_unclassified_gap_limit(tmp_path) -> None:
         check=False,
         capture_output=True,
         text=True,
+        timeout=60,
     )
 
     assert result.returncode == 1

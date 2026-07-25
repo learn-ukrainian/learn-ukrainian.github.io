@@ -34,6 +34,7 @@ def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["git", "-C", str(repo), *args],
         check=True, capture_output=True, text=True, env=_clean_env(),
+        timeout=30,
     )
 
 
@@ -53,6 +54,7 @@ def layout(tmp_path: Path) -> Layout:
     subprocess.run(
         ["git", "init", "-q", "-b", "main", str(main)],
         check=True, capture_output=True, text=True, env=_clean_env(),
+        timeout=30,
     )
     _git(main, "config", "user.email", "test@example.com")
     _git(main, "config", "user.name", "Test")
