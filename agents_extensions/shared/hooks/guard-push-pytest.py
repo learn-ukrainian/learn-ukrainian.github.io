@@ -223,13 +223,79 @@ def _has_inline_skip(command: str) -> bool:
     return False
 
 
-def _current_branch() -> str | None:
+def _payload_cwd(payload: dict) -> str:
+    """The directory the guarded tool call runs in (mirrors guard-primary-checkout-write)."""
+    cwd = payload.get("cwd") or payload.get("working_directory")
+    return str(cwd) if cwd else os.getcwd()
+
+
+def _cd_target(command: str) -> str | None:
+    """A literal leading ``cd <path>`` in the command, if any.
+
+    The hook process's own cwd is the primary checkout, which under layout A is
+    always `main`. A push issued from a dispatch worktree therefore looked like a
+    push from `main` and was judged against main's diff (#5771). Variable or
+    substituted targets (`cd $X`, `cd "$(...)"`, `cd -`) are deliberately not
+    resolved: guessing there is how a guard silently judges the wrong tree.
+    """
+    for tokens in _segments(command):
+        if not tokens:
+            continue
+        if tokens[0] != "cd":
+            # Only a LEADING cd re-homes the whole command. Anything else first
+            # (including another cd later in the chain) leaves the effective
+            # directory ambiguous, so fall back to the payload cwd.
+            return None
+        if len(tokens) < 2:
+            return None
+        target = tokens[1]
+        if target.startswith(("$", "-", "`")) or '"$' in target or "'$" in target:
+            return None
+        return target.strip("\"'")
+    return None
+
+
+def _git_cwd(payload: dict, command: str) -> str:
+    """Resolve the working tree the push will actually run in."""
+    base = _payload_cwd(payload)
+    target = _cd_target(command)
+    if not target:
+        return base
+    path = Path(target).expanduser()
+    if not path.is_absolute():
+        path = Path(base) / path
+    try:
+        resolved = path.resolve()
+    except OSError:
+        return base
+    return str(resolved) if resolved.is_dir() else base
+
+
+def _git_env() -> dict:
+    """Environment with git's repo-location overrides stripped.
+
+    `cwd=` alone does NOT decide which repository git operates on: GIT_DIR,
+    GIT_WORK_TREE, GIT_INDEX_FILE and GIT_PREFIX take precedence over the
+    working directory. Any invocation from inside a git hook (pre-commit, and
+    every agent command that runs under one) inherits them, so without this the
+    guard would keep inspecting the WRONG repository — the same wrong-tree bug
+    at one remove. Caught by the pre-commit run of this file's own tests.
+    """
+    env = os.environ.copy()
+    for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
+        env.pop(key, None)
+    return env
+
+
+def _current_branch(cwd: str) -> str | None:
     try:
         out = subprocess.run(
             ["git", "branch", "--show-current"],
             capture_output=True,
             text=True,
             timeout=5,
+            cwd=cwd,
+            env=_git_env(),
         )
     except Exception:
         return None
@@ -239,13 +305,15 @@ def _current_branch() -> str | None:
     return branch or None
 
 
-def _changed_paths() -> list[str] | None:
+def _changed_paths(cwd: str) -> list[str] | None:
     try:
         out = subprocess.run(
             ["git", "diff", "--name-only", "origin/main..HEAD"],
             capture_output=True,
             text=True,
             timeout=20,
+            cwd=cwd,
+            env=_git_env(),
         )
     except Exception:
         return None
@@ -302,12 +370,13 @@ def main() -> int:
     if _has_inline_skip(command):
         return 0
 
-    branch = _current_branch()
+    git_cwd = _git_cwd(payload, command)
+    branch = _current_branch(git_cwd)
     if branch != "main":
         return 0
 
-    paths = _changed_paths()
-    if paths is None or not _has_trigger_path(paths):
+    paths = _changed_paths(git_cwd)
+    if not paths or not _has_trigger_path(paths):
         return 0
 
     marker = _marker_path(branch)

@@ -38,8 +38,8 @@ def _run(
     payload = json.dumps({"tool_input": {"command": command}})
     marker = Path("/tmp/learn-uk-pytest.main.stamp")
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
-    monkeypatch.setattr(guard, "_current_branch", lambda: branch)
-    monkeypatch.setattr(guard, "_changed_paths", lambda: list(paths))
+    monkeypatch.setattr(guard, "_current_branch", lambda _cwd: branch)
+    monkeypatch.setattr(guard, "_changed_paths", lambda _cwd: list(paths))
     monkeypatch.setattr(guard, "_marker_path", lambda _branch: marker)
     monkeypatch.setattr(guard, "_marker_is_fresh", lambda _marker: marker_fresh)
     monkeypatch.delenv("SKIP_PYTEST_HOOK", raising=False)
@@ -87,7 +87,7 @@ def test_non_trigger_diff_allows(monkeypatch):
 def test_hook_errors_fail_open(monkeypatch):
     payload = json.dumps({"tool_input": {"command": "git push origin main"}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
-    monkeypatch.setattr(guard, "_current_branch", lambda: None)
+    monkeypatch.setattr(guard, "_current_branch", lambda _cwd: None)
     monkeypatch.delenv("SKIP_PYTEST_HOOK", raising=False)
     assert guard.main() == 0
 
@@ -330,3 +330,97 @@ def test_block_msg_interpolates_actual_branch():
     assert "direct push from `some-feature-branch`" in msg
     assert "from `main`" not in msg
 
+
+
+# --- #5771: the guard must judge the tree the push actually runs in. ---------
+#
+# Regression tests backed by REAL git repos, not monkeypatched helpers: the bug
+# was that `_current_branch`/`_changed_paths` ran in the hook process's own cwd
+# (the primary checkout, always `main` under layout A), so every dispatch-worktree
+# push was judged as a push from `main` against main's diff. Monkeypatching those
+# two helpers is exactly what hid it, so these tests must not.
+
+
+def _git(cwd: Path, *args: str) -> None:
+    env = os.environ.copy()
+    for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
+        env.pop(key, None)
+    subprocess.run(
+        ["git", *args], cwd=cwd, env=env, check=True,
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    )
+
+
+@pytest.fixture
+def repo_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
+    """A repo on `main` with a Python commit, plus a worktree on a feature branch."""
+    origin = tmp_path / "origin"
+    origin.mkdir()
+    _git(origin, "init", "-b", "main")
+    _git(origin, "config", "user.email", "t@t.t")
+    _git(origin, "config", "user.name", "t")
+    (origin / "seed.py").write_text("x = 1\n", encoding="utf-8")
+    _git(origin, "add", "seed.py")
+    _git(origin, "commit", "-m", "seed")
+
+    main_co = tmp_path / "main_co"
+    _git(tmp_path, "clone", str(origin), str(main_co))
+    _git(main_co, "config", "user.email", "t@t.t")
+    _git(main_co, "config", "user.name", "t")
+    # An unpushed Python commit on main — the guard's trigger condition.
+    (main_co / "changed.py").write_text("y = 2\n", encoding="utf-8")
+    _git(main_co, "add", "changed.py")
+    _git(main_co, "commit", "-m", "python change on main")
+
+    worktree = tmp_path / "wt"
+    _git(main_co, "worktree", "add", str(worktree), "-b", "claude/feature")
+    return main_co, worktree
+
+
+def _run_real(monkeypatch: pytest.MonkeyPatch, command: str, payload_cwd: Path) -> int:
+    payload = json.dumps({"tool_input": {"command": command}, "cwd": str(payload_cwd)})
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload))
+    monkeypatch.setattr(guard, "_marker_is_fresh", lambda _marker: False)
+    monkeypatch.delenv("SKIP_PYTEST_HOOK", raising=False)
+    return guard.main()
+
+
+def test_push_from_worktree_branch_is_not_judged_as_main(monkeypatch, repo_with_worktree):
+    """The false positive that trained everyone to set SKIP_PYTEST_HOOK=1."""
+    _main_co, worktree = repo_with_worktree
+    assert _run_real(monkeypatch, "git push origin HEAD:claude/feature", worktree) == 0
+
+
+def test_leading_cd_into_a_worktree_is_honoured(monkeypatch, repo_with_worktree):
+    """`cd <worktree> && git push` must be judged in the worktree, not the payload cwd."""
+    main_co, worktree = repo_with_worktree
+    command = f"cd {worktree} && git push origin HEAD:claude/feature"
+    assert _run_real(monkeypatch, command, main_co) == 0
+
+
+def test_genuine_main_push_with_python_changes_still_blocks(monkeypatch, repo_with_worktree):
+    """The guard must keep its teeth for the case it actually exists to catch."""
+    main_co, _worktree = repo_with_worktree
+    assert _run_real(monkeypatch, "git push origin main", main_co) == 2
+
+
+def test_empty_diff_never_claims_python_changes(monkeypatch, tmp_path):
+    """An empty outgoing diff must not be reported as 'includes Python changes'."""
+    origin = tmp_path / "o2"
+    origin.mkdir()
+    _git(origin, "init", "-b", "main")
+    _git(origin, "config", "user.email", "t@t.t")
+    _git(origin, "config", "user.name", "t")
+    (origin / "seed.py").write_text("x = 1\n", encoding="utf-8")
+    _git(origin, "add", "seed.py")
+    _git(origin, "commit", "-m", "seed")
+    clone = tmp_path / "c2"
+    _git(tmp_path, "clone", str(origin), str(clone))
+    # No commits ahead of origin/main at all.
+    assert _run_real(monkeypatch, "git push origin main", clone) == 0
+
+
+def test_unresolvable_cd_falls_back_instead_of_guessing(monkeypatch, repo_with_worktree):
+    """`cd $VAR` is ambiguous; the guard must fall back to the payload cwd, not guess."""
+    main_co, _worktree = repo_with_worktree
+    assert _run_real(monkeypatch, "cd $TARGET && git push origin main", main_co) == 2
