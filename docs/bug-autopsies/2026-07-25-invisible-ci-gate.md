@@ -1,6 +1,7 @@
 # The CI gate was invisible, and the suite rotted behind it
 
 **Date:** 2026-07-25
+**Symptom:** every PR reported a green CI Gate while the full test suite was broken — 111 failures on the first unconditional run, 6 of them red on `main` itself, plus two hangs that wedged any complete run.
 **Severity:** systemic — the repository's only required check could pass while the build
 pipeline, the quality gates, and 111 tests were broken.
 **Surfaced by:** #5766 (CI Gate reboot), which made the full suite run unconditionally.
