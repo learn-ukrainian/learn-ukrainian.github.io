@@ -252,3 +252,24 @@ def test_write_plan_lpt_opt_in_uses_durations(tmp_path: Path, monkeypatch) -> No
         equal_sets.append(set(eq["assigned_nodeids"]))
         lpt_sets.append(set(lpt["assigned_nodeids"]))
     assert equal_sets != lpt_sets
+
+
+def test_write_all_plans_collects_once_and_uses_duration_lpt(tmp_path: Path, monkeypatch) -> None:
+    nodeids = [f"tests/test_{index}.py::test_case" for index in range(8)]
+    calls = 0
+
+    def collect_once(args=()):
+        nonlocal calls
+        calls += 1
+        return list(nodeids)
+
+    monkeypatch.setattr(pytest_shards, "collect_nodeids", collect_once)
+    durations = tmp_path / "durations.json"
+    durations.write_text(json.dumps({nodeids[0]: 20.0}), encoding="utf-8")
+
+    pytest_shards.write_all_plans(shard_count=4, durations_path=durations, output_dir=tmp_path)
+
+    assert calls == 1
+    plans = [json.loads((tmp_path / f"plan-{index}.json").read_text()) for index in range(1, 5)]
+    assert {plan["partition_mode"] for plan in plans} == {"lpt-durations"}
+    assert sorted(nodeid for plan in plans for nodeid in plan["assigned_nodeids"]) == nodeids

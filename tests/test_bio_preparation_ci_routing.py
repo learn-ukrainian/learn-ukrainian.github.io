@@ -48,35 +48,25 @@ def test_preparation_filter_covers_every_bio_capsule_surface() -> None:
     assert not uncovered
 
 
-def test_bio_preparation_is_removed_from_broad_python_and_frontend_routes() -> None:
-    filters = _filters()
-    for route in ("python", "frontend"):
-        globs = set(filters[route])
-        assert "curriculum/l2-uk-en/**" not in globs
-        assert globs >= RUNTIME_CURRICULUM_GLOBS
-
-    # Mixed PRs remain fail-open: application/test paths still select Python,
-    # and BIO learner bundles still select both broad runtime routes.
-    assert "scripts/**/*.py" in filters["python"]
-    assert "tests/**/*.py" in filters["python"]
+def test_preparation_routing_is_advisory_only() -> None:
+    """#5744: path routing may inform reporting, never required-job selection."""
+    workflow = _workflow()
+    assert workflow["jobs"]["changes"]["name"] == "Advisory path classification"
+    required = workflow["jobs"]["ci-gate"]["needs"]
+    assert "changes" not in required
+    assert "preparation" in _filters()
 
 
-def test_preparation_output_and_required_gate_are_wired_end_to_end() -> None:
+def test_preparation_output_is_exposed_for_advisory_consumers() -> None:
     action = yaml.safe_load(FILTER_ACTION.read_text(encoding="utf-8"))
     assert "preparation" in action["outputs"]
 
     jobs = _workflow()["jobs"]
     assert jobs["changes"]["outputs"]["preparation"] == "${{ steps.filter.outputs.preparation }}"
-    assert jobs["bio-preparation-data"]["if"] == "needs.changes.outputs.preparation == 'true'"
-    assert "bio-preparation-data" in jobs["ci-gate"]["needs"]
+    assert "changes" not in jobs["ci-gate"]["needs"]
 
 
-def test_preparation_gate_tracks_registry_entry_changes_and_decomposes_renames() -> None:
-    steps = _workflow()["jobs"]["bio-preparation-data"]["steps"]
-    validator = next(step for step in steps if step.get("name") == "Validate BIO preparation capsules and active holds")
-    script = validator["run"]
-
-    assert script.count('"--no-renames"') == 2
-    assert '"git", "show", f"{base_sha}:{registry_rel}"' in script
-    assert "registry_changed_slugs" in script
-    assert "changed_slugs.update(registry_changed_slugs)" in script
+def test_required_suite_does_not_use_preparation_selection() -> None:
+    workflow = _workflow()
+    for job_name in workflow["jobs"]["ci-gate"]["needs"]:
+        assert "needs.changes.outputs.preparation" not in str(workflow["jobs"][job_name])

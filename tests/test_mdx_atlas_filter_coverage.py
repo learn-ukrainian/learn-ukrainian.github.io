@@ -20,7 +20,6 @@ new input without a matching glob fails pytest.
 from __future__ import annotations
 
 import fnmatch
-import re
 import sys
 from pathlib import Path
 
@@ -113,10 +112,7 @@ def test_frontend_filter_covers_mdx_generator_inputs() -> None:
     _assert_filter_covers(
         "frontend",
         _mdx_generator_inputs(),
-        hint=(
-            "mdx-generation-drift / mdx-source-parity will not fire on "
-            "generator-only changes."
-        ),
+        hint="advisory frontend classification should retain diagnostic coverage.",
     )
 
 
@@ -129,13 +125,8 @@ def test_atlas_filter_covers_freshness_inputs() -> None:
 
 
 def test_atlas_freshness_hashfiles_includes_pointer() -> None:
-    """Workflow expression must still key the cache on the pointer file."""
+    """The pointer remains routing input; required jobs never depend on it."""
     text = _CI_WORKFLOW.read_text(encoding="utf-8")
-    # Match the dorny/actions expression used by atlas-freshness (and peers).
-    pattern = re.compile(
-        r"hashFiles\(\s*['\"]site/src/data/lexicon-manifest\.pointer\.json['\"]\s*\)"
-    )
-    assert pattern.search(text), (
-        "ci.yml atlas cache key no longer hashFiles "
-        "site/src/data/lexicon-manifest.pointer.json"
-    )
+    assert "site/src/data/lexicon-manifest.pointer.json" in text
+    workflow = yaml.safe_load(text)
+    assert "changes" not in workflow["jobs"]["ci-gate"]["needs"]

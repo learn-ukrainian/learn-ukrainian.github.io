@@ -93,6 +93,14 @@ def _configure_search(
 ) -> None:
     monkeypatch.setattr(sources_db, "_get_conn", lambda: conn)
     monkeypatch.setattr(sources_db, "_CORPORA", ("ukrainian_wiki",))
+    # Search integration tests exercise ranking orchestration, not the real
+    # dense model.  Leaving this unstubbed can lazily load Torch and fetch a
+    # model from the network in every CI worker.
+    monkeypatch.setattr(
+        dense_rerank,
+        "rerank_candidates",
+        lambda query, candidates, *, corpus, limit=10, manifest_db=None: list(candidates)[:limit],
+    )
     monkeypatch.setattr(
         sources_db,
         "rerank_candidates",

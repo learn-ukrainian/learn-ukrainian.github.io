@@ -183,6 +183,35 @@ def write_plan(
     )
 
 
+def write_all_plans(*, shard_count: int, durations_path: Path | None, output_dir: Path) -> None:
+    """Collect once, then write a coherent duration-weighted LPT plan per shard."""
+    nodeids = collect_nodeids()
+    durations = load_durations(durations_path)
+    shards = assign_shards(nodeids, shard_count, durations)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    for shard_id, assigned in enumerate(shards, start=1):
+        if not assigned:
+            raise RuntimeError(
+                f"shard {shard_id} received zero assigned tests out of {len(nodeids)} collected"
+            )
+        (output_dir / f"test-nodeids-{shard_id}.txt").write_text(
+            "\n".join(assigned) + "\n", encoding="utf-8"
+        )
+        _write_json(
+            output_dir / f"plan-{shard_id}.json",
+            {
+                "assigned_nodeids": assigned,
+                "assigned_digest": _digest(assigned),
+                "collected_count": len(nodeids),
+                "collected_digest": _digest(nodeids),
+                "partition_mode": "lpt-durations",
+                "serial_nodeids": list(SERIAL_TESTS) if shard_id == 1 else [],
+                "shard_count": shard_count,
+                "shard_id": shard_id,
+            },
+        )
+
+
 def _junit_count(path: Path) -> int:
     root = element_tree.parse(path).getroot()
     if root.tag == "testsuite":
@@ -288,6 +317,10 @@ def _parser() -> argparse.ArgumentParser:
     )
     plan.add_argument("--output", type=Path, required=True)
     plan.add_argument("--args-output", type=Path, required=True)
+    plan_all = commands.add_parser("plan-all", help="Collect once and write every shard plan")
+    plan_all.add_argument("--shard-count", type=int, default=SHARD_COUNT)
+    plan_all.add_argument("--durations", type=Path)
+    plan_all.add_argument("--output-dir", type=Path, required=True)
     verify = commands.add_parser("verify-artifacts")
     verify.add_argument("--artifact-dir", type=Path, required=True)
     verify.add_argument("--shard-count", type=int, default=SHARD_COUNT)
@@ -311,6 +344,12 @@ def main(argv: Sequence[str] | None = None) -> int:
                 output=args.output,
                 args_output=args.args_output,
                 use_lpt_durations=bool(args.use_lpt_durations),
+            )
+        elif args.command == "plan-all":
+            write_all_plans(
+                shard_count=args.shard_count,
+                durations_path=args.durations,
+                output_dir=args.output_dir,
             )
         elif args.command == "verify-artifacts":
             verify_artifacts(args.artifact_dir, args.shard_count)

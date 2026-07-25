@@ -1,0 +1,20 @@
+name: Main health
+
+# This deliberately does not share CI's PR cancellation policy. It records a
+# post-merge full-suite result for every main SHA, even while newer merges arrive.
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: main-health-${{ github.sha }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  required-suite:
+    name: Main health required suite
+    uses: ./.github/workflows/ci.yml
+    secrets: inherit

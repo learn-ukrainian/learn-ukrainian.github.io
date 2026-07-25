@@ -110,6 +110,7 @@ def test_migration_fingerprint_drift_fails_closed(tmp_path: Path) -> None:
         SessionStreamDatabase(path).connect()
 
 
+@pytest.mark.xdist_group(name="resource-threading")
 def test_concurrent_first_open_serializes_migration_and_session_contention(tmp_path: Path) -> None:
     database_path = tmp_path / "shared-empty.sqlite3"
     barrier = Barrier(8)

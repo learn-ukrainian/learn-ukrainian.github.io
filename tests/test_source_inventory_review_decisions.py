@@ -73,6 +73,7 @@ def test_committed_first_source_inventory_review_batch_validates() -> None:
     }
 
 
+@pytest.mark.xdist_group(name="resource-inventory")
 def test_default_committed_decision_files_validate() -> None:
     summary = decisions.validate_committed_decision_files()
 
