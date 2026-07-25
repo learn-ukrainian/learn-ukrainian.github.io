@@ -192,7 +192,7 @@ _LLM_QG_CONTRACT_CONFLICT = pytest.mark.xfail(
     reason=(
         "contradicts test_llm_qg_phase_artifact_requires_current_db_record: a fresh "
         "llm_qg.json may not substitute for a current DB record. Design decision pending "
-        "(gate integrity vs. resume cost) — see #5788."
+        "(gate integrity vs. resume cost) — see #5796."
     ),
 )
 
