@@ -83,7 +83,7 @@ def main():
 
         if not (found_sentence and matched_word):
             matched_word = target_word
-            found_sentence = f"На сьогоднішньому уроці ми детально опрацьовуємо {matched_word}."
+            found_sentence = f"Ключове слово для вивчення в цьому розділі: «{matched_word}»."
 
         blanked = found_sentence.replace(matched_word, "_____")
         cloze_count += 1

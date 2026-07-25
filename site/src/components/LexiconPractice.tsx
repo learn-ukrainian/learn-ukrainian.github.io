@@ -103,28 +103,58 @@ function PracticeChromeDual({ uk, en }: { uk: string; en: string }): ReactElemen
 
 function ensureDeckCustomSetCoverage(deck: PracticeDeckData, lemmaKeys: string[]): PracticeDeckData {
   if (!deck || !lemmaKeys || lemmaKeys.length === 0) return deck;
-  const existingIndexLemmas = new Set((deck.index ?? []).map((i) => (i.lemmaId || i.lemma || '').toLowerCase()));
+  const existingIndexLemmas = new Set(
+    (deck.index ?? []).map((i) => (i.lemmaId || i.lemma || '').toLowerCase()),
+  );
   const newIndexItems: PracticeIndexItem[] = [];
   const newLexemes: PracticeLexeme[] = [];
 
+  const clozeByLemma = new Map<string, string[]>();
+  for (const c of deck.cloze ?? []) {
+    const key1 = (c.lemmaId || '').toLowerCase();
+    const key2 = (c.lemma || '').toLowerCase();
+    if (key1) {
+      if (!clozeByLemma.has(key1)) clozeByLemma.set(key1, []);
+      clozeByLemma.get(key1)!.push(c.clozeId);
+    }
+    if (key2 && key2 !== key1) {
+      if (!clozeByLemma.has(key2)) clozeByLemma.set(key2, []);
+      clozeByLemma.get(key2)!.push(c.clozeId);
+    }
+  }
+
+  let orderCounter = (deck.index ?? []).length + 1;
   for (const key of lemmaKeys) {
     const keyLower = key.toLowerCase();
     if (!existingIndexLemmas.has(keyLower)) {
       existingIndexLemmas.add(keyLower);
       const cleanKey = key.replace(/\(.*?\)/g, '').trim() || key;
+      const matchedClozeIds = clozeByLemma.get(keyLower) ?? [];
+      const hasCloze = matchedClozeIds.length > 0;
+
       newIndexItems.push({
         lemmaId: key,
         lemma: cleanKey,
-        level: 'A1',
-        modes: ['flashcard', 'cloze', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage'],
+        cefr: 'A1',
+        modes: hasCloze
+          ? ['flashcard', 'cloze', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage']
+          : ['flashcard', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage'],
+        hasCloze,
+        clozeIds: matchedClozeIds,
+        newOrder: orderCounter++,
       });
+
       newLexemes.push({
         lemmaId: key,
         lemma: cleanKey,
-        level: 'A1',
-        uk: cleanKey,
-        en: `Vocabulary item: ${cleanKey}`,
+        lemmaPlain: cleanKey,
+        ipa: null,
+        gloss: cleanKey,
         pos: 'noun',
+        cefr: 'A1',
+        heritage: null,
+        severity: null,
+        paradigm: { cases: {} },
       });
     }
   }
@@ -1556,8 +1586,8 @@ function LexiconPracticeIsland({
       if (selectedDeckFilter === 'virtual_teacher_lesson') {
         const teacherDeck = getTeacherLessonVirtualDeck();
         const keysLower = new Set(teacherDeck.lemma_keys.map((k) => k.toLowerCase()));
-        const candIdLower = (candidate.lemmaId || '').toLowerCase();
-        const candLemmaLower = (candidate.lemma || '').toLowerCase();
+        const candIdLower = (candidate.indexItem?.lemmaId || candidate.lemma?.lemmaId || '').toLowerCase();
+        const candLemmaLower = (candidate.lemma?.lemma || candidate.indexItem?.lemma || '').toLowerCase();
         if (!keysLower.has(candIdLower) && !keysLower.has(candLemmaLower)) {
           return false;
         }
@@ -1565,8 +1595,8 @@ function LexiconPracticeIsland({
         const customSet = customSets.find((s) => s.id === selectedDeckFilter);
         if (customSet) {
           const keysLower = new Set(customSet.lemma_keys.map((k) => k.toLowerCase()));
-          const candIdLower = (candidate.lemmaId || '').toLowerCase();
-          const candLemmaLower = (candidate.lemma || '').toLowerCase();
+          const candIdLower = (candidate.indexItem?.lemmaId || candidate.lemma?.lemmaId || '').toLowerCase();
+          const candLemmaLower = (candidate.lemma?.lemma || candidate.indexItem?.lemma || '').toLowerCase();
           if (!keysLower.has(candIdLower) && !keysLower.has(candLemmaLower)) {
             return false;
           }
@@ -1817,7 +1847,6 @@ function LexiconPracticeIsland({
         // Merge teacher deck pre-generated cloze items if active
         if (selectedDeckFilter === 'virtual_teacher_lesson') {
           const teacherDeck = getTeacherLessonVirtualDeck();
-          nextDeck = ensureDeckCustomSetCoverage(nextDeck!, teacherDeck.lemma_keys);
           try {
             const teacherClozeShard = await getShardJson<{ cloze?: PracticeClozeItem[] }>(
               `${shardBaseUrl}/practice-cloze.teacher.json`,
@@ -1832,19 +1861,20 @@ function LexiconPracticeIsland({
           } catch {
             // Degrades gracefully if teacher cloze shard is missing
           }
+          nextDeck = ensureDeckCustomSetCoverage(nextDeck!, teacherDeck.lemma_keys);
         }
 
         // Merge custom set document cloze items if active
         if (selectedDeckFilter !== 'all' && selectedDeckFilter !== 'virtual_teacher_lesson') {
           const activeSet = customSets.find((s) => s.id === selectedDeckFilter);
           if (activeSet) {
-            nextDeck = ensureDeckCustomSetCoverage(nextDeck!, activeSet.lemma_keys);
             if (activeSet.cloze_items && activeSet.cloze_items.length > 0) {
               nextDeck = {
                 ...nextDeck,
                 cloze: [...(nextDeck.cloze ?? []), ...activeSet.cloze_items],
               };
             }
+            nextDeck = ensureDeckCustomSetCoverage(nextDeck!, activeSet.lemma_keys);
           }
         }
 

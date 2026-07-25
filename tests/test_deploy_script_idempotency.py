@@ -25,6 +25,7 @@ CODEX_HOOKS_CONFIG = Path(".codex/hooks.json")
 PROMPT_CONTRACT_MANIFEST = Path("prompt-contracts/manifests/curriculum-lifecycle.module.v1.yaml")
 READINESS_PROFILE_CONFIG = Path("curriculum-lifecycle/config/readiness-profiles.v1.yaml")
 COORDINATOR_CONFIG = Path("curriculum-lifecycle/config/coordinator.v1.yaml")
+SHARED_CURRICULUM_SKILLS = ("curriculum-lifecycle", "curriculum-preparation")
 UNSCOPED_RULE_FILES = (
     "operator-expectations.md",
     "critical-rules.md",
@@ -132,6 +133,14 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
         canonical = repo / "agents_extensions/shared" / shared_file
         for mirror_root in (".claude", ".agent", ".codex"):
             assert (repo / mirror_root / shared_file).read_bytes() == canonical.read_bytes()
+    for skill_name in SHARED_CURRICULUM_SKILLS:
+        canonical_skill = repo / "agents_extensions" / "shared" / "skills" / skill_name
+        for mirror_root in (".claude", ".agent", ".agents", ".codex", ".gemini"):
+            deployed_skill = repo / mirror_root / "skills" / skill_name
+            assert (deployed_skill / "SKILL.md").read_bytes() == (canonical_skill / "SKILL.md").read_bytes()
+            assert (deployed_skill / "agents" / "openai.yaml").read_bytes() == (
+                canonical_skill / "agents" / "openai.yaml"
+            ).read_bytes()
 
     codex_hooks_diff = _run_command(
         repo,
@@ -140,6 +149,22 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
     assert codex_hooks_diff.returncode == 0, (
         f"Codex hooks drift after fresh deploy:\nstdout: {codex_hooks_diff.stdout}\nstderr: {codex_hooks_diff.stderr}"
     )
+
+
+def test_curriculum_preparation_documents_canonical_helper_paths() -> None:
+    """Preparation must identify its import-only helpers from the repository root."""
+    skill_path = REPO_ROOT / "agents_extensions/shared/skills/curriculum-preparation/SKILL.md"
+    skill = skill_path.read_text(encoding="utf-8")
+    helper_paths = (
+        Path("agents_extensions/shared/skills/curriculum-preparation/scripts/bounded_packet.py"),
+        Path("agents_extensions/shared/skills/track-completion/scripts/bounded_completion.py"),
+    )
+
+    for helper_path in helper_paths:
+        assert (REPO_ROOT / helper_path).is_file()
+        assert str(helper_path) in skill
+    assert "`scripts/bounded_packet.py`" not in skill
+    assert "`../track-completion/scripts/bounded_completion.py`" not in skill
 
 
 def test_claude_rule_exclusion_list_covers_unscoped_files() -> None:
