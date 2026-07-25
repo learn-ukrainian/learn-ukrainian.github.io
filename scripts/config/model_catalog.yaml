@@ -88,6 +88,20 @@ models:
     weaknesses: [frontier_quota_cost]
     sources:
       - https://platform.claude.com/docs/en/about-claude/models/overview
+  # Retained alongside claude-opus-5: the advisor ROSTER now points at opus-5, but
+  # this id is still referenced by scripts/context_canary.py, scripts/pipeline/dispatch.py,
+  # ai_agent_bridge/openai_proxy.py and _dispatch_wrappers.py. Removing the entry
+  # broke collection with KeyError: 'claude-opus-4-8'.
+  claude-opus-4-8:
+    family: anthropic
+    tier: frontier_authority
+    lifecycle: active
+    roles: [architecture, critical_review, security_review, orchestration]
+    transports: [native_claude, cursor]
+    strengths: [production_judgment, adversarial_review, reliable_long_horizon_coding]
+    weaknesses: [frontier_quota_cost]
+    sources:
+      - https://www.anthropic.com/news/claude-opus-4-8
   claude-sonnet-5:
     family: anthropic
     tier: frontier_practical
@@ -349,6 +363,15 @@ models:
 review_candidates:
   claude-opus-5:
     model_id: claude-opus-5
+    route: claude
+    transport: native_claude
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude
+    review_profiles: [code, infra]
+    capabilities: [code_review]
+  # Kept: scripts/review/reviewer_resolver.py:213 binds CLAUDE_OPUS_4_8 at import
+  # time, so deleting this key breaks collection of every test that imports it.
+  claude-opus-4-8:
+    model_id: claude-opus-4-8
     route: claude
     transport: native_claude
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude

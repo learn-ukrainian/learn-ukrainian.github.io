@@ -475,11 +475,14 @@ def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
 
 def test_critical_ladder_keeps_authority_before_practical():
     critical = REVIEW_LADDERS["critical"]
+    # Operator directive 2026-07-25: the Anthropic advisor seat is claude-opus-5.
+    # Fable stays listed but is deprioritised on cost; claude-opus-4-8 remains in the
+    # catalog for its non-advisor consumers but is no longer on the critical ladder.
     assert [rung[0].name for rung in critical[:5]] == [
         "openai_frontier",
         "claude-fable-5",
         "claude-fable-5-cursor-fallback",
-        "claude-opus-4-8",
+        "claude-opus-5",
         "gpt-5.6-terra",
     ]
 
