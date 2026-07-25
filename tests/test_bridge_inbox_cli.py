@@ -416,27 +416,31 @@ def test_discuss_fails_and_warns_when_agent_writes_worktree(
         check=True,
         capture_output=True,
         env=git_env,
+        timeout=30
     )
     subprocess.run(
         ["git", "config", "user.email", "test@example.com"],
         cwd=tmp_path,
         check=True,
         env=git_env,
+        timeout=30
     )
     subprocess.run(
         ["git", "config", "user.name", "Test User"],
         cwd=tmp_path,
         check=True,
         env=git_env,
+        timeout=30
     )
     (tmp_path / "README.md").write_text("clean\n", encoding="utf-8")
-    subprocess.run(["git", "add", "README.md"], cwd=tmp_path, check=True, env=git_env)
+    subprocess.run(["git", "add", "README.md"], cwd=tmp_path, check=True, env=git_env, timeout=30)
     subprocess.run(
         ["git", "commit", "-m", "initial"],
         cwd=tmp_path,
         check=True,
         capture_output=True,
         env=git_env,
+        timeout=30
     )
 
     def _write_attempt(agent: str, *_args, **kwargs) -> Result:
@@ -481,6 +485,7 @@ def test_discuss_fails_and_warns_when_agent_writes_worktree(
         capture_output=True,
         text=True,
         env=git_env,
+        timeout=30
     ).stdout.strip()
     assert rev_count == "1"
 

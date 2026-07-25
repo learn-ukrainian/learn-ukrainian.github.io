@@ -10,7 +10,7 @@ def test_hooks_are_executable_in_git():
 
     # Run git ls-files -s to inspect the staging area/index file modes
     cmd = ["git", "ls-files", "-s", "agents_extensions/shared/hooks/"]
-    res = subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, text=True, check=True)
+    res = subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, text=True, check=True, timeout=30)
 
     lines = res.stdout.strip().split("\n")
     assert lines and lines[0], "No hook files tracked under agents_extensions/shared/hooks/"
