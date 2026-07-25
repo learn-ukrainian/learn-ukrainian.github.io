@@ -13,6 +13,8 @@ single source of truth that downstream resume logic depends on.
 from __future__ import annotations
 
 import json
+import os
+import time
 from pathlib import Path
 from typing import Any
 
@@ -202,6 +204,35 @@ def test_llm_qg_skipped_for_legacy_aggregate_pass(module_dir: Path) -> None:
 
 def test_llm_qg_reruns_when_aggregate_missing(module_dir: Path) -> None:
     _write_json(module_dir / "llm_qg.json", {"placeholder": True})
+    assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is False
+
+
+def test_llm_qg_skipped_when_db_empty_but_json_file_is_fresh(module_dir: Path) -> None:
+    """A freshly dispatched worktree has no local llm_qg.db (gitignored).
+
+    Resume must fall back to a module-local llm_qg.json when it is not older
+    than the module's learner-facing content, mirroring
+    scripts.api.state_compute.read_llm_qg (docs/runbooks/module-quality-gates.md
+    Persistence).
+    """
+    (module_dir / "module.md").write_text("# Fixture\n", encoding="utf-8")
+    time.sleep(0.01)
+    _write_json(
+        module_dir / "llm_qg.json",
+        {"aggregate": {"verdict": "PASS", "terminal_verdict": "PASS", "min_score": 9.0}},
+    )
+    assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is True
+
+
+def test_llm_qg_reruns_when_json_file_is_stale_relative_to_content(module_dir: Path) -> None:
+    """A pass artifact older than the current module content must not be trusted."""
+    _write_json(
+        module_dir / "llm_qg.json",
+        {"aggregate": {"verdict": "PASS", "terminal_verdict": "PASS", "min_score": 9.0}},
+    )
+    stale_mtime = time.time() - 3600
+    os.utime(module_dir / "llm_qg.json", (stale_mtime, stale_mtime))
+    (module_dir / "module.md").write_text("# Fixture, revised\n", encoding="utf-8")
     assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is False
 
 
