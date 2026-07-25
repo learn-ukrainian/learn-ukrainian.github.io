@@ -23,6 +23,16 @@ from wiki.channels import (
 def test_registry_covers_all_external_source_files():
     channels = load_channels(reload=True)
     source_files = {path.stem for path in CHANNELS_PATH.parent.glob("*.jsonl")}
+    if not source_files:
+        # Same condition as tests/test_wiki_channels.py: the corpus itself is untracked
+        # local data, so in CI the glob is empty, every registry entry reads as
+        # "uncovered", and the failure says nothing about the registry. Skip visibly
+        # rather than fail — or, worse, pass vacuously. Where the corpus IS present the
+        # assertion below still runs in full.
+        pytest.skip(
+            f"requires the external-article corpus (*.jsonl under {CHANNELS_PATH.parent}) — "
+            "untracked local data, not provisioned in CI"
+        )
     assert set(channels) == source_files
 
 

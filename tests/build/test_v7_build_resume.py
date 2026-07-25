@@ -165,7 +165,39 @@ def test_wiki_coverage_review_reruns_when_overall_fail(module_dir: Path) -> None
 
 
 # ----- llm_qg ------------------------------------------------------------------
+#
+# QUARANTINED — these three encode a contract that DIRECTLY CONTRADICTS
+# tests/test_v7_build_reviewer_assert.py::test_llm_qg_phase_artifact_requires_current_db_record.
+# Both cannot hold at once:
+#
+#   * here: a fresh on-disk llm_qg.json MAY stand in for a DB record, so a resumed
+#     build in a freshly dispatched worktree (which has no gitignored llm_qg.db) does
+#     not re-run paid LLM quality-gate calls;
+#   * there: a fresh llm_qg.json must NOT count as a pass without a current DB record,
+#     so a stale or hand-written file cannot make a build skip its LLM quality gate.
+#
+# They coexisted undetected because CI selected tests by changed files and never ran
+# both. #5766 made the suite run unconditionally and the contradiction surfaced
+# immediately. PR #5784 restored the fallback and satisfied these three while silently
+# breaking the gate-integrity test; that production change has been reverted here,
+# because weakening a quality gate is not a call to make in passing.
+#
+# Which contract wins is a DESIGN decision (gate integrity vs. resume cost) and is
+# handed to the advisor seat — see the issue referenced in the marker below.
+# strict=True on purpose: if someone makes these pass, this file FAILS until the
+# contradiction is resolved deliberately rather than drifting back.
 
+_LLM_QG_CONTRACT_CONFLICT = pytest.mark.xfail(
+    strict=True,
+    reason=(
+        "contradicts test_llm_qg_phase_artifact_requires_current_db_record: a fresh "
+        "llm_qg.json may not substitute for a current DB record. Design decision pending "
+        "(gate integrity vs. resume cost) — see #5788."
+    ),
+)
+
+
+@_LLM_QG_CONTRACT_CONFLICT
 def test_llm_qg_skipped_when_terminal_verdict_pass(module_dir: Path) -> None:
     _write_json(
         module_dir / "llm_qg.json",
@@ -194,6 +226,7 @@ def test_llm_qg_reruns_when_terminal_verdict_revise(module_dir: Path) -> None:
     assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is False
 
 
+@_LLM_QG_CONTRACT_CONFLICT
 def test_llm_qg_skipped_for_legacy_aggregate_pass(module_dir: Path) -> None:
     _write_json(
         module_dir / "llm_qg.json",
@@ -207,6 +240,7 @@ def test_llm_qg_reruns_when_aggregate_missing(module_dir: Path) -> None:
     assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is False
 
 
+@_LLM_QG_CONTRACT_CONFLICT
 def test_llm_qg_skipped_when_db_empty_but_json_file_is_fresh(module_dir: Path) -> None:
     """A freshly dispatched worktree has no local llm_qg.db (gitignored).
 
