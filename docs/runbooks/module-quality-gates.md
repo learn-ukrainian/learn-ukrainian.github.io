@@ -89,12 +89,17 @@ inside prose evidence.
 LLM-QG output is expensive and must not be lost.
 
 - Raw forensic files remain in the run archive.
-- Current queryable LLM-QG state is persisted to local SQLite at
-  `data/telemetry/llm_qg.db`.
+- Current queryable LLM-QG state is persisted to the primary checkout's
+  repository-owned SQLite store at `data/telemetry/llm_qg.db`, shared by every
+  linked worktree. Set `LEARN_UKRAINIAN_LLM_QG_DB` to use one exact alternate
+  store; an explicit missing store is a cache miss, not a fallback trigger.
 - The store is content-hash bound to `module.md`, `activities.yaml`,
   `vocabulary.yaml`, and `resources.yaml`.
-- API readers prefer the current SQLite record and fall back to module-local
-  `llm_qg.json` only when the file is newer than all learner-facing content.
+- Build and promotion resume require a current SQLite PASS record with the
+  expected gate version and prompt hash. A module-local `llm_qg.json` never
+  authorizes a gate skip.
+- Monitor readers may display a module-local `llm_qg.json` when it is newer
+  than learner-facing content, but mark it as non-authoritative observation.
 - Corrupt local telemetry DBs degrade to missing QG rather than breaking the
   Monitor API.
 - Generated QG artifacts and telemetry DBs stay out of PR diffs.
