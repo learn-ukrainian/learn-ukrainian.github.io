@@ -40,6 +40,7 @@ def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
         capture_output=True,
         text=True,
         env=_clean_env(),
+        timeout=30,
     )
 
 

@@ -16,26 +16,29 @@ from ai_agent_bridge import _review_safety as safety
 def fake_repo(tmp_path: Path) -> Path:
     repo = tmp_path / "primary"
     repo.mkdir()
-    subprocess.run(["git", "init"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "init"], cwd=repo, check=True, capture_output=True, timeout=30)
     subprocess.run(
         ["git", "config", "user.email", "test@example.com"],
         cwd=repo,
         check=True,
         capture_output=True,
+        timeout=30,
     )
     subprocess.run(
         ["git", "config", "user.name", "test"],
         cwd=repo,
         check=True,
         capture_output=True,
+        timeout=30,
     )
     (repo / "README").write_text("main\n", encoding="utf-8")
-    subprocess.run(["git", "add", "README"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "add", "README"], cwd=repo, check=True, capture_output=True, timeout=30)
     subprocess.run(
         ["git", "commit", "-m", "init"],
         cwd=repo,
         check=True,
         capture_output=True,
+        timeout=30,
     )
     return repo
 
@@ -120,12 +123,14 @@ def test_hermes_review_runs_in_neutral_cwd_and_cannot_mutate_primary(
         capture_output=True,
         text=True,
         check=True,
+        timeout=30,
     ).stdout.strip()
     branch_before = subprocess.run(
         ["git", "-C", str(fake_repo), "branch", "--show-current"],
         capture_output=True,
         text=True,
         check=True,
+        timeout=30,
     ).stdout.strip()
     readme_before = (fake_repo / "README").read_text(encoding="utf-8")
 
@@ -186,18 +191,21 @@ echo 'VERDICT: APPROVED'
         capture_output=True,
         text=True,
         check=True,
+        timeout=30,
     ).stdout.strip()
     status_before = subprocess.run(
         ["git", "-C", str(fake_repo), "status", "--porcelain"],
         capture_output=True,
         text=True,
         check=True,
+        timeout=30,
     ).stdout
     branch_before = subprocess.run(
         ["git", "-C", str(fake_repo), "branch", "--show-current"],
         capture_output=True,
         text=True,
         check=True,
+        timeout=30,
     ).stdout.strip()
 
     hermes._invoke_hermes(
@@ -211,18 +219,21 @@ echo 'VERDICT: APPROVED'
         capture_output=True,
         text=True,
         check=True,
+        timeout=30,
     ).stdout.strip()
     status_after = subprocess.run(
         ["git", "-C", str(fake_repo), "status", "--porcelain"],
         capture_output=True,
         text=True,
         check=True,
+        timeout=30,
     ).stdout
     branch_after = subprocess.run(
         ["git", "-C", str(fake_repo), "branch", "--show-current"],
         capture_output=True,
         text=True,
         check=True,
+        timeout=30,
     ).stdout.strip()
 
     assert head_after == head_before

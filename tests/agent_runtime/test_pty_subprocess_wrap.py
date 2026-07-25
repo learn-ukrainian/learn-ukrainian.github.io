@@ -58,6 +58,7 @@ def _resolve_test_python() -> str:
             cwd=str(_REPO_ROOT),
             text=True,
             stderr=subprocess.DEVNULL,
+            timeout=30,
         ).strip()
         if common_dir:
             main_venv = (Path(common_dir) / ".." / ".venv" / "bin" / "python").resolve()
