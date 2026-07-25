@@ -110,6 +110,10 @@ def image_only_pdf(tmp_path: Path) -> Path:
     return pdf_path
 
 
+@pytest.mark.skipif(
+    shutil.which("pdfinfo") is None,
+    reason="pdfinfo not installed",
+)
 class TestDiasporianaTextLayerProbe:
     def test_text_layer_probe_extracts_cyrillic_pages(
         self,
@@ -184,6 +188,7 @@ class TestDiasporianaJsonlSchema:
     def test_chunk_schema_matches_existing_litopys_waves(
         self,
         sample_spec: sd.SourceSpec,
+        requires_literary_wave12_jsonl: Path,
     ) -> None:
         pages = [
             sd.PageText(
