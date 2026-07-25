@@ -99,10 +99,20 @@ Shard `[3/4]` failed **identically across unrelated PRs** (#5745, #5742, #5738, 
 diffs with nothing in common, the shard's environment is the defect.
 
 CI installed the full lockfile and then force-reinstalled `torch==2.13.0` + `torchvision==0.28.0`
-CPU wheels **on all four shards** — roughly 2.5 GB per shard — on a 2-vCPU / ~7 GB runner already
+CPU wheels **on all four shards** — roughly 2.5 GB per shard — on a standard GitHub-hosted runner already
 running `pytest-xdist` with `-n auto`. Nothing the suite loads needs any of it: a repo-wide search
 for `import torch`, `from torch`, `sentence_transformers`, `SentenceTransformer` and `open_clip`
-returns **zero hits under `scripts/` or `tests/`** — every hit is inside `embed-venv/`, the embedding
+returns **zero hits under `scripts/` or `tests/`**. 
+
+> **Correction (2026-07-25):** earlier revisions of this autopsy, and the commit messages of
+> #5749, described the runner as "2 vCPU / ~7 GB". That figure was **wrong** — GitHub's standard
+> hosted runners for **public** repositories are documented at **4 vCPU / 16 GB with unlimited free
+> minutes**, which an independent capacity review surfaced. The measured failures
+> (`MemoryError`, `RuntimeError: can't start new thread`) and the fix are unaffected: removing the
+> unused ML stack turned all four shards green (29 checks pass, 0 fail). But the *stated cause*
+> carried a wrong number, so the lesson is narrower than first written — four xdist workers each
+> importing torch can exhaust even a 16 GB runner. Do not cite the old figure; and note the real
+> free-tier constraints are **20 concurrent jobs** and RAM *usage*, not minutes and not machine size — every hit is inside `embed-venv/`, the embedding
 worker's separate virtualenv, and its vendored `huggingface_hub`. Addressed in PR #5749.
 
 ### The gate and the concurrency policy were jointly self-defeating
