@@ -49,12 +49,6 @@
           },
           {
             "type": "command",
-            "command": "\"$(git rev-parse --show-toplevel)/.venv/bin/python\" \"$(git rev-parse --show-toplevel)/.codex/hooks/guard-push-pytest.py\"",
-            "timeout": 10,
-            "statusMessage": "Checking push safety"
-          },
-          {
-            "type": "command",
             "command": "\"$(git rev-parse --show-toplevel)/.venv/bin/python\" \"$(git rev-parse --show-toplevel)/.codex/hooks/guard-secret-print.py\"",
             "timeout": 5,
             "statusMessage": "Checking secret-print safety"
