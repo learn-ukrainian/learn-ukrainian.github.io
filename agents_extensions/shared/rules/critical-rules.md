@@ -35,11 +35,13 @@ This is the canonical statement; other files point here instead of restating it.
 
 > **These are agent SOPs, not the primary safeguard.** An independent best-practice audit
 > (2026-07-25) put it bluntly: *"you are over-engineering review ritual and under-engineering merge
-> physics."* Every incident these rules respond to is fixable at the **forge** — rulesets, a merge
-> queue, and identities that can approve each other — and prose is a poor substitute for
-> configuration. Read §8.6 first: it names the controls that must exist. The rules below are what an
-> agent does *while* those controls are being put in place, and remain useful afterwards as
-> operating discipline.
+> physics."* **Most** of the incidents these rules respond to are fixable at the **forge** — the direct
+> push, the untested combination, the unenforceable review — and for those, prose is a poor substitute
+> for configuration. Read §8.6 first: it names those controls.
+> **But not all of them.** The false-completion incident (§8.3) was a **harness defect**, not a forge
+> gap: a dispatch settled as `done` having pushed nothing because the dirty-worktree check was gated on
+> the wrong mode. No ruleset or merge queue would have caught it; it was fixed in code. Treat "configure
+> the forge" as the first question, never the only one.
 
 **8.1 — NEVER push to `main`.** Not a commit, not a fast-forward, not "just a regenerated file",
 not with `--no-verify`, not to unblock something urgent. **PRs only, always.** A direct push skips
@@ -67,12 +69,29 @@ and will refuse the write, which is a guard working correctly, not a bug to rout
 > implement "never merge an untested combination", and does not fix a cancelled required check. Do
 > not present worktree discipline as the answer to any of those.
 
-**8.3 — "Done" means PUSHED.** Definition of done is **a pushed branch, an open PR, and CI triggered
-on it** (or an entry in the merge queue). A task that ends without that has **FAILED**, whatever its
-status field says; analysis delivered only as a chat reply is worth nothing. **Commit early and
-often** — uncommitted work in a worktree is lost work.
-**A clarifying question with no PR is not success — it is `BLOCKED` / `NEEDS-INPUT`,** and must be
-reported as such rather than settling as `done`.
+**8.3 — For a task whose deliverable is a CHANGE, "done" means PUSHED:** a pushed branch, an open PR,
+and CI triggered on it (or an entry in the merge queue). Such a task ending without that has **FAILED**,
+whatever its status field says; the change delivered only as a chat reply is worth nothing. **Commit
+early and often** — uncommitted work in a worktree is lost work.
+
+**Scope, stated precisely because the first draft of this rule over-reached:** this applies to tasks
+dispatched to produce a change — code, docs, config. It does **not** apply to read-only work, which is
+legitimately complete with no PR: reviews, audits, research, diagnosis, and any dispatch run with
+`--mode read-only`. For those, the deliverable *is* the report. The mechanical test is the dispatch's
+own mode plus whether its worktree is dirty — not a judgement about intent.
+
+**Three distinct terminal outcomes; do not collapse them into `done`:**
+- **`done`** — the deliverable exists (a pushed PR for change tasks, a report for read-only tasks).
+- **`needs_finalize`** — work was produced but not committed or pushed. This is a **failure to finish**,
+  and it is now detected mechanically for every write-capable mode (`delegate.py`); a dirty worktree with
+  no commits can no longer report `done`.
+- **`BLOCKED` / `NEEDS-INPUT`** — genuinely cannot proceed. Reporting this is correct behaviour, not a
+  failure of nerve.
+
+Prefer **assume-and-proceed** over asking: where a brief is ambiguous but a reasonable assumption exists,
+take it, state it in the PR body, and continue. Reserve `BLOCKED` for the case where no reasonable
+assumption exists — a missing credential, a contradictory instruction, an inaccessible resource. What is
+forbidden is the middle path that caused the incident: replying with a question and settling as `done`.
 > On 2026-07-25 four dispatches reported `done` having pushed nothing: two left finished work
 > uncommitted in their worktrees, one produced nothing after inventorying its targets, and one replied
 > with a clarifying question instead of building. Three real failures read as three successes.
@@ -99,30 +118,50 @@ pass — get the missing evidence from a lane that can obtain it, then finalise.
 > maths.
 
 **Severity tiers — do not restart the world for a nit.** Blanket "fix every finding, then re-review
-everything" cannot survive this repo's merge rate and is corporate dual-control cosplay:
-- **P0 / P1 (correctness, security, scope violation, coverage silently dropped):** fix, then
-  **RE-REVIEW**, then merge.
-- **P2 / nits (naming, comments, style, non-behavioural cleanups):** fix and merge, or file a
-  follow-up. No re-review required.
-- Where a finding sits is the **reviewer's** call, recorded in the verdict — not the author's.
+everything" cannot survive this repo's merge rate and is corporate dual-control cosplay. The boundary is
+**one question about impact**, so that two reviewers reach the same tier independently:
+
+> **Can this finding change what the merged artifact DOES, or what a reader/consumer would conclude
+> from it?**
+
+- **Yes → BLOCKING.** Fix, then **RE-REVIEW**, then merge. Includes: wrong behaviour or output; a
+  security or secret-handling defect; a change outside the PR's declared scope; coverage or a gate
+  weakened or skipped; a factual claim in shipped prose that is wrong or unsupported (a wrong statement
+  in an autopsy or a rule changes what readers conclude, so it blocks).
+- **No → NON-BLOCKING.** Fix and merge, or file a follow-up; **no re-review**. Includes: naming, comment
+  wording, formatting, and refactors that provably cannot change behaviour.
+- **Unsure → treat as BLOCKING.** The tie-break is fail-closed, so an ambiguous finding never merges on
+  an optimistic reading.
+- The tier is the **reviewer's** call, recorded explicitly in the verdict, not the author's. An author
+  who disagrees escalates to a second reviewer rather than re-tiering their own finding.
 
 **8.5 — Auto-merge protocol.**
 - **Workers never merge and never arm auto-merge.** Only the driver owning that PR's lane arms it.
-- Arm **only** when all three hold: review **PASS** (findings fixed and re-reviewed) · PR is **not a
-  draft** · **no failing checks**. Standard form:
+- Arm **only** when all three hold: the review gate is satisfied — **no BLOCKING finding outstanding**
+  per §8.4, so a non-blocking nit does **not** hold arming · PR is **not a draft** · **no failing
+  checks**. Standard form:
   `gh pr merge <N> --auto --squash --delete-branch -R <owner/repo>`.
+- **Arm as early as those conditions allow, then leave it alone.** The binding policy in
+  [`workflow.md`](workflow.md) (§ auto-merge) is explicit: arm `--auto` and *"GitHub merges it when CI
+  settles, nobody babysits."* `--auto` waits for green and never bypasses blocking checks, so early
+  arming is safe and is the intended path.
 - **Our review gate is agent-enforced, not GitHub-enforced.** Branch protection may require only a
   single status check and **zero approving reviews**, so nothing external will stop a premature merge.
   That is precisely why the review gate must gate *arming*.
 - **Never merge ahead of the verdict, even under pressure.** On 2026-07-25 PR #5741 was armed while
   green and merged before its review returned; that review then found a factual omission and an
   overstatement in the merged document, needing a follow-up PR to correct.
-- **ARMED ≠ MERGED.** A PR leaves the books only at state `MERGED`. Keep one babysitter running while
-  any lane PR is open, and arm green PRs as they become green rather than when someone notices.
-  > **The babysitter is a symptom, not a virtue.** Needing an agent to watch PRs to `MERGED` means the
-  > forge is not doing it: either there is no merge queue, or cancellation makes green unobtainable
-  > (§8.6). That is **under-automation**, not diligence. Once the queue is enabled, enqueueing replaces
-  > babysitting — do not build elaborate watcher machinery instead of fixing the merge physics.
+- **ARMED ≠ MERGED.** A PR leaves the books only at state `MERGED`. Once armed, GitHub is responsible for
+  merging it — **do not babysit for arming.** A watcher's only legitimate jobs are to notice
+  *exceptions*: an outage-failed check that needs re-running, a base-branch fix that needs
+  `gh pr update-branch`, a conflict, or a PR that has sat armed-and-green without merging. If a watcher
+  is doing anything else, it has become a substitute for configuration.
+  > **Known gap that makes a watcher necessary today, stated so it is fixed rather than institutionalised:**
+  > `guard-pr-merge` refuses to arm while checks are red — correctly, since red is red — but that means a
+  > PR whose checks are still running or transiently red **cannot be armed early**, which is exactly what
+  > [`workflow.md`](workflow.md) intends. Until arming is permitted before green (or a merge queue removes
+  > the question), something must notice when a PR becomes armable. That gap is **under-automation**, not
+  > diligence, and it is infra debt — not a pattern to build on.
 - **Never `--admin`-bypass blocking CI** (pytest, ruff, frontend, schema-drift, gitleaks, radon,
   prompt-lint).
 - A **`cancelled`** required check is a gate failure, not a pass — re-run it. But after fixing the
@@ -143,12 +182,13 @@ more than any wording in §8.1–8.5:
 3. **Merge queue** (`merge_group` wired, max group size 1 so failures attribute to one PR). This is the
    real implementation of *never merge an untested combination* — the problem that two individually
    green PRs can combine into a state neither validated.
-   > **Verify availability before promising it.** GitHub's GA announcement scopes the feature to "a
-   > managed organization with public repositories and GitHub Enterprise Cloud users", which is genuinely
-   > ambiguous about free org plans. Checked 2026-07-25: this repo is **Organization-owned and public**,
-   > so the wording plausibly covers us — but confirm the setting actually appears before designing
-   > around it. Wiring `merge_group` into the workflow is harmless either way; assuming the queue exists
-   > is not.
+   > **Availability:** current GitHub documentation states merge queues are available for **any public
+   > repository** (and for private repos on Enterprise Cloud). The 2023 GA announcement's phrasing —
+   > "a managed organization with public repositories and GitHub Enterprise Cloud users" — reads as
+   > ambiguous but has been superseded; an earlier draft of this rule over-stated that uncertainty and
+   > was corrected in review. Verified 2026-07-25: this repo is **Organization-owned and public**, so it
+   > qualifies. Wire `merge_group` into every required workflow, drop wildcard branch rules, and set
+   > **maximum group size 1** if you want per-PR failure attribution.
 4. **Split the agent identities:** an author identity distinct from the approver/enqueue identity.
    With one shared identity GitHub **cannot** enforce required reviews at all, because that identity
    cannot approve its own PR. This is what makes §8.4 and §8.5 enforceable rather than voluntary.
