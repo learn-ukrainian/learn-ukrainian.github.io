@@ -17,6 +17,7 @@ def _run_migrate(input_path: Path, output_path: Path, *extra_args: str) -> subpr
         capture_output=True,
         check=False,
         text=True,
+        timeout=30,
     )
 
 

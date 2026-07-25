@@ -8,6 +8,7 @@ from agent_runtime import runner as agent_runner
 from agent_runtime.adapters.kimi import KIMI_BRIDGE_DEFAULT_MODEL
 from agent_runtime.errors import AgentStalledError, AgentTimeoutError, AgentUnavailableError, RateLimitedError
 
+from ._ask_contract import requested_effort, resolve_model_selection, response_provenance
 from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
@@ -48,6 +49,7 @@ def ask_kimi(
     from_llm: str = "claude",
     from_model: str | None = None,
     to_model: str | None = None,
+    effort: str | None = None,
     no_timeout: bool = False,
     review: bool = False,
     model: str | None = None,
@@ -56,10 +58,13 @@ def ask_kimi(
     review_pr_number: int | None = None,
 ) -> int:
     """Send a broker message and invoke the native Kimi CLI to answer it."""
-    effective_model = to_model or model or KIMI_BRIDGE_DEFAULT_MODEL
+    effective_model = resolve_model_selection(
+        lane="ask-kimi", to_model=to_model, model=model, default=KIMI_BRIDGE_DEFAULT_MODEL
+    )
     message_id = send_message(
         content, task_id, msg_type, data, from_llm=from_llm, to_llm="kimi",
         from_model=from_model, to_model=effective_model,
+        effort=effort,
         review_target=review_target_payload(review_branch, review_pr_number),
     )
     register_ask(message_id)
@@ -87,6 +92,7 @@ def process_for_kimi(
     _ = new_session  # v1 registry policy is resume_policy="never".
     timeout = _resolve_kimi_bridge_timeout(no_timeout)
     model = _extract_target_model(msg) or KIMI_BRIDGE_DEFAULT_MODEL
+    effort = requested_effort(msg)
     try:
         review_target = review_target_from_message(msg) if review else None
         with provision_review_worktree(review_target, repo_root=REPO_ROOT) as checkout:
@@ -100,7 +106,7 @@ def process_for_kimi(
                 ),
                 mode="read-only", cwd=checkout.path if checkout else REPO_ROOT,
                 model=model, task_id=msg["task_id"], session_id=None, tool_config=None,
-                entrypoint="bridge", hard_timeout=timeout, stall_timeout=min(600, timeout),
+                entrypoint="bridge", hard_timeout=timeout, stall_timeout=min(600, timeout), effort=effort,
             )
     except (RateLimitedError, AgentStalledError, AgentTimeoutError, AgentUnavailableError, ReviewWorktreeError) as exc:
         _handle_kimi_error(msg, message_id, f"Kimi unavailable: {exc}")
@@ -110,10 +116,22 @@ def process_for_kimi(
         return
     if result.session_id and msg["task_id"]:
         set_session(msg["task_id"], "kimi", result.session_id)
+    effort_applied = getattr(result, "effort", None) or "max"
+    effort_reason = None
+    if effort and effort != effort_applied:
+        effort_reason = "Kimi Code exposes max effort only for this native K3 lane"
+        print(f"NOTE: kimi requested effort={effort}; applying native effort={effort_applied}: {effort_reason}")
+    provenance_data, actual_model = response_provenance(
+        msg,
+        actual_model=getattr(result, "model", None) or model,
+        harness="kimi",
+        effort_applied=effort_applied,
+        effort_reason=effort_reason,
+    )
     reply_id = send_message(
         content=result.response, task_id=msg["task_id"], msg_type="response",
         from_llm="kimi", to_llm=msg["from"],
-        from_model=getattr(result, "model", None) or model,
+        data=provenance_data, from_model=actual_model,
     )
     acknowledge(message_id)
     acknowledge(reply_id)

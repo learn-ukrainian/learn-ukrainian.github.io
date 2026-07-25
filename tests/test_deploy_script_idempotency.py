@@ -87,6 +87,7 @@ def _run(repo: Path, script: Path) -> subprocess.CompletedProcess[str]:
         capture_output=True,
         check=False,
         text=True,
+        timeout=120,
     )
 
 
@@ -97,6 +98,7 @@ def _run_command(repo: Path, command: list[str]) -> subprocess.CompletedProcess[
         capture_output=True,
         check=False,
         text=True,
+        timeout=30,
     )
 
 
@@ -191,6 +193,7 @@ echo "GEMINI:${ORPHAN_PATHS_GEMINI}"
         capture_output=True,
         check=True,
         text=True,
+        timeout=30,
     )
     sets: dict[str, frozenset[str]] = {}
     for line in result.stdout.splitlines():

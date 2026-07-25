@@ -303,7 +303,7 @@ def _run(args: argparse.Namespace) -> int:
 
     repo = args.repo.resolve()
     _load_repo(repo)
-    from scripts.lexicon.runner.memory import MemoryPolicy, apply_worker_memory_limit
+    from scripts.lexicon.runner.memory import MemoryPolicy
     from scripts.lexicon.runner.offline_engine import enrich_offline_slice
 
     work_dir = args.work_dir.resolve()
@@ -334,15 +334,13 @@ def _run(args: argparse.Namespace) -> int:
         high_bytes=int(args.memory_high_mib) * 1024**2,
         max_bytes=int(args.memory_max_mib) * 1024**2,
     )
-    enforcement = apply_worker_memory_limit(memory_policy)
     _event(
         "memory_policy",
-        enforcement=enforcement,
+        enforcement="deferred_to_worker_child",
+        scope="worker_child",
         high_bytes=memory_policy.high_bytes,
         max_bytes=memory_policy.max_bytes,
     )
-    if args.require_memory_cap and enforcement == "none":
-        raise RuntimeError("MemoryPolicy could not enforce a hard cap")
 
     manifest_for_engine = input_path
     if args.max_lemmas is not None:

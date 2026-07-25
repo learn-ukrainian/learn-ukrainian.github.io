@@ -21,7 +21,7 @@ def _git(repo: Path, *args: str, date: str | None = None) -> None:
     if date:
         env["GIT_AUTHOR_DATE"] = date
         env["GIT_COMMITTER_DATE"] = date
-    subprocess.run(["git", *args], cwd=repo, env=env, check=True, capture_output=True, text=True)
+    subprocess.run(["git", *args], cwd=repo, env=env, check=True, capture_output=True, text=True, timeout=30)
 
 
 def _commit(repo: Path, message: str, date: str) -> None:

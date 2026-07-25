@@ -83,7 +83,13 @@ def test_writer_draft_length_precheck_applies_targeted_writer_reprompt(tmp_path:
     )
     (module_dir / "module.md").write_text(initial, encoding="utf-8")
     plan_path = tmp_path / "plan.yaml"
-    plan_path.write_text("level: folk\nsequence: 1\nslug: sample\n", encoding="utf-8")
+    # Core track (not folk/seminar): the size-policy dossier gate added in
+    # ff0b647667 only blocks auto-expansion for SEMINAR_TRACKS without a
+    # discoverable research dossier. This test targets the generic
+    # short-draft-triggers-a-reprompt mechanism, which the dedicated
+    # tests/test_writer_size_policy.py suite already covers for dossier-gated
+    # tracks.
+    plan_path.write_text("level: a1\nsequence: 1\nslug: sample\n", encoding="utf-8")
     prompts: list[str] = []
 
     def corrector(context: linear_pipeline.CorrectionContext) -> str:
@@ -95,7 +101,7 @@ def test_writer_draft_length_precheck_applies_targeted_writer_reprompt(tmp_path:
         return f"```markdown file=module.md\n{patched}```"
 
     result = linear_pipeline.run_writer_draft_length_precheck(
-        plan=_length_plan(word_target=16),
+        plan={**_length_plan(word_target=16), "level": "a1"},
         module_dir=module_dir,
         plan_path=plan_path,
         writer_corrector=corrector,

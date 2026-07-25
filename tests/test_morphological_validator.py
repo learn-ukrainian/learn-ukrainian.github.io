@@ -6,6 +6,8 @@ Issue: #753
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from audit.checks.morphological_validator import (
@@ -128,6 +130,7 @@ class TestAllowedChunks:
 # Core validation tests (TC1-TC9 from issue #753)
 # ---------------------------------------------------------------------------
 
+@pytest.mark.usefixtures("requires_vesum_db")
 class TestVerbDetection:
     """TC1: Verbs caught in pre-verb modules (M01-M03 have no_verbs=True)."""
 
@@ -145,6 +148,7 @@ class TestVerbDetection:
         assert len(verb_issues) == 0
 
 
+@pytest.mark.usefixtures("requires_vesum_db")
 class TestCaseDetection:
     """TC2: Non-nominative cases caught in early modules."""
 
@@ -163,6 +167,7 @@ class TestCaseDetection:
         assert len(issues) == 0
 
 
+@pytest.mark.usefixtures("requires_vesum_db")
 class TestChunkExceptions:
     """TC3: Memorized chunks exempt from constraints."""
 
@@ -179,6 +184,7 @@ class TestTableExclusion:
         assert len(issues) == 0
 
 
+@pytest.mark.usefixtures("requires_vesum_db")
 class TestImperativeDetection:
     """TC8: Imperative forms detected via VESUM tags."""
 
@@ -195,6 +201,7 @@ class TestImperativeDetection:
         assert len(issues) == 0
 
 
+@pytest.mark.usefixtures("requires_vesum_db")
 class TestPOSMismatch:
     """TC9: Words used as wrong POS detected in no_verbs phase."""
 
@@ -204,6 +211,7 @@ class TestPOSMismatch:
         assert any("переніс" in i["text"] for i in issues)
 
 
+@pytest.mark.usefixtures("requires_vesum_db")
 class TestStressMarks:
     """Stress marks (combining acute accent) handled correctly."""
 
@@ -218,6 +226,7 @@ class TestStressMarks:
         assert len(issues) == 0
 
 
+@pytest.mark.usefixtures("requires_vesum_db")
 class TestAccusativeConstraint:
     """Accusative case detected in nominative-only modules."""
 
@@ -227,6 +236,7 @@ class TestAccusativeConstraint:
         assert any("accusative" in i["text"].lower() or "книгу" in i["text"] for i in issues)
 
 
+@pytest.mark.usefixtures("requires_vesum_db")
 class TestPresentTenseOnly:
     """Non-present tense detected in present-only modules."""
 
@@ -243,6 +253,7 @@ class TestPresentTenseOnly:
         assert len(past_issues) == 0
 
 
+@pytest.mark.usefixtures("requires_vesum_db")
 class TestAccusativeHomonyms:
     """Accusative escape hatch for verb homonyms."""
 
@@ -253,6 +264,7 @@ class TestAccusativeHomonyms:
         assert len(acc_issues) == 0
 
 
+@pytest.mark.usefixtures("requires_vesum_db")
 class TestNonA1Imperatives:
     """Non-A1 tracks should not block imperatives."""
 
@@ -291,6 +303,7 @@ class TestReplacements:
 # Agreement tests
 # ---------------------------------------------------------------------------
 
+@pytest.mark.usefixtures("requires_vesum_db")
 class TestAgreement:
     """Adjective-noun gender/case agreement detection."""
 
@@ -324,6 +337,7 @@ class TestAgreement:
 # Bracket stripping — phonetic transcriptions (#1053)
 # ---------------------------------------------------------------------------
 
+@pytest.mark.usefixtures("requires_vesum_db")
 class TestBracketStripping:
     """Phonetic transcriptions in [brackets] should not be validated (#1053)."""
 

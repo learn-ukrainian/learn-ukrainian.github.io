@@ -34,7 +34,7 @@ CONCEPT_PATTERNS = {
 }
 
 
-def test_t1_t2_pipeline_surfaces_section_level_a1_evidence(monkeypatch):
+def test_t1_t2_pipeline_surfaces_section_level_a1_evidence(monkeypatch, requires_sources_db):
     bucket_a, bucket_b = build_query_buckets(DISCOVERY_PATH, "a1")
     assert bucket_a
     assert bucket_b

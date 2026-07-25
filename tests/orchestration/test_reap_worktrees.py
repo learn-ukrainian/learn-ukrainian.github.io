@@ -451,6 +451,7 @@ def test_squash_merge_branch_force_delete(
         cwd=repo,
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert "codex/squash-merged" not in proc.stdout
 

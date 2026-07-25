@@ -152,6 +152,14 @@ def test_in_process_slice_stop_after_chunks(tmp_path: Path, monkeypatch: pytest.
         ),
     )
 
+    def _parent_memory_limit_must_not_be_applied(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("the coordinator must not apply a worker memory limit to pytest")
+
+    monkeypatch.setattr(
+        "scripts.lexicon.runner.memory.apply_worker_memory_limit",
+        _parent_memory_limit_must_not_be_applied,
+    )
+
     def _fake_enrich(payload: dict) -> dict[str, str]:
         import hashlib
 
@@ -304,5 +312,5 @@ def test_launch_enrich_sh_is_executable_and_documents_caps() -> None:
     assert "candidate-ulif-reduce.json" in text
     assert "finalize" in text.lower() or "pin-flip" in text.lower()
     # Shell syntax check
-    proc = subprocess.run(["bash", "-n", str(path)], capture_output=True, text=True, check=False)
+    proc = subprocess.run(["bash", "-n", str(path)], capture_output=True, text=True, check=False, timeout=10)
     assert proc.returncode == 0, proc.stderr

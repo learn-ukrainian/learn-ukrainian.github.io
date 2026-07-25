@@ -123,6 +123,35 @@ function ensureDeckCustomSetCoverage(deck: PracticeDeckData, lemmaKeys: string[]
     }
   }
 
+  let indexModified = false;
+  const updatedIndex = (deck.index ?? []).map((item) => {
+    const keyLower = item.lemmaId.toLowerCase();
+    const customClozeIds = clozeByLemma.get(keyLower) ?? [];
+    if (customClozeIds.length === 0) return item;
+
+    const mergedClozeIds = Array.from(new Set([...(item.clozeIds ?? []), ...customClozeIds]));
+    const hasCloze = mergedClozeIds.length > 0;
+    const modesSet = new Set(item.modes ?? []);
+    modesSet.add('flashcards');
+    if (hasCloze) modesSet.add('cloze');
+
+    const nextModes = Array.from(modesSet) as PracticeIndexItem['modes'];
+    const modesChanged = nextModes.length !== (item.modes ?? []).length;
+    const clozeIdsChanged = mergedClozeIds.length !== (item.clozeIds ?? []).length;
+    const hasClozeChanged = hasCloze !== item.hasCloze;
+
+    if (modesChanged || clozeIdsChanged || hasClozeChanged) {
+      indexModified = true;
+      return {
+        ...item,
+        clozeIds: mergedClozeIds,
+        hasCloze,
+        modes: nextModes,
+      };
+    }
+    return item;
+  });
+
   let orderCounter = (deck.index ?? []).length + 1;
   for (const key of lemmaKeys) {
     const keyLower = key.toLowerCase();
@@ -137,8 +166,8 @@ function ensureDeckCustomSetCoverage(deck: PracticeDeckData, lemmaKeys: string[]
         lemma: cleanKey,
         cefr: 'A1',
         modes: hasCloze
-          ? ['flashcard', 'cloze', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage']
-          : ['flashcard', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage'],
+          ? ['flashcards', 'cloze', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage']
+          : ['flashcards', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage'],
         hasCloze,
         clozeIds: matchedClozeIds,
         newOrder: orderCounter++,
@@ -159,11 +188,11 @@ function ensureDeckCustomSetCoverage(deck: PracticeDeckData, lemmaKeys: string[]
     }
   }
 
-  if (newIndexItems.length === 0) return deck;
+  if (newIndexItems.length === 0 && !indexModified) return deck;
 
   return {
     ...deck,
-    index: [...(deck.index ?? []), ...newIndexItems],
+    index: [...updatedIndex, ...newIndexItems],
     lexemes: [...(deck.lexemes ?? []), ...newLexemes],
   };
 }

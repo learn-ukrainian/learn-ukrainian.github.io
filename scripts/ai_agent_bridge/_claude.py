@@ -29,6 +29,11 @@ from agent_runtime.errors import (
 from agent_runtime.runner import invoke as runtime_invoke
 from secret_redactor import redact_text
 
+from ._ask_contract import (
+    resolve_model_selection,
+    response_provenance,
+    unsupported_effort_note,
+)
 from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
 from ._broker import _is_task_locked, _remove_pid_file, _write_pid_file
 from ._config import _PARENT_ENV, CLAUDE_CMD, REPO_ROOT
@@ -75,6 +80,9 @@ def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query"
         formal_review=formal_review,
         has_target=has_target,
     )
+    effective_model = resolve_model_selection(
+        lane="ask-claude", to_model=to_model, model=None, default="claude-sonnet-5"
+    )
     msg_id = send_message(
         content,
         task_id,
@@ -83,7 +91,7 @@ def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query"
         from_llm=from_llm,
         to_llm="claude",
         from_model=from_model,
-        to_model=to_model,
+        to_model=effective_model,
         effort=effort,
         review_target=review_target_payload(review_branch, review_pr_number),
     )
@@ -190,6 +198,19 @@ def _run_claude_sync_via_runtime(
     try:
         target_model = _extract_target_model(msg)
         effort = _extract_effort(msg)
+        effort_applied: str | None = None
+        effort_reason: str | None = None
+        effort_to_invoke = effort
+        if effort:
+            from utils.claude_version import supports_effort
+
+            if not supports_effort(CLAUDE_CMD):
+                effort_to_invoke = None
+                effort_applied, effort_reason = unsupported_effort_note(
+                    lane="claude",
+                    effort=effort,
+                    reason="the installed Claude CLI does not support --effort",
+                )
         review_target = review_target_from_message(msg) if review else None
         with provision_review_worktree(
             review_target,
@@ -223,7 +244,7 @@ def _run_claude_sync_via_runtime(
                 mode="read-only",
                 cwd=checkout.path if checkout is not None else REPO_ROOT,
                 model=target_model,
-                effort=effort,
+                effort=effort_to_invoke,
                 task_id=msg.get('task_id'),
                 session_id=session_id_to_pass,
                 tool_config=tool_config,
@@ -252,10 +273,17 @@ def _run_claude_sync_via_runtime(
         print(f"✅ Claude finished ({len(response)} chars)")
         sys.stdout.flush()
 
+        provenance_data, actual_model = response_provenance(
+            msg,
+            actual_model=result.model or target_model or "claude-sonnet-5",
+            harness="claude",
+            effort_applied=effort_applied if effort_reason else getattr(result, "effort", None),
+            effort_reason=effort_reason,
+        )
         reply_id = send_message(
             content=response, task_id=msg['task_id'], msg_type="response",
             from_llm="claude", to_llm=msg['from'],
-            from_model=result.model, to_model=None,
+            data=provenance_data, from_model=actual_model, to_model=None,
         )
         _response_sent = True
 
