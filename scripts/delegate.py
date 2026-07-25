@@ -2703,9 +2703,14 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 return 2
         else:
             if ownership.would_refuse or ownership.override_reason:
+                # Only report a conflict count when there ARE conflicts: an
+                # unprovable-disjointness refusal has none, and printing
+                # "conflicts=0" next to it reads as a guard bug (#5340-adjacent).
+                suffix = (
+                    f" (conflicts={len(ownership.conflicts)})" if ownership.conflicts else ""
+                )
                 print(
-                    f"⚠️  write-path ownership: {ownership.reason} "
-                    f"(conflicts={len(ownership.conflicts)})",
+                    f"⚠️  write-path ownership: {ownership.reason}{suffix}",
                     file=sys.stderr,
                 )
             if not ownership.admitted:

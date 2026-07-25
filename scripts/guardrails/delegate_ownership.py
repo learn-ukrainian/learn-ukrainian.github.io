@@ -33,6 +33,30 @@ except ImportError:  # pragma: no cover - flat script path
 _REPO_ROOT = resolve_repo_root(Path(__file__), 2)
 DEFAULT_LEDGER_PATH = _REPO_ROOT / "batch_state" / "tasks" / "write-ownership.sqlite3"
 DEFAULT_TASK_STATE_DIR = _REPO_ROOT / "batch_state" / "tasks"
+
+LEDGER_ENV_VAR = "LEARN_UKRAINIAN_OWNERSHIP_LEDGER"
+TASK_STATE_ENV_VAR = "LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR"
+
+
+def default_ledger_path() -> Path:
+    """Ledger location, resolved at CALL time so tests can redirect it.
+
+    Root cause this closes: the ledger was a module-level constant baked into
+    default arguments at import, so every process — including the test suite —
+    shared the live fleet ledger. Dispatch tests then admitted against whatever
+    real dispatches happened to be running and refused, i.e. they passed on an
+    idle machine and failed on a busy one.
+    """
+    override = (os.environ.get(LEDGER_ENV_VAR) or "").strip()
+    return Path(override) if override else DEFAULT_LEDGER_PATH
+
+
+def default_task_state_dir() -> Path:
+    """Task-state directory, resolved at call time (see :func:`default_ledger_path`)."""
+    override = (os.environ.get(TASK_STATE_ENV_VAR) or "").strip()
+    return Path(override) if override else DEFAULT_TASK_STATE_DIR
+
+
 # Admission uses the short-lived CLI PID until the worker PID is written.
 # Live-PID fast path only applies inside this grace window (seconds).
 ADMISSION_PID_GRACE_S = 180.0
@@ -143,6 +167,55 @@ def normalize_claim(raw: str) -> PathClaim:
     return PathClaim(raw=raw, kind=ClaimKind.FILE, norm=norm)
 
 
+def _peer_label(peer: dict[str, object]) -> str:
+    """Render one blocking peer as `task-id(pid N)` for operator-facing messages."""
+    pid = peer.get("other_pid")
+    task = str(peer.get("other_task_id") or "?")
+    return f"{task}(pid {pid})" if pid else task
+
+
+def refusal_message(
+    *,
+    conflicts: list[dict[str, object]],
+    unprovable_peers: list[dict[str, object]],
+    self_unprovable: bool,
+    unknown: list[PathClaim],
+) -> str:
+    """Explain a REFUSE so the operator can act on it.
+
+    Two very different conditions used to share the string "path ownership
+    conflict": a real overlap between declared paths, and an *unprovable*
+    admission where nobody overlaps but some active writer declared no paths at
+    all. The second one reported ``conflicts=0`` while refusing, which reads as
+    a guard bug and hides the fix (declare paths, or override deliberately).
+    """
+    if conflicts:
+        shown = ", ".join(
+            f"{_peer_label(c)} on {(c.get('other_claim') or {}).get('norm', '?')}"  # type: ignore[union-attr]
+            for c in conflicts[:3]
+        )
+        more = f" (+{len(conflicts) - 3} more)" if len(conflicts) > 3 else ""
+        return f"path ownership conflict (REFUSE): overlaps {shown}{more}"
+
+    parts: list[str] = []
+    if self_unprovable:
+        declared = ", ".join(repr(c.raw) for c in unknown[:3]) if unknown else "none declared"
+        parts.append(
+            f"this task declared no comparable --research-owned-path ({declared})"
+        )
+    if unprovable_peers:
+        peers = ", ".join(_peer_label(p) for p in unprovable_peers[:3])
+        more = f" (+{len(unprovable_peers) - 3} more)" if len(unprovable_peers) > 3 else ""
+        parts.append(f"active writer(s) with undeclared paths: {peers}{more}")
+    detail = "; ".join(parts) or "no comparable claims among active writers"
+    return (
+        f"cannot prove write-path disjointness (REFUSE): {detail}. "
+        "No actual path overlap was found. Fix by re-running the undeclared "
+        "dispatches with --research-owned-path, or pass "
+        "--allow-path-overlap '<why this is safe>'."
+    )
+
+
 def claims_conflict(a: PathClaim, b: PathClaim) -> bool:
     """Return True if two concrete claims intersect. UNKNOWN never proves overlap alone."""
     if a.kind == ClaimKind.UNKNOWN or b.kind == ClaimKind.UNKNOWN:
@@ -242,13 +315,15 @@ def _task_still_active(
 class OwnershipLedger:
     def __init__(
         self,
-        path: Path = DEFAULT_LEDGER_PATH,
+        path: Path | None = None,
         *,
-        task_state_dir: Path = DEFAULT_TASK_STATE_DIR,
+        task_state_dir: Path | None = None,
         mode: GuardMode | None = None,
     ) -> None:
-        self.path = Path(path)
-        self.task_state_dir = Path(task_state_dir)
+        self.path = Path(path) if path is not None else default_ledger_path()
+        self.task_state_dir = (
+            Path(task_state_dir) if task_state_dir is not None else default_task_state_dir()
+        )
         # Default follows env (REFUSE after #5645 soak). Explicit mode still wins.
         self.mode = mode if mode is not None else env_guard_mode()
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -473,12 +548,17 @@ class OwnershipLedger:
 
             # Missing/unknown claims cannot prove disjointness against an active writer.
             # Also: an active peer with UNKNOWN intent blocks proof of disjointness.
-            active_unknown = any(
-                other_claim.kind == ClaimKind.UNKNOWN for _, other_claim, _ in active
-            )
-            unprovable = bool(active) and (
-                not concrete or bool(unknown) or active_unknown or not claims
-            )
+            unprovable_peers = [
+                {
+                    "other_task_id": other_task,
+                    "other_pid": other_pid,
+                    "other_claim": other_claim.as_dict(),
+                }
+                for other_task, other_claim, other_pid in active
+                if other_claim.kind == ClaimKind.UNKNOWN
+            ]
+            self_unprovable = bool(active) and (not concrete or bool(unknown) or not claims)
+            unprovable = self_unprovable or (bool(active) and bool(unprovable_peers))
             would_refuse = bool(conflicts) or unprovable
 
             override = (allow_path_overlap or "").strip() or None
@@ -486,11 +566,19 @@ class OwnershipLedger:
                 would_refuse = False  # explicit override clears refuse intent for logging
 
             if would_refuse and self.mode == GuardMode.REFUSE and not override:
+                refusal_reason = refusal_message(
+                    conflicts=conflicts,
+                    unprovable_peers=unprovable_peers,
+                    self_unprovable=self_unprovable,
+                    unknown=unknown,
+                )
                 event = {
                     "task_id": task_id,
                     "conflicts": conflicts,
+                    "unprovable_peers": unprovable_peers,
                     "unknown": [c.as_dict() for c in unknown],
                     "caller": caller,
+                    "reason": refusal_reason,
                 }
                 conn.execute(
                     "INSERT INTO admission_events (ts, task_id, event, payload) VALUES (?,?,?,?)",
@@ -501,7 +589,7 @@ class OwnershipLedger:
                     admitted=False,
                     mode=self.mode,
                     would_refuse=True,
-                    reason="path ownership conflict (REFUSE)",
+                    reason=refusal_reason,
                     conflicts=conflicts,
                     claims=concrete,
                     unknown_claims=unknown,
@@ -571,8 +659,8 @@ def admit_write_paths(
     owned_paths: Sequence[str] | None,
     allow_path_overlap: str | None = None,
     pid: int | None = None,
-    ledger_path: Path = DEFAULT_LEDGER_PATH,
-    task_state_dir: Path = DEFAULT_TASK_STATE_DIR,
+    ledger_path: Path | None = None,
+    task_state_dir: Path | None = None,
     guard_mode: GuardMode | str | None = None,
 ) -> AdmissionResult:
     """Admit writable paths. ``guard_mode=None`` → :func:`env_guard_mode` (default REFUSE)."""
@@ -614,8 +702,8 @@ def update_write_claim_pid(
     task_id: str,
     new_pid: int,
     *,
-    ledger_path: Path = DEFAULT_LEDGER_PATH,
-    task_state_dir: Path = DEFAULT_TASK_STATE_DIR,
+    ledger_path: Path | None = None,
+    task_state_dir: Path | None = None,
 ) -> None:
     """Public helper: bind claim rows to the detached worker PID after Popen."""
     OwnershipLedger(ledger_path, task_state_dir=task_state_dir).update_claim_pid(

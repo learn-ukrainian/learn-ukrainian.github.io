@@ -545,3 +545,82 @@ def test_ownership_ledger_default_mode_follows_env(
         OwnershipLedger(ledger, task_state_dir=state, mode=GuardMode.REFUSE).mode
         is GuardMode.REFUSE
     )
+
+
+def test_unprovable_refusal_names_peer_and_is_not_called_a_conflict(tmp_path: Path):
+    """A refusal with zero overlaps must not masquerade as a path conflict.
+
+    Regression: five live dispatches that were fired without
+    ``--research-owned-path`` blocked every subsequent write dispatch fleet-wide,
+    and the guard reported ``path ownership conflict ... (conflicts=0)`` — a
+    message that names no peer, offers no fix, and reads as a guard bug.
+    """
+    ledger = tmp_path / "own.sqlite3"
+    state_dir = tmp_path / "tasks"
+    state_dir.mkdir()
+    pid = os.getpid()
+    (state_dir / "undeclared.json").write_text(
+        json.dumps({"status": "running", "pid": pid}), encoding="utf-8"
+    )
+    # Peer runs write-capable without declaring any owned path.
+    peer = admit_write_paths(
+        task_id="undeclared",
+        mode="workspace-write",
+        owned_paths=[],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+    )
+    assert peer.admitted is True
+
+    # Our task declares one concrete file that overlaps nothing.
+    blocked = admit_write_paths(
+        task_id="mine",
+        mode="workspace-write",
+        owned_paths=["docs/plans/brand-new-file.md"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+        guard_mode=GuardMode.REFUSE,
+    )
+    assert blocked.admitted is False
+    assert blocked.conflicts == []
+    reason = blocked.reason
+    assert "path ownership conflict" not in reason, reason
+    assert "cannot prove write-path disjointness" in reason, reason
+    assert "undeclared" in reason, reason  # the blocking peer is named
+    assert f"pid {pid}" in reason, reason
+    assert "--research-owned-path" in reason and "--allow-path-overlap" in reason, reason
+
+
+def test_real_conflict_refusal_still_reads_as_a_conflict(tmp_path: Path):
+    """The genuine-overlap message keeps its name and points at the shared path."""
+    ledger = tmp_path / "own.sqlite3"
+    state_dir = tmp_path / "tasks"
+    state_dir.mkdir()
+    pid = os.getpid()
+    (state_dir / "holder.json").write_text(
+        json.dumps({"status": "running", "pid": pid}), encoding="utf-8"
+    )
+    admit_write_paths(
+        task_id="holder",
+        mode="workspace-write",
+        owned_paths=["scripts/shared.py"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+    )
+    blocked = admit_write_paths(
+        task_id="challenger",
+        mode="workspace-write",
+        owned_paths=["scripts/shared.py"],
+        pid=pid,
+        ledger_path=ledger,
+        task_state_dir=state_dir,
+        guard_mode=GuardMode.REFUSE,
+    )
+    assert blocked.admitted is False
+    assert blocked.conflicts
+    assert "path ownership conflict" in blocked.reason
+    assert "scripts/shared.py" in blocked.reason
+    assert "holder" in blocked.reason
