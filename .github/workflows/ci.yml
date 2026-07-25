@@ -53,6 +53,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
+          fetch-depth: 0
 
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
@@ -76,20 +77,19 @@ jobs:
           path: site/src/data/lexicon-manifest.json
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
-      # Sole owner of ~/.cache/pip for this job (setup-python cache disabled
-      # — pip installs from a torch-stripped requirements file, see below).
+      # Sole owner of ~/.cache/pip for this job (setup-python cache disabled).
       - name: Restore pip wheel cache
         id: pip-wheel-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/pip
-          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-notorch
+          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch-cpu
 
-      # torch/torchvision/open_clip_torch are NOT installed for pytest: no
-      # first-party module under scripts/ or tests/ imports them (the
-      # embedding worker owns a separate venv). Installing ~2.5GB of CPU
-      # wheels here previously caused shard OOMs under xdist on constrained
-      # runners for code the suite never loads.
+      # pytest exercises scripts/pipeline/stress_annotator.py::_get_stressifier,
+      # which imports ukrainian_word_stress.Stressifier; Stressifier imports
+      # stanza, and Stanza imports torch. Keep torchvision and open_clip_torch
+      # out of this environment: the suite does not import either package.
+      # Install the CPU-only torch wheel to avoid the much larger CUDA build.
       - name: Install dependencies
         run: |
           python -m venv .venv
@@ -97,6 +97,8 @@ jobs:
           grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
             > "${RUNNER_TEMP}/requirements-ci.txt"
           .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
+            torch==2.13.0
           .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
           .venv/bin/python -m pip install ruff
 
@@ -105,7 +107,29 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/pip
-          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-notorch
+          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch-cpu
+
+      # Stressifier lazily provisions this model when it creates its Stanza
+      # pipeline. Cache the model package separately from pip wheels so a
+      # cold runner does not redownload it in every CI run.
+      - name: Restore Stanza Ukrainian model cache
+        id: stanza-model-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/stanza_resources
+          key: stanza-uk-model-${{ runner.os }}-1.13.0
+
+      - name: Provision Stanza Ukrainian model
+        if: steps.stanza-model-cache.outputs.cache-hit != 'true'
+        run: |
+          .venv/bin/python -c "from scripts.pipeline.stress_annotator import annotate_stress; print(annotate_stress('Мама читає книжку.'))"
+
+      - name: Save Stanza Ukrainian model cache
+        if: steps.stanza-model-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/stanza_resources
+          key: stanza-uk-model-${{ runner.os }}-1.13.0
 
       - name: Ruff
         run: .venv/bin/python -m ruff check scripts/
