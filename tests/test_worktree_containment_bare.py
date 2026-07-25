@@ -33,6 +33,7 @@ def _git(*args: str, cwd: Path | None = None) -> None:
         text=True,
         cwd=str(cwd) if cwd else None,
         env=_clean_env(),
+        timeout=30,
     )
 
 
@@ -48,6 +49,7 @@ def test_heal_primary_bare_if_needed_resets_core_bare(tmp_path: Path) -> None:
             text=True,
             env=_clean_env(),
             check=False,
+            timeout=30,
         ).stdout.strip()
         == "true"
     )
@@ -62,6 +64,7 @@ def test_heal_primary_bare_if_needed_resets_core_bare(tmp_path: Path) -> None:
             text=True,
             env=_clean_env(),
             check=False,
+            timeout=30,
         ).stdout.strip()
         == "false"
     )
@@ -73,6 +76,7 @@ def test_heal_primary_bare_if_needed_resets_core_bare(tmp_path: Path) -> None:
             text=True,
             env=_clean_env(),
             check=False,
+            timeout=30,
         ).stdout.strip()
         == "true"
     )
@@ -106,6 +110,7 @@ def test_primary_checkout_dirty_status_heals_bare_then_reports_status(
             text=True,
             env=_clean_env(),
             check=False,
+            timeout=30,
         ).stdout.strip()
         == "false"
     )

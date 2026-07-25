@@ -122,13 +122,13 @@ def _build_fake_project(tmp_path: Path) -> tuple[Path, Path]:
 
     # Git repo so session_supervisor.sh can resolve a canonical state root.
     env = _clean_environ()
-    subprocess.run(["git", "init", "--quiet", str(project)], check=True, env=env)
-    subprocess.run(["git", "-C", str(project), "config", "user.email", "test@example.com"], check=True, env=env)
-    subprocess.run(["git", "-C", str(project), "config", "user.name", "Test"], check=True, env=env)
+    subprocess.run(["git", "init", "--quiet", str(project)], check=True, env=env, timeout=30)
+    subprocess.run(["git", "-C", str(project), "config", "user.email", "test@example.com"], check=True, env=env, timeout=30)
+    subprocess.run(["git", "-C", str(project), "config", "user.name", "Test"], check=True, env=env, timeout=30)
     (project / "README.md").write_text("# test", encoding="utf-8")
-    subprocess.run(["git", "-C", str(project), "add", "."], check=True, env=env)
-    subprocess.run(["git", "-C", str(project), "commit", "--quiet", "-m", "init"], check=True, env=env)
-    subprocess.run(["git", "-C", str(project), "branch", "-m", "main"], check=True, env=env)
+    subprocess.run(["git", "-C", str(project), "add", "."], check=True, env=env, timeout=30)
+    subprocess.run(["git", "-C", str(project), "commit", "--quiet", "-m", "init"], check=True, env=env, timeout=30)
+    subprocess.run(["git", "-C", str(project), "branch", "-m", "main"], check=True, env=env, timeout=30)
 
     return project, capture
 

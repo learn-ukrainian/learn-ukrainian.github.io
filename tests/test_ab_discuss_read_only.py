@@ -22,7 +22,7 @@ def _clean_git_env() -> dict[str, str]:
 def _init_repo(path: Path) -> None:
     git_env = _clean_git_env()
     subprocess.run(
-        ["git", "init"], cwd=path, check=True, capture_output=True, env=git_env
+        ["git", "init"], cwd=path, check=True, capture_output=True, env=git_env, timeout=30
     )
     subprocess.run(
         ["git", "config", "user.email", "test@example.invalid"],
@@ -30,6 +30,7 @@ def _init_repo(path: Path) -> None:
         check=True,
         capture_output=True,
         env=git_env,
+        timeout=30,
     )
     subprocess.run(
         ["git", "config", "user.name", "Test User"],
@@ -37,15 +38,17 @@ def _init_repo(path: Path) -> None:
         check=True,
         capture_output=True,
         env=git_env,
+        timeout=30,
     )
     (path / "tracked.txt").write_text("base\n", encoding="utf-8")
-    subprocess.run(["git", "add", "tracked.txt"], cwd=path, check=True, env=git_env)
+    subprocess.run(["git", "add", "tracked.txt"], cwd=path, check=True, env=git_env, timeout=30)
     subprocess.run(
         ["git", "commit", "-m", "init"],
         cwd=path,
         check=True,
         capture_output=True,
         env=git_env,
+        timeout=30,
     )
 
 

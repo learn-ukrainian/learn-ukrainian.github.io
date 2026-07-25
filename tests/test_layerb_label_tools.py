@@ -576,6 +576,7 @@ def test_rederive_cli_is_byte_identical_for_two_source_walks(tmp_path: Path) -> 
             check=False,
             capture_output=True,
             text=True,
+            timeout=60,
         )
         assert completed.returncode == 0, completed.stderr
 
@@ -694,6 +695,7 @@ def test_label_tool_imports_do_not_load_runtime_reviewer_dispatch(module: str) -
         check=False,
         capture_output=True,
         text=True,
+        timeout=60,
     )
 
     assert completed.returncode == 0, completed.stderr

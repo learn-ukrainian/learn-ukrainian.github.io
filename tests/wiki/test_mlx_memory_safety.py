@@ -31,6 +31,7 @@ def _ensure_mlx_available() -> None:
         capture_output=True,
         text=True,
         check=False,
+        timeout=60,
     )
     if probe.returncode != 0:
         details = (probe.stderr or probe.stdout).strip() or "unknown import failure"

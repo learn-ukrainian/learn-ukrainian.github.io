@@ -81,6 +81,33 @@ def test_default_committed_decision_files_validate() -> None:
     assert summary["decision_counts"]["approve_for_publish"] >= 20
 
 
+def test_committed_yaml_uses_the_c_safe_loader_when_available() -> None:
+    # Guards #5768. `yaml.safe_load` silently uses PyYAML's PURE-PYTHON loader even
+    # when libyaml is installed — PyYAML never auto-selects the C implementation. That
+    # is why this module parsed 41MB of committed decision YAML at ~590MB peak RSS and
+    # hit MemoryError on CI. A refactor that reverts to `yaml.safe_load` must fail
+    # here, not silently cost 20% of the suite's memory again three weeks later.
+    if not hasattr(yaml, "CSafeLoader"):
+        pytest.skip("this PyYAML build has no libyaml C extension")
+    assert decisions._SafeLoader is yaml.CSafeLoader
+
+
+def test_committed_yaml_loader_refuses_python_object_tags(tmp_path: Path) -> None:
+    # The security boundary behind the perf fix, asserted behaviourally so it holds
+    # whichever loader is wired in. `CSafeLoader` is the C implementation of
+    # SafeLoader; `CLoader`/`Loader` are the C/py implementations of the FULL loader
+    # and construct arbitrary Python objects from `!!python/object` tags. They differ
+    # by four characters and a code-execution boundary, and this module parses
+    # committed data files, so that boundary is real and not theoretical.
+    hostile = tmp_path / "hostile.yaml"
+    hostile.write_text(
+        'decisions: !!python/object/apply:os.system ["echo pwned"]\n',
+        encoding="utf-8",
+    )
+    with pytest.raises(yaml.YAMLError):
+        decisions._read_yaml_mapping(hostile)
+
+
 def test_decision_validator_rejects_bad_source_key(tmp_path: Path) -> None:
     payload = _minimal_payload()
     row = payload["decisions"][0]  # type: ignore[index]

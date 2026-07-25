@@ -75,6 +75,7 @@ def _resolve_test_python() -> str:
             cwd=Path(__file__).resolve().parent,
             text=True,
             stderr=subprocess.DEVNULL,
+            timeout=30,
         ).strip()
         if common_dir:
             main_venv = (Path(common_dir) / ".." / ".venv" / "bin" / "python").resolve()
@@ -1723,7 +1724,7 @@ def _git_wt(repo, *args):
             "GIT_COMMON_DIR",
         }
     }
-    return subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True, text=True, env=env)
+    return subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True, text=True, env=env, timeout=30)
 
 
 @pytest.fixture
@@ -4054,6 +4055,7 @@ def test_gh_shim_blocks_pr_merge_without_opt_in(tmp_path):
             "PATH": os.environ.get("PATH", ""),
         },
         check=False,
+        timeout=15,
     )
 
     assert proc.returncode != 0
@@ -4077,6 +4079,7 @@ def test_gh_shim_allows_pr_merge_with_opt_in(tmp_path):
             "PATH": os.environ.get("PATH", ""),
         },
         check=False,
+        timeout=15,
     )
 
     assert proc.returncode == 0
@@ -4099,6 +4102,7 @@ def test_git_shim_blocks_push_to_main_without_opt_in(tmp_path):
             "PATH": os.environ.get("PATH", ""),
         },
         check=False,
+        timeout=15,
     )
 
     assert proc.returncode != 0

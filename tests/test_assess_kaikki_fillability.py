@@ -114,7 +114,7 @@ def test_assess_kaikki_fillability_cli(tmp_path: Path):
         "--out", str(report_file)
     ]
 
-    result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, check=True, timeout=60)
 
     # Assert stdout output
     assert "Raw Union Count (N): 5" in result.stdout

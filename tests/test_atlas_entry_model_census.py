@@ -133,6 +133,7 @@ def test_cli_emits_json_and_markdown(tmp_path: Path) -> None:
         check=True,
         capture_output=True,
         text=True,
+        timeout=30
     )
     assert json.loads(json_result.stdout)["reviewed_entries_by_type"]["expression"] == 1
 
@@ -148,6 +149,7 @@ def test_cli_emits_json_and_markdown(tmp_path: Path) -> None:
         check=True,
         capture_output=True,
         text=True,
+        timeout=30
     )
     assert "# Word Atlas Entry Model Census" in md_result.stdout
 
@@ -167,6 +169,7 @@ def test_cli_can_fail_on_legacy_heuristic(tmp_path: Path) -> None:
         check=False,
         capture_output=True,
         text=True,
+        timeout=30
     )
 
     assert result.returncode == 1

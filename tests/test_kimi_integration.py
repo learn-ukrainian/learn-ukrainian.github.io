@@ -9,7 +9,7 @@ from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.ai_agent_bridge import _channels, _cli, _kimi
+from scripts.ai_agent_bridge import _ask_contract, _channels, _cli, _kimi
 from scripts.ai_agent_bridge._channels_cli import _cli_available_agent
 from scripts.ai_agent_bridge._model import _build_kimi_probe_plan
 
@@ -34,7 +34,17 @@ def test_ask_kimi_parser_defaults_to_k3_and_check_model_accepts_kimi():
     ask = parser.parse_args(["ask-kimi", "hello", "--task-id", "kimi-ask", "--from", "codex"])
     probe = parser.parse_args(["check-model", "k3", "--agent", "kimi"])
 
-    assert ask.model == "k3"
+    # --model no longer carries an argparse default: the contract needs to tell
+    # "unset" from "explicitly passed" so --to-model/--model conflicts can be
+    # detected. The default is applied downstream by resolve_model_selection().
+    assert ask.model is None
+    assert ask.to_model is None
+    assert (
+        _ask_contract.resolve_model_selection(
+            lane="kimi", to_model=ask.to_model, model=ask.model, default="k3"
+        )
+        == "k3"
+    )
     assert probe.agent == "kimi"
     assert probe.model == "k3"
 

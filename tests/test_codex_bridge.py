@@ -24,6 +24,7 @@ from agent_runtime.usage import _reset_rate_limit_cache_for_tests
 from ai_agent_bridge._cli import _dispatch_command, _handle_ask_codex
 from ai_agent_bridge._codex import (
     _codex_bridge_runtime_mode,
+    _reported_codex_effort,
     _resolve_codex_bridge_timeout,
     ask_codex_chain,
     process_for_codex,
@@ -205,28 +206,17 @@ def test_ask_codex_chain_dispatches_issues_sequentially():
 
     assert message_ids == [11, 12]
     assert ask_codex_mock.call_count == 2
-    assert ask_codex_mock.call_args_list[0].args == (
-        "Fix #1177 via issue-1177",
-        "issue-1177",
-        "query",
-        None,
-        False,
-        "claude",
-        None,
-        None,
-        True,
-    )
-    assert ask_codex_mock.call_args_list[1].args == (
-        "Fix #1178 via issue-1178",
-        "issue-1178",
-        "query",
-        None,
-        False,
-        "claude",
-        None,
-        None,
-        True,
-    )
+    first_call, second_call = ask_codex_mock.call_args_list
+    assert first_call.args[0] == "Fix #1177 via issue-1177"
+    assert first_call.args[1] == "issue-1177"
+    assert first_call.args[2] == "query"
+    assert first_call.args[5] == "claude"
+    assert first_call.args[8] is True
+    assert second_call.args[0] == "Fix #1178 via issue-1178"
+    assert second_call.args[1] == "issue-1178"
+    assert second_call.args[2] == "query"
+    assert second_call.args[5] == "claude"
+    assert second_call.args[8] is True
 
 
 def test_ask_codex_chain_prefixes_issue_context_without_placeholders():
@@ -246,6 +236,17 @@ def test_resolve_codex_bridge_timeout_defaults_to_normal_timeout():
 def test_resolve_codex_bridge_timeout_honors_env_override():
     with patch.dict(os.environ, {"CODEX_BRIDGE_TIMEOUT": "120"}, clear=True):
         assert _resolve_codex_bridge_timeout() == 120
+
+
+def test_reported_codex_effort_preserves_runtime_default():
+    assert _reported_codex_effort(type("Result", (), {"effort": "high"})()) == ("high", None)
+
+
+def test_reported_codex_effort_records_unknown_as_unreported():
+    assert _reported_codex_effort(type("Result", (), {"effort": "unknown"})()) == (
+        None,
+        "Codex runtime did not report the applied effort",
+    )
 
 
 def test_codex_bridge_runtime_mode_invalid_mode_falls_back_read_only():
@@ -308,13 +309,21 @@ def test_process_for_codex_invokes_runtime_with_bridge_shape(
     assert kwargs["hard_timeout"] == 900
     assert kwargs["stall_timeout"] == 600
     mock_set_session.assert_called_once_with("issue-1177", "codex", "session-123")
-    mock_send_message.assert_called_once_with(
-        content="Codex response",
-        task_id="issue-1177",
-        msg_type="response",
-        from_llm="codex",
-        to_llm="gemini",
-    )
+    send_kwargs = mock_send_message.call_args.kwargs
+    assert send_kwargs["content"] == "Codex response"
+    assert send_kwargs["task_id"] == "issue-1177"
+    assert send_kwargs["msg_type"] == "response"
+    assert send_kwargs["from_llm"] == "codex"
+    assert send_kwargs["to_llm"] == "gemini"
+    assert send_kwargs["from_model"] == "gpt-5.4"
+    provenance = json.loads(send_kwargs["data"])
+    assert provenance["effort_requested"] is None
+    assert provenance["effort_applied"] is None
+    assert provenance["effort_reason"] == "Codex runtime did not report the applied effort"
+    assert provenance["from_model"] == "gpt-5.4"
+    assert provenance["model_requested"] == "gpt-5.4"
+    assert provenance["harness"] == "codex"
+    assert mock_send_message.call_count == 1
     assert mock_acknowledge.call_args_list[0].args == (7,)
     assert mock_acknowledge.call_args_list[1].args == (99,)
 
@@ -374,13 +383,22 @@ def test_process_for_codex_uses_workspace_write_mode_and_never_resumes(
     assert kwargs["hard_timeout"] == 900
     assert kwargs["stall_timeout"] == 600
     mock_set_session.assert_not_called()
-    mock_send_message.assert_called_once_with(
-        content="Codex response",
-        task_id="issue-1178",
-        msg_type="response",
-        from_llm="codex",
-        to_llm="gemini",
-    )
+    # Replies now carry provenance (#5761): which model actually answered, what was
+    # requested, and the harness that carried it. Assert the identity fields
+    # explicitly rather than pinning the whole call, so adding a field later is not
+    # a false failure.
+    send_kwargs = mock_send_message.call_args.kwargs
+    assert send_kwargs["content"] == "Codex response"
+    assert send_kwargs["task_id"] == "issue-1178"
+    assert send_kwargs["msg_type"] == "response"
+    assert send_kwargs["from_llm"] == "codex"
+    assert send_kwargs["to_llm"] == "gemini"
+    assert send_kwargs["from_model"] == "gpt-5.4"
+    provenance = json.loads(send_kwargs["data"])
+    assert provenance["from_model"] == "gpt-5.4"
+    assert provenance["model_requested"] == "gpt-5.4"
+    assert provenance["harness"] == "codex"
+    assert mock_send_message.call_count == 1
     assert mock_acknowledge.call_args_list[0].args == (8,)
     assert mock_acknowledge.call_args_list[1].args == (100,)
 

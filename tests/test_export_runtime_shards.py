@@ -74,6 +74,7 @@ def test_script_path_invocation_exits_zero() -> None:
         capture_output=True,
         text=True,
         check=False,
+        timeout=30
     )
     assert result.returncode == 0, result.stderr
     assert "usage:" in result.stdout.lower()

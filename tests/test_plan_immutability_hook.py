@@ -28,6 +28,7 @@ def _git(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedProc
         capture_output=True,
         env=_clean_env(),
         text=True,
+        timeout=30,
     )
 
 
@@ -45,6 +46,7 @@ def _project_python() -> str:
         ["git", "-C", str(REPO_ROOT), "rev-parse", "--git-common-dir"],
         env=_clean_env(),
         text=True,
+        timeout=30,
     ).strip()
     shared_python = Path(common_dir).resolve().parent / ".venv" / "bin" / "python"
     return str(shared_python)
@@ -98,6 +100,7 @@ def _run_hook(repo: Path, commit_message: str) -> subprocess.CompletedProcess[st
         capture_output=True,
         env=_clean_env(),
         text=True,
+        timeout=30,
     )
 
 

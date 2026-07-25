@@ -66,6 +66,7 @@ def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
         capture_output=True,
         text=True,
         env=sanitized_git_env(),
+        timeout=10,
     )
 
 
@@ -1865,6 +1866,7 @@ def test_cli_subprocess_malformed_scope_exits_2(tmp_path):
         text=True,
         check=False,
         env=sanitized_git_env(),
+        timeout=30,
     )
     assert proc.returncode == EXIT_INVALID
     err = json.loads(proc.stderr)
