@@ -283,8 +283,13 @@ def init_db(path: Path | None = None) -> Path:
 
     def _do_init() -> None:
         with closing(_connect_sqlite_db(resolved, writable=True)) as conn:
+            # ``executescript`` commits an already-pending transaction before it
+            # runs, so the write lock must be the first statement in the script.
+            # Keep every schema operation below, including column migrations,
+            # under this one lock.
             conn.executescript(
                 """
+                BEGIN IMMEDIATE;
                 CREATE TABLE IF NOT EXISTS llm_qg_runs (
                     run_id          TEXT PRIMARY KEY,
                     created_at      TEXT NOT NULL,
@@ -515,7 +520,11 @@ def _ensure_composite_columns(conn: sqlite3.Connection) -> None:
     }
     for name, column_type in additions.items():
         if name not in existing:
-            conn.execute(f"ALTER TABLE llm_qg_runs ADD COLUMN {name} {column_type}")
+            try:
+                conn.execute(f"ALTER TABLE llm_qg_runs ADD COLUMN {name} {column_type}")
+            except sqlite3.OperationalError as error:
+                if str(error).casefold() != f"duplicate column name: {name}".casefold():
+                    raise
 
 
 def _aggregate(payload: dict[str, Any]) -> dict[str, Any]:

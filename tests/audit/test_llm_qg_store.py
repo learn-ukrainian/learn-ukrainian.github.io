@@ -432,6 +432,9 @@ def test_concurrent_writers_shared_store(tmp_path: Path) -> None:
         for future in concurrent.futures.as_completed(futures):
             future.result()
 
+    with sqlite3.connect(db_path) as conn:
+        assert conn.execute("SELECT count(*) FROM llm_qg_runs").fetchone()[0] == num_procs
+
 def test_db_uses_wal_mode_and_busy_timeout(tmp_path: Path) -> None:
     from scripts.audit.llm_qg_store import init_db
 
@@ -457,5 +460,4 @@ def test_repository_root_failure_degrades_gracefully(monkeypatch) -> None:
 
     # Should degrade to returning None instead of propagating RuntimeError
     assert llm_qg_store.latest_llm_qg("b1", "aspect-in-imperatives", path=None) is None
-
 
