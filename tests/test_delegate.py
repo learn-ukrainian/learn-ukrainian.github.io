@@ -4540,10 +4540,13 @@ def test_sigterm_during_runtime_lease_cleanup_cannot_lose_the_outcome(
             model=None,
             hard_timeout=60,
             effort="xhigh",
+            # A real dispatch always leases runtime tmp; pass one explicitly so
+            # this test actually enters the cleanup path instead of skipping it.
+            runtime_tmp_root=str(tmp_path / "runtime-tmp"),
         )
 
-    if seen:  # only asserts when the dispatch actually leases runtime tmp
-        assert seen["sigterm_disposition"] is signal.SIG_IGN, seen
+    assert seen, "the lease-cleanup path was never entered — test proves nothing"
+    assert seen["sigterm_disposition"] is signal.SIG_IGN, seen
     assert signal.getsignal(signal.SIGTERM) is not signal.SIG_IGN
     state = delegate._read_state(state_path)
     assert state is not None and state["status"] in delegate._TERMINAL_STATUSES
