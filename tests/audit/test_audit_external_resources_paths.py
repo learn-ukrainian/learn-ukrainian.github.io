@@ -25,5 +25,5 @@ def test_resources_file_path_resolution():
 def test_live_reproducer():
     script_path = Path(__file__).resolve().parents[2] / "scripts" / "audit" / "audit_external_resources.py"
     # We use subprocess with sys.executable to run exactly how the test is run
-    result = subprocess.run([sys.executable, str(script_path), "--stats"], capture_output=True, text=True)
+    result = subprocess.run([sys.executable, str(script_path), "--stats"], capture_output=True, text=True, timeout=30)
     assert result.returncode == 0, f"Script failed with output: {result.stderr}\n{result.stdout}"

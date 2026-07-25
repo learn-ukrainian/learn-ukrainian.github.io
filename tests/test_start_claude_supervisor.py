@@ -148,25 +148,28 @@ fi
     env["HOME"] = str(home)
     env["PATH"] = f"{bin_dir}:{env.get('PATH', '')}"
 
-    subprocess.run(["git", "init", "--quiet", str(project)], check=True, env=env)
+    subprocess.run(["git", "init", "--quiet", str(project)], check=True, env=env, timeout=30)
     subprocess.run(
         ["git", "-C", str(project), "config", "user.email", "t@example.com"],
         check=True,
         env=env,
+        timeout=30,
     )
     subprocess.run(
         ["git", "-C", str(project), "config", "user.name", "t"],
         check=True,
         env=env,
+        timeout=30,
     )
     (project / "README.md").write_text("t\n", encoding="utf-8")
-    subprocess.run(["git", "-C", str(project), "add", "."], check=True, env=env)
+    subprocess.run(["git", "-C", str(project), "add", "."], check=True, env=env, timeout=30)
     subprocess.run(
         ["git", "-C", str(project), "commit", "--quiet", "-m", "init"],
         check=True,
         env=env,
+        timeout=30,
     )
-    subprocess.run(["git", "-C", str(project), "branch", "-M", "main"], check=True, env=env)
+    subprocess.run(["git", "-C", str(project), "branch", "-M", "main"], check=True, env=env, timeout=30)
 
     result = subprocess.run(
         [str(project / "start-claude.sh"), "--epic", selector],

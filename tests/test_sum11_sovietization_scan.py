@@ -218,6 +218,7 @@ def test_scan_produces_expected_distribution(seeded_db, tmp_path):
         capture_output=True,
         text=True,
         check=False,
+        timeout=60,
     )
     assert result.returncode == 0, (
         f"scan failed: stdout={result.stdout!r} stderr={result.stderr!r}"
@@ -275,6 +276,7 @@ def test_dry_run_does_not_modify_db(seeded_db, tmp_path):
         capture_output=True,
         text=True,
         check=False,
+        timeout=60,
     )
     assert result.returncode == 0
     assert "[dry-run]" in result.stdout
@@ -300,7 +302,7 @@ def test_scan_is_idempotent(seeded_db, tmp_path):
         "--report",
         str(report_path),
     ]
-    subprocess.run(cmd, check=True)
+    subprocess.run(cmd, check=True, timeout=60)
     conn = sqlite3.connect(seeded_db)
     first = conn.execute(
         "SELECT word, sovietization_risk, sovietization_keywords "
@@ -308,7 +310,7 @@ def test_scan_is_idempotent(seeded_db, tmp_path):
     ).fetchall()
     conn.close()
 
-    subprocess.run(cmd, check=True)
+    subprocess.run(cmd, check=True, timeout=60)
     conn = sqlite3.connect(seeded_db)
     second = conn.execute(
         "SELECT word, sovietization_risk, sovietization_keywords "
@@ -339,6 +341,7 @@ def test_scan_clears_stale_clean_row_flags(seeded_db, tmp_path):
             str(report_path),
         ],
         check=True,
+        timeout=60,
     )
 
     conn = sqlite3.connect(seeded_db)
