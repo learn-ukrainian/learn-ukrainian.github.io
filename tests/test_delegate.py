@@ -4487,3 +4487,63 @@ def test_terminal_fallback_write_defers_a_second_sigterm(
     assert signal.getsignal(signal.SIGTERM) is not signal.SIG_IGN
     state = delegate._read_state(state_path)
     assert state is not None and state["status"] != "running"
+
+
+def test_sigterm_during_runtime_lease_cleanup_cannot_lose_the_outcome(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The pre-guard cleanup window must not swallow a completed worker.
+
+    Runtime-lease cleanup runs in the runtime `finally` — after the worker has
+    finished, before the guarded span — and catches Exception, not the
+    KeyboardInterrupt a SIGTERM raises. Cross-family review of #5807.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("sigterm-in-cleanup")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "sigterm-in-cleanup",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    seen = {}
+
+    def reap_under_deferral(*_args, **_kwargs):
+        seen["sigterm_disposition"] = signal.getsignal(signal.SIGTERM)
+        return {"tmp_bytes_freed": 0, "tmp_reap_error": None}
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_reap_runtime_tmp_lease", side_effect=reap_under_deferral),
+        patch.object(delegate, "_worktree_is_dirty", return_value=False),
+        patch.object(delegate, "_count_commits_ahead", return_value=1),
+    ):
+        delegate._run_worker(
+            task_id="sigterm-in-cleanup",
+            agent="codex",
+            prompt="hi",
+            mode="workspace-write",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            effort="xhigh",
+        )
+
+    if seen:  # only asserts when the dispatch actually leases runtime tmp
+        assert seen["sigterm_disposition"] is signal.SIG_IGN, seen
+    assert signal.getsignal(signal.SIGTERM) is not signal.SIG_IGN
+    state = delegate._read_state(state_path)
+    assert state is not None and state["status"] in delegate._TERMINAL_STATUSES

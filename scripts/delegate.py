@@ -2489,10 +2489,20 @@ def _run_worker(
         returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
     finally:
         if runtime_tmp_root is not None or runtime_tmp_namespace_root is not None:
-            runtime_tmp_reap = _reap_runtime_tmp_lease(
-                runtime_tmp_root,
-                runtime_tmp_namespace_root,
-            )
+            # This cleanup runs AFTER the worker has finished but BEFORE the
+            # guarded span below, and it catches Exception rather than the
+            # KeyboardInterrupt a SIGTERM raises — so a cancel landing here used
+            # to unwind out of _run_worker with no terminal status written.
+            # Deferring the signal across the cleanup drops a cancel that has
+            # nothing left to cancel (the work is already done) in exchange for
+            # never losing the record that it was done. (Cross-family review of
+            # #5807.) Cleanup stays in `finally` so an interrupt during the
+            # runtime call itself still frees the lease.
+            with _sigterm_deferred():
+                runtime_tmp_reap = _reap_runtime_tmp_lease(
+                    runtime_tmp_root,
+                    runtime_tmp_namespace_root,
+                )
 
     duration_s = time.monotonic() - start
 
