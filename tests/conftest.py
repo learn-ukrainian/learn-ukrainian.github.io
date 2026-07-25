@@ -6,11 +6,35 @@ Provides reusable content snippets and module templates for testing.
 
 import os
 import sys
+from pathlib import Path
 
 import pytest
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _require_data_artifact(relative_path: str) -> Path:
+    """Return a local data artifact or skip tests that cannot run without it."""
+    data_root = Path(os.environ.get("LEARN_UKRAINIAN_TEST_DATA_ROOT", _REPO_ROOT))
+    artifact = data_root / relative_path
+    if not artifact.is_file():
+        pytest.skip(f"requires {relative_path} (not provisioned in CI)")
+    return artifact
+
+
+@pytest.fixture
+def requires_sources_db() -> Path:
+    """Skip a test requiring the uncommitted sources corpus database."""
+    return _require_data_artifact("data/sources.db")
+
+
+@pytest.fixture
+def requires_vesum_db() -> Path:
+    """Skip a test requiring the uncommitted VESUM database."""
+    return _require_data_artifact("data/vesum.db")
 
 
 @pytest.fixture(autouse=True)
