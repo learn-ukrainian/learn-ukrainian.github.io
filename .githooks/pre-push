@@ -87,8 +87,9 @@ def _branch_from_local_ref(local_ref: str, local_sha: str) -> str | None:
     # Git sends the literal ``HEAD`` for ``git push origin HEAD:main``.  It
     # does not include the symbolic branch name in the stdin record.  Resolve
     # the pushed object against local branch refs, rather than consulting the
-    # current branch (which is unrelated to an explicit refspec).  Ambiguity
-    # is a probe failure and therefore intentionally fails open.
+    # current branch (which is unrelated to an explicit refspec).  A missing
+    # or ambiguous result must be refused by ``main()``: otherwise a SHA push,
+    # detached HEAD, or probe failure could evade the pytest requirement.
     if local_ref != "HEAD":
         return None
     output = _git_output("for-each-ref", "--format=%(refname)", "--points-at", local_sha, "refs/heads")
@@ -139,6 +140,17 @@ def _block_message(branch: str, marker: Path) -> None:
     )
 
 
+def _verification_error(reason: str) -> None:
+    """Explain a fail-closed refusal when the guard cannot verify an update."""
+    print(
+        "Push to main blocked: "
+        f"{reason}; the pytest requirement could not be verified.\n"
+        "Resolve the Git or filesystem error and push again.\n"
+        "To intentionally bypass this discipline check, use: git push --no-verify",
+        file=sys.stderr,
+    )
+
+
 def _updates() -> list[tuple[str, str, str, str]] | None:
     try:
         lines = sys.stdin.read().splitlines()
@@ -149,7 +161,7 @@ def _updates() -> list[tuple[str, str, str, str]] | None:
     for line in lines:
         fields = line.split()
         if len(fields) != 4:
-            continue
+            return None
         updates.append(tuple(fields))
     return updates
 
@@ -160,7 +172,8 @@ def main() -> int:
 
     updates = _updates()
     if updates is None:
-        return 0
+        _verification_error("could not read valid ref updates from Git")
+        return 1
 
     for local_ref, local_sha, remote_ref, remote_sha in updates:
         if remote_ref != MAIN_REF or _is_all_zero(local_sha):
@@ -168,17 +181,20 @@ def main() -> int:
 
         paths = _changed_paths(remote_sha, local_sha)
         if paths is None:
-            return 0
+            _verification_error("could not determine changed paths")
+            return 1
         if not any(_is_trigger_path(path) for path in paths):
             continue
 
         branch = _branch_from_local_ref(local_ref, local_sha)
         if branch is None:
-            return 0
+            _verification_error("could not determine the local source branch for the pytest stamp")
+            return 1
         marker = _marker_path(branch)
         marker_is_fresh = _marker_is_fresh(marker)
         if marker_is_fresh is None:
-            return 0
+            _verification_error(f"could not inspect the pytest stamp at {marker}")
+            return 1
         if not marker_is_fresh:
             _block_message(branch, marker)
             return 1

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import subprocess
 import time
@@ -11,6 +12,7 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOK_PATH = REPO_ROOT / ".githooks" / "pre-push"
+STAMP_PATH = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "stamp-pytest.sh"
 PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 ZERO_SHA = "0" * 40
 
@@ -31,7 +33,15 @@ def _load_hook_module():
 
 
 def _git_environment(extra_env: dict[str, str] | None = None) -> dict[str, str]:
+    """Return an environment owned by this test's Git subprocesses.
+
+    The agent-runtime Git shim rejects pushes to ``main`` when its
+    ``AGENT_NO_MERGE`` guard is inherited. These tests create disposable
+    repositories and must exercise their own hook, so remove that ambient
+    policy as well as Git's worktree-specific variables.
+    """
     environment = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    environment.pop("AGENT_NO_MERGE", None)
     if extra_env:
         environment.update(extra_env)
     return environment
@@ -105,6 +115,24 @@ def _hook(
 def _stamp(tmp_path: Path, branch: str = "feature") -> Path:
     tmp_path.mkdir(exist_ok=True)
     return tmp_path / f"learn-uk-pytest.{branch}.stamp"
+
+
+def _run_stamp_writer(
+    repo: Path,
+    payload: dict[str, object],
+    *,
+    tmpdir: Path,
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [str(STAMP_PATH)],
+        capture_output=True,
+        check=False,
+        cwd=repo,
+        env=_git_environment({"TMPDIR": str(tmpdir)}),
+        input=json.dumps(payload),
+        text=True,
+        timeout=30,
+    )
 
 
 def test_blocks_main_update_with_trigger_path_and_no_stamp(tmp_path):
@@ -227,12 +255,14 @@ def test_new_remote_main_ref_uses_merge_base_fallback(tmp_path):
     assert result.returncode == 1
 
 
-def test_unresolvable_range_fails_open(tmp_path):
+def test_unresolvable_range_refuses_main_update_with_actionable_override(tmp_path):
     repo, _, local_sha = _repo_with_change(tmp_path)
 
     result = _hook(repo, _update(local_sha, ZERO_SHA), tmpdir=tmp_path / "stamps")
 
-    assert result.returncode == 0
+    assert result.returncode == 1
+    assert "could not determine changed paths" in result.stderr
+    assert "git push --no-verify" in result.stderr
 
 
 def test_skip_pytest_hook_environment_escapes(tmp_path):
@@ -248,14 +278,91 @@ def test_skip_pytest_hook_environment_escapes(tmp_path):
     assert result.returncode == 0
 
 
-def test_stamp_filesystem_error_fails_open(tmp_path):
+def test_stamp_filesystem_error_refuses_main_update_with_actionable_override(tmp_path):
     repo, remote_sha, local_sha = _repo_with_change(tmp_path)
     not_a_directory = tmp_path / "not-a-directory"
     not_a_directory.write_text("not a directory\n", encoding="utf-8")
 
     result = _hook(repo, _update(local_sha, remote_sha), tmpdir=not_a_directory)
 
+    assert result.returncode == 1
+    assert "could not inspect the pytest stamp" in result.stderr
+    assert "git push --no-verify" in result.stderr
+
+
+def test_unresolvable_local_ref_refuses_triggering_main_update(tmp_path):
+    repo, remote_sha, local_sha = _repo_with_change(tmp_path)
+
+    result = _hook(
+        repo,
+        _update(local_sha, remote_sha, local_ref=local_sha),
+        tmpdir=tmp_path / "stamps",
+    )
+
+    assert result.returncode == 1
+    assert "could not determine the local source branch" in result.stderr
+    assert "git push --no-verify" in result.stderr
+
+
+def test_git_environment_removes_the_agent_push_guard(monkeypatch):
+    monkeypatch.setenv("AGENT_NO_MERGE", "1")
+
+    assert "AGENT_NO_MERGE" not in _git_environment()
+
+
+@pytest.mark.parametrize(
+    "command",
+    (
+        ".venv/bin/python -m pytest tests/test_pre_push_hook.py -q",
+        "/arbitrary/path/.venv/bin/python -m pytest tests/test_pre_push_hook.py -q",
+    ),
+)
+def test_stamp_writer_records_successful_pytest_runs(tmp_path, command):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+
+    result = _run_stamp_writer(repo, {"tool_input": {"command": command}}, tmpdir=stamp_dir)
+
     assert result.returncode == 0
+    assert _stamp(stamp_dir).exists()
+
+
+def test_stamp_writer_leaves_no_stamp_from_detached_head(tmp_path):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+    _git(repo, "checkout", "--detach", "HEAD")
+
+    result = _run_stamp_writer(
+        repo,
+        {"tool_input": {"command": ".venv/bin/python -m pytest tests/test_pre_push_hook.py -q"}},
+        tmpdir=stamp_dir,
+    )
+
+    assert result.returncode == 0
+    assert not stamp_dir.exists()
+
+
+@pytest.mark.parametrize(
+    ("output", "should_stamp"),
+    (
+        ("============================= 20 passed in 0.65s ==============================", True),
+        ("============================= 1 failed, 19 passed in 0.65s ==============================", False),
+        ("============================= no tests ran in 0.12s ==============================", False),
+    ),
+)
+def test_stamp_writer_checks_pytest_result_after_a_compound_command(tmp_path, output, should_stamp):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+    payload = {
+        "hook_event_name": "PostToolUseFailure",
+        "tool_input": {"command": ".venv/bin/python -m pytest tests/ -v && exit 1"},
+        "tool_output": output,
+    }
+
+    result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
+
+    assert result.returncode == 0
+    assert _stamp(stamp_dir).exists() is should_stamp
 
 
 def test_no_verify_skips_hook_for_an_actual_push(tmp_path):
