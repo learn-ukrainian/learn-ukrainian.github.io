@@ -100,7 +100,7 @@ def _isolate_llm_qg_runtime_stores(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
-def _isolate_write_ownership_ledger(tmp_path, monkeypatch):
+def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
     """Every test gets its own write-path ownership ledger.
 
     Root cause (2026-07-25): the ledger path was a module constant baked into
@@ -109,9 +109,14 @@ def _isolate_write_ownership_ledger(tmp_path, monkeypatch):
     be running: eight of them failed on a busy machine and passed on an idle
     one, which is indistinguishable from flakiness and silently erodes the
     pre-push pytest signal. Tests that want the real ledger override this.
+
+    The directory comes from ``tmp_path_factory``, NOT from the test's own
+    ``tmp_path``: an autouse fixture that creates a subdirectory there breaks
+    every test asserting its ``tmp_path`` is empty. Caught in CI by
+    test_grok_envelope_failure_skips_forensics_when_unconfigured after the
+    first version of this fixture did exactly that.
     """
-    ledger_dir = tmp_path / "ownership"
-    ledger_dir.mkdir(exist_ok=True)
+    ledger_dir = tmp_path_factory.mktemp("write-ownership")
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(ledger_dir / "write-ownership.sqlite3"))
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR", str(ledger_dir))
 
