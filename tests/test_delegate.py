@@ -4288,3 +4288,134 @@ def test_run_worker_records_completion_even_when_cancelled_during_finalize(
     assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
     assert state["needs_finalize"] is True
     assert "KeyboardInterrupt" in (state.get("finalize_error") or "")
+
+
+def test_interrupt_before_telemetry_still_records_the_outcome(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The fallback must not depend on names bound inside the span it guards.
+
+    Cross-family review of #5807: the handler read final_state and final_status,
+    both assigned inside the try, so an interrupt arriving early raised
+    UnboundLocalError *inside the handler* — failing at exactly the moment it
+    existed for. Interrupt during the result-file write, the very first statement
+    of the span.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("interrupt-early")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "interrupt-early",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "a response", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    real_write_text = Path.write_text
+
+    def interrupt_on_result_file(self, *args, **kwargs):
+        if self.suffix == ".result":
+            raise KeyboardInterrupt("SIGTERM during result-file write")
+        return real_write_text(self, *args, **kwargs)
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(Path, "write_text", interrupt_on_result_file),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="interrupt-early",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None, "handler blew up instead of recording the outcome"
+    assert state["status"] != "running"
+    assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
+
+
+def test_interrupt_after_clean_telemetry_does_not_invent_finalize_work(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A dispatch already measured clean and committed stays done.
+
+    Cross-family review of #5807 (F002): unconditionally writing
+    needs_finalize=True on the interrupt path turned a healthy, already-verified
+    dispatch into a false manual-finalization alert.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("interrupt-after-clean")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "interrupt-after-clean",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    # Interrupt lands exactly ON the checkpoint write: telemetry has settled
+    # (clean worktree, 3 commits) but nothing has been persisted yet. The
+    # fallback write that follows must succeed, so only the first call raises.
+    real_write = delegate._write_state_atomic
+    fired = {"once": False}
+
+    def interrupt_first_write(path, state):
+        # The checkpoint is the first write carrying the finished-outcome fields;
+        # earlier writes record the running task. Fire once so the fallback write
+        # that follows can still land.
+        if not fired["once"] and "duration_s" in state:
+            fired["once"] = True
+            raise KeyboardInterrupt("SIGTERM at the checkpoint")
+        return real_write(path, state)
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_worktree_is_dirty", return_value=False),
+        patch.object(delegate, "_count_commits_ahead", return_value=3),
+        patch.object(delegate, "_write_state_atomic", side_effect=interrupt_first_write),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="interrupt-after-clean",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["needs_finalize"] is False, "invented finalize work for a clean dispatch"
+    assert state["status"] == "done"
+    assert state["commits_ahead"] == 3

@@ -2468,6 +2468,40 @@ def _run_worker(
 
     duration_s = time.monotonic() - start
 
+    # Everything the interrupt fallback below needs is bound BEFORE the guarded
+    # span. A handler that raises UnboundLocalError while trying to record the
+    # outcome is worse than no handler at all: it fails exactly when it is
+    # needed. (Cross-family review of this PR.)
+    final_status = _classify_final_status(
+        cancelled=cancelled,
+        rate_limited=rate_limited,
+        ok_outcome=ok_outcome,
+        timed_out=timed_out,
+    )
+
+    # A successful runtime result must carry the completed child process's
+    # return code.  Refuse to persist a misleading ``done``/null combination
+    # if a future runner regression drops it; failures without a child code
+    # retain a precise reason instead of inventing a number (#4837).
+    if final_status == "done" and returncode is None:
+        final_status = "failed"
+        ok_outcome = False
+        returncode_reason = "runtime reported success without a terminal subprocess returncode"
+        stderr_excerpt = "runtime reported success without a terminal subprocess returncode"
+    elif returncode is None and returncode_reason is None:
+        returncode_reason = "no terminal subprocess returncode was available"
+
+    final_state = _read_state(state_path) or {}
+    result_file: str | None = None
+    dirty_on_exit: bool | None = None
+    commits_ahead: int | None = None
+    needs_finalize = False
+    finalize_error: str | None = None
+    auto_finalize: AutoFinalizeResult | None = None
+    # True once the worktree telemetry has actually run: only then is
+    # ``needs_finalize`` a verdict rather than an unmeasured default.
+    telemetry_settled = False
+
     # A SIGTERM arriving anywhere in this span raises KeyboardInterrupt (see
     # _worker_sigterm_handler), which is NOT an Exception and would unwind
     # straight out of _run_worker — leaving a worker that HAS finished
@@ -2476,7 +2510,6 @@ def _run_worker(
     # that the work completed. (Cross-family review of this PR.)
     try:
         # Write the full response to a result file (may be large).
-        result_file: str | None = None
         if response:
             result_path = state_path.with_suffix(".result")
             try:
@@ -2485,39 +2518,13 @@ def _run_worker(
             except OSError:
                 result_file = None
 
-        final_status = _classify_final_status(
-            cancelled=cancelled,
-            rate_limited=rate_limited,
-            ok_outcome=ok_outcome,
-            timed_out=timed_out,
-        )
-
-        # A successful runtime result must carry the completed child process's
-        # return code.  Refuse to persist a misleading ``done``/null combination
-        # if a future runner regression drops it; failures without a child code
-        # retain a precise reason instead of inventing a number (#4837).
-        if final_status == "done" and returncode is None:
-            final_status = "failed"
-            ok_outcome = False
-            returncode_reason = "runtime reported success without a terminal subprocess returncode"
-            stderr_excerpt = "runtime reported success without a terminal subprocess returncode"
-        elif returncode is None and returncode_reason is None:
-            returncode_reason = "no terminal subprocess returncode was available"
-
-        final_state = _read_state(state_path) or {}
-
         # Fix 5 (#1476 AC 5): dispatch-finish telemetry — record whether the
         # worktree exited dirty so follow-up reviewers can see at a glance
         # that the dispatched agent left uncommitted changes behind.
-        dirty_on_exit: bool | None = None
         worktree_path = final_state.get("worktree_path")
         if worktree_path:
             dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
 
-        commits_ahead: int | None = None
-        needs_finalize = False
-        finalize_error: str | None = None
-        auto_finalize: AutoFinalizeResult | None = None
         # EVERYTHING from here to the state write is telemetry ABOUT a worker that
         # has already finished. None of it may prevent the terminal status from
         # being recorded: a task stuck at ``running`` with a dead pid is worse than
@@ -2579,6 +2586,10 @@ def _run_worker(
             # Unknown telemetry cannot prove the work was committed, so surface
             # the task for a human instead of settling it as done.
             needs_finalize = True
+        # Either way the verdict is now measured rather than assumed, so an
+        # interrupt below must persist it as-is instead of forcing attention
+        # onto a dispatch already shown to be clean and committed.
+        telemetry_settled = True
 
         if needs_finalize:
             final_status = "needs_finalize"
@@ -2619,18 +2630,30 @@ def _run_worker(
         }
         _write_state_atomic(state_path, {**final_state, **core_terminal_state})
     except BaseException as interrupt_exc:
+        # Honour a verdict the telemetry already reached; fail closed only when
+        # the interrupt beat the measurement to it — and only for modes that can
+        # leave work behind, so an interrupted read-only review is not dressed up
+        # as a dispatch needing manual finalization.
+        interrupted_needs_finalize = (
+            needs_finalize if telemetry_settled else mode in _WRITE_CAPABLE_MODES
+        )
         _write_state_atomic(
             state_path,
             {
                 **final_state,
-                "status": final_status or "cancelled",
+                # final_status is classified before this span, so it is always
+                # bound and already reflects the worker's own outcome.
+                "status": (
+                    "needs_finalize" if interrupted_needs_finalize else final_status
+                ),
                 "finished_at": datetime.now(UTC).isoformat(),
                 "duration_s": round(duration_s, 3),
                 "returncode": returncode,
                 "stderr_excerpt": stderr_excerpt,
-                # Interrupted before the worktree could be inspected, so
-                # nothing here proves the work was committed.
-                "needs_finalize": True,
+                "needs_finalize": interrupted_needs_finalize,
+                "worktree_dirty_on_exit": dirty_on_exit,
+                "commits_ahead": commits_ahead,
+                "result_file": result_file,
                 "finalize_error": (
                     f"interrupted during finalize: {type(interrupt_exc).__name__}"
                 ),
