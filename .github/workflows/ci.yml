@@ -200,6 +200,18 @@ jobs:
           python-version: '3.12'
           cache: pip
           cache-dependency-path: requirements-lock.txt
+      # `generate_lesson_schema.py` shells out to `node` for
+      # `scripts/build/lesson_schema_extractor.mjs` (see that script, ~line 190),
+      # so this job needs Node and the root `npm ci` — the previous schema-drift
+      # job had both and the rewrite dropped them, which is why
+      # "Check generated lesson-schema contract" failed.
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6.0.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+      - name: Install extractor dependencies
+        run: npm ci
       - name: Check generated lesson-schema contract
         run: |
           python -m venv .venv
@@ -220,6 +232,34 @@ jobs:
           node-version: '22'
           cache: npm
           cache-dependency-path: site/package-lock.json
+      # The site build reads `site/src/data/lexicon-manifest.json`. The previous
+      # frontend job restored it from cache and rehydrated it from the pointer when
+      # stale; the rewrite dropped that, along with the Python venv the rehydrate
+      # step needs — which is why "Build and test site" failed. Ported verbatim from
+      # the job this replaces rather than improvised.
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version-file: '.python-version'
+      - name: Create Python venv
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install jsonschema PyYAML
+      - name: Restore Atlas lexicon manifest cache
+        id: atlas-manifest-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        run: |
+          .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+      - name: Save Atlas lexicon manifest cache
+        if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
       - name: Build and test site
         working-directory: site
         run: |
