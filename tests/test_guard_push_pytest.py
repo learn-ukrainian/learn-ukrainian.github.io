@@ -468,3 +468,27 @@ def test_hostile_git_env_cannot_disable_the_guard(monkeypatch, repo_with_worktre
     main_co, _worktree = repo_with_worktree
     monkeypatch.setenv(var, "/nonexistent/hostile/path")
     assert _run_real(monkeypatch, "git push origin main", main_co) == 2
+
+
+def test_pushd_re_homes_the_push(monkeypatch, repo_with_worktree):
+    """Cross-family review P1 (round 3): the directory STACK moves the shell too.
+
+    `pushd <main> && git push origin main` from a worktree payload cwd was judged
+    in the worktree, so an untested push to main was permitted.
+    """
+    main_co, worktree = repo_with_worktree
+    command = f"pushd {main_co} && git push origin main"
+    assert _run_real(monkeypatch, command, worktree) == 2
+
+
+def test_popd_returns_to_the_previous_directory(monkeypatch, repo_with_worktree):
+    """`pushd <worktree>` then `popd` lands back on main, so the guard must fire."""
+    main_co, worktree = repo_with_worktree
+    command = f"pushd {worktree} && popd && git push origin main"
+    assert _run_real(monkeypatch, command, main_co) == 2
+
+
+def test_popd_without_a_matching_pushd_is_not_modelled(monkeypatch, repo_with_worktree):
+    """An unbalanced popd is unmodellable; fall back rather than guess a directory."""
+    main_co, _worktree = repo_with_worktree
+    assert _run_real(monkeypatch, "popd && git push origin main", main_co) == 2

@@ -246,14 +246,29 @@ def _effective_cwd(command: str, base: str) -> str:
     is not a directory) collapses back to `base`. That is the SAFE direction:
     base is the primary checkout, so an ambiguous command leaves the guard armed
     rather than silently disarmed.
+
+    Models `cd`, `pushd` and `popd`. Residual limitation, stated rather than
+    implied: shell constructs this cannot model — `eval`, subshells, shell
+    functions, aliases — fall through to `base`. This guard exists to catch an
+    operator's own untested push, not to withstand a crafted evasion; a caller
+    determined to bypass it can simply set `SKIP_PYTEST_HOOK=1`.
     """
     current = base
+    stack: list[str] = []
     for tokens in _segments(command):
         if not tokens:
             continue
         if _git_push_args(tokens) is not None:
             break
-        if tokens[0] != "cd":
+        verb = tokens[0]
+        if verb == "popd":
+            # Cross-family review P1 (round 3): the directory stack moves the shell
+            # too. An empty stack means the command is not modellable here.
+            if not stack:
+                return base
+            current = stack.pop()
+            continue
+        if verb not in {"cd", "pushd"}:
             continue
         if len(tokens) < 2:
             return base
@@ -269,6 +284,8 @@ def _effective_cwd(command: str, base: str) -> str:
             return base
         if not resolved.is_dir():
             return base
+        if verb == "pushd":
+            stack.append(current)
         current = str(resolved)
     return current
 
