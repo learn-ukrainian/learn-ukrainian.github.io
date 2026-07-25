@@ -243,8 +243,19 @@ def verify_artifacts(artifact_dir: Path, shard_count: int) -> None:
         cache_junit = shard_dir / "cache-junit.xml"
         playground_junit = shard_dir / "playground-junit.xml"
         if shard_id == 1:
-            if serial != list(SERIAL_TESTS) or not cache_junit.exists() or not playground_junit.exists():
-                raise RuntimeError("shard 1 must execute the documented serial tests")
+            if serial != list(SERIAL_TESTS):
+                raise RuntimeError(
+                    f"shard 1 plan.json declares an unexpected serial test list: "
+                    f"{serial!r} (expected {list(SERIAL_TESTS)!r})"
+                )
+            if not cache_junit.exists():
+                raise RuntimeError(
+                    "shard 1 is missing cache-junit.xml: the cache-invalidation serial tests did not run"
+                )
+            if not playground_junit.exists():
+                raise RuntimeError(
+                    "shard 1 is missing playground-junit.xml: the playground serial test did not run"
+                )
             if _junit_count(cache_junit) + _junit_count(playground_junit) != len(SERIAL_TESTS):
                 raise RuntimeError("serial JUnit count does not match the documented serial tests")
         elif serial or cache_junit.exists() or playground_junit.exists():

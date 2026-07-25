@@ -92,6 +92,70 @@ def test_verify_artifacts_rejects_partition_mode_mismatch(tmp_path: Path) -> Non
         raise AssertionError("partition_mode mismatch must fail closed")
 
 
+def _write_single_shard1_plan(shard_dir: Path, *, serial: list[str], selected: list[str]) -> None:
+    digest = pytest_shards._digest(selected)
+    shard_dir.mkdir()
+    (shard_dir / "plan.json").write_text(
+        json.dumps(
+            {
+                "assigned_nodeids": selected,
+                "assigned_digest": pytest_shards._digest(selected),
+                "collected_count": len(selected),
+                "collected_digest": digest,
+                "partition_mode": "equal-weight",
+                "serial_nodeids": serial,
+                "shard_count": 1,
+                "shard_id": 1,
+            }
+        ),
+        encoding="utf-8",
+    )
+    (shard_dir / "main-junit.xml").write_text(f'<testsuite tests="{len(selected)}" />', encoding="utf-8")
+
+
+def test_verify_artifacts_rejects_a_serial_list_mismatch(tmp_path: Path) -> None:
+    selected = ["tests/test_a.py::test_a"]
+    shard = tmp_path / "pytest-shard-1"
+    _write_single_shard1_plan(shard, serial=["tests/test_wrong.py::test_wrong"], selected=selected)
+    (shard / "cache-junit.xml").write_text('<testsuite tests="2" />', encoding="utf-8")
+    (shard / "playground-junit.xml").write_text('<testsuite tests="1" />', encoding="utf-8")
+
+    try:
+        pytest_shards.verify_artifacts(tmp_path, 1)
+    except RuntimeError as error:
+        assert "unexpected serial test list" in str(error)
+    else:
+        raise AssertionError("a serial test list mismatch must fail closed")
+
+
+def test_verify_artifacts_rejects_missing_cache_junit(tmp_path: Path) -> None:
+    selected = ["tests/test_a.py::test_a"]
+    shard = tmp_path / "pytest-shard-1"
+    _write_single_shard1_plan(shard, serial=list(pytest_shards.SERIAL_TESTS), selected=selected)
+    (shard / "playground-junit.xml").write_text('<testsuite tests="1" />', encoding="utf-8")
+
+    try:
+        pytest_shards.verify_artifacts(tmp_path, 1)
+    except RuntimeError as error:
+        assert "missing cache-junit.xml" in str(error)
+    else:
+        raise AssertionError("a missing cache-junit.xml must fail closed")
+
+
+def test_verify_artifacts_rejects_missing_playground_junit(tmp_path: Path) -> None:
+    selected = ["tests/test_a.py::test_a"]
+    shard = tmp_path / "pytest-shard-1"
+    _write_single_shard1_plan(shard, serial=list(pytest_shards.SERIAL_TESTS), selected=selected)
+    (shard / "cache-junit.xml").write_text('<testsuite tests="2" />', encoding="utf-8")
+
+    try:
+        pytest_shards.verify_artifacts(tmp_path, 1)
+    except RuntimeError as error:
+        assert "missing playground-junit.xml" in str(error)
+    else:
+        raise AssertionError("a missing playground-junit.xml must fail closed")
+
+
 def test_verify_artifacts_accepts_a_complete_disjoint_partition(tmp_path: Path) -> None:
     selected = [f"tests/test_{number}.py::test_case" for number in range(4)]
     digest = pytest_shards._digest(selected)
