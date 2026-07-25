@@ -100,12 +100,12 @@ def test_stamp_pytest_bash_smoke(tmp_path):
 
     repo = tmp_path / "repo"
     repo.mkdir()
-    subprocess.run(["git", "init", "-b", branch], cwd=repo, env=git_env, check=True)
-    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, env=git_env, check=True)
-    subprocess.run(["git", "config", "user.name", "Test User"], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "init", "-b", branch], cwd=repo, env=git_env, check=True, timeout=30)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, env=git_env, check=True, timeout=30)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=repo, env=git_env, check=True, timeout=30)
     (repo / "README.md").write_text("test repo\n", encoding="utf-8")
-    subprocess.run(["git", "add", "README.md"], cwd=repo, env=git_env, check=True)
-    subprocess.run(["git", "commit", "-m", "initial"], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "add", "README.md"], cwd=repo, env=git_env, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "initial"], cwd=repo, env=git_env, check=True, timeout=30)
 
     marker = tmp_path / f"learn-uk-pytest.{branch}.stamp"
     payload = json.dumps({"tool_input": {"command": ".venv/bin/python -m pytest tests/test_guard_push_pytest.py -q"}})
@@ -120,13 +120,14 @@ def test_stamp_pytest_bash_smoke(tmp_path):
         text=True,
         env=env,
         check=False,
+        timeout=30,
     )
 
     assert result.returncode == 0
     assert marker.exists()
 
     marker.unlink()
-    subprocess.run(["git", "checkout", "--detach", "HEAD"], cwd=repo, env=git_env, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "checkout", "--detach", "HEAD"], cwd=repo, env=git_env, check=True, capture_output=True, text=True, timeout=30)
 
     detached_result = subprocess.run(
         [str(STAMP_PATH)],
@@ -136,6 +137,7 @@ def test_stamp_pytest_bash_smoke(tmp_path):
         text=True,
         env=env,
         check=False,
+        timeout=30,
     )
 
     assert detached_result.returncode == 0
@@ -196,12 +198,12 @@ def test_stamp_pytest_absolute_path_venv(tmp_path):
 
     repo = tmp_path / "repo"
     repo.mkdir()
-    subprocess.run(["git", "init", "-b", branch], cwd=repo, env=git_env, check=True)
-    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, env=git_env, check=True)
-    subprocess.run(["git", "config", "user.name", "Test User"], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "init", "-b", branch], cwd=repo, env=git_env, check=True, timeout=30)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, env=git_env, check=True, timeout=30)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=repo, env=git_env, check=True, timeout=30)
     (repo / "README.md").write_text("test repo\n", encoding="utf-8")
-    subprocess.run(["git", "add", "README.md"], cwd=repo, env=git_env, check=True)
-    subprocess.run(["git", "commit", "-m", "initial"], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "add", "README.md"], cwd=repo, env=git_env, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "initial"], cwd=repo, env=git_env, check=True, timeout=30)
 
     marker = tmp_path / f"learn-uk-pytest.{branch}.stamp"
 
@@ -222,6 +224,7 @@ def test_stamp_pytest_absolute_path_venv(tmp_path):
         text=True,
         env=env,
         check=False,
+        timeout=30,
     )
 
     assert result.returncode == 0
@@ -236,12 +239,12 @@ def test_stamp_pytest_compound_command_segment_success(tmp_path):
 
     repo = tmp_path / "repo"
     repo.mkdir()
-    subprocess.run(["git", "init", "-b", branch], cwd=repo, env=git_env, check=True)
-    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, env=git_env, check=True)
-    subprocess.run(["git", "config", "user.name", "Test User"], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "init", "-b", branch], cwd=repo, env=git_env, check=True, timeout=30)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, env=git_env, check=True, timeout=30)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=repo, env=git_env, check=True, timeout=30)
     (repo / "README.md").write_text("test repo\n", encoding="utf-8")
-    subprocess.run(["git", "add", "README.md"], cwd=repo, env=git_env, check=True)
-    subprocess.run(["git", "commit", "-m", "initial"], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "add", "README.md"], cwd=repo, env=git_env, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "initial"], cwd=repo, env=git_env, check=True, timeout=30)
 
     env = git_env.copy()
     env["TMPDIR"] = str(tmp_path)
@@ -264,6 +267,7 @@ def test_stamp_pytest_compound_command_segment_success(tmp_path):
         text=True,
         env=env,
         check=False,
+        timeout=30,
     )
     assert result.returncode == 0
     assert marker.exists()
@@ -286,6 +290,7 @@ def test_stamp_pytest_compound_command_segment_success(tmp_path):
         text=True,
         env=env,
         check=False,
+        timeout=30,
     )
     assert result.returncode == 0
     assert not marker.exists()
@@ -308,6 +313,7 @@ def test_stamp_pytest_compound_command_segment_success(tmp_path):
         text=True,
         env=env,
         check=False,
+        timeout=30,
     )
     assert result.returncode == 0
     assert not marker.exists()
