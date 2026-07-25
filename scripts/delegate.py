@@ -2562,7 +2562,9 @@ def _run_worker(
                     needs_finalize = False
                     ok_outcome = True
                     final_status = "done"
-    except Exception as finalize_exc:  # noqa: BLE001 - telemetry must never mask the outcome
+    # Deliberately broad: this is measurement about a worker that has already
+    # finished, and no measurement failure may cost the task its terminal status.
+    except Exception as finalize_exc:
         finalize_error = f"{type(finalize_exc).__name__}: {finalize_exc}"[:300]
         # Unknown telemetry cannot prove the work was committed, so surface
         # the task for a human instead of settling it as done.
