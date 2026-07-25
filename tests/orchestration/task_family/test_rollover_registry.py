@@ -327,6 +327,7 @@ def test_cli_script_entrypoint_runs_from_repo_root(tmp_path: Path) -> None:
         check=False,
         capture_output=True,
         text=True,
+        timeout=30,
     )
 
     assert result.returncode == 0, result.stderr
