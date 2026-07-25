@@ -10,6 +10,7 @@ from pathlib import Path
 from agent_runtime import usage as runtime_usage
 
 from ._agy import ask_agy
+from ._ask_contract import EFFORT_CHOICES
 from ._ask_lifecycle import maybe_print_timeout_notice, print_asks, process_background_ask
 from ._broker import bridge_status, broker_cleanup
 from ._claude import ask_claude, process_for_claude
@@ -610,6 +611,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     ask_claude_parser.add_argument("--from-model", dest="from_model", help="Exact sender model ID")
     ask_claude_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_claude_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_claude_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
     # ask-codex
@@ -628,6 +630,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     ask_codex_parser.add_argument("--from-model", dest="from_model", help="Exact sender model ID")
     ask_codex_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_codex_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_codex_parser.add_argument(
         "--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout"
     )
@@ -717,6 +720,7 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_agy_parser.add_argument(
         "--to-model", dest="to_model", help="Target Agy model ID (default: gemini-3.6-flash-high)"
     )
+    ask_agy_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_agy_parser.add_argument(
         "--stdout-only",
         dest="stdout_only",
@@ -745,12 +749,12 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_hermes_parser.add_argument("--data", help="Path to data file to attach")
     ask_hermes_parser.add_argument(
         "--model",
-        default=HERMES_DEFAULT_MODEL,
-        help=f"Hermes model (default {HERMES_DEFAULT_MODEL})",
+        help=f"Deprecated alias for --to-model (default {HERMES_DEFAULT_MODEL})",
     )
     ask_hermes_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_hermes_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_hermes_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_hermes_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_hermes_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
     # ask-opencode
@@ -764,12 +768,12 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_opencode_parser.add_argument("--data", help="Path to data file to attach")
     ask_opencode_parser.add_argument(
         "--model",
-        default=OPENCODE_DEFAULT_MODEL,
-        help=f"Opencode model (default {OPENCODE_DEFAULT_MODEL})",
+        help=f"Deprecated alias for --to-model (default {OPENCODE_DEFAULT_MODEL})",
     )
     ask_opencode_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_opencode_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_opencode_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_opencode_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_opencode_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
     # ask-pool (poolside.ai laguna-s-2.1 — cross-family CODE + web-verify specialist)
@@ -783,13 +787,15 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_pool_parser.add_argument("--data", help="Path to data file to attach")
     ask_pool_parser.add_argument(
         "--variant",
-        default=POOL_DEFAULT_VARIANT,
+        default=None,
         choices=["minimal", "high", "max"],
         help=f"Reasoning effort (default {POOL_DEFAULT_VARIANT}; use high/max for harder tasks)",
     )
-    ask_pool_parser.add_argument("--model", default=None, help=f"Override model (default {POOL_MODEL})")
+    ask_pool_parser.add_argument("--model", default=None, help=f"Deprecated alias for --to-model (default {POOL_MODEL})")
     ask_pool_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_pool_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
+    ask_pool_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_pool_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_pool_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
     # ask-glm (Zhipu glm-5.2 — cross-family CODE + review; ⚠️ China-hosted, LOCAL-ONLY)
@@ -802,10 +808,12 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_glm_parser.add_argument("--type", default="query", help="Message type")
     ask_glm_parser.add_argument("--data", help="Path to data file to attach")
     ask_glm_parser.add_argument(
-        "--model", default=None, help=f"Override GLM model (default {GLM_MODEL}; e.g. openrouter/z-ai/glm-5.2)"
+        "--model", default=None, help=f"Deprecated alias for --to-model (default {GLM_MODEL}; e.g. openrouter/z-ai/glm-5.2)"
     )
     ask_glm_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_glm_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
+    ask_glm_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_glm_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_glm_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
     # ask-gemma (Google Gemma 4 31B-it — cheap Google-family lane; ⚠️ not a sole seminar writer / factual reviewer)
@@ -820,10 +828,12 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_gemma_parser.add_argument(
         "--model",
         default=None,
-        help=f"Override Gemma model (default {GEMMA_MODEL} — $0 via Google AI Studio direct; e.g. google-ais/gemma-4-26b-a4b-it, or the PAID openrouter/google/gemma-4-31b-it fallback)",
+        help=f"Deprecated alias for --to-model (default {GEMMA_MODEL} — $0 via Google AI Studio direct; e.g. google-ais/gemma-4-26b-a4b-it, or the PAID openrouter/google/gemma-4-31b-it fallback)",
     )
     ask_gemma_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_gemma_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
+    ask_gemma_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_gemma_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_gemma_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
     # ask-cursor
@@ -837,12 +847,12 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_cursor_parser.add_argument("--data", help="Path to data file to attach")
     ask_cursor_parser.add_argument(
         "--model",
-        default=CURSOR_DEFAULT_MODEL,
-        help=f"Cursor model (default {CURSOR_DEFAULT_MODEL})",
+        help=f"Deprecated alias for --to-model (default {CURSOR_DEFAULT_MODEL})",
     )
     ask_cursor_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_cursor_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_cursor_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_cursor_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_cursor_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
     # ask-grok (canonical native seat) + ask-grok-build (permanent alias)
@@ -863,12 +873,12 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     ask_grok_build_parser.add_argument(
         "--model",
-        default=GROK_BUILD_DEFAULT_MODEL,
-        help=f"Grok Build model (default {GROK_BUILD_DEFAULT_MODEL})",
+        help=f"Deprecated alias for --to-model (default {GROK_BUILD_DEFAULT_MODEL})",
     )
     ask_grok_build_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_grok_build_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_grok_build_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_grok_build_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_grok_build_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
     ask_grok_build_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
@@ -880,10 +890,11 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_kimi_parser.add_argument("--type", default="query", help="Message type")
     ask_kimi_parser.add_argument("--data", help="Path to data file to attach")
     ask_kimi_parser.add_argument("--new-session", dest="new_session", action="store_true", help="Accepted for parity; Kimi always starts fresh")
-    ask_kimi_parser.add_argument("--model", default=KIMI_BRIDGE_DEFAULT_MODEL, help=f"Kimi model (default {KIMI_BRIDGE_DEFAULT_MODEL})")
+    ask_kimi_parser.add_argument("--model", help=f"Deprecated alias for --to-model (default {KIMI_BRIDGE_DEFAULT_MODEL})")
     ask_kimi_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_kimi_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_kimi_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_kimi_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_kimi_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
     ask_kimi_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
@@ -1399,6 +1410,8 @@ def _handle_ask_claude(args):
     # the caller got an empty/unhelpful reply (the grok "empty result" bug).
     content = sys.stdin.read() if args.content == "-" else args.content
     kwargs = {"review": True} if getattr(args, "review", False) else {}
+    if getattr(args, "effort", None) is not None:
+        kwargs["effort"] = args.effort
     kwargs.update(_review_target_kwargs(args))
     from_llm = _resolve_from_llm(args)
     ask_claude(
@@ -1426,6 +1439,8 @@ def _handle_ask_codex(args):
             raise SystemExit("ask-codex --chain derives issue task IDs automatically; omit --task-id")
         try:
             kwargs = {"review": True} if getattr(args, "review", False) else {}
+            if getattr(args, "effort", None) is not None:
+                kwargs["effort"] = args.effort
             kwargs.update(_review_target_kwargs(args))
             from_llm = _resolve_from_llm(args)
             ask_codex_chain(
@@ -1447,6 +1462,8 @@ def _handle_ask_codex(args):
     if not args.task_id:
         raise SystemExit("ask-codex requires --task-id unless --chain is used")
     kwargs = {"review": True} if getattr(args, "review", False) else {}
+    if getattr(args, "effort", None) is not None:
+        kwargs["effort"] = args.effort
     kwargs.update(_review_target_kwargs(args))
     from_llm = _resolve_from_llm(args)
     ask_codex(
@@ -1471,6 +1488,8 @@ def _handle_ask_agy(args):
         data = Path(args.data).read_text()
     content = sys.stdin.read() if args.content == "-" else args.content
     kwargs = {"review": True} if getattr(args, "review", False) else {}
+    if getattr(args, "effort", None) is not None:
+        kwargs["effort"] = args.effort
     kwargs.update(_review_target_kwargs(args))
     from_llm = _resolve_from_llm(args)
     try:
@@ -1510,6 +1529,7 @@ def _handle_ask_hermes(args):
         from_llm=from_llm,
         from_model=args.from_model,
         to_model=args.to_model,
+        effort=getattr(args, "effort", None),
         no_timeout=args.no_timeout,
         **_background_kwargs(args),
     )
@@ -1528,6 +1548,7 @@ def _handle_ask_opencode(args):
         from_llm=from_llm,
         from_model=args.from_model,
         to_model=args.to_model,
+        effort=getattr(args, "effort", None),
         no_timeout=args.no_timeout,
         **_background_kwargs(args),
     )
@@ -1544,6 +1565,8 @@ def _handle_ask_pool(args):
         data=args.data,
         variant=args.variant,
         model=args.model,
+        to_model=args.to_model,
+        effort=getattr(args, "effort", None),
         from_llm=from_llm,
         from_model=args.from_model,
         no_timeout=args.no_timeout,
@@ -1561,6 +1584,8 @@ def _handle_ask_glm(args):
         msg_type=args.type,
         data=args.data,
         model=args.model,
+        to_model=args.to_model,
+        effort=getattr(args, "effort", None),
         from_llm=from_llm,
         from_model=args.from_model,
         no_timeout=args.no_timeout,
@@ -1578,6 +1603,8 @@ def _handle_ask_gemma(args):
         msg_type=args.type,
         data=args.data,
         model=args.model,
+        to_model=args.to_model,
+        effort=getattr(args, "effort", None),
         from_llm=from_llm,
         from_model=args.from_model,
         no_timeout=args.no_timeout,
@@ -1598,6 +1625,7 @@ def _handle_ask_cursor(args):
         from_llm=from_llm,
         from_model=args.from_model,
         to_model=args.to_model,
+        effort=getattr(args, "effort", None),
         no_timeout=args.no_timeout,
         **_background_kwargs(args),
     )
@@ -1619,6 +1647,7 @@ def _handle_ask_grok_build(args):
         from_llm=from_llm,
         from_model=args.from_model,
         to_model=args.to_model,
+        effort=getattr(args, "effort", None),
         no_timeout=args.no_timeout,
         review=args.review,
         model=args.model,
@@ -1640,6 +1669,7 @@ def _handle_ask_kimi(args):
         from_llm=_resolve_from_llm(args),
         from_model=args.from_model,
         to_model=args.to_model,
+        effort=getattr(args, "effort", None),
         no_timeout=args.no_timeout,
         review=args.review,
         model=args.model,

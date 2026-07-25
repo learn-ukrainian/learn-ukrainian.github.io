@@ -17,10 +17,17 @@ Under the hood: agent -p PROMPT --model MODEL --output-format text --trust
 
 from __future__ import annotations
 
+import json
 import shutil
 import subprocess
 from pathlib import Path
 
+from ._ask_contract import (
+    requested_effort,
+    resolve_model_selection,
+    response_provenance,
+    unsupported_effort_note,
+)
 from ._ask_lifecycle import (
     ask_attachment,
     ask_sender_model,
@@ -45,11 +52,19 @@ def ask_cursor(
     from_llm: str = "claude",
     from_model: str | None = None,
     to_model: str | None = None,
+    effort: str | None = None,
     no_timeout: bool = False,
     background: bool = False,
 ) -> int:
     """Send message to Cursor Agent AND invoke Cursor one-shot to process it."""
-    effective_model = model or CURSOR_DEFAULT_MODEL
+    effective_model = resolve_model_selection(
+        lane="ask-cursor", to_model=to_model, model=model, default=CURSOR_DEFAULT_MODEL
+    )
+    effort_applied, effort_reason = unsupported_effort_note(
+        lane="cursor",
+        effort=effort,
+        reason="Cursor Agent has no per-invocation effort flag",
+    )
     msg_id = send_message(
         content,
         task_id,
@@ -59,6 +74,7 @@ def ask_cursor(
         to_llm="cursor",
         from_model=from_model,
         to_model=to_model or effective_model,
+        effort=effort,
     )
     register_ask(msg_id)
     if background:
@@ -66,12 +82,21 @@ def ask_cursor(
         return msg_id
     print(f"\n🚀 Invoking cursor ({effective_model}) to process message #{msg_id}...")
     response = _invoke_cursor(content, effective_model, data=data, no_timeout=no_timeout)
+    provenance_data, actual_model = response_provenance(
+        {"data": json.dumps({"to_model": effective_model, "effort": effort})},
+        actual_model=effective_model,
+        harness="cursor",
+        effort_applied=effort_applied,
+        effort_reason=effort_reason,
+    )
     reply_id = send_message(
         content=response,
         task_id=task_id,
         msg_type="response",
         from_llm="cursor",
         to_llm=from_llm,
+        data=provenance_data,
+        from_model=actual_model,
         to_model=from_model,
     )
     acknowledge(msg_id)
@@ -90,13 +115,28 @@ def process_for_cursor(message_id: int, *, no_timeout: bool = False) -> None:
     if not msg:
         return
     model = ask_target_model(msg) or CURSOR_DEFAULT_MODEL
+    effort = requested_effort(msg)
+    effort_applied, effort_reason = unsupported_effort_note(
+        lane="cursor",
+        effort=effort,
+        reason="Cursor Agent has no per-invocation effort flag",
+    )
     response = _invoke_cursor(msg["content"], model, data=ask_attachment(msg), no_timeout=no_timeout)
+    provenance_data, actual_model = response_provenance(
+        msg,
+        actual_model=model,
+        harness="cursor",
+        effort_applied=effort_applied,
+        effort_reason=effort_reason,
+    )
     reply_id = send_message(
         content=response,
         task_id=msg["task_id"],
         msg_type="response",
         from_llm="cursor",
         to_llm=msg["from"],
+        data=provenance_data,
+        from_model=actual_model,
         to_model=ask_sender_model(msg),
     )
     acknowledge(message_id)
