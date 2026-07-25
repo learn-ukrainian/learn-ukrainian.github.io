@@ -16,6 +16,29 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 FAULT_LIMIT_BYTES = 104_857_600
 
 
+def _mlx_unavailable_reason() -> str:
+    """Return why MLX cannot run here, or '' when it can.
+
+    MLXEncoderBridge calls check_mlx_availability() in __init__, which refuses
+    below a 32GB RAM floor. GitHub's standard runners have 16GB, so this test
+    can never pass in CI. It was previously hidden by a hardcoded
+    `--ignore=` list in the shard planner; the reboot (#5762) removed that list,
+    so the requirement is declared here where it is visible instead.
+    """
+    try:
+        from wiki.mlx_bridge import check_mlx_availability
+    except Exception as exc:  # pragma: no cover - import shape guard
+        return f"wiki.mlx_bridge unavailable: {exc}"
+    try:
+        check_mlx_availability()
+    except Exception as exc:
+        return str(exc)
+    return ""
+
+
+_MLX_SKIP_REASON = _mlx_unavailable_reason()
+
+
 def _fault_text(index: int, *, char_count: int = 2_000) -> str:
     prefix = f"Синтетичний fault-injection текст {index}. "
     filler = (
@@ -37,6 +60,7 @@ def _expected_vectors(texts: list[str]) -> np.ndarray:
     return np.stack(rows, axis=0)
 
 
+@pytest.mark.skipif(bool(_MLX_SKIP_REASON), reason=_MLX_SKIP_REASON or "mlx available")
 def test_mlx_fault_injection_halves_batch_and_preserves_row_order(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
