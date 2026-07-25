@@ -9,6 +9,8 @@ import yaml
 from scripts.audit import source_inventory_review_decisions as decisions
 from scripts.audit.source_inventory_intake import read_source_inventory
 
+SAFE_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 ABETKA_DIR = PROJECT_ROOT / "curriculum/l2-uk-direct/a1"
 OHOIKO_INVENTORY = PROJECT_ROOT / "data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml"
@@ -52,7 +54,7 @@ def test_ohoiko_abetka_inventory_has_review_decisions_for_all_rows() -> None:
     )
     approved_rows: Counter[tuple[str, str]] = Counter()
     for path in sorted(DECISION_DIR.glob("*.yaml")):
-        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+        payload = yaml.load(path.read_text(encoding="utf-8"), Loader=SAFE_YAML_LOADER)
         for row in payload.get("decisions", []):
             source_inventory = row.get("source_inventory", {})
             if (

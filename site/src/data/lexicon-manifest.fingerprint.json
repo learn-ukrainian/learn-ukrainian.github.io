@@ -1,5 +1,5 @@
 {
-  "fingerprint": "17667fd093d04365da2f0f715df44a98709be2c97cb3e9b3e74bed6568bd6856",
+  "fingerprint": "74b91f3cdf5d3d172921e821d58de283a68594e9ca621293b2c06a8aeadb379a",
   "inputs": {
     "lexicon_code": [
       {
@@ -43,6 +43,10 @@
         "sha256": "f0b9b17fd194700272ca88c93050f38fea1c680e82845181d69146fd673df78c"
       },
       {
+        "path": "scripts/lexicon/build_teacher_deck_cloze.py",
+        "sha256": "ce05f8fbef73722ebaefd91033e7cf037f29bbfb21b7309ac0c3a2d551f878cd"
+      },
+      {
         "path": "scripts/lexicon/calque_corrections.py",
         "sha256": "d1af3c47b47916c90f7e9fa6fa1e2a9e29283ffda14e430415a97848f91556c5"
       },
@@ -76,7 +80,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "b2fe216f34b00f35bdb85edfe9c68beee875405d148b2b8378cbf36272856ed5"
+        "sha256": "0307b5c171f3ad3585666100c1055769013f2db18888f7a2ac36a63b78cf6f6f"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -120,7 +124,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "fde3fb8e0fc380719aa1e11763f584b85e2b0ee0a48f45bc09bca0cdab2392ac"
+        "sha256": "c820ae8560296ab6d1e02c0fa2deca159c001633e91062b2e48e13a971ff1a47"
       },
       {
         "path": "scripts/lexicon/lemma_normalization.py",
@@ -160,7 +164,7 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_atlas_intake.py",
-        "sha256": "d87fafc2b0d0e8e23c6d40c98b1320e79cfe439079ff393787af4eff02e84528"
+        "sha256": "98081166a4df2a694d1a686ebbf89553761646a36824dcd89ae5618ab04f29ba"
       },
       {
         "path": "scripts/lexicon/park_thin_entries.py",
@@ -169,6 +173,10 @@
       {
         "path": "scripts/lexicon/promote_grow_candidates.py",
         "sha256": "197d9a8c4791be86899a6b35357e97732bb58657222bc01e50598c92a2f6c5cf"
+      },
+      {
+        "path": "scripts/lexicon/promote_teacher_lesson_intake.py",
+        "sha256": "99eb174d108a18087bc6a895bb81e35de11078dcfc6e899b1c512edd7977a306"
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
@@ -200,7 +208,7 @@
       },
       {
         "path": "scripts/lexicon/verify_manifest.py",
-        "sha256": "47df54386fda97fb7b372e8e68f89afb3ac5bd647c5a292a7380f14c5ae1f4b0"
+        "sha256": "de72b894b26028f2f19d8b8cd34d0c29d3c7f9b48f826e55182af1efd82615e8"
       },
       {
         "path": "scripts/lexicon/verify_synonym_pairs.py",
@@ -211,6 +219,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 51
+    "lexicon_code_files": 53
   }
 }
