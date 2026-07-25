@@ -404,3 +404,58 @@ def test_evidence_record_rejects_unknown_schema_gate_and_terminal_verdict(tmp_pa
 
     failing_terminal = {**evidence, "terminal_verdict": "FAIL"}
     assert not evidence_record_passes_for_module(failing_terminal, module_dir)
+
+
+def _concurrent_worker(args: tuple[Path, Path, int]) -> None:
+    module_dir, db_path, i = args
+    record_llm_qg(
+        level="b1",
+        slug="aspect-in-imperatives",
+        module_dir=module_dir,
+        payload=_payload(),
+        gate_version="test.v1",
+        run_id=f"run-{i}",
+        path=db_path,
+    )
+
+
+def test_concurrent_writers_shared_store(tmp_path: Path) -> None:
+    import concurrent.futures
+    module_dir = _module(tmp_path)
+    db_path = tmp_path / "shared_qg.db"
+    num_procs = 16
+
+    tasks = [(module_dir, db_path, i) for i in range(num_procs)]
+
+    with concurrent.futures.ProcessPoolExecutor(max_workers=num_procs) as executor:
+        futures = [executor.submit(_concurrent_worker, task) for task in tasks]
+        for future in concurrent.futures.as_completed(futures):
+            future.result()
+
+def test_db_uses_wal_mode_and_busy_timeout(tmp_path: Path) -> None:
+    from scripts.audit.llm_qg_store import init_db
+
+    db_path = tmp_path / "wal_test.db"
+    init_db(db_path)
+
+    with sqlite3.connect(db_path) as conn:
+        journal_mode = conn.execute("PRAGMA journal_mode").fetchone()[0]
+        assert str(journal_mode).lower() == "wal"
+
+
+
+
+def test_repository_root_failure_degrades_gracefully(monkeypatch) -> None:
+    from scripts.audit import llm_qg_store
+
+    monkeypatch.delenv(llm_qg_store.DB_ENV_VAR, raising=False)
+
+    def mock_repo_root(*args: object, **kwargs: object) -> Path:
+        raise RuntimeError("git execution failed: mock failure")
+
+    monkeypatch.setattr(llm_qg_store, "_repository_root", mock_repo_root)
+
+    # Should degrade to returning None instead of propagating RuntimeError
+    assert llm_qg_store.latest_llm_qg("b1", "aspect-in-imperatives", path=None) is None
+
+

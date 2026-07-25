@@ -12,11 +12,13 @@ import argparse
 import hashlib
 import json
 import os
+import random
 import sqlite3
 import subprocess
+import time
 from collections import Counter
 from collections.abc import Mapping, Sequence
-from contextlib import closing
+from contextlib import closing, suppress
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -46,6 +48,39 @@ EVIDENCE_SCHEMA_VERSION = "llm_qg_evidence.v1"
 SUPPORTED_EVIDENCE_GATE_VERSIONS = frozenset({"v7.llm_qg.1"})
 DIMENSION_ORDER = ("pedagogical", "naturalness", "decolonization", "engagement", "tone")
 TOOL_EVENT_KEYS = ("tool", "input", "status", "tool_call_id", "output")
+
+_LOCK_RETRY_ATTEMPTS = 6
+_LOCK_RETRY_BASE_S = 0.25
+_LOCK_RETRY_CAP_S = 4.0
+
+
+def _connect_sqlite_db(path: Path, *, writable: bool = False, timeout: float = 5.0) -> sqlite3.Connection:
+    conn = connect_sqlite(str(path), timeout=timeout)
+    conn.execute("PRAGMA busy_timeout = 5000")
+    if writable:
+        journal_mode = str(conn.execute("PRAGMA journal_mode = WAL").fetchone()[0]).lower()
+        if journal_mode != "wal":
+            raise RuntimeError(f"LLM-QG database did not enter WAL mode: {journal_mode}")
+    return conn
+
+
+def _run_with_lock_retry(func: Any, *args: Any, **kwargs: Any) -> Any:
+    """Execute a DB operation with bounded retry on sqlite3.OperationalError locked/busy."""
+    last_error: sqlite3.OperationalError | None = None
+    for attempt in range(_LOCK_RETRY_ATTEMPTS):
+        try:
+            return func(*args, **kwargs)
+        except sqlite3.OperationalError as error:
+            message = str(error).lower()
+            if "locked" not in message and "busy" not in message:
+                raise
+            last_error = error
+            if attempt == _LOCK_RETRY_ATTEMPTS - 1:
+                break
+            delay = min(_LOCK_RETRY_BASE_S * (2**attempt), _LOCK_RETRY_CAP_S)
+            time.sleep(delay + random.uniform(0, delay / 2))
+    if last_error is not None:
+        raise last_error
 
 
 @dataclass(frozen=True, slots=True)
@@ -103,7 +138,12 @@ def _repository_root(checkout_root: Path | None = None) -> Path:
     is instead ``<primary>/.git`` for this repository layout and is shared by
     every linked worktree.
     """
-    checkout = (checkout_root or LIVE_REPO_ROOT).resolve()
+    checkout = checkout_root or LIVE_REPO_ROOT
+    if hasattr(checkout, "resolve"):
+        with suppress(OSError):
+            checkout = checkout.resolve()
+
+
     try:
         result = subprocess.run(
             [
@@ -114,22 +154,58 @@ def _repository_root(checkout_root: Path | None = None) -> Path:
                 "--path-format=absolute",
                 "--git-common-dir",
             ],
-            check=True,
+            check=False,
             capture_output=True,
             text=True,
+            timeout=10,
         )
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.SubprocessError) as exc:
         raise RuntimeError(
-            f"Could not resolve the repository-owned LLM-QG store for {checkout}"
+            f"Could not resolve the repository-owned LLM-QG store for {checkout}: {exc}"
         ) from exc
 
-    common_dir = Path(result.stdout.strip()).resolve()
-    if common_dir.name != ".git":
+    if result.returncode != 0:
+        stderr = result.stderr.strip() or "git rev-parse failed"
         raise RuntimeError(
-            "Git common directory must be the primary checkout's .git directory: "
-            f"{common_dir}"
+            f"Could not resolve the repository-owned LLM-QG store for {checkout}: {stderr}"
         )
-    return common_dir.parent
+
+    common_dir_text = result.stdout.strip()
+    if not common_dir_text:
+        raise RuntimeError(
+            f"Could not resolve the repository-owned LLM-QG store for {checkout}: git reported empty common directory"
+        )
+
+    common_dir = Path(common_dir_text)
+    if common_dir.name == ".git":
+        return common_dir.parent
+
+    try:
+        main = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(checkout),
+                "worktree",
+                "list",
+                "--porcelain",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        if main.returncode == 0:
+            for line in main.stdout.splitlines():
+                if line.startswith("worktree "):
+                    return Path(line.split(" ", 1)[1])
+    except (OSError, subprocess.SubprocessError):
+        pass
+
+    raise RuntimeError(
+        f"Git common directory must be the primary checkout's .git directory: {common_dir}"
+    )
+
 
 
 def circuit_state_path(path: Path | None = None) -> Path:
@@ -204,64 +280,69 @@ def init_db(path: Path | None = None) -> Path:
     """Create the LLM-QG persistence schema if needed."""
     resolved = db_path(path)
     resolved.parent.mkdir(parents=True, exist_ok=True)
-    with closing(connect_sqlite(str(resolved))) as conn:
-        conn.executescript(
-            """
-            CREATE TABLE IF NOT EXISTS llm_qg_runs (
-                run_id          TEXT PRIMARY KEY,
-                created_at      TEXT NOT NULL,
-                level           TEXT NOT NULL,
-                slug            TEXT NOT NULL,
-                content_sha     TEXT NOT NULL,
-                gate_version    TEXT NOT NULL,
-                prompt_hash     TEXT,
-                checker_version TEXT,
-                level_policy_family TEXT,
-                reviewer_model  TEXT,
-                reviewer_family TEXT,
-                source          TEXT NOT NULL,
-                verdict         TEXT,
-                terminal_verdict TEXT,
-                min_score       REAL,
-                min_dim         TEXT,
-                payload_json    TEXT NOT NULL
-            );
-            CREATE INDEX IF NOT EXISTS idx_llm_qg_level_slug_created
-                ON llm_qg_runs(level, slug, created_at DESC);
-            CREATE INDEX IF NOT EXISTS idx_llm_qg_level_slug_content
-                ON llm_qg_runs(level, slug, content_sha, created_at DESC);
 
-            CREATE TABLE IF NOT EXISTS llm_qg_findings (
-                id              INTEGER PRIMARY KEY AUTOINCREMENT,
-                run_id          TEXT NOT NULL,
-                category        TEXT,
-                severity        TEXT,
-                file            TEXT,
-                quote           TEXT,
-                replacement     TEXT,
-                payload_json    TEXT NOT NULL,
-                FOREIGN KEY(run_id) REFERENCES llm_qg_runs(run_id)
-                    ON DELETE CASCADE
-            );
-            CREATE INDEX IF NOT EXISTS idx_llm_qg_findings_run
-                ON llm_qg_findings(run_id, id);
-            CREATE INDEX IF NOT EXISTS idx_llm_qg_findings_category
-                ON llm_qg_findings(category, severity);
-            """
-        )
-        _ensure_composite_columns(conn)
-        conn.execute(
-            """
-            CREATE INDEX IF NOT EXISTS idx_llm_qg_composite
-                ON llm_qg_runs(
-                    level, slug, content_sha, gate_version, prompt_hash,
-                    checker_version, level_policy_family, reviewer_model,
-                    created_at DESC
-                )
-            """
-        )
-        conn.commit()
+    def _do_init() -> None:
+        with closing(_connect_sqlite_db(resolved, writable=True)) as conn:
+            conn.executescript(
+                """
+                CREATE TABLE IF NOT EXISTS llm_qg_runs (
+                    run_id          TEXT PRIMARY KEY,
+                    created_at      TEXT NOT NULL,
+                    level           TEXT NOT NULL,
+                    slug            TEXT NOT NULL,
+                    content_sha     TEXT NOT NULL,
+                    gate_version    TEXT NOT NULL,
+                    prompt_hash     TEXT,
+                    checker_version TEXT,
+                    level_policy_family TEXT,
+                    reviewer_model  TEXT,
+                    reviewer_family TEXT,
+                    source          TEXT NOT NULL,
+                    verdict         TEXT,
+                    terminal_verdict TEXT,
+                    min_score       REAL,
+                    min_dim         TEXT,
+                    payload_json    TEXT NOT NULL
+                );
+                CREATE INDEX IF NOT EXISTS idx_llm_qg_level_slug_created
+                    ON llm_qg_runs(level, slug, created_at DESC);
+                CREATE INDEX IF NOT EXISTS idx_llm_qg_level_slug_content
+                    ON llm_qg_runs(level, slug, content_sha, created_at DESC);
+
+                CREATE TABLE IF NOT EXISTS llm_qg_findings (
+                    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+                    run_id          TEXT NOT NULL,
+                    category        TEXT,
+                    severity        TEXT,
+                    file            TEXT,
+                    quote           TEXT,
+                    replacement     TEXT,
+                    payload_json    TEXT NOT NULL,
+                    FOREIGN KEY(run_id) REFERENCES llm_qg_runs(run_id)
+                        ON DELETE CASCADE
+                );
+                CREATE INDEX IF NOT EXISTS idx_llm_qg_findings_run
+                    ON llm_qg_findings(run_id, id);
+                CREATE INDEX IF NOT EXISTS idx_llm_qg_findings_category
+                    ON llm_qg_findings(category, severity);
+                """
+            )
+            _ensure_composite_columns(conn)
+            conn.execute(
+                """
+                CREATE INDEX IF NOT EXISTS idx_llm_qg_composite
+                    ON llm_qg_runs(
+                        level, slug, content_sha, gate_version, prompt_hash,
+                        checker_version, level_policy_family, reviewer_model,
+                        created_at DESC
+                    )
+                """
+            )
+            conn.commit()
+
+    _run_with_lock_retry(_do_init)
     return resolved
+
 
 
 def live_tier2_circuit_status(path: Path | None = None) -> dict[str, Any]:
@@ -527,102 +608,106 @@ def record_llm_qg(
     )
     normalized_gate_outcomes = dict(gate_outcomes) if isinstance(gate_outcomes, Mapping) else None
 
-    with closing(connect_sqlite(str(resolved))) as conn:
-        conn.execute("PRAGMA foreign_keys = ON")
-        _ensure_composite_columns(conn)
-        conn.execute(
-            """
-            INSERT INTO llm_qg_runs (
-                run_id, created_at, level, slug, content_sha, gate_version,
-                prompt_hash, checker_version, level_policy_family,
-                reviewer_model, reviewer_family, route_name,
-                tool_call_count, tools_used_json, tool_events_json,
-                raw_response, raw_response_sha256, dispatch_json,
-                retry_history_json, gate_outcomes_json, attempt_id,
-                source, verdict, terminal_verdict,
-                min_score, min_dim, payload_json
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT(run_id) DO UPDATE SET
-                created_at = excluded.created_at,
-                level = excluded.level,
-                slug = excluded.slug,
-                content_sha = excluded.content_sha,
-                gate_version = excluded.gate_version,
-                prompt_hash = excluded.prompt_hash,
-                checker_version = excluded.checker_version,
-                level_policy_family = excluded.level_policy_family,
-                reviewer_model = excluded.reviewer_model,
-                reviewer_family = excluded.reviewer_family,
-                route_name = excluded.route_name,
-                tool_call_count = excluded.tool_call_count,
-                tools_used_json = excluded.tools_used_json,
-                tool_events_json = excluded.tool_events_json,
-                raw_response = excluded.raw_response,
-                raw_response_sha256 = excluded.raw_response_sha256,
-                dispatch_json = excluded.dispatch_json,
-                retry_history_json = excluded.retry_history_json,
-                gate_outcomes_json = excluded.gate_outcomes_json,
-                attempt_id = excluded.attempt_id,
-                source = excluded.source,
-                verdict = excluded.verdict,
-                terminal_verdict = excluded.terminal_verdict,
-                min_score = excluded.min_score,
-                min_dim = excluded.min_dim,
-                payload_json = excluded.payload_json
-            """,
-            (
-                clean_run_id,
-                created_at,
-                clean_level,
-                clean_slug,
-                content_sha,
-                gate_version,
-                prompt_hash,
-                checker_version,
-                level_policy_family,
-                reviewer_model,
-                reviewer_family,
-                route_name,
-                tool_call_count_int,
-                _json_dumps(list(tools_used_tuple)),
-                _json_dumps(list(normalized_tool_events)),
-                raw_response,
-                raw_response_sha256,
-                _json_dumps(normalized_dispatch) if normalized_dispatch is not None else None,
-                _json_dumps(normalized_history) if normalized_history is not None else None,
-                _json_dumps(normalized_gate_outcomes) if normalized_gate_outcomes is not None else None,
-                attempt_id,
-                source,
-                aggregate.get("verdict"),
-                aggregate.get("terminal_verdict"),
-                aggregate.get("min_score"),
-                aggregate.get("min_dim"),
-                _json_dumps(payload),
-            ),
-        )
-        conn.execute("DELETE FROM llm_qg_findings WHERE run_id = ?", (clean_run_id,))
-        conn.executemany(
-            """
-            INSERT INTO llm_qg_findings (
-                run_id, category, severity, file, quote, replacement, payload_json
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            """,
-            [
+    def _do_record() -> None:
+        with closing(_connect_sqlite_db(resolved, writable=True)) as conn:
+            conn.execute("PRAGMA foreign_keys = ON")
+            _ensure_composite_columns(conn)
+            conn.execute(
+                """
+                INSERT INTO llm_qg_runs (
+                    run_id, created_at, level, slug, content_sha, gate_version,
+                    prompt_hash, checker_version, level_policy_family,
+                    reviewer_model, reviewer_family, route_name,
+                    tool_call_count, tools_used_json, tool_events_json,
+                    raw_response, raw_response_sha256, dispatch_json,
+                    retry_history_json, gate_outcomes_json, attempt_id,
+                    source, verdict, terminal_verdict,
+                    min_score, min_dim, payload_json
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(run_id) DO UPDATE SET
+                    created_at = excluded.created_at,
+                    level = excluded.level,
+                    slug = excluded.slug,
+                    content_sha = excluded.content_sha,
+                    gate_version = excluded.gate_version,
+                    prompt_hash = excluded.prompt_hash,
+                    checker_version = excluded.checker_version,
+                    level_policy_family = excluded.level_policy_family,
+                    reviewer_model = excluded.reviewer_model,
+                    reviewer_family = excluded.reviewer_family,
+                    route_name = excluded.route_name,
+                    tool_call_count = excluded.tool_call_count,
+                    tools_used_json = excluded.tools_used_json,
+                    tool_events_json = excluded.tool_events_json,
+                    raw_response = excluded.raw_response,
+                    raw_response_sha256 = excluded.raw_response_sha256,
+                    dispatch_json = excluded.dispatch_json,
+                    retry_history_json = excluded.retry_history_json,
+                    gate_outcomes_json = excluded.gate_outcomes_json,
+                    attempt_id = excluded.attempt_id,
+                    source = excluded.source,
+                    verdict = excluded.verdict,
+                    terminal_verdict = excluded.terminal_verdict,
+                    min_score = excluded.min_score,
+                    min_dim = excluded.min_dim,
+                    payload_json = excluded.payload_json
+                """,
                 (
                     clean_run_id,
-                    _finding_category(item),
-                    item.get("severity"),
-                    item.get("file"),
-                    item.get("quote"),
-                    item.get("replacement"),
-                    _json_dumps(item),
+                    created_at,
+                    clean_level,
+                    clean_slug,
+                    content_sha,
+                    gate_version,
+                    prompt_hash,
+                    checker_version,
+                    level_policy_family,
+                    reviewer_model,
+                    reviewer_family,
+                    route_name,
+                    tool_call_count_int,
+                    _json_dumps(list(tools_used_tuple)),
+                    _json_dumps(list(normalized_tool_events)),
+                    raw_response,
+                    raw_response_sha256,
+                    _json_dumps(normalized_dispatch) if normalized_dispatch is not None else None,
+                    _json_dumps(normalized_history) if normalized_history is not None else None,
+                    _json_dumps(normalized_gate_outcomes) if normalized_gate_outcomes is not None else None,
+                    attempt_id,
+                    source,
+                    aggregate.get("verdict"),
+                    aggregate.get("terminal_verdict"),
+                    aggregate.get("min_score"),
+                    aggregate.get("min_dim"),
+                    _json_dumps(payload),
+                ),
+            )
+            conn.execute("DELETE FROM llm_qg_findings WHERE run_id = ?", (clean_run_id,))
+            conn.executemany(
+                """
+                INSERT INTO llm_qg_findings (
+                    run_id, category, severity, file, quote, replacement, payload_json
                 )
-                for item in findings
-            ],
-        )
-        conn.commit()
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """,
+                [
+                    (
+                        clean_run_id,
+                        _finding_category(item),
+                        item.get("severity"),
+                        item.get("file"),
+                        item.get("quote"),
+                        item.get("replacement"),
+                        _json_dumps(item),
+                    )
+                    for item in findings
+                ],
+            )
+            conn.commit()
+
+    _run_with_lock_retry(_do_record)
+
 
     return StoredQG(
         run_id=clean_run_id,
@@ -752,41 +837,46 @@ def latest_llm_qg(
     path: Path | None = None,
 ) -> StoredQG | None:
     """Return the newest persisted QG run for a module, optionally hash-bound."""
-    resolved = db_path(path)
-    if not resolved.exists():
-        return None
-    params: list[Any] = [level.strip().lower(), slug.strip()]
-    where = "level = ? AND slug = ?"
-    for column, value in (
-        ("content_sha", content_sha),
-        ("gate_version", gate_version),
-        ("prompt_hash", prompt_hash),
-        ("checker_version", checker_version),
-        ("level_policy_family", level_policy_family),
-        ("reviewer_model", reviewer_model),
-        ("route_name", route_name),
-    ):
-        if value is not None:
-            where += f" AND {column} = ?"
-            params.append(value)
     try:
-        with closing(connect_sqlite(str(resolved))) as conn:
-            _ensure_composite_columns(conn)
-            conn.commit()
-            conn.row_factory = sqlite3.Row
-            row = conn.execute(
-                f"""
-                SELECT *
-                FROM llm_qg_runs
-                WHERE {where}
-                ORDER BY created_at DESC, run_id DESC
-                LIMIT 1
-                """,
-                params,
-            ).fetchone()
-        return _row_to_record(row) if row else None
-    except (json.JSONDecodeError, OSError, sqlite3.DatabaseError, ValueError):
+        resolved = db_path(path)
+        if not resolved.exists():
+            return None
+        params: list[Any] = [level.strip().lower(), slug.strip()]
+        where = "level = ? AND slug = ?"
+        for column, value in (
+            ("content_sha", content_sha),
+            ("gate_version", gate_version),
+            ("prompt_hash", prompt_hash),
+            ("checker_version", checker_version),
+            ("level_policy_family", level_policy_family),
+            ("reviewer_model", reviewer_model),
+            ("route_name", route_name),
+        ):
+            if value is not None:
+                where += f" AND {column} = ?"
+                params.append(value)
+
+        def _do_query() -> StoredQG | None:
+            with closing(_connect_sqlite_db(resolved, writable=False)) as conn:
+                _ensure_composite_columns(conn)
+                conn.commit()
+                conn.row_factory = sqlite3.Row
+                row = conn.execute(
+                    f"""
+                    SELECT *
+                    FROM llm_qg_runs
+                    WHERE {where}
+                    ORDER BY created_at DESC, run_id DESC
+                    LIMIT 1
+                    """,
+                    params,
+                ).fetchone()
+            return _row_to_record(row) if row else None
+
+        return _run_with_lock_retry(_do_query)
+    except (json.JSONDecodeError, OSError, sqlite3.DatabaseError, RuntimeError, ValueError):
         return None
+
 
 
 def current_llm_qg_for_module(
