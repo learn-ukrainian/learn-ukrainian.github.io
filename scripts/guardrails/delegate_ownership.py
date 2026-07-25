@@ -17,6 +17,7 @@ import os
 import posixpath
 import sqlite3
 import time
+import unicodedata
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from enum import StrEnum
@@ -168,7 +169,9 @@ def normalize_claim(raw: str) -> PathClaim:
 
 
 _DISPLAY_LIMIT = 120
-_CONTROL_CHARS = {c: f"\\x{c:02x}" for c in range(0x20)} | {0x7F: "\\x7f"}
+# Cc control, Cf format (bidi overrides, zero-width joiners), Cs surrogate,
+# Co private use — none of these belong in a one-line operator message.
+_UNSAFE_UNICODE_CATEGORIES = frozenset({"Cc", "Cf", "Cs", "Co"})
 
 
 def sanitize_for_display(value: object, *, limit: int = _DISPLAY_LIMIT) -> str:
@@ -177,11 +180,21 @@ def sanitize_for_display(value: object, *, limit: int = _DISPLAY_LIMIT) -> str:
     Task ids and claim paths come from other processes, so they reach this
     message as untrusted text. Raw interpolation let a task id containing a
     newline or an ANSI escape forge extra operator-looking lines in the guard's
-    own output (CF review of #5804). Control characters are escaped rather than
-    dropped so the value stays recognisable, and the result is length-bounded.
+    own output (CF review of #5804).
+
+    Escaping only the ASCII control range would still let U+202E RIGHT-TO-LEFT
+    OVERRIDE visually reverse the rest of the line, so every Unicode
+    control/format code point is escaped — as an escape sequence rather than a
+    deletion, so the value stays recognisable — and the result is bounded.
     """
-    text = str(value)
-    escaped = text.translate(_CONTROL_CHARS)
+    out: list[str] = []
+    for ch in str(value):
+        if unicodedata.category(ch) in _UNSAFE_UNICODE_CATEGORIES:
+            point = ord(ch)
+            out.append(f"\\x{point:02x}" if point < 0x100 else f"\\u{point:04x}")
+        else:
+            out.append(ch)
+    escaped = "".join(out)
     if len(escaped) > limit:
         escaped = escaped[: limit - 1] + "…"
     return escaped

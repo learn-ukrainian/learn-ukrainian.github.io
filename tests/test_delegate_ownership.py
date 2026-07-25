@@ -664,6 +664,14 @@ def test_refusal_message_escapes_untrusted_task_ids_and_paths():
     # Length-bounded so one absurd claim cannot bury the message.
     assert len(sanitize_for_display("x" * 5000)) <= 120
 
+    # Beyond ASCII: a bidi override would visually reverse the rest of the line
+    # even though it is not a C0 control character.
+    bidi = sanitize_for_display("safe‮evil")
+    assert "‮" not in bidi and "\\u202e" in bidi, bidi
+    assert sanitize_for_display("zero​width").count("\\u200b") == 1
+    # Ordinary non-ASCII text must survive untouched — Ukrainian paths are normal.
+    assert sanitize_for_display("данні/слово.md") == "данні/слово.md"
+
 
 def test_refusal_message_counts_peers_not_claim_rows():
     """One agent holding four claims is ONE blocker (CF review of #5804)."""
