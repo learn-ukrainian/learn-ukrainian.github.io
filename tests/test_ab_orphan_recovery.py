@@ -27,6 +27,7 @@ def _git(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedProc
         capture_output=True,
         text=True,
         env=merged_env,
+        timeout=30,
     )
 
 

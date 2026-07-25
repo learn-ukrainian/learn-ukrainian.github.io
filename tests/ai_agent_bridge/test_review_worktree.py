@@ -25,6 +25,8 @@ from scripts.review.snapshot import (
     materialize_review_snapshot,
 )
 
+GIT_TIMEOUT_SECONDS = 10
+
 
 def _write_fake_bundle(root: Path) -> None:
     bundle = root / ".review-bundle"
@@ -92,6 +94,7 @@ printf 'protocol=https\\nhost=github.com\\nusername=x-access-token\\npassword=%s
         text=True,
         check=False,
         env=env,
+        timeout=5,
     )
 
     assert completed.returncode == 0, completed.stderr
@@ -975,26 +978,28 @@ def test_local_changed_lines_follow_git_alignment_for_reordered_duplicates(
     repo = tmp_path / "repo"
     repo.mkdir()
     git_env = review_worktree._isolation_env(repo)
-    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, env=git_env)
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, env=git_env, timeout=GIT_TIMEOUT_SECONDS)
     subprocess.run(
         ["git", "config", "user.email", "test@example.com"],
         cwd=repo,
         check=True,
         env=git_env,
+        timeout=GIT_TIMEOUT_SECONDS,
     )
     subprocess.run(
         ["git", "config", "user.name", "Test"],
         cwd=repo,
         check=True,
         env=git_env,
+        timeout=GIT_TIMEOUT_SECONDS,
     )
     source = repo / "lines.txt"
     source.write_text("A\nB\nA\n", encoding="utf-8")
     subprocess.run(
-        ["git", "add", "lines.txt"], cwd=repo, check=True, env=git_env
+        ["git", "add", "lines.txt"], cwd=repo, check=True, env=git_env, timeout=GIT_TIMEOUT_SECONDS
     )
     subprocess.run(
-        ["git", "commit", "-qm", "base"], cwd=repo, check=True, env=git_env
+        ["git", "commit", "-qm", "base"], cwd=repo, check=True, env=git_env, timeout=GIT_TIMEOUT_SECONDS
     )
     head = subprocess.run(
         ["git", "rev-parse", "HEAD"],
@@ -1003,6 +1008,7 @@ def test_local_changed_lines_follow_git_alignment_for_reordered_duplicates(
         capture_output=True,
         text=True,
         env=git_env,
+        timeout=GIT_TIMEOUT_SECONDS,
     ).stdout.strip()
 
     sealed = tmp_path / "sealed"
@@ -1035,20 +1041,20 @@ def test_remote_changed_lines_preserve_rename_pairing(tmp_path: Path) -> None:
     repo = tmp_path / "rename-repo"
     repo.mkdir()
     env = review_worktree._isolation_env(repo)
-    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, env=env)
-    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, check=True, env=env)
-    subprocess.run(["git", "config", "user.name", "Test"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
     original = "".join(f"line {number}\n" for number in range(1, 21))
     (repo / "old.txt").write_text(original, encoding="utf-8")
-    subprocess.run(["git", "add", "old.txt"], cwd=repo, check=True, env=env)
-    subprocess.run(["git", "commit", "-qm", "base"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "add", "old.txt"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
+    subprocess.run(["git", "commit", "-qm", "base"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
     base = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env
+        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env, timeout=GIT_TIMEOUT_SECONDS
     ).stdout.strip()
-    subprocess.run(["git", "mv", "old.txt", "new.txt"], cwd=repo, check=True, env=env)
-    subprocess.run(["git", "commit", "-qm", "rename"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "mv", "old.txt", "new.txt"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
+    subprocess.run(["git", "commit", "-qm", "rename"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
     rename_head = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env
+        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env, timeout=GIT_TIMEOUT_SECONDS
     ).stdout.strip()
     git_bin = review_worktree.resolve_external_executable("git", reject_root=repo)
 
@@ -1082,10 +1088,10 @@ def test_remote_changed_lines_preserve_rename_pairing(tmp_path: Path) -> None:
     lines = (repo / "new.txt").read_text(encoding="utf-8").splitlines()
     lines[9] = "edited line 10"
     (repo / "new.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
-    subprocess.run(["git", "add", "new.txt"], cwd=repo, check=True, env=env)
-    subprocess.run(["git", "commit", "-qm", "edit rename"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "add", "new.txt"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
+    subprocess.run(["git", "commit", "-qm", "edit rename"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
     edited_head = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env
+        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env, timeout=GIT_TIMEOUT_SECONDS
     ).stdout.strip()
     edited = review_worktree._changed_line_numbers_for_snapshot(
         snapshot_at(tmp_path / "edited", edited_head), repo_root=repo, git_bin=git_bin
@@ -1097,24 +1103,24 @@ def test_remote_changed_lines_keep_copy_source_and_destination_separate(tmp_path
     repo = tmp_path / "copy-repo"
     repo.mkdir()
     env = review_worktree._isolation_env(repo)
-    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, env=env)
-    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, check=True, env=env)
-    subprocess.run(["git", "config", "user.name", "Test"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
     original = "".join(f"line {number}\n" for number in range(1, 21))
     (repo / "source.txt").write_text(original, encoding="utf-8")
-    subprocess.run(["git", "add", "source.txt"], cwd=repo, check=True, env=env)
-    subprocess.run(["git", "commit", "-qm", "base"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "add", "source.txt"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
+    subprocess.run(["git", "commit", "-qm", "base"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
     base = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env
+        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env, timeout=GIT_TIMEOUT_SECONDS
     ).stdout.strip()
     (repo / "copy.txt").write_text(original, encoding="utf-8")
     source_lines = original.splitlines()
     source_lines[9] = "edited source line 10"
     (repo / "source.txt").write_text("\n".join(source_lines) + "\n", encoding="utf-8")
-    subprocess.run(["git", "add", "source.txt", "copy.txt"], cwd=repo, check=True, env=env)
-    subprocess.run(["git", "commit", "-qm", "copy and edit source"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "add", "source.txt", "copy.txt"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
+    subprocess.run(["git", "commit", "-qm", "copy and edit source"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
     head = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env
+        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env, timeout=GIT_TIMEOUT_SECONDS
     ).stdout.strip()
 
     sealed = tmp_path / "copy-sealed"
@@ -1153,21 +1159,21 @@ def test_remote_snapshot_detects_real_copy_and_preserves_source(tmp_path: Path) 
     repo = tmp_path / "copy-target"
     repo.mkdir()
     env = review_worktree._isolation_env(repo)
-    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, env=env)
-    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, check=True, env=env)
-    subprocess.run(["git", "config", "user.name", "Test"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
     original = "".join(f"stable line {number}\n" for number in range(1, 31))
     (repo / "source.txt").write_text(original, encoding="utf-8")
-    subprocess.run(["git", "add", "source.txt"], cwd=repo, check=True, env=env)
-    subprocess.run(["git", "commit", "-qm", "base"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "add", "source.txt"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
+    subprocess.run(["git", "commit", "-qm", "base"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
     base = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env
+        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env, timeout=GIT_TIMEOUT_SECONDS
     ).stdout.strip()
     (repo / "copy.txt").write_text(original, encoding="utf-8")
-    subprocess.run(["git", "add", "copy.txt"], cwd=repo, check=True, env=env)
-    subprocess.run(["git", "commit", "-qm", "copy"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "add", "copy.txt"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
+    subprocess.run(["git", "commit", "-qm", "copy"], cwd=repo, check=True, env=env, timeout=GIT_TIMEOUT_SECONDS)
     head = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env
+        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env, timeout=GIT_TIMEOUT_SECONDS
     ).stdout.strip()
 
     snapshot, state = materialize_review_snapshot(

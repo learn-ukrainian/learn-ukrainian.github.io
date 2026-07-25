@@ -260,7 +260,8 @@ sys.exit(0)
     result = subprocess.run(
         [sys.executable, "-c", harness_code],
         capture_output=True,
-        text=True
+        text=True,
+        timeout=30,
     )
     assert result.returncode != 0, "AST check did not fail for synthetic uncovered import!"
     assert "some_uncovered_lazy_module_xyz" in result.stdout or "some_uncovered_lazy_module_xyz" in result.stderr
@@ -293,7 +294,8 @@ except Exception as e:
     result = subprocess.run(
         [sys.executable, "-c", harness_code],
         capture_output=True,
-        text=True
+        text=True,
+        timeout=30,
     )
     assert result.returncode == 0, f"Failed to import scripts.api.main with optional modules blocked:\\nStdout: {result.stdout}\\nStderr: {result.stderr}"
 
@@ -323,6 +325,7 @@ sys.exit(1)
     result = subprocess.run(
         [sys.executable, "-c", harness_code],
         capture_output=True,
-        text=True
+        text=True,
+        timeout=30,
     )
     assert result.returncode == 0, f"Alias check failed to flag unregistered loader call!\nStdout: {result.stdout}\nStderr: {result.stderr}"

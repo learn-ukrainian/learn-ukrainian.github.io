@@ -427,6 +427,7 @@ def test_publish_script_style_invocation_reaches_projection_read(tmp_path: Path)
         capture_output=True,
         text=True,
         check=False,
+        timeout=60,
     )
     combined = result.stdout + result.stderr
     assert result.returncode != 0

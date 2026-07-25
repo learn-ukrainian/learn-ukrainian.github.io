@@ -144,7 +144,7 @@ def _clean_env() -> dict[str, str]:
 def _git(repo: Path, *args: str) -> None:
     subprocess.run(
         ["git", "-C", str(repo), *args],
-        check=True, capture_output=True, text=True, env=_clean_env(),
+        check=True, capture_output=True, text=True, env=_clean_env(), timeout=10,
     )
 
 
@@ -177,7 +177,7 @@ def _run(repo: Path, payload: dict) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [_python(), str(HOOK_PATH)],
         input=json.dumps(payload),
-        cwd=repo, check=False, capture_output=True, text=True, env=_clean_env(),
+        cwd=repo, check=False, capture_output=True, text=True, env=_clean_env(), timeout=30,
     )
 
 
@@ -490,6 +490,7 @@ def test_git_apply_override_env_allows(repo: Path, monkeypatch: pytest.MonkeyPat
         capture_output=True,
         text=True,
         env=env,
+        timeout=30,
     )
     assert result.returncode == 0, result.stderr
 

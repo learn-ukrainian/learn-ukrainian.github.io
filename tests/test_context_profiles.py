@@ -184,6 +184,7 @@ def test_env0_output_is_exact_allow_list() -> None:
         ],
         check=True,
         capture_output=True,
+        timeout=30,
     )
     fields = result.stdout.split(b"\0")
     assert fields[-1] == b""
@@ -217,6 +218,7 @@ def test_shell_resolver_exports_only_project_private_fields() -> None:
             "PATH": os.environ["PATH"],
             "TMPDIR": os.environ.get("TMPDIR", "/tmp"),
         },
+        timeout=30,
     )
     before_output, after_output = result.stdout.split(
         "__AFTER_PROFILE_RESOLUTION__\n", 1

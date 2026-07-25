@@ -25,6 +25,7 @@ def _git(repo: Path, *args: str) -> str:
         env=env,
         text=True,
         check=True,
+        timeout=30,
     )
     return proc.stdout
 
