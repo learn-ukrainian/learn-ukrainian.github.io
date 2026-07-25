@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -130,7 +131,8 @@ def test_shadow_detects_any_learner_tree_change(monkeypatch: pytest.MonkeyPatch)
 
 def test_report_tampering_and_false_pass_fail_closed() -> None:
     matrix = pilot.load_matrix(repo_root=REPO_ROOT)
-    report = _report()
+    valid_report = _report()
+    report = deepcopy(valid_report)
     report["rows"][0]["passed"] = False
 
     with pytest.raises(pilot.PilotError, match="identity does not match"):
@@ -140,7 +142,7 @@ def test_report_tampering_and_false_pass_fail_closed() -> None:
     with pytest.raises(pilot.PilotError, match="row evidence does not match"):
         pilot.validate_report_value(report, matrix=matrix, repo_root=REPO_ROOT)
 
-    report = _report()
+    report = deepcopy(valid_report)
     report["metrics"]["prompt_bytes"] += 1
     report["identity_sha256"] = pilot._report_identity(report)
     with pytest.raises(pilot.PilotError, match="metrics do not match"):
