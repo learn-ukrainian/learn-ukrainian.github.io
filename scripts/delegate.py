@@ -1134,15 +1134,27 @@ def _resolve_sha(path: Path, ref: str = "HEAD") -> str | None:
 
 
 def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
-    """Return commits on HEAD not reachable from ``base_ref``, or None."""
-    proc = subprocess.run(
-        ["git", "rev-list", "--count", f"{base_ref}..HEAD"],
-        cwd=worktree,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    """Return commits on HEAD not reachable from ``base_ref``, or None.
+
+    ``None`` means "cannot count", and a vanished worktree is exactly that: on
+    2026-07-25 a dispatch whose worktree disappeared mid-run raised
+    FileNotFoundError out of here, which killed the finalize path before it
+    could write a terminal status and left the task reading ``running`` with a
+    dead pid — invisible to every settle-loop watching it. The sibling
+    ``_worktree_is_dirty`` already treated OSError as unknown; this is the same
+    contract, and callers already fail closed on ``None``.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "rev-list", "--count", f"{base_ref}..HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+        )
+    except OSError:
+        return None
     if proc.returncode != 0:
         return None
     try:
@@ -2494,53 +2506,67 @@ def _run_worker(
 
     commits_ahead: int | None = None
     needs_finalize = False
+    finalize_error: str | None = None
     auto_finalize: AutoFinalizeResult | None = None
-    # The dirty-worktree safety net must cover EVERY write-capable mode, not just
-    # ``danger``. It was gated on ``danger`` alone, so a ``workspace-write``
-    # dispatch that left finished work uncommitted settled as ``done`` — a real
-    # failure reported as success. On 2026-07-25 three lanes did exactly that
-    # (``timeouts-B3``, ``timeouts-B6``, ``timeouts-B4-orig``: dirty worktrees,
-    # zero commits, ``status: done``) and 31 files of finished work were one agent
-    # restart away from being lost. Detection now runs for the whole write-capable
-    # set; the riskier auto-finalize action stays scoped to ``danger``.
-    if worktree_path and mode in _WRITE_CAPABLE_MODES:
-        base_branch = str(final_state.get("worktree_base") or "main")
-        base_ref = _origin_base_ref(base_branch)
-        commits_ahead = _count_commits_ahead(
-            Path(worktree_path),
-            base_ref,
-        )
-        # Fail CLOSED on BOTH unknowns — they are the same bug in two variables.
-        #
-        # ``_count_commits_ahead`` returns None when it cannot count, and
-        # ``commits_ahead == 0`` silently skipped that case, which is how the B4
-        # dispatch (commits_ahead=None, dirty_on_exit=True) still reported ``done``.
-        #
-        # ``_worktree_is_dirty`` can ALSO return None (OSError, or a non-zero
-        # ``git status --porcelain``). A bare ``if dirty_on_exit`` treats that unknown
-        # as falsy and skips the check entirely — failing OPEN in precisely the way
-        # this fix exists to prevent. Caught in cross-family review of #5754, which
-        # noted the asymmetry after the count half had been fixed.
-        #
-        # Neither unknown can prove the work was committed, so either one surfaces
-        # the task for finalization rather than letting it settle as ``done``.
-        if dirty_on_exit in (True, None) and commits_ahead in (0, None):
-            needs_finalize = True
-
-        if needs_finalize and returncode == 0 and mode == "danger":
-            auto_finalize = _auto_finalize_dirty_worktree(
-                worktree=Path(worktree_path),
-                task_id=task_id,
-                agent=agent,
-                branch=final_state.get("worktree_branch"),
-                base_branch=base_branch,
+    # EVERYTHING from here to the state write is telemetry ABOUT a worker that
+    # has already finished. None of it may prevent the terminal status from
+    # being recorded: a task stuck at ``running`` with a dead pid is worse than
+    # a task with unknown telemetry, because no settle-loop can ever wake on it
+    # and the operator sees a job that appears to still be working. See the
+    # 2026-07-25 incident where a vanished worktree crashed the count and hid a
+    # dead dispatch for 52 minutes.
+    try:
+        # The dirty-worktree safety net must cover EVERY write-capable mode, not just
+        # ``danger``. It was gated on ``danger`` alone, so a ``workspace-write``
+        # dispatch that left finished work uncommitted settled as ``done`` — a real
+        # failure reported as success. On 2026-07-25 three lanes did exactly that
+        # (``timeouts-B3``, ``timeouts-B6``, ``timeouts-B4-orig``: dirty worktrees,
+        # zero commits, ``status: done``) and 31 files of finished work were one agent
+        # restart away from being lost. Detection now runs for the whole write-capable
+        # set; the riskier auto-finalize action stays scoped to ``danger``.
+        if worktree_path and mode in _WRITE_CAPABLE_MODES:
+            base_branch = str(final_state.get("worktree_base") or "main")
+            base_ref = _origin_base_ref(base_branch)
+            commits_ahead = _count_commits_ahead(
+                Path(worktree_path),
+                base_ref,
             )
-            dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
-            commits_ahead = _count_commits_ahead(Path(worktree_path), base_ref)
-            if auto_finalize.ok:
-                needs_finalize = False
-                ok_outcome = True
-                final_status = "done"
+            # Fail CLOSED on BOTH unknowns — they are the same bug in two variables.
+            #
+            # ``_count_commits_ahead`` returns None when it cannot count, and
+            # ``commits_ahead == 0`` silently skipped that case, which is how the B4
+            # dispatch (commits_ahead=None, dirty_on_exit=True) still reported ``done``.
+            #
+            # ``_worktree_is_dirty`` can ALSO return None (OSError, or a non-zero
+            # ``git status --porcelain``). A bare ``if dirty_on_exit`` treats that unknown
+            # as falsy and skips the check entirely — failing OPEN in precisely the way
+            # this fix exists to prevent. Caught in cross-family review of #5754, which
+            # noted the asymmetry after the count half had been fixed.
+            #
+            # Neither unknown can prove the work was committed, so either one surfaces
+            # the task for finalization rather than letting it settle as ``done``.
+            if dirty_on_exit in (True, None) and commits_ahead in (0, None):
+                needs_finalize = True
+
+            if needs_finalize and returncode == 0 and mode == "danger":
+                auto_finalize = _auto_finalize_dirty_worktree(
+                    worktree=Path(worktree_path),
+                    task_id=task_id,
+                    agent=agent,
+                    branch=final_state.get("worktree_branch"),
+                    base_branch=base_branch,
+                )
+                dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
+                commits_ahead = _count_commits_ahead(Path(worktree_path), base_ref)
+                if auto_finalize.ok:
+                    needs_finalize = False
+                    ok_outcome = True
+                    final_status = "done"
+    except Exception as finalize_exc:  # noqa: BLE001 - telemetry must never mask the outcome
+        finalize_error = f"{type(finalize_exc).__name__}: {finalize_exc}"[:300]
+        # Unknown telemetry cannot prove the work was committed, so surface
+        # the task for a human instead of settling it as done.
+        needs_finalize = True
 
     if needs_finalize:
         final_status = "needs_finalize"
@@ -2589,6 +2615,9 @@ def _run_worker(
             "worktree_dirty_on_exit": dirty_on_exit,
             "commits_ahead": commits_ahead,
             "needs_finalize": needs_finalize,
+            # Non-null means the finish telemetry above raised: the worker's own
+            # outcome still stands, but nothing here could be measured.
+            "finalize_error": finalize_error,
             "keep_worktree": keep_worktree,
             "worktree_reap": worktree_reap,
             "tmp_bytes_freed": (
@@ -3550,7 +3579,22 @@ def cmd_status_or_fail(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------------------------
 
 _TERMINAL_STATUSES = frozenset(
-    {"done", "failed", "timeout", "rate_limited", "crashed", "cancelled", "dry_run"},
+    {
+        "done",
+        "failed",
+        "timeout",
+        "rate_limited",
+        "crashed",
+        "cancelled",
+        "dry_run",
+        # A worker that settles as ``needs_finalize`` HAS finished — the status
+        # flags leftover work for a human, it does not mean "still running".
+        # Omitting it made ``delegate.py wait`` poll a finished task until its
+        # own timeout, and made ``cancel`` willing to signal a stored PID the OS
+        # may already have recycled. Every other terminal vocabulary in this
+        # file already includes it (see _BRANCH_HOLDER_RELEASABLE_STATUSES).
+        "needs_finalize",
+    },
 )
 
 

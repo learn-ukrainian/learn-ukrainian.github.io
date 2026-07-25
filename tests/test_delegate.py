@@ -4073,3 +4073,80 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
     assert meta3["full_checkout"] is True
     assert (worktree / "curriculum" / "f.txt").is_file()
     assert (worktree / "wiki" / "f.txt").is_file()
+
+
+def test_count_commits_ahead_treats_a_vanished_worktree_as_unknown(tmp_path):
+    """A missing worktree is "cannot count", not an exception.
+
+    _worktree_is_dirty already returned None on OSError; its sibling raised, and
+    that asymmetry took down a whole dispatch's finalize path (2026-07-25).
+    """
+    missing = tmp_path / "never-existed"
+    assert delegate._count_commits_ahead(missing, "origin/main") is None
+    assert delegate._worktree_is_dirty(missing) is None
+
+
+def test_run_worker_reaches_a_terminal_status_when_finalize_telemetry_raises(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Finish telemetry must never cost the task its terminal status.
+
+    A task left at "running" with a dead pid is invisible to every settle-loop
+    watching it: the operator sees a job that still looks busy, forever. On
+    2026-07-25 a dispatch whose worktree disappeared mid-run did exactly that and
+    hid a dead worker for 52 minutes.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("finalize-explodes")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "finalize-explodes",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+    (tmp_path / "work.txt").write_text("finished work", encoding="utf-8")
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    def explode(*_args, **_kwargs):
+        raise FileNotFoundError(2, "No such file or directory", str(tmp_path))
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_count_commits_ahead", side_effect=explode),
+    ):
+        delegate._run_worker(
+            task_id="finalize-explodes",
+            agent="codex",
+            prompt="hi",
+            mode="workspace-write",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            effort="xhigh",
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
+    assert state["status"] != "running"
+    # Unknown telemetry cannot prove the work was committed, so it surfaces.
+    assert state["needs_finalize"] is True
+    assert state["status"] == "needs_finalize"
+    # And the reason the telemetry is unknown is recorded, not swallowed.
+    assert "FileNotFoundError" in (state.get("finalize_error") or "")
