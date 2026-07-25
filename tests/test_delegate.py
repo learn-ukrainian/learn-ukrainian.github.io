@@ -4150,3 +4150,83 @@ def test_run_worker_reaches_a_terminal_status_when_finalize_telemetry_raises(
     assert state["status"] == "needs_finalize"
     # And the reason the telemetry is unknown is recorded, not swallowed.
     assert "FileNotFoundError" in (state.get("finalize_error") or "")
+
+
+def test_run_worker_records_terminal_status_before_best_effort_reaping(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Post-worker enrichment must not be able to strand a finished task.
+
+    Cross-family review of #5807: the first guard covered the finish telemetry
+    but not the worktree reaping below it, and _reap_finished_worktree performs
+    its import OUTSIDE its own handler — so an unimportable reaper module still
+    skipped the state write and left the task reading "running".
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("reap-explodes")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "reap-explodes",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    def unimportable(*_args, **_kwargs):
+        raise ImportError("No module named 'scripts.orchestration.reap_worktrees'")
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_count_commits_ahead", return_value=1),
+        patch.object(delegate, "_worktree_is_dirty", return_value=False),
+        patch.object(delegate, "_reap_finished_worktree", side_effect=unimportable),
+    ):
+        with contextlib.suppress(ImportError):
+            delegate._run_worker(
+                task_id="reap-explodes",
+                agent="codex",
+                prompt="hi",
+                mode="danger",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] != "running", "a finished worker was left looking busy"
+    assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
+
+
+def test_reap_finished_worktree_survives_an_unimportable_reaper(tmp_path, monkeypatch):
+    """The reaper's own import belongs inside its error handling."""
+    import builtins
+
+    real_import = builtins.__import__
+
+    def fake_import(name, *args, **kwargs):
+        if name == "scripts.orchestration" or name.endswith("reap_worktrees"):
+            raise ImportError(f"simulated missing module: {name}")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+    out = delegate._reap_finished_worktree(tmp_path)
+    assert isinstance(out, dict)
+    assert out.get("ok") is not True

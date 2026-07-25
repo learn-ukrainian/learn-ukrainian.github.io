@@ -1475,9 +1475,12 @@ def _reap_finished_worktree(worktree: Path) -> dict[str, Any]:
     """Try to reap a clean successful delegate worktree, returning state metadata."""
     if str(_REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(_REPO_ROOT))
-    from scripts.orchestration import reap_worktrees
 
     try:
+        # Imported inside the handler: an unimportable reaper is a reaping
+        # failure like any other, not a reason to take down the caller.
+        from scripts.orchestration import reap_worktrees
+
         results = reap_worktrees.reap_worktrees(
             repo_root=_REPO_ROOT,
             apply=True,
@@ -2572,6 +2575,20 @@ def _run_worker(
 
     if needs_finalize:
         final_status = "needs_finalize"
+
+    # CHECKPOINT: record that this worker finished, before any further
+    # best-effort work. Everything below — worktree reaping, usage extraction,
+    # the enriched state assembly — is enrichment, and any of it can raise:
+    # `_reap_finished_worktree` performs its import OUTSIDE its own exception
+    # handler, so an unimportable reaper module would skip the final write
+    # entirely and stand the task back up as ``running`` with a dead pid. That
+    # is the exact failure this change exists to remove, so the terminal status
+    # is persisted first and enriched afterwards rather than being persisted
+    # once at the end. (Found in cross-family review of this PR.)
+    _write_state_atomic(
+        state_path,
+        {**final_state, "status": final_status, "finalize_error": finalize_error},
+    )
 
     last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
     if last_error:
