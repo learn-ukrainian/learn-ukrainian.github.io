@@ -424,3 +424,47 @@ def test_unresolvable_cd_falls_back_instead_of_guessing(monkeypatch, repo_with_w
     """`cd $VAR` is ambiguous; the guard must fall back to the payload cwd, not guess."""
     main_co, _worktree = repo_with_worktree
     assert _run_real(monkeypatch, "cd $TARGET && git push origin main", main_co) == 2
+
+
+# --- Cross-family review P1s on the #5771 fix. Both were BYPASSES: they let an
+# --- untested push to `main` through, which is the one thing this guard exists
+# --- to stop. Absence of these tests is what let the first fix look correct.
+
+
+def test_chained_cd_follows_the_last_directory_before_the_push(monkeypatch, repo_with_worktree):
+    """`cd <worktree> && cd <main> && git push origin main` must still be judged as main.
+
+    Honouring only the FIRST cd meant the guard saw a feature branch and waved the
+    push through, even though it actually ran from main.
+    """
+    main_co, worktree = repo_with_worktree
+    command = f"cd {worktree} && cd {main_co} && git push origin main"
+    assert _run_real(monkeypatch, command, worktree) == 2
+
+
+def test_cd_after_the_push_does_not_re_home_it(monkeypatch, repo_with_worktree):
+    """Only cd's BEFORE the push count; a trailing cd must not change the verdict."""
+    main_co, worktree = repo_with_worktree
+    command = f"cd {main_co} && git push origin main && cd {worktree}"
+    assert _run_real(monkeypatch, command, worktree) == 2
+
+
+@pytest.mark.parametrize(
+    "var",
+    [
+        "GIT_DIR",
+        "GIT_OBJECT_DIRECTORY",
+        "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+        "GIT_COMMON_DIR",
+        "GIT_INDEX_FILE",
+    ],
+)
+def test_hostile_git_env_cannot_disable_the_guard(monkeypatch, repo_with_worktree, var):
+    """A broken git-discovery override must not turn a block into a pass.
+
+    An invalid value makes `git diff` fail; an unstripped variable therefore
+    yielded no changed paths, and no changed paths meant "nothing to guard".
+    """
+    main_co, _worktree = repo_with_worktree
+    monkeypatch.setenv(var, "/nonexistent/hostile/path")
+    assert _run_real(monkeypatch, "git push origin main", main_co) == 2

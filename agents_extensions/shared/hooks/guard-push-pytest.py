@@ -229,46 +229,53 @@ def _payload_cwd(payload: dict) -> str:
     return str(cwd) if cwd else os.getcwd()
 
 
-def _cd_target(command: str) -> str | None:
-    """A literal leading ``cd <path>`` in the command, if any.
+def _effective_cwd(command: str, base: str) -> str:
+    """Directory the push runs in, following EVERY cd that precedes it.
 
     The hook process's own cwd is the primary checkout, which under layout A is
     always `main`. A push issued from a dispatch worktree therefore looked like a
-    push from `main` and was judged against main's diff (#5771). Variable or
-    substituted targets (`cd $X`, `cd "$(...)"`, `cd -`) are deliberately not
-    resolved: guessing there is how a guard silently judges the wrong tree.
+    push from `main` and was judged against main's diff (#5771).
+
+    Cross-family review P1: honouring only the FIRST cd is a bypass —
+    `cd /feature && cd /main && git push origin main` would be judged in
+    /feature, see a non-main branch, and wave an untested push to main straight
+    through. So walk the segments in order, applying each cd cumulatively, and
+    stop at the segment that performs the push.
+
+    Anything unresolvable (`cd $VAR`, `cd -`, command substitution, a path that
+    is not a directory) collapses back to `base`. That is the SAFE direction:
+    base is the primary checkout, so an ambiguous command leaves the guard armed
+    rather than silently disarmed.
     """
+    current = base
     for tokens in _segments(command):
         if not tokens:
             continue
+        if _git_push_args(tokens) is not None:
+            break
         if tokens[0] != "cd":
-            # Only a LEADING cd re-homes the whole command. Anything else first
-            # (including another cd later in the chain) leaves the effective
-            # directory ambiguous, so fall back to the payload cwd.
-            return None
+            continue
         if len(tokens) < 2:
-            return None
+            return base
         target = tokens[1]
         if target.startswith(("$", "-", "`")) or '"$' in target or "'$" in target:
-            return None
-        return target.strip("\"'")
-    return None
+            return base
+        path = Path(target.strip("\"'")).expanduser()
+        if not path.is_absolute():
+            path = Path(current) / path
+        try:
+            resolved = path.resolve()
+        except OSError:
+            return base
+        if not resolved.is_dir():
+            return base
+        current = str(resolved)
+    return current
 
 
 def _git_cwd(payload: dict, command: str) -> str:
     """Resolve the working tree the push will actually run in."""
-    base = _payload_cwd(payload)
-    target = _cd_target(command)
-    if not target:
-        return base
-    path = Path(target).expanduser()
-    if not path.is_absolute():
-        path = Path(base) / path
-    try:
-        resolved = path.resolve()
-    except OSError:
-        return base
-    return str(resolved) if resolved.is_dir() else base
+    return _effective_cwd(command, _payload_cwd(payload))
 
 
 def _git_env() -> dict:
@@ -282,7 +289,21 @@ def _git_env() -> dict:
     at one remove. Caught by the pre-commit run of this file's own tests.
     """
     env = os.environ.copy()
-    for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
+    for key in (
+        "GIT_DIR",
+        "GIT_WORK_TREE",
+        "GIT_INDEX_FILE",
+        "GIT_PREFIX",
+        # Cross-family review P1: leaving these set can make `git diff` FAIL, and a
+        # failed probe returns no paths, which lets an untested push to `main`
+        # through. An incomplete strip is a bypass, not a cosmetic gap.
+        "GIT_COMMON_DIR",
+        "GIT_OBJECT_DIRECTORY",
+        "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+        "GIT_CEILING_DIRECTORIES",
+        "GIT_DISCOVERY_ACROSS_FILESYSTEM",
+        "GIT_NAMESPACE",
+    ):
         env.pop(key, None)
     return env
 
