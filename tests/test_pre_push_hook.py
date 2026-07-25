@@ -15,6 +15,21 @@ PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 ZERO_SHA = "0" * 40
 
 
+def _load_hook_module():
+    """Import the hook for unit-level assertions; it has no .py suffix, so load by path."""
+    import importlib.machinery
+    import importlib.util
+
+    spec = importlib.util.spec_from_loader(
+        "pre_push_hook",
+        importlib.machinery.SourceFileLoader("pre_push_hook", str(HOOK_PATH)),
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def _git_environment(extra_env: dict[str, str] | None = None) -> dict[str, str]:
     environment = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     if extra_env:
@@ -122,6 +137,45 @@ def test_blocks_main_update_with_stamp_older_than_600_seconds(tmp_path):
     result = _hook(repo, _update(local_sha, remote_sha), tmpdir=stamp.parent)
 
     assert result.returncode == 1
+
+
+@pytest.mark.parametrize(
+    ("tmpdir_value", "expected_parent"),
+    [
+        ("", "/tmp"),  # empty: shell ${TMPDIR:-/tmp} treats this as unset
+        (None, "/tmp"),  # genuinely unset
+        ("relative-tmp", "/tmp"),  # non-absolute: cwd-dependent, so both sides refuse it
+        ("/var/custom-tmp", "/var/custom-tmp"),  # ordinary absolute value is honoured
+    ],
+)
+def test_marker_path_resolution_matches_the_stamp_writer(tmpdir_value, expected_parent, monkeypatch):
+    """The reader must resolve TMPDIR exactly as `${TMPDIR:-/tmp}` does for the writer.
+
+    Writer is `agents_extensions/shared/hooks/stamp-pytest.sh`. Two ways the two sides
+    can disagree, both of which send the reader looking where the writer never wrote:
+
+    * EMPTY TMPDIR — shell parameter expansion treats it as unset, but a Python
+      `get("TMPDIR", "/tmp")` default does not; it yields "" and the marker becomes a
+      relative path.
+    * NON-ABSOLUTE TMPDIR — resolved against each side's own cwd, and those differ:
+      the stamper runs from a PostToolUse cwd while git runs this hook from the
+      worktree root. Both sides therefore refuse a relative value and fall back.
+
+    This asserts the resolution rule directly, with no filesystem side effects — the
+    earlier version created and deleted a real /tmp stamp, which could race and destroy
+    a concurrent session's state (caught in cross-family review).
+    """
+    hook = _load_hook_module()
+    if tmpdir_value is None:
+        monkeypatch.delenv("TMPDIR", raising=False)
+    else:
+        monkeypatch.setenv("TMPDIR", tmpdir_value)
+
+    marker = hook._marker_path("feature")
+
+    assert marker.parent == Path(expected_parent)
+    assert marker.name == "learn-uk-pytest.feature.stamp"
+    assert marker.is_absolute(), "a relative marker path can never match the writer's"
 
 
 def test_allows_non_triggering_paths(tmp_path):

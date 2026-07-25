@@ -159,7 +159,18 @@ fi
 BRANCH=$(git branch --show-current 2>/dev/null) || exit 0
 [ -n "$BRANCH" ] || exit 0
 
-STAMP="${TMPDIR:-/tmp}/learn-uk-pytest.${BRANCH}.stamp"
+# A non-absolute TMPDIR would be resolved against this hook's cwd, while the
+# reader (.githooks/pre-push) resolves it against the worktree root git runs it
+# from — so the stamp would be written where the reader never looks. Neither side
+# can honour a relative value safely; both fall back to /tmp. Empty is already
+# handled by ${TMPDIR:-/tmp} treating it as unset.
+STAMP_DIR="${TMPDIR:-/tmp}"
+case "$STAMP_DIR" in
+    /*) ;;
+    *) STAMP_DIR="/tmp" ;;
+esac
+
+STAMP="${STAMP_DIR}/learn-uk-pytest.${BRANCH}.stamp"
 mkdir -p "$(dirname "$STAMP")" 2>/dev/null || exit 0
 touch "$STAMP" 2>/dev/null || true
 
