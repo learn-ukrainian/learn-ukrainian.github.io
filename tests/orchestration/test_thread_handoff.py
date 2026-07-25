@@ -359,6 +359,7 @@ def test_direct_script_help_from_repository_root():
         text=True,
         env=env,
         check=False,
+        timeout=30,
     )
 
     assert completed.returncode == 0, completed.stderr
@@ -2106,11 +2107,12 @@ def test_default_runtime_root_is_shared_by_real_linked_worktree(tmp_path: Path, 
         ["git", "config", "user.email", "test@example.invalid"],
         ["git", "config", "user.name", "Test"],
     ):
-        subprocess.run(command, cwd=primary, check=True, capture_output=True, text=True, env=git_env)
+        subprocess.run(command, cwd=primary, check=True, capture_output=True, text=True, env=git_env, timeout=30)
     (primary / "README.md").write_text("fixture\n", encoding="utf-8")
-    subprocess.run(["git", "add", "README.md"], cwd=primary, check=True, capture_output=True, text=True, env=git_env)
+    subprocess.run(["git", "add", "README.md"], cwd=primary, check=True, capture_output=True, text=True, env=git_env, timeout=30)
     subprocess.run(
-        ["git", "commit", "-m", "fixture"], cwd=primary, check=True, capture_output=True, text=True, env=git_env
+        ["git", "commit", "-m", "fixture"], cwd=primary, check=True, capture_output=True, text=True, env=git_env,
+        timeout=30,
     )
     subprocess.run(
         ["git", "worktree", "add", "-b", "linked", str(linked)],
@@ -2119,6 +2121,7 @@ def test_default_runtime_root_is_shared_by_real_linked_worktree(tmp_path: Path, 
         capture_output=True,
         text=True,
         env=git_env,
+        timeout=30,
     )
 
     assert th.canonical_state_root(primary) == primary.resolve()
@@ -2494,6 +2497,7 @@ def test_epic_harness_session_start_surfaces_claude_infra_pending_packet(tmp_pat
     mapped = subprocess.check_output(
         ["bash", "-c", f'source "{identity_sh}" && handoff_identity_for_epic harness'],
         text=True,
+        timeout=30,
     ).strip()
     assert mapped == "claude-infra", f"--epic harness must map to claude-infra, got {mapped!r}"
     assert mapped != "claude-harness"

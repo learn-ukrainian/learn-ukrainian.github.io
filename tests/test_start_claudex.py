@@ -178,6 +178,7 @@ def test_claudex_status_settings_cover_main_and_subagent_visibility() -> None:
         capture_output=True,
         check=True,
         cwd=_REPO_ROOT,
+        timeout=15,
     )
     assert "[GPT-5.6 Sol]" in main.stdout
     assert "[ctx: 68K/272K (25%)]" in main.stdout
@@ -207,6 +208,7 @@ def test_claudex_status_settings_cover_main_and_subagent_visibility() -> None:
         capture_output=True,
         check=True,
         cwd=_REPO_ROOT,
+        timeout=15,
     )
     assert json.loads(subagent.stdout) == {
         "id": "agent-1",

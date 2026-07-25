@@ -20,6 +20,7 @@ def test_v7_build_dry_run_emits_module_start() -> None:
         text=True,
         capture_output=True,
         check=False,
+        timeout=60,
     )
 
     assert result.returncode == 0, result.stderr
@@ -49,6 +50,7 @@ def test_v7_build_dry_run_accepts_writer_alias() -> None:
         text=True,
         capture_output=True,
         check=False,
+        timeout=60,
     )
 
     assert result.returncode == 0, result.stderr

@@ -14,6 +14,7 @@ def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["git", "-C", str(repo), *args],
         check=True, capture_output=True, text=True, env=_clean_env(),
+        timeout=30,
     )
 
 @pytest.fixture
@@ -23,6 +24,7 @@ def repo_layout(tmp_path: Path):
     subprocess.run(
         ["git", "init", "-q", "-b", "main", str(main)],
         check=True, capture_output=True, text=True, env=_clean_env(),
+        timeout=30,
     )
     _git(main, "config", "user.email", "test@example.com")
     _git(main, "config", "user.name", "Test")
@@ -69,7 +71,8 @@ def run_git_shim(repo: Path, *args: str, agent_no_merge: bool = True):
         capture_output=True,
         text=True,
         env=env,
-        check=False
+        check=False,
+        timeout=30,
     )
 
 def test_git_shim_blocks_branch_switch_in_main(repo_layout):

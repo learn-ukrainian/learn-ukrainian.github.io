@@ -104,6 +104,7 @@ def test_bridge_config_state_paths_resolve_to_primary_in_worktree(wt_layout):
         capture_output=True,
         text=True,
         check=True,
+        timeout=30,
     )
     db_path_str, pid_dir_str = proc.stdout.strip().split(";")
 
@@ -125,6 +126,7 @@ def test_bridge_dispatch_wrappers_repo_root_resolves_to_primary_in_worktree(wt_l
         capture_output=True,
         text=True,
         check=True,
+        timeout=30,
     )
     resolved_repo_root = Path(proc.stdout.strip())
     assert resolved_repo_root.resolve() == main_repo.resolve()
@@ -141,6 +143,7 @@ def test_bridge_monitor_cache_project_root_resolves_to_primary_in_worktree(wt_la
         capture_output=True,
         text=True,
         check=True,
+        timeout=30,
     )
     resolved_project_root = Path(proc.stdout.strip())
     assert resolved_project_root.resolve() == main_repo.resolve()

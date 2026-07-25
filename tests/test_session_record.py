@@ -35,6 +35,7 @@ def test_canonical_state_root_uses_git_common_directory() -> None:
         check=True,
         capture_output=True,
         text=True,
+        timeout=30
     )
 
     assert canonical_state_root(PROJECT_ROOT) == Path(result.stdout.strip()).parent.resolve()
@@ -200,6 +201,7 @@ def test_env_file_exports_are_shell_safe_and_project_private(tmp_path: Path) -> 
         check=True,
         capture_output=True,
         text=True,
+        timeout=30
     )
     assert result.stdout.splitlines() == ["quoted-session", os.fspath(transcript.resolve())]
 
@@ -223,6 +225,7 @@ def test_cli_round_trip_uses_explicit_state_root(tmp_path: Path) -> None:
         check=True,
         capture_output=True,
         text=True,
+        timeout=30
     )
     get = subprocess.run(
         [
@@ -239,6 +242,7 @@ def test_cli_round_trip_uses_explicit_state_root(tmp_path: Path) -> None:
         check=True,
         capture_output=True,
         text=True,
+        timeout=30
     )
 
     assert json.loads(update.stdout)["effective_profile_id"] == "sol_lead"

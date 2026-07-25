@@ -136,6 +136,7 @@ def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
         env=env,
         capture_output=True,
         text=True,
+        timeout=60,
     )
 
     assert result.returncode == 0, f"session-setup.sh failed: {result.stderr}\n{result.stdout}"

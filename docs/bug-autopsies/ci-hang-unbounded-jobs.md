@@ -99,10 +99,31 @@ Shard `[3/4]` failed **identically across unrelated PRs** (#5745, #5742, #5738, 
 diffs with nothing in common, the shard's environment is the defect.
 
 CI installed the full lockfile and then force-reinstalled `torch==2.13.0` + `torchvision==0.28.0`
-CPU wheels **on all four shards** — roughly 2.5 GB per shard — on a 2-vCPU / ~7 GB runner already
+CPU wheels **on all four shards** — roughly 2.5 GB per shard — on a standard GitHub-hosted runner already
 running `pytest-xdist` with `-n auto`. Nothing the suite loads needs any of it: a repo-wide search
 for `import torch`, `from torch`, `sentence_transformers`, `SentenceTransformer` and `open_clip`
-returns **zero hits under `scripts/` or `tests/`** — every hit is inside `embed-venv/`, the embedding
+returns **zero hits under `scripts/` or `tests/`**. 
+
+> **Correction (2026-07-25):** earlier revisions of this autopsy, and the commit messages of
+> #5749, described the runner as "2 vCPU / ~7 GB". That figure was **wrong** — GitHub's standard
+> hosted runners for **public** repositories are documented at **4 vCPU / 16 GB with unlimited free
+> minutes**, which an independent capacity review surfaced.
+>
+> **What is measured, and what is not — stated separately, because the first two drafts of this
+> paragraph blurred them.**
+> *Measured:* the shard failed with `MemoryError` and `RuntimeError: can't start new thread`; the
+> `MemoryError` appears during **extraction/installation of the ~2.5 GB torch/torchvision wheels**, and
+> `can't start new thread` is **thread** exhaustion, not RAM exhaustion. Removing the unused ML stack
+> turned all four shards green (29 checks pass, 0 fail).
+> *NOT measured:* the precise mechanism. A cross-family review put four xdist workers importing torch at
+> roughly **1.5–2.0 GB RSS combined** — which does **not** by itself explain exhausting a 16 GB runner, so
+> the tempting story "four workers importing torch filled the box" is an **inference and probably wrong**.
+> The likelier contributors are install-time wheel extraction and a thread ceiling. **Nobody has profiled
+> it**, and the fix landed without needing to.
+> The honest lesson is therefore about *installing 2.5 GB of unused dependencies per shard*, not about
+> runner size. Do not cite the old `2 vCPU / ~7 GB` figure, and do not cite a RAM-exhaustion mechanism as
+> established. The real free-tier constraints are **20 concurrent jobs** and how much the install and the
+> suite consume — not minutes, and not machine size — every hit is inside `embed-venv/`, the embedding
 worker's separate virtualenv, and its vendored `huggingface_hub`. Addressed in PR #5749.
 
 ### The gate and the concurrency policy were jointly self-defeating

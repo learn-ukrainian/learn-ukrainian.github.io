@@ -19,7 +19,8 @@ def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
     # this suite from inside a `git commit` pre-commit hook leaks the OUTER
     # repo's git env into these calls and silently operates on the wrong repo.
     return subprocess.run(
-        ["git", *args], cwd=str(repo), check=True, capture_output=True, text=True, env=sanitized_git_env()
+        ["git", *args], cwd=str(repo), check=True, capture_output=True, text=True, env=sanitized_git_env(),
+        timeout=30
     )
 
 
@@ -42,6 +43,7 @@ def _run_cli(state_file: Path, *args: str) -> subprocess.CompletedProcess[str]:
         cwd=str(project_root),
         capture_output=True,
         text=True,
+        timeout=30
     )
 
 
@@ -259,6 +261,7 @@ def test_behavior_proof_recording_round_trips_into_receipt(tmp_path):
         cwd=str(project_root),
         capture_output=True,
         text=True,
+        timeout=60
     )
     assert verify.returncode == 0, verify.stderr
     receipt = json.loads(verify.stdout)

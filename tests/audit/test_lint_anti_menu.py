@@ -13,6 +13,7 @@ def run_linter(path: Path) -> subprocess.CompletedProcess[str]:
         capture_output=True,
         check=False,
         text=True,
+        timeout=30,
     )
 
 
@@ -237,6 +238,7 @@ def test_stdin_uses_stdin_label_and_informative_snippet() -> None:
         check=False,
         input="Should I merge this now or wait for another review?\n",
         text=True,
+        timeout=30,
     )
 
     assert result.returncode == 1
