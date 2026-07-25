@@ -58,6 +58,7 @@ def test_lockfile_conflict_uses_clear_message(tmp_path):
             capture_output=True,
             text=True,
             check=False,
+            timeout=30
         )
         assert second.returncode != 0
         combined_output = f"{second.stdout}\n{second.stderr}"

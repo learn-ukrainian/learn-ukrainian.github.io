@@ -29,6 +29,7 @@ def _git(
         capture_output=True,
         text=True,
         env=merged_env,
+        timeout=30
     )
 
 

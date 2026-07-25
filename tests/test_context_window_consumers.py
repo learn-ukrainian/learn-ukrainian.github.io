@@ -165,6 +165,7 @@ def test_statusline_prefers_official_usage_and_observed_capacity(tmp_path: Path)
         check=True,
         cwd=tmp_path,
         env=_environment(project, record_path),
+        timeout=30
     )
 
     assert "[ctx: 130K/260K (50%)]" in completed.stdout
@@ -199,6 +200,7 @@ def test_statusline_unknown_capacity_does_not_use_auto_compact_fallback(
         check=True,
         cwd=tmp_path,
         env=env,
+        timeout=30
     )
 
     assert "[ctx:" not in completed.stdout
@@ -232,6 +234,7 @@ def test_subagent_statusline_reports_progress_and_tokens(tmp_path: Path) -> None
         capture_output=True,
         check=True,
         cwd=tmp_path,
+        timeout=30
     )
 
     rows = [json.loads(line) for line in completed.stdout.splitlines()]
@@ -263,6 +266,7 @@ def test_context_monitor_uses_record_tiers_and_excludes_output_tokens(
         check=True,
         cwd=tmp_path,
         env=_environment(project, record_path),
+        timeout=30
     )
 
     hook_output = json.loads(completed.stdout)
@@ -302,6 +306,7 @@ def test_context_monitor_size_fallback_handles_long_base64_portably(
         check=True,
         cwd=tmp_path,
         env=_environment(project, record_path),
+        timeout=30
     )
 
     hook_output = json.loads(completed.stdout)
@@ -330,6 +335,7 @@ def test_context_monitor_unknown_capacity_emits_no_warning(tmp_path: Path) -> No
         check=True,
         cwd=tmp_path,
         env=_environment(project, record_path),
+        timeout=30
     )
 
     assert completed.stdout == ""
@@ -342,6 +348,7 @@ def test_context_consumer_shell_syntax(script: Path) -> None:
         text=True,
         capture_output=True,
         check=False,
+        timeout=30
     )
     assert completed.returncode == 0, completed.stderr
 def test_statusline_reports_steps_compacts_and_handoff_warning(tmp_path: Path) -> None:
@@ -373,6 +380,7 @@ def test_statusline_reports_steps_compacts_and_handoff_warning(tmp_path: Path) -
         check=True,
         cwd=tmp_path,
         env=_environment(project, record_path),
+        timeout=30
     )
 
     assert "[steps: 77]" in completed.stdout
@@ -407,6 +415,7 @@ def test_statusline_prefer_handoff_over_compaction(tmp_path: Path) -> None:
         check=True,
         cwd=tmp_path,
         env=_environment(project, record_path),
+        timeout=30
     )
 
     assert "[compacts: 1]" in completed.stdout
