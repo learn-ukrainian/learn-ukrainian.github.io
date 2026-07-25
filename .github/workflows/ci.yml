@@ -98,6 +98,24 @@ jobs:
           # planner job fail: reproduced locally by making huggingface_hub
           # unimportable, which yields exactly the observed 2 collection errors.
           .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
+      # Collection imports every test module, so the planner needs the manifest for
+      # the same reason the shards do — otherwise collection can reach for a ~30MB
+      # download. Gate-review finding 2 (non-blocking, same root cause as finding 1).
+      - name: Restore Atlas lexicon manifest cache
+        id: atlas-manifest-cache-plan
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        run: |
+          .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+      - name: Save Atlas lexicon manifest cache
+        if: steps.atlas-manifest-cache-plan.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
       - name: Collect once and write four duration-balanced plans
         run: |
           mkdir -p ci-artifacts
@@ -163,15 +181,38 @@ jobs:
           .venv/bin/python -m pip install --upgrade pip
           # torch/torchvision/open_clip_torch excluded per #5749 (merged): nothing
           # under scripts/ or tests/ imports them — the embedding worker owns its own
-          # venv — and installing them on all shards exhausted a 2-vCPU/~7GB runner.
-          # This also removes the CPU-wheel force-reinstall that existed only to stop
-          # PyPI's CUDA build (needing libcudart.so.13) from winning; moot once torch
-          # is not installed at all.
+          # venv. Installing ~2.5GB of unused wheels on every shard is what preceded
+          # the shard failures; the mechanism was never profiled (see the autopsy),
+          # so the lesson is "do not install what the suite never imports", not a
+          # claim about runner size. This also removes the CPU-wheel force-reinstall
+          # that existed only to stop PyPI's CUDA build (needing libcudart.so.13)
+          # from winning; moot once torch is not installed at all.
           grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
             > "${RUNNER_TEMP}/requirements-ci.txt"
           .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
           # Not in the lockfile, but imported during collection.
           .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
+      # The suite reads site/src/data/lexicon-manifest.json. Without these steps
+      # `load_manifest()` downloads a ~30MB release asset over HTTP mid-test — network
+      # I/O inside the gate, which is the profile of the test that held a runner for
+      # 357 minutes (#5740). The job this replaced had them; the rewrite dropped them.
+      # Caught by the cross-family gate review of #5752 (BLOCKING finding 1) after I
+      # had fixed the identical omission in `frontend` and failed to check this job.
+      - name: Restore Atlas lexicon manifest cache
+        id: atlas-manifest-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        run: |
+          .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+      - name: Save Atlas lexicon manifest cache
+        if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
       - name: Run planned shard with bounded worker concurrency
         run: |
           .venv/bin/python scripts/ci/pytest_shards.py run \
