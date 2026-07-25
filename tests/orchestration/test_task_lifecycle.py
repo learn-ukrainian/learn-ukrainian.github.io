@@ -529,7 +529,7 @@ def test_carrier_preserves_identity_ac_snapshot_and_remaining_scope(
 ) -> None:
     for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
         monkeypatch.delenv(name, raising=False)
-    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
     ledger = _ledger()
     path = task_lifecycle.lifecycle_path(tmp_path, ledger["identity"])
     task_lifecycle.write_lifecycle(path, ledger)
@@ -548,16 +548,17 @@ def test_local_git_observation_cross_checks_exact_worktree_branch(
     for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
         monkeypatch.delenv(name, raising=False)
     repo = tmp_path / "repo"
-    subprocess.run(["git", "init", "-q", "-b", "main", str(repo)], check=True)
-    subprocess.run(["git", "-C", str(repo), "config", "user.name", "Test"], check=True)
+    subprocess.run(["git", "init", "-q", "-b", "main", str(repo)], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(repo), "config", "user.name", "Test"], check=True, timeout=30)
     subprocess.run(
         ["git", "-C", str(repo), "config", "user.email", "test@example.com"],
         check=True,
+        timeout=30,
     )
     (repo / ".gitignore").write_text(".worktrees/\n", encoding="utf-8")
     (repo / "tracked.txt").write_text("base\n", encoding="utf-8")
-    subprocess.run(["git", "-C", str(repo), "add", "."], check=True)
-    subprocess.run(["git", "-C", str(repo), "commit", "-qm", "base"], check=True)
+    subprocess.run(["git", "-C", str(repo), "add", "."], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(repo), "commit", "-qm", "base"], check=True, timeout=30)
     worktree = repo / ".worktrees" / "dispatch" / "codex" / "42-closeout"
     subprocess.run(
         [
@@ -571,6 +572,7 @@ def test_local_git_observation_cross_checks_exact_worktree_branch(
             str(worktree),
         ],
         check=True,
+        timeout=30,
     )
 
     observed = task_lifecycle.observe_local_git(
