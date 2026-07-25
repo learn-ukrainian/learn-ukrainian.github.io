@@ -77,11 +77,14 @@ MAX_HARNESS_ANCESTOR_HOPS = 10
 # no death signal, and keeping it here would leave the reported cold-start
 # lockout reachable in production whenever liveness cannot be checked.
 DEFAULT_THREAD_LEASE_EMERGENCY_TTL_SECONDS = 15 * 60
-# Tolerance for comparing a recorded process start time against a freshly
-# probed one. psutil reports sub-second precision; the `ps -o lstart=`
-# fallback only has whole-second precision, and pid reuse within this window
-# is not distinguished from the original process (an accepted, documented gap).
-PROCESS_START_TIME_TOLERANCE_SECONDS = 2.0
+# Start times are compared at whole-second resolution, not a wider tolerance.
+# psutil reports sub-second precision; the `ps -o lstart=` fallback only has
+# whole-second precision. Truncating both to integer epoch seconds before
+# comparing is exact given that shared precision floor — a wider tolerance
+# would silently accept a pid-reused process that started within the same
+# multi-second window as a "match". Pid reuse within the same wall-clock
+# second is not distinguished from the original process (an accepted,
+# documented gap — the real precision boundary, not an arbitrary widening).
 
 
 @dataclass(frozen=True)
@@ -666,6 +669,16 @@ class ProcessSnapshot:
     started_at: float | None
 
 
+def _epoch_seconds(value: float) -> int:
+    """Truncate to whole epoch seconds — the precision both start-time probes share.
+
+    psutil.create_time() returns sub-second precision; the `ps -o lstart=` fallback only
+    parses whole seconds. Comparing at whole-second resolution is exact for both instead of
+    papering over the gap with an arbitrary tolerance window.
+    """
+    return int(value)
+
+
 def _parse_ps_lstart(raw: str) -> float | None:
     """Parse ``ps -o lstart=`` (whole-second, local-time) into epoch seconds."""
     try:
@@ -802,14 +815,45 @@ def _default_machine_id() -> str | None:
 
 
 def _process_is_alive(pid: int) -> bool:
-    """POSIX liveness probe. EPERM means the process exists (owned by another user)."""
+    """POSIX liveness probe. EPERM means the process exists (owned by another user).
+
+    A zombie (defunct) process also answers `kill(pid, 0)` successfully — its pid slot is
+    reserved until its parent reaps it — but it can never run again, refresh a heartbeat, or
+    release its lease. Treating it as alive would conflict with every future claim forever,
+    recreating the original lockout (a dead owner blocking every restart) under a new name.
+    A confirmed zombie is dead here, not merely absent.
+    """
     try:
         os.kill(pid, 0)
     except ProcessLookupError:
         return False
     except PermissionError:
         return True
-    return True
+    return not _process_is_zombie(pid)
+
+
+def _process_is_zombie(pid: int) -> bool:
+    """Best-effort zombie probe. Never raises; an inconclusive read means "not confirmed zombie".
+
+    Prefers psutil's structured status. Falls back to `ps -o stat=` (forced `LC_ALL=C`,
+    matching `_default_process_snapshot`) when psutil is unavailable — the leading `Z` in the
+    state column is portable across macOS and Linux `ps` implementations.
+    """
+    try:
+        import psutil
+
+        try:
+            return psutil.Process(pid).status() == psutil.STATUS_ZOMBIE
+        except (psutil.NoSuchProcess, psutil.AccessDenied, OSError):
+            return False
+    except ImportError:
+        pass
+    env = git_environment()
+    env["LC_ALL"] = "C"
+    result = run_command(["ps", "-o", "stat=", "-p", str(pid)], cwd=Path.cwd(), env=env)
+    if result.returncode != 0:
+        return False
+    return result.stdout.strip()[:1] == "Z"
 
 
 def _derive_owner_liveness_fields(
@@ -892,14 +936,14 @@ def _evaluate_owner_liveness(
     except Exception as exc:
         return "uncheckable", f"liveness probe raised: {type(exc).__name__}: {exc}"
     if not alive:
-        return "dead", "owner process not found (ESRCH)"
+        return "dead", "owner process not found or is a zombie (ESRCH, or confirmed defunct)"
     try:
         snapshot = snapshot_fn(pid)
     except Exception as exc:
         return "uncheckable", f"start-time probe raised: {type(exc).__name__}: {exc}"
     if snapshot is None or snapshot.started_at is None:
         return "uncheckable", "owner process is alive but its start time could not be determined"
-    if abs(snapshot.started_at - recorded_started_at) > PROCESS_START_TIME_TOLERANCE_SECONDS:
+    if _epoch_seconds(snapshot.started_at) != _epoch_seconds(recorded_started_at):
         return "dead", "owner pid was reused by an unrelated process (start time mismatch)"
     return "alive", "owner process is alive and its start time matches"
 
@@ -1021,6 +1065,71 @@ def _same_owner_refresh_result(
     }
 
 
+def _same_owner_identity_confirmed(existing_raw: Mapping[str, Any], starting_pid: int) -> bool:
+    """True only when a resumed thread id is provably driven by the SAME process as before.
+
+    A same-owner refresh must never blindly preserve generation across a process change: a
+    resumed thread id (e.g. `claude --resume`) can be driven by a brand-new harness process
+    with a different pid, and if its lease kept the old generation, a delayed SessionEnd
+    release from the dead predecessor process — which cached that same old generation from
+    its own SessionStart — would still pass release_thread_lease's fencing and delete the
+    *successor's* live lease. When the recorded identity is checkable but a fresh probe
+    cannot confirm it still matches, this returns False so the caller reacquires with a new
+    generation instead of assuming continuity across an unproven process boundary.
+
+    When the recorded lease has no checkable identity at all (legacy v1, or a v2 lease that
+    could never derive one), there is nothing to contradict continuity with, so this returns
+    True and the existing v1->v2 upgrade-on-refresh behavior (rule E) is preserved unchanged.
+    """
+    if not _lease_liveness_checkable(existing_raw):
+        return True
+    new_fields = _derive_owner_liveness_fields(starting_pid)
+    if not new_fields:
+        return False
+    if new_fields["owner_pid"] != existing_raw.get("owner_pid"):
+        return False
+    return _epoch_seconds(new_fields["owner_pid_started_at"]) == _epoch_seconds(existing_raw.get("owner_pid_started_at"))
+
+
+def _identity_changed_reacquire_result(
+    lease_path: Path,
+    existing_raw: Mapping[str, Any],
+    *,
+    agent: str,
+    owner_thread_id: str,
+    now: datetime,
+    starting_pid: int,
+) -> dict[str, Any]:
+    """Reacquire with an incremented generation when the resuming process's identity changed.
+
+    See `_same_owner_identity_confirmed`: this is what actually fences a delayed release from
+    the dead predecessor process out — its cached generation no longer matches this lease.
+    """
+    raw_generation = existing_raw.get("generation")
+    generation = raw_generation if isinstance(raw_generation, int) and raw_generation >= 1 else 1
+    new_generation = generation + 1
+    record = _new_thread_lease_record(
+        agent=agent,
+        generation=new_generation,
+        owner_thread_id=owner_thread_id,
+        acquired_at=isoformat_z(now),
+        now=now,
+        starting_pid=starting_pid,
+        previous_owner_thread_id=owner_thread_id,
+    )
+    write_json_atomic(lease_path, record)
+    return {
+        "status": "acquired",
+        "lease_path": lease_path,
+        "owner_thread_id": owner_thread_id,
+        "generation": new_generation,
+        "heartbeat_at": record["heartbeat_at"],
+        "replaced_owner_thread_id": owner_thread_id,
+        "liveness_fields_recorded": "owner_pid" in record,
+        "takeover_reason": "same thread id resumed under a different process identity (pid/start time changed)",
+    }
+
+
 def claim_thread_lease(
     *,
     state_root: Path,
@@ -1075,7 +1184,16 @@ def claim_thread_lease(
         held_by_valid = isinstance(held_by, str) and bool(held_by.strip())
 
         if held_by_valid and held_by == owner_thread_id:
-            return _same_owner_refresh_result(
+            if _same_owner_identity_confirmed(existing_raw, resolved_starting_pid):
+                return _same_owner_refresh_result(
+                    lease_path,
+                    existing_raw,
+                    agent=agent,
+                    owner_thread_id=owner_thread_id,
+                    now=now,
+                    starting_pid=resolved_starting_pid,
+                )
+            return _identity_changed_reacquire_result(
                 lease_path,
                 existing_raw,
                 agent=agent,
@@ -1155,7 +1273,7 @@ def release_thread_lease(
     generation: int | None = None,
     force: bool = False,
 ) -> dict[str, Any]:
-    """Release a durable thread lease this exact owner (and generation) holds.
+    """Release a durable thread lease this exact owner and generation holds.
 
     Best-effort by design: SessionEnd does not fire on SIGKILL, so the pid
     liveness check in ``claim_thread_lease`` remains the primary defense —
@@ -1163,10 +1281,24 @@ def release_thread_lease(
     lease it does not own; fencing (owner + generation match) means a late
     release from a session that has already been superseded by a takeover
     cannot clobber the new owner's lease.
+
+    ``generation`` is mandatory unless ``force`` is given: the only production
+    call site (release-thread-lease.sh, the SessionEnd hook) must always pass
+    the exact generation it claimed at SessionStart. Generation is also what
+    fences a release by *process identity*, not merely thread id:
+    `claim_thread_lease`'s same-owner path (`_same_owner_identity_confirmed`)
+    increments generation whenever a resumed thread id is driven by a
+    different underlying process, so a delayed release from a dead
+    predecessor process — which can only ever know the generation it itself
+    observed — is refused here rather than deleting its live successor's lease.
     """
     owner_thread_id = current_thread_id.strip()
     if not force and not owner_thread_id:
         raise ValueError("current thread id is required to release a durable thread lease")
+    if not force and generation is None:
+        raise ValueError(
+            "generation is required to release a durable thread lease (fencing) unless force is given"
+        )
 
     lease_path = repo_local_path(state_root, default_thread_lease_path(agent))
     lock_path = lease_path.with_suffix(lease_path.suffix + ".lock")
@@ -1201,7 +1333,7 @@ def release_thread_lease(
                 "current_owner_thread_id": held_by,
                 "current_generation": held_generation,
             }
-        if generation is not None and held_generation != generation:
+        if held_generation != generation:
             return {
                 "status": "noop",
                 "lease_path": lease_path,
@@ -1227,14 +1359,21 @@ def refresh_thread_lease_heartbeat(
     current_thread_id: str,
     now: datetime,
     starting_pid: int | None = None,
+    min_refresh_interval: timedelta | None = None,
 ) -> dict[str, Any]:
-    """Best-effort heartbeat refresh for the ``Stop`` hook. A no-op unless we already own the lease.
+    """Best-effort heartbeat refresh. A no-op unless we already own the lease.
 
     This never attempts a takeover — unlike ``claim_thread_lease``, a
     different owner (or an unreadable lease) is simply left alone. This is
     what makes the short emergency TTL in ``claim_thread_lease`` safe: a live
-    owner working on the liveness-uncheckable path keeps its own heartbeat
-    fresh here, so it is never mistaken for stale and stolen mid-session.
+    owner keeps its own heartbeat fresh here, so it is never mistaken for
+    stale and stolen mid-session.
+
+    ``min_refresh_interval``, when given, throttles the write: the hot path
+    (called from ``PostToolUse``, on every tool call) is a cheap read that
+    no-ops — status ``"throttled"`` — unless the existing heartbeat is
+    already older than the interval. The ``Stop`` hook fires far less often
+    and omits this, refreshing unconditionally every call.
     """
     owner_thread_id = current_thread_id.strip()
     if not owner_thread_id:
@@ -1259,6 +1398,14 @@ def refresh_thread_lease_heartbeat(
                 "lease_path": lease_path,
                 "reason": "lease is owned by a different thread id; not refreshing",
             }
+        if min_refresh_interval is not None:
+            heartbeat_at = parse_iso_datetime(existing_raw.get("heartbeat_at"))
+            if heartbeat_at is not None and (now - heartbeat_at) < min_refresh_interval:
+                return {
+                    "status": "throttled",
+                    "lease_path": lease_path,
+                    "heartbeat_at": isoformat_z(heartbeat_at),
+                }
         return _same_owner_refresh_result(
             lease_path,
             existing_raw,
@@ -4266,7 +4413,7 @@ def cmd_release_thread_lease(args: argparse.Namespace) -> int:
 
 
 def cmd_refresh_thread_lease_heartbeat(args: argparse.Namespace) -> int:
-    """Best-effort heartbeat refresh from the ``Stop`` hook. Always exits 0."""
+    """Best-effort heartbeat refresh from the ``Stop``/``PostToolUse`` hooks. Always exits 0."""
     try:
         _, state_root = resolve_roots(args.repo_root)
         agent = normalize_agent_name(args.agent)
@@ -4276,6 +4423,11 @@ def cmd_refresh_thread_lease_heartbeat(args: argparse.Namespace) -> int:
             current_thread_id=args.current_thread_id,
             now=utc_now(),
             starting_pid=args.starting_pid,
+            min_refresh_interval=(
+                timedelta(seconds=args.min_refresh_interval_seconds)
+                if args.min_refresh_interval_seconds is not None
+                else None
+            ),
         )
     except ValueError as exc:
         print(json.dumps({"error": str(exc)}, indent=2))
@@ -4535,7 +4687,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--generation",
         type=int,
         default=None,
-        help="Only release if the on-disk lease is still at this exact generation (fencing).",
+        help=(
+            "Required unless --force: only release if the on-disk lease is still at this "
+            "exact generation (fencing, including across a process-identity change)."
+        ),
     )
     release_thread_lease_parser.add_argument(
         "--force",
@@ -4546,11 +4701,23 @@ def build_parser() -> argparse.ArgumentParser:
 
     refresh_heartbeat_parser = subparsers.add_parser(
         "refresh-thread-lease-heartbeat",
-        help="Best-effort heartbeat refresh for the lease this exact thread already owns (Stop hook).",
+        help=(
+            "Best-effort heartbeat refresh for the lease this exact thread already owns "
+            "(Stop and PostToolUse hooks)."
+        ),
     )
     refresh_heartbeat_parser.add_argument("--agent", type=argparse_agent_name, required=True)
     refresh_heartbeat_parser.add_argument("--current-thread-id", required=True)
     refresh_heartbeat_parser.add_argument("--starting-pid", type=int, default=None)
+    refresh_heartbeat_parser.add_argument(
+        "--min-refresh-interval-seconds",
+        type=float,
+        default=None,
+        help=(
+            "Throttle: no-op (cheap read only) unless the existing heartbeat is older than "
+            "this many seconds. Omit for an unconditional refresh (e.g. the Stop hook)."
+        ),
+    )
     refresh_heartbeat_parser.set_defaults(func=cmd_refresh_thread_lease_heartbeat)
     return parser
 

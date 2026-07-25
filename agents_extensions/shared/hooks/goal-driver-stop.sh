@@ -16,7 +16,10 @@
 # what keeps that window from ever mistaking it for dead — see
 # refresh_thread_lease_heartbeat in scripts/orchestration/thread_handoff.py).
 # The refresh is a no-op unless this exact session already owns the lease, so
-# it can never steal or clobber another session's lease.
+# it can never steal or clobber another session's lease. This refresh is
+# unconditional (unthrottled) since Stop only fires once per turn; the
+# throttled per-tool-call companion is thread-lease-heartbeat.sh (PostToolUse,
+# issue #5759) — it covers a single tool call running longer than one turn.
 #
 # Skip in non-interactive / pipeline contexts to avoid latency in batch jobs.
 

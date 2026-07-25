@@ -16,6 +16,13 @@
 # fires after another session has already taken the lease over) can never
 # clobber a newer owner's lease.
 #
+# Generation is REQUIRED for a non-force release (thread_handoff.py raises
+# without it) — it is the fence that makes the previous paragraph true. The
+# generation this session actually claimed at SessionStart is exported by
+# session-setup.sh into $CLAUDE_ENV_FILE as LEARN_UKRAINIAN_THREAD_LEASE_GENERATION;
+# without it we cannot safely release (a missing/wrong generation could only
+# ever match by accident), so this hook no-ops rather than guessing one.
+#
 # Skip in non-interactive / pipeline contexts, matching session-setup.sh.
 
 if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UKRAINIAN_PIPELINE" ] || [ -n "$GEMINI_SESSION" ]; then
@@ -63,8 +70,17 @@ else
   fi
 fi
 
+if [ -z "${LEARN_UKRAINIAN_THREAD_LEASE_GENERATION:-}" ]; then
+  # No generation to fence with — release-thread-lease.py now refuses a non-force
+  # release without one. Leaving the lease in place is safe: claim_thread_lease's
+  # pid-liveness check is the primary defense and will reclaim it once this
+  # process is confirmed dead, regardless of this cooperative path.
+  exit 0
+fi
+
 "$PYTHON" "$PROJECT_DIR/scripts/orchestration/thread_handoff.py" --repo-root "$CANONICAL_ROOT" \
   release-thread-lease --agent "$HANDOFF_AGENT" --current-thread-id "$SESSION_ID" \
+  --generation "$LEARN_UKRAINIAN_THREAD_LEASE_GENERATION" \
   >/dev/null 2>&1 || true
 
 exit 0
