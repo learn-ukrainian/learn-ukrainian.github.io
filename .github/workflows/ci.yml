@@ -36,6 +36,7 @@ jobs:
   python:
     name: Python (pytest)
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     permissions:
       contents: read
     steps:
@@ -108,7 +109,7 @@ jobs:
       # fixed that class, so they run as ordinary members of the suite.
       - name: Run pytest
         run: |
-          .venv/bin/python -m pytest tests -n auto --strict-markers --timeout=120 --timeout-method=signal \
+          .venv/bin/python -m pytest tests -n auto --strict-markers --timeout=120 --timeout-method=thread --durations=25 \
             --deselect=tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast
 
       # Wall-clock perf probe. Kept serial, after the main body, with its
@@ -135,6 +136,7 @@ jobs:
   contracts:
     name: Contracts (schema, MDX, atlas, BIO)
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     permissions:
       contents: read
     steps:
@@ -408,6 +410,7 @@ jobs:
   frontend:
     name: Frontend (build + vitest)
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     permissions:
       contents: read
     steps:
@@ -471,6 +474,7 @@ jobs:
   frontend-e2e:
     name: Frontend E2E (playwright)
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     permissions:
       contents: read
     steps:
@@ -536,6 +540,7 @@ jobs:
   security:
     name: Secret Scanning (gitleaks)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -554,6 +559,7 @@ jobs:
   ci-gate:
     name: CI Gate
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     if: always()
     needs:
       - python
