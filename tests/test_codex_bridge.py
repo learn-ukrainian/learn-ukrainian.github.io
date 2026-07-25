@@ -374,13 +374,22 @@ def test_process_for_codex_uses_workspace_write_mode_and_never_resumes(
     assert kwargs["hard_timeout"] == 900
     assert kwargs["stall_timeout"] == 600
     mock_set_session.assert_not_called()
-    mock_send_message.assert_called_once_with(
-        content="Codex response",
-        task_id="issue-1178",
-        msg_type="response",
-        from_llm="codex",
-        to_llm="gemini",
-    )
+    # Replies now carry provenance (#5761): which model actually answered, what was
+    # requested, and the harness that carried it. Assert the identity fields
+    # explicitly rather than pinning the whole call, so adding a field later is not
+    # a false failure.
+    send_kwargs = mock_send_message.call_args.kwargs
+    assert send_kwargs["content"] == "Codex response"
+    assert send_kwargs["task_id"] == "issue-1178"
+    assert send_kwargs["msg_type"] == "response"
+    assert send_kwargs["from_llm"] == "codex"
+    assert send_kwargs["to_llm"] == "gemini"
+    assert send_kwargs["from_model"] == "gpt-5.4"
+    provenance = json.loads(send_kwargs["data"])
+    assert provenance["from_model"] == "gpt-5.4"
+    assert provenance["model_requested"] == "gpt-5.4"
+    assert provenance["harness"] == "codex"
+    assert mock_send_message.call_count == 1
     assert mock_acknowledge.call_args_list[0].args == (8,)
     assert mock_acknowledge.call_args_list[1].args == (100,)
 
