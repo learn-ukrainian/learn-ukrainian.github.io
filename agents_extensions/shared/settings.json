@@ -795,6 +795,17 @@
           }
         ]
       }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/release-thread-lease.sh",
+            "timeout": 5
+          }
+        ]
+      }
     ]
   },
   "statusLine": {

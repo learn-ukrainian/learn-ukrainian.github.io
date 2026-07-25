@@ -15,6 +15,7 @@ import hashlib
 import json
 import os
 import re
+import socket
 import sqlite3
 import subprocess
 import sys
@@ -59,11 +60,28 @@ ORCHESTRATOR_HANDOFF_PATH = Path("docs/session-state/codex-orchestrator-handoff.
 DEFAULT_STALE_HOURS = 12
 # Default warning threshold (percentage of window)
 DEFAULT_CONTEXT_THRESHOLD = 88.0
-THREAD_LEASE_SCHEMA_VERSION = 1
-# A session's lease is refreshed at each SessionStart. Keep a conservative
-# takeover window: a live driver can work for hours between compaction events,
-# while a crashed session can still be deliberately recovered after this age.
-DEFAULT_THREAD_LEASE_FRESH_SECONDS = DEFAULT_STALE_HOURS * 60 * 60
+THREAD_LEASE_SCHEMA_VERSION = 2
+# Executable basenames trusted as durable agent-driver harness processes. The
+# ancestor walk in _find_harness_ancestor stops at the nearest one of these; a
+# transient hook-launcher subshell is never mistaken for the long-lived owner.
+KNOWN_HARNESS_EXECUTABLES = frozenset(
+    {"claude", "codex", "agy", "kimi", "cursor", "opencode", "hermes"}
+)
+MAX_HARNESS_ANCESTOR_HOPS = 10
+# Liveness is checked (pid + start time + machine id), not inferred from a
+# clock. This TTL only covers the residual case where liveness is genuinely
+# uncheckable (legacy v1 lease, cross-machine lease, unreadable process
+# state): it must stay short, because it is the ONLY protection against a
+# truly dead owner in that case. It is deliberately much shorter than the old
+# 12h clock-only window — that window existed only to compensate for having
+# no death signal, and keeping it here would leave the reported cold-start
+# lockout reachable in production whenever liveness cannot be checked.
+DEFAULT_THREAD_LEASE_EMERGENCY_TTL_SECONDS = 15 * 60
+# Tolerance for comparing a recorded process start time against a freshly
+# probed one. psutil reports sub-second precision; the `ps -o lstart=`
+# fallback only has whole-second precision, and pid reuse within this window
+# is not distinguished from the original process (an accepted, documented gap).
+PROCESS_START_TIME_TOLERANCE_SECONDS = 2.0
 
 
 @dataclass(frozen=True)
@@ -628,38 +646,379 @@ def write_json_atomic(path: Path, payload: dict[str, Any]) -> None:
     os.replace(tmp, path)
 
 
-def _load_thread_lease(path: Path) -> dict[str, Any] | None:
-    """Load one durable cold-start lease without accepting malformed state."""
-    if not path.exists():
+@dataclass(frozen=True)
+class ProcessSnapshot:
+    """One process's identity facts, gathered atomically from a single probe.
+
+    ``candidate_basenames`` deliberately holds more than one name: measured on
+    a real Claude Code session, ``psutil.Process.name()`` for the ``claude``
+    harness process returns its version string (e.g. ``"2.1.220"``), not
+    ``claude`` — the CLI overrides its own process title. ``cmdline()[0]`` and
+    ``ps -o comm=`` both still resolve to a path basename of ``claude``.
+    Matching against every candidate we can cheaply gather is what makes the
+    harness-ancestor walk work on the machine it actually has to run on,
+    rather than only in a clean test environment.
+    """
+
+    pid: int
+    ppid: int | None
+    candidate_basenames: frozenset[str]
+    started_at: float | None
+
+
+def _parse_ps_lstart(raw: str) -> float | None:
+    """Parse ``ps -o lstart=`` (whole-second, local-time) into epoch seconds."""
+    try:
+        parsed = datetime.strptime(raw.strip(), "%a %b %d %H:%M:%S %Y")
+    except ValueError:
         return None
+    return parsed.timestamp()
+
+
+def _default_process_snapshot(pid: int) -> ProcessSnapshot | None:
+    """Probe one live process for ppid, candidate executable names, and start time.
+
+    Prefers psutil (locked in requirements-lock.txt) for one atomic read.
+    Falls back to ``ps`` (forced ``LC_ALL=C`` so ``lstart`` parses regardless
+    of locale) when psutil is unavailable or cannot see the process.
+    """
+    try:
+        import psutil
+
+        try:
+            proc = psutil.Process(pid)
+            candidates: set[str] = set()
+            name = proc.name()
+            if name:
+                candidates.add(Path(name).name)
+            for accessor in (proc.exe, proc.cmdline):
+                try:
+                    value = accessor()
+                except (psutil.AccessDenied, psutil.NoSuchProcess, OSError):
+                    continue
+                if isinstance(value, list):
+                    if value and value[0]:
+                        candidates.add(Path(value[0]).name)
+                elif value:
+                    candidates.add(Path(value).name)
+            return ProcessSnapshot(
+                pid=pid,
+                ppid=proc.ppid(),
+                candidate_basenames=frozenset(candidates),
+                started_at=proc.create_time(),
+            )
+        except psutil.NoSuchProcess:
+            return None
+        except psutil.AccessDenied:
+            pass  # fall through to the ps fallback, which may still resolve lstart
+    except ImportError:
+        pass
+
+    env = git_environment()
+    env["LC_ALL"] = "C"
+    result = run_command(
+        ["ps", "-o", "ppid=,comm=,lstart=", "-p", str(pid)],
+        cwd=Path.cwd(),
+        env=env,
+    )
+    if result.returncode != 0 or not result.stdout.strip():
+        return None
+    fields = result.stdout.strip().split(None, 2)
+    if len(fields) < 3:
+        return None
+    try:
+        ppid = int(fields[0])
+    except ValueError:
+        ppid = None
+    candidate_basenames = frozenset({Path(fields[1]).name}) if fields[1] else frozenset()
+    started_at = _parse_ps_lstart(fields[2])
+    return ProcessSnapshot(pid=pid, ppid=ppid, candidate_basenames=candidate_basenames, started_at=started_at)
+
+
+def _find_harness_ancestor(
+    starting_pid: int,
+    *,
+    process_snapshot: Callable[[int], ProcessSnapshot | None] | None = None,
+    max_hops: int = MAX_HARNESS_ANCESTOR_HOPS,
+) -> ProcessSnapshot | None:
+    """Walk the parent-pid chain (bounded) for the nearest known-harness ancestor.
+
+    A hook subprocess's immediate parent is often a short-lived launcher
+    subshell, never the durable session owner. Recording that transient pid
+    as ``owner_pid`` would make a live session look dead the moment the
+    subshell exits, and the lease would be stolen out from under it while it
+    is still driving. Walking to the nearest recognizable harness process
+    (``claude``, ``codex``, ...) finds the actual long-lived owner instead.
+
+    ``process_snapshot`` resolves inside the body (not as a bound default) so
+    tests can either inject a fake process table here or monkeypatch
+    ``_default_process_snapshot`` and have callers like ``claim_thread_lease``
+    (which never pass an override) pick it up too.
+    """
+    snapshot_fn = process_snapshot or _default_process_snapshot
+    pid: int | None = starting_pid
+    seen: set[int] = set()
+    for _ in range(max_hops):
+        if pid is None or pid <= 0 or pid in seen:
+            return None
+        seen.add(pid)
+        snapshot = snapshot_fn(pid)
+        if snapshot is None:
+            return None
+        if snapshot.candidate_basenames & KNOWN_HARNESS_EXECUTABLES:
+            return snapshot
+        pid = snapshot.ppid
+    return None
+
+
+def _default_machine_id() -> str | None:
+    """Return a stable machine identifier — never a network hostname.
+
+    Hostnames change under macOS mDNS renames, VPN reassociation, and
+    container rebuilds; keying liveness off one would silently and
+    permanently push every lease onto the cross-machine fallback path and
+    resurrect the exact lockout this design fixes.
+    """
+    if sys.platform == "darwin":
+        result = run_command(
+            ["ioreg", "-rd1", "-c", "IOPlatformExpertDevice"],
+            cwd=Path.cwd(),
+            env=git_environment(),
+        )
+        if result.returncode == 0:
+            match = re.search(r'"IOPlatformUUID"\s*=\s*"([^"]+)"', result.stdout)
+            if match:
+                return match.group(1)
+    else:
+        machine_id_path = Path("/etc/machine-id")
+        try:
+            value = machine_id_path.read_text(encoding="utf-8").strip()
+        except OSError:
+            value = ""
+        if value:
+            return value
+    hostname = socket.gethostname().strip()
+    return hostname or None
+
+
+def _process_is_alive(pid: int) -> bool:
+    """POSIX liveness probe. EPERM means the process exists (owned by another user)."""
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def _derive_owner_liveness_fields(
+    starting_pid: int,
+    *,
+    process_snapshot: Callable[[int], ProcessSnapshot | None] | None = None,
+    machine_id: Callable[[], str | None] | None = None,
+) -> dict[str, Any]:
+    """Derive the v2 identity fields, or {} when liveness cannot be established.
+
+    An empty result is a legitimate, expected outcome (no harness ancestor
+    found, or no stable machine id available) — callers write a v2 lease
+    without liveness fields, which is the documented uncheckable path.
+    """
+    machine_id_fn = machine_id or _default_machine_id
+    try:
+        ancestor = _find_harness_ancestor(starting_pid, process_snapshot=process_snapshot)
+    except Exception:
+        ancestor = None
+    if ancestor is None or ancestor.started_at is None:
+        return {}
+    try:
+        resolved_machine_id = machine_id_fn()
+    except Exception:
+        resolved_machine_id = None
+    if not resolved_machine_id:
+        return {}
+    return {
+        "owner_pid": ancestor.pid,
+        "owner_pid_started_at": ancestor.started_at,
+        "owner_machine_id": resolved_machine_id,
+    }
+
+
+def _lease_liveness_checkable(
+    lease: Mapping[str, Any],
+    *,
+    machine_id: Callable[[], str | None] | None = None,
+) -> bool:
+    """A lease's liveness is checkable only with a complete, current-machine v2 identity."""
+    if lease.get("schema_version") != THREAD_LEASE_SCHEMA_VERSION:
+        return False
+    pid = lease.get("owner_pid")
+    started_at = lease.get("owner_pid_started_at")
+    recorded_machine_id = lease.get("owner_machine_id")
+    if not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0:
+        return False
+    if not isinstance(started_at, (int, float)) or isinstance(started_at, bool):
+        return False
+    if not isinstance(recorded_machine_id, str) or not recorded_machine_id.strip():
+        return False
+    machine_id_fn = machine_id or _default_machine_id
+    try:
+        current_machine_id = machine_id_fn()
+    except Exception:
+        return False
+    return bool(current_machine_id) and recorded_machine_id == current_machine_id
+
+
+def _evaluate_owner_liveness(
+    lease: Mapping[str, Any],
+    *,
+    process_is_alive: Callable[[int], bool] | None = None,
+    process_snapshot: Callable[[int], ProcessSnapshot | None] | None = None,
+    machine_id: Callable[[], str | None] | None = None,
+) -> tuple[str, str]:
+    """Return (path, reason); path is one of "alive", "dead", "uncheckable".
+
+    Never raises: a probe failure of any kind is an uncheckable verdict, not
+    an exception that could block a SessionStart hook.
+    """
+    if not _lease_liveness_checkable(lease, machine_id=machine_id):
+        return "uncheckable", "lease has no complete, current-machine liveness identity"
+    pid = int(lease["owner_pid"])
+    recorded_started_at = float(lease["owner_pid_started_at"])
+    is_alive_fn = process_is_alive or _process_is_alive
+    snapshot_fn = process_snapshot or _default_process_snapshot
+    try:
+        alive = is_alive_fn(pid)
+    except Exception as exc:
+        return "uncheckable", f"liveness probe raised: {type(exc).__name__}: {exc}"
+    if not alive:
+        return "dead", "owner process not found (ESRCH)"
+    try:
+        snapshot = snapshot_fn(pid)
+    except Exception as exc:
+        return "uncheckable", f"start-time probe raised: {type(exc).__name__}: {exc}"
+    if snapshot is None or snapshot.started_at is None:
+        return "uncheckable", "owner process is alive but its start time could not be determined"
+    if abs(snapshot.started_at - recorded_started_at) > PROCESS_START_TIME_TOLERANCE_SECONDS:
+        return "dead", "owner pid was reused by an unrelated process (start time mismatch)"
+    return "alive", "owner process is alive and its start time matches"
+
+
+def _read_lease_json(path: Path) -> tuple[dict[str, Any] | None, str | None]:
+    """Read a lease file without ever raising. Returns (payload, corrupt_error).
+
+    ``(None, None)`` means no file exists. ``(None, "<error>")`` means the file
+    exists but is unreadable or not a JSON object — unlike the old raising
+    loader, this is recoverable: the caller heals by acquiring a fresh lease
+    rather than wedging SessionStart shut with no release path.
+    """
+    if not path.exists():
+        return None, None
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        raise ValueError(f"unreadable thread lease: {type(exc).__name__}: {exc}") from exc
+        return None, f"{type(exc).__name__}: {exc}"
     if not isinstance(payload, dict):
-        raise ValueError("thread lease is not a JSON object")
-    return payload
+        return None, "thread lease is not a JSON object"
+    return payload, None
 
 
-def _validate_thread_lease(lease: Mapping[str, Any], *, agent: str) -> dict[str, Any]:
-    """Validate the immutable ownership facts needed to block a second start."""
-    if lease.get("schema_version") != THREAD_LEASE_SCHEMA_VERSION:
-        raise ValueError(f"thread lease schema_version must be {THREAD_LEASE_SCHEMA_VERSION}")
-    if lease.get("agent") != agent:
-        raise ValueError(f"thread lease agent {lease.get('agent')!r} does not match requested agent {agent!r}")
-    owner_thread_id = lease.get("owner_thread_id")
-    if not isinstance(owner_thread_id, str) or not owner_thread_id.strip():
-        raise ValueError("thread lease owner_thread_id is missing or malformed")
-    generation = lease.get("generation")
-    if not isinstance(generation, int) or generation < 1:
-        raise ValueError("thread lease generation is missing or malformed")
-    heartbeat_at = parse_iso_datetime(lease.get("heartbeat_at"))
-    if heartbeat_at is None:
-        raise ValueError("thread lease heartbeat_at is missing or malformed")
-    acquired_at = parse_iso_datetime(lease.get("acquired_at"))
-    if acquired_at is None:
-        raise ValueError("thread lease acquired_at is missing or malformed")
-    return dict(lease)
+def _new_thread_lease_record(
+    *,
+    agent: str,
+    generation: int,
+    owner_thread_id: str,
+    acquired_at: str,
+    now: datetime,
+    starting_pid: int,
+    previous_owner_thread_id: str | None,
+) -> dict[str, Any]:
+    record: dict[str, Any] = {
+        "schema_version": THREAD_LEASE_SCHEMA_VERSION,
+        "agent": agent,
+        "generation": generation,
+        "owner_thread_id": owner_thread_id,
+        "acquired_at": acquired_at,
+        "heartbeat_at": isoformat_z(now),
+        **_derive_owner_liveness_fields(starting_pid),
+    }
+    if previous_owner_thread_id is not None:
+        record["replaced_owner_thread_id"] = previous_owner_thread_id
+    return record
+
+
+def _fresh_acquire_result(
+    lease_path: Path,
+    *,
+    agent: str,
+    owner_thread_id: str,
+    now: datetime,
+    starting_pid: int,
+    recovered_from_corrupt_lease: str | None = None,
+) -> dict[str, Any]:
+    """Write and report a brand-new generation-1 lease (no prior owner to reconcile)."""
+    record = _new_thread_lease_record(
+        agent=agent,
+        generation=1,
+        owner_thread_id=owner_thread_id,
+        acquired_at=isoformat_z(now),
+        now=now,
+        starting_pid=starting_pid,
+        previous_owner_thread_id=None,
+    )
+    write_json_atomic(lease_path, record)
+    result = {
+        "status": "acquired",
+        "lease_path": lease_path,
+        "owner_thread_id": owner_thread_id,
+        "generation": 1,
+        "heartbeat_at": record["heartbeat_at"],
+        "replaced_owner_thread_id": None,
+        "liveness_fields_recorded": "owner_pid" in record,
+    }
+    if recovered_from_corrupt_lease is not None:
+        result["recovered_from_corrupt_lease"] = recovered_from_corrupt_lease
+    return result
+
+
+def _same_owner_refresh_result(
+    lease_path: Path,
+    existing_raw: Mapping[str, Any],
+    *,
+    agent: str,
+    owner_thread_id: str,
+    now: datetime,
+    starting_pid: int,
+) -> dict[str, Any]:
+    """Rewrite the lease this exact owner already holds, re-deriving liveness identity.
+
+    Rule E: this always re-derives the full v2 identity fields, so a legacy
+    v1 lease refreshed by its own owner is upgraded to v2 rather than staying
+    permanently stuck on the uncheckable fallback path.
+    """
+    raw_generation = existing_raw.get("generation")
+    generation = raw_generation if isinstance(raw_generation, int) and raw_generation >= 1 else 1
+    acquired_at = existing_raw.get("acquired_at")
+    if not isinstance(acquired_at, str) or parse_iso_datetime(acquired_at) is None:
+        acquired_at = isoformat_z(now)
+    record = _new_thread_lease_record(
+        agent=agent,
+        generation=generation,
+        owner_thread_id=owner_thread_id,
+        acquired_at=acquired_at,
+        now=now,
+        starting_pid=starting_pid,
+        previous_owner_thread_id=None,
+    )
+    write_json_atomic(lease_path, record)
+    return {
+        "status": "refreshed",
+        "lease_path": lease_path,
+        "owner_thread_id": owner_thread_id,
+        "generation": generation,
+        "heartbeat_at": record["heartbeat_at"],
+        "liveness_fields_recorded": "owner_pid" in record,
+    }
 
 
 def claim_thread_lease(
@@ -668,80 +1027,246 @@ def claim_thread_lease(
     agent: str,
     current_thread_id: str,
     now: datetime,
-    fresh_after: timedelta,
+    emergency_ttl: timedelta = timedelta(seconds=DEFAULT_THREAD_LEASE_EMERGENCY_TTL_SECONDS),
+    starting_pid: int | None = None,
 ) -> dict[str, Any]:
     """Atomically claim or refresh a driver-session lease for ``agent``.
 
-    A fresh lease owned by a different SessionStart identity is a hard conflict:
-    callers must stop rather than guess which live session owns the queue.  A
-    stale lease is reclaimable and its generation advances, leaving durable
-    evidence of the takeover in the replacement lease.
+    Liveness is checked, not inferred from a clock: a different owner is a
+    conflict only while its process is confirmed alive (or, absent a
+    checkable process identity, only within a short emergency TTL). A
+    confirmed-dead or pid-reused owner is reclaimed immediately regardless of
+    clock age; an unreadable or malformed on-disk lease is treated as
+    recoverable state, never as a reason to raise and block SessionStart.
     """
     owner_thread_id = current_thread_id.strip()
     if not owner_thread_id:
         raise ValueError("current thread id is required to claim a durable thread lease")
-    if fresh_after <= timedelta(0):
-        raise ValueError("thread lease freshness must be positive")
+    if emergency_ttl <= timedelta(0):
+        raise ValueError("thread lease emergency TTL must be positive")
 
+    resolved_starting_pid = starting_pid if starting_pid is not None else os.getpid()
     lease_path = repo_local_path(state_root, default_thread_lease_path(agent))
     lock_path = lease_path.with_suffix(lease_path.suffix + ".lock")
+
     with task_family_advisory_lock(lock_path):
-        existing = _load_thread_lease(lease_path)
-        if existing is not None:
-            validated = _validate_thread_lease(existing, agent=agent)
-            heartbeat_at = parse_iso_datetime(str(validated["heartbeat_at"]))
-            assert heartbeat_at is not None  # validated above
-            held_by = str(validated["owner_thread_id"])
-            fresh = now - heartbeat_at <= fresh_after
-            if held_by != owner_thread_id and fresh:
+        existing_raw, corrupt_error = _read_lease_json(lease_path)
+
+        if corrupt_error is not None:
+            return _fresh_acquire_result(
+                lease_path,
+                agent=agent,
+                owner_thread_id=owner_thread_id,
+                now=now,
+                starting_pid=resolved_starting_pid,
+                recovered_from_corrupt_lease=corrupt_error,
+            )
+
+        if existing_raw is None:
+            return _fresh_acquire_result(
+                lease_path,
+                agent=agent,
+                owner_thread_id=owner_thread_id,
+                now=now,
+                starting_pid=resolved_starting_pid,
+            )
+
+        held_by = existing_raw.get("owner_thread_id")
+        held_by_valid = isinstance(held_by, str) and bool(held_by.strip())
+
+        if held_by_valid and held_by == owner_thread_id:
+            return _same_owner_refresh_result(
+                lease_path,
+                existing_raw,
+                agent=agent,
+                owner_thread_id=owner_thread_id,
+                now=now,
+                starting_pid=resolved_starting_pid,
+            )
+
+        raw_generation = existing_raw.get("generation")
+        generation = raw_generation if isinstance(raw_generation, int) and raw_generation >= 1 else 0
+        heartbeat_at = parse_iso_datetime(existing_raw.get("heartbeat_at"))
+        previous_owner = held_by if held_by_valid else None
+        liveness_path, liveness_reason = _evaluate_owner_liveness(existing_raw)
+
+        if liveness_path == "alive":
+            return {
+                "status": "conflict",
+                "lease_path": lease_path,
+                "owner_thread_id": previous_owner,
+                "generation": generation,
+                "heartbeat_at": isoformat_z(heartbeat_at) if heartbeat_at else None,
+                "liveness": "live_owner",
+                "reason": liveness_reason,
+            }
+
+        if liveness_path == "uncheckable":
+            age = now - heartbeat_at if heartbeat_at is not None else None
+            if age is not None and age <= emergency_ttl:
                 return {
                     "status": "conflict",
                     "lease_path": lease_path,
-                    "owner_thread_id": held_by,
-                    "generation": validated["generation"],
-                    "heartbeat_at": isoformat_z(heartbeat_at),
-                    "fresh_after_seconds": int(fresh_after.total_seconds()),
+                    "owner_thread_id": previous_owner,
+                    "generation": generation,
+                    "heartbeat_at": isoformat_z(heartbeat_at) if heartbeat_at else None,
+                    "liveness": "liveness_unknown",
+                    "reason": liveness_reason,
+                    "emergency_ttl_seconds": int(emergency_ttl.total_seconds()),
                 }
-            if held_by == owner_thread_id:
-                refreshed = {
-                    **validated,
-                    "heartbeat_at": isoformat_z(now),
-                }
-                write_json_atomic(lease_path, refreshed)
-                return {
-                    "status": "refreshed",
-                    "lease_path": lease_path,
-                    "owner_thread_id": owner_thread_id,
-                    "generation": refreshed["generation"],
-                    "heartbeat_at": refreshed["heartbeat_at"],
-                    "fresh_after_seconds": int(fresh_after.total_seconds()),
-                }
-            generation = int(validated["generation"]) + 1
-            previous_owner = held_by
+            takeover_reason = (
+                f"liveness uncheckable ({liveness_reason}) and heartbeat is older than the "
+                f"{int(emergency_ttl.total_seconds())}s emergency TTL"
+                if age is not None
+                else f"liveness uncheckable ({liveness_reason}) and heartbeat_at could not be parsed"
+            )
         else:
-            generation = 1
-            previous_owner = None
+            takeover_reason = liveness_reason
 
-        acquired = {
-            "schema_version": THREAD_LEASE_SCHEMA_VERSION,
-            "agent": agent,
-            "generation": generation,
-            "owner_thread_id": owner_thread_id,
-            "acquired_at": isoformat_z(now),
-            "heartbeat_at": isoformat_z(now),
-        }
-        if previous_owner is not None:
-            acquired["replaced_owner_thread_id"] = previous_owner
-        write_json_atomic(lease_path, acquired)
+        new_generation = generation + 1
+        record = _new_thread_lease_record(
+            agent=agent,
+            generation=new_generation,
+            owner_thread_id=owner_thread_id,
+            acquired_at=isoformat_z(now),
+            now=now,
+            starting_pid=resolved_starting_pid,
+            previous_owner_thread_id=previous_owner,
+        )
+        write_json_atomic(lease_path, record)
         return {
             "status": "acquired",
             "lease_path": lease_path,
             "owner_thread_id": owner_thread_id,
-            "generation": generation,
-            "heartbeat_at": acquired["heartbeat_at"],
-            "fresh_after_seconds": int(fresh_after.total_seconds()),
+            "generation": new_generation,
+            "heartbeat_at": record["heartbeat_at"],
             "replaced_owner_thread_id": previous_owner,
+            "liveness_fields_recorded": "owner_pid" in record,
+            "takeover_reason": takeover_reason,
         }
+
+
+def release_thread_lease(
+    *,
+    state_root: Path,
+    agent: str,
+    current_thread_id: str,
+    now: datetime,
+    generation: int | None = None,
+    force: bool = False,
+) -> dict[str, Any]:
+    """Release a durable thread lease this exact owner (and generation) holds.
+
+    Best-effort by design: SessionEnd does not fire on SIGKILL, so the pid
+    liveness check in ``claim_thread_lease`` remains the primary defense —
+    this is only the fast, cooperative path. Never rewrites or upgrades a
+    lease it does not own; fencing (owner + generation match) means a late
+    release from a session that has already been superseded by a takeover
+    cannot clobber the new owner's lease.
+    """
+    owner_thread_id = current_thread_id.strip()
+    if not force and not owner_thread_id:
+        raise ValueError("current thread id is required to release a durable thread lease")
+
+    lease_path = repo_local_path(state_root, default_thread_lease_path(agent))
+    lock_path = lease_path.with_suffix(lease_path.suffix + ".lock")
+
+    with task_family_advisory_lock(lock_path):
+        existing_raw, corrupt_error = _read_lease_json(lease_path)
+        if existing_raw is None:
+            return {
+                "status": "noop",
+                "lease_path": lease_path,
+                "reason": "no lease file present" if corrupt_error is None else f"lease unreadable: {corrupt_error}",
+            }
+
+        held_by = existing_raw.get("owner_thread_id")
+        held_generation = existing_raw.get("generation")
+
+        if force:
+            lease_path.unlink(missing_ok=True)
+            return {
+                "status": "released",
+                "lease_path": lease_path,
+                "forced": True,
+                "previous_owner_thread_id": held_by,
+                "previous_generation": held_generation,
+            }
+
+        if held_by != owner_thread_id:
+            return {
+                "status": "noop",
+                "lease_path": lease_path,
+                "reason": "lease is owned by a different thread id; not releasing",
+                "current_owner_thread_id": held_by,
+                "current_generation": held_generation,
+            }
+        if generation is not None and held_generation != generation:
+            return {
+                "status": "noop",
+                "lease_path": lease_path,
+                "reason": "lease generation does not match; a takeover superseded this owner",
+                "current_owner_thread_id": held_by,
+                "current_generation": held_generation,
+            }
+
+        lease_path.unlink(missing_ok=True)
+        return {
+            "status": "released",
+            "lease_path": lease_path,
+            "forced": False,
+            "owner_thread_id": owner_thread_id,
+            "generation": held_generation,
+        }
+
+
+def refresh_thread_lease_heartbeat(
+    *,
+    state_root: Path,
+    agent: str,
+    current_thread_id: str,
+    now: datetime,
+    starting_pid: int | None = None,
+) -> dict[str, Any]:
+    """Best-effort heartbeat refresh for the ``Stop`` hook. A no-op unless we already own the lease.
+
+    This never attempts a takeover — unlike ``claim_thread_lease``, a
+    different owner (or an unreadable lease) is simply left alone. This is
+    what makes the short emergency TTL in ``claim_thread_lease`` safe: a live
+    owner working on the liveness-uncheckable path keeps its own heartbeat
+    fresh here, so it is never mistaken for stale and stolen mid-session.
+    """
+    owner_thread_id = current_thread_id.strip()
+    if not owner_thread_id:
+        return {"status": "noop", "reason": "no current thread id supplied"}
+
+    resolved_starting_pid = starting_pid if starting_pid is not None else os.getpid()
+    lease_path = repo_local_path(state_root, default_thread_lease_path(agent))
+    lock_path = lease_path.with_suffix(lease_path.suffix + ".lock")
+
+    with task_family_advisory_lock(lock_path):
+        existing_raw, corrupt_error = _read_lease_json(lease_path)
+        if existing_raw is None:
+            return {
+                "status": "noop",
+                "lease_path": lease_path,
+                "reason": "no lease file present" if corrupt_error is None else f"lease unreadable: {corrupt_error}",
+            }
+        held_by = existing_raw.get("owner_thread_id")
+        if held_by != owner_thread_id:
+            return {
+                "status": "noop",
+                "lease_path": lease_path,
+                "reason": "lease is owned by a different thread id; not refreshing",
+            }
+        return _same_owner_refresh_result(
+            lease_path,
+            existing_raw,
+            agent=agent,
+            owner_thread_id=owner_thread_id,
+            now=now,
+            starting_pid=resolved_starting_pid,
+        )
 
 
 def write_text_atomic(path: Path, text: str) -> None:
@@ -3648,6 +4173,13 @@ def cmd_detect(args: argparse.Namespace) -> int:
     return 0
 
 
+def _force_release_command(agent: str) -> str:
+    return (
+        f".venv/bin/python scripts/orchestration/thread_handoff.py release-thread-lease "
+        f"--agent {agent} --force"
+    )
+
+
 def cmd_claim_thread_lease(args: argparse.Namespace) -> int:
     """Claim the durable single-driver lease used during SessionStart."""
     try:
@@ -3658,7 +4190,8 @@ def cmd_claim_thread_lease(args: argparse.Namespace) -> int:
             agent=agent,
             current_thread_id=args.current_thread_id,
             now=utc_now(),
-            fresh_after=timedelta(seconds=args.fresh_after_seconds),
+            emergency_ttl=timedelta(seconds=args.emergency_ttl_seconds),
+            starting_pid=args.starting_pid,
         )
     except ValueError as exc:
         print(json.dumps({"error": str(exc)}, indent=2))
@@ -3671,15 +4204,89 @@ def cmd_claim_thread_lease(args: argparse.Namespace) -> int:
         **result,
     }
     if payload["status"] == "conflict":
-        payload.update(
-            {
-                "error_code": "THREAD_LEASE_CONFLICT",
-                "error": "durable thread lease is held by another fresh session; stop to avoid double-driving",
-                "resolution": "Wait for the owner heartbeat to become stale, or verify that the owner session stopped before retrying.",
-            }
-        )
+        liveness = payload.get("liveness")
+        if liveness == "liveness_unknown":
+            payload.update(
+                {
+                    "error_code": "THREAD_LEASE_LIVENESS_UNKNOWN",
+                    "error": (
+                        "durable thread lease owner's liveness could not be checked and its "
+                        "heartbeat is still within the emergency TTL; stop to avoid double-driving"
+                    ),
+                    "resolution": (
+                        f"Wait for the emergency TTL to expire, or if the previous owner is "
+                        f"confirmed gone, force-release with: {_force_release_command(agent)}"
+                    ),
+                }
+            )
+        else:
+            payload.update(
+                {
+                    "error_code": "THREAD_LEASE_CONFLICT",
+                    "error": "durable thread lease is held by another live session; stop to avoid double-driving",
+                    "resolution": (
+                        f"Wait for the owner session to stop, or if it is confirmed gone, "
+                        f"force-release with: {_force_release_command(agent)}"
+                    ),
+                }
+            )
         print(json.dumps(payload, indent=2))
         return 2
+    print(json.dumps(payload, indent=2))
+    return 0
+
+
+def cmd_release_thread_lease(args: argparse.Namespace) -> int:
+    """Release the durable single-driver lease, e.g. from a SessionEnd hook."""
+    try:
+        _, state_root = resolve_roots(args.repo_root)
+        agent = normalize_agent_name(args.agent)
+        if not args.force and not args.current_thread_id:
+            raise ValueError("--current-thread-id is required unless --force is given")
+        result = release_thread_lease(
+            state_root=state_root,
+            agent=agent,
+            current_thread_id=args.current_thread_id or "",
+            now=utc_now(),
+            generation=args.generation,
+            force=args.force,
+        )
+    except ValueError as exc:
+        print(json.dumps({"error": str(exc)}, indent=2))
+        return 2
+
+    lease_path = result.pop("lease_path")
+    payload = {
+        "agent": agent,
+        "lease_file": rel(lease_path, state_root),
+        **result,
+    }
+    print(json.dumps(payload, indent=2))
+    return 0
+
+
+def cmd_refresh_thread_lease_heartbeat(args: argparse.Namespace) -> int:
+    """Best-effort heartbeat refresh from the ``Stop`` hook. Always exits 0."""
+    try:
+        _, state_root = resolve_roots(args.repo_root)
+        agent = normalize_agent_name(args.agent)
+        result = refresh_thread_lease_heartbeat(
+            state_root=state_root,
+            agent=agent,
+            current_thread_id=args.current_thread_id,
+            now=utc_now(),
+            starting_pid=args.starting_pid,
+        )
+    except ValueError as exc:
+        print(json.dumps({"error": str(exc)}, indent=2))
+        return 0
+
+    lease_path = result.pop("lease_path", None)
+    payload = {
+        "agent": agent,
+        **({"lease_file": rel(lease_path, state_root)} if lease_path is not None else {}),
+        **result,
+    }
     print(json.dumps(payload, indent=2))
     return 0
 
@@ -3900,12 +4507,51 @@ def build_parser() -> argparse.ArgumentParser:
     claim_thread_lease_parser.add_argument("--agent", type=argparse_agent_name, required=True)
     claim_thread_lease_parser.add_argument("--current-thread-id", required=True)
     claim_thread_lease_parser.add_argument(
-        "--fresh-after-seconds",
+        "--emergency-ttl-seconds",
         type=int,
-        default=DEFAULT_THREAD_LEASE_FRESH_SECONDS,
-        help=f"Treat another owner heartbeat as live for this many seconds (default: {DEFAULT_THREAD_LEASE_FRESH_SECONDS}).",
+        default=DEFAULT_THREAD_LEASE_EMERGENCY_TTL_SECONDS,
+        help=(
+            "Only used when the existing owner's liveness cannot be checked (legacy lease, "
+            "cross-machine, or unreadable process state): treat its heartbeat as live for this "
+            f"many seconds (default: {DEFAULT_THREAD_LEASE_EMERGENCY_TTL_SECONDS}). A checkable "
+            "live or dead owner is decided by liveness alone, regardless of this value."
+        ),
+    )
+    claim_thread_lease_parser.add_argument(
+        "--starting-pid",
+        type=int,
+        default=None,
+        help="Override the pid the harness-ancestor walk starts from (defaults to this process's own pid).",
     )
     claim_thread_lease_parser.set_defaults(func=cmd_claim_thread_lease)
+
+    release_thread_lease_parser = subparsers.add_parser(
+        "release-thread-lease",
+        help="Release one agent slot's durable cold-start lease, e.g. from a SessionEnd hook.",
+    )
+    release_thread_lease_parser.add_argument("--agent", type=argparse_agent_name, required=True)
+    release_thread_lease_parser.add_argument("--current-thread-id", default="")
+    release_thread_lease_parser.add_argument(
+        "--generation",
+        type=int,
+        default=None,
+        help="Only release if the on-disk lease is still at this exact generation (fencing).",
+    )
+    release_thread_lease_parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Operator escape hatch: release regardless of current owner/generation.",
+    )
+    release_thread_lease_parser.set_defaults(func=cmd_release_thread_lease)
+
+    refresh_heartbeat_parser = subparsers.add_parser(
+        "refresh-thread-lease-heartbeat",
+        help="Best-effort heartbeat refresh for the lease this exact thread already owns (Stop hook).",
+    )
+    refresh_heartbeat_parser.add_argument("--agent", type=argparse_agent_name, required=True)
+    refresh_heartbeat_parser.add_argument("--current-thread-id", required=True)
+    refresh_heartbeat_parser.add_argument("--starting-pid", type=int, default=None)
+    refresh_heartbeat_parser.set_defaults(func=cmd_refresh_thread_lease_heartbeat)
     return parser
 
 
