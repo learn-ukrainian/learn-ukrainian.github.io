@@ -40,6 +40,27 @@ def tmp_tasks_dir(tmp_path, monkeypatch):
     return tasks_dir
 
 
+@pytest.fixture(autouse=True)
+def _stub_primary_integrity_sweep(monkeypatch):
+    """Keep _run_worker/cmd_dispatch tests hermetic from the ambient checkout.
+
+    The primary-integrity watchdog sweep (#5803 follow-up) runs real git
+    against delegate._REPO_ROOT. Its verdict depends on the machine running
+    the tests: a detached CI workspace (actions/checkout) reads as DRIFT, so
+    the sweep appends primary_integrity_post_worker to dispatch_events.jsonl
+    — breaking tests that assert on that file — and a stable-main second pass
+    would even "repair" (mutate) the host repo mid-suite. The sweep itself is
+    covered against fixture repos in tests/test_delegate_primary_integrity.py.
+    """
+    import scripts.audit.check_primary_integrity as cpi
+
+    monkeypatch.setattr(
+        cpi,
+        "check_primary_integrity",
+        lambda *_args, **_kwargs: (True, "primary on main (test stub)"),
+    )
+
+
 def _sanitize_git_env_for_test(monkeypatch) -> None:
     for key in tuple(os.environ):
         if key.startswith(("GIT_", "PRE_COMMIT")):

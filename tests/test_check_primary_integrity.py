@@ -347,7 +347,7 @@ def test_worktree_origin_points_at_remote(tmp_path):
 
     ok, message = worktree_origin_points_at_remote(worktree)
     assert ok is True
-    assert "github.com" in message
+    assert message == "origin → git@github.com:learn-ukrainian/learn-ukrainian.github.io.git"
 
 
 def test_worktree_origin_local_path_is_flagged(tmp_path):
