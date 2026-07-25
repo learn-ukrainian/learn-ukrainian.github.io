@@ -13,14 +13,15 @@ single source of truth that downstream resume logic depends on.
 from __future__ import annotations
 
 import json
-import os
-import time
+import subprocess
 from pathlib import Path
 from typing import Any
 
 import pytest
 
-from scripts.build import v7_build
+from scripts.audit import llm_qg_store
+from scripts.audit.llm_qg_store import CONTENT_FILES, DB_ENV_VAR, db_path, record_llm_qg
+from scripts.build import linear_pipeline, v7_build
 
 
 @pytest.fixture()
@@ -30,6 +31,56 @@ def module_dir(tmp_path: Path) -> Path:
 
 def _write_json(path: Path, payload: Any) -> None:
     path.write_text(json.dumps(payload), encoding="utf-8")
+
+
+def _qg_pass_payload() -> dict[str, Any]:
+    return {
+        "aggregate": {
+            "verdict": "PASS",
+            "terminal_verdict": "PASS",
+            "min_score": 9.0,
+            "min_dim": "naturalness",
+        },
+        "dimensions": {},
+    }
+
+
+def _write_module_content(module_dir: Path) -> None:
+    module_dir.mkdir(parents=True, exist_ok=True)
+    contents = {
+        "module.md": "# Тестовий модуль\n\nТекст для перевірки.\n",
+        "activities.yaml": "[]\n",
+        "vocabulary.yaml": "[]\n",
+        "resources.yaml": "[]\n",
+    }
+    for name, content in contents.items():
+        (module_dir / name).write_text(content, encoding="utf-8")
+
+
+def _write_resumable_artifacts(module_dir: Path) -> None:
+    (module_dir / "knowledge_packet.md").write_text("knowledge packet\n", encoding="utf-8")
+    _write_json(module_dir / "wiki_manifest.json", {})
+    for artifact in linear_pipeline.WRITER_ARTIFACTS:
+        path = module_dir / artifact
+        if not path.exists():
+            path.write_text(f"{artifact}\n", encoding="utf-8")
+    (module_dir / "writer_output.raw.md").write_text("writer output\n", encoding="utf-8")
+    _write_json(module_dir / "implementation_map.json", {"entries": []})
+    _write_json(module_dir / "stress_annotation.json", {"passed": True})
+    _write_json(module_dir / "ulp_fidelity_gate.json", {"passed": True})
+    _write_json(module_dir / "python_qg.json", {"gates": {"passed": True}})
+    _write_json(module_dir / "wiki_completeness_gate.json", {"verdict": "PASS"})
+    _write_json(module_dir / "wiki_coverage_gate.json", {"passed": True})
+    _write_json(module_dir / "wiki_coverage_review.json", {"overall_verdict": "PASS", "verdicts": []})
+
+
+def _git(cwd: Path, *args: str) -> None:
+    subprocess.run(
+        ["git", "-C", str(cwd), *args],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
 
 
 # ----- knowledge_packet -------------------------------------------------------
@@ -165,109 +216,222 @@ def test_wiki_coverage_review_reruns_when_overall_fail(module_dir: Path) -> None
 
 
 # ----- llm_qg ------------------------------------------------------------------
-#
-# QUARANTINED — these three encode a contract that DIRECTLY CONTRADICTS
-# tests/test_v7_build_reviewer_assert.py::test_llm_qg_phase_artifact_requires_current_db_record.
-# Both cannot hold at once:
-#
-#   * here: a fresh on-disk llm_qg.json MAY stand in for a DB record, so a resumed
-#     build in a freshly dispatched worktree (which has no gitignored llm_qg.db) does
-#     not re-run paid LLM quality-gate calls;
-#   * there: a fresh llm_qg.json must NOT count as a pass without a current DB record,
-#     so a stale or hand-written file cannot make a build skip its LLM quality gate.
-#
-# They coexisted undetected because CI selected tests by changed files and never ran
-# both. #5766 made the suite run unconditionally and the contradiction surfaced
-# immediately. PR #5784 restored the fallback and satisfied these three while silently
-# breaking the gate-integrity test; that production change has been reverted here,
-# because weakening a quality gate is not a call to make in passing.
-#
-# Which contract wins is a DESIGN decision (gate integrity vs. resume cost) and is
-# handed to the advisor seat — see the issue referenced in the marker below.
-# strict=True on purpose: if someone makes these pass, this file FAILS until the
-# contradiction is resolved deliberately rather than drifting back.
 
-_LLM_QG_CONTRACT_CONFLICT = pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "contradicts test_llm_qg_phase_artifact_requires_current_db_record: a fresh "
-        "llm_qg.json may not substitute for a current DB record. Design decision pending "
-        "(gate integrity vs. resume cost) — see #5796."
-    ),
-)
-
-
-@_LLM_QG_CONTRACT_CONFLICT
-def test_llm_qg_skipped_when_terminal_verdict_pass(module_dir: Path) -> None:
-    _write_json(
-        module_dir / "llm_qg.json",
+def test_llm_qg_payload_terminal_verdict_pass_wins_over_warning_aggregate() -> None:
+    """Payload shape is compatible; a DB record remains required to resume."""
+    assert v7_build._llm_qg_payload_passes(
         {
             "aggregate": {
                 "verdict": "REJECT",
                 "terminal_verdict": "PASS",
                 "min_score": 4.0,
             }
-        },
+        }
     )
-    assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is True
 
 
-def test_llm_qg_reruns_when_terminal_verdict_revise(module_dir: Path) -> None:
-    _write_json(
-        module_dir / "llm_qg.json",
+def test_llm_qg_payload_rejects_terminal_revise() -> None:
+    assert not v7_build._llm_qg_payload_passes(
         {
             "aggregate": {
                 "verdict": "REVISE",
                 "terminal_verdict": "REVISE",
                 "min_score": 8.5,
             }
-        },
+        }
     )
-    assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is False
 
 
-@_LLM_QG_CONTRACT_CONFLICT
-def test_llm_qg_skipped_for_legacy_aggregate_pass(module_dir: Path) -> None:
-    _write_json(
-        module_dir / "llm_qg.json",
-        {"aggregate": {"verdict": "PASS", "min_score": 9.0}},
+def test_llm_qg_payload_supports_legacy_aggregate_pass() -> None:
+    """Legacy payload compatibility does not change the DB authority rule."""
+    assert v7_build._llm_qg_payload_passes({"aggregate": {"verdict": "PASS", "min_score": 9.0}})
+
+
+def test_llm_qg_payload_rejects_missing_aggregate() -> None:
+    assert not v7_build._llm_qg_payload_passes({"placeholder": True})
+
+
+@pytest.mark.parametrize("changed_name", CONTENT_FILES)
+def test_llm_qg_authority_rejects_each_changed_content_file(
+    tmp_path: Path,
+    changed_name: str,
+) -> None:
+    module = tmp_path / "b1" / "target"
+    _write_module_content(module)
+    expected_prompt_hash = "expected-prompt-hash"
+    record_llm_qg(
+        level="b1",
+        slug="target",
+        module_dir=module,
+        payload=_qg_pass_payload(),
+        gate_version=v7_build.LLM_QG_GATE_VERSION,
+        prompt_hash=expected_prompt_hash,
     )
-    assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is True
 
-
-def test_llm_qg_reruns_when_aggregate_missing(module_dir: Path) -> None:
-    _write_json(module_dir / "llm_qg.json", {"placeholder": True})
-    assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is False
-
-
-@_LLM_QG_CONTRACT_CONFLICT
-def test_llm_qg_skipped_when_db_empty_but_json_file_is_fresh(module_dir: Path) -> None:
-    """A freshly dispatched worktree has no local llm_qg.db (gitignored).
-
-    Resume must fall back to a module-local llm_qg.json when it is not older
-    than the module's learner-facing content, mirroring
-    scripts.api.state_compute.read_llm_qg (docs/runbooks/module-quality-gates.md
-    Persistence).
-    """
-    (module_dir / "module.md").write_text("# Fixture\n", encoding="utf-8")
-    time.sleep(0.01)
-    _write_json(
-        module_dir / "llm_qg.json",
-        {"aggregate": {"verdict": "PASS", "terminal_verdict": "PASS", "min_score": 9.0}},
+    assert v7_build._phase_artifact_passes(
+        module,
+        "llm_qg",
+        expected_llm_qg_prompt_hash=expected_prompt_hash,
     )
-    assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is True
-
-
-def test_llm_qg_reruns_when_json_file_is_stale_relative_to_content(module_dir: Path) -> None:
-    """A pass artifact older than the current module content must not be trusted."""
-    _write_json(
-        module_dir / "llm_qg.json",
-        {"aggregate": {"verdict": "PASS", "terminal_verdict": "PASS", "min_score": 9.0}},
+    (module / changed_name).write_text("changed\n", encoding="utf-8")
+    assert not v7_build._phase_artifact_passes(
+        module,
+        "llm_qg",
+        expected_llm_qg_prompt_hash=expected_prompt_hash,
     )
-    stale_mtime = time.time() - 3600
-    os.utime(module_dir / "llm_qg.json", (stale_mtime, stale_mtime))
-    (module_dir / "module.md").write_text("# Fixture, revised\n", encoding="utf-8")
-    assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is False
+
+
+def test_llm_qg_authority_rejects_wrong_gate_or_prompt_hash(tmp_path: Path) -> None:
+    module = tmp_path / "b1" / "target"
+    _write_module_content(module)
+    record_llm_qg(
+        level="b1",
+        slug="target",
+        module_dir=module,
+        payload=_qg_pass_payload(),
+        gate_version="v7.llm_qg.old",
+        prompt_hash="expected-prompt-hash",
+    )
+    assert not v7_build._phase_artifact_passes(
+        module,
+        "llm_qg",
+        expected_llm_qg_prompt_hash="expected-prompt-hash",
+    )
+
+    record_llm_qg(
+        level="b1",
+        slug="target",
+        module_dir=module,
+        payload=_qg_pass_payload(),
+        gate_version=v7_build.LLM_QG_GATE_VERSION,
+        prompt_hash="wrong-prompt-hash",
+    )
+    assert not v7_build._phase_artifact_passes(
+        module,
+        "llm_qg",
+        expected_llm_qg_prompt_hash="expected-prompt-hash",
+    )
+
+
+def test_llm_qg_authority_fails_closed_without_expected_prompt_hash(tmp_path: Path) -> None:
+    module = tmp_path / "b1" / "target"
+    _write_module_content(module)
+    record_llm_qg(
+        level="b1",
+        slug="target",
+        module_dir=module,
+        payload=_qg_pass_payload(),
+        gate_version=v7_build.LLM_QG_GATE_VERSION,
+        prompt_hash="expected-prompt-hash",
+    )
+
+    assert not v7_build._phase_artifact_passes(module, "llm_qg")
+
+def test_llm_qg_resumes_from_shared_store_in_linked_worktree(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    _git(primary, "init")
+    _git(primary, "config", "user.email", "test@example.invalid")
+    _git(primary, "config", "user.name", "LLM QG test")
+    (primary / "README.md").write_text("fixture\n", encoding="utf-8")
+    _git(primary, "add", "README.md")
+    _git(primary, "commit", "-m", "fixture")
+    linked = tmp_path / "linked"
+    _git(primary, "worktree", "add", "--detach", str(linked), "HEAD")
+
+    monkeypatch.delenv(DB_ENV_VAR)
+    monkeypatch.setattr(llm_qg_store, "LIVE_REPO_ROOT", primary)
+    shared_db = db_path()
+    monkeypatch.setattr(llm_qg_store, "LIVE_REPO_ROOT", linked)
+    assert db_path() == shared_db
+    assert shared_db == primary / "data" / "telemetry" / "llm_qg.db"
+
+    plan = {"level": "b1", "slug": "target", "sequence": 1}
+    plan_content = "level: b1\nslug: target\n"
+    module_a = primary / "curriculum" / "l2-uk-en" / "b1" / "target"
+    module_b = linked / "curriculum" / "l2-uk-en" / "b1" / "target"
+    _write_module_content(module_a)
+    _write_module_content(module_b)
+    _write_resumable_artifacts(module_a)
+    _write_resumable_artifacts(module_b)
+    monkeypatch.setattr(
+        v7_build.linear_pipeline,
+        "render_review_prompt",
+        lambda *_args, **_kwargs: f"prompt::{_args[3]}",
+    )
+    monkeypatch.setattr(v7_build, "read_implementation_map", lambda _path: {"entries": []})
+    expected_prompt_hash = v7_build._expected_llm_qg_prompt_hash(
+        plan=plan,
+        plan_content=plan_content,
+        module_dir=module_a,
+        wiki_manifest={},
+        implementation_map={"entries": []},
+        use_generator=False,
+        obligation_checklist=None,
+    )
+    assert expected_prompt_hash is not None
+    record_llm_qg(
+        level="b1",
+        slug="target",
+        module_dir=module_a,
+        payload=_qg_pass_payload(),
+        gate_version=v7_build.LLM_QG_GATE_VERSION,
+        prompt_hash=expected_prompt_hash,
+    )
+
+    assert shared_db.exists()
+    assert not (linked / "data" / "telemetry" / "llm_qg.db").exists()
+    assert not (module_b / "llm_qg.json").exists()
+    assert v7_build._phase_artifact_passes(
+        module_b,
+        "llm_qg",
+        expected_llm_qg_prompt_hash=expected_prompt_hash,
+    )
+
+    plan_path = tmp_path / "plan.yaml"
+    plan_path.write_text(plan_content, encoding="utf-8")
+    monkeypatch.setattr(v7_build.linear_pipeline, "plan_path_for", lambda *_args: plan_path)
+    monkeypatch.setattr(v7_build.linear_pipeline, "load_plan", lambda _path: plan)
+    monkeypatch.setattr(v7_build.linear_pipeline, "validate_plan", lambda _plan: None)
+    monkeypatch.setattr(v7_build.linear_pipeline, "curriculum_profile_for_level", lambda _level: "core")
+    monkeypatch.setattr(v7_build.linear_pipeline, "assemble_mdx", lambda *_args: None)
+
+    def paid_reviewer_must_not_run(**_kwargs: Any) -> dict[str, Any]:
+        raise AssertionError("paid LLM-QG reviewer ran despite a shared current record")
+
+    monkeypatch.setattr(
+        v7_build.linear_pipeline,
+        "run_llm_qg_with_corrections",
+        paid_reviewer_must_not_run,
+    )
+    args = v7_build.parse_args(["b1", "target", "--out", str(module_b)])
+    assert v7_build._run(args) == 0
+    assert not (module_b / "llm_qg.json").exists()
+
+    explicit_db = tmp_path / "explicit" / "llm_qg.db"
+    monkeypatch.setenv(DB_ENV_VAR, str(explicit_db))
+    assert db_path() == explicit_db
+    assert not v7_build._phase_artifact_passes(
+        module_b,
+        "llm_qg",
+        expected_llm_qg_prompt_hash=expected_prompt_hash,
+    )
+    record_llm_qg(
+        level="b1",
+        slug="target",
+        module_dir=module_b,
+        payload=_qg_pass_payload(),
+        gate_version=v7_build.LLM_QG_GATE_VERSION,
+        prompt_hash=expected_prompt_hash,
+    )
+    assert v7_build._phase_artifact_passes(
+        module_b,
+        "llm_qg",
+        expected_llm_qg_prompt_hash=expected_prompt_hash,
+    )
 
 
 # ----- unknown phase ----------------------------------------------------------

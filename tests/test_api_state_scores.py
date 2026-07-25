@@ -15,6 +15,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 import scripts.api.main as api_main
+import scripts.api.state_compute as state_compute
 import scripts.api.state_router as state_router
 from scripts.api.state_router import _read_llm_qg_scores
 from scripts.audit.llm_qg_store import DB_ENV_VAR, record_llm_qg
@@ -64,6 +65,24 @@ def test_read_scores_parses_dims_and_aggregate(tmp_path: Path) -> None:
 def test_read_scores_missing_file_degrades(tmp_path: Path) -> None:
     out = _read_llm_qg_scores(tmp_path / "does-not-exist")
     assert out == {"aggregate": None, "dimensions": {}}
+
+
+def test_read_llm_qg_marks_file_fallback_as_non_authoritative(tmp_path: Path) -> None:
+    track_dir = tmp_path / "b1"
+    module_dir = track_dir / "display-only"
+    module_dir.mkdir(parents=True)
+    (module_dir / "module.md").write_text("## Тест\n\nТекст.\n", encoding="utf-8")
+    _write_llm_qg(
+        module_dir,
+        dims={"naturalness": 8.0},
+        aggregate={"verdict": "PASS", "terminal_verdict": "PASS"},
+    )
+
+    observed = state_compute.read_llm_qg(track_dir, "display-only")
+
+    assert observed is not None
+    assert observed["_qg_source"] == "file_observation"
+    assert observed["_qg_authoritative"] is False
 
 
 def test_read_scores_malformed_json_degrades(tmp_path: Path) -> None:

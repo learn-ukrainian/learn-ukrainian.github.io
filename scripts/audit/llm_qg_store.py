@@ -13,6 +13,7 @@ import hashlib
 import json
 import os
 import sqlite3
+import subprocess
 from collections import Counter
 from collections.abc import Mapping, Sequence
 from contextlib import closing
@@ -22,10 +23,9 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-from scripts.api.config import PROJECT_ROOT
+from scripts.api.config import LIVE_REPO_ROOT, PROJECT_ROOT
 from scripts.api.resilience import connect_sqlite
 
-DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "telemetry" / "llm_qg.db"
 DB_ENV_VAR = "LEARN_UKRAINIAN_LLM_QG_DB"
 DEFAULT_CIRCUIT_STATE_PATH = PROJECT_ROOT / "data" / "telemetry" / "llm_qg_live_circuit.json"
 CIRCUIT_ENV_VAR = "LEARN_UKRAINIAN_LLM_QG_CIRCUIT"
@@ -81,10 +81,55 @@ class StoredQG:
 
 
 def db_path(path: Path | None = None) -> Path:
-    """Return the configured QG database path."""
+    """Return the configured per-repository QG database path.
+
+    The implicit store belongs to the primary checkout that owns Git's common
+    directory, not to whichever linked worktree imported this module.  An
+    explicit environment override is the only store for that process.
+    """
     if path is not None:
         return path
-    return Path(os.environ.get(DB_ENV_VAR, str(DEFAULT_DB_PATH)))
+    configured = os.environ.get(DB_ENV_VAR)
+    if configured is not None:
+        return Path(configured)
+    return _repository_root() / "data" / "telemetry" / "llm_qg.db"
+
+
+def _repository_root(checkout_root: Path | None = None) -> Path:
+    """Resolve the primary checkout for ``checkout_root``'s Git repository.
+
+    ``git rev-parse --show-toplevel`` deliberately identifies a linked
+    worktree, so it cannot define durable shared state.  Git's common directory
+    is instead ``<primary>/.git`` for this repository layout and is shared by
+    every linked worktree.
+    """
+    checkout = (checkout_root or LIVE_REPO_ROOT).resolve()
+    try:
+        result = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(checkout),
+                "rev-parse",
+                "--path-format=absolute",
+                "--git-common-dir",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise RuntimeError(
+            f"Could not resolve the repository-owned LLM-QG store for {checkout}"
+        ) from exc
+
+    common_dir = Path(result.stdout.strip()).resolve()
+    if common_dir.name != ".git":
+        raise RuntimeError(
+            "Git common directory must be the primary checkout's .git directory: "
+            f"{common_dir}"
+        )
+    return common_dir.parent
 
 
 def circuit_state_path(path: Path | None = None) -> Path:

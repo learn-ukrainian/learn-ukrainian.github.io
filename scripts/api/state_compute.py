@@ -245,18 +245,26 @@ def _read_json_file(path: Path) -> dict | None:
 
 
 def read_llm_qg(track_dir: Path, slug: str) -> dict | None:
-    """Read a module's LLM quality-gate artifact if present."""
+    """Read QG state for Monitor display, retaining its authority source.
+
+    A current SQLite record is authoritative.  A fresh module-local JSON file
+    is display-only observational data; build and promotion code must use the
+    SQLite lookup in ``scripts.audit.llm_qg_store`` instead.
+    """
     try:
         module_dir = safe_join(track_dir, slug)
         current = current_payload_for_module(track_dir.name, slug, module_dir)
         if current is not None:
-            return current
+            return {**current, "_qg_authoritative": True, "_qg_source": "current_db"}
         path = safe_join(module_dir, "llm_qg.json")
     except ValueError:
         return None
     if not llm_qg_file_is_current_for_module(module_dir, path):
         return None
-    return _read_json_file(path)
+    observed = _read_json_file(path)
+    if observed is None:
+        return None
+    return {**observed, "_qg_authoritative": False, "_qg_source": "file_observation"}
 
 
 def read_wiki_gate(track_dir: Path, slug: str) -> dict | None:
