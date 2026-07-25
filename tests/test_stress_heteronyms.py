@@ -10,6 +10,24 @@ Issue: #1019
 from __future__ import annotations
 
 import pytest
+
+# `ukrainian_word_stress` imports `stanza`, which imports `torch`. The CI test
+# environment deliberately does not install the ML stack (see the pytest job in
+# `.github/workflows/ci.yml`), so declare the dependency instead of failing
+# collection for the whole shard. Locally \u2014 where torch is present \u2014 this is a
+# no-op and the tests run normally.
+#
+# NOTE this is a *visible* skip, not silent coverage loss: stress-annotation
+# accuracy is curriculum-load-bearing and still needs a bounded home. It also
+# downloads Stanza models at runtime, i.e. it performs network I/O inside the
+# gate, which is the profile of the test that held a runner for 357 minutes
+# (#5740). The correct home is a dedicated, bounded, scheduled ML job that
+# installs torch \u2014 tracked for the CI control-plane replacement.
+pytest.importorskip(
+    "ukrainian_word_stress",
+    reason="requires the ML stack (ukrainian_word_stress -> stanza -> torch), not installed in CI",
+)
+
 from ukrainian_word_stress import Stressifier, StressSymbol
 
 STRESS = "\u0301"  # combining acute accent

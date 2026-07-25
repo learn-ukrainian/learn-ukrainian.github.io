@@ -6,6 +6,22 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+
+# FlagEmbedding imports torch at import time, and the CI test environment
+# deliberately does not install the ML stack (see the pytest job in
+# `.github/workflows/ci.yml`). Declare the dependency rather than failing
+# collection for the whole shard.
+#
+# Nothing real is lost on CI: this is an MLX parity check, and MLX is
+# Apple-Silicon-only, so it cannot pass on an ubuntu runner regardless — it also
+# pulls the ~2GB `BAAI/bge-m3` model at runtime. It runs on the Apple-Silicon
+# workstation where MLX and torch both exist, which is the only place its result
+# is meaningful.
+pytest.importorskip(
+    "FlagEmbedding",
+    reason="requires the ML stack (FlagEmbedding -> torch); MLX parity is Apple-Silicon-only",
+)
+
 from FlagEmbedding import BGEM3FlagModel
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
