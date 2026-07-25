@@ -5,7 +5,9 @@ Provides reusable content snippets and module templates for testing.
 """
 
 import os
+import sqlite3
 import sys
+from collections.abc import Collection
 from pathlib import Path
 
 import pytest
@@ -16,25 +18,70 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
-def _require_data_artifact(relative_path: str) -> Path:
+def _require_data_artifact(
+    relative_path: str,
+    *,
+    required_sqlite_tables: Collection[str] = (),
+) -> Path:
     """Return a local data artifact or skip tests that cannot run without it."""
     data_root = Path(os.environ.get("LEARN_UKRAINIAN_TEST_DATA_ROOT", _REPO_ROOT))
     artifact = data_root / relative_path
     if not artifact.is_file():
         pytest.skip(f"requires {relative_path} (not provisioned in CI)")
+
+    if required_sqlite_tables:
+        try:
+            with sqlite3.connect(f"file:{artifact}?mode=ro", uri=True) as connection:
+                available_tables = {
+                    row[0]
+                    for row in connection.execute(
+                        "SELECT name FROM sqlite_master WHERE type = 'table'"
+                    )
+                }
+        except sqlite3.Error:
+            available_tables = set()
+        missing_tables = sorted(set(required_sqlite_tables) - available_tables)
+        if missing_tables:
+            pytest.skip(
+                f"requires {relative_path} with SQLite tables: "
+                f"{', '.join(missing_tables)} (not provisioned in CI)"
+            )
     return artifact
 
 
 @pytest.fixture
 def requires_sources_db() -> Path:
-    """Skip a test requiring the uncommitted sources corpus database."""
-    return _require_data_artifact("data/sources.db")
+    """Skip a test requiring the complete uncommitted sources corpus database."""
+    return _require_data_artifact(
+        "data/sources.db",
+        required_sqlite_tables=(
+            "external_articles",
+            "external_fts",
+            "literary_fts",
+            "literary_texts",
+            "textbook_sections",
+            "textbooks",
+            "textbooks_fts",
+            "ukrainian_wiki",
+            "ukrainian_wiki_fts",
+            "wikipedia",
+            "wikipedia_fts",
+        ),
+    )
 
 
 @pytest.fixture
 def requires_vesum_db() -> Path:
     """Skip a test requiring the uncommitted VESUM database."""
-    return _require_data_artifact("data/vesum.db")
+    return _require_data_artifact("data/vesum.db", required_sqlite_tables=("forms",))
+
+
+@pytest.fixture
+def requires_literary_wave12_jsonl() -> Path:
+    """Skip a test requiring the uncommitted Wave 12 literary corpus fixture."""
+    return _require_data_artifact(
+        "data/literary_texts/wave12-krupnytsky-orlyk-biohrafiia.jsonl"
+    )
 
 
 @pytest.fixture(autouse=True)
