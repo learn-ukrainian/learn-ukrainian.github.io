@@ -34,9 +34,23 @@ jobs:
   # 1. python — the full test suite, one job, no sharding, no path filter.
   # ---------------------------------------------------------------------
   python:
-    name: Python (pytest)
+    name: Python (pytest) [${{ matrix.mode }}]
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # 90 so the SERIAL variant has room to finish; a timeout here is otherwise
+    # indistinguishable from the hang we are testing for.
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - mode: serial
+            args: "-p no:xdist"
+          - mode: n1
+            args: "-n 1"
+          - mode: loadfile
+            args: "-n 2 --dist loadfile"
+          - mode: baseline
+            args: "-n 2"
     permissions:
       contents: read
     steps:
@@ -134,10 +148,24 @@ jobs:
           if [ "$IS_MAIN_PUSH" = "true" ]; then
             cov_args="--cov=scripts --cov-report="
           fi
-          # shellcheck disable=SC2086  # cov_args is a deliberate word-split argument list
-          .venv/bin/python -m pytest tests -n auto --strict-markers --timeout=120 --timeout-method=thread --durations=25 $cov_args \
-            --deselect=tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
-            --deselect=tests/wiki/test_ukrainian_wiki_corpus.py::test_main_cli_encode_flag_wires_ingest_to_manifest
+          # DIAGNOSTIC BRANCH ONLY (#5776) — splits the fault plane. The hang MOVED
+          # between runs (95% tests/wiki/..., then 94% tests/test_yaml_activities.py),
+          # so it is not a test. The wiki deselect is intentionally NOT applied here:
+          # it bought nothing and would only muddy the comparison.
+          # Heartbeat: proves whether the JOB is alive while pytest is silent, which
+          # separates "controller wedged" from "runner dead".
+          ( while true; do echo "::notice::heartbeat $(date -u +%H:%M:%S)"; sleep 60; done ) &
+          hb=$!
+          set +e
+          # shellcheck disable=SC2086  # cov_args/matrix.args are deliberate word-split argument lists
+          PYTHONFAULTHANDLER=1 .venv/bin/python -X faulthandler -m pytest tests ${{ matrix.args }} \
+            --strict-markers --timeout=120 --timeout-method=thread --durations=25 $cov_args \
+            --deselect=tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast
+          rc=$?
+          set -e
+          kill $hb 2>/dev/null || true
+          echo "pytest rc=$rc for mode=${{ matrix.mode }}"
+          exit $rc
 
       # Restores the `--fail-under=35` floor the deleted shard aggregation
       # enforced (origin/main ci.yml:1183). Cross-family review of #5762 caught
@@ -604,7 +632,6 @@ jobs:
     timeout-minutes: 10
     if: always()
     needs:
-      - python
       - contracts
       - frontend
       - security
