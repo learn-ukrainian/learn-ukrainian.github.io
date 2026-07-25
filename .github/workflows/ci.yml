@@ -33,10 +33,20 @@ jobs:
   # ---------------------------------------------------------------------
   # 1. python — the full test suite, one job, no sharding, no path filter.
   # ---------------------------------------------------------------------
+  # Four PARALLEL JOBS, not one xdist session (#5776, 3-seat advisor panel).
+  # Sharding was never the bug — changed-files SELECTION was. This keeps the
+  # reboot's invariant (no test is chosen or skipped by what changed) and
+  # restores the only topology that has ever completed: the single-session
+  # design never finished once, stalling ~94-95% with ~23 minutes of silence on
+  # a DIFFERENT test each run.
   python:
-    name: Python (pytest)
+    name: Python (pytest) [${{ matrix.shard }}/4]
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     permissions:
       contents: read
     steps:
@@ -129,15 +139,23 @@ jobs:
         # never spliced into `run:`, so a hostile branch name cannot inject.
         env:
           IS_MAIN_PUSH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          SHARD: ${{ matrix.shard }}
         run: |
           cov_args=""
           if [ "$IS_MAIN_PUSH" = "true" ]; then
             cov_args="--cov=scripts --cov-report="
           fi
+          # Round-robin over SORTED test files. Deterministic, depends only on the
+          # file list, and every file lands in exactly one shard — so the union is
+          # always the whole suite. Nothing here consults the diff.
+          split_py="import pathlib,sys;fs=sorted(str(p) for p in pathlib.Path('tests').rglob('test_*.py'));print(chr(10).join(fs[int(sys.argv[1])-1::4]))"
+          mapfile -t shard_files < <(.venv/bin/python -c "$split_py" "$SHARD")
+          echo "shard $SHARD: ${#shard_files[@]} test files"
+          if [ "${#shard_files[@]}" -eq 0 ]; then echo "::error::empty shard"; exit 1; fi
           # shellcheck disable=SC2086  # cov_args is a deliberate word-split argument list
-          .venv/bin/python -m pytest tests -n auto --strict-markers --timeout=120 --timeout-method=thread --durations=25 $cov_args \
-            --deselect=tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
-            --deselect=tests/wiki/test_ukrainian_wiki_corpus.py::test_main_cli_encode_flag_wires_ingest_to_manifest
+          .venv/bin/python -m pytest "${shard_files[@]}" -n auto --strict-markers \
+            --timeout=120 --timeout-method=thread --durations=25 $cov_args \
+            --deselect=tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast
 
       # Restores the `--fail-under=35` floor the deleted shard aggregation
       # enforced (origin/main ci.yml:1183). Cross-family review of #5762 caught
@@ -148,11 +166,18 @@ jobs:
       # main had to upload four `.coverage.shard-*` artifacts and `coverage
       # combine` them. One job with `-n auto` means pytest-cov combines the
       # xdist workers itself, and `coverage report` just reads the result.
-      - name: Coverage floor (pushes to main only)
+      # The floor moves to its own job: with four shards no single one sees the
+      # whole suite, so enforcing per-shard would measure a quarter and pass
+      # vacuously. Each shard publishes its data; `coverage-floor` combines.
+      - name: Upload shard coverage data
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          .venv/bin/python -m coverage report --fail-under=35
-          .venv/bin/python -m coverage xml -o coverage.xml
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4
+        with:
+          name: coverage-shard-${{ matrix.shard }}
+          path: .coverage
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
 
       # Wall-clock perf probe. Kept serial, after the main body, with its
       # existing retry-on-flake: /api/rag/search_text can 500 on an FTS
@@ -598,6 +623,42 @@ jobs:
   #    so `skipped` is as much a failure as `failure`/`cancelled`: there is
   #    no legitimate reason for any of them to not report `success`.
   # ---------------------------------------------------------------------
+  # Enforces the 35% floor ONCE, over the combined four-shard data. Restores the
+  # guarantee cross-family review flagged as a P1 when the reboot dropped it.
+  coverage-floor:
+    name: Coverage floor
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [python]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.12'
+      - name: Download shard coverage data
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v4
+        with:
+          pattern: coverage-shard-*
+          path: coverage-artifacts
+      - name: Combine and enforce
+        run: |
+          python -m pip install --quiet coverage
+          i=0
+          for f in coverage-artifacts/*/.coverage; do
+            i=$((i + 1))
+            cp "$f" ".coverage.shard-$i"
+          done
+          echo "combining $i shard coverage files"
+          if [ "$i" -eq 0 ]; then echo "::error::no coverage data — refusing to pass vacuously"; exit 1; fi
+          python -m coverage combine
+          python -m coverage report --fail-under=35
+          python -m coverage xml -o coverage.xml
+
   ci-gate:
     name: CI Gate
     runs-on: ubuntu-latest
