@@ -167,11 +167,48 @@ def normalize_claim(raw: str) -> PathClaim:
     return PathClaim(raw=raw, kind=ClaimKind.FILE, norm=norm)
 
 
+_DISPLAY_LIMIT = 120
+_CONTROL_CHARS = {c: f"\\x{c:02x}" for c in range(0x20)} | {0x7F: "\\x7f"}
+
+
+def sanitize_for_display(value: object, *, limit: int = _DISPLAY_LIMIT) -> str:
+    """Make a ledger-sourced string safe to print in an operator message.
+
+    Task ids and claim paths come from other processes, so they reach this
+    message as untrusted text. Raw interpolation let a task id containing a
+    newline or an ANSI escape forge extra operator-looking lines in the guard's
+    own output (CF review of #5804). Control characters are escaped rather than
+    dropped so the value stays recognisable, and the result is length-bounded.
+    """
+    text = str(value)
+    escaped = text.translate(_CONTROL_CHARS)
+    if len(escaped) > limit:
+        escaped = escaped[: limit - 1] + "…"
+    return escaped
+
+
+def _peer_key(peer: dict[str, object]) -> tuple[str, object]:
+    """Identity of a blocking peer: one task, one pid — NOT one claim row."""
+    return (str(peer.get("other_task_id") or "?"), peer.get("other_pid"))
+
+
 def _peer_label(peer: dict[str, object]) -> str:
     """Render one blocking peer as `task-id(pid N)` for operator-facing messages."""
     pid = peer.get("other_pid")
-    task = str(peer.get("other_task_id") or "?")
+    task = sanitize_for_display(peer.get("other_task_id") or "?")
     return f"{task}(pid {pid})" if pid else task
+
+
+def _dedupe_peers(rows: list[dict[str, object]]) -> list[dict[str, object]]:
+    """Collapse claim rows to distinct peers, preserving first-seen order.
+
+    A peer holding four claims is ONE blocking peer. Counting rows made the
+    message say "(+1 more)" about a single agent (CF review of #5804).
+    """
+    seen: dict[tuple[str, object], dict[str, object]] = {}
+    for row in rows:
+        seen.setdefault(_peer_key(row), row)
+    return list(seen.values())
 
 
 def refusal_message(
@@ -190,22 +227,46 @@ def refusal_message(
     a guard bug and hides the fix (declare paths, or override deliberately).
     """
     if conflicts:
+        # Group overlapping paths under the peer that holds them: N claim rows
+        # from one agent is one blocker, not N blockers.
+        by_peer: dict[tuple[str, object], list[str]] = {}
+        labels: dict[tuple[str, object], str] = {}
+        for row in conflicts:
+            key = _peer_key(row)
+            labels.setdefault(key, _peer_label(row))
+            claim = row.get("other_claim") or {}
+            norm = claim.get("norm", "?") if isinstance(claim, dict) else "?"
+            paths = by_peer.setdefault(key, [])
+            if norm not in paths:
+                paths.append(str(norm))
+        shown_keys = list(by_peer)[:3]
         shown = ", ".join(
-            f"{_peer_label(c)} on {(c.get('other_claim') or {}).get('norm', '?')}"  # type: ignore[union-attr]
-            for c in conflicts[:3]
+            f"{labels[key]} on "
+            + ", ".join(sanitize_for_display(p) for p in by_peer[key][:2])
+            + (
+                f" (+{len(by_peer[key]) - 2} more paths)"
+                if len(by_peer[key]) > 2
+                else ""
+            )
+            for key in shown_keys
         )
-        more = f" (+{len(conflicts) - 3} more)" if len(conflicts) > 3 else ""
+        more = f" (+{len(by_peer) - 3} more)" if len(by_peer) > 3 else ""
         return f"path ownership conflict (REFUSE): overlaps {shown}{more}"
 
     parts: list[str] = []
     if self_unprovable:
-        declared = ", ".join(repr(c.raw) for c in unknown[:3]) if unknown else "none declared"
+        declared = (
+            ", ".join(repr(sanitize_for_display(c.raw)) for c in unknown[:3])
+            if unknown
+            else "none declared"
+        )
         parts.append(
             f"this task declared no comparable --research-owned-path ({declared})"
         )
-    if unprovable_peers:
-        peers = ", ".join(_peer_label(p) for p in unprovable_peers[:3])
-        more = f" (+{len(unprovable_peers) - 3} more)" if len(unprovable_peers) > 3 else ""
+    distinct_peers = _dedupe_peers(unprovable_peers)
+    if distinct_peers:
+        peers = ", ".join(_peer_label(p) for p in distinct_peers[:3])
+        more = f" (+{len(distinct_peers) - 3} more)" if len(distinct_peers) > 3 else ""
         parts.append(f"active writer(s) with undeclared paths: {peers}{more}")
     detail = "; ".join(parts) or "no comparable claims among active writers"
     return (
