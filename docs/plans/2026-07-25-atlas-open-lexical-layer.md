@@ -39,7 +39,7 @@ Operator directive: proceed. Defaults applied:
 
 | ID | Decision | Default |
 | --- | --- | --- |
-| **DC-A** | Public sentence text | **Two-tier:** full lexicon local; public export only rows with explicit redistributable rights + attribution; else **pointer / short quotation** with bibliography |
+| **DC-A** | Public sentence text | **Two-tier:** full lexicon local; public export only rows with explicit redistributable rights + attribution; else **pointer / short quotation** with bibliography. The pointer is a **structured record, not prose**: `source_work`, `author_uk`, `grade`, `chunk_id`, `span_start`, `span_end` — schema frozen in Phase 0b. A candidate that cannot produce those fields is not exportable in any form |
 | **DC-B** | Homograph / lemma layer | **Address early** (lemma_entries or equivalent) before freezing VESUM maps into SRS/export IDs |
 | **DC-C** | Prescription model | Multi-authority **stances** + project editorial strength + corpus frequency evidence; **no boolean russianism** |
 | **DC-D** | Alona / teacher seed privacy | **Private/local by default** until operator grants publish consent; Example deck may be local-first |
@@ -66,7 +66,7 @@ Operator directive: proceed. Defaults applied:
 | Phase | Work | Exit criteria |
 | --- | --- | --- |
 | **0a** | Inventory + migration matrix (docs) | Written matrix over enrichment/provenance; dual-read policy |
-| **0b** | Schema v2 ADR + builder SCHEMA + external source files | Round-trip fixture; FK integrity with `foreign_keys=ON` |
+| **0b** | Schema v2 ADR + builder SCHEMA + external source files | Round-trip fixture; FK integrity with `foreign_keys=ON`; **`scripts/atlas/export_runtime_shards.py` dual-reads** legacy `enrichment` sections **and** new normalized tables, proven by a shard-parity test (no lexeme payload may disappear from static Practice shards); **DC-A pointer locator schema frozen**; **prescription lint gate** in CI rejects boolean flags (`is_russianism: bool`) and single-authority strings under `data/lexicon/` |
 | **1** | Alona reconcile + rights audit of sentence candidates | 1018 conservation; redistributable flags; quarantine weak/no_hit |
 | **2** | Gold vertical slice (32–50) → static Practice shards → local Astro | Deterministic round-trip; local session works via `./services.sh start astro` |
 | **3** | Full Example/Test deck from curated seed (local privacy policy) | Operator human smoke pass |
@@ -84,8 +84,16 @@ Operator directive: proceed. Defaults applied:
 **Input evidence (local):**
 
 - Curated: `.claude/atlas-epic/plans/alona-truth/v2-curated.jsonl` (1018)  
-- With sentences: `v2-curated-with-sentences.jsonl` (993 ok / 4 weak / 21 no_hit)  
+- With sentences: `v2-curated-with-sentences.jsonl` (993 ok / 4 weak / 21 no_hit) — **a preliminary retrieval dump, NOT admissible attestation evidence.** The generating script dropped every source locator (`chunk_id`, `source_file`, row id, character span) and kept raw FTS snippets including footnote digits and dictionary gloss frames (observed row 1: `"4 Прàведний — тут: справедливий."`). Admitting it as-is would violate Architecture Rule 6, populate `attestations` with empty locators, bypass rights resolution, and render footnote noise in learner cards.  
 - Problem log + originals under same directory  
+
+**Before any Phase 1 admission of that file (blocking):**
+
+1. Regenerate with locators captured from `data/sources.db` — `chunk_id`, `source_file`, source row id, `span_start`, `span_end` — so DC-A pointers can actually be built. 93% of current `ok` rows (923/993) come from copyrighted school textbooks and will be quarantined by the license filter; without locators they cannot even be exported as pointers.  
+2. Sanitize candidates: strip leading footnote numerals and dictionary gloss frames (`— тут:`), reject snippets that are dictionary commentary rather than usage sentences.  
+3. Rights-resolve every candidate; `scripts/audit/source_license_map.json` currently carries **no** entry for modern school textbooks, so that policy gap must be closed or those rows stay local-only.  
+
+Tracked in #5790 (Alona seed reconcile + sentence rights audit).  
 
 **Product name:** Example / Test deck (not “private teacher product” in UI).  
 
