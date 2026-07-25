@@ -170,8 +170,12 @@ def normalize_claim(raw: str) -> PathClaim:
 
 _DISPLAY_LIMIT = 120
 # Cc control, Cf format (bidi overrides, zero-width joiners), Cs surrogate,
-# Co private use — none of these belong in a one-line operator message.
-_UNSAFE_UNICODE_CATEGORIES = frozenset({"Cc", "Cf", "Cs", "Co"})
+# Co private use — none of these belong in a one-line operator message. Zl/Zp
+# are U+2028 LINE SEPARATOR and U+2029 PARAGRAPH SEPARATOR: not control
+# characters by category, but terminals and log viewers render them as line
+# breaks, so leaving them through kept the forged-line hole open (CF re-review
+# of #5804, F001).
+_UNSAFE_UNICODE_CATEGORIES = frozenset({"Cc", "Cf", "Cs", "Co", "Zl", "Zp"})
 
 
 def sanitize_for_display(value: object, *, limit: int = _DISPLAY_LIMIT) -> str:
@@ -187,17 +191,29 @@ def sanitize_for_display(value: object, *, limit: int = _DISPLAY_LIMIT) -> str:
     control/format code point is escaped — as an escape sequence rather than a
     deletion, so the value stays recognisable — and the result is bounded.
     """
-    out: list[str] = []
+    units: list[str] = []
     for ch in str(value):
         if unicodedata.category(ch) in _UNSAFE_UNICODE_CATEGORIES:
             point = ord(ch)
-            out.append(f"\\x{point:02x}" if point < 0x100 else f"\\u{point:04x}")
+            units.append(f"\\x{point:02x}" if point < 0x100 else f"\\u{point:04x}")
         else:
-            out.append(ch)
-    escaped = "".join(out)
-    if len(escaped) > limit:
-        escaped = escaped[: limit - 1] + "…"
-    return escaped
+            units.append(ch)
+
+    if sum(len(u) for u in units) <= limit:
+        return "".join(units)
+
+    # Truncate on escape-unit boundaries. Slicing the joined string could cut
+    # "‮" into a bare backslash, which is both misleading and a different
+    # string than the one that is actually blocking the operator (CF re-review
+    # of #5804, F002). One character of the budget is reserved for the ellipsis.
+    kept: list[str] = []
+    used = 0
+    for unit in units:
+        if used + len(unit) > limit - 1:
+            break
+        kept.append(unit)
+        used += len(unit)
+    return "".join(kept) + "…"
 
 
 def _peer_key(peer: dict[str, object]) -> tuple[str, object]:
