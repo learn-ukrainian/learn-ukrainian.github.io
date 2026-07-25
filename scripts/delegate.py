@@ -219,6 +219,20 @@ def _state_path(task_id: str) -> Path:
     return _TASKS_DIR / f"{safe}.json"
 
 
+def _apply_returncode_invariant(status: str, returncode: int | None) -> str:
+    """A success without a terminal child return code is not a success (#4837).
+
+    Lives on its own because it is applied twice: once on the normal completion
+    path and once in the interrupt fallback. When only the normal path enforced
+    it, a cancel landing between classification and the check persisted
+    ``done`` with a null return code — the fallback contradicting the invariant
+    precisely when it was exercised (cross-family review of #5807).
+    """
+    if status == "done" and returncode is None:
+        return "failed"
+    return status
+
+
 @contextlib.contextmanager
 def _sigterm_deferred():
     """Ignore SIGTERM for the duration of a critical write, then restore.
@@ -2539,8 +2553,8 @@ def _run_worker(
         # return code.  Refuse to persist a misleading ``done``/null combination
         # if a future runner regression drops it; failures without a child code
         # retain a precise reason instead of inventing a number (#4837).
-        if final_status == "done" and returncode is None:
-            final_status = "failed"
+        if _apply_returncode_invariant(final_status, returncode) != final_status:
+            final_status = _apply_returncode_invariant(final_status, returncode)
             ok_outcome = False
             returncode_reason = "runtime reported success without a terminal subprocess returncode"
             stderr_excerpt = "runtime reported success without a terminal subprocess returncode"
@@ -2679,11 +2693,15 @@ def _run_worker(
         )
         # The interrupt may have landed before classification ran, so derive the
         # outcome from the runtime flags rather than persisting an empty status.
-        interrupted_status = final_status or _classify_final_status(
-            cancelled=cancelled,
-            rate_limited=rate_limited,
-            ok_outcome=ok_outcome,
-            timed_out=timed_out,
+        interrupted_status = _apply_returncode_invariant(
+            final_status
+            or _classify_final_status(
+                cancelled=cancelled,
+                rate_limited=rate_limited,
+                ok_outcome=ok_outcome,
+                timed_out=timed_out,
+            ),
+            returncode,
         )
         with _sigterm_deferred():
             _write_state_atomic(

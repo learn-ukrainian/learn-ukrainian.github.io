@@ -4615,3 +4615,26 @@ def test_interrupt_in_the_post_cleanup_gap_still_records_the_outcome(
     assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
     # The fallback derived a real outcome instead of persisting an empty status.
     assert state["status"] in {"needs_finalize", "done"}
+
+
+def test_returncode_invariant_is_shared_by_both_status_paths():
+    """A success without a child return code is never persisted as done.
+
+    Cross-family review of #5807, round seven: the normal path enforced this and
+    the interrupt fallback did not, so a cancel landing between classification
+    and the check wrote status=done with returncode=null — the fallback
+    contradicting the invariant exactly when it was exercised.
+
+    The race window itself has no callable between the two statements, so no
+    patch can place an interrupt inside it. I wrote an end-to-end test that
+    appeared to cover it, found it was passing for the wrong reason — the
+    interrupt landed before the worker ran at all — and deleted it rather than
+    keep a test that cannot fail for its stated reason. The shared rule is
+    tested directly instead, and both call sites now route through it.
+    """
+    assert delegate._apply_returncode_invariant("done", None) == "failed"
+    assert delegate._apply_returncode_invariant("done", 0) == "done"
+    assert delegate._apply_returncode_invariant("done", 1) == "done"
+    # Non-success statuses are never rewritten by it.
+    for status in ("failed", "timeout", "rate_limited", "cancelled", "needs_finalize"):
+        assert delegate._apply_returncode_invariant(status, None) == status
