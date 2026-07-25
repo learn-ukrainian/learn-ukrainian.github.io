@@ -2431,12 +2431,21 @@ def _run_worker(
             Path(worktree_path),
             base_ref,
         )
-        # Fail CLOSED when the count is unknown. ``_count_commits_ahead`` returns
-        # None when it cannot count, and ``commits_ahead == 0`` silently skipped
-        # that case — which is how the B4 dispatch (commits_ahead=None,
-        # dirty_on_exit=True) still reported ``done``. Unknown plus dirty means we
-        # cannot prove the work was committed, so surface it for finalization.
-        if dirty_on_exit and commits_ahead in (0, None):
+        # Fail CLOSED on BOTH unknowns — they are the same bug in two variables.
+        #
+        # ``_count_commits_ahead`` returns None when it cannot count, and
+        # ``commits_ahead == 0`` silently skipped that case, which is how the B4
+        # dispatch (commits_ahead=None, dirty_on_exit=True) still reported ``done``.
+        #
+        # ``_worktree_is_dirty`` can ALSO return None (OSError, or a non-zero
+        # ``git status --porcelain``). A bare ``if dirty_on_exit`` treats that unknown
+        # as falsy and skips the check entirely — failing OPEN in precisely the way
+        # this fix exists to prevent. Caught in cross-family review of #5754, which
+        # noted the asymmetry after the count half had been fixed.
+        #
+        # Neither unknown can prove the work was committed, so either one surfaces
+        # the task for finalization rather than letting it settle as ``done``.
+        if dirty_on_exit in (True, None) and commits_ahead in (0, None):
             needs_finalize = True
 
         if needs_finalize and returncode == 0 and mode == "danger":

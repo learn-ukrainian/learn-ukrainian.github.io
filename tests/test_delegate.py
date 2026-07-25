@@ -1492,6 +1492,58 @@ def test_run_worker_marks_needs_finalize_for_dirty_workspace_write_worktree(
     assert state.get("auto_finalize") is None
 
 
+def test_run_worker_marks_needs_finalize_when_dirty_state_is_unknown(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """An UNKNOWN dirty state must fail closed, exactly like an unknown commit count.
+
+    Sibling of the bug above, caught in cross-family review of #5754 after the count
+    half was fixed. ``_worktree_is_dirty`` returns None when it cannot tell (OSError,
+    or a non-zero ``git status --porcelain``). A bare ``if dirty_on_exit`` treats that
+    unknown as falsy and skips the whole check — failing OPEN in the precise way this
+    safety net exists to prevent, and letting a dispatch settle as ``done`` when we
+    cannot prove anything was committed.
+    """
+    task_id = "needs-finalize-unknown-dirty"
+    state_path = delegate._state_path(task_id)
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    delegate._write_state_atomic(state_path, {
+        "task_id": task_id,
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    monkeypatch.setattr(delegate, "_auto_finalize_dirty_worktree", lambda **_k: None)
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=_finalize_mock_result()),
+        # Dirty state unknowable, and the commit count unknowable too.
+        patch.object(delegate, "_worktree_is_dirty", return_value=None),
+        patch.object(delegate, "_count_commits_ahead", return_value=None),
+    ):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="do the work",
+            mode="workspace-write",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            effort="high",
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "needs_finalize", (
+        f"unknown dirty state reported {state['status']!r}; an unknowable worktree "
+        "cannot prove the work was committed and must fail closed"
+    )
+    assert state["needs_finalize"] is True
+    assert rc == 1
+
+
 def test_run_worker_auto_finalizes_dirty_agy_worktree(
     tmp_tasks_dir,
     tmp_path,
