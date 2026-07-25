@@ -41,6 +41,8 @@ PRELOAD_MODULES = [
     "audit.check_core_bare",
     "scripts.audit.check_self_symlinks",
     "audit.check_self_symlinks",
+    "scripts.audit.check_primary_integrity",
+    "audit.check_primary_integrity",
     "scripts.build.phase_constants",
     "agent_runtime.adapters.gemini",
     "research_quality",
