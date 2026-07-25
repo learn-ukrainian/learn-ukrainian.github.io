@@ -78,7 +78,7 @@ models:
     weaknesses: [stricter_refusal_surface, cursor_fallback_no_zdr]
     sources:
       - https://www.anthropic.com/news/claude-fable-5-mythos-5
-  claude-opus-4-8:
+  claude-opus-5:
     family: anthropic
     tier: frontier_authority
     lifecycle: active
@@ -87,7 +87,7 @@ models:
     strengths: [production_judgment, adversarial_review, reliable_long_horizon_coding]
     weaknesses: [frontier_quota_cost]
     sources:
-      - https://www.anthropic.com/news/claude-opus-4-8
+      - https://platform.claude.com/docs/en/about-claude/models/overview
   claude-sonnet-5:
     family: anthropic
     tier: frontier_practical
@@ -158,6 +158,22 @@ models:
     transports: [native_kimi]
     strengths: [strong_agentic_coding, max_effort, image_video_tools]
     weaknesses: [public_context_spec_is_not_verified, max_effort_only]
+    sources:
+      - https://moonshotai.github.io/kimi-code/en/configuration/providers.html
+  kimi-k3-max:
+    family: moonshot
+    tier: frontier_authority
+    lifecycle: active
+    aliases: [k3-max]
+    kimi_routes:
+      kimicc_alias: k3-max
+      platform_model_id: kimi-k3-max
+      coding_model_id: kimi-k3-max
+      context_profile: kimicc_k3
+    roles: [architecture, critical_review, long_context_debugging, advisor]
+    transports: [native_kimi]
+    strengths: [frontier_reasoning, max_effort, long_context_review]
+    weaknesses: [max_effort_only, subscription_quota]
     sources:
       - https://moonshotai.github.io/kimi-code/en/configuration/providers.html
   kimi-code/kimi-for-coding:
@@ -331,8 +347,8 @@ models:
       - https://platform.claude.com/docs/en/about-claude/models/overview
 
 review_candidates:
-  claude-opus-4-8:
-    model_id: claude-opus-4-8
+  claude-opus-5:
+    model_id: claude-opus-5
     route: claude
     transport: native_claude
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude
@@ -413,11 +429,11 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review]
     requires_data_egress_policy: local_interactive
-  claude-opus-4-8:
-    model_id: claude-opus-4-8
+  claude-opus-5:
+    model_id: claude-opus-5
     route: claude
     transport: native_claude
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-4-8
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-5
     review_profiles: [code, infra]
     capabilities: [code_review]
   claude-sonnet-5:
@@ -577,7 +593,7 @@ review_ladders:
     - [openai_frontier]
     - [claude-fable-5]
     - [claude-fable-5-cursor-fallback]
-    - [claude-opus-4-8]
+    - [claude-opus-5]
     - [gpt-5.6-terra]
     - [claude-sonnet-5]
     - [gemini-3.6-flash]

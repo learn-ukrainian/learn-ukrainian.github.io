@@ -17,6 +17,7 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 
+from ._ask_contract import resolve_model_selection, response_provenance
 from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
@@ -112,13 +113,13 @@ def ask_codex(
     from_llm: str | None = None,
     from_model: str | None = None,
     to_model: str | None = None,
-    effort: str | None = None,
     no_timeout: bool = False,
+    effort: str | None = None,
     review: bool = False,
     background: bool = False,
     review_branch: str | None = None,
     review_pr_number: int | None = None,
-):
+    ):
     """Send message to Codex AND invoke Codex to process it."""
     try:
         has_target = review_branch is not None or review_pr_number is not None
@@ -137,6 +138,9 @@ def ask_codex(
         has_target=has_target,
     )
     from_llm = _resolve_codex_from_llm(from_llm)
+    effective_model = resolve_model_selection(
+        lane="ask-codex", to_model=to_model, model=None, default="gpt-5.6-terra"
+    )
     msg_id = send_message(
         content,
         task_id,
@@ -145,7 +149,7 @@ def ask_codex(
         from_llm=from_llm,
         to_llm="codex",
         from_model=from_model,
-        to_model=to_model,
+        to_model=effective_model,
         effort=effort,
         review_target=review_target_payload(review_branch, review_pr_number),
     )
@@ -172,6 +176,7 @@ def ask_codex_chain(
     from_model: str | None = None,
     to_model: str | None = None,
     no_timeout: bool = False,
+    effort: str | None = None,
     review: bool = False,
     background: bool = False,
     review_branch: str | None = None,
@@ -198,6 +203,7 @@ def ask_codex_chain(
             from_model,
             to_model,
             no_timeout,
+            effort,
             review=review,
             background=background,
             review_branch=review_branch,
@@ -377,12 +383,20 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
         return
 
     print(f"\n✅ Codex finished ({len(response)} chars)")
+    provenance_data, actual_model = response_provenance(
+        msg,
+        actual_model=getattr(result, "model", None) or model or "gpt-5.6-terra",
+        harness="codex",
+        effort_applied=getattr(result, "effort", None),
+    )
     reply_id = send_message(
         content=response,
         task_id=msg["task_id"],
         msg_type="response",
         from_llm="codex",
         to_llm=msg["from"],
+        data=provenance_data,
+        from_model=actual_model,
     )
     acknowledge(message_id)
     acknowledge(reply_id)

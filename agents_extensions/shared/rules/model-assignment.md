@@ -22,8 +22,8 @@ official model documentation, checking local bakeoff deltas, updating `reviewed_
 
 Selection order is binding: **independence and hard gates → review quality tier → health/quota within
 that tier → cost among equivalent fits**. For formal code review, everyday routine PRs use practical seats
-(**Sonnet 5 → Terra → Gemini 3.6 Flash → GLM**). Escalatory authority reviews select from the advisor quality prior (**Sol → Fable
-→ Opus → Pro**) (#5293).
+(**Sonnet 5 → Terra → Gemini 3.6 Flash → GLM**). Escalatory authority reviews select from the advisor quality prior (**Sol → Opus
+→ Fable → Pro**) (#5293). `gpt-5.6-terra` is **not an advisor**: it remains a practical/routine review seat.
 Cost never lowers the quality floor. An `unhealthy` route is unavailable; `degraded` and `near_cap`
 only break ties inside a quality rung. `cursor:auto` is never an acceptable formal-review identity;
 Composer is eligible only with its concrete `composer-2.5` model identity.
@@ -43,11 +43,18 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
   * **GLM seat**: `glm-5.2` (local-only)
   * **Gemini seat**: `gemini-3.6-flash-high`
 * **Complex Non-Advisory Tasks & Deep Reviews**:
-  * **Anthropic Opus seat**: `claude-opus-4-8` (complex coding, deep reasoning, adversarial review)
+  * **Anthropic Opus seat**: `claude-opus-5` (complex coding, deep reasoning, adversarial review)
 * **Escalatory Advisor / Critical Authority Reviews** (reserved for architecture, security, or design escalation):
-  * **Anthropic Advisor**: `claude-fable-5` (Fable 5)
-  * **OpenAI Advisor**: `gpt-5.6-sol` (`--effort xhigh`)
-  * **Google Advisor**: `gemini-3.1-pro-high` (Pro)
+  * **Top advisors @ `xhigh`**: `gpt-5.6-sol` · `claude-opus-5` · `claude-fable-5`.
+    Fable remains listed, but is too expensive: prefer `claude-opus-5` when the
+    Anthropic advisor is needed.
+  * **Other advisors**: `gemini-3.1-pro-high` · `gemini-3.6-flash-high` ·
+    `kimi-k3-max` · `glm-5.2` · `grok-4.5` @ `high`.
+  * `gpt-5.6-terra` is **not an advisor**; it remains the practical/routine
+    Codex review seat.
+  * `gemini-3.6-flash-high` is currently the strongest lane for Ukrainian.
+    Flash 3.6 sometimes outperforms 3.1 Pro; until the next 3.1 Pro ships,
+    test Flash in advisor-adjacent roles.
 
 *Everyday routine PRs use practical seats (`sonnet` / `terra`). Do not burn advisor seats on routine work.*
 
@@ -62,7 +69,7 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
 | Task | Tool + model |
 | --- | --- |
 | Inline code edit ≤5 LOC, fixing a CI failure I just caused | Me, current model |
-| Claude-side ROUTINE work — formulaic reviews, config/fixture edits, monitoring-only sessions, wiki fixes, mechanical PR babysitting | **Sonnet 5** (user 2026-07-07: "use Sonnet more often for routine work") — dispatch `--model sonnet` / Sonnet session. Reserve the frontier Claude tier (Opus 4.8 / whatever frontier model is active) for judgment work: architecture, adversarial review, pedagogy, hard bugs. **Route by TIER-FIT, not model name — the Claude lane rotates** (Fable 5 was temporary). **Motive = SAVE THE FRONTIER WINDOW** (user-confirmed 2026-07-07): if Sonnet is busy, QUEUE routine work or reroute to agy/codex — do not burn the frontier window on it. |
+| Claude-side ROUTINE work — formulaic reviews, config/fixture edits, monitoring-only sessions, wiki fixes, mechanical PR babysitting | **Sonnet 5** (user 2026-07-07: "use Sonnet more often for routine work") — dispatch `--model sonnet` / Sonnet session. Reserve the frontier Claude tier (Opus 5 / whatever frontier model is active) for judgment work: architecture, adversarial review, pedagogy, hard bugs. **Route by TIER-FIT, not model name — the Claude lane rotates** (Fable 5 was temporary). **Motive = SAVE THE FRONTIER WINDOW** (user-confirmed 2026-07-07): if Sonnet is busy, QUEUE routine work or reroute to agy/codex — do not burn the frontier window on it. |
 | Code change >5 LOC, mechanical / pattern-applying / fixtures | `delegate.py dispatch --agent codex --mode danger --worktree --base origin/main` (no `--model`) |
 | Code Review (PR diff) | Resolve with `.venv/bin/python -m scripts.review.closeout_cli ... resolve-reviewer --author-model <exact-model> --review-profile code --risk <low\|medium\|high\|critical>`. The resolver applies hard filters first, then the #5293 quality prior above for every formal review; risk remains recorded in the receipt but does not allow a lower tier to leapfrog an eligible higher one. Execute the returned `invocation`; preserve its concrete model, family, `route`, `transport`, health trace, and `requires_silence_timeout` receipt. Do not hand-pick Flash while an eligible higher-tier reviewer remains usable. |
 | Content Review with VESUM verification (load-bearing) | **LANGUAGE-LANES RULE binds (user 2026-07-17): agy / codex / claude / grok-4.5 only** — dispatch the reviewer on one of the four with the `sources` MCP (`verify_words`, `query_cefr_level`, `check_russian_shadow`). ~~deepseek-v4-pro default (#4358)~~ RETIRED for language seats by the same order; the #2112/# 4358 validation history stands as evidence only |
