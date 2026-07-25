@@ -999,6 +999,47 @@ def test_corrupt_json_lease_heals_via_fresh_acquire(tmp_path: Path):
     assert on_disk["schema_version"] == 2
 
 
+def test_same_owner_resume_of_uncheckable_v2_lease_reacquires_with_new_generation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """A v2 lease with no usable identity must NOT keep its generation on an explicit resume.
+
+    Cross-family review finding F002 (gpt-5.6-sol, PR #5758). The v1->v2 upgrade concession is
+    safe only because a v1 lease predates the generation export, so its predecessor cannot hold
+    a generation to release with. A v2 lease whose liveness fields are absent is different: its
+    predecessor ran under this schema and may already have exported generation 2, so preserving
+    it would let that dead predecessor's delayed SessionEnd pass release fencing and delete THIS
+    process's live lease.
+    """
+    now = datetime(2026, 7, 25, 10, 0, tzinfo=UTC)
+    uncheckable_v2 = {
+        "schema_version": th.THREAD_LEASE_SCHEMA_VERSION,
+        "agent": "claude-infra",
+        "generation": 2,
+        "owner_thread_id": "same-owner",
+        "acquired_at": "2026-07-25T09:00:00Z",
+        "heartbeat_at": "2026-07-25T09:00:00Z",
+        # v2, but carries no owner_pid/owner_pid_started_at/owner_machine_id — nothing to probe.
+    }
+    lease_path = _write_lease(tmp_path, "claude-infra", uncheckable_v2)
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda starting_pid: {"owner_pid": 777, "owner_pid_started_at": 99.0, "owner_machine_id": "machine-a"},
+    )
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="same-owner", now=now, starting_pid=1
+    )
+
+    # The generation MUST advance: absence of proof is not proof of continuity.
+    assert result["generation"] == 3, "an uncheckable v2 lease must reacquire, not refresh in place"
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["generation"] == 3
+    assert on_disk["owner_pid"] == 777
+    assert on_disk["owner_machine_id"] == "machine-a"
+
+
 def test_same_owner_refresh_upgrades_v1_lease_to_v2(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """Matrix 13 / rule E: a same-owner refresh must not leave a v1 lease stuck on the fallback path."""
     now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)

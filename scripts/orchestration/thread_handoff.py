@@ -1075,16 +1075,27 @@ def _same_owner_identity_confirmed(
     contradict continuity with, but also nothing to prove it either:
 
     - Default (``False``), used by ``claim_thread_lease``'s explicit same-owner resume: this
-      returns True, so the existing v1->v2 upgrade-on-refresh behavior (rule E) still heals a
-      legacy lease the first time its own owner resumes it.
+      returns True **only for a legacy v1 lease**, so the v1->v2 upgrade-on-refresh behavior
+      (rule E) still heals a legacy lease the first time its own owner resumes it.
     - ``True``, used by ``refresh_thread_lease_heartbeat``: this returns False. A heartbeat
       call is implicit and frequent, not an explicit resume — it must never assume unproven
       process continuity just to keep writing a lease it cannot actually verify it still owns.
       A no-op there is safe: nothing takes a lease over on heartbeat age anymore, so a stale
       heartbeat on an uncheckable lease costs nothing.
+
+    A **v2** lease whose identity is merely unusable (incomplete liveness fields, or another
+    machine's) is NOT eligible for that upgrade concession, even on the explicit-resume path.
+    Its predecessor ran under this schema and therefore may already have exported this exact
+    generation at its own SessionStart, so preserving the generation would let a delayed
+    ``SessionEnd`` from that dead process pass ``release_thread_lease``'s fencing and delete
+    the *successor's* live lease — the precise double-driving the generation fence exists to
+    stop, leaking in exactly the case where the lease is least verifiable. Only v1 predates
+    the generation export and so provably cannot hold a generation to release with.
     """
     if not _lease_liveness_checkable(existing_raw):
-        return not require_proof
+        if existing_raw.get("schema_version") != THREAD_LEASE_SCHEMA_VERSION:
+            return not require_proof
+        return False
     new_fields = _derive_owner_liveness_fields(starting_pid)
     if not new_fields:
         return False
