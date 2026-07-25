@@ -107,10 +107,38 @@ jobs:
       # the `-n auto` bulk run and passed standalone). The two cache tests
       # that used to need isolation do not: #2002's autouse fixture already
       # fixed that class, so they run as ordinary members of the suite.
+      # Coverage is collected only on pushes to `main`, matching the behaviour
+      # this file replaces — it is a trend floor, not a per-PR gate, and
+      # instrumentation costs wall-clock on every PR for no added signal.
       - name: Run pytest
+        # The predicate is evaluated by the expression engine and reaches the
+        # shell as the literal string "true"/"false" via env — `github.ref` is
+        # never spliced into `run:`, so a hostile branch name cannot inject.
+        env:
+          IS_MAIN_PUSH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         run: |
-          .venv/bin/python -m pytest tests -n auto --strict-markers --timeout=120 --timeout-method=thread --durations=25 \
+          cov_args=""
+          if [ "$IS_MAIN_PUSH" = "true" ]; then
+            cov_args="--cov=scripts --cov-report="
+          fi
+          # shellcheck disable=SC2086  # cov_args is a deliberate word-split argument list
+          .venv/bin/python -m pytest tests -n auto --strict-markers --timeout=120 --timeout-method=thread --durations=25 $cov_args \
             --deselect=tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast
+
+      # Restores the `--fail-under=35` floor the deleted shard aggregation
+      # enforced (origin/main ci.yml:1183). Cross-family review of #5762 caught
+      # its removal as a P1: without it a green CI Gate could accompany an
+      # arbitrarily large coverage regression.
+      #
+      # Simpler than what it replaces: the four shards ran as separate JOBS, so
+      # main had to upload four `.coverage.shard-*` artifacts and `coverage
+      # combine` them. One job with `-n auto` means pytest-cov combines the
+      # xdist workers itself, and `coverage report` just reads the result.
+      - name: Coverage floor (pushes to main only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          .venv/bin/python -m coverage report --fail-under=35
+          .venv/bin/python -m coverage xml -o coverage.xml
 
       # Wall-clock perf probe. Kept serial, after the main body, with its
       # existing retry-on-flake: /api/rag/search_text can 500 on an FTS
