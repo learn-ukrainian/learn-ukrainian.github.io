@@ -177,7 +177,7 @@ is for CROSS-session continuity, not an in-session rot guard. But:
 - **Watch: `Monitor` a settle-loop on the task's `batch_state/tasks/<id>.json` `status`** → read the
   result file on terminal. Terminal vocab (match `scripts/delegate.py`): **`done` = SUCCESS (NOT
   "completed")**; other settle states `failed|timeout|rate_limited|cancelled|crashed|dry_run`
-  (`dry_run` is terminal, not success) plus the persisted attention status `needs_finalize`; emit
+  (`dry_run` is terminal, not success) plus the persisted attention statuses `needs_finalize|no_deliverable`; emit
   on any status NOT in {spawning,running,""} — `spawning` persists before the worker forks, so it
   is not terminal. A loop waiting for "completed" silently times out on a finished task (burned
   2026-07-15). Never keyword-grep logs as a completion signal; never ScheduleWakeup-poll what

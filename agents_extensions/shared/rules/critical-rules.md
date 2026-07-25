@@ -80,11 +80,15 @@ legitimately complete with no PR: reviews, audits, research, diagnosis, and any 
 `--mode read-only`. For those, the deliverable *is* the report. The mechanical test is the dispatch's
 own mode plus whether its worktree is dirty — not a judgement about intent.
 
-**Three distinct terminal outcomes; do not collapse them into `done`:**
+**Four distinct terminal outcomes; do not collapse them into `done`:**
 - **`done`** — the deliverable exists (a pushed PR for change tasks, a report for read-only tasks).
 - **`needs_finalize`** — work was produced but not committed or pushed. This is a **failure to finish**,
   and it is now detected mechanically for every write-capable mode (`delegate.py`); a dirty worktree with
   no commits can no longer report `done`.
+- **`no_deliverable`** — a clean write-capable dispatch did not provide verifiable delivery evidence.
+  It is distinct from `needs_finalize`: do not re-enter its worktree expecting uncommitted edits. Resolve
+  the failed task or re-dispatch it. A structured final `DELIVERABLE:` declaration may establish either a
+  committed change or a reasoned no-op; free-form narration and an unstructured commit do not.
 - **`BLOCKED` / `NEEDS-INPUT`** — genuinely cannot proceed. Reporting this is correct behaviour, not a
   failure of nerve.
 

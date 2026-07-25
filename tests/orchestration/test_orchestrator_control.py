@@ -96,6 +96,39 @@ def test_inbox_markdown_includes_result_excerpt_and_pr_attention(tmp_path: Path,
     assert "Summary text." in output
 
 
+def test_inbox_marks_no_deliverable_for_operator_attention(tmp_path: Path, capsys):
+    _write_task(
+        tmp_path,
+        "missing-deliverable",
+        {
+            "agent": "codex",
+            "status": "no_deliverable",
+            "started_at": "2026-06-06T10:00:00Z",
+            "duration_s": 571.0,
+            "no_deliverable_reason": "missing_delivery_declaration_short_response",
+        },
+    )
+    oc.record_task(tmp_path, "a1-policy", task_id="missing-deliverable", agent="codex")
+
+    rc = oc.main(
+        [
+            "--repo-root",
+            str(tmp_path),
+            "inbox",
+            "--run-id",
+            "a1-policy",
+            "--format",
+            "json",
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert rc == 0
+    assert payload["tasks"][0]["status"] == "no_deliverable"
+    assert "no_deliverable" in payload["tasks"][0]["attention"]
+    assert payload["tasks"][0]["no_deliverable_reason"] == "missing_delivery_declaration_short_response"
+
+
 def test_inbox_json_reports_missing_recorded_task(tmp_path: Path, capsys):
     oc.record_task(tmp_path, "a1-policy", task_id="missing-worker", agent="codex")
 

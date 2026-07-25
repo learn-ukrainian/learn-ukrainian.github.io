@@ -40,7 +40,8 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "cli_version": str,
         "mode": str,
         "pid": int,
-        "status": "running" | "done" | "failed" | "timeout" | "rate_limited" | "crashed",
+        "status": "running" | "done" | "failed" | "timeout" | "rate_limited" | "crashed"
+                  | "needs_finalize" | "no_deliverable",
         "started_at": iso-8601 UTC,
         "finished_at": iso-8601 UTC | null,
         "duration_s": float | null,
@@ -658,7 +659,17 @@ def _classify_worktree_layout(path: Path | str | None) -> str | None:
 # preflight and creating a worktree from the primary checkout stay allowed.
 
 _WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
-_NO_DELIVERABLE_REASON = "write_capable_clean_worktree_zero_commits_short_response"
+_NO_DELIVERABLE_STATUS = "no_deliverable"
+_NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON = "commit_count_unknown"
+_NO_DELIVERABLE_MISSING_DECLARATION_REASON = "missing_delivery_declaration"
+_NO_DELIVERABLE_MISSING_DECLARATION_SHORT_RESPONSE_REASON = (
+    "missing_delivery_declaration_short_response"
+)
+_NO_DELIVERABLE_INVALID_DECLARATION_REASON = "invalid_delivery_declaration"
+_NO_DELIVERABLE_COMMIT_DIFF_UNKNOWN_REASON = "commit_diff_unknown"
+_NO_DELIVERABLE_COMMIT_DIFF_MISMATCH_REASON = "commit_diff_mismatch"
+_DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
+_DELIVERY_OUTCOMES = frozenset({"change", "no_change"})
 
 _WRITE_WORKTREE_HINT = (
     "Write-capable dispatch must run inside a dispatch worktree, never the "
@@ -666,6 +677,107 @@ _WRITE_WORKTREE_HINT = (
     ".worktrees/dispatch/<agent>/<task>/. Alternatively point `--cwd` at an "
     "existing added worktree there."
 )
+
+
+def _parse_delivery_declaration(response: str) -> dict[str, Any] | None:
+    """Return one strict structured outcome declaration from a worker response.
+
+    Write-capable work cannot use narration or a commit count alone as delivery
+    proof. The worker must end its response with one machine-readable line:
+
+    ``DELIVERABLE: {"outcome":"change",...}`` or
+    ``DELIVERABLE: {"outcome":"no_change","reason":"..."}``.
+
+    Requiring the final non-empty line prevents a report from accidentally
+    embedding an example declaration and makes the result-file evidence easy
+    for operators to inspect. This validates structure only; git state supplies
+    the corresponding durable evidence for a declared change/no-change.
+    """
+    lines = [line.strip() for line in response.splitlines() if line.strip()]
+    if not lines:
+        return None
+    line = lines[-1]
+    if not line.startswith(_DELIVERY_DECLARATION_PREFIX):
+        return None
+    try:
+        declaration = json.loads(line.removeprefix(_DELIVERY_DECLARATION_PREFIX).strip())
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(declaration, dict):
+        return None
+    outcome = declaration.get("outcome")
+    if outcome not in _DELIVERY_OUTCOMES:
+        return None
+    if outcome == "no_change":
+        reason = declaration.get("reason")
+        if not isinstance(reason, str) or not reason.strip():
+            return None
+        return {"outcome": outcome, "reason": reason.strip()}
+    summary = declaration.get("summary")
+    if not isinstance(summary, str) or not summary.strip():
+        return None
+    changed_paths = declaration.get("changed_paths")
+    if (
+        not isinstance(changed_paths, list)
+        or not changed_paths
+        or any(
+            not isinstance(path, str)
+            or not path
+            or Path(path).is_absolute()
+            or ".." in Path(path).parts
+            for path in changed_paths
+        )
+    ):
+        return None
+    return {
+        "outcome": outcome,
+        "summary": summary.strip(),
+        "changed_paths": sorted(set(changed_paths)),
+    }
+
+
+def _committed_paths_ahead(worktree: Path, base_ref: str) -> tuple[str, ...] | None:
+    """Return changed paths in the own-branch range, or None if git cannot prove it."""
+    proc = subprocess.run(
+        ["git", "diff", "--name-only", f"{base_ref}...HEAD"],
+        cwd=worktree,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    if proc.returncode != 0:
+        return None
+    return tuple(sorted({path for path in proc.stdout.splitlines() if path}))
+
+
+def _delivery_declaration_failure_reason(
+    response: str,
+    declaration: dict[str, Any] | None,
+    *,
+    commits_ahead: int | None,
+    dirty_on_exit: bool | None,
+    committed_paths: tuple[str, ...] | None,
+) -> str | None:
+    """Return why a clean write outcome lacks verifiable delivery evidence."""
+    if commits_ahead is None:
+        return _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON
+    if declaration is None:
+        if len(response) <= DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX:
+            return _NO_DELIVERABLE_MISSING_DECLARATION_SHORT_RESPONSE_REASON
+        return _NO_DELIVERABLE_MISSING_DECLARATION_REASON
+    if dirty_on_exit is not False:
+        return _NO_DELIVERABLE_INVALID_DECLARATION_REASON
+    outcome = declaration["outcome"]
+    if outcome == "no_change" and commits_ahead == 0:
+        return None
+    if outcome == "change" and commits_ahead > 0:
+        if committed_paths is None:
+            return _NO_DELIVERABLE_COMMIT_DIFF_UNKNOWN_REASON
+        if committed_paths and tuple(declaration["changed_paths"]) == committed_paths:
+            return None
+        return _NO_DELIVERABLE_COMMIT_DIFF_MISMATCH_REASON
+    return _NO_DELIVERABLE_INVALID_DECLARATION_REASON
 
 
 def _load_worktree_containment():
@@ -1155,7 +1267,17 @@ def _worktree_matches_origin_branch(path: Path, branch: str) -> bool:
 # mounted. Includes failure modes — a crashed review worktree should not
 # permanently pin a PR branch for follow-up dispatches (#5340).
 _BRANCH_HOLDER_RELEASABLE_STATUSES = frozenset(
-    {"done", "failed", "timeout", "rate_limited", "crashed", "cancelled", "dry_run", "needs_finalize"}
+    {
+        "done",
+        "failed",
+        "timeout",
+        "rate_limited",
+        "crashed",
+        "cancelled",
+        "dry_run",
+        "needs_finalize",
+        _NO_DELIVERABLE_STATUS,
+    }
 )
 
 
@@ -2150,6 +2272,7 @@ def _augment_prompt_with_worktree(
     prompt: str,
     worktree_path: Path | None,
     *,
+    mode: str = "read-only",
     sparse_telemetry: dict[str, Any] | None = None,
 ) -> str:
     """Inject worktree context into the delegated prompt when relevant."""
@@ -2165,6 +2288,15 @@ def _augment_prompt_with_worktree(
                 + ". If you need them, re-dispatch with --sparse-include <dir> "
                 "or --full-checkout (do not invent content for missing paths).\n"
             )
+    delivery_note = ""
+    if mode in _WRITE_CAPABLE_MODES:
+        delivery_note = (
+            "\n[delivery declaration required]\n"
+            "For a write-capable dispatch, end your final response with exactly one machine-readable "
+            "line. For a committed change: `DELIVERABLE: {\"outcome\":\"change\",\"summary\":\"what changed\",\"changed_paths\":[\"path/to/file\"]}`. "
+            "For a verified no-op: `DELIVERABLE: {\"outcome\":\"no_change\",\"reason\":\"why no changes are required\"}`. "
+            "A commit count or free-form narration alone does not prove delivery.\n"
+        )
     return (
         "[delegate worktree]\n"
         f"Run all file edits, tests, and git commands inside this worktree: {worktree_path}\n"
@@ -2176,7 +2308,7 @@ def _augment_prompt_with_worktree(
         "`origin` here points at the canonical GitHub remote and fetch works from any "
         "linked worktree. NEVER use the primary checkout as a source of freshness "
         "(no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.\n"
-        f"{sparse_note}\n"
+        f"{sparse_note}{delivery_note}\n"
         f"{prompt}"
     )
 
@@ -2540,7 +2672,10 @@ def _run_worker(
     commits_ahead: int | None = None
     needs_finalize = False
     finalize_error: str | None = None
+    no_deliverable = False
     no_deliverable_reason: str | None = None
+    delivery_declaration: dict[str, Any] | None = None
+    committed_paths: tuple[str, ...] | None = None
     auto_finalize: AutoFinalizeResult | None = None
     telemetry_settled = False
 
@@ -2839,25 +2974,48 @@ def _run_worker(
             )
         raise
 
-        # A clean, zero-commit write-capable dispatch that only returned a tiny
-        # response has no durable deliverable to inspect. Preserve the existing
-        # attention mechanism instead of misclassifying the terminal process exit
-        # as sufficient evidence of completed work. Read-only tasks are excluded:
+        # A write-capable task must supply machine-checkable final-outcome
+        # evidence. Response length is retained only to explain a thin response;
+        # it never makes narration a deliverable. Read-only tasks are excluded:
         # their deliverable may be analysis or an external side effect such as a
         # posted review comment.
         if (
             final_status == "done"
             and returncode == 0
-            and commits_ahead == 0
-            and dirty_on_exit is False
-            and len(response) <= DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX
+            and not needs_finalize
         ):
-            needs_finalize = True
-            no_deliverable_reason = _NO_DELIVERABLE_REASON
+            if auto_finalize and auto_finalize.ok:
+                # The runtime itself committed/pushed this previously dirty tree
+                # and returned its exact path inventory, so this is stronger
+                # evidence than a worker's final-text declaration.
+                committed_paths = tuple(sorted(auto_finalize.changed_files))
+                delivery_declaration = {
+                    "outcome": "change",
+                    "summary": "runtime auto-finalized the dirty worktree",
+                    "changed_paths": list(committed_paths),
+                }
+            else:
+                delivery_declaration = _parse_delivery_declaration(response)
+                if delivery_declaration and delivery_declaration["outcome"] == "change" and commits_ahead:
+                    committed_paths = _committed_paths_ahead(Path(worktree_path), base_ref)
+                no_deliverable_reason = _delivery_declaration_failure_reason(
+                    response,
+                    delivery_declaration,
+                    commits_ahead=commits_ahead,
+                    dirty_on_exit=dirty_on_exit,
+                    committed_paths=committed_paths,
+                )
+                no_deliverable = no_deliverable_reason is not None
 
     if needs_finalize:
         final_status = "needs_finalize"
+    elif no_deliverable:
+        final_status = _NO_DELIVERABLE_STATUS
+        ok_outcome = False
 
+    last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
+    if no_deliverable_reason is not None:
+        last_error = no_deliverable_reason
     if last_error:
         # Task logs capture this worker's stderr, while agent_runtime captures
         # the CLI child's stderr internally. Re-emit the excerpt so an
@@ -2893,6 +3051,8 @@ def _run_worker(
             "cli_version": getattr(result, "cli_version", final_state.get("cli_version")),
             "substitution": substitution,
             "no_deliverable_reason": no_deliverable_reason,
+            "delivery_declaration": delivery_declaration,
+            "committed_paths": committed_paths,
             "keep_worktree": keep_worktree,
             "worktree_reap": worktree_reap,
             "tmp_bytes_freed": (
@@ -2972,7 +3132,7 @@ def _run_worker(
             stderr_excerpt=stderr_excerpt,
         )
 
-    return 0 if ok_outcome and not needs_finalize else 1
+    return 0 if ok_outcome and not needs_finalize and not no_deliverable else 1
 
 
 # ---------------------------------------------------------------------------
@@ -3340,6 +3500,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     prompt = _augment_prompt_with_worktree(
         prompt,
         worktree_path,
+        mode=args.mode,
         sparse_telemetry=worktree_telemetry.get("sparse")
         if isinstance(worktree_telemetry.get("sparse"), dict)
         else None,
@@ -4436,6 +4597,7 @@ def build_parser() -> argparse.ArgumentParser:
             "crashed",
             "cancelled",
             "needs_finalize",
+            _NO_DELIVERABLE_STATUS,
             "dry_run",
         ],
         help="Optional status filter, e.g. running or failed.",

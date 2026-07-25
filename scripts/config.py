@@ -19,9 +19,8 @@ except ModuleNotFoundError:
         sys.path.insert(0, str(_SCRIPTS_DIR))
     from batch_gemini_config import FLASH_MODEL, PRO_MODEL
 
-# A response below this size cannot by itself demonstrate a write-capable
-# dispatch delivered work. It is only used alongside a clean worktree and zero
-# commits to surface the task for human finalization; tune from observed runs.
+# A short unstructured response is useful diagnostic context for a failed
+# delivery declaration, never proof that a write-capable dispatch delivered work.
 DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX = 300
 
 # =============================================================================

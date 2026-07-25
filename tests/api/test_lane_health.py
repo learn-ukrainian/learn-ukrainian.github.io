@@ -38,6 +38,9 @@ def test_is_spawn_phase_failure():
     # Status needs_finalize -> not a spawn failure
     assert is_spawn_phase_failure({"status": "needs_finalize", "returncode": 1, "duration_s": 10}) is False
 
+    # no_deliverable is a completion-contract failure, not a provider spawn failure.
+    assert is_spawn_phase_failure({"status": "no_deliverable", "returncode": 1, "duration_s": 10}) is False
+
     # Active/running task (no returncode) -> not a spawn failure
     assert is_spawn_phase_failure({"status": "running", "returncode": None, "duration_s": None}) is False
 

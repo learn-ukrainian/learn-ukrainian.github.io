@@ -27,6 +27,7 @@ TASK_STATUS_ATTENTION = {
     "crashed",
     "failed",
     "needs_finalize",
+    "no_deliverable",
     "rate_limited",
     "timeout",
 }
@@ -295,6 +296,7 @@ def summarize_task(
         "worktree_branch": task.get("worktree_branch"),
         "worktree_dirty_on_exit": task.get("worktree_dirty_on_exit"),
         "commits_ahead": task.get("commits_ahead"),
+        "no_deliverable_reason": task.get("no_deliverable_reason"),
         "result_file": str(result_path) if result_path else task.get("result_file"),
         "result_excerpt": result_excerpt,
         "result_truncated": result_truncated,

@@ -92,7 +92,7 @@ initialPrompt: |
     result file on terminal. **Match the runtime's terminal vocab (`scripts/delegate.py`) — `done`
     (the SUCCESS state, NOT "completed"); other settle states
     `failed|timeout|rate_limited|cancelled|crashed|dry_run` (`dry_run` is terminal, not success)
-    plus the persisted attention status `needs_finalize`; emit on any status NOT in
+    plus the persisted attention statuses `needs_finalize|no_deliverable`; emit on any status NOT in
     {spawning,running,""}** (a dispatch persists `spawning` before it forks
     the worker — treating it as terminal would retry/clean up a live task) — a loop that waits for
     "completed" silently times out on
