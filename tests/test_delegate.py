@@ -3180,9 +3180,12 @@ def test_augment_prompt_mentions_sparse_exclusions():
     assert "sparse" in text.lower() or "Sparse" in text
 
 
-def test_ensure_worktree_falls_back_when_fetch_fails(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
-    """Fix 1 (#1476): offline/no-remote scenarios fall back to local
-    base rather than hard-failing. A warning is logged on stderr.
+def test_ensure_worktree_refuses_stale_base_when_fetch_fails(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """Fix 1 (#1476) amended by #5803 follow-up: offline/no-remote scenarios
+    used to fall back to the local base with only a stderr warning. That
+    silent fallback is why a worker concluded "origin/main may be stale" and
+    went to the PRIMARY checkout for freshness, leaving it detached. Fetch
+    failure is now an actionable hard error — no stale-base worktree.
     """
     target = tmp_path / "offline-worktree"
 
@@ -3199,18 +3202,15 @@ def test_ensure_worktree_falls_back_when_fetch_fails(tmp_tasks_dir, tmp_path, mo
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
 
-    _, branch, _ = delegate._ensure_worktree(
-        agent="codex",
-        task_id="1476-offline",
-        raw_path=str(target),
-        base="main",
-    )
-    assert branch == "codex/1476-offline"
-    captured = capsys.readouterr()
-    assert (
-        ("fetch" in captured.err and "fallback" in captured.err.lower())
-        or "stale" in captured.err.lower()
-    )
+    with pytest.raises(RuntimeError, match="git fetch origin main"):
+        delegate._ensure_worktree(
+            agent="codex",
+            task_id="1476-offline",
+            raw_path=str(target),
+            base="main",
+        )
+    # No worktree was branched from the stale local base.
+    assert not target.exists()
 
 
 # ---------------------------------------------------------------------------

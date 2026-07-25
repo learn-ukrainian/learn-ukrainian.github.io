@@ -660,6 +660,37 @@ def _self_symlink_canary() -> bool:
     return ok
 
 
+def _primary_integrity_canary() -> bool:
+    """Detection + conservative repair canary for primary-checkout drift.
+
+    #5803 follow-up: a worker detached the primary checkout (`checkout: moving
+    from main to FETCH_HEAD`). Git-layer prevention was proven impossible
+    against a same-UID process (design panel: gpt-5.6-sol + agy), so this
+    canary DETECTS and repairs ONLY detached+clean+idle drift; anything else
+    (dirty tree, op in progress, running dispatch, main moved unexpectedly)
+    alerts and preserves evidence without touching the human's checkout.
+    Never raises: the canary must not break health collection.
+    """
+    try:
+        from scripts.audit.check_primary_integrity import (  # noqa: PLC0415 — script-path fallback
+            check_primary_integrity,
+        )
+    except ImportError:  # path-flavoured import for test/script contexts
+        from audit.check_primary_integrity import check_primary_integrity  # noqa: PLC0415 — script-path fallback
+    try:
+        ok, message = check_primary_integrity(
+            PROJECT_ROOT,
+            fix=True,
+            tasks_dir=PROJECT_ROOT / "batch_state" / "tasks",
+        )
+    except Exception:
+        logger.exception("primary-integrity canary failed to run")
+        return True  # fail-open: don't raise a false alarm on canary error
+    if not ok or "repaired" in message:
+        logger.warning("primary-integrity canary: %s", message)
+    return ok
+
+
 def _collect_health_orient_data() -> dict:
     return {
         "api": True,
@@ -668,6 +699,7 @@ def _collect_health_orient_data() -> dict:
         "message_broker": _readable_file(MESSAGE_DB),
         "git_core_bare_ok": _core_bare_canary(),
         "node_modules_symlinks_ok": _self_symlink_canary(),
+        "primary_integrity_ok": _primary_integrity_canary(),
     }
 
 
