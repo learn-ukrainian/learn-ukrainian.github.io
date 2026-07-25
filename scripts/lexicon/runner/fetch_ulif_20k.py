@@ -15,6 +15,7 @@ import hashlib
 import json
 import sys
 import time
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -346,7 +347,11 @@ def _run(args: argparse.Namespace) -> int:
     repo = args.repo.resolve()
     _load_runner(repo)
     from scripts.lexicon.runner.ledger import CasStatus, Ledger
-    from scripts.lexicon.runner.memory import MemoryPolicy, apply_worker_memory_limit
+    from scripts.lexicon.runner.memory import (
+        MemoryPolicy,
+        require_hard_cap_protection,
+        run_startup_self_test,
+    )
     from scripts.lexicon.runner.network_cache import NetworkCache
     from scripts.lexicon.runner.network_worker import NetworkWorkItem
 
@@ -354,9 +359,13 @@ def _run(args: argparse.Namespace) -> int:
     work_dir.mkdir(parents=True, exist_ok=True)
     lemmas, cohort_digest = _cohort(args.cohort.resolve())
     memory_policy = MemoryPolicy(high_bytes=1536 * 1024**2, max_bytes=2048 * 1024**2)
-    enforcement = apply_worker_memory_limit(memory_policy)
-    if enforcement == "none":
-        raise RuntimeError("MemoryPolicy could not enforce a hard cap")
+    # Proof runs in a disposable child (see memory.run_startup_self_test) — this
+    # fetch loop runs single-process (no forked worker), so self-applying a hard
+    # cap here would RLIMIT/cgroup-cap whatever process drives _run(), including
+    # pytest itself when a test calls this in-process (#5776/#5786).
+    proof = run_startup_self_test(test_max_bytes=min(64 * 1024 * 1024, memory_policy.max_bytes))
+    require_hard_cap_protection(proof)
+    enforcement = proof.kind
 
     config = {
         "cohort_path": str(args.cohort.resolve()),
@@ -465,7 +474,7 @@ def _run(args: argparse.Namespace) -> int:
                 return 0
 
 
-def main() -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path.cwd())
     parser.add_argument("--work-dir", type=Path, default=Path("/home/ops/atlas-runner/run-20k"))
@@ -475,7 +484,7 @@ def main() -> int:
         default=Path("data/lexicon/cohort-20k-20260717.txt"),
     )
     parser.add_argument("--max-lemmas", type=int, default=None)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     return _run(args)
 
 
