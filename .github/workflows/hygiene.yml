@@ -1,0 +1,327 @@
+name: Hygiene (advisory)
+
+# Advisory Python/config hygiene checks, split out of ci.yml during the CI
+# reboot (#5762). These jobs cannot catch a broken artifact — they flag code
+# smells (radon complexity), prompt-template lint, bug-autopsy hygiene, and
+# agent/config drift. None of them may gate a PR: `CI Gate` in ci.yml is the
+# sole required check and none of these jobs are in its `needs`. Safe to
+# path-filter, unlike pytest — an advisory check skipping on an unrelated
+# change is a non-event, not a silent regression.
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      python: ${{ steps.filter.outputs.python }}
+      agent_config: ${{ steps.filter.outputs.agent_config }}
+      postmortems: ${{ steps.filter.outputs.postmortems }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/paths-filter-retry
+        id: filter
+        with:
+          filters: |
+            python:
+              - '.github/workflows/hygiene.yml'
+              - 'requirements*.txt'
+              - 'requirements.lock'
+              - 'pyproject.toml'
+              - 'scripts/**/*.py'
+              - 'tests/**/*.py'
+            agent_config:
+              - '.github/workflows/hygiene.yml'
+              - '.mcp.json'
+              - '.cursor/mcp.json'
+              - 'AGENTS.md'
+              - 'CLAUDE.md'
+              - 'GEMINI.md'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'start-claude.sh'
+              - 'scripts/lib/handoff_identity.sh'
+              - 'start-codex.sh'
+              - 'scripts/check_rules_deployment.sh'
+              - 'scripts/deploy_prompts.sh'
+              - 'scripts/lint/**/*.py'
+              - 'scripts/lint_prompts.py'
+              - 'agents_extensions/shared/**'
+              - 'agents_extensions/codex/**'
+              - 'gemini_extensions/**'
+              - 'scripts/build/phases/**/*.md'
+              - 'docs/l2-uk-en/template_mappings.yaml'
+              - 'docs/l2-uk-en/templates/**'
+              - 'docs/prompts/orchestrators/**'
+            postmortems:
+              - '.github/workflows/hygiene.yml'
+              - 'docs/bug-autopsies/**'
+              - 'scripts/audit/check_postmortems.py'
+
+  quality-gates:
+    name: Quality Gates (radon)
+    runs-on: ubuntu-latest
+    needs: [changes]
+    if: needs.changes.outputs.python == 'true'
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.12'
+
+      - name: Install radon
+        run: pip install radon
+
+      - name: Collect changed scripts for radon
+        id: changed-scripts
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+          PUSH_HEAD_SHA: ${{ github.sha }}
+        run: |
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            base_sha="$PR_BASE_SHA"
+            head_sha="$PR_HEAD_SHA"
+          elif [[ "$EVENT_NAME" == "push" ]]; then
+            base_sha="$PUSH_BEFORE_SHA"
+            head_sha="$PUSH_HEAD_SHA"
+          else
+            echo "ℹ️ Skipping changed-file collection on $EVENT_NAME"
+            echo "files=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ "$base_sha" =~ ^0+$ ]]; then
+            base_sha="$(git merge-base origin/main "$head_sha")"
+          fi
+
+          mapfile -t changed_files < <(
+            git diff --name-only --diff-filter=AMR "$base_sha" "$head_sha" -- \
+              | rg '^scripts/.*\.py$' \
+              | rg -v '^scripts/(oneoff|retired)/'
+          )
+
+          if ((${#changed_files[@]} == 0)); then
+            echo "✅ No changed Python files under scripts/."
+            echo "files=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          printf 'Checking radon only on changed files:\n'
+          printf '  %s\n' "${changed_files[@]}"
+          {
+            echo 'files<<EOF'
+            printf '%s\n' "${changed_files[@]}"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: No F-grade functions in changed files (CC > 40)
+        if: steps.changed-scripts.outputs.files != ''
+        env:
+          CHANGED_FILES: ${{ steps.changed-scripts.outputs.files }}
+        run: |
+          mapfile -t files <<< "$CHANGED_FILES"
+          output=$(python -m radon cc "${files[@]}" -n F -s 2>/dev/null || true)
+          if [ -n "$output" ]; then
+            echo "::error::F-grade functions found:"
+            echo "$output"
+            exit 1
+          fi
+          echo "✅ No F-grade functions in changed files"
+
+      - name: No MI=C files in changed files (MI < 10)
+        if: steps.changed-scripts.outputs.files != ''
+        env:
+          CHANGED_FILES: ${{ steps.changed-scripts.outputs.files }}
+        run: |
+          mapfile -t files <<< "$CHANGED_FILES"
+          output=$(python -m radon mi "${files[@]}" -s 2>/dev/null | grep " - C " || true)
+          if [ -n "$output" ]; then
+            echo "::error::MI=C files found:"
+            echo "$output"
+            exit 1
+          fi
+          echo "✅ No MI=C files in changed files"
+
+  lint-prompts:
+    name: Lint Prompts
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.python == 'true' || needs.changes.outputs.agent_config == 'true'
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.12'
+
+      - name: Lint prompt templates
+        run: python scripts/lint/lint_prompts.py
+
+  postmortem-hygiene:
+    name: Postmortem Hygiene
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.postmortems == 'true'
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.12'
+
+      # Direct file path (NOT `-m`): the checker is stdlib-only, but `-m`
+      # would import scripts.audit/__init__ which needs pyyaml (absent on
+      # bare setup-python).
+      - name: Validate bug-autopsy fields + INDEX freshness (#3725)
+        run: python scripts/audit/check_postmortems.py --check
+
+  agent-config:
+    name: Agent Config
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.agent_config == 'true'
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6 — SHA-pinned per supply-chain hardening 2026-05-19
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Validate agent JSON config
+        run: |
+          jq empty \
+            .mcp.json \
+            .cursor/mcp.json \
+            agents_extensions/shared/settings.json
+          if [[ -f agents_extensions/shared/settings.local.json ]]; then
+            jq empty agents_extensions/shared/settings.local.json
+          fi
+
+      - name: Validate agent shell entrypoints
+        run: |
+          bash -n \
+            start-claude.sh \
+            start-claudex.sh \
+            start-kimicc.sh \
+            start-codex.sh \
+            scripts/lib/handoff_identity.sh \
+            scripts/lib/claude_route_guard.sh \
+            scripts/deploy_prompts.sh \
+            scripts/check_rules_deployment.sh
+
+      - name: Create local test venv
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install pytest pyyaml
+
+      - name: Verify agent extension deployment
+        run: |
+          npm run agents:deploy --silent
+          bash scripts/check_rules_deployment.sh
+
+      - name: Run focused agent config tests
+        run: |
+          .venv/bin/python -m pytest \
+            tests/test_deploy_script_idempotency.py \
+            tests/test_agent_runtime_tool_config.py \
+            -v --tb=short
+
+  scripts-root-guard:
+    name: No new root scripts
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.python == 'true'
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Check for non-stub scripts in scripts/ root
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+          PUSH_HEAD_SHA: ${{ github.sha }}
+        run: |
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            base_sha="$PR_BASE_SHA"
+            head_sha="$PR_HEAD_SHA"
+          elif [[ "$EVENT_NAME" == "push" ]]; then
+            base_sha="$PUSH_BEFORE_SHA"
+            head_sha="$PUSH_HEAD_SHA"
+          else
+            echo "ℹ️ Skipping root-script diff on $EVENT_NAME"
+            exit 0
+          fi
+
+          if [[ "$base_sha" =~ ^0+$ ]]; then
+            base_sha="$(git merge-base origin/main "$head_sha")"
+          fi
+
+          if [[ -z "$base_sha" ]]; then
+            echo "::error::Unable to determine the comparison base for scripts/ root guard."
+            exit 1
+          fi
+
+          # Allowed non-stub files at scripts/ root
+          allowed="__init__.py|batch_gemini_runner.py|config.py|generate_mdx.py|manifest_direct.py|manifest_utils.py|paths.py|pipeline_lib.py|slug_utils.py|yaml_activities.py"
+          violations=""
+
+          mapfile -t candidates < <(
+            git diff --name-only --diff-filter=AR "$base_sha" "$head_sha" -- scripts \
+              | while IFS= read -r f; do
+                  if [[ "$(dirname "$f")" == "scripts" && "$f" == *.py ]]; then
+                    printf '%s\n' "$f"
+                  fi
+                done
+          )
+
+          for f in "${candidates[@]}"; do
+            [ ! -f "$f" ] && continue
+            basename=$(basename "$f")
+            # Skip allowed files
+            echo "$basename" | grep -qE "^($allowed)$" && continue
+            # Skip re-export stubs
+            grep -q "Stub: module moved" "$f" && continue
+            violations="$violations $f"
+          done
+          if [ -n "$violations" ]; then
+            echo "::error::New non-stub scripts found in scripts/ root (move to a subdirectory):"
+            echo "$violations" | tr ' ' '\n' | grep .
+            exit 1
+          fi
+          echo "✅ No new root-level scripts"

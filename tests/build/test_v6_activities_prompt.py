@@ -98,10 +98,18 @@ def test_type_diversity_substitutes_positive_integer(tmp_path: Path) -> None:
 
 
 def test_inline_min_and_max_match_marker_count(tmp_path: Path) -> None:
-    # v6_build.py (the caller that set inline_min = inline_max = str(marker_count))
-    # was deleted in 71fda4ed03 ("delete retired v6_build.py + test suite"); this
-    # test now only pins the still-live v6-activities.md template's own
-    # self-consistency between its marker count and its rendered table/text.
+    """Four markers must pin the inline activity count to exactly four.
+
+    This used to also grep `scripts/build/v6_build.py` for the literal source line
+    `inline_min = inline_max = str(marker_count)`. That file was deleted with the rest
+    of V6 in 71fda4ed03, so the assertion had no target and this test has been failing
+    ever since — invisibly, because changed-files CI selection never ran it.
+
+    The white-box assertion is not worth restoring against V7: pinning min and max to
+    the marker count is already asserted below through the assembled prompt, which is
+    the behaviour that matters and does not break when the implementation moves. V7
+    enforces the resulting bound in scripts/build/activity_validator.py via INLINE_MIN.
+    """
     prompt = _assemble_prompt(tmp_path, markers=("one", "two", "three", "four"))
 
     match = re.search(r"\| Inline \(lesson tab\) \| (\d+) \| (\d+) \|", prompt)

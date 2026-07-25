@@ -29,6 +29,7 @@ ukrainian-word-stress>=1.0
 # Testing
 pytest>=9.0.3
 pytest-cov>=7.0
+pytest-timeout>=2.4.0
 
 # Linting
 ruff>=0.15.21

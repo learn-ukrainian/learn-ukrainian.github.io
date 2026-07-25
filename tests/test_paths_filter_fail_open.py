@@ -9,8 +9,12 @@ import yaml
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _ACTION_FILE = _REPO_ROOT / ".github" / "actions" / "paths-filter-retry" / "action.yml"
-_CI_WORKFLOW = _REPO_ROOT / ".github" / "workflows" / "ci.yml"
+# ci.yml's required jobs are unconditional as of the CI reboot (#5762) — it no
+# longer has a `changes` job. The action is still consumed by the advisory
+# workflows below, where a path-filter skip is a non-event, not a silent
+# regression.
 _CONTENT_CI_WORKFLOW = _REPO_ROOT / ".github" / "workflows" / "content-ci.yml"
+_HYGIENE_WORKFLOW = _REPO_ROOT / ".github" / "workflows" / "hygiene.yml"
 
 
 def test_action_metadata_exists_and_parses() -> None:
@@ -86,7 +90,7 @@ def test_workflows_only_consume_valid_action_outputs() -> None:
     action_data = yaml.safe_load(_ACTION_FILE.read_text(encoding="utf-8"))
     action_outputs = set(action_data.get("outputs", {}).keys())
 
-    for wf_path in (_CI_WORKFLOW, _CONTENT_CI_WORKFLOW):
+    for wf_path in (_CONTENT_CI_WORKFLOW, _HYGIENE_WORKFLOW):
         assert wf_path.is_file(), f"Missing workflow file: {wf_path}"
         wf_data = yaml.safe_load(wf_path.read_text(encoding="utf-8"))
 

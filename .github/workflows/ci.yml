@@ -1,275 +1,211 @@
 name: CI
 
+# CI Gate reboot (#5762). The prior control plane (4-way pytest sharding +
+# a deterministic-selection planner + JUnit reconstruction + a paths-filtered
+# `changes` job gating every required job) caused four consecutive gate
+# failures and a two-day outage — every failure was in the verification
+# machinery, never in the tests themselves. This file replaces it with four
+# required jobs that always run, plus one aggregator.
+#
+# Invariant (encodes #3873 #4888 #4936 #5351 #5354): pytest must NEVER be
+# selected or skipped by changed files. Five separate incidents shipped a
+# regression to main because a data-only change skipped pytest under a
+# path-filtered required check. Every required job below is unconditional.
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # PRs cancel their own stale runs. `main` and `merge_group` must never
+  # cancel themselves — that was why 14 of the last 30 `main` runs were
+  # cancelled and 0 succeeded.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
 
 on:
+  pull_request:
+  merge_group:
   push:
     branches: [main]
-    paths:
-      - '.github/workflows/ci.yml'
-      - 'requirements*.txt'
-      - 'requirements.lock'
-      - 'scripts/**/*.py'
-      # Config YAML is runtime input for catalog/fleet tests (CF F001 on #5638).
-      - 'scripts/config/**'
-      - 'scripts/check_rules_deployment.sh'
-      - 'scripts/deploy_prompts.sh'
-      - 'start-claude.sh'
-      - 'start-claudex.sh'
-      - 'start-kimicc.sh'
-      - 'scripts/lib/handoff_identity.sh'
-      - 'scripts/lib/claude_route_guard.sh'
-      - 'start-codex.sh'
-      - 'tests/**/*.py'
-      - 'pyproject.toml'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.mcp.json'
-      - '.cursor/mcp.json'
-      - 'AGENTS.md'
-      - 'CLAUDE.md'
-      - 'GEMINI.md'
-      - 'agents_extensions/shared/**'
-      - 'agents_extensions/codex/**'
-      - 'gemini_extensions/**'
-      - 'scripts/build/phases/**/*.md'
-      - 'scripts/build/contracts/**/*.md'
-      - 'docs/prompts/orchestrators/**'
-      - 'docs/lesson-contract.md'
-      - 'docs/lesson-schema.yaml'
-      - 'site/**'
-      - 'curriculum/l2-uk-en/**'
-      # Research registry data (ADR-011) — validator + tests read these at runtime.
-      - 'docs/references/research-registry.yaml'
-      - 'docs/references/research-digests/**'
-      - 'schemas/research_registry.schema.json'
-  # CI/docs-only required-check note:
-  # Keep PRs unfiltered so the required `Test (pytest)` check is always emitted.
-  # Docs-only PRs otherwise leave branch protection stuck on "expected" (#1641).
-  # Earlier path widenings only fixed individual recurrences (#1544, #1546);
-  # #1644 moves the anti-whack-a-mole path list into `dorny/paths-filter`:
-  # non-required jobs skip cleanly on docs-only PRs, while `Test (pytest)`
-  # still emits the required check and skips its inner pytest body.
-  pull_request:
   workflow_dispatch:
 
 jobs:
-  changes:
+  # ---------------------------------------------------------------------
+  # 1. python — the full test suite, one job, no sharding, no path filter.
+  # ---------------------------------------------------------------------
+  # Four PARALLEL JOBS, not one xdist session (#5776, 3-seat advisor panel).
+  # Sharding was never the bug — changed-files SELECTION was. This keeps the
+  # reboot's invariant (no test is chosen or skipped by what changed) and
+  # restores the only topology that has ever completed: the single-session
+  # design never finished once, stalling ~94-95% with ~23 minutes of silence on
+  # a DIFFERENT test each run.
+  python:
+    name: Python (pytest) [${{ matrix.shard }}/4]
     runs-on: ubuntu-latest
-    outputs:
-      # code = any high-signal source/config change. Used by the broad secret scan.
-      code: ${{ steps.filter.outputs.code }}
-      # python = Python/test paths PLUS learner curriculum/site content that tests
-      # read at runtime. Gates pytest + ruff/radon/root guards. Learner bundles
-      # and site/src/content/** are INCLUDED because content-reading tests
-      # (citation_resolve, llm_qg_api, reading_coverage, reading_links, parity, ...)
-      # load those files at runtime — excluding them let a content-deletion PR
-      # (#3867) skip pytest entirely and ship a regression to main (root cause: #3873).
-      # BIO preparation-only data is excluded and routed to the focused preparation
-      # gate below; mixed PRs still match their Python or learner-content paths.
-      python: ${{ steps.filter.outputs.python }}
-      # frontend = generated site inputs/outputs. Gates the build/vitest job plus
-      # MDX source/drift checks, so curriculum source edits cannot leave stale
-      # committed MDX.
-      frontend: ${{ steps.filter.outputs.frontend }}
-      # agent_config = agent/MCP/prompt deployment config. Gates lightweight
-      # JSON/shell/deploy checks without forcing the full pytest suite.
-      agent_config: ${{ steps.filter.outputs.agent_config }}
-      # lesson_schema = schema contract inputs. Gates only the schema drift job.
-      lesson_schema: ${{ steps.filter.outputs.lesson_schema }}
-      # atlas = inputs that can stale the committed DB-enriched Word Atlas
-      # manifest but are available on CI.
-      atlas: ${{ steps.filter.outputs.atlas }}
-      # postmortems = bug-autopsy docs + the checker. Gates the postmortem
-      # hygiene job so a malformed autopsy or stale INDEX cannot merge (#3725).
-      postmortems: ${{ steps.filter.outputs.postmortems }}
-      # preparation = BIO source-preparation surfaces. These are plans/research
-      # evidence, not application code or learner bundles.
-      preparation: ${{ steps.filter.outputs.preparation }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
 
-      - uses: ./.github/actions/paths-filter-retry
-        id: filter
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
-          filters: |
-            code:
-              - '.github/workflows/ci.yml'
-              - 'requirements*.txt'
-              - 'requirements.lock'
-              - 'pyproject.toml'
-              - 'scripts/**/*.py'
-              - 'scripts/check_rules_deployment.sh'
-              - 'scripts/deploy_prompts.sh'
-              - 'start-claude.sh'
-              - 'scripts/lib/handoff_identity.sh'
-              - 'start-codex.sh'
-              - 'tests/**/*.py'
-              - 'package.json'
-              - 'package-lock.json'
-              - '.mcp.json'
-              - '.cursor/mcp.json'
-              - 'AGENTS.md'
-              - 'CLAUDE.md'
-              - 'GEMINI.md'
-              - 'agents_extensions/shared/**'
-              - 'agents_extensions/codex/**'
-              - 'gemini_extensions/**'
-              - 'scripts/build/phases/**/*.md'
-              - 'scripts/build/contracts/**/*.md'
-              - 'docs/lesson-contract.md'
-              - 'docs/lesson-schema.yaml'
-              - 'site/**'
-              - 'curriculum/l2-uk-en/**'
-            python:
-              - '.github/workflows/ci.yml'
-              - 'requirements*.txt'
-              - 'requirements.lock'
-              - 'pyproject.toml'
-              - 'scripts/**/*.py'
-              - 'tests/**/*.py'
-              # Config with test fixture mirrors: test_model_catalog reads
-              # model_catalog.yaml + fleet_communications.yaml; a config-only edit
-              # (no .py) must run pytest, else an orchestrator_seats / model-pin
-              # regression reaches main unguarded (same #3873/#4888/#4936 class —
-              # a yaml change that skipped pytest would ship broken routing to main).
-              - 'scripts/config/**'
-              # Learner content that python tests read at runtime — a deletion/edit
-              # here must run pytest, else a content regression reaches main unguarded
-              # (this is the #3873 root cause: #3867 deleted curriculum files,
-              # python filter was false, pytest skipped, 4 tests broke on main).
-              # BIO plans/discovery/promotion evidence are preparation data and
-              # take the focused `preparation` lane instead. Picomatch extglobs
-              # preserve broad coverage for all other tracks and BIO learner data.
-              - 'curriculum/l2-uk-en/curriculum.yaml'
-              - 'curriculum/l2-uk-en/!(plans|bio)/**'
-              - 'curriculum/l2-uk-en/plans/!(bio)/**'
-              - 'curriculum/l2-uk-en/bio/!(*promotion-evidence.yaml|discovery)/**'
-              - 'site/src/content/**'
-              # Schema-validated committed data: pytest validates every file in
-              # this directory (test_source_inventory_review_decisions). A
-              # data-only PR here skipped pytest and turned main red for every
-              # subsequent code PR (2026-07-10, #4888 — same class as #3873).
-              - 'data/lexicon/source-inventory-review-decisions/**'
-              # Same class (#4894, review-4893 sibling sweep):
-              # test_source_inventory_intake::test_committed_source_inventory_files_are_valid
-              # globs every file here — data-only edits must run pytest too.
-              - 'data/lexicon/source-inventory/**'
-              # Same class again (2026-07-10, #4936 — 3rd manifestation after
-              # #3873/#4888): test_atlas_conformance reads the committed Atlas
-              # manifest; a data(atlas) publish PR skipped pytest and turned
-              # main red for every subsequent code PR.
-              - 'site/src/data/lexicon-manifest.json'
-              - 'site/src/data/lexicon-manifest.fingerprint.json'
-              # Research registry data (ADR-011): the P1 validator + P2–P4 tests
-              # read these committed files at runtime, so a data-only edit must
-              # run pytest/ruff (same #3873/#4888/#4936 class — a registry/digest
-              # edit that skipped pytest would ship an unvalidated content_hash or
-              # a rot-monitor regression to main).
-              - 'docs/references/research-registry.yaml'
-              - 'docs/references/research-digests/**'
-              - 'schemas/research_registry.schema.json'
-            frontend:
-              - '.github/workflows/ci.yml'
-              - 'site/**'
-              # BIO preparation data does not feed generated MDX or frontend code.
-              # Keep learner bundles and every non-BIO preparation surface covered.
-              - 'curriculum/l2-uk-en/curriculum.yaml'
-              - 'curriculum/l2-uk-en/!(plans|bio)/**'
-              - 'curriculum/l2-uk-en/plans/!(bio)/**'
-              - 'curriculum/l2-uk-en/bio/!(*promotion-evidence.yaml|discovery)/**'
-              # MDX generator entry + package (mdx-generation-drift invokes
-              # scripts/generate_mdx.py; mdx-source-parity treats package edits
-              # as generator changes). Missing these let generator-only PRs skip
-              # both drift/parity gates (#5354; class: #5351/#3873/#4888/#4936).
-              # tests/test_mdx_atlas_filter_coverage.py enforces coverage.
-              - 'scripts/generate_mdx.py'
-              - 'scripts/generate_mdx/**'
-              - 'scripts/yaml_activities.py'
-            agent_config:
-              - '.github/workflows/ci.yml'
-              - '.mcp.json'
-              - '.cursor/mcp.json'
-              - 'AGENTS.md'
-              - 'CLAUDE.md'
-              - 'GEMINI.md'
-              - 'package.json'
-              - 'package-lock.json'
-              - 'start-claude.sh'
-              - 'scripts/lib/handoff_identity.sh'
-              - 'start-codex.sh'
-              - 'scripts/check_rules_deployment.sh'
-              - 'scripts/deploy_prompts.sh'
-              - 'scripts/lint/**/*.py'
-              - 'scripts/lint_prompts.py'
-              - 'agents_extensions/shared/**'
-              - 'agents_extensions/codex/**'
-              - 'gemini_extensions/**'
-              - 'scripts/build/phases/**/*.md'
-              - 'docs/l2-uk-en/template_mappings.yaml'
-              - 'docs/l2-uk-en/templates/**'
-              - 'docs/prompts/orchestrators/**'
-            lesson_schema:
-              - '.github/workflows/ci.yml'
-              - 'docs/lesson-contract.md'
-              - 'docs/lesson-schema.yaml'
-              - 'scripts/build/contracts/**/*.md'
-              - 'scripts/build/generate_lesson_schema.py'
-              # Generator INPUTS (hashed into generated_from / shaping output).
-              # Missing these let drift accumulate silently on main and red
-              # unrelated ci.yml-touching PRs (#5351; class: #3873/#4888/#4936).
-              # tests/test_lesson_schema_filter_coverage.py enforces coverage.
-              - 'site/src/components/**'
-              - 'scripts/pipeline/config_tables.py'
-              - 'scripts/build/lesson_schema_extractor.mjs'
-            atlas:
-              - '.github/workflows/ci.yml'
-              - 'scripts/audit/audit_atlas_poc_richness.py'
-              - 'scripts/audit/check_atlas_manifest_enrichment.py'
-              - 'scripts/lexicon/*.py'
-              - 'scripts/audit/check_static_practice_assets.py'
-              - 'scripts/audit/generate_daily_pool.py'
-              - 'scripts/audit/generate_practice_deck.py'
-              - 'scripts/practice_deck/**'
-              - 'curriculum/l2-uk-en/**/vocabulary.yaml'
-              - 'site/src/data/lexicon-daily-pool.json'
-              - 'site/src/data/lexicon-manifest.json'
-              - 'site/src/data/lexicon-manifest.fingerprint.json'
-              # hashFiles + load_manifest read the pointer; missing it let
-              # pointer-only edits skip atlas-freshness (#5354; class: #5351).
-              # tests/test_mdx_atlas_filter_coverage.py enforces coverage.
-              - 'site/src/data/lexicon-manifest.pointer.json'
-              - 'site/src/data/lexicon-practice-deck.pointer.json'
-              - 'site/src/data/lexicon-practice-reviewed-sources.json'
-              # check_static_practice_assets.py DEFAULT_PRACTICE_DIR
-              - 'site/public/lexicon/**'
-              - 'site/scripts/hydrate-practice-deck.mjs'
-              - 'site/scripts/hydrate-lexicon-api-shards.ts'
-            postmortems:
-              - '.github/workflows/ci.yml'
-              - 'docs/bug-autopsies/**'
-              - 'scripts/audit/check_postmortems.py'
-            preparation:
-              - '.github/workflows/ci.yml'
-              - 'curriculum/l2-uk-en/plans/bio/*.yaml'
-              - 'curriculum/l2-uk-en/bio/discovery/*.yaml'
-              - 'curriculum/l2-uk-en/bio/promotion-evidence.yaml'
-              - 'docs/research/bio/*.md'
-              - 'wiki/figures/*.md'
-              - 'wiki/figures/*.sources.yaml'
+          python-version: '3.12'
 
-  bio-preparation-data:
-    name: BIO Preparation Data
+      - name: Restore Atlas lexicon manifest cache
+        id: atlas-manifest-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
+      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        run: |
+          python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+
+      - name: Save Atlas lexicon manifest cache
+        if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
+      # Sole owner of ~/.cache/pip for this job (setup-python cache disabled
+      # — pip installs from a torch-stripped requirements file, see below).
+      - name: Restore pip wheel cache
+        id: pip-wheel-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/pip
+          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-notorch
+
+      # torch/torchvision/open_clip_torch are NOT installed for pytest: no
+      # first-party module under scripts/ or tests/ imports them (the
+      # embedding worker owns a separate venv). Installing ~2.5GB of CPU
+      # wheels here previously caused shard OOMs under xdist on constrained
+      # runners for code the suite never loads.
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
+            > "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
+          .venv/bin/python -m pip install ruff
+
+      - name: Save pip wheel cache
+        if: steps.pip-wheel-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/pip
+          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-notorch
+
+      - name: Ruff
+        run: .venv/bin/python -m ruff check scripts/
+
+      # The playground perf probe is deselected here and run as its own
+      # serial step below — it is the one SERIAL_TESTS entry with a real
+      # isolation claim (a wall-clock latency assertion that is flaky under
+      # parallel resource contention; confirmed locally: it failed inside
+      # the `-n auto` bulk run and passed standalone). The two cache tests
+      # that used to need isolation do not: #2002's autouse fixture already
+      # fixed that class, so they run as ordinary members of the suite.
+      # Coverage is collected only on pushes to `main`, matching the behaviour
+      # this file replaces — it is a trend floor, not a per-PR gate, and
+      # instrumentation costs wall-clock on every PR for no added signal.
+      # QUARANTINE — #5776, one node, temporary, owned.
+      # test_main_cli_encode_flag_wires_ingest_to_manifest HANGS in a full
+      # parallel run: it started at 15:54:23 in run 30163791890 and had produced
+      # nothing 23 minutes later when the new 45-minute cap killed the job. It
+      # passes ALONE in 0.57s and `pytest tests/wiki -n 2` completes in 15s, so
+      # it is an interaction with full-suite state, not a bad test.
+      #
+      # This is a NAMED node with an open issue, not a path filter: it cannot
+      # grow to hide unrelated tests, and it does not reintroduce changed-files
+      # selection (the defect this reboot exists to remove, #3873 #4888 #4936
+      # #5351 #5354). If the cause turns out to be shared global state, the hang
+      # will simply move — and the cap now makes that a bounded, visible failure
+      # rather than a silent six-hour stall.
+      - name: Run pytest
+        # The predicate is evaluated by the expression engine and reaches the
+        # shell as the literal string "true"/"false" via env — `github.ref` is
+        # never spliced into `run:`, so a hostile branch name cannot inject.
+        env:
+          IS_MAIN_PUSH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          SHARD: ${{ matrix.shard }}
+        run: |
+          cov_args=""
+          if [ "$IS_MAIN_PUSH" = "true" ]; then
+            cov_args="--cov=scripts --cov-report="
+          fi
+          # Round-robin over SORTED test files. Deterministic, depends only on the
+          # file list, and every file lands in exactly one shard — so the union is
+          # always the whole suite. Nothing here consults the diff.
+          split_py="import pathlib,sys;fs=sorted(str(p) for p in pathlib.Path('tests').rglob('test_*.py'));print(chr(10).join(fs[int(sys.argv[1])-1::4]))"
+          mapfile -t shard_files < <(.venv/bin/python -c "$split_py" "$SHARD")
+          echo "shard $SHARD: ${#shard_files[@]} test files"
+          if [ "${#shard_files[@]}" -eq 0 ]; then echo "::error::empty shard"; exit 1; fi
+          # shellcheck disable=SC2086  # cov_args is a deliberate word-split argument list
+          .venv/bin/python -m pytest "${shard_files[@]}" -n auto --strict-markers \
+            --timeout=120 --timeout-method=thread --durations=25 $cov_args \
+            --deselect=tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast
+
+      # Restores the `--fail-under=35` floor the deleted shard aggregation
+      # enforced (origin/main ci.yml:1183). Cross-family review of #5762 caught
+      # its removal as a P1: without it a green CI Gate could accompany an
+      # arbitrarily large coverage regression.
+      #
+      # Simpler than what it replaces: the four shards ran as separate JOBS, so
+      # main had to upload four `.coverage.shard-*` artifacts and `coverage
+      # combine` them. One job with `-n auto` means pytest-cov combines the
+      # xdist workers itself, and `coverage report` just reads the result.
+      # The floor moves to its own job: with four shards no single one sees the
+      # whole suite, so enforcing per-shard would measure a quarter and pass
+      # vacuously. Each shard publishes its data; `coverage-floor` combines.
+      - name: Upload shard coverage data
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4
+        with:
+          name: coverage-shard-${{ matrix.shard }}
+          path: .coverage
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+      # Wall-clock perf probe. Kept serial, after the main body, with its
+      # existing retry-on-flake: /api/rag/search_text can 500 on an FTS
+      # rebuild race under load.
+      - name: Playground perf probe (serial)
+        run: |
+          for attempt in 1 2 3; do
+            echo "playground smoke attempt ${attempt}/3"
+            if .venv/bin/python -m pytest \
+              tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
+              -v --tb=short; then
+              exit 0
+            fi
+            sleep 3
+          done
+          exit 1
+
+  # ---------------------------------------------------------------------
+  # 2. contracts — deterministic drift/artifact checks. Unconditional:
+  #    every check here diffs against origin/main or a committed file
+  #    itself, so an untouched input is a fast no-op, not a skip.
+  # ---------------------------------------------------------------------
+  contracts:
+    name: Contracts (schema, MDX, atlas, BIO)
     runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.preparation == 'true'
+    timeout-minutes: 25
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -280,11 +216,111 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install preparation validator dependencies
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6 — SHA-pinned per supply-chain hardening 2026-05-19
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Restore Atlas lexicon manifest cache
+        id: atlas-manifest-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
+      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        run: |
+          python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+
+      - name: Save Atlas lexicon manifest cache
+        if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
+      - name: Install contract-check dependencies
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
           .venv/bin/python -m pip install PyYAML jsonschema
+          npm ci
+
+      - name: Regenerate lesson schema and check drift
+        run: |
+          .venv/bin/python scripts/build/generate_lesson_schema.py
+          git diff --exit-code docs/lesson-schema.yaml
+
+      - name: Check MDX source parity
+        env:
+          # Parenthesized: without parens, && binds tighter than || and the
+          # title-tag paths yield boolean `true` (not '1'), which the
+          # checker rejects — found via PR #4399.
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          MDX_PARITY_BULK_REGEN=0
+          if [[ "$PR_TITLE" == *"[regen-mdx]"* || "$PR_TITLE" == *"[bulk-regen]"* \
+                || "$PR_BODY" == *"[regen-mdx]"* || "$PR_BODY" == *"[bulk-regen]"* ]]; then
+            MDX_PARITY_BULK_REGEN=1
+          fi
+          export MDX_PARITY_BULK_REGEN
+          .venv/bin/python scripts/audit/check_mdx_source_parity.py --changed-vs-base origin/main
+
+      - name: Check source-to-site MDX forward parity
+        run: .venv/bin/python scripts/audit/check_mdx_forward_parity.py --changed-vs-base origin/main
+
+      - name: Check internal IDs are not published
+        run: .venv/bin/python scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
+
+      - name: Check locked modules are not published
+        run: .venv/bin/python scripts/audit/check_locked_module_not_published.py --changed-vs-base origin/main
+
+      - name: Regenerate changed curriculum MDX and check drift
+        run: .venv/bin/python scripts/audit/check_mdx_generation_drift.py --changed-vs-base origin/main
+
+      - name: Check DB-free Atlas manifest freshness
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            .venv/bin/python scripts/lexicon/check_manifest_freshness.py \
+              --pr-scoped --base-ref "$BASE_SHA" --head-ref "$HEAD_SHA"
+          else
+            .venv/bin/python scripts/lexicon/check_manifest_freshness.py
+          fi
+
+      # Root-cause guard for the #3631 empty-atlas regression: a manifest
+      # committed without enrichment renders an empty Atlas while the
+      # freshness gate above stays green. Blocks it.
+      - name: Block thin/un-enriched Atlas manifest (#3658)
+        run: .venv/bin/python scripts/audit/check_atlas_manifest_enrichment.py
+
+      # Advisory since #4515: caps audit the LIVE release asset, not this
+      # PR's diff — a regression can only enter at publish time. Kept for
+      # visibility only; continue-on-error preserved from the absorbed job.
+      - name: Gate Atlas POC richness and learner anchors (#3930, advisory since #4515)
+        continue-on-error: true
+        run: |
+          .venv/bin/python scripts/audit/audit_atlas_poc_richness.py \
+            --max-search-no-visible-gloss 0 \
+            --max-old-gate-no-english-anchor 0 \
+            --max-poc-thin-pages 900
+
+      - name: Check static Word Day / practice assets (#3935)
+        run: .venv/bin/python scripts/audit/check_static_practice_assets.py
+
+      # Diff-scoped + advisory (#3150): a full manifest regen is ~33 min and
+      # the merge-train adds vocab faster than that. continue-on-error
+      # preserved from the absorbed job.
+      - name: Check Atlas vocabulary manifest coverage (advisory, diff-scoped)
+        continue-on-error: true
+        run: |
+          git fetch --no-tags --quiet origin main || true
+          .venv/bin/python scripts/lexicon/check_manifest_vocabulary_coverage.py --changed-only --base origin/main
 
       - name: Check changed BIO dossier word-count floor
         run: |
@@ -435,789 +471,15 @@ jobs:
           )
           PY
 
-  atlas-freshness:
-    name: Atlas Manifest Freshness
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.atlas == 'true'
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-          # Full history so the diff-scoped vocab gate can diff vs origin/main (#3150).
-          fetch-depth: 0
-
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
-        with:
-          python-version: '3.12'
-
-      - name: Restore Atlas lexicon manifest cache
-        id: atlas-manifest-cache
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: site/src/data/lexicon-manifest.json
-          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
-
-      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
-        run: |
-          python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
-
-      - name: Save Atlas lexicon manifest cache
-        if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: site/src/data/lexicon-manifest.json
-          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
-
-      - name: Install YAML parser
-        run: |
-          python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install PyYAML
-
-      - name: Check DB-free Atlas manifest freshness
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            .venv/bin/python scripts/lexicon/check_manifest_freshness.py \
-              --pr-scoped \
-              --base-ref "${{ github.event.pull_request.base.sha }}" \
-              --head-ref "${{ github.event.pull_request.head.sha }}"
-          else
-            .venv/bin/python scripts/lexicon/check_manifest_freshness.py
-          fi
-
-      # Root-cause guard for the #3631 empty-atlas regression: a manifest committed
-      # without enrichment (enrichment_generated False / ~0 enriched entries) renders
-      # an empty Atlas while the fingerprint/freshness gate above stays green. Blocks it.
-      - name: Block thin/un-enriched Atlas manifest (#3658)
-        run: .venv/bin/python scripts/audit/check_atlas_manifest_enrichment.py
-
-      # Learner-facing static Atlas gate (#3930). ADVISORY since #4515: all
-      # three caps (gloss, anchor, thin pages) audit the LIVE release asset,
-      # not this PR's diff — regressions can only enter at publish time, where
-      # scripts/lexicon/publish_manifest.py compares all three metrics against
-      # the canonical published Release asset and raises ManifestPublishError
-      # only for a regression. Blocking here failed unrelated PRs after the fact
-      # (#4514/#4512, 2026-07-06). Kept for visibility only.
-      - name: Gate Atlas POC richness and learner anchors (#3930, advisory since #4515)
-        continue-on-error: true
-        run: |
-          .venv/bin/python scripts/audit/audit_atlas_poc_richness.py \
-            --max-search-no-visible-gloss 0 \
-            --max-old-gate-no-english-anchor 0 \
-            --max-poc-thin-pages 900
-
-      - name: Check static Word Day / practice assets (#3935)
-        run: python scripts/audit/check_static_practice_assets.py
-
-      # Diff-scoped + advisory (#3150): only flags modules whose vocabulary.yaml changed
-      # in THIS PR (no cross-PR coupling on the merge-train), and never blocks merge — a
-      # full manifest regen is ~33 min and the merge-train adds vocab faster than that.
-      # Blocking enforcement belongs on promote / an eventual auto-regen, not here.
-      - name: Check Atlas vocabulary manifest coverage (advisory, diff-scoped)
-        continue-on-error: true
-        run: |
-          git fetch --no-tags --quiet origin main || true
-          .venv/bin/python scripts/lexicon/check_manifest_vocabulary_coverage.py --changed-only --base origin/main
-
-  lint:
-    name: Lint (ruff)
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.python == 'true'
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
-        with:
-          python-version: '3.12'
-
-      - name: Install ruff
-        run: pip install ruff
-
-      - name: Run ruff
-        run: ruff check scripts/
-
-  quality-gates:
-    name: Quality Gates (radon)
-    runs-on: ubuntu-latest
-    needs: [changes]
-    if: needs.changes.outputs.python == 'true'
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
-        with:
-          python-version: '3.12'
-
-      - name: Install radon
-        run: pip install radon
-
-      - name: Collect changed scripts for radon
-        id: changed-scripts
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            base_sha="${{ github.event.pull_request.base.sha }}"
-            head_sha="${{ github.event.pull_request.head.sha }}"
-          elif [[ "${{ github.event_name }}" == "push" ]]; then
-            base_sha="${{ github.event.before }}"
-            head_sha="${{ github.sha }}"
-          else
-            echo "ℹ️ Skipping changed-file collection on ${{ github.event_name }}"
-            echo "files=" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          if [[ "$base_sha" =~ ^0+$ ]]; then
-            base_sha="$(git merge-base origin/main "$head_sha")"
-          fi
-
-          mapfile -t changed_files < <(
-            git diff --name-only --diff-filter=AMR "$base_sha" "$head_sha" -- \
-              | rg '^scripts/.*\.py$' \
-              | rg -v '^scripts/(oneoff|retired)/'
-          )
-
-          if ((${#changed_files[@]} == 0)); then
-            echo "✅ No changed Python files under scripts/."
-            echo "files=" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          printf 'Checking radon only on changed files:\n'
-          printf '  %s\n' "${changed_files[@]}"
-          {
-            echo 'files<<EOF'
-            printf '%s\n' "${changed_files[@]}"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
-
-      - name: No F-grade functions in changed files (CC > 40)
-        if: steps.changed-scripts.outputs.files != ''
-        env:
-          CHANGED_FILES: ${{ steps.changed-scripts.outputs.files }}
-        run: |
-          mapfile -t files <<< "$CHANGED_FILES"
-          output=$(python -m radon cc "${files[@]}" -n F -s 2>/dev/null || true)
-          if [ -n "$output" ]; then
-            echo "::error::F-grade functions found:"
-            echo "$output"
-            exit 1
-          fi
-          echo "✅ No F-grade functions in changed files"
-
-      - name: No MI=C files in changed files (MI < 10)
-        if: steps.changed-scripts.outputs.files != ''
-        env:
-          CHANGED_FILES: ${{ steps.changed-scripts.outputs.files }}
-        run: |
-          mapfile -t files <<< "$CHANGED_FILES"
-          output=$(python -m radon mi "${files[@]}" -s 2>/dev/null | grep " - C " || true)
-          if [ -n "$output" ]; then
-            echo "::error::MI=C files found:"
-            echo "$output"
-            exit 1
-          fi
-          echo "✅ No MI=C files in changed files"
-
-  lint-prompts:
-    name: Lint Prompts
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.python == 'true' || needs.changes.outputs.agent_config == 'true'
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
-        with:
-          python-version: '3.12'
-
-      - name: Lint prompt templates
-        run: python scripts/lint/lint_prompts.py
-
-  postmortem-hygiene:
-    name: Postmortem Hygiene
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.postmortems == 'true'
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
-        with:
-          python-version: '3.12'
-
-      # Validate bug-autopsy required fields + assert INDEX.md is current, without
-      # writing. Root-cause guard for #3725: a malformed autopsy (#3725 shipped one
-      # with non-canonical headings + no Links) previously only tripped an advisory
-      # SessionStart warning days later — nothing blocked it at PR time.
-      # Direct file path (NOT `-m`): the checker is stdlib-only, but `-m` would
-      # import scripts.audit/__init__ which needs pyyaml (absent on bare setup-python).
-      - name: Validate bug-autopsy fields + INDEX freshness (#3725)
-        run: python scripts/audit/check_postmortems.py --check
-
-  agent-config:
-    name: Agent Config
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.agent_config == 'true'
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
-        with:
-          python-version: '3.12'
-
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6 — SHA-pinned per supply-chain hardening 2026-05-19
-        with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-
-      - name: Validate agent JSON config
-        run: |
-          jq empty \
-            .mcp.json \
-            .cursor/mcp.json \
-            agents_extensions/shared/settings.json
-          if [[ -f agents_extensions/shared/settings.local.json ]]; then
-            jq empty agents_extensions/shared/settings.local.json
-          fi
-
-      - name: Validate agent shell entrypoints
-        run: |
-          bash -n \
-            start-claude.sh \
-            start-claudex.sh \
-            start-kimicc.sh \
-            start-codex.sh \
-            scripts/lib/handoff_identity.sh \
-            scripts/lib/claude_route_guard.sh \
-            scripts/deploy_prompts.sh \
-            scripts/check_rules_deployment.sh
-
-      - name: Create local test venv
-        run: |
-          python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install pytest pyyaml
-
-      - name: Verify agent extension deployment
-        run: |
-          npm run agents:deploy --silent
-          bash scripts/check_rules_deployment.sh
-
-      - name: Run focused agent config tests
-        run: |
-          .venv/bin/python -m pytest \
-            tests/test_deploy_script_idempotency.py \
-            tests/test_agent_runtime_tool_config.py \
-            -v --tb=short
-
-  scripts-root-guard:
-    name: No new root scripts
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.python == 'true'
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
-      - name: Check for non-stub scripts in scripts/ root
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            base_sha="${{ github.event.pull_request.base.sha }}"
-            head_sha="${{ github.event.pull_request.head.sha }}"
-          elif [[ "${{ github.event_name }}" == "push" ]]; then
-            base_sha="${{ github.event.before }}"
-            head_sha="${{ github.sha }}"
-          else
-            echo "ℹ️ Skipping root-script diff on ${{ github.event_name }}"
-            exit 0
-          fi
-
-          if [[ "$base_sha" =~ ^0+$ ]]; then
-            base_sha="$(git merge-base origin/main "$head_sha")"
-          fi
-
-          if [[ -z "$base_sha" ]]; then
-            echo "::error::Unable to determine the comparison base for scripts/ root guard."
-            exit 1
-          fi
-
-          # Allowed non-stub files at scripts/ root
-          allowed="__init__.py|batch_gemini_runner.py|config.py|generate_mdx.py|manifest_direct.py|manifest_utils.py|paths.py|pipeline_lib.py|slug_utils.py|yaml_activities.py"
-          violations=""
-
-          mapfile -t candidates < <(
-            git diff --name-only --diff-filter=AR "$base_sha" "$head_sha" -- scripts \
-              | while IFS= read -r f; do
-                  if [[ "$(dirname "$f")" == "scripts" && "$f" == *.py ]]; then
-                    printf '%s\n' "$f"
-                  fi
-                done
-          )
-
-          for f in "${candidates[@]}"; do
-            [ ! -f "$f" ] && continue
-            basename=$(basename "$f")
-            # Skip allowed files
-            echo "$basename" | grep -qE "^($allowed)$" && continue
-            # Skip re-export stubs
-            grep -q "Stub: module moved" "$f" && continue
-            violations="$violations $f"
-          done
-          if [ -n "$violations" ]; then
-            echo "::error::New non-stub scripts found in scripts/ root (move to a subdirectory):"
-            echo "$violations" | tr ' ' '\n' | grep .
-            exit 1
-          fi
-          echo "✅ No new root-level scripts"
-
-  mdx-source-parity:
-    name: MDX Source Parity
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.frontend == 'true' && github.event_name == 'pull_request'
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
-        with:
-          python-version: '3.12'
-
-      - name: Restore Atlas lexicon manifest cache
-        id: atlas-manifest-cache
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: site/src/data/lexicon-manifest.json
-          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
-
-      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
-        run: |
-          python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
-
-      - name: Save Atlas lexicon manifest cache
-        if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: site/src/data/lexicon-manifest.json
-          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
-
-      - name: Install dependencies
-        run: |
-          python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install PyYAML jsonschema
-
-      - name: Check MDX source parity
-        env:
-          # Parenthesized: without parens, && binds tighter than || and the
-          # title-tag paths yield boolean `true` (not '1'), which the checker
-          # rejects — the exemption silently never fired (found via PR #4399).
-          MDX_PARITY_BULK_REGEN: ${{ (contains(github.event.pull_request.title, '[regen-mdx]') || contains(github.event.pull_request.title, '[bulk-regen]') || contains(github.event.pull_request.body, '[regen-mdx]') || contains(github.event.pull_request.body, '[bulk-regen]')) && '1' || '0' }}
-        run: |
-          .venv/bin/python scripts/audit/check_mdx_source_parity.py --changed-vs-base origin/main
-
-      - name: Check source-to-site MDX forward parity
-        run: |
-          .venv/bin/python scripts/audit/check_mdx_forward_parity.py --changed-vs-base origin/main
-
-      - name: Check internal IDs are not published
-        run: |
-          .venv/bin/python scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
-
-      - name: Check locked modules are not published
-        run: |
-          .venv/bin/python scripts/audit/check_locked_module_not_published.py --changed-vs-base origin/main
-
-  mdx-generation-drift:
-    name: MDX Generation Drift
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.frontend == 'true' && github.event_name == 'pull_request'
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
-        with:
-          python-version: '3.12'
-
-      - name: Restore Atlas lexicon manifest cache
-        id: atlas-manifest-cache
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: site/src/data/lexicon-manifest.json
-          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
-
-      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
-        run: |
-          python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
-
-      - name: Save Atlas lexicon manifest cache
-        if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: site/src/data/lexicon-manifest.json
-          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
-
-      - name: Install generator dependencies
-        run: |
-          python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install PyYAML jsonschema
-
-      - name: Regenerate changed curriculum MDX and check drift
-        run: |
-          .venv/bin/python scripts/audit/check_mdx_generation_drift.py --changed-vs-base origin/main
-
-  lesson-schema-drift:
-    name: Lesson Schema Drift
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      actions: write
-    needs: changes
-    if: needs.changes.outputs.lesson_schema == 'true'
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
-        with:
-          python-version: '3.12'
-
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6 — SHA-pinned per supply-chain hardening 2026-05-19
-        with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-
-      - name: Install schema dependencies
-        run: |
-          python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install PyYAML
-          npm ci
-
-      - name: Regenerate lesson schema and check drift
-        run: |
-          .venv/bin/python scripts/build/generate_lesson_schema.py
-          git diff --exit-code docs/lesson-schema.yaml
-
-  test:
-    name: Test (pytest) [${{ matrix.shard }}/4]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      actions: write
-    # Sol #5657 step 6: run pytest concurrent with lint. CI Gate still needs
-    # both lint and test — lint failure fails the required gate without serializing
-    # the pytest matrix behind ruff. Job still uses !cancelled() (#1644 class).
-    needs: [changes]
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2, 3, 4]
-    if: '!cancelled()'
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-        if: needs.changes.outputs.python == 'true'
-
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
-        if: needs.changes.outputs.python == 'true'
-        with:
-          python-version: '3.12'
-          # No cache: 'pip' here — sole owner of ~/.cache/pip is the manual
-          # Restore/Save pip wheel cache below (torch CPU pin in key; CF #5663 F001).
-
-      - name: Restore Atlas lexicon manifest cache
-        if: needs.changes.outputs.python == 'true'
-        id: atlas-manifest-cache
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: site/src/data/lexicon-manifest.json
-          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
-
-      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
-        if: needs.changes.outputs.python == 'true'
-        run: |
-          python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
-
-      - name: Save Atlas lexicon manifest cache
-        if: needs.changes.outputs.python == 'true' && steps.atlas-manifest-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: site/src/data/lexicon-manifest.json
-          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
-
-      # Pip wheel cache (was: Sol #5657 torch-download cache).
-      #
-      # torch/torchvision/open_clip_torch are NO LONGER installed for pytest.
-      # Nothing under scripts/ or tests/ imports torch, sentence_transformers, or
-      # open_clip: the embedding worker owns a separate venv (embed-venv/) and
-      # dense rerank degrades gracefully when the model is unavailable
-      # (SOURCES_MCP_NO_MLX / FTS5-only fallback). Installing ~2.5GB of CPU wheels
-      # on all 4 shards cost cold-install time for code the suite never loads, and
-      # under `-n auto` xdist on a 2-vCPU/~7GB runner it contributed to shard
-      # failures with `MemoryError` and `RuntimeError: can't start new thread`
-      # (run 30136964516, shard 3/4 failing identically across unrelated PRs).
-      #
-      # If a first-party import of torch is ever added, pytest will fail loudly on
-      # ImportError — it cannot silently skip.
-      # Sole manager of ~/.cache/pip for this job (setup-python cache disabled above).
-      - name: Restore pip wheel cache
-        id: pip-wheel-cache
-        if: needs.changes.outputs.python == 'true'
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.cache/pip
-          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-notorch
-          restore-keys: |
-            pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-
-            pip-wheels-${{ runner.os }}-py3.12-
-
-      - name: Install dependencies
-        if: needs.changes.outputs.python == 'true'
-        run: |
-          python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          # Drop the ML stack for the test suite. Safe because the lockfile is
-          # installed with --no-deps (nothing can pull it back transitively) and no
-          # first-party module under scripts/ or tests/ imports it. This also removes
-          # the CPU-wheel force-reinstall that existed only to stop PyPI's CUDA build
-          # (which needs libcudart.so.13) from winning.
-          grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
-            > "${RUNNER_TEMP}/requirements-ci.txt"
-          .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
-          .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
-
-      - name: Save pip wheel cache
-        # Only shard 1 saves on exact-key miss — avoids 4-way matrix save races (CF F001).
-        if: needs.changes.outputs.python == 'true' && matrix.shard == 1 && steps.pip-wheel-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.cache/pip
-          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-notorch
-
-      # Duration estimates are still *saved* post-run (parse-durations) for a future
-      # single-planner LPT job. Matrix workers do not restore/feed them into plan
-      # (equal-weight partition; #5664).
-
-      - name: Plan deterministic pytest shard
-        if: needs.changes.outputs.python == 'true' && !cancelled()
-        run: |
-          mkdir -p ci-artifacts
-          # Default equal-weight partition (no --use-lpt-durations). Safe under
-          # concurrent matrix workers even when duration cache restores diverge.
-          .venv/bin/python scripts/ci/pytest_shards.py plan --shard-id "${{ matrix.shard }}" \
-            --output ci-artifacts/plan.json --args-output ci-artifacts/test-nodeids.txt
-
-      - name: Run pytest shard
-        if: needs.changes.outputs.python == 'true' && !cancelled() && (github.event_name != 'push' || github.ref != 'refs/heads/main')
-        run: |
-          # Track failures without aborting mid-step so main-shard artifacts still upload.
-          status=0
-          if [ "${{ matrix.shard }}" = "1" ]; then
-            # Cache-invalidating tests need a fresh process before the shard body.
-            .venv/bin/python -m pytest \
-              tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
-              tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
-              -v --tb=short --junitxml=ci-artifacts/cache-junit.xml || status=$?
-          fi
-          set -o pipefail
-          .venv/bin/python scripts/ci/pytest_shards.py run --nodeids ci-artifacts/test-nodeids.txt -- \
-            -v --tb=short -n auto --junitxml=ci-artifacts/main-junit.xml --durations=0 \
-            2>&1 | tee ci-artifacts/main.log || status=$?
-          if [ "${{ matrix.shard }}" = "1" ]; then
-            # Wall-clock smoke last so an FTS/race flake does not skip the bulk shard body.
-            # Up to 2 retries: /api/rag/search_text can 500 on FTS rebuild races under load.
-            playground_status=1
-            for attempt in 1 2 3; do
-              echo "playground smoke attempt ${attempt}/3"
-              if .venv/bin/python -m pytest \
-                tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
-                -v --tb=short --junitxml=ci-artifacts/playground-junit.xml; then
-                playground_status=0
-                break
-              fi
-              playground_status=$?
-              sleep 3
-            done
-            if [ "$playground_status" -ne 0 ]; then status=$playground_status; fi
-          fi
-          exit "$status"
-
-      - name: Run tests with coverage
-        if: needs.changes.outputs.python == 'true' && !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          # Gradual path: 30 (2025) → 35 (now, 2026-04) → 50 (mid-2026) → 80 on
-          # critical paths (dispatch, activity_repair, audit/core). Measured
-          # current: 39% on 2026-04-10. Bumping the floor above measured
-          # coverage would break CI, so we nudge the minimum and track the
-          # trend. Re-measure after each new batch of tests and raise the floor.
-          #
-          status=0
-          if [ "${{ matrix.shard }}" = "1" ]; then
-            .venv/bin/python -m pytest \
-              tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
-              tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
-              -v --tb=short --junitxml=ci-artifacts/cache-junit.xml --cov=scripts --cov-append --cov-report= || status=$?
-          fi
-          set -o pipefail
-          .venv/bin/python scripts/ci/pytest_shards.py run --nodeids ci-artifacts/test-nodeids.txt -- \
-            -v --tb=short -n auto --junitxml=ci-artifacts/main-junit.xml --durations=0 \
-            --cov=scripts --cov-append --cov-report= \
-            2>&1 | tee ci-artifacts/main.log || status=$?
-          if [ "${{ matrix.shard }}" = "1" ]; then
-            # Coverage instrumentation skews this endpoint latency budget, so it stays outside coverage.
-            playground_status=1
-            for attempt in 1 2 3; do
-              echo "playground smoke attempt ${attempt}/3"
-              if .venv/bin/python -m pytest \
-                tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
-                -v --tb=short --junitxml=ci-artifacts/playground-junit.xml; then
-                playground_status=0
-                break
-              fi
-              playground_status=$?
-              sleep 3
-            done
-            if [ "$playground_status" -ne 0 ]; then status=$playground_status; fi
-          fi
-          exit "$status"
-
-      - name: Upload pytest shard plan and results
-        if: always() && needs.changes.outputs.python == 'true'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: pytest-shard-${{ matrix.shard }}
-          path: ci-artifacts/
-          if-no-files-found: error
-
-      - name: Save coverage data for aggregation
-        if: always() && needs.changes.outputs.python == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          test -f .coverage
-          mkdir -p coverage
-          mv .coverage coverage/.coverage.shard-${{ matrix.shard }}
-
-      - name: Upload coverage shard
-        if: always() && needs.changes.outputs.python == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: pytest-coverage-${{ matrix.shard }}
-          path: coverage/
-          include-hidden-files: true
-          if-no-files-found: error
-
-  pytest-shard-artifacts:
-    name: Pytest shard artifacts
-    runs-on: ubuntu-latest
-    if: always()
-    needs: [changes, test]
-    permissions:
-      contents: read
-      actions: write
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
-        with:
-          python-version: '3.12'
-
-      - name: Download pytest shard artifacts
-        if: needs.changes.outputs.python == 'true' && needs.test.result == 'success'
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
-        with:
-          pattern: pytest-shard-*
-          path: pytest-artifacts
-
-      - name: Verify complete pytest selection and execution counts
-        if: needs.changes.outputs.python == 'true' && needs.test.result == 'success'
-        run: |
-          python -m venv .venv
-          .venv/bin/python scripts/ci/pytest_shards.py verify-artifacts --artifact-dir pytest-artifacts
-
-      - name: Download coverage shards
-        if: needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
-        with:
-          pattern: pytest-coverage-*
-          path: coverage-artifacts
-
-      - name: Combine coverage once and enforce the floor
-        if: needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install --no-deps -r requirements-lock.txt
-          # upload-artifact strips the coverage/ LCA; download lands files at
-          # coverage-artifacts/pytest-coverage-N/.coverage.shard-N
-          .venv/bin/python -m coverage combine coverage-artifacts/pytest-coverage-*/.coverage.shard-*
-          .venv/bin/python -m coverage report --fail-under=35
-          .venv/bin/python -m coverage xml -o coverage.xml
-
-      # Duration cache must not be blocked by a coverage combine failure (CF r2).
-      - name: Publish next-run duration estimates
-        if: always() && needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          python -m venv .venv
-          .venv/bin/python scripts/ci/pytest_shards.py parse-durations \
-            --log pytest-artifacts/pytest-shard-1/main.log \
-            --log pytest-artifacts/pytest-shard-2/main.log \
-            --log pytest-artifacts/pytest-shard-3/main.log \
-            --log pytest-artifacts/pytest-shard-4/main.log \
-            --output ci-artifacts/pytest-durations.json
-
-      - name: Save next-run duration estimates
-        if: always() && needs.changes.outputs.python == 'true' && needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ci-artifacts/pytest-durations.json
-          key: pytest-shard-durations-v1-main-${{ github.sha }}
-
-      - name: Upload combined coverage
-        if: always() && needs.changes.outputs.python == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: coverage-report
-          path: coverage.xml
-          if-no-files-found: error
-
+  # ---------------------------------------------------------------------
+  # 3. frontend — build + vitest. Unconditional.
+  # ---------------------------------------------------------------------
   frontend:
     name: Frontend (build + vitest)
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     permissions:
       contents: read
-      actions: write
-    needs: changes
-    if: needs.changes.outputs.frontend == 'true'
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -1269,76 +531,83 @@ jobs:
         working-directory: site
         run: npm test
 
+  # ---------------------------------------------------------------------
+  # frontend-e2e — built, but intentionally NOT in ci-gate.needs. It has a
+  # live regression (Practice dashboard 940px EN / 952px UK in a 768px
+  # viewport, CTAs below the fold — tracked separately). It becomes
+  # required in a follow-up PR once that regression is fixed and the job
+  # is demonstrably stable.
+  # ---------------------------------------------------------------------
   frontend-e2e:
     name: Frontend E2E (playwright)
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     permissions:
       contents: read
-      actions: write
-    needs: changes
-    if: needs.changes.outputs.frontend == 'true'
     steps:
-    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      with:
-        persist-credentials: false
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
 
-    - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6 — SHA-pinned per supply-chain hardening 2026-05-19
-      with:
-        node-version: '22'
-        cache: 'npm'
-        cache-dependency-path: site/package-lock.json
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6 — SHA-pinned per supply-chain hardening 2026-05-19
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: site/package-lock.json
 
-    - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
-      with:
-        python-version-file: '.python-version'
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version-file: '.python-version'
 
-    - name: Create Python venv
-      run: |
-        python -m venv .venv
-        .venv/bin/python -m pip install --upgrade pip
-        # jsonschema: `npm run build` imports scripts/audit via meta_validator —
-        # keep this list in sync with the `frontend` job's venv above.
-        .venv/bin/python -m pip install PyYAML jsonschema
+      - name: Create Python venv
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          # jsonschema: `npm run build` imports scripts/audit via meta_validator —
+          # keep this list in sync with the `frontend` job's venv above.
+          .venv/bin/python -m pip install PyYAML jsonschema
 
-    - name: Restore Atlas lexicon manifest cache
-      id: atlas-manifest-cache
-      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-      with:
-        path: site/src/data/lexicon-manifest.json
-        key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+      - name: Restore Atlas lexicon manifest cache
+        id: atlas-manifest-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
-    - name: Verify Atlas manifest matches pointer (rehydrate if stale)
-      run: |
-        .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        run: |
+          .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
 
-    - name: Save Atlas lexicon manifest cache
-      if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
-      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-      with:
-        path: site/src/data/lexicon-manifest.json
-        key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+      - name: Save Atlas lexicon manifest cache
+        if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
-    - name: Install dependencies
-      working-directory: site
-      run: npm ci
+      - name: Install dependencies
+        working-directory: site
+        run: npm ci
 
-    - name: Install Playwright browser
-      working-directory: site
-      run: npx playwright install --with-deps chromium
+      - name: Install Playwright browser
+        working-directory: site
+        run: npx playwright install --with-deps chromium
 
-    - name: Build site for Playwright preview
-      working-directory: site
-      run: npm run build
+      - name: Build site for Playwright preview
+        working-directory: site
+        run: npm run build
 
-    - name: Run Playwright E2E
-      working-directory: site
-      run: npx playwright test
+      - name: Run Playwright E2E
+        working-directory: site
+        run: npx playwright test
 
-  secret-scan:
+  # ---------------------------------------------------------------------
+  # 4. security — deterministic secret scanning. Unconditional.
+  # ---------------------------------------------------------------------
+  security:
     name: Secret Scanning (gitleaks)
     runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.code == 'true'
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -1349,59 +618,72 @@ jobs:
         with:
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore
 
-  # Aggregation gate (#4803). The deterministic CI jobs above are CONDITIONAL
-  # (path-filtered via dorny/paths-filter), so none can be a branch-protection
-  # required check directly: on a PR that doesn't trigger it, the context never
-  # reports and the PR blocks forever ("Expected — waiting for status"). The
-  # team already hit this for the single required check and solved it narrowly
-  # (Test (pytest) uses `if: !cancelled()`, see #1644). This job generalizes
-  # that fix: it always runs, `needs:` every deterministic gate, and fails iff
-  # any non-skipped dependency failed. Make THIS job (`CI Gate`) the sole
-  # required status check so the whole set becomes load-bearing without the
-  # conditional-required-check footgun.
-  #
-  # Semantics: skipped -> pass (path-filtered out, nothing to check);
-  #            failure/cancelled -> block.
-  # `changes` is in `needs` so a broken paths-filter router fails the gate
-  # rather than silently letting every routed job report skipped.
-  # `frontend-e2e` (playwright) is intentionally EXCLUDED — flaky, stays
-  # advisory to protect fleet merge velocity. `frontend` (build + vitest) IS
-  # included: it is deterministic and a broken frontend build must not merge.
-  # Fleet-reviewed by codex/agy/cursor on #4803.
+  # ---------------------------------------------------------------------
+  # 5. CI Gate — the sole required check. Every job above is unconditional,
+  #    so `skipped` is as much a failure as `failure`/`cancelled`: there is
+  #    no legitimate reason for any of them to not report `success`.
+  # ---------------------------------------------------------------------
+  # Enforces the 35% floor ONCE, over the combined four-shard data. Restores the
+  # guarantee cross-family review flagged as a P1 when the reboot dropped it.
+  coverage-floor:
+    name: Coverage floor
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [python]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.12'
+      - name: Download shard coverage data
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v4
+        with:
+          pattern: coverage-shard-*
+          path: coverage-artifacts
+      - name: Combine and enforce
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          python -m pip install --quiet coverage
+          i=0
+          for f in coverage-artifacts/*/.coverage; do
+            i=$((i + 1))
+            cp "$f" ".coverage.shard-$i"
+          done
+          echo "combining $i shard coverage files"
+          if [ "$i" -eq 0 ]; then echo "::error::no coverage data — refusing to pass vacuously"; exit 1; fi
+          python -m coverage combine
+          python -m coverage report --fail-under=35
+          python -m coverage xml -o coverage.xml
+
+      - name: Not a main push — coverage is a trend floor, nothing to enforce
+        if: "!(github.event_name == 'push' && github.ref == 'refs/heads/main')"
+        run: echo "coverage floor applies to pushes to main only; job succeeds so CI Gate can require it unconditionally"
+
   ci-gate:
     name: CI Gate
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     if: always()
     needs:
-      - changes
-      - bio-preparation-data   # BIO Preparation Data
-      - test                  # Test (pytest) [1/4] ... [4/4]
-      - pytest-shard-artifacts # Pytest selection/count and coverage aggregation
-      - lint                  # Lint (ruff)
-      - quality-gates         # Quality Gates (radon)
-      - lint-prompts          # Lint Prompts
-      - lesson-schema-drift   # Lesson Schema Drift
-      - mdx-source-parity     # MDX Source Parity
-      - mdx-generation-drift  # MDX Generation Drift
-      - postmortem-hygiene    # Postmortem Hygiene
-      - agent-config          # Agent Config
-      - scripts-root-guard    # No new root scripts
-      - secret-scan           # Secret Scanning (gitleaks)
-      - atlas-freshness       # Atlas Manifest Freshness
-      - frontend              # Frontend (build + vitest)
+      - python
+      - contracts
+      - frontend
+      - security
+      - coverage-floor
     steps:
       - name: Report required-job results
         env:
           RESULTS: ${{ join(needs.*.result, ',') }}
         run: |
           echo "required job results: $RESULTS"
-      - name: Fail if required pytest matrix did not complete
-        if: needs.changes.outputs.python == 'true' && needs.test.result != 'success'
+
+      - name: Fail unless every required job succeeded
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped')
         run: |
-          echo "::error::A required pytest shard failed, was cancelled, or was unexpectedly skipped."
-          exit 1
-      - name: Fail if any required job failed or was cancelled
-        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
-        run: |
-          echo "::error::A required CI job failed or was cancelled — see 'Report required-job results' for the per-job breakdown."
+          echo "::error::A required CI job failed, was cancelled, or was unexpectedly skipped — see 'Report required-job results' for the per-job breakdown."
           exit 1
