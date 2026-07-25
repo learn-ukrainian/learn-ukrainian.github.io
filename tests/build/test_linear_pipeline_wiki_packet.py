@@ -37,11 +37,15 @@ def test_build_knowledge_packet_reads_wiki_and_sources(monkeypatch) -> None:
         plan=plan,
     )
 
-    assert "Подача теми «Мій ранок»" in packet
-    assert "засвоєнням зворотних дієслів" in packet
-    assert "wiki/pedagogy/a1/my-morning.md" in packet
-    assert "S1=4-klas-ukrmova-zaharijchuk_s1922" in packet
-    assert "S9=ukrainian_wiki/reflexive-verbs-nuances" in packet
+    # 295d27ea1a ("fix(writer-prompt): ULP S1 baseline...") replaced the verbatim
+    # "## Full Wiki Context" dump with compressed targeted excerpts to fit the
+    # 130KB writer-prompt ceiling — raw article prose (and its S1=/S9= source-key
+    # mapping) is deliberately no longer duplicated in the packet.
+    assert "Подача теми «Мій ранок»" not in packet
+    assert "Do not duplicate the full article text in the writer prompt" in packet
+    assert "зворотних дієслів" in packet
+    assert "pedagogy/a1/my-morning.md" in packet
+    assert "[S1" in packet
     assert "mcp__sources__verify_lemma" in packet
     assert "mcp__sources__search_style_guide" in packet
     assert "mcp__sources__search_definitions" in packet
