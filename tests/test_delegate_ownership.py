@@ -740,6 +740,30 @@ def test_every_admission_reason_is_display_safe(tmp_path: Path):
             guard_mode=GuardMode.WARN,
         ),
     ]
+
+    # The same-task/different-live-PID race branch needs a SECOND live pid, or it
+    # is never entered — the reviewer noticed the first version of this test only
+    # claimed to cover it. The parent process is live and is not us.
+    other_live_pid = os.getppid()
+    race_state = tmp_path / "race"
+    race_state.mkdir()
+    race_ledger = tmp_path / "race.sqlite3"
+    (race_state / _safe_task_state_name(hostile)).with_suffix(".json").write_text(
+        json.dumps({"status": "running", "pid": other_live_pid}), encoding="utf-8"
+    )
+    admit_write_paths(
+        task_id=hostile, mode="workspace-write", owned_paths=[hostile],
+        pid=other_live_pid, ledger_path=race_ledger, task_state_dir=race_state,
+    )
+    for mode in (GuardMode.REFUSE, GuardMode.WARN):
+        raced = admit_write_paths(
+            task_id=hostile, mode="workspace-write", owned_paths=[hostile],
+            pid=pid, ledger_path=race_ledger, task_state_dir=race_state,
+            guard_mode=mode,
+        )
+        assert "pid" in raced.reason  # proves we entered the same-task race branch
+        assert str(other_live_pid) in raced.reason
+        results.append(raced)
     for result in results:
         bad = [c for c in result.reason if unicodedata.category(c) in unsafe]
         assert not bad, (result.reason, [hex(ord(c)) for c in bad])
