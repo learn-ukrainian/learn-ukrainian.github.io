@@ -87,6 +87,7 @@ Issue: #1184.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import logging
@@ -216,6 +217,33 @@ def _state_path(task_id: str) -> Path:
     # task-ids with slashes would break paths; sanitize
     safe = task_id.replace("/", "_").replace("\\", "_")
     return _TASKS_DIR / f"{safe}.json"
+
+
+@contextlib.contextmanager
+def _sigterm_deferred():
+    """Ignore SIGTERM for the duration of a critical write, then restore.
+
+    The worker's SIGTERM handler raises KeyboardInterrupt, and an exception
+    raised inside an ``except`` suite is not caught by that same suite. So a
+    SECOND cancel arriving while the terminal-status fallback is writing escapes
+    before the atomic rename, and the task stays recorded as ``running`` even
+    though its worker finished — the very failure the fallback exists to prevent
+    (cross-family review of #5807).
+
+    The window is one small file write. Deferring the signal across it cannot
+    hang a cancel meaningfully, and the interrupt is re-raised immediately after.
+    Degrades to a no-op off the main thread, where ``signal.signal`` is illegal.
+    """
+    try:
+        previous = signal.signal(signal.SIGTERM, signal.SIG_IGN)
+    except (ValueError, OSError):  # not the main thread — nothing to defer
+        yield
+        return
+    try:
+        yield
+    finally:
+        with contextlib.suppress(ValueError, OSError):
+            signal.signal(signal.SIGTERM, previous)
 
 
 def _write_state_atomic(path: Path, state: dict[str, Any]) -> None:
@@ -2637,28 +2665,29 @@ def _run_worker(
         interrupted_needs_finalize = (
             needs_finalize if telemetry_settled else mode in _WRITE_CAPABLE_MODES
         )
-        _write_state_atomic(
-            state_path,
-            {
-                **final_state,
-                # final_status is classified before this span, so it is always
-                # bound and already reflects the worker's own outcome.
-                "status": (
-                    "needs_finalize" if interrupted_needs_finalize else final_status
-                ),
-                "finished_at": datetime.now(UTC).isoformat(),
-                "duration_s": round(duration_s, 3),
-                "returncode": returncode,
-                "stderr_excerpt": stderr_excerpt,
-                "needs_finalize": interrupted_needs_finalize,
-                "worktree_dirty_on_exit": dirty_on_exit,
-                "commits_ahead": commits_ahead,
-                "result_file": result_file,
-                "finalize_error": (
-                    f"interrupted during finalize: {type(interrupt_exc).__name__}"
-                ),
-            },
-        )
+        with _sigterm_deferred():
+            _write_state_atomic(
+                state_path,
+                {
+                    **final_state,
+                    # final_status is classified before this span, so it is
+                    # always bound and reflects the worker's own outcome.
+                    "status": (
+                        "needs_finalize" if interrupted_needs_finalize else final_status
+                    ),
+                    "finished_at": datetime.now(UTC).isoformat(),
+                    "duration_s": round(duration_s, 3),
+                    "returncode": returncode,
+                    "stderr_excerpt": stderr_excerpt,
+                    "needs_finalize": interrupted_needs_finalize,
+                    "worktree_dirty_on_exit": dirty_on_exit,
+                    "commits_ahead": commits_ahead,
+                    "result_file": result_file,
+                    "finalize_error": (
+                        f"interrupted during finalize: {type(interrupt_exc).__name__}"
+                    ),
+                },
+            )
         raise
 
     if last_error:

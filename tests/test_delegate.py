@@ -4419,3 +4419,71 @@ def test_interrupt_after_clean_telemetry_does_not_invent_finalize_work(
     assert state["needs_finalize"] is False, "invented finalize work for a clean dispatch"
     assert state["status"] == "done"
     assert state["commits_ahead"] == 3
+
+
+def test_terminal_fallback_write_defers_a_second_sigterm(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A repeat cancel must not escape mid-write and undo the guarantee.
+
+    An exception raised inside an `except` suite is not caught by that same
+    suite, so a second SIGTERM arriving while the fallback writes would escape
+    before the atomic rename and leave the finished worker recorded as running.
+    Cross-family review of #5807.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("double-sigterm")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "double-sigterm",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    observed = {}
+    real_write = delegate._write_state_atomic
+
+    def record_signal_state(path, state):
+        if "finalize_error" in state and state.get("finalize_error"):
+            observed["sigterm_disposition"] = signal.getsignal(signal.SIGTERM)
+        return real_write(path, state)
+
+    def interrupt(*_args, **_kwargs):
+        raise KeyboardInterrupt("first SIGTERM")
+
+    installed_before = signal.getsignal(signal.SIGTERM)
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_worktree_is_dirty", side_effect=interrupt),
+        patch.object(delegate, "_write_state_atomic", side_effect=record_signal_state),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="double-sigterm",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    # During the fallback write, a repeat SIGTERM cannot raise.
+    assert observed.get("sigterm_disposition") is signal.SIG_IGN, observed
+    # ...and the handler is restored afterwards, so cancellation still works.
+    assert signal.getsignal(signal.SIGTERM) is not signal.SIG_IGN
+    state = delegate._read_state(state_path)
+    assert state is not None and state["status"] != "running"
