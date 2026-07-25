@@ -629,7 +629,6 @@ jobs:
     name: Coverage floor
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [python]
     permissions:
       contents: read
@@ -641,11 +640,13 @@ jobs:
         with:
           python-version: '3.12'
       - name: Download shard coverage data
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v4
         with:
           pattern: coverage-shard-*
           path: coverage-artifacts
       - name: Combine and enforce
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           python -m pip install --quiet coverage
           i=0
@@ -659,6 +660,10 @@ jobs:
           python -m coverage report --fail-under=35
           python -m coverage xml -o coverage.xml
 
+      - name: Not a main push — coverage is a trend floor, nothing to enforce
+        if: "!(github.event_name == 'push' && github.ref == 'refs/heads/main')"
+        run: echo "coverage floor applies to pushes to main only; job succeeds so CI Gate can require it unconditionally"
+
   ci-gate:
     name: CI Gate
     runs-on: ubuntu-latest
@@ -669,6 +674,7 @@ jobs:
       - contracts
       - frontend
       - security
+      - coverage-floor
     steps:
       - name: Report required-job results
         env:
