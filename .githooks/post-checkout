@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# post-checkout — LFS passthrough + primary-checkout stay-on-main heal.
+#
+# This file makes the #5389/#4857 heal ACTUALLY live: the heal fragment was
+# installed into .git/hooks/post-checkout, but core.hooksPath points at the
+# (previously nonexistent) tracked .githooks/ directory, so .git/hooks/* never
+# fired — which is why the 2026-07-25 detached-FETCH_HEAD incident was not
+# auto-healed. With this tracked copy, every checkout in any worktree runs it.
+#
+# post-checkout args: <prev HEAD> <new HEAD> <flag: 1=branch, 0=file>.
+# A post-checkout hook can never veto (the checkout already happened); the
+# pre-flight block lives in .githooks/reference-transaction.
+
+# Git LFS passthrough (was .git/hooks/post-checkout, shadowed since
+# core.hooksPath was set). Guarded: a missing git-lfs must not break checkout.
+if command -v git-lfs >/dev/null 2>&1; then
+  git lfs post-checkout "$@" || true
+fi
+
+# Keep the PRIMARY worktree attached to main (#4857). The fragment no-ops in
+# linked worktrees (it compares git-dir vs git-common-dir itself).
+if [ -f "scripts/guardrails/primary_post_checkout_heal.sh" ]; then
+  sh "scripts/guardrails/primary_post_checkout_heal.sh" "$@" || true
+fi
+
+exit 0

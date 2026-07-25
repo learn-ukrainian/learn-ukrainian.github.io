@@ -102,6 +102,13 @@ def primary_head_state(cwd: Path | None = None) -> dict[str, object]:
 
 def heal_primary_to_main(main_root: Path) -> tuple[bool, str]:
     """Force primary back onto main (no force-reset of dirty files)."""
+    # Healing is the one SANCTIONED mutation of the primary's refs: the
+    # checkout -B / ff-only pull below move refs/heads/main, which the
+    # .githooks/reference-transaction guard blocks in non-interactive contexts
+    # (e.g. when this heal is triggered by .githooks/post-checkout after an
+    # agent's checkout, or by a session launcher). Carry the documented
+    # override for our own subprocesses only.
+    os.environ["LEARN_UK_ALLOW_PRIMARY_REF_WRITE"] = "1"
     # Prefer local main; if missing, create tracking branch from origin/main.
     show = _git(main_root, "show-ref", "--verify", "--quiet", "refs/heads/main")
     if show.returncode != 0:

@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+# reference-transaction guard — keep the PRIMARY checkout on main, at git level.
+#
+# Why this exists (incident 2026-07-25, refs #5389 / #5396):
+#   A cursor dispatch worker, running inside its own worktree, reached OUT and
+#   ran git commands against the primary checkout, leaving it detached at
+#   FETCH_HEAD:
+#       a8d9a8f949 HEAD@{0}: checkout: moving from main to FETCH_HEAD
+#       ba468fdab8 HEAD@{1}: pull: Fast-forward
+#   Every pre-existing guard is harness-side (Claude/Codex PreToolUse hooks) or
+#   PATH-side (scripts/agent_runtime/shims/git) — a worker on a different
+#   harness with the real git binary bypasses all of them. This hook lives in
+#   git itself (core.hooksPath=.githooks, tracked), so it binds EVERY harness,
+#   every shell, and every `git -C <primary>` reach-across equally.
+#
+# What it blocks (state=prepared, non-interactive, no override):
+#   * Any update to refs/heads/main|master — commit/pull/reset/branch -f/
+#     update-ref against the protected branch, from ANY worktree context.
+#   * Any HEAD update whose new value is a raw commit (a DETACH) when the
+#     command's git dir IS the primary checkout's git dir — this is the
+#     `git checkout FETCH_HEAD` incident class.
+#
+# What it deliberately allows:
+#   * HEAD symref retargets (checkout -b / checkout <branch> / worktree add).
+#     A `git worktree add` internal HEAD write is byte-for-byte
+#     indistinguishable from a branch switch inside this hook (verified
+#     empirically), and worktree creation from the primary is the standard
+#     dispatch flow — blocking it would break delegate.py. Wrong-branch
+#     primaries are instead auto-healed by .githooks/post-checkout +
+#     scripts/guardrails/primary_post_checkout_heal.sh (#4857).
+#   * Everything in linked worktrees (git dir != common dir).
+#   * fetch / remote ref updates (refs/remotes/*, FETCH_HEAD, ORIG_HEAD,
+#     AUTO_MERGE), refs/stash, agent branches.
+#
+# Operator escape hatches (never silently block a human):
+#   * An interactive terminal (stdout or stderr is a TTY) is always allowed —
+#     the human operator working in the primary by hand is unaffected.
+#   * Scripted operator/service flows set LEARN_UK_ALLOW_PRIMARY_REF_WRITE=1
+#     for the invocation. The block message names this variable.
+#
+# The hook FAILS OPEN on any internal error: it is a guard rail against
+# accidents, not an adversarial boundary, and must never wedge git itself.
+
+set -u
+
+state="${1:-}"
+# Only `prepared` may veto; preparing/committed/aborted are informational.
+[ "$state" = "prepared" ] || exit 0
+
+# --- scan stdin for refs we care about; exit fast for everything else -------
+block_detached_head=""   # set to 1 when a primary-context HEAD detach is seen
+block_main_ref=""        # set to 1 when refs/heads/main|master is touched
+while IFS= read -r line; do
+  ref="${line##* }"
+  case "$ref" in
+    refs/heads/main | refs/heads/master)
+      block_main_ref=1
+      ;;
+    HEAD)
+      # new value is the middle field; a 40/64-hex value = detach, a
+      # ref:refs/heads/... value = symref retarget (allowed, see header).
+      set -- $line
+      new_value="${2:-}"
+      case "$new_value" in
+        ref:*) ;;
+        *[!0-9a-f]*)
+          # non-hex, non-symref — unexpected; stay out of the way
+          ;;
+        *)
+          if [ "${#new_value}" -eq 40 ] || [ "${#new_value}" -eq 64 ]; then
+            block_detached_head=1
+          fi
+          ;;
+      esac
+      ;;
+  esac
+done
+
+[ -n "$block_main_ref" ] || [ -n "$block_detached_head" ] || exit 0
+
+# --- operator escape hatches -------------------------------------------------
+if [ "${LEARN_UK_ALLOW_PRIMARY_REF_WRITE:-}" = "1" ]; then
+  exit 0
+fi
+if [ -t 1 ] || [ -t 2 ]; then
+  # Interactive terminal: the human operator is driving — never block.
+  exit 0
+fi
+
+# --- context: is this the primary checkout, and does the rule apply? --------
+# git-dir == git-common-dir identifies the primary worktree. A HEAD detach is
+# only blocked in primary context (worktrees may detach freely); a main-tip
+# move is blocked from ANY context (the protected ref is shared).
+_abs() {
+  (cd "$(dirname "$1")" 2>/dev/null && printf '%s/%s' "$(pwd)" "$(basename "$1")")
+}
+
+is_primary=0
+git_dir="$(git rev-parse --git-dir 2>/dev/null)" || exit 0
+common_dir="$(git rev-parse --git-common-dir 2>/dev/null)" || exit 0
+[ -n "$git_dir" ] && [ -n "$common_dir" ] || exit 0
+git_dir_abs="$(_abs "$git_dir")"
+common_dir_abs="$(_abs "$common_dir")"
+[ -n "$git_dir_abs" ] && [ -n "$common_dir_abs" ] || exit 0
+if [ "$git_dir_abs" = "$common_dir_abs" ]; then
+  is_primary=1
+fi
+
+if [ "$is_primary" -ne 1 ] && [ -z "$block_main_ref" ]; then
+  exit 0
+fi
+
+# --- fail loudly -------------------------------------------------------------
+{
+  echo "BLOCKED by .githooks/reference-transaction (primary-checkout ref guard):"
+  if [ -n "$block_main_ref" ]; then
+    echo "  - this command would move refs/heads/main (or master) from a"
+    echo "    non-interactive context."
+  fi
+  if [ -n "$block_detached_head" ] && [ "$is_primary" -eq 1 ]; then
+    echo "  - this command would DETACH the primary checkout's HEAD"
+    echo "    (the 2026-07-25 'checkout: moving from main to FETCH_HEAD'"
+    echo "    incident class, #5389/#5396)."
+  fi
+  echo ""
+  echo "The primary checkout stays attached to main. Agents do ref work in"
+  echo "their dispatch worktree (.worktrees/dispatch/<agent>/<task>/), never"
+  echo "via 'git -C <primary>'."
+  echo ""
+  echo "If you are the operator running this intentionally from a script or"
+  echo "service, re-run with the documented one-shot override:"
+  echo ""
+  echo "  LEARN_UK_ALLOW_PRIMARY_REF_WRITE=1 git <your command>"
+  echo ""
+  echo "See docs/runbooks/primary-checkout-ref-guard.md."
+} >&2
+exit 1
