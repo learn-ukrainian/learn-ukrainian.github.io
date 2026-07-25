@@ -4550,3 +4550,68 @@ def test_sigterm_during_runtime_lease_cleanup_cannot_lose_the_outcome(
     assert signal.getsignal(signal.SIGTERM) is not signal.SIG_IGN
     state = delegate._read_state(state_path)
     assert state is not None and state["status"] in delegate._TERMINAL_STATUSES
+
+
+def test_interrupt_in_the_post_cleanup_gap_still_records_the_outcome(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The window between lease cleanup and classification is covered too.
+
+    Cross-family review of #5807, round six: each earlier fix guarded one window
+    and left the next one open. The recovery region now spans everything between
+    the worker finishing and that fact being on disk, so an interrupt during
+    status classification — previously unguarded — still persists a terminal
+    record.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("gap-interrupt")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "gap-interrupt",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    calls = {"n": 0}
+    real_classify = delegate._classify_final_status
+
+    def interrupt_on_first_classify(**kwargs):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise KeyboardInterrupt("SIGTERM during classification")
+        return real_classify(**kwargs)
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_classify_final_status", side_effect=interrupt_on_first_classify),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="gap-interrupt",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] != "running", "interrupt in the gap stranded a finished worker"
+    assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
+    # The fallback derived a real outcome instead of persisting an empty status.
+    assert state["status"] in {"needs_finalize", "done"}

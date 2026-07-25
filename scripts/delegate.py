@@ -2504,49 +2504,51 @@ def _run_worker(
                     runtime_tmp_namespace_root,
                 )
 
+    # ONE recovery region covers everything between "the worker finished" and
+    # "that fact is on disk". Five review rounds of patching individual windows
+    # — the reaper, the checkpoint, a second signal, lease cleanup — each closed
+    # an instance and left the next one open, because the interval kept being
+    # split into guarded and unguarded halves. The region below is the whole
+    # interval, so a cancellation anywhere in it records the outcome and then
+    # continues to propagate. What remains uncoverable in-process is SIGKILL,
+    # which the dead-pid probe in cmd_status/cmd_wait already handles.
+    #
+    # Nothing the fallback reads may be bound only inside this region: a handler
+    # that raises UnboundLocalError fails exactly when it is needed.
+    final_state: dict[str, Any] = {}
+    final_status = ""
     duration_s = time.monotonic() - start
-
-    # Everything the interrupt fallback below needs is bound BEFORE the guarded
-    # span. A handler that raises UnboundLocalError while trying to record the
-    # outcome is worse than no handler at all: it fails exactly when it is
-    # needed. (Cross-family review of this PR.)
-    final_status = _classify_final_status(
-        cancelled=cancelled,
-        rate_limited=rate_limited,
-        ok_outcome=ok_outcome,
-        timed_out=timed_out,
-    )
-
-    # A successful runtime result must carry the completed child process's
-    # return code.  Refuse to persist a misleading ``done``/null combination
-    # if a future runner regression drops it; failures without a child code
-    # retain a precise reason instead of inventing a number (#4837).
-    if final_status == "done" and returncode is None:
-        final_status = "failed"
-        ok_outcome = False
-        returncode_reason = "runtime reported success without a terminal subprocess returncode"
-        stderr_excerpt = "runtime reported success without a terminal subprocess returncode"
-    elif returncode is None and returncode_reason is None:
-        returncode_reason = "no terminal subprocess returncode was available"
-
-    final_state = _read_state(state_path) or {}
     result_file: str | None = None
     dirty_on_exit: bool | None = None
     commits_ahead: int | None = None
     needs_finalize = False
     finalize_error: str | None = None
     auto_finalize: AutoFinalizeResult | None = None
-    # True once the worktree telemetry has actually run: only then is
-    # ``needs_finalize`` a verdict rather than an unmeasured default.
     telemetry_settled = False
 
-    # A SIGTERM arriving anywhere in this span raises KeyboardInterrupt (see
-    # _worker_sigterm_handler), which is NOT an Exception and would unwind
-    # straight out of _run_worker — leaving a worker that HAS finished
-    # recorded as running until some later probe guesses it crashed. The
-    # cancellation still propagates; it just does not get to erase the fact
-    # that the work completed. (Cross-family review of this PR.)
     try:
+        duration_s = time.monotonic() - start
+        final_status = _classify_final_status(
+            cancelled=cancelled,
+            rate_limited=rate_limited,
+            ok_outcome=ok_outcome,
+            timed_out=timed_out,
+        )
+
+        # A successful runtime result must carry the completed child process's
+        # return code.  Refuse to persist a misleading ``done``/null combination
+        # if a future runner regression drops it; failures without a child code
+        # retain a precise reason instead of inventing a number (#4837).
+        if final_status == "done" and returncode is None:
+            final_status = "failed"
+            ok_outcome = False
+            returncode_reason = "runtime reported success without a terminal subprocess returncode"
+            stderr_excerpt = "runtime reported success without a terminal subprocess returncode"
+        elif returncode is None and returncode_reason is None:
+            returncode_reason = "no terminal subprocess returncode was available"
+
+        final_state = _read_state(state_path) or {}
+
         # Write the full response to a result file (may be large).
         if response:
             result_path = state_path.with_suffix(".result")
@@ -2675,6 +2677,14 @@ def _run_worker(
         interrupted_needs_finalize = (
             needs_finalize if telemetry_settled else mode in _WRITE_CAPABLE_MODES
         )
+        # The interrupt may have landed before classification ran, so derive the
+        # outcome from the runtime flags rather than persisting an empty status.
+        interrupted_status = final_status or _classify_final_status(
+            cancelled=cancelled,
+            rate_limited=rate_limited,
+            ok_outcome=ok_outcome,
+            timed_out=timed_out,
+        )
         with _sigterm_deferred():
             _write_state_atomic(
                 state_path,
@@ -2683,7 +2693,9 @@ def _run_worker(
                     # final_status is classified before this span, so it is
                     # always bound and reflects the worker's own outcome.
                     "status": (
-                        "needs_finalize" if interrupted_needs_finalize else final_status
+                        "needs_finalize"
+                        if interrupted_needs_finalize
+                        else interrupted_status
                     ),
                     "finished_at": datetime.now(UTC).isoformat(),
                     "duration_s": round(duration_s, 3),
