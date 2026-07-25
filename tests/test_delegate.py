@@ -4230,3 +4230,61 @@ def test_reap_finished_worktree_survives_an_unimportable_reaper(tmp_path, monkey
     out = delegate._reap_finished_worktree(tmp_path)
     assert isinstance(out, dict)
     assert out.get("ok") is not True
+
+
+def test_run_worker_records_completion_even_when_cancelled_during_finalize(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A SIGTERM after the worker finished must not erase that it finished.
+
+    _worker_sigterm_handler raises KeyboardInterrupt, which is a BaseException:
+    an Exception-only guard let it unwind straight out of _run_worker, leaving a
+    completed worker recorded as running until some later probe guessed it had
+    crashed. Cross-family review of #5807.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("cancelled-in-finalize")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "cancelled-in-finalize",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    def cancel(*_args, **_kwargs):
+        raise KeyboardInterrupt("SIGTERM during finalize")
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_worktree_is_dirty", side_effect=cancel),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="cancelled-in-finalize",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] != "running", "cancellation erased a completed worker"
+    assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
+    assert state["needs_finalize"] is True
+    assert "KeyboardInterrupt" in (state.get("finalize_error") or "")
