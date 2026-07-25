@@ -78,10 +78,26 @@ jobs:
           restore-keys: |
             pytest-durations-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}-
       - name: Install collection dependencies
+        # INVARIANT: this install set must stay IDENTICAL to the pytest shard job's.
+        # The planner imports every test module during collection, so anything a
+        # shard can import the planner must import too. A planner-only gap makes
+        # collection fail, which empties the shard matrix and makes the whole suite
+        # SKIP while the run still looks plausible — the exact failure this PR hit.
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install --no-deps -r requirements-lock.txt
+          # torch/torchvision/open_clip_torch excluded per #5749: no first-party
+          # module imports them, and installing them on a 2-vCPU/~7GB runner caused
+          # MemoryError / "can't start new thread". --no-deps means nothing can pull
+          # them back transitively.
+          grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
+            > "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          # NOT present in requirements-lock.txt, yet imported during collection
+          # (huggingface_hub via FlagEmbedding). Omitting them is what made this
+          # planner job fail: reproduced locally by making huggingface_hub
+          # unimportable, which yields exactly the observed 2 collection errors.
+          .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
       - name: Collect once and write four duration-balanced plans
         run: |
           mkdir -p ci-artifacts
@@ -140,13 +156,22 @@ jobs:
           name: pytest-plans
           path: ci-artifacts
       - name: Install test dependencies
+        # INVARIANT: identical to the planner job's install set. See the comment
+        # there — a divergence empties the shard matrix and silently skips the suite.
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install --no-deps -r requirements-lock.txt
-          # Four runners are already the parallelism budget. One xdist worker
-          # per runner avoids four Torch imports on a two-vCPU host.
-          .venv/bin/python -m pip install --no-deps --force-reinstall --index-url https://download.pytorch.org/whl/cpu torch==2.13.0 torchvision==0.28.0
+          # torch/torchvision/open_clip_torch excluded per #5749 (merged): nothing
+          # under scripts/ or tests/ imports them — the embedding worker owns its own
+          # venv — and installing them on all shards exhausted a 2-vCPU/~7GB runner.
+          # This also removes the CPU-wheel force-reinstall that existed only to stop
+          # PyPI's CUDA build (needing libcudart.so.13) from winning; moot once torch
+          # is not installed at all.
+          grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
+            > "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          # Not in the lockfile, but imported during collection.
+          .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
       - name: Run planned shard with bounded worker concurrency
         run: |
           .venv/bin/python scripts/ci/pytest_shards.py run \
@@ -275,9 +300,6 @@ jobs:
           RESULTS: ${{ join(needs.*.result, ',') }}
         run: |
           echo "required job results: $RESULTS"
-          case ",$RESULTS," in
-            *,success,*) ;;
-          esac
           if echo "$RESULTS" | grep -Eq '(^|,)(failure|cancelled|skipped)(,|$)'; then
             echo '::error::A required CI job failed, was cancelled, or was skipped.'
             exit 1
