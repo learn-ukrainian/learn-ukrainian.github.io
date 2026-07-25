@@ -121,6 +121,7 @@ if str(_local_repo_root) not in sys.path:
 
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root
 from scripts.common.repo_root import resolve_repo_root
+from scripts.config import DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
@@ -657,6 +658,7 @@ def _classify_worktree_layout(path: Path | str | None) -> str | None:
 # preflight and creating a worktree from the primary checkout stay allowed.
 
 _WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
+_NO_DELIVERABLE_REASON = "write_capable_clean_worktree_zero_commits_short_response"
 
 _WRITE_WORKTREE_HINT = (
     "Write-capable dispatch must run inside a dispatch worktree, never the "
@@ -2538,6 +2540,7 @@ def _run_worker(
     commits_ahead: int | None = None
     needs_finalize = False
     finalize_error: str | None = None
+    no_deliverable_reason: str | None = None
     auto_finalize: AutoFinalizeResult | None = None
     telemetry_settled = False
 
@@ -2836,6 +2839,25 @@ def _run_worker(
             )
         raise
 
+        # A clean, zero-commit write-capable dispatch that only returned a tiny
+        # response has no durable deliverable to inspect. Preserve the existing
+        # attention mechanism instead of misclassifying the terminal process exit
+        # as sufficient evidence of completed work. Read-only tasks are excluded:
+        # their deliverable may be analysis or an external side effect such as a
+        # posted review comment.
+        if (
+            final_status == "done"
+            and returncode == 0
+            and commits_ahead == 0
+            and dirty_on_exit is False
+            and len(response) <= DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX
+        ):
+            needs_finalize = True
+            no_deliverable_reason = _NO_DELIVERABLE_REASON
+
+    if needs_finalize:
+        final_status = "needs_finalize"
+
     if last_error:
         # Task logs capture this worker's stderr, while agent_runtime captures
         # the CLI child's stderr internally. Re-emit the excerpt so an
@@ -2870,6 +2892,7 @@ def _run_worker(
             "effort": getattr(result, "effort", final_state.get("effort")),
             "cli_version": getattr(result, "cli_version", final_state.get("cli_version")),
             "substitution": substitution,
+            "no_deliverable_reason": no_deliverable_reason,
             "keep_worktree": keep_worktree,
             "worktree_reap": worktree_reap,
             "tmp_bytes_freed": (

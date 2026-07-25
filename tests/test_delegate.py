@@ -1473,6 +1473,147 @@ def _finalize_mock_result():
     )()
 
 
+def _run_successful_worker_for_deliverable_test(
+    *,
+    task_id: str,
+    mode: str,
+    response: str,
+    commits_ahead: int,
+    tmp_path,
+    monkeypatch,
+):
+    """Run a clean successful worker with controllable delivery signals."""
+    worktree = tmp_path / "worktree"
+    worktree.mkdir()
+    _init_git_repo_for_test(worktree, monkeypatch)
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_base": "main",
+        },
+    )
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": response,
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.6-terra",
+            "effort": "medium",
+            "cli_version": "fixture",
+        },
+    )()
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_count_commits_ahead", return_value=commits_ahead),
+    ):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="complete the assigned change",
+            mode=mode,
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort="medium",
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    return rc, state
+
+
+def test_run_worker_marks_needs_finalize_for_clean_zero_commit_tiny_response(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A write dispatch must surface narration-only exits for attention."""
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="no-deliverable-tiny-response",
+        mode="workspace-write",
+        response="I will inspect the files.",
+        commits_ahead=0,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 1
+    assert state["status"] == "needs_finalize"
+    assert state["needs_finalize"] is True
+    assert state["no_deliverable_reason"] == "write_capable_clean_worktree_zero_commits_short_response"
+
+
+def test_run_worker_does_not_flag_tiny_response_when_commit_exists(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A commit is a durable write-capable dispatch deliverable."""
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="deliverable-commit-present",
+        mode="workspace-write",
+        response="Done.",
+        commits_ahead=1,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["needs_finalize"] is False
+    assert state["no_deliverable_reason"] is None
+
+
+def test_run_worker_does_not_flag_read_only_tiny_response(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Read-only work can deliver through analysis or an external side effect."""
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="read-only-tiny-response",
+        mode="read-only",
+        response="Posted.",
+        commits_ahead=0,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["needs_finalize"] is False
+    assert state["no_deliverable_reason"] is None
+
+
+def test_run_worker_does_not_flag_normal_successful_write_dispatch(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A substantive successful write response is not narration-only."""
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="write-substantive-response",
+        mode="danger",
+        response="x" * (delegate.DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX + 1),
+        commits_ahead=0,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["needs_finalize"] is False
+    assert state["no_deliverable_reason"] is None
+
+
 @pytest.mark.parametrize(
     "commits_ahead,case",
     [
