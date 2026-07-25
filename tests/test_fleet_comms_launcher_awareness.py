@@ -76,6 +76,7 @@ def test_drive_wrappers_exist_and_point_at_base_launchers() -> None:
         ("start-grok-drive.sh", "start-grok.sh"),
         ("start-gemini-drive.sh", "start-gemini.sh"),
         ("start-sonnet-drive.sh", "start-claude.sh"),
+        ("start-opus-drive.sh", "start-claude.sh"),
     ):
         path = REPO / name
         assert path.is_file(), f"missing {name} from #5632"

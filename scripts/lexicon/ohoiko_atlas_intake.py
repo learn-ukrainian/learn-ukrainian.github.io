@@ -244,6 +244,20 @@ def build_ohoiko_intake(
     units = discover_source_units(private_root=private_root, june_notes_root=june_notes_root)
     occurrences = collect_ohoiko_occurrences(units, private_root=private_root, june_notes_root=june_notes_root)
     forms = tuple(sorted({occurrence.form for occurrence in occurrences}, key=core.stable_lemma_sort_key))
+    if not forms:
+        # With no source forms, no candidate can be filtered against the Atlas,
+        # source-decision ledger, or committed inventories. Avoid hydrating and
+        # parsing those unrelated data sets so an unavailable private corpus is
+        # a fast, deterministic empty intake.
+        return core.AtlasIntakeResult(
+            workflow=WORKFLOW_ID,
+            source_family=SOURCE_FAMILY,
+            source_units=tuple(_public_source_unit(unit) for unit in units),
+            token_occurrences=0,
+            unique_forms=0,
+            candidates=(),
+            inventory_path=inventory_path,
+        )
     resolutions = core.resolve_forms(forms, vesum_lookup=vesum_lookup)
     atlas_keys = manifest_lemma_keys if manifest_lemma_keys is not None else core.load_atlas_lemma_keys()
     ledger_keys = (
