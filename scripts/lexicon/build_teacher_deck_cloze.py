@@ -93,14 +93,18 @@ def main():
         random.seed(cloze_count)
         distractor_samples = random.sample(distractor_pool, min(3, len(distractor_pool)))
 
-        options = [{"label": matched_word, "kind": "answer"}] + [
-            {"label": d, "kind": "distractor"} for d in distractor_samples
+        options = [
+            {"optionId": "opt_ans", "lemmaId": lemma, "label": matched_word, "kind": "answer"}
+        ] + [
+            {"optionId": f"opt_dec_{idx}", "lemmaId": d.lower(), "label": d, "kind": "distractor"}
+            for idx, d in enumerate(distractor_samples)
         ]
 
         extracted_cloze.append(
             {
                 "clozeId": f"teacher_cloze_{cloze_count}",
                 "lemmaId": lemma,
+                "sentenceFrameId": f"teacher_frame_{cloze_count}",
                 "lemma": target_word.lower(),
                 "form": matched_word,
                 "sentence": blanked,
@@ -109,6 +113,7 @@ def main():
                     "code": "teacher-lesson",
                     "labelUk": "Уроки вчителя",
                     "labelEn": "Teacher Lesson Context",
+                    "caseLabel": "знахідний",
                 },
                 "clozeEn": f"Context sentence for {lemma}",
                 "options": options,
