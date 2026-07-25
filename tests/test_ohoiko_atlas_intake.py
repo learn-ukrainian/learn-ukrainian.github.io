@@ -398,10 +398,18 @@ def test_heritage_rejection_and_uncertainty_are_fail_closed() -> None:
 def test_main_with_absent_private_root_exits_zero_with_empty_outputs(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     missing_private = tmp_path / "nonexistent-private"
     inventory_out = tmp_path / "inventory.json"
     report_out = tmp_path / "report.json"
+
+    def fail_if_loaded(*_: object, **__: object) -> None:
+        pytest.fail("an empty intake must not load unrelated Atlas or source-ledger data")
+
+    monkeypatch.setattr(core, "load_atlas_lemma_keys", fail_if_loaded)
+    monkeypatch.setattr(core, "load_existing_ledger_keys", fail_if_loaded)
+    monkeypatch.setattr(core, "load_committed_inventory_keys", fail_if_loaded)
 
     exit_code = intake.main(
         [
