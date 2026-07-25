@@ -1678,9 +1678,24 @@ def _llm_qg_payload_passes(payload: Mapping[str, Any] | None) -> bool:
 
 
 def _current_db_llm_qg_payload(module_dir: Path) -> dict[str, Any] | None:
+    """Return the current LLM-QG payload: DB record, else a fresh on-disk file.
+
+    Mirrors ``scripts.api.state_compute.read_llm_qg``'s fallback (see
+    "Persistence" in docs/runbooks/module-quality-gates.md): the SQLite store
+    is content-hash bound and authoritative, but a freshly dispatched worktree
+    has no local ``data/telemetry/llm_qg.db`` (gitignored), so the
+    module-local ``llm_qg.json`` is trusted only when it is not older than the
+    module's learner-facing content.
+    """
     level = module_dir.parent.name
     slug = module_dir.name
-    return current_payload_for_module(level, slug, module_dir)
+    current = current_payload_for_module(level, slug, module_dir)
+    if current is not None:
+        return current
+    path = module_dir / "llm_qg.json"
+    if not llm_qg_file_is_current_for_module(module_dir, path):
+        return None
+    return _read_json(path)
 
 
 def _current_db_llm_qg_passes(module_dir: Path) -> bool:
