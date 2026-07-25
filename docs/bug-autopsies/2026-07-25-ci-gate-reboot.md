@@ -195,7 +195,36 @@ CTAs at 645px, 123px of headroom, DOM order untouched.
 
 ---
 
-## 7. Prevention
+## Root cause
+
+Four independent defects, but one shared shape: **every one of them made a failure look like something
+else**, and each cost far more in misdirection than in repair.
+
+| Defect | Presented as | Actually |
+| --- | --- | --- |
+| GitHub transient | "our workflow file is invalid" | a platform blip; the tree was fine |
+| pytest hang + no `timeout-minutes` | "CI is just slow" | wedged, and structurally unable to report |
+| verdict recorded from memory | "reviewed and approved" | CHANGES REQUIRED, 7 blocking findings |
+| `--background` ask swallowing its reply | "the reviewer hasn't answered yet" | it answered; the answer was auto-acked |
+
+The unifying cause is **absent or misleading failure signals**, not absent engineering:
+
+1. **No bounded failure.** No job carried `timeout-minutes`, so an unbounded hang produced *no verdict
+   at all* rather than a red one. A gate that can hang forever cannot report, and a system that cannot
+   report trains people to guess.
+2. **A safety net that shares the failure it reports.** pytest-timeout's watchdog dumps to a pipe the
+   xdist controller must be reading — so the instrument deadlocks on the same condition it exists to
+   surface, and its silence is indistinguishable from health.
+3. **Unauditable review state.** Verdicts lived in gitignored local files, so the only durable record
+   was a human sentence in a handoff — which inverted. Combined with (4), the driver could not see the
+   verdict even when it existed.
+4. **Guards that fire on correct behaviour.** Four false positives in one day, each escapable only via
+   `SKIP_*=1`. A guard that cries wolf is disabled by reflex, and then it is not a guard.
+
+The through-line: **the system's honesty about its own failures was the defect.** Every fix below adds
+a signal or removes a lie; none of them makes the underlying machinery faster or cleverer.
+
+## Prevention
 
 | Prevention | Status |
 | --- | --- |
