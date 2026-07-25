@@ -214,6 +214,7 @@ def test_cost_report_smoke_runs_on_repo_data():
         capture_output=True,
         text=True,
         check=False,
+        timeout=30,
     )
 
     assert result.returncode == 0

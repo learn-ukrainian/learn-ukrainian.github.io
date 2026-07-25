@@ -125,19 +125,21 @@ printf 'rollover_agent=%s\\nlineage=%s\\nrollover=%s\\n' \\
 ''',
     )
     git_env = _clean_environ()
-    subprocess.run(["git", "init", "-q", "-b", "main", os.fspath(project)], check=True, env=git_env)
+    subprocess.run(["git", "init", "-q", "-b", "main", os.fspath(project)], check=True, env=git_env, timeout=30)
     subprocess.run(
         ["git", "-C", os.fspath(project), "config", "user.email", "test@example.com"],
         check=True,
         env=git_env,
+        timeout=30,
     )
     subprocess.run(
         ["git", "-C", os.fspath(project), "config", "user.name", "Test"],
         check=True,
         env=git_env,
+        timeout=30,
     )
-    subprocess.run(["git", "-C", os.fspath(project), "add", "."], check=True, env=git_env)
-    subprocess.run(["git", "-C", os.fspath(project), "commit", "-qm", "init"], check=True, env=git_env)
+    subprocess.run(["git", "-C", os.fspath(project), "add", "."], check=True, env=git_env, timeout=30)
+    subprocess.run(["git", "-C", os.fspath(project), "commit", "-qm", "init"], check=True, env=git_env, timeout=30)
     return project, supervisor_capture, canary_capture
 
 

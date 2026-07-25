@@ -374,10 +374,9 @@ def _build_rows(
             gloss = manifest_glosses.get(key) or dictionary_glosses.get(key)
             gloss_fallbacks += bool(gloss)
         if not gloss:
-            # The reviewed ledger's Ukrainian echo is not a valid learner-English
-            # anchor.  Retain the source in the candidates report but do not claim
-            # an invented translation; enrichment can provide Dmklinger/SUM-11 when
-            # the data-enabled pipeline is available.
+            continue
+        if not _is_expression(lemma) and not analyses_for_lemma:
+            # Single-word headwords must be attested in VESUM to satisfy Atlas gates.
             continue
 
         primary = first

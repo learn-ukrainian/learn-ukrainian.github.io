@@ -68,6 +68,7 @@ def _git(cwd: Path, *args: str) -> None:
         capture_output=True,
         text=True,
         env=env,
+        timeout=30,
     )
 
 

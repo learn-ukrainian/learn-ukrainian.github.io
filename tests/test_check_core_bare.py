@@ -35,6 +35,7 @@ def _init_repo(path: Path) -> Path:
         ["git", "init", "-q", str(path)],
         check=True,
         env=_clean_env(),
+        timeout=30
     )
     return path
 
@@ -45,6 +46,7 @@ def _core_bare(repo: Path) -> str:
         capture_output=True,
         text=True,
         env=_clean_env(),
+        timeout=30
     ).stdout.strip()
 
 
@@ -53,6 +55,7 @@ def _set_bare(repo: Path, value: str) -> None:
         ["git", "-C", str(repo), "config", "--local", "core.bare", value],
         check=True,
         env=_clean_env(),
+        timeout=30
     )
 
 
@@ -69,6 +72,7 @@ def _set_worktree_config(repo: Path, value: str = "true") -> None:
         ],
         check=True,
         env=_clean_env(),
+        timeout=30
     )
 
 
@@ -104,6 +108,7 @@ def test_fix_resets_core_bare_true(tmp_path):
         capture_output=True,
         text=True,
         env=_clean_env(),
+        timeout=30
     ).stdout.strip()
     assert wtc == "true"
 

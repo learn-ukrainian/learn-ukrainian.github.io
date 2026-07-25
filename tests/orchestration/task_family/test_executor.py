@@ -28,7 +28,7 @@ def _git_env() -> dict[str, str]:
 
 def git(cwd: Path, *args: str) -> str:
     proc = subprocess.run(
-        ["git", *args], cwd=cwd, check=False, capture_output=True, text=True, env=_git_env()
+        ["git", *args], cwd=cwd, check=False, capture_output=True, text=True, env=_git_env(), timeout=30
     )
     assert proc.returncode == 0, proc.stderr or proc.stdout
     return proc.stdout.strip()

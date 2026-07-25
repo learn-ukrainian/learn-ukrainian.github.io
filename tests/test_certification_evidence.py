@@ -1260,14 +1260,15 @@ def test_completed_provisional_run_resumes_for_fresh_qg_without_legacy_authority
 def test_common_repository_tree_rejects_primary_current_and_sibling_worktree_evidence(tmp_path: Path) -> None:
     repo, config_path, _ledger_root, _ledger, inputs = _completion_case(tmp_path)
     git_env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
-    subprocess.run(["git", "init", str(repo)], check=True, capture_output=True, text=True, env=git_env)
-    subprocess.run(["git", "-C", str(repo), "add", "."], check=True, capture_output=True, text=True, env=git_env)
+    subprocess.run(["git", "init", str(repo)], check=True, capture_output=True, text=True, env=git_env, timeout=30)
+    subprocess.run(["git", "-C", str(repo), "add", "."], check=True, capture_output=True, text=True, env=git_env, timeout=30)
     subprocess.run(
         ["git", "-C", str(repo), "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test", "commit", "-m", "fixture"],
         check=True,
         capture_output=True,
         text=True,
         env=git_env,
+        timeout=30,
     )
     current = repo / ".worktrees/dispatch/codex/current"
     sibling = repo / ".worktrees/dispatch/codex/sibling"
@@ -1277,6 +1278,7 @@ def test_common_repository_tree_rejects_primary_current_and_sibling_worktree_evi
         capture_output=True,
         text=True,
         env=git_env,
+        timeout=30,
     )
     subprocess.run(
         ["git", "-C", str(repo), "worktree", "add", "-b", "fixture-sibling", str(sibling)],
@@ -1284,6 +1286,7 @@ def test_common_repository_tree_rejects_primary_current_and_sibling_worktree_evi
         capture_output=True,
         text=True,
         env=git_env,
+        timeout=30,
     )
     current_config = current / config_path.relative_to(repo)
     current_ledger_root = tmp_path / "ledgers-current"
