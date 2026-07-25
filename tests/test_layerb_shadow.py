@@ -482,6 +482,7 @@ def test_stored_corpus_lineage_resolves_all_groundings_when_available() -> None:
         check=True,
         capture_output=True,
         text=True,
+        timeout=15,
     ).stdout.strip()
     corpus_dir = Path(common_git_dir).resolve().parent / "audit" / "2026-07-06-qg-bakeoff-multirun"
     artifacts = _read_artifacts(corpus_dir)

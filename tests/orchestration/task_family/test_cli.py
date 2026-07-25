@@ -31,7 +31,7 @@ def _git_env() -> dict[str, str]:
 
 
 def _git(cwd: Path, *args: str) -> None:
-    result = subprocess.run(["git", *args], cwd=cwd, env=_git_env(), capture_output=True, text=True, check=False)
+    result = subprocess.run(["git", *args], cwd=cwd, env=_git_env(), capture_output=True, text=True, check=False, timeout=30)
     assert result.returncode == 0, result.stderr or result.stdout
 
 
