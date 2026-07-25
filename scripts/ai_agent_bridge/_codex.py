@@ -214,6 +214,14 @@ def ask_codex_chain(
     return message_ids
 
 
+def _reported_codex_effort(result: object) -> tuple[str | None, str | None]:
+    """Return reported Codex effort without presenting an unknown value as fact."""
+    effort = getattr(result, "effort", None)
+    if effort and effort != "unknown":
+        return effort, None
+    return None, "Codex runtime did not report the applied effort"
+
+
 def has_codex_headroom(model: str | None = None) -> tuple[bool, str]:
     """Return whether Codex has quota headroom for a new bridge call."""
     from agent_runtime.usage import has_headroom
@@ -383,11 +391,13 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
         return
 
     print(f"\n✅ Codex finished ({len(response)} chars)")
+    effort_applied, effort_reason = _reported_codex_effort(result)
     provenance_data, actual_model = response_provenance(
         msg,
         actual_model=getattr(result, "model", None) or model or "gpt-5.6-terra",
         harness="codex",
-        effort_applied=getattr(result, "effort", None),
+        effort_applied=effort_applied,
+        effort_reason=effort_reason,
     )
     reply_id = send_message(
         content=response,

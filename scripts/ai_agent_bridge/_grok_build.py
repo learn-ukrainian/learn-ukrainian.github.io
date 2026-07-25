@@ -143,7 +143,7 @@ def process_for_grok_build(
     _ = new_session  # grok resume_policy="never"; bridge calls are fresh.
     timeout_val = _resolve_grok_build_bridge_timeout(no_timeout)
     model = _extract_target_model(msg) or GROK_BUILD_DEFAULT_MODEL
-    effort = requested_effort(msg)
+    effort = requested_effort(msg) or GROK_BUILD_DEFAULT_EFFORT
 
     print(f"Message #{msg['id']}")
     print(f"   From: {msg['from']} -> To: {msg['to']}")

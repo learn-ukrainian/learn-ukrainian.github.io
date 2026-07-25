@@ -1410,7 +1410,7 @@ def _handle_ask_claude(args):
     # the caller got an empty/unhelpful reply (the grok "empty result" bug).
     content = sys.stdin.read() if args.content == "-" else args.content
     kwargs = {"review": True} if getattr(args, "review", False) else {}
-    if args.effort is not None:
+    if getattr(args, "effort", None) is not None:
         kwargs["effort"] = args.effort
     kwargs.update(_review_target_kwargs(args))
     from_llm = _resolve_from_llm(args)
@@ -1439,7 +1439,7 @@ def _handle_ask_codex(args):
             raise SystemExit("ask-codex --chain derives issue task IDs automatically; omit --task-id")
         try:
             kwargs = {"review": True} if getattr(args, "review", False) else {}
-            if args.effort is not None:
+            if getattr(args, "effort", None) is not None:
                 kwargs["effort"] = args.effort
             kwargs.update(_review_target_kwargs(args))
             from_llm = _resolve_from_llm(args)
@@ -1462,7 +1462,7 @@ def _handle_ask_codex(args):
     if not args.task_id:
         raise SystemExit("ask-codex requires --task-id unless --chain is used")
     kwargs = {"review": True} if getattr(args, "review", False) else {}
-    if args.effort is not None:
+    if getattr(args, "effort", None) is not None:
         kwargs["effort"] = args.effort
     kwargs.update(_review_target_kwargs(args))
     from_llm = _resolve_from_llm(args)
@@ -1488,7 +1488,7 @@ def _handle_ask_agy(args):
         data = Path(args.data).read_text()
     content = sys.stdin.read() if args.content == "-" else args.content
     kwargs = {"review": True} if getattr(args, "review", False) else {}
-    if args.effort is not None:
+    if getattr(args, "effort", None) is not None:
         kwargs["effort"] = args.effort
     kwargs.update(_review_target_kwargs(args))
     from_llm = _resolve_from_llm(args)
