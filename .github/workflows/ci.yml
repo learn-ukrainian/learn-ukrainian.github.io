@@ -115,7 +115,7 @@ jobs:
       - name: Lint Python
         run: .venv/bin/ruff check scripts/ tests/
       - name: Validate workflow syntax
-        run: docker run --rm -v "$PWD:/repo" rhysd/actionlint:1.7.8
+        run: docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:1.7.8
 
   pytest:
     name: Pytest [${{ matrix.shard }}/4]
