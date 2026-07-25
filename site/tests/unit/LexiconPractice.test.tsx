@@ -22,6 +22,7 @@ import {
   type ReviewLogEntry,
 } from '@site/src/lib/lexicon/srs';
 import { LEARNER_LEVEL_STORAGE_KEY, type CefrLevel } from '@site/src/lib/lexicon/levels';
+import { type CustomSet } from '@site/src/lib/lexicon/custom-decks';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
 
@@ -3073,6 +3074,7 @@ describe('LexiconPractice', () => {
           {
             clozeId: 'test_cloze_1',
             lemmaId: 'кава',
+            sentenceFrameId: 'test_frame_1',
             lemma: 'кава',
             form: 'каву',
             sentence: 'Я п’ю _____ зранку.',
@@ -3081,11 +3083,12 @@ describe('LexiconPractice', () => {
               code: 'acc_sg',
               labelUk: 'знахідний відмінок',
               labelEn: 'accusative singular',
+              caseLabel: 'знахідний',
             },
             clozeEn: 'I drink coffee in the morning.',
             options: [
-              { label: 'каву', kind: 'answer' },
-              { label: 'каві', kind: 'decoy-oblique' },
+              { optionId: 'opt_ans', lemmaId: 'кава', label: 'каву', kind: 'answer' },
+              { optionId: 'opt_dec_1', lemmaId: 'кава', label: 'каві', kind: 'decoy-oblique' },
             ],
           },
         ],

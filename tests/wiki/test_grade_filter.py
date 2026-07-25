@@ -35,7 +35,7 @@ A1_PLAYBACK_KEYWORDS = {
 }
 
 
-def test_search_textbooks_does_not_apply_hard_grade_filter():
+def test_search_textbooks_does_not_apply_hard_grade_filter(requires_sources_db):
     """A1 retrieval must reach Grade 5+ phonetics chunks (not just Grades 1-4).
 
     Grade 5+ Ukrainian-language textbooks contain the explicit, systematic

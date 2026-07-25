@@ -93,6 +93,10 @@ models:
       Separate rate-limit bucket from the Opus 4.x pool.
     sources:
       - https://platform.claude.com/docs/en/about-claude/models/overview
+  # Retained alongside claude-opus-5: the advisor ROSTER now points at opus-5, but
+  # this id is still referenced by scripts/context_canary.py, scripts/pipeline/dispatch.py,
+  # ai_agent_bridge/openai_proxy.py and _dispatch_wrappers.py. Removing the entry
+  # broke collection with KeyError: 'claude-opus-4-8'.
   claude-opus-4-8:
     family: anthropic
     tier: frontier_authority
@@ -173,6 +177,22 @@ models:
     transports: [native_kimi]
     strengths: [strong_agentic_coding, max_effort, image_video_tools]
     weaknesses: [public_context_spec_is_not_verified, max_effort_only]
+    sources:
+      - https://moonshotai.github.io/kimi-code/en/configuration/providers.html
+  kimi-k3-max:
+    family: moonshot
+    tier: frontier_authority
+    lifecycle: active
+    aliases: [k3-max]
+    kimi_routes:
+      kimicc_alias: k3-max
+      platform_model_id: kimi-k3-max
+      coding_model_id: kimi-k3-max
+      context_profile: kimicc_k3
+    roles: [architecture, critical_review, long_context_debugging, advisor]
+    transports: [native_kimi]
+    strengths: [frontier_reasoning, max_effort, long_context_review]
+    weaknesses: [max_effort_only, subscription_quota]
     sources:
       - https://moonshotai.github.io/kimi-code/en/configuration/providers.html
   kimi-code/kimi-for-coding:
@@ -350,6 +370,15 @@ review_candidates:
   # YAML last-wins meant THIS block never took effect, so the duplicate was dead
   # config that the strict check-yaml hook flagged (fixed 2026-07-24). The surviving
   # pinned entry now lives below as `claude-opus-5`. Keys here must stay unique.
+  # Kept: scripts/review/reviewer_resolver.py:213 binds CLAUDE_OPUS_4_8 at import
+  # time, so deleting this key breaks collection of every test that imports it.
+  claude-opus-4-8:
+    model_id: claude-opus-4-8
+    route: claude
+    transport: native_claude
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude
+    review_profiles: [code, infra]
+    capabilities: [code_review]
   openai_frontier:
     model_id: gpt-5.6-sol
     route: codex

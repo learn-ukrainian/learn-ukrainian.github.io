@@ -155,7 +155,7 @@ export function extractDocumentClozeItems(text: string, lemmaKeys: string[], wor
         const distractors = Array.from(setKeys)
           .filter((w) => w !== matchedLemma)
           .slice(0, 3)
-          .map((w) => ({ label: w, kind: 'distractor' }));
+          .map((w, idx) => ({ optionId: `opt_dec_${idx}`, lemmaId: w, label: w, kind: 'distractor' }));
 
         const translation = wordTranslations.get(matchedLemma);
 
@@ -167,10 +167,10 @@ export function extractDocumentClozeItems(text: string, lemmaKeys: string[], wor
           blankCase: 'context',
           form: rawWord,
           lemma: matchedLemma,
-          caseRule: { code: 'document-context', labelUk: 'Контекст з документа', labelEn: 'Document Sentence' },
+          caseRule: { code: 'document-context', labelUk: 'Контекст з документа', labelEn: 'Document Sentence', caseLabel: 'знахідний' },
           clozeEn: translation ? `Translation: ${translation}` : 'Sentence from your imported text',
           options: [
-            { label: rawWord, kind: 'answer' },
+            { optionId: 'opt_ans', lemmaId: matchedLemma, label: rawWord, kind: 'answer' },
             ...distractors,
           ],
         });

@@ -68,7 +68,7 @@ def run_applier(db: Path, worksheet: Path, extra_args: list[str] | None = None) 
     ]
     if extra_args:
         args.extend(extra_args)
-    return subprocess.run(args, capture_output=True, text=True)
+    return subprocess.run(args, capture_output=True, text=True, timeout=60)
 
 
 def test_apply_success(temp_db: Path, write_worksheet) -> None:

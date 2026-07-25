@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import json
 import os
 import sqlite3
@@ -359,6 +360,7 @@ def test_direct_script_help_from_repository_root():
         text=True,
         env=env,
         check=False,
+        timeout=30,
     )
 
     assert completed.returncode == 0, completed.stderr
@@ -642,43 +644,672 @@ def test_default_agent_paths_are_agent_specific():
     assert th.default_handoff_path("claude") == Path("docs/session-state/current.claude.md")
 
 
-def test_fresh_thread_lease_blocks_a_second_claude_infra_session(tmp_path: Path):
+def _v2_lease(
+    *,
+    owner_thread_id: str = "old-owner",
+    generation: int = 1,
+    heartbeat_at: str = "2026-07-23T10:00:00Z",
+    acquired_at: str = "2026-07-23T09:00:00Z",
+    owner_pid: int = 4242,
+    owner_pid_started_at: float = 1000.0,
+    owner_machine_id: str = "machine-a",
+    agent: str = "claude-infra",
+) -> dict:
+    return {
+        "schema_version": 2,
+        "agent": agent,
+        "generation": generation,
+        "owner_thread_id": owner_thread_id,
+        "acquired_at": acquired_at,
+        "heartbeat_at": heartbeat_at,
+        "owner_pid": owner_pid,
+        "owner_pid_started_at": owner_pid_started_at,
+        "owner_machine_id": owner_machine_id,
+    }
+
+
+def _write_lease(tmp_path: Path, agent: str, lease: dict) -> Path:
+    path = tmp_path / f".agent/{agent}-thread-lease.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(lease), encoding="utf-8")
+    return path
+
+
+def _fake_snapshot(**overrides) -> th.ProcessSnapshot:
+    defaults = {"pid": 4242, "ppid": 1, "candidate_basenames": frozenset(), "started_at": 1000.0}
+    defaults.update(overrides)
+    return th.ProcessSnapshot(**defaults)
+
+
+# --- claim_thread_lease: liveness-based takeover (test matrix items 1-13) ---
+
+
+def test_dead_owner_fresh_clock_takes_over(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Matrix 1: today's user-facing bug — a dead owner must never lock out a restart."""
     now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
-    first = th.claim_thread_lease(
-        state_root=tmp_path,
-        agent="claude-infra",
-        current_thread_id="infra-session-one",
-        now=now,
-        fresh_after=timedelta(minutes=15),
-    )
-    second = th.claim_thread_lease(
-        state_root=tmp_path,
-        agent="claude-infra",
-        current_thread_id="infra-session-two",
-        now=now + timedelta(minutes=1),
-        fresh_after=timedelta(minutes=15),
+    lease = _v2_lease(heartbeat_at="2026-07-23T09:59:00Z")  # 1 minute old: fresh under the old clock design
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(th, "_process_is_alive", lambda pid: False)
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
     )
 
-    lease_path = tmp_path / ".agent/claude-infra-thread-lease.json"
-    assert first["status"] == "acquired"
-    assert second == {
-        "status": "conflict",
-        "lease_path": lease_path,
-        "owner_thread_id": "infra-session-one",
+    assert result["status"] == "acquired"
+    assert result["generation"] == 2
+    assert result["replaced_owner_thread_id"] == "old-owner"
+    assert "not found" in result["takeover_reason"]
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["owner_thread_id"] == "new-owner"
+    assert on_disk["generation"] == 2
+
+
+def test_live_owner_fresh_clock_conflicts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Matrix 2: unchanged behavior — a genuinely live owner is never stolen from."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(heartbeat_at="2026-07-23T09:59:00Z")
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(th, "_process_is_alive", lambda pid: True)
+    monkeypatch.setattr(th, "_default_process_snapshot", lambda pid: _fake_snapshot(pid=pid))
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "conflict"
+    assert result["liveness"] == "live_owner"
+    assert result["owner_thread_id"] == "old-owner"
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "old-owner"
+
+
+def test_live_owner_beyond_old_clock_window_still_conflicts_not_stolen(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Matrix 3: today's opposite bug — a live owner working >12h must not be stolen from."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(heartbeat_at="2026-07-22T08:00:00Z")  # 26h old: reclaimable under the old clock-only design
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(th, "_process_is_alive", lambda pid: True)
+    monkeypatch.setattr(th, "_default_process_snapshot", lambda pid: _fake_snapshot(pid=pid))
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "conflict"
+    assert result["liveness"] == "live_owner"
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "old-owner"
+
+
+def test_pid_reused_by_unrelated_process_takes_over(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Matrix 4: start-time mismatch means the pid was recycled — takeover regardless of clock age."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(heartbeat_at="2026-07-23T09:59:00Z", owner_pid_started_at=1000.0)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(th, "_process_is_alive", lambda pid: True)
+    monkeypatch.setattr(th, "_default_process_snapshot", lambda pid: _fake_snapshot(pid=pid, started_at=5000.0))
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "acquired"
+    assert "reused" in result["takeover_reason"]
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "new-owner"
+
+
+def test_start_time_within_the_same_whole_second_still_matches(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Fix 6: sub-second jitter between psutil and the ps-fallback probe must not look like reuse."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(heartbeat_at="2026-07-23T09:59:00Z", owner_pid_started_at=1000.9)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(th, "_process_is_alive", lambda pid: True)
+    monkeypatch.setattr(th, "_default_process_snapshot", lambda pid: _fake_snapshot(pid=pid, started_at=1000.0))
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "conflict"
+    assert result["liveness"] == "live_owner"
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "old-owner"
+
+
+def test_start_time_one_whole_second_apart_is_treated_as_pid_reuse(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Fix 6: exact whole-second comparison, not a 2s tolerance — a gap this small used to be
+    (wrongly) absorbed by the old tolerance and would have missed a genuine pid reuse."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(heartbeat_at="2026-07-23T09:59:00Z", owner_pid_started_at=1000.0)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(th, "_process_is_alive", lambda pid: True)
+    monkeypatch.setattr(th, "_default_process_snapshot", lambda pid: _fake_snapshot(pid=pid, started_at=1001.0))
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "acquired"
+    assert "reused" in result["takeover_reason"]
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "new-owner"
+
+
+def test_legacy_v1_lease_with_fresh_heartbeat_conflicts_as_liveness_unknown(tmp_path: Path):
+    """Matrix 5/6: an uncheckable owner (legacy v1 lease) is never taken over — a DIFFERENT
+    thread id claiming it always conflicts and points at the operator force-release command."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    v1_lease = {
+        "schema_version": 1,
+        "agent": "claude-infra",
         "generation": 1,
-        "heartbeat_at": "2026-07-23T10:00:00Z",
-        "fresh_after_seconds": 900,
+        "owner_thread_id": "old-owner-v1",
+        "acquired_at": "2026-07-23T09:55:00Z",
+        "heartbeat_at": "2026-07-23T09:55:00Z",  # 5 minutes old
     }
-    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "infra-session-one"
+    lease_path = _write_lease(tmp_path, "claude-infra", v1_lease)
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "conflict"
+    assert result["liveness"] == "liveness_unknown"
+    assert result["owner_thread_id"] == "old-owner-v1"
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "old-owner-v1"
+
+
+def test_uncheckable_lease_never_taken_over_regardless_of_clock_age(tmp_path: Path):
+    """Fix 5 (design change, supersedes the 900s emergency TTL): this used to be the exact
+    stuck-lease shape that healed via a clock-based takeover once the heartbeat aged past the
+    TTL (formerly ``test_legacy_v1_lease_with_stale_heartbeat_is_healed_by_takeover``, deleted
+    — it asserted status == "acquired" here, which is now the vulnerability, not the fix).
+    Silently stealing from a possibly-live owner whose liveness just cannot be checked would
+    corrupt the mutual exclusion this lease exists to provide, so a DIFFERENT thread id must
+    conflict no matter how old the heartbeat is — there is no longer a clock that grants
+    ownership to anyone. The legacy lease still heals, but only via the same-owner refresh
+    upgrade path (see test_same_owner_refresh_upgrades_v1_lease_to_v2) or an explicit
+    --force release, never via a timer."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    v1_lease = {
+        "schema_version": 1,
+        "agent": "claude-infra",
+        "generation": 3,
+        "owner_thread_id": "old-owner-v1",
+        "acquired_at": "2026-07-22T01:00:00Z",
+        "heartbeat_at": "2026-07-23T01:00:00Z",  # 9 hours old: reclaimable under the old TTL design
+    }
+    lease_path = _write_lease(tmp_path, "claude-infra", v1_lease)
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "conflict"
+    assert result["liveness"] == "liveness_unknown"
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["owner_thread_id"] == "old-owner-v1"  # untouched — no takeover happened
+    assert on_disk["schema_version"] == 1  # not healed by this path either
+
+
+def test_claim_thread_lease_has_no_emergency_ttl_parameter(tmp_path: Path):
+    """Fix 5: the emergency TTL and its parameter are deleted outright, not merely unused —
+    guards against a future reintroduction of clock-based takeover."""
+    assert "emergency_ttl" not in inspect.signature(th.claim_thread_lease).parameters
+    assert not hasattr(th, "DEFAULT_THREAD_LEASE_EMERGENCY_TTL_SECONDS")
+
+
+def test_different_machine_id_is_uncheckable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Matrix 7: a lease recorded on another machine can never be liveness-checked here."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(heartbeat_at="2026-07-23T09:55:00Z", owner_machine_id="machine-remote")
+    _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-local")
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "conflict"
+    assert result["liveness"] == "liveness_unknown"
+
+
+def test_liveness_probe_raising_never_escapes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Matrix 8: a probe failure of any kind is an uncheckable verdict, never an exception."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(heartbeat_at="2026-07-23T09:55:00Z")
+    _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+
+    def _boom(pid: int) -> bool:
+        raise OSError("simulated probe failure")
+
+    monkeypatch.setattr(th, "_process_is_alive", _boom)
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "conflict"
+    assert result["liveness"] == "liveness_unknown"
+    assert "probe raised" in result["reason"]
+
+
+def test_eperm_from_os_kill_is_treated_as_alive_and_conflicts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Matrix 9: EPERM means the process exists (owned by another user), not that it's dead."""
+
+    def _raise_eperm(pid: int, sig: int) -> None:
+        raise PermissionError("no permission")
+
+    monkeypatch.setattr(th.os, "kill", _raise_eperm)
+    assert th._process_is_alive(4242) is True  # unit-level: the EPERM branch itself
+
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(heartbeat_at="2026-07-23T09:55:00Z", owner_pid=4242, owner_pid_started_at=1000.0)
+    _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(th, "_default_process_snapshot", lambda pid: _fake_snapshot(pid=pid))
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "conflict"
+    assert result["liveness"] == "live_owner"
+
+
+def test_process_is_alive_treats_zombie_as_dead(monkeypatch: pytest.MonkeyPatch):
+    """Fix 4 (unit-level): kill(pid, 0) succeeds for a zombie — without a status check it
+    would look identical to a live owner and conflict forever."""
+    monkeypatch.setattr(th.os, "kill", lambda pid, sig: None)  # zombie: kill(0) still succeeds
+    monkeypatch.setattr(th, "_process_is_zombie", lambda pid: True)
+
+    assert th._process_is_alive(4242) is False
+
+
+def test_zombie_owner_is_reclaimed_not_treated_as_live(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Fix 4: a zombie owner must be reclaimable immediately, exactly like a confirmed-dead one —
+    otherwise it recreates the original lockout (a dead-looking owner blocking every restart)."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(heartbeat_at="2026-07-23T09:59:00Z")  # fresh under the old clock-only design
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(th.os, "kill", lambda pid, sig: None)
+    monkeypatch.setattr(th, "_process_is_zombie", lambda pid: True)
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "acquired"
+    assert result["generation"] == 2
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "new-owner"
+
+
+def test_malformed_v2_liveness_fields_are_uncheckable_not_raised(tmp_path: Path):
+    """Matrix 10: a malformed individual field degrades to uncheckable, never raises."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(heartbeat_at="2026-07-23T09:55:00Z")
+    lease["owner_pid"] = "not-an-int"
+    _write_lease(tmp_path, "claude-infra", lease)
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "conflict"
+    assert result["liveness"] == "liveness_unknown"
+
+
+def test_unknown_future_schema_version_is_uncheckable_not_raised(tmp_path: Path):
+    """Matrix 11: SessionStart must never be blocked by a schema version this code predates."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(heartbeat_at="2026-07-23T09:55:00Z")
+    lease["schema_version"] = 3
+    _write_lease(tmp_path, "claude-infra", lease)
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "conflict"
+    assert result["liveness"] == "liveness_unknown"
+
+
+def test_corrupt_json_lease_heals_via_fresh_acquire(tmp_path: Path):
+    """Matrix 12: unreadable/corrupt state is recoverable, never a reason to raise and block."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease_path = tmp_path / ".agent/claude-infra-thread-lease.json"
+    lease_path.parent.mkdir(parents=True)
+    lease_path.write_text("{not-valid-json", encoding="utf-8")
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "acquired"
+    assert result["generation"] == 1
+    assert "recovered_from_corrupt_lease" in result
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["owner_thread_id"] == "new-owner"
+    assert on_disk["schema_version"] == 2
+
+
+def test_same_owner_resume_of_uncheckable_v2_lease_reacquires_with_new_generation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """A v2 lease with no usable identity must NOT keep its generation on an explicit resume.
+
+    Cross-family review finding F002 (gpt-5.6-sol, PR #5758). The v1->v2 upgrade concession is
+    safe only because a v1 lease predates the generation export, so its predecessor cannot hold
+    a generation to release with. A v2 lease whose liveness fields are absent is different: its
+    predecessor ran under this schema and may already have exported generation 2, so preserving
+    it would let that dead predecessor's delayed SessionEnd pass release fencing and delete THIS
+    process's live lease.
+    """
+    now = datetime(2026, 7, 25, 10, 0, tzinfo=UTC)
+    uncheckable_v2 = {
+        "schema_version": th.THREAD_LEASE_SCHEMA_VERSION,
+        "agent": "claude-infra",
+        "generation": 2,
+        "owner_thread_id": "same-owner",
+        "acquired_at": "2026-07-25T09:00:00Z",
+        "heartbeat_at": "2026-07-25T09:00:00Z",
+        # v2, but carries no owner_pid/owner_pid_started_at/owner_machine_id — nothing to probe.
+    }
+    lease_path = _write_lease(tmp_path, "claude-infra", uncheckable_v2)
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda starting_pid: {"owner_pid": 777, "owner_pid_started_at": 99.0, "owner_machine_id": "machine-a"},
+    )
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="same-owner", now=now, starting_pid=1
+    )
+
+    # The generation MUST advance: absence of proof is not proof of continuity.
+    assert result["generation"] == 3, "an uncheckable v2 lease must reacquire, not refresh in place"
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["generation"] == 3
+    assert on_disk["owner_pid"] == 777
+    assert on_disk["owner_machine_id"] == "machine-a"
+
+
+def test_same_owner_refresh_upgrades_v1_lease_to_v2(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Matrix 13 / rule E: a same-owner refresh must not leave a v1 lease stuck on the fallback path."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    v1_lease = {
+        "schema_version": 1,
+        "agent": "claude-infra",
+        "generation": 2,
+        "owner_thread_id": "same-owner",
+        "acquired_at": "2026-07-23T09:00:00Z",
+        "heartbeat_at": "2026-07-23T09:00:00Z",
+    }
+    lease_path = _write_lease(tmp_path, "claude-infra", v1_lease)
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda starting_pid: {"owner_pid": 555, "owner_pid_started_at": 42.0, "owner_machine_id": "machine-a"},
+    )
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="same-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "refreshed"
+    assert result["generation"] == 2
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["schema_version"] == 2
+    assert on_disk["owner_pid"] == 555
+    assert on_disk["owner_machine_id"] == "machine-a"
+    assert on_disk["acquired_at"] == "2026-07-23T09:00:00Z"  # preserved across the v1->v2 upgrade
+    assert on_disk["heartbeat_at"] == "2026-07-23T10:00:00Z"  # refreshed
+
+
+def test_same_thread_id_with_matching_process_identity_preserves_generation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Fix 2 (regression guard): a genuine resume by the SAME process must stay on the fast,
+    generation-preserving refresh path — only an identity CHANGE should force a reacquire."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="resumed-thread", generation=3, owner_pid=111, owner_pid_started_at=1000.0)
+    _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda starting_pid: {"owner_pid": 111, "owner_pid_started_at": 1000.0, "owner_machine_id": "machine-a"},
+    )
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="resumed-thread", now=now, starting_pid=111
+    )
+
+    assert result["status"] == "refreshed"
+    assert result["generation"] == 3
+
+
+def test_same_thread_id_with_changed_process_identity_increments_generation_and_fences_late_release(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Fix 2: resuming the same thread id under a NEW harness process (different pid/start
+    time) must NOT silently preserve generation. If it did, the dead predecessor process —
+    which cached the OLD generation from its own SessionStart — could still release-fence
+    its way past a late SessionEnd and delete the SUCCESSOR's live lease."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="resumed-thread", generation=1, owner_pid=111, owner_pid_started_at=1000.0)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    # The predecessor process (pid 111) is gone; a NEW process (pid 222) resumes the thread id.
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda starting_pid: {"owner_pid": 222, "owner_pid_started_at": 5000.0, "owner_machine_id": "machine-a"},
+    )
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="resumed-thread", now=now, starting_pid=222
+    )
+
+    assert result["status"] == "acquired"
+    assert result["generation"] == 2
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["generation"] == 2
+    assert on_disk["owner_pid"] == 222
+
+    # The predecessor's late SessionEnd still remembers generation 1 (it can only ever know
+    # what it observed at its own SessionStart) — it must be refused, not delete the successor.
+    late_release = th.release_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="resumed-thread", now=now, generation=1
+    )
+    assert late_release["status"] == "noop"
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["generation"] == 2
+
+    # The successor's own release, with the generation it actually claimed, must succeed.
+    own_release = th.release_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="resumed-thread", now=now, generation=2
+    )
+    assert own_release["status"] == "released"
+    assert not lease_path.exists()
+
+
+def test_same_thread_id_with_unresolvable_new_identity_reacquires_defensively(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Fix 2: when the recorded identity is checkable but a fresh probe cannot confirm it still
+    matches (e.g. the harness-ancestor walk fails this time), continuity must NOT be assumed —
+    assuming it would recreate the exact vulnerability finding 2 describes."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="resumed-thread", generation=1, owner_pid=111, owner_pid_started_at=1000.0)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(th, "_derive_owner_liveness_fields", lambda starting_pid: {})
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="resumed-thread", now=now, starting_pid=999
+    )
+
+    assert result["status"] == "acquired"
+    assert result["generation"] == 2
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["generation"] == 2
+
+
+# --- release_thread_lease: fencing (test matrix items 14-16) ---
+
+
+def test_release_without_generation_is_refused_unless_forced(tmp_path: Path):
+    """Fix 1: generation is mandatory for a non-force release — the only call site
+    (release-thread-lease.sh) must always pass it, or the fencing this whole design
+    depends on is dead code at its one production caller."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="real-owner", generation=1)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+
+    with pytest.raises(ValueError, match="generation"):
+        th.release_thread_lease(
+            state_root=tmp_path, agent="claude-infra", current_thread_id="real-owner", now=now
+        )
+
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "real-owner"
+
+
+def test_release_by_non_owner_is_noop(tmp_path: Path):
+    """Matrix 14: release never touches a lease it does not own."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="real-owner", generation=1)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+
+    result = th.release_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="impostor", now=now, generation=1
+    )
+
+    assert result["status"] == "noop"
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "real-owner"
+
+
+def test_release_after_takeover_is_fenced_by_owner_and_generation(tmp_path: Path):
+    """Matrix 15: a stale former owner's late SessionEnd must not clobber the new owner's lease."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    # On-disk state after a real takeover: "new-owner" now holds generation 2.
+    current_lease = _v2_lease(owner_thread_id="new-owner", generation=2)
+    lease_path = _write_lease(tmp_path, "claude-infra", current_lease)
+
+    # The old owner's late SessionEnd, still believing it holds generation 1.
+    result = th.release_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="old-owner", now=now, generation=1
+    )
+
+    assert result["status"] == "noop"
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["owner_thread_id"] == "new-owner"
+    assert on_disk["generation"] == 2
+
+    # Generation fencing also holds even when the owner_thread_id happens to match.
+    result_same_owner_wrong_generation = th.release_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, generation=1
+    )
+    assert result_same_owner_wrong_generation["status"] == "noop"
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["generation"] == 2
+
+
+def test_release_thread_lease_takes_the_advisory_lock(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Matrix 16: an unlocked release could lose updates or clobber a newer generation."""
+    events: list[str] = []
+
+    class RecordingLock:
+        def __enter__(self) -> None:
+            events.append("lock-entered")
+
+        def __exit__(self, *_args: object) -> None:
+            events.append("lock-exited")
+
+    monkeypatch.setattr(th, "task_family_advisory_lock", lambda _path: RecordingLock())
+
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    result = th.release_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="whoever", now=now, generation=1
+    )
+
+    assert result["status"] == "noop"  # no lease file exists — the lock must still be taken
+    assert events == ["lock-entered", "lock-exited"]
+
+
+def test_release_thread_lease_force_bypasses_ownership(tmp_path: Path):
+    """The operator escape hatch named in every conflict message."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="somebody-else", generation=5)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+
+    result = th.release_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="", now=now, force=True
+    )
+
+    assert result["status"] == "released"
+    assert result["forced"] is True
+    assert not lease_path.exists()
+
+
+# --- harness-ancestor walk (test matrix items 17-18) ---
+
+
+def test_ancestor_walk_skips_transient_subshell_and_finds_harness():
+    """Matrix 17: a fake process table, no shelling out — the launcher subshell must be skipped."""
+    table = {
+        100: _fake_snapshot(pid=100, ppid=200, candidate_basenames=frozenset({"python3.12"}), started_at=10.0),
+        200: _fake_snapshot(pid=200, ppid=300, candidate_basenames=frozenset({"bash"}), started_at=9.0),
+        300: _fake_snapshot(pid=300, ppid=1, candidate_basenames=frozenset({"claude"}), started_at=1.0),
+    }
+
+    ancestor = th._find_harness_ancestor(100, process_snapshot=lambda pid: table.get(pid))
+
+    assert ancestor is not None
+    assert ancestor.pid == 300
+    assert ancestor.started_at == 1.0
+
+
+def test_ancestor_walk_with_no_harness_ancestor_records_no_liveness_fields(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Matrix 18: no known-harness ancestor means the uncheckable path, never a guessed pid."""
+    table = {
+        100: _fake_snapshot(pid=100, ppid=200, candidate_basenames=frozenset({"python3.12"}), started_at=10.0),
+        200: _fake_snapshot(pid=200, ppid=1, candidate_basenames=frozenset({"launchd"}), started_at=1.0),
+    }
+
+    ancestor = th._find_harness_ancestor(100, process_snapshot=lambda pid: table.get(pid))
+    assert ancestor is None
+
+    fields = th._derive_owner_liveness_fields(100, process_snapshot=lambda pid: table.get(pid))
+    assert fields == {}
+
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    monkeypatch.setattr(th, "_default_process_snapshot", lambda pid: table.get(pid))
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="fresh-owner", now=now, starting_pid=100
+    )
+
+    assert result["status"] == "acquired"
+    assert result["liveness_fields_recorded"] is False
+    on_disk = json.loads((tmp_path / ".agent/claude-infra-thread-lease.json").read_text(encoding="utf-8"))
+    assert "owner_pid" not in on_disk
 
 
 def test_claim_thread_lease_command_reports_a_clear_double_launch_conflict(tmp_path: Path, capsys):
+    """CLI-level: deterministic across environments via --starting-pid 1 (never a known harness)."""
     command = [
         "--repo-root",
         str(tmp_path),
         "claim-thread-lease",
         "--agent",
         "claude-infra",
+        "--starting-pid",
+        "1",
         "--current-thread-id",
     ]
 
@@ -687,9 +1318,218 @@ def test_claim_thread_lease_command_reports_a_clear_double_launch_conflict(tmp_p
     assert th.main([*command, "second-session"]) == 2
 
     payload = json.loads(capsys.readouterr().out)
-    assert payload["error_code"] == "THREAD_LEASE_CONFLICT"
+    assert payload["error_code"] == "THREAD_LEASE_LIVENESS_UNKNOWN"
     assert payload["owner_thread_id"] == "first-session"
     assert "stop to avoid double-driving" in payload["error"]
+    assert "release-thread-lease" in payload["resolution"]
+
+
+def test_release_thread_lease_command_end_to_end(tmp_path: Path, capsys):
+    """CLI-level: claim then release through the same subcommands a real hook would call."""
+    repo_args = ["--repo-root", str(tmp_path)]
+
+    assert th.main([*repo_args, "claim-thread-lease", "--agent", "claude-infra", "--starting-pid", "1",
+                     "--current-thread-id", "cli-session"]) == 0
+    claim_payload = json.loads(capsys.readouterr().out)
+
+    assert th.main([*repo_args, "release-thread-lease", "--agent", "claude-infra",
+                     "--current-thread-id", "cli-session",
+                     "--generation", str(claim_payload["generation"])]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "released"
+    assert not (tmp_path / ".agent/claude-infra-thread-lease.json").exists()
+
+
+def test_release_thread_lease_command_requires_generation_unless_forced(tmp_path: Path, capsys):
+    """Fix 1: release-thread-lease.sh is the only call site — it must always pass --generation,
+    or a SessionEnd release is no longer fenced by anything but thread id."""
+    repo_args = ["--repo-root", str(tmp_path)]
+
+    assert th.main([*repo_args, "claim-thread-lease", "--agent", "claude-infra", "--starting-pid", "1",
+                     "--current-thread-id", "cli-session"]) == 0
+    capsys.readouterr()
+
+    assert th.main([*repo_args, "release-thread-lease", "--agent", "claude-infra",
+                     "--current-thread-id", "cli-session"]) == 2
+    payload = json.loads(capsys.readouterr().out)
+    assert "generation" in payload["error"]
+    # Refused, not released: the lease must survive an attempted release with no generation.
+    assert (tmp_path / ".agent/claude-infra-thread-lease.json").exists()
+
+
+def test_refresh_thread_lease_heartbeat_command_is_noop_for_a_different_owner(tmp_path: Path, capsys):
+    """Rule G: the Stop-hook heartbeat refresh must never take over — only ever refresh its own lease."""
+    repo_args = ["--repo-root", str(tmp_path)]
+    assert th.main([*repo_args, "claim-thread-lease", "--agent", "claude-infra", "--starting-pid", "1",
+                     "--current-thread-id", "owner-session"]) == 0
+    capsys.readouterr()
+
+    assert th.main([*repo_args, "refresh-thread-lease-heartbeat", "--agent", "claude-infra",
+                     "--current-thread-id", "someone-else", "--starting-pid", "1",
+                     "--generation", "1"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "noop"
+    assert json.loads((tmp_path / ".agent/claude-infra-thread-lease.json").read_text())["owner_thread_id"] == (
+        "owner-session"
+    )
+
+
+def test_refresh_thread_lease_heartbeat_is_noop_for_a_stale_generation(tmp_path: Path):
+    """Fix 2: a takeover that resumes the SAME thread id under a NEW process bumps generation
+    but keeps the old thread id — a late heartbeat call still in flight from the dead
+    predecessor process, carrying the OLD generation it cached, must not rewrite the
+    successor's recorded process identity just because the thread id still matches."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="resumed-thread", generation=2, owner_pid=222, owner_pid_started_at=5000.0)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    original = lease_path.read_text(encoding="utf-8")
+
+    result = th.refresh_thread_lease_heartbeat(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="resumed-thread",
+        generation=1,  # the dead predecessor's stale, cached generation
+        now=now,
+        starting_pid=111,  # the dead predecessor's own pid
+    )
+
+    assert result["status"] == "noop"
+    assert "generation" in result["reason"]
+    assert lease_path.read_text(encoding="utf-8") == original  # never rewritten
+
+
+def test_refresh_thread_lease_heartbeat_is_noop_when_process_identity_unconfirmed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Fix 2: even with a matching thread id AND generation, the heartbeat refresh must
+    reconfirm the calling process's identity — unlike claim_thread_lease's explicit
+    same-owner resume, it never assumes unproven continuity for an uncheckable lease."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="owner-session", generation=1, owner_pid=111, owner_pid_started_at=1000.0)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    original = lease_path.read_text(encoding="utf-8")
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    # A fresh probe from the calling process resolves to a DIFFERENT identity.
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda starting_pid: {"owner_pid": 222, "owner_pid_started_at": 5000.0, "owner_machine_id": "machine-a"},
+    )
+
+    result = th.refresh_thread_lease_heartbeat(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="owner-session",
+        generation=1,
+        now=now,
+        starting_pid=222,
+    )
+
+    assert result["status"] == "noop"
+    assert "identity" in result["reason"]
+    assert lease_path.read_text(encoding="utf-8") == original  # never rewritten
+
+
+def test_refresh_thread_lease_heartbeat_is_noop_for_an_uncheckable_lease(tmp_path: Path):
+    """Fix 2: an uncheckable lease (e.g. legacy v1) must never be blindly refreshed here —
+    unproven continuity is not assumed on the implicit, frequent heartbeat path, only on
+    claim_thread_lease's explicit same-owner resume."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    v1_lease = {
+        "schema_version": 1,
+        "agent": "claude-infra",
+        "generation": 1,
+        "owner_thread_id": "owner-session",
+        "acquired_at": "2026-07-23T09:00:00Z",
+        "heartbeat_at": "2026-07-23T09:58:30Z",  # 90s old, past any throttle
+    }
+    lease_path = _write_lease(tmp_path, "claude-infra", v1_lease)
+    original = lease_path.read_text(encoding="utf-8")
+
+    result = th.refresh_thread_lease_heartbeat(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="owner-session",
+        generation=1,
+        now=now,
+        starting_pid=1,
+        min_refresh_interval=timedelta(seconds=60),
+    )
+
+    assert result["status"] == "noop"
+    assert "identity" in result["reason"]
+    assert lease_path.read_text(encoding="utf-8") == original  # never rewritten
+
+
+def test_throttled_heartbeat_refresh_is_a_cheap_noop_within_the_interval(tmp_path: Path):
+    """The PostToolUse hook fires on every tool call — it must not rewrite the lease
+    file every time, only once the existing heartbeat is already older than the throttle.
+    Throttle is checked before process identity, so this stays a cheap read even when
+    identity would be unconfirmed."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="owner-session", heartbeat_at="2026-07-23T09:59:30Z")  # 30s old
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    original_mtime = lease_path.stat().st_mtime_ns
+
+    result = th.refresh_thread_lease_heartbeat(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="owner-session",
+        generation=1,
+        now=now,
+        starting_pid=1,
+        min_refresh_interval=timedelta(seconds=60),
+    )
+
+    assert result["status"] == "throttled"
+    assert lease_path.stat().st_mtime_ns == original_mtime  # never rewritten
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["heartbeat_at"] == "2026-07-23T09:59:30Z"
+
+
+def test_throttled_heartbeat_refresh_writes_once_the_interval_has_elapsed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Past the throttle window, the refresh must still actually happen when generation and
+    process identity both confirm this session still owns the lease."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="owner-session", heartbeat_at="2026-07-23T09:58:30Z")  # 90s old
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda starting_pid: {"owner_pid": 4242, "owner_pid_started_at": 1000.0, "owner_machine_id": "machine-a"},
+    )
+
+    result = th.refresh_thread_lease_heartbeat(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="owner-session",
+        generation=1,
+        now=now,
+        starting_pid=1,
+        min_refresh_interval=timedelta(seconds=60),
+    )
+
+    assert result["status"] == "refreshed"
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["heartbeat_at"] == "2026-07-23T10:00:00Z"
+
+
+def test_refresh_thread_lease_heartbeat_command_throttles_via_min_refresh_interval_seconds(
+    tmp_path: Path, capsys
+):
+    """CLI-level: --min-refresh-interval-seconds is the flag the PostToolUse hook actually passes."""
+    repo_args = ["--repo-root", str(tmp_path)]
+    assert th.main([*repo_args, "claim-thread-lease", "--agent", "claude-infra", "--starting-pid", "1",
+                     "--current-thread-id", "owner-session"]) == 0
+    capsys.readouterr()
+
+    assert th.main([*repo_args, "refresh-thread-lease-heartbeat", "--agent", "claude-infra",
+                     "--current-thread-id", "owner-session", "--starting-pid", "1",
+                     "--generation", "1",
+                     "--min-refresh-interval-seconds", "3600"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "throttled"  # fresh claim heartbeat is well within the 3600s window
 
 
 def test_checkout_continuity_requires_clean_source_binding_and_same_clean_head():
@@ -2106,11 +2946,12 @@ def test_default_runtime_root_is_shared_by_real_linked_worktree(tmp_path: Path, 
         ["git", "config", "user.email", "test@example.invalid"],
         ["git", "config", "user.name", "Test"],
     ):
-        subprocess.run(command, cwd=primary, check=True, capture_output=True, text=True, env=git_env)
+        subprocess.run(command, cwd=primary, check=True, capture_output=True, text=True, env=git_env, timeout=30)
     (primary / "README.md").write_text("fixture\n", encoding="utf-8")
-    subprocess.run(["git", "add", "README.md"], cwd=primary, check=True, capture_output=True, text=True, env=git_env)
+    subprocess.run(["git", "add", "README.md"], cwd=primary, check=True, capture_output=True, text=True, env=git_env, timeout=30)
     subprocess.run(
-        ["git", "commit", "-m", "fixture"], cwd=primary, check=True, capture_output=True, text=True, env=git_env
+        ["git", "commit", "-m", "fixture"], cwd=primary, check=True, capture_output=True, text=True, env=git_env,
+        timeout=30,
     )
     subprocess.run(
         ["git", "worktree", "add", "-b", "linked", str(linked)],
@@ -2119,6 +2960,7 @@ def test_default_runtime_root_is_shared_by_real_linked_worktree(tmp_path: Path, 
         capture_output=True,
         text=True,
         env=git_env,
+        timeout=30,
     )
 
     assert th.canonical_state_root(primary) == primary.resolve()
@@ -2494,6 +3336,7 @@ def test_epic_harness_session_start_surfaces_claude_infra_pending_packet(tmp_pat
     mapped = subprocess.check_output(
         ["bash", "-c", f'source "{identity_sh}" && handoff_identity_for_epic harness'],
         text=True,
+        timeout=30,
     ).strip()
     assert mapped == "claude-infra", f"--epic harness must map to claude-infra, got {mapped!r}"
     assert mapped != "claude-harness"
