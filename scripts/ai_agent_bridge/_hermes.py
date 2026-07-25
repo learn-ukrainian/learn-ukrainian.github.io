@@ -20,11 +20,18 @@ Isolation (Sol #213 / fleet-comms Phase 0):
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess
 from pathlib import Path
 
+from ._ask_contract import (
+    requested_effort,
+    resolve_model_selection,
+    response_provenance,
+    unsupported_effort_note,
+)
 from ._ask_lifecycle import (
     ask_attachment,
     ask_sender_model,
@@ -70,11 +77,19 @@ def ask_hermes(
     from_llm: str = "claude",
     from_model: str | None = None,
     to_model: str | None = None,
+    effort: str | None = None,
     no_timeout: bool = False,
     background: bool = False,
 ) -> int:
     """Send message to Hermes AND invoke Hermes one-shot to process it."""
-    effective_model = model or HERMES_DEFAULT_MODEL
+    effective_model = resolve_model_selection(
+        lane="ask-hermes", to_model=to_model, model=model, default=HERMES_DEFAULT_MODEL
+    )
+    effort_applied, effort_reason = unsupported_effort_note(
+        lane="hermes",
+        effort=effort,
+        reason="Hermes exposes reasoning effort only through shared configuration, not this invocation",
+    )
     # Guard BEFORE send_message so a refused model leaves no orphaned bridge
     # message behind (hermes is a non-opencode transport; _run_opencode's
     # guard never sees this path).
@@ -98,6 +113,7 @@ def ask_hermes(
         to_llm="hermes",
         from_model=from_model,
         to_model=to_model or effective_model,
+        effort=effort,
     )
     register_ask(msg_id)
     if background:
@@ -116,12 +132,21 @@ def ask_hermes(
         )
     except ReviewSafetyError as exc:
         raise SystemExit(f"ask-hermes: {exc}") from exc
+    provenance_data, actual_model = response_provenance(
+        {"data": json.dumps({"to_model": effective_model, "effort": effort})},
+        actual_model=effective_model,
+        harness="hermes",
+        effort_applied=effort_applied,
+        effort_reason=effort_reason,
+    )
     reply_id = send_message(
         content=response,
         task_id=task_id,
         msg_type="response",
         from_llm="hermes",
         to_llm=from_llm,
+        data=provenance_data,
+        from_model=actual_model,
         to_model=from_model,
     )
     acknowledge(msg_id)
@@ -140,6 +165,12 @@ def process_for_hermes(message_id: int, *, no_timeout: bool = False) -> None:
     if not msg:
         return
     model = ask_target_model(msg) or HERMES_DEFAULT_MODEL
+    effort = requested_effort(msg)
+    effort_applied, effort_reason = unsupported_effort_note(
+        lane="hermes",
+        effort=effort,
+        reason="Hermes exposes reasoning effort only through shared configuration, not this invocation",
+    )
     content = msg["content"]
     task_id = msg.get("task_id") or ""
     msg_type = msg.get("type") or "query"
@@ -159,12 +190,21 @@ def process_for_hermes(message_id: int, *, no_timeout: bool = False) -> None:
     except ReviewSafetyError as exc:
         # Surface as exit for process-ask workers; lifecycle records failure upstream.
         raise SystemExit(f"ask-hermes: {exc}") from exc
+    provenance_data, actual_model = response_provenance(
+        msg,
+        actual_model=model,
+        harness="hermes",
+        effort_applied=effort_applied,
+        effort_reason=effort_reason,
+    )
     reply_id = send_message(
         content=response,
         task_id=msg["task_id"],
         msg_type="response",
         from_llm="hermes",
         to_llm=msg["from"],
+        data=provenance_data,
+        from_model=actual_model,
         to_model=ask_sender_model(msg),
     )
     acknowledge(message_id)

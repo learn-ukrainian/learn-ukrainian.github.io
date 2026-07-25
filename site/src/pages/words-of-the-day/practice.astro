@@ -968,6 +968,39 @@ const frontmatter = {
     margin: 0 auto;
   }
 
+  /* #5772 — desktop fold. Measured at 1366x768 on the single-column layout: the
+     primary CTAs landed at 932px, 164px below the fold, because the hero (147px),
+     stats (62px), Drive sync bar (44px), deck-filter bar (122px) and the 293px
+     deck preview all stack above them while ~560px of horizontal space sits
+     unused. The earlier #5502 density pass tuned spacing but could not absorb the
+     two bars added since.
+
+     Pair the deck preview with the session panel rather than shaving padding
+     again: it uses the width that is already there, and it keeps the primary CTA
+     beside the deck it acts on. DOM order is untouched, so the documented
+     hero → stats → words → session → secondary order still holds and the
+     reading order matches the visual order. */
+  @media (min-width: 1024px) {
+    :global(.k3-practice-dashboard) {
+      max-width: 1040px;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+      align-items: start;
+    }
+    :global(.k3-hero),
+    :global(.k3-stats),
+    :global(.k3-drive-sync-bar),
+    :global(.k3-deck-filter-bar),
+    :global(.k3-secondary) {
+      grid-column: 1 / -1;
+    }
+    :global(.k3-words) {
+      grid-column: 1;
+    }
+    :global(.k3-session) {
+      grid-column: 2;
+    }
+  }
+
   :global(.k3-hero h1) {
     margin: 0;
     font-size: clamp(1.65rem, 3vw, 2.05rem);
