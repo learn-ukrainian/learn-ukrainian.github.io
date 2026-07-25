@@ -26,6 +26,7 @@ def _run(args: list[str], env_extra: dict[str, str] | None = None) -> subprocess
         capture_output=True,
         text=True,
         env=env,
+        timeout=15,
     )
 
 
@@ -50,6 +51,7 @@ def test_check_reports_unset_for_absent_var():
         capture_output=True,
         text=True,
         env=env,
+        timeout=15,
     )
     assert res.returncode == 1
     assert "SAFE_ENV_DEFINITELY_ABSENT: UNSET" in res.stdout
@@ -73,6 +75,7 @@ def test_is_set_is_silent_and_uses_exit_code():
         capture_output=True,
         text=True,
         env={k: v for k, v in os.environ.items() if k != "SAFE_ENV_DEFINITELY_ABSENT"},
+        timeout=15,
     )
     assert unset_res.returncode == 1
 

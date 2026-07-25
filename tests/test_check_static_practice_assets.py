@@ -396,6 +396,7 @@ def test_cli_reports_missing_static_shard(tmp_path: Path) -> None:
         check=False,
         capture_output=True,
         text=True,
+        timeout=60,
     )
 
     assert result.returncode == 1
@@ -647,6 +648,7 @@ def test_cli_prints_coverage_table(tmp_path: Path) -> None:
         check=False,
         capture_output=True,
         text=True,
+        timeout=60,
     )
 
     assert result.returncode == 0
