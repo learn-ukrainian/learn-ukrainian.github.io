@@ -304,5 +304,5 @@ def test_launch_enrich_sh_is_executable_and_documents_caps() -> None:
     assert "candidate-ulif-reduce.json" in text
     assert "finalize" in text.lower() or "pin-flip" in text.lower()
     # Shell syntax check
-    proc = subprocess.run(["bash", "-n", str(path)], capture_output=True, text=True, check=False)
+    proc = subprocess.run(["bash", "-n", str(path)], capture_output=True, text=True, check=False, timeout=10)
     assert proc.returncode == 0, proc.stderr
