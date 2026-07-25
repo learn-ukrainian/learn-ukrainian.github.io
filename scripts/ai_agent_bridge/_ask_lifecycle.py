@@ -13,6 +13,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 from pathlib import Path
 from typing import Any
 
@@ -179,8 +180,65 @@ def launch_background_ask(message_id: int, target: str, options: dict[str, Any])
         {"message_id": message_id, "target": target, "options": options},
         pid=proc.pid,
     )
+
+    # A worker can die BEFORE `process_background_ask` runs — a bad adapter path, an
+    # import error, a missing binary — in which case its `finally:` never executes and
+    # nothing is ever recorded. Observed live on the kimi lane 2026-07-25: message id
+    # returned, worker gone, log file 0 bytes, no usage record. The ask reported
+    # SUCCESS and produced nothing, which is the worst possible failure shape for a
+    # review gate: silence is indistinguishable from "still thinking".
+    #
+    # So confirm the worker actually came up, and fail LOUDLY if it did not.
+    _confirm_worker_started(message_id, target, proc, log_file)
     print(f"✅ Ask #{message_id} sent; processing in background (PID {proc.pid}).")
     return proc.pid
+
+
+_WORKER_START_GRACE_S = 5.0
+_WORKER_POLL_S = 0.25
+
+
+def _confirm_worker_started(message_id: int, target: str, proc, log_file: Path) -> None:
+    """Detect a worker that dies without recording anything, and say so.
+
+    Success here means only "it is alive, or it produced output" — NOT that the ask
+    succeeded. A worker that exits 0 having written nothing is still a failure, because
+    a completed ask always leaves either a reply or a recorded failure.
+    """
+    deadline = time.monotonic() + _WORKER_START_GRACE_S
+    while time.monotonic() < deadline:
+        rc = proc.poll()
+        if rc is None:
+            try:
+                if log_file.stat().st_size > 0:
+                    return  # alive and talking
+            except OSError:
+                pass
+            time.sleep(_WORKER_POLL_S)
+            continue
+
+        # Exited within the grace window. Only a recorded terminal status makes that OK.
+        status = _ask_status(message_id)
+        if status is not None and not status.startswith(("sent", "processing", "pending")):
+            return
+        try:
+            tail = log_file.read_text(encoding="utf-8", errors="replace").strip()[-400:]
+        except OSError:
+            tail = ""
+        detail = tail or f"worker exited rc={rc} without writing any output"
+        record_ask_failure(message_id, f"{target} worker died at startup: {detail}")
+        _remove_pid_file(_ASK_AGENT, str(message_id))
+        print(
+            f"❌ Ask #{message_id}: the {target} worker DIED AT STARTUP (rc={rc}) without "
+            f"recording anything.\n"
+            f"   This is not a slow reply — no answer is coming. Log: {log_file}\n"
+            f"   {('Log tail: ' + tail) if tail else 'The log file is empty.'}\n"
+            f"   Route this ask to another lane.",
+            file=sys.stderr,
+        )
+        return
+    # Still running after the grace window: normal, long-running ask.
+    return
 
 
 def process_background_ask(message_id: int, target: str) -> None:
