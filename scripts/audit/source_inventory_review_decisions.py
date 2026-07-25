@@ -318,9 +318,23 @@ def resolve_staged_inventory_path(inventory_path: str) -> Path:
     return candidate
 
 
+# libyaml's C parser, when available. `yaml.safe_load` does NOT auto-select it,
+# so this module was parsing 41MB of committed decision YAML with the pure-Python
+# loader. Measured on the largest committed file (20.7MB):
+#     yaml.safe_load  → ~70s, 563MB peak RSS
+#     yaml.CSafeLoader→  3.2s, 390MB peak RSS
+# That 563MB peak x 4 xdist workers is what produced `MemoryError` /
+# `worker 'gwN' crashed` on CI shards (#5768).
+#
+# CSafeLoader is the C implementation of SafeLoader — same guarantees, no
+# arbitrary Python object construction. It is NOT yaml.CLoader, which executes
+# `!!python/object` tags and must never be used on committed data.
+_SafeLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
+
 def _read_yaml_mapping(path: Path) -> dict[str, Any]:
     try:
-        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+        payload = yaml.load(path.read_text(encoding="utf-8"), Loader=_SafeLoader)
     except FileNotFoundError as exc:
         raise SourceInventoryError(f"{path}: not found") from exc
     if not isinstance(payload, dict):

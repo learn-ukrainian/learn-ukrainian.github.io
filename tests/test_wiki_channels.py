@@ -17,6 +17,16 @@ from wiki.channels import CHANNELS_PATH, TRACK_CHANNEL_AFFINITY, get_track_affin
 def test_registry_schema_covers_all_live_source_files():
     channels = load_channels(reload=True)
     source_files = {path.stem for path in CHANNELS_PATH.parent.glob("*.jsonl")}
+    if not source_files:
+        # The corpus itself is untracked local data. With none of it present the glob is
+        # empty, every registry entry reads as "uncovered", and the failure says nothing
+        # about the registry — so skip visibly rather than fail or, worse, pass vacuously.
+        # When the corpus IS present (any developer machine) the assertion below still runs
+        # in full: this narrows the test to where it has evidence, it does not weaken it.
+        pytest.skip(
+            f"requires the external-article corpus (*.jsonl under {CHANNELS_PATH.parent}) — "
+            "untracked local data, not provisioned in CI"
+        )
     assert set(channels) == source_files
 
 

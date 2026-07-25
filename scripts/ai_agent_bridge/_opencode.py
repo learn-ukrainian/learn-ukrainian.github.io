@@ -43,6 +43,11 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
+from ._ask_contract import (
+    requested_effort,
+    resolve_model_selection,
+    response_provenance,
+)
 from ._ask_lifecycle import (
     ask_attachment,
     ask_sender_model,
@@ -86,6 +91,13 @@ POOL_MODEL_M1_LEGACY = "poolside/poolside/laguna-m.1"
 POOL_DEFAULT_VARIANT = "high"  # reasoning effort: minimal | high | max
 POOL_DEFAULT_TIMEOUT_S = 1800  # browsing + high-effort reasoning runs long
 POOL_VARIANTS = frozenset({"minimal", "high", "max"})
+_EFFORT_TO_VARIANT = {
+    "low": "minimal",
+    "medium": "high",
+    "high": "high",
+    "xhigh": "max",
+    "max": "max",
+}
 
 # Zhipu GLM fleet member (model glm-5.2), reached via the Z.AI Coding Plan
 # provider under opencode (also reachable as openrouter/z-ai/glm-5.2). Strong
@@ -161,6 +173,28 @@ GEMMA_MODEL = "google-ais/gemma-4-31b-it"
 GEMMA_DEFAULT_TIMEOUT_S = 900  # chat model (no browsing); MoE variants can be slow
 
 
+def _resolve_opencode_effort(
+    *, lane: str, effort: str | None, variant: str | None = None
+) -> tuple[str | None, str | None]:
+    """Map the uniform contract to opencode's three native variants visibly."""
+    requested_variant = (variant or "").strip().lower() or None
+    if requested_variant and requested_variant not in POOL_VARIANTS:
+        raise SystemExit(f"{lane}: invalid --variant {variant!r} (choose one of {sorted(POOL_VARIANTS)})")
+    if not effort:
+        return requested_variant, None
+    applied = _EFFORT_TO_VARIANT[effort]
+    if requested_variant and requested_variant != applied:
+        raise ValueError(
+            f"{lane}: --effort {effort} maps to opencode --variant {applied}, "
+            f"which conflicts with --variant {requested_variant}"
+        )
+    reason = None
+    if applied != effort:
+        reason = f"opencode exposes variants minimal/high/max; requested {effort} maps to {applied}"
+        print(f"NOTE: {lane} {reason}")
+    return applied, reason
+
+
 def ask_opencode(
     content: str,
     task_id: str,
@@ -170,6 +204,7 @@ def ask_opencode(
     from_llm: str = "claude",
     from_model: str | None = None,
     to_model: str | None = None,
+    effort: str | None = None,
     no_timeout: bool = False,
     background: bool = False,
 ) -> int:
@@ -179,7 +214,10 @@ def ask_opencode(
     member. To reach poolside.ai, prefer :func:`ask_pool` (opencode is a
     router — "opencode" does not identify the model).
     """
-    effective_model = model or OPENCODE_DEFAULT_MODEL
+    effective_model = resolve_model_selection(
+        lane="ask-opencode", to_model=to_model, model=model, default=OPENCODE_DEFAULT_MODEL
+    )
+    effective_variant, effort_reason = _resolve_opencode_effort(lane="ask-opencode", effort=effort)
     msg_id = send_message(
         content,
         task_id,
@@ -189,20 +227,30 @@ def ask_opencode(
         to_llm="opencode",
         from_model=from_model,
         to_model=to_model or effective_model,
+        effort=effort,
     )
     register_ask(msg_id)
     if background:
         launch_background_ask(msg_id, "opencode", {"no_timeout": no_timeout})
         return msg_id
     print(f"\n🚀 Invoking opencode ({effective_model}) to process message #{msg_id}...")
-    response = _invoke_opencode(content, effective_model, data=data, no_timeout=no_timeout)
+    response = _invoke_opencode(
+        content, effective_model, variant=effective_variant, data=data, no_timeout=no_timeout
+    )
+    provenance_data, actual_model = response_provenance(
+        {"data": json.dumps({"to_model": effective_model, "effort": effort})},
+        actual_model=effective_model,
+        harness="opencode",
+        effort_applied=effective_variant,
+        effort_reason=effort_reason,
+    )
     reply_id = send_message(
         content=response,
         task_id=task_id,
         msg_type="response",
         from_llm="opencode",
         to_llm=from_llm,
-        to_model=from_model,
+        data=provenance_data, from_model=actual_model, to_model=from_model,
     )
     acknowledge(msg_id)
     acknowledge(reply_id)
@@ -217,6 +265,8 @@ def ask_pool(
     data: str | None = None,
     variant: str | None = None,
     model: str | None = None,
+    to_model: str | None = None,
+    effort: str | None = None,
     from_llm: str = "claude",
     from_model: str | None = None,
     no_timeout: bool = False,
@@ -239,10 +289,13 @@ def ask_pool(
     ``model`` overrides the pinned ``POOL_MODEL`` (model tags drift — see the
     "examples not constants" note in model-assignment.md).
     """
-    effective_variant = (variant or POOL_DEFAULT_VARIANT).strip().lower()
-    if effective_variant not in POOL_VARIANTS:
-        raise SystemExit(f"ask-pool: invalid --variant {variant!r} (choose one of {sorted(POOL_VARIANTS)})")
-    effective_model = model or POOL_MODEL
+    effective_variant, effort_reason = _resolve_opencode_effort(
+        lane="ask-pool", effort=effort, variant=variant
+    )
+    effective_variant = effective_variant or POOL_DEFAULT_VARIANT
+    effective_model = resolve_model_selection(
+        lane="ask-pool", to_model=to_model, model=model, default=POOL_MODEL
+    )
     msg_id = send_message(
         content,
         task_id,
@@ -252,6 +305,7 @@ def ask_pool(
         to_llm="pool",
         from_model=from_model,
         to_model=effective_model,
+        effort=effort,
     )
     register_ask(msg_id)
     if background:
@@ -271,13 +325,18 @@ def ask_pool(
         no_timeout=no_timeout,
         default_timeout_s=POOL_DEFAULT_TIMEOUT_S,
     )
+    provenance_data, actual_model = response_provenance(
+        {"data": json.dumps({"to_model": effective_model, "effort": effort})},
+        actual_model=effective_model, harness="opencode", effort_applied=effective_variant,
+        effort_reason=effort_reason,
+    )
     reply_id = send_message(
         content=response,
         task_id=task_id,
         msg_type="response",
         from_llm="pool",
         to_llm=from_llm,
-        to_model=from_model,
+        data=provenance_data, from_model=actual_model, to_model=from_model,
     )
     acknowledge(msg_id)
     acknowledge(reply_id)
@@ -309,6 +368,8 @@ def ask_glm(
     msg_type: str = "query",
     data: str | None = None,
     model: str | None = None,
+    to_model: str | None = None,
+    effort: str | None = None,
     from_llm: str = "claude",
     from_model: str | None = None,
     no_timeout: bool = False,
@@ -344,7 +405,10 @@ def ask_glm(
         raise SystemExit(f"ask-glm: {exc}") from exc
     warn_missing_review_target(formal_review=formal_review, has_target=False)
     _assert_glm_egress_allowed()
-    effective_model = model or GLM_MODEL
+    effective_model = resolve_model_selection(
+        lane="ask-glm", to_model=to_model, model=model, default=GLM_MODEL
+    )
+    effective_variant, effort_reason = _resolve_opencode_effort(lane="ask-glm", effort=effort)
     msg_id = send_message(
         content,
         task_id,
@@ -354,6 +418,7 @@ def ask_glm(
         to_llm="glm",
         from_model=from_model,
         to_model=effective_model,
+        effort=effort,
     )
     register_ask(msg_id)
     if background:
@@ -365,10 +430,16 @@ def ask_glm(
     response = _invoke_opencode(
         content,
         effective_model,
+        variant=effective_variant,
         output_format="json",
         data=data,
         no_timeout=no_timeout,
         default_timeout_s=GLM_DEFAULT_TIMEOUT_S,
+    )
+    provenance_data, actual_model = response_provenance(
+        {"data": json.dumps({"to_model": effective_model, "effort": effort})},
+        actual_model=effective_model, harness="opencode", effort_applied=effective_variant,
+        effort_reason=effort_reason,
     )
     reply_id = send_message(
         content=response,
@@ -376,7 +447,7 @@ def ask_glm(
         msg_type="response",
         from_llm="glm",
         to_llm=from_llm,
-        to_model=from_model,
+        data=provenance_data, from_model=actual_model, to_model=from_model,
     )
     acknowledge(msg_id)
     acknowledge(reply_id)
@@ -390,6 +461,8 @@ def ask_gemma(
     msg_type: str = "query",
     data: str | None = None,
     model: str | None = None,
+    to_model: str | None = None,
+    effort: str | None = None,
     from_llm: str = "claude",
     from_model: str | None = None,
     no_timeout: bool = False,
@@ -428,7 +501,10 @@ def ask_gemma(
     ``openrouter/google/gemma-4-31b-it`` fallback — while tags drift (see the
     "examples not constants" note in model-assignment.md).
     """
-    effective_model = model or GEMMA_MODEL
+    effective_model = resolve_model_selection(
+        lane="ask-gemma", to_model=to_model, model=model, default=GEMMA_MODEL
+    )
+    effective_variant, effort_reason = _resolve_opencode_effort(lane="ask-gemma", effort=effort)
     msg_id = send_message(
         content,
         task_id,
@@ -438,6 +514,7 @@ def ask_gemma(
         to_llm="gemma",
         from_model=from_model,
         to_model=effective_model,
+        effort=effort,
     )
     register_ask(msg_id)
     if background:
@@ -448,6 +525,7 @@ def ask_gemma(
         _invoke_opencode(
             content,
             effective_model,
+            variant=effective_variant,
             output_format="json",
             data=data,
             no_timeout=no_timeout,
@@ -455,13 +533,18 @@ def ask_gemma(
             agent="chat",
         )
     )
+    provenance_data, actual_model = response_provenance(
+        {"data": json.dumps({"to_model": effective_model, "effort": effort})},
+        actual_model=effective_model, harness="opencode", effort_applied=effective_variant,
+        effort_reason=effort_reason,
+    )
     reply_id = send_message(
         content=response,
         task_id=task_id,
         msg_type="response",
         from_llm="gemma",
         to_llm=from_llm,
-        to_model=from_model,
+        data=provenance_data, from_model=actual_model, to_model=from_model,
     )
     acknowledge(msg_id)
     acknowledge(reply_id)
@@ -487,15 +570,19 @@ def process_for_opencode(
     model = ask_target_model(msg)
     if not model:
         raise ValueError(f"ask #{message_id} has no target model")
+    effort = requested_effort(msg)
+    effective_variant, effort_reason = _resolve_opencode_effort(
+        lane=f"ask-{target}", effort=effort, variant=variant
+    )
 
     kwargs: dict[str, object] = {"data": ask_attachment(msg), "no_timeout": no_timeout}
     if target == "opencode":
-        response = _invoke_opencode(content, model, **kwargs)
+        response = _invoke_opencode(content, model, variant=effective_variant, **kwargs)
     elif target == "pool":
         response = _invoke_opencode(
             content,
             model,
-            variant=variant or POOL_DEFAULT_VARIANT,
+            variant=effective_variant or POOL_DEFAULT_VARIANT,
             output_format="json",
             default_timeout_s=POOL_DEFAULT_TIMEOUT_S,
             **kwargs,
@@ -505,6 +592,7 @@ def process_for_opencode(
         response = _invoke_opencode(
             content,
             model,
+            variant=effective_variant,
             output_format="json",
             default_timeout_s=GLM_DEFAULT_TIMEOUT_S,
             **kwargs,
@@ -514,6 +602,7 @@ def process_for_opencode(
             _invoke_opencode(
                 content,
                 model,
+                variant=effective_variant,
                 output_format="json",
                 default_timeout_s=GEMMA_DEFAULT_TIMEOUT_S,
                 agent="chat",
@@ -523,13 +612,20 @@ def process_for_opencode(
     else:
         raise ValueError(f"unsupported opencode ask target {target!r}")
 
+    provenance_data, actual_model = response_provenance(
+        msg,
+        actual_model=model,
+        harness="opencode",
+        effort_applied=effective_variant,
+        effort_reason=effort_reason,
+    )
     reply_id = send_message(
         content=response,
         task_id=msg["task_id"],
         msg_type="response",
         from_llm=target,
         to_llm=msg["from"],
-        to_model=ask_sender_model(msg),
+        data=provenance_data, from_model=actual_model, to_model=ask_sender_model(msg),
     )
     acknowledge(message_id)
     acknowledge(reply_id)

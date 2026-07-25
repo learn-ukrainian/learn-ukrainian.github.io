@@ -21,6 +21,12 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 
+from ._ask_contract import (
+    requested_effort,
+    resolve_model_selection,
+    response_provenance,
+    unsupported_effort_note,
+)
 from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
@@ -103,6 +109,7 @@ def ask_agy(
     from_model: str | None = None,
     to_model: str | None = None,
     no_timeout: bool = False,
+    effort: str | None = None,
     review: bool = False,
     stdout_only: bool = False,
     output_path: str | None = None,
@@ -116,6 +123,9 @@ def ask_agy(
     if review or review_branch is not None or review_pr_number is not None:
         # Refuse formal/exact-target review on AGY before any worktree or send.
         raise ValueError(AGY_SEALED_REVIEW_UNSUPPORTED)
+    effective_model = resolve_model_selection(
+        lane="ask-agy", to_model=to_model, model=None, default=_DEFAULT_AGY_MODEL
+    )
     msg_id = send_message(
         content,
         task_id,
@@ -124,7 +134,8 @@ def ask_agy(
         from_llm=from_llm,
         to_llm="agy",
         from_model=from_model,
-        to_model=to_model,
+        to_model=effective_model,
+        effort=effort,
         review_target=review_target_payload(review_branch, review_pr_number),
     )
     register_ask(msg_id)
@@ -173,6 +184,12 @@ def process_for_agy(
     _ = new_session  # No-op for now; Agy bridge calls are always fresh.
     timeout_val = _resolve_agy_bridge_timeout(no_timeout)
     model = _extract_target_model(msg) or _DEFAULT_AGY_MODEL
+    effort = requested_effort(msg)
+    effort_applied, effort_reason = unsupported_effort_note(
+        lane="agy",
+        effort=effort,
+        reason="the Antigravity CLI has no per-invocation effort control",
+    )
 
     review_target = review_target_from_message(msg) if review else None
     if review or review_target is not None:
@@ -237,6 +254,7 @@ def process_for_agy(
                 # out-of-tree scratch cwd for write-mode containment.
                 cwd=review_cwd,
                 model=model,
+                effort=effort,
                 task_id=msg["task_id"],
                 session_id=None,
                 tool_config=tool_config,
@@ -287,12 +305,21 @@ def process_for_agy(
 
     if not stdout_only:
         print(f"\n✅ Agy finished ({len(response)} chars)")
+    provenance_data, actual_model = response_provenance(
+        msg,
+        actual_model=getattr(result, "model", None) or model,
+        harness="agy",
+        effort_applied=effort_applied,
+        effort_reason=effort_reason,
+    )
     reply_id = send_message(
         content=response,
         task_id=msg["task_id"],
         msg_type="response",
         from_llm="agy",
         to_llm=msg["from"],
+        data=provenance_data,
+        from_model=actual_model,
     )
     acknowledge(message_id)
     acknowledge(reply_id)

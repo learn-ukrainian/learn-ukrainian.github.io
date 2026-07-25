@@ -24,6 +24,7 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 
+from ._ask_contract import requested_effort, resolve_model_selection, response_provenance
 from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
@@ -77,6 +78,7 @@ def ask_grok_build(
     from_llm: str = "claude",
     from_model: str | None = None,
     to_model: str | None = None,
+    effort: str | None = None,
     no_timeout: bool = False,
     review: bool = False,
     model: str | None = None,
@@ -85,7 +87,9 @@ def ask_grok_build(
     review_pr_number: int | None = None,
 ) -> int:
     """Send message to the native grok seat and invoke it to process the message."""
-    effective_model = to_model or model or GROK_BUILD_DEFAULT_MODEL
+    effective_model = resolve_model_selection(
+        lane="ask-grok", to_model=to_model, model=model, default=GROK_BUILD_DEFAULT_MODEL
+    )
     msg_id = send_message(
         content,
         task_id,
@@ -95,6 +99,7 @@ def ask_grok_build(
         to_llm="grok",  # prefer-WRITE canonical seat
         from_model=from_model,
         to_model=effective_model,
+        effort=effort,
         review_target=review_target_payload(review_branch, review_pr_number),
     )
     register_ask(msg_id)
@@ -138,6 +143,7 @@ def process_for_grok_build(
     _ = new_session  # grok resume_policy="never"; bridge calls are fresh.
     timeout_val = _resolve_grok_build_bridge_timeout(no_timeout)
     model = _extract_target_model(msg) or GROK_BUILD_DEFAULT_MODEL
+    effort = requested_effort(msg) or GROK_BUILD_DEFAULT_EFFORT
 
     print(f"Message #{msg['id']}")
     print(f"   From: {msg['from']} -> To: {msg['to']}")
@@ -145,7 +151,7 @@ def process_for_grok_build(
     print(f"   Task: {msg['task_id'] or 'N/A'}")
     print("   Session: NEW (grok runtime always fresh)")
     print(f"   Model: {model}")
-    print(f"   Effort: {GROK_BUILD_DEFAULT_EFFORT}")
+    print(f"   Effort: {effort or GROK_BUILD_DEFAULT_EFFORT}")
     if timeout_val == _NO_TIMEOUT_GROK_BUILD_BRIDGE_TIMEOUT_SECONDS:
         print("   Hard timeout: no-timeout requested (24h ceiling)")
     else:
@@ -191,7 +197,7 @@ def process_for_grok_build(
                 entrypoint="bridge",
                 hard_timeout=timeout_val,
                 stall_timeout=min(600, timeout_val),
-                effort=GROK_BUILD_DEFAULT_EFFORT,
+                effort=effort,
             )
             if review and checkout is not None:
                 checkout.bind_review_result(result, engine="grok")
@@ -228,13 +234,20 @@ def process_for_grok_build(
         return
 
     print(f"\nGrok finished ({len(response)} chars)")
+    provenance_data, actual_model = response_provenance(
+        msg,
+        actual_model=getattr(result, "model", None) or model,
+        harness="grok",
+        effort_applied=getattr(result, "effort", None) or effort or GROK_BUILD_DEFAULT_EFFORT,
+    )
     reply_id = send_message(
         content=response,
         task_id=msg["task_id"],
         msg_type="response",
         from_llm="grok",
         to_llm=msg["from"],
-        from_model=getattr(result, "model", None) or model,
+        data=provenance_data,
+        from_model=actual_model,
     )
     acknowledge(message_id)
     acknowledge(reply_id)

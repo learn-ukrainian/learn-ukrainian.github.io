@@ -174,7 +174,7 @@ vocabulary:
 class TestVesumEnrichment:
     """Test VESUM POS/gender enrichment of vocabulary."""
 
-    def test_noun_gets_pos_and_gender(self):
+    def test_noun_gets_pos_and_gender(self, requires_vesum_db):
         from build.vocab_gen import vesum_enrich_entry
 
         entry = {"word": "мама", "translation": "mother", "expression": False}
@@ -183,7 +183,7 @@ class TestVesumEnrichment:
         assert enriched["gender"] == "ж."
         assert enriched["verified"] is True
 
-    def test_verb_gets_pos(self):
+    def test_verb_gets_pos(self, requires_vesum_db):
         from build.vocab_gen import vesum_enrich_entry
 
         entry = {"word": "читати", "translation": "to read", "expression": False}
