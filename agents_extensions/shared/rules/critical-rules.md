@@ -90,10 +90,13 @@ pass — get the missing evidence from a lane that can obtain it, then finalise.
 > **What this is, and what it is NOT.** It is a **quality control** — a second model, unlike the
 > author, hunting defects. It found real ones this week: an omitted root cause in a merged autopsy, and
 > a wrong "nothing imports torch" claim. Keep it for that.
-> It is **NOT** a security or supply-chain gate, and must never be presented as equivalent to a human
-> approving review. **OpenSSF Scorecard explicitly does not count bot/AI reviews as code review**, and
-> for good reason: no second *person* understood the change. Claiming Scorecard/SLSA-grade review from
-> AI↔AI is theatre. Honest posture: optimise for control continuity, not badge maths.
+> It is **NOT** the review *requirement* itself, and must never be presented as equivalent to a human
+> approving review. Precisely: **OpenSSF gives bot/AI review ZERO credit toward a review requirement.**
+> Two independent audits agreed on that fact and split on the tone — one called presenting it as a
+> Scorecard-grade gate "security theatre", the other noted the same sentence *validates the intent*
+> while proving it is **not sufficient**. Both readings land in the same place: keep it as defect-finding,
+> never claim it satisfies a review requirement, and optimise for control continuity rather than badge
+> maths.
 
 **Severity tiers — do not restart the world for a nit.** Blanket "fix every finding, then re-review
 everything" cannot survive this repo's merge rate and is corporate dual-control cosplay:
@@ -140,6 +143,12 @@ more than any wording in §8.1–8.5:
 3. **Merge queue** (`merge_group` wired, max group size 1 so failures attribute to one PR). This is the
    real implementation of *never merge an untested combination* — the problem that two individually
    green PRs can combine into a state neither validated.
+   > **Verify availability before promising it.** GitHub's GA announcement scopes the feature to "a
+   > managed organization with public repositories and GitHub Enterprise Cloud users", which is genuinely
+   > ambiguous about free org plans. Checked 2026-07-25: this repo is **Organization-owned and public**,
+   > so the wording plausibly covers us — but confirm the setting actually appears before designing
+   > around it. Wiring `merge_group` into the workflow is harmless either way; assuming the queue exists
+   > is not.
 4. **Split the agent identities:** an author identity distinct from the approver/enqueue identity.
    With one shared identity GitHub **cannot** enforce required reviews at all, because that identity
    cannot approve its own PR. This is what makes §8.4 and §8.5 enforceable rather than voluntary.
