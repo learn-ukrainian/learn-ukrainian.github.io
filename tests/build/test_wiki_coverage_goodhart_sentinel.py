@@ -108,6 +108,11 @@ def _install_v7_fixture(
     monkeypatch.setattr(v7_build.linear_pipeline, "write_writer_artifacts", write_artifacts)
     monkeypatch.setattr(
         v7_build.linear_pipeline,
+        "run_ulp_fidelity_with_correction",
+        lambda *_args, **_kwargs: {"passed": True},
+    )
+    monkeypatch.setattr(
+        v7_build.linear_pipeline,
         "run_python_qg_with_corrections",
         lambda *_args, **_kwargs: {"gates": {"passed": True}},
     )
