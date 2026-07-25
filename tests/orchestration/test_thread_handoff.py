@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import json
 import os
 import sqlite3
@@ -798,33 +799,9 @@ def test_start_time_one_whole_second_apart_is_treated_as_pid_reuse(tmp_path: Pat
     assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "new-owner"
 
 
-def test_legacy_v1_lease_with_stale_heartbeat_is_healed_by_takeover(tmp_path: Path):
-    """Matrix 5 / rule C: the migration heal — this is the exact stuck-lease shape on disk today."""
-    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
-    v1_lease = {
-        "schema_version": 1,
-        "agent": "claude-infra",
-        "generation": 3,
-        "owner_thread_id": "old-owner-v1",
-        "acquired_at": "2026-07-22T01:00:00Z",
-        "heartbeat_at": "2026-07-23T01:00:00Z",  # 9 hours old
-    }
-    lease_path = _write_lease(tmp_path, "claude-infra", v1_lease)
-
-    result = th.claim_thread_lease(
-        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
-    )
-
-    assert result["status"] == "acquired"
-    assert result["generation"] == 4
-    assert result["replaced_owner_thread_id"] == "old-owner-v1"
-    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
-    assert on_disk["schema_version"] == 2
-    assert on_disk["owner_thread_id"] == "new-owner"
-
-
-def test_legacy_v1_lease_within_emergency_ttl_conflicts_as_liveness_unknown(tmp_path: Path):
-    """Matrix 6: the short emergency TTL, not the old 12h window, gates the uncheckable path."""
+def test_legacy_v1_lease_with_fresh_heartbeat_conflicts_as_liveness_unknown(tmp_path: Path):
+    """Matrix 5/6: an uncheckable owner (legacy v1 lease) is never taken over — a DIFFERENT
+    thread id claiming it always conflicts and points at the operator force-release command."""
     now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
     v1_lease = {
         "schema_version": 1,
@@ -832,7 +809,7 @@ def test_legacy_v1_lease_within_emergency_ttl_conflicts_as_liveness_unknown(tmp_
         "generation": 1,
         "owner_thread_id": "old-owner-v1",
         "acquired_at": "2026-07-23T09:55:00Z",
-        "heartbeat_at": "2026-07-23T09:55:00Z",  # 5 minutes old: inside the 900s default TTL
+        "heartbeat_at": "2026-07-23T09:55:00Z",  # 5 minutes old
     }
     lease_path = _write_lease(tmp_path, "claude-infra", v1_lease)
 
@@ -844,6 +821,46 @@ def test_legacy_v1_lease_within_emergency_ttl_conflicts_as_liveness_unknown(tmp_
     assert result["liveness"] == "liveness_unknown"
     assert result["owner_thread_id"] == "old-owner-v1"
     assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "old-owner-v1"
+
+
+def test_uncheckable_lease_never_taken_over_regardless_of_clock_age(tmp_path: Path):
+    """Fix 5 (design change, supersedes the 900s emergency TTL): this used to be the exact
+    stuck-lease shape that healed via a clock-based takeover once the heartbeat aged past the
+    TTL (formerly ``test_legacy_v1_lease_with_stale_heartbeat_is_healed_by_takeover``, deleted
+    — it asserted status == "acquired" here, which is now the vulnerability, not the fix).
+    Silently stealing from a possibly-live owner whose liveness just cannot be checked would
+    corrupt the mutual exclusion this lease exists to provide, so a DIFFERENT thread id must
+    conflict no matter how old the heartbeat is — there is no longer a clock that grants
+    ownership to anyone. The legacy lease still heals, but only via the same-owner refresh
+    upgrade path (see test_same_owner_refresh_upgrades_v1_lease_to_v2) or an explicit
+    --force release, never via a timer."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    v1_lease = {
+        "schema_version": 1,
+        "agent": "claude-infra",
+        "generation": 3,
+        "owner_thread_id": "old-owner-v1",
+        "acquired_at": "2026-07-22T01:00:00Z",
+        "heartbeat_at": "2026-07-23T01:00:00Z",  # 9 hours old: reclaimable under the old TTL design
+    }
+    lease_path = _write_lease(tmp_path, "claude-infra", v1_lease)
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "conflict"
+    assert result["liveness"] == "liveness_unknown"
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["owner_thread_id"] == "old-owner-v1"  # untouched — no takeover happened
+    assert on_disk["schema_version"] == 1  # not healed by this path either
+
+
+def test_claim_thread_lease_has_no_emergency_ttl_parameter(tmp_path: Path):
+    """Fix 5: the emergency TTL and its parameter are deleted outright, not merely unused —
+    guards against a future reintroduction of clock-based takeover."""
+    assert "emergency_ttl" not in inspect.signature(th.claim_thread_lease).parameters
+    assert not hasattr(th, "DEFAULT_THREAD_LEASE_EMERGENCY_TTL_SECONDS")
 
 
 def test_different_machine_id_is_uncheckable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -1307,7 +1324,8 @@ def test_refresh_thread_lease_heartbeat_command_is_noop_for_a_different_owner(tm
     capsys.readouterr()
 
     assert th.main([*repo_args, "refresh-thread-lease-heartbeat", "--agent", "claude-infra",
-                     "--current-thread-id", "someone-else", "--starting-pid", "1"]) == 0
+                     "--current-thread-id", "someone-else", "--starting-pid", "1",
+                     "--generation", "1"]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "noop"
     assert json.loads((tmp_path / ".agent/claude-infra-thread-lease.json").read_text())["owner_thread_id"] == (
@@ -1315,9 +1333,98 @@ def test_refresh_thread_lease_heartbeat_command_is_noop_for_a_different_owner(tm
     )
 
 
+def test_refresh_thread_lease_heartbeat_is_noop_for_a_stale_generation(tmp_path: Path):
+    """Fix 2: a takeover that resumes the SAME thread id under a NEW process bumps generation
+    but keeps the old thread id — a late heartbeat call still in flight from the dead
+    predecessor process, carrying the OLD generation it cached, must not rewrite the
+    successor's recorded process identity just because the thread id still matches."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="resumed-thread", generation=2, owner_pid=222, owner_pid_started_at=5000.0)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    original = lease_path.read_text(encoding="utf-8")
+
+    result = th.refresh_thread_lease_heartbeat(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="resumed-thread",
+        generation=1,  # the dead predecessor's stale, cached generation
+        now=now,
+        starting_pid=111,  # the dead predecessor's own pid
+    )
+
+    assert result["status"] == "noop"
+    assert "generation" in result["reason"]
+    assert lease_path.read_text(encoding="utf-8") == original  # never rewritten
+
+
+def test_refresh_thread_lease_heartbeat_is_noop_when_process_identity_unconfirmed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Fix 2: even with a matching thread id AND generation, the heartbeat refresh must
+    reconfirm the calling process's identity — unlike claim_thread_lease's explicit
+    same-owner resume, it never assumes unproven continuity for an uncheckable lease."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="owner-session", generation=1, owner_pid=111, owner_pid_started_at=1000.0)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    original = lease_path.read_text(encoding="utf-8")
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    # A fresh probe from the calling process resolves to a DIFFERENT identity.
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda starting_pid: {"owner_pid": 222, "owner_pid_started_at": 5000.0, "owner_machine_id": "machine-a"},
+    )
+
+    result = th.refresh_thread_lease_heartbeat(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="owner-session",
+        generation=1,
+        now=now,
+        starting_pid=222,
+    )
+
+    assert result["status"] == "noop"
+    assert "identity" in result["reason"]
+    assert lease_path.read_text(encoding="utf-8") == original  # never rewritten
+
+
+def test_refresh_thread_lease_heartbeat_is_noop_for_an_uncheckable_lease(tmp_path: Path):
+    """Fix 2: an uncheckable lease (e.g. legacy v1) must never be blindly refreshed here —
+    unproven continuity is not assumed on the implicit, frequent heartbeat path, only on
+    claim_thread_lease's explicit same-owner resume."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    v1_lease = {
+        "schema_version": 1,
+        "agent": "claude-infra",
+        "generation": 1,
+        "owner_thread_id": "owner-session",
+        "acquired_at": "2026-07-23T09:00:00Z",
+        "heartbeat_at": "2026-07-23T09:58:30Z",  # 90s old, past any throttle
+    }
+    lease_path = _write_lease(tmp_path, "claude-infra", v1_lease)
+    original = lease_path.read_text(encoding="utf-8")
+
+    result = th.refresh_thread_lease_heartbeat(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="owner-session",
+        generation=1,
+        now=now,
+        starting_pid=1,
+        min_refresh_interval=timedelta(seconds=60),
+    )
+
+    assert result["status"] == "noop"
+    assert "identity" in result["reason"]
+    assert lease_path.read_text(encoding="utf-8") == original  # never rewritten
+
+
 def test_throttled_heartbeat_refresh_is_a_cheap_noop_within_the_interval(tmp_path: Path):
-    """Fix 5: the PostToolUse hook fires on every tool call — it must not rewrite the lease
-    file every time, only once the existing heartbeat is already older than the throttle."""
+    """The PostToolUse hook fires on every tool call — it must not rewrite the lease
+    file every time, only once the existing heartbeat is already older than the throttle.
+    Throttle is checked before process identity, so this stays a cheap read even when
+    identity would be unconfirmed."""
     now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
     lease = _v2_lease(owner_thread_id="owner-session", heartbeat_at="2026-07-23T09:59:30Z")  # 30s old
     lease_path = _write_lease(tmp_path, "claude-infra", lease)
@@ -1327,6 +1434,7 @@ def test_throttled_heartbeat_refresh_is_a_cheap_noop_within_the_interval(tmp_pat
         state_root=tmp_path,
         agent="claude-infra",
         current_thread_id="owner-session",
+        generation=1,
         now=now,
         starting_pid=1,
         min_refresh_interval=timedelta(seconds=60),
@@ -1337,17 +1445,26 @@ def test_throttled_heartbeat_refresh_is_a_cheap_noop_within_the_interval(tmp_pat
     assert json.loads(lease_path.read_text(encoding="utf-8"))["heartbeat_at"] == "2026-07-23T09:59:30Z"
 
 
-def test_throttled_heartbeat_refresh_writes_once_the_interval_has_elapsed(tmp_path: Path):
-    """Fix 5: past the throttle window, the refresh must still actually happen — otherwise the
-    PostToolUse hook would never protect a long single tool call from the emergency TTL."""
+def test_throttled_heartbeat_refresh_writes_once_the_interval_has_elapsed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Past the throttle window, the refresh must still actually happen when generation and
+    process identity both confirm this session still owns the lease."""
     now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
     lease = _v2_lease(owner_thread_id="owner-session", heartbeat_at="2026-07-23T09:58:30Z")  # 90s old
     lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda starting_pid: {"owner_pid": 4242, "owner_pid_started_at": 1000.0, "owner_machine_id": "machine-a"},
+    )
 
     result = th.refresh_thread_lease_heartbeat(
         state_root=tmp_path,
         agent="claude-infra",
         current_thread_id="owner-session",
+        generation=1,
         now=now,
         starting_pid=1,
         min_refresh_interval=timedelta(seconds=60),
@@ -1368,6 +1485,7 @@ def test_refresh_thread_lease_heartbeat_command_throttles_via_min_refresh_interv
 
     assert th.main([*repo_args, "refresh-thread-lease-heartbeat", "--agent", "claude-infra",
                      "--current-thread-id", "owner-session", "--starting-pid", "1",
+                     "--generation", "1",
                      "--min-refresh-interval-seconds", "3600"]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "throttled"  # fresh claim heartbeat is well within the 3600s window

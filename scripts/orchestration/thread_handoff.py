@@ -68,15 +68,6 @@ KNOWN_HARNESS_EXECUTABLES = frozenset(
     {"claude", "codex", "agy", "kimi", "cursor", "opencode", "hermes"}
 )
 MAX_HARNESS_ANCESTOR_HOPS = 10
-# Liveness is checked (pid + start time + machine id), not inferred from a
-# clock. This TTL only covers the residual case where liveness is genuinely
-# uncheckable (legacy v1 lease, cross-machine lease, unreadable process
-# state): it must stay short, because it is the ONLY protection against a
-# truly dead owner in that case. It is deliberately much shorter than the old
-# 12h clock-only window — that window existed only to compensate for having
-# no death signal, and keeping it here would leave the reported cold-start
-# lockout reachable in production whenever liveness cannot be checked.
-DEFAULT_THREAD_LEASE_EMERGENCY_TTL_SECONDS = 15 * 60
 # Start times are compared at whole-second resolution, not a wider tolerance.
 # psutil reports sub-second precision; the `ps -o lstart=` fallback only has
 # whole-second precision. Truncating both to integer epoch seconds before
@@ -1065,7 +1056,9 @@ def _same_owner_refresh_result(
     }
 
 
-def _same_owner_identity_confirmed(existing_raw: Mapping[str, Any], starting_pid: int) -> bool:
+def _same_owner_identity_confirmed(
+    existing_raw: Mapping[str, Any], starting_pid: int, *, require_proof: bool = False
+) -> bool:
     """True only when a resumed thread id is provably driven by the SAME process as before.
 
     A same-owner refresh must never blindly preserve generation across a process change: a
@@ -1077,12 +1070,21 @@ def _same_owner_identity_confirmed(existing_raw: Mapping[str, Any], starting_pid
     cannot confirm it still matches, this returns False so the caller reacquires with a new
     generation instead of assuming continuity across an unproven process boundary.
 
-    When the recorded lease has no checkable identity at all (legacy v1, or a v2 lease that
-    could never derive one), there is nothing to contradict continuity with, so this returns
-    True and the existing v1->v2 upgrade-on-refresh behavior (rule E) is preserved unchanged.
+    ``require_proof`` controls what happens when the recorded lease has NO checkable identity
+    at all (legacy v1, or a v2 lease that could never derive one) — there is nothing to
+    contradict continuity with, but also nothing to prove it either:
+
+    - Default (``False``), used by ``claim_thread_lease``'s explicit same-owner resume: this
+      returns True, so the existing v1->v2 upgrade-on-refresh behavior (rule E) still heals a
+      legacy lease the first time its own owner resumes it.
+    - ``True``, used by ``refresh_thread_lease_heartbeat``: this returns False. A heartbeat
+      call is implicit and frequent, not an explicit resume — it must never assume unproven
+      process continuity just to keep writing a lease it cannot actually verify it still owns.
+      A no-op there is safe: nothing takes a lease over on heartbeat age anymore, so a stale
+      heartbeat on an uncheckable lease costs nothing.
     """
     if not _lease_liveness_checkable(existing_raw):
-        return True
+        return not require_proof
     new_fields = _derive_owner_liveness_fields(starting_pid)
     if not new_fields:
         return False
@@ -1136,23 +1138,26 @@ def claim_thread_lease(
     agent: str,
     current_thread_id: str,
     now: datetime,
-    emergency_ttl: timedelta = timedelta(seconds=DEFAULT_THREAD_LEASE_EMERGENCY_TTL_SECONDS),
     starting_pid: int | None = None,
 ) -> dict[str, Any]:
     """Atomically claim or refresh a driver-session lease for ``agent``.
 
     Liveness is checked, not inferred from a clock: a different owner is a
-    conflict only while its process is confirmed alive (or, absent a
-    checkable process identity, only within a short emergency TTL). A
-    confirmed-dead or pid-reused owner is reclaimed immediately regardless of
-    clock age; an unreadable or malformed on-disk lease is treated as
-    recoverable state, never as a reason to raise and block SessionStart.
+    conflict while its process is confirmed alive, AND while its liveness
+    cannot be checked at all (legacy v1 lease, cross-machine lease,
+    unreadable process state). The clock never grants ownership to anyone —
+    there is no emergency TTL that takes an uncheckable owner over on age.
+    Silently stealing from a possibly-live owner would corrupt the very
+    mutual exclusion this lease exists to provide; an uncheckable conflict
+    instead surfaces the exact operator command (``release-thread-lease
+    --force``) to unlock it. A confirmed-dead or pid-reused owner is
+    reclaimed immediately regardless of clock age; an unreadable or
+    malformed on-disk lease is treated as recoverable state, never as a
+    reason to raise and block SessionStart.
     """
     owner_thread_id = current_thread_id.strip()
     if not owner_thread_id:
         raise ValueError("current thread id is required to claim a durable thread lease")
-    if emergency_ttl <= timedelta(0):
-        raise ValueError("thread lease emergency TTL must be positive")
 
     resolved_starting_pid = starting_pid if starting_pid is not None else os.getpid()
     lease_path = repo_local_path(state_root, default_thread_lease_path(agent))
@@ -1220,27 +1225,20 @@ def claim_thread_lease(
             }
 
         if liveness_path == "uncheckable":
-            age = now - heartbeat_at if heartbeat_at is not None else None
-            if age is not None and age <= emergency_ttl:
-                return {
-                    "status": "conflict",
-                    "lease_path": lease_path,
-                    "owner_thread_id": previous_owner,
-                    "generation": generation,
-                    "heartbeat_at": isoformat_z(heartbeat_at) if heartbeat_at else None,
-                    "liveness": "liveness_unknown",
-                    "reason": liveness_reason,
-                    "emergency_ttl_seconds": int(emergency_ttl.total_seconds()),
-                }
-            takeover_reason = (
-                f"liveness uncheckable ({liveness_reason}) and heartbeat is older than the "
-                f"{int(emergency_ttl.total_seconds())}s emergency TTL"
-                if age is not None
-                else f"liveness uncheckable ({liveness_reason}) and heartbeat_at could not be parsed"
-            )
-        else:
-            takeover_reason = liveness_reason
+            # Never take over on clock age: an uncheckable owner might be alive.
+            # heartbeat_at is diagnostic only here; it grants nobody ownership.
+            return {
+                "status": "conflict",
+                "lease_path": lease_path,
+                "owner_thread_id": previous_owner,
+                "generation": generation,
+                "heartbeat_at": isoformat_z(heartbeat_at) if heartbeat_at else None,
+                "liveness": "liveness_unknown",
+                "reason": liveness_reason,
+            }
 
+        # Only "dead" reaches here: a confirmed-dead or pid-reused owner is
+        # reclaimed immediately, regardless of clock age.
         new_generation = generation + 1
         record = _new_thread_lease_record(
             agent=agent,
@@ -1260,7 +1258,7 @@ def claim_thread_lease(
             "heartbeat_at": record["heartbeat_at"],
             "replaced_owner_thread_id": previous_owner,
             "liveness_fields_recorded": "owner_pid" in record,
-            "takeover_reason": takeover_reason,
+            "takeover_reason": liveness_reason,
         }
 
 
@@ -1357,6 +1355,7 @@ def refresh_thread_lease_heartbeat(
     state_root: Path,
     agent: str,
     current_thread_id: str,
+    generation: int,
     now: datetime,
     starting_pid: int | None = None,
     min_refresh_interval: timedelta | None = None,
@@ -1364,10 +1363,25 @@ def refresh_thread_lease_heartbeat(
     """Best-effort heartbeat refresh. A no-op unless we already own the lease.
 
     This never attempts a takeover — unlike ``claim_thread_lease``, a
-    different owner (or an unreadable lease) is simply left alone. This is
-    what makes the short emergency TTL in ``claim_thread_lease`` safe: a live
-    owner keeps its own heartbeat fresh here, so it is never mistaken for
-    stale and stolen mid-session.
+    different owner, a stale generation, or an unconfirmed process identity
+    is simply left alone. Fenced by BOTH ``owner_thread_id`` and
+    ``generation``: thread id alone is not enough, because a takeover that
+    resumes the SAME thread id under a NEW process (see
+    ``_same_owner_identity_confirmed``) bumps generation but keeps the old
+    thread id — a late heartbeat call still in flight from the dead
+    predecessor process would otherwise pass a thread-id-only check and
+    overwrite the successor's recorded process identity with its own stale
+    one. On top of that, the recorded process identity must be reconfirmed
+    against the calling process (``require_proof=True``: an uncheckable
+    identity is never assumed to be continuous here, unlike the explicit
+    same-owner resume path in ``claim_thread_lease``) — any mismatch, or any
+    identity that cannot be reconfirmed, is a no-op, never a rewrite.
+
+    This is diagnostic, not a safety mechanism: there is no emergency TTL
+    left for a fresh heartbeat to protect against (see ``claim_thread_lease``
+    — an uncheckable owner is never taken over on clock age at all now), so
+    a no-op here just leaves ``heartbeat_at`` looking a little stale, which
+    costs nothing.
 
     ``min_refresh_interval``, when given, throttles the write: the hot path
     (called from ``PostToolUse``, on every tool call) is a cheap read that
@@ -1398,6 +1412,14 @@ def refresh_thread_lease_heartbeat(
                 "lease_path": lease_path,
                 "reason": "lease is owned by a different thread id; not refreshing",
             }
+        held_generation = existing_raw.get("generation")
+        if held_generation != generation:
+            return {
+                "status": "noop",
+                "lease_path": lease_path,
+                "reason": "lease generation does not match; a takeover superseded this owner",
+                "current_generation": held_generation,
+            }
         if min_refresh_interval is not None:
             heartbeat_at = parse_iso_datetime(existing_raw.get("heartbeat_at"))
             if heartbeat_at is not None and (now - heartbeat_at) < min_refresh_interval:
@@ -1406,6 +1428,12 @@ def refresh_thread_lease_heartbeat(
                     "lease_path": lease_path,
                     "heartbeat_at": isoformat_z(heartbeat_at),
                 }
+        if not _same_owner_identity_confirmed(existing_raw, resolved_starting_pid, require_proof=True):
+            return {
+                "status": "noop",
+                "lease_path": lease_path,
+                "reason": "recorded process identity could not be reconfirmed; not refreshing",
+            }
         return _same_owner_refresh_result(
             lease_path,
             existing_raw,
@@ -4337,7 +4365,6 @@ def cmd_claim_thread_lease(args: argparse.Namespace) -> int:
             agent=agent,
             current_thread_id=args.current_thread_id,
             now=utc_now(),
-            emergency_ttl=timedelta(seconds=args.emergency_ttl_seconds),
             starting_pid=args.starting_pid,
         )
     except ValueError as exc:
@@ -4357,12 +4384,14 @@ def cmd_claim_thread_lease(args: argparse.Namespace) -> int:
                 {
                     "error_code": "THREAD_LEASE_LIVENESS_UNKNOWN",
                     "error": (
-                        "durable thread lease owner's liveness could not be checked and its "
-                        "heartbeat is still within the emergency TTL; stop to avoid double-driving"
+                        "durable thread lease owner's liveness could not be checked and it is "
+                        "never taken over automatically (no clock-based takeover); stop to avoid "
+                        "double-driving"
                     ),
                     "resolution": (
-                        f"Wait for the emergency TTL to expire, or if the previous owner is "
-                        f"confirmed gone, force-release with: {_force_release_command(agent)}"
+                        f"If the previous owner ({payload.get('lease_file')}) is confirmed gone, "
+                        f"force-release with: {_force_release_command(agent)} — then start normally "
+                        f"again. Otherwise wait for it to exit and release cooperatively."
                     ),
                 }
             )
@@ -4421,6 +4450,7 @@ def cmd_refresh_thread_lease_heartbeat(args: argparse.Namespace) -> int:
             state_root=state_root,
             agent=agent,
             current_thread_id=args.current_thread_id,
+            generation=args.generation,
             now=utc_now(),
             starting_pid=args.starting_pid,
             min_refresh_interval=(
@@ -4659,17 +4689,6 @@ def build_parser() -> argparse.ArgumentParser:
     claim_thread_lease_parser.add_argument("--agent", type=argparse_agent_name, required=True)
     claim_thread_lease_parser.add_argument("--current-thread-id", required=True)
     claim_thread_lease_parser.add_argument(
-        "--emergency-ttl-seconds",
-        type=int,
-        default=DEFAULT_THREAD_LEASE_EMERGENCY_TTL_SECONDS,
-        help=(
-            "Only used when the existing owner's liveness cannot be checked (legacy lease, "
-            "cross-machine, or unreadable process state): treat its heartbeat as live for this "
-            f"many seconds (default: {DEFAULT_THREAD_LEASE_EMERGENCY_TTL_SECONDS}). A checkable "
-            "live or dead owner is decided by liveness alone, regardless of this value."
-        ),
-    )
-    claim_thread_lease_parser.add_argument(
         "--starting-pid",
         type=int,
         default=None,
@@ -4708,6 +4727,16 @@ def build_parser() -> argparse.ArgumentParser:
     )
     refresh_heartbeat_parser.add_argument("--agent", type=argparse_agent_name, required=True)
     refresh_heartbeat_parser.add_argument("--current-thread-id", required=True)
+    refresh_heartbeat_parser.add_argument(
+        "--generation",
+        type=int,
+        required=True,
+        help=(
+            "Fencing: only refresh if the on-disk lease is still at this exact generation "
+            "(the generation this session claimed at SessionStart, e.g. "
+            "$LEARN_UKRAINIAN_THREAD_LEASE_GENERATION)."
+        ),
+    )
     refresh_heartbeat_parser.add_argument("--starting-pid", type=int, default=None)
     refresh_heartbeat_parser.add_argument(
         "--min-refresh-interval-seconds",
