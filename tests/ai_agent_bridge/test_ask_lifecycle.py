@@ -96,8 +96,11 @@ def test_background_branch_review_agy_refuses_sealed_cf(bridge_db, monkeypatch):
 def test_launch_background_ask_writes_state_and_uses_detached_popen(bridge_db, monkeypatch, tmp_path):
     message_id = _send_ask()
     monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+    monkeypatch.setattr(lifecycle, "_WORKER_START_GRACE_S", 0.05)
+    monkeypatch.setattr(lifecycle, "_WORKER_POLL_S", 0.01)
 
     proc = Mock(pid=4321)
+    proc.poll.return_value = None  # still running, matching real Popen while alive
     popen = Mock(return_value=proc)
     monkeypatch.setattr(lifecycle.subprocess, "Popen", popen)
 
