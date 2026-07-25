@@ -590,6 +590,7 @@ def bilash_packet() -> dict:
         capture_output=True,
         check=True,
         text=True,
+        timeout=30,
     ).stdout
     before_artifacts = _artifact_snapshot()
     packet = pbr.prepare_review("bio/oleksandr-bilash", _reviewer())
@@ -599,6 +600,7 @@ def bilash_packet() -> dict:
         capture_output=True,
         check=True,
         text=True,
+        timeout=30,
     ).stdout
     assert after_status == before_status
     assert _artifact_snapshot() == before_artifacts
@@ -3904,6 +3906,7 @@ def test_concurrent_review_runs_allocate_isolated_artifact_paths(tmp_path: Path)
             capture_output=True,
             check=True,
             text=True,
+            timeout=60,
         )
         return json.loads(completed.stdout)
 

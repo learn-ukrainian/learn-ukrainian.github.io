@@ -1308,18 +1308,20 @@ def test_run_worker_marks_needs_finalize_for_dirty_danger_worktree(
     """Danger dispatches with edits but no commits surface needs_finalize (#2134)."""
     _sanitize_git_env_for_test(monkeypatch)
     state_path = delegate._state_path("needs-finalize")
-    subprocess.run(["git", "init"], cwd=tmp_path, check=True, capture_output=True)
+    subprocess.run(["git", "init"], cwd=tmp_path, check=True, capture_output=True, timeout=30)
     subprocess.run(
         ["git", "config", "user.email", "test@example.com"],
         cwd=tmp_path,
         check=True,
         capture_output=True,
+        timeout=30,
     )
     subprocess.run(
         ["git", "config", "user.name", "test"],
         cwd=tmp_path,
         check=True,
         capture_output=True,
+        timeout=30,
     )
     delegate._write_state_atomic(state_path, {
         "task_id": "needs-finalize",
@@ -1393,43 +1395,50 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
         ["git", "init", "--bare", str(origin)],
         check=True,
         capture_output=True,
+        timeout=30,
     )
     subprocess.run(
         ["git", "init", "--initial-branch=main", str(worktree)],
         check=True,
         capture_output=True,
+        timeout=30,
     )
     subprocess.run(
         ["git", "config", "user.email", "test@example.com"],
         cwd=worktree,
         check=True,
         capture_output=True,
+        timeout=30,
     )
     subprocess.run(
         ["git", "config", "user.name", "test"],
         cwd=worktree,
         check=True,
         capture_output=True,
+        timeout=30,
     )
     (worktree / "README.md").write_text("base\n", encoding="utf-8")
-    subprocess.run(["git", "add", "README.md"], cwd=worktree, check=True)
-    subprocess.run(["git", "commit", "-m", "base"], cwd=worktree, check=True)
+    subprocess.run(["git", "add", "README.md"], cwd=worktree, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=worktree, check=True, timeout=30)
     subprocess.run(
         ["git", "remote", "add", "origin", str(origin)],
         cwd=worktree,
         check=True,
+        timeout=30,
     )
     subprocess.run(
         ["git", "push", "-u", "origin", "main"],
         cwd=worktree,
         check=True,
         capture_output=True,
+        timeout=30,
     )
     subprocess.run(
         ["git", "checkout", "-b", "agy/auto-finalize-test"],
         cwd=worktree,
         check=True,
         capture_output=True,
+        timeout=30,
     )
 
     state_path = delegate._state_path("agy-auto-finalize-test")
@@ -1512,6 +1521,7 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
         check=True,
         capture_output=True,
         text=True,
+        timeout=30,
     ).stdout
     assert "X-Agent: agy/auto-finalize-test" in message
 
@@ -1523,27 +1533,31 @@ def test_auto_finalize_push_failure_soft_resets_local_commit(tmp_path, monkeypat
         ["git", "init", "--initial-branch=main", str(worktree)],
         check=True,
         capture_output=True,
+        timeout=30,
     )
     subprocess.run(
         ["git", "config", "user.email", "test@example.com"],
         cwd=worktree,
         check=True,
         capture_output=True,
+        timeout=30,
     )
     subprocess.run(
         ["git", "config", "user.name", "test"],
         cwd=worktree,
         check=True,
         capture_output=True,
+        timeout=30,
     )
     (worktree / "README.md").write_text("base\n", encoding="utf-8")
-    subprocess.run(["git", "add", "README.md"], cwd=worktree, check=True)
-    subprocess.run(["git", "commit", "-m", "base"], cwd=worktree, check=True)
+    subprocess.run(["git", "add", "README.md"], cwd=worktree, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=worktree, check=True, timeout=30)
     subprocess.run(
         ["git", "checkout", "-b", "agy/push-fails"],
         cwd=worktree,
         check=True,
         capture_output=True,
+        timeout=30,
     )
     base_head = subprocess.run(
         ["git", "rev-parse", "HEAD"],
@@ -1551,6 +1565,7 @@ def test_auto_finalize_push_failure_soft_resets_local_commit(tmp_path, monkeypat
         check=True,
         capture_output=True,
         text=True,
+        timeout=30,
     ).stdout.strip()
     (worktree / "artifact.txt").write_text("agy wrote this\n", encoding="utf-8")
 
@@ -1577,6 +1592,7 @@ def test_auto_finalize_push_failure_soft_resets_local_commit(tmp_path, monkeypat
         check=True,
         capture_output=True,
         text=True,
+        timeout=30,
     ).stdout.strip()
     head = subprocess.run(
         ["git", "rev-parse", "HEAD"],
@@ -1584,6 +1600,7 @@ def test_auto_finalize_push_failure_soft_resets_local_commit(tmp_path, monkeypat
         check=True,
         capture_output=True,
         text=True,
+        timeout=30,
     ).stdout.strip()
     log_subjects = subprocess.run(
         ["git", "log", "--format=%s"],
@@ -1591,6 +1608,7 @@ def test_auto_finalize_push_failure_soft_resets_local_commit(tmp_path, monkeypat
         check=True,
         capture_output=True,
         text=True,
+        timeout=30,
     ).stdout
 
     assert status
@@ -3291,6 +3309,7 @@ def _init_repo_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
         subprocess.run(
             ["git", "-C", str(cwd), *args],
             check=True, capture_output=True, text=True, env=env,
+            timeout=30,
         )
 
     main = tmp_path / "main"
@@ -3298,6 +3317,7 @@ def _init_repo_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
     subprocess.run(
         ["git", "init", "-q", "-b", "main", str(main)],
         check=True, capture_output=True, text=True, env=env,
+        timeout=30,
     )
     _git(main, "config", "user.email", "test@example.com")
     _git(main, "config", "user.name", "Test")
@@ -3553,6 +3573,7 @@ def test_dispatch_rejects_write_capable_when_primary_checkout_dirty(
         capture_output=True,
         text=True,
         env=delegate._sanitized_git_env(),
+        timeout=30,
     )
     assert branch_proc.stdout.strip() == ""
 
@@ -3827,6 +3848,7 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
             capture_output=True,
             text=True,
             env=clean_env,
+            timeout=30,
         )
 
     git("init", "-b", "main")
