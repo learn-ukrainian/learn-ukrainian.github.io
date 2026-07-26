@@ -2453,7 +2453,13 @@ def _run_worker(
     # Nothing the fallback reads may be bound only inside this region: a handler
     # that raises UnboundLocalError fails exactly when it is needed. Every name
     # it touches is initialized above, including the runtime-outcome flags.
-    final_state: dict[str, Any] = {}
+    # Read the persisted record BEFORE the region, not inside it. Starting the
+    # fallback from {} meant an early interrupt atomically REPLACED the task
+    # file — recording a terminal status while destroying task_id, pid, mode,
+    # cwd and worktree metadata that status/wait/cleanup and the operator all
+    # read. A terminal status with no context is not an improvement over a stale
+    # running one. (Cross-family review of #5807, round nine.)
+    final_state: dict[str, Any] = _read_state(state_path) or {}
     final_status = ""
     duration_s = time.monotonic() - start
     result_file: str | None = None
@@ -2693,32 +2699,39 @@ def _run_worker(
         }
         _write_state_atomic(state_path, {**final_state, **core_terminal_state})
     except BaseException as interrupt_exc:
-        # Honour a verdict the telemetry already reached; fail closed only when
-        # the interrupt beat the measurement to it — and only for modes that can
-        # leave work behind, so an interrupted read-only review is not dressed up
-        # as a dispatch needing manual finalization.
-        interrupted_needs_finalize = (
-            needs_finalize if telemetry_settled else mode in _WRITE_CAPABLE_MODES
-        )
-        # The interrupt may have landed before classification ran, so derive the
-        # outcome from the runtime flags rather than persisting an empty status.
-        interrupted_status = _apply_returncode_invariant(
-            final_status
-            or _classify_final_status(
-                cancelled=cancelled,
-                rate_limited=rate_limited,
-                ok_outcome=ok_outcome,
-                timed_out=timed_out,
-            ),
-            returncode,
-        )
+        # Defer SIGTERM across the ENTIRE handler, not just its write. A second
+        # cancel arriving while the fallback was still computing raised from
+        # inside this `except` suite, which the same suite cannot catch — the
+        # same boundary-between-guarded-spans mistake as the region itself, one
+        # level down. (Cross-family review of #5807, round nine.)
         with _sigterm_deferred():
+            # Honour a verdict the telemetry already reached; fail closed only
+            # when the interrupt beat the measurement to it — and only for modes
+            # that can leave work behind, so an interrupted read-only review is
+            # not dressed up as a dispatch needing manual finalization.
+            interrupted_needs_finalize = (
+                needs_finalize if telemetry_settled else mode in _WRITE_CAPABLE_MODES
+            )
+            # The interrupt may have landed before classification ran, so derive
+            # the outcome from the runtime flags rather than persisting an empty
+            # status, and apply the same return-code invariant the normal path
+            # enforces.
+            interrupted_status = _apply_returncode_invariant(
+                final_status
+                or _classify_final_status(
+                    cancelled=cancelled,
+                    rate_limited=rate_limited,
+                    ok_outcome=ok_outcome,
+                    timed_out=timed_out,
+                ),
+                returncode,
+            )
             _write_state_atomic(
                 state_path,
                 {
+                    # final_state was read before the region, so this MERGES onto
+                    # the real task record instead of replacing it.
                     **final_state,
-                    # final_status is classified before this span, so it is
-                    # always bound and reflects the worker's own outcome.
                     "status": (
                         "needs_finalize"
                         if interrupted_needs_finalize

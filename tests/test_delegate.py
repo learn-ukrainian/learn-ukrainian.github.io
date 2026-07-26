@@ -4745,3 +4745,143 @@ def test_interrupt_at_the_cleanup_boundary_is_inside_the_region(
     assert state is not None
     assert state["status"] != "running", "interrupt at the boundary stranded the task"
     assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
+
+
+def test_interrupt_fallback_preserves_the_task_record(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The fallback must MERGE onto the task record, never replace it.
+
+    Cross-family review of #5807, round nine (F002): the fallback started from
+    an empty dict, so an early interrupt atomically replaced the task file —
+    recording a terminal status while destroying task_id, pid, mode, cwd and
+    worktree metadata that status/wait/cleanup and the operator all read. A
+    terminal status with no context is not an improvement over a stale running
+    one; it is a different way to lose the same information.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("preserve-record")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "preserve-record",
+        "status": "running",
+        "pid": 4242,
+        "mode": "workspace-write",
+        "agent": "codex",
+        "cwd": str(tmp_path),
+        "worktree_path": str(tmp_path),
+        "worktree_branch": "codex/preserve-record",
+        "worktree_base": "main",
+        "prompt_chars": 17,
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    @contextlib.contextmanager
+    def interrupt_on_restore():
+        yield
+        raise KeyboardInterrupt("SIGTERM at the cleanup boundary")
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_sigterm_deferred", interrupt_on_restore),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="preserve-record",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+                runtime_tmp_root=str(tmp_path / "runtime-tmp"),
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] != "running"
+    # Every field the rest of the system reads must still be there.
+    # (pid is legitimately rewritten to the live worker pid early in the run,
+    # so assert it is still recorded rather than pinning the seeded value.)
+    assert isinstance(state.get("pid"), int)
+    for key, expected in (
+        ("task_id", "preserve-record"),
+        ("agent", "codex"),
+        ("worktree_branch", "codex/preserve-record"),
+        ("worktree_path", str(tmp_path)),
+        ("prompt_chars", 17),
+    ):
+        assert state.get(key) == expected, f"fallback dropped {key}: {state.get(key)!r}"
+
+
+def test_interrupt_fallback_defers_sigterm_before_computing(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """SIGTERM is deferred for the whole handler, not only its write.
+
+    Round nine (F001): fallback computations ran before the deferral, so a
+    second cancel raised from inside the `except` suite — which that suite
+    cannot catch — and nothing was written.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("defer-before-compute")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "defer-before-compute",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    seen = {}
+    real_invariant = delegate._apply_returncode_invariant
+
+    def observe(status, returncode):
+        # Runs inside the fallback, BEFORE the state write.
+        seen["disposition"] = signal.getsignal(signal.SIGTERM)
+        return real_invariant(status, returncode)
+
+    def cancel(*_args, **_kwargs):
+        raise KeyboardInterrupt("first SIGTERM")
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_worktree_is_dirty", side_effect=cancel),
+        patch.object(delegate, "_apply_returncode_invariant", side_effect=observe),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="defer-before-compute",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    assert seen.get("disposition") is signal.SIG_IGN, seen
+    assert signal.getsignal(signal.SIGTERM) is not signal.SIG_IGN
