@@ -14,6 +14,7 @@ from scripts.agent_runtime.codex_hook_policy import (
     LOCAL_BASH_GUARDS,
     MERGE_GUARDS,
     PRIMARY_WRITE_GUARD,
+    _result_code,
     _run_enforce_venv,
     run_guard,
 )
@@ -113,6 +114,26 @@ def test_codex_policy_guard_timeout_fails_closed(tmp_path: Path) -> None:
     assert result.returncode == 2
     assert result.timed_out is True
     assert "blocking the tool call fail-closed" in result.stderr
+
+
+def test_non_rewrite_guard_stdout_fails_closed(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    guard = tmp_path / "noisy_guard.py"
+    guard.write_text("print('not-json')\n", encoding="utf-8")
+    result = run_guard(
+        PRIMARY_ROOT / ".venv" / "bin" / "python",
+        guard,
+        "{}",
+        timeout_seconds=1,
+    )
+
+    assert _result_code([result]) == 2
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert "unexpected stdout" in captured.err
+    assert "not-json" in captured.err
 
 
 def test_codex_policy_venv_rewrite_timeout_fails_closed(

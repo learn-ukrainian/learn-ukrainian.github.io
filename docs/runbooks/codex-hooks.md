@@ -45,6 +45,10 @@ tool call; a timeout therefore fails closed. The manifest's 55-second outer
 timeout remains a last-resort ceiling above the 3-second rewrite, local-chain,
 and concurrent network-guard budgets.
 
+Only the venv rewrite may write the final Codex JSON response to stdout.
+Unexpected stdout from any policy guard is redirected to diagnostics and
+fails closed, preventing multiple payloads from corrupting the hook response.
+
 The entry point resolves the exact tool worktree from structured hook input and
 the canonical checkout from Git's common directory. Python policies use the
 canonical checkout's `.venv/bin/python`, so a linked worktree does not need its

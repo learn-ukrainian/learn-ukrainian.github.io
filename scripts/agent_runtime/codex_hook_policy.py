@@ -155,11 +155,24 @@ def _run_enforce_venv(
 
 
 def _result_code(results: list[GuardResult]) -> int:
+    normalized: list[GuardResult] = []
     for result in results:
+        if result.stdout:
+            result = GuardResult(
+                name=result.name,
+                returncode=2,
+                stdout="",
+                stderr=(
+                    result.stderr + f"Codex hook guard {result.name} wrote unexpected stdout; "
+                    "blocking fail-closed to preserve the single JSON response channel.\n" + result.stdout
+                ),
+                timed_out=result.timed_out,
+            )
+        normalized.append(result)
         _emit(result)
-    if any(result.returncode == 2 for result in results):
+    if any(result.returncode == 2 for result in normalized):
         return 2
-    return next((result.returncode for result in results if result.returncode), 0)
+    return next((result.returncode for result in normalized if result.returncode), 0)
 
 
 def main() -> int:
