@@ -11,14 +11,12 @@ PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
 CANONICAL_ROOT="${CODEX_CANONICAL_REPO_ROOT:-$PROJECT_DIR}"
 BOUNDED_PYTHON="${THREAD_ROLLOVER_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
 BOUNDED_RUNNER="${SESSION_BOUNDED_RUNNER:-$PROJECT_DIR/scripts/agent_runtime/bounded_command.py}"
-if [ ! -f "$BOUNDED_RUNNER" ]; then
-  _HOOK_SOURCE_ROOT=$(cd "$(dirname "$0")/../../.." 2>/dev/null && pwd)
-  BOUNDED_RUNNER="$_HOOK_SOURCE_ROOT/scripts/agent_runtime/bounded_command.py"
-  unset _HOOK_SOURCE_ROOT
-fi
 run_bounded() {
   local timeout_seconds="$1"
   shift
+  if [ ! -x "$BOUNDED_PYTHON" ] || [ ! -f "$BOUNDED_RUNNER" ]; then
+    return 127
+  fi
   "$BOUNDED_PYTHON" "$BOUNDED_RUNNER" --timeout "$timeout_seconds" -- "$@"
 }
 CONTEXT=""

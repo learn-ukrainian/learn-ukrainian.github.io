@@ -105,6 +105,7 @@ run_hook() {
     CLAUDE_PROFILE_RESOLVER_PYTHON="$REPO_ROOT/.venv/bin/python" \
     CLAUDE_SESSION_RECORD_SCRIPT="$REPO_ROOT/scripts/lib/session_record.py" \
     CLAUDE_SESSION_RECORD_PYTHON="$REPO_ROOT/.venv/bin/python" \
+    SESSION_BOUNDED_RUNNER="$REPO_ROOT/scripts/agent_runtime/bounded_command.py" \
     CLAUDEX_SUPERVISOR_SCRIPT="$REPO_ROOT/scripts/orchestration/claudex_supervisor.py" \
     CLAUDEX_SUPERVISOR_PYTHON="$REPO_ROOT/.venv/bin/python" \
     THREAD_ROLLOVER_PYTHON="$REPO_ROOT/.venv/bin/python" \
@@ -216,6 +217,7 @@ run_post_compact() {
     CLAUDE_PROJECT_DIR="$root" SESSION_HANDOFF_AGENT="codex" CODEX_CANONICAL_REPO_ROOT="$root" \
     THREAD_ROLLOVER_PYTHON="$REPO_ROOT/.venv/bin/python" \
     THREAD_ROLLOVER_SCRIPT="$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    SESSION_BOUNDED_RUNNER="$REPO_ROOT/scripts/agent_runtime/bounded_command.py" \
     "$POST_COMPACT_HOOK"
 }
 

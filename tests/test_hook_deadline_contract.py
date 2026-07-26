@@ -49,3 +49,6 @@ def test_rollover_and_postcompact_commands_are_bounded() -> None:
     assert "THREAD_ROLLOVER_COMMAND_TIMEOUT_SECONDS=3" in session_source
     assert 'run_bounded 3 "$ROLLOVER_PYTHON"' in session_source
     assert 'run_bounded 2 "$ROLLOVER_PYTHON"' in compact_source
+    assert "_HOOK_SOURCE_ROOT" not in session_source
+    assert "_HOOK_SOURCE_ROOT" not in compact_source
+    assert compact_source.count('[ ! -f "$BOUNDED_RUNNER" ]') == 1
