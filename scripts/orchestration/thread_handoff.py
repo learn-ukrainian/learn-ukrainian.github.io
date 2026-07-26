@@ -15,6 +15,7 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import socket
 import sqlite3
 import subprocess
@@ -1143,6 +1144,99 @@ def _identity_changed_reacquire_result(
     }
 
 
+IDLE_SUSPECTED_THRESHOLD_SECONDS = 45 * 60
+
+
+def _humanize_duration(seconds: float) -> str:
+    """Render a duration for a human operator reading a conflict/diagnosis payload."""
+    total = max(0, int(seconds))
+    if total < 60:
+        return f"{total}s"
+    minutes, secs = divmod(total, 60)
+    if minutes < 60:
+        return f"{minutes}m{secs:02d}s" if secs else f"{minutes}m"
+    hours, mins = divmod(minutes, 60)
+    if hours < 24:
+        return f"{hours}h{mins:02d}m" if mins else f"{hours}h"
+    days, hrs = divmod(hours, 24)
+    return f"{days}d{hrs:02d}h" if hrs else f"{days}d"
+
+
+def _cas_force_release_command(
+    agent: str, *, owner_thread_id: str | None, generation: int | None, include_ack: bool = False
+) -> str:
+    """The exact CAS-scoped force-release command an operator should run.
+
+    Never a bare ``--force``: it always pins the current owner/generation the
+    caller observed, so a stale copy-pasted command refuses instead of
+    silently deleting whatever lease happens to exist by the time it runs.
+    """
+    parts = [
+        ".venv/bin/python scripts/orchestration/thread_handoff.py release-thread-lease",
+        f"--agent {shlex.quote(agent)}",
+        "--force",
+        f"--expect-owner-thread-id {shlex.quote(owner_thread_id or '')}",
+        f"--expect-generation {generation if isinstance(generation, int) else 0}",
+    ]
+    if include_ack:
+        parts.append("--acknowledge-live-owner")
+    return " ".join(parts)
+
+
+def _lease_conflict_diagnostics(
+    *,
+    agent: str,
+    existing_raw: Mapping[str, Any],
+    owner_thread_id: str | None,
+    generation: int,
+    heartbeat_at: datetime | None,
+    now: datetime,
+    liveness_path: str,
+) -> dict[str, Any]:
+    """Everything an operator needs to decide, without opening the lease file by hand."""
+    owner_pid = existing_raw.get("owner_pid")
+    owner_pid_started_at = existing_raw.get("owner_pid_started_at")
+    owner_alive = True if liveness_path == "alive" else None
+    heartbeat_age_seconds = (now - heartbeat_at).total_seconds() if heartbeat_at is not None else None
+    return {
+        "owner_pid": owner_pid if isinstance(owner_pid, int) else None,
+        "owner_pid_started_at": (owner_pid_started_at if isinstance(owner_pid_started_at, (int, float)) else None),
+        "owner_alive": owner_alive,
+        "heartbeat_age_seconds": heartbeat_age_seconds,
+        "heartbeat_age_humanized": (
+            _humanize_duration(heartbeat_age_seconds) if heartbeat_age_seconds is not None else None
+        ),
+        "idle_suspected": bool(
+            heartbeat_age_seconds is not None and heartbeat_age_seconds > IDLE_SUSPECTED_THRESHOLD_SECONDS
+        ),
+        "resolution": _cas_force_release_command(
+            agent,
+            owner_thread_id=owner_thread_id,
+            generation=generation,
+            include_ack=liveness_path == "alive",
+        ),
+    }
+
+
+def _released_tombstone_record(
+    existing_raw: Mapping[str, Any], *, released_by_thread_id: str, now: datetime, forced: bool = False
+) -> dict[str, Any]:
+    """A released lease is a tombstone, never a deleted file.
+
+    Keeping the record (generation, prior owner/identity fields) lets a stale
+    duplicate release call recognize "already released" and no-op, and lets
+    the next claim continue the SAME monotonic generation counter instead of
+    resetting to 1 — see ``claim_thread_lease``'s tombstone-reclaim branch.
+    """
+    record = dict(existing_raw)
+    record["state"] = "released"
+    record["released_at"] = isoformat_z(now)
+    record["released_by_thread_id"] = released_by_thread_id
+    if forced:
+        record["released_forced"] = True
+    return record
+
+
 def claim_thread_lease(
     *,
     state_root: Path,
@@ -1196,6 +1290,36 @@ def claim_thread_lease(
                 starting_pid=resolved_starting_pid,
             )
 
+        if existing_raw.get("state") == "released":
+            # A tombstone is held by nobody — reclaim unconditionally, but the
+            # generation counter is monotonic and must never reset to 1 while
+            # a tombstone exists (it is durable evidence of the last holder).
+            raw_generation = existing_raw.get("generation")
+            generation = raw_generation if isinstance(raw_generation, int) and raw_generation >= 1 else 0
+            previous_owner = existing_raw.get("owner_thread_id")
+            previous_owner = previous_owner if isinstance(previous_owner, str) and previous_owner.strip() else None
+            new_generation = generation + 1
+            record = _new_thread_lease_record(
+                agent=agent,
+                generation=new_generation,
+                owner_thread_id=owner_thread_id,
+                acquired_at=isoformat_z(now),
+                now=now,
+                starting_pid=resolved_starting_pid,
+                previous_owner_thread_id=previous_owner,
+            )
+            write_json_atomic(lease_path, record)
+            return {
+                "status": "acquired",
+                "lease_path": lease_path,
+                "owner_thread_id": owner_thread_id,
+                "generation": new_generation,
+                "heartbeat_at": record["heartbeat_at"],
+                "replaced_owner_thread_id": previous_owner,
+                "liveness_fields_recorded": "owner_pid" in record,
+                "takeover_reason": "lease was cooperatively released; claiming at the next monotonic generation",
+            }
+
         held_by = existing_raw.get("owner_thread_id")
         held_by_valid = isinstance(held_by, str) and bool(held_by.strip())
 
@@ -1233,6 +1357,15 @@ def claim_thread_lease(
                 "heartbeat_at": isoformat_z(heartbeat_at) if heartbeat_at else None,
                 "liveness": "live_owner",
                 "reason": liveness_reason,
+                **_lease_conflict_diagnostics(
+                    agent=agent,
+                    existing_raw=existing_raw,
+                    owner_thread_id=previous_owner,
+                    generation=generation,
+                    heartbeat_at=heartbeat_at,
+                    now=now,
+                    liveness_path=liveness_path,
+                ),
             }
 
         if liveness_path == "uncheckable":
@@ -1246,6 +1379,15 @@ def claim_thread_lease(
                 "heartbeat_at": isoformat_z(heartbeat_at) if heartbeat_at else None,
                 "liveness": "liveness_unknown",
                 "reason": liveness_reason,
+                **_lease_conflict_diagnostics(
+                    agent=agent,
+                    existing_raw=existing_raw,
+                    owner_thread_id=previous_owner,
+                    generation=generation,
+                    heartbeat_at=heartbeat_at,
+                    now=now,
+                    liveness_path=liveness_path,
+                ),
             }
 
         # Only "dead" reaches here: a confirmed-dead or pid-reused owner is
@@ -1280,35 +1422,48 @@ def release_thread_lease(
     current_thread_id: str,
     now: datetime,
     generation: int | None = None,
+    starting_pid: int | None = None,
     force: bool = False,
+    expect_owner_thread_id: str | None = None,
+    expect_generation: int | None = None,
+    acknowledge_live_owner: bool = False,
 ) -> dict[str, Any]:
-    """Release a durable thread lease this exact owner and generation holds.
+    """Release a durable thread lease this exact owner (proven by identity or generation) holds.
 
     Best-effort by design: SessionEnd does not fire on SIGKILL, so the pid
     liveness check in ``claim_thread_lease`` remains the primary defense —
     this is only the fast, cooperative path. Never rewrites or upgrades a
-    lease it does not own; fencing (owner + generation match) means a late
-    release from a session that has already been superseded by a takeover
-    cannot clobber the new owner's lease.
+    lease it does not own.
 
-    ``generation`` is mandatory unless ``force`` is given: the only production
-    call site (release-thread-lease.sh, the SessionEnd hook) must always pass
-    the exact generation it claimed at SessionStart. Generation is also what
-    fences a release by *process identity*, not merely thread id:
-    `claim_thread_lease`'s same-owner path (`_same_owner_identity_confirmed`)
-    increments generation whenever a resumed thread id is driven by a
-    different underlying process, so a delayed release from a dead
-    predecessor process — which can only ever know the generation it itself
-    observed — is refused here rather than deleting its live successor's lease.
+    A release never deletes the file — it rewrites it as a ``released``
+    tombstone (see ``_released_tombstone_record``), preserving generation so
+    the next claim continues the SAME monotonic counter rather than
+    resetting to 1. A release against an already-released tombstone is
+    always a no-op: there is nothing left to release.
+
+    Identity is the primary fence, not generation: ``_same_owner_identity_confirmed``
+    with ``require_proof=True`` re-derives the caller's harness-ancestor
+    pid/start time rather than trusting a value it merely remembers, so it is
+    strictly stronger than a caller-supplied generation. When the calling
+    process's identity is confirmed, ``generation`` is OPTIONAL. When it is
+    NOT confirmed (uncheckable lease, or a mismatched probe — e.g. a resumed
+    thread id now driven by a different process, per
+    ``_same_owner_identity_confirmed``'s docstring), the caller must supply
+    the exact generation it holds, or this fails closed with a no-op —
+    NEVER by reading the generation back off the lease file itself, which
+    would make the check a tautology.
+
+    ``force`` is the CAS-scoped operator escape hatch: it requires
+    ``expect_owner_thread_id`` and ``expect_generation`` to match the current
+    lease exactly (a bare ``--force`` with neither supplied is refused, never
+    an unscoped delete), and additionally ``acknowledge_live_owner`` when the
+    recorded owner process is verifiably alive.
     """
     owner_thread_id = current_thread_id.strip()
     if not force and not owner_thread_id:
         raise ValueError("current thread id is required to release a durable thread lease")
-    if not force and generation is None:
-        raise ValueError(
-            "generation is required to release a durable thread lease (fencing) unless force is given"
-        )
 
+    resolved_starting_pid = starting_pid if starting_pid is not None else os.getpid()
     lease_path = repo_local_path(state_root, default_thread_lease_path(agent))
     lock_path = lease_path.with_suffix(lease_path.suffix + ".lock")
 
@@ -1324,14 +1479,69 @@ def release_thread_lease(
         held_by = existing_raw.get("owner_thread_id")
         held_generation = existing_raw.get("generation")
 
+        if existing_raw.get("state") == "released":
+            return {
+                "status": "noop",
+                "lease_path": lease_path,
+                "reason": "lease is already released; nothing to release",
+                "current_owner_thread_id": held_by,
+                "current_generation": held_generation,
+            }
+
         if force:
-            lease_path.unlink(missing_ok=True)
+            if not expect_owner_thread_id or expect_generation is None:
+                return {
+                    "status": "refused",
+                    "lease_path": lease_path,
+                    "error_code": "THREAD_LEASE_FORCE_UNSCOPED",
+                    "reason": (
+                        "bare --force is refused; force release must be CAS-scoped to the exact "
+                        "current owner and generation"
+                    ),
+                    "current_owner_thread_id": held_by,
+                    "current_generation": held_generation,
+                    "resolution": _cas_force_release_command(
+                        agent,
+                        owner_thread_id=held_by,
+                        generation=held_generation,
+                        include_ack=_evaluate_owner_liveness(existing_raw)[0] == "alive",
+                    ),
+                }
+            if held_by != expect_owner_thread_id or held_generation != expect_generation:
+                return {
+                    "status": "refused",
+                    "lease_path": lease_path,
+                    "error_code": "THREAD_LEASE_FORCE_MISMATCH",
+                    "reason": (
+                        "force release refused: --expect-owner-thread-id/--expect-generation do not "
+                        "match the current lease"
+                    ),
+                    "current_owner_thread_id": held_by,
+                    "current_generation": held_generation,
+                }
+            liveness_path, _liveness_reason = _evaluate_owner_liveness(existing_raw)
+            if liveness_path == "alive" and not acknowledge_live_owner:
+                return {
+                    "status": "refused",
+                    "lease_path": lease_path,
+                    "error_code": "THREAD_LEASE_FORCE_LIVE_OWNER",
+                    "reason": (
+                        "force release refused: the recorded owner process is verifiably alive; "
+                        "pass --acknowledge-live-owner to override"
+                    ),
+                    "current_owner_thread_id": held_by,
+                    "current_generation": held_generation,
+                }
+            record = _released_tombstone_record(
+                existing_raw, released_by_thread_id=owner_thread_id or held_by or "", now=now, forced=True
+            )
+            write_json_atomic(lease_path, record)
             return {
                 "status": "released",
                 "lease_path": lease_path,
                 "forced": True,
                 "previous_owner_thread_id": held_by,
-                "previous_generation": held_generation,
+                "generation": held_generation,
             }
 
         if held_by != owner_thread_id:
@@ -1342,16 +1552,31 @@ def release_thread_lease(
                 "current_owner_thread_id": held_by,
                 "current_generation": held_generation,
             }
-        if held_generation != generation:
-            return {
-                "status": "noop",
-                "lease_path": lease_path,
-                "reason": "lease generation does not match; a takeover superseded this owner",
-                "current_owner_thread_id": held_by,
-                "current_generation": held_generation,
-            }
 
-        lease_path.unlink(missing_ok=True)
+        identity_proven = _same_owner_identity_confirmed(existing_raw, resolved_starting_pid, require_proof=True)
+        if not identity_proven:
+            if generation is None:
+                return {
+                    "status": "noop",
+                    "lease_path": lease_path,
+                    "reason": (
+                        "process identity could not be reconfirmed and no generation was supplied to "
+                        "fence with; refusing to release"
+                    ),
+                    "current_owner_thread_id": held_by,
+                    "current_generation": held_generation,
+                }
+            if held_generation != generation:
+                return {
+                    "status": "noop",
+                    "lease_path": lease_path,
+                    "reason": "lease generation does not match; a takeover superseded this owner",
+                    "current_owner_thread_id": held_by,
+                    "current_generation": held_generation,
+                }
+
+        record = _released_tombstone_record(existing_raw, released_by_thread_id=owner_thread_id, now=now)
+        write_json_atomic(lease_path, record)
         return {
             "status": "released",
             "lease_path": lease_path,
@@ -1366,7 +1591,7 @@ def refresh_thread_lease_heartbeat(
     state_root: Path,
     agent: str,
     current_thread_id: str,
-    generation: int,
+    generation: int | None = None,
     now: datetime,
     starting_pid: int | None = None,
     min_refresh_interval: timedelta | None = None,
@@ -1375,18 +1600,26 @@ def refresh_thread_lease_heartbeat(
 
     This never attempts a takeover — unlike ``claim_thread_lease``, a
     different owner, a stale generation, or an unconfirmed process identity
-    is simply left alone. Fenced by BOTH ``owner_thread_id`` and
+    is simply left alone. Fenced by ``owner_thread_id`` and, when supplied,
     ``generation``: thread id alone is not enough, because a takeover that
     resumes the SAME thread id under a NEW process (see
     ``_same_owner_identity_confirmed``) bumps generation but keeps the old
     thread id — a late heartbeat call still in flight from the dead
     predecessor process would otherwise pass a thread-id-only check and
     overwrite the successor's recorded process identity with its own stale
-    one. On top of that, the recorded process identity must be reconfirmed
-    against the calling process (``require_proof=True``: an uncheckable
-    identity is never assumed to be continuous here, unlike the explicit
-    same-owner resume path in ``claim_thread_lease``) — any mismatch, or any
-    identity that cannot be reconfirmed, is a no-op, never a rewrite.
+    one.
+
+    ``generation`` is now OPTIONAL: the recorded process identity being
+    reconfirmed against the calling process (``require_proof=True``) is
+    strictly stronger — it re-derives the caller's harness-ancestor pid/start
+    time rather than trusting a value the caller merely remembers, so it is
+    the sole fence when no generation is supplied. An uncheckable identity is
+    never assumed to be continuous here, unlike the explicit same-owner
+    resume path in ``claim_thread_lease`` — any mismatch, or any identity
+    that cannot be reconfirmed, is a no-op, never a rewrite. When a
+    generation IS supplied, it is still enforced as an extra fence (belt and
+    braces) on top of the identity check, never read back off the lease file
+    itself as a substitute for one.
 
     This is diagnostic, not a safety mechanism: there is no emergency TTL
     left for a fresh heartbeat to protect against (see ``claim_thread_lease``
@@ -1424,7 +1657,7 @@ def refresh_thread_lease_heartbeat(
                 "reason": "lease is owned by a different thread id; not refreshing",
             }
         held_generation = existing_raw.get("generation")
-        if held_generation != generation:
+        if generation is not None and held_generation != generation:
             return {
                 "status": "noop",
                 "lease_path": lease_path,
@@ -3131,6 +3364,31 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
             )
         )
         return 2
+
+    if agent == "claude" or agent.startswith("claude-"):
+        # The packet is sealed: this predecessor's own terminal mutating
+        # action is to cooperatively release its thread-lease slot through
+        # the same identity-gated path a SessionEnd hook would use, so the
+        # replacement thread's future claim never has to wait out a stale
+        # lease. Best-effort and never fatal to prepare: a session whose
+        # process identity cannot be reconfirmed here simply leaves the
+        # lease for claim_thread_lease's pid-liveness check to reclaim later.
+        try:
+            seal_release_result = release_thread_lease(
+                state_root=state_root, agent=agent, current_thread_id=active_thread_id, now=now
+            )
+            if seal_release_result.get("status") not in {"released", "noop"}:
+                print(
+                    f"WARNING: unexpected thread-lease release status at prepare seal for "
+                    f"agent {agent!r}: {seal_release_result}",
+                    file=sys.stderr,
+                )
+        except (OSError, ValueError) as exc:
+            print(
+                f"WARNING: thread-lease release at prepare seal failed for agent {agent!r}: {exc}",
+                file=sys.stderr,
+            )
+
     wrote_router = False
     if args.write_current:
         write_text_atomic(router_path, router_md)
@@ -4359,13 +4617,6 @@ def cmd_detect(args: argparse.Namespace) -> int:
     return 0
 
 
-def _force_release_command(agent: str) -> str:
-    return (
-        f".venv/bin/python scripts/orchestration/thread_handoff.py release-thread-lease "
-        f"--agent {agent} --force"
-    )
-
-
 def cmd_claim_thread_lease(args: argparse.Namespace) -> int:
     """Claim the durable single-driver lease used during SessionStart."""
     try:
@@ -4390,6 +4641,12 @@ def cmd_claim_thread_lease(args: argparse.Namespace) -> int:
     }
     if payload["status"] == "conflict":
         liveness = payload.get("liveness")
+        # claim_thread_lease already computed the exact CAS-scoped command as
+        # payload["resolution"]; this layer only adds the human-facing error
+        # text and, for the liveness-unknown lane, a slightly different frame.
+        resolution_command = payload.get("resolution") or _cas_force_release_command(
+            agent, owner_thread_id=payload.get("owner_thread_id"), generation=payload.get("generation")
+        )
         if liveness == "liveness_unknown":
             payload.update(
                 {
@@ -4401,7 +4658,7 @@ def cmd_claim_thread_lease(args: argparse.Namespace) -> int:
                     ),
                     "resolution": (
                         f"If the previous owner ({payload.get('lease_file')}) is confirmed gone, "
-                        f"force-release with: {_force_release_command(agent)} — then start normally "
+                        f"force-release with: {resolution_command} — then start normally "
                         f"again. Otherwise wait for it to exit and release cooperatively."
                     ),
                 }
@@ -4413,7 +4670,7 @@ def cmd_claim_thread_lease(args: argparse.Namespace) -> int:
                     "error": "durable thread lease is held by another live session; stop to avoid double-driving",
                     "resolution": (
                         f"Wait for the owner session to stop, or if it is confirmed gone, "
-                        f"force-release with: {_force_release_command(agent)}"
+                        f"force-release with: {resolution_command}"
                     ),
                 }
             )
@@ -4436,7 +4693,11 @@ def cmd_release_thread_lease(args: argparse.Namespace) -> int:
             current_thread_id=args.current_thread_id or "",
             now=utc_now(),
             generation=args.generation,
+            starting_pid=args.starting_pid,
             force=args.force,
+            expect_owner_thread_id=args.expect_owner_thread_id,
+            expect_generation=args.expect_generation,
+            acknowledge_live_owner=args.acknowledge_live_owner,
         )
     except ValueError as exc:
         print(json.dumps({"error": str(exc)}, indent=2))
@@ -4449,7 +4710,7 @@ def cmd_release_thread_lease(args: argparse.Namespace) -> int:
         **result,
     }
     print(json.dumps(payload, indent=2))
-    return 0
+    return 2 if payload.get("status") == "refused" else 0
 
 
 def cmd_refresh_thread_lease_heartbeat(args: argparse.Namespace) -> int:
@@ -4718,14 +4979,40 @@ def build_parser() -> argparse.ArgumentParser:
         type=int,
         default=None,
         help=(
-            "Required unless --force: only release if the on-disk lease is still at this "
-            "exact generation (fencing, including across a process-identity change)."
+            "Optional when this process's identity can be reconfirmed against the lease "
+            "(the strictly stronger fence); required otherwise (fail closed). Never read back "
+            "off the on-disk lease as a substitute."
         ),
+    )
+    release_thread_lease_parser.add_argument(
+        "--starting-pid",
+        type=int,
+        default=None,
+        help="Override the pid the harness-ancestor identity walk starts from (defaults to this process's own pid).",
     )
     release_thread_lease_parser.add_argument(
         "--force",
         action="store_true",
-        help="Operator escape hatch: release regardless of current owner/generation.",
+        help=(
+            "Operator escape hatch: CAS-scoped, requires --expect-owner-thread-id and "
+            "--expect-generation (a bare --force is refused, never an unscoped delete)."
+        ),
+    )
+    release_thread_lease_parser.add_argument(
+        "--expect-owner-thread-id",
+        default=None,
+        help="Required with --force: the exact owner_thread_id the operator observed on the lease.",
+    )
+    release_thread_lease_parser.add_argument(
+        "--expect-generation",
+        type=int,
+        default=None,
+        help="Required with --force: the exact generation the operator observed on the lease.",
+    )
+    release_thread_lease_parser.add_argument(
+        "--acknowledge-live-owner",
+        action="store_true",
+        help="Required with --force when the recorded owner process is verifiably alive.",
     )
     release_thread_lease_parser.set_defaults(func=cmd_release_thread_lease)
 
@@ -4741,10 +5028,11 @@ def build_parser() -> argparse.ArgumentParser:
     refresh_heartbeat_parser.add_argument(
         "--generation",
         type=int,
-        required=True,
+        default=None,
         help=(
-            "Fencing: only refresh if the on-disk lease is still at this exact generation "
-            "(the generation this session claimed at SessionStart, e.g. "
+            "Optional when this process's identity can be reconfirmed against the lease "
+            "(the strictly stronger fence); when supplied, also enforced as an extra fence "
+            "(the exact generation this session claimed at SessionStart, e.g. "
             "$LEARN_UKRAINIAN_THREAD_LEASE_GENERATION)."
         ),
     )

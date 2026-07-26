@@ -1095,13 +1095,17 @@ def test_same_thread_id_with_matching_process_identity_preserves_generation(
     assert result["generation"] == 3
 
 
-def test_same_thread_id_with_changed_process_identity_increments_generation_and_fences_late_release(
+def test_same_thread_id_with_changed_process_identity_increments_generation(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
     """Fix 2: resuming the same thread id under a NEW harness process (different pid/start
     time) must NOT silently preserve generation. If it did, the dead predecessor process —
     which cached the OLD generation from its own SessionStart — could still release-fence
-    its way past a late SessionEnd and delete the SUCCESSOR's live lease."""
+    its way past a late SessionEnd and delete the SUCCESSOR's live lease. (The release-side
+    consequence of this exact scenario, with pid-sensitive identity mocking, is
+    test_resume_aba_late_release_from_dead_predecessor_is_fenced_by_identity_and_generation
+    below — this test's blanket-identity mock, which ignores the calling starting_pid, cannot
+    faithfully simulate release's own identity check.)"""
     now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
     lease = _v2_lease(owner_thread_id="resumed-thread", generation=1, owner_pid=111, owner_pid_started_at=1000.0)
     lease_path = _write_lease(tmp_path, "claude-infra", lease)
@@ -1123,20 +1127,62 @@ def test_same_thread_id_with_changed_process_identity_increments_generation_and_
     assert on_disk["generation"] == 2
     assert on_disk["owner_pid"] == 222
 
-    # The predecessor's late SessionEnd still remembers generation 1 (it can only ever know
-    # what it observed at its own SessionStart) — it must be refused, not delete the successor.
+
+def test_resume_aba_late_release_from_dead_predecessor_is_fenced_by_identity_and_generation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Resume-ABA: claim(T, proc A) -> identity-changed reacquire(T, proc B) at gen+1 -> a late
+    release from a process presenting A's identity, carrying A's stale generation, must no-op —
+    release is now itself identity-gated (item 2), doubly fencing this exact scenario. The
+    successor's lease must survive both fences."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="resumed-thread", generation=1, owner_pid=111, owner_pid_started_at=1000.0)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    identities = {111: (111, 1000.0), 222: (222, 5000.0)}
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda starting_pid: {
+            "owner_pid": identities[starting_pid][0],
+            "owner_pid_started_at": identities[starting_pid][1],
+            "owner_machine_id": "machine-a",
+        },
+    )
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="resumed-thread", now=now, starting_pid=222
+    )
+    assert result["status"] == "acquired"
+    assert result["generation"] == 2
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["generation"] == 2
+    assert on_disk["owner_pid"] == 222
+
+    # Process A's late SessionEnd: presents A's own real identity (pid 111) and carries A's
+    # stale generation 1 — identity mismatches the current (B's) record, so this falls through
+    # to the generation fence, which also fails (1 != 2).
     late_release = th.release_thread_lease(
-        state_root=tmp_path, agent="claude-infra", current_thread_id="resumed-thread", now=now, generation=1
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="resumed-thread",
+        now=now,
+        generation=1,
+        starting_pid=111,
     )
     assert late_release["status"] == "noop"
     assert json.loads(lease_path.read_text(encoding="utf-8"))["generation"] == 2
 
-    # The successor's own release, with the generation it actually claimed, must succeed.
+    # Process B's own release, presenting its own real identity, succeeds WITHOUT even
+    # supplying a generation — identity proof alone is a sufficient, stronger fence (item 2).
     own_release = th.release_thread_lease(
-        state_root=tmp_path, agent="claude-infra", current_thread_id="resumed-thread", now=now, generation=2
+        state_root=tmp_path, agent="claude-infra", current_thread_id="resumed-thread", now=now, starting_pid=222
     )
     assert own_release["status"] == "released"
-    assert not lease_path.exists()
+    tombstone = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert tombstone["state"] == "released"
+    assert tombstone["generation"] == 2
+    assert tombstone["released_by_thread_id"] == "resumed-thread"
 
 
 def test_same_thread_id_with_unresolvable_new_identity_reacquires_defensively(
@@ -1163,20 +1209,51 @@ def test_same_thread_id_with_unresolvable_new_identity_reacquires_defensively(
 # --- release_thread_lease: fencing (test matrix items 14-16) ---
 
 
-def test_release_without_generation_is_refused_unless_forced(tmp_path: Path):
-    """Fix 1: generation is mandatory for a non-force release — the only call site
-    (release-thread-lease.sh) must always pass it, or the fencing this whole design
-    depends on is dead code at its one production caller."""
+def test_release_without_proof_or_generation_is_a_noop(tmp_path: Path):
+    """Item 2: generation is no longer unconditionally mandatory — identity proof
+    (require_proof=True) is the stronger fence and makes it optional. But when identity
+    canNOT be reconfirmed (as here: no machine-id/process mocking, so the lease is
+    uncheckable in this test process) AND no generation is supplied either, this must fail
+    closed as an explicit no-op — never a silent release, and (unlike the old design) never
+    a raised exception that would crash a caller that forgot to special-case it."""
     now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
     lease = _v2_lease(owner_thread_id="real-owner", generation=1)
     lease_path = _write_lease(tmp_path, "claude-infra", lease)
 
-    with pytest.raises(ValueError, match="generation"):
-        th.release_thread_lease(
-            state_root=tmp_path, agent="claude-infra", current_thread_id="real-owner", now=now
-        )
+    result = th.release_thread_lease(state_root=tmp_path, agent="claude-infra", current_thread_id="real-owner", now=now)
 
-    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "real-owner"
+    assert result["status"] == "noop"
+    assert "generation" in result["reason"]
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["owner_thread_id"] == "real-owner"
+    assert on_disk.get("state") != "released"
+
+
+def test_release_with_proven_identity_and_no_generation_succeeds(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Item 2: when this process's identity IS reconfirmed against the lease, generation is
+    genuinely optional — proof alone is a sufficient, stronger fence. Mutation check: without
+    the identity-proof branch (i.e. reverting to the old owner+generation-only fence), this
+    call would incorrectly raise/refuse since no generation is supplied."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="real-owner", generation=4, owner_pid=111, owner_pid_started_at=1000.0)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda starting_pid: {"owner_pid": 111, "owner_pid_started_at": 1000.0, "owner_machine_id": "machine-a"},
+    )
+
+    result = th.release_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="real-owner", now=now, starting_pid=111
+    )
+
+    assert result["status"] == "released"
+    tombstone = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert tombstone["state"] == "released"
+    assert tombstone["generation"] == 4
+    assert tombstone["released_by_thread_id"] == "real-owner"
+    assert tombstone["owner_pid"] == 111  # prior identity fields preserved as evidence
 
 
 def test_release_by_non_owner_is_noop(tmp_path: Path):
@@ -1240,19 +1317,177 @@ def test_release_thread_lease_takes_the_advisory_lock(tmp_path: Path, monkeypatc
     assert events == ["lock-entered", "lock-exited"]
 
 
-def test_release_thread_lease_force_bypasses_ownership(tmp_path: Path):
-    """The operator escape hatch named in every conflict message."""
+def test_force_release_bare_is_refused(tmp_path: Path):
+    """Item 6: a bare --force (no CAS expectations) is refused, never an unscoped delete —
+    it must instead echo back the exact pre-filled CAS command using the CURRENT on-disk
+    owner/generation. Mutation check: without the unscoped-refusal branch, this would fall
+    straight through to an unconditional release exactly like the old bare --force design."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="somebody-else", generation=5)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+
+    result = th.release_thread_lease(state_root=tmp_path, agent="claude-infra", current_thread_id="", now=now, force=True)
+
+    assert result["status"] == "refused"
+    assert result["error_code"] == "THREAD_LEASE_FORCE_UNSCOPED"
+    assert "--expect-owner-thread-id somebody-else" in result["resolution"]
+    assert "--expect-generation 5" in result["resolution"]
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["owner_thread_id"] == "somebody-else"  # untouched
+
+
+def test_force_release_with_wrong_expectations_is_refused(tmp_path: Path):
+    """Item 6: CAS expectations that don't match the current lease are refused, showing the
+    real current state — a stale copy-pasted force command must never silently no-op-succeed
+    against a lease it no longer describes."""
     now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
     lease = _v2_lease(owner_thread_id="somebody-else", generation=5)
     lease_path = _write_lease(tmp_path, "claude-infra", lease)
 
     result = th.release_thread_lease(
-        state_root=tmp_path, agent="claude-infra", current_thread_id="", now=now, force=True
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="",
+        now=now,
+        force=True,
+        expect_owner_thread_id="somebody-else",
+        expect_generation=4,  # stale
+    )
+
+    assert result["status"] == "refused"
+    assert result["error_code"] == "THREAD_LEASE_FORCE_MISMATCH"
+    assert result["current_generation"] == 5
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "somebody-else"
+
+
+def test_force_release_with_live_owner_requires_acknowledgement(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Item 6: correct CAS expectations still refuse a verifiably-alive owner unless the
+    operator explicitly acknowledges it — a force release must never be a silent way to
+    steal from a session that is provably still running."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="somebody-else", generation=5, owner_pid=4242, owner_pid_started_at=1000.0)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(th, "_process_is_alive", lambda pid: True)
+    monkeypatch.setattr(th, "_default_process_snapshot", lambda pid: _fake_snapshot(pid=pid))
+
+    refused = th.release_thread_lease(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="",
+        now=now,
+        force=True,
+        expect_owner_thread_id="somebody-else",
+        expect_generation=5,
+    )
+    assert refused["status"] == "refused"
+    assert refused["error_code"] == "THREAD_LEASE_FORCE_LIVE_OWNER"
+    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "somebody-else"
+
+    acknowledged = th.release_thread_lease(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="",
+        now=now,
+        force=True,
+        expect_owner_thread_id="somebody-else",
+        expect_generation=5,
+        acknowledge_live_owner=True,
+    )
+    assert acknowledged["status"] == "released"
+    assert acknowledged["forced"] is True
+    tombstone = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert tombstone["state"] == "released"
+    assert tombstone["generation"] == 5
+
+
+def test_force_release_with_correct_cas_succeeds(tmp_path: Path):
+    """Item 6: the exact CAS-scoped command (correct owner + generation, owner not
+    verifiably alive) succeeds and writes a tombstone rather than deleting the file."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="somebody-else", generation=5)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+
+    result = th.release_thread_lease(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="",
+        now=now,
+        force=True,
+        expect_owner_thread_id="somebody-else",
+        expect_generation=5,
     )
 
     assert result["status"] == "released"
     assert result["forced"] is True
-    assert not lease_path.exists()
+    tombstone = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert tombstone["state"] == "released"
+    assert tombstone["generation"] == 5
+    assert tombstone["released_forced"] is True
+
+
+# --- released tombstone: monotonic generation, no unlink (item 3) ---
+
+
+def test_tombstone_monotonic_generation_across_claim_release_claim(tmp_path: Path):
+    """Item 3: claim -> release -> claim strictly increases generation and NEVER resets to 1
+    while a tombstone exists — the tombstone is durable evidence of the last generation, not
+    an absent-file fresh start. Mutation check: reverting the tombstone-reclaim branch to
+    treat a released record as absent would incorrectly restart at generation 1."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+
+    first_claim = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="first-owner", now=now, starting_pid=1
+    )
+    assert first_claim["status"] == "acquired"
+    assert first_claim["generation"] == 1
+
+    release = th.release_thread_lease(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="first-owner",
+        now=now,
+        generation=1,
+        starting_pid=1,
+    )
+    assert release["status"] == "released"
+    lease_path = tmp_path / ".agent/claude-infra-thread-lease.json"
+    tombstone = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert tombstone["state"] == "released"
+    assert tombstone["generation"] == 1
+
+    second_claim = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="second-owner", now=now, starting_pid=1
+    )
+    assert second_claim["status"] == "acquired"
+    assert second_claim["generation"] == 2  # monotonic, never reset to 1
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["generation"] == 2
+    assert on_disk["owner_thread_id"] == "second-owner"
+    assert on_disk.get("state") != "released"
+
+
+def test_stale_release_against_a_tombstone_is_noop(tmp_path: Path):
+    """Item 3: a second (e.g. duplicate/late) release call against an already-released
+    tombstone must no-op — there is nothing left to release, and it must never re-derive or
+    rewrite the tombstone."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="real-owner", generation=3)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+
+    first_release = th.release_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="real-owner", now=now, generation=3
+    )
+    assert first_release["status"] == "released"
+    tombstone_before = lease_path.read_text(encoding="utf-8")
+
+    stale_release = th.release_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="real-owner", now=now, generation=3
+    )
+
+    assert stale_release["status"] == "noop"
+    assert "already released" in stale_release["reason"]
+    assert lease_path.read_text(encoding="utf-8") == tombstone_before  # byte-identical, never rewritten
 
 
 # --- harness-ancestor walk (test matrix items 17-18) ---
@@ -1325,7 +1560,8 @@ def test_claim_thread_lease_command_reports_a_clear_double_launch_conflict(tmp_p
 
 
 def test_release_thread_lease_command_end_to_end(tmp_path: Path, capsys):
-    """CLI-level: claim then release through the same subcommands a real hook would call."""
+    """CLI-level: claim then release through the same subcommands a real hook would call.
+    Release now writes a tombstone (item 3) rather than deleting the lease file."""
     repo_args = ["--repo-root", str(tmp_path)]
 
     assert th.main([*repo_args, "claim-thread-lease", "--agent", "claude-infra", "--starting-pid", "1",
@@ -1337,12 +1573,16 @@ def test_release_thread_lease_command_end_to_end(tmp_path: Path, capsys):
                      "--generation", str(claim_payload["generation"])]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "released"
-    assert not (tmp_path / ".agent/claude-infra-thread-lease.json").exists()
+    tombstone = json.loads((tmp_path / ".agent/claude-infra-thread-lease.json").read_text(encoding="utf-8"))
+    assert tombstone["state"] == "released"
+    assert tombstone["generation"] == claim_payload["generation"]
 
 
-def test_release_thread_lease_command_requires_generation_unless_forced(tmp_path: Path, capsys):
-    """Fix 1: release-thread-lease.sh is the only call site — it must always pass --generation,
-    or a SessionEnd release is no longer fenced by anything but thread id."""
+def test_release_thread_lease_command_without_generation_or_proof_is_a_noop(tmp_path: Path, capsys):
+    """Item 2: --generation is no longer unconditionally required — but with neither a
+    generation NOR a reconfirmable process identity (as here: --starting-pid 1 is never a
+    known harness, matching the double-launch-conflict test's convention), the release must
+    fail closed as an explicit no-op (exit 0, status noop) rather than releasing or raising."""
     repo_args = ["--repo-root", str(tmp_path)]
 
     assert th.main([*repo_args, "claim-thread-lease", "--agent", "claude-infra", "--starting-pid", "1",
@@ -1350,11 +1590,14 @@ def test_release_thread_lease_command_requires_generation_unless_forced(tmp_path
     capsys.readouterr()
 
     assert th.main([*repo_args, "release-thread-lease", "--agent", "claude-infra",
-                     "--current-thread-id", "cli-session"]) == 2
+                     "--current-thread-id", "cli-session"]) == 0
     payload = json.loads(capsys.readouterr().out)
-    assert "generation" in payload["error"]
-    # Refused, not released: the lease must survive an attempted release with no generation.
-    assert (tmp_path / ".agent/claude-infra-thread-lease.json").exists()
+    assert payload["status"] == "noop"
+    assert "generation" in payload["reason"]
+    # Untouched: the lease must survive an attempted release with no generation or proof.
+    on_disk = json.loads((tmp_path / ".agent/claude-infra-thread-lease.json").read_text(encoding="utf-8"))
+    assert on_disk["owner_thread_id"] == "cli-session"
+    assert on_disk.get("state") != "released"
 
 
 def test_refresh_thread_lease_heartbeat_command_is_noop_for_a_different_owner(tmp_path: Path, capsys):
@@ -1530,6 +1773,253 @@ def test_refresh_thread_lease_heartbeat_command_throttles_via_min_refresh_interv
                      "--min-refresh-interval-seconds", "3600"]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "throttled"  # fresh claim heartbeat is well within the 3600s window
+
+
+# --- refresh_thread_lease_heartbeat without --generation (item 1) ---
+
+
+def test_refresh_thread_lease_heartbeat_without_generation_and_proven_identity_succeeds(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Item 1: --generation is now optional — a confirmed process identity (require_proof=True)
+    is the sole, strictly-stronger fence. Mutation check: reverting refresh to require
+    generation unconditionally would make this call raise a TypeError/no-op instead of
+    refreshing, since no generation is supplied here at all."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(
+        owner_thread_id="owner-session",
+        generation=7,
+        heartbeat_at="2026-07-23T09:00:00Z",
+        owner_pid=111,
+        owner_pid_started_at=1000.0,
+    )
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda starting_pid: {"owner_pid": 111, "owner_pid_started_at": 1000.0, "owner_machine_id": "machine-a"},
+    )
+
+    result = th.refresh_thread_lease_heartbeat(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="owner-session", now=now, starting_pid=111
+    )
+
+    assert result["status"] == "refreshed"
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["heartbeat_at"] == "2026-07-23T10:00:00Z"
+    assert on_disk["generation"] == 7  # untouched
+
+
+def test_refresh_thread_lease_heartbeat_without_generation_and_unproven_identity_is_noop(tmp_path: Path):
+    """Item 1: with no generation supplied AND no way to reconfirm identity (no mocking here,
+    so the lease is uncheckable in this test process), the refresh must fail closed as a
+    no-op — never blindly rewrite heartbeat_at just because the thread id happens to match."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(owner_thread_id="owner-session", generation=1)
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    original = lease_path.read_text(encoding="utf-8")
+
+    result = th.refresh_thread_lease_heartbeat(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="owner-session", now=now
+    )
+
+    assert result["status"] == "noop"
+    assert "identity" in result["reason"]
+    assert lease_path.read_text(encoding="utf-8") == original
+
+
+def test_refresh_thread_lease_heartbeat_command_without_generation_flag(tmp_path: Path, capsys):
+    """CLI-level: --generation is optional on refresh-thread-lease-heartbeat (item 1) — the
+    updated hook scripts no longer pass it at all."""
+    repo_args = ["--repo-root", str(tmp_path)]
+    assert th.main([*repo_args, "claim-thread-lease", "--agent", "claude-infra", "--starting-pid", "1",
+                     "--current-thread-id", "owner-session"]) == 0
+    capsys.readouterr()
+
+    assert th.main([*repo_args, "refresh-thread-lease-heartbeat", "--agent", "claude-infra",
+                     "--current-thread-id", "owner-session"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    # --starting-pid 1 is never a known harness ancestor (matches the double-launch-conflict
+    # test's convention), so identity cannot be reconfirmed here either — this is the
+    # documented fail-closed no-op, exercised purely through the CLI surface with no
+    # --generation flag passed at all, exactly like the updated hook scripts.
+    assert payload["status"] == "noop"
+
+
+# --- claim conflict diagnosis (item 5) ---
+
+
+def test_claim_conflict_diagnosis_reports_pid_heartbeat_age_and_cas_resolution_command(tmp_path: Path, capsys):
+    """Diagnosis golden test: the conflict JSON must give an operator everything needed to
+    decide without opening the lease file by hand, including the exact CAS-scoped (never
+    bare) force-release command."""
+    lease = {
+        "schema_version": 2,
+        "agent": "claude-infra",
+        "generation": 3,
+        "owner_thread_id": "stuck-owner",
+        "acquired_at": "2020-01-01T00:00:00Z",
+        "heartbeat_at": "2020-01-01T00:00:00Z",  # far enough in the past to be unambiguous forever
+        "owner_pid": 55555,
+        "owner_pid_started_at": 1000.0,
+        "owner_machine_id": "some-other-machine",  # cross-machine: liveness is never checkable
+    }
+    _write_lease(tmp_path, "claude-infra", lease)
+
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "claim-thread-lease",
+                "--agent",
+                "claude-infra",
+                "--starting-pid",
+                "1",
+                "--current-thread-id",
+                "new-session",
+            ]
+        )
+        == 2
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert payload["error_code"] == "THREAD_LEASE_LIVENESS_UNKNOWN"
+    assert payload["owner_thread_id"] == "stuck-owner"
+    assert payload["owner_pid"] == 55555
+    assert payload["owner_pid_started_at"] == 1000.0
+    assert payload["owner_alive"] is None  # never checkable, never guessed
+    assert payload["heartbeat_age_seconds"] > 45 * 60
+    assert payload["heartbeat_age_humanized"]
+    assert payload["idle_suspected"] is True
+    resolution = payload["resolution"]
+    assert "--force" in resolution
+    assert "--expect-owner-thread-id stuck-owner" in resolution
+    assert "--expect-generation 3" in resolution
+    assert "--acknowledge-live-owner" not in resolution  # liveness is unknown, not confirmed alive
+
+
+def test_claim_conflict_diagnosis_flags_a_confirmed_live_owner_and_requires_acknowledgement(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
+):
+    """Item 5/6: a genuinely live owner reports owner_alive=True and its resolution command
+    includes --acknowledge-live-owner up front — an operator should never have to discover
+    that flag by trial and error against a live process."""
+    lease = {
+        "schema_version": 2,
+        "agent": "claude-infra",
+        "generation": 2,
+        "owner_thread_id": "live-owner",
+        "acquired_at": "2020-01-01T00:00:00Z",
+        "heartbeat_at": "2020-01-01T00:00:00Z",
+        "owner_pid": 4242,
+        "owner_pid_started_at": 1000.0,
+        "owner_machine_id": "machine-a",
+    }
+    _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(th, "_process_is_alive", lambda pid: True)
+    monkeypatch.setattr(th, "_default_process_snapshot", lambda pid: _fake_snapshot(pid=pid))
+
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "claim-thread-lease",
+                "--agent",
+                "claude-infra",
+                "--starting-pid",
+                "1",
+                "--current-thread-id",
+                "new-session",
+            ]
+        )
+        == 2
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert payload["error_code"] == "THREAD_LEASE_CONFLICT"
+    assert payload["owner_alive"] is True
+    assert payload["idle_suspected"] is True
+    assert "--acknowledge-live-owner" in payload["resolution"]
+
+
+# --- cooperative release at prepare/rollover seal (item 4) ---
+
+
+def test_prepare_releases_the_slot_lease_on_successful_seal_for_claude_agent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
+):
+    """Item 4: once the rollover packet is sealed, prepare's own terminal mutating action for
+    a claude/claude-* agent slot is to cooperatively release its thread-lease through the
+    same identity-gated release path a SessionEnd hook would use — the predecessor does not
+    have to wait for (or rely on) a hook firing correctly to unblock its own successor."""
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda starting_pid: {"owner_pid": 999, "owner_pid_started_at": 1000.0, "owner_machine_id": "machine-a"},
+    )
+    lease = _v2_lease(
+        owner_thread_id="old-thread",
+        generation=1,
+        agent="claude",
+        owner_pid=999,
+        owner_pid_started_at=1000.0,
+        owner_machine_id="machine-a",
+    )
+    lease_path = _write_lease(tmp_path, "claude", lease)
+
+    assert (
+        th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "claude", "--active-thread-id", "old-thread"])
+        == 0
+    )
+    capsys.readouterr()
+
+    tombstone = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert tombstone["state"] == "released"
+    assert tombstone["generation"] == 1
+    assert tombstone["released_by_thread_id"] == "old-thread"
+
+
+def test_prepare_release_failure_at_seal_warns_but_does_not_fail_prepare(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
+):
+    """Item 4: a failure releasing the slot lease at seal time must never fail prepare itself
+    — it only warns loudly (to stderr) so an operator can notice and investigate."""
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+
+    def _boom(**_kwargs):
+        raise OSError("simulated release failure")
+
+    monkeypatch.setattr(th, "release_thread_lease", _boom)
+
+    rc = th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "claude", "--active-thread-id", "old-thread"])
+
+    assert rc == 0
+    captured = capsys.readouterr()
+    assert "WARNING" in captured.err
+    assert "simulated release failure" in captured.err
+
+
+def test_prepare_does_not_release_a_non_claude_agent_slot(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys):
+    """Item 4 is scoped to claude/claude-* agent slots only — Codex's own lifecycle fix is a
+    separate, parallel effort (Phase B), so prepare must never touch a codex lease."""
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    lease = _v2_lease(owner_thread_id="old-thread", generation=1, agent="codex")
+    lease_path = _write_lease(tmp_path, "codex", lease)
+    original = lease_path.read_text(encoding="utf-8")
+
+    assert (
+        th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--active-thread-id", "old-thread"])
+        == 0
+    )
+    capsys.readouterr()
+
+    assert lease_path.read_text(encoding="utf-8") == original  # untouched
 
 
 def test_checkout_continuity_requires_clean_source_binding_and_same_clean_head():

@@ -16,13 +16,17 @@
 # not already own, at a different generation, or whose process identity it
 # cannot reconfirm, exactly like the Stop-hook refresh.
 #
-# Fenced by generation, not just thread id: the generation this session
-# claimed at SessionStart is exported by session-setup.sh into
-# $CLAUDE_ENV_FILE as LEARN_UKRAINIAN_THREAD_LEASE_GENERATION (same variable
-# release-thread-lease.sh uses). Without it we cannot safely refresh (a
-# thread-id-only check could let a late predecessor heartbeat rewrite a
-# successor's recorded process identity — issue #5759 round 2), so this hook
-# no-ops rather than guessing one.
+# Fenced by process identity, not generation: refresh_thread_lease_heartbeat
+# re-derives this calling process's harness-ancestor pid/start time and
+# requires it to match what the lease recorded (require_proof=True) before
+# writing anything — a thread-id-only check could otherwise let a late
+# predecessor heartbeat rewrite a successor's recorded process identity
+# (issue #5759 round 2). This is strictly stronger than the old generation
+# fence, and load-bearing: $CLAUDE_ENV_FILE exports (including
+# LEARN_UKRAINIAN_THREAD_LEASE_GENERATION, set by session-setup.sh) reach
+# only Bash tool calls, never this hook's own subprocess, so a generation
+# gate here was silently dead code in every real session — this hook no
+# longer requires one at all, only current-thread-id.
 #
 # Skip in non-interactive / pipeline contexts, matching every other
 # thread-lease hook.
@@ -60,13 +64,6 @@ if [ -z "$SESSION_ID" ]; then
   exit 0
 fi
 
-if [ -z "${LEARN_UKRAINIAN_THREAD_LEASE_GENERATION:-}" ]; then
-  # No generation to fence with — refresh_thread_lease_heartbeat now refuses to
-  # refresh without one. Leaving heartbeat_at stale is safe: it is diagnostic
-  # only, nothing takes a lease over on its age.
-  exit 0
-fi
-
 if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
   CANONICAL_ROOT="$CODEX_CANONICAL_REPO_ROOT"
 else
@@ -78,10 +75,13 @@ else
   fi
 fi
 
+# No --generation: identity proof is the sole fence (see above). If this repo
+# checkout still has an OLDER thread_handoff.py that hard-requires
+# --generation, the CLI's argparse error is swallowed by `|| true` below —
+# a safe no-op in a mixed-deploy, exactly like the old missing-env-var path.
 "$PYTHON" "$PROJECT_DIR/scripts/orchestration/thread_handoff.py" \
   --repo-root "$CANONICAL_ROOT" refresh-thread-lease-heartbeat \
   --agent "$HANDOFF_AGENT" --current-thread-id "$SESSION_ID" \
-  --generation "$LEARN_UKRAINIAN_THREAD_LEASE_GENERATION" \
   --min-refresh-interval-seconds 60 \
   >/dev/null 2>&1 || true
 
