@@ -6,6 +6,7 @@ import fcntl
 import json
 import os
 import tempfile
+import time
 from collections.abc import Iterator
 from contextlib import contextmanager, suppress
 from pathlib import Path
@@ -59,10 +60,25 @@ def atomic_write_text(path: Path, text: str) -> None:
 
 @contextmanager
 def advisory_lock(path: Path) -> Iterator[None]:
-    """Cooperate with other planners; never alters or deletes Git lock files."""
+    """Cooperate with other planners; optionally bound hook-startup lock waits."""
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a+", encoding="utf-8") as handle:
-        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        timeout_text = os.environ.get("LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS", "")
+        timeout_seconds = float(timeout_text) if timeout_text else None
+        if timeout_seconds is None:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        else:
+            deadline = time.monotonic() + timeout_seconds
+            while True:
+                try:
+                    fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    break
+                except BlockingIOError:
+                    if time.monotonic() >= deadline:
+                        raise TimeoutError(
+                            f"timed out after {timeout_seconds:g}s waiting for local state lock: {path}"
+                        ) from None
+                    time.sleep(min(0.05, max(0.0, deadline - time.monotonic())))
         try:
             yield
         finally:

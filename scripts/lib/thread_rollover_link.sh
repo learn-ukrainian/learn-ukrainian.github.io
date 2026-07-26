@@ -74,6 +74,14 @@ resolve_codex_pending_rollover() {
   local native_title_supported=""
   local title_state=""
   local replacement_task_id=""
+  local runner=()
+
+  if [ -n "${THREAD_ROLLOVER_COMMAND_RUNNER:-}" ]; then
+    runner=(
+      "$python_bin" "$THREAD_ROLLOVER_COMMAND_RUNNER"
+      --timeout "${THREAD_ROLLOVER_COMMAND_TIMEOUT_SECONDS:-3}" --
+    )
+  fi
 
   clear_codex_launcher_rollover_env
 
@@ -82,10 +90,17 @@ resolve_codex_pending_rollover() {
     return 1
   fi
 
-  detect_output="$(
-    "$python_bin" "$handoff_script" --repo-root "$project_dir" \
-      detect --agent "$handoff_agent" --format json 2>&1
-  )" || detect_rc=$?
+  if [ -n "${THREAD_ROLLOVER_COMMAND_RUNNER:-}" ]; then
+    detect_output="$(
+      "${runner[@]}" "$python_bin" "$handoff_script" --repo-root "$project_dir" \
+        detect --agent "$handoff_agent" --format json 2>&1
+    )" || detect_rc=$?
+  else
+    detect_output="$(
+      "$python_bin" "$handoff_script" --repo-root "$project_dir" \
+        detect --agent "$handoff_agent" --format json 2>&1
+    )" || detect_rc=$?
+  fi
   if [ "$detect_rc" -ne 0 ]; then
     printf 'Error: Codex rollover preflight refused launch for %s.\n' "$handoff_agent" >&2
     printf '%s\n' "$detect_output" >&2

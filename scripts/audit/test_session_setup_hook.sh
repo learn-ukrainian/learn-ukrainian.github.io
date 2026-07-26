@@ -105,6 +105,7 @@ run_hook() {
     CLAUDE_PROFILE_RESOLVER_PYTHON="$REPO_ROOT/.venv/bin/python" \
     CLAUDE_SESSION_RECORD_SCRIPT="$REPO_ROOT/scripts/lib/session_record.py" \
     CLAUDE_SESSION_RECORD_PYTHON="$REPO_ROOT/.venv/bin/python" \
+    SESSION_BOUNDED_RUNNER="$REPO_ROOT/scripts/agent_runtime/bounded_command.py" \
     CLAUDEX_SUPERVISOR_SCRIPT="$REPO_ROOT/scripts/orchestration/claudex_supervisor.py" \
     CLAUDEX_SUPERVISOR_PYTHON="$REPO_ROOT/.venv/bin/python" \
     THREAD_ROLLOVER_PYTHON="$REPO_ROOT/.venv/bin/python" \
@@ -216,6 +217,7 @@ run_post_compact() {
     CLAUDE_PROJECT_DIR="$root" SESSION_HANDOFF_AGENT="codex" CODEX_CANONICAL_REPO_ROOT="$root" \
     THREAD_ROLLOVER_PYTHON="$REPO_ROOT/.venv/bin/python" \
     THREAD_ROLLOVER_SCRIPT="$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    SESSION_BOUNDED_RUNNER="$REPO_ROOT/scripts/agent_runtime/bounded_command.py" \
     "$POST_COMPACT_HOOK"
 }
 
@@ -372,8 +374,7 @@ assert_contains "$output" "Thread handoff: .agent/claude-infra-thread-handoff.md
 assert_not_contains "$output" "Thread handoff: .agent/claude-thread-handoff.md" "infra lane isolation"
 assert_not_contains "$output" "WARN:" "infra lane isolation"
 
-# 9. Research-registry strict-adoption gate (ADR-011 P4, PR #4998 review):
-#    a fresh stream-audit cache plus a failing gate must surface an ISSUES entry.
+# 9. Optional governance diagnostics are deferred from synchronous startup.
 setup_fixture "$fixture_root"
 mkdir -p "$fixture_root/scripts/audit" "$fixture_root/scripts/orchestration" "$fixture_root/docs/references" "$fixture_root/batch_state"
 printf '# stub\n' > "$fixture_root/scripts/audit/check_research_registry.py"
@@ -385,25 +386,11 @@ export STRICT_GATE_FAKE_JSON='{"ok": false, "errors": ["demo-record: consumer is
 export STRICT_GATE_FAKE_EXIT=2
 output="$(run_hook "$fixture_root")"
 unset STRICT_GATE_FAKE_JSON STRICT_GATE_FAKE_EXIT
-assert_contains "$output" "Research registry strict-adoption gate FAILED" "strict gate wired"
-assert_contains "$output" "demo-record: consumer issue 999 did not resolve" "strict gate wired"
+assert_not_contains "$output" "Research registry strict-adoption gate FAILED" "strict gate deferred"
+assert_not_contains "$output" "demo-record: consumer issue 999 did not resolve" "strict gate deferred"
+assert_contains "$output" "Orientation diagnostics:" "strict gate deferred"
 
-# 10. A passing strict-adoption gate must remain silent on success.
-setup_fixture "$fixture_root"
-mkdir -p "$fixture_root/scripts/audit" "$fixture_root/scripts/orchestration" "$fixture_root/docs/references" "$fixture_root/batch_state"
-printf '# stub\n' > "$fixture_root/scripts/audit/check_research_registry.py"
-printf '# stub\n' > "$fixture_root/scripts/orchestration/issue_stream_audit.py"
-printf 'records: []\n' > "$fixture_root/docs/references/research-registry.yaml"
-printf '{"generated_at": %s, "orphans": [], "closed_or_missing_epics": []}\n' \
-  "$(date +%s)" > "$fixture_root/batch_state/issue_stream_audit.json"
-export STRICT_GATE_FAKE_JSON='{"ok": true, "errors": [], "drift": [], "cache": "fresh"}'
-export STRICT_GATE_FAKE_EXIT=0
-output="$(run_hook "$fixture_root")"
-unset STRICT_GATE_FAKE_JSON STRICT_GATE_FAKE_EXIT
-assert_not_contains "$output" "Research registry strict-adoption gate FAILED" "strict gate passing"
-assert_not_contains "$output" "WARN:" "strict gate passing"
-
-# 11. Engine-generated pending packet is authoritative.
+# 10. Engine-generated pending packet is authoritative.
 setup_fixture "$fixture_root"
 prepare_fixture "$fixture_root" claude old-thread
 output="$(run_hook "$fixture_root")"
@@ -440,7 +427,8 @@ setup_fixture "$fixture_root"
 prepare_fixture "$fixture_root" codex old-a
 prepare_fixture "$fixture_root" codex old-b
 output="$(run_hook "$fixture_root" 0 codex)"
-assert_contains "$output" "Multiple live pending rollovers found for agent codex" "ambiguous packet"
+assert_contains "$output" "MULTIPLE LIVE PENDING ROLLOVERS for agent \`codex\`" "ambiguous packet"
+assert_contains "$output" "Candidate count: 2." "ambiguous packet"
 
 # 15. Resumed packet for current thread allowed; mismatch blocks.
 setup_fixture "$fixture_root"
