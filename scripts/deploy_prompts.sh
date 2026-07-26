@@ -424,6 +424,19 @@ rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_
 # retired paths which an earlier deploy recorded, preserving all other runtime
 # scratch even when it shares a source directory such as prompts/. #4741
 reap_retired_shared_agent_paths
+# Review finding P1: the reap is fd-bound, but this rsync is PATH-based, so a
+# symlinked `.agent` redirects deploy WRITES outside the repository. Check as late
+# as possible — immediately before the write, not once at the top.
+#
+# HONEST LIMIT: this narrows the window, it does not eliminate it. rsync takes a
+# path, not a file descriptor, so a swap between this test and the rsync below is
+# still theoretically possible. Closing it fully means replacing rsync for this
+# target. Documented rather than glossed: the reap (the DESTRUCTIVE half) is fully
+# fd-bound; this overlay (the WRITE half) is best-effort.
+if [[ -e .agent || -L .agent ]] && { [[ -L .agent ]] || [[ ! -d .agent ]]; }; then
+    echo "Error: refusing to deploy into .agent — it exists but is not a real directory." >&2
+    exit 1
+fi
 rsync -av "$SHARED_EXTENSIONS/" .agent/
 write_shared_agent_manifest
 # shellcheck disable=SC2046

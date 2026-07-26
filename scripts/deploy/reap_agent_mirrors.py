@@ -116,16 +116,24 @@ def _walk_to_parent(agent_root: str, parts: list[str]) -> tuple[int, list[int]]:
     """
     opened: list[int] = []
     try:
-        fd = _open_dir_nofollow(None, agent_root)
-    except OSError as exc:
-        raise ComponentRefused(agent_root, _classify_component(None, agent_root)) from exc
-    opened.append(fd)
-    for component in parts[:-1]:
         try:
-            fd = _open_dir_nofollow(fd, component)
+            fd = _open_dir_nofollow(None, agent_root)
         except OSError as exc:
-            raise ComponentRefused(component, _classify_component(fd, component)) from exc
+            raise ComponentRefused(agent_root, _classify_component(None, agent_root)) from exc
         opened.append(fd)
+        for component in parts[:-1]:
+            try:
+                fd = _open_dir_nofollow(fd, component)
+            except OSError as exc:
+                raise ComponentRefused(component, _classify_component(fd, component)) from exc
+            opened.append(fd)
+    except BaseException:
+        # Review finding P2: this list is LOCAL. When we raise, the caller's own
+        # `opened` was never assigned, so it closed nothing and every refused entry
+        # leaked one directory fd — a corrupt manifest could exhaust the table and
+        # deny the reap entirely. Close our own fds before propagating.
+        _close_all(opened)
+        raise
     return fd, opened
 
 
@@ -157,10 +165,12 @@ def reap_entry(agent_root: str, kind: str, relative: str) -> tuple[bool, str]:
     try:
         parent_fd, opened = _walk_to_parent(agent_root, parts)
     except ComponentRefused as exc:
-        _close_all(opened)
+        # No _close_all here: on failure `opened` was never assigned, so it is still
+        # empty and closing it did nothing — that WAS the leak (P2). _walk_to_parent
+        # now closes its own fds before propagating. Closing a stale number here
+        # would risk closing an unrelated fd that reused it.
         return False, f"  .agent: {unsafe}: {exc.reason} '{exc.component}'"
     except OSError as exc:
-        _close_all(opened)
         return False, f"  .agent: {_describe(exc, relative)}"
 
     try:
@@ -209,20 +219,33 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--source-root", required=True)
     args = parser.parse_args(argv)
 
+    agent_root = args.agent_root
+    # Validate the mirror root FIRST — before the missing-manifest early return.
+    # Review finding P1: with the check after that return, a first run (no manifest
+    # yet) exited 0 having never looked at the root at all, and deploy_prompts.sh
+    # then runs a path-based `rsync` into `.agent/`. A symlinked root therefore
+    # redirected deploy WRITES outside the repository. Validating here means the
+    # helper refuses loudly on every path through it, first run included.
+    # Distinguish ABSENT from REDIRECTED. On a first deploy `.agent` does not exist
+    # yet and rsync creates it — refusing there breaks every clean install (caught by
+    # the existing suite when I first wrote this check as `not isdir`). What must be
+    # refused is a root that EXISTS but is not a real directory, which is the actual
+    # redirect.
+    if os.path.lexists(agent_root):
+        if os.path.islink(agent_root) or not os.path.isdir(agent_root):
+            print(
+                f"  .agent: refusing manifest reap: '{agent_root}' is not a real directory",
+                file=sys.stderr,
+            )
+            return 1
+    else:
+        # Nothing deployed yet, so nothing to reap. rsync will create a real directory.
+        return 0
+
     manifest = Path(args.manifest)
     if not manifest.is_file():
         print("  .agent: no deploy manifest yet; preserving all existing paths during migration")
         return 0
-
-    agent_root = args.agent_root
-    # Refuse outright if the mirror root is not a real directory: a symlinked
-    # .agent would make every subsequent operation land somewhere else.
-    if os.path.islink(agent_root) or not os.path.isdir(agent_root):
-        print(
-            f"  .agent: refusing manifest reap: '{agent_root}' is not a real directory",
-            file=sys.stderr,
-        )
-        return 1
 
     source_root = Path(args.source_root)
     files: list[tuple[str, str]] = []
@@ -247,18 +270,39 @@ def main(argv: list[str]) -> int:
             continue
         (dirs if kind == "d" else files).append((kind, relative))
 
-    failed = False
-    for kind, relative in files:
-        removed, message = reap_entry(agent_root, kind, relative)
+    # Review finding P2: `failed` was declared and never assigned — a flag that
+    # cannot fire, so the exit code claimed success unconditionally. Deliberate
+    # semantics now, stated rather than implied:
+    #   REFUSING an entry is the SAFE outcome (we preserved a file we were unsure
+    #   about) and must NOT fail deploy — a symlink an agent legitimately left in
+    #   .agent/ would otherwise block every deploy.
+    #   An UNEXPECTED internal error is different: it means the reap did not do what
+    #   it was asked, and a silently-skipped reap is a false-green.
+    refused = 0
+    errored = 0
+
+    def _run(kind: str, relative: str) -> None:
+        nonlocal refused, errored
+        try:
+            removed, message = reap_entry(agent_root, kind, relative)
+        except Exception as exc:  # broad on purpose: one bad entry must not abort the reap
+            errored += 1
+            print(f"  .agent: internal error reaping '{relative}': {exc}", file=sys.stderr)
+            return
         if message:
             print(message, file=sys.stdout if removed else sys.stderr)
+        if not removed and message:
+            refused += 1
+
+    for kind, relative in files:
+        _run(kind, relative)
     # Deepest first, so a parent becomes empty only after its children are gone.
     for kind, relative in sorted(dirs, key=lambda item: item[1].count("/"), reverse=True):
-        removed, message = reap_entry(agent_root, kind, relative)
-        if message:
-            print(message, file=sys.stdout if removed else sys.stderr)
+        _run(kind, relative)
 
-    return 1 if failed else 0
+    if refused:
+        print(f"  .agent: {refused} manifest entry(ies) refused and preserved", file=sys.stderr)
+    return 1 if errored else 0
 
 
 if __name__ == "__main__":

@@ -153,3 +153,76 @@ def test_non_empty_directory_is_preserved(tmp_path: Path) -> None:
 @pytest.mark.parametrize("relative", ["../outside/victim.txt", "/etc/passwd", "a/../../b", ""])
 def test_lexically_unsafe_entries_refused(relative: str) -> None:
     assert reaper.path_is_lexically_safe(relative) is False
+
+
+def _open_fd_count() -> int:
+    """Best-effort open-fd count; the leak assertion needs a delta, not a total."""
+    return len(os.listdir("/dev/fd")) if os.path.isdir("/dev/fd") else -1
+
+
+def test_missing_manifest_still_validates_the_root_first(tmp_path: Path, capsys) -> None:
+    """Review P1: the root check must run BEFORE the missing-manifest early return.
+
+    With the old ordering a first run exited 0 without ever looking at the root, and
+    deploy_prompts.sh then rsynced into `.agent/` by path — so a symlinked root
+    redirected deploy WRITES outside the repo.
+    """
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    link_root = tmp_path / "agent-link"
+    link_root.symlink_to(outside, target_is_directory=True)
+
+    rc = reaper.main(
+        [
+            "--agent-root", str(link_root),
+            "--manifest", str(tmp_path / "does-not-exist.manifest"),
+            "--source-root", str(tmp_path / "src"),
+        ]
+    )
+
+    assert rc == 1, "a symlinked root must be refused even when no manifest exists yet"
+    err = capsys.readouterr().err
+    assert "not a real directory" in err
+    assert "preserving all existing paths during migration" not in err
+
+
+def test_refused_entries_do_not_leak_directory_fds(tmp_path: Path) -> None:
+    """Review P2: a corrupt manifest could exhaust the fd table and deny the reap."""
+    agent, _inner, _external = _fixture(tmp_path)
+
+    before = _open_fd_count()
+    outcomes = [
+        reaper.reap_entry(str(agent), "f", "NONEXISTENT_COMPONENT/victim.txt")[0]
+        for _ in range(8)
+    ]
+    after = _open_fd_count()
+
+    assert outcomes == [False] * 8
+    if before >= 0:
+        assert after - before == 0, f"leaked {after - before} fds across 8 refused entries"
+
+
+def test_internal_error_is_reported_and_fails_loudly(tmp_path: Path, monkeypatch, capsys) -> None:
+    """A silently-skipped reap is a false-green, so real errors must set the exit code.
+
+    Refusals deliberately do NOT fail deploy — preserving a file we were unsure about
+    is the safe outcome, and a symlink an agent legitimately left in .agent/ must not
+    block every deploy.
+    """
+    agent, inner, _external = _fixture(tmp_path)
+    manifest = tmp_path / "m.manifest"
+    manifest.write_text("f\tsub/victim.txt\n", encoding="utf-8")
+    src = tmp_path / "src"
+    src.mkdir()
+
+    def boom(*_args, **_kwargs):
+        raise RuntimeError("synthetic internal failure")
+
+    monkeypatch.setattr(reaper, "reap_entry", boom)
+    rc = reaper.main(
+        ["--agent-root", str(agent), "--manifest", str(manifest), "--source-root", str(src)]
+    )
+
+    assert rc == 1, "an internal error must not report success"
+    assert "internal error" in capsys.readouterr().err
+    assert inner.exists(), "the entry must be left alone when the reap errored"
