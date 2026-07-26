@@ -234,70 +234,22 @@ def check_guard() -> None:
 
 
 def install_hooks() -> None:
-    """Install the primary write guard logic into local git hooks."""
+    """Delegate hook installation to the repository's tracked hook installer."""
     main_root = check_primary_checkout_root(hook_mode=False)
-    hooks_dir = main_root / ".git" / "hooks"
-
-    if not hooks_dir.exists():
-        try:
-            hooks_dir.mkdir(parents=True, exist_ok=True)
-        except OSError as e:
-            print(f"Error creating hooks directory: {e}", file=sys.stderr)
-            sys.exit(1)
-
-    # post-merge: re-apply write-bit guard after pull/merge (review #5399).
-    # post-checkout: heal detached/wrong-branch primary back to main (#4857).
-    fragments: list[tuple[str, str, str]] = [
-        (
-            "post-merge",
-            "AGY_PRIMARY_WRITE_GUARD_START",
-            "\n# AGY_PRIMARY_WRITE_GUARD_START\n"
-            'if [ -f "scripts/guardrails/primary_write_guard.py" ]; then\n'
-            "    python3 scripts/guardrails/primary_write_guard.py apply --hook\n"
-            "fi\n"
-            "# AGY_PRIMARY_WRITE_GUARD_END\n",
-        ),
-        (
-            "post-checkout",
-            "AGY_PRIMARY_STAY_ON_MAIN_START",
-            "\n# AGY_PRIMARY_STAY_ON_MAIN_START\n"
-            'if [ -f "scripts/guardrails/primary_post_checkout_heal.sh" ]; then\n'
-            '    sh "scripts/guardrails/primary_post_checkout_heal.sh" "$@"\n'
-            "fi\n"
-            "# AGY_PRIMARY_STAY_ON_MAIN_END\n",
-        ),
-    ]
-
-    for hook_name, marker, hook_command in fragments:
-        hook_path = hooks_dir / hook_name
-        content = ""
-        if hook_path.exists():
-            try:
-                content = hook_path.read_text(encoding="utf-8")
-            except OSError as e:
-                print(f"Error reading existing hook {hook_name}: {e}", file=sys.stderr)
-                sys.exit(1)
-
-        if marker in content:
-            print(f"Hook '{hook_name}' already has {marker} installed.")
-            continue
-
-        new_content = content
-        if not new_content:
-            new_content = "#!/bin/sh\n"
-        elif not new_content.endswith("\n"):
-            new_content += "\n"
-
-        new_content += hook_command
-
-        try:
-            hook_path.write_text(new_content, encoding="utf-8")
-            current_mode = hook_path.stat().st_mode
-            hook_path.chmod(current_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
-            print(f"Successfully installed primary guard fragment in hook '{hook_name}'.")
-        except OSError as e:
-            print(f"Error writing hook {hook_name}: {e}", file=sys.stderr)
-            sys.exit(1)
+    installer = main_root / "scripts" / "install_git_hooks.sh"
+    if not installer.is_file():
+        print(f"Tracked Git hook installer not found at {installer}", file=sys.stderr)
+        sys.exit(1)
+    try:
+        subprocess.run(
+            ["bash", str(installer)],
+            cwd=main_root,
+            check=True,
+            env=sanitized_git_env(),
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        print(f"Failed to install tracked Git hooks: {exc}", file=sys.stderr)
+        sys.exit(1)
 
 
 def main() -> None:

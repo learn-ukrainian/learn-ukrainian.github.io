@@ -5,8 +5,7 @@
 # or on a non-main branch, heal immediately and warn. Added worktrees are
 # ignored (feature branches are expected there).
 #
-# Install via: .venv/bin/python scripts/guardrails/assert_primary_on_main.py
-# (or the primary_write_guard install-hooks path). Safe to re-run.
+# Install via scripts/install_git_hooks.sh. Safe to re-run.
 
 set -euo pipefail
 
@@ -34,7 +33,15 @@ fi
 
 PY="${ROOT}/.venv/bin/python"
 if [ ! -x "$PY" ]; then
-  PY="python3"
+  GIT_COMMON="$(git rev-parse --git-common-dir)"
+  if [[ "$GIT_COMMON" != /* ]]; then
+    GIT_COMMON="$ROOT/$GIT_COMMON"
+  fi
+  PY="$(cd "$GIT_COMMON/.." && pwd)/.venv/bin/python"
+fi
+if [ ! -x "$PY" ]; then
+  echo "WARNING: primary-on-main heal skipped; project .venv/bin/python is unavailable." >&2
+  exit 0
 fi
 
 # Heal quietly if broken; always allow the checkout to complete (we already moved).
