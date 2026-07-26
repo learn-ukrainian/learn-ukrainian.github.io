@@ -54,6 +54,11 @@ def _copy_repo_subset(target: Path) -> None:
         DEPLOY_SCRIPT,
         CHECK_SCRIPT,
         ORPHAN_PATHS_FILE,
+        # deploy_prompts.sh delegates the .agent reap to this helper (fd-bound
+        # deletion, see scripts/deploy/reap_agent_mirrors.py). The fixture must
+        # mirror every file the script actually invokes, or deploy exits non-zero
+        # here for a reason that has nothing to do with the behaviour under test.
+        Path("scripts/deploy/reap_agent_mirrors.py"),
         Path("scripts/lint_prompts.py"),
         Path("scripts/lint/lint_prompts.py"),
         Path("scripts/lint/lint_agent_skills.py"),
