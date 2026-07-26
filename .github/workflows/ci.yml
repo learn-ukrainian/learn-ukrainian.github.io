@@ -551,9 +551,13 @@ jobs:
         working-directory: site
         run: npm run build
 
-      - name: Run vitest (unit + build quality gate)
+      - name: Run vitest unit tests
         working-directory: site
-        run: npm test
+        run: npm run test:unit
+
+      - name: Run built-output quality gates
+        working-directory: site
+        run: npm run test:built-output
 
   # ---------------------------------------------------------------------
   # frontend-e2e — built, but intentionally NOT in ci-gate.needs. It has a

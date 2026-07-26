@@ -59,9 +59,11 @@ Run from `starlight/`:
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
 | `npm install`             | Install dependencies                             |
-| `npm run dev`             | Local dev server on `http://localhost:4321`      |
-| `npm run build`           | Build production site to `./dist/`               |
+| `npm run dev`             | Node-only dev server on `http://localhost:4321`  |
+| `npm run build`           | Hydrate and build the production publisher site  |
+| `npm run build:shell`     | Build the client shell from committed artifacts  |
 | `npm run preview`         | Preview built site locally                       |
+| `npm test`                | Run unit tests and built-output quality gates    |
 | `npm run astro check`     | Type-check MDX + content collections             |
 
 The `services.sh start` helper in the repo root launches `npm run dev` in
