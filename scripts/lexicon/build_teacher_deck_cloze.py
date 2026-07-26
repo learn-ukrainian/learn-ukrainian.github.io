@@ -111,7 +111,7 @@ def main():
                 "blankCase": "context",
                 "caseRule": {
                     "code": "teacher-lesson",
-                    "labelUk": "Уроки вчителя",
+                    "labelUk": "Відібрана добірка",
                     "labelEn": "Teacher Lesson Context",
                     "caseLabel": "знахідний",
                 },
