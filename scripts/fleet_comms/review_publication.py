@@ -357,10 +357,6 @@ def resolve_verdict_and_evidence(payload: Mapping[str, Any]) -> tuple[str, Revie
         if evidence is not None
         else _verdict_from_degenerate_evidence(payload)
     )
-    if derived is None:
-        raise ReviewPublicationError(
-            "review_evidence_invalid: no verdict can be derived from degenerate evidence"
-        )
     if explicit is not None and explicit != derived:
         raise ReviewPublicationError(
             f"review_evidence_verdict_mismatch: verdict={explicit} evidence={derived}"
