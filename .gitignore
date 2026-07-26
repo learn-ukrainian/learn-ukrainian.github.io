@@ -125,6 +125,9 @@ temp/
 *.yml.orig
 .venv/
 .agent/
+# Local state owned by scripts/deploy_prompts.sh. It records which shared files
+# deploy placed in .agent/ so only those paths can be reaped on a later deploy.
+.deploy-state/
 # deploy target (rsync'd from agents_extensions/shared/skills); like .claude/.codex/.agent
 .agents/
 # Temporary/sample images in docs (textbook screenshots, vision test outputs)

@@ -12,6 +12,7 @@ PROJECT_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 DEPLOY_SCRIPT = Path("scripts/deploy_prompts.sh")
 CHECK_SCRIPT = Path("scripts/check_rules_deployment.sh")
 ORPHAN_PATHS_FILE = Path("scripts/deploy_orphan_paths.sh")
+AGENT_DEPLOY_MANIFEST = Path(".deploy-state/shared-to-agent.manifest")
 ORPHAN_PATH_VARS = (
     "ORPHAN_PATHS_CLAUDE",
     "ORPHAN_PATHS_AGENT",  # kept for compat (empty; .agent/ preserve-by-default)
@@ -102,6 +103,33 @@ def _run_command(repo: Path, command: list[str]) -> subprocess.CompletedProcess[
     )
 
 
+def _init_git_history(repo: Path) -> None:
+    """Create the source history used to verify legacy deploy artifacts."""
+    for command in (
+        ["git", "init", "-q"],
+        ["git", "config", "user.email", "deploy-test@example.invalid"],
+        ["git", "config", "user.name", "Deploy test"],
+        ["git", "add", "-A"],
+        ["git", "commit", "-qm", "seed deploy source"],
+    ):
+        result = _run_command(repo, command)
+        assert result.returncode == 0, result.stderr
+
+
+def _delete_source_file(repo: Path, relative: Path) -> bytes:
+    """Delete a tracked source file and commit the deletion for a deploy test."""
+    source = repo / "agents_extensions" / "shared" / relative
+    original = source.read_bytes()
+    source.unlink()
+    for command in (
+        ["git", "add", "-A"],
+        ["git", "commit", "-qm", f"retire {relative.name}"],
+    ):
+        result = _run_command(repo, command)
+        assert result.returncode == 0, result.stderr
+    return original
+
+
 def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
     """A clean checkout should deploy successfully and pass drift checks."""
     repo = _init_checkout(tmp_path)
@@ -151,6 +179,70 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
     assert codex_hooks_diff.returncode == 0, (
         f"Codex hooks drift after fresh deploy:\nstdout: {codex_hooks_diff.stdout}\nstderr: {codex_hooks_diff.stderr}"
     )
+
+
+def test_agent_manifest_reaps_retired_hook_without_touching_agent_state(tmp_path: Path) -> None:
+    """A recorded hook is reaped; unrecorded .agent runtime paths survive."""
+    repo = _init_checkout(tmp_path)
+    _init_git_history(repo)
+    retired = Path("hooks/auto-audit.sh")
+
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stderr
+    assert (repo / AGENT_DEPLOY_MANIFEST).is_file()
+
+    agent_prompt = repo / ".agent/prompts/agent-written.md"
+    rollover = repo / ".agent/thread-rollovers/x/handoff.md"
+    runtime_tmp = repo / ".agent/tmp/y"
+    for path, contents in (
+        (agent_prompt, "agent-owned prompt\n"),
+        (rollover, "agent-owned handoff\n"),
+        (runtime_tmp, "agent-owned scratch\n"),
+    ):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(contents, encoding="utf-8")
+
+    _delete_source_file(repo, retired)
+    deploy = _run(repo, DEPLOY_SCRIPT)
+
+    assert deploy.returncode == 0, deploy.stderr
+    assert "removed retired deploy artifact 'hooks/auto-audit.sh'" in deploy.stdout
+    assert not (repo / ".agent" / retired).exists()
+    assert not (repo / ".claude" / retired).exists()
+    assert not (repo / ".codex" / retired).exists()
+    assert agent_prompt.read_text(encoding="utf-8") == "agent-owned prompt\n"
+    assert rollover.read_text(encoding="utf-8") == "agent-owned handoff\n"
+    assert runtime_tmp.read_text(encoding="utf-8") == "agent-owned scratch\n"
+
+
+def test_agent_manifest_migration_defers_reaping_verified_legacy_artifact(tmp_path: Path) -> None:
+    """The first manifest deploy preserves legacy output; the next one reaps it."""
+    repo = _init_checkout(tmp_path)
+    _init_git_history(repo)
+    retired = Path("hooks/auto-audit.sh")
+    original = _delete_source_file(repo, retired)
+
+    stale_target = repo / ".agent" / retired
+    agent_owned = repo / ".agent/hooks/custom-agent-hook.sh"
+    stale_target.parent.mkdir(parents=True)
+    stale_target.write_bytes(original)
+    agent_owned.write_text("agent-owned hook\n", encoding="utf-8")
+    assert not (repo / AGENT_DEPLOY_MANIFEST).exists()
+
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stderr
+    assert "no deploy manifest yet; preserving all existing paths during migration" in first.stdout
+    assert stale_target.read_bytes() == original
+    manifest = (repo / AGENT_DEPLOY_MANIFEST).read_text(encoding="utf-8")
+    assert "f\thooks/auto-audit.sh" in manifest
+    assert "custom-agent-hook.sh" not in manifest
+    assert agent_owned.read_text(encoding="utf-8") == "agent-owned hook\n"
+
+    second = _run(repo, DEPLOY_SCRIPT)
+    assert second.returncode == 0, second.stderr
+    assert "removed retired deploy artifact 'hooks/auto-audit.sh'" in second.stdout
+    assert not stale_target.exists()
+    assert agent_owned.read_text(encoding="utf-8") == "agent-owned hook\n"
 
 
 def test_curriculum_preparation_documents_canonical_helper_paths() -> None:

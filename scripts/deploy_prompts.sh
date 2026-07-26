@@ -10,11 +10,12 @@
 # deploy, so we exclude them explicitly.
 #
 # .agent/ is special (preserve-by-default since #4741): runtime scratch
-# written by agents (handoffs, dispatch-briefs, canaries, tmp/, etc.)
-# must never be deleted by deploy. We overlay the complete source tree without
-# --delete, then delete only within the source-managed entries that currently
-# exist under agents_extensions/shared/. This makes a retired hook/rule/skill
-# stop executing without touching agent-owned runtime scratch.
+# written by agents (handoffs, dispatch-briefs, canaries, tmp/, etc.) must
+# never be deleted by deploy. A deploy-owned manifest records exactly the
+# source paths previously copied there. On a later deploy, only paths in that
+# manifest which have disappeared from source may be reaped. This propagates
+# retired hooks without treating a colliding namespace (such as prompts/) as
+# wholly deploy-owned.
 #
 # For other targets, if you add a destination-only path, add it to
 # ORPHAN_PATHS_<TARGET> in scripts/deploy_orphan_paths.sh.
@@ -29,6 +30,8 @@ source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"
 AGENT_EXTENSIONS_ROOT="agents_extensions"
 SHARED_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/shared"
 CODEX_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/codex"
+DEPLOY_STATE_DIR="${DEPLOY_STATE_DIR:-$PROJECT_ROOT/.deploy-state}"
+AGENT_SHARED_MANIFEST="$DEPLOY_STATE_DIR/shared-to-agent.manifest"
 
 DRY_RUN=false
 if [[ "${1:-}" == "--dry-run" ]]; then
@@ -53,22 +56,123 @@ build_shared_skill_overlay_excludes() {
     done
 }
 
-# .agent/ contains both deployed definitions and live runtime state. Its
-# source-managed boundary is deliberately derived from the source tree, not a
-# hard-coded list: every current top-level directory (and top-level file) in
-# agents_extensions/shared is a mirror where source deletions must propagate.
-# Everything else in .agent/ remains preserve-by-default (#4741).
-sync_shared_agent_mirrors() {
-    local shared_entry entry_name
-    for shared_entry in "$SHARED_EXTENSIONS"/*; do
-        [[ -e "$shared_entry" ]] || continue
-        entry_name="$(basename "$shared_entry")"
-        if [[ -d "$shared_entry" ]]; then
-            rsync -av --delete "$shared_entry/" ".agent/$entry_name/"
-        else
-            rsync -av --delete "$shared_entry" ".agent/$entry_name"
-        fi
+# A manifest entry is TYPE<TAB>PATH, where TYPE is d, f, or l.  Paths are
+# source-controlled, but validate persisted entries before acting on them so a
+# corrupt local state file can never escape .agent/.
+agent_manifest_path_is_safe() {
+    local path="$1"
+    [[ -n "$path" && "$path" != /* && "$path" != *$'\n'* && "$path" != *$'\t'* ]] || return 1
+    case "/$path/" in
+        *"//"*|*"/./"*|*"/../"*) return 1 ;;
+    esac
+}
+
+shared_source_path_exists() {
+    local relative="$1"
+    [[ -e "$SHARED_EXTENSIONS/$relative" || -L "$SHARED_EXTENSIONS/$relative" ]]
+}
+
+write_current_shared_agent_paths() {
+    local kind
+    for kind in d f l; do
+        (
+            cd "$SHARED_EXTENSIONS"
+            find . -mindepth 1 -type "$kind" -print
+        ) | while IFS= read -r path; do
+            agent_manifest_path_is_safe "${path#./}" || {
+                echo "Cannot record unsafe shared source path: $path" >&2
+                exit 1
+            }
+            printf '%s\t%s\n' "$kind" "${path#./}"
+        done
     done
+}
+
+# Before this manifest existed, the only safe legacy paths to adopt are files
+# whose bytes still match the last tracked source version deleted from Git.
+# This lets the migration reap an old deployed hook on the *next* deploy while
+# refusing to claim arbitrary .agent/ scratch as deploy-owned.
+legacy_agent_file_matches_deleted_source() {
+    local relative="$1" destination="$2" deletion_commit
+    [[ -f "$destination" && ! -L "$destination" ]] || return 1
+    git rev-parse --git-dir >/dev/null 2>&1 || return 1
+    deletion_commit="$(git log --diff-filter=D --format=%H -1 -- "$SHARED_EXTENSIONS/$relative" 2>/dev/null)"
+    [[ -n "$deletion_commit" ]] || return 1
+    git show "$deletion_commit^:$SHARED_EXTENSIONS/$relative" 2>/dev/null | cmp -s - "$destination"
+}
+
+write_legacy_shared_agent_paths() {
+    local source_path relative
+    git rev-parse --git-dir >/dev/null 2>&1 || return 0
+    git log -z --diff-filter=D --name-only --format= -- "$SHARED_EXTENSIONS" 2>/dev/null \
+        | while IFS= read -r -d '' source_path; do
+            case "$source_path" in
+                "$SHARED_EXTENSIONS"/*) relative="${source_path#"$SHARED_EXTENSIONS/"}" ;;
+                *) continue ;;
+            esac
+            agent_manifest_path_is_safe "$relative" || continue
+            shared_source_path_exists "$relative" && continue
+            if legacy_agent_file_matches_deleted_source "$relative" ".agent/$relative"; then
+                printf 'f\t%s\n' "$relative"
+            fi
+        done
+}
+
+write_shared_agent_manifest() {
+    local manifest_tmp
+    mkdir -p "$DEPLOY_STATE_DIR"
+    manifest_tmp="$(mktemp "$DEPLOY_STATE_DIR/shared-to-agent.manifest.XXXXXX")"
+    write_current_shared_agent_paths >"$manifest_tmp"
+    if [[ ! -f "$AGENT_SHARED_MANIFEST" ]]; then
+        write_legacy_shared_agent_paths >>"$manifest_tmp"
+    fi
+    sort -u "$manifest_tmp" -o "$manifest_tmp"
+    mv "$manifest_tmp" "$AGENT_SHARED_MANIFEST"
+}
+
+reap_retired_shared_agent_paths() {
+    local kind relative
+    local -a stale_dirs=()
+    [[ -f "$AGENT_SHARED_MANIFEST" ]] || {
+        echo "  .agent: no deploy manifest yet; preserving all existing paths during migration"
+        return 0
+    }
+
+    while IFS=$'\t' read -r kind relative || [[ -n "$kind" ]]; do
+        if [[ "$kind" != d && "$kind" != f && "$kind" != l ]] \
+            || ! agent_manifest_path_is_safe "$relative"; then
+            echo "  .agent: ignoring unsafe manifest entry '$kind $relative'" >&2
+            continue
+        fi
+        shared_source_path_exists "$relative" && continue
+        case "$kind" in
+            f)
+                if [[ -f ".agent/$relative" && ! -L ".agent/$relative" ]]; then
+                    rm -f -- ".agent/$relative"
+                    echo "  .agent: removed retired deploy artifact '$relative'"
+                fi
+                ;;
+            l)
+                if [[ -L ".agent/$relative" ]]; then
+                    rm -f -- ".agent/$relative"
+                    echo "  .agent: removed retired deploy artifact '$relative'"
+                fi
+                ;;
+            d)
+                if [[ -d ".agent/$relative" && ! -L ".agent/$relative" ]]; then
+                    stale_dirs+=("$relative")
+                fi
+                ;;
+        esac
+    done <"$AGENT_SHARED_MANIFEST"
+
+    if (( ${#stale_dirs[@]} > 0 )); then
+        printf '%s\n' "${stale_dirs[@]}" | sort -r | while IFS= read -r relative; do
+            if rmdir -- ".agent/$relative" 2>/dev/null; then
+                echo "  .agent: removed retired deploy directory '$relative'"
+            fi
+        done
+    fi
 }
 
 remove_claude_autoload_rules() {
@@ -337,11 +441,12 @@ fi
 echo "=== Syncing ==="
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "$SHARED_EXTENSIONS/" .claude/
-# .agent/ overlays the whole source without --delete, preserving runtime scratch.
-# Then source-managed entries are individually mirrored with --delete so retired
-# definitions (for example hooks/auto-audit.sh) cannot remain executable. #4741
+# .agent/ overlays source without --delete. A deploy-owned manifest reaps only
+# retired paths which an earlier deploy recorded, preserving all other runtime
+# scratch even when it shares a source directory such as prompts/. #4741
+reap_retired_shared_agent_paths
 rsync -av "$SHARED_EXTENSIONS/" .agent/
-sync_shared_agent_mirrors
+write_shared_agent_manifest
 # shellcheck disable=SC2046
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS") "$SHARED_EXTENSIONS/" .codex/
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
