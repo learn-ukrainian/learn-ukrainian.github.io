@@ -30,10 +30,19 @@ Re-verified against the current OpenAI Codex Hooks reference on 2026-07-26:
 
 The Codex manifest therefore sends each tool event through one tracked,
 deterministic entry point:
-`scripts/agent_runtime/codex_hook_entry.sh`. `PreToolUse` policy checks run
-sequentially in a fixed order; `PostToolUse` telemetry and pytest stamping do
-the same. This removes the prior seven-process Bash fan-out and the unsupported
-failure-event duplicate.
+`scripts/agent_runtime/codex_hook_entry.sh`. `PreToolUse` local policy checks
+run sequentially with their former 3–5 second individual deadlines. The two
+independent, network-backed merge guards run concurrently with separate
+30-second deadlines, and their results are emitted in a fixed order.
+`PostToolUse` telemetry and pytest stamping run sequentially. This removes the
+prior seven-process Bash fan-out and the unsupported failure-event duplicate
+without letting one slow merge guard starve the other.
+
+`codex_hook_policy.py` converts an individual guard timeout into exit code `2`
+with a concrete reason. Per the Codex `PreToolUse` contract, exit `2` blocks the
+tool call; a timeout therefore fails closed. The manifest's 55-second outer
+timeout remains a last-resort ceiling above the local-chain plus concurrent
+network-guard budgets.
 
 The entry point resolves the exact tool worktree from structured hook input and
 the canonical checkout from Git's common directory. Python policies use the

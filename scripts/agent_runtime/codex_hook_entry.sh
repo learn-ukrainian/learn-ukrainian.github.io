@@ -36,15 +36,6 @@ fi
 
 PYTHON_BIN="$CANONICAL_ROOT/.venv/bin/python"
 
-run_python_guard() {
-  local guard="$1"
-  local rc
-
-  printf '%s' "$PAYLOAD" | "$PYTHON_BIN" "$HOOKS_DIR/$guard"
-  rc=${PIPESTATUS[1]}
-  [ "$rc" -eq 0 ] || exit "$rc"
-}
-
 case "$MODE" in
   pre-tool-use)
     if [ ! -x "$PYTHON_BIN" ]; then
@@ -62,19 +53,14 @@ case "$MODE" in
       rewrite_rc=$?
       [ "$rewrite_rc" -eq 0 ] || exit "$rewrite_rc"
 
-      # Preserve the former Bash-only scope for shell and merge guards.
-      run_python_guard "heal-core-bare.py"
-      run_python_guard "guard-branch-switch-in-main.py"
-      run_python_guard "guard-secret-print.py"
     fi
 
-    # Structured edit tools need only the primary-checkout containment guard.
-    run_python_guard "guard-primary-checkout-write.py"
-
-    if [ "$TOOL_NAME" = "Bash" ]; then
-      run_python_guard "guard-admin-merge.py"
-      run_python_guard "guard-pr-merge.py"
-    fi
+    printf '%s' "$PAYLOAD" \
+      | "$PYTHON_BIN" "$SCRIPT_ROOT/scripts/agent_runtime/codex_hook_policy.py" \
+        --python-bin "$PYTHON_BIN" \
+        --hooks-dir "$HOOKS_DIR"
+    policy_rc=${PIPESTATUS[1]}
+    [ "$policy_rc" -eq 0 ] || exit "$policy_rc"
 
     [ -z "$rewrite_output" ] || printf '%s\n' "$rewrite_output"
     ;;

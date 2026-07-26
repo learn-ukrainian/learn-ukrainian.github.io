@@ -42,8 +42,10 @@ if echo "$COMMAND" | grep -qE '^python3?[[:space:]]'; then
     exit 2
   fi
 
-  FIXED=$(printf '%s' "$COMMAND" \
-    | sed -E "s|^python3?[[:space:]]|$PYTHON_BIN |")
+  case "$COMMAND" in
+    python3*) FIXED="${PYTHON_BIN}${COMMAND#python3}" ;;
+    python*) FIXED="${PYTHON_BIN}${COMMAND#python}" ;;
+  esac
 
   if [ "${LEARN_UK_HOOK_PROVIDER:-claude}" = "codex" ]; then
     jq -n --arg command "$FIXED" '{

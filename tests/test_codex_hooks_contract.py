@@ -8,6 +8,13 @@ import sqlite3
 import subprocess
 from pathlib import Path
 
+from scripts.agent_runtime.codex_hook_policy import (
+    LOCAL_BASH_GUARDS,
+    MERGE_GUARDS,
+    PRIMARY_WRITE_GUARD,
+    run_guard,
+)
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PRIMARY_ROOT = Path(
     subprocess.check_output(
@@ -67,7 +74,7 @@ def test_codex_tool_events_have_one_deterministic_command_hook() -> None:
     assert len(pre_groups[0]["hooks"]) == 1
     pre_hook = pre_groups[0]["hooks"][0]
     assert 'codex_hook_entry.sh" pre-tool-use' in pre_hook["command"]
-    assert pre_hook["timeout"] == 65
+    assert pre_hook["timeout"] == 55
 
     post_groups = hooks["PostToolUse"]
     assert len(post_groups) == 1
@@ -75,13 +82,33 @@ def test_codex_tool_events_have_one_deterministic_command_hook() -> None:
     assert 'codex_hook_entry.sh" post-tool-use' in post_groups[0]["hooks"][0]["command"]
 
 
-def test_codex_entry_preserves_bash_only_guard_scope() -> None:
-    entry = ENTRY.read_text(encoding="utf-8")
+def test_codex_policy_preserves_tool_scopes_and_per_guard_deadlines() -> None:
+    assert LOCAL_BASH_GUARDS == (
+        ("heal-core-bare.py", 3),
+        ("guard-branch-switch-in-main.py", 3),
+        ("guard-secret-print.py", 5),
+    )
+    assert PRIMARY_WRITE_GUARD == ("guard-primary-checkout-write.py", 5)
+    assert MERGE_GUARDS == (
+        ("guard-admin-merge.py", 30),
+        ("guard-pr-merge.py", 30),
+    )
 
-    assert 'if [ "$TOOL_NAME" = "Bash" ]; then' in entry
-    assert entry.count('run_python_guard "guard-admin-merge.py"') == 1
-    assert entry.count('run_python_guard "guard-pr-merge.py"') == 1
-    assert entry.count('run_python_guard "guard-primary-checkout-write.py"') == 1
+
+def test_codex_policy_guard_timeout_fails_closed(tmp_path: Path) -> None:
+    guard = tmp_path / "slow_guard.py"
+    guard.write_text("import time\ntime.sleep(5)\n", encoding="utf-8")
+
+    result = run_guard(
+        PRIMARY_ROOT / ".venv" / "bin" / "python",
+        guard,
+        "{}",
+        timeout_seconds=0.01,
+    )
+
+    assert result.returncode == 2
+    assert result.timed_out is True
+    assert "blocking the tool call fail-closed" in result.stderr
 
 
 def test_codex_entry_rewrites_bare_python_from_worktree_without_local_venv(
@@ -145,6 +172,39 @@ def test_claude_python_rewrite_shape_remains_compatible() -> None:
             "command": f"{PRIMARY_ROOT}/.venv/bin/python --version",
         }
     }
+
+
+def test_python_rewrite_preserves_checkout_path_metacharacters(tmp_path: Path) -> None:
+    canonical = tmp_path / "checkout&pipe|root"
+    canonical.mkdir()
+    (canonical / ".venv").symlink_to(
+        PRIMARY_ROOT / ".venv",
+        target_is_directory=True,
+    )
+    payload = {
+        "hook_event_name": "PreToolUse",
+        "cwd": str(canonical),
+        "tool_name": "Bash",
+        "tool_input": {"command": 'python3 -c "print(1)"'},
+    }
+    environment = os.environ.copy()
+    environment["LEARN_UK_CANONICAL_ROOT"] = str(canonical)
+    environment["LEARN_UK_HOOK_PROVIDER"] = "codex"
+
+    completed = subprocess.run(
+        ["bash", str(VENV_HOOK)],
+        cwd=canonical,
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment,
+        timeout=10,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    updated = json.loads(completed.stdout)["hookSpecificOutput"]["updatedInput"]
+    assert updated["command"] == (f'{canonical}/.venv/bin/python -c "print(1)"')
 
 
 def _make_inbox_db(project: Path) -> None:
