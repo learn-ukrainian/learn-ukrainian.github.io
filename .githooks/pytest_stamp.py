@@ -296,7 +296,7 @@ def _is_no_run_pytest(segment: list[str]) -> bool:
     return any(token == "--co" or token.partition("=")[0] in _NO_RUN_OPTIONS for token in segment)
 
 
-def _command_shape(command: str) -> tuple[int, bool] | None:
+def _command_is_compound_pytest(command: str) -> bool | None:
     tokens = _shell_tokens(command)
     if not tokens:
         return None
@@ -306,8 +306,7 @@ def _command_shape(command: str) -> tuple[int, bool] | None:
     pytest_invocations = [segment for segment in segments if _is_pytest_segment(segment)]
     if len(pytest_invocations) != 1 or _is_no_run_pytest(pytest_invocations[0]):
         return None
-    pytest_segments = len(pytest_invocations)
-    return pytest_segments, compound or len(segments) != 1
+    return compound or len(segments) != 1
 
 
 def _command_output(value: Any) -> str:
@@ -352,16 +351,15 @@ def payload_proves_pytest_success(payload: dict[str, Any]) -> bool:
     if not isinstance(command, str) or not command.strip():
         return False
 
-    shape = _command_shape(command)
-    if shape is None:
+    compound = _command_is_compound_pytest(command)
+    if compound is None:
         return False
-    pytest_segments, compound = shape
     event_name = str(payload.get("hook_event_name") or "")
-    if event_name == "PostToolUse" and not compound and pytest_segments == 1:
+    if event_name == "PostToolUse" and not compound:
         return True
 
     summaries = _passing_summaries(_command_output(payload))
-    return len(summaries) >= pytest_segments and all(summaries)
+    return bool(summaries) and all(summaries)
 
 
 def record_payload(payload: dict[str, Any]) -> bool:
