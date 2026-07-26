@@ -32,6 +32,7 @@ from scripts.review.isolation import (
     build_codex_review_argv,
     build_macos_sandbox_profile,
     build_reviewer_env,
+    create_review_temp_root,
     detect_engine_capabilities,
     is_sensitive_path,
     preflight_review_inputs,
@@ -161,7 +162,7 @@ def _private_review_roots(tmp_path: Path, label: str = "review") -> tuple[Path, 
 
 
 def test_review_temp_cleanup_removes_restrictive_view_after_simulated_review(tmp_path: Path) -> None:
-    review_root = tmp_path / "lu-review-view-simulated"
+    review_root = create_review_temp_root(prefix="lu-review-view-", dir=tmp_path)
     restricted = review_root / "context" / "restricted"
     blocked = restricted / "deeper"
     blocked.mkdir(parents=True)
@@ -179,6 +180,18 @@ def test_review_temp_cleanup_removes_restrictive_view_after_simulated_review(tmp
             blocked.chmod(0o700)
         if restricted.exists():
             restricted.chmod(0o700)
+
+
+def test_review_temp_cleanup_refuses_unmarked_prefixed_directory(tmp_path: Path) -> None:
+    root = tmp_path / "lu-review-view-unmarked"
+    root.mkdir()
+    (root / "payload").write_text("preserve", encoding="utf-8")
+
+    with pytest.raises(OSError, match="unmarked review temporary root"):
+        remove_review_temp_tree(root)
+
+    assert root.exists()
+    assert (root / "payload").read_text(encoding="utf-8") == "preserve"
 
 
 def test_review_temp_orphan_sweep_reaps_only_old_loose_and_task_roots(

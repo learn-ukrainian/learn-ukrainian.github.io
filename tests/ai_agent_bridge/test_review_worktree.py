@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 from ai_agent_bridge import _agy, _claude, _cli, _codex, _grok_build
 from ai_agent_bridge import _review_worktree as review_worktree
 
+from scripts.review.isolation import create_review_temp_root
 from scripts.review.snapshot import (
     ReviewSnapshot,
     _SnapshotState,
@@ -1210,7 +1211,7 @@ def test_remove_review_root_unlinks_reviewer_symlinks_without_following(
     outside_dir = tmp_path / "outside-dir"
     outside_dir.mkdir()
     (outside_dir / "preserve.txt").write_text("preserve\n", encoding="utf-8")
-    root = tmp_path / "private-root"
+    root = create_review_temp_root(prefix="private-root-", dir=tmp_path)
     nested = root / "home" / ".codex" / "tmp" / "arg0"
     nested.mkdir(parents=True)
     (nested / "applypatch").symlink_to(outside_file)
@@ -1769,8 +1770,7 @@ def test_provision_review_worktree_fetches_origin_head_and_reaps_on_error(
 ) -> None:
     """A failing reviewer cannot strand the fetched neutral snapshot."""
     sha = "a" * 40
-    snap_path = tmp_path / "snap"
-    snap_path.mkdir()
+    snap_path = create_review_temp_root(prefix="snapshot-", dir=tmp_path)
     _write_fake_bundle(snap_path)
     (snap_path / "tracked.py").write_text("value = 1\n", encoding="utf-8")
     calls: list[list[str]] = []
@@ -1880,8 +1880,7 @@ def test_provision_review_worktree_fetches_origin_head_and_reaps_on_error(
 
 def test_pr_review_target_resolves_head_then_fetches_origin(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     sha = "b" * 40
-    snap_path = tmp_path / "snap"
-    snap_path.mkdir()
+    snap_path = create_review_temp_root(prefix="snapshot-", dir=tmp_path)
     _write_fake_bundle(snap_path)
     calls: list[list[str]] = []
 
@@ -2038,8 +2037,7 @@ def test_review_target_present_but_non_dict_fails_closed() -> None:
 
 def test_source_drift_raises_after_yield(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     sha = "c" * 40
-    snap_path = tmp_path / "snap"
-    snap_path.mkdir()
+    snap_path = create_review_temp_root(prefix="snapshot-", dir=tmp_path)
     _write_fake_bundle(snap_path)
     monkeypatch.setattr(
         review_worktree,
@@ -2112,11 +2110,10 @@ def test_source_drift_raises_after_yield(monkeypatch: pytest.MonkeyPatch, tmp_pa
 def test_cleanup_attempts_snapshot_view_and_auth_root_independently(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    snapshot = tmp_path / "snapshot"
-    view = tmp_path / "view"
-    write = tmp_path / "write"
+    snapshot = create_review_temp_root(prefix="snapshot-", dir=tmp_path)
+    view = create_review_temp_root(prefix="view-", dir=tmp_path)
+    write = create_review_temp_root(prefix="write-", dir=tmp_path)
     for root in (snapshot, view, write):
-        root.mkdir()
         (root / "data").write_text("x", encoding="utf-8")
 
     class State:
@@ -2137,8 +2134,7 @@ def test_cleanup_attempts_snapshot_view_and_auth_root_independently(
 def test_partial_root_creation_failure_cleans_parent_owned_write_root(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    write = tmp_path / "write"
-    write.mkdir(mode=0o700)
+    write = create_review_temp_root(prefix="write-", dir=tmp_path)
     monkeypatch.setattr(review_worktree, "_create_private_write_root", lambda: write)
     monkeypatch.setattr(
         review_worktree,

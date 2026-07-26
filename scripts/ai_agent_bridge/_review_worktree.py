@@ -19,6 +19,7 @@ import json
 import os
 import re
 import shlex
+import shutil
 import stat
 import subprocess
 import sys
@@ -43,10 +44,12 @@ from scripts.review.evidence import (
 )
 from scripts.review.isolation import (
     ISOLATION_POLICY_VERSION,
+    REVIEW_TEMP_ROOT_MARKER_NAME,
     SEALED_READ_CHUNK_BYTES,
     ReviewIsolationError,
     build_reviewer_env,
     canonical_isolated_review_schema,
+    create_review_temp_root,
     is_sensitive_path,
     remove_review_temp_tree,
     resolve_external_executable,
@@ -1656,7 +1659,7 @@ def _init_neutral_bare_repository(
     *, git_bin: Path, env: dict[str, str]
 ) -> Path:
     """Create a private config-neutral object repository for one review."""
-    root = Path(tempfile.mkdtemp(prefix="lu-review-git-"))
+    root = create_review_temp_root(prefix="lu-review-git-")
     try:
         _run_command(
             [str(git_bin), "init", "--bare", "--template=", str(root)],
@@ -2261,7 +2264,10 @@ def _reviewer_context_paths(snapshot: ReviewSnapshot) -> frozenset[str]:
         for name in filenames:
             source = base / name
             rel = source.relative_to(snapshot.path).as_posix()
-            if rel == ".review-snapshot-metadata.json" or rel in inert_unchanged:
+            if rel in {
+                ".review-snapshot-metadata.json",
+                REVIEW_TEMP_ROOT_MARKER_NAME,
+            } or rel in inert_unchanged:
                 continue
             if rel.startswith(".review-bundle/"):
                 continue
@@ -2307,6 +2313,8 @@ def _verify_reviewer_view(
             if path.is_symlink() or not path.is_file():
                 raise ReviewWorktreeError(f"review_view_non_regular:{path}")
             rel = path.relative_to(view).as_posix()
+            if rel == REVIEW_TEMP_ROOT_MARKER_NAME:
+                continue
             actual.add(rel)
             source = snapshot.path / rel
             if not source.is_file() or source.is_symlink():
@@ -2331,7 +2339,7 @@ def _create_reviewer_view(
     context_paths: tuple[str, ...] | None = None,
 ) -> Path:
     """Expose safe tracked text and the sealed bundle to reviewer tools."""
-    view = Path(tempfile.mkdtemp(prefix="lu-review-view-"))
+    view = create_review_temp_root(prefix="lu-review-view-")
     try:
         try:
             manifest = json.loads(
@@ -2378,7 +2386,7 @@ def _remove_review_root(root: Path) -> None:
 
 def _create_private_write_root() -> Path:
     """Create the complete parent-owned write layout before adapter planning."""
-    root = Path(tempfile.mkdtemp(prefix="lu-review-write-"))
+    root = create_review_temp_root(prefix="lu-review-write-")
     root.chmod(0o700)
     try:
         for name in ("tmp", "home", "exec"):
@@ -2397,7 +2405,7 @@ def _create_private_write_root() -> Path:
 
 def _create_private_exec_root() -> Path:
     """Create a parent-owned root for the immutable staged reviewer runtime."""
-    root = Path(tempfile.mkdtemp(prefix="lu-review-exec-"))
+    root = create_review_temp_root(prefix="lu-review-exec-")
     root.chmod(0o700)
     return root
 

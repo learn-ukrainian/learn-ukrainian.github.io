@@ -37,7 +37,9 @@ from pathlib import Path
 from typing import Any
 
 from scripts.review.isolation import (
+    REVIEW_TEMP_ROOT_MARKER_NAME,
     ReviewIsolationError,
+    create_review_temp_root,
     is_sensitive_path,
     is_within,
     preflight_review_inputs,
@@ -625,7 +627,7 @@ def _fingerprint_snapshot_tree(
             if full.is_symlink():
                 raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{full}")
             rel = full.relative_to(root).as_posix()
-            if rel != ".review-snapshot-metadata.json":
+            if rel not in {".review-snapshot-metadata.json", REVIEW_TEMP_ROOT_MARKER_NAME}:
                 paths.append(rel)
 
     hasher = _source_fingerprint_hasher(
@@ -1918,7 +1920,7 @@ def materialize_review_snapshot(
     if is_within(parent.resolve(), root):
         raise ReviewSnapshotError("tmpdir_inside_repo")
 
-    dest = Path(tempfile.mkdtemp(prefix="lu-review-snap-", dir=str(parent)))
+    dest = create_review_temp_root(prefix="lu-review-snap-", dir=str(parent))
     try:
         remove_paths = set(deleted_paths)
         remove_paths.update(old for old, _new in rename_pairs)
