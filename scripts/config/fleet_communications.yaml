@@ -20,7 +20,8 @@ message_plane:
 # Authority Sol/Fable only on critical resolve-reviewer ladder.
 #
 # Orchestrator seats for this stream (model_catalog.orchestrator_seats):
-#   claude · codex(gpt-5.6-terra @ high) · grok · agy(gemini-3.6-flash-high @ high)
+#   claude(claude-fable-5 @ high, SUMMONED cadence — grok drives daily; operator 2026-07-26)
+#   · codex(gpt-5.6-terra @ high) · grok(daily driver) · agy(gemini-3.6-flash-high @ high)
 #   (codex was dropped as a driver on 2026-07-22, then re-added on 2026-07-23 because
 #    HydrationCapsuleV1 reduces rollover overhead; formal-CF eligibility is unchanged.)
 # Each may own cold-start / drive-board loops. Sealed formal CF requests still

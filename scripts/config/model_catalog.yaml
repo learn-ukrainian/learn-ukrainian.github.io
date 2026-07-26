@@ -93,7 +93,8 @@ models:
       Separate rate-limit bucket from the Opus 4.x pool.
     sources:
       - https://platform.claude.com/docs/en/about-claude/models/overview
-  # Retained alongside claude-opus-5: the advisor ROSTER now points at opus-5, but
+  # Retained alongside claude-opus-5 (which since 2026-07-26 is a coding seat, not an
+  # advisor — the advisor roster points at claude-fable-5 + gpt-5.6-sol), but
   # this id is still referenced by scripts/context_canary.py, scripts/pipeline/dispatch.py,
   # ai_agent_bridge/openai_proxy.py and _dispatch_wrappers.py. Removing the entry
   # broke collection with KeyError: 'claude-opus-4-8'.
@@ -526,19 +527,22 @@ review_candidates:
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
   claude:
-    model_id: claude-opus-5
+    model_id: claude-fable-5
     effort: high
     escalate_model_id: gpt-5.6-sol
     escalate_effort: xhigh
     escalate_when: deep_single_shot_or_architecture
     note: >-
-      Opus 5 @ high drives the lane; escalation is CROSS-FAMILY to Sol @ xhigh
-      (user 2026-07-24). Claude is an escalation TARGET, not an escalator — other
-      lanes escalate to Claude or Sol by whichever has CodexBar headroom. Fable is
-      NOT the default Anthropic advisor: it is the top capability tier but burns
-      subscription usage the fleet needs elsewhere; reserve it for a case Opus 5
-      has already failed. Driving is `high`, not `xhigh` — xhigh is the documented
-      START for agentic work, and the same docs say sweep down from it.
+      Fable 5 is the Anthropic orchestration/judgment seat (operator 2026-07-26;
+      REVERSES the 2026-07-24 Opus-as-default ruling — operator: Opus 5 is weak in
+      the advisor role and over-verbose). Fable runs in the SUMMONED cadence, not
+      as a resident daily driver: grok-4.5 owns the daily epic loops; Fable takes
+      1-2 short scheduled judgment sessions/day (verdict reads, course corrections,
+      design locks, briefs) driven dispatch-heavy, never inline-heavy — measured
+      2026-07-26 at ~2 weekly-quota points per orchestration hour in that style.
+      Escalation stays CROSS-FAMILY to Sol @ xhigh; Claude is an escalation TARGET,
+      not an escalator. Opus 5 remains a complex-coding/deep-reasoning seat only —
+      not an advisor, not an orchestrator. Driving is `high`, not `xhigh`.
   codex:
     model_id: gpt-5.6-terra
     effort: high
@@ -587,9 +591,9 @@ formal_cf_defaults:
   claude:
     model_id: claude-sonnet-5
     effort: high
-    # Others escalate TO Claude: Opus 5 @ xhigh is the Anthropic advisor seat
-    # (replaced Fable 5 on 2026-07-24 — same authority role, half the burn).
-    escalate_model_id: claude-opus-5
+    # Others escalate TO Claude: Fable 5 @ xhigh is the Anthropic advisor/authority
+    # seat (operator 2026-07-26 — Opus 5 de-advisored; reverses the 2026-07-24 swap).
+    escalate_model_id: claude-fable-5
     escalate_effort: xhigh
   glm:
     model_id: glm-5.2
@@ -626,11 +630,9 @@ review_ladders:
   # Grok / K3 / GLM / DS-Pro / pool S 2.1) — not Sol/Fable on routine PRs.
   critical:
     - [openai_frontier]
-    # Opus 5 is the Anthropic authority rung (user 2026-07-24). Fable sits BELOW it:
-    # same tier, ~2x the token cost, and the fleet keeps running out of subscription
-    # headroom — so it is the fallback for a case Opus 5 has already failed, not the
-    # first Anthropic pick.
-    - [claude-opus-5]
+    # Fable 5 is the Anthropic authority rung (operator 2026-07-26 — Opus 5
+    # de-advisored: weak in the role, over-verbose; reverses 2026-07-24). Opus is
+    # NOT on the authority ladder at all; it remains a practical/coding seat.
     - [claude-fable-5]
     - [claude-fable-5-cursor-fallback]
     - [gpt-5.6-terra]

@@ -27,7 +27,7 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **folk** (curriculum track) | Grok 4.5 † | `./start-grok-drive.sh folk` |
 | **bio** (curriculum track) | Grok 4.5 | `./start-grok-drive.sh bio` |
 | **any epic** — incident · architecture cutover · contested review | Sonnet-5 | `./start-sonnet-drive.sh <epic>` |
-| **any epic** — hardest judgment only (see the reserved-seat cost below) | Opus | `./start-opus-drive.sh <epic>` |
+| **any epic** — hardest judgment only (SUMMONED cadence; see the reserved-seat cost below) | Fable 5 | `./start-opus-drive.sh <epic>` (wrapper now pins Fable) |
 
 **Per-model launcher convention:** `./start-<model>-drive.sh <epic>` where `<model>` ∈
 `codex · grok · gemini · sonnet · opus`. Epic is the first arg; extra flags forward
@@ -37,23 +37,28 @@ and by manual `$drive-epic` invocation until then. The Codex DevOps alternate is
 first zero-touch path: its generated board is injected into SessionStart and explicitly
 directs the task to load `$drive-epic`; the other wrappers do not yet auto-load the skill.
 
-**Sonnet-5 is the DEFAULT Anthropic driver seat** — near-Opus judgment without spending the
-Opus review-of-record capacity. `./start-opus-drive.sh <epic>` exists for the rare
-hardest-judgment session (live incident, architecture cutover, contested verdict) and prints
-a reserved-seat notice on launch so the cost is never spent by habit; it replaces the older
-"use raw `./start-claude.sh --epic <x>`" advice, which skipped that notice and left the model
-pin implicit. Both Anthropic wrappers resolve to the same `claude-<lane>` handoff slot, so the
-stream lease still allows only one Anthropic driver per lane. The legacy
-`scripts/start-bio-driver.sh` runs Claude + the `curriculum-track-orchestrator` agent-def if
-you specifically want that agent.
+**Sonnet-5 is the DEFAULT Anthropic driver seat** — strong judgment without spending the
+top-tier capacity. `./start-opus-drive.sh <epic>` now pins **Fable 5** (operator
+2026-07-26 — Opus 5 removed from the advisor/judgment role: weak there and over-verbose;
+the wrapper name is kept until the renames-last migration step) and exists for the rare
+hardest-judgment session (live incident, architecture cutover, contested verdict) in the
+SUMMONED cadence — 1-2 short scheduled sessions/day, dispatch-heavy, never a resident
+polling loop (see model-assignment.md § Orchestration operating pattern). It prints a
+reserved-seat notice on launch so the cost is never spent by habit. Both Anthropic wrappers
+resolve to the same `claude-<lane>` handoff slot, so the stream lease still allows only one
+Anthropic driver per lane. The legacy `scripts/start-bio-driver.sh` runs Claude + the
+`curriculum-track-orchestrator` agent-def if you specifically want that agent.
 
 † **folk carve-out:** the *driver* may be Grok, but folk content **review** stays
 cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) — the
 `drive-epic` skill enforces this.
 
 **Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
-- **Opus** (current Anthropic frontier) — hardest judgment + the cross-family review of record.
-  Don't burn it on a polling loop. `./start-opus-drive.sh` exists for the exceptions, not the default.
+- **Fable 5** (Anthropic top tier) — hardest judgment + the cross-family review of record +
+  top Anthropic advisor (with Sol). Don't burn it on a polling loop. `./start-opus-drive.sh`
+  (Fable-pinned) exists for the exceptions, not the default. **Opus 5 is neither an advisor
+  nor an orchestrator seat** (operator 2026-07-26) — it remains a complex-coding/deep-review
+  dispatch seat only.
 - **Kimi K2.7** 256K — under the ~500K window we want for a driver. **Codex (GPT-5.6)** was
   dropped on 2026-07-22 for its 272K window, then **re-added on 2026-07-23** as the named
   harness / infra / devops alternate: HydrationCapsuleV1's score-from-memory and small capsule
@@ -71,7 +76,7 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.6-flash-high | high | gemini-3.1-pro-high | high |
-| claude | claude-opus-5 | high | gpt-5.6-sol | xhigh |
+| claude | claude-fable-5 | high | gpt-5.6-sol | xhigh |
 | codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
 | grok | grok-4.5 | high | grok-4.5 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
