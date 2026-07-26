@@ -170,31 +170,31 @@
       "tracking": "devops #5703"
     },
     {
-      "nodeid": "tests/test_stress_heteronyms.py::TestHeteronymSentenceContext::test_heteronym_with_context[lock_замок]",
+      "nodeid": "tests/test_stress_heteronyms.py::TestHeteronymSentenceContext::test_heteronym_with_context[lock_\\u0437\\u0430\\u043c\\u043e\\u043a]",
       "reason": "Requires the Ukrainian Stanza model; the runner had no cache and Hugging Face returned 429 after retries. The full gate will not depend on an unpinned live model download.",
       "owner": "core-quality (#4274)",
       "tracking": "devops #5703"
     },
     {
-      "nodeid": "tests/test_stress_heteronyms.py::TestHeteronymSentenceContext::test_heteronym_with_context[rim_обід]",
+      "nodeid": "tests/test_stress_heteronyms.py::TestHeteronymSentenceContext::test_heteronym_with_context[rim_\\u043e\\u0431\\u0456\\u0434]",
       "reason": "Requires the Ukrainian Stanza model; the runner had no cache and Hugging Face returned 429 after retries. The full gate will not depend on an unpinned live model download.",
       "owner": "core-quality (#4274)",
       "tracking": "devops #5703"
     },
     {
-      "nodeid": "tests/test_stress_heteronyms.py::TestHeteronymSentenceContext::test_heteronym_with_context[expensive_дорога]",
+      "nodeid": "tests/test_stress_heteronyms.py::TestHeteronymSentenceContext::test_heteronym_with_context[expensive_\\u0434\\u043e\\u0440\\u043e\\u0433\\u0430]",
       "reason": "Requires the Ukrainian Stanza model; the runner had no cache and Hugging Face returned 429 after retries. The full gate will not depend on an unpinned live model download.",
       "owner": "core-quality (#4274)",
       "tracking": "devops #5703"
     },
     {
-      "nodeid": "tests/test_stress_heteronyms.py::TestHeteronymSentenceContext::test_heteronym_with_context[torment_мука]",
+      "nodeid": "tests/test_stress_heteronyms.py::TestHeteronymSentenceContext::test_heteronym_with_context[torment_\\u043c\\u0443\\u043a\\u0430]",
       "reason": "Requires the Ukrainian Stanza model; the runner had no cache and Hugging Face returned 429 after retries. The full gate will not depend on an unpinned live model download.",
       "owner": "core-quality (#4274)",
       "tracking": "devops #5703"
     },
     {
-      "nodeid": "tests/test_stress_heteronyms.py::TestHeteronymSentenceContext::test_heteronym_with_context[I pay_плачу]",
+      "nodeid": "tests/test_stress_heteronyms.py::TestHeteronymSentenceContext::test_heteronym_with_context[I pay_\\u043f\\u043b\\u0430\\u0447\\u0443]",
       "reason": "Requires the Ukrainian Stanza model; the runner had no cache and Hugging Face returned 429 after retries. The full gate will not depend on an unpinned live model download.",
       "owner": "core-quality (#4274)",
       "tracking": "devops #5703"
