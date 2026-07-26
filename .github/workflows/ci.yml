@@ -158,12 +158,14 @@ jobs:
       # will simply move — and the cap now makes that a bounded, visible failure
       # rather than a silent six-hour stall.
       - name: Run pytest
+        timeout-minutes: 25
         # The predicate is evaluated by the expression engine and reaches the
         # shell as the literal string "true"/"false" via env — `github.ref` is
         # never spliced into `run:`, so a hostile branch name cannot inject.
         env:
           IS_MAIN_PUSH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           SHARD: ${{ matrix.shard }}
+          PYTEST_BREADCRUMB_DIR: .pytest_breadcrumbs
         run: |
           cov_args=""
           if [ "$IS_MAIN_PUSH" = "true" ]; then
@@ -180,6 +182,17 @@ jobs:
           .venv/bin/python -m pytest "${shard_files[@]}" -n auto --strict-markers \
             --timeout=120 --timeout-method=thread --durations=25 $cov_args \
             --deselect=tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast
+
+      - name: Upload test breadcrumbs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4
+        with:
+          name: pytest-breadcrumbs-shard-${{ matrix.shard }}
+          path: .pytest_breadcrumbs
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 7
+
 
       # Restores the `--fail-under=35` floor the deleted shard aggregation
       # enforced (origin/main ci.yml:1183). Cross-family review of #5762 caught
