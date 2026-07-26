@@ -43,9 +43,7 @@ def _run(monkeypatch, command: str, *, pr: str | None = "5", failing=()) -> int:
     payload = json.dumps({"tool_input": {"command": command}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
     monkeypatch.setattr(guard, "_pr_number", lambda args: pr)
-    monkeypatch.setattr(
-        guard, "_failing_blocking_checks", lambda p: (list(failing) if failing is not None else None)
-    )
+    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda p: list(failing) if failing is not None else None)
     return guard.main()
 
 
@@ -157,9 +155,7 @@ def test_failing_checks_garbage_output_is_failclosed(monkeypatch):
 
 
 def _any_admin(command: str) -> bool:
-    return any(
-        guard._admin_merge_args(s) is not None for s in guard._segments(command)
-    )
+    return any(guard._admin_merge_args(s) is not None for s in guard._segments(command))
 
 
 @pytest.mark.parametrize(
@@ -213,11 +209,11 @@ def test_unclosed_heredoc_does_not_hide_admin():
 
 # Escapes sit OUTSIDE the string tokens, as gh's colorizer actually emits them.
 _COLORIZED_ROWS = (
-    '\x1b[1;37m[\x1b[m{\n'
+    "\x1b[1;37m[\x1b[m{\n"
     '  \x1b[1;34m"name"\x1b[m: \x1b[32m"Test (pytest)"\x1b[m,\n'
     '  \x1b[1;34m"bucket"\x1b[m: \x1b[32m"pass"\x1b[m,\n'
     '  \x1b[1;34m"state"\x1b[m: \x1b[32m"SUCCESS"\x1b[m\n'
-    '}\x1b[1;37m]\x1b[m\n'
+    "}\x1b[1;37m]\x1b[m\n"
 )
 
 
@@ -282,22 +278,17 @@ def test_colorized_blocking_failure_still_blocks(monkeypatch):
     assert guard._failing_blocking_checks("5") == ["Test (pytest)"]
 
 
-def test_colorized_pr_number_recovered(monkeypatch):
-    """`-q .number` output is passed to the NEXT gh call as the selector, so escapes
-    there break it just as surely as a failed parse."""
-    _fake_gh(monkeypatch, returncode=0, stdout="\x1b[32m5\x1b[m\n")
-    assert guard._pr_number(["--admin"]) == "5"
+def test_pr_number_requires_explicit_numeric_selector():
+    assert guard._pr_number(["--admin"]) is None
+    assert guard._pr_number(["5", "--admin"]) == "5"
 
 
-def test_both_gh_sites_run_with_scrubbed_env(monkeypatch):
-    """Both subprocess sites, not just one: the sibling's B1 fix was partial exactly
-    because a second raw call site was missed."""
+def test_gh_check_lookup_runs_with_scrubbed_env(monkeypatch):
     monkeypatch.setenv("CLICOLOR_FORCE", "1")
     monkeypatch.setenv("FORCE_COLOR", "1")
     calls = _capture_gh(monkeypatch, returncode=0, stdout="[]")
-    guard._pr_number(["--admin"])
     guard._failing_blocking_checks("5")
-    assert len(calls) == 2
+    assert len(calls) == 1
     for cmd, kwargs in calls:
         env = kwargs.get("env")
         assert env is not None, f"{cmd} ran without a scrubbed env"
@@ -306,12 +297,9 @@ def test_both_gh_sites_run_with_scrubbed_env(monkeypatch):
 
 
 def test_gh_timeouts_stay_within_hook_budget(monkeypatch):
-    """Both gh calls can run in one main() pass; their timeouts must fit the hook's
-    registered 30s budget (settings.json) with headroom, else a slow gh is killed by the
-    harness mid-verdict rather than fail-closing cleanly."""
+    """The only admin lookup must fit the aggregate merge-guard budget."""
     calls = _capture_gh(monkeypatch, returncode=0, stdout="[]")
-    guard._pr_number(["--admin"])
     guard._failing_blocking_checks("5")
     timeouts = [kwargs["timeout"] for _cmd, kwargs in calls]
     assert all(t > 0 for t in timeouts)
-    assert sum(timeouts) < 30
+    assert sum(timeouts) < 20

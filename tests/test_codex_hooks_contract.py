@@ -78,7 +78,7 @@ def test_codex_tool_events_have_one_deterministic_command_hook() -> None:
     assert len(pre_groups[0]["hooks"]) == 1
     pre_hook = pre_groups[0]["hooks"][0]
     assert 'codex_hook_entry.sh" pre-tool-use' in pre_hook["command"]
-    assert pre_hook["timeout"] == 55
+    assert pre_hook["timeout"] == 45
 
     post_groups = hooks["PostToolUse"]
     assert len(post_groups) == 1
@@ -95,8 +95,8 @@ def test_codex_policy_preserves_tool_scopes_and_per_guard_deadlines() -> None:
     )
     assert PRIMARY_WRITE_GUARD == ("guard-primary-checkout-write.py", 5)
     assert MERGE_GUARDS == (
-        ("guard-admin-merge.py", 30),
-        ("guard-pr-merge.py", 30),
+        ("guard-admin-merge.py", 20),
+        ("guard-pr-merge.py", 20),
     )
 
 

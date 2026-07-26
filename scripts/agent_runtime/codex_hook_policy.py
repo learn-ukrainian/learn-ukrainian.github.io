@@ -20,8 +20,8 @@ LOCAL_BASH_GUARDS = (
 ENFORCE_VENV_TIMEOUT = 3
 PRIMARY_WRITE_GUARD = ("guard-primary-checkout-write.py", 5)
 MERGE_GUARDS = (
-    ("guard-admin-merge.py", 30),
-    ("guard-pr-merge.py", 30),
+    ("guard-admin-merge.py", 20),
+    ("guard-pr-merge.py", 20),
 )
 
 

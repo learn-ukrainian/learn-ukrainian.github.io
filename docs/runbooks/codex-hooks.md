@@ -34,20 +34,26 @@ deterministic entry point:
 its own 3-second fail-closed deadline. `PreToolUse` local policy checks then run
 sequentially with their former 3–5 second individual deadlines. The two
 independent, network-backed merge guards run concurrently with separate
-30-second deadlines, and their results are emitted in a fixed order.
+20-second aggregate deadlines, and their results are emitted in a fixed order.
 `PostToolUse` telemetry and pytest stamping run sequentially. This removes the
 prior seven-process Bash fan-out and the unsupported failure-event duplicate
 without letting one slow merge guard starve the other.
 
 `codex_hook_policy.py` converts an individual guard timeout into exit code `2`
 with a concrete reason. Per the Codex `PreToolUse` contract, exit `2` blocks the
-tool call; a timeout therefore fails closed. The manifest's 55-second outer
+tool call; a timeout therefore fails closed. The manifest's 45-second outer
 timeout remains a last-resort ceiling above the 3-second rewrite, local-chain,
 and concurrent network-guard budgets.
 
 Only the venv rewrite may write the final Codex JSON response to stdout.
 Unexpected stdout from any policy guard is redirected to diagnostics and
 fails closed, preventing multiple payloads from corrupting the hook response.
+
+Merge commands must name the PR explicitly. This removes the preliminary
+current-branch discovery call and prevents the guard from checking one PR while
+`gh` resolves another. For normal merges, independent PR metadata and check
+lookups run concurrently; `--auto` branch-protection verification follows only
+after those results identify the exact base.
 
 The entry point resolves the exact tool worktree from structured hook input and
 the canonical checkout from Git's common directory. Python policies use the

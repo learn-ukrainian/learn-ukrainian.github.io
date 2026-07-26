@@ -20,6 +20,7 @@ Blocking (required) checks per #M-0.5: pytest, ruff, frontend/vitest, schema/MDX
 gitleaks/secret-scan, radon/quality-gates, prompt-lint, CodeQL/Analyze. Matched by name
 substring (case-insensitive); erring toward "treat as blocking" is the safe direction here.
 """
+
 from __future__ import annotations
 
 import json
@@ -210,9 +211,7 @@ def _skip_command_prefix(seg: list[str], i: int) -> int:
     missed (#4877)."""
     while i < len(seg):
         tok = seg[i]
-        if tok in {"sudo", "time", "env", "nohup", "command", "exec", "{"} or _is_env_assignment(
-            tok
-        ):
+        if tok in {"sudo", "time", "env", "nohup", "command", "exec", "{"} or _is_env_assignment(tok):
             i += 1
         else:
             break
@@ -229,23 +228,11 @@ def _admin_merge_args(seg: list[str]) -> list[str] | None:
 
 
 def _pr_number(args: list[str]) -> str | None:
-    """First numeric positional after `merge`, else the current branch's PR number."""
+    """First numeric positional after `merge`; implicit discovery is refused."""
     for a in args:
         if not a.startswith("-") and a.isdigit():
             return a
-    try:
-        out = subprocess.run(
-            ["gh", "pr", "view", "--json", "number", "-q", ".number"],
-            capture_output=True,
-            env=_gh_env(),
-            text=True,
-            timeout=10,
-        )
-        # Decolorized before use, not just before json.loads: a colorized "5" is passed
-        # straight to the next gh call as the PR selector, where the escapes break it.
-        return _decolorize(out.stdout or "").strip() or None
-    except Exception:
-        return None
+    return None
 
 
 def _failing_blocking_checks(pr: str) -> list[str] | None:
