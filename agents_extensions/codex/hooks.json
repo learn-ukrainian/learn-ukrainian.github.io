@@ -85,12 +85,6 @@
           },
           {
             "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/context-monitor.sh\"",
-            "timeout": 5,
-            "statusMessage": "Checking context budget"
-          },
-          {
-            "type": "command",
             "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/stamp-pytest.sh\"",
             "timeout": 3,
             "statusMessage": "Stamping pytest telemetry"

@@ -6,6 +6,17 @@
 # size is a compatibility estimate only. Unknown capacity suppresses percentage
 # warnings rather than fabricating a 1M or auto-compaction denominator.
 
+# Native Codex owns context compaction. A PostToolUse warning is injected as
+# higher-priority context, so imperative rollover text can trap the agent:
+# every tool call re-injects STOP, while the suggested `prepare` command is not
+# repeatable once a pending lease exists. Keep this manual rollover hook silent
+# for Codex; its native runtime remains responsible for compaction/continuation.
+if [ "${SESSION_HANDOFF_AGENT:-}" = "codex" ] \
+  || [[ "${0:-}" == *"/.codex/"* ]] \
+  || [ -n "${CODEX_THREAD_ID:-}${CODEX_SESSION_ID:-}" ]; then
+  exit 0
+fi
+
 # Skip in non-interactive / subagent / pipeline contexts.
 if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UK_PIPELINE" ] || [ -n "$GEMINI_SESSION" ]; then
   exit 0
@@ -96,12 +107,8 @@ PCT=$((TOKENS * 100 / WINDOW))
 
 if [ -n "${SESSION_HANDOFF_AGENT:-}" ]; then
   HANDOFF_AGENT="$SESSION_HANDOFF_AGENT"
-elif [[ "${0:-}" == *"/.codex/"* ]]; then
-  HANDOFF_AGENT="codex"
 elif [[ "${0:-}" == *"/.gemini/"* ]]; then
   HANDOFF_AGENT="gemini"
-elif [ -n "${CODEX_THREAD_ID:-}${CODEX_SESSION_ID:-}" ]; then
-  HANDOFF_AGENT="codex"
 else
   HANDOFF_AGENT="claude"
 fi

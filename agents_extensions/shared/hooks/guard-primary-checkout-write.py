@@ -120,7 +120,18 @@ def _tool_input(payload: dict) -> dict:
 
 
 def _payload_cwd(payload: dict) -> str:
-    cwd = payload.get("cwd") or payload.get("working_directory")
+    # A tool-specific working directory is the execution cwd and therefore
+    # outranks the session-level cwd carried by the hook envelope. Unified
+    # exec calls commonly keep the session cwd at the primary checkout while
+    # placing the dispatch worktree in tool_input.workdir.
+    tool_input = _tool_input(payload)
+    cwd = (
+        tool_input.get("cwd")
+        or tool_input.get("workdir")
+        or tool_input.get("working_directory")
+        or payload.get("cwd")
+        or payload.get("working_directory")
+    )
     return str(cwd) if cwd else os.getcwd()
 
 
@@ -294,6 +305,37 @@ def _strip_heredoc_bodies(command: str) -> str:
     return "\n".join(kept)
 
 
+def _collapse_shell_line_continuations(command: str) -> str:
+    """Remove shell ``\\`` + newline continuations outside single quotes.
+
+    The shell removes these pairs before parsing command boundaries, including
+    inside double quotes. Leaving them in the guard's token stream turns one
+    mutating command into two apparent segments and can hide the target of an
+    in-place editor. Backslash-newline remains literal inside single quotes.
+    """
+    collapsed: list[str] = []
+    in_single = False
+    in_double = False
+    i = 0
+    while i < len(command):
+        char = command[i]
+        if char == "\\" and not in_single and i + 1 < len(command):
+            following = command[i + 1]
+            if following == "\n":
+                i += 2
+                continue
+            collapsed.extend((char, following))
+            i += 2
+            continue
+        if char == "'" and not in_double:
+            in_single = not in_single
+        elif char == '"' and not in_single:
+            in_double = not in_double
+        collapsed.append(char)
+        i += 1
+    return "".join(collapsed)
+
+
 def _tokenize(command: str) -> list[str]:
     """Quote-aware tokens with redirection/control operators kept separate.
 
@@ -305,9 +347,16 @@ def _tokenize(command: str) -> list[str]:
     """
     try:
         lexer = shlex.shlex(
-            _strip_heredoc_bodies(command), posix=True, punctuation_chars=True
+            _collapse_shell_line_continuations(_strip_heredoc_bodies(command)),
+            posix=True,
+            punctuation_chars="();<>|&\n",
         )
         lexer.whitespace_split = True
+        # Keep newline out of whitespace so shlex returns it as a control
+        # operator. Otherwise adjacent lines collapse into one segment: a later
+        # command's option (for example `find -print`) can be mistaken for an
+        # earlier `sed` invocation's `-i` flag and produce bogus write targets.
+        lexer.whitespace = " \t\r"
         return list(lexer)
     except ValueError:
         # Unbalanced quotes / un-tokenizable — fail open (the shell will reject
