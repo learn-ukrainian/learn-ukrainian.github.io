@@ -1,47 +1,30 @@
-import { readFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
+import { performance } from 'node:perf_hooks';
 import { resolve } from 'node:path';
-import { fileURLToPath, URL } from 'node:url';
-import { preview } from 'vite';
+import { fileURLToPath } from 'node:url';
+import { mergeConfig, preview } from 'vite';
+import { BuildTimeAstroVersionProvider } from '../node_modules/astro/dist/cli/infra/build-time-astro-version-provider.js';
+import { piccoloreTextStyler } from '../node_modules/astro/dist/cli/infra/piccolore-text-styler.js';
+import { resolveConfig } from '../node_modules/astro/dist/core/config/config.js';
+import * as msg from '../node_modules/astro/dist/core/messages/runtime.js';
+import { getResolvedHostForHttpServer } from '../node_modules/astro/dist/core/preview/util.js';
+import { vitePluginAstroPreview } from '../node_modules/astro/dist/core/preview/vite-plugin-astro-preview.js';
 import { rawAtlasShardTransport } from './raw-atlas-shard-transport.mjs';
 
-const serveStaticDirectories = () => ({
-  name: 'astro-static-directory-preview',
-  configurePreviewServer(server) {
-    server.middlewares.use((request, _response, next) => {
-      const url = new URL(request.url ?? '/', 'http://localhost');
-      if (url.pathname.endsWith('/')) request.url = `${url.pathname}index.html${url.search}`;
-      next();
-    });
-  },
-});
+const require = createRequire(import.meta.url);
+const supportedAstroVersion = '7.1.3';
+const { version: installedAstroVersion } = require('../node_modules/astro/package.json');
 
-const serveAstro404 = (outputDir) => ({
-  name: 'astro-static-404-preview',
-  configurePreviewServer(server) {
-    return () => {
-      server.middlewares.use(async (request, response, next) => {
-        if (!['GET', 'HEAD'].includes(request.method ?? 'GET')) {
-          next();
-          return;
-        }
-
-        try {
-          const page = await readFile(resolve(outputDir, '404.html'));
-          response.statusCode = 404;
-          response.setHeader('Content-Type', 'text/html');
-          response.end(request.method === 'HEAD' ? undefined : page);
-        } catch (error) {
-          next(error);
-        }
-      });
-    };
-  },
-});
+if (installedAstroVersion !== supportedAstroVersion) {
+  throw new Error(
+    `[raw-atlas-preview] Unsupported Astro ${installedAstroVersion}; this adapter is validated only for Astro ${supportedAstroVersion}.`,
+  );
+}
 
 /**
- * Astro's static preview server omits `vite.plugins` by design. Its supported
- * adapter preview entrypoint lets the Atlas transport middleware run before
- * Vite's static-file middleware, just as it does in development.
+ * Astro's static preview server intentionally omits user Vite plugins. This
+ * adapter copies its setup, inserts only the raw Atlas transport after Astro's
+ * guard plugin, and leaves all non-shard routing to Astro's own static plugin.
  */
 export default async function startPreview({
   host,
@@ -52,21 +35,74 @@ export default async function startPreview({
   allowedHosts,
   open,
   root,
+  logger,
 }) {
+  const startServerTime = performance.now();
   const outputDir = fileURLToPath(outDir);
-  const previewServer = await preview({
+  const rootDir = fileURLToPath(root);
+  const { astroConfig } = await resolveConfig({ root: rootDir }, 'preview');
+  const settings = {
+    config: {
+      ...astroConfig,
+      base,
+      outDir,
+      root,
+      server: {
+        ...astroConfig.server,
+        allowedHosts,
+        headers,
+        host,
+        open,
+        port,
+      },
+    },
+  };
+  const astroPreviewConfig = {
     appType: 'mpa',
     base,
     build: { outDir: outputDir },
     configFile: false,
     plugins: [
-      rawAtlasShardTransport(resolve(outputDir, 'atlas')),
-      serveStaticDirectories(),
-      serveAstro404(outputDir),
+      vitePluginAstroPreview(settings),
+      rawAtlasShardTransport(resolve(outputDir, 'atlas'), base),
     ],
-    preview: { allowedHosts, headers, host, open, port },
-    root: fileURLToPath(root),
+    preview: { headers, host, open, port },
+    root: rootDir,
+  };
+  const userViteConfig = { ...(astroConfig.vite ?? {}) };
+  delete userViteConfig.plugins;
+  const mergedViteConfig = mergeConfig(userViteConfig, astroPreviewConfig);
+  if (typeof allowedHosts === 'boolean' || (Array.isArray(allowedHosts) && allowedHosts.length > 0)) {
+    mergedViteConfig.preview ??= {};
+    mergedViteConfig.preview.allowedHosts = allowedHosts;
+  }
+
+  let previewServer;
+  try {
+    previewServer = await preview(mergedViteConfig);
+  } catch (error) {
+    if (error instanceof Error) logger.error(null, error.stack || error.message);
+    throw error;
+  }
+  previewServer.bindCLIShortcuts({
+    customShortcuts: [
+      { key: 'r', description: '' },
+      { key: 'u', description: '' },
+      { key: 'c', description: '' },
+      { key: 's', description: '' },
+    ],
   });
+  logger.info(
+    'SKIP_FORMAT',
+    msg.serverStart({
+      startupTime: performance.now() - startServerTime,
+      resolvedUrls: previewServer.resolvedUrls ?? { local: [], network: [] },
+      host,
+      base,
+      astroVersionProvider: new BuildTimeAstroVersionProvider(),
+      textStyler: piccoloreTextStyler,
+    }),
+  );
   const address = previewServer.httpServer.address();
   const actualPort = address && typeof address === 'object' ? address.port : port;
 
@@ -76,7 +112,7 @@ export default async function startPreview({
         previewServer.httpServer.addListener('close', resolve);
         previewServer.httpServer.addListener('error', reject);
       }),
-    host: typeof host === 'string' ? host : 'localhost',
+    host: getResolvedHostForHttpServer(host),
     port: actualPort,
     server: previewServer.httpServer,
     stop: () => previewServer.close(),
