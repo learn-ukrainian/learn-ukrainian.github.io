@@ -19,6 +19,55 @@ Normal API commands launch uvicorn in dev-reload mode:
 `npm run api` and `npm run api:bg` use this shape. `npm run api:reload`
 is an alias for backward compatibility.
 
+`./services.sh start api` and `./services.sh restart api` are the persistent
+Monitor API path. They use the immutable release snapshot model (not reload
+mode) under a per-user macOS LaunchAgent:
+
+- Label: `com.learn-ukrainian.monitor-api`
+- Restart policy: `KeepAlive.SuccessfulExit=false`; the foreground runner turns
+  any unexpected API exit, including an unexpected zero exit, into a failed
+  launch-agent run.
+- Crash-loop protection: `ThrottleInterval=30`, so `launchd` cannot respawn a
+  repeatedly failing server faster than once every 30 seconds.
+- Operator stop: `./services.sh stop api` disables and unloads the agent before
+  the listener is signalled. It remains stopped across terminal close and
+  login; only a later `start` or `restart` enables it again.
+
+The normal start path installs or reconciles the plist automatically. To
+inspect or remove it explicitly, run these commands from the merged primary
+checkout (the plist stores an absolute checkout path):
+
+```bash
+./services.sh supervise api install
+./services.sh supervise api status
+./services.sh supervise api uninstall
+```
+
+If an older, unsupervised API is already healthy when this change is first
+installed, use `./services.sh restart api` once to move it under `launchd`.
+`start api` intentionally preserves its existing no-op behavior for a healthy
+listener.
+
+Unexpected exits persist a durable record at `.pids/api-last-crash.json` with
+the UTC timestamp, normalized exit code, signal when applicable, and the tail
+of stderr. It is not cleared by the next start. Runtime logs are:
+
+```text
+logs/api.log
+logs/api.stderr.log
+logs/api.launchd.stdout.log
+logs/api.launchd.stderr.log
+```
+
+Use `launchctl print "gui/$(id -u)/com.learn-ukrainian.monitor-api"` for
+low-level launchd readback. The plist, crash record, and logs are local runtime
+state; they must not be committed.
+
+`delegate.py dispatch` intentionally warns rather than blocks if the Monitor
+API health probe is unreachable. File-based dispatch fallbacks still work and
+may be needed to repair the API; the warning names `services.sh status api` and
+the crash record as recovery steps.
+
 The FastAPI app also installs `scripts/api/resilience.py` middleware:
 
 - `API_REQUEST_TIMEOUT_S` defaults to 10 seconds and returns 504 on timeout.
@@ -29,6 +78,10 @@ The FastAPI app also installs `scripts/api/resilience.py` middleware:
   `connect_sqlite()`.
 - `/api/health` exposes in-flight, saturation, timeout, slow-request, and
   slow-SQL telemetry.
+- `agents_extensions/shared/hooks/tool-timing.sh` serializes hook data with
+  `jq` and posts it to `/api/telemetry/tool-timings`. The endpoint keeps its
+  strict `ToolTimingIngest` schema; malformed hook input is discarded locally
+  instead of generating repeated 422 requests.
 
 ## Architecture Overview
 
