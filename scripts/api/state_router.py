@@ -855,14 +855,16 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 if cb_data.get("weekly_resets_at"):
                     agents[lane]["resets_at"] = cb_data["weekly_resets_at"]
 
-        elif cb_data and cb_data.get("auth_error"):
-            # Provider/credential error from codexbar (e.g. Kimi/Gemini credentials
-            # expired). The CLI positively reported the lane is unavailable.
-            # Surface status='unavailable' with the error message carried;
-            # report 'unavailable' for quota fields rather than ambiguous null.
+        else:
+            # CodexBar capacity is unavailable (missing binary, timeout, non-zero exit, malformed JSON, unparseable schema, provider error, or fallback).
+            # Authoritative subscription capacity is ABSENT — mark lane explicitly UNAVAILABLE.
+            # Never present ledger-derived numeric burn/remaining/status as authoritative capacity.
             agents[lane]["status"] = "unavailable"
             agents[lane]["burn_pct_7d"] = "unavailable"
             agents[lane]["remaining_pct"] = "unavailable"
+            err_msg = (cb_data.get("auth_error") if isinstance(cb_data, dict) else None) or "CodexBar usage data unavailable"
+            err_kind = (cb_data.get("error_kind") if isinstance(cb_data, dict) else None) or "unavailable"
+            err_code = cb_data.get("error_code") if isinstance(cb_data, dict) else None
             agents[lane]["codexbar"] = {
                 "primary_used_pct": None,
                 "primary_remaining_pct": None,
@@ -879,12 +881,12 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 "weekly_pace_delta_pct": None,
                 "will_last_to_reset": None,
                 "pace_summary": None,
-                "stale": cb_data.get("stale", False),
-                "fetched_at": cb_data.get("fetched_at"),
+                "stale": cb_data.get("stale", False) if isinstance(cb_data, dict) else False,
+                "fetched_at": cb_data.get("fetched_at") if isinstance(cb_data, dict) else None,
                 "status": "unavailable",
-                "auth_error": cb_data.get("auth_error"),
-                "error_kind": cb_data.get("error_kind"),
-                "error_code": cb_data.get("error_code"),
+                "auth_error": err_msg,
+                "error_kind": err_kind,
+                "error_code": err_code,
             }
             if lane == "claude":
                 agents[lane]["interactive"]["status"] = "unavailable"
