@@ -31,6 +31,7 @@ from scripts.fleet_comms.review_publication import (
     ReviewPublicationError,
     build_review_comment,
     resolve_verdict_and_evidence,
+    validate_review_gate_input,
     verdict_from_review_evidence,
 )
 
@@ -122,14 +123,22 @@ def build_verdict_comment(
             f"review_evidence_verdict_mismatch: verdict={normalized_verdict} "
             f"evidence={evidence_verdict}"
         )
-    return build_review_comment(
-        verdict=normalized_verdict,
-        head_sha=_single_line(head_sha, label="head_sha"),
-        model=_single_line(model, label="model"),
-        family=_single_line(family, label="family"),
-        harness=_single_line(harness, label="harness"),
-        review_evidence=evidence,
-    )
+    try:
+        validate_review_gate_input(
+            verdict=normalized_verdict,
+            model=model,
+            review_evidence=evidence,
+        )
+        return build_review_comment(
+            verdict=normalized_verdict,
+            head_sha=_single_line(head_sha, label="head_sha"),
+            model=_single_line(model, label="model"),
+            family=_single_line(family, label="family"),
+            harness=_single_line(harness, label="harness"),
+            review_evidence=evidence,
+        )
+    except ReviewPublicationError as exc:
+        raise ReviewSafetyError(str(exc)) from exc
 
 
 Runner = Callable[..., subprocess.CompletedProcess[str]]

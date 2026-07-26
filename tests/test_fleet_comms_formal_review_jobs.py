@@ -177,9 +177,18 @@ def _sealed_payload(review_id: str, **overrides: object) -> dict[str, object]:
         "head_sha": _SHA,
         "gate_kind": GATE,
         "verdict": "APPROVED",
-        "model": "claude-opus-4-6",
+        "model": "claude-opus-5",
         "family": "anthropic",
         "harness": "claude",
+        "review_evidence": {
+            "schema_version": "code-review-findings.v1",
+            "overall": {
+                "correctness": "correct",
+                "explanation": "The review found no defects that block approval.",
+                "confidence": 0.95,
+            },
+            "findings": [],
+        },
     }
     base.update(overrides)
     return base
@@ -211,6 +220,35 @@ def test_accept_sealed_verdict_rejects_identity_mismatch(tmp_path: Path) -> None
             )
 
 
+def test_accept_sealed_verdict_refuses_evidence_free_approved(tmp_path: Path) -> None:
+    with _service(tmp_path) as svc:
+        job = svc.create_job(REPO, 5512, _SHA, GATE)
+        with pytest.raises(
+            FormalReviewJobsError, match="approved_review_evidence_required"
+        ):
+            svc.accept_sealed_verdict(
+                job.review_id,
+                _sealed_payload(job.review_id, review_evidence=None),
+            )
+
+
+def test_accept_sealed_verdict_refuses_unknown_reviewer_model(tmp_path: Path) -> None:
+    with _service(tmp_path) as svc:
+        job = svc.create_job(REPO, 5512, _SHA, GATE)
+        with pytest.raises(
+            FormalReviewJobsError, match=r"unknown_reviewer_model: 'gemini-1.5-pro'"
+        ):
+            svc.accept_sealed_verdict(
+                job.review_id,
+                _sealed_payload(
+                    job.review_id,
+                    verdict="BLOCKED",
+                    model="gemini-1.5-pro",
+                    review_evidence=None,
+                ),
+            )
+
+
 def test_accept_sealed_verdict_refuses_overwrite(tmp_path: Path) -> None:
     with _service(tmp_path) as svc:
         job = svc.create_job(REPO, 5512, _SHA, GATE)
@@ -218,7 +256,11 @@ def test_accept_sealed_verdict_refuses_overwrite(tmp_path: Path) -> None:
         with pytest.raises(FormalReviewJobsError, match="sealed_verdict_already_set"):
             svc.accept_sealed_verdict(
                 job.review_id,
-                _sealed_payload(job.review_id, verdict="CHANGES_REQUESTED"),
+                _sealed_payload(
+                    job.review_id,
+                    verdict="CHANGES_REQUESTED",
+                    review_evidence=None,
+                ),
             )
 
 

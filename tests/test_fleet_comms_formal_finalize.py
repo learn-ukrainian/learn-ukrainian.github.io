@@ -17,6 +17,7 @@ from scripts.fleet_comms.formal_review_jobs import FormalReviewJobService
 
 _SHA = "a" * 40
 _REPO = "learn-ukrainian/learn-ukrainian.github.io"
+_MODEL = "glm-5.2"
 
 
 class FakeGh:
@@ -52,15 +53,47 @@ def test_resolve_verdict_token_sources(tmp_path: Path) -> None:
         resolve_verdict_token()
 
 
-def test_finalize_creates_job_and_accepts(tmp_path: Path) -> None:
+def test_finalize_refuses_explicit_approved_without_evidence(tmp_path: Path) -> None:
+    gh = FakeGh()
+    with pytest.raises(
+        FormalReviewFinalizeError, match="approved_review_evidence_required"
+    ):
+        finalize_formal_review_verdict(
+            pr_number=5571,
+            model=_MODEL,
+            family="zhipu",
+            harness="opencode",
+            verdict="APPROVED",
+            plane_root=tmp_path / "plane",
+            runner=gh,
+        )
+    assert gh.calls == []
+
+
+def test_finalize_accepts_approved_findings_and_seals_evidence(tmp_path: Path) -> None:
     root = tmp_path / "plane"
+    findings_path = tmp_path / "review-findings.json"
+    findings_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "code-review-findings.v1",
+                "overall": {
+                    "correctness": "correct",
+                    "explanation": "The reviewed change has no blocking defects.",
+                    "confidence": 0.95,
+                },
+                "findings": [],
+            }
+        ),
+        encoding="utf-8",
+    )
     gh = FakeGh()
     result = finalize_formal_review_verdict(
         pr_number=5571,
-        model="zai-coding-plan/glm-5.2",
+        model=_MODEL,
         family="zhipu",
         harness="opencode",
-        verdict="APPROVED",
+        findings_path=findings_path,
         plane_root=root,
         runner=gh,
     )
@@ -73,8 +106,10 @@ def test_finalize_creates_job_and_accepts(tmp_path: Path) -> None:
         job = svc.get_job(result.review_id)
         assert job.has_sealed_verdict
         sealed = svc.load_sealed_verdict(result.review_id)
-        assert sealed.model == "zai-coding-plan/glm-5.2"
+        assert sealed.model == _MODEL
         assert sealed.family == "zhipu"
+        assert sealed.review_evidence is not None
+        assert sealed.review_evidence.explanation == "The reviewed change has no blocking defects."
 
 
 def test_finalize_reuses_job_idempotent(tmp_path: Path) -> None:
@@ -82,19 +117,19 @@ def test_finalize_reuses_job_idempotent(tmp_path: Path) -> None:
     gh = FakeGh()
     first = finalize_formal_review_verdict(
         pr_number=100,
-        model="m",
-        family="f",
-        harness="h",
-        verdict="APPROVED",
+        model=_MODEL,
+        family="zhipu",
+        harness="opencode",
+        verdict="BLOCKED",
         plane_root=root,
         runner=gh,
     )
     second = finalize_formal_review_verdict(
         pr_number=100,
-        model="m",
-        family="f",
-        harness="h",
-        verdict="APPROVED",
+        model=_MODEL,
+        family="zhipu",
+        harness="opencode",
+        verdict="BLOCKED",
         plane_root=root,
         runner=gh,
     )
@@ -107,9 +142,9 @@ def test_finalize_publish_dry_run_and_live(tmp_path: Path) -> None:
     gh = FakeGh()
     dry = finalize_formal_review_verdict(
         pr_number=200,
-        model="m",
-        family="f",
-        harness="h",
+        model=_MODEL,
+        family="zhipu",
+        harness="opencode",
         verdict="CHANGES_REQUESTED",
         plane_root=root,
         runner=gh,
@@ -122,10 +157,10 @@ def test_finalize_publish_dry_run_and_live(tmp_path: Path) -> None:
     gh2 = FakeGh()
     live = finalize_formal_review_verdict(
         pr_number=201,
-        model="m",
-        family="f",
-        harness="h",
-        verdict="APPROVED",
+        model=_MODEL,
+        family="zhipu",
+        harness="opencode",
+        verdict="BLOCKED",
         plane_root=root,
         runner=gh2,
         publish=True,
@@ -174,9 +209,9 @@ def test_finalize_preserves_canonical_evidence_for_publication(tmp_path: Path) -
 
     result = finalize_formal_review_verdict(
         pr_number=202,
-        model="m",
-        family="f",
-        harness="h",
+        model=_MODEL,
+        family="zhipu",
+        harness="opencode",
         findings_path=findings_path,
         plane_root=root,
         runner=gh,
@@ -194,6 +229,35 @@ def test_finalize_preserves_canonical_evidence_for_publication(tmp_path: Path) -
     assert "The mutable cache is reused by the next request." in body
 
 
+@pytest.mark.parametrize("model", ["glm-5.2", "gemini-3.1-pro"])
+def test_finalize_accepts_catalog_model_and_alias(tmp_path: Path, model: str) -> None:
+    result = finalize_formal_review_verdict(
+        pr_number=302,
+        model=model,
+        family="zhipu",
+        harness="opencode",
+        verdict="BLOCKED",
+        plane_root=tmp_path / model,
+        head_sha=_SHA,
+    )
+    assert result.verdict == "BLOCKED"
+
+
+def test_finalize_refuses_unknown_reviewer_model(tmp_path: Path) -> None:
+    with pytest.raises(
+        FormalReviewFinalizeError, match=r"unknown_reviewer_model: 'gemini-1.5-pro'"
+    ):
+        finalize_formal_review_verdict(
+            pr_number=301,
+            model="gemini-1.5-pro",
+            family="google",
+            harness="agy",
+            verdict="BLOCKED",
+            plane_root=tmp_path / "plane",
+            head_sha=_SHA,
+        )
+
+
 def test_cli_formal_job_accept(tmp_path: Path) -> None:
     from scripts.fleet_comms.cli import main
 
@@ -206,13 +270,13 @@ def test_cli_formal_job_accept(tmp_path: Path) -> None:
             "--pr",
             "300",
             "--verdict",
-            "APPROVED",
+            "BLOCKED",
             "--model",
-            "m",
+            _MODEL,
             "--family",
-            "f",
+            "zhipu",
             "--harness",
-            "h",
+            "opencode",
             "--head-sha",
             _SHA,
             "--root",

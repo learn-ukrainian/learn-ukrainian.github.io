@@ -10,6 +10,18 @@ from ai_agent_bridge import _review_verdict as publisher
 from ai_agent_bridge._review_safety import ReviewSafetyError
 
 
+def _approved_evidence() -> dict[str, object]:
+    return {
+        "schema_version": "code-review-findings.v1",
+        "overall": {
+            "correctness": "correct",
+            "explanation": "The review found no defects that block approval.",
+            "confidence": 0.95,
+        },
+        "findings": [],
+    }
+
+
 def test_publish_review_verdict_dry_run_is_thin_and_does_not_post() -> None:
     calls: list[list[str]] = []
 
@@ -23,6 +35,7 @@ def test_publish_review_verdict_dry_run_is_thin_and_does_not_post() -> None:
         model="gpt-5.6-terra",
         family="openai",
         harness="codex",
+        review_evidence=_approved_evidence(),
         dry_run=True,
         runner=fake_runner,
     )
@@ -31,6 +44,26 @@ def test_publish_review_verdict_dry_run_is_thin_and_does_not_post() -> None:
     assert "pr=5458" in summary
     assert "head_sha=deadbeef" in summary
     assert len(summary.encode("utf-8")) <= publisher.MAX_VERDICT_SUMMARY_BYTES
+
+
+def test_publish_review_verdict_refuses_evidence_free_approved() -> None:
+    calls: list[list[str]] = []
+
+    def fake_runner(command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        calls.append(command)
+        return subprocess.CompletedProcess(command, 0, stdout="deadbeef\n", stderr="")
+
+    with pytest.raises(ReviewSafetyError, match="approved_review_evidence_required"):
+        publisher.publish_review_verdict(
+            pr=5458,
+            verdict="APPROVED",
+            model="gpt-5.6-terra",
+            family="openai",
+            harness="codex",
+            dry_run=True,
+            runner=fake_runner,
+        )
+    assert calls == [["gh", "pr", "view", "5458", "--json", "headRefOid", "--jq", ".headRefOid"]]
 
 
 def test_publish_review_verdict_marks_legacy_verdict_without_evidence() -> None:

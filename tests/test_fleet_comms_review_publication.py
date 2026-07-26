@@ -24,6 +24,7 @@ from scripts.fleet_comms.review_publication import (
     parse_verdict_token,
     plan_publication,
     publication_idempotency_key,
+    validate_review_gate_input,
 )
 
 _SHA_A = "a" * 40
@@ -38,12 +39,24 @@ def _sealed(**overrides: object) -> dict[str, object]:
         "head_sha": _SHA_A,
         "gate_kind": DEFAULT_GATE_KIND,
         "verdict": "APPROVED",
-        "model": "claude-opus-4-6",
+        "model": "claude-opus-5",
         "family": "anthropic",
         "harness": "claude",
     }
     base.update(overrides)
     return base
+
+
+def _approved_evidence() -> dict[str, object]:
+    return {
+        "schema_version": "code-review-findings.v1",
+        "overall": {
+            "correctness": "correct",
+            "explanation": "The review found no defects that block approval.",
+            "confidence": 0.95,
+        },
+        "findings": [],
+    }
 
 
 # ── verdict parsing ──────────────────────────────────────────────────────────
@@ -234,7 +247,7 @@ def test_build_verdict_comment_marks_missing_review_evidence() -> None:
     assert "VERDICT: BLOCKED" in body
     assert f"Head SHA: {_SHA_A}" in body
     assert "Review ID: review_deadbeef" in body
-    assert "model=claude-opus-4-6" in body
+    assert "model=claude-opus-5" in body
     assert "NO EVIDENCE SUPPLIED" in body
 
 
@@ -331,7 +344,9 @@ def test_build_verdict_comment_truncates_findings_last_with_record_pointer() -> 
 
 
 def test_plan_publication_dry_run_default_ready() -> None:
-    sealed = parse_sealed_verdict_payload(_sealed())
+    sealed = parse_sealed_verdict_payload(
+        _sealed(review_evidence=_approved_evidence())
+    )
     plan = plan_publication(sealed, current_head_sha=_SHA_A)
     assert plan.action == "publish"
     assert plan.mutate is False
@@ -359,7 +374,9 @@ def test_plan_publication_mutate_flag_only_marks_intent() -> None:
 
 
 def test_plan_publication_refuses_stale_head_without_posting() -> None:
-    sealed = parse_sealed_verdict_payload(_sealed())
+    sealed = parse_sealed_verdict_payload(
+        _sealed(review_evidence=_approved_evidence())
+    )
     plan = plan_publication(sealed, current_head_sha=_SHA_B, mutate=True)
     assert plan.action == "refuse_stale"
     assert plan.mutate is False  # never mutate on stale
@@ -369,7 +386,9 @@ def test_plan_publication_refuses_stale_head_without_posting() -> None:
 
 
 def test_plan_publication_idempotent_skip_on_repeat() -> None:
-    sealed = parse_sealed_verdict_payload(_sealed())
+    sealed = parse_sealed_verdict_payload(
+        _sealed(review_evidence=_approved_evidence())
+    )
     key = publication_idempotency_key(
         repository=sealed.repository,
         pr_number=sealed.pr_number,
@@ -395,8 +414,36 @@ def test_plan_publication_all_verdicts_for_fake_github_matrix() -> None:
         ("CHANGES_REQUESTED", STATUS_FAILURE),
         ("BLOCKED", STATUS_ERROR),
     ):
-        sealed = parse_sealed_verdict_payload(_sealed(verdict=verdict))
+        payload = _sealed(verdict=verdict)
+        if verdict == "APPROVED":
+            payload["review_evidence"] = _approved_evidence()
+        sealed = parse_sealed_verdict_payload(payload)
         plan = plan_publication(sealed, current_head_sha=_SHA_A)
         assert plan.action == "publish"
         assert plan.status_state == status
         assert plan.to_dict()["verdict"] == verdict
+
+
+def test_plan_publication_refuses_evidence_free_approved_verdict() -> None:
+    sealed = parse_sealed_verdict_payload(_sealed())
+    with pytest.raises(ReviewPublicationError, match="approved_review_evidence_required"):
+        plan_publication(sealed, current_head_sha=_SHA_A)
+
+
+def test_plan_publication_refuses_unknown_reviewer_model() -> None:
+    sealed = parse_sealed_verdict_payload(
+        _sealed(verdict="BLOCKED", model="gemini-1.5-pro")
+    )
+    with pytest.raises(
+        ReviewPublicationError, match=r"unknown_reviewer_model: 'gemini-1.5-pro'"
+    ):
+        plan_publication(sealed, current_head_sha=_SHA_A)
+
+
+def test_validation_refuses_unparsed_approved_evidence() -> None:
+    with pytest.raises(ReviewPublicationError, match="approved_review_evidence_required"):
+        validate_review_gate_input(
+            verdict="APPROVED",
+            model="claude-opus-5",
+            review_evidence={"explanation": "Not canonical evidence"},  # type: ignore[arg-type]
+        )

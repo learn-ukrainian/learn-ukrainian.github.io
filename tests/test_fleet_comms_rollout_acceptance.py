@@ -61,6 +61,27 @@ def _request_for_legacy_message(plane_root: Path, message_id: int) -> tuple[str,
     return str(row[0]), str(row[1])
 
 
+@pytest.fixture
+def approved_findings_path(tmp_path: Path) -> Path:
+    """Persist canonical, evidence-backed findings for an approved review."""
+    path = tmp_path / "review-findings.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "code-review-findings.v1",
+                "overall": {
+                    "correctness": "correct",
+                    "explanation": "The review found no defects that block approval.",
+                    "confidence": 0.95,
+                },
+                "findings": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
 @pytest.mark.parametrize(
     ("recipient", "send"),
     [
@@ -142,7 +163,9 @@ def test_schema_v2_contains_rollout_contract_tables_and_columns(tmp_path: Path) 
     )
 
 
-def test_formal_review_verdict_is_sealed_as_an_immutable_json_artifact(tmp_path: Path) -> None:
+def test_formal_review_verdict_is_sealed_as_an_immutable_json_artifact(
+    tmp_path: Path, approved_findings_path: Path
+) -> None:
     """Formal verdict provenance is durably sealed before any live publication."""
     root = tmp_path / "batch_state" / "fleet-comms" / "v1"
     result = finalize_formal_review_verdict(
@@ -153,6 +176,7 @@ def test_formal_review_verdict_is_sealed_as_an_immutable_json_artifact(tmp_path:
         verdict="APPROVED",
         repository=_REPOSITORY,
         head_sha=_HEAD_SHA,
+        findings_path=approved_findings_path,
         plane_root=root,
     )
 
@@ -174,7 +198,15 @@ def test_formal_review_verdict_is_sealed_as_an_immutable_json_artifact(tmp_path:
         "model": "claude-sonnet-5",
         "pr_number": 5512,
         "repository": _REPOSITORY,
-        "review_evidence": None,
+        "review_evidence": {
+            "schema_version": "code-review-findings.v1",
+            "overall": {
+                "correctness": "correct",
+                "explanation": "The review found no defects that block approval.",
+                "confidence": 0.95,
+            },
+            "findings": [],
+        },
         "review_id": result.review_id,
         "verdict": "APPROVED",
     }
