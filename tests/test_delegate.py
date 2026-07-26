@@ -4229,3 +4229,880 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
     assert meta3["full_checkout"] is True
     assert (worktree / "curriculum" / "f.txt").is_file()
     assert (worktree / "wiki" / "f.txt").is_file()
+
+
+def test_count_commits_ahead_treats_a_vanished_worktree_as_unknown(tmp_path):
+    """A missing worktree is "cannot count", not an exception.
+
+    _worktree_is_dirty already returned None on OSError; its sibling raised, and
+    that asymmetry took down a whole dispatch's finalize path (2026-07-25).
+    """
+    missing = tmp_path / "never-existed"
+    assert delegate._count_commits_ahead(missing, "origin/main") is None
+    assert delegate._worktree_is_dirty(missing) is None
+
+
+def test_run_worker_reaches_a_terminal_status_when_finalize_telemetry_raises(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Finish telemetry must never cost the task its terminal status.
+
+    A task left at "running" with a dead pid is invisible to every settle-loop
+    watching it: the operator sees a job that still looks busy, forever. On
+    2026-07-25 a dispatch whose worktree disappeared mid-run did exactly that and
+    hid a dead worker for 52 minutes.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("finalize-explodes")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "finalize-explodes",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+    (tmp_path / "work.txt").write_text("finished work", encoding="utf-8")
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    def explode(*_args, **_kwargs):
+        raise FileNotFoundError(2, "No such file or directory", str(tmp_path))
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_count_commits_ahead", side_effect=explode),
+    ):
+        delegate._run_worker(
+            task_id="finalize-explodes",
+            agent="codex",
+            prompt="hi",
+            mode="workspace-write",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            effort="xhigh",
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
+    assert state["status"] != "running"
+    # Unknown telemetry cannot prove the work was committed, so it surfaces.
+    assert state["needs_finalize"] is True
+    assert state["status"] == "needs_finalize"
+    # And the reason the telemetry is unknown is recorded, not swallowed.
+    assert "FileNotFoundError" in (state.get("finalize_error") or "")
+
+
+def test_run_worker_records_terminal_status_before_best_effort_reaping(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Post-worker enrichment must not be able to strand a finished task.
+
+    Cross-family review of #5807: the first guard covered the finish telemetry
+    but not the worktree reaping below it, and _reap_finished_worktree performs
+    its import OUTSIDE its own handler — so an unimportable reaper module still
+    skipped the state write and left the task reading "running".
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("reap-explodes")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "reap-explodes",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    def unimportable(*_args, **_kwargs):
+        raise ImportError("No module named 'scripts.orchestration.reap_worktrees'")
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_count_commits_ahead", return_value=1),
+        patch.object(delegate, "_worktree_is_dirty", return_value=False),
+        patch.object(delegate, "_reap_finished_worktree", side_effect=unimportable),
+    ):
+        with contextlib.suppress(ImportError):
+            delegate._run_worker(
+                task_id="reap-explodes",
+                agent="codex",
+                prompt="hi",
+                mode="danger",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] != "running", "a finished worker was left looking busy"
+    assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
+
+
+def test_reap_finished_worktree_survives_an_unimportable_reaper(tmp_path, monkeypatch):
+    """The reaper's own import belongs inside its error handling."""
+    import builtins
+
+    real_import = builtins.__import__
+
+    def fake_import(name, *args, **kwargs):
+        if name == "scripts.orchestration" or name.endswith("reap_worktrees"):
+            raise ImportError(f"simulated missing module: {name}")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+    out = delegate._reap_finished_worktree(tmp_path)
+    assert isinstance(out, dict)
+    assert out.get("ok") is not True
+
+
+def test_run_worker_records_completion_even_when_cancelled_during_finalize(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A SIGTERM after the worker finished must not erase that it finished.
+
+    _worker_sigterm_handler raises KeyboardInterrupt, which is a BaseException:
+    an Exception-only guard let it unwind straight out of _run_worker, leaving a
+    completed worker recorded as running until some later probe guessed it had
+    crashed. Cross-family review of #5807.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("cancelled-in-finalize")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "cancelled-in-finalize",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    def cancel(*_args, **_kwargs):
+        raise KeyboardInterrupt("SIGTERM during finalize")
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_worktree_is_dirty", side_effect=cancel),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="cancelled-in-finalize",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] != "running", "cancellation erased a completed worker"
+    assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
+    assert state["needs_finalize"] is True
+    assert "KeyboardInterrupt" in (state.get("finalize_error") or "")
+
+
+def test_interrupt_before_telemetry_still_records_the_outcome(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The fallback must not depend on names bound inside the span it guards.
+
+    Cross-family review of #5807: the handler read final_state and final_status,
+    both assigned inside the try, so an interrupt arriving early raised
+    UnboundLocalError *inside the handler* — failing at exactly the moment it
+    existed for. Interrupt during the result-file write, the very first statement
+    of the span.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("interrupt-early")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "interrupt-early",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "a response", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    real_write_text = Path.write_text
+
+    def interrupt_on_result_file(self, *args, **kwargs):
+        if self.suffix == ".result":
+            raise KeyboardInterrupt("SIGTERM during result-file write")
+        return real_write_text(self, *args, **kwargs)
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(Path, "write_text", interrupt_on_result_file),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="interrupt-early",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None, "handler blew up instead of recording the outcome"
+    assert state["status"] != "running"
+    assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
+
+
+def test_interrupt_after_clean_telemetry_does_not_invent_finalize_work(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A dispatch already measured clean and committed stays done.
+
+    Cross-family review of #5807 (F002): unconditionally writing
+    needs_finalize=True on the interrupt path turned a healthy, already-verified
+    dispatch into a false manual-finalization alert.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("interrupt-after-clean")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "interrupt-after-clean",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    # Interrupt lands exactly ON the checkpoint write: telemetry has settled
+    # (clean worktree, 3 commits) but nothing has been persisted yet. The
+    # fallback write that follows must succeed, so only the first call raises.
+    real_write = delegate._write_state_atomic
+    fired = {"once": False}
+
+    def interrupt_first_write(path, state):
+        # The checkpoint is the first write carrying the finished-outcome fields;
+        # earlier writes record the running task. Fire once so the fallback write
+        # that follows can still land.
+        if not fired["once"] and "duration_s" in state:
+            fired["once"] = True
+            raise KeyboardInterrupt("SIGTERM at the checkpoint")
+        return real_write(path, state)
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_worktree_is_dirty", return_value=False),
+        patch.object(delegate, "_count_commits_ahead", return_value=3),
+        patch.object(delegate, "_write_state_atomic", side_effect=interrupt_first_write),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="interrupt-after-clean",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["needs_finalize"] is False, "invented finalize work for a clean dispatch"
+    assert state["status"] == "done"
+    assert state["commits_ahead"] == 3
+
+
+def test_terminal_fallback_write_defers_a_second_sigterm(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A repeat cancel must not escape mid-write and undo the guarantee.
+
+    An exception raised inside an `except` suite is not caught by that same
+    suite, so a second SIGTERM arriving while the fallback writes would escape
+    before the atomic rename and leave the finished worker recorded as running.
+    Cross-family review of #5807.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("double-sigterm")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "double-sigterm",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    observed = {}
+    real_write = delegate._write_state_atomic
+
+    def record_signal_state(path, state):
+        if "finalize_error" in state and state.get("finalize_error"):
+            observed["sigterm_disposition"] = signal.getsignal(signal.SIGTERM)
+        return real_write(path, state)
+
+    def interrupt(*_args, **_kwargs):
+        raise KeyboardInterrupt("first SIGTERM")
+
+    installed_before = signal.getsignal(signal.SIGTERM)
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_worktree_is_dirty", side_effect=interrupt),
+        patch.object(delegate, "_write_state_atomic", side_effect=record_signal_state),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="double-sigterm",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    # During the fallback write, a repeat SIGTERM cannot raise.
+    assert observed.get("sigterm_disposition") is signal.SIG_IGN, observed
+    # ...and the handler is restored afterwards, so cancellation still works.
+    assert signal.getsignal(signal.SIGTERM) is not signal.SIG_IGN
+    state = delegate._read_state(state_path)
+    assert state is not None and state["status"] != "running"
+
+
+def test_sigterm_during_runtime_lease_cleanup_cannot_lose_the_outcome(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The pre-guard cleanup window must not swallow a completed worker.
+
+    Runtime-lease cleanup runs in the runtime `finally` — after the worker has
+    finished, before the guarded span — and catches Exception, not the
+    KeyboardInterrupt a SIGTERM raises. Cross-family review of #5807.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("sigterm-in-cleanup")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "sigterm-in-cleanup",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    seen = {}
+
+    def reap_under_deferral(*_args, **_kwargs):
+        seen["sigterm_disposition"] = signal.getsignal(signal.SIGTERM)
+        return {"tmp_bytes_freed": 0, "tmp_reap_error": None}
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_reap_runtime_tmp_lease", side_effect=reap_under_deferral),
+        patch.object(delegate, "_worktree_is_dirty", return_value=False),
+        patch.object(delegate, "_count_commits_ahead", return_value=1),
+    ):
+        delegate._run_worker(
+            task_id="sigterm-in-cleanup",
+            agent="codex",
+            prompt="hi",
+            mode="workspace-write",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            effort="xhigh",
+            # A real dispatch always leases runtime tmp; pass one explicitly so
+            # this test actually enters the cleanup path instead of skipping it.
+            runtime_tmp_root=str(tmp_path / "runtime-tmp"),
+        )
+
+    assert seen, "the lease-cleanup path was never entered — test proves nothing"
+    assert seen["sigterm_disposition"] is signal.SIG_IGN, seen
+    assert signal.getsignal(signal.SIGTERM) is not signal.SIG_IGN
+    state = delegate._read_state(state_path)
+    assert state is not None and state["status"] in delegate._TERMINAL_STATUSES
+
+
+def test_interrupt_in_the_post_cleanup_gap_still_records_the_outcome(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The window between lease cleanup and classification is covered too.
+
+    Cross-family review of #5807, round six: each earlier fix guarded one window
+    and left the next one open. The recovery region now spans everything between
+    the worker finishing and that fact being on disk, so an interrupt during
+    status classification — previously unguarded — still persists a terminal
+    record.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("gap-interrupt")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "gap-interrupt",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    calls = {"n": 0}
+    real_classify = delegate._classify_final_status
+
+    def interrupt_on_first_classify(**kwargs):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise KeyboardInterrupt("SIGTERM during classification")
+        return real_classify(**kwargs)
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_classify_final_status", side_effect=interrupt_on_first_classify),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="gap-interrupt",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] != "running", "interrupt in the gap stranded a finished worker"
+    assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
+    # The fallback derived a real outcome instead of persisting an empty status.
+    assert state["status"] in {"needs_finalize", "done"}
+
+
+def test_returncode_invariant_is_shared_by_both_status_paths():
+    """A success without a child return code is never persisted as done.
+
+    Cross-family review of #5807, round seven: the normal path enforced this and
+    the interrupt fallback did not, so a cancel landing between classification
+    and the check wrote status=done with returncode=null — the fallback
+    contradicting the invariant exactly when it was exercised.
+
+    The race window itself has no callable between the two statements, so no
+    patch can place an interrupt inside it. I wrote an end-to-end test that
+    appeared to cover it, found it was passing for the wrong reason — the
+    interrupt landed before the worker ran at all — and deleted it rather than
+    keep a test that cannot fail for its stated reason. The shared rule is
+    tested directly instead, and both call sites now route through it.
+    """
+    assert delegate._apply_returncode_invariant("done", None) == "failed"
+    assert delegate._apply_returncode_invariant("done", 0) == "done"
+    assert delegate._apply_returncode_invariant("done", 1) == "done"
+    # Non-success statuses are never rewritten by it.
+    for status in ("failed", "timeout", "rate_limited", "cancelled", "needs_finalize"):
+        assert delegate._apply_returncode_invariant(status, None) == status
+
+
+def test_interrupt_during_the_runtime_call_still_records_a_terminal_status(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The region covers the runtime call itself, not just what follows it.
+
+    Round eight of cross-family review on #5807 found a SIGTERM window between
+    the deferred lease cleanup and the old region's start. That was the fifth
+    boundary of the same shape, so the region now spans the runtime call too:
+    there is no boundary left to land between. A cancel here is recorded as
+    cancelled — accurate, the worker really was stopped — instead of leaving the
+    task claiming to run.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("interrupt-mid-runtime")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "interrupt-mid-runtime",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    def cancel_mid_run(*_args, **_kwargs):
+        raise KeyboardInterrupt("SIGTERM while the worker was running")
+
+    with patch("agent_runtime.runner.invoke", side_effect=cancel_mid_run):
+        with contextlib.suppress(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="interrupt-mid-runtime",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] != "running", "a killed worker was left claiming to run"
+    assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
+
+
+def test_interrupt_at_the_cleanup_boundary_is_inside_the_region(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The exact boundary round eight reported: cleanup done, handler restored.
+
+    _sigterm_deferred restores the SIGTERM handler on exit, and the old region
+    began only afterwards — so a signal delivered in that instruction gap
+    escaped. Raising from the context manager's exit places the interrupt
+    precisely there. It now lands inside the region because the runtime
+    `finally` is itself inside it.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("boundary-interrupt")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "boundary-interrupt",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    @contextlib.contextmanager
+    def interrupt_on_restore():
+        yield
+        raise KeyboardInterrupt("SIGTERM as the handler was restored")
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_sigterm_deferred", interrupt_on_restore),
+        patch.object(delegate, "_worktree_is_dirty", return_value=False),
+        patch.object(delegate, "_count_commits_ahead", return_value=2),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="boundary-interrupt",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+                runtime_tmp_root=str(tmp_path / "runtime-tmp"),
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] != "running", "interrupt at the boundary stranded the task"
+    assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
+
+
+def test_interrupt_fallback_preserves_the_task_record(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The fallback must MERGE onto the task record, never replace it.
+
+    Cross-family review of #5807, round nine (F002): the fallback started from
+    an empty dict, so an early interrupt atomically replaced the task file —
+    recording a terminal status while destroying task_id, pid, mode, cwd and
+    worktree metadata that status/wait/cleanup and the operator all read. A
+    terminal status with no context is not an improvement over a stale running
+    one; it is a different way to lose the same information.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("preserve-record")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "preserve-record",
+        "status": "running",
+        "pid": 4242,
+        "mode": "workspace-write",
+        "agent": "codex",
+        "cwd": str(tmp_path),
+        "worktree_path": str(tmp_path),
+        "worktree_branch": "codex/preserve-record",
+        "worktree_base": "main",
+        "prompt_chars": 17,
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    @contextlib.contextmanager
+    def interrupt_on_restore():
+        yield
+        raise KeyboardInterrupt("SIGTERM at the cleanup boundary")
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_sigterm_deferred", interrupt_on_restore),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="preserve-record",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+                runtime_tmp_root=str(tmp_path / "runtime-tmp"),
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] != "running"
+    # Every field the rest of the system reads must still be there.
+    # (pid is legitimately rewritten to the live worker pid early in the run,
+    # so assert it is still recorded rather than pinning the seeded value.)
+    assert isinstance(state.get("pid"), int)
+    for key, expected in (
+        ("task_id", "preserve-record"),
+        ("agent", "codex"),
+        ("worktree_branch", "codex/preserve-record"),
+        ("worktree_path", str(tmp_path)),
+        ("prompt_chars", 17),
+    ):
+        assert state.get(key) == expected, f"fallback dropped {key}: {state.get(key)!r}"
+
+
+def test_interrupt_fallback_defers_sigterm_before_computing(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """SIGTERM is deferred for the whole handler, not only its write.
+
+    Round nine (F001): fallback computations ran before the deferral, so a
+    second cancel raised from inside the `except` suite — which that suite
+    cannot catch — and nothing was written.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("defer-before-compute")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "defer-before-compute",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    seen = {}
+    real_invariant = delegate._apply_returncode_invariant
+
+    def observe(status, returncode):
+        # Runs inside the fallback, BEFORE the state write.
+        seen["disposition"] = signal.getsignal(signal.SIGTERM)
+        return real_invariant(status, returncode)
+
+    def cancel(*_args, **_kwargs):
+        raise KeyboardInterrupt("first SIGTERM")
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_worktree_is_dirty", side_effect=cancel),
+        patch.object(delegate, "_apply_returncode_invariant", side_effect=observe),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="defer-before-compute",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    assert seen.get("disposition") is signal.SIG_IGN, seen
+    assert signal.getsignal(signal.SIGTERM) is not signal.SIG_IGN
+
+
+def test_interrupt_fallback_records_the_complete_outcome(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The fallback's record must be as complete as the checkpoint's.
+
+    Round ten of cross-family review on #5807: the fallback hand-assembled a
+    subset of the outcome fields, so an interrupted run persisted a terminal
+    status beside stale placeholder response_chars / exit_code / last_error.
+    Both writers now build their record from _core_terminal_fields.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("complete-outcome")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "complete-outcome",
+        "status": "running",
+        "response_chars": None,
+        "exit_code": None,
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "a real response body", "stderr_excerpt": None,
+            "returncode": 0, "rate_limited": False, "model": "gpt-5.5",
+            "effort": "xhigh", "cli_version": "0.131.0",
+        },
+    )()
+
+    @contextlib.contextmanager
+    def interrupt_on_restore():
+        yield
+        raise KeyboardInterrupt("SIGTERM at the cleanup boundary")
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_sigterm_deferred", interrupt_on_restore),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="complete-outcome",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+                runtime_tmp_root=str(tmp_path / "runtime-tmp"),
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    # No placeholder may survive next to a terminal status.
+    assert state["response_chars"] == len("a real response body")
+    assert state["exit_code"] == 0
+    assert state["returncode"] == 0
+    assert state.get("finished_at")
+    assert isinstance(state.get("duration_s"), float)
