@@ -19,7 +19,6 @@ import json
 import os
 import re
 import shlex
-import shutil
 import stat
 import subprocess
 import sys
@@ -49,10 +48,12 @@ from scripts.review.isolation import (
     build_reviewer_env,
     canonical_isolated_review_schema,
     is_sensitive_path,
+    remove_review_temp_tree,
     resolve_external_executable,
     resolve_trusted_reviewer_executable,
     review_isolation_tool_config,
     secret_like_findings,
+    sweep_review_temp_orphans,
 )
 from scripts.review.review_contract import ContractError, validate_reviewer_payload
 from scripts.review.snapshot import (
@@ -2372,28 +2373,7 @@ def _create_reviewer_view(
 
 def _remove_review_root(root: Path) -> None:
     """Remove a private root without following reviewer-created symlinks."""
-    try:
-        root_stat = root.lstat()
-    except FileNotFoundError:
-        return
-    if stat.S_ISLNK(root_stat.st_mode) or not stat.S_ISDIR(root_stat.st_mode):
-        raise OSError(f"temporary root is not a private directory: {root}")
-    for dirpath, dirnames, filenames in os.walk(root, topdown=False, followlinks=False):
-        base = Path(dirpath)
-        for name in filenames:
-            path = base / name
-            if path.is_symlink():
-                path.unlink()
-        for name in dirnames:
-            path = base / name
-            if path.is_symlink():
-                path.unlink()
-            else:
-                path.chmod(0o700)
-    root.chmod(0o700)
-    shutil.rmtree(root, ignore_errors=False)
-    if root.exists():
-        raise OSError(f"temporary root survived cleanup: {root}")
+    remove_review_temp_tree(root)
 
 
 def _create_private_write_root() -> Path:
@@ -2472,6 +2452,7 @@ def provision_review_worktree(
     Post-review acceptance verifies snapshot, bundle, original-source state,
     and requires bound isolation evidence from the runner.
     """
+    sweep_review_temp_orphans()
     if target is None:
         if allow_local_fallback:
             with _provision_local_review_worktree(repo_root=repo_root) as checkout:
@@ -2727,6 +2708,7 @@ def provision_local_review_snapshot(
     """
     from scripts.review.snapshot import capture_local_review_state
 
+    sweep_review_temp_orphans()
     root = repo_root.resolve()
     git_bin, _gh = _trusted_bins(root)
     try:

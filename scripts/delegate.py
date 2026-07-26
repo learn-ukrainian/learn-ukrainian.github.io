@@ -128,6 +128,20 @@ _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
 _GH_TOKEN_AGENTS = {"codex", "claude", "bridge"}
+_RUNTIME_TMP_TERMINAL_STATUSES = frozenset(
+    {
+        "done",
+        "failed",
+        "timeout",
+        "rate_limited",
+        "cancelled",
+        "crashed",
+        "dry_run",
+        "needs_finalize",
+        "no_deliverable",
+    }
+)
+_RUNTIME_TMP_ORPHAN_MAX_AGE_S = 7 * 24 * 60 * 60
 _FALLBACK_SUBS_PATH = _REPO_ROOT / "scripts" / "config" / "agent_fallback_substitutions.yaml"
 # Single source for dispatchable agents: argparse choices AND the hard-sub
 # validation in _resolve_agent_with_budget_guard (a yaml typo must never
@@ -450,6 +464,10 @@ class WorktreeStaleBase(RuntimeError):
     """Existing worktree is behind origin/<base> and the fast-forward rebase failed."""
 
 
+class WorktreeBranchDiverged(RuntimeError):
+    """A local --branch ref contains commits absent from its fetched origin ref."""
+
+
 def _normalize_task_id(agent: str, task_id: str) -> str:
     """Strip a leading ``{agent}-`` or ``{agent}/`` from task_id.
 
@@ -534,6 +552,163 @@ def _runtime_tmp_lease_bytes(lease_root: Path) -> int:
     return total
 
 
+def _grant_owner_rwx_at(path: Path, *, dir_fd: int) -> None:
+    """Give the owner access to a non-symlink path anchored at ``dir_fd``."""
+    try:
+        entry = os.stat(path, dir_fd=dir_fd, follow_symlinks=False)
+    except FileNotFoundError:
+        return
+    if stat.S_ISLNK(entry.st_mode):
+        return
+    os.chmod(
+        path,
+        stat.S_IMODE(entry.st_mode) | stat.S_IRWXU,
+        dir_fd=dir_fd,
+        follow_symlinks=False,
+    )
+
+
+def _runtime_tmp_reap_onexc(
+    lease: Path,
+    namespace: Path,
+    namespace_fd: int,
+):
+    """Build an ``rmtree`` repair callback confined to one verified lease."""
+
+    def repair(_func: Any, raw_path: str | os.PathLike[str], exc: BaseException) -> None:
+        if not isinstance(exc, PermissionError):
+            raise exc
+        path = Path(raw_path)
+        try:
+            candidate = path.relative_to(namespace) if path.is_absolute() else path
+            candidate.relative_to(lease.name)
+        except ValueError:
+            raise exc from None
+        _grant_owner_rwx_at(candidate, dir_fd=namespace_fd)
+        _grant_owner_rwx_at(candidate.parent, dir_fd=namespace_fd)
+
+    return repair
+
+
+def _remove_runtime_tmp_lease(lease: Path, namespace: Path) -> None:
+    """Delete one verified lease, repairing restrictive owned entries first."""
+    if not getattr(shutil.rmtree, "avoids_symlink_attacks", False):
+        raise RuntimeError("platform rmtree lacks symlink-attack protection")
+    if not hasattr(os, "O_NOFOLLOW"):
+        raise RuntimeError("platform lacks O_NOFOLLOW for runtime tmp cleanup")
+    open_flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+    open_flags |= os.O_NOFOLLOW
+    last_error: OSError | None = None
+    # ``shutil.rmtree`` calls onexc but cannot resume an ``os.open`` that
+    # failed while descending into a mode-000 directory. The next complete
+    # pass is safe because the handler repaired only verified lease entries.
+    for _attempt in range(2):
+        namespace_fd = os.open(namespace, open_flags)
+        try:
+            shutil.rmtree(
+                lease.name,
+                dir_fd=namespace_fd,
+                onexc=_runtime_tmp_reap_onexc(lease, namespace, namespace_fd),
+            )
+        except FileNotFoundError:
+            return
+        except OSError as exc:
+            last_error = exc
+        finally:
+            os.close(namespace_fd)
+        if not os.path.lexists(lease):
+            return
+    detail = f": {last_error}" if last_error is not None else ""
+    raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}{detail}")
+
+
+def _runtime_tmp_state_for_lease(lease_name: str) -> dict[str, Any] | None:
+    """Find the task state that owns a deterministic runtime-lease name."""
+    try:
+        state_files = tuple(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else ()
+    except OSError:
+        return None
+    for state_path in state_files:
+        if state_path.name.endswith(".tmp") or ".tmp." in state_path.name:
+            continue
+        state = _read_state(state_path)
+        task_id = state.get("task_id") if isinstance(state, dict) else None
+        if isinstance(task_id, str) and _runtime_tmp_lease_name(task_id) == lease_name:
+            return state
+    return None
+
+
+def _runtime_tmp_state_has_live_pid(state: dict[str, Any]) -> bool:
+    """Treat a valid live recorded PID as an active lease regardless of status."""
+    pid = state.get("pid")
+    if isinstance(pid, bool):
+        return False
+    try:
+        return isinstance(pid, (int, str)) and int(pid) > 0 and _pid_alive(int(pid))
+    except (TypeError, ValueError):
+        return False
+
+
+def _sweep_runtime_tmp_orphans(
+    *,
+    now: float | None = None,
+) -> dict[str, int]:
+    """Reap terminal or clearly abandoned task leases before a new dispatch.
+
+    A state-backed lease is removed only once its task is terminal and no
+    recorded process is alive. A state-less lease must be older than seven
+    days. Symlinks and malformed entries are skipped rather than followed.
+    """
+    result = {"leases_reaped": 0, "bytes_freed": 0, "errors": 0}
+    tmp_root = Path(tempfile.gettempdir())
+    namespace = tmp_root / "learn-ukrainian"
+    try:
+        namespace_stat = namespace.lstat()
+    except FileNotFoundError:
+        return result
+    except OSError:
+        result["errors"] += 1
+        return result
+    if stat.S_ISLNK(namespace_stat.st_mode) or not stat.S_ISDIR(namespace_stat.st_mode):
+        result["errors"] += 1
+        return result
+
+    cutoff = (time.time() if now is None else now) - _RUNTIME_TMP_ORPHAN_MAX_AGE_S
+    try:
+        candidates = tuple(namespace.iterdir())
+    except OSError:
+        result["errors"] += 1
+        return result
+    for lease in candidates:
+        try:
+            lease_stat = lease.lstat()
+        except FileNotFoundError:
+            continue
+        except OSError:
+            result["errors"] += 1
+            continue
+        if stat.S_ISLNK(lease_stat.st_mode) or not stat.S_ISDIR(lease_stat.st_mode):
+            continue
+
+        state = _runtime_tmp_state_for_lease(lease.name)
+        if state is not None:
+            status = state.get("status")
+            if status not in _RUNTIME_TMP_TERMINAL_STATUSES or _runtime_tmp_state_has_live_pid(state):
+                continue
+        elif lease_stat.st_mtime >= cutoff:
+            continue
+
+        try:
+            bytes_freed = _runtime_tmp_lease_bytes(lease)
+            _remove_runtime_tmp_lease(lease, namespace)
+        except OSError:
+            result["errors"] += 1
+            continue
+        result["leases_reaped"] += 1
+        result["bytes_freed"] += bytes_freed
+    return result
+
+
 def _reap_runtime_tmp_lease(
     lease_root: Path | str | None,
     namespace_root: Path | str | None,
@@ -592,16 +767,9 @@ def _reap_runtime_tmp_lease(
             raise RuntimeError("platform rmtree lacks symlink-attack protection")
 
         bytes_freed = _runtime_tmp_lease_bytes(lease)
-        open_flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
-        if hasattr(os, "O_NOFOLLOW"):
-            open_flags |= os.O_NOFOLLOW
-        namespace_fd = os.open(namespace, open_flags)
-        try:
-            # Passing a basename plus dir_fd keeps the deletion anchored to
-            # the verified namespace even if an ancestor changes afterwards.
-            shutil.rmtree(lease.name, dir_fd=namespace_fd)
-        finally:
-            os.close(namespace_fd)
+        _remove_runtime_tmp_lease(lease, namespace)
+        if os.path.lexists(lease):
+            raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
         result["tmp_bytes_freed"] = bytes_freed
     except Exception as exc:
         result["tmp_reap_error"] = (f"{type(exc).__name__}: {exc}")[:500]
@@ -1114,6 +1282,43 @@ def _fetch_existing_branch(branch: str) -> None:
     )
     if verify.returncode != 0:
         raise RuntimeError(f"origin/{branch} was not found after fetch; --branch requires an existing remote branch")
+
+
+def _require_local_branch_is_ancestor_of_origin(branch: str) -> str:
+    """Return fetched origin SHA or refuse a local-only branch divergence."""
+    origin_ref = f"origin/{branch}"
+    local_ref = f"refs/heads/{branch}"
+    origin_sha = _resolve_sha(_REPO_ROOT, origin_ref)
+    if origin_sha is None:
+        raise RuntimeError(f"{origin_ref} was not found after fetch; --branch requires an existing remote branch")
+    local_sha = _resolve_sha(_REPO_ROOT, local_ref)
+    if local_sha is None or local_sha == origin_sha:
+        return origin_sha
+
+    ancestry = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", local_ref, origin_ref],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_sanitized_git_env(),
+    )
+    if ancestry.returncode == 0:
+        return origin_sha
+    if ancestry.returncode != 1:
+        raise RuntimeError(
+            f"could not compare local {branch!r} against {origin_ref}: "
+            f"{_format_process_failure(ancestry)}"
+        )
+    raise WorktreeBranchDiverged(
+        f"refusing --branch {branch!r}: local {local_ref} is not an ancestor of "
+        f"{origin_ref}; local_sha={local_sha} origin_sha={origin_sha}. "
+        "Reconcile explicitly before dispatching: inspect with "
+        f"`git log --left-right --graph --oneline {local_ref}...{origin_ref}`; "
+        f"to preserve local commits, run `git switch {branch} && git rebase {origin_ref}` "
+        f"then `git push --force-with-lease origin {branch}`; to discard the local-only "
+        f"ref, run `git branch -f {branch} {origin_ref}`."
+    )
 
 
 def _branch_worktree_paths(branch: str) -> list[Path]:
@@ -2141,6 +2346,7 @@ def _ensure_worktree(
 
     if requested_branch:
         _fetch_existing_branch(requested_branch)
+        _require_local_branch_is_ancestor_of_origin(requested_branch)
         occupied_paths = _branch_worktree_paths(requested_branch)
         elsewhere = [path for path in occupied_paths if path != worktree_path]
         if elsewhere:
@@ -2239,10 +2445,20 @@ def _ensure_worktree(
     worktree_path.parent.mkdir(parents=True, exist_ok=True)
 
     add_command = ["git", "worktree", "add"]
-    if requested_branch and _resolve_sha(_REPO_ROOT, f"refs/heads/{requested_branch}"):
-        add_command.extend([str(worktree_path), requested_branch])
-    elif requested_branch:
-        add_command.extend(["--track", "-b", requested_branch, str(worktree_path), f"origin/{requested_branch}"])
+    if requested_branch:
+        # ``-B`` intentionally resets a behind local tracking ref to the SHA
+        # fetched from origin. _require_local_branch_is_ancestor_of_origin()
+        # already refused any local-only commits, and branch holders were
+        # released/refused above, so this cannot silently overwrite work.
+        add_command.extend(
+            [
+                "--track",
+                "-B",
+                requested_branch,
+                str(worktree_path),
+                f"origin/{requested_branch}",
+            ]
+        )
     else:
         add_command.extend(["-b", worktree_branch, str(worktree_path), worktree_base_ref])
     proc = subprocess.run(
@@ -3208,6 +3424,17 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         return 2
 
     _warn_if_monitor_api_unreachable()
+    if bool(getattr(args, "dry_run", False)):
+        print("🧹 runtime tmp orphan sweep: skipped=dry-run", file=sys.stderr)
+    else:
+        runtime_tmp_sweep = _sweep_runtime_tmp_orphans()
+        print(
+            "🧹 runtime tmp orphan sweep: "
+            f"leases_reaped={runtime_tmp_sweep['leases_reaped']} "
+            f"bytes_freed={runtime_tmp_sweep['bytes_freed']} "
+            f"errors={runtime_tmp_sweep['errors']}",
+            file=sys.stderr,
+        )
 
     # Refuse to clobber a task that's still alive — whether it's in
     # "running" (worker up and executing) OR "spawning" (worker created

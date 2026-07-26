@@ -41,6 +41,7 @@ from scripts.review.isolation import (
     is_sensitive_path,
     is_within,
     preflight_review_inputs,
+    remove_review_temp_tree,
     resolve_external_executable,
     safe_engine_path,
     secret_like_findings,
@@ -1147,24 +1148,6 @@ def _set_tree_read_only(root: Path) -> None:
     root.chmod(root.stat().st_mode & ~stat.S_IWUSR & ~stat.S_IWGRP & ~stat.S_IWOTH)
 
 
-def _set_tree_writable(root: Path) -> None:
-    if not root.exists():
-        return
-    for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
-        base = Path(dirpath)
-        for name in [*dirnames, *filenames]:
-            p = base / name
-            try:
-                if p.is_symlink():
-                    continue
-                mode = p.stat().st_mode
-                p.chmod(mode | stat.S_IWUSR)
-            except OSError:
-                continue
-    with contextlib.suppress(OSError):
-        root.chmod(root.stat().st_mode | stat.S_IWUSR)
-
-
 def derive_changed_paths_and_patch(
     repo_root: Path,
     *,
@@ -2152,10 +2135,7 @@ def verify_review_acceptance(
 
 
 def _cleanup_snapshot(path: Path) -> None:
-    if not path.exists():
-        return
-    _set_tree_writable(path)
-    shutil.rmtree(path, ignore_errors=False)
+    remove_review_temp_tree(path)
 
 
 def cleanup_snapshot_state(state: _SnapshotState) -> None:

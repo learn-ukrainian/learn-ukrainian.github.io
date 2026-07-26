@@ -45,6 +45,224 @@ from scripts.utils.claude_version import _parse_claude_semver
 
 ISOLATION_POLICY_VERSION = "review-isolation-v2"
 CLAUDE_MIN_SUPPORTED_CLI_VERSION = (2, 1, 116)
+REVIEW_TEMP_ROOT_PREFIXES = (
+    "lu-review-snap-",
+    "lu-review-git-",
+    "lu-review-exec-",
+    "lu-review-view-",
+    "lu-review-write-",
+)
+REVIEW_TEMP_ORPHAN_MAX_AGE_S = 48 * 60 * 60
+
+
+def _is_review_temp_root(path: Path) -> bool:
+    """Return whether a path has one of the review-owned temp prefixes."""
+    return path.name.startswith(REVIEW_TEMP_ROOT_PREFIXES)
+
+
+def _grant_owner_rwx(path: Path) -> None:
+    """Restore owner access for one owned non-symlink path if it remains."""
+    try:
+        entry = path.lstat()
+    except FileNotFoundError:
+        return
+    if stat.S_ISLNK(entry.st_mode):
+        return
+    os.chmod(
+        path,
+        stat.S_IMODE(entry.st_mode) | stat.S_IRWXU,
+        follow_symlinks=False,
+    )
+
+
+def restore_review_temp_tree_permissions(root: Path) -> None:
+    """Restore owner write/traversal access without following symlinks.
+
+    Review snapshots and views deliberately remove write bits. This walks
+    directory descriptors opened with ``O_NOFOLLOW`` so a concurrent symlink
+    swap cannot turn permission restoration into a write outside the root.
+    """
+    entry = root.lstat()
+    if stat.S_ISLNK(entry.st_mode) or not stat.S_ISDIR(entry.st_mode):
+        raise OSError(f"review temporary root is not a private directory: {root}")
+    _grant_owner_rwx(root)
+    if not hasattr(os, "O_NOFOLLOW"):
+        raise OSError("platform lacks O_NOFOLLOW for review temporary cleanup")
+    flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NONBLOCK", 0)
+    flags |= os.O_NOFOLLOW
+    root_fd = os.open(root, flags)
+    pending = [root_fd]
+    try:
+        while pending:
+            directory_fd = pending.pop()
+            try:
+                directory_stat = os.fstat(directory_fd)
+                if not stat.S_ISDIR(directory_stat.st_mode):
+                    raise OSError("review temporary descriptor is not a directory")
+                os.fchmod(
+                    directory_fd,
+                    stat.S_IMODE(directory_stat.st_mode) | stat.S_IRWXU,
+                )
+                with os.scandir(directory_fd) as entries:
+                    children = tuple(entries)
+                for child in children:
+                    try:
+                        child_stat = os.stat(
+                            child.name,
+                            dir_fd=directory_fd,
+                            follow_symlinks=False,
+                        )
+                    except FileNotFoundError:
+                        continue
+                    if stat.S_ISLNK(child_stat.st_mode):
+                        continue
+                    os.chmod(
+                        child.name,
+                        stat.S_IMODE(child_stat.st_mode) | stat.S_IRWXU,
+                        dir_fd=directory_fd,
+                        follow_symlinks=False,
+                    )
+                    if not stat.S_ISDIR(child_stat.st_mode):
+                        continue
+                    try:
+                        child_fd = os.open(child.name, flags, dir_fd=directory_fd)
+                    except FileNotFoundError:
+                        continue
+                    pending.append(child_fd)
+            finally:
+                os.close(directory_fd)
+    except BaseException:
+        for directory_fd in pending:
+            with contextlib.suppress(OSError):
+                os.close(directory_fd)
+        raise
+
+
+def _review_temp_reap_onexc(root: Path):
+    """Build an rmtree callback that repairs the blocking entry and parent."""
+
+    def repair(_func: Any, raw_path: str | os.PathLike[str], exc: BaseException) -> None:
+        if not isinstance(exc, PermissionError):
+            raise exc
+        path = Path(raw_path)
+        try:
+            path.relative_to(root)
+            path.parent.relative_to(root.parent)
+        except ValueError:
+            raise exc from None
+        _grant_owner_rwx(path)
+        _grant_owner_rwx(path.parent)
+
+    return repair
+
+
+def remove_review_temp_tree(root: Path) -> None:
+    """Hardened removal for one review-owned temp root, with final proof."""
+    if not _is_review_temp_root(root):
+        raise OSError(f"refusing to remove non-review temporary root: {root}")
+    try:
+        entry = root.lstat()
+    except FileNotFoundError:
+        return
+    if stat.S_ISLNK(entry.st_mode) or not stat.S_ISDIR(entry.st_mode):
+        raise OSError(f"review temporary root is not a private directory: {root}")
+    if not getattr(shutil.rmtree, "avoids_symlink_attacks", False):
+        raise OSError("platform rmtree lacks symlink-attack protection")
+
+    restore_review_temp_tree_permissions(root)
+    repair = _review_temp_reap_onexc(root)
+    last_error: OSError | None = None
+    for _attempt in range(2):
+        try:
+            shutil.rmtree(root, onexc=repair)
+        except FileNotFoundError:
+            return
+        except OSError as exc:
+            last_error = exc
+        if not os.path.lexists(root):
+            return
+    detail = f": {last_error}" if last_error is not None else ""
+    raise OSError(f"review temporary root survived cleanup: {root}{detail}")
+
+
+def _review_temp_root_bytes(root: Path) -> int:
+    """Count regular-file payload bytes without following symlink targets."""
+    total = 0
+    for directory, dirnames, filenames in os.walk(root, followlinks=False):
+        for name in [*dirnames, *filenames]:
+            path = Path(directory) / name
+            try:
+                entry = path.lstat()
+            except FileNotFoundError:
+                continue
+            if stat.S_ISREG(entry.st_mode) or stat.S_ISLNK(entry.st_mode):
+                total += entry.st_size
+    return total
+
+
+def _review_temp_orphan_candidates(tmp_root: Path) -> tuple[Path, ...]:
+    """Return only direct review-owned roots under loose and task TMPDIRs."""
+    candidates: list[Path] = []
+    parent_sets = [tmp_root]
+    namespace = tmp_root / "learn-ukrainian"
+    try:
+        namespace_stat = namespace.lstat()
+    except FileNotFoundError:
+        namespace_stat = None
+    if namespace_stat is not None and not stat.S_ISLNK(namespace_stat.st_mode) and stat.S_ISDIR(namespace_stat.st_mode):
+        try:
+            for path in namespace.iterdir():
+                path_stat = path.lstat()
+                if not stat.S_ISLNK(path_stat.st_mode) and stat.S_ISDIR(path_stat.st_mode):
+                    parent_sets.append(path)
+        except OSError:
+            pass
+    for parent in parent_sets:
+        try:
+            children = tuple(parent.iterdir())
+        except OSError:
+            continue
+        for child in children:
+            try:
+                child_stat = child.lstat()
+            except FileNotFoundError:
+                continue
+            if (
+                _is_review_temp_root(child)
+                and not stat.S_ISLNK(child_stat.st_mode)
+                and stat.S_ISDIR(child_stat.st_mode)
+            ):
+                candidates.append(child)
+    return tuple(candidates)
+
+
+def sweep_review_temp_orphans(*, now: float | None = None) -> dict[str, int]:
+    """Remove review-owned temp roots older than 48 hours before a review."""
+    result = {"roots_reaped": 0, "bytes_freed": 0, "errors": 0}
+    # Delegate workers override TMPDIR with their lease. The dispatcher keeps
+    # this base value so nested review cleanup can still cover both loose and
+    # task-namespaced review roots.
+    base = Path(os.environ.get("LU_RUNTIME_TMP_BASE_ROOT", tempfile.gettempdir()))
+    cutoff = (time.time() if now is None else now) - REVIEW_TEMP_ORPHAN_MAX_AGE_S
+    for root in _review_temp_orphan_candidates(base):
+        try:
+            root_stat = root.lstat()
+        except FileNotFoundError:
+            continue
+        except OSError:
+            result["errors"] += 1
+            continue
+        if root_stat.st_mtime >= cutoff:
+            continue
+        try:
+            bytes_freed = _review_temp_root_bytes(root)
+            remove_review_temp_tree(root)
+        except OSError:
+            result["errors"] += 1
+            continue
+        result["roots_reaped"] += 1
+        result["bytes_freed"] += bytes_freed
+    return result
 
 # Process-injection / Git-override variables stripped for every reviewer.
 _PROCESS_INJECTION_ENV_KEYS = frozenset(

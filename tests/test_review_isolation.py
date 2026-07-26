@@ -9,6 +9,7 @@ import os
 import stat
 import subprocess
 import textwrap
+import time
 from pathlib import Path
 
 import pytest
@@ -36,6 +37,7 @@ from scripts.review.isolation import (
     preflight_review_inputs,
     prepare_host_sandbox,
     prepare_isolated_review_launch,
+    remove_review_temp_tree,
     require_engine_isolation,
     require_supported_engine_version,
     resolve_external_executable,
@@ -44,6 +46,7 @@ from scripts.review.isolation import (
     safe_proxy_url,
     secret_like_findings,
     stage_engine_auth,
+    sweep_review_temp_orphans,
     wrap_argv_with_sandbox,
 )
 from scripts.review.snapshot import (
@@ -70,6 +73,18 @@ from scripts.review.snapshot import (
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+
+@pytest.fixture(autouse=True)
+def _fixture_review_tmp_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Keep review-start orphan sweeps inside a test-owned TMPDIR only."""
+    from scripts.review import isolation
+
+    review_tmp = tmp_path / "review-tmp"
+    review_tmp.mkdir()
+    monkeypatch.setattr(isolation.tempfile, "gettempdir", lambda: str(review_tmp))
+    monkeypatch.delenv("LU_RUNTIME_TMP_BASE_ROOT", raising=False)
+    return review_tmp
 
 
 def _frag(*parts: str) -> str:
@@ -143,6 +158,57 @@ def _private_review_roots(tmp_path: Path, label: str = "review") -> tuple[Path, 
     (write / "empty-mcp.json").write_text('{"mcpServers":{}}\n', encoding="utf-8")
     (write / "empty-mcp.json").chmod(0o400)
     return write, execution
+
+
+def test_review_temp_cleanup_removes_restrictive_view_after_simulated_review(tmp_path: Path) -> None:
+    review_root = tmp_path / "lu-review-view-simulated"
+    restricted = review_root / "context" / "restricted"
+    blocked = restricted / "deeper"
+    blocked.mkdir(parents=True)
+    (blocked / "evidence.txt").write_text("sealed", encoding="utf-8")
+    blocked.chmod(0o000)
+    restricted.chmod(0o000)
+
+    try:
+        remove_review_temp_tree(review_root)
+
+        assert not review_root.exists()
+        assert not tuple(tmp_path.glob("lu-review-*"))
+    finally:
+        if blocked.exists():
+            blocked.chmod(0o700)
+        if restricted.exists():
+            restricted.chmod(0o700)
+
+
+def test_review_temp_orphan_sweep_reaps_only_old_loose_and_task_roots(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from scripts.review import isolation
+
+    loose_old = tmp_path / "lu-review-git-old"
+    task_old = tmp_path / "learn-ukrainian" / "task" / "lu-review-view-old"
+    loose_young = tmp_path / "lu-review-write-young"
+    unrelated = tmp_path / "not-review"
+    for root in (loose_old, task_old, loose_young, unrelated):
+        root.mkdir(parents=True)
+        (root / "payload").write_text(root.name, encoding="utf-8")
+    now = time.time()
+    old = now - isolation.REVIEW_TEMP_ORPHAN_MAX_AGE_S - 1
+    os.utime(loose_old, (old, old))
+    os.utime(task_old, (old, old))
+    monkeypatch.setattr(isolation.tempfile, "gettempdir", lambda: str(tmp_path))
+    monkeypatch.delenv("LU_RUNTIME_TMP_BASE_ROOT", raising=False)
+
+    result = sweep_review_temp_orphans(now=now)
+
+    assert result["roots_reaped"] == 2
+    assert result["errors"] == 0
+    assert not loose_old.exists()
+    assert not task_old.exists()
+    assert loose_young.exists()
+    assert unrelated.exists()
 
 
 def _init_repo(path: Path) -> None:
