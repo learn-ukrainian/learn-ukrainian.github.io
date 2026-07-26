@@ -134,6 +134,9 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
         "fi\n"
         'if [[ "$1" == "post-checkout" && "${FAIL_LFS_POST_CHECKOUT:-0}" == "1" ]]; then\n'
         "  exit 42\n"
+        "fi\n"
+        'if [[ "$1" == "post-merge" && "${FAIL_LFS_POST_MERGE:-0}" == "1" ]]; then\n'
+        "  exit 43\n"
         "fi\n",
     )
     hook_log = tmp_path / "hook.log"
@@ -192,6 +195,7 @@ def test_installer_and_all_hook_functions_run(tmp_path):
     assert "lfs-post-checkout" in calls
     assert "lfs-post-commit" in calls
     assert "lfs-pre-push" in calls
+    assert "lfs-post-merge" in calls
 
     updates = Path(env["LFS_STDIN_LOG"]).read_text(encoding="utf-8").splitlines()
     assert len(updates) == 1
@@ -228,6 +232,22 @@ def test_post_checkout_heals_even_when_lfs_fails(tmp_path):
     assert result.returncode == 42
     calls = Path(env["HOOK_LOG"]).read_text(encoding="utf-8").splitlines()
     assert calls[-2:] == ["lfs-post-checkout", "primary-heal"]
+
+
+def test_post_merge_reapplies_primary_guard_even_when_lfs_fails(tmp_path):
+    repo, _, env = _fixture_repository(tmp_path)
+    _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+
+    result = _run(
+        [str(repo / ".githooks/post-merge"), "0"],
+        cwd=repo,
+        env={**env, "FAIL_LFS_POST_MERGE": "1"},
+        check=False,
+    )
+
+    assert result.returncode == 43
+    calls = Path(env["HOOK_LOG"]).read_text(encoding="utf-8").splitlines()
+    assert calls[-2:] == ["lfs-post-merge", "primary-write-guard"]
 
 
 def test_full_pre_push_chain_replays_updates_to_the_pytest_guard(tmp_path):

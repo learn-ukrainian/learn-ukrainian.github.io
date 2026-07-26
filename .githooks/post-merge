@@ -2,4 +2,18 @@
 set -euo pipefail
 
 source "$(dirname "$0")/_lib.sh"
-run_project_python "$source_root/scripts/guardrails/primary_write_guard.py" apply --hook
+
+lfs_status=0
+if command -v git-lfs >/dev/null 2>&1; then
+  git lfs post-merge "$@" || lfs_status=$?
+else
+  echo "Git hook error: this repository uses Git LFS, but git-lfs is not installed." >&2
+  lfs_status=2
+fi
+
+guard_status=0
+run_project_python "$source_root/scripts/guardrails/primary_write_guard.py" apply --hook || guard_status=$?
+if [[ "$guard_status" -ne 0 ]]; then
+  exit "$guard_status"
+fi
+exit "$lfs_status"
