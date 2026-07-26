@@ -67,6 +67,63 @@ agent_manifest_path_is_safe() {
     esac
 }
 
+# A lexically safe manifest path can still escape through a symlinked
+# intermediate component.  This check is deliberately separate from the
+# lexical check above: defence in depth matters because .agent/ is writable
+# runtime state and its manifest is persisted locally.
+#
+# A manifest symlink entry is the one safe exception at the leaf: rm -f on the
+# link removes the link itself and never follows it.  Every intermediate
+# component must be a real directory, and all other leaf types must be real
+# filesystem objects.  The resolved parent is then required to sit beneath the
+# physical .agent/ root before any deletion is attempted.
+agent_manifest_path_is_safe_to_delete() {
+    local kind="$1" relative="$2" agent_root_real current component
+    local resolved_parent resolved_path
+    local -a components
+    local index last_index
+
+    if [[ ! -d .agent || -L .agent ]]; then
+        echo "  .agent: refusing manifest deletion '$relative': .agent is not a real directory" >&2
+        return 1
+    fi
+    agent_root_real="$(cd -P -- .agent && pwd)" || return 1
+
+    IFS='/' read -r -a components <<< "$relative"
+    last_index=$((${#components[@]} - 1))
+    current=".agent"
+    for ((index = 0; index < last_index; index++)); do
+        component="${components[index]}"
+        current+="/$component"
+        if [[ -L "$current" ]]; then
+            echo "  .agent: refusing manifest deletion '$relative': symlinked component '$component'" >&2
+            return 1
+        fi
+        if [[ ! -d "$current" ]]; then
+            echo "  .agent: refusing manifest deletion '$relative': cannot resolve component '$component'" >&2
+            return 1
+        fi
+    done
+
+    resolved_parent="$(cd -P -- "$current" && pwd)" || {
+        echo "  .agent: refusing manifest deletion '$relative': cannot resolve parent" >&2
+        return 1
+    }
+    resolved_path="$resolved_parent/${components[last_index]}"
+    case "$resolved_path" in
+        "$agent_root_real"/*) ;;
+        *)
+            echo "  .agent: refusing manifest deletion '$relative': resolved path escapes .agent" >&2
+            return 1
+            ;;
+    esac
+
+    if [[ -L "$current/${components[last_index]}" && "$kind" != l ]]; then
+        echo "  .agent: refusing manifest deletion '$relative': symlinked leaf has manifest type '$kind'" >&2
+        return 1
+    fi
+}
+
 shared_source_path_exists() {
     local relative="$1"
     [[ -e "$SHARED_EXTENSIONS/$relative" || -L "$SHARED_EXTENSIONS/$relative" ]]
@@ -141,6 +198,10 @@ reap_retired_shared_agent_paths() {
     while IFS=$'\t' read -r kind relative || [[ -n "$kind" ]]; do
         if [[ "$kind" != d && "$kind" != f && "$kind" != l ]] \
             || ! agent_manifest_path_is_safe "$relative"; then
+            echo "  .agent: ignoring unsafe manifest entry '$kind $relative'" >&2
+            continue
+        fi
+        if ! agent_manifest_path_is_safe_to_delete "$kind" "$relative"; then
             echo "  .agent: ignoring unsafe manifest entry '$kind $relative'" >&2
             continue
         fi

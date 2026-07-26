@@ -215,6 +215,99 @@ def test_agent_manifest_reaps_retired_hook_without_touching_agent_state(tmp_path
     assert runtime_tmp.read_text(encoding="utf-8") == "agent-owned scratch\n"
 
 
+def test_agent_manifest_rejects_symlinked_intermediate_component(tmp_path: Path) -> None:
+    """A manifest path must not follow a symlinked .agent/ subdirectory."""
+    repo = _init_checkout(tmp_path)
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stderr
+
+    external_dir = tmp_path / "external"
+    external_dir.mkdir()
+    victim = external_dir / "victim.txt"
+    victim.write_text("must survive\n", encoding="utf-8")
+    (repo / ".agent" / "escape").symlink_to(external_dir, target_is_directory=True)
+    with (repo / AGENT_DEPLOY_MANIFEST).open("a", encoding="utf-8") as manifest:
+        manifest.write("f\tescape/victim.txt\n")
+
+    deploy = _run(repo, DEPLOY_SCRIPT)
+    output = f"{deploy.stdout}\n{deploy.stderr}"
+    assert deploy.returncode == 0, output
+    assert victim.read_text(encoding="utf-8") == "must survive\n"
+    assert (repo / ".agent" / "escape").is_symlink()
+    assert "symlinked component 'escape'" in output
+    assert "ignoring unsafe manifest entry 'f escape/victim.txt'" in output
+
+
+def test_agent_manifest_unlinks_symlink_leaf_without_following_target(tmp_path: Path) -> None:
+    """A recorded symlink leaf is unlinked, never followed to its target."""
+    repo = _init_checkout(tmp_path)
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stderr
+
+    external_target = tmp_path / "external-target.txt"
+    external_target.write_text("must survive\n", encoding="utf-8")
+    link = repo / ".agent" / "link"
+    link.symlink_to(external_target)
+    with (repo / AGENT_DEPLOY_MANIFEST).open("a", encoding="utf-8") as manifest:
+        manifest.write("l\tlink\n")
+
+    deploy = _run(repo, DEPLOY_SCRIPT)
+    assert deploy.returncode == 0, deploy.stderr
+    assert "removed retired deploy artifact 'link'" in deploy.stdout
+    assert external_target.read_text(encoding="utf-8") == "must survive\n"
+    assert not link.is_symlink()
+
+
+def test_agent_manifest_keeps_lexically_unsafe_entries_rejected(tmp_path: Path) -> None:
+    """Existing absolute and parent-directory manifest rejections remain in force."""
+    repo = _init_checkout(tmp_path)
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stderr
+
+    parent_victim = tmp_path / "outside"
+    absolute_victim = tmp_path / "absolute-outside"
+    parent_victim.write_text("must survive\n", encoding="utf-8")
+    absolute_victim.write_text("must survive\n", encoding="utf-8")
+    # The deploy script exits early on a true no-op, so add a legitimate source
+    # change to exercise manifest reaping during this regression.
+    source_change = repo / "agents_extensions" / "shared" / "hooks" / "force-redeploy.sh"
+    source_change.write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+    source_change.chmod(0o755)
+    with (repo / AGENT_DEPLOY_MANIFEST).open("a", encoding="utf-8") as manifest:
+        manifest.write("f\t../outside\n")
+        manifest.write(f"f\t{absolute_victim}\n")
+
+    deploy = _run(repo, DEPLOY_SCRIPT)
+    output = f"{deploy.stdout}\n{deploy.stderr}"
+    assert deploy.returncode == 0, output
+    assert "ignoring unsafe manifest entry 'f ../outside'" in output
+    assert f"ignoring unsafe manifest entry 'f {absolute_victim}'" in output
+    assert parent_victim.read_text(encoding="utf-8") == "must survive\n"
+    assert absolute_victim.read_text(encoding="utf-8") == "must survive\n"
+
+
+def test_agent_manifest_reaps_legitimate_nested_file(tmp_path: Path) -> None:
+    """Physical-path validation still permits a retired nested .agent/ artifact."""
+    repo = _init_checkout(tmp_path)
+    retired = Path("hooks/nested/retired.sh")
+    source = repo / "agents_extensions" / "shared" / retired
+    source.parent.mkdir(parents=True)
+    source.write_text("#!/usr/bin/env bash\necho retired\n", encoding="utf-8")
+    source.chmod(0o755)
+    _init_git_history(repo)
+
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stderr
+    deployed = repo / ".agent" / retired
+    assert deployed.exists()
+
+    _delete_source_file(repo, retired)
+    deploy = _run(repo, DEPLOY_SCRIPT)
+    assert deploy.returncode == 0, deploy.stderr
+    assert "removed retired deploy artifact 'hooks/nested/retired.sh'" in deploy.stdout
+    assert not deployed.exists()
+
+
 def test_agent_manifest_migration_defers_reaping_verified_legacy_artifact(tmp_path: Path) -> None:
     """The first manifest deploy preserves legacy output; the next one reaps it."""
     repo = _init_checkout(tmp_path)
