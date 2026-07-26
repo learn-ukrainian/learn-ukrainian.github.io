@@ -10,6 +10,7 @@ Issue: #1184.
 from __future__ import annotations
 
 import contextlib
+import errno
 import json
 import os
 import signal
@@ -248,6 +249,48 @@ def test_runtime_tmp_reap_repairs_mode_zero_descendant(tmp_path, monkeypatch):
             blocked.chmod(0o700)
 
 
+def test_runtime_tmp_remove_absent_lease_returns_cleanly(tmp_path, monkeypatch):
+    """A lease a concurrent sweep already removed is success, not a survived-cleanup raise."""
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace_root = tmp_path / "learn-ukrainian"
+    namespace_root.mkdir()
+    lease_root = namespace_root / "task-already-gone"
+
+    delegate._remove_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert not os.path.lexists(lease_root)
+
+
+def test_runtime_tmp_reap_retries_past_multiple_mode_zero_barriers(tmp_path, monkeypatch):
+    """Every repaired unreadable directory must be retried until the lease is gone."""
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace_root = tmp_path / "learn-ukrainian"
+    lease_root = namespace_root / "task"
+    first_blocked = lease_root / "00-blocked"
+    second_blocked = first_blocked / "00-blocked-again"
+    second_blocked.mkdir(parents=True)
+    (second_blocked / "sealed.txt").write_text("sealed", encoding="utf-8")
+    (first_blocked / "10-ordinary-after-first-error.txt").write_text("ordinary", encoding="utf-8")
+    (lease_root / "10-ordinary-after-first-error.txt").write_text("ordinary", encoding="utf-8")
+    ordinary_tree = lease_root / "20-ordinary-tree" / "nested"
+    ordinary_tree.mkdir(parents=True)
+    (ordinary_tree / "ordinary.txt").write_text("ordinary", encoding="utf-8")
+    second_blocked.chmod(0o000)
+    first_blocked.chmod(0o000)
+
+    try:
+        result = delegate._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+        assert result["tmp_reap_error"] is None
+        assert not os.path.lexists(lease_root)
+    finally:
+        for blocked in (first_blocked, second_blocked):
+            with contextlib.suppress(FileNotFoundError, PermissionError):
+                blocked.chmod(0o700)
+        with contextlib.suppress(FileNotFoundError, OSError):
+            delegate.shutil.rmtree(lease_root)
+
+
 def test_runtime_tmp_reap_records_cleanup_errors(tmp_path, monkeypatch):
     monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
     namespace_root = tmp_path / "learn-ukrainian"
@@ -299,11 +342,39 @@ def test_runtime_tmp_orphan_sweep_reaps_only_safe_candidates(tmp_tasks_dir, tmp_
     assert result["leases_reaped"] == 2
     assert result["bytes_freed"] == len("terminal-task") + len("old-unknown")
     assert result["errors"] == 0
+    assert result["error_details"] == []
     assert not terminal.exists()
     assert not old_unknown.exists()
     assert running.exists()
     assert live_pid.exists()
     assert young_unknown.exists()
+
+
+def test_runtime_tmp_orphan_sweep_reports_bounded_error_details(tmp_tasks_dir, tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace = tmp_path / "learn-ukrainian"
+    count = delegate._RUNTIME_TMP_SWEEP_ERROR_DETAILS_LIMIT + 1
+    for index in range(count):
+        lease = namespace / f"failed-{index}"
+        lease.mkdir(parents=True)
+        delegate._write_state_atomic(
+            delegate._state_path(lease.name),
+            {"task_id": lease.name, "status": "done", "pid": None},
+        )
+
+    def fail_reap(lease: Path, _namespace: Path) -> None:
+        raise OSError(errno.ENOTEMPTY, "Directory not empty", str(lease / "residue"))
+
+    monkeypatch.setattr(delegate, "_remove_runtime_tmp_lease", fail_reap)
+
+    result = delegate._sweep_runtime_tmp_orphans()
+
+    assert result["errors"] == count
+    details = result["error_details"]
+    assert len(details) == delegate._RUNTIME_TMP_SWEEP_ERROR_DETAILS_LIMIT
+    assert all(lease.startswith("failed-") for lease, _errno, _path in details)
+    assert all(error_number == errno.ENOTEMPTY for _lease, error_number, _path in details)
+    assert all(path.endswith("/residue") for _lease, _errno, path in details)
 
 
 def test_write_state_atomic_no_partial_reads(tmp_tasks_dir):
