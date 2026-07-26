@@ -16,8 +16,12 @@ from __future__ import annotations
 
 import importlib.util
 import io
+import json
+import os
 import stat
+import subprocess
 import sys
+import time
 import urllib.error
 from pathlib import Path
 
@@ -92,6 +96,41 @@ def test_pipes_normally_when_stdout_is_not_a_terminal(monkeypatch):
 
     assert rc == 0
     assert sys.stdout.getvalue().strip() == TOKEN
+
+
+def test_helper_sub_process_piped_contract(tmp_path: Path):
+    """Consumer contract: invoking helper with stdout piped yields exit 0 and non-empty token on stdout."""
+    cred_file = tmp_path / "kimi-code.json"
+    cred_file.write_text(
+        json.dumps(
+            {
+                "access_token": "sk-piped-delivery-token-12345",
+                "refresh_token": "r-refresh-token",
+                "expires_at": time.time() + 900,
+                "expires_in": 900,
+                "token_type": "Bearer",
+                "scope": "kimi-code",
+            }
+        ),
+        encoding="utf-8",
+    )
+    env = os.environ.copy()
+    env["KIMI_CODE_CREDENTIALS_PATH"] = str(cred_file)
+    env["KIMI_CODE_OAUTH_HOST"] = "http://127.0.0.1:9"
+    env.pop(oauth._OUT_FILE_ENV, None)
+    env.pop(oauth._OUT_FILE_ENV_ALT, None)
+
+    proc = subprocess.run(
+        [sys.executable, str(MODULE), "token"],
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=10,
+    )
+
+    assert proc.returncode == 0, f"Expected exit 0, got {proc.returncode}. Stderr: {proc.stderr}"
+    assert proc.stdout.strip() == "sk-piped-delivery-token-12345", "Token must be printed to stdout when stdout is piped"
+    assert len(proc.stdout.strip()) > 0, "stdout must be non-empty"
 
 
 def test_out_file_delivers_token_securely_mode_0600(tmp_path: Path, monkeypatch, capsys):

@@ -46,6 +46,7 @@ def _require_launcher_sources() -> None:
     """Seed from checkout once; do not depend on root scripts surviving full CI suite."""
     missing = [path for path in (
         _LAUNCHER,
+        _REPO_ROOT / "scripts" / "secret_redactor.py",
         _REPO_ROOT / "scripts" / "lib" / "claude_route_guard.sh",
         _REPO_ROOT / "scripts" / "lib" / "profile_resolver.sh",
         _REPO_ROOT / "scripts" / "lib" / "context_profiles.py",
@@ -74,6 +75,10 @@ def _seed_fake_project(tmp_path: Path) -> Path:
     _write_executable(
         project / "start-claude.sh",
         "#!/usr/bin/env bash\n# Test stub: kimicc already exported env; exec fake claude from PATH.\nexec claude \"$@\"\n",
+    )
+    secret_redactor = _REPO_ROOT / "scripts" / "secret_redactor.py"
+    (project / "scripts" / "secret_redactor.py").write_text(
+        secret_redactor.read_text(encoding="utf-8"), encoding="utf-8"
     )
     for name in ("claude_route_guard.sh", "profile_resolver.sh", "context_profiles.py", "kimi_coding_oauth.py"):
         src = _REPO_ROOT / "scripts" / "lib" / name
