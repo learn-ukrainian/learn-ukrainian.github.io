@@ -4638,3 +4638,48 @@ def test_returncode_invariant_is_shared_by_both_status_paths():
     # Non-success statuses are never rewritten by it.
     for status in ("failed", "timeout", "rate_limited", "cancelled", "needs_finalize"):
         assert delegate._apply_returncode_invariant(status, None) == status
+
+
+def test_interrupt_during_the_runtime_call_still_records_a_terminal_status(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The region covers the runtime call itself, not just what follows it.
+
+    Round eight of cross-family review on #5807 found a SIGTERM window between
+    the deferred lease cleanup and the old region's start. That was the fifth
+    boundary of the same shape, so the region now spans the runtime call too:
+    there is no boundary left to land between. A cancel here is recorded as
+    cancelled — accurate, the worker really was stopped — instead of leaving the
+    task claiming to run.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("interrupt-mid-runtime")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "interrupt-mid-runtime",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    def cancel_mid_run(*_args, **_kwargs):
+        raise KeyboardInterrupt("SIGTERM while the worker was running")
+
+    with patch("agent_runtime.runner.invoke", side_effect=cancel_mid_run):
+        with contextlib.suppress(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="interrupt-mid-runtime",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] != "running", "a killed worker was left claiming to run"
+    assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]

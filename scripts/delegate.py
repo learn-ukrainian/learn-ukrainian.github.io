@@ -2433,102 +2433,26 @@ def _run_worker(
     runtime_tmp_reap: dict[str, int | str | None] | None = None
 
     cancelled = False
-    try:
-        stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
-        initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
-        tool_config: dict[str, Any] = {}
-        if max_budget_usd is not None:
-            tool_config["max_budget_usd"] = max_budget_usd
-        if provider is not None:
-            tool_config[RUNTIME_ROUTE_TOOL_CONFIG_KEY] = {"provider": provider}
-        if output_schema_path is not None:
-            tool_config["output_schema_path"] = output_schema_path
-            tool_config["output_schema_sha256"] = output_schema_sha256
-        tool_config = tool_config or None
-        result = runtime_invoke(
-            agent,
-            prompt,
-            mode=mode,
-            cwd=cwd,
-            model=model,
-            task_id=task_id,
-            session_id=None,  # Layer 3 is always fresh-session
-            tool_config=tool_config,
-            entrypoint="delegate",
-            hard_timeout=hard_timeout,
-            stdout_silence_timeout=stdout_silence_timeout,
-            initial_response_timeout=initial_probe,
-            effort=effort,
-        )
-        ok_outcome = result.ok
-        response = result.response
-        stderr_excerpt = result.stderr_excerpt
-        returncode = result.returncode
-        rate_limited = result.rate_limited
-        substitution = getattr(result, "substitution", None)
-    except KeyboardInterrupt as exc:
-        # Raised by our SIGTERM handler (or by Ctrl+C in manual runs).
-        # The runtime's finally block has already killed the CLI
-        # subprocess and stopped the watchdog by the time we catch
-        # this, so no extra cleanup is needed here. Mark as cancelled.
-        cancelled = True
-        stderr_excerpt = f"cancelled via SIGTERM or Ctrl+C: {exc}"[:500]
-        returncode_reason = "worker interrupted before a terminal subprocess returncode was available"
-    except RateLimitedError as exc:
-        rate_limited = True
-        stderr_excerpt = str(exc)[:500]
-        returncode_reason = "runtime rejected the dispatch before a terminal subprocess returncode was available"
-    except AgentStalledError as exc:
-        timed_out = True
-        substitution = getattr(exc, "substitution", None)
-        prefix = (
-            "initial_response_timeout"
-            if getattr(exc, "kind", "stall") == "initial_response_timeout"
-            else "stdout_silence_timeout"
-        )
-        stderr_excerpt = f"{prefix}: {exc}"[:500]
-        returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
-    except AgentTimeoutError as exc:
-        substitution = getattr(exc, "substitution", None)
-        stderr_excerpt = f"hard_timeout: {exc}"[:500]
-        returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
-    except AgentRuntimeError as exc:
-        stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
-        returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
-    except Exception as exc:
-        # Last-ditch: don't crash the worker on an unexpected bug — we
-        # need to update the state file or the parent will see us as
-        # "crashed" forever.
-        stderr_excerpt = f"worker unexpected: {type(exc).__name__}: {exc}"[:500]
-        returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
-    finally:
-        if runtime_tmp_root is not None or runtime_tmp_namespace_root is not None:
-            # This cleanup runs AFTER the worker has finished but BEFORE the
-            # guarded span below, and it catches Exception rather than the
-            # KeyboardInterrupt a SIGTERM raises — so a cancel landing here used
-            # to unwind out of _run_worker with no terminal status written.
-            # Deferring the signal across the cleanup drops a cancel that has
-            # nothing left to cancel (the work is already done) in exchange for
-            # never losing the record that it was done. (Cross-family review of
-            # #5807.) Cleanup stays in `finally` so an interrupt during the
-            # runtime call itself still frees the lease.
-            with _sigterm_deferred():
-                runtime_tmp_reap = _reap_runtime_tmp_lease(
-                    runtime_tmp_root,
-                    runtime_tmp_namespace_root,
-                )
-
-    # ONE recovery region covers everything between "the worker finished" and
-    # "that fact is on disk". Five review rounds of patching individual windows
-    # — the reaper, the checkpoint, a second signal, lease cleanup — each closed
-    # an instance and left the next one open, because the interval kept being
-    # split into guarded and unguarded halves. The region below is the whole
-    # interval, so a cancellation anywhere in it records the outcome and then
-    # continues to propagate. What remains uncoverable in-process is SIGKILL,
-    # which the dead-pid probe in cmd_status/cmd_wait already handles.
+    # ONE recovery region, spanning the runtime call itself through the moment
+    # the outcome is on disk.
+    #
+    # Seven review rounds each found a different instruction-level gap — the
+    # reaper, the checkpoint, a second signal, lease cleanup, the boundary right
+    # after lease cleanup — and each fix guarded that gap and created the next
+    # one, because the interval kept being cut into guarded and unguarded
+    # halves. The gaps were not the bug; splitting the interval was. This region
+    # is the whole interval, so there is no boundary left to land between.
+    #
+    # A cancellation during the runtime call records ``cancelled`` — accurate,
+    # the worker really was stopped. A cancellation after it records the
+    # outcome the worker reached. Either way the state file stops saying
+    # "running" about a process that is gone, and the signal still propagates.
+    # What remains uncoverable in-process is SIGKILL, which the dead-pid probe
+    # in cmd_status/cmd_wait already reports.
     #
     # Nothing the fallback reads may be bound only inside this region: a handler
-    # that raises UnboundLocalError fails exactly when it is needed.
+    # that raises UnboundLocalError fails exactly when it is needed. Every name
+    # it touches is initialized above, including the runtime-outcome flags.
     final_state: dict[str, Any] = {}
     final_status = ""
     duration_s = time.monotonic() - start
@@ -2541,6 +2465,91 @@ def _run_worker(
     telemetry_settled = False
 
     try:
+        try:
+            stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
+            initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
+            tool_config: dict[str, Any] = {}
+            if max_budget_usd is not None:
+                tool_config["max_budget_usd"] = max_budget_usd
+            if provider is not None:
+                tool_config[RUNTIME_ROUTE_TOOL_CONFIG_KEY] = {"provider": provider}
+            if output_schema_path is not None:
+                tool_config["output_schema_path"] = output_schema_path
+                tool_config["output_schema_sha256"] = output_schema_sha256
+            tool_config = tool_config or None
+            result = runtime_invoke(
+                agent,
+                prompt,
+                mode=mode,
+                cwd=cwd,
+                model=model,
+                task_id=task_id,
+                session_id=None,  # Layer 3 is always fresh-session
+                tool_config=tool_config,
+                entrypoint="delegate",
+                hard_timeout=hard_timeout,
+                stdout_silence_timeout=stdout_silence_timeout,
+                initial_response_timeout=initial_probe,
+                effort=effort,
+            )
+            ok_outcome = result.ok
+            response = result.response
+            stderr_excerpt = result.stderr_excerpt
+            returncode = result.returncode
+            rate_limited = result.rate_limited
+            substitution = getattr(result, "substitution", None)
+        except KeyboardInterrupt as exc:
+            # Raised by our SIGTERM handler (or by Ctrl+C in manual runs).
+            # The runtime's finally block has already killed the CLI
+            # subprocess and stopped the watchdog by the time we catch
+            # this, so no extra cleanup is needed here. Mark as cancelled.
+            cancelled = True
+            stderr_excerpt = f"cancelled via SIGTERM or Ctrl+C: {exc}"[:500]
+            returncode_reason = "worker interrupted before a terminal subprocess returncode was available"
+        except RateLimitedError as exc:
+            rate_limited = True
+            stderr_excerpt = str(exc)[:500]
+            returncode_reason = "runtime rejected the dispatch before a terminal subprocess returncode was available"
+        except AgentStalledError as exc:
+            timed_out = True
+            substitution = getattr(exc, "substitution", None)
+            prefix = (
+                "initial_response_timeout"
+                if getattr(exc, "kind", "stall") == "initial_response_timeout"
+                else "stdout_silence_timeout"
+            )
+            stderr_excerpt = f"{prefix}: {exc}"[:500]
+            returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
+        except AgentTimeoutError as exc:
+            substitution = getattr(exc, "substitution", None)
+            stderr_excerpt = f"hard_timeout: {exc}"[:500]
+            returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
+        except AgentRuntimeError as exc:
+            stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
+            returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
+        except Exception as exc:
+            # Last-ditch: don't crash the worker on an unexpected bug — we
+            # need to update the state file or the parent will see us as
+            # "crashed" forever.
+            stderr_excerpt = f"worker unexpected: {type(exc).__name__}: {exc}"[:500]
+            returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
+        finally:
+            if runtime_tmp_root is not None or runtime_tmp_namespace_root is not None:
+                # This cleanup runs AFTER the worker has finished but BEFORE the
+                # guarded span below, and it catches Exception rather than the
+                # KeyboardInterrupt a SIGTERM raises — so a cancel landing here used
+                # to unwind out of _run_worker with no terminal status written.
+                # Deferring the signal across the cleanup drops a cancel that has
+                # nothing left to cancel (the work is already done) in exchange for
+                # never losing the record that it was done. (Cross-family review of
+                # #5807.) Cleanup stays in `finally` so an interrupt during the
+                # runtime call itself still frees the lease.
+                with _sigterm_deferred():
+                    runtime_tmp_reap = _reap_runtime_tmp_lease(
+                        runtime_tmp_root,
+                        runtime_tmp_namespace_root,
+                    )
+
         duration_s = time.monotonic() - start
         final_status = _classify_final_status(
             cancelled=cancelled,
