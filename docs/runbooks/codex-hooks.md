@@ -86,8 +86,11 @@ protected branch (`main`/`master`). It is wired into both providers:
 
 - Claude (`agents_extensions/shared/settings.json`): the `Bash` matcher plus a
   `Write|Edit|MultiEdit` matcher.
-- Codex (`agents_extensions/codex/hooks.json`): the `^Bash$` matcher plus a
-  `^(Write|Edit|MultiEdit|apply_patch)$` matcher.
+- Codex (`agents_extensions/codex/hooks.json`): one consolidated
+  `^(Bash|Write|Edit|MultiEdit|apply_patch)$` matcher calls the deterministic
+  entry point. The entry point preserves the former per-tool policy boundary:
+  all Bash guards run for `Bash`, while structured edit tools run only
+  `guard-primary-checkout-write.py`.
 
 Every containment decision is delegated to
 `scripts.guardrails.worktree_containment` (#4444); the hook only maps each

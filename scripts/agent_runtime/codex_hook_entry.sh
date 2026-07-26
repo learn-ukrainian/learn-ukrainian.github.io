@@ -22,6 +22,7 @@ payload_cwd=$(printf '%s' "$PAYLOAD" | jq -r '
   // empty
 ' 2>/dev/null)
 [ -n "$payload_cwd" ] || payload_cwd="$SCRIPT_ROOT"
+TOOL_NAME=$(printf '%s' "$PAYLOAD" | jq -r '.tool_name // empty' 2>/dev/null)
 
 COMMON_DIR=$(git -C "$payload_cwd" rev-parse --path-format=absolute --git-common-dir 2>/dev/null) \
   || COMMON_DIR=$(git -C "$SCRIPT_ROOT" rev-parse --path-format=absolute --git-common-dir 2>/dev/null) \
@@ -52,20 +53,28 @@ case "$MODE" in
       exit 2
     fi
 
-    rewrite_output=$(printf '%s' "$PAYLOAD" \
-      | LEARN_UK_HOOK_PROVIDER=codex \
-        LEARN_UK_CANONICAL_ROOT="$CANONICAL_ROOT" \
-        bash "$HOOKS_DIR/enforce-venv.sh")
-    rewrite_rc=$?
-    [ "$rewrite_rc" -eq 0 ] || exit "$rewrite_rc"
+    rewrite_output=""
+    if [ "$TOOL_NAME" = "Bash" ]; then
+      rewrite_output=$(printf '%s' "$PAYLOAD" \
+        | LEARN_UK_HOOK_PROVIDER=codex \
+          LEARN_UK_CANONICAL_ROOT="$CANONICAL_ROOT" \
+          bash "$HOOKS_DIR/enforce-venv.sh")
+      rewrite_rc=$?
+      [ "$rewrite_rc" -eq 0 ] || exit "$rewrite_rc"
 
-    # Cheap/local checks precede the GitHub-backed merge guards.
-    run_python_guard "heal-core-bare.py"
-    run_python_guard "guard-branch-switch-in-main.py"
-    run_python_guard "guard-secret-print.py"
+      # Preserve the former Bash-only scope for shell and merge guards.
+      run_python_guard "heal-core-bare.py"
+      run_python_guard "guard-branch-switch-in-main.py"
+      run_python_guard "guard-secret-print.py"
+    fi
+
+    # Structured edit tools need only the primary-checkout containment guard.
     run_python_guard "guard-primary-checkout-write.py"
-    run_python_guard "guard-admin-merge.py"
-    run_python_guard "guard-pr-merge.py"
+
+    if [ "$TOOL_NAME" = "Bash" ]; then
+      run_python_guard "guard-admin-merge.py"
+      run_python_guard "guard-pr-merge.py"
+    fi
 
     [ -z "$rewrite_output" ] || printf '%s\n' "$rewrite_output"
     ;;

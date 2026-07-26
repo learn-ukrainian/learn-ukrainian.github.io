@@ -65,12 +65,23 @@ def test_codex_tool_events_have_one_deterministic_command_hook() -> None:
     assert len(pre_groups) == 1
     assert pre_groups[0]["matcher"] == "^(Bash|Write|Edit|MultiEdit|apply_patch)$"
     assert len(pre_groups[0]["hooks"]) == 1
-    assert 'codex_hook_entry.sh" pre-tool-use' in pre_groups[0]["hooks"][0]["command"]
+    pre_hook = pre_groups[0]["hooks"][0]
+    assert 'codex_hook_entry.sh" pre-tool-use' in pre_hook["command"]
+    assert pre_hook["timeout"] == 65
 
     post_groups = hooks["PostToolUse"]
     assert len(post_groups) == 1
     assert len(post_groups[0]["hooks"]) == 1
     assert 'codex_hook_entry.sh" post-tool-use' in post_groups[0]["hooks"][0]["command"]
+
+
+def test_codex_entry_preserves_bash_only_guard_scope() -> None:
+    entry = ENTRY.read_text(encoding="utf-8")
+
+    assert 'if [ "$TOOL_NAME" = "Bash" ]; then' in entry
+    assert entry.count('run_python_guard "guard-admin-merge.py"') == 1
+    assert entry.count('run_python_guard "guard-pr-merge.py"') == 1
+    assert entry.count('run_python_guard "guard-primary-checkout-write.py"') == 1
 
 
 def test_codex_entry_rewrites_bare_python_from_worktree_without_local_venv(
