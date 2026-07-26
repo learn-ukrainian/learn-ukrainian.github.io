@@ -20,15 +20,20 @@ unconditional on pull requests, merge groups, and pushes to `main`.
   override contract test. Tests requiring ignored databases or ignored external
   JSONL retain their explicit pytest skip reason instead of failing
   mysteriously.
+- Each substantive test, build, and integrity job restores a cache keyed by
+  the committed Atlas manifest pointer, then verifies or hydrates that
+  release-pinned manifest before it can be consumed. Only pytest shard 1 writes
+  the shared manifest cache, so parallel shards cannot race to create it.
 - One combined web-and-quality job provisions the Python runtime used by site
   hydration, then runs Ruff, Actionlint, frontend unit tests, a production
   build, Chromium browser tests, and the hydrated Atlas enrichment gate.
 - One integrity-and-security job runs TruffleHog on every workflow invocation,
-  verifies lesson-schema drift, MDX parity, learner-surface IDs, locked-module
-  publication, Atlas freshness, dossier word-count, and BIO capsule/active-hold
-  validation, including a hard rejection of deleted BIO preparation files.
-  These commands may calculate their own relevant source scope, but the job
-  itself is never routed or skipped.
+  verifies lesson-schema drift, MDX generation drift and parity, static practice
+  assets, learner-surface IDs, locked-module publication, Atlas freshness,
+  dossier word-count, and BIO capsule/active-hold validation, including a hard
+  rejection of deleted BIO preparation files. These commands may calculate
+  their own relevant source scope, but the job itself is never routed or
+  skipped.
 - Pushes to `main` also collect coverage from every complete pytest shard and
   fail if the combined `scripts` coverage falls below 35%. Coverage does not
   change which tests run.

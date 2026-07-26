@@ -182,6 +182,13 @@ def test_workflow_uses_the_node_planner_and_fail_closed_gate() -> None:
     assert "trufflesecurity/trufflehog@27b0417c16317ca9a472a9a8092acce143b49c55" in workflow
     assert "--exclude-paths=.trufflehogignore" in workflow
     assert "Validate BIO preparation capsules and active holds" in workflow
+    assert "check_mdx_generation_drift.py --changed-vs-base \"$CI_INTEGRITY_BASE_SHA\"" in workflow
+    assert "check_static_practice_assets.py" in workflow
+    assert "git merge-base origin/main HEAD" in workflow
+    assert workflow.count("Hydrate release-pinned Atlas manifest") == 1
+    assert workflow.count("Restore release-pinned Atlas manifest") == 3
+    assert "Save release-pinned Atlas manifest cache (single writer)" in workflow
+    assert "atlas-manifest-${{ runner.os }}-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}" in workflow
     assert "CI_PYTEST_COVERAGE" in workflow
     assert "--require-coverage" in workflow
     assert "coverage report --fail-under=35" in workflow
