@@ -10,9 +10,11 @@ unconditional on pull requests, merge groups, and pushes to `main`.
 - Five deterministic node-level shards run the resulting suite. The
   thread-sensitive, source-inventory, and bounded-network nodes remain within
   their own external shard, while all other nodes are balanced by node count.
-- Each shard writes its planned and executed node IDs. `CI Gate` rejects a
-  missing artifact, duplicate node, empty plan, incomplete execution report,
-  failed job, cancelled job, or skipped job.
+- Each matrix runner writes its full collected-node set plus planned and
+  executed node IDs. `CI Gate` rejects a missing artifact, collection
+  divergence, duplicate node, empty plan, incomplete execution report, failed
+  job, cancelled job, or skipped job. It also proves that the union of shard
+  plans and the exact quarantine ledger accounts for the whole collection.
 - Pytest has full Git history and CPU Torch. The evidence plugin applies
   `SOURCES_MCP_NO_MLX=1` to wiki nodes only, preserving the separate MLX
   override contract test. Tests requiring ignored databases or ignored external

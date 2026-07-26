@@ -37,14 +37,44 @@ def verify(
     expected_quarantine = {entry["nodeid"] for entry in load_quarantine(quarantine_path)}
     seen_plans: set[str] = set()
     seen_quarantine: set[str] = set()
+    expected_collection: set[str] | None = None
     summary: list[str] = []
 
     for shard in range(1, shard_count + 1):
         artifact = root / f"pytest-evidence-{shard}"
+        collected = _read_nodeids(artifact / "collected.txt")
         plan = _read_nodeids(artifact / "plan.txt")
         executed = _read_nodeids(artifact / "executed.txt")
         quarantined = _read_nodeids(artifact / "quarantine.txt")
+        plan_metadata = _read_json(artifact / "plan.json")
         run = _read_json(artifact / "run.json")
+        if not collected:
+            raise ShardPlanError(f"shard {shard} collected zero tests")
+        if len(collected) != len(set(collected)):
+            raise ShardPlanError(f"shard {shard} collected duplicate node IDs")
+        if expected_collection is None:
+            expected_collection = set(collected)
+        elif set(collected) != expected_collection:
+            missing = sorted(expected_collection - set(collected))
+            unexpected = sorted(set(collected) - expected_collection)
+            raise ShardPlanError(
+                f"shard {shard} collection differs from the other matrix runners; "
+                f"missing={missing[:10]} unexpected={unexpected[:10]}"
+            )
+        expected_metadata = {
+            "collected_nodes": len(collected),
+            "planned_nodes": len(plan),
+            "quarantined_nodes": len(quarantined),
+            "shard": shard,
+            "shard_count": shard_count,
+        }
+        for field, expected in expected_metadata.items():
+            actual = plan_metadata.get(field)
+            if type(actual) is not int or actual != expected:
+                raise ShardPlanError(
+                    f"shard {shard} plan metadata {field!r} is {actual!r}; "
+                    f"expected {expected!r}"
+                )
         if run.get("returncode") != 0 or run.get("timed_out") is not False:
             raise ShardPlanError(f"shard {shard} did not finish successfully: {run}")
         if require_coverage:
@@ -59,18 +89,32 @@ def verify(
             raise ShardPlanError(f"shard {shard} planned duplicate node IDs")
         if len(executed) != len(set(executed)):
             raise ShardPlanError(f"shard {shard} reported duplicate executed node IDs")
-        if set(plan) != set(executed):
-            missing = sorted(set(plan) - set(executed))
-            unexpected = sorted(set(executed) - set(plan))
+        if len(quarantined) != len(set(quarantined)):
+            raise ShardPlanError(f"shard {shard} reported duplicate quarantined node IDs")
+        planned_nodes = set(plan)
+        quarantined_nodes = set(quarantined)
+        if not planned_nodes.issubset(collected) or not quarantined_nodes.issubset(collected):
+            raise ShardPlanError(f"shard {shard} planned or quarantined nodes absent from its collection")
+        if planned_nodes.intersection(quarantined_nodes):
+            raise ShardPlanError(f"shard {shard} marks node IDs as both planned and quarantined")
+        if planned_nodes != set(executed):
+            missing = sorted(planned_nodes - set(executed))
+            unexpected = sorted(set(executed) - planned_nodes)
             raise ShardPlanError(
                 f"shard {shard} execution did not match its plan; "
                 f"missing={missing[:10]} unexpected={unexpected[:10]}"
             )
-        overlap = seen_plans.intersection(plan)
+        overlap = seen_plans.intersection(planned_nodes)
         if overlap:
             raise ShardPlanError(f"node IDs appear in more than one shard plan: {sorted(overlap)[:10]}")
-        seen_plans.update(plan)
-        seen_quarantine.update(quarantined)
+        overlap = seen_quarantine.intersection(quarantined_nodes)
+        if overlap:
+            raise ShardPlanError(f"node IDs appear in more than one shard quarantine record: {sorted(overlap)[:10]}")
+        overlap = seen_plans.intersection(quarantined_nodes) | seen_quarantine.intersection(planned_nodes)
+        if overlap:
+            raise ShardPlanError(f"node IDs appear as both planned and quarantined: {sorted(overlap)[:10]}")
+        seen_plans.update(planned_nodes)
+        seen_quarantine.update(quarantined_nodes)
         summary.append(
             f"pytest shard {shard}: {len(plan)} planned/executed nodes; "
             f"{run.get('elapsed_seconds')}s"
@@ -82,6 +126,16 @@ def verify(
         raise ShardPlanError(
             "quarantine evidence is incomplete or unexpected; "
             f"missing={missing} unexpected={unexpected}"
+        )
+    if expected_collection is None:
+        raise ShardPlanError("no pytest collection evidence was supplied")
+    accounted_for = seen_plans | seen_quarantine
+    if accounted_for != expected_collection:
+        missing = sorted(expected_collection - accounted_for)
+        unexpected = sorted(accounted_for - expected_collection)
+        raise ShardPlanError(
+            "pytest plans and quarantine do not account for the complete collected suite; "
+            f"missing={missing[:10]} unexpected={unexpected[:10]}"
         )
     summary.append(f"quarantine: {len(expected_quarantine)} exact node IDs")
     summary.append(f"pytest union: {len(seen_plans)} planned/executed nodes")

@@ -101,13 +101,27 @@ def test_main_coverage_evidence_is_fail_closed(tmp_path: Path) -> None:
     quarantine = tmp_path / "quarantine.json"
     quarantine.write_text(json.dumps({"version": 1, "entries": []}), encoding="utf-8")
     evidence_root = tmp_path / "evidence"
+    nodeids = [f"tests/test_shard_{shard}.py::test_complete" for shard in range(1, pytest_shard.DEFAULT_SHARD_COUNT + 1)]
     for shard in range(1, pytest_shard.DEFAULT_SHARD_COUNT + 1):
         artifact = evidence_root / f"pytest-evidence-{shard}"
         artifact.mkdir(parents=True)
         nodeid = f"tests/test_shard_{shard}.py::test_complete"
+        (artifact / "collected.txt").write_text("\n".join(nodeids) + "\n", encoding="utf-8")
         (artifact / "plan.txt").write_text(f"{nodeid}\n", encoding="utf-8")
         (artifact / "executed.txt").write_text(f"{nodeid}\n", encoding="utf-8")
         (artifact / "quarantine.txt").write_text("", encoding="utf-8")
+        (artifact / "plan.json").write_text(
+            json.dumps(
+                {
+                    "collected_nodes": len(nodeids),
+                    "planned_nodes": 1,
+                    "quarantined_nodes": 0,
+                    "shard": shard,
+                    "shard_count": pytest_shard.DEFAULT_SHARD_COUNT,
+                }
+            ),
+            encoding="utf-8",
+        )
         (artifact / "run.json").write_text(
             json.dumps({"returncode": 0, "timed_out": False, "coverage_enabled": True}),
             encoding="utf-8",
@@ -121,6 +135,22 @@ def test_main_coverage_evidence_is_fail_closed(tmp_path: Path) -> None:
         require_coverage=True,
     )
     assert "pytest union: 5 planned/executed nodes" in summary
+
+    (evidence_root / "pytest-evidence-3" / "collected.txt").write_text(
+        "\n".join([*nodeids[:-1], "tests/test_different_shard.py::test_complete"]) + "\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(pytest_shard.ShardPlanError, match="collection differs"):
+        verify_pytest_evidence.verify(
+            evidence_root,
+            quarantine,
+            pytest_shard.DEFAULT_SHARD_COUNT,
+            require_coverage=True,
+        )
+    (evidence_root / "pytest-evidence-3" / "collected.txt").write_text(
+        "\n".join(nodeids) + "\n",
+        encoding="utf-8",
+    )
 
     (evidence_root / "pytest-evidence-3" / "coverage").unlink()
     with pytest.raises(pytest_shard.ShardPlanError, match="coverage evidence"):
@@ -149,7 +179,8 @@ def test_workflow_uses_the_node_planner_and_fail_closed_gate() -> None:
     assert "npm --prefix site exec -- playwright test" not in workflow
     assert "needs: [pytest, web_quality, integrity]" in workflow
     assert "uv venv --python 3.12 .venv" in workflow
-    assert "trufflesecurity/trufflehog@47e7b7cd74f578e1e3145d48f669f22fd1330ca6" in workflow
+    assert "trufflesecurity/trufflehog@27b0417c16317ca9a472a9a8092acce143b49c55" in workflow
+    assert "--exclude-paths=.trufflehogignore" in workflow
     assert "Validate BIO preparation capsules and active holds" in workflow
     assert "CI_PYTEST_COVERAGE" in workflow
     assert "--require-coverage" in workflow

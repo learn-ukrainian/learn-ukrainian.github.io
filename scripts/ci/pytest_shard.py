@@ -217,6 +217,10 @@ def prepare(args: argparse.Namespace) -> int:
     shard_quarantine = sorted(
         entry["nodeid"] for entry in quarantine if quarantine_owner(entry["nodeid"]) == args.shard - 1
     )
+    # Each matrix VM collects independently.  Preserve the complete result as
+    # evidence so CI Gate can reject even a same-count collection divergence
+    # instead of trusting the local shard plan alone.
+    _atomic_lines_write(evidence_dir / "collected.txt", nodeids)
     _atomic_lines_write(evidence_dir / "plan.txt", plan)
     _atomic_lines_write(evidence_dir / "quarantine.txt", shard_quarantine)
     _atomic_json_write(

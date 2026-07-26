@@ -214,11 +214,9 @@ jobs:
           key: uv-packages-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch-cpu
 
       - name: Scan commits for verified or unknown secrets
-        uses: trufflesecurity/trufflehog@47e7b7cd74f578e1e3145d48f669f22fd1330ca6 # v3.94.3
+        uses: trufflesecurity/trufflehog@27b0417c16317ca9a472a9a8092acce143b49c55 # v3.95.9
         with:
-          path: ./
-          extra_args: --results=verified,unknown
-          version: 3.94.3
+          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore
 
       - name: Run integrity contracts with an explicit timeout report
         run: |
