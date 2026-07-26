@@ -13,7 +13,7 @@ from uuid import uuid4
 import pytest
 
 from scripts.orchestration import task_identity
-from scripts.orchestration.task_family import codex_state, rollover
+from scripts.orchestration.task_family import codex_state, rollover, storage
 from scripts.orchestration.task_family.model import RelationType
 from scripts.orchestration.task_family.storage import TaskFamilyStorage, advisory_lock
 
@@ -287,6 +287,23 @@ def test_advisory_lock_honors_hook_deadline(tmp_path: Path, monkeypatch: pytest.
     finally:
         child.terminate()
         child.wait(timeout=5)
+
+
+def test_advisory_lock_treats_malformed_hook_timeout_as_unbounded(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    flock_flags: list[int] = []
+
+    def record_flock(_: int, flags: int) -> None:
+        flock_flags.append(flags)
+
+    monkeypatch.setenv("LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS", "not-a-number")
+    monkeypatch.setattr(storage.fcntl, "flock", record_flock)
+
+    with advisory_lock(tmp_path / "lineage" / ".native-intent.lock"):
+        pass
+
+    assert flock_flags == [storage.fcntl.LOCK_EX, storage.fcntl.LOCK_UN]
 
 
 def test_pristine_transition_supersession_is_durable_idempotent_and_blocks_old_create(tmp_path: Path) -> None:

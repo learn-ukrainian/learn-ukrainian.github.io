@@ -1324,6 +1324,32 @@ def test_claim_thread_lease_command_reports_a_clear_double_launch_conflict(tmp_p
     assert "release-thread-lease" in payload["resolution"]
 
 
+def test_claim_thread_lease_command_reports_structured_lock_timeout(
+    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
+):
+    def raise_timeout(_: Path) -> None:
+        raise TimeoutError("timed out waiting for local state lock")
+
+    monkeypatch.setattr(th, "task_family_advisory_lock", raise_timeout)
+
+    assert th.main(
+        [
+            "--repo-root",
+            str(tmp_path),
+            "claim-thread-lease",
+            "--agent",
+            "claude-infra",
+            "--current-thread-id",
+            "session-under-lock",
+        ]
+    ) == 124
+    payload = json.loads(capsys.readouterr().out)
+    assert payload == {
+        "error_code": "LOCK_TIMEOUT",
+        "error": "timed out waiting for local state lock",
+    }
+
+
 def test_release_thread_lease_command_end_to_end(tmp_path: Path, capsys):
     """CLI-level: claim then release through the same subcommands a real hook would call."""
     repo_args = ["--repo-root", str(tmp_path)]
