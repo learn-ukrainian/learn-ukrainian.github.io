@@ -14,6 +14,56 @@ Codex hook facts verified from the current OpenAI Codex manual on 2026-07-05:
 - Hook command trust is separate from project trust. For automation that already
   vets the hook source, use `--dangerously-bypass-hook-trust`.
 
+## Codex event and output contract
+
+Re-verified against the current OpenAI Codex Hooks reference on 2026-07-26:
+
+- Supported result hooks use `PostToolUse`; it also fires after a Bash command
+  exits non-zero. Codex does not define a separate `PostToolUseFailure` event.
+- A `PreToolUse` rewrite must return
+  `hookSpecificOutput.permissionDecision: "allow"` with an `updatedInput`
+  object. Claude's `modifiedInput` shape is not the Codex rewrite contract.
+- All matching command hooks for one event launch concurrently. One matching
+  command cannot keep another matching command from starting.
+- Hook commands start in the session cwd. The tool's actual cwd can instead be
+  present in `tool_input.workdir` or `tool_input.cwd`.
+
+The Codex manifest therefore sends each tool event through one tracked,
+deterministic entry point:
+`scripts/agent_runtime/codex_hook_entry.sh`. The Bash-command venv rewrite has
+its own 3-second fail-closed deadline. `PreToolUse` local policy checks then run
+sequentially with their former 3–5 second individual deadlines. The two
+independent, network-backed merge guards run concurrently with separate
+30-second deadlines, and their results are emitted in a fixed order.
+`PostToolUse` telemetry and pytest stamping run sequentially. This removes the
+prior seven-process Bash fan-out and the unsupported failure-event duplicate
+without letting one slow merge guard starve the other.
+
+`codex_hook_policy.py` converts an individual guard timeout into exit code `2`
+with a concrete reason. Per the Codex `PreToolUse` contract, exit `2` blocks the
+tool call; a timeout therefore fails closed. The manifest's 55-second outer
+timeout remains a last-resort ceiling above the 3-second rewrite, local-chain,
+and concurrent network-guard budgets.
+
+Only the venv rewrite may write the final Codex JSON response to stdout.
+Unexpected stdout from any policy guard is redirected to diagnostics and
+fails closed, preventing multiple payloads from corrupting the hook response.
+
+The entry point resolves the exact tool worktree from structured hook input and
+the canonical checkout from Git's common directory. Python policies use the
+canonical checkout's `.venv/bin/python`, so a linked worktree does not need its
+own `.venv` symlink. Bare `python`/`python3` calls are rewritten to that absolute
+project interpreter using the Codex `updatedInput` schema. If the project
+interpreter is genuinely absent, the policy blocks instead of falling back to a
+system interpreter.
+
+`UserPromptSubmit` invokes the inbox hook with recipient `codex`; the shared
+script retains `claude` as its default for Claude settings. A Codex session now
+queries Codex-addressed messages rather than silently reporting Claude's inbox.
+
+The repository deploy manages project-local `.codex/hooks.json`; it does not
+edit the separate user-level `~/.codex/hooks.json`.
+
 ## Pytest stamp and pre-push guard
 
 `agents_extensions/shared/hooks/stamp-pytest.sh` is the deployed
@@ -50,8 +100,11 @@ protected branch (`main`/`master`). It is wired into both providers:
 
 - Claude (`agents_extensions/shared/settings.json`): the `Bash` matcher plus a
   `Write|Edit|MultiEdit` matcher.
-- Codex (`agents_extensions/codex/hooks.json`): the `^Bash$` matcher plus a
-  `^(Write|Edit|MultiEdit|apply_patch)$` matcher.
+- Codex (`agents_extensions/codex/hooks.json`): one consolidated
+  `^(Bash|Write|Edit|MultiEdit|apply_patch)$` matcher calls the deterministic
+  entry point. The entry point preserves the former per-tool policy boundary:
+  all Bash guards run for `Bash`, while structured edit tools run only
+  `guard-primary-checkout-write.py`.
 
 Every containment decision is delegated to
 `scripts.guardrails.worktree_containment` (#4444); the hook only maps each
