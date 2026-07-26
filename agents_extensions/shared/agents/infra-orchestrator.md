@@ -191,8 +191,9 @@ is for CROSS-session continuity, not an in-session rot guard. But:
 - Width is pace/reserve-driven — fixed per-lane in-flight caps are OBSOLETE (operator
   2026-07-26). Before fanning out, apply the two-sided doctrine in `model-assignment.md`
   § Worker priority ladder: read CodexBar pace stage + reserve per lane
-  (`codexbar usage --json --provider <lane>`) AND disk headroom (`df -h /` + `du -sh
-  .worktrees`). Idle lane with quota headroom AND free disk → widen into it; lane at/ahead of
+  (`codexbar usage --json --provider <lane>`) AND disk headroom (`df -h /` plus
+  `du -sh "$repo_root/.worktrees"` where `repo_root=$(dirname "$(git rev-parse --git-common-dir)")`).
+  Idle lane with quota headroom AND free disk → widen into it; lane at/ahead of
   pace or thin reserve → throttle it, shed to a lane with headroom; no data for a lane →
   in-flight count + lane health only, and SAY the picture is partial. DISK wins every conflict:
   quota headroom never authorises exceeding worktree disk space, and reaping finished worktrees

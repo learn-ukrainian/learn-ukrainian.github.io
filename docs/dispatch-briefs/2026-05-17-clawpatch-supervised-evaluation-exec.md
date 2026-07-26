@@ -1,5 +1,9 @@
 # Dispatch brief — clawpatch supervised evaluation (execution)
 
+> **Historical note:** this document was written when the fleet used a fixed
+> "2 Codex in flight" dispatch cap. That cap is retired; current width doctrine
+> is pace/reserve-driven per `agents_extensions/shared/rules/model-assignment.md`.
+
 > User signed off mid-session (2026-05-17 afternoon): "crabpatch needs attention. you can handle 3 parallel things?" — interpret as GO on the supervised evaluation per `docs/dispatch-briefs/2026-05-17-clawpatch-evaluation.md` §4.
 
 ## What you're doing

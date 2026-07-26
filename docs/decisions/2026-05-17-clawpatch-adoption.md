@@ -1,5 +1,9 @@
 # DECISION REQUIRED — clawpatch adoption (supervised evaluation results)
 
+> **Historical note:** this document was written when the fleet used a fixed
+> "2 Codex in flight" dispatch cap. That cap is retired; current width doctrine
+> is pace/reserve-driven per `agents_extensions/shared/rules/model-assignment.md`.
+
 **Status:** PROPOSED — awaiting user sign-off
 **Surfaced:** 2026-05-17, user direction *"i wuld like to introduce this tool under supervision"* and (mid-session) *"crabpatch needs attention. you can handle 3 parallel things?"*
 **Brief:** [`docs/dispatch-briefs/2026-05-17-clawpatch-evaluation.md`](../../dispatch-briefs/2026-05-17-clawpatch-evaluation.md) §4 evaluation plan
