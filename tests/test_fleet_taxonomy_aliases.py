@@ -142,7 +142,7 @@ def test_inventory_session_streams_wiring() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 3. Per-Launcher Spelling-Acceptance Contract Tests
+# 3. Per-Launcher Spelling-Acceptance & Resolver Contract Tests
 # ---------------------------------------------------------------------------
 
 
@@ -195,26 +195,90 @@ def test_handoff_identity_shell_selector_contract(
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
 @pytest.mark.parametrize(
+    "unknown_selector",
+    [
+        "invalid_selector_xyz",
+        "unknown_lane_abc",
+        "epic:999999",
+    ],
+)
+def test_handoff_identity_shell_resolver_unknown_selector_fails_closed(
+    unknown_selector: str,
+) -> None:
+    """Hermetic resolver contract test: verify launcher_selector_resolve in handoff_identity.sh fails closed (rc=1) for unknown selectors."""
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source "$1"; launcher_selector_resolve "$2"',
+            "bash",
+            str(_HANDOFF_IDENTITY_SH),
+            unknown_selector,
+        ],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode != 0, f"Expected non-zero returncode for unknown selector '{unknown_selector}'"
+    assert result.stdout.strip() == ""
+
+
+@pytest.mark.parametrize(
+    "launcher",
+    [
+        "start-claude.sh",
+        "start-codex.sh",
+        "start-gemini.sh",
+        "start-grok.sh",
+        "start-kimi.sh",
+        "start-codex-drive.sh",
+        "start-gemini-drive.sh",
+        "start-grok-drive.sh",
+        "start-opus-drive.sh",
+        "start-sonnet-drive.sh",
+    ],
+)
+def test_launcher_static_selector_wiring(launcher: str) -> None:
+    """Verify statically (text inspection) that each launcher script sources handoff_identity.sh and invokes selector resolution functions."""
+    script_path = _REPO_ROOT / launcher
+    assert script_path.is_file(), f"Launcher missing: {launcher}"
+    content = script_path.read_text(encoding="utf-8")
+    assert "scripts/lib/handoff_identity.sh" in content, f"{launcher} does not source scripts/lib/handoff_identity.sh"
+    assert any(
+        fn in content
+        for fn in (
+            "launcher_selector_resolve",
+            "launcher_selector_lane",
+            "handoff_identity_for_",
+        )
+    ), f"{launcher} does not call selector resolution functions"
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+@pytest.mark.parametrize(
     ("launcher", "unknown_arg", "expected_rc"),
     [
+        # CI-safe: start-claude.sh parses and validates --epic early before preflight checks or external CLI lookups.
         ("start-claude.sh", "--epic=invalid_selector_xyz", 1),
-        ("start-codex.sh", "--epic=invalid_selector_xyz", 1),
-        ("start-gemini.sh", "--epic=invalid_selector_xyz", 1),
-        ("start-grok.sh", "--epic=invalid_selector_xyz", 1),
-        ("start-kimi.sh", "--epic=invalid_selector_xyz", 1),
+        # CI-safe: start-codex-drive.sh validates $1 via launcher_selector_resolve at top of script before exec start-codex.sh.
         ("start-codex-drive.sh", "invalid_selector_xyz", 2),
+        # CI-safe: start-gemini-drive.sh validates $1 via launcher_selector_resolve at top of script before exec start-gemini.sh.
         ("start-gemini-drive.sh", "invalid_selector_xyz", 2),
+        # CI-safe: start-grok-drive.sh validates $1 via launcher_selector_resolve at top of script before exec start-grok.sh.
         ("start-grok-drive.sh", "invalid_selector_xyz", 2),
+        # CI-safe: start-opus-drive.sh validates $1 via launcher_selector_resolve at top of script before exec start-opus.sh.
         ("start-opus-drive.sh", "invalid_selector_xyz", 2),
+        # CI-safe: start-sonnet-drive.sh validates $1 via launcher_selector_resolve at top of script before exec start-sonnet.sh.
         ("start-sonnet-drive.sh", "invalid_selector_xyz", 2),
     ],
 )
-def test_launcher_unknown_selector_fails_closed_contract(
+def test_hermetic_launcher_unknown_selector_fails_closed_contract(
     launcher: str,
     unknown_arg: str,
     expected_rc: int,
 ) -> None:
-    """Verify launchers fail closed when given an unknown epic/lane selector."""
+    """Verify hermetic launchers (which validate selectors early without external CLI/checkout requirements) fail closed on unknown selectors."""
     script_path = _REPO_ROOT / launcher
     assert script_path.is_file(), f"Launcher missing: {launcher}"
 

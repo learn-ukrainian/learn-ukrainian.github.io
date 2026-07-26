@@ -37,3 +37,7 @@ It details the accepted spellings, the behavior when encountering unknown spelli
    `agents_extensions/shared/hooks/session-setup.sh` accepts any arbitrary `SESSION_EPIC` string passed via environment variables without validating against the fleet taxonomy registry.
 4. **Session Streams Inventory Wiring Gap**:
    `agents_extensions/shared/session_streams/inventory.py` previously relied on a hardcoded map (`_STREAM_NAME_TO_CLAUDE_DIR`) rather than querying canonical area assignments from `fleet_taxonomy.yaml`.
+5. **Launcher Preflight & Prereq-Before-Validation Ordering Inconsistency (Step-6 Launcher Parity Input)**:
+   `start-codex.sh`, `start-gemini.sh`, `start-grok.sh`, and `start-kimi.sh` perform CLI presence (`command -v ...`) and canonical checkout prerequisite checks *before* selector validation (`--epic`). In environments where those external CLIs are absent (e.g., CI runners), preflight check errors fire first (such as `error: agy cli not found...`) before reaching selector validation.
+   In contrast, `start-claude.sh` and drive wrappers (`start-*-drive.sh`) validate the selector first before preflight or CLI invocation.
+   This ordering inconsistency is recorded as an explicit input for Step-6 (launcher parity). The launchers are not rewritten here.
