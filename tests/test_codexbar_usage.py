@@ -619,8 +619,8 @@ def test_codexbar_unavailable_missing_binary(monkeypatch):
 
     data = state_router.compute_routing_budget(now)
     assert data["agents"]["codex"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["burn_pct_7d"] == "unavailable"
-    assert data["agents"]["codex"]["remaining_pct"] == "unavailable"
+    assert data["agents"]["codex"]["burn_pct_7d"] is None
+    assert data["agents"]["codex"]["remaining_pct"] is None
     assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
     assert data["agents"]["codex"]["codexbar"]["error_kind"] == "missing_binary"
 
@@ -652,8 +652,8 @@ def test_codexbar_unavailable_timeout(monkeypatch):
 
     data = state_router.compute_routing_budget(now)
     assert data["agents"]["codex"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["burn_pct_7d"] == "unavailable"
-    assert data["agents"]["codex"]["remaining_pct"] == "unavailable"
+    assert data["agents"]["codex"]["burn_pct_7d"] is None
+    assert data["agents"]["codex"]["remaining_pct"] is None
     assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
     assert data["agents"]["codex"]["codexbar"]["error_kind"] == "timeout"
 
@@ -687,8 +687,8 @@ def test_codexbar_unavailable_nonzero_exit(monkeypatch):
 
     data = state_router.compute_routing_budget(now)
     assert data["agents"]["codex"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["burn_pct_7d"] == "unavailable"
-    assert data["agents"]["codex"]["remaining_pct"] == "unavailable"
+    assert data["agents"]["codex"]["burn_pct_7d"] is None
+    assert data["agents"]["codex"]["remaining_pct"] is None
     assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
     assert data["agents"]["codex"]["codexbar"]["error_kind"] == "non_zero_exit"
 
@@ -722,8 +722,8 @@ def test_codexbar_unavailable_malformed_json(monkeypatch):
 
     data = state_router.compute_routing_budget(now)
     assert data["agents"]["codex"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["burn_pct_7d"] == "unavailable"
-    assert data["agents"]["codex"]["remaining_pct"] == "unavailable"
+    assert data["agents"]["codex"]["burn_pct_7d"] is None
+    assert data["agents"]["codex"]["remaining_pct"] is None
     assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
     assert data["agents"]["codex"]["codexbar"]["error_kind"] == "malformed_json"
 
@@ -757,7 +757,55 @@ def test_codexbar_unavailable_unparseable_schema(monkeypatch):
 
     data = state_router.compute_routing_budget(now)
     assert data["agents"]["codex"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["burn_pct_7d"] == "unavailable"
-    assert data["agents"]["codex"]["remaining_pct"] == "unavailable"
+    assert data["agents"]["codex"]["burn_pct_7d"] is None
+    assert data["agents"]["codex"]["remaining_pct"] is None
     assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
     assert data["agents"]["codex"]["codexbar"]["error_kind"] == "unparseable_schema"
+
+
+def test_dashboard_routing_html_renders_unavailable_explicitly():
+    """Prove dashboards/routing.html renders 'unavailable' non-numeric display, not 0.0% or 0-width bar."""
+    import subprocess
+    script = """
+    const fs = require('fs');
+    const html = fs.readFileSync('dashboards/routing.html', 'utf8');
+    const renderBudgetMatch = html.match(/function renderBudget\\(routing\\) \\{[\\s\\S]*?\\n\\}/);
+    if (!renderBudgetMatch) throw new Error('renderBudget not found');
+
+    const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
+    const pct = (value) => {
+      const num = Number(value);
+      return Number.isFinite(num) ? Math.max(0, Math.min(100, num)) : 0;
+    };
+    const statusPill = (status) => `<span class="pill ${escapeHtml(status)}">${escapeHtml(status)}</span>`;
+
+    let innerHTML = '';
+    const document = {
+      getElementById: (id) => ({ set innerHTML(val) { innerHTML = val; } })
+    };
+
+    eval(renderBudgetMatch[0]);
+
+    renderBudget({
+      agents: {
+        codex: {
+          status: 'unavailable',
+          burn_pct_7d: null,
+          remaining_pct: null,
+          weekly_cap_usd: null
+        }
+      },
+      in_flight: {}
+    });
+
+    console.log(innerHTML);
+    """
+    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True)
+    out = res.stdout
+    assert "0.0%" not in out, f"Dashboard rendered 0.0% for unavailable state: {out}"
+    assert "style=\"width:0%\"" not in out, f"Dashboard rendered 0-width bar for unavailable state: {out}"
+    assert "unavailable" in out
+    assert 'class="bar unavailable"' in out
+
