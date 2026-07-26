@@ -12,7 +12,7 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker, ValidationError
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 TAXONOMY_PATH = PROJECT_ROOT / "scripts/config/fleet_taxonomy.yaml"
 ASSIGNMENTS_PATH = PROJECT_ROOT / "scripts/config/area_assignments.yaml"
 TAXONOMY_SCHEMA_PATH = (

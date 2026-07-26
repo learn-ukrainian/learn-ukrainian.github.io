@@ -7,7 +7,8 @@ from typing import Any
 import pytest
 import yaml
 
-from scripts.config.validate_fleet_taxonomy import (
+import scripts.config
+from scripts.validate_fleet_taxonomy import (
     ASSIGNMENTS_PATH,
     ASSIGNMENTS_SCHEMA_PATH,
     TAXONOMY_PATH,
@@ -15,6 +16,13 @@ from scripts.config.validate_fleet_taxonomy import (
     FleetTaxonomyValidationError,
     validate_fleet_taxonomy,
 )
+
+
+def test_scripts_config_resolves_to_module() -> None:
+    """Guard test: import scripts.config must resolve to the module, not a package."""
+    assert scripts.config.__file__ is not None
+    assert scripts.config.__file__.rstrip("c").endswith("scripts/config.py")
+
 
 
 def _write_yaml(path: Any, data: dict[str, Any]) -> None:
