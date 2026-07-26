@@ -49,6 +49,21 @@ def _clear_state():
     _reset_rate_limit_cache_for_tests()
 
 
+@pytest.fixture(autouse=True)
+def _stub_primary_integrity_sweep(monkeypatch):
+    """Keep _run_worker tests hermetic from the ambient checkout (the #5803
+    post-worker sweep runs real git against delegate._REPO_ROOT; a detached
+    CI workspace reads as drift and leaks dispatch events / repair attempts).
+    Covered for real in tests/test_delegate_primary_integrity.py."""
+    import scripts.audit.check_primary_integrity as cpi
+
+    monkeypatch.setattr(
+        cpi,
+        "check_primary_integrity",
+        lambda *_args, **_kwargs: (True, "primary on main (test stub)"),
+    )
+
+
 # ---------------------------------------------------------------------------
 # AC5.1 — delegate.py dispatch --effort parses
 # ---------------------------------------------------------------------------

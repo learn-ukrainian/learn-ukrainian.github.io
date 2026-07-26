@@ -23,7 +23,6 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.agent_runtime.errors import AgentStalledError
 from scripts.audit.llm_qg_store import (
     current_payload_for_module,
-    llm_qg_file_is_current_for_module,
     prompt_hash_for_text,
     record_llm_qg,
 )
@@ -52,6 +51,7 @@ WRITER_ALIASES = {
 }
 WRITER_CHOICES = (*linear_pipeline.WRITER_CHOICES, *WRITER_ALIASES)
 LLM_QG_DIM_MAX_ATTEMPTS = 2
+LLM_QG_GATE_VERSION = "v7.llm_qg.1"
 
 
 @dataclass(slots=True)
@@ -1315,16 +1315,18 @@ def _persist_llm_qg_result(
     llm_qg: dict[str, Any],
     reviewer: str,
     source: str,
+    prompt_hash: str | None = None,
 ) -> None:
     defaults = linear_pipeline.REVIEWER_DEFAULTS.get(reviewer, {})
+    effective_prompt_hash = prompt_hash or _combined_llm_qg_prompt_hash(module_dir)
     try:
         record_llm_qg(
             level=level,
             slug=slug,
             module_dir=module_dir,
             payload=llm_qg,
-            gate_version="v7.llm_qg.1",
-            prompt_hash=_combined_llm_qg_prompt_hash(module_dir),
+            gate_version=LLM_QG_GATE_VERSION,
+            prompt_hash=effective_prompt_hash,
             reviewer_model=defaults.get("model"),
             reviewer_family=reviewer,
             source=source,
@@ -1336,12 +1338,50 @@ def _persist_llm_qg_result(
 
 
 def _combined_llm_qg_prompt_hash(module_dir: Path) -> str | None:
+    """Hash prompts emitted by a completed LLM-QG run for durable storage."""
     prompt_parts: list[str] = []
     for dim in QG_DIMS:
         prompt_path = module_dir / f"llm-qg-{dim}-prompt.md"
         if not prompt_path.exists():
             return None
         prompt_parts.append(f"## {dim}\n{prompt_path.read_text(encoding='utf-8')}")
+    return prompt_hash_for_text("\n\n".join(prompt_parts))
+
+
+def _expected_llm_qg_prompt_hash(
+    *,
+    plan: Mapping[str, Any],
+    plan_content: str,
+    module_dir: Path,
+    wiki_manifest: str | Mapping[str, Any] | None,
+    implementation_map: Mapping[str, Any] | None,
+    use_generator: bool,
+    obligation_checklist: Mapping[str, Any] | None,
+) -> str | None:
+    """Hash the prompts that the current module inputs would send to LLM-QG.
+
+    This computes the expected identity instead of trusting mutable prompt
+    artifacts from an earlier worktree.  If current inputs cannot produce a
+    complete prompt set, resume fails closed.
+    """
+    try:
+        generated_content = _generated_content(module_dir)
+        prompt_parts = [
+            f"## {dim}\n"
+            + linear_pipeline.render_review_prompt(
+                plan,
+                plan_content,
+                generated_content,
+                dim,
+                wiki_manifest,
+                implementation_map,
+                use_generator=use_generator,
+                obligation_checklist=obligation_checklist,
+            )
+            for dim in QG_DIMS
+        ]
+    except (KeyError, OSError, TypeError, ValueError):
+        return None
     return prompt_hash_for_text("\n\n".join(prompt_parts))
 
 
@@ -1593,10 +1633,11 @@ def main(argv: list[str] | None = None) -> int:
 
 # ----- Resume helpers ---------------------------------------------------------
 #
-# Resume policy: skip a phase iff its on-disk artifact exists AND reports the
-# canonical success shape for that phase. Any missing / failed artifact forces
-# the phase to re-run. Once one phase re-runs, every downstream phase also
-# re-runs unconditionally (the corrections may invalidate later verdicts).
+# Resume policy: skip a phase iff its artifact reports the canonical success
+# shape; LLM-QG additionally requires its authoritative, input-bound SQLite
+# record. Any missing / failed artifact forces the phase to re-run. Once one
+# phase re-runs, every downstream phase also re-runs unconditionally (the
+# corrections may invalidate later verdicts).
 #
 # Codified after the 2026-05-21 cascade burned ~14 minutes of writer time per
 # iteration on phase-6 fixes. With resume, iteration drops to ~45s for the
@@ -1609,7 +1650,12 @@ def _read_json(path: Path) -> Any:
         return None
 
 
-def _phase_artifact_passes(module_dir: Path, phase: str) -> bool:
+def _phase_artifact_passes(
+    module_dir: Path,
+    phase: str,
+    *,
+    expected_llm_qg_prompt_hash: str | None = None,
+) -> bool:
     """Return True if `phase`'s on-disk artifact exists and reports success.
 
     The on-disk shapes mirror the success conditions enforced in `_run` itself
@@ -1663,7 +1709,10 @@ def _phase_artifact_passes(module_dir: Path, phase: str) -> bool:
             and str(data.get("overall_verdict", "")).upper() == "PASS"
         )
     if phase == "llm_qg":
-        return _current_db_llm_qg_passes(module_dir)
+        return _authoritative_llm_qg_payload(
+            module_dir,
+            expected_prompt_hash=expected_llm_qg_prompt_hash,
+        ) is not None
     return False
 
 
@@ -1677,14 +1726,28 @@ def _llm_qg_payload_passes(payload: Mapping[str, Any] | None) -> bool:
     return str(terminal_verdict).upper() == "PASS"
 
 
-def _current_db_llm_qg_payload(module_dir: Path) -> dict[str, Any] | None:
+def _authoritative_llm_qg_payload(
+    module_dir: Path,
+    *,
+    expected_prompt_hash: str | None,
+) -> dict[str, Any] | None:
+    """Return a PASS record that is current for all LLM-QG gate inputs.
+
+    The SQLite store is the only resume authority.  A raw ``llm_qg.json`` is
+    presentation evidence and is never consulted here.
+    """
+    if expected_prompt_hash is None:
+        return None
     level = module_dir.parent.name
     slug = module_dir.name
-    return current_payload_for_module(level, slug, module_dir)
-
-
-def _current_db_llm_qg_passes(module_dir: Path) -> bool:
-    return _llm_qg_payload_passes(_current_db_llm_qg_payload(module_dir))
+    payload = current_payload_for_module(
+        level,
+        slug,
+        module_dir,
+        gate_version=LLM_QG_GATE_VERSION,
+        prompt_hash=expected_prompt_hash,
+    )
+    return payload if _llm_qg_payload_passes(payload) else None
 
 
 def _run_stress_annotation_for_level(module_dir: Path, level: str) -> dict[str, Any]:
@@ -2172,11 +2235,23 @@ def _run(args: argparse.Namespace) -> int:
         llm_qg_reviewer_samples = linear_pipeline.llm_qg_reviewer_samples_for_level(level)
         timeout_agent = _reviewer_for_writer(writer, llm_qg_reviewer_override)
         started_at = time.monotonic()
-        resumed_llm_qg = _current_db_llm_qg_payload(module_dir)
+        expected_llm_qg_prompt_hash = _expected_llm_qg_prompt_hash(
+            plan=plan,
+            plan_content=plan_content,
+            module_dir=module_dir,
+            wiki_manifest=wiki_manifest,
+            implementation_map=impl_map,
+            use_generator=use_generator,
+            obligation_checklist=obligation_checklist,
+        )
+        resumed_llm_qg = _authoritative_llm_qg_payload(
+            module_dir,
+            expected_prompt_hash=expected_llm_qg_prompt_hash,
+        )
         if (
             resume_enabled
             and not force_rerun
-            and _llm_qg_payload_passes(resumed_llm_qg)
+            and resumed_llm_qg is not None
         ):
             llm_qg = resumed_llm_qg
             llm_qg_source = "v7_build:resumed-db"
@@ -2204,6 +2279,15 @@ def _run(args: argparse.Namespace) -> int:
             )
             linear_pipeline.write_json(module_dir / "llm_qg.json", llm_qg)
             llm_qg_source = "v7_build"
+            expected_llm_qg_prompt_hash = _expected_llm_qg_prompt_hash(
+                plan=plan,
+                plan_content=plan_content,
+                module_dir=module_dir,
+                wiki_manifest=wiki_manifest,
+                implementation_map=impl_map,
+                use_generator=use_generator,
+                obligation_checklist=obligation_checklist,
+            )
         _persist_llm_qg_result(
             level=level,
             slug=slug,
@@ -2211,6 +2295,7 @@ def _run(args: argparse.Namespace) -> int:
             llm_qg=llm_qg,
             reviewer=_reviewer_for_writer(writer, llm_qg_reviewer_override),
             source=llm_qg_source,
+            prompt_hash=expected_llm_qg_prompt_hash,
         )
         aggregate = llm_qg["aggregate"]
         tracker.emit(

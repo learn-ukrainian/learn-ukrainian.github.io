@@ -10,6 +10,14 @@ Before guessing CLI flags, run the tool's `--help`. The repo standard lives in
 `claude_extensions/rules/cli-help-standard.md`, and touched CLIs are expected to
 meet it so agents can use them without source-diving.
 
+## Git hooks
+
+Run `scripts/install_git_hooks.sh` once after cloning to configure the
+repository-level `core.hooksPath` as `.githooks`. The relative path applies to
+each linked worktree, so the tracked `pre-push` hook is shared without a
+per-worktree install. The installer also materializes `.githooks` in existing
+sparse worktrees without broadening their checkout.
+
 ---
 
 ## Startup Wrappers

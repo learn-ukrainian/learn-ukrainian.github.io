@@ -101,9 +101,9 @@ def test_unsupported_risk_fails_closed():
 
 
 def test_critical_uses_authority_while_routine_uses_practical_defaults():
-    # OpenAI author: critical → Fable (Sol advisory); high/medium/low → Sonnet 5.
+    # OpenAI author: critical → Opus 5 (Sol advisory); high/medium/low → Sonnet 5.
     critical = resolve_reviewer(ResolverInputs(author_model="codex", risk="critical"))
-    assert critical.selected.name == "claude-fable-5"
+    assert critical.selected.name == "claude-opus-5"
     for risk in ("high", "medium", "low"):
         resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk))
         assert resolution.selected.name == "claude-sonnet-5", risk
@@ -157,7 +157,7 @@ def test_fable_keeps_native_claude_when_native_health_is_degraded():
         )
     )
 
-    assert resolution.selected.name == "claude-fable-5"
+    assert resolution.selected.name == "claude-opus-5"
     assert resolution.selected.transport == "native_claude"
     assert resolution.selected.health == "degraded"
 
@@ -480,9 +480,9 @@ def test_critical_ladder_keeps_authority_before_practical():
     # catalog for its non-advisor consumers but is no longer on the critical ladder.
     assert [rung[0].name for rung in critical[:5]] == [
         "openai_frontier",
+        "claude-opus-5",
         "claude-fable-5",
         "claude-fable-5-cursor-fallback",
-        "claude-opus-5",
         "gpt-5.6-terra",
     ]
 

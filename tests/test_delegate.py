@@ -40,6 +40,27 @@ def tmp_tasks_dir(tmp_path, monkeypatch):
     return tasks_dir
 
 
+@pytest.fixture(autouse=True)
+def _stub_primary_integrity_sweep(monkeypatch):
+    """Keep _run_worker/cmd_dispatch tests hermetic from the ambient checkout.
+
+    The primary-integrity watchdog sweep (#5803 follow-up) runs real git
+    against delegate._REPO_ROOT. Its verdict depends on the machine running
+    the tests: a detached CI workspace (actions/checkout) reads as DRIFT, so
+    the sweep appends primary_integrity_post_worker to dispatch_events.jsonl
+    — breaking tests that assert on that file — and a stable-main second pass
+    would even "repair" (mutate) the host repo mid-suite. The sweep itself is
+    covered against fixture repos in tests/test_delegate_primary_integrity.py.
+    """
+    import scripts.audit.check_primary_integrity as cpi
+
+    monkeypatch.setattr(
+        cpi,
+        "check_primary_integrity",
+        lambda *_args, **_kwargs: (True, "primary on main (test stub)"),
+    )
+
+
 def _sanitize_git_env_for_test(monkeypatch) -> None:
     for key in tuple(os.environ):
         if key.startswith(("GIT_", "PRE_COMMIT")):
@@ -292,6 +313,39 @@ def test_explicit_silence_timeout_override_still_works():
     ])
 
     assert args.silence_timeout == 600
+
+
+def test_initial_response_timeout_default_is_600():
+    """Reasoning-heavy models think for minutes before their first token;
+    the default startup probe must tolerate that (# dispatch-timeouts)."""
+    args = delegate.build_parser().parse_args([
+        "dispatch",
+        "--agent",
+        "codex",
+        "--task-id",
+        "defaults",
+        "--prompt",
+        "hi",
+    ])
+
+    assert args.initial_response_timeout == 600
+    assert delegate.DEFAULT_INITIAL_RESPONSE_TIMEOUT_S == 600
+
+
+def test_explicit_initial_response_timeout_override_still_works():
+    args = delegate.build_parser().parse_args([
+        "dispatch",
+        "--agent",
+        "codex",
+        "--task-id",
+        "override",
+        "--prompt",
+        "hi",
+        "--initial-response-timeout",
+        "120",
+    ])
+
+    assert args.initial_response_timeout == 120
 
 
 def test_dispatch_help_documents_timeout_interaction(capsys):
@@ -1955,6 +2009,129 @@ def test_run_worker_silence_timeout_kills_silent_subprocess(
     assert events[-1]["silence_timeout_s"] == 1
 
 
+def _sleeping_adapter(returncode_file: Path) -> Any:
+    """Adapter whose CLI never produces output (sleeps until reaped)."""
+
+    class SleepingAdapter:
+        name = "claude"
+        default_model = "fixture-model"
+        supported_modes = frozenset({"read-only"})
+
+        def build_invocation(self, **kwargs: Any) -> InvocationPlan:
+            return InvocationPlan(
+                cmd=["/bin/sh", "-c", "sleep 60"],
+                cwd=Path(kwargs["cwd"]),
+            )
+
+        def parse_response(self, *, returncode: int, **_kwargs: Any) -> ParseResult:
+            returncode_file.write_text(str(returncode), encoding="utf-8")
+            return ParseResult(ok=False, response="", stderr_excerpt="")
+
+        def liveness_signal_paths(self, _plan: InvocationPlan) -> tuple[Path, ...]:
+            return ()
+
+    return SleepingAdapter()
+
+
+def _patch_runtime_for_sleeping_adapter(
+    monkeypatch: pytest.MonkeyPatch, adapter: Any
+) -> None:
+    from agent_runtime import runner as runtime_runner
+
+    monkeypatch.setattr(runtime_runner, "has_headroom", lambda *_args: (True, ""))
+    monkeypatch.setattr(runtime_runner, "write_record", lambda _record: None)
+    monkeypatch.setattr(
+        runtime_runner,
+        "resolve_invocation_telemetry",
+        lambda **_kwargs: InvocationTelemetry(
+            model="fixture-model",
+            effort="unknown",
+            cli_version="fixture",
+        ),
+    )
+    monkeypatch.setitem(runtime_runner._ADAPTER_CACHE, "claude", adapter)
+
+
+def test_run_worker_initial_response_timeout_still_reaps_silent_startup(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A worker that exceeds the startup probe is still reaped (timeouts
+    are not disabled) and the death message names the timeout, its value,
+    and the flag to raise it."""
+    state_path = delegate._state_path("initial-timeout")
+    returncode_file = tmp_path / "returncode.txt"
+    delegate._write_state_atomic(state_path, {"task_id": "initial-timeout"})
+    _patch_runtime_for_sleeping_adapter(
+        monkeypatch, _sleeping_adapter(returncode_file)
+    )
+
+    started = time.monotonic()
+    rc = delegate._run_worker(
+        task_id="initial-timeout",
+        agent="claude",
+        prompt="hi",
+        mode="read-only",
+        cwd_str=str(tmp_path),
+        model=None,
+        hard_timeout=30,
+        silence_timeout=30,
+        effort=None,
+        initial_response_timeout=1,
+    )
+    elapsed = time.monotonic() - started
+
+    state = delegate._read_state(state_path)
+
+    assert rc == 1
+    assert elapsed < 6
+    assert int(returncode_file.read_text("utf-8")) == -signal.SIGKILL
+    assert state is not None
+    assert state["status"] == "timeout"
+    excerpt = state["stderr_excerpt"] or ""
+    assert "initial_response_timeout" in excerpt
+    assert "fired after 1s" in excerpt
+    assert "--initial-response-timeout" in excerpt
+
+
+def test_run_worker_silence_timeout_message_names_flag_and_value(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The silence-timeout death message must also be actionable: name the
+    timeout, its configured value, and the flag to raise it."""
+    state_path = delegate._state_path("silence-message")
+    returncode_file = tmp_path / "returncode.txt"
+    delegate._write_state_atomic(state_path, {"task_id": "silence-message"})
+    _patch_runtime_for_sleeping_adapter(
+        monkeypatch, _sleeping_adapter(returncode_file)
+    )
+
+    rc = delegate._run_worker(
+        task_id="silence-message",
+        agent="claude",
+        prompt="hi",
+        mode="read-only",
+        cwd_str=str(tmp_path),
+        model=None,
+        hard_timeout=30,
+        silence_timeout=1,
+        effort=None,
+    )
+
+    state = delegate._read_state(state_path)
+
+    assert rc == 1
+    assert state is not None
+    assert state["status"] == "timeout"
+    excerpt = state["stderr_excerpt"] or ""
+    assert "stdout_silence_timeout" in excerpt
+    assert "fired after 1s" in excerpt
+    assert "--silence-timeout" in excerpt
+
+
 def test_run_worker_periodic_stdout_avoids_silence_timeout(
     tmp_tasks_dir,
     tmp_path,
@@ -3180,9 +3357,12 @@ def test_augment_prompt_mentions_sparse_exclusions():
     assert "sparse" in text.lower() or "Sparse" in text
 
 
-def test_ensure_worktree_falls_back_when_fetch_fails(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
-    """Fix 1 (#1476): offline/no-remote scenarios fall back to local
-    base rather than hard-failing. A warning is logged on stderr.
+def test_ensure_worktree_refuses_stale_base_when_fetch_fails(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """Fix 1 (#1476) amended by #5803 follow-up: offline/no-remote scenarios
+    used to fall back to the local base with only a stderr warning. That
+    silent fallback is why a worker concluded "origin/main may be stale" and
+    went to the PRIMARY checkout for freshness, leaving it detached. Fetch
+    failure is now an actionable hard error — no stale-base worktree.
     """
     target = tmp_path / "offline-worktree"
 
@@ -3199,18 +3379,15 @@ def test_ensure_worktree_falls_back_when_fetch_fails(tmp_tasks_dir, tmp_path, mo
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
 
-    _, branch, _ = delegate._ensure_worktree(
-        agent="codex",
-        task_id="1476-offline",
-        raw_path=str(target),
-        base="main",
-    )
-    assert branch == "codex/1476-offline"
-    captured = capsys.readouterr()
-    assert (
-        ("fetch" in captured.err and "fallback" in captured.err.lower())
-        or "stale" in captured.err.lower()
-    )
+    with pytest.raises(RuntimeError, match="git fetch origin main"):
+        delegate._ensure_worktree(
+            agent="codex",
+            task_id="1476-offline",
+            raw_path=str(target),
+            base="main",
+        )
+    # No worktree was branched from the stale local base.
+    assert not target.exists()
 
 
 # ---------------------------------------------------------------------------

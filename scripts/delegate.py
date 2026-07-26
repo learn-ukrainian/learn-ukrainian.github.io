@@ -203,7 +203,10 @@ DEFAULT_HARD_TIMEOUT_S = 7200
 DEFAULT_SILENCE_TIMEOUT_S = 3600
 # Fail fast when Codex (or any agent) never produces stdout/stderr/liveness
 # activity at startup — distinct from the long silence window above (#2071).
-DEFAULT_INITIAL_RESPONSE_TIMEOUT_S = 180
+# 600s: reasoning-heavy models at high/max effort routinely think for minutes
+# before their first token; the old 180s killed healthy workers mid-thought
+# (observed: deepseek review dispatch reaped at 181s, 1s over the limit).
+DEFAULT_INITIAL_RESPONSE_TIMEOUT_S = 600
 
 
 # ---------------------------------------------------------------------------
@@ -638,6 +641,25 @@ def _is_verified_added_worktree(path: Path) -> bool:
     return False
 
 
+def _apply_worktree_git_ceiling(worker_env: dict[str, str], worktree_path: Path) -> None:
+    """Pin GIT_CEILING_DIRECTORIES at the worktree's PARENT (#5803 follow-up).
+
+    Damage reduction, NOT isolation: stops git repo discovery at the dispatch
+    parent dir so a broken/missing worktree .git pointer can never bind the
+    worker to the PRIMARY checkout via upward traversal. The ceiling must be
+    the parent — a ceiling at the worktree root itself excludes the root from
+    the discovery walk and breaks git from subdirectories (verified
+    2026-07-25). Linked worktrees resolve their own .git file at the root and
+    share the git control plane, so normal ops (subdirs, fetch, commit) are
+    unaffected.
+    """
+    ceiling = str(worktree_path.parent)
+    existing_ceiling = worker_env.get("GIT_CEILING_DIRECTORIES")
+    worker_env["GIT_CEILING_DIRECTORIES"] = (
+        f"{existing_ceiling}{os.pathsep}{ceiling}" if existing_ceiling else ceiling
+    )
+
+
 def _resolve_write_cwd_error(
     *,
     mode: str,
@@ -754,6 +776,52 @@ def _resolve_dirty_primary_checkout_error(*, mode: str) -> str | None:
         f"{extra_diagnostic}"
         "   Clean/stash the primary checkout, or keep only gitignored local "
         "runtime state, then retry."
+    )
+
+
+def _resolve_primary_integrity_error(*, mode: str) -> str | None:
+    """Block NEW write-capable dispatches while the primary checkout is drifted.
+
+    #5803 follow-up: a worker detached the primary (`checkout: moving from main
+    to FETCH_HEAD`) and every worktree branched afterwards would inherit a
+    wrong base. The watchdog repairs detached+clean+idle drift conservatively
+    and reports anything else as unrepaired — in which case new dispatches must
+    stop (running ones are never killed). Read-only dispatches stay allowed for
+    preflight and diagnosis, same contract as the dirty-primary guard.
+    """
+    if mode not in _WRITE_CAPABLE_MODES:
+        return None
+
+    try:
+        try:
+            from scripts.audit.check_primary_integrity import check_primary_integrity
+        except ImportError:  # path-flavoured import for test/script contexts
+            from audit.check_primary_integrity import check_primary_integrity
+
+        ok, message = check_primary_integrity(_REPO_ROOT, fix=True, tasks_dir=_TASKS_DIR)
+    except Exception as exc:
+        print(
+            f"⚠️  primary-integrity watchdog errored ({type(exc).__name__}: {exc}); "
+            "proceeding — the health-poll canary will surface persistent failures",
+            file=sys.stderr,
+        )
+        return None
+
+    if ok:
+        if "repaired" in message:
+            _append_dispatch_event("primary_integrity_repaired_pre_dispatch", detail=message)
+        return None
+
+    return (
+        "❌ primary checkout drift is UNREPAIRED; refusing to start a new "
+        "write-capable dispatch (it would branch from a wrong base). Running "
+        "dispatches are not touched.\n"
+        f"   watchdog: {message}\n"
+        "   The first detection only records a baseline — if the drift is "
+        "detached+clean+idle and main is stable, simply retry the dispatch and "
+        "the watchdog re-attaches HEAD automatically. Otherwise inspect the "
+        "primary checkout manually; evidence is under "
+        "data/telemetry/primary-integrity/events.jsonl."
     )
 
 
@@ -1906,13 +1974,20 @@ def _ensure_worktree(
         if _fetch_base(base):
             worktree_base_ref = origin_ref
         else:
-            print(
-                f"⚠️  `git fetch origin {_base_branch_name(base)}` failed or "
-                f"{origin_ref} is unresolvable; falling back to local {base}. "
-                f"This worktree may be branched from a stale tip.",
-                file=sys.stderr,
+            # #5803 follow-up: NO silent fallback to the local base. That
+            # fallback is exactly why a worker concluded "origin/main may be
+            # stale" and went to the PRIMARY checkout for a fresh copy,
+            # leaving it detached. Fail with an actionable error instead.
+            branch_name = _base_branch_name(base)
+            raise RuntimeError(
+                f"could not fetch origin/{branch_name} and {origin_ref} is "
+                f"unresolvable — refusing to branch from possibly-stale local "
+                f"{branch_name}. Check connectivity and that "
+                "`git remote get-url origin` points at the canonical remote "
+                "(github.com:learn-ukrainian/learn-ukrainian.github.io), then "
+                f"run `git fetch origin {branch_name}` and retry the dispatch. "
+                "Do NOT use the primary checkout as a freshness source."
             )
-            worktree_base_ref = base
 
     # Ensure parent dirs exist for the dispatch/ subtree layout.
     worktree_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1967,6 +2042,13 @@ def _augment_prompt_with_worktree(
         "[delegate worktree]\n"
         f"Run all file edits, tests, and git commands inside this worktree: {worktree_path}\n"
         "Do not switch branches in the main checkout.\n"
+        # #5803 follow-up: remove the workflow reason to visit the primary.
+        # A linked worktree shares the canonical `origin` remote, so fresh
+        # main is always one fetch away from INSIDE the worktree.
+        "If you need a fresh base, run `git fetch origin main` INSIDE this worktree — "
+        "`origin` here points at the canonical GitHub remote and fetch works from any "
+        "linked worktree. NEVER use the primary checkout as a source of freshness "
+        "(no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.\n"
         f"{sparse_note}\n"
         f"{prompt}"
     )
@@ -2345,16 +2427,28 @@ def _run_worker(
     except AgentStalledError as exc:
         timed_out = True
         substitution = getattr(exc, "substitution", None)
-        prefix = (
-            "initial_response_timeout"
-            if getattr(exc, "kind", "stall") == "initial_response_timeout"
-            else "stdout_silence_timeout"
-        )
-        stderr_excerpt = f"{prefix}: {exc}"[:500]
+        if getattr(exc, "kind", "stall") == "initial_response_timeout":
+            stderr_excerpt = (
+                f"initial_response_timeout fired after {exc.stall_timeout}s "
+                f"with no first stdout/stderr/liveness activity: {exc} "
+                f"— raise it with --initial-response-timeout "
+                f"(current default {DEFAULT_INITIAL_RESPONSE_TIMEOUT_S}s)"
+            )[:500]
+        else:
+            stderr_excerpt = (
+                f"stdout_silence_timeout fired after {exc.stall_timeout}s "
+                f"without watchdog activity: {exc} "
+                f"— raise it with --silence-timeout "
+                f"(current default {DEFAULT_SILENCE_TIMEOUT_S}s)"
+            )[:500]
         returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
     except AgentTimeoutError as exc:
         substitution = getattr(exc, "substitution", None)
-        stderr_excerpt = f"hard_timeout: {exc}"[:500]
+        stderr_excerpt = (
+            f"hard_timeout fired after {exc.hard_timeout}s: {exc} "
+            f"— raise it with --hard-timeout "
+            f"(current default {DEFAULT_HARD_TIMEOUT_S}s)"
+        )[:500]
         returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
     except AgentRuntimeError as exc:
         stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
@@ -2544,6 +2638,34 @@ def _run_worker(
         fallback_prompt_chars=len(prompt),
     )
 
+    # Post-worker primary-integrity sweep (#5803 follow-up): if THIS worker
+    # touched the primary checkout, the drift is caught here while its
+    # task_id/agent/pid are still known, so the drift event names the likely
+    # actor. Conservative: repairs only detached+clean+idle drift and never
+    # raises into teardown. Runs after final_state is persisted, so this task
+    # no longer counts as a running dispatch for the repair gate.
+    try:
+        try:
+            from scripts.audit.check_primary_integrity import check_primary_integrity
+        except ImportError:  # path-flavoured import for test/script contexts
+            from audit.check_primary_integrity import check_primary_integrity
+
+        pi_ok, pi_message = check_primary_integrity(_REPO_ROOT, fix=True, tasks_dir=_TASKS_DIR)
+        if not pi_ok or "repaired" in pi_message:
+            _append_dispatch_event(
+                "primary_integrity_post_worker",
+                task_id=task_id,
+                agent=agent,
+                ok=pi_ok,
+                detail=pi_message,
+            )
+    except Exception as pi_exc:
+        print(
+            f"[delegate] WARNING: primary-integrity post-worker sweep failed: "
+            f"{type(pi_exc).__name__}: {pi_exc}",
+            file=sys.stderr,
+        )
+
     if timed_out:
         _append_dispatch_event(
             "dispatch_silence_timeout",
@@ -2638,6 +2760,11 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print(dirty_primary_error, file=sys.stderr)
         return 2
 
+    primary_integrity_error = _resolve_primary_integrity_error(mode=args.mode)
+    if primary_integrity_error:
+        print(primary_integrity_error, file=sys.stderr)
+        return 2
+
     # Refuse to clobber a task that's still alive — whether it's in
     # "running" (worker up and executing) OR "spawning" (worker created
     # but not yet past its own state-update step). Without the
@@ -2703,9 +2830,14 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 return 2
         else:
             if ownership.would_refuse or ownership.override_reason:
+                # Only report a conflict count when there ARE conflicts: an
+                # unprovable-disjointness refusal has none, and printing
+                # "conflicts=0" next to it reads as a guard bug (#5340-adjacent).
+                suffix = (
+                    f" (conflicts={len(ownership.conflicts)})" if ownership.conflicts else ""
+                )
                 print(
-                    f"⚠️  write-path ownership: {ownership.reason} "
-                    f"(conflicts={len(ownership.conflicts)})",
+                    f"⚠️  write-path ownership: {ownership.reason}{suffix}",
                     file=sys.stderr,
                 )
             if not ownership.admitted:
@@ -3078,6 +3210,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     worker_env["TMPDIR"] = str(runtime_tmp_root)
     worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
     worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(runtime_tmp_namespace_root.parent)
+    if worktree_path is not None:
+        _apply_worktree_git_ceiling(worker_env, worktree_path)
     if getattr(args, "allow_merge", False):
         worker_env.pop("AGENT_NO_MERGE", None)
         worker_env["AGENT_ALLOW_MERGE"] = "1"

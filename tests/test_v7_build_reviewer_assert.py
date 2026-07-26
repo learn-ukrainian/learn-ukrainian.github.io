@@ -61,6 +61,9 @@ def test_llm_qg_phase_artifact_requires_current_db_record(
     (module_dir / "llm_qg.json").write_text(
         json.dumps(
             {
+                "content_sha": "self-asserted-content-hash",
+                "gate_version": v7_build.LLM_QG_GATE_VERSION,
+                "prompt_hash": "self-asserted-prompt-hash",
                 "aggregate": {
                     "verdict": "PASS",
                     "terminal_verdict": "PASS",
@@ -72,18 +75,84 @@ def test_llm_qg_phase_artifact_requires_current_db_record(
         ),
         encoding="utf-8",
     )
+    _set_mtime_ns(module_dir / "llm_qg.json", 2_000_000_000_000_000_000)
+    expected_prompt_hash = "current-computed-prompt-hash"
 
-    assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is False
+    assert not db_path.exists()
+    assert not v7_build._phase_artifact_passes(
+        module_dir,
+        "llm_qg",
+        expected_llm_qg_prompt_hash=expected_prompt_hash,
+    )
 
     record_llm_qg(
         level="b1",
         slug="target",
         module_dir=module_dir,
         payload=json.loads((module_dir / "llm_qg.json").read_text(encoding="utf-8")),
-        gate_version="test.v1",
+        gate_version=v7_build.LLM_QG_GATE_VERSION,
+        prompt_hash=expected_prompt_hash,
     )
 
-    assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is True
+    assert v7_build._phase_artifact_passes(
+        module_dir,
+        "llm_qg",
+        expected_llm_qg_prompt_hash=expected_prompt_hash,
+    )
+
+
+def test_llm_qg_phase_artifact_rejects_future_file_when_db_is_corrupt(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    db_path = tmp_path / "corrupt-llm-qg.db"
+    monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_DB", str(db_path))
+    db_path.write_text("not a SQLite database", encoding="utf-8")
+    module_dir = tmp_path / "b1" / "target"
+    module_dir.mkdir(parents=True)
+    (module_dir / "module.md").write_text("## Тест\n\nТекст.\n", encoding="utf-8")
+    (module_dir / "llm_qg.json").write_text(
+        json.dumps(
+            {
+                "content_sha": "self-asserted-content-hash",
+                "gate_version": v7_build.LLM_QG_GATE_VERSION,
+                "prompt_hash": "self-asserted-prompt-hash",
+                "aggregate": {"verdict": "PASS", "terminal_verdict": "PASS"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    _set_mtime_ns(module_dir / "llm_qg.json", 2_000_000_000_000_000_000)
+
+    assert not v7_build._phase_artifact_passes(
+        module_dir,
+        "llm_qg",
+        expected_llm_qg_prompt_hash="current-computed-prompt-hash",
+    )
+
+
+def test_llm_qg_persistence_failure_is_a_build_failure(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module_dir = tmp_path / "b1" / "target"
+    module_dir.mkdir(parents=True)
+    (module_dir / "module.md").write_text("## Тест\n", encoding="utf-8")
+
+    def fail_persistence(**_kwargs) -> None:
+        raise OSError("disk full")
+
+    monkeypatch.setattr(v7_build, "record_llm_qg", fail_persistence)
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="result persistence failed"):
+        v7_build._persist_llm_qg_result(
+            level="b1",
+            slug="target",
+            module_dir=module_dir,
+            llm_qg={"aggregate": {"verdict": "PASS", "terminal_verdict": "PASS"}},
+            reviewer="codex-tools",
+            source="test",
+            prompt_hash="current-computed-prompt-hash",
+        )
 
 
 def test_seminar_llm_qg_routes_away_from_gemini_reviewer():
