@@ -60,6 +60,7 @@ def _copy_repo_subset(target: Path) -> None:
         # deletion, see scripts/deploy/reap_agent_mirrors.py). The fixture must
         # mirror every file the script actually invokes, or deploy exits non-zero
         # here for a reason that has nothing to do with the behaviour under test.
+        Path("scripts/deploy/agent_directory.py"),
         Path("scripts/deploy/reap_agent_mirrors.py"),
         Path("scripts/deploy/sync_agent_mirror.py"),
         Path("scripts/lint_prompts.py"),

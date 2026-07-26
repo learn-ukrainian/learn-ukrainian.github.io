@@ -14,36 +14,11 @@ macOS does not provide a usable ``/proc/self/fd`` path for this purpose;
 from __future__ import annotations
 
 import argparse
-import contextlib
 import os
 import sys
 from pathlib import Path
 
-
-def _directory_flags() -> int:
-    """Return flags that open a real directory without following a symlink."""
-    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
-    if hasattr(os, "O_CLOEXEC"):
-        flags |= os.O_CLOEXEC
-    return flags
-
-
-def open_agent_directory(agent_root: str) -> int:
-    """Create (when absent) and open ``agent_root`` without following links.
-
-    The final open is always the security boundary.  If another process creates
-    or swaps the name after ``mkdir``, ``O_NOFOLLOW`` rejects a symlink and the
-    descriptor returned for a directory remains bound to the opened object.
-    """
-    flags = _directory_flags()
-    try:
-        return os.open(agent_root, flags)
-    except FileNotFoundError:
-        with contextlib.suppress(FileExistsError):
-            os.mkdir(agent_root)
-        # A concurrent creator may have won the race.  The no-follow open below
-        # still verifies that its entry is a real directory.
-        return os.open(agent_root, flags)
+from agent_directory import open_agent_directory
 
 
 def sync_agent_mirror(source_root: str, agent_root: str) -> None:

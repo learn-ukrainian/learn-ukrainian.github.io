@@ -47,13 +47,21 @@ deploy_agent_extensions() {
     # it on start, so the operator never sees the banner and the agent boots
     # with no idea its own config is stale. Persist the verdict where
     # session-setup.sh can read it back into the session capsule.
-    local status_file="$project_dir/.agent/last-deploy-status"
-    local failure_log="$project_dir/.agent/last-deploy-failure.log"
-    mkdir -p "$project_dir/.agent" 2>/dev/null || true
+    # .agent is concurrent agent-owned state. The helper opens it with
+    # O_NOFOLLOW|O_DIRECTORY and updates leaves by dir_fd; plain shell
+    # redirection/cp/rm here would reintroduce deploy's path-swap escape.
+    local scripts_dir helper_project_root status_helper
+    scripts_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+    helper_project_root="$(cd "$scripts_dir/.." && pwd)"
+    status_helper="$scripts_dir/deploy/update_agent_deploy_status.py"
 
     if [ "$exit_code" -eq 0 ]; then
+        if ! "$helper_project_root/.venv/bin/python" "$status_helper" clear --agent-root "$project_dir/.agent"; then
+            echo "Error: agent extensions deployed but deploy-status cleanup refused an unsafe .agent root." >&2
+            rm -f "$log_file"
+            return 1
+        fi
         echo "Agent extensions deployed ($npm_script)"
-        rm -f "$status_file" "$failure_log"
     else
         echo ""
         echo "⚠️⚠️  AGENT-EXTENSIONS DEPLOY FAILED (npm run $npm_script, exit $exit_code)  ⚠️⚠️"
@@ -62,13 +70,13 @@ deploy_agent_extensions() {
         tail -15 "$log_file"
         echo "────────────────────────────────────────"
         echo "Reproduce with: npm run $npm_script"
-        {
-            echo "FAILED"
-            echo "script=$npm_script"
-            echo "exit_code=$exit_code"
-            echo "when=$(date -u '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || echo unknown)"
-        } >"$status_file" 2>/dev/null || true
-        cp "$log_file" "$failure_log" 2>/dev/null || true
+        if ! "$helper_project_root/.venv/bin/python" "$status_helper" record-failure \
+            --agent-root "$project_dir/.agent" \
+            --script "$npm_script" \
+            --exit-code "$exit_code" \
+            --failure-log "$log_file"; then
+            echo "Error: deploy-status update refused an unsafe .agent root." >&2
+        fi
     fi
     rm -f "$log_file"
     return "$exit_code"
