@@ -47,7 +47,8 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
 * **Escalatory Advisor / Critical Authority Reviews** (reserved for architecture, security, or design escalation):
   * **Top advisors @ `xhigh`**: `gpt-5.6-sol` · `claude-opus-5` · `claude-fable-5`.
     Fable remains listed, but is too expensive: prefer `claude-opus-5` when the
-    Anthropic advisor is needed.
+    Anthropic advisor is needed — it replaced Fable 5 as the default Anthropic
+    advisor on 2026-07-24; reserve Fable for a case Opus 5 has already failed.
   * **Other advisors**: `gemini-3.1-pro-high` · `gemini-3.6-flash-high` ·
     `kimi-k3-max` · `glm-5.2` · `grok-4.5` @ `high`.
   * `gpt-5.6-terra` is **not an advisor**; it remains the practical/routine
@@ -121,7 +122,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 
   | Seat | Default (loop) | Escalate (deep) | Notes |
   | --- | --- | --- | --- |
-  | **claude** | `claude-sonnet-5` @ high | **`claude-fable-5` @ xhigh** | Same pattern as AGY Flash→Pro |
+  | **claude** | `claude-opus-5` @ high | **`gpt-5.6-sol` @ xhigh** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Other lanes escalate **to** Claude (`claude-opus-5` @ xhigh) or to Sol — pick by CodexBar headroom |
   | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | Named alternate for harness / infra / devops; never co-owns a live lease |
   | **grok** | `grok-4.5` @ high | same SKU (no higher pin yet) | Cursor **explicit** `grok-4.5` = availability fallback, not quality escalate |
   | **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | Flash loop; Pro deep single-shot |
@@ -130,7 +131,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | seat | model_id | effort | escalate_model_id | escalate_effort |
   | --- | --- | --- | --- | --- |
   | agy | gemini-3.6-flash-high | high | gemini-3.1-pro-high | high |
-  | claude | claude-sonnet-5 | high | claude-fable-5 | xhigh |
+  | claude | claude-opus-5 | high | gpt-5.6-sol | xhigh |
   | codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
   | grok | grok-4.5 | high | grok-4.5 | high |
   <!-- fleet-roster-projection:end orchestrator_seats -->
