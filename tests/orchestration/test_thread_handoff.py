@@ -2426,6 +2426,53 @@ def test_supervised_claudex_request_failure_preserves_prepared_lease(
     assert not cs._request_path(tmp_path, supervisor.run_id).exists()
 
 
+def test_prepare_seal_release_skipped_when_claudex_rollover_request_fails(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys,
+) -> None:
+    """P1 regression (bridge msg #5285): the cooperative seal-time thread-lease release must
+    be the LAST fallible-free step in prepare. If request_claudex_rollover fails, prepare
+    returns an error — the predecessor's own slot lease must still be HELD so no successor can
+    claim it and double-drive. Mutation check: moving the release call back before the
+    request_claudex_rollover call makes this test fail (the lease flips to "released" even
+    though prepare returned rc=2)."""
+    seed_supervised_claudex(tmp_path, monkeypatch)
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda starting_pid: {"owner_pid": 999, "owner_pid_started_at": 1000.0, "owner_machine_id": "machine-a"},
+    )
+    lease = _v2_lease(
+        owner_thread_id="official-session-5265",
+        generation=1,
+        agent="claude-infra",
+        owner_pid=999,
+        owner_pid_started_at=1000.0,
+        owner_machine_id="machine-a",
+    )
+    lease_path = _write_lease(tmp_path, "claude-infra", lease)
+    original_lease_text = lease_path.read_text(encoding="utf-8")
+    monkeypatch.setenv("LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION", "1")  # stale -> request fails
+
+    rc = th.main(
+        [
+            "--repo-root",
+            str(tmp_path),
+            "prepare",
+            "--agent",
+            "claude-infra",
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert rc == 2
+    assert "request launch generation is stale" in payload["error"]
+    assert lease_path.read_text(encoding="utf-8") == original_lease_text  # still held, not tombstoned
+
+
 def test_prepare_without_native_adapter_records_carrier_binding_action(
     tmp_path: Path,
     capsys,

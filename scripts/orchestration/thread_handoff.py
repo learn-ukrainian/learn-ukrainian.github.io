@@ -3365,30 +3365,6 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
         )
         return 2
 
-    if agent == "claude" or agent.startswith("claude-"):
-        # The packet is sealed: this predecessor's own terminal mutating
-        # action is to cooperatively release its thread-lease slot through
-        # the same identity-gated path a SessionEnd hook would use, so the
-        # replacement thread's future claim never has to wait out a stale
-        # lease. Best-effort and never fatal to prepare: a session whose
-        # process identity cannot be reconfirmed here simply leaves the
-        # lease for claim_thread_lease's pid-liveness check to reclaim later.
-        try:
-            seal_release_result = release_thread_lease(
-                state_root=state_root, agent=agent, current_thread_id=active_thread_id, now=now
-            )
-            if seal_release_result.get("status") not in {"released", "noop"}:
-                print(
-                    f"WARNING: unexpected thread-lease release status at prepare seal for "
-                    f"agent {agent!r}: {seal_release_result}",
-                    file=sys.stderr,
-                )
-        except (OSError, ValueError) as exc:
-            print(
-                f"WARNING: thread-lease release at prepare seal failed for agent {agent!r}: {exc}",
-                file=sys.stderr,
-            )
-
     wrote_router = False
     if args.write_current:
         write_text_atomic(router_path, router_md)
@@ -3415,6 +3391,35 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
             )
         )
         return 2
+
+    if agent == "claude" or agent.startswith("claude-"):
+        # The packet is sealed and every fallible prepare step (including the
+        # Claudex rollover request above) has already succeeded: only now is
+        # it safe for this predecessor's terminal mutating action to
+        # cooperatively release its thread-lease slot through the same
+        # identity-gated path a SessionEnd hook would use, so the replacement
+        # thread's future claim never has to wait out a stale lease. This
+        # MUST stay the last fallible-free step in prepare — releasing any
+        # earlier would drop mutual exclusion while a later step could still
+        # fail and leave the predecessor running with no lease held. Release
+        # itself is best-effort and never fatal to prepare: a session whose
+        # process identity cannot be reconfirmed here simply leaves the lease
+        # for claim_thread_lease's pid-liveness check to reclaim later.
+        try:
+            seal_release_result = release_thread_lease(
+                state_root=state_root, agent=agent, current_thread_id=active_thread_id, now=now
+            )
+            if seal_release_result.get("status") not in {"released", "noop"}:
+                print(
+                    f"WARNING: unexpected thread-lease release status at prepare seal for "
+                    f"agent {agent!r}: {seal_release_result}",
+                    file=sys.stderr,
+                )
+        except (OSError, ValueError) as exc:
+            print(
+                f"WARNING: thread-lease release at prepare seal failed for agent {agent!r}: {exc}",
+                file=sys.stderr,
+            )
 
     output = {
         "agent": agent,
