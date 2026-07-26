@@ -203,6 +203,39 @@ def force_refresh_token() -> str:
         return token
 
 
+_FORCE_TTY_ENV = "KIMI_OAUTH_ALLOW_TTY"
+
+
+def _emit_token(token: str) -> int:
+    """Write the OAuth token to stdout — but never into a terminal by accident.
+
+    Printing the credential IS this command's contract: it is Claude Code's
+    `apiKeyHelper`, the same shape as `gh auth token`, and the launchd refresher
+    sends stdout to /dev/null. Both automated consumers pipe, so neither is
+    affected by the check below.
+
+    The residual exposure is the operator running it by hand: a live token then
+    sits in terminal scrollback and shell history, where it long outlives its
+    ~15-minute lifetime in a place nobody thinks to clear. CodeQL flags this line
+    (`py/clear-text-logging-sensitive-data`) and it is right to.
+
+    So refuse when stdout is a TTY unless explicitly overridden. This keeps the
+    helper contract intact, removes the accidental-exposure path, and makes the
+    remaining suppression honest rather than a shrug.
+    """
+    if sys.stdout.isatty() and os.environ.get(_FORCE_TTY_ENV) != "1":
+        print(
+            "kimi-coding-oauth: refusing to print a live OAuth token to a terminal.\n"
+            "  It would persist in scrollback and shell history long after the token expires.\n"
+            "  Pipe it (`... token | pbcopy`), or set "
+            f"{_FORCE_TTY_ENV}=1 to override deliberately.",
+            file=sys.stderr,
+        )
+        return 3
+    print(token)
+    return 0
+
+
 def cmd_token() -> int:
     path = _credentials_path()
     margin = _margin_seconds()
@@ -225,8 +258,7 @@ def cmd_token() -> int:
 
         token = _fresh_token(data, margin)
         if token is not None:
-            print(token)
-            return 0
+            return _emit_token(token)
 
         try:
             merged = _refresh(data)
@@ -243,11 +275,10 @@ def cmd_token() -> int:
             return 3
 
         token = _fresh_token(merged, 0)
-        if token is None:
-            print("kimi-coding-oauth: refreshed token is already expired", file=sys.stderr)
-            return 3
-        print(token)
-        return 0
+        if token is not None:
+            return _emit_token(token)
+        print("kimi-coding-oauth: refreshed token is already expired", file=sys.stderr)
+        return 3
 
 
 def cmd_refresh() -> int:
@@ -263,8 +294,7 @@ def cmd_refresh() -> int:
     except OSError as exc:
         print(f"kimi-coding-oauth: cannot write credentials: {exc}", file=sys.stderr)
         return 3
-    print(token)
-    return 0
+    return _emit_token(token)
 
 
 def main(argv: list[str]) -> int:
