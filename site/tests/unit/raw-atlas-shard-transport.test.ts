@@ -2,6 +2,7 @@
 
 import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import { get as getHttp } from 'node:http';
+import { createServer as createTcpServer } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -24,6 +25,16 @@ type HttpResponse = {
   body: Uint8Array;
   headers: Record<string, string | string[] | undefined>;
   status: number;
+};
+
+type ReservedPort = {
+  close: () => Promise<void>;
+  port: number;
+};
+
+type PreviewLogger = {
+  error: (...args: unknown[]) => void;
+  info: (...args: unknown[]) => void;
 };
 
 function serverUrl(httpServer: ViteDevServer['httpServer']): string {
@@ -49,6 +60,24 @@ function get(url: string): Promise<HttpResponse> {
   });
 }
 
+async function reserveTcpPort(): Promise<ReservedPort> {
+  const server = createTcpServer();
+  await new Promise<void>((resolve, reject) => {
+    server.once('error', reject);
+    server.listen(0, '127.0.0.1', resolve);
+  });
+  const address = server.address();
+  if (!address || typeof address === 'string') throw new Error('Could not reserve a TCP port');
+
+  return {
+    close: () =>
+      new Promise((resolve, reject) =>
+        server.close((error) => (error ? reject(error) : resolve())),
+      ),
+    port: address.port,
+  };
+}
+
 async function writeFixture(assetRoot: string, root: string): Promise<void> {
   await mkdir(join(assetRoot, 'atlas'), { recursive: true });
   await mkdir(join(assetRoot, 'lexicon'), { recursive: true });
@@ -58,7 +87,7 @@ async function writeFixture(assetRoot: string, root: string): Promise<void> {
   await writeFile(join(assetRoot, '404.html'), notFoundPage);
   await writeFile(
     join(root, 'astro.config.mjs'),
-    "export default { base: '/preview-base/', trailingSlash: 'always', vite: { preview: { headers: { 'X-Project-Vite': 'merged' } } } };\n",
+    "export default { base: '/preview-base/', trailingSlash: 'always', vite: { preview: { headers: { 'X-Project-Vite': 'merged' }, strictPort: true } } };\n",
   );
 }
 
@@ -75,13 +104,17 @@ async function startDev(root: string, publicDir: string): Promise<RunningServer>
   return { baseUrl: serverUrl(server.httpServer), stop: () => server.close() };
 }
 
-async function startGuardedPreview(root: string, outDir: string): Promise<RunningServer> {
+async function startGuardedPreview(
+  root: string,
+  outDir: string,
+  logger: PreviewLogger = { error: () => {}, info: () => {} },
+): Promise<RunningServer> {
   const server = await startPreview({
     allowedHosts: [],
     base: '/preview-base/',
     headers: {},
     host: '127.0.0.1',
-    logger: { error: () => {}, info: () => {} },
+    logger,
     open: false,
     outDir: pathToFileURL(outDir),
     port: 0,
@@ -111,6 +144,39 @@ afterEach(async () => {
 });
 
 describe('raw Atlas shard transport', () => {
+  test('logs EADDRINUSE through the single-argument integration logger API', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'raw-atlas-shard-transport-'));
+    temporaryRoots.push(root);
+    const outDir = join(root, 'dist');
+    await writeFixture(outDir, root);
+    const reservedPort = await reserveTcpPort();
+    const errorCalls: unknown[][] = [];
+
+    try {
+      await expect(
+        startPreview({
+          allowedHosts: [],
+          base: '/preview-base/',
+          headers: {},
+          host: '127.0.0.1',
+          logger: { error: (...args: unknown[]) => errorCalls.push(args), info: () => {} },
+          open: false,
+          outDir: pathToFileURL(outDir),
+          port: reservedPort.port,
+          root: pathToFileURL(`${root}/`),
+        }),
+      ).rejects.toThrow(`Port ${reservedPort.port} is already in use`);
+
+      expect(errorCalls).toHaveLength(1);
+      expect(errorCalls[0]).toHaveLength(1);
+      expect(errorCalls[0][0]).toEqual(
+        expect.stringContaining(`Port ${reservedPort.port} is already in use`),
+      );
+    } finally {
+      await reservedPort.close();
+    }
+  });
+
   test('serves raw shard bytes in real Vite dev and guarded Astro preview servers', async () => {
     const root = await mkdtemp(join(tmpdir(), 'raw-atlas-shard-transport-'));
     temporaryRoots.push(root);
@@ -127,8 +193,15 @@ describe('raw Atlas shard transport', () => {
       await dev.stop();
     }
 
-    const previewServer = await startGuardedPreview(root, outDir);
+    const infoCalls: unknown[][] = [];
+    const previewServer = await startGuardedPreview(root, outDir, {
+      error: () => {},
+      info: (...args: unknown[]) => infoCalls.push(args),
+    });
     try {
+      expect(infoCalls).toHaveLength(1);
+      expect(infoCalls[0]).toHaveLength(1);
+      expect(infoCalls[0][0]).toEqual(expect.stringContaining('Local'));
       await expectRawShardTransport(previewServer, '/preview-base');
       await expectUnchangedAsset(previewServer, '/preview-base');
       expect(

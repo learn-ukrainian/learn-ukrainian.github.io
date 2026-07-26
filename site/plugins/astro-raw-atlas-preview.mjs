@@ -81,7 +81,7 @@ export default async function startPreview({
   try {
     previewServer = await preview(mergedViteConfig);
   } catch (error) {
-    if (error instanceof Error) logger.error(null, error.stack || error.message);
+    if (error instanceof Error) logger.error(error.stack || error.message);
     throw error;
   }
   previewServer.bindCLIShortcuts({
@@ -93,7 +93,6 @@ export default async function startPreview({
     ],
   });
   logger.info(
-    'SKIP_FORMAT',
     msg.serverStart({
       startupTime: performance.now() - startServerTime,
       resolvedUrls: previewServer.resolvedUrls ?? { local: [], network: [] },
