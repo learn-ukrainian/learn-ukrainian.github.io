@@ -82,10 +82,15 @@ models:
     family: anthropic
     tier: frontier_authority
     lifecycle: active
-    roles: [architecture, critical_review, security_review, orchestration]
+    roles: [architecture, critical_review, security_review, orchestration, agentic_coding]
     transports: [native_claude, cursor]
-    strengths: [production_judgment, adversarial_review, reliable_long_horizon_coding]
-    weaknesses: [frontier_quota_cost]
+    strengths: [deep_reasoning, long_horizon_agentic, high_precision_and_recall_code_review]
+    weaknesses: [verbose_by_default, over_delegates_to_subagents, elevated_refusal_surface]
+    notes: >-
+      Anthropic advisor + escalation TARGET seat (replaced Fable 5 on 2026-07-24 at half
+      the token cost). Effort ladder low..max; drive at high, xhigh for the hard turn.
+      Thinking is ON by default and disabling it is invalid above high effort.
+      Separate rate-limit bucket from the Opus 4.x pool.
     sources:
       - https://platform.claude.com/docs/en/about-claude/models/overview
   # Retained alongside claude-opus-5: the advisor ROSTER now points at opus-5, but
@@ -99,7 +104,7 @@ models:
     roles: [architecture, critical_review, security_review, orchestration]
     transports: [native_claude, cursor]
     strengths: [production_judgment, adversarial_review, reliable_long_horizon_coding]
-    weaknesses: [frontier_quota_cost]
+    weaknesses: [frontier_quota_cost, superseded_by_claude-opus-5]
     sources:
       - https://www.anthropic.com/news/claude-opus-4-8
   claude-sonnet-5:
@@ -361,13 +366,10 @@ models:
       - https://platform.claude.com/docs/en/about-claude/models/overview
 
 review_candidates:
-  claude-opus-5:
-    model_id: claude-opus-5
-    route: claude
-    transport: native_claude
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude
-    review_profiles: [code, infra]
-    capabilities: [code_review]
+  # NOTE: a second `claude-opus-4-8:` key used to appear further down this mapping.
+  # YAML last-wins meant THIS block never took effect, so the duplicate was dead
+  # config that the strict check-yaml hook flagged (fixed 2026-07-24). The surviving
+  # pinned entry now lives below as `claude-opus-5`. Keys here must stay unique.
   # Kept: scripts/review/reviewer_resolver.py:213 binds CLAUDE_OPUS_4_8 at import
   # time, so deleting this key breaks collection of every test that imports it.
   claude-opus-4-8:
@@ -524,12 +526,19 @@ review_candidates:
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
   claude:
-    model_id: claude-sonnet-5
+    model_id: claude-opus-5
     effort: high
-    escalate_model_id: claude-fable-5
+    escalate_model_id: gpt-5.6-sol
     escalate_effort: xhigh
     escalate_when: deep_single_shot_or_architecture
-    note: default Sonnet 5 @ high; escalate Fable 5 @ xhigh (Opus only if Fable unavailable)
+    note: >-
+      Opus 5 @ high drives the lane; escalation is CROSS-FAMILY to Sol @ xhigh
+      (user 2026-07-24). Claude is an escalation TARGET, not an escalator — other
+      lanes escalate to Claude or Sol by whichever has CodexBar headroom. Fable is
+      NOT the default Anthropic advisor: it is the top capability tier but burns
+      subscription usage the fleet needs elsewhere; reserve it for a case Opus 5
+      has already failed. Driving is `high`, not `xhigh` — xhigh is the documented
+      START for agentic work, and the same docs say sweep down from it.
   codex:
     model_id: gpt-5.6-terra
     effort: high
@@ -566,7 +575,8 @@ orchestrator_seats:
     note: Google-family orchestrator; Flash default loop; Pro escalate only
 
 # Formal CF transport defaults for review-pr (model + effort). Authority seats
-# (Sol/Fable/Opus) are critical-ladder only — not routine review-pr pins.
+# (Sol/Opus) are critical-ladder only — not routine review-pr pins. Fable is no
+# longer on the routine ladder at all (usage cost, user 2026-07-24).
 formal_cf_defaults:
   codex:
     model_id: gpt-5.6-terra
@@ -577,7 +587,9 @@ formal_cf_defaults:
   claude:
     model_id: claude-sonnet-5
     effort: high
-    escalate_model_id: claude-fable-5
+    # Others escalate TO Claude: Opus 5 @ xhigh is the Anthropic advisor seat
+    # (replaced Fable 5 on 2026-07-24 — same authority role, half the burn).
+    escalate_model_id: claude-opus-5
     escalate_effort: xhigh
   glm:
     model_id: glm-5.2
@@ -614,9 +626,13 @@ review_ladders:
   # Grok / K3 / GLM / DS-Pro / pool S 2.1) — not Sol/Fable on routine PRs.
   critical:
     - [openai_frontier]
+    # Opus 5 is the Anthropic authority rung (user 2026-07-24). Fable sits BELOW it:
+    # same tier, ~2x the token cost, and the fleet keeps running out of subscription
+    # headroom — so it is the fallback for a case Opus 5 has already failed, not the
+    # first Anthropic pick.
+    - [claude-opus-5]
     - [claude-fable-5]
     - [claude-fable-5-cursor-fallback]
-    - [claude-opus-5]
     - [gpt-5.6-terra]
     - [claude-sonnet-5]
     - [gemini-3.6-flash]

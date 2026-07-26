@@ -204,7 +204,10 @@ DEFAULT_HARD_TIMEOUT_S = 7200
 DEFAULT_SILENCE_TIMEOUT_S = 3600
 # Fail fast when Codex (or any agent) never produces stdout/stderr/liveness
 # activity at startup — distinct from the long silence window above (#2071).
-DEFAULT_INITIAL_RESPONSE_TIMEOUT_S = 180
+# 600s: reasoning-heavy models at high/max effort routinely think for minutes
+# before their first token; the old 180s killed healthy workers mid-thought
+# (observed: deepseek review dispatch reaped at 181s, 1s over the limit).
+DEFAULT_INITIAL_RESPONSE_TIMEOUT_S = 600
 
 
 # ---------------------------------------------------------------------------
@@ -2561,16 +2564,28 @@ def _run_worker(
         except AgentStalledError as exc:
             timed_out = True
             substitution = getattr(exc, "substitution", None)
-            prefix = (
-                "initial_response_timeout"
-                if getattr(exc, "kind", "stall") == "initial_response_timeout"
-                else "stdout_silence_timeout"
-            )
-            stderr_excerpt = f"{prefix}: {exc}"[:500]
+            if getattr(exc, "kind", "stall") == "initial_response_timeout":
+                stderr_excerpt = (
+                    f"initial_response_timeout fired after {exc.stall_timeout}s "
+                    f"with no first stdout/stderr/liveness activity: {exc} "
+                    f"— raise it with --initial-response-timeout "
+                    f"(current default {DEFAULT_INITIAL_RESPONSE_TIMEOUT_S}s)"
+                )[:500]
+            else:
+                stderr_excerpt = (
+                    f"stdout_silence_timeout fired after {exc.stall_timeout}s "
+                    f"without watchdog activity: {exc} "
+                    f"— raise it with --silence-timeout "
+                    f"(current default {DEFAULT_SILENCE_TIMEOUT_S}s)"
+                )[:500]
             returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
         except AgentTimeoutError as exc:
             substitution = getattr(exc, "substitution", None)
-            stderr_excerpt = f"hard_timeout: {exc}"[:500]
+            stderr_excerpt = (
+                f"hard_timeout fired after {exc.hard_timeout}s: {exc} "
+                f"— raise it with --hard-timeout "
+                f"(current default {DEFAULT_HARD_TIMEOUT_S}s)"
+            )[:500]
             returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
         except AgentRuntimeError as exc:
             stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
