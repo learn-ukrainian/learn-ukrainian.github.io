@@ -1479,7 +1479,6 @@ def _run_successful_worker_for_deliverable_test(
     mode: str,
     response: str,
     commits_ahead: int | None,
-    committed_paths: tuple[str, ...] | None = None,
     tmp_path,
     monkeypatch,
 ):
@@ -1511,9 +1510,6 @@ def _run_successful_worker_for_deliverable_test(
         },
     )()
 
-    if committed_paths is not None:
-        monkeypatch.setattr(delegate, "_committed_paths_ahead", lambda *_args: committed_paths)
-
     with (
         patch("agent_runtime.runner.invoke", return_value=mock_result),
         patch.object(delegate, "_count_commits_ahead", return_value=commits_ahead),
@@ -1539,7 +1535,7 @@ def test_run_worker_marks_no_deliverable_for_clean_zero_commit_tiny_response(
     tmp_path,
     monkeypatch,
 ):
-    """A clean write dispatch without delivery evidence must fail distinctly."""
+    """A clean write dispatch with only a trivial response has no deliverable."""
     rc, state = _run_successful_worker_for_deliverable_test(
         task_id="no-deliverable-tiny-response",
         mode="workspace-write",
@@ -1552,36 +1548,44 @@ def test_run_worker_marks_no_deliverable_for_clean_zero_commit_tiny_response(
     assert rc == 1
     assert state["status"] == "no_deliverable"
     assert state["needs_finalize"] is False
-    assert state["no_deliverable_reason"] == "missing_delivery_declaration_short_response"
+    assert state["no_deliverable_reason"] == (
+        "write_capable_clean_worktree_zero_commits_short_response"
+    )
 
 
-def test_run_worker_marks_unstructured_commit_as_no_deliverable(
+def test_run_worker_does_not_flag_committed_change_without_declaration(
     tmp_tasks_dir,
     tmp_path,
     monkeypatch,
 ):
-    """A commit alone cannot launder a write dispatch into success."""
+    """Commits on the dispatch branch prove delivery; no magic phrase needed.
+
+    A worker that did its job and ended with ordinary completion text must
+    settle as ``done`` — a ``DELIVERABLE:`` line is an optional positive
+    signal, never a requirement.
+    """
     rc, state = _run_successful_worker_for_deliverable_test(
-        task_id="deliverable-commit-present",
+        task_id="committed-change-plain-summary",
         mode="workspace-write",
-        response="Done.",
+        response="Implemented the guard and added regression tests. All 152 tests pass.",
         commits_ahead=1,
         tmp_path=tmp_path,
         monkeypatch=monkeypatch,
     )
 
-    assert rc == 1
-    assert state["status"] == "no_deliverable"
+    assert rc == 0
+    assert state["status"] == "done"
     assert state["needs_finalize"] is False
-    assert state["no_deliverable_reason"] == "missing_delivery_declaration_short_response"
+    assert state["no_deliverable_reason"] is None
+    assert state["delivery_declaration"] is None
 
 
-def test_run_worker_accepts_structured_committed_change_with_matching_paths(
+def test_run_worker_records_optional_declaration_as_positive_signal(
     tmp_tasks_dir,
     tmp_path,
     monkeypatch,
 ):
-    """A declared change must match the durable paths in the own-branch diff."""
+    """A valid declaration accompanying real commits is recorded as evidence."""
     response = (
         "Implemented the requested outcome.\n"
         'DELIVERABLE: {"outcome":"change","summary":"Added no-delivery detection",'
@@ -1592,7 +1596,6 @@ def test_run_worker_accepts_structured_committed_change_with_matching_paths(
         mode="workspace-write",
         response=response,
         commits_ahead=1,
-        committed_paths=("scripts/delegate.py",),
         tmp_path=tmp_path,
         monkeypatch=monkeypatch,
     )
@@ -1601,26 +1604,56 @@ def test_run_worker_accepts_structured_committed_change_with_matching_paths(
     assert state["status"] == "done"
     assert state["needs_finalize"] is False
     assert state["no_deliverable_reason"] is None
-    assert state["committed_paths"] == ["scripts/delegate.py"]
+    assert state["delivery_declaration"] == {
+        "outcome": "change",
+        "summary": "Added no-delivery detection",
+        "changed_paths": ["scripts/delegate.py"],
+    }
 
 
-def test_run_worker_rejects_structured_commit_with_mismatched_paths(
+def test_run_worker_tolerates_trailing_text_after_declaration(
     tmp_tasks_dir,
     tmp_path,
     monkeypatch,
 ):
-    """A declaration cannot claim paths absent from the committed diff."""
+    """A polite closing line after ``DELIVERABLE:`` must not void the signal."""
     response = (
         "Implemented the requested outcome.\n"
         'DELIVERABLE: {"outcome":"change","summary":"Added no-delivery detection",'
-        '"changed_paths":["scripts/config.py"]}'
+        '"changed_paths":["scripts/delegate.py"]}\n'
+        "All 15 tests passed; let me know if you need anything else."
     )
     rc, state = _run_successful_worker_for_deliverable_test(
-        task_id="mismatched-committed-change",
+        task_id="declaration-with-trailing-text",
         mode="workspace-write",
         response=response,
         commits_ahead=1,
-        committed_paths=("scripts/delegate.py",),
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["no_deliverable_reason"] is None
+    assert state["delivery_declaration"]["outcome"] == "change"
+
+
+def test_run_worker_rejects_declaration_claiming_change_without_commits(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A declared change with a clean zero-commit branch is a contradiction."""
+    response = (
+        "Implemented the requested outcome.\n"
+        'DELIVERABLE: {"outcome":"change","summary":"Added no-delivery detection",'
+        '"changed_paths":["scripts/delegate.py"]}'
+    )
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="claimed-change-zero-commits",
+        mode="workspace-write",
+        response=response,
+        commits_ahead=0,
         tmp_path=tmp_path,
         monkeypatch=monkeypatch,
     )
@@ -1628,33 +1661,7 @@ def test_run_worker_rejects_structured_commit_with_mismatched_paths(
     assert rc == 1
     assert state["status"] == "no_deliverable"
     assert state["needs_finalize"] is False
-    assert state["no_deliverable_reason"] == "commit_diff_mismatch"
-
-
-def test_run_worker_rejects_structured_empty_commit(
-    tmp_tasks_dir,
-    tmp_path,
-    monkeypatch,
-):
-    """An empty commit cannot satisfy a declared write outcome."""
-    response = (
-        "Implemented the requested outcome.\n"
-        'DELIVERABLE: {"outcome":"change","summary":"Added no-delivery detection",'
-        '"changed_paths":["scripts/delegate.py"]}'
-    )
-    rc, state = _run_successful_worker_for_deliverable_test(
-        task_id="empty-committed-change",
-        mode="workspace-write",
-        response=response,
-        commits_ahead=1,
-        committed_paths=(),
-        tmp_path=tmp_path,
-        monkeypatch=monkeypatch,
-    )
-
-    assert rc == 1
-    assert state["status"] == "no_deliverable"
-    assert state["no_deliverable_reason"] == "commit_diff_mismatch"
+    assert state["no_deliverable_reason"] == "invalid_delivery_declaration"
 
 
 def test_run_worker_does_not_flag_read_only_tiny_response(
@@ -1678,25 +1685,38 @@ def test_run_worker_does_not_flag_read_only_tiny_response(
     assert state["no_deliverable_reason"] is None
 
 
-def test_run_worker_marks_long_narration_without_a_delivery_declaration(
+def test_run_worker_does_not_flag_legitimate_noop_write_dispatch(
     tmp_tasks_dir,
     tmp_path,
     monkeypatch,
 ):
-    """Length is not evidence of a deliverable for a write dispatch."""
+    """A substantive zero-commit analysis is a deliverable, not a failure.
+
+    "Investigate and only change if needed" dispatches legitimately conclude
+    with no commits. Their analysis — a non-trivial response — is the
+    deliverable; flagging it trains orchestrators to ignore the signal.
+    """
+    response = (
+        "I investigated the reported failure across scripts/delegate.py and its "
+        "tests. The guard already rejects this exact case: the ownership ledger "
+        "refuses overlapping claims in REFUSE mode, and the regression test at "
+        "tests/test_delegate.py covers it. No code change is required; the "
+        "reported behaviour came from a stale build."
+    )
+    assert len(response) > delegate.DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX
     rc, state = _run_successful_worker_for_deliverable_test(
-        task_id="write-substantive-response",
-        mode="danger",
-        response="x" * (delegate.DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX + 1),
+        task_id="write-substantive-noop",
+        mode="workspace-write",
+        response=response,
         commits_ahead=0,
         tmp_path=tmp_path,
         monkeypatch=monkeypatch,
     )
 
-    assert rc == 1
-    assert state["status"] == "no_deliverable"
+    assert rc == 0
+    assert state["status"] == "done"
     assert state["needs_finalize"] is False
-    assert state["no_deliverable_reason"] == "missing_delivery_declaration"
+    assert state["no_deliverable_reason"] is None
 
 
 def test_run_worker_allows_structured_no_change_declaration(
@@ -1768,7 +1788,9 @@ def test_run_worker_flags_real_world_other_branch_delivery_miss(
     assert rc == 1
     assert state["status"] == "no_deliverable"
     assert state["needs_finalize"] is False
-    assert state["no_deliverable_reason"] == "missing_delivery_declaration_short_response"
+    assert state["no_deliverable_reason"] == (
+        "write_capable_clean_worktree_zero_commits_short_response"
+    )
 
 
 @pytest.mark.parametrize(
@@ -3655,7 +3677,7 @@ def test_augment_prompt_mentions_sparse_exclusions():
     assert "sparse" in text.lower() or "Sparse" in text
 
 
-def test_augment_write_prompt_requires_structured_delivery_declaration():
+def test_augment_write_prompt_offers_optional_delivery_declaration():
     text = delegate._augment_prompt_with_worktree(
         "do work",
         Path("/tmp/wt"),
@@ -3663,13 +3685,22 @@ def test_augment_write_prompt_requires_structured_delivery_declaration():
     )
 
     assert "DELIVERABLE:" in text
-    assert '"outcome":"change"' in text
     assert '"outcome":"no_change"' in text
+    assert "optional" in text.lower()
+
+
+def test_augment_read_only_prompt_omits_delivery_declaration():
+    text = delegate._augment_prompt_with_worktree(
+        "do work",
+        Path("/tmp/wt"),
+        mode="read-only",
+    )
+
+    assert "DELIVERABLE:" not in text
 
 
 def test_ensure_worktree_refuses_stale_base_when_fetch_fails(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     """Fetch failure must not create a worktree from a stale local base."""
-    """
     target = tmp_path / "offline-worktree"
 
     def fake_run(cmd, **kwargs):

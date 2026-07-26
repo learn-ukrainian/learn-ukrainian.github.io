@@ -19,8 +19,11 @@ except ModuleNotFoundError:
         sys.path.insert(0, str(_SCRIPTS_DIR))
     from batch_gemini_config import FLASH_MODEL, PRO_MODEL
 
-# A short unstructured response is useful diagnostic context for a failed
-# delivery declaration, never proof that a write-capable dispatch delivered work.
+# A response at or below this size cannot itself be the deliverable of a
+# write-capable dispatch. It is only used alongside a clean worktree and zero
+# own-branch commits (and no optional DELIVERABLE declaration) to flag the run
+# as no_deliverable; a substantive response — analysis, a no-op conclusion —
+# is accepted as the deliverable. Tune from observed runs.
 DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX = 300
 
 # =============================================================================

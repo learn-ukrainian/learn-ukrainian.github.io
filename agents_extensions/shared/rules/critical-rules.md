@@ -85,10 +85,13 @@ own mode plus whether its worktree is dirty — not a judgement about intent.
 - **`needs_finalize`** — work was produced but not committed or pushed. This is a **failure to finish**,
   and it is now detected mechanically for every write-capable mode (`delegate.py`); a dirty worktree with
   no commits can no longer report `done`.
-- **`no_deliverable`** — a clean write-capable dispatch did not provide verifiable delivery evidence.
-  It is distinct from `needs_finalize`: do not re-enter its worktree expecting uncommitted edits. Resolve
-  the failed task or re-dispatch it. A structured final `DELIVERABLE:` declaration may establish either a
-  committed change or a reasoned no-op; free-form narration and an unstructured commit do not.
+- **`no_deliverable`** — a clean write-capable dispatch produced nothing verifiable: zero commits on
+  its branch, a clean worktree, and only a trivial response that cannot itself be the deliverable.
+  Detection is inferred from observable git facts, not from any formatting contract — commits on the
+  dispatch branch are sufficient proof on their own. A structured final `DELIVERABLE:` line is an
+  **optional** positive signal (a reasoned `no_change` proves a legitimate no-op); its absence never
+  fails a dispatch. `no_deliverable` is distinct from `needs_finalize`: do not re-enter its worktree
+  expecting uncommitted edits. Resolve the failed task or re-dispatch it.
 - **`BLOCKED` / `NEEDS-INPUT`** — genuinely cannot proceed. Reporting this is correct behaviour, not a
   failure of nerve.
 

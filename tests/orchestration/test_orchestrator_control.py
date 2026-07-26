@@ -105,7 +105,7 @@ def test_inbox_marks_no_deliverable_for_operator_attention(tmp_path: Path, capsy
             "status": "no_deliverable",
             "started_at": "2026-06-06T10:00:00Z",
             "duration_s": 571.0,
-            "no_deliverable_reason": "missing_delivery_declaration_short_response",
+            "no_deliverable_reason": "write_capable_clean_worktree_zero_commits_short_response",
         },
     )
     oc.record_task(tmp_path, "a1-policy", task_id="missing-deliverable", agent="codex")
@@ -126,7 +126,9 @@ def test_inbox_marks_no_deliverable_for_operator_attention(tmp_path: Path, capsy
     assert rc == 0
     assert payload["tasks"][0]["status"] == "no_deliverable"
     assert "no_deliverable" in payload["tasks"][0]["attention"]
-    assert payload["tasks"][0]["no_deliverable_reason"] == "missing_delivery_declaration_short_response"
+    assert payload["tasks"][0]["no_deliverable_reason"] == (
+        "write_capable_clean_worktree_zero_commits_short_response"
+    )
 
 
 def test_inbox_json_reports_missing_recorded_task(tmp_path: Path, capsys):
