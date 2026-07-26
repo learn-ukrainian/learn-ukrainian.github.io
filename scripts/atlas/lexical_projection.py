@@ -90,17 +90,44 @@ class CascadedDeckItem:
 
 
 @dataclass(frozen=True)
+class AdmittedPeriodRow:
+    """A heritage attestation admitted with its period badge."""
+
+    attestation_id: str
+    period: str
+    record: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class NormalizedLanguagePeriods:
+    """Validated period metadata shared by the admission gate and badge."""
+
+    attestation: str | None
+    source: str | None
+
+
+@dataclass(frozen=True)
 class BuildResult:
     accepted_records: int
     rejected_records: tuple[RejectedRecord, ...]
     cascaded_deck_items: int = 0
     cascaded_deck_item_records: tuple[CascadedDeckItem, ...] = ()
+    admitted_period_rows: int = 0
+    admitted_period_row_records: tuple[AdmittedPeriodRow, ...] = ()
 
     @property
     def rejection_counts(self) -> dict[str, int]:
         counts: dict[str, int] = {}
         for rejected in self.rejected_records:
             counts[rejected.reason] = counts.get(rejected.reason, 0) + 1
+        return counts
+
+    @property
+    def admitted_period_counts(self) -> dict[str, int]:
+        """Return admitted heritage-attestation counts keyed by their exact period."""
+        counts: dict[str, int] = {}
+        for admitted in self.admitted_period_row_records:
+            counts[admitted.period] = counts.get(admitted.period, 0) + 1
         return counts
 
 
@@ -291,23 +318,47 @@ def _is_textbook_source(source: dict[str, Any], attestation: dict[str, Any]) -> 
     return source.get("source_kind") == "textbook"
 
 
+def _normalize_language_period(record: dict[str, Any], field_name: str) -> str | None:
+    """Validate a period field and collapse blank producer stamps to absence."""
+    value = record.get("language_period")
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise ProjectionError(f"{field_name} must be a string, got {value!r}")
+    return value.strip() or None
+
+
+def normalize_attestation_language_periods(
+    attestation: dict[str, Any], source: dict[str, Any]
+) -> NormalizedLanguagePeriods:
+    """Return the one canonical period view for an attestation and its source."""
+    return NormalizedLanguagePeriods(
+        attestation=_normalize_language_period(attestation, "attestation.language_period"),
+        source=_normalize_language_period(source, "source.language_period"),
+    )
+
+
+def attestation_period_badge(periods: NormalizedLanguagePeriods) -> str | None:
+    """Return the exact non-modern period to expose for an admitted attestation."""
+    for period in (periods.attestation, periods.source):
+        if period is not None and period != "modern":
+            return period
+    return None
+
+
 def attestation_rejection_reason(
-    attestation: dict[str, Any], source: dict[str, Any], vesum_forms: frozenset[str]
+    attestation: dict[str, Any],
+    source: dict[str, Any],
+    vesum_forms: frozenset[str],
+    *,
+    periods: NormalizedLanguagePeriods | None = None,
 ) -> str | None:
     """Return the first calibrated quality-gate failure for an attestation."""
-    source_period = source.get("language_period")
-    chunk_period = attestation.get("language_period")
-    # Literary producers must stamp their period. Values that are present fail
-    # closed unless modern; only absent textbook metadata is not a period claim.
-    if (
-        source_period not in {None, "modern"}
-        or chunk_period not in {None, "modern"}
-        or (
-            source_period is None
-            and chunk_period is None
-            and not _is_textbook_source(source, attestation)
-        )
-    ):
+    periods = periods or normalize_attestation_language_periods(attestation, source)
+    # Literary producers must stamp their period.  Heritage attestations are
+    # admitted with a badge; only a wholly unstamped literary source fails
+    # closed.  Textbooks legitimately carry no period metadata.
+    if periods.source is None and periods.attestation is None and not _is_textbook_source(source, attestation):
         return "language_period_not_modern"
 
     text = _required_string(attestation, "text")
@@ -451,7 +502,7 @@ def _insert_record(cursor: sqlite3.Cursor, record: dict[str, Any]) -> None:
 
 def _records_for_build(
     records: Iterable[dict[str, Any]], vesum_forms: frozenset[str]
-) -> tuple[list[dict[str, Any]], list[RejectedRecord], list[CascadedDeckItem]]:
+) -> tuple[list[dict[str, Any]], list[RejectedRecord], list[CascadedDeckItem], list[AdmittedPeriodRow]]:
     by_type = {record_type: [] for record_type in RECORD_TYPES}
     sources: dict[str, dict[str, Any]] = {}
     for record in records:
@@ -464,6 +515,7 @@ def _records_for_build(
     rejected: list[RejectedRecord] = []
     rejected_attestation_ids: set[str] = set()
     cascaded_deck_items: list[CascadedDeckItem] = []
+    admitted_period_rows: list[AdmittedPeriodRow] = []
     for record_type in RECORD_TYPES:
         for record in by_type[record_type]:
             if record_type == "attestation":
@@ -472,12 +524,23 @@ def _records_for_build(
                 source = sources.get(source_id)
                 if source is None:
                     raise ProjectionError(f"attestation references undeclared source_id {source_id!r}")
-                reason = attestation_rejection_reason(record, source, vesum_forms)
+                periods = normalize_attestation_language_periods(record, source)
+                reason = attestation_rejection_reason(record, source, vesum_forms, periods=periods)
                 if reason:
                     attestation_id = _required_string(record, "attestation_id")
                     rejected.append(RejectedRecord(attestation_id, reason, record))
                     rejected_attestation_ids.add(attestation_id)
                     continue
+                period_badge = attestation_period_badge(periods)
+                if period_badge is not None:
+                    record = {**record, "period_badge": period_badge}
+                    admitted_period_rows.append(
+                        AdmittedPeriodRow(
+                            attestation_id=_required_string(record, "attestation_id"),
+                            period=period_badge,
+                            record=record,
+                        )
+                    )
             elif record_type == "practice_deck_item":
                 attestation_id = record.get("attestation_id")
                 if isinstance(attestation_id, str) and attestation_id in rejected_attestation_ids:
@@ -491,7 +554,7 @@ def _records_for_build(
                     )
                     continue
             accepted.append(record)
-    return accepted, rejected, cascaded_deck_items
+    return accepted, rejected, cascaded_deck_items, admitted_period_rows
 
 
 def _foreign_key_check(connection: sqlite3.Connection) -> None:
@@ -511,10 +574,12 @@ def build_projection(
     records = _read_jsonl(input_jsonl)
     attestation_count = sum(record.get("record_type") == "attestation" for record in records)
     vesum_forms = load_vesum_forms(vesum_db) if attestation_count else frozenset()
-    accepted, rejected, cascaded_deck_items = _records_for_build(records, vesum_forms)
+    accepted, rejected, cascaded_deck_items, admitted_period_rows = _records_for_build(records, vesum_forms)
     if strict and rejected:
         raise ProjectionError(
-            f"strict build rejected {len(rejected)} attestation record(s): {BuildResult(0, tuple(rejected)).rejection_counts}"
+            "strict build rejected "
+            f"{len(rejected)} attestation record(s): "
+            f"{BuildResult(accepted_records=0, rejected_records=tuple(rejected)).rejection_counts}"
         )
 
     db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -541,6 +606,8 @@ def build_projection(
         rejected_records=tuple(rejected),
         cascaded_deck_items=len(cascaded_deck_items),
         cascaded_deck_item_records=tuple(cascaded_deck_items),
+        admitted_period_rows=len(admitted_period_rows),
+        admitted_period_row_records=tuple(admitted_period_rows),
     )
 
 
@@ -611,6 +678,8 @@ def main() -> None:
             json.dumps(
                 {
                     "accepted_records": result.accepted_records,
+                    "admitted_period_rows": result.admitted_period_rows,
+                    "admitted_periods": result.admitted_period_counts,
                     "cascaded_deck_items": result.cascaded_deck_items,
                     "rejections": result.rejection_counts,
                 },
