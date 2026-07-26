@@ -288,9 +288,13 @@ jobs:
               return False
 
 
-          def changed_paths() -> set[str]:
+          def changed_paths(diff_filter: str | None = None) -> set[str]:
+              command = ["git", "diff", "--name-only", "--no-renames"]
+              if diff_filter is not None:
+                  command.append(f"--diff-filter={diff_filter}")
+              command.extend([base_sha, "HEAD"])
               completed = subprocess.run(
-                  ["git", "diff", "--name-only", "--no-renames", base_sha, "HEAD"],
+                  command,
                   check=True,
                   capture_output=True,
                   cwd=root,
@@ -345,6 +349,14 @@ jobs:
               return None
 
 
+          deleted_preparation = sorted(
+              raw_path for raw_path in changed_paths("D") if is_bio_preparation_path(raw_path)
+          )
+          if deleted_preparation:
+              raise SystemExit(
+                  "BIO preparation validator refuses deleted preparation files: "
+                  + ", ".join(deleted_preparation)
+              )
           changed_slugs = {
               slug
               for raw_path in changed_paths()

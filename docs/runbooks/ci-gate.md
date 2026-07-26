@@ -26,8 +26,9 @@ unconditional on pull requests, merge groups, and pushes to `main`.
 - One integrity-and-security job runs TruffleHog on every workflow invocation,
   verifies lesson-schema drift, MDX parity, learner-surface IDs, locked-module
   publication, Atlas freshness, dossier word-count, and BIO capsule/active-hold
-  validation. These commands may calculate their own relevant source scope,
-  but the job itself is never routed or skipped.
+  validation, including a hard rejection of deleted BIO preparation files.
+  These commands may calculate their own relevant source scope, but the job
+  itself is never routed or skipped.
 - Pushes to `main` also collect coverage from every complete pytest shard and
   fail if the combined `scripts` coverage falls below 35%. Coverage does not
   change which tests run.

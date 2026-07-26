@@ -129,7 +129,10 @@ def test_nothing_can_skip_the_bio_preparation_validator() -> None:
 
 def test_validator_change_detection_is_intact() -> None:
     script = _validator_python_body()
-    assert '["git", "diff", "--name-only", "--no-renames", base_sha, "HEAD"]' in script
+    assert 'command = ["git", "diff", "--name-only", "--no-renames"]' in script
+    assert 'command.append(f"--diff-filter={diff_filter}")' in script
+    assert 'changed_paths("D")' in script
+    assert "BIO preparation validator refuses deleted preparation files:" in script
     assert '"--name-status", "--no-renames", base_sha, "HEAD", "--", registry_rel' not in script
     assert '"git", "show", f"{ref}:{registry_rel}"' in script
     assert "except (FileNotFoundError, subprocess.CalledProcessError):" in script
