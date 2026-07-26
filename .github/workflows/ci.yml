@@ -296,16 +296,22 @@ jobs:
 
 
           def registry_entries(ref: str) -> dict:
-              if ref == "HEAD":
-                  payload = (root / registry_rel).read_text(encoding="utf-8")
-              else:
-                  payload = subprocess.run(
-                      ["git", "show", f"{base_sha}:{registry_rel}"],
-                      check=True,
-                      capture_output=True,
-                      cwd=root,
-                      text=True,
-                  ).stdout
+              try:
+                  if ref == "HEAD":
+                      payload = (root / registry_rel).read_text(encoding="utf-8")
+                  else:
+                      payload = subprocess.run(
+                          ["git", "show", f"{ref}:{registry_rel}"],
+                          check=True,
+                          capture_output=True,
+                          cwd=root,
+                          text=True,
+                      ).stdout
+              except (FileNotFoundError, subprocess.CalledProcessError):
+                  # A workflow-dispatch base can predate this registry. Treat
+                  # an absent historical file as an empty registry; malformed
+                  # YAML in a file that does exist still fails below.
+                  return {}
               document = yaml.safe_load(payload) or {}
               entries = document.get("entries", {})
               if not isinstance(entries, dict):

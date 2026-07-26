@@ -23,7 +23,9 @@ What genuinely still needs defending, and is covered here:
 from __future__ import annotations
 
 import ast
+import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
@@ -90,6 +92,23 @@ def _classifier():
     raise AssertionError("is_bio_preparation_path() is no longer defined in the embedded validator script")
 
 
+def _registry_entries(root: Path, registry_rel: str, subprocess_module):
+    """Compile the embedded registry reader with controllable I/O."""
+    tree = ast.parse(_validator_python_body())
+    for node in tree.body:
+        if isinstance(node, ast.FunctionDef) and node.name == "registry_entries":
+            namespace = {
+                "root": root,
+                "registry_rel": registry_rel,
+                "subprocess": subprocess_module,
+                "yaml": yaml,
+            }
+            module = ast.Module(body=[node], type_ignores=[])
+            exec(compile(module, filename="<ci.yml embedded validator>", mode="exec"), namespace)
+            return namespace["registry_entries"]
+    raise AssertionError("registry_entries() is no longer defined in the embedded validator script")
+
+
 def test_bio_preparation_validator_is_reachable_from_the_required_gate() -> None:
     job_name, _, _ = _validator_job_and_step()
     required = _workflow()["jobs"]["ci-gate"]["needs"]
@@ -114,9 +133,34 @@ def test_validator_change_detection_is_intact() -> None:
         "rename decomposition dropped: a renamed BIO capsule would otherwise be invisible to the "
         "changed-slug scan"
     )
-    assert '"git", "show", f"{base_sha}:{registry_rel}"' in script
+    assert '"git", "show", f"{ref}:{registry_rel}"' in script
+    assert "except (FileNotFoundError, subprocess.CalledProcessError):" in script
     assert "registry_changed_slugs" in script
     assert "changed_slugs.update(registry_changed_slugs)" in script
+
+
+def test_registry_reader_tolerates_absent_historical_or_head_registry(tmp_path: Path) -> None:
+    reader = _registry_entries(tmp_path, "promotion-evidence.yaml", subprocess)
+
+    assert reader("historical-sha") == {}
+    assert reader("HEAD") == {}
+
+
+def test_registry_reader_uses_the_ref_it_received(tmp_path: Path) -> None:
+    observed: list[list[str]] = []
+
+    class FakeSubprocess:
+        CalledProcessError = subprocess.CalledProcessError
+
+        @staticmethod
+        def run(arguments: list[str], **_kwargs) -> SimpleNamespace:
+            observed.append(arguments)
+            return SimpleNamespace(stdout="version: 1\nentries:\n  demo: {}\n")
+
+    reader = _registry_entries(tmp_path, "promotion-evidence.yaml", FakeSubprocess)
+
+    assert reader("historical-sha") == {"demo": {}}
+    assert observed == [["git", "show", "historical-sha:promotion-evidence.yaml"]]
 
 
 @pytest.mark.parametrize("raw_path", BIO_PREPARATION_PATHS)
