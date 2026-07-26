@@ -1,5 +1,5 @@
 """
-Build Pre-Generated Cloze Shard for Teacher Lesson Collection (610+440 / 5096 entries).
+Build Pre-Generated Cloze Shard for Curated Deck.
 Extracts authentic textbook sentences from data/sources.db for all teacher vocabulary words,
 generates smart distractors, and writes site/public/lexicon/practice-cloze.teacher.json.
 """

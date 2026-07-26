@@ -1640,7 +1640,7 @@ function LexiconPracticeIsland({
       // weakness on top of the normal §6b session constraints (no parallel path).
       if (focusWeakness && !matchesWeakness(candidate, focusWeakness)) return false;
 
-      // Filter by Selected Deck (Teacher Lesson 610+440 or Custom Set)
+      // Filter by selected deck (Curated Deck or a custom set).
       const candLemmaId = candidate.indexItem?.lemmaId || candidate.lemma?.lemmaId || '';
       const candLemma = candidate.lemma?.lemma || candidate.indexItem?.lemma || '';
       if (!deckFilterAllowsLemma(candLemmaId, candLemma, selectedDeckFilter, customSets)) {
@@ -2834,7 +2834,7 @@ function LexiconPracticeIsland({
                 onClick={() => requestDeckSwitch('virtual_teacher_lesson')}
                 style={selectedDeckFilter === 'virtual_teacher_lesson' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
               >
-                {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓 {chromeLocale === 'uk' ? 'Уроки вчителя (610+440 слів)' : 'Teacher Deck (610+440 words)'}
+                {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓 {chromeLocale === 'uk' ? 'Відібрана добірка' : 'Curated Deck'}
               </button>
               {customSets.map((set) => (
                 <button
