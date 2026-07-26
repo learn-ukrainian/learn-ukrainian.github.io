@@ -113,7 +113,7 @@ def test_default_committed_decision_files_keep_aggregate_floors(
 ) -> None:
     sample_summary = decisions.validate_decision_file(
         FIRST_BATCH,
-        source_index=committed_source_index,
+        source_index=dict(committed_source_index),
     )
     sample_counts = _decision_counts_from_validated_lines(FIRST_BATCH)
     assert sum(sample_counts.values()) == sample_summary["rows"]
