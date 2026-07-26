@@ -76,11 +76,11 @@ def test_log_tail_is_surfaced_when_present(tmp_path, monkeypatch, capsys, record
 def test_clean_exit_with_recorded_status_is_not_flagged(tmp_path, monkeypatch, recorded):
     """A worker that finished properly must NOT be reported as a startup death."""
     monkeypatch.setattr(lifecycle, "_ask_status", lambda _mid: "replied:42")
+    monkeypatch.setattr(lifecycle, "_stored_reply_is_useful", lambda _rid: True)
     log = tmp_path / "ask-2.log"
     log.write_text("done\n", encoding="utf-8")
 
-    lifecycle._confirm_worker_started(2, "codex", _FakeProc(rc=0), log)
-
+    assert lifecycle._confirm_worker_started(2, "codex", _FakeProc(rc=0), log) is True
     assert not recorded, "a completed ask must not be mislabelled a startup death"
 
 
@@ -151,10 +151,86 @@ def test_launch_background_ask_is_actually_wired_to_the_check(tmp_path, monkeypa
 
     monkeypatch.setattr(lifecycle.subprocess, "Popen", lambda *a, **k: _DeadOnArrival())
 
-    lifecycle.launch_background_ask(777, "kimi", {"content": "x"})
+    with pytest.raises(lifecycle.AskWorkerStartupError):
+        lifecycle.launch_background_ask(777, "kimi", {"content": "x"})
 
     assert recorded, (
         "launch_background_ask did not run the startup check — a worker that dies "
         "instantly would still be reported to the caller as a successful dispatch"
     )
     assert recorded[0][0] == 777
+
+
+def test_startup_death_does_not_print_success_banner_or_return_pid(tmp_path, monkeypatch, capsys, recorded):
+    """Finding 2: fail loudly must be caller-visible, not just stderr.
+
+    Pre-fix shape printed ✅ and returned the dead PID after recording failure.
+    Drivers keying on return value / success banner treated dispatch as OK.
+    """
+    monkeypatch.setattr(lifecycle, "_ask_status", lambda _mid: "sent")
+    monkeypatch.setattr(lifecycle, "_write_pid_file", lambda *a, **k: None)
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+
+    class _DeadOnArrival:
+        pid = 4242
+
+        def poll(self):
+            return 1
+
+    monkeypatch.setattr(lifecycle.subprocess, "Popen", lambda *a, **k: _DeadOnArrival())
+
+    with pytest.raises(lifecycle.AskWorkerStartupError) as excinfo:
+        result = lifecycle.launch_background_ask(888, "kimi", {"content": "x"})
+        # If we get here without raising, the return path is still "success".
+        pytest.fail(f"expected non-success return path, got {result!r}")
+
+    out = capsys.readouterr().out
+    assert "✅" not in out, f"success banner must not appear on startup death; got: {out!r}"
+    assert "processing in background" not in out
+    assert "888" in str(excinfo.value)
+    assert recorded and recorded[0][0] == 888
+
+
+def test_narration_only_reply_is_not_terminal_success():
+    """Finding 1: intent-only scaffolding must not count as a useful reply.
+
+    Concrete failure that motivated the completion gate: worker lives a while,
+    emits narration like "I'll check out the branch and run the tests", exits 0.
+    Length alone is gamed; structured signals help but are not required.
+    """
+    hollow = "I'll check out the branch and run the tests."
+    assert lifecycle.reply_body_is_useful(hollow) is False
+    assert lifecycle.reply_body_is_useful(
+        "Let me look at the diff and then I'll report back."
+    ) is False
+    assert lifecycle.reply_body_is_useful("") is False
+    assert lifecycle.reply_body_is_useful("   ") is False
+
+    # Legitimate short answers and structured reviews must still pass — no
+    # magic-marker contract on every worker (sibling PR #5800 over-correction).
+    assert lifecycle.reply_body_is_useful("yes") is True
+    assert lifecycle.reply_body_is_useful("42") is True
+    assert lifecycle.reply_body_is_useful(
+        "VERDICT: CHANGES_REQUESTED\n\nThe startup path still returns success."
+    ) is True
+    assert lifecycle.reply_body_is_useful(
+        "Bug is in scripts/ai_agent_bridge/_ask_lifecycle.py:193 — banner still prints."
+    ) is True
+
+
+def test_confirm_rejects_terminal_replied_with_hollow_body(tmp_path, monkeypatch, recorded):
+    """Exited-within-grace + replied:N is not OK when the body is pure scaffolding."""
+    monkeypatch.setattr(lifecycle, "_ask_status", lambda _mid: "replied:55")
+    monkeypatch.setattr(
+        lifecycle,
+        "_stored_reply_is_useful",
+        lambda reply_id: reply_id != 55,
+    )
+    log = tmp_path / "ask-hollow.log"
+    log.write_text("I'll check out the branch and run the tests.\n", encoding="utf-8")
+
+    ok = lifecycle._confirm_worker_started(9, "codex", _FakeProc(rc=0), log)
+
+    assert ok is False
+    assert recorded, "hollow replied: status must be flipped to a recorded failure"
+    assert "thin scaffolding" in recorded[0][1]

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -29,6 +30,41 @@ _ASK_AGENT = "ask"
 _FLEET_REQUEST_ID_KEY = "fleet_request_id"
 # Tests may point plane storage at a tmp root without touching batch_state/.
 _PLANE_ROOT_OVERRIDE: Path | None = None
+
+
+class AskWorkerStartupError(RuntimeError):
+    """Background ask worker died before recording a durable terminal status."""
+
+
+# Positive content signals — optional boosts, NOT a formatting contract on workers.
+# Presence of any one is enough to treat a body as useful.
+_USEFUL_REPLY_SIGNAL_RE = re.compile(
+    r"(?is)"
+    r"(?:\bVERDICT\s*:)"
+    r"|(?:^\#{1,6}\s+\S)"
+    r"|(?:```)"
+    r"|(?:\b[\w./+-]+\.(?:py|ts|tsx|js|jsx|md|ya?ml|json|toml|sh|rs|go)\b(?::\d+)?)"
+    r"|(?:\b(?:FINDING|CHANGES[_ ]?REQUESTED|APPROVED|BLOCKED|REQUEST CHANGES)\b)"
+    r"|(?:\b(?:AssertionError|Traceback|FAILED|PASSED)\b)"
+)
+
+# Entire-body intent / plan scaffolding ("I'll check out the branch…") with no
+# actual answer. Inferred from observable language — workers are not required to
+# emit a magic marker line.
+_INTENT_SCAFFOLD_RE = re.compile(
+    r"(?is)^\s*(?:"
+    r"(?:okay|ok|sure|alright|right|got it)[,!.]?\s+"
+    r")?"
+    r"(?:"
+    r"i(?:'ll| will)\b|"
+    r"i(?:'m| am)\s+(?:just\s+)?(?:going to|about to|gonna)\b|"
+    r"let me\b|"
+    r"going to\b|"
+    r"i need to\b|"
+    r"planning to\b|"
+    r"first[, ]+i(?:'ll| will)\b"
+    r").+\s*$"
+)
 
 
 def register_ask(message_id: int) -> None:
@@ -52,7 +88,14 @@ def record_ask_reply(message_id: int, reply_id: int) -> bool:
     When ``FLEET_COMMS_MESSAGE_PLANE=dual_write`` and a durable request exists
     that is not proven complete, refuse to mark legacy ``replied`` (incomplete
     never becomes replied). ``shadow`` / ``off`` never block this path.
+
+    Completion also requires a stored reply body that meets a usefulness bar
+    (see :func:`reply_body_is_useful`). Thin intent-only scaffolding recorded as
+    a "reply" is a terminal failure, not success — that is the hollow-reply
+    class that motivated this gate (narration like "I'll check out the branch
+    and run the tests" exiting 0).
     """
+    thin_preview: str | None = None
     conn = get_db()
     try:
         ask = conn.execute(
@@ -60,7 +103,7 @@ def record_ask_reply(message_id: int, reply_id: int) -> bool:
             (message_id,),
         ).fetchone()
         reply = conn.execute(
-            "SELECT task_id, from_llm, to_llm, message_type FROM messages WHERE id = ?",
+            "SELECT task_id, from_llm, to_llm, message_type, content FROM messages WHERE id = ?",
             (reply_id,),
         ).fetchone()
         if not ask or not reply:
@@ -77,11 +120,54 @@ def record_ask_reply(message_id: int, reply_id: int) -> bool:
             return False
         if not _plane_may_mark_legacy_replied(message_id):
             return False
+        raw_body = reply[4]
+        body = raw_body if isinstance(raw_body, str) else ""
+        if not reply_body_is_useful(body):
+            # Defer failure write until the reader conn is closed.
+            thin_preview = " ".join(body.split())[:120] or "(empty)"
+            return False
         conn.execute("UPDATE messages SET status = ? WHERE id = ?", (f"replied:{reply_id}", message_id))
         conn.commit()
         return True
     finally:
         conn.close()
+        # Thin scaffolding: refuse replied:… and record a terminal failure.
+        # Runs after close so record_ask_failure can open its own writer.
+        if thin_preview is not None:
+            status = _ask_status(message_id)
+            if status in {"sent", "processing", "pending", None}:
+                record_ask_failure(
+                    message_id,
+                    f"thin scaffolding reply #{reply_id}: {thin_preview}",
+                )
+
+
+def reply_body_is_useful(body: str) -> bool:
+    """Return True when a stored reply body is more than empty/intent scaffolding.
+
+    Infer from observable facts only — do **not** require a magic marker line on
+    every worker (that over-correction broke legitimate dispatches on the
+    sibling delegate path). Positive structured signals (``VERDICT:``, headings,
+    code fences, file paths, review tokens) pass immediately. Empty bodies and
+    pure future-intent narration ("I'll check out the branch and run the tests")
+    fail. Everything else with real non-scaffold content passes, including short
+    legitimate answers like ``yes`` or ``42``.
+    """
+    text = (body or "").strip()
+    if not text:
+        return False
+    if _USEFUL_REPLY_SIGNAL_RE.search(text):
+        return True
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    if not lines:
+        return False
+    if all(_INTENT_SCAFFOLD_RE.match(line) for line in lines):
+        return False
+    # Single-paragraph intent-only (no newlines, or blank-line-only splits).
+    if len(lines) == 1 and _INTENT_SCAFFOLD_RE.match(lines[0]):
+        return False
+    # Whole body as one intent sentence even when split oddly.
+    return not _INTENT_SCAFFOLD_RE.match(text)
 
 
 def note_ask_plane_capture(
@@ -140,7 +226,13 @@ def record_ask_failure(message_id: int, reason: str, *, timed_out: bool = False)
 
 
 def launch_background_ask(message_id: int, target: str, options: dict[str, Any]) -> int:
-    """Start a detached bridge processor after its ask message has been sent."""
+    """Start a detached bridge processor after its ask message has been sent.
+
+    Returns the worker PID only when startup confirmation succeeds. On recorded
+    startup death this raises :class:`AskWorkerStartupError` and does **not**
+    print the success banner — callers that key on return value / stdout must
+    not treat a dead worker as a successful dispatch.
+    """
     task_key = str(message_id)
     log_dir = REPO_ROOT / ".mcp" / "servers" / "message-broker" / "logs"
     log_dir.mkdir(parents=True, exist_ok=True)
@@ -188,8 +280,13 @@ def launch_background_ask(message_id: int, target: str, options: dict[str, Any])
     # SUCCESS and produced nothing, which is the worst possible failure shape for a
     # review gate: silence is indistinguishable from "still thinking".
     #
-    # So confirm the worker actually came up, and fail LOUDLY if it did not.
-    _confirm_worker_started(message_id, target, proc, log_file)
+    # So confirm the worker actually came up, and fail LOUDLY if it did not —
+    # including a non-success return path (raise), not only a stderr message.
+    if not _confirm_worker_started(message_id, target, proc, log_file):
+        raise AskWorkerStartupError(
+            f"Ask #{message_id}: the {target} worker died at startup "
+            f"(PID {proc.pid}); no answer is coming. Log: {log_file}"
+        )
     print(f"✅ Ask #{message_id} sent; processing in background (PID {proc.pid}).")
     return proc.pid
 
@@ -198,12 +295,30 @@ _WORKER_START_GRACE_S = 5.0
 _WORKER_POLL_S = 0.25
 
 
-def _confirm_worker_started(message_id: int, target: str, proc, log_file: Path) -> None:
+def _confirm_worker_started(message_id: int, target: str, proc, log_file: Path) -> bool:
     """Detect a worker that dies without recording anything, and say so.
 
-    Success here means only "it is alive, or it produced output" — NOT that the ask
-    succeeded. A worker that exits 0 having written nothing is still a failure, because
-    a completed ask always leaves either a reply or a recorded failure.
+    Returns True when the worker looks started enough for the caller to proceed,
+    False when a startup death was recorded (caller must not print ✅ / return a
+    success PID).
+
+    **Success here means only liveness, not ask completion.** A worker that exits
+    0 having written nothing is still a failure, because a completed ask always
+    leaves either a useful reply or a recorded failure. Terminal usefulness of a
+    stored reply body is enforced later by :func:`record_ask_reply` /
+    :func:`reply_body_is_useful`.
+
+    **Residual race (documented, not fully closable at this gate):** if the child
+    flushes early output (banner, import warning, partial traceback) while still
+    alive, this function returns True on "alive + log bytes" and the parent may
+    print the success banner. The child can then die before writing a durable
+    terminal status. Output is a liveness proxy, not completion proof. The
+    worker's ``process_background_ask`` ``finally:`` still records
+    ``failed:worker ended without a reply`` when no terminal status was written,
+    and :func:`record_ask_reply` refuses thin scaffolding — so the durable ask
+    state does not stay a silent success. Callers that only watch the launch
+    banner remain exposed to this short window; re-check ask status / reply body
+    for completion, do not trust the banner alone.
     """
     deadline = time.monotonic() + _WORKER_START_GRACE_S
     while time.monotonic() < deadline:
@@ -211,7 +326,7 @@ def _confirm_worker_started(message_id: int, target: str, proc, log_file: Path) 
         if rc is None:
             try:
                 if log_file.stat().st_size > 0:
-                    return  # alive and talking
+                    return True  # alive and talking (liveness only — see residual race)
             except OSError:
                 pass
             time.sleep(_WORKER_POLL_S)
@@ -220,7 +335,27 @@ def _confirm_worker_started(message_id: int, target: str, proc, log_file: Path) 
         # Exited within the grace window. Only a recorded terminal status makes that OK.
         status = _ask_status(message_id)
         if status is not None and not status.startswith(("sent", "processing", "pending")):
-            return
+            # Terminal status present — still reject thin replied: scaffolding if we can.
+            if status.startswith("replied:"):
+                reply_id_s = status.split(":", 1)[1]
+                try:
+                    reply_id = int(reply_id_s)
+                except ValueError:
+                    return True
+                if not _stored_reply_is_useful(reply_id):
+                    record_ask_failure(
+                        message_id,
+                        f"thin scaffolding reply #{reply_id} at startup",
+                    )
+                    _remove_pid_file(_ASK_AGENT, str(message_id))
+                    print(
+                        f"❌ Ask #{message_id}: the {target} worker exited with a hollow "
+                        f"scaffolding reply (#{reply_id}); no useful answer was recorded.\n"
+                        f"   Route this ask to another lane.",
+                        file=sys.stderr,
+                    )
+                    return False
+            return True
         try:
             tail = log_file.read_text(encoding="utf-8", errors="replace").strip()[-400:]
         except OSError:
@@ -236,9 +371,22 @@ def _confirm_worker_started(message_id: int, target: str, proc, log_file: Path) 
             f"   Route this ask to another lane.",
             file=sys.stderr,
         )
-        return
+        return False
     # Still running after the grace window: normal, long-running ask.
-    return
+    return True
+
+
+def _stored_reply_is_useful(reply_id: int) -> bool:
+    """Load a reply row's body and apply the usefulness bar (fail closed on missing)."""
+    conn = get_db()
+    try:
+        row = conn.execute("SELECT content FROM messages WHERE id = ?", (reply_id,)).fetchone()
+        if not row:
+            return False
+        body = row[0] if isinstance(row[0], str) else ""
+        return reply_body_is_useful(body)
+    finally:
+        conn.close()
 
 
 def process_background_ask(message_id: int, target: str) -> None:

@@ -148,6 +148,46 @@ def test_reply_link_rejects_a_response_for_another_transport(bridge_db):
     assert _status(message_id) == "sent"
 
 
+def test_narration_only_reply_is_not_recorded_as_success(bridge_db):
+    """Finding 1: thin scaffolding via record_ask_reply is failure, not replied:N.
+
+    A worker that narrates intent and exits 0 must not land as terminal success.
+    Verified to fail against pre-fix code (would set replied:… and leave no failed:).
+    """
+    message_id = _send_ask(target="agy")
+    lifecycle.mark_ask_processing(message_id)
+    reply_id = send_message(
+        "I'll check out the branch and run the tests.",
+        task_id="task-4837",
+        msg_type="response",
+        from_llm="agy",
+        to_llm="codex",
+        quiet=True,
+    )
+
+    assert lifecycle.record_ask_reply(message_id, reply_id) is False
+    status = _status(message_id)
+    assert status.startswith("failed:"), status
+    assert "thin scaffolding" in status
+    assert f"replied:{reply_id}" != status
+
+
+def test_substantive_reply_still_records_as_replied(bridge_db):
+    """Usefulness gate must not break legitimate short or structured answers."""
+    message_id = _send_ask(target="agy")
+    reply_id = send_message(
+        "VERDICT: APPROVED\n\nThe wiring test covers the launch path.",
+        task_id="task-4837",
+        msg_type="response",
+        from_llm="agy",
+        to_llm="codex",
+        quiet=True,
+    )
+
+    assert lifecycle.record_ask_reply(message_id, reply_id) is True
+    assert _status(message_id) == f"replied:{reply_id}"
+
+
 def test_detached_timeout_marks_terminal_state_and_next_cli_notice_is_once(bridge_db, monkeypatch, capsys):
     message_id = _send_ask()
     monkeypatch.setattr(lifecycle, "_background_options", lambda *_args: {})
