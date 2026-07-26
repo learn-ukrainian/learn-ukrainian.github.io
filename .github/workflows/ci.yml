@@ -33,6 +33,9 @@ jobs:
       fail-fast: false
       matrix:
         shard: [1, 2, 3, 4, 5]
+    env:
+      # Coverage is a main-branch threshold, never a test-selection input.
+      CI_PYTEST_COVERAGE: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && '1' || '0' }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -110,6 +113,7 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
@@ -150,6 +154,7 @@ jobs:
             frontend_started="$(date +%s)"
             npm ci --prefix site
             npm run test --prefix site
+            .venv/bin/python scripts/audit/check_atlas_manifest_enrichment.py
             npm run build --prefix site
             (
               cd site
@@ -167,12 +172,225 @@ jobs:
           fi
           exit "$status"
 
+  integrity:
+    name: Integrity and security (contracts, BIO, secrets)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6.0.0
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+        with:
+          version: "0.11.28"
+          enable-cache: false
+
+      - name: Start integrity timing and resolve comparison base
+        run: |
+          echo "INTEGRITY_STARTED_EPOCH=$(date +%s)" >> "$GITHUB_ENV"
+          candidate="${{ github.event.pull_request.base.sha || github.event.before || '' }}"
+          if [ -z "$candidate" ] || [ "$candidate" = "0000000000000000000000000000000000000000" ]; then
+            candidate="$(git rev-parse HEAD^ 2>/dev/null || git rev-list --max-parents=0 HEAD)"
+          fi
+          git cat-file -e "${candidate}^{commit}"
+          echo "CI_INTEGRITY_BASE_SHA=${candidate}" >> "$GITHUB_ENV"
+
+      - name: Restore deterministic package cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/uv
+          key: uv-packages-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch-cpu
+
+      - name: Scan commits for verified or unknown secrets
+        uses: trufflesecurity/trufflehog@47e7b7cd74f578e1e3145d48f669f22fd1330ca6 # v3.94.3
+        with:
+          path: ./
+          extra_args: --results=verified,unknown
+          version: 3.94.3
+
+      - name: Run integrity contracts with an explicit timeout report
+        run: |
+          started="$(date +%s)"
+          set +e
+          timeout --verbose --signal=TERM --kill-after=60s 900s bash -eo pipefail <<'CHECKS'
+            uv venv --python 3.12 .venv
+            grep -vE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt > "$RUNNER_TEMP/requirements-ci.txt"
+            uv pip install --python .venv/bin/python --no-deps -r "$RUNNER_TEMP/requirements-ci.txt"
+            npm ci --ignore-scripts
+            .venv/bin/python scripts/build/generate_lesson_schema.py --output "$RUNNER_TEMP/lesson-schema.yaml"
+            diff -u docs/lesson-schema.yaml "$RUNNER_TEMP/lesson-schema.yaml"
+            .venv/bin/python scripts/audit/check_mdx_source_parity.py --changed-vs-base "$CI_INTEGRITY_BASE_SHA"
+            .venv/bin/python scripts/audit/check_mdx_forward_parity.py --changed-vs-base "$CI_INTEGRITY_BASE_SHA"
+            .venv/bin/python scripts/audit/check_no_internal_ids.py --changed-vs-base "$CI_INTEGRITY_BASE_SHA"
+            .venv/bin/python scripts/audit/check_locked_module_not_published.py \
+              --changed-vs-base "$CI_INTEGRITY_BASE_SHA"
+            .venv/bin/python scripts/lexicon/check_manifest_freshness.py \
+              --pr-scoped --base-ref "$CI_INTEGRITY_BASE_SHA" --head-ref HEAD
+            .venv/bin/python scripts/audit/check_dossier_wordcount.py --changed
+          CHECKS
+          status=$?
+          elapsed="$(( $(date +%s) - started ))"
+          echo "integrity_contracts_elapsed_seconds=${elapsed}" | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ "$status" -eq 124 ]; then
+            echo "::error title=integrity contracts timeout::checks exceeded the 900-second wrapper"
+          fi
+          exit "$status"
+
+      - name: Validate BIO preparation capsules and active holds
+        run: |
+          BIO_BASE_SHA="$CI_INTEGRITY_BASE_SHA" .venv/bin/python - <<'PY'
+          from __future__ import annotations
+
+          import os
+          import subprocess
+          from pathlib import Path
+
+          import yaml
+
+          from scripts.audit.bio_readiness_ledger import build_ledger, manifest_inventory
+
+
+          root = Path(".").resolve()
+          registry_rel = "curriculum/l2-uk-en/bio/promotion-evidence.yaml"
+          base_sha = os.environ["BIO_BASE_SHA"]
+          manifest_set = set(manifest_inventory(root, "bio")[0])
+
+
+          def is_bio_preparation_path(raw_path: str) -> bool:
+              path = Path(raw_path)
+              parts = path.parts
+              if raw_path == "curriculum/l2-uk-en/bio/promotion-evidence.yaml":
+                  return True
+              if len(parts) == 5 and parts[:4] == ("curriculum", "l2-uk-en", "plans", "bio"):
+                  return path.suffix in {".yaml", ".yml"} and path.stem in manifest_set
+              if len(parts) == 5 and parts[:4] == ("curriculum", "l2-uk-en", "bio", "discovery"):
+                  return path.suffix in {".yaml", ".yml"} and path.stem in manifest_set
+              if len(parts) == 4 and parts[:3] == ("docs", "research", "bio"):
+                  return path.suffix == ".md" and path.stem in manifest_set
+              if len(parts) == 3 and parts[:2] == ("wiki", "figures"):
+                  name = path.name
+                  slug = name.removesuffix(".sources.yaml") if name.endswith(".sources.yaml") else path.stem
+                  return slug in manifest_set and (name.endswith(".sources.yaml") or path.suffix == ".md")
+              return False
+
+
+          def changed_paths() -> set[str]:
+              completed = subprocess.run(
+                  ["git", "diff", "--name-only", "--no-renames", base_sha, "HEAD"],
+                  check=True,
+                  capture_output=True,
+                  cwd=root,
+                  text=True,
+              )
+              return {line for line in completed.stdout.splitlines() if line}
+
+
+          def registry_entries(ref: str) -> dict:
+              if ref == "HEAD":
+                  payload = (root / registry_rel).read_text(encoding="utf-8")
+              else:
+                  payload = subprocess.run(
+                      ["git", "show", f"{base_sha}:{registry_rel}"],
+                      check=True,
+                      capture_output=True,
+                      cwd=root,
+                      text=True,
+                  ).stdout
+              document = yaml.safe_load(payload) or {}
+              entries = document.get("entries", {})
+              if not isinstance(entries, dict):
+                  raise ValueError(f"{registry_rel} entries must be a mapping")
+              return entries
+
+
+          def changed_registry_slugs() -> set[str]:
+              subprocess.run(
+                  ["git", "diff", "--name-status", "--no-renames", base_sha, "HEAD", "--", registry_rel],
+                  check=True,
+                  capture_output=True,
+                  cwd=root,
+                  text=True,
+              )
+              before = registry_entries(base_sha)
+              after = registry_entries("HEAD")
+              return {slug for slug in set(before) | set(after) if before.get(slug) != after.get(slug)}
+
+
+          def slug_for_path(raw_path: str) -> str | None:
+              path = Path(raw_path)
+              if raw_path == registry_rel:
+                  return None
+              if path.parts[:4] in {
+                  ("curriculum", "l2-uk-en", "plans", "bio"),
+                  ("curriculum", "l2-uk-en", "bio", "discovery"),
+              }:
+                  return path.stem
+              if path.parts[:3] == ("docs", "research", "bio"):
+                  return path.stem
+              if path.parts[:2] == ("wiki", "figures"):
+                  return path.name.removesuffix(".sources.yaml") if path.name.endswith(".sources.yaml") else path.stem
+              return None
+
+
+          changed_slugs = {
+              slug
+              for raw_path in changed_paths()
+              if is_bio_preparation_path(raw_path)
+              for slug in [slug_for_path(raw_path)]
+              if slug is not None
+          }
+          registry_changed_slugs = changed_registry_slugs()
+          changed_slugs.update(registry_changed_slugs)
+          if not changed_slugs:
+              print("BIO preparation validator: no BIO capsule or registry entry changed.")
+              raise SystemExit(0)
+
+          unexpected = sorted(changed_slugs - manifest_set)
+          if unexpected:
+              raise SystemExit(
+                  "BIO preparation validator found changed slugs outside the active BIO manifest: "
+                  + ", ".join(unexpected)
+              )
+          rows = {row["slug"]: row for row in build_ledger(root=root, track="bio")["rows"]}
+          active_holds = [
+              slug
+              for slug in sorted(changed_slugs)
+              if rows[slug]["gates"]["no_active_hold"]["status"] != "pass"
+          ]
+          if active_holds:
+              raise SystemExit(
+                  "BIO preparation validator refuses changes while active holds remain: "
+                  + ", ".join(active_holds)
+              )
+          print("BIO preparation validator: active holds clear for " + ", ".join(sorted(changed_slugs)))
+          PY
+
+      - name: Report integrity timing
+        if: ${{ always() }}
+        run: |
+          elapsed="$(( $(date +%s) - INTEGRITY_STARTED_EPOCH ))"
+          echo "integrity_elapsed_seconds=${elapsed}" | tee -a "$GITHUB_STEP_SUMMARY"
+
   ci-gate:
     name: CI Gate
-    needs: [pytest, web_quality]
+    needs: [pytest, web_quality, integrity]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      CI_PYTEST_COVERAGE: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && '1' || '0' }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -200,9 +418,10 @@ jobs:
         env:
           PYTEST_RESULT: ${{ needs.pytest.result }}
           WEB_QUALITY_RESULT: ${{ needs.web_quality.result }}
+          INTEGRITY_RESULT: ${{ needs.integrity.result }}
         run: |
           status=0
-          for required in pytest web_quality; do
+          for required in pytest web_quality integrity; do
             result="$(printenv "${required^^}_RESULT")"
             echo "${required}=${result}" | tee -a "$GITHUB_STEP_SUMMARY"
             if [ "$result" != "success" ]; then
@@ -211,11 +430,27 @@ jobs:
               status=1
             fi
           done
+          verify_args=()
+          if [ "$CI_PYTEST_COVERAGE" = "1" ]; then
+            verify_args+=(--require-coverage)
+          fi
           .venv/bin/python -m scripts.ci.verify_pytest_evidence \
             --root pytest-evidence \
             --quarantine scripts/config/pytest-quarantine.json \
-            --shard-count 5 | tee -a "$GITHUB_STEP_SUMMARY" || status=1
+            --shard-count 5 "${verify_args[@]}" | tee -a "$GITHUB_STEP_SUMMARY" || status=1
           exit "$status"
+
+      - name: Enforce main-branch Python coverage floor
+        if: ${{ env.CI_PYTEST_COVERAGE == '1' }}
+        run: |
+          .venv/bin/python -m pip install coverage==7.14.1
+          coverage_files=(pytest-evidence/pytest-evidence-*/coverage)
+          if [ "${#coverage_files[@]}" -ne 5 ]; then
+            echo "::error title=coverage evidence missing::expected five shard coverage files"
+            exit 1
+          fi
+          .venv/bin/python -m coverage combine "${coverage_files[@]}"
+          .venv/bin/python -m coverage report --fail-under=35 | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Report gate timing
         if: ${{ always() }}

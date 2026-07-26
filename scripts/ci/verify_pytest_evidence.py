@@ -27,7 +27,13 @@ def _read_json(path: Path) -> dict[str, object]:
     return data
 
 
-def verify(root: Path, quarantine_path: Path, shard_count: int) -> list[str]:
+def verify(
+    root: Path,
+    quarantine_path: Path,
+    shard_count: int,
+    *,
+    require_coverage: bool = False,
+) -> list[str]:
     expected_quarantine = {entry["nodeid"] for entry in load_quarantine(quarantine_path)}
     seen_plans: set[str] = set()
     seen_quarantine: set[str] = set()
@@ -41,6 +47,12 @@ def verify(root: Path, quarantine_path: Path, shard_count: int) -> list[str]:
         run = _read_json(artifact / "run.json")
         if run.get("returncode") != 0 or run.get("timed_out") is not False:
             raise ShardPlanError(f"shard {shard} did not finish successfully: {run}")
+        if require_coverage:
+            coverage = artifact / "coverage"
+            if run.get("coverage_enabled") is not True or not coverage.is_file() or coverage.stat().st_size == 0:
+                raise ShardPlanError(
+                    f"shard {shard} did not produce required main-branch coverage evidence: {coverage}"
+                )
         if not plan:
             raise ShardPlanError(f"shard {shard} planned zero runnable tests")
         if len(plan) != len(set(plan)):
@@ -81,9 +93,19 @@ def main() -> int:
     parser.add_argument("--root", required=True, type=Path)
     parser.add_argument("--quarantine", required=True, type=Path)
     parser.add_argument("--shard-count", type=int, default=4)
+    parser.add_argument(
+        "--require-coverage",
+        action="store_true",
+        help="Fail unless every shard supplied a non-empty coverage data file.",
+    )
     args = parser.parse_args()
     try:
-        for line in verify(args.root, args.quarantine, args.shard_count):
+        for line in verify(
+            args.root,
+            args.quarantine,
+            args.shard_count,
+            require_coverage=args.require_coverage,
+        ):
             print(line)
     except ShardPlanError as error:
         print(f"::error title=pytest evidence verification failed::{error}")

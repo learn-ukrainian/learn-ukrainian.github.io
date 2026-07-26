@@ -30,6 +30,11 @@ THREAD_SENSITIVE_FILES = frozenset(
 )
 
 
+def _coverage_enabled() -> bool:
+    """Return whether this full-suite invocation must write coverage evidence."""
+    return os.environ.get("CI_PYTEST_COVERAGE") == "1"
+
+
 class ShardPlanError(ValueError):
     """Raised when the test plan or quarantine ledger is inconsistent."""
 
@@ -267,12 +272,24 @@ def run(args: argparse.Namespace) -> int:
         "-p",
         "scripts.ci.pytest_evidence",
     ]
+    coverage_enabled = _coverage_enabled()
+    coverage_file = evidence_dir / "coverage"
+    if coverage_enabled:
+        command.extend(
+            [
+                "--cov=scripts",
+                "--cov-append",
+                "--cov-report=",
+            ]
+        )
     environment = {
         **os.environ,
         "CI_PYTEST_PLAN_FILE": str(plan_path.resolve()),
         "CI_PYTEST_EXECUTED_FILE": str(executed_path.resolve()),
         "PYTHONFAULTHANDLER": "1",
     }
+    if coverage_enabled:
+        environment["COVERAGE_FILE"] = str(coverage_file.resolve())
     started = time.monotonic()
     timed_out = False
     returncode: int
@@ -296,6 +313,12 @@ def run(args: argparse.Namespace) -> int:
             },
         )
         _terminate_process_group(process)
+    if returncode == 0 and coverage_enabled and not coverage_file.is_file():
+        returncode = 1
+        print(
+            "::error title=pytest coverage evidence missing::"
+            f"shard {args.shard} completed without {coverage_file}"
+        )
     elapsed = round(time.monotonic() - started, 3)
     _atomic_json_write(
         evidence_dir / "run.json",
@@ -305,6 +328,7 @@ def run(args: argparse.Namespace) -> int:
             "returncode": returncode,
             "shard": args.shard,
             "timed_out": timed_out,
+            "coverage_enabled": coverage_enabled,
         },
     )
     print(f"pytest shard {args.shard}: returncode={returncode} elapsed_seconds={elapsed}")

@@ -20,8 +20,17 @@ unconditional on pull requests, merge groups, and pushes to `main`.
   mysteriously.
 - One combined web-and-quality job provisions the Python runtime used by site
   hydration, then runs Ruff, Actionlint, frontend unit tests, a production
-  build, and Chromium browser tests. Alongside the five pytest shards, it caps
-  the normal concurrent runner demand at six slots.
+  build, Chromium browser tests, and the hydrated Atlas enrichment gate.
+- One integrity-and-security job runs TruffleHog on every workflow invocation,
+  verifies lesson-schema drift, MDX parity, learner-surface IDs, locked-module
+  publication, Atlas freshness, dossier word-count, and BIO capsule/active-hold
+  validation. These commands may calculate their own relevant source scope,
+  but the job itself is never routed or skipped.
+- Pushes to `main` also collect coverage from every complete pytest shard and
+  fail if the combined `scripts` coverage falls below 35%. Coverage does not
+  change which tests run.
+- Alongside the five pytest shards, the combined web-and-quality job and the
+  integrity job cap normal concurrent runner demand at seven slots.
 
 The workflow reports a measured duration in every job summary. The pytest
 evidence verifier also reports the measured duration of each shard.
@@ -30,18 +39,19 @@ evidence verifier also reports the measured duration of each shard.
 
 Pytest uses a 15-minute per-test timeout and a 30-minute wrapper that writes a
 named timeout record before the 35-minute GitHub job limit. The combined web
-and quality job has a 22-minute wrapper inside a 25-minute job. These are
-failure ceilings, not expected durations.
+and quality job has a 22-minute wrapper inside a 25-minute job. Integrity
+contracts have a 15-minute wrapper inside a 20-minute job. These are failure
+ceilings, not expected durations.
 
 ## Quarantine
 
 [`scripts/config/pytest-quarantine.json`](../../scripts/config/pytest-quarantine.json)
 is an explicit to-do list. Every entry contains one exact pytest node ID, a
-reason, an owning stream, and a tracking reference. It currently contains 33
-entries: two operator-reported main failures, thirteen retired BIO
-routing-contract nodes, one release-only Atlas database node, and seventeen
-nodes that require a Stanza model unavailable without a live download. The
-JSON ledger is the authoritative per-node explanation and owner list.
+reason, an owning stream, and a tracking reference. It currently contains 20
+entries: two operator-reported main failures, one release-only Atlas database
+node, and seventeen nodes that require a Stanza model unavailable without a
+live download. The JSON ledger is the authoritative per-node explanation and
+owner list.
 
 To remove an entry:
 

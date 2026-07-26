@@ -7,11 +7,12 @@ is deliberately independent of git, diff state, and the pull-request base.
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
 
-from scripts.ci import pytest_evidence, pytest_shard
+from scripts.ci import pytest_evidence, pytest_shard, verify_pytest_evidence
 
 
 def _synthetic_nodes() -> list[str]:
@@ -85,6 +86,49 @@ def test_stale_quarantine_fails_closed() -> None:
         pytest_shard.build_plans(_synthetic_nodes(), {"tests/not-real.py::test_missing"})
 
 
+def test_main_coverage_is_an_explicit_evidence_mode(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("CI_PYTEST_COVERAGE", raising=False)
+    assert pytest_shard._coverage_enabled() is False
+
+    monkeypatch.setenv("CI_PYTEST_COVERAGE", "1")
+    assert pytest_shard._coverage_enabled() is True
+
+
+def test_main_coverage_evidence_is_fail_closed(tmp_path: Path) -> None:
+    quarantine = tmp_path / "quarantine.json"
+    quarantine.write_text(json.dumps({"version": 1, "entries": []}), encoding="utf-8")
+    evidence_root = tmp_path / "evidence"
+    for shard in range(1, pytest_shard.DEFAULT_SHARD_COUNT + 1):
+        artifact = evidence_root / f"pytest-evidence-{shard}"
+        artifact.mkdir(parents=True)
+        nodeid = f"tests/test_shard_{shard}.py::test_complete"
+        (artifact / "plan.txt").write_text(f"{nodeid}\n", encoding="utf-8")
+        (artifact / "executed.txt").write_text(f"{nodeid}\n", encoding="utf-8")
+        (artifact / "quarantine.txt").write_text("", encoding="utf-8")
+        (artifact / "run.json").write_text(
+            json.dumps({"returncode": 0, "timed_out": False, "coverage_enabled": True}),
+            encoding="utf-8",
+        )
+        (artifact / "coverage").write_bytes(b"coverage-data")
+
+    summary = verify_pytest_evidence.verify(
+        evidence_root,
+        quarantine,
+        pytest_shard.DEFAULT_SHARD_COUNT,
+        require_coverage=True,
+    )
+    assert "pytest union: 5 planned/executed nodes" in summary
+
+    (evidence_root / "pytest-evidence-3" / "coverage").unlink()
+    with pytest.raises(pytest_shard.ShardPlanError, match="coverage evidence"):
+        verify_pytest_evidence.verify(
+            evidence_root,
+            quarantine,
+            pytest_shard.DEFAULT_SHARD_COUNT,
+            require_coverage=True,
+        )
+
+
 def test_workflow_uses_the_node_planner_and_fail_closed_gate() -> None:
     workflow = (Path(__file__).resolve().parents[1] / ".github" / "workflows" / "ci.yml").read_text(
         encoding="utf-8"
@@ -100,7 +144,12 @@ def test_workflow_uses_the_node_planner_and_fail_closed_gate() -> None:
     assert "CI_PYTEST_WIKI_NO_MLX" in workflow
     assert "./node_modules/.bin/playwright test" in workflow
     assert "npm --prefix site exec -- playwright test" not in workflow
-    assert "needs: [pytest, web_quality]" in workflow
+    assert "needs: [pytest, web_quality, integrity]" in workflow
     assert "uv venv --python 3.12 .venv" in workflow
+    assert "trufflesecurity/trufflehog@47e7b7cd74f578e1e3145d48f669f22fd1330ca6" in workflow
+    assert "Validate BIO preparation capsules and active holds" in workflow
+    assert "CI_PYTEST_COVERAGE" in workflow
+    assert "--require-coverage" in workflow
+    assert "coverage report --fail-under=35" in workflow
     for forbidden in ("GITHUB_BASE_REF", "changed-files", "paths-filter", "git diff"):
         assert forbidden not in workflow
