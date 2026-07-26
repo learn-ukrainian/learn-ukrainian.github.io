@@ -87,6 +87,7 @@ Issue: #1184.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import logging
@@ -141,7 +142,7 @@ _DISPATCH_AGENT_CHOICES = (
     "agy",
     "cursor",
 )
-_MONITOR_API_BASE_URL = "http://localhost:8765"
+_MONITOR_API_BASE_URL = "http://127.0.0.1:8765"
 _logger = logging.getLogger(__name__)
 
 
@@ -219,6 +220,89 @@ def _state_path(task_id: str) -> Path:
     # task-ids with slashes would break paths; sanitize
     safe = task_id.replace("/", "_").replace("\\", "_")
     return _TASKS_DIR / f"{safe}.json"
+
+
+def _core_terminal_fields(
+    *,
+    status: str,
+    duration_s: float,
+    response: str,
+    result_file: str | None,
+    stderr_excerpt: str | None,
+    returncode: int | None,
+    returncode_reason: str | None,
+    dirty_on_exit: bool | None,
+    commits_ahead: int | None,
+    needs_finalize: bool,
+    finalize_error: str | None,
+) -> dict[str, Any]:
+    """The complete set of fields that define a finished dispatch's outcome.
+
+    Both writers that can be the LAST word on a task — the normal checkpoint and
+    the interrupt fallback — build their record here. The fallback used to
+    hand-assemble a subset, so an interrupted run persisted a terminal status
+    beside stale placeholder ``response_chars``/``exit_code``/``last_error``:
+    the same duplication that let the return-code invariant apply on one path
+    and not the other. One definition, both paths. (Cross-family review of
+    #5807, round ten.)
+    """
+    return {
+        "status": status,
+        "finished_at": datetime.now(UTC).isoformat(),
+        "duration_s": round(duration_s, 3),
+        "response_chars": len(response),
+        "result_file": result_file,
+        "stderr_excerpt": stderr_excerpt,
+        "returncode": returncode,
+        "returncode_reason": returncode_reason,
+        "last_error": _first_error_line(stderr_excerpt) if status != "done" else None,
+        "exit_code": returncode,
+        "worktree_dirty_on_exit": dirty_on_exit,
+        "commits_ahead": commits_ahead,
+        "needs_finalize": needs_finalize,
+        "finalize_error": finalize_error,
+    }
+
+
+def _apply_returncode_invariant(status: str, returncode: int | None) -> str:
+    """A success without a terminal child return code is not a success (#4837).
+
+    Lives on its own because it is applied twice: once on the normal completion
+    path and once in the interrupt fallback. When only the normal path enforced
+    it, a cancel landing between classification and the check persisted
+    ``done`` with a null return code — the fallback contradicting the invariant
+    precisely when it was exercised (cross-family review of #5807).
+    """
+    if status == "done" and returncode is None:
+        return "failed"
+    return status
+
+
+@contextlib.contextmanager
+def _sigterm_deferred():
+    """Ignore SIGTERM for the duration of a critical write, then restore.
+
+    The worker's SIGTERM handler raises KeyboardInterrupt, and an exception
+    raised inside an ``except`` suite is not caught by that same suite. So a
+    SECOND cancel arriving while the terminal-status fallback is writing escapes
+    before the atomic rename, and the task stays recorded as ``running`` even
+    though its worker finished — the very failure the fallback exists to prevent
+    (cross-family review of #5807).
+
+    The window is one small file write. Deferring the signal across it cannot
+    hang a cancel meaningfully, and the interrupt is re-raised immediately after.
+    Degrades to a no-op off the main thread, where ``signal.signal`` is illegal.
+    """
+    try:
+        previous = signal.signal(signal.SIGTERM, signal.SIG_IGN)
+    except (ValueError, OSError):  # not the main thread — nothing to defer
+        yield
+        return
+    try:
+        yield
+    finally:
+        with contextlib.suppress(ValueError, OSError):
+            signal.signal(signal.SIGTERM, previous)
 
 
 def _write_state_atomic(path: Path, state: dict[str, Any]) -> None:
@@ -825,6 +909,32 @@ def _resolve_primary_integrity_error(*, mode: str) -> str | None:
     )
 
 
+def _warn_if_monitor_api_unreachable() -> None:
+    """Make a dead local Monitor API visible without making dispatch depend on it.
+
+    Dispatch remains a recovery path when the dashboard is down. The warning is
+    deliberately advisory, unlike primary-integrity drift, because workers can
+    still run with their file-based fallbacks and may be needed to repair the
+    API itself.
+    """
+    url = f"{_monitor_api_base_url()}/api/health"
+    try:
+        with urllib.request.urlopen(url, timeout=1) as response:
+            if response.status != 200:
+                raise MonitorApiUnavailable(f"HTTP {response.status}")
+    except (OSError, TimeoutError, urllib.error.URLError, MonitorApiUnavailable) as exc:
+        detail = f"{type(exc).__name__}: {exc}"
+        _append_dispatch_event("monitor_api_unreachable_pre_dispatch", url=url, detail=detail)
+        print(
+            "⚠ MONITOR API UNREACHABLE — dispatch will continue with offline fallbacks.\n"
+            f"   probe: GET {url}\n"
+            f"   error: {detail}\n"
+            "   recovery: ./services.sh status api; inspect .pids/api-last-crash.json; "
+            "then ./services.sh restart api",
+            file=sys.stderr,
+        )
+
+
 def _fetch_base(base: str) -> bool:
     """Fetch ``origin/{base}``. Returns True iff the remote ref is resolvable.
 
@@ -1137,15 +1247,27 @@ def _resolve_sha(path: Path, ref: str = "HEAD") -> str | None:
 
 
 def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
-    """Return commits on HEAD not reachable from ``base_ref``, or None."""
-    proc = subprocess.run(
-        ["git", "rev-list", "--count", f"{base_ref}..HEAD"],
-        cwd=worktree,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    """Return commits on HEAD not reachable from ``base_ref``, or None.
+
+    ``None`` means "cannot count", and a vanished worktree is exactly that: on
+    2026-07-25 a dispatch whose worktree disappeared mid-run raised
+    FileNotFoundError out of here, which killed the finalize path before it
+    could write a terminal status and left the task reading ``running`` with a
+    dead pid — invisible to every settle-loop watching it. The sibling
+    ``_worktree_is_dirty`` already treated OSError as unknown; this is the same
+    contract, and callers already fail closed on ``None``.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "rev-list", "--count", f"{base_ref}..HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+        )
+    except OSError:
+        return None
     if proc.returncode != 0:
         return None
     try:
@@ -1466,9 +1588,12 @@ def _reap_finished_worktree(worktree: Path) -> dict[str, Any]:
     """Try to reap a clean successful delegate worktree, returning state metadata."""
     if str(_REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(_REPO_ROOT))
-    from scripts.orchestration import reap_worktrees
 
     try:
+        # Imported inside the handler: an unimportable reaper is a reaping
+        # failure like any other, not a reason to take down the caller.
+        from scripts.orchestration import reap_worktrees
+
         results = reap_worktrees.reap_worktrees(
             repo_root=_REPO_ROOT,
             apply=True,
@@ -2379,188 +2504,338 @@ def _run_worker(
     runtime_tmp_reap: dict[str, int | str | None] | None = None
 
     cancelled = False
-    try:
-        stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
-        initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
-        tool_config: dict[str, Any] = {}
-        if max_budget_usd is not None:
-            tool_config["max_budget_usd"] = max_budget_usd
-        if provider is not None:
-            tool_config[RUNTIME_ROUTE_TOOL_CONFIG_KEY] = {"provider": provider}
-        if output_schema_path is not None:
-            tool_config["output_schema_path"] = output_schema_path
-            tool_config["output_schema_sha256"] = output_schema_sha256
-        tool_config = tool_config or None
-        result = runtime_invoke(
-            agent,
-            prompt,
-            mode=mode,
-            cwd=cwd,
-            model=model,
-            task_id=task_id,
-            session_id=None,  # Layer 3 is always fresh-session
-            tool_config=tool_config,
-            entrypoint="delegate",
-            hard_timeout=hard_timeout,
-            stdout_silence_timeout=stdout_silence_timeout,
-            initial_response_timeout=initial_probe,
-            effort=effort,
-        )
-        ok_outcome = result.ok
-        response = result.response
-        stderr_excerpt = result.stderr_excerpt
-        returncode = result.returncode
-        rate_limited = result.rate_limited
-        substitution = getattr(result, "substitution", None)
-    except KeyboardInterrupt as exc:
-        # Raised by our SIGTERM handler (or by Ctrl+C in manual runs).
-        # The runtime's finally block has already killed the CLI
-        # subprocess and stopped the watchdog by the time we catch
-        # this, so no extra cleanup is needed here. Mark as cancelled.
-        cancelled = True
-        stderr_excerpt = f"cancelled via SIGTERM or Ctrl+C: {exc}"[:500]
-        returncode_reason = "worker interrupted before a terminal subprocess returncode was available"
-    except RateLimitedError as exc:
-        rate_limited = True
-        stderr_excerpt = str(exc)[:500]
-        returncode_reason = "runtime rejected the dispatch before a terminal subprocess returncode was available"
-    except AgentStalledError as exc:
-        timed_out = True
-        substitution = getattr(exc, "substitution", None)
-        if getattr(exc, "kind", "stall") == "initial_response_timeout":
-            stderr_excerpt = (
-                f"initial_response_timeout fired after {exc.stall_timeout}s "
-                f"with no first stdout/stderr/liveness activity: {exc} "
-                f"— raise it with --initial-response-timeout "
-                f"(current default {DEFAULT_INITIAL_RESPONSE_TIMEOUT_S}s)"
-            )[:500]
-        else:
-            stderr_excerpt = (
-                f"stdout_silence_timeout fired after {exc.stall_timeout}s "
-                f"without watchdog activity: {exc} "
-                f"— raise it with --silence-timeout "
-                f"(current default {DEFAULT_SILENCE_TIMEOUT_S}s)"
-            )[:500]
-        returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
-    except AgentTimeoutError as exc:
-        substitution = getattr(exc, "substitution", None)
-        stderr_excerpt = (
-            f"hard_timeout fired after {exc.hard_timeout}s: {exc} "
-            f"— raise it with --hard-timeout "
-            f"(current default {DEFAULT_HARD_TIMEOUT_S}s)"
-        )[:500]
-        returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
-    except AgentRuntimeError as exc:
-        stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
-        returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
-    except Exception as exc:
-        # Last-ditch: don't crash the worker on an unexpected bug — we
-        # need to update the state file or the parent will see us as
-        # "crashed" forever.
-        stderr_excerpt = f"worker unexpected: {type(exc).__name__}: {exc}"[:500]
-        returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
-    finally:
-        if runtime_tmp_root is not None or runtime_tmp_namespace_root is not None:
-            runtime_tmp_reap = _reap_runtime_tmp_lease(
-                runtime_tmp_root,
-                runtime_tmp_namespace_root,
-            )
-
+    # ONE recovery region, spanning the runtime call itself through the moment
+    # the outcome is on disk.
+    #
+    # Seven review rounds each found a different instruction-level gap — the
+    # reaper, the checkpoint, a second signal, lease cleanup, the boundary right
+    # after lease cleanup — and each fix guarded that gap and created the next
+    # one, because the interval kept being cut into guarded and unguarded
+    # halves. The gaps were not the bug; splitting the interval was. This region
+    # is the whole interval, so there is no boundary left to land between.
+    #
+    # A cancellation during the runtime call records ``cancelled`` — accurate,
+    # the worker really was stopped. A cancellation after it records the
+    # outcome the worker reached. Either way the state file stops saying
+    # "running" about a process that is gone, and the signal still propagates.
+    # What remains uncoverable in-process is SIGKILL, which the dead-pid probe
+    # in cmd_status/cmd_wait already reports.
+    #
+    # Nothing the fallback reads may be bound only inside this region: a handler
+    # that raises UnboundLocalError fails exactly when it is needed. Every name
+    # it touches is initialized above, including the runtime-outcome flags.
+    # Read the persisted record BEFORE the region, not inside it. Starting the
+    # fallback from {} meant an early interrupt atomically REPLACED the task
+    # file — recording a terminal status while destroying task_id, pid, mode,
+    # cwd and worktree metadata that status/wait/cleanup and the operator all
+    # read. A terminal status with no context is not an improvement over a stale
+    # running one. (Cross-family review of #5807, round nine.)
+    final_state: dict[str, Any] = _read_state(state_path) or {}
+    final_status = ""
     duration_s = time.monotonic() - start
-
-    # Write the full response to a result file (may be large).
     result_file: str | None = None
-    if response:
-        result_path = state_path.with_suffix(".result")
-        try:
-            result_path.write_text(response)
-            result_file = str(result_path)
-        except OSError:
-            result_file = None
-
-    final_status = _classify_final_status(
-        cancelled=cancelled,
-        rate_limited=rate_limited,
-        ok_outcome=ok_outcome,
-        timed_out=timed_out,
-    )
-
-    # A successful runtime result must carry the completed child process's
-    # return code.  Refuse to persist a misleading ``done``/null combination
-    # if a future runner regression drops it; failures without a child code
-    # retain a precise reason instead of inventing a number (#4837).
-    if final_status == "done" and returncode is None:
-        final_status = "failed"
-        ok_outcome = False
-        returncode_reason = "runtime reported success without a terminal subprocess returncode"
-        stderr_excerpt = "runtime reported success without a terminal subprocess returncode"
-    elif returncode is None and returncode_reason is None:
-        returncode_reason = "no terminal subprocess returncode was available"
-
-    final_state = _read_state(state_path) or {}
-
-    # Fix 5 (#1476 AC 5): dispatch-finish telemetry — record whether the
-    # worktree exited dirty so follow-up reviewers can see at a glance
-    # that the dispatched agent left uncommitted changes behind.
     dirty_on_exit: bool | None = None
-    worktree_path = final_state.get("worktree_path")
-    if worktree_path:
-        dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
-
     commits_ahead: int | None = None
     needs_finalize = False
+    finalize_error: str | None = None
     auto_finalize: AutoFinalizeResult | None = None
-    # The dirty-worktree safety net must cover EVERY write-capable mode, not just
-    # ``danger``. It was gated on ``danger`` alone, so a ``workspace-write``
-    # dispatch that left finished work uncommitted settled as ``done`` — a real
-    # failure reported as success. On 2026-07-25 three lanes did exactly that
-    # (``timeouts-B3``, ``timeouts-B6``, ``timeouts-B4-orig``: dirty worktrees,
-    # zero commits, ``status: done``) and 31 files of finished work were one agent
-    # restart away from being lost. Detection now runs for the whole write-capable
-    # set; the riskier auto-finalize action stays scoped to ``danger``.
-    if worktree_path and mode in _WRITE_CAPABLE_MODES:
-        base_branch = str(final_state.get("worktree_base") or "main")
-        base_ref = _origin_base_ref(base_branch)
-        commits_ahead = _count_commits_ahead(
-            Path(worktree_path),
-            base_ref,
-        )
-        # Fail CLOSED on BOTH unknowns — they are the same bug in two variables.
-        #
-        # ``_count_commits_ahead`` returns None when it cannot count, and
-        # ``commits_ahead == 0`` silently skipped that case, which is how the B4
-        # dispatch (commits_ahead=None, dirty_on_exit=True) still reported ``done``.
-        #
-        # ``_worktree_is_dirty`` can ALSO return None (OSError, or a non-zero
-        # ``git status --porcelain``). A bare ``if dirty_on_exit`` treats that unknown
-        # as falsy and skips the check entirely — failing OPEN in precisely the way
-        # this fix exists to prevent. Caught in cross-family review of #5754, which
-        # noted the asymmetry after the count half had been fixed.
-        #
-        # Neither unknown can prove the work was committed, so either one surfaces
-        # the task for finalization rather than letting it settle as ``done``.
-        if dirty_on_exit in (True, None) and commits_ahead in (0, None):
-            needs_finalize = True
+    telemetry_settled = False
 
-        if needs_finalize and returncode == 0 and mode == "danger":
-            auto_finalize = _auto_finalize_dirty_worktree(
-                worktree=Path(worktree_path),
+    try:
+        try:
+            stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
+            initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
+            tool_config: dict[str, Any] = {}
+            if max_budget_usd is not None:
+                tool_config["max_budget_usd"] = max_budget_usd
+            if provider is not None:
+                tool_config[RUNTIME_ROUTE_TOOL_CONFIG_KEY] = {"provider": provider}
+            if output_schema_path is not None:
+                tool_config["output_schema_path"] = output_schema_path
+                tool_config["output_schema_sha256"] = output_schema_sha256
+            tool_config = tool_config or None
+            result = runtime_invoke(
+                agent,
+                prompt,
+                mode=mode,
+                cwd=cwd,
+                model=model,
                 task_id=task_id,
-                agent=agent,
-                branch=final_state.get("worktree_branch"),
-                base_branch=base_branch,
+                session_id=None,  # Layer 3 is always fresh-session
+                tool_config=tool_config,
+                entrypoint="delegate",
+                hard_timeout=hard_timeout,
+                stdout_silence_timeout=stdout_silence_timeout,
+                initial_response_timeout=initial_probe,
+                effort=effort,
             )
+            ok_outcome = result.ok
+            response = result.response
+            stderr_excerpt = result.stderr_excerpt
+            returncode = result.returncode
+            rate_limited = result.rate_limited
+            substitution = getattr(result, "substitution", None)
+        except KeyboardInterrupt as exc:
+            # Raised by our SIGTERM handler (or by Ctrl+C in manual runs).
+            # The runtime's finally block has already killed the CLI
+            # subprocess and stopped the watchdog by the time we catch
+            # this, so no extra cleanup is needed here. Mark as cancelled.
+            cancelled = True
+            stderr_excerpt = f"cancelled via SIGTERM or Ctrl+C: {exc}"[:500]
+            returncode_reason = "worker interrupted before a terminal subprocess returncode was available"
+        except RateLimitedError as exc:
+            rate_limited = True
+            stderr_excerpt = str(exc)[:500]
+            returncode_reason = "runtime rejected the dispatch before a terminal subprocess returncode was available"
+        except AgentStalledError as exc:
+            timed_out = True
+            substitution = getattr(exc, "substitution", None)
+            if getattr(exc, "kind", "stall") == "initial_response_timeout":
+                stderr_excerpt = (
+                    f"initial_response_timeout fired after {exc.stall_timeout}s "
+                    f"with no first stdout/stderr/liveness activity: {exc} "
+                    f"— raise it with --initial-response-timeout "
+                    f"(current default {DEFAULT_INITIAL_RESPONSE_TIMEOUT_S}s)"
+                )[:500]
+            else:
+                stderr_excerpt = (
+                    f"stdout_silence_timeout fired after {exc.stall_timeout}s "
+                    f"without watchdog activity: {exc} "
+                    f"— raise it with --silence-timeout "
+                    f"(current default {DEFAULT_SILENCE_TIMEOUT_S}s)"
+                )[:500]
+            returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
+        except AgentTimeoutError as exc:
+            substitution = getattr(exc, "substitution", None)
+            stderr_excerpt = (
+                f"hard_timeout fired after {exc.hard_timeout}s: {exc} "
+                f"— raise it with --hard-timeout "
+                f"(current default {DEFAULT_HARD_TIMEOUT_S}s)"
+            )[:500]
+            returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
+        except AgentRuntimeError as exc:
+            stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
+            returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
+        except Exception as exc:
+            # Last-ditch: don't crash the worker on an unexpected bug — we
+            # need to update the state file or the parent will see us as
+            # "crashed" forever.
+            stderr_excerpt = f"worker unexpected: {type(exc).__name__}: {exc}"[:500]
+            returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
+        finally:
+            if runtime_tmp_root is not None or runtime_tmp_namespace_root is not None:
+                # This cleanup runs AFTER the worker has finished but BEFORE the
+                # guarded span below, and it catches Exception rather than the
+                # KeyboardInterrupt a SIGTERM raises — so a cancel landing here used
+                # to unwind out of _run_worker with no terminal status written.
+                # Deferring the signal across the cleanup drops a cancel that has
+                # nothing left to cancel (the work is already done) in exchange for
+                # never losing the record that it was done. (Cross-family review of
+                # #5807.) Cleanup stays in `finally` so an interrupt during the
+                # runtime call itself still frees the lease.
+                with _sigterm_deferred():
+                    runtime_tmp_reap = _reap_runtime_tmp_lease(
+                        runtime_tmp_root,
+                        runtime_tmp_namespace_root,
+                    )
+
+        duration_s = time.monotonic() - start
+        final_status = _classify_final_status(
+            cancelled=cancelled,
+            rate_limited=rate_limited,
+            ok_outcome=ok_outcome,
+            timed_out=timed_out,
+        )
+
+        # A successful runtime result must carry the completed child process's
+        # return code.  Refuse to persist a misleading ``done``/null combination
+        # if a future runner regression drops it; failures without a child code
+        # retain a precise reason instead of inventing a number (#4837).
+        if _apply_returncode_invariant(final_status, returncode) != final_status:
+            final_status = _apply_returncode_invariant(final_status, returncode)
+            ok_outcome = False
+            returncode_reason = "runtime reported success without a terminal subprocess returncode"
+            stderr_excerpt = "runtime reported success without a terminal subprocess returncode"
+        elif returncode is None and returncode_reason is None:
+            returncode_reason = "no terminal subprocess returncode was available"
+
+        final_state = _read_state(state_path) or {}
+
+        # Write the full response to a result file (may be large).
+        if response:
+            result_path = state_path.with_suffix(".result")
+            try:
+                result_path.write_text(response)
+                result_file = str(result_path)
+            except OSError:
+                result_file = None
+
+        # Fix 5 (#1476 AC 5): dispatch-finish telemetry — record whether the
+        # worktree exited dirty so follow-up reviewers can see at a glance
+        # that the dispatched agent left uncommitted changes behind.
+        worktree_path = final_state.get("worktree_path")
+        if worktree_path:
             dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
-            commits_ahead = _count_commits_ahead(Path(worktree_path), base_ref)
-            if auto_finalize.ok:
-                needs_finalize = False
-                ok_outcome = True
-                final_status = "done"
 
-    if needs_finalize:
-        final_status = "needs_finalize"
+        # EVERYTHING from here to the state write is telemetry ABOUT a worker that
+        # has already finished. None of it may prevent the terminal status from
+        # being recorded: a task stuck at ``running`` with a dead pid is worse than
+        # a task with unknown telemetry, because no settle-loop can ever wake on it
+        # and the operator sees a job that appears to still be working. See the
+        # 2026-07-25 incident where a vanished worktree crashed the count and hid a
+        # dead dispatch for 52 minutes.
+        try:
+            # The dirty-worktree safety net must cover EVERY write-capable mode, not just
+            # ``danger``. It was gated on ``danger`` alone, so a ``workspace-write``
+            # dispatch that left finished work uncommitted settled as ``done`` — a real
+            # failure reported as success. On 2026-07-25 three lanes did exactly that
+            # (``timeouts-B3``, ``timeouts-B6``, ``timeouts-B4-orig``: dirty worktrees,
+            # zero commits, ``status: done``) and 31 files of finished work were one agent
+            # restart away from being lost. Detection now runs for the whole write-capable
+            # set; the riskier auto-finalize action stays scoped to ``danger``.
+            if worktree_path and mode in _WRITE_CAPABLE_MODES:
+                base_branch = str(final_state.get("worktree_base") or "main")
+                base_ref = _origin_base_ref(base_branch)
+                commits_ahead = _count_commits_ahead(
+                    Path(worktree_path),
+                    base_ref,
+                )
+                # Fail CLOSED on BOTH unknowns — they are the same bug in two variables.
+                #
+                # ``_count_commits_ahead`` returns None when it cannot count, and
+                # ``commits_ahead == 0`` silently skipped that case, which is how the B4
+                # dispatch (commits_ahead=None, dirty_on_exit=True) still reported ``done``.
+                #
+                # ``_worktree_is_dirty`` can ALSO return None (OSError, or a non-zero
+                # ``git status --porcelain``). A bare ``if dirty_on_exit`` treats that unknown
+                # as falsy and skips the check entirely — failing OPEN in precisely the way
+                # this fix exists to prevent. Caught in cross-family review of #5754, which
+                # noted the asymmetry after the count half had been fixed.
+                #
+                # Neither unknown can prove the work was committed, so either one surfaces
+                # the task for finalization rather than letting it settle as ``done``.
+                if dirty_on_exit in (True, None) and commits_ahead in (0, None):
+                    needs_finalize = True
 
-    last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
+                if needs_finalize and returncode == 0 and mode == "danger":
+                    auto_finalize = _auto_finalize_dirty_worktree(
+                        worktree=Path(worktree_path),
+                        task_id=task_id,
+                        agent=agent,
+                        branch=final_state.get("worktree_branch"),
+                        base_branch=base_branch,
+                    )
+                    dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
+                    commits_ahead = _count_commits_ahead(Path(worktree_path), base_ref)
+                    if auto_finalize.ok:
+                        needs_finalize = False
+                        ok_outcome = True
+                        final_status = "done"
+        # Deliberately broad: this is measurement about a worker that has already
+        # finished, and no measurement failure may cost the task its terminal status.
+        except Exception as finalize_exc:
+            finalize_error = f"{type(finalize_exc).__name__}: {finalize_exc}"[:300]
+            # Unknown telemetry cannot prove the work was committed, so surface
+            # the task for a human instead of settling it as done.
+            needs_finalize = True
+        # Either way the verdict is now measured rather than assumed, so an
+        # interrupt below must persist it as-is instead of forcing attention
+        # onto a dispatch already shown to be clean and committed.
+        telemetry_settled = True
+
+        if needs_finalize:
+            final_status = "needs_finalize"
+
+        last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
+
+        # CHECKPOINT: persist the COMPLETE core outcome before any best-effort work.
+        #
+        # Everything below — worktree reaping, usage extraction, the enriched state
+        # assembly — is enrichment, and any of it can raise: `_reap_finished_worktree`
+        # performed its import outside its own handler, so an unimportable reaper
+        # module skipped the write entirely and stood the task back up as ``running``
+        # with a dead pid. Ordering fixes that by construction, where wrapping each
+        # statement would only hold until someone adds the next one.
+        #
+        # The checkpoint carries every field that defines the outcome, not just the
+        # status: a watcher that sees ``done`` must not find null ``finished_at`` /
+        # ``duration_s`` / ``result_file`` / ``returncode`` next to it, and if this
+        # process dies mid-enrichment the surviving record must still be complete
+        # and true. Only genuinely optional metadata (reap telemetry, usage record,
+        # runtime model/effort/cli labels) is left to the second write.
+        # (Both points from cross-family review of this PR.)
+        core_terminal_state = _core_terminal_fields(
+            status=final_status,
+            duration_s=duration_s,
+            response=response,
+            result_file=result_file,
+            stderr_excerpt=stderr_excerpt,
+            returncode=returncode,
+            returncode_reason=returncode_reason,
+            dirty_on_exit=dirty_on_exit,
+            commits_ahead=commits_ahead,
+            needs_finalize=needs_finalize,
+            finalize_error=finalize_error,
+        )
+        _write_state_atomic(state_path, {**final_state, **core_terminal_state})
+    except BaseException as interrupt_exc:
+        # Defer SIGTERM across the ENTIRE handler, not just its write. A second
+        # cancel arriving while the fallback was still computing raised from
+        # inside this `except` suite, which the same suite cannot catch — the
+        # same boundary-between-guarded-spans mistake as the region itself, one
+        # level down. (Cross-family review of #5807, round nine.)
+        with _sigterm_deferred():
+            # Honour a verdict the telemetry already reached; fail closed only
+            # when the interrupt beat the measurement to it — and only for modes
+            # that can leave work behind, so an interrupted read-only review is
+            # not dressed up as a dispatch needing manual finalization.
+            interrupted_needs_finalize = (
+                needs_finalize if telemetry_settled else mode in _WRITE_CAPABLE_MODES
+            )
+            # The interrupt may have landed before classification ran, so derive
+            # the outcome from the runtime flags rather than persisting an empty
+            # status, and apply the same return-code invariant the normal path
+            # enforces.
+            interrupted_status = _apply_returncode_invariant(
+                final_status
+                or _classify_final_status(
+                    cancelled=cancelled,
+                    rate_limited=rate_limited,
+                    ok_outcome=ok_outcome,
+                    timed_out=timed_out,
+                ),
+                returncode,
+            )
+            if interrupted_needs_finalize:
+                interrupted_status = "needs_finalize"
+            _write_state_atomic(
+                state_path,
+                {
+                    # final_state was read before the region, so this MERGES onto
+                    # the real task record instead of replacing it...
+                    **final_state,
+                    # ...and the outcome fields come from the same builder the
+                    # checkpoint uses, so an interrupted run never persists a
+                    # terminal status beside stale placeholder values.
+                    **_core_terminal_fields(
+                        status=interrupted_status,
+                        duration_s=duration_s,
+                        response=response,
+                        result_file=result_file,
+                        stderr_excerpt=stderr_excerpt,
+                        returncode=returncode,
+                        returncode_reason=returncode_reason,
+                        dirty_on_exit=dirty_on_exit,
+                        commits_ahead=commits_ahead,
+                        needs_finalize=interrupted_needs_finalize,
+                        finalize_error=(
+                            f"interrupted during finalize: {type(interrupt_exc).__name__}"
+                        ),
+                    ),
+                },
+            )
+        raise
+
     if last_error:
         # Task logs capture this worker's stderr, while agent_runtime captures
         # the CLI child's stderr internally. Re-emit the excerpt so an
@@ -2587,23 +2862,14 @@ def _run_worker(
 
     final_state.update(
         {
+            # The core outcome was already checkpointed above; re-stating it here
+            # keeps this write self-contained and idempotent — same values, so a
+            # reader between the two writes never sees the status change.
+            **core_terminal_state,
             "model": getattr(result, "model", final_state.get("model")),
             "effort": getattr(result, "effort", final_state.get("effort")),
             "cli_version": getattr(result, "cli_version", final_state.get("cli_version")),
             "substitution": substitution,
-            "status": final_status,
-            "finished_at": datetime.now(UTC).isoformat(),
-            "duration_s": round(duration_s, 3),
-            "response_chars": len(response),
-            "result_file": result_file,
-            "stderr_excerpt": stderr_excerpt,
-            "returncode": returncode,
-            "returncode_reason": returncode_reason,
-            "last_error": last_error,
-            "exit_code": returncode,
-            "worktree_dirty_on_exit": dirty_on_exit,
-            "commits_ahead": commits_ahead,
-            "needs_finalize": needs_finalize,
             "keep_worktree": keep_worktree,
             "worktree_reap": worktree_reap,
             "tmp_bytes_freed": (
@@ -2764,6 +3030,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     if primary_integrity_error:
         print(primary_integrity_error, file=sys.stderr)
         return 2
+
+    _warn_if_monitor_api_unreachable()
 
     # Refuse to clobber a task that's still alive — whether it's in
     # "running" (worker up and executing) OR "spawning" (worker created
@@ -3565,7 +3833,22 @@ def cmd_status_or_fail(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------------------------
 
 _TERMINAL_STATUSES = frozenset(
-    {"done", "failed", "timeout", "rate_limited", "crashed", "cancelled", "dry_run"},
+    {
+        "done",
+        "failed",
+        "timeout",
+        "rate_limited",
+        "crashed",
+        "cancelled",
+        "dry_run",
+        # A worker that settles as ``needs_finalize`` HAS finished — the status
+        # flags leftover work for a human, it does not mean "still running".
+        # Omitting it made ``delegate.py wait`` poll a finished task until its
+        # own timeout, and made ``cancel`` willing to signal a stored PID the OS
+        # may already have recycled. Every other terminal vocabulary in this
+        # file already includes it (see _BRANCH_HOLDER_RELEASABLE_STATUSES).
+        "needs_finalize",
+    },
 )
 
 

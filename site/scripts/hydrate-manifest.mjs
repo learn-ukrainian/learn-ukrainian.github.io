@@ -65,7 +65,7 @@ function assertPointerFresh(pointer, fingerprint) {
 
   if (pointer.manifest_fingerprint !== fingerprint.fingerprint) {
     console.warn(
-      `Atlas manifest pointer fingerprint ${pointer.manifest_fingerprint} is stale; expected ${fingerprint.fingerprint}. Run make atlas-publish.`,
+      `WARNING: site/src/data/lexicon-manifest.pointer.json fingerprint ${pointer.manifest_fingerprint} is stale; expected ${fingerprint.fingerprint}. Run make atlas-publish.`,
     );
   }
 }

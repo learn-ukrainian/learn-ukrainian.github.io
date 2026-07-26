@@ -196,7 +196,7 @@ describe('pointer freshness checks', () => {
 
     expect(() => assertPointerFresh(pointer, fingerprint)).not.toThrow();
     expect(warn).toHaveBeenCalledWith(
-      'Atlas manifest pointer fingerprint old-fingerprint is stale; expected new-fingerprint. Run make atlas-publish.',
+      'WARNING: site/src/data/lexicon-manifest.pointer.json fingerprint old-fingerprint is stale; expected new-fingerprint. Run make atlas-publish.',
     );
   });
 });

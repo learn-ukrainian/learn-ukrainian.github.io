@@ -52,10 +52,11 @@ _DEFAULT_CHECKLIST = """\
 the operator to paste the diff.
 
 ### Required output
-End with exactly one line:
-`VERDICT: APPROVED` or `VERDICT: CHANGES_REQUESTED` or `VERDICT: BLOCKED`
-
-If CHANGES_REQUESTED/BLOCKED, list blockers with paths.
+Emit exactly one canonical `code-review-findings.v1` JSON object — no markdown
+or trailing `VERDICT:` line. It must contain `overall`
+(`correctness`, `explanation`, `confidence`) and every finding with its
+canonical location and evidence fields. Publication derives the GitHub gate
+verdict from this evidence and preserves the review body in the PR comment.
 """
 
 

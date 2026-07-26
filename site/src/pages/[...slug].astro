@@ -6,7 +6,7 @@ import ChromeText from '../components/chrome/ChromeText.astro';
 import { CHROME_STRINGS } from '../lib/i18n/chrome';
 import { isPublishedReading } from '../lib/readings';
 import curriculumStats from '../data/curriculum-stats.json';
-import lexiconManifest from '../data/lexicon-manifest.json';
+import lexiconSearchIndex from '../data/lexicon-search-index.json';
 
 type DocsEntry = CollectionEntry<'docs'>;
 type TrackStats = Record<string, { modules?: number } | number>;
@@ -34,9 +34,7 @@ type SearchItem = {
   track: string;
   text: string;
 };
-type LexiconManifest = {
-  entries: Array<{ lemma: string; url_slug: string; gloss: string | null }>;
-};
+type LexiconSearchEntry = { l: string; s: string; g: string | null };
 type RouteProps =
   | { kind: 'doc'; entry: DocsEntry }
   | { kind: 'landingDoc'; entry: DocsEntry }
@@ -45,7 +43,7 @@ type RouteProps =
   | { kind: 'state'; state: 'missing-content' | 'empty-reference' | 'not-found' };
 
 const stats = curriculumStats as TrackStats;
-const lexicon = lexiconManifest as LexiconManifest;
+const lexicon = lexiconSearchIndex as LexiconSearchEntry[];
 const moduleCount = (id: string) => {
   const entry = stats[id];
   return typeof entry === 'object' && entry ? entry.modules ?? 0 : 0;
@@ -346,12 +344,12 @@ const searchItems: SearchItem[] = [
         text: `${entry.data.title} ${entry.data.description ?? ''} ${entry.data.sidebar?.label ?? ''}`,
       };
     }),
-  ...lexicon.entries.slice(0, 160).map((entry) => ({
-    title: entry.lemma,
-    href: `/lexicon/${entry.url_slug}/`,
+  ...lexicon.slice(0, 160).map((entry) => ({
+    title: entry.l,
+    href: `/lexicon/${entry.s}/`,
     type: 'Word Atlas',
     track: 'Atlas',
-    text: `${entry.lemma} ${entry.gloss ?? ''}`,
+    text: `${entry.l} ${entry.g ?? ''}`,
   })),
   ...allReadings.map((entry) => ({
     title: entry.data.title,

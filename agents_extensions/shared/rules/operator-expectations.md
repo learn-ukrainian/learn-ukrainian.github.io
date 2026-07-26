@@ -20,6 +20,10 @@ tie-breakers.
    and the services'; agents live under `.worktrees/`.** Primary
    `~/projects/learn-ukrainian` is a **normal non-bare** checkout, pinned to `main`, where
    `git status` works; agents implement only in `.worktrees/dispatch/<agent>/<task>/`.
+   **The primary checkout is strictly read-only.** Do not drop scratch files, test scripts,
+   or command outputs into its root directory under any circumstances. If you need a
+   temporary file for discovery or testing, put it in your assigned worktree or an ignored
+   scratch directory (like `batch_state/`).
    `core.bare=true` on primary is a **bug** to heal (`git config core.bare false` +
    `extensions.worktreeConfig=true`), never an intentional mode. PRs for everything — no
    direct commits to main. After merge: delete branch local + remote, remove worktree. Close

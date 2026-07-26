@@ -78,6 +78,34 @@ class _FakeBudgetResponse:
         return json.dumps(payload).encode("utf-8")
 
 
+class _FakeHealthResponse:
+    """Fake for the /api/health probe cmd_dispatch runs before every dispatch (#5817)."""
+
+    status = 200
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, _exc_type, _exc, _tb):
+        return False
+
+
+def _urlopen_routing(budget_response):
+    """Route urlopen by URL: /api/health → healthy probe, anything else → budget fake.
+
+    cmd_dispatch probes /api/health unconditionally (#5817 monitor supervision);
+    budget fixtures only model /api/state/routing-budget, so the probe needs its
+    own response or it trips on the missing ``status`` attribute.
+    """
+
+    def _fake(url, *_args, **_kwargs):
+        if "/api/health" in str(url):
+            return _FakeHealthResponse()
+        return budget_response
+
+    return _fake
+
+
 class _FakeStdin:
     def write(self, _data):
         pass
@@ -128,7 +156,7 @@ def test_check_budget_warns_when_agent_mismatch(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr(
         delegate.urllib.request,
         "urlopen",
-        lambda *_args, **_kwargs: _FakeBudgetResponse("codex"),
+        _urlopen_routing(_FakeBudgetResponse("codex")),
     )
 
     rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
@@ -142,10 +170,12 @@ def test_check_budget_warns_when_agent_mismatch(monkeypatch, tmp_path, capsys):
 def test_check_budget_skipped_when_force_agent(monkeypatch, tmp_path, capsys):
     _patch_spawn(monkeypatch, tmp_path)
 
-    def fail_if_called(*_args, **_kwargs):
-        raise AssertionError("urlopen should not be called with --force-agent")
+    def fail_on_budget_fetch(url, *_args, **_kwargs):
+        if "/api/health" in str(url):
+            return _FakeHealthResponse()
+        raise AssertionError("routing-budget urlopen should not be called with --force-agent")
 
-    monkeypatch.setattr(delegate.urllib.request, "urlopen", fail_if_called)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", fail_on_budget_fetch)
 
     rc = delegate.cmd_dispatch(_dispatch_args("--check-budget", "--force-agent"))
 
@@ -170,10 +200,12 @@ def test_check_budget_skipped_when_api_down(monkeypatch, tmp_path, capsys):
 def test_check_budget_off_by_default(monkeypatch, tmp_path, capsys):
     _patch_spawn(monkeypatch, tmp_path)
 
-    def fail_if_called(*_args, **_kwargs):
-        raise AssertionError("urlopen should not be called unless --check-budget is passed")
+    def fail_on_budget_fetch(url, *_args, **_kwargs):
+        if "/api/health" in str(url):
+            return _FakeHealthResponse()
+        raise AssertionError("routing-budget urlopen should not be called unless --check-budget is passed")
 
-    monkeypatch.setattr(delegate.urllib.request, "urlopen", fail_if_called)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", fail_on_budget_fetch)
 
     rc = delegate.cmd_dispatch(_dispatch_args())
 
@@ -187,7 +219,7 @@ def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr(
         delegate.urllib.request,
         "urlopen",
-        lambda *_args, **_kwargs: _FakeBudgetResponse("codex"),
+        _urlopen_routing(_FakeBudgetResponse("codex")),
     )
 
     def fail_if_spawned(*_args, **_kwargs):
@@ -211,8 +243,10 @@ def test_check_budget_hard_sub_on_near_cap_fresh(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr(
         delegate.urllib.request,
         "urlopen",
-        lambda *_a, **_k: _FakeBudgetResponse(
-            "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False
+        _urlopen_routing(
+            _FakeBudgetResponse(
+                "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False
+            )
         ),
     )
 
@@ -232,8 +266,10 @@ def test_check_budget_no_hard_sub_on_stale(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr(
         delegate.urllib.request,
         "urlopen",
-        lambda *_a, **_k: _FakeBudgetResponse(
-            "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=3, stale=True
+        _urlopen_routing(
+            _FakeBudgetResponse(
+                "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=3, stale=True
+            )
         ),
     )
 
@@ -311,8 +347,10 @@ def test_check_budget_no_hard_sub_without_yaml_mapping(monkeypatch, tmp_path, ca
     monkeypatch.setattr(
         delegate.urllib.request,
         "urlopen",
-        lambda *_a, **_k: _FakeBudgetResponse(
-            "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False
+        _urlopen_routing(
+            _FakeBudgetResponse(
+                "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False
+            )
         ),
     )
 
@@ -330,8 +368,10 @@ def test_check_budget_hard_sub_ignores_unknown_fallback_target(monkeypatch, tmp_
     monkeypatch.setattr(
         delegate.urllib.request,
         "urlopen",
-        lambda *_a, **_k: _FakeBudgetResponse(
-            "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False
+        _urlopen_routing(
+            _FakeBudgetResponse(
+                "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False
+            )
         ),
     )
 

@@ -200,7 +200,7 @@ def test_publication_idempotency_key_stable_and_sensitive() -> None:
     assert len({key1, different_sha, different_pr, different_gate}) == 4
 
 
-# ── status mapping + thin comment ────────────────────────────────────────────
+# ── status mapping + published comment ───────────────────────────────────────
 
 
 @pytest.mark.parametrize(
@@ -215,14 +215,116 @@ def test_map_verdict_to_commit_status(verdict: str, state: str) -> None:
     assert map_verdict_to_commit_status(verdict) == state
 
 
-def test_build_thin_verdict_comment_has_no_findings() -> None:
-    sealed = parse_sealed_verdict_payload(_sealed(verdict="CHANGES_REQUESTED"))
+def test_build_verdict_comment_marks_missing_review_evidence() -> None:
+    sealed = parse_sealed_verdict_payload(
+        _sealed(
+            verdict="BLOCKED",
+            review_evidence={
+                "schema_version": "code-review-findings.v1",
+                "overall": {
+                    "correctness": "incorrect",
+                    "explanation": "",
+                    "confidence": 0.9,
+                },
+                "findings": [],
+            },
+        )
+    )
     body = build_thin_verdict_comment(sealed)
-    assert "VERDICT: CHANGES_REQUESTED" in body
+    assert "VERDICT: BLOCKED" in body
     assert f"Head SHA: {_SHA_A}" in body
     assert "Review ID: review_deadbeef" in body
     assert "model=claude-opus-4-6" in body
-    assert "findings" not in body.lower()
+    assert "NO EVIDENCE SUPPLIED" in body
+
+
+@pytest.mark.parametrize("correctness", ["correct", "incorrect", "uncertain"])
+def test_degenerate_review_evidence_is_always_blocked(correctness: str) -> None:
+    """A bare reviewer label cannot grant or deny the formal merge gate."""
+    sealed = parse_sealed_verdict_payload(
+        _sealed(
+            verdict="BLOCKED",
+            review_evidence={
+                "schema_version": "code-review-findings.v1",
+                "overall": {
+                    "correctness": correctness,
+                    "explanation": "",
+                    "confidence": 0.9,
+                },
+                "findings": [],
+            },
+        )
+    )
+
+    plan = plan_publication(sealed, current_head_sha=_SHA_A, mutate=True)
+
+    assert sealed.verdict == "BLOCKED"
+    assert sealed.review_evidence is None
+    assert plan.status_state == STATUS_ERROR
+    assert plan.comment_body is not None
+    assert "NO EVIDENCE SUPPLIED" in plan.comment_body
+
+
+def test_degenerate_review_evidence_rejects_an_explicit_approved_verdict() -> None:
+    with pytest.raises(ReviewPublicationError, match="review_evidence_verdict_mismatch"):
+        parse_sealed_verdict_payload(
+            _sealed(
+                review_evidence={
+                    "schema_version": "code-review-findings.v1",
+                    "overall": {
+                        "correctness": "correct",
+                        "explanation": "",
+                        "confidence": 0.9,
+                    },
+                    "findings": [],
+                }
+            )
+        )
+
+
+def test_build_verdict_comment_truncates_findings_last_with_record_pointer() -> None:
+    findings = [
+        {
+            "id": f"F{number:03}",
+            "title": f"Finding {number}",
+            "body": "x" * 4_000,
+            "priority": "P2",
+            "confidence": 0.9,
+            "category": "correctness",
+            "location": {
+                "path": "scripts/example.py",
+                "start_line": number,
+                "end_line": number,
+                "claim_type": "present",
+            },
+            "verbatim": "value = shared_state",
+            "why_wrong": "The state is not reset.",
+            "smallest_fix": "Rebuild the state for every call.",
+            "sources": ["none"],
+        }
+        for number in range(1, 32)
+    ]
+    sealed = parse_sealed_verdict_payload(
+        _sealed(
+            verdict="CHANGES_REQUESTED",
+            review_evidence={
+                "schema_version": "code-review-findings.v1",
+                "overall": {
+                    "correctness": "incorrect",
+                    "explanation": "The review found several independent defects.",
+                    "confidence": 0.95,
+                },
+                "findings": findings,
+            }
+        )
+    )
+
+    body = build_thin_verdict_comment(sealed)
+
+    assert len(body) <= 64_000
+    assert "FINDINGS TRUNCATED" in body
+    assert "Full structured review record: review ID `review_deadbeef`" in body
+    assert "The review found several independent defects." in body
 
 
 # ── publication plan (dry-run default, no live mutation) ─────────────────────

@@ -14,11 +14,17 @@
  */
 import CourseLayout from "../../layouts/CourseLayout.astro";
 import WordAtlasPageShell from "../../lexicon/WordAtlasPageShell.astro";
+import WordAtlasClientShell from "../../lexicon/WordAtlasClientShell";
 import { SqliteAtlasDataSource } from "../../lib/lexicon/sqlite-atlas-data-source";
 import type { EntryRecord } from "../../lib/lexicon/atlas-data-source";
 import type { WordAtlasPageState } from "../../lib/lexicon/word-atlas-page-state";
 
 export async function getStaticPaths() {
+  // The normal site build consumes the committed public projections and lets
+  // the Atlas client shell resolve article detail through the published runtime
+  // tree. The optional publisher-only SSG mode keeps the SQLite parity path
+  // explicit instead of making every local build depend on data/atlas.db.
+  if (process.env.ATLAS_STATIC_ROUTES !== "1") return [];
   const source = new SqliteAtlasDataSource();
   const catalog = source.getStaticCatalog();
   const paths: Array<{
@@ -48,33 +54,45 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { record, generatedAt, manifestVersion } = Astro.props as {
+const { record, generatedAt, manifestVersion } = Astro.props as Partial<{
   record: EntryRecord;
   generatedAt: string;
   manifestVersion: string;
-};
-const entry = record.entry;
-const readyState = {
-  status: "ready",
-  record,
-  generatedAt,
-  manifestVersion,
-} satisfies WordAtlasPageState;
+}>;
+const entry = record?.entry;
+const readyState = record && generatedAt && manifestVersion
+  ? {
+      status: "ready",
+      record,
+      generatedAt,
+      manifestVersion,
+    } satisfies WordAtlasPageState
+  : undefined;
+const baseUrl = import.meta.env.BASE_URL || "/";
+const atlasAssetBase = `${baseUrl === "/" ? "" : baseUrl.replace(/\/$/, "")}/atlas`;
 const frontmatter = {
-  title: entry.lemma,
-  description: entry.form_of
+  title: entry?.lemma ?? "Атлас слів",
+  description: entry?.form_of
     ? `${entry.lemma} — форма слова «${entry.form_of.lemma}»`
-    : entry.gloss ? `${entry.lemma} — ${entry.gloss}` : `${entry.lemma} — стаття Лексикону`,
+    : entry?.gloss ? `${entry.lemma} — ${entry.gloss}` : "Стаття Лексикону",
 };
 ---
 
 <CourseLayout
   title={frontmatter.title}
   description={frontmatter.description}
-  currentPath={`/lexicon/${entry.url_slug}/`}
+  currentPath={entry ? `/lexicon/${entry.url_slug}/` : Astro.url.pathname}
   heroVariant="lexicon"
   wide
   showHero={false}
 >
-  <WordAtlasPageShell state={readyState} />
+  {readyState ? (
+    <WordAtlasPageShell state={readyState} />
+  ) : (
+    <WordAtlasClientShell
+      client:only="react"
+      baseUrl={baseUrl}
+      assetBaseUrl={atlasAssetBase}
+    />
+  )}
 </CourseLayout>

@@ -30,6 +30,6 @@ def test_build_review_pr_prompt_has_contract_and_cap() -> None:
     )
     assert "READ-ONLY REVIEW CONTRACT" in prompt
     assert "pull/5443" in prompt
-    assert "VERDICT:" in prompt
+    assert "code-review-findings.v1" in prompt
     assert "gpt-5.6-terra" in prompt
     assert "effort=high" in prompt

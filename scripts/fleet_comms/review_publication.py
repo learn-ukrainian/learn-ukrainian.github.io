@@ -30,6 +30,10 @@ from typing import Any, Literal
 VALID_VERDICTS = frozenset({"APPROVED", "CHANGES_REQUESTED", "BLOCKED"})
 DEFAULT_GATE_KIND = "cross-family-review"
 DEFAULT_STATUS_CONTEXT = "fleet/cross-family-review"
+REVIEW_SCHEMA_VERSION = "code-review-findings.v1"
+# GitHub accepts 65,536 characters per comment. Reserve room for markup and
+# the explicit truncation notice rather than relying on a remote rejection.
+GITHUB_COMMENT_CHAR_LIMIT = 64_000
 # GitHub commit status states used for the merge gate.
 STATUS_SUCCESS = "success"
 STATUS_FAILURE = "failure"
@@ -51,12 +55,74 @@ class ReviewPublicationError(ValueError):
 
 
 @dataclass(frozen=True, slots=True)
-class SealedVerdict:
-    """Minimal sealed formal-review verdict needed to plan a GitHub gate post.
+class ReviewFinding:
+    """Immutable projection of one validated canonical review finding."""
 
-    Provenance fields (model/family/harness) are required so the thin PR comment
-    never invents CLI-supplied identity after PR-G cutover. PR-F owns job
-    storage; this structure is the in-memory view the publisher consumes.
+    finding_id: str
+    title: str
+    body: str
+    priority: str
+    confidence: float
+    category: str
+    path: str
+    start_line: int
+    end_line: int
+    claim_type: str
+    verbatim: str
+    why_wrong: str
+    smallest_fix: str
+    sources: tuple[str, ...]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.finding_id,
+            "title": self.title,
+            "body": self.body,
+            "priority": self.priority,
+            "confidence": self.confidence,
+            "category": self.category,
+            "location": {
+                "path": self.path,
+                "start_line": self.start_line,
+                "end_line": self.end_line,
+                "claim_type": self.claim_type,
+            },
+            "verbatim": self.verbatim,
+            "why_wrong": self.why_wrong,
+            "smallest_fix": self.smallest_fix,
+            "sources": list(self.sources),
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class ReviewEvidence:
+    """Validated review evidence retained with the formal verdict."""
+
+    correctness: str
+    explanation: str
+    confidence: float
+    findings: tuple[ReviewFinding, ...]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "schema_version": REVIEW_SCHEMA_VERSION,
+            "overall": {
+                "correctness": self.correctness,
+                "explanation": self.explanation,
+                "confidence": self.confidence,
+            },
+            "findings": [finding.to_dict() for finding in self.findings],
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class SealedVerdict:
+    """Sealed formal-review verdict needed to plan a GitHub gate post.
+
+    Provenance fields (model/family/harness) are required so the PR comment
+    never invents CLI-supplied identity after PR-G cutover. ``review_evidence``
+    is the immutable canonical projection that makes the public verdict
+    auditable; an absent projection is rendered as an explicit warning.
     """
 
     review_id: str
@@ -68,6 +134,7 @@ class SealedVerdict:
     model: str
     family: str
     harness: str
+    review_evidence: ReviewEvidence | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -80,6 +147,9 @@ class SealedVerdict:
             "model": self.model,
             "family": self.family,
             "harness": self.harness,
+            "review_evidence": (
+                self.review_evidence.to_dict() if self.review_evidence is not None else None
+            ),
         }
 
 
@@ -171,6 +241,129 @@ def normalize_verdict(raw: Any) -> str:
     return verdict
 
 
+def _canonical_evidence_fields(payload: Mapping[str, Any]) -> dict[str, Any]:
+    """Extract the canonical reviewer payload from a wrapper mapping."""
+    return {
+        field: payload[field]
+        for field in ("schema_version", "overall", "findings")
+        if field in payload
+    }
+
+
+def _has_canonical_review_evidence(payload: Mapping[str, Any]) -> bool:
+    return "schema_version" in payload or "overall" in payload
+
+
+def _is_degenerate_review_evidence(payload: Mapping[str, Any]) -> bool:
+    """Recognize a reviewer that supplied neither explanation nor findings.
+
+    The canonical schema deliberately rejects an empty explanation. Publication
+    nevertheless needs to surface this exact reviewer failure rather than turn
+    it into a clean-looking verdict or discard it with a generic schema error.
+    """
+    if payload.get("schema_version") != REVIEW_SCHEMA_VERSION:
+        return False
+    findings = payload.get("findings")
+    overall = payload.get("overall")
+    if findings != [] or not isinstance(overall, Mapping):
+        return False
+    explanation = overall.get("explanation")
+    return not isinstance(explanation, str) or not explanation.strip()
+
+
+def parse_review_evidence(payload: Mapping[str, Any]) -> ReviewEvidence | None:
+    """Validate and freeze canonical reviewer evidence for public rendering.
+
+    ``None`` is reserved for the explicit no-evidence case: an empty explanation
+    and no findings. All other malformed evidence fails closed before it can
+    produce a misleading GitHub gate comment.
+    """
+    canonical = _canonical_evidence_fields(payload)
+    if _is_degenerate_review_evidence(canonical):
+        return None
+
+    try:
+        from scripts.review.review_contract import ContractError, validate_reviewer_payload
+
+        validated = validate_reviewer_payload(canonical)
+    except ContractError as exc:
+        raise ReviewPublicationError(f"review_evidence_invalid: {exc}") from exc
+
+    overall = validated["overall"]
+    findings = tuple(
+        ReviewFinding(
+            finding_id=finding["id"],
+            title=finding["title"],
+            body=finding["body"],
+            priority=finding["priority"],
+            confidence=float(finding["confidence"]),
+            category=finding["category"],
+            path=finding["location"]["path"],
+            start_line=int(finding["location"]["start_line"]),
+            end_line=int(finding["location"]["end_line"]),
+            claim_type=finding["location"]["claim_type"],
+            verbatim=finding["verbatim"],
+            why_wrong=finding["why_wrong"],
+            smallest_fix=finding["smallest_fix"],
+            sources=tuple(finding["sources"]),
+        )
+        for finding in validated["findings"]
+    )
+    return ReviewEvidence(
+        correctness=overall["correctness"],
+        explanation=overall["explanation"],
+        confidence=float(overall["confidence"]),
+        findings=findings,
+    )
+
+
+def verdict_from_review_evidence(evidence: ReviewEvidence) -> str:
+    """Derive the only gate verdict consistent with canonical review evidence."""
+    if evidence.findings or evidence.correctness == "incorrect":
+        return "CHANGES_REQUESTED"
+    if evidence.correctness == "correct":
+        return "APPROVED"
+    return "BLOCKED"
+
+
+def _verdict_from_degenerate_evidence(_payload: Mapping[str, Any]) -> str:
+    """Fail closed when a canonical review supplies no auditable evidence.
+
+    A reviewer-provided correctness label without an explanation or finding is
+    not evidence. It must never grant a green formal-review gate.
+    """
+    return "BLOCKED"
+
+
+def resolve_verdict_and_evidence(payload: Mapping[str, Any]) -> tuple[str, ReviewEvidence | None]:
+    """Resolve a verdict and retain any canonical evidence from one payload.
+
+    Legacy payloads may still carry only a top-level ``verdict``. Canonical
+    ``code-review-findings.v1`` payloads derive the verdict from their verified
+    meaning; an explicit conflicting token fails closed.
+    """
+    raw_verdict = payload.get("verdict")
+    explicit = normalize_verdict(raw_verdict) if raw_verdict is not None else None
+    if not _has_canonical_review_evidence(payload):
+        if explicit is None:
+            raise ReviewPublicationError(
+                "findings_json_missing_verdict: expected verdict or canonical review evidence"
+            )
+        return explicit, None
+
+    evidence = parse_review_evidence(payload)
+    derived = (
+        verdict_from_review_evidence(evidence)
+        if evidence is not None
+        else _verdict_from_degenerate_evidence(payload)
+    )
+    if explicit is not None and explicit != derived:
+        raise ReviewPublicationError(
+            f"review_evidence_verdict_mismatch: verdict={explicit} evidence={derived}"
+        )
+    return derived, evidence
+
+
 def parse_verdict_token(text: str) -> str:
     """Extract a VERDICT line from free text without retaining the body."""
     if not isinstance(text, str) or not text.strip():
@@ -191,9 +384,9 @@ def parse_sealed_verdict_payload(payload: Mapping[str, Any] | str | bytes) -> Se
     * a mapping / JSON object with explicit fields, or
     * JSON text that decodes to that object.
 
-    The ``verdict`` field is required. A free-text ``verdict_text`` with a
-    ``VERDICT:`` line is accepted only when ``verdict`` is absent (bridge
-    compatibility while PR-F jobs land).
+    A canonical ``review_evidence`` payload derives the verdict. A free-text
+    ``verdict_text`` with a ``VERDICT:`` line is accepted only when canonical
+    evidence is absent (legacy bridge compatibility).
     """
     data: Mapping[str, Any]
     if isinstance(payload, (str, bytes)):
@@ -212,13 +405,29 @@ def parse_sealed_verdict_payload(payload: Mapping[str, Any] | str | bytes) -> Se
             f"sealed_payload_invalid: unsupported type {type(payload).__name__}"
         )
 
-    if "verdict" in data and data["verdict"] is not None:
+    review_payload: Mapping[str, Any] | None = None
+    raw_evidence = data.get("review_evidence")
+    if raw_evidence is not None:
+        if not isinstance(raw_evidence, Mapping):
+            raise ReviewPublicationError("review_evidence_invalid: expected an object")
+        review_payload = dict(raw_evidence)
+        if "verdict" in data and "verdict" not in review_payload:
+            review_payload = {**review_payload, "verdict": data["verdict"]}
+    elif _has_canonical_review_evidence(data):
+        review_payload = _canonical_evidence_fields(data)
+        if "verdict" in data:
+            review_payload["verdict"] = data["verdict"]
+
+    review_evidence: ReviewEvidence | None = None
+    if review_payload is not None:
+        verdict, review_evidence = resolve_verdict_and_evidence(review_payload)
+    elif "verdict" in data and data["verdict"] is not None:
         verdict = normalize_verdict(data["verdict"])
     elif data.get("verdict_text"):
         verdict = parse_verdict_token(str(data["verdict_text"]))
     else:
         raise ReviewPublicationError(
-            "sealed_payload_missing_verdict: expected verdict field"
+            "sealed_payload_missing_verdict: expected verdict field or review evidence"
         )
 
     gate_kind = (
@@ -237,6 +446,7 @@ def parse_sealed_verdict_payload(payload: Mapping[str, Any] | str | bytes) -> Se
         model=_require_nonempty_str(data.get("model"), field="model"),
         family=_require_nonempty_str(data.get("family"), field="family"),
         harness=_require_nonempty_str(data.get("harness"), field="harness"),
+        review_evidence=review_evidence,
     )
 
 
@@ -307,19 +517,145 @@ def map_verdict_to_commit_status(verdict: str) -> CommitStatusState:
     return STATUS_ERROR
 
 
-def build_thin_verdict_comment(sealed: SealedVerdict) -> str:
-    """Build the thin PR comment body (no findings, provenance from sealed job)."""
+def _format_location(finding: ReviewFinding) -> str:
+    if finding.start_line == finding.end_line:
+        return f"{finding.path}:{finding.start_line}"
+    return f"{finding.path}:{finding.start_line}-{finding.end_line}"
+
+
+def _render_finding(finding: ReviewFinding) -> str:
+    sources = ", ".join(finding.sources)
     return "\n".join(
         (
-            f"VERDICT: {sealed.verdict}",
-            f"Head SHA: {sealed.head_sha}",
-            f"Review ID: {sealed.review_id}",
-            "Reviewer provenance: "
-            f"model={sealed.model}; "
-            f"family={sealed.family}; "
-            f"harness={sealed.harness}",
+            f"### {finding.finding_id} — Severity: {finding.priority}",
+            f"**Location:** `{_format_location(finding)}` ({finding.claim_type})",
+            f"**Title:** {finding.title}",
+            f"**Category:** {finding.category} · **Confidence:** {finding.confidence:g}",
+            "",
+            f"**Description:** {finding.body}",
+            "",
+            f"**Why it is wrong:** {finding.why_wrong}",
+            "",
+            f"**Smallest fix:** {finding.smallest_fix}",
+            "",
+            f"**Sources:** {sources}",
         )
     )
+
+
+def _render_evidence(
+    *,
+    prefix: str,
+    evidence: ReviewEvidence | None,
+    record_reference: str,
+) -> str:
+    if evidence is None:
+        return "\n\n".join(
+            (
+                prefix,
+                "## Review evidence\n"
+                "> **NO EVIDENCE SUPPLIED.** The reviewer supplied no overall explanation "
+                "and no findings. This verdict is not independently auditable.",
+            )
+        )
+
+    overall = "\n".join(
+        (
+            "## Overall review",
+            f"**Correctness:** `{evidence.correctness}` · **Confidence:** {evidence.confidence:g}",
+            "",
+            evidence.explanation,
+        )
+    )
+    findings = [_render_finding(finding) for finding in evidence.findings]
+    complete = "\n\n".join((prefix, overall, "## Findings", "\n\n".join(findings)))
+    if len(complete) <= GITHUB_COMMENT_CHAR_LIMIT:
+        return complete
+
+    findings_header = "## Findings"
+    truncation = (
+        "> **FINDINGS TRUNCATED.** Published {published} of {total} findings to stay within "
+        "GitHub's comment limit. Full structured review record: {record_reference}."
+    )
+    baseline = "\n\n".join((prefix, overall, findings_header))
+    minimum_notice = truncation.format(
+        published=0,
+        total=len(findings),
+        record_reference=record_reference,
+    )
+    if len("\n\n".join((baseline, minimum_notice))) > GITHUB_COMMENT_CHAR_LIMIT:
+        raise ReviewPublicationError(
+            "review_evidence_overall_exceeds_comment_limit: cannot truncate overall explanation"
+        )
+
+    published: list[str] = []
+    for finding in findings:
+        candidate = [*published, finding]
+        notice = truncation.format(
+            published=len(candidate),
+            total=len(findings),
+            record_reference=record_reference,
+        )
+        if len("\n\n".join((baseline, *candidate, notice))) > GITHUB_COMMENT_CHAR_LIMIT:
+            break
+        published.append(finding)
+
+    notice = truncation.format(
+        published=len(published),
+        total=len(findings),
+        record_reference=record_reference,
+    )
+    return "\n\n".join((baseline, *published, notice))
+
+
+def build_review_comment(
+    *,
+    verdict: str,
+    head_sha: str,
+    model: str,
+    family: str,
+    harness: str,
+    review_evidence: ReviewEvidence | None = None,
+    review_id: str | None = None,
+) -> str:
+    """Render one auditable formal-review comment for a GitHub PR."""
+    lines = [
+        f"VERDICT: {verdict}",
+        f"Head SHA: {head_sha}",
+    ]
+    if review_id is not None:
+        lines.append(f"Review ID: {review_id}")
+    lines.append(
+        "Reviewer provenance: "
+        f"model={model}; family={family}; harness={harness}"
+    )
+    record_reference = (
+        f"review ID `{review_id}` (sealed formal-job artifact)"
+        if review_id is not None
+        else "the supplied `--findings-json` input (legacy publication path)"
+    )
+    return _render_evidence(
+        prefix="\n".join(lines),
+        evidence=review_evidence,
+        record_reference=record_reference,
+    )
+
+
+def build_verdict_comment(sealed: SealedVerdict) -> str:
+    """Render one auditable GitHub comment from a sealed formal review."""
+    return build_review_comment(
+        verdict=sealed.verdict,
+        head_sha=sealed.head_sha,
+        review_id=sealed.review_id,
+        model=sealed.model,
+        family=sealed.family,
+        harness=sealed.harness,
+        review_evidence=sealed.review_evidence,
+    )
+
+
+# Kept as a compatibility alias while external callers move to the honest name.
+build_thin_verdict_comment = build_verdict_comment
 
 
 def plan_publication(
@@ -403,7 +739,7 @@ def plan_publication(
         verdict=sealed.verdict,
         status_context=context,
         status_state=map_verdict_to_commit_status(sealed.verdict),
-        comment_body=build_thin_verdict_comment(sealed),
+        comment_body=build_verdict_comment(sealed),
         mutate=bool(mutate),
         reason=(
             "ready_to_publish"
@@ -416,6 +752,8 @@ def plan_publication(
 __all__ = [
     "DEFAULT_GATE_KIND",
     "DEFAULT_STATUS_CONTEXT",
+    "GITHUB_COMMENT_CHAR_LIMIT",
+    "REVIEW_SCHEMA_VERSION",
     "STATUS_ERROR",
     "STATUS_FAILURE",
     "STATUS_PENDING",
@@ -425,15 +763,22 @@ __all__ = [
     "HeadFreshness",
     "PublicationAction",
     "PublicationPlan",
+    "ReviewEvidence",
+    "ReviewFinding",
     "ReviewPublicationError",
     "SealedVerdict",
     "assert_head_fresh",
+    "build_review_comment",
     "build_thin_verdict_comment",
+    "build_verdict_comment",
     "check_head_freshness",
     "map_verdict_to_commit_status",
     "normalize_verdict",
+    "parse_review_evidence",
     "parse_sealed_verdict_payload",
     "parse_verdict_token",
     "plan_publication",
     "publication_idempotency_key",
+    "resolve_verdict_and_evidence",
+    "verdict_from_review_evidence",
 ]

@@ -93,8 +93,8 @@ def validate_committed_decision_files(
     # Every committed decision ledger is checked against the same immutable
     # inventory corpus. Loading that corpus per ledger was needlessly expensive
     # (and pushed the complete CI shard past pytest's per-test timeout). Keep one
-    # shared index for this validation pass; `validate_decision_file` extends it
-    # only when a ledger references a present staged inventory.
+    # baseline index for this validation pass; `validate_decision_file` copies it
+    # before adding records from a ledger's present staged inventory.
     source_index = _source_record_index(
         read_source_inventories(COMMITTED_SOURCE_INVENTORIES, project_root=PROJECT_ROOT)
     )
@@ -200,16 +200,15 @@ def _index_and_absent_inventories(
     before — fail-open applies only to the genuinely-absent regenerable case.
     """
 
-    # `validate_committed_decision_files` supplies a mutable shared index, so
-    # repeated ledgers do not reparse the immutable committed corpus (or the
-    # same staged inventory). Keep standalone `validate_decision_file` fully
-    # self-contained by loading that corpus when no index was supplied.
+    # Callers may reuse an immutable committed-corpus index. Always copy it
+    # before adding records from a present staged inventory: validation of one
+    # ledger must not change the result of a later ledger or mutate caller data.
+    # Keep standalone `validate_decision_file` fully self-contained by loading
+    # that corpus when no index was supplied.
     if source_index is None:
         index = _source_record_index(
             read_source_inventories(COMMITTED_SOURCE_INVENTORIES, project_root=PROJECT_ROOT)
         )
-    elif isinstance(source_index, dict):
-        index = source_index
     else:
         index = dict(source_index)
 

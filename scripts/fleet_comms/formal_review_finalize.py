@@ -27,11 +27,13 @@ from scripts.fleet_comms.formal_review_jobs import (
 )
 from scripts.fleet_comms.review_publication import (
     DEFAULT_GATE_KIND,
+    ReviewEvidence,
     ReviewPublicationError,
     SealedVerdict,
     normalize_verdict,
     parse_sealed_verdict_payload,
     parse_verdict_token,
+    resolve_verdict_and_evidence,
 )
 from scripts.fleet_comms.review_publisher import (
     ReviewPublisherError,
@@ -95,10 +97,10 @@ def resolve_verdict_token(
             payload = json.loads(findings_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
             raise FormalReviewFinalizeError(f"findings_unreadable: {exc}") from exc
-        if not isinstance(payload, dict) or "verdict" not in payload:
-            raise FormalReviewFinalizeError("findings_json_missing_verdict")
         try:
-            return normalize_verdict(payload["verdict"])
+            if not isinstance(payload, dict):
+                raise FormalReviewFinalizeError("findings_json_invalid: expected an object")
+            return resolve_verdict_and_evidence(payload)[0]
         except ReviewPublicationError as exc:
             raise FormalReviewFinalizeError(str(exc)) from exc
     if verdict_text and str(verdict_text).strip():
@@ -122,6 +124,7 @@ def build_sealed_verdict(
     model: str,
     family: str,
     harness: str,
+    review_evidence: ReviewEvidence | None = None,
 ) -> SealedVerdict:
     """Build a SealedVerdict from explicit fields (provenance never invented)."""
     payload = {
@@ -134,6 +137,9 @@ def build_sealed_verdict(
         "model": model,
         "family": family,
         "harness": harness,
+        "review_evidence": (
+            review_evidence.to_dict() if review_evidence is not None else None
+        ),
     }
     try:
         return parse_sealed_verdict_payload(payload)
@@ -169,11 +175,42 @@ def finalize_formal_review_verdict(
     # Validate repository shape early.
     split_repository(repository)
 
-    resolved_verdict = resolve_verdict_token(
-        verdict=verdict,
-        verdict_text=verdict_text,
-        findings_path=findings_path,
-    )
+    findings_verdict: str | None = None
+    review_evidence: ReviewEvidence | None = None
+    if findings_path is not None:
+        try:
+            findings_payload = json.loads(findings_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise FormalReviewFinalizeError(f"findings_unreadable: {exc}") from exc
+        if not isinstance(findings_payload, dict):
+            raise FormalReviewFinalizeError("findings_json_invalid: expected an object")
+        try:
+            findings_verdict, review_evidence = resolve_verdict_and_evidence(findings_payload)
+        except ReviewPublicationError as exc:
+            raise FormalReviewFinalizeError(str(exc)) from exc
+
+    if verdict and str(verdict).strip():
+        try:
+            resolved_verdict = normalize_verdict(verdict)
+        except ReviewPublicationError as exc:
+            raise FormalReviewFinalizeError(str(exc)) from exc
+    elif findings_verdict is not None:
+        resolved_verdict = findings_verdict
+    elif verdict_text and str(verdict_text).strip():
+        try:
+            resolved_verdict = parse_verdict_token(verdict_text)
+        except ReviewPublicationError as exc:
+            raise FormalReviewFinalizeError(str(exc)) from exc
+    else:
+        raise FormalReviewFinalizeError(
+            "verdict_required: pass --verdict, --verdict-file, or --findings-json"
+        )
+
+    if findings_verdict is not None and resolved_verdict != findings_verdict:
+        raise FormalReviewFinalizeError(
+            f"review_evidence_verdict_mismatch: verdict={resolved_verdict} "
+            f"evidence={findings_verdict}"
+        )
 
     sha = head_sha
     if sha is None:
@@ -223,6 +260,7 @@ def finalize_formal_review_verdict(
                 model=model.strip(),
                 family=family.strip(),
                 harness=harness.strip(),
+                review_evidence=review_evidence,
             )
             service.accept_sealed_verdict(job.review_id, sealed)
         except FormalReviewJobsError as exc:

@@ -134,6 +134,66 @@ def test_finalize_publish_dry_run_and_live(tmp_path: Path) -> None:
     assert any(c[1:3] == ["pr", "comment"] for c in gh2.calls)
 
 
+def test_finalize_preserves_canonical_evidence_for_publication(tmp_path: Path) -> None:
+    root = tmp_path / "plane"
+    findings_path = tmp_path / "review-findings.json"
+    findings_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "code-review-findings.v1",
+                "overall": {
+                    "correctness": "incorrect",
+                    "explanation": "The shared cache is retained between requests.",
+                    "confidence": 0.95,
+                },
+                "findings": [
+                    {
+                        "id": "F001",
+                        "title": "Shared cache survives requests",
+                        "body": "The mutable cache is reused by the next request.",
+                        "priority": "P1",
+                        "confidence": 0.9,
+                        "category": "regression",
+                        "location": {
+                            "path": "scripts/cache.py",
+                            "start_line": 19,
+                            "end_line": 19,
+                            "claim_type": "present",
+                        },
+                        "verbatim": "cache.update(values)",
+                        "why_wrong": "Requests observe stale entries.",
+                        "smallest_fix": "Construct a new cache per request.",
+                        "sources": ["none"],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    gh = FakeGh()
+
+    result = finalize_formal_review_verdict(
+        pr_number=202,
+        model="m",
+        family="f",
+        harness="h",
+        findings_path=findings_path,
+        plane_root=root,
+        runner=gh,
+        publish=True,
+    )
+
+    assert result.verdict == "CHANGES_REQUESTED"
+    with FormalReviewJobService(root=root) as service:
+        sealed = service.load_sealed_verdict(result.review_id)
+    assert sealed.review_evidence is not None
+    assert sealed.review_evidence.explanation == "The shared cache is retained between requests."
+    comment = next(call for call in gh.calls if call[1:3] == ["pr", "comment"])
+    body = comment[comment.index("--body") + 1]
+    assert "scripts/cache.py:19" in body
+    assert "The mutable cache is reused by the next request." in body
+
+
 def test_cli_formal_job_accept(tmp_path: Path) -> None:
     from scripts.fleet_comms.cli import main
 
