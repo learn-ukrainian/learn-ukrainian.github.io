@@ -185,5 +185,8 @@ def test_workflow_uses_the_node_planner_and_fail_closed_gate() -> None:
     assert "CI_PYTEST_COVERAGE" in workflow
     assert "--require-coverage" in workflow
     assert "coverage report --fail-under=35" in workflow
+    assert 'if [ "${{ github.event_name }}" = "pull_request" ]; then' in workflow
+    assert "--pr-scoped --base-ref \"$CI_INTEGRITY_BASE_SHA\" --head-ref HEAD" in workflow
+    assert "else\n              .venv/bin/python scripts/lexicon/check_manifest_freshness.py\n            fi" in workflow
     for forbidden in ("GITHUB_BASE_REF", "changed-files", "paths-filter", "git diff"):
         assert forbidden not in workflow

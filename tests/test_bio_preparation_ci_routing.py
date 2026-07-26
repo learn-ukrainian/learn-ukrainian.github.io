@@ -129,10 +129,8 @@ def test_nothing_can_skip_the_bio_preparation_validator() -> None:
 
 def test_validator_change_detection_is_intact() -> None:
     script = _validator_python_body()
-    assert script.count('"--no-renames"') == 2, (
-        "rename decomposition dropped: a renamed BIO capsule would otherwise be invisible to the "
-        "changed-slug scan"
-    )
+    assert '["git", "diff", "--name-only", "--no-renames", base_sha, "HEAD"]' in script
+    assert '"--name-status", "--no-renames", base_sha, "HEAD", "--", registry_rel' not in script
     assert '"git", "show", f"{ref}:{registry_rel}"' in script
     assert "except (FileNotFoundError, subprocess.CalledProcessError):" in script
     assert "registry_changed_slugs" in script

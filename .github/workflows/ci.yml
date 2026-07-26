@@ -234,8 +234,12 @@ jobs:
             .venv/bin/python scripts/audit/check_no_internal_ids.py --changed-vs-base "$CI_INTEGRITY_BASE_SHA"
             .venv/bin/python scripts/audit/check_locked_module_not_published.py \
               --changed-vs-base "$CI_INTEGRITY_BASE_SHA"
-            .venv/bin/python scripts/lexicon/check_manifest_freshness.py \
-              --pr-scoped --base-ref "$CI_INTEGRITY_BASE_SHA" --head-ref HEAD
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+              .venv/bin/python scripts/lexicon/check_manifest_freshness.py \
+                --pr-scoped --base-ref "$CI_INTEGRITY_BASE_SHA" --head-ref HEAD
+            else
+              .venv/bin/python scripts/lexicon/check_manifest_freshness.py
+            fi
             .venv/bin/python scripts/audit/check_dossier_wordcount.py --changed
           CHECKS
           status=$?
@@ -320,13 +324,6 @@ jobs:
 
 
           def changed_registry_slugs() -> set[str]:
-              subprocess.run(
-                  ["git", "diff", "--name-status", "--no-renames", base_sha, "HEAD", "--", registry_rel],
-                  check=True,
-                  capture_output=True,
-                  cwd=root,
-                  text=True,
-              )
               before = registry_entries(base_sha)
               after = registry_entries("HEAD")
               return {slug for slug in set(before) | set(after) if before.get(slug) != after.get(slug)}
