@@ -93,6 +93,42 @@ fi
     return values, result
 
 
+def test_predeploy_failure_refuses_to_launch_claude(tmp_path: Path) -> None:
+    """A failed deploy must return non-zero and never exec the Claude binary."""
+    home_bin = tmp_path / "home" / ".local" / "bin"
+    home_bin.mkdir(parents=True)
+    capture = tmp_path / "claude-was-launched.txt"
+    _write_executable(
+        home_bin / "claude",
+        f"""#!/usr/bin/env bash
+if [[ "${{1:-}}" == "--version" ]]; then
+    echo test-claude
+    exit 0
+fi
+printf launched > {capture}
+""",
+    )
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    _write_executable(fake_bin / "npm", "#!/usr/bin/env bash\nexit 3\n")
+
+    env = os.environ.copy()
+    env.update({"HOME": os.fspath(tmp_path / "home"), "PATH": f"{fake_bin}:{env['PATH']}"})
+    result = subprocess.run(
+        [os.fspath(_LAUNCHER), "--resume", "session-id"],
+        cwd=_REPO_ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert result.returncode != 0
+    assert "AGENT-EXTENSIONS DEPLOY FAILED" in result.stdout
+    assert "refusing to launch Claude" in result.stderr
+    assert not capture.exists(), "Claude launched after its predeploy failed"
+
+
 def test_certified_native_route_keeps_native_capacity_and_clears_proxy_flags(
     tmp_path: Path,
 ) -> None:

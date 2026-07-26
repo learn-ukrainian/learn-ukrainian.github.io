@@ -11,9 +11,8 @@
 #
 # This helper runs the deploy with output captured, prints one line on
 # success, and on failure prints a loud banner plus the tail of the real
-# output. It returns the npm exit code so callers can decide whether to
-# abort; launchers deliberately continue (an interactive session with stale
-# skills beats no session) but the operator now SEES the failure.
+# output. It returns the npm exit code so callers can choose whether to abort;
+# start-claude.sh refuses to launch against stale definitions.
 #
 # Usage: deploy_agent_extensions <project_dir> <npm_script>
 # Load-bearing tests: scripts/audit/test_deploy_extensions.sh (wrapped by

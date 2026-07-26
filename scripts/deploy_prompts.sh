@@ -11,9 +11,10 @@
 #
 # .agent/ is special (preserve-by-default since #4741): runtime scratch
 # written by agents (handoffs, dispatch-briefs, canaries, tmp/, etc.)
-# must never be deleted by deploy. We rsync WITHOUT --delete for .agent/
-# so the preflight orphan check and ORPHAN_PATHS_AGENT no longer apply to it.
-# Source content (if any) from agents_extensions/shared is overlaid.
+# must never be deleted by deploy. We overlay the complete source tree without
+# --delete, then delete only within the source-managed entries that currently
+# exist under agents_extensions/shared/. This makes a retired hook/rule/skill
+# stop executing without touching agent-owned runtime scratch.
 #
 # For other targets, if you add a destination-only path, add it to
 # ORPHAN_PATHS_<TARGET> in scripts/deploy_orphan_paths.sh.
@@ -49,6 +50,24 @@ build_shared_skill_overlay_excludes() {
     for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
         [[ -d "$shared_skill" ]] || continue
         echo "--exclude=/skills/$(basename "$shared_skill")/"
+    done
+}
+
+# .agent/ contains both deployed definitions and live runtime state. Its
+# source-managed boundary is deliberately derived from the source tree, not a
+# hard-coded list: every current top-level directory (and top-level file) in
+# agents_extensions/shared is a mirror where source deletions must propagate.
+# Everything else in .agent/ remains preserve-by-default (#4741).
+sync_shared_agent_mirrors() {
+    local shared_entry entry_name
+    for shared_entry in "$SHARED_EXTENSIONS"/*; do
+        [[ -e "$shared_entry" ]] || continue
+        entry_name="$(basename "$shared_entry")"
+        if [[ -d "$shared_entry" ]]; then
+            rsync -av --delete "$shared_entry/" ".agent/$entry_name/"
+        else
+            rsync -av --delete "$shared_entry" ".agent/$entry_name"
+        fi
     done
 }
 
@@ -318,10 +337,11 @@ fi
 echo "=== Syncing ==="
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "$SHARED_EXTENSIONS/" .claude/
-# .agent/ uses plain rsync (no --delete) — runtime scratch is preserve-by-default.
-# Source files from agents_extensions/shared are overlaid if present; agent-written
-# files (dispatch briefs, canaries, handoffs, tmp/, etc.) are never deleted. #4741
+# .agent/ overlays the whole source without --delete, preserving runtime scratch.
+# Then source-managed entries are individually mirrored with --delete so retired
+# definitions (for example hooks/auto-audit.sh) cannot remain executable. #4741
 rsync -av "$SHARED_EXTENSIONS/" .agent/
+sync_shared_agent_mirrors
 # shellcheck disable=SC2046
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS") "$SHARED_EXTENSIONS/" .codex/
 if [[ -d "$CODEX_EXTENSIONS" ]]; then

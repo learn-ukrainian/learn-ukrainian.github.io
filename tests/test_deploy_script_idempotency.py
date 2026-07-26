@@ -435,6 +435,53 @@ def test_agent_transient_briefs_are_preserved(tmp_path: Path) -> None:
     assert collected.exists(), "dispatch-briefs/ brief was wiped"
 
 
+def test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime(
+    tmp_path: Path,
+) -> None:
+    """A retired shared hook is removed, while .agent runtime scratch survives.
+
+    The source-managed set is derived from ``agents_extensions/shared``. This
+    exercises the exact production boundary: ``hooks/`` is mirrored with
+    deletion propagation, but ``thread-rollovers/`` and ``tmp/`` are runtime
+    state outside that source tree and remain preserve-by-default.
+    """
+    repo = _init_checkout(tmp_path)
+    source_hook = repo / "agents_extensions" / "shared" / "hooks" / "auto-audit.sh"
+    source_hook.write_text("#!/usr/bin/env bash\necho auto-audit\n", encoding="utf-8")
+    source_hook.chmod(0o755)
+    for command in (
+        ["git", "init", "--quiet"],
+        ["git", "config", "user.email", "test@example.invalid"],
+        ["git", "config", "user.name", "Deploy test"],
+        ["git", "add", "agents_extensions"],
+        ["git", "commit", "--quiet", "-m", "add source hook"],
+    ):
+        result = _run_command(repo, command)
+        assert result.returncode == 0, result.stderr
+
+    first_deploy = _run(repo, DEPLOY_SCRIPT)
+    assert first_deploy.returncode == 0, first_deploy.stderr + first_deploy.stdout
+    deployed_hook = repo / ".agent" / "hooks" / "auto-audit.sh"
+    assert deployed_hook.exists(), "test fixture hook was not deployed"
+
+    handoff = repo / ".agent" / "thread-rollovers" / "x" / "handoff.md"
+    handoff.parent.mkdir(parents=True)
+    handoff.write_text("live handoff\n", encoding="utf-8")
+    runtime_tmp = repo / ".agent" / "tmp" / "y"
+    runtime_tmp.parent.mkdir(parents=True)
+    runtime_tmp.write_text("live scratch\n", encoding="utf-8")
+
+    deletion = _run_command(repo, ["git", "rm", "agents_extensions/shared/hooks/auto-audit.sh"])
+    assert deletion.returncode == 0, deletion.stderr
+    deletion_commit = _run_command(repo, ["git", "commit", "--quiet", "-m", "retire source hook"])
+    assert deletion_commit.returncode == 0, deletion_commit.stderr
+    second_deploy = _run(repo, DEPLOY_SCRIPT)
+    assert second_deploy.returncode == 0, second_deploy.stderr + second_deploy.stdout
+    assert not deployed_hook.exists(), "deleted source hook still executes from .agent"
+    assert handoff.read_text(encoding="utf-8") == "live handoff\n"
+    assert runtime_tmp.read_text(encoding="utf-8") == "live scratch\n"
+
+
 def test_claude_epic_dirs_are_preserved(tmp_path: Path) -> None:
     """Curriculum-track *-epic/ driver-handoff dirs in .claude/ must survive deploy.
 
