@@ -249,6 +249,18 @@ def test_runtime_tmp_reap_repairs_mode_zero_descendant(tmp_path, monkeypatch):
             blocked.chmod(0o700)
 
 
+def test_runtime_tmp_remove_absent_lease_returns_cleanly(tmp_path, monkeypatch):
+    """A lease a concurrent sweep already removed is success, not a survived-cleanup raise."""
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace_root = tmp_path / "learn-ukrainian"
+    namespace_root.mkdir()
+    lease_root = namespace_root / "task-already-gone"
+
+    delegate._remove_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert not os.path.lexists(lease_root)
+
+
 def test_runtime_tmp_reap_retries_past_multiple_mode_zero_barriers(tmp_path, monkeypatch):
     """Every repaired unreadable directory must be retried until the lease is gone."""
     monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))

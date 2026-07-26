@@ -632,6 +632,11 @@ def _remove_runtime_tmp_lease(lease: Path, namespace: Path) -> None:
             return
         if not repairs:
             break
+    # A lease already gone at entry (e.g. a concurrent sweep won the race) is
+    # success, not a survived-cleanup failure — the loop guard never ran rmtree,
+    # so nothing above could return early on its behalf.
+    if not os.path.lexists(lease):
+        return
     if last_error is not None:
         raise OSError(
             last_error.errno,
