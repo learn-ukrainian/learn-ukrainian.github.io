@@ -297,11 +297,16 @@ def attestation_rejection_reason(
     """Return the first calibrated quality-gate failure for an attestation."""
     source_period = source.get("language_period")
     chunk_period = attestation.get("language_period")
-    # Literary producers must stamp their period.  Values that are present
-    # fail closed unless modern; absent textbook metadata is not a period claim.
+    # Literary producers must stamp their period. Values that are present fail
+    # closed unless modern; only absent textbook metadata is not a period claim.
     if (
         source_period not in {None, "modern"}
         or chunk_period not in {None, "modern"}
+        or (
+            source_period is None
+            and chunk_period is None
+            and not _is_textbook_source(source, attestation)
+        )
     ):
         return "language_period_not_modern"
 

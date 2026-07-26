@@ -216,6 +216,33 @@ def test_textbook_without_period_metadata_accepts_modern_attestation(tmp_path: P
     assert result.rejection_counts == {}
 
 
+@pytest.mark.parametrize(
+    ("source_kind", "source_period", "attestation_period", "expected_reason"),
+    [
+        ("literary", None, None, "language_period_not_modern"),
+        ("textbook", None, None, None),
+        ("literary", "middle_ukrainian", None, "language_period_not_modern"),
+    ],
+)
+def test_period_metadata_waiver_is_limited_to_textbook_sources(
+    source_kind: str,
+    source_period: str | None,
+    attestation_period: str | None,
+    expected_reason: str | None,
+) -> None:
+    source = _source("source", language_period=source_period, source_kind=source_kind)
+    attestation = _attestation(
+        "source",
+        "chunk-1",
+        "Її зошит лежить на парті.",
+        chunk_text="Її зошит лежить на парті.",
+    )
+    if attestation_period is not None:
+        attestation["language_period"] = attestation_period
+
+    assert projection.attestation_rejection_reason(attestation, source, frozenset()) == expected_reason
+
+
 def test_textbook_exercise_screening_requires_full_chunk_text(tmp_path: Path) -> None:
     attestation = _attestation("textbook-source", "chunk-1", "Її зошит лежить на парті.")
     records: list[dict[str, object]] = [
