@@ -182,6 +182,11 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   the standard capsule/handoff contract (operator 2026-07-26; untested as driver, repeatedly
   the sharpest cheap seat on code review). Evaluate against the same rails; report before
   widening.
+- **GPT lane never orchestrates as primary.** If it did, the seat would be Sol — and it is
+  not worth it: orientation alone consumes ~33% of the GPT context window before any work
+  (operator measurement 2026-07-26). Sol stays advisor/escalation-only; the codex seat
+  remains a named ALTERNATE (HydrationCapsuleV1 exists to cut exactly that orientation
+  cost), never the daily driver.
 - Session-cadence seats stay unchanged for kimi (capable, slow), agy (compaction loses
   orchestration state — not a driver), gemini CLI (retired → agy).
 
