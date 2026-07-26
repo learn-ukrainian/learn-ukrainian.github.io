@@ -1095,6 +1095,21 @@ def is_live_pending(record: Mapping[str, Any]) -> bool:
     return RolloverState(str(record.get("state"))) in LIVE_PENDING_STATES
 
 
+def is_terminal_state(state: str | RolloverState) -> bool:
+    try:
+        st = RolloverState(str(state))
+    except ValueError:
+        return False
+    if st in TERMINAL_STATES:
+        return True
+    rank = SUCCESS_RANK.get(st)
+    return rank is not None and rank >= SUCCESS_RANK[RolloverState.CONFIRMED]
+
+
+def is_terminal_record(record: Mapping[str, Any]) -> bool:
+    return is_terminal_state(str(record.get("state")))
+
+
 def allows_exact_progress(record: Mapping[str, Any]) -> bool:
     """Return whether ordinary exact progress is safe without blocker adjudication."""
     state = RolloverState(str(record.get("state")))

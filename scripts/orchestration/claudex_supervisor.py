@@ -389,7 +389,23 @@ def _load_valid_lease(
         raise SupervisorError("rollover lease generation does not match the request")
     if replacement.get("rollover_id") != rollover_id:
         raise SupervisorError("rollover lease id does not match the request")
+    try:
+        reg_path = thread_handoff.task_family_rollover_registry.record_path(
+            state_root, agent=handoff_agent, lineage_id=lineage_id, rollover_id=rollover_id
+        )
+        if reg_path.is_file():
+            rec = thread_handoff.task_family_rollover_registry.load_record(
+                state_root, agent=handoff_agent, lineage_id=lineage_id, rollover_id=rollover_id
+            )
+            rec_state = rec.get("state")
+            if thread_handoff.task_family_rollover_registry.is_terminal_state(rec_state):
+                raise SupervisorError(f"rollover lease is terminal in registry ({rec_state})")
+    except SupervisorError:
+        raise
+    except Exception:
+        pass
     native = replacement.get("native_lifecycle")
+
     if not isinstance(native, dict) or native.get("source_thread_id") != runtime.get("session_id"):
         raise SupervisorError("rollover native lifecycle does not match the bound session")
     return state, replacement, lease_path

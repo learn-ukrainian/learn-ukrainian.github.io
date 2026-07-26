@@ -4203,3 +4203,92 @@ def test_confirmation_revalidates_probe_before_handwritten_pass_can_unlock_clean
     assert resumed == before_confirmation
     assert resumed["replacement"]["status"] == "resumed"
     assert resumed["cleanup"]["old_automation_ready_to_delete"] is False
+
+
+def test_detect_excludes_registry_terminal_rollover_packets(tmp_path: Path, capsys, monkeypatch):
+    """#5851: detect excludes registry-terminal rollover packets (e.g. SUPERSEDED)."""
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+
+    # 1. Prepare packet 1
+    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--active-thread-id", "t1"]) == 0
+    p1 = json.loads(capsys.readouterr().out)
+    lineage1, rollover1 = p1["lineage_id"], p1["rollover_id"]
+
+    # Mark packet 1 as SUPERSEDED in registry
+    reg_path1 = tmp_path / ".agent" / "thread-rollover-registry" / "v1" / "codex" / lineage1 / rollover1 / "record.json"
+    rec1 = json.loads(reg_path1.read_text(encoding="utf-8"))
+    rec1["state"] = "SUPERSEDED"
+    rec1["terminal_reason"] = "superseded by new packet"
+    th.write_json_atomic(reg_path1, rec1)
+
+    # Detect with single superseded packet -> status: none, excluded_terminal populated
+    assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "codex"]) == 0
+    detected_single = json.loads(capsys.readouterr().out)
+    assert detected_single["status"] == "none"
+    assert detected_single["excluded_terminal"] == [
+        {"agent": "codex", "lineage_id": lineage1, "rollover_id": rollover1, "state": "SUPERSEDED"}
+    ]
+
+    # Test session-start output for single superseded packet
+    assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "codex", "--format", "session-start"]) == 0
+    start_output = capsys.readouterr().out
+    assert "COLD START: NO LIVE THREAD ROLLOVER" in start_output
+    assert f"Excluded terminal rollover: codex/{lineage1}/{rollover1} (SUPERSEDED)" in start_output
+
+    # 2. Prepare packet 2 (live)
+    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--active-thread-id", "t2"]) == 0
+    p2 = json.loads(capsys.readouterr().out)
+    lineage2, rollover2 = p2["lineage_id"], p2["rollover_id"]
+
+    # Detect with 1 superseded packet + 1 live packet -> resolves packet 2 directly instead of ambiguous error
+    assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "codex"]) == 0
+    detected_multi = json.loads(capsys.readouterr().out)
+    assert detected_multi["status"] == "pending_start"
+    assert detected_multi["lineage_id"] == lineage2
+    assert detected_multi["rollover_id"] == rollover2
+    assert detected_multi["excluded_terminal"] == [
+        {"agent": "codex", "lineage_id": lineage1, "rollover_id": rollover1, "state": "SUPERSEDED"}
+    ]
+
+    # Sibling sweep: check rollover_identity_snapshot
+    snapshot = th.rollover_identity_snapshot(tmp_path, agent="codex")
+    assert snapshot["candidate_count"] == 1
+    assert snapshot["candidates"][0]["lineage_id"] == lineage2
+    assert snapshot["excluded_terminal"] == [
+        {"agent": "codex", "lineage_id": lineage1, "rollover_id": rollover1, "state": "SUPERSEDED"}
+    ]
+
+
+def test_detect_registry_non_terminal_record_is_detected(tmp_path: Path, capsys, monkeypatch):
+    """Negative control: non-terminal registry record is still detected as live."""
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+
+    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--active-thread-id", "t1"]) == 0
+    p1 = json.loads(capsys.readouterr().out)
+
+    assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "codex"]) == 0
+    detected = json.loads(capsys.readouterr().out)
+    assert detected["status"] == "pending_start"
+    assert detected["lineage_id"] == p1["lineage_id"]
+    assert "excluded_terminal" not in detected
+
+
+def test_detect_corrupt_registry_record_fails_open(tmp_path: Path, capsys, monkeypatch):
+    """Corrupt registry record must not crash detect, fails open, and surfaces error."""
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+
+    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--active-thread-id", "t1"]) == 0
+    p1 = json.loads(capsys.readouterr().out)
+    lineage1, rollover1 = p1["lineage_id"], p1["rollover_id"]
+
+    # Corrupt registry record
+    reg_path1 = tmp_path / ".agent" / "thread-rollover-registry" / "v1" / "codex" / lineage1 / rollover1 / "record.json"
+    reg_path1.write_text("{invalid json", encoding="utf-8")
+
+    assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "codex"]) == 0
+    detected = json.loads(capsys.readouterr().out)
+    assert detected["status"] == "pending_start"
+    assert detected["lineage_id"] == lineage1
+    assert "registry_errors" in detected
+    assert len(detected["registry_errors"]) == 1
+    assert "corrupt or unreadable" in detected["registry_errors"][0]

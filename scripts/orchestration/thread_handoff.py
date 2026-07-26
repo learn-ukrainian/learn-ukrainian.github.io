@@ -4311,6 +4311,7 @@ def rollover_identity_snapshot(state_root: Path, agent: str | None = None) -> di
     root = state_root / ".agent" / "thread-rollovers"
     candidates: list[dict[str, Any]] = []
     errors: list[dict[str, str]] = []
+    excluded_terminal: list[dict[str, str]] = []
     paths = root.glob(f"{agent}/*/lease.json") if agent else root.glob("*/*/lease.json")
     for path in sorted(paths):
         lease_agent = path.parent.parent.name
@@ -4320,6 +4321,31 @@ def rollover_identity_snapshot(state_root: Path, agent: str | None = None) -> di
             errors.append({"state_file": rel(path, state_root), "error": error})
             continue
         if replacement is not None and replacement.get("status") in {"pending_start", "resumed"}:
+            lineage_id = state.get("lineage_id")
+            rollover_id = replacement.get("rollover_id")
+            candidate_agent = str(state.get("agent") or lease_agent)
+            if lineage_id and rollover_id:
+                try:
+                    reg_path = task_family_rollover_registry.record_path(
+                        state_root, agent=candidate_agent, lineage_id=lineage_id, rollover_id=rollover_id
+                    )
+                    if reg_path.is_file():
+                        rec = task_family_rollover_registry.load_record(
+                            state_root, agent=candidate_agent, lineage_id=lineage_id, rollover_id=rollover_id
+                        )
+                        rec_state = rec.get("state")
+                        if task_family_rollover_registry.is_terminal_state(rec_state):
+                            excluded_terminal.append(
+                                {
+                                    "agent": candidate_agent,
+                                    "lineage_id": str(lineage_id),
+                                    "rollover_id": str(rollover_id),
+                                    "state": str(rec_state),
+                                }
+                            )
+                            continue
+                except Exception as exc:
+                    errors.append({"state_file": rel(path, state_root), "error": f"registry load error: {exc}"})
             diagnostic = task_identity.candidate_diagnostic(
                 state,
                 replacement,
@@ -4327,30 +4353,45 @@ def rollover_identity_snapshot(state_root: Path, agent: str | None = None) -> di
             )
             diagnostic["agent"] = lease_agent
             candidates.append(diagnostic)
-    return {
+    out: dict[str, Any] = {
         "schema_version": "rollover-identity-snapshot.v1",
         "generated_at": isoformat_z(utc_now()),
         "candidate_count": len(candidates),
         "candidates": candidates,
         "errors": errors,
     }
+    if excluded_terminal:
+        out["excluded_terminal"] = excluded_terminal
+    return out
+
 
 
 def render_session_start_context(candidate: dict[str, Any] | None, *, agent: str, current_thread_id: str) -> str:
     """Render the only SessionStart handoff text; shell hooks never parse leases."""
-    if candidate is None:
+    if candidate is None or candidate.get("status") == "none":
         facts_path = ".agent/orientation-health-facts.json"
-        return "\n".join(
-            [
-                "COLD START: NO LIVE THREAD ROLLOVER",
-                "No pending or resumed packet exists for this agent.",
-                "Orient from durable project state with tool-backed reads before ordinary work.",
-                "Create exactly ten truthful legacy orientation facts, then run:",
-                f".venv/bin/python scripts/context_canary.py mint --facts {facts_path} --out .agent/orientation-health-probe.json",
-                "Do not invent a lineage_id or rollover_id; prepare creates both only when this thread later rolls over.",
-                "Keep the primary checkout read-only and use a dispatch worktree for implementation.",
-            ]
-        )
+        lines = [
+            "COLD START: NO LIVE THREAD ROLLOVER",
+            "No pending or resumed packet exists for this agent.",
+            "Orient from durable project state with tool-backed reads before ordinary work.",
+            "Create exactly ten truthful legacy orientation facts, then run:",
+            f".venv/bin/python scripts/context_canary.py mint --facts {facts_path} --out .agent/orientation-health-probe.json",
+            "Do not invent a lineage_id or rollover_id; prepare creates both only when this thread later rolls over.",
+            "Keep the primary checkout read-only and use a dispatch worktree for implementation.",
+        ]
+        if isinstance(candidate, dict):
+            if candidate.get("excluded_terminal"):
+                lines.append(
+                    "Excluded terminal rollover: "
+                    + ", ".join(
+                        f"{item['agent']}/{item['lineage_id']}/{item['rollover_id']} ({item['state']})"
+                        for item in candidate["excluded_terminal"]
+                    )
+                )
+            if candidate.get("registry_errors"):
+                for err in candidate["registry_errors"]:
+                    lines.append(f"Registry error: {err}")
+        return "\n".join(lines)
     thread_id = current_thread_id or "<current-codex-thread-id>"
     lineage_id = candidate["lineage_id"]
     rollover_id = candidate["rollover_id"]
@@ -4410,6 +4451,17 @@ def render_session_start_context(candidate: dict[str, Any] | None, *, agent: str
             "Do not auto-run any mutation above. Cleanup remains locked unless both exact proofs pass.",
         ]
     )
+    if candidate.get("excluded_terminal"):
+        lines.append(
+            "Excluded terminal rollover: "
+            + ", ".join(
+                f"{item['agent']}/{item['lineage_id']}/{item['rollover_id']} ({item['state']})"
+                for item in candidate["excluded_terminal"]
+            )
+        )
+    if candidate.get("registry_errors"):
+        for err in candidate["registry_errors"]:
+            lines.append(f"Registry error: {err}")
     return "\n".join(lines)
 
 
@@ -4449,6 +4501,8 @@ def _render_multiple_pending_session_start(
     agent: str,
     candidates: list[dict[str, Any]],
     task_family_filter: str,
+    excluded_terminal: list[dict[str, str]] | None = None,
+    registry_errors: list[str] | None = None,
 ) -> str:
     lines = [
         f"MULTIPLE LIVE PENDING ROLLOVERS for agent `{agent}` (#5398 class).",
@@ -4473,11 +4527,23 @@ def _render_multiple_pending_session_start(
             f"--replacement-task-id <this-thread-id> --evidence <harness-binding>"
         )
         lines.append("")
+    if excluded_terminal:
+        lines.append(
+            "Excluded terminal rollover: "
+            + ", ".join(
+                f"{item['agent']}/{item['lineage_id']}/{item['rollover_id']} ({item['state']})"
+                for item in excluded_terminal
+            )
+        )
+    if registry_errors:
+        for err in registry_errors:
+            lines.append(f"Registry error: {err}")
     lines.append(
         "Resolution: bind the exact candidate for THIS lane (or re-run detect with "
         "`--task-family <family>` / launch with `--epic <name>`)."
     )
     return "\n".join(lines)
+
 
 
 def cmd_detect(args: argparse.Namespace) -> int:
@@ -4500,6 +4566,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
         scan_agents.append("codex")
 
     live_leases: list[tuple[Path, dict[str, Any], dict[str, Any], str]] = []
+    excluded_terminal: list[dict[str, str]] = []
+    registry_errors: list[str] = []
 
     for scan_agent in scan_agents:
         agent_dir = state_root / ".agent" / "thread-rollovers" / scan_agent
@@ -4512,12 +4580,45 @@ def cmd_detect(args: argparse.Namespace) -> int:
                 print(json.dumps({"error": f"invalid rollover lease {rel(path, state_root)}: {error}"}, indent=2))
                 return 2
             if replacement is not None and replacement["status"] in {"pending_start", "resumed"}:
+                lineage_id = state.get("lineage_id")
+                rollover_id = replacement.get("rollover_id")
+                candidate_agent = str(state.get("agent") or scan_agent)
+                if lineage_id and rollover_id:
+                    try:
+                        reg_path = task_family_rollover_registry.record_path(
+                            state_root, agent=candidate_agent, lineage_id=lineage_id, rollover_id=rollover_id
+                        )
+                        if reg_path.is_file():
+                            rec = task_family_rollover_registry.load_record(
+                                state_root, agent=candidate_agent, lineage_id=lineage_id, rollover_id=rollover_id
+                            )
+                            rec_state = rec.get("state")
+                            if task_family_rollover_registry.is_terminal_state(rec_state):
+                                excluded_terminal.append(
+                                    {
+                                        "agent": candidate_agent,
+                                        "lineage_id": str(lineage_id),
+                                        "rollover_id": str(rollover_id),
+                                        "state": str(rec_state),
+                                    }
+                                )
+                                continue
+
+
+                    except Exception as exc:
+                        registry_errors.append(
+                            f"registry record corrupt or unreadable for {candidate_agent}/{lineage_id}/{rollover_id}: {exc}"
+                        )
                 live_leases.append((path, state, replacement, scan_agent))
 
     if not live_leases:
         output: dict[str, Any] = {"agent": agent, "status": "none"}
+        if excluded_terminal:
+            output["excluded_terminal"] = excluded_terminal
+        if registry_errors:
+            output["registry_errors"] = registry_errors
         print(
-            render_session_start_context(None, agent=agent, current_thread_id=args.current_thread_id)
+            render_session_start_context(output, agent=agent, current_thread_id=args.current_thread_id)
             if args.format == "session-start"
             else json.dumps(output, indent=2)
         )
@@ -4561,12 +4662,19 @@ def cmd_detect(args: argparse.Namespace) -> int:
                 "--epic launch filter when the lane is known."
             ),
         }
+        if excluded_terminal:
+            payload["excluded_terminal"] = excluded_terminal
+        if registry_errors:
+            payload["registry_errors"] = registry_errors
+
         if args.format == "session-start":
             print(
                 _render_multiple_pending_session_start(
                     agent=agent,
                     candidates=candidates,
                     task_family_filter=task_family_filter,
+                    excluded_terminal=excluded_terminal,
+                    registry_errors=registry_errors,
                 )
             )
         else:
@@ -4614,12 +4722,18 @@ def cmd_detect(args: argparse.Namespace) -> int:
         "title_transition": replacement.get("title_transition"),
         "task_family_filter": task_family_filter or None,
     }
+    if excluded_terminal:
+        output["excluded_terminal"] = excluded_terminal
+    if registry_errors:
+        output["registry_errors"] = registry_errors
+
     print(
         render_session_start_context(output, agent=agent, current_thread_id=args.current_thread_id)
         if args.format == "session-start"
         else json.dumps(output, indent=2)
     )
     return 0
+
 
 
 def _lock_timeout_exit(exc: TimeoutError) -> int:
