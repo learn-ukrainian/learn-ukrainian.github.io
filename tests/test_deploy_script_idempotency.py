@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import os
 import shlex
 import shutil
 import subprocess
+import time
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -40,6 +42,7 @@ PROJECT_PYTHON = _resolve_project_python()
 DEPLOY_SCRIPT = Path("scripts/deploy_prompts.sh")
 CHECK_SCRIPT = Path("scripts/check_rules_deployment.sh")
 ORPHAN_PATHS_FILE = Path("scripts/deploy_orphan_paths.sh")
+AGENT_DEPLOY_MANIFEST = Path(".deploy-state/shared-to-agent.manifest")
 ORPHAN_PATH_VARS = (
     "ORPHAN_PATHS_CLAUDE",
     "ORPHAN_PATHS_AGENT",  # kept for compat (empty; .agent/ preserve-by-default)
@@ -81,6 +84,13 @@ def _copy_repo_subset(target: Path) -> None:
         DEPLOY_SCRIPT,
         CHECK_SCRIPT,
         ORPHAN_PATHS_FILE,
+        # deploy_prompts.sh delegates the .agent reap to this helper (fd-bound
+        # deletion, see scripts/deploy/reap_agent_mirrors.py). The fixture must
+        # mirror every file the script actually invokes, or deploy exits non-zero
+        # here for a reason that has nothing to do with the behaviour under test.
+        Path("scripts/deploy/agent_directory.py"),
+        Path("scripts/deploy/reap_agent_mirrors.py"),
+        Path("scripts/deploy/sync_agent_mirror.py"),
         Path("scripts/lint_prompts.py"),
         Path("scripts/lint/lint_prompts.py"),
         Path("scripts/lint/lint_agent_skills.py"),
@@ -128,6 +138,33 @@ def _run_command(repo: Path, command: list[str]) -> subprocess.CompletedProcess[
         text=True,
         timeout=30,
     )
+
+
+def _init_git_history(repo: Path) -> None:
+    """Create the source history used to verify legacy deploy artifacts."""
+    for command in (
+        ["git", "init", "-q"],
+        ["git", "config", "user.email", "deploy-test@example.invalid"],
+        ["git", "config", "user.name", "Deploy test"],
+        ["git", "add", "-A"],
+        ["git", "commit", "-qm", "seed deploy source"],
+    ):
+        result = _run_command(repo, command)
+        assert result.returncode == 0, result.stderr
+
+
+def _delete_source_file(repo: Path, relative: Path) -> bytes:
+    """Delete a tracked source file and commit the deletion for a deploy test."""
+    source = repo / "agents_extensions" / "shared" / relative
+    original = source.read_bytes()
+    source.unlink()
+    for command in (
+        ["git", "add", "-A"],
+        ["git", "commit", "-qm", f"retire {relative.name}"],
+    ):
+        result = _run_command(repo, command)
+        assert result.returncode == 0, result.stderr
+    return original
 
 
 def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
@@ -179,6 +216,233 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
     assert codex_hooks_diff.returncode == 0, (
         f"Codex hooks drift after fresh deploy:\nstdout: {codex_hooks_diff.stdout}\nstderr: {codex_hooks_diff.stderr}"
     )
+
+
+def test_agent_manifest_reaps_retired_hook_without_touching_agent_state(tmp_path: Path) -> None:
+    """A recorded hook is reaped; unrecorded .agent runtime paths survive."""
+    repo = _init_checkout(tmp_path)
+    _init_git_history(repo)
+    retired = Path("hooks/auto-audit.sh")
+
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stderr
+    assert (repo / AGENT_DEPLOY_MANIFEST).is_file()
+
+    agent_prompt = repo / ".agent/prompts/agent-written.md"
+    rollover = repo / ".agent/thread-rollovers/x/handoff.md"
+    runtime_tmp = repo / ".agent/tmp/y"
+    for path, contents in (
+        (agent_prompt, "agent-owned prompt\n"),
+        (rollover, "agent-owned handoff\n"),
+        (runtime_tmp, "agent-owned scratch\n"),
+    ):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(contents, encoding="utf-8")
+
+    _delete_source_file(repo, retired)
+    deploy = _run(repo, DEPLOY_SCRIPT)
+
+    assert deploy.returncode == 0, deploy.stderr
+    assert "removed retired deploy artifact 'hooks/auto-audit.sh'" in deploy.stdout
+    assert not (repo / ".agent" / retired).exists()
+    assert not (repo / ".claude" / retired).exists()
+    assert not (repo / ".codex" / retired).exists()
+    assert agent_prompt.read_text(encoding="utf-8") == "agent-owned prompt\n"
+    assert rollover.read_text(encoding="utf-8") == "agent-owned handoff\n"
+    assert runtime_tmp.read_text(encoding="utf-8") == "agent-owned scratch\n"
+
+
+def test_agent_manifest_rejects_symlinked_intermediate_component(tmp_path: Path) -> None:
+    """A manifest path must not follow a symlinked .agent/ subdirectory."""
+    repo = _init_checkout(tmp_path)
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stderr
+
+    external_dir = tmp_path / "external"
+    external_dir.mkdir()
+    victim = external_dir / "victim.txt"
+    victim.write_text("must survive\n", encoding="utf-8")
+    (repo / ".agent" / "escape").symlink_to(external_dir, target_is_directory=True)
+    with (repo / AGENT_DEPLOY_MANIFEST).open("a", encoding="utf-8") as manifest:
+        manifest.write("f\tescape/victim.txt\n")
+
+    deploy = _run(repo, DEPLOY_SCRIPT)
+    output = f"{deploy.stdout}\n{deploy.stderr}"
+    assert deploy.returncode == 0, output
+    assert victim.read_text(encoding="utf-8") == "must survive\n"
+    assert (repo / ".agent" / "escape").is_symlink()
+    assert "symlinked component 'escape'" in output
+    assert "ignoring unsafe manifest entry 'f escape/victim.txt'" in output
+
+
+def test_agent_overlay_write_stays_in_held_directory_after_root_swap(tmp_path: Path) -> None:
+    """A post-validation `.agent` symlink swap must not redirect rsync writes.
+
+    The rsync shim waits only when the agent overlay begins.  At that point the
+    production helper has already opened and fchdir'ed into `.agent`; the test
+    swaps the pathname to an external directory before allowing the real rsync
+    binary to run.  A regression to ``rsync ... .agent/`` writes settings.json
+    outside the fixture and fails this test.
+    """
+    repo = _init_checkout(tmp_path)
+    # Exercise the post-validation race from the review: the root is a real
+    # directory before deploy starts, then becomes a symlink immediately before
+    # rsync writes.  (A clean first deploy is covered separately.)
+    (repo / ".agent").mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    ready = tmp_path / "rsync-ready"
+    release = tmp_path / "rsync-release"
+    fake_bin = tmp_path / "fake-bin"
+    fake_bin.mkdir()
+    real_rsync = shutil.which("rsync")
+    assert real_rsync, "rsync is required for the deploy integration test"
+    (fake_bin / "rsync").write_text(
+        "#!/usr/bin/env bash\n"
+        "set -euo pipefail\n"
+        'last="${!#}"\n'
+        'if [[ "$last" == "." || "$last" == ".agent" || "$last" == ".agent/" ]]; then\n'
+        '    : > "$SYNC_AGENT_RACE_READY"\n'
+        '    while [[ ! -e "$SYNC_AGENT_RACE_RELEASE" ]]; do sleep 0.01; done\n'
+        "fi\n"
+        f"exec {shlex.quote(real_rsync)} \"$@\"\n",
+        encoding="utf-8",
+    )
+    (fake_bin / "rsync").chmod(0o755)
+    environment = os.environ | {
+        "PATH": f"{fake_bin}{os.pathsep}{os.environ['PATH']}",
+        "SYNC_AGENT_RACE_READY": str(ready),
+        "SYNC_AGENT_RACE_RELEASE": str(release),
+    }
+    process = subprocess.Popen(
+        ["bash", str(DEPLOY_SCRIPT)],
+        cwd=repo,
+        env=environment,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        deadline = time.monotonic() + 10
+        while not ready.exists() and process.poll() is None and time.monotonic() < deadline:
+            time.sleep(0.02)
+        assert ready.exists(), "the descriptor-bound .agent rsync never started"
+
+        held_agent = repo / ".agent-held"
+        (repo / ".agent").rename(held_agent)
+        (repo / ".agent").symlink_to(outside, target_is_directory=True)
+    finally:
+        release.touch()
+        stdout, stderr = process.communicate(timeout=120)
+
+    output = f"{stdout}\n{stderr}"
+    assert process.returncode == 0, output
+    assert not (outside / "settings.json").exists(), (
+        "shared content was written through the swapped .agent symlink"
+    )
+    assert (repo / ".agent-held" / "settings.json").is_file(), (
+        "rsync did not write into the directory held before the pathname swap"
+    )
+
+
+def test_agent_manifest_unlinks_symlink_leaf_without_following_target(tmp_path: Path) -> None:
+    """A recorded symlink leaf is unlinked, never followed to its target."""
+    repo = _init_checkout(tmp_path)
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stderr
+
+    external_target = tmp_path / "external-target.txt"
+    external_target.write_text("must survive\n", encoding="utf-8")
+    link = repo / ".agent" / "link"
+    link.symlink_to(external_target)
+    with (repo / AGENT_DEPLOY_MANIFEST).open("a", encoding="utf-8") as manifest:
+        manifest.write("l\tlink\n")
+
+    deploy = _run(repo, DEPLOY_SCRIPT)
+    assert deploy.returncode == 0, deploy.stderr
+    assert "removed retired deploy artifact 'link'" in deploy.stdout
+    assert external_target.read_text(encoding="utf-8") == "must survive\n"
+    assert not link.is_symlink()
+
+
+def test_agent_manifest_keeps_lexically_unsafe_entries_rejected(tmp_path: Path) -> None:
+    """Existing absolute and parent-directory manifest rejections remain in force."""
+    repo = _init_checkout(tmp_path)
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stderr
+
+    parent_victim = tmp_path / "outside"
+    absolute_victim = tmp_path / "absolute-outside"
+    parent_victim.write_text("must survive\n", encoding="utf-8")
+    absolute_victim.write_text("must survive\n", encoding="utf-8")
+    # The deploy script exits early on a true no-op, so add a legitimate source
+    # change to exercise manifest reaping during this regression.
+    source_change = repo / "agents_extensions" / "shared" / "hooks" / "force-redeploy.sh"
+    source_change.write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+    source_change.chmod(0o755)
+    with (repo / AGENT_DEPLOY_MANIFEST).open("a", encoding="utf-8") as manifest:
+        manifest.write("f\t../outside\n")
+        manifest.write(f"f\t{absolute_victim}\n")
+
+    deploy = _run(repo, DEPLOY_SCRIPT)
+    output = f"{deploy.stdout}\n{deploy.stderr}"
+    assert deploy.returncode == 0, output
+    assert "ignoring unsafe manifest entry 'f ../outside'" in output
+    assert f"ignoring unsafe manifest entry 'f {absolute_victim}'" in output
+    assert parent_victim.read_text(encoding="utf-8") == "must survive\n"
+    assert absolute_victim.read_text(encoding="utf-8") == "must survive\n"
+
+
+def test_agent_manifest_reaps_legitimate_nested_file(tmp_path: Path) -> None:
+    """Physical-path validation still permits a retired nested .agent/ artifact."""
+    repo = _init_checkout(tmp_path)
+    retired = Path("hooks/nested/retired.sh")
+    source = repo / "agents_extensions" / "shared" / retired
+    source.parent.mkdir(parents=True)
+    source.write_text("#!/usr/bin/env bash\necho retired\n", encoding="utf-8")
+    source.chmod(0o755)
+    _init_git_history(repo)
+
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stderr
+    deployed = repo / ".agent" / retired
+    assert deployed.exists()
+
+    _delete_source_file(repo, retired)
+    deploy = _run(repo, DEPLOY_SCRIPT)
+    assert deploy.returncode == 0, deploy.stderr
+    assert "removed retired deploy artifact 'hooks/nested/retired.sh'" in deploy.stdout
+    assert not deployed.exists()
+
+
+def test_agent_manifest_migration_defers_reaping_verified_legacy_artifact(tmp_path: Path) -> None:
+    """The first manifest deploy preserves legacy output; the next one reaps it."""
+    repo = _init_checkout(tmp_path)
+    _init_git_history(repo)
+    retired = Path("hooks/auto-audit.sh")
+    original = _delete_source_file(repo, retired)
+
+    stale_target = repo / ".agent" / retired
+    agent_owned = repo / ".agent/hooks/custom-agent-hook.sh"
+    stale_target.parent.mkdir(parents=True)
+    stale_target.write_bytes(original)
+    agent_owned.write_text("agent-owned hook\n", encoding="utf-8")
+    assert not (repo / AGENT_DEPLOY_MANIFEST).exists()
+
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stderr
+    assert "no deploy manifest yet; preserving all existing paths during migration" in first.stdout
+    assert stale_target.read_bytes() == original
+    manifest = (repo / AGENT_DEPLOY_MANIFEST).read_text(encoding="utf-8")
+    assert "f\thooks/auto-audit.sh" in manifest
+    assert "custom-agent-hook.sh" not in manifest
+    assert agent_owned.read_text(encoding="utf-8") == "agent-owned hook\n"
+
+    second = _run(repo, DEPLOY_SCRIPT)
+    assert second.returncode == 0, second.stderr
+    assert "removed retired deploy artifact 'hooks/auto-audit.sh'" in second.stdout
+    assert not stale_target.exists()
+    assert agent_owned.read_text(encoding="utf-8") == "agent-owned hook\n"
 
 
 def test_curriculum_preparation_documents_canonical_helper_paths() -> None:
@@ -461,6 +725,53 @@ def test_agent_transient_briefs_are_preserved(tmp_path: Path) -> None:
     assert brief.exists(), "atlas-3150-brief.md was wiped"
     assert dispatch.exists(), "dispatch-3098-slice3.md was wiped"
     assert collected.exists(), "dispatch-briefs/ brief was wiped"
+
+
+def test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime(
+    tmp_path: Path,
+) -> None:
+    """A retired shared hook is removed, while .agent runtime scratch survives.
+
+    The source-managed set is derived from ``agents_extensions/shared``. This
+    exercises the exact production boundary: ``hooks/`` is mirrored with
+    deletion propagation, but ``thread-rollovers/`` and ``tmp/`` are runtime
+    state outside that source tree and remain preserve-by-default.
+    """
+    repo = _init_checkout(tmp_path)
+    source_hook = repo / "agents_extensions" / "shared" / "hooks" / "auto-audit.sh"
+    source_hook.write_text("#!/usr/bin/env bash\necho auto-audit\n", encoding="utf-8")
+    source_hook.chmod(0o755)
+    for command in (
+        ["git", "init", "--quiet"],
+        ["git", "config", "user.email", "test@example.invalid"],
+        ["git", "config", "user.name", "Deploy test"],
+        ["git", "add", "agents_extensions"],
+        ["git", "commit", "--quiet", "-m", "add source hook"],
+    ):
+        result = _run_command(repo, command)
+        assert result.returncode == 0, result.stderr
+
+    first_deploy = _run(repo, DEPLOY_SCRIPT)
+    assert first_deploy.returncode == 0, first_deploy.stderr + first_deploy.stdout
+    deployed_hook = repo / ".agent" / "hooks" / "auto-audit.sh"
+    assert deployed_hook.exists(), "test fixture hook was not deployed"
+
+    handoff = repo / ".agent" / "thread-rollovers" / "x" / "handoff.md"
+    handoff.parent.mkdir(parents=True)
+    handoff.write_text("live handoff\n", encoding="utf-8")
+    runtime_tmp = repo / ".agent" / "tmp" / "y"
+    runtime_tmp.parent.mkdir(parents=True)
+    runtime_tmp.write_text("live scratch\n", encoding="utf-8")
+
+    deletion = _run_command(repo, ["git", "rm", "agents_extensions/shared/hooks/auto-audit.sh"])
+    assert deletion.returncode == 0, deletion.stderr
+    deletion_commit = _run_command(repo, ["git", "commit", "--quiet", "-m", "retire source hook"])
+    assert deletion_commit.returncode == 0, deletion_commit.stderr
+    second_deploy = _run(repo, DEPLOY_SCRIPT)
+    assert second_deploy.returncode == 0, second_deploy.stderr + second_deploy.stdout
+    assert not deployed_hook.exists(), "deleted source hook still executes from .agent"
+    assert handoff.read_text(encoding="utf-8") == "live handoff\n"
+    assert runtime_tmp.read_text(encoding="utf-8") == "live scratch\n"
 
 
 def test_claude_epic_dirs_are_preserved(tmp_path: Path) -> None:

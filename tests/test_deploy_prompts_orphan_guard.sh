@@ -24,6 +24,8 @@ EXTRACT=$(mktemp)
 trap 'rm -f "$EXTRACT"' EXIT
 sed -n '/^build_excludes()/,/^}$/p' "$SCRIPT" >> "$EXTRACT"
 echo "" >> "$EXTRACT"
+sed -n '/^git_source_deleted()/,/^}$/p' "$SCRIPT" >> "$EXTRACT"
+echo "" >> "$EXTRACT"
 sed -n '/^check_orphans()/,/^}$/p' "$SCRIPT" >> "$EXTRACT"
 
 # shellcheck disable=SC1090
@@ -101,6 +103,49 @@ _assert_rc "docs/ multi-file undeclared → rc 1" "1" "$?"
 # With docs/ declared → passes
 check_orphans "$TEST_DIR/src5" "$TEST_DIR/dst5" "docs/" "docs/ multi-file declared" >/dev/null 2>&1
 _assert_rc "docs/ multi-file declared → rc 0" "0" "$?"
+
+echo ""
+echo "=== git-deleted source → stale artifact, not orphan (#5783 deadlock) ==="
+# A file deleted from source in git must NOT abort the deploy: rsync --delete
+# removing the destination copy IS the propagation of that deletion. Before
+# this, one deletion in the SSOT deadlocked every local deploy forever.
+GITREPO="$TEST_DIR/gitrepo"
+mkdir -p "$GITREPO"
+(
+    cd "$GITREPO" || exit 1
+    git init -q .
+    git config user.email t@t.t
+    git config user.name t
+    mkdir -p src/hooks dst/hooks
+    echo "keep" > src/hooks/kept.py
+    echo "retired" > src/hooks/retired.py
+    git add -A && git commit -qm "add both hooks"
+    git rm -q src/hooks/retired.py
+    git commit -qm "retire one hook"
+) >/dev/null 2>&1
+
+# Destination still carries the retired hook (deploy never got to remove it).
+echo "keep" > "$GITREPO/dst/hooks/kept.py"
+echo "retired" > "$GITREPO/dst/hooks/retired.py"
+
+rc=0
+out=$( cd "$GITREPO" && check_orphans "src" "dst" "" "git-deleted" 2>&1 ) || rc=$?
+_assert_rc "git-deleted source file → rc 0 (deploy proceeds)" "0" "$rc"
+if echo "$out" | grep -q "stale deploy artifact 'hooks/retired.py'"; then
+    echo "  ✓ reports it as a stale deploy artifact"
+    PASS=$((PASS + 1))
+else
+    echo "  ✗ did not report stale deploy artifact"
+    echo "    output: $out"
+    FAIL=$((FAIL + 1))
+fi
+
+# Fail-closed: a destination file git has NEVER tracked is still an undeclared
+# orphan and must still abort. The git check must not become a blanket bypass.
+echo "mystery" > "$GITREPO/dst/hooks/never-in-git.py"
+rc=0
+( cd "$GITREPO" && check_orphans "src" "dst" "" "unknown-file" >/dev/null 2>&1 ) || rc=$?
+_assert_rc "file git never tracked → rc 1 (still aborts)" "1" "$rc"
 
 echo ""
 echo "=== results ==="

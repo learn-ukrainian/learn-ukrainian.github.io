@@ -255,6 +255,20 @@ if [ -f "$MEMORY_FILE" ]; then
   fi
 fi
 
+# 7a. Report the LAUNCH-TIME predeploy verdict. The launcher prints a failure
+# banner, but the agent CLI clears the terminal on start, so that banner never
+# reaches the operator or the session. scripts/lib/deploy_extensions.sh leaves
+# a durable breadcrumb; surface it here or the session boots against a stale
+# .claude/ believing it is current (incident 2026-07-26).
+PREDEPLOY_STATUS="$PROJECT_DIR/.agent/last-deploy-status"
+if [ -f "$PREDEPLOY_STATUS" ] && head -1 "$PREDEPLOY_STATUS" 2>/dev/null | grep -q '^FAILED'; then
+  PD_EXIT=$(grep '^exit_code=' "$PREDEPLOY_STATUS" 2>/dev/null | cut -d= -f2)
+  PD_SCRIPT=$(grep '^script=' "$PREDEPLOY_STATUS" 2>/dev/null | cut -d= -f2)
+  PD_REASON=$(grep -m1 -E '^(❌|  ⚠️)' "$PROJECT_DIR/.agent/last-deploy-failure.log" 2>/dev/null | sed 's/^[[:space:]]*//')
+  [ -z "$PD_REASON" ] && PD_REASON="see .agent/last-deploy-failure.log"
+  ISSUES+=("PREDEPLOY FAILED at launch (npm run ${PD_SCRIPT:-agents:deploy}, exit ${PD_EXIT:-?}) — deploy targets are STALE, this session may be running outdated hooks/skills/settings. Reason: $PD_REASON")
+fi
+
 # 7. Check agents_extensions/shared/ → .claude/ sync drift
 if [ -d "$PROJECT_DIR/agents_extensions/shared" ] && [ -d "$PROJECT_DIR/.claude" ]; then
   DIFF_EXCLUDES=(".DS_Store")

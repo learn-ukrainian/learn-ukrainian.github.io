@@ -110,6 +110,11 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
                 "scripts/config/issue_streams.yaml",
                 "agents_extensions/codex/hooks.json",
                 "agents_extensions/shared/hooks/session-setup.sh",
+                # Deploy status breadcrumbs (PR #5814 r6): deploy_prompts.sh now
+                # invokes this helper, so fixture repos must ship it and its
+                # sibling import.
+                "scripts/deploy/update_agent_deploy_status.py",
+                "scripts/deploy/agent_directory.py",
             ]
         )
         sources.extend(

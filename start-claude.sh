@@ -93,13 +93,15 @@ if git rev-parse --git-dir > /dev/null 2>&1; then
     fi
 fi
 
-# Deploy agent extensions (always run to ensure up-to-date). Fail-honest: a
-# failing deploy prints a loud banner + the real output instead of the old
-# silent `|| true` that claimed "Skills deployed" over a stale .claude/.
+# Deploy agent extensions before launching. A failed deploy means Claude would
+# run against stale definitions, so refuse to launch rather than report a
+# successful session with retired hooks/rules still active.
 # shellcheck source=scripts/lib/deploy_extensions.sh
 source "$PROJECT_DIR/scripts/lib/deploy_extensions.sh"
-deploy_agent_extensions "$PROJECT_DIR" agents:deploy \
-    || echo "Continuing launch despite deploy failure (see banner above)."
+if ! deploy_agent_extensions "$PROJECT_DIR" agents:deploy; then
+    echo "Error: refusing to launch Claude because the agent-extensions deploy failed." >&2
+    exit 1
+fi
 
 # Show project status
 echo ""

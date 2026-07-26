@@ -10,10 +10,12 @@
 # deploy, so we exclude them explicitly.
 #
 # .agent/ is special (preserve-by-default since #4741): runtime scratch
-# written by agents (handoffs, dispatch-briefs, canaries, tmp/, etc.)
-# must never be deleted by deploy. We rsync WITHOUT --delete for .agent/
-# so the preflight orphan check and ORPHAN_PATHS_AGENT no longer apply to it.
-# Source content (if any) from agents_extensions/shared is overlaid.
+# written by agents (handoffs, dispatch-briefs, canaries, tmp/, etc.) must
+# never be deleted by deploy. A deploy-owned manifest records exactly the
+# source paths previously copied there. On a later deploy, only paths in that
+# manifest which have disappeared from source may be reaped. This propagates
+# retired hooks without treating a colliding namespace (such as prompts/) as
+# wholly deploy-owned.
 #
 # For other targets, if you add a destination-only path, add it to
 # ORPHAN_PATHS_<TARGET> in scripts/deploy_orphan_paths.sh.
@@ -40,6 +42,8 @@ source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"
 AGENT_EXTENSIONS_ROOT="agents_extensions"
 SHARED_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/shared"
 CODEX_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/codex"
+DEPLOY_STATE_DIR="${DEPLOY_STATE_DIR:-$PROJECT_ROOT/.deploy-state}"
+AGENT_SHARED_MANIFEST="$DEPLOY_STATE_DIR/shared-to-agent.manifest"
 
 DRY_RUN=false
 if [[ "${1:-}" == "--dry-run" ]]; then
@@ -64,11 +68,141 @@ build_shared_skill_overlay_excludes() {
     done
 }
 
+# A manifest entry is TYPE<TAB>PATH, where TYPE is d, f, or l.  Paths are
+# source-controlled, but validate persisted entries before acting on them so a
+# corrupt local state file can never escape .agent/.
+agent_manifest_path_is_safe() {
+    local path="$1"
+    [[ -n "$path" && "$path" != /* && "$path" != *$'\n'* && "$path" != *$'\t'* ]] || return 1
+    case "/$path/" in
+        *"//"*|*"/./"*|*"/../"*) return 1 ;;
+    esac
+}
+
+# A lexically safe manifest path can still escape through a symlinked
+# intermediate component.  This check is deliberately separate from the
+# lexical check above: defence in depth matters because .agent/ is writable
+# runtime state and its manifest is persisted locally.
+#
+# A manifest symlink entry is the one safe exception at the leaf: rm -f on the
+# link removes the link itself and never follows it.  Every intermediate
+# component must be a real directory, and all other leaf types must be real
+# filesystem objects.  The resolved parent is then required to sit beneath the
+# physical .agent/ root before any deletion is attempted.
+
+shared_source_path_exists() {
+    local relative="$1"
+    [[ -e "$SHARED_EXTENSIONS/$relative" || -L "$SHARED_EXTENSIONS/$relative" ]]
+}
+
+write_current_shared_agent_paths() {
+    local kind
+    for kind in d f l; do
+        (
+            cd "$SHARED_EXTENSIONS"
+            find . -mindepth 1 -type "$kind" -print
+        ) | while IFS= read -r path; do
+            agent_manifest_path_is_safe "${path#./}" || {
+                echo "Cannot record unsafe shared source path: $path" >&2
+                exit 1
+            }
+            printf '%s\t%s\n' "$kind" "${path#./}"
+        done
+    done
+}
+
+# Before this manifest existed, the only safe legacy paths to adopt are files
+# whose bytes still match the last tracked source version deleted from Git.
+# This lets the migration reap an old deployed hook on the *next* deploy while
+# refusing to claim arbitrary .agent/ scratch as deploy-owned.
+legacy_agent_file_matches_deleted_source() {
+    local relative="$1" destination="$2" deletion_commit
+    [[ -f "$destination" && ! -L "$destination" ]] || return 1
+    git rev-parse --git-dir >/dev/null 2>&1 || return 1
+    deletion_commit="$(git log --diff-filter=D --format=%H -1 -- "$SHARED_EXTENSIONS/$relative" 2>/dev/null)"
+    [[ -n "$deletion_commit" ]] || return 1
+    git show "$deletion_commit^:$SHARED_EXTENSIONS/$relative" 2>/dev/null | cmp -s - "$destination"
+}
+
+write_legacy_shared_agent_paths() {
+    local source_path relative
+    git rev-parse --git-dir >/dev/null 2>&1 || return 0
+    git log -z --diff-filter=D --name-only --format= -- "$SHARED_EXTENSIONS" 2>/dev/null \
+        | while IFS= read -r -d '' source_path; do
+            case "$source_path" in
+                "$SHARED_EXTENSIONS"/*) relative="${source_path#"$SHARED_EXTENSIONS/"}" ;;
+                *) continue ;;
+            esac
+            agent_manifest_path_is_safe "$relative" || continue
+            shared_source_path_exists "$relative" && continue
+            if legacy_agent_file_matches_deleted_source "$relative" ".agent/$relative"; then
+                printf 'f\t%s\n' "$relative"
+            fi
+        done
+}
+
+write_shared_agent_manifest() {
+    local manifest_tmp
+    mkdir -p "$DEPLOY_STATE_DIR"
+    manifest_tmp="$(mktemp "$DEPLOY_STATE_DIR/shared-to-agent.manifest.XXXXXX")"
+    write_current_shared_agent_paths >"$manifest_tmp"
+    if [[ ! -f "$AGENT_SHARED_MANIFEST" ]]; then
+        write_legacy_shared_agent_paths >>"$manifest_tmp"
+    fi
+    sort -u "$manifest_tmp" -o "$manifest_tmp"
+    mv "$manifest_tmp" "$AGENT_SHARED_MANIFEST"
+}
+
+reap_retired_shared_agent_paths() {
+    # Delegated to Python: the reap must not be redirectable between validation and
+    # deletion. Shell can only validate a PATH and then delete by that same PATH, and
+    # a review reproduced a symlink swapped in between those two steps deleting a file
+    # OUTSIDE the repository. The helper walks components with O_NOFOLLOW|O_DIRECTORY
+    # and unlinks relative to the resulting directory fd, so the entry removed is the
+    # one inside the directory actually opened. See scripts/deploy/reap_agent_mirrors.py.
+    "$PROJECT_ROOT/.venv/bin/python" "$PROJECT_ROOT/scripts/deploy/reap_agent_mirrors.py" \
+        --agent-root .agent \
+        --manifest "$AGENT_SHARED_MANIFEST" \
+        --source-root "$SHARED_EXTENSIONS"
+}
+
+sync_shared_agent_mirror() {
+    # The source is absolute because the helper fchdirs into a descriptor for
+    # .agent before it execs rsync.  Passing . as the destination keeps the write
+    # bound to that descriptor even if another agent swaps the .agent pathname.
+    "$PROJECT_ROOT/.venv/bin/python" "$PROJECT_ROOT/scripts/deploy/sync_agent_mirror.py" \
+        --source-root "$PROJECT_ROOT/$SHARED_EXTENSIONS" \
+        --agent-root .agent
+}
+
 remove_claude_autoload_rules() {
     local p
     for p in "${CLAUDE_RULE_AUTOLOAD_EXCLUDES[@]}"; do
         rm -f ".claude/$p"
     done
+}
+
+# A destination-only path is a STALE DEPLOY ARTIFACT, not an undeclared
+# orphan, when git shows the source path was tracked and has since been
+# deleted. Removing the destination copy is the intended propagation of that
+# deletion — aborting on it deadlocks every future deploy until a human
+# hand-deletes the target file.
+#
+# Git is the SSOT, so git decides: tracked in HEAD -> still owned by source;
+# absent from HEAD but deleted in history -> stale artifact. Anything git has
+# never heard of stays an undeclared orphan and still aborts (fail-closed).
+#
+# Incident 2026-07-26: #5783 deleted hooks/guard-push-pytest.py from source.
+# Every local deploy aborted from then on, so .claude/settings.json kept the
+# retired hook registered and live. CI never caught it — CI deploys into a
+# clean checkout where the gitignored destination trees carry no stale copy.
+git_source_deleted() {
+    local src="$1" rel="$2"
+    git rev-parse --git-dir >/dev/null 2>&1 || return 1
+    # Still tracked at HEAD → source owns it; not a deletion.
+    git cat-file -e "HEAD:$src/$rel" 2>/dev/null && return 1
+    # Absent from HEAD and history records a deletion → stale deploy artifact.
+    [[ -n "$(git log --diff-filter=D --format=%H -1 -- "$src/$rel" 2>/dev/null)" ]]
 }
 
 # Preflight assertion: warn if an undeclared orphan is in the destination
@@ -90,6 +224,10 @@ check_orphans() {
                 break
             fi
         done
+        if [[ "$matched" == false ]] && git_source_deleted "$src" "$orphan"; then
+            echo "  ♻️  $label: stale deploy artifact '$orphan' (deleted from source in git) — deploy will remove it"
+            continue
+        fi
         if [[ "$matched" == false ]]; then
             echo "  ⚠️  $label: undeclared orphan '$orphan' in destination"
             echo "     rsync --delete would wipe this. Either:"
@@ -303,10 +441,15 @@ fi
 echo "=== Syncing ==="
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "$SHARED_EXTENSIONS/" .claude/
-# .agent/ uses plain rsync (no --delete) — runtime scratch is preserve-by-default.
-# Source files from agents_extensions/shared are overlaid if present; agent-written
-# files (dispatch briefs, canaries, handoffs, tmp/, etc.) are never deleted. #4741
-rsync -av "$SHARED_EXTENSIONS/" .agent/
+# .agent/ overlays source without --delete. A deploy-owned manifest reaps only
+# retired paths which an earlier deploy recorded, preserving all other runtime
+# scratch even when it shares a source directory such as prompts/. #4741
+reap_retired_shared_agent_paths
+# The .agent overlay is descriptor-bound all the way through rsync.  A late
+# pathname check is not sufficient: another local agent can swap the directory
+# after the check and redirect a path-based write outside this repository.
+sync_shared_agent_mirror
+write_shared_agent_manifest
 # shellcheck disable=SC2046
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS") "$SHARED_EXTENSIONS/" .codex/
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
