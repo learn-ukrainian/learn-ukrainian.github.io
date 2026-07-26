@@ -279,6 +279,7 @@ def test_full_pre_push_chain_replays_updates_to_the_pytest_guard(tmp_path):
                 "cwd": str(repo),
                 "hook_event_name": "PostToolUse",
                 "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q"},
+                "tool_response": {"stdout": "2 passed in 0.01s"},
             }
         ),
     )

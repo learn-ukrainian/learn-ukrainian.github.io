@@ -101,14 +101,13 @@ worktree, and checked-out branch. A fresh marker from another clone, worktree,
 or same-named branch cannot satisfy the guard. Marker contents carry the same
 identity key, so legacy, empty, or partially written marker files fail closed.
 
-The writer trusts a successful hook event only for one direct pytest invocation.
-Compound commands and failure events require a clean pytest summary in the
-captured output; masked failures, zero-test runs, multiple pytest invocations,
-and collection/help-only modes do not stamp. Only named result/output envelope
-fields are inspected; arbitrary metadata and command-input strings are not
-trusted as test output. The exact checkout comes from the structured Bash
-`cwd`/`workdir` payload. A command-level `cd`/`pushd` is not guessed from shell
-text—set the tool's `workdir` instead.
+The writer requires a clean pytest summary in captured output for every
+recognized command shape; event names never prove success. Masked failures,
+zero-test runs, multiple pytest invocations, and collection/help-only modes do
+not stamp. Only named result/output envelope fields are inspected; arbitrary
+metadata and command-input strings are not trusted as test output. The exact
+checkout comes from the structured Bash `cwd`/`workdir` payload. A command-level
+`cd`/`pushd` is not guessed from shell text—set the tool's `workdir` instead.
 
 Stamping remains observational and exits successfully when it cannot prove the
 run. It uses the checkout or shared primary `.venv/bin/python` and deliberately

@@ -345,18 +345,14 @@ def _passing_summaries(output: str) -> list[bool]:
 
 
 def payload_proves_pytest_success(payload: dict[str, Any]) -> bool:
-    """Accept only a proven pytest success for the command shape and event."""
+    """Accept only a proven pytest success for a recognized command shape."""
     tool_input = _tool_input(payload)
     command = tool_input.get("command") or payload.get("command")
     if not isinstance(command, str) or not command.strip():
         return False
 
-    compound = _command_is_compound_pytest(command)
-    if compound is None:
+    if _command_is_compound_pytest(command) is None:
         return False
-    event_name = str(payload.get("hook_event_name") or "")
-    if event_name == "PostToolUse" and not compound:
-        return True
 
     summaries = _passing_summaries(_command_output(payload))
     return bool(summaries) and all(summaries)
