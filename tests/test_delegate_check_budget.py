@@ -341,3 +341,25 @@ def test_check_budget_hard_sub_ignores_unknown_fallback_target(monkeypatch, tmp_
     err = capsys.readouterr().err
     assert "not a known dispatch agent" in err
     assert "HARD AUTO-SUBSTITUTE" not in err
+
+
+def test_dispatch_capacity_hint_printed_when_target_lane_busy(monkeypatch, tmp_path, capsys):
+    """Task 2: non-blocking note printed when dispatching to busy lane while other lanes idle."""
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setattr(delegate, "_pid_alive", lambda _pid: True)
+
+    # Create a running task for codex
+    state_file = tasks_dir / "busy-task.json"
+    state_file.write_text(json.dumps({
+        "task_id": "busy-task",
+        "agent": "codex",
+        "status": "running",
+        "pid": 99999,
+    }))
+
+    delegate._check_capacity_hint("codex")
+    err = capsys.readouterr().err
+    assert "💡 Note: lane 'codex' has 1 task(s) in flight while idle capacity is available in:" in err
+    assert "claude" in err

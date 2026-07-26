@@ -64,6 +64,11 @@ def _patch_orient_sources(monkeypatch) -> None:
         },
     )
     monkeypatch.setattr(api_main, "_collect_delegate_orient_data", lambda: {"active_count": 0, "recent": []})
+    monkeypatch.setattr(
+        api_main,
+        "_collect_capacity_orient_data",
+        lambda: {"lanes": {"codex": {"in_flight": 0, "healthy": True, "burn_pct_7d": 10.0, "remaining_pct": 90.0, "status": "cool"}}, "primary_recommendation": "codex"},
+    )
     monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda: {})
     monkeypatch.setattr(
         api_main,
@@ -636,6 +641,7 @@ def test_orient_default_sections_remain_full_payload(monkeypatch):
         "pipeline",
         "runtime",
         "delegate",
+        "capacity",
         "bridge_pending",
         "rollovers",
         "wiki",
@@ -644,6 +650,15 @@ def test_orient_default_sections_remain_full_payload(monkeypatch):
         "session_hints",
         "meta",
     } <= set(data)
+
+
+def test_orient_includes_capacity_section(monkeypatch):
+    _patch_orient_sources(monkeypatch)
+    response = client.get("/api/orient?sections=capacity")
+    assert response.status_code == 200
+    data = response.json()
+    assert "capacity" in data
+    assert "lanes" in data["capacity"]
 
 
 def test_orient_issues_collector_uses_five_second_subprocess_timeout(monkeypatch):

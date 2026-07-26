@@ -87,6 +87,7 @@ Issue: #1184.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import logging
@@ -2894,6 +2895,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     else:
         dispatch_agent = args.agent
 
+    _check_capacity_hint(dispatch_agent)
+
     try:
         output_schema_path, output_schema_sha256 = _resolve_output_schema(
             getattr(args, "output_schema", None),
@@ -3520,6 +3523,54 @@ def _resolve_agent_with_budget_guard(agent: str) -> str:
             return sub
 
     return requested
+
+
+def _check_capacity_hint(dispatch_agent: str) -> None:
+    """Non-blocking hint when dispatching to a busy lane while other eligible lanes are idle."""
+    with contextlib.suppress(Exception):
+        try:
+            from scripts.api.lane_health import compute_lane_health, normalize_agent_name
+        except ImportError:
+            from api.lane_health import compute_lane_health, normalize_agent_name
+
+        subscription_lanes = ("claude", "codex", "gemini", "grok", "cursor", "kimi")
+        target_norm = normalize_agent_name(dispatch_agent) or dispatch_agent.lower().strip()
+
+        in_flight: dict[str, int] = {lane: 0 for lane in subscription_lanes}
+        if _TASKS_DIR.is_dir():
+            for state_file in _TASKS_DIR.glob("*.json"):
+                state = _read_state(state_file)
+                if not state or state.get("status") not in ("running", "spawning"):
+                    continue
+                pid = state.get("pid")
+                if pid and not _pid_alive(int(pid)):
+                    continue
+                agent_norm = normalize_agent_name(state.get("agent"))
+                if agent_norm in in_flight:
+                    in_flight[agent_norm] += 1
+
+        busy_count = in_flight.get(target_norm, 0)
+        if busy_count <= 0:
+            return
+
+        health: dict[str, Any] = {}
+        with contextlib.suppress(Exception):
+            health = compute_lane_health(_TASKS_DIR)
+
+        idle_lanes = [
+            lane
+            for lane in subscription_lanes
+            if lane != target_norm
+            and in_flight.get(lane, 0) == 0
+            and health.get(lane, {}).get("healthy", True)
+        ]
+
+        if idle_lanes:
+            idle_str = ", ".join(idle_lanes)
+            print(
+                f"💡 Note: lane '{target_norm}' has {busy_count} task(s) in flight while idle capacity is available in: {idle_str}",
+                file=sys.stderr,
+            )
 
 
 def _status_or_fail_payload(task_id: str) -> dict[str, Any]:

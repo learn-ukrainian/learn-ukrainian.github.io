@@ -464,7 +464,7 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
         res["age_s"] = time.monotonic() - t_mono
         return res
 
-    # Completely unknown fallback
+    # Completely unavailable fallback
     lane = PROVIDER_TO_LANE.get(provider, provider)
     empty_win = {
         "used_pct": None,
