@@ -16,12 +16,17 @@
 # fires after another session has already taken the lease over) can never
 # clobber a newer owner's lease.
 #
-# Generation is REQUIRED for a non-force release (thread_handoff.py raises
-# without it) — it is the fence that makes the previous paragraph true. The
-# generation this session actually claimed at SessionStart is exported by
-# session-setup.sh into $CLAUDE_ENV_FILE as LEARN_UKRAINIAN_THREAD_LEASE_GENERATION;
-# without it we cannot safely release (a missing/wrong generation could only
-# ever match by accident), so this hook no-ops rather than guessing one.
+# Fenced by process identity, not generation: release_thread_lease re-derives
+# this calling process's harness-ancestor pid/start time and requires it to
+# match what the lease recorded (require_proof=True) before releasing
+# anything — this is the fence that makes the previous paragraph true, and it
+# is strictly stronger than a caller-supplied generation. This used to
+# require --generation (exported by session-setup.sh into $CLAUDE_ENV_FILE as
+# LEARN_UKRAINIAN_THREAD_LEASE_GENERATION), but that export reaches only Bash
+# tool calls, never this hook's own subprocess, so the generation gate was
+# silently dead code in every real session — every SessionEnd release
+# no-oped, which is exactly how a 4h-ended session was still able to lock out
+# its successor. This hook no longer requires a generation at all.
 #
 # Skip in non-interactive / pipeline contexts, matching session-setup.sh.
 
@@ -70,17 +75,15 @@ else
   fi
 fi
 
-if [ -z "${LEARN_UKRAINIAN_THREAD_LEASE_GENERATION:-}" ]; then
-  # No generation to fence with — release-thread-lease.py now refuses a non-force
-  # release without one. Leaving the lease in place is safe: claim_thread_lease's
-  # pid-liveness check is the primary defense and will reclaim it once this
-  # process is confirmed dead, regardless of this cooperative path.
-  exit 0
-fi
-
+# No --generation: identity proof is the sole fence (see above). If this repo
+# checkout still has an OLDER thread_handoff.py that hard-requires
+# --generation, the CLI's ValueError is swallowed by `|| true` below — a safe
+# no-op in a mixed-deploy, exactly like the old missing-env-var path. Leaving
+# the lease in place is always safe either way: claim_thread_lease's
+# pid-liveness check is the primary defense and will reclaim it once this
+# process is confirmed dead, regardless of this cooperative path.
 "$PYTHON" "$PROJECT_DIR/scripts/orchestration/thread_handoff.py" --repo-root "$CANONICAL_ROOT" \
   release-thread-lease --agent "$HANDOFF_AGENT" --current-thread-id "$SESSION_ID" \
-  --generation "$LEARN_UKRAINIAN_THREAD_LEASE_GENERATION" \
   >/dev/null 2>&1 || true
 
 exit 0

@@ -15,11 +15,16 @@
 # thread_handoff.py). This is diagnostic only — claim_thread_lease never
 # takes an uncheckable owner over on clock age at all, so there is no window
 # left for a fresh heartbeat to protect. The refresh is a no-op unless this
-# exact session already owns the lease at the exact generation it claimed
-# (LEARN_UKRAINIAN_THREAD_LEASE_GENERATION, exported by session-setup.sh) and
-# its process identity can be reconfirmed, so it can never steal or clobber
-# another session's lease. This refresh is unconditional (unthrottled) since
-# Stop only fires once per turn; the throttled per-tool-call companion is
+# exact session already owns the lease AND its process identity can be
+# reconfirmed (require_proof=True re-derives this process's harness-ancestor
+# pid/start time), so it can never steal or clobber another session's lease.
+# No --generation is passed: it used to be required
+# (LEARN_UKRAINIAN_THREAD_LEASE_GENERATION, exported by session-setup.sh into
+# $CLAUDE_ENV_FILE), but that export reaches only Bash tool calls, never this
+# hook's own subprocess, so the generation gate was silently dead code in
+# every real session — identity proof is strictly stronger and is now the
+# sole fence. This refresh is unconditional (unthrottled) since Stop only
+# fires once per turn; the throttled per-tool-call companion is
 # thread-lease-heartbeat.sh (PostToolUse, issue #5759).
 #
 # Skip in non-interactive / pipeline contexts to avoid latency in batch jobs.
@@ -54,7 +59,7 @@ case "$HANDOFF_AGENT" in
   claude|claude-*)
     if [ -n "$STDIN_JSON" ]; then
       SESSION_ID=$(printf '%s' "$STDIN_JSON" | jq -r '.session_id // empty' 2>/dev/null)
-      if [ -n "$SESSION_ID" ] && [ -n "${LEARN_UKRAINIAN_THREAD_LEASE_GENERATION:-}" ]; then
+      if [ -n "$SESSION_ID" ]; then
         if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
           CANONICAL_ROOT="$CODEX_CANONICAL_REPO_ROOT"
         else
@@ -65,10 +70,14 @@ case "$HANDOFF_AGENT" in
             CANONICAL_ROOT="$PROJECT_DIR"
           fi
         fi
+        # No --generation: identity proof is the sole fence (see above). If
+        # this repo checkout still has an OLDER thread_handoff.py that
+        # hard-requires --generation, the CLI's error is swallowed by
+        # `|| true` below — a safe no-op in a mixed-deploy, exactly like the
+        # old missing-env-var path.
         "$PYTHON" "$PROJECT_DIR/scripts/orchestration/thread_handoff.py" \
           --repo-root "$CANONICAL_ROOT" refresh-thread-lease-heartbeat \
           --agent "$HANDOFF_AGENT" --current-thread-id "$SESSION_ID" \
-          --generation "$LEARN_UKRAINIAN_THREAD_LEASE_GENERATION" \
           >/dev/null 2>&1 || true
         unset CANONICAL_ROOT GIT_COMMON_DIR
       fi
