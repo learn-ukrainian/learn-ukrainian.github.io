@@ -400,31 +400,38 @@ case "$HANDOFF_AGENT" in
   claude|claude-*)
     if [ -z "$CURRENT_THREAD_ID" ]; then
       HANDOFF_CONTEXT="ERROR: Cannot acquire durable thread lease: SessionStart did not provide a current thread id. Stop; do not drive this queue."
-    elif ! THREAD_LEASE_OUTPUT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
-      --repo-root "$CANONICAL_ROOT" claim-thread-lease --agent "$HANDOFF_AGENT" \
-      --current-thread-id "$CURRENT_THREAD_ID" 2>&1); then
-      HANDOFF_CONTEXT="ERROR: DURABLE THREAD LEASE CONFLICT — stop; do not cold-start or drive this queue.
+    else
+      THREAD_LEASE_RC=0
+      THREAD_LEASE_OUTPUT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+        --repo-root "$CANONICAL_ROOT" claim-thread-lease --agent "$HANDOFF_AGENT" \
+        --current-thread-id "$CURRENT_THREAD_ID" 2>&1) || THREAD_LEASE_RC=$?
+      if [ "$THREAD_LEASE_RC" -eq 124 ] || [ "$THREAD_LEASE_RC" -eq 127 ]; then
+        HANDOFF_CONTEXT="ERROR: LEASE CLAIM COULD NOT RUN (timeout/budget/runner missing) — stop; lease state UNKNOWN; do NOT force-release.
 Output:
 $THREAD_LEASE_OUTPUT"
-    else
-      # Propagate the exact generation this session just claimed so the SessionEnd
-      # release hook (release-thread-lease.sh) can fence its release with it —
-      # thread_handoff.py now refuses a non-force release without one (#5759).
-      THREAD_LEASE_GENERATION=$(printf '%s' "$THREAD_LEASE_OUTPUT" | "$ROLLOVER_PYTHON" -c 'import json,sys
+      elif [ "$THREAD_LEASE_RC" -ne 0 ]; then
+        HANDOFF_CONTEXT="ERROR: DURABLE THREAD LEASE CONFLICT — stop; do not cold-start or drive this queue.
+Output:
+$THREAD_LEASE_OUTPUT"
+      else
+        # Propagate the exact generation this session just claimed so the SessionEnd
+        # release hook (release-thread-lease.sh) can fence its release with it —
+        # thread_handoff.py now refuses a non-force release without one (#5759).
+        THREAD_LEASE_GENERATION=$(printf '%s' "$THREAD_LEASE_OUTPUT" | "$ROLLOVER_PYTHON" -c 'import json,sys
 try:
   d=json.loads(sys.stdin.read()); print(d.get("generation") or "")
 except Exception:
   print("")' 2>/dev/null || true)
-      if [ -n "$THREAD_LEASE_GENERATION" ] && [ -n "${CLAUDE_ENV_FILE:-}" ]; then
-        printf 'export LEARN_UKRAINIAN_THREAD_LEASE_GENERATION=%s\n' "$THREAD_LEASE_GENERATION" >> "$CLAUDE_ENV_FILE" 2>/dev/null || true
-      fi
-      unset THREAD_LEASE_GENERATION
+        if [ -n "$THREAD_LEASE_GENERATION" ] && [ -n "${CLAUDE_ENV_FILE:-}" ]; then
+          printf 'export LEARN_UKRAINIAN_THREAD_LEASE_GENERATION=%s\n' "$THREAD_LEASE_GENERATION" >> "$CLAUDE_ENV_FILE" 2>/dev/null || true
+        fi
+        unset THREAD_LEASE_GENERATION
 
-      # A successful claim can still be a takeover (the previous owner was confirmed
-      # dead/zombie, or its pid was reused) or a heal from a corrupt on-disk lease.
-      # Neither may ever be silent — surface it into SessionStart context so the
-      # operator is told a slot changed hands before driving it (#5759).
-      THREAD_LEASE_TAKEOVER_BANNER=$(printf '%s' "$THREAD_LEASE_OUTPUT" | "$ROLLOVER_PYTHON" -c 'import json,sys
+        # A successful claim can still be a takeover (the previous owner was confirmed
+        # dead/zombie, or its pid was reused) or a heal from a corrupt on-disk lease.
+        # Neither may ever be silent — surface it into SessionStart context so the
+        # operator is told a slot changed hands before driving it (#5759).
+        THREAD_LEASE_TAKEOVER_BANNER=$(printf '%s' "$THREAD_LEASE_OUTPUT" | "$ROLLOVER_PYTHON" -c 'import json,sys
 try:
     d = json.loads(sys.stdin.read())
 except Exception:
@@ -442,10 +449,12 @@ if corrupt:
 if parts:
     print("\n".join(parts))
 ' 2>/dev/null || true)
-      if [ -n "$THREAD_LEASE_TAKEOVER_BANNER" ]; then
-        INFO+=("$THREAD_LEASE_TAKEOVER_BANNER")
+        if [ -n "$THREAD_LEASE_TAKEOVER_BANNER" ]; then
+          INFO+=("$THREAD_LEASE_TAKEOVER_BANNER")
+        fi
+        unset THREAD_LEASE_TAKEOVER_BANNER
       fi
-      unset THREAD_LEASE_TAKEOVER_BANNER
+      unset THREAD_LEASE_RC
     fi
     ;;
 esac

@@ -80,6 +80,11 @@ accumulate past the outer hook deadline. Hook-owned advisory locks use a
 one-second bounded wait; the lock remains fail-safe, while a live but wedged
 owner can no longer stall a new session indefinitely.
 
+A `SIGKILL` can land after `claim-thread-lease` persists the lease but before the
+claim reports back to SessionStart. In that case the session must stop and the
+lease can remain held; do not force-release based only on a claim timeout. The
+lease-lifecycle work in the infrastructure lane is making this recovery explicit.
+
 Broad curriculum scans, service probes, GitHub issue listings, and governance
 audits were removed from the synchronous hook. The hook now points to
 `/api/orient` for those optional diagnostics. Multiple pending rollovers remain

@@ -75,12 +75,14 @@ resolve_codex_pending_rollover() {
   local title_state=""
   local replacement_task_id=""
   local runner=()
+  local parser_runner=()
 
   if [ -n "${THREAD_ROLLOVER_COMMAND_RUNNER:-}" ]; then
     runner=(
       "$python_bin" "$THREAD_ROLLOVER_COMMAND_RUNNER"
       --timeout "${THREAD_ROLLOVER_COMMAND_TIMEOUT_SECONDS:-3}" --
     )
+    parser_runner=("${runner[@]}")
   fi
 
   clear_codex_launcher_rollover_env
@@ -108,7 +110,7 @@ resolve_codex_pending_rollover() {
   fi
 
   if ! parsed="$(
-    printf '%s' "$detect_output" | "$python_bin" -c '
+    printf '%s' "$detect_output" | "${parser_runner[@]}" "$python_bin" -c '
 import json
 import re
 import sys
