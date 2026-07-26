@@ -8,7 +8,7 @@ import pytest
 import yaml
 
 import scripts.config
-from scripts.validate_fleet_taxonomy import (
+from scripts.orchestration.validate_fleet_taxonomy import (
     ASSIGNMENTS_PATH,
     ASSIGNMENTS_SCHEMA_PATH,
     TAXONOMY_PATH,
