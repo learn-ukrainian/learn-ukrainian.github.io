@@ -3,6 +3,13 @@
 The JSONL source remains editorial truth.  This module writes a fresh SQLite
 query projection and can export the accepted source records canonically.  It
 does not mutate the source JSONL or the legacy v1 ``atlas_db`` projection.
+
+Textbook-table-derived sources must stamp ``source_kind`` exactly ``"textbook"``.
+That producer contract is how the textbook-specific exercise gate recognizes
+those sources.
+
+The v1-named compatibility views are schema-complete but partial until the
+enrichment projection lands; they do not keep the live UI running.
 """
 
 from __future__ import annotations
@@ -73,9 +80,21 @@ class RejectedRecord:
 
 
 @dataclass(frozen=True)
+class CascadedDeckItem:
+    """A deck item excluded because its attestation failed a quality gate."""
+
+    deck_slug: str
+    sense_slug: str
+    attestation_id: str
+    record: dict[str, Any]
+
+
+@dataclass(frozen=True)
 class BuildResult:
     accepted_records: int
     rejected_records: tuple[RejectedRecord, ...]
+    cascaded_deck_items: int = 0
+    cascaded_deck_item_records: tuple[CascadedDeckItem, ...] = ()
 
     @property
     def rejection_counts(self) -> dict[str, int]:
@@ -161,13 +180,26 @@ CREATE INDEX idx_attestations_source_id ON attestations(source_id);
 CREATE INDEX idx_practice_deck_items_sense_slug ON practice_deck_items(sense_slug);
 
 -- Read-only v1 compatibility projections.  The existing v1 ``atlas_db``
--- tables remain untouched; these views allow a v2-only projection to serve
--- legacy SELECT consumers during the migration.
+-- tables remain untouched.  These views complete the legacy schema surface,
+-- but remain partial until enrichment records are projected from v2.
 CREATE VIEW articles AS
 SELECT entry_slug AS slug, COALESCE(display_head, lemma) AS display_head,
        lemma, entry_type, NULL AS pos, NULL AS gloss,
-       'approved' AS review_state, visibility, NULL AS cefr,
+       NULL AS review_state, visibility, NULL AS cefr,
        NULL AS heritage_classification, NULL AS created_at, NULL AS updated_at
+FROM lemma_entries;
+CREATE VIEW article_provenance AS
+SELECT sense.entry_slug AS slug, source.source_kind AS source_family,
+       COALESCE(source.canonical_url, source.file_path) AS source_locator,
+       attestation.extraction_mode
+FROM attestations AS attestation
+JOIN senses AS sense ON sense.sense_slug = attestation.sense_slug
+JOIN sources AS source ON source.source_id = attestation.source_id;
+CREATE VIEW article_payloads AS
+SELECT entry_slug AS slug,
+       ROW_NUMBER() OVER (ORDER BY entry_slug) AS route_order,
+       record_json AS payload_json,
+       CASE WHEN visibility = 'public' THEN 1 ELSE 0 END AS is_public_route
 FROM lemma_entries;
 CREATE VIEW enrichment AS
 SELECT sense.entry_slug AS slug, 'meaning' AS section,
@@ -254,18 +286,9 @@ def load_vesum_forms(vesum_db: Path) -> frozenset[str]:
 
 
 def _is_textbook_source(source: dict[str, Any], attestation: dict[str, Any]) -> bool:
-    haystack = " ".join(
-        str(value or "")
-        for value in (
-            source.get("source_kind"),
-            source.get("source_work"),
-            source.get("source_id"),
-            attestation.get("source_kind"),
-            attestation.get("source_work"),
-            attestation.get("chunk_id"),
-        )
-    ).casefold()
-    return "textbook" in haystack or "ukrmova" in haystack
+    """Recognize textbook records using the producer's exact source-kind stamp."""
+    del attestation
+    return source.get("source_kind") == "textbook"
 
 
 def attestation_rejection_reason(
@@ -274,10 +297,11 @@ def attestation_rejection_reason(
     """Return the first calibrated quality-gate failure for an attestation."""
     source_period = source.get("language_period")
     chunk_period = attestation.get("language_period")
+    # Literary producers must stamp their period.  Values that are present
+    # fail closed unless modern; absent textbook metadata is not a period claim.
     if (
         source_period not in {None, "modern"}
         or chunk_period not in {None, "modern"}
-        or (source_period is None and chunk_period is None)
     ):
         return "language_period_not_modern"
 
@@ -290,14 +314,19 @@ def attestation_rejection_reason(
     # surname alone can raise the VESUM miss rate.  Neither signal is safe by
     # itself; only this exact combined predicate rejects a row.
     if not UKRAINIAN_SPECIFIC_LETTERS.intersection(folded):
-        tokens = UKRAINIAN_TOKEN_RE.findall(text)
+        # Keep parity with attach_sentences_v3.py's calibrated scorer: one-
+        # and two-letter tokens are excluded before calculating the ratio.
+        tokens = [token for token in UKRAINIAN_TOKEN_RE.findall(text) if len(token) >= 3]
         unknown = sum(_normalized_form(token) not in vesum_forms for token in tokens)
         if tokens and unknown / len(tokens) > UNKNOWN_TOKEN_RATIO_LIMIT:
             return "ukrainian_purity_unknown_ratio"
 
-    chunk_text = str(attestation.get("chunk_text") or attestation.get("source_text") or text)
-    if _is_textbook_source(source, attestation) and EXERCISE_INSTRUCTION_RE.search(chunk_text):
-        return "textbook_exercise_instruction"
+    if _is_textbook_source(source, attestation):
+        chunk_text = attestation.get("chunk_text")
+        if not isinstance(chunk_text, str) or not chunk_text:
+            raise ProjectionError("textbook attestation requires chunk_text for exercise screening")
+        if EXERCISE_INSTRUCTION_RE.search(chunk_text):
+            return "textbook_exercise_instruction"
     return None
 
 
@@ -417,7 +446,7 @@ def _insert_record(cursor: sqlite3.Cursor, record: dict[str, Any]) -> None:
 
 def _records_for_build(
     records: Iterable[dict[str, Any]], vesum_forms: frozenset[str]
-) -> tuple[list[dict[str, Any]], list[RejectedRecord]]:
+) -> tuple[list[dict[str, Any]], list[RejectedRecord], list[CascadedDeckItem]]:
     by_type = {record_type: [] for record_type in RECORD_TYPES}
     sources: dict[str, dict[str, Any]] = {}
     for record in records:
@@ -428,6 +457,8 @@ def _records_for_build(
 
     accepted: list[dict[str, Any]] = []
     rejected: list[RejectedRecord] = []
+    rejected_attestation_ids: set[str] = set()
+    cascaded_deck_items: list[CascadedDeckItem] = []
     for record_type in RECORD_TYPES:
         for record in by_type[record_type]:
             if record_type == "attestation":
@@ -438,10 +469,24 @@ def _records_for_build(
                     raise ProjectionError(f"attestation references undeclared source_id {source_id!r}")
                 reason = attestation_rejection_reason(record, source, vesum_forms)
                 if reason:
-                    rejected.append(RejectedRecord(_required_string(record, "attestation_id"), reason, record))
+                    attestation_id = _required_string(record, "attestation_id")
+                    rejected.append(RejectedRecord(attestation_id, reason, record))
+                    rejected_attestation_ids.add(attestation_id)
+                    continue
+            elif record_type == "practice_deck_item":
+                attestation_id = record.get("attestation_id")
+                if isinstance(attestation_id, str) and attestation_id in rejected_attestation_ids:
+                    cascaded_deck_items.append(
+                        CascadedDeckItem(
+                            deck_slug=_required_string(record, "deck_slug"),
+                            sense_slug=_required_string(record, "sense_slug"),
+                            attestation_id=attestation_id,
+                            record=record,
+                        )
+                    )
                     continue
             accepted.append(record)
-    return accepted, rejected
+    return accepted, rejected, cascaded_deck_items
 
 
 def _foreign_key_check(connection: sqlite3.Connection) -> None:
@@ -461,7 +506,7 @@ def build_projection(
     records = _read_jsonl(input_jsonl)
     attestation_count = sum(record.get("record_type") == "attestation" for record in records)
     vesum_forms = load_vesum_forms(vesum_db) if attestation_count else frozenset()
-    accepted, rejected = _records_for_build(records, vesum_forms)
+    accepted, rejected, cascaded_deck_items = _records_for_build(records, vesum_forms)
     if strict and rejected:
         raise ProjectionError(
             f"strict build rejected {len(rejected)} attestation record(s): {BuildResult(0, tuple(rejected)).rejection_counts}"
@@ -486,7 +531,12 @@ def build_projection(
         os.replace(temp_path, db_path)
     finally:
         temp_path.unlink(missing_ok=True)
-    return BuildResult(accepted_records=len(accepted), rejected_records=tuple(rejected))
+    return BuildResult(
+        accepted_records=len(accepted),
+        rejected_records=tuple(rejected),
+        cascaded_deck_items=len(cascaded_deck_items),
+        cascaded_deck_item_records=tuple(cascaded_deck_items),
+    )
 
 
 def export_projection(db_path: Path, output_jsonl: Path) -> None:
@@ -514,10 +564,23 @@ def export_projection(db_path: Path, output_jsonl: Path) -> None:
 
 def write_rejection_report(result: BuildResult, output_jsonl: Path) -> None:
     """Write rejected rows in a deterministic, auditable JSONL format."""
-    rows = [
+    rows: list[dict[str, Any]] = [
         {"attestation_id": item.attestation_id, "gate_failed": item.reason, "record": item.record}
         for item in sorted(result.rejected_records, key=lambda item: (item.reason, item.attestation_id))
     ]
+    rows.extend(
+        {
+            "attestation_id": item.attestation_id,
+            "deck_slug": item.deck_slug,
+            "sense_slug": item.sense_slug,
+            "gate_failed": "cascaded_attestation_rejected",
+            "record": item.record,
+        }
+        for item in sorted(
+            result.cascaded_deck_item_records,
+            key=lambda item: (item.deck_slug, item.sense_slug, item.attestation_id),
+        )
+    )
     output_jsonl.parent.mkdir(parents=True, exist_ok=True)
     output_jsonl.write_text("".join(f"{canonical_json(row)}\n" for row in rows), encoding="utf-8")
 
@@ -541,7 +604,12 @@ def main() -> None:
             write_rejection_report(result, args.rejections)
         print(
             json.dumps(
-                {"accepted_records": result.accepted_records, "rejections": result.rejection_counts}, sort_keys=True
+                {
+                    "accepted_records": result.accepted_records,
+                    "cascaded_deck_items": result.cascaded_deck_items,
+                    "rejections": result.rejection_counts,
+                },
+                sort_keys=True,
             )
         )
     except ProjectionError as exc:

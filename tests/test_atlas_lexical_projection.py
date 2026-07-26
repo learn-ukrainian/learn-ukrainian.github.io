@@ -34,17 +34,21 @@ def _attestation(source_id: str, chunk_id: str, text: str, **extra: object) -> d
     }
 
 
-def _source(source_id: str, *, language_period: str = "modern", source_kind: str = "literary") -> dict[str, str]:
-    return {
+def _source(
+    source_id: str, *, language_period: str | None = "modern", source_kind: str = "literary"
+) -> dict[str, str]:
+    source = {
         "record_type": "source",
         "source_id": source_id,
         "source_work": source_id,
-        "language_period": language_period,
         "source_kind": source_kind,
         "license_type": "CC-BY-4.0",
         "attribution_type": "required",
         "rights_status": "redistributable",
     }
+    if language_period is not None:
+        source["language_period"] = language_period
+    return source
 
 
 def _write_jsonl(path: Path, records: list[dict[str, object]]) -> None:
@@ -131,7 +135,19 @@ def test_round_trip_keeps_good_rows_byte_exact_and_rejects_each_bad_attestation_
         assert connection.execute("PRAGMA foreign_key_check").fetchall() == []
         assert connection.execute("SELECT COUNT(*) FROM attestations").fetchone()[0] == 1
         assert connection.execute("SELECT type FROM sqlite_master WHERE name='articles'").fetchone()[0] == "view"
+        assert connection.execute("SELECT type FROM sqlite_master WHERE name='article_provenance'").fetchone()[0] == "view"
+        assert connection.execute("SELECT type FROM sqlite_master WHERE name='article_payloads'").fetchone()[0] == "view"
         assert connection.execute("SELECT slug FROM articles").fetchone()[0] == "прапор"
+        assert connection.execute("SELECT pos, gloss, cefr, heritage_classification FROM articles").fetchone() == (
+            None,
+            None,
+            None,
+            None,
+        )
+        assert connection.execute(
+            "SELECT slug, source_family, source_locator, extraction_mode FROM article_provenance"
+        ).fetchone() == ("прапор", "literary", None, None)
+        assert connection.execute("SELECT payload_json FROM article_payloads").fetchone()[0]
         with pytest.raises(sqlite3.IntegrityError):
             connection.execute(
                 "INSERT INTO senses(sense_slug, entry_slug, record_json) VALUES ('orphan:core', 'missing', '{}')"
@@ -157,6 +173,108 @@ def test_purity_gate_requires_both_signals_and_uses_the_calibrated_ratio(tmp_pat
 
     assert result.accepted_records == 4
     assert result.rejection_counts == {"ukrainian_purity_unknown_ratio": 1}
+
+
+def test_purity_gate_excludes_one_and_two_letter_tokens_for_calibration(tmp_path: Path) -> None:
+    short_tokens_and_known_word = _attestation("literary-modern", "short-1", "Та ми пан.")
+    records: list[dict[str, object]] = [
+        _source("literary-modern"),
+        {"record_type": "lemma_entry", "entry_slug": "прапор", "lemma": "прапор", "entry_type": "lemma"},
+        {"record_type": "sense", "sense_slug": "прапор:core", "entry_slug": "прапор"},
+        short_tokens_and_known_word,
+    ]
+    input_path = tmp_path / "input.jsonl"
+    _write_jsonl(input_path, records)
+    vesum_db = _vesum_db(tmp_path / "vesum.db", ["пан"])
+
+    result = projection.build_projection(input_path, tmp_path / "atlas-v2.db", vesum_db=vesum_db)
+
+    assert result.rejection_counts == {}
+    assert result.accepted_records == 4
+
+
+def test_textbook_without_period_metadata_accepts_modern_attestation(tmp_path: Path) -> None:
+    attestation = _attestation(
+        "textbook-source",
+        "chunk-1",
+        "Її зошит лежить на парті.",
+        chunk_text="Її зошит лежить на парті.",
+    )
+    records: list[dict[str, object]] = [
+        _source("textbook-source", language_period=None, source_kind="textbook"),
+        {"record_type": "lemma_entry", "entry_slug": "прапор", "lemma": "прапор", "entry_type": "lemma"},
+        {"record_type": "sense", "sense_slug": "прапор:core", "entry_slug": "прапор"},
+        attestation,
+    ]
+    input_path = tmp_path / "input.jsonl"
+    _write_jsonl(input_path, records)
+    vesum_db = _vesum_db(tmp_path / "vesum.db", [])
+
+    result = projection.build_projection(input_path, tmp_path / "atlas-v2.db", vesum_db=vesum_db)
+
+    assert result.accepted_records == 4
+    assert result.rejection_counts == {}
+
+
+def test_textbook_exercise_screening_requires_full_chunk_text(tmp_path: Path) -> None:
+    attestation = _attestation("textbook-source", "chunk-1", "Її зошит лежить на парті.")
+    records: list[dict[str, object]] = [
+        _source("textbook-source", language_period=None, source_kind="textbook"),
+        {"record_type": "lemma_entry", "entry_slug": "прапор", "lemma": "прапор", "entry_type": "lemma"},
+        {"record_type": "sense", "sense_slug": "прапор:core", "entry_slug": "прапор"},
+        attestation,
+    ]
+    input_path = tmp_path / "input.jsonl"
+    _write_jsonl(input_path, records)
+    vesum_db = _vesum_db(tmp_path / "vesum.db", [])
+
+    with pytest.raises(projection.ProjectionError, match="textbook attestation requires chunk_text"):
+        projection.build_projection(input_path, tmp_path / "atlas-v2.db", vesum_db=vesum_db)
+
+    attestation["chunk_text"] = "Виправте помилки. Її зошит лежить на парті."
+    _write_jsonl(input_path, records)
+    result = projection.build_projection(input_path, tmp_path / "atlas-v2.db", vesum_db=vesum_db)
+
+    assert result.rejection_counts == {"textbook_exercise_instruction": 1}
+
+
+def test_deck_item_referencing_rejected_attestation_is_cascaded_into_report(tmp_path: Path) -> None:
+    rejected_attestation = _attestation(
+        "textbook-source",
+        "chunk-1",
+        "Її зошит лежить на парті.",
+        chunk_text="Виправте помилки. Її зошит лежить на парті.",
+    )
+    deck_item = {
+        "record_type": "practice_deck_item",
+        "deck_slug": "a1-flags-v1",
+        "sense_slug": "прапор:core",
+        "attestation_id": rejected_attestation["attestation_id"],
+        "card_template": "recognition",
+    }
+    records: list[dict[str, object]] = [
+        _source("textbook-source", language_period=None, source_kind="textbook"),
+        {"record_type": "lemma_entry", "entry_slug": "прапор", "lemma": "прапор", "entry_type": "lemma"},
+        {"record_type": "sense", "sense_slug": "прапор:core", "entry_slug": "прапор"},
+        rejected_attestation,
+        {"record_type": "practice_deck", "deck_slug": "a1-flags-v1"},
+        deck_item,
+    ]
+    input_path = tmp_path / "input.jsonl"
+    report_path = tmp_path / "rejections.jsonl"
+    db_path = tmp_path / "atlas-v2.db"
+    _write_jsonl(input_path, records)
+    vesum_db = _vesum_db(tmp_path / "vesum.db", [])
+
+    result = projection.build_projection(input_path, db_path, vesum_db=vesum_db)
+    projection.write_rejection_report(result, report_path)
+
+    assert result.accepted_records == 4
+    assert result.cascaded_deck_items == 1
+    report_rows = [json.loads(line) for line in report_path.read_text(encoding="utf-8").splitlines()]
+    assert any(row["gate_failed"] == "cascaded_attestation_rejected" for row in report_rows)
+    with sqlite3.connect(db_path) as connection:
+        assert connection.execute("SELECT COUNT(*) FROM practice_deck_items").fetchone()[0] == 0
 
 
 def test_strict_mode_fails_closed_when_a_builder_gate_rejects_an_attestation(tmp_path: Path) -> None:
