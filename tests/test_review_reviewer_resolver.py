@@ -101,9 +101,10 @@ def test_unsupported_risk_fails_closed():
 
 
 def test_critical_uses_authority_while_routine_uses_practical_defaults():
-    # OpenAI author: critical → Opus 5 (Sol advisory); high/medium/low → Sonnet 5.
+    # OpenAI author: critical → Fable 5 (Sol advisory); high/medium/low → Sonnet 5.
+    # Operator 2026-07-26: Opus 5 de-advisored; Fable is the Anthropic authority seat.
     critical = resolve_reviewer(ResolverInputs(author_model="codex", risk="critical"))
-    assert critical.selected.name == "claude-opus-5"
+    assert critical.selected.name == "claude-fable-5"
     for risk in ("high", "medium", "low"):
         resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk))
         assert resolution.selected.name == "claude-sonnet-5", risk
@@ -157,7 +158,7 @@ def test_fable_keeps_native_claude_when_native_health_is_degraded():
         )
     )
 
-    assert resolution.selected.name == "claude-opus-5"
+    assert resolution.selected.name == "claude-fable-5"
     assert resolution.selected.transport == "native_claude"
     assert resolution.selected.health == "degraded"
 
@@ -475,12 +476,10 @@ def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
 
 def test_critical_ladder_keeps_authority_before_practical():
     critical = REVIEW_LADDERS["critical"]
-    # Operator directive 2026-07-25: the Anthropic advisor seat is claude-opus-5.
-    # Fable stays listed but is deprioritised on cost; claude-opus-4-8 remains in the
-    # catalog for its non-advisor consumers but is no longer on the critical ladder.
-    assert [rung[0].name for rung in critical[:5]] == [
+    # Operator directive 2026-07-26: Fable 5 is the Anthropic authority seat;
+    # Opus 5 is de-advisored and absent from the critical ladder entirely.
+    assert [rung[0].name for rung in critical[:4]] == [
         "openai_frontier",
-        "claude-opus-5",
         "claude-fable-5",
         "claude-fable-5-cursor-fallback",
         "gpt-5.6-terra",
