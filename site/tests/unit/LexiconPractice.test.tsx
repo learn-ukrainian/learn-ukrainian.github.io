@@ -3,6 +3,7 @@ import { State } from 'ts-fsrs';
 import { act, render, screen, waitFor, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LexiconPractice, { addDailyExamples } from '@site/src/components/LexiconPractice';
+import { LexiconCustomDeckManager } from '@site/src/components/LexiconCustomDeckManager';
 import PracticeDailyDeck from '@site/src/components/PracticeDailyDeck';
 import PracticeSessionSummary, { type SessionSummaryStats } from '@site/src/components/PracticeSessionSummary';
 import PracticeErrorBoundary from '@site/src/components/PracticeErrorBoundary';
@@ -3074,17 +3075,37 @@ describe('LexiconPractice', () => {
     expect(container.querySelector('figcaption')).toHaveTextContent("Українське прислів'я");
   });
 
-  describe('Teacher Deck & Custom Sets Automated UI Selection Tests', () => {
-    test('renders Teacher Deck button always visible and switches deck filter without error', async () => {
+  describe('Curated Deck & Custom Sets Automated UI Selection Tests', () => {
+    test.each([
+      ['en', 'Curated Deck'],
+      ['uk', 'Відібрана добірка'],
+    ] as const)('renders the %s Curated Deck chip and switches deck filter without error', async (locale, label) => {
+      document.documentElement.dataset.chromeLocale = locale;
       const user = userEvent.setup();
       render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
 
-      const teacherBtn = screen.getByRole('button', { name: /Teacher Deck|Уроки вчителя/i });
+      const teacherBtn = screen.getByRole('button', { name: new RegExp(label) });
       expect(teacherBtn).toBeInTheDocument();
 
       await user.click(teacherBtn);
       expect(teacherBtn).toHaveClass('btn-primary');
       expect(screen.queryByText(/We couldn’t load practice/i)).not.toBeInTheDocument();
+    });
+
+    test.each([
+      ['en', 'Private Curated Deck'],
+      ['uk', 'Приватна відібрана добірка'],
+    ] as const)('renders the %s manager unlock title', (locale, label) => {
+      render(
+        <LexiconCustomDeckManager
+          chromeLocale={locale}
+          activeDeckFilter="all"
+          onSelectDeckFilter={() => undefined}
+          onClose={() => undefined}
+        />,
+      );
+
+      expect(screen.getByText(new RegExp(label))).toBeInTheDocument();
     });
 
     test('renders Custom Set button and filters practice session with reachable cloze items', async () => {

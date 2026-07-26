@@ -62,7 +62,7 @@ export function getTeacherLessonVirtualDeck(
 
   return {
     id: 'virtual_teacher_lesson',
-    title: 'Teacher Lesson Collection (610+440)',
+    title: 'Curated Deck',
     description: 'Special vocabulary deck curated from your private teacher-lesson intake.',
     lemma_keys: teacherLemmas,
     created_at: '2026-07-24T00:00:00.000Z',

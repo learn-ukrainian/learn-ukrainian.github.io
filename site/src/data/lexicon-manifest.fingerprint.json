@@ -1,5 +1,5 @@
 {
-  "fingerprint": "74b91f3cdf5d3d172921e821d58de283a68594e9ca621293b2c06a8aeadb379a",
+  "fingerprint": "a7c648c543c71b4760dd66e175ae08c538a74cb06750b57ebf214b0457c5fe2b",
   "inputs": {
     "lexicon_code": [
       {
@@ -44,7 +44,7 @@
       },
       {
         "path": "scripts/lexicon/build_teacher_deck_cloze.py",
-        "sha256": "ce05f8fbef73722ebaefd91033e7cf037f29bbfb21b7309ac0c3a2d551f878cd"
+        "sha256": "f113cdeadc77789bc243bc3515b9f2cde65fe711c2f1dfa0be2ce8f68520dc15"
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",

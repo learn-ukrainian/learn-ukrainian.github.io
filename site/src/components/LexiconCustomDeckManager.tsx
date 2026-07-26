@@ -66,7 +66,7 @@ export function LexiconCustomDeckManager({
   const [parseError, setParseError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Private Teacher Deck unlock gate
+  // Private Curated Deck unlock gate
   const [teacherDeckUnlocked, setTeacherDeckUnlocked] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     return localStorage.getItem('learn_uk_unlock_teacher_deck') === 'true';
@@ -318,11 +318,11 @@ export function LexiconCustomDeckManager({
           {/* VIEW 1: MY DECKS LIST */}
           {activeTab === 'decks' ? (
             <div>
-              {/* Private Teacher Deck Unlock Toggle */}
+              {/* Private Curated Deck unlock toggle */}
               <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '12px', padding: '0.85rem 1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div>
                   <div style={{ fontWeight: 600, fontSize: '0.9rem', color: '#fef08a' }}>
-                    🔒 {chromeLocale === 'uk' ? 'Приватна добірка вчителя (610+440 слів)' : 'Private Teacher Collection (610+440 words)'}
+                    🔒 {chromeLocale === 'uk' ? 'Приватна відібрана добірка' : 'Private Curated Deck'}
                   </div>
                   <div style={{ fontSize: '0.8rem', color: '#cbd5e1', marginTop: '0.2rem' }}>
                     {chromeLocale === 'uk' ? 'Схована від публічних відвідувачів сайту за замовчуванням' : 'Protected and hidden from general public visitors'}
