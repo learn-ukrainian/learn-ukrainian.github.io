@@ -120,7 +120,18 @@ def _tool_input(payload: dict) -> dict:
 
 
 def _payload_cwd(payload: dict) -> str:
-    cwd = payload.get("cwd") or payload.get("working_directory")
+    # A tool-specific working directory is the execution cwd and therefore
+    # outranks the session-level cwd carried by the hook envelope. Unified
+    # exec calls commonly keep the session cwd at the primary checkout while
+    # placing the dispatch worktree in tool_input.workdir.
+    tool_input = _tool_input(payload)
+    cwd = (
+        tool_input.get("cwd")
+        or tool_input.get("workdir")
+        or tool_input.get("working_directory")
+        or payload.get("cwd")
+        or payload.get("working_directory")
+    )
     return str(cwd) if cwd else os.getcwd()
 
 
@@ -305,9 +316,16 @@ def _tokenize(command: str) -> list[str]:
     """
     try:
         lexer = shlex.shlex(
-            _strip_heredoc_bodies(command), posix=True, punctuation_chars=True
+            _strip_heredoc_bodies(command),
+            posix=True,
+            punctuation_chars="();<>|&\n",
         )
         lexer.whitespace_split = True
+        # Keep newline out of whitespace so shlex returns it as a control
+        # operator. Otherwise adjacent lines collapse into one segment: a later
+        # command's option (for example `find -print`) can be mistaken for an
+        # earlier `sed` invocation's `-i` flag and produce bogus write targets.
+        lexer.whitespace = " \t\r"
         return list(lexer)
     except ValueError:
         # Unbalanced quotes / un-tokenizable — fail open (the shell will reject

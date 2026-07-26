@@ -18,6 +18,7 @@ SUBAGENT_STATUSLINE = (
     PROJECT_ROOT / "agents_extensions/shared/statusline/subagent-statusline.sh"
 )
 CONTEXT_MONITOR = PROJECT_ROOT / "agents_extensions/shared/hooks/context-monitor.sh"
+CODEX_HOOKS = PROJECT_ROOT / "agents_extensions/codex/hooks.json"
 
 
 def _record(*, actual_window: int | None = 272_000) -> dict[str, object]:
@@ -341,6 +342,55 @@ def test_context_monitor_unknown_capacity_emits_no_warning(tmp_path: Path) -> No
     assert completed.stdout == ""
 
 
+@pytest.mark.parametrize(
+    ("identity_env", "value"),
+    [
+        ("SESSION_HANDOFF_AGENT", "codex"),
+        ("CODEX_THREAD_ID", "codex-thread"),
+        ("CODEX_SESSION_ID", "codex-session"),
+    ],
+)
+def test_context_monitor_is_silent_for_native_codex(
+    tmp_path: Path,
+    identity_env: str,
+    value: str,
+) -> None:
+    project, record_path = _fake_project(tmp_path, _record(actual_window=100))
+    transcript = tmp_path / "monitor.jsonl"
+    _write_transcript(transcript, input_tokens=100, cache_tokens=0)
+    payload = {
+        "session_id": "status-session",
+        "transcript_path": os.fspath(transcript),
+    }
+    env = _environment(project, record_path)
+    env[identity_env] = value
+
+    completed = subprocess.run(
+        [os.fspath(CONTEXT_MONITOR)],
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=tmp_path,
+        env=env,
+        timeout=30,
+    )
+
+    assert completed.stdout == ""
+
+
+def test_codex_hook_ssot_does_not_register_manual_context_monitor() -> None:
+    config = json.loads(CODEX_HOOKS.read_text(encoding="utf-8"))
+    commands = [
+        hook["command"]
+        for groups in config["hooks"].values()
+        for group in groups
+        for hook in group.get("hooks", [])
+    ]
+
+    assert all("context-monitor.sh" not in command for command in commands)
+
+
 @pytest.mark.parametrize("script", [STATUSLINE, GEMINI_STATUSLINE, CONTEXT_MONITOR])
 def test_context_consumer_shell_syntax(script: Path) -> None:
     completed = subprocess.run(
@@ -420,4 +470,3 @@ def test_statusline_prefer_handoff_over_compaction(tmp_path: Path) -> None:
 
     assert "[compacts: 1]" in completed.stdout
     assert "HANDOFF SUGGESTED" in completed.stdout
-
