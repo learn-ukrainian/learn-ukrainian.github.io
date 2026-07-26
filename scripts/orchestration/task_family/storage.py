@@ -64,7 +64,10 @@ def advisory_lock(path: Path) -> Iterator[None]:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a+", encoding="utf-8") as handle:
         timeout_text = os.environ.get("LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS", "")
-        timeout_seconds = float(timeout_text) if timeout_text else None
+        try:
+            timeout_seconds = float(timeout_text) if timeout_text else None
+        except ValueError:
+            timeout_seconds = None
         if timeout_seconds is None:
             fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
         else:

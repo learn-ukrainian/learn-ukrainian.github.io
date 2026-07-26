@@ -376,11 +376,18 @@ def test_git_environment_removes_the_agent_push_guard(monkeypatch):
         "/arbitrary/path/.venv/bin/python -m pytest tests/test_pre_push_hook.py -q",
     ),
 )
-def test_stamp_writer_records_successful_pytest_runs(tmp_path, command):
+def test_stamp_writer_records_captured_successful_pytest_runs(tmp_path, command):
     repo, _, _ = _repo_with_change(tmp_path)
     stamp_dir = tmp_path / "stamps"
 
-    result = _run_stamp_writer(repo, {"tool_input": {"command": command}}, tmpdir=stamp_dir)
+    result = _run_stamp_writer(
+        repo,
+        {
+            "tool_input": {"command": command},
+            "tool_response": {"stdout": "2 passed in 0.01s"},
+        },
+        tmpdir=stamp_dir,
+    )
 
     assert result.returncode == 0
     assert _stamp(stamp_dir, repo).exists()
@@ -393,7 +400,10 @@ def test_stamp_writer_leaves_no_stamp_from_detached_head(tmp_path):
 
     result = _run_stamp_writer(
         repo,
-        {"tool_input": {"command": ".venv/bin/python -m pytest tests/test_pre_push_hook.py -q"}},
+        {
+            "tool_input": {"command": ".venv/bin/python -m pytest tests/test_pre_push_hook.py -q"},
+            "tool_response": {"stdout": "2 passed in 0.01s"},
+        },
         tmpdir=stamp_dir,
     )
 
@@ -461,6 +471,7 @@ def test_stamp_writer_uses_tool_workdir_instead_of_hook_process_cwd(tmp_path):
             "command": ".venv/bin/python -m pytest tests/ -q",
             "workdir": str(tested_repo),
         },
+        "tool_response": {"stdout": "2 passed in 0.01s"},
     }
 
     result = _run_stamp_writer(
@@ -482,6 +493,93 @@ def test_successful_shell_wrapper_does_not_mask_failed_pytest(tmp_path):
         "hook_event_name": "PostToolUse",
         "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q || true"},
         "tool_output": "================== 1 failed, 19 passed in 0.65s ==================",
+    }
+
+    result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
+
+    assert result.returncode == 0
+    assert not _stamp(stamp_dir, repo).exists()
+
+
+def test_codex_post_tool_use_with_failed_pytest_output_does_not_stamp(tmp_path):
+    """Codex emits PostToolUse even when Bash exits nonzero."""
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+    payload = {
+        "hook_event_name": "PostToolUse",
+        "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q"},
+        "tool_response": {"stdout": "1 failed, 0 passed in 0.10s"},
+    }
+
+    result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
+
+    assert result.returncode == 0
+    assert not _stamp(stamp_dir, repo).exists()
+
+
+def test_codex_post_tool_use_with_passing_pytest_output_stamps(tmp_path):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+    payload = {
+        "hook_event_name": "PostToolUse",
+        "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q"},
+        "tool_response": {"stdout": "2 passed in 0.01s"},
+    }
+
+    result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
+
+    assert result.returncode == 0
+    assert _stamp(stamp_dir, repo).exists()
+
+
+def test_codex_post_tool_use_with_no_tests_ran_does_not_stamp(tmp_path):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+    payload = {
+        "hook_event_name": "PostToolUse",
+        "tool_input": {"command": ".venv/bin/python -m pytest -k matches_nothing -q"},
+        "tool_response": {"stdout": "no tests ran in 0.00s"},
+    }
+
+    result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
+
+    assert result.returncode == 0
+    assert not _stamp(stamp_dir, repo).exists()
+
+
+@pytest.mark.parametrize(
+    "output_payload",
+    (
+        {},
+        {"tool_output": ""},
+        {"tool_response": {"stdout": ""}},
+        {"tool_response": {"stdout": None}},
+    ),
+)
+def test_codex_post_tool_use_with_missing_or_empty_output_does_not_stamp(tmp_path, output_payload):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+    payload: dict[str, object] = {
+        "hook_event_name": "PostToolUse",
+        "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q"},
+    }
+    payload.update(output_payload)
+
+    result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
+
+    assert result.returncode == 0
+    assert not _stamp(stamp_dir, repo).exists()
+
+
+def test_codex_post_tool_use_with_mixed_passing_and_failing_summaries_does_not_stamp(tmp_path):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+    payload = {
+        "hook_event_name": "PostToolUse",
+        "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q"},
+        "tool_response": {
+            "stdout": "2 passed in 0.01s\n1 failed, 1 passed in 0.01s"
+        },
     }
 
     result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
@@ -619,6 +717,7 @@ def test_same_branch_name_in_another_repo_cannot_reuse_stamp(tmp_path):
         {
             "hook_event_name": "PostToolUse",
             "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q"},
+            "tool_response": {"stdout": "2 passed in 0.01s"},
         },
         tmpdir=stamp_dir,
     )
@@ -718,6 +817,7 @@ def test_actual_head_to_main_push_accepts_stamp_for_the_invoking_worktree(tmp_pa
         {
             "hook_event_name": "PostToolUse",
             "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q"},
+            "tool_response": {"stdout": "2 passed in 0.01s"},
         },
         tmpdir=stamp_dir,
     )

@@ -80,6 +80,11 @@ accumulate past the outer hook deadline. Hook-owned advisory locks use a
 one-second bounded wait; the lock remains fail-safe, while a live but wedged
 owner can no longer stall a new session indefinitely.
 
+A `SIGKILL` can land after `claim-thread-lease` persists the lease but before the
+claim reports back to SessionStart. In that case the session must stop and the
+lease can remain held; do not force-release based only on a claim timeout. The
+lease-lifecycle work in the infrastructure lane is making this recovery explicit.
+
 Broad curriculum scans, service probes, GitHub issue listings, and governance
 audits were removed from the synchronous hook. The hook now points to
 `/api/orient` for those optional diagnostics. Multiple pending rollovers remain
@@ -101,14 +106,13 @@ worktree, and checked-out branch. A fresh marker from another clone, worktree,
 or same-named branch cannot satisfy the guard. Marker contents carry the same
 identity key, so legacy, empty, or partially written marker files fail closed.
 
-The writer trusts a successful hook event only for one direct pytest invocation.
-Compound commands and failure events require a clean pytest summary in the
-captured output; masked failures, zero-test runs, multiple pytest invocations,
-and collection/help-only modes do not stamp. Only named result/output envelope
-fields are inspected; arbitrary metadata and command-input strings are not
-trusted as test output. The exact checkout comes from the structured Bash
-`cwd`/`workdir` payload. A command-level `cd`/`pushd` is not guessed from shell
-text—set the tool's `workdir` instead.
+The writer requires a clean pytest summary in captured output for every
+recognized command shape; event names never prove success. Masked failures,
+zero-test runs, multiple pytest invocations, and collection/help-only modes do
+not stamp. Only named result/output envelope fields are inspected; arbitrary
+metadata and command-input strings are not trusted as test output. The exact
+checkout comes from the structured Bash `cwd`/`workdir` payload. A command-level
+`cd`/`pushd` is not guessed from shell text—set the tool's `workdir` instead.
 
 Stamping remains observational and exits successfully when it cannot prove the
 run. It uses the checkout or shared primary `.venv/bin/python` and deliberately

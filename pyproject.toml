@@ -9,6 +9,9 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+timeout = 120
+timeout_method = "thread"
+faulthandler_timeout = 110
 # atlas_release is publish-time only (requires data/atlas.db); run explicitly with -m atlas_release
 addopts = "-v --tb=short -m 'not atlas_release'"
 filterwarnings = [

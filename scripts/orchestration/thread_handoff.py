@@ -4617,6 +4617,11 @@ def cmd_detect(args: argparse.Namespace) -> int:
     return 0
 
 
+def _lock_timeout_exit(exc: TimeoutError) -> int:
+    print(json.dumps({"error_code": "LOCK_TIMEOUT", "error": str(exc)}, indent=2))
+    return 124
+
+
 def cmd_claim_thread_lease(args: argparse.Namespace) -> int:
     """Claim the durable single-driver lease used during SessionStart."""
     try:
@@ -4629,6 +4634,8 @@ def cmd_claim_thread_lease(args: argparse.Namespace) -> int:
             now=utc_now(),
             starting_pid=args.starting_pid,
         )
+    except TimeoutError as exc:
+        return _lock_timeout_exit(exc)
     except ValueError as exc:
         print(json.dumps({"error": str(exc)}, indent=2))
         return 2
@@ -4699,6 +4706,8 @@ def cmd_release_thread_lease(args: argparse.Namespace) -> int:
             expect_generation=args.expect_generation,
             acknowledge_live_owner=args.acknowledge_live_owner,
         )
+    except TimeoutError as exc:
+        return _lock_timeout_exit(exc)
     except ValueError as exc:
         print(json.dumps({"error": str(exc)}, indent=2))
         return 2

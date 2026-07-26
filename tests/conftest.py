@@ -4,6 +4,7 @@ Pytest configuration and shared fixtures for audit tests.
 Provides reusable content snippets and module templates for testing.
 """
 
+import contextlib
 import os
 import sqlite3
 import sys
@@ -16,6 +17,35 @@ import pytest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _get_breadcrumb_file() -> Path | None:
+    breadcrumb_dir_str = os.environ.get("PYTEST_BREADCRUMB_DIR", ".pytest_breadcrumbs")
+    if not breadcrumb_dir_str:
+        return None
+    dir_path = Path(breadcrumb_dir_str)
+    dir_path.mkdir(parents=True, exist_ok=True)
+    worker_id = os.environ.get("PYTEST_XDIST_WORKER", "master")
+    return dir_path / f"breadcrumb_{worker_id}.txt"
+
+
+def _append_breadcrumb(line: str) -> None:
+    breadcrumb_file = _get_breadcrumb_file()
+    if breadcrumb_file:
+        with open(breadcrumb_file, "a", encoding="utf-8") as f:
+            f.write(line)
+            f.flush()
+            with contextlib.suppress(OSError):
+                os.fsync(f.fileno())
+
+
+def pytest_runtest_logstart(nodeid: str, location: tuple[str, int | None, str]) -> None:
+    _append_breadcrumb(f"START {nodeid}\n")
+
+
+def pytest_runtest_logfinish(nodeid: str, location: tuple[str, int | None, str]) -> None:
+    _append_breadcrumb(f"FINISH {nodeid}\n")
+
 
 
 def _require_data_artifact(
