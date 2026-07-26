@@ -14,6 +14,8 @@ from typing import Any
 
 import yaml
 
+from scripts.orchestration.fleet_taxonomy import UnknownAreaError, resolve_area
+
 DEFAULT_STREAMS_YAML = Path("scripts/config/issue_streams.yaml")
 
 # Optional explicit handoff path overrides (relative to repo root).
@@ -91,7 +93,10 @@ def _handoff_candidates_for(stream_name: str, epic_number: int) -> tuple[str, ..
     stream_id = f"epic:{epic_number}"
     if stream_id in HANDOFF_PATH_OVERRIDES:
         return HANDOFF_PATH_OVERRIDES[stream_id]
-    slug = _STREAM_NAME_TO_CLAUDE_DIR.get(stream_name, stream_name.replace("_", "-"))
+    try:
+        slug = resolve_area(stream_name).id
+    except UnknownAreaError:
+        slug = _STREAM_NAME_TO_CLAUDE_DIR.get(stream_name, stream_name.replace("_", "-"))
     return (
         f".claude/{slug}-epic/CLAUDE-DRIVER-HANDOFF.md",
         f".claude/{slug}-epic/INTERIM-DRIVER-HANDOFF.md",
