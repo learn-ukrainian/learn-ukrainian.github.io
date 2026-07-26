@@ -49,7 +49,7 @@ Each cell carries:
 
 The rest of this doc is *task → agent*. This section is the **inverse — *free lane → next work*** — so capacity is never left idle (user directive 2026-06-19; cf. MEMORY #M-6 "parallel by default").
 
-- **In-flight caps:** 2 Codex + 2 Claude + 2 agy concurrent (check `/api/delegate/active`; queue if full). DeepSeek (review), cursor + grok (writer/fixer) are additional lanes not counted in the 2+2+2.
+- **Capacity rule (no fixed caps):** width is pace/reserve-driven per `rules/model-assignment.md` § Worker priority ladder. Before firing, read CodexBar (`codexbar usage --json --provider <lane>`) and disk headroom (`df -h /` plus `du -sh "$repo_root/.worktrees"` where `repo_root=$(dirname "$(git rev-parse --git-common-dir)")`). A lane at `farBehind` pace with meaningful reserve and free disk → pull work into it; a lane at/ahead of pace or thin reserve → throttle/queue. Check `/api/delegate/active` for in-flight state, but do **not** queue merely because a lane already has 2 jobs. DeepSeek (review), cursor + grok (writer/fixer) are additional lanes evaluated the same way.
 - **When a lane frees up, pull the next item that FITS it — don't idle, don't make-work:**
   - **Codex / Claude (top-priority):** the hardest open work first — novel impl, cross-file refactors, architecture, V7 module building/review, hard debugging. Don't burn these on mechanical work a cheaper lane can do.
   - **agy / cursor / grok:** mechanical-with-judgment — running scripts, fixtures/migrations, docs-near-code, wiki/content writing, schema edits, bounded refactors.

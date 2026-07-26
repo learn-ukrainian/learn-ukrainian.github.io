@@ -12,8 +12,9 @@ driver — and Claude when driving a track — follows so orchestration behaves 
 regardless of which model is in the seat.
 
 **Golden rule of this skill: it teaches the _method_, never the _roster_.** Who is in
-which lane, which model fits which task, and the in-flight caps are **live data** that
-change; always read them fresh from the served rules and catalog, never from memory:
+which lane, which model fits which task, and the current width (CodexBar pace/reserve +
+disk headroom, not a fixed cap) are **live data** that change; always read them fresh from
+the served rules and catalog, never from memory:
 
 - `GET http://127.0.0.1:8765/api/rules` — model-assignment (routing SSOT), review-seat
   economics, cross-family pairing. Served first; supports `If-None-Match`.

@@ -9,6 +9,10 @@ target: openclaw/clawpatch + openclaw/acpx (provider bridge)
 
 # clawpatch — supervised evaluation brief
 
+> **Historical note:** this document was written when the fleet used a fixed
+> "2 Codex in flight" dispatch cap. That cap is retired; current width doctrine
+> is pace/reserve-driven per `agents_extensions/shared/rules/model-assignment.md`.
+
 > **User direction (2026-05-17):** *"i wuld like to introduce this tool under supervision … it can use any of our agents or agent combinations."*
 
 This brief is research-only. No `pnpm add -g`, no `clawpatch init`, no

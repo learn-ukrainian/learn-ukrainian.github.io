@@ -88,8 +88,28 @@ If I'm about to write code inline and it doesn't match row 1, STOP and dispatch 
 
 **Writer routing refinement (user-confirmed 2026-07-07):** general content writing runs on **codex + agy** (agy = the standout A1-A2 immersion teaching voice per the 2026-07-04 bakeoff — do not forget it exists); the Claude window is SAVED for judgment work (architecture, adversarial review, hard bugs — codex is the primary coder, not Claude). The **V7 PIPELINE writer seat is separate**: it stays `claude-tools` because that seat is in-harness TOOL-CALLING fit, not prose (codex-tools emitted `tool_calls=0`); after any Claude-model rotation, spot-check ONE module before the next batch.
 
-**CodexBar / routing-budget:** `/api/state/routing-budget` + `delegate --check-budget` is the
-never-trip window check for subscription lanes. It does not list every API/routed model and therefore
+**CodexBar pace/reserve (width truth source):** the working command is the CodexBar CLI —
+`codexbar usage --json --provider <codex|claude|gemini|cursor|grok|kimi>`. It returns
+`usage.{primary,secondary,tertiary}.usedPercent` for every lane it can probe, but
+`pace.<window>.{stage,summary,deltaPercent,willLastToReset}` is only available for
+**codex** (secondary window only) and **claude** (primary + secondary). Measured right now:
+
+| lane | has `pace` | pace windows | `usage.secondary` |
+| --- | --- | --- | --- |
+| codex | yes | `secondary` | object |
+| claude | yes | `primary`, `secondary` | object |
+| gemini | no | — | null |
+| cursor | no | — | object |
+| grok | no | — | null |
+| kimi | no | — | object |
+
+For **codex** and **claude**, read the SIGNAL (`pace.<window>.stage` + reserve /
+`willLastToReset`) to decide width. For **gemini/cursor/grok/kimi** the operator is partly
+blind to pace: fall back to `usage.<window>.usedPercent`, in-flight count, and lane health,
+and SAY the picture is partial rather than guessing. `/api/state/routing-budget` +
+`delegate --check-budget` mirror the same signal but have historically dropped it
+(`burn_pct_7d: null` / `remaining_pct: null` per lane) — a null there is MISSING DATA, not zero
+usage and not zero remaining; when they disagree or return nulls, trust the CLI. It does not list every API/routed model and therefore
 must never define the fleet by itself. Grok 4.5 and GPT/Codex never route through Hermes. Kimi K3 is a separate
 native OAuth subscription lane (`kimi-code/k3`, max effort, tool/image/video input; do not publish a
 context-size claim until the native provider documents it). API-billed lanes such as DeepSeek may be absent from CodexBar by design; absence is unknown
@@ -173,7 +193,27 @@ above, and the GPT-5.6 Sol/Terra/Luna row below are unchanged — this is the st
 
 ### Worker priority ladder — first pick per work type (user standing order 2026-07-11: stop re-deriving this)
 
-Route by FIT, then shed from HOT lanes — consult **CodexBar** `/api/state/routing-budget` (+ `delegate --check-budget`) before any fanout. Never persist a live percentage in routing policy; it becomes false as soon as a quota window moves. Each lane's current strengths/caveats live in the catalog, the per-task table, and the panel notes.
+Route by FIT, then shed from HOT lanes — fanout WIDTH is decided by CodexBar **pace stage + reserve**
+(`codexbar usage --json --provider <lane>`; read `pace.<window>.{stage,summary,deltaPercent,willLastToReset}`),
+and it is TWO-SIDED (operator 2026-07-26):
+
+- **Lower bound — no idle paid capacity:** a lane sitting at `in_flight=0` while work queues behind
+  another lane is waste. Pace stage `farBehind` with meaningful reserve → WIDEN into that lane.
+  Headroom says you MAY use an idle lane, not that you should manufacture work for it.
+- **Upper bound — DISK, and disk wins every conflict:** every dispatch costs a git worktree
+  (hundreds of MB each). Concurrency is capped by worktree disk space regardless of how much
+  quota remains; quota headroom never authorises exceeding disk headroom. From inside a dispatch
+  worktree `.worktrees` is not a relative child, so resolve the repository root first:
+  `repo_root=$(dirname "$(git rev-parse --git-common-dir)")`, then run `df -h /` and
+  `du -sh "$repo_root/.worktrees"`. Reaping finished worktrees is what buys room for more
+  agents — cleanup is part of capacity management, not housekeeping.
+- **At or ahead of pace, or reserve thin →** throttle THAT lane; shed to one with headroom.
+- **No data for a lane →** fall back to in-flight count + lane health, and SAY the picture is
+  partial rather than guessing.
+
+Never persist a live percentage or a fixed maximum worktree count into routing policy; both become
+false as soon as a quota window moves or the disk fills — describe the check, run it live. Each
+lane's current strengths/caveats live in the catalog, the per-task table, and the panel notes.
 
 | Work type | 1st pick | 2nd | 3rd | gate / never |
 | --- | --- | --- | --- | --- |
