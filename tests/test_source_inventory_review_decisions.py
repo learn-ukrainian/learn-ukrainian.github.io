@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -12,6 +13,8 @@ from scripts.audit.source_inventory_intake import SourceInventoryError, SourceIn
 FIRST_BATCH = (
     decisions.DEFAULT_DECISION_DIR / "2026-06-29-first-approved-publish-batch.yaml"
 )
+EXPECTED_COMMITTED_DECISION_FILE_COUNT = 51
+COMMITTED_DECISION_FILES = tuple(sorted(decisions.DEFAULT_DECISION_DIR.glob("*.yaml")))
 
 
 def _write_decision_file(path: Path, payload: dict[str, object]) -> None:
@@ -73,12 +76,58 @@ def test_committed_first_source_inventory_review_batch_validates() -> None:
     }
 
 
-def test_default_committed_decision_files_validate() -> None:
-    summary = decisions.validate_committed_decision_files()
+@pytest.fixture(scope="session")
+def committed_source_index() -> dict[tuple[str, str, str], SourceInventoryRecord]:
+    """Load the immutable committed corpus once in each pytest process."""
+    records = decisions.read_source_inventories(
+        decisions.COMMITTED_SOURCE_INVENTORIES,
+        project_root=decisions.PROJECT_ROOT,
+    )
+    return decisions._source_record_index(records)
 
-    assert summary["files"] >= 1
-    assert summary["rows"] >= 20
-    assert summary["decision_counts"]["approve_for_publish"] >= 20
+
+def test_default_committed_decision_file_parametrization_is_complete() -> None:
+    discovered = tuple(sorted(decisions.DEFAULT_DECISION_DIR.glob("*.yaml")))
+
+    assert discovered
+    assert discovered == COMMITTED_DECISION_FILES
+    assert len(COMMITTED_DECISION_FILES) == EXPECTED_COMMITTED_DECISION_FILE_COUNT
+    assert len(set(COMMITTED_DECISION_FILES)) == len(COMMITTED_DECISION_FILES)
+
+
+def test_default_committed_decision_files_keep_aggregate_floors() -> None:
+    decision_counts: Counter[str] = Counter()
+    total_rows = 0
+    for path in COMMITTED_DECISION_FILES:
+        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+        rows = payload["decisions"]
+        total_rows += len(rows)
+        decision_counts.update(row["decision"] for row in rows)
+
+    assert len(COMMITTED_DECISION_FILES) >= 1
+    assert total_rows >= 20
+    assert decision_counts["approve_for_publish"] >= 20
+
+
+@pytest.mark.parametrize(
+    "ledger_path",
+    COMMITTED_DECISION_FILES,
+    ids=lambda path: path.name,
+)
+def test_default_committed_decision_files_validate(
+    ledger_path: Path,
+    committed_source_index: dict[tuple[str, str, str], SourceInventoryRecord],
+) -> None:
+    # Each ledger gets an independent copy because validation may add records from
+    # a present staged inventory. This prevents test order from affecting results.
+    summary = decisions.validate_decision_file(
+        ledger_path,
+        source_index=dict(committed_source_index),
+    )
+
+    assert summary["path"] == str(ledger_path)
+    assert summary["rows"] >= 1
+    assert summary["decision_counts"]
 
 
 def test_committed_decision_validation_reuses_shared_source_index(
@@ -319,6 +368,16 @@ def test_decision_validator_full_crosscheck_when_inventory_present(
     # Same ledger, JSON present: full row cross-check runs and passes.
     path = _staged_ledger_in_tmp_project(tmp_path, monkeypatch, write_inventory=True)
     assert decisions.validate_committed_decision_files([path])["rows"] == 1
+
+
+def test_decision_validator_does_not_mutate_supplied_source_index(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    path = _staged_ledger_in_tmp_project(tmp_path, monkeypatch, write_inventory=True)
+    source_index: dict[tuple[str, str, str], SourceInventoryRecord] = {}
+
+    assert decisions.validate_decision_file(path, source_index=source_index)["rows"] == 1
+    assert source_index == {}
 
 
 def test_decision_validator_absent_inventory_still_rejects_bad_key(
