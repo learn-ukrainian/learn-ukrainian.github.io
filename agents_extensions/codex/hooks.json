@@ -7,7 +7,7 @@
           {
             "type": "command",
             "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/session-setup.sh\"",
-          "timeout": 15,
+            "timeout": 15,
             "statusMessage": "Checking learn-ukrainian session state"
           }
         ]
