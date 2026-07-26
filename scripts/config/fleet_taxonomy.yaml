@@ -1,0 +1,92 @@
+# Fleet taxonomy registry — STABLE membership (areas -> canonical ID, aliases, epics).
+# Generated initially from scripts/config/issue_streams.yaml (provenance preserved).
+# See #5281 / #5279 / operator rulings on area definitions.
+#
+# Rules (binding):
+# - Every OPEN issue must be a member of EXACTLY ONE area/epic.
+# - New issues link their area epic at creation time.
+# - Epics themselves (and their child drive boards) are exempt from membership.
+#
+# Operator rulings applied:
+# - benchmark (#4639) -> harness area
+# - corpus (#4706) -> harness area (datasets mission)
+# - devops (#5703) -> devops area (separate slot — operator #5703 order)
+
+schema_version: 1
+areas:
+  infra:
+    id: infra
+    aliases:
+      - infra-harness
+    epics:
+      - number: 4707
+        name: "Infra & fleet reliability (hooks, dispatch, routing)"
+  devops:
+    id: devops
+    aliases:
+      - devops
+    epics:
+      - number: 5703
+        name: "DevOps automation, CI, release & launcher reliability"
+  harness:
+    id: harness
+    aliases:
+      - eval-harness
+      - benchmark-2156
+      - corpus-channels
+    epics:
+      - number: 4913
+        name: "UA eval harness — QG gates, grammar-lexical gate, annotation, bakeoffs"
+      - number: 4639  # operator ruling: benchmark->harness
+        name: "Ukrainian LLM factuality benchmark — community release"
+      - number: 4706  # operator ruling: corpus->harness, datasets mission
+        name: "Corpus channels — acquisition & ingestion"
+  atlas:
+    id: atlas
+    aliases:
+      - atlas-practice
+      - atlas-intake
+    epics:
+      - number: 4387  # umbrella + UX-quality-wave + #5331 fill_local divergence
+        name: "Word Atlas + Practice Hub product"
+      - number: 4700  # umbrella + UX-quality-wave + #5331 fill_local divergence
+        name: "Word Atlas + Practice Hub product"
+      - number: 5331  # umbrella + UX-quality-wave + #5331 fill_local divergence
+        name: "Word Atlas + Practice Hub product"
+      - number: 4220  # intake epic + entry-model DB epic
+        name: "Word Atlas full-corpus intake"
+      - number: 4378  # intake epic + entry-model DB epic
+        name: "Word Atlas full-corpus intake"
+      - number: 5224  # intake epic + entry-model DB epic
+        name: "Word Atlas full-corpus intake"
+  core:
+    id: core
+    aliases:
+      - core-quality
+    epics:
+      - number: 4274
+        name: "Core-track deterministic quality"
+  seminars:
+    id: seminars
+    aliases:
+      - seminars-folk
+      - seminars-bio
+      - seminars-cross
+    epics:
+      - number: 2836
+        name: "FOLK track re-research + rebuild"
+      - number: 4431
+        name: "BIO track readiness + builds"
+      - number: 4215
+        name: "BIO track readiness + builds"
+      - number: 3120
+        name: "Cross-seminar gates (reading links, self-convergence)"
+      - number: 3079
+        name: "Cross-seminar gates (reading links, self-convergence)"
+  hramatka:
+    id: hramatka
+    aliases:
+      - hramatka
+    epics:
+      - number: 4542
+        name: "Hramatka teacher lesson service (user-gated)"
