@@ -142,6 +142,7 @@ _RUNTIME_TMP_TERMINAL_STATUSES = frozenset(
     }
 )
 _RUNTIME_TMP_ORPHAN_MAX_AGE_S = 7 * 24 * 60 * 60
+_RUNTIME_TMP_SWEEP_ERROR_DETAILS_LIMIT = 10
 _FALLBACK_SUBS_PATH = _REPO_ROOT / "scripts" / "config" / "agent_fallback_substitutions.yaml"
 # Single source for dispatchable agents: argparse choices AND the hard-sub
 # validation in _resolve_agent_with_budget_guard (a yaml typo must never
@@ -552,26 +553,32 @@ def _runtime_tmp_lease_bytes(lease_root: Path) -> int:
     return total
 
 
-def _grant_owner_rwx_at(path: Path, *, dir_fd: int) -> None:
+def _grant_owner_rwx_at(path: Path, *, dir_fd: int) -> bool:
     """Give the owner access to a non-symlink path anchored at ``dir_fd``."""
     try:
         entry = os.stat(path, dir_fd=dir_fd, follow_symlinks=False)
     except FileNotFoundError:
-        return
+        return False
     if stat.S_ISLNK(entry.st_mode):
-        return
+        return False
+    mode = stat.S_IMODE(entry.st_mode)
+    repaired_mode = mode | stat.S_IRWXU
+    if repaired_mode == mode:
+        return False
     os.chmod(
         path,
-        stat.S_IMODE(entry.st_mode) | stat.S_IRWXU,
+        repaired_mode,
         dir_fd=dir_fd,
         follow_symlinks=False,
     )
+    return True
 
 
 def _runtime_tmp_reap_onexc(
     lease: Path,
     namespace: Path,
     namespace_fd: int,
+    repairs: set[Path],
 ):
     """Build an ``rmtree`` repair callback confined to one verified lease."""
 
@@ -584,8 +591,10 @@ def _runtime_tmp_reap_onexc(
             candidate.relative_to(lease.name)
         except ValueError:
             raise exc from None
-        _grant_owner_rwx_at(candidate, dir_fd=namespace_fd)
-        _grant_owner_rwx_at(candidate.parent, dir_fd=namespace_fd)
+        if _grant_owner_rwx_at(candidate, dir_fd=namespace_fd):
+            repairs.add(candidate)
+        if _grant_owner_rwx_at(candidate.parent, dir_fd=namespace_fd):
+            repairs.add(candidate.parent)
 
     return repair
 
@@ -600,15 +609,18 @@ def _remove_runtime_tmp_lease(lease: Path, namespace: Path) -> None:
     open_flags |= os.O_NOFOLLOW
     last_error: OSError | None = None
     # ``shutil.rmtree`` calls onexc but cannot resume an ``os.open`` that
-    # failed while descending into a mode-000 directory. The next complete
-    # pass is safe because the handler repaired only verified lease entries.
-    for _attempt in range(2):
+    # failed while descending into a mode-000 directory. Re-run the complete,
+    # fd-relative walk after every actual permission repair: a tree can have
+    # any number of nested restricted directories, so a fixed retry count
+    # abandons valid entries below the next barrier.
+    while os.path.lexists(lease):
+        repairs: set[Path] = set()
         namespace_fd = os.open(namespace, open_flags)
         try:
             shutil.rmtree(
                 lease.name,
                 dir_fd=namespace_fd,
-                onexc=_runtime_tmp_reap_onexc(lease, namespace, namespace_fd),
+                onexc=_runtime_tmp_reap_onexc(lease, namespace, namespace_fd, repairs),
             )
         except FileNotFoundError:
             return
@@ -618,8 +630,16 @@ def _remove_runtime_tmp_lease(lease: Path, namespace: Path) -> None:
             os.close(namespace_fd)
         if not os.path.lexists(lease):
             return
-    detail = f": {last_error}" if last_error is not None else ""
-    raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}{detail}")
+        if not repairs:
+            break
+    if last_error is not None:
+        raise OSError(
+            last_error.errno,
+            f"runtime tmp lease survived hardened cleanup: {lease}: "
+            f"{last_error.strerror or last_error}",
+            last_error.filename or str(lease),
+        )
+    raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
 
 
 def _runtime_tmp_state_for_lease(lease_name: str) -> dict[str, Any] | None:
@@ -652,22 +672,29 @@ def _runtime_tmp_state_has_live_pid(state: dict[str, Any]) -> bool:
 def _sweep_runtime_tmp_orphans(
     *,
     now: float | None = None,
-) -> dict[str, int]:
+) -> dict[str, Any]:
     """Reap terminal or clearly abandoned task leases before a new dispatch.
 
     A state-backed lease is removed only once its task is terminal and no
     recorded process is alive. A state-less lease must be older than seven
     days. Symlinks and malformed entries are skipped rather than followed.
     """
-    result = {"leases_reaped": 0, "bytes_freed": 0, "errors": 0}
+    error_details: list[tuple[str, int | None, str]] = []
+    result: dict[str, Any] = {
+        "leases_reaped": 0,
+        "bytes_freed": 0,
+        "errors": 0,
+        "error_details": error_details,
+    }
     tmp_root = Path(tempfile.gettempdir())
     namespace = tmp_root / "learn-ukrainian"
     try:
         namespace_stat = namespace.lstat()
     except FileNotFoundError:
         return result
-    except OSError:
+    except OSError as exc:
         result["errors"] += 1
+        error_details.append((namespace.name, exc.errno, str(exc.filename or namespace)))
         return result
     if stat.S_ISLNK(namespace_stat.st_mode) or not stat.S_ISDIR(namespace_stat.st_mode):
         result["errors"] += 1
@@ -676,16 +703,19 @@ def _sweep_runtime_tmp_orphans(
     cutoff = (time.time() if now is None else now) - _RUNTIME_TMP_ORPHAN_MAX_AGE_S
     try:
         candidates = tuple(namespace.iterdir())
-    except OSError:
+    except OSError as exc:
         result["errors"] += 1
+        error_details.append((namespace.name, exc.errno, str(exc.filename or namespace)))
         return result
     for lease in candidates:
         try:
             lease_stat = lease.lstat()
         except FileNotFoundError:
             continue
-        except OSError:
+        except OSError as exc:
             result["errors"] += 1
+            if len(error_details) < _RUNTIME_TMP_SWEEP_ERROR_DETAILS_LIMIT:
+                error_details.append((lease.name, exc.errno, str(exc.filename or lease)))
             continue
         if stat.S_ISLNK(lease_stat.st_mode) or not stat.S_ISDIR(lease_stat.st_mode):
             continue
@@ -701,8 +731,10 @@ def _sweep_runtime_tmp_orphans(
         try:
             bytes_freed = _runtime_tmp_lease_bytes(lease)
             _remove_runtime_tmp_lease(lease, namespace)
-        except OSError:
+        except OSError as exc:
             result["errors"] += 1
+            if len(error_details) < _RUNTIME_TMP_SWEEP_ERROR_DETAILS_LIMIT:
+                error_details.append((lease.name, exc.errno, str(exc.filename or lease)))
             continue
         result["leases_reaped"] += 1
         result["bytes_freed"] += bytes_freed
@@ -3432,7 +3464,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             "🧹 runtime tmp orphan sweep: "
             f"leases_reaped={runtime_tmp_sweep['leases_reaped']} "
             f"bytes_freed={runtime_tmp_sweep['bytes_freed']} "
-            f"errors={runtime_tmp_sweep['errors']}",
+            f"errors={runtime_tmp_sweep['errors']} "
+            f"error_details={runtime_tmp_sweep['error_details']}",
             file=sys.stderr,
         )
 
