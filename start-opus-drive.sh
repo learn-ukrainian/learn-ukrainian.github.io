@@ -8,14 +8,10 @@
 # the `drive-epic` skill — automatic once the cold-prompt wiring lands (follow-up PR);
 # invoke $drive-epic manually until then; the wrapper does NOT force it.
 #
-# MODEL PIN: we pass the CLI's `opus` ALIAS, not a versioned id. Two reasons:
-#   1. The Anthropic lane rotates (Opus 4.6 -> 4.8 -> 5). A pinned id silently points at a
-#      retired model — scripts/config/model_catalog.yaml still reads claude-opus-4-8 while
-#      the live seat is claude-opus-5. The alias always resolves to the current Opus.
-#   2. `opus` matches the `^(opus|sonnet|haiku)$` pattern in scripts/config/context_profiles.yaml,
-#      so the session resolves the TRUSTED native_claude profile (1M window) instead of
-#      falling back to the untrusted `fallback` profile with a 0-token denominator.
-# Pin a specific build with OPUS_DRIVER_MODEL when a rotation needs to be held back.
+# MODEL PIN: claude-fable-5 (operator 2026-07-26 — Fable is the Anthropic judgment seat;
+# Opus 5 is neither an advisor nor an orchestrator: weak in the role and over-verbose).
+# The wrapper NAME is kept until the renames-last migration step of the taxonomy work.
+# Override with OPUS_DRIVER_MODEL when a rotation needs to be held back or tested.
 #
 # HANDOFF SLOT: both Anthropic wrappers resolve to `claude-<lane>` (handoff_identity_for_epic),
 # so an Opus driver and a Sonnet driver on the SAME lane contend for one stream lease and the
@@ -47,6 +43,7 @@ fi
 # Reserved-seat notice (roster "least-bite" logic): Opus is the fleet's cross-family
 # review-of-record seat. Driving a lane with it spends that capacity, so say so out loud
 # rather than letting a habit-launch quietly consume it. Informational only — never blocks.
-echo "Note: Opus is the fleet's cross-family review-of-record seat (docs/runbooks/epic-orchestrator-roster.md)." >&2
-echo "      Driving with it spends that capacity — prefer ./start-sonnet-drive.sh unless this is a hardest-judgment session." >&2
-exec "$ROOT/start-claude.sh" --model "${OPUS_DRIVER_MODEL:-opus}" --epic "$SELECTOR" "$@"
+echo "Note: Fable 5 is the fleet's judgment/advisor seat (docs/runbooks/epic-orchestrator-roster.md)." >&2
+echo "      Summoned cadence only: short judgment sessions, dispatch-heavy. Prefer ./start-grok-drive.sh for daily loops," >&2
+echo "      ./start-sonnet-drive.sh for routine Anthropic driving." >&2
+exec "$ROOT/start-claude.sh" --model "${OPUS_DRIVER_MODEL:-claude-fable-5}" --epic "$SELECTOR" "$@"

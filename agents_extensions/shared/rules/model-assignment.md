@@ -43,12 +43,14 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
   * **GLM seat**: `glm-5.2` (local-only)
   * **Gemini seat**: `gemini-3.6-flash-high`
 * **Complex Non-Advisory Tasks & Deep Reviews**:
-  * **Anthropic Opus seat**: `claude-opus-5` (complex coding, deep reasoning, adversarial review)
+  * **Anthropic Opus seat**: `claude-opus-5` (complex coding, deep reasoning). NOT an
+    advisor seat — operator ruling 2026-07-26: weak in the advisor role and over-verbose
+    there; this REVERSES the 2026-07-24 "Opus replaces Fable as default Anthropic advisor"
+    ruling.
 * **Escalatory Advisor / Critical Authority Reviews** (reserved for architecture, security, or design escalation):
-  * **Top advisors @ `xhigh`**: `gpt-5.6-sol` · `claude-opus-5` · `claude-fable-5`.
-    Fable remains listed, but is too expensive: prefer `claude-opus-5` when the
-    Anthropic advisor is needed — it replaced Fable 5 as the default Anthropic
-    advisor on 2026-07-24; reserve Fable for a case Opus 5 has already failed.
+  * **Top advisors @ `xhigh`**: `claude-fable-5` · `gpt-5.6-sol` — the ONLY top-tier
+    advisor seats (operator 2026-07-26). Fable's cost is accepted for advisor turns:
+    they are rare, short, and decision-bearing; never spend them on queue grind.
   * **Other advisors**: `gemini-3.1-pro-high` · `gemini-3.6-flash-high` ·
     `kimi-k3-max` · `glm-5.2` · `grok-4.5` @ `high`.
   * `gpt-5.6-terra` is **not an advisor**; it remains the practical/routine
@@ -142,7 +144,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 
   | Seat | Default (loop) | Escalate (deep) | Notes |
   | --- | --- | --- | --- |
-  | **claude** | `claude-opus-5` @ high | **`gpt-5.6-sol` @ xhigh** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Other lanes escalate **to** Claude (`claude-opus-5` @ xhigh) or to Sol — pick by CodexBar headroom |
+  | **claude** | `claude-fable-5` @ high | **`gpt-5.6-sol` @ xhigh** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Other lanes escalate **to** Claude (`claude-fable-5` @ xhigh) or to Sol — pick by CodexBar headroom. Fable drives in the SUMMONED cadence only (see § Orchestration operating pattern) |
   | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | Named alternate for harness / infra / devops; never co-owns a live lease |
   | **grok** | `grok-4.5` @ high | same SKU (no higher pin yet) | Cursor **explicit** `grok-4.5` = availability fallback, not quality escalate |
   | **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | Flash loop; Pro deep single-shot |
@@ -151,7 +153,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | seat | model_id | effort | escalate_model_id | escalate_effort |
   | --- | --- | --- | --- | --- |
   | agy | gemini-3.6-flash-high | high | gemini-3.1-pro-high | high |
-  | claude | claude-opus-5 | high | gpt-5.6-sol | xhigh |
+  | claude | claude-fable-5 | high | gpt-5.6-sol | xhigh |
   | codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
   | grok | grok-4.5 | high | grok-4.5 | high |
   <!-- fleet-roster-projection:end orchestrator_seats -->
@@ -159,6 +161,29 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   **Escalate when:** deep single-shot, architecture, hard multi-file judgment, high-stakes synthesis —
   not for routine queue grind. Machine fields: `escalate_model_id` / `escalate_effort` /
   `escalate_when` on each seat in `model_catalog.yaml`.
+
+## Orchestration operating pattern (operator 2026-07-26 — binding)
+
+The knowledge-monopoly + quota-burn cycle (only the Anthropic frontier seat holds the whole
+system; letting it drive daily exhausts the weekly in ~2 days; cheaper drivers then degrade
+the system until it returns) is broken by ROLE SPLIT, not by a better single driver:
+
+- **Daily driver: `grok-4.5`** — owns the epic loops (dispatch, babysit, settle, reap,
+  re-fire) under the mechanical rails (evidence-mandatory reviews, lease lifecycle,
+  merge/stamp guards, delegate origin-sync). Operator-rated the best price/quality
+  orchestrator currently available.
+- **Summoned judgment: `claude-fable-5`** — NOT a resident driver. One or two SHORT
+  scheduled sessions per day: read the fleet's verdicts, correct course, lock designs,
+  write the next precise briefs, leave. Drive dispatch-heavy, never inline-heavy
+  (measured 2026-07-26: a dispatch-heavy Fable orchestration hour costs ~2 weekly-quota
+  points; inline-heavy driving is what burns the window in days). Also the escalation
+  target and top Anthropic advisor seat.
+- **Understudy trial: `glm-5.2`** — sanctioned as a BOUNDED driver trial on one epic under
+  the standard capsule/handoff contract (operator 2026-07-26; untested as driver, repeatedly
+  the sharpest cheap seat on code review). Evaluate against the same rails; report before
+  widening.
+- Session-cadence seats stay unchanged for kimi (capable, slow), agy (compaction loses
+  orchestration state — not a driver), gemini CLI (retired → agy).
 
   When an orchestrator needs **formal sealed CF**, request it via
   `review-pr --reviewer codex|claude|glm` (agy|kimi|grok remain `formal_review_eligible: false`

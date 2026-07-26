@@ -526,19 +526,22 @@ review_candidates:
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
   claude:
-    model_id: claude-opus-5
+    model_id: claude-fable-5
     effort: high
     escalate_model_id: gpt-5.6-sol
     escalate_effort: xhigh
     escalate_when: deep_single_shot_or_architecture
     note: >-
-      Opus 5 @ high drives the lane; escalation is CROSS-FAMILY to Sol @ xhigh
-      (user 2026-07-24). Claude is an escalation TARGET, not an escalator — other
-      lanes escalate to Claude or Sol by whichever has CodexBar headroom. Fable is
-      NOT the default Anthropic advisor: it is the top capability tier but burns
-      subscription usage the fleet needs elsewhere; reserve it for a case Opus 5
-      has already failed. Driving is `high`, not `xhigh` — xhigh is the documented
-      START for agentic work, and the same docs say sweep down from it.
+      Fable 5 is the Anthropic orchestration/judgment seat (operator 2026-07-26;
+      REVERSES the 2026-07-24 Opus-as-default ruling — operator: Opus 5 is weak in
+      the advisor role and over-verbose). Fable runs in the SUMMONED cadence, not
+      as a resident daily driver: grok-4.5 owns the daily epic loops; Fable takes
+      1-2 short scheduled judgment sessions/day (verdict reads, course corrections,
+      design locks, briefs) driven dispatch-heavy, never inline-heavy — measured
+      2026-07-26 at ~2 weekly-quota points per orchestration hour in that style.
+      Escalation stays CROSS-FAMILY to Sol @ xhigh; Claude is an escalation TARGET,
+      not an escalator. Opus 5 remains a complex-coding/deep-reasoning seat only —
+      not an advisor, not an orchestrator. Driving is `high`, not `xhigh`.
   codex:
     model_id: gpt-5.6-terra
     effort: high
