@@ -28,6 +28,10 @@ def test_session_start_has_a_hard_outer_budget() -> None:
     session_hook = manifest["hooks"]["SessionStart"][0]["hooks"][0]
 
     assert session_hook["timeout"] == 15
+    source = SESSION_SETUP.read_text(encoding="utf-8")
+    assert 'SESSION_START_BUDGET_SECONDS="${SESSION_START_BUDGET_SECONDS:-12}"' in source
+    assert "remaining_seconds=$((SESSION_START_BUDGET_SECONDS - elapsed_seconds))" in source
+    assert 'if [ "$timeout_seconds" -gt "$remaining_seconds" ]' in source
 
 
 def test_session_start_defers_optional_network_diagnostics() -> None:

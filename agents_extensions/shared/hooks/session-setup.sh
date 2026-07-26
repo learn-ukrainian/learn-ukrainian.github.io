@@ -3,6 +3,8 @@
 # Validates environment and reports project state.
 # Skips in headless/pipeline mode to avoid adding latency.
 
+SESSION_START_STARTED_SECONDS=$SECONDS
+
 # 0. Pyenv-rehash stale-lock cleanup. Runs BEFORE the headless-skip
 #    because every shell startup (including pipeline jobs) hits pyenv
 #    init, and a stale lock costs 60s per Bash invocation.
@@ -112,11 +114,25 @@ fi
 
 BOUNDED_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
 BOUNDED_RUNNER="${SESSION_BOUNDED_RUNNER:-$PROJECT_DIR/scripts/agent_runtime/bounded_command.py}"
+SESSION_START_BUDGET_SECONDS="${SESSION_START_BUDGET_SECONDS:-12}"
+if ! [[ "$SESSION_START_BUDGET_SECONDS" =~ ^[1-9][0-9]*$ ]]; then
+  SESSION_START_BUDGET_SECONDS=12
+fi
 run_bounded() {
-  local timeout_seconds="$1"
+  local requested_timeout="$1"
+  local elapsed_seconds=$((SECONDS - SESSION_START_STARTED_SECONDS))
+  local remaining_seconds=$((SESSION_START_BUDGET_SECONDS - elapsed_seconds))
+  local timeout_seconds="$requested_timeout"
   shift
   if [ ! -x "$BOUNDED_PYTHON" ] || [ ! -f "$BOUNDED_RUNNER" ]; then
     return 127
+  fi
+  if [ "$remaining_seconds" -le 0 ]; then
+    echo "SessionStart aggregate ${SESSION_START_BUDGET_SECONDS}s command budget exhausted." >&2
+    return 124
+  fi
+  if [ "$timeout_seconds" -gt "$remaining_seconds" ]; then
+    timeout_seconds="$remaining_seconds"
   fi
   "$BOUNDED_PYTHON" "$BOUNDED_RUNNER" --timeout "$timeout_seconds" -- "$@"
 }

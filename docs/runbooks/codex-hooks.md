@@ -66,11 +66,13 @@ edit the separate user-level `~/.codex/hooks.json`.
 
 ## Session availability and rollover deadlines
 
-`SessionStart` is an availability path with a 15-second outer ceiling. Mandatory
-identity, protected-branch, and rollover work runs locally with 1–3 second
-subprocess deadlines. Hook-owned advisory locks use a one-second bounded wait;
-the lock remains fail-safe, while a live but wedged owner can no longer stall a
-new session indefinitely.
+`SessionStart` is an availability path with a 15-second outer ceiling. Its
+subprocesses share a 12-second aggregate command budget: every 1–3 second local
+deadline is clamped to the time remaining in that budget. This leaves time to
+render the final JSON context instead of letting individually bounded commands
+accumulate past the outer hook deadline. Hook-owned advisory locks use a
+one-second bounded wait; the lock remains fail-safe, while a live but wedged
+owner can no longer stall a new session indefinitely.
 
 Broad curriculum scans, service probes, GitHub issue listings, and governance
 audits were removed from the synchronous hook. The hook now points to
