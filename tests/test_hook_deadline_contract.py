@@ -12,6 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 CODEX_HOOKS = REPO_ROOT / "agents_extensions" / "codex" / "hooks.json"
 SESSION_SETUP = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "session-setup.sh"
 POST_COMPACT = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "post-compact.sh"
+ROLLOVER_LINK = REPO_ROOT / "scripts" / "lib" / "thread_rollover_link.sh"
 
 
 def test_bounded_command_terminates_a_slow_process() -> None:
@@ -49,6 +50,7 @@ def test_session_start_defers_optional_network_diagnostics() -> None:
 def test_rollover_and_postcompact_commands_are_bounded() -> None:
     session_source = SESSION_SETUP.read_text(encoding="utf-8")
     compact_source = POST_COMPACT.read_text(encoding="utf-8")
+    rollover_link_source = ROLLOVER_LINK.read_text(encoding="utf-8")
 
     assert "LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS=1" in session_source
     assert "THREAD_ROLLOVER_COMMAND_TIMEOUT_SECONDS=3" in session_source
@@ -65,6 +67,8 @@ def test_rollover_and_postcompact_commands_are_bounded() -> None:
     )
     assert 'run_bounded 3 "$ROLLOVER_PYTHON"' in session_source
     assert 'run_bounded 2 "$ROLLOVER_PYTHON"' in compact_source
+    assert 'parser_runner=("${runner[@]}")' in rollover_link_source
+    assert '"${parser_runner[@]}" "$python_bin" -c' in rollover_link_source
     assert "_HOOK_SOURCE_ROOT" not in session_source
     assert "_HOOK_SOURCE_ROOT" not in compact_source
     assert compact_source.count('[ ! -f "$BOUNDED_RUNNER" ]') == 1

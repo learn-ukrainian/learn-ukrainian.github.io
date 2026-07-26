@@ -108,7 +108,7 @@ run_hook() {
     SESSION_BOUNDED_RUNNER="$REPO_ROOT/scripts/agent_runtime/bounded_command.py" \
     CLAUDEX_SUPERVISOR_SCRIPT="$REPO_ROOT/scripts/orchestration/claudex_supervisor.py" \
     CLAUDEX_SUPERVISOR_PYTHON="$REPO_ROOT/.venv/bin/python" \
-    THREAD_ROLLOVER_PYTHON="$REPO_ROOT/.venv/bin/python" \
+    THREAD_ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$REPO_ROOT/.venv/bin/python}" \
     THREAD_ROLLOVER_SCRIPT="$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
     SESSION_HANDOFF_AGENT="$handoff_agent" \
     SESSION_EPIC="$session_epic" \
@@ -479,6 +479,24 @@ output_harness="$(run_hook "$fixture_root" 0 "$harness_slot")"
 assert_contains "$output_harness" "PENDING THREAD ROLLOVER DETECTED" "epic harness surfaces claude-infra packet (#5201)"
 assert_contains "$output_harness" "--agent claude-infra" "epic harness surfaces claude-infra packet (#5201)"
 assert_not_contains "$output_harness" "COLD START: NO LIVE THREAD ROLLOVER" "epic harness surfaces claude-infra packet (#5201)"
+
+# 17b. An exhausted aggregate budget leaves the durable lease state unknown;
+# it is not evidence of a thread lease conflict and must never suggest force release.
+setup_fixture "$fixture_root"
+slow_python="$fixture_root/.venv/bin/slow-python"
+cat > "$slow_python" <<'EOF'
+#!/usr/bin/env bash
+sleep 2
+EOF
+chmod +x "$slow_python"
+output="$(
+  SESSION_START_BUDGET_SECONDS=1 THREAD_ROLLOVER_PYTHON="$slow_python" \
+    run_hook "$fixture_root" 0 claude
+)"
+assert_contains "$output" \
+  "ERROR: LEASE CLAIM COULD NOT RUN (timeout/budget/runner missing) — stop; lease state UNKNOWN; do NOT force-release." \
+  "lease claim budget exhaustion"
+assert_not_contains "$output" "DURABLE THREAD LEASE CONFLICT" "lease claim budget exhaustion"
 
 # 18. Official SessionStart fields drive the native profile and exact transcript record.
 setup_fixture "$fixture_root"
