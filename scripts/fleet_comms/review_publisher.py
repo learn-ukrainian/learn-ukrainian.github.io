@@ -40,6 +40,7 @@ from scripts.fleet_comms.review_publication import (
     parse_sealed_verdict_payload,
     plan_publication,
     publication_idempotency_key,
+    validate_review_gate_input,
 )
 
 Runner = Callable[..., subprocess.CompletedProcess[str]]
@@ -463,6 +464,14 @@ def publish_sealed_verdict(
         sealed = sealed.read_text(encoding="utf-8")
     if not isinstance(sealed, SealedVerdict):
         sealed = parse_sealed_verdict_payload(sealed)
+    try:
+        validate_review_gate_input(
+            verdict=sealed.verdict,
+            model=sealed.model,
+            review_evidence=sealed.review_evidence,
+        )
+    except ReviewPublicationError as exc:
+        raise ReviewPublisherError(str(exc)) from exc
 
     head = current_head_sha
     if head is None:

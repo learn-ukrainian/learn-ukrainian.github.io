@@ -38,12 +38,24 @@ def _sealed(**overrides: object) -> dict[str, object]:
         "head_sha": _SHA_A,
         "gate_kind": "cross-family-review",
         "verdict": "APPROVED",
-        "model": "claude-opus-4-6",
+        "model": "claude-opus-5",
         "family": "anthropic",
         "harness": "claude",
     }
     base.update(overrides)
     return base
+
+
+def _approved_evidence() -> dict[str, object]:
+    return {
+        "schema_version": "code-review-findings.v1",
+        "overall": {
+            "correctness": "correct",
+            "explanation": "The review found no defects that block approval.",
+            "confidence": 0.95,
+        },
+        "findings": [],
+    }
 
 
 class FakeGh:
@@ -87,9 +99,12 @@ def test_publish_matrix_posts_comment_and_status(
     tmp_path: Path, verdict: str, status: str
 ) -> None:
     gh = FakeGh(head=_SHA_A)
+    payload = _sealed(verdict=verdict)
+    if verdict == "APPROVED":
+        payload["review_evidence"] = _approved_evidence()
     with ArtifactStore(root=tmp_path / "plane") as store:
         result = publish_sealed_verdict(
-            _sealed(verdict=verdict),
+            payload,
             current_head_sha=_SHA_A,
             mutate=True,
             runner=gh,
@@ -109,7 +124,10 @@ def test_publish_matrix_posts_comment_and_status(
     assert len(comment_calls) == 1
     body = comment_calls[0][comment_calls[0].index("--body") + 1]
     assert f"VERDICT: {verdict}" in body
-    assert "NO EVIDENCE SUPPLIED" in body
+    if verdict == "APPROVED":
+        assert "The review found no defects that block approval." in body
+    else:
+        assert "NO EVIDENCE SUPPLIED" in body
     status_calls = [c for c in gh.calls if c[1] == "api"]
     assert any(f"state={status}" in " ".join(c) for c in status_calls)
     assert any(DEFAULT_STATUS_CONTEXT in " ".join(c) for c in status_calls)
@@ -119,7 +137,7 @@ def test_stale_head_refuses_without_github_mutation(tmp_path: Path) -> None:
     gh = FakeGh(head=_SHA_B)
     with ArtifactStore(root=tmp_path / "plane") as store:
         result = publish_sealed_verdict(
-            _sealed(),
+            _sealed(verdict="BLOCKED"),
             current_head_sha=_SHA_B,
             mutate=True,
             runner=gh,
@@ -145,7 +163,7 @@ def test_repeat_publish_is_idempotent(tmp_path: Path) -> None:
     root = tmp_path / "plane"
     with ArtifactStore(root=root) as store:
         first = publish_sealed_verdict(
-            _sealed(),
+            _sealed(verdict="BLOCKED"),
             current_head_sha=_SHA_A,
             mutate=True,
             runner=gh,
@@ -161,7 +179,7 @@ def test_repeat_publish_is_idempotent(tmp_path: Path) -> None:
     gh2 = FakeGh(head=_SHA_A)
     with ArtifactStore(root=root) as store:
         second = publish_sealed_verdict(
-            _sealed(),
+            _sealed(verdict="BLOCKED"),
             current_head_sha=_SHA_A,
             mutate=True,
             runner=gh2,
@@ -177,7 +195,7 @@ def test_dry_run_never_posts(tmp_path: Path) -> None:
     gh = FakeGh(head=_SHA_A)
     with ArtifactStore(root=tmp_path / "plane") as store:
         result = publish_sealed_verdict(
-            _sealed(),
+            _sealed(verdict="BLOCKED"),
             current_head_sha=_SHA_A,
             mutate=False,
             runner=gh,
@@ -190,7 +208,7 @@ def test_dry_run_never_posts(tmp_path: Path) -> None:
 
 
 def test_require_receipt_without_conn_refuses_live() -> None:
-    sealed = _sealed()
+    sealed = _sealed(verdict="BLOCKED")
     plan = plan_publication(
         __import__(
             "scripts.fleet_comms.review_publication", fromlist=["parse_sealed_verdict_payload"]
@@ -234,6 +252,24 @@ def test_sealed_payload_file_round_trip(tmp_path: Path) -> None:
     assert result.status_posted is True
 
 
+def test_publish_refuses_evidence_free_approved_without_github_mutation(
+    tmp_path: Path,
+) -> None:
+    gh = FakeGh(head=_SHA_A)
+    with ArtifactStore(root=tmp_path / "plane") as store:
+        with pytest.raises(
+            ReviewPublisherError, match="approved_review_evidence_required"
+        ):
+            publish_sealed_verdict(
+                _sealed(),
+                current_head_sha=_SHA_A,
+                mutate=True,
+                runner=gh,
+                store=store,
+            )
+    assert gh.calls == []
+
+
 def test_publish_from_review_id_via_accept_sealed(tmp_path: Path) -> None:
     """Sol milestone 2: publish without CLI-supplied provenance after accept."""
     from scripts.fleet_comms.formal_review_jobs import FormalReviewJobService
@@ -254,6 +290,7 @@ def test_publish_from_review_id_via_accept_sealed(tmp_path: Path) -> None:
                 "model": "gpt-5.6-terra",
                 "family": "openai",
                 "harness": "codex",
+                "review_evidence": _approved_evidence(),
             },
         )
         sealed = svc.load_sealed_verdict(job.review_id)

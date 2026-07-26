@@ -34,6 +34,7 @@ from scripts.fleet_comms.review_publication import (
     parse_sealed_verdict_payload,
     parse_verdict_token,
     resolve_verdict_and_evidence,
+    validate_review_gate_input,
 )
 from scripts.fleet_comms.review_publisher import (
     ReviewPublisherError,
@@ -211,6 +212,15 @@ def finalize_formal_review_verdict(
             f"review_evidence_verdict_mismatch: verdict={resolved_verdict} "
             f"evidence={findings_verdict}"
         )
+
+    try:
+        validate_review_gate_input(
+            verdict=resolved_verdict,
+            model=model,
+            review_evidence=review_evidence,
+        )
+    except ReviewPublicationError as exc:
+        raise FormalReviewFinalizeError(str(exc)) from exc
 
     sha = head_sha
     if sha is None:

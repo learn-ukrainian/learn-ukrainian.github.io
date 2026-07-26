@@ -32,6 +32,7 @@ from scripts.fleet_comms.review_publication import (
     ReviewPublicationError,
     SealedVerdict,
     parse_sealed_verdict_payload,
+    validate_review_gate_input,
 )
 
 JOB_STATES = frozenset({"open", "running", "complete", "failed", "blocked"})
@@ -286,6 +287,11 @@ class FormalReviewJobService:
         try:
             if not isinstance(sealed, SealedVerdict):
                 sealed = parse_sealed_verdict_payload(sealed)
+            validate_review_gate_input(
+                verdict=sealed.verdict,
+                model=sealed.model,
+                review_evidence=sealed.review_evidence,
+            )
         except ReviewPublicationError as exc:
             raise FormalReviewJobsError(f"sealed_verdict_invalid: {exc}") from exc
 

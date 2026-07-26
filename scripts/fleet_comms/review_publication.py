@@ -153,6 +153,54 @@ class SealedVerdict:
         }
 
 
+def _validate_reviewer_model(model: str) -> str:
+    """Require an exact catalog model id or declared alias for gate provenance."""
+    normalized = _require_nonempty_str(model, field="model")
+    try:
+        from scripts.review.model_catalog import ModelCatalogError, load_model_catalog
+
+        catalog = load_model_catalog()
+    except ModelCatalogError as exc:
+        raise ReviewPublicationError(f"reviewer_model_catalog_invalid: {exc}") from exc
+
+    models = catalog["models"]
+    known_models = set(models)
+    known_models.update(
+        alias
+        for entry in models.values()
+        for alias in entry.get("aliases", [])
+    )
+    if normalized not in known_models:
+        raise ReviewPublicationError(f"unknown_reviewer_model: {normalized!r}")
+    return normalized
+
+
+def validate_review_gate_input(
+    *,
+    verdict: str,
+    model: str,
+    review_evidence: ReviewEvidence | None,
+) -> str:
+    """Validate the evidence and provenance needed to grant a review gate.
+
+    A BLOCKED verdict is intentionally allowed without evidence: it is the
+    conservative fast path. Every APPROVED verdict, however it arrived, must
+    retain canonical evidence so a successful merge gate is auditable.
+    """
+    normalized_verdict = normalize_verdict(verdict)
+    _validate_reviewer_model(model)
+    if normalized_verdict == "APPROVED" and (
+        review_evidence is None
+        or not isinstance(review_evidence, ReviewEvidence)
+        or not review_evidence.explanation.strip()
+    ):
+        raise ReviewPublicationError(
+            "approved_review_evidence_required: "
+            "verdict=APPROVED review_evidence=missing"
+        )
+    return normalized_verdict
+
+
 @dataclass(frozen=True, slots=True)
 class HeadFreshness:
     """Result of comparing the sealed job head to the live PR head."""
@@ -619,6 +667,11 @@ def build_review_comment(
     review_id: str | None = None,
 ) -> str:
     """Render one auditable formal-review comment for a GitHub PR."""
+    verdict = validate_review_gate_input(
+        verdict=verdict,
+        model=model,
+        review_evidence=review_evidence,
+    )
     lines = [
         f"VERDICT: {verdict}",
         f"Head SHA: {head_sha}",
@@ -678,6 +731,12 @@ def plan_publication(
     """
     if not isinstance(sealed, SealedVerdict):
         raise ReviewPublicationError("sealed_verdict_invalid: expected SealedVerdict")
+
+    validate_review_gate_input(
+        verdict=sealed.verdict,
+        model=sealed.model,
+        review_evidence=sealed.review_evidence,
+    )
 
     context = _require_nonempty_str(status_context, field="status_context")
     key = publication_idempotency_key(
@@ -780,5 +839,6 @@ __all__ = [
     "plan_publication",
     "publication_idempotency_key",
     "resolve_verdict_and_evidence",
+    "validate_review_gate_input",
     "verdict_from_review_evidence",
 ]
