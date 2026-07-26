@@ -609,6 +609,25 @@ def test_wait_returns_nonzero_on_failed(tmp_tasks_dir, capsys):
     assert rc == 1  # nonzero for any non-done terminal status
 
 
+def test_wait_returns_immediately_on_no_deliverable_with_default_timeout(tmp_tasks_dir, capsys):
+    """A completion-contract failure is terminal even when wait has no deadline."""
+    path = delegate._state_path("wait-no-deliverable")
+    delegate._write_state_atomic(path, {
+        "task_id": "wait-no-deliverable",
+        "status": "no_deliverable",
+    })
+    import argparse
+    args = argparse.Namespace(
+        task_id="wait-no-deliverable", timeout=0, poll_interval=0.1,
+    )
+    t0 = time.monotonic()
+    rc = delegate.cmd_wait(args)
+    elapsed = time.monotonic() - t0
+
+    assert rc == 1
+    assert elapsed < 1.0, "wait on no_deliverable must return without an explicit timeout"
+
+
 def test_wait_returns_124_on_task_timeout(tmp_tasks_dir, capsys):
     path = delegate._state_path("wait-task-timeout")
     delegate._write_state_atomic(path, {
@@ -1001,6 +1020,23 @@ def test_cancel_refuses_crashed_task(tmp_tasks_dir, capsys):
     assert rc == 1
     captured = capsys.readouterr()
     assert "terminal state" in captured.err
+
+
+def test_cancel_refuses_no_deliverable_task(tmp_tasks_dir, capsys):
+    """no_deliverable is terminal, so cancel must not signal its stale PID."""
+    path = delegate._state_path("no-deliverable-task")
+    delegate._write_state_atomic(path, {
+        "task_id": "no-deliverable-task",
+        "status": "no_deliverable",
+        "pid": os.getpid(),
+    })
+    import argparse
+    rc = delegate.cmd_cancel(argparse.Namespace(task_id="no-deliverable-task"))
+
+    assert rc == 1
+    captured = capsys.readouterr()
+    assert "terminal state" in captured.err
+    assert "no_deliverable" in captured.err
 
 
 def test_worker_sigterm_handler_raises_keyboard_interrupt():
@@ -1551,6 +1587,7 @@ def test_run_worker_marks_no_deliverable_for_clean_zero_commit_tiny_response(
     assert state["no_deliverable_reason"] == (
         "write_capable_clean_worktree_zero_commits_short_response"
     )
+    assert state["last_error"] == state["no_deliverable_reason"]
 
 
 def test_run_worker_does_not_flag_committed_change_without_declaration(

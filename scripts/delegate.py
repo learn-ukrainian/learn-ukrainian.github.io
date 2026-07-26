@@ -237,6 +237,7 @@ def _core_terminal_fields(
     commits_ahead: int | None,
     needs_finalize: bool,
     finalize_error: str | None,
+    last_error: str | None,
 ) -> dict[str, Any]:
     """The complete set of fields that define a finished dispatch's outcome.
 
@@ -257,7 +258,7 @@ def _core_terminal_fields(
         "stderr_excerpt": stderr_excerpt,
         "returncode": returncode,
         "returncode_reason": returncode_reason,
-        "last_error": _first_error_line(stderr_excerpt) if status != "done" else None,
+        "last_error": last_error if status != "done" else None,
         "exit_code": returncode,
         "worktree_dirty_on_exit": dirty_on_exit,
         "commits_ahead": commits_ahead,
@@ -2937,6 +2938,7 @@ def _run_worker(
             commits_ahead=commits_ahead,
             needs_finalize=needs_finalize,
             finalize_error=finalize_error,
+            last_error=last_error,
         )
         _write_state_atomic(state_path, {**final_state, **core_terminal_state})
     except BaseException as interrupt_exc:
@@ -2991,6 +2993,14 @@ def _run_worker(
                         needs_finalize=interrupted_needs_finalize,
                         finalize_error=(
                             f"interrupted during finalize: {type(interrupt_exc).__name__}"
+                        ),
+                        last_error=(
+                            no_deliverable_reason
+                            or (
+                                _first_error_line(stderr_excerpt)
+                                if interrupted_status != "done"
+                                else None
+                            )
                         ),
                     ),
                 },
@@ -4015,6 +4025,7 @@ _TERMINAL_STATUSES = frozenset(
         # may already have recycled. Every other terminal vocabulary in this
         # file already includes it (see _BRANCH_HOLDER_RELEASABLE_STATUSES).
         "needs_finalize",
+        _NO_DELIVERABLE_STATUS,
     },
 )
 
