@@ -2645,9 +2645,13 @@ function LexiconPracticeIsland({
   const homeScope = useMemo(
     () =>
       indexForStats.length
-        ? computeSessionScope(indexForStats, sessionBudget, { dailyNewCount })
+        ? computeSessionScope(
+            filterIndexByDeckFilter(indexForStats, selectedDeckFilter, customSets),
+            sessionBudget,
+            { dailyNewCount },
+          )
         : null,
-    [dailyNewCount, indexForStats, sessionBudget],
+    [customSets, dailyNewCount, indexForStats, selectedDeckFilter, sessionBudget],
   );
   const dailyRows = useMemo(
     () =>

@@ -3136,5 +3136,43 @@ describe('LexiconPractice', () => {
       expect(screen.queryByText(/We couldn’t load practice/i)).not.toBeInTheDocument();
       expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
     });
+
+    test('dashboard session estimate narrows to a 1-word custom deck, not the full level (PR #5837 fix-round-2)', async () => {
+      // 'робота' carries 3 practice modes (flashcards/matching/choice, no cloze) in
+      // sampleDeck() — a deterministic "new" count for a single-lemma custom deck,
+      // distinct from the full deck's cap of 8 (DEFAULT_NEW_PER_SESSION).
+      const customSet: CustomSet = {
+        id: 'test_custom_deck_scope',
+        title: 'Одне слово',
+        lemma_keys: ['робота'],
+        cloze_items: [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        device_id: 'test_device',
+        revision: 1,
+      };
+      localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
+
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
+
+      // Before selecting the custom deck, the estimate reflects the full level (4 words x
+      // up to 4 modes each, capped at the 8-per-session new-card ceiling).
+      await waitFor(() =>
+        expect(screen.getByTestId('practice-session-scope')).toHaveTextContent(/8 нових/),
+      );
+
+      const customBtn = screen.getByRole('button', { name: /Одне слово/i });
+      await user.click(customBtn);
+
+      // F1-F3 (PR #5837) scoped the two session-START paths to the selected deck via
+      // filterIndexByDeckFilter, but the dashboard's homeScope estimate — visible before a
+      // session even starts — still fed it the unfiltered level index. A 1-word custom deck
+      // (3 modes, under the session cap) must now show a 3-word estimate here too, not the
+      // capped full-level number.
+      await waitFor(() =>
+        expect(screen.getByTestId('practice-session-scope')).toHaveTextContent(/3 нових/),
+      );
+    });
   });
 });

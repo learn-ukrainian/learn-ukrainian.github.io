@@ -615,6 +615,64 @@ test('A6: the session-box estimate stays inside the card at 1366x768 and 390x844
   }
 });
 
+test('A6b: dashboard session estimate narrows to the selected custom deck before any session starts (PR #5837 fix-round-2)', async ({
+  page,
+  context,
+}) => {
+  await context.clearCookies();
+
+  // Fixture index: 3 single-mode items, so the full-level estimate is a small, exact
+  // number (not a live-corpus count that could drift) — well under the 8-per-session cap.
+  await page.route('**/lexicon/practice-index.A1.json', (route) =>
+    route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({
+        deckVersion: 'e2e-scope-fixture',
+        level: 'A1',
+        items: ['a', 'b', 'c'].map((suffix) => ({
+          lemmaId: `e2eScope${suffix}`,
+          lemma: `e2eScope${suffix}`,
+          cefr: 'A1',
+          modes: ['flashcards'],
+          hasCloze: false,
+          clozeIds: [],
+          newOrder: 0,
+        })),
+      }),
+    }),
+  );
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'learn_ukrainian_custom_sets_v1',
+      JSON.stringify([
+        {
+          id: 'e2e-scope-deck',
+          title: 'E2E Scope Deck',
+          description: '',
+          lemma_keys: ['e2eScopea'],
+          created_at: '2026-01-01T00:00:00.000Z',
+          updated_at: '2026-01-01T00:00:00.000Z',
+          device_id: 'e2e-device',
+          revision: 1,
+        },
+      ]),
+    );
+  });
+
+  await page.goto('/words-of-the-day/practice/');
+
+  const estimate = page.getByTestId('practice-session-scope');
+  // Before selecting the custom deck, the estimate describes the full (3-item) fixture level.
+  await expect(estimate).toContainText('3 нов');
+
+  await page.getByRole('button', { name: /E2E Scope Deck/ }).click();
+
+  // F1-F3 (PR #5837) scoped the two SESSION-start paths to the chosen deck via
+  // filterIndexByDeckFilter; the dashboard estimate — visible before a session even
+  // starts — must narrow the same way, not keep describing the unfiltered level.
+  await expect(estimate).toContainText('1 нов');
+});
+
 test('A7: word cards render the level exactly once', async ({ page, context }) => {
   await context.clearCookies();
   await page.addInitScript(() => window.localStorage.setItem('lu-learner-level', 'A1'));
