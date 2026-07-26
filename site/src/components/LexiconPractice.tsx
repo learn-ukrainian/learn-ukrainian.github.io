@@ -1,4 +1,4 @@
-import { type CSSProperties, type ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type CSSProperties, type ReactElement, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import MatchUp from './MatchUp';
 import PracticeDailyDeck from './PracticeDailyDeck';
 import PracticeErrorBoundary from './PracticeErrorBoundary';
@@ -10,11 +10,11 @@ import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
 import { CHROME_STRINGS, type ChromeKey } from '../lib/i18n/chrome';
 import {
   DEFAULT_NEW_PER_DAY,
-  DAILY_PRACTICE_DECK_KEY,
+  DAILY_PRACTICE_DECK_SIZE,
   PUBLISHED_PRACTICE_LEVELS,
   SRS_STORAGE_FULL_WARNING,
-  buildDailyPracticeDeckSnapshot,
   buildSessionPoolConstraintState,
+  classifyDailyPracticeOrigin,
   clearPracticeSessionSnapshots,
   combinePracticeShards,
   deriveDailyPracticeRows,
@@ -33,8 +33,6 @@ import {
   parseCardKey,
   previewRatingIntervals,
   rateCard,
-  readDailyPracticeDeckSnapshot,
-  refillDailyPracticeDeckSnapshot,
   resolveSessionCompletion,
   readNewCardsDailyState,
   readPracticeSessionSnapshots,
@@ -44,7 +42,6 @@ import {
   stripStressMarks,
   uaPlural,
   validateClozeOptions,
-  writeDailyPracticeDeckSnapshot,
   writeNewCardsDailyState,
   writePracticeSessionSnapshot,
   type ChoicePolarity,
@@ -63,6 +60,7 @@ import {
   type PracticeModeFilter,
   type PracticeRating,
   type PracticeSelection,
+  type PracticeSessionIdentity,
   type PracticeSessionSnapshot,
   type PracticeSessionSnapshots,
   type ReviewLogEntry,
@@ -80,9 +78,11 @@ import {
 import {
   CEFR_LEVELS,
   LEARNER_LEVEL_STORAGE_KEY,
+  filterByCumulativeLevel,
   normalizeCefrLevel,
   type CefrLevel,
 } from '../lib/lexicon/levels';
+import { dateSeed, pickDaily, type DailyWord } from '../lib/lexicon/daily';
 import { getTeacherLessonVirtualDeck, readLocalCustomSets, saveLocalCustomSet, deleteLocalCustomSet, type CustomSet } from '../lib/lexicon/custom-decks';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
@@ -268,16 +268,6 @@ const CASE_GLOSSES: Record<string, string> = {
   'середній': 'neuter',
   'рід': 'gender',
   'відмінок': 'case',
-};
-
-const CASE_LABELS_UK: Record<string, string> = {
-  nominative: 'називний',
-  genitive: 'родовий',
-  dative: 'давальний',
-  accusative: 'знахідний',
-  instrumental: 'орудний',
-  locative: 'місцевий',
-  vocative: 'кличний',
 };
 
 function translateGrammarTerm(ukLabel: string): string {
@@ -1028,6 +1018,42 @@ function sessionScopeIndexForMode(
     .map((item) => ({ ...item, modes: [modeFilter] }));
 }
 
+/** Shared match test for the Selected Deck filter (Teacher Lesson or a Custom Set),
+ * keyed on lemmaId/lemma the same way for both index-level planning and per-candidate
+ * selection — a single definition so the two can never drift apart. */
+function deckFilterAllowsLemma(
+  lemmaId: string,
+  lemma: string,
+  deckFilter: string,
+  customSets: CustomSet[],
+): boolean {
+  if (deckFilter === 'all') return true;
+  const idLower = lemmaId.toLowerCase();
+  const lemmaLower = lemma.toLowerCase();
+  const keys =
+    deckFilter === 'virtual_teacher_lesson'
+      ? getTeacherLessonVirtualDeck().lemma_keys
+      : (customSets.find((s) => s.id === deckFilter)?.lemma_keys ?? null);
+  if (!keys) return true;
+  const keysLower = new Set(keys.map((k) => k.toLowerCase()));
+  return keysLower.has(idLower) || keysLower.has(lemmaLower);
+}
+
+/** Narrow a level's practice index to the active deck filter BEFORE computing session
+ * scope, so a session's planned total/due count/estimate reflect the SELECTED deck
+ * rather than the full level (F2 follow-up, PR #5837 review: "the chosen set actually
+ * drives the next session" applies to the session's size, not just its item content —
+ * without this, switching to a 1-word custom deck still planned a session sized off the
+ * full level index). */
+function filterIndexByDeckFilter(
+  index: PracticeIndexItem[],
+  deckFilter: string,
+  customSets: CustomSet[],
+): PracticeIndexItem[] {
+  if (deckFilter === 'all') return index;
+  return index.filter((item) => deckFilterAllowsLemma(item.lemmaId, item.lemma, deckFilter, customSets));
+}
+
 /** Learner level persisted in the shared `lu-learner-level` key (also used by Words of the Day). */
 function readLearnerLevel(fallback: CefrLevel): CefrLevel {
   if (typeof window === 'undefined') return fallback;
@@ -1224,6 +1250,12 @@ function LexiconPracticeIsland({
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newSetTitle, setNewSetTitle] = useState('');
   const [newSetLemmas, setNewSetLemmas] = useState('');
+  // D7: changing deck/level while a session is active or resumable offers a fresh
+  // session instead of silently discarding progress. `pendingDeckSwitch` holds the
+  // NOT-YET-APPLIED choice; the chip visually reverts until the learner decides.
+  const [pendingDeckSwitch, setPendingDeckSwitch] = useState<
+    { kind: 'deck'; value: string } | { kind: 'level'; value: CefrLevel } | null
+  >(null);
 
   const handleGoogleDriveSync = useCallback(async () => {
     setIsDriveSyncing(true);
@@ -1363,8 +1395,11 @@ function LexiconPracticeIsland({
         void initializeFocusedPractice(target);
       } else {
         const snapshots = readPracticeSessionSnapshots();
+        const identity = currentSessionIdentity();
         const resumableSnapshots = Object.fromEntries(
-          Object.entries(snapshots).filter(([, snapshot]) => isPracticeSessionResumable(snapshot)),
+          Object.entries(snapshots).filter(([, snapshot]) =>
+            isPracticeSessionResumable(snapshot, Date.now(), identity),
+          ),
         ) as PracticeSessionSnapshots;
         setResumeSnapshots(resumableSnapshots);
       }
@@ -1392,9 +1427,11 @@ function LexiconPracticeIsland({
       return;
     }
 
-    const plan = computeSessionScope(sessionScopeIndexForMode(deck.index, mode), sessionBudget, {
-      dailyNewCount,
-    });
+    const plan = computeSessionScope(
+      sessionScopeIndexForMode(filterIndexByDeckFilter(deck.index, selectedDeckFilter, customSets), mode),
+      sessionBudget,
+      { dailyNewCount },
+    );
     resetSessionTracking(plan, sessionBudget);
 
     // Persist an initial snapshot for this newly started session so it is resumable.
@@ -1410,6 +1447,8 @@ function LexiconPracticeIsland({
       completed: 0,
       modeFilter: mode,
       level: learnerLevel,
+      deckId: selectedDeckFilter,
+      dateSeed: dateSeed(new Date()),
       startedAt: sessionStartedAtRef.current,
       extensionUsed: 0,
       sessionNewIntroduced: 0,
@@ -1480,13 +1519,17 @@ function LexiconPracticeIsland({
     };
   }, [deck, learnerLevel, shardBaseUrl]);
 
-  // Build or restore the versioned daily 20-lemma snapshot for the idle dashboard.
-  // Loads lexeme cores only for the levels represented in the selected IDs so the
-  // preview rows have verified lemma/gloss/pos data without pulling every shard.
+  // D2 (design delta 2026-07-26): the Words-of-the-Day zone renders the SAME 12
+  // lemmas as /words-of-the-day/ — pickDaily(filterByCumulativeLevel(pool, level),
+  // dateSeed(now), 12) over /lexicon/daily-pool.json. This is recomputed fresh
+  // from (pool, level, date) on every run rather than reused from a persisted
+  // snapshot, so there is no stale cache to silently pin the carousel on one
+  // word across days (confirmed live bug: борщ every visit, while the page
+  // itself showed a rotating 12). Loads lexeme cores only for the levels
+  // represented among today's picks so the preview rows have verified
+  // lemma/gloss/pos data without pulling every shard.
   useEffect(() => {
     if (sessionPhase !== 'idle') return;
-    const indexSource = deck?.index ?? dueIndex ?? [];
-    if (indexSource.length === 0) return;
 
     let cancelled = false;
     setDailySnapshotLoading(true);
@@ -1496,49 +1539,35 @@ function LexiconPracticeIsland({
         const now = new Date();
         const dateKey = todayKey(now);
         const state = loadState();
+        const indexSource = deck?.index ?? dueIndex ?? [];
 
-        // Determine the generated deck version from the available source. When a full
-        // deck is loaded, use its version; otherwise read the first index shard's meta.
-        let deckVersion = deck?.deckVersion ?? '';
-        if (!deckVersion) {
-          const firstLevel = levelsUpTo(learnerLevel)[0];
-          if (firstLevel) {
-            try {
-              const shard = await getShardJson<PracticeIndexShard>(
-                `${shardBaseUrl}/practice-index.${firstLevel}.json`,
-                shardJsonCacheRef.current,
-              );
-              deckVersion = shard.deckVersion ?? '';
-            } catch {
-              deckVersion = '';
-            }
-          }
-        }
+        const pool = await getShardJson<DailyWord[]>(
+          '/lexicon/daily-pool.json',
+          shardJsonCacheRef.current,
+        );
+        const eligiblePool = filterByCumulativeLevel(pool, learnerLevel);
+        const picks = pickDaily(eligiblePool, dateSeed(now), DAILY_PRACTICE_DECK_SIZE);
 
-        const snapshot =
-          deckVersion
-            ? refillDailyPracticeDeckSnapshot(
-                readDailyPracticeDeckSnapshot(undefined, dateKey, learnerLevel),
-                indexSource,
-                state.cards,
-                { date: dateKey, level: learnerLevel, deckVersion, now },
-              )
-            : buildDailyPracticeDeckSnapshot(indexSource, state.cards, {
-                level: learnerLevel,
-                deckVersion: deckVersion || 'unknown',
-                date: dateKey,
-                now,
-              });
+        const snapshot: DailyPracticeDeckSnapshot = {
+          version: 1,
+          date: dateKey,
+          level: learnerLevel,
+          deckVersion: 'daily-pool',
+          createdAt: now.getTime(),
+          items: picks.map((word) => ({
+            lemmaId: word.slug,
+            origin: classifyDailyPracticeOrigin(word.slug, indexSource, state.cards, now),
+          })),
+        };
 
         if (cancelled) return;
         setDailySnapshot(snapshot);
-        writeDailyPracticeDeckSnapshot(snapshot);
 
-        // Fetch lexeme cores only for levels represented in the snapshot IDs.
+        // Fetch lexeme cores only for levels represented among today's picks —
+        // each `DailyWord` already carries its own `cefr`, so this no longer
+        // needs to cross-reference the SRS index at all.
         const representedLevels = new Set(
-          snapshot.items
-            .map((item) => indexSource.find((i) => i.lemmaId === item.lemmaId)?.cefr)
-            .filter((cefr): cefr is string => Boolean(cefr)),
+          picks.map((word) => word.cefr).filter((cefr): cefr is string => Boolean(cefr)),
         );
         const levelEntries = deck
           ? []
@@ -1587,7 +1616,7 @@ function LexiconPracticeIsland({
     return () => {
       cancelled = true;
     };
-  }, [deck?.index, deck?.deckVersion, deck?.lexemes, deck?.cloze, dueIndex, learnerLevel, sessionPhase, shardBaseUrl]);
+  }, [deck?.index, deck?.lexemes, deck?.cloze, dueIndex, learnerLevel, sessionPhase, shardBaseUrl]);
 
   const indexForStats = (deck?.index ?? dueIndex ?? []).filter(
     (item) => !focusedLemmaId || item.lemmaId === focusedLemmaId
@@ -1612,24 +1641,10 @@ function LexiconPracticeIsland({
       if (focusWeakness && !matchesWeakness(candidate, focusWeakness)) return false;
 
       // Filter by Selected Deck (Teacher Lesson 610+440 or Custom Set)
-      if (selectedDeckFilter === 'virtual_teacher_lesson') {
-        const teacherDeck = getTeacherLessonVirtualDeck();
-        const keysLower = new Set(teacherDeck.lemma_keys.map((k) => k.toLowerCase()));
-        const candIdLower = (candidate.indexItem?.lemmaId || candidate.lemma?.lemmaId || '').toLowerCase();
-        const candLemmaLower = (candidate.lemma?.lemma || candidate.indexItem?.lemma || '').toLowerCase();
-        if (!keysLower.has(candIdLower) && !keysLower.has(candLemmaLower)) {
-          return false;
-        }
-      } else if (selectedDeckFilter !== 'all') {
-        const customSet = customSets.find((s) => s.id === selectedDeckFilter);
-        if (customSet) {
-          const keysLower = new Set(customSet.lemma_keys.map((k) => k.toLowerCase()));
-          const candIdLower = (candidate.indexItem?.lemmaId || candidate.lemma?.lemmaId || '').toLowerCase();
-          const candLemmaLower = (candidate.lemma?.lemma || candidate.indexItem?.lemma || '').toLowerCase();
-          if (!keysLower.has(candIdLower) && !keysLower.has(candLemmaLower)) {
-            return false;
-          }
-        }
+      const candLemmaId = candidate.indexItem?.lemmaId || candidate.lemma?.lemmaId || '';
+      const candLemma = candidate.lemma?.lemma || candidate.indexItem?.lemma || '';
+      if (!deckFilterAllowsLemma(candLemmaId, candLemma, selectedDeckFilter, customSets)) {
+        return false;
       }
       return true;
     },
@@ -1751,10 +1766,17 @@ function LexiconPracticeIsland({
   }, [pendingOutcome, selection]);
 
   // Answer dwell: move focus to «Далі →» so keyboard/SR users keep their place
-  // after the clicked (now-disabled) option blurs to <body>.
-  useEffect(() => {
+  // after the clicked (now-disabled) option blurs to <body>. D6 moved Далі into the
+  // top status row specifically so it is reachable without scrolling — but a tall
+  // prompt (e.g. rating buttons below the fold) can leave the page scrolled down
+  // from answering, and a plain `.focus()` only nudges the nearest edge into view.
+  // Reset scroll to the top explicitly so the status row (and Далі) is guaranteed
+  // visible. `useLayoutEffect` (not `useEffect`) runs before the browser paints, so
+  // there is no visible scroll-jump flash after the result renders.
+  useLayoutEffect(() => {
     if (!pendingOutcome) return;
-    advanceButtonRef.current?.focus();
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    advanceButtonRef.current?.focus({ preventScroll: true });
   }, [pendingOutcome]);
 
   useEffect(() => {
@@ -1768,12 +1790,14 @@ function LexiconPracticeIsland({
 
   async function ensureDeck(
     includeCloze = shouldLoadCloze(mode),
-    options: { level?: CefrLevel; force?: boolean } = {},
+    options: { level?: CefrLevel; force?: boolean; deckFilter?: string } = {},
   ): Promise<PracticeDeckData | null> {
-    // `level`/`force` are passed explicitly on a level change so we don't read the
-    // stale `learnerLevel`/`deck` closures before their state updates have flushed.
+    // `level`/`force`/`deckFilter` are passed explicitly on a level or deck change so we
+    // don't read the stale `learnerLevel`/`deck`/`selectedDeckFilter` closures before
+    // their state updates have flushed.
     const level = options.level ?? learnerLevel;
     const force = options.force ?? false;
+    const deckFilter = options.deckFilter ?? selectedDeckFilter;
     const current = force ? null : deck;
     if (current && (!includeCloze || clozeLoaded)) {
       setError(null);
@@ -1874,7 +1898,7 @@ function LexiconPracticeIsland({
         };
 
         // Merge teacher deck pre-generated cloze items if active
-        if (selectedDeckFilter === 'virtual_teacher_lesson') {
+        if (deckFilter === 'virtual_teacher_lesson') {
           const teacherDeck = getTeacherLessonVirtualDeck();
           try {
             const teacherClozeShard = await getShardJson<{ cloze?: PracticeClozeItem[] }>(
@@ -1894,8 +1918,8 @@ function LexiconPracticeIsland({
         }
 
         // Merge custom set document cloze items if active
-        if (selectedDeckFilter !== 'all' && selectedDeckFilter !== 'virtual_teacher_lesson') {
-          const activeSet = customSets.find((s) => s.id === selectedDeckFilter);
+        if (deckFilter !== 'all' && deckFilter !== 'virtual_teacher_lesson') {
+          const activeSet = customSets.find((s) => s.id === deckFilter);
           if (activeSet) {
             if (activeSet.cloze_items && activeSet.cloze_items.length > 0) {
               nextDeck = {
@@ -2073,6 +2097,8 @@ function LexiconPracticeIsland({
       completed: sessionCompleted,
       modeFilter: mode,
       level: learnerLevel,
+      deckId: selectedDeckFilter,
+      dateSeed: dateSeed(new Date()),
       startedAt: sessionStartedAtRef.current,
       extensionUsed,
       sessionNewIntroduced,
@@ -2129,6 +2155,10 @@ function LexiconPracticeIsland({
     // so `focusWeakness` is always cleared on resume — the focus is session-transient by
     // design and is intentionally NOT persisted to `PracticeSessionSnapshot`.
     focus: WeakArea | null = null,
+    // F1 (PR #5837 review): an accepted level/deck switch passes the ACCEPTED values here
+    // explicitly, so the deck load and the persisted snapshot use them directly instead of
+    // racing the `learnerLevel`/`selectedDeckFilter` state updates that triggered this call.
+    overrides?: { level?: CefrLevel; deckFilter?: string },
   ) {
     // A pinned selection is only valid within the session that created it. Without this
     // reset, returning home with an empty history lets the selector reuse the previous
@@ -2138,7 +2168,12 @@ function LexiconPracticeIsland({
     setSessionBudget(budget);
     setError(null);
     setFocusLookupMiss(false);
-    let loadedDeck = await ensureDeck(shouldLoadCloze(nextMode));
+    const effectiveLevel = overrides?.level ?? learnerLevel;
+    const effectiveDeckFilter = overrides?.deckFilter ?? selectedDeckFilter;
+    let loadedDeck = await ensureDeck(
+      shouldLoadCloze(nextMode),
+      overrides ? { level: overrides.level, deckFilter: overrides.deckFilter, force: true } : undefined,
+    );
     if (!loadedDeck) return;
     if (focusedLemmaId) {
       loadedDeck = {
@@ -2175,7 +2210,10 @@ function LexiconPracticeIsland({
     // A session is starting for real — drop any stale idle notice (e.g. the empty-focus
     // message) so the active status line reads «Сесія …» cleanly.
     setFeedback(null);
-    const index = sessionScopeIndexForMode(loadedDeck.index, nextMode);
+    const index = sessionScopeIndexForMode(
+      filterIndexByDeckFilter(loadedDeck.index, effectiveDeckFilter, customSets),
+      nextMode,
+    );
     const plan = computeSessionScope(index, budget, { dailyNewCount });
     const nextSeed = resume?.sessionSeed ?? makePracticeSessionSeed();
     if (resume) {
@@ -2204,7 +2242,9 @@ function LexiconPracticeIsland({
       budget,
       completed: resume?.completed ?? 0,
       modeFilter: nextMode,
-      level: learnerLevel,
+      level: effectiveLevel,
+      deckId: effectiveDeckFilter,
+      dateSeed: dateSeed(new Date()),
       startedAt: sessionStartedAtRef.current,
       extensionUsed: resume?.extensionUsed ?? 0,
       sessionNewIntroduced: resume?.sessionNewIntroduced ?? 0,
@@ -2222,17 +2262,38 @@ function LexiconPracticeIsland({
     budget: SessionBudget = 20,
     nextMode: PracticeModeFilter = 'mixed',
     focus: WeakArea | null = null,
+    overrides?: { level?: CefrLevel; deckFilter?: string },
   ) {
     clearResumeSnapshot(nextMode);
-    await beginSession(nextMode, budget, undefined, focus);
+    await beginSession(nextMode, budget, undefined, focus, overrides);
+  }
+
+  function currentSessionIdentity(): PracticeSessionIdentity {
+    return { level: learnerLevel, deckId: selectedDeckFilter, dateSeed: dateSeed(new Date()) };
   }
 
   async function resumeSession(nextMode: PracticeModeFilter) {
     const snapshot = resumeSnapshots[nextMode];
-    if (!snapshot || snapshot.modeFilter !== nextMode || !isPracticeSessionResumable(snapshot)) return;
+    if (
+      !snapshot ||
+      snapshot.modeFilter !== nextMode ||
+      !isPracticeSessionResumable(snapshot, Date.now(), currentSessionIdentity())
+    ) {
+      return;
+    }
     // A resumed session starts with NO focus: the weakness is session-transient (never
     // persisted to the snapshot), so `beginSession(..., focus=null)` clears `focusWeakness`.
     await beginSession(nextMode, snapshot.budget, snapshot, null);
+  }
+
+  /**
+   * D5: «Почати наново» discards the resumable snapshot outright (no confirmation
+   * modal — sessions are cheap) and seeds a brand-new session for it instead.
+   */
+  async function restartMixedSession() {
+    clearResumeSnapshots();
+    setFocusWeakness(null);
+    await startSession(sessionBudget, 'mixed');
   }
 
   async function startFocusMode(nextMode: PracticeModeFilter) {
@@ -2274,6 +2335,61 @@ function LexiconPracticeIsland({
       setDeck(null);
       setSessionPhase('idle');
     }
+  }
+
+  // D7: a session in progress (active) or resumable (idle with a stored snapshot) is
+  // "law" until the learner explicitly agrees to trade it in — so a deck/level tap
+  // parks the choice in `pendingDeckSwitch` and asks, instead of silently recomputing
+  // out from under a session the learner may still want to finish.
+  function hasActiveOrResumableSession(): boolean {
+    return sessionPhase === 'active' || Boolean(resumeSnapshots.mixed);
+  }
+
+  function requestDeckSwitch(nextDeckFilter: string) {
+    if (nextDeckFilter === selectedDeckFilter) return;
+    if (hasActiveOrResumableSession()) {
+      setPendingDeckSwitch({ kind: 'deck', value: nextDeckFilter });
+      return;
+    }
+    setSelectedDeckFilter(nextDeckFilter);
+  }
+
+  function requestLevelSwitch(nextLevel: CefrLevel) {
+    if (nextLevel === learnerLevel || !publishedLevels.has(nextLevel)) return;
+    if (hasActiveOrResumableSession()) {
+      setPendingDeckSwitch({ kind: 'level', value: nextLevel });
+      return;
+    }
+    void changeLevel(nextLevel);
+  }
+
+  function declineDeckSwitch() {
+    setPendingDeckSwitch(null);
+  }
+
+  async function acceptDeckSwitch() {
+    if (!pendingDeckSwitch) return;
+    const change = pendingDeckSwitch;
+    setPendingDeckSwitch(null);
+    setSessionPhase('idle');
+    clearResumeSnapshots();
+    setClozeLoaded(false);
+    setHistory([]);
+    committedSelectionRef.current = null;
+    // F1 (PR #5837 review): the accepted level/deck is threaded through `startSession` as
+    // an explicit override rather than relied upon via `learnerLevel`/`selectedDeckFilter`
+    // state — those setters below schedule a re-render but do NOT update the closures this
+    // same synchronous call chain reads, so without the override the session that follows
+    // would silently load the PRIOR level/deck while the UI claims the accepted one.
+    const overrides: { level?: CefrLevel; deckFilter?: string } =
+      change.kind === 'deck' ? { deckFilter: change.value } : { level: change.value };
+    if (change.kind === 'deck') {
+      setSelectedDeckFilter(change.value);
+    } else {
+      setLearnerLevel(change.value);
+      writeLearnerLevel(change.value);
+    }
+    await startSession(sessionBudget, 'mixed', null, overrides);
   }
 
   function refreshProgress() {
@@ -2529,9 +2645,13 @@ function LexiconPracticeIsland({
   const homeScope = useMemo(
     () =>
       indexForStats.length
-        ? computeSessionScope(indexForStats, sessionBudget, { dailyNewCount })
+        ? computeSessionScope(
+            filterIndexByDeckFilter(indexForStats, selectedDeckFilter, customSets),
+            sessionBudget,
+            { dailyNewCount },
+          )
         : null,
-    [dailyNewCount, indexForStats, sessionBudget],
+    [customSets, dailyNewCount, indexForStats, selectedDeckFilter, sessionBudget],
   );
   const dailyRows = useMemo(
     () =>
@@ -2540,39 +2660,6 @@ function LexiconPracticeIsland({
         : { pendingDue: [], pendingNew: [], done: [] },
     [dailySnapshot, reviewLog],
   );
-  const focusCue = useMemo(() => {
-    const pending = [...dailyRows.pendingDue, ...dailyRows.pendingNew];
-    if (pending.length === 0) return null;
-
-    const weakCases = weakCaseChips(reviewLog);
-    for (const weakness of weakCases) {
-      for (const row of pending) {
-        const lexeme = dailyLexemes.get(row.item.lemmaId);
-        if (!lexeme) continue;
-        const forms = lexeme.paradigm?.cases?.[weakness.key];
-        const form = forms?.singular ?? forms?.plural ?? '';
-        if (form && form !== lexeme.lemma) {
-          return { lemmaId: row.item.lemmaId, caseLabel: weakness.label, form };
-        }
-      }
-    }
-
-    for (const row of pending) {
-      const lexeme = dailyLexemes.get(row.item.lemmaId);
-      if (!lexeme) continue;
-      const cases = lexeme.paradigm?.cases ?? {};
-      for (const caseKey of Object.keys(cases)) {
-        if (caseKey === 'nominative') continue;
-        const forms = cases[caseKey];
-        const form = forms?.singular ?? forms?.plural ?? '';
-        if (form && form !== lexeme.lemma) {
-          return { lemmaId: row.item.lemmaId, caseLabel: CASE_LABELS_UK[caseKey] ?? caseKey, form };
-        }
-      }
-    }
-
-    return null;
-  }, [dailyLexemes, dailyRows, reviewLog]);
   const todayDenominator = useMemo(
     () =>
       indexForStats.length
@@ -2702,6 +2789,109 @@ function LexiconPracticeIsland({
             </div>
           )}
 
+          {/* Google Drive Sync Bar */}
+          <div className="k3-drive-sync-bar" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '0.75rem 0 1rem 0' }}>
+            <button
+              type="button"
+              className="btn btn-sm"
+              style={{ background: 'var(--lu-accent-blue, #2563eb)', color: '#fff', borderRadius: '8px', padding: '0.4rem 0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+              onClick={handleGoogleDriveSync}
+              disabled={isDriveSyncing}
+            >
+              <span>☁️</span>
+              <span>{isDriveSyncing ? 'Синхронізація...' : 'Увійти та синхронізувати з Google Drive'}</span>
+            </button>
+            {driveSyncMsg ? <span style={{ fontSize: '0.85rem', color: 'var(--lu-text-muted)' }}>{driveSyncMsg}</span> : null}
+          </div>
+
+          {/* Custom Decks & Special Deck Filter Bar */}
+          <div className="k3-deck-filter-bar" style={{ margin: '1rem 0', padding: '0.75rem 1rem', background: 'var(--lu-bg-card, rgba(255,255,255,0.05))', borderRadius: '12px', border: '1px solid var(--lu-border, rgba(255,255,255,0.1))' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
+                {chromeLocale === 'uk' ? '📚 Колоди та добірки слів' : '📚 Word Decks & Collections'}
+              </span>
+              <button
+                type="button"
+                className="btn btn-sm btn-accent"
+                onClick={() => setShowCreateModal(true)}
+                style={{ fontSize: '0.8rem', padding: '0.25rem 0.6rem' }}
+              >
+                ⚙️ {chromeLocale === 'uk' ? 'Менеджер колод / Імпорт' : 'Manage Decks / Import'}
+              </button>
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <button
+                type="button"
+                className={`btn btn-sm ${selectedDeckFilter === 'all' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
+                onClick={() => requestDeckSwitch('all')}
+                style={selectedDeckFilter === 'all' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
+              >
+                {selectedDeckFilter === 'all' ? '✓ ' : ''}🌐 {chromeLocale === 'uk' ? `Всі слова (${learnerLevel})` : `All Words (${learnerLevel})`}
+              </button>
+              <button
+                type="button"
+                className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_lesson' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
+                onClick={() => requestDeckSwitch('virtual_teacher_lesson')}
+                style={selectedDeckFilter === 'virtual_teacher_lesson' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
+              >
+                {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓 {chromeLocale === 'uk' ? 'Уроки вчителя (610+440 слів)' : 'Teacher Deck (610+440 words)'}
+              </button>
+              {customSets.map((set) => (
+                <button
+                  key={set.id}
+                  type="button"
+                  className={`btn btn-sm ${selectedDeckFilter === set.id ? 'btn-primary shadow-md' : 'btn-ghost'}`}
+                  onClick={() => requestDeckSwitch(set.id)}
+                  style={selectedDeckFilter === set.id ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
+                >
+                  {selectedDeckFilter === set.id ? '✓ ' : ''}⭐ {set.title} ({set.lemma_keys.length})
+                </button>
+              ))}
+            </div>
+            {pendingDeckSwitch ? (
+              <div className="k3-switch-offer" data-testid="practice-switch-session-offer" role="status">
+                <span><ChromeText k="practice.switchSessionOffer" /></span>
+                <div className="k3-switch-offer-actions">
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-accent"
+                    data-testid="practice-switch-session-accept"
+                    onClick={acceptDeckSwitch}
+                  >
+                    <ChromeText k="practice.switchSessionAccept" />
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-sm"
+                    data-testid="practice-switch-session-decline"
+                    onClick={declineDeckSwitch}
+                  >
+                    <ChromeText k="practice.switchSessionDecline" />
+                  </button>
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          {/* Custom Deck Manager & Document Importer Modal */}
+          {showCreateModal ? (
+            <LexiconCustomDeckManager
+              chromeLocale={chromeLocale}
+              activeDeckFilter={selectedDeckFilter}
+              onSelectDeckFilter={(id) => {
+                // F2 (PR #5837 review): route through the same guarded switch flow as the
+                // deck-filter chips — the manager must offer a fresh session too, not
+                // silently swap the deck under an active/resumable one.
+                setCustomSets(readLocalCustomSets());
+                requestDeckSwitch(id);
+              }}
+              onClose={() => {
+                setShowCreateModal(false);
+                setCustomSets(readLocalCustomSets());
+              }}
+            />
+          ) : null}
+
           <div className="k3-practice-dashboard">
             <div className="k3-hero" data-testid="practice-dashboard-hero">
               <h1><ChromeText k="practice.heroTitle" /></h1>
@@ -2726,7 +2916,7 @@ function LexiconPracticeIsland({
                       aria-pressed={learnerLevel === level}
                       disabled={!published}
                       title={published ? undefined : CHROME_STRINGS[chromeLocale]['practice.c2Soon']}
-                      onClick={() => void changeLevel(level)}
+                      onClick={() => requestLevelSwitch(level)}
                     >
                       {level}
                       {!published ? (
@@ -2756,83 +2946,6 @@ function LexiconPracticeIsland({
                 <span className="k3-stat-label"><ChromeText k="practice.streak" /></span>
               </div>
             </div>
-
-            {/* Google Drive Sync Bar */}
-            <div className="k3-drive-sync-bar" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '0.75rem 0 1rem 0' }}>
-              <button
-                type="button"
-                className="btn btn-sm"
-                style={{ background: 'var(--lu-accent-blue, #2563eb)', color: '#fff', borderRadius: '8px', padding: '0.4rem 0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-                onClick={handleGoogleDriveSync}
-                disabled={isDriveSyncing}
-              >
-                <span>☁️</span>
-                <span>{isDriveSyncing ? 'Синхронізація...' : 'Увійти та синхронізувати з Google Drive'}</span>
-              </button>
-              {driveSyncMsg ? <span style={{ fontSize: '0.85rem', color: 'var(--lu-text-muted)' }}>{driveSyncMsg}</span> : null}
-            </div>
-
-            {/* Custom Decks & Special Deck Filter Bar */}
-            <div className="k3-deck-filter-bar" style={{ margin: '1rem 0', padding: '0.75rem 1rem', background: 'var(--lu-bg-card, rgba(255,255,255,0.05))', borderRadius: '12px', border: '1px solid var(--lu-border, rgba(255,255,255,0.1))' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
-                  {chromeLocale === 'uk' ? '📚 Колоди та добірки слів' : '📚 Word Decks & Collections'}
-                </span>
-                <button
-                  type="button"
-                  className="btn btn-sm btn-accent"
-                  onClick={() => setShowCreateModal(true)}
-                  style={{ fontSize: '0.8rem', padding: '0.25rem 0.6rem' }}
-                >
-                  ⚙️ {chromeLocale === 'uk' ? 'Менеджер колод / Імпорт' : 'Manage Decks / Import'}
-                </button>
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                <button
-                  type="button"
-                  className={`btn btn-sm ${selectedDeckFilter === 'all' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
-                  onClick={() => setSelectedDeckFilter('all')}
-                  style={selectedDeckFilter === 'all' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
-                >
-                  {selectedDeckFilter === 'all' ? '✓ ' : ''}🌐 {chromeLocale === 'uk' ? `Всі слова (${learnerLevel})` : `All Words (${learnerLevel})`}
-                </button>
-                <button
-                  type="button"
-                  className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_lesson' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
-                  onClick={() => setSelectedDeckFilter('virtual_teacher_lesson')}
-                  style={selectedDeckFilter === 'virtual_teacher_lesson' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
-                >
-                  {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓 {chromeLocale === 'uk' ? 'Уроки вчителя (610+440 слів)' : 'Teacher Deck (610+440 words)'}
-                </button>
-                {customSets.map((set) => (
-                  <button
-                    key={set.id}
-                    type="button"
-                    className={`btn btn-sm ${selectedDeckFilter === set.id ? 'btn-primary shadow-md' : 'btn-ghost'}`}
-                    onClick={() => setSelectedDeckFilter(set.id)}
-                    style={selectedDeckFilter === set.id ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
-                  >
-                    {selectedDeckFilter === set.id ? '✓ ' : ''}⭐ {set.title} ({set.lemma_keys.length})
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Custom Deck Manager & Document Importer Modal */}
-            {showCreateModal ? (
-              <LexiconCustomDeckManager
-                chromeLocale={chromeLocale}
-                activeDeckFilter={selectedDeckFilter}
-                onSelectDeckFilter={(id) => {
-                  setSelectedDeckFilter(id);
-                  setCustomSets(readLocalCustomSets());
-                }}
-                onClose={() => {
-                  setShowCreateModal(false);
-                  setCustomSets(readLocalCustomSets());
-                }}
-              />
-            ) : null}
 
             <div className="k3-words" data-testid="practice-dashboard-words">
               {dailySnapshotLoading || !dailySnapshot ? (
@@ -2912,7 +3025,11 @@ function LexiconPracticeIsland({
                 disabled={loading}
                 onClick={() => {
                   setFocusWeakness(null);
-                  void startSession(sessionBudget, 'mixed');
+                  if (resumeSnapshots.mixed) {
+                    void resumeSession('mixed');
+                  } else {
+                    void startSession(sessionBudget, 'mixed');
+                  }
                 }}
               >
                 <ChromeText k={resumeSnapshots.mixed ? 'practice.sessionResume' : 'practice.sessionStart'} />
@@ -2920,52 +3037,38 @@ function LexiconPracticeIsland({
               {resumeSnapshots.mixed ? (
                 <button
                   type="button"
-                  className="btn k3-session-resume"
-                  data-testid="practice-resume-session"
-                  data-resume-mode="mixed"
-                  onClick={() => void resumeSession('mixed')}
+                  className="btn k3-session-reset"
+                  data-testid="practice-reset-session"
+                  data-reset-mode="mixed"
+                  onClick={() => void restartMixedSession()}
                 >
-                  <ChromeDual
-                    uk={`Продовжити «Мікс» (${resumeSnapshots.mixed.completed}/${resumeSnapshots.mixed.plannedTotal ?? resumeSnapshots.mixed.budget})`}
-                    en={`Resume "Mixed" (${resumeSnapshots.mixed.completed}/${resumeSnapshots.mixed.plannedTotal ?? resumeSnapshots.mixed.budget})`}
-                  />
+                  <ChromeText k="practice.sessionRestart" />
                 </button>
               ) : null}
             </div>
 
             <div className="k3-secondary" data-testid="practice-dashboard-secondary">
-            <div className="k3-focus">
-              <h2><ChromeText k="practice.focusTitle" /></h2>
-              {weakChips.length > 0 ? (
-                <div className="lexicon-weak-areas" data-testid="practice-weak-areas">
-                  <div
-                    className="lexicon-weak-chips"
-                    role="group"
-                    aria-label={CHROME_STRINGS[chromeLocale]['practice.focusTitle']}
-                  >
-                    {weakChips.map((weakness) => (
-                      <button
-                        type="button"
-                        key={`${weakness.dimension}:${weakness.key}`}
-                        className="lexicon-weak-chip"
-                        data-testid={`practice-weak-chip-${weakness.key}`}
-                        onClick={() => void startWeakAreaFocus(weakness)}
-                      >
-                        {weakness.label}
-                      </button>
-                    ))}
-                  </div>
+            {weakChips.length > 0 ? (
+              <div className="lexicon-weak-areas" data-testid="practice-weak-areas">
+                <div
+                  className="lexicon-weak-chips"
+                  role="group"
+                  aria-label={CHROME_STRINGS[chromeLocale]['practice.weakAreas']}
+                >
+                  {weakChips.map((weakness) => (
+                    <button
+                      type="button"
+                      key={`${weakness.dimension}:${weakness.key}`}
+                      className="lexicon-weak-chip"
+                      data-testid={`practice-weak-chip-${weakness.key}`}
+                      onClick={() => void startWeakAreaFocus(weakness)}
+                    >
+                      {weakness.label}
+                    </button>
+                  ))}
                 </div>
-              ) : null}
-              {focusCue ? (
-                <a href={atlasLemmaHref(focusCue.lemmaId)} className="k3-focus-link">
-                  <span className="k3-focus-case">{focusCue.caseLabel}</span>
-                  <span className="k3-focus-form">{focusCue.form}</span>
-                </a>
-              ) : (
-                <span className="k3-focus-empty" aria-hidden="true" />
-              )}
-            </div>
+              </div>
+            ) : null}
 
             <div className="k3-modes">
               <h2><ChromeText k="practice.modesTitle" /></h2>
@@ -3054,6 +3157,17 @@ function LexiconPracticeIsland({
             >
               {progressLabel}
             </span>
+            {pendingOutcome ? (
+              <button
+                ref={advanceButtonRef}
+                type="button"
+                className="btn btn-accent queue-next-btn"
+                data-testid="practice-advance-button"
+                onClick={advancePending}
+              >
+                <PracticeChromeLabel k="practice.nextArrow" />
+              </button>
+            ) : null}
           </div>
 
           {deck && deck.index.length === 0 && (
@@ -3092,19 +3206,6 @@ function LexiconPracticeIsland({
                     chromeLocale={chromeLocale}
                     learnerLevel={learnerLevel}
                   />
-                  {pendingOutcome ? (
-                    <div className="lexicon-practice-advance" data-testid="practice-advance">
-                      <button
-                        ref={advanceButtonRef}
-                        type="button"
-                        className="btn btn-accent lexicon-practice-advance-btn"
-                        data-testid="practice-advance-button"
-                        onClick={advancePending}
-                      >
-                        <PracticeChromeLabel k="practice.nextArrow" />
-                      </button>
-                    </div>
-                  ) : null}
                 </>
               ) : mode === 'cloze' && deck.cloze.length === 0 ? (
                 <p className="lexicon-practice-muted" data-testid="practice-cloze-empty">
@@ -3660,7 +3761,7 @@ function PracticeHeritage({
               <PracticeChromeDual
                 uk={`Джерело: ${feedback.citations.join('; ')}`}
                 en={`Source: ${feedback.citations.join('; ')}`}
-               
+
               />
             </p>
           ) : null}
@@ -3734,7 +3835,7 @@ function PracticeCloze({
         <PracticeChromeDual
           uk={`Поставте слово „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” у правильному відмінку.`}
           en={`Put the word „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” in the correct case.`}
-         
+
         />
       </p>
       <p className="cz-sentence">

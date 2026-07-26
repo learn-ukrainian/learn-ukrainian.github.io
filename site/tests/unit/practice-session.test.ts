@@ -30,6 +30,7 @@ import {
   type PracticeLexeme,
   type SelectionHistoryItem,
 } from '@site/src/lib/lexicon/srs';
+import { dateSeed } from '@site/src/lib/lexicon/daily';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
 
@@ -222,6 +223,8 @@ describe('practice session helpers', () => {
       completed: 1,
       modeFilter: 'flashcards',
       level: 'A1',
+      deckId: 'all',
+      dateSeed: dateSeed(NOW),
       startedAt: NOW.getTime(),
       plannedReviews: 2,
       plannedNew: 2,
@@ -239,6 +242,20 @@ describe('practice session helpers', () => {
       completed: 1,
     });
     expect(isPracticeSessionResumable(snapshot, NOW)).toBe(true);
+    expect(
+      isPracticeSessionResumable(snapshot, NOW, { level: 'A1', deckId: 'all', dateSeed: dateSeed(NOW) }),
+    ).toBe(true);
+    // F2 (PR #5837 review): a snapshot must never resume against a pool other than the
+    // one it was drawn from — level, deck, and day are all part of its identity.
+    expect(
+      isPracticeSessionResumable(snapshot, NOW, { level: 'A2', deckId: 'all', dateSeed: dateSeed(NOW) }),
+    ).toBe(false);
+    expect(
+      isPracticeSessionResumable(snapshot, NOW, { level: 'A1', deckId: 'custom-set-1', dateSeed: dateSeed(NOW) }),
+    ).toBe(false);
+    expect(
+      isPracticeSessionResumable(snapshot, NOW, { level: 'A1', deckId: 'all', dateSeed: dateSeed(NOW) + 1 }),
+    ).toBe(false);
     const live = selectNextPracticeItem(testDeck, {
       now: NOW,
       modeFilter: 'flashcards',
@@ -290,6 +307,8 @@ describe('practice session helpers', () => {
       completed: 2,
       modeFilter: 'mixed',
       level: 'A1',
+      deckId: 'all',
+      dateSeed: dateSeed(NOW),
       startedAt: NOW.getTime() - 7 * 60 * 60_000,
       plannedTotal: 10,
     });

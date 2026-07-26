@@ -368,6 +368,23 @@ const frontmatter = {
     font-weight: 900;
   }
 
+  /*
+   * D6: Далі/Next moves into the top status row, immediately right of the n/N
+   * pill, so it is reachable without scrolling at 1366x768 and 390x844 — the
+   * bottom advance button (below the exercise card, off the first viewport on
+   * long prompts) is gone; exactly one Next control per round.
+   */
+  :global(.queue-next-btn) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 999px;
+    font-weight: 900;
+  }
+
   :global(.lexicon-practice-stage) {
     display: grid;
     gap: 1.1rem;
@@ -970,34 +987,48 @@ const frontmatter = {
 
   /* #5772 — desktop fold. Measured at 1366x768 on the single-column layout: the
      primary CTAs landed at 932px, 164px below the fold, because the hero (147px),
-     stats (62px), Drive sync bar (44px), deck-filter bar (122px) and the 293px
-     deck preview all stack above them while ~560px of horizontal space sits
-     unused. The earlier #5502 density pass tuned spacing but could not absorb the
-     two bars added since.
+     stats (62px) and the 293px deck preview all stack above them while ~560px of
+     horizontal space sits unused. The earlier #5502 density pass tuned spacing
+     but could not absorb that on its own.
 
      Pair the deck preview with the session panel rather than shaving padding
      again: it uses the width that is already there, and it keeps the primary CTA
      beside the deck it acts on. DOM order is untouched, so the documented
      hero → stats → words → session → secondary order still holds and the
-     reading order matches the visual order. */
-  @media (min-width: 1024px) {
+     reading order matches the visual order.
+
+     Design delta 2026-07-26 (D1): the baseline's "focus modes" last row is gone —
+     the standalone focus-word zone is deleted, so `.k3-secondary` (now just the
+     weak-area chips, if any, plus the mode grid) fills the full-width "modes"
+     row alone. The "." filler row is deliberate — it keeps `.k3-words` reaching
+     the full column height without cramming a fifth left-column row into it. */
+  @media (min-width: 1000px) {
     :global(.k3-practice-dashboard) {
       max-width: 1040px;
       grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+      grid-template-rows: auto auto auto 1fr auto;
+      grid-template-areas:
+        "hero words"
+        "stats words"
+        "session words"
+        ". words"
+        "modes modes";
       align-items: start;
     }
-    :global(.k3-hero),
-    :global(.k3-stats),
-    :global(.k3-drive-sync-bar),
-    :global(.k3-deck-filter-bar),
-    :global(.k3-secondary) {
-      grid-column: 1 / -1;
+    :global(.k3-hero) {
+      grid-area: hero;
+    }
+    :global(.k3-stats) {
+      grid-area: stats;
     }
     :global(.k3-words) {
-      grid-column: 1;
+      grid-area: words;
     }
     :global(.k3-session) {
-      grid-column: 2;
+      grid-area: session;
+    }
+    :global(.k3-secondary) {
+      grid-area: modes;
     }
   }
 
@@ -1105,19 +1136,30 @@ const frontmatter = {
       );
     box-shadow: var(--lu-shadow);
   }
+  /*
+   * D4 (design delta 2026-07-26): one card, three stacked rows — pills, then the
+   * estimate (its own row, right-aligned, ellipsis rather than card overflow),
+   * then the single dominant action. The estimate previously shared a flex row
+   * with the pills via `justify-content: space-between`; squeezed into the
+   * ~340px right-hand desktop column (`.k3-session` grid-area) that pushed the
+   * estimate text outside the card border — confirmed live.
+   */
   :global(.k3-session-overview) {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.3rem;
   }
   :global(.k3-session-size) {
     display: flex;
+    flex-wrap: nowrap;
     align-items: center;
     gap: 0.5rem;
     min-width: 0;
+    overflow-x: auto;
   }
   :global(.k3-session-label) {
+    flex-shrink: 0;
     color: var(--lu-text-muted);
     font-size: 0.78rem;
     font-weight: 900;
@@ -1126,14 +1168,19 @@ const frontmatter = {
   }
   :global(.k3-session-scope) {
     margin: 0;
+    max-width: 100%;
+    overflow: hidden;
     color: var(--lu-text-muted);
     font-size: 0.9rem;
     font-weight: 800;
+    text-align: right;
+    text-overflow: ellipsis;
     white-space: nowrap;
   }
   :global(.k3-session-budgets) {
     display: flex;
     flex-wrap: nowrap;
+    flex-shrink: 0;
     gap: 0.5rem;
   }
   :global(.k3-session-budgets button) {
@@ -1185,26 +1232,60 @@ const frontmatter = {
     filter: none;
     cursor: wait;
   }
-  :global(.k3-session-resume) {
-    justify-self: start;
+  /*
+   * D5: "Почати наново" / "Start over" is a secondary, DANGER-outline action — it
+   * discards the resumable session's progress via `clearPracticeSessionSnapshots()`
+   * — never underlined link-text (that reads as a low-stakes secondary link, the
+   * opposite of what a progress-discarding reset should signal).
+   */
+  :global(.lexicon-practice button.k3-session-reset) {
+    justify-self: stretch;
     min-height: 44px;
-    padding: 0.15rem 0;
-    border: 0;
+    width: 100%;
+    padding: 0 1rem;
+    border: 1px solid var(--lu-state-wrong-fg, #b91c1c);
     background: transparent;
-    color: var(--lu-primary);
+    color: var(--lu-state-wrong-fg, #b91c1c);
     font-weight: 800;
-    text-decoration: underline;
-    text-underline-offset: 0.18em;
   }
-  :global(.lexicon-practice button.k3-session-resume:hover),
-  :global(.lexicon-practice button.k3-session-resume:focus-visible) {
-    border: 0;
-    background: transparent;
-    color: var(--lu-primary);
+  :global(.lexicon-practice button.k3-session-reset:hover),
+  :global(.lexicon-practice button.k3-session-reset:focus-visible) {
+    border-color: var(--lu-state-wrong-fg, #b91c1c);
+    background: var(--lu-state-wrong-bg);
+    color: var(--lu-state-wrong-fg, #b91c1c);
     box-shadow: none;
-    outline: 2px solid var(--lu-primary);
+    outline: 2px solid var(--lu-state-wrong-fg, #b91c1c);
     outline-offset: 2px;
   }
+
+  /*
+   * D7: changing deck/level with an active-or-resumable session asks inline
+   * (never a modal) before trading that session in for a fresh one.
+   */
+  :global(.k3-switch-offer) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--lu-primary) 35%, var(--lu-border));
+    border-radius: 10px;
+    background: var(--lu-state-active);
+    color: var(--lu-text);
+    font-weight: 800;
+  }
+  :global(.k3-switch-offer-actions) {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+  }
+  :global(.k3-switch-offer-actions button) {
+    min-height: 40px;
+    padding: 0 0.85rem;
+  }
+
   :global(.k3-practice-sources) {
     border: 1px solid var(--lu-border);
     border-radius: 12px;
@@ -1225,7 +1306,7 @@ const frontmatter = {
     gap: 0.75rem;
     padding: 0 0.75rem 0.75rem;
   }
-  @media (max-width: 760px) {
+  @media (max-width: 999px) {
     :global(.k3-practice-dashboard) {
       gap: 0.45rem;
     }
@@ -1238,18 +1319,14 @@ const frontmatter = {
     :global(.k3-session) {
       padding: 0.75rem 0.8rem;
     }
-    :global(.k3-session-overview),
-    :global(.k3-session-size) {
-      align-items: flex-start;
-      flex-wrap: wrap;
-    }
-    :global(.k3-session-overview) {
-      flex-direction: column;
-    }
-    :global(.k3-session-budgets) {
-      flex-wrap: wrap;
-    }
+    /* D4: the pills stay one line at every width; only the estimate (its own row)
+       wraps below 1000px instead of eliding — there is no card edge left to hide
+       overflow behind once the layout drops to a single column. */
     :global(.k3-session-scope) {
+      max-width: none;
+      overflow: visible;
+      text-align: left;
+      text-overflow: clip;
       white-space: normal;
     }
     :global(.lexicon-practice button.k3-session-primary) {
@@ -1456,39 +1533,9 @@ const frontmatter = {
     display: grid;
     gap: 1rem;
   }
-  :global(.k3-focus) {
-    display: grid;
-    gap: 0.75rem;
-    padding: 0.85rem 0;
+  :global(.k3-secondary .lexicon-weak-areas) {
+    padding: 0.85rem 0 0;
     border-top: 1px solid var(--lu-border);
-  }
-  :global(.k3-focus h2) {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  :global(.k3-focus-link) {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    color: var(--lu-text);
-    text-decoration: none;
-  }
-  :global(.k3-focus-case) {
-    color: var(--lu-text-muted);
-    font-size: 0.85rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-  }
-  :global(.k3-focus-form) {
-    font-size: 1.5rem;
-    font-weight: 900;
-  }
-  :global(.k3-focus-empty) {
-    min-height: 3.5rem;
   }
 
   :global(.k3-modes) {

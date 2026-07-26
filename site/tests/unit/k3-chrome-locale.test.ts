@@ -72,11 +72,16 @@ describe("K3 practice dashboard layout and copy (Chunk 2)", () => {
     "utf8",
   );
 
-  test("practice.astro keeps the frozen K3 setup in one centered column without a filler row", () => {
+  test("practice.astro keeps the frozen K3 setup in one centered column, with the D1 desktop area map", () => {
     expect(practiceSource).toContain(":global(.k3-practice-dashboard) {");
     expect(practiceSource).toContain("max-width: 800px;");
     expect(practiceSource).toContain("margin: 0 auto;");
-    expect(practiceSource).not.toMatch(/grid-template-areas|grid-area\s*:/);
+    // Design delta 2026-07-26 (D1): the focus zone is deleted, so the desktop area
+    // map's last row is "modes modes" (not "focus modes"), with the deliberate "."
+    // filler row still present.
+    expect(practiceSource).toMatch(
+      /grid-template-areas:\s*"hero words"\s*"stats words"\s*"session words"\s*"\. words"\s*"modes modes"/,
+    );
     expect(dailyDeckSource).toContain("<details");
     expect(dailyDeckSource).toContain('onToggle={(event) => setDetailsOpen(event.currentTarget.open)}');
   });
@@ -109,19 +114,19 @@ describe("K3 practice dashboard layout and copy (Chunk 2)", () => {
     }
   });
 
-  test("LexiconPractice renders the frozen single-column DOM order", () => {
+  test("LexiconPractice renders the frozen single-column DOM order (D1: focus zone deleted)", () => {
     const heroIndex = lexiconPracticeSource.indexOf('className="k3-hero"');
     const statsIndex = lexiconPracticeSource.indexOf('className="k3-stats"');
     const sessionIndex = lexiconPracticeSource.indexOf('className="k3-session"');
     const wordsIndex = lexiconPracticeSource.indexOf('className="k3-words"');
-    const focusIndex = lexiconPracticeSource.indexOf('className="k3-focus"');
     const modesIndex = lexiconPracticeSource.indexOf('className="k3-modes"');
     expect(heroIndex).toBeGreaterThan(0);
     expect(statsIndex).toBeGreaterThan(heroIndex);
     expect(wordsIndex).toBeGreaterThan(statsIndex);
     expect(sessionIndex).toBeGreaterThan(wordsIndex);
-    expect(focusIndex).toBeGreaterThan(sessionIndex);
-    expect(modesIndex).toBeGreaterThan(focusIndex);
+    expect(modesIndex).toBeGreaterThan(sessionIndex);
+    // The focus concept (a featured-word zone separate from Words of the Day) is gone.
+    expect(lexiconPracticeSource).not.toContain('className="k3-focus"');
   });
 
   test("mode chooser exposes all 11 modes with no icons", () => {

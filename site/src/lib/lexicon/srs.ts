@@ -463,6 +463,13 @@ export interface PracticeSessionSnapshot {
   completed: number;
   modeFilter: PracticeModeFilter;
   level: string;
+  /** The selected deck filter ('all', 'virtual_teacher_lesson', or a custom set id) the
+   * session was drawn from — validated on resume so a snapshot never gets replayed
+   * against a pool other than the one it started with. */
+  deckId: string;
+  /** `dateSeed()` of the day the session started — the daily pool rotates by day, so a
+   * snapshot surviving past midnight is validated against this before resuming. */
+  dateSeed: number;
   startedAt: number;
   /** Resume helpers — not part of selector state; safe to persist for closure rule. */
   extensionUsed?: number;
@@ -481,7 +488,7 @@ export interface PracticeSessionSnapshot {
 export type PracticeSessionSnapshots = Partial<Record<PracticeModeFilter, PracticeSessionSnapshot>>;
 
 interface PersistedPracticeSessionSnapshots {
-  version: 1;
+  version: 2;
   byMode: PracticeSessionSnapshots;
 }
 
@@ -2220,6 +2227,8 @@ function parsePracticeSessionSnapshot(value: unknown): PracticeSessionSnapshot |
       typeof parsed.completed !== 'number' ||
       !isPracticeModeFilter(parsed.modeFilter) ||
       typeof parsed.level !== 'string' ||
+      typeof parsed.deckId !== 'string' ||
+      typeof parsed.dateSeed !== 'number' ||
       typeof parsed.startedAt !== 'number'
     ) {
       return null;
@@ -2232,7 +2241,10 @@ function parsePracticeSessionSnapshot(value: unknown): PracticeSessionSnapshot |
 
 /**
  * Read the mode-indexed session store. A pre-mode-scoping legacy snapshot is accepted
- * and placed under its own stored mode; the next write upgrades it to the v1 envelope.
+ * and placed under its own stored mode; the next write upgrades it to the current envelope.
+ * (A legacy snapshot predates `deckId`/`dateSeed` too, so in practice it now fails
+ * `parsePracticeSessionSnapshot` and is discarded — a fresh start, same as any other
+ * schema mismatch.)
  */
 export function readPracticeSessionSnapshots(
   storage: StorageLike = resolveStorage(),
@@ -2248,7 +2260,7 @@ export function readPracticeSessionSnapshots(
     if (
       !persisted ||
       typeof persisted !== 'object' ||
-      persisted.version !== 1 ||
+      persisted.version !== 2 ||
       !persisted.byMode ||
       typeof persisted.byMode !== 'object' ||
       Array.isArray(persisted.byMode)
@@ -2292,7 +2304,7 @@ export function writePracticeSessionSnapshot(
       storage.removeItem(PRACTICE_SESSION_STORAGE_KEY);
       return;
     }
-    const persisted: PersistedPracticeSessionSnapshots = { version: 1, byMode: snapshots };
+    const persisted: PersistedPracticeSessionSnapshots = { version: 2, byMode: snapshots };
     storage.setItem(PRACTICE_SESSION_STORAGE_KEY, JSON.stringify(persisted));
   } catch {
     // Best-effort persistence.
@@ -2307,11 +2319,33 @@ export function clearPracticeSessionSnapshots(storage: StorageLike = resolveStor
   }
 }
 
+export interface PracticeSessionIdentity {
+  level: string;
+  deckId: string;
+  dateSeed: number;
+}
+
+/**
+ * `expected` is the pool the learner is CURRENTLY set up for (level, deck filter, and
+ * today's date seed). A snapshot drawn from a different pool — a stale level, a deck
+ * filter that has since changed, or a session left over from a previous day — is never
+ * resumable: it must fail closed to a fresh start rather than silently replay against
+ * whatever pool happens to be active now (F2, PR #5837 review).
+ */
 export function isPracticeSessionResumable(
   snapshot: PracticeSessionSnapshot | null,
   now: Date | number = Date.now(),
+  expected?: PracticeSessionIdentity,
 ): boolean {
   if (!snapshot) return false;
+  if (
+    expected &&
+    (snapshot.level !== expected.level ||
+      snapshot.deckId !== expected.deckId ||
+      snapshot.dateSeed !== expected.dateSeed)
+  ) {
+    return false;
+  }
   const nowTime = toTime(now) ?? Date.now();
   if (nowTime - snapshot.startedAt >= SESSION_RESUME_MAX_MS) return false;
   const plannedTotal = snapshot.plannedTotal ?? snapshot.budget;
@@ -2485,6 +2519,30 @@ export function selectDailyPracticeDeckItems(
     ...newLemmas.map((entry) => ({ lemmaId: entry.lemmaId, origin: 'new' as const })),
   ];
   return combined.slice(0, DAILY_PRACTICE_DECK_SIZE);
+}
+
+/**
+ * Design delta 2026-07-26 (D2): the Words-of-the-Day zone's featured set is now
+ * chosen by `pickDaily` over `/lexicon/daily-pool.json`, not by SRS due/new
+ * priority — but each featured lemma still shows an honest due/new marker. This
+ * classifies ONE already-chosen lemma (reusing the exact due-card check from
+ * `selectDailyPracticeDeckItems`) instead of selecting *which* lemmas qualify.
+ */
+export function classifyDailyPracticeOrigin(
+  lemmaId: string,
+  indexItems: PracticeIndexItem[],
+  cards: ReadonlyMap<string, CardState> | null | undefined,
+  now: Date | number = Date.now(),
+): 'due' | 'new' {
+  const nowTime = toTime(now) ?? Date.now();
+  const item = indexItems.find((entry) => entry.lemmaId === lemmaId);
+  if (!item) return 'new';
+  for (const mode of item.modes) {
+    if (!isPracticeMode(mode)) continue;
+    const card = cards?.get(cardKey(lemmaId, mode)) ?? null;
+    if (isDueReviewCard(card, nowTime)) return 'due';
+  }
+  return 'new';
 }
 
 export function buildDailyPracticeDeckSnapshot(

@@ -153,9 +153,9 @@ async function prepareResumableMixedSession(page: Page): Promise<void> {
 
 async function assertFirstViewportPracticeCTAs(page: Page, locale: 'en' | 'uk'): Promise<void> {
   const start = page.getByTestId('practice-start-session');
-  const resume = page.locator('button[data-resume-mode="mixed"]');
+  const reset = page.locator('button[data-reset-mode="mixed"]');
 
-  for (const control of [start, resume]) {
+  for (const control of [start, reset]) {
     await expect(control).toBeVisible();
     const box = await control.boundingBox();
     expect(box).not.toBeNull();
@@ -166,15 +166,16 @@ async function assertFirstViewportPracticeCTAs(page: Page, locale: 'en' | 'uk'):
   }
 
   // Accessible names must match the active chrome locale only (no slash duplicates).
-  // With a resumable Mixed snapshot, the primary CTA reads "Resume session" and the
-  // secondary control reads "Resume Mixed (N/M)" / "Продовжити «Мікс» (N/M)".
+  // With a resumable Mixed snapshot (D5), the primary CTA is the REAL resume action
+  // ("Resume session" / "Продовжити заняття") and the secondary is the danger-outline
+  // reset ("Start over" / "Почати наново").
   if (locale === 'en') {
     await expect(page.getByRole('button', { name: 'Resume session' })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Resume "Mixed"/ })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Start session|Почати заняття|Продовжити «Мікс»/ })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Start over' })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Start session|Почати заняття|Почати наново/ })).toHaveCount(0);
   } else {
     await expect(page.getByRole('button', { name: 'Продовжити заняття' })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Продовжити «Мікс»/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Почати наново' })).toBeVisible();
     await expect(page.getByRole('button', { name: /Start session|Resume session|Почати заняття/ })).toHaveCount(0);
   }
 
@@ -280,4 +281,411 @@ test('practice flashcard rating locks the card and waits for explicit next', asy
   await expect(card).toHaveAttribute('data-rated', 'true');
   await expect(goodButton).toBeDisabled();
   await expect(page.getByTestId('practice-advance-button')).toBeVisible();
+});
+
+// --- Practice UX batch — design delta 2026-07-26 (A1-A7) ---
+
+/** Complete one flashcard round (flip + rate) so the caller can advance or inspect progress. */
+async function completeOneFlashcard(page: Page, rating: 'good' | 'easy' | 'hard' | 'again' = 'good'): Promise<void> {
+  const card = page.locator('[data-activity="flashcard"]');
+  await expect(card).toBeVisible();
+  await card.click();
+  await expect(card).toHaveAttribute('data-flipped', 'true');
+  await page.locator(`[data-rate="${rating}"]`).click();
+  await expect(page.getByTestId('practice-advance-button')).toBeVisible();
+}
+
+/**
+ * `Mixed` mode opens on any of the 11 exercise types (D3: session-seeded, not fixed).
+ * Flashcards and every "pick one option" mode (choice/classify/synonym/paradigm/
+ * paronym/heritage) share simple, quick completions; the rest (matching/cloze/
+ * stress) are not needed here, so retry with a fresh session-seeded draw instead
+ * of teaching this helper all 11 interaction shapes.
+ */
+async function completeOneEasyMixedItem(page: Page): Promise<void> {
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    await expect(page.locator('.lexicon-practice-stage')).toBeVisible();
+    const flashcard = page.locator('[data-activity="flashcard"]');
+    const mcOption = page.locator('.mc-opt').first();
+    if (await flashcard.isVisible().catch(() => false)) {
+      await flashcard.click();
+      await page.locator('[data-rate="good"]').click();
+      await expect(page.getByTestId('practice-advance-button')).toBeVisible();
+      return;
+    }
+    if (await mcOption.isVisible().catch(() => false)) {
+      await mcOption.click();
+      await expect(page.getByTestId('practice-advance-button')).toBeVisible();
+      return;
+    }
+    // Going home without completing anything leaves a resumable snapshot, so the
+    // primary CTA would now RESUME this exact (unhandled-type) session instead of
+    // drawing fresh — use the reset control (D5) to force a genuinely new draw.
+    await page.getByRole('button', { name: /Додому|Home/ }).click();
+    const reset = page.locator('button[data-reset-mode="mixed"]');
+    if (await reset.isVisible().catch(() => false)) {
+      await reset.click();
+    } else {
+      await page.getByTestId('practice-start-session').click();
+    }
+  }
+  throw new Error('Could not reach an easily-completable mixed-mode item after 8 tries');
+}
+
+async function prepareResumableMixedSessionWithProgress(page: Page): Promise<void> {
+  await page.goto('/words-of-the-day/practice/');
+  await expect(page.getByTestId('practice-start-session')).toBeVisible();
+  await page.getByTestId('practice-start-session').click();
+  await expect(page.locator('.lexicon-practice-stage')).toBeVisible();
+  // Advance one item so the resumable snapshot carries real progress — this lets
+  // A3 tell "resumed with prior progress" apart from "reset back to 0".
+  await completeOneEasyMixedItem(page);
+  await page.getByTestId('practice-advance-button').click();
+  await page.getByRole('button', { name: /Додому|Home/ }).click();
+  await expect(page.getByTestId('practice-start-session')).toBeVisible();
+}
+
+test('A1: the practice Words-of-the-Day zone shows the same 12 as /words-of-the-day/ for the same level and day', async ({ page, context }) => {
+  await context.clearCookies();
+
+  await page.addInitScript(() => window.localStorage.setItem('lu-learner-level', 'A1'));
+
+  await page.goto('/words-of-the-day/');
+  await expect(page.locator('.lexicon-daily-item')).not.toHaveCount(0);
+  const atlasLemmas = await page.locator('.lexicon-daily-lemma').allTextContents();
+
+  await page.goto('/words-of-the-day/practice/');
+  await page.getByTestId('practice-daily-summary').click();
+  const practiceLemmas = await page.locator('.daily-deck-row .row-lemma').allTextContents();
+
+  expect(practiceLemmas.length).toBe(atlasLemmas.length);
+  expect(new Set(practiceLemmas)).toEqual(new Set(atlasLemmas));
+});
+
+test('A2: starting two sessions back-to-back yields different item sequences', async ({ page, context }) => {
+  await context.clearCookies();
+
+  async function captureFirstThreeFlashcards(): Promise<string[]> {
+    await page.goto('/words-of-the-day/practice/');
+    await page.locator('button[data-mode="flashcards"]').click();
+    const words: string[] = [];
+    for (let i = 0; i < 3; i += 1) {
+      const card = page.locator('[data-activity="flashcard"]');
+      await expect(card).toBeVisible();
+      words.push((await card.locator('.flashcard-word').first().textContent()) ?? '');
+      await completeOneFlashcard(page);
+      await page.getByTestId('practice-advance-button').click();
+    }
+    await page.getByRole('button', { name: /Додому|Home/ }).click();
+    return words;
+  }
+
+  const first = await captureFirstThreeFlashcards();
+  const second = await captureFirstThreeFlashcards();
+
+  expect(second).not.toEqual(first);
+});
+
+test('A3: a stored in-progress session shows Продовжити + Почати наново; Почати наново clears it and starts fresh', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.addInitScript(() => window.localStorage.setItem('lu-chrome-locale', 'uk'));
+  await prepareResumableMixedSessionWithProgress(page);
+
+  await expect(page.getByRole('button', { name: 'Продовжити заняття' })).toBeVisible();
+  const resetBtn = page.getByRole('button', { name: 'Почати наново' });
+  await expect(resetBtn).toBeVisible();
+
+  await resetBtn.click();
+
+  await expect(page.locator('.lexicon-practice-stage')).toBeVisible();
+  await expect(page.getByTestId('practice-session-progress')).toContainText('0/');
+
+  // The stored snapshot was discarded, not resumed-with-progress: going home again
+  // reoffers the primary CTA as a fresh start-state pairing (no prior 1/N carried over).
+  await page.getByRole('button', { name: /Додому|Home/ }).click();
+  await expect(page.getByRole('button', { name: 'Продовжити заняття' })).toBeVisible();
+});
+
+test('A4: Далі sits in the top status row next to the counter and is clickable without scrolling at 1366x768', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.goto('/words-of-the-day/practice/');
+
+  await page.locator('button[data-mode="flashcards"]').click();
+  await completeOneFlashcard(page);
+
+  // Exactly one Next control, living in the status bar next to the n/N pill.
+  await expect(page.getByTestId('practice-advance-button')).toHaveCount(1);
+  const statusBarNext = page.locator('.lexicon-practice-stage-bar').getByTestId('practice-advance-button');
+  await expect(statusBarNext).toBeVisible();
+
+  // The status bar (with Далі) sits at the very top of the exercise stage, so it is
+  // reachable without scrolling. The scroll-to-top reset (on answering) settles
+  // asynchronously (a browser reflow/scroll-anchoring tick after the result
+  // renders), so poll rather than reading the geometry the instant the button
+  // appears.
+  await expect.poll(async () => (await statusBarNext.boundingBox())?.y).toBeGreaterThanOrEqual(0);
+  const box = await statusBarNext.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box!.y + box!.height).toBeLessThanOrEqual(768);
+
+  // Enter also advances, per the existing key-handling contract.
+  await page.keyboard.press('Enter');
+  await expect(page.getByTestId('practice-session-progress')).toContainText('1/');
+});
+
+/**
+ * F1/F2 (PR #5837 review): route disjoint, single-item fixture decks for the A1/A2 core
+ * shards so "the accepted level drives the session" is provable from ITEM CONTENT, not
+ * merely from a request having fired for the right URL — a same-tick closure bug could
+ * silently replay the stale level's pool while the request log still looks correct.
+ * `depleteLowerLevel` is called right before the level switch so the (real, harmless)
+ * background lower-level merge a higher level kicks off can never dilute the accepted
+ * level's pool back into ambiguous territory.
+ */
+async function mockDisjointLevelFixtures(page: Page): Promise<{ depleteLowerLevel(level: 'A1' | 'A2'): void }> {
+  const depleted = new Set<'A1' | 'A2'>();
+  const fixtureItem = (level: 'A1' | 'A2') => ({
+    lemmaId: `e2eFixture${level}`,
+    lemma: `e2eFixture${level}`,
+    cefr: level,
+    modes: ['flashcards'] as const,
+    hasCloze: false,
+    clozeIds: [] as string[],
+    newOrder: 0,
+  });
+  const fixtureLexeme = (level: 'A1' | 'A2') => ({
+    lemmaId: `e2eFixture${level}`,
+    lemma: `e2eFixture${level}`,
+    lemmaPlain: `e2eFixture${level}`,
+    ipa: null,
+    gloss: `e2eFixture${level}`,
+    pos: 'noun',
+    cefr: level,
+    heritage: null,
+    severity: null,
+    paradigm: { cases: {} },
+  });
+  for (const level of ['A1', 'A2'] as const) {
+    await page.route(`**/lexicon/practice-index.${level}.json`, (route) =>
+      route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({
+          deckVersion: `e2e-fixture-${level}`,
+          level,
+          items: depleted.has(level) ? [] : [fixtureItem(level)],
+        }),
+      }),
+    );
+    await page.route(`**/lexicon/practice-lexemes.${level}.json`, (route) =>
+      route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({
+          deckVersion: `e2e-fixture-${level}`,
+          level,
+          lexemes: depleted.has(level) ? [] : [fixtureLexeme(level)],
+        }),
+      }),
+    );
+  }
+  return { depleteLowerLevel: (level) => depleted.add(level) };
+}
+
+async function readMixedSessionSnapshot(
+  page: Page,
+): Promise<{ level?: string; deckId?: string; dateSeed?: number } | null> {
+  return page.evaluate(() => {
+    const raw = window.localStorage.getItem('lu-practice-session');
+    return raw ? JSON.parse(raw).byMode?.mixed ?? null : null;
+  });
+}
+
+test('A5: switching level with a session in progress offers a fresh session; accepting starts one from the chosen set', async ({ page, context }) => {
+  await context.clearCookies();
+  const fixtures = await mockDisjointLevelFixtures(page);
+  await prepareResumableMixedSession(page);
+  // The A1 setup session is over; deplete A1 so A2's background lower-level merge (which
+  // always fetches A1 as a lower level) cannot reintroduce it into the accepted pool.
+  fixtures.depleteLowerLevel('A1');
+
+  await page.getByRole('button', { name: 'A2' }).click();
+
+  const offer = page.getByTestId('practice-switch-session-offer');
+  await expect(offer).toBeVisible();
+
+  await page.getByTestId('practice-switch-session-accept').click();
+
+  await expect(page.locator('.lexicon-practice-stage')).toBeVisible();
+  await expect(page.getByTestId('practice-session-progress')).toContainText('0/');
+
+  // F1/F2: the persisted snapshot must record the ACCEPTED level, and the first
+  // presented item must be drawn from the ACCEPTED (A2) pool — not the stale A1 one.
+  const snapshot = await readMixedSessionSnapshot(page);
+  expect(snapshot?.level).toBe('A2');
+  await expect(page.locator('.flashcard-word').first()).toContainText('e2eFixtureA2');
+});
+
+test('A5c: choosing a deck from the custom-deck manager while a session is active also offers a fresh session (finding 2 bypass)', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'learn_ukrainian_custom_sets_v1',
+      JSON.stringify([
+        {
+          id: 'e2e-custom-deck',
+          title: 'E2E Custom Deck',
+          description: '',
+          lemma_keys: ['e2eCustomDeckWord'],
+          created_at: '2026-01-01T00:00:00.000Z',
+          updated_at: '2026-01-01T00:00:00.000Z',
+          device_id: 'e2e-device',
+          revision: 1,
+        },
+      ]),
+    );
+  });
+  await prepareResumableMixedSession(page);
+
+  await page.getByRole('button', { name: /Manage Decks|Менеджер колод/ }).click();
+  await page.getByRole('button', { name: /Practice|Практика/ }).first().click();
+
+  // The custom-deck manager's own "Practice" action must route through the SAME guarded
+  // switch flow as the level/deck chips — it must not silently swap the active deck out
+  // from under the in-progress session (finding 2's bypass).
+  const offer = page.getByTestId('practice-switch-session-offer');
+  await expect(offer).toBeVisible();
+
+  await page.getByTestId('practice-switch-session-accept').click();
+
+  await expect(page.locator('.lexicon-practice-stage')).toBeVisible();
+  // The custom deck has exactly one word with no cloze content, so `ensureDeckCustomSetCoverage`
+  // gives it 7 practicable modes (flashcards/stress/classify/paradigm/synonym/paronym/heritage) —
+  // a mixed-mode session over ONE such word plans exactly 7 mode-cards. That number is wildly
+  // different from a full-level session (hundreds of due/new cards) — proof the pool is the
+  // accepted deck, not the full corpus.
+  await expect(page.getByTestId('practice-session-progress')).toContainText('0/7');
+
+  const snapshot = await readMixedSessionSnapshot(page);
+  expect(snapshot?.deckId).toBe('e2e-custom-deck');
+});
+
+test('A5b: declining the switch offer reverts the selection and leaves the session untouched', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.addInitScript(() => window.localStorage.setItem('lu-chrome-locale', 'uk'));
+  await prepareResumableMixedSession(page);
+
+  await page.getByRole('button', { name: 'A2' }).click();
+  await expect(page.getByTestId('practice-switch-session-offer')).toBeVisible();
+
+  await page.getByTestId('practice-switch-session-decline').click();
+
+  await expect(page.getByTestId('practice-switch-session-offer')).toBeHidden();
+  const levelA1 = page.getByTestId('practice-dashboard-hero').getByRole('button', { name: 'A1', exact: true });
+  await expect(levelA1).toHaveClass(/active/);
+  // The resumable Mixed snapshot from setup is untouched by the decline.
+  await expect(page.getByRole('button', { name: 'Продовжити заняття' })).toBeVisible();
+});
+
+test('A6: the session-box estimate stays inside the card at 1366x768 and 390x844', async ({ page, context }) => {
+  await context.clearCookies();
+
+  for (const viewport of [{ width: 1366, height: 768 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(viewport);
+    await page.goto('/words-of-the-day/practice/');
+
+    const card = page.getByTestId('practice-dashboard-session');
+    const estimate = page.getByTestId('practice-session-scope');
+    await expect(card).toBeVisible();
+
+    const cardBox = await card.boundingBox();
+    expect(cardBox).not.toBeNull();
+    if ((await estimate.count()) > 0) {
+      const estimateBox = await estimate.boundingBox();
+      expect(estimateBox).not.toBeNull();
+      expect(estimateBox!.x).toBeGreaterThanOrEqual(cardBox!.x - 1);
+      expect(estimateBox!.x + estimateBox!.width).toBeLessThanOrEqual(cardBox!.x + cardBox!.width + 1);
+      expect(estimateBox!.y + estimateBox!.height).toBeLessThanOrEqual(cardBox!.y + cardBox!.height + 1);
+    }
+
+    // The session-size pills (10 / 20 / until-clear) stay on one row at every width.
+    const budgets = page.locator('.k3-session-budgets button');
+    const firstTop = (await budgets.first().boundingBox())?.y;
+    const lastTop = (await budgets.last().boundingBox())?.y;
+    expect(firstTop).toBe(lastTop);
+  }
+});
+
+test('A6b: dashboard session estimate narrows to the selected custom deck before any session starts (PR #5837 fix-round-2)', async ({
+  page,
+  context,
+}) => {
+  await context.clearCookies();
+
+  // Fixture index: 3 single-mode items, so the full-level estimate is a small, exact
+  // number (not a live-corpus count that could drift) — well under the 8-per-session cap.
+  await page.route('**/lexicon/practice-index.A1.json', (route) =>
+    route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({
+        deckVersion: 'e2e-scope-fixture',
+        level: 'A1',
+        items: ['a', 'b', 'c'].map((suffix) => ({
+          lemmaId: `e2eScope${suffix}`,
+          lemma: `e2eScope${suffix}`,
+          cefr: 'A1',
+          modes: ['flashcards'],
+          hasCloze: false,
+          clozeIds: [],
+          newOrder: 0,
+        })),
+      }),
+    }),
+  );
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'learn_ukrainian_custom_sets_v1',
+      JSON.stringify([
+        {
+          id: 'e2e-scope-deck',
+          title: 'E2E Scope Deck',
+          description: '',
+          lemma_keys: ['e2eScopea'],
+          created_at: '2026-01-01T00:00:00.000Z',
+          updated_at: '2026-01-01T00:00:00.000Z',
+          device_id: 'e2e-device',
+          revision: 1,
+        },
+      ]),
+    );
+  });
+
+  await page.goto('/words-of-the-day/practice/');
+
+  const estimate = page.getByTestId('practice-session-scope');
+  // Before selecting the custom deck, the estimate describes the full (3-item) fixture level.
+  await expect(estimate).toContainText('3 нов');
+
+  await page.getByRole('button', { name: /E2E Scope Deck/ }).click();
+
+  // F1-F3 (PR #5837) scoped the two SESSION-start paths to the chosen deck via
+  // filterIndexByDeckFilter; the dashboard estimate — visible before a session even
+  // starts — must narrow the same way, not keep describing the unfiltered level.
+  await expect(estimate).toContainText('1 нов');
+});
+
+test('A7: word cards render the level exactly once', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.addInitScript(() => window.localStorage.setItem('lu-learner-level', 'A1'));
+  await page.goto('/words-of-the-day/practice/');
+
+  // Wait for the real daily deck (not the loading placeholder's bare "—" card).
+  await expect(page.getByTestId('practice-daily-deck')).toBeVisible();
+  const front = page.locator('.daily-preview-card .flashcard-front');
+  await expect(front).toBeVisible();
+  await expect(front).not.toHaveText('—');
+
+  const occurrences = await front.evaluate(
+    (node) => (node.textContent?.split('A1').length ?? 1) - 1,
+  );
+  expect(occurrences).toBe(1);
 });

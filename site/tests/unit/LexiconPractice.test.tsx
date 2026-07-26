@@ -23,6 +23,7 @@ import {
 } from '@site/src/lib/lexicon/srs';
 import { LEARNER_LEVEL_STORAGE_KEY, type CefrLevel } from '@site/src/lib/lexicon/levels';
 import { type CustomSet } from '@site/src/lib/lexicon/custom-decks';
+import { type DailyWord } from '@site/src/lib/lexicon/daily';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
 
@@ -38,12 +39,25 @@ function notFoundResponse(): Response {
   return { ok: false, json: async () => ({}) } as unknown as Response;
 }
 
+/** D2: the Words-of-the-Day zone now fetches this pool directly (see `dailyPoolFixture`). */
+function dailyPoolFixture(counts: Partial<Record<CefrLevel, number>>): DailyWord[] {
+  return Object.entries(counts).flatMap(([level, n]) =>
+    Array.from({ length: n ?? 0 }, (_unused, i) => ({
+      lemma: `слово-${level}-${i}`,
+      slug: `${level}-${i}`,
+      gloss: `gloss ${level} ${i}`,
+      cefr: level,
+    })),
+  );
+}
+
 /** Mock fetch for the level-sharded practice deck; `counts` lists which levels are published. */
 function mockShardFetch(counts: Partial<Record<CefrLevel, number>>) {
   const requested: string[] = [];
   const fn = vi.fn(async (input: RequestInfo | URL) => {
     const url = String(input);
     requested.push(url);
+    if (url.includes('daily-pool.json')) return okJson(dailyPoolFixture(counts));
     const match = url.match(
       /practice-(index|lexemes|cloze|stress|classify|paradigm|synonym|paronym|heritage)\.([ABC][12])\.json/,
     );
@@ -763,20 +777,26 @@ describe('LexiconPractice', () => {
     expect(retry.textContent ?? '').not.toMatch(/\/\s*Try again|\/\s*Спробувати/);
   });
 
-  test('eager-loads only the index (not lexemes/cloze) before a mode starts', async () => {
+  test('eager-loads the index and Words-of-the-Day lexemes, but no mode-specific drill shards, before a mode starts', async () => {
     const { fn, requested } = mockShardFetch({ A1: 2 });
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
 
     render(<LexiconPractice />);
 
     // The due-count tile eager-loads the lightweight index on mount so a returning
-    // learner sees their SRS due-count immediately...
-    await waitFor(() =>
-      expect(requested.some((u) => u.includes('practice-index.A1'))).toBe(true),
-    );
-    // ...while the heavy lexeme/cloze shards stay lazy until a mode actually starts.
-    expect(requested.some((u) => u.includes('practice-lexemes'))).toBe(false);
-    expect(requested.some((u) => u.includes('practice-cloze'))).toBe(false);
+    // learner sees their SRS due-count immediately, and the Words-of-the-Day zone
+    // (D2) fetches lexeme/cloze cores for its featured picks' represented levels —
+    // both settle before any mode starts.
+    await screen.findByTestId('practice-daily-deck');
+    expect(requested.some((u) => u.includes('practice-index.A1'))).toBe(true);
+    expect(requested.some((u) => u.includes('practice-lexemes.A1'))).toBe(true);
+    // The heavy MODE-specific drill shards stay lazy until a mode actually starts.
+    expect(requested.some((u) => u.includes('practice-stress'))).toBe(false);
+    expect(requested.some((u) => u.includes('practice-classify'))).toBe(false);
+    expect(requested.some((u) => u.includes('practice-paradigm'))).toBe(false);
+    expect(requested.some((u) => u.includes('practice-synonym'))).toBe(false);
+    expect(requested.some((u) => u.includes('practice-paronym'))).toBe(false);
+    expect(requested.some((u) => u.includes('practice-heritage'))).toBe(false);
   });
 
   test('shows due review count on the home before any session starts', async () => {
@@ -1964,7 +1984,9 @@ describe('LexiconPractice', () => {
     await waitFor(() =>
       expect(screen.getByTestId('practice-weak-areas')).toBeInTheDocument(),
     );
-    expect(screen.getByText('Фокус')).toBeInTheDocument();
+    // D1: the standalone "Фокус" zone/heading is deleted; the chips render on
+    // their own, un-headed, inside the (renamed) modes section.
+    expect(screen.queryByText('Фокус')).not.toBeInTheDocument();
     // Chips use Ukrainian case names only — знахідний for accusative.
     expect(screen.getByTestId('practice-weak-chip-accusative')).toHaveTextContent('знахідний');
   });
@@ -3113,6 +3135,44 @@ describe('LexiconPractice', () => {
 
       expect(screen.queryByText(/We couldn’t load practice/i)).not.toBeInTheDocument();
       expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
+    });
+
+    test('dashboard session estimate narrows to a 1-word custom deck, not the full level (PR #5837 fix-round-2)', async () => {
+      // 'робота' carries 3 practice modes (flashcards/matching/choice, no cloze) in
+      // sampleDeck() — a deterministic "new" count for a single-lemma custom deck,
+      // distinct from the full deck's cap of 8 (DEFAULT_NEW_PER_SESSION).
+      const customSet: CustomSet = {
+        id: 'test_custom_deck_scope',
+        title: 'Одне слово',
+        lemma_keys: ['робота'],
+        cloze_items: [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        device_id: 'test_device',
+        revision: 1,
+      };
+      localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
+
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
+
+      // Before selecting the custom deck, the estimate reflects the full level (4 words x
+      // up to 4 modes each, capped at the 8-per-session new-card ceiling).
+      await waitFor(() =>
+        expect(screen.getByTestId('practice-session-scope')).toHaveTextContent(/8 нових/),
+      );
+
+      const customBtn = screen.getByRole('button', { name: /Одне слово/i });
+      await user.click(customBtn);
+
+      // F1-F3 (PR #5837) scoped the two session-START paths to the selected deck via
+      // filterIndexByDeckFilter, but the dashboard's homeScope estimate — visible before a
+      // session even starts — still fed it the unfiltered level index. A 1-word custom deck
+      // (3 modes, under the session cap) must now show a 3-word estimate here too, not the
+      // capped full-level number.
+      await waitFor(() =>
+        expect(screen.getByTestId('practice-session-scope')).toHaveTextContent(/3 нових/),
+      );
     });
   });
 });

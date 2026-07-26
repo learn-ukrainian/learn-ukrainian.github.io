@@ -119,9 +119,6 @@ export default function PracticeDailyDeck({
                 <>
                   <span className="flashcard-word">{displayLemma(currentLexeme.lemma)}</span>
                   {frontSubtitle && <span className="flashcard-subtitle">{frontSubtitle}</span>}
-                  {currentLexeme.cefr && (
-                    <span className="flashcard-tag">{currentLexeme.cefr}</span>
-                  )}
                 </>
               ) : (
                 <span className="flashcard-word">—</span>
