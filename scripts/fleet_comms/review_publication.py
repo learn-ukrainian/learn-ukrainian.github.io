@@ -326,18 +326,13 @@ def verdict_from_review_evidence(evidence: ReviewEvidence) -> str:
     return "BLOCKED"
 
 
-def _verdict_from_degenerate_evidence(payload: Mapping[str, Any]) -> str | None:
-    overall = payload.get("overall")
-    if not isinstance(overall, Mapping):
-        return None
-    correctness = overall.get("correctness")
-    if correctness == "correct":
-        return "APPROVED"
-    if correctness == "incorrect":
-        return "CHANGES_REQUESTED"
-    if correctness == "uncertain":
-        return "BLOCKED"
-    return None
+def _verdict_from_degenerate_evidence(_payload: Mapping[str, Any]) -> str:
+    """Fail closed when a canonical review supplies no auditable evidence.
+
+    A reviewer-provided correctness label without an explanation or finding is
+    not evidence. It must never grant a green formal-review gate.
+    """
+    return "BLOCKED"
 
 
 def resolve_verdict_and_evidence(payload: Mapping[str, Any]) -> tuple[str, ReviewEvidence | None]:
