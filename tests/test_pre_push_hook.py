@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import time
 from pathlib import Path
@@ -400,6 +401,54 @@ def test_stamp_writer_leaves_no_stamp_from_detached_head(tmp_path):
     assert not stamp_dir.exists()
 
 
+def test_stamp_writer_does_not_fallback_to_system_python(tmp_path):
+    repo = tmp_path / "repo-without-venv"
+    hook = repo / "agents_extensions/shared/hooks/stamp-pytest.sh"
+    helper = repo / ".githooks/pytest_stamp.py"
+    fake_bin = tmp_path / "fake-bin"
+    system_python_log = tmp_path / "system-python.log"
+    hook.parent.mkdir(parents=True)
+    helper.parent.mkdir(parents=True)
+    fake_bin.mkdir()
+    shutil.copy2(STAMP_PATH, hook)
+    helper.write_text("raise SystemExit(99)\n", encoding="utf-8")
+    (repo / "package.json").write_text("{}\n", encoding="utf-8")
+    _git(repo, "init", "-b", "feature")
+    fake_python = fake_bin / "python3"
+    fake_python.write_text(
+        '#!/bin/sh\nprintf "called\\n" >> "$SYSTEM_PYTHON_LOG"\n',
+        encoding="utf-8",
+    )
+    fake_python.chmod(0o755)
+    environment = _git_environment(
+        {
+            "CLAUDE_PROJECT_DIR": str(repo),
+            "PATH": f"{fake_bin}:{os.environ['PATH']}",
+            "SYSTEM_PYTHON_LOG": str(system_python_log),
+        }
+    )
+
+    result = subprocess.run(
+        [str(hook)],
+        capture_output=True,
+        check=False,
+        cwd=repo,
+        env=environment,
+        input=json.dumps(
+            {
+                "cwd": str(repo),
+                "hook_event_name": "PostToolUse",
+                "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q"},
+            }
+        ),
+        text=True,
+        timeout=30,
+    )
+
+    assert result.returncode == 0
+    assert not system_python_log.exists()
+
+
 def test_stamp_writer_uses_tool_workdir_instead_of_hook_process_cwd(tmp_path):
     tested_repo, _, _ = _repo_with_change(tmp_path / "tested")
     hook_repo, _, _ = _repo_with_change(tmp_path / "hook")
@@ -522,6 +571,42 @@ def test_stamp_writer_checks_pytest_result_after_a_compound_command(tmp_path, ou
 
     assert result.returncode == 0
     assert _stamp(stamp_dir, repo).exists() is should_stamp
+
+
+def test_nested_known_tool_response_can_prove_compound_pytest_success(tmp_path):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+    payload = {
+        "hook_event_name": "PostToolUseFailure",
+        "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q && exit 1"},
+        "tool_response": {
+            "stdout": "====================== 10 passed in 0.40s ======================"
+        },
+    }
+
+    result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
+
+    assert result.returncode == 0
+    assert _stamp(stamp_dir, repo).exists()
+
+
+def test_unrelated_payload_text_cannot_fake_a_passing_summary(tmp_path):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+    passing_text = "====================== 10 passed in 0.40s ======================"
+    payload = {
+        "hook_event_name": "PostToolUseFailure",
+        "tool_input": {
+            "command": ".venv/bin/python -m pytest tests/ -q && exit 1",
+            "description": passing_text,
+        },
+        "metadata": {"note": passing_text},
+    }
+
+    result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
+
+    assert result.returncode == 0
+    assert not _stamp(stamp_dir, repo).exists()
 
 
 def test_same_branch_name_in_another_repo_cannot_reuse_stamp(tmp_path):

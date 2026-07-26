@@ -19,6 +19,10 @@ if [ ! -x "$PYTHON" ]; then
   PYTHON="$PRIMARY_ROOT/.venv/bin/python"
 fi
 
+# Do not fall back to python/python3 from PATH. Repository commands require the
+# project venv, and a system interpreter can belong to another checkout or lack
+# pinned dependencies (#5134). Stamping is observational: no proven project
+# interpreter means no marker, and the later pre-push guard remains fail-closed.
 [ -x "$PYTHON" ] || exit 0
 [ -f "$HELPER" ] || HELPER="$SOURCE_ROOT/.githooks/pytest_stamp.py"
 [ -f "$HELPER" ] || exit 0

@@ -29,13 +29,18 @@ identity key, so legacy, empty, or partially written marker files fail closed.
 The writer trusts a successful hook event only for one direct pytest invocation.
 Compound commands and failure events require a clean pytest summary in the
 captured output; masked failures, zero-test runs, multiple pytest invocations,
-and collection/help-only modes do not stamp. The exact checkout comes from the
-structured Bash `cwd`/`workdir` payload. A command-level `cd`/`pushd` is not
-guessed from shell text—set the tool's `workdir` instead.
+and collection/help-only modes do not stamp. Only named result/output envelope
+fields are inspected; arbitrary metadata and command-input strings are not
+trusted as test output. The exact checkout comes from the structured Bash
+`cwd`/`workdir` payload. A command-level `cd`/`pushd` is not guessed from shell
+text—set the tool's `workdir` instead.
 
 Stamping remains observational and exits successfully when it cannot prove the
-run. The subsequent push then fails with a rerun instruction. An intentional
-operator bypass remains `git push --no-verify`.
+run. It uses the checkout or shared primary `.venv/bin/python` and deliberately
+does not fall back to a system `python3`, which could belong to another checkout
+or violate the repository's pinned-environment contract. The subsequent push
+then fails with a rerun instruction. An intentional operator bypass remains
+`git push --no-verify`.
 
 ## Primary-checkout write guard (#4448)
 
