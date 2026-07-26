@@ -219,6 +219,48 @@ def _state_path(task_id: str) -> Path:
     return _TASKS_DIR / f"{safe}.json"
 
 
+def _core_terminal_fields(
+    *,
+    status: str,
+    duration_s: float,
+    response: str,
+    result_file: str | None,
+    stderr_excerpt: str | None,
+    returncode: int | None,
+    returncode_reason: str | None,
+    dirty_on_exit: bool | None,
+    commits_ahead: int | None,
+    needs_finalize: bool,
+    finalize_error: str | None,
+) -> dict[str, Any]:
+    """The complete set of fields that define a finished dispatch's outcome.
+
+    Both writers that can be the LAST word on a task — the normal checkpoint and
+    the interrupt fallback — build their record here. The fallback used to
+    hand-assemble a subset, so an interrupted run persisted a terminal status
+    beside stale placeholder ``response_chars``/``exit_code``/``last_error``:
+    the same duplication that let the return-code invariant apply on one path
+    and not the other. One definition, both paths. (Cross-family review of
+    #5807, round ten.)
+    """
+    return {
+        "status": status,
+        "finished_at": datetime.now(UTC).isoformat(),
+        "duration_s": round(duration_s, 3),
+        "response_chars": len(response),
+        "result_file": result_file,
+        "stderr_excerpt": stderr_excerpt,
+        "returncode": returncode,
+        "returncode_reason": returncode_reason,
+        "last_error": _first_error_line(stderr_excerpt) if status != "done" else None,
+        "exit_code": returncode,
+        "worktree_dirty_on_exit": dirty_on_exit,
+        "commits_ahead": commits_ahead,
+        "needs_finalize": needs_finalize,
+        "finalize_error": finalize_error,
+    }
+
+
 def _apply_returncode_invariant(status: str, returncode: int | None) -> str:
     """A success without a terminal child return code is not a success (#4837).
 
@@ -2681,22 +2723,19 @@ def _run_worker(
         # and true. Only genuinely optional metadata (reap telemetry, usage record,
         # runtime model/effort/cli labels) is left to the second write.
         # (Both points from cross-family review of this PR.)
-        core_terminal_state = {
-            "status": final_status,
-            "finished_at": datetime.now(UTC).isoformat(),
-            "duration_s": round(duration_s, 3),
-            "response_chars": len(response),
-            "result_file": result_file,
-            "stderr_excerpt": stderr_excerpt,
-            "returncode": returncode,
-            "returncode_reason": returncode_reason,
-            "last_error": last_error,
-            "exit_code": returncode,
-            "worktree_dirty_on_exit": dirty_on_exit,
-            "commits_ahead": commits_ahead,
-            "needs_finalize": needs_finalize,
-            "finalize_error": finalize_error,
-        }
+        core_terminal_state = _core_terminal_fields(
+            status=final_status,
+            duration_s=duration_s,
+            response=response,
+            result_file=result_file,
+            stderr_excerpt=stderr_excerpt,
+            returncode=returncode,
+            returncode_reason=returncode_reason,
+            dirty_on_exit=dirty_on_exit,
+            commits_ahead=commits_ahead,
+            needs_finalize=needs_finalize,
+            finalize_error=finalize_error,
+        )
         _write_state_atomic(state_path, {**final_state, **core_terminal_state})
     except BaseException as interrupt_exc:
         # Defer SIGTERM across the ENTIRE handler, not just its write. A second
@@ -2726,27 +2765,31 @@ def _run_worker(
                 ),
                 returncode,
             )
+            if interrupted_needs_finalize:
+                interrupted_status = "needs_finalize"
             _write_state_atomic(
                 state_path,
                 {
                     # final_state was read before the region, so this MERGES onto
-                    # the real task record instead of replacing it.
+                    # the real task record instead of replacing it...
                     **final_state,
-                    "status": (
-                        "needs_finalize"
-                        if interrupted_needs_finalize
-                        else interrupted_status
-                    ),
-                    "finished_at": datetime.now(UTC).isoformat(),
-                    "duration_s": round(duration_s, 3),
-                    "returncode": returncode,
-                    "stderr_excerpt": stderr_excerpt,
-                    "needs_finalize": interrupted_needs_finalize,
-                    "worktree_dirty_on_exit": dirty_on_exit,
-                    "commits_ahead": commits_ahead,
-                    "result_file": result_file,
-                    "finalize_error": (
-                        f"interrupted during finalize: {type(interrupt_exc).__name__}"
+                    # ...and the outcome fields come from the same builder the
+                    # checkpoint uses, so an interrupted run never persists a
+                    # terminal status beside stale placeholder values.
+                    **_core_terminal_fields(
+                        status=interrupted_status,
+                        duration_s=duration_s,
+                        response=response,
+                        result_file=result_file,
+                        stderr_excerpt=stderr_excerpt,
+                        returncode=returncode,
+                        returncode_reason=returncode_reason,
+                        dirty_on_exit=dirty_on_exit,
+                        commits_ahead=commits_ahead,
+                        needs_finalize=interrupted_needs_finalize,
+                        finalize_error=(
+                            f"interrupted during finalize: {type(interrupt_exc).__name__}"
+                        ),
                     ),
                 },
             )

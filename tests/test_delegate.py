@@ -4885,3 +4885,68 @@ def test_interrupt_fallback_defers_sigterm_before_computing(
 
     assert seen.get("disposition") is signal.SIG_IGN, seen
     assert signal.getsignal(signal.SIGTERM) is not signal.SIG_IGN
+
+
+def test_interrupt_fallback_records_the_complete_outcome(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The fallback's record must be as complete as the checkpoint's.
+
+    Round ten of cross-family review on #5807: the fallback hand-assembled a
+    subset of the outcome fields, so an interrupted run persisted a terminal
+    status beside stale placeholder response_chars / exit_code / last_error.
+    Both writers now build their record from _core_terminal_fields.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("complete-outcome")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "complete-outcome",
+        "status": "running",
+        "response_chars": None,
+        "exit_code": None,
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "a real response body", "stderr_excerpt": None,
+            "returncode": 0, "rate_limited": False, "model": "gpt-5.5",
+            "effort": "xhigh", "cli_version": "0.131.0",
+        },
+    )()
+
+    @contextlib.contextmanager
+    def interrupt_on_restore():
+        yield
+        raise KeyboardInterrupt("SIGTERM at the cleanup boundary")
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_sigterm_deferred", interrupt_on_restore),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="complete-outcome",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+                runtime_tmp_root=str(tmp_path / "runtime-tmp"),
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    # No placeholder may survive next to a terminal status.
+    assert state["response_chars"] == len("a real response body")
+    assert state["exit_code"] == 0
+    assert state["returncode"] == 0
+    assert state.get("finished_at")
+    assert isinstance(state.get("duration_s"), float)
