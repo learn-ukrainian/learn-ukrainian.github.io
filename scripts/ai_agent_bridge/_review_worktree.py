@@ -44,15 +44,19 @@ from scripts.review.evidence import (
 )
 from scripts.review.isolation import (
     ISOLATION_POLICY_VERSION,
+    REVIEW_TEMP_ROOT_MARKER_NAME,
     SEALED_READ_CHUNK_BYTES,
     ReviewIsolationError,
     build_reviewer_env,
     canonical_isolated_review_schema,
+    create_review_temp_root,
     is_sensitive_path,
+    remove_review_temp_tree,
     resolve_external_executable,
     resolve_trusted_reviewer_executable,
     review_isolation_tool_config,
     secret_like_findings,
+    sweep_review_temp_orphans,
 )
 from scripts.review.review_contract import ContractError, validate_reviewer_payload
 from scripts.review.snapshot import (
@@ -1655,7 +1659,7 @@ def _init_neutral_bare_repository(
     *, git_bin: Path, env: dict[str, str]
 ) -> Path:
     """Create a private config-neutral object repository for one review."""
-    root = Path(tempfile.mkdtemp(prefix="lu-review-git-"))
+    root = create_review_temp_root(prefix="lu-review-git-")
     try:
         _run_command(
             [str(git_bin), "init", "--bare", "--template=", str(root)],
@@ -2260,7 +2264,10 @@ def _reviewer_context_paths(snapshot: ReviewSnapshot) -> frozenset[str]:
         for name in filenames:
             source = base / name
             rel = source.relative_to(snapshot.path).as_posix()
-            if rel == ".review-snapshot-metadata.json" or rel in inert_unchanged:
+            if rel in {
+                ".review-snapshot-metadata.json",
+                REVIEW_TEMP_ROOT_MARKER_NAME,
+            } or rel in inert_unchanged:
                 continue
             if rel.startswith(".review-bundle/"):
                 continue
@@ -2306,6 +2313,8 @@ def _verify_reviewer_view(
             if path.is_symlink() or not path.is_file():
                 raise ReviewWorktreeError(f"review_view_non_regular:{path}")
             rel = path.relative_to(view).as_posix()
+            if rel == REVIEW_TEMP_ROOT_MARKER_NAME:
+                continue
             actual.add(rel)
             source = snapshot.path / rel
             if not source.is_file() or source.is_symlink():
@@ -2330,7 +2339,7 @@ def _create_reviewer_view(
     context_paths: tuple[str, ...] | None = None,
 ) -> Path:
     """Expose safe tracked text and the sealed bundle to reviewer tools."""
-    view = Path(tempfile.mkdtemp(prefix="lu-review-view-"))
+    view = create_review_temp_root(prefix="lu-review-view-")
     try:
         try:
             manifest = json.loads(
@@ -2372,33 +2381,12 @@ def _create_reviewer_view(
 
 def _remove_review_root(root: Path) -> None:
     """Remove a private root without following reviewer-created symlinks."""
-    try:
-        root_stat = root.lstat()
-    except FileNotFoundError:
-        return
-    if stat.S_ISLNK(root_stat.st_mode) or not stat.S_ISDIR(root_stat.st_mode):
-        raise OSError(f"temporary root is not a private directory: {root}")
-    for dirpath, dirnames, filenames in os.walk(root, topdown=False, followlinks=False):
-        base = Path(dirpath)
-        for name in filenames:
-            path = base / name
-            if path.is_symlink():
-                path.unlink()
-        for name in dirnames:
-            path = base / name
-            if path.is_symlink():
-                path.unlink()
-            else:
-                path.chmod(0o700)
-    root.chmod(0o700)
-    shutil.rmtree(root, ignore_errors=False)
-    if root.exists():
-        raise OSError(f"temporary root survived cleanup: {root}")
+    remove_review_temp_tree(root)
 
 
 def _create_private_write_root() -> Path:
     """Create the complete parent-owned write layout before adapter planning."""
-    root = Path(tempfile.mkdtemp(prefix="lu-review-write-"))
+    root = create_review_temp_root(prefix="lu-review-write-")
     root.chmod(0o700)
     try:
         for name in ("tmp", "home", "exec"):
@@ -2417,7 +2405,7 @@ def _create_private_write_root() -> Path:
 
 def _create_private_exec_root() -> Path:
     """Create a parent-owned root for the immutable staged reviewer runtime."""
-    root = Path(tempfile.mkdtemp(prefix="lu-review-exec-"))
+    root = create_review_temp_root(prefix="lu-review-exec-")
     root.chmod(0o700)
     return root
 
@@ -2472,6 +2460,7 @@ def provision_review_worktree(
     Post-review acceptance verifies snapshot, bundle, original-source state,
     and requires bound isolation evidence from the runner.
     """
+    sweep_review_temp_orphans()
     if target is None:
         if allow_local_fallback:
             with _provision_local_review_worktree(repo_root=repo_root) as checkout:
@@ -2727,6 +2716,7 @@ def provision_local_review_snapshot(
     """
     from scripts.review.snapshot import capture_local_review_state
 
+    sweep_review_temp_orphans()
     root = repo_root.resolve()
     git_bin, _gh = _trusted_bins(root)
     try:

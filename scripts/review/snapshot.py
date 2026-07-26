@@ -37,10 +37,13 @@ from pathlib import Path
 from typing import Any
 
 from scripts.review.isolation import (
+    REVIEW_TEMP_ROOT_MARKER_NAME,
     ReviewIsolationError,
+    create_review_temp_root,
     is_sensitive_path,
     is_within,
     preflight_review_inputs,
+    remove_review_temp_tree,
     resolve_external_executable,
     safe_engine_path,
     secret_like_findings,
@@ -624,7 +627,7 @@ def _fingerprint_snapshot_tree(
             if full.is_symlink():
                 raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{full}")
             rel = full.relative_to(root).as_posix()
-            if rel != ".review-snapshot-metadata.json":
+            if rel not in {".review-snapshot-metadata.json", REVIEW_TEMP_ROOT_MARKER_NAME}:
                 paths.append(rel)
 
     hasher = _source_fingerprint_hasher(
@@ -1145,24 +1148,6 @@ def _set_tree_read_only(root: Path) -> None:
                 raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{p}")
             p.chmod(0o444)
     root.chmod(root.stat().st_mode & ~stat.S_IWUSR & ~stat.S_IWGRP & ~stat.S_IWOTH)
-
-
-def _set_tree_writable(root: Path) -> None:
-    if not root.exists():
-        return
-    for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
-        base = Path(dirpath)
-        for name in [*dirnames, *filenames]:
-            p = base / name
-            try:
-                if p.is_symlink():
-                    continue
-                mode = p.stat().st_mode
-                p.chmod(mode | stat.S_IWUSR)
-            except OSError:
-                continue
-    with contextlib.suppress(OSError):
-        root.chmod(root.stat().st_mode | stat.S_IWUSR)
 
 
 def derive_changed_paths_and_patch(
@@ -1935,7 +1920,7 @@ def materialize_review_snapshot(
     if is_within(parent.resolve(), root):
         raise ReviewSnapshotError("tmpdir_inside_repo")
 
-    dest = Path(tempfile.mkdtemp(prefix="lu-review-snap-", dir=str(parent)))
+    dest = create_review_temp_root(prefix="lu-review-snap-", dir=str(parent))
     try:
         remove_paths = set(deleted_paths)
         remove_paths.update(old for old, _new in rename_pairs)
@@ -2152,10 +2137,7 @@ def verify_review_acceptance(
 
 
 def _cleanup_snapshot(path: Path) -> None:
-    if not path.exists():
-        return
-    _set_tree_writable(path)
-    shutil.rmtree(path, ignore_errors=False)
+    remove_review_temp_tree(path)
 
 
 def cleanup_snapshot_state(state: _SnapshotState) -> None:

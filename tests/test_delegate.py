@@ -61,6 +61,16 @@ def _stub_primary_integrity_sweep(monkeypatch):
     )
 
 
+@pytest.fixture(autouse=True)
+def _fixture_runtime_tmp_root(tmp_path, monkeypatch):
+    """Keep dispatch-time orphan sweeps inside each test fixture only."""
+    runtime_tmp = tmp_path / "runtime-tmp"
+    runtime_tmp.mkdir()
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(runtime_tmp))
+    monkeypatch.delenv("LU_RUNTIME_TMP_BASE_ROOT", raising=False)
+    return runtime_tmp
+
+
 def _sanitize_git_env_for_test(monkeypatch) -> None:
     for key in tuple(os.environ):
         if key.startswith(("GIT_", "PRE_COMMIT")):
@@ -219,6 +229,25 @@ def test_runtime_tmp_reap_unlinks_child_symlinks_without_following_them(tmp_path
     assert payload.read_text(encoding="utf-8") == "keep"
 
 
+def test_runtime_tmp_reap_repairs_mode_zero_descendant(tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace_root = tmp_path / "learn-ukrainian"
+    lease_root = namespace_root / "task"
+    blocked = lease_root / "lu-review-view-restrictive"
+    blocked.mkdir(parents=True)
+    (blocked / "evidence.txt").write_text("sealed", encoding="utf-8")
+    blocked.chmod(0o000)
+
+    try:
+        result = delegate._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+        assert result["tmp_reap_error"] is None
+        assert not os.path.lexists(lease_root)
+    finally:
+        if blocked.exists():
+            blocked.chmod(0o700)
+
+
 def test_runtime_tmp_reap_records_cleanup_errors(tmp_path, monkeypatch):
     monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
     namespace_root = tmp_path / "learn-ukrainian"
@@ -236,6 +265,45 @@ def test_runtime_tmp_reap_records_cleanup_errors(tmp_path, monkeypatch):
     assert result["tmp_bytes_freed"] == 0
     assert "permission denied" in str(result["tmp_reap_error"])
     assert lease_root.exists()
+
+
+def test_runtime_tmp_orphan_sweep_reaps_only_safe_candidates(tmp_tasks_dir, tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace = tmp_path / "learn-ukrainian"
+    terminal = namespace / "terminal-task"
+    running = namespace / "running-task"
+    live_pid = namespace / "live-pid-task"
+    old_unknown = namespace / "old-unknown"
+    young_unknown = namespace / "young-unknown"
+    for lease in (terminal, running, live_pid, old_unknown, young_unknown):
+        lease.mkdir(parents=True)
+        (lease / "payload").write_text(lease.name, encoding="utf-8")
+    now = time.time()
+    old = now - delegate._RUNTIME_TMP_ORPHAN_MAX_AGE_S - 1
+    os.utime(old_unknown, (old, old))
+    delegate._write_state_atomic(
+        delegate._state_path("terminal-task"),
+        {"task_id": "terminal-task", "status": "done", "pid": None},
+    )
+    delegate._write_state_atomic(
+        delegate._state_path("running-task"),
+        {"task_id": "running-task", "status": "running", "pid": None},
+    )
+    delegate._write_state_atomic(
+        delegate._state_path("live-pid-task"),
+        {"task_id": "live-pid-task", "status": "done", "pid": os.getpid()},
+    )
+
+    result = delegate._sweep_runtime_tmp_orphans(now=now)
+
+    assert result["leases_reaped"] == 2
+    assert result["bytes_freed"] == len("terminal-task") + len("old-unknown")
+    assert result["errors"] == 0
+    assert not terminal.exists()
+    assert not old_unknown.exists()
+    assert running.exists()
+    assert live_pid.exists()
+    assert young_unknown.exists()
 
 
 def test_write_state_atomic_no_partial_reads(tmp_tasks_dir):
@@ -2958,6 +3026,11 @@ def test_dispatch_dry_run_records_and_reaps_runtime_tmp_lease(
     monkeypatch,
 ):
     monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    monkeypatch.setattr(
+        delegate,
+        "_sweep_runtime_tmp_orphans",
+        lambda: pytest.fail("dry-run must not sweep ambient runtime tmp leases"),
+    )
     args = delegate.build_parser().parse_args(
         [
             "dispatch",
@@ -3186,7 +3259,7 @@ def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path
 
 
 def test_branch_reuse_creates_worktree_from_existing_remote_branch(tmp_tasks_dir, tmp_path, monkeypatch):
-    """--branch must attach to its fetched branch, never origin/main (#4837)."""
+    """--branch must reset its worktree to the fetched origin branch."""
     target = tmp_path / "branch-reuse"
     branch = "cursor/follow-up"
     calls, base_stub = _make_run_stub(rev_parse_head_sha="branch-head")
@@ -3216,11 +3289,148 @@ def test_branch_reuse_creates_worktree_from_existing_remote_branch(tmp_tasks_dir
         "worktree",
         "add",
         "--track",
-        "-b",
+        "-B",
         branch,
         str(target.resolve()),
         f"origin/{branch}",
     ]
+
+
+def test_branch_reuse_resets_behind_local_ref_to_fetched_origin(tmp_tasks_dir, tmp_path, monkeypatch):
+    target = tmp_path / "behind-local"
+    branch = "claude/predeploy-visibility"
+    calls: list[list[str]] = []
+
+    def fake_run(cmd, **_kwargs):
+        calls.append(list(cmd))
+        if cmd[:2] == ["git", "fetch"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:2] == ["git", "rev-parse"]:
+            ref = cmd[-1]
+            sha = {
+                f"origin/{branch}": "1ef217eed9",
+                f"refs/heads/{branch}": "729a7990a3",
+                "HEAD": "1ef217eed9",
+            }.get(ref, "1ef217eed9")
+            return subprocess.CompletedProcess(cmd, 0, sha, "")
+        if cmd[:3] == ["git", "merge-base", "--is-ancestor"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:3] == ["git", "worktree", "list"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:3] == ["git", "worktree", "add"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:2] == ["git", "ls-tree"]:
+            return subprocess.CompletedProcess(cmd, 0, "docs\nscripts\ntests\n", "")
+        if cmd[:2] == ["git", "sparse-checkout"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    path, actual_branch, telemetry = delegate._ensure_worktree(
+        agent="claude",
+        task_id="predeploy-visibility",
+        raw_path=str(target),
+        branch=branch,
+    )
+
+    assert path == target.resolve()
+    assert actual_branch == branch
+    assert telemetry["base_sha"] == "1ef217eed9"
+    assert ["git", "fetch", "origin", branch] in calls
+    assert [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        f"refs/heads/{branch}",
+        f"origin/{branch}",
+    ] in calls
+    add_cmd = next(command for command in calls if command[:3] == ["git", "worktree", "add"])
+    assert add_cmd[-1] == f"origin/{branch}"
+    assert "-B" in add_cmd
+
+
+def test_branch_reuse_real_worktree_head_matches_fetched_origin(tmp_tasks_dir, tmp_path, monkeypatch):
+    remote = tmp_path / "remote.git"
+    source = tmp_path / "source"
+    client = tmp_path / "client"
+    env = delegate._sanitized_git_env()
+
+    def git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            ["git", *args],
+            cwd=cwd,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=env,
+        )
+
+    subprocess.run(["git", "init", "--bare", str(remote)], check=True, capture_output=True, env=env)
+    source.mkdir()
+    git(source, "init", "-b", "main")
+    git(source, "config", "user.email", "test@example.com")
+    git(source, "config", "user.name", "Test")
+    git(source, "commit", "--allow-empty", "-m", "base")
+    git(source, "remote", "add", "origin", str(remote))
+    git(source, "push", "-u", "origin", "main")
+    git(source, "switch", "-c", "claude/predeploy-visibility")
+    git(source, "commit", "--allow-empty", "-m", "remote branch head")
+    git(source, "push", "-u", "origin", "claude/predeploy-visibility")
+    subprocess.run(["git", "clone", str(remote), str(client)], check=True, capture_output=True, env=env)
+    git(client, "branch", "claude/predeploy-visibility", "origin/main")
+
+    monkeypatch.setattr(delegate, "_REPO_ROOT", client.resolve())
+    monkeypatch.setattr(delegate, "_apply_dispatch_sparse_checkout", lambda *_args, **_kwargs: {})
+    worktree = tmp_path / "dispatched"
+    path, branch, _telemetry = delegate._ensure_worktree(
+        agent="claude",
+        task_id="predeploy-visibility",
+        raw_path=str(worktree),
+        branch="claude/predeploy-visibility",
+    )
+
+    assert path == worktree.resolve()
+    assert branch == "claude/predeploy-visibility"
+    assert git(path, "rev-parse", "HEAD").stdout.strip() == git(
+        client,
+        "rev-parse",
+        "origin/claude/predeploy-visibility",
+    ).stdout.strip()
+
+
+def test_branch_reuse_refuses_diverged_local_ref(tmp_tasks_dir, tmp_path, monkeypatch):
+    branch = "claude/predeploy-visibility"
+
+    def fake_run(cmd, **_kwargs):
+        if cmd[:2] == ["git", "fetch"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:2] == ["git", "rev-parse"]:
+            ref = cmd[-1]
+            sha = {
+                f"origin/{branch}": "1ef217eed9",
+                f"refs/heads/{branch}": "729a7990a3",
+            }.get(ref, "")
+            return subprocess.CompletedProcess(cmd, 0 if sha else 1, sha, "")
+        if cmd[:3] == ["git", "merge-base", "--is-ancestor"]:
+            return subprocess.CompletedProcess(cmd, 1, "", "")
+        pytest.fail(f"unexpected git command after divergence refusal: {cmd}")
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    with pytest.raises(delegate.WorktreeBranchDiverged) as exc_info:
+        delegate._ensure_worktree(
+            agent="claude",
+            task_id="predeploy-visibility",
+            raw_path=str(tmp_path / "diverged-local"),
+            branch=branch,
+        )
+
+    message = str(exc_info.value)
+    assert "729a7990a3" in message
+    assert "1ef217eed9" in message
+    assert "git log --left-right --graph --oneline" in message
+    assert "git branch -f" in message
 
 
 def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
