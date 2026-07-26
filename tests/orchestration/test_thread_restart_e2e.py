@@ -101,6 +101,7 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
             [
                 "start-codex.sh",
                 "start-codex-drive.sh",
+                "scripts/agent_runtime/bounded_command.py",
                 "scripts/lib/thread_rollover_link.sh",
                 "scripts/lib/deploy_extensions.sh",
                 "scripts/lib/handoff_identity.sh",
