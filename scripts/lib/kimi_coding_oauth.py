@@ -124,11 +124,15 @@ def _held_secrets(*sources: dict | None) -> set[str]:
     for src in sources:
         if isinstance(src, dict):
             for k, v in src.items():
-                if isinstance(v, str) and v:
-                    if k in {"access_token", "refresh_token", "id_token", "client_secret", "secret", "api_key", "token", "password"}:
-                        secrets.add(v)
-                    elif k not in _METADATA_KEYS:
-                        secrets.add(v)
+                if (
+                    isinstance(v, str)
+                    and v
+                    and (
+                        k in {"access_token", "refresh_token", "id_token", "client_secret", "secret", "api_key", "token", "password"}
+                        or k not in _METADATA_KEYS
+                    )
+                ):
+                    secrets.add(v)
     for env_var in ("KIMI_CODE_OAUTH_CLIENT_SECRET", "KIMI_OAUTH_CLIENT_SECRET"):
         val = os.environ.get(env_var)
         if val:
@@ -206,8 +210,8 @@ def _refresh(data: dict) -> dict:
         with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
             payload = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
-        raw_detail = exc.read().decode("utf-8", errors="replace")[:200]
-        detail = redact_oauth_text(raw_detail, held) or ""
+        raw_detail = exc.read().decode("utf-8", errors="replace")
+        detail = redact_oauth_text(raw_detail, held)[:200] or ""
         raise RefreshFailedError(f"token refresh failed: HTTP {exc.code} ({detail})", secrets=held) from exc
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
         msg = redact_oauth_text(f"token refresh failed: {exc}", held)

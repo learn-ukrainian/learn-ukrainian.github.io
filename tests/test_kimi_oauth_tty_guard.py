@@ -231,3 +231,31 @@ def test_refresh_failed_error_redacts_opaque_synthetic_tokens(monkeypatch, respo
     assert opaque_token not in err_msg, f"opaque synthetic token leaked in exception message: {err_msg}"
     assert "[REDACTED_SECRET]" in err_msg, f"expected redaction placeholder in exception message: {err_msg}"
 
+
+def test_refresh_failed_error_redacts_token_straddling_truncation_boundary(monkeypatch):
+    """Token straddling 200-byte truncation boundary must be redacted before truncation."""
+    opaque_token = "6f1d2a9c7b8e9f0a1b2c3d4e5f6a7b8c"
+    # Position token so it starts at offset 190, straddling the 200-byte boundary.
+    padding_before = "x" * 190
+    padding_after = "y" * 50
+    response_body = f"{padding_before}{opaque_token}{padding_after}"
+
+    fp = io.BytesIO(response_body.encode("utf-8"))
+    exc = urllib.error.HTTPError("http://auth.kimi.com/api/oauth/token", 400, "Bad Request", {}, fp)  # type: ignore[arg-type]
+
+    def _mock_urlopen(*args, **kwargs):
+        raise exc
+
+    monkeypatch.setattr(urllib.request, "urlopen", _mock_urlopen)
+
+    data = {"refresh_token": opaque_token}
+    with pytest.raises(oauth.RefreshFailedError) as exc_info:
+        oauth._refresh(data)
+    err_msg = str(exc_info.value)
+
+    # Assert no prefix of length >= 8 of the secret appears in the output
+    for i in range(8, len(opaque_token) + 1):
+        prefix = opaque_token[:i]
+        assert prefix not in err_msg, f"secret prefix {prefix!r} leaked in exception message: {err_msg}"
+
+
