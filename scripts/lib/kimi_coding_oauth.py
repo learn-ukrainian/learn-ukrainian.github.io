@@ -42,6 +42,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections.abc import Iterable
 from pathlib import Path
 
 # Import secret_redactor (stdlib-only helper in parent scripts directory)
@@ -98,32 +99,91 @@ def _fresh_token(data: dict, margin: int) -> str | None:
     return token
 
 
-def _print_err(message: object) -> None:
-    """Print an error message to stderr after redacting any token shapes."""
-    redacted = redact_text(str(message))
+_METADATA_KEYS = {
+    "token_type",
+    "scope",
+    "expires_in",
+    "expires_at",
+    "client_id",
+    "grant_type",
+    "error",
+    "error_description",
+    "message",
+    "detail",
+    "status",
+    "host",
+    "url",
+    "path",
+    "filename",
+}
+
+
+def _held_secrets(*sources: dict | None) -> set[str]:
+    """Collect known credential string values from dictionary sources and environment."""
+    secrets: set[str] = set()
+    for src in sources:
+        if isinstance(src, dict):
+            for k, v in src.items():
+                if isinstance(v, str) and v:
+                    if k in {"access_token", "refresh_token", "id_token", "client_secret", "secret", "api_key", "token", "password"}:
+                        secrets.add(v)
+                    elif k not in _METADATA_KEYS:
+                        secrets.add(v)
+    for env_var in ("KIMI_CODE_OAUTH_CLIENT_SECRET", "KIMI_OAUTH_CLIENT_SECRET"):
+        val = os.environ.get(env_var)
+        if val:
+            secrets.add(val)
+    return secrets
+
+
+def redact_exact(text: str, secrets: Iterable[str]) -> str:
+    """Redact known secret strings from text by exact substring match."""
+    if not text:
+        return text
+    result = str(text)
+    valid_secrets = sorted({s for s in secrets if isinstance(s, str) and s}, key=len, reverse=True)
+    for sec in valid_secrets:
+        result = result.replace(sec, "[REDACTED_SECRET]")
+    return result
+
+
+def redact_oauth_text(text: str, secrets: Iterable[str] = ()) -> str:
+    """Redact text using exact-value match on held secrets, then redact_text shape matching."""
+    if not text:
+        return text
+    cleaned = redact_exact(text, secrets)
+    return redact_text(cleaned)
+
+
+def _print_err(message: object, secrets: Iterable[str] = ()) -> None:
+    """Print an error message to stderr after redacting any token shapes or held secrets."""
+    redacted = redact_oauth_text(str(message), secrets)
     print(redacted, file=sys.stderr)
 
 
 class NoCredentialsError(Exception):
     """Credential file cannot produce a token (missing/unusable)."""
 
-    def __init__(self, message: object = "") -> None:
-        msg_str = redact_text(str(message)) if message is not None else ""
-        super().__init__(msg_str)
+    def __init__(self, message: object = "", secrets: Iterable[str] = ()) -> None:
+        msg_str = str(message) if message is not None else ""
+        redacted = redact_oauth_text(msg_str, secrets)
+        super().__init__(redacted)
 
 
 class RefreshFailedError(Exception):
     """The refresh grant against the auth host failed."""
 
-    def __init__(self, message: object = "") -> None:
-        msg_str = redact_text(str(message)) if message is not None else ""
-        super().__init__(msg_str)
+    def __init__(self, message: object = "", secrets: Iterable[str] = ()) -> None:
+        msg_str = str(message) if message is not None else ""
+        redacted = redact_oauth_text(msg_str, secrets)
+        super().__init__(redacted)
 
 
 def _refresh(data: dict) -> dict:
+    held = _held_secrets(data)
     refresh_token = data.get("refresh_token")
     if not isinstance(refresh_token, str) or not refresh_token:
-        raise NoCredentialsError("no refresh_token in credential file — run `kimi login` again")
+        raise NoCredentialsError("no refresh_token in credential file — run `kimi login` again", secrets=held)
     host = os.environ.get("KIMI_CODE_OAUTH_HOST") or os.environ.get("KIMI_OAUTH_HOST") or DEFAULT_OAUTH_HOST
     client_id = os.environ.get("KIMI_CODE_OAUTH_CLIENT_ID") or DEFAULT_CLIENT_ID
     body = "&".join(
@@ -147,12 +207,18 @@ def _refresh(data: dict) -> dict:
             payload = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         raw_detail = exc.read().decode("utf-8", errors="replace")[:200]
-        detail = redact_text(raw_detail) or ""
-        raise RefreshFailedError(f"token refresh failed: HTTP {exc.code} ({detail})") from exc
+        detail = redact_oauth_text(raw_detail, held) or ""
+        raise RefreshFailedError(f"token refresh failed: HTTP {exc.code} ({detail})", secrets=held) from exc
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
-        raise RefreshFailedError(f"token refresh failed: {exc}") from exc
+        msg = redact_oauth_text(f"token refresh failed: {exc}", held)
+        raise RefreshFailedError(msg, secrets=held) from exc
     if not isinstance(payload, dict) or not isinstance(payload.get("access_token"), str):
-        raise RefreshFailedError("token refresh returned no access_token")
+        if isinstance(payload, dict):
+            held.update(_held_secrets(payload))
+        msg = redact_oauth_text("token refresh returned no access_token", held)
+        raise RefreshFailedError(msg, secrets=held)
+
+    held.update(_held_secrets(payload))
 
     merged = dict(data)
     merged["access_token"] = payload["access_token"]
@@ -222,11 +288,13 @@ def force_refresh_token() -> str:
         except (OSError, ValueError) as exc:
             raise NoCredentialsError(f"cannot read credentials: {exc}") from exc
 
+        held = _held_secrets(data)
         merged = _refresh(data)
+        held.update(_held_secrets(merged))
         _write_credentials(path, merged)
         token = _fresh_token(merged, 0)
         if token is None:
-            raise RefreshFailedError("refreshed token is already expired")
+            raise RefreshFailedError("refreshed token is already expired", secrets=held)
         return token
 
 
@@ -298,28 +366,30 @@ def cmd_token() -> int:
             _print_err(f"kimi-coding-oauth: cannot read credentials: {exc}")
             return 2
 
+        held = _held_secrets(data)
         token = _fresh_token(data, margin)
         if token is not None:
             return _emit_token(token)
 
         try:
             merged = _refresh(data)
+            held.update(_held_secrets(merged))
         except NoCredentialsError as exc:
-            _print_err(f"kimi-coding-oauth: {exc}")
+            _print_err(f"kimi-coding-oauth: {exc}", secrets=held)
             return 2
         except RefreshFailedError as exc:
-            _print_err(f"kimi-coding-oauth: {exc}")
+            _print_err(f"kimi-coding-oauth: {exc}", secrets=held)
             return 3
         try:
             _write_credentials(path, merged)
         except OSError as exc:
-            _print_err(f"kimi-coding-oauth: cannot write credentials: {exc}")
+            _print_err(f"kimi-coding-oauth: cannot write credentials: {exc}", secrets=held)
             return 3
 
         token = _fresh_token(merged, 0)
         if token is not None:
             return _emit_token(token)
-        _print_err("kimi-coding-oauth: refreshed token is already expired")
+        _print_err("kimi-coding-oauth: refreshed token is already expired", secrets=held)
         return 3
 
 

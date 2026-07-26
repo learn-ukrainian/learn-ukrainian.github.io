@@ -203,3 +203,31 @@ def test_every_token_emission_path_goes_through_the_guard():
     emit_def = source.index("def _emit_token")
     next_def = source.index("\ndef ", emit_def + 1)
     assert "print(token)" in source[emit_def:next_def], "the surviving print must be the guarded one"
+
+
+@pytest.mark.parametrize(
+    "response_body",
+    [
+        '{"error": "invalid_grant", "error_description": "token 9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c is expired"}',
+        '{"detail": "refresh failed for 9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c"}',
+        'refresh failed: 9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c rejected',
+    ],
+)
+def test_refresh_failed_error_redacts_opaque_synthetic_tokens(monkeypatch, response_body):
+    """Held credentials (opaque, non-prefixed) must be redacted by exact value on provider error text."""
+    opaque_token = "9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c"
+    fp = io.BytesIO(response_body.encode("utf-8"))
+    exc = urllib.error.HTTPError("http://auth.kimi.com/api/oauth/token", 400, "Bad Request", {}, fp)  # type: ignore[arg-type]
+
+    def _mock_urlopen(*args, **kwargs):
+        raise exc
+
+    monkeypatch.setattr(urllib.request, "urlopen", _mock_urlopen)
+
+    data = {"refresh_token": opaque_token}
+    with pytest.raises(oauth.RefreshFailedError) as exc_info:
+        oauth._refresh(data)
+    err_msg = str(exc_info.value)
+    assert opaque_token not in err_msg, f"opaque synthetic token leaked in exception message: {err_msg}"
+    assert "[REDACTED_SECRET]" in err_msg, f"expected redaction placeholder in exception message: {err_msg}"
+
