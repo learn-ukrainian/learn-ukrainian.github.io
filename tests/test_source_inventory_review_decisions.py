@@ -7,7 +7,7 @@ import pytest
 import yaml
 
 from scripts.audit import source_inventory_review_decisions as decisions
-from scripts.audit.source_inventory_intake import SourceInventoryError
+from scripts.audit.source_inventory_intake import SourceInventoryError, SourceInventoryRecord
 
 FIRST_BATCH = (
     decisions.DEFAULT_DECISION_DIR / "2026-06-29-first-approved-publish-batch.yaml"
@@ -79,6 +79,43 @@ def test_default_committed_decision_files_validate() -> None:
     assert summary["files"] >= 1
     assert summary["rows"] >= 20
     assert summary["decision_counts"]["approve_for_publish"] >= 20
+
+
+def test_committed_decision_validation_reuses_shared_source_index(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    inventory = tmp_path / "committed-inventory.yaml"
+    first = tmp_path / "first.yaml"
+    second = tmp_path / "second.yaml"
+    _write_decision_file(first, _minimal_payload())
+    _write_decision_file(second, _minimal_payload())
+    record = SourceInventoryRecord(
+        lemma="ананас",
+        source_family="ohoiko",
+        extraction_mode="fixture",
+        inventory_path="data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml",
+        inventory_locator="letters[А].key_word",
+        source_id="ohoiko-abetka-1-keywords",
+        source_locator="letters[А].key_word",
+    )
+    calls: list[tuple[Path, ...]] = []
+
+    def read_once(paths: tuple[Path, ...], *, project_root: Path) -> list[SourceInventoryRecord]:
+        calls.append(paths)
+        return [record]
+
+    monkeypatch.setattr(decisions, "COMMITTED_SOURCE_INVENTORIES", (inventory,))
+    monkeypatch.setattr(decisions, "read_source_inventories", read_once)
+
+    summary = decisions.validate_committed_decision_files([first, second])
+
+    assert summary == {
+        "files": 2,
+        "rows": 2,
+        "decision_counts": {"approve_for_publish": 2},
+    }
+    assert calls == [(inventory,)]
 
 
 def test_committed_yaml_uses_the_c_safe_loader_when_available() -> None:
