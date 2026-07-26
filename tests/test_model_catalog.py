@@ -220,7 +220,7 @@ def test_orchestrator_seats_include_agy_flash_36_high():
     assert seats["agy"]["model_id"] == "gemini-3.6-flash-high"
     assert seats["agy"]["effort"] == "high"
     assert seats["agy"]["escalate_model_id"] == "gemini-3.1-pro-high"
-    assert seats["claude"]["model_id"] == "claude-opus-5"
+    assert seats["claude"]["model_id"] == "claude-fable-5"
     assert seats["grok"]["fallback_model_id"] == "grok-4.5"
 
 
@@ -235,7 +235,7 @@ def test_orchestrator_escalate_pins_parallel_sol_fable_pro():
     # formal-CF review seat whose authority escalate is still Sol.
     fc = load_model_catalog()["formal_cf_defaults"]
     assert fc["codex"]["escalate_model_id"] == "gpt-5.6-sol"
-    assert fc["claude"]["escalate_model_id"] == "claude-opus-5"
+    assert fc["claude"]["escalate_model_id"] == "claude-fable-5"
 
 
 def test_practical_ladders_exclude_authority_seats():
