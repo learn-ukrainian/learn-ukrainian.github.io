@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from collections import Counter
 from pathlib import Path
 
@@ -15,6 +16,7 @@ FIRST_BATCH = (
 )
 EXPECTED_COMMITTED_DECISION_FILE_COUNT = 51
 COMMITTED_DECISION_FILES = tuple(sorted(decisions.DEFAULT_DECISION_DIR.glob("*.yaml")))
+DECISION_LINE = re.compile(r"^\s+decision:\s+([a-z_]+)\s*$")
 
 
 def _write_decision_file(path: Path, payload: dict[str, object]) -> None:
@@ -66,6 +68,17 @@ def _minimal_payload() -> dict[str, object]:
     }
 
 
+def _decision_counts_from_validated_lines(path: Path) -> Counter[str]:
+    """Count decision rows without constructing a second 41 MB YAML object graph."""
+    counts: Counter[str] = Counter()
+    with path.open(encoding="utf-8") as stream:
+        for line in stream:
+            match = DECISION_LINE.fullmatch(line.rstrip("\n"))
+            if match:
+                counts[match.group(1)] += 1
+    return counts
+
+
 def test_committed_first_source_inventory_review_batch_validates() -> None:
     summary = decisions.validate_committed_decision_files([FIRST_BATCH])
 
@@ -99,10 +112,9 @@ def test_default_committed_decision_files_keep_aggregate_floors() -> None:
     decision_counts: Counter[str] = Counter()
     total_rows = 0
     for path in COMMITTED_DECISION_FILES:
-        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
-        rows = payload["decisions"]
-        total_rows += len(rows)
-        decision_counts.update(row["decision"] for row in rows)
+        counts = _decision_counts_from_validated_lines(path)
+        total_rows += sum(counts.values())
+        decision_counts.update(counts)
 
     assert len(COMMITTED_DECISION_FILES) >= 1
     assert total_rows >= 20
@@ -128,6 +140,9 @@ def test_default_committed_decision_files_validate(
     assert summary["path"] == str(ledger_path)
     assert summary["rows"] >= 1
     assert summary["decision_counts"]
+    line_counts = _decision_counts_from_validated_lines(ledger_path)
+    assert sum(line_counts.values()) == summary["rows"]
+    assert line_counts == Counter(summary["decision_counts"])
 
 
 def test_committed_decision_validation_reuses_shared_source_index(
