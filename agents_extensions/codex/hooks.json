@@ -20,7 +20,7 @@
           {
             "type": "command",
             "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh\" pre-tool-use",
-            "timeout": 55,
+          "timeout": 45,
             "statusMessage": "Running Codex tool policy"
           }
         ]

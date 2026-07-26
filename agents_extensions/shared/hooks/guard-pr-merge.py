@@ -37,8 +37,10 @@ Nothing matching on Bash commands can close that, so the job is to make the CARE
 refuse, not the deliberate path impossible. A shell here-string (`sh <<< '<cmd>'`) is
 likewise unread — a deliberate-only shape, documented rather than papered over.
 """
+
 from __future__ import annotations
 
+import concurrent.futures
 import json
 import os
 import re
@@ -63,6 +65,7 @@ def _gh_env() -> dict[str, str]:
 
 def _decolorize(text: str) -> str:
     return _ANSI_RE.sub("", text)
+
 
 # A check is treated as merge-blocking unless its name marks it explicitly advisory.
 # Same inversion as guard-admin-merge.py, and it matters more here: an allowlist of
@@ -364,9 +367,7 @@ def _skip_command_prefix(seg: list[str], i: int) -> int:
     `env FOO=1 gh pr merge` or `{ gh pr merge; }` is not missed (#4877)."""
     while i < len(seg):
         tok = seg[i]
-        if tok in {"sudo", "time", "env", "nohup", "command", "exec", "{"} or _is_env_assignment(
-            tok
-        ):
+        if tok in {"sudo", "time", "env", "nohup", "command", "exec", "{"} or _is_env_assignment(tok):
             i += 1
         else:
             break
@@ -385,9 +386,27 @@ def _find_merge(seg: list[str], start: int) -> int | None:
 
 
 # xargs options that consume a value; everything else short is a switch.
-_XARGS_VALUE_OPTS = {"-n", "-P", "-I", "-i", "-L", "-l", "-s", "-d", "-E", "-e", "-a", "--max-args",
-                     "--max-procs", "--replace", "--max-lines", "--max-chars", "--delimiter",
-                     "--eof", "--arg-file"}
+_XARGS_VALUE_OPTS = {
+    "-n",
+    "-P",
+    "-I",
+    "-i",
+    "-L",
+    "-l",
+    "-s",
+    "-d",
+    "-E",
+    "-e",
+    "-a",
+    "--max-args",
+    "--max-procs",
+    "--replace",
+    "--max-lines",
+    "--max-chars",
+    "--delimiter",
+    "--eof",
+    "--arg-file",
+}
 
 
 def _invoked_start(seg: list[str]) -> tuple[int, bool]:
@@ -632,13 +651,18 @@ def _merge_args(seg: list[str]) -> list[str] | None:
 # commit subject and the real target is the current branch's PR. Judging the wrong PR is a
 # fail-open (green PR #5 waves through a red current branch), not a cosmetic slip.
 _VALUE_FLAGS = {
-    "--subject", "-t",
-    "--body", "-b",
-    "--body-file", "-F",
+    "--subject",
+    "-t",
+    "--body",
+    "-b",
+    "--body-file",
+    "-F",
     "--match-head-commit",
-    "--author-email", "-A",
+    "--author-email",
+    "-A",
     # Inherited by every `gh pr` subcommand: `-R, --repo [HOST/]OWNER/REPO`.
-    "--repo", "-R",
+    "--repo",
+    "-R",
 }
 
 
@@ -747,24 +771,9 @@ def _pr_selector(args: list[str]) -> str | None:
 
 
 def _pr_ref(args: list[str], repo: str | None = None, cwd: str | None = None) -> str | None:
-    """The PR to judge: the explicit selector, else the current branch's PR number."""
-    selector = _pr_selector(args)
-    if selector:
-        return selector
-    try:
-        out = subprocess.run(
-            ["gh", "pr", "view", *_repo_args(repo), "--json", "number", "-q", ".number"],
-            capture_output=True,
-            env=_gh_env(),
-            cwd=cwd,
-            text=True,
-            timeout=10,
-        )
-    except Exception:
-        return None
-    if out.returncode != 0:
-        return None
-    return out.stdout.strip() or None
+    """The explicit PR selector; implicit current-branch discovery is refused."""
+    del repo, cwd
+    return _pr_selector(args)
 
 
 def _owner_repo_from_url(url: str) -> str | None:
@@ -891,6 +900,18 @@ def _base_protected(owner_repo: str, base: str) -> bool | None:
     return bool(contexts or checks)
 
 
+def _pr_snapshot(
+    pr: str,
+    repo: str | None = None,
+    cwd: str | None = None,
+) -> tuple[dict | None, tuple[list[str], list[str]] | None]:
+    """Read independent PR metadata and check state concurrently."""
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+        meta_future = pool.submit(_pr_meta, pr, repo, cwd)
+        states_future = pool.submit(_check_states, pr, repo, cwd)
+        return meta_future.result(), states_future.result()
+
+
 _FOOTER = (
     "GitHub will merge a draft or a red PR without complaint — branch protection stops only\n"
     "what it was configured to require, and on a free-plan private repo it cannot be configured\n"
@@ -921,7 +942,7 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
             "could not determine which PR this merges",
             "Name the PR explicitly (`gh pr merge <number> ...`) so the merge can be verified.",
         )
-    meta = _pr_meta(pr, repo, cwd=cwd)
+    meta, states = _pr_snapshot(pr, repo, cwd=cwd)
     if meta is None:
         return _block_msg(
             f"could not verify PR {pr}'s draft status (gh error, timeout, or unexpected schema)",
@@ -935,7 +956,6 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
             "(the #189 incident: a draft was squash-merged before anyone reviewed it). Mark it\n"
             "ready (`gh pr ready`) and get the review gate first.",
         )
-    states = _check_states(pr, repo, cwd=cwd)
     if states is None:
         return _block_msg(
             f"could not verify PR {pr} check states (gh error, timeout, or an unrecognized check state)",
