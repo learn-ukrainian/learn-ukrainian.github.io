@@ -1,97 +1,95 @@
-"""The CI shard split must be a PARTITION of the test suite.
+"""The CI node planner must make a complete, deterministic test partition.
 
-Sharding is how the gate runs at all (#5776: the single-session design never
-completed once). But a sharding bug is invisible in the worst way — every shard
-goes green while some tests simply never ran. That is the exact failure class the
-gate reboot exists to end (#3873 #4888 #4936 #5351 #5354, all "a required check
-passed while pytest was skipped").
-
-So the split expression is extracted from `.github/workflows/ci.yml` and executed
-here. If someone edits the shard logic in YAML and breaks coverage of the suite,
-this fails — the workflow is not a place where logic can hide from tests.
+This guards the exact failure mode that motivated the CI rebuild: every shard
+can report success while a test simply is not assigned anywhere.  The planner
+is deliberately independent of git, diff state, and the pull-request base.
 """
 
 from __future__ import annotations
 
-import pathlib
-import re
-import subprocess
-import sys
+from pathlib import Path
 
 import pytest
 
-REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
-WORKFLOW = REPO_ROOT / ".github" / "workflows" / "ci.yml"
-SHARD_COUNT = 4
+from scripts.ci import pytest_shard
 
 
-def _split_expression() -> str:
-    """The one-liner the workflow feeds to `python -c`, read from the YAML itself."""
-    text = WORKFLOW.read_text(encoding="utf-8")
-    match = re.search(r'split_py="(?P<expr>[^"]+)"', text)
-    assert match, "shard split expression not found in ci.yml — did the shard job change shape?"
-    return match.group("expr")
+def _synthetic_nodes() -> list[str]:
+    ordinary = [
+        f"tests/test_regular_{index}.py::test_case[{case}]"
+        for index in range(24)
+        for case in range(3)
+    ]
+    thread_sensitive = [
+        "tests/orchestration/test_thread_handoff.py::test_handoff",
+        "tests/orchestration/test_thread_restart_e2e.py::test_restart",
+        "tests/test_pytest_worker_rlimit_isolation.py::test_worker_limit",
+        "tests/wiki/test_ukrainian_wiki_corpus.py::test_encode",
+    ]
+    inventory = [
+        "tests/test_source_inventory_intake.py::test_intake",
+        "tests/test_source_inventory_review_decisions.py::test_review",
+    ]
+    return sorted([*ordinary, *thread_sensitive, *inventory])
 
 
-def _shard_files(shard: int) -> list[str]:
-    out = subprocess.run(
-        [sys.executable, "-c", _split_expression(), str(shard)],
-        capture_output=True,
-        text=True,
-        cwd=REPO_ROOT,
-        timeout=60,
-        check=True,
+def _owner(plans: list[list[str]], nodeid: str) -> int:
+    return next(index for index, plan in enumerate(plans) if nodeid in plan)
+
+
+def test_plans_cover_each_non_quarantined_node_once() -> None:
+    nodes = _synthetic_nodes()
+    quarantined = {"tests/test_regular_0.py::test_case[0]"}
+
+    plans, emitted_quarantine = pytest_shard.build_plans(nodes, quarantined)
+
+    assigned = [nodeid for plan in plans for nodeid in plan]
+    assert sorted(assigned) == sorted(set(nodes) - quarantined)
+    assert len(assigned) == len(set(assigned))
+    assert emitted_quarantine == sorted(quarantined)
+    assert all(plan for plan in plans)
+
+
+def test_thread_and_inventory_nodes_each_stay_in_one_external_shard() -> None:
+    nodes = _synthetic_nodes()
+    plans, _ = pytest_shard.build_plans(nodes, ())
+
+    thread_nodes = [nodeid for nodeid in nodes if pytest_shard._group_for(nodeid) == "thread-sensitive"]
+    inventory_nodes = [nodeid for nodeid in nodes if pytest_shard._group_for(nodeid) == "source-inventory"]
+
+    assert len({_owner(plans, nodeid) for nodeid in thread_nodes}) == 1
+    assert len({_owner(plans, nodeid) for nodeid in inventory_nodes}) == 1
+
+
+def test_plans_are_balanced_within_one_node() -> None:
+    plans, _ = pytest_shard.build_plans(_synthetic_nodes(), ())
+
+    sizes = [len(plan) for plan in plans]
+    assert max(sizes) - min(sizes) <= 1
+
+
+def test_plans_are_deterministic() -> None:
+    nodes = _synthetic_nodes()
+
+    assert pytest_shard.build_plans(nodes, ()) == pytest_shard.build_plans(nodes, ())
+
+
+def test_stale_quarantine_fails_closed() -> None:
+    with pytest.raises(pytest_shard.ShardPlanError):
+        pytest_shard.build_plans(_synthetic_nodes(), {"tests/not-real.py::test_missing"})
+
+
+def test_workflow_uses_the_node_planner_and_fail_closed_gate() -> None:
+    workflow = (Path(__file__).resolve().parents[1] / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
     )
-    return [line for line in out.stdout.splitlines() if line.strip()]
 
-
-@pytest.fixture(scope="module")
-def shards() -> list[list[str]]:
-    return [_shard_files(i) for i in range(1, SHARD_COUNT + 1)]
-
-
-def test_shards_cover_every_test_file(shards: list[list[str]]) -> None:
-    """Union of all shards == every test file. A dropped file is a silent hole."""
-    expected = sorted(str(p.relative_to(REPO_ROOT)) for p in (REPO_ROOT / "tests").rglob("test_*.py"))
-    union = sorted(f for shard in shards for f in shard)
-    missing = sorted(set(expected) - set(union))
-    assert not missing, f"{len(missing)} test file(s) belong to NO shard and would never run: {missing[:10]}"
-    assert union == expected
-
-
-def test_shards_do_not_overlap(shards: list[list[str]]) -> None:
-    """A file in two shards wastes a runner and double-counts coverage."""
-    union = [f for shard in shards for f in shard]
-    duplicates = sorted({f for f in union if union.count(f) > 1})
-    assert not duplicates, f"file(s) in more than one shard: {duplicates[:10]}"
-
-
-def test_no_shard_is_empty(shards: list[list[str]]) -> None:
-    """An empty shard means the split silently collapsed — the job would pass trivially."""
-    empty = [i + 1 for i, shard in enumerate(shards) if not shard]
-    assert not empty, f"shard(s) {empty} are empty; the gate would pass without running them"
-
-
-def test_shards_are_balanced_within_one_file(shards: list[list[str]]) -> None:
-    """Round-robin over a sorted list; sizes must differ by at most one."""
-    sizes = [len(shard) for shard in shards]
-    assert max(sizes) - min(sizes) <= 1, f"unbalanced shard sizes {sizes}"
-
-
-def test_split_is_deterministic() -> None:
-    """Two invocations must agree, or reruns would test a different subset."""
-    assert _shard_files(1) == _shard_files(1)
-
-
-def test_split_does_not_consult_the_diff() -> None:
-    """The invariant the whole reboot exists to protect.
-
-    Five main-breaking regressions shipped because a required check chose tests
-    from the changed-file set. The split may depend on the FILE LIST and nothing
-    else — no git, no diff, no base ref.
-    """
-    expr = _split_expression()
-    for forbidden in ("git", "diff", "GITHUB_BASE_REF", "changed", "HEAD", "origin/"):
-        assert forbidden not in expr, (
-            f"shard split references {forbidden!r}; it must depend only on the test file list"
-        )
+    assert "scripts/ci/pytest_shard.py --repo-root . prepare" in workflow
+    assert "--timeout-seconds 1800" in workflow
+    assert "scripts/ci/verify_pytest_evidence.py" in workflow
+    assert "skipped and cancelled are failures" in workflow
+    assert "SOURCES_MCP_NO_MLX" in workflow
+    assert "./node_modules/.bin/playwright test" in workflow
+    assert "npm --prefix site exec -- playwright test" not in workflow
+    for forbidden in ("GITHUB_BASE_REF", "changed-files", "paths-filter", "git diff"):
+        assert forbidden not in workflow

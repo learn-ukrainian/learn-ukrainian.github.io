@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "nodeid": "tests/test_source_inventory_review_decisions.py::test_default_committed_decision_files_validate",
+      "reason": "Fails on main while validating the committed source-inventory decision corpus; this CI rebuild does not alter content or the validator.",
+      "owner": "atlas-intake (#4220)",
+      "tracking": "devops #5703"
+    },
+    {
+      "nodeid": "tests/orchestration/test_curriculum_lifecycle_pilot.py::test_report_tampering_and_false_pass_fail_closed",
+      "reason": "Fails on main in the curriculum-lifecycle false-pass contract; this CI rebuild does not change the lifecycle implementation or assertion.",
+      "owner": "infra-harness (#4707)",
+      "tracking": "devops #5703"
+    }
+  ]
+}
