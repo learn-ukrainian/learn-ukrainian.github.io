@@ -92,10 +92,14 @@ def test_workflow_uses_the_node_planner_and_fail_closed_gate() -> None:
 
     assert "scripts/ci/pytest_shard.py --repo-root . prepare" in workflow
     assert "--timeout-seconds 1800" in workflow
+    assert pytest_shard.DEFAULT_SHARD_COUNT == 5
+    assert "shard: [1, 2, 3, 4, 5]" in workflow
+    assert "--shard-count 5" in workflow
     assert "-m scripts.ci.verify_pytest_evidence" in workflow
     assert "skipped and cancelled are failures" in workflow
     assert "CI_PYTEST_WIKI_NO_MLX" in workflow
     assert "./node_modules/.bin/playwright test" in workflow
     assert "npm --prefix site exec -- playwright test" not in workflow
+    assert "needs: [pytest, web_quality]" in workflow
     for forbidden in ("GITHUB_BASE_REF", "changed-files", "paths-filter", "git diff"):
         assert forbidden not in workflow

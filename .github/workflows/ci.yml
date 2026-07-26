@@ -26,13 +26,13 @@ env:
 
 jobs:
   pytest:
-    name: Pytest [${{ matrix.shard }}/4]
+    name: Pytest [${{ matrix.shard }}/5]
     runs-on: ubuntu-latest
     timeout-minutes: 35
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: [1, 2, 3, 4, 5]
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -43,28 +43,33 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Restore Python wheel cache
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+        with:
+          version: "0.11.28"
+          enable-cache: false
+
+      - name: Restore deterministic package cache
         id: pip-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: ~/.cache/pip
-          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch-cpu
+          path: ~/.cache/uv
+          key: uv-packages-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch-cpu
 
       - name: Provision deterministic pytest environment
         run: |
-          python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
+          uv venv --python 3.12 .venv
           grep -vE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt > "$RUNNER_TEMP/requirements-ci.txt"
-          .venv/bin/python -m pip install --no-deps -r "$RUNNER_TEMP/requirements-ci.txt"
-          .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu torch==2.13.0
+          uv pip install --python .venv/bin/python --no-deps -r "$RUNNER_TEMP/requirements-ci.txt"
+          uv pip install --python .venv/bin/python --no-deps \
+            --index-url https://download.pytorch.org/whl/cpu torch==2.13.0
           .venv/bin/python -c "import torch; print(f'torch={torch.__version__}; cuda={torch.cuda.is_available()}')"
 
-      - name: Save Python wheel cache (single writer)
+      - name: Save deterministic package cache (single writer)
         if: matrix.shard == 1 && steps.pip-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: ~/.cache/pip
-          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch-cpu
+          path: ~/.cache/uv
+          key: uv-packages-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch-cpu
 
       - name: Plan complete pytest shard
         run: |
@@ -98,40 +103,8 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
-  quality:
-    name: Quality (Python and workflow structure)
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
-        with:
-          python-version: "3.12"
-
-      - name: Run static checks with an explicit timeout report
-        run: |
-          started="$(date +%s)"
-          set +e
-          timeout --verbose --signal=TERM --kill-after=60s 720s bash -eo pipefail <<'CHECKS'
-            python -m venv .venv
-            .venv/bin/python -m pip install --upgrade pip
-            .venv/bin/python -m pip install --no-deps ruff==0.15.21
-            .venv/bin/python -m ruff check scripts tests
-            ACTIONLINT_FORCE_DOWNLOAD=1 scripts/audit/check_workflows.sh .github/workflows/ci.yml
-          CHECKS
-          status=$?
-          elapsed="$(( $(date +%s) - started ))"
-          echo "quality_elapsed_seconds=${elapsed}" | tee -a "$GITHUB_STEP_SUMMARY"
-          if [ "$status" -eq 124 ]; then
-            echo "::error title=quality timeout::static checks exceeded the 720-second wrapper"
-          fi
-          exit "$status"
-
-  frontend:
-    name: Frontend (unit, build, browser)
+  web_quality:
+    name: Web and quality (Python structure, unit, build, browser)
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -149,22 +122,21 @@ jobs:
           cache: npm
           cache-dependency-path: site/package-lock.json
 
-      - name: Restore Python wheel cache
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.cache/pip
-          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch-cpu
-
-      - name: Build and exercise the frontend with an explicit timeout report
+      - name: Run web and quality checks with an explicit timeout report
         run: |
           started="$(date +%s)"
           set +e
           timeout --verbose --signal=TERM --kill-after=60s 1320s bash -eo pipefail <<'CHECKS'
-            python -m venv .venv
-            .venv/bin/python -m pip install --upgrade pip
-            grep -vE "^(torch|torchvision|open_clip_torch)==" requirements-lock.txt > "$RUNNER_TEMP/requirements-ci.txt"
-            .venv/bin/python -m pip install --no-deps -r "$RUNNER_TEMP/requirements-ci.txt"
-            .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu torch==2.13.0
+            quality_started="$(date +%s)"
+            python -m venv .quality-venv
+            .quality-venv/bin/python -m pip install --upgrade pip
+            .quality-venv/bin/python -m pip install --no-deps ruff==0.15.21
+            .quality-venv/bin/python -m ruff check scripts tests
+            ACTIONLINT_FORCE_DOWNLOAD=1 scripts/audit/check_workflows.sh .github/workflows/ci.yml
+            quality_elapsed="$(( $(date +%s) - quality_started ))"
+            echo "quality_elapsed_seconds=${quality_elapsed}" | tee -a "$GITHUB_STEP_SUMMARY"
+
+            frontend_started="$(date +%s)"
             npm ci --prefix site
             npm run test --prefix site
             npm run build --prefix site
@@ -173,18 +145,20 @@ jobs:
               ./node_modules/.bin/playwright install --with-deps chromium
               ./node_modules/.bin/playwright test
             )
+            frontend_elapsed="$(( $(date +%s) - frontend_started ))"
+            echo "frontend_elapsed_seconds=${frontend_elapsed}" | tee -a "$GITHUB_STEP_SUMMARY"
           CHECKS
           status=$?
           elapsed="$(( $(date +%s) - started ))"
-          echo "frontend_elapsed_seconds=${elapsed}" | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "web_quality_elapsed_seconds=${elapsed}" | tee -a "$GITHUB_STEP_SUMMARY"
           if [ "$status" -eq 124 ]; then
-            echo "::error title=frontend timeout::frontend checks exceeded the 1320-second wrapper"
+            echo "::error title=web and quality timeout::checks exceeded the 1320-second wrapper"
           fi
           exit "$status"
 
   ci-gate:
     name: CI Gate
-    needs: [pytest, quality, frontend]
+    needs: [pytest, web_quality]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -214,11 +188,10 @@ jobs:
         if: ${{ always() }}
         env:
           PYTEST_RESULT: ${{ needs.pytest.result }}
-          QUALITY_RESULT: ${{ needs.quality.result }}
-          FRONTEND_RESULT: ${{ needs.frontend.result }}
+          WEB_QUALITY_RESULT: ${{ needs.web_quality.result }}
         run: |
           status=0
-          for required in pytest quality frontend; do
+          for required in pytest web_quality; do
             result="$(printenv "${required^^}_RESULT")"
             echo "${required}=${result}" | tee -a "$GITHUB_STEP_SUMMARY"
             if [ "$result" != "success" ]; then
@@ -230,7 +203,7 @@ jobs:
           .venv/bin/python -m scripts.ci.verify_pytest_evidence \
             --root pytest-evidence \
             --quarantine scripts/config/pytest-quarantine.json \
-            --shard-count 4 | tee -a "$GITHUB_STEP_SUMMARY" || status=1
+            --shard-count 5 | tee -a "$GITHUB_STEP_SUMMARY" || status=1
           exit "$status"
 
       - name: Report gate timing

@@ -7,7 +7,7 @@ unconditional on pull requests, merge groups, and pushes to `main`.
 
 - Pytest collects the complete repository suite with the default marker filter
   disabled. It never asks which files changed.
-- Four deterministic node-level shards run the resulting suite. The
+- Five deterministic node-level shards run the resulting suite. The
   thread-sensitive and source-inventory nodes remain within their own external
   shard, while all other nodes are balanced by node count.
 - Each shard writes its planned and executed node IDs. `CI Gate` rejects a
@@ -18,8 +18,9 @@ unconditional on pull requests, merge groups, and pushes to `main`.
   override contract test. Tests requiring ignored databases or ignored external
   JSONL retain their explicit pytest skip reason instead of failing
   mysteriously.
-- The required frontend job runs unit tests, a production build, and Chromium
-  browser tests. The quality job runs Ruff and Actionlint on this workflow.
+- One combined web-and-quality job runs Ruff, Actionlint, frontend unit tests,
+  a production build, and Chromium browser tests. Alongside the five pytest
+  shards, it caps the normal concurrent runner demand at six slots.
 
 The workflow reports a measured duration in every job summary. The pytest
 evidence verifier also reports the measured duration of each shard.
@@ -27,9 +28,9 @@ evidence verifier also reports the measured duration of each shard.
 ## Time bounds
 
 Pytest uses a 15-minute per-test timeout and a 30-minute wrapper that writes a
-named timeout record before the 35-minute GitHub job limit. Quality has a
-12-minute wrapper inside a 15-minute job; frontend has a 22-minute wrapper
-inside a 25-minute job. These are failure ceilings, not expected durations.
+named timeout record before the 35-minute GitHub job limit. The combined web
+and quality job has a 22-minute wrapper inside a 25-minute job. These are
+failure ceilings, not expected durations.
 
 ## Quarantine
 
@@ -52,5 +53,5 @@ To remove an entry:
 
 The gate does not claim coverage for quarantined nodes, ignored corpus data, or
 live ML model downloads. Those limits are visible in the ledger or in pytest's
-own skip output; they are never turned into a changed-file selection, broad
-`-k` exclusion, or `xfail`.
+own `-rs` skip output; they are never turned into a changed-file selection,
+broad `-k` exclusion, or `xfail`.

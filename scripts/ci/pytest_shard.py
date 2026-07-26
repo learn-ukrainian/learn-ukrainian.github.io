@@ -2,7 +2,7 @@
 
 The required CI gate never asks a diff which tests to run.  Every invocation
 collects the complete test suite, removes only exact node IDs from the committed
-quarantine ledger, and assigns every remaining node to one of four jobs.
+quarantine ledger, and assigns every remaining node to one of five jobs.
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ from collections.abc import Iterable, Sequence
 from pathlib import Path
 from typing import Any
 
-DEFAULT_SHARD_COUNT = 4
+DEFAULT_SHARD_COUNT = 5
 THREAD_SENSITIVE_FILES = frozenset(
     {
         "tests/orchestration/test_thread_handoff.py",
@@ -262,6 +262,7 @@ def run(args: argparse.Namespace) -> int:
         "--strict-markers",
         "--timeout=900",
         "--timeout-method=thread",
+        "-rs",
         "--durations=50",
         "-p",
         "scripts.ci.pytest_evidence",
