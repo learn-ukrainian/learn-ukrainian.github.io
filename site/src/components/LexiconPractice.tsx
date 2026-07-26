@@ -60,6 +60,7 @@ import {
   type PracticeModeFilter,
   type PracticeRating,
   type PracticeSelection,
+  type PracticeSessionIdentity,
   type PracticeSessionSnapshot,
   type PracticeSessionSnapshots,
   type ReviewLogEntry,
@@ -1017,6 +1018,42 @@ function sessionScopeIndexForMode(
     .map((item) => ({ ...item, modes: [modeFilter] }));
 }
 
+/** Shared match test for the Selected Deck filter (Teacher Lesson or a Custom Set),
+ * keyed on lemmaId/lemma the same way for both index-level planning and per-candidate
+ * selection — a single definition so the two can never drift apart. */
+function deckFilterAllowsLemma(
+  lemmaId: string,
+  lemma: string,
+  deckFilter: string,
+  customSets: CustomSet[],
+): boolean {
+  if (deckFilter === 'all') return true;
+  const idLower = lemmaId.toLowerCase();
+  const lemmaLower = lemma.toLowerCase();
+  const keys =
+    deckFilter === 'virtual_teacher_lesson'
+      ? getTeacherLessonVirtualDeck().lemma_keys
+      : (customSets.find((s) => s.id === deckFilter)?.lemma_keys ?? null);
+  if (!keys) return true;
+  const keysLower = new Set(keys.map((k) => k.toLowerCase()));
+  return keysLower.has(idLower) || keysLower.has(lemmaLower);
+}
+
+/** Narrow a level's practice index to the active deck filter BEFORE computing session
+ * scope, so a session's planned total/due count/estimate reflect the SELECTED deck
+ * rather than the full level (F2 follow-up, PR #5837 review: "the chosen set actually
+ * drives the next session" applies to the session's size, not just its item content —
+ * without this, switching to a 1-word custom deck still planned a session sized off the
+ * full level index). */
+function filterIndexByDeckFilter(
+  index: PracticeIndexItem[],
+  deckFilter: string,
+  customSets: CustomSet[],
+): PracticeIndexItem[] {
+  if (deckFilter === 'all') return index;
+  return index.filter((item) => deckFilterAllowsLemma(item.lemmaId, item.lemma, deckFilter, customSets));
+}
+
 /** Learner level persisted in the shared `lu-learner-level` key (also used by Words of the Day). */
 function readLearnerLevel(fallback: CefrLevel): CefrLevel {
   if (typeof window === 'undefined') return fallback;
@@ -1358,8 +1395,11 @@ function LexiconPracticeIsland({
         void initializeFocusedPractice(target);
       } else {
         const snapshots = readPracticeSessionSnapshots();
+        const identity = currentSessionIdentity();
         const resumableSnapshots = Object.fromEntries(
-          Object.entries(snapshots).filter(([, snapshot]) => isPracticeSessionResumable(snapshot)),
+          Object.entries(snapshots).filter(([, snapshot]) =>
+            isPracticeSessionResumable(snapshot, Date.now(), identity),
+          ),
         ) as PracticeSessionSnapshots;
         setResumeSnapshots(resumableSnapshots);
       }
@@ -1387,9 +1427,11 @@ function LexiconPracticeIsland({
       return;
     }
 
-    const plan = computeSessionScope(sessionScopeIndexForMode(deck.index, mode), sessionBudget, {
-      dailyNewCount,
-    });
+    const plan = computeSessionScope(
+      sessionScopeIndexForMode(filterIndexByDeckFilter(deck.index, selectedDeckFilter, customSets), mode),
+      sessionBudget,
+      { dailyNewCount },
+    );
     resetSessionTracking(plan, sessionBudget);
 
     // Persist an initial snapshot for this newly started session so it is resumable.
@@ -1405,6 +1447,8 @@ function LexiconPracticeIsland({
       completed: 0,
       modeFilter: mode,
       level: learnerLevel,
+      deckId: selectedDeckFilter,
+      dateSeed: dateSeed(new Date()),
       startedAt: sessionStartedAtRef.current,
       extensionUsed: 0,
       sessionNewIntroduced: 0,
@@ -1597,24 +1641,10 @@ function LexiconPracticeIsland({
       if (focusWeakness && !matchesWeakness(candidate, focusWeakness)) return false;
 
       // Filter by Selected Deck (Teacher Lesson 610+440 or Custom Set)
-      if (selectedDeckFilter === 'virtual_teacher_lesson') {
-        const teacherDeck = getTeacherLessonVirtualDeck();
-        const keysLower = new Set(teacherDeck.lemma_keys.map((k) => k.toLowerCase()));
-        const candIdLower = (candidate.indexItem?.lemmaId || candidate.lemma?.lemmaId || '').toLowerCase();
-        const candLemmaLower = (candidate.lemma?.lemma || candidate.indexItem?.lemma || '').toLowerCase();
-        if (!keysLower.has(candIdLower) && !keysLower.has(candLemmaLower)) {
-          return false;
-        }
-      } else if (selectedDeckFilter !== 'all') {
-        const customSet = customSets.find((s) => s.id === selectedDeckFilter);
-        if (customSet) {
-          const keysLower = new Set(customSet.lemma_keys.map((k) => k.toLowerCase()));
-          const candIdLower = (candidate.indexItem?.lemmaId || candidate.lemma?.lemmaId || '').toLowerCase();
-          const candLemmaLower = (candidate.lemma?.lemma || candidate.indexItem?.lemma || '').toLowerCase();
-          if (!keysLower.has(candIdLower) && !keysLower.has(candLemmaLower)) {
-            return false;
-          }
-        }
+      const candLemmaId = candidate.indexItem?.lemmaId || candidate.lemma?.lemmaId || '';
+      const candLemma = candidate.lemma?.lemma || candidate.indexItem?.lemma || '';
+      if (!deckFilterAllowsLemma(candLemmaId, candLemma, selectedDeckFilter, customSets)) {
+        return false;
       }
       return true;
     },
@@ -1760,12 +1790,14 @@ function LexiconPracticeIsland({
 
   async function ensureDeck(
     includeCloze = shouldLoadCloze(mode),
-    options: { level?: CefrLevel; force?: boolean } = {},
+    options: { level?: CefrLevel; force?: boolean; deckFilter?: string } = {},
   ): Promise<PracticeDeckData | null> {
-    // `level`/`force` are passed explicitly on a level change so we don't read the
-    // stale `learnerLevel`/`deck` closures before their state updates have flushed.
+    // `level`/`force`/`deckFilter` are passed explicitly on a level or deck change so we
+    // don't read the stale `learnerLevel`/`deck`/`selectedDeckFilter` closures before
+    // their state updates have flushed.
     const level = options.level ?? learnerLevel;
     const force = options.force ?? false;
+    const deckFilter = options.deckFilter ?? selectedDeckFilter;
     const current = force ? null : deck;
     if (current && (!includeCloze || clozeLoaded)) {
       setError(null);
@@ -1866,7 +1898,7 @@ function LexiconPracticeIsland({
         };
 
         // Merge teacher deck pre-generated cloze items if active
-        if (selectedDeckFilter === 'virtual_teacher_lesson') {
+        if (deckFilter === 'virtual_teacher_lesson') {
           const teacherDeck = getTeacherLessonVirtualDeck();
           try {
             const teacherClozeShard = await getShardJson<{ cloze?: PracticeClozeItem[] }>(
@@ -1886,8 +1918,8 @@ function LexiconPracticeIsland({
         }
 
         // Merge custom set document cloze items if active
-        if (selectedDeckFilter !== 'all' && selectedDeckFilter !== 'virtual_teacher_lesson') {
-          const activeSet = customSets.find((s) => s.id === selectedDeckFilter);
+        if (deckFilter !== 'all' && deckFilter !== 'virtual_teacher_lesson') {
+          const activeSet = customSets.find((s) => s.id === deckFilter);
           if (activeSet) {
             if (activeSet.cloze_items && activeSet.cloze_items.length > 0) {
               nextDeck = {
@@ -2065,6 +2097,8 @@ function LexiconPracticeIsland({
       completed: sessionCompleted,
       modeFilter: mode,
       level: learnerLevel,
+      deckId: selectedDeckFilter,
+      dateSeed: dateSeed(new Date()),
       startedAt: sessionStartedAtRef.current,
       extensionUsed,
       sessionNewIntroduced,
@@ -2121,6 +2155,10 @@ function LexiconPracticeIsland({
     // so `focusWeakness` is always cleared on resume — the focus is session-transient by
     // design and is intentionally NOT persisted to `PracticeSessionSnapshot`.
     focus: WeakArea | null = null,
+    // F1 (PR #5837 review): an accepted level/deck switch passes the ACCEPTED values here
+    // explicitly, so the deck load and the persisted snapshot use them directly instead of
+    // racing the `learnerLevel`/`selectedDeckFilter` state updates that triggered this call.
+    overrides?: { level?: CefrLevel; deckFilter?: string },
   ) {
     // A pinned selection is only valid within the session that created it. Without this
     // reset, returning home with an empty history lets the selector reuse the previous
@@ -2130,7 +2168,12 @@ function LexiconPracticeIsland({
     setSessionBudget(budget);
     setError(null);
     setFocusLookupMiss(false);
-    let loadedDeck = await ensureDeck(shouldLoadCloze(nextMode));
+    const effectiveLevel = overrides?.level ?? learnerLevel;
+    const effectiveDeckFilter = overrides?.deckFilter ?? selectedDeckFilter;
+    let loadedDeck = await ensureDeck(
+      shouldLoadCloze(nextMode),
+      overrides ? { level: overrides.level, deckFilter: overrides.deckFilter, force: true } : undefined,
+    );
     if (!loadedDeck) return;
     if (focusedLemmaId) {
       loadedDeck = {
@@ -2167,7 +2210,10 @@ function LexiconPracticeIsland({
     // A session is starting for real — drop any stale idle notice (e.g. the empty-focus
     // message) so the active status line reads «Сесія …» cleanly.
     setFeedback(null);
-    const index = sessionScopeIndexForMode(loadedDeck.index, nextMode);
+    const index = sessionScopeIndexForMode(
+      filterIndexByDeckFilter(loadedDeck.index, effectiveDeckFilter, customSets),
+      nextMode,
+    );
     const plan = computeSessionScope(index, budget, { dailyNewCount });
     const nextSeed = resume?.sessionSeed ?? makePracticeSessionSeed();
     if (resume) {
@@ -2196,7 +2242,9 @@ function LexiconPracticeIsland({
       budget,
       completed: resume?.completed ?? 0,
       modeFilter: nextMode,
-      level: learnerLevel,
+      level: effectiveLevel,
+      deckId: effectiveDeckFilter,
+      dateSeed: dateSeed(new Date()),
       startedAt: sessionStartedAtRef.current,
       extensionUsed: resume?.extensionUsed ?? 0,
       sessionNewIntroduced: resume?.sessionNewIntroduced ?? 0,
@@ -2214,14 +2262,25 @@ function LexiconPracticeIsland({
     budget: SessionBudget = 20,
     nextMode: PracticeModeFilter = 'mixed',
     focus: WeakArea | null = null,
+    overrides?: { level?: CefrLevel; deckFilter?: string },
   ) {
     clearResumeSnapshot(nextMode);
-    await beginSession(nextMode, budget, undefined, focus);
+    await beginSession(nextMode, budget, undefined, focus, overrides);
+  }
+
+  function currentSessionIdentity(): PracticeSessionIdentity {
+    return { level: learnerLevel, deckId: selectedDeckFilter, dateSeed: dateSeed(new Date()) };
   }
 
   async function resumeSession(nextMode: PracticeModeFilter) {
     const snapshot = resumeSnapshots[nextMode];
-    if (!snapshot || snapshot.modeFilter !== nextMode || !isPracticeSessionResumable(snapshot)) return;
+    if (
+      !snapshot ||
+      snapshot.modeFilter !== nextMode ||
+      !isPracticeSessionResumable(snapshot, Date.now(), currentSessionIdentity())
+    ) {
+      return;
+    }
     // A resumed session starts with NO focus: the weakness is session-transient (never
     // persisted to the snapshot), so `beginSession(..., focus=null)` clears `focusWeakness`.
     await beginSession(nextMode, snapshot.budget, snapshot, null);
@@ -2314,12 +2373,23 @@ function LexiconPracticeIsland({
     setPendingDeckSwitch(null);
     setSessionPhase('idle');
     clearResumeSnapshots();
+    setClozeLoaded(false);
+    setHistory([]);
+    committedSelectionRef.current = null;
+    // F1 (PR #5837 review): the accepted level/deck is threaded through `startSession` as
+    // an explicit override rather than relied upon via `learnerLevel`/`selectedDeckFilter`
+    // state — those setters below schedule a re-render but do NOT update the closures this
+    // same synchronous call chain reads, so without the override the session that follows
+    // would silently load the PRIOR level/deck while the UI claims the accepted one.
+    const overrides: { level?: CefrLevel; deckFilter?: string } =
+      change.kind === 'deck' ? { deckFilter: change.value } : { level: change.value };
     if (change.kind === 'deck') {
       setSelectedDeckFilter(change.value);
     } else {
-      await changeLevel(change.value);
+      setLearnerLevel(change.value);
+      writeLearnerLevel(change.value);
     }
-    await startSession(sessionBudget, 'mixed');
+    await startSession(sessionBudget, 'mixed', null, overrides);
   }
 
   function refreshProgress() {
@@ -2805,8 +2875,11 @@ function LexiconPracticeIsland({
               chromeLocale={chromeLocale}
               activeDeckFilter={selectedDeckFilter}
               onSelectDeckFilter={(id) => {
-                setSelectedDeckFilter(id);
+                // F2 (PR #5837 review): route through the same guarded switch flow as the
+                // deck-filter chips — the manager must offer a fresh session too, not
+                // silently swap the deck under an active/resumable one.
                 setCustomSets(readLocalCustomSets());
+                requestDeckSwitch(id);
               }}
               onClose={() => {
                 setShowCreateModal(false);

@@ -434,9 +434,79 @@ test('A4: Далі sits in the top status row next to the counter and is clickab
   await expect(page.getByTestId('practice-session-progress')).toContainText('1/');
 });
 
+/**
+ * F1/F2 (PR #5837 review): route disjoint, single-item fixture decks for the A1/A2 core
+ * shards so "the accepted level drives the session" is provable from ITEM CONTENT, not
+ * merely from a request having fired for the right URL — a same-tick closure bug could
+ * silently replay the stale level's pool while the request log still looks correct.
+ * `depleteLowerLevel` is called right before the level switch so the (real, harmless)
+ * background lower-level merge a higher level kicks off can never dilute the accepted
+ * level's pool back into ambiguous territory.
+ */
+async function mockDisjointLevelFixtures(page: Page): Promise<{ depleteLowerLevel(level: 'A1' | 'A2'): void }> {
+  const depleted = new Set<'A1' | 'A2'>();
+  const fixtureItem = (level: 'A1' | 'A2') => ({
+    lemmaId: `e2eFixture${level}`,
+    lemma: `e2eFixture${level}`,
+    cefr: level,
+    modes: ['flashcards'] as const,
+    hasCloze: false,
+    clozeIds: [] as string[],
+    newOrder: 0,
+  });
+  const fixtureLexeme = (level: 'A1' | 'A2') => ({
+    lemmaId: `e2eFixture${level}`,
+    lemma: `e2eFixture${level}`,
+    lemmaPlain: `e2eFixture${level}`,
+    ipa: null,
+    gloss: `e2eFixture${level}`,
+    pos: 'noun',
+    cefr: level,
+    heritage: null,
+    severity: null,
+    paradigm: { cases: {} },
+  });
+  for (const level of ['A1', 'A2'] as const) {
+    await page.route(`**/lexicon/practice-index.${level}.json`, (route) =>
+      route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({
+          deckVersion: `e2e-fixture-${level}`,
+          level,
+          items: depleted.has(level) ? [] : [fixtureItem(level)],
+        }),
+      }),
+    );
+    await page.route(`**/lexicon/practice-lexemes.${level}.json`, (route) =>
+      route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({
+          deckVersion: `e2e-fixture-${level}`,
+          level,
+          lexemes: depleted.has(level) ? [] : [fixtureLexeme(level)],
+        }),
+      }),
+    );
+  }
+  return { depleteLowerLevel: (level) => depleted.add(level) };
+}
+
+async function readMixedSessionSnapshot(
+  page: Page,
+): Promise<{ level?: string; deckId?: string; dateSeed?: number } | null> {
+  return page.evaluate(() => {
+    const raw = window.localStorage.getItem('lu-practice-session');
+    return raw ? JSON.parse(raw).byMode?.mixed ?? null : null;
+  });
+}
+
 test('A5: switching level with a session in progress offers a fresh session; accepting starts one from the chosen set', async ({ page, context }) => {
   await context.clearCookies();
+  const fixtures = await mockDisjointLevelFixtures(page);
   await prepareResumableMixedSession(page);
+  // The A1 setup session is over; deplete A1 so A2's background lower-level merge (which
+  // always fetches A1 as a lower level) cannot reintroduce it into the accepted pool.
+  fixtures.depleteLowerLevel('A1');
 
   await page.getByRole('button', { name: 'A2' }).click();
 
@@ -447,6 +517,56 @@ test('A5: switching level with a session in progress offers a fresh session; acc
 
   await expect(page.locator('.lexicon-practice-stage')).toBeVisible();
   await expect(page.getByTestId('practice-session-progress')).toContainText('0/');
+
+  // F1/F2: the persisted snapshot must record the ACCEPTED level, and the first
+  // presented item must be drawn from the ACCEPTED (A2) pool — not the stale A1 one.
+  const snapshot = await readMixedSessionSnapshot(page);
+  expect(snapshot?.level).toBe('A2');
+  await expect(page.locator('.flashcard-word').first()).toContainText('e2eFixtureA2');
+});
+
+test('A5c: choosing a deck from the custom-deck manager while a session is active also offers a fresh session (finding 2 bypass)', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'learn_ukrainian_custom_sets_v1',
+      JSON.stringify([
+        {
+          id: 'e2e-custom-deck',
+          title: 'E2E Custom Deck',
+          description: '',
+          lemma_keys: ['e2eCustomDeckWord'],
+          created_at: '2026-01-01T00:00:00.000Z',
+          updated_at: '2026-01-01T00:00:00.000Z',
+          device_id: 'e2e-device',
+          revision: 1,
+        },
+      ]),
+    );
+  });
+  await prepareResumableMixedSession(page);
+
+  await page.getByRole('button', { name: /Manage Decks|Менеджер колод/ }).click();
+  await page.getByRole('button', { name: /Practice|Практика/ }).first().click();
+
+  // The custom-deck manager's own "Practice" action must route through the SAME guarded
+  // switch flow as the level/deck chips — it must not silently swap the active deck out
+  // from under the in-progress session (finding 2's bypass).
+  const offer = page.getByTestId('practice-switch-session-offer');
+  await expect(offer).toBeVisible();
+
+  await page.getByTestId('practice-switch-session-accept').click();
+
+  await expect(page.locator('.lexicon-practice-stage')).toBeVisible();
+  // The custom deck has exactly one word with no cloze content, so `ensureDeckCustomSetCoverage`
+  // gives it 7 practicable modes (flashcards/stress/classify/paradigm/synonym/paronym/heritage) —
+  // a mixed-mode session over ONE such word plans exactly 7 mode-cards. That number is wildly
+  // different from a full-level session (hundreds of due/new cards) — proof the pool is the
+  // accepted deck, not the full corpus.
+  await expect(page.getByTestId('practice-session-progress')).toContainText('0/7');
+
+  const snapshot = await readMixedSessionSnapshot(page);
+  expect(snapshot?.deckId).toBe('e2e-custom-deck');
 });
 
 test('A5b: declining the switch offer reverts the selection and leaves the session untouched', async ({ page, context }) => {
