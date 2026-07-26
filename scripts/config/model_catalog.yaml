@@ -630,11 +630,9 @@ review_ladders:
   # Grok / K3 / GLM / DS-Pro / pool S 2.1) — not Sol/Fable on routine PRs.
   critical:
     - [openai_frontier]
-    # Opus 5 is the Anthropic authority rung (user 2026-07-24). Fable sits BELOW it:
-    # same tier, ~2x the token cost, and the fleet keeps running out of subscription
-    # headroom — so it is the fallback for a case Opus 5 has already failed, not the
-    # first Anthropic pick.
-    - [claude-opus-5]
+    # Fable 5 is the Anthropic authority rung (operator 2026-07-26 — Opus 5
+    # de-advisored: weak in the role, over-verbose; reverses 2026-07-24). Opus is
+    # NOT on the authority ladder at all; it remains a practical/coding seat.
     - [claude-fable-5]
     - [claude-fable-5-cursor-fallback]
     - [gpt-5.6-terra]

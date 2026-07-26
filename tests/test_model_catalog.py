@@ -338,3 +338,15 @@ def test_catalog_rejects_future_review_date():
     validated = validate_catalog(catalog)
     with pytest.raises(ModelCatalogError, match="future"):
         catalog_age_days(validated, as_of=date(2026, 7, 17))
+
+
+def test_critical_ladder_anthropic_authority_is_fable_not_opus():
+    """Operator 2026-07-26: Opus 5 is de-advisored. The critical (authority)
+    ladder must route Anthropic authority reviews to Fable and must not list
+    Opus at all — otherwise the resolver dispatches authority reviews to the
+    explicitly de-advisored model whenever the OpenAI rung is excluded."""
+    ladder = load_model_catalog()["review_ladders"]["critical"]
+    flat = [model for rung in ladder for model in rung]
+    assert "claude-fable-5" in flat
+    assert "claude-opus-5" not in flat
+    assert flat.index("claude-fable-5") < flat.index("claude-sonnet-5")
