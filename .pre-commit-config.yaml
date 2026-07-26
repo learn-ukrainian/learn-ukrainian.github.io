@@ -1,8 +1,11 @@
 # Pre-commit hooks for learn-ukrainian.
 #
-# Install:
-#   pip install pre-commit
-#   pre-commit install                       # installs pre-commit + commit-msg + pre-push
+# Install the repository's complete tracked hook chain:
+#   scripts/install_git_hooks.sh
+#
+# Do not run `pre-commit install`: pre-commit refuses that command while the
+# repository intentionally uses `core.hooksPath=.githooks`. The tracked
+# wrappers invoke these stages through the project virtual environment.
 #
 # Or run manually on all files:
 #   pre-commit run --all-files

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(dirname "$0")/_lib.sh"
+
+lfs_status=0
+if command -v git-lfs >/dev/null 2>&1; then
+  git lfs post-checkout "$@" || lfs_status=$?
+else
+  echo "Git hook error: this repository uses Git LFS, but git-lfs is not installed." >&2
+  lfs_status=2
+fi
+
+heal_status=0
+bash "$source_root/scripts/guardrails/primary_post_checkout_heal.sh" "$@" || heal_status=$?
+if [[ "$heal_status" -ne 0 ]]; then
+  exit "$heal_status"
+fi
+exit "$lfs_status"

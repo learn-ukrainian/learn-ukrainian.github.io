@@ -242,20 +242,22 @@ def test_unusual_filenames_handled(temp_git_repo, monkeypatch):
 def test_install_hooks(temp_git_repo, monkeypatch):
     main_dir = temp_git_repo["main"]
     monkeypatch.chdir(main_dir)
+    installer = main_dir / "scripts" / "install_git_hooks.sh"
+    installer.parent.mkdir(parents=True)
+    installer.write_text(
+        "#!/usr/bin/env bash\n"
+        "set -euo pipefail\n"
+        'touch "$PWD/.tracked-hook-installer-ran"\n',
+        encoding="utf-8",
+    )
+    installer.chmod(0o755)
 
     pwg.install_hooks()
 
-    hooks_dir = main_dir / ".git" / "hooks"
-    for hook_name in ["post-merge"]:
-        hook_path = hooks_dir / hook_name
-        assert hook_path.exists()
-        content = hook_path.read_text(encoding="utf-8")
-        assert "# AGY_PRIMARY_WRITE_GUARD_START" in content
-        assert "primary_write_guard.py apply --hook" in content
-        assert os.access(hook_path, os.X_OK)
-    # Review #5399: post-checkout / post-commit deliberately NOT installed
-    # (per-operation O(tracked) scan; post-commit touches no working files).
-    for hook_name in ["post-checkout", "post-commit"]:
-        hook_path = hooks_dir / hook_name
+    assert (main_dir / ".tracked-hook-installer-ran").exists()
+    for hook_name in ("post-merge", "post-checkout", "post-commit"):
+        hook_path = main_dir / ".git" / "hooks" / hook_name
         if hook_path.exists():
-            assert "# AGY_PRIMARY_WRITE_GUARD_START" not in hook_path.read_text(encoding="utf-8")
+            content = hook_path.read_text(encoding="utf-8")
+            assert "AGY_PRIMARY_WRITE_GUARD_START" not in content
+            assert "AGY_PRIMARY_STAY_ON_MAIN_START" not in content

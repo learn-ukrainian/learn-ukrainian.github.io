@@ -11,9 +11,20 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-HOOK_PATH = REPO_ROOT / ".githooks" / "pre-push"
+GUARD_PATH = REPO_ROOT / ".githooks" / "check-pytest-stamp.py"
 STAMP_PATH = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "stamp-pytest.sh"
-PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
+GIT_COMMON_DIR = Path(
+    subprocess.run(
+        ["git", "rev-parse", "--git-common-dir"],
+        capture_output=True,
+        check=True,
+        cwd=REPO_ROOT,
+        text=True,
+    ).stdout.strip()
+)
+if not GIT_COMMON_DIR.is_absolute():
+    GIT_COMMON_DIR = REPO_ROOT / GIT_COMMON_DIR
+PYTHON = GIT_COMMON_DIR.resolve().parent / ".venv" / "bin" / "python"
 ZERO_SHA = "0" * 40
 
 
@@ -24,7 +35,7 @@ def _load_hook_module():
 
     spec = importlib.util.spec_from_loader(
         "pre_push_hook",
-        importlib.machinery.SourceFileLoader("pre_push_hook", str(HOOK_PATH)),
+        importlib.machinery.SourceFileLoader("pre_push_hook", str(GUARD_PATH)),
     )
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
@@ -101,7 +112,7 @@ def _hook(
     if extra_env:
         env.update(extra_env)
     return subprocess.run(
-        [str(PYTHON), str(HOOK_PATH), "origin", "unused"],
+        [str(PYTHON), str(GUARD_PATH), "origin", "unused"],
         capture_output=True,
         check=False,
         cwd=repo,
@@ -115,6 +126,19 @@ def _hook(
 def _stamp(tmp_path: Path, branch: str = "feature") -> Path:
     tmp_path.mkdir(exist_ok=True)
     return tmp_path / f"learn-uk-pytest.{branch}.stamp"
+
+
+def _configure_guard_only_hook(repo: Path, tmp_path: Path) -> None:
+    """Install only the custom guard for tests that isolate its Git behavior."""
+    hook_dir = tmp_path / "guard-only-hooks"
+    hook_dir.mkdir(exist_ok=True)
+    hook = hook_dir / "pre-push"
+    hook.write_text(
+        f'#!/bin/sh\nexec "{PYTHON}" "{GUARD_PATH}" "$@"\n',
+        encoding="utf-8",
+    )
+    hook.chmod(0o755)
+    _git(repo, "config", "core.hooksPath", str(hook_dir))
 
 
 def _run_stamp_writer(
@@ -377,7 +401,7 @@ def test_no_verify_skips_hook_for_an_actual_push(tmp_path):
         timeout=30,
     )
     _git(repo, "remote", "add", "origin", str(remote))
-    _git(repo, "config", "core.hooksPath", str(REPO_ROOT / ".githooks"))
+    _configure_guard_only_hook(repo, tmp_path)
 
     result = subprocess.run(
         ["git", "push", "--no-verify", "origin", "HEAD:main"],
@@ -404,7 +428,7 @@ def test_actual_head_to_main_push_is_blocked_from_a_non_main_branch(tmp_path):
         timeout=30,
     )
     _git(repo, "remote", "add", "origin", str(remote))
-    _git(repo, "config", "core.hooksPath", str(REPO_ROOT / ".githooks"))
+    _configure_guard_only_hook(repo, tmp_path)
     _git(repo, "push", "--no-verify", "origin", "HEAD:main")
 
     (repo / "tests" / "second.py").write_text("second change\n", encoding="utf-8")
