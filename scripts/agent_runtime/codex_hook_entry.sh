@@ -22,7 +22,6 @@ payload_cwd=$(printf '%s' "$PAYLOAD" | jq -r '
   // empty
 ' 2>/dev/null)
 [ -n "$payload_cwd" ] || payload_cwd="$SCRIPT_ROOT"
-TOOL_NAME=$(printf '%s' "$PAYLOAD" | jq -r '.tool_name // empty' 2>/dev/null)
 
 COMMON_DIR=$(git -C "$payload_cwd" rev-parse --path-format=absolute --git-common-dir 2>/dev/null) \
   || COMMON_DIR=$(git -C "$SCRIPT_ROOT" rev-parse --path-format=absolute --git-common-dir 2>/dev/null) \
@@ -44,25 +43,13 @@ case "$MODE" in
       exit 2
     fi
 
-    rewrite_output=""
-    if [ "$TOOL_NAME" = "Bash" ]; then
-      rewrite_output=$(printf '%s' "$PAYLOAD" \
-        | LEARN_UK_HOOK_PROVIDER=codex \
-          LEARN_UK_CANONICAL_ROOT="$CANONICAL_ROOT" \
-          bash "$HOOKS_DIR/enforce-venv.sh")
-      rewrite_rc=$?
-      [ "$rewrite_rc" -eq 0 ] || exit "$rewrite_rc"
-
-    fi
-
     printf '%s' "$PAYLOAD" \
       | "$PYTHON_BIN" "$SCRIPT_ROOT/scripts/agent_runtime/codex_hook_policy.py" \
         --python-bin "$PYTHON_BIN" \
-        --hooks-dir "$HOOKS_DIR"
+        --hooks-dir "$HOOKS_DIR" \
+        --canonical-root "$CANONICAL_ROOT"
     policy_rc=${PIPESTATUS[1]}
     [ "$policy_rc" -eq 0 ] || exit "$policy_rc"
-
-    [ -z "$rewrite_output" ] || printf '%s\n' "$rewrite_output"
     ;;
 
   post-tool-use)

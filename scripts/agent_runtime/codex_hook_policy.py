@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import concurrent.futures
 import json
+import os
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -16,6 +17,7 @@ LOCAL_BASH_GUARDS = (
     ("guard-branch-switch-in-main.py", 3),
     ("guard-secret-print.py", 5),
 )
+ENFORCE_VENV_TIMEOUT = 3
 PRIMARY_WRITE_GUARD = ("guard-primary-checkout-write.py", 5)
 MERGE_GUARDS = (
     ("guard-admin-merge.py", 30),
@@ -114,6 +116,44 @@ def _run_merge_guards(
         return [future.result() for future in futures]
 
 
+def _run_enforce_venv(
+    hooks_dir: Path,
+    canonical_root: Path,
+    payload: str,
+) -> GuardResult:
+    environment = os.environ.copy()
+    environment["LEARN_UK_HOOK_PROVIDER"] = "codex"
+    environment["LEARN_UK_CANONICAL_ROOT"] = str(canonical_root)
+    guard = hooks_dir / "enforce-venv.sh"
+    try:
+        completed = subprocess.run(
+            ["/bin/bash", str(guard)],
+            input=payload,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=ENFORCE_VENV_TIMEOUT,
+            env=environment,
+        )
+    except subprocess.TimeoutExpired as exc:
+        return GuardResult(
+            name=guard.name,
+            returncode=2,
+            stdout=_timeout_text(exc.stdout),
+            stderr=(
+                _timeout_text(exc.stderr) + f"Codex hook guard {guard.name} exceeded "
+                f"{ENFORCE_VENV_TIMEOUT}s; blocking the tool call fail-closed.\n"
+            ),
+            timed_out=True,
+        )
+    return GuardResult(
+        name=guard.name,
+        returncode=completed.returncode,
+        stdout=completed.stdout,
+        stderr=completed.stderr,
+    )
+
+
 def _result_code(results: list[GuardResult]) -> int:
     for result in results:
         _emit(result)
@@ -126,9 +166,20 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--python-bin", type=Path, required=True)
     parser.add_argument("--hooks-dir", type=Path, required=True)
+    parser.add_argument("--canonical-root", type=Path, required=True)
     args = parser.parse_args()
     payload = sys.stdin.read()
     tool_name = _tool_name(payload)
+    rewrite_result = None
+    if tool_name == "Bash":
+        rewrite_result = _run_enforce_venv(
+            args.hooks_dir,
+            args.canonical_root,
+            payload,
+        )
+        if rewrite_result.returncode:
+            _emit(rewrite_result)
+            return rewrite_result.returncode
 
     local_specs = LOCAL_BASH_GUARDS if tool_name == "Bash" else ()
     local_results = _run_specs(
@@ -142,7 +193,11 @@ def main() -> int:
         return local_code
 
     if tool_name == "Bash":
-        return _result_code(_run_merge_guards(args.python_bin, args.hooks_dir, payload))
+        merge_code = _result_code(_run_merge_guards(args.python_bin, args.hooks_dir, payload))
+        if merge_code:
+            return merge_code
+        if rewrite_result is not None:
+            _emit(rewrite_result)
     return 0
 
 

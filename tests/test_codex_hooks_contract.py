@@ -8,10 +8,13 @@ import sqlite3
 import subprocess
 from pathlib import Path
 
+from scripts.agent_runtime import codex_hook_policy
 from scripts.agent_runtime.codex_hook_policy import (
+    ENFORCE_VENV_TIMEOUT,
     LOCAL_BASH_GUARDS,
     MERGE_GUARDS,
     PRIMARY_WRITE_GUARD,
+    _run_enforce_venv,
     run_guard,
 )
 
@@ -83,6 +86,7 @@ def test_codex_tool_events_have_one_deterministic_command_hook() -> None:
 
 
 def test_codex_policy_preserves_tool_scopes_and_per_guard_deadlines() -> None:
+    assert ENFORCE_VENV_TIMEOUT == 3
     assert LOCAL_BASH_GUARDS == (
         ("heal-core-bare.py", 3),
         ("guard-branch-switch-in-main.py", 3),
@@ -108,6 +112,22 @@ def test_codex_policy_guard_timeout_fails_closed(tmp_path: Path) -> None:
 
     assert result.returncode == 2
     assert result.timed_out is True
+    assert "blocking the tool call fail-closed" in result.stderr
+
+
+def test_codex_policy_venv_rewrite_timeout_fails_closed(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    guard = tmp_path / "enforce-venv.sh"
+    guard.write_text("#!/bin/bash\nsleep 5\n", encoding="utf-8")
+    monkeypatch.setattr(codex_hook_policy, "ENFORCE_VENV_TIMEOUT", 0.01)
+
+    result = _run_enforce_venv(tmp_path, tmp_path, "{}")
+
+    assert result.returncode == 2
+    assert result.timed_out is True
+    assert "enforce-venv.sh exceeded 0.01s" in result.stderr
     assert "blocking the tool call fail-closed" in result.stderr
 
 
