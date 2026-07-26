@@ -905,8 +905,17 @@ def _validate_private_exec_root(
         raise ReviewIsolationError("review_exec_root_wrong_owner")
     if stat.S_IMODE(st.st_mode) & 0o077:
         raise ReviewIsolationError("review_exec_root_not_owner_only")
-    if any(root.iterdir()):
-        raise ReviewIsolationError("review_exec_root_not_empty")
+    # A freshly created review temp root legitimately contains exactly one entry:
+    # the ownership sentinel written by create_review_temp_root(). Anything else
+    # (or a sentinel that is not a regular non-symlink file) still refuses —
+    # the sentinel integration broke every bridge review on 2026-07-26 when this
+    # check predated the marker.
+    for entry in root.iterdir():
+        if entry.name != REVIEW_TEMP_ROOT_MARKER_NAME:
+            raise ReviewIsolationError("review_exec_root_not_empty")
+        entry_st = entry.lstat()
+        if stat.S_ISLNK(entry_st.st_mode) or not stat.S_ISREG(entry_st.st_mode):
+            raise ReviewIsolationError("review_exec_root_marker_not_regular")
     return root
 
 
