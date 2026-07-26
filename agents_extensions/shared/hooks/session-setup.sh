@@ -110,6 +110,28 @@ else
   fi
 fi
 
+BOUNDED_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
+BOUNDED_RUNNER="${SESSION_BOUNDED_RUNNER:-$PROJECT_DIR/scripts/agent_runtime/bounded_command.py}"
+if [ ! -f "$BOUNDED_RUNNER" ]; then
+  _HOOK_SOURCE_ROOT=$(cd "$(dirname "$0")/../../.." 2>/dev/null && pwd)
+  BOUNDED_RUNNER="$_HOOK_SOURCE_ROOT/scripts/agent_runtime/bounded_command.py"
+  unset _HOOK_SOURCE_ROOT
+fi
+run_bounded() {
+  local timeout_seconds="$1"
+  shift
+  if [ ! -x "$BOUNDED_PYTHON" ] || [ ! -f "$BOUNDED_RUNNER" ]; then
+    return 127
+  fi
+  "$BOUNDED_PYTHON" "$BOUNDED_RUNNER" --timeout "$timeout_seconds" -- "$@"
+}
+
+# Hook-owned state uses the same bounded local-lock contract. fcntl releases
+# locks when an owner dies; this deadline handles a live but wedged owner.
+export LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS=1
+export THREAD_ROLLOVER_COMMAND_RUNNER="$BOUNDED_RUNNER"
+export THREAD_ROLLOVER_COMMAND_TIMEOUT_SECONDS=3
+
 if [ -n "${SESSION_HANDOFF_AGENT:-}" ]; then
   HANDOFF_AGENT="$SESSION_HANDOFF_AGENT"
 elif [[ "${0:-}" == *"/.codex/"* ]]; then
@@ -154,7 +176,7 @@ if [ -n "$SESSION_ID" ] && [ -f "$SESSION_RECORD_SCRIPT" ] && [ -x "$SESSION_REC
   [ -n "$OBSERVED_MODEL" ] && SESSION_RECORD_CMD+=(--observed-model "$OBSERVED_MODEL")
   [ -n "$AGENT_TYPE" ] && SESSION_RECORD_CMD+=(--agent-type "$AGENT_TYPE")
   [ -n "$REQUESTED_PROFILE_ID" ] && SESSION_RECORD_CMD+=(--profile-id "$REQUESTED_PROFILE_ID")
-  if ! "${SESSION_RECORD_CMD[@]}" >/dev/null; then
+  if ! run_bounded 2 "${SESSION_RECORD_CMD[@]}" >/dev/null; then
     ISSUES+=("SESSION RECORD FAILED: official SessionStart identity could not be persisted.")
   fi
   unset SESSION_RECORD_CMD
@@ -179,7 +201,7 @@ if [ -n "${LEARN_UKRAINIAN_CLAUDEX_RUN_ID:-}" ]; then
     )
     [ -n "$SOURCE" ] && SUPERVISOR_BIND_CMD+=(--source "$SOURCE")
     [ -n "$OBSERVED_MODEL" ] && SUPERVISOR_BIND_CMD+=(--model "$OBSERVED_MODEL")
-    if ! "${SUPERVISOR_BIND_CMD[@]}" >/dev/null 2>&1; then
+    if ! run_bounded 3 "${SUPERVISOR_BIND_CMD[@]}" >/dev/null 2>&1; then
       ISSUES+=("CLAUDEX SUPERVISOR BIND FAILED: SessionStart did not match the owned child generation.")
     fi
     unset SUPERVISOR_BIND_CMD
@@ -190,7 +212,7 @@ fi
 if [ ! -f "$PROJECT_DIR/.venv/bin/python" ]; then
   ISSUES+=("VENV MISSING: .venv/bin/python not found. Recreate: rm -rf .venv && ~/.pyenv/versions/3.12.8/bin/python -m venv .venv")
 else
-  PY_VERSION=$("$PROJECT_DIR/.venv/bin/python" --version 2>/dev/null)
+  PY_VERSION=$(run_bounded 1 "$PROJECT_DIR/.venv/bin/python" --version 2>/dev/null)
   if [[ "$PY_VERSION" != *"3.12"* ]]; then
     ISSUES+=("VENV WRONG PYTHON: Expected 3.12.x, got $PY_VERSION")
   fi
@@ -201,44 +223,9 @@ if [ -z "$CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS" ]; then
   ISSUES+=("ENV MISSING: CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS not set. Add to .bashrc: export CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS=32000")
 fi
 
-if [ "${LEARN_UKRAINIAN_COLD_START_PROFILE:-}" != "compact" ]; then
-  # 3. Check message broker DB exists
-  MCP_DB="$PROJECT_DIR/.mcp/servers/message-broker/messages.db"
-  if [ ! -f "$MCP_DB" ]; then
-    INFO+=("Message broker DB not found at $MCP_DB — Gemini comms unavailable")
-  fi
-
-  # 4. Check for stale orchestration state (in-progress builds older than 24h)
-  STALE_COUNT=0
-  if [ -d "$PROJECT_DIR/curriculum" ]; then
-    while IFS= read -r -d '' state_file; do
-      if [ -f "$state_file" ]; then
-        if grep -q '"in_progress"' "$state_file" 2>/dev/null; then
-          MOD_TIME=$(stat -f %m "$state_file" 2>/dev/null || stat -c %Y "$state_file" 2>/dev/null)
-          NOW=$(date +%s)
-          AGE=$(( (NOW - MOD_TIME) / 3600 ))
-          if [ "$AGE" -gt 24 ]; then
-            STALE_COUNT=$((STALE_COUNT + 1))
-          fi
-        fi
-      fi
-    done < <(find "$PROJECT_DIR/curriculum" -name "state-v3.json" -print0 2>/dev/null)
-  fi
-
-  if [ "$STALE_COUNT" -gt 0 ]; then
-    INFO+=("$STALE_COUNT stale orchestration state file(s) found (in_progress > 24h old). Consider cleanup.")
-  fi
-
-  # 5. Report in-progress module builds
-  IN_PROGRESS_COUNT=0
-  if [ -d "$PROJECT_DIR/curriculum" ]; then
-    IN_PROGRESS_COUNT=$(find "$PROJECT_DIR/curriculum" -name "state-v3.json" -exec grep -l '"in_progress"' {} \; 2>/dev/null | wc -l | tr -d ' ')
-  fi
-
-  if [ "$IN_PROGRESS_COUNT" -gt 0 ]; then
-    INFO+=("$IN_PROGRESS_COUNT module build(s) currently in progress")
-  fi
-fi
+# Broad curriculum scans, service probes, GitHub issue listings, and governance
+# audits are deliberately absent here. They are optional orientation data and
+# belong behind /api/orient, not on the synchronous session-availability path.
 
 # 6. Check MEMORY.md line count (truncated at 200 lines by system)
 MEMORY_DIR="$HOME/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/memory"
@@ -279,131 +266,34 @@ if [ -d "$PROJECT_DIR/agents_extensions/shared" ] && [ -d "$PROJECT_DIR/.claude"
     diff_args+=("--exclude=$ex")
   done
 
-  DRIFT=$(diff "${diff_args[@]}" "$PROJECT_DIR/agents_extensions/shared/" "$PROJECT_DIR/.claude/" 2>/dev/null | head -5)
+  DRIFT=$(run_bounded 2 diff "${diff_args[@]}" \
+    "$PROJECT_DIR/agents_extensions/shared/" "$PROJECT_DIR/.claude/" 2>/dev/null | head -5)
   if [ -n "$DRIFT" ]; then
     DRIFT_COUNT=$(echo "$DRIFT" | wc -l | tr -d ' ')
     ISSUES+=("DEPLOY DRIFT: $DRIFT_COUNT file(s) differ between agents_extensions/shared/ and .claude/. Run: npm run agents:deploy")
   fi
 fi
 
-if [ "${LEARN_UKRAINIAN_COLD_START_PROFILE:-}" != "compact" ]; then
-  # 8. Check MCP sources server health (historically called the RAG server)
-  MCP_STATUS=$(curl -s -o /dev/null -w '%{http_code}' --max-time 2 "http://127.0.0.1:8766/sse" 2>/dev/null)
-  if [ "$MCP_STATUS" != "200" ] && [ "$MCP_STATUS" != "000" ]; then
-    INFO+=("MCP sources server returned HTTP $MCP_STATUS — some tools may be unavailable")
-  elif [ "$MCP_STATUS" = "000" ]; then
-    ISSUES+=("MCP sources server unreachable at 127.0.0.1:8766 — VESUM + textbook + dictionary tools unavailable. Start with: ./services.sh start sources")
-  fi
-
-  # 10. Check for stale decisions
-  if [ -f "$PROJECT_DIR/.venv/bin/python" ] && [ -f "$PROJECT_DIR/scripts/check_decisions.py" ]; then
-    STALE_DECISIONS=$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/check_decisions.py" --quiet 2>/dev/null)
-    if [ -n "$STALE_DECISIONS" ]; then
-      INFO+=("$STALE_DECISIONS")
-    fi
-  fi
-
-  # 10b. Check ADR hygiene
-  if [ -f "$PROJECT_DIR/.venv/bin/python" ] && [ -f "$PROJECT_DIR/scripts/audit/check_adrs.py" ]; then
-    ADR_REPORT=$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/audit/check_adrs.py" --quiet 2>/dev/null)
-    ADR_EXIT=$?
-    if [ "$ADR_EXIT" -ge 2 ] && [ -n "$ADR_REPORT" ]; then
-      ISSUES+=("ADR hygiene: $ADR_REPORT — see docs/best-practices/adr-management.md")
-    elif [ -n "$ADR_REPORT" ]; then
-      INFO+=("ADR hygiene: $ADR_REPORT")
-    fi
-  fi
-
-  # 10c. Check postmortem hygiene
-  if [ -f "$PROJECT_DIR/.venv/bin/python" ] && [ -f "$PROJECT_DIR/scripts/audit/check_postmortems.py" ]; then
-    POSTMORTEM_REPORT=$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/audit/check_postmortems.py" --quiet 2>/dev/null)
-    if [ -n "$POSTMORTEM_REPORT" ]; then
-      ISSUES+=("Postmortem hygiene: $POSTMORTEM_REPORT — see docs/best-practices/postmortem-management.md")
-    fi
-  fi
-
-  # 11. Open GH issues summary
-  if command -v gh >/dev/null 2>&1; then
-    OPEN_ISSUES=$(gh issue list --state open --json number,title,labels --limit 10 2>/dev/null)
-    if [ $? -eq 0 ] && [ -n "$OPEN_ISSUES" ] && [ "$OPEN_ISSUES" != "[]" ]; then
-      ISSUE_COUNT=$(echo "$OPEN_ISSUES" | jq 'length')
-      ISSUE_LIST=$(echo "$OPEN_ISSUES" | jq -r '.[] | "  #\(.number): \(.title)"' | head -5)
-      INFO+=("$ISSUE_COUNT open issue(s):
-  $ISSUE_LIST")
-    fi
-  fi
-
-  # 11b. Issue-stream hygiene
-  STREAM_AUDIT_CACHE="$PROJECT_DIR/batch_state/issue_stream_audit.json"
-  if [ -f "$PROJECT_DIR/scripts/orchestration/issue_stream_audit.py" ]; then
-    STREAM_FRESH=0
-    if [ -f "$STREAM_AUDIT_CACHE" ]; then
-      STREAM_AGE=$(( $(date +%s) - $(jq -r '.generated_at // 0' "$STREAM_AUDIT_CACHE" 2>/dev/null || echo 0) ))
-      [ "$STREAM_AGE" -lt 3600 ] && STREAM_FRESH=1
-    fi
-    if [ "$STREAM_FRESH" -eq 1 ]; then
-      ORPHAN_COUNT=$(jq -r '.orphans | length' "$STREAM_AUDIT_CACHE" 2>/dev/null || echo 0)
-      if [ "$ORPHAN_COUNT" -gt 0 ]; then
-        ORPHAN_LIST=$(jq -r '.orphans[:5][] | "  #\(.number): \(.title)"' "$STREAM_AUDIT_CACHE" 2>/dev/null)
-        ISSUES+=("$ORPHAN_COUNT issue(s) in NO stream epic (link them — registry: scripts/config/issue_streams.yaml):
-  $ORPHAN_LIST")
-      fi
-      MISSING_EPICS=$(jq -r '.closed_or_missing_epics | join(", ")' "$STREAM_AUDIT_CACHE" 2>/dev/null)
-      [ -n "$MISSING_EPICS" ] && ISSUES+=("Stream epic(s) closed/missing: #$MISSING_EPICS — fix scripts/config/issue_streams.yaml or reopen")
-
-      if [ -f "$PROJECT_DIR/scripts/audit/check_research_registry.py" ] && \
-         [ -f "$PROJECT_DIR/docs/references/research-registry.yaml" ] && \
-         [ -x "$PROJECT_DIR/.venv/bin/python" ]; then
-        STRICT_JSON=$(cd "$PROJECT_DIR" && "$PROJECT_DIR/.venv/bin/python" scripts/audit/check_research_registry.py --strict-adoption --json 2>/dev/null)
-        STRICT_OK=$(echo "$STRICT_JSON" | jq -r '.ok' 2>/dev/null)
-        if [ "$STRICT_OK" = "false" ]; then
-          STRICT_ERRORS=$(echo "$STRICT_JSON" | jq -r '.errors[]? | "  - \(.)"' 2>/dev/null)
-          ISSUES+=("Research registry strict-adoption gate FAILED (ADR-011 P4 — ownership/consumer drift vs live GitHub, scripts/audit/check_research_registry.py --strict-adoption):
-  $STRICT_ERRORS")
-        fi
-      fi
-    elif command -v gh >/dev/null 2>&1; then
-      (cd "$PROJECT_DIR" && nohup "$PROJECT_DIR/.venv/bin/python" -m scripts.orchestration.issue_stream_audit --json >/dev/null 2>&1 &)
-      INFO+=("issue-stream audit cache stale — background refresh started (#4708)")
-    fi
-  fi
-
-  # 12. Git hygiene
-  if command -v git >/dev/null 2>&1 && [ -d "$PROJECT_DIR/.git" ]; then
-    HYGIENE_THRESHOLD_WARN=5
-    HYGIENE_THRESHOLD_ISSUE=20
-
-    DIRTY_NONEXEMPT=$(
-      git -C "$PROJECT_DIR" status --short 2>/dev/null \
-        | grep -vE ' (wiki/|data/corpus_audit/draft_tickets/)' \
-        | wc -l | tr -d ' '
-    )
-
-    if [ "$DIRTY_NONEXEMPT" -gt "$HYGIENE_THRESHOLD_ISSUE" ]; then
-      ISSUES+=("GIT HYGIENE: $DIRTY_NONEXEMPT dirty files outside exempt paths (threshold: $HYGIENE_THRESHOLD_ISSUE). Triage BEFORE starting work — see docs/best-practices/git-hygiene.md. Often these are stale-behind-main drift; \`git checkout HEAD -- <file>\` fixes each one.")
-    elif [ "$DIRTY_NONEXEMPT" -gt "$HYGIENE_THRESHOLD_WARN" ]; then
-      INFO+=("Git hygiene: $DIRTY_NONEXEMPT dirty files outside exempt paths. Under the issue threshold ($HYGIENE_THRESHOLD_ISSUE) but worth inspecting with \`git status --short | grep -vE ' (wiki/|data/corpus_audit/draft_tickets/)'\`. Policy: docs/best-practices/git-hygiene.md.")
-    fi
-
-    # 12b. Primary must stay attached to main (#4857) — auto-heal when possible.
-    if [ -x "$PROJECT_DIR/.venv/bin/python" ] \
-        && [ -f "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" ]; then
-      if ! "$PROJECT_DIR/.venv/bin/python" \
-          "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" \
-          --cwd "$PROJECT_DIR" --quiet 2>/dev/null; then
-        if "$PROJECT_DIR/.venv/bin/python" \
-            "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" \
-            --cwd "$PROJECT_DIR" --heal 2>/dev/null; then
-          INFO+=("PRIMARY HEAD was off main/detached — auto-healed to main (#4857). Prefer worktrees for all branch work.")
-        else
-          ISSUES+=("PRIMARY HEAD is detached or not on main (#4857). Run: .venv/bin/python scripts/guardrails/assert_primary_on_main.py --heal. Never gh pr checkout / git checkout <sha> on primary.")
-        fi
-      fi
-    fi
-  fi
+if [ "${LEARN_UKRAINIAN_COLD_START_PROFILE:-}" = "compact" ]; then
+  INFO+=("Orientation diagnostics: http://localhost:8765/api/orient?lean=true&session=${SESSION_ID:-}")
 else
-  # 9. Compact mode orientation link
-  INFO+=("Lean orientation: http://localhost:8765/api/orient?lean=true&session=${SESSION_ID:-}")
+  INFO+=("Orientation diagnostics: http://localhost:8765/api/orient?session=${SESSION_ID:-}")
+fi
+
+# Keep only the local protected-branch canary on the synchronous path.
+if [ -x "$PROJECT_DIR/.venv/bin/python" ] \
+    && [ -f "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" ]; then
+  if ! run_bounded 2 "$PROJECT_DIR/.venv/bin/python" \
+      "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" \
+      --cwd "$PROJECT_DIR" --quiet 2>/dev/null; then
+    if run_bounded 2 "$PROJECT_DIR/.venv/bin/python" \
+        "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" \
+        --cwd "$PROJECT_DIR" --heal 2>/dev/null; then
+      INFO+=("PRIMARY HEAD was off main/detached — auto-healed to main (#4857). Prefer worktrees for all branch work.")
+    else
+      ISSUES+=("PRIMARY HEAD is detached or not on main (#4857). Run: .venv/bin/python scripts/guardrails/assert_primary_on_main.py --heal.")
+    fi
+  fi
 fi
 
 # 13. Session handoff. Claude uses the official SessionStart session id; Codex
@@ -450,7 +340,7 @@ $VERIFY_OUTPUT"
         --rollover-id "$CODEX_LAUNCHER_ROLLOVER_ID"
       )
       BIND_OUTPUT=""
-      if ! BIND_OUTPUT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" --repo-root "$CANONICAL_ROOT" \
+      if ! BIND_OUTPUT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" --repo-root "$CANONICAL_ROOT" \
         bind-replacement "${EXACT_ROLLOVER_COMMON[@]}" \
         --replacement-task-id "$CURRENT_THREAD_ID" \
         --evidence "Codex launcher SessionStart bound the exact fresh CLI task ID" 2>&1); then
@@ -459,13 +349,13 @@ Output:
 $BIND_OUTPUT"
       else
         RESUME_OUTPUT=""
-        if ! RESUME_OUTPUT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" --repo-root "$CANONICAL_ROOT" \
+        if ! RESUME_OUTPUT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" --repo-root "$CANONICAL_ROOT" \
           resume "${EXACT_ROLLOVER_COMMON[@]}" \
           --replacement-thread-id "$CURRENT_THREAD_ID" 2>&1); then
           HANDOFF_CONTEXT="ERROR: CODEX LAUNCHER EXACT ROLLOVER RESUME FAILED — stop.
 Output:
 $RESUME_OUTPUT"
-        elif ! HANDOFF_CONTEXT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" --repo-root "$CANONICAL_ROOT" \
+        elif ! HANDOFF_CONTEXT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" --repo-root "$CANONICAL_ROOT" \
           detect --agent "$CODEX_LAUNCHER_ROLLOVER_AGENT" \
           --current-thread-id "$CURRENT_THREAD_ID" --format session-start 2>&1); then
           HANDOFF_CONTEXT="ERROR: CODEX LAUNCHER EXACT ROLLOVER READBACK FAILED — stop.
@@ -489,7 +379,7 @@ case "$HANDOFF_AGENT" in
   claude|claude-*)
     if [ -z "$CURRENT_THREAD_ID" ]; then
       HANDOFF_CONTEXT="ERROR: Cannot acquire durable thread lease: SessionStart did not provide a current thread id. Stop; do not drive this queue."
-    elif ! THREAD_LEASE_OUTPUT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+    elif ! THREAD_LEASE_OUTPUT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
       --repo-root "$CANONICAL_ROOT" claim-thread-lease --agent "$HANDOFF_AGENT" \
       --current-thread-id "$CURRENT_THREAD_ID" 2>&1); then
       HANDOFF_CONTEXT="ERROR: DURABLE THREAD LEASE CONFLICT — stop; do not cold-start or drive this queue.
@@ -597,7 +487,7 @@ if [ -n "${SESSION_EPIC:-}" ]; then
   esac
 fi
 
-if [ -z "$HANDOFF_CONTEXT" ] && ! DETECT_OUTPUT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+if [ -z "$HANDOFF_CONTEXT" ] && ! DETECT_OUTPUT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
   --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
   --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" --format json 2>&1); then
   # Exit 2 may be multi-packet ambiguity (#5398) — surface candidates, never cold-start.
@@ -607,8 +497,10 @@ try:
 except Exception:
   print("")' 2>/dev/null || true)
   if [ "$DETECT_ERR_CODE" = "MULTIPLE_LIVE_PENDING_ROLLOVERS" ]; then
-    HANDOFF_CONTEXT="ERROR: MULTIPLE live pending rollovers — do not cold-start; bind one exact candidate.
-$DETECT_OUTPUT"
+    HANDOFF_CONTEXT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+      --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
+      --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" \
+      --format session-start 2>&1 || true)
   else
     HANDOFF_CONTEXT="ERROR: thread_handoff.py detect failed. Stop.
 Output:
@@ -621,10 +513,12 @@ elif ! DETECT_STATUS=$(printf '%s' "$DETECT_OUTPUT" | "$ROLLOVER_PYTHON" -c 'imp
 Output:
 $DETECT_OUTPUT"
 elif [ "$DETECT_STATUS" = "ambiguous" ]; then
-  HANDOFF_CONTEXT="ERROR: MULTIPLE live pending rollovers — do not cold-start; bind one exact candidate.
-$DETECT_OUTPUT"
+  HANDOFF_CONTEXT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+    --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
+    --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" \
+    --format session-start 2>&1 || true)
 elif [ "$DETECT_STATUS" = "pending_start" ] || [ "$DETECT_STATUS" = "resumed" ]; then
-  if ! HANDOFF_CONTEXT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+  if ! HANDOFF_CONTEXT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
     --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
     --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" --format session-start 2>&1); then
     HANDOFF_CONTEXT="ERROR: thread_handoff.py detect failed. Stop.
@@ -658,6 +552,7 @@ elif [ "$DETECT_STATUS" = "none" ]; then
     fi
 
     if [ -z "$HANDOFF_CONTEXT" ]; then
+      # shellcheck disable=SC2016
       TABLE_BRIEF=$(sed -n 's/.*\*\*Brief (read first):\*\* `\([^`]*\)`.*/\1/p' "$HANDOFF_FILE" 2>/dev/null | head -1)
 
       if [ -n "$TABLE_BRIEF" ]; then
@@ -684,7 +579,7 @@ elif [ "$DETECT_STATUS" = "none" ]; then
   fi
 
   if [ -z "$HANDOFF_CONTEXT" ]; then
-    if ! HANDOFF_CONTEXT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+    if ! HANDOFF_CONTEXT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
       --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
       --current-thread-id "$CURRENT_THREAD_ID" --format session-start 2>&1); then
       HANDOFF_CONTEXT="ERROR: thread_handoff.py detect failed. Stop.

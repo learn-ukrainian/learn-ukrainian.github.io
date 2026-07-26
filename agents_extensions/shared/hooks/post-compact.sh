@@ -8,12 +8,26 @@ if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UKRAINIAN_PIPELINE" ] || [ -
 fi
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
+CANONICAL_ROOT="${CODEX_CANONICAL_REPO_ROOT:-$PROJECT_DIR}"
+BOUNDED_PYTHON="${THREAD_ROLLOVER_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
+BOUNDED_RUNNER="${SESSION_BOUNDED_RUNNER:-$PROJECT_DIR/scripts/agent_runtime/bounded_command.py}"
+if [ ! -f "$BOUNDED_RUNNER" ]; then
+  _HOOK_SOURCE_ROOT=$(cd "$(dirname "$0")/../../.." 2>/dev/null && pwd)
+  BOUNDED_RUNNER="$_HOOK_SOURCE_ROOT/scripts/agent_runtime/bounded_command.py"
+  unset _HOOK_SOURCE_ROOT
+fi
+run_bounded() {
+  local timeout_seconds="$1"
+  shift
+  "$BOUNDED_PYTHON" "$BOUNDED_RUNNER" --timeout "$timeout_seconds" -- "$@"
+}
 CONTEXT=""
 
 # 1. Find current in-progress modules
 IN_PROGRESS=""
 if [ -d "$PROJECT_DIR/curriculum" ]; then
-  IN_PROGRESS=$(find "$PROJECT_DIR/curriculum" -name "state-v3.json" -exec grep -l '"in_progress"' {} \; 2>/dev/null | head -3)
+  IN_PROGRESS=$(run_bounded 2 find "$PROJECT_DIR/curriculum" -name "state-v3.json" \
+    -exec grep -l '"in_progress"' {} \; 2>/dev/null | head -3)
 fi
 
 if [ -n "$IN_PROGRESS" ]; then
@@ -37,10 +51,9 @@ if [ -z "$HANDOFF_AGENT" ]; then
     HANDOFF_AGENT="claude"
   fi
 fi
-CANONICAL_ROOT="${CODEX_CANONICAL_REPO_ROOT:-$PROJECT_DIR}"
 ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
 ROLLOVER_SCRIPT="${THREAD_ROLLOVER_SCRIPT:-$PROJECT_DIR/scripts/orchestration/thread_handoff.py}"
-ROLLOVER_HEALTH=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+ROLLOVER_HEALTH=$(run_bounded 2 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
   --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" 2>&1) || true
 
 # 3. Key reminders

@@ -64,6 +64,23 @@ queries Codex-addressed messages rather than silently reporting Claude's inbox.
 The repository deploy manages project-local `.codex/hooks.json`; it does not
 edit the separate user-level `~/.codex/hooks.json`.
 
+## Session availability and rollover deadlines
+
+`SessionStart` is an availability path with a 15-second outer ceiling. Mandatory
+identity, protected-branch, and rollover work runs locally with 1–3 second
+subprocess deadlines. Hook-owned advisory locks use a one-second bounded wait;
+the lock remains fail-safe, while a live but wedged owner can no longer stall a
+new session indefinitely.
+
+Broad curriculum scans, service probes, GitHub issue listings, and governance
+audits were removed from the synchronous hook. The hook now points to
+`/api/orient` for those optional diagnostics. Multiple pending rollovers remain
+a stop condition, but SessionStart renders the existing concise exact-identity
+inventory rather than injecting the full lease JSON.
+
+`PostCompact` remains read-only. Its curriculum scan and rollover-health read
+have separate two-second deadlines under the existing 10-second outer ceiling.
+
 ## Pytest stamp and pre-push guard
 
 `agents_extensions/shared/hooks/stamp-pytest.sh` is the deployed

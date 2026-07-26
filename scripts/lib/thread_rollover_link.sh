@@ -74,6 +74,14 @@ resolve_codex_pending_rollover() {
   local native_title_supported=""
   local title_state=""
   local replacement_task_id=""
+  local runner=()
+
+  if [ -n "${THREAD_ROLLOVER_COMMAND_RUNNER:-}" ]; then
+    runner=(
+      "$python_bin" "$THREAD_ROLLOVER_COMMAND_RUNNER"
+      --timeout "${THREAD_ROLLOVER_COMMAND_TIMEOUT_SECONDS:-3}" --
+    )
+  fi
 
   clear_codex_launcher_rollover_env
 
@@ -83,7 +91,7 @@ resolve_codex_pending_rollover() {
   fi
 
   detect_output="$(
-    "$python_bin" "$handoff_script" --repo-root "$project_dir" \
+    "${runner[@]}" "$python_bin" "$handoff_script" --repo-root "$project_dir" \
       detect --agent "$handoff_agent" --format json 2>&1
   )" || detect_rc=$?
   if [ "$detect_rc" -ne 0 ]; then
