@@ -141,7 +141,7 @@ _DISPATCH_AGENT_CHOICES = (
     "agy",
     "cursor",
 )
-_MONITOR_API_BASE_URL = "http://localhost:8765"
+_MONITOR_API_BASE_URL = "http://127.0.0.1:8765"
 _logger = logging.getLogger(__name__)
 
 
@@ -823,6 +823,32 @@ def _resolve_primary_integrity_error(*, mode: str) -> str | None:
         "primary checkout manually; evidence is under "
         "data/telemetry/primary-integrity/events.jsonl."
     )
+
+
+def _warn_if_monitor_api_unreachable() -> None:
+    """Make a dead local Monitor API visible without making dispatch depend on it.
+
+    Dispatch remains a recovery path when the dashboard is down. The warning is
+    deliberately advisory, unlike primary-integrity drift, because workers can
+    still run with their file-based fallbacks and may be needed to repair the
+    API itself.
+    """
+    url = f"{_monitor_api_base_url()}/api/health"
+    try:
+        with urllib.request.urlopen(url, timeout=1) as response:
+            if response.status != 200:
+                raise MonitorApiUnavailable(f"HTTP {response.status}")
+    except (OSError, TimeoutError, urllib.error.URLError, MonitorApiUnavailable) as exc:
+        detail = f"{type(exc).__name__}: {exc}"
+        _append_dispatch_event("monitor_api_unreachable_pre_dispatch", url=url, detail=detail)
+        print(
+            "⚠ MONITOR API UNREACHABLE — dispatch will continue with offline fallbacks.\n"
+            f"   probe: GET {url}\n"
+            f"   error: {detail}\n"
+            "   recovery: ./services.sh status api; inspect .pids/api-last-crash.json; "
+            "then ./services.sh restart api",
+            file=sys.stderr,
+        )
 
 
 def _fetch_base(base: str) -> bool:
@@ -2764,6 +2790,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     if primary_integrity_error:
         print(primary_integrity_error, file=sys.stderr)
         return 2
+
+    _warn_if_monitor_api_unreachable()
 
     # Refuse to clobber a task that's still alive — whether it's in
     # "running" (worker up and executing) OR "spawning" (worker created

@@ -10,6 +10,7 @@
 #   ./services.sh restart api        # Restart specific service
 #   ./services.sh start api --live   # Emergency mutable-checkout API mode
 #   ./services.sh status             # Show what's running
+#   ./services.sh supervise api install|status|uninstall
 #   ./services.sh build astro        # Run Astro production build (no dev server)
 #   ./services.sh clean astro        # Remove Astro build/cache outputs
 #   ./services.sh rebuild astro      # Run Astro clean then build
@@ -365,29 +366,44 @@ _is_running() {
     return 1
 }
 
-_api_launch_context() {
-    API_LAUNCH_CWD="$PROJECT_ROOT"
-    API_PYTHONPATH="$PROJECT_ROOT"
+_api_supervisor() {
+    if [[ -n "${SVC_API_SUPERVISOR_BIN:-}" ]]; then
+        "$SVC_API_SUPERVISOR_BIN" "$@"
+        return
+    fi
+    "$VENV/python" -m scripts.api.launchd_supervisor "$@"
+}
 
+_start_api_supervised() {
+    local args=(start --repo-root "$PROJECT_ROOT")
     if [[ "$API_LIVE_MODE" -eq 1 ]]; then
-        local warning="WARNING: API live mode enabled; serving mutable checkout code"
-        echo "  $warning" >&2
-        printf '%s\n' "$warning" >> "${SVC_LOG[api]}"
-        return 0
+        args+=(--live)
+        echo "  WARNING: API live mode enabled; serving mutable checkout code" >&2
     fi
 
-    local head_sha origin_main_sha release_dir prune_summary release_line
-    head_sha="$(git -C "$PROJECT_ROOT" rev-parse --verify HEAD)"
-    origin_main_sha="$(git -C "$PROJECT_ROOT" rev-parse --verify origin/main 2>/dev/null || echo unavailable)"
-    echo "  API release source: HEAD $head_sha; origin/main $origin_main_sha"
-    release_dir="$(cd "$PROJECT_ROOT" && "$VENV/python" -m scripts.api.release_snapshot build --repo-root "$PROJECT_ROOT" --sha "$head_sha")"
-    prune_summary="$(cd "$PROJECT_ROOT" && "$VENV/python" -m scripts.api.release_snapshot prune --repo-root "$PROJECT_ROOT" --keep 3)"
-    API_LAUNCH_CWD="$release_dir"
-    API_PYTHONPATH="$release_dir"
-    release_line="release: $head_sha data-root: $PROJECT_ROOT"
-    echo "  $release_line"
-    printf '%s\n' "$release_line" >> "${SVC_LOG[api]}"
-    echo "  API release prune: $prune_summary"
+    echo "  Starting api — ${SVC_DESC[api]} (launchd supervised)..."
+    if ! _api_supervisor "${args[@]}"; then
+        echo "  ERROR: launchd did not accept the API start request." >&2
+        return 1
+    fi
+
+    local pid=""
+    pid="$(_verified_port_pid api || true)"
+
+    if [[ -n "$pid" ]]; then
+        _sync_pidfile api "$pid"
+        echo "  api started (PID $pid, port ${SVC_PORT[api]}, log ${SVC_LOG[api]})"
+    else
+        rm -f "$(_pid_file api)"
+        echo "  api launch requested; waiting for launchd snapshot build (log ${SVC_LOG[api]})"
+    fi
+}
+
+_disable_api_supervisor() {
+    if ! _api_supervisor stop; then
+        echo "  ERROR: launchd did not confirm API supervision is disabled." >&2
+        return 1
+    fi
 }
 
 _start_service() {
@@ -435,48 +451,12 @@ _start_service() {
     fi
 
     if [[ "$name" == "api" ]]; then
-        # Log rotation check: size > 10MB (10485760 bytes)
-        local log_file="${SVC_LOG[$name]}"
-        if [[ -f "$log_file" ]]; then
-            local size
-            size=$(wc -c < "$log_file" | tr -d '[:space:]')
-            if (( size > 10485760 )); then
-                echo "  api log exceeds 10MB; rotating..."
-                rm -f "${log_file}.3"
-                [[ -f "${log_file}.2" ]] && mv "${log_file}.2" "${log_file}.3"
-                [[ -f "${log_file}.1" ]] && mv "${log_file}.1" "${log_file}.2"
-                mv "$log_file" "${log_file}.1"
-            fi
-        fi
-
-        # Crashloop backoff check: start < 60s ago
-        local last_start_file="$PIDS_DIR/${name}.last_start"
-        local now
-        now=$(date +%s)
-        if [[ -f "$last_start_file" ]]; then
-            local last_start
-            last_start=$(cat "$last_start_file" 2>/dev/null || echo 0)
-            local diff=$((now - last_start))
-            if (( diff < 60 )) && [[ "$FORCE" -ne 1 ]]; then
-                echo "  ERROR: $name started less than 60s ago (diff: ${diff}s); potential crashloop!" >&2
-                echo "  Use --force to override this safety guard." >&2
-                if [[ -f "$log_file" ]]; then
-                    echo "  Last 20 log lines:" >&2
-                    tail -n 20 "$log_file" >&2
-                fi
-                return 1
-            fi
-        fi
-        echo "$now" > "$last_start_file"
+        _start_api_supervised
+        return
     fi
 
     echo "  Starting $name — ${SVC_DESC[$name]}..."
-    if [[ "$name" == "api" ]]; then
-        _api_launch_context
-        cd "$API_LAUNCH_CWD"
-    else
-        cd "$PROJECT_ROOT"
-    fi
+    cd "$PROJECT_ROOT"
 
     local pid=""
     if [[ "$name" == "astro" ]] && command -v tmux >/dev/null 2>&1; then
@@ -494,20 +474,7 @@ _start_service() {
         done
     else
         # shellcheck disable=SC2086
-        if [[ "$name" == "api" ]]; then
-            (
-                unset GIT_INDEX_FILE GIT_PREFIX GIT_COMMON_DIR GIT_OBJECT_DIRECTORY
-                unset GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_NAMESPACE GIT_CEILING_DIRECTORIES
-                unset GIT_DISCOVERY_ACROSS_FILESYSTEM
-                export LEARN_UK_REPO_ROOT="$PROJECT_ROOT"
-                export GIT_DIR="$PROJECT_ROOT/.git"
-                export GIT_WORK_TREE="$PROJECT_ROOT"
-                export PYTHONPATH="$API_PYTHONPATH${PYTHONPATH:+:$PYTHONPATH}"
-                exec nohup ${SVC_CMD[$name]}
-            ) </dev/null >> "${SVC_LOG[$name]}" 2>&1 &
-        else
-            nohup ${SVC_CMD[$name]} </dev/null >> "${SVC_LOG[$name]}" 2>&1 &
-        fi
+        nohup ${SVC_CMD[$name]} </dev/null >> "${SVC_LOG[$name]}" 2>&1 &
         pid=$!
     fi
 
@@ -524,6 +491,13 @@ _stop_service() {
     local name="$1"
     local pidfile
     pidfile="$(_pid_file "$name")"
+
+    # ``launchctl disable`` happens before the listener is signalled. A
+    # deliberate ``services.sh stop api`` therefore cannot be resurrected by
+    # KeepAlive while the old process drains.
+    if [[ "$name" == "api" ]]; then
+        _disable_api_supervisor || return 1
+    fi
 
     local pid
     pid="$(_known_service_pid "$name" || true)"
@@ -612,7 +586,6 @@ _stop_service() {
         _astro_cleanup_cache
     fi
 
-    rm -f "$PIDS_DIR/${name}.last_start"
     echo "  $name stopped"
 }
 
@@ -795,6 +768,29 @@ case "$action" in
         echo ""
         _status
         ;;
+    supervise)
+        supervisor_service="${remaining_args[0]:-}"
+        supervisor_action="${remaining_args[1]:-}"
+        if [[ "$supervisor_service" != "api" ]]; then
+            echo "Usage: $0 supervise api <install|status|uninstall>" >&2
+            exit 1
+        fi
+        case "$supervisor_action" in
+            install)
+                _api_supervisor install --repo-root "$PROJECT_ROOT"
+                ;;
+            status)
+                _api_supervisor status
+                ;;
+            uninstall)
+                _api_supervisor uninstall
+                ;;
+            *)
+                echo "Usage: $0 supervise api <install|status|uninstall>" >&2
+                exit 1
+                ;;
+        esac
+        ;;
     build)
         if [[ "$#" -eq 0 ]]; then
             echo "Usage: $0 build <service>"
@@ -857,7 +853,7 @@ case "$action" in
         _status
         ;;
     *)
-        echo "Usage: $0 {start|stop|restart|status|build|clean|rebuild} [service ...]"
+        echo "Usage: $0 {start|stop|restart|status|supervise|build|clean|rebuild} [service ...]"
         echo ""
         echo "Services:"
         for name in $ALL_SERVICES; do
@@ -870,6 +866,8 @@ case "$action" in
         echo "  $0 start api --live       # Emergency API fallback (mutable checkout)"
         echo "  $0 stop sources           # Stop one"
         echo "  $0 restart                # Restart all"
+        echo "  $0 supervise api install  # Write the launchd supervisor plist"
+        echo "  $0 supervise api uninstall # Disable and remove the supervisor plist"
         echo "  $0 build astro            # Build Astro"
         echo "  $0 clean astro            # Clean Astro cache/build outputs"
         echo "  $0 rebuild astro          # Clean then build Astro"

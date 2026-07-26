@@ -144,6 +144,40 @@ def test_gate_fail_open_on_watchdog_error(primary_repo, monkeypatch, capsys):
     assert "watchdog errored" in capsys.readouterr().err
 
 
+def test_monitor_api_failure_warns_but_does_not_block_dispatch(monkeypatch, capsys):
+    def unavailable(*_args, **_kwargs):
+        raise OSError("Connection refused")
+
+    events: list[tuple[str, dict[str, object]]] = []
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", unavailable)
+    monkeypatch.setattr(delegate, "_append_dispatch_event", lambda event, **fields: events.append((event, fields)))
+
+    assert delegate._warn_if_monitor_api_unreachable() is None
+
+    output = capsys.readouterr().err
+    assert "MONITOR API UNREACHABLE" in output
+    assert "offline fallbacks" in output
+    assert "services.sh status api" in output
+    assert events[0][0] == "monitor_api_unreachable_pre_dispatch"
+
+
+def test_healthy_monitor_api_emits_no_dispatch_warning(monkeypatch, capsys):
+    class Response:
+        status = 200
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", lambda *_args, **_kwargs: Response())
+
+    delegate._warn_if_monitor_api_unreachable()
+
+    assert capsys.readouterr().err == ""
+
+
 # ---------------------------------------------------------------------------
 # instructive fetch failure (no silent stale-base fallback)
 # ---------------------------------------------------------------------------
