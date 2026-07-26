@@ -90,7 +90,15 @@ def validate_committed_decision_files(
     if not decision_paths:
         raise SourceInventoryError("no source-inventory review decision files found")
 
-    summaries = [validate_decision_file(path) for path in decision_paths]
+    # Every committed decision ledger is checked against the same immutable
+    # inventory corpus. Loading that corpus per ledger was needlessly expensive
+    # (and pushed the complete CI shard past pytest's per-test timeout). Keep one
+    # shared index for this validation pass; `validate_decision_file` extends it
+    # only when a ledger references a present staged inventory.
+    source_index = _source_record_index(
+        read_source_inventories(COMMITTED_SOURCE_INVENTORIES, project_root=PROJECT_ROOT)
+    )
+    summaries = [validate_decision_file(path, source_index=source_index) for path in decision_paths]
     decision_counts: Counter[str] = Counter()
     total_rows = 0
     for summary in summaries:
@@ -147,11 +155,10 @@ def validate_decision_file(
     if not isinstance(decisions, list) or not decisions:
         raise SourceInventoryError(f"{path}: decisions must be a non-empty list")
 
-    if source_index is not None:
-        index = source_index
-        absent_inventories: set[str] = set()
-    else:
-        index, absent_inventories = _index_and_absent_inventories(payload)
+    index, absent_inventories = _index_and_absent_inventories(
+        payload,
+        source_index=source_index,
+    )
     seen_source_keys: set[str] = set()
     decision_counts: Counter[str] = Counter()
     for idx, row in enumerate(decisions, start=1):
@@ -176,6 +183,8 @@ def validate_decision_file(
 
 def _index_and_absent_inventories(
     payload: Mapping[str, Any],
+    *,
+    source_index: Mapping[tuple[str, str, str], SourceInventoryRecord] | None = None,
 ) -> tuple[dict[tuple[str, str, str], SourceInventoryRecord], set[str]]:
     """Build the source-record index, tolerating absent regenerable inventories.
 
@@ -191,7 +200,21 @@ def _index_and_absent_inventories(
     before — fail-open applies only to the genuinely-absent regenerable case.
     """
 
-    read_paths: list[Path] = list(COMMITTED_SOURCE_INVENTORIES)
+    # `validate_committed_decision_files` supplies a mutable shared index, so
+    # repeated ledgers do not reparse the immutable committed corpus (or the
+    # same staged inventory). Keep standalone `validate_decision_file` fully
+    # self-contained by loading that corpus when no index was supplied.
+    if source_index is None:
+        index = _source_record_index(
+            read_source_inventories(COMMITTED_SOURCE_INVENTORIES, project_root=PROJECT_ROOT)
+        )
+    elif isinstance(source_index, dict):
+        index = source_index
+    else:
+        index = dict(source_index)
+
+    indexed_inventory_paths = {record.inventory_path for record in index.values()}
+    read_paths: list[Path] = []
     absent: set[str] = set()
     decisions = payload.get("decisions")
     if isinstance(decisions, list):
@@ -205,15 +228,18 @@ def _index_and_absent_inventories(
             if not isinstance(raw_path, str) or not raw_path.strip():
                 continue
             resolved = resolve_staged_inventory_path(raw_path)
-            if resolved.exists():
+            if raw_path not in indexed_inventory_paths and resolved.exists():
                 read_paths.append(resolved)
             else:
-                absent.add(raw_path.strip())
-    records = read_source_inventories(
-        tuple(dict.fromkeys(read_paths)),
-        project_root=PROJECT_ROOT,
-    )
-    return _source_record_index(records), absent
+                if not resolved.exists():
+                    absent.add(raw_path.strip())
+    if read_paths:
+        records = read_source_inventories(
+            tuple(dict.fromkeys(read_paths)),
+            project_root=PROJECT_ROOT,
+        )
+        index.update(_source_record_index(records))
+    return index, absent
 
 
 def _validate_decision_row(
