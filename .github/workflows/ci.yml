@@ -189,6 +189,7 @@ jobs:
         with:
           name: pytest-breadcrumbs-shard-${{ matrix.shard }}
           path: .pytest_breadcrumbs
+          include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7
 
