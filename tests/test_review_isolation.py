@@ -3605,3 +3605,59 @@ def test_f18_changed_binary_denied_unchanged_binary_preserved(tmp_path: Path) ->
         assert (snap.path / "assets" / "pixel.bin").read_bytes() == (b"\x00SECRET_BYTES_NOT_SAFE\x00")
     finally:
         cleanup_snapshot_state(state)
+
+
+class TestExecRootAcceptsSentinel:
+    """The sentinel written by create_review_temp_root must not fail the
+    exec-root emptiness check (2026-07-26: the sentinel integration broke every
+    bridge formal review with review_exec_root_not_empty)."""
+
+    def _validate(self, exec_root, tmp_path):
+        from scripts.review import isolation
+
+        snapshot_root = tmp_path / "snap"
+        write_root = tmp_path / "write"
+        snapshot_root.mkdir(exist_ok=True)
+        write_root.mkdir(exist_ok=True)
+        return isolation._validate_private_exec_root(
+            exec_root=exec_root,
+            snapshot_root=snapshot_root,
+            write_root=write_root,
+            reject_roots=(),
+        )
+
+    def test_factory_created_root_with_sentinel_validates(self, tmp_path, monkeypatch):
+        from scripts.review import isolation
+
+        monkeypatch.setenv("TMPDIR", str(tmp_path / "t"))
+        (tmp_path / "t").mkdir()
+        root = isolation.create_review_temp_root(prefix="lu-review-exec-")
+        root.chmod(0o700)
+        assert (root / isolation.REVIEW_TEMP_ROOT_MARKER_NAME).is_file()
+        assert self._validate(root, tmp_path) == root.resolve()
+
+    def test_root_with_extra_entry_still_refuses(self, tmp_path, monkeypatch):
+        import pytest
+
+        from scripts.review import isolation
+
+        monkeypatch.setenv("TMPDIR", str(tmp_path / "t"))
+        (tmp_path / "t").mkdir()
+        root = isolation.create_review_temp_root(prefix="lu-review-exec-")
+        root.chmod(0o700)
+        (root / "stray.txt").write_text("x", encoding="utf-8")
+        with pytest.raises(isolation.ReviewIsolationError, match="review_exec_root_not_empty"):
+            self._validate(root, tmp_path)
+
+    def test_symlinked_marker_refuses(self, tmp_path):
+        import pytest
+
+        from scripts.review import isolation
+
+        root = tmp_path / "exec"
+        root.mkdir(mode=0o700)
+        outside = tmp_path / "outside"
+        outside.write_text("x", encoding="utf-8")
+        (root / isolation.REVIEW_TEMP_ROOT_MARKER_NAME).symlink_to(outside)
+        with pytest.raises(isolation.ReviewIsolationError, match="marker_not_regular"):
+            self._validate(root, tmp_path)
