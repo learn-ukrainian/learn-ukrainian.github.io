@@ -176,13 +176,10 @@ jobs:
             uv venv --python 3.12 .venv
             grep -vE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt > "$RUNNER_TEMP/requirements-ci.txt"
             uv pip install --python .venv/bin/python --no-deps -r "$RUNNER_TEMP/requirements-ci.txt"
-            .venv/bin/python - <<'PY'
-            from scripts.lexicon.manifest_io import load_manifest
-
-            manifest = load_manifest()
-            entries = manifest.get("entries", [])
-            print(f"Atlas manifest hydrated: {len(entries)} entries")
-            PY
+            .venv/bin/python -c \
+              'from scripts.lexicon.manifest_io import load_manifest; \
+              manifest = load_manifest(); \
+              print("Atlas manifest hydrated:", len(manifest.get("entries", [])), "entries")'
             .venv/bin/python -m ruff check scripts tests
             ACTIONLINT_FORCE_DOWNLOAD=1 scripts/audit/check_workflows.sh .github/workflows/ci.yml
             quality_elapsed="$(( $(date +%s) - quality_started ))"
@@ -276,13 +273,10 @@ jobs:
             grep -vE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt > "$RUNNER_TEMP/requirements-ci.txt"
             uv pip install --python .venv/bin/python --no-deps -r "$RUNNER_TEMP/requirements-ci.txt"
             npm ci --ignore-scripts
-            .venv/bin/python - <<'PY'
-            from scripts.lexicon.manifest_io import load_manifest
-
-            manifest = load_manifest()
-            entries = manifest.get("entries", [])
-            print(f"Atlas manifest hydrated: {len(entries)} entries")
-            PY
+            .venv/bin/python -c \
+              'from scripts.lexicon.manifest_io import load_manifest; \
+              manifest = load_manifest(); \
+              print("Atlas manifest hydrated:", len(manifest.get("entries", [])), "entries")'
             .venv/bin/python scripts/build/generate_lesson_schema.py --output "$RUNNER_TEMP/lesson-schema.yaml"
             diff -u docs/lesson-schema.yaml "$RUNNER_TEMP/lesson-schema.yaml"
             .venv/bin/python scripts/audit/check_mdx_generation_drift.py --changed-vs-base "$CI_INTEGRITY_BASE_SHA"
