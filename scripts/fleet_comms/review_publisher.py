@@ -4,7 +4,7 @@ Sol fleet-comms (#5512) PR-G owns the GitHub side of formal review publication:
 
 * resolve current PR head (fail closed on lookup failure)
 * plan via pure ``review_publication.plan_publication`` (stale / idempotent / ready)
-* when mutate is requested and the plan says ``publish``: post one thin PR comment
+* when mutate is requested and the plan says ``publish``: post one evidence-bearing PR comment
   and one commit status under ``fleet/cross-family-review``
 * record a durable row in ``github_publications`` (schema v1)
 

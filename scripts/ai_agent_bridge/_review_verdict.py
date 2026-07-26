@@ -1,4 +1,4 @@
-"""Publish a deliberately thin formal-review verdict to one GitHub PR comment.
+"""Publish an auditable formal-review verdict to one GitHub PR comment.
 
 Two paths:
 
@@ -8,7 +8,7 @@ Two paths:
 2. **PR-G sealed path** — ``--sealed-payload`` (JSON matching
    ``scripts.fleet_comms.review_publication.SealedVerdict``). Optionally bind
    ``--review-id`` to a durable formal-job row (identity check only; PR-F still
-   owns sealed-job writers). Posts thin comment + ``fleet/cross-family-review``
+   owns sealed-job writers). Posts evidence-bearing comment + ``fleet/cross-family-review``
    commit status, with stale-head / idempotent receipt handling.
 
 Full default cutover of all formal CF to ``--review-id`` alone waits for PR-F
@@ -25,6 +25,14 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
+
+from scripts.fleet_comms.review_publication import (
+    ReviewEvidence,
+    ReviewPublicationError,
+    build_review_comment,
+    resolve_verdict_and_evidence,
+    verdict_from_review_evidence,
+)
 
 from ._review_safety import MAX_VERDICT_SUMMARY_BYTES, ReviewSafetyError
 
@@ -50,47 +58,77 @@ def _read_small_file(path: Path) -> str:
     if size > _MAX_INPUT_BYTES:
         raise ReviewSafetyError(
             f"verdict_file_exceeds_cap: bytes={size} limit={_MAX_INPUT_BYTES}. "
-            "Publish only a verdict or findings JSON, never a full review body."
+            "Use canonical findings JSON so the evidence can be published."
         )
     return path.read_text(encoding="utf-8")
 
 
 def verdict_from_text(text: str) -> str:
-    """Extract the required verdict without retaining the review body."""
+    """Extract the required verdict from a legacy free-text input."""
     match = _VERDICT_RE.search(text)
     if not match:
         raise ReviewSafetyError("verdict_missing: expected VERDICT: APPROVED|CHANGES_REQUESTED|BLOCKED")
     return match.group(1).upper()
 
 
-def verdict_from_findings_json(path: Path) -> str:
-    """Read a findings JSON document and extract its top-level verdict field."""
+def review_from_findings_json(path: Path) -> tuple[str, ReviewEvidence | None]:
+    """Read canonical findings JSON and retain all publishable review evidence."""
     try:
         payload = json.loads(_read_small_file(path))
     except json.JSONDecodeError as exc:
         raise ReviewSafetyError(f"findings_json_invalid: {path}") from exc
     if not isinstance(payload, dict):
-        raise ReviewSafetyError("findings_json_invalid: expected an object with a verdict field")
-    raw = payload.get("verdict")
-    if not isinstance(raw, str) or raw.upper() not in _VALID_VERDICTS:
-        raise ReviewSafetyError("findings_json_missing_verdict: expected APPROVED|CHANGES_REQUESTED|BLOCKED")
-    return raw.upper()
+        raise ReviewSafetyError("findings_json_invalid: expected an object")
+    try:
+        return resolve_verdict_and_evidence(payload)
+    except ReviewPublicationError as exc:
+        raise ReviewSafetyError(str(exc)) from exc
 
 
-def build_verdict_comment(*, verdict: str, head_sha: str, model: str, family: str, harness: str) -> str:
-    """Build the complete comment body; it intentionally has no review findings."""
+def verdict_from_findings_json(path: Path) -> str:
+    """Compatibility helper returning the verdict resolved from findings JSON."""
+    return review_from_findings_json(path)[0]
+
+
+def _coerce_review_evidence(
+    review_evidence: ReviewEvidence | dict[str, Any] | None,
+) -> tuple[str | None, ReviewEvidence | None]:
+    if review_evidence is None:
+        return None, None
+    if isinstance(review_evidence, ReviewEvidence):
+        return verdict_from_review_evidence(review_evidence), review_evidence
+    try:
+        return resolve_verdict_and_evidence(review_evidence)
+    except ReviewPublicationError as exc:
+        raise ReviewSafetyError(str(exc)) from exc
+
+
+def build_verdict_comment(
+    *,
+    verdict: str,
+    head_sha: str,
+    model: str,
+    family: str,
+    harness: str,
+    review_evidence: ReviewEvidence | dict[str, Any] | None = None,
+) -> str:
+    """Build the complete legacy-path comment through the shared renderer."""
     normalized_verdict = _single_line(verdict, label="verdict").upper()
     if normalized_verdict not in _VALID_VERDICTS:
         raise ReviewSafetyError(f"invalid_verdict: {normalized_verdict!r}")
-    return "\n".join(
-        (
-            f"VERDICT: {normalized_verdict}",
-            f"Head SHA: {_single_line(head_sha, label='head_sha')}",
-            "Reviewer provenance: "
-            f"model={_single_line(model, label='model')}; "
-            f"family={_single_line(family, label='family')}; "
-            f"harness={_single_line(harness, label='harness')}",
+    evidence_verdict, evidence = _coerce_review_evidence(review_evidence)
+    if evidence_verdict is not None and evidence_verdict != normalized_verdict:
+        raise ReviewSafetyError(
+            f"review_evidence_verdict_mismatch: verdict={normalized_verdict} "
+            f"evidence={evidence_verdict}"
         )
+    return build_review_comment(
+        verdict=normalized_verdict,
+        head_sha=_single_line(head_sha, label="head_sha"),
+        model=_single_line(model, label="model"),
+        family=_single_line(family, label="family"),
+        harness=_single_line(harness, label="harness"),
+        review_evidence=evidence,
     )
 
 
@@ -104,10 +142,11 @@ def publish_review_verdict(
     model: str,
     family: str,
     harness: str,
+    review_evidence: ReviewEvidence | dict[str, Any] | None = None,
     dry_run: bool = False,
     runner: Runner = subprocess.run,
 ) -> str:
-    """Legacy path: post one comment and return a bounded, body-free summary."""
+    """Legacy path: post one evidence-bearing comment and a bounded summary."""
     if pr <= 0:
         raise ReviewSafetyError(f"invalid_pr: {pr}")
     head = runner(
@@ -125,6 +164,7 @@ def publish_review_verdict(
         model=model,
         family=family,
         harness=harness,
+        review_evidence=review_evidence,
     )
     if not dry_run:
         posted = runner(
@@ -301,11 +341,11 @@ def handle_publish_review_verdict(args: argparse.Namespace) -> int:
         return 2
 
     try:
-        verdict = (
-            verdict_from_findings_json(Path(args.findings_json))
-            if args.findings_json
-            else verdict_from_text(_read_small_file(Path(args.verdict_file)))
-        )
+        if args.findings_json:
+            verdict, review_evidence = review_from_findings_json(Path(args.findings_json))
+        else:
+            verdict = verdict_from_text(_read_small_file(Path(args.verdict_file)))
+            review_evidence = None
         print(
             publish_review_verdict(
                 pr=int(args.pr),
@@ -313,6 +353,7 @@ def handle_publish_review_verdict(args: argparse.Namespace) -> int:
                 model=args.model,
                 family=args.family,
                 harness=args.harness,
+                review_evidence=review_evidence,
                 dry_run=args.dry_run,
             )
         )
@@ -326,7 +367,7 @@ def register_publish_review_verdict_parser(subparsers: Any) -> None:
     parser = subparsers.add_parser(
         "publish-review-verdict",
         help=(
-            "Post one thin formal-review verdict (legacy file path, "
+            "Post one auditable formal-review verdict (legacy file path, "
             "--sealed-payload, or --review-id alone after PR-F accept)"
         ),
     )
