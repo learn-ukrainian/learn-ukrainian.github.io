@@ -436,19 +436,14 @@ def _recommend_agent(
             burn_by_agent[a] = agents[a].get("burn_pct_7d")
             resets_by[a] = agents[a].get("resets_at")
 
-    # If no usable data at all for rec, suppress
-    usable = [a for a, s in status_by_agent.items() if s not in {"unknown", "unavailable", "pre_launch", None}]
-    if not usable or all(s in {"hot", "near_cap", "unknown", "unavailable"} for s in status_by_agent.values()):
-        if all(s in {"hot", "near_cap"} for s in status_by_agent.values() if s not in {"unknown", "unavailable"}):
-            warnings.append("all agents near cap — orchestrator inline-mode contingency may be needed soon")
-            return {
-                "primary_agent_for_code": "inline_orchestrator",
-                "rationale": "All agents are hot or near cap; preserve remaining provider quota for high-judgment work.",
-                "warnings": warnings,
-            }
+    # Only claim inline_orchestrator if at least one lane is actually observed AND all observed lanes are hot/near_cap.
+    # An empty observation set (all unknown/unavailable) must NEVER satisfy this.
+    observed_statuses = [s for s in status_by_agent.values() if s not in {"unknown", "unavailable"}]
+    if observed_statuses and all(s in {"hot", "near_cap"} for s in observed_statuses):
+        warnings.append("all agents near cap — orchestrator inline-mode contingency may be needed soon")
         return {
-            "primary_agent_for_code": None,
-            "rationale": "No usable subscription lane headroom data for confident recommendation (stale/empty/unknowns).",
+            "primary_agent_for_code": "inline_orchestrator",
+            "rationale": "All agents are hot or near cap; preserve remaining provider quota for high-judgment work.",
             "warnings": warnings,
         }
 
@@ -532,7 +527,25 @@ def _recommend_agent(
                 "rationale": f"Mixed routing state; {recommended} currently has the lowest 7d burn ({_format_pct(burn_map.get(recommended))}%).",
             }
 
-        return {"primary_agent_for_code": None, "rationale": "insufficient data"}
+        # Doctrine #5816: lanes without pace data are partly blind, not unusable.
+        # Fall back to in-flight count + lane health, picking the first eligible candidate.
+        unknown_candidates = [a for a in ("claude", "codex", "gemini") if a in status_map]
+        if not unknown_candidates:
+            unknown_candidates = [a for a in status_map if a in SUBSCRIPTION_LANES]
+        if unknown_candidates:
+            def _sort_in_flight(lane_name: str) -> int:
+                return int(agents_dict.get(lane_name, {}).get("in_flight", 0))
+
+            recommended = min(unknown_candidates, key=_sort_in_flight)
+            return {
+                "primary_agent_for_code": recommended,
+                "rationale": f"Capacity data unavailable for subscription lanes (partly blind); fallback recommendation {recommended} based on lane health and in-flight signals.",
+            }
+
+        return {
+            "primary_agent_for_code": None,
+            "rationale": "No usable subscription lane headroom data for confident recommendation (stale/empty/unknowns).",
+        }
 
     # 1. Determine baseline budget-only recommendation (ignore health)
     budget_only_res = select_agent(agents, status_by_agent, burn_by_agent, resets_by)
