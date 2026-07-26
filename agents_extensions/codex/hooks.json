@@ -15,60 +15,13 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "^Bash$",
+        "matcher": "^(Bash|Write|Edit|MultiEdit|apply_patch)$",
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/enforce-venv.sh\"",
-            "timeout": 3,
-            "statusMessage": "Checking Bash Python interpreter"
-          },
-          {
-            "type": "command",
-            "command": "\"$(git rev-parse --show-toplevel)/.venv/bin/python\" \"$(git rev-parse --show-toplevel)/.codex/hooks/heal-core-bare.py\"",
-            "timeout": 3,
-            "statusMessage": "Checking git worktree health"
-          },
-          {
-            "type": "command",
-            "command": "\"$(git rev-parse --show-toplevel)/.venv/bin/python\" \"$(git rev-parse --show-toplevel)/.codex/hooks/guard-branch-switch-in-main.py\"",
-            "timeout": 3,
-            "statusMessage": "Checking branch-switch safety"
-          },
-          {
-            "type": "command",
-            "command": "\"$(git rev-parse --show-toplevel)/.venv/bin/python\" \"$(git rev-parse --show-toplevel)/.codex/hooks/guard-admin-merge.py\"",
-            "timeout": 30,
-            "statusMessage": "Checking admin merge safety"
-          },
-          {
-            "type": "command",
-            "command": "\"$(git rev-parse --show-toplevel)/.venv/bin/python\" \"$(git rev-parse --show-toplevel)/.codex/hooks/guard-pr-merge.py\"",
-            "timeout": 30,
-            "statusMessage": "Checking PR merge safety"
-          },
-          {
-            "type": "command",
-            "command": "\"$(git rev-parse --show-toplevel)/.venv/bin/python\" \"$(git rev-parse --show-toplevel)/.codex/hooks/guard-secret-print.py\"",
-            "timeout": 5,
-            "statusMessage": "Checking secret-print safety"
-          },
-          {
-            "type": "command",
-            "command": "\"$(git rev-parse --show-toplevel)/.venv/bin/python\" \"$(git rev-parse --show-toplevel)/.codex/hooks/guard-primary-checkout-write.py\"",
-            "timeout": 5,
-            "statusMessage": "Checking primary-checkout write safety"
-          }
-        ]
-      },
-      {
-        "matcher": "^(Write|Edit|MultiEdit|apply_patch)$",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$(git rev-parse --show-toplevel)/.venv/bin/python\" \"$(git rev-parse --show-toplevel)/.codex/hooks/guard-primary-checkout-write.py\"",
-            "timeout": 5,
-            "statusMessage": "Checking primary-checkout write safety"
+            "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh\" pre-tool-use",
+            "timeout": 45,
+            "statusMessage": "Running Codex tool policy"
           }
         ]
       }
@@ -79,34 +32,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/tool-timing.sh\"",
-            "timeout": 1,
-            "statusMessage": "Recording tool timing"
-          },
-          {
-            "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/stamp-pytest.sh\"",
-            "timeout": 3,
-            "statusMessage": "Stamping pytest telemetry"
-          }
-        ]
-      }
-    ],
-    "PostToolUseFailure": [
-      {
-        "matcher": "^(Bash|apply_patch|Edit|Write)$",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/tool-timing.sh\"",
-            "timeout": 1,
-            "statusMessage": "Recording tool timing"
-          },
-          {
-            "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/stamp-pytest.sh\"",
-            "timeout": 3,
-            "statusMessage": "Stamping pytest telemetry"
+            "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh\" post-tool-use",
+            "timeout": 5,
+            "statusMessage": "Recording Codex tool result"
           }
         ]
       }
@@ -116,7 +44,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/check-gemini-inbox.sh\"",
+            "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh\" user-prompt-submit",
             "timeout": 5,
             "statusMessage": "Checking cross-agent inbox"
           }

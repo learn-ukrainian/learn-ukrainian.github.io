@@ -9,13 +9,27 @@ import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+import pytest
+
 from scripts.api.telemetry_router import ToolTimingIngest
 
 _ROOT = Path(__file__).resolve().parents[1]
 _HOOK = _ROOT / "agents_extensions" / "shared" / "hooks" / "tool-timing.sh"
 
 
-def test_hook_posts_json_that_validates_against_tool_timing_model() -> None:
+@pytest.mark.parametrize(
+    "event_result",
+    [
+        {"hook_event_name": "PostToolUseFailure"},
+        {
+            "hook_event_name": "PostToolUse",
+            "tool_response": {"exit_code": 1},
+        },
+    ],
+)
+def test_hook_posts_json_that_validates_against_tool_timing_model(
+    event_result: dict[str, object],
+) -> None:
     posted: list[dict[str, object]] = []
     received = threading.Event()
 
@@ -34,12 +48,12 @@ def test_hook_posts_json_that_validates_against_tool_timing_model() -> None:
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     try:
-        event = {
+        event: dict[str, object] = {
             "tool_name": 'Bash "quoted" \\ path\nnext',
             "duration_ms": 12.5,
             "tool_use_id": 'tool "id"',
             "session_id": "session\\id",
-            "hook_event_name": "PostToolUseFailure",
+            **event_result,
         }
         environment = os.environ.copy()
         environment["TOOL_TIMING_API_URL"] = f"http://127.0.0.1:{server.server_port}/tool-timings"

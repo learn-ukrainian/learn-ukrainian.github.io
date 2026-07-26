@@ -22,6 +22,18 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
+PROJECT_PYTHON="$PROJECT_ROOT/.venv/bin/python"
+if [[ ! -x "$PROJECT_PYTHON" ]]; then
+    GIT_COMMON_DIR=$(git -C "$PROJECT_ROOT" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+    if [[ -n "$GIT_COMMON_DIR" ]]; then
+        PROJECT_PYTHON="$(dirname "$GIT_COMMON_DIR")/.venv/bin/python"
+    fi
+fi
+if [[ ! -x "$PROJECT_PYTHON" ]]; then
+    echo "❌ Deploy aborted: project interpreter not found in this or the canonical checkout." >&2
+    exit 1
+fi
+
 # shellcheck disable=SC1091
 source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"
 
@@ -125,7 +137,7 @@ echo ""
 
 # Step 1: Lint prompts (blocks deploy on failure)
 echo "=== Lint prompts ==="
-.venv/bin/python scripts/lint_prompts.py
+"$PROJECT_PYTHON" scripts/lint_prompts.py
 echo ""
 
 # Verify that all hooks in source directories are executable on disk
@@ -150,7 +162,7 @@ echo "  ✅ All hook files are executable."
 echo ""
 
 echo "=== Lint agent skills ==="
-.venv/bin/python scripts/lint/lint_agent_skills.py
+"$PROJECT_PYTHON" scripts/lint/lint_agent_skills.py
 echo ""
 
 if [[ "$DRY_RUN" == false ]]; then

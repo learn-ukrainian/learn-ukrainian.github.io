@@ -27,7 +27,12 @@ PAYLOAD=$(printf '%s' "$INPUT" | jq -ce --arg ts "$TS" '
         if (($input.session_id? | type) == "string" and ($input.session_id | length) > 0)
         then $input.session_id else null end
       ),
-      failed: ($input.hook_event_name == "PostToolUseFailure")
+      failed: (
+        ($input.hook_event_name == "PostToolUseFailure")
+        or (($input.tool_response.exit_code? | type) == "number" and $input.tool_response.exit_code != 0)
+        or ($input.tool_response.is_error? == true)
+        or ($input.tool_response.status? == "failed")
+      )
     }
 ') || exit 0
 

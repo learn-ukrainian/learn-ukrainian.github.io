@@ -1,5 +1,5 @@
 #!/bin/bash
-# Hook: Check for unread Gemini messages on every prompt submit
+# Hook: Check for unread cross-agent messages on every prompt submit
 # Queries the MCP message broker SQLite DB directly (no MCP overhead)
 #
 # PIPELINE GUARD: Skips during build_module / ai_agent_bridge runs
@@ -12,13 +12,21 @@ fi
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
 DB="$PROJECT_DIR/.mcp/servers/message-broker/messages.db"
+RECIPIENT="${LEARN_UK_HOOK_RECIPIENT:-claude}"
+
+case "$RECIPIENT" in
+  claude|codex|gemini|agy|grok|orchestrator) ;;
+  *) exit 0 ;;
+esac
+
+RECIPIENT_LABEL=$(printf '%s' "$RECIPIENT" | tr '[:lower:]' '[:upper:]')
 
 if [ ! -f "$DB" ]; then
   exit 0
 fi
 
-# Count unclaimed, unacknowledged messages for Claude
-COUNT=$(sqlite3 "$DB" "SELECT COUNT(*) FROM messages WHERE to_llm='claude' AND acknowledged=0 AND claimed_by IS NULL" 2>/dev/null)
+# Count unclaimed, unacknowledged messages for this hook's provider.
+COUNT=$(sqlite3 "$DB" "SELECT COUNT(*) FROM messages WHERE to_llm='$RECIPIENT' AND acknowledged=0 AND claimed_by IS NULL" 2>/dev/null)
 
 if [ -z "$COUNT" ] || [ "$COUNT" -eq 0 ]; then
   exit 0
@@ -34,12 +42,12 @@ PREVIEWS=$(sqlite3 -separator '|' "$DB" "
     substr(content, 1, 120),
     timestamp
   FROM messages
-  WHERE to_llm='claude' AND acknowledged=0 AND claimed_by IS NULL
+  WHERE to_llm='$RECIPIENT' AND acknowledged=0 AND claimed_by IS NULL
   ORDER BY id ASC
   LIMIT 5
 " 2>/dev/null)
 
-CONTEXT="GEMINI INBOX: ${COUNT} unread message(s) waiting.
+CONTEXT="${RECIPIENT_LABEL} INBOX: ${COUNT} unread message(s) waiting.
 ---"
 
 while IFS='|' read -r id from type task preview ts; do
