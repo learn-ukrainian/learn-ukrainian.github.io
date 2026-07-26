@@ -31,7 +31,8 @@ def _synthetic_nodes() -> list[str]:
         "tests/test_source_inventory_intake.py::test_intake",
         "tests/test_source_inventory_review_decisions.py::test_review",
     ]
-    return sorted([*ordinary, *thread_sensitive, *inventory])
+    bounded_network = ["tests/test_video_discovery.py::TestSearchChannel::test_returns_empty_on_timeout"]
+    return sorted([*ordinary, *thread_sensitive, *inventory, *bounded_network])
 
 
 def _owner(plans: list[list[str]], nodeid: str) -> int:
@@ -57,9 +58,11 @@ def test_thread_and_inventory_nodes_each_stay_in_one_external_shard() -> None:
 
     thread_nodes = [nodeid for nodeid in nodes if pytest_shard._group_for(nodeid) == "thread-sensitive"]
     inventory_nodes = [nodeid for nodeid in nodes if pytest_shard._group_for(nodeid) == "source-inventory"]
+    bounded_network_nodes = [nodeid for nodeid in nodes if pytest_shard._group_for(nodeid) == "bounded-network"]
 
     assert len({_owner(plans, nodeid) for nodeid in thread_nodes}) == 1
     assert len({_owner(plans, nodeid) for nodeid in inventory_nodes}) == 1
+    assert len({_owner(plans, nodeid) for nodeid in bounded_network_nodes}) == 1
 
 
 def test_plans_are_balanced_within_one_node() -> None:

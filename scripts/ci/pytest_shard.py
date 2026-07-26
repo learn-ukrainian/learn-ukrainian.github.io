@@ -28,6 +28,7 @@ THREAD_SENSITIVE_FILES = frozenset(
         "tests/wiki/test_ukrainian_wiki_corpus.py",
     }
 )
+BOUNDED_NETWORK_FILES = frozenset({"tests/test_video_discovery.py"})
 
 
 def _coverage_enabled() -> bool:
@@ -64,6 +65,11 @@ def _group_for(nodeid: str) -> str | None:
         return "thread-sensitive"
     if "inventory" in Path(test_file).name:
         return "source-inventory"
+    if test_file in BOUNDED_NETWORK_FILES:
+        # This file contains a legitimate 60-second timeout probe. Keeping it
+        # together on the otherwise light third shard balances wall time while
+        # still executing every node on every workflow invocation.
+        return "bounded-network"
     return None
 
 
@@ -153,7 +159,11 @@ def build_plans(
     if not runnable:
         raise ShardPlanError("quarantine removes every collected test")
 
-    grouped: dict[str, list[str]] = {"thread-sensitive": [], "source-inventory": []}
+    grouped: dict[str, list[str]] = {
+        "thread-sensitive": [],
+        "source-inventory": [],
+        "bounded-network": [],
+    }
     ordinary: list[str] = []
     for nodeid in runnable:
         group = _group_for(nodeid)
@@ -163,7 +173,7 @@ def build_plans(
             grouped[group].append(nodeid)
 
     buckets: list[list[str]] = [[] for _ in range(shard_count)]
-    for group_name in ("thread-sensitive", "source-inventory"):
+    for group_name in ("thread-sensitive", "source-inventory", "bounded-network"):
         members = grouped[group_name]
         if members:
             target = min(range(shard_count), key=lambda index: (len(buckets[index]), index))

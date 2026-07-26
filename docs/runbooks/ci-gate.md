@@ -8,8 +8,8 @@ unconditional on pull requests, merge groups, and pushes to `main`.
 - Pytest collects the complete repository suite with the default marker filter
   disabled. It never asks which files changed.
 - Five deterministic node-level shards run the resulting suite. The
-  thread-sensitive and source-inventory nodes remain within their own external
-  shard, while all other nodes are balanced by node count.
+  thread-sensitive, source-inventory, and bounded-network nodes remain within
+  their own external shard, while all other nodes are balanced by node count.
 - Each shard writes its planned and executed node IDs. `CI Gate` rejects a
   missing artifact, duplicate node, empty plan, incomplete execution report,
   failed job, cancelled job, or skipped job.
