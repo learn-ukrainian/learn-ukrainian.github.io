@@ -96,8 +96,11 @@ def test_background_branch_review_agy_refuses_sealed_cf(bridge_db, monkeypatch):
 def test_launch_background_ask_writes_state_and_uses_detached_popen(bridge_db, monkeypatch, tmp_path):
     message_id = _send_ask()
     monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+    monkeypatch.setattr(lifecycle, "_WORKER_START_GRACE_S", 0.05)
+    monkeypatch.setattr(lifecycle, "_WORKER_POLL_S", 0.01)
 
     proc = Mock(pid=4321)
+    proc.poll.return_value = None  # still running, matching real Popen while alive
     popen = Mock(return_value=proc)
     monkeypatch.setattr(lifecycle.subprocess, "Popen", popen)
 
@@ -143,6 +146,46 @@ def test_reply_link_rejects_a_response_for_another_transport(bridge_db):
 
     assert lifecycle.record_ask_reply(message_id, unrelated_reply) is False
     assert _status(message_id) == "sent"
+
+
+def test_narration_only_reply_is_not_recorded_as_success(bridge_db):
+    """Finding 1: thin scaffolding via record_ask_reply is failure, not replied:N.
+
+    A worker that narrates intent and exits 0 must not land as terminal success.
+    Verified to fail against pre-fix code (would set replied:… and leave no failed:).
+    """
+    message_id = _send_ask(target="agy")
+    lifecycle.mark_ask_processing(message_id)
+    reply_id = send_message(
+        "I'll check out the branch and run the tests.",
+        task_id="task-4837",
+        msg_type="response",
+        from_llm="agy",
+        to_llm="codex",
+        quiet=True,
+    )
+
+    assert lifecycle.record_ask_reply(message_id, reply_id) is False
+    status = _status(message_id)
+    assert status.startswith("failed:"), status
+    assert "thin scaffolding" in status
+    assert f"replied:{reply_id}" != status
+
+
+def test_substantive_reply_still_records_as_replied(bridge_db):
+    """Usefulness gate must not break legitimate short or structured answers."""
+    message_id = _send_ask(target="agy")
+    reply_id = send_message(
+        "VERDICT: APPROVED\n\nThe wiring test covers the launch path.",
+        task_id="task-4837",
+        msg_type="response",
+        from_llm="agy",
+        to_llm="codex",
+        quiet=True,
+    )
+
+    assert lifecycle.record_ask_reply(message_id, reply_id) is True
+    assert _status(message_id) == f"replied:{reply_id}"
 
 
 def test_detached_timeout_marks_terminal_state_and_next_cli_notice_is_once(bridge_db, monkeypatch, capsys):
