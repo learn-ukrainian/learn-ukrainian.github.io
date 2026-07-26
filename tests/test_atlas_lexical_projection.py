@@ -250,6 +250,76 @@ def test_only_unstamped_literary_sources_fail_the_period_gate(
     assert projection.attestation_rejection_reason(attestation, source, frozenset()) == expected_reason
 
 
+def test_empty_literary_period_is_normalized_to_an_unstamped_rejection() -> None:
+    source = _source("source", language_period="")
+    attestation = _attestation("source", "chunk-1", "Її зошит лежить на парті.")
+
+    assert projection.attestation_rejection_reason(attestation, source, frozenset()) == "language_period_not_modern"
+
+
+@pytest.mark.parametrize(
+    ("period_owner", "invalid_period"),
+    [("source", 42), ("attestation", {"period": "modern"})],
+)
+def test_non_string_period_raises_projection_error_without_poisoning_the_next_build(
+    tmp_path: Path, period_owner: str, invalid_period: object
+) -> None:
+    source = _source("source")
+    attestation = _attestation("source", "chunk-1", "Її зошит лежить на парті.")
+    if period_owner == "source":
+        source["language_period"] = invalid_period
+    else:
+        attestation["language_period"] = invalid_period
+    malformed_records: list[dict[str, object]] = [
+        source,
+        {"record_type": "lemma_entry", "entry_slug": "прапор", "lemma": "прапор", "entry_type": "lemma"},
+        {"record_type": "sense", "sense_slug": "прапор:core", "entry_slug": "прапор"},
+        attestation,
+    ]
+    malformed_input = tmp_path / "malformed.jsonl"
+    output_db = tmp_path / "atlas-v2.db"
+    _write_jsonl(malformed_input, malformed_records)
+    vesum_db = _vesum_db(tmp_path / "vesum.db", [])
+
+    with pytest.raises(projection.ProjectionError) as error:
+        projection.build_projection(malformed_input, output_db, vesum_db=vesum_db)
+    assert f"{period_owner}.language_period" in str(error.value)
+    assert repr(invalid_period) in str(error.value)
+    assert not output_db.exists()
+
+    valid_input = tmp_path / "valid.jsonl"
+    valid_records = [
+        _source("source"),
+        {"record_type": "lemma_entry", "entry_slug": "прапор", "lemma": "прапор", "entry_type": "lemma"},
+        {"record_type": "sense", "sense_slug": "прапор:core", "entry_slug": "прапор"},
+        _attestation("source", "chunk-1", "Її зошит лежить на парті."),
+    ]
+    _write_jsonl(valid_input, valid_records)
+
+    assert projection.build_projection(valid_input, output_db, vesum_db=vesum_db).accepted_records == 4
+
+
+def test_mixed_modern_and_heritage_periods_badge_the_heritage_value(tmp_path: Path) -> None:
+    attestation = _attestation("literary-source", "chunk-1", "Її зошит лежить на парті.", language_period="modern")
+    records: list[dict[str, object]] = [
+        _source("literary-source", language_period="middle_ukrainian"),
+        {"record_type": "lemma_entry", "entry_slug": "прапор", "lemma": "прапор", "entry_type": "lemma"},
+        {"record_type": "sense", "sense_slug": "прапор:core", "entry_slug": "прапор"},
+        attestation,
+    ]
+    input_path = tmp_path / "input.jsonl"
+    export_path = tmp_path / "export.jsonl"
+    _write_jsonl(input_path, records)
+
+    result = projection.build_projection(input_path, tmp_path / "atlas-v2.db", vesum_db=_vesum_db(tmp_path / "vesum.db", []))
+    projection.export_projection(tmp_path / "atlas-v2.db", export_path)
+
+    assert result.admitted_period_counts == {"middle_ukrainian": 1}
+    exported_records = [json.loads(line) for line in export_path.read_text(encoding="utf-8").splitlines()]
+    exported_attestation = next(record for record in exported_records if record["record_type"] == "attestation")
+    assert exported_attestation["period_badge"] == "middle_ukrainian"
+
+
 def test_old_east_slavic_attestation_is_exported_with_its_period_badge(tmp_path: Path) -> None:
     attestation = _attestation(
         "literary-source", "old-1", "Її зошит лежить на парті.", language_period="old_east_slavic"

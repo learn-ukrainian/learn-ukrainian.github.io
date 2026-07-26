@@ -99,6 +99,14 @@ class AdmittedPeriodRow:
 
 
 @dataclass(frozen=True)
+class NormalizedLanguagePeriods:
+    """Validated period metadata shared by the admission gate and badge."""
+
+    attestation: str | None
+    source: str | None
+
+
+@dataclass(frozen=True)
 class BuildResult:
     accepted_records: int
     rejected_records: tuple[RejectedRecord, ...]
@@ -310,29 +318,47 @@ def _is_textbook_source(source: dict[str, Any], attestation: dict[str, Any]) -> 
     return source.get("source_kind") == "textbook"
 
 
-def attestation_period_badge(attestation: dict[str, Any], source: dict[str, Any]) -> str | None:
-    """Return the exact non-modern period to expose for an admitted attestation."""
-    periods = (attestation.get("language_period"), source.get("language_period"))
-    if "modern" in periods:
+def _normalize_language_period(record: dict[str, Any], field_name: str) -> str | None:
+    """Validate a period field and collapse blank producer stamps to absence."""
+    value = record.get("language_period")
+    if value is None:
         return None
-    for period in periods:
-        if period is not None:
-            if not isinstance(period, str):
-                raise ProjectionError("language_period must be a string when present")
+    if not isinstance(value, str):
+        raise ProjectionError(f"{field_name} must be a string, got {value!r}")
+    return value.strip() or None
+
+
+def normalize_attestation_language_periods(
+    attestation: dict[str, Any], source: dict[str, Any]
+) -> NormalizedLanguagePeriods:
+    """Return the one canonical period view for an attestation and its source."""
+    return NormalizedLanguagePeriods(
+        attestation=_normalize_language_period(attestation, "attestation.language_period"),
+        source=_normalize_language_period(source, "source.language_period"),
+    )
+
+
+def attestation_period_badge(periods: NormalizedLanguagePeriods) -> str | None:
+    """Return the exact non-modern period to expose for an admitted attestation."""
+    for period in (periods.attestation, periods.source):
+        if period is not None and period != "modern":
             return period
     return None
 
 
 def attestation_rejection_reason(
-    attestation: dict[str, Any], source: dict[str, Any], vesum_forms: frozenset[str]
+    attestation: dict[str, Any],
+    source: dict[str, Any],
+    vesum_forms: frozenset[str],
+    *,
+    periods: NormalizedLanguagePeriods | None = None,
 ) -> str | None:
     """Return the first calibrated quality-gate failure for an attestation."""
-    source_period = source.get("language_period")
-    chunk_period = attestation.get("language_period")
+    periods = periods or normalize_attestation_language_periods(attestation, source)
     # Literary producers must stamp their period.  Heritage attestations are
     # admitted with a badge; only a wholly unstamped literary source fails
     # closed.  Textbooks legitimately carry no period metadata.
-    if source_period is None and chunk_period is None and not _is_textbook_source(source, attestation):
+    if periods.source is None and periods.attestation is None and not _is_textbook_source(source, attestation):
         return "language_period_not_modern"
 
     text = _required_string(attestation, "text")
@@ -498,13 +524,14 @@ def _records_for_build(
                 source = sources.get(source_id)
                 if source is None:
                     raise ProjectionError(f"attestation references undeclared source_id {source_id!r}")
-                reason = attestation_rejection_reason(record, source, vesum_forms)
+                periods = normalize_attestation_language_periods(record, source)
+                reason = attestation_rejection_reason(record, source, vesum_forms, periods=periods)
                 if reason:
                     attestation_id = _required_string(record, "attestation_id")
                     rejected.append(RejectedRecord(attestation_id, reason, record))
                     rejected_attestation_ids.add(attestation_id)
                     continue
-                period_badge = attestation_period_badge(record, source)
+                period_badge = attestation_period_badge(periods)
                 if period_badge is not None:
                     record = {**record, "period_badge": period_badge}
                     admitted_period_rows.append(
