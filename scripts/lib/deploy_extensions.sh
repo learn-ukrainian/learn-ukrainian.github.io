@@ -43,8 +43,18 @@ deploy_agent_extensions() {
     local exit_code=0
     (cd "$project_dir" && npm run --silent "$npm_script" >"$log_file" 2>&1) || exit_code=$?
 
+    # Durable status breadcrumb. Printing the banner to the terminal is NOT
+    # enough: the launcher hands the terminal to the agent CLI, which clears
+    # it on start, so the operator never sees the banner and the agent boots
+    # with no idea its own config is stale. Persist the verdict where
+    # session-setup.sh can read it back into the session capsule.
+    local status_file="$project_dir/.agent/last-deploy-status"
+    local failure_log="$project_dir/.agent/last-deploy-failure.log"
+    mkdir -p "$project_dir/.agent" 2>/dev/null || true
+
     if [ "$exit_code" -eq 0 ]; then
         echo "Agent extensions deployed ($npm_script)"
+        rm -f "$status_file" "$failure_log"
     else
         echo ""
         echo "⚠️⚠️  AGENT-EXTENSIONS DEPLOY FAILED (npm run $npm_script, exit $exit_code)  ⚠️⚠️"
@@ -53,6 +63,13 @@ deploy_agent_extensions() {
         tail -15 "$log_file"
         echo "────────────────────────────────────────"
         echo "Reproduce with: npm run $npm_script"
+        {
+            echo "FAILED"
+            echo "script=$npm_script"
+            echo "exit_code=$exit_code"
+            echo "when=$(date -u '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || echo unknown)"
+        } >"$status_file" 2>/dev/null || true
+        cp "$log_file" "$failure_log" 2>/dev/null || true
     fi
     rm -f "$log_file"
     return "$exit_code"

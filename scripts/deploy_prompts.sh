@@ -59,6 +59,29 @@ remove_claude_autoload_rules() {
     done
 }
 
+# A destination-only path is a STALE DEPLOY ARTIFACT, not an undeclared
+# orphan, when git shows the source path was tracked and has since been
+# deleted. Removing the destination copy is the intended propagation of that
+# deletion — aborting on it deadlocks every future deploy until a human
+# hand-deletes the target file.
+#
+# Git is the SSOT, so git decides: tracked in HEAD -> still owned by source;
+# absent from HEAD but deleted in history -> stale artifact. Anything git has
+# never heard of stays an undeclared orphan and still aborts (fail-closed).
+#
+# Incident 2026-07-26: #5783 deleted hooks/guard-push-pytest.py from source.
+# Every local deploy aborted from then on, so .claude/settings.json kept the
+# retired hook registered and live. CI never caught it — CI deploys into a
+# clean checkout where the gitignored destination trees carry no stale copy.
+git_source_deleted() {
+    local src="$1" rel="$2"
+    git rev-parse --git-dir >/dev/null 2>&1 || return 1
+    # Still tracked at HEAD → source owns it; not a deletion.
+    git cat-file -e "HEAD:$src/$rel" 2>/dev/null && return 1
+    # Absent from HEAD and history records a deletion → stale deploy artifact.
+    [[ -n "$(git log --diff-filter=D --format=%H -1 -- "$src/$rel" 2>/dev/null)" ]]
+}
+
 # Preflight assertion: warn if an undeclared orphan is in the destination
 # but missing from source. This catches "someone dropped a new file in
 # .gemini/ without updating ORPHAN_PATHS_GEMINI" situations before the
@@ -78,6 +101,10 @@ check_orphans() {
                 break
             fi
         done
+        if [[ "$matched" == false ]] && git_source_deleted "$src" "$orphan"; then
+            echo "  ♻️  $label: stale deploy artifact '$orphan' (deleted from source in git) — deploy will remove it"
+            continue
+        fi
         if [[ "$matched" == false ]]; then
             echo "  ⚠️  $label: undeclared orphan '$orphan' in destination"
             echo "     rsync --delete would wipe this. Either:"

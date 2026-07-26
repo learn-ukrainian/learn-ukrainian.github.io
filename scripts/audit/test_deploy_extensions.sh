@@ -60,6 +60,33 @@ contains "$out" "rsync: permission denied somewhere" "failure surfaces real depl
 contains "$out" "may be STALE" "failure warns about stale targets"
 not_contains "$out" "Agent extensions deployed" "failure never claims success"
 
+# --- failure leaves a DURABLE breadcrumb for session-setup.sh ---
+# The banner alone is not enough: the launcher hands the terminal to the agent
+# CLI, which clears it, so the session boots blind against a stale target.
+STATUS_FILE="$WORK_DIR/project/.agent/last-deploy-status"
+FAILURE_LOG="$WORK_DIR/project/.agent/last-deploy-failure.log"
+[[ -f "$STATUS_FILE" ]] || fail "failure did not persist $STATUS_FILE"
+head -1 "$STATUS_FILE" | grep -q '^FAILED' \
+  || fail "status file does not start with FAILED"
+grep -q '^exit_code=3' "$STATUS_FILE" || fail "status file lost the exit code"
+grep -q '^script=agents:deploy' "$STATUS_FILE" || fail "status file lost the script name"
+[[ -f "$FAILURE_LOG" ]] || fail "failure did not persist $FAILURE_LOG"
+grep -q 'rsync: permission denied somewhere' "$FAILURE_LOG" \
+  || fail "persisted log lost the real deploy output"
+
+# --- a later SUCCESS must clear the breadcrumb (no stale alarm next launch) ---
+out="$(FAKE_NPM_EXIT=0 deploy_agent_extensions "$WORK_DIR/project" agents:deploy)" \
+  || fail "post-failure success case: expected exit 0, got $?"
+[[ ! -f "$STATUS_FILE" ]] || fail "success did not clear $STATUS_FILE"
+[[ ! -f "$FAILURE_LOG" ]] || fail "success did not clear $FAILURE_LOG"
+
+# --- session-setup.sh actually reads the breadcrumb back (wiring guard) ---
+SESSION_SETUP="$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh"
+grep -q 'last-deploy-status' "$SESSION_SETUP" \
+  || fail "session-setup.sh no longer reads the predeploy status breadcrumb"
+grep -q 'PREDEPLOY FAILED' "$SESSION_SETUP" \
+  || fail "session-setup.sh no longer reports a failed predeploy"
+
 # --- missing npm script: explicit skip warning, exit 0 ---
 mkdir -p "$WORK_DIR/bare"
 printf '{"scripts": {}}\n' > "$WORK_DIR/bare/package.json"
