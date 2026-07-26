@@ -44,11 +44,23 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+# Import secret_redactor (stdlib-only helper in parent scripts directory)
+try:
+    from secret_redactor import redact_text
+except ImportError:
+    _scripts_dir = str(Path(__file__).resolve().parent.parent)
+    if _scripts_dir not in sys.path:
+        sys.path.insert(0, _scripts_dir)
+    from secret_redactor import redact_text
+
 DEFAULT_OAUTH_HOST = "https://auth.kimi.com"
 # Public client id of the Kimi Code CLI device-code flow (no secret).
 DEFAULT_CLIENT_ID = "17e5f671-d194-4dfb-9706-5516cb48c098"
 DEFAULT_MARGIN_SECONDS = 120
 REQUEST_TIMEOUT_SECONDS = 15
+
+_OUT_FILE_ENV = "KIMI_CODE_OAUTH_OUT_FILE"
+_OUT_FILE_ENV_ALT = "KIMI_OAUTH_OUT_FILE"
 
 
 def _credentials_path() -> Path:
@@ -86,12 +98,26 @@ def _fresh_token(data: dict, margin: int) -> str | None:
     return token
 
 
+def _print_err(message: object) -> None:
+    """Print an error message to stderr after redacting any token shapes."""
+    redacted = redact_text(str(message))
+    print(redacted, file=sys.stderr)
+
+
 class NoCredentialsError(Exception):
     """Credential file cannot produce a token (missing/unusable)."""
+
+    def __init__(self, message: object = "") -> None:
+        msg_str = redact_text(str(message)) if message is not None else ""
+        super().__init__(msg_str)
 
 
 class RefreshFailedError(Exception):
     """The refresh grant against the auth host failed."""
+
+    def __init__(self, message: object = "") -> None:
+        msg_str = redact_text(str(message)) if message is not None else ""
+        super().__init__(msg_str)
 
 
 def _refresh(data: dict) -> dict:
@@ -120,7 +146,8 @@ def _refresh(data: dict) -> dict:
         with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
             payload = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")[:200]
+        raw_detail = exc.read().decode("utf-8", errors="replace")[:200]
+        detail = redact_text(raw_detail) or ""
         raise RefreshFailedError(f"token refresh failed: HTTP {exc.code} ({detail})") from exc
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
         raise RefreshFailedError(f"token refresh failed: {exc}") from exc
@@ -203,35 +230,50 @@ def force_refresh_token() -> str:
         return token
 
 
-_FORCE_TTY_ENV = "KIMI_OAUTH_ALLOW_TTY"
+def _write_token_to_file(out_path: Path, token: str) -> None:
+    out_path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    fd, tmp_name = tempfile.mkstemp(dir=str(out_path.parent), prefix=out_path.name + ".", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(token.strip() + "\n")
+        os.chmod(tmp_name, 0o600)
+        os.replace(tmp_name, out_path)
+    except BaseException:
+        with contextlib.suppress(OSError):
+            os.unlink(tmp_name)
+        raise
 
 
 def _emit_token(token: str) -> int:
-    """Write the OAuth token to stdout — but never into a terminal by accident.
+    """Write the OAuth token safely.
 
-    Printing the credential IS this command's contract: it is Claude Code's
-    `apiKeyHelper`, the same shape as `gh auth token`, and the launchd refresher
-    sends stdout to /dev/null. Both automated consumers pipe, so neither is
-    affected by the check below.
+    Refuses to print a live OAuth token to a terminal (TTY) under any
+    circumstances. No opt-in flag is provided that prints to a screen.
+    When stdout is a TTY, the token can be delivered to a secure file
+    (mode 0600) if KIMI_CODE_OAUTH_OUT_FILE or KIMI_OAUTH_OUT_FILE is set.
 
-    The residual exposure is the operator running it by hand: a live token then
-    sits in terminal scrollback and shell history, where it long outlives its
-    ~15-minute lifetime in a place nobody thinks to clear. CodeQL flags this line
-    (`py/clear-text-logging-sensitive-data`) and it is right to.
-
-    So refuse when stdout is a TTY unless explicitly overridden. This keeps the
-    helper contract intact, removes the accidental-exposure path, and makes the
-    remaining suppression honest rather than a shrug.
+    When stdout is not a TTY (piped or redirected), prints token to stdout.
     """
-    if sys.stdout.isatty() and os.environ.get(_FORCE_TTY_ENV) != "1":
-        print(
+    out_file = os.environ.get(_OUT_FILE_ENV) or os.environ.get(_OUT_FILE_ENV_ALT)
+    if out_file:
+        out_path = Path(out_file).expanduser()
+        try:
+            _write_token_to_file(out_path, token)
+            _print_err(f"kimi-coding-oauth: token written to {out_path} (mode 0600)")
+            return 0
+        except OSError as exc:
+            _print_err(f"kimi-coding-oauth: cannot write token to {out_path}: {exc}")
+            return 3
+
+    if sys.stdout.isatty():
+        _print_err(
             "kimi-coding-oauth: refusing to print a live OAuth token to a terminal.\n"
             "  It would persist in scrollback and shell history long after the token expires.\n"
-            "  Pipe it (`... token | pbcopy`), or set "
-            f"{_FORCE_TTY_ENV}=1 to override deliberately.",
-            file=sys.stderr,
+            "  Pipe it (`... token | pbcopy`), redirect it (`... token > token.txt`), or set "
+            f"{_OUT_FILE_ENV}=/path/to/file to deliver to a 0600 file."
         )
         return 3
+
     print(token)
     return 0
 
@@ -240,7 +282,7 @@ def cmd_token() -> int:
     path = _credentials_path()
     margin = _margin_seconds()
     if not path.is_file():
-        print(f"kimi-coding-oauth: credential file not found: {path} (run `kimi login`)", file=sys.stderr)
+        _print_err(f"kimi-coding-oauth: credential file not found: {path} (run `kimi login`)")
         return 2
 
     # Serialize refreshes across concurrent apiKeyHelper invocations. The lock
@@ -253,7 +295,7 @@ def cmd_token() -> int:
         try:
             data = _read_credentials(path)
         except (OSError, ValueError) as exc:
-            print(f"kimi-coding-oauth: cannot read credentials: {exc}", file=sys.stderr)
+            _print_err(f"kimi-coding-oauth: cannot read credentials: {exc}")
             return 2
 
         token = _fresh_token(data, margin)
@@ -263,21 +305,21 @@ def cmd_token() -> int:
         try:
             merged = _refresh(data)
         except NoCredentialsError as exc:
-            print(f"kimi-coding-oauth: {exc}", file=sys.stderr)
+            _print_err(f"kimi-coding-oauth: {exc}")
             return 2
         except RefreshFailedError as exc:
-            print(f"kimi-coding-oauth: {exc}", file=sys.stderr)
+            _print_err(f"kimi-coding-oauth: {exc}")
             return 3
         try:
             _write_credentials(path, merged)
         except OSError as exc:
-            print(f"kimi-coding-oauth: cannot write credentials: {exc}", file=sys.stderr)
+            _print_err(f"kimi-coding-oauth: cannot write credentials: {exc}")
             return 3
 
         token = _fresh_token(merged, 0)
         if token is not None:
             return _emit_token(token)
-        print("kimi-coding-oauth: refreshed token is already expired", file=sys.stderr)
+        _print_err("kimi-coding-oauth: refreshed token is already expired")
         return 3
 
 
@@ -286,23 +328,24 @@ def cmd_refresh() -> int:
     try:
         token = force_refresh_token()
     except NoCredentialsError as exc:
-        print(f"kimi-coding-oauth: {exc}", file=sys.stderr)
+        _print_err(f"kimi-coding-oauth: {exc}")
         return 2
     except RefreshFailedError as exc:
-        print(f"kimi-coding-oauth: {exc}", file=sys.stderr)
+        _print_err(f"kimi-coding-oauth: {exc}")
         return 3
     except OSError as exc:
-        print(f"kimi-coding-oauth: cannot write credentials: {exc}", file=sys.stderr)
+        _print_err(f"kimi-coding-oauth: cannot write credentials: {exc}")
         return 3
     return _emit_token(token)
 
 
 def main(argv: list[str]) -> int:
     if len(argv) != 2 or argv[1] not in {"token", "refresh"}:
-        print(__doc__, file=sys.stderr)
+        _print_err(__doc__)
         return 64
     return cmd_token() if argv[1] == "token" else cmd_refresh()
 
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv))
+

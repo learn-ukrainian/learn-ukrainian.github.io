@@ -8,15 +8,20 @@ The exposure is the operator running it by hand: the token then sits in scrollba
 and shell history long after its ~15-minute life, somewhere nobody thinks to clear.
 CodeQL flags it (`py/clear-text-logging-sensitive-data`) and is right to.
 
-Operator chose this over suppressing the alert (2026-07-25).
+This test module verifies both P1-a (no escape hatch printing to terminal, optional 0600 file delivery)
+and P1-b (all error paths, HTTP error bodies, and exceptions redacted by token shape).
 """
 
 from __future__ import annotations
 
 import importlib.util
 import io
+import stat
 import sys
+import urllib.error
 from pathlib import Path
+
+import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 MODULE = REPO_ROOT / "scripts" / "lib" / "kimi_coding_oauth.py"
@@ -26,7 +31,7 @@ assert spec and spec.loader
 oauth = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(oauth)
 
-TOKEN = "sk-live-do-not-leak-me"
+TOKEN = "sk-live-do-not-leak-me-1234567890"
 
 
 class _Stdout(io.StringIO):
@@ -40,7 +45,8 @@ class _Stdout(io.StringIO):
 
 def test_refuses_to_print_into_a_terminal(monkeypatch, capsys):
     monkeypatch.setattr(sys, "stdout", _Stdout(tty=True))
-    monkeypatch.delenv(oauth._FORCE_TTY_ENV, raising=False)
+    monkeypatch.delenv(oauth._OUT_FILE_ENV, raising=False)
+    monkeypatch.delenv(oauth._OUT_FILE_ENV_ALT, raising=False)
 
     rc = oauth._emit_token(TOKEN)
 
@@ -48,23 +54,39 @@ def test_refuses_to_print_into_a_terminal(monkeypatch, capsys):
     assert TOKEN not in sys.stdout.getvalue(), "the token was written to a terminal"
 
 
-def test_refusal_explains_the_two_ways_forward(monkeypatch, capsys):
+def test_refusal_explains_how_to_deliver_safely(monkeypatch, capsys):
     monkeypatch.setattr(sys, "stdout", _Stdout(tty=True))
-    monkeypatch.delenv(oauth._FORCE_TTY_ENV, raising=False)
+    monkeypatch.delenv(oauth._OUT_FILE_ENV, raising=False)
+    monkeypatch.delenv(oauth._OUT_FILE_ENV_ALT, raising=False)
 
     oauth._emit_token(TOKEN)
 
     err = capsys.readouterr().err
     assert "scrollback" in err, "say WHY, not just no"
     assert "Pipe it" in err
-    assert oauth._FORCE_TTY_ENV in err, "the override must be discoverable"
+    assert oauth._OUT_FILE_ENV in err, "the file output option must be discoverable"
+    assert "KIMI_OAUTH_ALLOW_TTY" not in err, "the deprecated dangerous flag must not be suggested"
     assert TOKEN not in err, "the refusal must not leak the token it is protecting"
+
+
+def test_env_override_allow_tty_is_ignored_and_still_refuses(monkeypatch, capsys):
+    """An opt-in flag that prints a live token to a TTY is forbidden (P1-a)."""
+    monkeypatch.setattr(sys, "stdout", _Stdout(tty=True))
+    monkeypatch.setenv("KIMI_OAUTH_ALLOW_TTY", "1")
+    monkeypatch.delenv(oauth._OUT_FILE_ENV, raising=False)
+    monkeypatch.delenv(oauth._OUT_FILE_ENV_ALT, raising=False)
+
+    rc = oauth._emit_token(TOKEN)
+
+    assert rc == 3
+    assert TOKEN not in sys.stdout.getvalue()
+    assert TOKEN not in capsys.readouterr().err
 
 
 def test_pipes_normally_when_stdout_is_not_a_terminal(monkeypatch):
     """The apiKeyHelper and launchd paths both pipe — they must be untouched."""
     monkeypatch.setattr(sys, "stdout", _Stdout(tty=False))
-    monkeypatch.delenv(oauth._FORCE_TTY_ENV, raising=False)
+    monkeypatch.delenv(oauth._OUT_FILE_ENV, raising=False)
 
     rc = oauth._emit_token(TOKEN)
 
@@ -72,22 +94,97 @@ def test_pipes_normally_when_stdout_is_not_a_terminal(monkeypatch):
     assert sys.stdout.getvalue().strip() == TOKEN
 
 
-def test_explicit_override_is_honoured(monkeypatch):
+def test_out_file_delivers_token_securely_mode_0600(tmp_path: Path, monkeypatch, capsys):
+    """Operator can deliver token to a file with 0600 permissions instead of printing to TTY."""
+    out_file = tmp_path / "tokens" / "secret_token.txt"
     monkeypatch.setattr(sys, "stdout", _Stdout(tty=True))
-    monkeypatch.setenv(oauth._FORCE_TTY_ENV, "1")
+    monkeypatch.setenv(oauth._OUT_FILE_ENV, str(out_file))
 
     rc = oauth._emit_token(TOKEN)
 
     assert rc == 0
-    assert sys.stdout.getvalue().strip() == TOKEN
+    assert out_file.is_file()
+    assert out_file.read_text(encoding="utf-8").strip() == TOKEN
+    assert stat.S_IMODE(out_file.stat().st_mode) == 0o600
+    assert TOKEN not in sys.stdout.getvalue()
+    err = capsys.readouterr().err
+    assert "token written to" in err
+    assert TOKEN not in err
 
 
-def test_override_must_be_exactly_1(monkeypatch):
-    """A stray truthy value must not disable a credential guard."""
+def test_out_file_alt_env_var_works(tmp_path: Path, monkeypatch):
+    out_file = tmp_path / "secret_alt.txt"
     monkeypatch.setattr(sys, "stdout", _Stdout(tty=True))
-    monkeypatch.setenv(oauth._FORCE_TTY_ENV, "true")
+    monkeypatch.setenv(oauth._OUT_FILE_ENV_ALT, str(out_file))
 
-    assert oauth._emit_token(TOKEN) == 3
+    rc = oauth._emit_token(TOKEN)
+
+    assert rc == 0
+    assert out_file.is_file()
+    assert out_file.read_text(encoding="utf-8").strip() == TOKEN
+    assert stat.S_IMODE(out_file.stat().st_mode) == 0o600
+
+
+def test_refresh_failed_error_redacts_http_400_body_tokens(monkeypatch):
+    """OAuth error bodies in HTTP 400 responses must be redacted by token shape (P1-b)."""
+    synthetic_body = (
+        '{"error": "invalid_grant", "received_access_token": "sk-synthetic-live-token-12345678901234567890"}'
+    )
+    fp = io.BytesIO(synthetic_body.encode("utf-8"))
+    exc = urllib.error.HTTPError("http://auth.kimi.com/api/oauth/token", 400, "Bad Request", {}, fp)  # type: ignore[arg-type]
+
+    def _mock_urlopen(*args, **kwargs):
+        raise exc
+
+    monkeypatch.setattr(urllib.request, "urlopen", _mock_urlopen)
+
+    data = {"refresh_token": "r-synthetic-refresh-1234567890"}
+    with pytest.raises(oauth.RefreshFailedError) as exc_info:
+        oauth._refresh(data)
+    err_msg = str(exc_info.value)
+    assert "sk-synthetic-live-token" not in err_msg, "synthetic token leaked in exception message"
+    assert "[REDACTED_SECRET]" in err_msg, "expected redaction placeholder in exception message"
+
+
+def test_refresh_failed_error_redacts_unanticipated_nested_keys(monkeypatch):
+    """Redaction must be by token SHAPE, not key name, for provider-controlled bodies."""
+    unanticipated_body = (
+        '{"error": "invalid", "provider_unanticipated_key": "sk-synthetic-secret-token-99999999999"}'
+    )
+    fp = io.BytesIO(unanticipated_body.encode("utf-8"))
+    exc = urllib.error.HTTPError("http://auth.kimi.com/api/oauth/token", 400, "Bad Request", {}, fp)  # type: ignore[arg-type]
+
+    def _mock_urlopen(*args, **kwargs):
+        raise exc
+
+    monkeypatch.setattr(urllib.request, "urlopen", _mock_urlopen)
+
+    data = {"refresh_token": "r-synthetic-refresh-1234567890"}
+    with pytest.raises(oauth.RefreshFailedError) as exc_info:
+        oauth._refresh(data)
+    err_msg = str(exc_info.value)
+    assert "sk-synthetic-secret-token" not in err_msg
+    assert "[REDACTED_SECRET]" in err_msg
+
+
+def test_exception_init_redacts_token_in_message():
+    raw_msg = "Refresh failed for token sk-synthetic-secret-1234567890123456"
+    err = oauth.RefreshFailedError(raw_msg)
+    assert "sk-synthetic-secret" not in str(err)
+    assert "[REDACTED_SECRET]" in str(err)
+
+    no_cred_err = oauth.NoCredentialsError(raw_msg)
+    assert "sk-synthetic-secret" not in str(no_cred_err)
+    assert "[REDACTED_SECRET]" in str(no_cred_err)
+
+
+def test_print_err_redacts_token_shapes(capsys):
+    raw_msg = "kimi-coding-oauth: failed with token sk-synthetic-secret-1234567890123456"
+    oauth._print_err(raw_msg)
+
+    err = capsys.readouterr().err
+    assert "sk-synthetic-secret" not in err
+    assert "[REDACTED_SECRET]" in err
 
 
 def test_every_token_emission_path_goes_through_the_guard():
