@@ -20,7 +20,7 @@ for hook_name in "${required_hooks[@]}"; do
     fi
 done
 
-for support_file in _lib.sh check-pytest-stamp.py; do
+for support_file in _lib.sh check-pytest-stamp.py pytest_stamp.py; do
     if [[ ! -r "$hooks_dir/$support_file" ]]; then
         echo "Expected readable hook support file at $hooks_dir/$support_file" >&2
         exit 1
