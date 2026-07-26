@@ -2487,6 +2487,30 @@ export function selectDailyPracticeDeckItems(
   return combined.slice(0, DAILY_PRACTICE_DECK_SIZE);
 }
 
+/**
+ * Design delta 2026-07-26 (D2): the Words-of-the-Day zone's featured set is now
+ * chosen by `pickDaily` over `/lexicon/daily-pool.json`, not by SRS due/new
+ * priority — but each featured lemma still shows an honest due/new marker. This
+ * classifies ONE already-chosen lemma (reusing the exact due-card check from
+ * `selectDailyPracticeDeckItems`) instead of selecting *which* lemmas qualify.
+ */
+export function classifyDailyPracticeOrigin(
+  lemmaId: string,
+  indexItems: PracticeIndexItem[],
+  cards: ReadonlyMap<string, CardState> | null | undefined,
+  now: Date | number = Date.now(),
+): 'due' | 'new' {
+  const nowTime = toTime(now) ?? Date.now();
+  const item = indexItems.find((entry) => entry.lemmaId === lemmaId);
+  if (!item) return 'new';
+  for (const mode of item.modes) {
+    if (!isPracticeMode(mode)) continue;
+    const card = cards?.get(cardKey(lemmaId, mode)) ?? null;
+    if (isDueReviewCard(card, nowTime)) return 'due';
+  }
+  return 'new';
+}
+
 export function buildDailyPracticeDeckSnapshot(
   indexItems: PracticeIndexItem[],
   cards: ReadonlyMap<string, CardState> | null | undefined,
