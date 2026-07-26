@@ -67,6 +67,7 @@ TERMINAL_TASK_STATUSES = frozenset(
     {
         "done",
         "failed",
+        "no_deliverable",
         "timeout",
         "rate_limited",
         "cancelled",
@@ -393,7 +394,8 @@ def _task_still_active(
     # No state file and no pid → treat as stale (cannot prove active).
     if status is None and (check_pid is None or check_pid <= 0):
         return False
-    # spawning/running/needs_finalize/empty with live pid (or unknown pid) = active
+    # spawning/running/needs_finalize/empty with live pid (or unknown pid) = active.
+    # no_deliverable is terminal: there is no unfinished tree to protect.
     if status in ("running", "spawning", "needs_finalize", "", None):
         if check_pid is None or check_pid <= 0:
             # State says active but no pid — keep claim conservatively if status explicit.

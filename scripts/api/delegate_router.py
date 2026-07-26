@@ -149,7 +149,10 @@ def _delegate_task_rows(statuses: set[str] | None = None) -> list[dict[str, Any]
 
 def list_delegate_tasks(
     *,
-    status: Literal["running", "done", "failed", "timeout", "spawning", "all"] = "all",
+    status: Literal[
+        "running", "done", "failed", "timeout", "spawning",
+        "needs_finalize", "no_deliverable", "all",
+    ] = "all",
     limit: int = 50,
 ) -> dict[str, Any]:
     task_limit = min(max(1, int(limit)), 500)
@@ -195,7 +198,10 @@ def active_delegate_tasks() -> dict[str, Any]:
 
 @router.get("/tasks")
 async def delegate_tasks(
-    status: Literal["running", "done", "failed", "timeout", "spawning", "all"] = Query("all"),
+    status: Literal[
+        "running", "done", "failed", "timeout", "spawning",
+        "needs_finalize", "no_deliverable", "all",
+    ] = Query("all"),
     limit: int = Query(50, ge=1, le=500),
 ):
     return await asyncio.to_thread(list_delegate_tasks, status=status, limit=limit)

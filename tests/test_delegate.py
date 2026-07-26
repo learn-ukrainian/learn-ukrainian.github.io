@@ -609,6 +609,25 @@ def test_wait_returns_nonzero_on_failed(tmp_tasks_dir, capsys):
     assert rc == 1  # nonzero for any non-done terminal status
 
 
+def test_wait_returns_immediately_on_no_deliverable_with_default_timeout(tmp_tasks_dir, capsys):
+    """A completion-contract failure is terminal even when wait has no deadline."""
+    path = delegate._state_path("wait-no-deliverable")
+    delegate._write_state_atomic(path, {
+        "task_id": "wait-no-deliverable",
+        "status": "no_deliverable",
+    })
+    import argparse
+    args = argparse.Namespace(
+        task_id="wait-no-deliverable", timeout=0, poll_interval=0.1,
+    )
+    t0 = time.monotonic()
+    rc = delegate.cmd_wait(args)
+    elapsed = time.monotonic() - t0
+
+    assert rc == 1
+    assert elapsed < 1.0, "wait on no_deliverable must return without an explicit timeout"
+
+
 def test_wait_returns_124_on_task_timeout(tmp_tasks_dir, capsys):
     path = delegate._state_path("wait-task-timeout")
     delegate._write_state_atomic(path, {
@@ -1001,6 +1020,23 @@ def test_cancel_refuses_crashed_task(tmp_tasks_dir, capsys):
     assert rc == 1
     captured = capsys.readouterr()
     assert "terminal state" in captured.err
+
+
+def test_cancel_refuses_no_deliverable_task(tmp_tasks_dir, capsys):
+    """no_deliverable is terminal, so cancel must not signal its stale PID."""
+    path = delegate._state_path("no-deliverable-task")
+    delegate._write_state_atomic(path, {
+        "task_id": "no-deliverable-task",
+        "status": "no_deliverable",
+        "pid": os.getpid(),
+    })
+    import argparse
+    rc = delegate.cmd_cancel(argparse.Namespace(task_id="no-deliverable-task"))
+
+    assert rc == 1
+    captured = capsys.readouterr()
+    assert "terminal state" in captured.err
+    assert "no_deliverable" in captured.err
 
 
 def test_worker_sigterm_handler_raises_keyboard_interrupt():
@@ -1471,6 +1507,327 @@ def _finalize_mock_result():
             "cli_version": "0.2.111",
         },
     )()
+
+
+def _run_successful_worker_for_deliverable_test(
+    *,
+    task_id: str,
+    mode: str,
+    response: str,
+    commits_ahead: int | None,
+    tmp_path,
+    monkeypatch,
+):
+    """Run a clean successful worker with controllable delivery signals."""
+    worktree = tmp_path / "worktree"
+    worktree.mkdir()
+    _init_git_repo_for_test(worktree, monkeypatch)
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_base": "main",
+        },
+    )
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": response,
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.6-terra",
+            "effort": "medium",
+            "cli_version": "fixture",
+        },
+    )()
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_count_commits_ahead", return_value=commits_ahead),
+    ):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="complete the assigned change",
+            mode=mode,
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort="medium",
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    return rc, state
+
+
+def test_run_worker_marks_no_deliverable_for_clean_zero_commit_tiny_response(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A clean write dispatch with only a trivial response has no deliverable."""
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="no-deliverable-tiny-response",
+        mode="workspace-write",
+        response="I will inspect the files.",
+        commits_ahead=0,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 1
+    assert state["status"] == "no_deliverable"
+    assert state["needs_finalize"] is False
+    assert state["no_deliverable_reason"] == (
+        "write_capable_clean_worktree_zero_commits_short_response"
+    )
+    assert state["last_error"] == state["no_deliverable_reason"]
+
+
+def test_run_worker_does_not_flag_committed_change_without_declaration(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Commits on the dispatch branch prove delivery; no magic phrase needed.
+
+    A worker that did its job and ended with ordinary completion text must
+    settle as ``done`` — a ``DELIVERABLE:`` line is an optional positive
+    signal, never a requirement.
+    """
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="committed-change-plain-summary",
+        mode="workspace-write",
+        response="Implemented the guard and added regression tests. All 152 tests pass.",
+        commits_ahead=1,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["needs_finalize"] is False
+    assert state["no_deliverable_reason"] is None
+    assert state["delivery_declaration"] is None
+
+
+def test_run_worker_records_optional_declaration_as_positive_signal(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A valid declaration accompanying real commits is recorded as evidence."""
+    response = (
+        "Implemented the requested outcome.\n"
+        'DELIVERABLE: {"outcome":"change","summary":"Added no-delivery detection",'
+        '"changed_paths":["scripts/delegate.py"]}'
+    )
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="structured-committed-change",
+        mode="workspace-write",
+        response=response,
+        commits_ahead=1,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["needs_finalize"] is False
+    assert state["no_deliverable_reason"] is None
+    assert state["delivery_declaration"] == {
+        "outcome": "change",
+        "summary": "Added no-delivery detection",
+        "changed_paths": ["scripts/delegate.py"],
+    }
+
+
+def test_run_worker_tolerates_trailing_text_after_declaration(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A polite closing line after ``DELIVERABLE:`` must not void the signal."""
+    response = (
+        "Implemented the requested outcome.\n"
+        'DELIVERABLE: {"outcome":"change","summary":"Added no-delivery detection",'
+        '"changed_paths":["scripts/delegate.py"]}\n'
+        "All 15 tests passed; let me know if you need anything else."
+    )
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="declaration-with-trailing-text",
+        mode="workspace-write",
+        response=response,
+        commits_ahead=1,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["no_deliverable_reason"] is None
+    assert state["delivery_declaration"]["outcome"] == "change"
+
+
+def test_run_worker_rejects_declaration_claiming_change_without_commits(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A declared change with a clean zero-commit branch is a contradiction."""
+    response = (
+        "Implemented the requested outcome.\n"
+        'DELIVERABLE: {"outcome":"change","summary":"Added no-delivery detection",'
+        '"changed_paths":["scripts/delegate.py"]}'
+    )
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="claimed-change-zero-commits",
+        mode="workspace-write",
+        response=response,
+        commits_ahead=0,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 1
+    assert state["status"] == "no_deliverable"
+    assert state["needs_finalize"] is False
+    assert state["no_deliverable_reason"] == "invalid_delivery_declaration"
+
+
+def test_run_worker_does_not_flag_read_only_tiny_response(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Read-only work can deliver through analysis or an external side effect."""
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="read-only-tiny-response",
+        mode="read-only",
+        response="Posted.",
+        commits_ahead=0,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["needs_finalize"] is False
+    assert state["no_deliverable_reason"] is None
+
+
+def test_run_worker_does_not_flag_legitimate_noop_write_dispatch(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A substantive zero-commit analysis is a deliverable, not a failure.
+
+    "Investigate and only change if needed" dispatches legitimately conclude
+    with no commits. Their analysis — a non-trivial response — is the
+    deliverable; flagging it trains orchestrators to ignore the signal.
+    """
+    response = (
+        "I investigated the reported failure across scripts/delegate.py and its "
+        "tests. The guard already rejects this exact case: the ownership ledger "
+        "refuses overlapping claims in REFUSE mode, and the regression test at "
+        "tests/test_delegate.py covers it. No code change is required; the "
+        "reported behaviour came from a stale build."
+    )
+    assert len(response) > delegate.DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="write-substantive-noop",
+        mode="workspace-write",
+        response=response,
+        commits_ahead=0,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["needs_finalize"] is False
+    assert state["no_deliverable_reason"] is None
+
+
+def test_run_worker_allows_structured_no_change_declaration(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """An explicit reasoned no-op is a legitimate zero-commit outcome."""
+    response = (
+        "I verified the target implementation.\n"
+        'DELIVERABLE: {"outcome":"no_change","reason":"The requested guard already rejects this case."}'
+    )
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="structured-no-change",
+        mode="workspace-write",
+        response=response,
+        commits_ahead=0,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["needs_finalize"] is False
+    assert state["no_deliverable_reason"] is None
+    assert state["delivery_declaration"] == {
+        "outcome": "no_change",
+        "reason": "The requested guard already rejects this case.",
+    }
+
+
+def test_run_worker_fails_closed_when_clean_commit_count_is_unknown(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Unknown own-branch commit count cannot establish a write deliverable."""
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="unknown-clean-commit-count",
+        mode="workspace-write",
+        response="The task is complete.",
+        commits_ahead=None,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 1
+    assert state["status"] == "no_deliverable"
+    assert state["needs_finalize"] is False
+    assert state["no_deliverable_reason"] == "commit_count_unknown"
+
+
+def test_run_worker_flags_real_world_other_branch_delivery_miss(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A 571-second run that changed other branches has no own-branch proof."""
+    response = "*(intermediate CI progress — waiting for full completion before reporting)*"
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="fix-red-prs-delivery-miss",
+        mode="workspace-write",
+        response=response,
+        commits_ahead=0,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+    )
+
+    assert rc == 1
+    assert state["status"] == "no_deliverable"
+    assert state["needs_finalize"] is False
+    assert state["no_deliverable_reason"] == (
+        "write_capable_clean_worktree_zero_commits_short_response"
+    )
 
 
 @pytest.mark.parametrize(
@@ -3357,13 +3714,30 @@ def test_augment_prompt_mentions_sparse_exclusions():
     assert "sparse" in text.lower() or "Sparse" in text
 
 
+def test_augment_write_prompt_offers_optional_delivery_declaration():
+    text = delegate._augment_prompt_with_worktree(
+        "do work",
+        Path("/tmp/wt"),
+        mode="workspace-write",
+    )
+
+    assert "DELIVERABLE:" in text
+    assert '"outcome":"no_change"' in text
+    assert "optional" in text.lower()
+
+
+def test_augment_read_only_prompt_omits_delivery_declaration():
+    text = delegate._augment_prompt_with_worktree(
+        "do work",
+        Path("/tmp/wt"),
+        mode="read-only",
+    )
+
+    assert "DELIVERABLE:" not in text
+
+
 def test_ensure_worktree_refuses_stale_base_when_fetch_fails(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
-    """Fix 1 (#1476) amended by #5803 follow-up: offline/no-remote scenarios
-    used to fall back to the local base with only a stderr warning. That
-    silent fallback is why a worker concluded "origin/main may be stale" and
-    went to the PRIMARY checkout for freshness, leaving it detached. Fetch
-    failure is now an actionable hard error — no stale-base worktree.
-    """
+    """Fetch failure must not create a worktree from a stale local base."""
     target = tmp_path / "offline-worktree"
 
     def fake_run(cmd, **kwargs):

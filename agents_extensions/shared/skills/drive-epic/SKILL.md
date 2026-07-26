@@ -120,7 +120,7 @@ be missed between routing and worker launch. Read and apply every `unread` or
 Watch the task's `batch_state/tasks/<id>.json` `status` with the **Monitor** tool.
 Terminal vocab (match `scripts/delegate.py`): **`done` = SUCCESS** (NOT "completed");
 other terminal/attention states: `failed | timeout | rate_limited | cancelled |
-crashed | dry_run` (dry_run is terminal, not success) + `needs_finalize`. Emit on any
+crashed | dry_run` (dry_run is terminal, not success) + `needs_finalize | no_deliverable`. Emit on any
 status NOT in `{spawning, running, ""}`. The task file is truth; `/api/delegate/active`
 can omit live tasks. **Before declaring a dispatch dead:** `gh pr list --state open`
 first, then check the worktree for finished-but-unpushed work.

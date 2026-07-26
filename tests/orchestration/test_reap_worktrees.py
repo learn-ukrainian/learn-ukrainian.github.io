@@ -292,6 +292,33 @@ def test_class_a_settled_dispatch_removed(
     assert not worktree_path.exists()
 
 
+def test_class_a_no_deliverable_dispatch_removed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A ``no_deliverable`` dispatch is terminal; its clean worktree reaps."""
+    repo = init_repo(tmp_path)
+    task_id = "5800-false-success-noop"
+    worktree_path = repo / ".worktrees" / "dispatch" / "codex" / task_id
+    add_worktree(repo, "codex/5800-false-success", path=worktree_path)
+
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(
+        json.dumps({"status": "no_deliverable"}), encoding="utf-8"
+    )
+
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    patch_gh(monkeypatch, {"codex/5800-false-success": []})
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    result = result_for(results, worktree_path)
+    assert result.action == "removed"
+    assert "settled dispatch" in result.reason
+    assert "status=no_deliverable" in result.reason
+    assert not worktree_path.exists()
+
+
 def test_class_a_fail_safe_skips(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

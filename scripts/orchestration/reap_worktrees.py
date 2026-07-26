@@ -358,7 +358,7 @@ def _qualifying_reason(
                 try:
                     task_data = json.loads(task_file.read_text(encoding="utf-8"))
                     task_status = task_data.get("status")
-                    if task_status in ("done", "failed") and active_ids is not None and task_id not in active_ids:
+                    if task_status in ("done", "failed", "no_deliverable") and active_ids is not None and task_id not in active_ids:
                         task_settled = True
                 except Exception:
                     pass
@@ -378,7 +378,7 @@ def _qualifying_reason(
             try:
                 task_data = json.loads(task_file.read_text(encoding="utf-8"))
                 task_status = task_data.get("status")
-                if task_status in ("done", "failed") and active_ids is not None and task_id not in active_ids:
+                if task_status in ("done", "failed", "no_deliverable") and active_ids is not None and task_id not in active_ids:
                     if info.branch:
                         prs, pr_error = _query_pr_states(repo_root, info.branch)
                         if pr_error is None and not any(pr.state == "OPEN" for pr in prs):

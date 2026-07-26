@@ -97,6 +97,23 @@ def test_tasks_timeout_status_is_distinct_from_failed(tmp_path, monkeypatch):
     assert [task["task_id"] for task in failed_response.json()["tasks"]] == ["failed"]
 
 
+def test_tasks_attention_status_filters_are_queryable(tmp_path, monkeypatch):
+    """``needs_finalize``/``no_deliverable`` are real settle states — the API
+    must not 422 when an orchestrator filters by them (#5800 review)."""
+    tasks_dir = tmp_path / "tasks"
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _write_task(tasks_dir / "finalize.json", _task_payload("finalize", status="needs_finalize"))
+    _write_task(tasks_dir / "nodeliv.json", _task_payload("nodeliv", status="no_deliverable"))
+
+    finalize_response = client.get("/api/delegate/tasks?status=needs_finalize")
+    nodeliv_response = client.get("/api/delegate/tasks?status=no_deliverable")
+
+    assert finalize_response.status_code == 200
+    assert nodeliv_response.status_code == 200
+    assert [task["task_id"] for task in finalize_response.json()["tasks"]] == ["finalize"]
+    assert [task["task_id"] for task in nodeliv_response.json()["tasks"]] == ["nodeliv"]
+
+
 def test_active_lists_only_live_running_tasks(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
     monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)

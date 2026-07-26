@@ -80,11 +80,18 @@ legitimately complete with no PR: reviews, audits, research, diagnosis, and any 
 `--mode read-only`. For those, the deliverable *is* the report. The mechanical test is the dispatch's
 own mode plus whether its worktree is dirty — not a judgement about intent.
 
-**Three distinct terminal outcomes; do not collapse them into `done`:**
+**Four distinct terminal outcomes; do not collapse them into `done`:**
 - **`done`** — the deliverable exists (a pushed PR for change tasks, a report for read-only tasks).
 - **`needs_finalize`** — work was produced but not committed or pushed. This is a **failure to finish**,
   and it is now detected mechanically for every write-capable mode (`delegate.py`); a dirty worktree with
   no commits can no longer report `done`.
+- **`no_deliverable`** — a clean write-capable dispatch produced nothing verifiable: zero commits on
+  its branch, a clean worktree, and only a trivial response that cannot itself be the deliverable.
+  Detection is inferred from observable git facts, not from any formatting contract — commits on the
+  dispatch branch are sufficient proof on their own. A structured final `DELIVERABLE:` line is an
+  **optional** positive signal (a reasoned `no_change` proves a legitimate no-op); its absence never
+  fails a dispatch. `no_deliverable` is distinct from `needs_finalize`: do not re-enter its worktree
+  expecting uncommitted edits. Resolve the failed task or re-dispatch it.
 - **`BLOCKED` / `NEEDS-INPUT`** — genuinely cannot proceed. Reporting this is correct behaviour, not a
   failure of nerve.
 

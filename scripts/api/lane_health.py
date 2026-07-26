@@ -43,7 +43,8 @@ def is_spawn_phase_failure(record: dict[str, Any], duration_threshold_s: int = D
     duration_s = record.get("duration_s")
 
     is_failed_status = status in ("failed", "error")
-    # Treat clean exits (returncode == 0) and needs_finalize as healthy signals.
+    # ``needs_finalize`` and ``no_deliverable`` are completion-contract failures,
+    # not provider spawn failures. Keep them out of lane availability scoring.
     # If returncode is None, the process is still running or hasn't updated its returncode yet.
     is_non_zero_rc = returncode is not None and returncode != 0
     is_short_duration = duration_s is not None and duration_s < duration_threshold_s
