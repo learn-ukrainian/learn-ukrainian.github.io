@@ -30,6 +30,33 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parent.parent
 MODULE = REPO_ROOT / "scripts" / "lib" / "kimi_coding_oauth.py"
 
+
+def _resolve_venv_python() -> Path | None:
+    """Project venv; falls back to the main worktree when run from a linked worktree.
+
+    The repo forbids `sys.executable` / bare `python`: subprocesses must run the
+    project interpreter. Mirrors the helper in tests/test_start_kimicc.py.
+    """
+    candidates = [REPO_ROOT / ".venv" / "bin" / "python"]
+    try:
+        common = subprocess.run(
+            ["git", "-C", str(REPO_ROOT), "rev-parse", "--path-format=absolute", "--git-common-dir"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        if common.returncode == 0 and common.stdout.strip():
+            candidates.append(Path(common.stdout.strip()).parent / ".venv" / "bin" / "python")
+    except (OSError, subprocess.SubprocessError):
+        pass
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+VENV_PYTHON = _resolve_venv_python()
+
 spec = importlib.util.spec_from_file_location("kimi_oauth_under_test", MODULE)
 assert spec and spec.loader
 oauth = importlib.util.module_from_spec(spec)
@@ -120,8 +147,11 @@ def test_helper_sub_process_piped_contract(tmp_path: Path):
     env.pop(oauth._OUT_FILE_ENV, None)
     env.pop(oauth._OUT_FILE_ENV_ALT, None)
 
+    if VENV_PYTHON is None:
+        pytest.skip("project .venv interpreter not found; repo forbids sys.executable here")
+
     proc = subprocess.run(
-        [sys.executable, str(MODULE), "token"],
+        [str(VENV_PYTHON), str(MODULE), "token"],
         capture_output=True,
         text=True,
         env=env,
