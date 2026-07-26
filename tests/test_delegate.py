@@ -3426,6 +3426,7 @@ def test_branch_reuse_real_worktree_head_matches_fetched_origin(tmp_tasks_dir, t
     source = tmp_path / "source"
     client = tmp_path / "client"
     env = delegate._sanitized_git_env()
+    env.pop("AGENT_NO_MERGE", None)
 
     def git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
@@ -3442,6 +3443,7 @@ def test_branch_reuse_real_worktree_head_matches_fetched_origin(tmp_tasks_dir, t
     git(source, "init", "-b", "main")
     git(source, "config", "user.email", "test@example.com")
     git(source, "config", "user.name", "Test")
+    git(source, "config", "core.hooksPath", "/dev/null")
     git(source, "commit", "--allow-empty", "-m", "base")
     git(source, "remote", "add", "origin", str(remote))
     git(source, "push", "-u", "origin", "main")
