@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -368,6 +369,32 @@ def test_context_monitor_is_silent_for_native_codex(
     completed = subprocess.run(
         [os.fspath(CONTEXT_MONITOR)],
         input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=tmp_path,
+        env=env,
+        timeout=30,
+    )
+
+    assert completed.stdout == ""
+
+
+def test_context_monitor_is_silent_from_deployed_codex_path(tmp_path: Path) -> None:
+    deployed = tmp_path / ".codex" / "hooks" / "context-monitor.sh"
+    deployed.parent.mkdir(parents=True)
+    shutil.copy2(CONTEXT_MONITOR, deployed)
+    env = os.environ.copy()
+    for identity_var in (
+        "SESSION_HANDOFF_AGENT",
+        "CODEX_THREAD_ID",
+        "CODEX_SESSION_ID",
+    ):
+        env.pop(identity_var, None)
+
+    completed = subprocess.run(
+        [os.fspath(deployed)],
+        input="{}",
         text=True,
         capture_output=True,
         check=True,

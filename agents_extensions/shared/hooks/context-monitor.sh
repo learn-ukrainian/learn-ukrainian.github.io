@@ -107,12 +107,8 @@ PCT=$((TOKENS * 100 / WINDOW))
 
 if [ -n "${SESSION_HANDOFF_AGENT:-}" ]; then
   HANDOFF_AGENT="$SESSION_HANDOFF_AGENT"
-elif [[ "${0:-}" == *"/.codex/"* ]]; then
-  HANDOFF_AGENT="codex"
 elif [[ "${0:-}" == *"/.gemini/"* ]]; then
   HANDOFF_AGENT="gemini"
-elif [ -n "${CODEX_THREAD_ID:-}${CODEX_SESSION_ID:-}" ]; then
-  HANDOFF_AGENT="codex"
 else
   HANDOFF_AGENT="claude"
 fi

@@ -112,6 +112,12 @@ def test_bash_multiline_read_only_commands_do_not_merge_editor_flags():
     assert hook.bash_write_targets(command) == []
 
 
+def test_bash_line_continuation_keeps_in_place_editor_target():
+    command = "sed -i \\\n-e 's/old/new/' curriculum/tracked.md"
+
+    assert hook.bash_write_targets(command) == ["curriculum/tracked.md"]
+
+
 # ===========================================================================
 # Pure extraction — structured write tools
 # ===========================================================================
@@ -239,6 +245,38 @@ def test_bash_tool_input_workdir_controls_relative_write_resolution(repo: Path):
     result = _run(repo, payload)
 
     assert result.returncode == 0, result.stderr
+
+
+def test_bash_tool_input_primary_workdir_cannot_be_spoofed_by_payload_cwd(repo: Path):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(worktree),
+        "tool_input": {
+            "command": "echo x > curriculum/tracked.md",
+            "workdir": str(repo),
+        },
+    }
+
+    result = _run(repo, payload)
+
+    assert result.returncode == 2, result.stderr
+    assert "tracked_primary_checkout" in result.stderr
+
+
+def test_bash_line_continuation_cannot_hide_primary_in_place_edit(repo: Path):
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {
+            "command": "sed -i \\\n-e 's/old/new/' curriculum/tracked.md",
+        },
+    }
+
+    result = _run(repo, payload)
+
+    assert result.returncode == 2, result.stderr
+    assert "tracked_primary_checkout" in result.stderr
 
 
 def test_write_capable_bash_redirect_blocked(repo: Path):
