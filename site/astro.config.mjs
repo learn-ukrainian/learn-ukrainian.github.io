@@ -10,6 +10,7 @@ import rehypeMermaid from 'rehype-mermaid';
 import remarkDirective from 'remark-directive';
 import remarkGfm from 'remark-gfm';
 import remarkAdmonitions from './plugins/remark-admonitions.mjs';
+import { rawAtlasShardTransport } from './plugins/raw-atlas-shard-transport.mjs';
 import vocabEtymologyLinker from './plugins/vocab-etymology-link.mjs';
 
 const remarkPlugins = [remarkDirective, remarkAdmonitions, remarkGfm, vocabEtymologyLinker];
@@ -48,6 +49,20 @@ const isRedirectSource = (page) => {
   );
 };
 
+/** @type {import('astro').AstroAdapter} */
+const rawAtlasPreviewAdapter = {
+  name: 'raw-atlas-preview',
+  previewEntrypoint: fileURLToPath(new URL('./plugins/astro-raw-atlas-preview.mjs', import.meta.url)),
+  supportedAstroFeatures: {
+    hybridOutput: { message: 'Static preview only', support: 'unsupported', suppress: 'all' },
+    serverOutput: { message: 'Static preview only', support: 'unsupported', suppress: 'all' },
+    sharpImageService: { message: 'Static preview only', support: 'unsupported', suppress: 'all' },
+    staticOutput: 'stable',
+  },
+  entrypointResolution: 'auto',
+};
+let isPreviewCommand = false;
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://learn-ukrainian.github.io',
@@ -62,6 +77,7 @@ export default defineConfig({
 
   // Prevent duplicate React instances (SSR + client hydration)
   vite: {
+    plugins: [rawAtlasShardTransport()],
     server: {
       fs: {
         allow: [starlightRoot, starlightNodeModules],
@@ -80,6 +96,17 @@ export default defineConfig({
   },
 
   integrations: [
+    {
+      name: 'raw-atlas-preview-adapter',
+      hooks: {
+        'astro:config:setup': ({ command }) => {
+          isPreviewCommand = command === 'preview';
+        },
+        'astro:config:done': ({ setAdapter }) => {
+          if (isPreviewCommand) setAdapter(rawAtlasPreviewAdapter);
+        },
+      },
+    },
     // GoatCounter — privacy-friendly analytics (no cookies, no PII). Injected on
     // every page from astro.config so coverage does not depend on any single layout.
     // Site code is hardcoded (always active in the production build — no env var that

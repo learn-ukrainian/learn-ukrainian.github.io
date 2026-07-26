@@ -83,6 +83,7 @@ dist/
 /build/
 *.tsbuildinfo
 output/json/
+site/public/atlas/
 
 # IDE
 .idea/
