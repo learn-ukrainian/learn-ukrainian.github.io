@@ -196,18 +196,28 @@ steering warning with `BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1`.
 `publish-review-verdict`. `scripts/audit/llm_reviewer_dispatch.py` content-review
 routes remain `ask-* --review` (module QG, not PR CF).
 
-After a reviewer writes a short verdict or findings JSON, publish exactly one
-PR comment without relaying the full body through the orchestrator:
+After a reviewer writes canonical `code-review-findings.v1` JSON, publish it
+with exactly one PR comment. The publisher retains the overall explanation and
+every finding; it derives the gate verdict from the canonical evidence rather
+than treating a detached verdict line as proof:
 
 ```bash
 .venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict \
-  --pr 5458 --verdict-file /tmp/review-verdict.txt \
+  --pr 5458 --findings-json /tmp/review-findings.json \
   --model gpt-5.6-terra --family openai --harness codex
 ```
 
-The comment contains only `VERDICT`, the PR head SHA, and reviewer provenance.
-The command prints a ≤2 KiB status summary; use `--findings-json` for a JSON
-file with a top-level `verdict`, and `--dry-run` to verify the payload locally.
+The comment keeps `VERDICT`, the PR head SHA, and reviewer provenance, then
+renders the explanation and each finding's priority, path/line, description,
+rationale, smallest fix, and sources. A verdict with no explanation and no
+findings is marked **NO EVIDENCE SUPPLIED** in the published comment. If a
+review is too large for GitHub, the publisher retains the overall explanation,
+truncates findings last, and names the full structured record. The command
+prints a ≤2 KiB status summary; use `--dry-run` to verify the payload locally.
+
+`--verdict-file` remains a legacy escape hatch, but its published comment
+explicitly says that no review evidence was supplied. It is not equivalent to
+a canonical review.
 
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py review-deep <PR-or-path> [--effort xhigh]` dispatches an
 adversarial Claude review run. It hardcodes `--agent claude --mode

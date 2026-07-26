@@ -109,7 +109,7 @@ def test_publish_matrix_posts_comment_and_status(
     assert len(comment_calls) == 1
     body = comment_calls[0][comment_calls[0].index("--body") + 1]
     assert f"VERDICT: {verdict}" in body
-    assert "findings" not in body.lower()
+    assert "NO EVIDENCE SUPPLIED" in body
     status_calls = [c for c in gh.calls if c[1] == "api"]
     assert any(f"state={status}" in " ".join(c) for c in status_calls)
     assert any(DEFAULT_STATUS_CONTEXT in " ".join(c) for c in status_calls)

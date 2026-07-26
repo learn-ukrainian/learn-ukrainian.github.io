@@ -174,6 +174,7 @@ def test_formal_review_verdict_is_sealed_as_an_immutable_json_artifact(tmp_path:
         "model": "claude-sonnet-5",
         "pr_number": 5512,
         "repository": _REPOSITORY,
+        "review_evidence": None,
         "review_id": result.review_id,
         "verdict": "APPROVED",
     }
