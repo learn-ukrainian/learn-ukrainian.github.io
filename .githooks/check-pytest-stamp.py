@@ -10,10 +10,18 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
-import time
 from pathlib import Path
 
-MARKER_MAX_AGE_SECONDS = 10 * 60
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from pytest_stamp import (
+    MARKER_MAX_AGE_SECONDS,
+    StampIdentity,
+    marker_is_fresh,
+    marker_path,
+    stamp_identity_for_branch,
+)
+
 TRIGGER_PREFIXES = (
     "tests/",
     "scripts/",
@@ -98,33 +106,8 @@ def _branch_from_local_ref(local_ref: str, local_sha: str) -> str | None:
     return branches[0] if len(branches) == 1 else None
 
 
-def _marker_path(branch: str) -> Path:
-    """Resolve the stamp path exactly as ``${TMPDIR:-/tmp}`` does for the writer.
-
-    The writer is ``agents_extensions/shared/hooks/stamp-pytest.sh``. Two ways the
-    two sides can disagree, both of which send this hook looking somewhere the stamp
-    was never written:
-
-    * EMPTY ``TMPDIR`` — shell parameter expansion treats it as unset, so ``or`` is
-      used here rather than a ``get()`` default (which would yield ``""``).
-    * NON-ABSOLUTE ``TMPDIR`` — each side would resolve it against its own working
-      directory, and those differ: the stamper runs from a PostToolUse cwd, while git
-      runs this non-bare hook from the worktree root. Neither side can honour a
-      relative value safely, so both fall back to ``/tmp``.
-    """
-    tmpdir = os.environ.get("TMPDIR") or "/tmp"
-    if not tmpdir.startswith("/"):
-        tmpdir = "/tmp"
-    return Path(tmpdir) / f"learn-uk-pytest.{branch}.stamp"
-
-
-def _marker_is_fresh(marker: Path) -> bool | None:
-    try:
-        return time.time() - marker.stat().st_mtime <= MARKER_MAX_AGE_SECONDS
-    except FileNotFoundError:
-        return False
-    except OSError:
-        return None
+def _stamp_identity(branch: str) -> StampIdentity | None:
+    return stamp_identity_for_branch(Path.cwd(), branch)
 
 
 def _block_message(branch: str, marker: Path) -> None:
@@ -189,12 +172,18 @@ def main() -> int:
         if branch is None:
             _verification_error("could not determine the local source branch for the pytest stamp")
             return 1
-        marker = _marker_path(branch)
-        marker_is_fresh = _marker_is_fresh(marker)
-        if marker_is_fresh is None:
+        identity = _stamp_identity(branch)
+        if identity is None:
+            _verification_error(
+                f"could not resolve the registered worktree for local branch '{branch}'"
+            )
+            return 1
+        marker = marker_path(identity)
+        is_fresh = marker_is_fresh(marker, identity)
+        if is_fresh is None:
             _verification_error(f"could not inspect the pytest stamp at {marker}")
             return 1
-        if not marker_is_fresh:
+        if not is_fresh:
             _block_message(branch, marker)
             return 1
 

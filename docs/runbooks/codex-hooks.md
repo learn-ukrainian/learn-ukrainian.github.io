@@ -14,6 +14,34 @@ Codex hook facts verified from the current OpenAI Codex manual on 2026-07-05:
 - Hook command trust is separate from project trust. For automation that already
   vets the hook source, use `--dangerously-bypass-hook-trust`.
 
+## Pytest stamp and pre-push guard
+
+`agents_extensions/shared/hooks/stamp-pytest.sh` is the deployed
+`PostToolUse`/`PostToolUseFailure` writer. It delegates parsing and marker
+identity to `.githooks/pytest_stamp.py`; `.githooks/check-pytest-stamp.py` uses
+that same contract in the tracked `pre-push` chain.
+
+A marker is namespaced to the canonical Git common directory, exact registered
+worktree, and checked-out branch. A fresh marker from another clone, worktree,
+or same-named branch cannot satisfy the guard. Marker contents carry the same
+identity key, so legacy, empty, or partially written marker files fail closed.
+
+The writer trusts a successful hook event only for one direct pytest invocation.
+Compound commands and failure events require a clean pytest summary in the
+captured output; masked failures, zero-test runs, multiple pytest invocations,
+and collection/help-only modes do not stamp. Only named result/output envelope
+fields are inspected; arbitrary metadata and command-input strings are not
+trusted as test output. The exact checkout comes from the structured Bash
+`cwd`/`workdir` payload. A command-level `cd`/`pushd` is not guessed from shell
+text—set the tool's `workdir` instead.
+
+Stamping remains observational and exits successfully when it cannot prove the
+run. It uses the checkout or shared primary `.venv/bin/python` and deliberately
+does not fall back to a system `python3`, which could belong to another checkout
+or violate the repository's pinned-environment contract. The subsequent push
+then fails with a rerun instruction. An intentional operator bypass remains
+`git push --no-verify`.
+
 ## Primary-checkout write guard (#4448)
 
 `guard-primary-checkout-write.py` is a `PreToolUse` guard that blocks a write

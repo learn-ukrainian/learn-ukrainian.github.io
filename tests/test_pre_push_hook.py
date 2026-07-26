@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import time
 from pathlib import Path
@@ -72,7 +73,7 @@ def _git(repo: Path, *args: str, env: dict[str, str] | None = None) -> subproces
 
 def _repo_with_change(tmp_path: Path, changed_path: str = "tests/example.py") -> tuple[Path, str, str]:
     repo = tmp_path / "repo"
-    repo.mkdir()
+    repo.mkdir(parents=True)
     _git(repo, "init", "-b", "feature")
     _git(repo, "config", "user.email", "test@example.invalid")
     _git(repo, "config", "user.name", "Test User")
@@ -123,9 +124,22 @@ def _hook(
     )
 
 
-def _stamp(tmp_path: Path, branch: str = "feature") -> Path:
+def _stamp(tmp_path: Path, repo: Path, branch: str = "feature") -> Path:
     tmp_path.mkdir(exist_ok=True)
-    return tmp_path / f"learn-uk-pytest.{branch}.stamp"
+    hook = _load_hook_module()
+    identity = hook.stamp_identity_for_branch(repo, branch)
+    assert identity is not None
+    return hook.marker_path(identity, {"TMPDIR": str(tmp_path)})
+
+
+def _write_valid_stamp(tmp_path: Path, repo: Path, branch: str = "feature") -> Path:
+    hook = _load_hook_module()
+    identity = hook.stamp_identity_for_branch(repo, branch)
+    assert identity is not None
+    marker = hook.marker_path(identity, {"TMPDIR": str(tmp_path)})
+    marker.parent.mkdir(exist_ok=True)
+    marker.write_text(f"{identity.key}\n", encoding="utf-8")
+    return marker
 
 
 def _configure_guard_only_hook(repo: Path, tmp_path: Path) -> None:
@@ -146,14 +160,18 @@ def _run_stamp_writer(
     payload: dict[str, object],
     *,
     tmpdir: Path,
+    hook_cwd: Path | None = None,
 ) -> subprocess.CompletedProcess[str]:
+    resolved_payload = dict(payload)
+    resolved_payload.setdefault("cwd", str(repo))
+    resolved_payload.setdefault("hook_event_name", "PostToolUse")
     return subprocess.run(
         [str(STAMP_PATH)],
         capture_output=True,
         check=False,
-        cwd=repo,
+        cwd=hook_cwd or repo,
         env=_git_environment({"TMPDIR": str(tmpdir)}),
-        input=json.dumps(payload),
+        input=json.dumps(resolved_payload),
         text=True,
         timeout=30,
     )
@@ -171,8 +189,7 @@ def test_blocks_main_update_with_trigger_path_and_no_stamp(tmp_path):
 
 def test_allows_main_update_with_fresh_stamp(tmp_path):
     repo, remote_sha, local_sha = _repo_with_change(tmp_path)
-    stamp = _stamp(tmp_path / "stamps")
-    stamp.touch()
+    stamp = _write_valid_stamp(tmp_path / "stamps", repo)
 
     result = _hook(repo, _update(local_sha, remote_sha), tmpdir=stamp.parent)
 
@@ -181,14 +198,24 @@ def test_allows_main_update_with_fresh_stamp(tmp_path):
 
 def test_blocks_main_update_with_stamp_older_than_600_seconds(tmp_path):
     repo, remote_sha, local_sha = _repo_with_change(tmp_path)
-    stamp = _stamp(tmp_path / "stamps")
-    stamp.touch()
+    stamp = _write_valid_stamp(tmp_path / "stamps", repo)
     stale_time = time.time() - 601
     os.utime(stamp, (stale_time, stale_time))
 
     result = _hook(repo, _update(local_sha, remote_sha), tmpdir=stamp.parent)
 
     assert result.returncode == 1
+
+
+def test_blocks_main_update_with_corrupt_stamp_content(tmp_path):
+    repo, remote_sha, local_sha = _repo_with_change(tmp_path)
+    stamp = _stamp(tmp_path / "stamps", repo)
+    stamp.write_text("not-this-checkout\n", encoding="utf-8")
+
+    result = _hook(repo, _update(local_sha, remote_sha), tmpdir=stamp.parent)
+
+    assert result.returncode == 1
+    assert "Rerun pytest" in result.stderr
 
 
 @pytest.mark.parametrize(
@@ -200,7 +227,12 @@ def test_blocks_main_update_with_stamp_older_than_600_seconds(tmp_path):
         ("/var/custom-tmp", "/var/custom-tmp"),  # ordinary absolute value is honoured
     ],
 )
-def test_marker_path_resolution_matches_the_stamp_writer(tmpdir_value, expected_parent, monkeypatch):
+def test_marker_path_resolution_matches_the_stamp_writer(
+    tmp_path,
+    tmpdir_value,
+    expected_parent,
+    monkeypatch,
+):
     """The reader must resolve TMPDIR exactly as `${TMPDIR:-/tmp}` does for the writer.
 
     Writer is `agents_extensions/shared/hooks/stamp-pytest.sh`. Two ways the two sides
@@ -223,10 +255,13 @@ def test_marker_path_resolution_matches_the_stamp_writer(tmpdir_value, expected_
     else:
         monkeypatch.setenv("TMPDIR", tmpdir_value)
 
-    marker = hook._marker_path("feature")
+    repo, _, _ = _repo_with_change(tmp_path)
+    identity = hook.stamp_identity_for_branch(repo, "feature")
+    assert identity is not None
+    marker = hook.marker_path(identity)
 
     assert marker.parent == Path(expected_parent)
-    assert marker.name == "learn-uk-pytest.feature.stamp"
+    assert marker.name == f"learn-uk-pytest.v2.{identity.key}.stamp"
     assert marker.is_absolute(), "a relative marker path can never match the writer's"
 
 
@@ -348,7 +383,7 @@ def test_stamp_writer_records_successful_pytest_runs(tmp_path, command):
     result = _run_stamp_writer(repo, {"tool_input": {"command": command}}, tmpdir=stamp_dir)
 
     assert result.returncode == 0
-    assert _stamp(stamp_dir).exists()
+    assert _stamp(stamp_dir, repo).exists()
 
 
 def test_stamp_writer_leaves_no_stamp_from_detached_head(tmp_path):
@@ -364,6 +399,155 @@ def test_stamp_writer_leaves_no_stamp_from_detached_head(tmp_path):
 
     assert result.returncode == 0
     assert not stamp_dir.exists()
+
+
+def test_stamp_writer_does_not_fallback_to_system_python(tmp_path):
+    repo = tmp_path / "repo-without-venv"
+    hook = repo / "agents_extensions/shared/hooks/stamp-pytest.sh"
+    helper = repo / ".githooks/pytest_stamp.py"
+    fake_bin = tmp_path / "fake-bin"
+    system_python_log = tmp_path / "system-python.log"
+    hook.parent.mkdir(parents=True)
+    helper.parent.mkdir(parents=True)
+    fake_bin.mkdir()
+    shutil.copy2(STAMP_PATH, hook)
+    helper.write_text("raise SystemExit(99)\n", encoding="utf-8")
+    (repo / "package.json").write_text("{}\n", encoding="utf-8")
+    _git(repo, "init", "-b", "feature")
+    fake_python = fake_bin / "python3"
+    fake_python.write_text(
+        '#!/bin/sh\nprintf "called\\n" >> "$SYSTEM_PYTHON_LOG"\n',
+        encoding="utf-8",
+    )
+    fake_python.chmod(0o755)
+    environment = _git_environment(
+        {
+            "CLAUDE_PROJECT_DIR": str(repo),
+            "PATH": f"{fake_bin}:{os.environ['PATH']}",
+            "SYSTEM_PYTHON_LOG": str(system_python_log),
+        }
+    )
+
+    result = subprocess.run(
+        [str(hook)],
+        capture_output=True,
+        check=False,
+        cwd=repo,
+        env=environment,
+        input=json.dumps(
+            {
+                "cwd": str(repo),
+                "hook_event_name": "PostToolUse",
+                "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q"},
+            }
+        ),
+        text=True,
+        timeout=30,
+    )
+
+    assert result.returncode == 0
+    assert not system_python_log.exists()
+
+
+def test_stamp_writer_uses_tool_workdir_instead_of_hook_process_cwd(tmp_path):
+    tested_repo, _, _ = _repo_with_change(tmp_path / "tested")
+    hook_repo, _, _ = _repo_with_change(tmp_path / "hook")
+    _git(hook_repo, "branch", "-m", "main")
+    stamp_dir = tmp_path / "stamps"
+    payload = {
+        "cwd": str(hook_repo),
+        "hook_event_name": "PostToolUse",
+        "tool_input": {
+            "command": ".venv/bin/python -m pytest tests/ -q",
+            "workdir": str(tested_repo),
+        },
+    }
+
+    result = _run_stamp_writer(
+        tested_repo,
+        payload,
+        tmpdir=stamp_dir,
+        hook_cwd=hook_repo,
+    )
+
+    assert result.returncode == 0
+    assert _stamp(stamp_dir, tested_repo).exists()
+    assert not _stamp(stamp_dir, hook_repo, "main").exists()
+
+
+def test_successful_shell_wrapper_does_not_mask_failed_pytest(tmp_path):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+    payload = {
+        "hook_event_name": "PostToolUse",
+        "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q || true"},
+        "tool_output": "================== 1 failed, 19 passed in 0.65s ==================",
+    }
+
+    result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
+
+    assert result.returncode == 0
+    assert not _stamp(stamp_dir, repo).exists()
+
+
+@pytest.mark.parametrize(
+    "command",
+    (
+        ".venv/bin/python -m pytest --collect-only",
+        ".venv/bin/python -m pytest --co",
+        ".venv/bin/python -m pytest --help",
+    ),
+)
+def test_successful_non_execution_pytest_modes_do_not_stamp(tmp_path, command):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+
+    result = _run_stamp_writer(
+        repo,
+        {
+            "hook_event_name": "PostToolUse",
+            "tool_input": {"command": command},
+        },
+        tmpdir=stamp_dir,
+    )
+
+    assert result.returncode == 0
+    assert not _stamp(stamp_dir, repo).exists()
+
+
+def test_command_level_directory_change_is_not_misattributed_to_payload_cwd(tmp_path):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+    payload = {
+        "hook_event_name": "PostToolUse",
+        "tool_input": {"command": "cd elsewhere && .venv/bin/python -m pytest -q"},
+        "tool_output": "====================== 10 passed in 0.40s ======================",
+    }
+
+    result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
+
+    assert result.returncode == 0
+    assert not _stamp(stamp_dir, repo).exists()
+
+
+def test_every_pytest_segment_must_have_a_passing_summary(tmp_path):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+    payload = {
+        "hook_event_name": "PostToolUse",
+        "tool_input": {
+            "command": (
+                ".venv/bin/python -m pytest tests/first.py -q; "
+                ".venv/bin/python -m pytest tests/second.py -q || true"
+            )
+        },
+        "tool_output": "====================== 10 passed in 0.40s ======================",
+    }
+
+    result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
+
+    assert result.returncode == 0
+    assert not _stamp(stamp_dir, repo).exists()
 
 
 @pytest.mark.parametrize(
@@ -386,7 +570,68 @@ def test_stamp_writer_checks_pytest_result_after_a_compound_command(tmp_path, ou
     result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
 
     assert result.returncode == 0
-    assert _stamp(stamp_dir).exists() is should_stamp
+    assert _stamp(stamp_dir, repo).exists() is should_stamp
+
+
+def test_nested_known_tool_response_can_prove_compound_pytest_success(tmp_path):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+    payload = {
+        "hook_event_name": "PostToolUseFailure",
+        "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q && exit 1"},
+        "tool_response": {
+            "stdout": "====================== 10 passed in 0.40s ======================"
+        },
+    }
+
+    result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
+
+    assert result.returncode == 0
+    assert _stamp(stamp_dir, repo).exists()
+
+
+def test_unrelated_payload_text_cannot_fake_a_passing_summary(tmp_path):
+    repo, _, _ = _repo_with_change(tmp_path)
+    stamp_dir = tmp_path / "stamps"
+    passing_text = "====================== 10 passed in 0.40s ======================"
+    payload = {
+        "hook_event_name": "PostToolUseFailure",
+        "tool_input": {
+            "command": ".venv/bin/python -m pytest tests/ -q && exit 1",
+            "description": passing_text,
+        },
+        "metadata": {"note": passing_text},
+    }
+
+    result = _run_stamp_writer(repo, payload, tmpdir=stamp_dir)
+
+    assert result.returncode == 0
+    assert not _stamp(stamp_dir, repo).exists()
+
+
+def test_same_branch_name_in_another_repo_cannot_reuse_stamp(tmp_path):
+    first_repo, _, _ = _repo_with_change(tmp_path / "first")
+    second_repo, remote_sha, local_sha = _repo_with_change(tmp_path / "second")
+    stamp_dir = tmp_path / "stamps"
+
+    writer = _run_stamp_writer(
+        first_repo,
+        {
+            "hook_event_name": "PostToolUse",
+            "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q"},
+        },
+        tmpdir=stamp_dir,
+    )
+    guarded_push = _hook(
+        second_repo,
+        _update(local_sha, remote_sha),
+        tmpdir=stamp_dir,
+    )
+
+    assert writer.returncode == 0
+    assert _stamp(stamp_dir, first_repo).exists()
+    assert _stamp(stamp_dir, first_repo) != _stamp(stamp_dir, second_repo)
+    assert guarded_push.returncode == 1
 
 
 def test_no_verify_skips_hook_for_an_actual_push(tmp_path):
@@ -447,6 +692,48 @@ def test_actual_head_to_main_push_is_blocked_from_a_non_main_branch(tmp_path):
 
     assert result.returncode == 1
     assert "Push to main blocked" in result.stderr
+
+
+def test_actual_head_to_main_push_accepts_stamp_for_the_invoking_worktree(tmp_path):
+    repo, _, _ = _repo_with_change(tmp_path)
+    remote = tmp_path / "remote.git"
+    stamp_dir = tmp_path / "stamps"
+    subprocess.run(
+        ["git", "init", "--bare", str(remote)],
+        check=True,
+        capture_output=True,
+        env=_git_environment(),
+        text=True,
+        timeout=30,
+    )
+    _git(repo, "remote", "add", "origin", str(remote))
+    _configure_guard_only_hook(repo, tmp_path)
+    _git(repo, "push", "--no-verify", "origin", "HEAD:main")
+
+    (repo / "tests" / "second.py").write_text("second change\n", encoding="utf-8")
+    _git(repo, "add", "tests/second.py")
+    _git(repo, "commit", "-m", "second change")
+    writer = _run_stamp_writer(
+        repo,
+        {
+            "hook_event_name": "PostToolUse",
+            "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q"},
+        },
+        tmpdir=stamp_dir,
+    )
+
+    result = subprocess.run(
+        ["git", "push", "origin", "HEAD:main"],
+        capture_output=True,
+        check=False,
+        cwd=repo,
+        env=_git_environment({"TMPDIR": str(stamp_dir)}),
+        text=True,
+        timeout=30,
+    )
+
+    assert writer.returncode == 0
+    assert result.returncode == 0, result.stderr
 
 
 @pytest.mark.parametrize(

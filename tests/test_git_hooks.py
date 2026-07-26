@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess
@@ -269,8 +270,20 @@ def test_full_pre_push_chain_replays_updates_to_the_pytest_guard(tmp_path):
     assert blocked.returncode == 1
     assert "Push to main blocked" in blocked.stderr
 
-    stamp = Path(env["TMPDIR"]) / "learn-uk-pytest.feature.stamp"
-    stamp.touch()
+    stamped = _run(
+        [str(_project_python()), str(repo / ".githooks/pytest_stamp.py")],
+        cwd=repo,
+        env=env,
+        input_text=json.dumps(
+            {
+                "cwd": str(repo),
+                "hook_event_name": "PostToolUse",
+                "tool_input": {"command": ".venv/bin/python -m pytest tests/ -q"},
+            }
+        ),
+    )
+    assert stamped.returncode == 0
+    assert len(list(Path(env["TMPDIR"]).glob("learn-uk-pytest.v2.*.stamp"))) == 1
     pushed = _git(repo, "push", "origin", "feature:main", env=env)
     assert pushed.returncode == 0
     calls = Path(env["HOOK_LOG"]).read_text(encoding="utf-8").splitlines()
