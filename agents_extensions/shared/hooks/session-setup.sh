@@ -118,23 +118,28 @@ SESSION_START_BUDGET_SECONDS="${SESSION_START_BUDGET_SECONDS:-12}"
 if ! [[ "$SESSION_START_BUDGET_SECONDS" =~ ^[1-9][0-9]*$ ]]; then
   SESSION_START_BUDGET_SECONDS=12
 fi
-run_bounded() {
+clamp_bounded_timeout() {
   local requested_timeout="$1"
   local elapsed_seconds=$((SECONDS - SESSION_START_STARTED_SECONDS))
   local remaining_seconds=$((SESSION_START_BUDGET_SECONDS - elapsed_seconds))
-  local timeout_seconds="$requested_timeout"
-  shift
-  if [ ! -x "$BOUNDED_PYTHON" ] || [ ! -f "$BOUNDED_RUNNER" ]; then
-    return 127
-  fi
   if [ "$remaining_seconds" -le 0 ]; then
     echo "SessionStart aggregate ${SESSION_START_BUDGET_SECONDS}s command budget exhausted." >&2
     return 124
   fi
-  if [ "$timeout_seconds" -gt "$remaining_seconds" ]; then
-    timeout_seconds="$remaining_seconds"
+  CLAMPED_BOUNDED_TIMEOUT_SECONDS="$requested_timeout"
+  if [ "$CLAMPED_BOUNDED_TIMEOUT_SECONDS" -gt "$remaining_seconds" ]; then
+    CLAMPED_BOUNDED_TIMEOUT_SECONDS="$remaining_seconds"
   fi
-  "$BOUNDED_PYTHON" "$BOUNDED_RUNNER" --timeout "$timeout_seconds" -- "$@"
+}
+run_bounded() {
+  local requested_timeout="$1"
+  shift
+  if [ ! -x "$BOUNDED_PYTHON" ] || [ ! -f "$BOUNDED_RUNNER" ]; then
+    return 127
+  fi
+  clamp_bounded_timeout "$requested_timeout" || return $?
+  "$BOUNDED_PYTHON" "$BOUNDED_RUNNER" \
+    --timeout "$CLAMPED_BOUNDED_TIMEOUT_SECONDS" -- "$@"
 }
 
 # Hook-owned state uses the same bounded local-lock contract. fcntl releases
@@ -335,12 +340,17 @@ if [ "${CODEX_SESSION:-0}" = "1" ] \
     # shellcheck disable=SC1090
     source "$ROLLOVER_LINK_HELPER"
     VERIFY_OUTPUT=""
-    if ! VERIFY_OUTPUT=$(verify_codex_pending_rollover \
-      "$CANONICAL_ROOT" \
-      "$HANDOFF_AGENT" \
-      "$CODEX_LAUNCHER_ROLLOVER_AGENT" \
-      "$CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID" \
-      "$CODEX_LAUNCHER_ROLLOVER_ID" 2>&1); then
+    if ! clamp_bounded_timeout 3; then
+      HANDOFF_CONTEXT="ERROR: CODEX LAUNCHER ROLLOVER PREFLIGHT SKIPPED — SessionStart command budget exhausted; no rollover was mutated."
+    elif ! VERIFY_OUTPUT=$(
+      THREAD_ROLLOVER_COMMAND_TIMEOUT_SECONDS="$CLAMPED_BOUNDED_TIMEOUT_SECONDS" \
+        verify_codex_pending_rollover \
+          "$CANONICAL_ROOT" \
+          "$HANDOFF_AGENT" \
+          "$CODEX_LAUNCHER_ROLLOVER_AGENT" \
+          "$CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID" \
+          "$CODEX_LAUNCHER_ROLLOVER_ID" 2>&1
+    ); then
       HANDOFF_CONTEXT="ERROR: CODEX LAUNCHER ROLLOVER PREFLIGHT CHANGED — stop; no rollover was mutated.
 Output:
 $VERIFY_OUTPUT"

@@ -31,7 +31,8 @@ def test_session_start_has_a_hard_outer_budget() -> None:
     source = SESSION_SETUP.read_text(encoding="utf-8")
     assert 'SESSION_START_BUDGET_SECONDS="${SESSION_START_BUDGET_SECONDS:-12}"' in source
     assert "remaining_seconds=$((SESSION_START_BUDGET_SECONDS - elapsed_seconds))" in source
-    assert 'if [ "$timeout_seconds" -gt "$remaining_seconds" ]' in source
+    assert 'clamp_bounded_timeout "$requested_timeout" || return $?' in source
+    assert 'if [ "$CLAMPED_BOUNDED_TIMEOUT_SECONDS" -gt "$remaining_seconds" ]' in source
 
 
 def test_session_start_defers_optional_network_diagnostics() -> None:
@@ -51,6 +52,10 @@ def test_rollover_and_postcompact_commands_are_bounded() -> None:
 
     assert "LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS=1" in session_source
     assert "THREAD_ROLLOVER_COMMAND_TIMEOUT_SECONDS=3" in session_source
+    assert (
+        'THREAD_ROLLOVER_COMMAND_TIMEOUT_SECONDS="$CLAMPED_BOUNDED_TIMEOUT_SECONDS"'
+        in session_source
+    )
     assert 'run_bounded 3 "$ROLLOVER_PYTHON"' in session_source
     assert 'run_bounded 2 "$ROLLOVER_PYTHON"' in compact_source
     assert "_HOOK_SOURCE_ROOT" not in session_source
