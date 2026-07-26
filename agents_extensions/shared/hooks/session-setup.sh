@@ -508,6 +508,27 @@ if [ -n "${SESSION_EPIC:-}" ]; then
   esac
 fi
 
+render_ambiguous_rollover_context() {
+  local original_detect_output="$1"
+  local formatted_context=""
+
+  if formatted_context=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+    --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
+    --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" \
+    --format session-start 2>&1); then
+    printf '%s' "$formatted_context"
+    return 0
+  fi
+
+  cat <<EOF
+ERROR: MULTIPLE live pending rollovers — do not cold-start; bind one exact candidate.
+Formatting lookup failed:
+${formatted_context:-no output}
+Detection output:
+$original_detect_output
+EOF
+}
+
 if [ -z "$HANDOFF_CONTEXT" ] && ! DETECT_OUTPUT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
   --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
   --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" --format json 2>&1); then
@@ -518,10 +539,7 @@ try:
 except Exception:
   print("")' 2>/dev/null || true)
   if [ "$DETECT_ERR_CODE" = "MULTIPLE_LIVE_PENDING_ROLLOVERS" ]; then
-    HANDOFF_CONTEXT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
-      --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
-      --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" \
-      --format session-start 2>&1 || true)
+    HANDOFF_CONTEXT=$(render_ambiguous_rollover_context "$DETECT_OUTPUT")
   else
     HANDOFF_CONTEXT="ERROR: thread_handoff.py detect failed. Stop.
 Output:
@@ -534,10 +552,7 @@ elif ! DETECT_STATUS=$(printf '%s' "$DETECT_OUTPUT" | "$ROLLOVER_PYTHON" -c 'imp
 Output:
 $DETECT_OUTPUT"
 elif [ "$DETECT_STATUS" = "ambiguous" ]; then
-  HANDOFF_CONTEXT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
-    --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
-    --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" \
-    --format session-start 2>&1 || true)
+  HANDOFF_CONTEXT=$(render_ambiguous_rollover_context "$DETECT_OUTPUT")
 elif [ "$DETECT_STATUS" = "pending_start" ] || [ "$DETECT_STATUS" = "resumed" ]; then
   if ! HANDOFF_CONTEXT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
     --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
