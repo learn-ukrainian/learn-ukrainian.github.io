@@ -116,11 +116,22 @@ jobs:
         with:
           python-version: "3.12"
 
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+        with:
+          version: "0.11.28"
+          enable-cache: false
+
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6.0.0
         with:
           node-version: "22"
           cache: npm
           cache-dependency-path: site/package-lock.json
+
+      - name: Restore deterministic package cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/uv
+          key: uv-packages-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch-cpu
 
       - name: Run web and quality checks with an explicit timeout report
         run: |
@@ -128,10 +139,10 @@ jobs:
           set +e
           timeout --verbose --signal=TERM --kill-after=60s 1320s bash -eo pipefail <<'CHECKS'
             quality_started="$(date +%s)"
-            python -m venv .quality-venv
-            .quality-venv/bin/python -m pip install --upgrade pip
-            .quality-venv/bin/python -m pip install --no-deps ruff==0.15.21
-            .quality-venv/bin/python -m ruff check scripts tests
+            uv venv --python 3.12 .venv
+            grep -vE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt > "$RUNNER_TEMP/requirements-ci.txt"
+            uv pip install --python .venv/bin/python --no-deps -r "$RUNNER_TEMP/requirements-ci.txt"
+            .venv/bin/python -m ruff check scripts tests
             ACTIONLINT_FORCE_DOWNLOAD=1 scripts/audit/check_workflows.sh .github/workflows/ci.yml
             quality_elapsed="$(( $(date +%s) - quality_started ))"
             echo "quality_elapsed_seconds=${quality_elapsed}" | tee -a "$GITHUB_STEP_SUMMARY"

@@ -101,5 +101,6 @@ def test_workflow_uses_the_node_planner_and_fail_closed_gate() -> None:
     assert "./node_modules/.bin/playwright test" in workflow
     assert "npm --prefix site exec -- playwright test" not in workflow
     assert "needs: [pytest, web_quality]" in workflow
+    assert "uv venv --python 3.12 .venv" in workflow
     for forbidden in ("GITHUB_BASE_REF", "changed-files", "paths-filter", "git diff"):
         assert forbidden not in workflow

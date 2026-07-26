@@ -18,9 +18,10 @@ unconditional on pull requests, merge groups, and pushes to `main`.
   override contract test. Tests requiring ignored databases or ignored external
   JSONL retain their explicit pytest skip reason instead of failing
   mysteriously.
-- One combined web-and-quality job runs Ruff, Actionlint, frontend unit tests,
-  a production build, and Chromium browser tests. Alongside the five pytest
-  shards, it caps the normal concurrent runner demand at six slots.
+- One combined web-and-quality job provisions the Python runtime used by site
+  hydration, then runs Ruff, Actionlint, frontend unit tests, a production
+  build, and Chromium browser tests. Alongside the five pytest shards, it caps
+  the normal concurrent runner demand at six slots.
 
 The workflow reports a measured duration in every job summary. The pytest
 evidence verifier also reports the measured duration of each shard.
