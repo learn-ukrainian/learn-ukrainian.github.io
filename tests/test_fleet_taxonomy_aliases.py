@@ -297,3 +297,24 @@ def test_hermetic_launcher_unknown_selector_fails_closed_contract(
         f"stdout: {result.stdout}\nstderr: {result.stderr}"
     )
     assert "unknown lane selector" in result.stderr.lower() or "invalid" in result.stderr.lower()
+
+
+def test_inventory_handoff_candidates_survive_missing_resolver(monkeypatch):
+    """#5857 r3: deployed/sandbox copies lack the repo-root ``scripts`` package.
+
+    The thread-restart e2e sandbox materializes ``inventory.py`` without
+    ``scripts/orchestration`` — a module-level resolver import crashed the whole
+    session supervisor there (ModuleNotFoundError). The resolver import must be
+    lazy and degrade to the legacy map. Mutation check: with the import hoisted
+    back to module level, the blocked-module fallback below is unreachable and
+    the resolved slug ('infra') breaks this assertion.
+    """
+    import sys
+
+    from agents_extensions.shared.session_streams import inventory
+
+    monkeypatch.setitem(sys.modules, "scripts.orchestration.fleet_taxonomy", None)
+    candidates = inventory._handoff_candidates_for("infra-harness", 99999)
+    # Legacy-map answer ('harness'); the resolver would give 'infra' — so a hoisted
+    # module-level import makes this assertion fail, keeping the mutation detectable.
+    assert candidates[0] == ".claude/harness-epic/CLAUDE-DRIVER-HANDOFF.md"
