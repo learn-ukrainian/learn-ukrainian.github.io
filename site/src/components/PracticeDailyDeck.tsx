@@ -50,7 +50,11 @@ export default function PracticeDailyDeck({
   );
 
   const total = snapshot.items.length;
-  const currentLemmaId = orderedRows[previewIndex]?.item.lemmaId ?? null;
+  const currentItem = orderedRows[previewIndex]?.item ?? null;
+  const currentLemmaId = currentItem?.lemmaId ?? null;
+  // The practice-lexemes map is OPTIONAL ENRICHMENT ONLY (ipa, an extra pos
+  // tag) — most daily-pool picks are not in this much smaller map, so the
+  // card must never depend on a hit here to render (#5852).
   const currentLexeme = currentLemmaId ? lexemes.get(currentLemmaId) ?? null : null;
 
   const handlePrevious = () => {
@@ -67,13 +71,17 @@ export default function PracticeDailyDeck({
     setFlipped((value) => !value);
   };
 
-  const frontSubtitle = currentLexeme
-    ? [currentLexeme.ipa, currentLexeme.pos, currentLexeme.cefr].filter(Boolean).join(' · ')
+  const displayGloss = currentItem?.gloss ?? currentLexeme?.gloss ?? null;
+  const displayCefr = currentItem?.cefr ?? currentLexeme?.cefr ?? null;
+  const frontSubtitle = currentItem
+    ? [currentLexeme?.ipa, currentLexeme?.pos, displayCefr].filter(Boolean).join(' · ')
     : '';
   const showStressMarks = learnerLevel === 'A1';
   const displayLemma = (lemma: string) => (showStressMarks ? lemma : stripStressMarks(lemma));
-  const currentExample = currentLexeme?.example?.trim() || null;
-  const currentExampleEn = showStressMarks ? currentLexeme?.exampleEn?.trim() || null : null;
+  const currentExample = currentLexeme?.example?.trim() || currentItem?.example?.trim() || null;
+  const currentExampleEn = showStressMarks
+    ? currentLexeme?.exampleEn?.trim() || currentItem?.exampleEn?.trim() || null
+    : null;
 
   return (
     <div className="practice-daily-deck" data-testid="practice-daily-deck">
@@ -115,9 +123,9 @@ export default function PracticeDailyDeck({
         >
           <div className="flashcard-inner">
             <div className="flashcard-front">
-              {currentLexeme ? (
+              {currentItem ? (
                 <>
-                  <span className="flashcard-word">{displayLemma(currentLexeme.lemma)}</span>
+                  <span className="flashcard-word">{displayLemma(currentItem.lemma)}</span>
                   {frontSubtitle && <span className="flashcard-subtitle">{frontSubtitle}</span>}
                 </>
               ) : (
@@ -125,10 +133,10 @@ export default function PracticeDailyDeck({
               )}
             </div>
             <div className="flashcard-back">
-              {currentLexeme ? (
+              {currentItem ? (
                 <>
-                  <span className="flashcard-word">{currentLexeme.gloss}</span>
-                  {currentLexeme.pos && (
+                  <span className="flashcard-word">{displayGloss ?? '—'}</span>
+                  {currentLexeme?.pos && (
                     <span className="flashcard-subtitle">{currentLexeme.pos}</span>
                   )}
                   {currentExample ? (
@@ -200,6 +208,8 @@ export default function PracticeDailyDeck({
           {orderedRows.map((row, index) => {
             const meta = STATUS_META[row.state];
             const entry = lexemes.get(row.item.lemmaId);
+            const rowLemma = row.item.lemma || entry?.lemma || row.item.lemmaId;
+            const rowGloss = row.item.gloss ?? entry?.gloss ?? null;
             const lastSeen = row.lastSeenAt === null ? null : formatLastSeenAgo(row.lastSeenAt);
             const why =
               row.state === 'due'
@@ -226,8 +236,8 @@ export default function PracticeDailyDeck({
                   </span>
                   <span className="row-number">{index + 1}</span>
                   <span className="row-identity">
-                    <span className="row-lemma">{displayLemma(entry?.lemma ?? row.item.lemmaId)}</span>
-                    {entry?.gloss ? <span className="row-gloss">{entry.gloss}</span> : null}
+                    <span className="row-lemma">{displayLemma(rowLemma)}</span>
+                    {rowGloss ? <span className="row-gloss">{rowGloss}</span> : null}
                     <span className="row-why" data-testid={`practice-daily-why-${row.item.lemmaId}`}>
                       <ChromeDual uk={why.uk} en={why.en} />
                     </span>

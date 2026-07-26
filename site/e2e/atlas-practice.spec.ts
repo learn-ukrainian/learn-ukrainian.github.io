@@ -362,6 +362,27 @@ test('A1: the practice Words-of-the-Day zone shows the same 12 as /words-of-the-
   expect(new Set(practiceLemmas)).toEqual(new Set(atlasLemmas));
 });
 
+test('A1b: the Words-of-the-Day preview card renders a real word and gloss on real data, not "—" (#5852)', async ({ page, context }) => {
+  await context.clearCookies();
+
+  await page.addInitScript(() => window.localStorage.setItem('lu-learner-level', 'A1'));
+
+  await page.goto('/words-of-the-day/practice/');
+
+  const card = page.locator('.daily-preview-card');
+  await expect(card).toBeVisible();
+  const front = card.locator('.flashcard-front .flashcard-word');
+  await expect(front).toBeVisible();
+  await expect(front).not.toHaveText('—');
+  expect(((await front.textContent()) ?? '').trim().length).toBeGreaterThan(0);
+
+  await card.click();
+  await expect(card).toHaveAttribute('data-flipped', 'true');
+  const back = card.locator('.flashcard-back .flashcard-word');
+  await expect(back).not.toHaveText('—');
+  expect(((await back.textContent()) ?? '').trim().length).toBeGreaterThan(0);
+});
+
 test('A2: starting two sessions back-to-back yields different item sequences', async ({ page, context }) => {
   await context.clearCookies();
 

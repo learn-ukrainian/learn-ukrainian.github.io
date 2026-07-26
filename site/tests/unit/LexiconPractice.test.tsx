@@ -709,12 +709,12 @@ describe('LexiconPractice', () => {
       locative: 'ма́мі',
     }, { example: 'Мама читає.', exampleEn: 'Mother is reading.' });
     const snapshot: DailyPracticeDeckSnapshot = {
-      version: 1,
+      version: 2,
       date: '2026-06-23',
       level: 'A1',
       deckVersion: 'test-daily-display',
       createdAt: NOW.getTime(),
-      items: [{ lemmaId: marked.lemmaId, origin: 'due' }],
+      items: [{ lemmaId: marked.lemmaId, origin: 'due', lemma: marked.lemma, gloss: marked.gloss, cefr: marked.cefr }],
     };
     const rows: { pendingDue: DailyPracticeRowState[]; pendingNew: DailyPracticeRowState[]; done: DailyPracticeRowState[] } = {
       pendingDue: [{ item: snapshot.items[0]!, state: 'due', lastSeenAt: NOW.getTime() }],
@@ -740,6 +740,88 @@ describe('LexiconPractice', () => {
     expect(screen.queryByText('ма́ма')).not.toBeInTheDocument();
     expect(screen.getAllByText('мама').length).toBeGreaterThan(0);
     expect(screen.queryByTestId('practice-daily-example-en')).not.toBeInTheDocument();
+  });
+
+  test('renders the daily card from the pick payload when the slug is absent from the practice-lexemes map (#5852)', () => {
+    const snapshot: DailyPracticeDeckSnapshot = {
+      version: 2,
+      date: '2026-06-23',
+      level: 'A1',
+      deckVersion: 'daily-pool',
+      createdAt: NOW.getTime(),
+      items: [
+        {
+          lemmaId: 'борщ',
+          origin: 'new',
+          lemma: 'борщ',
+          gloss: 'borscht',
+          cefr: 'A1',
+          example: 'Я їм борщ.',
+          exampleEn: 'I am eating borscht.',
+        },
+      ],
+    };
+    const rows: { pendingDue: DailyPracticeRowState[]; pendingNew: DailyPracticeRowState[]; done: DailyPracticeRowState[] } = {
+      pendingDue: [],
+      pendingNew: [{ item: snapshot.items[0]!, state: 'new', lastSeenAt: null }],
+      done: [],
+    };
+
+    render(
+      <PracticeDailyDeck
+        snapshot={snapshot}
+        rows={rows}
+        // Empty: 'борщ' is NOT in the (much smaller) practice-lexemes map — the
+        // live #5852 failure mode. The card must still render from the item.
+        lexemes={new Map()}
+        atlasLemmaHref={(lemmaId) => `/lexicon/${lemmaId}/`}
+        chromeLocale="uk"
+        learnerLevel="A1"
+      />,
+    );
+
+    expect(screen.getAllByText('борщ').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('borscht').length).toBeGreaterThan(0);
+    expect(screen.getByTestId('practice-daily-example')).toHaveTextContent('Я їм борщ.');
+    expect(screen.getByTestId('practice-daily-example-en')).toHaveTextContent('I am eating borscht.');
+    expect(screen.queryByText('—')).not.toBeInTheDocument();
+  });
+
+  test('enriches the daily card with ipa/pos from the practice-lexemes map when a lexeme exists for the pick (#5852)', () => {
+    const enrichment = lexeme('борщ', 'борщ', 'borscht (lexeme gloss)', {
+      nominative: 'борщ',
+      accusative: 'борщ',
+      locative: 'борщі',
+    }, { ipa: 'bɔrʃtʃ', pos: 'noun' });
+    const snapshot: DailyPracticeDeckSnapshot = {
+      version: 2,
+      date: '2026-06-23',
+      level: 'A1',
+      deckVersion: 'daily-pool',
+      createdAt: NOW.getTime(),
+      items: [{ lemmaId: 'борщ', origin: 'new', lemma: 'борщ', gloss: 'borscht', cefr: 'A1' }],
+    };
+    const rows: { pendingDue: DailyPracticeRowState[]; pendingNew: DailyPracticeRowState[]; done: DailyPracticeRowState[] } = {
+      pendingDue: [],
+      pendingNew: [{ item: snapshot.items[0]!, state: 'new', lastSeenAt: null }],
+      done: [],
+    };
+
+    render(
+      <PracticeDailyDeck
+        snapshot={snapshot}
+        rows={rows}
+        lexemes={new Map([[enrichment.lemmaId, enrichment]])}
+        atlasLemmaHref={(lemmaId) => `/lexicon/${lemmaId}/`}
+        chromeLocale="uk"
+        learnerLevel="A1"
+      />,
+    );
+
+    // ipa is enrichment-only, sourced from the lexeme map.
+    expect(screen.getByText(/bɔrʃtʃ/)).toBeInTheDocument();
+    // The pick payload's own gloss remains the source of truth for the card text.
+    expect(screen.getAllByText('borscht').length).toBeGreaterThan(0);
   });
 
   test('uses a lemma-matched cloze sentence only when a lexeme example is absent', () => {
