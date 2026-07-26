@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import os
 import shlex
 import shutil
 import subprocess
+import time
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -59,6 +61,7 @@ def _copy_repo_subset(target: Path) -> None:
         # mirror every file the script actually invokes, or deploy exits non-zero
         # here for a reason that has nothing to do with the behaviour under test.
         Path("scripts/deploy/reap_agent_mirrors.py"),
+        Path("scripts/deploy/sync_agent_mirror.py"),
         Path("scripts/lint_prompts.py"),
         Path("scripts/lint/lint_prompts.py"),
         Path("scripts/lint/lint_agent_skills.py"),
@@ -241,6 +244,76 @@ def test_agent_manifest_rejects_symlinked_intermediate_component(tmp_path: Path)
     assert (repo / ".agent" / "escape").is_symlink()
     assert "symlinked component 'escape'" in output
     assert "ignoring unsafe manifest entry 'f escape/victim.txt'" in output
+
+
+def test_agent_overlay_write_stays_in_held_directory_after_root_swap(tmp_path: Path) -> None:
+    """A post-validation `.agent` symlink swap must not redirect rsync writes.
+
+    The rsync shim waits only when the agent overlay begins.  At that point the
+    production helper has already opened and fchdir'ed into `.agent`; the test
+    swaps the pathname to an external directory before allowing the real rsync
+    binary to run.  A regression to ``rsync ... .agent/`` writes settings.json
+    outside the fixture and fails this test.
+    """
+    repo = _init_checkout(tmp_path)
+    # Exercise the post-validation race from the review: the root is a real
+    # directory before deploy starts, then becomes a symlink immediately before
+    # rsync writes.  (A clean first deploy is covered separately.)
+    (repo / ".agent").mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    ready = tmp_path / "rsync-ready"
+    release = tmp_path / "rsync-release"
+    fake_bin = tmp_path / "fake-bin"
+    fake_bin.mkdir()
+    real_rsync = shutil.which("rsync")
+    assert real_rsync, "rsync is required for the deploy integration test"
+    (fake_bin / "rsync").write_text(
+        "#!/usr/bin/env bash\n"
+        "set -euo pipefail\n"
+        'last="${!#}"\n'
+        'if [[ "$last" == "." || "$last" == ".agent" || "$last" == ".agent/" ]]; then\n'
+        '    : > "$SYNC_AGENT_RACE_READY"\n'
+        '    while [[ ! -e "$SYNC_AGENT_RACE_RELEASE" ]]; do sleep 0.01; done\n'
+        "fi\n"
+        f"exec {shlex.quote(real_rsync)} \"$@\"\n",
+        encoding="utf-8",
+    )
+    (fake_bin / "rsync").chmod(0o755)
+    environment = os.environ | {
+        "PATH": f"{fake_bin}{os.pathsep}{os.environ['PATH']}",
+        "SYNC_AGENT_RACE_READY": str(ready),
+        "SYNC_AGENT_RACE_RELEASE": str(release),
+    }
+    process = subprocess.Popen(
+        ["bash", str(DEPLOY_SCRIPT)],
+        cwd=repo,
+        env=environment,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        deadline = time.monotonic() + 10
+        while not ready.exists() and process.poll() is None and time.monotonic() < deadline:
+            time.sleep(0.02)
+        assert ready.exists(), "the descriptor-bound .agent rsync never started"
+
+        held_agent = repo / ".agent-held"
+        (repo / ".agent").rename(held_agent)
+        (repo / ".agent").symlink_to(outside, target_is_directory=True)
+    finally:
+        release.touch()
+        stdout, stderr = process.communicate(timeout=120)
+
+    output = f"{stdout}\n{stderr}"
+    assert process.returncode == 0, output
+    assert not (outside / "settings.json").exists(), (
+        "shared content was written through the swapped .agent symlink"
+    )
+    assert (repo / ".agent-held" / "settings.json").is_file(), (
+        "rsync did not write into the directory held before the pathname swap"
+    )
 
 
 def test_agent_manifest_unlinks_symlink_leaf_without_following_target(tmp_path: Path) -> None:

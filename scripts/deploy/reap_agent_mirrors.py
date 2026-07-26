@@ -119,13 +119,19 @@ def _walk_to_parent(agent_root: str, parts: list[str]) -> tuple[int, list[int]]:
         try:
             fd = _open_dir_nofollow(None, agent_root)
         except OSError as exc:
-            raise ComponentRefused(agent_root, _classify_component(None, agent_root)) from exc
+            reason = _classify_component(None, agent_root)
+            if reason in {"symlinked component", "non-directory component"}:
+                raise ComponentRefused(agent_root, reason) from exc
+            raise
         opened.append(fd)
         for component in parts[:-1]:
             try:
                 fd = _open_dir_nofollow(fd, component)
             except OSError as exc:
-                raise ComponentRefused(component, _classify_component(fd, component)) from exc
+                reason = _classify_component(fd, component)
+                if reason in {"symlinked component", "non-directory component"}:
+                    raise ComponentRefused(component, reason) from exc
+                raise
             opened.append(fd)
     except BaseException:
         # Review finding P2: this list is LOCAL. When we raise, the caller's own
@@ -141,16 +147,6 @@ def _close_all(fds: list[int]) -> None:
     for fd in fds:
         with contextlib.suppress(OSError):
             os.close(fd)
-
-
-def _describe(exc: OSError, relative: str) -> str:
-    if exc.errno == errno.ELOOP:
-        return f"{REDACTED_UNSAFE} '{relative}': symlinked component refused"
-    if exc.errno == errno.ENOTDIR:
-        return f"{REDACTED_UNSAFE} '{relative}': component is not a directory"
-    if exc.errno == errno.ENOENT:
-        return f"  .agent: nothing to remove for '{relative}'"
-    return f"{REDACTED_UNSAFE} '{relative}': {exc.strerror}"
 
 
 def reap_entry(agent_root: str, kind: str, relative: str) -> tuple[bool, str]:
@@ -170,8 +166,8 @@ def reap_entry(agent_root: str, kind: str, relative: str) -> tuple[bool, str]:
         # now closes its own fds before propagating. Closing a stale number here
         # would risk closing an unrelated fd that reused it.
         return False, f"  .agent: {unsafe}: {exc.reason} '{exc.component}'"
-    except OSError as exc:
-        return False, f"  .agent: {_describe(exc, relative)}"
+    except FileNotFoundError:
+        return False, f"  .agent: nothing to remove for '{relative}'"
 
     try:
         try:
@@ -206,8 +202,11 @@ def reap_entry(agent_root: str, kind: str, relative: str) -> tuple[bool, str]:
                     return False, ""
                 raise
         return True, f"  .agent: removed retired deploy artifact '{relative}'"
-    except OSError as exc:
-        return False, f"  .agent: {_describe(exc, relative)}"
+    except OSError:
+        # Refusals are returned explicitly above.  Any other filesystem error
+        # (for example EIO from unlink) is operational: propagate it so main()
+        # reports the affected entry and returns a non-zero status.
+        raise
     finally:
         _close_all(opened)
 
@@ -285,6 +284,10 @@ def main(argv: list[str]) -> int:
         nonlocal refused, errored
         try:
             removed, message = reap_entry(agent_root, kind, relative)
+        except OSError as exc:
+            errored += 1
+            print(f"  .agent: operational error reaping '{relative}': {exc}", file=sys.stderr)
+            return
         except Exception as exc:  # broad on purpose: one bad entry must not abort the reap
             errored += 1
             print(f"  .agent: internal error reaping '{relative}': {exc}", file=sys.stderr)
