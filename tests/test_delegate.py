@@ -4683,3 +4683,65 @@ def test_interrupt_during_the_runtime_call_still_records_a_terminal_status(
     assert state is not None
     assert state["status"] != "running", "a killed worker was left claiming to run"
     assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
+
+
+def test_interrupt_at_the_cleanup_boundary_is_inside_the_region(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """The exact boundary round eight reported: cleanup done, handler restored.
+
+    _sigterm_deferred restores the SIGTERM handler on exit, and the old region
+    began only afterwards — so a signal delivered in that instruction gap
+    escaped. Raising from the context manager's exit places the interrupt
+    precisely there. It now lands inside the region because the runtime
+    `finally` is itself inside it.
+    """
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("boundary-interrupt")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "boundary-interrupt",
+        "status": "running",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    @contextlib.contextmanager
+    def interrupt_on_restore():
+        yield
+        raise KeyboardInterrupt("SIGTERM as the handler was restored")
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_sigterm_deferred", interrupt_on_restore),
+        patch.object(delegate, "_worktree_is_dirty", return_value=False),
+        patch.object(delegate, "_count_commits_ahead", return_value=2),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="boundary-interrupt",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+                runtime_tmp_root=str(tmp_path / "runtime-tmp"),
+            )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] != "running", "interrupt at the boundary stranded the task"
+    assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
