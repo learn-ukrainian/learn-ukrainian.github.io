@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sys
+import types
 import urllib.error
 from pathlib import Path
 
@@ -360,6 +361,14 @@ def test_dispatch_capacity_hint_printed_when_target_lane_busy(monkeypatch, tmp_p
     }))
 
     delegate._check_capacity_hint("codex")
-    err = capsys.readouterr().err
-    assert "💡 Note: lane 'codex' has 1 task(s) in flight while idle capacity is available in:" in err
-    assert "claude" in err
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert "💡 Note: lane 'codex' has 1 task(s) in flight while idle capacity is available in:" in captured.err
+    assert "claude" in captured.err
+
+    # Machine/JSON mode suppresses hints entirely
+    mock_args = types.SimpleNamespace(json=True)
+    delegate._check_capacity_hint("codex", args=mock_args)
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""

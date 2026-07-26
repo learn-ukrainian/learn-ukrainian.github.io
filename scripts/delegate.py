@@ -2895,7 +2895,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     else:
         dispatch_agent = args.agent
 
-    _check_capacity_hint(dispatch_agent)
+    _check_capacity_hint(dispatch_agent, args=args)
 
     try:
         output_schema_path, output_schema_sha256 = _resolve_output_schema(
@@ -3525,8 +3525,11 @@ def _resolve_agent_with_budget_guard(agent: str) -> str:
     return requested
 
 
-def _check_capacity_hint(dispatch_agent: str) -> None:
+def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = None) -> None:
     """Non-blocking hint when dispatching to a busy lane while other eligible lanes are idle."""
+    if args is not None and (getattr(args, "json", False) or getattr(args, "quiet", False)):
+        return
+
     with contextlib.suppress(Exception):
         try:
             from scripts.api.lane_health import compute_lane_health, normalize_agent_name
