@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -82,6 +83,61 @@ def test_wiki_mlx_safe_mode_excludes_the_mlx_override_contract() -> None:
     assert pytest_evidence._is_wiki_node("tests/wiki/test_ukrainian_wiki_corpus.py::test_encode")
     assert pytest_evidence._is_wiki_node("tests/test_wiki_source_attribution.py::test_source")
     assert not pytest_evidence._is_wiki_node("tests/test_mlx_bridge_gate.py::test_force_mlx_override")
+
+
+def test_evidence_plugin_persists_the_last_dispatched_node(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    nodeid = "tests/test_example.py::test_last_started"
+    plan = tmp_path / "plan.txt"
+    executed = tmp_path / "executed.txt"
+    current = tmp_path / "current.txt"
+    plan.write_text(f"{nodeid}\n", encoding="utf-8")
+    monkeypatch.setenv("CI_PYTEST_PLAN_FILE", str(plan))
+    monkeypatch.setenv("CI_PYTEST_EXECUTED_FILE", str(executed))
+    monkeypatch.setenv("CI_PYTEST_CURRENT_FILE", str(current))
+
+    plugin = pytest_evidence.EvidencePlugin(SimpleNamespace())
+    plugin.pytest_runtest_logstart(nodeid, ("tests/test_example.py", 1, "test_last_started"))
+
+    assert current.read_text(encoding="utf-8") == f"{nodeid}\n"
+
+
+def test_shard_runner_disables_worker_restart_and_exports_current_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = tmp_path / "repo"
+    python = repo / ".venv" / "bin" / "python"
+    python.parent.mkdir(parents=True)
+    python.touch()
+    evidence = tmp_path / "evidence"
+    evidence.mkdir()
+    (evidence / "plan.txt").write_text("tests/test_example.py::test_node\n", encoding="utf-8")
+    captured: dict[str, object] = {}
+
+    class FakeProcess:
+        def wait(self, timeout: int) -> int:
+            assert timeout == 1800
+            return 0
+
+    def fake_popen(command: list[str], **kwargs: object) -> FakeProcess:
+        captured["command"] = command
+        captured["environment"] = kwargs["env"]
+        return FakeProcess()
+
+    monkeypatch.delenv("CI_PYTEST_COVERAGE", raising=False)
+    monkeypatch.setattr(pytest_shard.subprocess, "Popen", fake_popen)
+
+    assert pytest_shard.run(
+        SimpleNamespace(repo_root=repo, evidence_dir=evidence, shard=1, timeout_seconds=1800)
+    ) == 0
+
+    command = captured["command"]
+    environment = captured["environment"]
+    assert isinstance(command, list)
+    assert isinstance(environment, dict)
+    assert "--max-worker-restart=0" in command
+    assert environment["CI_PYTEST_CURRENT_FILE"] == str((evidence / "current.txt").resolve())
+    run = json.loads((evidence / "run.json").read_text(encoding="utf-8"))
+    assert run["current_nodeid"] is None
 
 
 def test_stale_quarantine_fails_closed() -> None:

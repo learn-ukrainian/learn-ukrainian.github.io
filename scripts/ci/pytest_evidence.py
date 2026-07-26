@@ -22,6 +22,7 @@ class EvidencePlugin:
         self.config = config
         self.plan_path = Path(os.environ["CI_PYTEST_PLAN_FILE"])
         self.executed_path = Path(os.environ["CI_PYTEST_EXECUTED_FILE"])
+        self.current_path = Path(os.environ["CI_PYTEST_CURRENT_FILE"])
         self.expected = {
             nodeid for nodeid in self.plan_path.read_text(encoding="utf-8").splitlines() if nodeid
         }
@@ -64,6 +65,20 @@ class EvidencePlugin:
         # A node missing here means pytest never reached its execution protocol.
         if report.when == "setup":
             self.executed.add(report.nodeid)
+
+    def pytest_runtest_logstart(self, nodeid: str, location: tuple[str, int, str]) -> None:
+        """Persist the last node the controller dispatched before a worker can die.
+
+        xdist can lose its only worker after it has received a node but before
+        the worker emits a setup report.  The outer shard wrapper must still
+        name that node in its timeout evidence rather than report an anonymous
+        worker crash.
+        """
+        del location
+        self.current_path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = self.current_path.with_name(f".{self.current_path.name}.tmp")
+        temporary.write_text(f"{nodeid}\n", encoding="utf-8")
+        temporary.replace(self.current_path)
 
     def pytest_sessionfinish(self, session: pytest.Session, exitstatus: int) -> None:
         # xdist workers inherit this plugin.  The controller receives their reports

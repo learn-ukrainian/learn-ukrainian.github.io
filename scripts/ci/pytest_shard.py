@@ -255,11 +255,21 @@ def _terminate_process_group(process: subprocess.Popen[bytes]) -> None:
         process.wait(timeout=30)
 
 
+def _read_current_nodeid(path: Path) -> str | None:
+    """Return the last node dispatched by pytest's controller, when present."""
+    try:
+        nodeids = [line for line in path.read_text(encoding="utf-8").splitlines() if line]
+    except OSError:
+        return None
+    return nodeids[-1] if nodeids else None
+
+
 def run(args: argparse.Namespace) -> int:
     repo_root = Path(args.repo_root).resolve()
     evidence_dir = Path(args.evidence_dir)
     plan_path = evidence_dir / "plan.txt"
     executed_path = evidence_dir / "executed.txt"
+    current_path = evidence_dir / "current.txt"
     plan = [line for line in plan_path.read_text(encoding="utf-8").splitlines() if line]
     if not plan:
         raise ShardPlanError(f"{plan_path} has no runnable node IDs")
@@ -276,6 +286,7 @@ def run(args: argparse.Namespace) -> int:
         "addopts=",
         "-n",
         "1",
+        "--max-worker-restart=0",
         "--dist",
         "loadgroup",
         "--strict-markers",
@@ -300,12 +311,14 @@ def run(args: argparse.Namespace) -> int:
         **os.environ,
         "CI_PYTEST_PLAN_FILE": str(plan_path.resolve()),
         "CI_PYTEST_EXECUTED_FILE": str(executed_path.resolve()),
+        "CI_PYTEST_CURRENT_FILE": str(current_path.resolve()),
         "PYTHONFAULTHANDLER": "1",
     }
     if coverage_enabled:
         environment["COVERAGE_FILE"] = str(coverage_file.resolve())
     started = time.monotonic()
     timed_out = False
+    current_nodeid: str | None = None
     returncode: int
     process = subprocess.Popen(command, cwd=repo_root, env=environment, start_new_session=True)
     try:
@@ -313,10 +326,12 @@ def run(args: argparse.Namespace) -> int:
     except subprocess.TimeoutExpired:
         timed_out = True
         returncode = 124
+        current_nodeid = _read_current_nodeid(current_path)
+        current_detail = f"; last_started_node={current_nodeid}" if current_nodeid else ""
         print(
             "::error title=pytest shard timeout::"
             f"shard {args.shard} exceeded the {args.timeout_seconds}-second job wrapper; "
-            "the timeout evidence artifact names it explicitly."
+            f"the timeout evidence artifact names it explicitly{current_detail}."
         )
         _atomic_json_write(
             evidence_dir / "timeout.json",
@@ -324,6 +339,7 @@ def run(args: argparse.Namespace) -> int:
                 "shard": args.shard,
                 "timeout_seconds": args.timeout_seconds,
                 "timed_out": True,
+                "current_nodeid": current_nodeid,
             },
         )
         _terminate_process_group(process)
@@ -334,6 +350,8 @@ def run(args: argparse.Namespace) -> int:
             f"shard {args.shard} completed without {coverage_file}"
         )
     elapsed = round(time.monotonic() - started, 3)
+    if current_nodeid is None:
+        current_nodeid = _read_current_nodeid(current_path)
     _atomic_json_write(
         evidence_dir / "run.json",
         {
@@ -343,6 +361,7 @@ def run(args: argparse.Namespace) -> int:
             "shard": args.shard,
             "timed_out": timed_out,
             "coverage_enabled": coverage_enabled,
+            "current_nodeid": current_nodeid,
         },
     )
     print(f"pytest shard {args.shard}: returncode={returncode} elapsed_seconds={elapsed}")

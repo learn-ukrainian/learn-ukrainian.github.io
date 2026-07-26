@@ -46,8 +46,10 @@ evidence verifier also reports the measured duration of each shard.
 ## Time bounds
 
 Pytest uses a 15-minute per-test timeout and a 30-minute wrapper that writes a
-named timeout record before the 35-minute GitHub job limit. The combined web
-and quality job has a 22-minute wrapper inside a 25-minute job. Integrity
+named timeout record with the last dispatched node ID before the 35-minute
+GitHub job limit. Its sole xdist worker is not restarted after a crash, so a
+worker failure cannot silently consume the remaining wrapper time. The combined
+web and quality job has a 22-minute wrapper inside a 25-minute job. Integrity
 contracts have a 15-minute wrapper inside a 20-minute job. These are failure
 ceilings, not expected durations.
 
