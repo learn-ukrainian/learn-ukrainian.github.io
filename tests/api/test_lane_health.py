@@ -344,3 +344,21 @@ def test_recommendation_no_health_fields_anywhere(monkeypatch, tmp_path):
     assert rec["primary_agent_for_code"] == "claude"
     assert not any("skipped" in w for w in rec["warnings"])
     assert not any("unhealthy" in w for w in rec["warnings"])
+
+
+def test_recommendation_all_unavailable_does_not_claim_all_hot(monkeypatch, tmp_path):
+    now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
+    records = [
+        _mock_cost_record("claude (interactive)", 10.0, now - timedelta(hours=1)),
+    ]
+    _configure_test_budgets(monkeypatch, tmp_path, records)
+
+    # When all subscription lanes have unavailable status (no CodexBar data observed),
+    # verify router does NOT make false 'inline_orchestrator' or 'all hot' claims.
+    budget = state_router.compute_routing_budget(now)
+    rec = budget["recommendation"]
+
+    assert rec["primary_agent_for_code"] != "inline_orchestrator"
+    assert not any("all agents near cap" in w for w in rec["warnings"])
+    assert "All agents are hot or near cap" not in rec["rationale"]
+

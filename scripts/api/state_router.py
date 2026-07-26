@@ -316,9 +316,9 @@ def _round_money(value: float | None) -> float | None:
     return round(float(value), 2)
 
 
-def _format_pct(value: float | None) -> str:
-    if value is None:
-        return "unknown"
+def _format_pct(value: float | str | None) -> str:
+    if value is None or isinstance(value, str):
+        return str(value) if value is not None else "unknown"
     return f"{value:.1f}".rstrip("0").rstrip(".")
 
 
@@ -430,23 +430,20 @@ def _recommend_agent(
     for a in SUBSCRIPTION_LANES:
         if a in core or a not in agents:
             continue
-        status_by_agent[a] = agents[a].get("status", "unknown")
-        burn_by_agent[a] = agents[a].get("burn_pct_7d")
-        resets_by[a] = agents[a].get("resets_at")
+        st = agents[a].get("status", "unknown")
+        if st not in ("unknown", "unavailable"):
+            status_by_agent[a] = st
+            burn_by_agent[a] = agents[a].get("burn_pct_7d")
+            resets_by[a] = agents[a].get("resets_at")
 
-    # If no usable data at all for rec, suppress
-    usable = [a for a, s in status_by_agent.items() if s not in {"unknown", "pre_launch", None}]
-    if not usable or all(s in {"hot", "near_cap", "unknown"} for s in status_by_agent.values()):
-        if all(s in {"hot", "near_cap"} for s in status_by_agent.values() if s not in {"unknown"}):
-            warnings.append("all agents near cap — orchestrator inline-mode contingency may be needed soon")
-            return {
-                "primary_agent_for_code": "inline_orchestrator",
-                "rationale": "All agents are hot or near cap; preserve remaining provider quota for high-judgment work.",
-                "warnings": warnings,
-            }
+    # Only claim inline_orchestrator if at least one lane is actually observed AND all observed lanes are hot/near_cap.
+    # An empty observation set (all unknown/unavailable) must NEVER satisfy this.
+    observed_statuses = [s for s in status_by_agent.values() if s not in {"unknown", "unavailable"}]
+    if observed_statuses and all(s in {"hot", "near_cap"} for s in observed_statuses):
+        warnings.append("all agents near cap — orchestrator inline-mode contingency may be needed soon")
         return {
-            "primary_agent_for_code": None,
-            "rationale": "No usable subscription lane headroom data for confident recommendation (stale/empty/unknowns).",
+            "primary_agent_for_code": "inline_orchestrator",
+            "rationale": "All agents are hot or near cap; preserve remaining provider quota for high-judgment work.",
             "warnings": warnings,
         }
 
@@ -469,6 +466,10 @@ def _recommend_agent(
         )
 
     def select_agent(agents_dict, status_map, burn_map, resets_map):
+        def _sort_burn(agent: str) -> float:
+            val = burn_map.get(agent)
+            return float(val) if isinstance(val, (int, float)) else 999.0
+
         if "near_cap" in status_map.values():
             candidates = [agent for agent, st in status_map.items() if st == "cool"]
             if not candidates:
@@ -476,7 +477,7 @@ def _recommend_agent(
             if candidates:
                 # prefer non-imminent if possible
                 non_imm = [c for c in candidates if c not in imminent] or candidates
-                recommended = min(non_imm, key=lambda agent: burn_map.get(agent) or 0.0)
+                recommended = min(non_imm, key=_sort_burn)
                 return {
                     "primary_agent_for_code": recommended,
                     "rationale": (
@@ -497,7 +498,7 @@ def _recommend_agent(
         cool_lanes = [a for a, s in status_map.items() if s == "cool"]
         if cool_lanes:
             pool = [c for c in cool_lanes if c not in imminent] or cool_lanes
-            recommended = min(pool, key=lambda agent: burn_map.get(agent) or 0.0)
+            recommended = min(pool, key=_sort_burn)
             rationale = (
                 "All agents cool or warm; default split applies. "
                 f"{recommended} 7d burn is {_format_pct(burn_map.get(recommended))}%. "
@@ -510,7 +511,7 @@ def _recommend_agent(
         warm_lanes = [a for a, s in status_map.items() if s == "warm"]
         if warm_lanes:
             pool = [c for c in warm_lanes if c not in imminent] or warm_lanes
-            recommended = min(pool, key=lambda agent: burn_map.get(agent) or 0.0)
+            recommended = min(pool, key=_sort_burn)
             rationale = f"Mixed; {recommended} has lowest 7d burn ({_format_pct(burn_map.get(recommended))}%)."
             return {
                 "primary_agent_for_code": recommended,
@@ -518,15 +519,33 @@ def _recommend_agent(
             }
 
         # fallback to lowest burn among known
-        known = list(status_map.keys())
+        known = [a for a, s in status_map.items() if s not in ("unknown", "unavailable")]
         if known:
-            recommended = min(known, key=lambda agent: burn_map.get(agent) or 0.0)
+            recommended = min(known, key=_sort_burn)
             return {
                 "primary_agent_for_code": recommended,
                 "rationale": f"Mixed routing state; {recommended} currently has the lowest 7d burn ({_format_pct(burn_map.get(recommended))}%).",
             }
 
-        return {"primary_agent_for_code": None, "rationale": "insufficient data"}
+        # Doctrine #5816: lanes without pace data are partly blind, not unusable.
+        # Fall back to in-flight count + lane health, picking the first eligible candidate.
+        unknown_candidates = [a for a in ("claude", "codex", "gemini") if a in status_map]
+        if not unknown_candidates:
+            unknown_candidates = [a for a in status_map if a in SUBSCRIPTION_LANES]
+        if unknown_candidates:
+            def _sort_in_flight(lane_name: str) -> int:
+                return int(agents_dict.get(lane_name, {}).get("in_flight", 0))
+
+            recommended = min(unknown_candidates, key=_sort_in_flight)
+            return {
+                "primary_agent_for_code": recommended,
+                "rationale": f"Capacity data unavailable for subscription lanes (partly blind); fallback recommendation {recommended} based on lane health and in-flight signals.",
+            }
+
+        return {
+            "primary_agent_for_code": None,
+            "rationale": "No usable subscription lane headroom data for confident recommendation (stale/empty/unknowns).",
+        }
 
     # 1. Determine baseline budget-only recommendation (ignore health)
     budget_only_res = select_agent(agents, status_by_agent, burn_by_agent, resets_by)
@@ -849,16 +868,16 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 if cb_data.get("weekly_resets_at"):
                     agents[lane]["resets_at"] = cb_data["weekly_resets_at"]
 
-        elif cb_data and cb_data.get("auth_error"):
-            # Provider/credential error from codexbar (e.g. Kimi CLI credentials
-            # expired — 2026-07-17 incident). The CLI positively reported the lane
-            # is unavailable, so override any ledger-derived "cool"/0%-burn verdict
-            # (an empty ledger with a cap would otherwise render the seat as 100%
-            # available, or a stale ledger as 0%). Surface status='unknown' with
-            # the error message carried; NEVER 0% remaining, never an absent row.
-            agents[lane]["status"] = "unknown"
+        else:
+            # CodexBar capacity is unavailable (missing binary, timeout, non-zero exit, malformed JSON, unparseable schema, provider error, or fallback).
+            # Authoritative subscription capacity is ABSENT — mark lane explicitly UNAVAILABLE.
+            # Never present ledger-derived numeric burn/remaining/status as authoritative capacity.
+            agents[lane]["status"] = "unavailable"
             agents[lane]["burn_pct_7d"] = None
             agents[lane]["remaining_pct"] = None
+            err_msg = (cb_data.get("auth_error") if isinstance(cb_data, dict) else None) or "CodexBar usage data unavailable"
+            err_kind = (cb_data.get("error_kind") if isinstance(cb_data, dict) else None) or "unavailable"
+            err_code = cb_data.get("error_code") if isinstance(cb_data, dict) else None
             agents[lane]["codexbar"] = {
                 "primary_used_pct": None,
                 "primary_remaining_pct": None,
@@ -875,15 +894,15 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 "weekly_pace_delta_pct": None,
                 "will_last_to_reset": None,
                 "pace_summary": None,
-                "stale": cb_data.get("stale", False),
-                "fetched_at": cb_data.get("fetched_at"),
-                "status": "unknown",
-                "auth_error": cb_data.get("auth_error"),
-                "error_kind": cb_data.get("error_kind"),
-                "error_code": cb_data.get("error_code"),
+                "stale": cb_data.get("stale", False) if isinstance(cb_data, dict) else False,
+                "fetched_at": cb_data.get("fetched_at") if isinstance(cb_data, dict) else None,
+                "status": "unavailable",
+                "auth_error": err_msg,
+                "error_kind": err_kind,
+                "error_code": err_code,
             }
             if lane == "claude":
-                agents[lane]["interactive"]["status"] = "unknown"
+                agents[lane]["interactive"]["status"] = "unavailable"
                 agents[lane]["interactive"]["burn_pct_7d"] = None
 
     # Hybrid overlay: agent-runtime JSONL burn (rate-limits / outcomes).
@@ -1072,7 +1091,12 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 "health": a.get("health", {"healthy": True, "consecutive_failures": 0, "span_minutes": 0}),
             }
         )
-    ranked_subs.sort(key=lambda x: (x["status"] == "unknown", x.get("burn_pct_7d") or 999.0))
+    ranked_subs.sort(
+        key=lambda x: (
+            x["status"] in ("unknown", "unavailable"),
+            x.get("burn_pct_7d") if isinstance(x.get("burn_pct_7d"), (int, float)) else 999.0,
+        )
+    )
 
     ranked_apis = [
         {
@@ -2175,6 +2199,10 @@ async def manifest(request: Request):
         "activity": {
             "url": "/api/comms/agent-activity",
             "note": "Compact channel delivery/event snapshot for orchestration.",
+        },
+        "capacity": {
+            "url": "/api/state/routing-budget",
+            "note": "Per-agent capacity burn, in-flight counts, health, and routing recommendations.",
         },
     }
     # ADR-011 P2: compact {hash, url} research pointer, present only when the

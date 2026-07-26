@@ -243,6 +243,7 @@ ORIENT_SECTION_TTLS: dict[str, float] = {
     "pipeline": 0.0,
     "runtime": 60.0,
     "delegate": 30.0,
+    "capacity": 15.0,
     "bridge_pending": 15.0,
     "rollovers": 15.0,
     "wiki": 120.0,
@@ -257,6 +258,7 @@ ORIENT_SECTION_SOURCES: dict[str, str] = {
     "pipeline": "fs",
     "runtime": "fs",
     "delegate": "fs",
+    "capacity": "fs",
     "bridge_pending": "sqlite",
     "rollovers": "fs",
     "wiki": "fs",
@@ -279,6 +281,7 @@ LEAN_ORIENT_SECTIONS: tuple[str, ...] = (
     "git",
     "runtime",
     "delegate",
+    "capacity",
     "bridge_pending",
     "rollovers",
     "governance",
@@ -530,6 +533,29 @@ def _collect_delegate_orient_data() -> dict:
     return {
         "active_count": delegate_api.active_delegate_count(),
         "recent": recent["tasks"],
+    }
+
+
+def _collect_capacity_orient_data() -> dict:
+    budget = state_api.compute_routing_budget()
+    lanes_summary = {}
+    agents = budget.get("agents", {})
+    in_flight = budget.get("in_flight", {})
+    for lane in state_api.SUBSCRIPTION_LANES:
+        data = agents.get(lane, {})
+        health = data.get("health", {})
+        healthy = health.get("healthy", True) if isinstance(health, dict) else True
+        lanes_summary[lane] = {
+            "in_flight": in_flight.get(lane, 0),
+            "healthy": healthy,
+            "burn_pct_7d": data.get("burn_pct_7d"),
+            "remaining_pct": data.get("remaining_pct"),
+            "status": data.get("status", "unknown"),
+        }
+    rec = budget.get("recommendation", {}).get("primary_agent_for_code")
+    return {
+        "lanes": lanes_summary,
+        "primary_recommendation": rec,
     }
 
 
@@ -855,6 +881,7 @@ def _orient_section_specs() -> dict[str, tuple[Callable[..., Any], Any, bool]]:
         "pipeline": (_collect_pipeline_orient_data, {"summary": {}}, True),
         "runtime": (_collect_runtime_orient_data, {}, False),
         "delegate": (_collect_delegate_orient_data, {"active_count": 0, "recent": []}, False),
+        "capacity": (_collect_capacity_orient_data, {"lanes": {}}, False),
         "bridge_pending": (_collect_bridge_pending_orient_data, {}, False),
         "rollovers": (
             _collect_rollovers_orient_data,
@@ -926,12 +953,11 @@ async def orient(
         *[
             _cached_orient_section(
                 key,
-                collector,
-                fallback,
-                is_async=is_async,
+                section_specs[key][0],
+                section_specs[key][1],
+                is_async=section_specs[key][2],
             )
-            for key, (collector, fallback, is_async) in section_specs.items()
-            if key in selected
+            for key in selected
         ]
     )
 
@@ -962,6 +988,8 @@ async def orient(
         response["runtime"] = section_data["runtime"]
     if "delegate" in section_data:
         response["delegate"] = section_data["delegate"]
+    if "capacity" in section_data:
+        response["capacity"] = section_data["capacity"]
     if "bridge_pending" in section_data:
         response["bridge_pending"] = section_data["bridge_pending"]
     if "rollovers" in section_data:

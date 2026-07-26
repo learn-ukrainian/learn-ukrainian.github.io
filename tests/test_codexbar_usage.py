@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import json
 from datetime import UTC, datetime
+from pathlib import Path
 
+from scripts.analytics.cost_report import CostRecord
 from scripts.api import codexbar_usage as codexbar_usage_mod
 from scripts.api import state_router
 from scripts.api.codexbar_usage import _normalize_provider_data
@@ -531,7 +533,7 @@ def test_kimi_provider_error_surfaces_unknown(monkeypatch):
 
     assert res is not None
     assert res["lane"] == "kimi"
-    assert res["status"] == "unknown"
+    assert res["status"] in ("unavailable", "unknown")
     assert res["weekly_used_pct"] is None
     assert res["primary_used_pct"] is None
     assert "credential is expired" in res["auth_error"]
@@ -554,7 +556,7 @@ def test_kimi_provider_error_with_nonzero_exit_still_surfaces(monkeypatch):
     res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
 
     assert res is not None
-    assert res["status"] == "unknown"
+    assert res["status"] in ("unavailable", "unknown")
     assert "credential is expired" in res["auth_error"]
 
 
@@ -588,3 +590,222 @@ def test_missing_homebrew_binary_reaches_path_fallback(monkeypatch):
     res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
     assert calls == ["/opt/homebrew/bin/codexbar", "codexbar"]
     assert res is not None and res["lane"] == "kimi" and res["status"] == "healthy"
+
+
+def test_codexbar_unavailable_missing_binary(monkeypatch):
+    """Regression test for missing binary: must surface status='unavailable' and auth_error."""
+    def fake_run(cmd, **kw):
+        raise FileNotFoundError(cmd[0])
+
+    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", fake_run)
+    codexbar_usage_mod._last_good_data.pop("codex", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
+    assert res["status"] == "unavailable"
+    assert res["error_kind"] == "missing_binary"
+    assert "binary not found" in res["auth_error"].lower()
+
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    record = CostRecord(
+        path=Path("fixture-meta.json"),
+        level="a1", slug="fixture", phase="write", agent="codex", model="fixture-model",
+        model_source="stored", ok=True, timestamp=now.isoformat(), mtime=now,
+        prompt_chars=1, response_chars=1, prompt_tokens_est=1, response_tokens_est=1,
+        prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
+        used_default_rate=False, cost_usd_est=500.0,
+    )
+    monkeypatch.setattr(state_router, "load_cost_records", lambda: [record])
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
+
+    data = state_router.compute_routing_budget(now)
+    assert data["agents"]["codex"]["status"] == "unavailable"
+    assert data["agents"]["codex"]["burn_pct_7d"] is None
+    assert data["agents"]["codex"]["remaining_pct"] is None
+    assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
+    assert data["agents"]["codex"]["codexbar"]["error_kind"] == "missing_binary"
+
+
+def test_codexbar_unavailable_timeout(monkeypatch):
+    """Regression test for timeout: must surface status='unavailable' and auth_error."""
+    def fake_run(cmd, **kw):
+        raise codexbar_usage_mod.subprocess.TimeoutExpired(cmd, 2.0)
+
+    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", fake_run)
+    codexbar_usage_mod._last_good_data.pop("codex", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
+    assert res["status"] == "unavailable"
+    assert res["error_kind"] == "timeout"
+    assert "timed out" in res["auth_error"].lower()
+
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    record = CostRecord(
+        path=Path("fixture-meta.json"),
+        level="a1", slug="fixture", phase="write", agent="codex", model="fixture-model",
+        model_source="stored", ok=True, timestamp=now.isoformat(), mtime=now,
+        prompt_chars=1, response_chars=1, prompt_tokens_est=1, response_tokens_est=1,
+        prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
+        used_default_rate=False, cost_usd_est=500.0,
+    )
+    monkeypatch.setattr(state_router, "load_cost_records", lambda: [record])
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
+
+    data = state_router.compute_routing_budget(now)
+    assert data["agents"]["codex"]["status"] == "unavailable"
+    assert data["agents"]["codex"]["burn_pct_7d"] is None
+    assert data["agents"]["codex"]["remaining_pct"] is None
+    assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
+    assert data["agents"]["codex"]["codexbar"]["error_kind"] == "timeout"
+
+
+def test_codexbar_unavailable_nonzero_exit(monkeypatch):
+    """Regression test for non-zero exit: must surface status='unavailable' and auth_error."""
+    class _FakeResult:
+        returncode = 1
+        stdout = ""
+        stderr = "fatal CLI error"
+
+    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", lambda cmd, **kw: _FakeResult())
+    codexbar_usage_mod._last_good_data.pop("codex", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
+    assert res["status"] == "unavailable"
+    assert res["error_kind"] == "non_zero_exit"
+    assert "fatal CLI error" in res["auth_error"]
+
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    record = CostRecord(
+        path=Path("fixture-meta.json"),
+        level="a1", slug="fixture", phase="write", agent="codex", model="fixture-model",
+        model_source="stored", ok=True, timestamp=now.isoformat(), mtime=now,
+        prompt_chars=1, response_chars=1, prompt_tokens_est=1, response_tokens_est=1,
+        prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
+        used_default_rate=False, cost_usd_est=500.0,
+    )
+    monkeypatch.setattr(state_router, "load_cost_records", lambda: [record])
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
+
+    data = state_router.compute_routing_budget(now)
+    assert data["agents"]["codex"]["status"] == "unavailable"
+    assert data["agents"]["codex"]["burn_pct_7d"] is None
+    assert data["agents"]["codex"]["remaining_pct"] is None
+    assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
+    assert data["agents"]["codex"]["codexbar"]["error_kind"] == "non_zero_exit"
+
+
+def test_codexbar_unavailable_malformed_json(monkeypatch):
+    """Regression test for malformed JSON: must surface status='unavailable' and auth_error."""
+    class _FakeResult:
+        returncode = 0
+        stdout = "not valid json {{"
+        stderr = ""
+
+    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", lambda cmd, **kw: _FakeResult())
+    codexbar_usage_mod._last_good_data.pop("codex", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
+    assert res["status"] == "unavailable"
+    assert res["error_kind"] == "malformed_json"
+    assert "malformed JSON" in res["auth_error"]
+
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    record = CostRecord(
+        path=Path("fixture-meta.json"),
+        level="a1", slug="fixture", phase="write", agent="codex", model="fixture-model",
+        model_source="stored", ok=True, timestamp=now.isoformat(), mtime=now,
+        prompt_chars=1, response_chars=1, prompt_tokens_est=1, response_tokens_est=1,
+        prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
+        used_default_rate=False, cost_usd_est=500.0,
+    )
+    monkeypatch.setattr(state_router, "load_cost_records", lambda: [record])
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
+
+    data = state_router.compute_routing_budget(now)
+    assert data["agents"]["codex"]["status"] == "unavailable"
+    assert data["agents"]["codex"]["burn_pct_7d"] is None
+    assert data["agents"]["codex"]["remaining_pct"] is None
+    assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
+    assert data["agents"]["codex"]["codexbar"]["error_kind"] == "malformed_json"
+
+
+def test_codexbar_unavailable_unparseable_schema(monkeypatch):
+    """Regression test for unparseable schema: must surface status='unavailable' and auth_error."""
+    class _FakeResult:
+        returncode = 0
+        stdout = "[]"
+        stderr = ""
+
+    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", lambda cmd, **kw: _FakeResult())
+    codexbar_usage_mod._last_good_data.pop("codex", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
+    assert res["status"] == "unavailable"
+    assert res["error_kind"] == "unparseable_schema"
+    assert "unparseable" in res["auth_error"].lower()
+
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    record = CostRecord(
+        path=Path("fixture-meta.json"),
+        level="a1", slug="fixture", phase="write", agent="codex", model="fixture-model",
+        model_source="stored", ok=True, timestamp=now.isoformat(), mtime=now,
+        prompt_chars=1, response_chars=1, prompt_tokens_est=1, response_tokens_est=1,
+        prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
+        used_default_rate=False, cost_usd_est=500.0,
+    )
+    monkeypatch.setattr(state_router, "load_cost_records", lambda: [record])
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
+
+    data = state_router.compute_routing_budget(now)
+    assert data["agents"]["codex"]["status"] == "unavailable"
+    assert data["agents"]["codex"]["burn_pct_7d"] is None
+    assert data["agents"]["codex"]["remaining_pct"] is None
+    assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
+    assert data["agents"]["codex"]["codexbar"]["error_kind"] == "unparseable_schema"
+
+
+def test_dashboard_routing_html_renders_unavailable_explicitly():
+    """Prove dashboards/routing.html renders 'unavailable' non-numeric display, not 0.0% or 0-width bar."""
+    import subprocess
+    script = """
+    const fs = require('fs');
+    const html = fs.readFileSync('dashboards/routing.html', 'utf8');
+    const renderBudgetMatch = html.match(/function renderBudget\\(routing\\) \\{[\\s\\S]*?\\n\\}/);
+    if (!renderBudgetMatch) throw new Error('renderBudget not found');
+
+    const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
+    const pct = (value) => {
+      const num = Number(value);
+      return Number.isFinite(num) ? Math.max(0, Math.min(100, num)) : 0;
+    };
+    const statusPill = (status) => `<span class="pill ${escapeHtml(status)}">${escapeHtml(status)}</span>`;
+
+    let innerHTML = '';
+    const document = {
+      getElementById: (id) => ({ set innerHTML(val) { innerHTML = val; } })
+    };
+
+    eval(renderBudgetMatch[0]);
+
+    renderBudget({
+      agents: {
+        codex: {
+          status: 'unavailable',
+          burn_pct_7d: null,
+          remaining_pct: null,
+          weekly_cap_usd: null
+        }
+      },
+      in_flight: {}
+    });
+
+    console.log(innerHTML);
+    """
+    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True)
+    out = res.stdout
+    assert "0.0%" not in out, f"Dashboard rendered 0.0% for unavailable state: {out}"
+    assert "style=\"width:0%\"" not in out, f"Dashboard rendered 0-width bar for unavailable state: {out}"
+    assert "unavailable" in out
+    assert 'class="bar unavailable"' in out
+

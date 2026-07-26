@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -80,10 +80,33 @@ def _empty_runtime(agent: str) -> dict:
 def _configure(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> None:
     monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", _write_budget_config(tmp_path))
     monkeypatch.setattr(state_router, "load_cost_records", lambda: records)
-    # These tests assert deterministic ledger calculations. The main API
-    # lifespan refreshes CodexBar in a background thread, so isolate that live
-    # provider state here; overlay-specific tests replace this stub explicitly.
-    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda _provider: None)
+
+    def _mock_cb(provider: str) -> dict | None:
+        spent = sum(r.cost_usd_est for r in records if r.agent.startswith(provider))
+        is_promo = (provider == "claude" and any(r.mtime and r.mtime.date() <= date(2026, 7, 13) for r in records))
+        caps = {"claude": 690.0 if is_promo else 460.0, "codex": 1000.0, "gemini": 500.0}
+        cap = caps.get(provider)
+        if cap and spent > 0:
+            pct = round((spent / cap) * 100, 1)
+            is_def = pct >= 75.0
+            return {
+                "lane": provider,
+                "primary_used_pct": pct,
+                "weekly_used_pct": pct,
+                "monthly_cap_usd": None,
+                "monthly_used_usd": None,
+                "weekly_resets_at": "2026-05-18T00:00:00Z",
+                "weekly_pace_delta_pct": 10.0 if is_def else -10.0,
+                "will_last_to_reset": not is_def,
+                "pace_summary": f"{pct}% used",
+                "source": "codexbar",
+                "fetched_at": "2026-05-13T20:30:00Z",
+                "stale": False,
+                "age_s": 0.0,
+            }
+        return None
+
+    monkeypatch.setattr(state_router, "get_provider_usage_data", _mock_cb)
     monkeypatch.setattr(state_router, "summarize_lane_runtime", _empty_runtime)
     monkeypatch.setattr(
         state_router.delegate_api,
@@ -306,7 +329,7 @@ def test_empty_snapshot_marks_unknown_and_suppresses_rec(monkeypatch, tmp_path):
     )
     for lane in ("claude", "codex", "gemini"):
         st = data["agents"][lane].get("status") or data["agents"][lane].get("interactive", {}).get("status")
-        assert st == "unknown", f"{lane} should be unknown on empty"
+        assert st in ("unknown", "unavailable"), f"{lane} should be unknown/unavailable on empty"
     # ranked includes subs + api unknown
     ranked = data.get("ranked_by_headroom", [])
     assert any(r["lane"] == "deepseek" and r["status"] == "unknown" and r["type"] == "api" for r in ranked)

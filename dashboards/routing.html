@@ -37,9 +37,10 @@ tr:last-child td { border-bottom:none; }
 .pill.cool, .pill.ok, .pill.done { background:rgba(63,185,80,.15); color:var(--green); }
 .pill.warm, .pill.hot, .pill.warn, .pill.timeout { background:rgba(210,153,34,.15); color:var(--orange); }
 .pill.near_cap, .pill.error, .pill.failed, .pill.rate_limited, .pill.zombie { background:rgba(248,81,73,.15); color:var(--red); }
-.pill.gray, .pill.unknown, .pill.spawning, .pill.running { background:rgba(72,79,88,.2); color:var(--text2); }
+.pill.gray, .pill.unknown, .pill.spawning, .pill.running, .pill.unavailable { background:rgba(72,79,88,.2); color:var(--text2); }
 .bar { background:var(--bg3); border-radius:4px; height:8px; overflow:hidden; min-width:90px; }
 .bar span { background:var(--accent); display:block; height:100%; }
+.bar.unavailable span { background: repeating-linear-gradient(45deg, var(--border), var(--border) 4px, var(--bg3) 4px, var(--bg3) 8px); opacity: 0.7; }
 .section { margin-top:18px; }
 .section h2 { font-family: Charter, Georgia, serif; font-size:22px; margin:0 0 10px; }
 .error { color:var(--red); font-size:13px; padding:12px 0; }
@@ -174,13 +175,17 @@ function renderSummary(routing, usage, delegates) {
 function renderBudget(routing) {
   const agents = routing.agents || {};
   const rows = Object.entries(agents).map(([name, data]) => {
-    const burn = pct(data.burn_pct_7d);
+    const isUnavailable = data.status === 'unavailable' || data.burn_pct_7d == null || typeof data.burn_pct_7d !== 'number';
+    const burnStr = isUnavailable ? 'unavailable' : `${Number(data.burn_pct_7d).toFixed(1)}%`;
+    const barCell = isUnavailable
+      ? '<div class="bar unavailable" title="Capacity unavailable"><span style="width:100%"></span></div>'
+      : `<div class="bar"><span style="width:${pct(data.burn_pct_7d)}%"></span></div>`;
     const cap = data.weekly_cap_usd == null ? 'n/a' : `$${Number(data.weekly_cap_usd).toFixed(0)}`;
     return `<tr>
       <td class="mono">${escapeHtml(name)}</td>
       <td>${statusPill(data.status)}</td>
-      <td>${burn.toFixed(1)}%</td>
-      <td><div class="bar"><span style="width:${burn}%"></span></div></td>
+      <td>${escapeHtml(burnStr)}</td>
+      <td>${barCell}</td>
       <td>${cap}</td>
       <td>${escapeHtml((routing.in_flight || {})[name] ?? 0)}</td>
     </tr>`;

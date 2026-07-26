@@ -66,21 +66,26 @@ def refresh_provider_usage_data(providers: Iterable[str], *, timeout_s: float = 
     return refreshed
 
 
-def fetch_codexbar_usage(provider: str, *, timeout_s: float = 45.0) -> dict[str, Any] | None:
+def fetch_codexbar_usage(provider: str, *, timeout_s: float = 45.0) -> dict[str, Any]:
     """Run codexbar CLI, parse and normalize provider-specific usage data.
 
-    Returns None on failure/timeout/parse error. Never raises exceptions.
+    Returns a normalized dictionary. If the CLI fails, times out, is missing,
+    or returns an error/malformed output, returns a normalized record with status='unavailable'
+    and auth_error/error_kind set. Never raises exceptions.
     For provider 'gemini', it queries 'gemini' first, and falls back to 'antigravity' if the first fails.
     """
     if provider == "gemini":
         data = _fetch_single_provider("gemini", timeout_s=timeout_s)
-        if data is not None:
+        if data.get("weekly_used_pct") is not None:
             return data
-        return _fetch_single_provider("antigravity", timeout_s=timeout_s)
+        fallback_data = _fetch_single_provider("antigravity", timeout_s=timeout_s)
+        if fallback_data.get("weekly_used_pct") is not None:
+            return fallback_data
+        return data
     return _fetch_single_provider(provider, timeout_s=timeout_s)
 
 
-def _fetch_single_provider(provider: str, timeout_s: float) -> dict[str, Any] | None:
+def _fetch_single_provider(provider: str, timeout_s: float) -> dict[str, Any]:
     try:
         # Run codexbar usage --json --provider <provider>
         try:
@@ -99,34 +104,74 @@ def _fetch_single_provider(provider: str, timeout_s: float) -> dict[str, Any] | 
             res = subprocess.CompletedProcess(cmd, returncode=127, stdout="", stderr="")
         if res.returncode != 0 and not _stdout_has_provider_payload(res.stdout):
             # Fallback to codexbar in system path
-            cmd = ["codexbar", "usage", "--json", "--provider", provider]
-            res = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=timeout_s,
-                check=False,
-            )
+            try:
+                cmd = ["codexbar", "usage", "--json", "--provider", provider]
+                res = subprocess.run(
+                    cmd,
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout_s,
+                    check=False,
+                )
+            except FileNotFoundError:
+                return _normalize_provider_error(
+                    provider,
+                    {"message": "CodexBar CLI binary not found", "kind": "missing_binary", "code": 127},
+                )
             # The CLI exits NON-zero on provider/credential errors while still
             # printing the error JSON on stdout (live-verified 2026-07-17: kimi
             # expired credential → rc=1 + error payload). Bail only when there
-            # is no parseable payload at all — otherwise fall through so the
-            # error surfaces as status='unknown' instead of a silent None.
+            # is no parseable payload at all.
             if res.returncode != 0 and not _stdout_has_provider_payload(res.stdout):
-                return None
+                if res.returncode == 127:
+                    return _normalize_provider_error(
+                        provider,
+                        {"message": "CodexBar CLI binary not found", "kind": "missing_binary", "code": 127},
+                    )
+                return _normalize_provider_error(
+                    provider,
+                    {
+                        "message": (res.stderr.strip() or f"CodexBar CLI exited with non-zero code {res.returncode}"),
+                        "kind": "non_zero_exit",
+                        "code": res.returncode,
+                    },
+                )
 
-        parsed = json.loads(res.stdout)
+        try:
+            parsed = json.loads(res.stdout)
+        except Exception as exc:
+            return _normalize_provider_error(
+                provider,
+                {"message": f"CodexBar CLI stdout is malformed JSON: {exc}", "kind": "malformed_json", "code": "MALFORMED_JSON"},
+            )
+
         if not isinstance(parsed, list) or not parsed:
-            return None
+            return _normalize_provider_error(
+                provider,
+                {"message": "CodexBar CLI JSON payload is unparseable or empty schema", "kind": "unparseable_schema", "code": "UNPARSEABLE_SCHEMA"},
+            )
 
         first_entry = parsed[0]
+        if not isinstance(first_entry, dict):
+            return _normalize_provider_error(
+                provider,
+                {"message": "CodexBar CLI JSON payload entry is unparseable schema", "kind": "unparseable_schema", "code": "UNPARSEABLE_SCHEMA"},
+            )
+
         if "error" in first_entry:
-            # Provider/credential error (e.g. expired Kimi credentials): surface
-            # as status='unknown' with the message carried, never as zero usage.
+            # Provider/credential error (e.g. expired Kimi credentials)
             return _normalize_provider_error(provider, first_entry["error"])
         return _normalize_provider_data(provider, first_entry)
-    except Exception:
-        return None
+    except subprocess.TimeoutExpired:
+        return _normalize_provider_error(
+            provider,
+            {"message": f"CodexBar CLI timed out after {timeout_s}s", "kind": "timeout", "code": "TIMEOUT"},
+        )
+    except Exception as exc:
+        return _normalize_provider_error(
+            provider,
+            {"message": f"CodexBar CLI fetch error: {exc}", "kind": "fetch_error", "code": "FETCH_ERROR"},
+        )
 
 
 def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, Any]:
@@ -405,9 +450,9 @@ def _normalize_provider_error(provider: str, error: Any) -> dict[str, Any]:
         "pace_summary": None,
         "source": "codexbar",
         "fetched_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-        "status": "unknown",
+        "status": "unavailable",
         "auth_error": message,
-        "error_kind": kind,
+        "error_kind": kind or "unavailable",
         "error_code": code,
     }
 
@@ -464,7 +509,7 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
         res["age_s"] = time.monotonic() - t_mono
         return res
 
-    # Completely unknown fallback
+    # Completely unavailable fallback
     lane = PROVIDER_TO_LANE.get(provider, provider)
     empty_win = {
         "used_pct": None,
@@ -494,6 +539,8 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
         "fetched_at": None,
         "stale": False,
         "age_s": None,
-        "status": "unknown",
-        "auth_error": None,
+        "status": "unavailable",
+        "auth_error": "CodexBar usage data unavailable",
+        "error_kind": "unavailable",
+        "error_code": None,
     }

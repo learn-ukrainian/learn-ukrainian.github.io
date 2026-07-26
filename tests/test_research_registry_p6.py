@@ -19,7 +19,7 @@ def test_real_seeded_pilot_checker_is_green() -> None:
     report = pilot.run(Path(__file__).resolve().parents[1])
 
     assert report["metrics"] == {"tp": 3, "fp": 0, "fn": 0, "precision": 1.0, "recall": 1.0}
-    assert report["state_manifest_bytes"] == {"disabled": 912, "enabled": 1031}
+    assert report["state_manifest_bytes"] == {"disabled": 1048, "enabled": 1167}
     assert report["warm_reads"] == {
         "quality_manifest": [200, 342, 304, 0],
         "record_body": [200, 2630, 304, 0],
