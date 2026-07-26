@@ -75,7 +75,7 @@ User is senior, time-poor, budget-sensitive. If instruction is short/vague, NEVE
 **Split: 3:3:3 Codex:Claude-headless:Gemini** across open coding (user-stated 2026-05-10, supersedes 6:4 from 2026-04-23). Routing target, not strict quota — pick by fit. Gemini = bounded tests, schema migrations, fixtures with semantic judgment, docs-near-code. NOT gemini for: ambiguous cross-file architectural rewrites, security/concurrency bugs, GH/rebase/auth-heavy work, mass mechanical pattern-application.
 - **Inline that IS mine:** browser/UI testing, adversarial reviews via dispatch, hard-bug debugging through reasoning (not coding), brief writing, linguistic verification via `mcp__sources__*`, memory/rules/docs custodianship.
 - **>50 LOC of non-test code inline?** STOP — dispatch instead.
-- **DISPATCH CAP: 2 Claude + 2 Codex + 2 Gemini in flight.** Check `/api/delegate/active` before firing; queue brief if cap hit.
+- **DISPATCH WIDTH: pace/reserve-driven — fixed in-flight caps are OBSOLETE (operator 2026-07-26).** Width comes from CodexBar pace stage + reserve per lane (`codexbar usage --json --provider <lane>`), bounded above by worktree DISK (`df -h /` + `du -sh .worktrees` — disk always wins; reap finished worktrees to buy room). Doctrine: `rules/model-assignment.md` § Worker priority ladder. Check `/api/delegate/active` before firing; idle lane + quota headroom + free disk → widen.
 - User signals "claude usage is hot" if Anthropic budget tight — bias to Codex+Gemini.
 
 ## #1 — QUALITY ABOVE ALL
@@ -141,7 +141,7 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 - **WORD TARGETS:** 1.5× overshoot (4000 → 5500-6000). Easier to trim than expand.
 
 ## Fleet Comms + Delegation + CodexBar + Local API Cold-Start (2026-07-09)
-**Fleet lanes (from activity-matrix + guardrails):** Claude (Opus 4.8 primary for arch/review), Codex (gpt-5.5, top orchestrator), AGY (Antigravity/Gemini replacement), Grok (grok-4.5 via native `grok` seat [alias `grok-build`] + demoted Hermes `grok-hermes`; xAI catalog rotation 2026-07-15; grok-4.5 re-won the bakeoff, #5197), DeepSeek (cheap review), Cursor, pool, glm. Caps ~2 per top lane. Use full fleet for parallel work.
+**Fleet lanes (from activity-matrix + guardrails):** Claude (Opus 4.8 primary for arch/review), Codex (gpt-5.5, top orchestrator), AGY (Antigravity/Gemini replacement), Grok (grok-4.5 via native `grok` seat [alias `grok-build`] + demoted Hermes `grok-hermes`; xAI catalog rotation 2026-07-15; grok-4.5 re-won the bakeoff, #5197), DeepSeek (cheap review), Cursor, pool, glm. Width is pace/reserve-driven per `rules/model-assignment.md` (CodexBar pace + disk bound), not fixed caps. Use full fleet for parallel work.
 
 **Communicate / ask / discuss (analysis, no FS writes):** Always `.venv/bin/python scripts/ai_agent_bridge/__main__.py` (bare `ab` = ApacheBench).
 - One-shot: `ask-codex - --task-id foo <prompt.md` (also ask-claude, ask-agy [--to-model ...], ask-grok-build (native alias), ask-hermes, ask-opencode, ask-pool, ask-cursor, ask-glm...)

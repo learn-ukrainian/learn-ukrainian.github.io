@@ -188,8 +188,17 @@ is for CROSS-session continuity, not an in-session rot guard. But:
   dead: `gh pr list --state open` first, then check the worktree for finished-but-unpushed work
   (silent-exit class). Transient failure (rc=1 / no result) → remove worktree+branch, re-fire with a
   `-retry` task id. Never hand off "leave for the orchestrator on wake" when you are the active driver.
-- Caps: 2 Claude + 2 Codex + 2 agy in flight; LOCAL fanout is ONE-AT-A-TIME (#M-9 — remote/API
-  dispatches may parallelize). **>50 LOC non-test inline → STOP and dispatch** (dispatch enforces
+- Width is pace/reserve-driven — fixed per-lane in-flight caps are OBSOLETE (operator
+  2026-07-26). Before fanning out, apply the two-sided doctrine in `model-assignment.md`
+  § Worker priority ladder: read CodexBar pace stage + reserve per lane
+  (`codexbar usage --json --provider <lane>`) AND disk headroom (`df -h /` + `du -sh
+  .worktrees`). Idle lane with quota headroom AND free disk → widen into it; lane at/ahead of
+  pace or thin reserve → throttle it, shed to a lane with headroom; no data for a lane →
+  in-flight count + lane health only, and SAY the picture is partial. DISK wins every conflict:
+  quota headroom never authorises exceeding worktree disk space, and reaping finished worktrees
+  is what buys room for more agents — cleanup IS capacity management, not housekeeping. LOCAL
+  fanout stays ONE-AT-A-TIME (#M-9 — a machine-resource limit, not quota; remote/API dispatches
+  may parallelize). **>50 LOC non-test inline → STOP and dispatch** (dispatch enforces
   worktree + commits). Inline IS yours: hard-bug reasoning, the adversarial/design/code-review seat,
   browser/UI testing, `mcp__sources__*` verification. Use `/code-review` after non-trivial
   gate/adapter/pipeline changes.
