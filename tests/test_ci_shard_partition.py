@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.ci import pytest_shard
+from scripts.ci import pytest_evidence, pytest_shard
 
 
 def _synthetic_nodes() -> list[str]:
@@ -74,6 +74,12 @@ def test_plans_are_deterministic() -> None:
     assert pytest_shard.build_plans(nodes, ()) == pytest_shard.build_plans(nodes, ())
 
 
+def test_wiki_mlx_safe_mode_excludes_the_mlx_override_contract() -> None:
+    assert pytest_evidence._is_wiki_node("tests/wiki/test_ukrainian_wiki_corpus.py::test_encode")
+    assert pytest_evidence._is_wiki_node("tests/test_wiki_source_attribution.py::test_source")
+    assert not pytest_evidence._is_wiki_node("tests/test_mlx_bridge_gate.py::test_force_mlx_override")
+
+
 def test_stale_quarantine_fails_closed() -> None:
     with pytest.raises(pytest_shard.ShardPlanError):
         pytest_shard.build_plans(_synthetic_nodes(), {"tests/not-real.py::test_missing"})
@@ -86,9 +92,9 @@ def test_workflow_uses_the_node_planner_and_fail_closed_gate() -> None:
 
     assert "scripts/ci/pytest_shard.py --repo-root . prepare" in workflow
     assert "--timeout-seconds 1800" in workflow
-    assert "scripts/ci/verify_pytest_evidence.py" in workflow
+    assert "-m scripts.ci.verify_pytest_evidence" in workflow
     assert "skipped and cancelled are failures" in workflow
-    assert "SOURCES_MCP_NO_MLX" in workflow
+    assert "CI_PYTEST_WIKI_NO_MLX" in workflow
     assert "./node_modules/.bin/playwright test" in workflow
     assert "npm --prefix site exec -- playwright test" not in workflow
     for forbidden in ("GITHUB_BASE_REF", "changed-files", "paths-filter", "git diff"):

@@ -13,9 +13,11 @@ unconditional on pull requests, merge groups, and pushes to `main`.
 - Each shard writes its planned and executed node IDs. `CI Gate` rejects a
   missing artifact, duplicate node, empty plan, incomplete execution report,
   failed job, cancelled job, or skipped job.
-- Pytest has full Git history, CPU Torch, and `SOURCES_MCP_NO_MLX=1`. Tests
-  requiring ignored databases or ignored external JSONL retain their explicit
-  pytest skip reason instead of failing mysteriously.
+- Pytest has full Git history and CPU Torch. The evidence plugin applies
+  `SOURCES_MCP_NO_MLX=1` to wiki nodes only, preserving the separate MLX
+  override contract test. Tests requiring ignored databases or ignored external
+  JSONL retain their explicit pytest skip reason instead of failing
+  mysteriously.
 - The required frontend job runs unit tests, a production build, and Chromium
   browser tests. The quality job runs Ruff and Actionlint on this workflow.
 
@@ -33,8 +35,11 @@ inside a 25-minute job. These are failure ceilings, not expected durations.
 
 [`scripts/config/pytest-quarantine.json`](../../scripts/config/pytest-quarantine.json)
 is an explicit to-do list. Every entry contains one exact pytest node ID, a
-reason, an owning stream, and a tracking reference. It currently contains two
-entries, both supplied by the operator as failing on `main` at rebuild start.
+reason, an owning stream, and a tracking reference. It currently contains 33
+entries: two operator-reported main failures, thirteen retired BIO
+routing-contract nodes, one release-only Atlas database node, and seventeen
+nodes that require a Stanza model unavailable without a live download. The
+JSON ledger is the authoritative per-node explanation and owner list.
 
 To remove an entry:
 

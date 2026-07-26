@@ -8,6 +8,13 @@ from pathlib import Path
 import pytest
 
 
+def _is_wiki_node(nodeid: str) -> bool:
+    """Return whether a test can invoke the sources-MCP dense reranker."""
+    test_file = nodeid.split("::", 1)[0]
+    filename = Path(test_file).name
+    return test_file.startswith("tests/wiki/") or filename.startswith("test_wiki")
+
+
 class EvidencePlugin:
     """Keep every shard honest about the test nodes it ran."""
 
@@ -21,6 +28,8 @@ class EvidencePlugin:
         if not self.expected:
             raise pytest.UsageError(f"CI pytest plan is empty: {self.plan_path}")
         self.executed: set[str] = set()
+        self.wiki_no_mlx = os.environ.get("CI_PYTEST_WIKI_NO_MLX") == "1"
+        self.original_no_mlx = os.environ.get("SOURCES_MCP_NO_MLX")
 
     def pytest_collection_modifyitems(self, config: pytest.Config, items: list[pytest.Item]) -> None:
         available = {item.nodeid for item in items}
@@ -31,6 +40,24 @@ class EvidencePlugin:
         deselected = [item for item in items if item.nodeid not in self.expected]
         items[:] = selected
         config.hook.pytest_deselected(items=deselected)
+
+    def pytest_runtest_setup(self, item: pytest.Item) -> None:
+        """Avoid the MLX worker only where a wiki test can use it.
+
+        `tests/test_mlx_bridge_gate.py` is itself a contract for the explicit
+        force-MLX override, so setting the kill switch at workflow scope makes
+        that ordinary unit test fail for the wrong reason.  Scope the safe
+        fallback to wiki nodes instead, and restore the caller's environment
+        after the session.
+        """
+        if not self.wiki_no_mlx:
+            return
+        if _is_wiki_node(item.nodeid):
+            os.environ["SOURCES_MCP_NO_MLX"] = "1"
+        elif self.original_no_mlx is None:
+            os.environ.pop("SOURCES_MCP_NO_MLX", None)
+        else:
+            os.environ["SOURCES_MCP_NO_MLX"] = self.original_no_mlx
 
     def pytest_runtest_logreport(self, report: pytest.TestReport) -> None:
         # Setup reports exist for passed, failed, and explicitly skipped tests.
@@ -47,6 +74,10 @@ class EvidencePlugin:
         temporary = self.executed_path.with_name(f".{self.executed_path.name}.tmp")
         temporary.write_text("".join(f"{nodeid}\n" for nodeid in sorted(self.executed)), encoding="utf-8")
         temporary.replace(self.executed_path)
+        if self.original_no_mlx is None:
+            os.environ.pop("SOURCES_MCP_NO_MLX", None)
+        else:
+            os.environ["SOURCES_MCP_NO_MLX"] = self.original_no_mlx
 
 
 def pytest_configure(config: pytest.Config) -> None:

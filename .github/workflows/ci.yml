@@ -20,7 +20,9 @@ concurrency:
 env:
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PYTHONUNBUFFERED: "1"
-  SOURCES_MCP_NO_MLX: "1"
+  # The pytest evidence plugin applies SOURCES_MCP_NO_MLX only to wiki nodes.
+  # A global value would invalidate the MLX bridge's non-wiki override tests.
+  CI_PYTEST_WIKI_NO_MLX: "1"
 
 jobs:
   pytest:
@@ -225,7 +227,7 @@ jobs:
               status=1
             fi
           done
-          .venv/bin/python scripts/ci/verify_pytest_evidence.py \
+          .venv/bin/python -m scripts.ci.verify_pytest_evidence \
             --root pytest-evidence \
             --quarantine scripts/config/pytest-quarantine.json \
             --shard-count 4 | tee -a "$GITHUB_STEP_SUMMARY" || status=1
