@@ -108,7 +108,17 @@ def test_default_committed_decision_file_parametrization_is_complete() -> None:
     assert len(set(COMMITTED_DECISION_FILES)) == len(COMMITTED_DECISION_FILES)
 
 
-def test_default_committed_decision_files_keep_aggregate_floors() -> None:
+def test_default_committed_decision_files_keep_aggregate_floors(
+    committed_source_index: dict[tuple[str, str, str], SourceInventoryRecord],
+) -> None:
+    sample_summary = decisions.validate_decision_file(
+        FIRST_BATCH,
+        source_index=committed_source_index,
+    )
+    sample_counts = _decision_counts_from_validated_lines(FIRST_BATCH)
+    assert sum(sample_counts.values()) == sample_summary["rows"]
+    assert sample_counts == Counter(sample_summary["decision_counts"])
+
     decision_counts: Counter[str] = Counter()
     total_rows = 0
     for path in COMMITTED_DECISION_FILES:
