@@ -51,4 +51,7 @@ jobs:
           # throttles/blocks. Skip online audits — all 21 baseline findings
           # (17 artipacked + 4 secrets-inherit) are produced by offline
           # YAML-static rules, so we lose nothing in coverage.
-          advanced-args: '--offline'
+          #
+          # zizmor-action v0.6.0 dropped `advanced-args: '--offline'` in favor
+          # of the first-class `online-audits` input (Dependabot #5869).
+          online-audits: 'false'
