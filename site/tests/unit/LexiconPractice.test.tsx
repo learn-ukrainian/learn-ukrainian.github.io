@@ -1067,6 +1067,111 @@ describe('LexiconPractice', () => {
     expect(screen.getAllByText(withPos!.pos!).length).toBeGreaterThan(0);
   });
 
+  test('resolves a level-less custom deck key from the learner cumulative shards', async () => {
+    const cat = lexeme('кіт', 'кіт', 'cat', {
+      nominative: 'кіт',
+      accusative: 'кота',
+      locative: 'коті',
+    });
+    const customSet: CustomSet = {
+      id: 'custom-cats',
+      title: 'Коти',
+      lemma_keys: ['кіт'],
+      cloze_items: [],
+      created_at: '2026-07-27T12:00:00.000Z',
+      updated_at: '2026-07-27T12:00:00.000Z',
+      device_id: 'test-device',
+      revision: 1,
+    };
+    localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
+
+    const requested: string[] = [];
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      requested.push(url);
+      if (url.includes('daily-pool.json')) return okJson([]);
+      if (url.includes('practice-index.A1.json')) {
+        return okJson({
+          deckVersion: 'cats',
+          level: 'A1',
+          items: [{
+            lemmaId: cat.lemmaId,
+            lemma: cat.lemma,
+            cefr: 'A1',
+            modes: ['flashcards'],
+            hasCloze: false,
+            clozeIds: [],
+            newOrder: 0,
+          }],
+        });
+      }
+      if (url.includes('practice-lexemes.A1.json')) {
+        return okJson({ deckVersion: 'cats', level: 'A1', lexemes: [cat] });
+      }
+      if (url.includes('practice-cloze.A1.json')) return okJson({ cloze: [] });
+      return notFoundResponse();
+    });
+
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByRole('button', { name: /Коти/ }));
+
+    await waitFor(() =>
+      expect(screen.getByTestId('practice-daily-deck-title')).toHaveTextContent('Коти'),
+    );
+    await user.click(container.querySelector<HTMLElement>('.daily-preview-card')!);
+
+    expect(screen.getAllByText('cat').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('noun').length).toBeGreaterThan(0);
+    expect(screen.getByTestId('practice-preview-atlas-link')).toHaveAttribute(
+      'href',
+      '/lexicon/%D0%BA%D1%96%D1%82/',
+    );
+    expect(requested.some((url) => url.includes('practice-lexemes.A2.json'))).toBe(false);
+  });
+
+  test('keeps a genuinely absent custom deck key on the orphan path', async () => {
+    const customSet: CustomSet = {
+      id: 'custom-orphan',
+      title: 'Невідомі слова',
+      lemma_keys: ['неіснуюча лексема'],
+      cloze_items: [],
+      created_at: '2026-07-27T12:00:00.000Z',
+      updated_at: '2026-07-27T12:00:00.000Z',
+      device_id: 'test-device',
+      revision: 1,
+    };
+    localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
+
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes('daily-pool.json')) return okJson([]);
+      if (url.includes('practice-index.A1.json')) {
+        return okJson({ deckVersion: 'empty', level: 'A1', items: [] });
+      }
+      if (url.includes('practice-lexemes.A1.json')) {
+        return okJson({ deckVersion: 'empty', level: 'A1', lexemes: [] });
+      }
+      if (url.includes('practice-cloze.A1.json')) return okJson({ cloze: [] });
+      return notFoundResponse();
+    });
+
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByRole('button', { name: /Невідомі слова/ }));
+
+    await waitFor(() =>
+      expect(screen.getByTestId('practice-daily-deck-title')).toHaveTextContent('Невідомі слова'),
+    );
+    expect(screen.getAllByText('неіснуюча лексема').length).toBeGreaterThan(0);
+    expect(screen.queryByTestId('practice-preview-atlas-link')).not.toBeInTheDocument();
+    expect(
+      container.querySelectorAll(
+        'a[href="/lexicon/%D0%BD%D0%B5%D1%96%D1%81%D0%BD%D1%83%D1%8E%D1%87%D0%B0%20%D0%BB%D0%B5%D0%BA%D1%81%D0%B5%D0%BC%D0%B0/"]',
+      ),
+    ).toHaveLength(0);
+  });
+
   test('shows due review count on the home before any session starts', async () => {
     const { fn } = mockShardFetch({ A1: 3 });
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);

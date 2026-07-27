@@ -735,6 +735,85 @@ function customSetFixture(id: string, title: string, lemmaKeys: string[]) {
   };
 }
 
+test('A8a: an A1 custom deck resolves a level-less key and keeps a true orphan unlinked', async ({
+  page,
+  context,
+}) => {
+  await context.clearCookies();
+  const catDeck = customSetFixture('e2e-d10-cat', 'E2E D10 Cat Deck', ['кіт']);
+  const orphanDeck = customSetFixture('e2e-d10-orphan', 'E2E D10 Orphan Deck', ['вигаданий термін']);
+  const cat = {
+    lemmaId: 'кіт',
+    lemma: 'кіт',
+    lemmaPlain: 'кіт',
+    gloss: 'cat',
+    ipa: null,
+    pos: 'noun',
+    cefr: 'A1',
+    heritage: null,
+    severity: null,
+    paradigm: { cases: {} },
+  };
+
+  await page.route(/\/lexicon\/practice-(index|lexemes|cloze)\.(A1|A2|B1|B2|C1)\.json$/, async (route) => {
+    const { pathname } = new URL(route.request().url());
+    if (pathname.endsWith('practice-index.A1.json')) {
+      await route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({
+          deckVersion: 'e2e-d10',
+          level: 'A1',
+          items: [{
+            lemmaId: cat.lemmaId,
+            lemma: cat.lemma,
+            cefr: 'A1',
+            modes: ['flashcards'],
+            hasCloze: false,
+            clozeIds: [],
+            newOrder: 0,
+          }],
+        }),
+      });
+      return;
+    }
+    if (pathname.endsWith('practice-lexemes.A1.json')) {
+      await route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({ deckVersion: 'e2e-d10', level: 'A1', lexemes: [cat] }),
+      });
+      return;
+    }
+    if (pathname.endsWith('practice-cloze.A1.json')) {
+      await route.fulfill({ contentType: 'application/json', body: JSON.stringify({ cloze: [] }) });
+      return;
+    }
+    await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+  await page.addInitScript(([catSet, orphanSet]) => {
+    window.localStorage.setItem('lu-learner-level', 'A1');
+    window.localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([catSet, orphanSet]));
+  }, [catDeck, orphanDeck] as const);
+
+  await page.goto('/words-of-the-day/practice/');
+
+  await page.getByRole('button', { name: /E2E D10 Cat Deck/ }).click();
+  await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Cat Deck');
+  const catCard = page.locator('.daily-preview-card');
+  await expect(catCard).toContainText('кіт');
+  await expect(page.getByTestId('practice-preview-atlas-link')).toHaveAttribute(
+    'href',
+    '/lexicon/%D0%BA%D1%96%D1%82/',
+  );
+  await catCard.click();
+  await expect(catCard).toContainText('cat');
+  await expect(catCard).toContainText('noun');
+
+  await page.getByRole('button', { name: /E2E D10 Orphan Deck/ }).click();
+  await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Orphan Deck');
+  await expect(page.locator('.daily-preview-card')).toContainText('вигаданий термін');
+  await expect(page.getByTestId('practice-preview-atlas-link')).toHaveCount(0);
+});
+
 /** Opens the daily-zone disclosure (idempotent — `PracticeDailyDeck` can remount and
  * reset `detailsOpen` across a deck switch) and reads the full featured word list. */
 async function readDailyDeckWords(page: Page): Promise<string[]> {

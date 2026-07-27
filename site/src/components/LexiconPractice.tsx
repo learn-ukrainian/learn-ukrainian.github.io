@@ -1594,9 +1594,11 @@ function LexiconPracticeIsland({
           );
         } else {
           // A deck's words can sit at any level (or none — an unverified custom
-          // import) — resolve against every published level's shard rather than
-          // guessing from the learner's currently selected level.
-          representedLevels = new Set<string>(PUBLISHED_PRACTICE_LEVELS);
+          // import). Resolve its keys across the learner's complete accessible
+          // range, the same A1..learnerLevel set `filterByCumulativeLevel`
+          // uses for atlas-global picks. That gives level-less custom keys their
+          // verified metadata without loading shards above the learner's level.
+          representedLevels = new Set<string>(levelsUpTo(learnerLevel));
         }
 
         // The atlas branch can skip this fetch once `deck` already covers the
