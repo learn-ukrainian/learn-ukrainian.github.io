@@ -298,8 +298,9 @@ Consequences:
   natively but browses via opencode; any hermes-hosted model gets VESUM/`sources` tools for free.
 - **Limits are per-harness-credential, not per-model**: when a lane quotas out, the same model is
   often reachable through another harness (e.g. deepseek via delegate-hermes ↔ opencode), but
-  **GPT/Codex is a hard exception**: keep it on the native CLI and never substitute a Codex
-  OAuth-backed Hermes model. **Grok (updated by operator ruling 2026-07-27):** never Hermes
+  **GPT/Codex and Claude are hard exceptions**: keep both on their native CLIs (operator
+  ruling 2026-07-27 for Claude) and never substitute a Codex OAuth-backed Hermes model or a
+  non-native Claude host. **Grok (updated by operator ruling 2026-07-27):** never Hermes
   (`grok-hermes`/`grok-tools` stay banned), but **`opencode` hosting IS sanctioned for
   ORCHESTRATOR seats** — first-party `xai/grok-4.5` on the xAI subscription OAuth
   (probe-verified: tools work; ⚠️ NO effort control on this route — `effort_applied: null`).
