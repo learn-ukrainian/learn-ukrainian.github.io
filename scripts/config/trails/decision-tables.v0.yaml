@@ -39,10 +39,10 @@ tables:
       - blocking CI
       - draft state
       - reviewer identity
-      - "formal-review-job ledger (fleet-comms `formal_review_jobs`: review_id, repository, pr_number, head_sha, state, sealed_verdict_artifact_id; + `formal_review_attempts`) — joined on pr_number+head_sha, this is what makes 'requested for THIS head' and 'terminal' checkable"
-      - "publication receipts: the PR's review threads / verdict comments (comment id per review_id) — 'published' means the sealed verdict landed on the PR, not merely that a broker reply exists"
-      - "sealed-dispatch request records (`ab asks` task id + status + reply id, `batch_state/tasks/review-*.json`) for reviews requested OUTSIDE the formal flow — same terminal-and-published bar, publication = the driver's verdict comment on the PR"
-      - "cancellation: an explicit recorded reason on the PR (comment referencing the request/review id) — absent that, a failed/timed-out request stays UNRESOLVED"
+      - "formal-review-job ledger (fleet-comms `formal_review_jobs`, unique key (repository, pr_number, head_sha, gate_kind); columns review_id, state, sealed_verdict_artifact_id) — 'requested for THIS head' resolves here; `formal_review_attempts` joins by review_id only (attempt_number, completion_state) for 'terminal'"
+      - "publication receipts: `github_publications` (review_id, head_sha, status_context, published_at) joined by review_id with head_sha revalidated — 'published' means a durable publication row for the CURRENT head, not a broker reply or a returned comment URL"
+      - "sealed-dispatch (out-of-flow) reviews: the request is head-bound ONLY if its brief/task record pins PR + head SHA and its publication is the driver's verdict comment on the PR naming that head — `batch_state/tasks/review-*.json` alone carries neither, so an unpinned request cannot satisfy this row (BLOCKED-ON: head-bound request records for sealed dispatches, tracked with T2 certification)"
+      - "cancellation: an explicit PR comment recording the request/review id and the reason — absent that, a failed/timed-out request stays UNRESOLVED"
     rows:
       - when: PR is a DRAFT
         then: never arm, never merge — undraft only after the gate passes
