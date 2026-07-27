@@ -834,3 +834,36 @@ def test_asks_cli_watchdog_flag(bridge_db, monkeypatch, capsys):
 
     watchdog_mock.assert_called_once()
     assert "Watchdog run complete" in capsys.readouterr().out
+
+
+def test_re_fire_ask_inner_claim_admits_exactly_one_caller(bridge_db, monkeypatch, tmp_path):
+    """The once-only enforcement point under concurrency is the O_EXCL claim INSIDE
+    _re_fire_ask: two callers that both already passed should_auto_retry_ask must
+    resolve to exactly one live re-fire. (r3 review mutation check showed the
+    pre-created-claim test only covers the outer should_auto_retry_ask decline —
+    removing the inner claim left it green.)"""
+    message_id = _send_ask("task-claim-inner", target="grok")
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+    state_dir = tmp_path / "batch_state" / "asks" / "task-claim-inner"
+    lifecycle._atomic_write_json(
+        state_dir / "launch.json",
+        {
+            "message_id": message_id,
+            "pid": 999_999_999,
+            "agent": "grok",
+            "harness": "grok",
+            "model": "grok-3",
+            "started_at": "2026-07-27T00:00:00+00:00",
+        },
+    )
+    launches: list[int] = []
+    monkeypatch.setattr(
+        lifecycle, "launch_background_ask", lambda mid, target, options: launches.append(mid)
+    )
+
+    first = lifecycle._re_fire_ask(message_id)
+    second = lifecycle._re_fire_ask(message_id)
+
+    assert first is True
+    assert second is False, "second concurrent-style caller must lose the O_EXCL claim"
+    assert launches == [message_id], "exactly one live re-fire despite two callers"
