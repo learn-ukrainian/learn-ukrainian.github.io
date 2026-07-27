@@ -294,6 +294,29 @@ def test_negative_unbound_table_ref() -> None:
     assert validate_trail_table_refs(restored, tables)["ok"] is True
 
 
+def test_cli_tables_flag_runs_cross_check(tmp_path, capsys) -> None:
+    """r3 review finding: the CLI --tables path must run the cross-document check, not
+    just the two independent validators — an unbound reference must fail the COMMAND."""
+    from scripts.orchestration.validate_trailspec import main
+
+    spec = _get_rb1_data()
+    for step in spec["steps"]:
+        if step.get("table"):
+            step["table"] = "queue-pikc"  # misspelled
+            break
+    bad_spec = tmp_path / "rb1-bad-ref.trail.yaml"
+    bad_spec.write_text(yaml.dump(spec), encoding="utf-8")
+
+    rc = main(["--spec", str(bad_spec), "--tables", str(DEFAULT_DECISION_TABLES_PATH), "--json"])
+    assert rc == 1
+    assert "queue-pikc" in capsys.readouterr().out
+
+    rc_ok = main(["--spec", str(_RB1_PATH), "--tables", str(DEFAULT_DECISION_TABLES_PATH), "--json"])
+    assert rc_ok == 0
+    out_ok = capsys.readouterr().out
+    assert '"table_refs"' in out_ok
+
+
 def test_hash_stability() -> None:
     """Test TrailSpec content hash calculation and stability across YAML formatting changes."""
     data_orig = _get_happy_example_data()

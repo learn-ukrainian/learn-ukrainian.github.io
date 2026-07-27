@@ -315,8 +315,14 @@ def main(argv: list[str] | None = None) -> int:
             receipt_path=args.receipt.resolve() if args.receipt else None,
         )
         if args.tables is not None:
-            summary["decision_tables"] = validate_decision_tables(
-                args.tables.resolve()
+            tables_path = args.tables.resolve()
+            summary["decision_tables"] = validate_decision_tables(tables_path)
+            # Cross-document check: declared table references must resolve. Without
+            # this, the CLI would report success on a misspelled/unbound reference
+            # even though both documents validate independently.
+            summary["table_refs"] = validate_trail_table_refs(
+                _load_yaml_or_json(args.spec.resolve()),
+                _load_yaml_or_json(tables_path),
             )
     except TrailSpecValidationError as exc:
         if args.json:
