@@ -95,6 +95,8 @@ export interface PracticeLexeme {
   example?: string | null;
   /** English rendering of `example` (A1 scaffolding only). */
   exampleEn?: string | null;
+  /** Source metadata retained for reviewed static examples. */
+  exampleProvenance?: Record<string, unknown>;
 }
 
 export interface PracticeDeckEntry extends PracticeLexeme {

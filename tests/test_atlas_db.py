@@ -82,6 +82,7 @@ def test_alias_helpers():
     assert atlas_db.unstressed("ро́звідка") == "розвідка"
     assert atlas_db.transliterate("розвідка") == "rozvidka"
     assert atlas_db.classify_entry_type({"lemma": "сліпа зона"}) == "multiword_term"
+    assert atlas_db.classify_entry_type({"lemma": "виходити з ладу", "entry_type": "expression"}) == "expression"
     assert atlas_db.classify_entry_type({"lemma": "розвідка"}) == "lemma"
 
 

@@ -419,6 +419,11 @@ data/lexicon/grow_candidates.json
 data/lexicon/grow_needs_review.json
 data/lexicon/needs-review-triage.json
 data/lexicon/needs-review-triage-summary.md
+# Full Alona v5 admission evidence is regenerated locally from the private
+# curated JSONL.  Keep the recipe and fixture in git, not the 1,029-row output.
+data/lexicon/alona-v5-atlas-admission-seed.json
+data/lexicon/alona-v5-practice-seed.json
+data/lexicon/alona-v5-atlas-admission-report.json
 # Ohoiko corpus intake full source inventory (~31 MB, 111,200 rows): deterministic,
 # regenerable output of committed code over the private corpus (#4223). It does NOT
 # belong in git history — regenerate on demand into this path (main checkout only):

@@ -1,10 +1,14 @@
 {
-  "fingerprint": "a7c648c543c71b4760dd66e175ae08c538a74cb06750b57ebf214b0457c5fe2b",
+  "fingerprint": "344c2b5192fda27a1117876c9183b20588fc9fb50f300d2ad45d3c13459a552b",
   "inputs": {
     "lexicon_code": [
       {
         "path": "scripts/lexicon/__init__.py",
         "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "scripts/lexicon/alona_v5_atlas_admission.py",
+        "sha256": "d62089069184ac1b803280592a9bd08904112d7f80fba25a51372438391d3221"
       },
       {
         "path": "scripts/lexicon/anchor_curation_evidence.py",
@@ -172,7 +176,7 @@
       },
       {
         "path": "scripts/lexicon/promote_grow_candidates.py",
-        "sha256": "197d9a8c4791be86899a6b35357e97732bb58657222bc01e50598c92a2f6c5cf"
+        "sha256": "f6c2fb40fad518ea753023d9fdffba485ab56cdcac7cf1bce506a36e07f11f0b"
       },
       {
         "path": "scripts/lexicon/promote_teacher_lesson_intake.py",
@@ -219,6 +223,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 53
+    "lexicon_code_files": 54
   }
 }

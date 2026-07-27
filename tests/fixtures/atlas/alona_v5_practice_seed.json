@@ -1,0 +1,44 @@
+{
+  "schema": "alona-v5-practice-seed-v1",
+  "deckSlug": "alona-v5-fixture",
+  "title": "Alona v5 fixture practice admission",
+  "selectionNote": "Fixture-sized source-backed examples only.",
+  "entries": [
+    {
+      "seedRow": 1,
+      "lemma": "справедливий",
+      "slug": "справедливий",
+      "cefr": "A2",
+      "example": "Це справедливе рішення.",
+      "provenance": {
+        "source_file": "fixture-literary",
+        "credit": "Тестовий автор"
+      },
+      "sentenceStatus": "ok"
+    },
+    {
+      "seedRow": 2,
+      "lemma": "витирати",
+      "slug": "витирати",
+      "cefr": "A2",
+      "example": "Вона витирає стіл.",
+      "provenance": {
+        "source_file": "fixture-literary",
+        "credit": "Тестовий автор"
+      },
+      "sentenceStatus": "ok"
+    },
+    {
+      "seedRow": 3,
+      "lemma": "витерти",
+      "slug": "витерти",
+      "cefr": "B1",
+      "example": "Він витер дошку.",
+      "provenance": {
+        "source_file": "fixture-literary",
+        "credit": "Тестовий автор"
+      },
+      "sentenceStatus": "ok"
+    }
+  ]
+}

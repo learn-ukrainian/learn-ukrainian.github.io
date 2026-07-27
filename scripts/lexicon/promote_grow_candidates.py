@@ -65,6 +65,10 @@ APPROVAL_LEDGER_KIND = "atlas_grow_promotion_ledger"
 NEEDS_REVIEW_LEDGER_KIND = "atlas_grow_needs_review_decisions"
 ALLOWED_LEDGER_DECISIONS = frozenset({"approve", "deferred", "reject"})
 _OPTIONAL_CANDIDATE_FIELDS = (
+    # A reviewed intake may explicitly classify a multiword expression. Keep
+    # that entry-model fact through promotion instead of flattening it into
+    # Atlas's legacy multiword fallback.
+    "entry_type",
     "heritage_status",
     "enrichment",
     "pronunciation",
