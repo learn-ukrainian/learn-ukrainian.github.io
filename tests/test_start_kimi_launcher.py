@@ -397,6 +397,35 @@ def test_legacy_used_when_local_missing_and_hermes_ignored(tmp_path: Path) -> No
     assert capture.read_text(encoding="utf-8").strip() == "legacy"
 
 
+
+def test_learn_uk_kimi_bin_hermes_override_rejected(tmp_path: Path) -> None:
+    """LEARN_UK_KIMI_BIN must not allow selecting Hermes-private kimi (CF F002)."""
+    project, _supervisor_capture = _build_fake_project(tmp_path)
+    home = tmp_path / "home"
+    hermes_bin = home / ".hermes" / "node" / "bin"
+    hermes_bin.mkdir(parents=True)
+    capture = tmp_path / "which-kimi.txt"
+    _write_executable(hermes_bin / "kimi", f'#!/usr/bin/env bash\necho hermes > "{capture}"\n')
+
+    env = _clean_environ()
+    env["HOME"] = os.fspath(home)
+    env["LEARN_UK_KIMI_BIN"] = os.fspath(hermes_bin / "kimi")
+    env["PATH"] = "/usr/bin:/bin"
+
+    result = subprocess.run(
+        [os.fspath(project / "start-kimi.sh"), "hi"],
+        cwd=project,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode != 0
+    assert "Hermes-private" in result.stderr
+    assert not capture.exists()
+
+
 def test_passthrough_flags_only_launch_interactive_tui(tmp_path: Path) -> None:
     """`-- <flags>` with no prompt: interactive TUI, flags reach the CLI verbatim."""
     values, argv_blob, result, _project, supervisor_capture = _run_launcher(

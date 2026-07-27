@@ -75,6 +75,14 @@ usage_launcher() {
 # legacy standalone binary at ~/.kimi-code/bin (last resort; often stale).
 # Do NOT fall back to ~/.hermes/node/bin — that tree is Hermes-private only.
 KIMI_BIN="${LEARN_UK_KIMI_BIN:-}"
+# Never accept Hermes-private installs — including explicit LEARN_UK_KIMI_BIN overrides.
+case "$KIMI_BIN" in
+  */.hermes/node/bin/*)
+    echo "Error: LEARN_UK_KIMI_BIN points at Hermes-private Node ($KIMI_BIN)." >&2
+    echo "  Use ~/.local/bin/kimi (npm -g @moonshot-ai/kimi-code) instead." >&2
+    exit 1
+    ;;
+esac
 if [ -z "$KIMI_BIN" ] || [ ! -x "$KIMI_BIN" ]; then
   KIMI_BIN=""
   for cand in \
