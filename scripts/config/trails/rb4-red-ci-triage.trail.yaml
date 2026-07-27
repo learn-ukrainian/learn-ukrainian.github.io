@@ -4,8 +4,10 @@
 #
 # DRAFT STATUS: authored against today's substrate; certification waits for T1.4/5.
 # The known-failure-class signature registry does NOT exist yet — the allowlist step
-# carries the table's own blocked_on marker and unknown signatures STOP, never
-# retry-until-green.
+# is an enforced fail-closed gate (both present-without-lookup and absent STOP as
+# table-unknown), and NO rerun step exists in this draft: the raceless rerun
+# primitive ships with the registry design (v1 cannot express a per-claimant
+# rerun predicate — r3 review). Unknown signatures never retry-until-green.
 #
 # Anti-pattern guard (RB-2 v0.7.0 discipline, seven-round-reviewed): every command is
 # a real, currently runnable repo command whose OUTPUT SHAPE was captured live
@@ -21,7 +23,7 @@
 #   from the failing run's logs, never inferred from local state.
 schema_version: trailspec.v1
 trail_id: rb4-red-ci-triage
-version: "0.3.0"
+version: "0.4.0"
 title: RB4 Red-CI triage — signature, allowlist, staleness, bounded rerun
 seats:
   - grok-daily
@@ -29,12 +31,10 @@ seats:
   - judgment
 stop_codes:
   - STOP-precondition-failed
-  - STOP-ci-red
   - STOP-stale-head
   - STOP-manual-intervention
   - STOP-unknown
 terminal_outcomes:
-  - triaged_rerun_fired
   - triaged_update_branch_fired
   - back_to_pr_lifecycle
 steps:
@@ -181,36 +181,19 @@ steps:
       output vocabulary, and matched routes only arrive with the lookup tool). The
       table's judgment rows (pre-existing-on-main → note + owning issue;
       head-specific → fix round) are applied BY THE SUMMONED JUDGMENT from the
-      recorded signature receipt — deliberately not weak-seat routes. The
-      atomic_rerun step below documents the future matched-retry-once path.
-    command: sh -c 'test -f scripts/config/trails/red-ci-known-failures.yaml && echo registry-present || echo registry-absent'
+      recorded signature receipt — deliberately not weak-seat routes. The future
+      matched-retry-once path is deliberately NOT drafted as a step: trailspec.v1
+      cannot give a rerun claim a per-claimant predicate (the r3 review proved a
+      losing claimant would read the winner's queued run status), so the raceless
+      rerun primitive ships WITH the registry + lookup tool design, reviewed
+      together — never as unreachable speculative machinery here.
+    command: sh -c 'test -f scripts/config/trails/red-ci-known-failures.yaml && echo registry-present-lookup-unbuilt || echo registry-absent'
     evidence_predicate:
-      command: sh -c 'test -f scripts/config/trails/red-ci-known-failures.yaml && echo registry-present || echo registry-absent'
-      success_pattern: '^(registry-present|registry-absent)$'
+      command: sh -c 'test -f scripts/config/trails/red-ci-known-failures.yaml && echo registry-present-lookup-unbuilt || echo registry-absent'
+      success_pattern: '^(registry-present-lookup-unbuilt|registry-absent)$'
     transitions:
       registry_absent: STOP-unknown
       registry_present_lookup_unbuilt: STOP-unknown
     kind: table-lookup
     table: red-ci-triage
-    blocked_on: "known-failure-class signature registry + its lookup tool (#5885)"
-
-  - step_id: atomic_rerun
-    intent: >-
-      FUTURE matched-retry-once path (unreachable until the registry + lookup tool
-      land): claim and fire are ONE atomic step (r2 finding: a shared gate-result
-      file lets the losing claimant overwrite the winner's read — so there is no
-      shared result file at all). The noclobber create keyed by run id decides the
-      winner; ONLY the winner fires gh run rerun --failed. The predicate is the
-      run's OWN status: a fired rerun reads queued/in_progress; a lost claim or a
-      refused fire reads a settled status — derivable per-claimant without any
-      shared writable evidence. A consumed claim whose fire failed stays consumed
-      (safe direction). Never retry-until-green.
-    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); ( set -C; echo fired > "batch_state/rb4-rerun-$RUN.receipt" ) 2>/dev/null && gh run rerun "$RUN" --failed && echo rerun-fired || echo no-rerun'
-    evidence_predicate:
-      command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); gh run view "$RUN" --json status --jq .status'
-      success_pattern: '^(queued|in_progress|requested|waiting|completed)$'
-    transitions:
-      rerun_fired: triaged_rerun_fired
-      no_rerun: STOP-ci-red
-    kind: mechanical
     blocked_on: "known-failure-class signature registry + its lookup tool (#5885)"
