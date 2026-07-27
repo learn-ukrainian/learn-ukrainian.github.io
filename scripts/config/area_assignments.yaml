@@ -6,22 +6,72 @@ schema_version: 1
 assignments:
   infra:
     driver_agent_type: infra-orchestrator
-    slots: []
+    slots:
+      - claude-infra
+      - codex-infra
+      - gemini-infra
+      - grok-infra
+      - kimi-infra
   devops:
     driver_agent_type: infra-orchestrator
-    slots: []
+    slots:
+      - claude-devops
+      - codex-devops
+      - gemini-devops
+      - grok-devops
+      - kimi-devops
   harness:
     driver_agent_type: infra-orchestrator
-    slots: []
+    slots:
+      - claude-harness
+      - codex-harness
+      - gemini-harness
+      - grok-harness
+      - kimi-harness
+      - claude-corpus
+      - codex-corpus
+      - gemini-corpus
+      - grok-corpus
+      - kimi-corpus
   atlas:
     driver_agent_type: infra-orchestrator
-    slots: []
+    slots:
+      - claude-atlas
+      - codex-atlas
+      - gemini-atlas
+      - grok-atlas
+      - kimi-atlas
   core:
     driver_agent_type: curriculum-orchestrator
-    slots: []
+    slots:
+      - claude-core
+      - codex-core
+      - gemini-core
+      - grok-core
+      - kimi-core
   seminars:
     driver_agent_type: curriculum-orchestrator
-    slots: []
+    slots:
+      - claude-seminars
+      - codex-seminars
+      - gemini-seminars
+      - grok-seminars
+      - kimi-seminars
+      - claude-folk
+      - codex-folk
+      - gemini-folk
+      - grok-folk
+      - kimi-folk
+      - claude-bio
+      - codex-bio
+      - gemini-bio
+      - grok-bio
+      - kimi-bio
   hramatka:
     driver_agent_type: curriculum-orchestrator
-    slots: []
+    slots:
+      - claude-hramatka
+      - codex-hramatka
+      - gemini-hramatka
+      - grok-hramatka
+      - kimi-hramatka

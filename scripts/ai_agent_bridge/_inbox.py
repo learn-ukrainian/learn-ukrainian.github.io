@@ -188,9 +188,10 @@ def _iso_after(value: str, *, seconds: int) -> str:
 
 
 def _validate_agent(agent: str) -> None:
-    if agent not in _channels.VALID_AGENTS:
+    valids = _channels.get_valid_agents()
+    if agent not in valids:
         raise ValueError(
-            f"Unknown agent '{agent}'. Expected one of {_channels.VALID_AGENTS}."
+            f"Unknown agent '{agent}'. Expected one of {valids}."
         )
 
 
