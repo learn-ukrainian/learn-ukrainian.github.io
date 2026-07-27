@@ -32,7 +32,7 @@
 # arc and multi-signal branchings collapse back into fewer steps.
 schema_version: trailspec.v1
 trail_id: rb2-dispatch-loop
-version: "0.5.0"
+version: "0.6.0"
 title: RB2 Dispatch loop — brief, dispatch, settle, finalize
 seats:
   - grok-daily
@@ -318,15 +318,34 @@ steps:
       PR check, but the table's disposition here is finalize BY HAND — an OPEN PR
       also routes to judgment (a died worker's deliverable needs eyes before RB-3's
       babysit could auto-merge it), and a missing PR runs the commit-verification
-      chain before absence is believed (three live #5855-class false negatives this
-      session all had real deliverables the status missed).
+      PROBE — recorded evidence for the human, never a route into the automatic
+      retry chain (three live #5855-class false negatives this session all had real
+      deliverables the status missed).
     command: gh pr list --state open --head {lane}/{task_id} --json number,title --limit 3
     evidence_predicate:
       command: gh pr list --state open --head {lane}/{task_id} --json number --limit 3
       success_pattern: '"number"'
     transitions:
       pr_open: STOP-manual-intervention
-      no_pr_for_branch: commits_ahead_check
+      no_pr_for_branch: attention_absence_probe
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: attention_absence_probe
+    intent: >-
+      The table's commit-verification for attention states, with the table's
+      disposition kept intact: run the commits-beyond-base probe (base bound inline
+      from worktree_base_sha) and RECORD its result into the attention receipt — then
+      finalize BY HAND regardless of the count (r5 finding: the attention path must
+      never reach the automatic retry chain; the probe informs the human, it does not
+      route). The single transition to the stop is deliberate: verification is an
+      evidence obligation here, not a branch point.
+    command: sh -c 'B=$(jq -r ".worktree_base_sha" batch_state/tasks/{task_id}.json); git -C .worktrees/dispatch/{lane}/{task_id} rev-list --count "$B"..HEAD | tee batch_state/rb2-attention-{task_id}.txt'
+    evidence_predicate:
+      command: test -s batch_state/rb2-attention-{task_id}.txt && echo probe-recorded
+      success_pattern: '^probe-recorded$'
+    transitions:
+      probe_recorded: STOP-manual-intervention
     kind: mechanical
     blocked_on: null
 
@@ -398,16 +417,16 @@ steps:
 
   - step_id: cleanup_failed_worktree
     intent: >-
-      The settle-status row's action verbatim: remove worktree AND branch (RB-3's
-      cleanup precedent chains both). The failed attempt's branch was never merged,
-      so plain -d refuses and -D is required; harnesses whose write guard blocks a
-      manual branch -D route the branch half through the dispatcher's own reap — a
-      certification-time question recorded here, not papered over. The predicate
-      proves the worktree is gone from the registry.
-    command: sh -c 'git worktree remove --force .worktrees/dispatch/{lane}/{task_id} && (git branch -D {lane}/{task_id} 2>/dev/null || echo "branch reap deferred to dispatcher (write guard)")'
+      The settle-status row's action verbatim, ENFORCED (r5 finding: no swallowed
+      branch-delete): remove the worktree, then delete the never-merged branch with
+      -D — failures are not suppressed, and the predicate proves BOTH absences
+      (worktree gone from the registry AND no branch ref remains). A harness whose
+      write guard blocks manual branch -D fails this step honestly into
+      STOP-manual-intervention — a dangling branch is never accepted as cleaned.
+    command: sh -c 'git worktree remove --force .worktrees/dispatch/{lane}/{task_id} && git branch -D {lane}/{task_id}'
     evidence_predicate:
-      command: sh -c 'git worktree list | grep -c -e "dispatch/{lane}/{task_id}" || true'
-      success_pattern: '^0$'
+      command: sh -c '(git worktree list | grep -q -e "dispatch/{lane}/{task_id}") && exit 1; (git branch --list "{lane}/{task_id}" | grep -q .) && exit 1; echo fully-cleaned'
+      success_pattern: '^fully-cleaned$'
     transitions:
       cleaned: retry_gate
       removal_failed: STOP-manual-intervention
