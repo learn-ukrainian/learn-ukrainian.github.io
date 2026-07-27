@@ -48,7 +48,7 @@ def test_glm_registry_and_choices_wiring():
     assert "glm" in registry.AGENTS
     entry = registry.get_agent_entry("glm")
     assert entry["cli_available"] is True
-    assert entry["default_model"] == "glm-5.2"
+    assert entry["default_model"] == "zai-coding-plan/glm-5.2"
     assert entry["resume_policy"] == "never"
     assert "glm" in delegate._DISPATCH_AGENT_CHOICES
 
@@ -58,7 +58,7 @@ def test_glm_adapter_basic_argv_construction(tmp_path):
     assert plan.cmd[0] == FAKE_OPENCODE
     assert plan.cmd[1] == "run"
     assert plan.cmd[2] == "--model"
-    assert plan.cmd[3] == "glm-5.2"
+    assert plan.cmd[3] == "zai-coding-plan/glm-5.2"
     assert "--auto" not in plan.cmd
     assert plan.cmd[-2] == "--"
     assert plan.cmd[-1] == "Analyze code architecture"

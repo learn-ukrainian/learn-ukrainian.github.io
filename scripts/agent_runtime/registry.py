@@ -221,7 +221,9 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "glm": {
         "adapter": "scripts.agent_runtime.adapters.glm:GlmAdapter",
-        "default_model": "glm-5.2",
+        # Z.AI Coding Plan (subscription) provider pinned — keep in sync with
+        # the adapter default and scripts/ai_agent_bridge/_opencode.py GLM_MODEL.
+        "default_model": "zai-coding-plan/glm-5.2",
         "cost_tier": "low",
         "capabilities": frozenset(
             {

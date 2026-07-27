@@ -74,7 +74,10 @@ class GlmAdapter:
     """Adapter for the opencode CLI with glm-5.2."""
 
     name: str = "glm"
-    default_model: str = "glm-5.2"
+    # Pin the Z.AI Coding Plan (subscription) provider explicitly — a bare
+    # "glm-5.2" leaves provider resolution to opencode and can land off-sub.
+    # Keep in sync with scripts/ai_agent_bridge/_opencode.py GLM_MODEL.
+    default_model: str = "zai-coding-plan/glm-5.2"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(
