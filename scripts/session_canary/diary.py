@@ -34,6 +34,9 @@ def resolve_handoff_path(repo: Path, epic: str, override: str | Path | None = No
         return p if p.is_absolute() else (repo / p)
     base = repo / ".claude" / f"{epic}-epic"
     for name in (
+        "GLM-DRIVER-HANDOFF.md",
+        "KIMI-DRIVER-HANDOFF.md",
+        "GEMINI-DRIVER-HANDOFF.md",
         "INTERIM-DRIVER-HANDOFF.md",
         "CLAUDE-DRIVER-HANDOFF.md",
         "CODEX-DRIVER-HANDOFF.md",
@@ -629,4 +632,3 @@ def try_stream_tail_text(stream_id: str, *, limit: int = 5) -> str:
         return "\n".join(lines)
     except Exception:
         return ""
-
