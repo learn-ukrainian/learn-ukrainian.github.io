@@ -711,6 +711,122 @@ test('A7: word cards render the level exactly once', async ({ page, context }) =
   expect(occurrences).toBe(1);
 });
 
+// --- D10 (design delta amendment, 2026-07-27): deck-scoped daily picks ---
+
+function customSetFixture(id: string, title: string, lemmaKeys: string[]) {
+  return {
+    id,
+    title,
+    description: '',
+    lemma_keys: lemmaKeys,
+    created_at: '2026-01-01T00:00:00.000Z',
+    updated_at: '2026-01-01T00:00:00.000Z',
+    device_id: 'e2e-device',
+    revision: 1,
+  };
+}
+
+/** Opens the daily-zone disclosure (idempotent — `PracticeDailyDeck` can remount and
+ * reset `detailsOpen` across a deck switch) and reads the full featured word list. */
+async function readDailyDeckWords(page: Page): Promise<string[]> {
+  await expect(page.getByTestId('practice-daily-deck')).toBeVisible();
+  const summary = page.getByTestId('practice-daily-summary');
+  if ((await summary.getAttribute('aria-expanded')) !== 'true') {
+    await summary.click();
+  }
+  const rows = page.locator('.daily-deck-row .row-lemma');
+  await expect(rows.first()).toBeVisible();
+  return rows.allTextContents();
+}
+
+test('A8: two different custom decks show different daily-zone sets, each drawn from its own deck', async ({
+  page,
+  context,
+}) => {
+  await context.clearCookies();
+  const deckAlpha = customSetFixture('e2e-d10-alpha', 'E2E D10 Alpha Deck', [
+    'e2eD10Alpha1',
+    'e2eD10Alpha2',
+    'e2eD10Alpha3',
+  ]);
+  const deckBeta = customSetFixture('e2e-d10-beta', 'E2E D10 Beta Deck', [
+    'e2eD10Beta1',
+    'e2eD10Beta2',
+    'e2eD10Beta3',
+  ]);
+  await page.addInitScript(
+    ([alpha, beta]) => {
+      window.localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([alpha, beta]));
+    },
+    [deckAlpha, deckBeta] as const,
+  );
+
+  await page.goto('/words-of-the-day/practice/');
+
+  await page.getByRole('button', { name: /E2E D10 Alpha Deck/ }).click();
+  await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Alpha Deck');
+  const alphaWords = await readDailyDeckWords(page);
+  // Both fixture decks have fewer than 12 words — the zone shows all of them (D10 edge case).
+  expect(new Set(alphaWords)).toEqual(new Set(deckAlpha.lemma_keys));
+
+  await page.getByRole('button', { name: /E2E D10 Beta Deck/ }).click();
+  await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Beta Deck');
+  const betaWords = await readDailyDeckWords(page);
+  expect(new Set(betaWords)).toEqual(new Set(deckBeta.lemma_keys));
+
+  expect(alphaWords.some((word) => betaWords.includes(word))).toBe(false);
+});
+
+test('A9a: a deck-scoped daily set is stable within a day and rotates across days', async ({ page, context }) => {
+  await context.clearCookies();
+  const words = Array.from({ length: 20 }, (_, i) => `e2eD10Rot${i}`);
+  const deck = customSetFixture('e2e-d10-rot', 'E2E D10 Rotation Deck', words);
+  await page.addInitScript((set) => {
+    window.localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([set]));
+  }, deck);
+
+  async function selectDeckAndReadWords(clockTime: string): Promise<string[]> {
+    await page.clock.setFixedTime(new Date(clockTime));
+    await page.goto('/words-of-the-day/practice/');
+    await page.getByRole('button', { name: /E2E D10 Rotation Deck/ }).click();
+    await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Rotation Deck');
+    return readDailyDeckWords(page);
+  }
+
+  await page.clock.install({ time: new Date('2026-07-20T12:00:00.000Z') });
+  const day1First = await selectDeckAndReadWords('2026-07-20T12:00:00.000Z');
+  expect(day1First.length).toBe(12);
+
+  // Same calendar day, different time of day: stability.
+  const day1Second = await selectDeckAndReadWords('2026-07-20T18:00:00.000Z');
+  expect(new Set(day1Second)).toEqual(new Set(day1First));
+
+  // A different calendar day: rotation (20-word pool makes a same-12 collision negligible).
+  const day2 = await selectDeckAndReadWords('2026-07-21T12:00:00.000Z');
+  expect(new Set(day2)).not.toEqual(new Set(day1First));
+});
+
+test('A9b: the All-Words daily set is stable within a day and rotates across days', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.addInitScript(() => window.localStorage.setItem('lu-learner-level', 'A1'));
+
+  async function readAllWordsAt(clockTime: string): Promise<string[]> {
+    await page.clock.setFixedTime(new Date(clockTime));
+    await page.goto('/words-of-the-day/practice/');
+    return readDailyDeckWords(page);
+  }
+
+  await page.clock.install({ time: new Date('2026-07-20T12:00:00.000Z') });
+  const day1First = await readAllWordsAt('2026-07-20T12:00:00.000Z');
+  expect(day1First.length).toBeGreaterThan(0);
+
+  const day1Second = await readAllWordsAt('2026-07-20T18:00:00.000Z');
+  expect(new Set(day1Second)).toEqual(new Set(day1First));
+
+  const day2 = await readAllWordsAt('2026-07-21T12:00:00.000Z');
+  expect(new Set(day2)).not.toEqual(new Set(day1First));
+});
+
 test.describe('daily preview UTC boundary', () => {
   test.use({ timezoneId: 'UTC' });
 

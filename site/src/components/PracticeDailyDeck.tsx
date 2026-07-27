@@ -20,6 +20,8 @@ export interface PracticeDailyDeckProps {
   atlasLemmaHref: (lemmaId: string) => string;
   chromeLocale: ChromeLocale;
   learnerLevel: CefrLevel;
+  /** D10: the active deck's display title, or `null` for 'All Words' (unscoped). */
+  deckTitle?: string | null;
 }
 
 const STATUS_META = {
@@ -39,6 +41,7 @@ export default function PracticeDailyDeck({
   atlasLemmaHref,
   chromeLocale,
   learnerLevel,
+  deckTitle = null,
 }: PracticeDailyDeckProps) {
   const [previewIndex, setPreviewIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -90,8 +93,15 @@ export default function PracticeDailyDeck({
   return (
     <div className="practice-daily-deck" data-testid="practice-daily-deck">
       <div className="daily-deck-header">
-        <h2>
-          <ChromeText k="practice.wordsTitle" />
+        <h2 data-testid="practice-daily-deck-title">
+          {deckTitle ? (
+            <ChromeDual
+              uk={`Слова дня — ${deckTitle}`}
+              en={`Words of the day — ${deckTitle}`}
+            />
+          ) : (
+            <ChromeText k="practice.wordsTitle" />
+          )}
         </h2>
         <span className="daily-deck-position" aria-live="polite">
           <ChromeDual

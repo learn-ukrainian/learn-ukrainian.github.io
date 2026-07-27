@@ -44,3 +44,18 @@ export function pickDaily<T>(pool: T[], seed: number, n: number): T[] {
   }
   return result.slice(0, Math.max(0, Math.min(n, result.length)));
 }
+
+/**
+ * Deterministic numeric contribution for a deck id, for combining with `dateSeed`
+ * (D10: `pickDaily(deckPool, dateSeed(today) + deckId, 12)`). `deckId` is a string,
+ * so a literal `+` would coerce the whole expression to NaN/0 — this hash gives the
+ * formula's intent (date AND deck both drive the draw) a real numeric seed.
+ */
+export function deckSeed(deckId: string): number {
+  let hash = 2166136261;
+  for (let index = 0; index < deckId.length; index += 1) {
+    hash ^= deckId.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
