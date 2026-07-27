@@ -416,7 +416,7 @@ def register_channel_commands(subparsers: Any) -> None:
     )
     post_parser.add_argument(
         "--from-agent", default="user",
-        choices=list(_channels.VALID_POST_AGENTS),
+        choices=_channels.get_valid_post_agents(),
         help="Sender agent (default: user)",
     )
     post_parser.add_argument(
@@ -490,7 +490,7 @@ def register_channel_commands(subparsers: Any) -> None:
         )
         inbox_run.add_argument(
             "agent",
-            choices=list(_channels.VALID_AGENTS),
+            choices=list(_channels.get_valid_agents()),
             help="Agent inbox to drain",
         )
         inbox_mode = inbox_run.add_mutually_exclusive_group()
@@ -535,7 +535,7 @@ def register_channel_commands(subparsers: Any) -> None:
         )
         inbox_show.add_argument(
             "agent",
-            choices=list(_channels.VALID_AGENTS),
+            choices=list(_channels.get_valid_agents()),
             help="Agent inbox to inspect",
         )
         inbox_ack = inbox_sub.add_parser(
@@ -567,7 +567,7 @@ def register_channel_commands(subparsers: Any) -> None:
     sync_parser.add_argument(
         "agent",
         nargs="?",
-        choices=list(_channels.VALID_AGENTS),
+        choices=list(_channels.get_valid_agents()),
         help="Single agent inbox to drain",
     )
     sync_parser.add_argument(
@@ -1148,7 +1148,7 @@ def _broadcast_recipients(channel: dict[str, Any]) -> list[str]:
     """All live seats for a channel — its subscribers, or every valid agent
     if the channel has none configured — minus current dead lanes (#4837)."""
     live = set(_channels.live_agents())
-    base = channel["subscribers"] or list(_channels.VALID_AGENTS)
+    base = channel["subscribers"] or list(_channels.get_valid_agents())
     return [a for a in base if a in live]
 
 
@@ -1218,7 +1218,7 @@ def _handle_post(args) -> int:
         label = "📢 broadcast" if broadcast else "→"
         print(f"   {label} {', '.join(to_agents)}  ({len(result['delivery_ids'])} deliveries)")
     if broadcast:
-        excluded = sorted((set(ch["subscribers"] or _channels.VALID_AGENTS)) & _channels.dead_lane_agents())
+        excluded = sorted((set(ch["subscribers"] or _channels.get_valid_agents())) & _channels.dead_lane_agents())
         if excluded:
             print(f"   excluded dead lanes: {', '.join(excluded)}")
     return 0
@@ -1416,7 +1416,7 @@ def _handle_sync(args) -> int:
         return 2
 
     agents = (
-        [agent for agent in _channels.VALID_AGENTS if _cli_available_agent(agent)]
+        [agent for agent in _channels.get_valid_agents() if _cli_available_agent(agent)]
         if args.all
         else [args.agent]
     )
@@ -1494,11 +1494,11 @@ def _handle_discuss(args) -> int:
             file=sys.stderr,
         )
         return 1
-    unknown = [a for a in with_agents if a not in _channels.VALID_AGENTS]
+    unknown = [a for a in with_agents if a not in _channels.get_valid_agents()]
     if unknown:
         print(
             f"❌ unknown agent(s): {', '.join(unknown)} "
-            f"(valid: {', '.join(sorted(_channels.VALID_AGENTS))})",
+            f"(valid: {', '.join(sorted(_channels.get_valid_agents()))})",
             file=sys.stderr,
         )
         return 1

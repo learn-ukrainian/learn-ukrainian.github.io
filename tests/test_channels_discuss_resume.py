@@ -163,6 +163,16 @@ def test_discuss_unknown_agent_defaults_to_no_resume(monkeypatch):
     """Agents not in registry get resume_policy='never' equivalent - no session_id."""
     _channels.create_channel("shared")
     monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
+    # discuss validates via get_valid_agents() (STATIC + registry slots), not the
+    # legacy VALID_AGENTS module constant — patch the dynamic helpers.
+    base_valid = _channels.get_valid_agents()
+    base_post = _channels.get_valid_post_agents()
+    monkeypatch.setattr(
+        _channels, "get_valid_agents", lambda **_kw: (*base_valid, "mystery")
+    )
+    monkeypatch.setattr(
+        _channels, "get_valid_post_agents", lambda **_kw: (*base_post, "mystery")
+    )
     monkeypatch.setattr(_channels, "VALID_AGENTS", (*_channels.VALID_AGENTS, "mystery"))
     monkeypatch.setattr(
         _channels,

@@ -71,7 +71,7 @@ class StaleClaimError(Exception):
 
 # ── Constants ──────────────────────────────────────────────────────────
 
-VALID_AGENTS = (
+STATIC_VALID_AGENTS = (
     "agy",
     "claude",
     "claude-infra",
@@ -88,8 +88,86 @@ VALID_AGENTS = (
     "claude-desktop",
     "codex-desktop",
 )
+VALID_AGENTS = STATIC_VALID_AGENTS
 VALID_POST_AGENTS = (*VALID_AGENTS, "user")
 VALID_RECIPIENT_AGENTS = VALID_AGENTS
+
+ASSIGNMENTS_PATH = REPO_ROOT / "scripts" / "config" / "area_assignments.yaml"
+_SLOTS_CACHE: dict[str, Any] = {"key": None, "slots": ()}
+
+
+def _load_registry_slots(assignments_path: Path | None = None) -> tuple[str, ...]:
+    """Load slot identities from area_assignments.yaml.
+
+    Lazy load, fail-open: returns empty tuple on missing file, parse error,
+    or missing PyYAML.
+    """
+    path = (assignments_path or ASSIGNMENTS_PATH).resolve()
+    try:
+        if not path.is_file():
+            return ()
+        text = path.read_text(encoding="utf-8")
+        try:
+            import yaml
+
+            raw_data = yaml.safe_load(text)
+        except ImportError:
+            return ()
+        if not isinstance(raw_data, dict):
+            return ()
+        assignments = raw_data.get("assignments")
+        if not isinstance(assignments, dict):
+            return ()
+        slots: list[str] = []
+        for area_data in assignments.values():
+            if isinstance(area_data, dict):
+                area_slots = area_data.get("slots", [])
+                if isinstance(area_slots, (list, tuple)):
+                    for slot in area_slots:
+                        if isinstance(slot, str) and slot.strip() and slot.strip() not in slots:
+                            slots.append(slot.strip())
+        return tuple(slots)
+    except Exception:
+        return ()
+
+
+def get_valid_agents(*, assignments_path: Path | None = None) -> tuple[str, ...]:
+    """Return valid agent identities: static tuple extended by registry-derived slots.
+
+    Keyed by file mtime+size to prevent stale caching in long-lived processes
+    while avoiding re-parsing unchanged files.
+    """
+    path = (assignments_path or ASSIGNMENTS_PATH).resolve()
+    slots: tuple[str, ...] = ()
+    try:
+        st = path.stat()
+        cache_key = (str(path), st.st_mtime, st.st_size)
+        if cache_key == _SLOTS_CACHE.get("key"):
+            slots = _SLOTS_CACHE.get("slots", ())
+        else:
+            slots = _load_registry_slots(path)
+            _SLOTS_CACHE["key"] = cache_key
+            _SLOTS_CACHE["slots"] = slots
+    except Exception:
+        slots = ()
+
+    combined = list(STATIC_VALID_AGENTS)
+    for slot in slots:
+        if slot not in combined:
+            combined.append(slot)
+    return tuple(combined)
+
+
+def get_valid_post_agents(*, assignments_path: Path | None = None) -> tuple[str, ...]:
+    valids = get_valid_agents(assignments_path=assignments_path)
+    if "user" not in valids:
+        return (*valids, "user")
+    return valids
+
+
+def get_valid_recipient_agents(*, assignments_path: Path | None = None) -> tuple[str, ...]:
+    return get_valid_agents(assignments_path=assignments_path)
+
 VALID_KINDS = ("post", "reply", "system", "fanout_start", "fanout_end")
 VALID_DELIVERY_STATUSES = (
     "pending",
@@ -206,19 +284,22 @@ def context_sha256(path: Path) -> str:
         return ""
 
 
-def _validate_agent(agent: str) -> None:
-    if agent not in VALID_AGENTS:
-        raise ValueError(f"Unknown agent '{agent}'. Expected one of {VALID_AGENTS}.")
+def _validate_agent(agent: str, *, assignments_path: Path | None = None) -> None:
+    valids = get_valid_agents(assignments_path=assignments_path)
+    if agent not in valids:
+        raise ValueError(f"Unknown agent '{agent}'. Expected one of {valids}.")
 
 
-def _validate_post_agent(agent: str) -> None:
-    if agent not in VALID_POST_AGENTS:
-        raise ValueError(f"Unknown agent '{agent}'. Expected one of {VALID_POST_AGENTS}.")
+def _validate_post_agent(agent: str, *, assignments_path: Path | None = None) -> None:
+    valids = get_valid_post_agents(assignments_path=assignments_path)
+    if agent not in valids:
+        raise ValueError(f"Unknown agent '{agent}'. Expected one of {valids}.")
 
 
-def _validate_recipient_agent(agent: str) -> None:
-    if agent not in VALID_RECIPIENT_AGENTS:
-        raise ValueError(f"Unknown delivery target '{agent}'. Expected one of {VALID_RECIPIENT_AGENTS}.")
+def _validate_recipient_agent(agent: str, *, assignments_path: Path | None = None) -> None:
+    valids = get_valid_recipient_agents(assignments_path=assignments_path)
+    if agent not in valids:
+        raise ValueError(f"Unknown delivery target '{agent}'. Expected one of {valids}.")
 
 
 def _validate_priority(priority: str) -> None:
@@ -239,9 +320,10 @@ def dead_lane_agents() -> frozenset[str]:
 
 
 def live_agents() -> list[str]:
-    """Return ``VALID_AGENTS`` minus current dead lanes, registry order preserved."""
+    """Return ``get_valid_agents()`` minus current dead lanes, registry order preserved."""
     dead = dead_lane_agents()
-    return [a for a in VALID_AGENTS if a not in dead]
+    return [a for a in get_valid_agents() if a not in dead]
+
 
 
 def _validate_kind(kind: str) -> None:
@@ -899,8 +981,25 @@ def post(
     _validate_post_agent(from_agent)
     _validate_kind(kind)
     _validate_priority(priority)
+    warnings: list[str] = []
     for agent in to_agents or []:
         _validate_recipient_agent(agent)
+        if "-" in agent and agent not in STATIC_VALID_AGENTS:
+            try:
+                from scripts.orchestration.slot_routing import resolve_slot_holder
+
+                res = resolve_slot_holder(agent)
+                if not res.has_holder:
+                    msg = (
+                        f"⚠️ channel-bridge: recipient slot '{agent}' has no live holder "
+                        f"(queued at {res.queue_location})"
+                    )
+                    warnings.append(msg)
+                    import sys as _sys
+
+                    print(msg, file=_sys.stderr)
+            except Exception:
+                pass
     body = redact_text(body) or ""
     attachments = redact_value(attachments)
     monitor_state_snapshot = redact_value(monitor_state_snapshot)

@@ -89,12 +89,12 @@ def _map_legacy_gemini_model_to_agy(model: str | None) -> str | None:
 
 def _detect_caller_identity_from_env() -> str | None:
     """Infer the sending agent for legacy ask-* commands from wrapper env."""
-    from ._channels import VALID_AGENTS
+    from . import _channels
 
     handoff_agent = os.environ.get("SESSION_HANDOFF_AGENT")
     if handoff_agent:
         normalized = handoff_agent.strip().lower()
-        if normalized in VALID_AGENTS:
+        if normalized in _channels.get_valid_agents():
             return normalized
     claude_name = os.environ.get("CLAUDE_AGENT_NAME")
     if claude_name:
@@ -436,9 +436,9 @@ def _build_parser() -> argparse.ArgumentParser:
     # original claude/gemini/codex trio — otherwise grok-build, grok, kimi, agy, and
     # cursor cannot be targeted by `send --to`, listed by `inbox --for`, or
     # cleared by `ack-all`, which silently second-classes those lanes.
-    from ._channels import VALID_RECIPIENT_AGENTS
+    from . import _channels
 
-    recipient_choices = sorted(VALID_RECIPIENT_AGENTS)
+    recipient_choices = sorted(_channels.get_valid_recipient_agents())
     parser = argparse.ArgumentParser(
         description=(
             "Bridge CLI for Claude, Gemini, and Codex message passing.\n"
@@ -1085,6 +1085,14 @@ def _build_parser() -> argparse.ArgumentParser:
     # status
     subparsers.add_parser("status", help="Show running bridge processes")
 
+    # slot-holder (step 4b)
+    slot_holder_parser = subparsers.add_parser(
+        "slot-holder",
+        help="Resolve slot to live lease holder facts in session-streams DB",
+    )
+    slot_holder_parser.add_argument("slot", help="Slot name (e.g. claude-atlas, grok-infra)")
+    slot_holder_parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON")
+
     # serve
     serve_parser = subparsers.add_parser("serve", help="Serve local HTTP bridge surfaces")
     serve_parser.add_argument(
@@ -1372,6 +1380,8 @@ def _dispatch_command(args):
             argv += [args.message]
         rc = _ui_agy_cli_main(argv)
         sys.exit(rc)
+    elif args.command == "slot-holder":
+        _handle_slot_holder(args)
     elif args.command in ("channel", "post", "p", "reconcile", "sync", "discuss"):
         # Channel bridge commands (#1190)
         from ._channels_cli import dispatch_channel_command
@@ -1704,6 +1714,27 @@ def _handle_ask_gemini(args):
         **kwargs,
         **_background_kwargs(args),
     )
+
+
+def _handle_slot_holder(args):
+    """Handle slot-holder subcommand."""
+    from scripts.orchestration.slot_routing import resolve_slot_holder
+
+    res = resolve_slot_holder(args.slot)
+    if getattr(args, "json", False):
+        print(json.dumps(res.to_dict(), indent=2))
+    else:
+        if res.has_holder:
+            print(f"Slot: {res.slot}")
+            print(f"Area: {res.area_id}")
+            print(f"Stream ID: {res.stream_id}")
+            print(f"Session ID: {res.session_id}")
+            print(f"Holder Agent: {res.holder_agent}")
+            print(f"Holder Harness: {res.holder_harness}")
+            print(f"Generation: {res.generation}")
+            print(f"Expires At: {res.expires_at}")
+        else:
+            print(f"no-live-holder (queue: {res.queue_location})")
 
 
 def main():
