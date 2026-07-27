@@ -21,7 +21,7 @@
 #   from the failing run's logs, never inferred from local state.
 schema_version: trailspec.v1
 trail_id: rb4-red-ci-triage
-version: "0.2.0"
+version: "0.3.0"
 title: RB4 Red-CI triage — signature, allowlist, staleness, bounded rerun
 seats:
   - grok-daily
@@ -96,14 +96,18 @@ steps:
       JSON fields). A run for a superseded head has been replaced by the newer
       head's own CI — nothing here may act on it (the burned hazard: acting on a
       stale head's run cancels or misleads the live one); control returns to the PR
-      lifecycle, which watches the current run.
-    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); R=$(gh run view "$RUN" --json headSha --jq .headSha); P=$(gh pr view {pr_number} --json headRefOid --jq .headRefOid); [ "$R" = "$P" ] && echo head-current || echo head-superseded'
+      lifecycle, which watches the current run. FAILS CLOSED (r2 finding):
+      equality may mean current only for two validated, non-empty 40-hex SHAs —
+      failed gh lookups (empty equals empty) are their own lookup-failed outcome
+      and stop.
+    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); R=$(gh run view "$RUN" --json headSha --jq .headSha); P=$(gh pr view {pr_number} --json headRefOid --jq .headRefOid); case "$R$P" in *[!0-9a-f]*|"") echo lookup-failed; exit 0;; esac; [ "${#R}" = "40" ] && [ "${#P}" = "40" ] || { echo lookup-failed; exit 0; }; [ "$R" = "$P" ] && echo head-current || echo head-superseded'
     evidence_predicate:
-      command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); R=$(gh run view "$RUN" --json headSha --jq .headSha); P=$(gh pr view {pr_number} --json headRefOid --jq .headRefOid); [ "$R" = "$P" ] && echo head-current || echo head-superseded'
-      success_pattern: '^(head-current|head-superseded)$'
+      command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); R=$(gh run view "$RUN" --json headSha --jq .headSha); P=$(gh pr view {pr_number} --json headRefOid --jq .headRefOid); case "$R$P" in *[!0-9a-f]*|"") echo lookup-failed; exit 0;; esac; [ "${#R}" = "40" ] && [ "${#P}" = "40" ] || { echo lookup-failed; exit 0; }; [ "$R" = "$P" ] && echo head-current || echo head-superseded'
+      success_pattern: '^(head-current|head-superseded|lookup-failed)$'
     transitions:
       head_current: staleness_probe
       head_superseded: back_to_pr_lifecycle
+      lookup_failed: STOP-precondition-failed
     kind: mechanical
     blocked_on: null
 
@@ -170,55 +174,43 @@ steps:
       execution guard, not narration): the step checks for the registry file itself
       — scripts/config/trails/red-ci-known-failures.yaml — and with it ABSENT
       (today's state) every signature is table-unknown and stops as STOP-unknown;
-      the rerun path is mechanically UNREACHABLE until the registry lands. The
-      table's other judgment rows (pre-existing-on-main → note + owning issue;
-      head-specific → fix round) are applied BY THE SUMMONED JUDGMENT working from
-      the recorded signature receipt — deliberately not encoded as weak-seat
-      routes. When the registry lands, matched retry-once entries route to the
-      bounded rerun gate and matched STOP entries to STOP-ci-red.
+      the rerun path is mechanically UNREACHABLE until the registry AND its lookup
+      tool land: today BOTH outcomes stop as table-unknown — registry_absent, and
+      registry_present_lookup_unbuilt (a registry file with no lookup tool must not
+      be guessed against; r2 finding: transitions must match the command's actual
+      output vocabulary, and matched routes only arrive with the lookup tool). The
+      table's judgment rows (pre-existing-on-main → note + owning issue;
+      head-specific → fix round) are applied BY THE SUMMONED JUDGMENT from the
+      recorded signature receipt — deliberately not weak-seat routes. The
+      atomic_rerun step below documents the future matched-retry-once path.
     command: sh -c 'test -f scripts/config/trails/red-ci-known-failures.yaml && echo registry-present || echo registry-absent'
     evidence_predicate:
       command: sh -c 'test -f scripts/config/trails/red-ci-known-failures.yaml && echo registry-present || echo registry-absent'
       success_pattern: '^(registry-present|registry-absent)$'
     transitions:
-      matched_retry_once: rerun_gate
-      matched_stop: STOP-ci-red
-      registry_absent_unknown: STOP-unknown
+      registry_absent: STOP-unknown
+      registry_present_lookup_unbuilt: STOP-unknown
     kind: table-lookup
     table: red-ci-triage
-    blocked_on: "known-failure-class signature registry (#5885)"
+    blocked_on: "known-failure-class signature registry + its lookup tool (#5885)"
 
-  - step_id: rerun_gate
+  - step_id: atomic_rerun
     intent: >-
-      Bounded rerun for a registry-matched flake on a CURRENT head only (head
-      currency + staleness gates already ran): the claim is an ATOMIC noclobber
-      create keyed by run id (r1 finding: test-then-write races; set -C makes the
-      create itself the winner-decider — concurrent claimers lose the O_EXCL-style
-      race), and the gate's outcome is TEED to a gate-result file the predicate
-      reads back, so both branches are derivable from recorded evidence. A consumed
-      claim whose rerun later failed stays consumed — the safe direction. Never
-      retry-until-green.
-    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); ( set -C; echo fired > "batch_state/rb4-rerun-$RUN.receipt" ) 2>/dev/null && echo first-rerun > "batch_state/rb4-gate-$RUN.txt" || echo already-rerun > "batch_state/rb4-gate-$RUN.txt"; cat "batch_state/rb4-gate-$RUN.txt"'
-    evidence_predicate:
-      command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); cat "batch_state/rb4-gate-$RUN.txt"'
-      success_pattern: '^(first-rerun|already-rerun)$'
-    transitions:
-      first_rerun: fire_rerun
-      already_rerun: STOP-ci-red
-    kind: mechanical
-    blocked_on: "known-failure-class signature registry (#5885)"
-
-  - step_id: fire_rerun
-    intent: >-
-      Fire the single sanctioned rerun of the failed jobs on the CURRENT head's run
-      (live shape: the command exits 0 and the run returns to queued/in_progress).
-      The trail ends; the rerun's outcome is watched by the PR lifecycle babysit.
-    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); gh run rerun "$RUN" --failed'
+      FUTURE matched-retry-once path (unreachable until the registry + lookup tool
+      land): claim and fire are ONE atomic step (r2 finding: a shared gate-result
+      file lets the losing claimant overwrite the winner's read — so there is no
+      shared result file at all). The noclobber create keyed by run id decides the
+      winner; ONLY the winner fires gh run rerun --failed. The predicate is the
+      run's OWN status: a fired rerun reads queued/in_progress; a lost claim or a
+      refused fire reads a settled status — derivable per-claimant without any
+      shared writable evidence. A consumed claim whose fire failed stays consumed
+      (safe direction). Never retry-until-green.
+    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); ( set -C; echo fired > "batch_state/rb4-rerun-$RUN.receipt" ) 2>/dev/null && gh run rerun "$RUN" --failed && echo rerun-fired || echo no-rerun'
     evidence_predicate:
       command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); gh run view "$RUN" --json status --jq .status'
-      success_pattern: '^(queued|in_progress|requested|waiting)$'
+      success_pattern: '^(queued|in_progress|requested|waiting|completed)$'
     transitions:
       rerun_fired: triaged_rerun_fired
-      rerun_refused: STOP-manual-intervention
+      no_rerun: STOP-ci-red
     kind: mechanical
-    blocked_on: "known-failure-class signature registry (#5885)"
+    blocked_on: "known-failure-class signature registry + its lookup tool (#5885)"
