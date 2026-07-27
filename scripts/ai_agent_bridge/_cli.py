@@ -594,6 +594,11 @@ def _build_parser() -> argparse.ArgumentParser:
 
     asks_parser = subparsers.add_parser("asks", help="List tracked one-shot ask lifecycle states")
     asks_parser.add_argument("--task-id", help="Only show asks for this task ID")
+    asks_parser.add_argument(
+        "--watchdog",
+        action="store_true",
+        help="Run the ask watchdog to re-fire dead workers lacking clean completion once",
+    )
 
     # ask-claude
     ask_claude_parser = subparsers.add_parser(
@@ -1273,6 +1278,14 @@ def _dispatch_command(args):
     elif args.command == "process-ask":
         process_background_ask(args.message_id, args.target)
     elif args.command == "asks":
+        if getattr(args, "watchdog", False):
+            from ._ask_lifecycle import run_ask_watchdog
+
+            retried = run_ask_watchdog()
+            if retried:
+                print(f"Watchdog re-fired {len(retried)} ask(s): {', '.join(map(str, retried))}")
+            else:
+                print("Watchdog run complete: no dead asks eligible for retry.")
         print_asks(args.task_id)
     elif args.command == "ask-claude":
         _handle_ask_claude(args)

@@ -1,6 +1,5 @@
 """Prompt building for Gemini and Claude interactions."""
 
-from ._ask_contract import NATIVE_ASK_TOOL_CONTRACT
 from ._config import REPO_ROOT
 
 
@@ -229,9 +228,7 @@ def build_claude_prompt(
     review_worktree_provisioned: bool = False,
 ) -> str:
     """Build prompt for Claude invocation."""
-    prompt = f"""{NATIVE_ASK_TOOL_CONTRACT}
-
-You are Claude, receiving a message from {msg['from'].title()} via the message broker.
+    prompt = f"""You are Claude, receiving a message from {msg['from'].title()} via the message broker.
 
 ---
 Task ID: {msg['task_id'] or 'none'}
@@ -325,9 +322,7 @@ def build_agy_prompt(
     may read the precise repository files needed to answer, but must not
     broaden that into an exploratory or write-capable task.
     """
-    prompt = f"""{NATIVE_ASK_TOOL_CONTRACT}
-
-You are Agy (Antigravity CLI, Gemini-3.6-Flash-High), receiving a message from {msg['from'].title()} via the message broker.
+    prompt = f"""You are Agy (Antigravity CLI, Gemini-3.6-Flash-High), receiving a message from {msg['from'].title()} via the message broker.
 
 {OPERATOR_CONTRACT_DIGEST}
 
@@ -380,9 +375,7 @@ def build_codex_prompt(
     review_worktree_provisioned: bool = False,
 ) -> str:
     """Build prompt for Codex invocation."""
-    prompt = f"""{NATIVE_ASK_TOOL_CONTRACT}
-
-You are Codex, receiving a message from {msg['from'].title()} via the message broker.
+    prompt = f"""You are Codex, receiving a message from {msg['from'].title()} via the message broker.
 
 {_CODEX_STANDING_RULES}
 ---

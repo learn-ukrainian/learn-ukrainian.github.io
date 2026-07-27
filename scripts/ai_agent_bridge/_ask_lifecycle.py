@@ -31,6 +31,7 @@ from ._config import _PARENT_ENV, PID_DIR, REPO_ROOT
 from ._db import get_db
 
 _ASK_AGENT = "ask"
+_DEFAULT_HARD_TIMEOUT_SECONDS = 900
 # Stored on the legacy messages.data JSON so reply completion can reload by id.
 _FLEET_REQUEST_ID_KEY = "fleet_request_id"
 # Tests may point plane storage at a tmp root without touching batch_state/.
@@ -594,7 +595,6 @@ def print_asks(task_id: str | None = None) -> None:
 
 def maybe_print_timeout_notice() -> None:
     """Surface newly timed-out detached asks on the next bridge CLI command."""
-    run_ask_watchdog()
     conn = get_db()
     try:
         rows = conn.execute(
@@ -641,6 +641,20 @@ def should_auto_retry_ask(message_id: int) -> bool:
         return False
     pid = launch.get("pid")
     if _pid_is_alive(pid):
+        return False
+
+    started_at_raw = launch.get("started_at")
+    if not started_at_raw or not isinstance(started_at_raw, str):
+        return False
+    try:
+        started_at = datetime.fromisoformat(started_at_raw)
+        if started_at.tzinfo is None:
+            started_at = started_at.replace(tzinfo=UTC)
+        age = (datetime.now(UTC) - started_at).total_seconds()
+        max_age = 2 * _DEFAULT_HARD_TIMEOUT_SECONDS
+        if age < 0 or age > max_age:
+            return False
+    except (ValueError, TypeError):
         return False
 
     target = str(launch.get("agent") or launch.get("harness") or "grok")
@@ -693,7 +707,6 @@ def _re_fire_ask(message_id: int) -> bool:
         return False
 
     meta = _ask_metadata(msg)
-    meta["auto-retried"] = True
     meta["auto_retried"] = True
     current_count = int(meta.get("total_retry_count") or 0)
     meta["total_retry_count"] = current_count + 1

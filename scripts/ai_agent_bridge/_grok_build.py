@@ -326,7 +326,6 @@ def _attempt_cancel_and_retell_retry(
 ) -> bool:
     """Auto-retry ONCE with refusal reason appended to prompt (#5893 item 3)."""
     meta = _ask_metadata(msg)
-    meta["cancel-retried"] = True
     meta["cancel_retried"] = True
     current_count = int(meta.get("total_retry_count") or 0)
     meta["total_retry_count"] = current_count + 1
@@ -561,9 +560,8 @@ def _build_grok_build_prompt(
     review_worktree_provisioned: bool = False,
 ) -> str:
     """Build the native Grok Build bridge prompt."""
-    prompt = f"""{NATIVE_ASK_TOOL_CONTRACT}
-
-You are Grok Build (native grok CLI), receiving a message from {msg['from'].title()} via the message broker.
+    contract = f"{NATIVE_ASK_TOOL_CONTRACT}\n\n" if not review_worktree_provisioned else ""
+    prompt = f"""{contract}You are Grok Build (native grok CLI), receiving a message from {msg['from'].title()} via the message broker.
 
 ---
 Task ID: {msg['task_id'] or 'none'}

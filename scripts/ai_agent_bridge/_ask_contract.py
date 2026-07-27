@@ -86,10 +86,8 @@ def response_provenance(
     }
     if req_meta.get("auto_retried") or req_meta.get("auto-retried"):
         metadata["auto_retried"] = True
-        metadata["auto-retried"] = True
     if req_meta.get("cancel_retried") or req_meta.get("cancel-retried"):
         metadata["cancel_retried"] = True
-        metadata["cancel-retried"] = True
     if effort_reason:
         metadata["effort_reason"] = effort_reason
     return json.dumps(metadata, sort_keys=True), actual_model

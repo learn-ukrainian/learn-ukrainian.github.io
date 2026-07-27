@@ -220,6 +220,12 @@ def run_watcher(
     try:
         conn = open_readonly_db(db_path)
         while True:
+            try:
+                from ._ask_lifecycle import run_ask_watchdog
+
+                run_ask_watchdog()
+            except Exception:
+                pass
             events = poll_once(conn, agent, last_seen)
             last_seen = emit_notifications(events, last_seen, output)
             if once:
