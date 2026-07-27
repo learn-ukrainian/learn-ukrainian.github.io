@@ -36,6 +36,8 @@ tables:
     rows:
       - when: PR is a DRAFT
         then: never arm, never merge — undraft only after the gate passes
+      - when: ANY explicitly requested review of the CURRENT head is not yet terminal-and-published (sent | processing | timed-out | failed all count as unresolved until returned or explicitly cancelled with a recorded reason)
+        then: wait — the sealed-dispatch verdict and a formal-CF job are SEPARATE gates and auto-merge must not race the slower one (2026-07-27 burn on #5886; a new head invalidates every prior verdict)
       - when: reviewer is the author, or the arming driver specified the fix under review
         then: route to a different independent seat  # directing a fix disqualifies its reviewer
       - when: requested-changes unresolved (a later LGTM comment does not resolve a review thread)
