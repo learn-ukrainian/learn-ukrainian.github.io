@@ -294,6 +294,7 @@ printf '%s' "{\"session_id\":\"$evil_id\"}" | \
 #    .agent/sessions (or at the destination entry) must NOT let the sidecar
 #    write escape — the no-follow fd-anchored writer refuses and the outside
 #    target stays untouched.
+export REPO_ROOT_FOR_PROBE="$REPO_ROOT"
 root="$TMP_ROOT/symlink-project"
 outside="$TMP_ROOT/symlink-outside"
 mkdir -p "$root/.agent" "$outside"
@@ -312,6 +313,33 @@ if [ "$outside_count" != "0" ]; then
     echo "DIAG escaped files:"; find "$outside" -type f 2>/dev/null
     for _f in $(find "$outside" -type f 2>/dev/null); do echo "DIAG content of $_f:"; cat "$_f" 2>/dev/null; done
     echo "DIAG root/.agent listing:"; ls -la "$root/.agent" 2>/dev/null
+    echo "DIAG in-situ probe:"
+    "$PYTHON_BIN" - "$root" <<'PROBE_PY' 2>&1
+import os, sys
+root = sys.argv[1]
+sys.path.insert(0, os.environ.get("REPO_ROOT_FOR_PROBE", "."))
+import importlib.util
+spec = importlib.util.spec_from_file_location("sr_probe", os.path.join(os.environ["REPO_ROOT_FOR_PROBE"], "scripts/lib/session_record.py"))
+sr = importlib.util.module_from_spec(spec); spec.loader.exec_module(sr)
+print("module file:", sr.__file__)
+print("has fd walker:", hasattr(sr, "_open_sessions_dir_fd"))
+flags = os.O_RDONLY | os.O_NOFOLLOW | getattr(os, "O_DIRECTORY", 0)
+afd = os.open(os.path.join(root, ".agent"), flags)
+try:
+    try:
+        sfd = os.open("sessions", flags, dir_fd=afd)
+        print("PRIMITIVE: open(sessions symlink) SUCCEEDED fd=", sfd); os.close(sfd)
+    except OSError as e:
+        print("PRIMITIVE: open(sessions symlink) refused:", e.errno, e)
+finally:
+    os.close(afd)
+from pathlib import Path
+try:
+    rec = sr.update_session("probe-in-situ", provenance="probe", state_root=Path(root))
+    print("update_session: WROTE (BAD)", sr.get_record_path("probe-in-situ", state_root=Path(root)))
+except Exception as e:
+    print("update_session: refused:", type(e).__name__, e)
+PROBE_PY
   } >&2
   fail "symlink escape: sidecar write followed a symlinked sessions dir ($outside_count files landed outside)"
 fi
