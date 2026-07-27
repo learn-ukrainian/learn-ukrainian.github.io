@@ -29,18 +29,7 @@ const atlasAssetBase = `${baseUrl === '/' ? '' : baseUrl.replace(/\/$/, '')}/atl
   heroVariant="unavailable"
   wide
 >
-  {/* Generic site-wide OpenGraph on 404 (spec R2 — tail lemmas share these tags). */}
-  <meta slot="head" property="og:type" content="website" />
-  <meta slot="head" property="og:site_name" content="Learn Ukrainian" />
-  <meta slot="head" property="og:title" content={ogTitle} />
-  <meta slot="head" property="og:description" content={ogDescription} />
-  <meta slot="head" property="og:url" content={siteUrl} />
-  <meta slot="head" property="og:image" content={ogImage} />
-  <meta slot="head" name="twitter:card" content="summary" />
-  <meta slot="head" name="twitter:title" content={ogTitle} />
-  <meta slot="head" name="twitter:description" content={ogDescription} />
-
-  <script is:inline define:vars={{ baseUrl }}>
+  <script slot="head" is:inline define:vars={{ baseUrl }}>
     (() => {
       const base = baseUrl === '/' ? '' : String(baseUrl).replace(/\/$/, '');
       const path = location.pathname;
@@ -59,6 +48,17 @@ const atlasAssetBase = `${baseUrl === '/' ? '' : baseUrl.replace(/\/$/, '')}/atl
       });
     })();
   </script>
+
+  {/* Generic site-wide OpenGraph on 404 (spec R2 — tail lemmas share these tags). */}
+  <meta slot="head" property="og:type" content="website" />
+  <meta slot="head" property="og:site_name" content="Learn Ukrainian" />
+  <meta slot="head" property="og:title" content={ogTitle} />
+  <meta slot="head" property="og:description" content={ogDescription} />
+  <meta slot="head" property="og:url" content={siteUrl} />
+  <meta slot="head" property="og:image" content={ogImage} />
+  <meta slot="head" name="twitter:card" content="summary" />
+  <meta slot="head" name="twitter:title" content={ogTitle} />
+  <meta slot="head" name="twitter:description" content={ogDescription} />
 
   <div data-atlas-shell-boot hidden>
     <div
@@ -93,6 +93,12 @@ const atlasAssetBase = `${baseUrl === '/' ? '' : baseUrl.replace(/\/$/, '')}/atl
     </div>
   </section>
 </CourseLayout>
+
+<style>
+  :global(html[data-atlas-shell] .lu-hero) {
+    display: none;
+  }
+</style>
 
 <style is:global>
   .atlas-client-shell-state {

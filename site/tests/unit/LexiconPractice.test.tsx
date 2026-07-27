@@ -790,6 +790,63 @@ describe('LexiconPractice', () => {
     expect(screen.queryByText('—')).not.toBeInTheDocument();
   });
 
+  test('omits Atlas links for an unmatched custom-deck key but keeps them for a matched lemma', () => {
+    const makeSnapshot = (hasAtlasEntry: boolean): DailyPracticeDeckSnapshot => ({
+      version: 2,
+      date: '2026-06-23',
+      level: 'A1',
+      deckVersion: 'custom-deck',
+      createdAt: NOW.getTime(),
+      items: [{
+        lemmaId: 'synthetic-custom-key',
+        origin: 'new',
+        lemma: 'Синтетичний ключ',
+        gloss: 'Synthetic key',
+        hasAtlasEntry,
+        cefr: null,
+        pos: null,
+      }],
+    });
+    const rowsFor = (snapshot: DailyPracticeDeckSnapshot) => ({
+      pendingDue: [],
+      pendingNew: [{ item: snapshot.items[0]!, state: 'new' as const, lastSeenAt: null }],
+      done: [],
+    });
+    const atlasLemmaHref = (lemmaId: string) => `/lexicon/${lemmaId}/`;
+    const orphan = makeSnapshot(false);
+    const { container, rerender } = render(
+      <PracticeDailyDeck
+        snapshot={orphan}
+        rows={rowsFor(orphan)}
+        lexemes={new Map()}
+        atlasLemmaHref={atlasLemmaHref}
+        chromeLocale="uk"
+        learnerLevel="A1"
+      />,
+    );
+
+    expect(screen.queryByTestId('practice-preview-atlas-link')).not.toBeInTheDocument();
+    expect(container.querySelectorAll('a[href="/lexicon/synthetic-custom-key/"]')).toHaveLength(0);
+
+    const matched = makeSnapshot(true);
+    rerender(
+      <PracticeDailyDeck
+        snapshot={matched}
+        rows={rowsFor(matched)}
+        lexemes={new Map()}
+        atlasLemmaHref={atlasLemmaHref}
+        chromeLocale="uk"
+        learnerLevel="A1"
+      />,
+    );
+
+    expect(screen.getByTestId('practice-preview-atlas-link')).toHaveAttribute(
+      'href',
+      '/lexicon/synthetic-custom-key/',
+    );
+    expect(container.querySelectorAll('a[href="/lexicon/synthetic-custom-key/"]')).toHaveLength(2);
+  });
+
   test('enriches the daily card with ipa/pos from the practice-lexemes map when the pick payload has neither (#5852)', () => {
     const enrichment = lexeme('борщ', 'борщ', 'borscht (lexeme gloss)', {
       nominative: 'борщ',
@@ -1008,6 +1065,351 @@ describe('LexiconPractice', () => {
     await screen.findByTestId('practice-daily-deck');
     expect(screen.getAllByText(withPos!.lemma).length).toBeGreaterThan(0);
     expect(screen.getAllByText(withPos!.pos!).length).toBeGreaterThan(0);
+  });
+
+  test('resolves a level-less custom deck key from the learner cumulative shards', async () => {
+    const cat = lexeme('кіт', 'кіт', 'cat', {
+      nominative: 'кіт',
+      accusative: 'кота',
+      locative: 'коті',
+    });
+    const customSet: CustomSet = {
+      id: 'custom-cats',
+      title: 'Коти',
+      lemma_keys: ['кіт'],
+      cloze_items: [],
+      created_at: '2026-07-27T12:00:00.000Z',
+      updated_at: '2026-07-27T12:00:00.000Z',
+      device_id: 'test-device',
+      revision: 1,
+    };
+    localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
+
+    const requested: string[] = [];
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      requested.push(url);
+      if (url.includes('daily-pool.json')) return okJson([]);
+      if (url.includes('practice-index.A1.json')) {
+        return okJson({
+          deckVersion: 'cats',
+          level: 'A1',
+          items: [{
+            lemmaId: cat.lemmaId,
+            lemma: cat.lemma,
+            cefr: 'A1',
+            modes: ['flashcards'],
+            hasCloze: false,
+            clozeIds: [],
+            newOrder: 0,
+          }],
+        });
+      }
+      if (url.includes('practice-lexemes.A1.json')) {
+        return okJson({ deckVersion: 'cats', level: 'A1', lexemes: [cat] });
+      }
+      if (url.includes('practice-cloze.A1.json')) return okJson({ cloze: [] });
+      if (url.includes('search-index.json')) {
+        return okJson([{ l: 'кіт', s: 'кіт', g: 'atlas cat', t: 'lemma', c: 'A1' }]);
+      }
+      return notFoundResponse();
+    });
+
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByRole('button', { name: /Коти/ }));
+
+    await waitFor(() =>
+      expect(screen.getByTestId('practice-daily-deck-title')).toHaveTextContent('Коти'),
+    );
+    await user.click(container.querySelector<HTMLElement>('.daily-preview-card')!);
+
+    expect(screen.getAllByText('cat').length).toBeGreaterThan(0);
+    expect(screen.queryByText('atlas cat')).not.toBeInTheDocument();
+    expect(screen.getAllByText('noun').length).toBeGreaterThan(0);
+    expect(screen.getByTestId('practice-preview-atlas-link')).toHaveAttribute(
+      'href',
+      '/lexicon/%D0%BA%D1%96%D1%82/',
+    );
+    expect(requested.some((url) => url.includes('practice-lexemes.A2.json'))).toBe(false);
+  });
+
+  test('falls back to the Atlas index for a custom deck word outside practice lexemes', async () => {
+    const customSet: CustomSet = {
+      id: 'custom-atlas-only-cat',
+      title: 'Коти з Атласу',
+      lemma_keys: ['кіт'],
+      cloze_items: [],
+      created_at: '2026-07-27T12:00:00.000Z',
+      updated_at: '2026-07-27T12:00:00.000Z',
+      device_id: 'test-device',
+      revision: 1,
+    };
+    localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
+
+    const requested: string[] = [];
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      requested.push(url);
+      if (url.includes('daily-pool.json')) return okJson([]);
+      if (url.includes('practice-index.A1.json')) {
+        return okJson({ deckVersion: 'empty', level: 'A1', items: [] });
+      }
+      if (url.includes('practice-lexemes.A1.json')) {
+        return okJson({ deckVersion: 'empty', level: 'A1', lexemes: [] });
+      }
+      if (url.includes('practice-cloze.A1.json')) return okJson({ cloze: [] });
+      if (url.includes('search-index.json')) {
+        return okJson([{ l: 'кіт', s: 'кіт', g: 'cat', t: 'lemma', c: 'A1' }]);
+      }
+      return notFoundResponse();
+    });
+
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByRole('button', { name: /Коти з Атласу/ }));
+
+    await waitFor(() =>
+      expect(screen.getByTestId('practice-daily-deck-title')).toHaveTextContent('Коти з Атласу'),
+    );
+    await user.click(container.querySelector<HTMLElement>('.daily-preview-card')!);
+
+    expect(screen.getAllByText('cat').length).toBeGreaterThan(0);
+    expect(screen.getByTestId('practice-preview-atlas-link')).toHaveAttribute(
+      'href',
+      '/lexicon/%D0%BA%D1%96%D1%82/',
+    );
+    expect(screen.queryByText('noun')).not.toBeInTheDocument();
+    expect(requested.filter((url) => url.includes('search-index.json'))).toHaveLength(1);
+  });
+
+  test('starts a custom-deck flashcard session from a practice-core match without fetching Atlas', async () => {
+    const cat = lexeme('кіт', 'кіт', 'cat', {
+      nominative: 'кіт',
+      accusative: 'кота',
+      locative: 'коті',
+    });
+    const customSet: CustomSet = {
+      id: 'session-practice-cat',
+      title: 'Коти з практики',
+      lemma_keys: ['кіт'],
+      cloze_items: [],
+      created_at: '2026-07-27T12:00:00.000Z',
+      updated_at: '2026-07-27T12:00:00.000Z',
+      device_id: 'test-device',
+      revision: 1,
+    };
+    localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
+
+    const requested: string[] = [];
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      requested.push(url);
+      if (url.includes('daily-pool.json')) return okJson([]);
+      if (url.includes('practice-index.A1.json')) {
+        return okJson({
+          deckVersion: 'cats',
+          level: 'A1',
+          items: [{ lemmaId: cat.lemmaId, lemma: cat.lemma, cefr: 'A1', modes: ['flashcards'], hasCloze: false, clozeIds: [], newOrder: 0 }],
+        });
+      }
+      if (url.includes('practice-lexemes.A1.json')) return okJson({ deckVersion: 'cats', level: 'A1', lexemes: [cat] });
+      if (url.includes('practice-cloze.A1.json')) return okJson({ cloze: [] });
+      return notFoundResponse();
+    });
+
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByRole('button', { name: /Коти з практики/ }));
+    await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
+
+    await waitFor(() => expect(container.querySelector('[data-activity="flashcard"]')).toBeInTheDocument());
+    const flashcard = container.querySelector<HTMLElement>('[data-activity="flashcard"]')!;
+    await user.click(flashcard);
+    expect(container.querySelector('.flashcard-back .flashcard-word')).toHaveTextContent('cat');
+    expect(requested.some((url) => url.includes('search-shards.json'))).toBe(false);
+    expect(requested.some((url) => url.includes('search-index.json'))).toBe(false);
+  });
+
+  test('enriches an Atlas-only custom-deck key in the live flashcard session via its prefix shard', async () => {
+    const customSet: CustomSet = {
+      id: 'session-atlas-cat',
+      title: 'Коти з Атласу: сесія',
+      lemma_keys: ['кіт'],
+      cloze_items: [],
+      created_at: '2026-07-27T12:00:00.000Z',
+      updated_at: '2026-07-27T12:00:00.000Z',
+      device_id: 'test-device',
+      revision: 1,
+    };
+    localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
+
+    const requested: string[] = [];
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      requested.push(url);
+      if (url.includes('daily-pool.json')) return okJson([]);
+      if (url.includes('practice-index.A1.json')) return okJson({ deckVersion: 'empty', level: 'A1', items: [] });
+      if (url.includes('practice-lexemes.A1.json')) return okJson({ deckVersion: 'empty', level: 'A1', lexemes: [] });
+      if (url.includes('practice-cloze.A1.json')) return okJson({ cloze: [] });
+      if (url.includes('search-shards.json')) {
+        return okJson({
+          schema: 'atlas-search-shards', schemaVersion: 1, total: 1, shardCount: 1,
+          fullIndex: { path: '/lexicon/search-index.json', count: 1, bytes: 1, sha256: 'full' },
+          prefixMap: { к: 'u043a' },
+          shards: { u043a: { path: '/lexicon/search/u043a.json', count: 1, bytes: 1, sha256: 'cat' } },
+        });
+      }
+      if (url.includes('/lexicon/search/u043a.json')) return okJson([{ l: 'кіт', s: 'кіт', g: 'cat', t: 'lemma', c: 'A1' }]);
+      return notFoundResponse();
+    });
+
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByRole('button', { name: /Коти з Атласу: сесія/ }));
+    await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
+
+    await waitFor(() => expect(container.querySelector('[data-activity="flashcard"]')).toBeInTheDocument());
+    const flashcard = container.querySelector<HTMLElement>('[data-activity="flashcard"]')!;
+    await user.click(flashcard);
+    expect(container.querySelector('.flashcard-back .flashcard-word')).toHaveTextContent('cat');
+    expect(container.querySelectorAll('.flashcard-subtitle')).toHaveLength(0);
+    expect(requested.filter((url) => url.includes('search-shards.json'))).toHaveLength(1);
+    expect(requested.filter((url) => url.includes('/lexicon/search/u043a.json'))).toHaveLength(1);
+    expect(requested.some((url) => url.includes('search-index.json'))).toBe(false);
+  });
+
+  test('keeps the clean-key fallback in a live session when Atlas supplies a dictionary-length gloss', async () => {
+    const customSet: CustomSet = {
+      id: 'session-atlas-long-gloss',
+      title: 'Довгий атласний глос',
+      lemma_keys: ['кіт'],
+      cloze_items: [],
+      created_at: '2026-07-27T12:00:00.000Z',
+      updated_at: '2026-07-27T12:00:00.000Z',
+      device_id: 'test-device',
+      revision: 1,
+    };
+    localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
+
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes('daily-pool.json')) return okJson([]);
+      if (url.includes('practice-index.A1.json')) return okJson({ deckVersion: 'empty', level: 'A1', items: [] });
+      if (url.includes('practice-lexemes.A1.json')) return okJson({ deckVersion: 'empty', level: 'A1', lexemes: [] });
+      if (url.includes('practice-cloze.A1.json')) return okJson({ cloze: [] });
+      if (url.includes('search-shards.json')) {
+        return okJson({
+          schema: 'atlas-search-shards', schemaVersion: 1, total: 1, shardCount: 1,
+          fullIndex: { path: '/lexicon/search-index.json', count: 1, bytes: 1, sha256: 'full' },
+          prefixMap: { к: 'u043a' },
+          shards: { u043a: { path: '/lexicon/search/u043a.json', count: 1, bytes: 1, sha256: 'cat' } },
+        });
+      }
+      if (url.includes('/lexicon/search/u043a.json')) {
+        return okJson([{
+          l: 'кіт', s: 'кіт',
+          g: 'A domestic cat is a small carnivorous mammal commonly kept as a pet.',
+          t: 'lemma', c: 'A1',
+        }]);
+      }
+      return notFoundResponse();
+    });
+
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByRole('button', { name: /Довгий атласний глос/ }));
+    await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
+
+    await waitFor(() => expect(container.querySelector('[data-activity="flashcard"]')).toBeInTheDocument());
+    await user.click(container.querySelector<HTMLElement>('[data-activity="flashcard"]')!);
+    expect(container.querySelector('.flashcard-back .flashcard-word')).toHaveTextContent('кіт');
+    expect(container.querySelectorAll('.flashcard-subtitle')).toHaveLength(0);
+  });
+
+  test('keeps a true orphan usable in a live session without inventing a noun tag', async () => {
+    const customSet: CustomSet = {
+      id: 'session-true-orphan',
+      title: 'Справжній сирота',
+      lemma_keys: ['вигаданий термін'],
+      cloze_items: [],
+      created_at: '2026-07-27T12:00:00.000Z',
+      updated_at: '2026-07-27T12:00:00.000Z',
+      device_id: 'test-device',
+      revision: 1,
+    };
+    localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
+
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes('daily-pool.json')) return okJson([]);
+      if (url.includes('practice-index.A1.json')) return okJson({ deckVersion: 'empty', level: 'A1', items: [] });
+      if (url.includes('practice-lexemes.A1.json')) return okJson({ deckVersion: 'empty', level: 'A1', lexemes: [] });
+      if (url.includes('practice-cloze.A1.json')) return okJson({ cloze: [] });
+      if (url.includes('search-shards.json')) {
+        return okJson({
+          schema: 'atlas-search-shards', schemaVersion: 1, total: 0, shardCount: 1,
+          fullIndex: { path: '/lexicon/search-index.json', count: 0, bytes: 1, sha256: 'full' },
+          prefixMap: { в: 'u0432' },
+          shards: { u0432: { path: '/lexicon/search/u0432.json', count: 0, bytes: 1, sha256: 'empty' } },
+        });
+      }
+      if (url.includes('/lexicon/search/u0432.json') || url.includes('search-index.json')) return okJson([]);
+      return notFoundResponse();
+    });
+
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByRole('button', { name: /Справжній сирота/ }));
+    await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
+
+    await waitFor(() => expect(container.querySelector('[data-activity="flashcard"]')).toBeInTheDocument());
+    await user.click(container.querySelector<HTMLElement>('[data-activity="flashcard"]')!);
+    expect(container.querySelector('.flashcard-back .flashcard-word')).toHaveTextContent('вигаданий термін');
+    expect(container.querySelectorAll('.flashcard-subtitle')).toHaveLength(0);
+  });
+
+  test('keeps a genuinely absent custom deck key on the orphan path', async () => {
+    const customSet: CustomSet = {
+      id: 'custom-orphan',
+      title: 'Невідомі слова',
+      lemma_keys: ['неіснуюча лексема'],
+      cloze_items: [],
+      created_at: '2026-07-27T12:00:00.000Z',
+      updated_at: '2026-07-27T12:00:00.000Z',
+      device_id: 'test-device',
+      revision: 1,
+    };
+    localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
+
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes('daily-pool.json')) return okJson([]);
+      if (url.includes('practice-index.A1.json')) {
+        return okJson({ deckVersion: 'empty', level: 'A1', items: [] });
+      }
+      if (url.includes('practice-lexemes.A1.json')) {
+        return okJson({ deckVersion: 'empty', level: 'A1', lexemes: [] });
+      }
+      if (url.includes('practice-cloze.A1.json')) return okJson({ cloze: [] });
+      if (url.includes('search-index.json')) return okJson([]);
+      return notFoundResponse();
+    });
+
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByRole('button', { name: /Невідомі слова/ }));
+
+    await waitFor(() =>
+      expect(screen.getByTestId('practice-daily-deck-title')).toHaveTextContent('Невідомі слова'),
+    );
+    expect(screen.getAllByText('неіснуюча лексема').length).toBeGreaterThan(0);
+    expect(screen.queryByTestId('practice-preview-atlas-link')).not.toBeInTheDocument();
+    expect(
+      container.querySelectorAll(
+        'a[href="/lexicon/%D0%BD%D0%B5%D1%96%D1%81%D0%BD%D1%83%D1%8E%D1%87%D0%B0%20%D0%BB%D0%B5%D0%BA%D1%81%D0%B5%D0%BC%D0%B0/"]',
+      ),
+    ).toHaveLength(0);
   });
 
   test('shows due review count on the home before any session starts', async () => {
@@ -3300,6 +3702,14 @@ describe('LexiconPractice', () => {
       await user.click(teacherBtn);
       expect(teacherBtn).toHaveClass('btn-primary');
       expect(screen.queryByText(/We couldn’t load practice/i)).not.toBeInTheDocument();
+
+      const dailyTitle = await screen.findByTestId('practice-daily-deck-title');
+      expect(dailyTitle.querySelector('[data-loc="uk"]')).toHaveTextContent(
+        'Слова дня — Відібрана добірка',
+      );
+      expect(dailyTitle.querySelector('[data-loc="en"]')).toHaveTextContent(
+        'Words of the day — Curated Deck',
+      );
     });
 
     test.each([

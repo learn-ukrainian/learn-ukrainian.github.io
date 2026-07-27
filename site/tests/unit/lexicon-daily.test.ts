@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { dateSeed, pickDaily } from '@site/src/lib/lexicon/daily';
+import { dateSeed, deckSeed, pickDaily } from '@site/src/lib/lexicon/daily';
 
 describe('dateSeed', () => {
   test('uses the local calendar date', () => {
@@ -27,5 +27,33 @@ describe('pickDaily', () => {
     const pool = [{ slug: 'a' }, { slug: 'b' }];
 
     expect(pickDaily(pool, 20260623, 24)).toHaveLength(pool.length);
+  });
+});
+
+describe('deckSeed', () => {
+  test('is deterministic and varies by deck id', () => {
+    expect(deckSeed('virtual_teacher_lesson')).toBe(deckSeed('virtual_teacher_lesson'));
+    expect(deckSeed('set_alpha')).not.toBe(deckSeed('set_beta'));
+    expect(deckSeed('all')).not.toBe(deckSeed('virtual_teacher_lesson'));
+  });
+
+  test('combined with dateSeed, draws different sets for different decks on the same day', () => {
+    const pool = Array.from({ length: 30 }, (_, i) => `word-${i}`);
+    const day = dateSeed(new Date(2026, 5, 23));
+
+    const deckA = pickDaily(pool, day + deckSeed('set_alpha'), 12);
+    const deckB = pickDaily(pool, day + deckSeed('set_beta'), 12);
+
+    expect(deckA).not.toEqual(deckB);
+  });
+
+  test('combined with dateSeed, is stable for the same deck and day but rotates across days', () => {
+    const pool = Array.from({ length: 30 }, (_, i) => `word-${i}`);
+    const day1 = dateSeed(new Date(2026, 5, 23));
+    const day2 = dateSeed(new Date(2026, 5, 24));
+    const seed = deckSeed('set_alpha');
+
+    expect(pickDaily(pool, day1 + seed, 12)).toEqual(pickDaily(pool, day1 + seed, 12));
+    expect(pickDaily(pool, day1 + seed, 12)).not.toEqual(pickDaily(pool, day2 + seed, 12));
   });
 });
