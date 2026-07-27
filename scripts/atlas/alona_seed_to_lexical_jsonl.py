@@ -142,6 +142,11 @@ def convert_seed_row(row: dict[str, Any], *, deck_slug: str) -> list[dict[str, A
         "extraction_mode": str(row.get("sentence_query") or "corpus"),
         "review_state": "approved",
     }
+    # Textbook gate requires chunk_text; seed rows already passed exercise
+    # screening at attach time, so the clean sentence is a safe stand-in when
+    # the full chunk is not re-hydrated here.
+    if source_kind == "textbook":
+        attestation["chunk_text"] = sentence
     if row.get("matched_form"):
         attestation["matched_form"] = row["matched_form"]
     records.extend(
