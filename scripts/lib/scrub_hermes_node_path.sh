@@ -8,7 +8,8 @@
 # from before the detach — launchers must strip it on every start.
 #
 # Empty colon-delimited PATH fields are valid (they mean cwd). Rebuild PATH
-# without dropping them; only remove entries exactly equal to the Hermes bin.
+# without dropping them. Compare non-empty components to Hermes by physical
+# path (pwd -P) so ../ and symlink spellings are also removed.
 #
 # Usage (from a repo-root start-*.sh):
 #   # shellcheck source=scripts/lib/scrub_hermes_node_path.sh
@@ -17,8 +18,10 @@
 
 scrub_hermes_node_from_path() {
   local hermes_node_bin="${HOME}/.hermes/node/bin"
-  local out="" sep="" rest="${PATH-}"
-  local comp more=1
+  local hermes_phys out="" sep="" rest="${PATH-}"
+  local comp more=1 phys
+
+  hermes_phys="$(cd "$hermes_node_bin" 2>/dev/null && pwd -P)" || hermes_phys=""
 
   # Split on ':' while preserving empty fields (unlike unquoted ${PATH} split).
   while [ "$more" -eq 1 ]; do
@@ -32,9 +35,20 @@ scrub_hermes_node_from_path() {
         more=0
         ;;
     esac
-    if [ "$comp" = "$hermes_node_bin" ]; then
-      continue
+
+    # Drop Hermes-private bin (lexical or physical equivalence).
+    if [ -n "$comp" ]; then
+      if [ "$comp" = "$hermes_node_bin" ]; then
+        continue
+      fi
+      if [ -n "$hermes_phys" ] && { [ -d "$comp" ] || [ -L "$comp" ]; }; then
+        phys="$(cd "$comp" 2>/dev/null && pwd -P)" || phys=""
+        if [ -n "$phys" ] && [ "$phys" = "$hermes_phys" ]; then
+          continue
+        fi
+      fi
     fi
+
     out="${out}${sep}${comp}"
     sep=":"
   done
