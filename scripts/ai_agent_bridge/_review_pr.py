@@ -12,6 +12,7 @@ remain on the critical review ladder only (see model_catalog.yaml).
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sys
 from typing import Any
@@ -42,6 +43,47 @@ FORMAL_CF_EFFORT: dict[str, str] = {
     REVIEWER_CLAUDE: "high",
     REVIEWER_GLM: "high",
 }
+
+
+class _ReviewPrLifecycle:
+    """Attach formal-run terminal evidence to its bridge ask without changing asks."""
+
+    def __init__(self, *, background: bool):
+        self.background = background
+        self.message_id: int | None = None
+        self._terminal: Any = None
+
+    def message_created(self, message_id: int) -> None:
+        """Write launch evidence before the adapter enters its run/spawn path."""
+        from ._ask_lifecycle import _AskTerminalRecorder, _write_ask_launch_record
+
+        self.message_id = message_id
+        _write_ask_launch_record(message_id, pid=os.getpid(), target="review-pr")
+        self._terminal = _AskTerminalRecorder(message_id)
+
+    def record_terminal(self) -> None:
+        """Write the synchronous formal review's terminal state from its ask status."""
+        if self.background or self.message_id is None or self._terminal is None:
+            return
+        from ._ask_lifecycle import _ask_status
+
+        status = _ask_status(self.message_id)
+        if status and status.startswith("replied:"):
+            self._terminal.write(0, "success")
+        elif status and (status.startswith("timed-out:") or "timeout" in status.lower()):
+            self._terminal.write(1, "timeout", cause=status)
+        else:
+            self._terminal.write(1, "failed", cause=status or "review-pr ended without a reply")
+
+    def record_spawn_failure(self, exc: BaseException) -> None:
+        """Leave the dispatch failure reason durable after an ask id exists."""
+        if self.message_id is None or self._terminal is None:
+            return
+        from ._ask_lifecycle import record_ask_failure
+
+        cause = f"{type(exc).__name__}: {exc}"
+        record_ask_failure(self.message_id, cause)
+        self._terminal.write(1, "spawn-failure" if self.background else "exception", cause=cause)
 
 _DEFAULT_CHECKLIST = """\
 ## Formal cross-family PR review (pointer-only)
@@ -144,7 +186,7 @@ def handle_review_pr(args: argparse.Namespace) -> int:
         print(prompt)
         return 0
 
-    import os
+    lifecycle = _ReviewPrLifecycle(background=bool(args.background))
     from_llm = (
         getattr(args, "from_llm", None)
         or os.environ.get("SESSION_HANDOFF_AGENT")
@@ -154,33 +196,47 @@ def handle_review_pr(args: argparse.Namespace) -> int:
     if reviewer == REVIEWER_CODEX:
         from ._codex import ask_codex
 
-        ask_codex(
-            prompt,
-            task_id=task_id,
-            msg_type="review",
-            from_llm=from_llm,
-            to_model=model,
-            effort=effort,
-            review=True,
-            review_pr_number=pr,
-            background=bool(args.background),
-            no_timeout=bool(args.no_timeout),
-        )
+        try:
+            ask_codex(
+                prompt,
+                task_id=task_id,
+                msg_type="review",
+                from_llm=from_llm,
+                to_model=model,
+                effort=effort,
+                review=True,
+                review_pr_number=pr,
+                background=bool(args.background),
+                no_timeout=bool(args.no_timeout),
+                on_message_created=lifecycle.message_created,
+                review_pr_lifecycle=True,
+            )
+        except BaseException as exc:
+            lifecycle.record_spawn_failure(exc)
+            raise
+        lifecycle.record_terminal()
         return 0
     if reviewer == REVIEWER_CLAUDE:
         from ._claude import ask_claude
 
-        ask_claude(
-            prompt,
-            task_id=task_id,
-            msg_type="review",
-            from_llm=from_llm,
-            to_model=model,
-            effort=effort,
-            review=True,
-            review_pr_number=pr,
-            background=bool(args.background),
-        )
+        try:
+            ask_claude(
+                prompt,
+                task_id=task_id,
+                msg_type="review",
+                from_llm=from_llm,
+                to_model=model,
+                effort=effort,
+                review=True,
+                review_pr_number=pr,
+                background=bool(args.background),
+                on_message_created=lifecycle.message_created,
+                review_pr_lifecycle=True,
+            )
+        except BaseException as exc:
+            lifecycle.record_spawn_failure(exc)
+            raise
+        lifecycle.record_terminal()
         return 0
     if reviewer == REVIEWER_GLM:
         from ._opencode import ask_glm
@@ -189,14 +245,21 @@ def handle_review_pr(args: argparse.Namespace) -> int:
         # Isolation: GLM/opencode path still gets RO contract + size caps via prompt;
         # sealed worktree for opencode is a follow-up (Phase 0b). Prefer --reviewer codex
         # for full #5285 sealing today.
-        ask_glm(
-            prompt,
-            task_id=task_id,
-            msg_type="review",
-            from_llm=from_llm,
-            background=bool(args.background),
-            no_timeout=bool(args.no_timeout),
-        )
+        try:
+            ask_glm(
+                prompt,
+                task_id=task_id,
+                msg_type="review",
+                from_llm=from_llm,
+                background=bool(args.background),
+                no_timeout=bool(args.no_timeout),
+                on_message_created=lifecycle.message_created,
+                review_pr_lifecycle=True,
+            )
+        except BaseException as exc:
+            lifecycle.record_spawn_failure(exc)
+            raise
+        lifecycle.record_terminal()
         return 0
     print(f"review-pr: unhandled reviewer {reviewer}", file=sys.stderr)
     return 2

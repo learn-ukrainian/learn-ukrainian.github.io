@@ -18,6 +18,7 @@ import json
 import subprocess
 import sys
 import uuid
+from collections.abc import Callable
 from pathlib import Path
 
 from agent_runtime.errors import (
@@ -62,7 +63,9 @@ def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query"
                to_model: str | None = None, effort: str | None = None,
                review: bool = False,
                background: bool = False, review_branch: str | None = None,
-               review_pr_number: int | None = None):
+               review_pr_number: int | None = None,
+               on_message_created: Callable[[int], None] | None = None,
+               review_pr_lifecycle: bool = False):
     """Send message to Claude AND invoke Claude to process it."""
     try:
         has_target = review_branch is not None or review_pr_number is not None
@@ -96,6 +99,8 @@ def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query"
         review_target=review_target_payload(review_branch, review_pr_number),
     )
     register_ask(msg_id)
+    if on_message_created is not None:
+        on_message_created(msg_id)
     if background:
         launch_background_ask(
             msg_id,
@@ -105,6 +110,7 @@ def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query"
                 "no_timeout": False,
                 "review": review,
                 "timeout_seconds": 900,
+                "review_pr_lifecycle": review_pr_lifecycle,
             },
         )
         return msg_id

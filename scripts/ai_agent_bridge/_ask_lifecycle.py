@@ -153,17 +153,20 @@ class _AskTerminalRecorder:
         self.message_id = message_id
         self.written = False
 
-    def write(self, rc_or_signal: int | str, stage: str) -> None:
+    def write(self, rc_or_signal: int | str, stage: str, *, cause: str | None = None) -> None:
         if self.written:
             return
+        payload: dict[str, Any] = {
+            "rc_or_signal": rc_or_signal,
+            "stage": stage,
+            "stderr_tail": _stderr_tail(self.message_id),
+            "ended_at": _now_iso(),
+        }
+        if cause:
+            payload["cause"] = " ".join(cause.split())[:300]
         _atomic_write_json(
             _ask_state_dir(self.message_id) / "terminal.json",
-            {
-                "rc_or_signal": rc_or_signal,
-                "stage": stage,
-                "stderr_tail": _stderr_tail(self.message_id),
-                "ended_at": _now_iso(),
-            },
+            payload,
         )
         self.written = True
 
@@ -544,6 +547,7 @@ def process_background_ask(message_id: int, target: str) -> None:
         signal.signal(signum, terminal.signal_handler)
     rc_or_signal: int | str = 1
     stage = "startup"
+    options: dict[str, Any] = {}
     try:
         options = _background_options(message_id, target)
         mark_ask_processing(message_id)
@@ -571,7 +575,11 @@ def process_background_ask(message_id: int, target: str) -> None:
         if status in {"sent", "processing", "pending", None}:
             record_ask_failure(message_id, "worker ended without a reply")
             stage = "missing-reply"
-        terminal.write(rc_or_signal, stage)
+        terminal.write(
+            rc_or_signal,
+            stage,
+            cause=_ask_status(message_id) if options.get("review_pr_lifecycle") else None,
+        )
         _remove_pid_file(_ASK_AGENT, str(message_id))
         for signum, previous in previous_handlers.items():
             signal.signal(signum, previous)

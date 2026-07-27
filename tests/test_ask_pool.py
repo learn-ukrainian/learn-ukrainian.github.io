@@ -324,3 +324,24 @@ def test_invoke_opencode_no_token_budget_for_other_models(monkeypatch):
             # env may be present (copy), but the experimental key must NOT be set by us
             if "env" in call_kwargs:
                 assert "OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX" not in call_kwargs["env"]
+
+
+# --- #5911 lifecycle callback wiring (CI catch) ---
+
+
+def test_ask_glm_and_pool_invoke_on_message_created_callback(monkeypatch):
+    """ask_glm referenced the callback without declaring it (NameError, caught by
+    CI shard 1); ask_pool declared it without ever calling it (silently dropped
+    launch records). Pin both wirings: the callback fires with the message id."""
+    for var in _CI_ENV_VARS:
+        monkeypatch.delenv(var, raising=False)
+    for fn, name in ((ask_glm, "glm"), (ask_pool, "pool")):
+        seen: list[int] = []
+        with (
+            patch("scripts.ai_agent_bridge._opencode.send_message", return_value=41),
+            patch("scripts.ai_agent_bridge._opencode.acknowledge"),
+            patch("scripts.ai_agent_bridge._opencode.record_ask_reply"),
+            patch("scripts.ai_agent_bridge._opencode._invoke_opencode", return_value="ok"),
+        ):
+            fn("hi", task_id="t", on_message_created=seen.append)
+        assert seen == [41], f"{name}: on_message_created not invoked with the message id"

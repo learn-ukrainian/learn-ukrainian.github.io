@@ -124,6 +124,25 @@ def heal_primary_to_main(main_root: Path) -> tuple[bool, str]:
     return True, "on main and fast-forwarded to origin/main"
 
 
+# Heal/assert is an OPERATOR-ESTATE action. In CI the checkout is a detached
+# PR-merge SHA by design — "healing" it runs `git checkout main` + ff-only pull
+# UNDER a live test run, silently swapping the tree to latest main mid-shard
+# (root cause of the #5896 shard-2 rc=127 and the #5906/#5908 class). The env
+# gate below makes every CLI caller (session-setup canary, launchers,
+# post-checkout hook) inert in CI and in explicitly suppressed contexts such
+# as the hook test fixtures.
+_NON_OPERATOR_ENVS = ("LEARN_UK_PRIMARY_HEAL_DISABLE", "GITHUB_ACTIONS", "CI")
+
+
+def non_operator_context() -> str | None:
+    """Name the env var marking a CI / heal-suppressed context, else None."""
+    for name in _NON_OPERATOR_ENVS:
+        value = os.environ.get(name, "").strip().lower()
+        if value and value not in ("0", "false", "no"):
+            return name
+    return None
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -143,6 +162,15 @@ def main(argv: list[str] | None = None) -> int:
         help="No stdout on success",
     )
     args = parser.parse_args(argv)
+
+    skip_env = non_operator_context()
+    if skip_env is not None:
+        if not args.quiet:
+            print(
+                f"SKIP: {skip_env} set — not an operator primary context; "
+                "no assert/heal (#5908)."
+            )
+        return 0
 
     state = primary_head_state(args.cwd)
     if state.get("ok"):

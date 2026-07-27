@@ -2048,6 +2048,108 @@ def test_prepare_does_not_release_a_non_claude_agent_slot(tmp_path: Path, monkey
     assert lease_path.read_text(encoding="utf-8") == original  # untouched
 
 
+def test_resume_aba_late_release_no_ops(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """resume-ABA: claim(T,procA) -> resume claim(T,procB,gen2) -> late release from A (carried gen1) -> MUST no-op."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(
+        th,
+        "_derive_owner_liveness_fields",
+        lambda pid: (
+            {"owner_pid": 111, "owner_pid_started_at": 1000.0, "owner_machine_id": "machine-a"}
+            if pid == 111
+            else {"owner_pid": 222, "owner_pid_started_at": 2000.0, "owner_machine_id": "machine-a"}
+        ),
+    )
+    claim1 = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="thread-T", now=now, starting_pid=111
+    )
+    assert claim1["status"] == "acquired"
+    assert claim1["generation"] == 1
+
+    claim2 = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="thread-T", now=now, starting_pid=222
+    )
+    assert claim2["status"] == "acquired"
+    assert claim2["generation"] == 2
+
+    release_res = th.release_thread_lease(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="thread-T",
+        generation=1,
+        now=now,
+        starting_pid=111,
+    )
+    assert release_res["status"] == "noop"
+    lease_data = json.loads((tmp_path / ".agent/claude-infra-thread-lease.json").read_text(encoding="utf-8"))
+    assert lease_data["generation"] == 2
+    assert lease_data["owner_thread_id"] == "thread-T"
+    assert lease_data.get("state", "held") == "held"
+
+
+def test_tombstone_monotonic_generation(tmp_path: Path):
+    """claim -> release -> claim => gen strictly increases; late stale release no-ops."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    c1 = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="thread-1", now=now, starting_pid=111
+    )
+    assert c1["generation"] == 1
+
+    r1 = th.release_thread_lease(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="thread-1",
+        generation=1,
+        now=now,
+        starting_pid=111,
+    )
+    assert r1["status"] == "released"
+    tombstone = json.loads((tmp_path / ".agent/claude-infra-thread-lease.json").read_text(encoding="utf-8"))
+    assert tombstone["state"] == "released"
+    assert tombstone["generation"] == 1
+
+    c2 = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="thread-2", now=now, starting_pid=222
+    )
+    assert c2["generation"] == 2
+    assert c2["status"] == "acquired"
+
+    r2 = th.release_thread_lease(
+        state_root=tmp_path,
+        agent="claude-infra",
+        current_thread_id="thread-1",
+        generation=1,
+        now=now,
+        starting_pid=111,
+    )
+    assert r2["status"] == "noop"
+
+
+def test_absent_state_migration_compatibility(tmp_path: Path):
+    """Schema migration: absent state field is treated as state: held."""
+    lease_path = tmp_path / ".agent/claude-infra-thread-lease.json"
+    lease_path.parent.mkdir(parents=True, exist_ok=True)
+    lease = {
+        "schema_version": 2,
+        "agent": "claude-infra",
+        "generation": 1,
+        "owner_thread_id": "old-owner",
+        "acquired_at": "2026-07-23T09:00:00Z",
+        "heartbeat_at": "2026-07-23T09:00:00Z",
+    }
+    lease_path.write_text(json.dumps(lease), encoding="utf-8")
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    res = th.release_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="old-owner", generation=1, now=now, starting_pid=1
+    )
+    assert res["status"] == "released"
+    on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert on_disk["state"] == "released"
+
+
+
+
 def test_checkout_continuity_requires_clean_source_binding_and_same_clean_head():
     clean = sample_snapshot(Path("."))["git"]
     assert th.parse_status("M tracked.txt\n?? untracked.txt") == [

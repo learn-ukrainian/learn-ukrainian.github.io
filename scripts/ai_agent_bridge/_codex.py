@@ -8,6 +8,7 @@ consistent with the runtime's resume_policy="never" for Codex.
 import json
 import os
 import re
+from collections.abc import Callable
 
 from agent_runtime import runner as agent_runner
 from agent_runtime.errors import (
@@ -119,6 +120,8 @@ def ask_codex(
     background: bool = False,
     review_branch: str | None = None,
     review_pr_number: int | None = None,
+    on_message_created: Callable[[int], None] | None = None,
+    review_pr_lifecycle: bool = False,
     ):
     """Send message to Codex AND invoke Codex to process it."""
     try:
@@ -154,6 +157,8 @@ def ask_codex(
         review_target=review_target_payload(review_branch, review_pr_number),
     )
     register_ask(msg_id)
+    if on_message_created is not None:
+        on_message_created(msg_id)
     if background:
         launch_background_ask(
             msg_id,
@@ -163,6 +168,7 @@ def ask_codex(
                 "no_timeout": no_timeout,
                 "review": review,
                 "timeout_seconds": 1800 if no_timeout else 900,
+                "review_pr_lifecycle": review_pr_lifecycle,
             },
         )
         return msg_id
