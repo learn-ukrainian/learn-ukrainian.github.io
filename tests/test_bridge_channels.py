@@ -465,6 +465,87 @@ def test_deliveries_for_message_returns_all_recipients():
     assert len(dlvs) == 2
     assert {d["to_agent"] for d in dlvs} == {"claude", "codex"}
 
+
+def test_post_to_slots_with_shared_live_holder_delivers_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Live slots sharing a holder create one delivery row in that holder's inbox."""
+    from scripts.orchestration import slot_routing
+
+    session_db_path = tmp_path / "session-streams.sqlite3"
+    conn = sqlite3.connect(session_db_path)
+    try:
+        conn.executescript(
+            """
+            CREATE TABLE sessions (
+                session_id TEXT PRIMARY KEY,
+                stream_id TEXT NOT NULL,
+                state TEXT NOT NULL
+            );
+            CREATE TABLE stream_leases (
+                stream_id TEXT PRIMARY KEY,
+                session_id TEXT NOT NULL,
+                holder_agent TEXT NOT NULL,
+                holder_harness TEXT,
+                generation INTEGER NOT NULL,
+                expires_at TEXT NOT NULL,
+                state TEXT NOT NULL
+            );
+            """
+        )
+        conn.execute(
+            "INSERT INTO sessions (session_id, stream_id, state) VALUES (?, ?, ?)",
+            ("atlas-session", "epic:4387", "open"),
+        )
+        conn.execute(
+            "INSERT INTO sessions (session_id, stream_id, state) VALUES (?, ?, ?)",
+            ("folk-session", "epic:2836", "open"),
+        )
+        conn.execute(
+            """INSERT INTO stream_leases
+               (stream_id, session_id, holder_agent, holder_harness, generation, expires_at, state)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (
+                "epic:4387",
+                "atlas-session",
+                "claude-infra",
+                "claude",
+                1,
+                (datetime.now(UTC) + timedelta(hours=1)).isoformat(),
+                "active",
+            ),
+        )
+        conn.execute(
+            """INSERT INTO stream_leases
+               (stream_id, session_id, holder_agent, holder_harness, generation, expires_at, state)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (
+                "epic:2836",
+                "folk-session",
+                "claude-infra",
+                "claude",
+                1,
+                (datetime.now(UTC) + timedelta(hours=1)).isoformat(),
+                "active",
+            ),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    monkeypatch.setattr(slot_routing, "DEFAULT_SESSION_DB_PATH", session_db_path)
+    _channels.create_channel("topic")
+    result = _channels.post(
+        "topic",
+        "user",
+        "hello",
+        to_agents=["claude-atlas", "claude-folk"],
+        auto_snapshot=False,
+    )
+
+    deliveries = _channels.deliveries_for_message(result["message_id"])
+    assert len(deliveries) == 1
+    assert deliveries[0]["to_agent"] == "claude-infra"
+
+
 def test_pending_deliveries_for_agent_filters_by_agent():
     """Verify agent queues only return their own pending deliveries."""
     _channels.create_channel("topic")
