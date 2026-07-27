@@ -499,10 +499,13 @@ export interface NewCardsDailyState {
 
 /**
  * #5852 fix-forward (post-D2 #5837): the item now carries its own display
- * payload — lemma/gloss/cefr/example — so `PracticeDailyDeck` can render the
- * card straight from the pick, without depending on the lemma existing in the
- * (much smaller) practice-lexemes map. `example`/`exampleEn`/`exampleProvenance`
- * stay optional since the SRS-index-driven builders below have no example data.
+ * payload — lemma/gloss/cefr/pos/example — so `PracticeDailyDeck` can render
+ * the card straight from the pick, without depending on the lemma existing in
+ * the (much smaller) practice-lexemes map, which is #5856 fix-forward: the map
+ * stays optional fallback/enrichment for `pos` (and `ipa`, which the pick
+ * payload never carries), never a requirement to render. `example`/
+ * `exampleEn`/`exampleProvenance` stay optional since the SRS-index-driven
+ * builders below have no example data.
  */
 export interface DailyPracticeDeckItem {
   lemmaId: string;
@@ -510,6 +513,7 @@ export interface DailyPracticeDeckItem {
   lemma: string;
   gloss: string | null;
   cefr: string | null;
+  pos: string | null;
   example?: string | null;
   exampleEn?: string | null;
   exampleProvenance?: {
@@ -2453,6 +2457,7 @@ function normalizeDailyPracticeDeckSnapshot(
     if (typeof item.lemma !== 'string' || !item.lemma) return null;
     if (typeof item.gloss !== 'string' && item.gloss !== null) return null;
     if (typeof item.cefr !== 'string' && item.cefr !== null) return null;
+    if (typeof item.pos !== 'string' && item.pos !== null) return null;
     const example =
       typeof item.example === 'string' || item.example === null ? item.example : undefined;
     const exampleEn =
@@ -2467,6 +2472,7 @@ function normalizeDailyPracticeDeckSnapshot(
       lemma: item.lemma,
       gloss: item.gloss,
       cefr: item.cefr,
+      pos: item.pos,
       ...(example !== undefined ? { example } : {}),
       ...(exampleEn !== undefined ? { exampleEn } : {}),
       ...(exampleProvenance !== undefined ? { exampleProvenance } : {}),
@@ -2575,6 +2581,7 @@ export function selectDailyPracticeDeckItems(
       lemma: entry.lemma,
       gloss: null,
       cefr: entry.cefr,
+      pos: null,
     })),
     ...newLemmas.map((entry) => ({
       lemmaId: entry.lemmaId,
@@ -2582,6 +2589,7 @@ export function selectDailyPracticeDeckItems(
       lemma: entry.lemma,
       gloss: null,
       cefr: entry.cefr,
+      pos: null,
     })),
   ];
   return combined.slice(0, DAILY_PRACTICE_DECK_SIZE);

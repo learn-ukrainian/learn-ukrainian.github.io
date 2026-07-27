@@ -7,6 +7,8 @@ export interface DailyWord {
   k?: string;
   lessonTag?: string;
   cefr?: string;
+  /** Part of speech, when the pool source has it — the practice-lexemes map fills the gap otherwise. */
+  pos?: string | null;
   weight?: number;
   /**
    * #5434 verified example sentence for the word of the day.

@@ -1560,6 +1560,7 @@ function LexiconPracticeIsland({
             lemma: word.lemma,
             gloss: word.gloss,
             cefr: word.cefr ?? null,
+            pos: word.pos ?? null,
             example: word.example ?? null,
             exampleEn: word.exampleEn ?? null,
             exampleProvenance: word.exampleProvenance ?? null,

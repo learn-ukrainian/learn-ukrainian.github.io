@@ -52,9 +52,10 @@ export default function PracticeDailyDeck({
   const total = snapshot.items.length;
   const currentItem = orderedRows[previewIndex]?.item ?? null;
   const currentLemmaId = currentItem?.lemmaId ?? null;
-  // The practice-lexemes map is OPTIONAL ENRICHMENT ONLY (ipa, an extra pos
-  // tag) — most daily-pool picks are not in this much smaller map, so the
-  // card must never depend on a hit here to render (#5852).
+  // The practice-lexemes map is OPTIONAL ENRICHMENT ONLY (ipa, and pos/example
+  // when the pick payload itself lacks them) — most daily-pool picks are not
+  // in this much smaller map, so the card must never depend on a hit here to
+  // render (#5852), nor let a map hit override the pick's own data (#5856).
   const currentLexeme = currentLemmaId ? lexemes.get(currentLemmaId) ?? null : null;
 
   const handlePrevious = () => {
@@ -73,14 +74,17 @@ export default function PracticeDailyDeck({
 
   const displayGloss = currentItem?.gloss ?? currentLexeme?.gloss ?? null;
   const displayCefr = currentItem?.cefr ?? currentLexeme?.cefr ?? null;
+  // The pick payload's own pos wins wherever it exists; the lexeme map fills the
+  // gap only when the payload has none (#5856 — same precedence as gloss/cefr).
+  const displayPos = currentItem?.pos ?? currentLexeme?.pos ?? null;
   const frontSubtitle = currentItem
-    ? [currentLexeme?.ipa, currentLexeme?.pos, displayCefr].filter(Boolean).join(' · ')
+    ? [currentLexeme?.ipa, displayPos, displayCefr].filter(Boolean).join(' · ')
     : '';
   const showStressMarks = learnerLevel === 'A1';
   const displayLemma = (lemma: string) => (showStressMarks ? lemma : stripStressMarks(lemma));
-  const currentExample = currentLexeme?.example?.trim() || currentItem?.example?.trim() || null;
+  const currentExample = currentItem?.example?.trim() || currentLexeme?.example?.trim() || null;
   const currentExampleEn = showStressMarks
-    ? currentLexeme?.exampleEn?.trim() || currentItem?.exampleEn?.trim() || null
+    ? currentItem?.exampleEn?.trim() || currentLexeme?.exampleEn?.trim() || null
     : null;
 
   return (
@@ -136,8 +140,8 @@ export default function PracticeDailyDeck({
               {currentItem ? (
                 <>
                   <span className="flashcard-word">{displayGloss ?? '—'}</span>
-                  {currentLexeme?.pos && (
-                    <span className="flashcard-subtitle">{currentLexeme.pos}</span>
+                  {displayPos && (
+                    <span className="flashcard-subtitle">{displayPos}</span>
                   )}
                   {currentExample ? (
                     <p className="daily-deck-example" data-testid="practice-daily-example" lang="uk">
