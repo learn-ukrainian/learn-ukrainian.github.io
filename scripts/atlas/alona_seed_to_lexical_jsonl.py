@@ -103,7 +103,10 @@ def convert_seed_row(row: dict[str, Any], *, deck_slug: str) -> list[dict[str, A
         return records
 
     source_id = _source_id_from_provenance(prov)
-    chunk_id = str(prov.get("chunk_id") or f"row-{row.get('row')}")
+    # Seed rows can share a corpus chunk; uniquify chunk_id with the seed row so
+    # deterministic attestation keys never collide across lemmas.
+    base_chunk = str(prov.get("chunk_id") or "chunk")
+    chunk_id = f"{base_chunk}#seed-{row.get('row', 0)}"
     span_start = int(prov.get("span_start") or 0)
     span_end = int(prov.get("span_end") or (span_start + max(len(sentence), 1)))
     if span_end <= span_start:
@@ -180,25 +183,33 @@ def convert_seed_file(
     ]
     seen_sources: set[str] = set()
     seen_lemmas: set[str] = set()
+    seen_attestations: set[str] = set()
     for row in rows:
         if not isinstance(row, dict):
             continue
         expanded = convert_seed_row(row, deck_slug=deck_slug)
+        skip_rest = False
         for record in expanded:
+            if skip_rest:
+                break
             rtype = record["record_type"]
             if rtype == "source":
-                sid = record["source_id"]
+                sid = str(record["source_id"])
                 if sid in seen_sources:
                     continue
                 seen_sources.add(sid)
             if rtype == "lemma_entry":
-                slug = record["entry_slug"]
+                slug = str(record["entry_slug"])
                 if slug in seen_lemmas:
-                    # duplicate lemma in seed (aspect pairs): skip second lemma/sense
-                    # but still allow second attestation under first sense — rare;
-                    # for v5 dups, skip whole expansion of later dups.
+                    # Duplicate lemma (aspect pairs): skip this expansion.
+                    skip_rest = True
                     break
                 seen_lemmas.add(slug)
+            if rtype == "attestation":
+                aid = str(record["attestation_id"])
+                if aid in seen_attestations:
+                    continue
+                seen_attestations.add(aid)
             records.append(record)
     return records
 
