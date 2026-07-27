@@ -112,7 +112,7 @@ else
   fi
 fi
 
-BOUNDED_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
+BOUNDED_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
 BOUNDED_RUNNER="${SESSION_BOUNDED_RUNNER:-$PROJECT_DIR/scripts/agent_runtime/bounded_command.py}"
 SESSION_START_BUDGET_SECONDS="${SESSION_START_BUDGET_SECONDS:-12}"
 if ! [[ "$SESSION_START_BUDGET_SECONDS" =~ ^[1-9][0-9]*$ ]]; then
@@ -436,8 +436,14 @@ try:
   d=json.loads(sys.stdin.read()); print(d.get("generation") or "")
 except Exception:
   print("")' 2>/dev/null || true)
-        if [ -n "$THREAD_LEASE_GENERATION" ] && [ -n "${CLAUDE_ENV_FILE:-}" ]; then
-          printf 'export LEARN_UKRAINIAN_THREAD_LEASE_GENERATION=%s\n' "$THREAD_LEASE_GENERATION" >> "$CLAUDE_ENV_FILE" 2>/dev/null || true
+        if [ -n "$THREAD_LEASE_GENERATION" ]; then
+          if [ -n "$SESSION_ID" ]; then
+            mkdir -p "$CANONICAL_ROOT/.agent/sessions" 2>/dev/null || true
+            printf '%s\n' "$THREAD_LEASE_GENERATION" > "$CANONICAL_ROOT/.agent/sessions/${SESSION_ID}.generation" 2>/dev/null || true
+          fi
+          if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
+            printf 'export LEARN_UKRAINIAN_THREAD_LEASE_GENERATION=%s\n' "$THREAD_LEASE_GENERATION" >> "$CLAUDE_ENV_FILE" 2>/dev/null || true
+          fi
         fi
         unset THREAD_LEASE_GENERATION
 

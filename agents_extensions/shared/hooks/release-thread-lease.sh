@@ -75,15 +75,19 @@ else
   fi
 fi
 
-# No --generation: identity proof is the sole fence (see above). If this repo
-# checkout still has an OLDER thread_handoff.py that hard-requires
-# --generation, the CLI's ValueError is swallowed by `|| true` below — a safe
-# no-op in a mixed-deploy, exactly like the old missing-env-var path. Leaving
-# the lease in place is always safe either way: claim_thread_lease's
-# pid-liveness check is the primary defense and will reclaim it once this
-# process is confirmed dead, regardless of this cooperative path.
-"$PYTHON" "$PROJECT_DIR/scripts/orchestration/thread_handoff.py" --repo-root "$CANONICAL_ROOT" \
-  release-thread-lease --agent "$HANDOFF_AGENT" --current-thread-id "$SESSION_ID" \
-  >/dev/null 2>&1 || true
+SIDECAR_GEN=""
+if [ -f "$CANONICAL_ROOT/.agent/sessions/${SESSION_ID}.generation" ]; then
+  SIDECAR_GEN=$(cat "$CANONICAL_ROOT/.agent/sessions/${SESSION_ID}.generation" 2>/dev/null | tr -d ' \r\n')
+fi
+
+if [ -n "$SIDECAR_GEN" ]; then
+  "$PYTHON" "$PROJECT_DIR/scripts/orchestration/thread_handoff.py" --repo-root "$CANONICAL_ROOT" \
+    release-thread-lease --agent "$HANDOFF_AGENT" --current-thread-id "$SESSION_ID" --generation "$SIDECAR_GEN" \
+    >/dev/null 2>&1 || true
+else
+  "$PYTHON" "$PROJECT_DIR/scripts/orchestration/thread_handoff.py" --repo-root "$CANONICAL_ROOT" \
+    release-thread-lease --agent "$HANDOFF_AGENT" --current-thread-id "$SESSION_ID" \
+    >/dev/null 2>&1 || true
+fi
 
 exit 0

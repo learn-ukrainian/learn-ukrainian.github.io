@@ -186,4 +186,67 @@ released_by="$(lease_field "$lease" released_by_thread_id)"
 [ "$state" = "released" ] || fail "release hook: lease was not released with no generation env var set (state=$state)"
 [ "$released_by" = "$session_id" ] || fail "release hook: released_by_thread_id mismatch"
 
+# 4. session-setup.sh sidecar write: session-setup.sh must write
+#    .agent/sessions/<session_id>.generation at claim time.
+root="$TMP_ROOT/session-setup-project"
+mkdir -p "$root"
+session_id="fixture-session-sidecar"
+(
+  exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
+      -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
+      CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
+      bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
+)
+sidecar="$root/.agent/sessions/${session_id}.generation"
+[ -f "$sidecar" ] || fail "session-setup hook: generation sidecar file missing after claim"
+sidecar_gen="$(cat "$sidecar" 2>/dev/null | tr -d ' \r\n')"
+[ "$sidecar_gen" = "1" ] || fail "session-setup hook: generation sidecar content mismatch (got '$sidecar_gen', expected '1')"
+
+# 5. Missing sidecar + uncheckable identity: release hook must no-op and fail closed (exit 0, lease stays held).
+root="$TMP_ROOT/uncheckable-project"
+mkdir -p "$root/.agent"
+session_id="fixture-session-uncheckable"
+cat <<JSON > "$root/.agent/claude-thread-lease.json"
+{
+  "schema_version": 2,
+  "agent": "claude",
+  "state": "held",
+  "generation": 1,
+  "owner_thread_id": "$session_id",
+  "acquired_at": "2026-07-23T09:00:00Z",
+  "heartbeat_at": "2026-07-23T09:00:00Z",
+  "owner_pid": 99999,
+  "owner_pid_started_at": 1000.0,
+  "owner_machine_id": "other-machine"
+}
+JSON
+printf '%s' "{\"session_id\":\"$session_id\"}" | \
+  env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
+      -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
+  CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
+  "$RELEASE_HOOK"
+lease="$(lease_file_path "$root" claude)"
+state="$(lease_field "$lease" state)"
+[ "$state" = "held" ] || fail "release hook: uncheckable missing-sidecar lease was improperly released (state=$state)"
+
+# 6. Old CLI tolerance: hooks must swallow CLI errors and exit 0 when calling an old/failing CLI.
+STUB_BIN_DIR="$TMP_ROOT/stub-bin"
+mkdir -p "$STUB_BIN_DIR"
+cat <<'PYSTUB' > "$STUB_BIN_DIR/python"
+#!/usr/bin/env bash
+echo "error: unrecognized argument or old CLI" >&2
+exit 2
+PYSTUB
+chmod +x "$STUB_BIN_DIR/python"
+
+printf '%s' '{"session_id":"stub-session"}' | \
+  env -u CLAUDE_NON_INTERACTIVE -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
+  CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" THREAD_ROLLOVER_PYTHON="$STUB_BIN_DIR/python" \
+  "$HEARTBEAT_HOOK" || fail "heartbeat hook failed against old CLI"
+
+printf '%s' '{"session_id":"stub-session"}' | \
+  env -u CLAUDE_NON_INTERACTIVE -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
+  CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" THREAD_ROLLOVER_PYTHON="$STUB_BIN_DIR/python" \
+  "$RELEASE_HOOK" || fail "release hook failed against old CLI"
+
 printf 'ok - thread lease hook fixtures passed\n'
