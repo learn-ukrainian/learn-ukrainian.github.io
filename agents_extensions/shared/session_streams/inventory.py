@@ -91,7 +91,19 @@ def _handoff_candidates_for(stream_name: str, epic_number: int) -> tuple[str, ..
     stream_id = f"epic:{epic_number}"
     if stream_id in HANDOFF_PATH_OVERRIDES:
         return HANDOFF_PATH_OVERRIDES[stream_id]
-    slug = _STREAM_NAME_TO_CLAUDE_DIR.get(stream_name, stream_name.replace("_", "-"))
+    # Lazy import: this module is deployed/copied into contexts (e2e sandboxes,
+    # standalone supervisor runs) where the repo-root ``scripts`` package does not
+    # exist. A module-level import crashed the session supervisor there (#5857 r3);
+    # resolver absence must degrade to the legacy map, never break the module.
+    try:
+        from scripts.orchestration.fleet_taxonomy import UnknownAreaError, resolve_area
+    except ImportError:
+        slug = _STREAM_NAME_TO_CLAUDE_DIR.get(stream_name, stream_name.replace("_", "-"))
+    else:
+        try:
+            slug = resolve_area(stream_name).id
+        except UnknownAreaError:
+            slug = _STREAM_NAME_TO_CLAUDE_DIR.get(stream_name, stream_name.replace("_", "-"))
     return (
         f".claude/{slug}-epic/CLAUDE-DRIVER-HANDOFF.md",
         f".claude/{slug}-epic/INTERIM-DRIVER-HANDOFF.md",
