@@ -32,7 +32,7 @@ tables:
 
   review-gate-arm:
     mode: static
-    inputs: [cross-family verdict, verdict head SHA vs current PR head, requested-changes state, blocking CI, draft state, reviewer identity]
+    inputs: [cross-family verdict, verdict head SHA vs current PR head, requested-changes state, blocking CI, draft state, reviewer identity, "review-request ledger: `ab asks` rows for this PR (task id, status sent|processing|replied|failed, reply id) + the PR's review threads/comments — the sources that make 'explicitly requested', 'terminal-and-published', and 'cancelled with recorded reason' mechanically checkable"]
     rows:
       - when: PR is a DRAFT
         then: never arm, never merge — undraft only after the gate passes
