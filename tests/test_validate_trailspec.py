@@ -36,6 +36,7 @@ _ALL_SHIPPED_TRAILS = sorted(_TRAILS_DIR.glob("*.trail.yaml"))
 # the glob-only guard passed as long as ANY trail remained).
 REQUIRED_TRAIL_IDS = {
     "rb1-cold-start",
+    "rb2-dispatch-loop",
     "rb3-pr-lifecycle",
 }
 

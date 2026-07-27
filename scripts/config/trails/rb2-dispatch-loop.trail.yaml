@@ -1,0 +1,249 @@
+# RB-2 — dispatch loop (T2 DRAFT, extraction from drive-epic SKILL steps 3/4/4a + the
+# infra driver's dispatch-brief checklist and settle discipline). Part of #5885.
+#
+# DRAFT STATUS: authored against today's substrate per the panel's draft-now ruling;
+# certification waits for T1.4/5. Steps that depend on unbuilt machinery carry an
+# explicit blocked_on marker.
+#
+# Anti-pattern guard (the #5860 r1 lessons, held to the RB-1 bar): every command below
+# is a real, currently runnable repo command whose OUTPUT SHAPE was captured from a live
+# run (2026-07-27/28 infra session: dispatches fix-5900/fix-5893/t13-glm-canary, the
+# write-path REFUSE + override, three live no_deliverable false negatives) before being
+# encoded; every predicate is falsifiable; unknown situations exit through a STOP code.
+#
+# kind-wait note (spec v1.1 carry-over): trailspec.v1 has no `wait` kind — the
+# await_settle step is a summon whose documentation-predicate is the Monitor settle
+# event; the transition source is the settle-status table lookup that follows it.
+schema_version: trailspec.v1
+trail_id: rb2-dispatch-loop
+version: "0.1.0"
+title: RB2 Dispatch loop — classify, brief, dispatch, settle, finalize
+seats:
+  - grok-daily
+  - glm-trial
+  - judgment
+stop_codes:
+  - STOP-precondition-failed
+  - STOP-concurrency-conflict
+  - STOP-unrecoverable-error
+  - STOP-manual-intervention
+  - STOP-unknown
+terminal_outcomes:
+  - handed_to_pr_lifecycle
+  - parked_no_capacity
+  - aborted
+steps:
+  - step_id: drain_slot_inbox
+    intent: >-
+      Mandatory inbox-drain substep (drive-epic 4a pattern): before firing new work,
+      surface pending slot deliveries for this seat. The live output shape is
+      "<agent> inbox:" followed by "pending: N (oldest ...)" — a pending count of 0
+      proceeds; a non-zero count runs one coalesced drain and re-checks. A drain that
+      leaves deliveries pending needs a human or judgment seat (delivery processing
+      spawns agents; never loop it blindly).
+    command: .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} show {handoff_agent}
+    evidence_predicate:
+      command: .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} show {handoff_agent}
+      success_pattern: 'pending:\s+0'
+    transitions:
+      empty: classify_task
+      pending_deliveries: drain_once
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: drain_once
+    intent: >-
+      Run the thread-coalesced inbox worker exactly once for this seat, then re-check.
+      Still-pending after one drain means a delivery needs handling this trail cannot
+      do mechanically.
+    command: .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} run {handoff_agent}
+    evidence_predicate:
+      command: .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} show {handoff_agent}
+      success_pattern: 'pending:\s+0'
+    transitions:
+      drained: classify_task
+      still_pending: STOP-manual-intervention
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: classify_task
+    intent: >-
+      Project Research Registry duty: classify the task's functional role, task family,
+      track, and owned paths FROM THE ISSUE/BRIEF TEXT (labels, title tags, named
+      files). Pass every dimension that is explicitly derivable; omit every dimension
+      that is not — a pointer-free dispatch is a legal, deliberate outcome and never a
+      reason to invent a value. This is mechanical because the rule is total: derivable
+      → pass, not derivable → omit. Never infer from provider or agent name.
+    command: gh issue view {issue_number} --json title,labels,body
+    evidence_predicate:
+      command: gh issue view {issue_number} --json title,labels
+      success_pattern: '"title"'
+    transitions:
+      classified_or_deliberately_generic: sibling_check
+      issue_unreadable: STOP-precondition-failed
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: sibling_check
+    intent: >-
+      Dispatch-brief checklist step 0: search PRs by ISSUE REFERENCE (never title
+      words) and read the issue's timeline before briefing — open issue does not mean
+      unfixed. Live shape: a JSON array of {number, state, title}; [] proceeds. Any
+      hit referencing this issue means residual scope must be re-derived from what
+      already landed — that comparison is judgment, so the weak seat parks.
+    command: gh pr list --state all --search "{issue_number}" --json number,title,state --limit 10
+    evidence_predicate:
+      command: gh pr list --state all --search "{issue_number}" --json number --limit 10
+      success_pattern: '^\[\]$'
+    transitions:
+      no_siblings: capacity_check
+      siblings_found: STOP-manual-intervention
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: capacity_check
+    intent: >-
+      Two-sided width check per the width table: codexbar pace stage + reserve per
+      candidate lane, and disk (df -h / plus du -sh .worktrees — a dispatch worktree
+      costs roughly half a GB; DISK WINS every conflict). No pace data for a lane →
+      use in-flight count + lane health and say the picture is partial.
+    command: codexbar usage --json
+    evidence_predicate:
+      command: df -h / | tail -1
+      success_pattern: '\d+G?i?\s+\d+%'
+    transitions:
+      capacity_ok: route_lane
+      no_capacity: parked_no_capacity
+    kind: table-lookup
+    table: width
+    blocked_on: null
+
+  - step_id: route_lane
+    intent: >-
+      Resolve the seat from the served routing rule for this task family and risk
+      class per the lane-routing table (live-lookup: /api/rules model-assignment is
+      the SSOT; never route from a remembered roster). Language-lane restrictions,
+      judge-seat exclusions, and cross-family pairing bind.
+    command: curl -s --max-time 3 "http://127.0.0.1:8765/api/rules?format=markdown"
+    evidence_predicate:
+      command: curl -s -o /dev/null -w '%{http_code}' --max-time 3 "http://127.0.0.1:8765/api/rules"
+      success_pattern: '200'
+    transitions:
+      lane_resolved: author_brief
+      api_down_fallback_files: author_brief
+      no_sanctioned_lane: STOP-precondition-failed
+    kind: table-lookup
+    table: lane-routing
+    blocked_on: null
+
+  - step_id: author_brief
+    intent: >-
+      Brief content is judgment: scope boundaries, required tests and their mutation
+      checks, hard exclusions, and the #M-4 evidence preamble steer the worker's whole
+      arc. The weak seat summons judgment for brief authorship (template:
+      .agent/tmp/reviews/*-brief.md conventions — numbered steps, worktree-only work,
+      no auto-merge by worker, one-line finalize comment on the tracking issue). A task
+      whose issue lacks explicit acceptance criteria stops as a failed precondition,
+      not a guessed brief.
+    command: null
+    evidence_predicate: null
+    transitions:
+      brief_written: dispatch_worker
+      no_clear_spec: STOP-precondition-failed
+    kind: summon
+    blocked_on: null
+
+  - step_id: dispatch_worker
+    intent: >-
+      Fire the dispatch with the classified research flags, --worktree, and the brief
+      file. Live success shape ends with the bare task id on the last line and a
+      "dispatch <task>: branch=... base_sha=... path=..." line above it. Same-lane
+      spawns in the same second race — stagger ~10s. A write-path ownership REFUSE is
+      NOT one outcome: the refusal text distinguishes provable-conflict from
+      cannot-prove-disjoint ("No actual path overlap was found"), and only the latter
+      may be overridden.
+    command: .venv/bin/python scripts/delegate.py dispatch --agent {lane} --task-id {task_id} --prompt-file {brief_path} --worktree --mode danger {research_flags}
+    evidence_predicate:
+      command: jq -r '.status // ""' batch_state/tasks/{task_id}.json
+      success_pattern: '^(spawning|running)$'
+    transitions:
+      dispatched: arm_settle_watch
+      refuse_no_actual_overlap: override_dispatch
+      refuse_actual_overlap: STOP-concurrency-conflict
+      spawn_error: STOP-unrecoverable-error
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: override_dispatch
+    intent: >-
+      Re-run the same dispatch with --allow-path-overlap '<why this is safe>' ONLY
+      when the refusal said "No actual path overlap was found" (an undeclared active
+      writer elsewhere in the estate blocks the disjointness proof). The reason must
+      name the undeclared writer and why the write surfaces are disjoint. Admitted
+      shape: "write-path ownership: would-refuse recorded (override); admitted under
+      refuse" or "admitted; paths disjoint". A second refusal is a hard stop.
+    command: .venv/bin/python scripts/delegate.py dispatch --agent {lane} --task-id {task_id} --prompt-file {brief_path} --worktree --mode danger {research_flags} --allow-path-overlap "{overlap_reason}"
+    evidence_predicate:
+      command: jq -r '.status // ""' batch_state/tasks/{task_id}.json
+      success_pattern: '^(spawning|running)$'
+    transitions:
+      dispatched: arm_settle_watch
+      refused_again: STOP-concurrency-conflict
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: arm_settle_watch
+    intent: >-
+      Arm ONE Monitor settle-loop over the task status file — the file is truth (the
+      active-list API can omit live tasks). The loop polls jq -r '.status' every 60-90s
+      and emits exactly once when the status leaves {spawning, running, ""}. Never
+      keyword-grep worker logs as a completion signal; never poll with scheduled
+      wakeups when a Monitor can watch.
+    command: jq -r '.status // ""' batch_state/tasks/{task_id}.json
+    evidence_predicate:
+      command: jq -r '.status // ""' batch_state/tasks/{task_id}.json
+      success_pattern: '^(spawning|running|done|failed|timeout|rate_limited|cancelled|crashed|dry_run|needs_finalize|no_deliverable)$'
+    transitions:
+      watch_armed: await_settle
+      task_file_missing: STOP-unrecoverable-error
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: await_settle
+    intent: >-
+      Wait state (kind-wait note in the header): the seat idles on the Monitor's settle
+      event; no polling loops, no log grepping. The settle event's payload is the
+      terminal status string, which the next step routes through the settle-status
+      table. A watch that outlives its Monitor (session end, watcher reaped) is re-armed,
+      not forgotten.
+    command: null
+    evidence_predicate: null
+    transitions:
+      settle_event: finalize_settle
+      watcher_lost: arm_settle_watch
+    kind: summon
+    blocked_on: null
+
+  - step_id: finalize_settle
+    intent: >-
+      Route the terminal status through the settle-status table. Non-negotiables lived
+      this session: done still requires reading the produced CONTENT (result file, PR
+      diff) before the review gate; no_deliverable is an attention state, not a fact —
+      three consecutive false negatives (#5855 class) were disproven by checking the
+      branch head against the PR head before re-dispatching anything; timeout checks
+      the worktree for finished-but-unpushed work AND gh pr list for an already-opened
+      PR (silent-exit class); failed/crashed re-fires ONCE with a -retry task id and
+      never a third time.
+    command: jq -r '.status // ""' batch_state/tasks/{task_id}.json
+    evidence_predicate:
+      command: jq -r '.status // ""' batch_state/tasks/{task_id}.json
+      success_pattern: '^(done|failed|timeout|rate_limited|cancelled|crashed|dry_run|needs_finalize|no_deliverable)$'
+    transitions:
+      deliverable_verified_pr_open: handed_to_pr_lifecycle
+      refire_once: dispatch_worker
+      reroute_lane: route_lane
+      unrecoverable: STOP-unrecoverable-error
+      unknown_status: STOP-unknown
+    kind: table-lookup
+    table: settle-status
+    blocked_on: null
