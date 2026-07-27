@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import os
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -80,12 +79,15 @@ _GATE_ENVS = ("LEARN_UK_PRIMARY_HEAL_DISABLE", "GITHUB_ACTIONS", "CI")
 
 
 def _run_cli(repo: Path, extra_env: dict[str, str], *args: str) -> subprocess.CompletedProcess[str]:
+    venv_python = _REPO_ROOT / ".venv" / "bin" / "python"
+    if not venv_python.is_file():  # repo forbids sys.executable / bare python
+        pytest.skip("project .venv interpreter not found; repo forbids sys.executable here")
     env = os.environ.copy()
     for name in _GATE_ENVS:
         env.pop(name, None)
     env.update(extra_env)
     return subprocess.run(
-        [sys.executable, str(_CLI), "--cwd", str(repo), *args],
+        [str(venv_python), str(_CLI), "--cwd", str(repo), *args],
         cwd=str(_REPO_ROOT),
         capture_output=True,
         text=True,
