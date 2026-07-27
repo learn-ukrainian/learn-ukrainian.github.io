@@ -302,6 +302,38 @@ def _validate_recipient_agent(agent: str, *, assignments_path: Path | None = Non
         raise ValueError(f"Unknown delivery target '{agent}'. Expected one of {valids}.")
 
 
+def _resolve_delivery_agent(
+    agent: str,
+    *,
+    warnings: list[str],
+    warn_if_unheld: bool,
+) -> str:
+    """Resolve a slot to its live holder, retaining unheld slots unchanged."""
+    if "-" not in agent or agent in STATIC_VALID_AGENTS:
+        return agent
+
+    try:
+        from scripts.orchestration.slot_routing import resolve_slot_holder
+
+        res = resolve_slot_holder(agent)
+    except Exception:
+        return agent
+
+    if res.has_holder:
+        return res.holder_agent or agent
+
+    if warn_if_unheld:
+        msg = (
+            f"⚠️ channel-bridge: recipient slot '{agent}' has no live holder "
+            f"(queued at {res.queue_location})"
+        )
+        warnings.append(msg)
+        import sys as _sys
+
+        print(msg, file=_sys.stderr)
+    return agent
+
+
 def _validate_priority(priority: str) -> None:
     if priority not in VALID_MESSAGE_PRIORITIES:
         raise ValueError(f"Unknown priority '{priority}'. Expected one of {VALID_MESSAGE_PRIORITIES}.")
@@ -982,29 +1014,17 @@ def post(
     _validate_kind(kind)
     _validate_priority(priority)
     warnings: list[str] = []
+    resolved_from_agent = _resolve_delivery_agent(
+        from_agent,
+        warnings=warnings,
+        warn_if_unheld=False,
+    )
     delivery_targets: list[str] = []
     for agent in to_agents or []:
         _validate_recipient_agent(agent)
-        delivery_agent = agent
-        if "-" in agent and agent not in STATIC_VALID_AGENTS:
-            try:
-                from scripts.orchestration.slot_routing import resolve_slot_holder
-
-                res = resolve_slot_holder(agent)
-                if res.has_holder:
-                    delivery_agent = res.holder_agent
-                else:
-                    msg = (
-                        f"⚠️ channel-bridge: recipient slot '{agent}' has no live holder "
-                        f"(queued at {res.queue_location})"
-                    )
-                    warnings.append(msg)
-                    import sys as _sys
-
-                    print(msg, file=_sys.stderr)
-            except Exception:
-                pass
-        delivery_targets.append(delivery_agent)
+        delivery_targets.append(
+            _resolve_delivery_agent(agent, warnings=warnings, warn_if_unheld=True)
+        )
     body = redact_text(body) or ""
     attachments = redact_value(attachments)
     monitor_state_snapshot = redact_value(monitor_state_snapshot)
@@ -1150,7 +1170,7 @@ def post(
         for agent in delivery_targets:
             # Skip sender self-fanout: an agent does not need to "process"
             # its own reply. Channel deliveries are for other subscribers.
-            if agent == from_agent or agent in seen_delivery_agents:
+            if agent == resolved_from_agent or agent in seen_delivery_agents:
                 continue
             seen_delivery_agents.add(agent)
             delivery_agents.append(agent)

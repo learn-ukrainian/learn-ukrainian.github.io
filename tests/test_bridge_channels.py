@@ -546,6 +546,33 @@ def test_post_to_slots_with_shared_live_holder_delivers_once(tmp_path: Path, mon
     assert deliveries[0]["to_agent"] == "claude-infra"
 
 
+def test_post_skips_self_fanout_when_sender_and_recipient_slots_share_holder(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """Sender and recipient slots sharing a holder create no self-delivery."""
+    from scripts.orchestration import slot_routing
+
+    def resolve_shared_holder(slot: str) -> slot_routing.SlotHolderResult:
+        return slot_routing.SlotHolderResult(
+            has_holder=True,
+            slot=slot,
+            holder_agent="claude-infra",
+        )
+
+    monkeypatch.setattr(slot_routing, "resolve_slot_holder", resolve_shared_holder)
+    _channels.create_channel("topic")
+    result = _channels.post(
+        "topic",
+        "claude-atlas",
+        "hello",
+        to_agents=["claude-folk"],
+        auto_snapshot=False,
+    )
+
+    assert result["delivery_ids"] == []
+    assert _channels.deliveries_for_message(result["message_id"]) == []
+
+
 def test_pending_deliveries_for_agent_filters_by_agent():
     """Verify agent queues only return their own pending deliveries."""
     _channels.create_channel("topic")
