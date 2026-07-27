@@ -124,6 +124,23 @@
                 }
               }
             }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "table-lookup"
+                }
+              }
+            },
+            "then": {
+              "required": ["table"],
+              "properties": {
+                "table": {
+                  "type": "string"
+                }
+              }
+            }
           }
         ]
       },

@@ -73,6 +73,7 @@ steps:
       ci_red: red_ci_triage
       disarmed: rearm_automerge
     kind: table-lookup
+    table: review-gate-arm
     blocked_on: null
 
   - step_id: rearm_automerge

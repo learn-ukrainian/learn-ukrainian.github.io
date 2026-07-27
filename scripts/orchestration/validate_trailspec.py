@@ -229,14 +229,23 @@ def validate_trail_table_refs(
     spec_data: dict[str, Any],
     tables_data: dict[str, Any],
 ) -> dict[str, Any]:
-    """Cross-document check: every table reference a trail step declares must resolve
-    to a table in the decision-tables document. A misspelled or unbound reference is a
-    validation failure, not a silent no-op."""
+    """Cross-document check: table-lookup steps must bind a resolvable decision table.
+
+    A missing, misspelled, or unbound reference is a validation failure, not a
+    silent no-op. This also fails closed for callers that bypass JSON Schema.
+    """
     known_tables = set(tables_data.get("tables", {}).keys())
     bound: dict[str, str] = {}
     for step in spec_data.get("steps", []):
         step_id = step.get("step_id", "<unknown>")
         table_ref = step.get("table")
+        if step.get("kind") == "table-lookup" and (
+            not isinstance(table_ref, str) or not table_ref
+        ):
+            raise TrailSpecValidationError(
+                f"Missing table binding: table-lookup step '{step_id}' requires a non-empty "
+                "string table field"
+            )
         if table_ref is None:
             continue
         if table_ref not in known_tables:

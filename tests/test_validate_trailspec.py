@@ -278,6 +278,50 @@ def test_rb1_table_lookup_steps_bind_tables() -> None:
     assert not unbound, f"RB1 table-lookup steps without a table binding: {unbound}"
 
 
+def test_negative_table_lookup_without_table_fails_schema() -> None:
+    """A table-lookup step must name a non-null table in the TrailSpec schema."""
+    spec = _get_rb1_data()
+    lookup_step = next(step for step in spec["steps"] if step["kind"] == "table-lookup")
+    del lookup_step["table"]
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec_data(spec)
+
+    assert "TrailSpec schema violation" in str(exc_info.value)
+    assert "table" in str(exc_info.value)
+
+
+def test_negative_table_lookup_without_table_fails_cross_check() -> None:
+    """The table cross-check fails closed even when its caller bypasses schema validation."""
+    spec = _get_rb1_data()
+    tables = _get_happy_tables_data()
+    lookup_step = next(step for step in spec["steps"] if step["kind"] == "table-lookup")
+    lookup_step["table"] = None
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trail_table_refs(spec, tables)
+
+    assert "Missing table binding" in str(exc_info.value)
+    assert lookup_step["step_id"] in str(exc_info.value)
+
+
+@pytest.mark.parametrize("table_ref", [[], {}], ids=["list", "mapping"])
+def test_negative_table_lookup_non_string_table_fails_cross_check(
+    table_ref: object,
+) -> None:
+    """The cross-check must reject non-string table bindings before membership tests."""
+    spec = _get_rb1_data()
+    tables = _get_happy_tables_data()
+    lookup_step = next(step for step in spec["steps"] if step["kind"] == "table-lookup")
+    lookup_step["table"] = table_ref
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trail_table_refs(spec, tables)
+
+    assert "Missing table binding" in str(exc_info.value)
+    assert lookup_step["step_id"] in str(exc_info.value)
+
+
 def test_negative_unbound_table_ref() -> None:
     """Mutation check: a misspelled table reference must fail the cross-document check."""
     spec = _get_rb1_data()
