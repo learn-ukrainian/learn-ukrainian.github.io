@@ -310,11 +310,17 @@ def ask_pool(
         effort=effort,
     )
     register_ask(msg_id)
+    if on_message_created is not None:
+        on_message_created(msg_id)
     if background:
         launch_background_ask(
             msg_id,
             "pool",
-            {"no_timeout": no_timeout, "variant": effective_variant},
+            {
+                "no_timeout": no_timeout,
+                "variant": effective_variant,
+                "review_pr_lifecycle": review_pr_lifecycle,
+            },
         )
         return msg_id
     print(f"\n🚀 Invoking pool ({effective_model}, variant={effective_variant}) to process message #{msg_id}...")
@@ -375,6 +381,8 @@ def ask_glm(
     from_model: str | None = None,
     no_timeout: bool = False,
     background: bool = False,
+    on_message_created: Callable[[int], None] | None = None,
+    review_pr_lifecycle: bool = False,
 ) -> int:
     """Send a message AND invoke Zhipu GLM (glm-5.2) one-shot via opencode.
 
