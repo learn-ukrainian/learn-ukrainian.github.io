@@ -90,7 +90,7 @@ is_hermes_private_node_bin() {
       cand_phys="$(python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$cand" 2>/dev/null)" || cand_phys=""
     fi
     if [ -n "$cand_phys" ]; then
-      cand_dir="$(dirname -- "$cand_phys")"
+      cand_dir="$(dirname "$cand_phys")"
       if [ "$cand_dir" = "$hermes_phys" ]; then
         return 0
       fi
