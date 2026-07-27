@@ -3661,3 +3661,35 @@ class TestExecRootAcceptsSentinel:
         (root / isolation.REVIEW_TEMP_ROOT_MARKER_NAME).symlink_to(outside)
         with pytest.raises(isolation.ReviewIsolationError, match="marker_not_regular"):
             self._validate(root, tmp_path)
+
+    def test_hardlinked_marker_refuses(self, tmp_path):
+        """#5849: a hardlinked sentinel (st_nlink != 1) must refuse even when its
+        content is byte-valid — mirrors _has_review_temp_root_marker."""
+        import os
+
+        import pytest
+
+        from scripts.review import isolation
+
+        root = tmp_path / "exec"
+        root.mkdir(mode=0o700)
+        marker = root / isolation.REVIEW_TEMP_ROOT_MARKER_NAME
+        marker.write_bytes(b"lu-review-root-v1:" + b"ab" * 32 + b"\n")
+        os.link(marker, tmp_path / "marker-hardlink")
+        with pytest.raises(isolation.ReviewIsolationError, match="marker_not_regular"):
+            self._validate(root, tmp_path)
+
+    def test_wrong_content_marker_refuses(self, tmp_path):
+        """#5849: a regular-file sentinel whose bytes do not fullmatch the marker
+        pattern is a forgery — refuse with the content-specific error."""
+        import pytest
+
+        from scripts.review import isolation
+
+        root = tmp_path / "exec"
+        root.mkdir(mode=0o700)
+        (root / isolation.REVIEW_TEMP_ROOT_MARKER_NAME).write_bytes(
+            b"not-a-review-root-marker\n"
+        )
+        with pytest.raises(isolation.ReviewIsolationError, match="marker_invalid"):
+            self._validate(root, tmp_path)

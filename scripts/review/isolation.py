@@ -913,9 +913,26 @@ def _validate_private_exec_root(
     for entry in root.iterdir():
         if entry.name != REVIEW_TEMP_ROOT_MARKER_NAME:
             raise ReviewIsolationError("review_exec_root_not_empty")
-        entry_st = entry.lstat()
-        if stat.S_ISLNK(entry_st.st_mode) or not stat.S_ISREG(entry_st.st_mode):
-            raise ReviewIsolationError("review_exec_root_marker_not_regular")
+        # Mirror _has_review_temp_root_marker's semantics exactly (#5849): the
+        # sentinel must be a sole regular file (st_nlink == 1) whose bytes fullmatch
+        # the marker pattern — a hardlinked or forged marker must not pass validation
+        # here only to fail cleanup later. fd-based like the reference check so the
+        # verdict comes from fstat on the opened fd, not a racy lstat-then-open.
+        try:
+            marker_fd = os.open(entry, os.O_RDONLY | os.O_NOFOLLOW)
+        except OSError as exc:
+            # O_NOFOLLOW turns a symlinked marker into an open error — same
+            # refusal class as the old lstat symlink check.
+            raise ReviewIsolationError("review_exec_root_marker_not_regular") from exc
+        try:
+            marker_stat = os.fstat(marker_fd)
+            if not stat.S_ISREG(marker_stat.st_mode) or marker_stat.st_nlink != 1:
+                raise ReviewIsolationError("review_exec_root_marker_not_regular")
+            marker = os.read(marker_fd, _REVIEW_TEMP_ROOT_MARKER_MAX_BYTES + 1)
+        finally:
+            os.close(marker_fd)
+        if not _REVIEW_TEMP_ROOT_MARKER_RE.fullmatch(marker):
+            raise ReviewIsolationError("review_exec_root_marker_invalid")
     return root
 
 
