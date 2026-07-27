@@ -307,7 +307,7 @@ session_id="fixture-session-symlink"
       bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
 )
 outside_count="$(find "$outside" -type f 2>/dev/null | wc -l | tr -d ' ')"
-[ "$outside_count" = "0" ] || fail "symlink escape: sidecar write followed a symlinked sessions dir ($outside_count files landed outside)"
+[ "$outside_count" = "0" ] || fail "symlink escape: sidecar write followed a symlinked sessions dir ($outside_count files landed outside: $(find "$outside" -type f 2>/dev/null | tr '\n' ' '))"
 # Symlinked destination entry: real dir, symlinked file — write must refuse.
 root="$TMP_ROOT/symlink-entry-project"
 mkdir -p "$root/.agent/sessions"
