@@ -32,7 +32,7 @@
 # arc and multi-signal branchings collapse back into fewer steps.
 schema_version: trailspec.v1
 trail_id: rb2-dispatch-loop
-version: "0.6.0"
+version: "0.7.0"
 title: RB2 Dispatch loop — brief, dispatch, settle, finalize
 seats:
   - grok-daily
@@ -280,8 +280,8 @@ steps:
       success_pattern: '^(done|failed|timeout|silence-timeout|rate_limited|cancelled|crashed|dry_run|needs_finalize|no_deliverable|spawning|running)$'
     transitions:
       done: verify_deliverable_success
-      timeout: verify_deliverable_attention
-      silence_timeout: verify_deliverable_attention
+      timeout: verify_deliverable_timeout
+      silence_timeout: verify_deliverable_timeout
       needs_finalize: verify_deliverable_attention
       no_deliverable: verify_deliverable_attention
       failed: retry_suffix_gate
@@ -308,6 +308,23 @@ steps:
       success_pattern: '"number"'
     transitions:
       pr_open: handed_to_pr_lifecycle
+      no_pr_for_branch: commits_ahead_check
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: verify_deliverable_timeout
+    intent: >-
+      Timeout path (timeout / silence-timeout): the same PR receipt check. An open
+      PR is finalize-BY-HAND (a died-at-deadline worker's deliverable needs eyes).
+      No PR routes into the commits-ahead/dirty-tree chain, whose clean-and-empty
+      outcome reaches the bounded failed/crashed retry — the table's disposition for
+      a deliverable-less timeout ("treat as the failed|crashed rows").
+    command: gh pr list --state open --head {lane}/{task_id} --json number,title --limit 3
+    evidence_predicate:
+      command: gh pr list --state open --head {lane}/{task_id} --json number --limit 3
+      success_pattern: '"number"'
+    transitions:
+      pr_open: STOP-manual-intervention
       no_pr_for_branch: commits_ahead_check
     kind: mechanical
     blocked_on: null
