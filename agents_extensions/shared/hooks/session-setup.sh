@@ -437,10 +437,16 @@ try:
 except Exception:
   print("")' 2>/dev/null || true)
         if [ -n "$THREAD_LEASE_GENERATION" ]; then
-          if [ -n "$SESSION_ID" ]; then
-            mkdir -p "$CANONICAL_ROOT/.agent/sessions" 2>/dev/null || true
-            printf '%s\n' "$THREAD_LEASE_GENERATION" > "$CANONICAL_ROOT/.agent/sessions/${SESSION_ID}.generation" 2>/dev/null || true
-          fi
+          # SESSION_ID comes from unvalidated hook stdin JSON — only a path-safe
+          # allowlist may reach the filesystem (formal CF F001 on #5896: a
+          # traversal-shaped id could redirect this write outside .agent/sessions).
+          case "$SESSION_ID" in
+            ''|*[!A-Za-z0-9_-]*) : ;;  # unsafe or empty: skip the sidecar, env-file path still works
+            *)
+              mkdir -p "$CANONICAL_ROOT/.agent/sessions" 2>/dev/null || true
+              printf '%s\n' "$THREAD_LEASE_GENERATION" > "$CANONICAL_ROOT/.agent/sessions/${SESSION_ID}.generation" 2>/dev/null || true
+              ;;
+          esac
           if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
             printf 'export LEARN_UKRAINIAN_THREAD_LEASE_GENERATION=%s\n' "$THREAD_LEASE_GENERATION" >> "$CLAUDE_ENV_FILE" 2>/dev/null || true
           fi

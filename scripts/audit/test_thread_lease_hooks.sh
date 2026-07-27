@@ -249,4 +249,28 @@ printf '%s' '{"session_id":"stub-session"}' | \
   CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" THREAD_ROLLOVER_PYTHON="$STUB_BIN_DIR/python" \
   "$RELEASE_HOOK" || fail "release hook failed against old CLI"
 
+# 7. Path-safety (formal CF F001 on #5896): a traversal-shaped session_id must
+#    NEVER reach the filesystem — no sidecar written anywhere, no stray file
+#    outside .agent/sessions, and the release hook must skip the sidecar read.
+root="$TMP_ROOT/traversal-project"
+mkdir -p "$root"
+evil_id='../evil-traversal'
+(
+  exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
+      -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
+      CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
+      bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$evil_id\"}" >/dev/null
+)
+[ ! -e "$root/.agent/evil-traversal.generation" ] || fail "path-safety: traversal session_id escaped .agent/sessions"
+if [ -d "$root/.agent/sessions" ]; then
+  stray_count="$(find "$root/.agent/sessions" -type f 2>/dev/null | wc -l | tr -d ' ')"
+  [ "$stray_count" = "0" ] || fail "path-safety: traversal session_id produced a sidecar ($stray_count files)"
+fi
+# Release hook with the same evil id: must exit 0 and not read outside the dir.
+printf '%s' "{\"session_id\":\"$evil_id\"}" | \
+  env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
+      -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
+  CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
+  "$RELEASE_HOOK" || fail "path-safety: release hook failed on traversal session_id"
+
 printf 'ok - thread lease hook fixtures passed\n'

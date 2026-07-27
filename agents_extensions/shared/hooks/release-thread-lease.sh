@@ -75,10 +75,17 @@ else
   fi
 fi
 
+# Same path-safety allowlist as the session-setup write side (formal CF F001 on
+# #5896): a traversal-shaped SESSION_ID must never reach the filesystem.
 SIDECAR_GEN=""
-if [ -f "$CANONICAL_ROOT/.agent/sessions/${SESSION_ID}.generation" ]; then
-  SIDECAR_GEN=$(cat "$CANONICAL_ROOT/.agent/sessions/${SESSION_ID}.generation" 2>/dev/null | tr -d ' \r\n')
-fi
+case "$SESSION_ID" in
+  ''|*[!A-Za-z0-9_-]*) : ;;
+  *)
+    if [ -f "$CANONICAL_ROOT/.agent/sessions/${SESSION_ID}.generation" ]; then
+      SIDECAR_GEN=$(cat "$CANONICAL_ROOT/.agent/sessions/${SESSION_ID}.generation" 2>/dev/null | tr -d ' \r\n')
+    fi
+    ;;
+esac
 
 if [ -n "$SIDECAR_GEN" ]; then
   "$PYTHON" "$PROJECT_DIR/scripts/orchestration/thread_handoff.py" --repo-root "$CANONICAL_ROOT" \
