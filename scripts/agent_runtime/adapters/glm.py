@@ -19,6 +19,9 @@ from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
 
+# Bare catalog model id → subscription-pinned opencode provider route.
+_OPENCODE_MODEL_ROUTES: dict[str, str] = {"glm-5.2": "zai-coding-plan/glm-5.2"}
+
 # Env vars whose presence indicates an automated/CI context where the
 # China-egress constraint forbids invoking GLM (matches ask-glm backstop).
 _CI_ENV_VARS: tuple[str, ...] = ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL")
@@ -74,10 +77,10 @@ class GlmAdapter:
     """Adapter for the opencode CLI with glm-5.2."""
 
     name: str = "glm"
-    # Pin the Z.AI Coding Plan (subscription) provider explicitly — a bare
-    # "glm-5.2" leaves provider resolution to opencode and can land off-sub.
-    # Keep in sync with scripts/ai_agent_bridge/_opencode.py GLM_MODEL.
-    default_model: str = "zai-coding-plan/glm-5.2"
+    # Fleet MODEL identity (must resolve in model_catalog.yaml). The Z.AI
+    # Coding Plan provider pin is an opencode INVOCATION detail — applied in
+    # build_invocation via _OPENCODE_MODEL_ROUTES, not stored as identity.
+    default_model: str = "glm-5.2"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(
@@ -99,8 +102,14 @@ class GlmAdapter:
 
         binary = shutil.which("opencode") or "opencode"
         target_model = model or self.default_model
+        # Route bare catalog ids to the subscription-pinned opencode provider —
+        # a bare "glm-5.2" would leave provider resolution to opencode and can
+        # land off the Z.AI Coding Plan sub. Explicit provider-prefixed ids
+        # pass through untouched. Keep in sync with
+        # scripts/ai_agent_bridge/_opencode.py GLM_MODEL.
+        invocation_model = _OPENCODE_MODEL_ROUTES.get(target_model, target_model)
 
-        cmd: list[str] = [binary, "run", "--model", target_model]
+        cmd: list[str] = [binary, "run", "--model", invocation_model]
 
         if mode in ("workspace-write", "danger"):
             cmd.append("--auto")

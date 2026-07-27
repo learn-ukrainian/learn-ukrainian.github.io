@@ -48,7 +48,7 @@ def test_glm_registry_and_choices_wiring():
     assert "glm" in registry.AGENTS
     entry = registry.get_agent_entry("glm")
     assert entry["cli_available"] is True
-    assert entry["default_model"] == "zai-coding-plan/glm-5.2"
+    assert entry["default_model"] == "glm-5.2"
     assert entry["resume_policy"] == "never"
     assert "glm" in delegate._DISPATCH_AGENT_CHOICES
 
