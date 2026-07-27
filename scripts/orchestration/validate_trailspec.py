@@ -225,6 +225,34 @@ def validate_decision_tables(
     )
 
 
+def validate_trail_table_refs(
+    spec_data: dict[str, Any],
+    tables_data: dict[str, Any],
+) -> dict[str, Any]:
+    """Cross-document check: every table reference a trail step declares must resolve
+    to a table in the decision-tables document. A misspelled or unbound reference is a
+    validation failure, not a silent no-op."""
+    known_tables = set(tables_data.get("tables", {}).keys())
+    bound: dict[str, str] = {}
+    for step in spec_data.get("steps", []):
+        step_id = step.get("step_id", "<unknown>")
+        table_ref = step.get("table")
+        if table_ref is None:
+            continue
+        if table_ref not in known_tables:
+            raise TrailSpecValidationError(
+                f"Unbound table reference: step '{step_id}' names table '{table_ref}' "
+                f"which does not exist in the decision-tables document "
+                f"(known: {sorted(known_tables)})"
+            )
+        bound[step_id] = table_ref
+    return {
+        "ok": True,
+        "trail_id": spec_data.get("trail_id"),
+        "bound_steps": bound,
+    }
+
+
 def validate_trailspec(
     *,
     spec_path: Path = DEFAULT_EXAMPLE_TRAIL_PATH,

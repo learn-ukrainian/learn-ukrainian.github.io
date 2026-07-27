@@ -18,6 +18,7 @@ from scripts.orchestration.validate_trailspec import (
     validate_decision_tables,
     validate_decision_tables_data,
     validate_step_receipt_data,
+    validate_trail_table_refs,
     validate_trailspec,
     validate_trailspec_data,
 )
@@ -247,6 +248,50 @@ def test_negative_decision_tables_unknown_stop_code() -> None:
     with pytest.raises(TrailSpecValidationError) as exc_info:
         validate_decision_tables_data(data)
     assert "STOP-made-up-code" in str(exc_info.value)
+
+
+_RB1_PATH = _TRAILS_DIR / "rb1-cold-start.trail.yaml"
+
+
+def _get_rb1_data() -> dict[str, Any]:
+    return yaml.safe_load(_RB1_PATH.read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("trail_path", _ALL_SHIPPED_TRAILS, ids=lambda p: p.stem)
+def test_declared_table_refs_resolve(trail_path) -> None:
+    """Every table a shipped trail declares must exist in the decision-tables draft
+    (r2 review finding on #5886: table references were unbound and unvalidatable)."""
+    spec = yaml.safe_load(trail_path.read_text(encoding="utf-8"))
+    tables = _get_happy_tables_data()
+    res = validate_trail_table_refs(spec, tables)
+    assert res["ok"] is True
+
+
+def test_rb1_table_lookup_steps_bind_tables() -> None:
+    """RB1's table-lookup steps must each name their table (RB3 predates the tables
+    draft — its retrofit is a T2-certification item on #5885, not enforced here)."""
+    spec = _get_rb1_data()
+    tables = _get_happy_tables_data()
+    res = validate_trail_table_refs(spec, tables)
+    lookup_steps = [s["step_id"] for s in spec["steps"] if s.get("kind") == "table-lookup"]
+    unbound = [s for s in lookup_steps if s not in res["bound_steps"]]
+    assert not unbound, f"RB1 table-lookup steps without a table binding: {unbound}"
+
+
+def test_negative_unbound_table_ref() -> None:
+    """Mutation check: a misspelled table reference must fail the cross-document check."""
+    spec = _get_rb1_data()
+    tables = _get_happy_tables_data()
+    for step in spec["steps"]:
+        if step.get("table"):
+            step["table"] = "queue-pikc"  # misspelled
+            break
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trail_table_refs(spec, tables)
+    assert "queue-pikc" in str(exc_info.value)
+
+    restored = _get_rb1_data()
+    assert validate_trail_table_refs(restored, tables)["ok"] is True
 
 
 def test_hash_stability() -> None:

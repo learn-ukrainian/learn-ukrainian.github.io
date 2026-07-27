@@ -123,6 +123,6 @@ tables:
     inputs: [PR's stream epic, branch/dispatch-brief slug, lane assignments registry, driver-handoff claims]
     rows:
       - {when: "PR's epic maps to THIS seat's area", then: "yours: drive, review-gate, arm, merge, reap"}
-      - {when: "PR's epic maps to another area", then: "hands off; author-lane prefixes do not decide ownership, and author:@me is meaningless under the shared git identity"}
       - {when: "out-of-lane PR sat GREEN (CI + review) > 1 hour and its driver is absent", then: "abandoned-work carve-out MAY apply; verify the driver is truly gone before touching"}
+      - {when: "PR's epic maps to another area", then: "hands off; author-lane prefixes do not decide ownership, and author:@me is meaningless under the shared git identity"}
       - {when: "ownership genuinely ambiguous after all three inputs", then: "STOP-manual-intervention"}
