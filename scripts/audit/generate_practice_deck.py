@@ -1032,7 +1032,7 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
     paradigm = _paradigm(entry)
     if not _verify_paradigm(lemma_plain, pos, paradigm, verifier):
         paradigm = {"cases": {}}
-    return {
+    lexeme: dict[str, Any] = {
         "lemmaId": _stable_lemma_id(entry),
         "lemma": lemma,
         "lemmaPlain": lemma_plain,
@@ -1047,6 +1047,14 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
         "paradigm": paradigm,
         "semanticBucket": _clean_text(entry.get("semantic_bucket")),
     }
+    example = entry.get("practice_example")
+    if isinstance(example, dict):
+        text = _clean_text(example.get("text"))
+        provenance = example.get("provenance")
+        if text and isinstance(provenance, dict):
+            lexeme["example"] = text
+            lexeme["exampleProvenance"] = provenance
+    return lexeme
 
 
 def _candidate_rule_id(candidate: dict[str, Any], case_name: str) -> str | None:
@@ -2863,6 +2871,87 @@ def read_manifest(path: Path) -> list[dict[str, Any]]:
     return [entry for entry in entries if isinstance(entry, dict)]
 
 
+def read_practice_seed(path: Path) -> list[dict[str, Any]]:
+    """Read a small, reviewed practice admission overlay.
+
+    The source Atlas entry remains authoritative for learner-facing lexical
+    metadata.  A seed can only admit an already-public Atlas slug and attach a
+    source-backed example; it cannot create a second Atlas entry or fabricate
+    a CEFR level.
+    """
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict) or payload.get("schema") != "alona-v5-practice-seed-v1":
+        raise ValueError(f"unsupported practice seed schema: {path}")
+    entries = payload.get("entries")
+    if not isinstance(entries, list) or not entries:
+        raise ValueError(f"practice seed entries must be a nonempty list: {path}")
+
+    seen_slugs: set[str] = set()
+    validated: list[dict[str, Any]] = []
+    for index, row in enumerate(entries):
+        if not isinstance(row, dict):
+            raise ValueError(f"practice seed entries[{index}] must be an object: {path}")
+        lemma = _clean_text(row.get("lemma"))
+        slug = _clean_text(row.get("slug"))
+        cefr = _normalize_cefr(row.get("cefr"))
+        example = _clean_text(row.get("example"))
+        provenance = row.get("provenance")
+        if not lemma or not slug or not cefr or not example or not isinstance(provenance, dict):
+            raise ValueError(
+                f"practice seed entries[{index}] requires lemma, slug, CEFR, example, and provenance: {path}"
+            )
+        if row.get("sentenceStatus") != "ok":
+            raise ValueError(f"practice seed entries[{index}] must retain sentenceStatus=ok: {path}")
+        if slug in seen_slugs:
+            raise ValueError(f"practice seed repeats slug {slug!r}: {path}")
+        seen_slugs.add(slug)
+        if _clean_text(provenance.get("source_file")) is None or _clean_text(provenance.get("credit")) is None:
+            raise ValueError(f"practice seed entries[{index}] provenance lacks source_file or credit: {path}")
+        validated.append(row)
+    return validated
+
+
+def merge_practice_seed_entries(
+    entries: list[dict[str, Any]],
+    seed_rows: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Explicitly admit reviewed seed rows without changing Atlas metadata."""
+    by_slug = {
+        slug: index
+        for index, entry in enumerate(entries)
+        if (slug := _clean_text(entry.get("url_slug"))) is not None
+    }
+    merged = list(entries)
+    for seed in seed_rows:
+        slug = str(seed["slug"])
+        target_index = by_slug.get(slug)
+        if target_index is None:
+            raise ValueError(f"practice seed slug is not a public Atlas entry: {slug}")
+        target = merged[target_index]
+        if _plain(str(target.get("lemma") or "")) != _plain(str(seed["lemma"])):
+            raise ValueError(f"practice seed lemma does not match Atlas slug {slug}")
+        atlas_cefr = _cefr_level(target)
+        if atlas_cefr is None:
+            raise ValueError(f"practice seed Atlas entry has no CEFR level: {slug}")
+        if atlas_cefr != _normalize_cefr(seed.get("cefr")):
+            raise ValueError(f"practice seed CEFR differs from Atlas entry for {slug}")
+
+        admission = target.get("surface_admission")
+        merged_admission = dict(admission) if isinstance(admission, dict) else {}
+        merged_admission[SURFACE_CLOZE] = bool(merged_admission.get(SURFACE_CLOZE))
+        merged_admission["practice"] = True
+        merged[target_index] = {
+            **target,
+            "surface_admission": merged_admission,
+            "practice_example": {
+                "text": seed["example"],
+                "provenance": seed["provenance"],
+                "seedRow": seed.get("seedRow"),
+            },
+        }
+    return merged
+
+
 def read_atlas_db(path: Path) -> list[dict[str, Any]]:
     if not path.exists():
         raise FileNotFoundError(f"{path} not found; run npm --prefix site run atlas:build-db")
@@ -3127,6 +3216,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS)
     parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS)
     parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
+    parser.add_argument(
+        "--practice-seed",
+        type=Path,
+        help="Reviewed practice admission overlay; each row must already exist in Atlas.",
+    )
     parser.add_argument("--vesum-fixture", type=Path)
     parser.add_argument("--target", type=int, default=DEFAULT_TARGET)
     parser.add_argument("--raw-limit", type=int, default=DEFAULT_RAW_LIMIT)
@@ -3148,6 +3242,8 @@ def main(argv: list[str] | None = None) -> int:
         return run_broken_validator_fixtures()
 
     entries = read_manifest(args.manifest) if args.manifest else read_atlas_db(args.atlas_db)
+    if args.practice_seed:
+        entries = merge_practice_seed_entries(entries, read_practice_seed(args.practice_seed))
     allowlist = ReviewedSourceAllowlist.from_path(args.reviewed_allowlist)
     cloze_sources = read_cloze_sources(args.cloze_sources)
     heritage_pairs = read_heritage_pairs(args.heritage_pairs)

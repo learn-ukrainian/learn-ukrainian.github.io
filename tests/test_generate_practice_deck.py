@@ -23,10 +23,12 @@ from scripts.audit.generate_practice_deck import (
     apply_size_budgets,
     build_practice_shards,
     main,
+    merge_practice_seed_entries,
     read_cloze_sources,
     read_heritage_pairs,
     read_manifest,
     read_paronym_pairs,
+    read_practice_seed,
     validate_classify_item,
     validate_heritage_item,
     validate_heritage_pair,
@@ -44,11 +46,58 @@ VESUM = FIXTURES / "lexicon-practice-vesum.json"
 CLOZE_SOURCES = FIXTURES / "lexicon-practice-cloze-sources.json"
 HERITAGE_PAIRS = FIXTURES / "lexicon-practice-heritage-pairs.yaml"
 PARONYM_PAIRS = FIXTURES / "lexicon-practice-paronym-pairs.yaml"
+ALONA_V5_GOLD_SEED = Path("data/lexicon/alona-v5-gold-practice-seed.json")
 
 
 def test_default_target_preserves_committed_practice_surface() -> None:
     assert DEFAULT_TARGET >= 6000
     assert BuildConfig().target == DEFAULT_TARGET
+
+
+def test_alona_v5_gold_seed_admits_existing_atlas_entries_with_provenance() -> None:
+    seed_rows = read_practice_seed(ALONA_V5_GOLD_SEED)
+    assert len(seed_rows) == 40
+    assert {row["sentenceStatus"] for row in seed_rows} == {"ok"}
+
+    atlas_entries = [
+        {
+            "url_slug": row["slug"],
+            "lemma": row["lemma"],
+            "gloss": f"seed gloss {index}",
+            "enrichment": {"cefr": {"level": row["cefr"]}},
+            "primary_source": "source_inventory_grow",
+        }
+        for index, row in enumerate(seed_rows)
+    ]
+    merged = merge_practice_seed_entries(atlas_entries, seed_rows)
+    assert all(entry["surface_admission"]["practice"] is True for entry in merged)
+
+    shards = build_practice_shards(
+        merged,
+        ReviewedSourceAllowlist.from_payload([]),
+        JsonVesumVerifier.from_path(VESUM),
+        [],
+        BuildConfig(target=len(seed_rows), source_label="fixture"),
+        heritage_pairs=[],
+        paronym_pairs=[],
+        synonym_verdicts={"approved": [], "rejected": []},
+    )
+    indexed = {
+        item["lemmaId"]: item
+        for level in shards.values()
+        for item in level["index"]["items"]
+    }
+    lexemes = {
+        item["lemmaId"]: item
+        for level in shards.values()
+        for item in level["lexemes"]["lexemes"]
+    }
+    for row in seed_rows:
+        item = indexed[row["slug"]]
+        assert item["hasCloze"] is False
+        assert item["clozeIds"] == []
+        assert lexemes[row["slug"]]["example"] == row["example"]
+        assert lexemes[row["slug"]]["exampleProvenance"] == row["provenance"]
 
 
 def _build(config: BuildConfig | None = None, cloze_sources_path: Path | None = CLOZE_SOURCES):

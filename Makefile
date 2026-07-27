@@ -13,7 +13,7 @@ atlas-publish: atlas
 	$(PYTHON) -m scripts.lexicon.publish_manifest
 
 practice-deck:
-	$(PYTHON) scripts/audit/generate_practice_deck.py
+	$(PYTHON) scripts/audit/generate_practice_deck.py --practice-seed data/lexicon/alona-v5-gold-practice-seed.json
 
 practice-deck-publish: practice-deck
 	$(PYTHON) scripts/practice_deck/publish.py
