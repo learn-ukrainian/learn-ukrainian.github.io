@@ -111,7 +111,7 @@ opencv-python-headless==4.13.0.92
 packaging==26.2
 pandas==3.0.1
 pathspec==1.1.1
-pdftext==0.6.3
+pdftext==0.7.1
 peft==0.19.1
 pillow==12.3.0
 platformdirs==4.9.6
