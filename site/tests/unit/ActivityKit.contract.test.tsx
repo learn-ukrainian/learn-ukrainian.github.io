@@ -9,7 +9,7 @@ import invalidSignatureFixtures from '../../../packages/activity-kit/src/fixture
 import lessonFixture from '../../../packages/activity-kit/src/fixtures/lu.lesson.v1.fixture.json';
 import lessonSupportFixture from '../../../packages/activity-kit/src/fixtures/lu.lesson-support.v1.valid.fixture.json';
 import invalidLessonSupportFixture from '../../../packages/activity-kit/src/fixtures/lu.lesson-support.v1.invalid.fixture.json';
-import { ActivityPlayer } from '../../../packages/activity-kit/src/ActivityPlayer';
+import { ActivityPlayer, LessonViewer } from '../../../packages/activity-kit/src';
 import type {
   ActivityEditOperation,
   LuActivityV1,
@@ -34,6 +34,7 @@ const GOLDEN_TYPES = [
   'error-correction',
   'text-questions',
   'short-writing',
+  'multiple-choice',
 ] as const;
 
 const validator = `
@@ -152,8 +153,8 @@ describe('activity-kit contract', () => {
     expect(lessonSupportGenerated).toContain('vocabulary: Array<LuLessonSupportVocabularyItem>;');
   });
 
-  test('golden fixture covers all nine player-backed engine types', () => {
-    expect(fixtures).toHaveLength(9);
+  test('golden fixture covers all ten player-backed engine types', () => {
+    expect(fixtures).toHaveLength(10);
     expect(fixtures.map((fixture) => fixture.type).sort()).toEqual([...GOLDEN_TYPES].sort());
   });
 
@@ -468,5 +469,51 @@ describe('lesson document v1 contract', () => {
       notice_uk: null,
     };
     expect(lessonSchemaErrors(doc)).not.toBe('');
+  });
+
+  describe('multiple-choice render path', () => {
+    test('renders multiple-choice activity with correct option marking on interaction', () => {
+      const mcActivity = fixtures.find((f) => f.type === 'multiple-choice') as LuActivityV1;
+      expect(mcActivity).toBeDefined();
+
+      const { container } = render(<ActivityPlayer activity={mcActivity} isUkrainian />);
+      expect(container.querySelector('[data-activity="multiple-choice"]')).toBeInTheDocument();
+
+      const buttons = screen.getAllByRole('button');
+      const correctButton = buttons.find((b) => b.textContent?.includes('у центрі'));
+      expect(correctButton).toBeDefined();
+
+      fireEvent.click(correctButton!);
+
+      const feedback = container.querySelector('[data-activity="quiz-feedback"]');
+      expect(feedback).toBeInTheDocument();
+      expect(feedback?.getAttribute('data-correct')).toBe('true');
+      expect(feedback?.textContent).toContain('Правильно');
+    });
+
+    test('renders fixture-lesson containing multiple-choice block in teacher review mode with key and note display', () => {
+      const { container } = render(
+        <LessonViewer lesson={lessonFixture as unknown as LuLessonV1} initialMode="teacher_review" />
+      );
+
+      const mcBlockContainer = container.querySelector('[data-testid="answer-key-rent-04-multiple-choice"]');
+      expect(mcBlockContainer).toBeInTheDocument();
+      expect(mcBlockContainer?.textContent).toContain('Answer Key:');
+      expect(mcBlockContainer?.textContent).toContain('1 — а');
+
+      const mcNoteContainer = container.querySelector('[data-testid="block-note-rent-04-multiple-choice"]');
+      expect(mcNoteContainer).toBeInTheDocument();
+      expect(mcNoteContainer?.textContent).toContain('Note:');
+      expect(mcNoteContainer?.textContent).toContain('перевірте, чи доречні');
+    });
+
+    test('renders fixture-lesson containing multiple-choice block in student mode with zero answer leakage', () => {
+      const { container } = render(
+        <LessonViewer lesson={lessonFixture as unknown as LuLessonV1} initialMode="student" />
+      );
+
+      expect(container.querySelector('[data-testid="answer-key-rent-04-multiple-choice"]')).toBeNull();
+      expect(container.querySelector('[data-testid="block-note-rent-04-multiple-choice"]')).toBeNull();
+    });
   });
 });

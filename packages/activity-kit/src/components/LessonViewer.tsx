@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import styles from './Activities.module.css';
 import type { LuLessonV1, LuLessonBlock } from '../lu.lesson.v1.generated';
 import type { LuLessonSupportV1 } from '../lu.lesson-support.v1.generated';
 import { ActivityPlayer } from '../ActivityPlayer';
@@ -9,6 +10,7 @@ export interface LessonViewerProps {
   lesson: LuLessonV1;
   support?: LuLessonSupportV1 | null;
   initialMode?: LessonViewerMode;
+  isUkrainian?: boolean;
   onModeChange?: (mode: LessonViewerMode) => void;
   onComplete?: (blockId: string, result: Record<string, unknown>) => void;
 }
@@ -51,6 +53,7 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
   lesson,
   support,
   initialMode = 'teacher_review',
+  isUkrainian = false,
   onModeChange,
   onComplete,
 }) => {
@@ -136,6 +139,7 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
               <div key={activeBlock.id} data-testid={`student-block-${activeBlock.id}`}>
                 <ActivityPlayer
                   activity={activeBlock.activity}
+                  isUkrainian={isUkrainian}
                   onComplete={(res) => onComplete && onComplete(activeBlock.id, res as Record<string, unknown>)}
                 />
               </div>
@@ -161,7 +165,7 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
                     </span>
                   </div>
 
-                  <ActivityPlayer activity={block.activity} />
+                  <ActivityPlayer activity={block.activity} isUkrainian={isUkrainian} />
 
                   {block.answer_key && (
                     <div style={{ marginTop: '16px', padding: '12px', backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '6px' }} data-testid={`answer-key-${block.id}`}>
@@ -169,6 +173,12 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
                       <pre style={{ margin: '4px 0 0', fontSize: '12px', color: '#14532d', whiteSpace: 'pre-wrap' }}>
                         {JSON.stringify(block.answer_key, null, 2)}
                       </pre>
+                    </div>
+                  )}
+
+                  {block.note && (
+                    <div className={styles.blockNote} data-testid={`block-note-${block.id}`}>
+                      <strong className={styles.blockNoteTitle}>{isUkrainian ? 'Примітка:' : 'Note:'}</strong> {block.note}
                     </div>
                   )}
                 </div>
@@ -187,8 +197,9 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
                 </div>
 
                 <div style={{ textAlign: 'left', maxWidth: '800px', margin: '0 auto' }}>
-                  <ActivityPlayer activity={activeBlock.activity} />
+                  <ActivityPlayer activity={activeBlock.activity} isUkrainian={isUkrainian} />
                 </div>
+
 
                 <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'center', gap: '16px' }}>
                   <button
@@ -238,7 +249,7 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
               {lesson.blocks.map((block, idx) => (
                 <div key={block.id} style={{ pageBreakInside: 'avoid' }}>
                   <h4 style={{ margin: '0 0 12px', fontSize: '16px', color: '#0f172a' }}>Task {idx + 1}</h4>
-                  <ActivityPlayer activity={block.activity} />
+                  <ActivityPlayer activity={block.activity} isUkrainian={isUkrainian} />
                 </div>
               ))}
             </div>
