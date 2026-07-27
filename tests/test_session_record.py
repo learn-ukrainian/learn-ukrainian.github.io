@@ -279,3 +279,21 @@ def test_read_record_refuses_symlinked_entry(tmp_path: Path) -> None:
 
     with pytest.raises(SessionRecordError, match="regular file"):
         read_record("sym-entry", state_root=state_root)
+
+
+def test_write_record_refuses_symlinked_agent_parent(tmp_path: Path) -> None:
+    """F001 round 4 (#5896): a symlink at .agent ITSELF (not just sessions)
+    must refuse record writes — every path component is opened no-follow."""
+    outside = tmp_path / "outside"
+    (outside / "sessions").mkdir(parents=True)
+    state_root = tmp_path / "root"
+    state_root.mkdir()
+    (state_root / ".agent").symlink_to(outside)
+
+    record = {
+        "schema_version": SCHEMA_VERSION,
+        "session_id": "sym-agent",
+    }
+    with pytest.raises(SessionRecordError, match="symlink"):
+        write_record("sym-agent", record, state_root=state_root)
+    assert list((outside / "sessions").iterdir()) == []

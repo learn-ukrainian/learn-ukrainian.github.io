@@ -11,7 +11,7 @@ import re
 import shlex
 import subprocess
 import sys
-import tempfile
+import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -113,12 +113,46 @@ def sessions_dir(*, state_root: Path | None = None) -> Path:
     return root / ".agent" / "sessions"
 
 
-def _refuse_symlinked_sessions_dir(directory: Path) -> None:
-    """A planted symlink at .agent/sessions must never redirect record I/O
-    (same guarantee as the generation-sidecar hooks — formal CF F001 round 2
-    on #5896: session records escaped through a symlinked sessions dir)."""
-    if directory.is_symlink():
-        raise SessionRecordError(f"sessions dir is a symlink, refusing: {directory}")
+_DIR_NOFOLLOW_FLAGS = os.O_RDONLY | os.O_NOFOLLOW | getattr(os, "O_DIRECTORY", 0)
+
+
+def _open_sessions_dir_fd(state_root: Path, *, create: bool) -> int | None:
+    """Open ``<state_root>/.agent/sessions`` as a directory fd, refusing a
+    symlink at EVERY component (formal CF F001 rounds 2+4 on #5896: a planted
+    symlink at ``sessions`` — or at ``.agent`` itself — must never redirect
+    record I/O). Each component is opened relative to the previous fd with
+    O_NOFOLLOW, so the verdict is race-free rather than check-then-act.
+
+    Returns the sessions-dir fd (caller closes), or ``None`` when ``create``
+    is false and a component does not exist. Raises ``SessionRecordError``
+    when any component is a symlink or not a real directory.
+    """
+    try:
+        fd = os.open(state_root, _DIR_NOFOLLOW_FLAGS)
+    except OSError as exc:
+        raise SessionRecordError(f"cannot open state root {state_root}: {exc}") from exc
+    try:
+        for component in (".agent", "sessions"):
+            try:
+                nxt = os.open(component, _DIR_NOFOLLOW_FLAGS, dir_fd=fd)
+            except FileNotFoundError:
+                if not create:
+                    os.close(fd)
+                    return None
+                # mkdir at a dir_fd-relative NAME: if the name is a dangling
+                # symlink this raises EEXIST, and the re-open below then
+                # refuses it with O_NOFOLLOW — no follow window either way.
+                with contextlib.suppress(FileExistsError):
+                    os.mkdir(component, 0o700, dir_fd=fd)
+                nxt = os.open(component, _DIR_NOFOLLOW_FLAGS, dir_fd=fd)
+            os.close(fd)
+            fd = nxt
+        return fd
+    except OSError as exc:
+        os.close(fd)
+        raise SessionRecordError(
+            f"sessions path component under {state_root} is a symlink or not a real directory, refusing: {exc}"
+        ) from exc
 
 
 def get_record_path(session_id: str, *, state_root: Path | None = None) -> Path:
@@ -161,19 +195,33 @@ def _validate_record(record: Any, *, expected_session_id: str | None = None) -> 
     return dict(record)
 
 
+def _resolved_state_root(state_root: Path | None) -> Path:
+    return state_root.resolve() if state_root is not None else canonical_state_root()
+
+
 def read_record(
     session_id: str, *, state_root: Path | None = None
 ) -> dict[str, Any] | None:
     path = get_record_path(session_id, state_root=state_root)
-    _refuse_symlinked_sessions_dir(path.parent)
-    if not path.exists():
+    dfd = _open_sessions_dir_fd(_resolved_state_root(state_root), create=False)
+    if dfd is None:
         return None
-    if path.is_symlink() or not path.is_file():
-        raise SessionRecordError(f"session record path is not a regular file: {path}")
     try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise SessionRecordError(f"cannot read session record {path}: {exc}") from exc
+        try:
+            fd = os.open(f"{session_id}.json", os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)
+        except FileNotFoundError:
+            return None
+        except OSError as exc:
+            raise SessionRecordError(
+                f"session record path is not a regular file: {path}"
+            ) from exc
+        try:
+            with os.fdopen(fd, encoding="utf-8") as handle:
+                raw = json.loads(handle.read())
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise SessionRecordError(f"cannot read session record {path}: {exc}") from exc
+    finally:
+        os.close(dfd)
     return _validate_record(raw, expected_session_id=session_id)
 
 
@@ -185,28 +233,35 @@ def write_record(
 ) -> Path:
     validated = _validate_record(record, expected_session_id=session_id)
     path = get_record_path(session_id, state_root=state_root)
-    _refuse_symlinked_sessions_dir(path.parent)
-    path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
-    _refuse_symlinked_sessions_dir(path.parent)
-    with contextlib.suppress(OSError):
-        path.parent.chmod(0o700)
-
-    fd, tmp_name = tempfile.mkstemp(prefix=f".{session_id}.", suffix=".tmp", dir=path.parent)
-    tmp_path = Path(tmp_name)
+    dfd = _open_sessions_dir_fd(_resolved_state_root(state_root), create=True)
+    assert dfd is not None  # create=True never returns None
+    tmp_name = f".{session_id}.{os.getpid()}.{uuid.uuid4().hex}.tmp"
     try:
-        os.fchmod(fd, 0o600)
-        with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            json.dump(validated, handle, indent=2, sort_keys=True)
-            handle.write("\n")
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(tmp_path, path)
-        path.chmod(0o600)
+        # O_EXCL + O_NOFOLLOW at the dir fd: the temp entry is created fresh in
+        # the verified sessions dir; os.replace via the SAME fd renames within
+        # it atomically — a symlink planted at the destination NAME is replaced
+        # (the link itself, never its target).
+        fd = os.open(
+            tmp_name,
+            os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+            0o600,
+            dir_fd=dfd,
+        )
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as handle:
+                json.dump(validated, handle, indent=2, sort_keys=True)
+                handle.write("\n")
+                handle.flush()
+                os.fsync(handle.fileno())
+        except OSError as exc:
+            raise SessionRecordError(f"cannot write session record {path}: {exc}") from exc
+        os.replace(tmp_name, f"{session_id}.json", src_dir_fd=dfd, dst_dir_fd=dfd)
+        with contextlib.suppress(OSError, NotImplementedError):
+            os.chmod(f"{session_id}.json", 0o600, dir_fd=dfd, follow_symlinks=False)
     finally:
         with contextlib.suppress(OSError):
-            os.close(fd)
-        with contextlib.suppress(OSError):
-            tmp_path.unlink()
+            os.unlink(tmp_name, dir_fd=dfd)
+        os.close(dfd)
     return path
 
 

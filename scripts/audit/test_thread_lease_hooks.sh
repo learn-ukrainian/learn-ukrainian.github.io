@@ -196,6 +196,7 @@ session_id="fixture-session-sidecar"
   exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
       CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
+      CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" \
       bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
 )
 sidecar="$root/.agent/sessions/${session_id}.generation"
@@ -258,6 +259,7 @@ evil_id='../evil-traversal'
   exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
       CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
+      CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" \
       bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$evil_id\"}" >/dev/null
 )
 [ ! -e "$root/.agent/evil-traversal.generation" ] || fail "path-safety: traversal session_id escaped .agent/sessions"
@@ -285,6 +287,7 @@ session_id="fixture-session-symlink"
   exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
       CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
+      CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" \
       bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
 )
 outside_count="$(find "$outside" -type f 2>/dev/null | wc -l | tr -d ' ')"
@@ -299,6 +302,7 @@ ln -s "$target" "$root/.agent/sessions/${session_id}.json"
   exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
       CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
+      CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" \
       bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
 )
 target_size="$(wc -c < "$target" | tr -d ' ')"

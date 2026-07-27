@@ -112,7 +112,11 @@ else
   fi
 fi
 
-BOUNDED_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
+# Interpreter for bounded session-record calls: the CANONICAL checkout owns the
+# shared venv — linked worktrees have none (formal CF r4 F001 on #5896: the
+# PROJECT_DIR default 127s every worktree session). Hermetic tests inject
+# CLAUDE_SESSION_RECORD_PYTHON explicitly instead.
+BOUNDED_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
 BOUNDED_RUNNER="${SESSION_BOUNDED_RUNNER:-$PROJECT_DIR/scripts/agent_runtime/bounded_command.py}"
 SESSION_START_BUDGET_SECONDS="${SESSION_START_BUDGET_SECONDS:-12}"
 if ! [[ "$SESSION_START_BUDGET_SECONDS" =~ ^[1-9][0-9]*$ ]]; then
