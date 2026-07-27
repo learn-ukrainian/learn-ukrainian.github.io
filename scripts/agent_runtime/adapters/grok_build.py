@@ -32,6 +32,7 @@ import re
 import shutil
 import tempfile
 from pathlib import Path
+from urllib.parse import quote
 
 from ..result import ParseResult
 from .base import InvocationPlan
@@ -72,6 +73,17 @@ _MCP_REVIEW_DENY_RULES: tuple[str, ...] = (
 GROK_ALLOWED_MODELS: frozenset[str] = frozenset({"grok-4.5"})
 GROK_BUILD_DEFAULT_MODEL = "grok-4.5"
 GROK_BUILD_DEFAULT_EFFORT = os.environ.get("LEARN_UK_GROK_BUILD_EFFORT", "high")
+
+
+def grok_session_dir(grok_home: Path, cwd: Path, session_id: str) -> Path:
+    """Return Grok's session directory for ``cwd`` and ``session_id``.
+
+    Native Grok keys sessions by the symlink-resolved working directory.  This
+    matters on macOS, where ``/tmp`` normally resolves below ``/private``.
+    Keep this in the adapter so bridge callers and trace validators use the
+    identical, documented lookup rule.
+    """
+    return grok_home / "sessions" / quote(str(cwd.resolve()), safe="") / session_id
 
 
 class GrokBuildAdapter:

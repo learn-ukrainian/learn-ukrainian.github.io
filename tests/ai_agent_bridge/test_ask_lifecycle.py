@@ -111,6 +111,48 @@ def test_launch_background_ask_writes_state_and_uses_detached_popen(bridge_db, m
     state = json.loads((tmp_path / "pids" / f"ask-{message_id}.json").read_text())
     assert state["pid"] == 4321
     assert state["target"] == "agy"
+    launch = json.loads((tmp_path / "batch_state" / "asks" / "task-4837" / "launch.json").read_text())
+    assert launch["message_id"] == message_id
+    assert launch["pid"] == 4321
+    assert launch["agent"] == "agy"
+    assert launch["harness"] == "agy"
+    assert launch["started_at"]
+
+
+def test_background_exception_writes_well_formed_terminal_record(bridge_db, monkeypatch, tmp_path):
+    """A detached exception must leave a crash-safe terminal artifact (#5891)."""
+    message_id = _send_ask()
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+    monkeypatch.setattr(lifecycle, "_background_options", lambda *_args: {})
+    monkeypatch.setattr(
+        lifecycle,
+        "_process_target",
+        lambda *_args: (_ for _ in ()).throw(RuntimeError("adapter exploded")),
+    )
+
+    lifecycle.process_background_ask(message_id, "agy")
+
+    terminal = json.loads((tmp_path / "batch_state" / "asks" / "task-4837" / "terminal.json").read_text())
+    assert terminal["rc_or_signal"] == 1
+    assert terminal["stage"] == "exception"
+    assert terminal["stderr_tail"] == ""
+    assert terminal["ended_at"]
+
+
+def test_background_signal_handler_writes_terminal_record(bridge_db, monkeypatch, tmp_path):
+    """SIGTERM is recorded before the detached process exits (#5891)."""
+    message_id = _send_ask()
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+    recorder = lifecycle._AskTerminalRecorder(message_id)
+
+    with pytest.raises(SystemExit) as exc_info:
+        recorder.signal_handler(lifecycle.signal.SIGTERM, None)
+
+    assert exc_info.value.code == 128 + lifecycle.signal.SIGTERM
+    terminal = json.loads((tmp_path / "batch_state" / "asks" / "task-4837" / "terminal.json").read_text())
+    assert terminal["rc_or_signal"] == "SIGTERM"
+    assert terminal["stage"] == "signal"
+    assert terminal["ended_at"]
 
 
 def test_asks_lists_replied_id_and_filters_task(bridge_db, capsys):
@@ -131,6 +173,28 @@ def test_asks_lists_replied_id_and_filters_task(bridge_db, capsys):
     output = capsys.readouterr().out
     assert f"{first}  task-a  agy  replied (reply #{reply_id})" in output
     assert "task-b" not in output
+
+
+def test_asks_marks_dead_launched_worker_without_terminal_as_died_silent(bridge_db, monkeypatch, capsys, tmp_path):
+    """A vanished worker cannot remain indefinitely indistinguishable from pending."""
+    message_id = _send_ask()
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+    state_dir = tmp_path / "batch_state" / "asks" / "task-4837"
+    lifecycle._atomic_write_json(
+        state_dir / "launch.json",
+        {
+            "message_id": message_id,
+            "pid": 999_999_999,
+            "agent": "opencode",
+            "harness": "opencode",
+            "model": "grok-4.5",
+            "started_at": "2026-07-27T00:00:00+00:00",
+        },
+    )
+
+    lifecycle.print_asks("task-4837")
+
+    assert "DIED-SILENT (retry recommended)" in capsys.readouterr().out
 
 
 def test_reply_link_rejects_a_response_for_another_transport(bridge_db):
