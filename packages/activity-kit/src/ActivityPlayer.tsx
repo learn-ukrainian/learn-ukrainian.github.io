@@ -127,18 +127,20 @@ export function ActivityPlayer({ activity, onComplete, isUkrainian }: ActivityPl
         <Quiz
           questions={activity.payload.items.map(({ prompt, options }, index) => {
             const correct = activity.answer_key?.items?.find((item) => item.index === index)?.correct;
+            const trimmedCorrect = correct?.trim();
             return {
               question: prompt,
-              options: options.map((text) => ({
-                text,
-                correct: Boolean(
-                  correct &&
-                    (text === correct ||
-                      text.startsWith(`${correct})`) ||
-                      text.startsWith(correct) ||
-                      text.trim().startsWith(correct.trim()))
-                ),
-              })),
+              options: options.map((text) => {
+                const trimmedText = text.trim();
+                return {
+                  text,
+                  correct: Boolean(
+                    trimmedCorrect &&
+                      (trimmedText === trimmedCorrect ||
+                        trimmedText.startsWith(`${trimmedCorrect})`))
+                  ),
+                };
+              }),
             };
           })}
           instruction={activity.payload.instruction}

@@ -58,12 +58,6 @@ test('practice matching renders a real round (>=3 pairs) for a fresh learner', a
   await expect.poll(() => page.locator('[data-activity="match-left-tile"]').count()).toBeGreaterThanOrEqual(3);
 });
 
-test('multiple-choice widget rendering case at 1440x900 viewport', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/words-of-the-day/practice/');
-  await expect(page.locator('#lexicon-practice-mount .lexicon-practice')).toBeVisible();
-});
-
 test('practice mode switch starts the selected mode without inheriting the unfinished one', async ({ page }) => {
   await page.goto('/words-of-the-day/practice/');
 

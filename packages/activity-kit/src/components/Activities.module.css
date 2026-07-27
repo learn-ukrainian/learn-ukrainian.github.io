@@ -2642,3 +2642,28 @@
   background: var(--lu-state-missed);
   color: var(--lu-state-missed-fg);
 }
+
+/* block note · teacher review mode */
+.blockNote {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background-color: var(--lu-state-warning-bg, #fffbeb);
+  border: 1px solid var(--lu-state-warning-border, #fde68a);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--lu-state-warning-text, #92400e);
+}
+
+.blockNoteTitle {
+  color: var(--lu-state-warning-title, #78350f);
+}
+
+[data-theme='dark'] .blockNote {
+  background-color: var(--lu-state-missed, rgba(251, 191, 36, 0.15));
+  border-color: rgba(251, 191, 36, 0.3);
+  color: var(--lu-state-missed-fg, #fef3c7);
+}
+
+[data-theme='dark'] .blockNoteTitle {
+  color: #fde68a;
+}
