@@ -280,7 +280,7 @@ several models are reachable through more than one. Know both axes before routin
 | --- | --- | --- | --- |
 | **hermes** (v0.18.x — full agent platform, NOT a thin wrapper) | SOUL.md project persona · `sources` MCP (30+ UK tools) auto-attached · 16 built-in toolsets (web, browser, terminal, code-exec, files, delegation, cron, session-search…) · session store w/ FTS5 search · agent loop up to 90 turns | deepseek (API key) · zai/GLM (API key — ⚠️ same China-egress LOCAL-ONLY rule as opencode glm) · OpenRouter catalog (qwen², gemma, …) — probe `hermes auth list` | `ab ask-hermes --model <m>` (one-shot Q&A/review) · `delegate.py dispatch --agent deepseek\|qwen² --mode danger --worktree` (execution — worktree MANDATORY per delegate-must-use-worktree) · V7 `--writer/--reviewer deepseek-tools\|qwen-tools` (all hermes-backed) |
 | **opencode** (multi-provider router) | lightpanda MCP configured (`~/.config/opencode/opencode.jsonc`) → **live web browsing/fact-check is a HARNESS property here**, available to tool-capable hosted models (kubedojo-verified for pool·glm·deepseek routes; verify before relying on a new route) | pool (poolside **laguna-s-2.1**, free; m.1 prior-gen fallback) · glm (⚠️ LOCAL-ONLY) · gemma · deepseek-direct (first-party `api.deepseek.com`; #4358/#4626 QG bakeoff default) · OpenRouter deepseek/gemma baselines · any OpenRouter model | `ab ask-pool` / `ask-glm` / `ask-gemma` (named) · `ab ask-opencode <model>` (generic) |
-| **native CLIs** (codex, cursor, agy, grok, claude, kimi) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex and Grok are **native-only**: never route either family through Hermes. `grok` = the native Grok CLI seat (alias `grok-build` kept permanently); `kimi` = native Kimi Code OAuth seat (models `k3` · `k2.7-coding` · `k2.7-coding-highspeed`) | one primary family each; Cursor is multi-model and must be pinned for review identity | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` / `ask-kimi` · `delegate.py dispatch --agent <a> --mode danger --worktree` (includes `--agent kimi`) |
+| **native CLIs** (codex, cursor, agy, grok, claude, kimi) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex is **native-only**: never route it through Hermes. Grok: never Hermes; native CLI = interactive/operator seat (effort control) + drive wiring; **opencode hosting sanctioned for orchestrator seats** (operator 2026-07-27, see Consequences below). `grok` = the native Grok CLI seat (alias `grok-build` kept permanently); `kimi` = native Kimi Code OAuth seat (models `k3` · `k2.7-coding` · `k2.7-coding-highspeed`) | one primary family each; Cursor is multi-model and must be pinned for review identity | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` / `ask-kimi` · `delegate.py dispatch --agent <a> --mode danger --worktree` (includes `--agent kimi`) · orchestrator grok via `ab ask-opencode --model xai/grok-4.5` |
 
 ¹ `ab` = the user's shell alias for `.venv/bin/python scripts/ai_agent_bridge/__main__.py`.
 In scripts, docs meant for copy-paste, and anything automated, ALWAYS write the full path —
@@ -298,9 +298,16 @@ Consequences:
   natively but browses via opencode; any hermes-hosted model gets VESUM/`sources` tools for free.
 - **Limits are per-harness-credential, not per-model**: when a lane quotas out, the same model is
   often reachable through another harness (e.g. deepseek via delegate-hermes ↔ opencode), but
-  **Grok and GPT/Codex are hard exceptions**: keep both on their native CLIs and never substitute
-  `grok-hermes`, `grok-tools`, or a Codex OAuth-backed Hermes model (Grok routes strictly to native `grok` CLI or Cursor fallback). Check `hermes auth list` +
-  `/api/orient` headroom.
+  **GPT/Codex and Claude are hard exceptions**: keep both on their native CLIs (operator
+  ruling 2026-07-27 for Claude) and never substitute a Codex OAuth-backed Hermes model or a
+  non-native Claude host. **Grok (updated by operator ruling 2026-07-27):** never Hermes
+  (`grok-hermes`/`grok-tools` stay banned), but **`opencode` hosting IS sanctioned for
+  ORCHESTRATOR seats** — first-party `xai/grok-4.5` on the xAI subscription OAuth
+  (probe-verified: tools work; ⚠️ NO effort control on this route — `effort_applied: null`).
+  The native `grok` CLI remains the interactive/operator seat (effort control, drive wiring)
+  and the preferred seat wherever effort tiering matters; Cursor stays the fallback. Never
+  route grok via OpenRouter model ids (`openrouter/x-ai/*`) — only the first-party `xai/*`
+  provider is sub-backed. Check `hermes auth list` + `/api/orient` headroom.
   For Claude/Codex budget buckets at `near_cap`, substitute per
   `scripts/config/agent_fallback_substitutions.yaml` (that file is the budget-bucket map, not a
   general outage map); Codex substitutions must never use Hermes. ALWAYS note a substitution

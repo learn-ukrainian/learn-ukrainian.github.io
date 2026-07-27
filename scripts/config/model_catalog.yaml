@@ -34,7 +34,10 @@ policy:
   notes:
     - CodexBar is a health and quota signal, not a complete model inventory.
     - Cursor auto is a harness choice, never a model identity for formal review.
-    - GPT and Grok routes are native-only.
+    - GPT and Claude routes are native-only. Grok routes are native CLI for interactive/effort-sensitive
+      seats; opencode first-party xai/grok-4.5 is sanctioned for orchestrator seats only
+      (operator ruling 2026-07-27; no effort control on that route; Hermes and OpenRouter
+      grok routes remain banned).
     - Composer 2.5 conservatively shares Moonshot independence lineage with Kimi.
 
 models:
