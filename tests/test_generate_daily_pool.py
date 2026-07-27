@@ -99,6 +99,44 @@ def test_build_pool_schema_sorting_and_filters() -> None:
     assert set(by_lemma["добрий день"]) == {"lemma", "slug", "gloss", "k", "weight"}
 
 
+def test_build_pool_includes_pos_when_present_and_omits_key_when_absent() -> None:
+    """#5856 fix-round-2: the pool row must carry `pos` (same conditional-omit
+    style as cefr/lessonTag) — the served artifact was silently dropping it,
+    so payload-first pos could never reach production."""
+    entries = [
+        {
+            "lemma": "баба",
+            "url_slug": "baba",
+            "gloss": "grandmother",
+            "pos": "noun",
+            "primary_source": "course",
+            "course_usage": [],
+        },
+        {
+            "lemma": "дім",
+            "url_slug": "dim",
+            "gloss": "house",
+            "pos": "",
+            "primary_source": "course",
+            "course_usage": [],
+        },
+        {
+            "lemma": "жити",
+            "url_slug": "zhyty",
+            "gloss": "to live",
+            "primary_source": "course",
+            "course_usage": [],
+        },
+    ]
+
+    by_lemma = {item["lemma"]: item for item in build_pool(entries, size=10)}
+
+    assert by_lemma["баба"]["pos"] == "noun"
+    # An empty-string pos and an absent pos both mean "no signal" — never emit null spam.
+    assert "pos" not in by_lemma["дім"]
+    assert "pos" not in by_lemma["жити"]
+
+
 def test_build_pool_prefers_inventory_example_with_provenance() -> None:
     inventory = {
         "баба": {
@@ -255,6 +293,51 @@ def test_db_mode_matches_manifest_admission_and_excludes_form_of(tmp_path) -> No
     pool = json.loads(out.read_text(encoding="utf-8"))
     assert [item["lemma"] for item in pool] == ["баба", "дім"]  # жмур dropped (no gloss)
     assert "babu" not in {item["slug"] for item in pool}
+
+
+def test_db_mode_carries_pos_from_migrated_article_into_pool_row(tmp_path) -> None:
+    """#5856 fix-round-2 production gap: `articles.pos` was populated in
+    `atlas.db` all along, but `_pool_item` never copied it into the served
+    pool row. Exercise the real migration path (manifest -> atlas_db ->
+    payload_json -> load_db_entries -> build_pool -> main's JSON file) so a
+    regression here is caught end to end, not just at the dict-fixture level."""
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "entries": [
+                    {
+                        "lemma": "баба",
+                        "url_slug": "baba",
+                        "gloss": "grandmother",
+                        "pos": "noun",
+                        "primary_source": "course",
+                        "course_usage": [{"track": "a1", "module_num": 1, "slug": "family", "context": "x"}],
+                        "enrichment": {"cefr": {"level": "A1", "source": "est", "text": "A1"}},
+                    },
+                    {
+                        "lemma": "дім",
+                        "url_slug": "dim",
+                        "gloss": "house",
+                        "primary_source": "course",
+                        "course_usage": [],
+                        "enrichment": {"cefr": {"level": "A1", "source": "est", "text": "A1"}},
+                    },
+                ]
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    db = tmp_path / "atlas.db"
+    atlas_db.migrate_manifest(manifest, db)
+
+    out = tmp_path / "pool.json"
+    assert main(["--db", str(db), "--out", str(out), "--size", "300"]) == 0
+    pool = {item["lemma"]: item for item in json.loads(out.read_text(encoding="utf-8"))}
+
+    assert pool["баба"]["pos"] == "noun"
+    assert "pos" not in pool["дім"]
 
 
 def test_db_mode_writes_deterministic_json_bytes(tmp_path) -> None:

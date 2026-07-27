@@ -191,6 +191,9 @@ def _pool_item(
     cefr = _early_cefr(entry)
     if cefr is not None:
         item["cefr"] = cefr
+    pos = entry.get("pos")
+    if _has_text(pos):
+        item["pos"] = pos
     example, example_en = _first_example(entry)
     inventory_row = (sentence_inventory or {}).get(str(lemma))
     if inventory_row is not None:

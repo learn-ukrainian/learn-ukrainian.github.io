@@ -983,6 +983,33 @@ describe('LexiconPractice', () => {
     expect(requested.some((u) => u.includes('practice-heritage'))).toBe(false);
   });
 
+  test('a real regenerated daily-pool row with pos renders on the card (#5856 fix-round-2)', async () => {
+    // Payload-end-to-end guard on the ACTUAL committed artifact, not a synthetic
+    // fixture: `generate_daily_pool.py`'s `_pool_item` used to drop `pos` entirely
+    // (the production gap this fix closes), so a `DailyWord` straight off disk
+    // needs to carry `pos` through to the rendered card with no lexeme-map help.
+    const realPool = (await import('@site/src/data/lexicon-daily-pool.json'))
+      .default as unknown as DailyWord[];
+    const withPos = realPool.find(
+      (word) => word.cefr === 'A1' && typeof word.pos === 'string' && word.pos.length > 0,
+    );
+    expect(withPos).toBeDefined();
+
+    const { fn: shardFn } = mockShardFetch({});
+    const fn = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes('daily-pool.json')) return okJson([withPos]);
+      return shardFn(input);
+    });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+    render(<LexiconPractice />);
+
+    await screen.findByTestId('practice-daily-deck');
+    expect(screen.getAllByText(withPos!.lemma).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(withPos!.pos!).length).toBeGreaterThan(0);
+  });
+
   test('shows due review count on the home before any session starts', async () => {
     const { fn } = mockShardFetch({ A1: 3 });
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
