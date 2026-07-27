@@ -1,48 +1,53 @@
 # Decision tables v0 — the enumerated judgment seams of the drive loop (T2 DRAFT).
 # Part of #5885 (design v2, panel-approved; glm off-trail list + grok table forms).
 #
-# Contract: a trail step of kind table-lookup names ONE table here. A table either
-# resolves deterministically to exactly one action, or the row says STOP — a seat never
-# improvises between rows. Tables marked `mode: live-lookup` fix the PROCEDURE and the
-# input sources but never freeze live data (roster, pace, quotas) — the drive-epic golden
-# rule: method, never roster.
+# Contract: a trail step of kind table-lookup names ONE table here. Rows evaluate
+# TOP-DOWN and the FIRST matching row wins (`precedence: first-match` below) — exclusion
+# and stop rows therefore sit ABOVE the general pick/arm rows they guard, and an input
+# matching an earlier row never reaches a later one. A table either resolves to exactly
+# one action or the matched row says STOP — a seat never improvises between rows.
+# Tables marked `mode: live-lookup` fix the PROCEDURE and the input sources but never
+# freeze live data (roster, pace, quotas) — the drive-epic golden rule: method, never
+# roster.
 #
-# DRAFT: no schema enforces this file yet (tracked on #5885 — needed before T4
-# certification). Rows carry blocked_on markers where the input machinery is unbuilt.
+# This file validates against agents_extensions/shared/schemas/decision-tables.v0.schema.json
+# (validate_decision_tables in scripts/orchestration/validate_trailspec.py) and is covered
+# by tests/test_validate_trailspec.py.
 schema_version: decision-tables.v0
+precedence: first-match
 tables:
 
   queue-pick:
     mode: static
     inputs: [epic tracking issue checklist order, gh pr list --state all --search "<issue-nr>", lane assignment]
     rows:
-      - when: item's dependencies all MERGED and no sibling PR already carries it
-        then: pick lowest such open item in tracking-issue order
+      - when: item belongs to another lane's epic (check lane assignments + branch/brief slug + foreign driver-handoff claim)
+        then: STOP-policy-violation  # hands off; comment findings, never drive
       - when: sibling PR exists for the item (open or merged)
         then: reconcile against that PR first; an open issue is not proof of unfixed
       - when: two items tie or the order is not derivable from the tracking issue
         then: STOP-manual-intervention
-      - when: item belongs to another lane's epic (check lane assignments + branch/brief slug + foreign driver-handoff claim)
-        then: STOP-policy-violation  # hands off; comment findings, never drive
+      - when: item's dependencies all MERGED and no earlier row matched
+        then: pick lowest such open item in tracking-issue order
 
   review-gate-arm:
     mode: static
-    inputs: [cross-family verdict, verdict head SHA vs current PR head, requested-changes state, blocking CI]
+    inputs: [cross-family verdict, verdict head SHA vs current PR head, requested-changes state, blocking CI, draft state, reviewer identity]
     rows:
-      - when: cross-family APPROVE ∧ verdict bound to CURRENT head ∧ no unresolved requested-changes ∧ blocking CI green
-        then: arm auto-merge (gh pr merge --auto --squash --delete-branch) the same hour
-      - when: verdict APPROVE but head moved since verdict
-        then: re-request review on the new head; never arm on a stale-head verdict
-      - when: requested-changes unresolved (a later LGTM comment does not resolve a review thread)
-        then: wait; read the review THREAD, not the ticks
-      - when: blocking CI red
-        then: red-ci-triage table; never arm over blocking red, never admin-bypass
-      - when: verdicts conflict across seats
-        then: STOP-contested
       - when: PR is a DRAFT
         then: never arm, never merge — undraft only after the gate passes
       - when: reviewer is the author, or the arming driver specified the fix under review
         then: route to a different independent seat  # directing a fix disqualifies its reviewer
+      - when: requested-changes unresolved (a later LGTM comment does not resolve a review thread)
+        then: wait; read the review THREAD, not the ticks
+      - when: verdict APPROVE but head moved since verdict
+        then: re-request review on the new head; never arm on a stale-head verdict
+      - when: verdicts conflict across seats
+        then: STOP-contested
+      - when: blocking CI red
+        then: red-ci-triage table; never arm over blocking red, never admin-bypass
+      - when: cross-family APPROVE ∧ verdict bound to CURRENT head ∧ blocking CI green ∧ no earlier row matched
+        then: arm auto-merge (gh pr merge --auto --squash --delete-branch) the same hour
 
   red-ci-triage:
     mode: static
@@ -63,8 +68,9 @@ tables:
     inputs: ["batch_state/tasks/<id>.json status field (the file is truth; the active-list API can omit live tasks)"]
     rows:
       - {when: "done", then: "SUCCESS — finalize: read result + artifact CONTENT, verify diff rows, then review gate"}
-      - {when: "failed | crashed", then: "read stderr_excerpt + logs; transient → remove worktree+branch, re-fire once with -retry id; second failure → STOP-unrecoverable-error"}
-      - {when: "timeout | silence-timeout", then: "check worktree for finished-but-unpushed work and gh pr list FIRST (silent-exit class), then decide retry vs STOP"}
+      - {when: "failed | crashed, task id has no -retry suffix", then: "read stderr_excerpt + logs; remove worktree+branch; re-fire ONCE with a -retry task id"}
+      - {when: "failed | crashed, task id already carries -retry", then: "STOP-unrecoverable-error"}  # never a third automatic attempt
+      - {when: "timeout | silence-timeout", then: "check the worktree for finished-but-unpushed work AND gh pr list for an already-opened PR (silent-exit class); deliverable present → finalize by hand; absent → treat as the failed|crashed rows above"}
       - {when: "rate_limited", then: "reroute per fallback substitutions; note the substitution"}
       - {when: "cancelled | dry_run", then: "terminal, not success; re-fire only if the need stands"}
       - {when: "needs_finalize | no_deliverable", then: "attention states: finalize by hand; no_deliverable on a private-repo dispatch may be the #5855 false negative — verify commits before believing it"}

@@ -9,11 +9,14 @@ import pytest
 import yaml
 
 from scripts.orchestration.validate_trailspec import (
+    DEFAULT_DECISION_TABLES_PATH,
     DEFAULT_EXAMPLE_TRAIL_PATH,
     STEP_RECEIPT_SCHEMA_PATH,
     TRAIL_SPEC_SCHEMA_PATH,
     TrailSpecValidationError,
     compute_trail_hash,
+    validate_decision_tables,
+    validate_decision_tables_data,
     validate_step_receipt_data,
     validate_trailspec,
     validate_trailspec_data,
@@ -27,10 +30,26 @@ def _get_happy_example_data() -> dict[str, Any]:
 _TRAILS_DIR = DEFAULT_EXAMPLE_TRAIL_PATH.parent
 _ALL_SHIPPED_TRAILS = sorted(_TRAILS_DIR.glob("*.trail.yaml"))
 
+# Every draft the T2 initiative has shipped so far, by trail_id. A deleted or renamed
+# draft must FAIL this list, not silently shrink the glob (review finding on #5886:
+# the glob-only guard passed as long as ANY trail remained).
+REQUIRED_TRAIL_IDS = {
+    "rb1-cold-start",
+    "rb3-pr-lifecycle",
+}
+
 
 def test_trails_dir_is_not_empty() -> None:
     """Guard the glob itself: an empty parametrization must fail, not silently pass."""
     assert _ALL_SHIPPED_TRAILS, f"no *.trail.yaml found under {_TRAILS_DIR}"
+
+
+def test_required_trail_drafts_present() -> None:
+    """Every registered draft must exist on disk — a missing draft is a failure even
+    while other trails keep the glob non-empty."""
+    found_ids = {p.name.removesuffix(".trail.yaml") for p in _ALL_SHIPPED_TRAILS}
+    missing = REQUIRED_TRAIL_IDS - found_ids
+    assert not missing, f"required trail drafts missing from {_TRAILS_DIR}: {sorted(missing)}"
 
 
 @pytest.mark.parametrize("trail_path", _ALL_SHIPPED_TRAILS, ids=lambda p: p.stem)
@@ -174,6 +193,60 @@ def test_negative_step_receipt_schema_violation() -> None:
         )
 
     assert "StepReceipt schema violation" in str(exc_info.value)
+
+
+def _get_happy_tables_data() -> dict[str, Any]:
+    return yaml.safe_load(DEFAULT_DECISION_TABLES_PATH.read_text(encoding="utf-8"))
+
+
+def test_decision_tables_file_validates() -> None:
+    """The shipped decision-tables draft must pass its schema (review finding on #5886:
+    the v0 file declared itself unvalidated and sat outside all coverage)."""
+    res = validate_decision_tables()
+    assert res["ok"] is True
+    assert res["precedence"] == "first-match"
+    for expected in ("queue-pick", "review-gate-arm", "settle-status", "width"):
+        assert expected in res["tables"], f"table '{expected}' missing from the draft"
+
+
+def test_negative_decision_tables_bad_mode() -> None:
+    """Mutation check: an unknown table mode must fail schema validation."""
+    data = _get_happy_tables_data()
+    data["tables"]["queue-pick"]["mode"] = "vibes"
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_decision_tables_data(data)
+    assert "DecisionTables schema violation" in str(exc_info.value)
+
+    restored = _get_happy_tables_data()
+    assert validate_decision_tables_data(restored)["ok"] is True
+
+
+def test_negative_decision_tables_static_requires_rows() -> None:
+    """Mutation check: a static table with its rows deleted must fail."""
+    data = _get_happy_tables_data()
+    del data["tables"]["queue-pick"]["rows"]
+    with pytest.raises(TrailSpecValidationError):
+        validate_decision_tables_data(data)
+
+
+def test_negative_decision_tables_missing_precedence() -> None:
+    """Mutation check: dropping the first-match precedence contract must fail —
+    without it the row-ordering conflicts the #5886 review found come back."""
+    data = _get_happy_tables_data()
+    del data["precedence"]
+    with pytest.raises(TrailSpecValidationError):
+        validate_decision_tables_data(data)
+
+
+def test_negative_decision_tables_unknown_stop_code() -> None:
+    """Mutation check: a row action naming an unpublished STOP code must fail."""
+    data = _get_happy_tables_data()
+    data["tables"]["queue-pick"]["rows"].append(
+        {"when": "impossible synthetic condition", "then": "STOP-made-up-code"}
+    )
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_decision_tables_data(data)
+    assert "STOP-made-up-code" in str(exc_info.value)
 
 
 def test_hash_stability() -> None:
