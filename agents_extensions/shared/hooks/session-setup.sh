@@ -428,50 +428,21 @@ $THREAD_LEASE_OUTPUT"
 Output:
 $THREAD_LEASE_OUTPUT"
       else
-        # Propagate the exact generation this session just claimed so the SessionEnd
-        # release hook (release-thread-lease.sh) can fence its release with it —
-        # thread_handoff.py now refuses a non-force release without one (#5759).
+        # Record the claimed generation in the process-scoped env file ONLY.
+        # There is deliberately NO session-keyed generation sidecar (formal CF
+        # F001 round 3 on #5896): a sidecar keyed by SESSION_ID is mutable
+        # across a same-id resume, so a delayed SessionEnd from a dead
+        # predecessor could read the SUCCESSOR's generation and tombstone the
+        # successor's live lease. The SessionEnd release therefore fences on
+        # process identity alone and no-ops when it cannot be reconfirmed;
+        # claim-side pid-liveness reclaims any stale lease.
         THREAD_LEASE_GENERATION=$(printf '%s' "$THREAD_LEASE_OUTPUT" | "$ROLLOVER_PYTHON" -c 'import json,sys
 try:
   d=json.loads(sys.stdin.read()); print(d.get("generation") or "")
 except Exception:
   print("")' 2>/dev/null || true)
-        if [ -n "$THREAD_LEASE_GENERATION" ]; then
-          # SESSION_ID comes from unvalidated hook stdin JSON — only a path-safe
-          # allowlist may reach the filesystem (formal CF F001 on #5896: a
-          # traversal-shaped id could redirect this write outside .agent/sessions).
-          case "$SESSION_ID" in
-            ''|*[!A-Za-z0-9_-]*) : ;;  # unsafe or empty: skip the sidecar, env-file path still works
-            *)
-              # No-follow, fd-anchored write (formal CF F001 round 2): shell
-              # redirection follows symlinks, so a planted symlink at
-              # .agent/sessions or at the destination could still escape. The
-              # O_NOFOLLOW dir-open refuses a symlinked sessions dir; the
-              # dir_fd + O_NOFOLLOW file-open refuses a symlinked entry. Any
-              # refusal skips the sidecar silently — env-file transport and the
-              # identity-only release path still work.
-              printf '%s' "$THREAD_LEASE_GENERATION" | "$ROLLOVER_PYTHON" -c 'import os,sys
-root, name = sys.argv[1], sys.argv[2]
-gen = sys.stdin.read().strip()
-try:
-    os.makedirs(root, exist_ok=True)
-    dfd = os.open(root, os.O_RDONLY | os.O_NOFOLLOW | os.O_DIRECTORY)
-except OSError:
-    sys.exit(0)
-try:
-    try:
-        fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW, 0o600, dir_fd=dfd)
-    except OSError:
-        sys.exit(0)
-    with os.fdopen(fd, "w") as fh:
-        fh.write(gen + "\n")
-finally:
-    os.close(dfd)' "$CANONICAL_ROOT/.agent/sessions" "${SESSION_ID}.generation" 2>/dev/null || true
-              ;;
-          esac
-          if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
-            printf 'export LEARN_UKRAINIAN_THREAD_LEASE_GENERATION=%s\n' "$THREAD_LEASE_GENERATION" >> "$CLAUDE_ENV_FILE" 2>/dev/null || true
-          fi
+        if [ -n "$THREAD_LEASE_GENERATION" ] && [ -n "${CLAUDE_ENV_FILE:-}" ]; then
+          printf 'export LEARN_UKRAINIAN_THREAD_LEASE_GENERATION=%s\n' "$THREAD_LEASE_GENERATION" >> "$CLAUDE_ENV_FILE" 2>/dev/null || true
         fi
         unset THREAD_LEASE_GENERATION
 

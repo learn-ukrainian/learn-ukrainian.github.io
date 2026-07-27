@@ -186,8 +186,9 @@ released_by="$(lease_field "$lease" released_by_thread_id)"
 [ "$state" = "released" ] || fail "release hook: lease was not released with no generation env var set (state=$state)"
 [ "$released_by" = "$session_id" ] || fail "release hook: released_by_thread_id mismatch"
 
-# 4. session-setup.sh sidecar write: session-setup.sh must write
-#    .agent/sessions/<session_id>.generation at claim time.
+# 4. NO generation sidecar (formal CF F001 round 3): a session-keyed sidecar is
+#    mutable across a same-id resume and could hand a dead predecessor the
+#    SUCCESSOR's generation — session-setup must NOT write one.
 root="$TMP_ROOT/session-setup-project"
 mkdir -p "$root"
 session_id="fixture-session-sidecar"
@@ -198,11 +199,9 @@ session_id="fixture-session-sidecar"
       bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
 )
 sidecar="$root/.agent/sessions/${session_id}.generation"
-[ -f "$sidecar" ] || fail "session-setup hook: generation sidecar file missing after claim"
-sidecar_gen="$(cat "$sidecar" 2>/dev/null | tr -d ' \r\n')"
-[ "$sidecar_gen" = "1" ] || fail "session-setup hook: generation sidecar content mismatch (got '$sidecar_gen', expected '1')"
+[ ! -e "$sidecar" ] || fail "session-setup hook: forbidden generation sidecar was written (round-3 regression)"
 
-# 5. Missing sidecar + uncheckable identity: release hook must no-op and fail closed (exit 0, lease stays held).
+# 5. Uncheckable identity: release hook must no-op and fail closed (exit 0, lease stays held).
 root="$TMP_ROOT/uncheckable-project"
 mkdir -p "$root/.agent"
 session_id="fixture-session-uncheckable"
@@ -295,7 +294,7 @@ root="$TMP_ROOT/symlink-entry-project"
 mkdir -p "$root/.agent/sessions"
 target="$TMP_ROOT/symlink-entry-target"
 : > "$target"
-ln -s "$target" "$root/.agent/sessions/${session_id}.generation"
+ln -s "$target" "$root/.agent/sessions/${session_id}.json"
 (
   exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \

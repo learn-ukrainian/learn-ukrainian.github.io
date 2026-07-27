@@ -75,40 +75,18 @@ else
   fi
 fi
 
-# Same path-safety contract as the session-setup write side (formal CF F001 on
-# #5896, both rounds): a traversal-shaped SESSION_ID never reaches the
-# filesystem, and the read is no-follow + fd-anchored so a planted symlink at
-# the sessions dir or the entry cannot redirect it.
-SIDECAR_GEN=""
-case "$SESSION_ID" in
-  ''|*[!A-Za-z0-9_-]*) : ;;
-  *)
-    SIDECAR_GEN=$("$PYTHON" -c 'import os,sys
-root, name = sys.argv[1], sys.argv[2]
-try:
-    dfd = os.open(root, os.O_RDONLY | os.O_NOFOLLOW | os.O_DIRECTORY)
-except OSError:
-    sys.exit(0)
-try:
-    try:
-        fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)
-    except OSError:
-        sys.exit(0)
-    with os.fdopen(fd) as fh:
-        sys.stdout.write(fh.read().strip())
-finally:
-    os.close(dfd)' "$CANONICAL_ROOT/.agent/sessions" "${SESSION_ID}.generation" 2>/dev/null || true)
-    ;;
-esac
-
-if [ -n "$SIDECAR_GEN" ]; then
-  "$PYTHON" "$PROJECT_DIR/scripts/orchestration/thread_handoff.py" --repo-root "$CANONICAL_ROOT" \
-    release-thread-lease --agent "$HANDOFF_AGENT" --current-thread-id "$SESSION_ID" --generation "$SIDECAR_GEN" \
-    >/dev/null 2>&1 || true
-else
-  "$PYTHON" "$PROJECT_DIR/scripts/orchestration/thread_handoff.py" --repo-root "$CANONICAL_ROOT" \
-    release-thread-lease --agent "$HANDOFF_AGENT" --current-thread-id "$SESSION_ID" \
-    >/dev/null 2>&1 || true
-fi
+# NO generation is carried here — deliberately (formal CF F001 round 3 on
+# #5896): a sidecar keyed only by SESSION_ID is MUTABLE across a same-id
+# resume, so a delayed SessionEnd from a dead predecessor could read the
+# SUCCESSOR's generation and tombstone the successor's live lease — defeating
+# the exact ABA protection the generation fence exists for. Identity proof is
+# the sole fence on this path: release no-ops when the process identity cannot
+# be reconfirmed, and claim_thread_lease's pid-liveness check reclaims any
+# stale lease that leaves behind. If a repo checkout still has an OLDER
+# thread_handoff.py that hard-requires --generation, the CLI error is
+# swallowed by `|| true` — a safe no-op in a mixed deploy.
+"$PYTHON" "$PROJECT_DIR/scripts/orchestration/thread_handoff.py" --repo-root "$CANONICAL_ROOT" \
+  release-thread-lease --agent "$HANDOFF_AGENT" --current-thread-id "$SESSION_ID" \
+  >/dev/null 2>&1 || true
 
 exit 0
