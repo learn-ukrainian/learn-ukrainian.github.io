@@ -89,7 +89,7 @@ mando==0.8.2
 marisa-trie==1.4.1
 markdown-it-py==4.2.0
 markdown2==2.5.5
-markdownify==1.2.2
+markdownify==1.2.3
 marker-pdf==1.10.2
 MarkupSafe==3.0.3
 mcp-memory-service==10.74.1
