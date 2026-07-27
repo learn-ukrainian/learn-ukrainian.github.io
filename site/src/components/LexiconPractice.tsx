@@ -1356,13 +1356,14 @@ function LexiconPracticeIsland({
 
   // D10: the Words-of-the-Day zone's source line names the active deck. `null`
   // for 'all' (and for a stale/deleted deck id) falls back to the plain title.
-  const activeDeckTitle = useMemo(() => {
+  const activeDeckTitles = useMemo(() => {
     if (selectedDeckFilter === 'all') return null;
     if (selectedDeckFilter === 'virtual_teacher_lesson') {
-      return chromeLocale === 'uk' ? 'Відібрана добірка' : 'Curated Deck';
+      return { uk: 'Відібрана добірка', en: 'Curated Deck' };
     }
-    return customSets.find((s) => s.id === selectedDeckFilter)?.title ?? null;
-  }, [selectedDeckFilter, customSets, chromeLocale]);
+    const title = customSets.find((s) => s.id === selectedDeckFilter)?.title;
+    return title ? { uk: title, en: title } : null;
+  }, [selectedDeckFilter, customSets]);
 
   const matchedSelectedRatingRef = useRef<PracticeRating | null>(null);
   const matchingTargetOutcomeRef = useRef<CompletionOutcome | null>(null);
@@ -1660,6 +1661,7 @@ function LexiconPracticeIsland({
               lemma: match?.lemma ?? cleanKey,
               slug: match?.lemmaId ?? key,
               gloss: match?.gloss ?? cleanKey,
+              hasAtlasEntry: Boolean(match),
               cefr: match?.cefr ?? undefined,
               pos: match?.pos ?? undefined,
               example: match?.example ?? undefined,
@@ -1697,6 +1699,7 @@ function LexiconPracticeIsland({
             lemma: lexeme.lemma,
             slug: lexeme.lemmaId,
             gloss: lexeme.gloss,
+            hasAtlasEntry: true,
             cefr: lexeme.cefr ?? undefined,
           }));
           displayablePicks = picks.length > 0
@@ -1715,6 +1718,7 @@ function LexiconPracticeIsland({
             origin: classifyDailyPracticeOrigin(word.slug, indexSource, state.cards, now),
             lemma: word.lemma,
             gloss: word.gloss,
+            hasAtlasEntry: word.hasAtlasEntry ?? true,
             cefr: word.cefr ?? null,
             pos: word.pos ?? null,
             example: word.example ?? null,
@@ -3082,10 +3086,10 @@ function LexiconPracticeIsland({
                 <div className="practice-daily-deck k3-words-loading" data-testid="practice-daily-deck-loading">
                   <div className="daily-deck-header">
                     <h2>
-                      {activeDeckTitle ? (
+                      {activeDeckTitles ? (
                         <ChromeDual
-                          uk={`Слова дня — ${activeDeckTitle}`}
-                          en={`Words of the day — ${activeDeckTitle}`}
+                          uk={`Слова дня — ${activeDeckTitles.uk}`}
+                          en={`Words of the day — ${activeDeckTitles.en}`}
                         />
                       ) : (
                         <ChromeText k="practice.wordsTitle" />
@@ -3113,7 +3117,8 @@ function LexiconPracticeIsland({
                   atlasLemmaHref={atlasLemmaHref}
                   chromeLocale={chromeLocale}
                   learnerLevel={learnerLevel}
-                  deckTitle={activeDeckTitle}
+                  deckTitleUk={activeDeckTitles?.uk}
+                  deckTitleEn={activeDeckTitles?.en}
                 />
               )}
             </div>

@@ -790,6 +790,63 @@ describe('LexiconPractice', () => {
     expect(screen.queryByText('—')).not.toBeInTheDocument();
   });
 
+  test('omits Atlas links for an unmatched custom-deck key but keeps them for a matched lemma', () => {
+    const makeSnapshot = (hasAtlasEntry: boolean): DailyPracticeDeckSnapshot => ({
+      version: 2,
+      date: '2026-06-23',
+      level: 'A1',
+      deckVersion: 'custom-deck',
+      createdAt: NOW.getTime(),
+      items: [{
+        lemmaId: 'synthetic-custom-key',
+        origin: 'new',
+        lemma: 'Синтетичний ключ',
+        gloss: 'Synthetic key',
+        hasAtlasEntry,
+        cefr: null,
+        pos: null,
+      }],
+    });
+    const rowsFor = (snapshot: DailyPracticeDeckSnapshot) => ({
+      pendingDue: [],
+      pendingNew: [{ item: snapshot.items[0]!, state: 'new' as const, lastSeenAt: null }],
+      done: [],
+    });
+    const atlasLemmaHref = (lemmaId: string) => `/lexicon/${lemmaId}/`;
+    const orphan = makeSnapshot(false);
+    const { container, rerender } = render(
+      <PracticeDailyDeck
+        snapshot={orphan}
+        rows={rowsFor(orphan)}
+        lexemes={new Map()}
+        atlasLemmaHref={atlasLemmaHref}
+        chromeLocale="uk"
+        learnerLevel="A1"
+      />,
+    );
+
+    expect(screen.queryByTestId('practice-preview-atlas-link')).not.toBeInTheDocument();
+    expect(container.querySelectorAll('a[href="/lexicon/synthetic-custom-key/"]')).toHaveLength(0);
+
+    const matched = makeSnapshot(true);
+    rerender(
+      <PracticeDailyDeck
+        snapshot={matched}
+        rows={rowsFor(matched)}
+        lexemes={new Map()}
+        atlasLemmaHref={atlasLemmaHref}
+        chromeLocale="uk"
+        learnerLevel="A1"
+      />,
+    );
+
+    expect(screen.getByTestId('practice-preview-atlas-link')).toHaveAttribute(
+      'href',
+      '/lexicon/synthetic-custom-key/',
+    );
+    expect(container.querySelectorAll('a[href="/lexicon/synthetic-custom-key/"]')).toHaveLength(2);
+  });
+
   test('enriches the daily card with ipa/pos from the practice-lexemes map when the pick payload has neither (#5852)', () => {
     const enrichment = lexeme('борщ', 'борщ', 'borscht (lexeme gloss)', {
       nominative: 'борщ',
@@ -3300,6 +3357,14 @@ describe('LexiconPractice', () => {
       await user.click(teacherBtn);
       expect(teacherBtn).toHaveClass('btn-primary');
       expect(screen.queryByText(/We couldn’t load practice/i)).not.toBeInTheDocument();
+
+      const dailyTitle = await screen.findByTestId('practice-daily-deck-title');
+      expect(dailyTitle.querySelector('[data-loc="uk"]')).toHaveTextContent(
+        'Слова дня — Відібрана добірка',
+      );
+      expect(dailyTitle.querySelector('[data-loc="en"]')).toHaveTextContent(
+        'Words of the day — Curated Deck',
+      );
     });
 
     test.each([

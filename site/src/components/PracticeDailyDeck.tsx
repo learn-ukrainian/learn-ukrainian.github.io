@@ -20,8 +20,9 @@ export interface PracticeDailyDeckProps {
   atlasLemmaHref: (lemmaId: string) => string;
   chromeLocale: ChromeLocale;
   learnerLevel: CefrLevel;
-  /** D10: the active deck's display title, or `null` for 'All Words' (unscoped). */
-  deckTitle?: string | null;
+  /** D10: independently localized active-deck titles, or undefined for All Words. */
+  deckTitleUk?: string | null;
+  deckTitleEn?: string | null;
 }
 
 const STATUS_META = {
@@ -41,7 +42,8 @@ export default function PracticeDailyDeck({
   atlasLemmaHref,
   chromeLocale,
   learnerLevel,
-  deckTitle = null,
+  deckTitleUk = null,
+  deckTitleEn = null,
 }: PracticeDailyDeckProps) {
   const [previewIndex, setPreviewIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -94,10 +96,10 @@ export default function PracticeDailyDeck({
     <div className="practice-daily-deck" data-testid="practice-daily-deck">
       <div className="daily-deck-header">
         <h2 data-testid="practice-daily-deck-title">
-          {deckTitle ? (
+          {deckTitleUk && deckTitleEn ? (
             <ChromeDual
-              uk={`Слова дня — ${deckTitle}`}
-              en={`Words of the day — ${deckTitle}`}
+              uk={`Слова дня — ${deckTitleUk}`}
+              en={`Words of the day — ${deckTitleEn}`}
             />
           ) : (
             <ChromeText k="practice.wordsTitle" />
@@ -182,7 +184,7 @@ export default function PracticeDailyDeck({
       </div>
 
       <div className="daily-deck-preview-actions">
-        {currentLemmaId && (
+        {currentLemmaId && currentItem?.hasAtlasEntry !== false && (
           <a
             href={atlasLemmaHref(currentLemmaId)}
             className="daily-deck-atlas-link"
@@ -234,6 +236,24 @@ export default function PracticeDailyDeck({
                 : row.state === 'new'
                   ? { uk: 'Нове слово', en: 'New word' }
                   : { uk: 'Вивчено · сьогодні', en: 'Done · today' };
+            const rowContent = (
+              <>
+                <span className="row-marker" aria-hidden="true">
+                  {meta.glyph}
+                </span>
+                <span className="row-number">{index + 1}</span>
+                <span className="row-identity">
+                  <span className="row-lemma">{displayLemma(rowLemma)}</span>
+                  {rowGloss ? <span className="row-gloss">{rowGloss}</span> : null}
+                  <span className="row-why" data-testid={`practice-daily-why-${row.item.lemmaId}`}>
+                    <ChromeDual uk={why.uk} en={why.en} />
+                  </span>
+                </span>
+                <span className="row-status">
+                  <ChromeText k={meta.labelKey} />
+                </span>
+              </>
+            );
             return (
               <li
                 key={row.item.lemmaId}
@@ -241,25 +261,18 @@ export default function PracticeDailyDeck({
                 data-state={row.state}
                 style={{ '--row-accent': meta.colorVar } as React.CSSProperties}
               >
-                <a
-                  href={atlasLemmaHref(row.item.lemmaId)}
-                  className="daily-deck-row-link"
-                >
-                  <span className="row-marker" aria-hidden="true">
-                    {meta.glyph}
-                  </span>
-                  <span className="row-number">{index + 1}</span>
-                  <span className="row-identity">
-                    <span className="row-lemma">{displayLemma(rowLemma)}</span>
-                    {rowGloss ? <span className="row-gloss">{rowGloss}</span> : null}
-                    <span className="row-why" data-testid={`practice-daily-why-${row.item.lemmaId}`}>
-                      <ChromeDual uk={why.uk} en={why.en} />
-                    </span>
-                  </span>
-                  <span className="row-status">
-                    <ChromeText k={meta.labelKey} />
-                  </span>
-                </a>
+                {row.item.hasAtlasEntry !== false ? (
+                  <a
+                    href={atlasLemmaHref(row.item.lemmaId)}
+                    className="daily-deck-row-link"
+                  >
+                    {rowContent}
+                  </a>
+                ) : (
+                  <div className="daily-deck-row-link">
+                    {rowContent}
+                  </div>
+                )}
               </li>
             );
           })}

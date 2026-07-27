@@ -4,6 +4,11 @@ export interface DailyWord {
   lemma: string;
   slug: string;
   gloss: string | null;
+  /**
+   * Whether `slug` resolves to a real Atlas lemma page. Custom deck keys can
+   * remain displayable even when they have no atlas/practice-shard match.
+   */
+  hasAtlasEntry?: boolean;
   k?: string;
   lessonTag?: string;
   cefr?: string;

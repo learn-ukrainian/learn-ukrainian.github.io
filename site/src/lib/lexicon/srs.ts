@@ -512,6 +512,8 @@ export interface DailyPracticeDeckItem {
   origin: 'due' | 'new';
   lemma: string;
   gloss: string | null;
+  /** False only for displayable custom-deck keys without an Atlas lexeme match. */
+  hasAtlasEntry?: boolean;
   cefr: string | null;
   pos: string | null;
   example?: string | null;
@@ -2456,6 +2458,7 @@ function normalizeDailyPracticeDeckSnapshot(
     if (!isValidDailyPracticeDeckOrigin(item.origin)) return null;
     if (typeof item.lemma !== 'string' || !item.lemma) return null;
     if (typeof item.gloss !== 'string' && item.gloss !== null) return null;
+    if (typeof item.hasAtlasEntry !== 'boolean' && item.hasAtlasEntry !== undefined) return null;
     if (typeof item.cefr !== 'string' && item.cefr !== null) return null;
     if (typeof item.pos !== 'string' && item.pos !== null) return null;
     const example =
@@ -2471,6 +2474,7 @@ function normalizeDailyPracticeDeckSnapshot(
       origin: item.origin,
       lemma: item.lemma,
       gloss: item.gloss,
+      ...(item.hasAtlasEntry !== undefined ? { hasAtlasEntry: item.hasAtlasEntry } : {}),
       cefr: item.cefr,
       pos: item.pos,
       ...(example !== undefined ? { example } : {}),

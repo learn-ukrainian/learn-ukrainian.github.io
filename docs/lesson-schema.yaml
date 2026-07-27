@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 6b598612cd5eefec70cdc1e6414f41e47d0686cc373f9cfb5469f55c4137097d
+  components_sha256: 704691415f8ca7bcfd8ea23f1fa0d9010c3ddc5ec8cebbc84fd28c208ccae338
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1643,9 +1643,13 @@ components:
         description: learnerLevel prop.
         ukrainian_text: 'false'
       optional:
-      - name: deckTitle
+      - name: deckTitleUk
         type: string | null
-        description: deckTitle prop.
+        description: deckTitleUk prop.
+        ukrainian_text: 'false'
+      - name: deckTitleEn
+        type: string | null
+        description: deckTitleEn prop.
         ukrainian_text: 'false'
     nested_types: {}
     example:
