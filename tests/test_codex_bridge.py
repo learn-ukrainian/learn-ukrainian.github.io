@@ -93,9 +93,16 @@ def _task_messages(task_id: str) -> list[sqlite3.Row]:
 
 
 def test_detect_sender_codex():
-    env = {k: v for k, v in os.environ.items() if k not in ("GEMINI_SESSION", "GOOGLE_API_KEY", "CLAUDE_PROJECT_DIR", "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS")}
-    with patch.dict(os.environ, {**env, "CODEX_SESSION": "1"}, clear=True), \
-         patch("ai_agent_bridge._messaging.Path.exists", return_value=False):
+    env = {
+        k: v
+        for k, v in os.environ.items()
+        if k
+        not in ("GEMINI_SESSION", "GOOGLE_API_KEY", "CLAUDE_PROJECT_DIR", "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS")
+    }
+    with (
+        patch.dict(os.environ, {**env, "CODEX_SESSION": "1"}, clear=True),
+        patch("ai_agent_bridge._messaging.Path.exists", return_value=False),
+    ):
         assert detect_sender() == "codex"
 
 
@@ -122,8 +129,7 @@ def test_handle_ask_codex_reads_stdin():
         no_timeout=False,
         chain=None,
     )
-    with patch("ai_agent_bridge._cli.ask_codex") as ask_codex_mock, \
-         patch("sys.stdin", io.StringIO("stdin prompt")):
+    with patch("ai_agent_bridge._cli.ask_codex") as ask_codex_mock, patch("sys.stdin", io.StringIO("stdin prompt")):
         _handle_ask_codex(args)
     ask_codex_mock.assert_called_once()
     assert ask_codex_mock.call_args[0][0] == "stdin prompt"
@@ -223,9 +229,7 @@ def test_ask_codex_chain_prefixes_issue_context_without_placeholders():
     with patch("ai_agent_bridge._codex.ask_codex", return_value=11) as ask_codex_mock:
         ask_codex_chain("Review and fix the issue.", ["1177"])
 
-    assert ask_codex_mock.call_args.args[0] == (
-        "GitHub issue #1177 (issue-1177).\n\nReview and fix the issue."
-    )
+    assert ask_codex_mock.call_args.args[0] == ("GitHub issue #1177 (issue-1177).\n\nReview and fix the issue.")
 
 
 def test_resolve_codex_bridge_timeout_defaults_to_normal_timeout():
@@ -324,8 +328,7 @@ def test_process_for_codex_invokes_runtime_with_bridge_shape(
     assert provenance["model_requested"] == "gpt-5.4"
     assert provenance["harness"] == "codex"
     assert mock_send_message.call_count == 1
-    assert mock_acknowledge.call_args_list[0].args == (7,)
-    assert mock_acknowledge.call_args_list[1].args == (99,)
+    mock_acknowledge.assert_called_once_with(7)
 
 
 @patch("ai_agent_bridge._codex.acknowledge")
@@ -399,8 +402,7 @@ def test_process_for_codex_uses_workspace_write_mode_and_never_resumes(
     assert provenance["model_requested"] == "gpt-5.4"
     assert provenance["harness"] == "codex"
     assert mock_send_message.call_count == 1
-    assert mock_acknowledge.call_args_list[0].args == (8,)
-    assert mock_acknowledge.call_args_list[1].args == (100,)
+    mock_acknowledge.assert_called_once_with(8)
 
 
 def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_path):
@@ -451,20 +453,22 @@ def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_
     monkeypatch.setattr("ai_agent_bridge._codex.set_session", lambda *_args: None)
     monkeypatch.setattr(
         "ai_agent_bridge._codex.agent_runner.invoke",
-        lambda *args, **kwargs: captured.update({"prompt": args[1], **kwargs})
-        or Result(
-            ok=True,
-            agent="codex",
-            model="gpt-5.6-terra",
-            mode="read-only",
-            response="reply",
-            stderr_excerpt=None,
-            duration_s=0.1,
-            session_id=None,
-            rate_limited=False,
-            stalled=False,
-            returncode=0,
-            usage_record={},
+        lambda *args, **kwargs: (
+            captured.update({"prompt": args[1], **kwargs})
+            or Result(
+                ok=True,
+                agent="codex",
+                model="gpt-5.6-terra",
+                mode="read-only",
+                response="reply",
+                stderr_excerpt=None,
+                duration_s=0.1,
+                session_id=None,
+                rate_limited=False,
+                stalled=False,
+                returncode=0,
+                usage_record={},
+            )
         ),
     )
 
@@ -485,14 +489,18 @@ def test_process_for_codex_short_circuits_when_no_headroom(bridge_db):
         quiet=True,
     )
 
-    with patch(
-        "ai_agent_bridge._codex.has_codex_headroom",
-        return_value=(False, "rate_limited 30s ago"),
-    ), patch(
-        "ai_agent_bridge._codex.build_codex_prompt",
-    ) as mock_prompt, patch(
-        "agent_runtime.runner.invoke",
-    ) as mock_invoke:
+    with (
+        patch(
+            "ai_agent_bridge._codex.has_codex_headroom",
+            return_value=(False, "rate_limited 30s ago"),
+        ),
+        patch(
+            "ai_agent_bridge._codex.build_codex_prompt",
+        ) as mock_prompt,
+        patch(
+            "agent_runtime.runner.invoke",
+        ) as mock_invoke,
+    ):
         process_for_codex(message_id)
 
     mock_prompt.assert_not_called()
@@ -507,7 +515,7 @@ def test_process_for_codex_short_circuits_when_no_headroom(bridge_db):
     assert reply[3] == "codex-bridge-rate-limited"
     assert reply[4] == "error"
     assert "remains in Codex's inbox" in reply[5]
-    assert int(reply[6]) == 1
+    assert int(reply[6]) == 0
 
 
 def test_rate_limit_error_defers_message(bridge_db):
@@ -521,15 +529,19 @@ def test_rate_limit_error_defers_message(bridge_db):
         quiet=True,
     )
 
-    with patch(
-        "ai_agent_bridge._codex.has_codex_headroom",
-        return_value=(True, ""),
-    ), patch(
-        "ai_agent_bridge._codex.build_codex_prompt",
-        return_value="bridge prompt",
-    ), patch(
-        "agent_runtime.runner.invoke",
-        side_effect=RateLimitedError("codex", "gpt-5.4", "quota exceeded"),
+    with (
+        patch(
+            "ai_agent_bridge._codex.has_codex_headroom",
+            return_value=(True, ""),
+        ),
+        patch(
+            "ai_agent_bridge._codex.build_codex_prompt",
+            return_value="bridge prompt",
+        ),
+        patch(
+            "agent_runtime.runner.invoke",
+            side_effect=RateLimitedError("codex", "gpt-5.4", "quota exceeded"),
+        ),
     ):
         process_for_codex(message_id)
 
@@ -540,7 +552,7 @@ def test_rate_limit_error_defers_message(bridge_db):
     reply = rows[1]
     assert reply[3] == "codex-bridge-rate-limited"
     assert "Sender should NOT retry manually." in reply[5]
-    assert int(reply[6]) == 1
+    assert int(reply[6]) == 0
 
 
 def test_other_errors_still_ack_inbound(bridge_db):
@@ -554,15 +566,19 @@ def test_other_errors_still_ack_inbound(bridge_db):
         quiet=True,
     )
 
-    with patch(
-        "ai_agent_bridge._codex.has_codex_headroom",
-        return_value=(True, ""),
-    ), patch(
-        "ai_agent_bridge._codex.build_codex_prompt",
-        return_value="bridge prompt",
-    ), patch(
-        "agent_runtime.runner.invoke",
-        side_effect=AgentStalledError("codex", 600, 601.0),
+    with (
+        patch(
+            "ai_agent_bridge._codex.has_codex_headroom",
+            return_value=(True, ""),
+        ),
+        patch(
+            "ai_agent_bridge._codex.build_codex_prompt",
+            return_value="bridge prompt",
+        ),
+        patch(
+            "agent_runtime.runner.invoke",
+            side_effect=AgentStalledError("codex", 600, 601.0),
+        ),
     ):
         process_for_codex(message_id)
 
@@ -573,7 +589,8 @@ def test_other_errors_still_ack_inbound(bridge_db):
     reply = rows[1]
     assert reply[3] == "codex-bridge-error"
     assert "[Bridge Error] Codex CLI failed:" in reply[5]
-    assert int(reply[6]) == 1
+    # Re-prove inbound-ack guarantee: inbound message_id was acked (1 above), error reply is NOT acked (0)
+    assert int(reply[6]) == 0
 
 
 def test_codex_usage_cli_reports_counts(capsys, tmp_path):

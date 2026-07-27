@@ -4741,6 +4741,11 @@ def _lock_timeout_exit(exc: TimeoutError) -> int:
     return 124
 
 
+def _lock_timeout_exit(exc: TimeoutError) -> int:
+    print(json.dumps({"error_code": "LOCK_TIMEOUT", "error": str(exc)}, indent=2))
+    return 124
+
+
 def cmd_claim_thread_lease(args: argparse.Namespace) -> int:
     """Claim the durable single-driver lease used during SessionStart."""
     try:

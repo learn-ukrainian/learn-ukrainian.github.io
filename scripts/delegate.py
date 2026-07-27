@@ -158,6 +158,7 @@ _DISPATCH_AGENT_CHOICES = (
     "deepseek",
     "agy",
     "cursor",
+    "glm",
 )
 _MONITOR_API_BASE_URL = "http://127.0.0.1:8765"
 _logger = logging.getLogger(__name__)
@@ -640,8 +641,7 @@ def _remove_runtime_tmp_lease(lease: Path, namespace: Path) -> None:
     if last_error is not None:
         raise OSError(
             last_error.errno,
-            f"runtime tmp lease survived hardened cleanup: {lease}: "
-            f"{last_error.strerror or last_error}",
+            f"runtime tmp lease survived hardened cleanup: {lease}: {last_error.strerror or last_error}",
             last_error.filename or str(lease),
         )
     raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
@@ -867,9 +867,7 @@ def _classify_worktree_layout(path: Path | str | None) -> str | None:
 _WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
 _NO_DELIVERABLE_STATUS = "no_deliverable"
 _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON = "commit_count_unknown"
-_NO_DELIVERABLE_SHORT_RESPONSE_REASON = (
-    "write_capable_clean_worktree_zero_commits_short_response"
-)
+_NO_DELIVERABLE_SHORT_RESPONSE_REASON = "write_capable_clean_worktree_zero_commits_short_response"
 _NO_DELIVERABLE_INVALID_DECLARATION_REASON = "invalid_delivery_declaration"
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
 # A declaration is an optional positive signal, so tolerate a few closing
@@ -933,10 +931,7 @@ def _parse_delivery_declaration(response: str) -> dict[str, Any] | None:
         not isinstance(changed_paths, list)
         or not changed_paths
         or any(
-            not isinstance(path, str)
-            or not path
-            or Path(path).is_absolute()
-            or ".." in Path(path).parts
+            not isinstance(path, str) or not path or Path(path).is_absolute() or ".." in Path(path).parts
             for path in changed_paths
         )
     ):
@@ -1055,9 +1050,7 @@ def _apply_worktree_git_ceiling(worker_env: dict[str, str], worktree_path: Path)
     """
     ceiling = str(worktree_path.parent)
     existing_ceiling = worker_env.get("GIT_CEILING_DIRECTORIES")
-    worker_env["GIT_CEILING_DIRECTORIES"] = (
-        f"{existing_ceiling}{os.pathsep}{ceiling}" if existing_ceiling else ceiling
-    )
+    worker_env["GIT_CEILING_DIRECTORIES"] = f"{existing_ceiling}{os.pathsep}{ceiling}" if existing_ceiling else ceiling
 
 
 def _resolve_write_cwd_error(
@@ -1344,8 +1337,7 @@ def _require_local_branch_is_ancestor_of_origin(branch: str) -> str:
         return origin_sha
     if ancestry.returncode != 1:
         raise RuntimeError(
-            f"could not compare local {branch!r} against {origin_ref}: "
-            f"{_format_process_failure(ancestry)}"
+            f"could not compare local {branch!r} against {origin_ref}: {_format_process_failure(ancestry)}"
         )
     raise WorktreeBranchDiverged(
         f"refusing --branch {branch!r}: local {local_ref} is not an ancestor of "
@@ -1579,14 +1571,12 @@ def _release_stale_branch_holders(
         )
         if proc.returncode != 0:
             print(
-                f"⚠️  failed to release stale branch holder {path}: "
-                f"{_format_process_failure(proc)}",
+                f"⚠️  failed to release stale branch holder {path}: {_format_process_failure(proc)}",
                 file=sys.stderr,
             )
             continue
         print(
-            f"🌲 released stale branch holder {path} ({reason}) so "
-            f"{branch!r} can attach to a new dispatch worktree",
+            f"🌲 released stale branch holder {path} ({reason}) so {branch!r} can attach to a new dispatch worktree",
             file=sys.stderr,
         )
         released.append(path)
@@ -2399,9 +2389,7 @@ def _ensure_worktree(
             # dry-run treats releasable holders as free without mutating
             if dry_run:
                 still_blocking = [
-                    path
-                    for path in elsewhere
-                    if not _stale_branch_holder_releasable(path, requested_branch)[0]
+                    path for path in elsewhere if not _stale_branch_holder_releasable(path, requested_branch)[0]
                 ]
             else:
                 still_blocking = elsewhere
@@ -3139,12 +3127,7 @@ def _run_worker(
         # ``DELIVERABLE:`` line is honoured as an optional positive signal.
         # Read-only tasks are excluded: their deliverable may be analysis or
         # an external side effect such as a posted review comment.
-        if (
-            mode in _WRITE_CAPABLE_MODES
-            and final_status == "done"
-            and returncode == 0
-            and not needs_finalize
-        ):
+        if mode in _WRITE_CAPABLE_MODES and final_status == "done" and returncode == 0 and not needs_finalize:
             delivery_declaration = _parse_delivery_declaration(response)
             no_deliverable_reason = _delivery_failure_reason(
                 response,
@@ -3205,9 +3188,7 @@ def _run_worker(
             # when the interrupt beat the measurement to it — and only for modes
             # that can leave work behind, so an interrupted read-only review is
             # not dressed up as a dispatch needing manual finalization.
-            interrupted_needs_finalize = (
-                needs_finalize if telemetry_settled else mode in _WRITE_CAPABLE_MODES
-            )
+            interrupted_needs_finalize = needs_finalize if telemetry_settled else mode in _WRITE_CAPABLE_MODES
             # The interrupt may have landed before classification ran, so derive
             # the outcome from the runtime flags rather than persisting an empty
             # status, and apply the same return-code invariant the normal path
@@ -3244,16 +3225,10 @@ def _run_worker(
                         dirty_on_exit=dirty_on_exit,
                         commits_ahead=commits_ahead,
                         needs_finalize=interrupted_needs_finalize,
-                        finalize_error=(
-                            f"interrupted during finalize: {type(interrupt_exc).__name__}"
-                        ),
+                        finalize_error=(f"interrupted during finalize: {type(interrupt_exc).__name__}"),
                         last_error=(
                             no_deliverable_reason
-                            or (
-                                _first_error_line(stderr_excerpt)
-                                if interrupted_status != "done"
-                                else None
-                            )
+                            or (_first_error_line(stderr_excerpt) if interrupted_status != "done" else None)
                         ),
                     ),
                 },
@@ -3356,8 +3331,7 @@ def _run_worker(
             )
     except Exception as pi_exc:
         print(
-            f"[delegate] WARNING: primary-integrity post-worker sweep failed: "
-            f"{type(pi_exc).__name__}: {pi_exc}",
+            f"[delegate] WARNING: primary-integrity post-worker sweep failed: {type(pi_exc).__name__}: {pi_exc}",
             file=sys.stderr,
         )
 
@@ -3542,9 +3516,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 # Only report a conflict count when there ARE conflicts: an
                 # unprovable-disjointness refusal has none, and printing
                 # "conflicts=0" next to it reads as a guard bug (#5340-adjacent).
-                suffix = (
-                    f" (conflicts={len(ownership.conflicts)})" if ownership.conflicts else ""
-                )
+                suffix = f" (conflicts={len(ownership.conflicts)})" if ownership.conflicts else ""
                 print(
                     f"⚠️  write-path ownership: {ownership.reason}{suffix}",
                     file=sys.stderr,
@@ -4272,9 +4244,7 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
         idle_lanes = [
             lane
             for lane in subscription_lanes
-            if lane != target_norm
-            and in_flight.get(lane, 0) == 0
-            and health.get(lane, {}).get("healthy", True)
+            if lane != target_norm and in_flight.get(lane, 0) == 0 and health.get(lane, {}).get("healthy", True)
         ]
 
         if idle_lanes:

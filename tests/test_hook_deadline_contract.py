@@ -68,7 +68,9 @@ def test_rollover_and_postcompact_commands_are_bounded() -> None:
     assert 'run_bounded 3 "$ROLLOVER_PYTHON"' in session_source
     assert 'run_bounded 2 "$ROLLOVER_PYTHON"' in compact_source
     assert 'parser_runner=("${runner[@]}")' in rollover_link_source
-    assert '"${parser_runner[@]}" "$python_bin" -c' in rollover_link_source
+    # bash-3.2-safe guarded expansion (#5859): still the runner-wrapped, bounded
+    # parser invocation — the ${arr[@]+...} form only skips expansion when empty.
+    assert '${parser_runner[@]+"${parser_runner[@]}"} "$python_bin" -c' in rollover_link_source
     assert "_HOOK_SOURCE_ROOT" not in session_source
     assert "_HOOK_SOURCE_ROOT" not in compact_source
     assert compact_source.count('[ ! -f "$BOUNDED_RUNNER" ]') == 1

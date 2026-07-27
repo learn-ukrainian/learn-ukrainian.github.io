@@ -25,11 +25,13 @@ sys.path.insert(0, str(SCRIPTS / "pipeline"))
 # 1. pipeline/screen.py
 # ============================================================================
 
+
 class TestFixExtraH1:
     """Test _fix_extra_h1 from pipeline/screen.py."""
 
     def _import(self):
         from pipeline.screen import _fix_extra_h1
+
         return _fix_extra_h1
 
     def test_single_h1_no_change(self):
@@ -84,6 +86,7 @@ class TestFixIpaBrackets:
 
     def _import(self):
         from pipeline.screen import _fix_ipa_brackets
+
         return _fix_ipa_brackets
 
     def test_no_ipa_no_change(self):
@@ -113,6 +116,7 @@ class TestFixH2Titles:
 
     def _import(self):
         from pipeline.screen import _fix_h2_titles
+
         return _fix_h2_titles
 
     def test_empty_outline_no_change(self):
@@ -166,6 +170,7 @@ class TestRunIpaScan:
 
     def _import(self):
         from pipeline.screen import _run_ipa_scan
+
         return _run_ipa_scan
 
     def test_no_ipa_empty(self):
@@ -208,12 +213,15 @@ class TestRunRussicismScan:
 
     def _import(self):
         from pipeline.screen import _run_russicism_scan
+
         return _run_russicism_scan
 
     def test_russicism_scan_formats_output(self):
         f = self._import()
-        with patch("audit.checks.russicism_detection.check_russicisms",
-                    return_value=[{"severity": "high", "issue": "кот", "fix": "кіт"}]):
+        with patch(
+            "audit.checks.russicism_detection.check_russicisms",
+            return_value=[{"severity": "high", "issue": "кот", "fix": "кіт"}],
+        ):
             issues = f("кот", "/fake/path")
             assert len(issues) == 1
             assert issues[0]["type"] == "RUSSIANISM"
@@ -230,11 +238,13 @@ class TestRunRussicismScan:
 # 2. ai_agent_bridge/_gemini.py
 # ============================================================================
 
+
 class TestWarnLongHandoff:
     """Test _warn_long_handoff."""
 
     def _import(self):
         from ai_agent_bridge._gemini import _warn_long_handoff
+
         return _warn_long_handoff
 
     def test_short_handoff_no_warning(self, capsys):
@@ -265,12 +275,12 @@ class TestHandleGeminiError:
 
     def _import(self):
         from ai_agent_bridge._gemini import _handle_gemini_error
+
         return _handle_gemini_error
 
     def test_model_error_returns_stop(self):
         f = self._import()
-        with patch("ai_agent_bridge._gemini._detect_model_error",
-                    return_value="Model not found"):
+        with patch("ai_agent_bridge._gemini._detect_model_error", return_value="Model not found"):
             result = f("model not found", "test-model", 0, 5, 30)
             assert result == "stop"
 
@@ -289,8 +299,7 @@ class TestHandleGeminiError:
 
     def test_quota_returns_retry(self):
         f = self._import()
-        with patch("ai_agent_bridge._gemini._detect_model_error", return_value=None), \
-             patch("time.sleep"):
+        with patch("ai_agent_bridge._gemini._detect_model_error", return_value=None), patch("time.sleep"):
             result = f("quota exceeded", "test-model", 0, 5, 30)
             assert result == "retry"
 
@@ -306,6 +315,7 @@ class TestExtractAndPrint:
 
     def test_extract_with_tags(self, capsys):
         from ai_agent_bridge._gemini import _extract_and_print
+
         # Call with no matching tags - should still work without crashing
         _extract_and_print("some response text", [])
         # Verify no crash occurred
@@ -319,8 +329,10 @@ class TestExtractAndPrint:
         with patch.dict("sys.modules", {"gemini_output": mock_gemini_output}):
             if "ai_agent_bridge._gemini" in sys.modules:
                 import importlib
+
                 importlib.reload(sys.modules["ai_agent_bridge._gemini"])
             from ai_agent_bridge._gemini import _extract_and_print
+
             _extract_and_print("some response", [])
             out = capsys.readouterr().out
             assert "No complete delimiter" in out
@@ -331,6 +343,7 @@ class TestPrintCompletionStatus:
 
     def _import(self):
         from ai_agent_bridge._gemini import _print_completion_status
+
         return _print_completion_status
 
     def test_with_output_path_existing(self, tmp_path, capsys):
@@ -361,6 +374,7 @@ class TestRouteGeminiResponse:
 
     def _import(self):
         from ai_agent_bridge._gemini import _route_gemini_response
+
         return _route_gemini_response
 
     def test_output_path_mode(self, capsys):
@@ -373,8 +387,10 @@ class TestRouteGeminiResponse:
     def test_stdout_only_mode(self):
         f = self._import()
         msg = {"task_id": "test-task"}
-        with patch("ai_agent_bridge._gemini.send_message", return_value=42) as sm, \
-             patch("ai_agent_bridge._gemini.acknowledge") as ack:
+        with (
+            patch("ai_agent_bridge._gemini.send_message", return_value=42) as sm,
+            patch("ai_agent_bridge._gemini.acknowledge") as ack,
+        ):
             f(msg, 1, "model", "response", True, None, False)
             sm.assert_called_once()
             assert "stdout-only" in sm.call_args.kwargs.get("content", "")
@@ -382,18 +398,22 @@ class TestRouteGeminiResponse:
     def test_normal_mode_with_github(self):
         f = self._import()
         msg = {"task_id": "test-task"}
-        with patch("ai_agent_bridge._gemini.send_message", return_value=42), \
-             patch("ai_agent_bridge._gemini.acknowledge"), \
-             patch("ai_agent_bridge._gemini._post_review_to_github") as gh:
+        with (
+            patch("ai_agent_bridge._gemini.send_message", return_value=42),
+            patch("ai_agent_bridge._gemini.acknowledge"),
+            patch("ai_agent_bridge._gemini._post_review_to_github") as gh,
+        ):
             f(msg, 1, "model", "response", False, None, False)
             gh.assert_called_once()
 
     def test_normal_mode_skip_github(self):
         f = self._import()
         msg = {"task_id": "test-task"}
-        with patch("ai_agent_bridge._gemini.send_message", return_value=42), \
-             patch("ai_agent_bridge._gemini.acknowledge"), \
-             patch("ai_agent_bridge._gemini._post_review_to_github") as gh:
+        with (
+            patch("ai_agent_bridge._gemini.send_message", return_value=42),
+            patch("ai_agent_bridge._gemini.acknowledge"),
+            patch("ai_agent_bridge._gemini._post_review_to_github") as gh,
+        ):
             f(msg, 1, "model", "response", False, None, True)
             gh.assert_not_called()
 
@@ -403,16 +423,19 @@ class TestSendGeminiError:
 
     def _import(self):
         from ai_agent_bridge._gemini import _send_gemini_error
+
         return _send_gemini_error
 
     def test_sends_error_message(self):
         f = self._import()
         msg = {"task_id": "test-task"}
-        with patch("ai_agent_bridge._gemini.send_message", return_value=99) as sm, \
-             patch("ai_agent_bridge._gemini.acknowledge") as ack:
+        with (
+            patch("ai_agent_bridge._gemini.send_message", return_value=99) as sm,
+            patch("ai_agent_bridge._gemini.acknowledge") as ack,
+        ):
             f(msg, 42)
             sm.assert_called_once()
-            assert ack.call_count == 2
+            ack.assert_called_once_with(42)
 
     def test_exception_suppressed(self):
         f = self._import()
@@ -426,28 +449,35 @@ class TestSendGeminiMessage:
 
     def _import(self):
         from ai_agent_bridge._gemini import _send_gemini_message
+
         return _send_gemini_message
 
     def test_output_path_mode(self):
         f = self._import()
-        with patch("ai_agent_bridge._gemini.send_to_gemini", return_value=10) as st, \
-             patch("ai_agent_bridge._gemini.acknowledge") as ack:
+        with (
+            patch("ai_agent_bridge._gemini.send_to_gemini", return_value=10) as st,
+            patch("ai_agent_bridge._gemini.acknowledge") as ack,
+        ):
             result = f("content", "task-1", "query", None, None, None, "model", False, "/out")
             assert result == 10
             ack.assert_called_once()
 
     def test_stdout_only_mode(self):
         f = self._import()
-        with patch("ai_agent_bridge._gemini.send_to_gemini", return_value=11), \
-             patch("ai_agent_bridge._gemini.acknowledge") as ack:
+        with (
+            patch("ai_agent_bridge._gemini.send_to_gemini", return_value=11),
+            patch("ai_agent_bridge._gemini.acknowledge") as ack,
+        ):
             result = f("content", "task-1", "query", None, None, None, "model", True, None)
             assert result == 11
             ack.assert_called_once()
 
     def test_normal_mode(self):
         f = self._import()
-        with patch("ai_agent_bridge._gemini.send_to_gemini", return_value=12), \
-             patch("ai_agent_bridge._gemini.acknowledge") as ack:
+        with (
+            patch("ai_agent_bridge._gemini.send_to_gemini", return_value=12),
+            patch("ai_agent_bridge._gemini.acknowledge") as ack,
+        ):
             result = f("content", "task-1", "query", None, None, None, "model", False, None)
             assert result == 12
             ack.assert_not_called()
@@ -458,6 +488,7 @@ class TestDetectModelError:
 
     def _import(self):
         from ai_agent_bridge._model import _detect_model_error
+
         return _detect_model_error
 
     def test_not_found(self):
@@ -486,9 +517,11 @@ class TestDetectModelError:
 # 4. vocab_extract_proper.py
 # ============================================================================
 
+
 class TestStressedToIpa:
     def _import(self):
         from vocab.vocab_extract_proper import stressed_to_ipa
+
         return stressed_to_ipa
 
     def test_empty_string(self):
@@ -520,6 +553,7 @@ class TestStressedToIpa:
 class TestExtractUkrainianText:
     def _import(self):
         from vocab.vocab_extract_proper import extract_ukrainian_text
+
         return extract_ukrainian_text
 
     def test_basic_extraction(self, tmp_path):
@@ -583,6 +617,7 @@ class TestExtractUkrainianText:
 class TestExtractModuleNumber:
     def _import(self):
         from vocab.vocab_extract_proper import extract_module_number
+
         return extract_module_number
 
     def test_numeric_prefix(self, tmp_path):
@@ -605,6 +640,7 @@ class TestExtractModuleNumber:
 class TestGetKnownLemmas:
     def _import(self):
         from vocab.vocab_extract_proper import get_known_lemmas
+
         return get_known_lemmas
 
     def test_nonexistent_db(self, tmp_path):
@@ -615,6 +651,7 @@ class TestGetKnownLemmas:
     def test_existing_db(self, tmp_path):
         f = self._import()
         import sqlite3
+
         db_path = tmp_path / "test.db"
         conn = sqlite3.connect(db_path)
         conn.execute("CREATE TABLE lemmas (uk TEXT)")
@@ -636,6 +673,7 @@ class TestGetKnownLemmas:
 class TestTokenizeAndLemmatize:
     def _import(self):
         from vocab.vocab_extract_proper import tokenize_and_lemmatize
+
         return tokenize_and_lemmatize
 
     def test_basic_tokenization(self):
@@ -696,6 +734,7 @@ class TestTokenizeAndLemmatize:
 class TestCreateVocabularyEntries:
     def _import(self):
         from vocab.vocab_extract_proper import create_vocabulary_entries
+
         return create_vocabulary_entries
 
     def test_basic_entry_creation(self):
@@ -734,6 +773,7 @@ class TestCreateVocabularyEntries:
 class TestProcessModule:
     def _import(self):
         from vocab.vocab_extract_proper import process_module
+
         return process_module
 
     def test_dry_run(self, tmp_path):
@@ -752,8 +792,10 @@ class TestProcessModule:
 
         mock_stressifier = MagicMock(return_value="те\u0301кст")
 
-        with patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph), \
-             patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
+        with (
+            patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph),
+            patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier),
+        ):
             stats = f(md, dry_run=True)
 
         assert stats["module"] == "test.md"
@@ -771,8 +813,10 @@ class TestProcessModule:
         mock_morph.parse.return_value = []
         mock_stressifier = MagicMock()
 
-        with patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph), \
-             patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
+        with (
+            patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph),
+            patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier),
+        ):
             stats = f(md, dry_run=True)
         # Can't easily check level from stats, but it shouldn't crash
 
@@ -781,9 +825,11 @@ class TestProcessModule:
 # 5. generate_ipa.py
 # ============================================================================
 
+
 class TestPostprocess:
     def _import(self):
         from generate_ipa import _postprocess
+
         return _postprocess
 
     def test_rule1_a_to_open_back(self):
@@ -792,7 +838,7 @@ class TestPostprocess:
 
     def test_rule2_nonsyllabic_i_to_j(self):
         f = self._import()
-        assert f("i\u032F") == "j"
+        assert f("i\u032f") == "j"
 
     def test_rule3_lax_u(self):
         f = self._import()
@@ -812,19 +858,19 @@ class TestPostprocess:
 
     def test_rule5_u_nonsyl_palatalized(self):
         f = self._import()
-        assert f("u\u032Fʲ") == "ʋʲ"
+        assert f("u\u032fʲ") == "ʋʲ"
 
     def test_rule6_u_nonsyl_before_stress(self):
         f = self._import()
-        assert f("u\u032Fˈ") == "ˈʋ"
+        assert f("u\u032fˈ") == "ˈʋ"
 
     def test_rule7_u_nonsyl_before_secondary_stress(self):
         f = self._import()
-        assert f("u\u032Fˌ") == "ˌʋ"
+        assert f("u\u032fˌ") == "ˌʋ"
 
     def test_rule8_u_nonsyl_before_vowel(self):
         f = self._import()
-        assert f("u\u032Fa") == "ʋa"
+        assert f("u\u032fa") == "ʋa"
 
     def test_passthrough(self):
         f = self._import()
@@ -834,6 +880,7 @@ class TestPostprocess:
 class TestGenerateIpa:
     def _import(self):
         from generate_ipa import generate_ipa
+
         return generate_ipa
 
     def test_empty_word(self):
@@ -848,8 +895,10 @@ class TestGenerateIpa:
 
     def test_stress_override(self):
         f = self._import()
-        with patch("generate_ipa._get_ipa_overrides", return_value={}), \
-             patch("generate_ipa._get_stress_overrides", return_value={"тест": "те\u0301ст"}):
+        with (
+            patch("generate_ipa._get_ipa_overrides", return_value={}),
+            patch("generate_ipa._get_stress_overrides", return_value={"тест": "те\u0301ст"}),
+        ):
             mock_ipa_uk = MagicMock()
             mock_ipa_uk.ipa.return_value = "tɛst"
             with patch.dict("sys.modules", {"ipa_uk": mock_ipa_uk}):
@@ -860,17 +909,21 @@ class TestGenerateIpa:
 
     def test_stressifier_failure(self):
         f = self._import()
-        with patch("generate_ipa._get_ipa_overrides", return_value={}), \
-             patch("generate_ipa._get_stress_overrides", return_value={}), \
-             patch("generate_ipa._get_stressifier") as mock_stress:
+        with (
+            patch("generate_ipa._get_ipa_overrides", return_value={}),
+            patch("generate_ipa._get_stress_overrides", return_value={}),
+            patch("generate_ipa._get_stressifier") as mock_stress,
+        ):
             mock_stress.return_value = MagicMock(side_effect=Exception("fail"))
             assert f("тест") is None
 
     def test_ipa_uk_failure(self):
         f = self._import()
-        with patch("generate_ipa._get_ipa_overrides", return_value={}), \
-             patch("generate_ipa._get_stress_overrides", return_value={}), \
-             patch("generate_ipa._get_stressifier") as mock_stress:
+        with (
+            patch("generate_ipa._get_ipa_overrides", return_value={}),
+            patch("generate_ipa._get_stress_overrides", return_value={}),
+            patch("generate_ipa._get_stressifier") as mock_stress,
+        ):
             mock_stress.return_value = MagicMock(return_value="тест")
             mock_ipa_uk = MagicMock()
             mock_ipa_uk.ipa.side_effect = Exception("fail")
@@ -879,9 +932,11 @@ class TestGenerateIpa:
 
     def test_ipa_uk_empty_result(self):
         f = self._import()
-        with patch("generate_ipa._get_ipa_overrides", return_value={}), \
-             patch("generate_ipa._get_stress_overrides", return_value={}), \
-             patch("generate_ipa._get_stressifier") as mock_stress:
+        with (
+            patch("generate_ipa._get_ipa_overrides", return_value={}),
+            patch("generate_ipa._get_stress_overrides", return_value={}),
+            patch("generate_ipa._get_stressifier") as mock_stress,
+        ):
             mock_stress.return_value = MagicMock(return_value="тест")
             mock_ipa_uk = MagicMock()
             mock_ipa_uk.ipa.return_value = ""
@@ -892,6 +947,7 @@ class TestGenerateIpa:
 class TestLoadOverrides:
     def _import(self):
         from generate_ipa import _load_overrides
+
         return _load_overrides
 
     def test_file_not_exists(self, tmp_path):
@@ -903,6 +959,7 @@ class TestLoadOverrides:
     def test_file_with_dict(self, tmp_path):
         f = self._import()
         import yaml
+
         data = {"word": "value"}
         (tmp_path / "test.yaml").write_text(yaml.dump(data))
         with patch("generate_ipa.DATA_DIR", tmp_path):
@@ -920,6 +977,7 @@ class TestLoadOverrides:
 class TestIsIpaContent:
     def _import(self):
         from generate_ipa import _is_ipa_content
+
         return _is_ipa_content
 
     def test_ipa_chars(self):
@@ -938,6 +996,7 @@ class TestIsIpaContent:
 class TestStressifyWord:
     def _import(self):
         from generate_ipa import _stressify_word
+
         return _stressify_word
 
     def test_single_letter(self):
@@ -955,6 +1014,7 @@ class TestStressifyWord:
 class TestStressifyPhrase:
     def _import(self):
         from generate_ipa import _stressify_phrase
+
         return _stressify_phrase
 
     def test_multi_word(self):
@@ -969,6 +1029,7 @@ class TestStressifyPhrase:
 class TestCheckEntryLine:
     def _import(self):
         from generate_ipa import _check_entry_line
+
         return _check_entry_line
 
     def test_lemma_first_line(self):
@@ -1006,6 +1067,7 @@ class TestCheckEntryLine:
 class TestRegenerateVocabIpa:
     def _import(self):
         from generate_ipa import regenerate_vocab_ipa
+
         return regenerate_vocab_ipa
 
     def test_no_changes(self, tmp_path):
@@ -1066,6 +1128,7 @@ class TestRegenerateVocabIpa:
 class TestReplaceProseIpa:
     def _import(self):
         from generate_ipa import replace_prose_ipa
+
         return replace_prose_ipa
 
     def test_no_ipa(self, tmp_path):
@@ -1108,6 +1171,7 @@ class TestReplaceProseIpa:
 class TestClassifyQuestion:
     def _import(self):
         from import_zno import classify_question
+
         return classify_question
 
     def test_nagolos(self):
@@ -1160,6 +1224,7 @@ class TestClassifyQuestion:
 class TestFilterUkrainianLanguage:
     def _import(self):
         from import_zno import filter_ukrainian_language
+
         return filter_ukrainian_language
 
     def test_filters_by_subject(self):
@@ -1187,6 +1252,7 @@ class TestFilterUkrainianLanguage:
 class TestClassifyAll:
     def _import(self):
         from import_zno import classify_all
+
         return classify_all
 
     def test_adds_fields(self):
@@ -1208,6 +1274,7 @@ class TestClassifyAll:
 class TestSaveLoadJsonl:
     def _import(self):
         from import_zno import load_jsonl, save_jsonl
+
         return save_jsonl, load_jsonl
 
     def test_roundtrip(self, tmp_path):
@@ -1234,6 +1301,7 @@ class TestSaveLoadJsonl:
 class TestConvertToActivity:
     def _import(self):
         from import_zno import convert_to_activity
+
         return convert_to_activity
 
     def test_single_correct_quiz(self):
@@ -1290,6 +1358,7 @@ class TestConvertToActivity:
 class TestPrintStats:
     def _import(self):
         from import_zno import print_stats
+
         return print_stats
 
     def test_basic_stats(self, capsys):
@@ -1311,9 +1380,11 @@ class TestPrintStats:
 # 7. migrate_audit_review_paths.py
 # ============================================================================
 
+
 class TestMoveReviews:
     def _import(self):
         from migrate.migrate_audit_review_paths import move_reviews
+
         return move_reviews
 
     def test_no_audit_dir(self, tmp_path):
@@ -1354,6 +1425,7 @@ class TestMoveReviews:
         dest = review_dir / "my-module-review.md"
         dest.write_text("old")
         import time
+
         time.sleep(0.01)
         src.write_text("new")
 
@@ -1372,6 +1444,7 @@ class TestMoveReviews:
         src = audit_dir / "my-module-review.md"
         src.write_text("old")
         import time
+
         time.sleep(0.01)
         dest.write_text("new")
 
@@ -1395,6 +1468,7 @@ class TestMoveReviews:
 class TestRenameAuditReports:
     def _import(self):
         from migrate.migrate_audit_review_paths import rename_audit_reports
+
         return rename_audit_reports
 
     def test_no_audit_dir(self, tmp_path):
@@ -1442,6 +1516,7 @@ class TestRenameAuditReports:
 class TestRenameAuditArtifacts:
     def _import(self):
         from migrate.migrate_audit_review_paths import rename_audit_artifacts
+
         return rename_audit_artifacts
 
     def test_no_audit_dir(self, tmp_path):
@@ -1489,6 +1564,7 @@ class TestRenameAuditArtifacts:
 class TestRenameStatusFiles:
     def _import(self):
         from migrate.migrate_audit_review_paths import rename_status_files
+
         return rename_status_files
 
     def test_no_status_dir(self, tmp_path):
@@ -1539,6 +1615,7 @@ class TestRenameStatusFiles:
 class TestUpdateStatusModuleField:
     def _import(self):
         from migrate.migrate_audit_review_paths import _update_status_module_field
+
         return _update_status_module_field
 
     def test_updates_field(self, tmp_path):
@@ -1568,6 +1645,7 @@ class TestUpdateStatusModuleField:
 class TestCheckBatchLock:
     def _import(self):
         from migrate.migrate_audit_review_paths import check_batch_lock
+
         return check_batch_lock
 
     def test_no_lock_passes(self, tmp_path):
@@ -1608,11 +1686,13 @@ class TestCheckBatchLock:
 # Additional edge case tests to boost coverage
 # ============================================================================
 
+
 class TestPipelineScreenMtimeCache:
     """Test the mtime caching logic in screen.py."""
 
     def test_deterministic_fix_mtimes_dict_exists(self):
         from pipeline.screen import _deterministic_fix_mtimes
+
         assert isinstance(_deterministic_fix_mtimes, dict)
 
 
@@ -1622,11 +1702,13 @@ class TestCefrMapping:
 
     def test_all_skills_have_mapping(self):
         from import_zno import CEFR_MAPPING, SKILL_PATTERNS
+
         for category, _ in SKILL_PATTERNS:
             assert category in CEFR_MAPPING, f"Missing CEFR mapping for {category}"
 
     def test_mapping_structure(self):
         from import_zno import CEFR_MAPPING
+
         for _cat, levels in CEFR_MAPPING.items():
             assert "min" in levels
             assert "max" in levels
@@ -1637,18 +1719,21 @@ class TestVocabExtractConstants:
 
     def test_pos_map_coverage(self):
         from vocab.vocab_extract_proper import POS_MAP
+
         assert "NOUN" in POS_MAP
         assert "VERB" in POS_MAP
         assert "ADJF" in POS_MAP
 
     def test_gender_map(self):
         from vocab.vocab_extract_proper import GENDER_MAP
+
         assert GENDER_MAP["masc"] == "m"
         assert GENDER_MAP["femn"] == "f"
         assert GENDER_MAP["neut"] == "n"
 
     def test_stopwords_not_empty(self):
         from vocab.vocab_extract_proper import STOPWORDS
+
         assert len(STOPWORDS) > 50
 
 
@@ -1657,10 +1742,12 @@ class TestGenerateIpaConstants:
 
     def test_stress_mark(self):
         from generate_ipa import STRESS_MARK
+
         assert STRESS_MARK == "\u0301"
 
     def test_ipa_vowels(self):
         from generate_ipa import IPA_VOWELS
+
         assert "a" in IPA_VOWELS
         assert "ɔ" in IPA_VOWELS
 
@@ -1670,22 +1757,27 @@ class TestSlugUtils:
 
     def test_numeric_prefix_stripped(self):
         from slug_utils import to_bare_slug
+
         assert to_bare_slug("01-my-module") == "my-module"
 
     def test_extension_stripped(self):
         from slug_utils import to_bare_slug
+
         assert to_bare_slug("01-my-module.md") == "my-module"
 
     def test_year_prefix_preserved(self):
         from slug_utils import to_bare_slug
+
         assert to_bare_slug("1991-referendum") == "1991-referendum"
 
     def test_no_prefix(self):
         from slug_utils import to_bare_slug
+
         assert to_bare_slug("my-module") == "my-module"
 
     def test_three_digit_prefix(self):
         from slug_utils import to_bare_slug
+
         assert to_bare_slug("140-syntez-viyna") == "syntez-viyna"
 
 
@@ -1695,6 +1787,7 @@ class TestExportByTopic:
 
     def _import(self):
         from import_zno import export_by_topic
+
         return export_by_topic
 
     def test_export_creates_files(self, tmp_path):
@@ -1738,26 +1831,32 @@ class TestValidateSchema:
 
     def _import(self):
         from import_zno import validate_schema
+
         return validate_schema
 
     def test_valid_schema(self, tmp_path, capsys):
         f = self._import()
         import yaml
+
         by_topic = tmp_path / "by_topic"
         by_topic.mkdir(parents=True)
-        data = [{
-            "type": "quiz",
-            "title": "Test",
-            "items": [{
-                "question": "Q?",
-                "options": [
-                    {"text": "A", "correct": True},
-                    {"text": "B", "correct": False},
-                    {"text": "C", "correct": False},
-                    {"text": "D", "correct": False},
+        data = [
+            {
+                "type": "quiz",
+                "title": "Test",
+                "items": [
+                    {
+                        "question": "Q?",
+                        "options": [
+                            {"text": "A", "correct": True},
+                            {"text": "B", "correct": False},
+                            {"text": "C", "correct": False},
+                            {"text": "D", "correct": False},
+                        ],
+                    }
                 ],
-            }],
-        }]
+            }
+        ]
         (by_topic / "test.yaml").write_text(yaml.dump(data))
         with patch("import_zno.DATA_DIR", tmp_path):
             f()
@@ -1767,15 +1866,20 @@ class TestValidateSchema:
     def test_invalid_schema(self, tmp_path, capsys):
         f = self._import()
         import yaml
+
         by_topic = tmp_path / "by_topic"
         by_topic.mkdir(parents=True)
-        data = [{
-            "type": "quiz",
-            "items": [{
-                "question": "",
-                "options": [{"text": "A", "correct": False}],
-            }],
-        }]
+        data = [
+            {
+                "type": "quiz",
+                "items": [
+                    {
+                        "question": "",
+                        "options": [{"text": "A", "correct": False}],
+                    }
+                ],
+            }
+        ]
         (by_topic / "bad.yaml").write_text(yaml.dump(data))
         with patch("import_zno.DATA_DIR", tmp_path):
             f()
