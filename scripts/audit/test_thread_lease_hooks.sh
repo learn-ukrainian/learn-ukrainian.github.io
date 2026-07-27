@@ -119,7 +119,7 @@ __scenario_worktree_layout_claims_lease() {
   printf '%s' "{\"session_id\":\"$session_id\"}" | \
     env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
         -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
-        -u CLAUDE_SESSION_RECORD_PYTHON -u THREAD_ROLLOVER_PYTHON \
+        -u CLAUDE_SESSION_RECORD_PYTHON -u THREAD_ROLLOVER_PYTHON -u CLAUDE_PROFILE_RESOLVER_PYTHON \
     CLAUDE_PROJECT_DIR="$fakewt" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
     bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" >/dev/null
   :
