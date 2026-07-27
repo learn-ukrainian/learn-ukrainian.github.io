@@ -129,17 +129,22 @@ interface QuizProps {
    * @ukrainianText false
    */
   isUkrainian?: boolean;
+  /**
+   * @schemaDescription Activity type name for data attribute and help tooltip.
+   * @ukrainianText false
+   */
+  activityType?: string;
 }
 
-export default function Quiz({ questions, instruction, children, isUkrainian }: QuizProps) {
-  const headerLabel = isUkrainian ? 'Тест' : 'Quiz';
+export default function Quiz({ questions, instruction, children, isUkrainian, activityType = 'quiz' }: QuizProps) {
+  const headerLabel = isUkrainian ? 'Тест' : (activityType === 'multiple-choice' ? 'Multiple Choice' : 'Quiz');
 
   return (
-    <div className={styles.activityContainer} data-activity="quiz">
+    <div className={styles.activityContainer} data-activity={activityType}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>📝</span>
         <span>{headerLabel}</span>
-        <ActivityHelp activityType="quiz" isUkrainian={isUkrainian} />
+        <ActivityHelp activityType={activityType} isUkrainian={isUkrainian} />
       </div>
       {instruction && (
         <p className={styles.instruction}><strong>{instruction}</strong></p>

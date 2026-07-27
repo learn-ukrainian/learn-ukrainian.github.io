@@ -126,17 +126,24 @@ export function ActivityPlayer({ activity, onComplete, isUkrainian }: ActivityPl
       {activity.type === 'multiple-choice' && (
         <Quiz
           questions={activity.payload.items.map(({ prompt, options }, index) => {
-            const correct = activity.answer_key.items.find((item) => item.index === index)?.correct;
+            const correct = activity.answer_key?.items?.find((item) => item.index === index)?.correct;
             return {
               question: prompt,
               options: options.map((text) => ({
                 text,
-                correct: text === correct || text.startsWith(`${correct})`),
+                correct: Boolean(
+                  correct &&
+                    (text === correct ||
+                      text.startsWith(`${correct})`) ||
+                      text.startsWith(correct) ||
+                      text.trim().startsWith(correct.trim()))
+                ),
               })),
             };
           })}
           instruction={activity.payload.instruction}
           isUkrainian={isUkrainian}
+          activityType="multiple-choice"
         />
       )}
       {activity.type === 'text-questions' && (

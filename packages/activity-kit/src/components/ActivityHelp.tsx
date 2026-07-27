@@ -11,6 +11,10 @@ const HELP_TEXT: Record<string, { title: string; description: string }> = {
     title: 'Multiple Choice',
     description: 'Select the correct answer from the options provided. Only one answer is correct.',
   },
+  'multiple-choice': {
+    title: 'Multiple Choice',
+    description: 'Select the correct answer from the options provided. Only one answer is correct.',
+  },
   'fill-in': {
     title: 'Fill in the Blank',
     description: 'Choose the correct word or phrase to complete each sentence from the dropdown options.',
@@ -83,6 +87,10 @@ const HELP_TEXT: Record<string, { title: string; description: string }> = {
 
 const HELP_TEXT_UA: Record<string, { title: string; description: string }> = {
   'quiz': {
+    title: 'Вибір відповіді',
+    description: 'Виберіть правильну відповідь із запропонованих варіантів. Лише одна відповідь є правильною.',
+  },
+  'multiple-choice': {
     title: 'Вибір відповіді',
     description: 'Виберіть правильну відповідь із запропонованих варіантів. Лише одна відповідь є правильною.',
   },

@@ -210,5 +210,31 @@
       "generator": "hramatka-contract-golden-fixture",
       "gates": ["schema", "player-smoke"]
     }
+  },
+  {
+    "id": "golden-multiple-choice",
+    "type": "multiple-choice",
+    "title": "Оберіть відповідь",
+    "level": "b1",
+    "payload": {
+      "type": "multiple-choice",
+      "instruction": "Оберіть відповідь.",
+      "items": [
+        {
+          "prompt": "Де була перша квартира?",
+          "options": ["а) у центрі", "б) біля парку", "в) за містом"]
+        }
+      ]
+    },
+    "answer_key": {
+      "items": [
+        { "index": 0, "correct": "а" }
+      ]
+    },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "hramatka-contract-golden-fixture",
+      "gates": ["schema", "player-smoke"]
+    }
   }
 ]

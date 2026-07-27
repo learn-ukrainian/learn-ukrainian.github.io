@@ -171,6 +171,12 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
                       </pre>
                     </div>
                   )}
+
+                  {block.note && (
+                    <div style={{ marginTop: '12px', padding: '10px 12px', backgroundColor: '#fffbeb', border: '1px solid #fde68a', borderRadius: '6px', fontSize: '13px', color: '#92400e' }} data-testid={`block-note-${block.id}`}>
+                      <strong style={{ color: '#78350f' }}>Note:</strong> {block.note}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
