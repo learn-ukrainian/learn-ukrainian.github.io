@@ -111,17 +111,22 @@ jobs:
 
       # Stressifier lazily provisions this model when it creates its Stanza
       # pipeline. Cache the model package separately from pip wheels so a
-      # cold runner does not redownload it in every CI run.
+      # cold runner does not redownload it in every CI run. Version the key and
+      # couple it to the lockfile: a model cache is valid only for the Stanza
+      # dependency set that produced it.
       - name: Restore Stanza Ukrainian model cache
         id: stanza-model-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/stanza_resources
-          key: stanza-uk-model-${{ runner.os }}-1.13.0
+          key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}
 
-      - name: Provision Stanza Ukrainian model
-        if: steps.stanza-model-cache.outputs.cache-hit != 'true'
+      # Run this smoke regardless of cache state. Besides provisioning a cold
+      # cache, it verifies a restored archive before pytest workers can start
+      # lazy model downloads.
+      - name: Provision and verify Stanza Ukrainian model
         run: |
+          set -euo pipefail
           .venv/bin/python -c "from scripts.pipeline.stress_annotator import annotate_stress; print(annotate_stress('Мама читає книжку.'))"
 
       - name: Save Stanza Ukrainian model cache
@@ -129,7 +134,7 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/stanza_resources
-          key: stanza-uk-model-${{ runner.os }}-1.13.0
+          key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}
 
       - name: Ruff
         run: .venv/bin/python -m ruff check scripts/
