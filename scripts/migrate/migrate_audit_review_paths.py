@@ -29,10 +29,11 @@ from slug_utils import to_bare_slug
 CURRICULUM_DIR = Path(__file__).parent.parent.parent / "curriculum" / "l2-uk-en"
 
 # All track directories to process
-TRACK_DIRS = [
-    d for d in CURRICULUM_DIR.iterdir()
-    if d.is_dir() and d.name not in ("plans", "__pycache__")
-]
+TRACK_DIRS = (
+    [d for d in CURRICULUM_DIR.iterdir() if d.is_dir() and d.name not in ("plans", "__pycache__")]
+    if CURRICULUM_DIR.exists()
+    else []
+)
 
 
 def check_batch_lock():
@@ -59,7 +60,7 @@ def move_reviews(track_dir: Path, dry_run: bool) -> list[str]:
 
         # Determine bare slug from the review filename
         name = f.name
-        slug_part = name[:-len("-llm-review.md")] if name.endswith("-llm-review.md") else name[:-len("-review.md")]
+        slug_part = name[: -len("-llm-review.md")] if name.endswith("-llm-review.md") else name[: -len("-review.md")]
 
         bare = to_bare_slug(slug_part)
         dest = review_dir / f"{bare}-review.md"
@@ -99,7 +100,7 @@ def rename_audit_reports(track_dir: Path, dry_run: bool) -> list[str]:
         if not f.name.endswith("-audit-report.md"):
             continue
 
-        slug_part = f.name[:-len("-audit-report.md")]
+        slug_part = f.name[: -len("-audit-report.md")]
         bare = to_bare_slug(slug_part)
         dest = audit_dir / f"{bare}-audit.md"
 

@@ -150,7 +150,6 @@ def ask_hermes(
         to_model=from_model,
     )
     acknowledge(msg_id)
-    acknowledge(reply_id)
     record_ask_reply(msg_id, reply_id)
     return msg_id
 
@@ -208,7 +207,6 @@ def process_for_hermes(message_id: int, *, no_timeout: bool = False) -> None:
         to_model=ask_sender_model(msg),
     )
     acknowledge(message_id)
-    acknowledge(reply_id)
     record_ask_reply(message_id, reply_id)
 
 
