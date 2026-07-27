@@ -10,6 +10,7 @@ import pytest
 
 from scripts.lib.session_record import (
     PROJECT_ROOT,
+    SCHEMA_VERSION,
     SessionRecordError,
     append_to_env_file,
     canonical_state_root,
@@ -247,3 +248,34 @@ def test_cli_round_trip_uses_explicit_state_root(tmp_path: Path) -> None:
 
     assert json.loads(update.stdout)["effective_profile_id"] == "sol_lead"
     assert get.stdout.strip() == "272000"
+
+
+def test_write_record_refuses_symlinked_sessions_dir(tmp_path: Path) -> None:
+    """F001 round 2 (#5896): a planted symlink at .agent/sessions must refuse
+    record writes instead of following it outside the state root."""
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    state_root = tmp_path / "root"
+    (state_root / ".agent").mkdir(parents=True)
+    (state_root / ".agent" / "sessions").symlink_to(outside)
+
+    record = {
+        "schema_version": SCHEMA_VERSION,
+        "session_id": "sym-refuse",
+    }
+    with pytest.raises(SessionRecordError, match="symlink"):
+        write_record("sym-refuse", record, state_root=state_root)
+    assert list(outside.iterdir()) == []
+
+
+def test_read_record_refuses_symlinked_entry(tmp_path: Path) -> None:
+    """A symlinked record entry must refuse reads."""
+    state_root = tmp_path / "root"
+    sessions = state_root / ".agent" / "sessions"
+    sessions.mkdir(parents=True)
+    target = tmp_path / "target.json"
+    target.write_text("{}", encoding="utf-8")
+    (sessions / "sym-entry.json").symlink_to(target)
+
+    with pytest.raises(SessionRecordError, match="regular file"):
+        read_record("sym-entry", state_root=state_root)

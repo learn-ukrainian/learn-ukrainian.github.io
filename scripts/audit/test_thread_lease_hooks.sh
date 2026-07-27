@@ -273,4 +273,36 @@ printf '%s' "{\"session_id\":\"$evil_id\"}" | \
   CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
   "$RELEASE_HOOK" || fail "path-safety: release hook failed on traversal session_id"
 
+# 8. Symlink escape (formal CF F001 round 2): a planted symlink at
+#    .agent/sessions (or at the destination entry) must NOT let the sidecar
+#    write escape — the no-follow fd-anchored writer refuses and the outside
+#    target stays untouched.
+root="$TMP_ROOT/symlink-project"
+outside="$TMP_ROOT/symlink-outside"
+mkdir -p "$root/.agent" "$outside"
+ln -s "$outside" "$root/.agent/sessions"
+session_id="fixture-session-symlink"
+(
+  exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
+      -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
+      CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
+      bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
+)
+outside_count="$(find "$outside" -type f 2>/dev/null | wc -l | tr -d ' ')"
+[ "$outside_count" = "0" ] || fail "symlink escape: sidecar write followed a symlinked sessions dir ($outside_count files landed outside)"
+# Symlinked destination entry: real dir, symlinked file — write must refuse.
+root="$TMP_ROOT/symlink-entry-project"
+mkdir -p "$root/.agent/sessions"
+target="$TMP_ROOT/symlink-entry-target"
+: > "$target"
+ln -s "$target" "$root/.agent/sessions/${session_id}.generation"
+(
+  exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
+      -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
+      CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
+      bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
+)
+target_size="$(wc -c < "$target" | tr -d ' ')"
+[ "$target_size" = "0" ] || fail "symlink escape: sidecar write followed a symlinked destination entry ($target_size bytes written through)"
+
 printf 'ok - thread lease hook fixtures passed\n'

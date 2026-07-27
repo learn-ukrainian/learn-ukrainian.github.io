@@ -443,8 +443,30 @@ except Exception:
           case "$SESSION_ID" in
             ''|*[!A-Za-z0-9_-]*) : ;;  # unsafe or empty: skip the sidecar, env-file path still works
             *)
-              mkdir -p "$CANONICAL_ROOT/.agent/sessions" 2>/dev/null || true
-              printf '%s\n' "$THREAD_LEASE_GENERATION" > "$CANONICAL_ROOT/.agent/sessions/${SESSION_ID}.generation" 2>/dev/null || true
+              # No-follow, fd-anchored write (formal CF F001 round 2): shell
+              # redirection follows symlinks, so a planted symlink at
+              # .agent/sessions or at the destination could still escape. The
+              # O_NOFOLLOW dir-open refuses a symlinked sessions dir; the
+              # dir_fd + O_NOFOLLOW file-open refuses a symlinked entry. Any
+              # refusal skips the sidecar silently — env-file transport and the
+              # identity-only release path still work.
+              printf '%s' "$THREAD_LEASE_GENERATION" | "$ROLLOVER_PYTHON" -c 'import os,sys
+root, name = sys.argv[1], sys.argv[2]
+gen = sys.stdin.read().strip()
+try:
+    os.makedirs(root, exist_ok=True)
+    dfd = os.open(root, os.O_RDONLY | os.O_NOFOLLOW | os.O_DIRECTORY)
+except OSError:
+    sys.exit(0)
+try:
+    try:
+        fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW, 0o600, dir_fd=dfd)
+    except OSError:
+        sys.exit(0)
+    with os.fdopen(fd, "w") as fh:
+        fh.write(gen + "\n")
+finally:
+    os.close(dfd)' "$CANONICAL_ROOT/.agent/sessions" "${SESSION_ID}.generation" 2>/dev/null || true
               ;;
           esac
           if [ -n "${CLAUDE_ENV_FILE:-}" ]; then

@@ -113,6 +113,14 @@ def sessions_dir(*, state_root: Path | None = None) -> Path:
     return root / ".agent" / "sessions"
 
 
+def _refuse_symlinked_sessions_dir(directory: Path) -> None:
+    """A planted symlink at .agent/sessions must never redirect record I/O
+    (same guarantee as the generation-sidecar hooks — formal CF F001 round 2
+    on #5896: session records escaped through a symlinked sessions dir)."""
+    if directory.is_symlink():
+        raise SessionRecordError(f"sessions dir is a symlink, refusing: {directory}")
+
+
 def get_record_path(session_id: str, *, state_root: Path | None = None) -> Path:
     if not validate_session_id(session_id):
         raise SessionRecordError(f"invalid session_id: {session_id!r}")
@@ -157,10 +165,11 @@ def read_record(
     session_id: str, *, state_root: Path | None = None
 ) -> dict[str, Any] | None:
     path = get_record_path(session_id, state_root=state_root)
+    _refuse_symlinked_sessions_dir(path.parent)
     if not path.exists():
         return None
-    if not path.is_file():
-        raise SessionRecordError(f"session record path is not a file: {path}")
+    if path.is_symlink() or not path.is_file():
+        raise SessionRecordError(f"session record path is not a regular file: {path}")
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -176,7 +185,9 @@ def write_record(
 ) -> Path:
     validated = _validate_record(record, expected_session_id=session_id)
     path = get_record_path(session_id, state_root=state_root)
+    _refuse_symlinked_sessions_dir(path.parent)
     path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    _refuse_symlinked_sessions_dir(path.parent)
     with contextlib.suppress(OSError):
         path.parent.chmod(0o700)
 

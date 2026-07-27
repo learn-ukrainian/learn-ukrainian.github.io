@@ -75,15 +75,29 @@ else
   fi
 fi
 
-# Same path-safety allowlist as the session-setup write side (formal CF F001 on
-# #5896): a traversal-shaped SESSION_ID must never reach the filesystem.
+# Same path-safety contract as the session-setup write side (formal CF F001 on
+# #5896, both rounds): a traversal-shaped SESSION_ID never reaches the
+# filesystem, and the read is no-follow + fd-anchored so a planted symlink at
+# the sessions dir or the entry cannot redirect it.
 SIDECAR_GEN=""
 case "$SESSION_ID" in
   ''|*[!A-Za-z0-9_-]*) : ;;
   *)
-    if [ -f "$CANONICAL_ROOT/.agent/sessions/${SESSION_ID}.generation" ]; then
-      SIDECAR_GEN=$(cat "$CANONICAL_ROOT/.agent/sessions/${SESSION_ID}.generation" 2>/dev/null | tr -d ' \r\n')
-    fi
+    SIDECAR_GEN=$("$PYTHON" -c 'import os,sys
+root, name = sys.argv[1], sys.argv[2]
+try:
+    dfd = os.open(root, os.O_RDONLY | os.O_NOFOLLOW | os.O_DIRECTORY)
+except OSError:
+    sys.exit(0)
+try:
+    try:
+        fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)
+    except OSError:
+        sys.exit(0)
+    with os.fdopen(fd) as fh:
+        sys.stdout.write(fh.read().strip())
+finally:
+    os.close(dfd)' "$CANONICAL_ROOT/.agent/sessions" "${SESSION_ID}.generation" 2>/dev/null || true)
     ;;
 esac
 
