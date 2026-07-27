@@ -85,6 +85,7 @@ import {
 import { dateSeed, deckSeed, pickDaily, type DailyWord } from '../lib/lexicon/daily';
 import { getTeacherLessonVirtualDeck, readLocalCustomSets, saveLocalCustomSet, deleteLocalCustomSet, type CustomSet } from '../lib/lexicon/custom-decks';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
+import { type SearchRow } from '../lib/lexicon/search';
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
 
 
@@ -1165,7 +1166,7 @@ function DigitChoiceShortcuts({
   return null;
 }
 
-/** Deduped fetch for a practice shard JSON by URL. Concurrent or repeated callers share the promise. */
+/** Deduped fetch for practice and Atlas JSON by URL. Concurrent or repeated callers share the promise. */
 async function getShardJson<T>(url: string, cache: Map<string, Promise<unknown>>): Promise<T> {
   let p = cache.get(url) as Promise<T> | undefined;
   if (!p) {
@@ -1631,6 +1632,16 @@ function LexiconPracticeIsland({
               }),
             );
 
+        // The public Atlas search index is the route-existence source for deck
+        // words outside the smaller practice set. Keep it out of the all-words
+        // path, and use the shared JSON cache so deck changes never refetch it.
+        const atlasSearchIndex = deckLemmaKeys === null
+          ? []
+          : await getShardJson<SearchRow[]>(
+              '/lexicon/search-index.json',
+              shardJsonCacheRef.current,
+            ).catch(() => []);
+
         if (cancelled) return;
         const merged = new Map<string, PracticeLexeme>();
         for (const entry of deck?.lexemes ?? []) {
@@ -1653,17 +1664,24 @@ function LexiconPracticeIsland({
             lexemesByLower.set(entry.lemmaId.toLowerCase(), entry);
             lexemesByLower.set(entry.lemma.toLowerCase(), entry);
           }
+          const atlasEntriesByLower = new Map<string, SearchRow>();
+          for (const entry of atlasSearchIndex) {
+            atlasEntriesByLower.set(entry.s.toLowerCase(), entry);
+            atlasEntriesByLower.set(entry.l.toLowerCase(), entry);
+          }
           const deckPool: DailyWord[] = deckLemmaKeys.map((key) => {
             const match = lexemes.get(key) ?? lexemesByLower.get(key.toLowerCase()) ?? null;
-            // A deck word with no atlas/level match still deserves a real-looking
-            // card — same cleanup `ensureDeckCustomSetCoverage` applies for the
-            // session pool, so the preview and the session never disagree.
             const cleanKey = key.replace(/\(.*?\)/g, '').trim() || key;
+            const atlasMatch = atlasEntriesByLower.get(key.toLowerCase())
+              ?? atlasEntriesByLower.get(cleanKey.toLowerCase())
+              ?? null;
+            // Practice lexemes are richer than the search index. If neither
+            // source recognizes a deck key, preserve the unlinked orphan card.
             return {
-              lemma: match?.lemma ?? cleanKey,
-              slug: match?.lemmaId ?? key,
-              gloss: match?.gloss ?? cleanKey,
-              hasAtlasEntry: Boolean(match),
+              lemma: match?.lemma ?? atlasMatch?.l ?? cleanKey,
+              slug: match?.lemmaId ?? atlasMatch?.s ?? key,
+              gloss: match?.gloss ?? atlasMatch?.g ?? cleanKey,
+              hasAtlasEntry: Boolean(match ?? atlasMatch),
               cefr: match?.cefr ?? undefined,
               pos: match?.pos ?? undefined,
               example: match?.example ?? undefined,

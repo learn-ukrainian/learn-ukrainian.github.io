@@ -1109,6 +1109,9 @@ describe('LexiconPractice', () => {
         return okJson({ deckVersion: 'cats', level: 'A1', lexemes: [cat] });
       }
       if (url.includes('practice-cloze.A1.json')) return okJson({ cloze: [] });
+      if (url.includes('search-index.json')) {
+        return okJson([{ l: 'кіт', s: 'кіт', g: 'atlas cat', t: 'lemma', c: 'A1' }]);
+      }
       return notFoundResponse();
     });
 
@@ -1122,12 +1125,62 @@ describe('LexiconPractice', () => {
     await user.click(container.querySelector<HTMLElement>('.daily-preview-card')!);
 
     expect(screen.getAllByText('cat').length).toBeGreaterThan(0);
+    expect(screen.queryByText('atlas cat')).not.toBeInTheDocument();
     expect(screen.getAllByText('noun').length).toBeGreaterThan(0);
     expect(screen.getByTestId('practice-preview-atlas-link')).toHaveAttribute(
       'href',
       '/lexicon/%D0%BA%D1%96%D1%82/',
     );
     expect(requested.some((url) => url.includes('practice-lexemes.A2.json'))).toBe(false);
+  });
+
+  test('falls back to the Atlas index for a custom deck word outside practice lexemes', async () => {
+    const customSet: CustomSet = {
+      id: 'custom-atlas-only-cat',
+      title: 'Коти з Атласу',
+      lemma_keys: ['кіт'],
+      cloze_items: [],
+      created_at: '2026-07-27T12:00:00.000Z',
+      updated_at: '2026-07-27T12:00:00.000Z',
+      device_id: 'test-device',
+      revision: 1,
+    };
+    localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
+
+    const requested: string[] = [];
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      requested.push(url);
+      if (url.includes('daily-pool.json')) return okJson([]);
+      if (url.includes('practice-index.A1.json')) {
+        return okJson({ deckVersion: 'empty', level: 'A1', items: [] });
+      }
+      if (url.includes('practice-lexemes.A1.json')) {
+        return okJson({ deckVersion: 'empty', level: 'A1', lexemes: [] });
+      }
+      if (url.includes('practice-cloze.A1.json')) return okJson({ cloze: [] });
+      if (url.includes('search-index.json')) {
+        return okJson([{ l: 'кіт', s: 'кіт', g: 'cat', t: 'lemma', c: 'A1' }]);
+      }
+      return notFoundResponse();
+    });
+
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByRole('button', { name: /Коти з Атласу/ }));
+
+    await waitFor(() =>
+      expect(screen.getByTestId('practice-daily-deck-title')).toHaveTextContent('Коти з Атласу'),
+    );
+    await user.click(container.querySelector<HTMLElement>('.daily-preview-card')!);
+
+    expect(screen.getAllByText('cat').length).toBeGreaterThan(0);
+    expect(screen.getByTestId('practice-preview-atlas-link')).toHaveAttribute(
+      'href',
+      '/lexicon/%D0%BA%D1%96%D1%82/',
+    );
+    expect(screen.queryByText('noun')).not.toBeInTheDocument();
+    expect(requested.filter((url) => url.includes('search-index.json'))).toHaveLength(1);
   });
 
   test('keeps a genuinely absent custom deck key on the orphan path', async () => {
@@ -1153,6 +1206,7 @@ describe('LexiconPractice', () => {
         return okJson({ deckVersion: 'empty', level: 'A1', lexemes: [] });
       }
       if (url.includes('practice-cloze.A1.json')) return okJson({ cloze: [] });
+      if (url.includes('search-index.json')) return okJson([]);
       return notFoundResponse();
     });
 
