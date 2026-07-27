@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -27,8 +28,20 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 
-from ._ask_contract import requested_effort, resolve_model_selection, response_provenance
-from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
+from ._ask_contract import (
+    MAX_TOTAL_ASK_RETRIES,
+    NATIVE_ASK_TOOL_CONTRACT,
+    requested_effort,
+    resolve_model_selection,
+    response_provenance,
+)
+from ._ask_lifecycle import (
+    _ask_metadata,
+    launch_background_ask,
+    record_ask_failure,
+    record_ask_reply,
+    register_ask,
+)
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
@@ -241,6 +254,26 @@ def process_for_grok_build(
         cwd=checkout.path if checkout is not None else REPO_ROOT,
     )
     if turn_status["outcome"] != "completed":
+        if (
+            turn_status.get("cancellation_category") == "permission_cancelled"
+            and _can_cancel_retry(msg)
+        ):
+            print(
+                f"⚠️ Ask #{message_id}: native Grok turn ended in permission_cancelled; "
+                f"auto-retrying ONCE with refusal reason appended...",
+                file=sys.stderr,
+            )
+            if _attempt_cancel_and_retell_retry(
+                msg=msg,
+                message_id=message_id,
+                checkout=checkout,
+                model=model,
+                effort=effort or GROK_BUILD_DEFAULT_EFFORT,
+                timeout_val=timeout_val,
+                review=review,
+                turn_status=turn_status,
+            ):
+                return
         _handle_grok_build_incomplete_turn(
             msg,
             message_id,
@@ -269,6 +302,133 @@ def process_for_grok_build(
     )
     acknowledge(message_id)
     record_ask_reply(message_id, reply_id)
+
+
+def _can_cancel_retry(msg: dict) -> bool:
+    """Check whether a permission_cancelled turn can be auto-retried once."""
+    meta = _ask_metadata(msg)
+    if meta.get("cancel_retried") or meta.get("cancel-retried"):
+        return False
+    total_retries = int(meta.get("total_retry_count") or 0)
+    return total_retries < MAX_TOTAL_ASK_RETRIES
+
+
+def _attempt_cancel_and_retell_retry(
+    *,
+    msg: dict,
+    message_id: int,
+    checkout: Any,
+    model: str,
+    effort: str,
+    timeout_val: int,
+    review: bool,
+    turn_status: dict[str, str | None],
+) -> bool:
+    """Auto-retry ONCE with refusal reason appended to prompt (#5893 item 3)."""
+    meta = _ask_metadata(msg)
+    meta["cancel-retried"] = True
+    meta["cancel_retried"] = True
+    current_count = int(meta.get("total_retry_count") or 0)
+    meta["total_retry_count"] = current_count + 1
+    msg["data"] = json.dumps(meta, sort_keys=True)
+
+    conn = get_db()
+    try:
+        conn.execute(
+            "UPDATE messages SET data = ? WHERE id = ?",
+            (msg["data"], message_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    cat = turn_status.get("cancellation_category") or "permission_cancelled"
+    refusal_reason = (
+        f"Tool call permission cancelled: shell commands are unavailable in this mode ({cat}); "
+        "answer from attached material and file reads."
+    )
+
+    base_prompt = _build_grok_build_prompt(
+        msg,
+        review,
+        review_branch=checkout.branch if checkout else None,
+        review_pr_number=checkout.pr_number if checkout else None,
+        review_worktree_provisioned=checkout is not None,
+    )
+    retry_prompt = append_review_prompt_evidence(
+        f"{base_prompt}\n\n[Previous turn cancelled by permission policy]: {refusal_reason}\n",
+        review=review,
+        checkout=checkout,
+        engine="grok",
+    )
+    review_tool_config = checkout.isolation_tool_config("grok") if (review and checkout) else None
+
+    try:
+        result = agent_runner.invoke(
+            "grok",
+            retry_prompt,
+            mode="read-only",
+            cwd=checkout.path if checkout is not None else REPO_ROOT,
+            model=model,
+            task_id=msg["task_id"],
+            session_id=None,
+            tool_config=review_tool_config,
+            entrypoint="bridge",
+            hard_timeout=timeout_val,
+            stall_timeout=min(600, timeout_val),
+            effort=effort,
+        )
+    except Exception as exc:
+        _handle_grok_build_error(msg, message_id, f"Cancel-and-retell retry failed: {exc}")
+        return True
+
+    if not result.ok:
+        _handle_grok_build_error(
+            msg,
+            message_id,
+            result.stderr_excerpt or "Grok Build retry returned no final message",
+        )
+        return True
+
+    response = result.response
+    if not response:
+        _handle_grok_build_error(msg, message_id, "Grok Build retry returned no final message")
+        return True
+
+    new_turn_status = _native_grok_turn_status(
+        session_id=getattr(result, "session_id", None),
+        cwd=checkout.path if checkout is not None else REPO_ROOT,
+    )
+    if new_turn_status["outcome"] != "completed":
+        _handle_grok_build_incomplete_turn(
+            msg,
+            message_id,
+            response,
+            new_turn_status,
+            actual_model=getattr(result, "model", None) or model,
+            effort=effort or GROK_BUILD_DEFAULT_EFFORT,
+        )
+        return True
+
+    print(f"\nGrok finished retried turn ({len(response)} chars)")
+    provenance_data, actual_model = response_provenance(
+        msg,
+        actual_model=getattr(result, "model", None) or model,
+        harness="grok",
+        effort_applied=getattr(result, "effort", None) or effort or GROK_BUILD_DEFAULT_EFFORT,
+    )
+    reply_id = send_message(
+        content=response,
+        task_id=msg["task_id"],
+        msg_type="response",
+        from_llm="grok",
+        to_llm=msg["from"],
+        data=provenance_data,
+        from_model=actual_model,
+    )
+    acknowledge(message_id)
+    record_ask_reply(message_id, reply_id)
+    return True
 
 
 def _native_grok_turn_status(*, session_id: str | None, cwd: Path) -> dict[str, str | None]:
@@ -401,7 +561,9 @@ def _build_grok_build_prompt(
     review_worktree_provisioned: bool = False,
 ) -> str:
     """Build the native Grok Build bridge prompt."""
-    prompt = f"""You are Grok Build (native grok CLI), receiving a message from {msg['from'].title()} via the message broker.
+    prompt = f"""{NATIVE_ASK_TOOL_CONTRACT}
+
+You are Grok Build (native grok CLI), receiving a message from {msg['from'].title()} via the message broker.
 
 ---
 Task ID: {msg['task_id'] or 'none'}

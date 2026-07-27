@@ -25,6 +25,7 @@ from typing import Any
 from agent_runtime.errors import AgentStalledError, AgentTimeoutError
 
 from . import _config
+from ._ask_contract import MAX_TOTAL_ASK_RETRIES
 from ._broker import _remove_pid_file, _write_pid_file
 from ._config import _PARENT_ENV, PID_DIR, REPO_ROOT
 from ._db import get_db
@@ -593,6 +594,7 @@ def print_asks(task_id: str | None = None) -> None:
 
 def maybe_print_timeout_notice() -> None:
     """Surface newly timed-out detached asks on the next bridge CLI command."""
+    run_ask_watchdog()
     conn = get_db()
     try:
         rows = conn.execute(
@@ -614,6 +616,115 @@ def maybe_print_timeout_notice() -> None:
         conn.commit()
     finally:
         conn.close()
+
+
+def _is_clean_terminal_record(message_id: int) -> bool:
+    """Return True if a recorded terminal artifact indicates a clean success."""
+    terminal = _read_ask_record(message_id, "terminal.json")
+    if terminal is None:
+        return False
+    rc = terminal.get("rc_or_signal")
+    stage = str(terminal.get("stage") or "")
+    return rc in (0, "0") and stage == "success"
+
+
+def should_auto_retry_ask(message_id: int) -> bool:
+    """Return True if a background ask worker is dead without clean completion and unretried."""
+    status = _ask_status(message_id)
+    if status is not None and status.startswith("replied:"):
+        return False
+    if _is_clean_terminal_record(message_id):
+        return False
+
+    launch = _read_ask_record(message_id, "launch.json")
+    if launch is None:
+        return False
+    pid = launch.get("pid")
+    if _pid_is_alive(pid):
+        return False
+
+    target = str(launch.get("agent") or launch.get("harness") or "grok")
+    msg = fetch_ask_message(message_id, target)
+    if not msg:
+        return False
+    meta = _ask_metadata(msg)
+    if meta.get("auto_retried") or meta.get("auto-retried"):
+        return False
+    total_retries = int(meta.get("total_retry_count") or 0)
+    return total_retries < MAX_TOTAL_ASK_RETRIES
+
+
+def run_ask_watchdog(target_message_id: int | None = None) -> list[int]:
+    """Inspect background asks and re-fire dead workers lacking clean completion once.
+
+    Enforces the single-retry watchdog invariant (#5893 item 1). Dead workers
+    without a reply and without a clean terminal record get re-fired with
+    'auto-retried': True in metadata. Never silent.
+    """
+    retried_ids: list[int] = []
+    conn = get_db()
+    try:
+        if target_message_id is not None:
+            rows = conn.execute(
+                "SELECT id FROM messages WHERE id = ?", (target_message_id,)
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT id FROM messages WHERE status NOT LIKE 'replied:%' ORDER BY id ASC"
+            ).fetchall()
+    finally:
+        conn.close()
+
+    for row in rows:
+        msg_id = int(row[0])
+        if should_auto_retry_ask(msg_id) and _re_fire_ask(msg_id):
+            retried_ids.append(msg_id)
+    return retried_ids
+
+
+def _re_fire_ask(message_id: int) -> bool:
+    """Re-fire a dead background ask worker once with auto-retried metadata."""
+    launch = _read_ask_record(message_id, "launch.json")
+    if not launch:
+        return False
+    target = str(launch.get("agent") or launch.get("harness") or "grok")
+    msg = fetch_ask_message(message_id, target)
+    if not msg:
+        return False
+
+    meta = _ask_metadata(msg)
+    meta["auto-retried"] = True
+    meta["auto_retried"] = True
+    current_count = int(meta.get("total_retry_count") or 0)
+    meta["total_retry_count"] = current_count + 1
+
+    conn = get_db()
+    try:
+        conn.execute(
+            "UPDATE messages SET data = ? WHERE id = ?",
+            (json.dumps(meta, sort_keys=True), message_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    options = {}
+    try:
+        options = _background_options(message_id, target)
+    except Exception:
+        options = {"no_timeout": False, "review": False, "new_session": False}
+
+    print(
+        f"🔄 Ask #{message_id} ({target}) worker dead without clean completion; "
+        f"auto-retrying once (auto-retried=True)...",
+        file=sys.stderr,
+    )
+    try:
+        launch_background_ask(message_id, target, options)
+        return True
+    except Exception as exc:
+        record_ask_failure(message_id, f"auto-retry re-fire failed: {exc}")
+        return False
 
 
 def assert_ask_content_present(msg: dict[str, Any], *, message_id: int, target: str) -> str:

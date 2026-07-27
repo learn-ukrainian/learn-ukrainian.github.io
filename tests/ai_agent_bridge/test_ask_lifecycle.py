@@ -476,3 +476,171 @@ def test_background_ask_reply_remains_unacked_for_requester(bridge_db, monkeypat
         assert reply_row[3] == "claude-infra"
     finally:
         conn.close()
+
+
+def test_watchdog_refires_dead_worker_without_clean_terminal_once(bridge_db, monkeypatch, tmp_path):
+    """A dead background ask worker with no reply and no clean terminal gets auto-retried once (#5893)."""
+    message_id = _send_ask("task-watchdog-1", target="grok")
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+    state_dir = tmp_path / "batch_state" / "asks" / "task-watchdog-1"
+    lifecycle._atomic_write_json(
+        state_dir / "launch.json",
+        {
+            "message_id": message_id,
+            "pid": 999_999_999,
+            "agent": "grok",
+            "harness": "grok",
+            "model": "grok-3",
+            "started_at": "2026-07-27T00:00:00+00:00",
+        },
+    )
+
+    re_fire_mock = Mock(return_value=1234)
+    monkeypatch.setattr(lifecycle, "launch_background_ask", re_fire_mock)
+
+    retried = lifecycle.run_ask_watchdog(message_id)
+
+    assert retried == [message_id]
+    re_fire_mock.assert_called_once()
+    meta = lifecycle._ask_metadata(lifecycle.fetch_ask_message(message_id, "grok"))
+    assert meta.get("auto_retried") is True
+    assert meta.get("auto-retried") is True
+
+
+def test_watchdog_ignores_clean_terminal_records(bridge_db, monkeypatch, tmp_path):
+    """Clean terminal records (rc=0, stage=success) are NOT re-fired by watchdog (#5893)."""
+    message_id = _send_ask("task-watchdog-clean", target="grok")
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+    state_dir = tmp_path / "batch_state" / "asks" / "task-watchdog-clean"
+    lifecycle._atomic_write_json(
+        state_dir / "launch.json",
+        {
+            "message_id": message_id,
+            "pid": 999_999_999,
+            "agent": "grok",
+            "harness": "grok",
+            "model": "grok-3",
+            "started_at": "2026-07-27T00:00:00+00:00",
+        },
+    )
+    lifecycle._atomic_write_json(
+        state_dir / "terminal.json",
+        {
+            "rc_or_signal": 0,
+            "stage": "success",
+            "stderr_tail": "",
+            "ended_at": "2026-07-27T00:01:00+00:00",
+        },
+    )
+
+    re_fire_mock = Mock()
+    monkeypatch.setattr(lifecycle, "launch_background_ask", re_fire_mock)
+
+    retried = lifecycle.run_ask_watchdog(message_id)
+
+    assert retried == []
+    re_fire_mock.assert_not_called()
+
+
+def test_watchdog_ignores_already_retried_asks(bridge_db, monkeypatch, tmp_path):
+    """An ask that was already auto-retried must NOT be retried again by watchdog (#5893)."""
+    message_id = _send_ask("task-watchdog-retried", target="grok")
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+    state_dir = tmp_path / "batch_state" / "asks" / "task-watchdog-retried"
+    lifecycle._atomic_write_json(
+        state_dir / "launch.json",
+        {
+            "message_id": message_id,
+            "pid": 999_999_999,
+            "agent": "grok",
+            "harness": "grok",
+            "model": "grok-3",
+            "started_at": "2026-07-27T00:00:00+00:00",
+        },
+    )
+
+    conn = get_db()
+    try:
+        conn.execute(
+            "UPDATE messages SET data = ? WHERE id = ?",
+            (json.dumps({"auto_retried": True, "auto-retried": True}), message_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    re_fire_mock = Mock()
+    monkeypatch.setattr(lifecycle, "launch_background_ask", re_fire_mock)
+
+    retried = lifecycle.run_ask_watchdog(message_id)
+
+    assert retried == []
+    re_fire_mock.assert_not_called()
+
+
+def test_cancel_and_retell_native_grok_permission_cancelled(bridge_db, monkeypatch):
+    """A native Grok turn ending in permission_cancelled auto-retries once with refusal reason (#5893)."""
+    from ai_agent_bridge import _grok_build
+
+    message_id = _send_ask("task-cancel-retell", target="grok")
+
+    mock_invoke_1 = Mock(ok=True, response="I tried running a shell command.", model="grok-3", effort="medium", session_id="session-123")
+    mock_invoke_2 = Mock(ok=True, response="Answer based on file content only.", model="grok-3", effort="medium", session_id="session-123")
+
+    invokes = [mock_invoke_1, mock_invoke_2]
+    prompts_captured = []
+
+    def fake_invoke(*args, **kwargs):
+        prompts_captured.append(args[1])
+        return invokes.pop(0)
+
+    monkeypatch.setattr(_grok_build.agent_runner, "invoke", fake_invoke)
+    monkeypatch.setattr(
+        _grok_build,
+        "_native_grok_turn_status",
+        Mock(
+            side_effect=[
+                {"outcome": "cancelled", "cancellation_category": "permission_cancelled"},
+                {"outcome": "completed", "cancellation_category": None},
+            ]
+        ),
+    )
+
+    _grok_build.process_for_grok_build(message_id)
+
+    assert len(prompts_captured) == 2
+    assert "[Previous turn cancelled by permission policy]: Tool call permission cancelled" in prompts_captured[1]
+
+    conn = get_db()
+    try:
+        row = conn.execute("SELECT data FROM messages WHERE message_type = 'response' AND task_id = 'task-cancel-retell'").fetchone()
+        assert row is not None
+        meta = json.loads(row[0])
+        assert meta.get("cancel_retried") is True
+    finally:
+        conn.close()
+
+
+def test_cancel_and_retell_composes_with_watchdog_within_bound(bridge_db, monkeypatch, tmp_path):
+    """Total automatic re-fires for one ask never exceed MAX_TOTAL_ASK_RETRIES = 2 (#5893)."""
+    from ai_agent_bridge import _grok_build
+    from ai_agent_bridge._ask_contract import MAX_TOTAL_ASK_RETRIES
+
+    assert MAX_TOTAL_ASK_RETRIES == 2
+
+    message_id = _send_ask("task-bound", target="grok")
+
+    conn = get_db()
+    try:
+        conn.execute(
+            "UPDATE messages SET data = ? WHERE id = ?",
+            (json.dumps({"total_retry_count": 2, "auto_retried": True}), message_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    assert lifecycle.should_auto_retry_ask(message_id) is False
+
+    msg = lifecycle.fetch_ask_message(message_id, "grok")
+    assert _grok_build._can_cancel_retry(msg) is False
