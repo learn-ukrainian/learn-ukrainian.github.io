@@ -59,16 +59,11 @@ def _epic_dir(repo: Path, epic: str) -> Path:
     return repo / ".claude" / f"{epic}-epic"
 
 
+GLM_PREFERRED_HANDOFFS: list[str] = ["GLM-DRIVER-HANDOFF.md"]
+
+
 def _handoff_candidates(repo: Path, epic: str) -> list[Path]:
-    base = _epic_dir(repo, epic)
-    return [
-        base / "GLM-DRIVER-HANDOFF.md",
-        base / "INTERIM-DRIVER-HANDOFF.md",
-        base / "CLAUDE-DRIVER-HANDOFF.md",
-        base / "CODEX-DRIVER-HANDOFF.md",
-        base / "GEMINI-DRIVER-HANDOFF.md",
-        base / "KIMI-DRIVER-HANDOFF.md",
-    ]
+    return _gl._handoff_candidates(repo, epic, preferred=GLM_PREFERRED_HANDOFFS)
 
 
 def _cold_start_body(
@@ -121,7 +116,6 @@ def verify_transport_preconditions() -> dict[str, Any]:
             "reason": "ci_egress_forbidden",
             "message": str(exc),
         }
-
 
     opencode_bin = shutil.which("opencode")
     if not opencode_bin:
@@ -240,17 +234,10 @@ def _stream_id(args: argparse.Namespace) -> str:
     return str(getattr(args, "stream", None) or EPIC_STREAM_DEFAULTS.get(args.epic, f"epic:{args.epic}"))
 
 
-def _with_glm_handoffs(function: Any, args: argparse.Namespace) -> int:
-    original = _gl._handoff_candidates
-    try:
-        _gl._handoff_candidates = lambda repo, epic: _handoff_candidates(repo, epic)  # type: ignore[assignment]
-        return int(function(args))
-    finally:
-        _gl._handoff_candidates = original
-
-
 def _cmd_mint_glm(args: argparse.Namespace) -> int:
-    return _with_glm_handoffs(_gl.cmd_mint, args)
+    if not getattr(args, "preferred", None):
+        args.preferred = GLM_PREFERRED_HANDOFFS
+    return _gl.cmd_mint(args)
 
 
 def _read_lease_environment(env_path: Path) -> dict[str, str]:
@@ -299,8 +286,10 @@ def cmd_hydrate(args: argparse.Namespace) -> int:
 
 
 def cmd_score(args: argparse.Namespace) -> int:
+    if not getattr(args, "preferred", None):
+        args.preferred = GLM_PREFERRED_HANDOFFS
     args.no_hydrate = True
-    score_rc = _with_glm_handoffs(_gl.cmd_score, args)
+    score_rc = _gl.cmd_score(args)
     if score_rc == 0:
         hydrate_rc = cmd_hydrate(args)
         if hydrate_rc != 0:

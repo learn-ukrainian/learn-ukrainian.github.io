@@ -240,7 +240,7 @@ def test_mint_score_roundtrip(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
 def test_score_fail_handoff_closes_exact_lease_and_exits(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    monkeypatch.setattr(glm_lane, "_with_glm_handoffs", lambda function, args: 2)
+    monkeypatch.setattr(glm_lane._gl, "cmd_score", lambda args: 2)
     monkeypatch.setattr(glm_lane, "_close_exact_lease", lambda repo, epic: True)
 
     assert glm_lane.main(["score", "--epic", "harness", "--answers", "answers.json"]) == 2

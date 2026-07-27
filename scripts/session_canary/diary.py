@@ -28,19 +28,23 @@ def utc_stamp() -> str:
     return datetime.now(UTC).strftime("%Y-%m-%dT%H:%MZ")
 
 
-def resolve_handoff_path(repo: Path, epic: str, override: str | Path | None = None) -> Path:
+def resolve_handoff_path(
+    repo: Path,
+    epic: str,
+    override: str | Path | None = None,
+    preferred: list[str] | None = None,
+) -> Path:
     if override:
         p = Path(override)
         return p if p.is_absolute() else (repo / p)
     base = repo / ".claude" / f"{epic}-epic"
-    for name in (
-        "GLM-DRIVER-HANDOFF.md",
-        "KIMI-DRIVER-HANDOFF.md",
-        "GEMINI-DRIVER-HANDOFF.md",
+    candidates = [
+        *(preferred or []),
         "INTERIM-DRIVER-HANDOFF.md",
         "CLAUDE-DRIVER-HANDOFF.md",
         "CODEX-DRIVER-HANDOFF.md",
-    ):
+    ]
+    for name in candidates:
         cand = base / name
         if cand.is_file():
             return cand
