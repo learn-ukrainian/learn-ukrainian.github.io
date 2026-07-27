@@ -972,6 +972,7 @@ def _new_thread_lease_record(
     record: dict[str, Any] = {
         "schema_version": THREAD_LEASE_SCHEMA_VERSION,
         "agent": agent,
+        "state": "held",
         "generation": generation,
         "owner_thread_id": owner_thread_id,
         "acquired_at": acquired_at,
