@@ -1,0 +1,128 @@
+# Decision tables v0 — the enumerated judgment seams of the drive loop (T2 DRAFT).
+# Part of #5885 (design v2, panel-approved; glm off-trail list + grok table forms).
+#
+# Contract: a trail step of kind table-lookup names ONE table here. Rows evaluate
+# TOP-DOWN and the FIRST matching row wins (`precedence: first-match` below) — exclusion
+# and stop rows therefore sit ABOVE the general pick/arm rows they guard, and an input
+# matching an earlier row never reaches a later one. A table either resolves to exactly
+# one action or the matched row says STOP — a seat never improvises between rows.
+# Tables marked `mode: live-lookup` fix the PROCEDURE and the input sources but never
+# freeze live data (roster, pace, quotas) — the drive-epic golden rule: method, never
+# roster.
+#
+# This file validates against agents_extensions/shared/schemas/decision-tables.v0.schema.json
+# (validate_decision_tables in scripts/orchestration/validate_trailspec.py) and is covered
+# by tests/test_validate_trailspec.py.
+schema_version: decision-tables.v0
+precedence: first-match
+tables:
+
+  queue-pick:
+    mode: static
+    inputs: [epic tracking issue checklist order, gh pr list --state all --search "<issue-nr>", lane assignment]
+    rows:
+      - when: item belongs to another lane's epic (check lane assignments + branch/brief slug + foreign driver-handoff claim)
+        then: STOP-policy-violation  # hands off; comment findings, never drive
+      - when: sibling PR exists for the item (open or merged)
+        then: reconcile against that PR first; an open issue is not proof of unfixed
+      - when: two items tie or the order is not derivable from the tracking issue
+        then: STOP-manual-intervention
+      - when: item's dependencies all MERGED and no earlier row matched
+        then: pick lowest such open item in tracking-issue order
+
+  review-gate-arm:
+    mode: static
+    inputs: [cross-family verdict, verdict head SHA vs current PR head, requested-changes state, blocking CI, draft state, reviewer identity]
+    rows:
+      - when: PR is a DRAFT
+        then: never arm, never merge — undraft only after the gate passes
+      - when: reviewer is the author, or the arming driver specified the fix under review
+        then: route to a different independent seat  # directing a fix disqualifies its reviewer
+      - when: requested-changes unresolved (a later LGTM comment does not resolve a review thread)
+        then: wait; read the review THREAD, not the ticks
+      - when: verdict APPROVE but head moved since verdict
+        then: re-request review on the new head; never arm on a stale-head verdict
+      - when: verdicts conflict across seats
+        then: STOP-contested
+      - when: blocking CI red
+        then: red-ci-triage table; never arm over blocking red, never admin-bypass
+      - when: cross-family APPROVE ∧ verdict bound to CURRENT head ∧ blocking CI green ∧ no earlier row matched
+        then: arm auto-merge (gh pr merge --auto --squash --delete-branch) the same hour
+
+  red-ci-triage:
+    mode: static
+    inputs: [failing check name, failure signature from logs, base-branch state]
+    rows:
+      - when: failure signature matches a known-failure-class allowlist entry
+        then: apply that entry's action (retry-once | note-and-proceed | STOP)
+        blocked_on: "known-failure-class signature registry does not exist yet (#5885)"
+      - when: failure reproduces on origin/main (pre-existing)
+        then: note on PR; do not fix in-branch; file/link the owning issue
+      - when: base branch was fixed after this head's CI ran
+        then: gh pr update-branch — NEVER gh run rerun (rerun re-tests the stale pinned SHA; a rerun on a superseded head can cancel the live head's run via the concurrency group)
+      - when: signature unknown
+        then: STOP-unknown  # never retry-until-green
+
+  settle-status:
+    mode: static
+    inputs: ["batch_state/tasks/<id>.json status field (the file is truth; the active-list API can omit live tasks)"]
+    rows:
+      - {when: "done", then: "SUCCESS — finalize: read result + artifact CONTENT, verify diff rows, then review gate"}
+      - {when: "failed | crashed, task id has no -retry suffix", then: "read stderr_excerpt + logs; remove worktree+branch; re-fire ONCE with a -retry task id"}
+      - {when: "failed | crashed, task id already carries -retry", then: "STOP-unrecoverable-error"}  # never a third automatic attempt
+      - {when: "timeout | silence-timeout", then: "check the worktree for finished-but-unpushed work AND gh pr list for an already-opened PR (silent-exit class); deliverable present → finalize by hand; absent → treat as the failed|crashed rows above"}
+      - {when: "rate_limited", then: "reroute per fallback substitutions; note the substitution"}
+      - {when: "cancelled | dry_run", then: "terminal, not success; re-fire only if the need stands"}
+      - {when: "needs_finalize | no_deliverable", then: "attention states: finalize by hand; no_deliverable on a private-repo dispatch may be the #5855 false negative — verify commits before believing it"}
+      - {when: "spawning | running", then: "not terminal; keep the Monitor settle-loop, never keyword-grep logs as completion"}
+      - {when: "any status string not in this table", then: "STOP-unknown"}
+
+  lane-routing:
+    mode: live-lookup
+    procedure: >-
+      Resolve seat from /api/rules model-assignment (routing SSOT) + model_catalog.yaml
+      floors for the task's risk class. Confirm capability with check-model before first
+      use in a session. Respect: language-lane restriction (UK content only on sanctioned
+      lanes), judge-seat exclusions, local-fanout=1, cross-family review pairing.
+    never: [route from memory of a roster, route by provider name alone, freeze model names into this file]
+
+  width:
+    mode: live-lookup
+    procedure: >-
+      Two-sided: for each candidate lane read codexbar pace stage + reserve; read disk
+      (df -h / AND du -sh <repo_root>/.worktrees). Idle lane + quota headroom + disk room →
+      widen. At/ahead of pace or thin reserve → throttle, shed to a lane with headroom.
+      No data for a lane → in-flight count + lane health, and SAY the picture is partial.
+      DISK WINS every conflict; reaping finished worktrees is capacity management.
+    never: [fixed numeric in-flight caps, quota headroom overriding disk, manufacturing work for an idle lane]
+
+  handoff-completeness:
+    mode: static
+    inputs: [lane driver-handoff file at session close or rollover]
+    rows:
+      - {when: "closing a session or preparing rollover", then: "handoff carries: assignment scope · epic phase · IN-FLIGHT with watcher ids · verdict/finalize state per open PR · NEXT ACTION ordered list · operator-pending items · pace/disk at last dispatch"}
+      - {when: "any of those unknown", then: "reconstruct from tool output before writing; a handoff row must never be from memory"}
+      - {when: "file exceeds 40KB", then: "archive older sessions before writing more"}
+    blocked_on: "closure-gate integration lands with T1.2 (#5880 step 5)"
+
+  summon-vs-park:
+    mode: static
+    inputs: [blocking condition class]
+    rows:
+      - when: blocked on a decision the OPERATOR owns (his account/quota/deploy target, or conflict with his prior order)
+        then: park the item + post ONE plain-language sentence (no jargon, no id dumps), continue other work; never a menu
+      - when: blocked on a judgment seat (architecture, contested verdicts, design)
+        then: summon via bridge ask to the advisor seats per /api/rules; park with code + bridge template; continue other work
+      - when: blocked on unbuilt tooling
+        then: blocked_on marker + file/link the tracking-issue row; never invent a substitute command
+      - when: tempted to babysit interactively
+        then: babysit = table-lookup over the babysit file with a persistent Monitor, not a foreground wait
+
+  pr-ownership:
+    mode: static
+    inputs: [PR's stream epic, branch/dispatch-brief slug, lane assignments registry, driver-handoff claims]
+    rows:
+      - {when: "PR's epic maps to THIS seat's area", then: "yours: drive, review-gate, arm, merge, reap"}
+      - {when: "out-of-lane PR sat GREEN (CI + review) > 1 hour and its driver is absent", then: "abandoned-work carve-out MAY apply; verify the driver is truly gone before touching"}
+      - {when: "PR's epic maps to another area", then: "hands off; author-lane prefixes do not decide ownership, and author:@me is meaningless under the shared git identity"}
+      - {when: "ownership genuinely ambiguous after all three inputs", then: "STOP-manual-intervention"}

@@ -99,6 +99,11 @@
             "type": "string",
             "enum": ["mechanical", "table-lookup", "summon"]
           },
+          "table": {
+            "type": ["string", "null"],
+            "pattern": "^[a-z0-9-]+$",
+            "description": "For kind table-lookup: the decision-tables table this step resolves through. Cross-checked by validate_trail_table_refs."
+          },
           "blocked_on": {
             "type": ["string", "null"]
           }

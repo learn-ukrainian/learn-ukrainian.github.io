@@ -1,0 +1,213 @@
+# RB-1 — cold-start / orient / queue-pick (T2 DRAFT, extraction from drive-epic SKILL
+# steps 0/0a/1/2 + the infra driver's cold-start contract). Part of #5885.
+#
+# DRAFT STATUS: authored against today's substrate per the panel's draft-now ruling;
+# certification waits for T1 (slot addressing #5878, closure primitive). Steps that
+# depend on unbuilt machinery carry an explicit blocked_on marker.
+#
+# Anti-pattern guard (the #5860 r1 lessons, re-verified in the #5886 review round):
+# every command below is a real, currently runnable repo command whose OUTPUT SHAPE was
+# captured from a live run before being encoded; every predicate is falsifiable and has
+# an evidenced outcome for its failure direction; no failure path is swallowed — unknown
+# situations exit through a STOP code, never through a happy-path transition.
+schema_version: trailspec.v1
+trail_id: rb1-cold-start
+version: "0.2.0"
+title: RB1 Cold-start, orientation, and queue pick
+seats:
+  - grok-daily
+  - glm-trial
+  - judgment
+stop_codes:
+  - STOP-precondition-failed
+  - STOP-concurrency-conflict
+  - STOP-manual-intervention
+  - STOP-policy-violation
+  - STOP-unknown
+terminal_outcomes:
+  - ready_to_dispatch
+  - idle
+steps:
+  - step_id: detect_rollover
+    intent: >-
+      Detect whether a pending thread-rollover packet exists for this seat's handoff
+      agent. The tool emits JSON whose "status" field is the transition input; its real
+      vocabulary (verified in thread_handoff.py) is none / pending_start / resumed /
+      ambiguous, with terminal packets listed under excluded_terminal. Proceed states:
+      none, pending_start, and resumed (a live packet THIS thread already bound — the
+      tool itself hard-errors when the binding belongs to a different thread). Ambiguous
+      or any unrecognized status is a hard stop.
+    command: .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent {handoff_agent}
+    evidence_predicate:
+      command: .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent {handoff_agent}
+      success_pattern: '"status": "(none|pending_start|resumed)"'
+    transitions:
+      none: orient_api
+      pending_start: claim_rollover
+      resumed: claim_rollover
+      ambiguous_or_unrecognized_status: STOP-concurrency-conflict
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: claim_rollover
+    intent: >-
+      Claim the pending packet: bind-replacement (or the native-adapter path), resume,
+      semantic snapshot, strict recall, challenge proof, confirm-started. Judgment-carrying
+      (snapshot content, binding evidence) — the thread-rollover skill owns the procedure.
+      A packet bound to another lane or an ambiguous alias-directory state is a hard stop.
+    command: null
+    evidence_predicate: null
+    transitions:
+      confirmed: orient_api
+      foreign_packet: STOP-policy-violation
+      proofs_failed: STOP-precondition-failed
+    kind: summon
+    blocked_on: null
+
+  - step_id: orient_api
+    intent: >-
+      Orient via the Monitor API: manifest with live context telemetry. API down is not
+      fatal, but the fallback must be EVIDENCED, not narrated: the predicate emits either
+      the live "_telemetry" payload or an API_DOWN receipt proving the offline rule files
+      exist. Neither source available means no orientation basis at all — stop.
+    command: curl -sS --max-time 2 "http://127.0.0.1:8765/api/state/manifest"
+    evidence_predicate:
+      command: >-
+        curl -sS --max-time 2 "http://127.0.0.1:8765/api/state/manifest"
+        || echo "API_DOWN offline-fallback: $(ls agents_extensions/shared/rules/operator-expectations.md)"
+      success_pattern: '"_telemetry"|API_DOWN offline-fallback: agents_extensions/shared/rules/operator-expectations\.md'
+    transitions:
+      oriented: drain_inbox
+      api_down_fallback_evidenced: drain_inbox
+      no_orientation_source: STOP-precondition-failed
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: drain_inbox
+    intent: >-
+      Required live-driver inbox check (drive-epic 0a). List this seat's inbox state; the
+      "pending:" count line (captured live from `inbox show`) is the transition input.
+      Slot-identity inboxes (e.g. claude-atlas) require taxonomy step 4b.
+    command: .venv/bin/python -m scripts.ai_agent_bridge inbox show {handoff_agent}
+    evidence_predicate:
+      command: .venv/bin/python -m scripts.ai_agent_bridge inbox show {handoff_agent}
+      success_pattern: 'pending: +[0-9]+'
+    transitions:
+      pending_zero: reconcile_git
+      pending_nonzero: apply_inbox
+    kind: mechanical
+    blocked_on: "T1.1-slot-addressing (#5878) for non-static slot identities"
+
+  - step_id: apply_inbox
+    intent: >-
+      Read and APPLY every unconsumed message, then record live consumption with
+      ack --consumed-by-live-driver (plain ack is not delivery proof; the flag exists —
+      verified against the current CLI). Applying a message can change the queue, the
+      width, or the lane's orders — judgment-carrying. The post-condition IS mechanical
+      and proven: after application the seat's pending count must read zero.
+    command: null
+    evidence_predicate:
+      command: .venv/bin/python -m scripts.ai_agent_bridge inbox show {handoff_agent}
+      success_pattern: 'pending: +0'
+    transitions:
+      applied_and_drained: reconcile_git
+      order_conflicts_with_standing_rule: STOP-manual-intervention
+    kind: summon
+    blocked_on: null
+
+  - step_id: reconcile_git
+    intent: >-
+      Reconcile the handoff's claims against reality before firing anything: fetch,
+      compare main, list open PRs and worktrees. A prior session's in-flight item may
+      already be merged — re-firing it is the top re-collision class. The predicate chain
+      proves ALL FOUR commands ran (any failure breaks the && chain) and additionally
+      pins the invariant that the primary checkout sits on main — a primary moved off
+      main is the recurring #4857 incident class and must stop the trail.
+    command: git fetch origin && git log --oneline -3 origin/main && gh pr list --state open --limit 20 && git worktree list
+    evidence_predicate:
+      command: git fetch origin && git log --oneline -1 origin/main >/dev/null && gh pr list --state open --limit 20 >/dev/null && git worktree list
+      success_pattern: '\[main\]'
+    transitions:
+      reconciled: sweep_stale_refs
+      fetch_failed_or_primary_off_main: STOP-precondition-failed
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: sweep_stale_refs
+    intent: >-
+      Session-start hygiene: gather every worktree and every open PR head branch side by
+      side; the transition is a pr-ownership table lookup over that JOINED evidence — a
+      dispatch worktree whose branch has no open PR is a stale CANDIDATE (its final
+      MERGED/CLOSED check happens in reap_stale_refs; merge-base ancestry is NOT valid
+      under squash-merge). The predicate proves BOTH listings ran: the && chain gates the
+      gh call on worktree-list success, and the pattern matches only the gh JSON output
+      (a populated headRefName array or the literal empty array).
+    command: git worktree list --porcelain && gh pr list --state open --json headRefName --limit 30
+    evidence_predicate:
+      command: git worktree list --porcelain >/dev/null && gh pr list --state open --json headRefName --limit 30
+      success_pattern: 'headRefName|\[\]'
+    transitions:
+      no_stale_candidates: pick_next
+      stale_candidates_present: reap_stale_refs
+    kind: table-lookup
+    table: pr-ownership
+    blocked_on: null
+
+  - step_id: reap_stale_refs
+    intent: >-
+      Judgment seat: for each stale candidate, verify clean tree AND zero unpushed
+      commits (never delete uncommitted work; never touch another lane's live worktree),
+      then reap worktree BEFORE branch. Every reap must be receipt-backed by the actual
+      `git worktree remove` / branch-deletion command output — a candidate that resists
+      removal or shows any ambiguity is a stop, not a force flag.
+    command: null
+    evidence_predicate:
+      command: git worktree list --porcelain | grep -c '^worktree '
+      success_pattern: '[0-9]'
+    transitions:
+      reaped_with_receipts: pick_next
+      uncommitted_or_foreign_ambiguity: STOP-manual-intervention
+    kind: summon
+    blocked_on: null
+
+  - step_id: pick_next
+    intent: >-
+      Pick the next unblocked action from the lane queue via the queue-pick decision table
+      (decision-tables.v0.yaml, first-match precedence). Before any issue-fix pick, search
+      existing PRs by issue number — an open issue is not proof of unfixed.
+    command: gh pr list --state all --search "{issue_nr}" --limit 10
+    evidence_predicate:
+      command: gh pr list --state all --limit 1
+      success_pattern: '[0-9]'
+    transitions:
+      picked: route_lane
+      queue_empty: idle
+      ambiguous_pick: STOP-manual-intervention
+      out_of_lane_item: STOP-policy-violation
+    kind: table-lookup
+    table: queue-pick
+    blocked_on: null
+
+  - step_id: route_lane
+    intent: >-
+      Route the picked task by model-x-harness fit using the routing decision table — a
+      LIVE LOOKUP against /api/rules and codexbar pace/reserve plus disk headroom; the
+      table fixes the procedure, never the roster. The predicate emits either usable
+      quota data (the "pace"/"usage" keys of real codexbar JSON) or an explicit
+      CODEXBAR_UNAVAILABLE receipt — that receipt IS the required partial-picture
+      evidence, and routing on it must say so. No capacity anywhere with quality fit =
+      idle, never a forced misroute.
+    command: df -h / && codexbar usage --json --provider claude
+    evidence_predicate:
+      command: >-
+        df -h / && (codexbar usage --json --provider claude | grep -E '"pace"|"usage"'
+        || echo "CODEXBAR_UNAVAILABLE")
+      success_pattern: '"pace"|"usage"|CODEXBAR_UNAVAILABLE'
+    transitions:
+      routed: ready_to_dispatch
+      no_fitting_capacity: idle
+      partial_data_receipt_stated: ready_to_dispatch
+      language_lane_restriction_hit: STOP-policy-violation
+    kind: table-lookup
+    table: lane-routing
+    blocked_on: null
