@@ -136,7 +136,7 @@ def test_score_fail_writes_handback(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(gl.subprocess, "run", lambda *a, **k: FakeProc())
     monkeypatch.setattr(
         "scripts.session_canary.diary.resolve_handoff_path",
-        lambda repo, epic, override=None: handoff,
+        lambda repo, epic, override=None, preferred=None: handoff,
     )
     rc = gl.main(
         [
@@ -163,3 +163,27 @@ def test_score_fail_writes_handback(tmp_path: Path, monkeypatch) -> None:
     assert "FAIL-HANDOFF" in text or "canary" in text.lower()
     verdict = json.loads((canary / "last_verdict.json").read_text(encoding="utf-8"))
     assert verdict["verdict"] == "FAIL-HANDOFF"
+
+
+def test_resolve_handoff_path_default_order_unchanged(tmp_path: Path) -> None:
+    epic_dir = tmp_path / ".claude" / "harness-epic"
+    epic_dir.mkdir(parents=True)
+    kimi = epic_dir / "KIMI-DRIVER-HANDOFF.md"
+    claude = epic_dir / "CLAUDE-DRIVER-HANDOFF.md"
+    kimi.write_text("KIMI handoff", encoding="utf-8")
+    claude.write_text("CLAUDE handoff", encoding="utf-8")
+
+    resolved = d.resolve_handoff_path(tmp_path, "harness")
+    assert resolved == claude
+
+
+def test_resolve_handoff_path_glm_preferred(tmp_path: Path) -> None:
+    epic_dir = tmp_path / ".claude" / "harness-epic"
+    epic_dir.mkdir(parents=True)
+    glm = epic_dir / "GLM-DRIVER-HANDOFF.md"
+    claude = epic_dir / "CLAUDE-DRIVER-HANDOFF.md"
+    glm.write_text("GLM handoff", encoding="utf-8")
+    claude.write_text("CLAUDE handoff", encoding="utf-8")
+
+    resolved = d.resolve_handoff_path(tmp_path, "harness", preferred=["GLM-DRIVER-HANDOFF.md"])
+    assert resolved == glm

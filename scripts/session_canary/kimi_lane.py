@@ -367,7 +367,7 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
     )
     original_candidates = _gl._handoff_candidates
     try:
-        _gl._handoff_candidates = lambda r, e: _handoff_candidates(r, e)  # type: ignore[assignment]
+        _gl._handoff_candidates = lambda r, e, preferred=None: _handoff_candidates(r, e)  # type: ignore[assignment]
         mint_rc = _gl.cmd_mint(mint_ns)
     finally:
         _gl._handoff_candidates = original_candidates
@@ -451,7 +451,7 @@ See `docs/runbooks/kimi-orchestrator.md`.
 def _cmd_mint_kimi(args: argparse.Namespace) -> int:
     original = _gl._handoff_candidates
     try:
-        _gl._handoff_candidates = lambda r, e: _handoff_candidates(r, e)  # type: ignore[assignment]
+        _gl._handoff_candidates = lambda r, e, preferred=None: _handoff_candidates(r, e)  # type: ignore[assignment]
         return _gl.cmd_mint(args)
     finally:
         _gl._handoff_candidates = original

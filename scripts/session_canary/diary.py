@@ -28,16 +28,23 @@ def utc_stamp() -> str:
     return datetime.now(UTC).strftime("%Y-%m-%dT%H:%MZ")
 
 
-def resolve_handoff_path(repo: Path, epic: str, override: str | Path | None = None) -> Path:
+def resolve_handoff_path(
+    repo: Path,
+    epic: str,
+    override: str | Path | None = None,
+    preferred: list[str] | None = None,
+) -> Path:
     if override:
         p = Path(override)
         return p if p.is_absolute() else (repo / p)
     base = repo / ".claude" / f"{epic}-epic"
-    for name in (
+    candidates = [
+        *(preferred or []),
         "INTERIM-DRIVER-HANDOFF.md",
         "CLAUDE-DRIVER-HANDOFF.md",
         "CODEX-DRIVER-HANDOFF.md",
-    ):
+    ]
+    for name in candidates:
         cand = base / name
         if cand.is_file():
             return cand
@@ -629,4 +636,3 @@ def try_stream_tail_text(stream_id: str, *, limit: int = 5) -> str:
         return "\n".join(lines)
     except Exception:
         return ""
-

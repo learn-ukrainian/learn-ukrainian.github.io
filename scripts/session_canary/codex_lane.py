@@ -78,7 +78,7 @@ def _cold_start_body(
 def _with_codex_handoffs(function: Any, args: argparse.Namespace) -> int:
     original = _gl._handoff_candidates
     try:
-        _gl._handoff_candidates = lambda repo, epic: _handoff_candidates(repo, epic)  # type: ignore[assignment]
+        _gl._handoff_candidates = lambda repo, epic, preferred=None: _handoff_candidates(repo, epic)  # type: ignore[assignment]
         return int(function(args))
     finally:
         _gl._handoff_candidates = original

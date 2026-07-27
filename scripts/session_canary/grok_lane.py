@@ -81,13 +81,15 @@ def _canary_dir(repo: Path, epic: str) -> Path:
     return repo / ".claude" / f"{epic}-epic" / "canary"
 
 
-def _handoff_candidates(repo: Path, epic: str) -> list[Path]:
+def _handoff_candidates(repo: Path, epic: str, preferred: list[str] | None = None) -> list[Path]:
     base = repo / ".claude" / f"{epic}-epic"
-    return [
-        base / "INTERIM-DRIVER-HANDOFF.md",
-        base / "CLAUDE-DRIVER-HANDOFF.md",
-        base / "CODEX-DRIVER-HANDOFF.md",
+    names = [
+        *(preferred or []),
+        "INTERIM-DRIVER-HANDOFF.md",
+        "CLAUDE-DRIVER-HANDOFF.md",
+        "CODEX-DRIVER-HANDOFF.md",
     ]
+    return [base / n for n in names]
 
 
 def _read_text(path: Path, limit: int = 120_000) -> str:
@@ -315,7 +317,8 @@ def cmd_mint(args: argparse.Namespace) -> int:
         if not handoff_path.is_absolute():
             handoff_path = repo / handoff_path
     else:
-        for cand in _handoff_candidates(repo, epic):
+        preferred = getattr(args, "preferred", None)
+        for cand in _handoff_candidates(repo, epic, preferred=preferred):
             if cand.is_file():
                 handoff_path = cand
                 break
@@ -493,7 +496,10 @@ def cmd_score(args: argparse.Namespace) -> int:
     try:
         from scripts.session_canary import diary as diary_mod
 
-        handoff_path = diary_mod.resolve_handoff_path(repo, epic, getattr(args, "handoff", None))
+        preferred = getattr(args, "preferred", None)
+        handoff_path = diary_mod.resolve_handoff_path(
+            repo, epic, getattr(args, "handoff", None), preferred=preferred
+        )
         canary_line = diary_mod.format_canary_score_line(
             verdict=verdict,
             score_line=score_line,
@@ -569,6 +575,7 @@ def cmd_score(args: argparse.Namespace) -> int:
                             "=== AUTO-HYDRATE (post canary PASS) — restore board from diary; "
                             "do not ask the operator to restart or re-load diary ==="
                         ),
+                        preferred=preferred,
                     )
                     print(
                         "\n=== POST-COMPACT RE-GROUND (mandatory) ===\n"
@@ -617,6 +624,7 @@ def emit_hydrate_capsule(
     write: bool = False,
     print_stdout: bool = True,
     banner: str | None = None,
+    preferred: list[str] | None = None,
 ) -> tuple[int, dict]:
     """Build and optionally print/write a Sol Option-D hydrate capsule.
 
@@ -627,7 +635,7 @@ def emit_hydrate_capsule(
 
     epic = epic.strip().lower()
     stream_id = (stream_id or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")).strip()
-    handoff_path = diary_mod.resolve_handoff_path(repo, epic, handoff)
+    handoff_path = diary_mod.resolve_handoff_path(repo, epic, handoff, preferred=preferred)
     if not handoff_path.is_file():
         print(f"error: diary handoff missing: {handoff_path}", file=sys.stderr)
         return 1, {"error": "missing_handoff", "handoff": str(handoff_path)}
@@ -695,6 +703,7 @@ def cmd_hydrate(args: argparse.Namespace) -> int:
         no_stream=bool(getattr(args, "no_stream", False)),
         write=bool(getattr(args, "write", False)),
         print_stdout=True,
+        preferred=getattr(args, "preferred", None),
     )
     return rc
 
@@ -825,7 +834,8 @@ def cmd_stamp(args: argparse.Namespace) -> int:
     repo = Path(args.repo).resolve()
     epic = args.epic.strip().lower()
     stream = args.stream or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")
-    path = diary_mod.resolve_handoff_path(repo, epic, args.handoff)
+    preferred = getattr(args, "preferred", None)
+    path = diary_mod.resolve_handoff_path(repo, epic, args.handoff, preferred=preferred)
     bullets = list(args.bullet or [])
     if args.title and not bullets:
         bullets = [args.title]
@@ -855,7 +865,8 @@ def cmd_handback(args: argparse.Namespace) -> int:
     repo = Path(args.repo).resolve()
     epic = args.epic.strip().lower()
     stream = args.stream or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")
-    path = diary_mod.resolve_handoff_path(repo, epic, args.handoff)
+    preferred = getattr(args, "preferred", None)
+    path = diary_mod.resolve_handoff_path(repo, epic, args.handoff, preferred=preferred)
     next_drive = list(args.next or []) or ["Load STATE AT HANDBACK + stream; mint canary; resume"]
     canary_line = args.canary_line or "canary not scored this close"
     stamp = diary_mod.append_handback(
