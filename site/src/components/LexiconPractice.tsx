@@ -82,7 +82,7 @@ import {
   normalizeCefrLevel,
   type CefrLevel,
 } from '../lib/lexicon/levels';
-import { dateSeed, pickDaily, type DailyWord } from '../lib/lexicon/daily';
+import { dateSeed, deckSeed, pickDaily, type DailyWord } from '../lib/lexicon/daily';
 import { getTeacherLessonVirtualDeck, readLocalCustomSets, saveLocalCustomSet, deleteLocalCustomSet, type CustomSet } from '../lib/lexicon/custom-decks';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
@@ -1054,6 +1054,18 @@ function filterIndexByDeckFilter(
   return index.filter((item) => deckFilterAllowsLemma(item.lemmaId, item.lemma, deckFilter, customSets));
 }
 
+/**
+ * D10 (design delta 2026-07-27): the raw lemma keys owned by the active deck filter,
+ * or `null` for 'all' — meaning the atlas-global daily pool applies unchanged (D2).
+ * Mirrors `deckFilterAllowsLemma`'s own key resolution so the daily zone can never
+ * disagree with the session/estimate machinery about which deck owns which lemma.
+ */
+function resolveDeckLemmaKeys(deckFilter: string, customSets: CustomSet[]): string[] | null {
+  if (deckFilter === 'all') return null;
+  if (deckFilter === 'virtual_teacher_lesson') return getTeacherLessonVirtualDeck().lemma_keys;
+  return customSets.find((s) => s.id === deckFilter)?.lemma_keys ?? [];
+}
+
 /** Learner level persisted in the shared `lu-learner-level` key (also used by Words of the Day). */
 function readLearnerLevel(fallback: CefrLevel): CefrLevel {
   if (typeof window === 'undefined') return fallback;
@@ -1342,6 +1354,17 @@ function LexiconPracticeIsland({
   // chromeLocale via ChromeText/ChromeDual — never slash-dual (#5503).
   const showEnglishSubtitles = learnerLevel === 'A1' || chromeLocale === 'en';
 
+  // D10: the Words-of-the-Day zone's source line names the active deck. `null`
+  // for 'all' (and for a stale/deleted deck id) falls back to the plain title.
+  const activeDeckTitles = useMemo(() => {
+    if (selectedDeckFilter === 'all') return null;
+    if (selectedDeckFilter === 'virtual_teacher_lesson') {
+      return { uk: 'Відібрана добірка', en: 'Curated Deck' };
+    }
+    const title = customSets.find((s) => s.id === selectedDeckFilter)?.title;
+    return title ? { uk: title, en: title } : null;
+  }, [selectedDeckFilter, customSets]);
+
   const matchedSelectedRatingRef = useRef<PracticeRating | null>(null);
   const matchingTargetOutcomeRef = useRef<CompletionOutcome | null>(null);
 
@@ -1530,6 +1553,11 @@ function LexiconPracticeIsland({
   // lemma/gloss/pos data. The daily pool and practice-core shards are built
   // independently, so an orphaned pool row is normalized into a displayable
   // preview card from its verified pool metadata rather than rendering as —.
+  //
+  // D10 (amendment, 2026-07-27): 'All Words' keeps the above unchanged. Any other
+  // deck filter draws the daily picks FROM THAT DECK instead — pickDaily(deckPool,
+  // dateSeed(now) + deckSeed(deckId), 12) — so the featured zone (and its default
+  // session) react to the learner's deck choice, not just the atlas-global pool.
   useEffect(() => {
     if (sessionPhase !== 'idle') return;
 
@@ -1542,24 +1570,41 @@ function LexiconPracticeIsland({
         const dateKey = todayKey(now);
         const state = loadState();
         const indexSource = deck?.index ?? dueIndex ?? [];
+        const deckLemmaKeys = resolveDeckLemmaKeys(selectedDeckFilter, customSets);
 
-        const pool = await getShardJson<DailyWord[]>(
-          '/lexicon/daily-pool.json',
-          shardJsonCacheRef.current,
-        );
-        const eligiblePool = filterByCumulativeLevel(pool, learnerLevel);
-        const picks = pickDaily(eligiblePool, dateSeed(now), DAILY_PRACTICE_DECK_SIZE);
+        let picks: DailyWord[] = [];
+        let representedLevels: Set<string>;
 
-        // Fetch lexeme cores only for levels represented among today's picks —
-        // or all selected-level cores for the defined fallback when the daily
-        // pool is empty.
-        const levelsForDailyPreview = picks.length > 0
-          ? picks.map((word) => word.cefr)
-          : levelsUpTo(learnerLevel);
-        const representedLevels = new Set(
-          levelsForDailyPreview.filter((cefr): cefr is string => Boolean(cefr)),
-        );
-        const levelEntries = deck
+        if (deckLemmaKeys === null) {
+          const pool = await getShardJson<DailyWord[]>(
+            '/lexicon/daily-pool.json',
+            shardJsonCacheRef.current,
+          );
+          const eligiblePool = filterByCumulativeLevel(pool, learnerLevel);
+          picks = pickDaily(eligiblePool, dateSeed(now), DAILY_PRACTICE_DECK_SIZE);
+
+          // Fetch lexeme cores only for levels represented among today's picks —
+          // or all selected-level cores for the defined fallback when the daily
+          // pool is empty.
+          const levelsForDailyPreview = picks.length > 0
+            ? picks.map((word) => word.cefr)
+            : levelsUpTo(learnerLevel);
+          representedLevels = new Set(
+            levelsForDailyPreview.filter((cefr): cefr is string => Boolean(cefr)),
+          );
+        } else {
+          // A deck's words can sit at any level (or none — an unverified custom
+          // import) — resolve against every published level's shard rather than
+          // guessing from the learner's currently selected level.
+          representedLevels = new Set<string>(PUBLISHED_PRACTICE_LEVELS);
+        }
+
+        // The atlas branch can skip this fetch once `deck` already covers the
+        // learner's levels. The deck-scoped branch cannot: `deck` only gets
+        // per-lemma coverage for the ACTIVE deck filter when a drill mode has
+        // loaded cloze (`ensureDeckCustomSetCoverage`), which the idle setup
+        // screen has often never triggered — so it fetches independently.
+        const levelEntries = deck && deckLemmaKeys === null
           ? []
           : await Promise.all(
               Array.from(representedLevels).map(async (level) => {
@@ -1596,47 +1641,84 @@ function LexiconPracticeIsland({
           ...(deck?.cloze ?? []),
           ...levelEntries.flatMap((batch) => batch.cloze),
         ]);
-        for (const word of picks) {
-          if (lexemes.has(word.slug)) continue;
-          // The daily pool is itself a verified learner-facing source. Preserve
-          // its unified pick even when the independently generated practice
-          // shard lacks that lemma, using the metadata available on the row.
-          lexemes.set(word.slug, {
-            lemmaId: word.slug,
-            lemma: word.lemma,
-            lemmaPlain: word.lemma,
-            ipa: null,
-            gloss: word.gloss ?? word.lemma,
-            pos: null,
-            cefr: word.cefr ?? null,
-            heritage: null,
-            severity: null,
-            paradigm: { cases: {} },
+
+        let displayablePicks: DailyWord[];
+        if (deckLemmaKeys !== null) {
+          // Case-insensitive lookup, matching `deckFilterAllowsLemma`'s own
+          // lemmaId-or-lemma comparison — deck keys are free-form learner input.
+          const lexemesByLower = new Map<string, PracticeLexeme>();
+          for (const entry of lexemes.values()) {
+            lexemesByLower.set(entry.lemmaId.toLowerCase(), entry);
+            lexemesByLower.set(entry.lemma.toLowerCase(), entry);
+          }
+          const deckPool: DailyWord[] = deckLemmaKeys.map((key) => {
+            const match = lexemes.get(key) ?? lexemesByLower.get(key.toLowerCase()) ?? null;
+            // A deck word with no atlas/level match still deserves a real-looking
+            // card — same cleanup `ensureDeckCustomSetCoverage` applies for the
+            // session pool, so the preview and the session never disagree.
+            const cleanKey = key.replace(/\(.*?\)/g, '').trim() || key;
+            return {
+              lemma: match?.lemma ?? cleanKey,
+              slug: match?.lemmaId ?? key,
+              gloss: match?.gloss ?? cleanKey,
+              hasAtlasEntry: Boolean(match),
+              cefr: match?.cefr ?? undefined,
+              pos: match?.pos ?? undefined,
+              example: match?.example ?? undefined,
+              exampleEn: match?.exampleEn ?? undefined,
+            };
           });
+          displayablePicks = pickDaily(
+            deckPool,
+            dateSeed(now) + deckSeed(selectedDeckFilter),
+            DAILY_PRACTICE_DECK_SIZE,
+          );
+        } else {
+          for (const word of picks) {
+            if (lexemes.has(word.slug)) continue;
+            // The daily pool is itself a verified learner-facing source. Preserve
+            // its unified pick even when the independently generated practice
+            // shard lacks that lemma, using the metadata available on the row.
+            lexemes.set(word.slug, {
+              lemmaId: word.slug,
+              lemma: word.lemma,
+              lemmaPlain: word.lemma,
+              ipa: null,
+              gloss: word.gloss ?? word.lemma,
+              pos: null,
+              cefr: word.cefr ?? null,
+              heritage: null,
+              severity: null,
+              paradigm: { cases: {} },
+            });
+          }
+          // A genuinely empty daily pool has no unified pick set. In that case,
+          // deterministically use the selected level's curated practice cores
+          // rather than render an empty daily card.
+          const fallbackPool: DailyWord[] = Array.from(lexemes.values()).map((lexeme) => ({
+            lemma: lexeme.lemma,
+            slug: lexeme.lemmaId,
+            gloss: lexeme.gloss,
+            hasAtlasEntry: true,
+            cefr: lexeme.cefr ?? undefined,
+          }));
+          displayablePicks = picks.length > 0
+            ? picks
+            : pickDaily(fallbackPool, dateSeed(now), DAILY_PRACTICE_DECK_SIZE);
         }
-        // A genuinely empty daily pool has no unified pick set. In that case,
-        // deterministically use the selected level's curated practice cores
-        // rather than render an empty daily card.
-        const fallbackPool: DailyWord[] = Array.from(lexemes.values()).map((lexeme) => ({
-          lemma: lexeme.lemma,
-          slug: lexeme.lemmaId,
-          gloss: lexeme.gloss,
-          cefr: lexeme.cefr ?? undefined,
-        }));
-        const displayablePicks = picks.length > 0
-          ? picks
-          : pickDaily(fallbackPool, dateSeed(now), DAILY_PRACTICE_DECK_SIZE);
+
         const snapshot: DailyPracticeDeckSnapshot = {
           version: 2,
           date: dateKey,
           level: learnerLevel,
-          deckVersion: 'daily-pool',
+          deckVersion: deckLemmaKeys !== null ? selectedDeckFilter : 'daily-pool',
           createdAt: now.getTime(),
           items: displayablePicks.map((word) => ({
             lemmaId: word.slug,
             origin: classifyDailyPracticeOrigin(word.slug, indexSource, state.cards, now),
             lemma: word.lemma,
             gloss: word.gloss,
+            hasAtlasEntry: word.hasAtlasEntry ?? true,
             cefr: word.cefr ?? null,
             pos: word.pos ?? null,
             example: word.example ?? null,
@@ -1658,7 +1740,17 @@ function LexiconPracticeIsland({
     return () => {
       cancelled = true;
     };
-  }, [deck?.index, deck?.lexemes, deck?.cloze, dueIndex, learnerLevel, sessionPhase, shardBaseUrl]);
+  }, [
+    deck?.index,
+    deck?.lexemes,
+    deck?.cloze,
+    dueIndex,
+    learnerLevel,
+    sessionPhase,
+    shardBaseUrl,
+    selectedDeckFilter,
+    customSets,
+  ]);
 
   const indexForStats = (deck?.index ?? dueIndex ?? []).filter(
     (item) => !focusedLemmaId || item.lemmaId === focusedLemmaId
@@ -2993,7 +3085,16 @@ function LexiconPracticeIsland({
               {dailySnapshotLoading || !dailySnapshot ? (
                 <div className="practice-daily-deck k3-words-loading" data-testid="practice-daily-deck-loading">
                   <div className="daily-deck-header">
-                    <h2><ChromeText k="practice.wordsTitle" /></h2>
+                    <h2>
+                      {activeDeckTitles ? (
+                        <ChromeDual
+                          uk={`Слова дня — ${activeDeckTitles.uk}`}
+                          en={`Words of the day — ${activeDeckTitles.en}`}
+                        />
+                      ) : (
+                        <ChromeText k="practice.wordsTitle" />
+                      )}
+                    </h2>
                   </div>
                   <div className="daily-deck-preview-shell">
                     <div className="flashcard daily-preview-card">
@@ -3016,6 +3117,8 @@ function LexiconPracticeIsland({
                   atlasLemmaHref={atlasLemmaHref}
                   chromeLocale={chromeLocale}
                   learnerLevel={learnerLevel}
+                  deckTitleUk={activeDeckTitles?.uk}
+                  deckTitleEn={activeDeckTitles?.en}
                 />
               )}
             </div>

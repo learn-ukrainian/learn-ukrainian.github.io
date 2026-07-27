@@ -4,6 +4,11 @@ export interface DailyWord {
   lemma: string;
   slug: string;
   gloss: string | null;
+  /**
+   * Whether `slug` resolves to a real Atlas lemma page. Custom deck keys can
+   * remain displayable even when they have no atlas/practice-shard match.
+   */
+  hasAtlasEntry?: boolean;
   k?: string;
   lessonTag?: string;
   cefr?: string;
@@ -43,4 +48,19 @@ export function pickDaily<T>(pool: T[], seed: number, n: number): T[] {
     [result[i], result[j]] = [result[j], result[i]];
   }
   return result.slice(0, Math.max(0, Math.min(n, result.length)));
+}
+
+/**
+ * Deterministic numeric contribution for a deck id, for combining with `dateSeed`
+ * (D10: `pickDaily(deckPool, dateSeed(today) + deckId, 12)`). `deckId` is a string,
+ * so a literal `+` would coerce the whole expression to NaN/0 — this hash gives the
+ * formula's intent (date AND deck both drive the draw) a real numeric seed.
+ */
+export function deckSeed(deckId: string): number {
+  let hash = 2166136261;
+  for (let index = 0; index < deckId.length; index += 1) {
+    hash ^= deckId.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
 }
