@@ -21,7 +21,7 @@
 #   from the failing run's logs, never inferred from local state.
 schema_version: trailspec.v1
 trail_id: rb4-red-ci-triage
-version: "0.1.0"
+version: "0.2.0"
 title: RB4 Red-CI triage — signature, allowlist, staleness, bounded rerun
 seats:
   - grok-daily
@@ -36,18 +36,18 @@ stop_codes:
 terminal_outcomes:
   - triaged_rerun_fired
   - triaged_update_branch_fired
-  - noted_preexisting
   - back_to_pr_lifecycle
 steps:
   - step_id: snapshot_checks
     intent: >-
       Snapshot the PR's check table (live shape: tab-separated lines
-      "<name>\t<pass|fail|pending|skipping>\t<duration>\t<url>"). A snapshot with at
-      least one fail line proceeds to triage; all-green means this trail was summoned
-      stale and control returns to the PR lifecycle.
+      "<name>\t<pass|fail|pending|skipping>\t<duration>\t<url>"). The red count is
+      parsed from the STATUS FIELD, never whole-line grep (a passing check named
+      "failure-report" must not read as red — r1 finding); a non-zero fail-field
+      count proceeds to triage, zero returns to the PR lifecycle.
     command: sh -c 'gh pr checks {pr_number} 2>/dev/null | tee batch_state/rb4-checks-{pr_number}.txt'
     evidence_predicate:
-      command: grep -c -e "fail" batch_state/rb4-checks-{pr_number}.txt
+      command: sh -c 'awk -F"\t" "\$2==\"fail\"" batch_state/rb4-checks-{pr_number}.txt | wc -l | tr -d " "'
       success_pattern: '^[0-9]+$'
     transitions:
       red_present: locate_failing_run
@@ -89,6 +89,24 @@ steps:
     kind: mechanical
     blocked_on: null
 
+  - step_id: head_currency_check
+    intent: >-
+      Before any staleness reasoning, prove the failing run belongs to the PR's
+      CURRENT head: compare the run's headSha with the PR's headRefOid (both live gh
+      JSON fields). A run for a superseded head has been replaced by the newer
+      head's own CI — nothing here may act on it (the burned hazard: acting on a
+      stale head's run cancels or misleads the live one); control returns to the PR
+      lifecycle, which watches the current run.
+    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); R=$(gh run view "$RUN" --json headSha --jq .headSha); P=$(gh pr view {pr_number} --json headRefOid --jq .headRefOid); [ "$R" = "$P" ] && echo head-current || echo head-superseded'
+    evidence_predicate:
+      command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); R=$(gh run view "$RUN" --json headSha --jq .headSha); P=$(gh pr view {pr_number} --json headRefOid --jq .headRefOid); [ "$R" = "$P" ] && echo head-current || echo head-superseded'
+      success_pattern: '^(head-current|head-superseded)$'
+    transitions:
+      head_current: staleness_probe
+      head_superseded: back_to_pr_lifecycle
+    kind: mechanical
+    blocked_on: null
+
   - step_id: staleness_probe
     intent: >-
       BEFORE any rerun decision, capture both timestamps into one receipt: the
@@ -96,8 +114,11 @@ steps:
       timestamps from gh run view --json createdAt and git log -1 --format=%cI).
       A run created BEFORE main's tip may have tested a merge against a since-fixed
       base — the burned-in hazard: rerunning it re-tests the stale pinned SHA and can
-      cancel the live head's run via the concurrency group. The comparison itself is
-      the next step's single signal.
+      cancel the live head's run via the concurrency group. HONEST APPROXIMATION
+      NOTE: %cI is commit time, not push time; it can only UNDER-detect staleness,
+      and the under-detected case falls through to the fail-closed allowlist path
+      (registry absent → STOP-unknown), never to a rerun — the safe direction. The
+      comparison itself is the next step's single signal.
     command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); { gh run view "$RUN" --json createdAt --jq .createdAt; git log -1 --format=%cI origin/main; } | tee batch_state/rb4-staleness-{pr_number}.txt'
     evidence_predicate:
       command: sh -c 'test "$(wc -l < batch_state/rb4-staleness-{pr_number}.txt | tr -d " ")" = "2" && echo both-timestamps'
@@ -110,18 +131,20 @@ steps:
 
   - step_id: staleness_compare
     intent: >-
-      Single-signal lexicographic compare of the two recorded ISO timestamps (ISO
-      8601 sorts lexicographically): run older than main's tip means the base moved
-      after this CI ran — the table's disposition is gh pr update-branch, NEVER
-      gh run rerun. Run newer or equal means the head's merge is current and the
-      allowlist decides.
-    command: sh -c 'R=$(sed -n 1p batch_state/rb4-staleness-{pr_number}.txt); M=$(sed -n 2p batch_state/rb4-staleness-{pr_number}.txt); [ "$R" \< "$M" ] && echo run-predates-main || echo run-current'
+      Single-signal EPOCH compare of the two recorded timestamps, normalized in the
+      venv interpreter (r1 finding: mixed Z/offset ISO forms do not sort
+      lexicographically — a UTC run stamp vs an offset-form commit stamp misorders;
+      datetime.fromisoformat handles both and compares instants). FAILS CLOSED: a
+      missing or malformed receipt is its own outcome routing to a stop, never a
+      silent run-current.
+    command: sh -c '.venv/bin/python -c "import sys,datetime as d; L=open(\"batch_state/rb4-staleness-{pr_number}.txt\").read().split(); R=d.datetime.fromisoformat(L[0].replace(\"Z\",\"+00:00\")); M=d.datetime.fromisoformat(L[1].replace(\"Z\",\"+00:00\")); print(\"run-predates-main\" if R<M else \"run-current\")" 2>/dev/null || echo receipt-unusable'
     evidence_predicate:
-      command: sh -c 'R=$(sed -n 1p batch_state/rb4-staleness-{pr_number}.txt); M=$(sed -n 2p batch_state/rb4-staleness-{pr_number}.txt); [ "$R" \< "$M" ] && echo run-predates-main || echo run-current'
-      success_pattern: '^(run-predates-main|run-current)$'
+      command: sh -c '.venv/bin/python -c "import sys,datetime as d; L=open(\"batch_state/rb4-staleness-{pr_number}.txt\").read().split(); R=d.datetime.fromisoformat(L[0].replace(\"Z\",\"+00:00\")); M=d.datetime.fromisoformat(L[1].replace(\"Z\",\"+00:00\")); print(\"run-predates-main\" if R<M else \"run-current\")" 2>/dev/null || echo receipt-unusable'
+      success_pattern: '^(run-predates-main|run-current|receipt-unusable)$'
     transitions:
       run_predates_main: fire_update_branch
       run_current: allowlist_match
+      receipt_unusable: STOP-precondition-failed
     kind: mechanical
     blocked_on: null
 
@@ -143,53 +166,42 @@ steps:
 
   - step_id: allowlist_match
     intent: >-
-      Match the recorded signature against the known-failure-class allowlist and
-      apply that entry's action (retry-once | note-and-proceed | STOP). The registry
-      DOES NOT EXIST YET — the table row itself carries this blocked_on — so today
-      every signature is unmatched and routes to the base-reproduction summon;
-      nothing is retried on a pattern-match hunch. When the registry lands, matched
-      retry-once entries route to the bounded rerun and matched STOP entries to
-      STOP-ci-red.
-    command: cat batch_state/rb4-signature-{pr_number}.txt
+      ENFORCED fail-closed lookup (r1 finding: the missing registry must be an
+      execution guard, not narration): the step checks for the registry file itself
+      — scripts/config/trails/red-ci-known-failures.yaml — and with it ABSENT
+      (today's state) every signature is table-unknown and stops as STOP-unknown;
+      the rerun path is mechanically UNREACHABLE until the registry lands. The
+      table's other judgment rows (pre-existing-on-main → note + owning issue;
+      head-specific → fix round) are applied BY THE SUMMONED JUDGMENT working from
+      the recorded signature receipt — deliberately not encoded as weak-seat
+      routes. When the registry lands, matched retry-once entries route to the
+      bounded rerun gate and matched STOP entries to STOP-ci-red.
+    command: sh -c 'test -f scripts/config/trails/red-ci-known-failures.yaml && echo registry-present || echo registry-absent'
     evidence_predicate:
-      command: test -s batch_state/rb4-signature-{pr_number}.txt && echo signature-present
-      success_pattern: '^signature-present$'
+      command: sh -c 'test -f scripts/config/trails/red-ci-known-failures.yaml && echo registry-present || echo registry-absent'
+      success_pattern: '^(registry-present|registry-absent)$'
     transitions:
       matched_retry_once: rerun_gate
       matched_stop: STOP-ci-red
-      unmatched: base_reproduction_probe
+      registry_absent_unknown: STOP-unknown
     kind: table-lookup
     table: red-ci-triage
     blocked_on: "known-failure-class signature registry (#5885)"
 
-  - step_id: base_reproduction_probe
-    intent: >-
-      Judgment work by nature (tonight's live example: proving a shard failure came
-      from a mid-run tree swap took a primary-clone reproduction and a git shim —
-      no mechanical predicate can claim that): determine whether the recorded
-      signature reproduces on origin/main. Pre-existing-on-main failures are NOTED
-      on the PR with the owning issue filed/linked — never fixed in-branch; failures
-      unique to the head go back with the findings to the PR lifecycle's fix round.
-      Retry-until-green is never an outcome here.
-    command: null
-    evidence_predicate: null
-    transitions:
-      reproduces_on_main_noted: noted_preexisting
-      head_specific_fix_round: back_to_pr_lifecycle
-      cannot_determine: STOP-manual-intervention
-    kind: summon
-    blocked_on: null
-
   - step_id: rerun_gate
     intent: >-
-      Bounded rerun for a registry-matched flake on a CURRENT head only (the
-      staleness gate already ran): one rerun per run id, tracked by a receipt file —
-      a receipt already present means this run consumed its rerun and the class
-      needs eyes, not another spin. Never retry-until-green.
-    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); test -f "batch_state/rb4-rerun-$RUN.receipt" && echo already-rerun || { echo fired > "batch_state/rb4-rerun-$RUN.receipt"; echo first-rerun; }'
+      Bounded rerun for a registry-matched flake on a CURRENT head only (head
+      currency + staleness gates already ran): the claim is an ATOMIC noclobber
+      create keyed by run id (r1 finding: test-then-write races; set -C makes the
+      create itself the winner-decider — concurrent claimers lose the O_EXCL-style
+      race), and the gate's outcome is TEED to a gate-result file the predicate
+      reads back, so both branches are derivable from recorded evidence. A consumed
+      claim whose rerun later failed stays consumed — the safe direction. Never
+      retry-until-green.
+    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); ( set -C; echo fired > "batch_state/rb4-rerun-$RUN.receipt" ) 2>/dev/null && echo first-rerun > "batch_state/rb4-gate-$RUN.txt" || echo already-rerun > "batch_state/rb4-gate-$RUN.txt"; cat "batch_state/rb4-gate-$RUN.txt"'
     evidence_predicate:
-      command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); test -f "batch_state/rb4-rerun-$RUN.receipt" && echo receipt-present'
-      success_pattern: '^receipt-present$'
+      command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); cat "batch_state/rb4-gate-$RUN.txt"'
+      success_pattern: '^(first-rerun|already-rerun)$'
     transitions:
       first_rerun: fire_rerun
       already_rerun: STOP-ci-red
