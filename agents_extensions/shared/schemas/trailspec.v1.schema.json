@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "trailspec.v1",
+  "title": "TrailSpec v1 schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "trail_id",
+    "version",
+    "title",
+    "seats",
+    "steps",
+    "stop_codes",
+    "terminal_outcomes"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "trailspec.v1"
+    },
+    "trail_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_-]+$",
+      "minLength": 1
+    },
+    "version": {
+      "type": ["string", "integer"]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "seats": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["grok-daily", "glm-trial", "flash-queue", "judgment"]
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "step_id",
+          "intent",
+          "command",
+          "evidence_predicate",
+          "transitions",
+          "kind"
+        ],
+        "properties": {
+          "step_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "intent": {
+            "type": "string",
+            "minLength": 1
+          },
+          "command": {
+            "type": ["string", "null"]
+          },
+          "evidence_predicate": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["command", "success_pattern"],
+                "properties": {
+                  "command": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "success_pattern": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            ]
+          },
+          "transitions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minProperties": 1
+          },
+          "kind": {
+            "type": "string",
+            "enum": ["mechanical", "table-lookup", "summon"]
+          },
+          "blocked_on": {
+            "type": ["string", "null"]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "enum": ["mechanical", "table-lookup"]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "evidence_predicate": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "minItems": 1
+    },
+    "stop_codes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "terminal_outcomes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  }
+}

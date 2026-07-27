@@ -1,0 +1,119 @@
+schema_version: trailspec.v1
+trail_id: rb3-pr-lifecycle
+version: "1.0.0"
+title: RB3 Pull Request Lifecycle Drive Loop
+seats:
+  - grok-daily
+  - glm-trial
+  - flash-queue
+  - judgment
+stop_codes:
+  - STOP-verdict-timeout
+  - STOP-contested
+terminal_outcomes:
+  - completed
+  - aborted
+steps:
+  - step_id: request_review
+    intent: Request PR code review from assigned cross-family seat.
+    command: gh pr edit {pr_number} --add-reviewer {reviewer_seat}
+    evidence_predicate:
+      command: gh pr view {pr_number} --json reviewRequests
+      success_pattern: "reviewRequests"
+    transitions:
+      success: await_verdict
+      failed: STOP-verdict-timeout
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: await_verdict
+    intent: Wait for reviewer verdict to be submitted and sealed.
+    command: null
+    evidence_predicate: null
+    transitions:
+      verdict_received: evaluate_signals
+      timeout: STOP-verdict-timeout
+    kind: summon
+    blocked_on: null
+
+  - step_id: evaluate_signals
+    intent: Evaluate 4-signal arm table for auto-merge eligibility.
+    command: python3 -m scripts.orchestration.evaluate_pr_signals --pr {pr_number}
+    evidence_predicate:
+      command: python3 -m scripts.orchestration.evaluate_pr_signals --pr {pr_number} --check
+      success_pattern: "evaluated"
+    transitions:
+      arm_automerge: babysit_merge
+      signal_pending: await_verdict
+      stale_head: re_request_review
+      conflicting: STOP-contested
+    kind: table-lookup
+    blocked_on: null
+
+  - step_id: re_request_review
+    intent: Re-request review after new commit pushed to head.
+    command: gh pr edit {pr_number} --add-reviewer {reviewer_seat}
+    evidence_predicate:
+      command: gh pr view {pr_number} --json reviewRequests
+      success_pattern: "reviewRequests"
+    transitions:
+      success: await_verdict
+      failed: STOP-verdict-timeout
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: babysit_merge
+    intent: Monitor PR auto-merge and handle post-merge hygiene or CI failures.
+    command: null
+    evidence_predicate: null
+    transitions:
+      merged: post_merge_hygiene
+      ci_red: red_ci_triage
+      disarmed: rearm_automerge
+    kind: summon
+    blocked_on: null
+
+  - step_id: rearm_automerge
+    intent: Re-arm auto-merge once blocking CI checks turn green.
+    command: gh pr merge {pr_number} --auto --squash
+    evidence_predicate:
+      command: gh pr view {pr_number} --json autoMergeRequest
+      success_pattern: "autoMergeRequest"
+    transitions:
+      rearmed: babysit_merge
+      failed: STOP-verdict-timeout
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: red_ci_triage
+    intent: Dispatch red-CI triage trail on build failure.
+    command: null
+    evidence_predicate: null
+    transitions:
+      triaged: evaluate_signals
+      aborted: aborted
+    kind: summon
+    blocked_on: null
+
+  - step_id: post_merge_hygiene
+    intent: Perform post-merge hygiene by deleting branches, removing worktrees, and pulling latest main.
+    command: git worktree remove .worktrees/pr-{pr_number} && git branch -d feature-branch
+    evidence_predicate:
+      command: git worktree list
+      success_pattern: "main"
+    transitions:
+      success: close_pr_lifecycle
+      failed: close_pr_lifecycle
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: close_pr_lifecycle
+    intent: Close PR lifecycle trail and record terminal status.
+    command: echo "PR lifecycle completed"
+    evidence_predicate:
+      command: echo "done"
+      success_pattern: "done"
+    transitions:
+      completed: completed
+    kind: mechanical
+    blocked_on: null
