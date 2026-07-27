@@ -94,6 +94,12 @@ const atlasAssetBase = `${baseUrl === '/' ? '' : baseUrl.replace(/\/$/, '')}/atl
   </section>
 </CourseLayout>
 
+<style>
+  :global(html[data-atlas-shell] .lu-hero) {
+    display: none;
+  }
+</style>
+
 <style is:global>
   .atlas-client-shell-state {
     display: grid;

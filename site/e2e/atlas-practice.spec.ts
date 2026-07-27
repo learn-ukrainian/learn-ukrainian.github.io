@@ -103,6 +103,15 @@ test('all СУМ-11 definition cards are hidden from word pages (Soviet dictiona
   await expect(page.locator('.def-card.sum20')).toHaveCount(1);
 });
 
+test('Atlas shell hides the 404 hero only for rendered word pages', async ({ page }) => {
+  await page.goto('/lexicon/прапор/');
+  await expect(page.locator('h1.word-title')).toBeVisible();
+  await expect(page.locator('.lu-hero:visible').filter({ hasText: 'Page Not Found' })).toHaveCount(0);
+
+  await page.goto('/definitely-not-a-real-page/');
+  await expect(page.locator('.lu-hero:visible').filter({ hasText: 'Page Not Found' })).toHaveCount(1);
+});
+
 for (const path of ['/lexicon/', '/words-of-the-day/', '/lexicon/browse/']) {
   test(`${path} loads without console errors`, async ({ page }) => {
     const consoleErrors = trackConsoleErrors(page);
