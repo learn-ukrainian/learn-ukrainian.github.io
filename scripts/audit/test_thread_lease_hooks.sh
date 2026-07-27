@@ -301,11 +301,13 @@ printf '%s' "{\"session_id\":\"$evil_id\"}" | \
 
 # 8. Symlink-escape e2e scenarios — re-enabled on Linux (#5906): the CI-only
 #    "contradiction" (session record landing through a symlinked sessions dir
-#    while unit refusal tests passed) was the #5908-class mid-run tree swap:
-#    session-setup's primary-on-main heal checked out main under the running
-#    shard, so scenario 8 was exercising main's PRE-guard session_record.py.
-#    The heal is gated out of CI/test contexts now; this canary un-skip proves
-#    the guard end-to-end on Linux again.
+#    while unit refusal tests passed) is consistent with the #5908-class
+#    mid-run tree swap: session-setup's primary-on-main heal checked out main
+#    under the running shard (proven for scenario 9's rc=127), which likely
+#    left scenario 8 exercising main's PRE-guard session_record.py. The heal
+#    is gated out of CI/test contexts now; this canary un-skip is the arbiter:
+#    green on Linux CI proves the guard end-to-end regardless of the exact
+#    historical mechanism.
 run_scenario_8() {
 # 8. Symlink escape (formal CF F001 round 2): a planted symlink at
 #    .agent/sessions (or at the destination entry) must NOT let the sidecar
