@@ -411,10 +411,16 @@ def test_learn_uk_kimi_bin_hermes_override_rejected(tmp_path: Path) -> None:
     env["HOME"] = os.fspath(home)
     env["PATH"] = "/usr/bin:/bin"
 
+    # Outside-tree symlink whose target is still the Hermes binary.
+    outside = home / "elsewhere"
+    outside.mkdir(parents=True)
+    (outside / "kimi-link").symlink_to(hermes_bin / "kimi")
+
     for override in (
         hermes_bin / "kimi",
         # lexical bypass attempt: .../bin/../bin/kimi still resolves under Hermes
         hermes_bin / ".." / "bin" / "kimi",
+        outside / "kimi-link",
     ):
         env["LEARN_UK_KIMI_BIN"] = os.fspath(override)
         result = subprocess.run(

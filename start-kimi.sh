@@ -75,17 +75,25 @@ usage_launcher() {
 # legacy standalone binary at ~/.kimi-code/bin (last resort; often stale).
 # Do NOT fall back to ~/.hermes/node/bin — that tree is Hermes-private only.
 #
-# Returns 0 if path is the Hermes-private node bin tree (physical path match,
-# not just lexical */.hermes/node/bin/* — blocks $HOME/.hermes/node/bin/../bin/kimi).
+# Returns 0 if path is the Hermes-private node bin tree.
+# Uses physical path of the *executable* (resolves symlinks and ../), not just
+# a lexical prefix check — blocks overrides and PATH hits that land on Hermes.
 is_hermes_private_node_bin() {
   local cand="$1"
   [ -n "$cand" ] || return 1
-  local hermes_phys cand_dir
+  local hermes_phys cand_phys cand_dir
   hermes_phys="$(cd "${HOME}/.hermes/node/bin" 2>/dev/null && pwd -P)" || hermes_phys=""
-  if [ -n "$hermes_phys" ] && [ -e "$cand" ]; then
-    cand_dir="$(cd "$(dirname -- "$cand")" 2>/dev/null && pwd -P)" || cand_dir=""
-    if [ -n "$cand_dir" ] && [ "$cand_dir" = "$hermes_phys" ]; then
-      return 0
+  if [ -n "$hermes_phys" ] && { [ -e "$cand" ] || [ -L "$cand" ]; }; then
+    if command -v realpath >/dev/null 2>&1; then
+      cand_phys="$(realpath "$cand" 2>/dev/null)" || cand_phys=""
+    else
+      cand_phys="$(python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$cand" 2>/dev/null)" || cand_phys=""
+    fi
+    if [ -n "$cand_phys" ]; then
+      cand_dir="$(dirname -- "$cand_phys")"
+      if [ "$cand_dir" = "$hermes_phys" ]; then
+        return 0
+      fi
     fi
   fi
   case "$cand" in
@@ -93,6 +101,7 @@ is_hermes_private_node_bin() {
   esac
   return 1
 }
+
 
 KIMI_BIN="${LEARN_UK_KIMI_BIN:-}"
 # Never accept Hermes-private installs — including explicit LEARN_UK_KIMI_BIN overrides.
