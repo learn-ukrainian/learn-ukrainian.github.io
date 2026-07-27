@@ -1,6 +1,9 @@
 # Area assignments registry — MUTABLE mapping of area -> driver_agent_type, slots roster.
 # Replaces .agent/lane-assignments.md as machine authority (in later step).
 # See #5281 / #5279 design decisions.
+#
+# Derivation rule: slots = provider identity functions × launcher_selector_resolve lanes;
+# see scripts/lib/handoff_identity.sh — do not add rows without a mintable selector.
 
 schema_version: 1
 assignments:
@@ -23,11 +26,6 @@ assignments:
   harness:
     driver_agent_type: infra-orchestrator
     slots:
-      - claude-harness
-      - codex-harness
-      - gemini-harness
-      - grok-harness
-      - kimi-harness
       - claude-corpus
       - codex-corpus
       - gemini-corpus
@@ -43,20 +41,11 @@ assignments:
       - kimi-atlas
   core:
     driver_agent_type: curriculum-orchestrator
-    slots:
-      - claude-core
-      - codex-core
-      - gemini-core
-      - grok-core
-      - kimi-core
+    # no launcher selector mints a core slot (C7)
+    slots: []
   seminars:
     driver_agent_type: curriculum-orchestrator
     slots:
-      - claude-seminars
-      - codex-seminars
-      - gemini-seminars
-      - grok-seminars
-      - kimi-seminars
       - claude-folk
       - codex-folk
       - gemini-folk

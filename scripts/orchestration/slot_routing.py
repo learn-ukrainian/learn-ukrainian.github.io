@@ -105,10 +105,12 @@ def resolve_slot_holder(
     3. Query session-streams DB for active leases matching the area's epics.
     4. Return holder facts if an active, non-expired lease exists; else no-holder.
 
+    For multi-epic areas with several live leases, the farthest-expiry lease wins.
+
     READ-ONLY — never writes that DB from this path.
     """
     clean_slot = slot.strip()
-    queue_loc = f".agent/wake/{clean_slot}"
+    queue_loc = f"channels DB delivery queue for '{clean_slot}'"
 
     assign_path = (assignments_path or DEFAULT_ASSIGNMENTS_PATH).resolve()
     area_candidate = _find_area_for_slot(clean_slot, assign_path)

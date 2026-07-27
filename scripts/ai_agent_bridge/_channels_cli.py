@@ -416,7 +416,7 @@ def register_channel_commands(subparsers: Any) -> None:
     )
     post_parser.add_argument(
         "--from-agent", default="user",
-        choices=list(_channels.VALID_POST_AGENTS),
+        choices=_channels.get_valid_post_agents(),
         help="Sender agent (default: user)",
     )
     post_parser.add_argument(

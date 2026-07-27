@@ -81,7 +81,7 @@ def _active_lease_holder(stream_epic: str, *, session_db: Path, now: datetime) -
         logger.error("bottleneck alerts: invalid lease expiry for epic %s", stream_epic)
         return None
     holder = str(row["holder_agent"] or "")
-    if expires_at <= now or holder not in _channels.VALID_RECIPIENT_AGENTS:
+    if expires_at <= now or holder not in _channels.get_valid_recipient_agents():
         return None
     return holder
 

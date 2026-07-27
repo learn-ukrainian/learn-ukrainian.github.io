@@ -146,9 +146,8 @@ def get_valid_agents(*, assignments_path: Path | None = None) -> tuple[str, ...]
             slots = _SLOTS_CACHE.get("slots", ())
         else:
             slots = _load_registry_slots(path)
-            if slots:
-                _SLOTS_CACHE["key"] = cache_key
-                _SLOTS_CACHE["slots"] = slots
+            _SLOTS_CACHE["key"] = cache_key
+            _SLOTS_CACHE["slots"] = slots
     except Exception:
         slots = ()
 

@@ -9,6 +9,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.ai_agent_bridge import _channels, _inbox
 from scripts.orchestration.slot_routing import resolve_slot_holder
@@ -45,6 +46,28 @@ def test_roster_slots_accepted_by_validation() -> None:
     _channels._validate_post_agent("claude-atlas", assignments_path=_AREA_ASSIGNMENTS_YAML)
     _channels._validate_recipient_agent("codex-devops", assignments_path=_AREA_ASSIGNMENTS_YAML)
     _inbox._validate_agent("grok-infra")
+
+
+def test_roster_slot_count_is_35() -> None:
+    """Verify area_assignments.yaml contains exactly 35 mintable roster slots (5 providers x 7 lanes)."""
+    text = _AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8")
+    data = yaml.safe_load(text)
+    slots = []
+    for area_data in data["assignments"].values():
+        if isinstance(area_data, dict):
+            slots.extend(area_data.get("slots", []))
+    assert len(slots) == 35
+
+
+def test_phantom_slots_absent_from_valid_agents() -> None:
+    """Guard test: *-harness, *-seminars, and *-core phantom slots are NOT in get_valid_agents()."""
+    valids = _channels.get_valid_agents(assignments_path=_AREA_ASSIGNMENTS_YAML)
+    providers = ("claude", "codex", "gemini", "grok", "kimi")
+    phantoms = ("harness", "seminars", "core")
+    for provider in providers:
+        for suffix in phantoms:
+            phantom_slot = f"{provider}-{suffix}"
+            assert phantom_slot not in valids, f"Phantom slot '{phantom_slot}' found in valid agents"
 
 
 def test_unknown_slot_rejected_naming_valids() -> None:
@@ -112,8 +135,67 @@ assignments:
     assert "custom-slot-v2" in valids2
 
 
+def test_empty_roster_caching(tmp_path: Path) -> None:
+    """Verify empty roster result is cached when registry specifies empty slots."""
+    empty_file = tmp_path / "empty_assignments.yaml"
+    empty_file.write_text(
+        """schema_version: 1
+assignments:
+  core:
+    slots: []
+""",
+        encoding="utf-8",
+    )
+    valids1 = _channels.get_valid_agents(assignments_path=empty_file)
+    assert valids1 == _channels.STATIC_VALID_AGENTS
+    # Verify cache key is recorded in _SLOTS_CACHE
+    st = empty_file.resolve().stat()
+    assert _channels._SLOTS_CACHE.get("key") == (str(empty_file.resolve()), st.st_mtime, st.st_size)
+
+
 # ---------------------------------------------------------------------------
-# 2. Slot->Holder Resolution Helper Tests (resolve_slot_holder)
+# 2. R2 Validation Sites Tests
+# ---------------------------------------------------------------------------
+
+
+def test_post_cli_parser_accepts_roster_slot() -> None:
+    """Verify _channels_cli parser accepts a registry roster slot for --from-agent (R2 site 1)."""
+    from scripts.ai_agent_bridge import _cli
+
+    parser = _cli._build_parser()
+    args = parser.parse_args(["post", "shared", "hello", "--from-agent", "grok-infra", "--no-snapshot"])
+    assert args.from_agent == "grok-infra"
+
+
+def test_bottleneck_alerts_accepts_roster_slot_holder(tmp_path: Path) -> None:
+    """Verify bottleneck_alerts._active_lease_holder accepts a registry roster slot as holder (R2 site 2)."""
+    from agents_extensions.shared.session_streams import LeaseHolder, SessionStreamDatabase, SessionStreamStore
+    from scripts.fleet_comms.bottleneck_alerts import _active_lease_holder
+
+    db_path = tmp_path / "session-streams.sqlite3"
+    db = SessionStreamDatabase(db_path)
+    store = SessionStreamStore(db)
+    now = datetime.now(UTC)
+    store.open_session(
+        stream_id="epic:4707",
+        holder=LeaseHolder(
+            agent="grok-infra",
+            harness="grok",
+            instance_id="inst-1",
+            process_id=100,
+            task_id="task-1",
+        ),
+        lineage_id="lineage-1",
+        ttl_seconds=3600,
+        now=now,
+    )
+
+    holder = _active_lease_holder("4707", session_db=db_path, now=now)
+    assert holder == "grok-infra"
+
+
+# ---------------------------------------------------------------------------
+# 3. Slot->Holder Resolution Helper Tests (resolve_slot_holder)
 # ---------------------------------------------------------------------------
 
 
@@ -173,7 +255,7 @@ def test_resolve_slot_holder_live_holder(session_db_fixture: Path) -> None:
     assert res.holder_harness == "claude"
     assert res.generation == 1
     assert res.expires_at == future_time
-    assert res.queue_location == ".agent/wake/claude-atlas"
+    assert res.queue_location == "channels DB delivery queue for 'claude-atlas'"
 
 
 def test_resolve_slot_holder_no_holder(session_db_fixture: Path) -> None:
@@ -182,7 +264,7 @@ def test_resolve_slot_holder_no_holder(session_db_fixture: Path) -> None:
     assert res.has_holder is False
     assert res.slot == "grok-infra"
     assert res.area_id == "infra"
-    assert res.queue_location == ".agent/wake/grok-infra"
+    assert res.queue_location == "channels DB delivery queue for 'grok-infra'"
     assert res.reason == "no-live-holder"
 
 
@@ -248,7 +330,7 @@ def test_resolve_slot_holder_alias_slot(session_db_fixture: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
-# 3. Bounce Visibility Warning in Post
+# 4. Bounce Visibility Warning in Post
 # ---------------------------------------------------------------------------
 
 
@@ -264,5 +346,5 @@ def test_post_to_slot_with_no_live_holder_warns_and_queues(capsys: pytest.Captur
     captured = capsys.readouterr()
 
     assert "⚠️ channel-bridge: recipient slot 'grok-infra' has no live holder" in captured.err
-    assert ".agent/wake/grok-infra" in captured.err
+    assert "channels DB delivery queue for 'grok-infra'" in captured.err
     assert len(result["delivery_ids"]) == 1
