@@ -99,7 +99,7 @@ steps:
 
   - step_id: post_merge_hygiene
     intent: Perform post-merge hygiene by deleting branches, removing worktrees, and pulling latest main.
-    command: git worktree remove .worktrees/pr-{pr_number} && git branch -d feature-branch
+    command: git worktree remove .worktrees/pr-{pr_number} && git branch -d {branch}
     evidence_predicate:
       command: test ! -d .worktrees/pr-{pr_number} && echo "cleaned"
       success_pattern: "cleaned"
