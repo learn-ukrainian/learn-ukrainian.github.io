@@ -46,7 +46,8 @@ def _source_id_from_provenance(prov: dict[str, Any]) -> str:
     table = str(prov.get("table") or "unknown")
     author = str(prov.get("author") or prov.get("credit") or "anon")
     source_file = str(prov.get("source_file") or "")
-    raw = f"{table}:{author}:{source_file}"
+    title = " ".join(unicodedata.normalize("NFC", str(prov.get("title") or "")).split())
+    raw = f"{table}:{author}:{source_file}:{title}"
     digest = hashlib.sha1(raw.encode("utf-8")).hexdigest()[:12]
     return f"{table}-{digest}"
 

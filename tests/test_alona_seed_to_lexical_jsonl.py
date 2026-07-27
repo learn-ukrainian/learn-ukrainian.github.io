@@ -37,6 +37,50 @@ def test_convert_seed_emits_required_record_types() -> None:
     assert any(r["lemma"] == "Орендодавець" for r in lemmas)
 
 
+def test_convert_seed_keeps_distinct_titled_works_from_one_corpus_file(tmp_path: Path) -> None:
+    seed_path = tmp_path / "titled-works.jsonl"
+    provenance = {
+        "table": "literary_texts",
+        "author": "Леся Українка",
+        "source_file": "ukrlib-lesya-ukrainka",
+        "chunk_id": "shared-corpus-file",
+        "span_start": 0,
+        "span_end": 20,
+        "display": "short_quotation",
+    }
+    rows = [
+        {
+            "row": 1,
+            "ua": "Світло",
+            "en": "Light",
+            "sentence": "Світло веде нас уперед.",
+            "sentence_status": "ok",
+            "provenance": {**provenance, "title": "Лісова пісня"},
+        },
+        {
+            "row": 2,
+            "ua": "Надія",
+            "en": "Hope",
+            "sentence": "Надія не згасає ніколи.",
+            "sentence_status": "ok",
+            "provenance": {**provenance, "title": "Кассандра"},
+        },
+    ]
+    seed_path.write_text(
+        "".join(f"{json.dumps(row, ensure_ascii=False)}\n" for row in rows),
+        encoding="utf-8",
+    )
+
+    records = convert.convert_seed_file(seed_path)
+
+    sources = [record for record in records if record["record_type"] == "source"]
+    assert len(sources) == 2
+    assert {source["source_id"] for source in sources} == {
+        convert._source_id_from_provenance(row["provenance"]) for row in rows
+    }
+    assert {source["source_work"] for source in sources} == {"Лісова пісня", "Кассандра"}
+
+
 @pytest.mark.skipif(not REAL_VESUM.is_file(), reason="vesum.db not available in worktree")
 def test_sample_seed_round_trips_through_projection(tmp_path: Path) -> None:
     """End-to-end: Alona sample → ADR JSONL → SQLite projection with FKs ON."""
