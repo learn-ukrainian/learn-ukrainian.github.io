@@ -301,7 +301,7 @@ Consequences:
   **GPT/Codex is a hard exception**: keep it on the native CLI and never substitute a Codex
   OAuth-backed Hermes model. **Grok (updated by operator ruling 2026-07-27):** never Hermes
   (`grok-hermes`/`grok-tools` stay banned), but **`opencode` hosting IS sanctioned for
-  ORCHESTRATOR/automated seats** — first-party `xai/grok-4.5` on the xAI subscription OAuth
+  ORCHESTRATOR seats** — first-party `xai/grok-4.5` on the xAI subscription OAuth
   (probe-verified: tools work; ⚠️ NO effort control on this route — `effort_applied: null`).
   The native `grok` CLI remains the interactive/operator seat (effort control, drive wiring)
   and the preferred seat wherever effort tiering matters; Cursor stays the fallback. Never
