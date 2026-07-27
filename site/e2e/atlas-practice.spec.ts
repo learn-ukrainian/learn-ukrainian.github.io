@@ -768,7 +768,21 @@ test('A8a: an Atlas-only custom-deck key gets its gloss and route while a true o
     }
     await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
   });
-  await page.route('**/lexicon/search-index.json', (route) =>
+  await page.route('**/lexicon/search-shards.json', (route) =>
+    route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({
+        schema: 'atlas-search-shards',
+        schemaVersion: 1,
+        total: 1,
+        shardCount: 1,
+        fullIndex: { path: '/lexicon/search-index.json', count: 1, bytes: 1, sha256: 'full' },
+        prefixMap: { к: 'u043a' },
+        shards: { u043a: { path: '/lexicon/search/u043a.json', count: 1, bytes: 1, sha256: 'cat' } },
+      }),
+    }),
+  );
+  await page.route('**/lexicon/search/u043a.json', (route) =>
     route.fulfill({
       contentType: 'application/json',
       body: JSON.stringify([{ l: 'кіт', s: 'кіт', g: 'cat', t: 'lemma', c: 'A1' }]),
@@ -797,6 +811,17 @@ test('A8a: an Atlas-only custom-deck key gets its gloss and route while a true o
   await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Orphan Deck');
   await expect(page.locator('.daily-preview-card')).toContainText('вигаданий термін');
   await expect(page.getByTestId('practice-preview-atlas-link')).toHaveCount(0);
+
+  await page.getByRole('button', { name: /E2E D10 Cat Deck/ }).click();
+  // The daily card is only the preview path. Start a real flashcard session
+  // and reveal its back so the deck's committed lexeme, not preview state,
+  // proves the Atlas shard enrichment reached `cardData()`.
+  await page.locator('button[data-mode="flashcards"]').click();
+  const sessionCard = page.locator('[data-activity="flashcard"]');
+  await expect(sessionCard).toBeVisible();
+  await sessionCard.click();
+  await expect(sessionCard.locator('.flashcard-back .flashcard-word')).toHaveText('cat');
+  await expect(sessionCard.locator('.flashcard-subtitle')).toHaveCount(0);
 });
 
 /** Opens the daily-zone disclosure (idempotent — `PracticeDailyDeck` can remount and
