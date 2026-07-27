@@ -239,10 +239,12 @@ def validate_trail_table_refs(
     for step in spec_data.get("steps", []):
         step_id = step.get("step_id", "<unknown>")
         table_ref = step.get("table")
-        if step.get("kind") == "table-lookup" and table_ref is None:
+        if step.get("kind") == "table-lookup" and (
+            not isinstance(table_ref, str) or not table_ref
+        ):
             raise TrailSpecValidationError(
-                f"Missing table binding: table-lookup step '{step_id}' requires a non-null "
-                "table field"
+                f"Missing table binding: table-lookup step '{step_id}' requires a non-empty "
+                "string table field"
             )
         if table_ref is None:
             continue

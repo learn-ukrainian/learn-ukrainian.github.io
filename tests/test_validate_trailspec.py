@@ -305,6 +305,23 @@ def test_negative_table_lookup_without_table_fails_cross_check() -> None:
     assert lookup_step["step_id"] in str(exc_info.value)
 
 
+@pytest.mark.parametrize("table_ref", [[], {}], ids=["list", "mapping"])
+def test_negative_table_lookup_non_string_table_fails_cross_check(
+    table_ref: object,
+) -> None:
+    """The cross-check must reject non-string table bindings before membership tests."""
+    spec = _get_rb1_data()
+    tables = _get_happy_tables_data()
+    lookup_step = next(step for step in spec["steps"] if step["kind"] == "table-lookup")
+    lookup_step["table"] = table_ref
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trail_table_refs(spec, tables)
+
+    assert "Missing table binding" in str(exc_info.value)
+    assert lookup_step["step_id"] in str(exc_info.value)
+
+
 def test_negative_unbound_table_ref() -> None:
     """Mutation check: a misspelled table reference must fail the cross-document check."""
     spec = _get_rb1_data()
