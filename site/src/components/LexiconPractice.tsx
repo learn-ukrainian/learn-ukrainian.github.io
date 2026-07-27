@@ -85,6 +85,7 @@ import {
 import { dateSeed, deckSeed, pickDaily, type DailyWord } from '../lib/lexicon/daily';
 import { getTeacherLessonVirtualDeck, readLocalCustomSets, saveLocalCustomSet, deleteLocalCustomSet, type CustomSet } from '../lib/lexicon/custom-decks';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
+import { searchShardForQuery, type SearchRow, type SearchShardManifest } from '../lib/lexicon/search';
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
 
 
@@ -101,11 +102,138 @@ function PracticeChromeDual({ uk, en }: { uk: string; en: string }): ReactElemen
   return <ChromeDual en={en} uk={uk} />;
 }
 
-function ensureDeckCustomSetCoverage(deck: PracticeDeckData, lemmaKeys: string[]): PracticeDeckData {
+interface AtlasDeckMatch {
+  lemma: string;
+  slug: string;
+  gloss: string | null;
+  cefr: string | null;
+}
+
+interface DeckKeyResolution {
+  practice: PracticeLexeme | null;
+  atlas: AtlasDeckMatch | null;
+}
+
+function cleanDeckKey(key: string): string {
+  return key.replace(/\(.*?\)/g, '').trim() || key;
+}
+
+function keyLookupVariants(key: string): string[] {
+  return Array.from(new Set([key, cleanDeckKey(key)].map((value) => value.toLocaleLowerCase())));
+}
+
+function practiceLexemesByKey(lexemes: readonly PracticeLexeme[]): Map<string, PracticeLexeme> {
+  const byKey = new Map<string, PracticeLexeme>();
+  for (const entry of lexemes) {
+    byKey.set(entry.lemmaId.toLocaleLowerCase(), entry);
+    byKey.set(entry.lemma.toLocaleLowerCase(), entry);
+  }
+  return byKey;
+}
+
+function searchRowsByKey(rows: readonly SearchRow[]): Map<string, SearchRow> {
+  const byKey = new Map<string, SearchRow>();
+  for (const entry of rows) {
+    byKey.set(entry.s.toLocaleLowerCase(), entry);
+    byKey.set(entry.l.toLocaleLowerCase(), entry);
+  }
+  return byKey;
+}
+
+/**
+ * Resolve deck keys through the practice cores first, then Atlas's prefix shards.
+ * The complete index is deliberately reserved for a missing/broken shard manifest
+ * or a shard lookup that cannot find an exact key: it is a compatibility fallback,
+ * not the normal custom-deck transport.
+ */
+async function resolveDeckKeyMetadata(
+  lemmaKeys: readonly string[],
+  lexemes: readonly PracticeLexeme[],
+  cache: Map<string, Promise<unknown>>,
+): Promise<Map<string, DeckKeyResolution>> {
+  const practiceByKey = practiceLexemesByKey(lexemes);
+  const resolutions = new Map<string, DeckKeyResolution>();
+  const unresolved: string[] = [];
+
+  for (const key of lemmaKeys) {
+    const practice = keyLookupVariants(key)
+      .map((variant) => practiceByKey.get(variant))
+      .find((entry): entry is PracticeLexeme => Boolean(entry)) ?? null;
+    resolutions.set(key, { practice, atlas: null });
+    if (!practice) unresolved.push(key);
+  }
+
+  // The common case is a deck entirely covered by the practice cores. Do not
+  // download any Atlas index artifact in that case.
+  if (unresolved.length === 0) return resolutions;
+
+  let rows: SearchRow[] = [];
+  let needsFullIndexFallback = false;
+  try {
+    const manifest = await getShardJson<SearchShardManifest>('/lexicon/search-shards.json', cache);
+    const shardPaths = Array.from(
+      new Set(
+        unresolved.flatMap((key) =>
+          keyLookupVariants(key)
+            .map((variant) => searchShardForQuery(manifest, variant)?.path)
+            .filter((path): path is string => Boolean(path)),
+        ),
+      ),
+    );
+    if (shardPaths.length === 0) {
+      needsFullIndexFallback = true;
+    } else {
+      rows = (await Promise.all(
+        shardPaths.map((path) => getShardJson<SearchRow[]>(path, cache)),
+      )).flat();
+      const shardRowsByKey = searchRowsByKey(rows);
+      needsFullIndexFallback = unresolved.some(
+        (key) => !keyLookupVariants(key).some((variant) => shardRowsByKey.has(variant)),
+      );
+    }
+  } catch {
+    needsFullIndexFallback = true;
+  }
+
+  if (needsFullIndexFallback) {
+    // Last resort only: older/static deployments can lack a manifest or a
+    // relevant shard even though their legacy complete index still has the row.
+    rows = await getShardJson<SearchRow[]>('/lexicon/search-index.json', cache).catch(() => []);
+  }
+
+  const atlasByKey = searchRowsByKey(rows);
+  for (const key of unresolved) {
+    const atlasRow = keyLookupVariants(key)
+      .map((variant) => atlasByKey.get(variant))
+      .find((entry): entry is SearchRow => Boolean(entry));
+    if (!atlasRow) continue;
+    const gloss = atlasRow.g ? cleanGloss(atlasRow.g) : '';
+    resolutions.set(key, {
+      practice: null,
+      atlas: {
+        lemma: atlasRow.l,
+        slug: atlasRow.s,
+        // Search-index text can be a dictionary definition. Only retain the
+        // same concise first-sense labels eligible for practice cards.
+        gloss: isPhraseGloss(gloss) ? null : gloss,
+        cefr: atlasRow.c ?? null,
+      },
+    });
+  }
+  return resolutions;
+}
+
+function ensureDeckCustomSetCoverage(
+  deck: PracticeDeckData,
+  lemmaKeys: string[],
+  resolutions: ReadonlyMap<string, DeckKeyResolution>,
+): PracticeDeckData {
   if (!deck || !lemmaKeys || lemmaKeys.length === 0) return deck;
-  const existingIndexLemmas = new Set(
-    (deck.index ?? []).map((i) => (i.lemmaId || i.lemma || '').toLowerCase()),
-  );
+  const existingIndexLemmas = new Set<string>();
+  for (const item of deck.index ?? []) {
+    existingIndexLemmas.add(item.lemmaId.toLocaleLowerCase());
+    existingIndexLemmas.add(item.lemma.toLocaleLowerCase());
+  }
   const newIndexItems: PracticeIndexItem[] = [];
   const newLexemes: PracticeLexeme[] = [];
 
@@ -157,14 +285,15 @@ function ensureDeckCustomSetCoverage(deck: PracticeDeckData, lemmaKeys: string[]
     const keyLower = key.toLowerCase();
     if (!existingIndexLemmas.has(keyLower)) {
       existingIndexLemmas.add(keyLower);
-      const cleanKey = key.replace(/\(.*?\)/g, '').trim() || key;
+      const cleanKey = cleanDeckKey(key);
+      const atlas = resolutions.get(key)?.atlas ?? null;
       const matchedClozeIds = clozeByLemma.get(keyLower) ?? [];
       const hasCloze = matchedClozeIds.length > 0;
 
       newIndexItems.push({
-        lemmaId: key,
-        lemma: cleanKey,
-        cefr: 'A1',
+        lemmaId: atlas?.slug ?? key,
+        lemma: atlas?.lemma ?? cleanKey,
+        cefr: atlas?.cefr ?? 'A1',
         modes: hasCloze
           ? ['flashcards', 'cloze', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage']
           : ['flashcards', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage'],
@@ -174,13 +303,13 @@ function ensureDeckCustomSetCoverage(deck: PracticeDeckData, lemmaKeys: string[]
       });
 
       newLexemes.push({
-        lemmaId: key,
-        lemma: cleanKey,
-        lemmaPlain: cleanKey,
+        lemmaId: atlas?.slug ?? key,
+        lemma: atlas?.lemma ?? cleanKey,
+        lemmaPlain: atlas?.lemma ?? cleanKey,
         ipa: null,
-        gloss: cleanKey,
-        pos: 'noun',
-        cefr: 'A1',
+        gloss: atlas?.gloss ?? cleanKey,
+        pos: null,
+        cefr: atlas?.cefr ?? 'A1',
         heritage: null,
         severity: null,
         paradigm: { cases: {} },
@@ -1165,7 +1294,7 @@ function DigitChoiceShortcuts({
   return null;
 }
 
-/** Deduped fetch for a practice shard JSON by URL. Concurrent or repeated callers share the promise. */
+/** Deduped fetch for practice and Atlas JSON by URL. Concurrent or repeated callers share the promise. */
 async function getShardJson<T>(url: string, cache: Map<string, Promise<unknown>>): Promise<T> {
   let p = cache.get(url) as Promise<T> | undefined;
   if (!p) {
@@ -1643,6 +1772,16 @@ function LexiconPracticeIsland({
           ...(deck?.cloze ?? []),
           ...levelEntries.flatMap((batch) => batch.cloze),
         ]);
+        // Both the preview and the live session use this one resolver. It skips
+        // Atlas entirely when practice cores already cover the selected deck,
+        // otherwise it probes only the relevant search-prefix shards.
+        const deckKeyResolutions = deckLemmaKeys === null
+          ? new Map<string, DeckKeyResolution>()
+          : await resolveDeckKeyMetadata(
+              deckLemmaKeys,
+              Array.from(lexemes.values()),
+              shardJsonCacheRef.current,
+            );
 
         let displayablePicks: DailyWord[];
         if (deckLemmaKeys !== null) {
@@ -1655,16 +1794,16 @@ function LexiconPracticeIsland({
           }
           const deckPool: DailyWord[] = deckLemmaKeys.map((key) => {
             const match = lexemes.get(key) ?? lexemesByLower.get(key.toLowerCase()) ?? null;
-            // A deck word with no atlas/level match still deserves a real-looking
-            // card — same cleanup `ensureDeckCustomSetCoverage` applies for the
-            // session pool, so the preview and the session never disagree.
-            const cleanKey = key.replace(/\(.*?\)/g, '').trim() || key;
+            const cleanKey = cleanDeckKey(key);
+            const atlasMatch = deckKeyResolutions.get(key)?.atlas ?? null;
+            // Practice lexemes are richer than the search index. If neither
+            // source recognizes a deck key, preserve the unlinked orphan card.
             return {
-              lemma: match?.lemma ?? cleanKey,
-              slug: match?.lemmaId ?? key,
-              gloss: match?.gloss ?? cleanKey,
-              hasAtlasEntry: Boolean(match),
-              cefr: match?.cefr ?? undefined,
+              lemma: match?.lemma ?? atlasMatch?.lemma ?? cleanKey,
+              slug: match?.lemmaId ?? atlasMatch?.slug ?? key,
+              gloss: match?.gloss ?? atlasMatch?.gloss ?? cleanKey,
+              hasAtlasEntry: Boolean(match ?? atlasMatch),
+              cefr: match?.cefr ?? atlasMatch?.cefr ?? undefined,
               pos: match?.pos ?? undefined,
               example: match?.example ?? undefined,
               exampleEn: match?.exampleEn ?? undefined,
@@ -1949,6 +2088,8 @@ function LexiconPracticeIsland({
       const targetLevel = level;
       const lowerLevels = levels.slice(0, -1);
       const needDrills = includeCloze && (force || !clozeLoaded);
+      const deckLemmaKeys = resolveDeckLemmaKeys(deckFilter, customSets);
+      let deckKeyResolutions: Map<string, DeckKeyResolution> | null = null;
 
       if (!nextDeck) {
         // PROGRESSIVE: Load the SELECTED level's core shards (index + lexemes) FIRST.
@@ -1962,11 +2103,17 @@ function LexiconPracticeIsland({
           getShardJson<PracticeLexemeShard>(lexUrl, shardJsonCacheRef.current),
         ]);
         nextDeck = combinePracticeShards(indexShard, lexemeShard);
-        // Set early so that beginSession proceeds and first item can render from the
-        // selected level alone.
-        if (deckRequestId.current === requestId) {
-          setDeck(nextDeck);
+        if (deckLemmaKeys !== null) {
+          deckKeyResolutions = await resolveDeckKeyMetadata(
+            deckLemmaKeys,
+            nextDeck.lexemes ?? [],
+            shardJsonCacheRef.current,
+          );
+          nextDeck = ensureDeckCustomSetCoverage(nextDeck, deckLemmaKeys, deckKeyResolutions);
         }
+        // The first committed deck must already contain Atlas-enriched custom
+        // entries; background lower-level growth may safely extend it after this.
+        if (deckRequestId.current === requestId) setDeck(nextDeck);
 
         // Fire-and-forget background load of lower-level *cores*. Merge into live pool
         // as they arrive; selector cache per deck identity (#4656) receives the new deck
@@ -2050,7 +2197,6 @@ function LexiconPracticeIsland({
           } catch {
             // Degrades gracefully if teacher cloze shard is missing
           }
-          nextDeck = ensureDeckCustomSetCoverage(nextDeck!, teacherDeck.lemma_keys);
         }
 
         // Merge custom set document cloze items if active
@@ -2063,15 +2209,10 @@ function LexiconPracticeIsland({
                 cloze: [...(nextDeck.cloze ?? []), ...activeSet.cloze_items],
               };
             }
-            nextDeck = ensureDeckCustomSetCoverage(nextDeck!, activeSet.lemma_keys);
           }
         }
 
         nextClozeLoaded = true;
-        if (deckRequestId.current === requestId) {
-          setDeck(nextDeck);
-          setClozeLoaded(true);
-        }
 
         // Background lower drills (merge live when they land).
         if (lowerLevels.length > 0) {
@@ -2118,6 +2259,21 @@ function LexiconPracticeIsland({
             });
           })();
         }
+      }
+
+      // A custom/teacher deck may contain a valid Atlas word outside the
+      // practice-core lexemes. Resolve it before committing the deck, so the
+      // actual session (including a flashcard-only session) receives the same
+      // real slug and card-safe gloss as the idle preview.
+      if (deckLemmaKeys !== null) {
+        deckKeyResolutions ??= await resolveDeckKeyMetadata(
+          deckLemmaKeys,
+          nextDeck!.lexemes ?? [],
+          shardJsonCacheRef.current,
+        );
+        // Re-run the synchronous merge after a custom cloze document was added,
+        // so its IDs attach to the already-resolved custom index item.
+        nextDeck = ensureDeckCustomSetCoverage(nextDeck!, deckLemmaKeys, deckKeyResolutions);
       }
 
       // Ignore the result if a newer fetch (e.g. a later level switch) has superseded this one.
