@@ -1,0 +1,166 @@
+# RB-1 — cold-start / orient / queue-pick (T2 DRAFT, extraction from drive-epic SKILL
+# steps 0/0a/1/2 + the infra driver's cold-start contract). Part of #5885.
+#
+# DRAFT STATUS: authored against today's substrate per the panel's draft-now ruling;
+# certification waits for T1 (slot addressing #5878, closure primitive). Steps that
+# depend on unbuilt machinery carry an explicit blocked_on marker.
+#
+# Anti-pattern guard (the #5860 r1 lessons): every command below is a real, currently
+# runnable repo command; every predicate is falsifiable; no failure path is swallowed —
+# unknown situations exit through a STOP code, never through a happy-path transition.
+schema_version: trailspec.v1
+trail_id: rb1-cold-start
+version: "0.1.0"
+title: RB1 Cold-start, orientation, and queue pick
+seats:
+  - grok-daily
+  - glm-trial
+  - judgment
+stop_codes:
+  - STOP-precondition-failed
+  - STOP-concurrency-conflict
+  - STOP-manual-intervention
+  - STOP-policy-violation
+  - STOP-unknown
+terminal_outcomes:
+  - ready_to_dispatch
+  - idle
+steps:
+  - step_id: detect_rollover
+    intent: >-
+      Detect whether a pending thread-rollover packet exists for this seat's handoff
+      agent. Exactly one validated packet or none are the only proceed states.
+    command: .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent {handoff_agent}
+    evidence_predicate:
+      command: .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent {handoff_agent}
+      success_pattern: '"status"'
+    transitions:
+      none_pending: orient_api
+      one_pending: claim_rollover
+      multiple_or_corrupt: STOP-concurrency-conflict
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: claim_rollover
+    intent: >-
+      Claim the pending packet: bind-replacement (or the native-adapter path), resume,
+      semantic snapshot, strict recall, challenge proof, confirm-started. Judgment-carrying
+      (snapshot content, binding evidence) — the thread-rollover skill owns the procedure.
+      A packet bound to another lane or an ambiguous alias-directory state is a hard stop.
+    command: null
+    evidence_predicate: null
+    transitions:
+      confirmed: orient_api
+      foreign_packet: STOP-policy-violation
+      proofs_failed: STOP-precondition-failed
+    kind: summon
+    blocked_on: null
+
+  - step_id: orient_api
+    intent: >-
+      Orient via the Monitor API: manifest (live context telemetry), active dispatches,
+      and this seat's inbox. API down is not fatal — fall back to files — but the fallback
+      must be said out loud in the session log, never silently absorbed.
+    command: curl -sS --max-time 2 "http://127.0.0.1:8765/api/state/manifest"
+    evidence_predicate:
+      command: curl -sS --max-time 2 "http://127.0.0.1:8765/api/state/manifest"
+      success_pattern: '"_telemetry"'
+    transitions:
+      oriented: drain_inbox
+      api_down_fallback_stated: drain_inbox
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: drain_inbox
+    intent: >-
+      Required live-driver inbox drain (drive-epic 0a). List unconsumed messages for this
+      seat. Slot-identity inboxes (e.g. claude-atlas) require taxonomy step 4b.
+    command: .venv/bin/python -m scripts.ai_agent_bridge inbox --for {handoff_agent}
+    evidence_predicate:
+      command: .venv/bin/python -m scripts.ai_agent_bridge inbox --for {handoff_agent}
+      success_pattern: '"count"'
+    transitions:
+      empty: reconcile_git
+      messages_present: apply_inbox
+    kind: mechanical
+    blocked_on: "T1.1-slot-addressing (#5878) for non-static slot identities"
+
+  - step_id: apply_inbox
+    intent: >-
+      Read and APPLY every unconsumed message, then record live consumption with
+      ack --consumed-by-live-driver (plain ack is not delivery proof). Applying a message
+      can change the queue, the width, or the lane's orders — judgment-carrying.
+    command: null
+    evidence_predicate: null
+    transitions:
+      applied_and_acked: reconcile_git
+      order_conflicts_with_standing_rule: STOP-manual-intervention
+    kind: summon
+    blocked_on: null
+
+  - step_id: reconcile_git
+    intent: >-
+      Reconcile the handoff's claims against reality before firing anything: fetch, compare
+      main, list open PRs and worktrees. A prior session's in-flight item may already be
+      merged — re-firing it is the top re-collision class.
+    command: git fetch origin && git log --oneline -3 origin/main && gh pr list --state open --limit 20 && git worktree list
+    evidence_predicate:
+      command: git fetch origin && git status --short --branch
+      success_pattern: "\\.\\.\\."
+    transitions:
+      reconciled: sweep_stale_refs
+      fetch_failed: STOP-precondition-failed
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: sweep_stale_refs
+    intent: >-
+      Session-start hygiene sweep. Reap only refs whose PR state is MERGED or whose commits
+      are contained in main (merge-base --is-ancestor is NOT valid under squash-merge).
+      Never touch another lane's live worktrees; never delete uncommitted work.
+    command: git worktree list --porcelain
+    evidence_predicate:
+      command: git worktree list --porcelain
+      success_pattern: "worktree "
+    transitions:
+      clean: pick_next
+      own_merged_refs_reaped: pick_next
+      uncommitted_or_foreign_ambiguity: STOP-manual-intervention
+    kind: table-lookup
+    blocked_on: null
+
+  - step_id: pick_next
+    intent: >-
+      Pick the next unblocked action from the lane queue via the queue-pick decision table
+      (decision-tables.v0.yaml). Deterministic pick = dependencies-merged, lowest open item
+      in the epic's tracking-issue order. Before any issue-fix pick, search existing PRs by
+      issue number — an open issue is not proof of unfixed.
+    command: gh pr list --state all --search "{issue_nr}" --limit 10
+    evidence_predicate:
+      command: gh pr list --state all --limit 1
+      success_pattern: "[0-9]"
+    transitions:
+      picked: route_lane
+      queue_empty: idle
+      ambiguous_pick: STOP-manual-intervention
+      out_of_lane_item: STOP-policy-violation
+    kind: table-lookup
+    blocked_on: null
+
+  - step_id: route_lane
+    intent: >-
+      Route the picked task by model-x-harness fit using the routing decision table, which
+      is a LIVE LOOKUP against /api/rules and codexbar pace/reserve plus disk headroom —
+      the table fixes the procedure, never the roster. No capacity anywhere with quality
+      fit = idle, never a forced misroute.
+    command: codexbar usage --json --provider claude
+    evidence_predicate:
+      command: df -h / && codexbar usage --json --provider claude
+      success_pattern: "provider"
+    transitions:
+      routed: ready_to_dispatch
+      no_fitting_capacity: idle
+      routing_data_unavailable_partial_stated: ready_to_dispatch
+      language_lane_restriction_hit: STOP-policy-violation
+    kind: table-lookup
+    blocked_on: null

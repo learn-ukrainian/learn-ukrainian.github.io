@@ -24,6 +24,25 @@ def _get_happy_example_data() -> dict[str, Any]:
     return yaml.safe_load(DEFAULT_EXAMPLE_TRAIL_PATH.read_text(encoding="utf-8"))
 
 
+_TRAILS_DIR = DEFAULT_EXAMPLE_TRAIL_PATH.parent
+_ALL_SHIPPED_TRAILS = sorted(_TRAILS_DIR.glob("*.trail.yaml"))
+
+
+def test_trails_dir_is_not_empty() -> None:
+    """Guard the glob itself: an empty parametrization must fail, not silently pass."""
+    assert _ALL_SHIPPED_TRAILS, f"no *.trail.yaml found under {_TRAILS_DIR}"
+
+
+@pytest.mark.parametrize("trail_path", _ALL_SHIPPED_TRAILS, ids=lambda p: p.stem)
+def test_every_shipped_trail_validates(trail_path) -> None:
+    """Every trail shipped in scripts/config/trails/ must pass the validator,
+    so a future draft cannot land unvalidated by editing only the yaml."""
+    res = validate_trailspec(spec_path=trail_path)
+    assert res["ok"] is True
+    assert res["spec"]["trail_id"] == trail_path.name.removesuffix(".trail.yaml")
+    assert res["spec"]["trail_hash"]
+
+
 def _get_happy_step_receipt_data() -> dict[str, Any]:
     return {
         "schema_version": "step-receipt.v1",
