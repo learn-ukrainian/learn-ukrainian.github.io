@@ -1859,7 +1859,10 @@ def _resolve_exact_remote_target(
             repo_root=repo_root,
             git_bin=git_bin,
             env=env,
-            remote_ref=f"refs/pull/{target.pr_number}/head",
+            # The PR ref is mutable.  Fetch the exact SHA returned by GitHub
+            # above so a concurrent push cannot turn a valid review request
+            # into a remote_oid_mismatch before snapshot materialization.
+            remote_ref=expected_head,
             remote_url=remote_url,
             destination_ref="refs/lu-review/head",
             expected_oid=expected_head,
