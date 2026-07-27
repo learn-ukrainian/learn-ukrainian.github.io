@@ -11,6 +11,97 @@ from scripts.ai_agent_bridge import _cli, _grok_build
 from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
 
 
+def _grok_bridge_message() -> dict[str, str]:
+    return {
+        "id": 7,
+        "task_id": "task-5891",
+        "from": "codex",
+        "to": "grok",
+        "type": "query",
+        "content": "answer this",
+        "data": '{"to_model": "grok-4.5"}',
+        "timestamp": "now",
+    }
+
+
+def _run_grok_turn_with_events(monkeypatch, tmp_path, events: list[dict] | None) -> list[dict]:
+    sent: list[dict] = []
+    session_dir = tmp_path / "session"
+    if events is not None:
+        session_dir.mkdir()
+        (session_dir / "events.jsonl").write_text(
+            "\n".join(json.dumps(event) for event in events), encoding="utf-8"
+        )
+    monkeypatch.setattr(_grok_build, "_fetch_grok_build_message", lambda _message_id: _grok_bridge_message())
+    monkeypatch.setattr(_grok_build, "grok_session_dir", lambda *_args: session_dir)
+    monkeypatch.setattr(_grok_build, "acknowledge", lambda *_args: None)
+    monkeypatch.setattr(_grok_build, "record_ask_reply", lambda *_args: None)
+    monkeypatch.setattr(_grok_build, "record_ask_failure", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(_grok_build, "set_session", lambda *_args: None)
+    monkeypatch.setattr(
+        _grok_build.agent_runner,
+        "invoke",
+        lambda *_args, **_kwargs: SimpleNamespace(
+            ok=True,
+            response="captured preamble",
+            session_id="session-5891",
+            model="grok-4.5",
+        ),
+    )
+    monkeypatch.setattr(_grok_build, "send_message", lambda **kwargs: sent.append(kwargs) or 8)
+
+    _grok_build.process_for_grok_build(7)
+    return sent
+
+
+def test_grok_completed_turn_keeps_normal_response(monkeypatch, tmp_path):
+    sent = _run_grok_turn_with_events(
+        monkeypatch,
+        tmp_path,
+        [{"type": "turn_ended", "outcome": "completed"}],
+    )
+
+    assert sent[-1]["msg_type"] == "response"
+    assert not sent[-1]["content"].startswith("⚠️ TURN NOT COMPLETED")
+
+
+def test_grok_cancelled_turn_is_typed_error_with_banner(monkeypatch, tmp_path):
+    """Captured preamble from a cancelled native turn must never look normal."""
+    sent = _run_grok_turn_with_events(
+        monkeypatch,
+        tmp_path,
+        [
+            {"type": "turn_ended", "outcome": "completed"},
+            {
+                "type": "turn_ended",
+                "outcome": "cancelled",
+                "cancellation_category": "permission_cancelled",
+            },
+        ],
+    )
+
+    reply = sent[-1]
+    assert reply["msg_type"] == "error"
+    assert reply["content"].startswith(
+        "⚠️ TURN NOT COMPLETED (cancelled/permission_cancelled)"
+    )
+    metadata = json.loads(reply["data"])
+    assert metadata["turn_outcome"] == "cancelled"
+    assert metadata["cancellation_category"] == "permission_cancelled"
+    assert metadata["partial_response"] is True
+
+
+def test_grok_missing_trace_is_typed_error_with_banner(monkeypatch, tmp_path):
+    sent = _run_grok_turn_with_events(monkeypatch, tmp_path, None)
+
+    reply = sent[-1]
+    assert reply["msg_type"] == "error"
+    assert reply["content"].startswith("⚠️ TURN NOT COMPLETED (trace_unavailable)")
+    metadata = json.loads(reply["data"])
+    assert metadata["turn_outcome"] == "trace_unavailable"
+    assert metadata["trace_status"] == "unavailable"
+
+
 def test_ask_grok_build_parser_accepts_first_class_args():
     parser = _cli._build_parser()
 

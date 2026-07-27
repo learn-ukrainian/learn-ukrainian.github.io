@@ -11,11 +11,14 @@ from __future__ import annotations
 
 import json
 import os
+from pathlib import Path
+from typing import Any
 
 from agent_runtime import runner as agent_runner
 from agent_runtime.adapters.grok_build import (
     GROK_BUILD_DEFAULT_EFFORT,
     GROK_BUILD_DEFAULT_MODEL,
+    grok_session_dir,
 )
 from agent_runtime.errors import (
     AgentStalledError,
@@ -233,6 +236,21 @@ def process_for_grok_build(
         _handle_grok_build_error(msg, message_id, "Grok Build returned no final message")
         return
 
+    turn_status = _native_grok_turn_status(
+        session_id=getattr(result, "session_id", None),
+        cwd=checkout.path if checkout is not None else REPO_ROOT,
+    )
+    if turn_status["outcome"] != "completed":
+        _handle_grok_build_incomplete_turn(
+            msg,
+            message_id,
+            response,
+            turn_status,
+            actual_model=getattr(result, "model", None) or model,
+            effort=effort or GROK_BUILD_DEFAULT_EFFORT,
+        )
+        return
+
     print(f"\nGrok finished ({len(response)} chars)")
     provenance_data, actual_model = response_provenance(
         msg,
@@ -251,6 +269,78 @@ def process_for_grok_build(
     )
     acknowledge(message_id)
     record_ask_reply(message_id, reply_id)
+
+
+def _native_grok_turn_status(*, session_id: str | None, cwd: Path) -> dict[str, str | None]:
+    """Read Grok's authoritative last terminal event, failing closed on traces."""
+    if not session_id:
+        return {"outcome": "trace_unavailable", "cancellation_category": None}
+    grok_home = Path(os.environ.get("GROK_HOME", str(Path.home() / ".grok")))
+    events_path = grok_session_dir(grok_home, cwd, session_id) / "events.jsonl"
+    try:
+        events = []
+        for line in events_path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                event = json.loads(line)
+                if not isinstance(event, dict):
+                    raise ValueError("non-object event")
+                events.append(event)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError):
+        return {"outcome": "trace_unavailable", "cancellation_category": None}
+    terminal_events = [event for event in events if event.get("type") == "turn_ended"]
+    if not terminal_events:
+        return {"outcome": "trace_unavailable", "cancellation_category": None}
+    terminal = terminal_events[-1]
+    outcome = terminal.get("outcome")
+    if not isinstance(outcome, str) or not outcome:
+        return {"outcome": "trace_unavailable", "cancellation_category": None}
+    category = terminal.get("cancellation_category")
+    return {
+        "outcome": outcome,
+        "cancellation_category": str(category) if category is not None else None,
+    }
+
+
+def _handle_grok_build_incomplete_turn(
+    msg: dict,
+    message_id: int,
+    response: str,
+    turn_status: dict[str, str | None],
+    *,
+    actual_model: str,
+    effort: str,
+) -> None:
+    """Deliver captured native text only as an explicitly typed failed turn."""
+    outcome = str(turn_status["outcome"])
+    category = turn_status.get("cancellation_category")
+    detail = outcome if outcome == "trace_unavailable" else f"{outcome}/{category or 'none'}"
+    banner = f"⚠️ TURN NOT COMPLETED ({detail})"
+    provenance_data, _ = response_provenance(
+        msg,
+        actual_model=actual_model,
+        harness="grok",
+        effort_applied=effort,
+    )
+    metadata = json.loads(provenance_data)
+    metadata.update(
+        {
+            "turn_outcome": outcome,
+            "cancellation_category": category,
+            "trace_status": "unavailable" if outcome == "trace_unavailable" else "terminal_failure",
+            "partial_response": True,
+        }
+    )
+    send_message(
+        content=f"{banner}\n\n{response}",
+        task_id=msg["task_id"],
+        msg_type="error",
+        from_llm="grok",
+        to_llm=msg["from"],
+        data=json.dumps(metadata, sort_keys=True),
+        from_model=actual_model,
+    )
+    acknowledge(message_id)
+    record_ask_failure(message_id, f"native Grok turn not completed: {detail}")
 
 
 def _fetch_grok_build_message(message_id: int) -> dict | None:

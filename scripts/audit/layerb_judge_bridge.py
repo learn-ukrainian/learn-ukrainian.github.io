@@ -45,7 +45,6 @@ from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
 
 if __package__ in {None, ""}:
     project_root = Path(__file__).resolve().parents[2]
@@ -982,18 +981,10 @@ def _read_strict_jsonl(path: Path) -> list[dict[str, Any]]:
 
 
 def _grok_session_dir(scoped_home: Path, scratch_dir: Path, session_id: str) -> Path:
-    """Return the documented Grok session directory for this fresh invocation.
+    """Return the documented Grok session directory for this fresh invocation."""
+    from scripts.agent_runtime.adapters.grok_build import grok_session_dir
 
-    The native CLI keys the session store by its REAL working directory —
-    symlinks resolved. On macOS every tempfile root is behind a symlink
-    (``/tmp`` and ``/var`` both point into ``/private``), so deriving the key
-    from the unresolved path can never match what the CLI writes. Proven
-    empirically on CLI 0.2.101 (PR #5200 debug, 2026-07-15): the CLI wrote
-    ``sessions/%2Fprivate%2Ftmp%2F...`` while the unresolved derivation
-    looked for ``sessions/%2Ftmp%2F...``.
-    """
-
-    return scoped_home / "sessions" / quote(str(Path(scratch_dir).resolve()), safe="") / session_id
+    return grok_session_dir(scoped_home, scratch_dir, session_id)
 
 
 def _value_has_grok_tool_activity(value: Any) -> bool:

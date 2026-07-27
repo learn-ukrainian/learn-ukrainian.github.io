@@ -9,12 +9,16 @@ fail open so the legacy bridge never breaks on the opt-in path.
 
 from __future__ import annotations
 
+import atexit
+import contextlib
 import json
 import os
 import re
+import signal
 import subprocess
 import sys
 import time
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -30,6 +34,124 @@ _ASK_AGENT = "ask"
 _FLEET_REQUEST_ID_KEY = "fleet_request_id"
 # Tests may point plane storage at a tmp root without touching batch_state/.
 _PLANE_ROOT_OVERRIDE: Path | None = None
+
+
+def _now_iso() -> str:
+    return datetime.now(UTC).isoformat()
+
+
+def _ask_state_root() -> Path:
+    return REPO_ROOT / "batch_state" / "asks"
+
+
+def _ask_task_key(message_id: int) -> str:
+    row = _load_ask_row(message_id)
+    task_id = str(row[0]) if row and row[0] else f"message-{message_id}"
+    return re.sub(r"[^A-Za-z0-9._-]+", "-", task_id)[:80] or f"message-{message_id}"
+
+
+def _ask_state_dir(message_id: int) -> Path:
+    return _ask_state_root() / _ask_task_key(message_id)
+
+
+def _ask_log_path(message_id: int) -> Path:
+    return REPO_ROOT / ".mcp" / "servers" / "message-broker" / "logs" / f"ask-{message_id}.log"
+
+
+def _atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
+    """Durably replace a small lifecycle record without a partially-written file."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    encoded = (json.dumps(payload, ensure_ascii=False, sort_keys=True) + "\n").encode("utf-8")
+    temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    fd = os.open(str(temporary), os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    try:
+        with os.fdopen(fd, "wb") as handle:
+            handle.write(encoded)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        with contextlib.suppress(FileNotFoundError):
+            temporary.unlink()
+
+
+def _stderr_tail(message_id: int) -> str:
+    try:
+        return _ask_log_path(message_id).read_bytes()[-2048:].decode("utf-8", errors="replace")
+    except OSError:
+        return ""
+
+
+def _write_ask_launch_record(message_id: int, *, pid: int, target: str) -> None:
+    row = _load_ask_row(message_id)
+    metadata: dict[str, Any] = {}
+    if row and row[4]:
+        try:
+            decoded = json.loads(str(row[4]))
+            if isinstance(decoded, dict):
+                metadata = decoded
+        except (TypeError, json.JSONDecodeError):
+            pass
+    _atomic_write_json(
+        _ask_state_dir(message_id) / "launch.json",
+        {
+            "message_id": message_id,
+            "pid": pid,
+            "agent": target,
+            "harness": target,
+            "model": metadata.get("to_model"),
+            "started_at": _now_iso(),
+        },
+    )
+
+
+def _read_ask_record(message_id: int, name: str) -> dict[str, Any] | None:
+    try:
+        value = json.loads((_ask_state_dir(message_id) / name).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return value if isinstance(value, dict) else None
+
+
+def _pid_is_alive(pid: object) -> bool:
+    if not isinstance(pid, int) or pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+class _AskTerminalRecorder:
+    """Single-write terminal artifact for a detached ask worker."""
+
+    def __init__(self, message_id: int):
+        self.message_id = message_id
+        self.written = False
+
+    def write(self, rc_or_signal: int | str, stage: str) -> None:
+        if self.written:
+            return
+        _atomic_write_json(
+            _ask_state_dir(self.message_id) / "terminal.json",
+            {
+                "rc_or_signal": rc_or_signal,
+                "stage": stage,
+                "stderr_tail": _stderr_tail(self.message_id),
+                "ended_at": _now_iso(),
+            },
+        )
+        self.written = True
+
+    def atexit(self) -> None:
+        self.write("unknown", "atexit")
+
+    def signal_handler(self, signum: int, _frame: Any) -> None:
+        self.write(signal.Signals(signum).name, "signal")
+        raise SystemExit(128 + signum)
 
 
 class AskWorkerStartupError(RuntimeError):
@@ -272,6 +394,7 @@ def launch_background_ask(message_id: int, target: str, options: dict[str, Any])
         {"message_id": message_id, "target": target, "options": options},
         pid=proc.pid,
     )
+    _write_ask_launch_record(message_id, pid=proc.pid, target=target)
 
     # A worker can die BEFORE `process_background_ask` runs — a bad adapter path, an
     # import error, a missing binary — in which case its `finally:` never executes and
@@ -362,6 +485,7 @@ def _confirm_worker_started(message_id: int, target: str, proc, log_file: Path) 
             tail = ""
         detail = tail or f"worker exited rc={rc} without writing any output"
         record_ask_failure(message_id, f"{target} worker died at startup: {detail}")
+        _AskTerminalRecorder(message_id).write(rc if rc is not None else 1, "startup")
         _remove_pid_file(_ASK_AGENT, str(message_id))
         print(
             f"❌ Ask #{message_id}: the {target} worker DIED AT STARTUP (rc={rc}) without "
@@ -391,22 +515,45 @@ def _stored_reply_is_useful(reply_id: int) -> bool:
 
 def process_background_ask(message_id: int, target: str) -> None:
     """Run one detached ask worker and leave a terminal lifecycle status."""
-    options = _background_options(message_id, target)
-    mark_ask_processing(message_id)
+    terminal = _AskTerminalRecorder(message_id)
+    atexit.register(terminal.atexit)
+    previous_handlers: dict[int, Any] = {}
+    for signum in (signal.SIGTERM, signal.SIGINT):
+        previous_handlers[signum] = signal.getsignal(signum)
+        signal.signal(signum, terminal.signal_handler)
+    rc_or_signal: int | str = 1
+    stage = "startup"
     try:
+        options = _background_options(message_id, target)
+        mark_ask_processing(message_id)
+        stage = "processing"
         _process_target(message_id, target, options)
+        status = _ask_status(message_id)
+        if status and status.startswith("replied:"):
+            rc_or_signal = 0
+            stage = "success"
+        else:
+            stage = "missing-reply" if status in {"sent", "processing", "pending", None} else "failed"
     except (AgentStalledError, AgentTimeoutError, subprocess.TimeoutExpired, TimeoutError) as exc:
         record_ask_failure(message_id, str(exc), timed_out=True)
+        stage = "timeout"
     except SystemExit as exc:
         detail = str(exc)
         record_ask_failure(message_id, detail, timed_out=_looks_like_timeout(detail))
+        stage = "system-exit"
+        rc_or_signal = exc.code if isinstance(exc.code, int) else "SystemExit"
     except Exception as exc:  # pragma: no cover - defensive detached-worker boundary
         record_ask_failure(message_id, f"{type(exc).__name__}: {exc}")
+        stage = "exception"
     finally:
         status = _ask_status(message_id)
         if status in {"sent", "processing", "pending", None}:
             record_ask_failure(message_id, "worker ended without a reply")
+            stage = "missing-reply"
+        terminal.write(rc_or_signal, stage)
         _remove_pid_file(_ASK_AGENT, str(message_id))
+        for signum, previous in previous_handlers.items():
+            signal.signal(signum, previous)
 
 
 def print_asks(task_id: str | None = None) -> None:
@@ -439,7 +586,7 @@ def print_asks(task_id: str | None = None) -> None:
 
     print("ID  TASK  TO  STATUS  CONSUMPTION  SENT")
     for row in rows:
-        status = _display_status(str(row[3] or "sent"))
+        status = _ask_display_status(int(row[0]), str(row[3] or "sent"))
         consumption = _message_consumption_state(row[5], row[6])
         print(f"{row[0]}  {row[1] or '-'}  {row[2]}  {status}  {consumption}  {row[4]}")
 
@@ -623,6 +770,36 @@ def _display_status(status: str) -> str:
     if status.startswith("failed:"):
         return "failed"
     return status
+
+
+def _ask_display_status(message_id: int, status: str) -> str:
+    """Render durable worker-death evidence before the legacy status string."""
+    terminal = _read_ask_record(message_id, "terminal.json")
+    if terminal is not None:
+        rc_or_signal = terminal.get("rc_or_signal")
+        stage = str(terminal.get("stage") or "unknown")
+        failed = rc_or_signal not in {0, "0"} or stage in {
+            "atexit",
+            "exception",
+            "failed",
+            "missing-reply",
+            "signal",
+            "startup",
+            "system-exit",
+            "timeout",
+        }
+        if failed:
+            return f"FAILED ({stage}; retry recommended)"
+
+    launch = _read_ask_record(message_id, "launch.json")
+    if (
+        launch is not None
+        and terminal is None
+        and not status.startswith("replied:")
+        and not _pid_is_alive(launch.get("pid"))
+    ):
+        return "DIED-SILENT (retry recommended)"
+    return _display_status(status)
 
 
 def _message_consumption_state(acknowledged: int, consumed_by_live_driver: int) -> str:
