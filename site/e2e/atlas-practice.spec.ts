@@ -689,3 +689,56 @@ test('A7: word cards render the level exactly once', async ({ page, context }) =
   );
   expect(occurrences).toBe(1);
 });
+
+test.describe('daily preview UTC boundary', () => {
+  test.use({ timezoneId: 'UTC' });
+
+  test('keeps a displayable daily card on both sides of midnight when the pool has orphaned rows', async ({ page, context }) => {
+    await context.clearCookies();
+    const dailyPool = [
+      { lemma: 'видиме-один', slug: 'visible-one', gloss: 'visible one', cefr: 'A1' },
+      { lemma: 'видиме-два', slug: 'visible-two', gloss: 'visible two', cefr: 'A1' },
+      { lemma: 'сирота', slug: 'orphaned-row', gloss: 'orphaned row', cefr: 'A1' },
+    ];
+    const lexemes = dailyPool.slice(0, 2).map((word) => ({
+      lemmaId: word.slug,
+      lemma: word.lemma,
+      lemmaPlain: word.lemma,
+      ipa: null,
+      gloss: word.gloss,
+      pos: 'noun',
+      cefr: word.cefr,
+      heritage: null,
+      severity: null,
+      paradigm: { cases: {} },
+    }));
+
+    await page.route('**/lexicon/daily-pool.json', (route) =>
+      route.fulfill({ contentType: 'application/json', body: JSON.stringify(dailyPool) }),
+    );
+    await page.route('**/lexicon/practice-lexemes.A1.json', (route) =>
+      route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({ deckVersion: 'daily-boundary-fixture', level: 'A1', lexemes }),
+      }),
+    );
+    await page.clock.install({ time: new Date('2026-07-26T23:55:00.000Z') });
+    await page.addInitScript(() => {
+      window.localStorage.clear();
+      window.localStorage.setItem('lu-learner-level', 'A1');
+    });
+
+    for (const { instant, expectedWord } of [
+      { instant: '2026-07-26T23:55:00.000Z', expectedWord: 'видиме-два' },
+      { instant: '2026-07-27T00:05:00.000Z', expectedWord: 'сирота' },
+    ]) {
+      await page.clock.setFixedTime(new Date(instant));
+      await page.goto('/words-of-the-day/practice/');
+
+      const front = page.locator('.daily-preview-card .flashcard-front');
+      await expect(page.getByTestId('practice-daily-deck')).toBeVisible();
+      await expect(front).toContainText(expectedWord);
+      await expect(front).not.toHaveText('—');
+    }
+  });
+});
