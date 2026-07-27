@@ -7,6 +7,9 @@
 #   export PATH="$HOME/.hermes/node/bin:$PATH"
 # from before the detach — launchers must strip it on every start.
 #
+# Empty colon-delimited PATH fields are valid (they mean cwd). Rebuild PATH
+# without dropping them; only remove entries exactly equal to the Hermes bin.
+#
 # Usage (from a repo-root start-*.sh):
 #   # shellcheck source=scripts/lib/scrub_hermes_node_path.sh
 #   source "$ROOT/scripts/lib/scrub_hermes_node_path.sh"
@@ -14,27 +17,28 @@
 
 scrub_hermes_node_from_path() {
   local hermes_node_bin="${HOME}/.hermes/node/bin"
-  local scrubbed="" p
-  local _old_ifs="$IFS"
-  local -a parts=()
+  local out="" sep="" rest="${PATH-}"
+  local comp more=1
 
-  IFS=':'
-  # shellcheck disable=SC2206  # intentional word-split on PATH
-  parts=(${PATH:-})
-  IFS="$_old_ifs"
-
-  for p in "${parts[@]+"${parts[@]}"}"; do
-    [ -n "$p" ] || continue
-    if [ "$p" = "$hermes_node_bin" ]; then
+  # Split on ':' while preserving empty fields (unlike unquoted ${PATH} split).
+  while [ "$more" -eq 1 ]; do
+    case "$rest" in
+      *:*)
+        comp="${rest%%:*}"
+        rest="${rest#*:}"
+        ;;
+      *)
+        comp="$rest"
+        more=0
+        ;;
+    esac
+    if [ "$comp" = "$hermes_node_bin" ]; then
       continue
     fi
-    if [ -n "$scrubbed" ]; then
-      scrubbed="${scrubbed}:${p}"
-    else
-      scrubbed="$p"
-    fi
+    out="${out}${sep}${comp}"
+    sep=":"
   done
 
-  export PATH="$scrubbed"
+  export PATH="$out"
   hash -r 2>/dev/null || true
 }
