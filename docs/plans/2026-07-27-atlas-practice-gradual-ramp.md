@@ -1,10 +1,18 @@
 # Plan of record (DRAFT for advisors): Atlas + Practice gradual ramp
 
-**Status:** DRAFT — needs advisor review (Sol + Fable) before infra/process lock
-**Date:** 2026-07-27
+**Status:** DRAFT — needs advisor review (Sol + Fable) before **long-tail** infra lock
+**Date:** 2026-07-27 (revised same day — teacher-list priority)
 **Epic:** #4387 (Word Atlas + Practice Hub)
-**Operator ask:** gradual expansion schedule; know **when** infra must change; whether to ramp; path to server-side LLM later; **static for now**
 **Author seat:** interim atlas driver (Grok) — architecture draft for advisors, not a solo lock
+
+### CRITICAL split (operator 2026-07-27 evening)
+
+| Track | Scope | Timeline |
+| --- | --- | --- |
+| **Track T — Teacher homework** | Full **Alona v5** list (~1k active seed) in Practice | **Immediate** — next driver ships this; **not** “by winter,” **not** capped at 50 words |
+| **Track A — Atlas-wide ramp** | Grow practice pool toward “any atlas word” (~17k→more) | Gradual waves below; advisors lock triggers |
+
+A **32–50 gold slice** is only a **factory smoke test**. It must never be treated as the teacher-list delivery.
 
 ---
 
@@ -12,20 +20,25 @@
 
 | Horizon | Learner experience |
 | --- | --- |
-| **Now** | Browse a large Word Atlas; practice a smaller high-quality pool |
-| **Near** | Curated decks (Alona / course) feel complete; CTA works for those words |
+| **Now (Track T)** | Practice the **teacher’s full Alona word list** in the app |
+| **Now (product)** | Browse a large Word Atlas; practice pool smaller than atlas |
+| **Near** | Curated decks feel complete; CTA works for those words |
 | **Mid** | Most “everyday” atlas words are practiceable; banner becomes rare |
-| **Far** | **Practice any public atlas word** — static pool covers the head, long-tail may use server assist |
+| **Far** | **Practice any public atlas word** — static pool covers the head; long-tail may use server assist |
 
 **Non-negotiables (already decided):**
+
 - Static-first practice (offline-capable shards)
 - Quality gates over coverage vanity
 - Rights-aware examples (no fake sentences, no textbook exercise traps)
 - CODE decides word validity (VESUM / triage), not LLM dictionary judgment
 - Non-commercial permanent project
 
-**Answer: should we ramp?**
-**Yes — gradually.** Not “add everything tomorrow.” Ramp is how we reach “any word” without melting static size budgets or shipping junk drills.
+**Should we ramp the whole atlas (Track A)?**
+**Yes — gradually.**
+
+**Should the Alona teacher list wait for that ramp?**
+**No.** Track T is unblocked homework priority and runs **ahead of** Wave 1–4 calendar language.
 
 ---
 
@@ -61,8 +74,6 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 
 ## 3. Eligibility stack (what “practiceable” means)
 
-A lemma is practiceable only if it clears **mode-appropriate** gates (existing `generate_practice_deck` / PRACTICE-HUB-SPEC spirit):
-
 | Layer | Requirement |
 | --- | --- |
 | **Identity** | Stable lemma id / slug; preferably VESUM-linked |
@@ -72,136 +83,117 @@ A lemma is practiceable only if it clears **mode-appropriate** gates (existing `
 | **Quality** | No surzhyk junk, no derived-only debris, no ambiguous cloze |
 
 **Ramp rule:** expand only what passes gates. Prefer empty mode shard over bad cards.
+**Track T rule:** admit full Alona list for recognition/practice; cloze only where sentence is clean.
 
 ---
 
-## 4. Phased schedule (calendar targets, not hard SLAs)
+## 4. Phased schedule
 
-Assumes fleet capacity + one focused atlas driver; slip dates, not quality.
-
-### Wave 0 — Foundation (done → finishing) · through ~2026-08
+### Wave 0 — Foundation + **Track T** · **immediate**
 
 | Item | Exit |
 | --- | --- |
-| Practice hub live (static FSRS, CEFR shards) | Done |
-| Open lexical plan + inventory + projection schema | Done / landing |
-| Alona v5 seed frozen (VESUM skip policy) | Done |
+| Practice hub live | Done |
+| Open lexical plan + projection schema | Done |
+| Alona v5 seed frozen (VESUM skip; no renames) | Done |
 | Seed → ADR-017 converter | Done (#5901) |
-| **Gold deck 32–50** through real practice pipeline | **In flight (#5792)** |
+| Factory smoke 32–50 | Mechanism PR #5905 (smoke only) |
+| **Track T: full Alona v5 (~1k) in Practice** | **P0 next driver** — homework |
 
 **Infra change?** None. Stay static.
+**Do not** bury Track T in “Wave 1 autumn.”
 
 ---
 
-### Wave 1 — Curated vertical · ~2026-08 → 2026-09
+### Wave 1 — After Track T · polish
 
-| Milestone | Target | Exit criteria |
+| Milestone | Target | Exit |
 | --- | --- | --- |
-| W1.a Gold deck | 32–50 lemmas | CTA works; local Astro smoke; provenance on examples |
-| W1.b Alona full deck | ~1k seed (ok-sentence first) | `practice-index` membership for deck slug **or** CEFR inject; human smoke |
-| W1.c Morphology search v1 | form → lemma aliases | Declined search hits atlas page for sample set |
-| W1.d Durable enrich cache | 20k / ULIF (#5884) | No silent loss on cleanup |
+| W1.a Morphology search v1 | form → lemma | Declined search hits sample pages |
+| W1.b Durable enrich cache | #5884 | No silent loss on cleanup |
+| W1.c Banner UX | Soften gloss-only vs pool-miss | Clear copy |
 
-**Ramp?** Yes — curated only.
-**Infra change?** Still static. Measure: total gzip of practice shards per level after W1.b.
-
-**Advisor checkpoint A:** after W1.b — “Is static still healthy? Cloze quality OK?”
+**Advisor checkpoint A:** after Track T full Alona is live — static still healthy?
 
 ---
 
-### Wave 2 — Systematic pool growth · ~2026-09 → 2026-11
+### Wave 2 — Systematic pool growth · ~months after Track T
 
-Grow practice pool from atlas enrichment in **measured batches** (not one dump):
+| Batch | Source | Order of magnitude |
+| --- | --- | --- |
+| 2.1 | A1–A2 high-frequency + course | +1–2k |
+| 2.2 | B1 core | +1–2k |
+| 2.3 | Redistributable examples → cloze | careful |
+| 2.4 | Further teacher decks | as admitted |
 
-| Batch | Source | Target add (order of magnitude) | Notes |
-| --- | --- | --- | --- |
-| 2.1 | A1–A2 high-frequency + course | +1–2k | Stress + gloss required |
-| 2.2 | B1 core | +1–2k | Paradigm verify before case modes |
-| 2.3 | Words with redistributable examples | +cloze | Cloze stays rare until quality holds |
-| 2.4 | Alona remainder + teacher decks | +as admitted | Privacy until operator GO |
-
-**Pool target end of Wave 2:** ~**10–15k** practice lemmas (still << full atlas).
-**Atlas target:** continue Phase-1 local fill; no forced 250k yet.
+**Pool target end of Wave 2:** ~**10–15k** practice lemmas.
 
 **Infra triggers (measure monthly):**
 
 | Signal | Threshold (proposal) | Action |
 | --- | --- | --- |
-| Per-level practice-lexemes **gzip** | > **150 KB** of 180 KB budget (~80%) | Split shards (by letter / mode / sublevel) **before** hard fail |
-| Per-level practice-lexemes **raw** | > **1.2 MB** of 1.6 MB | Same |
-| Practice index load time (mobile mid) | > **500 ms** parse+index | Partition index; lazy mode shards already help |
-| SSG / hydrate wall time | > **30 min** or CI flake | Incremental deck build / cache |
-| Atlas search payload (client) | > **agreed MB** or jank | SQLite-wasm path or server search spike |
+| practice-lexemes **gzip** / level | > **150 KB** of 180 KB (~80%) | Split shards before hard fail |
+| practice-lexemes **raw** / level | > **1.2 MB** of 1.6 MB | Same |
+| Index load (mobile mid) | > **500 ms** | Partition index |
+| SSG / hydrate wall | > **30 min** or CI flake | Incremental build |
+| Client search jank | agreed MB / UX pain | SQLite-wasm or server search spike |
 
-**Infra change?** Still **static**, but may need **shard layout v2** (mechanical, not backend).
-**Advisor checkpoint B:** first time any level hits 80% size budget — Sol/Fable review shard plan **before** next +2k batch.
+**Advisor checkpoint B:** first 80% budget hit — Sol/Fable before next +2k batch.
 
 ---
 
-### Wave 3 — Coverage toward “most words” · ~2026-11 → 2027-Q1
+### Wave 3 — Toward “most words” · later
 
 | Goal | Approach |
 | --- | --- |
-| Practice pool ~**20–40k** (stretch) | Batch eligibility from atlas.db; fail closed on quality |
-| Atlas depth | Phase-2 paced ULIF/wiki; durable caches mandatory |
-| Cloze | Only attestation-backed; never LLM filler on client |
+| Pool ~20–40k stretch | Batch from atlas.db; fail closed |
+| Atlas depth | Phase-2 paced ULIF/wiki; durable caches |
+| Cloze | Attestation-backed only |
 
-**Should we ramp here?** Only if Wave 2 quality metrics hold (error rates, human spot checks, cloze ambiguity).
-
-**Infra triggers → real architecture change:**
-
-| Signal | Threshold (proposal) | Change |
-| --- | --- | --- |
-| Static total practice download (all levels learner might pull) | Uncomfortable on 4G / offline package | **Tiered download** (level-only) already; then **server fetch for long-tail modes** |
-| Full atlas SSG time / artifact size | Operator pain or CI broken | **On-demand article** or hybrid SSG |
-| “Practice any word” demand | Banner rate still high at 40k pool | Design **on-demand practice cards** from atlas.db |
-| Accounts / cross-device FSRS | Operator GO | **Practice backend** (#4384) — progressive enhancement |
-
-**Advisor checkpoint C (mandatory):** before any server component — Sol + Fable design review (auth, offline, cost, non-commercial hosting).
+**Advisor checkpoint C (mandatory before any server):** Sol + Fable (auth, offline, cost, non-commercial hosting).
 
 ---
 
-### Wave 4 — Server assist + optional LLM · 2027+ (gated)
+### Wave 4 — Server assist + optional LLM · gated, later
 
 **Still static-first.** Server is additive.
 
-| Capability | Role of server | Role of LLM (only if approved) |
+| Capability | Server | LLM (only if approved) |
 | --- | --- | --- |
-| Long-tail practice cards | Assemble gloss+stress+paradigm from DB | Optional: distractor generation with human/auto quality gates |
-| Cloze for rare words | Prefer corpus attestation API | LLM only if rights-safe **and** VESUM-checked; never invent dictionary facts |
-| Search | Query API if client FTS too big | No |
-| Sync / analytics | Accounts + FSRS sync | No |
+| Long-tail practice cards | Assemble from DB | Optional distractors with gates |
+| Cloze rare words | Corpus API first | Only rights-safe + VESUM-checked |
+| Search | API if client FTS too big | No |
+| Sync / analytics | Accounts + FSRS | No |
 
-**LLM policy (binding draft for advisors):**
-- Client remains static / deterministic for core decks
-- LLM **never** decides word validity or morphology
-- LLM **may** assist server-side generation only behind gates + logging
-- Default: off until Wave 3 checkpoint C passes
+**LLM policy (draft):** never on client core path; never decides validity/morphology; default off until checkpoint C.
 
 ---
 
-## 5. Operating cadence (how we ramp without chaos)
+## 5. Operating cadence
 
 | Cadence | Activity |
 | --- | --- |
-| **Weekly** | Gold/curated deck merges; practice rebuild for small deltas |
-| **Biweekly** | Pool growth batch (size + quality report) |
-| **Monthly** | Infra trigger dashboard (budgets, SSG time, banner rate sample) |
-| **Per wave end** | Advisor checkpoint (A/B/C) |
+| **Immediate** | Track T full Alona practice admission |
+| **Weekly** | Curated deck merges after Track T |
+| **Biweekly** | Track A pool batches (after Track T) |
+| **Monthly** | Infra trigger dashboard |
+| **Per wave end** | Advisor checkpoint |
 
 **Fleet:** drivers dispatch workers; cross-family CF on code; Sol/Fable for design locks.
+**FLEET-FIRST / NO SOLO** on Grok driver seat (demotion trigger).
 
 ---
 
-## 6. Decision cards for advisors
+## 6. Decision cards for advisors (Track A)
 
 | ID | Question | Driver recommendation |
 | --- | --- | --- |
-| **DC-1** | Confirm gradual ramp vs freeze practice pool at ~5k? | **Ramp gradually** (Waves 1–2) |
-| **DC-2** | Size-budget trigger at 80% gzip — split shards vs raise limits? | **Split first**; raise limits only with measurement |
-| **DC-3** | When to design on-demand practice? | After Wave 2 pool ~10–15k **or** 80% budget hit — whichever first |
-| **DC-4** | When to introduce server? | Only at Wave 3 checkpoint C; static remains default path |
-| **DC-5** | LLM on server? | **Later, gated**; never on client core path; never for validity/morphology |
+| **DC-0** | Confirm Track T full Alona is **not** gated by Wave 1–4 calendar? | **Confirm** — homework is immediate |
+| **DC-1** | Gradual atlas ramp vs freeze pool ~5k? | **Ramp gradually** after Track T |
+| **DC-2** | 80% gzip — split shards vs raise limits? | **Split first** |
+| **DC-3** | When design on-demand practice? | After Wave 2 ~10–15k **or** 80% budget |
+| **DC-4** | When introduce server? | Only checkpoint C; static default |
+| **DC-5** | LLM on server? | **Later, gated**; never validity/morphology |
 
 ---
 
@@ -209,46 +201,37 @@ Grow practice pool from atlas enrichment in **measured batches** (not one dump):
 
 | Risk | Mitigation |
 | --- | --- |
-| Coverage vanity → bad drills | Eligibility fail-closed; spot audits |
+| Confusing Track T with Track A | This section; #5903 comments |
+| Coverage vanity → bad drills | Eligibility fail-closed |
 | Static budget cliff | 80% triggers; shard v2 |
-| Rights regressions in examples | Provenance required; textbook exercise filter |
-| Double migration of 250k | Schema before mass fill (already policy) |
-| Solo driver thrash | FLEET-FIRST / NO SOLO seat rules |
+| Rights regressions | Provenance required |
+| Solo driver thrash | FLEET-FIRST seat rules |
 
 ---
 
-## 8. Immediate next 30 days (executable)
+## 8. Immediate next actions (ordered)
 
-1. Land **gold deck (#5792)** — factory proof
-2. Expand to **Alona full “ok sentence” subset** as curated practice deck
-3. Instrument **banner rate** sample (N random atlas pages: hasPractice true/false)
-4. Publish **size-budget dashboard** script (one command → gzip/raw per level)
-5. Advisor review of this draft (Sol + Fable) → lock DC-1…DC-5
-6. Only then schedule Wave 2 batch 2.1
+1. **Track T:** full Alona v5 (~1029) into Practice — extend #5905 / #5792 (not stop at 40)
+2. Local smoke: several Alona lemmas → Practice CTA works
+3. Banner-rate sample on random non-Alona atlas pages
+4. Advisor finish on this draft → lock DC-0…DC-5 for Track A
+5. Only after Track T: Wave 2 batch 2.1
 
 ---
 
 ## 9. Related issues / docs
 
-- Umbrella: #4387
-- Seed: #5790 · Schema: #5791 · Gold: #5792 · Paste-text: #5882 · Durability: #5884
-- Backend (later): #4384 · #4920
-- Plans: `docs/plans/2026-07-25-atlas-open-lexical-layer.md`, `docs/plans/atlas-entry-model-v1-and-corpus-fill.md`, `docs/poc/word-atlas/PRACTICE-HUB-SPEC.md`
+- Umbrella: #4387 · Tracking: #5903 · Plan PR: #5904
+- Seed: #5790 · Schema: #5791 · Gold/factory: #5792 · Paste-text: #5882 · Durability: #5884
+- Backend later: #4384 · #4920
+- Plans: `2026-07-25-atlas-open-lexical-layer.md`, `atlas-entry-model-v1-and-corpus-fill.md`, `PRACTICE-HUB-SPEC.md`
 
 ---
 
-## 10. Advisor ask (copy for Sol / Fable)
+## 10. Advisor ask
 
-Please review as **architecture / ramp design**, not code nits:
-
-1. Is the wave split and **order** right?
-2. Are **infra trigger thresholds** sane (too early / too late)?
-3. Should Wave 2 pool target be lower/higher than 10–15k?
-4. Confirm **static-until-checkpoint-C** and **LLM-only-later-gated**.
-5. Any missing trigger (SSG, rights, pedagogy)?
-
-Return: **APPROVE** / **APPROVE-WITH-CHANGES** / **BLOCK**, with explicit edits to DC-1…DC-5.
+Review as **architecture / ramp design**, not code nits. Explicitly affirm **DC-0** (teacher list is immediate). Return APPROVE / APPROVE-WITH-CHANGES / BLOCK on DC-0…DC-5.
 
 ---
 
-*Draft for advisor consensus. Not operator-locked until advisors + operator GO.*
+*Draft for advisor consensus. Track T priority is operator-locked; Track A thresholds need advisors + operator GO.*
