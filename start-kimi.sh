@@ -40,10 +40,15 @@
 
 set -euo pipefail
 
-export PATH="${HOME}/.local/bin:/opt/homebrew/bin:${HOME}/.hermes/node/bin:${PATH:-}"
-hash -r 2>/dev/null || true
-
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Drop Hermes-private Node from inherited PATH, then prefer user globals + brew.
+if [ -f "$PROJECT_DIR/scripts/lib/scrub_hermes_node_path.sh" ]; then
+  # shellcheck source=scripts/lib/scrub_hermes_node_path.sh
+  source "$PROJECT_DIR/scripts/lib/scrub_hermes_node_path.sh"
+  scrub_hermes_node_from_path
+fi
+export PATH="${HOME}/.local/bin:/opt/homebrew/bin:${PATH:-}"
+hash -r 2>/dev/null || true
 # Absolute path to THIS script, captured before any cd: usage_launcher reads
 # its own header, and the worktree redirect below changes cwd.
 SCRIPT_PATH="$PROJECT_DIR/$(basename "${BASH_SOURCE[0]}")"
@@ -65,17 +70,22 @@ usage_launcher() {
   exit 0
 }
 # --- locate kimi binary ---
-# Preference order: explicit override → ambient PATH (the hermes npm install,
-# ~/.hermes/node/bin, is the maintained one) → hermes explicit → legacy
-# standalone binary at ~/.kimi-code/bin (last resort; often stale).
+# Preference order: explicit override → ambient PATH (after PATH fix above,
+# that is ~/.local + Homebrew) → explicit ~/.local/bin/kimi (user npm -g) →
+# legacy standalone binary at ~/.kimi-code/bin (last resort; often stale).
+# Do NOT fall back to ~/.hermes/node/bin — that tree is Hermes-private only.
 KIMI_BIN="${LEARN_UK_KIMI_BIN:-}"
 if [ -z "$KIMI_BIN" ] || [ ! -x "$KIMI_BIN" ]; then
   KIMI_BIN=""
   for cand in \
     "$(command -v kimi 2>/dev/null || true)" \
-    "${HOME}/.hermes/node/bin/kimi" \
+    "${HOME}/.local/bin/kimi" \
     "${HOME}/.kimi-code/bin/kimi"
   do
+    # Never accept Hermes-private installs even if something re-injected PATH.
+    case "$cand" in
+      */.hermes/node/bin/*) continue ;;
+    esac
     if [ -n "$cand" ] && [ -x "$cand" ]; then
       KIMI_BIN="$cand"
       break
@@ -83,7 +93,8 @@ if [ -z "$KIMI_BIN" ] || [ ! -x "$KIMI_BIN" ]; then
   done
 fi
 if [ -z "$KIMI_BIN" ]; then
-  echo "Error: Kimi Code CLI not found. Install it or set LEARN_UK_KIMI_BIN." >&2
+  echo "Error: Kimi Code CLI not found. Install with: npm i -g @moonshot-ai/kimi-code" >&2
+  echo "  (user prefix ~/.local; see ~/.npmrc) or set LEARN_UK_KIMI_BIN." >&2
   exit 1
 fi
 
