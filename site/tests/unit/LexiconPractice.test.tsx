@@ -709,12 +709,12 @@ describe('LexiconPractice', () => {
       locative: 'ма́мі',
     }, { example: 'Мама читає.', exampleEn: 'Mother is reading.' });
     const snapshot: DailyPracticeDeckSnapshot = {
-      version: 1,
+      version: 2,
       date: '2026-06-23',
       level: 'A1',
       deckVersion: 'test-daily-display',
       createdAt: NOW.getTime(),
-      items: [{ lemmaId: marked.lemmaId, origin: 'due' }],
+      items: [{ lemmaId: marked.lemmaId, origin: 'due', lemma: marked.lemma, gloss: marked.gloss, cefr: marked.cefr, pos: null }],
     };
     const rows: { pendingDue: DailyPracticeRowState[]; pendingNew: DailyPracticeRowState[]; done: DailyPracticeRowState[] } = {
       pendingDue: [{ item: snapshot.items[0]!, state: 'due', lastSeenAt: NOW.getTime() }],
@@ -740,6 +740,189 @@ describe('LexiconPractice', () => {
     expect(screen.queryByText('ма́ма')).not.toBeInTheDocument();
     expect(screen.getAllByText('мама').length).toBeGreaterThan(0);
     expect(screen.queryByTestId('practice-daily-example-en')).not.toBeInTheDocument();
+  });
+
+  test('renders the daily card from the pick payload when the slug is absent from the practice-lexemes map (#5852)', () => {
+    const snapshot: DailyPracticeDeckSnapshot = {
+      version: 2,
+      date: '2026-06-23',
+      level: 'A1',
+      deckVersion: 'daily-pool',
+      createdAt: NOW.getTime(),
+      items: [
+        {
+          lemmaId: 'борщ',
+          origin: 'new',
+          lemma: 'борщ',
+          gloss: 'borscht',
+          cefr: 'A1',
+          pos: 'noun',
+          example: 'Я їм борщ.',
+          exampleEn: 'I am eating borscht.',
+        },
+      ],
+    };
+    const rows: { pendingDue: DailyPracticeRowState[]; pendingNew: DailyPracticeRowState[]; done: DailyPracticeRowState[] } = {
+      pendingDue: [],
+      pendingNew: [{ item: snapshot.items[0]!, state: 'new', lastSeenAt: null }],
+      done: [],
+    };
+
+    render(
+      <PracticeDailyDeck
+        snapshot={snapshot}
+        rows={rows}
+        // Empty: 'борщ' is NOT in the (much smaller) practice-lexemes map — the
+        // live #5852 failure mode. The card must still render from the item,
+        // including its own `pos` (#5856 — the map is fallback-only for pos).
+        lexemes={new Map()}
+        atlasLemmaHref={(lemmaId) => `/lexicon/${lemmaId}/`}
+        chromeLocale="uk"
+        learnerLevel="A1"
+      />,
+    );
+
+    expect(screen.getAllByText('борщ').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('borscht').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('noun').length).toBeGreaterThan(0);
+    expect(screen.getByTestId('practice-daily-example')).toHaveTextContent('Я їм борщ.');
+    expect(screen.getByTestId('practice-daily-example-en')).toHaveTextContent('I am eating borscht.');
+    expect(screen.queryByText('—')).not.toBeInTheDocument();
+  });
+
+  test('enriches the daily card with ipa/pos from the practice-lexemes map when the pick payload has neither (#5852)', () => {
+    const enrichment = lexeme('борщ', 'борщ', 'borscht (lexeme gloss)', {
+      nominative: 'борщ',
+      accusative: 'борщ',
+      locative: 'борщі',
+    }, { ipa: 'bɔrʃtʃ', pos: 'noun' });
+    const snapshot: DailyPracticeDeckSnapshot = {
+      version: 2,
+      date: '2026-06-23',
+      level: 'A1',
+      deckVersion: 'daily-pool',
+      createdAt: NOW.getTime(),
+      items: [{ lemmaId: 'борщ', origin: 'new', lemma: 'борщ', gloss: 'borscht', cefr: 'A1', pos: null }],
+    };
+    const rows: { pendingDue: DailyPracticeRowState[]; pendingNew: DailyPracticeRowState[]; done: DailyPracticeRowState[] } = {
+      pendingDue: [],
+      pendingNew: [{ item: snapshot.items[0]!, state: 'new', lastSeenAt: null }],
+      done: [],
+    };
+
+    render(
+      <PracticeDailyDeck
+        snapshot={snapshot}
+        rows={rows}
+        lexemes={new Map([[enrichment.lemmaId, enrichment]])}
+        atlasLemmaHref={(lemmaId) => `/lexicon/${lemmaId}/`}
+        chromeLocale="uk"
+        learnerLevel="A1"
+      />,
+    );
+
+    // ipa is enrichment-only, sourced from the lexeme map.
+    expect(screen.getByText(/bɔrʃtʃ/)).toBeInTheDocument();
+    // pos is absent from the pick payload, so the map fills the gap.
+    expect(screen.getAllByText('noun').length).toBeGreaterThan(0);
+    // The pick payload's own gloss remains the source of truth for the card text.
+    expect(screen.getAllByText('borscht').length).toBeGreaterThan(0);
+  });
+
+  test('the pick payload pos wins over a conflicting practice-lexemes map pos (#5856)', () => {
+    const enrichment = lexeme('борщ', 'борщ', 'borscht (lexeme gloss)', {
+      nominative: 'борщ',
+      accusative: 'борщ',
+      locative: 'борщі',
+    }, { pos: 'adjective' });
+    const snapshot: DailyPracticeDeckSnapshot = {
+      version: 2,
+      date: '2026-06-23',
+      level: 'A1',
+      deckVersion: 'daily-pool',
+      createdAt: NOW.getTime(),
+      items: [{ lemmaId: 'борщ', origin: 'new', lemma: 'борщ', gloss: 'borscht', cefr: 'A1', pos: 'noun' }],
+    };
+    const rows: { pendingDue: DailyPracticeRowState[]; pendingNew: DailyPracticeRowState[]; done: DailyPracticeRowState[] } = {
+      pendingDue: [],
+      pendingNew: [{ item: snapshot.items[0]!, state: 'new', lastSeenAt: null }],
+      done: [],
+    };
+
+    render(
+      <PracticeDailyDeck
+        snapshot={snapshot}
+        rows={rows}
+        lexemes={new Map([[enrichment.lemmaId, enrichment]])}
+        atlasLemmaHref={(lemmaId) => `/lexicon/${lemmaId}/`}
+        chromeLocale="uk"
+        learnerLevel="A1"
+      />,
+    );
+
+    expect(screen.getAllByText('noun').length).toBeGreaterThan(0);
+    expect(screen.queryByText('adjective')).not.toBeInTheDocument();
+  });
+
+  test('the pick payload example wins over a conflicting practice-lexemes map example; map fills the gap when the pick has none (#5856)', () => {
+    const enrichment = lexeme('борщ', 'борщ', 'borscht (lexeme gloss)', {
+      nominative: 'борщ',
+      accusative: 'борщ',
+      locative: 'борщі',
+    }, { example: 'Лексема: Борщ дуже смачний.', exampleEn: 'Lexeme: Borscht is very tasty.' });
+    const lexemes = new Map([[enrichment.lemmaId, enrichment]]);
+    const rowsFor = (item: DailyPracticeDeckSnapshot['items'][number]) => ({
+      pendingDue: [],
+      pendingNew: [{ item, state: 'new' as const, lastSeenAt: null }],
+      done: [],
+    });
+
+    // Pick has its own example (A); the map's conflicting example (B) must not win.
+    const withOwnExample: DailyPracticeDeckSnapshot['items'][number] = {
+      lemmaId: 'борщ',
+      origin: 'new',
+      lemma: 'борщ',
+      gloss: 'borscht',
+      cefr: 'A1',
+      pos: null,
+      example: 'Пік: Я їм борщ.',
+      exampleEn: 'Pick: I am eating borscht.',
+    };
+    const { rerender } = render(
+      <PracticeDailyDeck
+        snapshot={{ version: 2, date: '2026-06-23', level: 'A1', deckVersion: 'daily-pool', createdAt: NOW.getTime(), items: [withOwnExample] }}
+        rows={rowsFor(withOwnExample)}
+        lexemes={lexemes}
+        atlasLemmaHref={(lemmaId) => `/lexicon/${lemmaId}/`}
+        chromeLocale="uk"
+        learnerLevel="A1"
+      />,
+    );
+
+    expect(screen.getByTestId('practice-daily-example')).toHaveTextContent('Пік: Я їм борщ.');
+    expect(screen.queryByText('Лексема: Борщ дуже смачний.')).not.toBeInTheDocument();
+
+    // Pick has no example; the map's example fills the gap.
+    const withoutOwnExample: DailyPracticeDeckSnapshot['items'][number] = {
+      lemmaId: 'борщ',
+      origin: 'new',
+      lemma: 'борщ',
+      gloss: 'borscht',
+      cefr: 'A1',
+      pos: null,
+    };
+    rerender(
+      <PracticeDailyDeck
+        snapshot={{ version: 2, date: '2026-06-23', level: 'A1', deckVersion: 'daily-pool', createdAt: NOW.getTime(), items: [withoutOwnExample] }}
+        rows={rowsFor(withoutOwnExample)}
+        lexemes={lexemes}
+        atlasLemmaHref={(lemmaId) => `/lexicon/${lemmaId}/`}
+        chromeLocale="uk"
+        learnerLevel="A1"
+      />,
+    );
+
+    expect(screen.getByTestId('practice-daily-example')).toHaveTextContent('Лексема: Борщ дуже смачний.');
   });
 
   test('uses a lemma-matched cloze sentence only when a lexeme example is absent', () => {
@@ -798,6 +981,33 @@ describe('LexiconPractice', () => {
     expect(requested.some((u) => u.includes('practice-synonym'))).toBe(false);
     expect(requested.some((u) => u.includes('practice-paronym'))).toBe(false);
     expect(requested.some((u) => u.includes('practice-heritage'))).toBe(false);
+  });
+
+  test('a real regenerated daily-pool row with pos renders on the card (#5856 fix-round-2)', async () => {
+    // Payload-end-to-end guard on the ACTUAL committed artifact, not a synthetic
+    // fixture: `generate_daily_pool.py`'s `_pool_item` used to drop `pos` entirely
+    // (the production gap this fix closes), so a `DailyWord` straight off disk
+    // needs to carry `pos` through to the rendered card with no lexeme-map help.
+    const realPool = (await import('@site/src/data/lexicon-daily-pool.json'))
+      .default as unknown as DailyWord[];
+    const withPos = realPool.find(
+      (word) => word.cefr === 'A1' && typeof word.pos === 'string' && word.pos.length > 0,
+    );
+    expect(withPos).toBeDefined();
+
+    const { fn: shardFn } = mockShardFetch({});
+    const fn = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes('daily-pool.json')) return okJson([withPos]);
+      return shardFn(input);
+    });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+    render(<LexiconPractice />);
+
+    await screen.findByTestId('practice-daily-deck');
+    expect(screen.getAllByText(withPos!.lemma).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(withPos!.pos!).length).toBeGreaterThan(0);
   });
 
   test('shows due review count on the home before any session starts', async () => {

@@ -7,6 +7,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "propn",
     "example": "Хмельницький був обраний для сюжету ікони «Покрова Богородиці»?",
     "exampleProvenance": {
       "source": "textbook",
@@ -27,6 +28,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "proper noun",
     "example": "США надають політичну підтримку та матеріально-технічну допомогу Україні у протистоянні російській агресії.",
     "exampleProvenance": {
       "source": "textbook",
@@ -47,6 +49,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "proper noun",
     "example": "Боно та Едж з U-2 виступають у київському метро на станції «Хрещатик».",
     "exampleProvenance": {
       "source": "textbook",
@@ -66,7 +69,8 @@
     "k": "vyv",
     "weight": 5,
     "lessonTag": "a1",
-    "cefr": "A1"
+    "cefr": "A1",
+    "pos": "phrase"
   },
   {
     "lemma": "адміністратор",
@@ -76,6 +80,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Адміністратор: Сало́н краси́ «Верса́ль».",
     "exampleProvenance": {
       "source": "textbook",
@@ -96,6 +101,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "adv",
     "example": "Вважатимемо, що x2 > x1 (випадок, коли x2 < x1, розглядається аналогічно).",
     "exampleProvenance": {
       "source": "textbook",
@@ -116,6 +122,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Перепишіть слова, поставивши, де потрібно, апостроф.",
     "exampleProvenance": {
       "source": "textbook",
@@ -136,6 +143,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Витлумачте пряме й переносне значення слова аудиторія.",
     "exampleProvenance": {
       "source": "textbook",
@@ -156,6 +164,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun:m",
     "example": "Зберіть свій багаж знань.",
     "exampleProvenance": {
       "source": "textbook",
@@ -176,6 +185,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "noun:n",
     "example": "25 потреби та бажання Подумайте про те, чого ви дуже хочете.",
     "exampleProvenance": {
       "source": "textbook",
@@ -196,6 +206,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "adjective",
     "example": "Найбільше проблем може виникнути у ви­ падку, коли один з батьків проживає окремо від дитини.",
     "exampleProvenance": {
       "source": "textbook",
@@ -216,6 +227,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun:n",
     "example": "Спробуйте за допомоги ШІ створити образ майбутнього людства на основі вашого бачення.",
     "exampleProvenance": {
       "source": "textbook",
@@ -236,6 +248,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "adj",
     "example": "Зазвичай компанія, що надає безкоштовний хостинг, заробляє шляхом показу реклами на сторінках, розміщених на ньому.",
     "exampleProvenance": {
       "source": "textbook",
@@ -256,6 +269,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Дослідіть упаковку засобу побутової хімії та заповніть бланк.",
     "exampleProvenance": {
       "source": "textbook",
@@ -276,6 +290,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "adjective",
     "example": "Рум’янець на українських іконах додавав образам теплішого, більш людяного вигляду, що відбивало ближчий зв’язок між святими й вірянами.",
     "exampleProvenance": {
       "source": "textbook",
@@ -295,7 +310,8 @@
     "k": "vyv",
     "weight": 5,
     "lessonTag": "a2",
-    "cefr": "A2"
+    "cefr": "A2",
+    "pos": "verb pair"
   },
   {
     "lemma": "варта",
@@ -305,6 +321,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "adjective",
     "example": "Прийшло до мене втомлене поліття і роздуми достиглі принесло хвилина щастя варта півстоліття хвилина горя варта півстоліття (І.",
     "exampleProvenance": {
       "source": "textbook",
@@ -325,6 +342,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "вартість виготовлення одного пенні розǸовна назва Ȃента сягала приǭлизно \u0014,\u001a Ȃента.",
     "exampleProvenance": {
       "source": "textbook",
@@ -345,6 +363,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "МГП обмежує законні засоби і методи ведення війни.",
     "exampleProvenance": {
       "source": "textbook",
@@ -365,6 +384,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "adjective",
     "example": "Іван Франко — Великий Каменяр Іван Якович Франко народився 27 серпня 1856 року на Галичині, в селі Нагуєвичі.",
     "exampleProvenance": {
       "source": "textbook",
@@ -385,6 +405,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Інше слово, яке іноді вживають, це «виглядати».",
     "exampleProvenance": {
       "source": "textbook",
@@ -405,6 +426,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Відвести ручку затворної рами і, утримуючи її у задньому положенні, від’єднати магазин і вийняти патрон, що уткнувся.",
     "exampleProvenance": {
       "source": "textbook",
@@ -424,7 +446,8 @@
     "k": "vyv",
     "weight": 5,
     "lessonTag": "a1",
-    "cefr": "A1"
+    "cefr": "A1",
+    "pos": "noun"
   },
   {
     "lemma": "використовувати",
@@ -434,6 +457,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Вивчила я її тоді, коли вперше почала використовувати англійську мову для конкретних цілей у моєму житті.",
     "exampleProvenance": {
       "source": "textbook",
@@ -454,6 +478,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Серед молекул поверхневого шару рідини завжди є такі, що «намагаються» вилетіти з рідини.",
     "exampleProvenance": {
       "source": "textbook",
@@ -474,6 +499,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Чому важливо вимикати електричну лампу, коли нею не користуєшся?",
     "exampleProvenance": {
       "source": "textbook",
@@ -494,6 +520,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Які проблеми можуть виникати під час проведення штучного запліднення?",
     "exampleProvenance": {
       "source": "textbook",
@@ -514,6 +541,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Якось, реагуючи на людську нетерплячість, Блаженніший Любомир Гузар сказав: «Дайте людям вирости у свободі».",
     "exampleProvenance": {
       "source": "textbook",
@@ -534,6 +562,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "А чи однакову кількість теплоти не­ обхідно витратити на плавлення різних речовин однакової маси?",
     "exampleProvenance": {
       "source": "textbook",
@@ -554,6 +583,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "participle",
     "example": "Що символізує вишитий рушник в українській культурі?",
     "exampleProvenance": {
       "source": "textbook",
@@ -574,6 +604,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "adverb",
     "example": "Третє речення: День стає довший, сонце починає підніматися вище.",
     "exampleProvenance": {
       "source": "textbook",
@@ -593,7 +624,8 @@
     "k": "vyv",
     "weight": 5,
     "lessonTag": "b1",
-    "cefr": "A2"
+    "cefr": "A2",
+    "pos": "noun"
   },
   {
     "lemma": "всередині",
@@ -603,6 +635,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "adv",
     "example": "Тому всередині джерела, крім електричних сил Fкл, діють ще й сторонні сили Fст.",
     "exampleProvenance": {
       "source": "textbook",
@@ -623,6 +656,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "verb",
     "example": "вивча́ти = вчи́ти = учи́ти, to learn, to study something ви́вчити (imperfective, perfective) Я вивча́ю (вчу) чудо́ву I am learning the wonderful Ukrainian украї́нську мо́ву.",
     "exampleProvenance": {
       "source": "textbook",
@@ -643,6 +677,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun:m",
     "example": "Позначений цифрою 1 відділ учень назвав стовбуром мозку.",
     "exampleProvenance": {
       "source": "textbook",
@@ -663,6 +698,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb:impf",
     "example": "Ми любимо подорожувати і відкривати відкрива́ти — 1) to discover; 2) to open нові культури.",
     "exampleProvenance": {
       "source": "textbook",
@@ -683,6 +719,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Як ведуть відлік відстаней за паралелями і меридіанами.",
     "exampleProvenance": {
       "source": "textbook",
@@ -702,7 +739,8 @@
     "k": "vyv",
     "weight": 5,
     "lessonTag": "b1",
-    "cefr": "B1"
+    "cefr": "B1",
+    "pos": "phrase"
   },
   {
     "lemma": "відстань",
@@ -712,6 +750,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Яка відстань буде між ними через 35 хв?",
     "exampleProvenance": {
       "source": "textbook",
@@ -732,6 +771,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb:pf",
     "example": "Тому вирішив відчинити двері та перевірити, що сталося.",
     "exampleProvenance": {
       "source": "textbook",
@@ -752,6 +792,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Наступне п’яте речення: У Чорнобильській зоні відчуження сталась масштабна лісова пожежа.",
     "exampleProvenance": {
       "source": "textbook",
@@ -772,6 +813,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Через це серотонін і дофамін накопичуються в синаптичній щілині, викликаючи відчуття насолоди.",
     "exampleProvenance": {
       "source": "textbook",
@@ -792,6 +834,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Далі владу поступово перейняли більшовики й, на жаль, поступо́во ― gradually Грушевський змушений був відійти.",
     "exampleProvenance": {
       "source": "textbook",
@@ -812,6 +855,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Знаєте вінок, вінки?",
     "exampleProvenance": {
       "source": "textbook",
@@ -832,6 +876,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "numeral",
     "example": "Вас було троє, — відповів суддя, — а коржи­ ків — вісім.",
     "exampleProvenance": {
       "source": "textbook",
@@ -852,6 +897,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "numeral",
     "example": "Потреба кохання гостро спалахнула в ньому, як тільки минуло йому вісімнадцять років.",
     "exampleProvenance": {
       "source": "textbook",
@@ -872,6 +918,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "adv",
     "example": "Леся Українка «Contra spem spero!» «Геть думи сумні», — у першій строфі Леся звертається до строфа́ ― strophe своїх думок, дум.",
     "exampleProvenance": {
       "source": "textbook",
@@ -892,6 +939,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb:impf",
     "example": "Коли потрібно починати голитися?",
     "exampleProvenance": {
       "source": "textbook",
@@ -912,6 +960,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Голосування проводиться в день вибо­ рів або в день повторного голосування.",
     "exampleProvenance": {
       "source": "textbook",
@@ -932,6 +981,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "noun",
     "example": " ПРИКЛАД 4 Скільки грамів 3 %-го та скільки грамів 8 %-го розчинів солі треба взяти, щоб отримати 500 г 4 %-го розчину?",
     "exampleProvenance": {
       "source": "textbook",
@@ -952,6 +1002,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Підбиваємо підсумки Офіційною грошовою одиницею в Україні є гривня.",
     "exampleProvenance": {
       "source": "textbook",
@@ -972,6 +1023,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "adjective",
     "example": "Публіцистика формує … думку (громадський, громадянський).",
     "exampleProvenance": {
       "source": "textbook",
@@ -992,6 +1044,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "adj",
     "example": "Те саме можна сказати й про слова грубий – товстий.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1012,6 +1065,7 @@
     "weight": 5,
     "lessonTag": "folk",
     "cefr": "A2",
+    "pos": "adj",
     "example": "У тритомному Російсько–українському словнику на першому місці стоїть слово дальший, на другому – подальший, Словник за редакцією А.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1032,6 +1086,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Складний запит для таблиць МАГАЗИНИ і КАДРИ, за яким формуються дані, наведено в табл.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1052,6 +1107,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "verb",
     "example": "дарувати буду дарувати, подарую подарувати даруватиму 2.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1072,6 +1128,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Моволюбка Дата: Четвер, 25.10.2018, 14:48 | Повідомлення # 16 Група: Користувачі Повідомлень: 30 Статус: Offline Не бачу проблем.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1092,6 +1149,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "numeral",
     "example": "два two Два моро́зива, будь ла́ска.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1112,6 +1170,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "adv",
     "example": "Слово «дедалі» вживайте з прикметником чи прислівником у формі вищого ви́щий сту́пінь порівня́ння — ступеня порівняння.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1132,6 +1191,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "adj",
     "example": "Знання про хімічну рівновагу допомагає організувати більш дешевий і зручний технологічний процес одержання речовин.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1152,6 +1212,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "pronoun",
     "example": "Через деякий час це потепління зміниться похолоданням.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1172,6 +1233,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Вибрати джерело відеозапису.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1192,6 +1254,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "169 Мистецтво дивувати і радувати Цирк запрошує на свято .",
     "exampleProvenance": {
       "source": "textbook",
@@ -1212,6 +1275,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "38 Що я знаю про еколог³ю Поміркуєте про вплив діяльності людини на стан довкілля, про Європейський зелений курс.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1232,6 +1296,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "5 пам’ятати — … відлітати — … руйнувати — … нагріватись — … вигравати — … дозволяти — … зустрічати — ...",
     "exampleProvenance": {
       "source": "textbook",
@@ -1252,6 +1317,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Як проводили дозвілля робітники й селяни?",
     "exampleProvenance": {
       "source": "textbook",
@@ -1272,6 +1338,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "verb",
     "example": "А ви не підкажете, як ми можемо доїхати до Чигирина?",
     "exampleProvenance": {
       "source": "textbook",
@@ -1292,6 +1359,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "verb",
     "example": "Функція театру в тому, щоб збуджувати людей, змушувати їх думати… Бернард Шоу  Бургтеатр у Відні, де у 1913 р.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1312,6 +1380,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Історично українська діаспора формувалася під впливом чотирьох основних міграційних хвиль (див.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1332,6 +1401,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "noun",
     "example": "\u0003  Чому роман має назву «Дівчина з ведмедиком»?",
     "exampleProvenance": {
       "source": "textbook",
@@ -1352,6 +1422,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Ще дідусь і не отримав твого листа, а може, і не зразу відповість.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1372,6 +1443,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Шевчука «Дім на горі» якраз і представляє життя людей у такому незвичайному поєднанні.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1392,6 +1464,7 @@
     "weight": 7,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "adj",
     "example": "Перша постійно діюча марксистська група на українських землях під назвою «Російська група соціал-демократів» виникла в 1893 р.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1412,6 +1485,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Іду в садік забирати малу.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1432,6 +1506,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "noninfl",
     "example": "При необмеженому збільшенні кількості сторін правильного многокутника його периметр буде як завгодно мало відрізнятися від довжини кола.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1452,6 +1527,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "adj",
     "example": "Фільм розповідає про сучасного школяра Вітькà, який через загадковий портал часу потрапляє в минуле — на тисячу років назад.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1472,6 +1548,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "45 НАРОДНІ КАЗКИ Прийнято розрізняти заздрість злобну (чорну) і незлобну (білу).",
     "exampleProvenance": {
       "source": "textbook",
@@ -1491,7 +1568,8 @@
     "k": "vyv",
     "weight": 5,
     "lessonTag": "a2",
-    "cefr": "A2"
+    "cefr": "A2",
+    "pos": "verb pair"
   },
   {
     "lemma": "запис",
@@ -1501,6 +1579,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Зупинити запис вибором кнопки .",
     "exampleProvenance": {
       "source": "textbook",
@@ -1521,6 +1600,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "noun:f",
     "example": "Якщо затримка не усунулася, то необхідно з’ясувати причину її виникнення й усунути затримку.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1541,6 +1621,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Визнач­те, чи є в запропонованих ситуаціях порушення права на захист.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1561,6 +1642,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Заява може містити перелік документів, що додають до неї.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1581,6 +1663,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "form",
     "example": "Подвоєння зберігається у всіх формах слова (п’ять тонн, сім ванн) .",
     "exampleProvenance": {
       "source": "textbook",
@@ -1601,6 +1684,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "adverb",
     "example": "навести́ при́клад ― to provide an example Олеся: Звичайно, звичайно.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1621,6 +1705,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "question word",
     "example": "У складнопідрядних реченнях з підрядними місця сполучні слова де, куди, звідки є прислівниками й виконують синтаксичну роль обставини.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1640,7 +1725,8 @@
     "k": "vyv",
     "weight": 5,
     "lessonTag": "b1",
-    "cefr": "B1"
+    "cefr": "B1",
+    "pos": "preposition"
   },
   {
     "lemma": "здебільшого",
@@ -1650,6 +1736,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "adv",
     "example": "Тому великі міста країни мають, здебільшого, погану якість повітря.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1670,6 +1757,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "adj",
     "example": "Пісня «Будь здоровий!» (музика і слова Сергія Дяченка).",
     "exampleProvenance": {
       "source": "textbook",
@@ -1690,6 +1778,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A1",
+    "pos": "impersonal verb",
     "example": "Петлюри було здійснено низку заходів, покликаних викорінити в Армії УНР отаманщину та перетворити її на регулярне військо.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1710,6 +1799,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A1",
+    "pos": "verb",
     "example": "Суб’єкти господарювання можуть здійснювати свою діяльність не лише на основі права власності.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1730,6 +1820,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Створення закладки на відкриту сторінку: 1 – Панель закладок; 2 – Вікно 2 Закладку додано; 3 – Кнопка 3 Змінити закладку для цієї вкладки 1.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1750,6 +1841,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A1",
+    "pos": "verb",
     "example": "Радикали прагнули продовжити революцію та знищити самодержавство.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1770,6 +1862,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "75 Кадр із фільму «Захар Беркут» Кадр із фільму-серіалу «Роксолана» З історичним жанром кіно часто поєднується пригодницький.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1790,6 +1883,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "adj",
     "example": "Чому важливо відрізняти історичний і календарний час?",
     "exampleProvenance": {
       "source": "textbook",
@@ -1810,6 +1904,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Коефіцієнт корисної дії нагрівника Багато людей вважають, що в приватному будинку обов’язково має бути камін.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1830,6 +1925,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "До продуктів з високим вмістом білків належать м’ясо, риба, молоко, квасоля, горох, соя.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1850,6 +1946,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "adjective",
     "example": "Квіти щасливі, — сказав керівний робот корабля.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1870,6 +1967,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "adjective",
     "example": "Червоний укаже на кислий ґрунт, синій – на слабокислий, а зелений – на нейтральний.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1890,6 +1988,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "КЛАВІАТУРА Поміркуйте ● Значення яких властивостей користувач враховує під час вибору клавіатури для комп’ютера?",
     "exampleProvenance": {
       "source": "textbook",
@@ -1910,6 +2009,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "vocative",
     "example": "Проте прізвище може набувати форми називного відмінка: колего Євгене Онищук, пане Коваль.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1930,6 +2030,7 @@
     "weight": 5,
     "lessonTag": "folk",
     "cefr": "A2",
+    "pos": "adj",
     "example": "Виберіть стиль SmartArt — Плоска сцена, кольорову гаму — Кольоровий діапазон — кольори акценту 5–6.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1950,6 +2051,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "На місці крапок має стояти А кома Б тире В кома й тире Г крапка й тире 7.",
     "exampleProvenance": {
       "source": "textbook",
@@ -1970,6 +2072,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun:m",
     "example": "Ваш коментар \u0007Прочитайте текст, укладіть пам’ятку «Як працювати над основною частиною виступу».",
     "exampleProvenance": {
       "source": "textbook",
@@ -1990,6 +2093,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Контекст Основним способом точної передачі значення слова є контекст.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2010,6 +2114,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Вміння грати певні ролі важливе й під час конфліктів, коли важ­ ко контролювати свої емоції.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2030,6 +2135,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "щеплення, гвоздика, кориця, імбир, перець Поєднайте числівники та іменники: 1.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2050,6 +2156,7 @@
     "weight": 5,
     "lessonTag": "folk",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Космічні апарати для польоту людей у космос називають кос­ мічними кораблями.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2070,6 +2177,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Отже, шинку і ковбасу кладуть у кошик, і також можна покласти ще будь-яку їжу, яку готували.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2090,6 +2198,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "adj",
     "example": "Пересуватися на скутері, мопеді дозволено тільки по крайній правій смузі, не дозволено на автомагістралях !",
     "exampleProvenance": {
       "source": "textbook",
@@ -2110,6 +2219,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "noun",
     "example": "У широкому сенсі поняття ● культура означає все, що створене людиною, а не природою.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2130,6 +2240,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "adj",
     "example": "Чинники ЧИННИКИ, ЩО ВПЛИВАЛИ НА КУЛЬТУРНИЙ ПРОЦЕС НА УКРАЇНСЬКИХ ЗЕМЛЯХ у XIV—XV ст.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2150,6 +2261,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Купатися можна у вбиральні, на кухні, в кабінеті чи в конторі – за вибором.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2170,6 +2282,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "numeral",
     "example": "кі́лька = де́кілька some У ме́не є кі́лька (де́кілька) I have some questions.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2190,6 +2303,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "У посадах поряд із будинком найчастіше розміщувалася реміснича майстерня або торговельна лавка.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2210,6 +2324,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "adjective",
     "example": "Кетчуп «Лагідний» доповнює будь-який гарнір і м’ясо.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2230,6 +2345,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Це монологічний вид виступу, але погано, якщо лекція перетворюється тільки на монолог викладача без зворотного зв’язку з аудиторією.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2250,6 +2366,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Маргарита вирвала з блокнота листок, написала: «ЩО ВСЕ?» – склала його і кинула Флоріанові.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2270,6 +2387,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Також заборонено спалювати опале листя через небезпеку виникнення пожеж і забруднення повітря.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2290,6 +2408,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Запалене лице було гарне, але дуже молоде.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2309,7 +2428,8 @@
     "k": "vyv",
     "weight": 5,
     "lessonTag": "a2",
-    "cefr": "A2"
+    "cefr": "A2",
+    "pos": "verb pair"
   },
   {
     "lemma": "ложка",
@@ -2319,6 +2439,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Тобі знадобляться: помірно гаряча вода, чашка, секундомір, металева ложка.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2339,6 +2460,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "verb form",
     "example": "І це сва́рка — quarrel прислів’я говорить про те, що українці не люблять суперечки, не люблять конфлікти.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2359,6 +2481,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Потрібно одержати в одній із цих посудин 1 літр рідини.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2379,6 +2502,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Найчастіше первинний ключ складається з одного поля, а в ролі первинного ключа використовується поле типу Лічильник.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2398,7 +2522,8 @@
     "k": "other",
     "weight": 5,
     "lessonTag": "b2",
-    "cefr": "B1"
+    "cefr": "B1",
+    "pos": "noun"
   },
   {
     "lemma": "малі",
@@ -2408,6 +2533,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Були ми всі тоді трудящі чи малі.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2428,6 +2554,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Знайдіть інформацію, на що витрачає кошти мандрівник, готуючись до підйому на найвищу вершину світу.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2448,6 +2575,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Вам потрібно прокласти маршрут подорожі.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2468,6 +2596,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "noun",
     "example": "ДЛЯ ДОПИТЛИВИХ Виявлення глюкози в мед\u0003 Глюкозу виявляють у мед\u0003 так.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2488,6 +2617,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Методологія — принципи, сукупність ідей, методів і засобів, які визначають підхід до розробки програмного забезпечення.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2508,6 +2638,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Плекаймо слово і ЖИТЕЛЬ ЧИ МЕШКАНЕЦЬ?",
     "exampleProvenance": {
       "source": "textbook",
@@ -2528,6 +2659,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Що таке собаче мило?",
     "exampleProvenance": {
       "source": "textbook",
@@ -2548,6 +2680,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Прийшов битися чи миритися?",
     "exampleProvenance": {
       "source": "textbook",
@@ -2568,6 +2701,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Це здатність мислити вільно, знаходити свіжі ідеї та оригінальні рішення, швидко пристосовуватися до змін і нових обставин.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2588,6 +2722,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Вербинка обережно підважила мох.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2608,6 +2743,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Пригадай, що таке музей.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2626,6 +2762,7 @@
     "gloss": "avoid: захід",
     "k": "avoid",
     "weight": 2,
+    "pos": "noun",
     "example": "Помилку допущено в рядку А ухвалити рішення Б запобігти помилці В здійснити контроль Г відвідати міроприємство 5.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2646,6 +2783,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Шляхом тривалих спостережень вони визначили надійні одиниці часу: добу, рік, місяць.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2666,6 +2804,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Складіть і запишіть по одному реченню з такими словами: пощастить, повезе, заважати, мішати.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2686,6 +2825,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Чому глобалізацію розглядають як «скорочення світу» і «наближення речей»?",
     "exampleProvenance": {
       "source": "textbook",
@@ -2706,6 +2846,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Набрати з колодязя повне відро води.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2726,6 +2867,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "impersonal verb",
     "example": "Програму мовою Python обчислення чисел Фібоначчі на основі рекурентного підходу наведено на рис.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2746,6 +2888,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "noun:f",
     "example": "І одного разу йому випала нагода поїхати до Петербурга і працювати там при царському дворі.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2766,6 +2909,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "passive",
     "example": "У діловому листуванні трапляється читати: \"Книжки надіслано накладною платою\".",
     "exampleProvenance": {
       "source": "textbook",
@@ -2786,6 +2930,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "adjective",
     "example": "три, третій Відмінок Кількісні числівники Порядкові числівники Однина Множина Називний скільки?",
     "exampleProvenance": {
       "source": "textbook",
@@ -2806,6 +2951,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "adjective",
     "example": "137 Прикметник Н Найвищий ступінь порівняння вказує, що певний предмет переважає всі інші за якою-небудь ознакою.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2826,6 +2972,7 @@
     "weight": 5,
     "lessonTag": "folk",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Скільки ж необхідно найняти робітників на кухню?",
     "exampleProvenance": {
       "source": "textbook",
@@ -2846,6 +2993,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "adverb",
     "example": "Поверніть ліворуч (наліво), ідіть прямо по вулиці Зеленій.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2866,6 +3014,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "verb",
     "example": "Операції класу: + намалювати (фігура Прямокутник = квадрат, колірФарбування Соlоr = (255,0,0)) Приклад 5.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2886,6 +3035,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Саме із цієї миті відбувається перелом у сюжеті та спадає напруження, яке збільшувалося постійно впродовж усього твору.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2906,6 +3056,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Сніг, щука, юнак, берег, рік, книга, радити, Оленка, допомога, їздити, народити, могти.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2926,6 +3077,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "adv",
     "example": "взаємовідно́шення — relationship Наскільки часто ви будете слухати подкаст, настільки добре будете розуміти українську мову.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2946,6 +3098,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "adjective",
     "example": "Максим: _________________________ (Наступний п’ятниця) ми поїдемо на фестиваль ____________________ (борщ) в Тернопільській області.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2966,6 +3119,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "adj",
     "example": "Натуральний каучук був уперше описаний французьким астрономом та мандрівником Шарлем Марі де ла Кондоміном 1751 року.",
     "exampleProvenance": {
       "source": "textbook",
@@ -2986,6 +3140,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "adv",
     "example": "Цього недостатньо — це особлива структура речення, тому що недоста́тньо — insufficient, not enough ми вживаємо слово «це» в родовому відмінку — цього.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3006,6 +3161,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Визначте групу за значенням істота/неістота.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3026,6 +3182,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "adjective",
     "example": "З територій, де тиск вищий, повітря переміщується на території, де він нижчий.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3046,6 +3203,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "adv",
     "example": "Карпо ненавидів тих, хто панові дуже низько кланявся, до землі нагинався.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3066,6 +3224,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "conj",
     "example": "Працюй так, ніби тобі не потрібні не можна повернути: час, слово і гроші… Танцюй так, ніби можливість.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3086,6 +3245,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "negative pronoun",
     "example": "ніхто́ nobody, no one Ніхто́ мене́ не зупи́нить.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3106,6 +3266,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Вішати на вуха ло5кшину — обманювати, відволікати від суті розмови, вводити в оману.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3125,7 +3286,8 @@
     "k": "vyv",
     "weight": 5,
     "lessonTag": "b2",
-    "cefr": "A2"
+    "cefr": "A2",
+    "pos": "adjective"
   },
   {
     "lemma": "оболонка",
@@ -3135,6 +3297,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Під склерою розташована судинна оболонка, де проходять кровоносні судини.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3155,6 +3318,7 @@
     "weight": 5,
     "lessonTag": "folk",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Зеленеє жито ще й овес — Тут зібрався рід наш увесь.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3175,6 +3339,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "verb",
     "example": "Завоювавши Персію, Александр почав одягатися як перський шахиншах та одружився із двома персіянками.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3195,6 +3360,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "intj",
     "example": "Ой радуйся, земле, Син Божий народився.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3215,6 +3381,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Домашнє завдання 737 Яким повинен бути ідеальний опонент у дискусії?",
     "exampleProvenance": {
       "source": "textbook",
@@ -3235,6 +3402,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun:m",
     "example": "Отже, слова орендар, дипломант, касир мають чоловічий рід, але так можна називати й чоловіків, і жінок.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3255,6 +3423,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "У якому слові основа закінчується на м’який приголосний?",
     "exampleProvenance": {
       "source": "textbook",
@@ -3275,6 +3444,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "adj",
     "example": "Це визначає основний метод правового регулювання, який використовує фінансове право, — імперативний метод, або метод субординації, владних приписів.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3295,6 +3465,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Ми маєм офіс в Києві і офіс в Торонто.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3314,7 +3485,8 @@
     "k": "vyv",
     "weight": 5,
     "lessonTag": "a1",
-    "cefr": "A1"
+    "cefr": "A1",
+    "pos": "numeral"
   },
   {
     "lemma": "пакувати",
@@ -3323,7 +3495,8 @@
     "k": "other",
     "weight": 5,
     "lessonTag": "a2",
-    "cefr": "B1"
+    "cefr": "B1",
+    "pos": "verb"
   },
   {
     "lemma": "палати",
@@ -3333,6 +3506,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "verb",
     "example": "У складі апеляційного суду можуть утворю­ ватися судові палати з розгляду окремих ка­ тегорій справ.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3353,6 +3527,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "12.11 і зробіть висновки: куди напрямлене прискорення руху тіла, коли тіло зазнає перевантаження?",
     "exampleProvenance": {
       "source": "textbook",
@@ -3373,6 +3548,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Звертаємо увагу, що результати заповнення форми можуть переглянути тільки автор/ авторка і користувачі, яким надано доступ редагування форми.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3393,6 +3569,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Як людина сприймає повідомлення?",
     "exampleProvenance": {
       "source": "textbook",
@@ -3413,6 +3590,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "5 порад для покращення української мови Добре, отже, ви розумієте, що я кажу українською на подкасті.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3433,6 +3611,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "adjective",
     "example": "Беатріс купила в сільському магазині морозиво і зробила полуничний полуни́чний — strawberry (adjective) коктейль.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3453,6 +3632,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "noun",
     "example": "У роки революції російські чорносотенні організації вчинили єврейські погроми, причому поліція трималася ­осторонь цих подій.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3473,6 +3653,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Чи потрібно постійно порівнювати себе з іншими?",
     "exampleProvenance": {
       "source": "textbook",
@@ -3493,6 +3674,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "adv",
     "example": "Після евакуації пораненого в укриття потрібно постійно дбати про власну безпеку і безпеку пораненого.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3513,6 +3695,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Причин ритмічності кілька: по-перше, процес не може початися знову, доки не завершено попередній.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3533,6 +3716,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "verb:impf",
     "example": "У якому віці можна починати фарбувати волосся?",
     "exampleProvenance": {
       "source": "textbook",
@@ -3553,6 +3737,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Із метою відволікти населення від боротьби проти самодержавства царський уряд намагався поширити на українські землі антисемітські настрої.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3573,6 +3758,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb form",
     "example": "Запряжу я козу в віз Та й поїду по рогіз.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3593,6 +3779,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun:m",
     "example": "Перевірити правопис слова можна в орфографічному словнику .",
     "exampleProvenance": {
       "source": "textbook",
@@ -3613,6 +3800,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "verb form",
     "example": "Працюємо в малих групах.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3633,6 +3821,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Тривимірне зобра­ ження того, як наночастинки, що містять протипухлинний препарат, оточують ракову клітину та вбивають пухлину 111 § 18.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3653,6 +3842,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Які сувеніри привезти з України?",
     "exampleProvenance": {
       "source": "textbook",
@@ -3673,6 +3863,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Прочитайте фрагмент привітання Президента України з нагоди Дня Соборності.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3693,6 +3884,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Для цього їй довелося прийняти іслам.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3713,6 +3905,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Д Різдвяна прикраса на палиці, сповіщає про народження Ісуса Христа.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3733,6 +3926,7 @@
     "weight": 5,
     "lessonTag": "folk",
     "cefr": "B1",
+    "pos": "noun",
     "example": "(Приспів) Та кладіть калачі з ярої пшениці.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3753,6 +3947,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "verb",
     "example": "Коли потрібно приховати деякі поля, їх слід виділити й у групі Записи виконати команду Додатково → Приховати поля.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3773,6 +3968,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Приєднати газову трубку.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3793,6 +3989,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A1",
+    "pos": "verb",
     "example": "Приєднатися до такого народу — це гірше, ніж скочити живим у вогонь.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3813,6 +4010,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "prep",
     "example": "Нузет Умеров ПРО КНИЖКУ Дбайливо тонесеньку книжку гортаю, рядок за рядочком уважно читаю.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3833,6 +4031,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun:m",
     "example": "сила аМпЕра Із матеріалу § 1 ви дізналися, що магнітне поле діє на провідник зі струмом із де­ якою силою.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3853,6 +4052,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Ті не перемагають, хто не вміють програвати.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3873,6 +4073,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "verb",
     "example": "Її не можна було передавати в спадок, продавати тощо.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3893,6 +4094,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Однак я досить довго не могла зрозуміти, як (imperfective, perfective) продовжувати подкаст саме в умовах війни.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3913,6 +4115,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "­Ораторсько-проповідницька проза включала твори з тлумаченням євангельських текстів і моралістичними повчаннями.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3933,6 +4136,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Що таке особистий простір та якими є його складники.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3953,6 +4157,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Можна стати по-справжньому щасливим, коли характер і професія перебувають у гармонії.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3973,6 +4178,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "adj",
     "example": "Думаю скласти психологічний портрет людини можна за кількістю і якістю прочитаних і зібраних нею книжок.",
     "exampleProvenance": {
       "source": "textbook",
@@ -3993,6 +4199,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Персонаж «Синього птаха», якого в українському перекладі названо Душею Світла, в оригіналі – просто Світло.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4013,6 +4220,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "yy Балканський півострів омивається ________________ морями.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4033,6 +4241,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "В Підліток може висловити свої скарги вчителю, шкільному адміністратору чи батькам.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4053,6 +4262,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Розкажіть про особливості складнопідрядних речень із з’ясувальними підряд ними частинами.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4073,6 +4283,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Його потужність, колір, напрям допомагають зробити декорації виразнішими, виділити головне, підсилити враження глядачів/глядачок.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4093,6 +4304,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "noun:n",
     "example": "Доберіть історичні факти на підтвердження тези «Самвидав» — зброя в руках дисидентів».",
     "exampleProvenance": {
       "source": "textbook",
@@ -4113,6 +4325,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "adverb",
     "example": "Мілкіше, мало, довше, дешево, пізно, більше, світло, сумно, близько.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4133,6 +4346,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "adverb",
     "example": "Далі вона розповідає: Ми далі будемо рухатися по життю разом.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4153,6 +4367,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Номер 5 ― побити світовий рекорд.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4172,7 +4387,8 @@
     "k": "vyv",
     "weight": 5,
     "lessonTag": "b2",
-    "cefr": "B1"
+    "cefr": "B1",
+    "pos": "noun"
   },
   {
     "lemma": "реєструється",
@@ -4182,6 +4398,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Уявіть, що хтось із ваших знайомих уперше створює електронну пошту чи реєструється в соціальній мережі.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4202,6 +4419,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "(imperfective, perfective) торту́ри ― torture Очевидно, ця риса — риса стоїцизму — не може бути здава́тися, зда́тися ― to give up притаманною усім людям.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4222,6 +4440,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Моєму родичу випала неймовірна можливість (Мій родич отримав неймовірну можливість) навчатися (вчитися) безкоштовно.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4242,6 +4461,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "noun",
     "example": "за кордо́ном ― abroad Шотла́ндія ― Scotland Ця розмова буде особлива і трошки інша, ніж попередні дві.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4262,6 +4482,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "verb",
     "example": "☆☆☆ Я можу розповісти про причини виникнення пожеж.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4282,6 +4503,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "\u0007Поясніть поняття «власність», «користування», «володіння», «розпорядження», «сервітут», «суперфіцій», «емфітевзис».",
     "exampleProvenance": {
       "source": "textbook",
@@ -4302,6 +4524,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Маруся не знайшла в собі сили пережити цю зраду і тому вона зовсім втратила розум.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4322,6 +4545,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb",
     "example": "для тих, хто вже добре розуміє українську мову, але хоче розширювати словниковий запас».",
     "exampleProvenance": {
       "source": "textbook",
@@ -4342,6 +4566,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "noun:f",
     "example": "Далі я казала, що Ярослав Мудрий відіграв важливу роль в історії.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4362,6 +4587,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb",
     "example": "і заспівала: «Плавай, плавай, леб;едонько, По синьому морю – Рости, рости, топ;оленько, Все вгору та вгору!",
     "exampleProvenance": {
       "source": "textbook",
@@ -4382,6 +4608,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "І в дорогу далеку ти мене на зорі проводжала, І рушник вишиваний на щастя, на долю дала.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4402,6 +4629,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "adverb",
     "example": "У формі називного відмінка іменник, яким виражено звертання, уживають рідко — зазвичай у поетичних творах.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4422,6 +4650,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "adj",
     "example": "Узвар, український різдвяний напій, готується із 5.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4442,6 +4671,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Пагутяк «Потрапити в сад» за родовою ознакою — епічний.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4462,6 +4692,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Крім землеробства, розвивалися скотарство, городництво, садівництво, бджільництво, рибальство й мисливство.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4482,6 +4713,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Ще був салат мімоза — з вареними мімо́за — mimosa salad яйцями і рибними консервами.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4502,6 +4734,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "adverb",
     "example": "Початкові значення властивостей напису виберіть самостійно.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4522,6 +4755,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Речення номер один: Деякі свята потрохи відходять в історію.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4542,6 +4776,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Свідомість Прагнення пізнання себе є одним з головних рушіїв розвитку людства.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4562,6 +4797,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "adjective",
     "example": "Взагалі, свіжоспечений ми говоримо про хліб, тобто хліб, який спекли спекти́ — to bake щойно, недавно, цей хліб свіжий, він свіжоспечений.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4582,6 +4818,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "adj",
     "example": "Це така відстань, з якої середній радіус земної орбіти видно під кутом 1″ (секунда дуги).",
     "exampleProvenance": {
       "source": "textbook",
@@ -4602,6 +4839,7 @@
     "weight": 5,
     "lessonTag": "folk",
     "cefr": "A2",
+    "pos": "adv",
     "example": "символічно це показало, що від заходу до сходу Україна одна, символі́чно — symbolically єдина, неподільна, або соборна.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4622,6 +4860,7 @@
     "weight": 5,
     "lessonTag": "folk",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Люди – дуже цікаві створіння!» – думає персонаж твору А «Скарб» В «Мишка» Б «Кольорові миші» Г «Чайка на крижині» 6.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4642,6 +4881,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun:m",
     "example": "Учитель, лікар чи геолог, письменник, слюсар чи кресляр — всі називають головною одну професію — школяр!",
     "exampleProvenance": {
       "source": "textbook",
@@ -4661,6 +4901,7 @@
     "k": "avoid",
     "weight": 5,
     "lessonTag": "b1",
+    "pos": "adj",
     "example": "Студенти сіли в потяг, слідуючий до Рівного.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4681,6 +4922,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "\u0007Якими фарбами зображено на картині сніг, небо, дерева?",
     "exampleProvenance": {
       "source": "textbook",
@@ -4701,6 +4943,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun:f",
     "example": "Так і посипалось на сніг, а соломка й пір’ячко за вітром полетіли.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4721,6 +4964,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "numeral",
     "example": "Зверніть увагу на відмінкові закінчення числівника сорок.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4741,6 +4985,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Міжбанківський валютний ринок (міжбанк) Можете спитати в батьків чи в дорослих, яким довіряєте, як вам купити 100 доларів.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4761,6 +5006,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Споживач в економіці 51 кожного додаткового літра значно зменшу­ ється, а кожний додатковий карат алмаза збільшує корисність коштовностей.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4781,6 +5027,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "adj",
     "example": "Підготуйте твір-опис приміщення в художньому стилі на одну з тем: «Наш клас», «Моя кімната», «Улюблений спортивний зал» (усно).",
     "exampleProvenance": {
       "source": "textbook",
@@ -4801,6 +5048,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Пост радіаційного та хімічного спостереження встановлюють на території об’єкта недалеко від пункту управління.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4821,6 +5069,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "На стадіон прийшли хлопці, бажаючі грати у футбол.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4841,6 +5090,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "noun:n",
     "example": "Учасники наукового стажування отримали престижну премію.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4861,6 +5111,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "НУМО ДОСЛІДЖУВАТИ ЯК ОЧІ ОЦІНЮЮТЬ ВІДСТАНЬ Тобі знадобляться: аркуш паперу, олівець, стілець.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4881,6 +5132,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Знайдіть ймовірність того, що: 1) його куб менший за 8000; 2) сума квадратів його цифр менша за 20.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4901,6 +5153,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Для ваших однокласників у задоволенні цієї по­ треби товарами-субститутами можуть бути портфель, спортивна сумка, сумка-пакет, рюкзак.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4921,6 +5174,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb",
     "example": "(сумніватися) в тому, що я кажу правду?",
     "exampleProvenance": {
       "source": "textbook",
@@ -4941,6 +5195,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "noun:n",
     "example": "Сутність громадянського суспільства та його інститути Чим відрізняється громадянське суспільство від суспільства?",
     "exampleProvenance": {
       "source": "textbook",
@@ -4961,6 +5216,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Було тій Анні, може, десять рочків, її привів розлючений сусід.",
     "exampleProvenance": {
       "source": "textbook",
@@ -4981,6 +5237,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Верховною Радою схвалено «Основні напрями зовнішньої політики України»; – 5 грудня 1994 р.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5001,6 +5258,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "adj",
     "example": "Схильний, охочий що-небудь робити; готовий до певних учинків; згоден на певну дію, стан.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5021,6 +5279,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "noun:f",
     "example": "(Лиховісно сміється.) СЦЕНА 3 Покої в королівському палаці.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5041,6 +5300,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "noun",
     "example": "З якою метою створюється режисерський сценарій під час створення фільму за певним літературним твором?",
     "exampleProvenance": {
       "source": "textbook",
@@ -5061,6 +5321,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "До яких жанрів телебачення вони належать?",
     "exampleProvenance": {
       "source": "textbook",
@@ -5081,6 +5342,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "verb",
     "example": "дзвіно́к — call Ви можете зідзвонюватись, тобто телефонувати одне одному, телефонува́ти = дзвони́ти — to call дзвонити одне одному.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5101,6 +5363,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "noun",
     "example": "ПОВЕРНЕННЯ ДО ІДЕАЛІВ КРАСИ МИНУЛОГО Тема 1 5 -1 6 .",
     "exampleProvenance": {
       "source": "textbook",
@@ -5121,6 +5384,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Тест — це слово, яке часто має негативну конотацію.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5141,6 +5405,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "У процесі здійснення тест-дизайну тест-аналітик визначає, ЩО тестувати, а тест-дизайнер — ЯК тестувати.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5161,6 +5426,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "(на) тисяча дев’ятсот сьомому Кожен компонент складеного числівника відмінюється за своїм правилом.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5181,6 +5447,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "adv",
     "example": "Ярослав Грицак зазначав: «Можу сказати, що комунізм упав напрочуд тихо.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5201,6 +5468,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun:f",
     "example": "Скелетна м’язова тканина утворює скелетні м’язи, язик тощо.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5221,6 +5489,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "adjective",
     "example": "Використайте синоніми приятельський, приязний, дружній, товариський.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5241,6 +5510,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "adjective",
     "example": "Визначити точний час певної події, тобто її дату, допомагає хронологія.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5261,6 +5531,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "noun",
     "example": "трава́ grass Ми лежимо́ на траві́ в па́рку.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5281,6 +5552,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "noun",
     "example": "А от традиція купання в боягу́з — coward холодній воді не для боягузів, не для тих, хто боїться, так?",
     "exampleProvenance": {
       "source": "textbook",
@@ -5301,6 +5573,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "B1",
+    "pos": "adv",
     "example": "Його тричі обирали до Верховної Ради України (1990, 1994, 1998 рр.).",
     "exampleProvenance": {
       "source": "textbook",
@@ -5321,6 +5594,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "noun",
     "example": "УÑÅ заметено снігом: тротуар, дорога, стадіон.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5341,6 +5615,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "adverb",
     "example": "Зобрази його м’язистим, але трохи пере­ більшено кремезним — наче він щойно зліз із коня після десятиліття боїв.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5361,6 +5636,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "noun:m",
     "example": "Туалет • Не куріть, не шуміть, не запалюйте свічки без дозволу відповідальної особи.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5381,6 +5657,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Чоловік ламає те тістечко навпіл, підсовує їй одну частинку, другу з’їдає сам і йде геть.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5401,6 +5678,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2",
+    "pos": "adv",
     "example": "Бояри та представники знаті винаймали для своїх дітей приватних учителів, які навчали їх удома.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5421,6 +5699,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "adv",
     "example": "Узимку – пом’якшує морози, приносить снігопади, відлиги.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5441,6 +5720,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "У першому виданні твір мав відкритий фінал: груша розросталася, а сварки не припинялись.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5461,6 +5741,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
+    "pos": "adj",
     "example": "Етап 2 На етапі проектування структури інтерфейсу створюють прототип інтерфейсу — зазвичай два: чорновий та фінальний.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5481,6 +5762,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "verb form",
     "example": "Ходить сон стежками лісовими.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5501,6 +5783,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "verb",
     "example": "Цвісти або процвітати можуть квіти, коли вони розкриваються, цвісти́ — to bloom, to blossom квіти стають такі гарні квіти.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5521,6 +5804,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "adjective",
     "example": "Позаду був часовий стрибок у ранок сьогоднішнього дня.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5541,6 +5825,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Послухайте ще один уривочок про червень в Україні.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5561,6 +5846,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "adverb",
     "example": "Знатися на чомусь.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5581,6 +5867,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "adjective",
     "example": "ПІДНЯТИСЯ НАД БУДЕННІСТЮ здивувати», – повідомляли губи світу, доки Чорна Пані мовчки роздивлялася Софійку.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5601,6 +5888,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "adjective",
     "example": "Чорні клобуки часом повставали або відходили в степ, відмовляючись нести службу.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5621,6 +5909,7 @@
     "weight": 5,
     "lessonTag": "b2",
     "cefr": "A2",
+    "pos": "verb",
     "example": "Чіпати і їсти їх не (дозволятися).",
     "exampleProvenance": {
       "source": "textbook",
@@ -5641,6 +5930,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
+    "pos": "adj",
     "example": "Згодом розпочався «промисловий» бум – швидкий розвиток вторинного сектору економіки: металургії, машинобудування, хімічної промисловості.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5661,6 +5951,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "adverb",
     "example": "Б Троянці, в човни посідавши, і швидко їх поодпихавши, по вітру гарно попливли.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5681,6 +5972,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "noun",
     "example": "Вони в захваті від ритмів пісні «Шум», яку український гурт «Go A» прославив на співочому конкурсі «Євробачення» у 2021 р.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5701,6 +5993,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "B1",
+    "pos": "preposition",
     "example": "Які заходи щодо подолання дискримінації жінок у суспільно-політичній сфері передбачала Конвенція?",
     "exampleProvenance": {
       "source": "textbook",
@@ -5721,6 +6014,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "adverb",
     "example": "Якось враз знялася курява й завертівся перед­ грозовий вихор.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5741,6 +6035,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "noun",
     "example": "Альтруїзм та егоїзм у поведінці людини 139 Зараз в Україні живе понад 2,7 млн осіб, які мають інвалідність.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5761,6 +6056,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "adv",
     "example": "Узагалі одяг добирають індивідуально, охопити всі нюанси і тонкощі тих чи інших видів одягу неможливо.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5781,6 +6077,7 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "B1",
+    "pos": "adj",
     "example": "У природному русі населення розрізняють також традиційний (екстенсивний) та сучасний (інтенсивний) типи відтворення населення.",
     "exampleProvenance": {
       "source": "textbook",
@@ -5801,6 +6098,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
+    "pos": "noun:m",
     "example": "Використавши мережу Skype, організуйте та проведіть інтернет-дискусію на тему «Інтернет у житті сучасного школяра».",
     "exampleProvenance": {
       "source": "textbook",
@@ -5821,6 +6119,7 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A1",
+    "pos": "noun",
     "example": "Із розвитком суспільства інформація стає універсальним ресурсом, який уже не поступається традиційним матеріальним ресурсам (нафта, газ та ін.).",
     "exampleProvenance": {
       "source": "textbook",
@@ -5841,6 +6140,7 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
+    "pos": "verb",
     "example": "• Що робить держава для того, щоб інформувати людей про НС та ліквідувати її наслідки?",
     "exampleProvenance": {
       "source": "textbook",

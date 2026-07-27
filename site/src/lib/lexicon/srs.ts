@@ -497,13 +497,35 @@ export interface NewCardsDailyState {
   count: number;
 }
 
+/**
+ * #5852 fix-forward (post-D2 #5837): the item now carries its own display
+ * payload — lemma/gloss/cefr/pos/example — so `PracticeDailyDeck` can render
+ * the card straight from the pick, without depending on the lemma existing in
+ * the (much smaller) practice-lexemes map, which is #5856 fix-forward: the map
+ * stays optional fallback/enrichment for `pos` (and `ipa`, which the pick
+ * payload never carries), never a requirement to render. `example`/
+ * `exampleEn`/`exampleProvenance` stay optional since the SRS-index-driven
+ * builders below have no example data.
+ */
 export interface DailyPracticeDeckItem {
   lemmaId: string;
   origin: 'due' | 'new';
+  lemma: string;
+  gloss: string | null;
+  cefr: string | null;
+  pos: string | null;
+  example?: string | null;
+  exampleEn?: string | null;
+  exampleProvenance?: {
+    source: 'textbook' | 'ulp';
+    label: string;
+    locator?: string;
+    title?: string;
+  } | null;
 }
 
 export interface DailyPracticeDeckSnapshot {
-  version: 1;
+  version: 2;
   date: string;
   level: CefrLevel;
   deckVersion: string;
@@ -2398,12 +2420,27 @@ function isValidDailyPracticeDeckOrigin(value: unknown): value is 'due' | 'new' 
   return value === 'due' || value === 'new';
 }
 
+function isValidDailyPracticeDeckExampleProvenance(
+  value: unknown,
+): value is NonNullable<DailyPracticeDeckItem['exampleProvenance']> {
+  if (!value || typeof value !== 'object') return false;
+  const source = value as Record<string, unknown>;
+  if (source.source !== 'textbook' && source.source !== 'ulp') return false;
+  if (typeof source.label !== 'string' || !source.label) return false;
+  if (source.locator !== undefined && typeof source.locator !== 'string') return false;
+  if (source.title !== undefined && typeof source.title !== 'string') return false;
+  return true;
+}
+
 function normalizeDailyPracticeDeckSnapshot(
   value: unknown,
 ): DailyPracticeDeckSnapshot | null {
   if (!value || typeof value !== 'object') return null;
   const source = value as Record<string, unknown>;
-  if (source.version !== 1) return null;
+  // #5852: bumped from 1 to 2 when items started carrying their own display
+  // payload — a v1-shaped snapshot has no lemma/gloss/example, so it is
+  // discarded here (never migrated) and the caller rebuilds a fresh v2 one.
+  if (source.version !== 2) return null;
   if (typeof source.date !== 'string' || !source.date) return null;
   if (typeof source.deckVersion !== 'string' || !source.deckVersion) return null;
   if (typeof source.createdAt !== 'number' || !Number.isFinite(source.createdAt)) return null;
@@ -2417,10 +2454,32 @@ function normalizeDailyPracticeDeckSnapshot(
     const item = raw as Record<string, unknown>;
     if (typeof item.lemmaId !== 'string' || !item.lemmaId) return null;
     if (!isValidDailyPracticeDeckOrigin(item.origin)) return null;
-    items.push({ lemmaId: item.lemmaId, origin: item.origin });
+    if (typeof item.lemma !== 'string' || !item.lemma) return null;
+    if (typeof item.gloss !== 'string' && item.gloss !== null) return null;
+    if (typeof item.cefr !== 'string' && item.cefr !== null) return null;
+    if (typeof item.pos !== 'string' && item.pos !== null) return null;
+    const example =
+      typeof item.example === 'string' || item.example === null ? item.example : undefined;
+    const exampleEn =
+      typeof item.exampleEn === 'string' || item.exampleEn === null ? item.exampleEn : undefined;
+    const exampleProvenance =
+      item.exampleProvenance === null || isValidDailyPracticeDeckExampleProvenance(item.exampleProvenance)
+        ? (item.exampleProvenance as DailyPracticeDeckItem['exampleProvenance'] | null)
+        : undefined;
+    items.push({
+      lemmaId: item.lemmaId,
+      origin: item.origin,
+      lemma: item.lemma,
+      gloss: item.gloss,
+      cefr: item.cefr,
+      pos: item.pos,
+      ...(example !== undefined ? { example } : {}),
+      ...(exampleEn !== undefined ? { exampleEn } : {}),
+      ...(exampleProvenance !== undefined ? { exampleProvenance } : {}),
+    });
   }
   return {
-    version: 1,
+    version: 2,
     date: source.date,
     level: level as CefrLevel,
     deckVersion: source.deckVersion,
@@ -2465,14 +2524,15 @@ export function selectDailyPracticeDeckItems(
   const seen = new Set<string>();
   const dueLemmas: Array<{
     lemmaId: string;
+    lemma: string;
     earliestDue: number;
     cefr: string;
     newOrder: number;
   }> = [];
-  const newLemmas: Array<{ lemmaId: string; cefr: string; newOrder: number }> = [];
+  const newLemmas: Array<{ lemmaId: string; lemma: string; cefr: string; newOrder: number }> = [];
 
   for (const item of indexItems) {
-    const { lemmaId, cefr, newOrder, modes } = item;
+    const { lemmaId, lemma, cefr, newOrder, modes } = item;
     if (seen.has(lemmaId)) continue;
     seen.add(lemmaId);
 
@@ -2492,9 +2552,9 @@ export function selectDailyPracticeDeckItems(
     }
 
     if (isDue) {
-      dueLemmas.push({ lemmaId, earliestDue, cefr, newOrder });
+      dueLemmas.push({ lemmaId, lemma, earliestDue, cefr, newOrder });
     } else if (allNewOrAbsent) {
-      newLemmas.push({ lemmaId, cefr, newOrder });
+      newLemmas.push({ lemmaId, lemma, cefr, newOrder });
     }
   }
 
@@ -2515,8 +2575,22 @@ export function selectDailyPracticeDeckItems(
   });
 
   const combined: DailyPracticeDeckItem[] = [
-    ...dueLemmas.map((entry) => ({ lemmaId: entry.lemmaId, origin: 'due' as const })),
-    ...newLemmas.map((entry) => ({ lemmaId: entry.lemmaId, origin: 'new' as const })),
+    ...dueLemmas.map((entry) => ({
+      lemmaId: entry.lemmaId,
+      origin: 'due' as const,
+      lemma: entry.lemma,
+      gloss: null,
+      cefr: entry.cefr,
+      pos: null,
+    })),
+    ...newLemmas.map((entry) => ({
+      lemmaId: entry.lemmaId,
+      origin: 'new' as const,
+      lemma: entry.lemma,
+      gloss: null,
+      cefr: entry.cefr,
+      pos: null,
+    })),
   ];
   return combined.slice(0, DAILY_PRACTICE_DECK_SIZE);
 }
@@ -2557,7 +2631,7 @@ export function buildDailyPracticeDeckSnapshot(
 ): DailyPracticeDeckSnapshot {
   const nowTime = toTime(options.now ?? Date.now()) ?? Date.now();
   return {
-    version: 1,
+    version: 2,
     date: options.date ?? todayDateKey(new Date(nowTime)),
     level: options.level,
     deckVersion: options.deckVersion,
@@ -2621,7 +2695,7 @@ export function refillDailyPracticeDeckSnapshot(
   const refillItems = refill.slice(0, remainingSlots);
 
   return {
-    version: 1,
+    version: 2,
     date: options.date,
     level: options.level,
     deckVersion: options.deckVersion,

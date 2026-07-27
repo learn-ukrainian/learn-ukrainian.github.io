@@ -1627,7 +1627,7 @@ function LexiconPracticeIsland({
           ? picks
           : pickDaily(fallbackPool, dateSeed(now), DAILY_PRACTICE_DECK_SIZE);
         const snapshot: DailyPracticeDeckSnapshot = {
-          version: 1,
+          version: 2,
           date: dateKey,
           level: learnerLevel,
           deckVersion: 'daily-pool',
@@ -1635,6 +1635,13 @@ function LexiconPracticeIsland({
           items: displayablePicks.map((word) => ({
             lemmaId: word.slug,
             origin: classifyDailyPracticeOrigin(word.slug, indexSource, state.cards, now),
+            lemma: word.lemma,
+            gloss: word.gloss,
+            cefr: word.cefr ?? null,
+            pos: word.pos ?? null,
+            example: word.example ?? null,
+            exampleEn: word.exampleEn ?? null,
+            exampleProvenance: word.exampleProvenance ?? null,
           })),
         };
 
