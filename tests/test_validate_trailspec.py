@@ -38,6 +38,7 @@ REQUIRED_TRAIL_IDS = {
     "rb1-cold-start",
     "rb2-dispatch-loop",
     "rb3-pr-lifecycle",
+    "rb4-red-ci-triage",
 }
 
 

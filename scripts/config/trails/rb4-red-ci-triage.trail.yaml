@@ -1,0 +1,198 @@
+# RB-4 — red-CI triage (T2 DRAFT, extraction from the red-ci-triage decision table +
+# the #0H rerun/update-branch discipline). Part of #5885. Prerequisite for the glm
+# bounded-driver trial (per-seat prerequisites in the trails design).
+#
+# DRAFT STATUS: authored against today's substrate; certification waits for T1.4/5.
+# The known-failure-class signature registry does NOT exist yet — the allowlist step
+# is an enforced fail-closed gate (both present-without-lookup and absent STOP as
+# table-unknown), and NO rerun step exists in this draft: the raceless rerun
+# primitive ships with the registry design (v1 cannot express a per-claimant
+# rerun predicate — r3 review). Unknown signatures never retry-until-green.
+#
+# Anti-pattern guard (RB-2 v0.7.0 discipline, seven-round-reviewed): every command is
+# a real, currently runnable repo command whose OUTPUT SHAPE was captured live
+# (2026-07-27/28 infra session — the #5896 shard-2 triage: three red rounds, signature
+# extraction via --log-failed, the stale-head rerun hazard, base-side reproduction
+# work); every MECHANICAL step is single-signal; multi-signal branchings are split;
+# base-reproduction is judgment and encoded as a summon, not faked mechanical.
+#
+# Live-captured hazards this trail encodes (both burned this repo before):
+# - `gh run rerun` re-tests the ORIGINAL pinned merge SHA; a rerun on a superseded
+#   head can CANCEL the live head's run via the workflow concurrency group.
+# - A merge checkout's content is not the branch's content — signatures must be read
+#   from the failing run's logs, never inferred from local state.
+schema_version: trailspec.v1
+trail_id: rb4-red-ci-triage
+version: "0.4.1"
+title: RB4 Red-CI triage — signature, allowlist, staleness, bounded rerun
+seats:
+  - grok-daily
+  - glm-trial
+  - judgment
+stop_codes:
+  - STOP-precondition-failed
+  - STOP-manual-intervention
+  - STOP-unknown
+terminal_outcomes:
+  - triaged_update_branch_fired
+  - back_to_pr_lifecycle
+steps:
+  - step_id: snapshot_checks
+    intent: >-
+      Snapshot the PR's check table (live shape: tab-separated lines
+      "<name>\t<pass|fail|pending|skipping>\t<duration>\t<url>"). The red count is
+      parsed from the STATUS FIELD, never whole-line grep (a passing check named
+      "failure-report" must not read as red — r1 finding); a non-zero fail-field
+      count proceeds to triage, zero returns to the PR lifecycle.
+    command: sh -c 'gh pr checks {pr_number} 2>/dev/null | tee batch_state/rb4-checks-{pr_number}.txt'
+    evidence_predicate:
+      command: sh -c 'awk -F"\t" "\$2==\"fail\"" batch_state/rb4-checks-{pr_number}.txt | wc -l | tr -d " "'
+      success_pattern: '^[0-9]+$'
+    transitions:
+      red_present: locate_failing_run
+      all_green: back_to_pr_lifecycle
+      checks_unreadable: STOP-precondition-failed
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: locate_failing_run
+    intent: >-
+      Resolve the failing run id for the PR's branch (live shape: JSON array of
+      {databaseId, status, conclusion}; the newest run for the head branch). The run
+      id is recorded for every later step — signatures come from THIS run's logs,
+      never from local reproduction alone.
+    command: sh -c 'gh run list --branch {head_branch} --limit 1 --json databaseId,status,conclusion | tee batch_state/rb4-run-{pr_number}.json'
+    evidence_predicate:
+      command: jq -r '.[0].databaseId // ""' batch_state/rb4-run-{pr_number}.json
+      success_pattern: '^[0-9]+$'
+    transitions:
+      run_located: extract_signature
+      no_run_for_branch: STOP-precondition-failed
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: extract_signature
+    intent: >-
+      Extract the failure signature from the failing run's logs into a receipt (live
+      shapes: pytest's "short test summary info" FAILED lines; bash "command not
+      found" lines with script path + line number; assertion excerpts). The receipt
+      is the signature of record for the allowlist match and any PR note — a triage
+      claim without this receipt is not tool-backed.
+    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); gh run view "$RUN" --log-failed 2>/dev/null | grep -E "FAILED |Error|error:|command not found|short test summary" | head -30 | tee batch_state/rb4-signature-{pr_number}.txt'
+    evidence_predicate:
+      command: test -s batch_state/rb4-signature-{pr_number}.txt && echo signature-recorded
+      success_pattern: '^signature-recorded$'
+    transitions:
+      signature_recorded: staleness_probe
+      logs_empty: STOP-manual-intervention
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: head_currency_check
+    intent: >-
+      Before any staleness reasoning, prove the failing run belongs to the PR's
+      CURRENT head: compare the run's headSha with the PR's headRefOid (both live gh
+      JSON fields). A run for a superseded head has been replaced by the newer
+      head's own CI — nothing here may act on it (the burned hazard: acting on a
+      stale head's run cancels or misleads the live one); control returns to the PR
+      lifecycle, which watches the current run. FAILS CLOSED (r2 finding):
+      equality may mean current only for two validated, non-empty 40-hex SHAs —
+      failed gh lookups (empty equals empty) are their own lookup-failed outcome
+      and stop.
+    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); R=$(gh run view "$RUN" --json headSha --jq .headSha); P=$(gh pr view {pr_number} --json headRefOid --jq .headRefOid); case "$R$P" in *[!0-9a-f]*|"") echo lookup-failed; exit 0;; esac; [ "${#R}" = "40" ] && [ "${#P}" = "40" ] || { echo lookup-failed; exit 0; }; [ "$R" = "$P" ] && echo head-current || echo head-superseded'
+    evidence_predicate:
+      command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); R=$(gh run view "$RUN" --json headSha --jq .headSha); P=$(gh pr view {pr_number} --json headRefOid --jq .headRefOid); case "$R$P" in *[!0-9a-f]*|"") echo lookup-failed; exit 0;; esac; [ "${#R}" = "40" ] && [ "${#P}" = "40" ] || { echo lookup-failed; exit 0; }; [ "$R" = "$P" ] && echo head-current || echo head-superseded'
+      success_pattern: '^(head-current|head-superseded|lookup-failed)$'
+    transitions:
+      head_current: staleness_probe
+      head_superseded: back_to_pr_lifecycle
+      lookup_failed: STOP-precondition-failed
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: staleness_probe
+    intent: >-
+      BEFORE any rerun decision, capture both timestamps into one receipt: the
+      failing run's createdAt and origin/main's tip commit time (live shapes: ISO
+      timestamps from gh run view --json createdAt and git log -1 --format=%cI).
+      A run created BEFORE main's tip may have tested a merge against a since-fixed
+      base — the burned-in hazard: rerunning it re-tests the stale pinned SHA and can
+      cancel the live head's run via the concurrency group. HONEST APPROXIMATION
+      NOTE: %cI is commit time, not push time; it can only UNDER-detect staleness,
+      and the under-detected case falls through to the fail-closed allowlist path
+      (registry absent → STOP-unknown), never to a rerun — the safe direction. The
+      comparison itself is the next step's single signal.
+    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); { gh run view "$RUN" --json createdAt --jq .createdAt; git log -1 --format=%cI origin/main; } | tee batch_state/rb4-staleness-{pr_number}.txt'
+    evidence_predicate:
+      command: sh -c 'test "$(wc -l < batch_state/rb4-staleness-{pr_number}.txt | tr -d " ")" = "2" && echo both-timestamps'
+      success_pattern: '^both-timestamps$'
+    transitions:
+      timestamps_recorded: staleness_compare
+      probe_failed: STOP-precondition-failed
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: staleness_compare
+    intent: >-
+      Single-signal EPOCH compare of the two recorded timestamps, normalized in the
+      venv interpreter (r1 finding: mixed Z/offset ISO forms do not sort
+      lexicographically — a UTC run stamp vs an offset-form commit stamp misorders;
+      datetime.fromisoformat handles both and compares instants). FAILS CLOSED: a
+      missing or malformed receipt is its own outcome routing to a stop, never a
+      silent run-current.
+    command: sh -c '.venv/bin/python -c "import sys,datetime as d; L=open(\"batch_state/rb4-staleness-{pr_number}.txt\").read().split(); R=d.datetime.fromisoformat(L[0].replace(\"Z\",\"+00:00\")); M=d.datetime.fromisoformat(L[1].replace(\"Z\",\"+00:00\")); print(\"run-predates-main\" if R<M else \"run-current\")" 2>/dev/null || echo receipt-unusable'
+    evidence_predicate:
+      command: sh -c '.venv/bin/python -c "import sys,datetime as d; L=open(\"batch_state/rb4-staleness-{pr_number}.txt\").read().split(); R=d.datetime.fromisoformat(L[0].replace(\"Z\",\"+00:00\")); M=d.datetime.fromisoformat(L[1].replace(\"Z\",\"+00:00\")); print(\"run-predates-main\" if R<M else \"run-current\")" 2>/dev/null || echo receipt-unusable'
+      success_pattern: '^(run-predates-main|run-current|receipt-unusable)$'
+    transitions:
+      run_predates_main: fire_update_branch
+      run_current: allowlist_match
+      receipt_unusable: STOP-precondition-failed
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: fire_update_branch
+    intent: >-
+      The table's stale-base disposition: gh pr update-branch refreshes the merge
+      base so CI re-tests reality (live-burned alternative: gh run rerun on the
+      superseded head canceled the live head's run via the concurrency group —
+      #0H). The trail ends here; the new head's CI is watched by the PR lifecycle.
+    command: gh pr update-branch {pr_number}
+    evidence_predicate:
+      command: sh -c 'gh pr view {pr_number} --json mergeStateStatus --jq .mergeStateStatus'
+      success_pattern: '^(BLOCKED|CLEAN|BEHIND|UNKNOWN|UNSTABLE)$'
+    transitions:
+      update_fired: triaged_update_branch_fired
+      update_refused: STOP-manual-intervention
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: allowlist_match
+    intent: >-
+      ENFORCED fail-closed lookup (r1 finding: the missing registry must be an
+      execution guard, not narration): the step checks for the registry file itself
+      — scripts/config/trails/red-ci-known-failures.yaml — and with it ABSENT
+      (today's state) every signature is table-unknown and stops as STOP-unknown;
+      the rerun path is mechanically UNREACHABLE until the registry AND its lookup
+      tool land: today BOTH outcomes stop as table-unknown — registry_absent, and
+      registry_present_lookup_unbuilt (a registry file with no lookup tool must not
+      be guessed against; r2 finding: transitions must match the command's actual
+      output vocabulary, and matched routes only arrive with the lookup tool). The
+      table's judgment rows (pre-existing-on-main → note + owning issue;
+      head-specific → fix round) are applied BY THE SUMMONED JUDGMENT from the
+      recorded signature receipt — deliberately not weak-seat routes. The future
+      matched-retry-once path is deliberately NOT drafted as a step: trailspec.v1
+      cannot give a rerun claim a per-claimant predicate (the r3 review proved a
+      losing claimant would read the winner's queued run status), so the raceless
+      rerun primitive ships WITH the registry + lookup tool design, reviewed
+      together — never as unreachable speculative machinery here.
+    command: sh -c 'test -f scripts/config/trails/red-ci-known-failures.yaml && echo registry-present-lookup-unbuilt || echo registry-absent'
+    evidence_predicate:
+      command: sh -c 'test -f scripts/config/trails/red-ci-known-failures.yaml && echo registry-present-lookup-unbuilt || echo registry-absent'
+      success_pattern: '^(registry-present-lookup-unbuilt|registry-absent)$'
+    transitions:
+      registry_absent: STOP-unknown
+      registry_present_lookup_unbuilt: STOP-unknown
+    kind: table-lookup
+    table: red-ci-triage
+    blocked_on: "known-failure-class signature registry + its lookup tool (#5885)"
