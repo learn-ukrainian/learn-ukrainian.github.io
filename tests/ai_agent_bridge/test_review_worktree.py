@@ -1966,7 +1966,7 @@ def test_pr_review_target_resolves_head_then_fetches_origin(monkeypatch: pytest.
     gh_idx = next(i for i, j in enumerate(joined) if "pr view" in j)
     fetch_idx = next(i for i, j in enumerate(joined) if "fetch" in j)
     assert fetch_idx > gh_idx
-    assert any("refs/pull/5150/head" in command for command in joined)
+    assert any(f"{sha}:refs/lu-review/head" in command for command in joined)
 
 
 def test_exact_remote_fetch_rejects_api_oid_mismatch(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -1986,6 +1986,46 @@ def test_exact_remote_fetch_rejects_api_oid_mismatch(monkeypatch: pytest.MonkeyP
             destination_ref="refs/lu-review/head",
             expected_oid="a" * 40,
         )
+
+
+def test_pr_snapshot_fetches_resolved_head_sha_not_moving_pr_ref(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """A concurrent PR push cannot invalidate the already-resolved target (#5900)."""
+    expected_head = "a" * 40
+    expected_base = "b" * 40
+    fetched: list[str] = []
+
+    monkeypatch.setattr(
+        review_worktree,
+        "_resolve_pr_target",
+        lambda *_args, **_kwargs: ("feature/review", expected_head, "main", expected_base),
+    )
+
+    def fake_fetch(**kwargs):
+        fetched.append(kwargs["remote_ref"])
+        return str(kwargs["expected_oid"])
+
+    monkeypatch.setattr(review_worktree, "_fetch_exact_ref", fake_fetch)
+    monkeypatch.setattr(review_worktree, "_run_command", lambda *_args, **_kwargs: expected_base)
+    monkeypatch.setattr(
+        review_worktree,
+        "resolve_head_identity",
+        lambda *_args, **_kwargs: expected_base,
+    )
+
+    review_worktree._resolve_exact_remote_target(
+        review_worktree.ReviewTarget(pr_number=5900),
+        repo_root=tmp_path,
+        git_bin=Path("/usr/bin/git"),
+        gh_bin=Path("/usr/bin/gh"),
+        env={},
+        repository="learn-ukrainian/learn-ukrainian.github.io",
+        remote_url="https://github.com/learn-ukrainian/learn-ukrainian.github.io.git",
+        default_branch="main",
+    )
+
+    assert fetched == [expected_head, expected_base]
 
 
 def test_review_target_metadata_rejects_ambiguous_or_malformed_values() -> None:

@@ -40,6 +40,7 @@ import os
 import re
 import shutil
 import subprocess
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -270,6 +271,8 @@ def ask_pool(
     from_model: str | None = None,
     no_timeout: bool = False,
     background: bool = False,
+    on_message_created: Callable[[int], None] | None = None,
+    review_pr_lifecycle: bool = False,
 ) -> int:
     """Send a message AND invoke poolside.ai (laguna-s-2.1) one-shot via opencode.
 
@@ -419,8 +422,17 @@ def ask_glm(
         effort=effort,
     )
     register_ask(msg_id)
+    if on_message_created is not None:
+        on_message_created(msg_id)
     if background:
-        launch_background_ask(msg_id, "glm", {"no_timeout": no_timeout})
+        launch_background_ask(
+            msg_id,
+            "glm",
+            {
+                "no_timeout": no_timeout,
+                "review_pr_lifecycle": review_pr_lifecycle,
+            },
+        )
         return msg_id
     print(
         f"\n🚀 Invoking glm ({effective_model}) to process message #{msg_id}... [LOCAL-ONLY — data egresses to China]"
