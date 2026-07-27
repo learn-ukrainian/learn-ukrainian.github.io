@@ -23,7 +23,7 @@
 #   from the failing run's logs, never inferred from local state.
 schema_version: trailspec.v1
 trail_id: rb4-red-ci-triage
-version: "0.4.0"
+version: "0.4.1"
 title: RB4 Red-CI triage — signature, allowlist, staleness, bounded rerun
 seats:
   - grok-daily
@@ -31,7 +31,6 @@ seats:
   - judgment
 stop_codes:
   - STOP-precondition-failed
-  - STOP-stale-head
   - STOP-manual-intervention
   - STOP-unknown
 terminal_outcomes:
