@@ -32,10 +32,22 @@ tables:
 
   review-gate-arm:
     mode: static
-    inputs: [cross-family verdict, verdict head SHA vs current PR head, requested-changes state, blocking CI, draft state, reviewer identity]
+    inputs:
+      - cross-family verdict
+      - verdict head SHA vs current PR head
+      - requested-changes state
+      - blocking CI
+      - draft state
+      - reviewer identity
+      - "formal-review-job ledger (fleet-comms `formal_review_jobs`, unique key (repository, pr_number, head_sha, gate_kind); columns review_id, state, sealed_verdict_artifact_id) — 'requested for THIS head' resolves here; `formal_review_attempts` joins by review_id only (attempt_number, completion_state) for 'terminal'"
+      - "publication receipts: `github_publications` (review_id, head_sha, status_context, published_at) joined by review_id with head_sha revalidated — 'published' means a durable publication row for the CURRENT head, not a broker reply or a returned comment URL"
+      - "sealed-dispatch (out-of-flow) reviews: the request is head-bound ONLY if its brief/task record pins PR + head SHA and its publication is the driver's verdict comment on the PR naming that head — `batch_state/tasks/review-*.json` alone carries neither, so an unpinned request cannot satisfy this row (BLOCKED-ON: head-bound request records for sealed dispatches, tracked with T2 certification)"
+      - "cancellation: an explicit PR comment recording the request/review id and the reason — absent that, a failed/timed-out request stays UNRESOLVED"
     rows:
       - when: PR is a DRAFT
         then: never arm, never merge — undraft only after the gate passes
+      - when: ANY explicitly requested review of the CURRENT head is not yet terminal-and-published (sent | processing | timed-out | failed all count as unresolved until returned or explicitly cancelled with a recorded reason)
+        then: wait — the sealed-dispatch verdict and a formal-CF job are SEPARATE gates and auto-merge must not race the slower one (2026-07-27 burn on #5886; a new head invalidates every prior verdict)
       - when: reviewer is the author, or the arming driver specified the fix under review
         then: route to a different independent seat  # directing a fix disqualifies its reviewer
       - when: requested-changes unresolved (a later LGTM comment does not resolve a review thread)
