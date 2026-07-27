@@ -44,14 +44,14 @@ jobs:
       - name: 'Run zizmor 🌈'
         uses: 'zizmorcore/zizmor-action@6599ee8b7a49aef6a770f63d261d214911a7ce02' # v0.6.0
         with:
-          # 2026-05-23: workflow began failing at 15:57Z with the artipacked
-          # audit hitting HTTP 401 on `actions/checkout` git-upload-pack.
-          # Online verification by zizmor's audit requires unauthenticated
-          # git-fetch to other repos, which Microsoft's git host increasingly
-          # throttles/blocks. Skip online audits — all 21 baseline findings
-          # (17 artipacked + 4 secrets-inherit) are produced by offline
-          # YAML-static rules, so we lose nothing in coverage.
+          # 2026-05-23 intent: skip online audits. artipacked online verification
+          # hits HTTP 401 on unauthenticated git-upload-pack to actions/checkout,
+          # which Microsoft's git host increasingly throttles/blocks.
           #
-          # zizmor-action v0.6.0 dropped `advanced-args: '--offline'` in favor
-          # of the first-class `online-audits` input (Dependabot #5869).
+          # `advanced-args: '--offline'` was never a recognized zizmor-action
+          # input (always a no-op / Unexpected-input warning), so online audits
+          # kept running at the action default. Use the first-class
+          # `online-audits` input (present since at least v0.5.7) to actually
+          # enforce the offline posture. Some online-only audit coverage is
+          # lost; the known baseline findings are offline YAML-static rules.
           online-audits: 'false'
