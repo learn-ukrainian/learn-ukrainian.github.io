@@ -74,15 +74,33 @@ usage_launcher() {
 # that is ~/.local + Homebrew) → explicit ~/.local/bin/kimi (user npm -g) →
 # legacy standalone binary at ~/.kimi-code/bin (last resort; often stale).
 # Do NOT fall back to ~/.hermes/node/bin — that tree is Hermes-private only.
+#
+# Returns 0 if path is the Hermes-private node bin tree (physical path match,
+# not just lexical */.hermes/node/bin/* — blocks $HOME/.hermes/node/bin/../bin/kimi).
+is_hermes_private_node_bin() {
+  local cand="$1"
+  [ -n "$cand" ] || return 1
+  local hermes_phys cand_dir
+  hermes_phys="$(cd "${HOME}/.hermes/node/bin" 2>/dev/null && pwd -P)" || hermes_phys=""
+  if [ -n "$hermes_phys" ] && [ -e "$cand" ]; then
+    cand_dir="$(cd "$(dirname -- "$cand")" 2>/dev/null && pwd -P)" || cand_dir=""
+    if [ -n "$cand_dir" ] && [ "$cand_dir" = "$hermes_phys" ]; then
+      return 0
+    fi
+  fi
+  case "$cand" in
+    */.hermes/node/bin/*|"${HOME}/.hermes/node/bin"/*) return 0 ;;
+  esac
+  return 1
+}
+
 KIMI_BIN="${LEARN_UK_KIMI_BIN:-}"
 # Never accept Hermes-private installs — including explicit LEARN_UK_KIMI_BIN overrides.
-case "$KIMI_BIN" in
-  */.hermes/node/bin/*)
-    echo "Error: LEARN_UK_KIMI_BIN points at Hermes-private Node ($KIMI_BIN)." >&2
-    echo "  Use ~/.local/bin/kimi (npm -g @moonshot-ai/kimi-code) instead." >&2
-    exit 1
-    ;;
-esac
+if [ -n "$KIMI_BIN" ] && is_hermes_private_node_bin "$KIMI_BIN"; then
+  echo "Error: LEARN_UK_KIMI_BIN points at Hermes-private Node ($KIMI_BIN)." >&2
+  echo "  Use ~/.local/bin/kimi (npm -g @moonshot-ai/kimi-code) instead." >&2
+  exit 1
+fi
 if [ -z "$KIMI_BIN" ] || [ ! -x "$KIMI_BIN" ]; then
   KIMI_BIN=""
   for cand in \
@@ -90,10 +108,9 @@ if [ -z "$KIMI_BIN" ] || [ ! -x "$KIMI_BIN" ]; then
     "${HOME}/.local/bin/kimi" \
     "${HOME}/.kimi-code/bin/kimi"
   do
-    # Never accept Hermes-private installs even if something re-injected PATH.
-    case "$cand" in
-      */.hermes/node/bin/*) continue ;;
-    esac
+    if is_hermes_private_node_bin "$cand"; then
+      continue
+    fi
     if [ -n "$cand" ] && [ -x "$cand" ]; then
       KIMI_BIN="$cand"
       break

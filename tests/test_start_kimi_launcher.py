@@ -409,21 +409,26 @@ def test_learn_uk_kimi_bin_hermes_override_rejected(tmp_path: Path) -> None:
 
     env = _clean_environ()
     env["HOME"] = os.fspath(home)
-    env["LEARN_UK_KIMI_BIN"] = os.fspath(hermes_bin / "kimi")
     env["PATH"] = "/usr/bin:/bin"
 
-    result = subprocess.run(
-        [os.fspath(project / "start-kimi.sh"), "hi"],
-        cwd=project,
-        env=env,
-        text=True,
-        capture_output=True,
-        check=False,
-        timeout=30,
-    )
-    assert result.returncode != 0
-    assert "Hermes-private" in result.stderr
-    assert not capture.exists()
+    for override in (
+        hermes_bin / "kimi",
+        # lexical bypass attempt: .../bin/../bin/kimi still resolves under Hermes
+        hermes_bin / ".." / "bin" / "kimi",
+    ):
+        env["LEARN_UK_KIMI_BIN"] = os.fspath(override)
+        result = subprocess.run(
+            [os.fspath(project / "start-kimi.sh"), "hi"],
+            cwd=project,
+            env=env,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=30,
+        )
+        assert result.returncode != 0, (override, result.stderr, result.stdout)
+        assert "Hermes-private" in result.stderr
+        assert not capture.exists()
 
 
 def test_passthrough_flags_only_launch_interactive_tui(tmp_path: Path) -> None:
