@@ -106,6 +106,10 @@ def _build_fake_project(tmp_path: Path) -> tuple[Path, Path]:
         (_REPO_ROOT / "scripts" / "lib" / "handoff_identity.sh").read_text(encoding="utf-8"),
         encoding="utf-8",
     )
+    (lib_dir / "scrub_hermes_node_path.sh").write_text(
+        (_REPO_ROOT / "scripts" / "lib" / "scrub_hermes_node_path.sh").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
     (guard_dir / "assert_primary_on_main.py").write_text("#!/usr/bin/env python3\nraise SystemExit(0)\n")
     (guard_dir / "assert_primary_on_main.py").chmod(0o755)
     (review_dir / "model_catalog.py").write_text(
@@ -325,24 +329,30 @@ def test_unknown_model_rejected_before_launch(tmp_path: Path) -> None:
     assert "unknown --model" in result.stderr
 
 
-def test_hermes_install_preferred_over_legacy_binary(tmp_path: Path) -> None:
-    """With no kimi on PATH, the launcher must pick ~/.hermes/node/bin/kimi
-    (maintained npm install) over the legacy ~/.kimi-code/bin/kimi binary."""
+def test_local_install_preferred_over_legacy_binary(tmp_path: Path) -> None:
+    """With no kimi on PATH, the launcher must pick ~/.local/bin/kimi
+    (user npm global) over the legacy ~/.kimi-code/bin/kimi binary."""
     project, _supervisor_capture = _build_fake_project(tmp_path)
     home = tmp_path / "home"
-    hermes_bin = home / ".hermes" / "node" / "bin"
+    local_bin = home / ".local" / "bin"
     legacy_bin = home / ".kimi-code" / "bin"
-    hermes_bin.mkdir(parents=True)
+    hermes_bin = home / ".hermes" / "node" / "bin"
+    local_bin.mkdir(parents=True)
     legacy_bin.mkdir(parents=True)
+    hermes_bin.mkdir(parents=True)
     capture = tmp_path / "which-kimi.txt"
-    _write_executable(hermes_bin / "kimi", f'#!/usr/bin/env bash\necho hermes > "{capture}"\n')
+    _write_executable(local_bin / "kimi", f'#!/usr/bin/env bash\necho local > "{capture}"\n')
     _write_executable(legacy_bin / "kimi", f'#!/usr/bin/env bash\necho legacy > "{capture}"\n')
+    # Hermes copy must never win even if present on disk.
+    _write_executable(hermes_bin / "kimi", f'#!/usr/bin/env bash\necho hermes > "{capture}"\n')
 
     env = _clean_environ()
     env.pop("LEARN_UK_KIMI_BIN", None)
     env["HOME"] = os.fspath(home)
     # Deliberately no kimi anywhere on PATH: forces the explicit fallback chain.
-    env["PATH"] = "/usr/bin:/bin:/opt/homebrew/bin"
+    # Include hermes on PATH to prove the launcher does not prefer it via PATH
+    # pollution either (export PATH puts .local ahead; hermes is not injected).
+    env["PATH"] = f"/usr/bin:/bin:/opt/homebrew/bin:{hermes_bin}"
 
     result = subprocess.run(
         [os.fspath(project / "start-kimi.sh"), "hi"],
@@ -354,7 +364,77 @@ def test_hermes_install_preferred_over_legacy_binary(tmp_path: Path) -> None:
         timeout=30,
     )
     assert result.returncode == 0, result.stderr + result.stdout
-    assert capture.read_text(encoding="utf-8").strip() == "hermes"
+    assert capture.read_text(encoding="utf-8").strip() == "local"
+
+
+def test_legacy_used_when_local_missing_and_hermes_ignored(tmp_path: Path) -> None:
+    """Hermes-private kimi must not be selected; fall back to legacy only."""
+    project, _supervisor_capture = _build_fake_project(tmp_path)
+    home = tmp_path / "home"
+    legacy_bin = home / ".kimi-code" / "bin"
+    hermes_bin = home / ".hermes" / "node" / "bin"
+    legacy_bin.mkdir(parents=True)
+    hermes_bin.mkdir(parents=True)
+    capture = tmp_path / "which-kimi.txt"
+    _write_executable(legacy_bin / "kimi", f'#!/usr/bin/env bash\necho legacy > "{capture}"\n')
+    _write_executable(hermes_bin / "kimi", f'#!/usr/bin/env bash\necho hermes > "{capture}"\n')
+
+    env = _clean_environ()
+    env.pop("LEARN_UK_KIMI_BIN", None)
+    env["HOME"] = os.fspath(home)
+    env["PATH"] = f"/usr/bin:/bin:{hermes_bin}"
+
+    result = subprocess.run(
+        [os.fspath(project / "start-kimi.sh"), "hi"],
+        cwd=project,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert capture.read_text(encoding="utf-8").strip() == "legacy"
+
+
+
+def test_learn_uk_kimi_bin_hermes_override_rejected(tmp_path: Path) -> None:
+    """LEARN_UK_KIMI_BIN must not allow selecting Hermes-private kimi (CF F002)."""
+    project, _supervisor_capture = _build_fake_project(tmp_path)
+    home = tmp_path / "home"
+    hermes_bin = home / ".hermes" / "node" / "bin"
+    hermes_bin.mkdir(parents=True)
+    capture = tmp_path / "which-kimi.txt"
+    _write_executable(hermes_bin / "kimi", f'#!/usr/bin/env bash\necho hermes > "{capture}"\n')
+
+    env = _clean_environ()
+    env["HOME"] = os.fspath(home)
+    env["PATH"] = "/usr/bin:/bin"
+
+    # Outside-tree symlink whose target is still the Hermes binary.
+    outside = home / "elsewhere"
+    outside.mkdir(parents=True)
+    (outside / "kimi-link").symlink_to(hermes_bin / "kimi")
+
+    for override in (
+        hermes_bin / "kimi",
+        # lexical bypass attempt: .../bin/../bin/kimi still resolves under Hermes
+        hermes_bin / ".." / "bin" / "kimi",
+        outside / "kimi-link",
+    ):
+        env["LEARN_UK_KIMI_BIN"] = os.fspath(override)
+        result = subprocess.run(
+            [os.fspath(project / "start-kimi.sh"), "hi"],
+            cwd=project,
+            env=env,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=30,
+        )
+        assert result.returncode != 0, (override, result.stderr, result.stdout)
+        assert "Hermes-private" in result.stderr
+        assert not capture.exists()
 
 
 def test_passthrough_flags_only_launch_interactive_tui(tmp_path: Path) -> None:

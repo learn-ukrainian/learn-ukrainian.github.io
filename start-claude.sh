@@ -5,6 +5,13 @@
 set -e
 
 # Ensure ~/.local/bin is in PATH (where claude installs by default)
+_LU_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "$_LU_ROOT/scripts/lib/scrub_hermes_node_path.sh" ]; then
+  # shellcheck source=scripts/lib/scrub_hermes_node_path.sh
+  source "$_LU_ROOT/scripts/lib/scrub_hermes_node_path.sh"
+  scrub_hermes_node_from_path
+fi
+unset _LU_ROOT
 export PATH="$HOME/.local/bin:$PATH"
 hash -r 2>/dev/null || true  # Clear command cache
 

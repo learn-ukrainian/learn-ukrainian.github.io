@@ -55,8 +55,11 @@ Before EVER asking the user for additional pedagogical material, check: `docs/re
 ## #0I — DON'T STACK MICRO-DILEMMAS, DECIDE FOR THE USER (2026-05-04)
 Compound decisions = ONE table + ONE recommendation, NEVER N parallel sign-off questions. Required shape: (1) state of play 1-3 sentences, (2) options table 2-3 rows max, (3) **MY RECOMMENDATION** with one explicit pick + why + reject worst by name, (4) "going to execute unless you stop me" + first action verb. A numbered "sign off on these N" list IS a menu — forbidden.
 
-## #0H — MERGING PRs IS MY JOB (action bias)
-Review each PR (body + diff + CI), merge if clean: `gh pr merge N --squash --delete-branch`. Don't ask, do it. Hold only for BLOCKING CI fails (advisory Gemini-Dispatch fails ≠ blocking). LEAD AND GUIDE: state next action + execute + report, don't present status + wait. Same applies to memory/rules/docs cleanup — don't deflect to user.
+## #0H — CF REVIEW MANDATORY ON EVERY PR; THEN MERGE (2026-07-27)
+**Independent cross-family (CF) formal review is ALWAYS mandatory before merge.** No exceptions for “small,” docs-only, launcher, or infra PRs. Discussion / self-review / same-family review ≠ the gate.
+- Request immediately after `gh pr create`: `.venv/bin/python -m scripts.ai_agent_bridge review-pr <N> --reviewer codex|claude|glm --from <author-family>` (default codex sealed path). **agy / kimi / grok are NOT formal_review_eligible reviewers** — never self-seal.
+- Closeout incomplete until CF is requested (and settled). Failure encoded: 2026-07-27 Grok shipped #5875 without `review-pr`; operator had to ask.
+- After CF pass + green blocking CI: `gh pr merge N --auto --squash --delete-branch` (action bias — don’t leave PRs limbo). Hold only for CF fail or blocking CI.
 
 ## #0G — NEVER REPORT ASYNC-TASK STATE FROM MEMORY (2026-05-08)
 Before saying "task X is running / X just finished / X is at step Y", ALWAYS query `delegate.py status-or-fail X` or Monitor API `/api/delegate/active`. Memory of state from 2 minutes ago is wrong by default. Established 2026-05-08 after orchestrator reported bakeoff "Gemini mid-write" when it had finished.

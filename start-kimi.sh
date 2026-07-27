@@ -40,10 +40,15 @@
 
 set -euo pipefail
 
-export PATH="${HOME}/.local/bin:/opt/homebrew/bin:${HOME}/.hermes/node/bin:${PATH:-}"
-hash -r 2>/dev/null || true
-
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Drop Hermes-private Node from inherited PATH, then prefer user globals + brew.
+if [ -f "$PROJECT_DIR/scripts/lib/scrub_hermes_node_path.sh" ]; then
+  # shellcheck source=scripts/lib/scrub_hermes_node_path.sh
+  source "$PROJECT_DIR/scripts/lib/scrub_hermes_node_path.sh"
+  scrub_hermes_node_from_path
+fi
+export PATH="${HOME}/.local/bin:/opt/homebrew/bin:${PATH:-}"
+hash -r 2>/dev/null || true
 # Absolute path to THIS script, captured before any cd: usage_launcher reads
 # its own header, and the worktree redirect below changes cwd.
 SCRIPT_PATH="$PROJECT_DIR/$(basename "${BASH_SOURCE[0]}")"
@@ -65,17 +70,56 @@ usage_launcher() {
   exit 0
 }
 # --- locate kimi binary ---
-# Preference order: explicit override → ambient PATH (the hermes npm install,
-# ~/.hermes/node/bin, is the maintained one) → hermes explicit → legacy
-# standalone binary at ~/.kimi-code/bin (last resort; often stale).
+# Preference order: explicit override → ambient PATH (after PATH fix above,
+# that is ~/.local + Homebrew) → explicit ~/.local/bin/kimi (user npm -g) →
+# legacy standalone binary at ~/.kimi-code/bin (last resort; often stale).
+# Do NOT fall back to ~/.hermes/node/bin — that tree is Hermes-private only.
+#
+# Returns 0 if path is the Hermes-private node bin tree.
+# Uses physical path of the *executable* (resolves symlinks and ../), not just
+# a lexical prefix check — blocks overrides and PATH hits that land on Hermes.
+is_hermes_private_node_bin() {
+  local cand="$1"
+  [ -n "$cand" ] || return 1
+  local hermes_phys cand_phys cand_dir
+  hermes_phys="$(cd "${HOME}/.hermes/node/bin" 2>/dev/null && pwd -P)" || hermes_phys=""
+  if [ -n "$hermes_phys" ] && { [ -e "$cand" ] || [ -L "$cand" ]; }; then
+    if command -v realpath >/dev/null 2>&1; then
+      cand_phys="$(realpath "$cand" 2>/dev/null)" || cand_phys=""
+    else
+      cand_phys="$(python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$cand" 2>/dev/null)" || cand_phys=""
+    fi
+    if [ -n "$cand_phys" ]; then
+      cand_dir="$(dirname "$cand_phys")"
+      if [ "$cand_dir" = "$hermes_phys" ]; then
+        return 0
+      fi
+    fi
+  fi
+  case "$cand" in
+    */.hermes/node/bin/*|"${HOME}/.hermes/node/bin"/*) return 0 ;;
+  esac
+  return 1
+}
+
+
 KIMI_BIN="${LEARN_UK_KIMI_BIN:-}"
+# Never accept Hermes-private installs — including explicit LEARN_UK_KIMI_BIN overrides.
+if [ -n "$KIMI_BIN" ] && is_hermes_private_node_bin "$KIMI_BIN"; then
+  echo "Error: LEARN_UK_KIMI_BIN points at Hermes-private Node ($KIMI_BIN)." >&2
+  echo "  Use ~/.local/bin/kimi (npm -g @moonshot-ai/kimi-code) instead." >&2
+  exit 1
+fi
 if [ -z "$KIMI_BIN" ] || [ ! -x "$KIMI_BIN" ]; then
   KIMI_BIN=""
   for cand in \
     "$(command -v kimi 2>/dev/null || true)" \
-    "${HOME}/.hermes/node/bin/kimi" \
+    "${HOME}/.local/bin/kimi" \
     "${HOME}/.kimi-code/bin/kimi"
   do
+    if is_hermes_private_node_bin "$cand"; then
+      continue
+    fi
     if [ -n "$cand" ] && [ -x "$cand" ]; then
       KIMI_BIN="$cand"
       break
@@ -83,7 +127,8 @@ if [ -z "$KIMI_BIN" ] || [ ! -x "$KIMI_BIN" ]; then
   done
 fi
 if [ -z "$KIMI_BIN" ]; then
-  echo "Error: Kimi Code CLI not found. Install it or set LEARN_UK_KIMI_BIN." >&2
+  echo "Error: Kimi Code CLI not found. Install with: npm i -g @moonshot-ai/kimi-code" >&2
+  echo "  (user prefix ~/.local; see ~/.npmrc) or set LEARN_UK_KIMI_BIN." >&2
   exit 1
 fi
 

@@ -38,6 +38,13 @@ if env -u GIT_DIR -u GIT_WORK_TREE -u GIT_COMMON_DIR git -C "$PROJECT_DIR" rev-p
   fi
   unset _git_common _main_wt
 fi
+_LU_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "$_LU_ROOT/scripts/lib/scrub_hermes_node_path.sh" ]; then
+  # shellcheck source=scripts/lib/scrub_hermes_node_path.sh
+  source "$_LU_ROOT/scripts/lib/scrub_hermes_node_path.sh"
+  scrub_hermes_node_from_path
+fi
+unset _LU_ROOT
 export PATH="${HOME}/.local/bin:${PATH:-}"
 hash -r 2>/dev/null || true
 
