@@ -24,7 +24,7 @@ DEFAULT_EXAMPLE_TRAIL_PATH = (
     PROJECT_ROOT / "scripts/config/trails/rb3-pr-lifecycle.trail.yaml"
 )
 
-# 16-item STOP code contract (embedded constant; pending extraction to contract package)
+# Published STOP code contract (embedded constant; pending extraction to contract package)
 VALID_STOP_CODES: set[str] = {
     "STOP-timeout",
     "STOP-verdict-timeout",
@@ -42,6 +42,8 @@ VALID_STOP_CODES: set[str] = {
     "STOP-quota-exceeded",
     "STOP-stale-head",
     "STOP-unknown",
+    "STOP-rearm-failed",
+    "STOP-hygiene-failed",
 }
 
 

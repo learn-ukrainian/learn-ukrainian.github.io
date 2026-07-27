@@ -29,7 +29,7 @@ def _get_happy_step_receipt_data() -> dict[str, Any]:
         "schema_version": "step-receipt.v1",
         "trail_id": "rb3-pr-lifecycle",
         "trail_version": "1.0.0",
-        "trail_hash": "2caaa4e679fd44372611eab20f5efeb8a3778c5ac1207e5d63e1e8ba0fcfbc5f",
+        "trail_hash": "918baac42f0682697ee9389a8b7b79361ba47770ef1c18fcf33e2731524fcfd1",
         "run_id": "run-20260727-001",
         "step_id": "request_review",
         "task_family": "infra-orchestration",
