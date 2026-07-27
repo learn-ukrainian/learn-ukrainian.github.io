@@ -112,6 +112,10 @@ else
   fi
 fi
 
+# Interpreter for bounded session-record calls: the CANONICAL checkout owns the
+# shared venv — linked worktrees have none (formal CF r4 F001 on #5896: the
+# PROJECT_DIR default 127s every worktree session). Hermetic tests inject
+# CLAUDE_SESSION_RECORD_PYTHON explicitly instead.
 BOUNDED_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
 BOUNDED_RUNNER="${SESSION_BOUNDED_RUNNER:-$PROJECT_DIR/scripts/agent_runtime/bounded_command.py}"
 SESSION_START_BUDGET_SECONDS="${SESSION_START_BUDGET_SECONDS:-12}"
@@ -168,6 +172,10 @@ if [ ! -f "$PROFILE_RESOLVER_SH" ]; then
   echo "Error: context-profile resolver not found." >&2
   exit 1
 fi
+# The resolver's own interpreter default is $PROJECT_DIR/.venv — absent in
+# linked worktrees (F001 r5 class). Point it at the canonical venv here; an
+# explicit CLAUDE_PROFILE_RESOLVER_PYTHON still wins.
+export CLAUDE_PROFILE_RESOLVER_PYTHON="${CLAUDE_PROFILE_RESOLVER_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
 # shellcheck disable=SC1090
 source "$PROFILE_RESOLVER_SH"
 if ! resolve_context_profile "$REQUESTED_PROFILE_ID" "$OBSERVED_MODEL"; then
@@ -181,7 +189,7 @@ fi
 # Persist official SessionStart identity and the resolved route in the canonical
 # checkout. Build argv as an array so exact transcript paths are never split.
 SESSION_RECORD_SCRIPT="${CLAUDE_SESSION_RECORD_SCRIPT:-$PROJECT_DIR/scripts/lib/session_record.py}"
-SESSION_RECORD_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
+SESSION_RECORD_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"  # canonical: worktrees carry no venv (F001 r5)
 if [ -n "$SESSION_ID" ] && [ -f "$SESSION_RECORD_SCRIPT" ] && [ -x "$SESSION_RECORD_PYTHON" ]; then
   SESSION_RECORD_CMD=(
     "$SESSION_RECORD_PYTHON" "$SESSION_RECORD_SCRIPT" --state-root "$CANONICAL_ROOT"
@@ -329,7 +337,7 @@ fi
 # 13. Session handoff. Claude uses the official SessionStart session id; Codex
 # retains its documented environment fallback for non-Claude fixtures.
 CURRENT_THREAD_ID="${SESSION_ID:-${CODEX_THREAD_ID:-${CODEX_SESSION_ID:-}}}"
-ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
+ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"  # canonical: worktrees carry no venv (F001 r5)
 ROLLOVER_SCRIPT="${THREAD_ROLLOVER_SCRIPT:-$PROJECT_DIR/scripts/orchestration/thread_handoff.py}"
 HANDOFF_CONTEXT=""
 HANDOFF_WARNINGS=""
@@ -428,9 +436,14 @@ $THREAD_LEASE_OUTPUT"
 Output:
 $THREAD_LEASE_OUTPUT"
       else
-        # Propagate the exact generation this session just claimed so the SessionEnd
-        # release hook (release-thread-lease.sh) can fence its release with it —
-        # thread_handoff.py now refuses a non-force release without one (#5759).
+        # Record the claimed generation in the process-scoped env file ONLY.
+        # There is deliberately NO session-keyed generation sidecar (formal CF
+        # F001 round 3 on #5896): a sidecar keyed by SESSION_ID is mutable
+        # across a same-id resume, so a delayed SessionEnd from a dead
+        # predecessor could read the SUCCESSOR's generation and tombstone the
+        # successor's live lease. The SessionEnd release therefore fences on
+        # process identity alone and no-ops when it cannot be reconfirmed;
+        # claim-side pid-liveness reclaims any stale lease.
         THREAD_LEASE_GENERATION=$(printf '%s' "$THREAD_LEASE_OUTPUT" | "$ROLLOVER_PYTHON" -c 'import json,sys
 try:
   d=json.loads(sys.stdin.read()); print(d.get("generation") or "")

@@ -35,7 +35,20 @@ if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UKRAINIAN_PIPELINE" ] || [ -
 fi
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
-PYTHON="$PROJECT_DIR/.venv/bin/python"
+# Canonical checkout owns the shared venv — linked worktrees have none
+# (F001 r5 on #5896: the PROJECT_DIR default silently skipped this hook in
+# every worktree session). Derivation must run BEFORE the interpreter pick.
+if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
+  CANONICAL_ROOT="$CODEX_CANONICAL_REPO_ROOT"
+else
+  GIT_COMMON_DIR=$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+  if [ -n "$GIT_COMMON_DIR" ] && [ "$(basename "$GIT_COMMON_DIR")" = ".git" ]; then
+    CANONICAL_ROOT=$(dirname "$GIT_COMMON_DIR")
+  else
+    CANONICAL_ROOT="$PROJECT_DIR"
+  fi
+fi
+PYTHON="${THREAD_ROLLOVER_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
 
 if [ ! -x "$PYTHON" ]; then
   # Fail open: never let a missing venv block SessionEnd.
@@ -64,24 +77,16 @@ case "$HANDOFF_AGENT" in
   *) exit 0 ;;
 esac
 
-if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
-  CANONICAL_ROOT="$CODEX_CANONICAL_REPO_ROOT"
-else
-  GIT_COMMON_DIR=$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
-  if [ -n "$GIT_COMMON_DIR" ] && [ "$(basename "$GIT_COMMON_DIR")" = ".git" ]; then
-    CANONICAL_ROOT=$(dirname "$GIT_COMMON_DIR")
-  else
-    CANONICAL_ROOT="$PROJECT_DIR"
-  fi
-fi
-
-# No --generation: identity proof is the sole fence (see above). If this repo
-# checkout still has an OLDER thread_handoff.py that hard-requires
-# --generation, the CLI's ValueError is swallowed by `|| true` below — a safe
-# no-op in a mixed-deploy, exactly like the old missing-env-var path. Leaving
-# the lease in place is always safe either way: claim_thread_lease's
-# pid-liveness check is the primary defense and will reclaim it once this
-# process is confirmed dead, regardless of this cooperative path.
+# NO generation is carried here — deliberately (formal CF F001 round 3 on
+# #5896): a sidecar keyed only by SESSION_ID is MUTABLE across a same-id
+# resume, so a delayed SessionEnd from a dead predecessor could read the
+# SUCCESSOR's generation and tombstone the successor's live lease — defeating
+# the exact ABA protection the generation fence exists for. Identity proof is
+# the sole fence on this path: release no-ops when the process identity cannot
+# be reconfirmed, and claim_thread_lease's pid-liveness check reclaims any
+# stale lease that leaves behind. If a repo checkout still has an OLDER
+# thread_handoff.py that hard-requires --generation, the CLI error is
+# swallowed by `|| true` — a safe no-op in a mixed deploy.
 "$PYTHON" "$PROJECT_DIR/scripts/orchestration/thread_handoff.py" --repo-root "$CANONICAL_ROOT" \
   release-thread-lease --agent "$HANDOFF_AGENT" --current-thread-id "$SESSION_ID" \
   >/dev/null 2>&1 || true
