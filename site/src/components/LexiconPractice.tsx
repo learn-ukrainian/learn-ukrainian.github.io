@@ -1527,7 +1527,9 @@ function LexiconPracticeIsland({
   // word across days (confirmed live bug: борщ every visit, while the page
   // itself showed a rotating 12). Loads lexeme cores only for the levels
   // represented among today's picks so the preview rows have verified
-  // lemma/gloss/pos data without pulling every shard.
+  // lemma/gloss/pos data. The daily pool and practice-core shards are built
+  // independently, so an orphaned pool row is normalized into a displayable
+  // preview card from its verified pool metadata rather than rendering as —.
   useEffect(() => {
     if (sessionPhase !== 'idle') return;
 
@@ -1548,26 +1550,14 @@ function LexiconPracticeIsland({
         const eligiblePool = filterByCumulativeLevel(pool, learnerLevel);
         const picks = pickDaily(eligiblePool, dateSeed(now), DAILY_PRACTICE_DECK_SIZE);
 
-        const snapshot: DailyPracticeDeckSnapshot = {
-          version: 1,
-          date: dateKey,
-          level: learnerLevel,
-          deckVersion: 'daily-pool',
-          createdAt: now.getTime(),
-          items: picks.map((word) => ({
-            lemmaId: word.slug,
-            origin: classifyDailyPracticeOrigin(word.slug, indexSource, state.cards, now),
-          })),
-        };
-
-        if (cancelled) return;
-        setDailySnapshot(snapshot);
-
         // Fetch lexeme cores only for levels represented among today's picks —
-        // each `DailyWord` already carries its own `cefr`, so this no longer
-        // needs to cross-reference the SRS index at all.
+        // or all selected-level cores for the defined fallback when the daily
+        // pool is empty.
+        const levelsForDailyPreview = picks.length > 0
+          ? picks.map((word) => word.cefr)
+          : levelsUpTo(learnerLevel);
         const representedLevels = new Set(
-          picks.map((word) => word.cefr).filter((cefr): cefr is string => Boolean(cefr)),
+          levelsForDailyPreview.filter((cefr): cefr is string => Boolean(cefr)),
         );
         const levelEntries = deck
           ? []
@@ -1602,10 +1592,55 @@ function LexiconPracticeIsland({
         for (const entry of levelEntries.flatMap((batch) => batch.lexemes)) {
           merged.set(entry.lemmaId, entry);
         }
-        setDailyLexemes(addDailyExamples(merged, [
+        const lexemes = addDailyExamples(merged, [
           ...(deck?.cloze ?? []),
           ...levelEntries.flatMap((batch) => batch.cloze),
-        ]));
+        ]);
+        for (const word of picks) {
+          if (lexemes.has(word.slug)) continue;
+          // The daily pool is itself a verified learner-facing source. Preserve
+          // its unified pick even when the independently generated practice
+          // shard lacks that lemma, using the metadata available on the row.
+          lexemes.set(word.slug, {
+            lemmaId: word.slug,
+            lemma: word.lemma,
+            lemmaPlain: word.lemma,
+            ipa: null,
+            gloss: word.gloss ?? word.lemma,
+            pos: null,
+            cefr: word.cefr ?? null,
+            heritage: null,
+            severity: null,
+            paradigm: { cases: {} },
+          });
+        }
+        // A genuinely empty daily pool has no unified pick set. In that case,
+        // deterministically use the selected level's curated practice cores
+        // rather than render an empty daily card.
+        const fallbackPool: DailyWord[] = Array.from(lexemes.values()).map((lexeme) => ({
+          lemma: lexeme.lemma,
+          slug: lexeme.lemmaId,
+          gloss: lexeme.gloss,
+          cefr: lexeme.cefr ?? undefined,
+        }));
+        const displayablePicks = picks.length > 0
+          ? picks
+          : pickDaily(fallbackPool, dateSeed(now), DAILY_PRACTICE_DECK_SIZE);
+        const snapshot: DailyPracticeDeckSnapshot = {
+          version: 1,
+          date: dateKey,
+          level: learnerLevel,
+          deckVersion: 'daily-pool',
+          createdAt: now.getTime(),
+          items: displayablePicks.map((word) => ({
+            lemmaId: word.slug,
+            origin: classifyDailyPracticeOrigin(word.slug, indexSource, state.cards, now),
+          })),
+        };
+
+        if (cancelled) return;
+        setDailyLexemes(lexemes);
+        setDailySnapshot(snapshot);
       } catch {
         if (!cancelled) setDailySnapshot(null);
       } finally {
