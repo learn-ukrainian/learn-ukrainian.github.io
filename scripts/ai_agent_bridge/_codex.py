@@ -167,6 +167,7 @@ def ask_codex(
                 "new_session": new_session,
                 "no_timeout": no_timeout,
                 "review": review,
+                "timeout_seconds": 1800 if no_timeout else 900,
                 "review_pr_lifecycle": review_pr_lifecycle,
             },
         )

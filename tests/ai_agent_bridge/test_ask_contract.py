@@ -119,3 +119,34 @@ def test_every_response_provenance_shape_has_required_fields(harness: str) -> No
         "harness": harness,
         "model_requested": "requested",
     }
+
+
+def test_native_ask_tool_contract_present_in_ask_mode_and_absent_otherwise() -> None:
+    """Native grok ask prompt includes NATIVE_ASK_TOOL_CONTRACT when not review-provisioned; absent on review-provisioned, reverted builders, and full drivers (#5893)."""
+    from ai_agent_bridge._ask_contract import NATIVE_ASK_TOOL_CONTRACT
+    from ai_agent_bridge._grok_build import _build_grok_build_prompt
+    from ai_agent_bridge._prompts import (
+        _build_full_execution_prompt,
+        build_agy_prompt,
+        build_claude_prompt,
+        build_codex_prompt,
+    )
+
+    dummy_msg = {"from": "user", "task_id": "test-1", "type": "query", "content": "Hello", "data": None}
+
+    # Present ONLY on native grok ask path without a provisioned review worktree
+    assert NATIVE_ASK_TOOL_CONTRACT in _build_grok_build_prompt(dummy_msg, review_worktree_provisioned=False)
+
+    # ABSENT on grok review-provisioned path
+    assert NATIVE_ASK_TOOL_CONTRACT not in _build_grok_build_prompt(
+        dummy_msg, review=True, review_worktree_provisioned=True
+    )
+
+    # ABSENT in the three reverted builders
+    assert NATIVE_ASK_TOOL_CONTRACT not in build_agy_prompt(dummy_msg)
+    assert NATIVE_ASK_TOOL_CONTRACT not in build_claude_prompt(dummy_msg)
+    assert NATIVE_ASK_TOOL_CONTRACT not in build_codex_prompt(dummy_msg)
+
+    # ABSENT in full driver prompt
+    full_driver_prompt = _build_full_execution_prompt(dummy_msg, delimiters=None)
+    assert NATIVE_ASK_TOOL_CONTRACT not in full_driver_prompt

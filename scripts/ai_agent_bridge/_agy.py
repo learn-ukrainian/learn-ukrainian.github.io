@@ -143,7 +143,12 @@ def ask_agy(
         launch_background_ask(
             msg_id,
             "agy",
-            {"new_session": new_session, "no_timeout": no_timeout, "review": review},
+            {
+                "new_session": new_session,
+                "no_timeout": no_timeout,
+                "review": review,
+                "timeout_seconds": 1800,
+            },
         )
         return msg_id
     if not stdout_only:

@@ -109,6 +109,7 @@ def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query"
                 "new_session": new_session,
                 "no_timeout": False,
                 "review": review,
+                "timeout_seconds": 900,
                 "review_pr_lifecycle": review_pr_lifecycle,
             },
         )

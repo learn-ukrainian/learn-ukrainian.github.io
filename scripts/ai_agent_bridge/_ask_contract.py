@@ -8,6 +8,14 @@ from typing import Any
 
 EFFORT_CHOICES = ("low", "medium", "high", "xhigh", "max")
 
+NATIVE_ASK_TOOL_CONTRACT = (
+    "shell commands are unavailable in this mode; answer from attached material and file reads."
+)
+
+# Documented bound for total automatic re-fires of a single ask across all hardening
+# mechanisms (retry-once watchdog + cancel-and-retell).
+MAX_TOTAL_ASK_RETRIES = 2
+
 
 def resolve_model_selection(
     *,
@@ -68,6 +76,7 @@ def response_provenance(
     effort_reason: str | None = None,
 ) -> tuple[str, str]:
     """Return data JSON and ``from_model`` for a reply from one ask lane."""
+    req_meta = request_metadata(message)
     metadata: dict[str, Any] = {
         "from_model": actual_model,
         "model_requested": requested_model(message, actual_model),
@@ -75,6 +84,10 @@ def response_provenance(
         "effort_applied": effort_applied,
         "harness": harness,
     }
+    if req_meta.get("auto_retried") or req_meta.get("auto-retried"):
+        metadata["auto_retried"] = True
+    if req_meta.get("cancel_retried") or req_meta.get("cancel-retried"):
+        metadata["cancel_retried"] = True
     if effort_reason:
         metadata["effort_reason"] = effort_reason
     return json.dumps(metadata, sort_keys=True), actual_model
