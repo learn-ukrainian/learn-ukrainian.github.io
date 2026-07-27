@@ -1,0 +1,487 @@
+# RB-2 — dispatch loop (T2 DRAFT, extraction from drive-epic SKILL steps 3/4/4a + the
+# infra driver's dispatch-brief checklist and settle discipline). Part of #5885.
+#
+# DRAFT STATUS: authored against today's substrate per the panel's draft-now ruling;
+# certification waits for T1.4/5.
+#
+# Anti-pattern guard (the #5860 r1 lessons, tightened across the #5915 r1-r3 sealed
+# reviews): every command is a real, currently runnable repo command whose OUTPUT
+# SHAPE was captured live (2026-07-27/28 infra session); every MECHANICAL step is
+# single-signal (transition derivable from its own predicate's vocabulary; multi-
+# signal branchings are split); where proof is impossible the trail FAILS CLOSED and
+# says so. Live-lookup tables (width, lane-routing) are procedures by design: their
+# steps' predicates prove the table's INPUTS were captured, and the SEAT records the
+# applied decision as a receipt line — an auditable write obligation, not a machine
+# derivation (stated per the r3 review).
+#
+# RETRY MODEL (r3/r4 findings): trailspec.v1 has no cross-step variable rebinding,
+# so a re-fire ends THIS invocation at `refired_new_invocation` after dispatching the
+# -retry worker. What the predicate PROVES is only that the retry worker is running;
+# binding a fresh RB-2 invocation to the -retry id is an ORCHESTRATION-LAYER
+# OBLIGATION declared here (the runner that starts trails must start one per live
+# dispatch id) — when honored, a second failure hits the -retry suffix gate FIRST
+# (before any cleanup) and stops with the table's exact code. Declared, not
+# machine-proven: a v1.1 invocation-binding form is the proposed fix.
+#
+# kind-wait note (spec v1.1 carry-over): trailspec.v1 has no `wait` kind — settle
+# waiting is a summon whose documentation-predicate covers arming ONE Monitor
+# settle-loop and idling on its event (a Monitor arm is a harness action with no repo
+# command to predicate on — encoding it as mechanical was the r3 finding). SCHEMA
+# NOTE for v1.1 (proposal, operator/advisor call — not built): per-transition
+# evidence predicates + an invocation-parameter rebinding form would let the retry
+# arc and multi-signal branchings collapse back into fewer steps.
+schema_version: trailspec.v1
+trail_id: rb2-dispatch-loop
+version: "0.7.0"
+title: RB2 Dispatch loop — brief, dispatch, settle, finalize
+seats:
+  - grok-daily
+  - glm-trial
+  - judgment
+stop_codes:
+  - STOP-precondition-failed
+  - STOP-concurrency-conflict
+  - STOP-unrecoverable-error
+  - STOP-manual-intervention
+  - STOP-unknown
+terminal_outcomes:
+  - handed_to_pr_lifecycle
+  - parked_no_capacity
+  - refired_new_invocation
+  - aborted
+steps:
+  - step_id: drain_slot_inbox
+    intent: >-
+      Mandatory inbox-drain substep (drive-epic 4a pattern): surface pending slot
+      deliveries before firing new work. Live output shape: "<agent> inbox:" then
+      "pending: N (oldest ...)". NOTE (live-verified in the #5915 r1 review): show is
+      not a pure read — it expires stale deliveries via an UPDATE; a read-only DB
+      fails loudly here, which is a precondition failure, not a skip.
+    command: .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} show {handoff_agent}
+    evidence_predicate:
+      command: .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} show {handoff_agent}
+      success_pattern: 'pending:\s+0'
+    transitions:
+      empty: disk_floor_check
+      pending_deliveries: drain_once
+      db_not_writable: STOP-precondition-failed
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: drain_once
+    intent: >-
+      Run the thread-coalesced inbox worker exactly once, then re-check.
+      Still-pending after one drain needs handling this trail cannot do mechanically.
+    command: .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} run {handoff_agent}
+    evidence_predicate:
+      command: .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} show {handoff_agent}
+      success_pattern: 'pending:\s+0'
+    transitions:
+      drained: disk_floor_check
+      still_pending: STOP-manual-intervention
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: disk_floor_check
+    intent: >-
+      The width table's dominant clause ("DISK WINS every conflict") checked alone:
+      free space on / must clear the floor for at least one dispatch worktree
+      (~0.5 GB each; floor 10G for estate headroom — live probe shape: a bare avail
+      field like "184G"). Below the floor no quota argument can widen; reaping
+      finished worktrees is the recovery.
+    command: df -h / | awk 'NR==2 {print $4}'
+    evidence_predicate:
+      command: df -h / | awk 'NR==2 {print $4}'
+      success_pattern: '^([1-9][0-9]|[0-9]{3,})[GT]i?$'
+    transitions:
+      floor_cleared: width_weigh
+      below_floor: parked_no_capacity
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: width_weigh
+    intent: >-
+      Width is a LIVE-LOOKUP table: the weighing of per-lane pace stage + reserve
+      against in-flight load is the table's procedure. This step's machine obligation
+      is input completeness — the ANDed predicate proves each input class (codexbar
+      pace rows, disk, worktree footprint) is present so the lookup never runs blind.
+      The SEAT then appends the applied decision to the same receipt as a line
+      "decision: capacity_ok|no_capacity — <one-line basis>" — an auditable write
+      obligation (r3 review: the decision must be recorded, and it is recorded BY THE
+      SEAT applying the table, not derived by this predicate).
+    command: sh -c 'R=batch_state/rb2-width-receipt.txt; codexbar usage --json > "$R" 2>&1; df -h / >> "$R"; du -sh .worktrees >> "$R"; cat "$R"'
+    evidence_predicate:
+      command: sh -c 'R=batch_state/rb2-width-receipt.txt; grep -q -e "provider" "$R" && grep -q -e "%" "$R" && grep -q -e ".worktrees" "$R" && echo all-inputs-present'
+      success_pattern: '^all-inputs-present$'
+    transitions:
+      capacity_ok: route_lane
+      no_capacity: parked_no_capacity
+      receipt_incomplete: STOP-precondition-failed
+    kind: table-lookup
+    table: width
+    blocked_on: null
+
+  - step_id: route_lane
+    intent: >-
+      Lane-routing is a LIVE-LOOKUP table applied to the served routing SSOT. The
+      step fetches the document to a receipt (offline fallback: the shared rules
+      file — same content); the predicate proves the receipt is the real assignment
+      document (live first heading: "Per-Task Model Assignment"). The resolved lane
+      is recorded in the brief the next step authors — the auditable resolution
+      artifact. check-model capability confirmation exists only for agy/kimi today
+      (live CLI --agent choices); other lanes rely on the routing doc + fallback
+      substitutions. No sanctioned lane for the family is a hard stop.
+    command: sh -c 'curl -s --max-time 3 "http://127.0.0.1:8765/api/rules?format=markdown" -o batch_state/rb2-rules-receipt.md || cp agents_extensions/shared/rules/model-assignment.md batch_state/rb2-rules-receipt.md'
+    evidence_predicate:
+      command: grep -c -e "Per-Task Model Assignment" -e "model-assignment" batch_state/rb2-rules-receipt.md
+      success_pattern: '^[1-9][0-9]*$'
+    transitions:
+      lane_resolved: author_brief
+      no_sanctioned_lane: STOP-precondition-failed
+      rules_unreadable: STOP-precondition-failed
+    kind: table-lookup
+    table: lane-routing
+    blocked_on: null
+
+  - step_id: author_brief
+    intent: >-
+      Judgment authors the brief AND the research-registry classification together —
+      the same cognitive act. Registry duty: pass dimensions explicitly derivable
+      from the issue text, omit the rest (pointer-free is legal and deliberate; never
+      invent; never infer from provider/agent name). The resolved lane from
+      route_lane is recorded here. Brief conventions: numbered steps, worktree-only,
+      #M-4 evidence preamble, tests + mutation checks, hard exclusions, no auto-merge
+      by worker, one-line finalize comment on the tracking issue. Step 0 lives here:
+      sibling search by ISSUE REFERENCE (gh pr list --state all --search "<issue-nr>"
+      — live shape: JSON array, [] clear) + issue timeline; residual-scope judgment
+      on any hit. No explicit acceptance criteria → failed precondition, never a
+      guessed brief.
+    command: null
+    evidence_predicate: null
+    transitions:
+      brief_written_and_classified: dispatch_worker
+      siblings_change_scope: STOP-manual-intervention
+      no_clear_spec: STOP-precondition-failed
+    kind: summon
+    blocked_on: null
+
+  - step_id: dispatch_worker
+    intent: >-
+      Fire the dispatch, teeing all output to the per-task log later steps triage.
+      This step's OWN signal is the task state file: present with status
+      spawning|running means dispatched. Absent task file routes to log triage — the
+      log, not this predicate, discriminates refusal from spawn error.
+    command: sh -c '.venv/bin/python scripts/delegate.py dispatch --agent {lane} --task-id {task_id} --prompt-file {brief_path} --worktree --mode danger {research_flags} 2>&1 | tee batch_state/rb2-dispatch-{task_id}.log'
+    evidence_predicate:
+      command: jq -r '.status // ""' batch_state/tasks/{task_id}.json
+      success_pattern: '^(spawning|running)$'
+    transitions:
+      dispatched: await_settle
+      no_task_file: triage_dispatch_log
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: triage_dispatch_log
+    intent: >-
+      Single-signal log triage: the teed dispatch log either contains a write-path
+      REFUSE or it does not. REFUSE present routes to the benign-refusal proof;
+      REFUSE absent with no task file is a spawn error.
+    command: grep -e "REFUSE" batch_state/rb2-dispatch-{task_id}.log
+    evidence_predicate:
+      command: grep -c -e "REFUSE" batch_state/rb2-dispatch-{task_id}.log
+      success_pattern: '^[0-9]+$'
+    transitions:
+      refuse_present: triage_refusal
+      refuse_absent_spawn_error: STOP-unrecoverable-error
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: triage_refusal
+    intent: >-
+      FAIL-CLOSED refusal semantics (no claim to prove an actual overlap — that
+      shape has never been live-captured): the ONLY refusal proven benign is the
+      disjointness-proof gap whose live-captured text is "No actual path overlap was
+      found". That exact phrase routes to judgment for an override decision; every
+      other refusal text is treated as a real concurrency conflict BY DESIGN.
+    command: grep -e "No actual path overlap was found" batch_state/rb2-dispatch-{task_id}.log
+    evidence_predicate:
+      command: grep -c -e "No actual path overlap was found" batch_state/rb2-dispatch-{task_id}.log
+      success_pattern: '^[0-9]+$'
+    transitions:
+      provably_benign: approve_override
+      not_provably_benign: STOP-concurrency-conflict
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: approve_override
+    intent: >-
+      Judgment reviews the refusal text and the undeclared writer it names, and
+      writes the override reason (who the writer is, why the write surfaces are
+      disjoint). A weak seat never self-approves an ownership override.
+    command: null
+    evidence_predicate: null
+    transitions:
+      override_approved: override_dispatch
+      override_denied: STOP-concurrency-conflict
+    kind: summon
+    blocked_on: null
+
+  - step_id: override_dispatch
+    intent: >-
+      Re-run the identical dispatch with the approved --allow-path-overlap reason.
+      Admitted shapes (live-captured): "would-refuse recorded (override); admitted
+      under refuse" or "admitted; paths disjoint". A second refusal is a hard stop.
+    command: sh -c '.venv/bin/python scripts/delegate.py dispatch --agent {lane} --task-id {task_id} --prompt-file {brief_path} --worktree --mode danger {research_flags} --allow-path-overlap "{overlap_reason}" 2>&1 | tee batch_state/rb2-dispatch-{task_id}-override.log'
+    evidence_predicate:
+      command: grep -c -e "admitted under refuse" -e "admitted; paths disjoint" batch_state/rb2-dispatch-{task_id}-override.log
+      success_pattern: '^[1-9]'
+    transitions:
+      dispatched: await_settle
+      refused_again: STOP-concurrency-conflict
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: await_settle
+    intent: >-
+      Settle wait (kind-wait header note): the seat arms ONE Monitor settle-loop
+      over the task status file — the file is truth (the active-list API can omit
+      live tasks); poll cadence 60-90s; emit exactly once when status leaves
+      {spawning, running, ""} — then idles on the settle event, whose payload is the
+      terminal status string the next step routes. Arming a Monitor is a harness
+      action with no repo command to predicate on, which is why this whole
+      arm-and-wait is ONE summon with a documentation-predicate (r3 finding: a
+      mechanical arm step had no derivable evidence). Never keyword-grep worker logs
+      as completion; never poll with scheduled wakeups. A watch that outlives its
+      Monitor (session end, watcher reaped) is re-armed, not forgotten.
+    command: null
+    evidence_predicate: null
+    transitions:
+      settle_event: finalize_settle
+      watcher_lost: await_settle
+    kind: summon
+    blocked_on: null
+
+  - step_id: finalize_settle
+    intent: >-
+      Route the terminal status through the settle-status table — every row mapped
+      with the table's own dispositions: done and both timeout flavors go to the
+      success-path deliverable check (an open PR satisfies the table's "gh pr list"
+      check before any worktree digging); the attention states needs_finalize and
+      no_deliverable go to the ATTENTION-path deliverable check whose no-PR branch is
+      finalize-BY-HAND (the table's words — never an automatic retry; #5855-class
+      false negatives are disproven by checking the branch first); failed/crashed go
+      to failure-evidence reading then cleanup then the bounded re-fire;
+      rate_limited reroutes per fallback substitutions (the seat NOTES the substitution in the brief/receipt — a write obligation); cancelled/dry_run are
+      terminal-not-success; a spurious settle with status still spawning/running
+      re-enters the wait; anything else is unknown.
+    command: jq -r '.status // ""' batch_state/tasks/{task_id}.json
+    evidence_predicate:
+      command: jq -r '.status // ""' batch_state/tasks/{task_id}.json
+      success_pattern: '^(done|failed|timeout|silence-timeout|rate_limited|cancelled|crashed|dry_run|needs_finalize|no_deliverable|spawning|running)$'
+    transitions:
+      done: verify_deliverable_success
+      timeout: verify_deliverable_timeout
+      silence_timeout: verify_deliverable_timeout
+      needs_finalize: verify_deliverable_attention
+      no_deliverable: verify_deliverable_attention
+      failed: retry_suffix_gate
+      crashed: retry_suffix_gate
+      rate_limited: route_lane
+      cancelled: aborted
+      dry_run: aborted
+      still_spawning_or_running: await_settle
+      unknown_status: STOP-unknown
+    kind: table-lookup
+    table: settle-status
+    blocked_on: null
+
+  - step_id: verify_deliverable_success
+    intent: >-
+      Success/timeout path: an open PR for the dispatch branch is the deliverable
+      receipt (live shape: JSON array with a number field; [] means none). Reading
+      the produced CONTENT before the review gate is RB-3's entry. No PR routes to
+      the commits-ahead check (silent-exit class), which may end in the bounded
+      re-fire.
+    command: gh pr list --state open --head {lane}/{task_id} --json number,title --limit 3
+    evidence_predicate:
+      command: gh pr list --state open --head {lane}/{task_id} --json number --limit 3
+      success_pattern: '"number"'
+    transitions:
+      pr_open: handed_to_pr_lifecycle
+      no_pr_for_branch: commits_ahead_check
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: verify_deliverable_timeout
+    intent: >-
+      Timeout path (timeout / silence-timeout): the same PR receipt check. An open
+      PR is finalize-BY-HAND (a died-at-deadline worker's deliverable needs eyes).
+      No PR routes into the commits-ahead/dirty-tree chain, whose clean-and-empty
+      outcome reaches the bounded failed/crashed retry — the table's disposition for
+      a deliverable-less timeout ("treat as the failed|crashed rows").
+    command: gh pr list --state open --head {lane}/{task_id} --json number,title --limit 3
+    evidence_predicate:
+      command: gh pr list --state open --head {lane}/{task_id} --json number --limit 3
+      success_pattern: '"number"'
+    transitions:
+      pr_open: STOP-manual-intervention
+      no_pr_for_branch: commits_ahead_check
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: verify_deliverable_attention
+    intent: >-
+      Attention path (timeout flavors + needs_finalize / no_deliverable): the same
+      PR check, but the table's disposition here is finalize BY HAND — an OPEN PR
+      also routes to judgment (a died worker's deliverable needs eyes before RB-3's
+      babysit could auto-merge it), and a missing PR runs the commit-verification
+      PROBE — recorded evidence for the human, never a route into the automatic
+      retry chain (three live #5855-class false negatives this session all had real
+      deliverables the status missed).
+    command: gh pr list --state open --head {lane}/{task_id} --json number,title --limit 3
+    evidence_predicate:
+      command: gh pr list --state open --head {lane}/{task_id} --json number --limit 3
+      success_pattern: '"number"'
+    transitions:
+      pr_open: STOP-manual-intervention
+      no_pr_for_branch: attention_absence_probe
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: attention_absence_probe
+    intent: >-
+      The table's commit-verification for attention states, with the table's
+      disposition kept intact: run the commits-beyond-base probe (base bound inline
+      from worktree_base_sha) and RECORD its result into the attention receipt — then
+      finalize BY HAND regardless of the count (r5 finding: the attention path must
+      never reach the automatic retry chain; the probe informs the human, it does not
+      route). The single transition to the stop is deliberate: verification is an
+      evidence obligation here, not a branch point.
+    command: sh -c 'B=$(jq -r ".worktree_base_sha" batch_state/tasks/{task_id}.json); git -C .worktrees/dispatch/{lane}/{task_id} rev-list --count "$B"..HEAD | tee batch_state/rb2-attention-{task_id}.txt'
+    evidence_predicate:
+      command: test -s batch_state/rb2-attention-{task_id}.txt && echo probe-recorded
+      success_pattern: '^probe-recorded$'
+    transitions:
+      probe_recorded: STOP-manual-intervention
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: commits_ahead_check
+    intent: >-
+      Single-signal: count commits the dispatch worktree carries beyond its recorded
+      base, read from the task file's worktree_base_sha field (live-verified key) —
+      no unbound placeholders. Non-zero means finished-but-unpushed work — judgment
+      finalize, never a blind refire over real work. Zero falls through to the
+      dirty-tree check.
+    command: sh -c 'B=$(jq -r ".worktree_base_sha" batch_state/tasks/{task_id}.json); git -C .worktrees/dispatch/{lane}/{task_id} rev-list --count "$B"..HEAD'
+    evidence_predicate:
+      command: sh -c 'B=$(jq -r ".worktree_base_sha" batch_state/tasks/{task_id}.json); git -C .worktrees/dispatch/{lane}/{task_id} rev-list --count "$B"..HEAD'
+      success_pattern: '^[0-9]+$'
+    transitions:
+      commits_present: STOP-manual-intervention
+      no_commits: dirty_tree_check
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: dirty_tree_check
+    intent: >-
+      Single-signal: count dirty entries in the dispatch worktree. Non-zero means
+      uncommitted work — judgment finalize (never delete uncommitted work). Zero
+      means provably no deliverable anywhere → the failure-evidence read precedes
+      the bounded re-fire.
+    command: sh -c 'git -C .worktrees/dispatch/{lane}/{task_id} status --porcelain | wc -l | tr -d " "'
+    evidence_predicate:
+      command: sh -c 'git -C .worktrees/dispatch/{lane}/{task_id} status --porcelain | wc -l | tr -d " "'
+      success_pattern: '^[0-9]+$'
+    transitions:
+      dirty_entries_present: STOP-manual-intervention
+      clean_and_empty: read_failure_evidence
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: retry_suffix_gate
+    intent: >-
+      FIRST-MATCH gate for failed/crashed (r4 finding: the stop must precede any
+      cleanup): a task id already carrying -retry has consumed its single re-fire —
+      stop immediately with the table's exact code, PRESERVING the failed retry's
+      worktree and logs for forensics. Only a first-attempt id proceeds to
+      failure-evidence reading and cleanup.
+    command: sh -c 'case "{task_id}" in *-retry) echo already-retried ;; *) echo first-attempt ;; esac'
+    evidence_predicate:
+      command: sh -c 'case "{task_id}" in *-retry) echo already-retried ;; *) echo first-attempt ;; esac'
+      success_pattern: '^(already-retried|first-attempt)$'
+    transitions:
+      first_attempt: read_failure_evidence
+      already_retried: STOP-unrecoverable-error
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: read_failure_evidence
+    intent: >-
+      The settle-status row's action verbatim: read stderr_excerpt AND the logs.
+      Both the task file's stderr_excerpt field (live-verified key) and the teed
+      dispatch log are concatenated into the failure receipt, preserving the cause
+      for the -retry brief and audit. An empty excerpt is still evidence.
+    command: sh -c '{ jq -r ".stderr_excerpt // \"(no stderr recorded)\"" batch_state/tasks/{task_id}.json; echo "--- dispatch log tail ---"; tail -40 batch_state/rb2-dispatch-{task_id}.log 2>/dev/null || echo "(no dispatch log)"; } | tee batch_state/rb2-failure-{task_id}.txt'
+    evidence_predicate:
+      command: test -s batch_state/rb2-failure-{task_id}.txt && echo evidence-recorded
+      success_pattern: '^evidence-recorded$'
+    transitions:
+      evidence_recorded: cleanup_failed_worktree
+      task_file_unreadable: STOP-unrecoverable-error
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: cleanup_failed_worktree
+    intent: >-
+      The settle-status row's action verbatim, ENFORCED (r5 finding: no swallowed
+      branch-delete): remove the worktree, then delete the never-merged branch with
+      -D — failures are not suppressed, and the predicate proves BOTH absences
+      (worktree gone from the registry AND no branch ref remains). A harness whose
+      write guard blocks manual branch -D fails this step honestly into
+      STOP-manual-intervention — a dangling branch is never accepted as cleaned.
+    command: sh -c 'git worktree remove --force .worktrees/dispatch/{lane}/{task_id} && git branch -D {lane}/{task_id}'
+    evidence_predicate:
+      command: sh -c '(git worktree list | grep -q -e "dispatch/{lane}/{task_id}") && exit 1; (git branch --list "{lane}/{task_id}" | grep -q .) && exit 1; echo fully-cleaned'
+      success_pattern: '^fully-cleaned$'
+    transitions:
+      cleaned: retry_gate
+      removal_failed: STOP-manual-intervention
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: retry_gate
+    intent: >-
+      Defense-in-depth suffix re-check on the re-fire path (the authoritative
+      first-match gate is retry_suffix_gate, which runs BEFORE any cleanup): a task
+      id already carrying -retry stops as STOP-unrecoverable-error (the table's
+      exact code). Otherwise the retry id <task_id>-retry is recorded to a receipt
+      for the re-fire step.
+    command: sh -c 'case "{task_id}" in *-retry) echo already-retried ;; *) echo "{task_id}-retry" > batch_state/rb2-retry-{task_id}.txt; cat batch_state/rb2-retry-{task_id}.txt ;; esac'
+    evidence_predicate:
+      command: sh -c 'case "{task_id}" in *-retry) echo already-retried ;; *) cat batch_state/rb2-retry-{task_id}.txt ;; esac'
+      success_pattern: '^(already-retried|.+-retry)$'
+    transitions:
+      retry_id_recorded: dispatch_retry
+      already_retried: STOP-unrecoverable-error
+    kind: mechanical
+    blocked_on: null
+
+  - step_id: dispatch_retry
+    intent: >-
+      Fire ONCE under the recorded -retry id (read from the receipt), same brief and
+      lane, teeing to the retry log — then this invocation ENDS at the terminal
+      refired_new_invocation. trailspec.v1 cannot rebind {task_id} mid-trail (r3
+      finding), so the -retry task is owned by a NEW invocation of this same trail
+      whose {task_id} IS the -retry id: its settle, verification, and retry gate all
+      address the right task, and its retry_gate stops on the -retry suffix —
+      bounded without rebinding.
+    command: sh -c 'RID=$(cat batch_state/rb2-retry-{task_id}.txt); .venv/bin/python scripts/delegate.py dispatch --agent {lane} --task-id "$RID" --prompt-file {brief_path} --worktree --mode danger {research_flags} 2>&1 | tee "batch_state/rb2-dispatch-$RID.log"'
+    evidence_predicate:
+      command: sh -c 'RID=$(cat batch_state/rb2-retry-{task_id}.txt); jq -r ".status // \"\"" "batch_state/tasks/$RID.json"'
+      success_pattern: '^(spawning|running)$'
+    transitions:
+      retry_dispatched: refired_new_invocation
+      retry_spawn_failed: STOP-unrecoverable-error
+    kind: mechanical
+    blocked_on: null
