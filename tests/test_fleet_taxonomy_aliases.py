@@ -318,3 +318,75 @@ def test_inventory_handoff_candidates_survive_missing_resolver(monkeypatch):
     # Legacy-map answer ('harness'); the resolver would give 'infra' — so a hoisted
     # module-level import makes this assertion fail, keeping the mutation detectable.
     assert candidates[0] == ".claude/harness-epic/CLAUDE-DRIVER-HANDOFF.md"
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+@pytest.mark.parametrize(
+    ("session_epic", "expected_mode", "expected_token"),
+    [
+        ("hramatka", "valid", "ASSIGNED EPIC: hramatka.epic"),
+        ("invalid_selector_xyz", "unknown", "ERROR: unknown SESSION_EPIC 'invalid_selector_xyz'"),
+        ("", "empty", "NO EPIC ASSIGNED (launcher had no --epic flag)"),
+    ],
+)
+def test_session_setup_hook_epic_validation_contract(
+    tmp_path: Path,
+    session_epic: str,
+    expected_mode: str,
+    expected_token: str,
+) -> None:
+    """Verify SessionStart hook validates SESSION_EPIC against launcher_selector_resolve."""
+    import json
+
+    hook_path = _REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "session-setup.sh"
+    project_dir = tmp_path / "project"
+    project_dir.mkdir()
+
+    venv_bin = project_dir / ".venv" / "bin"
+    venv_bin.mkdir(parents=True)
+    (venv_bin / "python").write_text("#!/bin/sh\necho 'Python 3.12.8'\n", encoding="utf-8")
+    (venv_bin / "python").chmod(0o755)
+
+    scripts_lib = project_dir / "scripts" / "lib"
+    scripts_lib.mkdir(parents=True)
+    shutil.copy2(_HANDOFF_IDENTITY_SH, scripts_lib / "handoff_identity.sh")
+
+    env = {
+        "CLAUDE_PROJECT_DIR": str(project_dir),
+        "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS": "32000",
+        "HOME": str(tmp_path / "home"),
+        "PATH": f"{venv_bin}:{os.environ.get('PATH', '')}",
+        "SESSION_EPIC": session_epic,
+        "CLAUDE_PROFILE_RESOLVER_SH": str(_REPO_ROOT / "scripts/lib/profile_resolver.sh"),
+        "CLAUDE_PROFILE_RESOLVER_PY": str(_REPO_ROOT / "scripts/lib/context_profiles.py"),
+        "CLAUDE_PROFILE_RESOLVER_PYTHON": str(_REPO_ROOT / ".venv/bin/python"),
+        "CLAUDE_SESSION_RECORD_SCRIPT": str(_REPO_ROOT / "scripts/lib/session_record.py"),
+        "CLAUDE_SESSION_RECORD_PYTHON": str(_REPO_ROOT / ".venv/bin/python"),
+        "LEARN_UKRAINIAN_REQUESTED_PROFILE_ID": "native_claude",
+        "CODEX_CANONICAL_REPO_ROOT": str(project_dir),
+    }
+
+    result = subprocess.run(
+        ["bash", str(hook_path)],
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, f"hook failed: {result.stderr}\n{result.stdout}"
+    data = json.loads(result.stdout)
+    context = data.get("hookSpecificOutput", {}).get("additionalContext", "")
+
+    assert expected_token in context
+
+    if expected_mode == "valid":
+        assert ".claude/hramatka-epic/CLAUDE-DRIVER-HANDOFF.md" in context
+        assert "ERROR: unknown SESSION_EPIC" not in context
+    elif expected_mode == "unknown":
+        assert "Valid lane selectors:" in context
+        assert "infra | harness | infra.fleet-comms" in context
+        assert "ASSIGNED EPIC: invalid_selector_xyz.epic" not in context
+        assert ".claude/invalid_selector_xyz-epic" not in context
+    elif expected_mode == "empty":
+        assert "ERROR: unknown SESSION_EPIC" not in context
+        assert "ASSIGNED EPIC:" not in context
