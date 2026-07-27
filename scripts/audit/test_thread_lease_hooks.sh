@@ -4,6 +4,15 @@ set -euo pipefail
 unset GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_COMMON_DIR GIT_DIR GIT_INDEX_FILE
 unset GIT_OBJECT_DIRECTORY GIT_PREFIX GIT_WORK_TREE
 
+# The scenarios run real hooks with CLAUDE_PROJECT_DIR pointing at THIS
+# checkout. session-setup's protected-branch canary would then --heal a
+# detached/off-main checkout (git checkout main + ff-only pull) UNDER the
+# running suite — swapping the tree mid-run (CI shard-2 rc=127, #5908).
+# Lease STATE is already isolated per scenario; this isolates the one
+# git-mutating side effect too. Inherited by every hook child (env -u lists
+# never strip it).
+export LEARN_UK_PRIMARY_HEAL_DISABLE=1
+
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SELF="${BASH_SOURCE[0]}"
 PYTHON_BIN="$REPO_ROOT/.venv/bin/python"
