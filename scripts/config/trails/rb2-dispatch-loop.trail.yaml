@@ -14,11 +14,14 @@
 # applied decision as a receipt line — an auditable write obligation, not a machine
 # derivation (stated per the r3 review).
 #
-# RETRY MODEL (r3 finding): trailspec.v1 has no cross-step variable rebinding, so a
-# re-fire is a NEW INVOCATION of this same trail with task_id=<old>-retry. This
-# invocation ends at the terminal `refired_new_invocation`; the -retry invocation's
-# own retry gate hits the -retry suffix on a second failure and stops with the
-# settle-status table's exact code (STOP-unrecoverable-error). Bounded, no rebinding.
+# RETRY MODEL (r3/r4 findings): trailspec.v1 has no cross-step variable rebinding,
+# so a re-fire ends THIS invocation at `refired_new_invocation` after dispatching the
+# -retry worker. What the predicate PROVES is only that the retry worker is running;
+# binding a fresh RB-2 invocation to the -retry id is an ORCHESTRATION-LAYER
+# OBLIGATION declared here (the runner that starts trails must start one per live
+# dispatch id) — when honored, a second failure hits the -retry suffix gate FIRST
+# (before any cleanup) and stops with the table's exact code. Declared, not
+# machine-proven: a v1.1 invocation-binding form is the proposed fix.
 #
 # kind-wait note (spec v1.1 carry-over): trailspec.v1 has no `wait` kind — settle
 # waiting is a summon whose documentation-predicate covers arming ONE Monitor
@@ -29,7 +32,7 @@
 # arc and multi-signal branchings collapse back into fewer steps.
 schema_version: trailspec.v1
 trail_id: rb2-dispatch-loop
-version: "0.4.0"
+version: "0.5.0"
 title: RB2 Dispatch loop — brief, dispatch, settle, finalize
 seats:
   - grok-daily
@@ -268,7 +271,7 @@ steps:
       finalize-BY-HAND (the table's words — never an automatic retry; #5855-class
       false negatives are disproven by checking the branch first); failed/crashed go
       to failure-evidence reading then cleanup then the bounded re-fire;
-      rate_limited reroutes per fallback substitutions; cancelled/dry_run are
+      rate_limited reroutes per fallback substitutions (the seat NOTES the substitution in the brief/receipt — a write obligation); cancelled/dry_run are
       terminal-not-success; a spurious settle with status still spawning/running
       re-enters the wait; anything else is unknown.
     command: jq -r '.status // ""' batch_state/tasks/{task_id}.json
@@ -277,12 +280,12 @@ steps:
       success_pattern: '^(done|failed|timeout|silence-timeout|rate_limited|cancelled|crashed|dry_run|needs_finalize|no_deliverable|spawning|running)$'
     transitions:
       done: verify_deliverable_success
-      timeout: verify_deliverable_success
-      silence_timeout: verify_deliverable_success
+      timeout: verify_deliverable_attention
+      silence_timeout: verify_deliverable_attention
       needs_finalize: verify_deliverable_attention
       no_deliverable: verify_deliverable_attention
-      failed: read_failure_evidence
-      crashed: read_failure_evidence
+      failed: retry_suffix_gate
+      crashed: retry_suffix_gate
       rate_limited: route_lane
       cancelled: aborted
       dry_run: aborted
@@ -311,29 +314,32 @@ steps:
 
   - step_id: verify_deliverable_attention
     intent: >-
-      Attention path (needs_finalize / no_deliverable): the same PR check, but the
-      table's disposition for these states is finalize BY HAND — a missing PR here
-      routes to judgment, never to an automatic retry (three live #5855-class false
-      negatives this session all had real, pushed deliverables the status missed).
+      Attention path (timeout flavors + needs_finalize / no_deliverable): the same
+      PR check, but the table's disposition here is finalize BY HAND — an OPEN PR
+      also routes to judgment (a died worker's deliverable needs eyes before RB-3's
+      babysit could auto-merge it), and a missing PR runs the commit-verification
+      chain before absence is believed (three live #5855-class false negatives this
+      session all had real deliverables the status missed).
     command: gh pr list --state open --head {lane}/{task_id} --json number,title --limit 3
     evidence_predicate:
       command: gh pr list --state open --head {lane}/{task_id} --json number --limit 3
       success_pattern: '"number"'
     transitions:
-      pr_open: handed_to_pr_lifecycle
-      no_pr_for_branch: STOP-manual-intervention
+      pr_open: STOP-manual-intervention
+      no_pr_for_branch: commits_ahead_check
     kind: mechanical
     blocked_on: null
 
   - step_id: commits_ahead_check
     intent: >-
       Single-signal: count commits the dispatch worktree carries beyond its recorded
-      base (worktree_base_sha in the task file). Non-zero means finished-but-unpushed
-      work — judgment finalize, never a blind refire over real work. Zero falls
-      through to the dirty-tree check.
-    command: git -C .worktrees/dispatch/{lane}/{task_id} rev-list --count {base_sha}..HEAD
+      base, read from the task file's worktree_base_sha field (live-verified key) —
+      no unbound placeholders. Non-zero means finished-but-unpushed work — judgment
+      finalize, never a blind refire over real work. Zero falls through to the
+      dirty-tree check.
+    command: sh -c 'B=$(jq -r ".worktree_base_sha" batch_state/tasks/{task_id}.json); git -C .worktrees/dispatch/{lane}/{task_id} rev-list --count "$B"..HEAD'
     evidence_predicate:
-      command: git -C .worktrees/dispatch/{lane}/{task_id} rev-list --count {base_sha}..HEAD
+      command: sh -c 'B=$(jq -r ".worktree_base_sha" batch_state/tasks/{task_id}.json); git -C .worktrees/dispatch/{lane}/{task_id} rev-list --count "$B"..HEAD'
       success_pattern: '^[0-9]+$'
     transitions:
       commits_present: STOP-manual-intervention
@@ -357,14 +363,30 @@ steps:
     kind: mechanical
     blocked_on: null
 
+  - step_id: retry_suffix_gate
+    intent: >-
+      FIRST-MATCH gate for failed/crashed (r4 finding: the stop must precede any
+      cleanup): a task id already carrying -retry has consumed its single re-fire —
+      stop immediately with the table's exact code, PRESERVING the failed retry's
+      worktree and logs for forensics. Only a first-attempt id proceeds to
+      failure-evidence reading and cleanup.
+    command: sh -c 'case "{task_id}" in *-retry) echo already-retried ;; *) echo first-attempt ;; esac'
+    evidence_predicate:
+      command: sh -c 'case "{task_id}" in *-retry) echo already-retried ;; *) echo first-attempt ;; esac'
+      success_pattern: '^(already-retried|first-attempt)$'
+    transitions:
+      first_attempt: read_failure_evidence
+      already_retried: STOP-unrecoverable-error
+    kind: mechanical
+    blocked_on: null
+
   - step_id: read_failure_evidence
     intent: >-
-      The settle-status failed/crashed row's first action: read the recorded failure
-      evidence. stderr_excerpt is a real task-file field (live-verified key list);
-      extracting it into the retry receipt preserves the cause for the -retry
-      invocation's brief and for later audit. An empty excerpt is still evidence
-      (recorded as such), so both branches proceed to cleanup.
-    command: sh -c 'jq -r ".stderr_excerpt // \"(no stderr recorded)\"" batch_state/tasks/{task_id}.json | tee batch_state/rb2-failure-{task_id}.txt'
+      The settle-status row's action verbatim: read stderr_excerpt AND the logs.
+      Both the task file's stderr_excerpt field (live-verified key) and the teed
+      dispatch log are concatenated into the failure receipt, preserving the cause
+      for the -retry brief and audit. An empty excerpt is still evidence.
+    command: sh -c '{ jq -r ".stderr_excerpt // \"(no stderr recorded)\"" batch_state/tasks/{task_id}.json; echo "--- dispatch log tail ---"; tail -40 batch_state/rb2-dispatch-{task_id}.log 2>/dev/null || echo "(no dispatch log)"; } | tee batch_state/rb2-failure-{task_id}.txt'
     evidence_predicate:
       command: test -s batch_state/rb2-failure-{task_id}.txt && echo evidence-recorded
       success_pattern: '^evidence-recorded$'
@@ -376,12 +398,13 @@ steps:
 
   - step_id: cleanup_failed_worktree
     intent: >-
-      The settle-status failed/crashed row's second action: remove the failed
-      attempt's worktree before any re-fire (the dirty/commits checks upstream
-      guarantee nothing of value is inside on this path; branches without upstream
-      auto-prune on pull). The predicate proves the worktree is gone from the
-      registry.
-    command: git worktree remove --force .worktrees/dispatch/{lane}/{task_id}
+      The settle-status row's action verbatim: remove worktree AND branch (RB-3's
+      cleanup precedent chains both). The failed attempt's branch was never merged,
+      so plain -d refuses and -D is required; harnesses whose write guard blocks a
+      manual branch -D route the branch half through the dispatcher's own reap — a
+      certification-time question recorded here, not papered over. The predicate
+      proves the worktree is gone from the registry.
+    command: sh -c 'git worktree remove --force .worktrees/dispatch/{lane}/{task_id} && (git branch -D {lane}/{task_id} 2>/dev/null || echo "branch reap deferred to dispatcher (write guard)")'
     evidence_predicate:
       command: sh -c 'git worktree list | grep -c -e "dispatch/{lane}/{task_id}" || true'
       success_pattern: '^0$'
@@ -393,11 +416,11 @@ steps:
 
   - step_id: retry_gate
     intent: >-
-      One automatic re-fire, never a third — with the settle-status table's exact
-      code: a task id already carrying -retry has consumed its re-fire and stops as
-      STOP-unrecoverable-error (the table's row for a failed -retry attempt).
-      Otherwise the retry id <task_id>-retry is recorded to a receipt for the
-      re-fire step.
+      Defense-in-depth suffix re-check on the re-fire path (the authoritative
+      first-match gate is retry_suffix_gate, which runs BEFORE any cleanup): a task
+      id already carrying -retry stops as STOP-unrecoverable-error (the table's
+      exact code). Otherwise the retry id <task_id>-retry is recorded to a receipt
+      for the re-fire step.
     command: sh -c 'case "{task_id}" in *-retry) echo already-retried ;; *) echo "{task_id}-retry" > batch_state/rb2-retry-{task_id}.txt; cat batch_state/rb2-retry-{task_id}.txt ;; esac'
     evidence_predicate:
       command: sh -c 'case "{task_id}" in *-retry) echo already-retried ;; *) cat batch_state/rb2-retry-{task_id}.txt ;; esac'
