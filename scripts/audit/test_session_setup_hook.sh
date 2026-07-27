@@ -103,6 +103,7 @@ run_hook() {
     CLAUDE_PROFILE_RESOLVER_SH="$REPO_ROOT/scripts/lib/profile_resolver.sh" \
     CLAUDE_PROFILE_RESOLVER_PY="$REPO_ROOT/scripts/lib/context_profiles.py" \
     CLAUDE_PROFILE_RESOLVER_PYTHON="$REPO_ROOT/.venv/bin/python" \
+    CLAUDE_HANDOFF_IDENTITY_SH="$REPO_ROOT/scripts/lib/handoff_identity.sh" \
     CLAUDE_SESSION_RECORD_SCRIPT="$REPO_ROOT/scripts/lib/session_record.py" \
     CLAUDE_SESSION_RECORD_PYTHON="$REPO_ROOT/.venv/bin/python" \
     SESSION_BOUNDED_RUNNER="$REPO_ROOT/scripts/agent_runtime/bounded_command.py" \
@@ -275,10 +276,20 @@ assert_not_contains "$output" ".claude/atlas-epic/CODEX-DRIVER-HANDOFF.md" "Code
 # 2d. A brand-new Codex epic initializes the shared lane handoff path rather
 # than creating a provider-only fork that Claude cannot discover.
 setup_fixture "$fixture_root"
-output="$(run_hook "$fixture_root" 0 codex-new-lane "" "" native_codex "" "" new-lane)"
-assert_contains "$output" ".claude/new-lane-epic/CLAUDE-DRIVER-HANDOFF.md" "Codex new epic fallback"
-assert_not_contains "$output" ".claude/new-lane-epic/CODEX-DRIVER-HANDOFF.md" "Codex new epic fallback"
+output="$(run_hook "$fixture_root" 0 codex-devops "" "" native_codex "" "" devops)"
+assert_contains "$output" ".claude/devops-epic/CLAUDE-DRIVER-HANDOFF.md" "Codex new epic fallback"
+assert_not_contains "$output" ".claude/devops-epic/CODEX-DRIVER-HANDOFF.md" "Codex new epic fallback"
 assert_contains "$output" "No driver handoff exists yet" "Codex new epic fallback"
+
+# 2e. An unknown SESSION_EPIC fails closed: epic binding is stopped and a
+# fail-closed banner listing valid selectors is surfaced.
+setup_fixture "$fixture_root"
+output="$(run_hook "$fixture_root" 0 claude "" "" native_claude "" "" invalid-epic-xyz)"
+assert_contains "$output" "ERROR: unknown SESSION_EPIC 'invalid-epic-xyz' — epic binding STOPPED." "unknown SESSION_EPIC"
+assert_contains "$output" "Valid lane selectors:" "unknown SESSION_EPIC"
+assert_contains "$output" "infra | harness | infra.fleet-comms" "unknown SESSION_EPIC"
+assert_not_contains "$output" "ASSIGNED EPIC: invalid-epic-xyz.epic" "unknown SESSION_EPIC"
+assert_not_contains "$output" ".claude/invalid-epic-xyz-epic" "unknown SESSION_EPIC"
 
 # 3. Marker path is used when legacy router is explicitly enabled.
 setup_fixture "$fixture_root"

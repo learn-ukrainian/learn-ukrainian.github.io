@@ -521,10 +521,25 @@ Do not dump or rewrite docs/session-state/current.md. For thread rollover, run:
 EOF
 }
 
+# Validate SESSION_EPIC if set against fleet taxonomy selectors.
+HANDOFF_IDENTITY_SH="${CLAUDE_HANDOFF_IDENTITY_SH:-$PROJECT_DIR/scripts/lib/handoff_identity.sh}"
+if [ -f "$HANDOFF_IDENTITY_SH" ]; then
+  # shellcheck disable=SC1090
+  source "$HANDOFF_IDENTITY_SH"
+fi
+
+SESSION_EPIC_VALID=1
+if [ -n "${SESSION_EPIC:-}" ]; then
+  if declare -f launcher_selector_resolve >/dev/null 2>&1 \
+     && ! launcher_selector_resolve "$SESSION_EPIC" >/dev/null 2>&1; then
+    SESSION_EPIC_VALID=0
+  fi
+fi
+
 # Optional task-family filter from launcher epic (#5398). SESSION_EPIC is the
 # epic name (hramatka, atlas, harness); task_family on packets usually matches.
 TASK_FAMILY_ARGS=()
-if [ -n "${SESSION_EPIC:-}" ]; then
+if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ]; then
   case "${SESSION_EPIC}" in
     harness|infra) : ;; # do not over-filter infra packets
     *) TASK_FAMILY_ARGS=(--task-family "$SESSION_EPIC") ;;
@@ -652,7 +667,7 @@ fi
 
 # Epic assignment banner
 EPIC_BANNER=""
-if [ -n "${SESSION_EPIC:-}" ]; then
+if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ]; then
   EPIC_HANDOFF_PATH=".claude/${SESSION_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md"
   case "$HANDOFF_AGENT" in
     codex|codex-*)
@@ -673,6 +688,19 @@ is the lane SSOT): $EPIC_HANDOFF_PATH"
 (No driver handoff exists yet for this epic — create it at first rollover.)"
   fi
   unset EPIC_HANDOFF_PATH
+elif [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "0" ]; then
+  VALID_SELECTORS_HELP=""
+  if declare -f launcher_selector_help >/dev/null 2>&1; then
+    VALID_SELECTORS_HELP="$(launcher_selector_help)"
+  fi
+  EPIC_BANNER="ERROR: unknown SESSION_EPIC '${SESSION_EPIC}' — epic binding STOPPED.
+${VALID_SELECTORS_HELP:+$VALID_SELECTORS_HELP
+}NO EPIC ASSIGNED (unknown SESSION_EPIC fell back to unassigned mode).
+Do NOT default to 'main orchestrator'. Resolve your lane in this order:
+1. The user's first message names the epic → that binds.
+2. .agent/lane-assignments.md maps this agent type to exactly ONE epic → that binds.
+3. Otherwise ASK THE USER one question ('which epic is this session?') BEFORE
+   claiming any lane, reading any thread handoff as your own, or touching queues."
 else
   EPIC_BANNER="NO EPIC ASSIGNED (launcher had no --epic flag).
 Do NOT default to 'main orchestrator'. Resolve your lane in this order:
@@ -688,7 +716,7 @@ fi
 CODEX_COLD_START_BOARD=""
 case "$HANDOFF_AGENT" in
   codex|codex-*)
-    if [ -n "${SESSION_EPIC:-}" ]; then
+    if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ]; then
       CODEX_COLD_START_PATH="$PROJECT_DIR/.claude/${SESSION_EPIC}-epic/CODEX-COLD-START.md"
       if [ -f "$CODEX_COLD_START_PATH" ]; then
         CODEX_COLD_START_BOARD=$(<"$CODEX_COLD_START_PATH")
