@@ -171,3 +171,22 @@ def test_inbox_watcher_tick_invokes_ask_watchdog(isolate_db: Path, tmp_path: Pat
         watchdog_mock.assert_called_once()
     finally:
         patch.stopall()
+
+
+def test_inbox_watcher_watchdog_failure_warns_and_continues(isolate_db: Path, tmp_path: Path, capsys: pytest.CaptureFixture):
+    """A raising ask watchdog emits a stderr warning and does not crash the watcher loop (#5893)."""
+    watchdog_mock = patch("ai_agent_bridge._ask_lifecycle.run_ask_watchdog", side_effect=RuntimeError("watchdog exploded")).start()
+    try:
+        cursor = _inbox_watch.run_watcher(
+            "grok",
+            db_path=isolate_db,
+            lock_dir=tmp_path / "locks",
+            output=io.StringIO(),
+            once=True,
+        )
+        assert cursor == 0
+        watchdog_mock.assert_called_once()
+        stderr = capsys.readouterr().err
+        assert "⚠️  inbox watcher: ask watchdog failed: RuntimeError: watchdog exploded" in stderr
+    finally:
+        patch.stopall()

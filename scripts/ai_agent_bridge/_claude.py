@@ -100,7 +100,12 @@ def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query"
         launch_background_ask(
             msg_id,
             "claude",
-            {"new_session": new_session, "no_timeout": False, "review": review},
+            {
+                "new_session": new_session,
+                "no_timeout": False,
+                "review": review,
+                "timeout_seconds": 900,
+            },
         )
         return msg_id
     print(f"\n🚀 Invoking Claude to process message #{msg_id}...")

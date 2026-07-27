@@ -158,7 +158,12 @@ def ask_codex(
         launch_background_ask(
             msg_id,
             "codex",
-            {"new_session": new_session, "no_timeout": no_timeout, "review": review},
+            {
+                "new_session": new_session,
+                "no_timeout": no_timeout,
+                "review": review,
+                "timeout_seconds": 1800 if no_timeout else 900,
+            },
         )
         return msg_id
     print(f"\n🚀 Invoking Codex to process message #{msg_id}...")

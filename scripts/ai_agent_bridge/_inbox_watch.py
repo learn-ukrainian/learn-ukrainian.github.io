@@ -217,6 +217,7 @@ def run_watcher(
     lock = acquire_watcher_lock(agent, lock_dir)
     conn: sqlite3.Connection | None = None
     last_seen = 0
+    watchdog_warned = False
     try:
         conn = open_readonly_db(db_path)
         while True:
@@ -224,8 +225,13 @@ def run_watcher(
                 from ._ask_lifecycle import run_ask_watchdog
 
                 run_ask_watchdog()
-            except Exception:
-                pass
+            except Exception as exc:
+                if not watchdog_warned:
+                    print(
+                        f"⚠️  inbox watcher: ask watchdog failed: {type(exc).__name__}: {exc}",
+                        file=sys.stderr,
+                    )
+                    watchdog_warned = True
             events = poll_once(conn, agent, last_seen)
             last_seen = emit_notifications(events, last_seen, output)
             if once:

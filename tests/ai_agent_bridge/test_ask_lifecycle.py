@@ -63,7 +63,12 @@ def test_background_ask_sends_immediately_and_mocks_detached_spawn(bridge_db, mo
     spawn.assert_called_once_with(
         message_id,
         "agy",
-        {"new_session": False, "no_timeout": False, "review": False},
+        {
+            "new_session": False,
+            "no_timeout": False,
+            "review": False,
+            "timeout_seconds": 1800,
+        },
     )
 
 
@@ -579,13 +584,13 @@ def test_watchdog_ignores_already_retried_asks(bridge_db, monkeypatch, tmp_path)
 
 
 def test_watchdog_ignores_stale_launch_records(bridge_db, monkeypatch, tmp_path):
-    """Launch records older than 2x hard timeout window (1800s) are NOT re-fired by watchdog (#5893)."""
+    """Launch records older than 2x recorded hard timeout window are NOT re-fired by watchdog (#5893)."""
     from datetime import UTC, datetime, timedelta
 
     message_id = _send_ask("task-watchdog-stale", target="grok")
     monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
     state_dir = tmp_path / "batch_state" / "asks" / "task-watchdog-stale"
-    stale_timestamp = (datetime.now(UTC) - timedelta(seconds=3600)).isoformat()
+    stale_timestamp = (datetime.now(UTC) - timedelta(seconds=3700)).isoformat()
     lifecycle._atomic_write_json(
         state_dir / "launch.json",
         {
@@ -595,6 +600,7 @@ def test_watchdog_ignores_stale_launch_records(bridge_db, monkeypatch, tmp_path)
             "harness": "grok",
             "model": "grok-3",
             "started_at": stale_timestamp,
+            "timeout_seconds": 1800,
         },
     )
 
@@ -606,7 +612,7 @@ def test_watchdog_ignores_stale_launch_records(bridge_db, monkeypatch, tmp_path)
 
 
 def test_watchdog_retries_fresh_launch_records(bridge_db, monkeypatch, tmp_path):
-    """Launch records within 2x hard timeout window (1800s) ARE retried by watchdog (#5893)."""
+    """Launch records within 2x hard timeout window ARE retried by watchdog (#5893)."""
     from datetime import UTC, datetime, timedelta
 
     message_id = _send_ask("task-watchdog-fresh", target="grok")
@@ -622,15 +628,135 @@ def test_watchdog_retries_fresh_launch_records(bridge_db, monkeypatch, tmp_path)
             "harness": "grok",
             "model": "grok-3",
             "started_at": fresh_timestamp,
+            "timeout_seconds": 1800,
         },
     )
 
     assert lifecycle.should_auto_retry_ask(message_id) is True
 
 
-def test_cancel_and_retell_native_grok_permission_cancelled(bridge_db, monkeypatch):
+def test_watchdog_slow_lane_ask_dead_at_minute_35_is_eligible(bridge_db, monkeypatch, tmp_path):
+    """A slow-lane ask dead at minute 35 (2100s) with recorded 1800s timeout IS eligible (2x1800=3600s window)."""
+    from datetime import UTC, datetime, timedelta
+
+    message_id = _send_ask("task-watchdog-slow-lane", target="agy")
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+    state_dir = tmp_path / "batch_state" / "asks" / "task-watchdog-slow-lane"
+    min35_timestamp = (datetime.now(UTC) - timedelta(seconds=2100)).isoformat()
+    lifecycle._atomic_write_json(
+        state_dir / "launch.json",
+        {
+            "message_id": message_id,
+            "pid": 999_999_999,
+            "agent": "agy",
+            "harness": "agy",
+            "model": "gemini-3.6-pro",
+            "started_at": min35_timestamp,
+            "timeout_seconds": 1800,
+            "no_timeout": False,
+        },
+    )
+
+    assert lifecycle.should_auto_retry_ask(message_id) is True
+
+
+def test_watchdog_legacy_record_uses_fallback(bridge_db, monkeypatch, tmp_path):
+    """Legacy launch record lacking timeout_seconds falls back to 2x1800 = 3600s window."""
+    from datetime import UTC, datetime, timedelta
+
+    message_id = _send_ask("task-watchdog-legacy", target="grok")
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+    state_dir = tmp_path / "batch_state" / "asks" / "task-watchdog-legacy"
+
+    # Eligible at minute 35 (2100s < 3600s)
+    min35_timestamp = (datetime.now(UTC) - timedelta(seconds=2100)).isoformat()
+    lifecycle._atomic_write_json(
+        state_dir / "launch.json",
+        {
+            "message_id": message_id,
+            "pid": 999_999_999,
+            "agent": "grok",
+            "harness": "grok",
+            "model": "grok-3",
+            "started_at": min35_timestamp,
+        },
+    )
+    assert lifecycle.should_auto_retry_ask(message_id) is True
+
+    # Stale at minute 62 (3700s > 3600s)
+    min62_timestamp = (datetime.now(UTC) - timedelta(seconds=3700)).isoformat()
+    lifecycle._atomic_write_json(
+        state_dir / "launch.json",
+        {
+            "message_id": message_id,
+            "pid": 999_999_999,
+            "agent": "grok",
+            "harness": "grok",
+            "model": "grok-3",
+            "started_at": min62_timestamp,
+        },
+    )
+    assert lifecycle.should_auto_retry_ask(message_id) is False
+
+
+def test_watchdog_stale_beyond_own_window_not_eligible(bridge_db, monkeypatch, tmp_path):
+    """An ask with recorded timeout of 900s is NOT eligible at 1900s (> 2x900 = 1800s window)."""
+    from datetime import UTC, datetime, timedelta
+
+    message_id = _send_ask("task-watchdog-stale-window", target="claude")
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+    state_dir = tmp_path / "batch_state" / "asks" / "task-watchdog-stale-window"
+    stale_timestamp = (datetime.now(UTC) - timedelta(seconds=1900)).isoformat()
+    lifecycle._atomic_write_json(
+        state_dir / "launch.json",
+        {
+            "message_id": message_id,
+            "pid": 999_999_999,
+            "agent": "claude",
+            "harness": "claude",
+            "model": "claude-3-5-sonnet",
+            "started_at": stale_timestamp,
+            "timeout_seconds": 900,
+        },
+    )
+
+    assert lifecycle.should_auto_retry_ask(message_id) is False
+
+
+def test_atomic_retry_claim_prevents_concurrent_refire(bridge_db, monkeypatch, tmp_path):
+    """Atomic O_CREAT|O_EXCL retry-claim file ensures exactly one claim succeeds (#5893 item 3)."""
+    message_id = _send_ask("task-atomic-claim", target="grok")
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+    state_dir = tmp_path / "batch_state" / "asks" / "task-atomic-claim"
+    lifecycle._atomic_write_json(
+        state_dir / "launch.json",
+        {
+            "message_id": message_id,
+            "pid": 999_999_999,
+            "agent": "grok",
+            "harness": "grok",
+            "model": "grok-3",
+            "started_at": lifecycle._now_iso(),
+            "timeout_seconds": 1800,
+        },
+    )
+
+    # First claim succeeds
+    assert lifecycle.claim_ask_retry(message_id) is True
+    # Second claim fails
+    assert lifecycle.claim_ask_retry(message_id) is False
+
+    # Once claimed, should_auto_retry_ask and _re_fire_ask decline
+    assert lifecycle.should_auto_retry_ask(message_id) is False
+    assert lifecycle._re_fire_ask(message_id) is False
+
+
+def test_cancel_and_retell_native_grok_permission_cancelled(bridge_db, monkeypatch, tmp_path):
     """A native Grok turn ending in permission_cancelled auto-retries once with refusal reason (#5893)."""
     from ai_agent_bridge import _grok_build
+
+    monkeypatch.setattr(_grok_build, "REPO_ROOT", tmp_path)
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
 
     message_id = _send_ask("task-cancel-retell", target="grok")
 

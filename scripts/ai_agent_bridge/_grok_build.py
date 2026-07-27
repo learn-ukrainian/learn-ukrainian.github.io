@@ -37,6 +37,8 @@ from ._ask_contract import (
 )
 from ._ask_lifecycle import (
     _ask_metadata,
+    _ask_state_dir,
+    claim_ask_retry,
     launch_background_ask,
     record_ask_failure,
     record_ask_reply,
@@ -309,6 +311,9 @@ def _can_cancel_retry(msg: dict) -> bool:
     meta = _ask_metadata(msg)
     if meta.get("cancel_retried") or meta.get("cancel-retried"):
         return False
+    msg_id = msg.get("id")
+    if msg_id and (_ask_state_dir(msg_id) / "retry-claim").exists():
+        return False
     total_retries = int(meta.get("total_retry_count") or 0)
     return total_retries < MAX_TOTAL_ASK_RETRIES
 
@@ -325,6 +330,8 @@ def _attempt_cancel_and_retell_retry(
     turn_status: dict[str, str | None],
 ) -> bool:
     """Auto-retry ONCE with refusal reason appended to prompt (#5893 item 3)."""
+    if not claim_ask_retry(message_id):
+        return False
     meta = _ask_metadata(msg)
     meta["cancel_retried"] = True
     current_count = int(meta.get("total_retry_count") or 0)
