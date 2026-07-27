@@ -327,3 +327,88 @@ def test_message_plane_import_error_fail_open(bridge_db, monkeypatch, tmp_path):
     reply_id = _reply_for(message_id)
     assert lifecycle.record_ask_reply(message_id, reply_id) is True
     assert _status(message_id) == f"replied:{reply_id}"
+
+
+def test_ask_reply_remains_unacked_for_requester(bridge_db, monkeypatch):
+    """Ask reply message must remain unacknowledged (acknowledged=0) for the requester (#5773)."""
+    ask_id = send_message(
+        "Please review this PR",
+        task_id="task-5773",
+        msg_type="query",
+        from_llm="codex",
+        to_llm="claude",
+        quiet=True,
+    )
+    lifecycle.register_ask(ask_id)
+
+    mock_result = Mock(
+        ok=True,
+        response="VERDICT: APPROVED\n\nLooks good.",
+        model="claude-sonnet-5",
+        effort=None,
+    )
+    monkeypatch.setattr("ai_agent_bridge._claude.runtime_invoke", Mock(return_value=mock_result))
+
+    from ai_agent_bridge._claude import process_for_claude
+
+    process_for_claude(ask_id)
+
+    conn = get_db()
+    try:
+        # Outbound ask message TO claude IS acknowledged by worker
+        ask_row = conn.execute("SELECT acknowledged FROM messages WHERE id = ?", (ask_id,)).fetchone()
+        assert ask_row is not None
+        assert ask_row[0] == 1
+
+        # Inbound reply message TO codex IS NOT acknowledged (acknowledged=0)
+        reply_row = conn.execute(
+            "SELECT id, acknowledged, from_llm, to_llm FROM messages WHERE to_llm = 'codex' AND task_id = 'task-5773'"
+        ).fetchone()
+        assert reply_row is not None
+        assert reply_row[1] == 0
+        assert reply_row[2] == "claude"
+        assert reply_row[3] == "codex"
+    finally:
+        conn.close()
+
+
+def test_background_ask_reply_remains_unacked_for_requester(bridge_db, monkeypatch):
+    """Backgrounded ask reply message must remain unacknowledged (acknowledged=0) for requester (#5773)."""
+    ask_id = send_message(
+        "Background review request",
+        task_id="task-5773-bg",
+        msg_type="query",
+        from_llm="claude-infra",
+        to_llm="claude",
+        quiet=True,
+    )
+    lifecycle.register_ask(ask_id)
+
+    mock_result = Mock(
+        ok=True,
+        response="VERDICT: APPROVED\n\nBackground review complete.",
+        model="claude-sonnet-5",
+        effort=None,
+    )
+    monkeypatch.setattr("ai_agent_bridge._claude.runtime_invoke", Mock(return_value=mock_result))
+    monkeypatch.setattr(lifecycle, "_background_options", lambda *_args: {})
+
+    lifecycle.process_background_ask(ask_id, "claude")
+
+    conn = get_db()
+    try:
+        # Outbound ask message IS acknowledged by worker
+        ask_row = conn.execute("SELECT acknowledged FROM messages WHERE id = ?", (ask_id,)).fetchone()
+        assert ask_row is not None
+        assert ask_row[0] == 1
+
+        # Inbound reply message TO claude-infra IS NOT acknowledged
+        reply_row = conn.execute(
+            "SELECT id, acknowledged, from_llm, to_llm FROM messages WHERE to_llm = 'claude-infra' AND task_id = 'task-5773-bg'"
+        ).fetchone()
+        assert reply_row is not None
+        assert reply_row[1] == 0
+        assert reply_row[2] == "claude"
+        assert reply_row[3] == "claude-infra"
+    finally:
+        conn.close()

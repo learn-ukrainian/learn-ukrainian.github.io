@@ -322,7 +322,6 @@ def process_for_agy(
         from_model=actual_model,
     )
     acknowledge(message_id)
-    acknowledge(reply_id)
     record_ask_reply(message_id, reply_id)
     return response
 
@@ -385,7 +384,7 @@ def _extract_target_model(msg: dict) -> str | None:
 def _handle_agy_error(msg: dict, message_id: int, reason: str) -> None:
     """Record an Agy failure as a response message and acknowledge."""
     print(f"\n❌ Agy error for message #{message_id}: {reason}")
-    reply_id = send_message(
+    send_message(
         content=f"[Agy error] {reason}",
         task_id=msg["task_id"],
         msg_type="error",
@@ -393,7 +392,6 @@ def _handle_agy_error(msg: dict, message_id: int, reason: str) -> None:
         to_llm=msg["from"],
     )
     acknowledge(message_id)
-    acknowledge(reply_id)
     record_ask_failure(
         message_id,
         reason,

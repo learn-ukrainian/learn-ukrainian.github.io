@@ -250,7 +250,6 @@ def process_for_grok_build(
         from_model=actual_model,
     )
     acknowledge(message_id)
-    acknowledge(reply_id)
     record_ask_reply(message_id, reply_id)
 
 
@@ -348,7 +347,7 @@ Standing rules for bridge Q&A:
 def _handle_grok_build_error(msg: dict, message_id: int, reason: str) -> None:
     """Record a Grok Build failure as a response message and acknowledge."""
     print(f"\nGrok Build error for message #{message_id}: {reason}")
-    reply_id = send_message(
+    send_message(
         content=f"[Grok Build error] {reason}",
         task_id=msg["task_id"],
         msg_type="error",
@@ -356,7 +355,6 @@ def _handle_grok_build_error(msg: dict, message_id: int, reason: str) -> None:
         to_llm=msg["from"],
     )
     acknowledge(message_id)
-    acknowledge(reply_id)
     record_ask_failure(
         message_id,
         reason,

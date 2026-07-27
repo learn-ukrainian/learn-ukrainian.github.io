@@ -288,12 +288,11 @@ def _run_claude_sync_via_runtime(
         _response_sent = True
 
         acknowledge(message_id)
-        acknowledge(reply_id)
         record_ask_reply(message_id, reply_id)
 
     except RateLimitedError as exc:
         print(f"\n⏳ Claude rate limited: {exc}")
-        err_id = send_message(
+        send_message(
             content=f"[Bridge Error] Claude rate limited: {exc}",
             task_id=msg['task_id'], msg_type="error",
             from_llm="claude", to_llm=msg['from'],
@@ -301,12 +300,11 @@ def _run_claude_sync_via_runtime(
         )
         _response_sent = True
         acknowledge(message_id)
-        acknowledge(err_id)
         record_ask_failure(message_id, str(exc))
     except (AgentStalledError, AgentTimeoutError) as exc:
         timeout_mins = timeout_val // 60
         print(f"\n❌ Claude CLI timed out ({timeout_mins} min sync limit): {exc}")
-        err_id = send_message(
+        send_message(
             content=(
                 f"[Bridge Error] Claude CLI timed out after {timeout_mins} minutes. "
                 f"({type(exc).__name__}: {exc}). Consider using --async for long tasks."
@@ -317,11 +315,10 @@ def _run_claude_sync_via_runtime(
         )
         _response_sent = True
         acknowledge(message_id)
-        acknowledge(err_id)
         record_ask_failure(message_id, str(exc), timed_out=True)
     except AgentUnavailableError:
         print("❌ claude CLI not found. Is it installed?")
-        err_id = send_message(
+        send_message(
             content="[Bridge Error] Claude CLI not found on system",
             task_id=msg['task_id'], msg_type="error",
             from_llm="claude", to_llm=msg['from'],
@@ -329,10 +326,9 @@ def _run_claude_sync_via_runtime(
         )
         _response_sent = True
         acknowledge(message_id)  # Must ack incoming msg to prevent stuck queue
-        acknowledge(err_id)
         record_ask_failure(message_id, "Claude CLI not found")
     except ReviewWorktreeError as exc:
-        err_id = send_message(
+        send_message(
             content=f"[Bridge Error] Claude review checkout failed: {exc}",
             task_id=msg['task_id'], msg_type="error",
             from_llm="claude", to_llm=msg['from'],
@@ -340,7 +336,6 @@ def _run_claude_sync_via_runtime(
         )
         _response_sent = True
         acknowledge(message_id)
-        acknowledge(err_id)
         record_ask_failure(message_id, str(exc))
     finally:
         if not _response_sent:
@@ -484,13 +479,12 @@ def _handle_claude_error(msg, message_id, stderr):
     print(f"\n❌ Claude CLI error: {error_msg[:500]}")
     sys.stdout.flush()
 
-    err_id = send_message(
+    send_message(
         content=f"[Bridge Error] Claude CLI failed:\n{error_msg[:500]}",
         task_id=msg['task_id'], msg_type="error",
         from_llm="claude", to_llm=msg['from'], from_model="claude-bridge-error"
     )
     acknowledge(message_id)
-    acknowledge(err_id)
     record_ask_failure(message_id, error_msg)
     return True
 
@@ -498,13 +492,12 @@ def _handle_claude_error(msg, message_id, stderr):
 def _send_claude_fallback_error(msg, message_id):
     """Send fallback error when Claude process fails without sending a response."""
     try:
-        err_id = send_message(
+        send_message(
             content=f"[Bridge Error] Claude process failed unexpectedly for message #{message_id}. Check logs.",
             task_id=msg['task_id'], msg_type="error",
             from_llm="claude", to_llm=msg['from'], from_model="claude-bridge-error"
         )
         acknowledge(message_id)
-        acknowledge(err_id)
         record_ask_failure(message_id, "Claude process failed unexpectedly")
     except Exception:
         pass

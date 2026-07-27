@@ -253,7 +253,6 @@ def ask_opencode(
         data=provenance_data, from_model=actual_model, to_model=from_model,
     )
     acknowledge(msg_id)
-    acknowledge(reply_id)
     record_ask_reply(msg_id, reply_id)
     return msg_id
 
@@ -339,7 +338,6 @@ def ask_pool(
         data=provenance_data, from_model=actual_model, to_model=from_model,
     )
     acknowledge(msg_id)
-    acknowledge(reply_id)
     record_ask_reply(msg_id, reply_id)
     return msg_id
 
@@ -450,7 +448,6 @@ def ask_glm(
         data=provenance_data, from_model=actual_model, to_model=from_model,
     )
     acknowledge(msg_id)
-    acknowledge(reply_id)
     record_ask_reply(msg_id, reply_id)
     return msg_id
 
@@ -547,7 +544,6 @@ def ask_gemma(
         data=provenance_data, from_model=actual_model, to_model=from_model,
     )
     acknowledge(msg_id)
-    acknowledge(reply_id)
     record_ask_reply(msg_id, reply_id)
     return msg_id
 
@@ -628,7 +624,6 @@ def process_for_opencode(
         data=provenance_data, from_model=actual_model, to_model=ask_sender_model(msg),
     )
     acknowledge(message_id)
-    acknowledge(reply_id)
     record_ask_reply(message_id, reply_id)
 
 
