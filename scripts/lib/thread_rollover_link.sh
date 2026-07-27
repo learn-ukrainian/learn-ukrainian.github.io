@@ -109,8 +109,12 @@ resolve_codex_pending_rollover() {
     return 1
   fi
 
+  # ${arr[@]+...} guard: expanding an EMPTY array with "${arr[@]}" trips
+  # `set -u` on bash 3.2 (macOS /bin/bash) even though bash 4.4+ tolerates it —
+  # this line aborted every local run of the thread-restart e2e suite while CI
+  # (bash 5) stayed green.
   if ! parsed="$(
-    printf '%s' "$detect_output" | "${parser_runner[@]}" "$python_bin" -c '
+    printf '%s' "$detect_output" | ${parser_runner[@]+"${parser_runner[@]}"} "$python_bin" -c '
 import json
 import re
 import sys
