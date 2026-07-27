@@ -36,7 +36,20 @@ if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UKRAINIAN_PIPELINE" ] || [ -
 fi
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
-PYTHON="$PROJECT_DIR/.venv/bin/python"
+# Canonical checkout owns the shared venv — linked worktrees have none
+# (F001 r5 on #5896: the PROJECT_DIR default silently skipped this hook in
+# every worktree session). Derivation must run BEFORE the interpreter pick.
+if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
+  CANONICAL_ROOT="$CODEX_CANONICAL_REPO_ROOT"
+else
+  GIT_COMMON_DIR=$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+  if [ -n "$GIT_COMMON_DIR" ] && [ "$(basename "$GIT_COMMON_DIR")" = ".git" ]; then
+    CANONICAL_ROOT=$(dirname "$GIT_COMMON_DIR")
+  else
+    CANONICAL_ROOT="$PROJECT_DIR"
+  fi
+fi
+PYTHON="${THREAD_ROLLOVER_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
 
 if [ ! -x "$PYTHON" ]; then
   # Fail open: never let a missing venv slow down or block a tool call.
@@ -64,16 +77,7 @@ if [ -z "$SESSION_ID" ]; then
   exit 0
 fi
 
-if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
-  CANONICAL_ROOT="$CODEX_CANONICAL_REPO_ROOT"
-else
-  GIT_COMMON_DIR=$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
-  if [ -n "$GIT_COMMON_DIR" ] && [ "$(basename "$GIT_COMMON_DIR")" = ".git" ]; then
-    CANONICAL_ROOT=$(dirname "$GIT_COMMON_DIR")
-  else
-    CANONICAL_ROOT="$PROJECT_DIR"
-  fi
-fi
+# CANONICAL_ROOT derived once at the top of this hook (F001 r5).
 
 # No --generation: identity proof is the sole fence (see above). If this repo
 # checkout still has an OLDER thread_handoff.py that hard-requires

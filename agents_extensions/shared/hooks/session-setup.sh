@@ -172,6 +172,10 @@ if [ ! -f "$PROFILE_RESOLVER_SH" ]; then
   echo "Error: context-profile resolver not found." >&2
   exit 1
 fi
+# The resolver's own interpreter default is $PROJECT_DIR/.venv — absent in
+# linked worktrees (F001 r5 class). Point it at the canonical venv here; an
+# explicit CLAUDE_PROFILE_RESOLVER_PYTHON still wins.
+export CLAUDE_PROFILE_RESOLVER_PYTHON="${CLAUDE_PROFILE_RESOLVER_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
 # shellcheck disable=SC1090
 source "$PROFILE_RESOLVER_SH"
 if ! resolve_context_profile "$REQUESTED_PROFILE_ID" "$OBSERVED_MODEL"; then
@@ -185,7 +189,7 @@ fi
 # Persist official SessionStart identity and the resolved route in the canonical
 # checkout. Build argv as an array so exact transcript paths are never split.
 SESSION_RECORD_SCRIPT="${CLAUDE_SESSION_RECORD_SCRIPT:-$PROJECT_DIR/scripts/lib/session_record.py}"
-SESSION_RECORD_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
+SESSION_RECORD_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"  # canonical: worktrees carry no venv (F001 r5)
 if [ -n "$SESSION_ID" ] && [ -f "$SESSION_RECORD_SCRIPT" ] && [ -x "$SESSION_RECORD_PYTHON" ]; then
   SESSION_RECORD_CMD=(
     "$SESSION_RECORD_PYTHON" "$SESSION_RECORD_SCRIPT" --state-root "$CANONICAL_ROOT"
@@ -333,7 +337,7 @@ fi
 # 13. Session handoff. Claude uses the official SessionStart session id; Codex
 # retains its documented environment fallback for non-Claude fixtures.
 CURRENT_THREAD_ID="${SESSION_ID:-${CODEX_THREAD_ID:-${CODEX_SESSION_ID:-}}}"
-ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
+ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"  # canonical: worktrees carry no venv (F001 r5)
 ROLLOVER_SCRIPT="${THREAD_ROLLOVER_SCRIPT:-$PROJECT_DIR/scripts/orchestration/thread_handoff.py}"
 HANDOFF_CONTEXT=""
 HANDOFF_WARNINGS=""

@@ -71,6 +71,7 @@ __scenario_heartbeat_hook_advances_without_generation_env() {
     env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
         -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
     CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="$agent" CODEX_CANONICAL_REPO_ROOT="$root" \
+    THREAD_ROLLOVER_PYTHON="$PYTHON_BIN" \
     "$HEARTBEAT_HOOK"
   # `:` (no-op) after the hook invocation: if it were the textually-last
   # command in this function, bash's exec-last-command optimization can
@@ -94,6 +95,7 @@ __scenario_stop_hook_advances_heartbeat_without_generation_env() {
     env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
         -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
     CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="$agent" CODEX_CANONICAL_REPO_ROOT="$root" \
+    THREAD_ROLLOVER_PYTHON="$PYTHON_BIN" \
     "$STOP_HOOK" >/dev/null
   : # see the no-op note in the heartbeat scenario above — same reason.
 }
@@ -107,8 +109,20 @@ __scenario_release_hook_tombstones_without_generation_env() {
     env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
         -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
     CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="$agent" CODEX_CANONICAL_REPO_ROOT="$root" \
+    THREAD_ROLLOVER_PYTHON="$PYTHON_BIN" \
     "$RELEASE_HOOK"
   : # see the no-op note in the heartbeat scenario above — same reason.
+}
+
+__scenario_worktree_layout_claims_lease() {
+  local root="$1" fakewt="$2" session_id="$3"
+  printf '%s' "{\"session_id\":\"$session_id\"}" | \
+    env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
+        -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
+        -u CLAUDE_SESSION_RECORD_PYTHON -u THREAD_ROLLOVER_PYTHON \
+    CLAUDE_PROJECT_DIR="$fakewt" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
+    bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" >/dev/null
+  :
 }
 
 if [ "${1:-}" = "__dispatch__" ]; then
@@ -196,7 +210,7 @@ session_id="fixture-session-sidecar"
   exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
       CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
-      CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" \
+      CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" CLAUDE_PROFILE_RESOLVER_PYTHON="$PYTHON_BIN" THREAD_ROLLOVER_PYTHON="$PYTHON_BIN" \
       bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
 )
 sidecar="$root/.agent/sessions/${session_id}.generation"
@@ -224,6 +238,7 @@ printf '%s' "{\"session_id\":\"$session_id\"}" | \
   env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
   CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
+  THREAD_ROLLOVER_PYTHON="$PYTHON_BIN" \
   "$RELEASE_HOOK"
 lease="$(lease_file_path "$root" claude)"
 state="$(lease_field "$lease" state)"
@@ -259,7 +274,7 @@ evil_id='../evil-traversal'
   exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
       CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
-      CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" \
+      CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" CLAUDE_PROFILE_RESOLVER_PYTHON="$PYTHON_BIN" THREAD_ROLLOVER_PYTHON="$PYTHON_BIN" \
       bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$evil_id\"}" >/dev/null
 )
 [ ! -e "$root/.agent/evil-traversal.generation" ] || fail "path-safety: traversal session_id escaped .agent/sessions"
@@ -272,6 +287,7 @@ printf '%s' "{\"session_id\":\"$evil_id\"}" | \
   env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
   CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
+  THREAD_ROLLOVER_PYTHON="$PYTHON_BIN" \
   "$RELEASE_HOOK" || fail "path-safety: release hook failed on traversal session_id"
 
 # 8. Symlink escape (formal CF F001 round 2): a planted symlink at
@@ -287,7 +303,7 @@ session_id="fixture-session-symlink"
   exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
       CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
-      CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" \
+      CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" CLAUDE_PROFILE_RESOLVER_PYTHON="$PYTHON_BIN" THREAD_ROLLOVER_PYTHON="$PYTHON_BIN" \
       bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
 )
 outside_count="$(find "$outside" -type f 2>/dev/null | wc -l | tr -d ' ')"
@@ -302,10 +318,28 @@ ln -s "$target" "$root/.agent/sessions/${session_id}.json"
   exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
       CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
-      CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" \
+      CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" CLAUDE_PROFILE_RESOLVER_PYTHON="$PYTHON_BIN" THREAD_ROLLOVER_PYTHON="$PYTHON_BIN" \
       bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
 )
 target_size="$(wc -c < "$target" | tr -d ' ')"
 [ "$target_size" = "0" ] || fail "symlink escape: sidecar write followed a symlinked destination entry ($target_size bytes written through)"
+
+# 9. WORKTREE LAYOUT (formal CF F001 r5 on #5896 — the round-4 escape): a
+#    linked worktree has scripts but NO local venv; only the canonical checkout
+#    has one. With NO interpreter overrides, the SessionStart lease claim must
+#    still SUCCEED — every lease-path interpreter default must resolve to the
+#    canonical root, or the claim 127s and the session refuses to start.
+root="$TMP_ROOT/wt-canonical"
+fakewt="$TMP_ROOT/wt-project"
+mkdir -p "$root" "$fakewt"
+ln -s "$REPO_ROOT/.venv" "$root/.venv"
+ln -s "$REPO_ROOT/scripts" "$fakewt/scripts"
+ln -s "$REPO_ROOT/agents_extensions" "$fakewt/agents_extensions"
+session_id="fixture-session-worktree"
+run_as_fake_claude_ancestor __scenario_worktree_layout_claims_lease "$root" "$fakewt" "$session_id"
+lease="$(lease_file_path "$root" claude)"
+[ -f "$lease" ] || fail "worktree layout: lease was NOT claimed (venv-less project dir broke an interpreter default — r5 regression)"
+wt_owner="$(lease_field "$lease" owner_thread_id)"
+[ "$wt_owner" = "$session_id" ] || fail "worktree layout: lease owner mismatch (got '$wt_owner')"
 
 printf 'ok - thread lease hook fixtures passed\n'
