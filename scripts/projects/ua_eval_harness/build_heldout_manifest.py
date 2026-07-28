@@ -263,7 +263,10 @@ def build_manifest(root: Path, config: Mapping[str, Any]) -> dict[str, Any]:
     sentences = parse_m2(root / m2_rel)
     metadata, train_authors, test_authors = load_metadata(root / "data/metadata.csv")
     m2_docs = {sentence.doc_id for sentence in sentences}
+    metadata_train_docs = {doc_id for doc_id, row in metadata.items() if row["partition"] == "train"}
     metadata_test_docs = {doc_id for doc_id, row in metadata.items() if row["partition"] == "test"}
+    if metadata_train_docs & metadata_test_docs:
+        raise ManifestError("train/test document overlap detected")
     if m2_docs != metadata_test_docs:
         raise ManifestError("M2 document ids do not exactly match metadata test documents")
 
@@ -349,14 +352,14 @@ def build_manifest(root: Path, config: Mapping[str, Any]) -> dict[str, Any]:
             "upstream_locator": f"{m2_rel} + doc_id + sentence_index",
             "annotator_ids": "metadata.csv annotator_id values; upstream metadata namespace",
             "reference_annotator_index": (
-                "M2 annotation final field; upstream zero-based reference index, "
-                "not an index into item.annotator_ids"
+                "M2 annotation final field; upstream zero-based reference index, not an index into item.annotator_ids"
             ),
         },
         "integrity": {
             "upstream_files": dict(upstream["files"]),
             "payload_sha256": _canonical_sha256(payload),
             "train_test_author_overlap": 0,
+            "train_test_document_overlap": 0,
         },
         "counts": {
             "upstream_test_documents": len(m2_docs),
@@ -393,6 +396,10 @@ def validate_manifest(manifest: Mapping[str, Any]) -> None:
         raise ManifestError("record layouts do not match the v1 schema")
     if semantics.get("exclusion_reason") != predicate.get("exclusion_reason"):
         raise ManifestError("exclusion semantics do not match the predicate")
+    if integrity.get("train_test_author_overlap") != 0:
+        raise ManifestError("train/test author overlap receipt is not zero")
+    if integrity.get("train_test_document_overlap") != 0:
+        raise ManifestError("train/test document overlap receipt is not zero")
     items, exclusions = manifest.get("items"), manifest.get("exclusions")
     if not isinstance(items, list) or not isinstance(exclusions, list):
         raise ManifestError("items and exclusions must be arrays")

@@ -14,7 +14,7 @@ calques and grammar from UA-GEC. The final package must provide deterministic
 gold extraction, standard edit scoring, version-pinned baselines, and a
 stranger-runnable release without private product data or provider secrets.
 
-Oleksiy's direction for the project is:
+The accepted project direction is:
 
 - no dedicated Ukrainian calque harness is known;
 - UA-GEC reuse is welcome;
@@ -177,6 +177,24 @@ The complete [v1 baseline receipts](../../../data/projects/ua_eval_harness/basel
 include identity, train-fixture literal rules, and a source-only
 `gpt-5.6-terra` run. Terra scores 0.2439 edit F0.5 and 0.1610 exact-sentence
 accuracy; the report retains all 677 raw responses and full run provenance.
+
+## Immutable release freeze
+
+Release `0.1.0` is pinned by one
+[freeze manifest](../../../data/projects/ua_eval_harness/releases/v0.1.0/freeze_manifest.json).
+It records the exact dataset, task, prompt, schema, scorer, runner, request,
+saved-response, and report hashes together with split-integrity and generation
+provenance. Verify every frozen byte and the aggregate-report privacy contract
+offline:
+
+```bash
+.venv/bin/python scripts/projects/ua_eval_harness/verify_release_freeze.py
+```
+
+The Ukrainian-first
+[contamination policy](contamination-policy.md) documents the complete leakage
+disclosure, train-fixture separation, prohibited product/training reuse, and
+semantic version-bump rules. Frozen bytes are never edited in place.
 
 ## Ownership and data boundaries
 

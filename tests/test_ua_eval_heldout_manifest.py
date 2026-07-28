@@ -116,6 +116,7 @@ def test_build_manifest_applies_quota_free_heldout_predicate(tmp_path: Path) -> 
     assert manifest["counts"]["references"] == 2
     assert manifest["counts"]["eligible_edits"] == 3
     assert manifest["integrity"]["train_test_author_overlap"] == 0
+    assert manifest["integrity"]["train_test_document_overlap"] == 0
     item = dict(zip(manifest["record_layouts"]["item"], manifest["items"][0], strict=True))
     reference = dict(zip(manifest["record_layouts"]["reference"], item["references"][0], strict=True))
     assert item["id"] == "ua-gec-test-0002-s0001"
@@ -159,3 +160,5 @@ def test_committed_manifest_is_internally_valid_and_held_out() -> None:
     assert manifest["counts"]["included_sentences"] == 677
     assert manifest["counts"]["excluded_sentences"] == 2013
     assert manifest["predicate"]["partition"] == "test"
+    assert manifest["integrity"]["train_test_author_overlap"] == 0
+    assert manifest["integrity"]["train_test_document_overlap"] == 0
