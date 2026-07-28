@@ -292,10 +292,22 @@ def test_negative_decision_tables_unknown_stop_code() -> None:
 
 
 _RB1_PATH = _TRAILS_DIR / "rb1-cold-start.trail.yaml"
+_RB4_PATH = _TRAILS_DIR / "rb4-red-ci-triage.trail.yaml"
 
 
 def _get_rb1_data() -> dict[str, Any]:
     return yaml.safe_load(_RB1_PATH.read_text(encoding="utf-8"))
+
+
+def test_rb4_lookup_routes_never_make_a_rerun_reachable() -> None:
+    """Stage 2 may return retry data but must not execute or route a rerun."""
+    spec = yaml.safe_load(_RB4_PATH.read_text(encoding="utf-8"))
+    lookup_step = next(step for step in spec["steps"] if step["step_id"] == "allowlist_match")
+    commands = "\n".join(step["command"] for step in spec["steps"])
+
+    assert "red_ci_known_failures.py lookup" in lookup_step["command"]
+    assert lookup_step["transitions"]["matched_retry_once"] == "STOP-manual-intervention"
+    assert "gh run rerun" not in commands
 
 
 @pytest.mark.parametrize("trail_path", _ALL_SHIPPED_TRAILS, ids=lambda p: p.stem)

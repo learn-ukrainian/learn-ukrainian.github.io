@@ -14,7 +14,11 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.orchestration.red_ci_known_failures import (
+    VALID_STOP_CODES,
     RedCIKnownFailuresValidationError,
     load_and_validate_registry,
 )
@@ -35,29 +39,6 @@ DECISION_TABLES_SCHEMA_PATH = (
 DEFAULT_DECISION_TABLES_PATH = (
     PROJECT_ROOT / "scripts/config/trails/decision-tables.v0.yaml"
 )
-
-# Published STOP code contract (embedded constant; pending extraction to contract package)
-VALID_STOP_CODES: set[str] = {
-    "STOP-timeout",
-    "STOP-verdict-timeout",
-    "STOP-contested",
-    "STOP-ci-red",
-    "STOP-lease-expired",
-    "STOP-precondition-failed",
-    "STOP-max-retries-exceeded",
-    "STOP-manual-intervention",
-    "STOP-circuit-breaker",
-    "STOP-concurrency-conflict",
-    "STOP-policy-violation",
-    "STOP-rate-limit",
-    "STOP-unrecoverable-error",
-    "STOP-quota-exceeded",
-    "STOP-stale-head",
-    "STOP-unknown",
-    "STOP-rearm-failed",
-    "STOP-hygiene-failed",
-}
-
 
 class TrailSpecValidationError(Exception):
     """Raised when TrailSpec or StepReceipt validation fails."""
