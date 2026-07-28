@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "red-ci-known-failures.v1",
+  "title": "Red-CI Known Failures Registry v1 schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "registry_version",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "red-ci-known-failures.v1"
+    },
+    "registry_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "matcher",
+        "action",
+        "owning_issue",
+        "evidence",
+        "governance"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "matcher": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_name",
+            "lines"
+          ],
+          "properties": {
+            "check_name": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "exact"
+              ],
+              "properties": {
+                "exact": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "lines": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "required",
+                "accepted",
+                "require_full_coverage"
+              ],
+              "properties": {
+                "required": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "$ref": "#/$defs/line_matcher"
+                  }
+                },
+                "accepted": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/line_matcher"
+                  }
+                },
+                "require_full_coverage": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "action": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "retry-once",
+                "note-and-proceed",
+                "stop"
+              ]
+            },
+            "stop_code": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "kind": {
+                    "const": "stop"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "stop_code"
+                ]
+              },
+              "else": {
+                "not": {
+                  "required": [
+                    "stop_code"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "owning_issue": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/evidence_item"
+          }
+        },
+        "governance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "added_by",
+            "added_at",
+            "added_in_pr",
+            "reviewed_by",
+            "reviewed_at",
+            "review_by"
+          ],
+          "properties": {
+            "added_by": {
+              "type": "string",
+              "minLength": 1
+            },
+            "added_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "added_in_pr": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "reviewed_by": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "reviewed_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "review_by": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "line_matcher": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "value"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "exact",
+            "regex"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "evidence_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "run_attempt",
+        "pr_number",
+        "head_sha",
+        "observed_at",
+        "signature_sha256"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "run_attempt": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "pr_number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "head_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "signature_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}
