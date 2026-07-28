@@ -1726,7 +1726,8 @@ describe('LexiconPractice', () => {
     expect(await screen.findByTestId('practice-heritage')).toBeInTheDocument();
   });
 
-  test('heritage calque miss scores again and shows cited correction', async () => {
+  test('A2 heritage calque miss scores again and reveals the sentence English answer key', async () => {
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A2');
     const user = userEvent.setup();
     render(
       <LexiconPractice

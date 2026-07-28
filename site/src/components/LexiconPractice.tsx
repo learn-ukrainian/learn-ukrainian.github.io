@@ -681,6 +681,14 @@ function usablePracticeSentenceEnglish(value: string | null | undefined): string
   return sentence;
 }
 
+function postAnswerSentenceEnglish(
+  feedback: HeritageFeedback | ParonymFeedback | ClozeFeedback | null,
+  raw: string | null | undefined,
+): string | null {
+  // Intentional all-level post-answer English answer key; this is not dual-chrome.
+  return feedback ? usablePracticeSentenceEnglish(raw) : null;
+}
+
 function isPhraseGloss(label: string): boolean {
   const clean = label.replace(/\s+/g, ' ').trim();
   // Count alphanumeric tokens (ignoring standalone punctuation) to match the
@@ -3952,7 +3960,7 @@ function PracticeParonym({
   const [before, after] = slotPromptParts(item.prompt).map((part) => displayPracticeForm(part, learnerLevel));
   const options = paronymOptions(item);
   const slotText = feedback?.kind === 'correct' ? displayPracticeForm(item.answer, learnerLevel) : '___';
-  const sentenceEnglish = feedback ? usablePracticeSentenceEnglish(item.promptEn) : null;
+  const sentenceEnglish = postAnswerSentenceEnglish(feedback, item.promptEn);
   return (
     <div className="lexicon-paronym" data-testid="practice-paronym">
       <p className="paronym-task">
@@ -4050,7 +4058,7 @@ function PracticeHeritage({
   const slotText = feedback?.kind === 'correct'
     ? displayPracticeForm(selectedLabel ?? item.answer, learnerLevel)
     : '___';
-  const sentenceEnglish = feedback ? usablePracticeSentenceEnglish(item.promptEn) : null;
+  const sentenceEnglish = postAnswerSentenceEnglish(feedback, item.promptEn);
   return (
     <div className="lexicon-heritage" data-testid="practice-heritage">
       <p className="heritage-task">
@@ -4171,7 +4179,7 @@ function PracticeCloze({
   const optionErrors = validateClozeOptions(cloze);
   const blankText = feedback?.kind === 'correct' ? cloze.form : input.trim() || '?';
   const displayBlankText = displayPracticeForm(blankText, learnerLevel);
-  const sentenceEnglish = feedback ? usablePracticeSentenceEnglish(cloze.clozeEn) : null;
+  const sentenceEnglish = postAnswerSentenceEnglish(feedback, cloze.clozeEn);
   const blankClass = [
     'cz-blank',
     displayBlankText !== '?' ? 'filled' : '',
