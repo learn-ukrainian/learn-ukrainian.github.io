@@ -142,6 +142,10 @@ def _rail_write_decision(raw_targets: list[str], *, cwd: str):
         return None, "rail_path_guard_unavailable"
     if rail_guard is None:
         return None, "rail_path_guard_unavailable"
+    receipt_id = os.environ.get("LEARN_UK_RAIL_APPROVAL_RECEIPT")
+    task_id = os.environ.get("LEARN_UK_RAIL_TASK_ID") or "local-hook"
+    if receipt_id and not os.environ.get("LEARN_UK_RAIL_TASK_ID"):
+        return None, "rail_approval_task_context_missing"
     caller_root = _git_output(cwd, "rev-parse", "--show-toplevel")
     caller_root_path = Path(caller_root).resolve() if caller_root is not None else None
     try:
@@ -161,16 +165,20 @@ def _rail_write_decision(raw_targets: list[str], *, cwd: str):
                     return None, "rail_path_guard_repository_unreadable"
                 continue  # A target outside every repository cannot be a repository rail path.
             relative_path = target.relative_to(Path(root).resolve()).as_posix()
-            decision = rail_guard.decide_rail_path_mutation(
-                task_id="local-hook",
+            decision = rail_guard.decide_rail_path_mutation_with_production_receipt(
+                task_id=task_id,
                 candidate_paths=(relative_path,),
                 head_sha=head_sha,
+                receipt_id=receipt_id,
             )
             if not decision.allowed:
                 return decision, None
         return (
-            rail_guard.decide_rail_path_mutation(
-                task_id="local-hook", candidate_paths=(), head_sha="0" * 40
+            rail_guard.decide_rail_path_mutation_with_production_receipt(
+                task_id=task_id,
+                candidate_paths=(),
+                head_sha="0" * 40,
+                receipt_id=receipt_id,
             ),
             None,
         )
@@ -985,6 +993,49 @@ def main() -> int:
             )
             return 2
 
+    # Git commands mutate outside shell redirections/write-tool payloads, so
+    # they need their own rail pass. This executes for every path-scoped intent
+    # before the primary-containment branch below decides whether the worktree
+    # is the protected primary or an isolated dispatch tree.
+    git_intents: list[dict[str, object]] = []
+    if tool_name == "Bash" and command:
+        try:
+            git_intents = bash_git_write_intents(command)
+            for intent in git_intents:
+                if intent.get("allowlisted"):
+                    continue
+                paths = list(intent.get("paths") or [])
+                if not paths:
+                    # Pathless whole-tree mutators (apply/am/stash pop|apply)
+                    # cannot be enumerated in this fast hook for a non-primary
+                    # worktree. The residual is covered by the CI rail-path job
+                    # + merge guard diff of actual changed files; never treat
+                    # this deliberate non-enumeration as an implicit rail allow.
+                    continue
+                git_cwd = _effective_git_cwd(intent, cwd)
+                rail_decision, rail_error = _rail_write_decision(paths, cwd=str(git_cwd))
+                if rail_error is not None or rail_decision is None:
+                    sys.stderr.write(
+                        "BLOCKED by rail-path guard: shared decision module is unreadable "
+                        f"({rail_error or 'unknown error'}); failing closed.\n"
+                    )
+                    return 2
+                if not rail_decision.allowed:
+                    paths_text = ", ".join(rail_decision.rail_paths) or "(unreadable path)"
+                    sys.stderr.write(
+                        "BLOCKED by rail-path guard: git-mediated rail mutation requires a current, "
+                        "externally verified approval receipt.\n"
+                        f"  reason: {rail_decision.reason}\n"
+                        f"  rail paths: {paths_text}\n"
+                    )
+                    return 2
+        except Exception:  # pragma: no cover - parser/OS failure must not bypass P6
+            sys.stderr.write(
+                "BLOCKED by rail-path guard: cannot inspect git-mediated write targets; "
+                "failing closed.\n"
+            )
+            return 2
+
     if wc is None:
         return 0  # P6 ran above; the older primary-only predicate is unavailable.
 
@@ -1003,7 +1054,7 @@ def main() -> int:
     allow_primary_git = os.environ.get("LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "") == "1"
     if tool_name == "Bash" and command and not allow_primary_git:
         try:
-            for intent in bash_git_write_intents(command):
+            for intent in git_intents:
                 if intent.get("allowlisted"):
                     continue
                 git_cwd = _effective_git_cwd(intent, cwd)

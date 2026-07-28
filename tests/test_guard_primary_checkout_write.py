@@ -531,6 +531,7 @@ def test_git_apply_via_dash_c_worktree_allowed(repo: Path):
 
 
 def test_git_apply_from_worktree_cwd_allowed(repo: Path):
+    """Pinned residual: pathless worktree applies are checked by CI/merge diff layers."""
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     payload = {
         "tool_name": "Bash",
@@ -539,6 +540,45 @@ def test_git_apply_from_worktree_cwd_allowed(repo: Path):
     }
     result = _run(repo, payload)
     assert result.returncode == 0, result.stderr
+
+
+def test_git_add_rail_path_in_worktree_is_refused_without_receipt(repo: Path):
+    """P6 F001: git pathspecs do not bypass rail checks outside primary."""
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(worktree),
+        "tool_input": {
+            "command": "git add agents_extensions/shared/hooks/guard-pr-merge.py",
+        },
+    }
+
+    result = _run(repo, payload)
+
+    assert result.returncode == 2, result.stderr
+    assert "rail_approval_receipt_required" in result.stderr
+
+
+def test_git_worktree_rail_gate_mutation_is_observable(
+    repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Removing the new git-intent rail call turns this blocked write into an allow."""
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(worktree),
+        "tool_input": {
+            "command": "git add agents_extensions/shared/hooks/guard-pr-merge.py",
+        },
+    }
+    monkeypatch.setattr(hook, "_read_payload", lambda: payload)
+
+    assert hook.main() == 2
+
+    allowed = type("_Allowed", (), {"allowed": True, "rail_paths": (), "reason": "non_rail_paths"})()
+    monkeypatch.setattr(hook, "_rail_write_decision", lambda _paths, *, cwd: (allowed, None))
+
+    assert hook.main() == 0
 
 
 def test_git_apply_dash_c_primary_from_worktree_blocked(repo: Path):

@@ -877,6 +877,9 @@ def _classify_worktree_layout(path: Path | str | None) -> str | None:
 # preflight and creating a worktree from the primary checkout stay allowed.
 
 _WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
+RAIL_ADMISSION_NO_PATH_ADVISORY = (
+    "rail admission: no path declaration — rail enforcement deferred to hook/CI/merge layers"
+)
 _NO_DELIVERABLE_STATUS = "no_deliverable"
 _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON = "commit_count_unknown"
 _NO_DELIVERABLE_SHORT_RESPONSE_REASON = "write_capable_clean_worktree_zero_commits_short_response"
@@ -1132,21 +1135,24 @@ def _rail_path_admission_error(
     task_id: str,
     mode: str,
     owned_paths: Sequence[str] | None,
+    receipt_id: str | None = None,
 ) -> str | None:
     """Return a P6 refusal before write-path ownership creates any state.
 
     Receipt retrieval is deliberately not wired to a caller-provided local file:
-    P4 established that a local JSON projection is forgeable.  A provisioned
-    API/bridge caller may pass a :class:`VerifiedRailApprovalReceipt` directly
-    to the shared module; ordinary dispatch has no authority unless such a
-    trusted integration is installed, so rail claims fail closed here.
+    P4 established that a local JSON projection is forgeable.  The supplied
+    opaque ID is re-fetched only through the production Monitor API resolver.
     """
     if mode not in _WRITE_CAPABLE_MODES:
         return None
     try:
-        from scripts.orchestration.rail_path_guard import decide_rail_path_mutation
+        from scripts.orchestration.rail_path_guard import (
+            decide_rail_path_mutation_with_production_receipt,
+        )
     except ImportError:  # pragma: no cover - flat script path
-        from orchestration.rail_path_guard import decide_rail_path_mutation  # type: ignore
+        from orchestration.rail_path_guard import (  # type: ignore
+            decide_rail_path_mutation_with_production_receipt,
+        )
 
     try:
         head_sha = subprocess.run(
@@ -1161,10 +1167,11 @@ def _rail_path_admission_error(
         return f"❌ rail-path admission refused: cannot read current HEAD ({type(exc).__name__})"
     if head_sha.returncode != 0:
         return "❌ rail-path admission refused: cannot read current HEAD"
-    decision = decide_rail_path_mutation(
+    decision = decide_rail_path_mutation_with_production_receipt(
         task_id=task_id,
         candidate_paths=owned_paths or (),
         head_sha=head_sha.stdout.strip(),
+        receipt_id=receipt_id,
     )
     if decision.allowed:
         return None
@@ -1174,6 +1181,31 @@ def _rail_path_admission_error(
         f"{decision.reason}; paths={paths}. "
         "Rail mutations require a current externally verified approval receipt."
     )
+
+
+def _rail_path_admission_advisory(
+    *,
+    mode: str,
+    owned_paths: Sequence[str] | None,
+) -> str | None:
+    """State the deferred-enforcement boundary for undeclared write dispatches."""
+    if mode in _WRITE_CAPABLE_MODES and not owned_paths:
+        return RAIL_ADMISSION_NO_PATH_ADVISORY
+    return None
+
+
+def _with_rail_admission_state(
+    state: dict[str, Any],
+    *,
+    advisory: str | None,
+    receipt_id: str | None,
+) -> dict[str, Any]:
+    """Persist admission transparency without making the opaque ID authority."""
+    if advisory is not None:
+        state["rail_admission_advisory"] = advisory
+    if receipt_id is not None:
+        state["rail_approval_receipt_id"] = receipt_id
+    return state
 
 
 def _format_dirty_entries(entries: list[dict[str, str]], *, limit: int = 10) -> str:
@@ -3541,10 +3573,17 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
     # P6 rail-path admission runs before the ownership ledger. A refusal must
     # leave no task-state, worktree, branch, or claim residue for a rail write.
+    rail_admission_advisory = _rail_path_admission_advisory(
+        mode=str(args.mode),
+        owned_paths=getattr(args, "research_owned_path", None),
+    )
+    if rail_admission_advisory is not None:
+        print(rail_admission_advisory, file=sys.stderr)
     rail_admission_error = _rail_path_admission_error(
         task_id=task_id,
         mode=str(args.mode),
         owned_paths=getattr(args, "research_owned_path", None),
+        receipt_id=getattr(args, "rail_approval_receipt", None),
     )
     if rail_admission_error:
         print(rail_admission_error, file=sys.stderr)
@@ -3747,6 +3786,11 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             dry_run_state["harness"] = requested_harness
         if lifecycle_carrier is not None:
             dry_run_state["task_lifecycle"] = lifecycle_carrier
+        dry_run_state = _with_rail_admission_state(
+            dry_run_state,
+            advisory=rail_admission_advisory,
+            receipt_id=getattr(args, "rail_approval_receipt", None),
+        )
         dry_run_reap = _reap_runtime_tmp_lease(
             runtime_tmp_root,
             runtime_tmp_namespace_root,
@@ -3896,6 +3940,11 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     if lifecycle_carrier is not None:
         initial_state["task_lifecycle"] = lifecycle_carrier
     initial_state = _with_optional_research_state(initial_state, research_state)
+    initial_state = _with_rail_admission_state(
+        initial_state,
+        advisory=rail_admission_advisory,
+        receipt_id=getattr(args, "rail_approval_receipt", None),
+    )
     _write_state_atomic(state_path, initial_state)
 
     # Fix 5 (#1476 AC 5) — dispatch-start telemetry.
@@ -3990,6 +4039,14 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     worker_env["TMPDIR"] = str(runtime_tmp_root)
     worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
     worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(runtime_tmp_namespace_root.parent)
+    rail_receipt_id = getattr(args, "rail_approval_receipt", None)
+    if rail_receipt_id is not None:
+        # These values are only opaque references/context. The hook still
+        # re-fetches and verifies the receipt through Monitor before allowing
+        # any rail target; a worker cannot turn the inherited values into
+        # authority by editing its local state or environment.
+        worker_env["LEARN_UK_RAIL_APPROVAL_RECEIPT"] = rail_receipt_id
+        worker_env["LEARN_UK_RAIL_TASK_ID"] = task_id
     if worktree_path is not None:
         _apply_worktree_git_ceiling(worker_env, worktree_path)
     if getattr(args, "allow_merge", False):
@@ -4871,6 +4928,16 @@ def build_parser() -> argparse.ArgumentParser:
             "dispatch. The file is parsed before spawn, resolved to an "
             "absolute path, hashed into task state, and revalidated by the "
             "Codex adapter before it emits --output-schema."
+        ),
+    )
+    d.add_argument(
+        "--rail-approval-receipt",
+        default=None,
+        metavar="RECEIPT_ID",
+        help=(
+            "Opaque receipt issued by scripts/orchestration/rail_approval.py. "
+            "Dispatch and hooks re-fetch it only through the provisioned Monitor API; "
+            "it never accepts a local receipt file."
         ),
     )
     d.add_argument(

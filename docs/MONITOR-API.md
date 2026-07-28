@@ -1532,6 +1532,39 @@ task state.
 }
 ```
 
+## Rail approval receipts — `/api/rail-approvals/`
+
+### `GET /api/rail-approvals/{receipt_id}`
+
+Read-only provisioned source for control-rail mutation approvals. Enforcement
+re-fetches this receipt for every rail decision; it never trusts a worktree
+file, an environment identity claim, or an `X-Agent` trailer as approval.
+
+Only an operator or advisor issues a receipt, explicitly and outside any agent
+workflow:
+
+```bash
+.venv/bin/python scripts/orchestration/rail_approval.py issue \
+  --task-id rail-p8-trail-migration \
+  --head-sha <40-character-current-head> \
+  --owned-path scripts/config/trails/rb1.trail.yaml \
+  --issuer operator \
+  --ttl-hours 4
+```
+
+The command prints the receipt JSON, including its opaque receipt ID, and writes
+immutable runtime state under `batch_state/`; that state is served only by
+Monitor. A write dispatch passes the opaque ID with
+`--rail-approval-receipt <id>` and re-fetches it through Monitor before it is
+admitted. It also passes the reference to the worker hook, which repeats the
+source fetch and exact task/head/path check.
+
+Monitor is the normal source. If a deployment cannot reach Monitor, its process
+bootstrap may inject a separately provisioned bridge source; it must identify
+as `source_kind="bridge"` and is subject to the same schema and exact-binding
+checks. There is no fallback to a local file, an arbitrary URL, or a caller-
+selected environment source; an unavailable source denies the rail mutation.
+
 ## Build Events — `/api/build/events/`
 
 ### `GET /api/build/events/recent?level=&slug=&limit=100`

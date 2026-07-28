@@ -42,7 +42,10 @@ RAIL_PATH_PATTERNS = (
     "scripts/guardrails/**",
     "scripts/delegate.py",
     "scripts/agent_runtime/codex_hook_policy.py",
+    "scripts/orchestration/rail_approval.py",
     "scripts/orchestration/rail_path_guard.py",
+    "scripts/api/main.py",
+    "scripts/api/rail_approval_router.py",
     "scripts/config/model_catalog.yaml",
     "agents_extensions/shared/rules/model-assignment.md",
     "scripts/config/fleet_taxonomy.yaml",
@@ -104,6 +107,76 @@ class RailApprovalReceiptStore(Protocol):
 
     def fetch_rail_approval_receipt(self, receipt_id: str) -> Mapping[str, Any]:
         """Re-fetch one immutable approval receipt by opaque identifier."""
+
+
+def _monitor_api_get(path: str) -> tuple[int, str, Mapping[str, str]]:
+    """Use the established Monitor client rather than a caller-chosen URL."""
+    from scripts.ai_agent_bridge.monitor_client import MonitorClient
+
+    return MonitorClient()._get(path)
+
+
+class MonitorRailApprovalReceiptStore:
+    """The provisioned Monitor API source used by production enforcement.
+
+    Receipt issuance writes the Monitor-owned runtime registry, but a caller
+    must use this API projection to fetch it.  Reading a worktree-local JSON
+    file directly would turn the receipt into a forgeable caller projection.
+    """
+
+    source_id = "monitor-api:/api/rail-approvals"
+    source_kind = "api"
+
+    def __init__(
+        self,
+        *,
+        get: Callable[[str], tuple[int, str, Mapping[str, str]]] | None = None,
+    ) -> None:
+        self._get = get or _monitor_api_get
+
+    def fetch_rail_approval_receipt(self, receipt_id: str) -> Mapping[str, Any]:
+        if not OPAQUE_RECEIPT_ID.fullmatch(receipt_id):
+            raise RailApprovalReceiptError("rail approval receipt ID must be an opaque approved-source identifier")
+        try:
+            status, body, _headers = self._get(f"/api/rail-approvals/{receipt_id}")
+        except RailApprovalReceiptError:
+            raise
+        except Exception as exc:
+            raise RailApprovalReceiptError("Monitor rail approval API could not re-fetch receipt") from exc
+        if status != 200:
+            raise RailApprovalReceiptError("Monitor rail approval API could not re-fetch receipt")
+        try:
+            payload = json.loads(body)
+        except json.JSONDecodeError as exc:
+            raise RailApprovalReceiptError("Monitor rail approval API returned invalid JSON") from exc
+        if not isinstance(payload, Mapping):
+            raise RailApprovalReceiptError("Monitor rail approval API returned a non-object receipt")
+        return payload
+
+
+class ProvisionedRailApprovalReceiptBridge:
+    """Adapter for a deployment-provisioned bridge when Monitor is unavailable.
+
+    This is intentionally dependency-injected at process bootstrap.  There is
+    no environment-variable URL, local-file, or user-supplied bridge fallback:
+    those would let a write caller select its own approval authority.
+    """
+
+    source_kind = "bridge"
+
+    def __init__(
+        self,
+        *,
+        source_id: str,
+        fetcher: Callable[[str], Mapping[str, Any]],
+    ) -> None:
+        if not source_id:
+            raise RailApprovalReceiptError("rail approval bridge must have a stable source_id")
+        self.source_id = source_id
+        self._fetcher = fetcher
+
+    def fetch_rail_approval_receipt(self, receipt_id: str) -> Mapping[str, Any]:
+        return self._fetcher(receipt_id)
 
 
 @dataclass(frozen=True, slots=True)
@@ -281,6 +354,25 @@ class ApprovedRailApprovalReceiptResolver:
         )
 
 
+def build_production_rail_approval_receipt_resolver(
+    *,
+    bridge: RailApprovalReceiptStore | None = None,
+) -> ApprovedRailApprovalReceiptResolver:
+    """Build the fixed production resolver without caller-selected authority.
+
+    Monitor is the ordinary production source.  A deployment with an approved
+    bridge may inject it at process bootstrap when Monitor is unavailable; the
+    bridge must carry ``source_kind='bridge'`` and is still schema/binding
+    checked by :class:`ApprovedRailApprovalReceiptResolver`.  Enforcement code
+    never falls back to a local file, arbitrary URL, or environment claim.
+    """
+    if bridge is not None:
+        if getattr(bridge, "source_kind", None) != "bridge":
+            raise RailApprovalReceiptError("rail approval fallback must be a provisioned bridge")
+        return ApprovedRailApprovalReceiptResolver(bridge)
+    return ApprovedRailApprovalReceiptResolver(MonitorRailApprovalReceiptStore())
+
+
 def _receipt_authorizes(
     receipt: VerifiedRailApprovalReceipt,
     *,
@@ -349,3 +441,46 @@ def decide_rail_path_mutation(
     if reason is not None:
         return RailPathDecision(RailPathDecisionKind.DENY, reason, rail_paths)
     return RailPathDecision(RailPathDecisionKind.ALLOW, "rail_approval_verified", rail_paths)
+
+
+def decide_rail_path_mutation_with_production_receipt(
+    *,
+    task_id: str,
+    candidate_paths: Sequence[str],
+    head_sha: str,
+    receipt_id: str | None,
+    resolver: ApprovedRailApprovalReceiptResolver | None = None,
+    now: Callable[[], datetime] = _utc_now,
+) -> RailPathDecision:
+    """Resolve a receipt from the fixed source, then make the normal decision.
+
+    This keeps dispatch and hook layers from accidentally trusting a receipt
+    payload supplied by their caller.  Source failures become denials rather
+    than exceptions that a caller might mishandle as an allow.
+    """
+    preliminary = decide_rail_path_mutation(
+        task_id=task_id,
+        candidate_paths=candidate_paths,
+        head_sha=head_sha,
+        now=now,
+    )
+    if preliminary.allowed or preliminary.reason != "rail_approval_receipt_required":
+        return preliminary
+    if receipt_id is None:
+        return preliminary
+    try:
+        receipt = (resolver or build_production_rail_approval_receipt_resolver()).fetch(receipt_id)
+    except RailApprovalReceiptError as exc:
+        reason = (
+            "expired_rail_approval_receipt"
+            if "has expired" in str(exc)
+            else "rail_approval_receipt_unreadable"
+        )
+        return RailPathDecision(RailPathDecisionKind.DENY, reason, preliminary.rail_paths)
+    return decide_rail_path_mutation(
+        task_id=task_id,
+        candidate_paths=candidate_paths,
+        head_sha=head_sha,
+        receipt=receipt,
+        now=now,
+    )
