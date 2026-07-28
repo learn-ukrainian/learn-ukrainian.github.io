@@ -55,13 +55,14 @@ def validate_profile(profile: dict[str, Any], *, key: str | None = None) -> list
 
     if profile["transport"] not in {
         "claudex",
+        "glmcc",
         "kimicc",
         "native",
         "native_codex",
         "unknown",
     }:
         errors.append(
-            "transport must be claudex, kimicc, native, native_codex, or unknown"
+            "transport must be claudex, glmcc, kimicc, native, native_codex, or unknown"
         )
     if not isinstance(profile["main_model_id"], str) or not profile["main_model_id"].strip():
         errors.append("main_model_id must be a non-empty string")

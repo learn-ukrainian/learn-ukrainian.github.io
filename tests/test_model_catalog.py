@@ -14,10 +14,13 @@ from scripts.review.model_catalog import (
     ModelCatalogError,
     catalog_age_days,
     catalog_is_stale,
+    glm_model_aliases,
     kimi_model_aliases,
     load_model_catalog,
+    resolve_glm_model,
     resolve_kimi_model,
     validate_catalog,
+    validate_glm_alias_consumers,
     validate_kimi_alias_consumers,
 )
 
@@ -86,6 +89,24 @@ def test_kimi_aliases_and_routes_are_catalog_backed() -> None:
         "context_profile": "kimicc_k3",
     }
     validate_kimi_alias_consumers()
+
+
+def test_glm_model_aliases_and_consumer_lint() -> None:
+    aliases = glm_model_aliases()
+    assert "glm-5.2" in aliases
+    assert aliases["glm-5.2"] == "glm-5.2"
+    assert aliases["glm52"] == "glm-5.2"
+    assert aliases["glm"] == "glm-5.2"
+
+    model_id, routes = resolve_glm_model("glm")
+    assert model_id == "glm-5.2"
+    assert routes == {
+        "glmcc_alias": "glm-5.2",
+        "platform_model_id": "glm-5.2",
+        "coding_model_id": "glm-5.2",
+        "context_profile": "glmcc_glm52",
+    }
+    validate_glm_alias_consumers()
 
 
 def test_catalog_rejects_kimi_route_without_its_friendly_alias():

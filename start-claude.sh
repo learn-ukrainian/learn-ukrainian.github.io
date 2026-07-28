@@ -186,12 +186,17 @@ done
 # nested native launch cannot inherit an alternate route by ambient state.
 _claudex_managed_launch="${LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH:-0}"
 _kimicc_managed_launch="${LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH:-0}"
+_glmcc_managed_launch="${LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH:-0}"
 unset LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH
 unset LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH
+unset LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH
 if [ "$_claudex_managed_launch" != "1" ] && [ "${LEARN_UKRAINIAN_TRANSPORT:-}" = "claudex" ]; then
     unset LEARN_UKRAINIAN_REQUESTED_PROFILE_ID
 fi
 if [ "$_kimicc_managed_launch" != "1" ] && [ "${LEARN_UKRAINIAN_TRANSPORT:-}" = "kimicc" ]; then
+    unset LEARN_UKRAINIAN_REQUESTED_PROFILE_ID
+fi
+if [ "$_glmcc_managed_launch" != "1" ] && [ "${LEARN_UKRAINIAN_TRANSPORT:-}" = "glmcc" ]; then
     unset LEARN_UKRAINIAN_REQUESTED_PROFILE_ID
 fi
 _requested_profile="${LEARN_UKRAINIAN_REQUESTED_PROFILE_ID:-native_claude}"
@@ -237,7 +242,7 @@ fi
 
 # One concise diagnostic; no endpoint, authorization, or forwarded arguments.
 echo "Context profile: id=$LEARN_UKRAINIAN_PROFILE_ID model=$LEARN_UKRAINIAN_MAIN_MODEL_ID window=$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS budget=$LEARN_UKRAINIAN_COLD_START_BUDGET_TOKENS compact=${LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS:-native} reason=$LEARN_UKRAINIAN_RESOLUTION_REASON"
-unset _claudex_managed_launch _kimicc_managed_launch _requested_profile _prev
+unset _claudex_managed_launch _kimicc_managed_launch _glmcc_managed_launch _requested_profile _prev
 
 export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
 
