@@ -2,7 +2,11 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { State } from 'ts-fsrs';
 import { act, render, screen, waitFor, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import LexiconPractice, { addDailyExamples } from '@site/src/components/LexiconPractice';
+import LexiconPractice, {
+  addDailyExamples,
+  isEnglishLearnerGloss,
+  isMeaningMcEligible,
+} from '@site/src/components/LexiconPractice';
 import { LexiconCustomDeckManager } from '@site/src/components/LexiconCustomDeckManager';
 import PracticeDailyDeck from '@site/src/components/PracticeDailyDeck';
 import PracticeSessionSummary, { type SessionSummaryStats } from '@site/src/components/PracticeSessionSummary';
@@ -1536,6 +1540,24 @@ describe('LexiconPractice', () => {
       expect(label).not.toMatch(/[?(]/);
       expect(label.trim().split(/\s+/)).toHaveLength(1);
     }
+  });
+
+  test('meaning eligibility requires a Latin-majority learner English gloss', () => {
+    expect(isEnglishLearnerGloss('justice')).toBe(true);
+    expect(isEnglishLearnerGloss('42')).toBe(false);
+    expect(isEnglishLearnerGloss('сукупність прав')).toBe(false);
+    // A short Cyrillic clarification is acceptable only while Latin remains the majority.
+    expect(isEnglishLearnerGloss('justice укр')).toBe(true);
+    expect(isEnglishLearnerGloss('justice справедливість')).toBe(false);
+
+    const ukrainianDictionaryGloss = lexeme(
+      'pravo',
+      'право',
+      'сукупність прав',
+      { nominative: 'право', accusative: 'право', locative: 'праві' },
+      { glossClean: 'сукупність прав', meaningMcEligible: true },
+    );
+    expect(isMeaningMcEligible(ukrainianDictionaryGloss)).toBe(false);
   });
 
   test('choice backfills distractors across POS when same-POS pool is too small', () => {

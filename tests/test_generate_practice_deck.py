@@ -18,6 +18,7 @@ from scripts.audit.generate_practice_deck import (
     _build_paradigm_items,
     _declension_category,
     _eligible_decoys,
+    _meaning_mc_eligible,
     _option_strategy_for_level,
     _stress_position,
     apply_size_budgets,
@@ -581,6 +582,33 @@ def test_meaning_mc_eligibility_marks_clean_and_messy_glosses() -> None:
     assert lexemes["borshch"]["glossClean"] == "borshch"
     assert lexemes["borshch"]["meaningMcEligible"] is False
     assert index_items["borshch"]["modes"] == ["flashcards"]
+
+
+def test_meaning_mc_eligibility_requires_a_latin_majority_gloss() -> None:
+    assert _meaning_mc_eligible("justice", "справедливість", "noun") is True
+    assert _meaning_mc_eligible("сукупність прав", "право", "noun") is False
+    # A Latin-majority label with a brief Cyrillic clarification remains a learner English gloss.
+    assert _meaning_mc_eligible("justice укр", "справедливість", "noun") is True
+    assert _meaning_mc_eligible("justice справедливість", "справедливість", "noun") is False
+
+    entries = [
+        {
+            "lemma": "право",
+            "url_slug": "pravo",
+            "gloss": "сукупність прав",
+            "pos": "noun",
+            "primary_source": "course_vocab",
+            "cefr": "A1",
+        },
+    ]
+    shards = build_practice_shards(
+        entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({})
+    )
+    lexeme = shards["A1"]["lexemes"]["lexemes"][0]
+    index_item = shards["A1"]["index"]["items"][0]
+
+    assert lexeme["meaningMcEligible"] is False
+    assert index_item["modes"] == ["flashcards"]
 
 
 def test_option_set_validator_rejects_phrase_labels() -> None:
