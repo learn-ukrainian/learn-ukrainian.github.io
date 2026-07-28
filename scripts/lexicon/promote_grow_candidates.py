@@ -84,6 +84,7 @@ _ENRICHED_STAT_KEYS = ("enriched", "enriched_total", "enriched_count")
 _DUMMY_MODULE = ModuleInfo(track="", slug="", module_num=0, vocab_path=Path())
 
 SelfCheck = Callable[[Path], int]
+PromotedEntriesCheck = Callable[[Path, Sequence[Mapping[str, Any]]], int]
 FingerprintWriter = Callable[[Path], Any]
 
 
@@ -137,7 +138,9 @@ def promote_grow_candidates(
     approval_ledger_path: Path | None = None,
     needs_review_ledger_path: Path | None = None,
     write: bool = False,
+    allow_preexisting_conformance: bool = False,
     self_check: SelfCheck | None = None,
+    promoted_entries_check: PromotedEntriesCheck | None = None,
     fingerprint_writer: FingerprintWriter | None = None,
 ) -> PromotionResult:
     """Promote clean grow candidates and return a structured summary."""
@@ -150,6 +153,7 @@ def promote_grow_candidates(
     if needs_review_ledger_path is not None:
         needs_review_ledger_path = _resolve_path(needs_review_ledger_path)
     self_check = self_check or verify_prospective_manifest
+    promoted_entries_check = promoted_entries_check or verify_promoted_entries
     fingerprint_writer = fingerprint_writer or _write_fingerprint_sidecar
 
     if not candidates_path.exists():
@@ -230,7 +234,15 @@ def promote_grow_candidates(
 
     if write:
         if promoted:
-            _validate_before_write(manifest, manifest_path, self_check)
+            if allow_preexisting_conformance:
+                _validate_promoted_entries_before_write(
+                    manifest,
+                    manifest_path,
+                    newly_promoted_entries,
+                    promoted_entries_check,
+                )
+            else:
+                _validate_before_write(manifest, manifest_path, self_check)
             _write_json_atomically(manifest_path, manifest)
             manifest_written = True
             fingerprint_writer(fingerprint_path)
@@ -288,6 +300,79 @@ def verify_prospective_manifest(manifest_path: Path) -> int:
     )
     enrichment_status = check_enrichment(manifest_path=manifest_path)
     return verify_status or enrichment_status
+
+
+def verify_promoted_entries(manifest_path: Path, entries: Sequence[Mapping[str, Any]]) -> int:
+    """Run structural and conformance safety gates only on new manifest entries.
+
+    ``--allow-preexisting-conformance`` is intended for an already hydrated
+    manifest whose legacy entries are known to fail the full §8 sweep.  It does
+    not waive those gates for a promotion: each new entry still receives the
+    same entry-local structural and conformance checks, including VESUM and
+    attribution checks where their local data sources are available.
+    """
+    promoted_manifest = {"entries": list(entries)}
+    hazards = verify_manifest.hazards(promoted_manifest, list(entries))
+    violations = verify_manifest.conformance(promoted_manifest)
+    enrichment_status = check_enrichment(manifest_path=manifest_path)
+    identity_violations = _promoted_entry_identity_violations(manifest_path, entries)
+
+    if not any(hazards.values()) and not violations and not enrichment_status and not identity_violations:
+        print("=== PROMOTED-ENTRY SAFETY GATES: CLEAN ===")
+        return 0
+
+    print("=== PROMOTED-ENTRY SAFETY GATES ===", file=sys.stderr)
+    for name, hits in hazards.items():
+        if hits:
+            print(f"  {name}: {len(hits)} — {hits[:5]}", file=sys.stderr)
+    if violations:
+        by_gate: dict[str, int] = {}
+        for violation in violations:
+            by_gate[violation.gate] = by_gate.get(violation.gate, 0) + 1
+        for gate, count in sorted(by_gate.items()):
+            examples = [
+                f"{violation.lemma}: {violation.detail}"
+                for violation in violations
+                if violation.gate == gate
+            ][:5]
+            print(f"  {gate}: {count} — {examples}", file=sys.stderr)
+    if identity_violations:
+        for violation in identity_violations:
+            print(f"  route_identity: {violation}", file=sys.stderr)
+    return 2
+
+
+def _promoted_entry_identity_violations(
+    manifest_path: Path, entries: Sequence[Mapping[str, Any]]
+) -> list[str]:
+    """Return route collisions introduced by a newly promoted entry.
+
+    The grow queue is already de-duplicated by normalized lemma, but routes are
+    indexed by ``url_slug``.  Check only collisions involving a new entry so
+    documented legacy collisions remain outside this narrowly scoped escape
+    hatch.
+    """
+    manifest = _load_manifest(manifest_path)
+    all_entries = manifest.get("entries", [])
+    if not isinstance(all_entries, list):
+        return ["prospective manifest entries is not a list"]
+
+    slug_counts: dict[str, int] = {}
+    for entry in all_entries:
+        if isinstance(entry, Mapping):
+            slug = _clean_optional_str(entry.get("url_slug"))
+            if slug:
+                slug_counts[slug] = slug_counts.get(slug, 0) + 1
+
+    violations: list[str] = []
+    for entry in entries:
+        lemma = _clean_optional_str(entry.get("lemma")) or "<missing lemma>"
+        slug = _clean_optional_str(entry.get("url_slug"))
+        if not slug:
+            violations.append(f"{lemma}: missing url_slug")
+        elif slug_counts.get(slug, 0) > 1:
+            violations.append(f"{lemma}: url_slug {slug!r} collides with an existing route")
+    return violations
 
 
 def format_summary(result: PromotionResult, *, report: bool = False, candidates_path: Path = DEFAULT_CANDIDATES) -> str:
@@ -417,6 +502,15 @@ def build_parser() -> argparse.ArgumentParser:
             "only its approve rows are promoted from needs_review (with approved_gloss)"
         ),
     )
+    parser.add_argument(
+        "--allow-preexisting-conformance",
+        action="store_true",
+        help=(
+            "Validate only newly promoted entries for structural and §8 conformance "
+            "violations. Use only when the hydrated manifest has documented legacy "
+            "conformance debt; the default validates the whole prospective manifest."
+        ),
+    )
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument(
         "--write",
@@ -448,6 +542,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             approval_ledger_path=args.approval_ledger,
             needs_review_ledger_path=args.needs_review_ledger,
             write=args.write,
+            allow_preexisting_conformance=args.allow_preexisting_conformance,
         )
     except (SelfCheckError, ValueError) as exc:
         print(f"error: {exc}; no files written", file=sys.stderr)
@@ -928,6 +1023,20 @@ def _validate_before_write(manifest: dict[str, Any], manifest_path: Path, self_c
         temp_manifest.write_bytes(_json_bytes(manifest))
         exit_code = self_check(temp_manifest)
     if exit_code != 0:
+        raise SelfCheckError(exit_code)
+
+
+def _validate_promoted_entries_before_write(
+    manifest: dict[str, Any],
+    manifest_path: Path,
+    entries: Sequence[Mapping[str, Any]],
+    promoted_entries_check: PromotedEntriesCheck,
+) -> None:
+    with tempfile.TemporaryDirectory(prefix="atlas-grow-promote-") as tmp_dir:
+        temp_manifest = Path(tmp_dir) / manifest_path.name
+        temp_manifest.write_bytes(_json_bytes(manifest))
+        exit_code = promoted_entries_check(temp_manifest, entries)
+    if exit_code:
         raise SelfCheckError(exit_code)
 
 
