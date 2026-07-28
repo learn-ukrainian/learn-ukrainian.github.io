@@ -1,38 +1,56 @@
 # Workstreams — V7 Pipeline Era
 
-> **Living document.** Tiers + contents rotate. The *framework* (tier
-> definitions, operating rhythm, KPI) is stable; the *contents* (which
-> issues are in which tier) refresh whenever an issue closes, a bug is
-> filed, or a build surfaces a new gap. Update on every session-handoff
-> + on every PR that closes a Tier-1 item. **Stale tier rows are worse
-> than missing ones — when in doubt, delete and let `gh issue list`
-> be the source of truth.**
+> **Living document.** The *framework* (streams, pillars, operating rhythm) is stable;
+> the *contents* (each stream's current milestone row) refresh whenever a milestone
+> lands or the epic board moves. **Rot must be visible, never hidden: a row that no
+> longer reflects reality is marked `STALE`, a stream with no set milestone is marked
+> `VACANT` — rows are corrected or marked, not deleted.** The GitHub stream epic is the
+> real-time source of truth; this page is the once-per-session orientation layer.
 
 | Field | Value |
 |---|---|
-| **Last refreshed** | 2026-05-19 (post-B1-bakeoff, Hermes MCP fix + DeepSeek-pro xhigh validated) |
-| **Refresh trigger** | Every session handoff, every Tier-1 issue close, every new build-surfaced bug |
-| **KPI** | Curriculum modules passing audit per week |
+| **Last refreshed** | 2026-07-27 (milestone layer added; May-era tier lists retired — operator-requested focus refresh; 2-seat panel applied) |
+| **Refresh trigger** | Every session handoff that lands a milestone; every stream-epic board change |
+| **Curriculum KPI** | Modules passing audit per week (curriculum streams; each milestone carries its own outcome measure) |
 | **Mission** | Full Ukrainian curriculum with decolonized pedagogy, real textbook grounding, RAG-verified vocabulary, adversarial review. Quality non-negotiable. |
 | **Pipeline** | V7 (`scripts/build/v7_build.py` → `linear_pipeline.py`). V5/V6 obsolete, do not extend. |
 
 ---
 
+## The goal chain (read top-down before picking work)
+
+Learners and teachers are the only customers. Every stream must trace to this chain:
+
+1. **Products**: the LU curriculum site (learners) and Hramatka (teachers).
+2. **Kept honest by**: the UA eval harness (QG gates, judges, benchmarks).
+3. **Which runs on**: the fleet — build pipeline, dispatch, comms, leases, CI.
+4. **Community give-back**: the grounded-factuality benchmark release (code, not paper).
+
+**The trace is falsifiable, not vibes:** every queued item names its stream milestone,
+the specific done-condition it advances, and the learner/teacher outcome that condition
+protects. "Improves the fleet" alone is not a trace. Exceptions require an owning issue,
+a reason, and an expiry; an exception living past one session forces a milestone
+re-baseline. Pre-approved exception classes (no logging hesitation): emergency CI/main
+breakage; green out-of-lane PRs abandoned >1h per `AGENTS.md`; operator direct orders.
+
+---
+
 ## Streams = GitHub Epics (#4708 — supersedes hand-maintained tier rows for scheduling)
 
-Scheduling now lives in GitHub stream epics; this doc keeps the framework and pillars.
-The registry `scripts/config/issue_streams.yaml` is the single source of truth (auditor:
+Scheduling lives in GitHub stream epics; this doc keeps the framework, the pillars, and
+one **current milestone** per stream. The registry `scripts/config/issue_streams.yaml`
+is the single source of truth for membership (auditor:
 `scripts/orchestration/issue_stream_audit.py`; live view: `GET /api/issues/streams`).
 
 | Stream | Epic(s) | Scope |
 |---|---|---|
-| atlas-practice | #4387 → #4700 | Word Atlas + Practice Hub product & UX |
-| atlas-intake | #4220, #4378 | Full-corpus intake into the Atlas |
+| atlas-practice | #4387, #4700, #5331 | Word Atlas + Practice Hub product & UX |
+| atlas-intake | #4220, #4378, #5224 | Full-corpus intake into the Atlas |
 | corpus-channels | #4706 | Acquisition & ingestion (textbooks · ZNO · Ohoiko-media · press · academic) |
 | infra-harness | #4707 | Infra & fleet reliability (hooks, dispatch, routing) |
 | devops | #5703 | DevOps automation, CI, release & launcher reliability |
 | eval-harness | #4913 | UA eval harness: QG grounding/entailment gates, grammar-lexical gate, annotation, bakeoffs, cutovers |
-| benchmark-2156 | #4639 | UA LLM factuality benchmark community release |
+| benchmark-2156 | #4639 | UA LLM grounded-factuality benchmark community release |
 | core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |
 | seminars-folk | #2836 | FOLK re-research + rebuild |
 | seminars-bio | #4431, #4215 | BIO readiness + builds |
@@ -44,6 +62,40 @@ link new issues to a stream at creation; orphans get flagged at every cold start
 
 ---
 
+## Stream milestones (the focus layer)
+
+**Each ACTIVE stream has exactly one outcome milestone. Multiple tasks may contribute,
+but each must advance the same done-condition. A milestone does not activate a stream —
+activation (`ACTIVE | PAUSED | BLOCKED`) is operator-owned and sized from live
+capacity.** The stream's canonical lease holder is the sole editor of its row; edits
+ride the driver's normal PRs (never a standalone doc-race — the epic stays the
+real-time truth between refreshes). Cross-stream dependencies name ONE owning stream.
+Rows below marked *(proposed)* were drafted by the infra driver on 2026-07-27 from
+epic-board state and bind only once that stream's driver (State: the operator) confirms.
+
+| Stream | State | Current milestone | Done when |
+|---|---|---|---|
+| infra-harness | ACTIVE *(proposed)* | Weak-driver rails T1 (T1.1 slot addressing ✅ #5878; T1.2 lease lifecycle; T1.3 glm canary lane) | T1.2 + T1.3 merged with mutation-checked tests. (The fleet-comms decision packet — dual-write parity + authority-signal evidence for any future plane change, file handoff never dropped unilaterally per `fleet-comms-coordination.md` — is the NEXT milestone, not this one.) |
+| eval-harness | *(operator to set)* | Label-the-union annotation → judge qualification (#4913 board's critical path) *(proposed — driver to confirm)* | Annotation round complete + qualification scored against it per `layerb-entailment-gate-design.md`; judge-selection decisions only after |
+| benchmark-2156 | *(operator to set)* | Benchmark v1 freeze + native-expert validation (#4639 Phases 1–2: #4626 before packaging #4541) *(proposed — driver to confirm)* | v1 frozen with a tagged, reproducible run command; expert calibration pass recorded |
+| atlas-practice | ACTIVE *(proposed)* | Practice Hub deck experience stable after the D10 wave (#5877–#5883) *(driver to confirm)* | A bounded soak: 7 days with no new daily-deck defect filed; then next #4700 item |
+| atlas-intake | ACTIVE *(proposed)* | 20k enrichment run with durable storage (#5884) *(driver to confirm)* | Enriched dataset persisted off-repo with a tracked pointer; refetch never needed |
+| corpus-channels | *(operator to set)* | *(VACANT — driver to set from #4706; the slot-addressing work formerly listed here is infra-harness scope)* | — |
+| devops | *(operator to set)* | Post-#5703 launcher/lease separation soak *(driver to confirm)* | 7 consecutive days, ≥10 real session launches observed in lease telemetry, zero cross-stream lease collisions — zero-traffic days do not count |
+| core-quality | *(operator to set)* | *(VACANT — driver to set from #4274)* | — |
+| seminars-folk | *(operator to set)* | *(VACANT — driver to set from #2836)* | — |
+| seminars-bio | *(operator to set)* | *(VACANT — driver to set from #4431)* | — |
+| seminars-cross | *(operator to set)* | *(VACANT — driver to set from #3120/#3079)* | — |
+| hramatka | ACTIVE *(proposed)* | Lesson QUALITY floor (gate calibration #5254) *(driver to confirm — exact threshold, sample size, and run id belong on #5254)* | A soak run identified by run-id whose ready-lesson rate meets the #5254 bar at its declared sample size |
+
+Row states: a row contradicted by its epic board is edited or marked `STALE` by the
+next driver who notices — never silently deleted; `VACANT` means the stream has no set
+milestone and is itself a visible signal. The cold-start auditor SHOULD warn on STALE /
+VACANT rows and on milestones whose named issues are closed (tooling follow-up tracked
+on the infra board).
+
+---
+
 ## Three Quality Pillars
 
 Every shipped module must pass all three:
@@ -52,169 +104,39 @@ Every shipped module must pass all three:
 |---|---|---|
 | **Structural** | Word count, activities, vocab, formatting, MDX render | Deterministic audit gates (`scripts/audit_module.py`, `python_qg.json`, `wiki_coverage_gate.py`) |
 | **Linguistic** | VESUM-verified words, Russianisms/Surzhyk/calques/paronyms clean, citations resolve | MCP `sources` server (`mcp__sources__*` / `mcp_sources_*`) — verify_words, check_russian_shadow, verify_source_attribution, search_style_guide |
-| **Pedagogical** | Tone, immersion balance, register, decolonization, sequence | Cross-agent reviewer (Codex per `pipeline.md`; DeepSeek-pro hermes for VESUM-backed content review per #M0) |
+| **Pedagogical** | Tone, immersion balance, register, decolonization, sequence | Cross-agent reviewer per the live routing rule (`model-assignment.md` served at `/api/rules`) |
 
 The reviewer-as-fixer rule (ADR-007): reviewer emits `<fixes>` find/replace pairs; pipeline applies deterministically. No LLM regeneration during review. Self-review forbidden (`SELF_REVIEW_DETECTED` gate enforces).
 
 ---
 
-## Priority tiers (the operational framework)
+## Operating rhythm (the anti-drift ritual)
 
-Tier definitions are stable. Tier *membership* rotates — refresh per the rules above.
+Per session, every driver:
 
-### Tier 1 — Unblocks lesson throughput (drive first)
-
-Things that, when fixed, increase the number of modules passing audit per week. These get the orchestrator's foreground attention.
-
-| Issue | Why it blocks throughput |
-|---|---|
-| Writer-MCP-invocation gap | If Hermes-routed writers (deepseek/qwen) don't actually invoke MCP at writer-time, the post-2026-06-15 routing has a quality hole. Investigation in flight; the m20+A2+B1 builds running 2026-05-19 will tell us. |
-| **#2151** V7 preservation wrapper | Spec exists, impl missing — without it, parallel module builds don't archive consistently. Codex dispatch, ~2-3h. |
-| **#1969** `resources_search_attempted=0` regression | Multimedia obligations not getting fulfilled — direct lesson-quality hit. ~1-2h. |
-| **#1918** immersion gate tab-aware | Pedagogical accuracy on a load-bearing gate. Investigation first. |
-
-### Tier 2 — Improves lesson quality (next)
-
-These improve the QUALITY of modules passing audit, not the rate. Pick up when Tier 1 is empty or a Tier 1 dispatch is mid-flight.
-
-- **#1940** `pedagogical_deviations_from_standard:` plan field (curriculum metadata)
-- **#1916** Gate 4 Progressive Challenge needs `plan.targets` schema
-- **#1914** Pass-2 scaffold tune for YELLOW contract test
-- **#2039** grok-tools under-target (only matters if grok stays in routing rotation)
-
-### Tier 3 — Data acquisition (parallel content track)
-
-Don't block builds but cap content depth. Dispatch as background work when capacity exists. Gemini's lane (unmetered, "running existing pipelines").
-
-- **#2054** paronyms NBU 1986 PDF OCR — needs OCR pipeline (currently used on ESUM)
-- **#2053** Holovashchuk PDF 404 — needs alternate source
-- **#2052** Karavansky scraper landing
-- **#2048** R2U difficult-lexis (~5K rows) — script ready, data load pending
-- **#1960** wiki external article placeholders → real URLs
-
-### Tier 4 — Infra/CI noise reduction (when budget permits)
-
-Doesn't ship lessons but reduces friction. Address opportunistically.
-
-- **#2154** zizmor MEDIUM triage (DeepSeek-pro code dispatch in flight at time of writing)
-- **#2126** review/review broken-env (saves 1 advisory-fail per PR going forward)
-- **#2159** codex CLI silent-crash via runner — low priority; codex isn't the B1+ writer post-sunset routing anyway
-- **#2134** codex silent-exit pattern — related to #2159
-- **#2071** codex hangs with response_chars=0 — related to #2159
-- **#1908** layered-harness audit
-- **#1905** pipeline replay-mode regression suite
-- **#1896** secret-leak prevention follow-ups (#M-5 recurrence backlog)
-- **#2023** bridge claude --bare auth
-
-### Tier 5 — Epics / meta (separate workstreams, don't compete for tactical time)
-
-Long-running initiatives. Track in their own decision-card / RFC threads.
-
-- **#1865** [EPIC] Context budget optimization (subscription-tier quota burn)
-- **#2156** Project: UA calque + grammar eval harness (UNLP 2027 target)
-- **#2132** [promote-protocol] Round 1 results — agent capability expansion
-- **#2116** [research] claude-i tmux wrapper — post-2026-06-15 Claude lane
-- **#2072** [follow-up] Grok integration — extend dispatch capabilities
-- **#1933** [harness-engineering] /goal driver improvements
-- **#2036** [hermes/auth] anthropic provider logout — Claude-via-Hermes empty stdout
+1. **Cold-start**: orient (Monitor API + handoff), then read YOUR stream's milestone row
+   and epic board. The session queue must trace to the milestone per the falsifiable
+   goal-trace rule above; non-tracing work is an exception with an owning issue, reason,
+   and expiry, logged in the handoff.
+2. **Dispatch**: every brief names its stream (the research-registry classification
+   already forces this); width per CodexBar pace/reserve + disk headroom, never fixed
+   caps.
+3. **Merge gate — mechanical, not vibes**: auto-merge is armed only when EVERY
+   explicitly requested review of the CURRENT head is terminal and published. A review
+   in `sent` / `processing` / timed-out / failed state is unresolved until it returns or
+   is explicitly cancelled with a recorded reason; a new head invalidates prior
+   verdicts. (2026-07-27 lesson: auto-merge raced a still-running formal CF; the
+   finding was real and cost a follow-up PR. The enforcement home for this rule is the
+   task-lifecycle / decision-tables layer — this page only states it.)
+4. **Session close**: if your milestone moved, the row update rides your normal PR or
+   handoff commit — the epic remains the real-time truth between page refreshes.
+5. **Inventory hygiene** (weekly or on operator ping): run the stream auditor —
+   orphans to zero; issues stale >14 days triaged (close the dead, link the live).
 
 ---
 
-## Operating rhythm
+## Change control
 
-Per session (1-3h block):
-
-1. **Cold-start** — orient via Monitor API + latest handoff (existing protocol, `claude_extensions/rules/workflow.md`).
-2. **Pick a Tier-1 item + dispatch it** (Codex for mechanical-with-design-judgment, DeepSeek-pro for code+content quality, Gemini for routine pipeline runs per #M0).
-3. **Build at least one curriculum module in parallel** (`v7_build.py --writer deepseek-tools --effort xhigh --worktree`) — validates pipeline AND adds to throughput.
-4. **Sweep open PRs** — review + merge clean PRs (per #0H). Advisory CI fails (review/review per #2126, Gemini-Dispatch) don't block.
-5. **Inline orchestration** while dispatches run — write briefs, file follow-up issues, autopsies, decision cards. Never sit idle waiting on watchers.
-6. **Handoff at natural break** with full queue state — let the next session start oriented.
-
-Weekly cadence:
-
-- Modules built that pass audit (the KPI)
-- Modules with reviewer-approved content
-- Tier-1 issues closed
-- New bugs surfaced + filed (signal, not noise — bugs found mean the pipeline is exercising itself)
-
----
-
-## V7 Pipeline Architecture (current)
-
-```
-Plan (DRAFT→REVIEWED→LOCKED) →
-  Knowledge packet (RAG sources via MCP) →
-  Implementation map (seeded contract from wiki obligations) →
-  Writer (claude-tools pre-sunset / deepseek-tools xhigh post-sunset) →
-  Audit gates (python_qg) →
-  Reviewer (cross-agent, no self-review) →
-  Fix loop (deterministic find/replace from reviewer <fixes>) →
-  MDX assembly
-```
-
-- **Writer policy**: claude-tools (Opus 4.7 xhigh) is current default. Post-2026-06-15 sunset → deepseek-tools effort=xhigh uniformly across A1/A2/B1+ per `scripts/config/agent_fallback_substitutions.yaml`. No tier splits, no "budget option" routing — quality non-negotiable.
-- **Reviewer policy**: Codex primary per `claude_extensions/rules/pipeline.md`; DeepSeek-pro hermes for VESUM-backed content review (#M0). Cross-agent only (SELF_REVIEW_DETECTED enforces).
-- **Wiki writer**: Gemini always (`scripts/wiki/compile.py --writer gemini`).
-- **MCP source-of-truth**: `mcp__sources__*` (Claude/Codex convention) ↔ `mcp_sources_*` (Hermes/Gemini convention). Pipeline tolerates both (commits `0fc0f0d427` + `3aa830fa4f`).
-
----
-
-## Content Status
-
-Source of truth: `curl http://localhost:8765/api/orient | jq '.pipeline.summary'`. Numbers below are a periodic snapshot — refresh from API, do not edit inline.
-
-Snapshot 2026-05-19:
-
-| Track | Total | Research done | Content done | Audit passing |
-|---|---:|---:|---:|---:|
-| A1 | 55 | 0 | 0 | 0 |
-| A2 | 69 | 0 | 0 | 0 |
-| B1 | 94 | 0 | 0 | 0 |
-| B2 | 93 | 0 | 0 | 0 |
-| C1 | 132 | 0 | 0 | 0 |
-| C2 | 110 | 0 | 0 | 0 |
-| folk | 27 | 27 | 1 | 0 |
-| (seminar tracks) | 1318 | 0 | 0 | 0 |
-
-Wiki compilation: ~99% across most tracks (manifest in `curl /api/orient | jq '.wiki'`).
-
-Active work this session: 3 V7 builds with deepseek-pro xhigh — a1/my-morning, a2/aspect-concept, b1/genitive-nuances. Results determine whether deepseek-pro xhigh + Hermes MCP fix gives audit-green modules end-to-end.
-
----
-
-## Tracks (architecture)
-
-- **l2-uk-en** (main): A1→C2 + seminar tracks (HIST, BIO, ISTORIO, LIT, OES, RUTH, lit-* subtracks, folk). Ukrainian for English speakers.
-- **l2-uk-direct**: L1-agnostic Ukrainian (A1→B2). Separate schemas, no English. See `docs/l2-uk-direct/`.
-
-Per-track architecture details: `docs/best-practices/track-architecture.md`.
-
----
-
-## Deferred / parking lot
-
-Labeled `priority:later` in issues. Will revisit after CORE A1-B2 tracks have shipped quantity. Do NOT mix into Tier 1-5 above without explicit re-prioritization.
-
-- Seminar tracks beyond the existing manifest
-- STEM domain tracks (#859 epic + children: IT, MED, BUS, LAW, etc.)
-- PRO tracks activity framework (#429)
-- Vocabulary progression audit (#705)
-- Monolingual toggle for C1+ (#676)
-- ZNO exam dataset (#715)
-- RAG source expansion (#854)
-- Monolingual lexicon builder (#634)
-
----
-
-## When to refresh this document
-
-| Trigger | Action |
-|---|---|
-| A Tier-1 issue closes | Move it out + promote next-most-important Tier-2 in |
-| New bug surfaces a Tier-1-level blocker | Add it to Tier 1 immediately |
-| A pipeline architecture change lands | Update §V7 Pipeline Architecture section |
-| Routing config changes | Cross-reference `agent_fallback_substitutions.yaml` change in §V7 Pipeline Architecture |
-| Quarterly | Audit Tier 5 — initiatives that have stalled get moved to deferred or closed |
-
-The framework rows (tier definitions, operating rhythm, KPI, pillars) almost never change. The contents under each tier change every few sessions. **Don't be precious about edits — staleness is the actual failure mode.**
+Framework changes (streams added/removed, ritual changes, pillar changes, stream State
+changes) need operator or advisor sign-off. Milestone-row content is each stream
+driver's to maintain — that is the point of the layer.
