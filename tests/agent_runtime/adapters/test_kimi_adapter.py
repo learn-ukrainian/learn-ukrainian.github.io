@@ -18,6 +18,7 @@ from scripts.agent_runtime.adapters.kimi import (
     KIMI_MODEL_ALIASES,
     KimiAdapter,
 )
+from scripts.agent_runtime.adapters.kimicc import KimiccHarness
 from scripts.agent_runtime.telemetry import resolve_invocation_telemetry
 from scripts.agent_runtime.tool_config import build_mcp_tool_config
 from scripts.audit.lint_agent_trailer import _TRAILER_RE
@@ -56,6 +57,59 @@ def test_build_invocation_uses_flagless_write_modes(tmp_path, monkeypatch, mode)
     assert plan.cmd[plan.cmd.index("-m") + 1] == KIMI_MODEL_ALIASES[KIMI_DEFAULT_MODEL]
     assert plan.cmd[plan.cmd.index("--output-format") + 1] == "stream-json"
     assert not ({"--auto", "--yolo", "--plan"} & set(plan.cmd))
+    assert plan.metadata == {}
+
+
+def test_kimicc_harness_is_opt_in_and_native_kimi_remains_default(tmp_path, monkeypatch):
+    native = _build(tmp_path, monkeypatch)
+    claude = tmp_path / "claude"
+    claude.write_text("#!/bin/sh\n", encoding="utf-8")
+    claude.chmod(0o755)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+
+    kimicc = KimiAdapter().build_invocation(
+        prompt="Inspect the target.",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id="kimi-kimicc-test",
+        session_id=None,
+        tool_config={"harness": "kimicc"},
+    )
+
+    assert native.cmd[0] == str(tmp_path / "kimi")
+    assert kimicc.cmd[0].endswith("scripts/agent_runtime/kimicc_headless.sh")
+    assert kimicc.cmd[kimicc.cmd.index("--model") + 1] == "k3"
+    assert kimicc.metadata["harness"] == "kimicc"
+    assert kimicc.env_overrides["KIMICC_CLAUDE_BIN"] == str(claude)
+    assert "CLAUDE_CONFIG_DIR" in kimicc.env_unsets
+
+
+def test_kimicc_harness_uses_claude_stream_json_parser(tmp_path, monkeypatch):
+    claude = tmp_path / "claude"
+    claude.write_text("#!/bin/sh\n", encoding="utf-8")
+    claude.chmod(0o755)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    plan = KimiccHarness().build_invocation(
+        prompt="Inspect the target.",
+        mode="read-only",
+        cwd=tmp_path,
+        model="k3",
+        task_id="kimi-kimicc-parser",
+        session_id=None,
+        tool_config={"harness": "kimicc"},
+    )
+
+    parsed = KimiAdapter().parse_response(
+        stdout=json.dumps({"type": "result", "result": "KimiCC response"}),
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+
+    assert parsed.ok is True
+    assert parsed.response == "KimiCC response"
 
 
 def test_mode_flag_mapping_is_empty_for_all_headless_modes():
@@ -200,6 +254,25 @@ def test_dispatch_parser_and_commit_trailer_accept_kimi():
     )
     assert args.agent == "kimi"
     assert _TRAILER_RE.search("X-Agent: kimi/kimi-smoke")
+
+
+def test_dispatch_parser_accepts_only_explicit_kimicc_harness_for_kimi():
+    args = build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "kimi",
+            "--harness",
+            "kimicc",
+            "--task-id",
+            "kimi-kimicc-smoke",
+            "--prompt",
+            "probe",
+            "--dry-run",
+        ]
+    )
+
+    assert args.harness == "kimicc"
 
 
 def test_kimi_mcp_request_fails_closed_without_per_call_selector():

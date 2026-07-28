@@ -2388,6 +2388,47 @@ def test_run_worker_forwards_max_budget_usd_to_runtime(tmp_tasks_dir, tmp_path):
     assert state["max_budget_usd"] == 0.5
 
 
+def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks_dir, tmp_path):
+    state_path = delegate._state_path("worker-kimicc")
+    delegate._write_state_atomic(state_path, {"task_id": "worker-kimicc", "harness": "kimicc"})
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "k3",
+            "effort": "max",
+            "cli_version": "fixture",
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id="worker-kimicc",
+            agent="kimi",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            harness="kimicc",
+        )
+
+    assert rc == 0
+    assert mock_invoke.call_args.args[:2] == ("kimi", "hi")
+    assert mock_invoke.call_args.kwargs["tool_config"] == {"harness": "kimicc"}
+
+
+def test_kimicc_harness_rejects_other_agent_seats():
+    assert delegate._resolve_dispatch_harness("kimi", "kimicc") == "kimicc"
+    with pytest.raises(ValueError, match="only with --agent kimi"):
+        delegate._resolve_dispatch_harness("codex", "kimicc")
+
+
 def test_run_worker_forwards_output_schema_to_runtime(tmp_tasks_dir, tmp_path):
     state_path = delegate._state_path("worker-schema")
     delegate._write_state_atomic(state_path, {"task_id": "worker-schema"})

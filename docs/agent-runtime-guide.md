@@ -38,6 +38,21 @@ No other subprocess building anywhere else in the codebase. If you find
 yourself writing `subprocess.Popen([..., "claude", ...])` — stop. Use
 `runner.invoke()`.
 
+## KimiCC headless route
+
+The native Kimi Code lane remains the default. To opt into Kimi K3 through the
+headless Claude Code harness, dispatch `--agent kimi --harness kimicc`. The
+adapter runs `claude -p --bare` through `scripts/agent_runtime/kimicc_headless.sh`;
+that wrapper sources the same `scripts/lib/kimicc_route.sh` used by
+`start-kimicc.sh`, resolves the catalog route, applies the route guard and
+context profile, then resolves credentials immediately before `exec`.
+
+For `kimi login` OAuth, headless runs export one fresh token at spawn and never
+write `~/.claude` or an isolated Claude config. Kimi access tokens last roughly
+15 minutes, so a long-running headless call must be relaunched; unlike the
+interactive launcher, this stateless `--bare` route does not install an
+`apiKeyHelper` refresh loop.
+
 ## Add a new agent in 20 lines
 
 1. Copy `scripts/agent_runtime/adapters/_template.py` to `adapters/youragent.py`.

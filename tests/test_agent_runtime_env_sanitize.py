@@ -217,6 +217,33 @@ def test_kimi_binary_override_reaches_the_native_kimi_process():
     assert env["KIMI_CODE_BIN"] == "/opt/kimi"
 
 
+def test_kimicc_route_inputs_reach_the_kimi_wrapper_only():
+    parent_env = {
+        "PATH": "/usr/bin",
+        "HOME": "/Users/example",
+        "KIMICC_AUTH_TOKEN": "test-route-token",
+        "KIMI_CODE_CREDENTIALS_PATH": "/Users/example/.kimi-code/credentials/kimi-code.json",
+        "KIMICC_ENDPOINT": "coding",
+        "KIMICC_MODEL": "k3",
+        "KIMICC_BASE_URL": "https://example.invalid/coding",
+        "KIMICC_EFFORT_LEVEL": "max",
+        "KIMICC_CLAUDE_BIN": "/opt/claude",
+        "UNRELATED": "drop-me",
+    }
+
+    with patch.dict("os.environ", parent_env, clear=True):
+        env = build_agent_env(provider="kimi")
+
+    assert env["KIMICC_AUTH_TOKEN"] == "test-route-token"
+    assert env["KIMI_CODE_CREDENTIALS_PATH"].endswith("kimi-code.json")
+    assert env["KIMICC_ENDPOINT"] == "coding"
+    assert env["KIMICC_MODEL"] == "k3"
+    assert env["KIMICC_BASE_URL"] == "https://example.invalid/coding"
+    assert env["KIMICC_EFFORT_LEVEL"] == "max"
+    assert env["KIMICC_CLAUDE_BIN"] == "/opt/claude"
+    assert "UNRELATED" not in env
+
+
 @dataclass
 class _SmokePlan:
     cmd: list[str]
