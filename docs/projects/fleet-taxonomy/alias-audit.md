@@ -10,7 +10,7 @@ It details the accepted spellings, the behavior when encountering unknown spelli
 |---|---|---|---|---|
 | `start-claude.sh` | `--epic <selector>` | 17 selectors (`infra`, `harness`, `infra.fleet-comms`, `devops`, `infra.devops`, `atlas`, `practice`, `practice-hub`, `atlas.practice`, `hramatka`, `hramatka.lessons`, `folk`, `seminars-folk`, `bio`, `seminars-bio`, `corpus`, `corpus-channels`) | Errors and exits 1 | `start-claude.sh:40-52`, `scripts/lib/handoff_identity.sh:23-48` |
 | `start-claudex.sh` | CLI flags | N/A (Only accepts `--subagent sol\|terra\|luna`) | Passes unknown args through to Claude CLI | `start-claudex.sh:22-31`, `start-claudex.sh:53-70` |
-| `start-codex-drive.sh` | `$1` (`<lane-or-lane.topic>`) | 17 selectors via `launcher_selector_resolve` | Errors and exits 2 | `start-codex-drive.sh:27-31`, `scripts/lib/handoff_identity.sh:23-48` |
+| `start-codex-driver.sh` | `$1` (`<lane-or-lane.topic>`) | 17 selectors via `launcher_selector_resolve` | Errors and exits 2 | `start-codex-driver.sh:27-31`, `scripts/lib/handoff_identity.sh:23-48` |
 | `start-codex.sh` | `--epic <selector>` | 17 selectors via `launcher_selector_lane` | Errors and exits 1 | `start-codex.sh:91-105`, `scripts/lib/handoff_identity.sh:23-48` |
 | `start-gemini-drive.sh` | `$1` (`<lane-or-lane.topic>`) | 17 selectors via `launcher_selector_resolve` | Errors and exits 2 | `start-gemini-drive.sh:27-31`, `scripts/lib/handoff_identity.sh:23-48` |
 | `start-gemini.sh` | `--epic <selector>` | 17 selectors via `launcher_selector_lane` | Errors and exits 1 | `start-gemini.sh:230-245`, `scripts/lib/handoff_identity.sh:23-48` |

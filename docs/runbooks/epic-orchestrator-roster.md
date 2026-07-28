@@ -18,9 +18,9 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | Epic | Recommended seat | Run |
 | --- | --- | --- |
 | **harness / infra** | Gemini (AGY) | `./start-gemini-drive.sh infra` |
-| **harness / infra** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-drive.sh infra` |
+| **harness / infra** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-driver.sh infra` |
 | **devops** | Gemini (AGY) | `./start-gemini-drive.sh devops` |
-| **devops** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-drive.sh devops` |
+| **devops** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-driver.sh devops` |
 | **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-drive.sh corpus` |
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.5 | `./start-grok-drive.sh atlas` |
 | **hramatka** (teacher lesson service) | Grok 4.5 · Sonnet-5 if judgment-heavy | `./start-grok-drive.sh hramatka` |
@@ -168,7 +168,7 @@ Everything else the driver runs to completion and reports past-tense — no "sho
 
 1. **This PR:** the `drive-epic` skill, this runbook, and the per-model driver launchers
    (`start-grok-drive.sh` / `start-gemini-drive.sh` / `start-sonnet-drive.sh`;
-   `start-codex-drive.sh` and `start-opus-drive.sh` landed after). Cross-family reviewed;
+   `start-codex-driver.sh` and `start-opus-drive.sh` landed after). Cross-family reviewed;
    advisor-looped on the skill contract.
 2. **Follow-up PR:** rewire the `start-grok.sh` / `start-gemini.sh` / `start-kimi.sh`
    cold-prompt `case` blocks to invoke `$drive-epic` (replacing the hand-written per-epic

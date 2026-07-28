@@ -1,6 +1,6 @@
 #!/bin/bash
 # Codex / gpt-5.6-terra in DRIVER mode for an allowlisted lane selector.
-#   ./start-codex-drive.sh <lane-or-lane.topic> [extra flags]
+#   ./start-codex-driver.sh <lane-or-lane.topic> [extra flags]
 # Which epic routes to which model? -> docs/runbooks/epic-orchestrator-roster.md
 # Thin wrapper over start-codex.sh. The driver should load the `drive-epic` skill.
 set -euo pipefail

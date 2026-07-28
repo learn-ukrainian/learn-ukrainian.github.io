@@ -100,7 +100,7 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
         sources.extend(
             [
                 "start-codex.sh",
-                "start-codex-drive.sh",
+                "start-codex-driver.sh",
                 "scripts/agent_runtime/bounded_command.py",
                 "scripts/lib/thread_rollover_link.sh",
                 "scripts/lib/deploy_extensions.sh",
@@ -897,7 +897,7 @@ def test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover
         }
     )
     launched = run(
-        [primary / "start-codex-drive.sh", "devops", "--model", "gpt-5.6-sol"],
+        [primary / "start-codex-driver.sh", "devops", "--model", "gpt-5.6-sol"],
         cwd=primary,
         env=env,
     )
@@ -968,7 +968,7 @@ def test_real_codex_devops_launcher_fails_before_lease_on_rollover_ambiguity(
         }
     )
     launched = run(
-        [primary / "start-codex-drive.sh", "devops", "--model", "gpt-5.6-sol"],
+        [primary / "start-codex-driver.sh", "devops", "--model", "gpt-5.6-sol"],
         cwd=primary,
         env=env,
     )
@@ -1029,7 +1029,7 @@ def test_real_codex_devops_launcher_refuses_second_live_devops_driver(
         }
     )
     launched = run(
-        [primary / "start-codex-drive.sh", "devops", "--model", "gpt-5.6-sol"],
+        [primary / "start-codex-driver.sh", "devops", "--model", "gpt-5.6-sol"],
         cwd=primary,
         env=env,
     )
