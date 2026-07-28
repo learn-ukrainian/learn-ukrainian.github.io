@@ -291,3 +291,45 @@ decisions:
       Revisit only when a public schema or learner-visible continuity contract changes.
     superseded_by: null
     depends_on: []
+
+  - id: dec-013
+    status: active
+    date: 2026-07-28
+    expires: 2026-10-26
+    scope: atlas-practice
+    title: "Lexicon explains words; practice decks drill them"
+    reasoning: >-
+      Operator GO establishes a durable editorial boundary: Word Atlas owns
+      bounded dictionary-like explanation, while practice-deck SSOT owns
+      pedagogical items, SRS, distractors, and deck membership. Pointer-based
+      reuse preserves a shared sense and optional attestation link without
+      copying the unbounded practice inventory into lexicon articles.
+    evidence: "Operator GO 2026-07-28; #4387; ADR-017; docs/decisions/2026-07-28-lexicon-explains-practice-decks-drill.md"
+    alternatives:
+      - option: "Store practice sentences in lexicon entries"
+        rejected_because: "It creates an unbounded duplicate practice inventory and collapses distinct product ownership."
+      - option: "Use the Hramatka lesson pipeline as the lexicon writer"
+        rejected_because: "Shared deterministic helpers are appropriate, but lesson and lexicon rule packs have different responsibilities."
+    superseded_by: null
+    depends_on: []
+
+  - id: dec-014
+    status: active
+    date: 2026-07-28
+    expires: 2026-10-26
+    scope: atlas-lane-closeout
+    title: "Lane-owned green PRs require same-day formal review and merge arming"
+    reasoning: >-
+      Operator GO establishes that a non-draft lane-owned PR with a green CI
+      Gate must progress through formal cross-family review, verdict
+      publication, and auto-merge arming in the same session or next settling
+      cycle. A sealed green PR idle for over one hour requires merge arming or
+      an explicit blocker with an owner and ETA.
+    evidence: "Operator GO 2026-07-28; #5904; docs/decisions/2026-07-28-atlas-lane-no-sit-green-prs.md"
+    alternatives:
+      - option: "Leave green PRs for later advisor polish without a hold"
+        rejected_because: "Silence obscures ownership and leaves ready work idle."
+      - option: "Treat schema or isolation failures as terminal review failures"
+        rejected_because: "The owner must re-fire or repair packaging the same day rather than abandon delivery."
+    superseded_by: null
+    depends_on: []
