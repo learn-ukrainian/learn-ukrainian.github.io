@@ -24,7 +24,7 @@
 # (observation → judgment), never to a mutation.
 schema_version: trailspec.v1
 trail_id: rb6-estate-probes
-version: "0.1.1"
+version: "0.1.2"
 title: RB6 Estate probes — VPS, service, disk, private repo, public site (read-only)
 seats:
   - grok-daily
@@ -104,8 +104,11 @@ steps:
       "4bbfee6"), with the dirty-line count RECORDED as an observation — live
       capture 2026-07-28 showed 1 dirty line on a healthy estate (soak/ops state
       on the operator machine is normal). Dirty is never acted on: private-repo
-      pushes are judgment-tier. Only an absent/unreadable repo degrades.
-    command: sh -c 'H=$(git -C ~/projects/learn-ukrainian-infra-private rev-parse --short HEAD 2>/dev/null); D=$(git -C ~/projects/learn-ukrainian-infra-private status --porcelain 2>/dev/null | wc -l | tr -d " "); { echo "head=${H:-absent}"; echo "dirty-lines=${D:-unknown}"; } > batch_state/rb6-privrepo-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; case "$H" in "") echo repo-absent;; *) echo repo-present;; esac'
+      pushes are judgment-tier. Only an absent/unreadable repo degrades. The
+      dirty count is taken from an exit-checked status capture, never a pipe
+      (r2: `status | wc` reports wc\'s success, laundering a failed status into
+      a false clean 0 — dirty-lines=unknown is the honest value there).
+    command: sh -c 'H=$(git -C ~/projects/learn-ukrainian-infra-private rev-parse --short HEAD 2>/dev/null); if [ -z "$H" ]; then D=unknown; elif ST=$(git -C ~/projects/learn-ukrainian-infra-private status --porcelain 2>/dev/null); then D=$(printf "%s" "$ST" | grep -c .); else D=unknown; fi; { echo "head=${H:-absent}"; echo "dirty-lines=$D"; } > batch_state/rb6-privrepo-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; case "$H" in "") echo repo-absent;; *) echo repo-present;; esac'
     evidence_predicate:
       command: sh -c 'test -s batch_state/rb6-privrepo-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; grep -q "^head=[0-9a-f]" batch_state/rb6-privrepo-{handoff_agent}.txt && echo repo-present || echo repo-absent'
       success_pattern: '^(repo-present|repo-absent|receipt-unwritable)$'
