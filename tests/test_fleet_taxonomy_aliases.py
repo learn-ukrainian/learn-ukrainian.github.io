@@ -232,45 +232,30 @@ def test_handoff_identity_shell_resolver_unknown_selector_fails_closed(
         "start-gemini.sh",
         "start-grok.sh",
         "start-kimi.sh",
+        "start-glm.sh",
+        "start-claude-driver.sh",
         "start-codex-driver.sh",
-        "start-gemini-drive.sh",
-        "start-grok-drive.sh",
-        "start-opus-drive.sh",
-        "start-sonnet-drive.sh",
+        "start-gemini-driver.sh",
+        "start-grok-driver.sh",
     ],
 )
 def test_launcher_static_selector_wiring(launcher: str) -> None:
-    """Verify statically (text inspection) that each launcher script sources handoff_identity.sh and invokes selector resolution functions."""
+    """Public wrappers delegate selector behavior to the shared launcher core."""
     script_path = _REPO_ROOT / launcher
     assert script_path.is_file(), f"Launcher missing: {launcher}"
     content = script_path.read_text(encoding="utf-8")
-    assert "scripts/lib/handoff_identity.sh" in content, f"{launcher} does not source scripts/lib/handoff_identity.sh"
-    assert any(
-        fn in content
-        for fn in (
-            "launcher_selector_resolve",
-            "launcher_selector_lane",
-            "handoff_identity_for_",
-        )
-    ), f"{launcher} does not call selector resolution functions"
+    assert "scripts/lib/launcher_core.sh" in content, f"{launcher} does not source launcher_core.sh"
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
 @pytest.mark.parametrize(
     ("launcher", "unknown_arg", "expected_rc"),
     [
-        # CI-safe: start-claude.sh parses and validates --epic early before preflight checks or external CLI lookups.
-        ("start-claude.sh", "--epic=invalid_selector_xyz", 1),
-        # CI-safe: start-codex-driver.sh validates $1 via launcher_selector_resolve at top of script before exec start-codex.sh.
+        # Drivers validate selectors before provider preflight or CLI invocation.
+        ("start-claude-driver.sh", "invalid_selector_xyz", 2),
         ("start-codex-driver.sh", "invalid_selector_xyz", 2),
-        # CI-safe: start-gemini-drive.sh validates $1 via launcher_selector_resolve at top of script before exec start-gemini.sh.
-        ("start-gemini-drive.sh", "invalid_selector_xyz", 2),
-        # CI-safe: start-grok-drive.sh validates $1 via launcher_selector_resolve at top of script before exec start-grok.sh.
-        ("start-grok-drive.sh", "invalid_selector_xyz", 2),
-        # CI-safe: start-opus-drive.sh validates $1 via launcher_selector_resolve at top of script before exec start-opus.sh.
-        ("start-opus-drive.sh", "invalid_selector_xyz", 2),
-        # CI-safe: start-sonnet-drive.sh validates $1 via launcher_selector_resolve at top of script before exec start-sonnet.sh.
-        ("start-sonnet-drive.sh", "invalid_selector_xyz", 2),
+        ("start-gemini-driver.sh", "invalid_selector_xyz", 2),
+        ("start-grok-driver.sh", "invalid_selector_xyz", 2),
     ],
 )
 def test_hermetic_launcher_unknown_selector_fails_closed_contract(

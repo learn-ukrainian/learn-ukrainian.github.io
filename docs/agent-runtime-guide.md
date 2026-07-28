@@ -44,7 +44,7 @@ The native Kimi Code lane remains the default. To opt into Kimi K3 through the
 headless Claude Code harness, dispatch `--agent kimi --harness kimicc`. The
 adapter runs `claude -p --bare` through `scripts/agent_runtime/kimicc_headless.sh`;
 that wrapper sources the same `scripts/lib/kimicc_route.sh` used by
-`start-kimicc.sh`, resolves the catalog route, applies the route guard and
+`start-kimi.sh --harness claude-code`, resolves the catalog route, applies the route guard and
 context profile, then resolves credentials immediately before `exec`.
 
 For `kimi login` OAuth, headless runs export one fresh token at spawn and never

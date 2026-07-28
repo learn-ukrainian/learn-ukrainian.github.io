@@ -147,11 +147,10 @@ def test_devops_epic_is_registered_separately_from_infra() -> None:
 @pytest.mark.parametrize(
     "launcher",
     [
-        "start-gemini-drive.sh",
-        "start-grok-drive.sh",
-        "start-sonnet-drive.sh",
-        "start-opus-drive.sh",
-        "start-claude.sh",
+        "start-gemini-driver.sh",
+        "start-grok-driver.sh",
+        "start-claude-driver.sh",
+        "start-codex-driver.sh",
     ],
 )
 def test_launcher_help_documents_allowlisted_dot_notation(launcher: str) -> None:
@@ -172,11 +171,10 @@ def test_launcher_help_documents_allowlisted_dot_notation(launcher: str) -> None
 @pytest.mark.parametrize(
     ("launcher", "arguments", "expected_code"),
     [
-        ("start-gemini-drive.sh", ["unknown"], 2),
-        ("start-grok-drive.sh", ["unknown"], 2),
-        ("start-sonnet-drive.sh", ["unknown"], 2),
-        ("start-opus-drive.sh", ["unknown"], 2),
-        ("start-claude.sh", ["--epic", "unknown"], 1),
+        ("start-gemini-driver.sh", ["unknown"], 2),
+        ("start-grok-driver.sh", ["unknown"], 2),
+        ("start-claude-driver.sh", ["unknown"], 2),
+        ("start-codex-driver.sh", ["unknown"], 2),
     ],
 )
 def test_launcher_unknown_selector_fails_closed(launcher: str, arguments: list[str], expected_code: int) -> None:

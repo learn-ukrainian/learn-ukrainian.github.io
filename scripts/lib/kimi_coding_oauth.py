@@ -8,7 +8,7 @@ the token is refreshed via the standard OAuth ``refresh_token`` grant against
 the Kimi auth host and the credential file is updated atomically (keeping the
 rotated ``refresh_token`` when the server returns one).
 
-Used by ``start-kimicc.sh --endpoint coding`` both at launch time and as the
+Used by ``start-kimi.sh --harness claude-code --endpoint coding`` both at launch time and as the
 Claude Code ``apiKeyHelper`` command, which re-invokes this script periodically
 so long sessions survive the short (~15 min) access-token lifetime.
 
@@ -422,4 +422,3 @@ def main(argv: list[str]) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv))
-

@@ -21,7 +21,7 @@ that skill). Do not reintroduce claims Sol rejected (see §Plane modes).
 | **`drive-epic` skill** | Method playbook (orient → topology → route → dispatch → settle → CF → merge → handoff) | `agents_extensions/shared/skills/drive-epic/SKILL.md` |
 | **Epic roster runbook** | Operator seat routing (which model drives which epic) | `docs/runbooks/epic-orchestrator-roster.md` |
 | **Live routing data** | Caps, ladders, formal CF pins | `/api/rules` model-assignment + `scripts/config/model_catalog.yaml` + `scripts/config/fleet_communications.yaml` |
-| **Launchers** | Lease claim + dual-aware pointer (not a second design) | `start-*.sh`, `start-*-drive.sh` |
+| **Launchers** | Lease claim + dual-aware pointer (not a second design) | interactive `start-*.sh`, provider `start-*-driver.sh` |
 
 **Golden rule (from drive-epic):** rules + skill teach **method**; roster/caps are **live
 data** — always re-read; never hard-code from memory.
@@ -99,15 +99,15 @@ Every epic driver session (any harness) MUST:
      FAIL-HANDOFF (&lt;8/10), not compact count.
    - **Claude / Sonnet:** SessionStart / PostCompact + thread-handoff — **no** canary lane
      (do not invent `<model>_lane`).
-7. When driving an epic end-to-end, load the **`drive-epic`** skill for the method loop
-   (wrappers `start-*-drive.sh` do not auto-load it yet — invoke `$drive-epic` until
-   cold-prompt wiring lands).
+7. Provider drivers inject the **`drive-epic`** binding after their lease and
+   provider canary. Interactive launchers never claim a driver lease.
 
 ## Operator launch surface (#5632)
 
-- Per-model driver: `./start-grok-drive.sh <epic>`, `./start-gemini-drive.sh <epic>`,
-  `./start-sonnet-drive.sh <epic>`, `./start-opus-drive.sh <epic>` (thin wrappers over
-  `start-*.sh --epic`).
+- Driver entrypoints: `./start-grok-driver.sh --epic <epic>`,
+  `./start-gemini-driver.sh --epic <epic>`,
+  `./start-claude-driver.sh --epic <epic> [--model claude-fable-5|claude-sonnet-5]`,
+  and `./start-codex-driver.sh --epic <epic>`. Interactive launchers reject `--epic`.
 - Seat routing reminder: `docs/runbooks/epic-orchestrator-roster.md` (Gemini→harness/corpus,
   Grok→atlas/tracks, Sonnet-5→judgment-dense, Opus→hardest-judgment exception only — it
   spends the cross-family review-of-record seat). **Live policy** is still

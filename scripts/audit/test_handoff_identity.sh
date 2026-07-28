@@ -59,7 +59,7 @@ eq "$(launcher_selector_stream infra.devops)" "epic:5703" "devops resolves to de
 eq "$(launcher_selector_lane atlas.practice)" "atlas" "atlas practice resolves to atlas"
 eq "$(launcher_selector_stream hramatka.lessons)" "epic:4542" "hramatka lessons resolves"
 # corpus is a documented, currently-recommended driver epic
-# (docs/runbooks/epic-orchestrator-roster.md: `./start-gemini-drive.sh corpus`) — it must
+# (docs/runbooks/epic-orchestrator-roster.md: `./start-gemini-driver.sh --epic corpus`) — it must
 # stay in the allowlist alongside infra/atlas/hramatka/folk/bio.
 eq "$(launcher_selector_lane corpus)" "corpus" "corpus resolves to corpus lane"
 eq "$(launcher_selector_stream corpus-channels)" "epic:4706" "corpus-channels resolves to corpus stream"

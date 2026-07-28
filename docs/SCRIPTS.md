@@ -7,7 +7,7 @@ Current operational reference for repo-local scripts and agent workflows.
 - This document intentionally omits retired pipelines and legacy script paths
 
 Before guessing CLI flags, run the tool's `--help`. The repo standard lives in
-`claude_extensions/rules/cli-help-standard.md`, and touched CLIs are expected to
+`agents_extensions/shared/rules/cli-help-standard.md`, and touched CLIs are expected to
 meet it so agents can use them without source-diving.
 
 ## Git hooks
@@ -29,49 +29,46 @@ Project-local wrappers for interactive agent sessions:
 
 ```bash
 ./start-claude.sh      # native Anthropic Claude Code (original config)
-./start-claudex.sh     # Claude Code UI → GPT-5.6 Sol via CLIProxyAPI (interactive)
-./start-kimicc.sh      # Claude Code UI → Kimi K3 / K2.7 (interactive)
 ./start-codex.sh       # native Codex
 ./start-grok.sh        # native Grok Build TUI
 ./start-gemini.sh      # native Gemini / Antigravity AGY Build TUI
+./start-kimi.sh        # native Kimi Code
+./start-glm.sh         # GLM through Claude Code
+./start-claude-driver.sh --epic devops
+./start-codex-driver.sh --epic devops
+./start-gemini-driver.sh --epic devops
+./start-grok-driver.sh --epic devops
 ```
 
 Native Kimi Code (separate app/CLI, OAuth subscription) is the **headless / fleet**
-lane via `scripts/delegate.py --agent kimi` and `ab ask-kimi`. Interactive native
+lane via `scripts/delegate.py --agent kimi` or the project bridge/runtime. Interactive native
 Kimi is `kimi` (user npm global at `~/.local/bin/kimi` is preferred;
 `~/.kimi-code/bin/kimi` is the legacy standalone binary and last-resort fallback).
 Do not use `~/.hermes/node/bin` — that Node tree is Hermes-private only.
-Interactive launch is `./start-kimi.sh` — not `start-kimicc.sh`.
+Use `./start-kimi.sh --harness claude-code` for Kimi through Claude Code.
 
 ### Parallel routes and original Claude config
 
-`start-claudex.sh` and `start-kimicc.sh` route through process-scoped
-configuration (Moonshot Method 1 / CLIProxyAPI pattern). They **never rewrite**
-`~/.claude/settings.json`; Claudex additionally passes a checked-in status-line
-overlay with `--settings`. That means:
+`start-codex.sh --harness claude-code` and
+`start-kimi.sh --harness claude-code` route through process-scoped
+configuration. They **never rewrite** the live `~/.claude/settings.json`. That means:
 
 - `./start-claude.sh` always keeps the original Anthropic / Claude Code setup
-- You can run native Claude and KimiCC (or Claudex) in **parallel terminals**
+- You can run native Claude and a routed provider in **parallel terminals**
 - Tools like [cc-switch](https://github.com/farion1231/cc-switch) that pin
   `ANTHROPIC_*` into `settings.json env` will **block** these launchers until
   those keys are removed (or you use `--isolate-config` / `CLAUDE_CONFIG_DIR`)
 
-### Claudex (GPT-5.6 interactive)
+### Codex through Claude Code
 
-`start-claudex.sh` keeps Claude Code's interface while routing the lead model
-to GPT-5.6 Sol through a local CLIProxyAPI server. **Interactive only** —
-headless GPT work stays on `./start-codex.sh` / bridge. Compaction is certified
-by the `sol_lead` profile: **272k window, 258.4k auto-compact**. The launcher
-passes both values to Claude Code so an unrecognized gateway model does not
-fall back to Claude Code's default assumed window.
-
-Subagents default to Terra; select another tier without changing the Sol lead:
+`start-codex.sh --harness claude-code` keeps Claude Code's interface while
+routing Codex through the approved local CLIProxyAPI endpoint. The default
+Codex harness remains native; use the Claude-Code harness only when its
+interface is required.
 
 ```bash
-./start-claudex.sh
-./start-claudex.sh --subagent terra
-./start-claudex.sh --subagent luna --epic harness
-CLAUDEX_SUBAGENT=terra ./start-claudex.sh
+./start-codex.sh --harness claude-code --model gpt-5.6-sol
+./start-codex-driver.sh --governor AUTO
 ```
 
 On macOS, install and connect CLIProxyAPI once before launching:
@@ -85,40 +82,29 @@ cliproxyapi --codex-login
 See the [CLIProxyAPI quick start](https://help.router-for.me/introduction/quick-start)
 for upstream installation details.
 
-The launcher uses `http://127.0.0.1:8317` and CLIProxyAPI's documented dummy
-client token by default. Override them with `CLAUDEX_BASE_URL` and
-`CLAUDEX_AUTH_TOKEN`; credentials are inherited only by the launched process
-and are never written to the repository. `--subagent` accepts `sol`, `terra`,
-or `luna` (and their full `gpt-5.6-*` model IDs).
+The adapter uses `http://127.0.0.1:8317` and CLIProxyAPI's documented dummy
+client token by default. `CODEX_CC_BASE_URL` is restricted to that local
+endpoint; `CODEX_CC_AUTH_TOKEN` is process-scoped and never written to the
+repository.
 
-Claudex forces the project status overlay for that process so an unrelated
-user-level status line cannot mask it. The main row shows model, repository,
-branch, observed context usage/window, effort, and route mismatches. Background
-subagents get one live row each with state, task description, and token count.
+### Kimi through Claude Code
 
-### KimiCC (Kimi via Claude Code UI, interactive)
-
-`start-kimicc.sh` is **Claude Code UI + Kimi models** (not the native Kimi TUI).
+`start-kimi.sh --harness claude-code` is **Claude Code UI + Kimi models** (not the native Kimi TUI).
 Use it when you want Claude Code ergonomics with K3 or K2.7 in a second
 terminal while native Claude runs in the first.
 
 ```bash
-./start-kimicc.sh                    # defaults: coding endpoint + isolated config
-                                     # + infra-orchestrator agent, K3, 1M / ~996k compact
-./start-kimicc.sh --model k2.7       # K2.7 Code, 256k / ~249k compact
-./start-kimicc.sh --model k2.7-highspeed
-./start-kimicc.sh --agent curriculum-orchestrator   # explicit --agent always wins
-./start-kimicc.sh --endpoint platform               # pay-as-you-go (needs MOONSHOT_API_KEY)
-./start-kimicc.sh --no-isolate-config               # use live ~/.claude config
+./start-kimi.sh --harness claude-code                # coding endpoint + isolated config
+./start-kimi.sh --harness claude-code --model k2.7
+./start-kimi.sh --harness claude-code --endpoint platform
+./start-kimi.sh --harness claude-code --no-isolate-config
 ```
 
 **Defaults (operator lane):** `--endpoint coding` (subscription),
-`--isolate-config` (CLAUDE_CONFIG_DIR=$HOME/.claude-kimicc), and
-`--agent infra-orchestrator` **when no `--epic` is given** (an epic already
-implies the lane identity). Overrides: `--endpoint platform`,
-`--no-isolate-config`, `--agent NAME` (explicit always wins); env:
-`KIMICC_ENDPOINT`, `KIMICC_ISOLATE_CONFIG=0`, `KIMICC_AGENT` (empty string
-inherits the project settings.json default, curriculum-orchestrator).
+`--isolate-config` (CLAUDE_CONFIG_DIR=$HOME/.claude-kimicc). Interactive
+launchers reject `--epic`; use a certified provider driver for lease-bound work.
+Overrides: `--endpoint platform`, `--no-isolate-config`; env:
+`KIMICC_AUTH_TOKEN`, `MOONSHOT_API_KEY`, or `KIMI_API_KEY`.
 
 **Subscription auth (no platform API key):** run `kimi login` once — the
 launcher picks up the OAuth credential automatically
@@ -128,7 +114,8 @@ with the default isolated config an `apiKeyHelper` is written into the
 **isolated** settings.json and Claude Code re-mints the token on a schedule
 (`CLAUDE_CODE_API_KEY_HELPER_TTL_MS`, default 300000). With
 `--no-isolate-config` the token is fixed at launch — fine for short sessions.
-`KIMICC_DRY_RUN=1` prints the resolved route/auth and exits before launch.
+`LAUNCHER_DRY_RUN=1` validates the route, prints its credential source, and
+exits before launch. An ambient `ANTHROPIC_AUTH_TOKEN` is never a Kimi credential.
 
 The same helper also keeps CodexBar's Kimi tile alive (CodexBar never
 refreshes CLI-owned credentials): the launchd agent
@@ -144,8 +131,8 @@ and `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.learnukrainian.
 | `k2.7` | `kimi-k2.7-code` | 262 144 | 249 036 |
 | `k2.7-highspeed` | `kimi-k2.7-code-highspeed` | 262 144 | 249 036 |
 
-**Headless / fleet Kimi stays on the native Kimi Code app** (`delegate.py --agent kimi`,
-`ab ask-kimi`, or bare `kimi`). Do not point headless jobs at kimicc.
+**Headless / fleet Kimi stays on the native Kimi Code app** (`scripts/delegate.py --agent kimi`
+or the project bridge/runtime). Do not point headless jobs at kimicc.
 
 K2.7 requires **Thinking ON** in the Claude Code TUI (`Tab`) or the endpoint
 rejects requests. Official guide: [Use Kimi in Claude Code](https://platform.kimi.ai/docs/guide/claude-code-kimi).
@@ -173,22 +160,19 @@ nested fan-out bounded through its agent instructions and the three-child cap.
 Native Codex children remain OpenAI-family and do not satisfy the repository's
 independent cross-family review gate.
 
-Bind a Codex session to one epic at launch so SessionStart loads only that
-lane's handoff and rollover namespace:
+Start a lease-bound Codex driver so the core claims the one lane lease before
+the provider canary and the injected `drive-epic` binding:
 
 ```bash
-./start-codex.sh --epic hramatka
-./start-codex.sh --epic atlas
-./start-codex.sh --epic harness
+./start-codex-driver.sh --epic hramatka
+./start-codex-driver.sh --epic atlas
+./start-codex-driver.sh --epic harness
 ```
 
-`--epic` is launcher-only and is not forwarded to the Codex CLI. It exports the
-binding `SESSION_EPIC` and a provider-specific handoff identity such as
-`codex-hramatka`. SessionStart selects that epic's `CODEX-DRIVER-HANDOFF.md`
-when present and otherwise uses (or initializes) its shared
-`CLAUDE-DRIVER-HANDOFF.md`. Without `--epic`, the existing cold-start rule still
-requires the first user message or lane-assignment fallback to identify the
-session before it touches a queue.
+Interactive launchers reject `--epic`, so they cannot accidentally claim a
+driver lease. The driver core validates the selector, exports the provider
+handoff identity, claims the stream, runs the provider canary, and only then
+injects the `drive-epic` binding.
 
 Override before launch if needed:
 

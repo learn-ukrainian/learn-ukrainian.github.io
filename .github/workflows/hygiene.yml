@@ -232,9 +232,19 @@ jobs:
         run: |
           bash -n \
             start-claude.sh \
-            start-claudex.sh \
-            start-kimicc.sh \
+            start-claude-driver.sh \
             start-codex.sh \
+            start-codex-driver.sh \
+            start-gemini.sh \
+            start-gemini-driver.sh \
+            start-grok.sh \
+            start-grok-driver.sh \
+            start-kimi.sh \
+            start-glm.sh \
+            scripts/lib/launcher_core.sh \
+            scripts/lib/codex_cc_route.sh \
+            scripts/lib/glmcc_route.sh \
+            scripts/launchers/*.sh \
             scripts/lib/handoff_identity.sh \
             scripts/lib/claude_route_guard.sh \
             scripts/deploy_prompts.sh \

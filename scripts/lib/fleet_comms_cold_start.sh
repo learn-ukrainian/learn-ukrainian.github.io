@@ -45,7 +45,7 @@ fleet_comms_cold_clause() {
   rule="$(fleet_comms_rule_relpath)"
   printf '%s' \
     "Fleet-comms (#5512) mid-cutover — obey ${rule} (also in /api/rules). " \
-    "Method playbook: load skill drive-epic (start-*-drive.sh does not auto-load it yet). " \
+    "Method playbook: load skill drive-epic (provider drivers inject the binding after lease + canary). " \
     "Prefer plane + CF surfaces; file dual-write diary stays authoritative in every plane mode " \
     "(current mode=${plane_mode}; dual_write is shadow/mirror, not authority cutover — " \
     "do not flip cutovers or invent a competing design). " \
