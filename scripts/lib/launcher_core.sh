@@ -64,6 +64,7 @@ $provider_env
 
 EXIT CODES:
   0  Launch completed, help shown, or dry-run succeeded.
+  1  Launch refused on a continuity precondition (rollover ambiguity or lease).
   2  Usage error (unknown flag, unsupported harness, or invalid selector).
   3  Required provider credential or executable is unavailable.
   4  Driver certification is missing or revoked.
@@ -405,7 +406,10 @@ launcher_main() {
     local canary_rc=0
     launcher_prepare_driver_identity
     if [ "$LC_DRY_RUN" != "1" ] && declare -F launcher_adapter_prelease >/dev/null 2>&1; then
-      launcher_adapter_prelease
+      # Continuity refusal (rollover ambiguity / already-resumed packet) is the
+      # legacy public exit 1 — NOT 5, which is reserved for transport
+      # degradation (#5958 CI fix; e2e callers pin this contract).
+      launcher_adapter_prelease || exit 1
     fi
     if [ "${LC_DRIVER_LEASE_ENABLED:-1}" != "1" ]; then
       printf 'Skipping stream lease and provider canary (untrusted %s route).\n' "$LC_PROVIDER" >&2

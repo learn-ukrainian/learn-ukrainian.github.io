@@ -101,6 +101,14 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
             [
                 "start-codex.sh",
                 "start-codex-driver.sh",
+                # The consolidated launchers source the shared core + provider
+                # adapter (PR #5958); fixture repos must ship them or the staged
+                # driver dies at `source` before any behavior under test runs.
+                "scripts/lib/launcher_core.sh",
+                "scripts/launchers/codex.sh",
+                "scripts/lib/codex_cc_route.sh",
+                "scripts/lib/fleet_comms_cold_start.sh",
+                "scripts/orchestration/codex_transport_health.py",
                 "scripts/agent_runtime/bounded_command.py",
                 "scripts/lib/thread_rollover_link.sh",
                 "scripts/lib/deploy_extensions.sh",
@@ -137,7 +145,28 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
         shutil.copy2(REPO_ROOT / relative, target)
     git(primary, "add", ".")
     git(primary, "commit", "-m", "test fixture")
-    (primary / ".venv").symlink_to(REPO_ROOT / ".venv", target_is_directory=True)
+    # A raw .venv symlink would run the REAL codex transport probe (live model
+    # call / exit 5 in a sandbox). Shim python the same way
+    # tests/test_start_codex_driver.py does: stub ONLY the transport-health
+    # module (healthy by default, PROBE_STUB_EXIT overridable), delegate
+    # everything else to the real interpreter.
+    shim = primary / ".venv" / "bin" / "python"
+    shim.parent.mkdir(parents=True)
+    shim.write_text(
+        f"""#!/usr/bin/env bash
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.orchestration.codex_transport_health" ]]; then
+  if [ "${{PROBE_STUB_EXIT:-0}}" = "0" ]; then
+    printf '%s\\n' '{{"status":"healthy","fresh":true}}'
+  else
+    printf '%s\\n' '{{"status":"degraded","fresh":true,"failure_class":"test"}}'
+  fi
+  exit "${{PROBE_STUB_EXIT:-0}}"
+fi
+exec {os.fspath(REPO_ROOT / ".venv" / "bin" / "python")!r} "$@"
+""",
+        encoding="utf-8",
+    )
+    shim.chmod(0o755)
     git(primary, "worktree", "add", "-b", "replacement", str(replacement), "HEAD")
     return primary, replacement
 
