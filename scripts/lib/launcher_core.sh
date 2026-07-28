@@ -402,6 +402,21 @@ launcher_main() {
   launcher_adapter_validate
   launcher_adapter_preflight
 
+  # Agent-extensions staleness gate (restored from the pre-cutover
+  # start-claude.sh, now for EVERY provider): a session launched against stale
+  # deployed hooks/rules runs retired definitions — refuse rather than launch.
+  # Dry-run reports instead of deploying (hermetic probe surface).
+  if [ "$LC_DRY_RUN" = "1" ]; then
+    echo "LAUNCHER_DRY_RUN=1: would deploy agent extensions (agents:deploy)"
+  else
+    # shellcheck source=scripts/lib/deploy_extensions.sh
+    source "$LC_ROOT/scripts/lib/deploy_extensions.sh"
+    if ! deploy_agent_extensions "$LC_ROOT" agents:deploy; then
+      launcher_error "refusing to launch ${LC_PROVIDER}: the agent-extensions deploy failed."
+      exit 1
+    fi
+  fi
+
   if [ "$LC_MODE" = "driver" ] && [ "$LC_GOVERNOR" = "0" ]; then
     local canary_rc=0
     launcher_prepare_driver_identity

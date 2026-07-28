@@ -121,6 +121,9 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         "scripts/lib/handoff_identity.sh",
         "scripts/lib/launcher_core.sh",
         "scripts/lib/session_supervisor.sh",
+        # The core's deploy staleness gate sources this; without package.json
+        # in the sandbox it warns and passes (#5958).
+        "scripts/lib/deploy_extensions.sh",
     ):
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)

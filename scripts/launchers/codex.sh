@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Avoid optional index refresh locks while the primary checkout is used for
+# orientation (restored from the pre-cutover start-codex.sh, #5958). Task
+# writes still belong in scoped dispatch worktrees.
+export GIT_OPTIONAL_LOCKS=0
+
 launcher_adapter_validate() {
   case "$LC_HARNESS" in codex|claude-code) ;; *) launcher_error 'Codex supports --harness codex|claude-code.'; exit 2 ;; esac
 }
@@ -42,8 +47,16 @@ launcher_codex_resolve_canonical_root() {
     canonical_root="$LC_SESSION_ROOT"
   fi
   if [ -z "$canonical_root" ]; then
-    launcher_error "could not resolve a canonical main checkout for Codex."
-    exit 1
+    if [ "$LC_DRY_RUN" = 1 ]; then
+      # Dry-run is the hermetic probe surface: REPORT the missing canonical
+      # checkout and continue with the session root so the would-exec argv can
+      # still be validated (CI runners use detached checkouts — #5958 fix).
+      echo "LAUNCHER_DRY_RUN=1: would resolve canonical main checkout (unresolved here)"
+      canonical_root="$LC_SESSION_ROOT"
+    else
+      launcher_error "could not resolve a canonical main checkout for Codex."
+      exit 1
+    fi
   fi
 
   LC_CODEX_CANONICAL_ROOT="$canonical_root"
