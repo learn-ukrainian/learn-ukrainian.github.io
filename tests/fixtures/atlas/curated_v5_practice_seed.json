@@ -1,7 +1,7 @@
 {
-  "schema": "alona-v5-practice-seed-v1",
-  "deckSlug": "alona-v5-fixture",
-  "title": "Alona v5 fixture practice admission",
+  "schema": "curated-v5-practice-seed-v1",
+  "deckSlug": "curated-v5-fixture",
+  "title": "Curated v5 fixture practice admission",
   "selectionNote": "Fixture-sized source-backed examples only.",
   "entries": [
     {

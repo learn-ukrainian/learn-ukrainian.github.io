@@ -46,7 +46,7 @@ VESUM = FIXTURES / "lexicon-practice-vesum.json"
 CLOZE_SOURCES = FIXTURES / "lexicon-practice-cloze-sources.json"
 HERITAGE_PAIRS = FIXTURES / "lexicon-practice-heritage-pairs.yaml"
 PARONYM_PAIRS = FIXTURES / "lexicon-practice-paronym-pairs.yaml"
-ALONA_V5_SEED = FIXTURES / "atlas" / "alona_v5_practice_seed.json"
+CURATED_V5_SEED = FIXTURES / "atlas" / "curated_v5_practice_seed.json"
 
 
 def test_default_target_preserves_committed_practice_surface() -> None:
@@ -54,8 +54,8 @@ def test_default_target_preserves_committed_practice_surface() -> None:
     assert BuildConfig().target == DEFAULT_TARGET
 
 
-def test_alona_v5_seed_admits_existing_atlas_entries_with_provenance() -> None:
-    seed_rows = read_practice_seed(ALONA_V5_SEED)
+def test_curated_v5_seed_admits_existing_atlas_entries_with_provenance() -> None:
+    seed_rows = read_practice_seed(CURATED_V5_SEED)
     assert len(seed_rows) == 3
     assert {row["sentenceStatus"] for row in seed_rows} == {"ok"}
 
@@ -106,7 +106,7 @@ def test_practice_seed_validates_duplicate_attestations_but_emits_one_route_exam
     seed_path.write_text(
         json.dumps(
             {
-                "schema": "alona-v5-practice-seed-v1",
+                "schema": "curated-v5-practice-seed-v1",
                 "entries": [
                     {"lemma": "слово", "slug": "слово", "cefr": "A1", "example": "Перший.", "provenance": provenance, "sentenceStatus": "ok"},
                     {"lemma": "слово", "slug": "слово", "cefr": "A1", "example": "Другий.", "provenance": provenance, "sentenceStatus": "ok"},

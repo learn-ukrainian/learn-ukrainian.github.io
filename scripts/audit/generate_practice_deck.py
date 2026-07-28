@@ -2880,7 +2880,7 @@ def read_practice_seed(path: Path) -> list[dict[str, Any]]:
     a CEFR level.
     """
     payload = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict) or payload.get("schema") != "alona-v5-practice-seed-v1":
+    if not isinstance(payload, dict) or payload.get("schema") != "curated-v5-practice-seed-v1":
         raise ValueError(f"unsupported practice seed schema: {path}")
     entries = payload.get("entries")
     if not isinstance(entries, list) or not entries:

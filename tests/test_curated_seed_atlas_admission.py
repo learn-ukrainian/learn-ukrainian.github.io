@@ -1,11 +1,11 @@
-"""Alona v5 admission uses public Atlas facts rather than invented CEFR."""
+"""Curated v5 admission uses public Atlas facts rather than invented CEFR."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
 
-from scripts.lexicon import alona_v5_atlas_admission as admission
+from scripts.lexicon import curated_seed_atlas_admission as admission
 
 
 def _manifest(path: Path, entries: list[dict[str, object]]) -> Path:
@@ -30,7 +30,7 @@ def test_candidates_keep_explicit_verb_expression_type(tmp_path: Path, monkeypat
             "gloss": "to break down",
             "pos": None,
             "entry_type": "expression",
-            "primary_source": "alona_v5_curated_seed",
+            "primary_source": "curated_v5_seed",
         }
     ]
 
@@ -58,7 +58,7 @@ def test_normalize_rows_projects_private_v5_input_to_replayable_schema() -> None
                 "sentence": "Пристрій вийшов з ладу.",
                 "sentence_status": "ok",
                 "provenance": {"source_file": "ukrlib-example", "credit": "Автор"},
-                "private_source_path": ".claude/atlas-epic/plans/alona-truth/private.jsonl",
+                "private_source_path": ".claude/atlas-epic/plans/private/seed.jsonl",
             }
         ]
     )
