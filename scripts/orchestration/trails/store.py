@@ -122,10 +122,31 @@ class TrailStore:
                     created_at TEXT NOT NULL
                 );
 
+                CREATE TABLE IF NOT EXISTS trail_authority_receipts (
+                    receipt_id TEXT PRIMARY KEY,
+                    run_id TEXT NOT NULL REFERENCES trail_runs(run_id),
+                    summon_id TEXT NOT NULL UNIQUE REFERENCES trail_summons(summon_id),
+                    source_id TEXT NOT NULL,
+                    issuer TEXT NOT NULL,
+                    expires_at TEXT NOT NULL,
+                    receipt_json TEXT NOT NULL,
+                    receipt_digest TEXT NOT NULL,
+                    consumed_at TEXT NOT NULL
+                );
+
+                CREATE TABLE IF NOT EXISTS trail_closures (
+                    run_id TEXT PRIMARY KEY REFERENCES trail_runs(run_id),
+                    attestation_json TEXT NOT NULL,
+                    attestation_digest TEXT NOT NULL,
+                    committed_at TEXT NOT NULL
+                );
+
                 CREATE INDEX IF NOT EXISTS trail_invocations_by_run
                     ON trail_invocations(run_id, cursor_generation);
                 CREATE INDEX IF NOT EXISTS trail_summons_by_run
                     ON trail_summons(run_id, created_at);
+                CREATE INDEX IF NOT EXISTS trail_authority_receipts_by_run
+                    ON trail_authority_receipts(run_id, consumed_at);
                 """
             )
 
@@ -368,6 +389,32 @@ class TrailStore:
             )
             return self._get_run_locked(connection, run_id)
 
+    def park_stop(
+        self,
+        *,
+        run_id: str,
+        expected_step: str,
+        stop_code: str,
+        reason: str,
+    ) -> TrailRun:
+        """Atomically park a current cursor for a typed STOP outcome without a command."""
+        with self._immediate_transaction() as connection:
+            run = self._get_run_locked(connection, run_id)
+            if run.state != "active" or run.cursor_step_id != expected_step:
+                raise DeviationRefusedError(
+                    f"expected active current step '{expected_step}', found "
+                    f"state={run.state!r} cursor={run.cursor_step_id!r}"
+                )
+            self._park_locked(
+                connection,
+                run=run,
+                stop_code=stop_code,
+                reason=reason,
+                invocation_id=None,
+                summon_state="stop",
+            )
+            return self._get_run_locked(connection, run_id)
+
     def complete_invocation(
         self,
         *,
@@ -561,6 +608,202 @@ class TrailStore:
                 (run_id,),
             ).fetchall()
         return [dict(row) for row in rows]
+
+    def record_authority_receipt(
+        self,
+        *,
+        run_id: str,
+        receipt: dict[str, Any],
+        source_id: str,
+    ) -> dict[str, Any]:
+        """Consume one externally re-fetched receipt exactly once without inventing a transition.
+
+        P1/P3 deliberately have no resume-transition/override field.  This method
+        records the verified authority in the same transaction that consumes its
+        precise summon, but leaves the run parked until a later approved trail
+        contract supplies an executable transition.
+        """
+        receipt_id = receipt.get("receipt_id")
+        summon_id = receipt.get("summon_id")
+        if not isinstance(receipt_id, str) or not isinstance(summon_id, str):
+            raise TrailRunnerError("verified authority receipt lacks receipt_id or summon_id")
+        with self._immediate_transaction() as connection:
+            run = self._get_run_locked(connection, run_id)
+            if run.state != "parked":
+                raise DeviationRefusedError("authority receipt can only bind a currently parked run")
+            expected = {
+                "run_id": run.run_id,
+                "trail_id": run.trail_id,
+                "trail_version": run.trail_version,
+                "trail_hash": run.trail_hash,
+                "step_id": run.cursor_step_id,
+                "cursor_generation": run.cursor_generation,
+            }
+            for field, value in expected.items():
+                if receipt.get(field) != value:
+                    raise DeviationRefusedError(
+                        f"authority receipt {field} no longer binds the parked run"
+                    )
+            summon = connection.execute(
+                """
+                SELECT stop_code, authority_receipt_id FROM trail_summons
+                WHERE summon_id = ? AND run_id = ?
+                """,
+                (summon_id, run_id),
+            ).fetchone()
+            if summon is None:
+                raise DeviationRefusedError("authority receipt does not name a summon for this run")
+            if summon["authority_receipt_id"] is not None:
+                raise DeviationRefusedError("summon already has a consumed authority receipt")
+            if summon["stop_code"] != receipt.get("stop_code"):
+                raise DeviationRefusedError("authority receipt STOP code differs from summon")
+            now = utc_now()
+            try:
+                connection.execute(
+                    """
+                    INSERT INTO trail_authority_receipts (
+                        receipt_id, run_id, summon_id, source_id, issuer, expires_at,
+                        receipt_json, receipt_digest, consumed_at
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        receipt_id,
+                        run_id,
+                        summon_id,
+                        source_id,
+                        receipt["issuer"],
+                        receipt["expires_at"],
+                        canonical_json(receipt),
+                        digest_json(receipt),
+                        now,
+                    ),
+                )
+            except sqlite3.IntegrityError as exc:
+                raise DeviationRefusedError("authority receipt has already been consumed") from exc
+            updated = connection.execute(
+                """
+                UPDATE trail_summons
+                SET authority_receipt_id = ?, state = 'authority-verified'
+                WHERE summon_id = ? AND run_id = ? AND authority_receipt_id IS NULL
+                """,
+                (receipt_id, summon_id, run_id),
+            )
+            if updated.rowcount != 1:
+                raise ReceiptChainError("authority receipt summon consumption raced another writer")
+            return {
+                "receipt_id": receipt_id,
+                "summon_id": summon_id,
+                "receipt_digest": digest_json(receipt),
+                "source_id": source_id,
+            }
+
+    def list_authority_receipts(self, run_id: str) -> list[dict[str, Any]]:
+        """Return durably consumed authority evidence for closure re-observation."""
+        with closing(self._connect()) as connection:
+            self._get_run_locked(connection, run_id)
+            rows = connection.execute(
+                """
+                SELECT receipt_id, summon_id, source_id, issuer, expires_at, receipt_json,
+                       receipt_digest, consumed_at
+                FROM trail_authority_receipts WHERE run_id = ? ORDER BY consumed_at ASC
+                """,
+                (run_id,),
+            ).fetchall()
+        return [
+            {
+                **dict(row),
+                "receipt": json.loads(str(row["receipt_json"])),
+            }
+            for row in rows
+        ]
+
+    def get_closure(self, run_id: str) -> dict[str, Any] | None:
+        """Return the one immutable closure attestation, if terminal commit occurred."""
+        with closing(self._connect()) as connection:
+            self._get_run_locked(connection, run_id)
+            row = connection.execute(
+                "SELECT attestation_json, attestation_digest, committed_at FROM trail_closures WHERE run_id = ?",
+                (run_id,),
+            ).fetchone()
+        if row is None:
+            return None
+        return {
+            "attestation": json.loads(str(row["attestation_json"])),
+            "attestation_digest": str(row["attestation_digest"]),
+            "committed_at": str(row["committed_at"]),
+        }
+
+    def commit_closure(self, *, run_id: str, attestation: dict[str, Any]) -> dict[str, Any]:
+        """Terminally commit exactly one immutable closure attestation or replay it."""
+        digest = digest_json(attestation)
+        with self._immediate_transaction() as connection:
+            run = self._get_run_locked(connection, run_id)
+            existing = connection.execute(
+                "SELECT attestation_json, attestation_digest, committed_at FROM trail_closures WHERE run_id = ?",
+                (run_id,),
+            ).fetchone()
+            if existing is not None:
+                # A second closer can independently re-observe the same terminal
+                # state a few microseconds later. The first committed immutable
+                # attestation is authoritative; returning it prevents a timestamp
+                # difference from turning an idempotent terminal replay into a
+                # competing closure claim.
+                return {
+                    "attestation": json.loads(str(existing["attestation_json"])),
+                    "attestation_digest": str(existing["attestation_digest"]),
+                    "committed_at": str(existing["committed_at"]),
+                }
+            if run.state != "terminal" or not run.terminal_outcome:
+                raise DeviationRefusedError("only a terminal run can commit closure")
+            now = utc_now()
+            connection.execute(
+                """
+                INSERT INTO trail_closures (run_id, attestation_json, attestation_digest, committed_at)
+                VALUES (?, ?, ?, ?)
+                """,
+                (run_id, canonical_json(attestation), digest, now),
+            )
+            connection.execute(
+                "UPDATE trail_runs SET closure_state = 'closed', updated_at = ? WHERE run_id = ?",
+                (now, run_id),
+            )
+            return {
+                "attestation": attestation,
+                "attestation_digest": digest,
+                "committed_at": now,
+            }
+
+    def park_terminal_closure(self, *, run_id: str, reason: str) -> TrailRun:
+        """Atomically park closure while preserving the terminal command chain."""
+        with self._immediate_transaction() as connection:
+            run = self._get_run_locked(connection, run_id)
+            if run.state != "terminal":
+                raise DeviationRefusedError("only terminal runs can park closure")
+            if run.closure_state == "closed":
+                raise DeviationRefusedError("closed run cannot be re-parked for closure")
+            now = utc_now()
+            summon_id = digest_json(
+                {
+                    "kind": "closure",
+                    "run_id": run_id,
+                    "cursor_generation": run.cursor_generation,
+                    "reason": reason,
+                }
+            )
+            connection.execute(
+                """
+                INSERT OR IGNORE INTO trail_summons (
+                    summon_id, run_id, invocation_id, stop_code, reason, state,
+                    authority_receipt_id, created_at
+                ) VALUES (?, ?, NULL, 'STOP-unknown', ?, 'closure', NULL, ?)
+                """,
+                (summon_id, run_id, reason, now),
+            )
+            connection.execute(
+                "UPDATE trail_runs SET closure_state = 'parked', updated_at = ? WHERE run_id = ?",
+                (now, run_id),
+            )
+            return self._get_run_locked(connection, run_id)
 
     def project_json(self, *, run_id: str, filename: str, payload: dict[str, Any]) -> Path:
         """Write a receipt projection exactly once, rejecting mismatched replacements."""

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "trail-closure-attestation.v1",
+  "title": "Trail closure attestation v1 schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "trail_id",
+    "trail_version",
+    "trail_hash",
+    "terminal_outcome",
+    "chain_digest",
+    "terminal_command_receipt_digest",
+    "terminal_step_receipt_digest",
+    "observation_source",
+    "observation_id",
+    "terminal_reobservation_digest",
+    "lease_id",
+    "lease_generation",
+    "fencing_token",
+    "pr_head",
+    "authority_receipt_digests",
+    "closed_at"
+  ],
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "opaque_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "trail-closure-attestation.v1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "trail_id": {"type": "string", "minLength": 1},
+    "trail_version": {"type": ["string", "integer"]},
+    "trail_hash": {"$ref": "#/$defs/digest"},
+    "terminal_outcome": {"type": "string", "minLength": 1},
+    "chain_digest": {"$ref": "#/$defs/digest"},
+    "terminal_command_receipt_digest": {"$ref": "#/$defs/digest"},
+    "terminal_step_receipt_digest": {"$ref": "#/$defs/digest"},
+    "observation_source": {"$ref": "#/$defs/opaque_id"},
+    "observation_id": {"$ref": "#/$defs/opaque_id"},
+    "terminal_reobservation_digest": {"$ref": "#/$defs/digest"},
+    "lease_id": {"$ref": "#/$defs/opaque_id"},
+    "lease_generation": {"type": "integer", "minimum": 0},
+    "fencing_token": {"$ref": "#/$defs/opaque_id"},
+    "pr_head": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "authority_receipt_digests": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/digest"},
+      "uniqueItems": true
+    },
+    "closed_at": {"type": "string", "format": "date-time"}
+  }
+}
