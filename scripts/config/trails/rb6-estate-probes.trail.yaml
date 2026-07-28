@@ -8,7 +8,6 @@ seats:
   - kimi
 parameters:
   handoff_agent: string
-  estate_registry: string
 stop_codes:
   - STOP-precondition-failed
   - STOP-manual-intervention
@@ -19,7 +18,7 @@ terminal_outcomes:
 steps:
   - step_id: vps_reachability
     intent: >-
-      Round-trip the ssh alias for pilot-vps from the estate registry (scripts/config/trails/estate.v1.yaml)
+      Round-trip the ssh alias for pilot-vps pinned to scripts/config/trails/estate.v1.yaml by the consistency test
       with BatchMode and a bounded connect timeout. Target token: "vps_reachable". Any other output is
       vps_unreachable, routed to judgment.
     command:
@@ -31,7 +30,6 @@ steps:
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
-        ESTATE_REGISTRY: "{estate_registry}"
       timeout_seconds: 30
       mutation_class: observe
       outcome_decoder:
@@ -60,7 +58,7 @@ steps:
 
   - step_id: service_probe
     intent: >-
-      Read the pilot service (hramatka-api on host vps, defined in estate registry) systemd state.
+      Read the pilot service (hramatka-api on host vps, pinned to the estate registry seed by the consistency test) systemd state.
       Only "active" proceeds; any other token degrades. Service restart is refused.
     command:
       adapter: shell
@@ -71,7 +69,6 @@ steps:
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
-        ESTATE_REGISTRY: "{estate_registry}"
       timeout_seconds: 30
       mutation_class: observe
       outcome_decoder:
@@ -106,7 +103,7 @@ steps:
 
   - step_id: vps_disk_floor
     intent: >-
-      Check VPS root filesystem available space against a 5G floor on host vps (defined in estate registry).
+      Check VPS root filesystem available space against a 5G floor on host vps (pinned to the estate registry seed by the consistency test).
     command:
       adapter: shell
       argv:
@@ -116,7 +113,6 @@ steps:
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
-        ESTATE_REGISTRY: "{estate_registry}"
       timeout_seconds: 30
       mutation_class: observe
       outcome_decoder:
@@ -152,7 +148,7 @@ steps:
   - step_id: private_repo_probe
     intent: >-
       Presence probe of the private ops repo (learn-ukrainian-infra-private at ~/projects/learn-ukrainian-infra-private
-      from estate registry).
+      pinned to the estate registry seed by the consistency test).
     command:
       adapter: shell
       argv:
@@ -162,7 +158,6 @@ steps:
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
-        ESTATE_REGISTRY: "{estate_registry}"
       timeout_seconds: 30
       mutation_class: observe
       outcome_decoder:
@@ -191,7 +186,7 @@ steps:
 
   - step_id: public_site_probe
     intent: >-
-      HTTP status of the published site (https://learn-ukrainian.github.io/ from estate registry).
+      HTTP status of the published site (https://learn-ukrainian.github.io/ pinned to the estate registry seed by the consistency test).
     command:
       adapter: shell
       argv:
@@ -201,7 +196,6 @@ steps:
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
-        ESTATE_REGISTRY: "{estate_registry}"
       timeout_seconds: 30
       mutation_class: observe
       outcome_decoder:

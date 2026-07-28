@@ -176,7 +176,7 @@ steps:
       argv:
         - sh
         - -c
-        - OUT=$(.venv/bin/python -m scripts.ai_agent_bridge inbox show "${HANDOFF_AGENT%%-*}" 2>/dev/null); P=$(echo "$OUT" | awk "/pending:/{print \$2}"); if [ "$P" = "0" ]; then echo pending_zero; elif [ -n "$P" ]; then echo pending_nonzero; else echo inbox_unparseable; fi
+        - OUT=$(.venv/bin/python -m scripts.ai_agent_bridge inbox show "$HANDOFF_AGENT" 2>/dev/null); P=$(echo "$OUT" | awk "/pending:/{print \$2}"); if [ "$P" = "0" ]; then echo pending_zero; elif [ -n "$P" ]; then echo pending_nonzero; else echo inbox_unparseable; fi
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
@@ -219,7 +219,7 @@ steps:
       argv:
         - sh
         - -c
-        - OUT=$(.venv/bin/python -m scripts.ai_agent_bridge inbox show "${HANDOFF_AGENT%%-*}" 2>/dev/null); P=$(echo "$OUT" | awk "/pending:/{print \$2}"); if [ "$P" = "0" ]; then echo inbox_zero; else echo pending_requires_application; fi
+        - OUT=$(.venv/bin/python -m scripts.ai_agent_bridge inbox show "$HANDOFF_AGENT" 2>/dev/null); P=$(echo "$OUT" | awk "/pending:/{print \$2}"); if [ "$P" = "0" ]; then echo inbox_zero; else echo pending_requires_application; fi
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"

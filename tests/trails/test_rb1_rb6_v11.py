@@ -84,12 +84,45 @@ def test_rb6_references_estate_registry_entries() -> None:
     assert "learn-ukrainian-infra-private" in refused
     assert "public-site" in refused
 
-    # Verify RB-6 step intents reference these surfaces
-    step_intents = " ".join(s["intent"] for s in rb6_data["steps"])
-    assert "pilot-vps" in step_intents or "vps" in step_intents
-    assert "hramatka-api" in step_intents
-    assert "learn-ukrainian-infra-private" in step_intents
-    assert "https://learn-ukrainian.github.io/" in step_intents
+    # Consistency pin: the registry values must appear in the probe COMMANDS
+    # (not just intent prose). RB-6 probes deliberately hardcode these values
+    # for runtime robustness; this assertion is what makes the registry the
+    # source of truth — drifting a command away from the registry fails here.
+    _assert_registry_consumed_by_commands(estate_data, rb6_data)
+
+
+def _assert_registry_consumed_by_commands(estate_data: dict, rb6_data: dict) -> None:
+    surfaces = estate_data["surfaces"]
+    step_commands = " ".join(
+        s["command"]["argv"][-1] for s in rb6_data["steps"] if s["command"]["argv"]
+    )
+    for vps in surfaces["vps_hosts"]:
+        alias = vps["ssh_alias"]
+        assert f"ssh -o BatchMode=yes -o ConnectTimeout=5 {alias} " in step_commands, (
+            f"registry ssh alias '{alias}' is not consumed by any RB-6 probe command"
+        )
+    for service in surfaces["services"]:
+        assert service["systemd_unit"] in step_commands, (
+            f"registry systemd unit '{service['systemd_unit']}' is not consumed "
+            "by any RB-6 probe command"
+        )
+    for repo in surfaces["repositories"]:
+        assert repo["local_path"] in step_commands, (
+            f"registry repo path '{repo['local_path']}' is not consumed by any RB-6 probe command"
+        )
+    for site in surfaces["public_sites"]:
+        assert site["url"] in step_commands, (
+            f"registry site url '{site['url']}' is not consumed by any RB-6 probe command"
+        )
+
+
+def test_negative_rb6_registry_drift_fails_consistency() -> None:
+    """Mutation negative: a registry value drifting away from the commands FAILS the pin."""
+    estate_data = _load_yaml(ESTATE_PATH)
+    rb6_data = _load_yaml(RB6_TRAIL_PATH)
+    estate_data["surfaces"]["vps_hosts"][0]["ssh_alias"] = "vps-renamed"
+    with pytest.raises(AssertionError, match="vps-renamed"):
+        _assert_registry_consumed_by_commands(estate_data, rb6_data)
 
 
 def test_negative_rb1_dropped_predicate_clause_fails() -> None:
