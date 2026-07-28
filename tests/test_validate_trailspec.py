@@ -39,6 +39,7 @@ REQUIRED_TRAIL_IDS = {
     "rb2-dispatch-loop",
     "rb3-pr-lifecycle",
     "rb4-red-ci-triage",
+    "rb5-session-close",
 }
 
 
