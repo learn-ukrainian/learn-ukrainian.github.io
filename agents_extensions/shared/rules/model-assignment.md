@@ -274,37 +274,58 @@ Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to
 ## Advisor panels — per-area pools · pool-minus-author · size-by-stakes · Sol/Fable anchor (#5933, operator-ruled 2026-07-28)
 
 Advisory panels are a RULE, not a roster. **Per-area advisor assignment is the PRIMARY
-structure** — each top model has distinct strengths; the modifiers below operate WITHIN the
-area's pool, never across a flat roster. Panels are DISCUSSION/advice; they never replace the
-independent CROSS-FAMILY review of record (discussion ≠ review), which composes on top.
+structure** — each top model has distinct strengths; the pool modifiers operate WITHIN the
+area's pool, with ONE exception: the anchor (modifier 3) is an OVERLAY seat that joins from
+outside the pool when the pool contains neither Sol nor Fable. Panels are DISCUSSION/advice
+for CONVENED design and judgment work; an ordinary formal PR review is NOT an advisory
+panel (the "do not burn advisor seats on routine work" economy rule stands), and a panel
+never replaces the independent CROSS-FAMILY review of record (discussion ≠ review), which
+composes on top.
 
-**Per-area advisor pools** (the operator's approval surface; names resolve per model
-rotation — the rule encodes AREAS and re-maps when seats rotate):
+**Per-area advisor pools** (the operator's approval surface; the table is REVIEWED when
+seats rotate — operator wording; the catalog-refresh contract §above owns name→model):
 
 | Area | Advisor pool | Evidence anchor |
 | --- | --- | --- |
 | Ukrainian language & pedagogy | Fable · Sol · Gemini (sanctioned language seats ONLY) | LANGUAGE-LANES RULE binds |
 | Architecture & process design | Sol (designer seat) · Fable (counter-reader) | fleet topology §above |
-| Code & infrastructure review | Kimi K3 · GLM-5.2 · Terra | Terra: ~15 confirmed defects across trails/registry/launcher arcs (2026-07) |
-| Security-sensitive changes | Terra/GPT family · Kimi | Terra caught the ambient-Anthropic-token→z.ai leak pre-merge (#5931 arc) |
-| Debugging & forensics | Grok · GLM-5.2 | Grok: #5932 root cause + env/binary forensics record; GLM: large-scale cleanup record (operator 2026-07-28) |
-| Long-context sweeps & harness infra | Gemini | window + tool use |
+| Code & infrastructure review | Kimi K3 · GLM-5.2 · Terra | Terra review arcs on #5896/#5925/#5926/#5931 (defect-finding record) |
+| Security-sensitive changes | Terra/GPT family · Kimi | ambient-Anthropic-token→z.ai leak caught pre-merge (#5931 arc) |
+| Debugging & forensics | Grok · GLM-5.2 | Grok: #5932 root cause (#5950 workaround); GLM: operator statement, #5933 comment 2026-07-28 |
+| Long-context sweeps & harness infra | Gemini | model catalog §above (window/tooling) |
 
-**Modifiers (compose in this order):**
+Terra's presence in area pools is as a practical PANEL PARTICIPANT — it does not promote
+`gpt-5.6-terra` to the advisor tier (the "not an advisor" authority rule §topology stands).
+
+**Modifiers (compose in this order; semantics 2a-2c are DRAFTED DEFAULTS — the operator's
+sign-off on this section approves them):**
 1. **Pool-minus-author** — the panel is the area pool MINUS whoever authored the work under
    review (self-adjusting when an advisor is the worker). Family-independence accounting
    still binds for the review of record.
-2. **Size by stakes** — 1 cross-family seat for routine PRs · 2 seats for designs/plans ·
-   full 3 at high effort for contested verdicts, architecture, learner-facing calls.
-3. **ANCHOR RULE** — Sol or Fable sits on EVERY advisory panel: whichever of the two is
-   available and is NOT the author of the work under review.
+2. **Size by stakes** — routine PRs: NO panel (formal cross-family review only) · 2 seats
+   for designs/plans · 3 seats at high effort for contested verdicts, architecture,
+   learner-facing calls.
+   - 2a. The anchor COUNTS toward the size target (panels stay small — operator: big
+     panels are slow).
+   - 2b. If pool-minus-author cannot reach the target, UNDERFILL and record the shortfall
+     on the work item — never manufacture seats; escalate to the operator only when zero
+     eligible seats remain.
+   - 2c. When the anchor is the SOLE seat, it must be outside the author's model family;
+     if neither Sol nor Fable qualifies (both in-family or author), the pool's strongest
+     cross-family seat serves instead and the waived anchor is RECORDED on the work item.
+3. **ANCHOR RULE** — Sol or Fable sits on EVERY convened advisory panel: whichever of the
+   two is available and is NOT the author. In pools lacking both (code/infra, security,
+   debugging, long-context), the anchor joins as the outside-pool overlay seat per above.
 
 **Standing constraints (unchanged, restated because they bound the pools):** no Kimi/GLM on
 language judgment (#M-13a) · grok is NEVER a judge seat · GLM-5.2 is LOCAL-ONLY (China
-egress — no CI, no secrets, no sensitive data) · Gemma is not an advisor seat. Transport
-reliability note (2026-07-28): the opencode partial-reply masking is fixed (#5947 — aborts
-now fail loud); codex/kimi ask transports still showed spawn-level failures the same day —
-on an ask failure, reroute BY SEAT within the pool and note the substitution.
+egress — no CI, no secrets, no sensitive data).
+
+*Operational notes (not #5933 rulings; separate authority cited):* Gemma is not an advisor
+seat (§panels above) · for code reviews prefer Kimi first per the #5933 issue body's
+reliability guidance — noting the GLM transport fix landed 2026-07-28 (#5947) · on any ask
+transport failure, reroute BY SEAT within the pool and record the substitution
+(workflow.md substitution rule).
 
 ## Harness vs model — route by BOTH (added 2026-07-05; user order: fleet utilization is paramount)
 
