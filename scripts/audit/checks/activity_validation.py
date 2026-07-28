@@ -1007,9 +1007,6 @@ def _check_word_indeclinable(
             if m.get("lemma") and m["lemma"].lower() == l.lower() and m.get("pos")
         } | {f["pos"].lower() for f in l_forms if f.get("pos")}
 
-        if pos_hint:
-            l_pos_set.add(str(pos_hint).lower())
-
         distinct_word_forms = {f["word_form"].lower() for f in l_forms if f.get("word_form")}
 
         # Rule 3: Do not blanket-exclude numerals (numr) — they decline (#5956)

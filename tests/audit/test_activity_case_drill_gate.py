@@ -221,6 +221,39 @@ def test_homograph_adv_sense_with_pos_hint_must_fail(vesum_fixture_db: Path):
     assert "кругом" in violations[0]["message"]
 
 
+def test_pos_hint_does_not_contaminate_declinable_lemma(vesum_fixture_db: Path):
+    """PR #5974 fix: pos_hint must not pollute declinable lemma POS sets.
+
+    1. _check_word_indeclinable on declinable noun 'круг' with pos_hint='adv' must PASS (return False).
+    2. _check_word_indeclinable on 'кругом' with pos_hint='noun' must PASS (return False).
+    3. Activity case drill on declinable noun 'круг' with activity-level pos='adv' must PASS.
+    """
+    is_indec, pos_info = _check_word_indeclinable("круг", pos_hint="adv", db_path=vesum_fixture_db)
+    assert not is_indec
+    assert pos_info == ""
+
+    is_indec, pos_info = _check_word_indeclinable("кругом", pos_hint="noun", db_path=vesum_fixture_db)
+    assert not is_indec
+    assert pos_info == ""
+
+    activity = {
+        "type": "fill-in",
+        "title": "Noun Drill with Activity POS Hint",
+        "instruction": "Put the word „круг” in the correct case.",
+        "pos": "adv",
+        "items": [
+            {
+                "sentence": "У нас великий ___.",
+                "answer": "круг",
+                "options": ["круг", "круга"],
+            }
+        ],
+    }
+    violations = check_indeclinable_case_drills([activity], db_path=vesum_fixture_db)
+    assert len(violations) == 0
+
+
+
 def test_non_grammatical_case_prompts_must_pass(vesum_fixture_db: Path):
     """Regression F002: prompts with 'suitcase', 'case study', 'in case of' must NOT trip the gate."""
     activities = [
