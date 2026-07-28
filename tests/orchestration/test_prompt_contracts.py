@@ -732,6 +732,8 @@ def test_curriculum_skills_define_one_non_recursive_preparation_handoff() -> Non
         assert f"| {action} | {owner} |" in lifecycle
 
     assert "readiness routing snapshot from the latest matching `MODULE_ACQUIRED` event" in normalized_lifecycle
+    assert "snapshot is a routing hint, not the full typed authority" in normalized_lifecycle
+    assert "scripts/orchestration/curriculum_readiness.py" in normalized_lifecycle
     assert "use its full typed result to resolve ownership" in normalized_lifecycle
     assert "If any current failed requirement is owned by `plan` or `preparation`" in normalized_lifecycle
     assert "every current requirement passes but a built result remains `prepare`" in normalized_lifecycle
@@ -747,7 +749,18 @@ def test_curriculum_skills_define_one_non_recursive_preparation_handoff() -> Non
     assert "has no active HOLD" in normalized_lifecycle
     assert "goes once to `$track-completion`" in normalized_lifecycle
     assert "Reject a result containing both routes" in normalized_lifecycle
+    assert "explicit operator-selected terminal goal and scope" in normalized_lifecycle
+    assert "coordinator's `scope=all` parser default" in normalized_lifecycle
+    assert "`scope=one` requires exactly one active `--module <slug>`" in normalized_lifecycle
+    assert "`--module`; optional range bounds apply only to those non-`one` scopes" in normalized_lifecycle
+    assert "migrate-terminal-goal --run-id <run-id> --owner <agent/task>" in normalized_lifecycle
+    assert "--terminal-goal <merge|certify|deploy>" in normalized_lifecycle
+    assert "Do not guess an identity or start a replacement run" in normalized_lifecycle
     assert "accept and validate its exact full typed result" in normalized_preparation
+    assert "failed requirements owned by `plan` or `preparation`" in normalized_preparation
+    assert "routing signals, not blanket preparation-mutation authority" in normalized_preparation
+    assert "A pure identity-drift row follows the same completion-owned identity route" in normalized_preparation
+    assert "an active HOLD is report-only" in normalized_preparation
     assert "Never start, resume, or reacquire lifecycle" in normalized_preparation
     assert "failed `plan` requirement" in normalized_preparation
     assert "build-authorized queue" in normalized_preparation

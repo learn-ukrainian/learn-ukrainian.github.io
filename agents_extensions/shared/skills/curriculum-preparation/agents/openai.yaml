@@ -1,4 +1,4 @@
 interface:
   display_name: "Curriculum Preparation"
-  short_description: "Prepare missing curriculum evidence safely"
+  short_description: "Inventory or prepare prerequisite evidence safely"
   default_prompt: "Use $curriculum-preparation for c1 --missing-only."
