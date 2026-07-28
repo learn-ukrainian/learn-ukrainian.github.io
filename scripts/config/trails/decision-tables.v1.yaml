@@ -1,0 +1,320 @@
+# Executable decision tables v1 — P2 of #5885.
+#
+# Static rows only inspect typed inputs and return typed outcome tokens. Their
+# sequence preserves the v0 source ordering, but it is not an implicit conflict
+# resolver: a lookup with zero or multiple matches parks as STOP-unknown.
+# Live lookup tables retain their v0 procedure-only contract and are not
+# executable static lookups.
+---
+schema_version: decision-tables.v1
+matching_policy: first-match-unique
+tables:
+  queue-pick:
+    mode: static
+    inputs:
+      is_foreign_lane: {type: boolean}
+      has_sibling_pr: {type: boolean}
+      queue_order_derivable: {type: boolean}
+      dependencies_merged: {type: boolean}
+    rows:
+      - id: foreign-lane
+        when:
+          all:
+            - {input: is_foreign_lane, equals: true}
+        outcome: {kind: stop, token: STOP-policy-violation}
+      - id: sibling-pr
+        when:
+          all:
+            - {input: is_foreign_lane, equals: false}
+            - {input: has_sibling_pr, equals: true}
+        outcome: {kind: action, token: reconcile-sibling-pr}
+      - id: queue-order-unknown
+        when:
+          all:
+            - {input: is_foreign_lane, equals: false}
+            - {input: has_sibling_pr, equals: false}
+            - {input: queue_order_derivable, equals: false}
+        outcome: {kind: stop, token: STOP-manual-intervention}
+      - id: ready-item
+        when:
+          all:
+            - {input: is_foreign_lane, equals: false}
+            - {input: has_sibling_pr, equals: false}
+            - {input: queue_order_derivable, equals: true}
+            - {input: dependencies_merged, equals: true}
+        outcome: {kind: action, token: pick-lowest-ready-item}
+
+  review-gate-arm:
+    mode: static
+    inputs:
+      is_draft: {type: boolean}
+      current_head_reviews_terminal_published: {type: boolean}
+      reviewer_is_independent: {type: boolean}
+      requested_changes_resolved: {type: boolean}
+      has_stale_approval: {type: boolean}
+      verdicts_conflict: {type: boolean}
+      blocking_ci: {type: enum, values: [green, red]}
+      has_current_cross_family_approval: {type: boolean}
+    rows:
+      - id: draft
+        when:
+          all:
+            - {input: is_draft, equals: true}
+        outcome: {kind: action, token: hold-draft}
+      - id: review-unresolved
+        when:
+          all:
+            - {input: is_draft, equals: false}
+            - {input: current_head_reviews_terminal_published, equals: false}
+        outcome: {kind: action, token: wait-current-head-reviews}
+      - id: reviewer-not-independent
+        when:
+          all:
+            - {input: is_draft, equals: false}
+            - {input: current_head_reviews_terminal_published, equals: true}
+            - {input: reviewer_is_independent, equals: false}
+        outcome: {kind: action, token: request-independent-review}
+      - id: requested-changes-unresolved
+        when:
+          all:
+            - {input: is_draft, equals: false}
+            - {input: current_head_reviews_terminal_published, equals: true}
+            - {input: reviewer_is_independent, equals: true}
+            - {input: requested_changes_resolved, equals: false}
+        outcome: {kind: action, token: wait-requested-changes}
+      - id: stale-approval
+        when:
+          all:
+            - {input: is_draft, equals: false}
+            - {input: current_head_reviews_terminal_published, equals: true}
+            - {input: reviewer_is_independent, equals: true}
+            - {input: requested_changes_resolved, equals: true}
+            - {input: has_stale_approval, equals: true}
+        outcome: {kind: action, token: request-current-head-review}
+      - id: contested
+        when:
+          all:
+            - {input: is_draft, equals: false}
+            - {input: current_head_reviews_terminal_published, equals: true}
+            - {input: reviewer_is_independent, equals: true}
+            - {input: requested_changes_resolved, equals: true}
+            - {input: has_stale_approval, equals: false}
+            - {input: verdicts_conflict, equals: true}
+        outcome: {kind: stop, token: STOP-contested}
+      - id: blocking-ci-red
+        when:
+          all:
+            - {input: is_draft, equals: false}
+            - {input: current_head_reviews_terminal_published, equals: true}
+            - {input: reviewer_is_independent, equals: true}
+            - {input: requested_changes_resolved, equals: true}
+            - {input: has_stale_approval, equals: false}
+            - {input: verdicts_conflict, equals: false}
+            - {input: blocking_ci, equals: red}
+        outcome: {kind: action, token: delegate-red-ci-triage}
+      - id: gate-passed
+        when:
+          all:
+            - {input: is_draft, equals: false}
+            - {input: current_head_reviews_terminal_published, equals: true}
+            - {input: reviewer_is_independent, equals: true}
+            - {input: requested_changes_resolved, equals: true}
+            - {input: has_stale_approval, equals: false}
+            - {input: verdicts_conflict, equals: false}
+            - {input: blocking_ci, equals: green}
+            - {input: has_current_cross_family_approval, equals: true}
+        outcome: {kind: action, token: arm-automerge}
+
+  red-ci-triage:
+    mode: static
+    inputs:
+      known_failure_class: {type: enum, values: [matched, not-matched]}
+      reproduces_on_main: {type: boolean}
+      base_fixed_after_ci: {type: boolean}
+    rows:
+      - id: known-failure
+        when:
+          all:
+            - {input: known_failure_class, equals: matched}
+        outcome: {kind: action, token: apply-known-failure-action}
+      - id: pre-existing
+        when:
+          all:
+            - {input: known_failure_class, equals: not-matched}
+            - {input: reproduces_on_main, equals: true}
+        outcome: {kind: action, token: note-pre-existing-ci}
+      - id: base-fixed
+        when:
+          all:
+            - {input: known_failure_class, equals: not-matched}
+            - {input: reproduces_on_main, equals: false}
+            - {input: base_fixed_after_ci, equals: true}
+        outcome: {kind: action, token: update-branch}
+      - id: signature-unknown
+        when:
+          all:
+            - {input: known_failure_class, equals: not-matched}
+            - {input: reproduces_on_main, equals: false}
+            - {input: base_fixed_after_ci, equals: false}
+        outcome: {kind: stop, token: STOP-unknown}
+
+  settle-status:
+    mode: static
+    inputs:
+      task_status:
+        type: enum
+        values:
+          [done, failed, crashed, timeout, silence-timeout, rate-limited, cancelled,
+           dry-run, needs-finalize, no-deliverable, spawning, running]
+      has_retry_suffix: {type: boolean}
+    rows:
+      - id: done
+        when:
+          all:
+            - {input: task_status, equals: done}
+        outcome: {kind: action, token: finalize-deliverable}
+      - id: failed-first-attempt
+        when:
+          all:
+            - {input: task_status, one_of: [failed, crashed]}
+            - {input: has_retry_suffix, equals: false}
+        outcome: {kind: action, token: retry-once}
+      - id: failed-retry
+        when:
+          all:
+            - {input: task_status, one_of: [failed, crashed]}
+            - {input: has_retry_suffix, equals: true}
+        outcome: {kind: stop, token: STOP-unrecoverable-error}
+      - id: timeout
+        when:
+          all:
+            - {input: task_status, one_of: [timeout, silence-timeout]}
+        outcome: {kind: action, token: inspect-timeout-deliverable}
+      - id: rate-limited
+        when:
+          all:
+            - {input: task_status, equals: rate-limited}
+        outcome: {kind: action, token: reroute-fallback}
+      - id: terminal-not-success
+        when:
+          all:
+            - {input: task_status, one_of: [cancelled, dry-run]}
+        outcome: {kind: action, token: terminal-not-success}
+      - id: needs-attention
+        when:
+          all:
+            - {input: task_status, one_of: [needs-finalize, no-deliverable]}
+        outcome: {kind: action, token: finalize-attention}
+      - id: active
+        when:
+          all:
+            - {input: task_status, one_of: [spawning, running]}
+        outcome: {kind: action, token: await-settlement}
+
+  lane-routing:
+    mode: live-lookup
+    procedure: >-
+      Resolve seat from /api/rules model-assignment (routing SSOT) + model_catalog.yaml
+      floors for the task's risk class. Confirm capability with check-model before first
+      use in a session. Respect: language-lane restriction (UK content only on sanctioned
+      lanes), judge-seat exclusions, local-fanout=1, cross-family review pairing.
+    never: [route from memory of a roster, route by provider name alone, freeze model names into this file]
+
+  width:
+    mode: live-lookup
+    procedure: >-
+      Two-sided: for each candidate lane read codexbar pace stage + reserve; read disk
+      (df -h / AND du -sh <repo_root>/.worktrees). Idle lane + quota headroom + disk room →
+      widen. At/ahead of pace or thin reserve → throttle, shed to a lane with headroom.
+      No data for a lane → in-flight count + lane health, and SAY the picture is partial.
+      DISK WINS every conflict; reaping finished worktrees is capacity management.
+    never: [fixed numeric in-flight caps, quota headroom overriding disk, manufacturing work for an idle lane]
+
+  handoff-completeness:
+    mode: static
+    inputs:
+      session_closing_or_rollover: {type: boolean}
+      required_fields_known: {type: boolean}
+      file_within_size_limit: {type: boolean}
+    rows:
+      - id: closing-or-rollover
+        when:
+          all:
+            - {input: session_closing_or_rollover, equals: true}
+        outcome: {kind: action, token: write-complete-handoff}
+      - id: unknown-fields
+        when:
+          all:
+            - {input: session_closing_or_rollover, equals: false}
+            - {input: required_fields_known, equals: false}
+        outcome: {kind: action, token: reconstruct-handoff}
+      - id: file-too-large
+        when:
+          all:
+            - {input: session_closing_or_rollover, equals: false}
+            - {input: required_fields_known, equals: true}
+            - {input: file_within_size_limit, equals: false}
+        outcome: {kind: action, token: archive-handoff}
+
+  summon-vs-park:
+    mode: static
+    inputs:
+      blocker_class:
+        type: enum
+        values: [operator-decision, judgment-seat, unbuilt-tooling, interactive-babysit]
+    rows:
+      - id: operator-decision
+        when:
+          all:
+            - {input: blocker_class, equals: operator-decision}
+        outcome: {kind: action, token: park-and-notify-operator}
+      - id: judgment-seat
+        when:
+          all:
+            - {input: blocker_class, equals: judgment-seat}
+        outcome: {kind: action, token: summon-advisor}
+      - id: unbuilt-tooling
+        when:
+          all:
+            - {input: blocker_class, equals: unbuilt-tooling}
+        outcome: {kind: action, token: mark-blocked-tooling}
+      - id: interactive-babysit
+        when:
+          all:
+            - {input: blocker_class, equals: interactive-babysit}
+        outcome: {kind: action, token: monitor-babysit}
+
+  pr-ownership:
+    mode: static
+    inputs:
+      is_own_area: {type: boolean}
+      is_abandoned_green_other_lane: {type: boolean}
+      is_other_area: {type: boolean}
+      ownership_ambiguous: {type: boolean}
+    rows:
+      - id: owned
+        when:
+          all:
+            - {input: is_own_area, equals: true}
+        outcome: {kind: action, token: drive-owned-pr}
+      - id: abandoned-carve-out
+        when:
+          all:
+            - {input: is_own_area, equals: false}
+            - {input: is_abandoned_green_other_lane, equals: true}
+        outcome: {kind: action, token: verify-abandoned-carve-out}
+      - id: foreign
+        when:
+          all:
+            - {input: is_own_area, equals: false}
+            - {input: is_abandoned_green_other_lane, equals: false}
+            - {input: is_other_area, equals: true}
+        outcome: {kind: action, token: hands-off-foreign-pr}
+      - id: ambiguous
+        when:
+          all:
+            - {input: is_own_area, equals: false}
+            - {input: is_abandoned_green_other_lane, equals: false}
+            - {input: is_other_area, equals: false}
+            - {input: ownership_ambiguous, equals: true}
+        outcome: {kind: stop, token: STOP-manual-intervention}
