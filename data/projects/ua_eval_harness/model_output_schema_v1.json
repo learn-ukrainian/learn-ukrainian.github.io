@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "responses": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "item_id": {
+            "type": "string"
+          },
+          "raw_response": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "item_id",
+          "raw_response"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "responses"
+  ],
+  "type": "object"
+}
