@@ -266,6 +266,20 @@ def read_opencode_turn_status(
         if not isinstance(event, dict):
             continue
 
+        if (
+            event.get("type") is None
+            and not isinstance(event.get("part"), dict)
+            and not (event.get("sessionID") or event.get("session_id"))
+            and event.get("error") is None
+        ):
+            # A JSON object carrying none of the opencode event signature keys
+            # (type/part/session/error) is model CONTENT — e.g. an ask that
+            # replies with a bare JSON verdict — not a trace event. Without
+            # this, a legitimate pure-JSON reply classifies as
+            # trace_unavailable and a good ask is killed (REACH regression).
+            has_text = True
+            continue
+
         sid = event.get("sessionID") or event.get("session_id")
         if isinstance(sid, str) and sid:
             session_id = sid
@@ -284,7 +298,10 @@ def read_opencode_turn_status(
         elif isinstance(part, dict) and part.get("type") == "text":
             has_text = True
 
-        if event.get("type") == "error" or "error" in event:
+        # `error: null` is a benign key on normal events — only a NON-NULL
+        # error payload marks the turn errored (a null here previously blocked
+        # the has_text completion fallback and killed good turns).
+        if event.get("type") == "error" or event.get("error") is not None:
             stream_has_error = True
             err = event.get("error")
             if isinstance(err, dict):

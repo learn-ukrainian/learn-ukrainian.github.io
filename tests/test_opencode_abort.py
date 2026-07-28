@@ -64,6 +64,20 @@ def test_read_opencode_turn_status_trace_unavailable():
     assert status.cancellation_category == "trace_unavailable"
 
 
+def test_read_opencode_turn_status_pure_json_reply_completes():
+    """A model reply that is itself a bare JSON object (no opencode event
+    signature keys) is CONTENT, not a missing trace — the ask must succeed."""
+    status = read_opencode_turn_status('{"verdict": "MERGE", "findings": []}')
+    assert status.outcome == "completed"
+
+
+def test_read_opencode_turn_status_null_error_key_is_benign():
+    """`error: null` on a normal event must not mark the turn errored."""
+    ndjson = '{"type":"text","part":{"type":"text","text":"hi"},"error":null}\n'
+    status = read_opencode_turn_status(ndjson)
+    assert status.outcome == "completed"
+
+
 def test_ensure_toolless_prompt_notice():
     prompt = "Summarize the document."
     updated = _ensure_toolless_prompt_notice(prompt)
