@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import json
 from typing import Any
 
 import pytest
@@ -422,3 +423,84 @@ def test_hash_stability() -> None:
     hash_mutated = compute_trail_hash(data_mutated)
 
     assert hash_orig != hash_mutated, "Semantic mutation must alter canonical JSON hash"
+
+
+def test_cli_registry_flag_runs_validation(tmp_path, capsys) -> None:
+    """CLI --registry mode validates red-CI known-failures registry."""
+    from scripts.orchestration.validate_trailspec import main
+
+    reg_data = {
+        "schema_version": "red-ci-known-failures.v1",
+        "registry_version": "1.0.0",
+        "entries": [
+            {
+                "id": "pytest-cache-race",
+                "matcher": {
+                    "check_name": {"exact": "CI / Test (pytest)"},
+                    "lines": {
+                        "required": [
+                            {
+                                "type": "regex",
+                                "value": r"^FAILED tests/test_cache\.py::test_parallel_cache .*$",
+                            }
+                        ],
+                        "accepted": [
+                            {
+                                "type": "regex",
+                                "value": r"^FAILED tests/test_cache\.py::test_parallel_cache .*$",
+                            }
+                        ],
+                        "require_full_coverage": True,
+                    },
+                },
+                "action": {"kind": "retry-once"},
+                "owning_issue": 5885,
+                "evidence": [
+                    {
+                        "run_id": 123456789,
+                        "run_attempt": 1,
+                        "pr_number": 1234,
+                        "head_sha": "a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4",
+                        "observed_at": "2026-07-28T10:00:00Z",
+                        "signature_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                    }
+                ],
+                "governance": {
+                    "added_by": "developer1",
+                    "added_at": "2026-07-28T10:00:00Z",
+                    "added_in_pr": 6000,
+                    "reviewed_by": ["reviewer1"],
+                    "reviewed_at": "2026-07-28T11:00:00Z",
+                    "review_by": "2026-08-27T11:00:00Z",
+                },
+            }
+        ],
+    }
+    reg_file = tmp_path / "valid_registry.json"
+    reg_file.write_text(json.dumps(reg_data), encoding="utf-8")
+
+    rc = main([
+        "--spec", str(DEFAULT_EXAMPLE_TRAIL_PATH),
+        "--registry", str(reg_file),
+        "--as-of", "2026-07-28T12:00:00Z",
+        "--json",
+    ])
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert '"registry"' in out
+    assert '"entries_count": 1' in out
+
+    # Test failure case
+    reg_data["entries"][0]["governance"]["review_by"] = "2026-07-01T00:00:00Z"
+    bad_reg_file = tmp_path / "expired_registry.json"
+    bad_reg_file.write_text(json.dumps(reg_data), encoding="utf-8")
+
+    rc_err = main([
+        "--spec", str(DEFAULT_EXAMPLE_TRAIL_PATH),
+        "--registry", str(bad_reg_file),
+        "--as-of", "2026-07-28T12:00:00Z",
+        "--json",
+    ])
+    assert rc_err == 1
+    err_out = capsys.readouterr().out
+    assert "expired at review_by" in err_out

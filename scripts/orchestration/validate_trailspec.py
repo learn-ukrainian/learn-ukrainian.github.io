@@ -13,6 +13,11 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
+from scripts.orchestration.red_ci_known_failures import (
+    RedCIKnownFailuresValidationError,
+    load_and_validate_registry,
+)
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TRAIL_SPEC_SCHEMA_PATH = (
     PROJECT_ROOT / "agents_extensions/shared/schemas/trailspec.v1.schema.json"
@@ -285,14 +290,28 @@ def validate_trail_table_refs(
     }
 
 
+def validate_registry(
+    registry_path: Path,
+    *,
+    as_of: str | datetime | None = None,
+) -> dict[str, Any]:
+    """Validate a red-CI known-failures registry document via red_ci_known_failures module."""
+    try:
+        return load_and_validate_registry(registry_path, as_of=as_of)
+    except RedCIKnownFailuresValidationError as exc:
+        raise TrailSpecValidationError(str(exc)) from exc
+
+
 def validate_trailspec(
     *,
     spec_path: Path = DEFAULT_EXAMPLE_TRAIL_PATH,
     receipt_path: Path | None = None,
+    registry_path: Path | None = None,
+    as_of: str | datetime | None = None,
     spec_schema_path: Path = TRAIL_SPEC_SCHEMA_PATH,
     receipt_schema_path: Path = STEP_RECEIPT_SCHEMA_PATH,
 ) -> dict[str, Any]:
-    """Validate trail spec file and optional step receipt file."""
+    """Validate trail spec file and optional step receipt or registry file."""
     spec_data = _load_yaml_or_json(spec_path)
     spec_summary = validate_trailspec_data(spec_data, spec_schema_path=spec_schema_path)
 
@@ -309,12 +328,14 @@ def validate_trailspec(
     }
     if receipt_summary is not None:
         res["receipt"] = receipt_summary
+    if registry_path is not None:
+        res["registry"] = validate_registry(registry_path, as_of=as_of)
     return res
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Validate TrailSpec v1 and StepReceipt v1 instances."
+        description="Validate TrailSpec v1, StepReceipt v1, and Red-CI Known Failures Registry instances."
     )
     parser.add_argument(
         "--spec",
@@ -335,6 +356,18 @@ def main(argv: list[str] | None = None) -> int:
         help="optional path to a decision-tables YAML/JSON file to validate",
     )
     parser.add_argument(
+        "--registry",
+        type=Path,
+        default=None,
+        help="optional path to a red-CI known-failures registry YAML/JSON file to validate",
+    )
+    parser.add_argument(
+        "--as-of",
+        type=str,
+        default=None,
+        help="optional ISO 8601 timestamp to evaluate registry entry expirations against",
+    )
+    parser.add_argument(
         "--json",
         action="store_true",
         help="output machine-readable JSON",
@@ -345,6 +378,8 @@ def main(argv: list[str] | None = None) -> int:
         summary = validate_trailspec(
             spec_path=args.spec.resolve(),
             receipt_path=args.receipt.resolve() if args.receipt else None,
+            registry_path=args.registry.resolve() if args.registry else None,
+            as_of=args.as_of,
         )
         if args.tables is not None:
             tables_path = args.tables.resolve()
@@ -373,6 +408,12 @@ def main(argv: list[str] | None = None) -> int:
         )
         if "receipt" in summary:
             print(f"StepReceipt valid: step_id='{summary['receipt']['step_id']}'")
+        if "registry" in summary:
+            reg = summary["registry"]
+            print(
+                f"Registry valid: version='{reg['registry_version']}' "
+                f"entries={reg['entries_count']} as_of='{reg['as_of']}'"
+            )
     return 0
 
 
