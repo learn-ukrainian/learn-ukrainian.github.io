@@ -232,7 +232,7 @@ def test_handoff_identity_shell_resolver_unknown_selector_fails_closed(
         "start-gemini.sh",
         "start-grok.sh",
         "start-kimi.sh",
-        "start-codex-drive.sh",
+        "start-codex-driver.sh",
         "start-gemini-drive.sh",
         "start-grok-drive.sh",
         "start-opus-drive.sh",
@@ -261,8 +261,8 @@ def test_launcher_static_selector_wiring(launcher: str) -> None:
     [
         # CI-safe: start-claude.sh parses and validates --epic early before preflight checks or external CLI lookups.
         ("start-claude.sh", "--epic=invalid_selector_xyz", 1),
-        # CI-safe: start-codex-drive.sh validates $1 via launcher_selector_resolve at top of script before exec start-codex.sh.
-        ("start-codex-drive.sh", "invalid_selector_xyz", 2),
+        # CI-safe: start-codex-driver.sh validates $1 via launcher_selector_resolve at top of script before exec start-codex.sh.
+        ("start-codex-driver.sh", "invalid_selector_xyz", 2),
         # CI-safe: start-gemini-drive.sh validates $1 via launcher_selector_resolve at top of script before exec start-gemini.sh.
         ("start-gemini-drive.sh", "invalid_selector_xyz", 2),
         # CI-safe: start-grok-drive.sh validates $1 via launcher_selector_resolve at top of script before exec start-grok.sh.

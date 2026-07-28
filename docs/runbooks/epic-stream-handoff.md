@@ -31,7 +31,7 @@ driver (e.g. Codex on hramatka) leaves, content dual-write alone is not enough:
 
 ### Codex DevOps zero-touch boundary
 
-`./start-codex-drive.sh devops` scans only its assigned `codex-devops` rollover
+`./start-codex-driver.sh devops` scans only its assigned `codex-devops` rollover
 namespace before acquiring `epic:5703`. Infra keeps the separate `codex-infra`
 namespace and `epic:4707` lease, so a live Infra driver does not block DevOps.
 The launcher starts a fresh task when no packet
