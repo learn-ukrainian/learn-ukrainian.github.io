@@ -289,7 +289,16 @@ def resolve_glm_model(model: str, catalog: dict[str, Any] | None = None) -> tupl
 def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
     """Reject local alias maps so all Kimi surfaces stay catalog-backed."""
     consumers = {
-        "scripts/launchers/kimi.sh": ("kimicc_configure_route",),
+        # BOTH kimi harness branches must resolve aliases through the catalog:
+        # the native branch via --resolve-kimi-model --format native (review
+        # finding on #5958 r3 — this requirement was narrowed away in the
+        # cutover, blinding the guard while the native branch regressed), the
+        # claude-code branch via kimicc_configure_route.
+        "scripts/launchers/kimi.sh": (
+            "kimicc_configure_route",
+            "--resolve-kimi-model",
+            "--format native",
+        ),
         "scripts/lib/kimicc_route.sh": ("--resolve-kimi-model", "--format kimicc"),
         "scripts/agent_runtime/adapters/kimi.py": ("kimi_model_aliases()",),
     }

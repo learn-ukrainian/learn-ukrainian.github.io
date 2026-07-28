@@ -11,7 +11,8 @@ def test_kimi_native_is_default_and_interactive_rejects_epic() -> None:
     interactive = run_launcher("start-kimi.sh")
     epic = run_launcher("start-kimi.sh", "--epic", "devops")
     assert interactive.returncode == 0, interactive.stderr
-    assert "would exec kimi --model k3" in interactive.stdout
+    # Catalog-resolved native id, never the bare alias (review finding, #5958 r3).
+    assert "would exec kimi --model kimi-code/k3" in interactive.stdout
     assert epic.returncode == 2
     assert "interactive launchers reject --epic" in epic.stderr
 
@@ -26,7 +27,15 @@ def test_kimi_rejects_harnesses_outside_native_or_claude_code(harness: str) -> N
 def test_kimi_native_accepts_explicit_model_and_provider_arguments() -> None:
     result = run_launcher("start-kimi.sh", "--model", "k3", "--", "--yolo")
     assert result.returncode == 0, result.stderr
-    assert "would exec kimi --model k3 --yolo" in result.stdout
+    assert "would exec kimi --model kimi-code/k3 --yolo" in result.stdout
+
+
+def test_kimi_native_rejects_unknown_alias_via_catalog() -> None:
+    """Review finding on #5958 r3: the native branch must resolve aliases through
+    the catalog and refuse unknown ones (bare aliases are rejected by the CLI)."""
+    result = run_launcher("start-kimi.sh", "--model", "not-a-kimi-model")
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert "unknown --model" in (result.stdout + result.stderr)
 
 
 def test_kimi_claude_code_requires_a_kimi_credential_in_noninteractive_dry_run(tmp_path) -> None:
