@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import os
 import subprocess
-import time
 from pathlib import Path
 
 import pytest
@@ -190,6 +189,22 @@ def test_glmcc_dry_run_fails_honest_without_credential(tmp_path: Path) -> None:
     assert "ZAI_API_KEY, ZHIPU_API_KEY, GLM_API_KEY, or GLMCC_AUTH_TOKEN" in res.stderr
 
 
+def test_ambient_anthropic_token_is_rejected(tmp_path: Path) -> None:
+    """r3 security policy pinned (r4 finding): an ambient ANTHROPIC_AUTH_TOKEN must
+    NEVER authenticate the Z.AI route — the launcher exits with the
+    missing-GLM-credential error, proving the credential is not forwarded."""
+    project = _seed_fake_project(tmp_path)
+    res = _run_glmcc(
+        project,
+        [],
+        env_updates={"ANTHROPIC_AUTH_TOKEN": "anthropic-test-token", "GLMCC_DRY_RUN": "1"},
+        home_dir=tmp_path / "home",
+    )
+    assert res.returncode != 0
+    assert "no GLM API credential" in res.stderr
+    assert "anthropic-test-token" not in res.stdout + res.stderr
+
+
 @pytest.mark.parametrize(
     ("env_var", "token_val"),
     [
@@ -197,7 +212,6 @@ def test_glmcc_dry_run_fails_honest_without_credential(tmp_path: Path) -> None:
         ("ZAI_API_KEY", "zai-test-key"),
         ("ZHIPU_API_KEY", "zhipu-test-key"),
         ("GLM_API_KEY", "glm-test-key"),
-        ("ANTHROPIC_AUTH_TOKEN", "anthropic-test-token"),
     ],
 )
 def test_glmcc_auth_token_precedence_and_dry_run(tmp_path: Path, env_var: str, token_val: str) -> None:
