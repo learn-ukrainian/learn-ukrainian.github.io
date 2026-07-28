@@ -1,4 +1,4 @@
-"""Tests for TrailSpec v1 and StepReceipt v1 validation and invariants."""
+"""Tests for TrailSpec v1/v1.1 validation and receipt-contract invariants."""
 
 from __future__ import annotations
 
@@ -9,13 +9,19 @@ from typing import Any
 import pytest
 import yaml
 
+from scripts.orchestration.red_ci_known_failures import VALID_STOP_CODES
 from scripts.orchestration.validate_trailspec import (
+    COMMAND_RECEIPT_SCHEMA_PATH,
     DEFAULT_DECISION_TABLES_PATH,
     DEFAULT_EXAMPLE_TRAIL_PATH,
     STEP_RECEIPT_SCHEMA_PATH,
+    STEP_RECEIPT_V11_SCHEMA_PATH,
     TRAIL_SPEC_SCHEMA_PATH,
+    TRAIL_SPEC_V11_SCHEMA_PATH,
     TrailSpecValidationError,
+    compute_command_receipt_digest,
     compute_trail_hash,
+    validate_command_receipt_data,
     validate_decision_tables,
     validate_decision_tables_data,
     validate_step_receipt_data,
@@ -88,6 +94,118 @@ def _get_happy_step_receipt_data() -> dict[str, Any]:
     }
 
 
+def _get_happy_v11_trail_data() -> dict[str, Any]:
+    """Small, complete v1.1 trail fixture with receipt-only predicates."""
+    return {
+        "schema_version": "trailspec.v1.1",
+        "trail_id": "v11-contract-fixture",
+        "version": "1.1.0",
+        "title": "TrailSpec v1.1 contract fixture",
+        "seats": ["kimi"],
+        "parameters": {"issue_number": "integer"},
+        "steps": [
+            {
+                "step_id": "observe_issue",
+                "intent": "Observe the configured issue once.",
+                "command": {
+                    "adapter": "shell",
+                    "argv": ["issue-observer", "--issue", "{issue_number}"],
+                    "environment": {"TRAIL_INVOCATION_ID": "{invocation_id}"},
+                    "timeout_seconds": 30,
+                    "mutation_class": "observe",
+                    "outcome_decoder": {"source": "stdout-token"},
+                },
+                "transitions": {
+                    "accepted": {
+                        "target": "complete",
+                        "evidence": {
+                            "predicate_id": "accepted-outcome",
+                            "clauses": [
+                                {
+                                    "source": "command_receipt",
+                                    "field": "actor_outcome",
+                                    "op": "eq",
+                                    "value": "accepted",
+                                },
+                                {
+                                    "source": "command_receipt",
+                                    "field": "exit_code",
+                                    "op": "eq",
+                                    "value": 0,
+                                },
+                            ],
+                        },
+                    },
+                    "refused": {
+                        "target": "complete",
+                        "evidence": {
+                            "predicate_id": "refused-outcome",
+                            "clauses": [
+                                {
+                                    "source": "command_receipt",
+                                    "field": "actor_outcome",
+                                    "op": "eq",
+                                    "value": "refused",
+                                }
+                            ],
+                        },
+                    },
+                },
+                "blocked_on": None,
+            }
+        ],
+        "stop_codes": ["STOP-unknown"],
+        "terminal_outcomes": ["complete"],
+    }
+
+
+def _get_happy_command_receipt_data(trail: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "schema_version": "command-receipt.v1",
+        "invocation_id": "3e99cd0b-6718-48a9-a2c9-9658a650bc55",
+        "run_id": "run-20260728-001",
+        "trail_id": trail["trail_id"],
+        "trail_version": trail["version"],
+        "trail_hash": compute_trail_hash(trail),
+        "step_id": "observe_issue",
+        "resolved_command_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actor_outcome": "accepted",
+        "exit_code": 0,
+        "stdout_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "artifact_digests": {},
+        "prepared_at": "2026-07-28T10:00:00Z",
+        "completed_at": "2026-07-28T10:00:01Z",
+        "status": "complete",
+    }
+
+
+def _get_happy_v11_step_receipt_data(
+    trail: dict[str, Any], command_receipt: dict[str, Any]
+) -> dict[str, Any]:
+    return {
+        "schema_version": "step-receipt.v1.1",
+        "trail_id": trail["trail_id"],
+        "trail_version": trail["version"],
+        "trail_hash": compute_trail_hash(trail),
+        "run_id": command_receipt["run_id"],
+        "step_id": command_receipt["step_id"],
+        "task_family": "infra-orchestration",
+        "lineage_id": "lin-12345",
+        "pr_head": None,
+        "lease_generation": 1,
+        "predicate_exit": 0,
+        "evidence_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "transition_taken": "accepted",
+        "timestamp": "2026-07-28T10:00:02Z",
+        "idempotency_key": "idempotency-key-001",
+        "invocation_id": command_receipt["invocation_id"],
+        "command_receipt_digest": compute_command_receipt_digest(command_receipt),
+        "actor_outcome": command_receipt["actor_outcome"],
+        "predicate_id": "accepted-outcome",
+    }
+
+
 def test_happy_path_example_trail() -> None:
     """Happy path: validate the example rb3-pr-lifecycle.trail.yaml."""
     res = validate_trailspec(spec_path=DEFAULT_EXAMPLE_TRAIL_PATH)
@@ -107,6 +225,361 @@ def test_happy_path_step_receipt() -> None:
     assert res["ok"] is True
     assert res["step_id"] == "request_review"
     assert res["run_id"] == "run-20260727-001"
+
+
+def test_v1_is_schema_valid_but_execution_ineligible() -> None:
+    """v1 can be inspected and hashed, but its prose predicates cannot be executed."""
+    res = validate_trailspec_data(_get_happy_example_data())
+
+    assert res["ok"] is True
+    assert res["execution_eligible"] is False
+    assert "must refuse v1 execution and closure" in res["execution_refusal"]
+
+
+def test_v11_happy_path_binds_command_and_step_receipts(tmp_path) -> None:
+    """v1.1 validates the command/receipt chain and reports execution eligibility."""
+    trail = _get_happy_v11_trail_data()
+    command_receipt = _get_happy_command_receipt_data(trail)
+    step_receipt = _get_happy_v11_step_receipt_data(trail, command_receipt)
+
+    trail_path = tmp_path / "trail.json"
+    command_receipt_path = tmp_path / "command-receipt.json"
+    step_receipt_path = tmp_path / "step-receipt.json"
+    trail_path.write_text(json.dumps(trail), encoding="utf-8")
+    command_receipt_path.write_text(json.dumps(command_receipt), encoding="utf-8")
+    step_receipt_path.write_text(json.dumps(step_receipt), encoding="utf-8")
+
+    res = validate_trailspec(
+        spec_path=trail_path,
+        receipt_path=step_receipt_path,
+        command_receipt_path=command_receipt_path,
+    )
+
+    assert res["ok"] is True
+    assert res["spec"]["execution_eligible"] is True
+    assert res["receipt"]["schema_version"] == "step-receipt.v1.1"
+    assert res["command_receipt"]["status"] == "complete"
+
+
+@pytest.mark.parametrize(
+    "field_name",
+    ["invocation_id", "command_receipt_digest", "actor_outcome", "predicate_id"],
+)
+def test_negative_v11_receipt_additions_are_required(field_name: str) -> None:
+    """Mutation check: every required v1.1 receipt addition binds its command."""
+    trail = _get_happy_v11_trail_data()
+    command_receipt = _get_happy_command_receipt_data(trail)
+    receipt = _get_happy_v11_step_receipt_data(trail, command_receipt)
+    del receipt[field_name]
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_step_receipt_data(receipt, receipt_schema_path=STEP_RECEIPT_V11_SCHEMA_PATH)
+
+    assert field_name in str(exc_info.value)
+
+
+def test_negative_v11_optional_authority_receipt_must_be_a_digest() -> None:
+    """Mutation check: optional authority evidence cannot become unbound prose."""
+    trail = _get_happy_v11_trail_data()
+    command_receipt = _get_happy_command_receipt_data(trail)
+    receipt = _get_happy_v11_step_receipt_data(trail, command_receipt)
+    receipt["authority_receipt_digest"] = "approval-in-chat"
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_step_receipt_data(receipt, receipt_schema_path=STEP_RECEIPT_V11_SCHEMA_PATH)
+
+    assert "authority_receipt_digest" in str(exc_info.value)
+
+
+def test_negative_v11_receipt_transition_taken_must_be_a_label(tmp_path) -> None:
+    """Mutation check: a target value cannot be substituted for transition_taken."""
+    trail = _get_happy_v11_trail_data()
+    command_receipt = _get_happy_command_receipt_data(trail)
+    receipt = _get_happy_v11_step_receipt_data(trail, command_receipt)
+    receipt["transition_taken"] = "complete"  # target, not the "accepted" label
+
+    trail_path = tmp_path / "trail.json"
+    receipt_path = tmp_path / "receipt.json"
+    trail_path.write_text(json.dumps(trail), encoding="utf-8")
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec(spec_path=trail_path, receipt_path=receipt_path)
+
+    assert "transition_taken must be a transition label" in str(exc_info.value)
+
+
+def test_negative_v11_command_receipt_actor_must_bind(tmp_path) -> None:
+    """Mutation check: an actor outcome from another command receipt cannot bind a step."""
+    trail = _get_happy_v11_trail_data()
+    command_receipt = _get_happy_command_receipt_data(trail)
+    receipt = _get_happy_v11_step_receipt_data(trail, command_receipt)
+    command_receipt["actor_outcome"] = "refused"
+
+    trail_path = tmp_path / "trail.json"
+    command_receipt_path = tmp_path / "command-receipt.json"
+    receipt_path = tmp_path / "step-receipt.json"
+    trail_path.write_text(json.dumps(trail), encoding="utf-8")
+    command_receipt_path.write_text(json.dumps(command_receipt), encoding="utf-8")
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec(
+            spec_path=trail_path,
+            receipt_path=receipt_path,
+            command_receipt_path=command_receipt_path,
+        )
+
+    assert "actor_outcome" in str(exc_info.value)
+
+
+def test_negative_v11_command_receipt_digest_must_bind(tmp_path) -> None:
+    """Mutation check: a valid digest for a different receipt cannot bind a step."""
+    trail = _get_happy_v11_trail_data()
+    command_receipt = _get_happy_command_receipt_data(trail)
+    receipt = _get_happy_v11_step_receipt_data(trail, command_receipt)
+    receipt["command_receipt_digest"] = "0" * 64
+
+    trail_path = tmp_path / "trail.json"
+    command_receipt_path = tmp_path / "command-receipt.json"
+    receipt_path = tmp_path / "step-receipt.json"
+    trail_path.write_text(json.dumps(trail), encoding="utf-8")
+    command_receipt_path.write_text(json.dumps(command_receipt), encoding="utf-8")
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec(
+            spec_path=trail_path,
+            receipt_path=receipt_path,
+            command_receipt_path=command_receipt_path,
+        )
+
+    assert "command_receipt_digest" in str(exc_info.value)
+
+
+def test_negative_v11_command_receipt_requires_complete_exit_status() -> None:
+    """Mutation check: a complete receipt cannot hide a missing exit code."""
+    trail = _get_happy_v11_trail_data()
+    command_receipt = _get_happy_command_receipt_data(trail)
+    command_receipt["exit_code"] = None
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_command_receipt_data(
+            command_receipt, receipt_schema_path=COMMAND_RECEIPT_SCHEMA_PATH
+        )
+
+    assert "exit_code" in str(exc_info.value)
+
+
+def test_negative_v11_requires_invocation_environment() -> None:
+    """Mutation check: every command needs the runner-owned invocation environment."""
+    trail = _get_happy_v11_trail_data()
+    del trail["steps"][0]["command"]["environment"]["TRAIL_INVOCATION_ID"]
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec_data(trail, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
+
+    assert "TRAIL_INVOCATION_ID" in str(exc_info.value)
+
+
+def test_negative_v11_typed_primitive_requires_invocation_flag() -> None:
+    """Mutation check: typed primitives receive both required invocation channels."""
+    trail = _get_happy_v11_trail_data()
+    command = trail["steps"][0]["command"]
+    command["adapter"] = "typed-primitive"
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec_data(trail, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
+
+    assert "--invocation-id" in str(exc_info.value)
+
+
+def test_negative_v11_rejects_undeclared_or_shell_interpolated_parameters() -> None:
+    """Mutation checks: parameter values are declared and never interpolated into -c."""
+    trail = _get_happy_v11_trail_data()
+    trail["steps"][0]["command"]["argv"][2] = "{unknown_parameter}"
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec_data(trail, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
+
+    assert "Undeclared command parameter" in str(exc_info.value)
+
+    shell_interpolated = _get_happy_v11_trail_data()
+    shell_interpolated["steps"][0]["command"]["argv"] = [
+        "sh",
+        "-c",
+        "observer --issue {issue_number}",
+    ]
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec_data(
+            shell_interpolated, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH
+        )
+
+    assert "Unquoted parameter interpolation prohibited" in str(exc_info.value)
+
+    # Review finding on #5963: every alternate flag spelling that reaches a shell
+    # program string must be REJECTED as an unsupported shape, not silently accepted.
+    for bypass_argv in (
+        ["sh", "-lc", "observer --issue {issue_number}"],
+        ["sh", "-ec", "observer --issue {issue_number}"],
+        ["bash", "--login", "-c", "observer --issue {issue_number}"],
+        ["zsh", "-c", "observer --issue {issue_number}"],
+        ["/bin/bash", "-lc", "observer --issue {issue_number}"],
+        ["env", "bash", "-c", "observer --issue {issue_number}"],
+    ):
+        bypass = _get_happy_v11_trail_data()
+        bypass["steps"][0]["command"]["argv"] = bypass_argv
+        with pytest.raises(TrailSpecValidationError) as exc_info:
+            validate_trailspec_data(
+                bypass, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH
+            )
+        assert "Unsupported shell invocation shape" in str(exc_info.value), bypass_argv
+
+    # A shell-binary invocation in the exact sanctioned shape WITHOUT parameter
+    # references remains valid (the guard narrows interpolation, not shell use).
+    sanctioned = _get_happy_v11_trail_data()
+    sanctioned["steps"][0]["command"]["argv"] = ["sh", "-c", "observer --issue fixed"]
+    validate_trailspec_data(sanctioned, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
+
+    untyped = _get_happy_v11_trail_data()
+    untyped["parameters"]["issue_number"] = "free-form-prose"
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec_data(untyped, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
+
+    assert "TrailSpec schema violation" in str(exc_info.value)
+
+
+def test_negative_v11_predicate_must_be_unique_and_receipt_only() -> None:
+    """Mutation checks: transition predicates cannot collide or execute a command."""
+    trail = _get_happy_v11_trail_data()
+    trail["steps"][0]["transitions"]["refused"]["evidence"]["predicate_id"] = (
+        "accepted-outcome"
+    )
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec_data(trail, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
+
+    assert "Exactly-one-predicate rule" in str(exc_info.value)
+
+    command_predicate = _get_happy_v11_trail_data()
+    command_predicate["steps"][0]["transitions"]["accepted"]["evidence"]["clauses"][
+        0
+    ]["source"] = "shell-command"
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec_data(
+            command_predicate, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH
+        )
+
+    assert "TrailSpec schema violation" in str(exc_info.value)
+
+
+@pytest.mark.parametrize("case", ["zero", "multiple"])
+def test_negative_v11_command_receipt_must_match_exactly_one_predicate(
+    tmp_path, case: str
+) -> None:
+    """Mutation check: zero or multiple matching predicates park as STOP-unknown."""
+    trail = _get_happy_v11_trail_data()
+    command_receipt = _get_happy_command_receipt_data(trail)
+    step_receipt = _get_happy_v11_step_receipt_data(trail, command_receipt)
+    if case == "zero":
+        command_receipt["actor_outcome"] = "indeterminate"
+        step_receipt["actor_outcome"] = "indeterminate"
+        step_receipt["command_receipt_digest"] = compute_command_receipt_digest(command_receipt)
+    else:
+        refused_clause = trail["steps"][0]["transitions"]["refused"]["evidence"][
+            "clauses"
+        ][0]
+        refused_clause.update({"field": "exit_code", "value": 0})
+        command_receipt["trail_hash"] = compute_trail_hash(trail)
+        step_receipt["trail_hash"] = compute_trail_hash(trail)
+        step_receipt["command_receipt_digest"] = compute_command_receipt_digest(command_receipt)
+
+    trail_path = tmp_path / "trail.json"
+    command_receipt_path = tmp_path / "command-receipt.json"
+    step_receipt_path = tmp_path / "step-receipt.json"
+    trail_path.write_text(json.dumps(trail), encoding="utf-8")
+    command_receipt_path.write_text(json.dumps(command_receipt), encoding="utf-8")
+    step_receipt_path.write_text(json.dumps(step_receipt), encoding="utf-8")
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec(
+            spec_path=trail_path,
+            receipt_path=step_receipt_path,
+            command_receipt_path=command_receipt_path,
+        )
+
+    assert "Exactly-one-predicate match rule" in str(exc_info.value)
+    assert "STOP-unknown" in str(exc_info.value)
+
+
+def test_negative_v11_blocked_on_must_be_structured_and_declared() -> None:
+    """Mutation checks: blocked work is a structured STOP, not executable prose."""
+    trail = _get_happy_v11_trail_data()
+    trail["steps"][0]["blocked_on"] = "wait for an operator"
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec_data(trail, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
+
+    assert "TrailSpec schema violation" in str(exc_info.value)
+
+    undeclared_stop = _get_happy_v11_trail_data()
+    undeclared_stop["steps"][0]["blocked_on"] = {
+        "id": "operator-approval",
+        "reason": "Needs a current authority receipt.",
+        "stop_code": "STOP-timeout",
+    }
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec_data(
+            undeclared_stop, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH
+        )
+
+    assert "must be declared by the trail" in str(exc_info.value)
+
+
+def test_negative_v11_seat_syntax_and_registry_eligibility(tmp_path) -> None:
+    """Seat syntax remains schema-level; eligibility comes from the mutable registry."""
+    trail = _get_happy_v11_trail_data()
+    trail["seats"] = ["not a seat"]
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec_data(trail, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
+    assert "TrailSpec schema violation" in str(exc_info.value)
+
+    ineligible = _get_happy_v11_trail_data()
+    ineligible["seats"] = ["unknown-seat"]
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec_data(ineligible, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
+    assert "seat eligibility failed" in str(exc_info.value)
+
+    dynamic_registry = tmp_path / "seat-registry.yaml"
+    dynamic_registry.write_text(
+        yaml.safe_dump(
+            {"endpoints": [{"name": "future-seat", "state": "live"}]},
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+    dynamic = _get_happy_v11_trail_data()
+    dynamic["seats"] = ["future-seat"]
+    res = validate_trailspec_data(
+        dynamic,
+        spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH,
+        seat_registry_path=dynamic_registry,
+    )
+    assert res["execution_eligible"] is True
+
+
+def test_stop_vocabulary_has_18_codes_and_never_reports_16() -> None:
+    """The published operational vocabulary is 18 codes; 16 names trigger classes."""
+    assert len(VALID_STOP_CODES) == 18
+    data = _get_happy_example_data()
+    data["stop_codes"].append("STOP-not-published")
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec_data(data)
+
+    message = str(exc_info.value)
+    assert "18-code STOP vocabulary" in message
+    assert "16-item" not in message
 
 
 def test_negative_non_summon_step_lacks_predicate() -> None:
@@ -184,7 +657,7 @@ def test_negative_unreachable_step() -> None:
 
 
 def test_negative_unknown_stop_code() -> None:
-    """Negative invariant test: unknown stop_code not in 16-item contract list fails validation."""
+    """Negative invariant test: unknown stop_code not in the 18-code vocabulary fails."""
     data = _get_happy_example_data()
     # Corrupt a copy: add an invalid stop code
     data["stop_codes"].append("STOP-FORBIDDEN-CUSTOM-CODE")
