@@ -100,13 +100,17 @@ def _seed_fake_project(tmp_path: Path) -> Path:
         encoding="utf-8",
     )
 
-    if _VENV_PYTHON is not None:
-        (venv_bin / "python").symlink_to(_VENV_PYTHON)
-    else:
-        _write_executable(
-            venv_bin / "python",
-            "#!/usr/bin/env bash\nexec python3 \"$@\"\n",
-        )
+    # Wrapper script, NOT a symlink (CI red 2026-07-28): a symlinked venv python
+    # computes its prefix from the symlink's location on Linux — the seeded fake
+    # .venv has no pyvenv.cfg/site-packages, so yaml imports fail and the model
+    # resolver dies with "unsupported model". The CI-green kimicc suite already
+    # uses this exec-by-absolute-path wrapper pattern.
+    py_body = (
+        f'#!/usr/bin/env bash\nexec "{_VENV_PYTHON}" "$@"\n'
+        if _VENV_PYTHON is not None
+        else "#!/usr/bin/env bash\nexec /usr/bin/env python3 \"$@\"\n"
+    )
+    _write_executable(venv_bin / "python", py_body)
 
     bin_dir = project / "bin"
     bin_dir.mkdir(parents=True)
