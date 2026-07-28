@@ -15,14 +15,22 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.projects.ua_eval_harness.build_heldout_manifest import validate_manifest
+from scripts.projects.ua_eval_harness.build_heldout_manifest import (
+    load_metadata,
+    parse_m2,
+    validate_manifest,
+    verify_upstream,
+)
 from scripts.projects.ua_eval_harness.evaluate_model import load_manifest, load_saved_responses
 
 SCHEMA_VERSION = "ua_eval_release_freeze.v1"
 RELEASE_VERSION = "0.1.0"
 DEFAULT_OUTPUT = ROOT / "data/projects/ua_eval_harness/releases/v0.1.0/freeze_manifest.json"
+DEFAULT_SPLIT_OUTPUT = ROOT / "data/projects/ua_eval_harness/releases/v0.1.0/split_integrity.json"
+DEFAULT_UA_GEC_ROOT = ROOT / "data/ua-gec"
 HELDOUT_MANIFEST = Path("data/projects/ua_eval_harness/heldout_manifest_v1.json")
 HELDOUT_CONFIG = Path("data/projects/ua_eval_harness/heldout_manifest_config.json")
+SPLIT_RECEIPT = Path("data/projects/ua_eval_harness/releases/v0.1.0/split_integrity.json")
 DEV_FIXTURES = Path("data/projects/ua_eval_harness/evalset_v1.jsonl")
 PROMPT = Path("data/projects/ua_eval_harness/minimal_edit_prompt_v1.txt")
 OUTPUT_SCHEMA = Path("data/projects/ua_eval_harness/model_output_schema_v1.json")
@@ -43,6 +51,7 @@ REPORT_FILES = (
 FROZEN_ARTIFACTS: tuple[tuple[Path, str], ...] = (
     (HELDOUT_CONFIG, "dataset_configuration"),
     (HELDOUT_MANIFEST, "heldout_gold_manifest"),
+    (SPLIT_RECEIPT, "upstream_split_integrity_receipt"),
     (DEV_FIXTURES, "development_fixture_excluded_from_results"),
     (PROMPT, "task_instruction"),
     (OUTPUT_SCHEMA, "model_output_contract"),
@@ -118,6 +127,92 @@ def _artifact(path: Path, role: str) -> dict[str, str]:
     return {"path": path.as_posix(), "role": role, "sha256": _sha256(ROOT / path)}
 
 
+def build_split_receipt(root: Path, config: Mapping[str, Any]) -> dict[str, Any]:
+    """Derive exact train/test document and author sets from pinned UA-GEC."""
+    try:
+        verify_upstream(root, config)
+        metadata, train_authors, test_authors = load_metadata(root / "data/metadata.csv")
+        test_sentences = parse_m2(root / "data/gec-fluency/test/gec-fluency.test.m2")
+    except ValueError as exc:
+        raise FreezeError(f"cannot build split receipt: {exc}") from exc
+    train_documents = sorted(doc_id for doc_id, row in metadata.items() if row["partition"] == "train")
+    test_documents = sorted(doc_id for doc_id, row in metadata.items() if row["partition"] == "test")
+    m2_documents = {sentence.doc_id for sentence in test_sentences}
+    if set(test_documents) != m2_documents:
+        raise FreezeError("upstream test M2 documents do not match metadata")
+    if set(train_documents) & set(test_documents):
+        raise FreezeError("upstream train/test document overlap detected")
+    if train_authors & test_authors:
+        raise FreezeError("upstream train/test author overlap detected")
+    upstream = config["upstream"]
+    return {
+        "schema_version": "ua_eval_split_integrity.v1",
+        "release_version": RELEASE_VERSION,
+        "upstream_commit": upstream["commit"],
+        "metadata_sha256": upstream["files"]["data/metadata.csv"],
+        "test_m2_sha256": upstream["files"]["data/gec-fluency/test/gec-fluency.test.m2"],
+        "train_document_ids": train_documents,
+        "test_document_ids": test_documents,
+        "train_author_ids": sorted(train_authors),
+        "test_author_ids": sorted(test_authors),
+    }
+
+
+def _validated_id_set(receipt: Mapping[str, Any], field: str) -> set[str]:
+    values = receipt.get(field)
+    if not isinstance(values, list) or not values or any(not isinstance(value, str) or not value for value in values):
+        raise FreezeError(f"invalid split receipt field: {field}")
+    if values != sorted(values) or len(values) != len(set(values)):
+        raise FreezeError(f"split receipt field is not sorted and unique: {field}")
+    return set(values)
+
+
+def validate_split_receipt(
+    receipt: Mapping[str, Any],
+    *,
+    heldout: Mapping[str, Any],
+    config: Mapping[str, Any],
+) -> dict[str, int]:
+    """Prove the pinned upstream split is writer- and document-disjoint."""
+    if receipt.get("schema_version") != "ua_eval_split_integrity.v1":
+        raise FreezeError("unsupported split receipt schema")
+    if receipt.get("release_version") != RELEASE_VERSION:
+        raise FreezeError("split receipt release version mismatch")
+    upstream = config["upstream"]
+    if receipt.get("upstream_commit") != upstream["commit"]:
+        raise FreezeError("split receipt upstream commit mismatch")
+    if receipt.get("metadata_sha256") != upstream["files"]["data/metadata.csv"]:
+        raise FreezeError("split receipt metadata hash mismatch")
+    if receipt.get("test_m2_sha256") != upstream["files"]["data/gec-fluency/test/gec-fluency.test.m2"]:
+        raise FreezeError("split receipt test M2 hash mismatch")
+    train_documents = _validated_id_set(receipt, "train_document_ids")
+    test_documents = _validated_id_set(receipt, "test_document_ids")
+    train_authors = _validated_id_set(receipt, "train_author_ids")
+    test_authors = _validated_id_set(receipt, "test_author_ids")
+    document_overlap = len(train_documents & test_documents)
+    author_overlap = len(train_authors & test_authors)
+    if document_overlap or author_overlap:
+        raise FreezeError("split receipt contains train/test overlap")
+    manifest_documents = {str(row[1]) for row in [*heldout["items"], *heldout["exclusions"]]}
+    if test_documents != manifest_documents:
+        raise FreezeError("split receipt test documents do not match the held-out manifest")
+    counts = heldout["counts"]
+    if len(test_documents) != counts["upstream_test_documents"]:
+        raise FreezeError("split receipt test document count mismatch")
+    if len(test_authors) != counts["upstream_test_authors"]:
+        raise FreezeError("split receipt test author count mismatch")
+    if len(train_authors) != counts["upstream_train_authors"]:
+        raise FreezeError("split receipt train author count mismatch")
+    return {
+        "train_documents": len(train_documents),
+        "test_documents": len(test_documents),
+        "train_authors": len(train_authors),
+        "test_authors": len(test_authors),
+        "train_test_document_overlap": document_overlap,
+        "train_test_author_overlap": author_overlap,
+    }
+
+
 def _forbidden_report_keys(value: Any, *, path: str = "$") -> list[str]:
     findings: list[str] = []
     if isinstance(value, Mapping):
@@ -177,11 +272,13 @@ def build_freeze() -> dict[str, Any]:
     """Build a freeze receipt from the exact committed public artifacts."""
     heldout = _read_json(ROOT / HELDOUT_MANIFEST)
     config = _read_json(ROOT / HELDOUT_CONFIG)
+    split_receipt = _read_json(ROOT / SPLIT_RECEIPT)
     development_fixtures = _read_jsonl(ROOT / DEV_FIXTURES)
     try:
         validate_manifest(heldout)
     except ValueError as exc:
         raise FreezeError(f"held-out manifest validation failed: {exc}") from exc
+    split = validate_split_receipt(split_receipt, heldout=heldout, config=config)
     reports = [_read_json(ROOT / path) for path in REPORT_FILES]
     _validate_reports_do_not_expose_items(heldout, reports)
     expanded_manifest, expanded_items = load_manifest(ROOT / HELDOUT_MANIFEST)
@@ -216,10 +313,6 @@ def build_freeze() -> dict[str, Any]:
     counts = heldout["counts"]
     integrity = heldout["integrity"]
     upstream = config["upstream"]
-    author_overlap = integrity["train_test_author_overlap"]
-    document_overlap = integrity["train_test_document_overlap"]
-    if author_overlap != 0 or document_overlap != 0:
-        raise FreezeError("held-out manifest does not prove disjoint authors and documents")
     return {
         "schema_version": SCHEMA_VERSION,
         "release": {
@@ -255,11 +348,13 @@ def build_freeze() -> dict[str, Any]:
             "upstream_test_documents": counts["upstream_test_documents"],
             "upstream_test_authors": counts["upstream_test_authors"],
             "upstream_train_authors": counts["upstream_train_authors"],
-            "train_test_author_overlap": author_overlap,
-            "train_test_document_overlap": document_overlap,
+            "upstream_train_documents": split["train_documents"],
+            "train_test_author_overlap": split["train_test_author_overlap"],
+            "train_test_document_overlap": split["train_test_document_overlap"],
             "document_proof": (
-                "Pinned metadata has one unique row and one partition per document ID; "
-                "the extractor proves the test M2 document set exactly equals metadata test IDs."
+                "The frozen split receipt retains the exact pinned metadata document and "
+                "author ID sets; the verifier recomputes both intersections and requires "
+                "its test documents to equal the held-out manifest document set."
             ),
             "sentence_disposition": {
                 "upstream_test": counts["upstream_test_sentences"],
@@ -339,11 +434,10 @@ def validate_freeze(freeze: Mapping[str, Any]) -> None:
         raise FreezeError("freeze metadata is stale or has been edited in place")
 
 
-def write_freeze(path: Path, freeze: Mapping[str, Any]) -> None:
-    version = str(freeze.get("release", {}).get("version", ""))
+def _write_versioned_receipt(path: Path, value: Mapping[str, Any], *, version: str) -> None:
     if path.parent.name != f"v{version}":
         raise FreezeError(f"freeze path does not match release version {version!r}: {path}")
-    serialized = json.dumps(freeze, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    serialized = json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     if path.exists():
         try:
             existing = path.read_text(encoding="utf-8")
@@ -356,12 +450,36 @@ def write_freeze(path: Path, freeze: Mapping[str, Any]) -> None:
     path.write_text(serialized, encoding="utf-8")
 
 
+def write_freeze(path: Path, freeze: Mapping[str, Any]) -> None:
+    version = str(freeze.get("release", {}).get("version", ""))
+    _write_versioned_receipt(path, freeze, version=version)
+
+
+def write_split_receipt(path: Path, receipt: Mapping[str, Any]) -> None:
+    version = str(receipt.get("release_version", ""))
+    _write_versioned_receipt(path, receipt, version=version)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--freeze", type=Path, default=DEFAULT_OUTPUT)
-    parser.add_argument("--write", action="store_true")
+    parser.add_argument("--split-receipt", type=Path, default=DEFAULT_SPLIT_OUTPUT)
+    parser.add_argument("--ua-gec-root", type=Path, default=DEFAULT_UA_GEC_ROOT)
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--write", action="store_true")
+    mode.add_argument("--write-split-receipt", action="store_true")
     args = parser.parse_args(argv)
     try:
+        if args.write_split_receipt:
+            config = _read_json(ROOT / HELDOUT_CONFIG)
+            receipt = build_split_receipt(args.ua_gec_root, config)
+            write_split_receipt(args.split_receipt, receipt)
+            print(
+                f"UA evaluation split receipt valid: "
+                f"{len(receipt['train_document_ids'])} train documents, "
+                f"{len(receipt['test_document_ids'])} test documents"
+            )
+            return 0
         if args.write:
             freeze = build_freeze()
             write_freeze(args.freeze, freeze)
