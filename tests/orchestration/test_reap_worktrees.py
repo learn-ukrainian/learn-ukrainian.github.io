@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import fcntl
 import json
 import os
 import subprocess
@@ -74,7 +75,19 @@ def patch_gh(
         if args and args[0] == "gh":
             branch = args[args.index("--head") + 1]
             calls.append(branch)
-            payload = states_by_branch.get(branch, [])
+            payload = [dict(item) for item in states_by_branch.get(branch, [])]
+            for item in payload:
+                if item.get("headRefOid") or item.get("state") == "OPEN":
+                    continue
+                head = _REAL_RUN(
+                    ["git", "rev-parse", f"refs/heads/{branch}"],
+                    cwd=kwargs["cwd"],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    env=git_env(),
+                ).stdout.strip()
+                item["headRefOid"] = head
             return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
         return _REAL_RUN(args, **kwargs)
 
@@ -122,11 +135,11 @@ def test_merged_clean_removes_worktree_and_keeps_branch(
     assert_main_checkout_unchanged(repo)
 
 
-def test_merged_dirty_auto_preserve_then_reaps(
+def test_merged_dirty_is_preserved_by_default(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """MERGED dirty trees auto preserve-then-reap (operator cleanup painpoint)."""
+    """A scheduled cleanup must never silently commit and remove dirty work."""
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/dirty")
     (worktree / "dirty.txt").write_text("not committed\n", encoding="utf-8")
@@ -135,9 +148,10 @@ def test_merged_dirty_auto_preserve_then_reaps(
     results = rw.reap_worktrees(repo_root=repo, apply=True)
 
     result = result_for(results, worktree)
-    assert result.action == "preserved_then_removed"
-    assert "PR #13 MERGED" in (result.reason or "")
-    assert not worktree.exists()
+    assert result.action == "skipped"
+    assert result.reason == "dirty; qualifies for reap because PR #13 MERGED"
+    assert worktree.exists()
+    assert (worktree / "dirty.txt").read_text(encoding="utf-8") == "not committed\n"
     assert_main_checkout_unchanged(repo)
 
 
@@ -508,13 +522,175 @@ def test_open_pr_matching_origin_is_not_reaped(
     assert_main_checkout_unchanged(repo)
 
 
-def test_merged_flag_enables_safe_preserve_prune(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_open_pr_wins_over_historical_merged_pr(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/reused")
+    head = git(worktree, "rev-parse", "HEAD")
+    patch_gh(
+        monkeypatch,
+        {
+            "codex/reused": [
+                {"number": 8, "state": "MERGED", "headRefOid": head},
+                {"number": 9, "state": "OPEN", "headRefOid": head},
+            ]
+        },
+    )
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+    assert result.action == "skipped"
+    assert result.pr == {"number": 9, "state": "OPEN", "head_sha": head}
+    assert worktree.exists()
+
+
+def test_merged_pr_head_must_match_worktree_head(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/mismatched")
+    patch_gh(
+        monkeypatch,
+        {
+            "codex/mismatched": [
+                {"number": 10, "state": "MERGED", "headRefOid": "0" * 40}
+            ]
+        },
+    )
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, safe_only=True),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+
+
+def test_closed_pr_requires_matching_worktree_head(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    matching = add_worktree(repo, "codex/closed-matching")
+    mismatched = add_worktree(repo, "codex/closed-mismatched")
+    patch_gh(
+        monkeypatch,
+        {
+            "codex/closed-matching": [{"number": 12, "state": "CLOSED"}],
+            "codex/closed-mismatched": [
+                {"number": 13, "state": "CLOSED", "headRefOid": "0" * 40}
+            ],
+        },
+    )
+
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        safe_only=True,
+        live_cwds=set(),
+    )
+
+    assert result_for(results, matching).action == "removed"
+    assert result_for(results, mismatched).action == "skipped"
+    assert not matching.exists()
+    assert mismatched.exists()
+
+
+def test_live_process_cwd_protects_worktree(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/live")
+    patch_gh(monkeypatch, {"codex/live": [{"number": 11, "state": "MERGED"}]})
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds={worktree / "site"},
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert result.reason == f"live process cwd={worktree / 'site'}"
+    assert worktree.exists()
+
+
+def test_merged_flag_preserves_dirty_worktree(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/merged-flag")
+    (worktree / "dirty.txt").write_text("keep\n", encoding="utf-8")
     patch_gh(
         monkeypatch,
         {"codex/merged-flag": [{"number": 7, "state": "MERGED"}]},
     )
     rc = rw.main(["--repo-root", str(repo), "--apply", "--merged"])
     assert rc == 0
-    assert not worktree.exists()
+    assert worktree.exists()
+    assert (worktree / "dirty.txt").read_text(encoding="utf-8") == "keep\n"
+
+
+def test_apply_cli_requires_process_activity_probe(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: None)
+
+    with pytest.raises(
+        RuntimeError,
+        match="process-CWD activity probe unavailable",
+    ):
+        rw.main(["--repo-root", str(repo), "--apply", "--merged"])
+
+
+def test_reaper_lock_rejects_concurrent_cleanup(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    lock_path = rw._common_git_dir(repo) / "worktree-reaper.lock"
+
+    with lock_path.open("a+", encoding="utf-8") as handle:
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        with pytest.raises(RuntimeError, match="another worktree cleanup holds"):
+            rw.reap_worktrees(
+                repo_root=repo,
+                apply=True,
+                live_cwds=set(),
+            )
+        fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+def test_merged_flag_does_not_remove_settled_dispatch_without_merged_pr(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    task_id = "settled-without-pr"
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / task_id
+    add_worktree(repo, "codex/settled-without-pr", path=worktree)
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(
+        json.dumps({"status": "failed"}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    patch_gh(monkeypatch, {"codex/settled-without-pr": []})
+
+    rc = rw.main(["--repo-root", str(repo), "--apply", "--merged"])
+
+    assert rc == 0
+    assert worktree.exists()

@@ -13,6 +13,7 @@ Suggested backstop:
 from __future__ import annotations
 
 import argparse
+import fcntl
 import json
 import os
 import subprocess
@@ -50,6 +51,7 @@ class WorktreeInfo:
 class PullRequestState:
     number: int | None
     state: str
+    head_sha: str | None = None
 
 
 @dataclass(frozen=True)
@@ -217,7 +219,7 @@ def _query_pr_states(repo_root: Path, branch: str | None) -> tuple[list[PullRequ
                 "--state",
                 "all",
                 "--json",
-                "number,state",
+                "number,state,headRefOid",
             ],
             cwd=repo_root,
             timeout=30,
@@ -243,13 +245,20 @@ def _query_pr_states(repo_root: Path, branch: str | None) -> tuple[list[PullRequ
             PullRequestState(
                 number=number if isinstance(number, int) else None,
                 state=state,
+                head_sha=(
+                    str(item.get("headRefOid"))
+                    if item.get("headRefOid")
+                    else None
+                ),
             )
         )
     return states, None
 
 
 def _best_pr(prs: list[PullRequestState]) -> PullRequestState | None:
-    for desired in ("MERGED", "CLOSED", "OPEN"):
+    # A branch name can be reused. Any open PR is therefore authoritative over
+    # historical merged/closed PRs for the same head name.
+    for desired in ("OPEN", "MERGED", "CLOSED"):
         for pr_state in prs:
             if pr_state.state == desired:
                 return pr_state
@@ -259,7 +268,121 @@ def _best_pr(prs: list[PullRequestState]) -> PullRequestState | None:
 def _pr_dict(pr_state: PullRequestState | None) -> dict[str, Any] | None:
     if pr_state is None:
         return None
-    return {"number": pr_state.number, "state": pr_state.state}
+    return {
+        "number": pr_state.number,
+        "state": pr_state.state,
+        "head_sha": pr_state.head_sha,
+    }
+
+
+def _pr_matches_worktree_head(
+    info: WorktreeInfo,
+    pr_state: PullRequestState | None,
+) -> bool:
+    return bool(
+        pr_state is not None
+        and pr_state.head_sha
+        and info.head
+        and pr_state.head_sha == info.head
+    )
+
+
+def _live_cwd_paths(repo_root: Path) -> set[Path] | None:
+    """Return process working directories, or ``None`` when lsof is unavailable."""
+    try:
+        proc = _run(["lsof", "-d", "cwd", "-F", "n"], cwd=repo_root, timeout=15)
+    except (FileNotFoundError, subprocess.SubprocessError):
+        return None
+    if proc.returncode != 0:
+        return None
+    paths: set[Path] = set()
+    for line in (proc.stdout or "").splitlines():
+        if not line.startswith("n/"):
+            continue
+        try:
+            paths.add(Path(line[1:]).resolve())
+        except OSError:
+            continue
+    return paths
+
+
+def _path_contains(parent: Path, child: Path) -> bool:
+    try:
+        child.relative_to(parent)
+    except ValueError:
+        return False
+    return True
+
+
+def _dispatch_task_id(repo_root: Path, info: WorktreeInfo) -> str | None:
+    dispatch_root = (repo_root / ".worktrees" / "dispatch").resolve()
+    try:
+        relative = info.path.resolve().relative_to(dispatch_root)
+    except ValueError:
+        return None
+    return relative.parts[1] if len(relative.parts) == 2 else None
+
+
+def _task_record_status(repo_root: Path, task_id: str | None) -> str | None:
+    if not task_id:
+        return None
+    task_file = repo_root / "batch_state" / "tasks" / f"{task_id}.json"
+    try:
+        payload = json.loads(task_file.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    status = payload.get("status") if isinstance(payload, dict) else None
+    return str(status) if status else None
+
+
+def _activity_reason(
+    *,
+    repo_root: Path,
+    info: WorktreeInfo,
+    active_ids: set[str] | None,
+    live_cwds: set[Path] | None,
+) -> str | None:
+    task_id = _dispatch_task_id(repo_root, info)
+    if task_id and active_ids is not None and task_id in active_ids:
+        return f"active dispatch task-id={task_id}"
+    task_status = _task_record_status(repo_root, task_id)
+    if task_status in {"queued", "starting", "running", "needs_finalize"}:
+        return f"non-terminal dispatch task-id={task_id} status={task_status}"
+    if live_cwds is not None:
+        worktree = info.path.resolve()
+        for cwd in live_cwds:
+            if _path_contains(worktree, cwd):
+                return f"live process cwd={cwd}"
+    return None
+
+
+def _common_git_dir(repo_root: Path) -> Path:
+    proc = _run(["git", "rev-parse", "--git-common-dir"], cwd=repo_root)
+    if proc.returncode != 0:
+        raise RuntimeError(f"cannot resolve git common dir: {_format_failure(proc)}")
+    path = Path((proc.stdout or "").strip())
+    if not path.is_absolute():
+        path = repo_root / path
+    return path.resolve()
+
+
+class _ReapLock:
+    def __init__(self, repo_root: Path) -> None:
+        self.path = _common_git_dir(repo_root) / "worktree-reaper.lock"
+        self.handle: Any = None
+
+    def __enter__(self) -> None:
+        self.handle = self.path.open("a+", encoding="utf-8")
+        try:
+            fcntl.flock(self.handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as exc:
+            self.handle.close()
+            raise RuntimeError(f"another worktree cleanup holds {self.path}") from exc
+
+    def __exit__(self, _exc_type: Any, _exc: Any, _tb: Any) -> None:
+        if self.handle is not None:
+            fcntl.flock(self.handle.fileno(), fcntl.LOCK_UN)
+            self.handle.close()
 
 
 def _origin_matches_head(path: Path, branch: str | None) -> bool:
@@ -312,13 +435,18 @@ def _qualifying_reason(
     now: float | None,
     active_ids: set[str] | None = None,
     safe_only: bool = False,
+    merged_pr_only: bool = False,
 ) -> str | None:
     if info.branch is not None:
         if pr_state is not None:
             pr_label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"
-            if pr_state.state == "MERGED":
+            if pr_state.state == "MERGED" and _pr_matches_worktree_head(info, pr_state):
                 return f"{pr_label} MERGED"
-            if pr_state.state == "CLOSED":
+            if (
+                not merged_pr_only
+                and pr_state.state == "CLOSED"
+                and _pr_matches_worktree_head(info, pr_state)
+            ):
                 return f"{pr_label} CLOSED"
 
         if not safe_only:
@@ -334,19 +462,14 @@ def _qualifying_reason(
             ):
                 return f"HEAD matches origin/{info.branch}"
 
+    if merged_pr_only:
+        return None
+
     # Class B: detached-HEAD worktrees under .worktrees/
     is_under_wt = is_under_worktrees(repo_root, info.path)
     clean = _worktree_clean(info.path)
-    dispatch_root = (repo_root / ".worktrees" / "dispatch").resolve()
-    is_dispatch_candidate = False
-    task_id = None
-    try:
-        rel_path = info.path.resolve().relative_to(dispatch_root)
-        if len(rel_path.parts) == 2:
-            task_id = rel_path.parts[1]
-            is_dispatch_candidate = True
-    except ValueError:
-        pass
+    task_id = _dispatch_task_id(repo_root, info)
+    is_dispatch_candidate = task_id is not None
 
     if is_under_wt and info.detached and clean is True and _is_ancestor_of_origin_main(info.path):
         has_matching_task = False
@@ -413,7 +536,7 @@ def _preserve_dirty_worktree(info: WorktreeInfo) -> str | None:
 
 def _remove_worktree(repo_root: Path, info: WorktreeInfo) -> str | None:
     proc = _run(
-        ["git", "worktree", "remove", "--force", str(info.path)],
+        ["git", "worktree", "remove", str(info.path)],
         cwd=repo_root,
     )
     if proc.returncode != 0:
@@ -442,6 +565,7 @@ def _reap_qualified_worktree(
     preserve_then_reap: bool,
     prune_merged_branches: bool,
 ) -> ReapResult:
+    expected_head = info.head
     if dirty is None:
         return ReapResult(
             path=str(info.path),
@@ -451,12 +575,7 @@ def _reap_qualified_worktree(
             dirty=None,
             pr=_pr_dict(pr_state),
         )
-    # Operator pain: MERGED/CLOSED worktrees often dirty with local notes.
-    # Auto-enable preserve-then-reap for those classes so cleanup does not
-    # require remembering an extra flag.
-    merged_or_closed = "MERGED" in reason or "CLOSED" in reason
-    effective_preserve = bool(preserve_then_reap or (dirty and merged_or_closed))
-    if dirty and not effective_preserve:
+    if dirty and not preserve_then_reap:
         return ReapResult(
             path=str(info.path),
             branch=info.branch,
@@ -465,8 +584,6 @@ def _reap_qualified_worktree(
             dirty=True,
             pr=_pr_dict(pr_state),
         )
-    preserve_then_reap = effective_preserve
-
     if not apply:
         action = "would_preserve_then_remove" if dirty else "would_remove"
         return ReapResult(
@@ -490,6 +607,41 @@ def _reap_qualified_worktree(
                 pr=_pr_dict(pr_state),
                 error=preserve_error,
             )
+        refreshed_head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
+        if refreshed_head.returncode != 0:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="error",
+                reason=f"cannot verify preserved worktree HEAD: {reason}",
+                dirty=True,
+                pr=_pr_dict(pr_state),
+                error=_format_failure(refreshed_head),
+            )
+        expected_head = (refreshed_head.stdout or "").strip()
+
+    current_head_proc = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
+    current_head = (current_head_proc.stdout or "").strip()
+    if current_head_proc.returncode != 0 or not expected_head or current_head != expected_head:
+        return ReapResult(
+            path=str(info.path),
+            branch=info.branch,
+            action="skipped",
+            reason=f"HEAD changed during cleanup; originally qualified because {reason}",
+            dirty=dirty,
+            pr=_pr_dict(pr_state),
+        )
+
+    current_clean = _worktree_clean(info.path)
+    if current_clean is not True:
+        return ReapResult(
+            path=str(info.path),
+            branch=info.branch,
+            action="skipped",
+            reason=f"worktree changed during cleanup; originally qualified because {reason}",
+            dirty=None if current_clean is None else True,
+            pr=_pr_dict(pr_state),
+        )
 
     remove_error = _remove_worktree(repo_root, info)
     if remove_error is not None:
@@ -504,7 +656,12 @@ def _reap_qualified_worktree(
         )
 
     branch_prune_error = None
-    if prune_merged_branches and pr_state is not None and pr_state.state == "MERGED":
+    if (
+        prune_merged_branches
+        and pr_state is not None
+        and pr_state.state == "MERGED"
+        and pr_state.head_sha == current_head
+    ):
         branch_prune_error = _prune_branch(repo_root, info.branch, force=True)
 
     if branch_prune_error is not None:
@@ -544,79 +701,106 @@ def reap_worktrees(
     target_paths: list[Path] | None = None,
     now: float | None = None,
     safe_only: bool = False,
+    live_cwds: set[Path] | None = None,
+    merged_pr_only: bool = False,
+    require_activity_probe: bool = False,
 ) -> list[ReapResult]:
     """Evaluate and optionally reap eligible worktrees."""
     repo_root = repo_root.resolve()
     targets = _target_filter(target_paths)
     results: list[ReapResult] = []
     active_ids = _active_task_ids()
+    if live_cwds is None:
+        live_cwds = _live_cwd_paths(repo_root)
+    if require_activity_probe and live_cwds is None:
+        raise RuntimeError("process-CWD activity probe unavailable; cleanup skipped")
 
-    for info in list_git_worktrees(repo_root):
-        if targets is not None and info.path.resolve() not in targets:
-            continue
-        if not is_under_worktrees(repo_root, info.path):
-            results.append(
-                ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason="outside repo .worktrees/",
-                    dirty=None,
+    with _ReapLock(repo_root):
+        for info in list_git_worktrees(repo_root):
+            if targets is not None and info.path.resolve() not in targets:
+                continue
+            if not is_under_worktrees(repo_root, info.path):
+                results.append(
+                    ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason="outside repo .worktrees/",
+                        dirty=None,
+                    )
                 )
-            )
-            continue
+                continue
 
-        dirty_state = _worktree_clean(info.path)
-        dirty = None if dirty_state is None else not dirty_state
-
-        pr_state = None
-        pr_error = None
-        if info.branch is not None:
-            pr_states, pr_error = _query_pr_states(repo_root, info.branch)
-            pr_state = _best_pr(pr_states)
-
-        reason = _qualifying_reason(
-            repo_root=repo_root,
-            info=info,
-            pr_state=pr_state,
-            build_age_hours=build_age_hours,
-            now=now,
-            active_ids=active_ids,
-            safe_only=safe_only,
-        )
-        if reason is None:
-            if info.branch is None:
-                reason = "detached or missing branch"
-            else:
-                reason = (
-                    f"no reap condition matched; {pr_error}"
-                    if pr_error
-                    else "no reap condition matched"
-                )
-            results.append(
-                ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason=reason,
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-            )
-            continue
-
-        results.append(
-            _reap_qualified_worktree(
+            activity = _activity_reason(
                 repo_root=repo_root,
                 info=info,
-                reason=reason,
-                dirty=dirty,
-                pr_state=pr_state,
-                apply=apply,
-                preserve_then_reap=preserve_then_reap,
-                prune_merged_branches=prune_merged_branches,
+                active_ids=active_ids,
+                live_cwds=live_cwds,
             )
-        )
+            if activity is not None:
+                results.append(
+                    ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=activity,
+                        dirty=None,
+                    )
+                )
+                continue
+
+            dirty_state = _worktree_clean(info.path)
+            dirty = None if dirty_state is None else not dirty_state
+
+            pr_state = None
+            pr_error = None
+            if info.branch is not None:
+                pr_states, pr_error = _query_pr_states(repo_root, info.branch)
+                pr_state = _best_pr(pr_states)
+
+            reason = _qualifying_reason(
+                repo_root=repo_root,
+                info=info,
+                pr_state=pr_state,
+                build_age_hours=build_age_hours,
+                now=now,
+                active_ids=active_ids,
+                safe_only=safe_only,
+                merged_pr_only=merged_pr_only,
+            )
+            if reason is None:
+                if info.branch is None:
+                    reason = "detached or missing branch"
+                else:
+                    reason = (
+                        f"no reap condition matched; {pr_error}"
+                        if pr_error
+                        else "no reap condition matched"
+                    )
+                results.append(
+                    ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=reason,
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+                )
+                continue
+
+            results.append(
+                _reap_qualified_worktree(
+                    repo_root=repo_root,
+                    info=info,
+                    reason=reason,
+                    dirty=dirty,
+                    pr_state=pr_state,
+                    apply=apply,
+                    preserve_then_reap=preserve_then_reap,
+                    prune_merged_branches=prune_merged_branches,
+                )
+            )
 
     if targets is not None:
         seen = {Path(result.path).resolve() for result in results}
@@ -751,7 +935,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--prune-merged-branches",
         action="store_true",
-        help="After removing a MERGED PR worktree, run safe 'git branch -d <branch>'.",
+        help=(
+            "Delete a local branch only after its MERGED PR head SHA exactly "
+            "matches the removed worktree HEAD."
+        ),
     )
     parser.add_argument(
         "--safe-only",
@@ -762,9 +949,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--merged",
         action="store_true",
         help=(
-            "Convenience for post-PR cleanup: enables --safe-only, "
-            "--preserve-then-reap, and --prune-merged-branches. "
-            "Dirty trees whose PR is MERGED/CLOSED are local-committed then removed."
+            "Restrict cleanup to exact MERGED PR heads and enable branch "
+            "pruning. Dirty trees remain untouched unless "
+            "--preserve-then-reap is explicit."
         ),
     )
     parser.add_argument(
@@ -787,7 +974,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     apply = bool(args.apply)
     merged_mode = bool(getattr(args, "merged", False))
-    preserve = bool(args.preserve_then_reap) or merged_mode
+    preserve = bool(args.preserve_then_reap)
     prune = bool(args.prune_merged_branches) or merged_mode
     safe_only = bool(args.safe_only) or merged_mode
     results = reap_worktrees(
@@ -798,6 +985,8 @@ def main(argv: list[str] | None = None) -> int:
         prune_merged_branches=prune,
         target_paths=args.worktree,
         safe_only=safe_only,
+        merged_pr_only=merged_mode,
+        require_activity_probe=apply,
     )
     if args.json:
         print(json.dumps([_result_payload(result) for result in results], indent=2))
