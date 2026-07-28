@@ -4,7 +4,8 @@ Exercises the pure decision logic in
 ``agents_extensions/shared/hooks/guard-pr-merge.py``:
 
   * `gh pr merge` detection (incl. wrappers, a positional PR number, and the
-    `--admin` / `--disable-auto` segments this hook deliberately leaves alone),
+    `--disable-auto` segment it deliberately leaves alone; P6 keeps `--admin`
+    visible so rail authorization has no bypass),
   * the quote-aware tokenizer (a `gh pr merge` inside a quoted commit body is NOT a merge),
   * failing/pending check classification against the advisory allowlist,
   * the fail-CLOSED `main()` decision (block on draft, red checks, pending-without-auto,
@@ -58,6 +59,7 @@ def _run(
     checks: tuple[list[str], list[str]] | None = ([], []),
     owner_repo: str | None = "owner/repo",
     protected: bool | None = False,
+    changed_paths: list[str] | None = None,
 ) -> int:
     """Drive main() with a simulated stdin payload + monkeypatched network calls.
 
@@ -69,9 +71,23 @@ def _run(
     monkeypatch.setattr(
         guard,
         "_pr_meta",
-        lambda p, repo=None, cwd=None: {"isDraft": False, "baseRefName": "main", "url": _URL} if meta is None else meta,
+        lambda p, repo=None, cwd=None: (
+            {
+                "isDraft": False,
+                "baseRefName": "main",
+                "headRefOid": "a" * 40,
+                "url": _URL,
+            }
+            if meta is None
+            else meta
+        ),
     )
     monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: checks)
+    monkeypatch.setattr(
+        guard,
+        "_pr_changed_paths",
+        lambda p, repo=None, cwd=None: ["README.md"] if changed_paths is None else changed_paths,
+    )
     monkeypatch.setattr(guard, "_owner_repo_from_url", lambda u: owner_repo)
     monkeypatch.setattr(guard, "_base_protected", lambda o, b: protected)
     return guard.main()
@@ -87,8 +103,8 @@ def _run(
         (["gh", "pr", "merge", "123", "--squash", "--delete-branch"], True),
         (["gh", "pr", "merge", "--auto", "--squash"], True),
         (["sudo", "gh", "pr", "merge", "5"], True),
-        # guard-admin-merge.py's job — never double-judge.
-        (["gh", "pr", "merge", "5", "--admin"], False),
+        # P6 keeps admin merges visible to the shared rail-path guard.
+        (["gh", "pr", "merge", "5", "--admin"], True),
         # Disarms auto-merge rather than merging; it is the remedy, not the offence.
         (["gh", "pr", "merge", "5", "--disable-auto"], False),
         (["gh", "pr", "view", "5"], False),
@@ -110,6 +126,33 @@ def test_is_advisory():
     assert guard._is_advisory("pip-audit (advisory)")
     assert not guard._is_advisory("boundary-and-tests")
     assert not guard._is_advisory("Test (pytest)")
+
+
+def test_rail_diff_refuses_merge_without_external_receipt(monkeypatch):
+    assert (
+        _run(
+            monkeypatch,
+            "gh pr merge 5 --squash",
+            changed_paths=["agents_extensions/shared/hooks/guard-pr-merge.py"],
+        )
+        == 2
+    )
+
+
+def test_rail_merge_check_is_mutation_honest(monkeypatch):
+    """Removing the merge-layer call turns the same rail PR into an observable allow."""
+    assert (
+        _run(
+            monkeypatch,
+            "gh pr merge 5 --squash",
+            changed_paths=["agents_extensions/shared/hooks/guard-pr-merge.py"],
+        )
+        == 2
+    )
+
+    monkeypatch.setattr(guard, "_rail_path_decision", lambda *_args, **_kwargs: (type("D", (), {"allowed": True})(), None))
+
+    assert _run(monkeypatch, "gh pr merge 5 --squash") == 0
 
 
 def test_pr_snapshot_reads_metadata_and_checks_concurrently(monkeypatch):
@@ -145,9 +188,8 @@ def test_unrelated_command_is_untouched(monkeypatch):
     assert _run(monkeypatch, "git push origin main") == 0
 
 
-def test_admin_merge_is_other_guards_job(monkeypatch):
-    # Red checks + --admin → still 0 from THIS hook; guard-admin-merge.py judges it.
-    assert _run(monkeypatch, "gh pr merge 5 --admin", checks=(["Test (pytest)"], [])) == 0
+def test_admin_merge_has_no_rail_path_bypass(monkeypatch):
+    assert _run(monkeypatch, "gh pr merge 5 --admin", checks=(["Test (pytest)"], [])) == 2
 
 
 def test_disable_auto_is_not_a_merge(monkeypatch):
@@ -375,7 +417,7 @@ def test_disable_auto_equals_true_is_not_a_merge(monkeypatch):
 def test_admin_equals_true_is_judged_here(monkeypatch):
     # guard-admin-merge.py matches the exact token "--admin" only, so `--admin=true`
     # is invisible to it. Judging it here closes the gap between the two hooks rather
-    # than letting a red admin merge fall between them. (Bare --admin stays its job.)
+    # than letting a red admin merge fall between them. P6 also judges bare --admin.
     assert _run(monkeypatch, "gh pr merge 5 --admin=true", checks=(["Test (pytest)"], [])) == 2
 
 
@@ -518,10 +560,12 @@ def test_cross_repo_url_selector_uses_that_repo(monkeypatch):
         lambda p, repo=None, cwd=None: {
             "isDraft": False,
             "baseRefName": "main",
+            "headRefOid": "a" * 40,
             "url": "https://github.com/other/repo/pull/9",
         },
     )
     monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: ([], []))
+    monkeypatch.setattr(guard, "_pr_changed_paths", lambda p, repo=None, cwd=None: ["README.md"])
     monkeypatch.setattr(guard, "_base_protected", lambda o, b: seen.setdefault("repo", o) and True)
     payload = json.dumps({"tool_input": {"command": "gh pr merge https://github.com/other/repo/pull/9 --auto"}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
@@ -615,7 +659,7 @@ def test_flag_looking_value_does_not_force_auto_path():
 
 def test_real_control_flags_still_recognized():
     assert guard._merge_args(["gh", "pr", "merge", "5", "--disable-auto"]) is None
-    assert guard._merge_args(["gh", "pr", "merge", "5", "--admin"]) is None
+    assert guard._merge_args(["gh", "pr", "merge", "5", "--admin"]) == ["5", "--admin"]
     assert guard._flag_enabled(guard._classify(["5", "--auto"])[0], "auto")
 
 

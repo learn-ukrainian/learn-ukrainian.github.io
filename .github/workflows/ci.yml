@@ -665,7 +665,78 @@ jobs:
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore
 
   # ---------------------------------------------------------------------
-  # 5. CI Gate — the sole required check. Every job above is unconditional,
+  # 5. rail-path — CI/PR enforcement for the narrow control-rail deny-list.
+  # This job intentionally calls the shared P6 module; changed-path discovery
+  # belongs to CI, while receipt/task/head/path authorization belongs nowhere
+  # else. A PR with a rail diff and no provisioned external receipt fails closed.
+  # ---------------------------------------------------------------------
+  rail-path:
+    name: Rail path authorization
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+
+      - name: Install rail-path check dependency
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install jsonschema
+
+      - name: Enforce rail-path authorization
+        env:
+          RAIL_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          RAIL_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          RAIL_TASK_ID: pr-${{ github.event.pull_request.number || github.sha }}
+        run: |
+          .venv/bin/python - <<'PY'
+          import os
+          import subprocess
+          import sys
+
+          from scripts.orchestration.rail_path_guard import decide_rail_path_mutation
+
+          base = os.environ.get("RAIL_BASE_SHA") or "origin/main"
+          head = os.environ["RAIL_HEAD_SHA"]
+          task_id = os.environ["RAIL_TASK_ID"]
+          changed = subprocess.run(
+              ["git", "diff", "--name-only", "-z", "--diff-filter=ACDMRT", base, head],
+              check=False,
+              capture_output=True,
+          )
+          if changed.returncode != 0:
+              print("rail-path guard could not read the candidate diff", file=sys.stderr)
+              raise SystemExit(2)
+          decision = decide_rail_path_mutation(
+              task_id=task_id,
+              candidate_paths=[
+                  path.decode("utf-8", errors="surrogateescape")
+                  for path in changed.stdout.split(b"\0")
+                  if path
+              ],
+              head_sha=head,
+          )
+          print(f"rail-path decision={decision.kind} reason={decision.reason}")
+          if not decision.allowed:
+              print(
+                  "rail-path authorization refused: "
+                  + ", ".join(decision.rail_paths),
+                  file=sys.stderr,
+              )
+              raise SystemExit(2)
+          PY
+
+  # ---------------------------------------------------------------------
+  # 6. CI Gate — the sole required check. Every job above is unconditional,
   #    so `skipped` is as much a failure as `failure`/`cancelled`: there is
   #    no legitimate reason for any of them to not report `success`.
   # ---------------------------------------------------------------------
@@ -720,6 +791,7 @@ jobs:
       - contracts
       - frontend
       - security
+      - rail-path
       - coverage-floor
     steps:
       - name: Report required-job results

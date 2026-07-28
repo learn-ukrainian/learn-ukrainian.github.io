@@ -1127,6 +1127,55 @@ def _resolve_write_cwd_error(
     )
 
 
+def _rail_path_admission_error(
+    *,
+    task_id: str,
+    mode: str,
+    owned_paths: Sequence[str] | None,
+) -> str | None:
+    """Return a P6 refusal before write-path ownership creates any state.
+
+    Receipt retrieval is deliberately not wired to a caller-provided local file:
+    P4 established that a local JSON projection is forgeable.  A provisioned
+    API/bridge caller may pass a :class:`VerifiedRailApprovalReceipt` directly
+    to the shared module; ordinary dispatch has no authority unless such a
+    trusted integration is installed, so rail claims fail closed here.
+    """
+    if mode not in _WRITE_CAPABLE_MODES:
+        return None
+    try:
+        from scripts.orchestration.rail_path_guard import decide_rail_path_mutation
+    except ImportError:  # pragma: no cover - flat script path
+        from orchestration.rail_path_guard import decide_rail_path_mutation  # type: ignore
+
+    try:
+        head_sha = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            check=False,
+            text=True,
+            timeout=5,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return f"❌ rail-path admission refused: cannot read current HEAD ({type(exc).__name__})"
+    if head_sha.returncode != 0:
+        return "❌ rail-path admission refused: cannot read current HEAD"
+    decision = decide_rail_path_mutation(
+        task_id=task_id,
+        candidate_paths=owned_paths or (),
+        head_sha=head_sha.stdout.strip(),
+    )
+    if decision.allowed:
+        return None
+    paths = ", ".join(decision.rail_paths) or "(invalid or unreadable candidate path)"
+    return (
+        "❌ rail-path admission refused before dispatch side effects: "
+        f"{decision.reason}; paths={paths}. "
+        "Rail mutations require a current externally verified approval receipt."
+    )
+
+
 def _format_dirty_entries(entries: list[dict[str, str]], *, limit: int = 10) -> str:
     shown = [f"{entry.get('xy', '').strip() or '??'} {entry.get('path', '')}" for entry in entries[:limit]]
     if len(entries) > limit:
@@ -3489,6 +3538,17 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 file=sys.stderr,
             )
             return 2
+
+    # P6 rail-path admission runs before the ownership ledger. A refusal must
+    # leave no task-state, worktree, branch, or claim residue for a rail write.
+    rail_admission_error = _rail_path_admission_error(
+        task_id=task_id,
+        mode=str(args.mode),
+        owned_paths=getattr(args, "research_owned_path", None),
+    )
+    if rail_admission_error:
+        print(rail_admission_error, file=sys.stderr)
+        return 2
 
     # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
     # Runs before task-state write / worktree / branch side effects so a refuse

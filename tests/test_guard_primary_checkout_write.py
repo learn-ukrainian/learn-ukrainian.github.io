@@ -224,6 +224,20 @@ def test_dispatch_worktree_write_allowed(repo: Path):
     assert result.returncode == 0, result.stderr
 
 
+def test_dispatch_worktree_rail_write_is_refused_without_receipt(repo: Path):
+    """P6 local layer: worktree isolation never authorizes a control-rail write."""
+    payload = _write_payload(
+        repo,
+        "Edit",
+        ".worktrees/dispatch/claude/task-1/agents_extensions/shared/hooks/guard-pr-merge.py",
+    )
+
+    result = _run(repo, payload)
+
+    assert result.returncode == 2, result.stderr
+    assert "rail_approval_receipt_required" in result.stderr
+
+
 def test_read_only_bash_allowed(repo: Path):
     for command in ("git status", "cat curriculum/tracked.md", "git log --oneline"):
         payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
@@ -657,8 +671,8 @@ def test_bash_unresolved_shell_var_blocked_with_distinct_reason(repo: Path):
     assert "unresolved_shell_variable" in result.stderr
 
 
-def test_bash_redirect_to_claude_epic_archive_from_subdir_allowed(repo: Path):
-    """#5404: cwd inside gitignored epic dir + relative archive path allowed."""
+def test_bash_redirect_to_claude_epic_archive_from_subdir_is_rail_guarded(repo: Path):
+    """P6: all .claude paths are rail configuration even when gitignored."""
     epic = repo / ".claude" / "atlas-epic"
     epic.mkdir(parents=True, exist_ok=True)
     (epic / "archive").mkdir(exist_ok=True)
@@ -673,7 +687,8 @@ def test_bash_redirect_to_claude_epic_archive_from_subdir_allowed(repo: Path):
         "tool_input": {"command": "echo x > archive/t.md"},
     }
     result = _run(repo, payload)
-    assert result.returncode == 0, result.stderr
+    assert result.returncode == 2, result.stderr
+    assert "rail_approval_receipt_required" in result.stderr
 
 
 def test_bash_untracked_non_ignored_still_blocked(repo: Path):

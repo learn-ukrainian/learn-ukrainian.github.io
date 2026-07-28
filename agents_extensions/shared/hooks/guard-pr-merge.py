@@ -41,12 +41,14 @@ likewise unread — a deliberate-only shape, documented rather than papered over
 from __future__ import annotations
 
 import concurrent.futures
+import importlib.util
 import json
 import os
 import re
 import shlex
 import subprocess
 import sys
+from pathlib import Path
 from typing import NamedTuple
 
 # Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR, which beat NO_COLOR and make
@@ -609,10 +611,10 @@ def _merge_args(seg: list[str]) -> list[str] | None:
     Skipped: `--disable-auto` (any spelling), which disarms auto-merge rather than
     merging anything and is exactly the remedy this hook's --auto verdict asks for.
 
-    Also skipped: a bare `--admin`, which is guard-admin-merge.py's job — but ONLY that
-    exact spelling, because that is precisely what the sibling matches. `--admin=true` is
-    a real admin merge the sibling misses, so it is judged HERE rather than falling
-    between the two hooks. Judging it cannot double-judge: the sibling never sees it.
+    A bare `--admin` is also seen by ``guard-admin-merge.py``, but it remains visible
+    here: P6 rail authorization must have no ``--admin`` bypass. The duplicate status
+    read is conservative; the command is already an explicit protection bypass and an
+    unreadable rail decision must refuse.
     """
     i, via_xargs = _invoked_start(seg)
     if seg[i : i + 3] == ["gh", "pr", "merge"]:
@@ -641,7 +643,7 @@ def _merge_args(seg: list[str]) -> list[str] | None:
     # spelling treatment (`--help=true`) rather than a bare-token check.
     if _flag_enabled(flags, "help") or "-h" in flags:
         return None
-    if "--admin" in flags or _flag_enabled(flags, "disable-auto"):
+    if _flag_enabled(flags, "disable-auto"):
         return None
     return args
 
@@ -788,14 +790,22 @@ def _owner_repo_from_url(url: str) -> str | None:
 
 
 def _pr_meta(pr: str, repo: str | None = None, cwd: str | None = None) -> dict | None:
-    """`{isDraft, baseRefName, url}` for the PR, or None if undeterminable (→ fail-closed).
+    """`{isDraft, baseRefName, headRefOid, url}` for the PR, or None if undeterminable.
 
     A payload without a boolean `isDraft` is undeterminable, not "not a draft" — `{}` or
     `isDraft: null` must never read as a green light.
     """
     try:
         out = subprocess.run(
-            ["gh", "pr", "view", pr, *_repo_args(repo), "--json", "isDraft,baseRefName,url"],
+            [
+                "gh",
+                "pr",
+                "view",
+                pr,
+                *_repo_args(repo),
+                "--json",
+                "isDraft,baseRefName,headRefOid,url",
+            ],
             capture_output=True,
             env=_gh_env(),
             cwd=cwd,
@@ -912,6 +922,66 @@ def _pr_snapshot(
         return meta_future.result(), states_future.result()
 
 
+def _load_rail_path_guard():
+    """Load the source-controlled P6 guard from a deployed merge-hook copy."""
+    here = Path(__file__).resolve()
+    for parent in (here.parent, *here.parents):
+        candidate = parent / "scripts" / "orchestration" / "rail_path_guard.py"
+        if not candidate.is_file():
+            continue
+        spec = importlib.util.spec_from_file_location("rail_path_guard", candidate)
+        if spec is None or spec.loader is None:
+            return None
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        spec.loader.exec_module(module)
+        return module
+    return None
+
+
+def _pr_changed_paths(pr: str, repo: str | None = None, cwd: str | None = None) -> list[str] | None:
+    """Return the exact PR diff paths, or ``None`` when GitHub cannot prove them."""
+    try:
+        out = subprocess.run(
+            ["gh", "pr", "diff", pr, *_repo_args(repo), "--name-only"],
+            capture_output=True,
+            env=_gh_env(),
+            cwd=cwd,
+            text=True,
+            timeout=8,
+        )
+    except Exception:
+        return None
+    if out.returncode != 0:
+        return None
+    return [line for line in _decolorize(out.stdout).splitlines() if line]
+
+
+def _rail_path_decision(pr: str, meta: dict, repo: str | None, cwd: str | None):
+    """Delegate merge-path authorization to the single shared P6 module."""
+    head_sha = meta.get("headRefOid")
+    if not isinstance(head_sha, str):
+        return None, "could not verify the PR head SHA for rail authorization"
+    paths = _pr_changed_paths(pr, repo, cwd)
+    if paths is None:
+        return None, "could not read changed paths for rail authorization"
+    try:
+        rail_guard = _load_rail_path_guard()
+    except Exception:
+        return None, "the shared rail-path decision module is unavailable"
+    if rail_guard is None:
+        return None, "the shared rail-path decision module is unavailable"
+    try:
+        decision = rail_guard.decide_rail_path_mutation(
+            task_id=f"pr-{pr}",
+            candidate_paths=paths,
+            head_sha=head_sha,
+        )
+    except Exception:
+        return None, "the shared rail-path decision is unreadable"
+    return decision, None
+
+
 _FOOTER = (
     "GitHub will merge a draft or a red PR without complaint — branch protection stops only\n"
     "what it was configured to require, and on a free-plan private repo it cannot be configured\n"
@@ -969,6 +1039,21 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
             "Every non-advisory check counts, whether or not GitHub marks it required —\n"
             "'required' is a config accident, red is red. Fix the failures and re-run;\n"
             "do not merge over them.",
+        )
+    rail_decision, rail_error = _rail_path_decision(pr, meta, repo, cwd)
+    if rail_error is not None or rail_decision is None:
+        return _block_msg(
+            rail_error or "rail-path authorization is unreadable",
+            "The merge guard cannot prove that this PR avoids protected rails. "
+            "Repair the receipt source or changed-path query, then retry; it fails closed.",
+        )
+    if not rail_decision.allowed:
+        paths = ", ".join(rail_decision.rail_paths) or "(unreadable path)"
+        return _block_msg(
+            f"PR {pr} rail-path authorization refused: {rail_decision.reason} ({paths})",
+            "Rail mutations require a scoped, unexpired approval receipt re-fetched from "
+            "the provisioned advisor/operator source. X-Agent, model, and tier claims do "
+            "not authorize a merge.",
         )
     if _flag_enabled(_classify(args)[0], "auto"):
         base = str(meta.get("baseRefName") or "")
