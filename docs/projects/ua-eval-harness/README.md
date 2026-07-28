@@ -44,6 +44,16 @@ The mock path receives oracle data and is test-only. Its score must never be
 reported as a model baseline. The 52 rows may be used for parser/scorer
 development and regression only.
 
+The public held-out extraction manifest is separate:
+
+- `heldout_manifest_config.json` pins UA-GEC commit
+  `4757f72f192c4a41e4c8fb1d9690a948f87cf6d6`, CC BY 4.0 evidence,
+  metadata, and the `gec-fluency/test` M2 file by SHA-256;
+- `heldout_manifest_v1.json` accounts for all 2,690 upstream test sentences:
+  677 included calque/grammar records and 2,013 exclusion receipts;
+- all 166 test documents and 76 test authors are preserved, with zero author
+  overlap against the upstream train split.
+
 Historical receipts remain useful but bounded:
 
 - [issue #5608](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5608)
@@ -67,11 +77,27 @@ The target is minimal-edit Ukrainian sentence correction:
 6. Results report per-tag support, uncertainty, unchanged output, and
    over-editing.
 
-The public set will be derived from an upstream-pinned UA-GEC held-out split.
-A frozen eligibility predicate determines all included records; final size is
-an observed result, not a quota. The manifest preserves upstream IDs,
-writer/document splits, original tags, attribution, source/reference hashes,
-and explicit inclusion/exclusion reasons.
+The public set is derived from the pinned UA-GEC `gec-fluency/test` split.
+The frozen predicate includes every tokenized sentence with an `F/Calque` or
+`G/*` edit and applies only those edits per annotator. Final size is an
+observed result, not a quota. The manifest preserves upstream sentence
+locators, writer/document splits, original tags, attribution,
+source/reference hashes, and explicit inclusion/exclusion reasons.
+
+Verify the committed artifact without an upstream checkout:
+
+```bash
+.venv/bin/python scripts/projects/ua_eval_harness/build_heldout_manifest.py \
+  --verify-existing
+```
+
+Reproduce it from the exact pinned UA-GEC checkout:
+
+```bash
+.venv/bin/python scripts/projects/ua_eval_harness/build_heldout_manifest.py \
+  --ua-gec-root /path/to/ua-gec \
+  --check
+```
 
 ## Ownership and data boundaries
 

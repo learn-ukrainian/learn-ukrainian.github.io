@@ -1,0 +1,33 @@
+{
+  "schema_version": "ua_gec_heldout_config.v1",
+  "manifest_id": "ua-gec-calque-grammar-heldout-v1",
+  "upstream": {
+    "repository": "https://github.com/grammarly/ua-gec",
+    "commit": "4757f72f192c4a41e4c8fb1d9690a948f87cf6d6",
+    "version": "2.0",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "citation": "Syvokon, Nahorna, Kuchmiichuk, and Osidach. UA-GEC. UNLP 2023.",
+    "files": {
+      "LICENSE": "f5b745ef98087f531e719ee8ca6a96809444573ecc7173c6fa68eaad39b3cc3f",
+      "README.md": "e0aa163c7471ff9e876f5f294252b9e406b2ec832b10a6ded894ea322796e875",
+      "data/metadata.csv": "6f92f0734cd4a8b126b416f2bc19b518e739f6b3e1aaeef46a4bf5e4e97ab3f9",
+      "data/gec-fluency/test/gec-fluency.test.m2": "a7e91f93747492e4acda1fef261a948080228032f0871c0b3c14438f85397330"
+    }
+  },
+  "predicate": {
+    "partition": "test",
+    "annotation_layer": "gec-fluency",
+    "record_unit": "m2_tokenized_sentence",
+    "included_exact_tags": [
+      "F/Calque"
+    ],
+    "included_tag_prefixes": [
+      "G/"
+    ],
+    "reference_policy": "apply_only_in_scope_edits_per_annotator",
+    "selection_policy": "include_every_sentence_with_at_least_one_in_scope_edit",
+    "exclusion_reason": "no_calque_or_grammar_edit",
+    "arbitrary_item_quota": null
+  }
+}
