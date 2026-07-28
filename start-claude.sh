@@ -192,12 +192,24 @@ unset LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH
 unset LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH
 if [ "$_claudex_managed_launch" != "1" ] && [ "${LEARN_UKRAINIAN_TRANSPORT:-}" = "claudex" ]; then
     unset LEARN_UKRAINIAN_REQUESTED_PROFILE_ID
+    # r8 class sweep: transport must ALSO reset, else the native-route cleanup
+    # below never fires and the inherited proxy env (base URL, token, models)
+    # stays active in a native launch.
+    unset LEARN_UKRAINIAN_TRANSPORT
 fi
 if [ "$_kimicc_managed_launch" != "1" ] && [ "${LEARN_UKRAINIAN_TRANSPORT:-}" = "kimicc" ]; then
     unset LEARN_UKRAINIAN_REQUESTED_PROFILE_ID
+    # r8 class sweep: transport must ALSO reset, else the native-route cleanup
+    # below never fires and the inherited proxy env (base URL, token, models)
+    # stays active in a native launch.
+    unset LEARN_UKRAINIAN_TRANSPORT
 fi
 if [ "$_glmcc_managed_launch" != "1" ] && [ "${LEARN_UKRAINIAN_TRANSPORT:-}" = "glmcc" ]; then
     unset LEARN_UKRAINIAN_REQUESTED_PROFILE_ID
+    # r8 class sweep: transport must ALSO reset, else the native-route cleanup
+    # below never fires and the inherited proxy env (base URL, token, models)
+    # stays active in a native launch.
+    unset LEARN_UKRAINIAN_TRANSPORT
 fi
 _requested_profile="${LEARN_UKRAINIAN_REQUESTED_PROFILE_ID:-native_claude}"
 # shellcheck source=scripts/lib/profile_resolver.sh
