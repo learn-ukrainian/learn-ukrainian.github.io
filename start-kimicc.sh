@@ -217,7 +217,7 @@ while (($#)); do
   esac
 done
 
-if ! _kimicc_route="$("$SCRIPT_DIR/.venv/bin/python" "$SCRIPT_DIR/scripts/review/model_catalog.py" \
+if ! _kimicc_route="$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/review/model_catalog.py" \
     --resolve-kimi-model "$MODEL_ALIAS" --format kimicc 2>/dev/null)"; then
   echo "Error: unsupported model '$MODEL_ALIAS' (use k3, k2.7, k2.7-highspeed)." >&2
   exit 2

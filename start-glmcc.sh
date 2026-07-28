@@ -184,7 +184,7 @@ while (($#)); do
   esac
 done
 
-if ! _glmcc_route="$("$SCRIPT_DIR/.venv/bin/python" "$SCRIPT_DIR/scripts/review/model_catalog.py" \
+if ! _glmcc_route="$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/review/model_catalog.py" \
     --resolve-glm-model "$MODEL_ALIAS" --format glmcc 2>/dev/null)"; then
   echo "Error: unsupported model '$MODEL_ALIAS' (use glm-5.2)." >&2
   exit 2
