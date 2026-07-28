@@ -33,7 +33,7 @@
 # proceed.
 schema_version: trailspec.v1
 trail_id: rb5-session-close
-version: "0.1.0"
+version: "0.1.1"
 title: RB5 Session close — inbox drain, readiness receipts, hygiene sweep, handoff gate
 seats:
   - grok-daily
@@ -164,10 +164,13 @@ steps:
       merge continuously; live-captured 2026-07-28: origin/main moved ahead of a
       freshly-fetched local within the same session). The readiness predicate's
       branch_pushed field conflates the two directions, so this step counts only
-      the ahead direction (live shape: bare integer, "0" when clean).
-    command: sh -c 'git fetch origin --quiet 2>/dev/null; N=$(git rev-list --count origin/main..main 2>/dev/null); case "$N" in "") echo count-unavailable;; *[!0-9]*) echo count-unavailable;; 0) echo primary-clean;; *) echo primary-ahead;; esac'
+      the ahead direction (live shape: bare integer, "0" when clean). FAILS
+      CLOSED (r1 finding): a failed fetch means the remote state could not be
+      verified, so the count is unavailable — a stale tracking ref must never
+      read as primary-clean.
+    command: sh -c 'git fetch origin --quiet 2>/dev/null || { echo count-unavailable; exit 0; }; N=$(git rev-list --count origin/main..main 2>/dev/null); case "$N" in "") echo count-unavailable;; *[!0-9]*) echo count-unavailable;; 0) echo primary-clean;; *) echo primary-ahead;; esac'
     evidence_predicate:
-      command: sh -c 'git fetch origin --quiet 2>/dev/null; N=$(git rev-list --count origin/main..main 2>/dev/null); case "$N" in "") echo count-unavailable;; *[!0-9]*) echo count-unavailable;; 0) echo primary-clean;; *) echo primary-ahead;; esac'
+      command: sh -c 'git fetch origin --quiet 2>/dev/null || { echo count-unavailable; exit 0; }; N=$(git rev-list --count origin/main..main 2>/dev/null); case "$N" in "") echo count-unavailable;; *[!0-9]*) echo count-unavailable;; 0) echo primary-clean;; *) echo primary-ahead;; esac'
       success_pattern: '^(primary-clean|primary-ahead|count-unavailable)$'
     transitions:
       primary_clean: worktree_receipt
@@ -184,10 +187,13 @@ steps:
       more routes the recorded receipt to the sweep judgment — the #M-10a close
       sweep is disposition-per-worktree work this trail cannot do mechanically
       (merged-clean vs uncommitted vs other-lane-live all look alike to a count).
-    command: sh -c 'git worktree list --porcelain | tee batch_state/rb5-worktrees-{handoff_agent}.txt | grep -c "^worktree "'
+      The command emits the transition vocabulary itself (sibling sweep of the r1
+      fail-closed class: a bare count narrates the branching instead of enforcing
+      it, and a failed listing must not read as any worktree state).
+    command: sh -c 'git worktree list --porcelain > batch_state/rb5-worktrees-{handoff_agent}.txt 2>/dev/null || { echo receipt-unwritable; exit 0; }; N=$(grep -c "^worktree " batch_state/rb5-worktrees-{handoff_agent}.txt); case "$N" in 1) echo primary-only;; 0) echo receipt-unwritable;; *) echo extra-worktrees;; esac'
     evidence_predicate:
-      command: sh -c 'grep -c "^worktree " batch_state/rb5-worktrees-{handoff_agent}.txt'
-      success_pattern: '^[1-9][0-9]*$'
+      command: sh -c 'N=$(grep -c "^worktree " batch_state/rb5-worktrees-{handoff_agent}.txt 2>/dev/null); case "$N" in 1) echo primary-only;; ""|0) echo receipt-unwritable;; *) echo extra-worktrees;; esac'
+      success_pattern: '^(primary-only|extra-worktrees|receipt-unwritable)$'
     transitions:
       primary_only: handoff_gate
       extra_worktrees: sweep_judgment
