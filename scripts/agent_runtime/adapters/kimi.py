@@ -26,6 +26,7 @@ from scripts.review.model_catalog import kimi_model_aliases
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from .base import InvocationPlan
+from .kimicc import KimiccHarness
 
 _logger = logging.getLogger(__name__)
 
@@ -87,6 +88,21 @@ class KimiAdapter:
         tool_config: dict | None,
         effort: str | None = None,
     ) -> InvocationPlan:
+        config = tool_config or {}
+        harness = config.get("harness")
+        if harness == "kimicc":
+            return KimiccHarness().build_invocation(
+                prompt=prompt,
+                mode=mode,
+                cwd=cwd,
+                model=model,
+                task_id=task_id,
+                session_id=session_id,
+                tool_config=config,
+                effort=effort,
+            )
+        if harness not in (None, "native"):
+            raise ValueError(f"KimiAdapter: unsupported harness {harness!r}; expected 'native' or 'kimicc'")
         if mode not in self.supported_modes:
             raise ValueError(
                 f"KimiAdapter: unsupported mode {mode!r} "
@@ -118,7 +134,6 @@ class KimiAdapter:
         if session_id:
             cmd.extend(["--session", session_id])
 
-        config = tool_config or {}
         for skills_dir in _as_string_list(config.get("kimi_skills_dirs")):
             cmd.extend(["--skills-dir", skills_dir])
         for add_dir in _as_string_list(config.get("kimi_add_dirs")):
@@ -159,6 +174,15 @@ class KimiAdapter:
         plan: InvocationPlan | None = None,
         call_start_time: float | None = None,
     ) -> ParseResult:
+        if plan is not None and plan.metadata.get("harness") == "kimicc":
+            return KimiccHarness().parse_response(
+                stdout=stdout,
+                stderr=stderr,
+                returncode=returncode,
+                output_file=output_file,
+                plan=plan,
+                call_start_time=call_start_time,
+            )
         _ = (output_file, plan, call_start_time)
 
         events = parse_json_events(stdout, source="kimi stream-json", logger=_logger)

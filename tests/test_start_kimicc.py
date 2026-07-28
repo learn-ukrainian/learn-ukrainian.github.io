@@ -48,6 +48,7 @@ def _require_launcher_sources() -> None:
         _LAUNCHER,
         _REPO_ROOT / "scripts" / "secret_redactor.py",
         _REPO_ROOT / "scripts" / "lib" / "claude_route_guard.sh",
+        _REPO_ROOT / "scripts" / "lib" / "kimicc_route.sh",
         _REPO_ROOT / "scripts" / "lib" / "profile_resolver.sh",
         _REPO_ROOT / "scripts" / "lib" / "context_profiles.py",
         _REPO_ROOT / "scripts" / "lib" / "kimi_coding_oauth.py",
@@ -80,7 +81,7 @@ def _seed_fake_project(tmp_path: Path) -> Path:
     (project / "scripts" / "secret_redactor.py").write_text(
         secret_redactor.read_text(encoding="utf-8"), encoding="utf-8"
     )
-    for name in ("claude_route_guard.sh", "profile_resolver.sh", "context_profiles.py", "kimi_coding_oauth.py"):
+    for name in ("claude_route_guard.sh", "kimicc_route.sh", "profile_resolver.sh", "context_profiles.py", "kimi_coding_oauth.py"):
         src = _REPO_ROOT / "scripts" / "lib" / name
         dest = lib / name
         dest.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
@@ -483,6 +484,23 @@ def test_dry_run_resolves_route_without_launching(tmp_path: Path) -> None:
     assert "KIMICC_DRY_RUN=1: would exec" in result.stdout
     assert "auth=MOONSHOT_API_KEY" in result.stdout
     # Fake claude was never executed.
+    assert output == ""
+
+
+def test_dry_run_resolves_route_without_a_credential(tmp_path: Path) -> None:
+    output, result = _run_with_fakes(
+        tmp_path,
+        [],
+        env_overrides={
+            **_OAUTH_ENV_CLEAR,
+            "KIMICC_DRY_RUN": "1",
+            "KIMI_CODE_CREDENTIALS_PATH": str(tmp_path / "missing-oauth.json"),
+        },
+    )
+    assert result.returncode == 0, result.stderr
+    assert "KimiCC: model=k3 alias=k3 endpoint=coding profile=kimicc_k3" in result.stdout
+    assert "auth=UNSET (dry-run only)" in result.stdout
+    assert "would exec" in result.stdout
     assert output == ""
 
 
