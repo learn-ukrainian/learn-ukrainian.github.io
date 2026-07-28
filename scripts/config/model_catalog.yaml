@@ -235,8 +235,14 @@ models:
     family: zhipu
     tier: frontier_practical
     lifecycle: active
+    aliases: [glm52, glm]
+    glm_routes:
+      glmcc_alias: glm-5.2
+      platform_model_id: glm-5.2
+      coding_model_id: glm-5.2
+      context_profile: glmcc_glm52
     roles: [long_context_review, security_review, complex_debugging]
-    transports: [opencode]
+    transports: [opencode, glmcc]
     strengths: [long_horizon_coding, one_million_context, strong_open_model]
     weaknesses: [china_data_egress, local_interactive_only, quota_multiplier]
     sources:

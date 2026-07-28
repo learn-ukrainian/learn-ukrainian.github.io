@@ -83,6 +83,21 @@ profiles:
     cold_start_budget_tokens: 26214
     rollover_warning_percentages: [75.0, 85.0, 92.0]
 
+  # Interactive Claude Code + GLM (z.ai) Anthropic-compatible endpoint (start-glmcc.sh).
+  glmcc_glm52:
+    profile_id: glmcc_glm52
+    transport: glmcc
+    main_model_id: glm-5.2
+    model_id_patterns:
+      - '^glm-5\.2$'
+      - '^glm52$'
+      - '^glm$'
+    main_context_window_tokens: 1048576
+    auto_compact_capacity_tokens: 996147
+    cold_start_profile: compact
+    cold_start_budget_tokens: 104857
+    rollover_warning_percentages: [75.0, 85.0, 92.0]
+
   fallback:
     profile_id: fallback
     transport: unknown

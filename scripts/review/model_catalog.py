@@ -27,6 +27,12 @@ KIMI_ROUTE_FIELDS = (
     "coding_model_id",
     "context_profile",
 )
+GLM_ROUTE_FIELDS = (
+    "glmcc_alias",
+    "platform_model_id",
+    "coding_model_id",
+    "context_profile",
+)
 
 
 class ModelCatalogError(ValueError):
@@ -136,6 +142,14 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             if routes["kimicc_alias"] not in aliases:
                 raise ModelCatalogError(
                     f"models.{model_id}.kimi_routes.kimicc_alias must be listed in models.{model_id}.aliases"
+                )
+        if "glmcc" in model["transports"]:
+            routes = _require_mapping(model.get("glm_routes"), f"models.{model_id}.glm_routes")
+            for field in GLM_ROUTE_FIELDS:
+                _require_string(routes.get(field), f"models.{model_id}.glm_routes.{field}")
+            if routes["glmcc_alias"] != model_id and routes["glmcc_alias"] not in aliases:
+                raise ModelCatalogError(
+                    f"models.{model_id}.glm_routes.glmcc_alias must be model id or listed in models.{model_id}.aliases"
                 )
 
     candidates = _require_mapping(catalog.get("review_candidates"), "review_candidates")
@@ -249,6 +263,29 @@ def resolve_kimi_model(model: str, catalog: dict[str, Any] | None = None) -> tup
     return model_id, source["models"][model_id]["kimi_routes"]
 
 
+def glm_model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
+    """Return every supported GLM input alias mapped to its catalog model id."""
+    models = (catalog or load_model_catalog())["models"]
+    aliases: dict[str, str] = {}
+    for model_id, model in models.items():
+        if "glmcc" not in model.get("transports", []):
+            continue
+        aliases[model_id] = model_id
+        aliases.update({alias: model_id for alias in model.get("aliases", [])})
+    return aliases
+
+
+def resolve_glm_model(model: str, catalog: dict[str, Any] | None = None) -> tuple[str, dict[str, str]]:
+    """Resolve one GLM input alias to native and GLMCC route metadata."""
+    source = catalog or load_model_catalog()
+    aliases = glm_model_aliases(source)
+    try:
+        model_id = aliases[model]
+    except KeyError as exc:
+        raise ModelCatalogError(f"unsupported GLM model {model!r}; allowed: {sorted(aliases)}") from exc
+    return model_id, source["models"][model_id]["glm_routes"]
+
+
 def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
     """Reject local alias maps so all Kimi surfaces stay catalog-backed."""
     consumers = {
@@ -280,31 +317,71 @@ def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
         raise ModelCatalogError("KimiCC route helper contains a local Kimi alias case map")
 
 
+def validate_glm_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
+    """Reject local alias maps so all GLM surfaces stay catalog-backed."""
+    consumers = {
+        "start-glmcc.sh": ("--resolve-glm-model", "--format glmcc"),
+    }
+    for relative_path, required_snippets in consumers.items():
+        path = project_root / relative_path
+        try:
+            source = path.read_text(encoding="utf-8")
+        except OSError as exc:
+            raise ModelCatalogError(f"cannot read GLM alias consumer {relative_path}: {exc}") from exc
+        missing = [snippet for snippet in required_snippets if snippet not in source]
+        if missing:
+            raise ModelCatalogError(
+                f"{relative_path} must resolve GLM aliases through model_catalog.yaml; missing {missing}"
+            )
+
+
 def _main() -> int:
-    """Expose catalog-backed Kimi resolution for shell launchers."""
+    """Expose catalog-backed model resolution for shell launchers."""
     import argparse
 
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--resolve-kimi-model", metavar="ALIAS", required=True)
-    parser.add_argument("--format", choices=("native", "kimicc"), default="native")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--resolve-kimi-model", metavar="ALIAS")
+    group.add_argument("--resolve-glm-model", metavar="ALIAS")
+    parser.add_argument("--format", choices=("native", "kimicc", "glmcc"), default="native")
     args = parser.parse_args()
-    try:
-        model_id, routes = resolve_kimi_model(args.resolve_kimi_model)
-    except ModelCatalogError as exc:
-        parser.error(str(exc))
-    if args.format == "native":
-        print(model_id)
-    else:
-        print(
-            "\t".join(
-                (
-                    routes["kimicc_alias"],
-                    routes["platform_model_id"],
-                    routes["coding_model_id"],
-                    routes["context_profile"],
+
+    if args.resolve_kimi_model:
+        try:
+            model_id, routes = resolve_kimi_model(args.resolve_kimi_model)
+        except ModelCatalogError as exc:
+            parser.error(str(exc))
+        if args.format == "native":
+            print(model_id)
+        else:
+            print(
+                "\t".join(
+                    (
+                        routes["kimicc_alias"],
+                        routes["platform_model_id"],
+                        routes["coding_model_id"],
+                        routes["context_profile"],
+                    )
                 )
             )
-        )
+    elif args.resolve_glm_model:
+        try:
+            model_id, routes = resolve_glm_model(args.resolve_glm_model)
+        except ModelCatalogError as exc:
+            parser.error(str(exc))
+        if args.format == "native":
+            print(model_id)
+        else:
+            print(
+                "\t".join(
+                    (
+                        routes["glmcc_alias"],
+                        routes["platform_model_id"],
+                        routes["coding_model_id"],
+                        routes["context_profile"],
+                    )
+                )
+            )
     return 0
 
 

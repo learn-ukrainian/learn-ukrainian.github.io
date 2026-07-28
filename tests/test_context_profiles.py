@@ -88,6 +88,17 @@ def test_production_registry_separates_sol_capacity_values() -> None:
     assert profiles["kimicc_k27"]["main_context_window_tokens"] == 262_144
     assert profiles["kimicc_k27"]["auto_compact_capacity_tokens"] == 249_036
     assert profiles["kimicc_k27_highspeed"]["main_model_id"] == "kimi-k2.7-code-highspeed"
+    assert profiles["glmcc_glm52"] == {
+        "profile_id": "glmcc_glm52",
+        "transport": "glmcc",
+        "main_model_id": "glm-5.2",
+        "model_id_patterns": [r"^glm-5\.2$", r"^glm52$", r"^glm$"],
+        "main_context_window_tokens": 1_048_576,
+        "auto_compact_capacity_tokens": 996_147,
+        "cold_start_profile": "compact",
+        "cold_start_budget_tokens": 104_857,
+        "rollover_warning_percentages": [75.0, 85.0, 92.0],
+    }
 
 
 def test_native_codex_profile_accepts_sol_and_rejects_other_models() -> None:
