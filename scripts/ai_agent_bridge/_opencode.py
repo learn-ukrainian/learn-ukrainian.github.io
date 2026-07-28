@@ -55,10 +55,13 @@ from ._ask_lifecycle import (
     ask_target_model,
     fetch_ask_message,
     launch_background_ask,
+    record_ask_failure,
     record_ask_reply,
     register_ask,
 )
+from ._config import REPO_ROOT
 from ._messaging import acknowledge, send_message
+from ._reply_sidecar import write_reply_sidecar
 from ._review_safety import (
     ReviewSafetyError,
     assert_formal_review_ask_payload,
@@ -196,6 +199,369 @@ def _resolve_opencode_effort(
     return applied, reason
 
 
+STANDING_TOOLLESS_NOTICE = "answer from the attached content; shell/tools are unavailable in this mode"
+
+
+def _ensure_toolless_prompt_notice(prompt: str) -> str:
+    if STANDING_TOOLLESS_NOTICE in prompt:
+        return prompt
+    return f"{prompt.rstrip()}\n\n[{STANDING_TOOLLESS_NOTICE}]"
+
+
+@dataclass(frozen=True, slots=True)
+class OpencodeTurnStatus:
+    outcome: str  # "completed" | "aborted" | "permission_rejected" | "errored" | "trace_unavailable"
+    reason: str
+    cancellation_category: str | None = None
+    session_id: str | None = None
+
+
+class OpencodeTurnError(RuntimeError):
+    """Raised when an opencode turn is not completed cleanly."""
+
+    def __init__(self, status: OpencodeTurnStatus, partial_text: str):
+        super().__init__(f"opencode turn aborted: {status.outcome}/{status.reason}")
+        self.status = status
+        self.partial_text = partial_text
+
+
+def read_opencode_turn_status(
+    stdout: str,
+    *,
+    cwd: Path | None = None,
+    opencode_db_path: Path | None = None,
+) -> OpencodeTurnStatus:
+    """Classify an opencode turn: completed vs aborted/permission-rejected/errored.
+
+    Reads opencode's session/trace state from:
+      1. NDJSON stdout stream (events/parts/errors)
+      2. opencode.db SQLite database (if present)
+
+    Exit code 0 is PROVEN meaningless — turn state must be verified empirically.
+    If session trace state is missing or unreadable and stream has no trace proof,
+    fails closed as trace_unavailable.
+    """
+    session_id: str | None = None
+    stream_has_error = False
+    stream_error_name: str | None = None
+    stream_error_msg: str | None = None
+    stream_stop = False
+    stream_finish_reason: str | None = None
+    permission_cancelled = False
+    tool_error_detail: str | None = None
+    has_text = False
+
+    raw_stdout = (stdout or "").strip()
+    if raw_stdout and not raw_stdout.startswith("{"):
+        has_text = True
+
+    for raw_line in raw_stdout.splitlines():
+        line = raw_line.strip()
+        if not line.startswith("{"):
+            continue
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(event, dict):
+            continue
+
+        sid = event.get("sessionID") or event.get("session_id")
+        if isinstance(sid, str) and sid:
+            session_id = sid
+        part = event.get("part")
+        if isinstance(part, dict):
+            sid_part = part.get("sessionID") or part.get("session_id")
+            if isinstance(sid_part, str) and sid_part:
+                session_id = sid_part
+
+        event_type = event.get("type")
+        if event_type == "text":
+            has_text = True
+            part_obj = event.get("part")
+            if isinstance(part_obj, dict) and isinstance(part_obj.get("text"), str):
+                has_text = True
+        elif isinstance(part, dict) and part.get("type") == "text":
+            has_text = True
+
+        if event.get("type") == "error" or "error" in event:
+            stream_has_error = True
+            err = event.get("error")
+            if isinstance(err, dict):
+                stream_error_name = str(err.get("name") or err.get("type") or "error")
+                err_data = err.get("data")
+                if isinstance(err_data, dict):
+                    stream_error_msg = str(err_data.get("message") or "")
+                elif isinstance(err_data, str):
+                    stream_error_msg = err_data
+            elif isinstance(err, str):
+                stream_error_name = err
+
+        if event_type in ("step_finish", "step-finish") or (
+            isinstance(part, dict) and part.get("type") in ("step_finish", "step-finish")
+        ):
+            reason = (part.get("reason") if isinstance(part, dict) else None) or event.get("reason")
+            if isinstance(reason, str):
+                stream_finish_reason = reason
+                if reason in ("stop", "completed"):
+                    stream_stop = True
+                elif reason in ("abort", "cancelled", "permission_denied", "permission_rejected", "error", "length"):
+                    stream_has_error = True
+
+        if event_type in ("tool", "tool_use") or (isinstance(part, dict) and part.get("type") in ("tool", "tool_use")):
+            st = None
+            if isinstance(part, dict):
+                state = part.get("state")
+                st = state.get("status") if isinstance(state, dict) else part.get("status")
+            if st is None:
+                st = event.get("status")
+
+            if isinstance(st, str) and st in ("rejected", "cancelled", "permission_denied", "permission_rejected"):
+                permission_cancelled = True
+                tool = part.get("tool") if isinstance(part, dict) else None
+                tool_error_detail = f"tool call {tool or 'unknown'} permission cancelled ({st})"
+
+    db_path = opencode_db_path
+    if db_path is None:
+        raw_db_env = os.environ.get("OPENCODE_DB_PATH")
+        if raw_db_env:
+            db_path = Path(raw_db_env)
+        else:
+            data_home = Path(
+                os.environ.get("OPENCODE_HOME")
+                or os.environ.get("XDG_DATA_HOME")
+                or (Path.home() / ".local" / "share")
+            )
+            db_path = data_home / "opencode" / "opencode.db"
+
+    db_error_name: str | None = None
+    db_error_msg: str | None = None
+    db_finish_reason: str | None = None
+    db_permission_cancelled = False
+
+    if db_path and db_path.exists():
+        try:
+            import sqlite3
+
+            conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+            try:
+                cur = conn.cursor()
+                target_sid = session_id
+                if not target_sid and cwd is not None:
+                    cur.execute(
+                        "SELECT id FROM session WHERE directory = ? ORDER BY time_updated DESC LIMIT 1",
+                        (str(cwd.resolve()),),
+                    )
+                    row = cur.fetchone()
+                    if row:
+                        target_sid = row[0]
+
+                if target_sid:
+                    session_id = target_sid
+                    cur.execute(
+                        "SELECT data FROM message WHERE session_id = ? AND json_extract(data, '$.role') = 'assistant' ORDER BY time_created DESC LIMIT 1",
+                        (target_sid,),
+                    )
+                    msg_row = cur.fetchone()
+                    if msg_row and msg_row[0]:
+                        try:
+                            msg_data = json.loads(msg_row[0])
+                            if isinstance(msg_data, dict):
+                                err = msg_data.get("error")
+                                if isinstance(err, dict):
+                                    db_error_name = str(err.get("name") or "error")
+                                    err_d = err.get("data")
+                                    if isinstance(err_d, dict):
+                                        db_error_msg = str(err_d.get("message") or "")
+                                db_finish_reason = msg_data.get("finish")
+                        except json.JSONDecodeError:
+                            pass
+
+                    cur.execute(
+                        "SELECT data FROM part WHERE session_id = ? ORDER BY time_created DESC",
+                        (target_sid,),
+                    )
+                    for part_row in cur.fetchall():
+                        if not part_row or not part_row[0]:
+                            continue
+                        try:
+                            pdata = json.loads(part_row[0])
+                            if isinstance(pdata, dict):
+                                ptype = pdata.get("type")
+                                if ptype in ("step-finish", "step_finish"):
+                                    r = pdata.get("reason")
+                                    if isinstance(r, str) and not db_finish_reason:
+                                        db_finish_reason = r
+                                elif ptype in ("tool", "tool_use"):
+                                    st = (
+                                        pdata.get("state", {}).get("status")
+                                        if isinstance(pdata.get("state"), dict)
+                                        else pdata.get("status")
+                                    )
+                                    if isinstance(st, str) and st in (
+                                        "rejected",
+                                        "cancelled",
+                                        "permission_denied",
+                                        "permission_rejected",
+                                    ):
+                                        db_permission_cancelled = True
+                        except json.JSONDecodeError:
+                            pass
+            finally:
+                conn.close()
+        except Exception:
+            pass
+
+    if permission_cancelled or db_permission_cancelled:
+        return OpencodeTurnStatus(
+            outcome="permission_rejected",
+            reason=tool_error_detail or "tool call permission cancelled by policy",
+            cancellation_category="permission_rejected",
+            session_id=session_id,
+        )
+
+    err_name = db_error_name or stream_error_name
+    err_msg = db_error_msg or stream_error_msg
+    if err_name:
+        err_lower = (err_name + " " + (err_msg or "")).lower()
+        if "permission" in err_lower or "denied" in err_lower:
+            return OpencodeTurnStatus(
+                outcome="permission_rejected",
+                reason=err_msg or err_name,
+                cancellation_category="permission_rejected",
+                session_id=session_id,
+            )
+        if "abort" in err_lower or "cancel" in err_lower:
+            return OpencodeTurnStatus(
+                outcome="aborted",
+                reason=err_msg or err_name,
+                cancellation_category="aborted",
+                session_id=session_id,
+            )
+        return OpencodeTurnStatus(
+            outcome="errored",
+            reason=err_msg or err_name,
+            cancellation_category="error",
+            session_id=session_id,
+        )
+
+    finish_reason = db_finish_reason or stream_finish_reason
+    if finish_reason:
+        if finish_reason in ("stop", "completed"):
+            return OpencodeTurnStatus(
+                outcome="completed",
+                reason="stop",
+                session_id=session_id,
+            )
+        if finish_reason in ("abort", "cancelled"):
+            return OpencodeTurnStatus(
+                outcome="aborted",
+                reason=f"finish reason {finish_reason}",
+                cancellation_category="aborted",
+                session_id=session_id,
+            )
+        if finish_reason in ("permission_denied", "permission_rejected"):
+            return OpencodeTurnStatus(
+                outcome="permission_rejected",
+                reason=f"finish reason {finish_reason}",
+                cancellation_category="permission_rejected",
+                session_id=session_id,
+            )
+        if finish_reason in ("length", "error", "unknown"):
+            cat = "length" if finish_reason == "length" else "error"
+            return OpencodeTurnStatus(
+                outcome="errored",
+                reason=f"finish reason {finish_reason}",
+                cancellation_category=cat,
+                session_id=session_id,
+            )
+
+    if not stream_has_error and (stream_stop or has_text):
+        return OpencodeTurnStatus(
+            outcome="completed",
+            reason="stop",
+            session_id=session_id,
+        )
+
+    return OpencodeTurnStatus(
+        outcome="trace_unavailable",
+        reason="missing or unreadable session state",
+        cancellation_category="trace_unavailable",
+        session_id=session_id,
+    )
+
+
+def _handle_opencode_incomplete_turn(
+    msg: dict[str, Any],
+    message_id: int,
+    target: str,
+    partial_text: str,
+    turn_status: OpencodeTurnStatus,
+    *,
+    actual_model: str,
+    effort: str | None = None,
+) -> None:
+    """Deliver captured native text only as an explicitly typed failed turn with a sidecar."""
+    outcome = turn_status.outcome
+    category = turn_status.cancellation_category or outcome
+    reason = turn_status.reason
+    detail = f"{outcome}/{category}"
+    banner = f"[Bridge Error] opencode turn aborted ({reason})"
+
+    sidecar_rel_path: str | None = None
+    if partial_text and partial_text.strip():
+        try:
+            path = write_reply_sidecar(
+                partial_text,
+                task_id=msg.get("task_id"),
+                from_llm=target,
+                msg_type="error",
+            )
+            try:
+                sidecar_rel_path = path.resolve().relative_to(REPO_ROOT.resolve()).as_posix()
+            except ValueError:
+                sidecar_rel_path = str(path)
+        except Exception:
+            pass
+
+    provenance_data, _ = response_provenance(
+        msg,
+        actual_model=actual_model,
+        harness="opencode",
+        effort_applied=effort,
+    )
+    try:
+        metadata = json.loads(provenance_data)
+    except (TypeError, json.JSONDecodeError):
+        metadata = {}
+
+    metadata.update(
+        {
+            "turn_outcome": outcome,
+            "cancellation_category": category,
+            "reason": reason,
+            "partial_response": True,
+            "sidecar_path": sidecar_rel_path,
+        }
+    )
+
+    error_content = banner
+    if sidecar_rel_path:
+        error_content += f"\n\nPartial narration preserved to sidecar: {sidecar_rel_path}"
+
+    send_message(
+        content=error_content,
+        task_id=msg.get("task_id", "no-task"),
+        msg_type="error",
+        from_llm=target,
+        to_llm=msg.get("from", "user"),
+        data=json.dumps(metadata, sort_keys=True),
+        from_model=actual_model,
+    )
+    acknowledge(message_id)
+    record_ask_failure(message_id, f"opencode turn aborted ({detail}: {reason})")
+
+
 def ask_opencode(
     content: str,
     task_id: str,
@@ -235,9 +601,19 @@ def ask_opencode(
         launch_background_ask(msg_id, "opencode", {"no_timeout": no_timeout})
         return msg_id
     print(f"\n🚀 Invoking opencode ({effective_model}) to process message #{msg_id}...")
-    response = _invoke_opencode(
-        content, effective_model, variant=effective_variant, data=data, no_timeout=no_timeout
-    )
+    try:
+        response = _invoke_opencode(
+            content, effective_model, variant=effective_variant, data=data, no_timeout=no_timeout
+        )
+    except OpencodeTurnError as exc:
+        msg = fetch_ask_message(msg_id, "opencode") or {
+            "task_id": task_id,
+            "from": from_llm,
+        }
+        _handle_opencode_incomplete_turn(
+            msg, msg_id, "opencode", exc.partial_text, exc.status, actual_model=effective_model, effort=effort
+        )
+        raise SystemExit(f"[Bridge Error] opencode turn aborted ({exc.status.reason})") from exc
     provenance_data, actual_model = response_provenance(
         {"data": json.dumps({"to_model": effective_model, "effort": effort})},
         actual_model=effective_model,
@@ -324,15 +700,25 @@ def ask_pool(
         )
         return msg_id
     print(f"\n🚀 Invoking pool ({effective_model}, variant={effective_variant}) to process message #{msg_id}...")
-    response = _invoke_opencode(
-        content,
-        effective_model,
-        variant=effective_variant,
-        output_format="json",
-        data=data,
-        no_timeout=no_timeout,
-        default_timeout_s=POOL_DEFAULT_TIMEOUT_S,
-    )
+    try:
+        response = _invoke_opencode(
+            content,
+            effective_model,
+            variant=effective_variant,
+            output_format="json",
+            data=data,
+            no_timeout=no_timeout,
+            default_timeout_s=POOL_DEFAULT_TIMEOUT_S,
+        )
+    except OpencodeTurnError as exc:
+        msg = fetch_ask_message(msg_id, "pool") or {
+            "task_id": task_id,
+            "from": from_llm,
+        }
+        _handle_opencode_incomplete_turn(
+            msg, msg_id, "pool", exc.partial_text, exc.status, actual_model=effective_model, effort=effort
+        )
+        raise SystemExit(f"[Bridge Error] opencode turn aborted ({exc.status.reason})") from exc
     provenance_data, actual_model = response_provenance(
         {"data": json.dumps({"to_model": effective_model, "effort": effort})},
         actual_model=effective_model, harness="opencode", effort_applied=effective_variant,
@@ -445,15 +831,25 @@ def ask_glm(
     print(
         f"\n🚀 Invoking glm ({effective_model}) to process message #{msg_id}... [LOCAL-ONLY — data egresses to China]"
     )
-    response = _invoke_opencode(
-        content,
-        effective_model,
-        variant=effective_variant,
-        output_format="json",
-        data=data,
-        no_timeout=no_timeout,
-        default_timeout_s=GLM_DEFAULT_TIMEOUT_S,
-    )
+    try:
+        response = _invoke_opencode(
+            content,
+            effective_model,
+            variant=effective_variant,
+            output_format="json",
+            data=data,
+            no_timeout=no_timeout,
+            default_timeout_s=GLM_DEFAULT_TIMEOUT_S,
+        )
+    except OpencodeTurnError as exc:
+        msg = fetch_ask_message(msg_id, "glm") or {
+            "task_id": task_id,
+            "from": from_llm,
+        }
+        _handle_opencode_incomplete_turn(
+            msg, msg_id, "glm", exc.partial_text, exc.status, actual_model=effective_model, effort=effort
+        )
+        raise SystemExit(f"[Bridge Error] opencode turn aborted ({exc.status.reason})") from exc
     provenance_data, actual_model = response_provenance(
         {"data": json.dumps({"to_model": effective_model, "effort": effort})},
         actual_model=effective_model, harness="opencode", effort_applied=effective_variant,
@@ -538,18 +934,28 @@ def ask_gemma(
         launch_background_ask(msg_id, "gemma", {"no_timeout": no_timeout})
         return msg_id
     print(f"\n🚀 Invoking gemma ({effective_model}) to process message #{msg_id}...")
-    response = _strip_gemma_thought(
-        _invoke_opencode(
-            content,
-            effective_model,
-            variant=effective_variant,
-            output_format="json",
-            data=data,
-            no_timeout=no_timeout,
-            default_timeout_s=GEMMA_DEFAULT_TIMEOUT_S,
-            agent="chat",
+    try:
+        response = _strip_gemma_thought(
+            _invoke_opencode(
+                content,
+                effective_model,
+                variant=effective_variant,
+                output_format="json",
+                data=data,
+                no_timeout=no_timeout,
+                default_timeout_s=GEMMA_DEFAULT_TIMEOUT_S,
+                agent="chat",
+            )
         )
-    )
+    except OpencodeTurnError as exc:
+        msg = fetch_ask_message(msg_id, "gemma") or {
+            "task_id": task_id,
+            "from": from_llm,
+        }
+        _handle_opencode_incomplete_turn(
+            msg, msg_id, "gemma", exc.partial_text, exc.status, actual_model=effective_model, effort=effort
+        )
+        raise SystemExit(f"[Bridge Error] opencode turn aborted ({exc.status.reason})") from exc
     provenance_data, actual_model = response_provenance(
         {"data": json.dumps({"to_model": effective_model, "effort": effort})},
         actual_model=effective_model, harness="opencode", effort_applied=effective_variant,
@@ -592,41 +998,47 @@ def process_for_opencode(
     )
 
     kwargs: dict[str, object] = {"data": ask_attachment(msg), "no_timeout": no_timeout}
-    if target == "opencode":
-        response = _invoke_opencode(content, model, variant=effective_variant, **kwargs)
-    elif target == "pool":
-        response = _invoke_opencode(
-            content,
-            model,
-            variant=effective_variant or POOL_DEFAULT_VARIANT,
-            output_format="json",
-            default_timeout_s=POOL_DEFAULT_TIMEOUT_S,
-            **kwargs,
-        )
-    elif target == "glm":
-        _assert_glm_egress_allowed("process background ask-glm")
-        response = _invoke_opencode(
-            content,
-            model,
-            variant=effective_variant,
-            output_format="json",
-            default_timeout_s=GLM_DEFAULT_TIMEOUT_S,
-            **kwargs,
-        )
-    elif target == "gemma":
-        response = _strip_gemma_thought(
-            _invoke_opencode(
+    try:
+        if target == "opencode":
+            response = _invoke_opencode(content, model, variant=effective_variant, **kwargs)
+        elif target == "pool":
+            response = _invoke_opencode(
+                content,
+                model,
+                variant=effective_variant or POOL_DEFAULT_VARIANT,
+                output_format="json",
+                default_timeout_s=POOL_DEFAULT_TIMEOUT_S,
+                **kwargs,
+            )
+        elif target == "glm":
+            _assert_glm_egress_allowed("process background ask-glm")
+            response = _invoke_opencode(
                 content,
                 model,
                 variant=effective_variant,
                 output_format="json",
-                default_timeout_s=GEMMA_DEFAULT_TIMEOUT_S,
-                agent="chat",
+                default_timeout_s=GLM_DEFAULT_TIMEOUT_S,
                 **kwargs,
             )
+        elif target == "gemma":
+            response = _strip_gemma_thought(
+                _invoke_opencode(
+                    content,
+                    model,
+                    variant=effective_variant,
+                    output_format="json",
+                    default_timeout_s=GEMMA_DEFAULT_TIMEOUT_S,
+                    agent="chat",
+                    **kwargs,
+                )
+            )
+        else:
+            raise ValueError(f"unsupported opencode ask target {target!r}")
+    except OpencodeTurnError as exc:
+        _handle_opencode_incomplete_turn(
+            msg, message_id, target, exc.partial_text, exc.status, actual_model=model, effort=effort
         )
-    else:
-        raise ValueError(f"unsupported opencode ask target {target!r}")
+        return
 
     provenance_data, actual_model = response_provenance(
         msg,
@@ -773,6 +1185,7 @@ def _run_opencode(
         # Google-native upstreams additionally hard-reject one malformed
         # builtin/lightpanda tool schema (2026-07-07 probes).
         argv.extend(["--agent", agent])
+        content = _ensure_toolless_prompt_notice(content)
     if variant:
         argv.extend(["--variant", variant])
     if data:
@@ -824,6 +1237,7 @@ def _invoke_opencode(
     no_timeout: bool = False,
     default_timeout_s: int = OPENCODE_DEFAULT_TIMEOUT_S,
     agent: str | None = None,
+    cwd: Path | None = None,
 ) -> str:
     stdout = _run_opencode(
         content,
@@ -834,14 +1248,15 @@ def _invoke_opencode(
         no_timeout=no_timeout,
         default_timeout_s=default_timeout_s,
         agent=agent,
+        cwd=cwd,
     )
-    if output_format == "json":
-        return _parse_opencode_ndjson(stdout)
+    turn_status = read_opencode_turn_status(stdout, cwd=cwd)
+    parsed_text = _parse_opencode_ndjson(stdout) if output_format == "json" else stdout.strip()
 
-    # opencode run (--format default) prints ANSI control codes and a banner
-    # before the response; the JSON stream is cleaner to parse. Callers that
-    # need reliable text extraction should request output_format="json".
-    return stdout.strip()
+    if turn_status.outcome != "completed":
+        raise OpencodeTurnError(turn_status, parsed_text)
+
+    return parsed_text
 
 
 def _invoke_opencode_detailed(
@@ -875,9 +1290,17 @@ def _invoke_opencode_detailed(
         default_timeout_s=default_timeout_s,
         cwd=cwd,
     )
-    if output_format == "json":
-        return _parse_opencode_stream(stdout)
-    return OpencodeStreamParse(text=stdout.strip(), tool_events=())
+    turn_status = read_opencode_turn_status(stdout, cwd=cwd)
+    parse = (
+        _parse_opencode_stream(stdout)
+        if output_format == "json"
+        else OpencodeStreamParse(text=stdout.strip(), tool_events=())
+    )
+
+    if turn_status.outcome != "completed":
+        raise OpencodeTurnError(turn_status, parse.text)
+
+    return parse
 
 
 def _extract_tool_event(event: dict) -> dict | None:
