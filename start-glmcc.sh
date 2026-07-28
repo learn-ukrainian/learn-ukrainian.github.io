@@ -6,8 +6,9 @@
 # - Original Anthropic Claude config stays untouched; run native Claude in another terminal.
 # - Refuses to launch if settings.json already pins route env keys (cc-switch hazard).
 # - Compaction comes from scripts/config/context_profiles.yaml (1M for GLM-5.2).
-# - Static Z.AI API key authentication (GLMCC_AUTH_TOKEN, ZAI_API_KEY, ZHIPU_API_KEY, GLM_API_KEY,
-#   or ANTHROPIC_AUTH_TOKEN). Static keys require no OAuth helper or apiKeyHelper auto-refresh,
+# - Static Z.AI API key authentication (GLMCC_AUTH_TOKEN, ZAI_API_KEY, ZHIPU_API_KEY,
+#   or GLM_API_KEY — ambient ANTHROPIC_AUTH_TOKEN is deliberately REJECTED; see the
+#   security note in resolve_auth_token). Static keys require no OAuth helper or apiKeyHelper auto-refresh,
 #   unlike KimiCC subscription tokens.
 #
 # Official references:
