@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import UTC, datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -80,7 +80,7 @@ def _parse_iso_instant(val: str | datetime) -> datetime:
 def load_and_validate_registry(
     path: Path | str,
     *,
-    as_of: datetime | str | None = None,
+    as_of: datetime | str,
 ) -> dict[str, Any]:
     """Load and validate a red-CI known-failures registry document against schema and domain rules.
 
@@ -102,11 +102,9 @@ def load_and_validate_registry(
             f"Registry schema violation: {err.message} at {err.json_path}"
         )
 
-    as_of_dt = (
-        datetime.now(UTC)
-        if as_of is None
-        else _parse_iso_instant(as_of)
-    )
+    # as_of is REQUIRED at this layer (glm F4): the module stays deterministic;
+    # wall-clock convenience lives only in the CLI wrapper.
+    as_of_dt = _parse_iso_instant(as_of)
 
     seen_ids: set[str] = set()
     entries = data.get("entries", [])

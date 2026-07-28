@@ -193,7 +193,10 @@ def test_negative_stop_without_stop_code(tmp_path) -> None:
 
     assert "Registry schema violation" in str(exc_info.value)
 
-    # Kind retry-once with stop_code is also invalid according to schema
+
+def test_negative_retry_once_with_stop_code(tmp_path) -> None:
+    """Negative schema test: 'retry-once' carrying a stop_code fails schema validation
+    (split from the stop-without-code case — one test, one invariant)."""
     data2 = _get_valid_registry_data()
     data2["entries"][0]["action"] = {"kind": "retry-once", "stop_code": "STOP-ci-red"}
 
@@ -204,6 +207,19 @@ def test_negative_stop_without_stop_code(tmp_path) -> None:
         load_and_validate_registry(reg_path2, as_of="2026-07-28T12:00:00Z")
 
     assert "Registry schema violation" in str(exc_info2.value)
+
+
+def test_negative_receipt_empty_signature_lines(tmp_path) -> None:
+    """Negative schema test: a receipt with zero normalized signature lines is not a
+    signature (glm F3) — minItems 1 must reject it."""
+    data = _get_valid_receipt_data()
+    data["normalized_signature_lines"] = []
+
+    rec_path = tmp_path / "empty_lines.json"
+    rec_path.write_text(json.dumps(data), encoding="utf-8")
+
+    with pytest.raises(RedCIKnownFailuresValidationError):
+        load_and_validate_receipt(rec_path)
 
 
 def test_negative_expired_entry(tmp_path) -> None:

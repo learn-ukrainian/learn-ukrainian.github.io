@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -296,8 +297,9 @@ def validate_registry(
     as_of: str | datetime | None = None,
 ) -> dict[str, Any]:
     """Validate a red-CI known-failures registry document via red_ci_known_failures module."""
+    resolved_as_of = datetime.now(UTC) if as_of is None else as_of
     try:
-        return load_and_validate_registry(registry_path, as_of=as_of)
+        return load_and_validate_registry(registry_path, as_of=resolved_as_of)
     except RedCIKnownFailuresValidationError as exc:
         raise TrailSpecValidationError(str(exc)) from exc
 
