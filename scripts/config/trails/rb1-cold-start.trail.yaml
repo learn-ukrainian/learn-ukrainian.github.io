@@ -8,7 +8,6 @@ seats:
   - kimi
 parameters:
   handoff_agent: string
-  issue_nr: string
 stop_codes:
   - STOP-precondition-failed
   - STOP-concurrency-conflict
@@ -200,6 +199,12 @@ steps:
           clauses:
             - {source: command_receipt, field: actor_outcome, op: eq, value: pending_nonzero}
             - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      inbox_unparseable:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: drain-inbox-unparseable
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: inbox_unparseable}
     blocked_on:
       id: T1.1-slot-addressing
       reason: T1.1 slot addressing (#5878) for non-static slot identities
@@ -345,7 +350,6 @@ steps:
         - gh pr list --state open --limit 10 --json number 2>/dev/null | .venv/bin/python -c "import sys, json; print('picked' if json.load(sys.stdin) else 'queue_empty')" 2>/dev/null || echo queue_empty
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
-        ISSUE_NR: "{issue_nr}"
       timeout_seconds: 30
       mutation_class: observe
       outcome_decoder:
