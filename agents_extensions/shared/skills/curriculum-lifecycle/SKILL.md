@@ -1,16 +1,20 @@
 ---
 name: curriculum-lifecycle
-description: Run or resume the manifest-derived curriculum lifecycle for one active track. Use when an operator asks to process a track in manifest order, select built, unbuilt, stale, or one-module scope, or resume an exact coordinator run. Route every acquired module through curriculum-preparation or track-completion; do not use for an uncoordinated standalone module.
+description: Run or resume the manifest-derived curriculum lifecycle for one active track. Use when an operator asks to process a track in manifest order, select built, unbuilt, stale, or coordinator `one` scope for an explicitly named module, or resume an exact coordinator run. Route every acquired module through curriculum-preparation or track-completion; a standalone module completion belongs to track-completion instead.
 ---
 
 # Curriculum lifecycle
+
+Run repository commands from the repository root. Use canonical resource paths
+under `agents_extensions/shared/skills/`; provider-specific skill directories
+are deploy mirrors, not alternate sources.
 
 Keep the operator request short:
 
 ```text
 Use $curriculum-lifecycle for folk, terminal goal merge.
 Use $curriculum-lifecycle for c1, scope unbuilt, terminal goal certify.
-Resume $curriculum-lifecycle for bio.
+Resume $curriculum-lifecycle with run id <run-id>, owner <agent/task>.
 ```
 
 This skill is the track-level entry point. It composes the deterministic
@@ -28,9 +32,10 @@ only bounded-completion authority.
 1. Satisfy the repository issue, stream, worktree, research-classification,
    pending-decision, and quota/health preflight before mutation. Learner changes
    belong to the target track's stream epic, not the shared infrastructure epic.
-2. Require an explicit operator-selected terminal goal for every new run. If it
-   is absent, ask once before starting; never infer it from scope or history.
-   Resume uses the immutable goal in the exact recorded run.
+2. Require an explicit operator-selected terminal goal and scope for every new
+   run. If either is absent, ask once before starting; never infer it from
+   history or rely on the coordinator's `scope=all` parser default. Resume uses
+   the immutable goal and scope in the exact recorded run.
 3. For a new run, map the requested selector to one of `all`, `built`,
    `unbuilt`, `stale`, or `one`, then start exactly one manifest-backed run:
 
@@ -42,17 +47,31 @@ only bounded-completion authority.
      [--end <slug-or-position>] [--wave-size <n>]
    ```
 
+   `scope=one` requires exactly one active `--module <slug>` and forbids
+   `--start` or `--end`. Every other scope forbids `--module`; optional range
+   bounds apply only to those non-`one` scopes.
+
    Preserve the returned `run_id` and ledger path. Do not create a replacement
    run to bypass a lease, health pause, or manifest drift.
    The goal is immutable authority, not a progress label. A legacy run without
-   one must use `migrate-terminal-goal` on its exact run id; never infer intent
-   from `complete` or `PBR_PASS_QG_PENDING` history.
+   one must use this exact transition with an operator-selected goal; never
+   infer intent from `complete` or `PBR_PASS_QG_PENDING` history:
+
+   ```bash
+   .venv/bin/python scripts/orchestration/curriculum_coordinator.py \
+     migrate-terminal-goal --run-id <run-id> --owner <agent/task> \
+     --terminal-goal <merge|certify|deploy>
+   ```
 4. Resume only the exact recorded run:
 
    ```bash
    .venv/bin/python scripts/orchestration/curriculum_coordinator.py resume \
      --run-id <run-id> --owner <agent/task>
    ```
+
+   If the exact `run_id` and owner (or the recorded `resume_command`) are
+   unavailable, stop and request them. Do not guess an identity or start a
+   replacement run.
 
    If manifest authority changed, stop and use the coordinator's explicit
    adjudication path before starting a fresh run. Never migrate old state by
@@ -73,8 +92,10 @@ only bounded-completion authority.
 
 2. Read the canonical readiness routing snapshot from the latest matching
    `MODULE_ACQUIRED` event in the returned ledger. Bind it to that event's
-   track, slug, and attempt. Route its exact `next_action` uniformly for CORE,
-   seminar, and BIO targets:
+   track, slug, and attempt. The snapshot is a routing hint, not the full typed
+   authority for requirement ownership, identity, HOLD, or partial-bundle
+   decisions. Route its exact `next_action` uniformly for CORE, seminar, and
+   BIO targets:
 
    | `next_action` | Exact next owner |
    | --- | --- |
@@ -84,11 +105,18 @@ only bounded-completion authority.
    | `certify` | `$track-completion` |
    | `stop` | State- and owner-sensitive; reviewed HOLD or partial recovery |
 
-   For `plan` or `prepare`, run the canonical evaluator once for the exact
-   acquired target and use its full typed result to resolve ownership. If any
-   current failed requirement is owned by `plan` or `preparation`, route those
-   cells through `$curriculum-preparation`; accept its returned typed result
-   without calling lifecycle recursively.
+   For `plan`, `prepare`, or `stop`, run the canonical evaluator once for the
+   exact acquired target and use its full typed result to resolve ownership:
+
+   ```bash
+   .venv/bin/python scripts/orchestration/curriculum_readiness.py \
+     --track <track> --slug <slug> \
+     > <gitignored-readiness-result.json>
+   ```
+
+   If any current failed requirement is owned by `plan` or `preparation`, route
+   those cells through `$curriculum-preparation`; accept its returned typed
+   result without calling lifecycle recursively.
 
    When every current requirement passes but a built result remains `prepare`
    solely because of `PREPARATION_IDENTITY_MISSING` or
@@ -101,15 +129,15 @@ only bounded-completion authority.
    repeat the evaluator, or loop through preparation. Fail closed on mixed or
    unknown combinations.
 
-   For `stop`, run the canonical evaluator once to validate the full typed
-   result. `PREPARATION_HOLD_ACTIVE` without a partial-bundle finding is a
-   terminal reviewed HOLD: preserve its evidence, leave the acquisition in
-   place, report the hold, and do not record module completion or reacquire. A
-   result whose state is `partial-bundle`, contains `PARTIAL_LEARNER_BUNDLE`
-   owned by `built_artifact`, and has no active HOLD goes once to
-   `$track-completion` for its existing forensic recovery. Do not reacquire.
-   Reject a result containing both routes, or any unknown stop combination,
-   without mutation or an evaluation loop.
+   For `stop`, validate that full typed result.
+   `PREPARATION_HOLD_ACTIVE` without a partial-bundle finding is a terminal
+   reviewed HOLD: preserve its evidence, leave the acquisition in place, report
+   the hold, and do not record module completion or reacquire. A result whose
+   state is `partial-bundle`, contains `PARTIAL_LEARNER_BUNDLE` owned by
+   `built_artifact`, and has no active HOLD goes once to `$track-completion` for
+   its existing forensic recovery. Do not reacquire. Reject a result containing
+   both routes, or any unknown stop combination, without mutation or an
+   evaluation loop.
 3. For `build`, `certify`, an identity-only `prepare` exception, or the exact
    partial-bundle `stop` exception, resolve the acquired track's registered
    semantic profile from the manifest. Put the typed context in a gitignored

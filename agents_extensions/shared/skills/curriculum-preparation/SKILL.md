@@ -42,13 +42,17 @@ before mutation and require the same track, `profile_id`, `profile_version`, and
 Treat `--missing-only` as deterministic, read-only inventory only. Resolve the
 roster with `load_active_manifest()` and `load_manifest_track()` from
 `scripts.orchestration.curriculum_readiness`, evaluate the whole active track
-locally, and return the evaluator's preparation-owned missing or stale
-candidates in manifest order. This inventory intentionally excludes an
-identity-missing built module whose requirements otherwise pass; that route
-belongs to `$track-completion`. Do not mutate, call a model, silently broaden
-the canonical inventory, select an unbounded work scope, or scan another track.
-Stop after the inventory; actual preparation requires a new explicit one-target
-invocation or finite homogeneous packet with `--limit`.
+locally, and return readiness candidates in manifest order. Rows may contain
+failed requirements owned by `plan` or `preparation`, plus preparation reason
+codes such as identity drift or an active HOLD; preserve those owners and codes
+as routing signals, not blanket preparation-mutation authority. This inventory
+intentionally excludes an identity-missing built module whose requirements
+otherwise pass; that route belongs to `$track-completion`. A pure identity-drift
+row follows the same completion-owned identity route, while an active HOLD is
+report-only. Do not mutate, call a model, silently broaden the canonical
+inventory, select an unbounded work scope, or scan another track. Stop after the
+inventory; actual preparation requires a new explicit one-target invocation or
+finite homogeneous packet with `--limit`.
 
 ## Evaluate before acting
 
