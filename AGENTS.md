@@ -363,6 +363,13 @@ sweep backstop pick it up. Fresh out-of-lane PRs belong to their lane.
 
 When Codex multi-agent support is enabled, the user explicitly authorizes the main Codex agent to use lower-cost routine subagents for bounded work that can run in parallel without lowering quality. The main agent stays responsible for planning, integration, final review, PR creation, independent review routing, and merge decisions.
 
+Native V2 is the intra-Codex execution graph, not a context-compaction or
+durability layer. Codex runtime compaction remains authoritative. Fleet streams
+and file shadow diaries carry durable cross-session state; the external fleet
+provides cross-provider specialization, quota substitution, and independent
+review. Compose them under one accountable root, and never duplicate a healthy
+lane across V2 and the fleet.
+
 Prefer `explorer` subagents for read-only investigation and validation. Use `worker` subagents only for mechanical edits with a clearly owned file set and no ambiguity.
 
 Routine subagent model routing:

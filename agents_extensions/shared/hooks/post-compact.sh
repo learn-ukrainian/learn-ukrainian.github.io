@@ -21,6 +21,59 @@ run_bounded() {
 }
 CONTEXT=""
 
+# Ordinary Codex tasks use the runtime's native remote compaction and need no
+# repository-authored context replay. A launcher-bound fleet driver is the
+# exception: hydrate only its exact stream and point at the durable shadow
+# diary instead of scanning every rollover or curriculum artifact.
+POST_COMPACT_AGENT="${SESSION_HANDOFF_AGENT:-}"
+POST_COMPACT_AGENT_EXPLICIT=0
+if [ -n "$POST_COMPACT_AGENT" ]; then
+  POST_COMPACT_AGENT_EXPLICIT=1
+fi
+if [ -z "$POST_COMPACT_AGENT" ] \
+  && { [[ "${0:-}" == *"/.codex/"* ]] || [ -n "${CODEX_THREAD_ID:-}${CODEX_SESSION_ID:-}${CODEX_SESSION:-}" ]; }; then
+  POST_COMPACT_AGENT="codex"
+fi
+case "$POST_COMPACT_AGENT" in
+  codex|codex-*)
+    if [ -z "${SESSION_EPIC:-}" ]; then
+      if [ "$POST_COMPACT_AGENT_EXPLICIT" = "0" ]; then
+        exit 0
+      fi
+    else
+      DIARY_REL=".claude/${SESSION_EPIC}-epic/CODEX-DRIVER-HANDOFF.md"
+      if [ ! -f "$PROJECT_DIR/$DIARY_REL" ]; then
+        for candidate in \
+          ".claude/${SESSION_EPIC}-epic/INTERIM-DRIVER-HANDOFF.md" \
+          ".claude/${SESSION_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md"; do
+          if [ -f "$PROJECT_DIR/$candidate" ]; then
+            DIARY_REL="$candidate"
+            break
+          fi
+        done
+      fi
+
+      HYDRATION_RC=0
+      HYDRATION=$(run_bounded 2 "$BOUNDED_PYTHON" \
+        -m scripts.session_canary.codex_lane hydrate --epic "$SESSION_EPIC" 2>&1) \
+        || HYDRATION_RC=$?
+      if [ "$HYDRATION_RC" -eq 0 ]; then
+        CONTEXT="CODEX FLEET-DRIVER HYDRATION
+$HYDRATION
+Shadow diary: $DIARY_REL
+Native Codex still owns compaction; continue only from the capsule's next_drive_boundary."
+      else
+        CONTEXT="CODEX FLEET-DRIVER HYDRATION BLOCKED
+${HYDRATION:-Hydration helper unavailable.}
+Shadow diary: $DIARY_REL
+Do not select the next queue action until the stream lease or diary is repaired."
+      fi
+      printf '{"additionalContext": %s}' "$(printf '%s' "$CONTEXT" | jq -Rs '.')"
+      exit 0
+    fi
+    ;;
+esac
+
 # 1. Find current in-progress modules
 IN_PROGRESS=""
 if [ -d "$PROJECT_DIR/curriculum" ]; then

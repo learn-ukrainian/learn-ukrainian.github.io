@@ -53,12 +53,21 @@ bounded child threads perform independent investigation, validation, or
 mechanical work. It is most useful when parallelism shortens the critical path
 or keeps noisy evidence out of the root context. It is not a substitute for a
 clear owner, deterministic local tools, or the independent cross-family review
-gate.
+gate. It is also not a compaction workaround: native Codex owns compaction,
+while fleet-driver streams and shadow diaries provide durable recovery state.
 
-The repository launcher enables V2 with at most three spawned children in
-addition to the root. Descendants count toward that shared concurrency limit.
-Prefer direct children. Use a parent → grandchild hierarchy only when one
-bounded workstream genuinely needs its own coordinator.
+The trusted project config enables V2 for Codex App and CLI with at most three
+spawned children in addition to the root. Descendants count toward that shared
+concurrency limit. Prefer direct children. Use a parent → grandchild hierarchy
+only when one bounded workstream genuinely needs its own coordinator.
+
+V2 and the external fleet are complementary:
+
+- Use V2 for bounded same-family execution under one Codex root.
+- Use the fleet for cross-provider specialization, separate quota pools,
+  durable stream coordination, and independent cross-family review.
+- Never dispatch the same lane through both systems. One accountable root owns
+  the task ledger, integration, and final disposition across both.
 
 ### Operator shorthand
 

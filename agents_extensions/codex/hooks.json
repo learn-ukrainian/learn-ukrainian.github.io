@@ -2,13 +2,14 @@
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "startup|resume|clear|compact",
+        "matcher": "startup|resume|clear",
         "hooks": [
           {
             "type": "command",
             "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/session-setup.sh\"",
             "timeout": 15,
-            "statusMessage": "Checking learn-ukrainian session state"
+            "statusMessage": "Checking learn-ukrainian session state",
+            "additionalContextLimit": 1200
           }
         ]
       }
@@ -59,7 +60,8 @@
             "type": "command",
             "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/post-compact.sh\"",
             "timeout": 10,
-            "statusMessage": "Refreshing compacted context"
+            "statusMessage": "Hydrating bound fleet-driver context",
+            "additionalContextLimit": 800
           }
         ]
       }
