@@ -197,7 +197,7 @@ steps:
       argv:
         - sh
         - -c
-        - mkdir -p batch_state && C=$(curl -s -o /dev/null --max-time 8 -w "%{http""_code}" https://learn-ukrainian.github.io/ 2>/dev/null); echo "${C:-probe-failed}" > "batch_state/rb6-site-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; case "$C" in 200) echo site_serving;; *) echo site_not_serving;; esac
+        - mkdir -p batch_state && C=$(curl -sI --max-time 8 https://learn-ukrainian.github.io/ 2>/dev/null | head -1 | cut -d' ' -f2 | tr -d '\r'); echo "${C:-probe-failed}" > "batch_state/rb6-site-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; case "$C" in 200) echo site_serving;; *) echo site_not_serving;; esac
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
