@@ -154,3 +154,54 @@ def test_negative_estate_registry_missing_refused_surface_fails() -> None:
     with pytest.raises(TrailSpecValidationError) as exc_info:
         validate_estate_registry_data(data)
     assert "EstateRegistry schema violation" in str(exc_info.value)
+
+
+KNOWN_PASSTHROUGH_VOCABULARY = {
+    # detect_rollover passes through thread_handoff.py detect JSON 'status' values
+    ("rb1-cold-start", "detect_rollover"): {"none", "pending_start", "resumed", "ambiguous"},
+}
+
+
+def _verify_step_reachability(spec: dict[str, Any]) -> None:
+    trail_id = spec["trail_id"]
+    for step in spec["steps"]:
+        step_id = step["step_id"]
+        cmd_argv = step["command"]["argv"]
+        sh_prog = cmd_argv[2] if len(cmd_argv) > 2 else " ".join(cmd_argv)
+        passthrough = KNOWN_PASSTHROUGH_VOCABULARY.get((trail_id, step_id), set())
+
+        for trans_key in step["transitions"].keys():
+            is_literal = trans_key in sh_prog
+            is_passthrough = trans_key in passthrough
+            assert is_literal or is_passthrough, (
+                f"Dead transition key '{trans_key}' in step '{step_id}' of trail '{trail_id}'. "
+                f"Transition key does not appear in sh -c program nor in documented pass-through vocabulary."
+            )
+
+
+def test_rb1_rb6_transition_reachability() -> None:
+    """Every transition key in RB-1 and RB-6 specs is reachable by an emittable stdout token."""
+    _verify_step_reachability(_load_yaml(RB1_TRAIL_PATH))
+    _verify_step_reachability(_load_yaml(RB6_TRAIL_PATH))
+
+
+def test_negative_dead_transition_key_fails_reachability() -> None:
+    """Mutation negative test: re-adding a dead transition key to any step fails reachability check."""
+    spec = _load_yaml(RB1_TRAIL_PATH)
+    spec["steps"][0]["transitions"]["dead_unreachable_key"] = {
+        "target": "STOP-concurrency-conflict",
+        "evidence": {
+            "predicate_id": "detect-rollover-dead",
+            "clauses": [
+                {
+                    "source": "command_receipt",
+                    "field": "actor_outcome",
+                    "op": "eq",
+                    "value": "dead_unreachable_key",
+                }
+            ],
+        },
+    }
+    with pytest.raises(AssertionError) as exc_info:
+        _verify_step_reachability(spec)
+    assert "Dead transition key 'dead_unreachable_key'" in str(exc_info.value)

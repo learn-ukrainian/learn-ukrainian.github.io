@@ -269,7 +269,7 @@ steps:
       argv:
         - sh
         - -c
-        - echo degradation_handled
+        - .venv/bin/python -c "import os, re, pathlib; agent=os.environ.get('HANDOFF_AGENT',''); b=pathlib.Path('batch_state'); v=b/('rb6-vps-'+agent+'.txt'); s=b/('rb6-service-'+agent+'.txt'); d=b/('rb6-disk-'+agent+'.txt'); p=b/('rb6-privrepo-'+agent+'.txt'); st=b/('rb6-site-'+agent+'.txt'); v_ok=v.is_file() and v.read_text().strip()=='vps-reachable'; s_ok=s.is_file() and s.read_text().strip()=='active'; d_ok=d.is_file() and d.read_text().strip()!='probe-failed' and (d.read_text().strip().endswith(('T','Ti')) or bool(re.match(r'^[0-9.]+(Gi?)?$', d.read_text().strip()) and float(re.match(r'^([0-9.]+)', d.read_text().strip()).group(1))>=5.0)); p_ok=p.is_file() and bool(re.search(r'^head=(?!absent\$).+', p.read_text(), re.M)); st_ok=st.is_file() and st.read_text().strip()=='200'; print('no_degradation' if (v_ok and s_ok and d_ok and p_ok and st_ok) else 'degraded_summon_required')" 2>/dev/null || echo degraded_summon_required
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
@@ -278,23 +278,17 @@ steps:
       outcome_decoder:
         source: stdout-token
     transitions:
-      degradation_handled:
+      no_degradation:
         target: estate_degraded_handled
         evidence:
-          predicate_id: estate-degraded-handled
+          predicate_id: estate-degraded-no-degradation
           clauses:
-            - {source: command_receipt, field: actor_outcome, op: eq, value: degradation_handled}
+            - {source: command_receipt, field: actor_outcome, op: eq, value: no_degradation}
             - {source: command_receipt, field: exit_code, op: eq, value: 0}
-      mutation_required:
+      degraded_summon_required:
         target: STOP-manual-intervention
         evidence:
-          predicate_id: estate-degraded-mutation-refused
+          predicate_id: estate-degraded-summon-required
           clauses:
-            - {source: command_receipt, field: actor_outcome, op: eq, value: mutation_required}
-      judgment_unavailable:
-        target: STOP-manual-intervention
-        evidence:
-          predicate_id: estate-degraded-judgment-unavailable
-          clauses:
-            - {source: command_receipt, field: actor_outcome, op: eq, value: judgment_unavailable}
+            - {source: command_receipt, field: actor_outcome, op: eq, value: degraded_summon_required}
     blocked_on: null

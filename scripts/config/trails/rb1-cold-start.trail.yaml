@@ -60,12 +60,18 @@ steps:
           clauses:
             - {source: command_receipt, field: actor_outcome, op: eq, value: resumed}
             - {source: command_receipt, field: exit_code, op: eq, value: 0}
-      ambiguous_or_unrecognized_status:
+      ambiguous:
         target: STOP-concurrency-conflict
         evidence:
           predicate_id: detect-rollover-ambiguous
           clauses:
             - {source: command_receipt, field: actor_outcome, op: eq, value: ambiguous}
+      unparseable:
+        target: STOP-concurrency-conflict
+        evidence:
+          predicate_id: detect-rollover-unparseable
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: unparseable}
     blocked_on: null
 
   - step_id: claim_rollover
@@ -321,7 +327,7 @@ steps:
       argv:
         - sh
         - -c
-        - gh pr list --state all --limit 10 >/dev/null 2>&1 && echo picked || echo queue_empty
+        - gh pr list --state open --limit 10 --json number 2>/dev/null | .venv/bin/python -c "import sys, json; print('picked' if json.load(sys.stdin) else 'queue_empty')" 2>/dev/null || echo queue_empty
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         ISSUE_NR: "{issue_nr}"
@@ -344,18 +350,6 @@ steps:
           clauses:
             - {source: command_receipt, field: actor_outcome, op: eq, value: queue_empty}
             - {source: command_receipt, field: exit_code, op: eq, value: 0}
-      ambiguous_pick:
-        target: STOP-manual-intervention
-        evidence:
-          predicate_id: pick-next-ambiguous
-          clauses:
-            - {source: command_receipt, field: actor_outcome, op: eq, value: ambiguous_pick}
-      out_of_lane_item:
-        target: STOP-policy-violation
-        evidence:
-          predicate_id: pick-next-out-of-lane
-          clauses:
-            - {source: command_receipt, field: actor_outcome, op: eq, value: out_of_lane_item}
     blocked_on: null
 
   - step_id: route_lane
@@ -381,12 +375,6 @@ steps:
           clauses:
             - {source: command_receipt, field: actor_outcome, op: eq, value: routed}
             - {source: command_receipt, field: exit_code, op: eq, value: 0}
-      no_fitting_capacity:
-        target: idle
-        evidence:
-          predicate_id: route-lane-no-capacity
-          clauses:
-            - {source: command_receipt, field: actor_outcome, op: eq, value: no_fitting_capacity}
       partial_data_receipt_stated:
         target: ready_to_dispatch
         evidence:
@@ -394,10 +382,4 @@ steps:
           clauses:
             - {source: command_receipt, field: actor_outcome, op: eq, value: partial_data_receipt_stated}
             - {source: command_receipt, field: exit_code, op: eq, value: 0}
-      language_lane_restriction_hit:
-        target: STOP-policy-violation
-        evidence:
-          predicate_id: route-lane-restriction-hit
-          clauses:
-            - {source: command_receipt, field: actor_outcome, op: eq, value: language_lane_restriction_hit}
     blocked_on: null
