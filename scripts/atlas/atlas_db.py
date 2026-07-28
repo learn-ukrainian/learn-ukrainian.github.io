@@ -284,6 +284,9 @@ def classify_entry_type(entry: dict[str, Any]) -> str:
     Multiword defaults to multiword_term (entry-model tie-breaker); idiom/proverb
     promotion happens later when phraseological evidence is attached.
     """
+    explicit_type = str(entry.get("entry_type") or "").strip()
+    if explicit_type in ARTICLE_ENTRY_TYPES:
+        return explicit_type
     lemma = str(entry.get("lemma") or "").strip()
     if " " in lemma:
         return "multiword_term"
