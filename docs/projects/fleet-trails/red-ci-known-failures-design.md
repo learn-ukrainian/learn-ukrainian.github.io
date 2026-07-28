@@ -1,6 +1,17 @@
 # Red-CI known-failures registry + lookup tool + raceless rerun primitive — design
 
-- **Status**: ADOPTED DESIGN (advisor memo, verbatim below) — implementation staged, not started.
+- **Status**: STAGES 1–2 SHIPPED; Stage 3 (rerun primitive / atomic claimant ledger) is
+  operator-gated and OUT OF STANDING SCOPE — tracked as P13.
+- **Shipped surface** (verified from git history):
+  - Schemas: `agents_extensions/shared/schemas/red-ci-known-failures.v1.schema.json`,
+    `agents_extensions/shared/schemas/red-ci-signature-receipt.v1.schema.json`,
+    `agents_extensions/shared/schemas/red-ci-lookup-receipt.v1.schema.json`
+  - Validator / lookup module: `scripts/orchestration/red_ci_known_failures.py`
+  - Trail integration: `scripts/config/trails/rb4-red-ci-triage.trail.yaml`
+  - Tests: `tests/test_red_ci_known_failures.py`
+- **New in the P11 PR** (not prior git history): checked-in registry seed
+  `scripts/config/trails/red-ci-known-failures.yaml` + `tests/test_red_ci_registry_file.py`.
+- **PR refs**: stage 1 (#5926), stage 2 (#5946), TrailSpec v1.1 contract schema base (#5963).
 - **Provenance**: designed by the advisor seat (gpt-5.6-sol @ xhigh, bridge task
   `registry-design-sol`, reply msg 5551, 2026-07-28), commissioned by the infra lane per the
   RB-4 (#5919) review resolution: the registry, its lookup tool, and the rerun primitive are
@@ -12,9 +23,10 @@
   infra lane): `extract_signature` bypasses `head_currency_check` (unreachable step — the
   validator checks dangling targets, not reachability); `locate_failing_run`'s
   `gh run list --limit 1` can select a newer pending run instead of the failing one.
-- **Operator decisions still open** (listed verbatim in §D): review horizon + evidence
-  minimums · authorized registry reviewers · single- vs multi-host claimant scope ·
-  TrailSpec v1.1 approval · disposition of the GitHub head-change TOCTOU.
+- **Operator decisions closed on #5885** (encoded in the registry header and tests):
+  30-day review horizon, run + receipt evidence minimums, additions via infra-lane PR +
+  advisor sign-off, and single-host claimant scope. **Still open** (§D): TrailSpec v1.1
+  approval and disposition of the GitHub head-change TOCTOU.
 
 ---
 
@@ -191,4 +203,4 @@ Each PR gets independent cross-family review. PR 3 also receives a combined inte
 
 Rejected choices: substring matching, first-match or "most-specific" resolution, soft expiry dates, shared result files, queued-status inference, automatic takeover of uncertain claims, and any meaning of `note-and-proceed` that bypasses red CI.
 
-Operator decisions still required: maximum review horizon and evidence minimums; authorized registry reviewers; single-host versus multi-host claimant scope; v1.1 approval; and disposition of the unavoidable GitHub head-change TOCTOU.
+Operator decisions closed on #5885: 30-day maximum review horizon; run + receipt evidence minimums; additions via infra-lane PR with advisor sign-off; and single-host claimant scope. Decisions still required: TrailSpec v1.1 approval and disposition of the unavoidable GitHub head-change TOCTOU.

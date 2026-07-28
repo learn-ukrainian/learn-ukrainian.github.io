@@ -1,0 +1,16 @@
+# Red-CI known-failures registry (P11)
+#
+# Governance rules (operator decisions on #5885):
+# - Entries expire after 30 days. Every entry MUST set an explicit review_by
+#   deadline that is no more than 30 days after added_at and no more than 30 days
+#   after reviewed_at.
+# - Every entry requires run + receipt evidence: a workflow run reference
+#   (run_id, run_attempt, pr_number, head_sha, observed_at) plus signature-receipt
+#   provenance (signature_sha256).
+# - Additions MUST land via an infra-lane PR with advisor sign-off.
+# - Claimant identity is single-host; this registry file does not implement the
+#   claiming logic or rerun primitive (those are P13, operator-gated).
+# - No failure entries are seeded until an operator-approved known failure exists.
+schema_version: red-ci-known-failures.v1
+registry_version: "1.0.0"
+entries: []
