@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "trail-authority-receipt.v1",
+  "title": "Trail authority receipt v1 schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "issuer",
+    "issued_at",
+    "expires_at",
+    "action",
+    "run_id",
+    "trail_id",
+    "trail_version",
+    "trail_hash",
+    "summon_id",
+    "stop_code",
+    "step_id",
+    "cursor_generation",
+    "lease_id",
+    "lease_generation",
+    "fencing_token",
+    "pr_head"
+  ],
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "opaque_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "trail-authority-receipt.v1"},
+    "receipt_id": {"$ref": "#/$defs/opaque_id"},
+    "issuer": {"$ref": "#/$defs/opaque_id"},
+    "issued_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "action": {"const": "resume"},
+    "run_id": {"type": "string", "minLength": 1},
+    "trail_id": {"type": "string", "minLength": 1},
+    "trail_version": {"type": ["string", "integer"]},
+    "trail_hash": {"$ref": "#/$defs/digest"},
+    "summon_id": {"$ref": "#/$defs/digest"},
+    "stop_code": {"type": "string", "pattern": "^STOP-[a-z0-9-]+$"},
+    "step_id": {"type": "string", "minLength": 1},
+    "cursor_generation": {"type": "integer", "minimum": 0},
+    "lease_id": {"$ref": "#/$defs/opaque_id"},
+    "lease_generation": {"type": "integer", "minimum": 0},
+    "fencing_token": {"$ref": "#/$defs/opaque_id"},
+    "pr_head": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{40}$"
+    }
+  }
+}

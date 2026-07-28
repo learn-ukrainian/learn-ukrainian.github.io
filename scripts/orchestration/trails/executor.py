@@ -21,6 +21,11 @@ from typing import Any, Protocol
 
 import yaml
 
+from scripts.orchestration.trail_predicates import (
+    STOP_UNKNOWN,
+    evaluate_named_table,
+    load_decision_tables,
+)
 from scripts.orchestration.validate_trailspec import (
     TrailSpecValidationError,
     compute_command_receipt_digest,
@@ -30,6 +35,8 @@ from scripts.orchestration.validate_trailspec import (
     validate_trailspec_data,
 )
 
+from .authority import AuthorityReceiptError
+from .closure import ClosureError, TrailClosureGate
 from .models import (
     AuthorityReceiptUnavailableError,
     CommandExecution,
@@ -44,6 +51,7 @@ from .models import (
 from .store import TrailStore, canonical_json, digest_json, utc_now
 
 _OUTCOME_TOKEN = re.compile(r"^[A-Za-z][A-Za-z0-9_.:-]*$")
+_GIT_HEAD_SHA = re.compile(r"^[0-9a-f]{40}$")
 _AUTHORIZATION_REDACTION_PATTERN = re.compile(
     r"(?i)(authorization\s*[:=]\s*(?:bearer\s+)?)\S+"
 )
@@ -79,23 +87,33 @@ class ReceiptPredicateEvaluator(Protocol):
 
 
 class DecisionTableEvaluator(Protocol):
-    """P2 seam for typed table predicates; P3 intentionally has no implementation."""
+    """Typed P2 static-table evaluation without command execution or observation."""
 
     def evaluate(self, table_id: str, facts: dict[str, Any]) -> str:
         """Evaluate a pinned decision table without launching a command."""
 
 
-class UnavailableDecisionTableEvaluator:
-    """P3's explicit P2 seam: table execution is unavailable until it is wired."""
+class TrailPredicatesDecisionTableEvaluator:
+    """Wire P2's checked-in typed tables into the P3 executor seam."""
+
+    def __init__(self, tables_path: Path | None = None) -> None:
+        self.tables_path = tables_path
+        self.tables: dict[str, Any] | None = None
 
     def evaluate(self, table_id: str, facts: dict[str, Any]) -> str:
-        raise TrailRunnerError(
-            f"decision-table predicate '{table_id}' is unavailable until P2/P4 wiring"
-        )
+        if self.tables is None:
+            self.tables = (
+                load_decision_tables()
+                if self.tables_path is None
+                else load_decision_tables(self.tables_path)
+            )
+        return evaluate_named_table(self.tables, table_id, facts)
 
 
 class AuthorityReceiptResolver(Protocol):
     """P4-owned approved-source lookup, never a local JSON-file loader."""
+
+    source_id: str
 
     def fetch(self, authority_receipt_id: str, run: TrailRun) -> dict[str, Any]:
         """Re-fetch and validate an authority receipt from an approved source."""
@@ -103,6 +121,8 @@ class AuthorityReceiptResolver(Protocol):
 
 class UnavailableAuthorityReceiptResolver:
     """P3's deliberate fail-closed authority implementation."""
+
+    source_id = "unavailable"
 
     def fetch(self, authority_receipt_id: str, run: TrailRun) -> dict[str, Any]:
         raise AuthorityReceiptUnavailableError(
@@ -208,6 +228,7 @@ class TrailExecutor:
         predicate_evaluator: ReceiptPredicateEvaluator | None = None,
         decision_table_evaluator: DecisionTableEvaluator | None = None,
         authority_resolver: AuthorityReceiptResolver | None = None,
+        closure_gate: TrailClosureGate | None = None,
         fault_hook: Callable[[str, PreparedInvocation], None] | None = None,
     ) -> None:
         self.store = store
@@ -215,10 +236,9 @@ class TrailExecutor:
         self.seat_registry_path = seat_registry_path
         self.command_runner = command_runner
         self.predicate_evaluator = predicate_evaluator or DefaultReceiptPredicateEvaluator()
-        self.decision_table_evaluator = (
-            decision_table_evaluator or UnavailableDecisionTableEvaluator()
-        )
+        self.decision_table_evaluator = decision_table_evaluator or TrailPredicatesDecisionTableEvaluator()
         self.authority_resolver = authority_resolver or UnavailableAuthorityReceiptResolver()
+        self.closure_gate = closure_gate
         self.fault_hook = fault_hook
 
     @staticmethod
@@ -258,6 +278,11 @@ class TrailExecutor:
                 raise TrailRunnerError(
                     f"parameter '{name}' must be a TrailSpec {kind}, got {type(value).__name__}"
                 )
+        pr_head = params.get("pr_head")
+        if pr_head is not None and (
+            not isinstance(pr_head, str) or not _GIT_HEAD_SHA.fullmatch(pr_head)
+        ):
+            raise TrailRunnerError("parameter 'pr_head' must be a lowercase 40-hex Git commit SHA")
 
     def begin(
         self,
@@ -350,7 +375,78 @@ class TrailExecutor:
                 "terminal_outcome": run.terminal_outcome,
                 "closure_state": run.closure_state,
                 "summons": self.store.list_summons(run_id),
+                "authority_receipts": self.store.list_authority_receipts(run_id),
             },
+        )
+
+    def evaluate_decision_table(
+        self,
+        *,
+        run_id: str,
+        expected_step: str,
+        table_id: str,
+        facts: dict[str, Any],
+    ) -> TrailRunResult:
+        """Evaluate P2's typed outcome and atomically park ambiguous/unknown input.
+
+        TrailSpec v1.1 does not yet declare table-lookup steps, so this is the
+        explicit executor seam for later migrated trails. It never runs a
+        command. P2's fail-closed token is parked with its summon in one SQLite
+        transaction.
+        """
+        run = self.store.get_run(run_id)
+        if run.spec["schema_version"] != "trailspec.v1.1":
+            return self._reject_v1_execution("step", run)
+        if run.state != "active" or run.cursor_step_id != expected_step:
+            return TrailRunResult(
+                command="step",
+                exit_class=ExitClass.DEVIATION_REFUSED,
+                outcome="deviation_refused",
+                run_id=run_id,
+                state=run.state,
+                cursor_step=run.cursor_step_id,
+                error="decision table must name the exact active cursor",
+            )
+        token = self.decision_table_evaluator.evaluate(table_id, facts)
+        if token == STOP_UNKNOWN:
+            try:
+                parked = self.store.park_stop(
+                    run_id=run_id,
+                    expected_step=expected_step,
+                    stop_code=STOP_UNKNOWN,
+                    reason=(
+                        f"decision table '{table_id}' had zero, multiple, or invalid typed matches"
+                    ),
+                )
+            except DeviationRefusedError as exc:
+                latest = self.store.get_run(run_id)
+                return TrailRunResult(
+                    command="step",
+                    exit_class=ExitClass.DEVIATION_REFUSED,
+                    outcome="deviation_refused",
+                    run_id=run_id,
+                    state=latest.state,
+                    cursor_step=latest.cursor_step_id,
+                    error=str(exc),
+                )
+            return TrailRunResult(
+                command="step",
+                exit_class=ExitClass.STOP_PARKED,
+                outcome="stop_unknown",
+                run_id=run_id,
+                state=parked.state,
+                cursor_step=parked.cursor_step_id,
+                data={"table_id": table_id, "stop_code": STOP_UNKNOWN},
+                error=parked.parked_reason,
+            )
+        return TrailRunResult(
+            command="step",
+            exit_class=ExitClass.OK,
+            outcome="decision_table_outcome",
+            run_id=run_id,
+            state=run.state,
+            cursor_step=run.cursor_step_id,
+            data={"table_id": table_id, "outcome_token": token},
         )
 
     def _reject_v1_execution(self, command: str, run: TrailRun) -> TrailRunResult:
@@ -456,7 +552,7 @@ class TrailExecutor:
             "step_id": prepared.step_id,
             "task_family": run.task_family,
             "lineage_id": None,
-            "pr_head": None,
+            "pr_head": run.params.get("pr_head"),
             "lease_generation": None,
             "predicate_exit": command_receipt["exit_code"],
             "evidence_digest": digest_json(evidence),
@@ -814,7 +910,7 @@ class TrailExecutor:
         )
 
     def resume(self, *, run_id: str, authority_receipt_id: str) -> TrailRunResult:
-        """Refuse unverified local approvals until P4 supplies approved-source verification."""
+        """Re-fetch and durably bind authority without inventing an unsafe transition."""
         run = self.store.get_run(run_id)
         if run.spec["schema_version"] != "trailspec.v1.1":
             return self._reject_v1_execution("resume", run)
@@ -828,8 +924,19 @@ class TrailExecutor:
                 cursor_step=run.cursor_step_id,
                 error="authority receipt must be an opaque approved-source identifier, not a path",
             )
+        source_id = getattr(self.authority_resolver, "source_id", None)
+        if not isinstance(source_id, str) or not source_id.strip():
+            return TrailRunResult(
+                command="resume",
+                exit_class=ExitClass.INVALID,
+                outcome="authority_receipt_refused",
+                run_id=run_id,
+                state=run.state,
+                cursor_step=run.cursor_step_id,
+                error="approved authority resolver lacks a stable external source_id",
+            )
         try:
-            self.authority_resolver.fetch(authority_receipt_id, run)
+            receipt = self.authority_resolver.fetch(authority_receipt_id, run)
         except AuthorityReceiptUnavailableError as exc:
             return TrailRunResult(
                 command="resume",
@@ -840,14 +947,45 @@ class TrailExecutor:
                 cursor_step=run.cursor_step_id,
                 error=str(exc),
             )
+        except AuthorityReceiptError as exc:
+            return TrailRunResult(
+                command="resume",
+                exit_class=ExitClass.INVALID,
+                outcome="authority_receipt_refused",
+                run_id=run_id,
+                state=run.state,
+                cursor_step=run.cursor_step_id,
+                error=str(exc),
+            )
+        try:
+            recorded = self.store.record_authority_receipt(
+                run_id=run_id,
+                receipt=receipt,
+                source_id=source_id,
+            )
+        except (DeviationRefusedError, ReceiptChainError, TrailRunnerError) as exc:
+            latest = self.store.get_run(run_id)
+            return TrailRunResult(
+                command="resume",
+                exit_class=ExitClass.INVALID,
+                outcome="authority_receipt_refused",
+                run_id=run_id,
+                state=latest.state,
+                cursor_step=latest.cursor_step_id,
+                error=str(exc),
+            )
         return TrailRunResult(
             command="resume",
-            exit_class=ExitClass.INVALID,
-            outcome="authority_resume_unimplemented",
+            exit_class=ExitClass.STOP_PARKED,
+            outcome="authority_verified_parked",
             run_id=run_id,
-            state=run.state,
+            state="parked",
             cursor_step=run.cursor_step_id,
-            error="P4 must bind the approved authority receipt before a parked run can resume",
+            data=recorded,
+            error=(
+                "authority is verified and consumed, but TrailSpec v1.1 has no approved "
+                "resume transition or override; the summon remains parked"
+            ),
         )
 
     def _projection_payload(self, *, run_id: str, filename: str) -> dict[str, Any]:
@@ -1029,13 +1167,96 @@ class TrailExecutor:
             data=details,
         )
 
+    def _terminal_closure_evidence(
+        self, run: TrailRun
+    ) -> tuple[str, dict[str, Any], dict[str, Any], dict[str, Any]]:
+        """Return a digest of the already-verified chain and its final re-observation."""
+        invocations = self.store.list_invocations(run.run_id)
+        if not invocations:
+            raise ReceiptChainError("terminal run has no invocation evidence")
+        terminal_invocation = invocations[-1]
+        command_receipt = terminal_invocation.get("command_receipt")
+        if not isinstance(command_receipt, dict):
+            raise ReceiptChainError("terminal invocation has no command receipt")
+        step_receipt = self.store.get_step_receipt(str(terminal_invocation["invocation_id"]))
+        if not isinstance(step_receipt, dict):
+            raise ReceiptChainError("terminal invocation has no StepReceipt")
+        chain_digest = digest_json(
+            {
+                "run_id": run.run_id,
+                "trail_hash": run.trail_hash,
+                "invocations": [
+                    {
+                        "invocation_id": invocation["invocation_id"],
+                        "cursor_generation": invocation["cursor_generation"],
+                        "command_receipt_digest": invocation["command_receipt_digest"],
+                        "step_receipt_digest": digest_json(step)
+                        if isinstance(
+                            step := self.store.get_step_receipt(str(invocation["invocation_id"])),
+                            dict,
+                        )
+                        else None,
+                    }
+                    for invocation in invocations
+                ],
+            }
+        )
+        return chain_digest, terminal_invocation, command_receipt, step_receipt
+
+    def _park_closure_guarded(
+        self, *, run_id: str, reason: str, error: str | None
+    ) -> TrailRunResult:
+        """Park terminal closure, absorbing the concurrent-closer commit race.
+
+        A second closer can commit the closure between the caller's
+        closure-state check and this park call; the store then refuses with
+        DeviationRefusedError. That race is legitimate concurrency, so it maps
+        to a typed result — close() always returns a TrailRunResult.
+        """
+        try:
+            parked = self.store.park_terminal_closure(run_id=run_id, reason=reason)
+        except DeviationRefusedError as refusal:
+            current = self.store.get_run(run_id)
+            if current.closure_state == "closed" and self.closure_gate is not None:
+                try:
+                    concurrent = self.closure_gate.existing(run_id)
+                except ClosureError:
+                    concurrent = None
+                if concurrent is not None:
+                    return self._closed_result(run_id=run_id, committed=concurrent)
+            return TrailRunResult(
+                command="close",
+                exit_class=ExitClass.INVALID,
+                outcome="closure_refused",
+                run_id=run_id,
+                state=current.state,
+                cursor_step=current.cursor_step_id,
+                error=str(refusal),
+            )
+        return TrailRunResult(
+            command="close",
+            exit_class=ExitClass.STOP_PARKED,
+            outcome="closure_parked",
+            run_id=run_id,
+            state=parked.state,
+            cursor_step=parked.cursor_step_id,
+            data={"stop_code": "STOP-unknown", "closure_state": parked.closure_state},
+            error=error,
+        )
+
     def close(self, *, run_id: str) -> TrailRunResult:
-        """Expose the CLI verb while refusing P4-owned closure semantics."""
+        """Close only after a complete chain and fresh external re-observation."""
         run = self.store.get_run(run_id)
         if run.spec["schema_version"] != "trailspec.v1.1":
             return self._reject_v1_execution("close", run)
         chain = self.verify_chain(run_id=run_id)
         if chain.exit_class != ExitClass.OK:
+            if run.state == "terminal" and run.closure_state != "closed":
+                return self._park_closure_guarded(
+                    run_id=run_id,
+                    reason=chain.error or "closure chain verification failed",
+                    error=chain.error,
+                )
             return TrailRunResult(
                 command="close",
                 exit_class=ExitClass.INVALID,
@@ -1045,15 +1266,79 @@ class TrailExecutor:
                 cursor_step=run.cursor_step_id,
                 error=chain.error,
             )
+        if self.closure_gate is None:
+            return TrailRunResult(
+                command="close",
+                exit_class=ExitClass.INVALID,
+                outcome="closure_unavailable",
+                run_id=run_id,
+                state=run.state,
+                cursor_step=run.cursor_step_id,
+                error=(
+                    "closure needs a provisioned bridge/API re-observer; local state and "
+                    "receipt projections are not authority"
+                ),
+            )
+        try:
+            evidence = self._terminal_closure_evidence(run)
+            committed = self.closure_gate.close(
+                run=run,
+                chain_digest=evidence[0],
+                terminal_invocation=evidence[1],
+                terminal_command_receipt=evidence[2],
+                terminal_step_receipt=evidence[3],
+            )
+        except (ClosureError, ReceiptChainError, TrailRunnerError) as exc:
+            current = self.store.get_run(run_id)
+            if current.state == "terminal" and current.closure_state == "closed":
+                # Another closer may commit while this closer loses an external
+                # observation race. SQLite is authoritative, so return the
+                # immutable committed result rather than a false refusal.
+                try:
+                    concurrent = self.closure_gate.existing(run_id)
+                except ClosureError:
+                    concurrent = None
+                if concurrent is not None:
+                    return self._closed_result(run_id=run_id, committed=concurrent)
+            if current.state == "terminal" and current.closure_state != "closed":
+                return self._park_closure_guarded(
+                    run_id=run_id, reason=str(exc), error=str(exc)
+                )
+            return TrailRunResult(
+                command="close",
+                exit_class=ExitClass.INVALID,
+                outcome="closure_refused",
+                run_id=run_id,
+                state=current.state,
+                cursor_step=current.cursor_step_id,
+                error=str(exc),
+            )
+
+        return self._closed_result(run_id=run_id, committed=committed)
+
+    def _closed_result(self, *, run_id: str, committed: Any) -> TrailRunResult:
+        """Project a committed closure opportunistically without revising SQLite truth."""
+        projection_warning: str | None = None
+        try:
+            self.store.project_json(
+                run_id=run_id,
+                filename="closure.json",
+                payload=committed.attestation,
+            )
+        except (OSError, TrailRunnerError) as exc:
+            # SQLite is authoritative. A failed exactly-once projection cannot
+            # roll back a committed closure or truthfully turn it into a STOP.
+            projection_warning = f"closure committed; receipt projection pending: {exc}"
         return TrailRunResult(
             command="close",
-            exit_class=ExitClass.INVALID,
-            outcome="closure_unavailable",
+            exit_class=ExitClass.OK,
+            outcome="closed",
             run_id=run_id,
-            state=run.state,
-            cursor_step=run.cursor_step_id,
-            error=(
-                "P4 closure verification is not implemented; P3 never marks a run closed "
-                "without authority, lease, head, and terminal re-observation checks"
-            ),
+            state="terminal",
+            cursor_step=None,
+            data={
+                "attestation": committed.attestation,
+                "attestation_digest": committed.attestation_digest,
+            },
+            error=projection_warning,
         )
