@@ -40,6 +40,7 @@ REQUIRED_TRAIL_IDS = {
     "rb3-pr-lifecycle",
     "rb4-red-ci-triage",
     "rb5-session-close",
+    "rb6-estate-probes",
 }
 
 
