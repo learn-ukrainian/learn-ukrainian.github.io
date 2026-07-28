@@ -144,6 +144,39 @@ def test_negative_dangling_transition() -> None:
     assert res["ok"] is True
 
 
+def test_negative_unreachable_step() -> None:
+    """Negative invariant test: a spec with an unreachable/orphan step fails validation."""
+    data = _get_happy_example_data()
+    # Add an orphan step that no step transitions to
+    orphan_step = {
+        "step_id": "orphan_step_xyz",
+        "intent": "Unreachable step for testing",
+        "command": "echo orphan",
+        "evidence_predicate": {
+            "command": "echo orphan",
+            "success_pattern": "^orphan$",
+        },
+        "transitions": {
+            "success": "request_review",
+        },
+        "kind": "mechanical",
+        "blocked_on": None,
+    }
+    data["steps"].append(orphan_step)
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trailspec_data(data, spec_schema_path=TRAIL_SPEC_SCHEMA_PATH)
+
+    err_msg = str(exc_info.value)
+    assert "Unreachable step(s)" in err_msg
+    assert "orphan_step_xyz" in err_msg
+
+    # Mutation check: restore original copy -> passes
+    restored = _get_happy_example_data()
+    res = validate_trailspec_data(restored, spec_schema_path=TRAIL_SPEC_SCHEMA_PATH)
+    assert res["ok"] is True
+
+
 def test_negative_unknown_stop_code() -> None:
     """Negative invariant test: unknown stop_code not in 16-item contract list fails validation."""
     data = _get_happy_example_data()
