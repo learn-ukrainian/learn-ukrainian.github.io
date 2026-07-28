@@ -849,6 +849,36 @@ describe('LexiconPractice', () => {
     expect(screen.getByTestId('practice-daily-example-en')).toHaveTextContent('Mother is reading.');
   });
 
+  test('omits placeholder daily sentence English after the card is revealed', async () => {
+    const item: DailyPracticeDeckSnapshot['items'][number] = {
+      lemmaId: 'борщ',
+      origin: 'new',
+      lemma: 'борщ',
+      gloss: 'borscht',
+      cefr: 'A2',
+      pos: 'noun',
+      example: 'Я їм борщ.',
+      exampleEn: 'Context sentence for борщ',
+    };
+
+    render(
+      <PracticeDailyDeck
+        snapshot={{ version: 2, date: '2026-06-23', level: 'A2', deckVersion: 'daily-pool', createdAt: NOW.getTime(), items: [item] }}
+        rows={{ pendingDue: [], pendingNew: [{ item, state: 'new', lastSeenAt: null }], done: [] }}
+        lexemes={new Map()}
+        atlasLemmaHref={(lemmaId) => `/lexicon/${lemmaId}/`}
+        chromeLocale="uk"
+        learnerLevel="A2"
+      />,
+    );
+
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Натисніть, щоб перевернути' }));
+
+    expect(screen.getByTestId('practice-daily-example')).toHaveTextContent('Я їм борщ.');
+    expect(screen.queryByTestId('practice-daily-example-en')).not.toBeInTheDocument();
+    expect(screen.queryByText('Context sentence for борщ')).not.toBeInTheDocument();
+  });
+
   test('renders the daily card from the pick payload when the slug is absent from the practice-lexemes map (#5852)', () => {
     const snapshot: DailyPracticeDeckSnapshot = {
       version: 2,

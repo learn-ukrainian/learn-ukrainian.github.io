@@ -85,6 +85,7 @@ import {
 import { dateSeed, deckSeed, pickDaily, type DailyWord } from '../lib/lexicon/daily';
 import { getTeacherLessonVirtualDeck, readLocalCustomSets, saveLocalCustomSet, deleteLocalCustomSet, type CustomSet } from '../lib/lexicon/custom-decks';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
+import { usablePracticeSentenceEnglish } from '../lib/lexicon/practice-sentence-en';
 import { searchShardForQuery, type SearchRow, type SearchShardManifest } from '../lib/lexicon/search';
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
 
@@ -673,12 +674,6 @@ export function isEnglishLearnerGloss(label: string): boolean {
   const latinLetters = clean.match(/\p{Script=Latin}/gu)?.length ?? 0;
   const cyrillicLetters = clean.match(/\p{Script=Cyrillic}/gu)?.length ?? 0;
   return latinLetters > cyrillicLetters;
-}
-
-function usablePracticeSentenceEnglish(value: string | null | undefined): string | null {
-  const sentence = value?.trim();
-  if (!sentence || /^context sentence for\b/i.test(sentence)) return null;
-  return sentence;
 }
 
 function postAnswerSentenceEnglish(
