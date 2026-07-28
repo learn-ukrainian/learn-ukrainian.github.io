@@ -27,12 +27,6 @@ _vesum_conn_path: Path | None = None
 def _resolve_vesum_db_path(db_path: str | Path | None = None) -> Path:
     if db_path is not None:
         return Path(db_path)
-    if VESUM_DB_PATH.exists():
-        return VESUM_DB_PATH
-    for parent in PROJECT_ROOT.parents:
-        cand = parent / "data" / "vesum.db"
-        if cand.exists():
-            return cand
     return VESUM_DB_PATH
 
 

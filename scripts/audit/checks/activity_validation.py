@@ -956,21 +956,12 @@ def _check_word_indeclinable(
     try:
         from ...verification.vesum import verify_lemma, verify_word
     except (ImportError, ValueError):
-        try:
-            from scripts.verification.vesum import verify_lemma, verify_word
-        except ImportError:
-            return False, ""
+        from scripts.verification.vesum import verify_lemma, verify_word
 
-    try:
-        word_matches = verify_word(clean_word, db_path=db_path)
-    except Exception:
-        word_matches = []
+    word_matches = verify_word(clean_word, db_path=db_path)
 
     if not word_matches and clean_word != clean_word.lower():
-        try:
-            word_matches = verify_word(clean_word.lower(), db_path=db_path)
-        except Exception:
-            word_matches = []
+        word_matches = verify_word(clean_word.lower(), db_path=db_path)
 
     lemmas = set()
     for m in word_matches:
@@ -982,11 +973,8 @@ def _check_word_indeclinable(
 
     all_forms = []
     for l in lemmas:
-        try:
-            l_forms = verify_lemma(l, db_path=db_path)
-            all_forms.extend(l_forms)
-        except Exception:
-            pass
+        l_forms = verify_lemma(l, db_path=db_path)
+        all_forms.extend(l_forms)
 
     if not word_matches and not all_forms:
         if pos_hint and str(pos_hint).lower() in NON_CASE_POS:
@@ -1031,82 +1019,93 @@ def check_indeclinable_case_drills(
     """
     violations = []
 
-    for activity in yaml_activities:
-        act_title = _get_activity_attr(activity, "title", "Untitled")
-        act_inst = _get_activity_attr(activity, "instruction", "")
-        act_prompt = _get_activity_attr(activity, "prompt", "")
-        act_text = _get_activity_attr(activity, "text", "") or _get_activity_attr(activity, "passage", "")
+    try:
+        for activity in yaml_activities:
+            act_title = _get_activity_attr(activity, "title", "Untitled")
+            act_inst = _get_activity_attr(activity, "instruction", "")
+            act_prompt = _get_activity_attr(activity, "prompt", "")
+            act_text = _get_activity_attr(activity, "text", "") or _get_activity_attr(activity, "passage", "")
 
-        raw_items = _get_activity_attr(activity, "items", [])
-        if not raw_items:
-            raw_items = _get_activity_attr(activity, "blanks", []) or _get_activity_attr(activity, "questions", [])
+            raw_items = _get_activity_attr(activity, "items", [])
+            if not raw_items:
+                raw_items = _get_activity_attr(activity, "blanks", []) or _get_activity_attr(activity, "questions", [])
 
-        items = raw_items if raw_items else [activity]
+            items = raw_items if raw_items else [activity]
 
-        for item_idx, item in enumerate(items, 1):
-            item_sent = _get_activity_attr(item, "sentence", "")
-            item_quest = _get_activity_attr(item, "question", "")
-            item_prompt = _get_activity_attr(item, "prompt", "")
-            item_inst = _get_activity_attr(item, "instruction", "")
-            item_text = _get_activity_attr(item, "text", "")
+            for item_idx, item in enumerate(items, 1):
+                item_sent = _get_activity_attr(item, "sentence", "")
+                item_quest = _get_activity_attr(item, "question", "")
+                item_prompt = _get_activity_attr(item, "prompt", "")
+                item_inst = _get_activity_attr(item, "instruction", "")
+                item_text = _get_activity_attr(item, "text", "")
 
-            prompts_to_check = [
-                p
-                for p in (act_inst, act_prompt, act_text, item_inst, item_prompt, item_quest, item_sent, item_text)
-                if p and isinstance(p, str)
-            ]
+                prompts_to_check = [
+                    p
+                    for p in (act_inst, act_prompt, act_text, item_inst, item_prompt, item_quest, item_sent, item_text)
+                    if p and isinstance(p, str)
+                ]
 
-            matching_prompts = [p for p in prompts_to_check if _is_case_drill_prompt(p)]
-            if not matching_prompts:
-                continue
-
-            candidates = set()
-            pos_hint = _get_activity_attr(item, "pos") or _get_activity_attr(activity, "pos")
-
-            for prompt_str in matching_prompts:
-                quoted = re.findall(r'[„"«`\'‘]([а-яіїєґА-ЯІЇЄҐA-Za-z0-9_\-]+)[”"»`\'’]', prompt_str)
-                candidates.update(quoted)
-                unquoted_word = re.findall(r"(?:слово|word)\s+([а-яіїєґА-ЯІЇЄҐ]+)", prompt_str, re.IGNORECASE)
-                candidates.update(unquoted_word)
-
-            for field_name in ("lemma", "word", "target", "form", "answer"):
-                val = _get_activity_attr(item, field_name)
-                if val and isinstance(val, str) and len(val.split()) == 1:
-                    candidates.add(val)
-                val_act = _get_activity_attr(activity, field_name)
-                if val_act and isinstance(val_act, str) and len(val_act.split()) == 1:
-                    candidates.add(val_act)
-
-            for cand in candidates:
-                cand_clean = cand.strip().strip("„“\"'«»`")
-                if not cand_clean or not re.search(r"[а-яіїєґА-ЯІЇЄҐ]", cand_clean):
+                matching_prompts = [p for p in prompts_to_check if _is_case_drill_prompt(p)]
+                if not matching_prompts:
                     continue
 
-                is_indec, pos_info = _check_word_indeclinable(cand_clean, pos_hint=pos_hint, db_path=db_path)
-                if is_indec:
-                    prompt_sample = matching_prompts[0]
-                    if len(prompt_sample) > 80:
-                        prompt_sample = prompt_sample[:77] + "..."
-                    violations.append(
-                        {
-                            "type": "INDECLINABLE_CASE_DRILL",
-                            "severity": "critical",
-                            "activity": act_title,
-                            "message": (
-                                f'Item {item_idx}: prompt "{prompt_sample}" demands a case drill on '
-                                f'indeclinable word "{cand_clean}" (pos={pos_info}).'
-                            ),
-                            "suggestion": (
-                                f'Change prompt for "{cand_clean}" from a case drill to a neutral insertion '
-                                f'(e.g., "Fill in the blank with the word „{cand_clean}”").'
-                            ),
-                            "pedagogical_issue": (
-                                f'Word "{cand_clean}" is indeclinable in VESUM (pos={pos_info}) '
-                                f"and cannot be inflected for case."
-                            ),
-                        }
-                    )
-                    break
+                candidates = set()
+                pos_hint = _get_activity_attr(item, "pos") or _get_activity_attr(activity, "pos")
+
+                for prompt_str in matching_prompts:
+                    quoted = re.findall(r'[„"«`\'‘]([а-яіїєґА-ЯІЇЄҐA-Za-z0-9_\-]+)[”"»`\'’]', prompt_str)
+                    candidates.update(quoted)
+                    unquoted_word = re.findall(r"(?:слово|word)\s+([а-яіїєґА-ЯІЇЄҐ]+)", prompt_str, re.IGNORECASE)
+                    candidates.update(unquoted_word)
+
+                for field_name in ("lemma", "word", "target", "form", "answer"):
+                    val = _get_activity_attr(item, field_name)
+                    if val and isinstance(val, str) and len(val.split()) == 1:
+                        candidates.add(val)
+                    val_act = _get_activity_attr(activity, field_name)
+                    if val_act and isinstance(val_act, str) and len(val_act.split()) == 1:
+                        candidates.add(val_act)
+
+                for cand in candidates:
+                    cand_clean = cand.strip().strip("„“\"'«»`")
+                    if not cand_clean or not re.search(r"[а-яіїєґА-ЯІЇЄҐ]", cand_clean):
+                        continue
+
+                    is_indec, pos_info = _check_word_indeclinable(cand_clean, pos_hint=pos_hint, db_path=db_path)
+                    if is_indec:
+                        prompt_sample = matching_prompts[0]
+                        if len(prompt_sample) > 80:
+                            prompt_sample = prompt_sample[:77] + "..."
+                        violations.append(
+                            {
+                                "type": "INDECLINABLE_CASE_DRILL",
+                                "severity": "critical",
+                                "activity": act_title,
+                                "message": (
+                                    f'Item {item_idx}: prompt "{prompt_sample}" demands a case drill on '
+                                    f'indeclinable word "{cand_clean}" (pos={pos_info}).'
+                                ),
+                                "suggestion": (
+                                    f'Change prompt for "{cand_clean}" from a case drill to a neutral insertion '
+                                    f'(e.g., "Fill in the blank with the word „{cand_clean}”").'
+                                ),
+                                "pedagogical_issue": (
+                                    f'Word "{cand_clean}" is indeclinable in VESUM (pos={pos_info}) '
+                                    f"and cannot be inflected for case."
+                                ),
+                            }
+                        )
+                        break
+    except FileNotFoundError as err:
+        return [
+            {
+                "type": "VESUM_DB_UNAVAILABLE",
+                "severity": "critical",
+                "activity": "N/A",
+                "message": f"gate could not run — VESUM DB unavailable ({err})",
+                "suggestion": "Ensure data/vesum.db exists or pass db_path to check_indeclinable_case_drills.",
+            }
+        ]
 
     return violations
 
