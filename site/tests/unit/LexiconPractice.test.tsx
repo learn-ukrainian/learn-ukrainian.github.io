@@ -348,6 +348,57 @@ function indeclinableClozeDeck(): PracticeDeckData {
   };
 }
 
+function numeralClozeDeck(): PracticeDeckData {
+  const entry = lexeme(
+    'dva',
+    'два',
+    'two',
+    {
+      nominative: 'два',
+      accusative: 'двох',
+      locative: 'двох',
+    },
+    { pos: 'numr' },
+  );
+  return {
+    deckVersion: 'test-numeral-cloze',
+    level: 'A2',
+    lexemes: [entry],
+    index: [{
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A2',
+      modes: ['cloze'],
+      hasCloze: true,
+      clozeIds: ['dva-cloze-1'],
+      newOrder: 0,
+    }],
+    cloze: [{
+      clozeId: 'dva-cloze-1',
+      lemmaId: entry.lemmaId,
+      sentenceFrameId: 'dva-frame',
+      sentence: 'Я знаю ___ студентів.',
+      blankCase: 'accusative',
+      form: 'двох',
+      clozeEn: 'I know two students.',
+      caseRule: {
+        ruleId: 'numeral-case-fixture',
+        case: 'accusative',
+        caseLabel: 'знахідний',
+        trigger: 'fixture',
+        triggerLabel: 'fixture',
+        feedback: 'fixture',
+      },
+      options: [
+        { optionId: 'dva-cloze-1:answer', label: 'двох', lemmaId: entry.lemmaId, kind: 'answer' },
+        { optionId: 'dva-cloze-1:lemma', label: 'два', lemmaId: entry.lemmaId, kind: 'same-root-lemma' },
+        { optionId: 'dva-cloze-1:one', label: 'один', lemmaId: 'odyn', kind: 'decoy-lemma' },
+        { optionId: 'dva-cloze-1:three', label: 'три', lemmaId: 'try', kind: 'decoy-lemma' },
+      ],
+    }],
+  };
+}
+
 function heritagePracticeItem(): PracticeHeritageItem {
   return {
     heritageId: 'her-dim-fixture',
@@ -2239,7 +2290,7 @@ describe('LexiconPractice', () => {
     const status = within(screen.getByTestId('practice-cloze')).getByRole('status');
     expect(status).toHaveTextContent('Правильне слово');
     expect(status).toHaveClass('case-miss');
-    expect(screen.getByLabelText(/Відповідь у знахідному відмінку/)).toHaveValue('');
+    expect(screen.getByLabelText(/Поставте слово „книга” у правильному відмінку/)).toHaveValue('');
     expect(screen.getByRole('button', { name: 'книгу' })).not.toBeDisabled();
 
     await waitFor(() => {
@@ -2259,13 +2310,14 @@ describe('LexiconPractice', () => {
     });
   });
 
-  test('cloze uses a neutral English prompt for an indeclinable adverb', () => {
+  test('cloze uses a neutral prompt and aria-label for an adverb whose form equals its lemma', () => {
     seedRecognitionMastery('zhodom');
     render(<LexiconPractice initialDeck={indeclinableClozeDeck()} autoStart initialMode="cloze" />);
 
     const task = screen.getByTestId('practice-cloze').querySelector('.cz-task');
     expect(task).toHaveTextContent('Fill in the blank with the word „згодом”.');
     expect(task).not.toHaveTextContent('correct case');
+    expect(screen.getByLabelText('Вставте слово „згодом” у пропуск.')).toBeInTheDocument();
   });
 
   test('cloze retains the case prompt for an inflected noun form', () => {
@@ -2274,6 +2326,16 @@ describe('LexiconPractice', () => {
 
     expect(screen.getByTestId('practice-cloze').querySelector('.cz-task')).toHaveTextContent(
       'Put the word „книга” in the correct case.',
+    );
+    expect(screen.getByLabelText('Поставте слово „книга” у правильному відмінку.')).toBeInTheDocument();
+  });
+
+  test('cloze retains the case prompt for a declined numeral', () => {
+    seedRecognitionMastery('dva');
+    render(<LexiconPractice initialDeck={numeralClozeDeck()} autoStart initialMode="cloze" />);
+
+    expect(screen.getByTestId('practice-cloze').querySelector('.cz-task')).toHaveTextContent(
+      'Put the word „два” in the correct case.',
     );
   });
 
@@ -2583,7 +2645,7 @@ describe('LexiconPractice', () => {
       expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
     );
     expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
-    expect(screen.getByLabelText(/Відповідь у знахідному відмінку/)).toHaveValue('');
+    expect(screen.getByLabelText(/Поставте слово „книга” у правильному відмінку/)).toHaveValue('');
     expect(screen.getByRole('button', { name: 'книгу' })).not.toBeDisabled();
     expect(screen.queryByText('✗ Не те слово')).not.toBeInTheDocument();
   });
@@ -2718,7 +2780,7 @@ describe('LexiconPractice', () => {
     // Focus session is active and serving the accusative cloze — no other case leaks in.
     const cloze = await screen.findByTestId('practice-cloze');
     expect(cloze).toBeInTheDocument();
-    expect(screen.getByLabelText(/Відповідь у знахідному відмінку/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Поставте слово „книга” у правильному відмінку/)).toBeInTheDocument();
   });
 
   test('weak-area chip whose weakness yields no items shows a UA notice, clears focus, and never strands the learner', async () => {

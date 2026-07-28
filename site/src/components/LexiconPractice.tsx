@@ -1141,7 +1141,7 @@ function clozeParts(item: PracticeClozeItem): [string, string] {
   return [before, after.join('___')];
 }
 
-const NON_CASE_CLOZE_POS = new Set(['adv', 'prep', 'conj', 'part', 'numr']);
+const NON_CASE_CLOZE_POS = new Set(['adv', 'prep', 'conj', 'part']);
 
 function isCaseClozeDrill(cloze: PracticeClozeItem, lemma: PracticeLexeme): boolean {
   // Deterministic prompt heuristic: an NFC/casefold-equal answer is an insertion,
@@ -1278,14 +1278,6 @@ function resolvePracticeIndexItem(
 /** Pure-locale practice chrome message (both locales in DOM; CSS shows one). */
 function PureLocalePracticeMessage({ uk, en }: { uk: string; en: string }) {
   return <ChromeDual uk={uk} en={en} />;
-}
-
-/** Bare hard-stem adjective case labels (`знахідний`) → «у знахідному відмінку». */
-function casePhraseLocative(caseLabel: string): string {
-  if (caseLabel.endsWith('ий')) {
-    return `у ${caseLabel.slice(0, -2)}ому відмінку`;
-  }
-  return `у ${caseLabel} відмінку`;
 }
 
 /** Bare hard-stem adjective case labels (`знахідний`) → «у знахідний відмінок». */
@@ -4148,6 +4140,16 @@ function PracticeCloze({
   if (!cloze) return null;
   const [before, after] = clozeParts(cloze).map((part) => displayPracticeForm(part, learnerLevel));
   const caseDrill = isCaseClozeDrill(cloze, selection.lemma);
+  const displayLemma = displayPracticeForm(selection.lemma.lemma, learnerLevel);
+  const clozePrompt = caseDrill
+    ? {
+      uk: `Поставте слово „${displayLemma}” у правильному відмінку.`,
+      en: `Put the word „${displayLemma}” in the correct case.`,
+    }
+    : {
+      uk: `Вставте слово „${displayLemma}” у пропуск.`,
+      en: `Fill in the blank with the word „${displayLemma}”.`,
+    };
   const optionErrors = validateClozeOptions(cloze);
   const blankText = feedback?.kind === 'correct' ? cloze.form : input.trim() || '?';
   const displayBlankText = displayPracticeForm(blankText, learnerLevel);
@@ -4162,15 +4164,7 @@ function PracticeCloze({
   return (
     <div className="lexicon-cloze" data-testid="practice-cloze">
       <p className="cz-task">
-        <PracticeChromeDual
-          uk={caseDrill
-            ? `Поставте слово „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” у правильному відмінку.`
-            : `Вставте слово „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” у пропуск.`}
-          en={caseDrill
-            ? `Put the word „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” in the correct case.`
-            : `Fill in the blank with the word „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}”.`}
-
-        />
+        <PracticeChromeDual {...clozePrompt} />
       </p>
       <p className="cz-sentence">
         <span>{before}</span>
@@ -4214,11 +4208,7 @@ function PracticeCloze({
           autoCorrect="off"
           spellCheck={false}
           lang="uk"
-          aria-label={
-            chromeLocale === 'en'
-              ? `Answer in ${translateGrammarTerm(cloze.caseRule.caseLabel)}`
-              : `Відповідь ${casePhraseLocative(cloze.caseRule.caseLabel)}`
-          }
+          aria-label={clozePrompt[chromeLocale]}
           onChange={(event) => onInput(event.currentTarget.value)}
         />
         <button className="btn btn-accent" type="submit" disabled={answerLocked}>
