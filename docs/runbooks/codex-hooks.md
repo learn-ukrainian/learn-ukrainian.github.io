@@ -5,6 +5,43 @@ hand-edited destination file. The source of truth is
 `agents_extensions/codex/hooks.json`; run `npm run agents:deploy` to refresh the
 ignored `.codex/` target.
 
+The same deploy owns the project Codex config:
+`agents_extensions/codex/config.toml` → `.codex/config.toml`. Native
+multi-agent V2 remains enabled, but its tool namespace is explicitly `agents`.
+This avoids presenting `collaboration.spawn_agent`, which is a server-reserved
+function name whose contract may not match the client schema. The namespace
+setting is a compatibility fix, not a V2 disable switch.
+
+## Fresh Codex transport health
+
+Config presence is not behavior proof. A server-side tool-schema rejection can
+kill every new process while an already-running App task remains healthy. Run a
+bounded fresh worker through the same bridge used by the fleet:
+
+```bash
+.venv/bin/python -m scripts.orchestration.codex_transport_health probe \
+  --fresh --json
+```
+
+The probe starts a new `gpt-5.6-terra` Codex CLI process through `ask-codex` and
+requires its broker response to equal a unique sentinel. It writes only a
+sanitized TTL receipt under ignored `batch_state/runtime/`; no prompt, response,
+or raw error text is retained. A reserved `collaboration.spawn_agent` rejection
+is classified as `reserved_collaboration_schema`.
+
+Read the cached result without spending a model call:
+
+```bash
+.venv/bin/python -m scripts.orchestration.codex_transport_health status --json
+```
+
+Monitor exposes the same receipt at `GET /api/runtime/transport-health`; the
+endpoint never launches a model. `start-codex-driver.sh --governor` refreshes or
+reuses a model-matched Sol receipt before starting Sol; a receipt for another
+Codex model is not reused. Healthy transport allows the governor to inspect
+native `agents.*` availability. Degraded or unknown transport fails fast with
+an external-fleet disposition instead of retrying Codex or idling.
+
 Codex hook facts verified from the current OpenAI Codex manual on 2026-07-05:
 
 - Project-local `.codex/hooks.json` is loaded only for trusted project layers.

@@ -86,6 +86,7 @@ def test_codex_app_and_cli_share_bounded_native_context_defaults() -> None:
         "multi_agent_v2": {
             "enabled": True,
             "hide_spawn_agent_metadata": False,
+            "tool_namespace": "agents",
         },
     }
     assert config["agents"] == {

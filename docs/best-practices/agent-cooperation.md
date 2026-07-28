@@ -69,6 +69,15 @@ V2 and the external fleet are complementary:
 - Never dispatch the same lane through both systems. One accountable root owns
   the task ledger, integration, and final disposition across both.
 
+V2 eligibility is dynamic. Before native delegation, read
+`GET /api/runtime/transport-health` and inspect the current native tool catalog.
+Use native V2 only when the fresh-process receipt is healthy and the
+`agents.list_agents` / `agents.spawn_agent` tools are present. If fresh Codex is
+healthy but native tools are absent, route the OpenAI worker through
+fleet-comms/`ask-codex`. If fresh Codex is degraded or unknown, route to a
+qualified cross-provider lane and record the substitution. Never retry a
+reserved `collaboration.spawn_agent` schema failure inside the receipt TTL.
+
 ### Operator shorthand
 
 When the operator asks any repository agent to create, write, or improve a
@@ -599,6 +608,7 @@ filesystem spelunking:
 | Active worktrees | `GET /api/worktrees` |
 | Open issues grouped + supersede metadata | `GET /api/issues/map` |
 | Per-agent auth mode | `GET /api/runtime/auth` |
+| Fresh Codex process health | `GET /api/runtime/transport-health` |
 
 Full endpoint reference: [`docs/MONITOR-API.md`](../MONITOR-API.md).
 

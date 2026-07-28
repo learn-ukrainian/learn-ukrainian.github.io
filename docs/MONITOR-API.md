@@ -1296,6 +1296,32 @@ Newest usage records from today's runtime logs, newest first.
 }
 ```
 
+### `GET /api/runtime/transport-health`
+
+Read-only snapshot of the latest bounded fresh Codex CLI probe. The endpoint
+never launches a model. `healthy` requires a new `ask-codex` process to return
+its unique broker sentinel while the configured V2 namespace is `agents`;
+missing or expired behavior evidence is `unknown` when the namespace is valid,
+while an invalid or absent namespace is `degraded`. Health applies only to the
+exact model named in the receipt.
+
+```json
+{
+  "schema_version": "codex-transport-health.v1",
+  "status": "healthy",
+  "fresh": true,
+  "failure_class": null,
+  "tool_namespace": "agents",
+  "namespace_valid": true,
+  "checked_at": "2026-07-28T13:56:41Z",
+  "expires_at": "2026-07-28T14:11:41Z",
+  "age_seconds": 5,
+  "model": "gpt-5.6-terra",
+  "effort": "low",
+  "source": "receipt"
+}
+```
+
 ## Tool Timing Telemetry — `/api/telemetry/`
 
 ### `POST /api/telemetry/tool-timings`

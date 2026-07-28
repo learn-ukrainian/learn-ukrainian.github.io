@@ -13,6 +13,9 @@ memories = false
 [features.multi_agent_v2]
 enabled = true
 hide_spawn_agent_metadata = false
+# Avoid the server-reserved collaboration.spawn_agent schema. Native V2 stays
+# enabled, but exposes its tools as agents.spawn_agent/list_agents.
+tool_namespace = "agents"
 
 [agents]
 enabled = true

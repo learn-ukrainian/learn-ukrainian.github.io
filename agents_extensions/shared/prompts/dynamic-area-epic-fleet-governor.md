@@ -33,9 +33,19 @@ You are the single accountable root orchestrator for the cycle.
 Use the configured Monitor client or configured Monitor base URL. Do not
 hard-code or invent a server host.
 
-1. Call `list_agents` and start a requested-agent ledger before any native
-   delegation.
-2. Bootstrap through the Monitor API rather than bulk-reading source files:
+1. Read `/api/runtime/transport-health` before any native delegation. It is a
+   TTL-cached receipt from an actual fresh `ask-codex` process, not a static
+   config claim. A stale or missing receipt is `unknown`, not healthy. A
+   healthy receipt applies only to its exact `model`; before launching another
+   Codex model, run the same bounded probe for that model or treat its transport
+   as unknown.
+2. Inspect the current tool catalog. Only when transport health is fresh
+   `healthy` and the catalog exposes the native `agents.list_agents` and
+   `agents.spawn_agent` tools, call `list_agents` and start a requested-agent
+   ledger. Otherwise start the ledger with native V2 marked unavailable and
+   use the fallback rules below; never call a missing or mismatched native
+   tool.
+3. Bootstrap through the Monitor API rather than bulk-reading source files:
    - `/api/state/manifest?session=<current-session-id>` first;
    - `/api/rules?format=markdown&session=<current-session-id>` only when the
      manifest rules hash is new or unavailable in context;
@@ -43,17 +53,19 @@ hard-code or invent a server host.
      changed and an exact handoff identity is known;
    - `/api/orient?lean=true&session=<current-session-id>` for the bounded live
      snapshot.
-3. Expand only to task-relevant endpoints:
+4. Expand only to task-relevant endpoints:
    - `/api/issues/streams` for issue-to-epic membership;
    - `/api/worktrees` for checkout inventory;
-   - `/api/runtime/agents` and `/api/runtime/auth` for live harnesses and auth;
+   - `/api/runtime/agents`, `/api/runtime/auth`, and
+     `/api/runtime/transport-health` for live harnesses, auth, and fresh Codex
+     process health;
    - `/api/state/routing-budget` for the API routing view;
    - `/api/delegate/active` for active external work;
    - `/api/comms/inbox?agent=<exact-agent>` for unread deliveries.
-4. Give each read a two-second deadline. A timeout, error, stale timestamp, or
+5. Give each read a two-second deadline. A timeout, error, stale timestamp, or
    null field is missing evidence, never an empty queue, zero usage, free
    capacity, or permission to widen.
-5. Fall back deterministically without abandoning API-first behavior:
+6. Fall back deterministically without abandoning API-first behavior:
    - orient: `git status --short --branch`, lane-scoped `gh pr list`, and
      `.venv/bin/python -m scripts.fleet_comms plane-status`;
    - rules/session: the exact source files named by the manifest;
@@ -62,10 +74,13 @@ hard-code or invent a server host.
      `.venv/bin/python -m scripts.orchestration.issue_stream_audit`;
    - worktrees: `git worktree list --porcelain`;
    - runtime inventory: `scripts/config/model_catalog.yaml`;
+   - fresh Codex transport:
+     `.venv/bin/python -m scripts.orchestration.codex_transport_health status
+     --json`; only the bounded launcher/probe command may refresh it;
    - routing budget: the CodexBar probes below;
    - active delegates: exact `batch_state/tasks/<task-id>.json` records plus
      GitHub PR state.
-6. Retry the API on the next material cycle; a temporary fallback never
+7. Retry the API on the next material cycle; a temporary fallback never
    permanently demotes it. After a write that must be immediately visible, use
    the endpoint's supported `fresh=true` path.
 
@@ -171,8 +186,24 @@ Use the live model catalog and rules as authority. Standing task-fit defaults:
 Native Codex V2 is the intra-OpenAI execution graph, not durable state or
 cross-family review.
 
-- Before each native spawn, reconcile `list_agents`, external active work,
-  path ownership, CodexBar, and disk.
+- Treat native V2 and the fresh Codex bridge as separate health dimensions:
+  - fresh transport `healthy` plus native `agents.*` tools present: native V2
+    is eligible; call `list_agents` before the first spawn and use the rules
+    below;
+  - fresh transport `healthy` but native tools absent or mismatched: skip
+    native V2 and route an OpenAI worker through the existing fleet-comms /
+    `ask-codex` or dispatch path;
+  - fresh transport `degraded` or `unknown`: start no new OpenAI worker. Route
+    qualified work to a healthy cross-provider lane and record the
+    substitution.
+- A reserved `collaboration.spawn_agent` schema error is a circuit-breaker
+  event, not an outage and not a quota signal. Do not retry it in the same
+  receipt TTL. Keep V2 enabled under the configured `agents` namespace and use
+  the external fleet while the fresh-process lane is degraded.
+- Before each eligible native spawn, re-read
+  `/api/runtime/transport-health` and reconcile `list_agents`, external active
+  work, path ownership, CodexBar, and disk. The receipt must still be fresh,
+  healthy, and model-matched.
 - Use no more than three non-root native agents across the whole tree. Default
   to `fork_turns="none"` and use a unique `task_name`.
 - Every child brief states functional role, task family, track, area, epic,
@@ -185,8 +216,10 @@ cross-family review.
   descendant consume slots from the same three-agent whole-tree cap.
 - Continue useful root-owned integration work, wait for every requested child,
   inspect every return and diff, reconcile by evidence rather than vote, run
-  integrated verification, call `list_agents` again, and report every
-  canonical task path and terminal status.
+  integrated verification, call `list_agents` again when native V2 was used,
+  and report every canonical task path and terminal status. When it was not
+  used, record the health reason and fallback instead of fabricating a final
+  native snapshot.
 - Native children are OpenAI-family helpers and never satisfy the independent
   cross-family review gate.
 
@@ -234,7 +267,8 @@ owned paths, lifecycle, state, evidence, PR, reviewer, and disposition.
   transfer remaining scope before issue closure, reconcile the lifecycle
   ledger, close the issue with evidence, and safely reap the exact worktree.
 - Do not leave a PR or requested agent in limbo. Before ending, drain the inbox,
-  wait for all requested work, call `list_agents` again, update the
-  authoritative handoff and GitHub issue, and report area/epic/issue, routing,
-  agents and statuses, changed files, validation/review, PR/merge/deploy/
-  certification/closeout state, blockers, and final Git status.
+  wait for all requested work, call `list_agents` again if native V2 was used,
+  update the authoritative handoff and GitHub issue, and report
+  area/epic/issue, routing, agents and statuses, changed files,
+  validation/review, PR/merge/deploy/certification/closeout state, blockers,
+  and final Git status.

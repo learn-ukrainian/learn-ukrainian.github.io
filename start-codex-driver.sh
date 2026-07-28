@@ -54,12 +54,34 @@ if [ "$MODE" = "governor" ]; then
   fi
   unset SESSION_EPIC
   PROMPT="Follow agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md for one bounded supervision cycle. TARGET=$SELECTOR GOAL=AUTO"
+  PROBE_TTL="${CODEX_TRANSPORT_PROBE_TTL_SECONDS:-900}"
+  PROBE_TIMEOUT="${CODEX_TRANSPORT_PROBE_TIMEOUT_SECONDS:-120}"
+  PROBE_COMMAND=(
+    "$ROOT/.venv/bin/python"
+    -m scripts.orchestration.codex_transport_health
+    probe
+    --ttl-seconds "$PROBE_TTL"
+    --timeout-seconds "$PROBE_TIMEOUT"
+    --model gpt-5.6-sol
+    --effort low
+    --json
+  )
   if [ "${CODEX_DRIVER_DRY_RUN:-0}" = "1" ]; then
     # SESSION_EPIC is echoed so tests can PROVE the lease-claiming path is off
     # (review finding: the unset guard was not observable, so its test was vacuous).
     echo "CODEX_DRIVER_DRY_RUN=1: SESSION_EPIC=${SESSION_EPIC:-<unset>}"
+    echo "CODEX_DRIVER_DRY_RUN=1: would probe ${PROBE_COMMAND[*]}"
     echo "CODEX_DRIVER_DRY_RUN=1: would exec $ROOT/start-codex.sh --model gpt-5.6-sol \"$PROMPT\" ${*:-}"
     exit 0
+  fi
+  if PROBE_JSON="$("${PROBE_COMMAND[@]}")"; then
+    :
+  else
+    PROBE_RC=$?
+    echo "Codex governor not started: fresh Codex transport is not healthy." >&2
+    echo "$PROBE_JSON" >&2
+    echo "Disposition: do not retry Codex; route this cycle through the current external fleet/epic roster." >&2
+    exit "$PROBE_RC"
   fi
   exec "$ROOT/start-codex.sh" --model gpt-5.6-sol "$PROMPT" "$@"
 else
