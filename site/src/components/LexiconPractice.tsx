@@ -675,6 +675,12 @@ export function isEnglishLearnerGloss(label: string): boolean {
   return latinLetters > cyrillicLetters;
 }
 
+function usablePracticeSentenceEnglish(value: string | null | undefined): string | null {
+  const sentence = value?.trim();
+  if (!sentence || /^context sentence for\b/i.test(sentence)) return null;
+  return sentence;
+}
+
 function isPhraseGloss(label: string): boolean {
   const clean = label.replace(/\s+/g, ' ').trim();
   // Count alphanumeric tokens (ignoring standalone punctuation) to match the
@@ -3946,6 +3952,7 @@ function PracticeParonym({
   const [before, after] = slotPromptParts(item.prompt).map((part) => displayPracticeForm(part, learnerLevel));
   const options = paronymOptions(item);
   const slotText = feedback?.kind === 'correct' ? displayPracticeForm(item.answer, learnerLevel) : '___';
+  const sentenceEnglish = feedback ? usablePracticeSentenceEnglish(item.promptEn) : null;
   return (
     <div className="lexicon-paronym" data-testid="practice-paronym">
       <p className="paronym-task">
@@ -3958,6 +3965,11 @@ function PracticeParonym({
         </span>
         <span>{after}</span>
       </p>
+      {sentenceEnglish ? (
+        <p className="cz-translate" data-testid="practice-paronym-sentence-en" lang="en">
+          {sentenceEnglish}
+        </p>
+      ) : null}
       <ul className="lexicon-option-list mc-options">
         {options.map((option, index) => (
           <li key={`${option.label}-${index}`}>
@@ -4038,6 +4050,7 @@ function PracticeHeritage({
   const slotText = feedback?.kind === 'correct'
     ? displayPracticeForm(selectedLabel ?? item.answer, learnerLevel)
     : '___';
+  const sentenceEnglish = feedback ? usablePracticeSentenceEnglish(item.promptEn) : null;
   return (
     <div className="lexicon-heritage" data-testid="practice-heritage">
       <p className="heritage-task">
@@ -4050,6 +4063,11 @@ function PracticeHeritage({
         </span>
         <span>{after}</span>
       </p>
+      {sentenceEnglish ? (
+        <p className="cz-translate" data-testid="practice-heritage-sentence-en" lang="en">
+          {sentenceEnglish}
+        </p>
+      ) : null}
       <ul className="lexicon-option-list mc-options">
         {options.map((option, index) => (
           <li key={`${option.label}-${index}`}>
@@ -4153,6 +4171,7 @@ function PracticeCloze({
   const optionErrors = validateClozeOptions(cloze);
   const blankText = feedback?.kind === 'correct' ? cloze.form : input.trim() || '?';
   const displayBlankText = displayPracticeForm(blankText, learnerLevel);
+  const sentenceEnglish = feedback ? usablePracticeSentenceEnglish(cloze.clozeEn) : null;
   const blankClass = [
     'cz-blank',
     displayBlankText !== '?' ? 'filled' : '',
@@ -4171,8 +4190,14 @@ function PracticeCloze({
         <span className={blankClass}>{displayBlankText}</span>
         <span>{after}</span>
       </p>
-      {showEnglishSubtitles ? (
-        <p className="lexicon-cloze-translation cz-translate" lang="en">{cloze.clozeEn}</p>
+      {sentenceEnglish ? (
+        <p
+          className="lexicon-cloze-translation cz-translate"
+          data-testid="practice-cloze-sentence-en"
+          lang="en"
+        >
+          {sentenceEnglish}
+        </p>
       ) : null}
       {cloze.attribution ? (
         <p className="lexicon-cloze-attribution">

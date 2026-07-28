@@ -235,6 +235,8 @@ export interface PracticeHeritageItem {
   calqueLabel?: string;
   kind: 'lexical' | 'sense_restricted' | string;
   prompt: string;
+  /** Optional English meaning of the Ukrainian prompt sentence. */
+  promptEn?: string;
   answer: string;
   calque: string;
   origin?: string;
@@ -264,6 +266,8 @@ export interface PracticeParonymItem {
   frameIndex: number;
   cefr: string;
   prompt: string;
+  /** Optional English meaning of the Ukrainian prompt sentence. */
+  promptEn?: string;
   answer: string;
   options: PracticeParonymOption[];
   origin?: string;

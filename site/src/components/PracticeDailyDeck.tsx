@@ -88,9 +88,7 @@ export default function PracticeDailyDeck({
   const showStressMarks = learnerLevel === 'A1';
   const displayLemma = (lemma: string) => (showStressMarks ? lemma : stripStressMarks(lemma));
   const currentExample = currentItem?.example?.trim() || currentLexeme?.example?.trim() || null;
-  const currentExampleEn = showStressMarks
-    ? currentItem?.exampleEn?.trim() || currentLexeme?.exampleEn?.trim() || null
-    : null;
+  const currentExampleEn = currentItem?.exampleEn?.trim() || currentLexeme?.exampleEn?.trim() || null;
 
   return (
     <div className="practice-daily-deck" data-testid="practice-daily-deck">
