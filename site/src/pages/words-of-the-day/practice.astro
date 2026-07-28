@@ -397,6 +397,9 @@ const frontmatter = {
   }
 
   :global(.lexicon-practice-stage .flashcard) {
+    width: 100%;
+    max-width: 100%;
+    height: 300px;
     min-height: 300px;
   }
 
@@ -406,11 +409,26 @@ const frontmatter = {
     border-radius: 18px;
   }
 
+  :global(.lexicon-practice-stage .flashcard-front),
+  :global(.lexicon-practice-stage .flashcard-back) {
+    box-sizing: border-box;
+    min-height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: clamp(1rem, 4vw, 2rem);
+  }
 
   :global(.lexicon-practice-stage .flashcard-word) {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
     color: var(--lu-text);
-    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    font-size: clamp(1.35rem, 4.2vw, 2.4rem);
     font-weight: 900;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    text-align: center;
   }
 
   :global(.rating-bar) {
