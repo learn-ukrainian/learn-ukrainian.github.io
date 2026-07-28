@@ -271,6 +271,62 @@ Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to
 
 **opencode-routed cross-family reviewers (pool · glm · gemma):** opencode is a multi-provider ROUTER — the fleet member is the MODEL, not "opencode" (`ask-opencode <model>` is the generic escape hatch; `ask-pool`/`ask-glm`/`ask-gemma` are the named members). **Live web fact-checking is a HARNESS property (opencode + lightpanda MCP), NOT a model trait — any opencode-hosted model browses** (kubedojo-verified incl. deepseek); don't treat it as unique to pool/glm. Since the coding floor is uniformly high across the fleet, route by the DIFFERENTIATOR (kubedojo 5-agent scorecard 2026-07-04): **pool** = **free** cross-family code review + web-verify *volume*; **glm** = deep security/bug review + **large-context cross-file coherence audits**; grok = sharpest final code-review gate; deepseek = cheap all-rounder (+ browses when opencode-hosted); **gemma** (Google Gemma 4 via **`google-ais/gemma-4-31b-it`, $0 DEFAULT** — AIS-direct with the user's key, no paid SKU exists for Gemma on the Gemini API; TOOLLESS `chat` agent; paid OR `-it` via `--model` fallback only, note the spend; OR `:free` pool-starved, avoid) = a metered-lane OFFLOAD for **(a) cheap SURFACE review** — reliably flags russicisms/calques, Latin-letter leakage, imperial/decolonization framing — — **(b) wiki drafting RETIRED from gemma (LANGUAGE-LANES RULE 2026-07-17: wiki prose is language work → agy/codex/claude/grok-4.5 only; the 2026-07-05 source-citation probe evidence stands in `docs/projects/ua-eval-harness/model-evidence.md`). ** ⚠️ it is **NOT a sole seminar writer** (adds unsupported details beyond the source packet) and **NOT a sole factual reviewer** (not trustworthy on accuracy yet) — gate seminar/factual work behind a **non-Gemma** source/factual check; Google-family → not a clean reviewer of agy/Gemini work. **pool and glm are NOT for Ukrainian content / prose / pedagogy** — both are code models (glm anglicizes/code-switches, pool is worse); for UK content see the "Ukrainian CONTENT" row above (we author, not translate; cursor is NOT russicism-safe on long UK text). **pool** = poolside.ai **`laguna-s-2.1`** (default gen-2 S; also `laguna-xs-2.1` / fallback `laguna-m.1`), **free** (watch weekly limits on bursts). ⚠️ **glm** = Zhipu `glm-5.2`, **China-hosted (Zhipu/z.ai) → prompt data egresses to China → LOCAL-ONLY: never in CI / automated pipelines or with sensitive data** (`ask-glm` refuses under any CI env var as a backstop); prefer a Western-lab reviewer for top-stakes. Bridge (consult/review) only today — no `delegate.py --agent pool|glm|gemma` dispatch adapter yet, and no V7 `--writer gemma-tools` yet (the opencode→delegate adapter + tool-calling writer harness are scoped follow-ups; a plain OpenRouter chat model has no `sources`-MCP harness).
 
+## Advisor panels — per-area pools · pool-minus-author · size-by-stakes · Sol/Fable anchor (#5933, operator-ruled 2026-07-28)
+
+Advisory panels are a RULE, not a roster. **Per-area advisor assignment is the PRIMARY
+structure** — each top model has distinct strengths; the pool modifiers operate WITHIN the
+area's pool, with ONE exception: the anchor (modifier 3) is an OVERLAY seat that joins from
+outside the pool when the pool contains neither Sol nor Fable. Panels are DISCUSSION/advice
+for CONVENED design and judgment work; an ordinary formal PR review is NOT an advisory
+panel (the "do not burn advisor seats on routine work" economy rule stands), and a panel
+never replaces the independent CROSS-FAMILY review of record (discussion ≠ review), which
+composes on top.
+
+**Per-area advisor pools** (the operator's approval surface; the table is REVIEWED when
+seats rotate — operator wording; the catalog-refresh contract §above owns name→model):
+
+| Area | Advisor pool | Evidence anchor |
+| --- | --- | --- |
+| Ukrainian language & pedagogy | Fable · Sol · Gemini (sanctioned language seats ONLY) | LANGUAGE-LANES RULE binds |
+| Architecture & process design | Sol (designer seat) · Fable (counter-reader) | fleet topology §above |
+| Code & infrastructure review | Kimi K3 · GLM-5.2 · Terra | Terra review arcs on #5896/#5925/#5926/#5931 (defect-finding record) |
+| Security-sensitive changes | Terra/GPT family · Kimi | ambient-Anthropic-token→z.ai leak caught pre-merge (#5931 arc) |
+| Debugging & forensics | Grok · GLM-5.2 | Grok: #5932 root cause (#5950 workaround); GLM: operator statement, #5933 comment 2026-07-28 |
+| Long-context sweeps & harness infra | Gemini | model catalog §above (window/tooling) |
+
+Terra's presence in area pools is as a practical PANEL PARTICIPANT — it does not promote
+`gpt-5.6-terra` to the advisor tier (the "not an advisor" authority rule §topology stands).
+
+**Modifiers (compose in this order; semantics 2a-2c are DRAFTED DEFAULTS — the operator's
+sign-off on this section approves them):**
+1. **Pool-minus-author** — the panel is the area pool MINUS whoever authored the work under
+   review (self-adjusting when an advisor is the worker). Family-independence accounting
+   still binds for the review of record.
+2. **Size by stakes** — routine PRs: NO panel (formal cross-family review only) · 2 seats
+   for designs/plans · 3 seats at high effort for contested verdicts, architecture,
+   learner-facing calls.
+   - 2a. The anchor COUNTS toward the size target (panels stay small — operator: big
+     panels are slow).
+   - 2b. If pool-minus-author cannot reach the target, UNDERFILL and record the shortfall
+     on the work item — never manufacture seats; escalate to the operator only when zero
+     eligible seats remain.
+   - 2c. When the anchor is the SOLE seat, it must be outside the author's model family;
+     if neither Sol nor Fable qualifies (both in-family or author), the pool's strongest
+     cross-family seat serves instead and the waived anchor is RECORDED on the work item.
+3. **ANCHOR RULE** — Sol or Fable sits on EVERY convened advisory panel: whichever of the
+   two is available and is NOT the author. In pools lacking both (code/infra, security,
+   debugging, long-context), the anchor joins as the outside-pool overlay seat per above.
+
+**Standing constraints (unchanged, restated because they bound the pools):** no Kimi/GLM on
+language judgment (#M-13a) · grok is NEVER a judge seat · GLM-5.2 is LOCAL-ONLY (China
+egress — no CI, no secrets, no sensitive data).
+
+*Operational notes (not #5933 rulings; separate authority cited):* Gemma is not an advisor
+seat (§panels above) · for code reviews prefer Kimi first per the #5933 issue body's
+reliability guidance — noting the GLM transport fix landed 2026-07-28 (#5947) · on any ask
+transport failure, reroute BY SEAT within the pool and record the substitution
+(workflow.md substitution rule).
+
 ## Harness vs model — route by BOTH (added 2026-07-05; user order: fleet utilization is paramount)
 
 A fleet member = MODEL × HARNESS. The same model behaves differently in different harnesses, and
