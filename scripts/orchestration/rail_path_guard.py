@@ -60,6 +60,15 @@ RAIL_PATH_PATTERNS = (
     "agents_extensions/shared/schemas/rail-approval-receipt*",
     "agents_extensions/shared/schemas/rail-approval-receipt*/**",
     ".claude/**",
+    # Sibling deploy targets of agents_extensions/shared (deployed rule/agent/hook
+    # copies are the same tamper class as .claude/**): .gemini/** is git-tracked;
+    # .codex/** is gitignored local deploy state, so only the hook/dispatch layers
+    # ever see it — the pattern still binds there. .agent/** is DELIBERATELY not a
+    # rail path: it is per-session runtime scratch (babysit files, handoffs, tmp)
+    # written constantly by live drivers; requiring receipts for it would halt the
+    # fleet, and being gitignored it can never reach a PR diff anyway.
+    ".gemini/**",
+    ".codex/**",
     # The CI and merge-hook implementations are enforcement layers themselves;
     # leaving either mutable without an approval would make the other layers
     # cosmetic rather than defense in depth.

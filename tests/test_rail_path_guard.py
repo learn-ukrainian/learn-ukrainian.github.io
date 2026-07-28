@@ -355,3 +355,21 @@ def test_ci_gate_requires_the_shared_rail_path_module() -> None:
     assert "decide_rail_path_mutation" not in run_steps
     assert "build_production_rail_approval_receipt_resolver" not in run_steps
     assert "rail-path" in workflow["jobs"]["ci-gate"]["needs"]
+
+
+@pytest.mark.parametrize(
+    ("path", "is_rail"),
+    [
+        # Sibling deploy targets are the same tamper class as .claude/**.
+        (".gemini/hooks/check-claude-inbox.sh", True),
+        (".gemini/rules/critical-rules.md", True),
+        (".codex/agents/curriculum-orchestrator.toml", True),
+        # .agent/** is deliberate runtime-scratch exclusion (babysit/handoffs/tmp):
+        # requiring receipts for per-session state would halt live drivers.
+        (".agent/claude-infra-babysit-prs.txt", False),
+        (".agent/tmp/reviews/some-brief.md", False),
+    ],
+)
+def test_deploy_target_siblings_rail_classification(path: str, is_rail: bool) -> None:
+    """Deployed-copy dirs are rails; per-session runtime scratch deliberately is not."""
+    assert guard.is_rail_path(guard.normalize_repository_path(path)) is is_rail
