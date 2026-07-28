@@ -920,12 +920,22 @@ NON_CASE_POS = {"prep", "conj", "part", "adv", "advp", "intj", "noninfl"}
 CASE_DRILL_PROMPT_PATTERNS = [
     re.compile(r"\bcorrect\s+case\b", re.IGNORECASE),
     re.compile(
-        r"\bin\s+(?:the\s+)?(?:nominative|genitive|dative|accusative|instrumental|locative|vocative|correct)\s+case\b",
+        r"\b(?:in|into)\s+(?:the\s+)?(?:nominative|genitive|dative|accusative|instrumental|locative|vocative|correct|grammatical|appropriate|required)\s+case\b",
         re.IGNORECASE,
     ),
-    re.compile(r"\bput\b.*\bin\b.*\bcase\b", re.IGNORECASE),
-    re.compile(r"\b(which|what|choose|select|identify)\b.*\bcase\b", re.IGNORECASE),
-    re.compile(r"\bcase\s+(form|drill|ending)s?\b", re.IGNORECASE),
+    re.compile(
+        r"\b(?:which|what|choose|select|identify)\b.*\b(?:nominative|genitive|dative|accusative|instrumental|locative|vocative|correct|grammatical)\s+case\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:which|what|choose|select|identify)\b.*\bcase\s+(?:form|drill|ending)s?\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:which|what)\s+case\s+(?:is|should|to|of\s+the\s+word)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(r"\bcase\s+(?:form|drill|ending)s?\b", re.IGNORECASE),
     re.compile(r"\bвідмін(ок|ка|ку|ком|ках|ками|ки|кам|ків)\b", re.IGNORECASE),
     re.compile(r"\bправильн(ому|ий|ого|ім|им)\s+відмінк(у|ок|а|ом)\b", re.IGNORECASE),
     re.compile(r"\bпостав(те)?\b.*\bвідмінк", re.IGNORECASE),
@@ -944,6 +954,7 @@ def _check_word_indeclinable(
     word: str,
     pos_hint: str | None = None,
     db_path: str | Path | None = None,
+    target_lemma: str | None = None,
 ) -> tuple[bool, str]:
     """Check if a Ukrainian word/lemma is an indeclinable or non-casing POS in VESUM.
 
@@ -964,44 +975,74 @@ def _check_word_indeclinable(
         word_matches = verify_word(clean_word.lower(), db_path=db_path)
 
     lemmas = set()
-    for m in word_matches:
-        if m.get("lemma"):
-            lemmas.add(m["lemma"])
+    if target_lemma:
+        clean_tl = target_lemma.strip().strip("„“\"'«»`")
+        if clean_tl:
+            lemmas.add(clean_tl)
+            if clean_tl != clean_tl.lower():
+                lemmas.add(clean_tl.lower())
+
+    if not lemmas:
+        for m in word_matches:
+            if m.get("lemma"):
+                lemmas.add(m["lemma"])
 
     if not lemmas and re.search(r"^[а-яіїєґА-ЯІЇЄҐ]+$", clean_word):
         lemmas.add(clean_word.lower())
 
-    all_forms = []
-    for l in lemmas:
-        l_forms = verify_lemma(l, db_path=db_path)
-        all_forms.extend(l_forms)
-
-    if not word_matches and not all_forms:
+    if not word_matches and not lemmas:
         if pos_hint and str(pos_hint).lower() in NON_CASE_POS:
             return True, str(pos_hint).lower()
         return False, ""
 
-    pos_set = {m["pos"].lower() for m in word_matches if m.get("pos")} | {
-        f["pos"].lower() for f in all_forms if f.get("pos")
-    }
+    lemma_evaluations = []
+    for l in sorted(lemmas):
+        l_forms = verify_lemma(l, db_path=db_path)
+        if not l_forms and l != l.lower():
+            l_forms = verify_lemma(l.lower(), db_path=db_path)
+
+        l_pos_set = {
+            m["pos"].lower()
+            for m in word_matches
+            if m.get("lemma") and m["lemma"].lower() == l.lower() and m.get("pos")
+        } | {f["pos"].lower() for f in l_forms if f.get("pos")}
+
+        if pos_hint:
+            l_pos_set.add(str(pos_hint).lower())
+
+        distinct_word_forms = {f["word_form"].lower() for f in l_forms if f.get("word_form")}
+
+        # Rule 3: Do not blanket-exclude numerals (numr) — they decline (#5956)
+        if "numr" in l_pos_set and len(distinct_word_forms) > 1:
+            lemma_evaluations.append((False, "numr", l_pos_set))
+            continue
+
+        # Rule 2: POS in NON_CASE_POS or lemma has only one distinct form
+        has_non_case_pos = bool(l_pos_set & NON_CASE_POS)
+        has_single_form = len(distinct_word_forms) == 1 and bool(l_forms)
+
+        if has_non_case_pos or has_single_form:
+            pos_str = ", ".join(sorted(l_pos_set)) if l_pos_set else "indeclinable"
+            lemma_evaluations.append((True, pos_str, l_pos_set))
+        else:
+            lemma_evaluations.append((False, "", l_pos_set))
+
+    if not lemma_evaluations:
+        if pos_hint and str(pos_hint).lower() in NON_CASE_POS:
+            return True, str(pos_hint).lower()
+        return False, ""
+
     if pos_hint:
-        pos_set.add(str(pos_hint).lower())
+        matching_hint = [res for res in lemma_evaluations if str(pos_hint).lower() in res[2]]
+        if matching_hint:
+            lemma_evaluations = matching_hint
 
-    distinct_word_forms = {f["word_form"].lower() for f in all_forms if f.get("word_form")}
+    declinable_results = [res for res in lemma_evaluations if not res[0]]
+    if declinable_results:
+        return False, declinable_results[0][1]
 
-    # Rule 3: Do not blanket-exclude numerals (numr) — they decline (#5956)
-    if "numr" in pos_set and len(distinct_word_forms) > 1:
-        return False, "numr"
-
-    # Rule 2: POS in NON_CASE_POS or lemma has only one distinct form
-    has_non_case_pos = bool(pos_set & NON_CASE_POS)
-    has_single_form = len(distinct_word_forms) == 1 and bool(all_forms)
-
-    if has_non_case_pos or has_single_form:
-        pos_str = ", ".join(sorted(pos_set)) if pos_set else "indeclinable"
-        return True, pos_str
-
-    return False, ""
+    pos_strs = ", ".join(sorted({res[1] for res in lemma_evaluations if res[1]}))
+    return True, pos_strs or "indeclinable"
 
 
 def check_indeclinable_case_drills(
@@ -1051,6 +1092,7 @@ def check_indeclinable_case_drills(
 
                 candidates = set()
                 pos_hint = _get_activity_attr(item, "pos") or _get_activity_attr(activity, "pos")
+                target_lemma = _get_activity_attr(item, "lemma") or _get_activity_attr(activity, "lemma")
 
                 for prompt_str in matching_prompts:
                     quoted = re.findall(r'[„"«`\'‘]([а-яіїєґА-ЯІЇЄҐA-Za-z0-9_\-]+)[”"»`\'’]', prompt_str)
@@ -1071,7 +1113,9 @@ def check_indeclinable_case_drills(
                     if not cand_clean or not re.search(r"[а-яіїєґА-ЯІЇЄҐ]", cand_clean):
                         continue
 
-                    is_indec, pos_info = _check_word_indeclinable(cand_clean, pos_hint=pos_hint, db_path=db_path)
+                    is_indec, pos_info = _check_word_indeclinable(
+                        cand_clean, pos_hint=pos_hint, db_path=db_path, target_lemma=target_lemma
+                    )
                     if is_indec:
                         prompt_sample = matching_prompts[0]
                         if len(prompt_sample) > 80:

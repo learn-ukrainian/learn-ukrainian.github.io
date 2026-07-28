@@ -18,9 +18,7 @@ def vesum_fixture_db(tmp_path: Path) -> Path:
     """Create a minimal VESUM sqlite database fixture for testing."""
     db_path = tmp_path / "vesum_fixture.db"
     conn = sqlite3.connect(str(db_path))
-    conn.execute(
-        "CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)"
-    )
+    conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
     rows = [
         # завдяки (prep - non-casing POS)
         ("завдяки", "завдяки", "prep", "prep"),
@@ -36,6 +34,11 @@ def vesum_fixture_db(tmp_path: Path) -> Path:
         ("метро", "метро", "noun", "noun:inanim:n:nv:v_naz"),
         # згодом (adv - non-casing POS)
         ("згодом", "згодом", "adv", "adv"),
+        # круг / кругом (homograph: declinable noun 'круг' vs non-casing adv 'кругом')
+        ("круг", "круг", "noun", "noun:inanim:m:v_naz"),
+        ("круга", "круг", "noun", "noun:inanim:m:v_rod"),
+        ("кругом", "круг", "noun", "noun:inanim:m:v_oru"),
+        ("кругом", "кругом", "adv", "adv"),
     ]
     conn.executemany("INSERT INTO forms VALUES (?, ?, ?, ?)", rows)
     conn.commit()
@@ -177,6 +180,71 @@ def test_item_level_prompt_case_drill_must_fail(vesum_fixture_db: Path):
     violations = check_indeclinable_case_drills([activity], db_path=vesum_fixture_db)
     assert len(violations) == 1
     assert violations[0]["type"] == "INDECLINABLE_CASE_DRILL"
+
+
+def test_homograph_declinable_sense_must_pass(vesum_fixture_db: Path):
+    """Regression F001: homograph with a declinable sense ('кругом' as Oru of 'круг') must PASS."""
+    activity = {
+        "type": "fill-in",
+        "title": "Homograph Noun Case Drill",
+        "instruction": "Put the word „кругом” in the correct case.",
+        "items": [
+            {
+                "sentence": "Ми йшли ___.",
+                "answer": "кругом",
+                "options": ["круг", "кругом"],
+            }
+        ],
+    }
+    violations = check_indeclinable_case_drills([activity], db_path=vesum_fixture_db)
+    assert len(violations) == 0
+
+
+def test_homograph_adv_sense_with_pos_hint_must_fail(vesum_fixture_db: Path):
+    """Regression F001: homograph with explicit pos_hint='adv' must FAIL when case-drilled."""
+    activity = {
+        "type": "fill-in",
+        "title": "Homograph Adverb Case Drill",
+        "instruction": "Put the word „кругом” in the correct case.",
+        "items": [
+            {
+                "sentence": "___ була тиша.",
+                "answer": "кругом",
+                "pos": "adv",
+                "options": ["кругом"],
+            }
+        ],
+    }
+    violations = check_indeclinable_case_drills([activity], db_path=vesum_fixture_db)
+    assert len(violations) == 1
+    assert violations[0]["type"] == "INDECLINABLE_CASE_DRILL"
+    assert "кругом" in violations[0]["message"]
+
+
+def test_non_grammatical_case_prompts_must_pass(vesum_fixture_db: Path):
+    """Regression F002: prompts with 'suitcase', 'case study', 'in case of' must NOT trip the gate."""
+    activities = [
+        {
+            "type": "fill-in",
+            "title": "Suitcase prompt",
+            "instruction": "Put the clothes in the suitcase.",
+            "items": [{"sentence": "___", "answer": "завдяки"}],
+        },
+        {
+            "type": "fill-in",
+            "title": "Case study prompt",
+            "instruction": "Which case study should we analyze today?",
+            "items": [{"sentence": "___", "answer": "згодом"}],
+        },
+        {
+            "type": "fill-in",
+            "title": "In case of prompt",
+            "instruction": "In case of emergency, press the alarm.",
+            "items": [{"sentence": "___", "answer": "метро"}],
+        },
+    ]
+    violations = check_indeclinable_case_drills(activities, db_path=vesum_fixture_db)
+    assert len(violations) == 0
 
 
 def test_missing_vesum_db_raises_or_reports_unavailable(tmp_path: Path):
