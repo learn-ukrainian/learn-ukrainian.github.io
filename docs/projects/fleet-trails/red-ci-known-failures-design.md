@@ -9,7 +9,8 @@
   - Validator / lookup module: `scripts/orchestration/red_ci_known_failures.py`
   - Trail integration: `scripts/config/trails/rb4-red-ci-triage.trail.yaml`
   - Tests: `tests/test_red_ci_known_failures.py`
-  - Checked-in registry seed (this package): `scripts/config/trails/red-ci-known-failures.yaml`
+- **New in the P11 PR** (not prior git history): checked-in registry seed
+  `scripts/config/trails/red-ci-known-failures.yaml` + `tests/test_red_ci_registry_file.py`.
 - **PR refs**: stage 1 (#5926), stage 2 (#5946), TrailSpec v1.1 contract schema base (#5963).
 - **Provenance**: designed by the advisor seat (gpt-5.6-sol @ xhigh, bridge task
   `registry-design-sol`, reply msg 5551, 2026-07-28), commissioned by the infra lane per the

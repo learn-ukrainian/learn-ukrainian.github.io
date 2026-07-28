@@ -115,7 +115,12 @@ def test_registry_file_validates_via_stage1_stage2_code_path() -> None:
 
 
 def test_registry_entries_expire_within_30_days() -> None:
-    """Operator decision: review_by must be within 30 days of added_at and reviewed_at."""
+    """Operator decision: review_by must be within 30 days of added_at and reviewed_at.
+
+    Forward guard-rail: the shipped registry has ``entries: []``, so the in-loop
+    assertions activate only once a real entry lands. Live coverage of this rule
+    today comes from the mutation-honest negatives below (_valid_sample_entry).
+    """
     data = _load_registry_data()
     horizon = timedelta(days=MAX_REVIEW_HORIZON_DAYS)
     for entry in data.get("entries", []):
@@ -135,7 +140,11 @@ def test_registry_entries_expire_within_30_days() -> None:
 
 
 def test_registry_entries_have_required_provenance() -> None:
-    """Every entry requires run reference + signature-receipt evidence."""
+    """Every entry requires run reference + signature-receipt evidence.
+
+    Forward guard-rail: assertions activate once a real entry lands (shipped
+    registry is empty); the mutation-honest negatives below carry live coverage.
+    """
     data = _load_registry_data()
     for entry in data.get("entries", []):
         evidence = entry.get("evidence", [])
@@ -154,6 +163,8 @@ def test_registry_rejects_expired_entry_in_copy(tmp_path: Path) -> None:
     expired = _valid_sample_entry(review_by="2000-01-01T00:00:00Z")
     data["entries"] = [*list(data.get("entries", [])), expired]
 
+    # Mutated copies are written as .json on purpose: _load_yaml_or_json dispatches
+    # on suffix, and the YAML path is exercised by the positive test on the real file.
     mutated_path = tmp_path / "registry-expired.json"
     mutated_path.write_text(json.dumps(data), encoding="utf-8")
 
