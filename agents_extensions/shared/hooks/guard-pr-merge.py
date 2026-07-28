@@ -789,11 +789,19 @@ def _owner_repo_from_url(url: str) -> str | None:
     return f"{m.group(1)}/{m.group(2)}" if m else None
 
 
+def _canonical_pr_number(value: object) -> str | None:
+    """Return GitHub's positive integer PR number in canonical decimal form."""
+    if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+        return None
+    return str(value)
+
+
 def _pr_meta(pr: str, repo: str | None = None, cwd: str | None = None) -> dict | None:
-    """`{isDraft, baseRefName, headRefOid, url}` for the PR, or None if undeterminable.
+    """Read the fields that identify the exact PR and its current body.
 
     A payload without a boolean `isDraft` is undeterminable, not "not a draft" — `{}` or
-    `isDraft: null` must never read as a green light.
+    `isDraft: null` must never read as a green light.  The receipt task binding is
+    derived only from GitHub's integer ``number``; PR-body text is not an authority input.
     """
     try:
         out = subprocess.run(
@@ -804,7 +812,7 @@ def _pr_meta(pr: str, repo: str | None = None, cwd: str | None = None) -> dict |
                 pr,
                 *_repo_args(repo),
                 "--json",
-                "isDraft,baseRefName,headRefOid,url",
+                "isDraft,baseRefName,body,headRefOid,number,url",
             ],
             capture_output=True,
             env=_gh_env(),
@@ -820,7 +828,12 @@ def _pr_meta(pr: str, repo: str | None = None, cwd: str | None = None) -> dict |
         data = json.loads(_decolorize(out.stdout or "").strip() or "{}")
     except json.JSONDecodeError:
         return None
-    if not isinstance(data, dict) or not isinstance(data.get("isDraft"), bool):
+    if (
+        not isinstance(data, dict)
+        or not isinstance(data.get("isDraft"), bool)
+        or not isinstance(data.get("body"), str)
+        or _canonical_pr_number(data.get("number")) is None
+    ):
         return None
     return data
 
@@ -958,13 +971,19 @@ def _pr_changed_paths(pr: str, repo: str | None = None, cwd: str | None = None) 
 
 
 def _rail_path_decision(pr: str, meta: dict, repo: str | None, cwd: str | None):
-    """Delegate merge-path authorization to the single shared P6 module."""
+    """Authoritatively resolve a PR-body locator through the shared P6 module."""
     head_sha = meta.get("headRefOid")
     if not isinstance(head_sha, str):
-        return None, "could not verify the PR head SHA for rail authorization"
+        return None, "could not verify the PR head SHA for rail approval"
+    pr_number = _canonical_pr_number(meta.get("number"))
+    if pr_number is None:
+        return None, "could not verify the canonical PR number for rail approval"
+    body = meta.get("body")
+    if not isinstance(body, str):
+        return None, "could not read the live PR body for rail approval"
     paths = _pr_changed_paths(pr, repo, cwd)
     if paths is None:
-        return None, "could not read changed paths for rail authorization"
+        return None, "could not read changed paths for rail approval"
     try:
         rail_guard = _load_rail_path_guard()
     except Exception:
@@ -972,10 +991,31 @@ def _rail_path_decision(pr: str, meta: dict, repo: str | None, cwd: str | None):
     if rail_guard is None:
         return None, "the shared rail-path decision module is unavailable"
     try:
-        decision = rail_guard.decide_rail_path_mutation(
-            task_id=f"pr-{pr}",
+        rail_paths = rail_guard.rail_paths_from_candidates(paths)
+    except Exception:
+        return None, "the shared rail-path classifier is unreadable"
+    if not rail_paths:
+        return rail_guard.RailPathDecision(
+            rail_guard.RailPathDecisionKind.ALLOW,
+            "non_rail_paths",
+            (),
+        ), None
+    declaration = rail_guard.parse_rail_approval_declaration(body)
+    if not declaration.is_present or declaration.receipt_id is None:
+        return rail_guard.RailPathDecision(
+            rail_guard.RailPathDecisionKind.DENY,
+            declaration.reason,
+            rail_paths,
+        ), None
+    try:
+        decision = rail_guard.decide_rail_path_mutation_with_production_receipt(
+            # Only GitHub's canonical numeric PR ID binds the merge decision.  The
+            # body supplies the untrusted receipt locator, never a task identity.
+            task_id=f"pr-{pr_number}",
             candidate_paths=paths,
             head_sha=head_sha,
+            receipt_id=declaration.receipt_id,
+            path_binding=rail_guard.RailApprovalPathBinding.PR_DIFF_EXACT_SET,
         )
     except Exception:
         return None, "the shared rail-path decision is unreadable"

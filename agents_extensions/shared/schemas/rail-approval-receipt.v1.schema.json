@@ -16,9 +16,9 @@
     "owned_paths"
   ],
   "$defs": {
-    "opaque_id": {
+    "rail_approval_receipt_id": {
       "type": "string",
-      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+      "pattern": "^rail-approval-[0-9a-f]{32}$"
     },
     "head_sha": {
       "type": "string",
@@ -27,7 +27,7 @@
   },
   "properties": {
     "schema_version": {"const": "rail-approval-receipt.v1"},
-    "receipt_id": {"$ref": "#/$defs/opaque_id"},
+    "receipt_id": {"$ref": "#/$defs/rail_approval_receipt_id"},
     "issuer": {"enum": ["operator", "advisor"]},
     "issued_at": {"type": "string", "format": "date-time"},
     "expires_at": {"type": "string", "format": "date-time"},

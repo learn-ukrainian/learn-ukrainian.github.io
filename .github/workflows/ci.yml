@@ -24,6 +24,7 @@ permissions:
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, edited]
   merge_group:
   push:
     branches: [main]
@@ -665,13 +666,13 @@ jobs:
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore
 
   # ---------------------------------------------------------------------
-  # 5. rail-path — CI/PR enforcement for the narrow control-rail deny-list.
-  # This job intentionally calls the shared P6 module; changed-path discovery
-  # belongs to CI, while receipt/task/head/path authorization belongs nowhere
-  # else. A PR with a rail diff and no provisioned external receipt fails closed.
+  # 5. rail-path — CI declaration check for the narrow control-rail deny-list.
+  # CI can prove only that a rail PR body has one syntactically exact receipt
+  # locator. The locator is untrusted: the merge guard re-fetches it and makes
+  # the authoritative task/head/path decision.
   # ---------------------------------------------------------------------
   rail-path:
-    name: Rail path authorization
+    name: Rail approval declaration
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -686,50 +687,54 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install rail-path check dependency
+      - name: Install rail approval declaration dependency
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
           .venv/bin/python -m pip install jsonschema
 
-      - name: Enforce rail-path authorization
+      - name: Rail approval declaration
         env:
           RAIL_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
           RAIL_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-          RAIL_TASK_ID: pr-${{ github.event.pull_request.number || github.sha }}
+          RAIL_PR_BODY: ${{ github.event.pull_request.body || '' }}
         run: |
           .venv/bin/python - <<'PY'
           import os
           import subprocess
           import sys
 
-          from scripts.orchestration.rail_path_guard import decide_rail_path_mutation
+          from scripts.orchestration.rail_path_guard import inspect_rail_approval_declaration
 
           base = os.environ.get("RAIL_BASE_SHA") or "origin/main"
           head = os.environ["RAIL_HEAD_SHA"]
-          task_id = os.environ["RAIL_TASK_ID"]
           changed = subprocess.run(
               ["git", "diff", "--name-only", "-z", "--diff-filter=ACDMRT", base, head],
               check=False,
               capture_output=True,
           )
           if changed.returncode != 0:
-              print("rail-path guard could not read the candidate diff", file=sys.stderr)
+              print("rail approval declaration could not read the candidate diff", file=sys.stderr)
               raise SystemExit(2)
-          decision = decide_rail_path_mutation(
-              task_id=task_id,
-              candidate_paths=[
-                  path.decode("utf-8", errors="surrogateescape")
-                  for path in changed.stdout.split(b"\0")
-                  if path
-              ],
-              head_sha=head,
-          )
-          print(f"rail-path decision={decision.kind} reason={decision.reason}")
-          if not decision.allowed:
+          try:
+              declaration = inspect_rail_approval_declaration(
+                  candidate_paths=[
+                      path.decode("utf-8", errors="surrogateescape")
+                      for path in changed.stdout.split(b"\0")
+                      if path
+                  ],
+                  body=os.environ.get("RAIL_PR_BODY", ""),
+              )
+          except Exception:
+              print("rail approval declaration could not classify the candidate diff", file=sys.stderr)
+              raise SystemExit(2)
+          print(f"rail approval declaration={declaration.kind} reason={declaration.reason}")
+          if not declaration.is_present and declaration.kind.value != "not_required":
               print(
-                  "rail-path authorization refused: "
-                  + ", ".join(decision.rail_paths),
+                  "rail approval declaration refused for: "
+                  + ", ".join(declaration.rail_paths)
+                  + "; the authoritative merge guard must re-fetch and validate "
+                    "a current receipt from the approved source",
                   file=sys.stderr,
               )
               raise SystemExit(2)

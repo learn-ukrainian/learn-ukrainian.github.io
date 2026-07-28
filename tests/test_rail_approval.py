@@ -16,6 +16,7 @@ NOW = datetime(2026, 7, 29, 12, 0, tzinfo=UTC)
 HEAD = "c" * 40
 TASK = "rail-p8-trail-migration"
 PATH = "scripts/config/trails/rb1.trail.yaml"
+RECEIPT_ID = "rail-approval-" + "f" * 32
 
 
 def _monitor_get(client: TestClient):
@@ -54,6 +55,7 @@ def test_operator_cli_issue_monitor_fetch_and_exact_binding(
     assert exit_code == 0
     issued = json.loads(capsys.readouterr().out)
     assert issued["issuer"] == "operator"
+    assert guard.RAIL_APPROVAL_RECEIPT_ID.fullmatch(issued["receipt_id"])
     assert registry.fetch(issued["receipt_id"]) == issued
 
     app = FastAPI()
@@ -119,7 +121,7 @@ def test_receipt_registry_refuses_overwriting_an_issued_receipt(tmp_path) -> Non
         issuer="advisor",
         ttl_hours=1,
         now=lambda: NOW,
-        receipt_id="rail-approval-fixture",
+        receipt_id=RECEIPT_ID,
     )
     registry.issue(receipt)
 

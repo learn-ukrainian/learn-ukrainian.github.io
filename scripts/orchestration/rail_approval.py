@@ -35,7 +35,7 @@ try:
     from .rail_path_guard import (
         APPROVED_ISSUERS,
         HEAD_SHA,
-        OPAQUE_RECEIPT_ID,
+        RAIL_APPROVAL_RECEIPT_ID,
         RailApprovalReceiptError,
         normalize_repository_path,
         validate_rail_approval_receipt_data,
@@ -44,7 +44,7 @@ except ImportError:  # pragma: no cover - direct script invocation
     from rail_path_guard import (  # type: ignore
         APPROVED_ISSUERS,
         HEAD_SHA,
-        OPAQUE_RECEIPT_ID,
+        RAIL_APPROVAL_RECEIPT_ID,
         RailApprovalReceiptError,
         normalize_repository_path,
         validate_rail_approval_receipt_data,
@@ -80,7 +80,7 @@ def _validate_store(payload: object) -> dict[str, dict[str, Any]]:
         raise RailApprovalStoreError("rail approval store receipts must be an object")
     normalized: dict[str, dict[str, Any]] = {}
     for receipt_id, receipt in receipts.items():
-        if not isinstance(receipt_id, str) or not OPAQUE_RECEIPT_ID.fullmatch(receipt_id):
+        if not isinstance(receipt_id, str) or not RAIL_APPROVAL_RECEIPT_ID.fullmatch(receipt_id):
             raise RailApprovalStoreError("rail approval store contains an invalid receipt ID")
         try:
             verified = validate_rail_approval_receipt_data(receipt)
@@ -149,7 +149,7 @@ class RailApprovalReceiptRegistry:
         self.path = Path(path)
 
     def fetch(self, receipt_id: str) -> dict[str, Any]:
-        if not OPAQUE_RECEIPT_ID.fullmatch(receipt_id):
+        if not RAIL_APPROVAL_RECEIPT_ID.fullmatch(receipt_id):
             raise RailApprovalStoreError("rail approval receipt ID is invalid")
         receipt = _read_store(self.path).get(receipt_id)
         if receipt is None:
@@ -201,7 +201,7 @@ def create_rail_approval_receipt(
     if len(set(normalized_paths)) != len(normalized_paths):
         raise RailApprovalStoreError("rail approval owned paths must be unique")
     generated_id = receipt_id or f"rail-approval-{uuid.uuid4().hex}"
-    if not OPAQUE_RECEIPT_ID.fullmatch(generated_id):
+    if not RAIL_APPROVAL_RECEIPT_ID.fullmatch(generated_id):
         raise RailApprovalStoreError("rail approval receipt ID is invalid")
     issued_at = now().astimezone(UTC)
     receipt = {

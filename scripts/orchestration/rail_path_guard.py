@@ -70,7 +70,16 @@ RAIL_PATH_PATTERNS = (
 
 APPROVED_RECEIPT_SOURCE_KINDS = frozenset({"api", "bridge"})
 APPROVED_ISSUERS = frozenset({"operator", "advisor"})
-OPAQUE_RECEIPT_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$")
+# This is deliberately narrower than a generic opaque identifier.  It is the
+# one receipt grammar shared by issuance, schema validation, the PR-body
+# declaration parser, and every production receipt fetch.
+RAIL_APPROVAL_RECEIPT_ID_PATTERN = r"rail-approval-[0-9a-f]{32}"
+RAIL_APPROVAL_RECEIPT_ID = re.compile(rf"^{RAIL_APPROVAL_RECEIPT_ID_PATTERN}$")
+RAIL_APPROVAL_TRAILER_LABEL = "Rail-Approval-Receipt"
+RAIL_APPROVAL_TRAILER_PREFIX = f"{RAIL_APPROVAL_TRAILER_LABEL}:"
+RAIL_APPROVAL_TRAILER = re.compile(
+    rf"^{re.escape(RAIL_APPROVAL_TRAILER_PREFIX)} ({RAIL_APPROVAL_RECEIPT_ID_PATTERN})$"
+)
 HEAD_SHA = re.compile(r"^[0-9a-f]{40}$")
 _RECEIPT_VALIDATOR: Draft202012Validator | None = None
 
@@ -80,6 +89,23 @@ class RailPathDecisionKind(StrEnum):
 
     ALLOW = "allow"
     DENY = "deny"
+
+
+class RailApprovalDeclarationKind(StrEnum):
+    """Typed status for CI's untrusted PR-body receipt locator."""
+
+    NOT_REQUIRED = "not_required"
+    PRESENT = "present"
+    MISSING = "missing"
+    MALFORMED = "malformed"
+    MULTIPLE = "multiple"
+
+
+class RailApprovalPathBinding(StrEnum):
+    """How a receipt's owned paths bind to the current candidate paths."""
+
+    MUTATION_CONTAINMENT = "mutation_containment"
+    PR_DIFF_EXACT_SET = "pr_diff_exact_set"
 
 
 @dataclass(frozen=True, slots=True)
@@ -93,6 +119,21 @@ class RailPathDecision:
     @property
     def allowed(self) -> bool:
         return self.kind is RailPathDecisionKind.ALLOW
+
+
+@dataclass(frozen=True, slots=True)
+class RailApprovalDeclaration:
+    """A declaration result; unlike ``RailPathDecision`` it grants no authority."""
+
+    kind: RailApprovalDeclarationKind
+    reason: str
+    rail_paths: tuple[str, ...]
+    receipt_id: str | None = None
+
+    @property
+    def is_present(self) -> bool:
+        """Whether one syntactically valid, still-untrusted locator was found."""
+        return self.kind is RailApprovalDeclarationKind.PRESENT
 
 
 class RailApprovalReceiptError(ValueError):
@@ -135,8 +176,8 @@ class MonitorRailApprovalReceiptStore:
         self._get = get or _monitor_api_get
 
     def fetch_rail_approval_receipt(self, receipt_id: str) -> Mapping[str, Any]:
-        if not OPAQUE_RECEIPT_ID.fullmatch(receipt_id):
-            raise RailApprovalReceiptError("rail approval receipt ID must be an opaque approved-source identifier")
+        if not RAIL_APPROVAL_RECEIPT_ID.fullmatch(receipt_id):
+            raise RailApprovalReceiptError("rail approval receipt ID has an invalid rail-approval shape")
         try:
             status, body, _headers = self._get(f"/api/rail-approvals/{receipt_id}")
         except RailApprovalReceiptError:
@@ -271,6 +312,83 @@ def is_rail_path(path: str) -> bool:
     return any(regex.fullmatch(path) is not None for regex in _RAIL_PATH_REGEXES)
 
 
+def rail_paths_from_candidates(candidate_paths: Sequence[str]) -> tuple[str, ...]:
+    """Normalize candidate paths and return the protected subset, fail-closed on bad input."""
+    normalized = tuple(normalize_repository_path(path) for path in candidate_paths)
+    return tuple(path for path in normalized if is_rail_path(path))
+
+
+def parse_rail_approval_declaration(body: object) -> RailApprovalDeclaration:
+    """Parse exactly one standalone PR-body receipt trailer as an untrusted locator.
+
+    This deliberately does not retrieve a receipt or make an authorization
+    decision.  CI can only attest that a syntactically exact locator is present;
+    the merge guard later re-fetches the referenced receipt from production and
+    applies all authority bindings.
+    """
+    if not isinstance(body, str):
+        return RailApprovalDeclaration(
+            RailApprovalDeclarationKind.MALFORMED,
+            "rail_approval_declaration_body_unreadable",
+            (),
+        )
+    occurrences = body.count(RAIL_APPROVAL_TRAILER_PREFIX)
+    if occurrences == 0:
+        return RailApprovalDeclaration(
+            RailApprovalDeclarationKind.MISSING,
+            "rail_approval_declaration_missing",
+            (),
+        )
+    if occurrences != 1:
+        return RailApprovalDeclaration(
+            RailApprovalDeclarationKind.MULTIPLE,
+            "rail_approval_declaration_multiple",
+            (),
+        )
+    match = next(
+        (
+            RAIL_APPROVAL_TRAILER.fullmatch(line)
+            for line in body.splitlines()
+            if RAIL_APPROVAL_TRAILER_PREFIX in line
+        ),
+        None,
+    )
+    if match is None:
+        return RailApprovalDeclaration(
+            RailApprovalDeclarationKind.MALFORMED,
+            "rail_approval_declaration_malformed",
+            (),
+        )
+    return RailApprovalDeclaration(
+        RailApprovalDeclarationKind.PRESENT,
+        "rail_approval_declaration_present",
+        (),
+        match.group(1),
+    )
+
+
+def inspect_rail_approval_declaration(
+    *,
+    candidate_paths: Sequence[str],
+    body: object,
+) -> RailApprovalDeclaration:
+    """Classify CI's diff and parse its PR-body declaration without deciding authority."""
+    rail_paths = rail_paths_from_candidates(candidate_paths)
+    if not rail_paths:
+        return RailApprovalDeclaration(
+            RailApprovalDeclarationKind.NOT_REQUIRED,
+            "non_rail_paths",
+            (),
+        )
+    declaration = parse_rail_approval_declaration(body)
+    return RailApprovalDeclaration(
+        declaration.kind,
+        declaration.reason,
+        rail_paths,
+        declaration.receipt_id,
+    )
+
+
 def validate_rail_approval_receipt_data(payload: Mapping[str, Any]) -> dict[str, Any]:
     """Schema-validate a remotely fetched P6 receipt before inspecting bindings."""
     if not isinstance(payload, Mapping):
@@ -324,9 +442,9 @@ class ApprovedRailApprovalReceiptResolver:
 
     def fetch(self, receipt_id: str) -> VerifiedRailApprovalReceipt:
         """Re-fetch a receipt; any unreadable store is an authorization failure."""
-        if not OPAQUE_RECEIPT_ID.fullmatch(receipt_id):
+        if not RAIL_APPROVAL_RECEIPT_ID.fullmatch(receipt_id):
             raise RailApprovalReceiptError(
-                "rail approval receipt ID must be an opaque approved-source identifier"
+                "rail approval receipt ID has an invalid rail-approval shape"
             )
         try:
             fetched = self.store.fetch_rail_approval_receipt(receipt_id)
@@ -379,9 +497,10 @@ def _receipt_authorizes(
     task_id: str,
     head_sha: str,
     rail_paths: tuple[str, ...],
+    path_binding: RailApprovalPathBinding,
     now: datetime,
 ) -> str | None:
-    """Return a refusal reason, or ``None`` only for an exact current binding."""
+    """Return a refusal reason, or ``None`` only for a current path binding."""
     try:
         payload = validate_rail_approval_receipt_data(receipt.payload)
     except RailApprovalReceiptError:
@@ -395,8 +514,15 @@ def _receipt_authorizes(
     if payload["head_sha"] != head_sha:
         return "rail_approval_head_mismatch"
     owned_paths = frozenset(payload["owned_paths"])
-    if any(path not in owned_paths for path in rail_paths):
-        return "rail_approval_path_mismatch"
+    rail_path_set = frozenset(rail_paths)
+    if path_binding is RailApprovalPathBinding.PR_DIFF_EXACT_SET:
+        if owned_paths != rail_path_set:
+            return "rail_approval_path_set_mismatch"
+    elif path_binding is RailApprovalPathBinding.MUTATION_CONTAINMENT:
+        if not rail_path_set.issubset(owned_paths):
+            return "rail_approval_path_mismatch"
+    else:  # Runtime callers do not get a permissive fallback for an unknown mode.
+        return "invalid_rail_approval_path_binding"
     return None
 
 
@@ -406,19 +532,23 @@ def decide_rail_path_mutation(
     candidate_paths: Sequence[str],
     head_sha: str,
     receipt: VerifiedRailApprovalReceipt | None = None,
+    path_binding: RailApprovalPathBinding = RailApprovalPathBinding.MUTATION_CONTAINMENT,
     now: Callable[[], datetime] = _utc_now,
 ) -> RailPathDecision:
-    """Allow non-rail paths; require an exact, current approval for rail paths.
+    """Allow non-rail paths; require a current approval for rail paths.
 
     ``candidate_paths`` are mutation targets, not ownership globs.  A malformed
     target is denied rather than guessed, while ordinary non-rail paths remain
-    unaffected by absent receipts.
+    unaffected by absent receipts.  Dispatch and checkout-write hooks check a
+    bounded mutation attempt, so containment permits an approved larger scope.
+    The merge guard passes ``PR_DIFF_EXACT_SET`` because it sees the complete
+    current rail diff: equality prevents a receipt for an earlier path set from
+    being reused after the PR's protected scope changes.
     """
     try:
-        normalized = tuple(normalize_repository_path(path) for path in candidate_paths)
+        rail_paths = rail_paths_from_candidates(candidate_paths)
     except RailApprovalReceiptError:
         return RailPathDecision(RailPathDecisionKind.DENY, "invalid_candidate_path", ())
-    rail_paths = tuple(path for path in normalized if is_rail_path(path))
     if not rail_paths:
         return RailPathDecision(RailPathDecisionKind.ALLOW, "non_rail_paths", ())
     if not isinstance(task_id, str) or not task_id.strip():
@@ -436,6 +566,7 @@ def decide_rail_path_mutation(
         task_id=task_id,
         head_sha=head_sha,
         rail_paths=rail_paths,
+        path_binding=path_binding,
         now=now(),
     )
     if reason is not None:
@@ -450,6 +581,7 @@ def decide_rail_path_mutation_with_production_receipt(
     head_sha: str,
     receipt_id: str | None,
     resolver: ApprovedRailApprovalReceiptResolver | None = None,
+    path_binding: RailApprovalPathBinding = RailApprovalPathBinding.MUTATION_CONTAINMENT,
     now: Callable[[], datetime] = _utc_now,
 ) -> RailPathDecision:
     """Resolve a receipt from the fixed source, then make the normal decision.
@@ -462,6 +594,7 @@ def decide_rail_path_mutation_with_production_receipt(
         task_id=task_id,
         candidate_paths=candidate_paths,
         head_sha=head_sha,
+        path_binding=path_binding,
         now=now,
     )
     if preliminary.allowed or preliminary.reason != "rail_approval_receipt_required":
@@ -482,5 +615,6 @@ def decide_rail_path_mutation_with_production_receipt(
         candidate_paths=candidate_paths,
         head_sha=head_sha,
         receipt=receipt,
+        path_binding=path_binding,
         now=now,
     )

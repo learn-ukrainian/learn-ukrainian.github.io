@@ -1552,9 +1552,9 @@ workflow:
   --ttl-hours 4
 ```
 
-The command prints the receipt JSON, including its opaque receipt ID, and writes
-immutable runtime state under `batch_state/`; that state is served only by
-Monitor. A write dispatch passes the opaque ID with
+The command prints the receipt JSON, including an ID shaped exactly as
+`rail-approval-<32 lowercase hex>`, and writes immutable runtime state under
+`batch_state/`; that state is served only by Monitor. A write dispatch passes the ID with
 `--rail-approval-receipt <id>` and re-fetches it through Monitor before it is
 admitted. It also passes the reference to the worker hook, which repeats the
 source fetch and exact task/head/path check.
@@ -1564,6 +1564,16 @@ bootstrap may inject a separately provisioned bridge source; it must identify
 as `source_kind="bridge"` and is subject to the same schema and exact-binding
 checks. There is no fallback to a local file, an arbitrary URL, or a caller-
 selected environment source; an unavailable source denies the rail mutation.
+
+For a rail-path pull request, CI checks only one standalone PR-body declaration:
+`Rail-Approval-Receipt: rail-approval-<32 lowercase hex>`. It is an untrusted
+locator, not authorization. The merge guard derives `task_id` as `pr-<GitHub PR
+number>`, re-fetches that receipt through Monitor, and applies the authoritative
+task/head/path decision. Dispatch and checkout-write layers authorize a bounded
+mutation attempt, so their receipt scope may contain that attempt. The merge
+guard sees the complete current rail diff instead and requires the receipt's
+`owned_paths` to equal that exact set; a new head or rail-path set therefore
+requires a new receipt.
 
 ## Build Events — `/api/build/events/`
 
