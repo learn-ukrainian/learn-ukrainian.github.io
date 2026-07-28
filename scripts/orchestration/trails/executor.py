@@ -44,10 +44,20 @@ from .models import (
 from .store import TrailStore, canonical_json, digest_json, utc_now
 
 _OUTCOME_TOKEN = re.compile(r"^[A-Za-z][A-Za-z0-9_.:-]*$")
+_AUTHORIZATION_REDACTION_PATTERN = re.compile(
+    r"(?i)(authorization\s*[:=]\s*(?:bearer\s+)?)\S+"
+)
+_GITHUB_TOKEN_REDACTION_PATTERN = re.compile(
+    r"(?i)\b(github_pat_[A-Za-z0-9_]+|gh[pousr]_[A-Za-z0-9]+)\b"
+)
+_SECRET_ASSIGNMENT_REDACTION_PATTERN = re.compile(
+    r"(?i)((?:[\"'])?\b(?:password|passwd|token|secret|api[_-]?key)\b"
+    r"(?:[\"'])?\s*[:=]\s*)(?:\"[^\"\r\n]*\"|'[^'\r\n]*'|[^,\r\n\"']+)"
+)
 _REDACTION_PATTERNS = (
-    re.compile(r"(?i)(authorization\s*[:=]\s*(?:bearer\s+)?)\S+"),
-    re.compile(r"(?i)\b(github_pat_[A-Za-z0-9_]+|gh[pousr]_[A-Za-z0-9]+)\b"),
-    re.compile(r"(?i)\b(password|passwd|token|secret|api[_-]?key)\s*[:=]\s*\S+"),
+    _AUTHORIZATION_REDACTION_PATTERN,
+    _GITHUB_TOKEN_REDACTION_PATTERN,
+    _SECRET_ASSIGNMENT_REDACTION_PATTERN,
 )
 _MAX_RECEIPT_OUTPUT = 8192
 
@@ -122,10 +132,11 @@ def redact_and_bound_output(value: str, *, limit: int = _MAX_RECEIPT_OUTPUT) -> 
     """Redact credential-shaped output before producing a bounded receipt digest."""
     redacted = value
     for pattern in _REDACTION_PATTERNS:
-        if pattern.pattern.startswith("(?i)(authorization"):
+        if (
+            pattern is _AUTHORIZATION_REDACTION_PATTERN
+            or pattern is _SECRET_ASSIGNMENT_REDACTION_PATTERN
+        ):
             redacted = pattern.sub(r"\1[REDACTED]", redacted)
-        elif pattern.pattern.startswith("(?i)\\b(password"):
-            redacted = pattern.sub(lambda match: f"{match.group(1)}=[REDACTED]", redacted)
         else:
             redacted = pattern.sub("[REDACTED]", redacted)
     if len(redacted) > limit:
@@ -979,8 +990,13 @@ class TrailExecutor:
         if run.state == "terminal" and not saw_terminal:
             raise ReceiptChainError("terminal run has no terminal StepReceipt")
         if run.state == "parked" and not saw_stop and invocations:
-            # A blocked_on parking has no invocation and remains valid below.
-            raise ReceiptChainError("parked run has no STOP/unknown receipt evidence")
+            parked_step = (
+                self._find_step(run, run.cursor_step_id)
+                if run.cursor_step_id is not None
+                else None
+            )
+            if parked_step is None or parked_step.get("blocked_on") is None:
+                raise ReceiptChainError("parked run has no STOP/unknown receipt evidence")
         return {
             "inspection_only": False,
             "invocations": len(invocations),

@@ -323,6 +323,23 @@ def test_receipt_output_is_bounded_redacted_and_never_stores_raw_secret(tmp_path
     ).hexdigest()
 
 
+@pytest.mark.parametrize(
+    ("output", "expected"),
+    [
+        ("Authorization: Bearer one-word", "Authorization: Bearer [REDACTED]"),
+        ("ghp_exampletoken", "[REDACTED]"),
+        ("token=single-word", "token=[REDACTED]"),
+        ('token = "two words"', "token = [REDACTED]"),
+        ("api_key: 'spaced value'", "api_key: [REDACTED]"),
+        ('{"password": "a b c"}', '{"password": [REDACTED]}'),
+    ],
+)
+def test_redaction_covers_quoted_or_whitespace_containing_secret_values(
+    output: str, expected: str
+) -> None:
+    assert redact_and_bound_output(output) == expected
+
+
 @pytest.mark.parametrize("multiple", [False, True])
 def test_zero_and_multiple_predicate_matches_park_stop_unknown(
     tmp_path: Path, multiple: bool
@@ -387,6 +404,46 @@ def test_blocked_step_atomically_parks_and_creates_summon(tmp_path: Path) -> Non
     assert result.state == "parked"
     assert len(summons) == 1
     assert summons[0]["state"] == "blocked"
+
+
+def test_advanced_chain_can_park_on_blocked_step_and_remain_valid_for_close(
+    tmp_path: Path,
+) -> None:
+    blocked_on = {
+        "id": "operator-approval",
+        "reason": "approval is required",
+        "stop_code": "STOP-unknown",
+    }
+    trail = _trail()
+    start_step = trail["steps"][0]
+    start_step["transitions"]["accepted"]["target"] = "approval"
+    blocked_step = {
+        **start_step,
+        "step_id": "approval",
+        "intent": "wait for an operator approval",
+        "blocked_on": blocked_on,
+        "transitions": {
+            "accepted": {
+                **start_step["transitions"]["accepted"],
+                "target": "done",
+            }
+        },
+    }
+    trail["steps"].append(blocked_step)
+    executor = _executor(tmp_path)
+    run_id = _begin(executor, _write_trail(tmp_path, trail))
+
+    advanced = executor.step(run_id=run_id, expected_step="start")
+    parked = executor.step(run_id=run_id, expected_step="approval")
+    verified = executor.verify_chain(run_id=run_id)
+    closed = executor.close(run_id=run_id)
+
+    assert advanced.outcome == "advanced"
+    assert parked.exit_class == ExitClass.BLOCKED_PARKED
+    assert verified.exit_class == ExitClass.OK
+    assert verified.outcome == "chain_verified"
+    assert closed.exit_class == ExitClass.INVALID
+    assert closed.outcome == "closure_unavailable"
 
 
 def test_v1_is_inspection_only_and_execution_or_closure_is_refused(tmp_path: Path) -> None:
