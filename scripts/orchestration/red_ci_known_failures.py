@@ -28,6 +28,19 @@ class RedCIKnownFailuresValidationError(Exception):
     """Raised when red-CI known-failures registry or signature receipt validation fails."""
 
 
+class _StringTimestampSafeLoader(yaml.SafeLoader):
+    """SafeLoader minus implicit timestamp coercion (codex F001): PyYAML turns
+    unquoted ISO-8601 scalars into datetime objects, which the string-typed
+    schema then rejects — a normal unquoted YAML registry would be unusable.
+    Timestamps stay strings; _parse_iso_instant owns the parsing."""
+
+
+_StringTimestampSafeLoader.yaml_implicit_resolvers = {
+    key: [(tag, regexp) for tag, regexp in resolvers if tag != "tag:yaml.org,2002:timestamp"]
+    for key, resolvers in yaml.SafeLoader.yaml_implicit_resolvers.items()
+}
+
+
 def _load_yaml_or_json(path: Path) -> dict[str, Any]:
     if not path.is_file():
         raise RedCIKnownFailuresValidationError(f"File not found: {path}")
@@ -36,7 +49,7 @@ def _load_yaml_or_json(path: Path) -> dict[str, Any]:
         data = (
             json.loads(content)
             if path.suffix == ".json"
-            else yaml.safe_load(content)
+            else yaml.load(content, Loader=_StringTimestampSafeLoader)
         )
     except Exception as exc:
         raise RedCIKnownFailuresValidationError(f"Parse error in {path}: {exc}") from exc

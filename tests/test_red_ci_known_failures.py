@@ -6,6 +6,7 @@ import json
 from typing import Any
 
 import pytest
+import yaml
 
 from scripts.orchestration.red_ci_known_failures import (
     RedCIKnownFailuresValidationError,
@@ -207,6 +208,23 @@ def test_negative_retry_once_with_stop_code(tmp_path) -> None:
         load_and_validate_registry(reg_path2, as_of="2026-07-28T12:00:00Z")
 
     assert "Registry schema violation" in str(exc_info2.value)
+
+
+def test_yaml_unquoted_timestamps_validate(tmp_path) -> None:
+    """codex F001: a normal YAML registry with UNQUOTED ISO timestamps must
+    validate — PyYAML's implicit timestamp coercion would hand datetime objects
+    to the string-typed schema and reject the documented format."""
+    data = _get_valid_registry_data()
+    reg_path = tmp_path / "unquoted.yaml"
+    yaml_text = yaml.safe_dump(data, default_flow_style=False)
+    # safe_dump quotes nothing datetime-like here (values are strings), so
+    # strip quotes around timestamps to force the unquoted form PyYAML coerces.
+    yaml_text = yaml_text.replace("'2026-", "2026-").replace("Z'", "Z")
+    assert "'" not in yaml_text.split("added_at:")[1].splitlines()[0]
+    reg_path.write_text(yaml_text, encoding="utf-8")
+
+    res = load_and_validate_registry(reg_path, as_of="2026-07-28T12:00:00Z")
+    assert res["ok"] is True
 
 
 def test_negative_malformed_regex(tmp_path) -> None:
