@@ -457,6 +457,23 @@ def _meaning_label_is_phrase(label: str) -> bool:
     )
 
 
+def _is_english_learner_gloss(label: str) -> bool:
+    clean = label.strip()
+    if not clean:
+        return False
+    latin_letters = 0
+    cyrillic_letters = 0
+    for char in clean:
+        if not unicodedata.category(char).startswith("L"):
+            continue
+        name = unicodedata.name(char, "")
+        if "LATIN" in name:
+            latin_letters += 1
+        elif "CYRILLIC" in name:
+            cyrillic_letters += 1
+    return latin_letters > cyrillic_letters
+
+
 def _romanize_ukrainian_plain(value: str) -> str:
     return "".join(_UKRAINIAN_ROMANIZATION.get(char, char) for char in value.casefold())
 
@@ -472,6 +489,8 @@ def _is_transliteration_only_gloss(gloss_clean: str, lemma_plain: str) -> bool:
 
 def _meaning_mc_eligible(gloss_clean: str, lemma_plain: str, pos: str | None) -> bool:
     if not gloss_clean or len(gloss_clean) > MEANING_MC_MAX_CHARS:
+        return False
+    if not _is_english_learner_gloss(gloss_clean):
         return False
     if _meaning_label_is_phrase(gloss_clean):
         return False

@@ -667,6 +667,14 @@ function glossHeadword(entry: PracticeLexeme): string {
   return glossLabel(entry).toLocaleLowerCase('en-US').split(/\s+/)[0] ?? '';
 }
 
+export function isEnglishLearnerGloss(label: string): boolean {
+  const clean = label.trim();
+  if (!clean) return false;
+  const latinLetters = clean.match(/\p{Script=Latin}/gu)?.length ?? 0;
+  const cyrillicLetters = clean.match(/\p{Script=Cyrillic}/gu)?.length ?? 0;
+  return latinLetters > cyrillicLetters;
+}
+
 function isPhraseGloss(label: string): boolean {
   const clean = label.replace(/\s+/g, ' ').trim();
   // Count alphanumeric tokens (ignoring standalone punctuation) to match the
@@ -683,11 +691,12 @@ function isPhraseGloss(label: string): boolean {
   );
 }
 
-function isMeaningMcEligible(entry: PracticeLexeme): boolean {
+export function isMeaningMcEligible(entry: PracticeLexeme): boolean {
   const label = glossLabel(entry);
   if (entry.meaningMcEligible === false) return false;
   // Judge the CLEAN first-sense label, not the raw multi-sense gloss: a word like
   // "dog; hound" has a perfectly concise glossClean ("dog") and must stay eligible.
+  if (!isEnglishLearnerGloss(label)) return false;
   if (isPhraseGloss(label)) return false;
   if (FUNCTION_GLOSS_HEADWORDS.has(glossHeadword(entry))) return false;
   if (entry.pos && FUNCTION_POS.has(entry.pos.toLocaleLowerCase('en-US'))) return false;
@@ -821,7 +830,9 @@ function normalizeInitialDeck(initialDeck?: PracticeDeckData | PracticeLexeme[])
     const legacy = entry as PracticeLexeme & { slug?: string; example?: string | null };
     const lemmaId = legacy.lemmaId ?? legacy.slug ?? legacy.lemma;
     const glossClean = legacy.glossClean ?? cleanGloss(legacy.gloss);
-    const meaningMcEligible = legacy.meaningMcEligible ?? !isPhraseGloss(glossClean);
+    const meaningMcEligible = legacy.meaningMcEligible ?? (
+      isEnglishLearnerGloss(glossClean) && !isPhraseGloss(glossClean)
+    );
     return {
       ...entry,
       lemmaId,
@@ -962,7 +973,9 @@ function matchingPairs(selection: PracticeSelection, deck: PracticeDeckData, lea
   if (!isMeaningMcEligible(selection.lemma)) return [];
   const distractors = meaningDistractors(selection.lemma, deck, 5);
   if (distractors.length < 2) return [];
-  return [selection.lemma, ...distractors].map((entry) => ({
+  const entries = [selection.lemma, ...distractors];
+  if (!entries.every(isMeaningMcEligible)) return [];
+  return entries.map((entry) => ({
     left: displayPracticeForm(entry.lemma, learnerLevel),
     right: glossLabel(entry),
     lemmaId: entry.lemmaId,
