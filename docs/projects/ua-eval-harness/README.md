@@ -221,6 +221,22 @@ The Ukrainian-first
 disclosure, train-fixture separation, prohibited product/training reuse, and
 semantic version-bump rules. Frozen bytes are never edited in place.
 
+## Public v0
+
+The stranger-runnable release is documented by the Ukrainian-first
+[data card](DATA_CARD.uk.md), bilingual
+[reproduction guide](REPRODUCING.md), and complete
+[third-party notices](THIRD_PARTY_NOTICES.md). A clean checkout can reproduce
+all frozen reports without provider credentials:
+
+```bash
+uv venv --python 3.12.8
+.venv/bin/python scripts/projects/ua_eval_harness/smoke_public_v0.py
+```
+
+The smoke verifies the release freeze, validates each complete saved-response
+run, re-scores all three baselines, and requires exact report-object equality.
+
 ## Ownership and data boundaries
 
 Four lanes cooperate but retain separate ownership:
