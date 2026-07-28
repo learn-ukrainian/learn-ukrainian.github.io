@@ -38,9 +38,20 @@ while (($#)); do
       PROMPT="${2:?--prompt requires a value}"
       shift 2
       ;;
-    --mcp-config|--allowedTools|--agent|--max-budget-usd|--effort)
+    --mcp-config|--allowedTools|--tools|--agent|--max-budget-usd|--effort)
       FORWARD_ARGS+=("$1" "${2:?$1 requires a value}")
       shift 2
+      ;;
+    --setting-sources)
+      # An explicit empty value is the isolation profile's way to suppress
+      # ambient user/project settings, so distinguish an empty argument from
+      # an omitted one here.
+      FORWARD_ARGS+=("$1" "${2?--setting-sources requires a value}")
+      shift 2
+      ;;
+    --strict-mcp-config)
+      FORWARD_ARGS+=("$1")
+      shift
       ;;
     -h|--help)
       usage

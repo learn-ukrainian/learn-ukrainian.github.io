@@ -25,6 +25,7 @@ from scripts.review.model_catalog import kimi_model_aliases
 
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
+from ..trail_isolation import TrailIsolationError, trail_isolation_requested
 from .base import InvocationPlan
 from .kimicc import KimiccHarness
 
@@ -90,6 +91,10 @@ class KimiAdapter:
     ) -> InvocationPlan:
         config = tool_config or {}
         harness = config.get("harness")
+        if trail_isolation_requested(config) and harness != "kimicc":
+            raise TrailIsolationError(
+                "trail isolation refused for native Kimi: native Kimi cannot prove tool admission; use KimiCC"
+            )
         if harness == "kimicc":
             return KimiccHarness().build_invocation(
                 prompt=prompt,

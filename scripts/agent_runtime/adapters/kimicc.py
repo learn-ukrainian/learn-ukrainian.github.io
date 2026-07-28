@@ -16,11 +16,41 @@ from typing import Any
 from scripts.review.model_catalog import ModelCatalogError, resolve_kimi_model
 
 from ..result import ParseResult
+from ..trail_isolation import (
+    TrailIsolationError,
+    assert_trail_isolation_config,
+    trail_isolation_requested,
+)
 from .base import InvocationPlan
 from .claude import ClaudeAdapter, _default_claude_bin, _ensure_supported_claude_cli_version
 
 _HEADLESS_WRAPPER = Path(__file__).resolve().parents[1] / "kimicc_headless.sh"
-_SUPPORTED_TOOL_CONFIG_KEYS = frozenset({"agent", "allowed_tools", "max_budget_usd", "mcp_config_path"})
+_SUPPORTED_TOOL_CONFIG_KEYS = frozenset(
+    {
+        "agent",
+        "allowed_tools",
+        "max_budget_usd",
+        "mcp_config_path",
+        "tools",
+        "strict_mcp_config",
+        "setting_sources",
+        "trail_isolation",
+        "trail_isolation_cwd",
+        "runtime_route",
+    }
+)
+_TRAIL_ISOLATION_TOOL_CONFIG_KEYS = frozenset(
+    {
+        "allowed_tools",
+        "harness",
+        "mcp_config_path",
+        "setting_sources",
+        "strict_mcp_config",
+        "tools",
+        "trail_isolation",
+        "trail_isolation_cwd",
+    }
+)
 
 
 class KimiccHarness:
@@ -58,6 +88,16 @@ class KimiccHarness:
         tc: dict[str, Any] = tool_config or {}
         if tc.get("review_isolation"):
             raise ValueError("KimiccHarness does not support sealed review isolation")
+        trail_isolation = trail_isolation_requested(tc)
+        if trail_isolation:
+            if mode != "read-only":
+                raise TrailIsolationError("KimiCC trail isolation requires mode='read-only'")
+            assert_trail_isolation_config(tc, profile="kimicc")
+            unsupported = sorted(set(tc) - _TRAIL_ISOLATION_TOOL_CONFIG_KEYS)
+            if unsupported:
+                raise TrailIsolationError(
+                    f"KimiCC trail isolation refuses incompatible tool_config keys: {unsupported}"
+                )
         unsupported = sorted(set(tc) - _SUPPORTED_TOOL_CONFIG_KEYS - {"harness"})
         if unsupported:
             raise ValueError(f"KimiccHarness: unsupported tool_config keys: {unsupported}")
@@ -78,7 +118,21 @@ class KimiccHarness:
             "--prompt",
             prompt,
         ]
-        if isinstance(tc.get("mcp_config_path"), str) and tc.get("allowed_tools"):
+        if trail_isolation:
+            cmd.extend(
+                [
+                    "--mcp-config",
+                    str(tc["mcp_config_path"]),
+                    "--allowedTools",
+                    str(tc["allowed_tools"]),
+                    "--tools",
+                    str(tc["tools"]),
+                    "--strict-mcp-config",
+                    "--setting-sources",
+                    str(tc["setting_sources"]),
+                ]
+            )
+        elif isinstance(tc.get("mcp_config_path"), str) and tc.get("allowed_tools"):
             cmd.extend(["--mcp-config", str(tc["mcp_config_path"]), "--allowedTools", str(tc["allowed_tools"])])
         if tc.get("agent"):
             cmd.extend(["--agent", str(tc["agent"])])
