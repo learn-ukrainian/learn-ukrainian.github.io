@@ -210,6 +210,22 @@ def test_negative_retry_once_with_stop_code(tmp_path) -> None:
     assert "Registry schema violation" in str(exc_info2.value)
 
 
+def test_negative_naive_datetime_as_of(tmp_path) -> None:
+    """codex F001: a NAIVE datetime as_of must be rejected like naive strings —
+    silently assuming UTC evaluates expiry at the wrong instant for local-time
+    callers."""
+    from datetime import datetime as _dt
+
+    data = _get_valid_registry_data()
+    reg_path = tmp_path / "naive_asof.json"
+    reg_path.write_text(json.dumps(data), encoding="utf-8")
+
+    with pytest.raises(RedCIKnownFailuresValidationError) as exc_info:
+        load_and_validate_registry(reg_path, as_of=_dt(2026, 7, 28, 12, 0, 0))
+
+    assert "timezone-aware" in str(exc_info.value)
+
+
 def test_yaml_unquoted_timestamps_validate(tmp_path) -> None:
     """codex F001: a normal YAML registry with UNQUOTED ISO timestamps must
     validate — PyYAML's implicit timestamp coercion would hand datetime objects

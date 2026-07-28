@@ -74,7 +74,9 @@ def _parse_iso_instant(val: str | datetime) -> datetime:
     """Parse string or datetime to timezone-aware instant."""
     if isinstance(val, datetime):
         if val.tzinfo is None:
-            return val.replace(tzinfo=UTC)
+            raise RedCIKnownFailuresValidationError(
+                f"Timestamp '{val}' must be timezone-aware"
+            )
         return val
     if not isinstance(val, str):
         raise RedCIKnownFailuresValidationError(f"Invalid timestamp type: {type(val)}")
