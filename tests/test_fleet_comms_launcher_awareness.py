@@ -8,13 +8,12 @@ REPO = Path(__file__).resolve().parents[1]
 HELPER = REPO / "scripts/lib/fleet_comms_cold_start.sh"
 RULE = REPO / "agents_extensions/shared/rules/fleet-comms-coordination.md"
 
-# Epic-capable standalone TUIs / UIs that cold-start drivers.
+# Public wrappers dispatch driver lifecycle through one shared core.
 LAUNCHERS = (
-    "start-grok.sh",
-    "start-gemini.sh",
-    "start-kimi.sh",
-    "start-claude.sh",
-    "start-codex.sh",
+    "start-grok-driver.sh",
+    "start-gemini-driver.sh",
+    "start-claude-driver.sh",
+    "start-codex-driver.sh",
 )
 
 
@@ -25,9 +24,9 @@ def test_shared_fleet_comms_rule_and_helper_exist() -> None:
     assert "review-pr" in body
     assert "dual_write" in body or "dual-write" in body
     assert "competing design" in body
-    # Post-#5632 Sol alignment (Opus drive-epic skill).
+    # Post-#5632 Sol alignment (drive-epic skill).
     assert "drive-epic" in body
-    assert "start-" in body and "drive.sh" in body
+    assert "-driver.sh" in body
     assert "authoritative" in body.lower()
     assert "not implemented" in body.lower() or "shadow/mirror" in body.lower()
     assert "PR_NUMBER" in body or "PR number" in body.lower()
@@ -41,23 +40,20 @@ def test_shared_fleet_comms_rule_and_helper_exist() -> None:
 
 
 def test_epic_launchers_source_shared_helper_or_rule_pointer() -> None:
+    core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
+    assert "fleet_comms_cold_start.sh" in core
     for name in LAUNCHERS:
         path = REPO / name
         assert path.is_file(), f"missing launcher {name}"
         text = path.read_text(encoding="utf-8")
-        assert "fleet_comms_cold_start.sh" in text, (
-            f"{name} must source scripts/lib/fleet_comms_cold_start.sh "
-            "(or at least reference it for dual-aware banners)"
-        )
+        assert "launcher_core.sh" in text
 
 
 def test_prompt_injecting_launchers_include_plane_and_cf_surfaces() -> None:
-    """Grok / Gemini / Kimi inject free-text cold prompts — must mention dual-aware surfaces."""
-    for name in ("start-grok.sh", "start-gemini.sh", "start-kimi.sh"):
-        text = (REPO / name).read_text(encoding="utf-8")
-        # Clause comes from shared helper function name or inlined fallback.
-        assert "fleet_comms_cold_clause" in text or "plane-status" in text
-        assert "fleet-comms-coordination" in text or "fleet_comms_cold_clause" in text
+    """The shared driver prompt must include dual-aware fleet-comms surfaces."""
+    text = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
+    assert "fleet_comms_cold_clause" in text or "plane-status" in text
+    assert "fleet-comms" in text
 
 
 def test_agents_md_carries_fleet_comms_mid_cutover_digest() -> None:
@@ -70,16 +66,17 @@ def test_agents_md_carries_fleet_comms_mid_cutover_digest() -> None:
     assert "authoritative" in body.lower()
 
 
-def test_drive_wrappers_exist_and_point_at_base_launchers() -> None:
-    """#5632 per-model drive wrappers must remain thin peers of start-*.sh."""
-    for name, needle in (
-        ("start-grok-drive.sh", "start-grok.sh"),
-        ("start-gemini-drive.sh", "start-gemini.sh"),
-        ("start-sonnet-drive.sh", "start-claude.sh"),
-        ("start-opus-drive.sh", "start-claude.sh"),
+def test_driver_wrappers_use_the_shared_core() -> None:
+    """The consolidated drivers bind fleet-comms through launcher_core."""
+    for name in (
+        "start-grok-driver.sh",
+        "start-gemini-driver.sh",
+        "start-claude-driver.sh",
+        "start-codex-driver.sh",
     ):
         path = REPO / name
-        assert path.is_file(), f"missing {name} from #5632"
+        assert path.is_file(), f"missing {name}"
         text = path.read_text(encoding="utf-8")
-        assert needle in text
-        assert "drive-epic" in text or "epic-orchestrator-roster" in text
+        assert "launcher_core.sh" in text
+    core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
+    assert "drive-epic" in core

@@ -1,9 +1,8 @@
 # Launcher-estate consolidation — design (Sol memo, 2026-07-28)
 
-> **Status: OPERATOR APPROVAL PENDING.** Tracking issue: #5935. This document records the
-> advisor design memo (gpt-5.6-sol, xhigh; bridge task `launcher-consolidation-sol`,
-> reply 5683, 2026-07-28) verbatim. No build work starts until the operator approves the
-> target file list and answers the three explicit choices at the bottom of the memo.
+> **Status: OPERATOR APPROVED (2026-07-28).** Tracking issue: #5935. This document records
+> the advisor design memo (gpt-5.6-sol, xhigh; bridge task `launcher-consolidation-sol`,
+> reply 5683, 2026-07-28), including the operator's D1–D3 overrides.
 >
 > Sequencing prerequisite (per the memo §6): #5931 (glmcc launcher) and the Kimi
 > shared-route work (#5937, merged) land first; #5932 stays separate.
@@ -29,13 +28,9 @@ Ship these ten files now:
 
 Add `start-kimi-driver.sh` and `start-glm-driver.sh` only when their T4 certification is machine-recorded.
 
-Remove:
-
-- `start-claudex.sh`
-- `start-kimicc.sh`
-- `start-glmcc.sh`
-- All `start-*-drive.sh`
-- Specifically the misleading `start-opus-drive.sh`, which currently pins Fable rather than Opus
+Remove the retired harness-specific public wrappers and the prior `-drive`
+wrapper family. The atomic cutover contract test owns the exact absence list so
+this design remains forward-looking rather than preserving obsolete commands.
 
 ### Verdicts
 
@@ -48,7 +43,11 @@ Remove:
 
 2. Driver naming: hard rename to `-driver`; remove `-drive`.
 
-   Fold Sonnet/Fable into `start-claude-driver.sh --model sonnet|fable`. Default Sonnet for routine driving; Fable explicit/summoned. Reject Opus as a driver because current policy says it is not an orchestrator seat. Per-SKU scripts would recreate the same explosion on every model rotation.
+   Fold Sonnet/Fable into `start-claude-driver.sh --model claude-sonnet-5|claude-fable-5`.
+   Operator decision D1 pins Fable as the default; Sonnet remains an explicit
+   routine alternate. Reject Opus as a driver because current policy says it is
+   not an orchestrator seat. Per-SKU scripts would recreate the same explosion
+   on every model rotation.
 
 3. Shared core: use one lifecycle core, not one auth monolith.
 
@@ -92,6 +91,9 @@ Remove:
 
 ### Explicit operator choices required
 
-- Resolve the current authority drift: roster prose says Sonnet is the default Anthropic driver, while `model_catalog.orchestrator_seats` pins Fable. My recommendation is Sonnet default, Fable summoned/allowed.
-- Decide whether ambient `ANTHROPIC_AUTH_TOKEN` is ever allowed for Kimi. Recommendation: deny; explicit Kimi credentials or OAuth only.
-- Choose between a bounded exception to the `<20 files` PR rule or a two-PR migration. `rg` currently finds 27 tracked paths referencing old launcher names, so a truthful atomic cutover cannot satisfy that limit without an explicit exception.
+- Resolved by operator decision D1: the Claude driver defaults to Fable; Sonnet
+  remains an explicit supported model.
+- Resolved by operator decision D2: ambient `ANTHROPIC_AUTH_TOKEN` is denied for Kimi;
+  require explicit Kimi credentials or OAuth.
+- Resolved by operator decision D3: ship one atomic PR with a recorded size-rule
+  exception. The reference sweep is part of that single cutover.

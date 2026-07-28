@@ -437,7 +437,8 @@ You are bound to epic **{epic}** / stream **{stream}**.
 
 ### CLI
 ```bash
-./start-kimi.sh --epic {epic}
+# Kimi has no certified public driver entrypoint yet; use a certified provider
+# driver for lease-bound orchestration.
 .venv/bin/python -m scripts.session_canary.kimi_lane mint --epic {epic}
 .venv/bin/python -m scripts.session_canary.kimi_lane protocol --epic {epic}
 ```

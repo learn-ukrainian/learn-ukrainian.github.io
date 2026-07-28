@@ -48,10 +48,8 @@ claude_settings_conflicting_route_keys() {
   if [ -z "$py_bin" ]; then
     if [ -n "${PROJECT_DIR:-}" ] && [ -x "${PROJECT_DIR}/.venv/bin/python" ]; then
       py_bin="${PROJECT_DIR}/.venv/bin/python"
-    elif command -v python3 >/dev/null 2>&1; then
-      py_bin="$(command -v python3)"
     else
-      echo "Error: python3 is required to inspect Claude settings at $settings_path." >&2
+      echo "Error: .venv/bin/python is required to inspect Claude settings at $settings_path." >&2
       return 2
     fi
   fi
@@ -111,6 +109,7 @@ assert_claude_settings_route_clean() {
   local route_name="${1:-alternate Claude route}"
   local settings_path="${CLAUDE_SETTINGS_PATH:-${HOME}/.claude/settings.json}"
   local config_dir="${CLAUDE_CONFIG_DIR:-}"
+  local conflict_output
   local conflicts=()
   local line
 
@@ -124,9 +123,10 @@ assert_claude_settings_route_clean() {
     return 0
   fi
 
+  conflict_output="$(claude_settings_conflicting_route_keys "$settings_path")" || return $?
   while IFS= read -r line; do
     [ -n "$line" ] && conflicts+=("$line")
-  done < <(claude_settings_conflicting_route_keys "$settings_path")
+  done <<< "$conflict_output"
 
   if ((${#conflicts[@]} == 0)); then
     return 0
@@ -145,6 +145,6 @@ assert_claude_settings_route_clean() {
   echo "  3) Emergency only: CLAUDE_ROUTE_GUARD_ALLOW_SETTINGS_ENV=1 (not recommended)." >&2
   echo >&2
   echo "cc-switch and similar tools often write these keys — prefer project launchers" >&2
-  echo "(./start-claude.sh, ./start-claudex.sh, ./start-kimicc.sh) over global switches." >&2
+  echo "(./start-claude.sh, ./start-codex.sh --harness claude-code, ./start-kimi.sh --harness claude-code) over global switches." >&2
   return 1
 }

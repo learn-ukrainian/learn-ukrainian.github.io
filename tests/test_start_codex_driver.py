@@ -1,77 +1,93 @@
-"""Contract tests for start-codex-driver.sh (sustained driver vs --governor mode)."""
+"""Codex driver regression coverage, including the lease-free governor guard."""
 
 from __future__ import annotations
 
 import os
+import shlex
 import shutil
 import subprocess
 from pathlib import Path
 
-_REPO_ROOT = Path(__file__).resolve().parents[1]
-_LAUNCHER = _REPO_ROOT / "start-codex-driver.sh"
+import pytest
+
+from tests.test_launcher_contract import REPO, run_launcher
+
+
+def _would_exec_argv(result: subprocess.CompletedProcess[str]) -> list[str]:
+    """Return the redacted, exact CLI argv emitted by a launcher dry run."""
+    return shlex.split(result.stdout.split("would exec ", maxsplit=1)[1].strip())
 
 
 def _clean_environ() -> dict[str, str]:
-    return {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    return {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
 
 
-def _run_driver(
-    *arguments: str,
-    env_override: dict[str, str] | None = None,
-) -> subprocess.CompletedProcess[str]:
-    env = _clean_environ()
-    env["CODEX_DRIVER_DRY_RUN"] = "1"
-    if env_override:
-        env.update(env_override)
-    return subprocess.run(
-        ["bash", str(_LAUNCHER), *arguments],
-        cwd=_REPO_ROOT,
-        env=env,
+def _runtime_launcher(tmp_path: Path) -> tuple[Path, Path]:
+    """Build the minimal shared-launcher surface with observable probe and CLI stubs."""
+    root = tmp_path / "repo"
+    for relative in (
+        "start-codex-driver.sh",
+        "scripts/config/context_profiles.yaml",
+        "scripts/lib/context_profiles.py",
+        "scripts/lib/deploy_extensions.sh",
+        "scripts/lib/launcher_core.sh",
+        "scripts/lib/handoff_identity.sh",
+        "scripts/lib/profile_resolver.sh",
+        "scripts/lib/thread_rollover_link.sh",
+        "scripts/launchers/codex.sh",
+    ):
+        target = root / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPO / relative, target)
+
+    probe = root / ".venv" / "bin" / "python"
+    probe.parent.mkdir(parents=True)
+    probe.write_text(
+        f"""#!/usr/bin/env bash
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.orchestration.codex_transport_health" ]]; then
+  if [ "${{PROBE_STUB_EXIT:-0}}" = "0" ]; then
+    printf '%s\\n' '{{"status":"healthy","fresh":true}}'
+  else
+    printf '%s\\n' '{{"status":"degraded","fresh":true,"failure_class":"test"}}'
+  fi
+  exit "${{PROBE_STUB_EXIT:-0}}"
+fi
+exec {os.fspath(REPO / ".venv" / "bin" / "python")!r} "$@"
+""",
+        encoding="utf-8",
+    )
+    probe.chmod(0o755)
+
+    executable_dir = tmp_path / "bin"
+    executable_dir.mkdir()
+    codex = executable_dir / "codex"
+    codex.write_text(
+        """#!/usr/bin/env bash
+printf 'CODEX_EXEC %s\\n' "$*"
+""",
+        encoding="utf-8",
+    )
+    codex.chmod(0o755)
+    initialized = subprocess.run(
+        ["git", "init", "-q", "-b", "main", os.fspath(root)],
         capture_output=True,
         text=True,
-        timeout=10,
+        check=False,
+        timeout=30,
     )
+    assert initialized.returncode == 0, initialized.stderr
+    return root / "start-codex-driver.sh", executable_dir
 
 
-def _runtime_launcher(tmp_path: Path) -> Path:
-    root = tmp_path / "repo"
-    launcher = root / "start-codex-driver.sh"
-    handoff = root / "scripts" / "lib" / "handoff_identity.sh"
-    python_stub = root / ".venv" / "bin" / "python"
-    start_codex = root / "start-codex.sh"
-    handoff.parent.mkdir(parents=True)
-    python_stub.parent.mkdir(parents=True)
-    shutil.copy2(_LAUNCHER, launcher)
-    shutil.copy2(_REPO_ROOT / "scripts/lib/handoff_identity.sh", handoff)
-    python_stub.write_text(
-        """#!/bin/bash
-if [ "${PROBE_STUB_EXIT:-0}" = "0" ]; then
-  echo '{"status":"healthy","fresh":true}'
-else
-  echo '{"status":"degraded","fresh":true,"failure_class":"test"}'
-fi
-exit "${PROBE_STUB_EXIT:-0}"
-""",
-        encoding="utf-8",
-    )
-    start_codex.write_text(
-        """#!/bin/bash
-printf 'START_CODEX_CALLED %s\\n' "$*"
-""",
-        encoding="utf-8",
-    )
-    python_stub.chmod(0o755)
-    start_codex.chmod(0o755)
-    return launcher
-
-
-def _run_runtime_launcher(
+def _run_runtime_governor(
     launcher: Path,
+    executable_dir: Path,
     *,
     probe_exit: int,
 ) -> subprocess.CompletedProcess[str]:
     env = _clean_environ()
-    env.pop("CODEX_DRIVER_DRY_RUN", None)
+    env["LAUNCHER_DRY_RUN"] = "0"
+    env["PATH"] = f"{executable_dir}:{env.get('PATH', '')}"
     env["PROBE_STUB_EXIT"] = str(probe_exit)
     return subprocess.run(
         ["bash", str(launcher), "--governor", "AUTO"],
@@ -79,93 +95,113 @@ def _run_runtime_launcher(
         env=env,
         capture_output=True,
         text=True,
+        check=False,
         timeout=10,
     )
 
 
-def test_default_mode_forwards_epic_without_model_pin() -> None:
-    res = _run_driver("devops")
-    assert res.returncode == 0, res.stderr
-    assert "would exec" in res.stdout
-    assert "--epic devops" in res.stdout
-    assert "--model" not in res.stdout
+def test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic() -> None:
+    result = run_launcher(
+        "start-codex-driver.sh", "--epic", "devops", "--model", "gpt-5.6-sol"
+    )
+    assert result.returncode == 0, result.stderr
+    assert "would probe" in result.stdout
+    assert result.stdout.index("would probe") < result.stdout.index("would claim lease")
+    assert result.stdout.index("would claim lease") < result.stdout.index("would mint and bootstrap")
+    assert result.stdout.index("would mint and bootstrap") < result.stdout.index("would bind drive-epic")
 
 
-def test_default_mode_forwards_extra_flags() -> None:
-    res = _run_driver("atlas", "--verbose", "--foo=bar")
-    assert res.returncode == 0, res.stderr
-    assert "--epic atlas" in res.stdout
-    assert "--verbose --foo=bar" in res.stdout
+def test_governor_pins_sol_and_is_mutation_guarded_against_lease_claim() -> None:
+    result = run_launcher(
+        "start-codex-driver.sh",
+        "--governor",
+        "AUTO",
+        env={"SESSION_EPIC": "foreign-lease-must-not-survive"},
+    )
+    assert result.returncode == 0, result.stderr
+    argv = _would_exec_argv(result)
+    model_index = argv.index("--model")
+    assert argv[model_index + 1] == "gpt-5.6-sol"
+    # Mutation guard: removing this seed leaves the bounded Sol invocation
+    # without the operator-ordered supervision instruction.
+    assert argv[model_index + 2] == (
+        "Follow agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md "
+        "for one bounded supervision cycle. TARGET=AUTO GOAL=AUTO"
+    )
+    # This is intentionally observable: removing the core's `unset SESSION_EPIC`
+    # changes this line and fails the test.
+    assert "governor SESSION_EPIC=<unset>" in result.stdout
+    assert "foreign-lease-must-not-survive" not in result.stdout
+    assert "would claim lease" not in result.stdout
 
 
-def test_governor_mode_pins_model_unsets_epic_and_passes_prompt() -> None:
-    res = _run_driver("--governor", "devops", env_override={"SESSION_EPIC": "should_be_unset"})
-    assert res.returncode == 0, res.stderr
-    assert "would exec" in res.stdout
-    assert "--model gpt-5.6-sol" in res.stdout
-    assert "--epic" not in res.stdout
-    assert "dynamic-area-epic-fleet-governor.md" in res.stdout
-    assert "TARGET=devops GOAL=AUTO" in res.stdout
-    assert "would probe" in res.stdout
-    assert "scripts.orchestration.codex_transport_health probe" in res.stdout
-    assert "--model gpt-5.6-sol --effort low" in res.stdout
-    assert "CODEX_FRESH_TRANSPORT" not in res.stdout
-    # Load-bearing guard: an ambient SESSION_EPIC must be UNSET before exec so the
-    # governor never claims the epic-driver lease. The dry-run echoes the resolved
-    # value precisely so removing the `unset` line fails this assertion.
-    assert "SESSION_EPIC=<unset>" in res.stdout
-    assert "should_be_unset" not in res.stdout
+@pytest.mark.parametrize(
+    "arguments",
+    (("--help",), ("--governor", "--help")),
+)
+def test_codex_driver_help_succeeds_before_or_after_governor(arguments: tuple[str, ...]) -> None:
+    result = run_launcher("start-codex-driver.sh", *arguments)
+    assert result.returncode == 0, result.stderr
+    assert "Usage:" in result.stdout
 
 
-def test_governor_help_flag_after_governor_shows_usage() -> None:
-    res = _run_driver("--governor", "--help")
-    assert res.returncode == 0, res.stderr
-    assert "Usage:" in res.stdout
+def test_governor_missing_selector_exits_usage_error() -> None:
+    result = run_launcher("start-codex-driver.sh", "--governor")
+    assert result.returncode == 2
+    assert "requires a value" in result.stderr
 
 
-def test_bare_help_flag_shows_usage() -> None:
-    res = _run_driver("--help")
-    assert res.returncode == 0, res.stderr
-    assert "Usage:" in res.stdout
+@pytest.mark.parametrize(
+    "arguments",
+    (("not-a-selector",), ("--governor", "not-a-selector")),
+)
+def test_codex_driver_rejects_unknown_selector_in_default_and_governor_modes(
+    arguments: tuple[str, ...],
+) -> None:
+    result = run_launcher("start-codex-driver.sh", *arguments)
+    assert result.returncode == 2
+    assert "unknown lane selector 'not-a-selector'" in result.stderr
 
 
-def test_governor_mode_auto_selector_bypasses_validation() -> None:
-    res = _run_driver("--governor", "AUTO")
-    assert res.returncode == 0, res.stderr
-    assert "--model gpt-5.6-sol" in res.stdout
-    assert "TARGET=AUTO GOAL=AUTO" in res.stdout
+def test_default_driver_forwards_epic_binding_and_extra_provider_flags() -> None:
+    result = run_launcher(
+        "start-codex-driver.sh", "devops", "--model", "gpt-5.6-sol", "--verbose", "--foo=bar"
+    )
+    assert result.returncode == 0, result.stderr
+    assert "would claim lease" in result.stdout
+    argv = _would_exec_argv(result)
+    assert "--verbose" in argv
+    assert "--foo=bar" in argv
+    # Mutation guard: dropping the resolved selector from the injected binding
+    # would launch a provider process without an auditable epic association.
+    assert any("already claimed the devops lease" in argument for argument in argv)
 
 
-def test_governor_mode_missing_selector_exits_2() -> None:
-    res = _run_driver("--governor")
-    assert res.returncode == 2
-    assert "Usage:" in res.stderr
+def test_governor_refuses_degraded_transport_before_exec(tmp_path: Path) -> None:
+    launcher, executable_dir = _runtime_launcher(tmp_path)
+    result = _run_runtime_governor(launcher, executable_dir, probe_exit=1)
+
+    assert result.returncode == 5
+    assert "Codex transport is degraded" in result.stderr
+    # Mutation guard: if the governor bypasses the adapter probe, this marker
+    # appears because the stubbed Codex executable receives the invocation.
+    assert "CODEX_EXEC" not in result.stdout
 
 
-def test_unknown_selector_fails_in_default_and_governor_modes() -> None:
-    res_def = _run_driver("unknown_selector_xyz")
-    assert res_def.returncode == 2
-    assert "Error: unknown lane selector 'unknown_selector_xyz'." in res_def.stderr
-
-    res_gov = _run_driver("--governor", "unknown_selector_xyz")
-    assert res_gov.returncode == 2
-    assert "Error: unknown lane selector 'unknown_selector_xyz'." in res_gov.stderr
-
-
-def test_governor_runtime_gate_refuses_degraded_transport(tmp_path) -> None:
-    result = _run_runtime_launcher(_runtime_launcher(tmp_path), probe_exit=3)
-
-    assert result.returncode == 3
-    assert "fresh Codex transport is not healthy" in result.stderr
-    assert '"status":"degraded"' in result.stderr
-    assert "do not retry Codex" in result.stderr
-    assert "START_CODEX_CALLED" not in result.stdout
-
-
-def test_governor_runtime_gate_execs_sol_after_healthy_probe(tmp_path) -> None:
-    result = _run_runtime_launcher(_runtime_launcher(tmp_path), probe_exit=0)
+def test_governor_execs_sol_after_healthy_transport_probe(tmp_path: Path) -> None:
+    launcher, executable_dir = _runtime_launcher(tmp_path)
+    result = _run_runtime_governor(launcher, executable_dir, probe_exit=0)
 
     assert result.returncode == 0, result.stderr
-    assert "START_CODEX_CALLED --model gpt-5.6-sol" in result.stdout
+    assert '{"status":"healthy","fresh":true}' in result.stdout
+    assert "CODEX_EXEC" in result.stdout
+    assert "--model gpt-5.6-sol" in result.stdout
     assert "dynamic-area-epic-fleet-governor.md" in result.stdout
-    assert "CODEX_FRESH_TRANSPORT" not in result.stdout
+
+
+def test_sustained_codex_driver_revalidates_certification() -> None:
+    rejected = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-unknown")
+    sol = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-5.6-sol")
+    assert rejected.returncode == 4
+    assert sol.returncode == 0, sol.stderr
+    assert "--model gpt-5.6-sol" in sol.stdout

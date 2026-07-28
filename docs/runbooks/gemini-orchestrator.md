@@ -7,14 +7,14 @@
 ## Usage
 
 ```bash
-# Pin a lane and auto-claim the stream lease in interactive mode
-./start-gemini.sh --epic atlas
+# Pin a lane and auto-claim the stream lease through the driver entrypoint
+./start-gemini-driver.sh --epic atlas
 
 # Use Gemini 3.1 Pro High for complex epic planning & orchestration
-./start-gemini.sh --epic harness --model pro
+./start-gemini-driver.sh --epic harness --model gemini-3.1-pro-high
 
-# Pass an explicit interactive prompt
-./start-gemini.sh --epic atlas "check issue streams and open PRs"
+# Pass an explicit driver prompt after the core's binding
+./start-gemini-driver.sh --epic atlas "check issue streams and open PRs"
 
 # Non-epic mode — standard agy session
 ./start-gemini.sh --model gemini-3.6-flash-high

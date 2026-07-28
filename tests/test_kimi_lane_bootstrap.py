@@ -50,5 +50,7 @@ def test_protocol_prints_launcher(capsys) -> None:
     rc = kimi_lane.cmd_protocol(argparse.Namespace(epic="harness", stream=None))
     assert rc == 0
     out = capsys.readouterr().out
-    assert "start-kimi.sh" in out
+    # Post-cutover (#5958): kimi has NO certified driver entrypoint; the
+    # protocol points at certified provider drivers instead of start-kimi.sh.
+    assert "no certified public driver entrypoint" in out
     assert "epic:4707" in out

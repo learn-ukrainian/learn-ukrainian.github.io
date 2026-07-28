@@ -38,12 +38,9 @@ kimicc_resolve_explicit_auth_token() {
     AUTH_SOURCE="KIMI_API_KEY"
     return 0
   fi
-  if [ -n "${ANTHROPIC_AUTH_TOKEN:-}" ] && [ "${ENDPOINT}" = "coding" ]; then
-    # Allow an intentionally exported coding token without re-reading OAuth state.
-    _resolved_auth="$ANTHROPIC_AUTH_TOKEN"
-    AUTH_SOURCE="ANTHROPIC_AUTH_TOKEN"
-    return 0
-  fi
+  # Deliberately do not fall back to ANTHROPIC_AUTH_TOKEN. An Anthropic-named
+  # ambient credential is foreign to Kimi even when the coding endpoint is
+  # selected; callers must supply a Kimi credential or use Kimi OAuth.
   return 1
 }
 
@@ -115,6 +112,7 @@ PY
 kimicc_configure_route() {
   local project_dir="$1"
   local catalog_dir="${2:-$project_dir}"
+  local durable_helper_dir="${3:-$project_dir}"
   local python_bin oauth_helper route platform_model coding_model default_base_url
 
   if ! python_bin="$(kimicc_route_python "$catalog_dir")"; then
@@ -155,9 +153,15 @@ kimicc_configure_route() {
   default_base_url="$(kimicc_default_base_url "$ENDPOINT")"
   BASE_URL="${KIMICC_BASE_URL:-$default_base_url}"
   BASE_URL="${BASE_URL%/}"
+  if [ "$BASE_URL" != "$default_base_url" ]; then
+    echo "Error: KIMICC_BASE_URL override is not an approved endpoint." >&2
+    return 2
+  fi
 
   # shellcheck source=scripts/lib/claude_route_guard.sh
   source "$project_dir/scripts/lib/claude_route_guard.sh"
+  CLAUDE_ROUTE_GUARD_PYTHON="$python_bin"
+  export CLAUDE_ROUTE_GUARD_PYTHON
   if [ "$ISOLATE_CONFIG" = "1" ] && [ "${KIMICC_HEADLESS:-0}" != "1" ] && [ -z "${CLAUDE_CONFIG_DIR:-}" ]; then
     export CLAUDE_CONFIG_DIR="${HOME}/.claude-kimicc"
     mkdir -p "$CLAUDE_CONFIG_DIR"
@@ -167,7 +171,10 @@ kimicc_configure_route() {
     return 1
   fi
 
-  oauth_helper="$project_dir/scripts/lib/kimi_coding_oauth.py"
+  # Catalog/session resolution stays on the invoked worktree. Only Kimi's
+  # OAuth helper can be durable, so isolated apiKeyHelper paths survive a
+  # short-lived dispatch worktree without making the session itself durable.
+  oauth_helper="$durable_helper_dir/scripts/lib/kimi_coding_oauth.py"
   AUTH_VIA_OAUTH=0
   if ! kimicc_resolve_explicit_auth_token; then
     if [ "$ENDPOINT" = "coding" ] && [ -f "$oauth_helper" ] && [ -x "$python_bin" ]; then
@@ -185,7 +192,7 @@ kimicc_configure_route() {
       echo "  Platform (pay-as-you-go): set MOONSHOT_API_KEY, KIMI_API_KEY, or KIMICC_AUTH_TOKEN" >&2
       echo "  Platform keys: https://platform.kimi.ai/console/api-keys" >&2
       echo "  Subscription: run \`kimi login\`, then use --endpoint coding (OAuth is picked up automatically)." >&2
-      return 1
+      return 3
     fi
   fi
 
@@ -238,6 +245,7 @@ kimicc_configure_route() {
   export ANTHROPIC_DEFAULT_FABLE_MODEL="$LEAD_MODEL"
   export CLAUDE_CODE_SUBAGENT_MODEL="$LEAD_MODEL"
   export ENABLE_TOOL_SEARCH=false
+  export CLAUDE_CODE_MAX_CONTEXT_TOKENS="$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS"
   export CLAUDE_CODE_AUTO_COMPACT_WINDOW="$LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS"
 
   if [ "$MODEL_ALIAS" = "k3" ]; then

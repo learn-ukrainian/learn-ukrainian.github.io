@@ -19,8 +19,8 @@ Kimi is not a sealed formal CF reviewer; substitute seats remain the product pat
 
 - `delegate.py --agent kimi` (default `k2.7-coding`; K3 via model override)
 - `ai_agent_bridge ask-kimi` / `process-kimi`
-- `./start-kimi.sh --epic …` (supervisor + canary mint)
-- `./start-kimicc.sh` (Claude UI → Kimi API route)
+- `./start-kimi.sh` (native Kimi Code interactive session)
+- `./start-kimi.sh --harness claude-code` (Claude Code UI → Kimi API route)
 
 ## Substitute formal CF
 

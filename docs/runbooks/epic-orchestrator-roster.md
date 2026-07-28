@@ -17,30 +17,30 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 
 | Epic | Recommended seat | Run |
 | --- | --- | --- |
-| **harness / infra** | Gemini (AGY) | `./start-gemini-drive.sh infra` |
-| **harness / infra** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-driver.sh infra` |
-| **devops** | Gemini (AGY) | `./start-gemini-drive.sh devops` |
-| **devops** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-driver.sh devops` |
-| **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-drive.sh corpus` |
-| **atlas** (Word Atlas + Practice Hub product) | Grok 4.5 | `./start-grok-drive.sh atlas` |
-| **hramatka** (teacher lesson service) | Grok 4.5 · Sonnet-5 if judgment-heavy | `./start-grok-drive.sh hramatka` |
-| **folk** (curriculum track) | Grok 4.5 † | `./start-grok-drive.sh folk` |
-| **bio** (curriculum track) | Grok 4.5 | `./start-grok-drive.sh bio` |
-| **any epic** — incident · architecture cutover · contested review | Sonnet-5 | `./start-sonnet-drive.sh <epic>` |
-| **any epic** — hardest judgment only (SUMMONED cadence; see the reserved-seat cost below) | Fable 5 | `./start-opus-drive.sh <epic>` (wrapper now pins Fable) |
+| **harness / infra** | Gemini (AGY) | `./start-gemini-driver.sh --epic infra` |
+| **harness / infra** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-driver.sh --epic infra` |
+| **devops** | Gemini (AGY) | `./start-gemini-driver.sh --epic devops` |
+| **devops** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-driver.sh --epic devops` |
+| **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-driver.sh --epic corpus` |
+| **atlas** (Word Atlas + Practice Hub product) | Grok 4.5 | `./start-grok-driver.sh --epic atlas` |
+| **hramatka** (teacher lesson service) | Grok 4.5 · Fable if judgment-heavy | `./start-grok-driver.sh --epic hramatka` |
+| **folk** (curriculum track) | Grok 4.5 † | `./start-grok-driver.sh --epic folk` |
+| **bio** (curriculum track) | Grok 4.5 | `./start-grok-driver.sh --epic bio` |
+| **any epic** — incident · architecture cutover · contested review | Fable 5 (default Anthropic) | `./start-claude-driver.sh --epic <epic>` |
+| **any epic** — routine Anthropic alternate | Sonnet-5 | `./start-claude-driver.sh --epic <epic> --model claude-sonnet-5` |
 
-**Per-model launcher convention:** `./start-<model>-drive.sh <epic>` where `<model>` ∈
-`codex · grok · gemini · sonnet · opus`. Epic is the first arg; extra flags forward
-(e.g. `--agent curriculum-track-orchestrator`). Each **launches the lane**; the driver
-then loads `$drive-epic` — automatically once the cold-prompt wiring lands (follow-up PR),
-and by manual `$drive-epic` invocation until then. The Codex DevOps alternate is the
-first zero-touch path: its generated board is injected into SessionStart and explicitly
-directs the task to load `$drive-epic`; the other wrappers do not yet auto-load the skill.
+**Driver launcher convention:** `./start-<provider>-driver.sh --epic <epic>` where `<provider>` ∈
+`codex · grok · gemini · claude`. The core owns all launcher flags; provider
+CLI flags follow `--`. Each driver validates the lane, claims the lease, runs
+the provider canary, and injects the `drive-epic` binding before the provider
+process starts. Codex additionally performs its transport-health probe during
+adapter preflight, before it claims the lease; a degraded probe refuses the
+launch without acquiring a lane.
 
-**Sonnet-5 is the DEFAULT Anthropic driver seat** — strong judgment without spending the
-top-tier capacity. `./start-opus-drive.sh <epic>` now pins **Fable 5** (operator
-2026-07-26 — Opus 5 removed from the advisor/judgment role: weak there and over-verbose;
-the wrapper name is kept until the renames-last migration step) and exists for the rare
+**Fable 5 is the DEFAULT Anthropic driver seat** (operator decision 2026-07-28).
+`./start-claude-driver.sh --epic <epic>` pins Fable by default; pass
+`--model claude-sonnet-5` for the supported routine alternate. Opus 5 is not an
+orchestrator seat. Fable is reserved for the rare
 hardest-judgment session (live incident, architecture cutover, contested verdict) in the
 SUMMONED cadence — 1-2 short scheduled sessions/day, dispatch-heavy, never a resident
 polling loop (see model-assignment.md § Orchestration operating pattern). It prints a
@@ -54,9 +54,8 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
 `drive-epic` skill enforces this.
 
 **Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
-- **Fable 5** (Anthropic top tier) — hardest judgment + the cross-family review of record +
-  top Anthropic advisor (with Sol). Don't burn it on a polling loop. `./start-opus-drive.sh`
-  (Fable-pinned) exists for the exceptions, not the default. **Opus 5 is neither an advisor
+- **Fable 5** (Anthropic top tier) — default Anthropic driver plus hardest judgment and
+  top Anthropic advisor (with Sol). **Opus 5 is neither an advisor
   nor an orchestrator seat** (operator 2026-07-26) — it remains a complex-coding/deep-review
   dispatch seat only.
 - **Kimi K2.7** 256K — under the ~500K window we want for a driver. **Codex (GPT-5.6)** was
@@ -166,9 +165,9 @@ Everything else the driver runs to completion and reports past-tense — no "sho
 
 ## Rollout (sequencing)
 
-1. **This PR:** the `drive-epic` skill, this runbook, and the per-model driver launchers
-   (`start-grok-drive.sh` / `start-gemini-drive.sh` / `start-sonnet-drive.sh`;
-   `start-codex-driver.sh` and `start-opus-drive.sh` landed after). Cross-family reviewed;
+1. **This PR:** the `drive-epic` skill, this runbook, and the provider driver launchers
+   (`start-grok-driver.sh` / `start-gemini-driver.sh` / `start-claude-driver.sh` /
+   `start-codex-driver.sh`). Cross-family reviewed;
    advisor-looped on the skill contract.
 2. **Follow-up PR:** rewire the `start-grok.sh` / `start-gemini.sh` / `start-kimi.sh`
    cold-prompt `case` blocks to invoke `$drive-epic` (replacing the hand-written per-epic

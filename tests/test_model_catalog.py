@@ -120,8 +120,7 @@ def test_kimi_alias_lint_rejects_a_reintroduced_local_adapter_map(tmp_path: Path
     project_root = tmp_path / "project"
     (project_root / "scripts" / "agent_runtime" / "adapters").mkdir(parents=True)
     for relative_path in (
-        "start-kimi.sh",
-        "start-kimicc.sh",
+        "scripts/launchers/kimi.sh",
         "scripts/lib/kimicc_route.sh",
         "scripts/agent_runtime/adapters/kimi.py",
     ):

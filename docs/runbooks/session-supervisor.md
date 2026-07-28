@@ -140,8 +140,8 @@ and opens a new one when the holder PID is gone (same gates as `handoff-claim`
 You do **not** need to wait for lease expiry. Just relaunch:
 
 ```bash
-./start-grok.sh --epic=harness
-# same for start-kimi.sh / other launchers that use the common supervisor
+./start-grok-driver.sh --epic=harness
+# same for the other certified provider driver entrypoints
 ```
 
 Still refused (by design):

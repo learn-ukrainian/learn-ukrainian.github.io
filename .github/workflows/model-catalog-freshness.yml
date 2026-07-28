@@ -18,10 +18,10 @@ on:
       - 'tests/test_lint_fleet_roster.py'
       - 'tests/test_model_catalog.py'
       - 'tests/test_start_kimi_launcher.py'
-      - 'tests/test_start_kimicc.py'
+      - 'tests/test_start_kimi_claude_code.py'
       - 'tests/agent_runtime/adapters/test_kimi_adapter.py'
       - 'start-kimi.sh'
-      - 'start-kimicc.sh'
+      - 'scripts/launchers/kimi.sh'
       - '.github/workflows/model-catalog-freshness.yml'
   push:
     branches: [main]
@@ -41,10 +41,10 @@ on:
       - 'tests/test_lint_fleet_roster.py'
       - 'tests/test_model_catalog.py'
       - 'tests/test_start_kimi_launcher.py'
-      - 'tests/test_start_kimicc.py'
+      - 'tests/test_start_kimi_claude_code.py'
       - 'tests/agent_runtime/adapters/test_kimi_adapter.py'
       - 'start-kimi.sh'
-      - 'start-kimicc.sh'
+      - 'scripts/launchers/kimi.sh'
       - '.github/workflows/model-catalog-freshness.yml'
   schedule:
     - cron: '17 7 * * 1'

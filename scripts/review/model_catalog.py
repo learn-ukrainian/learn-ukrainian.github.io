@@ -289,8 +289,16 @@ def resolve_glm_model(model: str, catalog: dict[str, Any] | None = None) -> tupl
 def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
     """Reject local alias maps so all Kimi surfaces stay catalog-backed."""
     consumers = {
-        "start-kimi.sh": ("--resolve-kimi-model", "--format native"),
-        "start-kimicc.sh": ("kimicc_configure_route",),
+        # BOTH kimi harness branches must resolve aliases through the catalog:
+        # the native branch via --resolve-kimi-model --format native (review
+        # finding on #5958 r3 — this requirement was narrowed away in the
+        # cutover, blinding the guard while the native branch regressed), the
+        # claude-code branch via kimicc_configure_route.
+        "scripts/launchers/kimi.sh": (
+            "kimicc_configure_route",
+            "--resolve-kimi-model",
+            "--format native",
+        ),
         "scripts/lib/kimicc_route.sh": ("--resolve-kimi-model", "--format kimicc"),
         "scripts/agent_runtime/adapters/kimi.py": ("kimi_model_aliases()",),
     }
@@ -306,9 +314,9 @@ def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
                 f"{relative_path} must resolve Kimi aliases through model_catalog.yaml; missing {missing}"
             )
 
-    native_launcher = (project_root / "start-kimi.sh").read_text(encoding="utf-8")
-    if "resolve_kimi_model() {\n  case" in native_launcher:
-        raise ModelCatalogError("start-kimi.sh contains a local Kimi alias case map")
+    kimi_adapter = (project_root / "scripts" / "launchers" / "kimi.sh").read_text(encoding="utf-8")
+    if "resolve_kimi_model() {\n  case" in kimi_adapter:
+        raise ModelCatalogError("Kimi launcher adapter contains a local Kimi alias case map")
     adapter = (project_root / "scripts/agent_runtime/adapters/kimi.py").read_text(encoding="utf-8")
     if "KIMI_MODEL_ALIASES: dict[str, str] = {" in adapter:
         raise ModelCatalogError("KimiAdapter contains a local Kimi alias map")
@@ -320,7 +328,7 @@ def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
 def validate_glm_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
     """Reject local alias maps so all GLM surfaces stay catalog-backed."""
     consumers = {
-        "start-glmcc.sh": ("--resolve-glm-model", "--format glmcc"),
+        "scripts/lib/glmcc_route.sh": ("--resolve-glm-model", "--format glmcc"),
     }
     for relative_path, required_snippets in consumers.items():
         path = project_root / relative_path

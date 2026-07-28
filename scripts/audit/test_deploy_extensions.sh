@@ -101,7 +101,9 @@ out="$(deploy_agent_extensions "$WORK_DIR/empty" agents:deploy)" \
 contains "$out" "not found" "missing package.json warns instead of failing"
 
 # --- launchers actually use the helper (regression guard on the wiring) ---
-launcher=start-claude.sh
+# Post-cutover (#5958) the deploy gate lives in the SHARED core so every
+# provider launcher refuses to run against stale extensions.
+launcher=scripts/lib/launcher_core.sh
 grep -q 'deploy_extensions.sh' "$REPO_ROOT/$launcher" \
   || fail "$launcher no longer sources deploy_extensions.sh"
 grep -q 'deploy_agent_extensions' "$REPO_ROOT/$launcher" \
@@ -112,16 +114,19 @@ if grep -E '^[^#]*npm run [a-z:]*deploy.*(\|\| true|2>/dev/null)' "$REPO_ROOT/$l
   fail "$launcher reintroduced a fail-silent npm deploy"
 fi
 
-grep -q 'thread_rollover_link.sh' "$REPO_ROOT/start-codex.sh" \
-  || fail "start-codex.sh no longer sources the Codex checkout bootstrap"
-grep -q 'bootstrap_codex_checkout' "$REPO_ROOT/start-codex.sh" \
-  || fail "start-codex.sh no longer bootstraps the target checkout"
-grep -q -- '--git-common-dir' "$REPO_ROOT/start-codex.sh" \
-  || fail "start-codex.sh no longer resolves the canonical checkout"
-grep -q 'branch --show-current' "$REPO_ROOT/start-codex.sh" \
-  || fail "start-codex.sh no longer requires canonical main"
-grep -q 'GIT_OPTIONAL_LOCKS=0' "$REPO_ROOT/start-codex.sh" \
-  || fail "start-codex.sh no longer suppresses optional primary-index locks"
+# Post-cutover (#5958) the codex bootstrap/canonical wiring lives in the
+# provider adapter; the thin start-codex.sh delegates to launcher_core.
+codex_adapter=scripts/launchers/codex.sh
+grep -q 'thread_rollover_link.sh' "$REPO_ROOT/$codex_adapter" \
+  || fail "$codex_adapter no longer sources the Codex checkout bootstrap"
+grep -q 'bootstrap_codex_checkout' "$REPO_ROOT/$codex_adapter" \
+  || fail "$codex_adapter no longer bootstraps the target checkout"
+grep -q -- '--git-common-dir' "$REPO_ROOT/$codex_adapter" \
+  || fail "$codex_adapter no longer resolves the canonical checkout"
+grep -q 'branch --show-current' "$REPO_ROOT/$codex_adapter" \
+  || fail "$codex_adapter no longer requires canonical main"
+grep -q 'GIT_OPTIONAL_LOCKS=0' "$REPO_ROOT/$codex_adapter" \
+  || fail "$codex_adapter no longer suppresses optional primary-index locks"
 if grep -Eq 'codex-interactive|git worktree add|checkout --detach' "$REPO_ROOT/start-codex.sh"; then
   fail "start-codex.sh reintroduced a detached interactive worktree"
 fi

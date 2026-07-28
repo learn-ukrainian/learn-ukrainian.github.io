@@ -82,7 +82,12 @@ export KIMICC_HEADLESS=1
 if kimicc_configure_route "$PROJECT_DIR"; then
   :
 else
-  exit $?
+  _route_rc=$?
+  # The consolidated route helper standardized environment failures on exit 3,
+  # but this wrapper's PUBLIC contract (tests + the delegate adapter) pins
+  # credential-missing at exit 1 — map it back at the boundary (#5958 CI fix).
+  if [ "$_route_rc" -eq 3 ]; then exit 1; fi
+  exit "$_route_rc"
 fi
 
 CLAUDE_BIN="${KIMICC_CLAUDE_BIN:-claude}"
