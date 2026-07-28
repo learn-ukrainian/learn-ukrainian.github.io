@@ -1,0 +1,324 @@
+{
+  "diagnostics": {
+    "over_edit_rate": 0.005908419497784343,
+    "over_edited_outputs": 4,
+    "unchanged_outputs": 673,
+    "unchanged_rate": 0.9940915805022157,
+    "untyped_false_positive_edits": 4
+  },
+  "edit_correction": {
+    "f0_5": 0.0,
+    "false_negative": 1080,
+    "false_positive": 4,
+    "precision": 0.0,
+    "recall": 0.0,
+    "true_positive": 0
+  },
+  "exact_sentence": {
+    "accuracy": 0.0,
+    "correct": 0,
+    "total": 677
+  },
+  "manifest": {
+    "id": "ua-gec-calque-grammar-heldout-v1",
+    "items": 677,
+    "payload_sha256": "6e9f0097faaa84f9f6b2225295bf1aba8657325e3f587b3f55b69044291f0ba9"
+  },
+  "per_tag": {
+    "F/Calque": {
+      "false_negative": 243,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.015562453888609386
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 243,
+      "support": 354,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/Aspect": {
+      "false_negative": 14,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        1.3877787807814457e-17,
+        0.2153108027376358
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 14,
+      "support": 16,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/Case": {
+      "false_negative": 252,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        8.673617379884035e-19,
+        0.015014997328429099
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 252,
+      "support": 391,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/Comparison": {
+      "false_negative": 5,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.43448246478317476
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 5,
+      "support": 9,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/Conjunction": {
+      "false_negative": 40,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.08762160119728664
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 40,
+      "support": 61,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/Gender": {
+      "false_negative": 50,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        6.938893903907228e-18,
+        0.07134759913335872
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 50,
+      "support": 76,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/Number": {
+      "false_negative": 68,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.053471336520070537
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 68,
+      "support": 85,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/Other": {
+      "false_negative": 1,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.7934506856227626
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 1,
+      "support": 13,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/PartVoice": {
+      "false_negative": 9,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.2991450484195441
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 9,
+      "support": 12,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/Participle": {
+      "false_negative": 1,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.7934506856227626
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 1,
+      "support": 2,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/Particle": {
+      "false_negative": 2,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.6576197724933469
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 2,
+      "support": 7,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/Prep": {
+      "false_negative": 94,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.03926207629154474
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 94,
+      "support": 143,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/Tense": {
+      "false_negative": 64,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.05662405979280534
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 64,
+      "support": 77,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/UngrammaticalStructure": {
+      "false_negative": 183,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.02055999158292086
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 183,
+      "support": 270,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/VerbAForm": {
+      "false_negative": 9,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.2991450484195441
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 9,
+      "support": 18,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/VerbVoice": {
+      "false_negative": 45,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.07865159873288836
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 45,
+      "support": 74,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    }
+  },
+  "saved_run": {
+    "decoding": {
+      "deterministic": true
+    },
+    "generation_metadata": {
+      "gold_fields_supplied": [],
+      "source": "builtin deterministic generator"
+    },
+    "generator_kind": "fixture-rules",
+    "gold_fields_supplied": [],
+    "input_fields": [
+      "item_id",
+      "source",
+      "source_sha256",
+      "prompt_sha256"
+    ],
+    "model": "train-fixture-literal-rules-v1",
+    "model_version": "b04a6b65067ce4047462d53d01918486b610dedadad7c03aeb9429c0032ebd4e",
+    "path": "data/projects/ua_eval_harness/baselines/v1/fixture-rules.responses.jsonl",
+    "prompt_sha256": "f121546dcbaf602c58c7d85977ad792eb9be402dd1e01a6a556ba966dac2c96a",
+    "provider": "builtin",
+    "run_id": "ua-gec-calque-grammar-heldout-v1--train-fixture-literal-rules-v1",
+    "runner": "ua_eval_saved_response_runner.v1",
+    "runner_version": "ua_eval_saved_response_runner.v1;source_sha256=a956c70f6a088baeace45e23f7482f418a9f1ca75e55597c23a93533fdf168b2;fixtures_sha256=34a47de1a8826a60895898bd8d94c5d794159a9ea291a51a7f85790a3bb7f976",
+    "sha256": "cc22f750fcfd889f1054a7d48d010efe7add9a610ffc9ba2e2f139236cf29321"
+  },
+  "schema_version": "ua_eval_score_report.v1",
+  "scorer": {
+    "alignment_note": "This dependency-free v1 uses a pinned Wagner-Fischer token aligner. It implements the official exact-edit metric semantics but does not claim byte-for-byte ERRANT alignment parity in ambiguous alignments.",
+    "beta": 0.5,
+    "id": "ua_eval_exact_token_edits.v1",
+    "implementation_sha256": "a956c70f6a088baeace45e23f7482f418a9f1ca75e55597c23a93533fdf168b2",
+    "matching": "exact source token span plus exact replacement text",
+    "reference_policy": "best F0.5 upstream annotator per sentence; deterministic tie-break",
+    "standard_metric_reference": {
+      "commit": "fbff22905f8c9a3677c900d56599284151c029e6",
+      "evaluate_py_sha256": "6e37b7a41a3a3c303647ca29507cd51b4b6deb9b0952c2a62d8e0b0374fae31a",
+      "repository": "https://github.com/asivokon/unlp-2023-shared-task",
+      "semantic_contract": "Correction true positives require an exact source span and exact replacement; precision, recall, and F0.5 are primary."
+    }
+  },
+  "uncertainty": {
+    "confidence": 0.95,
+    "edit_f0_5": [
+      0.0,
+      0.0
+    ],
+    "exact_sentence_accuracy": [
+      0.0,
+      0.0
+    ],
+    "method": "sentence_bootstrap_percentile",
+    "samples": 1000,
+    "seed": 2156
+  }
+}

@@ -2,9 +2,10 @@
 
 > **Canonical tracker:** [GitHub epic #2156](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2156)
 >
-> **Verified status (2026-07-28):** the committed 52 rows and mock evaluator are
-> development fixtures. They are not a held-out public benchmark, standard GEC
-> scorer, real-model baseline, or leaderboard.
+> **Verified status (2026-07-28):** the 52 train-derived rows remain development
+> fixtures only. The public lane now has a 677-item held-out manifest, a
+> source-only saved-response interface, exact edit P/R/F0.5 scoring, and
+> reproducible baseline receipts. It is not a leaderboard.
 
 ## Mission
 
@@ -35,14 +36,14 @@ Repository inspection on 2026-07-28 established:
   apply a frozen upstream eligibility, split, or exclusion predicate;
 - heritage protection is a five-token hard-coded seed, not a versioned
   VESUM/heritage integration, and no current row exercises it;
-- `evaluate_model.py` implements only `mock`; every real model name raises
-  `NotImplementedError`;
-- current metrics use normalized exact sentence matching and custom
-  source/target substring checks, not standard edit alignment or F0.5.
+- the former mock-only evaluator and custom substring metric were prototype
+  behavior and have been replaced by the saved-response scorer described
+  below.
 
-The mock path receives oracle data and is test-only. Its score must never be
-reported as a model baseline. The 52 rows may be used for parser/scorer
-development and regression only.
+The 52 rows may be used for parser/scorer development and regression only.
+They are never included in held-out scores. The deterministic fixture-rule
+baseline is the only v1 component that reads them, and its fixture-file hash is
+recorded in the saved-run header.
 
 The public held-out extraction manifest is separate:
 
@@ -98,6 +99,84 @@ Reproduce it from the exact pinned UA-GEC checkout:
   --ua-gec-root /path/to/ua-gec \
   --check
 ```
+
+## Saved-response runner and standard scoring
+
+`evaluate_model.py` separates generation from scoring with two versioned JSONL
+contracts:
+
+- `ua_eval_generation_requests.v1` contains only item ID, source sentence,
+  source hash, and prompt hash;
+- `ua_eval_saved_responses.v1` retains raw response text plus prompt, model,
+  provider, model version, decoding, runner, request, response, manifest, and
+  source hashes.
+
+Both contracts declare `gold_fields_supplied: []`. Validators reject missing
+items, duplicate IDs, manifest drift, prompt drift, source drift, response
+tampering, or any declared target/reference/edit input field.
+
+Prepare the frozen source-only packet:
+
+```bash
+.venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py prepare \
+  --output data/projects/ua_eval_harness/baselines/v1/generation_requests.jsonl
+```
+
+Generate and score the credential-free baselines:
+
+```bash
+.venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py baseline \
+  --kind identity \
+  --output data/projects/ua_eval_harness/baselines/v1/identity.responses.jsonl
+
+.venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py baseline \
+  --kind fixture-rules \
+  --output data/projects/ua_eval_harness/baselines/v1/fixture-rules.responses.jsonl
+
+.venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py score \
+  --responses data/projects/ua_eval_harness/baselines/v1/identity.responses.jsonl \
+  --output data/projects/ua_eval_harness/baselines/v1/identity.report.json
+```
+
+The optional real-model generator runs Codex CLI in an empty temporary
+directory with a read-only sandbox and repository/user rules disabled. It
+receives the source-only packet, never the manifest:
+
+```bash
+.venv/bin/python scripts/projects/ua_eval_harness/run_codex_baseline.py \
+  --requests data/projects/ua_eval_harness/baselines/v1/generation_requests.jsonl \
+  --model gpt-5.6-terra \
+  --output /tmp/gpt-5.6-terra.raw.jsonl \
+  --metadata-output /tmp/gpt-5.6-terra.metadata.json
+
+.venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py import \
+  --requests data/projects/ua_eval_harness/baselines/v1/generation_requests.jsonl \
+  --model-output /tmp/gpt-5.6-terra.raw.jsonl \
+  --metadata /tmp/gpt-5.6-terra.metadata.json \
+  --output data/projects/ua_eval_harness/baselines/v1/gpt-5.6-terra.responses.jsonl
+```
+
+The primary metric is correction edit precision, recall, and F0.5 under exact
+source-token-span plus replacement matching. This follows the
+[official UNLP 2023 evaluation contract](https://github.com/asivokon/unlp-2023-shared-task/tree/fbff22905f8c9a3677c900d56599284151c029e6):
+a true positive must exactly match the source span and correction of the
+annotator selected for that sentence. V1 selects the best-F0.5 annotator per
+sentence with a deterministic tie-break; every report states this reference
+policy. Exact corrected-sentence accuracy is a companion metric. Reports also
+contain unchanged-output and over-editing rates, stable corpus annotation
+support, selected-reference support and Wilson recall intervals per tag, and
+deterministic sentence-bootstrap intervals for F0.5 and exact accuracy.
+
+The dependency-free v1 scorer uses a frozen Wagner-Fischer token aligner. It
+implements the official metric semantics but does not claim byte-for-byte
+ERRANT alignment parity for ambiguous alignments; the scorer ID, reference
+commit, implementation note, and all input hashes are recorded in every
+report.
+
+The complete [v1 baseline receipts](../../../data/projects/ua_eval_harness/baselines/v1/README.md)
+include identity, train-fixture literal rules, and a source-only
+`gpt-5.6-terra` run. Terra scores 0.2439 edit F0.5 and 0.1610 exact-sentence
+accuracy; the report retains all 677 raw responses and full run provenance.
 
 ## Ownership and data boundaries
 
