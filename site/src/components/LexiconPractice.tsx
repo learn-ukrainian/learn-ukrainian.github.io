@@ -4174,7 +4174,9 @@ function PracticeCloze({
   const optionErrors = validateClozeOptions(cloze);
   const blankText = feedback?.kind === 'correct' ? cloze.form : input.trim() || '?';
   const displayBlankText = displayPracticeForm(blankText, learnerLevel);
-  const sentenceEnglish = postAnswerSentenceEnglish(feedback, cloze.clozeEn);
+  const usableEnglish = usablePracticeSentenceEnglish(cloze.clozeEn);
+  // A1/EN chrome gets scaffolding before an answer; the answer-key remains all-level.
+  const sentenceEnglish = feedback || showEnglishSubtitles ? usableEnglish : null;
   const blankClass = [
     'cz-blank',
     displayBlankText !== '?' ? 'filled' : '',
