@@ -22,6 +22,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from agent_runtime.adapters.gemini import has_gemini_oauth_credentials, resolve_gemini_auth_mode
 from agent_runtime.usage import has_headroom
 
+from scripts.orchestration.codex_transport_health import (
+    DEFAULT_CONFIG_PATH as CODEX_TRANSPORT_CONFIG_PATH,
+)
+from scripts.orchestration.codex_transport_health import (
+    TRANSPORT_RECEIPT_PATH as CODEX_TRANSPORT_RECEIPT_PATH,
+)
+from scripts.orchestration.codex_transport_health import current_transport_health
+
 router = APIRouter(tags=["runtime"])
 
 ADAPTERS_DIR = Path(__file__).resolve().parent.parent / "agent_runtime" / "adapters"
@@ -269,6 +277,16 @@ async def runtime_headroom(
 @router.get("/recent")
 async def runtime_recent(limit: int = Query(50, ge=1, le=500)):
     return await asyncio.to_thread(recent_runtime_records, limit=limit)
+
+
+@router.get("/transport-health")
+async def runtime_transport_health():
+    """Return the cached Codex fresh-process probe; never launch a model."""
+    return await asyncio.to_thread(
+        current_transport_health,
+        receipt_path=CODEX_TRANSPORT_RECEIPT_PATH,
+        config_path=CODEX_TRANSPORT_CONFIG_PATH,
+    )
 
 
 # ---------------------------------------------------------------------

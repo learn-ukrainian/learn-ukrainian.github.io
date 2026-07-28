@@ -4,7 +4,6 @@ from pathlib import Path
 
 from scripts.api.route_contracts import contract_for_route
 
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PROMPT = (
     REPO_ROOT
@@ -34,6 +33,7 @@ def test_governor_prompt_is_api_first_with_bounded_fallbacks() -> None:
         "/api/worktrees",
         "/api/runtime/agents",
         "/api/runtime/auth",
+        "/api/runtime/transport-health",
         "/api/state/routing-budget",
         "/api/delegate/active",
     ):
@@ -59,6 +59,13 @@ def test_governor_prompt_keeps_sol_bounded_and_v2_accountable() -> None:
     assert "summoned supervisor, not a resident polling loop" in prompt
     assert "Escalate Sol to `xhigh` only for one concrete" in prompt
     assert prompt.count("list_agents") >= 3
+    assert "native `agents.list_agents` and `agents.spawn_agent` tools" in prompt
+    assert "healthy receipt applies only to its exact `model`" in prompt
+    assert "Before each eligible native spawn, re-read" in prompt
+    assert "model-matched" in prompt
+    assert "route an OpenAI worker through the existing fleet-comms" in prompt
+    assert "reserved `collaboration.spawn_agent` schema error is a circuit-breaker" in prompt
+    assert "start no new OpenAI worker" in prompt
     assert 'fork_turns="none"' in prompt
     assert "no more than three non-root native agents" in prompt
     assert "same three-agent whole-tree cap" in prompt

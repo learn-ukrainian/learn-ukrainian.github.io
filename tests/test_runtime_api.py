@@ -136,3 +136,64 @@ def test_recent_limits_results(tmp_path, monkeypatch):
     assert len(records) == 2
     assert records[0]["outcome"] == "timeout"
     assert records[1]["agent"] == "gemini"
+
+
+def test_transport_health_returns_sanitized_cached_probe(tmp_path, monkeypatch):
+    receipt_path = tmp_path / "codex-transport-health.json"
+    config_path = tmp_path / "config.toml"
+    now = datetime.now(UTC)
+    config_path.write_text(
+        "[features.multi_agent_v2]\ntool_namespace = \"agents\"\n",
+        encoding="utf-8",
+    )
+    receipt_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "codex-transport-health.v1",
+                "status": "healthy",
+                "checked_at": _iso(now - timedelta(seconds=5)),
+                "expires_at": _iso(now + timedelta(minutes=10)),
+                "model": "gpt-5.6-terra",
+                "effort": "low",
+                "task_id": "codex-transport-probe-test",
+                "failure_class": None,
+                "source": "fresh_bridge_probe",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(runtime_router, "CODEX_TRANSPORT_RECEIPT_PATH", receipt_path)
+    monkeypatch.setattr(runtime_router, "CODEX_TRANSPORT_CONFIG_PATH", config_path)
+
+    response = client.get("/api/runtime/transport-health")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "healthy"
+    assert data["fresh"] is True
+    assert data["namespace_valid"] is True
+    assert data["tool_namespace"] == "agents"
+    assert "task_id" not in data
+    assert "content" not in data
+
+
+def test_transport_health_is_unknown_without_probe_receipt(tmp_path, monkeypatch):
+    config_path = tmp_path / "config.toml"
+    config_path.write_text(
+        "[features.multi_agent_v2]\ntool_namespace = \"agents\"\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        runtime_router,
+        "CODEX_TRANSPORT_RECEIPT_PATH",
+        tmp_path / "missing.json",
+    )
+    monkeypatch.setattr(runtime_router, "CODEX_TRANSPORT_CONFIG_PATH", config_path)
+
+    response = client.get("/api/runtime/transport-health")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "unknown"
+    assert data["fresh"] is False
+    assert data["failure_class"] == "no_probe_receipt"
