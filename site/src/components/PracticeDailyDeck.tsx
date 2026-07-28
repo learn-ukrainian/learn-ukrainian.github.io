@@ -8,6 +8,7 @@ import { formatLastSeenAgo, stripStressMarks } from '../lib/lexicon/srs';
 import { CHROME_STRINGS, type ChromeLocale, type ChromeKey } from '../lib/i18n/chrome';
 import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
 import type { CefrLevel } from '../lib/lexicon/levels';
+import { usablePracticeSentenceEnglish } from '../lib/lexicon/practice-sentence-en';
 
 export interface PracticeDailyDeckProps {
   snapshot: DailyPracticeDeckSnapshot;
@@ -88,9 +89,7 @@ export default function PracticeDailyDeck({
   const showStressMarks = learnerLevel === 'A1';
   const displayLemma = (lemma: string) => (showStressMarks ? lemma : stripStressMarks(lemma));
   const currentExample = currentItem?.example?.trim() || currentLexeme?.example?.trim() || null;
-  const currentExampleEn = showStressMarks
-    ? currentItem?.exampleEn?.trim() || currentLexeme?.exampleEn?.trim() || null
-    : null;
+  const currentExampleEn = usablePracticeSentenceEnglish(currentItem?.exampleEn || currentLexeme?.exampleEn);
 
   return (
     <div className="practice-daily-deck" data-testid="practice-daily-deck">

@@ -409,6 +409,7 @@ function heritagePracticeItem(): PracticeHeritageItem {
     calqueLabel: 'дом',
     kind: 'lexical',
     prompt: 'Я бачу ___ щодня.',
+    promptEn: 'I see ___ every day.',
     answer: 'дім',
     calque: 'дом',
     origin: 'fixture',
@@ -808,7 +809,7 @@ describe('LexiconPractice', () => {
     expect(dashboard.querySelectorAll('[data-mode]').length).toBe(11);
   });
 
-  test('renders stress marks and daily examples only on A1 default surfaces', () => {
+  test('renders stress marks only on A1, while revealed daily sentence English stays available', () => {
     const marked = lexeme('mama', 'ма́ма', 'mother', {
       nominative: 'ма́ма',
       accusative: 'ма́му',
@@ -845,7 +846,37 @@ describe('LexiconPractice', () => {
 
     expect(screen.queryByText('ма́ма')).not.toBeInTheDocument();
     expect(screen.getAllByText('мама').length).toBeGreaterThan(0);
+    expect(screen.getByTestId('practice-daily-example-en')).toHaveTextContent('Mother is reading.');
+  });
+
+  test('omits placeholder daily sentence English after the card is revealed', async () => {
+    const item: DailyPracticeDeckSnapshot['items'][number] = {
+      lemmaId: 'борщ',
+      origin: 'new',
+      lemma: 'борщ',
+      gloss: 'borscht',
+      cefr: 'A2',
+      pos: 'noun',
+      example: 'Я їм борщ.',
+      exampleEn: 'Context sentence for борщ',
+    };
+
+    render(
+      <PracticeDailyDeck
+        snapshot={{ version: 2, date: '2026-06-23', level: 'A2', deckVersion: 'daily-pool', createdAt: NOW.getTime(), items: [item] }}
+        rows={{ pendingDue: [], pendingNew: [{ item, state: 'new', lastSeenAt: null }], done: [] }}
+        lexemes={new Map()}
+        atlasLemmaHref={(lemmaId) => `/lexicon/${lemmaId}/`}
+        chromeLocale="uk"
+        learnerLevel="A2"
+      />,
+    );
+
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Натисніть, щоб перевернути' }));
+
+    expect(screen.getByTestId('practice-daily-example')).toHaveTextContent('Я їм борщ.');
     expect(screen.queryByTestId('practice-daily-example-en')).not.toBeInTheDocument();
+    expect(screen.queryByText('Context sentence for борщ')).not.toBeInTheDocument();
   });
 
   test('renders the daily card from the pick payload when the slug is absent from the practice-lexemes map (#5852)', () => {
@@ -1725,7 +1756,8 @@ describe('LexiconPractice', () => {
     expect(await screen.findByTestId('practice-heritage')).toBeInTheDocument();
   });
 
-  test('heritage calque miss scores again and shows cited correction', async () => {
+  test('A2 heritage calque miss scores again and reveals the sentence English answer key', async () => {
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A2');
     const user = userEvent.setup();
     render(
       <LexiconPractice
@@ -1743,6 +1775,7 @@ describe('LexiconPractice', () => {
     const feedback = screen.getByTestId('practice-heritage-feedback');
     expect(feedback).toHaveTextContent('⚠️ калька; у цьому значенні потрібне питоме слово');
     expect(feedback).toHaveTextContent('Джерело: Антоненко-Давидович: fixture');
+    expect(screen.getByTestId('practice-heritage-sentence-en')).toHaveTextContent('I see ___ every day.');
     await waitFor(() => {
       expect(storedState().reviews[0]).toMatchObject({
         lemmaId: 'dim',
@@ -1780,6 +1813,20 @@ describe('LexiconPractice', () => {
         rating: 'again',
       });
     });
+  });
+
+  test('heritage without promptEn keeps feedback and omits the sentence-English block', async () => {
+    const user = userEvent.setup();
+    const deck = heritageDeck();
+    delete deck.heritage![0]!.promptEn;
+    render(<LexiconPractice initialDeck={deck} autoStart initialMode="heritage" />);
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /місто/ }),
+    );
+
+    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('Ще раз');
+    expect(screen.queryByTestId('practice-heritage-sentence-en')).not.toBeInTheDocument();
   });
 
   test('heritage correct answer scores good', async () => {
@@ -1902,6 +1949,7 @@ describe('LexiconPractice', () => {
       frameIndex: 1,
       cefr: 'A1',
       prompt: 'Вранці він ___ у парку.',
+      promptEn: 'In the morning he ___ in the park.',
       answer: 'бігає',
       options: [
         { label: 'бігає' },
@@ -1987,6 +2035,7 @@ describe('LexiconPractice', () => {
 
     const feedback = screen.getByTestId('practice-paronym-feedback');
     expect(feedback).toHaveTextContent('Неправильно. бігати регулярно, бігти конкретно зараз');
+    expect(screen.getByTestId('practice-paronym-sentence-en')).toHaveTextContent('In the morning he ___ in the park.');
     await waitFor(() => {
       expect(storedState().reviews[0]).toMatchObject({
         lemmaId: 'bihate',
@@ -2013,6 +2062,7 @@ describe('LexiconPractice', () => {
     );
 
     expect(screen.getByTestId('practice-paronym-feedback')).toHaveTextContent('Правильно! бігати регулярно, бігти конкретно зараз');
+    expect(screen.getByTestId('practice-paronym-sentence-en')).toHaveTextContent('In the morning he ___ in the park.');
     await waitFor(() => {
       expect(storedState().reviews[0]).toMatchObject({
         lemmaId: 'bihate',
@@ -2290,6 +2340,7 @@ describe('LexiconPractice', () => {
     const status = within(screen.getByTestId('practice-cloze')).getByRole('status');
     expect(status).toHaveTextContent('Правильне слово');
     expect(status).toHaveClass('case-miss');
+    expect(screen.getByTestId('practice-cloze-sentence-en')).toHaveTextContent('I am reading a book.');
     expect(screen.getByLabelText(/Поставте слово „книга” у правильному відмінку/)).toHaveValue('');
     expect(screen.getByRole('button', { name: 'книгу' })).not.toBeDisabled();
 
@@ -2318,6 +2369,32 @@ describe('LexiconPractice', () => {
     expect(task).toHaveTextContent('Fill in the blank with the word „згодом”.');
     expect(task).not.toHaveTextContent('correct case');
     expect(screen.getByLabelText('Вставте слово „згодом” у пропуск.')).toBeInTheDocument();
+  });
+
+  test('cloze reveals a usable sentence English only after feedback', async () => {
+    seedRecognitionMastery('knyha');
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="cloze" />);
+
+    expect(screen.queryByTestId('practice-cloze-sentence-en')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'робота' }));
+    await user.click(screen.getByRole('button', { name: /Перевірити/ }));
+
+    expect(screen.getByTestId('practice-cloze-sentence-en')).toHaveTextContent('I am reading a book.');
+  });
+
+  test('cloze omits blank or placeholder sentence English after feedback', async () => {
+    seedRecognitionMastery('knyha');
+    const user = userEvent.setup();
+    const deck = sampleDeck();
+    deck.cloze[0] = { ...deck.cloze[0]!, clozeEn: 'Context sentence for книгу' };
+    render(<LexiconPractice initialDeck={deck} autoStart initialMode="cloze" />);
+
+    await user.click(screen.getByRole('button', { name: 'робота' }));
+    await user.click(screen.getByRole('button', { name: /Перевірити/ }));
+
+    expect(screen.queryByTestId('practice-cloze-sentence-en')).not.toBeInTheDocument();
   });
 
   test('cloze retains the case prompt for an inflected noun form', () => {
@@ -2582,6 +2659,7 @@ describe('LexiconPractice', () => {
     // Correct answers dwell identically to wrong ones — «Далі →» is required.
     expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
     expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('Правильно');
+    expect(screen.getByTestId('practice-heritage-sentence-en')).toHaveTextContent('I see ___ every day.');
     expect(document.activeElement).toBe(screen.getByTestId('practice-advance-button'));
 
     // Still on the same card after a dwell window — no timer advance.
