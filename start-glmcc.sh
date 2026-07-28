@@ -18,19 +18,12 @@ set -euo pipefail
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPT_DIR="$PROJECT_DIR"
-# Prefer the main worktree root when launched from a git worktree copy, so the
-# launcher survives worktree cleanup. Ambient GIT_DIR/GIT_WORK_TREE (e.g. from
-# a pre-commit hook) must not leak into these lookups.
-if env -u GIT_DIR -u GIT_WORK_TREE -u GIT_COMMON_DIR git -C "$PROJECT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  _git_common="$(env -u GIT_DIR -u GIT_WORK_TREE -u GIT_COMMON_DIR git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
-  if [ -n "${_git_common:-}" ] && [ -d "$(dirname "$_git_common")" ]; then
-    _main_wt="$(dirname "$_git_common")"
-    if [ -f "$_main_wt/start-glmcc.sh" ]; then
-      PROJECT_DIR="$_main_wt"
-    fi
-  fi
-  unset _git_common _main_wt
-fi
+# NOTE (r2 review): unlike start-kimicc.sh, this launcher does NOT redirect
+# PROJECT_DIR to the main worktree. Kimicc's redirect exists solely so the
+# apiKeyHelper path baked into its isolated Claude config survives worktree
+# cleanup; glmcc uses a static key with no helper, so the redirect would only
+# root a feature-worktree launch at the wrong branch. The invoking checkout IS
+# the project context.
 _LU_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -f "$_LU_ROOT/scripts/lib/scrub_hermes_node_path.sh" ]; then
   # shellcheck source=scripts/lib/scrub_hermes_node_path.sh
