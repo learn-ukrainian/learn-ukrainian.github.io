@@ -297,6 +297,57 @@ function sampleDeck(): PracticeDeckData {
   };
 }
 
+function indeclinableClozeDeck(): PracticeDeckData {
+  const entry = lexeme(
+    'zhodom',
+    'згодом',
+    'later',
+    {
+      nominative: 'згодом',
+      accusative: 'згодом',
+      locative: 'згодом',
+    },
+    { pos: 'adv' },
+  );
+  return {
+    deckVersion: 'test-indeclinable-cloze',
+    level: 'A2',
+    lexemes: [entry],
+    index: [{
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A2',
+      modes: ['cloze'],
+      hasCloze: true,
+      clozeIds: ['zhodom-cloze-1'],
+      newOrder: 0,
+    }],
+    cloze: [{
+      clozeId: 'zhodom-cloze-1',
+      lemmaId: entry.lemmaId,
+      sentenceFrameId: 'zhodom-frame',
+      sentence: '___ він відповів.',
+      blankCase: 'accusative',
+      form: 'згодом',
+      clozeEn: 'Later, he replied.',
+      caseRule: {
+        ruleId: 'legacy-case-frame',
+        case: 'accusative',
+        caseLabel: 'знахідний',
+        trigger: 'legacy-fixture',
+        triggerLabel: 'legacy fixture',
+        feedback: 'fixture',
+      },
+      options: [
+        { optionId: 'zhodom-cloze-1:answer', label: 'згодом', lemmaId: entry.lemmaId, kind: 'answer' },
+        { optionId: 'zhodom-cloze-1:one', label: 'потім', lemmaId: 'potim', kind: 'decoy-lemma' },
+        { optionId: 'zhodom-cloze-1:two', label: 'вчора', lemmaId: 'vchora', kind: 'decoy-lemma' },
+        { optionId: 'zhodom-cloze-1:three', label: 'завтра', lemmaId: 'zavtra', kind: 'decoy-lemma' },
+      ],
+    }],
+  };
+}
+
 function heritagePracticeItem(): PracticeHeritageItem {
   return {
     heritageId: 'her-dim-fixture',
@@ -2206,6 +2257,24 @@ describe('LexiconPractice', () => {
     await waitFor(() => {
       expect(storedState().reviews).toHaveLength(1);
     });
+  });
+
+  test('cloze uses a neutral English prompt for an indeclinable adverb', () => {
+    seedRecognitionMastery('zhodom');
+    render(<LexiconPractice initialDeck={indeclinableClozeDeck()} autoStart initialMode="cloze" />);
+
+    const task = screen.getByTestId('practice-cloze').querySelector('.cz-task');
+    expect(task).toHaveTextContent('Fill in the blank with the word „згодом”.');
+    expect(task).not.toHaveTextContent('correct case');
+  });
+
+  test('cloze retains the case prompt for an inflected noun form', () => {
+    seedRecognitionMastery('knyha');
+    render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="cloze" />);
+
+    expect(screen.getByTestId('practice-cloze').querySelector('.cz-task')).toHaveTextContent(
+      'Put the word „книга” in the correct case.',
+    );
   });
 
   test('cloze renders Tatoeba attribution when present', () => {
