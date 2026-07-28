@@ -33,7 +33,7 @@
 # proceed.
 schema_version: trailspec.v1
 trail_id: rb5-session-close
-version: "0.1.5"
+version: "0.1.6"
 title: RB5 Session close — inbox drain, readiness receipts, hygiene sweep, handoff gate
 seats:
   - grok-daily
@@ -47,6 +47,28 @@ terminal_outcomes:
   - closed_handoff_written
   - back_to_dispatch_loop
 steps:
+  - step_id: assert_primary_checkout
+    intent: >-
+      FAIL-CLOSED entry assertion (r6 finding): every relative path in this trail
+      (.venv, batch_state) and every checkout-dependent signal (readiness tree,
+      the ahead count) assumes the PRIMARY main checkout — an assumption v0.1.5
+      narrated but never enforced, so a run from a clean feature worktree could
+      close over that worktree's own unpushed state while inspecting an
+      unrelated main ref. Discriminator (live-verified both directions
+      2026-07-28): in the primary checkout git-dir equals git-common-dir; in a
+      linked worktree they differ. The primary must also BE on main (layout A);
+      anything else stops before a single receipt is written.
+    command: sh -c 'G=$(git rev-parse --git-dir 2>/dev/null); C=$(git rev-parse --git-common-dir 2>/dev/null); B=$(git symbolic-ref --short -q HEAD); if [ -z "$G" ] || [ -z "$C" ]; then echo not-primary-checkout; elif [ "$G" != "$C" ]; then echo not-primary-checkout; elif [ "$B" != "main" ]; then echo primary-off-main; else echo primary-confirmed; fi'
+    evidence_predicate:
+      command: sh -c 'G=$(git rev-parse --git-dir 2>/dev/null); C=$(git rev-parse --git-common-dir 2>/dev/null); B=$(git symbolic-ref --short -q HEAD); if [ -z "$G" ] || [ -z "$C" ]; then echo not-primary-checkout; elif [ "$G" != "$C" ]; then echo not-primary-checkout; elif [ "$B" != "main" ]; then echo primary-off-main; else echo primary-confirmed; fi'
+      success_pattern: '^(primary-confirmed|not-primary-checkout|primary-off-main)$'
+    transitions:
+      primary_confirmed: drain_slot_inbox
+      not_primary_checkout: STOP-precondition-failed
+      primary_off_main: STOP-precondition-failed
+    kind: mechanical
+    blocked_on: null
+
   - step_id: drain_slot_inbox
     intent: >-
       OPENING live-driver inbox drain (drive-epic 8a pattern): surface every
@@ -173,10 +195,12 @@ steps:
       the ahead direction (live shape: bare integer, "0" when clean). FAILS
       CLOSED (r1 finding): a failed fetch means the remote state could not be
       verified, so the count is unavailable — a stale tracking ref must never
-      read as primary-clean.
-    command: sh -c 'git fetch origin --quiet 2>/dev/null || { echo count-unavailable; exit 0; }; N=$(git rev-list --count origin/main..main 2>/dev/null); case "$N" in "") echo count-unavailable;; *[!0-9]*) echo count-unavailable;; 0) echo primary-clean;; *) echo primary-ahead;; esac'
+      read as primary-clean. Counts origin/main..HEAD — HEAD IS main here, the
+      entry assertion guarantees it (r6: counting the main ref from an arbitrary
+      checkout inspected the wrong subject).
+    command: sh -c 'git fetch origin --quiet 2>/dev/null || { echo count-unavailable; exit 0; }; N=$(git rev-list --count origin/main..HEAD 2>/dev/null); case "$N" in "") echo count-unavailable;; *[!0-9]*) echo count-unavailable;; 0) echo primary-clean;; *) echo primary-ahead;; esac'
     evidence_predicate:
-      command: sh -c 'git fetch origin --quiet 2>/dev/null || { echo count-unavailable; exit 0; }; N=$(git rev-list --count origin/main..main 2>/dev/null); case "$N" in "") echo count-unavailable;; *[!0-9]*) echo count-unavailable;; 0) echo primary-clean;; *) echo primary-ahead;; esac'
+      command: sh -c 'git fetch origin --quiet 2>/dev/null || { echo count-unavailable; exit 0; }; N=$(git rev-list --count origin/main..HEAD 2>/dev/null); case "$N" in "") echo count-unavailable;; *[!0-9]*) echo count-unavailable;; 0) echo primary-clean;; *) echo primary-ahead;; esac'
       success_pattern: '^(primary-clean|primary-ahead|count-unavailable)$'
     transitions:
       primary_clean: worktree_receipt
