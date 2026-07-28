@@ -1141,6 +1141,19 @@ function clozeParts(item: PracticeClozeItem): [string, string] {
   return [before, after.join('___')];
 }
 
+const NON_CASE_CLOZE_POS = new Set(['adv', 'prep', 'conj', 'part', 'numr']);
+
+function isCaseClozeDrill(cloze: PracticeClozeItem, lemma: PracticeLexeme): boolean {
+  // Deterministic prompt heuristic: an NFC/casefold-equal answer is an insertion,
+  // never a case drill. Likewise, VESUM indeclinable POS tags must not receive
+  // case wording. Otherwise a changed form remains a case drill: authored clozes
+  // carry case-rule feedback and their chips may distinguish case variants.
+  const normalizedForm = cloze.form.trim().normalize('NFC').toLocaleLowerCase('uk-UA');
+  const normalizedLemma = lemma.lemma.trim().normalize('NFC').toLocaleLowerCase('uk-UA');
+  if (!normalizedForm || normalizedForm === normalizedLemma) return false;
+  return !NON_CASE_CLOZE_POS.has((lemma.pos ?? '').trim().toLocaleLowerCase());
+}
+
 function slotPromptParts(prompt: string): [string, string] {
   const [before, ...after] = prompt.split('___');
   return [before, after.join('___')];
@@ -4134,6 +4147,7 @@ function PracticeCloze({
   const cloze = selection.cloze;
   if (!cloze) return null;
   const [before, after] = clozeParts(cloze).map((part) => displayPracticeForm(part, learnerLevel));
+  const caseDrill = isCaseClozeDrill(cloze, selection.lemma);
   const optionErrors = validateClozeOptions(cloze);
   const blankText = feedback?.kind === 'correct' ? cloze.form : input.trim() || '?';
   const displayBlankText = displayPracticeForm(blankText, learnerLevel);
@@ -4149,8 +4163,12 @@ function PracticeCloze({
     <div className="lexicon-cloze" data-testid="practice-cloze">
       <p className="cz-task">
         <PracticeChromeDual
-          uk={`Поставте слово „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” у правильному відмінку.`}
-          en={`Put the word „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” in the correct case.`}
+          uk={caseDrill
+            ? `Поставте слово „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” у правильному відмінку.`
+            : `Вставте слово „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” у пропуск.`}
+          en={caseDrill
+            ? `Put the word „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}” in the correct case.`
+            : `Fill in the blank with the word „${displayPracticeForm(selection.lemma.lemma, learnerLevel)}”.`}
 
         />
       </p>
