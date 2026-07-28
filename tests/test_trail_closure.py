@@ -307,3 +307,77 @@ def test_concurrent_committed_closure_is_reported_as_closed_not_refused(tmp_path
     assert executor.store.get_run(run_id).closure_state == "closed"
     assert executor.store.get_closure(run_id) is not None
     assert executor.store.projection_path(run_id=run_id, filename="closure.json").is_file()
+
+
+class _FailingCloseGate(TrailClosureGate):
+    """Lose the closure response without committing (a second closer will win)."""
+
+    def close(self, **kwargs):
+        raise ClosureError("this closer lost its observation response")
+
+
+def _commit_closure_as_concurrent_winner(
+    executor: TrailExecutor, source: _TerminalSource, run_id: str
+) -> None:
+    """Commit the closure the way a second, racing closer would."""
+    run = executor.store.get_run(run_id)
+    evidence = executor._terminal_closure_evidence(run)
+    TrailClosureGate(executor.store, source).close(
+        run=run,
+        chain_digest=evidence[0],
+        terminal_invocation=evidence[1],
+        terminal_command_receipt=evidence[2],
+        terminal_step_receipt=evidence[3],
+    )
+
+
+def _install_losing_park(executor: TrailExecutor, source: _TerminalSource) -> None:
+    """Make park_terminal_closure lose the check-then-park race deterministically."""
+    original_park = executor.store.park_terminal_closure
+
+    def _losing_park(*, run_id: str, reason: str):
+        _commit_closure_as_concurrent_winner(executor, source, run_id)
+        return original_park(run_id=run_id, reason=reason)
+
+    executor.store.park_terminal_closure = _losing_park  # type: ignore[method-assign]
+
+
+def test_park_race_after_gate_error_returns_closed_result_not_crash(tmp_path: Path) -> None:
+    """A concurrent closer committing between the closed-check and the park call
+    inside close()'s except handler must yield the closed result, not an escaped
+    DeviationRefusedError (r7 F001)."""
+    source = _TerminalSource()
+    executor = _executor(tmp_path, source)
+    executor.closure_gate = _FailingCloseGate(executor.store, source)
+    run_id = _terminal_run(executor, tmp_path)
+    _install_losing_park(executor, source)
+
+    result = executor.close(run_id=run_id)
+
+    assert result.exit_class == ExitClass.OK
+    assert result.outcome == "closed"
+    assert executor.store.get_run(run_id).closure_state == "closed"
+    assert executor.store.get_closure(run_id) is not None
+
+
+def test_park_race_on_invalid_chain_returns_closed_result_not_crash(tmp_path: Path) -> None:
+    """The invalid-chain park site races the same way: a concurrent commit between
+    close()'s stale run snapshot and the park call must yield a typed result, not
+    an escaped DeviationRefusedError (r7 F002)."""
+    source = _TerminalSource()
+    executor = _executor(tmp_path, source)
+    run_id = _terminal_run(executor, tmp_path)
+    invocation = executor.store.list_invocations(run_id)[0]
+    command_path = executor.store.projection_path(
+        run_id=run_id,
+        filename=f"command-000000-{invocation['invocation_id']}.json",
+    )
+    command_path.write_text("{}\n", encoding="utf-8")
+    _install_losing_park(executor, source)
+
+    result = executor.close(run_id=run_id)
+
+    assert result.exit_class == ExitClass.OK
+    assert result.outcome == "closed"
+    assert executor.store.get_run(run_id).closure_state == "closed"
+    assert executor.store.get_closure(run_id) is not None

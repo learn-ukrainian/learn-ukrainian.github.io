@@ -1203,6 +1203,47 @@ class TrailExecutor:
         )
         return chain_digest, terminal_invocation, command_receipt, step_receipt
 
+    def _park_closure_guarded(
+        self, *, run_id: str, reason: str, error: str | None
+    ) -> TrailRunResult:
+        """Park terminal closure, absorbing the concurrent-closer commit race.
+
+        A second closer can commit the closure between the caller's
+        closure-state check and this park call; the store then refuses with
+        DeviationRefusedError. That race is legitimate concurrency, so it maps
+        to a typed result — close() always returns a TrailRunResult.
+        """
+        try:
+            parked = self.store.park_terminal_closure(run_id=run_id, reason=reason)
+        except DeviationRefusedError as refusal:
+            current = self.store.get_run(run_id)
+            if current.closure_state == "closed" and self.closure_gate is not None:
+                try:
+                    concurrent = self.closure_gate.existing(run_id)
+                except ClosureError:
+                    concurrent = None
+                if concurrent is not None:
+                    return self._closed_result(run_id=run_id, committed=concurrent)
+            return TrailRunResult(
+                command="close",
+                exit_class=ExitClass.INVALID,
+                outcome="closure_refused",
+                run_id=run_id,
+                state=current.state,
+                cursor_step=current.cursor_step_id,
+                error=str(refusal),
+            )
+        return TrailRunResult(
+            command="close",
+            exit_class=ExitClass.STOP_PARKED,
+            outcome="closure_parked",
+            run_id=run_id,
+            state=parked.state,
+            cursor_step=parked.cursor_step_id,
+            data={"stop_code": "STOP-unknown", "closure_state": parked.closure_state},
+            error=error,
+        )
+
     def close(self, *, run_id: str) -> TrailRunResult:
         """Close only after a complete chain and fresh external re-observation."""
         run = self.store.get_run(run_id)
@@ -1211,18 +1252,9 @@ class TrailExecutor:
         chain = self.verify_chain(run_id=run_id)
         if chain.exit_class != ExitClass.OK:
             if run.state == "terminal" and run.closure_state != "closed":
-                parked = self.store.park_terminal_closure(
+                return self._park_closure_guarded(
                     run_id=run_id,
                     reason=chain.error or "closure chain verification failed",
-                )
-                return TrailRunResult(
-                    command="close",
-                    exit_class=ExitClass.STOP_PARKED,
-                    outcome="closure_parked",
-                    run_id=run_id,
-                    state=parked.state,
-                    cursor_step=parked.cursor_step_id,
-                    data={"stop_code": "STOP-unknown", "closure_state": parked.closure_state},
                     error=chain.error,
                 )
             return TrailRunResult(
@@ -1269,16 +1301,8 @@ class TrailExecutor:
                 if concurrent is not None:
                     return self._closed_result(run_id=run_id, committed=concurrent)
             if current.state == "terminal" and current.closure_state != "closed":
-                parked = self.store.park_terminal_closure(run_id=run_id, reason=str(exc))
-                return TrailRunResult(
-                    command="close",
-                    exit_class=ExitClass.STOP_PARKED,
-                    outcome="closure_parked",
-                    run_id=run_id,
-                    state=parked.state,
-                    cursor_step=parked.cursor_step_id,
-                    data={"stop_code": "STOP-unknown", "closure_state": parked.closure_state},
-                    error=str(exc),
+                return self._park_closure_guarded(
+                    run_id=run_id, reason=str(exc), error=str(exc)
                 )
             return TrailRunResult(
                 command="close",
