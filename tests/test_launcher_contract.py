@@ -83,6 +83,22 @@ def test_driver_requires_certified_model_and_valid_epic() -> None:
     assert invalid.returncode == 2
 
 
+def test_dry_run_does_not_require_a_provider_binary(tmp_path: Path) -> None:
+    shell = shutil.which("bash")
+    assert shell is not None
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (bin_dir / "bash").symlink_to(shell)
+    provider_free_path = f"{bin_dir}{os.pathsep}{os.defpath}"
+    provider_binaries = ("agy", "claude", "codex", "grok", "kimi")
+    assert all(shutil.which(binary, path=provider_free_path) is None for binary in provider_binaries)
+
+    result = run_launcher("start-claude.sh", env={"PATH": provider_free_path})
+    assert result.returncode == 0, result.stderr
+    assert "LAUNCHER_DRY_RUN=1: would require binary claude" in result.stdout
+    assert "would exec claude --model claude-fable-5" in result.stdout
+
+
 def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
     sustained = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-5.6-sol")
     assert sustained.returncode == 0, sustained.stderr

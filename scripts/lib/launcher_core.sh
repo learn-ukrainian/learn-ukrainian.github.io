@@ -93,6 +93,21 @@ launcher_error() {
   printf 'Error: %s\n' "$*" >&2
 }
 
+launcher_require_binary() {
+  local binary="$1"
+  local error_message="$2"
+  local exit_code="$3"
+
+  if [ "$LC_DRY_RUN" = "1" ]; then
+    printf 'LAUNCHER_DRY_RUN=1: would require binary %s\n' "$binary"
+    return 0
+  fi
+  command -v "$binary" >/dev/null 2>&1 || {
+    launcher_error "$error_message"
+    return "$exit_code"
+  }
+}
+
 launcher_clear_foreign_route_state() {
   # A route-shaped value inherited by a public launcher is foreign. Adapters set
   # their own process-scoped values only after this cleanup; credentials with

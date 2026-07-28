@@ -11,7 +11,7 @@ launcher_adapter_preflight() {
   export ENDPOINT MODEL_ALIAS ISOLATE_CONFIG
   glmcc_configure_route "$LC_SESSION_ROOT" || exit $?
   LC_AUTH_SOURCE="$GLMCC_AUTH_SOURCE"
-  command -v claude >/dev/null 2>&1 || { launcher_error 'Claude Code executable is unavailable for the GLM harness.'; exit 3; }
+  launcher_require_binary claude 'Claude Code executable is unavailable for the GLM harness.' 3 || exit $?
 }
 launcher_adapter_canary() { return 0; }
 launcher_adapter_exec() {

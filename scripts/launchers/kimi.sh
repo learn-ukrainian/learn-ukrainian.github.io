@@ -7,7 +7,7 @@ launcher_adapter_validate() {
 launcher_adapter_preflight() {
   if [ "$LC_HARNESS" = kimi-code ]; then
     LC_AUTH_SOURCE='kimi-code-oauth'
-    command -v kimi >/dev/null 2>&1 || { launcher_error 'Kimi Code executable is unavailable.'; exit 3; }
+    launcher_require_binary kimi 'Kimi Code executable is unavailable.' 3 || exit $?
     # Catalog-backed alias resolution (review finding on #5958 r3): the native
     # kimi CLI rejects bare aliases like "k3" ("not configured in config.toml");
     # resolve every alias to the configured native model id before exec.
@@ -24,7 +24,7 @@ launcher_adapter_preflight() {
   export ENDPOINT MODEL_ALIAS ISOLATE_CONFIG
   kimicc_configure_route "$LC_SESSION_ROOT" "$LC_SESSION_ROOT" "$LC_DURABLE_HELPER_ROOT" || exit $?
   LC_AUTH_SOURCE="$AUTH_SOURCE"
-  command -v claude >/dev/null 2>&1 || { launcher_error 'Claude Code executable is unavailable for the Kimi harness.'; exit 3; }
+  launcher_require_binary claude 'Claude Code executable is unavailable for the Kimi harness.' 3 || exit $?
 }
 launcher_adapter_canary() {
   if [ "$LC_DRY_RUN" = 1 ]; then echo 'kimi adapter: would run provider canary'; fi

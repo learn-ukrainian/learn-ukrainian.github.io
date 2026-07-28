@@ -109,13 +109,13 @@ launcher_adapter_preflight() {
   if [ "$LC_HARNESS" = codex ]; then
     launcher_codex_native_profile_preflight
     LC_AUTH_SOURCE='codex-cli-oauth'
-    command -v codex >/dev/null 2>&1 || { launcher_error 'Codex executable is unavailable.'; exit 3; }
+    launcher_require_binary codex 'Codex executable is unavailable.' 3 || exit $?
   else
     # shellcheck source=scripts/lib/codex_cc_route.sh
     source "$LC_ROOT/scripts/lib/codex_cc_route.sh"
     codex_cc_configure_route "$LC_MODEL" || exit $?
     LC_AUTH_SOURCE="$CODEX_CC_AUTH_SOURCE"
-    command -v claude >/dev/null 2>&1 || { launcher_error 'Claude Code executable is unavailable for the Codex harness.'; exit 3; }
+    launcher_require_binary claude 'Claude Code executable is unavailable for the Codex harness.' 3 || exit $?
   fi
   if [ "$LC_MODE" = driver ]; then launcher_codex_transport_probe; fi
   return 0

@@ -21,7 +21,7 @@ launcher_adapter_preflight() {
   # absent after launcher_core clears ambient state.
   unset CLAUDE_CODE_MAX_CONTEXT_TOKENS CLAUDE_CODE_AUTO_COMPACT_WINDOW
   LC_AUTH_SOURCE='claude-cli-oauth'
-  command -v claude >/dev/null 2>&1 || { launcher_error 'Claude Code executable is unavailable.'; exit 3; }
+  launcher_require_binary claude 'Claude Code executable is unavailable.' 3 || exit $?
 }
 launcher_adapter_canary() {
   if [ "$LC_DRY_RUN" = 1 ]; then echo 'claude adapter: would run provider canary'; fi
