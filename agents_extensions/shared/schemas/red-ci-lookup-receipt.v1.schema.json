@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "red-ci-lookup-receipt.v1",
+  "title": "Red-CI Lookup Receipt v1 schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "red-ci-lookup-receipt.v1"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "matched",
+        "table-unknown"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "no-match",
+        "ambiguous",
+        "expired-match"
+      ]
+    },
+    "entry_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "retry-once",
+            "note-and-proceed",
+            "stop"
+          ]
+        },
+        "stop_code": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "stop"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "stop_code"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "stop_code"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "registry_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "signature_receipt_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "as_of_epoch": {
+      "type": "number"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "matched"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "entry_id",
+          "action",
+          "registry_sha256",
+          "signature_receipt_sha256",
+          "as_of_epoch"
+        ],
+        "not": {
+          "required": [
+            "reason"
+          ]
+        }
+      },
+      "else": {
+        "required": [
+          "reason"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "entry_id"
+              ]
+            },
+            {
+              "required": [
+                "action"
+              ]
+            },
+            {
+              "required": [
+                "registry_sha256"
+              ]
+            },
+            {
+              "required": [
+                "signature_receipt_sha256"
+              ]
+            },
+            {
+              "required": [
+                "as_of_epoch"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

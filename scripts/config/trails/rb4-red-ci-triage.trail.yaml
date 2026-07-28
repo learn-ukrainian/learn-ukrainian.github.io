@@ -3,11 +3,11 @@
 # bounded-driver trial (per-seat prerequisites in the trails design).
 #
 # DRAFT STATUS: authored against today's substrate; certification waits for T1.4/5.
-# The known-failure-class signature registry does NOT exist yet — the allowlist step
-# is an enforced fail-closed gate (both present-without-lookup and absent STOP as
-# table-unknown), and NO rerun step exists in this draft: the raceless rerun
-# primitive ships with the registry design (v1 cannot express a per-claimant
-# rerun predicate — r3 review). Unknown signatures never retry-until-green.
+# The known-failure-class lookup is a fail-closed gate: an absent registry or
+# structured receipt is table-unknown, and a lookup error stops. NO rerun step exists
+# in this draft: TrailSpec v1 cannot express the per-claimant predicate required by
+# the raceless primitive. A matched retry-once is data that stops for manual handling;
+# unknown signatures never retry-until-green.
 #
 # Anti-pattern guard (RB-2 v0.7.0 discipline, seven-round-reviewed): every command is
 # a real, currently runnable repo command whose OUTPUT SHAPE was captured live
@@ -28,8 +28,8 @@
 #   instead of gh run list --branch (which could pick a newer pending run).
 schema_version: trailspec.v1
 trail_id: rb4-red-ci-triage
-version: "0.4.2"
-title: RB4 Red-CI triage — signature, allowlist, staleness, bounded rerun
+version: "0.4.3"
+title: RB4 Red-CI triage — signature, lookup, and staleness
 seats:
   - grok-daily
   - glm-trial
@@ -177,30 +177,46 @@ steps:
 
   - step_id: allowlist_match
     intent: >-
-      ENFORCED fail-closed lookup (r1 finding: the missing registry must be an
-      execution guard, not narration): the step checks for the registry file itself
-      — scripts/config/trails/red-ci-known-failures.yaml — and with it ABSENT
-      (today's state) every signature is table-unknown and stops as STOP-unknown;
-      the rerun path is mechanically UNREACHABLE until the registry AND its lookup
-      tool land: today BOTH outcomes stop as table-unknown — registry_absent, and
-      registry_present_lookup_unbuilt (a registry file with no lookup tool must not
-      be guessed against; r2 finding: transitions must match the command's actual
-      output vocabulary, and matched routes only arrive with the lookup tool). The
-      table's judgment rows (pre-existing-on-main → note + owning issue;
-      head-specific → fix round) are applied BY THE SUMMONED JUDGMENT from the
-      recorded signature receipt — deliberately not weak-seat routes. The future
-      matched-retry-once path is deliberately NOT drafted as a step: trailspec.v1
-      cannot give a rerun claim a per-claimant predicate (the r3 review proved a
-      losing claimant would read the winner's queued run status), so the raceless
-      rerun primitive ships WITH the registry + lookup tool design, reviewed
-      together — never as unreachable speculative machinery here.
-    command: sh -c 'test -f scripts/config/trails/red-ci-known-failures.yaml && echo registry-present-lookup-unbuilt || echo registry-absent'
+      ENFORCED fail-closed lookup: the checked-in registry and the structured
+      signature receipt are both required. The extraction CLI normalizes the captured
+      job failure into batch_state/rb4-signature-{pr_number}.json; text logs alone are
+      not a matchable receipt. The lookup evaluates every matching entry, records the
+      deterministic as-of instant, and never contacts GitHub itself. Missing input,
+      unknown, ambiguity, expiry, or lookup failure stops. A matched retry-once is
+      only recorded data here — TrailSpec v1 has no retry execution transition.
+    command: |-
+      sh -c '
+        REG=scripts/config/trails/red-ci-known-failures.yaml
+        RECEIPT=batch_state/rb4-signature-{pr_number}.json
+        OUT=batch_state/rb4-lookup-{pr_number}.json
+        SIGNAL=batch_state/rb4-lookup-signal-{pr_number}.txt
+        if [ ! -f "$REG" ] || [ ! -f "$RECEIPT" ]; then
+          RESULT=table-unknown
+        else
+          RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json)
+          REPO=$(gh repo view --json databaseId --jq .databaseId) || RESULT=lookup-failed
+          if [ -n "${REPO:-}" ] && [ "${RESULT:-}" != lookup-failed ]; then
+            AS_OF=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+            .venv/bin/python scripts/orchestration/red_ci_known_failures.py lookup \
+              --registry "$REG" --receipt "$RECEIPT" --repository-id "$REPO" \
+              --pr {pr_number} --run-id "$RUN" --as-of "$AS_OF" --output "$OUT" \
+              >/dev/null && RESULT=$(jq -r \
+                "if .status == \"matched\" then \"matched-\" + .action.kind else \"table-unknown\" end" \
+                "$OUT") || RESULT=lookup-failed
+          fi
+        fi
+        printf "%s\n" "$RESULT" > "$SIGNAL"
+        printf "%s\n" "$RESULT"
+      '
     evidence_predicate:
-      command: sh -c 'test -f scripts/config/trails/red-ci-known-failures.yaml && echo registry-present-lookup-unbuilt || echo registry-absent'
-      success_pattern: '^(registry-present-lookup-unbuilt|registry-absent)$'
+      command: sh -c 'cat batch_state/rb4-lookup-signal-{pr_number}.txt'
+      success_pattern: '^(table-unknown|lookup-failed|matched-retry-once|matched-note-and-proceed|matched-stop)$'
     transitions:
-      registry_absent: STOP-unknown
-      registry_present_lookup_unbuilt: STOP-unknown
+      table_unknown: STOP-unknown
+      lookup_failed: STOP-precondition-failed
+      matched_retry_once: STOP-manual-intervention
+      matched_note_and_proceed: back_to_pr_lifecycle
+      matched_stop: STOP-manual-intervention
     kind: table-lookup
     table: red-ci-triage
-    blocked_on: "known-failure-class signature registry + its lookup tool (#5885)"
+    blocked_on: "operator-gated rerun primitive remains out of scope (#5885)"
