@@ -311,3 +311,17 @@ def test_negative_estate_refused_surfaces_drift_fails_validation() -> None:
     estate_data["refused_mutation_surfaces"].remove("pilot-vps")
     with pytest.raises(TrailSpecValidationError, match="pilot-vps"):
         validate_estate_registry_data(estate_data)
+
+
+def test_negative_estate_surface_id_keyed_refusal_is_not_skipped() -> None:
+    """Mutation negative: a surface_id-keyed group declaring refused is cross-checked too."""
+    from scripts.orchestration.validate_trailspec import (
+        TrailSpecValidationError,
+        validate_estate_registry_data,
+    )
+
+    estate_data = _load_yaml(ESTATE_PATH)
+    estate_data["surfaces"]["worktrees"][0]["mutation_policy"] = "refused"
+    # refused_mutation_surfaces not updated -> cross-check must catch the drift
+    with pytest.raises(TrailSpecValidationError, match="worktree-list"):
+        validate_estate_registry_data(estate_data)

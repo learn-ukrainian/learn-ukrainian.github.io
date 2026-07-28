@@ -779,10 +779,11 @@ def validate_estate_registry_data(
     # it drift from the per-surface truth would misstate the refusal boundary.
     declared_refused = set(registry_data.get("refused_mutation_surfaces", []))
     derived_refused = {
-        entry["name"]
+        identifier
         for group in registry_data.get("surfaces", {}).values()
         for entry in group
-        if entry.get("mutation_policy") == "refused" and "name" in entry
+        if entry.get("mutation_policy") == "refused"
+        and (identifier := entry.get("name") or entry.get("surface_id")) is not None
     }
     if declared_refused != derived_refused:
         raise TrailSpecValidationError(
