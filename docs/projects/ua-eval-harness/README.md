@@ -1,140 +1,152 @@
-# Project: Ukrainian Calque + Grammar Evaluation Harness
+# Ukrainian calque + grammar evaluation
 
-> **Status (2026-07-22):** Implementation sub-issue **[#5608](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5608)** active. Delivered **[PR #5610](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/5610)** (`compile_evalset.py` & `taxonomy.yaml`) and **[PR #5612](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/5612)** (`vps_dialect_ingest_standalone.py` & dialect catalog doc). Remote VPS ingestion host verified & deployed. Publication target: **UNLP 2027**.
+> **Canonical tracker:** [GitHub epic #2156](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2156)
+>
+> **Verified status (2026-07-28):** the committed 52 rows and mock evaluator are
+> development fixtures. They are not a held-out public benchmark, standard GEC
+> scorer, real-model baseline, or leaderboard.
 
-> **For future sessions: this is the canonical pick-up entrypoint.** When the user says "let's continue the eval harness work" or asks about the UNLP project, read this file first.
+## Mission
 
-## TL;DR
+Build a reproducible public minimal-edit correction evaluation for Ukrainian
+calques and grammar from UA-GEC. The final package must provide deterministic
+gold extraction, standard edit scoring, version-pinned baselines, and a
+stranger-runnable release without private product data or provider secrets.
 
-Build a **dedicated LLM evaluation harness for Ukrainian calques AND grammar errors** on top of the **UA-GEC** gold-tagged subset. Open-source, non-commercial, CC-BY-4.0 attribution preserved. **Publication target: UNLP 2027** (UNLP 2026 submission window already closed).
+Oleksiy's direction for the project is:
 
-Two coupled dimensions because (a) no dedicated harness exists for either today, (b) UA-GEC already tags both calques (F/Calque) and grammar (G/Case, G/Gender, etc.), and (c) a single harness with two scoring axes is cheaper and more useful than two separate harnesses.
+- no dedicated Ukrainian calque harness is known;
+- UA-GEC reuse is welcome;
+- the evaluation set is the highest priority;
+- a reproducible baseline harness is a close second.
 
-## Why this exists
+The project does not create a broad Ukrainian leaderboard or composite
+"Ukrainian quality" score.
 
-LLMs reliably produce Russianisms, calques, and grammar errors when generating Ukrainian text, even when prompts explicitly forbid them. The curriculum project ran into this firsthand: Claude Opus 4.7, asked to translate English → Ukrainian with explicit "avoid Russianisms," still produced 3 Russianisms in 70 words (`приймати участь`, `слідуючі пункти`, `у любий момент`). Public reproducer: `anthropics/claude-code#59146`.
+## Verified capability truth
 
-The public landscape (verified 2026-05-19):
+Repository inspection on 2026-07-28 established:
 
-- **UA-GEC** has 2,397 human-annotated F/Calque examples plus G/Case, G/Gender, F/Collocation, and other grammar/fluency tags. Only Ukrainian gold-tagged corpus with this shape. License CC BY 4.0. ([github.com/grammarly/ua-gec](https://github.com/grammarly/ua-gec))
-- **LanguageTool** has a rule-based Ukrainian module — adjacent rules, not LLM-eval-shaped.
-- **lang-uk leaderboard** benchmarks LLM *adaptation* to Ukrainian (translation/reasoning/QA/IFEval) — explicitly does NOT cover calque or grammar. ([huggingface.co/spaces/lang-uk/ukrainian-llm-leaderboard](https://huggingface.co/spaces/lang-uk/ukrainian-llm-leaderboard))
-- **Karpov & Chernodub (UNLP 2026):** *"How Far Can Prompting Go for Minimal-Edit Ukrainian Grammatical Error Correction?"* — adjacent work on UA grammar error CORRECTION. Different shape (correction, not eval-as-leaderboard).
-- **Pravopysnyk** has a synthetic *corrupter* (uk → ru → heuristic) — useful for prompt augmentation, not scoring.
-- **Curriculum project** has the *scorer* — a deterministic ~50-pattern Russianism + calque detector currently running as a build-time gate across the V7 module pipeline.
+- `data/projects/ua_eval_harness/evalset_v1.jsonl` contains 52 rows:
+  32 `F/Calque`, 12 `G/Case`, and 8 `G/Gender`;
+- all 52 source items are from UA-GEC train partitions
+  (`gec-fluency/train` or `gec-only/train`), not an upstream held-out split;
+- `compile_evalset.py` reads a pre-curated local 52-item source and does not
+  apply a frozen upstream eligibility, split, or exclusion predicate;
+- heritage protection is a five-token hard-coded seed, not a versioned
+  VESUM/heritage integration, and no current row exercises it;
+- `evaluate_model.py` implements only `mock`; every real model name raises
+  `NotImplementedError`;
+- current metrics use normalized exact sentence matching and custom
+  source/target substring checks, not standard edit alignment or F0.5.
 
-**The gap:** no LLM-evaluation harness with prompts engineered to elicit calques + grammar errors, paired with cross-model leaderboard scoring against UA-GEC gold tags. That is what we want to build.
+The mock path receives oracle data and is test-only. Its score must never be
+reported as a model baseline. The 52 rows may be used for parser/scorer
+development and regression only.
 
-## Scope
+Historical receipts remain useful but bounded:
 
-1. **Two scoring axes:** calque (F/Calque + adjacent F/* tags) AND grammar (G/* tags from UA-GEC).
-2. **UA-GEC** as the gold set. Full attribution + CC-BY-4.0 propagation.
-3. **Source-language-agnostic schema** from day one: `source_lang: ru | pl | en | …`. Russian first because that is where the empirical LLM harm concentrates today.
-4. **Permanently non-commercial open-source** (matches the curriculum project's posture; see `CLAUDE.md` non-commercial-permanent decision 2026-04-19).
-5. **Target UNLP 2027** for publication.
+- [issue #5608](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5608)
+  and [PR #5610](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/5610)
+  delivered the local compiler prototype;
+- [PR #5633](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/5633)
+  delivered the mock-only evaluator prototype.
 
-## Adjacent assets we already have
+Their closed/merged states do not prove that a public benchmark or live
+baseline harness exists.
 
-These are NOT the harness, but they are the scorer-side foundation:
+## Frozen task direction
 
-- **Deterministic calque detector** — ~50 patterns + scoring function, gating every V7 module build. Russian-only, smaller pattern set than UA-GEC's gold data. Lives in `scripts/audit/` (Russianism gate). Worth wiring as one of the scorers in the harness.
-- **Multi-model writer bakeoff** — `audit/2026-05-19-multi-agent-routing-assessment/REPORT.html` covers ~12 frontier models (Claude, GPT-5.5, Gemini, Grok closed-source; DeepSeek, Qwen, Mistral, Kimi, MiniMax, Ring, GLM open). Calque/Russianism signal is graded; generation-side data the lang-uk leaderboard does not cover.
-- **VESUM** — 6.7M Ukrainian forms, used for morphological verification. Available via `mcp__sources__verify_word`.
-- **Антоненко-Давидович** — 342 structured Russianism entries + 169 prose chunks. Available via `mcp__sources__search_style_guide` and `mcp__sources__search_text source=antonenko-davydovych-yak-my-hovorymo`.
-- **СУМ-11 + Грінченко + ЕСУМ + slovnyk.me** — heritage-defense layer (`mcp__sources__search_heritage`) to avoid false-positives on authentic Ukrainian archaisms/dialectisms.
-- **UA-GEC errors index** — already MCP-exposed via `mcp__sources__search_ua_gec_errors` (filtered to F/Calque, F/Collocation, G/Case, G/Gender). 8,937 rows.
+The target is minimal-edit Ukrainian sentence correction:
 
-## Current implementation artifacts
+1. Model input contains the source sentence and versioned task instruction.
+2. Gold targets and edit spans are never model inputs.
+3. Model responses are saved before scoring.
+4. A standard edit scorer reports precision, recall, and F0.5.
+5. Exact corrected-sentence accuracy is a companion metric.
+6. Results report per-tag support, uncertainty, unchanged output, and
+   over-editing.
 
-- [PR1 curriculum QG plan](pr1-curriculum-qg-plan.md) documents the merged
-  curriculum-facing MVP.
-- [UA contact quality evidence schema](schema.md) documents
-  `ua_contact_quality_evidence.v1` and the helper module
-  `scripts/audit/qg_schema.py`.
-- [Scorer adapter boundaries](scorer-adapters.md) document the #4308
-  deterministic, UA-GEC-fixture, and LLM-placeholder adapter layer.
-- [Cost-aware curriculum QG workflow](cost-aware-qg-workflow.md) documents the
-  #4310 tiered, short-circuiting workflow and composite LLM cache key.
-  Tier-2 reviewer retries are capped at <=3 calls/module: initial + one theatre retry + one deep-read retry.
-- [Agent fleet evidence for #4307](agent-fleet-4307.md) records the concrete
-  fleet lanes used for the schema slice and the observed strengths/weaknesses.
-- [Model evidence](model-evidence.md) — per-model probe results (Gemma 4 bakeoff,
-  the opencode-vs-hermes tooled fact-check experiment) that ground routing and
-  harness-transport decisions.
-- [Leaderboard boundary](leaderboard-boundary.md) — what #2156 measures vs what is
-  delegated to the lang-uk leaderboard, plus the metadata interop bridge (#4289).
-- [Surzhyk eval scoping](surzhyk-eval-scoping.md) — #4287 fleet-reviewed task definition,
-  5-class variety taxonomy, GRAC pointer-only fixture policy, IAA pilot gate.
-- [PL/EN borrowing eval scoping](pl-en-borrowing-scoping.md) — #4288 fleet-reviewed lexical-borrowing
-  boundary (syntactic EN calques stay in #2156), harmful-vs-accepted decision rule, source landscape.
+The public set will be derived from an upstream-pinned UA-GEC held-out split.
+A frozen eligibility predicate determines all included records; final size is
+an observed result, not a quota. The manifest preserves upstream IDs,
+writer/document splits, original tags, attribution, source/reference hashes,
+and explicit inclusion/exclusion reasons.
 
-## Design TBD (these are the questions next session should answer)
+## Ownership and data boundaries
 
-### Eval shape — calque axis
+Four lanes cooperate but retain separate ownership:
 
-- Prompt-elicitation: what task family elicits calques best? (Translation EN→UK? Free generation in UK? Continuation from UK seed? Conversation-completion?)
-- Coverage: how many UA-GEC F/Calque examples form the eval set? Hold-out for validation?
-- Scoring: exact-match against gold edit-pairs? F1 over flagged spans? Semantic-equivalence aware?
-- Calibration: how do we compare LLM output to UA-GEC's human-edit format (which is corrective, not generative)?
+- **#2156 — public evaluation:** public UA-GEC-derived gold, standard scoring,
+  baselines, freeze/versioning, documentation, and release.
+- **#4913 — internal quality machinery:** QG schemas, finding envelopes,
+  validators, internal gates, product adapters, and private calibration.
+- **#4542 / #5254 — Hramatka:** teacher-facing product and private Hramatka
+  regression calibration. Teachers are users, not annotators.
+- **#4387 / #4700 — Atlas and Daily Practice:** provenance-aware
+  lexical/heritage evidence and independently rights-cleared learner material.
 
-### Eval shape — grammar axis
+These inventories remain separate:
 
-- Which G/* tags do we score? G/Case, G/Gender, G/Number, G/Aspect, G/Verb? All?
-- Same prompt family as calque axis, or separate prompts that elicit grammar mistakes specifically?
-- Joint vs separate leaderboard: one ranking with two columns, or two separate rankings?
+- frozen public benchmark gold;
+- private Hramatka regression cases;
+- teacher feedback and lesson payloads;
+- Atlas source sentences;
+- Daily Practice exercise inventory;
+- model responses and result metadata;
+- any future training data.
 
-### Models in scope
+Public gold must not enter Daily Practice or training. Product findings and
+teacher feedback may inform private regressions but never automatically become
+public gold. Atlas evidence may cause abstention or a contested-heritage
+warning; it must not silently override UA-GEC gold.
 
-- Closed-source frontier: Claude, GPT-5.5, Gemini, Grok
-- Open-source frontier: DeepSeek, Qwen, Mistral, Kimi, MiniMax
-- Plus open-weight UA-fine-tuned: Lapa, MamayLM (covered by lang-uk leaderboard)
-- Cost ceiling per full eval pass
+Only thin infrastructure may be shared: stable schemas and upstream tags, span
+normalization, scorer interfaces, validator/configuration versions,
+VESUM/heritage evidence semantics, and provenance conventions.
 
-### Repo layout
+## Ordered execution queue
 
-- Standalone repo or sub-project of `learn-ukrainian`?
-- Naming: `ua-eval-harness`? `uk-russian-shadow-eval`? `ua-gec-llm-eval`?
-- Reproducibility: requirements pinned, results-versioned, model-version-captured
+1. [#5966 — reconcile capability truth and freeze the task/data contract](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5966)
+2. [#5967 — build the deterministic held-out UA-GEC extraction manifest](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5967)
+3. [#5636 — standard GEC scorer, saved-response adapter, and baselines](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5636)
+4. [#4626 — freeze manifest, split integrity, and contamination policy](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4626)
+5. [#4541 — stranger-runnable public v0, data card, and baseline report](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4541)
 
-## Out of scope for this project
+EleutherAI/lm-eval compatibility is optional after the saved-response runner
+and standard scorer are proven. It is not a v0 prerequisite.
 
-- **Surzhyk-specific eval (spoken register)** — calques are a subset of Surzhyk patterns; an eval scoped narrowly to spoken-register Surzhyk is a different shape and could be a follow-on project.
-- **Polonisms, anglicisms as primary scope** — schema supports them via `source_lang`, but Russian is priority-1 because that is where empirical LLM harm concentrates today.
-- **General Ukrainian LLM capability** — covered by the lang-uk leaderboard; the boundary + interop bridge are documented in [leaderboard-boundary.md](leaderboard-boundary.md) (#4289). Surzhyk follow-up = #4287; polonism/anglicism expansion = #4288.
+## Non-goals
 
-## Timeline anchors (loose)
+- factuality, BIO, cultural-grounding, or seminar fact checking;
+- synthetic corruption, DPO, fine-tuning, training, or training-data creation;
+- Hramatka, Atlas, Daily Practice, curriculum, or dataset implementation in
+  the governance cycle;
+- Surzhyk, Polonism, or Anglicism expansion;
+- a new leaderboard or arbitrary dataset-size target;
+- teacher/community annotation, approval, or external-person dependency;
+- treating heritage evidence as a boolean Russianism truth layer.
 
-- **2026-05** — scoping (this doc).
-- **2026-mid to 2026-late** — eval design draft + early results.
-- **2027-Q1** — paper draft.
-- **2027-05 (typical UNLP timing)** — UNLP 2027 conference.
+## Release gates
 
-These are loose. Adjust as design firms up.
+The epic remains open until:
 
-## Cross-references
+1. the upstream eligibility predicate and held-out manifest are frozen;
+2. every eligible record has attribution and an exclusion disposition;
+3. a standard scorer accepts saved responses;
+4. identity, deterministic, and one real version-pinned model baseline run;
+5. per-tag support and uncertainty are reported;
+6. the data card, license, limitations, and contamination policy exist;
+7. clean-clone scoring is proven;
+8. no private/product data has entered public gold; and
+9. the package runs without Hramatka, teacher data, Atlas private state, or
+   provider secrets.
 
-- v1 multi-agent routing audit: `audit/2026-05-19-multi-agent-routing-assessment/REPORT.html`
-- Curriculum non-commercial-permanent decision: `CLAUDE.md` (2026-04-19)
-- UA-GEC repo: https://github.com/grammarly/ua-gec
-- UA-GEC license: CC BY 4.0
-- Anthropic Russianism reproducer: anthropics/claude-code#59146
-- UNLP: https://unlp.org.ua/
-- lang-uk leaderboard: https://huggingface.co/spaces/lang-uk/ukrainian-llm-leaderboard
-- Karpov & Chernodub (UNLP 2026 paper): TBD URL when published
-- GitHub tracker: see "Issue tracker" section below.
+## Related records
 
-## Pick-up checklist (for the next session that resumes this)
-
-When you come back to this in a week / month / quarter:
-
-1. Read this file in full.
-2. Check the GitHub issue (linked below) for any inbound comments / status changes.
-3. Check `docs/decisions/` for any related decisions filed since.
-4. Read `audit/2026-05-19-multi-agent-routing-assessment/REPORT.html` §5 (writer bakeoff) and §1 finding #4 — the closest existing data points.
-5. Confirm UNLP 2027 timing — adjust the timeline section above if dates have firmed up.
-6. If the eval design has not been drafted yet, that is the next-action item.
-7. If a draft exists, link it from the "Design TBD" sections above.
-
-## Issue tracker
-
-Primary GitHub issue: **[#2156 — Project: UA calque + grammar eval harness (UNLP 2027 target)](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2156)** (filed 2026-05-19).
+- [Ownership and data-boundary decision](../../decisions/2026-07-28-public-ua-eval-ownership-and-data-boundaries.md)
+- [Internal QG epic #4913](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4913)
+- [Hramatka epic #4542](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4542)
+- [Atlas epic #4387](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4387)
+- [Daily Practice epic #4700](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4700)
+- [UA-GEC upstream repository](https://github.com/grammarly/ua-gec)

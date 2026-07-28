@@ -8,8 +8,8 @@
 > real-time source of truth; this page is the once-per-session orientation layer.
 
 | Field | Value |
-|---|---|
-| **Last refreshed** | 2026-07-27 (milestone layer added; May-era tier lists retired — operator-requested focus refresh; 2-seat panel applied) |
+| --- | --- |
+| **Last refreshed** | 2026-07-28 (#2156 public evaluation ownership reconciled; #4913 internal boundary retained) |
 | **Refresh trigger** | Every session handoff that lands a milestone; every stream-epic board change |
 | **Curriculum KPI** | Modules passing audit per week (curriculum streams; each milestone carries its own outcome measure) |
 | **Mission** | Full Ukrainian curriculum with decolonized pedagogy, real textbook grounding, RAG-verified vocabulary, adversarial review. Quality non-negotiable. |
@@ -22,9 +22,11 @@
 Learners and teachers are the only customers. Every stream must trace to this chain:
 
 1. **Products**: the LU curriculum site (learners) and Hramatka (teachers).
-2. **Kept honest by**: the UA eval harness (QG gates, judges, benchmarks).
+2. **Kept honest by**: internal QG machinery (#4913) and the separately owned
+   public UA-GEC calque + grammar evaluation (#2156).
 3. **Which runs on**: the fleet — build pipeline, dispatch, comms, leases, CI.
-4. **Community give-back**: the grounded-factuality benchmark release (code, not paper).
+4. **Community give-back**: the public UA-GEC calque + grammar evaluation
+   package (code and reproducible evidence, not a broad leaderboard).
 
 **The trace is falsifiable, not vibes:** every queued item names its stream milestone,
 the specific done-condition it advances, and the learner/teacher outcome that condition
@@ -43,14 +45,14 @@ is the single source of truth for membership (auditor:
 `scripts/orchestration/issue_stream_audit.py`; live view: `GET /api/issues/streams`).
 
 | Stream | Epic(s) | Scope |
-|---|---|---|
+| --- | --- | --- |
 | atlas-practice | #4387, #4700, #5331 | Word Atlas + Practice Hub product & UX |
 | atlas-intake | #4220, #4378, #5224 | Full-corpus intake into the Atlas |
 | corpus-channels | #4706 | Acquisition & ingestion (textbooks · ZNO · Ohoiko-media · press · academic) |
 | infra-harness | #4707 | Infra & fleet reliability (hooks, dispatch, routing) |
 | devops | #5703 | DevOps automation, CI, release & launcher reliability |
-| eval-harness | #4913 | UA eval harness: QG grounding/entailment gates, grammar-lexical gate, annotation, bakeoffs, cutovers |
-| benchmark-2156 | #4639 | UA LLM grounded-factuality benchmark community release |
+| eval-harness | #4913 | Internal QG schemas, validators, quality gates, product adapters, and private calibration |
+| benchmark-2156 | #2156 | Public UA-GEC-derived calque + grammar gold, standard scoring, baselines, freeze, and release |
 | core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |
 | seminars-folk | #2836 | FOLK re-research + rebuild |
 | seminars-bio | #4431, #4215 | BIO readiness + builds |
@@ -74,10 +76,10 @@ Rows below marked *(proposed)* were drafted by the infra driver on 2026-07-27 fr
 epic-board state and bind only once that stream's driver (State: the operator) confirms.
 
 | Stream | State | Current milestone | Done when |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | infra-harness | ACTIVE *(proposed)* | Weak-driver rails T1 (T1.1 slot addressing ✅ #5878; T1.2 lease lifecycle; T1.3 glm canary lane) | T1.2 + T1.3 merged with mutation-checked tests. (The fleet-comms decision packet — dual-write parity + authority-signal evidence for any future plane change, file handoff never dropped unilaterally per `fleet-comms-coordination.md` — is the NEXT milestone, not this one.) |
-| eval-harness | *(operator to set)* | Label-the-union annotation → judge qualification (#4913 board's critical path) *(proposed — driver to confirm)* | Annotation round complete + qualification scored against it per `layerb-entailment-gate-design.md`; judge-selection decisions only after |
-| benchmark-2156 | *(operator to set)* | Benchmark v1 freeze + native-expert validation (#4639 Phases 1–2: #4626 before packaging #4541) *(proposed — driver to confirm)* | v1 frozen with a tagged, reproducible run command; expert calibration pass recorded |
+| eval-harness | *(operator to set)* | Internal product-quality machinery under #4913 *(driver to confirm)* | Current internal milestone is confirmed on #4913 without absorbing public gold or release work |
+| benchmark-2156 | ACTIVE | Governance truth freeze (#5966), then held-out manifest (#5967) | #5966 merged and closed; #5967 then manifests every eligible upstream held-out UA-GEC record with provenance and exclusions |
 | atlas-practice | ACTIVE *(proposed)* | Practice Hub deck experience stable after the D10 wave (#5877–#5883) *(driver to confirm)* | A bounded soak: 7 days with no new daily-deck defect filed; then next #4700 item |
 | atlas-intake | ACTIVE *(proposed)* | 20k enrichment run with durable storage (#5884) *(driver to confirm)* | Enriched dataset persisted off-repo with a tracked pointer; refetch never needed |
 | corpus-channels | *(operator to set)* | *(VACANT — driver to set from #4706; the slot-addressing work formerly listed here is infra-harness scope)* | — |
@@ -101,7 +103,7 @@ on the infra board).
 Every shipped module must pass all three:
 
 | Pillar | What | How |
-|---|---|---|
+| --- | --- | --- |
 | **Structural** | Word count, activities, vocab, formatting, MDX render | Deterministic audit gates (`scripts/audit_module.py`, `python_qg.json`, `wiki_coverage_gate.py`) |
 | **Linguistic** | VESUM-verified words, Russianisms/Surzhyk/calques/paronyms clean, citations resolve | MCP `sources` server (`mcp__sources__*` / `mcp_sources_*`) — verify_words, check_russian_shadow, verify_source_attribution, search_style_guide |
 | **Pedagogical** | Tone, immersion balance, register, decolonization, sequence | Cross-agent reviewer per the live routing rule (`model-assignment.md` served at `/api/rules`) |

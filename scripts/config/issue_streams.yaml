@@ -1,3 +1,4 @@
+---
 # Issue-stream registry — single source of truth for "which epic defines which stream".
 # Consumed by scripts/orchestration/issue_stream_audit.py, the session-setup hook, and
 # /api/state/issues-health. docs/WORKSTREAMS.md § Streams mirrors this table.
@@ -25,11 +26,11 @@ streams:
     title: "DevOps automation, CI, release & launcher reliability"
     epics: [5703]
   eval-harness:
-    title: "UA eval harness — QG gates, grammar-lexical gate, annotation, bakeoffs"
+    title: "Internal UA quality machinery — QG gates, validators, product adapters"
     epics: [4913]
   benchmark-2156:
-    title: "Ukrainian LLM factuality benchmark — community release"
-    epics: [4639]
+    title: "Public Ukrainian calque + grammar evaluation — UA-GEC benchmark"
+    epics: [2156]
   core-quality:
     title: "Core-track deterministic quality"
     epics: [4274]
