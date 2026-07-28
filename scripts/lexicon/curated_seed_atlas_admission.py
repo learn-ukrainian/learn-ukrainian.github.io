@@ -1,4 +1,4 @@
-"""Prepare and verify the public Atlas + Practice admission for Alona v5.
+"""Prepare and verify the public Atlas + Practice admission for curated v5.
 
 The operator-curated v5 JSONL is private task input. This command emits a
 public replay seed, derives only missing Atlas candidates through the existing
@@ -24,8 +24,8 @@ from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.grow_lexicon_from_content import _vesum_pos
 from scripts.sync.promote_module import _write_atomically
 
-PRACTICE_SCHEMA = "alona-v5-practice-seed-v1"
-PUBLIC_SCHEMA = "alona-v5-atlas-admission-seed-v1"
+PRACTICE_SCHEMA = "curated-v5-practice-seed-v1"
+PUBLIC_SCHEMA = "curated-v5-admission-seed-v1"
 
 
 def _text(value: object) -> str:
@@ -74,7 +74,7 @@ def normalize_rows(rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
 def write_public_seed(rows: list[dict[str, Any]], path: Path) -> None:
     payload = {
         "schema": PUBLIC_SCHEMA,
-        "selectionNote": "All active Alona v5 curated rows; private document path omitted.",
+        "selectionNote": "All active curated v5 rows; private document path omitted.",
         "entries": rows,
     }
     _write_json(path, payload)
@@ -83,7 +83,7 @@ def write_public_seed(rows: list[dict[str, Any]], path: Path) -> None:
 def read_public_seed(path: Path) -> list[dict[str, Any]]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict) or payload.get("schema") != PUBLIC_SCHEMA:
-        raise ValueError(f"unsupported Alona public seed schema: {path}")
+        raise ValueError(f"unsupported curated public seed schema: {path}")
     entries = payload.get("entries")
     if not isinstance(entries, list) or not all(isinstance(row, dict) for row in entries):
         raise ValueError(f"public seed entries must be objects: {path}")
@@ -125,7 +125,7 @@ def candidates_for_manifest(rows: list[dict[str, Any]], manifest_path: Path) -> 
                 "gloss": _text(row.get("gloss")),
                 "pos": _vesum_pos(lemma),
                 "entry_type": _entry_type(lemma),
-                "primary_source": "alona_v5_curated_seed",
+                "primary_source": "curated_v5_seed",
             }
         )
     return {"auto_merge": candidates, "needs_review": []}
@@ -180,7 +180,7 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
         cefr_sources[source] += 1
         practice_rows.append({"seedRow": row.get("seedRow"), "lemma": _text(target.get("lemma")), "slug": _text(target.get("url_slug")), "cefr": level, "example": example, "provenance": provenance, "sentenceStatus": "ok"})
     report = {
-        "schema": "alona-v5-atlas-admission-report-v1",
+        "schema": "curated-v5-admission-report-v1",
         "counts": {
             "active_seed_rows": len(rows), "unique_seed_lemmas": len({_lemma_key(_text(row.get("lemma"))) for row in rows}),
             "public_atlas_rows": len(rows) - len(atlas_failures), "atlas_failures": len(atlas_failures),
@@ -190,7 +190,7 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
         "atlas_failures": atlas_failures,
         "practice_skipped_no_cefr": skipped_no_cefr,
     }
-    seed = {"schema": PRACTICE_SCHEMA, "deckSlug": "alona-v5-full", "title": "Alona v5 curated practice admission", "selectionNote": "All sentence_status=ok rows whose public Atlas route has pipeline-derived CEFR. Recognition-first; no cloze targets.", "entries": practice_rows}
+    seed = {"schema": PRACTICE_SCHEMA, "deckSlug": "curated-v5-full", "title": "Curated v5 practice admission", "selectionNote": "All sentence_status=ok rows whose public Atlas route has pipeline-derived CEFR. Recognition-first; no cloze targets.", "entries": practice_rows}
     return seed, report
 
 

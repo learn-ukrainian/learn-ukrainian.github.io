@@ -419,8 +419,13 @@ data/lexicon/grow_candidates.json
 data/lexicon/grow_needs_review.json
 data/lexicon/needs-review-triage.json
 data/lexicon/needs-review-triage-summary.md
-# Full Alona v5 admission evidence is regenerated locally from the private
-# curated JSONL.  Keep the recipe and fixture in git, not the 1,029-row output.
+# Full curated v5 admission evidence is regenerated locally from private input.
+# Keep the recipe and fixture in git, not the generated output.
+data/lexicon/curated-v5-admission-seed.json
+data/lexicon/curated-v5-practice-seed.json
+data/lexicon/curated-v5-admission-report.json
+data/lexicon/curated-v5-grow-candidates.json
+# Retain the prior output paths for one transition cycle.
 data/lexicon/alona-v5-atlas-admission-seed.json
 data/lexicon/alona-v5-practice-seed.json
 data/lexicon/alona-v5-atlas-admission-report.json

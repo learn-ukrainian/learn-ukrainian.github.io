@@ -1,14 +1,10 @@
 {
-  "fingerprint": "1b9d36a499d375795e26c711575b38d34c81b08f11bcfda542ac7d82560af16f",
+  "fingerprint": "bc3cf4e01301c1bef007036a41a83185da885a61587b077137bf07b7e73d7934",
   "inputs": {
     "lexicon_code": [
       {
         "path": "scripts/lexicon/__init__.py",
         "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-      },
-      {
-        "path": "scripts/lexicon/alona_v5_atlas_admission.py",
-        "sha256": "5ac4de1968e4b2f3a4523f714f6922bb55d5e54ae232f7580141f79738d8ef14"
       },
       {
         "path": "scripts/lexicon/anchor_curation_evidence.py",
@@ -69,6 +65,10 @@
       {
         "path": "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
         "sha256": "f5fd62e8e4a6aa02dd01d042368c874e56a992fa8e69366148c1cb184430920a"
+      },
+      {
+        "path": "scripts/lexicon/curated_seed_atlas_admission.py",
+        "sha256": "33ddb6dc5b79dac2f48e4598e2ad9fcc89e4584711b2d0182d0161ff5e937673"
       },
       {
         "path": "scripts/lexicon/curated_textbook_jsonl_repromote.py",
