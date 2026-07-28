@@ -181,7 +181,8 @@ cross-family review.
 - Run only independent work in parallel. Do not duplicate a healthy native or
   external lane, and do not give two writers the same path.
 - Avoid nested delegation unless a bounded sub-workstream truly needs a
-  coordinator and its descendant slots are reserved.
+  coordinator and its descendant slots are reserved. The coordinator and every
+  descendant consume slots from the same three-agent whole-tree cap.
 - Continue useful root-owned integration work, wait for every requested child,
   inspect every return and diff, reconcile by evidence rather than vote, run
   integrated verification, call `list_agents` again, and report every

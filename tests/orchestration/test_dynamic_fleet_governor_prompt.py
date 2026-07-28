@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from scripts.api.route_contracts import contract_for_route
+
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PROMPT = (
@@ -36,6 +38,7 @@ def test_governor_prompt_is_api_first_with_bounded_fallbacks() -> None:
         "/api/delegate/active",
     ):
         assert endpoint in prompt
+        assert contract_for_route(endpoint, "http") is not None
 
 
 def test_governor_prompt_binds_one_area_epic_and_github_lifecycle() -> None:
@@ -58,6 +61,7 @@ def test_governor_prompt_keeps_sol_bounded_and_v2_accountable() -> None:
     assert prompt.count("list_agents") >= 3
     assert 'fork_turns="none"' in prompt
     assert "no more than three non-root native agents" in prompt
+    assert "same three-agent whole-tree cap" in prompt
     assert "never satisfy the independent cross-family review gate" in prompt
     for field in (
         "functional role",
