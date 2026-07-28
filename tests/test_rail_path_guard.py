@@ -201,6 +201,51 @@ def test_missing_receipt_binding_mutation_is_observable(monkeypatch: pytest.Monk
     assert _decide(OWNED_RAIL_PATH, receipt=receipt, task_id="other-task").allowed is True
 
 
+def _direct_payload_receipt(**overrides: object) -> guard.VerifiedRailApprovalReceipt:
+    """Build a receipt the way a direct-payload caller (delegate.py) can: NO resolver.
+
+    The resolver refuses expired/forged receipts itself, so resolver-built
+    fixtures can never exercise the decision layer's own re-checks — which are
+    load-bearing for callers that pass a VerifiedRailApprovalReceipt directly.
+    Mutation-proven: disabling the decision-layer expiry check previously left
+    the whole suite green (orchestrator probe, PR #5980).
+    """
+    return guard.VerifiedRailApprovalReceipt(
+        payload=_receipt(**overrides),
+        source_id="bridge:test",
+        digest="d" * 64,
+    )
+
+
+@pytest.mark.parametrize(
+    ("overrides", "expected_reason"),
+    [
+        # Reachable ONLY via a direct payload: schema cannot see the clock.
+        # (Ordering stays valid — issued before expiry — but the window is past.)
+        (
+            {"issued_at": "2026-07-26T00:00:00Z", "expires_at": "2026-07-27T00:00:00Z"},
+            "expired_rail_approval_receipt",
+        ),
+        # Schema enum rejects a forged issuer at the decision layer's re-validation;
+        # the in-code APPROVED_ISSUERS check behind it is drift armor for the schema.
+        ({"issuer": "self-declared-model-tier"}, "invalid_rail_approval_receipt"),
+        ({"task_id": "another-task"}, "rail_approval_task_mismatch"),
+        ({"head_sha": "b" * 40}, "rail_approval_head_mismatch"),
+        ({"owned_paths": ["scripts/config/trails/other.trail.yaml"]}, "rail_approval_path_mismatch"),
+        # Structurally invalid payload (missing required field) → schema refusal.
+        ({"head_sha": None}, "invalid_rail_approval_receipt"),
+    ],
+)
+def test_decision_layer_denies_bad_direct_payloads(
+    overrides: dict, expected_reason: str
+) -> None:
+    """Every deny reason of the pure decision layer fires on a direct payload."""
+    receipt = _direct_payload_receipt(**overrides)
+    decision = _decide(OWNED_RAIL_PATH, receipt=receipt)
+    assert decision.allowed is False
+    assert decision.reason == expected_reason
+
+
 def test_ci_gate_requires_the_shared_rail_path_module() -> None:
     """Removing the CI job/wiring makes this rail-layer contract test fail."""
     workflow_path = Path(__file__).resolve().parents[1] / ".github/workflows/ci.yml"
