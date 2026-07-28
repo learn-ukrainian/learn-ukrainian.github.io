@@ -24,7 +24,7 @@
 # (observation → judgment), never to a mutation.
 schema_version: trailspec.v1
 trail_id: rb6-estate-probes
-version: "0.1.0"
+version: "0.1.1"
 title: RB6 Estate probes — VPS, service, disk, private repo, public site (read-only)
 seats:
   - grok-daily
@@ -47,8 +47,8 @@ steps:
       "fixes" — the pilot host is live.
     command: sh -c 'V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 vps "echo vps-reachable" 2>/dev/null); printf "%s\n" "${V:-probe-failed}" > batch_state/rb6-vps-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; [ "$V" = "vps-reachable" ] && echo vps-reachable || echo vps-unreachable'
     evidence_predicate:
-      command: sh -c 'grep -q "^vps-reachable$" batch_state/rb6-vps-{handoff_agent}.txt && echo vps-reachable || echo vps-unreachable'
-      success_pattern: '^(vps-reachable|vps-unreachable)$'
+      command: sh -c 'test -s batch_state/rb6-vps-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; grep -q "^vps-reachable$" batch_state/rb6-vps-{handoff_agent}.txt && echo vps-reachable || echo vps-unreachable'
+      success_pattern: '^(vps-reachable|vps-unreachable|receipt-unwritable)$'
     transitions:
       vps_reachable: service_probe
       vps_unreachable: estate_degraded_summon
@@ -66,8 +66,8 @@ steps:
       restart/deploy decisions are judgment-tier.
     command: sh -c 'V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 vps "systemctl is-active hramatka-api" 2>/dev/null); echo "${V:-probe-failed}" > batch_state/rb6-service-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; case "$V" in active) echo service-active;; "") echo probe-failed;; *) echo service-not-active;; esac'
     evidence_predicate:
-      command: sh -c 'V=$(cat batch_state/rb6-service-{handoff_agent}.txt 2>/dev/null); case "$V" in active) echo service-active;; ""|probe-failed) echo probe-failed;; *) echo service-not-active;; esac'
-      success_pattern: '^(service-active|service-not-active|probe-failed)$'
+      command: sh -c 'test -s batch_state/rb6-service-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; V=$(cat batch_state/rb6-service-{handoff_agent}.txt); case "$V" in active) echo service-active;; probe-failed) echo probe-failed;; *) echo service-not-active;; esac'
+      success_pattern: '^(service-active|service-not-active|probe-failed|receipt-unwritable)$'
     transitions:
       service_active: vps_disk_floor
       service_not_active: estate_degraded_summon
@@ -88,8 +88,8 @@ steps:
       unparseable size is a failed probe, never a clean one.
     command: sh -c 'V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 vps "df -h / | awk \"NR==2 {print \\\$4}\"" 2>/dev/null); echo "${V:-probe-failed}" > batch_state/rb6-disk-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; echo "$V" | awk "/^[0-9.]+Ti?\$/{print \"floor-cleared\"; ok=1} /^[0-9.]+Gi?\$/{sub(/Gi?\$/,\"\"); print (\$0+0>=5)?\"floor-cleared\":\"below-floor\"; ok=1} /^[0-9.]+[MKmk]i?\$/{print \"below-floor\"; ok=1} END{if(!ok) print \"probe-failed\"}"'
     evidence_predicate:
-      command: sh -c 'V=$(cat batch_state/rb6-disk-{handoff_agent}.txt 2>/dev/null); echo "$V" | awk "/^[0-9.]+Ti?\$/{print \"floor-cleared\"; ok=1} /^[0-9.]+Gi?\$/{sub(/Gi?\$/,\"\"); print (\$0+0>=5)?\"floor-cleared\":\"below-floor\"; ok=1} /^[0-9.]+[MKmk]i?\$/{print \"below-floor\"; ok=1} END{if(!ok) print \"probe-failed\"}"'
-      success_pattern: '^(floor-cleared|below-floor|probe-failed)$'
+      command: sh -c 'test -s batch_state/rb6-disk-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; V=$(cat batch_state/rb6-disk-{handoff_agent}.txt); echo "$V" | awk "/^[0-9.]+Ti?\$/{print \"floor-cleared\"; ok=1} /^[0-9.]+Gi?\$/{sub(/Gi?\$/,\"\"); print (\$0+0>=5)?\"floor-cleared\":\"below-floor\"; ok=1} /^[0-9.]+[MKmk]i?\$/{print \"below-floor\"; ok=1} END{if(!ok) print \"probe-failed\"}"'
+      success_pattern: '^(floor-cleared|below-floor|probe-failed|receipt-unwritable)$'
     transitions:
       floor_cleared: private_repo_probe
       below_floor: estate_degraded_summon
@@ -107,8 +107,8 @@ steps:
       pushes are judgment-tier. Only an absent/unreadable repo degrades.
     command: sh -c 'H=$(git -C ~/projects/learn-ukrainian-infra-private rev-parse --short HEAD 2>/dev/null); D=$(git -C ~/projects/learn-ukrainian-infra-private status --porcelain 2>/dev/null | wc -l | tr -d " "); { echo "head=${H:-absent}"; echo "dirty-lines=${D:-unknown}"; } > batch_state/rb6-privrepo-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; case "$H" in "") echo repo-absent;; *) echo repo-present;; esac'
     evidence_predicate:
-      command: sh -c 'grep -q "^head=[0-9a-f]" batch_state/rb6-privrepo-{handoff_agent}.txt && echo repo-present || echo repo-absent'
-      success_pattern: '^(repo-present|repo-absent)$'
+      command: sh -c 'test -s batch_state/rb6-privrepo-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; grep -q "^head=[0-9a-f]" batch_state/rb6-privrepo-{handoff_agent}.txt && echo repo-present || echo repo-absent'
+      success_pattern: '^(repo-present|repo-absent|receipt-unwritable)$'
     transitions:
       repo_present: public_site_probe
       repo_absent: estate_degraded_summon
@@ -125,8 +125,8 @@ steps:
       never a trail action.
     command: sh -c 'C=$(curl -s -o /dev/null --max-time 8 -w "%{http_code}" https://learn-ukrainian.github.io/ 2>/dev/null); echo "${C:-probe-failed}" > batch_state/rb6-site-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; case "$C" in 200) echo site-serving;; *) echo site-not-serving;; esac'
     evidence_predicate:
-      command: sh -c 'C=$(cat batch_state/rb6-site-{handoff_agent}.txt 2>/dev/null); case "$C" in 200) echo site-serving;; *) echo site-not-serving;; esac'
-      success_pattern: '^(site-serving|site-not-serving)$'
+      command: sh -c 'test -s batch_state/rb6-site-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; C=$(cat batch_state/rb6-site-{handoff_agent}.txt); case "$C" in 200) echo site-serving;; *) echo site-not-serving;; esac'
+      success_pattern: '^(site-serving|site-not-serving|receipt-unwritable)$'
     transitions:
       site_serving: estate_receipt
       site_not_serving: estate_degraded_summon
