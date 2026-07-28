@@ -15,6 +15,7 @@ import json
 import re
 import sys
 from datetime import UTC, datetime
+from itertools import product
 from pathlib import Path
 from typing import Any
 
@@ -53,8 +54,14 @@ DEFAULT_EXAMPLE_TRAIL_PATH = (
 DECISION_TABLES_SCHEMA_PATH = (
     PROJECT_ROOT / "agents_extensions/shared/schemas/decision-tables.v0.schema.json"
 )
+DECISION_TABLES_V1_SCHEMA_PATH = (
+    PROJECT_ROOT / "agents_extensions/shared/schemas/decision-tables.v1.schema.json"
+)
 DEFAULT_DECISION_TABLES_PATH = (
     PROJECT_ROOT / "scripts/config/trails/decision-tables.v0.yaml"
+)
+DEFAULT_DECISION_TABLES_V1_PATH = (
+    PROJECT_ROOT / "scripts/config/trails/decision-tables.v1.yaml"
 )
 
 _TRAIL_SCHEMA_PATHS = {
@@ -64,6 +71,10 @@ _TRAIL_SCHEMA_PATHS = {
 _STEP_RECEIPT_SCHEMA_PATHS = {
     "step-receipt.v1": STEP_RECEIPT_SCHEMA_PATH,
     "step-receipt.v1.1": STEP_RECEIPT_V11_SCHEMA_PATH,
+}
+_DECISION_TABLES_SCHEMA_PATHS = {
+    "decision-tables.v0": DECISION_TABLES_SCHEMA_PATH,
+    "decision-tables.v1": DECISION_TABLES_V1_SCHEMA_PATH,
 }
 _PARAMETER_REFERENCE = re.compile(r"\{([A-Za-z_][A-Za-z0-9_]*)\}")
 
@@ -539,13 +550,116 @@ def _validate_v11_receipt_binding(
         )
 
 
+def _v1_input_domain(input_name: str, definition: dict[str, Any]) -> list[bool | str]:
+    """Return a declared finite input domain or reject a malformed static table."""
+    if definition["type"] == "boolean":
+        return [False, True]
+    if definition["type"] == "enum":
+        return definition["values"]
+    raise TrailSpecValidationError(
+        f"DecisionTables v1 input '{input_name}' has unsupported type "
+        f"{definition['type']!r}"
+    )
+
+
+def _validate_v1_condition(
+    *,
+    table_name: str,
+    row_id: str,
+    condition: dict[str, Any],
+    declarations: dict[str, Any],
+) -> None:
+    """Check that a v1 condition references a declared input using its real type."""
+    input_name = condition["input"]
+    if input_name not in declarations:
+        raise TrailSpecValidationError(
+            f"DecisionTables v1 table '{table_name}' row '{row_id}' references "
+            f"undeclared input '{input_name}'"
+        )
+    definition = declarations[input_name]
+    expected_values = (
+        [condition["equals"]]
+        if "equals" in condition
+        else condition["one_of"]
+    )
+    for expected in expected_values:
+        if definition["type"] == "boolean":
+            valid = type(expected) is bool
+        else:
+            valid = isinstance(expected, str) and expected in definition["values"]
+        if not valid:
+            raise TrailSpecValidationError(
+                f"DecisionTables v1 table '{table_name}' row '{row_id}' condition "
+                f"for input '{input_name}' has invalid typed value {expected!r}"
+            )
+
+
+def _v1_row_matches(row: dict[str, Any], candidate: dict[str, bool | str]) -> bool:
+    """Evaluate a schema-validated row against one finite-domain input tuple."""
+    for condition in row["when"]["all"]:
+        value = candidate[condition["input"]]
+        if "equals" in condition:
+            if value != condition["equals"]:
+                return False
+        elif value not in condition["one_of"]:
+            return False
+    return True
+
+
+def _validate_v1_decision_table_uniqueness(tables_data: dict[str, Any]) -> None:
+    """Reject v1 static rows that overlap in any declared typed input tuple.
+
+    Empty regions are deliberately allowed: runtime evaluation parks them as
+    STOP-unknown. This check enforces the complementary safety property that a
+    row order cannot silently choose between multiple matching outcomes.
+    """
+    for table_name, table in tables_data["tables"].items():
+        if table["mode"] != "static":
+            continue
+        declarations = table["inputs"]
+        row_ids = [row["id"] for row in table["rows"]]
+        if len(row_ids) != len(set(row_ids)):
+            raise TrailSpecValidationError(
+                f"DecisionTables v1 table '{table_name}' has duplicate row id(s)"
+            )
+        for row in table["rows"]:
+            for condition in row["when"]["all"]:
+                _validate_v1_condition(
+                    table_name=table_name,
+                    row_id=row["id"],
+                    condition=condition,
+                    declarations=declarations,
+                )
+
+        input_names = list(declarations)
+        domains = [_v1_input_domain(name, declarations[name]) for name in input_names]
+        for values in product(*domains):
+            candidate = dict(zip(input_names, values, strict=True))
+            matches = [
+                row["id"]
+                for row in table["rows"]
+                if _v1_row_matches(row, candidate)
+            ]
+            if len(matches) > 1:
+                raise TrailSpecValidationError(
+                    "DecisionTables v1 first-match uniqueness violated: "
+                    f"table '{table_name}' rows {matches} match typed inputs {candidate}"
+                )
+
+
 def validate_decision_tables_data(
     tables_data: dict[str, Any],
     *,
-    tables_schema_path: Path = DECISION_TABLES_SCHEMA_PATH,
+    tables_schema_path: Path | None = None,
 ) -> dict[str, Any]:
     """Validate a decision-tables document against schema and domain invariants."""
-    tables_schema = _load_schema(tables_schema_path)
+    resolved_schema_path = _schema_path_for(
+        tables_data,
+        paths=_DECISION_TABLES_SCHEMA_PATHS,
+        label="DecisionTables",
+        supplied_path=tables_schema_path,
+    )
+    tables_schema = _load_schema(resolved_schema_path)
     validator = Draft202012Validator(tables_schema, format_checker=FormatChecker())
     errors = sorted(validator.iter_errors(tables_data), key=lambda e: e.path)
     if errors:
@@ -557,18 +671,27 @@ def validate_decision_tables_data(
     # Invariant: any row action naming a STOP code must use the published contract list.
     for table_name, table in tables_data.get("tables", {}).items():
         for idx, row in enumerate(table.get("rows", []) or []):
-            then = row.get("then", "")
-            if then.startswith("STOP-") and then not in VALID_STOP_CODES:
+            if tables_data["schema_version"] == "decision-tables.v0":
+                token = row.get("then", "")
+            else:
+                outcome = row.get("outcome", {})
+                token = outcome.get("token", "") if isinstance(outcome, dict) else ""
+            if token.startswith("STOP-") and token not in VALID_STOP_CODES:
                 raise TrailSpecValidationError(
                     f"DecisionTables invariant violated: table '{table_name}' row {idx} "
-                    f"names unknown stop code '{then}' (must be from the published contract list)"
+                    f"names unknown stop code '{token}' (must be from the published contract list)"
                 )
+
+    if tables_data["schema_version"] == "decision-tables.v1":
+        _validate_v1_decision_table_uniqueness(tables_data)
 
     tables = tables_data.get("tables", {})
     return {
         "ok": True,
         "schema_version": tables_data.get("schema_version"),
-        "precedence": tables_data.get("precedence"),
+        "precedence": tables_data.get(
+            "precedence", tables_data.get("matching_policy")
+        ),
         "tables": sorted(tables.keys()),
         "tables_count": len(tables),
     }
@@ -577,7 +700,7 @@ def validate_decision_tables_data(
 def validate_decision_tables(
     tables_path: Path = DEFAULT_DECISION_TABLES_PATH,
     *,
-    tables_schema_path: Path = DECISION_TABLES_SCHEMA_PATH,
+    tables_schema_path: Path | None = None,
 ) -> dict[str, Any]:
     """Validate a decision-tables YAML/JSON file."""
     tables_data = _load_yaml_or_json(tables_path)

@@ -13,6 +13,7 @@ from scripts.orchestration.red_ci_known_failures import VALID_STOP_CODES
 from scripts.orchestration.validate_trailspec import (
     COMMAND_RECEIPT_SCHEMA_PATH,
     DEFAULT_DECISION_TABLES_PATH,
+    DEFAULT_DECISION_TABLES_V1_PATH,
     DEFAULT_EXAMPLE_TRAIL_PATH,
     STEP_RECEIPT_SCHEMA_PATH,
     STEP_RECEIPT_V11_SCHEMA_PATH,
@@ -714,6 +715,10 @@ def _get_happy_tables_data() -> dict[str, Any]:
     return yaml.safe_load(DEFAULT_DECISION_TABLES_PATH.read_text(encoding="utf-8"))
 
 
+def _get_happy_v1_tables_data() -> dict[str, Any]:
+    return yaml.safe_load(DEFAULT_DECISION_TABLES_V1_PATH.read_text(encoding="utf-8"))
+
+
 def test_decision_tables_file_validates() -> None:
     """The shipped decision-tables draft must pass its schema (review finding on #5886:
     the v0 file declared itself unvalidated and sat outside all coverage)."""
@@ -762,6 +767,79 @@ def test_negative_decision_tables_unknown_stop_code() -> None:
     with pytest.raises(TrailSpecValidationError) as exc_info:
         validate_decision_tables_data(data)
     assert "STOP-made-up-code" in str(exc_info.value)
+
+
+def test_v1_decision_tables_file_validates_and_keeps_all_v0_table_names() -> None:
+    """P2's typed document is a parallel migration; v0 remains its own contract."""
+    res = validate_decision_tables(DEFAULT_DECISION_TABLES_V1_PATH)
+
+    assert res["ok"] is True
+    assert res["schema_version"] == "decision-tables.v1"
+    assert res["precedence"] == "first-match-unique"
+    for expected in ("queue-pick", "review-gate-arm", "settle-status", "width"):
+        assert expected in res["tables"], f"table '{expected}' missing from v1"
+
+
+def test_negative_v1_decision_tables_rejects_overlapping_first_match_rows() -> None:
+    """Mutation proof: row order cannot silently resolve two typed outcomes."""
+    data = _get_happy_v1_tables_data()
+    rows = data["tables"]["queue-pick"]["rows"]
+    duplicate = copy.deepcopy(rows[-1])
+    duplicate["id"] = "ready-item-duplicate"
+    rows.append(duplicate)
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_decision_tables_data(data)
+
+    assert "first-match uniqueness violated" in str(exc_info.value)
+    assert validate_decision_tables_data(_get_happy_v1_tables_data())["ok"] is True
+
+
+def test_negative_v1_decision_tables_rejects_free_form_outcome() -> None:
+    """Mutation proof: static executable rows cannot return prose."""
+    data = _get_happy_v1_tables_data()
+    data["tables"]["queue-pick"]["rows"][0]["outcome"] = "do whatever seems right"
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_decision_tables_data(data)
+
+    assert "DecisionTables schema violation" in str(exc_info.value)
+    assert validate_decision_tables_data(_get_happy_v1_tables_data())["ok"] is True
+
+
+def test_negative_v1_decision_tables_rejects_unknown_stop_token() -> None:
+    """Mutation proof: typed v1 STOP outcomes use P1's 18-code vocabulary."""
+    data = _get_happy_v1_tables_data()
+    data["tables"]["queue-pick"]["rows"][0]["outcome"]["token"] = "STOP-not-published"
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_decision_tables_data(data)
+
+    assert "STOP-not-published" in str(exc_info.value)
+    assert validate_decision_tables_data(_get_happy_v1_tables_data())["ok"] is True
+
+
+def test_negative_v1_decision_tables_rejects_wrongly_typed_condition() -> None:
+    """Mutation proof: a condition value must use its declared input type."""
+    data = _get_happy_v1_tables_data()
+    data["tables"]["queue-pick"]["rows"][0]["when"]["all"][0]["equals"] = "yes"
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_decision_tables_data(data)
+
+    assert "invalid typed value 'yes'" in str(exc_info.value)
+    assert validate_decision_tables_data(_get_happy_v1_tables_data())["ok"] is True
+
+
+def test_v1_table_reference_integrity_uses_the_typed_document() -> None:
+    """A trail binding must resolve in either validated parallel table version."""
+    spec = _get_rb1_data()
+    tables = _get_happy_v1_tables_data()
+
+    res = validate_trail_table_refs(spec, tables)
+
+    assert res["ok"] is True
+    assert res["bound_steps"]["pick_next"] == "queue-pick"
 
 
 _RB1_PATH = _TRAILS_DIR / "rb1-cold-start.trail.yaml"
