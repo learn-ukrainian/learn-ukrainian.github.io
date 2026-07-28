@@ -33,7 +33,7 @@
 # proceed.
 schema_version: trailspec.v1
 trail_id: rb5-session-close
-version: "0.1.4"
+version: "0.1.5"
 title: RB5 Session close — inbox drain, readiness receipts, hygiene sweep, handoff gate
 seats:
   - grok-daily
@@ -102,8 +102,8 @@ steps:
       stop) — the split steps read the fields this trail can act on soundly.
     command: sh -c '.venv/bin/python -m scripts.orchestration.handoff_ready --json | tee batch_state/rb5-ready-{handoff_agent}.json'
     evidence_predicate:
-      command: sh -c 'jq -e ".checks | has(\"tree_clean\")" batch_state/rb5-ready-{handoff_agent}.json'
-      success_pattern: '^true$'
+      command: sh -c 'jq -e ".checks | has(\"tree_clean\")" batch_state/rb5-ready-{handoff_agent}.json >/dev/null 2>&1 && echo snapshot-recorded || echo predicate-unavailable'
+      success_pattern: '^(snapshot-recorded|predicate-unavailable)$'
     transitions:
       snapshot_recorded: tree_clean_check
       predicate_unavailable: STOP-precondition-failed
