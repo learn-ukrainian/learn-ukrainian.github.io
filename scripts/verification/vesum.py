@@ -25,7 +25,15 @@ _vesum_conn_path: Path | None = None
 
 
 def _resolve_vesum_db_path(db_path: str | Path | None = None) -> Path:
-    return Path(db_path) if db_path is not None else VESUM_DB_PATH
+    if db_path is not None:
+        return Path(db_path)
+    if VESUM_DB_PATH.exists():
+        return VESUM_DB_PATH
+    for parent in PROJECT_ROOT.parents:
+        cand = parent / "data" / "vesum.db"
+        if cand.exists():
+            return cand
+    return VESUM_DB_PATH
 
 
 def get_vesum_conn(db_path: str | Path | None = None):
@@ -146,10 +154,7 @@ def main() -> None:
         else:
             print(f"'{args.query}' - {len(matches)} match(es):")
             for match in matches:
-                print(
-                    f"  lemma={match['lemma']}  pos={match['pos']}  "
-                    f"tags={match['tags']}"
-                )
+                print(f"  lemma={match['lemma']}  pos={match['pos']}  tags={match['tags']}")
     elif args.command == "words":
         results = verify_words(args.query, pos_filter=args.pos)
         if args.json:
