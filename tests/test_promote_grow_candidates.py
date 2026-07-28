@@ -411,6 +411,111 @@ def test_gate_failure_aborts_without_writing(tmp_path: Path, monkeypatch) -> Non
     assert not fingerprint_path.exists()
 
 
+def test_allow_preexisting_conformance_checks_only_promoted_entries(tmp_path: Path) -> None:
+    manifest_path = _write_manifest(tmp_path, [_entry("legacy")])
+    candidates_path = _write_candidates(tmp_path, [_candidate("мама")], [])
+    checked_entries: list[dict[str, object]] = []
+
+    result = promote.promote_grow_candidates(
+        candidates_path=candidates_path,
+        manifest_path=manifest_path,
+        needs_review_path=tmp_path / "grow_needs_review.json",
+        fingerprint_path=tmp_path / "lexicon-manifest.fingerprint.json",
+        write=True,
+        allow_preexisting_conformance=True,
+        self_check=lambda _path: pytest.fail("full-manifest check must not run"),
+        promoted_entries_check=lambda _path, entries: checked_entries.extend(entries) or 0,
+        fingerprint_writer=_fingerprint_writer,
+    )
+
+    assert result.manifest_written is True
+    assert [entry["lemma"] for entry in checked_entries] == ["мама"]
+
+
+def test_cli_allow_preexisting_conformance_uses_promoted_entry_gate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    manifest_path = _write_manifest(tmp_path, [_entry("legacy")])
+    candidates_path = _write_candidates(tmp_path, [_candidate("мама")], [])
+    checked_entries: list[dict[str, object]] = []
+    monkeypatch.setattr(
+        promote,
+        "verify_prospective_manifest",
+        lambda _path: pytest.fail("full-manifest check must not run"),
+    )
+    monkeypatch.setattr(
+        promote,
+        "verify_promoted_entries",
+        lambda _path, entries: checked_entries.extend(entries) or 0,
+    )
+    monkeypatch.setattr(promote, "_write_fingerprint_sidecar", _fingerprint_writer)
+
+    code = promote.main(
+        [
+            "--candidates",
+            str(candidates_path),
+            "--manifest",
+            str(manifest_path),
+            "--needs-review",
+            str(tmp_path / "grow_needs_review.json"),
+            "--fingerprint",
+            str(tmp_path / "lexicon-manifest.fingerprint.json"),
+            "--allow-preexisting-conformance",
+            "--write",
+        ]
+    )
+
+    assert code == 0
+    assert [entry["lemma"] for entry in checked_entries] == ["мама"]
+
+
+def test_allow_preexisting_conformance_still_aborts_on_new_entry_failure(tmp_path: Path) -> None:
+    manifest_path = _write_manifest(tmp_path, [_entry("legacy")])
+    before = manifest_path.read_text(encoding="utf-8")
+    candidates_path = _write_candidates(tmp_path, [_candidate("мама")], [])
+    needs_review_path = tmp_path / "grow_needs_review.json"
+    fingerprint_path = tmp_path / "lexicon-manifest.fingerprint.json"
+
+    with pytest.raises(promote.SelfCheckError):
+        promote.promote_grow_candidates(
+            candidates_path=candidates_path,
+            manifest_path=manifest_path,
+            needs_review_path=needs_review_path,
+            fingerprint_path=fingerprint_path,
+            write=True,
+            allow_preexisting_conformance=True,
+            promoted_entries_check=lambda _path, _entries: 2,
+            fingerprint_writer=_fingerprint_writer,
+        )
+
+    assert manifest_path.read_text(encoding="utf-8") == before
+    assert not needs_review_path.exists()
+    assert not fingerprint_path.exists()
+
+
+def test_promoted_entry_gate_keeps_full_manifest_enrichment_backstop(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    manifest_path = _write_manifest(tmp_path, [_entry("legacy"), _entry("мама")])
+    monkeypatch.setattr(promote.verify_manifest, "hazards", lambda _manifest, _entries: {})
+    monkeypatch.setattr(promote.verify_manifest, "conformance", lambda _manifest: [])
+    monkeypatch.setattr(promote, "check_enrichment", lambda **_kwargs: 2)
+
+    assert promote.verify_promoted_entries(manifest_path, [_entry("мама")]) == 2
+
+
+def test_promoted_entry_gate_rejects_new_slug_collision(tmp_path: Path) -> None:
+    legacy = _entry("legacy")
+    legacy["url_slug"] = "shared-route"
+    promoted = _entry("мама")
+    promoted["url_slug"] = "shared-route"
+    manifest_path = _write_manifest(tmp_path, [legacy, promoted])
+
+    assert promote._promoted_entry_identity_violations(manifest_path, [promoted]) == [
+        "мама: url_slug 'shared-route' collides with an existing route"
+    ]
+
+
 def test_dry_run_writes_nothing(tmp_path: Path) -> None:
     manifest_path = _write_manifest(tmp_path, [_entry("авто")])
     before = manifest_path.read_text(encoding="utf-8")
