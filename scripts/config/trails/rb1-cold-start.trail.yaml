@@ -29,7 +29,7 @@ steps:
       argv:
         - sh
         - -c
-        - .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent "$HANDOFF_AGENT" | .venv/bin/python -c "import sys, json; print(json.load(sys.stdin).get('status', 'unparseable'))"
+        - .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent "$HANDOFF_AGENT" | .venv/bin/python -c "import sys, json; print(json.load(sys.stdin).get('status', 'unparseable'))" || echo detect_failed
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
@@ -71,6 +71,12 @@ steps:
           predicate_id: detect-rollover-unparseable
           clauses:
             - {source: command_receipt, field: actor_outcome, op: eq, value: unparseable}
+      detect_failed:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: detect-rollover-detect-failed
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: detect_failed}
     blocked_on: null
 
   - step_id: claim_rollover
@@ -83,7 +89,7 @@ steps:
       argv:
         - sh
         - -c
-        - .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent "$HANDOFF_AGENT" | .venv/bin/python -c "import sys, json; print(json.load(sys.stdin).get('status', 'unparseable'))"
+        - .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent "$HANDOFF_AGENT" | .venv/bin/python -c "import sys, json; print(json.load(sys.stdin).get('status', 'unparseable'))" || echo detect_failed
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
@@ -125,6 +131,12 @@ steps:
           predicate_id: claim-rollover-unparseable
           clauses:
             - {source: command_receipt, field: actor_outcome, op: eq, value: unparseable}
+      detect_failed:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: claim-rollover-detect-failed
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: detect_failed}
     blocked_on: null
 
   - step_id: orient_api
@@ -318,7 +330,7 @@ steps:
       argv:
         - sh
         - -c
-        - .venv/bin/python -c "import subprocess as s; wt=set(l.split('branch refs/heads/')[1] for l in s.check_output(['git','worktree','list','--porcelain'],text=True).splitlines() if l.startswith('branch refs/heads/')); wt.discard('main'); gone=set(l.strip().split()[0] for l in s.check_output(['git','branch','--format=%(refname:short) %(upstream:track)'],text=True).splitlines() if '[gone]' in l); merged=set(l.strip() for l in s.check_output(['git','branch','--merged','origin/main','--format=%(refname:short)'],text=True).splitlines() if l.strip()); print('stale_refs_require_judgment' if wt.intersection(gone.union(merged)) else 'no_stale_refs')"
+        - .venv/bin/python -c "import subprocess as s; wt=set(l.split('branch refs/heads/')[1] for l in s.check_output(['git','worktree','list','--porcelain'],text=True).splitlines() if l.startswith('branch refs/heads/')); wt.discard('main'); gone=set(l.strip().split()[0] for l in s.check_output(['git','branch','--format=%(refname:short) %(upstream:track)'],text=True).splitlines() if '[gone]' in l); merged=set(l.strip() for l in s.check_output(['git','branch','--merged','origin/main','--format=%(refname:short)'],text=True).splitlines() if l.strip()); print('stale_refs_require_judgment' if wt.intersection(gone.union(merged)) else 'no_stale_refs')" || echo reap_probe_failed
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
       timeout_seconds: 30
@@ -339,6 +351,12 @@ steps:
           predicate_id: reap-stale-judgment-required
           clauses:
             - {source: command_receipt, field: actor_outcome, op: eq, value: stale_refs_require_judgment}
+      reap_probe_failed:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: reap-stale-refs-probe-failed
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: reap_probe_failed}
     blocked_on: null
 
   - step_id: pick_next

@@ -256,7 +256,14 @@ def test_rb1_action_honesty_pin() -> None:
     claim_step = steps_by_id["claim_rollover"]
     assert claim_step["command"]["mutation_class"] == "observe"
     claim_tokens = set(claim_step["transitions"].keys())
-    assert claim_tokens == {"none", "pending_start", "resumed", "ambiguous", "unparseable"}
+    assert claim_tokens == {
+        "none",
+        "pending_start",
+        "resumed",
+        "ambiguous",
+        "unparseable",
+        "detect_failed",
+    }
     assert FORBIDDEN_DISHONEST_TOKENS.isdisjoint(claim_tokens)
 
     # 2. apply_inbox
@@ -270,7 +277,7 @@ def test_rb1_action_honesty_pin() -> None:
     reap_step = steps_by_id["reap_stale_refs"]
     assert reap_step["command"]["mutation_class"] == "observe"
     reap_tokens = set(reap_step["transitions"].keys())
-    assert reap_tokens == {"no_stale_refs", "stale_refs_require_judgment"}
+    assert reap_tokens == {"no_stale_refs", "stale_refs_require_judgment", "reap_probe_failed"}
     assert FORBIDDEN_DISHONEST_TOKENS.isdisjoint(reap_tokens)
 
 
@@ -290,3 +297,17 @@ def test_negative_rb1_action_honesty_dishonest_token_fails(dishonest_token: str)
         tokens = set(steps_by_id[step_id]["transitions"].keys())
         tokens.add(dishonest_token)
         assert not FORBIDDEN_DISHONEST_TOKENS.isdisjoint(tokens)
+
+
+def test_negative_estate_refused_surfaces_drift_fails_validation() -> None:
+    """Mutation negative: refused list drifting from per-surface policy fails validation."""
+    from scripts.orchestration.validate_trailspec import (
+        TrailSpecValidationError,
+        validate_estate_registry_data,
+    )
+
+    estate_data = _load_yaml(ESTATE_PATH)
+    assert validate_estate_registry_data(estate_data)["ok"] is True
+    estate_data["refused_mutation_surfaces"].remove("pilot-vps")
+    with pytest.raises(TrailSpecValidationError, match="pilot-vps"):
+        validate_estate_registry_data(estate_data)

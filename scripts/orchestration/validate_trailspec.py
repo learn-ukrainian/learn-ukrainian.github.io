@@ -770,10 +770,26 @@ def validate_estate_registry_data(
     *,
     schema_path: Path = ESTATE_REGISTRY_SCHEMA_PATH,
 ) -> dict[str, Any]:
-    """Validate raw loaded dict against EstateRegistry schema."""
+    """Validate raw loaded dict against EstateRegistry schema + domain cross-checks."""
     _validate_against_schema(
         registry_data, schema_path=schema_path, label="EstateRegistry"
     )
+    # Cross-check: refused_mutation_surfaces must exactly name the surfaces whose
+    # own mutation_policy is 'refused' — the list is a derived summary, and letting
+    # it drift from the per-surface truth would misstate the refusal boundary.
+    declared_refused = set(registry_data.get("refused_mutation_surfaces", []))
+    derived_refused = {
+        entry["name"]
+        for group in registry_data.get("surfaces", {}).values()
+        for entry in group
+        if entry.get("mutation_policy") == "refused" and "name" in entry
+    }
+    if declared_refused != derived_refused:
+        raise TrailSpecValidationError(
+            "EstateRegistry refused_mutation_surfaces does not match the surfaces "
+            f"declaring mutation_policy=refused: declared={sorted(declared_refused)} "
+            f"derived={sorted(derived_refused)}"
+        )
     return {
         "ok": True,
         "schema_version": registry_data.get("schema_version"),
