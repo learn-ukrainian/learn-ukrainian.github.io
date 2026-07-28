@@ -28,7 +28,7 @@ if str(PROJECT_ROOT) not in sys.path:
 if str(AUDIT_DIR) not in sys.path:
     sys.path.insert(0, str(AUDIT_DIR))
 
-from lexeme_filter import SURFACE_CLOZE, is_practice_eligible, is_surface_admitted
+from lexeme_filter import SURFACE_CLOZE, SURFACE_PRACTICE, is_practice_eligible, is_surface_admitted
 
 from scripts.practice_deck.io import compute_deck_inputs_fingerprint, compute_deck_version
 
@@ -2476,13 +2476,27 @@ def _select_practice_lexemes(
     config: BuildConfig,
 ) -> tuple[list[tuple[dict[str, Any], dict[str, Any]]], list[dict[str, Any]], dict[str, dict[str, Any]], dict[str, dict[str, Any]]]:
     eligible = [entry for entry in entries if is_practice_eligible(entry)]
-    course_entries = [entry for entry in eligible if _course_usage(entry)]
-    fill_entries = [entry for entry in eligible if not _course_usage(entry)]
+    # A practice seed is an explicit curriculum admission, not merely a source of
+    # optional fill entries. Keep those entries ahead of ordinary course/fill
+    # selection so the per-shard size budget cannot silently discard the curated
+    # overlay from the tail of a level.
+    seed_entries = [
+        entry
+        for entry in eligible
+        if isinstance(entry.get("practice_example"), dict)
+        and is_surface_admitted(entry, SURFACE_PRACTICE)
+    ]
+    seed_entry_ids = {id(entry) for entry in seed_entries}
+    non_seed_entries = [entry for entry in eligible if id(entry) not in seed_entry_ids]
+    course_entries = [entry for entry in non_seed_entries if _course_usage(entry)]
+    fill_entries = [entry for entry in non_seed_entries if not _course_usage(entry)]
+    seed_entries.sort(key=_stable_lemma_id)
     course_entries.sort(key=_course_key)
     fill_entries.sort(
         key=lambda entry: (CEFR_RANK.get(_cefr_level(entry) or "", len(CEFR_RANK)), _stable_lemma_id(entry))
     )
-    selected = list(course_entries)
+    selected = list(seed_entries)
+    selected.extend(course_entries)
     if len(selected) < config.target:
         selected.extend(fill_entries[: config.target - len(selected)])
 

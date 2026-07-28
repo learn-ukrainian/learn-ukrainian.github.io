@@ -21,6 +21,7 @@ from scripts.audit.generate_practice_deck import (
     _eligible_decoys,
     _meaning_mc_eligible,
     _option_strategy_for_level,
+    _select_practice_lexemes,
     _stress_position,
     apply_size_budgets,
     build_practice_shards,
@@ -100,6 +101,38 @@ def test_curated_v5_seed_admits_existing_atlas_entries_with_provenance() -> None
         assert item["clozeIds"] == []
         assert lexemes[row["slug"]]["example"] == row["example"]
         assert lexemes[row["slug"]]["exampleProvenance"] == row["provenance"]
+
+
+def test_practice_seed_entries_are_selected_before_ordinary_course_entries() -> None:
+    entries = [
+        {
+            "lemma": "звичайний",
+            "url_slug": "звичайний",
+            "gloss": "ordinary",
+            "enrichment": {"cefr": {"level": "A1"}},
+            "course_usage": [{"module": "fixture"}],
+        },
+        {
+            "lemma": "насіннєвий",
+            "url_slug": "насіннєвий",
+            "gloss": "seeded",
+            "enrichment": {"cefr": {"level": "A1"}},
+            "primary_source": "source_inventory_grow",
+            "surface_admission": {"practice": True},
+            "practice_example": {
+                "text": "Це насіннєвий матеріал.",
+                "provenance": {"source_file": "fixture", "credit": "Fixture"},
+            },
+        },
+    ]
+
+    selected, _lexemes, _by_plain_lemma, _by_id = _select_practice_lexemes(
+        entries,
+        JsonVesumVerifier.from_path(VESUM),
+        BuildConfig(target=1, source_label="fixture"),
+    )
+
+    assert [entry["url_slug"] for entry, _lexeme in selected] == ["насіннєвий"]
 
 
 def test_practice_seed_validates_duplicate_attestations_but_emits_one_route_example(tmp_path: Path) -> None:
