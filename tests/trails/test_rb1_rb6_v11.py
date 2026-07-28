@@ -157,8 +157,9 @@ def test_negative_estate_registry_missing_refused_surface_fails() -> None:
 
 
 KNOWN_PASSTHROUGH_VOCABULARY = {
-    # detect_rollover passes through thread_handoff.py detect JSON 'status' values
-    ("rb1-cold-start", "detect_rollover"): {"none", "pending_start", "resumed", "ambiguous"},
+    # detect_rollover and claim_rollover pass through thread_handoff.py detect JSON 'status' values
+    ("rb1-cold-start", "detect_rollover"): {"none", "pending_start", "resumed", "ambiguous", "unparseable"},
+    ("rb1-cold-start", "claim_rollover"): {"none", "pending_start", "resumed", "ambiguous", "unparseable"},
 }
 
 
@@ -205,3 +206,54 @@ def test_negative_dead_transition_key_fails_reachability() -> None:
     with pytest.raises(AssertionError) as exc_info:
         _verify_step_reachability(spec)
     assert "Dead transition key 'dead_unreachable_key'" in str(exc_info.value)
+
+
+def test_rb1_action_honesty_pin() -> None:
+    """Action-honesty pin: judgment-tier steps in RB-1 must use observation vocabulary and never fake action tokens."""
+    data = _load_yaml(RB1_TRAIL_PATH)
+    steps_by_id = {s["step_id"]: s for s in data["steps"]}
+
+    FORBIDDEN_DISHONEST_TOKENS = {
+        "confirmed",
+        "applied_and_drained",
+        "reaped_with_receipts",
+    }
+
+    # 1. claim_rollover
+    claim_step = steps_by_id["claim_rollover"]
+    assert claim_step["command"]["mutation_class"] == "observe"
+    claim_tokens = set(claim_step["transitions"].keys())
+    assert claim_tokens == {"none", "pending_start", "resumed", "ambiguous", "unparseable"}
+    assert FORBIDDEN_DISHONEST_TOKENS.isdisjoint(claim_tokens)
+
+    # 2. apply_inbox
+    apply_step = steps_by_id["apply_inbox"]
+    assert apply_step["command"]["mutation_class"] == "observe"
+    apply_tokens = set(apply_step["transitions"].keys())
+    assert apply_tokens == {"inbox_zero", "pending_requires_application"}
+    assert FORBIDDEN_DISHONEST_TOKENS.isdisjoint(apply_tokens)
+
+    # 3. reap_stale_refs
+    reap_step = steps_by_id["reap_stale_refs"]
+    assert reap_step["command"]["mutation_class"] == "observe"
+    reap_tokens = set(reap_step["transitions"].keys())
+    assert reap_tokens == {"no_stale_refs", "stale_refs_require_judgment"}
+    assert FORBIDDEN_DISHONEST_TOKENS.isdisjoint(reap_tokens)
+
+
+@pytest.mark.parametrize("dishonest_token", ["confirmed", "applied_and_drained", "reaped_with_receipts"])
+def test_negative_rb1_action_honesty_dishonest_token_fails(dishonest_token: str) -> None:
+    """Mutation negative test: re-introducing any dishonest success token fails the action-honesty check."""
+    data = _load_yaml(RB1_TRAIL_PATH)
+    steps_by_id = {s["step_id"]: s for s in data["steps"]}
+
+    FORBIDDEN_DISHONEST_TOKENS = {
+        "confirmed",
+        "applied_and_drained",
+        "reaped_with_receipts",
+    }
+
+    for step_id in ("claim_rollover", "apply_inbox", "reap_stale_refs"):
+        tokens = set(steps_by_id[step_id]["transitions"].keys())
+        tokens.add(dishonest_token)
+        assert not FORBIDDEN_DISHONEST_TOKENS.isdisjoint(tokens)

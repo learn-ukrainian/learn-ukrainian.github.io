@@ -76,42 +76,56 @@ steps:
 
   - step_id: claim_rollover
     intent: >-
-      Claim the pending packet: bind-replacement (or the native-adapter path), resume,
-      semantic snapshot, strict recall, challenge proof, confirm-started. A packet
-      bound to another lane or an ambiguous alias-directory state is a hard stop.
+      Observe rollover status for manual claim check. If no pending rollover exists (none),
+      proceed to orientation. If pending_start or resumed, stop for manual driver claim.
+      Ambiguous or unparseable states trigger concurrency conflict stop.
     command:
       adapter: shell
       argv:
         - sh
         - -c
-        - .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent "$HANDOFF_AGENT" | .venv/bin/python -c "import sys, json; st=json.load(sys.stdin).get('status'); print('confirmed' if st in ('none', 'pending_start', 'resumed') else 'foreign_packet' if st == 'ambiguous' else 'proofs_failed')"
+        - .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent "$HANDOFF_AGENT" | .venv/bin/python -c "import sys, json; print(json.load(sys.stdin).get('status', 'unparseable'))"
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
       timeout_seconds: 30
-      mutation_class: local-write
+      mutation_class: observe
       outcome_decoder:
         source: stdout-token
     transitions:
-      confirmed:
+      none:
         target: orient_api
         evidence:
-          predicate_id: claim-rollover-confirmed
+          predicate_id: claim-rollover-none
           clauses:
-            - {source: command_receipt, field: actor_outcome, op: eq, value: confirmed}
+            - {source: command_receipt, field: actor_outcome, op: eq, value: none}
             - {source: command_receipt, field: exit_code, op: eq, value: 0}
-      foreign_packet:
-        target: STOP-policy-violation
+      pending_start:
+        target: STOP-manual-intervention
         evidence:
-          predicate_id: claim-rollover-foreign
+          predicate_id: claim-rollover-pending-start
           clauses:
-            - {source: command_receipt, field: actor_outcome, op: eq, value: foreign_packet}
-      proofs_failed:
-        target: STOP-precondition-failed
+            - {source: command_receipt, field: actor_outcome, op: eq, value: pending_start}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      resumed:
+        target: STOP-manual-intervention
         evidence:
-          predicate_id: claim-rollover-proofs-failed
+          predicate_id: claim-rollover-resumed
           clauses:
-            - {source: command_receipt, field: actor_outcome, op: eq, value: proofs_failed}
+            - {source: command_receipt, field: actor_outcome, op: eq, value: resumed}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      ambiguous:
+        target: STOP-concurrency-conflict
+        evidence:
+          predicate_id: claim-rollover-ambiguous
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: ambiguous}
+      unparseable:
+        target: STOP-concurrency-conflict
+        evidence:
+          predicate_id: claim-rollover-unparseable
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: unparseable}
     blocked_on: null
 
   - step_id: orient_api
@@ -193,14 +207,14 @@ steps:
 
   - step_id: apply_inbox
     intent: >-
-      Read and APPLY every unconsumed message, then record live consumption. Post-condition:
-      pending count must read zero.
+      Observe inbox pending status. If pending is zero (inbox_zero), proceed to git reconciliation.
+      If pending is greater than zero, stop for manual driver application (STOP-manual-intervention).
     command:
       adapter: shell
       argv:
         - sh
         - -c
-        - OUT=$(.venv/bin/python -m scripts.ai_agent_bridge inbox show "${HANDOFF_AGENT%%-*}" 2>/dev/null); P=$(echo "$OUT" | awk "/pending:/{print \$2}"); if [ "$P" = "0" ]; then echo applied_and_drained; else echo order_conflicts_with_standing_rule; fi
+        - OUT=$(.venv/bin/python -m scripts.ai_agent_bridge inbox show "${HANDOFF_AGENT%%-*}" 2>/dev/null); P=$(echo "$OUT" | awk "/pending:/{print \$2}"); if [ "$P" = "0" ]; then echo inbox_zero; else echo pending_requires_application; fi
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
@@ -209,19 +223,19 @@ steps:
       outcome_decoder:
         source: stdout-token
     transitions:
-      applied_and_drained:
+      inbox_zero:
         target: reconcile_git
         evidence:
-          predicate_id: apply-inbox-drained
+          predicate_id: apply-inbox-zero
           clauses:
-            - {source: command_receipt, field: actor_outcome, op: eq, value: applied_and_drained}
+            - {source: command_receipt, field: actor_outcome, op: eq, value: inbox_zero}
             - {source: command_receipt, field: exit_code, op: eq, value: 0}
-      order_conflicts_with_standing_rule:
+      pending_requires_application:
         target: STOP-manual-intervention
         evidence:
-          predicate_id: apply-inbox-conflict
+          predicate_id: apply-inbox-pending-requires-application
           clauses:
-            - {source: command_receipt, field: actor_outcome, op: eq, value: order_conflicts_with_standing_rule}
+            - {source: command_receipt, field: actor_outcome, op: eq, value: pending_requires_application}
     blocked_on: null
 
   - step_id: reconcile_git
@@ -290,13 +304,14 @@ steps:
 
   - step_id: reap_stale_refs
     intent: >-
-      Judgment seat: for each stale candidate, verify clean tree and unpushed commits, then reap worktree before branch.
+      Observe whether stale worktree references exist (merged into main or upstream tracking branch deleted).
+      If zero stale, proceed to pick_next. If stale references exist, stop for manual driver judgment (STOP-manual-intervention).
     command:
       adapter: shell
       argv:
         - sh
         - -c
-        - COUNT=$(git worktree list --porcelain | grep -c "^worktree "); if [ "$COUNT" -ge 1 ]; then echo reaped_with_receipts; else echo uncommitted_or_foreign_ambiguity; fi
+        - .venv/bin/python -c "import subprocess as s; wt=set(l.split('branch refs/heads/')[1] for l in s.check_output(['git','worktree','list','--porcelain'],text=True).splitlines() if l.startswith('branch refs/heads/')); wt.discard('main'); gone=set(l.strip().split()[0] for l in s.check_output(['git','branch','--format=%(refname:short) %(upstream:track)'],text=True).splitlines() if '[gone]' in l); merged=set(l.strip() for l in s.check_output(['git','branch','--merged','origin/main','--format=%(refname:short)'],text=True).splitlines() if l.strip()); print('stale_refs_require_judgment' if wt.intersection(gone.union(merged)) else 'no_stale_refs')"
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
       timeout_seconds: 30
@@ -304,19 +319,19 @@ steps:
       outcome_decoder:
         source: stdout-token
     transitions:
-      reaped_with_receipts:
+      no_stale_refs:
         target: pick_next
         evidence:
-          predicate_id: reap-stale-reaped
+          predicate_id: reap-stale-none
           clauses:
-            - {source: command_receipt, field: actor_outcome, op: eq, value: reaped_with_receipts}
+            - {source: command_receipt, field: actor_outcome, op: eq, value: no_stale_refs}
             - {source: command_receipt, field: exit_code, op: eq, value: 0}
-      uncommitted_or_foreign_ambiguity:
+      stale_refs_require_judgment:
         target: STOP-manual-intervention
         evidence:
-          predicate_id: reap-stale-ambiguity
+          predicate_id: reap-stale-judgment-required
           clauses:
-            - {source: command_receipt, field: actor_outcome, op: eq, value: uncommitted_or_foreign_ambiguity}
+            - {source: command_receipt, field: actor_outcome, op: eq, value: stale_refs_require_judgment}
     blocked_on: null
 
   - step_id: pick_next
