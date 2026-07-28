@@ -1,0 +1,22 @@
+# Shared project defaults for Codex App, CLI, and IDE surfaces.
+# Codex owns context compaction; repository hooks add durable fleet hydration
+# only when a launcher has explicitly bound an epic driver.
+model = "gpt-5.6-sol"
+model_reasoning_effort = "high"
+
+[features]
+multi_agent = true
+remote_compaction_v2 = true
+# Fleet streams and file shadow diaries are the durable memory layer.
+memories = false
+
+[features.multi_agent_v2]
+enabled = true
+hide_spawn_agent_metadata = false
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 3
+default_subagent_model = "gpt-5.6-terra"
+default_subagent_reasoning_effort = "medium"
+interrupt_message = true

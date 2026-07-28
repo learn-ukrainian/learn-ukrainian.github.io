@@ -150,12 +150,14 @@ and `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.learnukrainian.
 K2.7 requires **Thinking ON** in the Claude Code TUI (`Tab`) or the endpoint
 rejects requests. Official guide: [Use Kimi in Claude Code](https://platform.kimi.ai/docs/guide/claude-code-kimi).
 
-`start-codex.sh` launches Codex with:
+The trusted `agents_extensions/codex/config.toml` overlay gives Codex App and
+CLI the same Sol/high root and Terra/medium V2 defaults. `start-codex.sh`
+launches the CLI with:
 
 - interactive Codex in dangerous bypass mode
-- live web search and Codex 0.145 multi-agent V2 enabled
-- at most three spawned children (four active agents including the root), with
-  Terra/medium as the default child route and visible spawn metadata
+- live web search; project config supplies Codex 0.145 multi-agent V2
+- at most three project-configured spawned children (four active agents
+  including the root), with Terra/medium as the default child route
 - a footer showing model/reasoning, run state, context usage and window, 5-hour
   and weekly limits, branch, and current plan progress
 - `CODEX_SESSION=1` so repo scripts can detect an interactive Codex session

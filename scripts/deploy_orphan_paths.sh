@@ -42,14 +42,13 @@ ORPHAN_PATHS_AGENTS=""
 # --- shared → .codex (rsync orphan excludes only; overlay paths below) ---
 # agents/curriculum-orchestrator.toml and agents/curriculum-writer.toml —
 # Codex agent definitions with no source equivalent.
-# config.toml — Codex CLI configuration managed directly by Codex.
-ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml agents/curriculum-writer.toml config.toml settings.local.json"
+ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml agents/curriculum-writer.toml settings.local.json"
 
 # --- deploy-owned: Codex overlay paths (checker mirrors for .codex drift) ---
 # Managed by agents_extensions/codex/, not by the shared tree. Exclude them from
 # the shared rsync/delete pass, then verify them with the overlay drift check.
-# hooks.json is intentionally here, not in ORPHAN_PATHS_CODEX.
-CODEX_OVERLAY_PATHS="hooks.json memory"
+# hooks.json and config.toml are intentionally here, not in ORPHAN_PATHS_CODEX.
+CODEX_OVERLAY_PATHS="config.toml hooks.json memory"
 
 # --- gemini_extensions → .gemini ---
 # tmp/ — Gemini CLI runtime workspace (e.g. .gemini/tmp/learn-ukrainian/);

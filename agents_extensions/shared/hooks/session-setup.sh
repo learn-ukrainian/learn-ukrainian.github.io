@@ -164,9 +164,29 @@ else
   HANDOFF_AGENT="claude"
 fi
 
+IS_CODEX_SESSION=0
+case "$HANDOFF_AGENT" in
+  codex|codex-*) IS_CODEX_SESSION=1 ;;
+esac
+
+# An ordinary Codex App/CLI task is not a fleet driver. Native Codex owns its
+# compaction lifecycle, so do not search every Codex rollover namespace or ask
+# the operator to assign an epic. Exact launcher rollovers and explicit epic
+# drivers retain the durable handoff path below.
+CODEX_NORMAL_TASK=0
+if [ "$IS_CODEX_SESSION" = "1" ] \
+  && [ -z "${SESSION_HANDOFF_AGENT:-}" ] \
+  && [ -z "${SESSION_EPIC:-}" ] \
+  && [ -z "${CODEX_LAUNCHER_ROLLOVER_AGENT:-}${CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID:-}${CODEX_LAUNCHER_ROLLOVER_ID:-}" ]; then
+  CODEX_NORMAL_TASK=1
+fi
+
 # Resolve the main-session route. Model mismatches are recorded as an untrusted
 # compact fallback; they must not abort SessionStart or fabricate a 1M window.
 REQUESTED_PROFILE_ID="${LEARN_UKRAINIAN_REQUESTED_PROFILE_ID:-}"
+if [ "$IS_CODEX_SESSION" = "1" ] && [ -z "$REQUESTED_PROFILE_ID" ]; then
+  REQUESTED_PROFILE_ID="native_codex"
+fi
 PROFILE_RESOLVER_SH="${CLAUDE_PROFILE_RESOLVER_SH:-$PROJECT_DIR/scripts/lib/profile_resolver.sh}"
 if [ ! -f "$PROFILE_RESOLVER_SH" ]; then
   echo "Error: context-profile resolver not found." >&2
@@ -242,8 +262,8 @@ else
   fi
 fi
 
-# 2. Check CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS is set
-if [ -z "$CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS" ]; then
+# 2. Claude-only environment diagnostics do not belong in Codex context.
+if [ "$IS_CODEX_SESSION" = "0" ] && [ -z "$CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS" ]; then
   ISSUES+=("ENV MISSING: CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS not set. Add to .bashrc: export CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS=32000")
 fi
 
@@ -254,7 +274,7 @@ fi
 # 6. Check MEMORY.md line count (truncated at 200 lines by system)
 MEMORY_DIR="$HOME/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/memory"
 MEMORY_FILE="$MEMORY_DIR/MEMORY.md"
-if [ -f "$MEMORY_FILE" ]; then
+if [ "$IS_CODEX_SESSION" = "0" ] && [ -f "$MEMORY_FILE" ]; then
   MEMORY_LINES=$(wc -l < "$MEMORY_FILE" | tr -d ' ')
   if [ "$MEMORY_LINES" -gt 150 ]; then
     ISSUES+=("MEMORY.md is $MEMORY_LINES lines (limit: 200, budget: 150). Lines after 200 are INVISIBLE. Trim NOW before doing anything else. Move reference data to topic files in memory/.")
@@ -278,7 +298,9 @@ if [ -f "$PREDEPLOY_STATUS" ] && head -1 "$PREDEPLOY_STATUS" 2>/dev/null | grep 
 fi
 
 # 7. Check agents_extensions/shared/ → .claude/ sync drift
-if [ -d "$PROJECT_DIR/agents_extensions/shared" ] && [ -d "$PROJECT_DIR/.claude" ]; then
+if [ "$IS_CODEX_SESSION" = "0" ] \
+  && [ -d "$PROJECT_DIR/agents_extensions/shared" ] \
+  && [ -d "$PROJECT_DIR/.claude" ]; then
   DIFF_EXCLUDES=(".DS_Store")
   ORPHAN_PATHS_SH="$PROJECT_DIR/scripts/deploy_orphan_paths.sh"
   if [ -f "$ORPHAN_PATHS_SH" ]; then
@@ -312,10 +334,12 @@ if [ -d "$PROJECT_DIR/agents_extensions/shared" ] && [ -d "$PROJECT_DIR/.claude"
   fi
 fi
 
-if [ "${LEARN_UKRAINIAN_COLD_START_PROFILE:-}" = "compact" ]; then
-  INFO+=("Orientation diagnostics: http://localhost:8765/api/orient?lean=true&session=${SESSION_ID:-}")
-else
-  INFO+=("Orientation diagnostics: http://localhost:8765/api/orient?session=${SESSION_ID:-}")
+if [ "$CODEX_NORMAL_TASK" = "0" ]; then
+  if [ "${LEARN_UKRAINIAN_COLD_START_PROFILE:-}" = "compact" ]; then
+    INFO+=("Orientation diagnostics: http://localhost:8765/api/orient?lean=true&session=${SESSION_ID:-}")
+  else
+    INFO+=("Orientation diagnostics: http://localhost:8765/api/orient?session=${SESSION_ID:-}")
+  fi
 fi
 
 # Keep only the local protected-branch canary on the synchronous path.
@@ -580,7 +604,9 @@ $original_detect_output
 EOF
 }
 
-if [ -z "$HANDOFF_CONTEXT" ] && ! DETECT_OUTPUT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+if [ "$CODEX_NORMAL_TASK" = "1" ]; then
+  : # Native Codex task continuity; no fleet-driver rollover namespace is bound.
+elif [ -z "$HANDOFF_CONTEXT" ] && ! DETECT_OUTPUT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
   --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
   --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" --format json 2>&1); then
   # Exit 2 may be multi-packet ambiguity (#5398) — surface candidates, never cold-start.
@@ -714,6 +740,8 @@ Do NOT default to 'main orchestrator'. Resolve your lane in this order:
 2. .agent/lane-assignments.md maps this agent type to exactly ONE epic → that binds.
 3. Otherwise ASK THE USER one question ('which epic is this session?') BEFORE
    claiming any lane, reading any thread handoff as your own, or touching queues."
+elif [ "$IS_CODEX_SESSION" = "1" ]; then
+  EPIC_BANNER=""
 else
   EPIC_BANNER="NO EPIC ASSIGNED (launcher had no --epic flag).
 Do NOT default to 'main orchestrator'. Resolve your lane in this order:
@@ -747,7 +775,12 @@ if [ "${LEARN_UKRAINIAN_COLD_START_PROFILE:-}" = "compact" ]; then
   CAPSULE_ORIENTATION_URL="http://localhost:8765/api/orient?lean=true&session=${SESSION_ID:-}"
 fi
 
-CAPSULE="--- SESSION PROFILE CAPSULE ---
+if [ "$IS_CODEX_SESSION" = "1" ]; then
+  CAPSULE="CODEX SESSION: profile=${LEARN_UKRAINIAN_PROFILE_ID:-fallback}; model=${OBSERVED_MODEL:-${LEARN_UKRAINIAN_MAIN_MODEL_ID:-unknown}}; context=${LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS:-0}; trusted=${LEARN_UKRAINIAN_TRUSTED:-0}.
+Native compaction is runtime-owned. Fleet hydration is ${SESSION_EPIC:+bound to ${SESSION_EPIC}; }${SESSION_EPIC:-unbound for this ordinary task}.
+Orientation (on demand): ${CAPSULE_ORIENTATION_URL#http://localhost:8765}"
+else
+  CAPSULE="--- SESSION PROFILE CAPSULE ---
 Profile: ${LEARN_UKRAINIAN_PROFILE_ID:-fallback}
 Requested Profile: ${LEARN_UKRAINIAN_REQUESTED_PROFILE_ID:-None}
 Declared Model: ${LEARN_UKRAINIAN_EXPECTED_MAIN_MODEL_ID:-${LEARN_UKRAINIAN_MAIN_MODEL_ID:-unknown}}
@@ -761,6 +794,7 @@ Trusted: ${LEARN_UKRAINIAN_TRUSTED:-0} (${LEARN_UKRAINIAN_RESOLUTION_REASON:-mis
 Session ID: ${SESSION_ID:-None}
 Orientation URL: $CAPSULE_ORIENTATION_URL
 --------------------------------"
+fi
 
 # Build output
 CONTEXT="$CAPSULE"
@@ -781,12 +815,10 @@ CODEX COLD-START BOARD (launcher-injected)
 $CODEX_COLD_START_BOARD"
 fi
 
-CONTEXT="$CONTEXT
-
-SESSION SETUP CHECK:"
-
 if [ ${#ISSUES[@]} -gt 0 ]; then
   CONTEXT="$CONTEXT
+
+SESSION SETUP CHECK:
 ISSUES:"
   for issue in "${ISSUES[@]}"; do
     CONTEXT="$CONTEXT
@@ -795,6 +827,11 @@ ISSUES:"
 fi
 
 if [ ${#INFO[@]} -gt 0 ]; then
+  if [ ${#ISSUES[@]} -eq 0 ]; then
+    CONTEXT="$CONTEXT
+
+SESSION SETUP CHECK:"
+  fi
   CONTEXT="$CONTEXT
 INFO:"
   for info in "${INFO[@]}"; do

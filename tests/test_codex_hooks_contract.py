@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import sqlite3
 import subprocess
+import tomllib
 from pathlib import Path
 
 from scripts.agent_runtime import codex_hook_policy
@@ -27,9 +29,12 @@ PRIMARY_ROOT = Path(
     ).strip()
 ).parent
 HOOKS_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "hooks.json"
+PROJECT_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "config.toml"
 ENTRY = REPO_ROOT / "scripts" / "agent_runtime" / "codex_hook_entry.sh"
 VENV_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "enforce-venv.sh"
 INBOX_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "check-gemini-inbox.sh"
+SESSION_SETUP_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "session-setup.sh"
+POST_COMPACT_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "post-compact.sh"
 
 
 def _run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
@@ -67,6 +72,149 @@ def test_codex_manifest_uses_only_supported_result_event() -> None:
 
     assert "PostToolUse" in hooks
     assert "PostToolUseFailure" not in hooks
+
+
+def test_codex_app_and_cli_share_bounded_native_context_defaults() -> None:
+    config = tomllib.loads(PROJECT_CONFIG.read_text(encoding="utf-8"))
+
+    assert config["model"] == "gpt-5.6-sol"
+    assert config["model_reasoning_effort"] == "high"
+    assert config["features"] == {
+        "multi_agent": True,
+        "remote_compaction_v2": True,
+        "memories": False,
+        "multi_agent_v2": {
+            "enabled": True,
+            "hide_spawn_agent_metadata": False,
+        },
+    }
+    assert config["agents"] == {
+        "enabled": True,
+        "max_concurrent_threads_per_session": 3,
+        "default_subagent_model": "gpt-5.6-terra",
+        "default_subagent_reasoning_effort": "medium",
+        "interrupt_message": True,
+    }
+
+
+def test_codex_compaction_has_one_bounded_hydration_path() -> None:
+    hooks = _manifest()["hooks"]
+    session_group = hooks["SessionStart"][0]
+    compact_group = hooks["PostCompact"][0]
+
+    assert session_group["matcher"] == "startup|resume|clear"
+    assert session_group["hooks"][0]["additionalContextLimit"] == 1200
+    assert compact_group["matcher"] == "manual|auto"
+    assert compact_group["hooks"][0]["additionalContextLimit"] == 800
+
+
+def test_ordinary_codex_start_is_concise_and_postcompact_is_silent(
+    tmp_path: Path,
+) -> None:
+    deployed_hooks = tmp_path / ".codex" / "hooks"
+    deployed_hooks.mkdir(parents=True)
+    session_hook = deployed_hooks / "session-setup.sh"
+    compact_hook = deployed_hooks / "post-compact.sh"
+    shutil.copy2(SESSION_SETUP_HOOK, session_hook)
+    shutil.copy2(POST_COMPACT_HOOK, compact_hook)
+
+    environment = os.environ.copy()
+    for key in tuple(environment):
+        if (
+            key.startswith("LEARN_UKRAINIAN_")
+            or key.startswith("CODEX_")
+            or key.startswith("SESSION_")
+            or key == "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS"
+        ):
+            environment.pop(key, None)
+    environment.update(
+        {
+            "CLAUDE_PROJECT_DIR": os.fspath(PRIMARY_ROOT),
+            "CODEX_CANONICAL_REPO_ROOT": os.fspath(PRIMARY_ROOT),
+            "HOME": os.fspath(tmp_path / "home"),
+        }
+    )
+    started = subprocess.run(
+        ["bash", os.fspath(session_hook)],
+        input=json.dumps({"source": "startup", "model": "gpt-5.6-sol"}),
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment,
+        timeout=30,
+    )
+
+    assert started.returncode == 0, started.stderr
+    context = json.loads(started.stdout)["hookSpecificOutput"]["additionalContext"]
+    assert len(context.encode()) < 500
+    assert "profile=native_codex" in context
+    assert "Native compaction is runtime-owned" in context
+    assert "NO EPIC ASSIGNED" not in context
+    assert "THREAD ROLLOVER" not in context
+    assert "MEMORY.md" not in context
+
+    compacted = subprocess.run(
+        ["bash", os.fspath(compact_hook)],
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment,
+        timeout=10,
+    )
+    assert compacted.returncode == 0, compacted.stderr
+    assert compacted.stdout == ""
+
+
+def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
+    tmp_path: Path,
+) -> None:
+    deployed_hooks = tmp_path / ".codex" / "hooks"
+    deployed_hooks.mkdir(parents=True)
+    compact_hook = deployed_hooks / "post-compact.sh"
+    shutil.copy2(POST_COMPACT_HOOK, compact_hook)
+    diary = tmp_path / ".claude" / "devops-epic" / "CLAUDE-DRIVER-HANDOFF.md"
+    diary.parent.mkdir(parents=True)
+    diary.write_text("# durable driver state\n", encoding="utf-8")
+    bounded_runner = tmp_path / "bounded_command.py"
+    bounded_runner.write_text("# fixture\n", encoding="utf-8")
+    fake_python = tmp_path / "fake-python"
+    fake_python.write_text(
+        "#!/bin/bash\n"
+        "printf '%s\\n' "
+        "'{\"schema_name\":\"HydrationCapsuleV1\","
+        "\"execution_allowed\":true,"
+        "\"next_drive_boundary\":{\"status\":\"ok\",\"value\":\"issue:1\"}}'\n"
+        "printf '%s\\n' 'ACTION: hydration ready — continue the current driver.'\n",
+        encoding="utf-8",
+    )
+    fake_python.chmod(0o755)
+    environment = os.environ.copy()
+    environment.update(
+        {
+            "CLAUDE_PROJECT_DIR": os.fspath(tmp_path),
+            "CODEX_CANONICAL_REPO_ROOT": os.fspath(tmp_path),
+            "SESSION_HANDOFF_AGENT": "codex-devops",
+            "SESSION_EPIC": "devops",
+            "THREAD_ROLLOVER_PYTHON": os.fspath(fake_python),
+            "SESSION_BOUNDED_RUNNER": os.fspath(bounded_runner),
+        }
+    )
+
+    compacted = subprocess.run(
+        ["bash", os.fspath(compact_hook)],
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment,
+        timeout=10,
+    )
+
+    assert compacted.returncode == 0, compacted.stderr
+    context = json.loads(compacted.stdout)["additionalContext"]
+    assert "CODEX FLEET-DRIVER HYDRATION" in context
+    assert '"schema_name":"HydrationCapsuleV1"' in context
+    assert ".claude/devops-epic/CLAUDE-DRIVER-HANDOFF.md" in context
+    assert "continue only from the capsule's next_drive_boundary" in context
 
 
 def test_codex_tool_events_have_one_deterministic_command_hook() -> None:

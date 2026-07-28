@@ -553,17 +553,18 @@ def test_second_deploy_is_noop_for_codex_target(tmp_path: Path) -> None:
     assert "No changes to deploy." in second_result.stdout
 
 
-def test_codex_hooks_json_is_managed_source_not_orphan() -> None:
-    """Codex hooks config must be deployed from agents_extensions/codex."""
+def test_codex_config_and_hooks_are_managed_sources_not_orphans() -> None:
+    """Codex App/CLI config and hooks deploy from agents_extensions/codex."""
     shared = (REPO_ROOT / ORPHAN_PATHS_FILE).read_text(encoding="utf-8")
     check = (REPO_ROOT / CHECK_SCRIPT).read_text(encoding="utf-8")
 
     assert (REPO_ROOT / "agents_extensions" / "codex" / "hooks.json").exists()
+    assert (REPO_ROOT / "agents_extensions" / "codex" / "config.toml").exists()
     assert (
         'ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml '
-        'agents/curriculum-writer.toml config.toml settings.local.json"'
+        'agents/curriculum-writer.toml settings.local.json"'
     ) in shared
-    assert 'CODEX_OVERLAY_PATHS="hooks.json memory"' in shared
+    assert 'CODEX_OVERLAY_PATHS="config.toml hooks.json memory"' in shared
     assert "$CODEX_OVERLAY_PATHS" in check
 
 
