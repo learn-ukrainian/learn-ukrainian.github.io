@@ -184,6 +184,12 @@ launcher_parse() {
         ;;
       --epic=*) LC_EPIC="${1#*=}"; shift ;;
       --governor)
+        # Preserve the historical `--governor --help` form: help is a launcher
+        # request, not a selector named "--help".
+        if [ "${2:-}" = "-h" ] || [ "${2:-}" = "--help" ]; then
+          shift
+          continue
+        fi
         launcher_need_value "$1" "${2:-}"
         LC_GOVERNOR="1"
         LC_EPIC="$2"
@@ -199,6 +205,15 @@ launcher_parse() {
       --isolate-config) LC_ISOLATE_CONFIG=1; shift ;;
       --no-isolate-config) LC_ISOLATE_CONFIG=0; shift ;;
       -*)
+        # A driver selector consumes the first positional argument. Preserve
+        # the former driver's compatibility contract by forwarding subsequent
+        # provider flags, while still rejecting unknown launcher flags before
+        # a selector has been supplied.
+        if [ "$LC_MODE" = "driver" ] && [ -n "$LC_EPIC" ]; then
+          LC_FORWARD_ARGS+=("$1")
+          shift
+          continue
+        fi
         launcher_error "unknown launcher flag '$1'; run --help."
         exit 2
         ;;
@@ -264,6 +279,8 @@ launcher_validate_mode() {
     fi
     LC_MODEL="gpt-5.6-sol"
     unset SESSION_EPIC
+    LC_GOVERNOR_PROMPT="Follow agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md for one bounded supervision cycle. TARGET=$LC_EPIC GOAL=AUTO"
+    LC_FORWARD_ARGS=("$LC_GOVERNOR_PROMPT" "${LC_FORWARD_ARGS[@]}")
     return
   fi
 
