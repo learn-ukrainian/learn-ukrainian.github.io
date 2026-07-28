@@ -53,9 +53,10 @@ _RECEIPT_SOURCE_FIELDS = frozenset(
     }
 )
 
-# Published STOP-code contract. validate_trailspec imports this single source so
-# direct invocation of this lookup module never depends on package import layout.
-VALID_STOP_CODES: set[str] = {
+# Published 18-code STOP vocabulary. The historic "16" count describes trigger
+# classes only; it is not the executable vocabulary. validate_trailspec imports
+# this immutable source so direct invocation never depends on package layout.
+VALID_STOP_CODES: frozenset[str] = frozenset({
     "STOP-timeout",
     "STOP-verdict-timeout",
     "STOP-contested",
@@ -74,7 +75,7 @@ VALID_STOP_CODES: set[str] = {
     "STOP-unknown",
     "STOP-rearm-failed",
     "STOP-hygiene-failed",
-}
+})
 
 
 class RedCIKnownFailuresValidationError(Exception):

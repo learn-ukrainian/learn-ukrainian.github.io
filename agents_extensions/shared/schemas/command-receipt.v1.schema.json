@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "command-receipt.v1",
+  "title": "CommandReceipt v1 schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "invocation_id",
+    "run_id",
+    "trail_id",
+    "trail_version",
+    "trail_hash",
+    "step_id",
+    "resolved_command_digest",
+    "actor_outcome",
+    "exit_code",
+    "stdout_digest",
+    "stderr_digest",
+    "artifact_digests",
+    "prepared_at",
+    "completed_at",
+    "status"
+  ],
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "command-receipt.v1"},
+    "invocation_id": {"type": "string", "format": "uuid"},
+    "run_id": {"type": "string", "minLength": 1},
+    "trail_id": {"type": "string", "minLength": 1},
+    "trail_version": {"type": ["string", "integer"]},
+    "trail_hash": {"$ref": "#/$defs/digest"},
+    "step_id": {"type": "string", "minLength": 1},
+    "resolved_command_digest": {"$ref": "#/$defs/digest"},
+    "actor_outcome": {"type": "string", "minLength": 1},
+    "exit_code": {"type": ["integer", "null"]},
+    "stdout_digest": {"$ref": "#/$defs/digest"},
+    "stderr_digest": {"$ref": "#/$defs/digest"},
+    "artifact_digests": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/digest"}
+    },
+    "prepared_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "status": {"enum": ["complete", "indeterminate"]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "complete"}}},
+      "then": {"properties": {"exit_code": {"type": "integer"}}}
+    }
+  ]
+}

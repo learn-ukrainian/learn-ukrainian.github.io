@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "step-receipt.v1.1",
+  "title": "StepReceipt v1.1 schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "trail_id",
+    "trail_version",
+    "trail_hash",
+    "run_id",
+    "step_id",
+    "task_family",
+    "lineage_id",
+    "pr_head",
+    "lease_generation",
+    "predicate_exit",
+    "evidence_digest",
+    "transition_taken",
+    "timestamp",
+    "idempotency_key",
+    "invocation_id",
+    "command_receipt_digest",
+    "actor_outcome",
+    "predicate_id"
+  ],
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "step-receipt.v1.1"},
+    "trail_id": {"type": "string", "minLength": 1},
+    "trail_version": {"type": ["string", "integer"]},
+    "trail_hash": {"$ref": "#/$defs/digest"},
+    "run_id": {"type": "string", "minLength": 1},
+    "step_id": {"type": "string", "minLength": 1},
+    "task_family": {"type": "string", "minLength": 1},
+    "lineage_id": {"type": ["string", "null"]},
+    "pr_head": {"type": ["string", "null"]},
+    "lease_generation": {"type": ["integer", "null"]},
+    "predicate_exit": {"type": ["integer", "null"]},
+    "evidence_digest": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+    "transition_taken": {"type": "string", "minLength": 1},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "idempotency_key": {"type": "string", "minLength": 1},
+    "invocation_id": {"type": "string", "format": "uuid"},
+    "command_receipt_digest": {"$ref": "#/$defs/digest"},
+    "actor_outcome": {"type": "string", "minLength": 1},
+    "predicate_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*$"
+    },
+    "authority_receipt_digest": {"$ref": "#/$defs/digest"}
+  }
+}

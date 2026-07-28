@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
-"""Validator for TrailSpec v1 and StepReceipt v1 schemas and state machine invariants."""
+"""Validate TrailSpec v1/v1.1 and their receipt contracts.
+
+TrailSpec v1 remains an immutable, schema-valid historical format.  The
+validator deliberately reports it as execution-ineligible: a prose predicate
+cannot be soundly compiled into an executable receipt predicate.  v1.1 adds the
+receipt-bound command and transition contracts needed by a future runner.
+"""
 
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import re
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -27,9 +34,19 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TRAIL_SPEC_SCHEMA_PATH = (
     PROJECT_ROOT / "agents_extensions/shared/schemas/trailspec.v1.schema.json"
 )
+TRAIL_SPEC_V11_SCHEMA_PATH = (
+    PROJECT_ROOT / "agents_extensions/shared/schemas/trailspec.v1.1.schema.json"
+)
 STEP_RECEIPT_SCHEMA_PATH = (
     PROJECT_ROOT / "agents_extensions/shared/schemas/step-receipt.v1.schema.json"
 )
+STEP_RECEIPT_V11_SCHEMA_PATH = (
+    PROJECT_ROOT / "agents_extensions/shared/schemas/step-receipt.v1.1.schema.json"
+)
+COMMAND_RECEIPT_SCHEMA_PATH = (
+    PROJECT_ROOT / "agents_extensions/shared/schemas/command-receipt.v1.schema.json"
+)
+SEAT_TAXONOMY_PATH = PROJECT_ROOT / "scripts/config/fleet_communications.yaml"
 DEFAULT_EXAMPLE_TRAIL_PATH = (
     PROJECT_ROOT / "scripts/config/trails/rb3-pr-lifecycle.trail.yaml"
 )
@@ -39,6 +56,16 @@ DECISION_TABLES_SCHEMA_PATH = (
 DEFAULT_DECISION_TABLES_PATH = (
     PROJECT_ROOT / "scripts/config/trails/decision-tables.v0.yaml"
 )
+
+_TRAIL_SCHEMA_PATHS = {
+    "trailspec.v1": TRAIL_SPEC_SCHEMA_PATH,
+    "trailspec.v1.1": TRAIL_SPEC_V11_SCHEMA_PATH,
+}
+_STEP_RECEIPT_SCHEMA_PATHS = {
+    "step-receipt.v1": STEP_RECEIPT_SCHEMA_PATH,
+    "step-receipt.v1.1": STEP_RECEIPT_V11_SCHEMA_PATH,
+}
+_PARAMETER_REFERENCE = re.compile(r"\{([A-Za-z_][A-Za-z0-9_]*)\}")
 
 class TrailSpecValidationError(Exception):
     """Raised when TrailSpec or StepReceipt validation fails."""
@@ -73,6 +100,12 @@ def _load_schema(path: Path) -> dict[str, Any]:
     return data
 
 
+def _compute_canonical_json_digest(data: dict[str, Any]) -> str:
+    """Return a SHA-256 digest of semantic JSON data, independent of formatting."""
+    canonical_json = json.dumps(data, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(canonical_json.encode("utf-8")).hexdigest()
+
+
 def compute_trail_hash(data: dict[str, Any]) -> str:
     """Compute canonical-JSON SHA-256 hash of a parsed TrailSpec document.
 
@@ -82,52 +115,235 @@ def compute_trail_hash(data: dict[str, Any]) -> str:
     and compute SHA-256 hex digest. This ensures hash stability across formatting/whitespace
     changes while reflecting any semantic content mutation.
     """
-    canonical_json = json.dumps(data, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
-    return hashlib.sha256(canonical_json.encode("utf-8")).hexdigest()
+    return _compute_canonical_json_digest(data)
+
+
+def compute_command_receipt_digest(data: dict[str, Any]) -> str:
+    """Compute the canonical digest referenced by StepReceipt.command_receipt_digest."""
+    return _compute_canonical_json_digest(data)
+
+
+def _schema_path_for(
+    data: dict[str, Any],
+    *,
+    paths: dict[str, Path],
+    label: str,
+    supplied_path: Path | None,
+) -> Path:
+    """Resolve a versioned schema unless a caller explicitly pins one."""
+    if supplied_path is not None:
+        return supplied_path
+    version = data.get("schema_version")
+    if not isinstance(version, str) or version not in paths:
+        raise TrailSpecValidationError(
+            f"Unsupported {label} schema_version {version!r}; expected one of {sorted(paths)}"
+        )
+    return paths[version]
+
+
+def _validate_against_schema(
+    data: dict[str, Any],
+    *,
+    schema_path: Path,
+    label: str,
+) -> None:
+    schema = _load_schema(schema_path)
+    validator = Draft202012Validator(schema, format_checker=FormatChecker())
+    errors = sorted(validator.iter_errors(data), key=lambda error: error.path)
+    if errors:
+        err = errors[0]
+        raise TrailSpecValidationError(
+            f"{label} schema violation: {err.message} at {err.json_path}"
+        )
 
 
 def validate_step_receipt_data(
     receipt_data: dict[str, Any],
     *,
-    receipt_schema_path: Path = STEP_RECEIPT_SCHEMA_PATH,
+    receipt_schema_path: Path | None = None,
 ) -> dict[str, Any]:
-    """Validate raw loaded dict against StepReceipt JSON Schema."""
-    receipt_schema = _load_schema(receipt_schema_path)
-    validator = Draft202012Validator(receipt_schema, format_checker=FormatChecker())
-    errors = sorted(validator.iter_errors(receipt_data), key=lambda e: e.path)
-    if errors:
-        err = errors[0]
-        raise TrailSpecValidationError(
-            f"StepReceipt schema violation: {err.message} at {err.json_path}"
-        )
+    """Validate raw loaded dict against the version-selected StepReceipt schema."""
+    resolved_schema_path = _schema_path_for(
+        receipt_data,
+        paths=_STEP_RECEIPT_SCHEMA_PATHS,
+        label="StepReceipt",
+        supplied_path=receipt_schema_path,
+    )
+    _validate_against_schema(
+        receipt_data, schema_path=resolved_schema_path, label="StepReceipt"
+    )
     return {
         "ok": True,
+        "schema_version": receipt_data.get("schema_version"),
         "step_id": receipt_data.get("step_id"),
         "run_id": receipt_data.get("run_id"),
     }
 
 
+def validate_command_receipt_data(
+    receipt_data: dict[str, Any],
+    *,
+    receipt_schema_path: Path = COMMAND_RECEIPT_SCHEMA_PATH,
+) -> dict[str, Any]:
+    """Validate a CommandReceipt v1 document independently of a step receipt."""
+    _validate_against_schema(
+        receipt_data, schema_path=receipt_schema_path, label="CommandReceipt"
+    )
+    return {
+        "ok": True,
+        "invocation_id": receipt_data.get("invocation_id"),
+        "step_id": receipt_data.get("step_id"),
+        "status": receipt_data.get("status"),
+    }
+
+
+def _load_eligible_seats(seat_registry_path: Path) -> set[str]:
+    """Return active seat names from the live fleet taxonomy registry.
+
+    v1.1 deliberately does not carry a static seat enum: endpoint membership
+    and state are the registry-controlled eligibility contract.  ``retired``
+    endpoints are excluded even though their historic names remain recorded.
+    """
+    registry = _load_yaml_or_json(seat_registry_path)
+    endpoints = registry.get("endpoints")
+    if not isinstance(endpoints, list):
+        raise TrailSpecValidationError(
+            f"Seat taxonomy registry {seat_registry_path} must contain an endpoints list"
+        )
+
+    eligible: set[str] = set()
+    for endpoint in endpoints:
+        if not isinstance(endpoint, dict):
+            raise TrailSpecValidationError(
+                f"Seat taxonomy registry {seat_registry_path} contains a non-mapping endpoint"
+            )
+        name = endpoint.get("name")
+        state = endpoint.get("state")
+        if not isinstance(name, str) or not name:
+            raise TrailSpecValidationError(
+                f"Seat taxonomy registry {seat_registry_path} has an endpoint without a name"
+            )
+        if state in {"live", "local_only"}:
+            eligible.add(name)
+    if not eligible:
+        raise TrailSpecValidationError(
+            f"Seat taxonomy registry {seat_registry_path} has no eligible live endpoints"
+        )
+    return eligible
+
+
+def _validate_v11_seats(spec_data: dict[str, Any], seat_registry_path: Path) -> None:
+    eligible = _load_eligible_seats(seat_registry_path)
+    unknown = sorted(set(spec_data["seats"]) - eligible)
+    if unknown:
+        raise TrailSpecValidationError(
+            "TrailSpec v1.1 seat eligibility failed: "
+            f"{unknown} not present as live/local_only endpoints in {seat_registry_path} "
+            f"(eligible: {sorted(eligible)})"
+        )
+
+
+def _validate_v11_invocation_fields(spec_data: dict[str, Any]) -> None:
+    """Enforce the static invocation binding that the runner must preserve."""
+    declared_parameters = set(spec_data["parameters"])
+    for step in spec_data["steps"]:
+        step_id = step["step_id"]
+        command = step["command"]
+        environment = command["environment"]
+        if environment.get("TRAIL_INVOCATION_ID") != "{invocation_id}":
+            raise TrailSpecValidationError(
+                f"Invocation binding violated: step '{step_id}' must set "
+                "TRAIL_INVOCATION_ID to '{invocation_id}'"
+            )
+
+        argv = command["argv"]
+        if command["adapter"] == "typed-primitive":
+            try:
+                invocation_flag_index = argv.index("--invocation-id")
+            except ValueError as exc:
+                raise TrailSpecValidationError(
+                    f"Invocation binding violated: typed-primitive step '{step_id}' "
+                    "must pass --invocation-id {invocation_id}"
+                ) from exc
+            if (
+                invocation_flag_index + 1 >= len(argv)
+                or argv[invocation_flag_index + 1] != "{invocation_id}"
+            ):
+                raise TrailSpecValidationError(
+                    f"Invocation binding violated: typed-primitive step '{step_id}' "
+                    "must pass --invocation-id {invocation_id}"
+                )
+
+        if command["adapter"] == "shell":
+            for index, token in enumerate(argv[:-1]):
+                if token == "-c" and _PARAMETER_REFERENCE.search(argv[index + 1]):
+                    raise TrailSpecValidationError(
+                        f"Unquoted parameter interpolation prohibited: shell step '{step_id}' "
+                        "must pass parameters through argv/environment, not a -c program"
+                    )
+
+        values_to_check = [*argv, *environment.values()]
+        for value in values_to_check:
+            for reference in _PARAMETER_REFERENCE.findall(value):
+                if reference != "invocation_id" and reference not in declared_parameters:
+                    raise TrailSpecValidationError(
+                        f"Undeclared command parameter '{reference}' in step '{step_id}'"
+                    )
+
+
+def _validate_v11_transition_predicates(spec_data: dict[str, Any]) -> None:
+    """Require one distinct, receipt-only predicate identity for every transition."""
+    for step in spec_data["steps"]:
+        predicate_ids: set[str] = set()
+        transitions = step["transitions"]
+        for label, transition in transitions.items():
+            evidence = transition["evidence"]
+            predicate_id = evidence["predicate_id"]
+            if predicate_id in predicate_ids:
+                raise TrailSpecValidationError(
+                    f"Exactly-one-predicate rule violated: step '{step['step_id']}' "
+                    f"reuses predicate_id '{predicate_id}' in its transition set"
+                )
+            predicate_ids.add(predicate_id)
+            for clause in evidence["clauses"]:
+                if clause["source"] != "command_receipt":
+                    raise TrailSpecValidationError(
+                        f"Predicate command-execution prohibition violated: step '{step['step_id']}' "
+                        f"transition '{label}' must reference command_receipt fields only"
+                    )
+
+
+def _transition_targets(step: dict[str, Any], *, is_v11: bool) -> list[str]:
+    transitions = step.get("transitions", {})
+    if is_v11:
+        return [transition["target"] for transition in transitions.values()]
+    return list(transitions.values())
+
+
 def validate_trailspec_data(
     spec_data: dict[str, Any],
     *,
-    spec_schema_path: Path = TRAIL_SPEC_SCHEMA_PATH,
+    spec_schema_path: Path | None = None,
+    seat_registry_path: Path = SEAT_TAXONOMY_PATH,
 ) -> dict[str, Any]:
     """Validate raw loaded dict against TrailSpec JSON Schema and domain invariants."""
-    spec_schema = _load_schema(spec_schema_path)
-    validator = Draft202012Validator(spec_schema, format_checker=FormatChecker())
-    errors = sorted(validator.iter_errors(spec_data), key=lambda e: e.path)
-    if errors:
-        err = errors[0]
-        raise TrailSpecValidationError(
-            f"TrailSpec schema violation: {err.message} at {err.json_path}"
-        )
+    resolved_schema_path = _schema_path_for(
+        spec_data,
+        paths=_TRAIL_SCHEMA_PATHS,
+        label="TrailSpec",
+        supplied_path=spec_schema_path,
+    )
+    _validate_against_schema(
+        spec_data, schema_path=resolved_schema_path, label="TrailSpec"
+    )
+    is_v11 = spec_data["schema_version"] == "trailspec.v1.1"
 
     # Invariant 1: Stop codes must be from published contract list
     declared_stop_codes = set(spec_data.get("stop_codes", []))
     invalid_stops = declared_stop_codes - VALID_STOP_CODES
     if invalid_stops:
         raise TrailSpecValidationError(
-            f"Unknown stop_code(s) {sorted(invalid_stops)}: must be from published 16-item contract list"
+            f"Unknown stop_code(s) {sorted(invalid_stops)}: must be from the published 18-code STOP vocabulary"
         )
 
     steps = spec_data.get("steps", [])
@@ -141,19 +357,37 @@ def validate_trailspec_data(
         kind = step.get("kind")
         evidence_predicate = step.get("evidence_predicate")
 
-        # Invariant 2: No silent judgment steps (kind != summon must have evidence_predicate)
-        if kind != "summon" and evidence_predicate is None:
+        # v1's prose predicate contract is retained only for backward-compatible
+        # validation. v1.1 has one receipt predicate per transition instead.
+        if not is_v11 and kind != "summon" and evidence_predicate is None:
             raise TrailSpecValidationError(
                 f"No silent judgment steps invariant violated: step '{step_id}' with kind '{kind}' lacks an evidence_predicate"
             )
 
-        # Invariant 3: Every transition target must exist in step_ids, stop_codes, or terminal_outcomes
-        transitions = step.get("transitions", {})
-        for label, target in transitions.items():
+        for label, transition in step.get("transitions", {}).items():
+            target = transition["target"] if is_v11 else transition
             if target not in valid_transition_targets:
                 raise TrailSpecValidationError(
                     f"Dangling transition in step '{step_id}' (label '{label}'): target '{target}' does not exist in steps, stop_codes, or terminal_outcomes"
                 )
+
+        if is_v11:
+            blocked_on = step.get("blocked_on")
+            if blocked_on is not None:
+                stop_code = blocked_on["stop_code"]
+                if stop_code not in VALID_STOP_CODES:
+                    raise TrailSpecValidationError(
+                        f"Blocked step '{step_id}' names unknown stop_code '{stop_code}'"
+                    )
+                if stop_code not in declared_stop_codes:
+                    raise TrailSpecValidationError(
+                        f"Blocked step '{step_id}' stop_code '{stop_code}' must be declared by the trail"
+                    )
+
+    if is_v11:
+        _validate_v11_seats(spec_data, seat_registry_path)
+        _validate_v11_invocation_fields(spec_data)
+        _validate_v11_transition_predicates(spec_data)
 
     # Invariant 4: Graph reachability — every step must be reachable from the first step
     if steps:
@@ -168,7 +402,7 @@ def validate_trailspec_data(
                 continue
             visited.add(curr)
             curr_step = step_id_to_step.get(curr, {})
-            for target in curr_step.get("transitions", {}).values():
+            for target in _transition_targets(curr_step, is_v11=is_v11):
                 if target in step_id_to_step and target not in visited:
                     queue.append(target)
 
@@ -185,7 +419,101 @@ def validate_trailspec_data(
         "version": spec_data.get("version"),
         "steps_count": len(steps),
         "trail_hash": trail_hash,
+        "execution_eligible": is_v11,
+        **(
+            {}
+            if is_v11
+            else {
+                "execution_refusal": "TrailSpec v1 is schema-valid but execution-ineligible; "
+                "the runner must refuse v1 execution and closure."
+            }
+        ),
     }
+
+
+def _validate_v11_receipt_binding(
+    spec_data: dict[str, Any],
+    step_receipt_data: dict[str, Any],
+    command_receipt_data: dict[str, Any] | None = None,
+) -> None:
+    """Bind v1.1 receipts to the immutable pinned trail and selected predicate."""
+    expected_values = {
+        "trail_id": spec_data["trail_id"],
+        "trail_version": spec_data["version"],
+        "trail_hash": compute_trail_hash(spec_data),
+    }
+    for field, expected in expected_values.items():
+        if step_receipt_data[field] != expected:
+            raise TrailSpecValidationError(
+                f"StepReceipt binding violated: {field}={step_receipt_data[field]!r} "
+                f"does not match pinned trail value {expected!r}"
+            )
+
+    step_by_id = {step["step_id"]: step for step in spec_data["steps"]}
+    step_id = step_receipt_data["step_id"]
+    step = step_by_id.get(step_id)
+    if step is None:
+        raise TrailSpecValidationError(
+            f"StepReceipt binding violated: unknown step_id '{step_id}'"
+        )
+
+    transition_taken = step_receipt_data["transition_taken"]
+    transition = step["transitions"].get(transition_taken)
+    if transition is None:
+        raise TrailSpecValidationError(
+            f"StepReceipt transition_taken must be a transition label, not a target: "
+            f"'{transition_taken}' is not a label for step '{step_id}'"
+        )
+    expected_predicate_id = transition["evidence"]["predicate_id"]
+    if step_receipt_data["predicate_id"] != expected_predicate_id:
+        raise TrailSpecValidationError(
+            f"StepReceipt predicate_id '{step_receipt_data['predicate_id']}' does not match "
+            f"transition label '{transition_taken}' predicate '{expected_predicate_id}'"
+        )
+
+    if command_receipt_data is None:
+        return
+
+    command_expected_values = {
+        **expected_values,
+        "run_id": step_receipt_data["run_id"],
+        "step_id": step_id,
+        "invocation_id": step_receipt_data["invocation_id"],
+        "actor_outcome": step_receipt_data["actor_outcome"],
+    }
+    for field, expected in command_expected_values.items():
+        if command_receipt_data[field] != expected:
+            raise TrailSpecValidationError(
+                f"CommandReceipt binding violated: {field}={command_receipt_data[field]!r} "
+                f"does not match bound StepReceipt/trail value {expected!r}"
+            )
+
+    matching_labels = [
+        label
+        for label, candidate in step["transitions"].items()
+        if all(
+            command_receipt_data[clause["field"]] == clause["value"]
+            for clause in candidate["evidence"]["clauses"]
+        )
+    ]
+    if len(matching_labels) != 1:
+        raise TrailSpecValidationError(
+            f"Exactly-one-predicate match rule violated for step '{step_id}': "
+            f"matched {matching_labels}; runner must park this invocation as STOP-unknown"
+        )
+    if transition_taken != matching_labels[0]:
+        raise TrailSpecValidationError(
+            f"StepReceipt transition_taken '{transition_taken}' does not match command "
+            f"receipt predicate result '{matching_labels[0]}'"
+        )
+
+    if (
+        compute_command_receipt_digest(command_receipt_data)
+        != step_receipt_data["command_receipt_digest"]
+    ):
+        raise TrailSpecValidationError(
+            "StepReceipt command_receipt_digest does not match the canonical CommandReceipt digest"
+        )
 
 
 def validate_decision_tables_data(
@@ -289,20 +617,57 @@ def validate_trailspec(
     *,
     spec_path: Path = DEFAULT_EXAMPLE_TRAIL_PATH,
     receipt_path: Path | None = None,
+    command_receipt_path: Path | None = None,
     registry_path: Path | None = None,
     as_of: str | datetime | None = None,
-    spec_schema_path: Path = TRAIL_SPEC_SCHEMA_PATH,
-    receipt_schema_path: Path = STEP_RECEIPT_SCHEMA_PATH,
+    spec_schema_path: Path | None = None,
+    receipt_schema_path: Path | None = None,
+    command_receipt_schema_path: Path = COMMAND_RECEIPT_SCHEMA_PATH,
+    seat_registry_path: Path = SEAT_TAXONOMY_PATH,
 ) -> dict[str, Any]:
-    """Validate trail spec file and optional step receipt or registry file."""
+    """Validate a versioned trail spec and its optional receipt projections."""
     spec_data = _load_yaml_or_json(spec_path)
-    spec_summary = validate_trailspec_data(spec_data, spec_schema_path=spec_schema_path)
+    spec_summary = validate_trailspec_data(
+        spec_data,
+        spec_schema_path=spec_schema_path,
+        seat_registry_path=seat_registry_path,
+    )
 
     receipt_summary = None
+    step_receipt_data = None
     if receipt_path is not None:
-        receipt_data = _load_yaml_or_json(receipt_path)
+        step_receipt_data = _load_yaml_or_json(receipt_path)
         receipt_summary = validate_step_receipt_data(
-            receipt_data, receipt_schema_path=receipt_schema_path
+            step_receipt_data, receipt_schema_path=receipt_schema_path
+        )
+
+    command_receipt_summary = None
+    command_receipt_data = None
+    if command_receipt_path is not None:
+        command_receipt_data = _load_yaml_or_json(command_receipt_path)
+        command_receipt_summary = validate_command_receipt_data(
+            command_receipt_data, receipt_schema_path=command_receipt_schema_path
+        )
+
+    is_v11 = spec_data["schema_version"] == "trailspec.v1.1"
+    if not is_v11 and command_receipt_data is not None:
+        raise TrailSpecValidationError(
+            "TrailSpec v1 is execution-ineligible and cannot bind a CommandReceipt"
+        )
+    if step_receipt_data is not None:
+        expected_receipt_version = "step-receipt.v1.1" if is_v11 else "step-receipt.v1"
+        if step_receipt_data["schema_version"] != expected_receipt_version:
+            raise TrailSpecValidationError(
+                f"TrailSpec {spec_data['schema_version']} requires {expected_receipt_version}, "
+                f"got {step_receipt_data['schema_version']}"
+            )
+        if is_v11:
+            _validate_v11_receipt_binding(
+                spec_data, step_receipt_data, command_receipt_data
+            )
+    elif command_receipt_data is not None:
+        raise TrailSpecValidationError(
+            "A CommandReceipt requires its bound StepReceipt v1.1"
         )
 
     res = {
@@ -311,6 +676,8 @@ def validate_trailspec(
     }
     if receipt_summary is not None:
         res["receipt"] = receipt_summary
+    if command_receipt_summary is not None:
+        res["command_receipt"] = command_receipt_summary
     if registry_path is not None:
         res["registry"] = validate_registry(registry_path, as_of=as_of)
     return res
@@ -318,7 +685,7 @@ def validate_trailspec(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Validate TrailSpec v1, StepReceipt v1, and Red-CI Known Failures Registry instances."
+        description="Validate TrailSpec v1/v1.1, receipt contracts, and Red-CI registry instances."
     )
     parser.add_argument(
         "--spec",
@@ -330,7 +697,19 @@ def main(argv: list[str] | None = None) -> int:
         "--receipt",
         type=Path,
         default=None,
-        help="optional path to StepReceipt JSON/YAML file",
+        help="optional path to version-matched StepReceipt JSON/YAML file",
+    )
+    parser.add_argument(
+        "--command-receipt",
+        type=Path,
+        default=None,
+        help="optional CommandReceipt v1 JSON/YAML file; requires --receipt and a v1.1 trail",
+    )
+    parser.add_argument(
+        "--seat-registry",
+        type=Path,
+        default=SEAT_TAXONOMY_PATH,
+        help="fleet endpoint taxonomy used for TrailSpec v1.1 seat eligibility",
     )
     parser.add_argument(
         "--tables",
@@ -361,8 +740,12 @@ def main(argv: list[str] | None = None) -> int:
         summary = validate_trailspec(
             spec_path=args.spec.resolve(),
             receipt_path=args.receipt.resolve() if args.receipt else None,
+            command_receipt_path=(
+                args.command_receipt.resolve() if args.command_receipt else None
+            ),
             registry_path=args.registry.resolve() if args.registry else None,
             as_of=args.as_of,
+            seat_registry_path=args.seat_registry.resolve(),
         )
         if args.tables is not None:
             tables_path = args.tables.resolve()
@@ -387,10 +770,18 @@ def main(argv: list[str] | None = None) -> int:
         spec_info = summary["spec"]
         print(
             f"TrailSpec valid: id='{spec_info['trail_id']}' version='{spec_info['version']}' "
-            f"steps={spec_info['steps_count']} hash={spec_info['trail_hash']}"
+            f"steps={spec_info['steps_count']} hash={spec_info['trail_hash']} "
+            f"execution_eligible={spec_info['execution_eligible']}"
         )
         if "receipt" in summary:
             print(f"StepReceipt valid: step_id='{summary['receipt']['step_id']}'")
+        if "command_receipt" in summary:
+            command_receipt = summary["command_receipt"]
+            print(
+                "CommandReceipt valid: "
+                f"step_id='{command_receipt['step_id']}' "
+                f"status='{command_receipt['status']}'"
+            )
         if "registry" in summary:
             reg = summary["registry"]
             print(
