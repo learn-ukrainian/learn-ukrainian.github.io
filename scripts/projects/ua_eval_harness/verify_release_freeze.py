@@ -21,7 +21,11 @@ from scripts.projects.ua_eval_harness.build_heldout_manifest import (
     validate_manifest,
     verify_upstream,
 )
-from scripts.projects.ua_eval_harness.evaluate_model import load_manifest, load_saved_responses
+from scripts.projects.ua_eval_harness.evaluate_model import (
+    load_dispositions,
+    load_manifest,
+    load_saved_responses,
+)
 
 SCHEMA_VERSION = "ua_eval_release_freeze.v1"
 RELEASE_VERSION = "0.1.0"
@@ -30,12 +34,17 @@ DEFAULT_SPLIT_OUTPUT = ROOT / "data/projects/ua_eval_harness/releases/v0.1.0/spl
 DEFAULT_UA_GEC_ROOT = ROOT / "data/ua-gec"
 HELDOUT_MANIFEST = Path("data/projects/ua_eval_harness/heldout_manifest_v1.json")
 HELDOUT_CONFIG = Path("data/projects/ua_eval_harness/heldout_manifest_config.json")
+DISPOSITION_CONFIG = Path("data/projects/ua_eval_harness/scoring_disposition_config.json")
+DISPOSITIONS = Path("data/projects/ua_eval_harness/scoring_dispositions_v1.json")
 SPLIT_RECEIPT = Path("data/projects/ua_eval_harness/releases/v0.1.0/split_integrity.json")
 DEV_FIXTURES = Path("data/projects/ua_eval_harness/evalset_v1.jsonl")
 PROMPT = Path("data/projects/ua_eval_harness/minimal_edit_prompt_v1.txt")
 OUTPUT_SCHEMA = Path("data/projects/ua_eval_harness/model_output_schema_v1.json")
 EVALUATOR = Path("scripts/projects/ua_eval_harness/evaluate_model.py")
 EXTRACTOR = Path("scripts/projects/ua_eval_harness/build_heldout_manifest.py")
+DISPOSITION_BUILDER = Path("scripts/projects/ua_eval_harness/build_scoring_dispositions.py")
+VESUM_LOCK = Path("scripts/config/vesum_source.lock.json")
+VESUM_PARSER = Path("scripts/rag/vesum_reingest.py")
 RUNNER = Path("scripts/projects/ua_eval_harness/run_codex_baseline.py")
 BASELINE_DIR = Path("data/projects/ua_eval_harness/baselines/v1")
 RESPONSE_FILES = (
@@ -51,11 +60,16 @@ REPORT_FILES = (
 FROZEN_ARTIFACTS: tuple[tuple[Path, str], ...] = (
     (HELDOUT_CONFIG, "dataset_configuration"),
     (HELDOUT_MANIFEST, "heldout_gold_manifest"),
+    (DISPOSITION_CONFIG, "calque_disposition_configuration"),
+    (DISPOSITIONS, "calque_scoring_dispositions"),
     (SPLIT_RECEIPT, "upstream_split_integrity_receipt"),
     (DEV_FIXTURES, "development_fixture_excluded_from_results"),
     (PROMPT, "task_instruction"),
     (OUTPUT_SCHEMA, "model_output_contract"),
     (EXTRACTOR, "dataset_extractor"),
+    (DISPOSITION_BUILDER, "calque_disposition_builder"),
+    (VESUM_LOCK, "vesum_source_lock"),
+    (VESUM_PARSER, "vesum_marker_parser"),
     (EVALUATOR, "saved_response_scorer"),
     (RUNNER, "optional_live_model_runner"),
     (BASELINE_DIR / "generation_requests.jsonl", "source_only_generation_requests"),
@@ -272,6 +286,7 @@ def build_freeze() -> dict[str, Any]:
     """Build a freeze receipt from the exact committed public artifacts."""
     heldout = _read_json(ROOT / HELDOUT_MANIFEST)
     config = _read_json(ROOT / HELDOUT_CONFIG)
+    disposition_config = _read_json(ROOT / DISPOSITION_CONFIG)
     split_receipt = _read_json(ROOT / SPLIT_RECEIPT)
     development_fixtures = _read_jsonl(ROOT / DEV_FIXTURES)
     try:
@@ -282,6 +297,13 @@ def build_freeze() -> dict[str, Any]:
     reports = [_read_json(ROOT / path) for path in REPORT_FILES]
     _validate_reports_do_not_expose_items(heldout, reports)
     expanded_manifest, expanded_items = load_manifest(ROOT / HELDOUT_MANIFEST)
+    try:
+        disposition_manifest, _disposition_lookup = load_dispositions(
+            ROOT / DISPOSITIONS,
+            manifest=expanded_manifest,
+        )
+    except ValueError as exc:
+        raise FreezeError(f"calque disposition validation failed: {exc}") from exc
     for response_path in RESPONSE_FILES:
         try:
             load_saved_responses(
@@ -297,6 +319,8 @@ def build_freeze() -> dict[str, Any]:
         raise FreezeError("baseline reports do not cover the frozen response files exactly")
     if any(report["manifest"]["payload_sha256"] != heldout["integrity"]["payload_sha256"] for report in reports):
         raise FreezeError("baseline report manifest receipt drift")
+    if any(report["manifest"]["calque_disposition_sha256"] != _sha256(ROOT / DISPOSITIONS) for report in reports):
+        raise FreezeError("baseline report calque disposition receipt drift")
     if any(report["saved_run"]["prompt_sha256"] != _sha256(ROOT / PROMPT) for report in reports):
         raise FreezeError("baseline prompt receipt drift")
     if any(report["scorer"]["implementation_sha256"] != _sha256(ROOT / EVALUATOR) for report in reports):
@@ -330,6 +354,8 @@ def build_freeze() -> dict[str, Any]:
             "model_output_schema_sha256": _sha256(ROOT / OUTPUT_SCHEMA),
             "scorer_id": reports[0]["scorer"]["id"],
             "scorer_sha256": _sha256(ROOT / EVALUATOR),
+            "calque_disposition_id": disposition_manifest["disposition_id"],
+            "calque_disposition_sha256": _sha256(ROOT / DISPOSITIONS),
         },
         "upstream": {
             "dataset": "UA-GEC",
@@ -363,6 +389,15 @@ def build_freeze() -> dict[str, Any]:
             },
             "development_fixture_count": len(development_fixtures),
             "development_fixtures_in_heldout_results": 0,
+        },
+        "calque_scoring_disposition": {
+            "upstream_tag": disposition_config["upstream_tag"],
+            "upstream_tag_meaning": disposition_manifest["semantics"]["upstream_tag_meaning"],
+            "benchmark_disposition_meaning": disposition_manifest["semantics"]["benchmark_disposition_meaning"],
+            "counts": disposition_manifest["counts"],
+            "evidence_receipt": disposition_manifest["evidence_receipt"],
+            "activation_dependency": disposition_manifest["semantics"]["activation_dependency"],
+            "fail_closed": disposition_manifest["semantics"]["fail_closed"],
         },
         "contamination": {
             "disclosures": [

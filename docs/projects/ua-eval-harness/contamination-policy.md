@@ -10,9 +10,11 @@
 `data/projects/ua_eval_harness/releases/v0.1.0/freeze_manifest.json`. Він
 фіксує SHA-256 для:
 
-- конфігурації й маніфесту вибірки;
+- конфігурації й маніфесту вибірки, окремого disposition-маніфесту для
+  calque scoring та його конфігурації;
 - інструкції, схеми відповіді, екстрактора, оцінювача й необов'язкового
   провайдерного запускатора;
+- VESUM source lock, marker parser і builder benchmark-dispositions;
 - пакета запитів, усіх збережених відповідей і агрегованих звітів трьох
   базових систем;
 - 52 тренувальних прикладів, які дозволено використовувати лише як
@@ -45,6 +47,28 @@
 Отже, перетин train/test становить нуль і на рівні авторів, і на рівні
 документів. 52 старі development-fixtures походять із train і залишаються
 окремими від held-out оцінювання.
+
+## UA-GEC label і benchmark disposition
+
+`F/Calque` зберігається без змін як upstream label стандартизації UA-GEC. Це
+не є автоматичним твердженням нашого benchmark, що кожна початкова форма —
+калька. Окремий `scoring_dispositions_v1.json` містить рішення й причину для
+всіх 354 annotator-level edits.
+
+Відтворюваний exact-style probe використовує зафіксований dict_uk/VESUM
+`v6.8.0`. Серед 293 унікальних `F/Calque` spans він фіксує 49 style-marker
+collisions: 34 `bad`, 10 `slang`, 3 `arch`, 2 `rare`. Окремого `dial` token у
+цьому джерелі немає; офіційна семантика `arch` охоплює застаріле, архаїчне й
+інколи діалектне вживання. Тому реліз не заявляє «нуль діалектних
+конфліктів».
+
+Headline calque recall включає 338 annotations. Ще 16 не входять до headline:
+3 register-standardization, 2 heritage-conflict і 11 contested. Attestation
+або marker є evidence, а не готовим contextual adjudication. Випадки
+`тьоті`, `кришею`, `рижого`, `Спікери` та false surface collision `була`
+зафіксовано окремими regression receipts. Повну активацію marker-aware
+contextual policy відстежує #5092; п'ятислівний prototype seed не
+використовується.
 
 ## Відомі контакти з даними
 

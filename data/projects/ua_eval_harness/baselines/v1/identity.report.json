@@ -10,8 +10,10 @@
     "f0_5": 0.0,
     "false_negative": 1080,
     "false_positive": 0,
+    "headline": false,
     "precision": 0.0,
     "recall": 0.0,
+    "scope": "all retained UA-GEC standardization labels plus grammar labels",
     "true_positive": 0
   },
   "exact_sentence": {
@@ -19,7 +21,51 @@
     "correct": 0,
     "total": 677
   },
+  "headline_calque": {
+    "admitted_annotation_support": 338,
+    "disposition_counts": {
+      "contested": 11,
+      "excluded_as_regional_standardization": 0,
+      "excluded_as_register_standardization": 3,
+      "excluded_from_headline_calque": 16,
+      "heritage_conflict": 2,
+      "included_in_headline_calque": 338,
+      "items_by_disposition": {
+        "CONTESTED": 11,
+        "HEADLINE_CALQUE": 185,
+        "HERITAGE_CONFLICT": 1,
+        "REGIONAL_STANDARDIZATION": 0,
+        "REGISTER_STANDARDIZATION": 2
+      },
+      "raw_style_collision_annotations": 73,
+      "raw_style_collision_spans": 49,
+      "raw_style_collision_spans_by_marker": {
+        "arch": 3,
+        "bad": 34,
+        "rare": 2,
+        "slang": 10
+      },
+      "upstream_f_calque_annotations": 354
+    },
+    "excluded_annotation_support": 16,
+    "false_negative": 229,
+    "precision": null,
+    "precision_note": "Saved-response edits are untyped, so false positives cannot be attributed specifically to calque spans; standard overall edit precision remains in edit_correction.",
+    "recall": 0.0,
+    "scope": "F/Calque annotations admitted by the separate benchmark disposition",
+    "selected_reference_dispositions": {
+      "CONTESTED": 11,
+      "HEADLINE_CALQUE": 229,
+      "HERITAGE_CONFLICT": 1,
+      "REGISTER_STANDARDIZATION": 2
+    },
+    "selected_reference_support": 229,
+    "true_positive": 0,
+    "upstream_annotation_support": 354
+  },
   "manifest": {
+    "calque_disposition_id": "ua-gec-calque-dispositions-v1",
+    "calque_disposition_sha256": "44498d4c2ffcf8c0d3afed51bc82fa482be6b68ff6f05a3bcda035adbf5311a8",
     "id": "ua-gec-calque-grammar-heldout-v1",
     "items": 677,
     "payload_sha256": "6e9f0097faaa84f9f6b2225295bf1aba8657325e3f587b3f55b69044291f0ba9"
@@ -297,7 +343,7 @@
     "alignment_note": "This dependency-free v1 uses a pinned Wagner-Fischer token aligner. It implements the official exact-edit metric semantics but does not claim byte-for-byte ERRANT alignment parity in ambiguous alignments.",
     "beta": 0.5,
     "id": "ua_eval_exact_token_edits.v1",
-    "implementation_sha256": "a956c70f6a088baeace45e23f7482f418a9f1ca75e55597c23a93533fdf168b2",
+    "implementation_sha256": "358ee1419533577fb185615c8a80b15688214a89fe3003d9fe9425954511402a",
     "matching": "exact source token span plus exact replacement text",
     "reference_policy": "best F0.5 upstream annotator per sentence; deterministic tie-break",
     "standard_metric_reference": {

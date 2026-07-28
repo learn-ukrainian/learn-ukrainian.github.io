@@ -8,7 +8,22 @@
     {
       "path": "data/projects/ua_eval_harness/heldout_manifest_v1.json",
       "role": "heldout_gold_manifest",
-      "sha256": "06933e05542350a75552e56fdc6c1ca8521ac4dc509e7dcde90899bb1f2aa69b"
+      "sha256": "56eb4fc17a5ed6967c5c13fbdc9fde964d1b8fb08bde7da7f15cf535486735dd"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/scoring_disposition_config.json",
+      "role": "calque_disposition_configuration",
+      "sha256": "ecda338a95aa8cc8fe862ba67556101be119ad9391766221616304ce5928218a"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/scoring_dispositions_v1.json",
+      "role": "calque_scoring_dispositions",
+      "sha256": "44498d4c2ffcf8c0d3afed51bc82fa482be6b68ff6f05a3bcda035adbf5311a8"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/releases/v0.1.0/split_integrity.json",
+      "role": "upstream_split_integrity_receipt",
+      "sha256": "c10b1bba913364aff6ad0c0d9cbbafa9b611b3fb733a94e7fe73081be4b5b7c5"
     },
     {
       "path": "data/projects/ua_eval_harness/evalset_v1.jsonl",
@@ -28,12 +43,27 @@
     {
       "path": "scripts/projects/ua_eval_harness/build_heldout_manifest.py",
       "role": "dataset_extractor",
-      "sha256": "8df94490738c0ea47f27f625c1932ed76cfac686d9d645d49d783e4517339029"
+      "sha256": "d4774721fb1b7fdc750bbc9dea0c9aa193b9c9d9b203568146dd3bd3e557e47b"
+    },
+    {
+      "path": "scripts/projects/ua_eval_harness/build_scoring_dispositions.py",
+      "role": "calque_disposition_builder",
+      "sha256": "38317861c5f5fe5761282f8ba0c04308a0bcf653aac17d2e54e6bfb48053aece"
+    },
+    {
+      "path": "scripts/config/vesum_source.lock.json",
+      "role": "vesum_source_lock",
+      "sha256": "27362c3112579cbd8378314189c6c2032ac1d3db5f89f155f5557bb31a3d0fa6"
+    },
+    {
+      "path": "scripts/rag/vesum_reingest.py",
+      "role": "vesum_marker_parser",
+      "sha256": "d98ffb7f3dfd7503c901e554e02dbef61c728672ba554a2d2d8c50fc01059477"
     },
     {
       "path": "scripts/projects/ua_eval_harness/evaluate_model.py",
       "role": "saved_response_scorer",
-      "sha256": "a956c70f6a088baeace45e23f7482f418a9f1ca75e55597c23a93533fdf168b2"
+      "sha256": "358ee1419533577fb185615c8a80b15688214a89fe3003d9fe9425954511402a"
     },
     {
       "path": "scripts/projects/ua_eval_harness/run_codex_baseline.py",
@@ -53,7 +83,7 @@
     {
       "path": "data/projects/ua_eval_harness/baselines/v1/identity.report.json",
       "role": "identity_aggregate_report",
-      "sha256": "028f2254b82e8c9e3e8d4b7ac5bb2653fa094a24c4eda11b52047f9ab96f69b7"
+      "sha256": "b278dd289783c027162c80ec48b6857db968b2834c50d6fe1fbae30022205142"
     },
     {
       "path": "data/projects/ua_eval_harness/baselines/v1/fixture-rules.responses.jsonl",
@@ -63,7 +93,7 @@
     {
       "path": "data/projects/ua_eval_harness/baselines/v1/fixture-rules.report.json",
       "role": "deterministic_aggregate_report",
-      "sha256": "756f5c52a415ef7c69271ab122cda1e8ccd26a724f799bbf01a37bd0f52995e5"
+      "sha256": "0759ba0c49c6a834acede64e0faa62c7197a6b3d5b53f4761e4eef2d479055c5"
     },
     {
       "path": "data/projects/ua_eval_harness/baselines/v1/gpt-5.6-terra.responses.jsonl",
@@ -73,7 +103,7 @@
     {
       "path": "data/projects/ua_eval_harness/baselines/v1/gpt-5.6-terra.report.json",
       "role": "real_model_aggregate_report",
-      "sha256": "761be57af975bcf3797732e7c2fa38b7b861d503e7ec7c31b3105056ad221f7c"
+      "sha256": "2567fb9e96c94c3a165e24607907e98edb7fc86e25634c9d788fdc10e9f19952"
     }
   ],
   "baselines": [
@@ -129,6 +159,63 @@
       "saved_response_sha256": "e966913bd151f6a54170bc91442388cb68688965c9951c2d76088199c0ebe63b"
     }
   ],
+  "calque_scoring_disposition": {
+    "activation_dependency": 5092,
+    "benchmark_disposition_meaning": "separate calque scoring decision",
+    "counts": {
+      "contested": 11,
+      "excluded_as_regional_standardization": 0,
+      "excluded_as_register_standardization": 3,
+      "excluded_from_headline_calque": 16,
+      "heritage_conflict": 2,
+      "included_in_headline_calque": 338,
+      "items_by_disposition": {
+        "CONTESTED": 11,
+        "HEADLINE_CALQUE": 185,
+        "HERITAGE_CONFLICT": 1,
+        "REGIONAL_STANDARDIZATION": 0,
+        "REGISTER_STANDARDIZATION": 2
+      },
+      "raw_style_collision_annotations": 73,
+      "raw_style_collision_spans": 49,
+      "raw_style_collision_spans_by_marker": {
+        "arch": 3,
+        "bad": 34,
+        "rare": 2,
+        "slang": 10
+      },
+      "upstream_f_calque_annotations": 354
+    },
+    "evidence_receipt": {
+      "known_absent_markers": [
+        "coll"
+      ],
+      "parser": "scripts/rag/vesum_reingest.py",
+      "parser_sha256": "d98ffb7f3dfd7503c901e554e02dbef61c728672ba554a2d2d8c50fc01059477",
+      "release_asset_sha256": "e33803783ac138e6f3af2cf0e9428ba146c0ecfda7f5c41fe83ae00c7af24be9",
+      "release_version": "v6.8.0",
+      "source_lock": "scripts/config/vesum_source.lock.json",
+      "source_lock_sha256": "27362c3112579cbd8378314189c6c2032ac1d3db5f89f155f5557bb31a3d0fa6",
+      "style_markers": [
+        "arch",
+        "bad",
+        "coll",
+        "dialect",
+        "rare",
+        "slang"
+      ],
+      "tag_semantics": {
+        "arch_meaning": "застаріле/архаїчне/(інколи) діалектне",
+        "arch_source_line": 114,
+        "dedicated_dial_tag": false,
+        "source": "brown-uk/dict_uk doc/tags.txt",
+        "upstream_commit": "bcb5ccd9585a79dbbbb7c8c5e241adcd8a64f824"
+      }
+    },
+    "fail_closed": true,
+    "upstream_tag": "F/Calque",
+    "upstream_tag_meaning": "UA-GEC standardization label"
+  },
   "contamination": {
     "disclosures": [
       "The public task instruction contains no examples.",
@@ -183,7 +270,7 @@
     "annotation_layer": "gec-fluency",
     "development_fixture_count": 52,
     "development_fixtures_in_heldout_results": 0,
-    "document_proof": "Pinned metadata has one unique row and one partition per document ID; the extractor proves the test M2 document set exactly equals metadata test IDs.",
+    "document_proof": "The frozen split receipt retains the exact pinned metadata document and author ID sets; the verifier recomputes both intersections and requires its test documents to equal the held-out manifest document set.",
     "manifest_payload_sha256": "6e9f0097faaa84f9f6b2225295bf1aba8657325e3f587b3f55b69044291f0ba9",
     "partition": "test",
     "sentence_disposition": {
@@ -195,9 +282,12 @@
     "train_test_document_overlap": 0,
     "upstream_test_authors": 76,
     "upstream_test_documents": 166,
-    "upstream_train_authors": 752
+    "upstream_train_authors": 752,
+    "upstream_train_documents": 1706
   },
   "task_contract": {
+    "calque_disposition_id": "ua-gec-calque-dispositions-v1",
+    "calque_disposition_sha256": "44498d4c2ffcf8c0d3afed51bc82fa482be6b68ff6f05a3bcda035adbf5311a8",
     "manifest_id": "ua-gec-calque-grammar-heldout-v1",
     "model_output_schema_sha256": "93fda1b52e570cfc3c6431bb77e55d4e0047bf9cf92c45e4c5107b10e47ba710",
     "predicate": {
@@ -217,7 +307,7 @@
     },
     "prompt_sha256": "f121546dcbaf602c58c7d85977ad792eb9be402dd1e01a6a556ba966dac2c96a",
     "scorer_id": "ua_eval_exact_token_edits.v1",
-    "scorer_sha256": "a956c70f6a088baeace45e23f7482f418a9f1ca75e55597c23a93533fdf168b2",
+    "scorer_sha256": "358ee1419533577fb185615c8a80b15688214a89fe3003d9fe9425954511402a",
     "task": "minimal-edit Ukrainian calque and grammar correction"
   },
   "upstream": {

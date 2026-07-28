@@ -9,9 +9,11 @@ import pytest
 from scripts.projects.ua_eval_harness import verify_release_freeze as freeze_module
 from scripts.projects.ua_eval_harness.verify_release_freeze import (
     DEFAULT_OUTPUT,
+    DEFAULT_SPLIT_OUTPUT,
     FreezeError,
     build_freeze,
     validate_freeze,
+    validate_split_receipt,
     write_freeze,
 )
 
@@ -31,6 +33,9 @@ def test_committed_release_freeze_is_complete_and_current() -> None:
     assert freeze["split_integrity"]["train_test_author_overlap"] == 0
     assert freeze["split_integrity"]["train_test_document_overlap"] == 0
     assert freeze["split_integrity"]["development_fixtures_in_heldout_results"] == 0
+    assert freeze["calque_scoring_disposition"]["counts"]["included_in_headline_calque"] == 338
+    assert freeze["calque_scoring_disposition"]["counts"]["excluded_from_headline_calque"] == 16
+    assert len(freeze["artifacts"]) == 21
     assert len(freeze["baselines"]) == 3
     assert all(run["gold_fields_supplied"] == [] for run in freeze["baselines"])
 
@@ -103,3 +108,22 @@ def test_write_freeze_requires_matching_version_directory(tmp_path: Path) -> Non
 
     with pytest.raises(FreezeError, match="path does not match release version"):
         write_freeze(output, build_freeze())
+
+
+def test_split_receipt_proves_disjoint_upstream_sets() -> None:
+    receipt = json.loads(DEFAULT_SPLIT_OUTPUT.read_text(encoding="utf-8"))
+    heldout = json.loads((freeze_module.ROOT / freeze_module.HELDOUT_MANIFEST).read_text(encoding="utf-8"))
+    config = json.loads((freeze_module.ROOT / freeze_module.HELDOUT_CONFIG).read_text(encoding="utf-8"))
+
+    proof = validate_split_receipt(receipt, heldout=heldout, config=config)
+
+    assert proof["train_documents"] == 1706
+    assert proof["test_documents"] == 166
+    assert proof["train_test_document_overlap"] == 0
+    assert proof["train_test_author_overlap"] == 0
+
+    tampered = copy.deepcopy(receipt)
+    tampered["test_document_ids"].append(tampered["train_document_ids"][0])
+    tampered["test_document_ids"].sort()
+    with pytest.raises(FreezeError, match="train/test overlap"):
+        validate_split_receipt(tampered, heldout=heldout, config=config)

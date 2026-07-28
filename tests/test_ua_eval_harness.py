@@ -137,6 +137,12 @@ def test_identity_report_has_standard_metrics_and_diagnostics(tmp_path: Path) ->
     assert report["edit_correction"]["false_positive"] == 0
     assert report["edit_correction"]["false_negative"] > 0
     assert report["edit_correction"]["f0_5"] == 0.0
+    assert report["edit_correction"]["headline"] is False
+    assert report["headline_calque"]["upstream_annotation_support"] == 354
+    assert report["headline_calque"]["admitted_annotation_support"] == 338
+    assert report["headline_calque"]["excluded_annotation_support"] == 16
+    assert report["headline_calque"]["precision"] is None
+    assert report["headline_calque"]["recall"] == 0.0
     assert report["exact_sentence"]["accuracy"] == 0.0
     assert report["diagnostics"]["unchanged_outputs"] == 677
     assert report["uncertainty"]["samples"] == 25

@@ -15,6 +15,7 @@ import json
 import math
 import random
 import sys
+from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -25,8 +26,16 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.projects.ua_eval_harness.build_heldout_manifest import validate_manifest
+from scripts.projects.ua_eval_harness.build_scoring_dispositions import (
+    ROW_LAYOUT as DISPOSITION_ROW_LAYOUT,
+)
+from scripts.projects.ua_eval_harness.build_scoring_dispositions import (
+    validate_dispositions,
+)
 
 DEFAULT_MANIFEST = ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json"
+DEFAULT_DISPOSITION_CONFIG = ROOT / "data/projects/ua_eval_harness/scoring_disposition_config.json"
+DEFAULT_DISPOSITIONS = ROOT / "data/projects/ua_eval_harness/scoring_dispositions_v1.json"
 DEFAULT_DEV_FIXTURES = ROOT / "data/projects/ua_eval_harness/evalset_v1.jsonl"
 DEFAULT_PROMPT = ROOT / "data/projects/ua_eval_harness/minimal_edit_prompt_v1.txt"
 SAVED_RESPONSE_SCHEMA = "ua_eval_saved_responses.v1"
@@ -73,6 +82,8 @@ class ItemScore:
     over_edited: bool
     chosen_annotator: str
     tag_counts: Mapping[str, tuple[int, int]]
+    headline_calque_counts: tuple[int, int]
+    calque_disposition_counts: Mapping[str, int]
 
 
 def _canonical_json(value: Any) -> str:
@@ -146,6 +157,34 @@ def load_manifest(path: Path = DEFAULT_MANIFEST) -> tuple[dict[str, Any], list[d
         item["references"] = references
         items.append(item)
     return manifest, items
+
+
+def load_dispositions(
+    path: Path,
+    *,
+    manifest: Mapping[str, Any],
+    config_path: Path = DEFAULT_DISPOSITION_CONFIG,
+) -> tuple[dict[str, Any], dict[tuple[Any, ...], dict[str, Any]]]:
+    """Load exact per-annotation benchmark dispositions."""
+    dispositions = _read_json(path)
+    config = _read_json(config_path)
+    try:
+        validate_dispositions(dispositions, manifest=manifest, config=config)
+    except ValueError as exc:
+        raise EvaluationError(f"disposition validation failed: {exc}") from exc
+    lookup: dict[tuple[Any, ...], dict[str, Any]] = {}
+    for raw_row in dispositions["rows"]:
+        row = dict(zip(DISPOSITION_ROW_LAYOUT, raw_row, strict=True))
+        key = (
+            row["item_id"],
+            row["annotator_index"],
+            row["start"],
+            row["end"],
+            row["upstream_tag"],
+            row["replacement"],
+        )
+        lookup[key] = row
+    return dispositions, lookup
 
 
 def prompt_receipt(prompt_path: Path = DEFAULT_PROMPT) -> dict[str, Any]:
@@ -546,7 +585,12 @@ def _score_against_reference(
     return tp, fp, fn, {tag: (values[0], values[1]) for tag, values in by_tag.items()}
 
 
-def score_item(item: Mapping[str, Any], response: str) -> ItemScore:
+def score_item(
+    item: Mapping[str, Any],
+    response: str,
+    *,
+    dispositions: Mapping[tuple[Any, ...], Mapping[str, Any]] | None = None,
+) -> ItemScore:
     """Score one response against its best matching upstream annotator."""
     candidate = align_token_edits(str(item["source"]), response)
     ranked: list[tuple[tuple[float, int, int, int, str], Mapping[str, Any], tuple[int, int, int, Any]]] = []
@@ -561,6 +605,39 @@ def score_item(item: Mapping[str, Any], response: str) -> ItemScore:
         raise EvaluationError(f"manifest item has no references: {item['id']}")
     _, chosen_reference, counts = max(ranked, key=lambda entry: entry[0])
     tp, fp, fn, tag_counts = counts
+    candidate_keys = {edit.key for edit in candidate}
+    headline_tp = 0
+    headline_fn = 0
+    disposition_counts: Counter[str] = Counter()
+    for edit in chosen_reference["edits"]:
+        if edit["tag"] != "F/Calque":
+            continue
+        status = "HEADLINE_CALQUE"
+        if dispositions is not None:
+            key = (
+                str(item["id"]),
+                str(chosen_reference["annotator_index"]),
+                int(edit["start"]),
+                int(edit["end"]),
+                str(edit["tag"]),
+                str(edit["replacement"]),
+            )
+            disposition = dispositions.get(key)
+            if disposition is None:
+                raise EvaluationError(f"missing calque disposition: {key}")
+            status = str(disposition["disposition"])
+        disposition_counts[status] += 1
+        if status != "HEADLINE_CALQUE":
+            continue
+        gold_key = (
+            int(edit["start"]),
+            int(edit["end"]),
+            str(edit["replacement"]),
+        )
+        if gold_key in candidate_keys:
+            headline_tp += 1
+        else:
+            headline_fn += 1
     normalized_response = " ".join(response.split())
     targets = {" ".join(str(reference["target"]).split()) for reference in item["references"]}
     source = " ".join(str(item["source"]).split())
@@ -574,6 +651,8 @@ def score_item(item: Mapping[str, Any], response: str) -> ItemScore:
         over_edited=fp > 0,
         chosen_annotator=str(chosen_reference["annotator_index"]),
         tag_counts=tag_counts,
+        headline_calque_counts=(headline_tp, headline_fn),
+        calque_disposition_counts=dict(sorted(disposition_counts.items())),
     )
 
 
@@ -632,18 +711,30 @@ def score_saved_run(
     responses_path: Path,
     *,
     manifest_path: Path = DEFAULT_MANIFEST,
+    dispositions_path: Path = DEFAULT_DISPOSITIONS,
     prompt_path: Path = DEFAULT_PROMPT,
     bootstrap_samples: int = 1000,
 ) -> dict[str, Any]:
     """Compute standard exact-edit P/R/F0.5 plus companion diagnostics."""
     manifest, items = load_manifest(manifest_path)
+    disposition_manifest, dispositions = load_dispositions(
+        dispositions_path,
+        manifest=manifest,
+    )
     header, responses = load_saved_responses(
         responses_path,
         manifest=manifest,
         items=items,
         prompt_path=prompt_path,
     )
-    item_scores = [score_item(item, responses[str(item["id"])]) for item in items]
+    item_scores = [
+        score_item(
+            item,
+            responses[str(item["id"])],
+            dispositions=dispositions,
+        )
+        for item in items
+    ]
     tp = sum(score.tp for score in item_scores)
     fp = sum(score.fp for score in item_scores)
     fn = sum(score.fn for score in item_scores)
@@ -678,6 +769,12 @@ def score_saved_run(
     exact_count = sum(score.exact for score in item_scores)
     unchanged_count = sum(score.unchanged for score in item_scores)
     over_edited_count = sum(score.over_edited for score in item_scores)
+    headline_calque_tp = sum(score.headline_calque_counts[0] for score in item_scores)
+    headline_calque_fn = sum(score.headline_calque_counts[1] for score in item_scores)
+    selected_dispositions: Counter[str] = Counter()
+    for score in item_scores:
+        selected_dispositions.update(score.calque_disposition_counts)
+    headline_calque_support = disposition_manifest["counts"]["included_in_headline_calque"]
     return {
         "schema_version": REPORT_SCHEMA,
         "scorer": {
@@ -697,6 +794,8 @@ def score_saved_run(
             "id": manifest["manifest_id"],
             "payload_sha256": manifest["integrity"]["payload_sha256"],
             "items": len(items),
+            "calque_disposition_id": disposition_manifest["disposition_id"],
+            "calque_disposition_sha256": hashlib.sha256(dispositions_path.read_bytes()).hexdigest(),
         },
         "saved_run": {
             "path": responses_path.as_posix(),
@@ -720,12 +819,36 @@ def score_saved_run(
             },
         },
         "edit_correction": {
+            "scope": "all retained UA-GEC standardization labels plus grammar labels",
+            "headline": False,
             "true_positive": tp,
             "false_positive": fp,
             "false_negative": fn,
             "precision": precision,
             "recall": recall,
             "f0_5": f_score,
+        },
+        "headline_calque": {
+            "scope": "F/Calque annotations admitted by the separate benchmark disposition",
+            "upstream_annotation_support": disposition_manifest["counts"]["upstream_f_calque_annotations"],
+            "admitted_annotation_support": headline_calque_support,
+            "excluded_annotation_support": disposition_manifest["counts"]["excluded_from_headline_calque"],
+            "selected_reference_support": headline_calque_tp + headline_calque_fn,
+            "true_positive": headline_calque_tp,
+            "false_negative": headline_calque_fn,
+            "recall": (
+                headline_calque_tp / (headline_calque_tp + headline_calque_fn)
+                if headline_calque_tp + headline_calque_fn
+                else 0.0
+            ),
+            "precision": None,
+            "precision_note": (
+                "Saved-response edits are untyped, so false positives cannot be "
+                "attributed specifically to calque spans; standard overall edit "
+                "precision remains in edit_correction."
+            ),
+            "disposition_counts": disposition_manifest["counts"],
+            "selected_reference_dispositions": dict(sorted(selected_dispositions.items())),
         },
         "exact_sentence": {
             "correct": exact_count,
@@ -747,6 +870,7 @@ def score_saved_run(
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser.add_argument("--dispositions", type=Path, default=DEFAULT_DISPOSITIONS)
     parser.add_argument("--prompt", type=Path, default=DEFAULT_PROMPT)
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -804,6 +928,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             report = score_saved_run(
                 args.responses,
                 manifest_path=args.manifest,
+                dispositions_path=args.dispositions,
                 prompt_path=args.prompt,
                 bootstrap_samples=args.bootstrap_samples,
             )
