@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "red-ci-signature-receipt.v1",
+  "title": "Red-CI Signature Receipt v1 schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "repository_id",
+    "repository_name",
+    "pr_number",
+    "run_id",
+    "run_attempt",
+    "head_sha",
+    "job_id",
+    "job_name",
+    "check_id",
+    "check_name",
+    "normalized_signature_lines",
+    "extraction_version",
+    "timestamp",
+    "digest"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "red-ci-signature-receipt.v1"
+    },
+    "repository_id": {
+      "type": ["integer", "string"]
+    },
+    "repository_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pr_number": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "run_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "run_attempt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "head_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "job_id": {
+      "type": ["integer", "string"]
+    },
+    "job_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "check_id": {
+      "type": ["integer", "string", "null"]
+    },
+    "check_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "normalized_signature_lines": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "extraction_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

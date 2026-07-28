@@ -160,8 +160,20 @@ _DISPATCH_AGENT_CHOICES = (
     "cursor",
     "glm",
 )
+_KIMI_HARNESSES = frozenset({"native", "kimicc"})
 _MONITOR_API_BASE_URL = "http://127.0.0.1:8765"
 _logger = logging.getLogger(__name__)
+
+
+def _resolve_dispatch_harness(agent: str, harness: str | None) -> str | None:
+    """Validate the opt-in Kimi harness selector without changing its seat."""
+    if harness is None:
+        return None
+    if agent != "kimi":
+        raise ValueError("--harness is currently supported only with --agent kimi")
+    if harness not in _KIMI_HARNESSES:
+        raise ValueError(f"unsupported Kimi harness {harness!r}; expected one of {sorted(_KIMI_HARNESSES)}")
+    return harness
 
 
 def _read_github_token_from_bash_secrets(path: Path | None = None) -> str | None:
@@ -2816,6 +2828,7 @@ def _run_worker(
     provider: str | None = None,
     output_schema_path: str | None = None,
     output_schema_sha256: str | None = None,
+    harness: str | None = None,
     runtime_tmp_root: str | None = None,
     runtime_tmp_namespace_root: str | None = None,
 ) -> int:
@@ -2857,6 +2870,7 @@ def _run_worker(
             agent_name=agent,
             requested_model=model,
             requested_effort=effort,
+            harness=harness,
         )
         state.setdefault("model", start_telemetry.model)
         state.setdefault("effort", start_telemetry.effort)
@@ -2929,6 +2943,8 @@ def _run_worker(
             if output_schema_path is not None:
                 tool_config["output_schema_path"] = output_schema_path
                 tool_config["output_schema_sha256"] = output_schema_sha256
+            if harness is not None:
+                tool_config["harness"] = harness
             tool_config = tool_config or None
             result = runtime_invoke(
                 agent,
@@ -3366,6 +3382,11 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
     task_id = args.task_id
+    try:
+        requested_harness = _resolve_dispatch_harness(args.agent, getattr(args, "harness", None))
+    except ValueError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
     state_path = _state_path(task_id)
     worktree_arg = getattr(args, "worktree", None)
     requested_branch = getattr(args, "branch", None)
@@ -3575,6 +3596,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     else:
         dispatch_agent = args.agent
 
+    if requested_harness is not None and dispatch_agent != "kimi":
+        print(
+            "❌ --harness kimicc requires the effective dispatch agent to remain kimi; use --force-agent.",
+            file=sys.stderr,
+        )
+        return 2
+
     _check_capacity_hint(dispatch_agent, args=args)
 
     try:
@@ -3622,6 +3650,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             agent_name=dispatch_agent,
             requested_model=args.model,
             requested_effort=getattr(args, "effort", None),
+            harness=requested_harness,
         )
         dry_run_state = {
             "task_id": task_id,
@@ -3654,6 +3683,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             "exit_code": None,
             "substitution": None,
         }
+        if requested_harness is not None:
+            dry_run_state["harness"] = requested_harness
         if lifecycle_carrier is not None:
             dry_run_state["task_lifecycle"] = lifecycle_carrier
         dry_run_reap = _reap_runtime_tmp_lease(
@@ -3751,6 +3782,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         agent_name=dispatch_agent,
         requested_model=args.model,
         requested_effort=getattr(args, "effort", None),
+        harness=requested_harness,
     )
 
     # Write initial state BEFORE forking so a fast caller can see it.
@@ -3799,6 +3831,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "exit_code": None,
         "substitution": None,
     }
+    if requested_harness is not None:
+        initial_state["harness"] = requested_harness
     if lifecycle_carrier is not None:
         initial_state["task_lifecycle"] = lifecycle_carrier
     initial_state = _with_optional_research_state(initial_state, research_state)
@@ -3861,6 +3895,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "--runtime-tmp-namespace-root",
         str(runtime_tmp_namespace_root),
     ]
+    if requested_harness is not None:
+        cmd.extend(["--harness", requested_harness])
     if keep_worktree:
         cmd.append("--keep-worktree")
     if max_budget_usd is not None:
@@ -4497,6 +4533,7 @@ def cmd_worker(args: argparse.Namespace) -> int:
         provider=getattr(args, "provider", None),
         output_schema_path=getattr(args, "output_schema", None),
         output_schema_sha256=getattr(args, "output_schema_sha256", None),
+        harness=getattr(args, "harness", None),
         silence_timeout=args.silence_timeout,
         max_budget_usd=getattr(args, "max_budget_usd", None),
         effort=args.effort,
@@ -4568,6 +4605,15 @@ def build_parser() -> argparse.ArgumentParser:
         # guard still catches programmatic Namespace bypass.
         help="Agent to run for the task: codex, gemini, claude, grok "
         "(native CLI; grok-build=alias), grok-hermes, deepseek, agy, cursor, or kimi.",
+    )
+    d.add_argument(
+        "--harness",
+        choices=sorted(_KIMI_HARNESSES),
+        default=None,
+        help=(
+            "Opt-in Kimi transport. Only valid with --agent kimi; use kimicc "
+            "for Kimi through headless Claude Code. Omit to keep native Kimi Code."
+        ),
     )
     d.add_argument("--task-id", required=True, help="Stable task identifier used for state/log files, e.g. review-123.")
     d.add_argument("--prompt", help="Prompt text, or '-' to read the prompt from stdin.")
@@ -4890,6 +4936,7 @@ def build_parser() -> argparse.ArgumentParser:
     wk = sub.add_parser("_worker", help=argparse.SUPPRESS)
     wk.add_argument("--task-id", required=True)
     wk.add_argument("--agent", required=True)
+    wk.add_argument("--harness", choices=sorted(_KIMI_HARNESSES), default=None)
     wk.add_argument("--mode", required=True)
     wk.add_argument("--cwd", required=True)
     wk.add_argument("--model", default=None)

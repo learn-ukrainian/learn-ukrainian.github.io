@@ -171,6 +171,9 @@ def _hermes_configured_effort() -> str | None:
 
 
 def _resolve_model_from_plan(agent_name: str, plan: InvocationPlan) -> str | None:
+    if agent_name == "kimi" and plan.metadata.get("harness") == "kimicc":
+        alias = plan.metadata.get("kimicc_alias")
+        return str(alias).strip() if isinstance(alias, str) and alias.strip() else None
     del agent_name
     return _arg_after(plan.cmd, "-m", "--model")
 
@@ -191,6 +194,8 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
         # to resolve from the plan.
         return None
     if agent_name == "kimi":
+        if plan.metadata.get("harness") == "kimicc":
+            return "max" if plan.metadata.get("kimicc_alias") == "k3" else _NOT_EXPOSED
         # K3 is always-max; the k2.7 coding models expose no effort knob.
         # Read the resolved model off the plan so telemetry never mislabels
         # an ignored caller request as effective (#5326 multi-model lane).
@@ -198,7 +203,14 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
     return None
 
 
-def _resolve_model_from_defaults(agent_name: str, requested_model: str | None) -> str | None:
+def _resolve_model_from_defaults(
+    agent_name: str,
+    requested_model: str | None,
+    *,
+    harness: str | None = None,
+) -> str | None:
+    if agent_name == "kimi" and harness == "kimicc":
+        return requested_model or "k3"
     if requested_model:
         return requested_model
     if agent_name == "codex":
@@ -226,7 +238,12 @@ def _resolve_model_from_defaults(agent_name: str, requested_model: str | None) -
     return _default_model_for(agent_name)
 
 
-def _resolve_effort_from_defaults(agent_name: str, requested_effort: str | None) -> str | None:
+def _resolve_effort_from_defaults(
+    agent_name: str,
+    requested_effort: str | None,
+    *,
+    harness: str | None = None,
+) -> str | None:
     # These CLIs do not expose a per-invocation effort value.  A deliberate
     # marker is observability, not an error: warning on every dispatch made
     # routine task state look broken (#4837).
@@ -237,6 +254,8 @@ def _resolve_effort_from_defaults(agent_name: str, requested_effort: str | None)
     if agent_name in {"deepseek", "qwen"} or is_hermes_grok_seat(agent_name):
         return _hermes_configured_effort() or _NOT_EXPOSED
     if agent_name == "kimi":
+        if harness == "kimicc":
+            return requested_effort if requested_effort else "max"
         # Without a plan the resolved model is unknowable (K3 is always-max,
         # the k2.7 models expose no effort knob) — report the honest marker
         # rather than guessing.
@@ -368,6 +387,14 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
         prefix = _cursor_version_prefix(plan.cmd) if plan is not None else ("cursor-agent",)
         return cursor_cli_version(prefix)
     if agent_name == "kimi":
+        if plan is not None and plan.metadata.get("harness") == "kimicc":
+            claude_bin = plan.metadata.get("claude_bin")
+            prefix = (
+                (str(claude_bin),)
+                if isinstance(claude_bin, str) and claude_bin
+                else ("claude",)
+            )
+            return claude_cli_version(prefix)
         if plan is not None and plan.cmd:
             bin_path = plan.cmd[0]
         else:
@@ -395,14 +422,15 @@ def resolve_dispatch_start_telemetry(
     agent_name: str,
     requested_model: str | None,
     requested_effort: str | None,
+    harness: str | None = None,
 ) -> InvocationTelemetry:
     """Best-effort telemetry for task-state initialization before spawn."""
-    model = _resolve_model_from_defaults(agent_name, requested_model)
+    model = _resolve_model_from_defaults(agent_name, requested_model, harness=harness)
     if not model:
         _warn_unknown("model", agent_name, "no explicit override or readable default")
         model = _UNKNOWN
 
-    effort = _resolve_effort_from_defaults(agent_name, requested_effort)
+    effort = _resolve_effort_from_defaults(agent_name, requested_effort, harness=harness)
     if not effort:
         _warn_unknown("effort", agent_name, "no explicit override or readable default")
         effort = _UNKNOWN

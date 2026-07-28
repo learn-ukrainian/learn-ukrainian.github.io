@@ -76,6 +76,14 @@ _PROVIDER_SECRET_ALLOWLIST = {
         "GH_TOKEN",
         "OPENAI_API_KEY",
     },
+    "kimi": {
+        # Passed only to the KimiCC wrapper, which resolves the final route at
+        # spawn and exports ANTHROPIC_AUTH_TOKEN solely to its exec child.
+        "KIMICC_AUTH_TOKEN",
+        "MOONSHOT_API_KEY",
+        "KIMI_API_KEY",
+        "ANTHROPIC_AUTH_TOKEN",
+    },
     "bridge": {
         "GH_TOKEN",
     },
@@ -111,6 +119,17 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     "kimi": {
         # Native CLI executable override; it is a path, never a credential.
         "KIMI_CODE_BIN",
+        # KimiCC resolves its route and OAuth token inside the headless wrapper
+        # immediately before it execs Claude Code. These are route selectors or
+        # local credential-file paths, not token values.
+        "KIMICC_ENDPOINT",
+        "KIMICC_MODEL",
+        "KIMICC_BASE_URL",
+        "KIMICC_EFFORT_LEVEL",
+        "KIMICC_CLAUDE_BIN",
+        "KIMI_CODE_CREDENTIALS_PATH",
+        "KIMI_CODE_OAUTH_HOST",
+        "KIMI_CODE_OAUTH_MARGIN",
     },
 }
 

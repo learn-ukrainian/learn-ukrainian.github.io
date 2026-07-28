@@ -338,6 +338,35 @@ def test_resolve_dispatch_start_telemetry_kimi_resolves_binary(tmp_path, monkeyp
     assert telemetry_with_plan.cli_version == "0.42.1"
 
 
+def test_kimicc_telemetry_records_the_headless_k3_route(tmp_path):
+    plan = InvocationPlan(
+        cmd=["kimicc_headless.sh", "--model", "k3"],
+        cwd=tmp_path,
+        metadata={"harness": "kimicc", "kimicc_alias": "k3", "claude_bin": "claude"},
+    )
+
+    with patch("agent_runtime.telemetry.claude_cli_version", return_value="2.1.220"):
+        at_dispatch = resolve_dispatch_start_telemetry(
+            agent_name="kimi",
+            requested_model=None,
+            requested_effort=None,
+            harness="kimicc",
+        )
+        after_spawn = resolve_invocation_telemetry(
+            agent_name="kimi",
+            plan=plan,
+            requested_model=None,
+            requested_effort=None,
+        )
+
+    assert (at_dispatch.model, at_dispatch.effort) == ("k3", "max")
+    assert (after_spawn.model, after_spawn.effort, after_spawn.cli_version) == (
+        "k3",
+        "max",
+        "2.1.220",
+    )
+
+
 def setup_function() -> None:
     _reset_rate_limit_cache_for_tests()
     _reset_version_cache_for_tests()

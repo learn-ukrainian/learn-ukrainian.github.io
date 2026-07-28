@@ -290,7 +290,8 @@ def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
     """Reject local alias maps so all Kimi surfaces stay catalog-backed."""
     consumers = {
         "start-kimi.sh": ("--resolve-kimi-model", "--format native"),
-        "start-kimicc.sh": ("--resolve-kimi-model", "--format kimicc"),
+        "start-kimicc.sh": ("kimicc_configure_route",),
+        "scripts/lib/kimicc_route.sh": ("--resolve-kimi-model", "--format kimicc"),
         "scripts/agent_runtime/adapters/kimi.py": ("kimi_model_aliases()",),
     }
     for relative_path, required_snippets in consumers.items():
@@ -306,11 +307,14 @@ def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
             )
 
     native_launcher = (project_root / "start-kimi.sh").read_text(encoding="utf-8")
-    if 'resolve_kimi_model() {\n  case' in native_launcher:
+    if "resolve_kimi_model() {\n  case" in native_launcher:
         raise ModelCatalogError("start-kimi.sh contains a local Kimi alias case map")
     adapter = (project_root / "scripts/agent_runtime/adapters/kimi.py").read_text(encoding="utf-8")
     if "KIMI_MODEL_ALIASES: dict[str, str] = {" in adapter:
         raise ModelCatalogError("KimiAdapter contains a local Kimi alias map")
+    kimicc_helper = (project_root / "scripts" / "lib" / "kimicc_route.sh").read_text(encoding="utf-8")
+    if 'case "$MODEL_ALIAS"' in kimicc_helper:
+        raise ModelCatalogError("KimiCC route helper contains a local Kimi alias case map")
 
 
 def validate_glm_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:

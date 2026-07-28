@@ -124,45 +124,6 @@ Headless / native Kimi (not this launcher):
 EOF
 }
 
-default_base_url() {
-  case "$1" in
-    platform) printf '%s\n' 'https://api.moonshot.ai/anthropic' ;;
-    coding) printf '%s\n' 'https://api.kimi.com/coding' ;;
-    *) return 1 ;;
-  esac
-}
-
-# Resolve the auth credential into globals (no command substitution, so
-# AUTH_SOURCE survives in the caller's shell).
-_resolved_auth=""
-AUTH_SOURCE=""
-resolve_auth_token() {
-  _resolved_auth=""
-  AUTH_SOURCE=""
-  if [ -n "${KIMICC_AUTH_TOKEN:-}" ]; then
-    _resolved_auth="$KIMICC_AUTH_TOKEN"
-    AUTH_SOURCE="KIMICC_AUTH_TOKEN"
-    return 0
-  fi
-  if [ -n "${MOONSHOT_API_KEY:-}" ]; then
-    _resolved_auth="$MOONSHOT_API_KEY"
-    AUTH_SOURCE="MOONSHOT_API_KEY"
-    return 0
-  fi
-  if [ -n "${KIMI_API_KEY:-}" ]; then
-    _resolved_auth="$KIMI_API_KEY"
-    AUTH_SOURCE="KIMI_API_KEY"
-    return 0
-  fi
-  if [ -n "${ANTHROPIC_AUTH_TOKEN:-}" ] && [ "${ENDPOINT}" = "coding" ]; then
-    # Allow an already-exported coding token when operator sets it intentionally.
-    _resolved_auth="$ANTHROPIC_AUTH_TOKEN"
-    AUTH_SOURCE="ANTHROPIC_AUTH_TOKEN"
-    return 0
-  fi
-  return 1
-}
-
 while (($#)); do
   case "$1" in
     --)
@@ -217,169 +178,16 @@ while (($#)); do
   esac
 done
 
-if ! _kimicc_route="$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/review/model_catalog.py" \
-    --resolve-kimi-model "$MODEL_ALIAS" --format kimicc 2>/dev/null)"; then
-  echo "Error: unsupported model '$MODEL_ALIAS' (use k3, k2.7, k2.7-highspeed)." >&2
-  exit 2
-fi
-IFS=$'\t' read -r MODEL_ALIAS _platform_model _coding_model PROFILE_ID <<< "$_kimicc_route"
-if [ -z "$MODEL_ALIAS" ] || [ -z "$_platform_model" ] || [ -z "$_coding_model" ] || [ -z "$PROFILE_ID" ]; then
-  echo "Error: invalid Kimi route in scripts/config/model_catalog.yaml." >&2
-  exit 1
-fi
-unset _kimicc_route
-
-case "$ENDPOINT" in
-  platform|coding) ;;
-  *)
-    echo "Error: unsupported endpoint '$ENDPOINT' (use platform or coding)." >&2
-    exit 2
-    ;;
-esac
-
-case "$ISOLATE_CONFIG" in
-  0|1) ;;
-  *)
-    echo "Error: KIMICC_ISOLATE_CONFIG must be 0 or 1 (got '$ISOLATE_CONFIG')." >&2
-    exit 2
-    ;;
-esac
-
-if [ "$ENDPOINT" = "platform" ]; then
-  LEAD_MODEL="$_platform_model"
+# shellcheck source=scripts/lib/kimicc_route.sh
+source "$SCRIPT_DIR/scripts/lib/kimicc_route.sh"
+KIMICC_ROUTE_PYTHON="$SCRIPT_DIR/.venv/bin/python"
+export KIMICC_ROUTE_PYTHON
+if kimicc_configure_route "$PROJECT_DIR" "$SCRIPT_DIR"; then
+  unset KIMICC_ROUTE_PYTHON
 else
-  LEAD_MODEL="$_coding_model"
-fi
-unset _platform_model _coding_model
-BASE_URL="${KIMICC_BASE_URL:-$(default_base_url "$ENDPOINT")}"
-BASE_URL="${BASE_URL%/}"
-
-# shellcheck source=scripts/lib/claude_route_guard.sh
-source "$PROJECT_DIR/scripts/lib/claude_route_guard.sh"
-
-if [ "$ISOLATE_CONFIG" = "1" ] && [ -z "${CLAUDE_CONFIG_DIR:-}" ]; then
-  export CLAUDE_CONFIG_DIR="${HOME}/.claude-kimicc"
-  mkdir -p "$CLAUDE_CONFIG_DIR"
-  echo "Isolated Claude config: $CLAUDE_CONFIG_DIR (original ~/.claude untouched)"
-fi
-
-if ! assert_claude_settings_route_clean "KimiCC"; then
-  exit 1
-fi
-
-# Explicit credentials win. For --endpoint coding, fall back to the
-# `kimi login` OAuth credential (subscription route): the helper prints a
-# fresh access token, refreshing it via the refresh_token grant when needed.
-KIMI_OAUTH_PY="$PROJECT_DIR/.venv/bin/python"
-KIMI_OAUTH_HELPER="$PROJECT_DIR/scripts/lib/kimi_coding_oauth.py"
-AUTH_VIA_OAUTH=0
-if ! resolve_auth_token; then
-  if [ "$ENDPOINT" = "coding" ] && [ -f "$KIMI_OAUTH_HELPER" ] && [ -x "$KIMI_OAUTH_PY" ]; then
-    if _resolved_auth="$("$KIMI_OAUTH_PY" "$KIMI_OAUTH_HELPER" token 2>/dev/null)" \
-        && [ -n "$_resolved_auth" ]; then
-      AUTH_VIA_OAUTH=1
-      AUTH_SOURCE="oauth(kimi login)"
-    fi
-  fi
-fi
-if [ -z "$_resolved_auth" ]; then
-  echo "Error: no Kimi API credential found for the kimicc route." >&2
-  echo "  Platform (pay-as-you-go): set MOONSHOT_API_KEY, KIMI_API_KEY, or KIMICC_AUTH_TOKEN" >&2
-  echo "  Platform keys: https://platform.kimi.ai/console/api-keys" >&2
-  echo "  Subscription: run \`kimi login\`, then use --endpoint coding (OAuth is picked up automatically)." >&2
-  exit 1
-fi
-
-# shellcheck source=scripts/lib/profile_resolver.sh
-source "$PROJECT_DIR/scripts/lib/profile_resolver.sh"
-if ! resolve_context_profile "$PROFILE_ID" "$LEAD_MODEL"; then
-  echo "Error: could not resolve kimicc profile '$PROFILE_ID' for model '$LEAD_MODEL'." >&2
-  exit 1
-fi
-if [ "$LEARN_UKRAINIAN_TRUSTED" != "1" ] || [ "$LEARN_UKRAINIAN_PROFILE_ID" != "$PROFILE_ID" ]; then
-  echo "Error: kimicc profile did not resolve to a trusted contract ($LEARN_UKRAINIAN_RESOLUTION_REASON)." >&2
-  exit 1
-fi
-
-export LEARN_UKRAINIAN_REQUESTED_PROFILE_ID="$PROFILE_ID"
-export LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH=1
-export LEARN_UKRAINIAN_TRANSPORT=kimicc
-
-# Moonshot Anthropic-compatible routing (process-scoped only).
-export ANTHROPIC_BASE_URL="$BASE_URL"
-unset ANTHROPIC_API_KEY
-
-# OAuth (`kimi login`) access tokens expire after ~15 minutes. With an
-# isolated config we install an apiKeyHelper that re-mints the token on Claude
-# Code's schedule (long-session mode); without isolation the current token can
-# only be exported into the process env, which is fixed at launch.
-if [ "$AUTH_VIA_OAUTH" = "1" ] && [ "$ISOLATE_CONFIG" = "1" ]; then
-  _helper_cmd="$KIMI_OAUTH_PY $KIMI_OAUTH_HELPER token"
-  if ! KIMICC_SETTINGS_PATH="$CLAUDE_CONFIG_DIR/settings.json" KIMICC_API_KEY_HELPER="$_helper_cmd" \
-      "$KIMI_OAUTH_PY" - <<'PY'
-import json
-import os
-import sys
-
-path = os.environ["KIMICC_SETTINGS_PATH"]
-helper = os.environ["KIMICC_API_KEY_HELPER"]
-data = {}
-if os.path.exists(path):
-    with open(path, encoding="utf-8") as fh:
-        try:
-            data = json.load(fh)
-        except json.JSONDecodeError as exc:
-            print(f"Error: {path} is not valid JSON ({exc}); refusing to modify it.", file=sys.stderr)
-            sys.exit(1)
-    if not isinstance(data, dict):
-        print(f"Error: {path} is not a JSON object; refusing to modify it.", file=sys.stderr)
-        sys.exit(1)
-data["apiKeyHelper"] = helper
-os.makedirs(os.path.dirname(path), exist_ok=True)
-with open(path, "w", encoding="utf-8") as fh:
-    json.dump(data, fh, indent=2)
-    fh.write("\n")
-PY
-  then
-    echo "Error: could not install apiKeyHelper into $CLAUDE_CONFIG_DIR/settings.json" >&2
-    exit 1
-  fi
-  unset _helper_cmd
-  # Re-invoke the helper well inside the ~15 min token lifetime.
-  export CLAUDE_CODE_API_KEY_HELPER_TTL_MS="${KIMICC_API_KEY_HELPER_TTL_MS:-300000}"
-  unset ANTHROPIC_AUTH_TOKEN
-  AUTH_NOTE="oauth(kimi login) via apiKeyHelper (auto-refresh, ttl=${CLAUDE_CODE_API_KEY_HELPER_TTL_MS}ms)"
-else
-  export ANTHROPIC_AUTH_TOKEN="$_resolved_auth"
-  if [ "$AUTH_VIA_OAUTH" = "1" ]; then
-    AUTH_NOTE="oauth(kimi login) — short-lived token (~15 min); for long sessions relaunch with --isolate-config"
-  else
-    AUTH_NOTE="$AUTH_SOURCE"
-  fi
-fi
-unset _resolved_auth
-
-export ANTHROPIC_MODEL="$LEAD_MODEL"
-export ANTHROPIC_DEFAULT_OPUS_MODEL="$LEAD_MODEL"
-export ANTHROPIC_DEFAULT_SONNET_MODEL="$LEAD_MODEL"
-export ANTHROPIC_DEFAULT_HAIKU_MODEL="$LEAD_MODEL"
-export ANTHROPIC_DEFAULT_FABLE_MODEL="$LEAD_MODEL"
-export CLAUDE_CODE_SUBAGENT_MODEL="$LEAD_MODEL"
-
-# Kimi endpoint does not support Claude Code tool-search yet (official guide).
-export ENABLE_TOOL_SEARCH=false
-
-# Compaction: certified profile capacity (below true window; emergency rollover first).
-export CLAUDE_CODE_AUTO_COMPACT_WINDOW="$LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS"
-
-# K3 defaults to max effort on the platform guide; k2.7 always-thinks (Tab thinking in UI).
-if [ "$MODEL_ALIAS" = "k3" ]; then
-  export CLAUDE_CODE_EFFORT_LEVEL="${KIMICC_EFFORT_LEVEL:-max}"
-else
-  # Leave effort unset for k2.7 unless operator overrides; thinking must stay on in the TUI.
-  if [ -n "${KIMICC_EFFORT_LEVEL:-}" ]; then
-    export CLAUDE_CODE_EFFORT_LEVEL="$KIMICC_EFFORT_LEVEL"
-  fi
+  _kimicc_route_rc=$?
+  unset KIMICC_ROUTE_PYTHON
+  exit "$_kimicc_route_rc"
 fi
 
 echo "KimiCC: model=$LEAD_MODEL alias=$MODEL_ALIAS endpoint=$ENDPOINT profile=$PROFILE_ID"

@@ -119,9 +119,15 @@ def test_catalog_rejects_kimi_route_without_its_friendly_alias():
 def test_kimi_alias_lint_rejects_a_reintroduced_local_adapter_map(tmp_path: Path) -> None:
     project_root = tmp_path / "project"
     (project_root / "scripts" / "agent_runtime" / "adapters").mkdir(parents=True)
-    for relative_path in ("start-kimi.sh", "start-kimicc.sh", "scripts/agent_runtime/adapters/kimi.py"):
+    for relative_path in (
+        "start-kimi.sh",
+        "start-kimicc.sh",
+        "scripts/lib/kimicc_route.sh",
+        "scripts/agent_runtime/adapters/kimi.py",
+    ):
         source = (Path(__file__).resolve().parents[1] / relative_path).read_text(encoding="utf-8")
         destination = project_root / relative_path
+        destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(source, encoding="utf-8")
     adapter_path = project_root / "scripts" / "agent_runtime" / "adapters" / "kimi.py"
     adapter_path.write_text(
