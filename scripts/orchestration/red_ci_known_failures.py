@@ -149,6 +149,20 @@ def load_and_validate_registry(
                         f"Malformed regex in entry '{entry_id}': '{val}' ({exc})"
                     ) from exc
 
+        action = entry.get("action", {})
+        if action.get("kind") == "stop":
+            # Lazy import: validate_trailspec imports this module, so a top-level
+            # import here would cycle. The STOP-code contract has ONE home
+            # (validate_trailspec.VALID_STOP_CODES) — never duplicated here.
+            from scripts.orchestration.validate_trailspec import VALID_STOP_CODES
+
+            stop_code = action.get("stop_code", "")
+            if stop_code not in VALID_STOP_CODES:
+                raise RedCIKnownFailuresValidationError(
+                    f"Unknown stop_code '{stop_code}' in entry '{entry_id}': "
+                    "must be from the published STOP-code contract"
+                )
+
         # Parse & check timestamps
         governance = entry.get("governance", {})
         _parse_iso_instant(governance.get("added_at", ""))

@@ -210,6 +210,33 @@ def test_negative_retry_once_with_stop_code(tmp_path) -> None:
     assert "Registry schema violation" in str(exc_info2.value)
 
 
+def test_negative_unpublished_stop_code(tmp_path) -> None:
+    """codex F001: a stop entry with a code outside the published STOP-code
+    contract (e.g. a typo) must fail validation — consumers cannot interpret it."""
+    data = _get_valid_registry_data()
+    data["entries"][0]["action"] = {"kind": "stop", "stop_code": "STOP-typo"}
+
+    reg_path = tmp_path / "bad_stop_code.json"
+    reg_path.write_text(json.dumps(data), encoding="utf-8")
+
+    with pytest.raises(RedCIKnownFailuresValidationError) as exc_info:
+        load_and_validate_registry(reg_path, as_of="2026-07-28T12:00:00Z")
+
+    assert "Unknown stop_code" in str(exc_info.value)
+
+
+def test_stop_entry_with_published_code_validates(tmp_path) -> None:
+    """Positive twin: a stop entry using a published code passes."""
+    data = _get_valid_registry_data()
+    data["entries"][0]["action"] = {"kind": "stop", "stop_code": "STOP-manual-intervention"}
+
+    reg_path = tmp_path / "good_stop_code.json"
+    reg_path.write_text(json.dumps(data), encoding="utf-8")
+
+    res = load_and_validate_registry(reg_path, as_of="2026-07-28T12:00:00Z")
+    assert res["ok"] is True
+
+
 def test_negative_naive_datetime_as_of(tmp_path) -> None:
     """codex F001: a NAIVE datetime as_of must be rejected like naive strings —
     silently assuming UTC evaluates expiry at the wrong instant for local-time
