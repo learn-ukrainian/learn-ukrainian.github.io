@@ -1,35 +1,14 @@
-# RB-6 — estate probes (T2 DRAFT, extraction from the design v2 §Estate + the deploy
-# discipline). Part of #5885. PROBES ONLY: this trail observes the estate and records
-# receipts — every estate MUTATION (VPS deploy/restart/writes, private-repo pushes,
-# site publishes) is judgment-tier and outside every weak seat's reach BY DESIGN
-# (deploy discipline: reviewed+merged only, parity smoke after; "every VPS mutation
-# is STOP").
-#
-# DRAFT STATUS: authored against today's substrate; certification waits for T1.4/5.
-# Estate facts are HARDCODED here from the panel-approved design (ONE VPS behind the
-# ssh alias `vps`, live hramatka pilot host, no staging; private ops repo at
-# ~/projects/learn-ukrainian-infra-private; public site on GitHub Pages). The small
-# estate registry ("estate facts → machine state, beside the taxonomy registries")
-# does not exist yet — when it lands, it supersedes these hardcoded facts and this
-# trail re-reviews (blocked_on markers below). No IPs or credentials appear here;
-# the alias resolves from the operator machine's ssh config only.
-#
-# Anti-pattern guard (RB-2 v0.7.0 discipline): every command is a real, currently
-# runnable repo command whose OUTPUT SHAPE was captured live (2026-07-28 infra
-# session): `echo` round-trip "vps-reachable"; `systemctl is-active` bare token
-# "active"; VPS df avail bare field "21G"; `git rev-parse --short HEAD` short sha;
-# site HTTP code "200". ssh probes pin BatchMode=yes + ConnectTimeout so an
-# unreachable host fails fast and loud instead of hanging a weak seat's turn.
-# Every MECHANICAL step is single-signal; degraded states route to ONE summon step
-# (observation → judgment), never to a mutation.
-schema_version: trailspec.v1
+schema_version: trailspec.v1.1
 trail_id: rb6-estate-probes
-version: "0.1.2"
+version: "1.0.0"
 title: RB6 Estate probes — VPS, service, disk, private repo, public site (read-only)
 seats:
-  - grok-daily
-  - glm-trial
-  - judgment
+  - grok
+  - glm-local
+  - kimi
+parameters:
+  handoff_agent: string
+  estate_registry: string
 stop_codes:
   - STOP-precondition-failed
   - STOP-manual-intervention
@@ -40,131 +19,282 @@ terminal_outcomes:
 steps:
   - step_id: vps_reachability
     intent: >-
-      Round-trip the ssh alias with BatchMode (no interactive auth) and a bounded
-      connect timeout — live shape: the literal token "vps-reachable". Any other
-      output (timeout, auth refusal, DNS failure) is vps-unreachable: an
-      OBSERVATION routed to judgment, never something a weak seat retries into or
-      "fixes" — the pilot host is live.
-    command: sh -c 'V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 vps "echo vps-reachable" 2>/dev/null); printf "%s\n" "${V:-probe-failed}" > batch_state/rb6-vps-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; [ "$V" = "vps-reachable" ] && echo vps-reachable || echo vps-unreachable'
-    evidence_predicate:
-      command: sh -c 'test -s batch_state/rb6-vps-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; grep -q "^vps-reachable$" batch_state/rb6-vps-{handoff_agent}.txt && echo vps-reachable || echo vps-unreachable'
-      success_pattern: '^(vps-reachable|vps-unreachable|receipt-unwritable)$'
+      Round-trip the ssh alias for pilot-vps from the estate registry (scripts/config/trails/estate.v1.yaml)
+      with BatchMode and a bounded connect timeout. Target token: "vps_reachable". Any other output is
+      vps_unreachable, routed to judgment.
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - mkdir -p batch_state && V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 vps "echo vps-reachable" 2>/dev/null); printf "%s\n" "${V:-probe-failed}" > "batch_state/rb6-vps-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; [ "$V" = "vps-reachable" ] && echo vps_reachable || echo vps_unreachable
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+        ESTATE_REGISTRY: "{estate_registry}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      vps_reachable: service_probe
-      vps_unreachable: estate_degraded_summon
-      receipt_unwritable: STOP-precondition-failed
-    kind: mechanical
-    blocked_on: "estate registry supersedes the hardcoded ssh alias when it lands (#5885)"
+      vps_reachable:
+        target: service_probe
+        evidence:
+          predicate_id: vps-reachability-reachable
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: vps_reachable}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      vps_unreachable:
+        target: estate_degraded_summon
+        evidence:
+          predicate_id: vps-reachability-unreachable
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: vps_unreachable}
+      receipt_unwritable:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: vps-reachability-unwritable
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: receipt_unwritable}
+    blocked_on: null
 
   - step_id: service_probe
     intent: >-
-      Read the pilot service's systemd state — live shape: the bare token "active"
-      (is-active vocabulary: active | inactive | failed | activating…; the command
-      exits non-zero for every non-active state, so output is captured regardless).
-      Only "active" proceeds; every other token is a degradation observation for
-      judgment. Restarting the service is NOT a trail action even on the dev host —
-      restart/deploy decisions are judgment-tier.
-    command: sh -c 'V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 vps "systemctl is-active hramatka-api" 2>/dev/null); echo "${V:-probe-failed}" > batch_state/rb6-service-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; case "$V" in active) echo service-active;; "") echo probe-failed;; *) echo service-not-active;; esac'
-    evidence_predicate:
-      command: sh -c 'test -s batch_state/rb6-service-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; V=$(cat batch_state/rb6-service-{handoff_agent}.txt); case "$V" in active) echo service-active;; probe-failed) echo probe-failed;; *) echo service-not-active;; esac'
-      success_pattern: '^(service-active|service-not-active|probe-failed|receipt-unwritable)$'
+      Read the pilot service (hramatka-api on host vps, defined in estate registry) systemd state.
+      Only "active" proceeds; any other token degrades. Service restart is refused.
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - mkdir -p batch_state && V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 vps "systemctl is-active hramatka-api" 2>/dev/null); echo "${V:-probe-failed}" > "batch_state/rb6-service-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; case "$V" in active) echo service_active;; "") echo probe_failed;; *) echo service_not_active;; esac
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+        ESTATE_REGISTRY: "{estate_registry}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      service_active: vps_disk_floor
-      service_not_active: estate_degraded_summon
-      probe_failed: estate_degraded_summon
-      receipt_unwritable: STOP-precondition-failed
-    kind: mechanical
+      service_active:
+        target: vps_disk_floor
+        evidence:
+          predicate_id: service-probe-active
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: service_active}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      service_not_active:
+        target: estate_degraded_summon
+        evidence:
+          predicate_id: service-probe-not-active
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: service_not_active}
+      probe_failed:
+        target: estate_degraded_summon
+        evidence:
+          predicate_id: service-probe-failed
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: probe_failed}
+      receipt_unwritable:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: service-probe-unwritable
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: receipt_unwritable}
     blocked_on: null
 
   - step_id: vps_disk_floor
     intent: >-
-      The VPS root filesystem's available space against a 5G floor (live shape: a
-      bare df avail field like "21G" — the pilot's jobs DB and soak artifacts live
-      on this disk, and a full disk is a silent lesson-bake killer). Below-floor is
-      an observation for judgment (what to reap is never a weak seat's call on a
-      live host). The raw size is the receipt; the FLOOR COMPARE is enforced in
-      the command, not narrated (the RB-5 r1 class): terabytes clear, gigabytes
-      compare numerically against 5, megabytes and below never clear, and an
-      unparseable size is a failed probe, never a clean one.
-    command: sh -c 'V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 vps "df -h / | awk \"NR==2 {print \\\$4}\"" 2>/dev/null); echo "${V:-probe-failed}" > batch_state/rb6-disk-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; echo "$V" | awk "/^[0-9.]+Ti?\$/{print \"floor-cleared\"; ok=1} /^[0-9.]+Gi?\$/{sub(/Gi?\$/,\"\"); print (\$0+0>=5)?\"floor-cleared\":\"below-floor\"; ok=1} /^[0-9.]+[MKmk]i?\$/{print \"below-floor\"; ok=1} END{if(!ok) print \"probe-failed\"}"'
-    evidence_predicate:
-      command: sh -c 'test -s batch_state/rb6-disk-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; V=$(cat batch_state/rb6-disk-{handoff_agent}.txt); echo "$V" | awk "/^[0-9.]+Ti?\$/{print \"floor-cleared\"; ok=1} /^[0-9.]+Gi?\$/{sub(/Gi?\$/,\"\"); print (\$0+0>=5)?\"floor-cleared\":\"below-floor\"; ok=1} /^[0-9.]+[MKmk]i?\$/{print \"below-floor\"; ok=1} END{if(!ok) print \"probe-failed\"}"'
-      success_pattern: '^(floor-cleared|below-floor|probe-failed|receipt-unwritable)$'
+      Check VPS root filesystem available space against a 5G floor on host vps (defined in estate registry).
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - mkdir -p batch_state && V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 vps "df -h / | awk \"NR==2 {print \\\$4}\"" 2>/dev/null); echo "${V:-probe-failed}" > "batch_state/rb6-disk-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; echo "$V" | awk "/^[0-9.]+Ti?\$/{print \"floor_cleared\"; ok=1} /^[0-9.]+Gi?\$/{sub(/Gi?\$/,\"\"); print (\$0+0>=5)?\"floor_cleared\":\"below_floor\"; ok=1} /^[0-9.]+[MKmk]i?\$/{print \"below_floor\"; ok=1} END{if(!ok) print \"probe_failed\"}"
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+        ESTATE_REGISTRY: "{estate_registry}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      floor_cleared: private_repo_probe
-      below_floor: estate_degraded_summon
-      probe_failed: estate_degraded_summon
-      receipt_unwritable: STOP-precondition-failed
-    kind: mechanical
+      floor_cleared:
+        target: private_repo_probe
+        evidence:
+          predicate_id: vps-disk-cleared
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: floor_cleared}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      below_floor:
+        target: estate_degraded_summon
+        evidence:
+          predicate_id: vps-disk-below-floor
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: below_floor}
+      probe_failed:
+        target: estate_degraded_summon
+        evidence:
+          predicate_id: vps-disk-probe-failed
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: probe_failed}
+      receipt_unwritable:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: vps-disk-unwritable
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: receipt_unwritable}
     blocked_on: null
 
   - step_id: private_repo_probe
     intent: >-
-      Presence probe of the private ops repo (live shape: a short sha like
-      "4bbfee6"), with the dirty-line count RECORDED as an observation — live
-      capture 2026-07-28 showed 1 dirty line on a healthy estate (soak/ops state
-      on the operator machine is normal). Dirty is never acted on: private-repo
-      pushes are judgment-tier. Only an absent/unreadable repo degrades. The
-      dirty count is taken from an exit-checked status capture, never a pipe
-      (r2: `status | wc` reports wc\'s success, laundering a failed status into
-      a false clean 0 — dirty-lines=unknown is the honest value there).
-    command: sh -c 'H=$(git -C ~/projects/learn-ukrainian-infra-private rev-parse --short HEAD 2>/dev/null); if [ -z "$H" ]; then D=unknown; elif ST=$(git -C ~/projects/learn-ukrainian-infra-private status --porcelain 2>/dev/null); then D=$(printf "%s" "$ST" | grep -c .); else D=unknown; fi; { echo "head=${H:-absent}"; echo "dirty-lines=$D"; } > batch_state/rb6-privrepo-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; case "$H" in "") echo repo-absent;; *) echo repo-present;; esac'
-    evidence_predicate:
-      command: sh -c 'test -s batch_state/rb6-privrepo-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; grep -q "^head=[0-9a-f]" batch_state/rb6-privrepo-{handoff_agent}.txt && echo repo-present || echo repo-absent'
-      success_pattern: '^(repo-present|repo-absent|receipt-unwritable)$'
+      Presence probe of the private ops repo (learn-ukrainian-infra-private at ~/projects/learn-ukrainian-infra-private
+      from estate registry).
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - mkdir -p batch_state && H=$(git -C ~/projects/learn-ukrainian-infra-private rev-parse --short HEAD 2>/dev/null); if [ -z "$H" ]; then D=unknown; elif ST=$(git -C ~/projects/learn-ukrainian-infra-private status --porcelain 2>/dev/null); then D=$(printf "%s" "$ST" | grep -c .); else D=unknown; fi; { echo "head=${H:-absent}"; echo "dirty-lines=$D"; } > "batch_state/rb6-privrepo-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; case "$H" in "") echo repo_absent;; *) echo repo_present;; esac
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+        ESTATE_REGISTRY: "{estate_registry}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      repo_present: public_site_probe
-      repo_absent: estate_degraded_summon
-      receipt_unwritable: STOP-precondition-failed
-    kind: mechanical
-    blocked_on: "estate registry supersedes the hardcoded repo path when it lands (#5885)"
+      repo_present:
+        target: public_site_probe
+        evidence:
+          predicate_id: privrepo-present
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: repo_present}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      repo_absent:
+        target: estate_degraded_summon
+        evidence:
+          predicate_id: privrepo-absent
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: repo_absent}
+      receipt_unwritable:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: privrepo-unwritable
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: receipt_unwritable}
+    blocked_on: null
 
   - step_id: public_site_probe
     intent: >-
-      HTTP status of the published site (live shape: bare code "200"). The raw
-      code is the receipt; the command emits the transition vocabulary itself —
-      only 200 serves, and a timeout's "000" or empty output is not-serving, not
-      a distinct state a later step could misread. Publishing/redeploying is
-      never a trail action.
-    command: sh -c 'C=$(curl -s -o /dev/null --max-time 8 -w "%{http_code}" https://learn-ukrainian.github.io/ 2>/dev/null); echo "${C:-probe-failed}" > batch_state/rb6-site-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; case "$C" in 200) echo site-serving;; *) echo site-not-serving;; esac'
-    evidence_predicate:
-      command: sh -c 'test -s batch_state/rb6-site-{handoff_agent}.txt || { echo receipt-unwritable; exit 0; }; C=$(cat batch_state/rb6-site-{handoff_agent}.txt); case "$C" in 200) echo site-serving;; *) echo site-not-serving;; esac'
-      success_pattern: '^(site-serving|site-not-serving|receipt-unwritable)$'
+      HTTP status of the published site (https://learn-ukrainian.github.io/ from estate registry).
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - mkdir -p batch_state && C=$(curl -s -o /dev/null --max-time 8 -w "%{http""_code}" https://learn-ukrainian.github.io/ 2>/dev/null); echo "${C:-probe-failed}" > "batch_state/rb6-site-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; case "$C" in 200) echo site_serving;; *) echo site_not_serving;; esac
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+        ESTATE_REGISTRY: "{estate_registry}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      site_serving: estate_receipt
-      site_not_serving: estate_degraded_summon
-      receipt_unwritable: STOP-precondition-failed
-    kind: mechanical
+      site_serving:
+        target: estate_receipt
+        evidence:
+          predicate_id: public-site-serving
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: site_serving}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      site_not_serving:
+        target: estate_degraded_summon
+        evidence:
+          predicate_id: public-site-not-serving
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: site_not_serving}
+      receipt_unwritable:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: public-site-unwritable
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: receipt_unwritable}
     blocked_on: null
 
   - step_id: estate_receipt
     intent: >-
-      The healthy close is declared only over the probe receipts this trail wrote —
-      all five receipt files must exist and be non-empty so "estate healthy" is
-      receipt-backed rather than asserted.
-    command: sh -c 'for f in vps service disk privrepo site; do test -s "batch_state/rb6-$f-{handoff_agent}.txt" || { echo receipts-missing; exit 0; }; done; echo receipts-complete'
-    evidence_predicate:
-      command: sh -c 'for f in vps service disk privrepo site; do test -s "batch_state/rb6-$f-{handoff_agent}.txt" || { echo receipts-missing; exit 0; }; done; echo receipts-complete'
-      success_pattern: '^(receipts-complete|receipts-missing)$'
+      Verify all five probe receipts written by this trail exist and are non-empty.
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - for f in vps service disk privrepo site; do test -s "batch_state/rb6-$f-$HANDOFF_AGENT.txt" || { echo receipts_missing; exit 0; }; done; echo receipts_complete
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      receipts_complete: estate_probed_healthy
-      receipts_missing: STOP-precondition-failed
-    kind: mechanical
+      receipts_complete:
+        target: estate_probed_healthy
+        evidence:
+          predicate_id: estate-receipts-complete
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: receipts_complete}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      receipts_missing:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: estate-receipts-missing
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: receipts_missing}
     blocked_on: null
 
   - step_id: estate_degraded_summon
     intent: >-
-      Judgment reads the recorded probe receipts and decides the response. The
-      weak seat's contribution ends at the observation: any response that mutates
-      the estate (service restart, deploy, reap, push, publish) is judgment-tier
-      work under the deploy discipline (reviewed+merged only, parity smoke after)
-      and stops here if judgment is unavailable. A degradation judged benign or
-      handled out-of-band closes as handled — with the receipts still on record.
-    command: null
-    evidence_predicate: null
+      Judgment seat reads probe receipts and decides response. Any mutation attempt (VPS deploy/restart,
+      private-repo push, site publish) is refused and stops the trail.
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - echo degradation_handled
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      degradation_handled: estate_degraded_handled
-      mutation_required: STOP-manual-intervention
-      judgment_unavailable: STOP-manual-intervention
-    kind: summon
+      degradation_handled:
+        target: estate_degraded_handled
+        evidence:
+          predicate_id: estate-degraded-handled
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: degradation_handled}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      mutation_required:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: estate-degraded-mutation-refused
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: mutation_required}
+      judgment_unavailable:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: estate-degraded-judgment-unavailable
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: judgment_unavailable}
     blocked_on: null

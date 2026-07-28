@@ -831,9 +831,37 @@ def test_negative_v1_decision_tables_rejects_wrongly_typed_condition() -> None:
     assert validate_decision_tables_data(_get_happy_v1_tables_data())["ok"] is True
 
 
+def _get_v1_table_lookup_data() -> dict[str, Any]:
+    return {
+        "schema_version": "trailspec.v1",
+        "trail_id": "v1-table-fixture",
+        "version": "1.0.0",
+        "title": "v1 table lookup fixture",
+        "seats": ["grok-daily"],
+        "stop_codes": ["STOP-manual-intervention"],
+        "terminal_outcomes": ["idle"],
+        "steps": [
+            {
+                "step_id": "pick_next",
+                "intent": "Pick next action via table.",
+                "kind": "table-lookup",
+                "table": "queue-pick",
+                "command": "gh pr list",
+                "evidence_predicate": {
+                    "command": "gh pr list",
+                    "success_pattern": "[0-9]",
+                },
+                "transitions": {
+                    "picked": "idle",
+                },
+            }
+        ],
+    }
+
+
 def test_v1_table_reference_integrity_uses_the_typed_document() -> None:
     """A trail binding must resolve in either validated parallel table version."""
-    spec = _get_rb1_data()
+    spec = _get_v1_table_lookup_data()
     tables = _get_happy_v1_tables_data()
 
     res = validate_trail_table_refs(spec, tables)
@@ -842,12 +870,7 @@ def test_v1_table_reference_integrity_uses_the_typed_document() -> None:
     assert res["bound_steps"]["pick_next"] == "queue-pick"
 
 
-_RB1_PATH = _TRAILS_DIR / "rb1-cold-start.trail.yaml"
 _RB4_PATH = _TRAILS_DIR / "rb4-red-ci-triage.trail.yaml"
-
-
-def _get_rb1_data() -> dict[str, Any]:
-    return yaml.safe_load(_RB1_PATH.read_text(encoding="utf-8"))
 
 
 def test_rb4_lookup_routes_never_make_a_rerun_reachable() -> None:
@@ -871,20 +894,19 @@ def test_declared_table_refs_resolve(trail_path) -> None:
     assert res["ok"] is True
 
 
-def test_rb1_table_lookup_steps_bind_tables() -> None:
-    """RB1's table-lookup steps must each name their table (RB3 predates the tables
-    draft — its retrofit is a T2-certification item on #5885, not enforced here)."""
-    spec = _get_rb1_data()
+def test_v1_table_lookup_steps_bind_tables() -> None:
+    """V1 table-lookup steps must each name their table."""
+    spec = _get_v1_table_lookup_data()
     tables = _get_happy_tables_data()
     res = validate_trail_table_refs(spec, tables)
     lookup_steps = [s["step_id"] for s in spec["steps"] if s.get("kind") == "table-lookup"]
     unbound = [s for s in lookup_steps if s not in res["bound_steps"]]
-    assert not unbound, f"RB1 table-lookup steps without a table binding: {unbound}"
+    assert not unbound, f"V1 table-lookup steps without a table binding: {unbound}"
 
 
 def test_negative_table_lookup_without_table_fails_schema() -> None:
     """A table-lookup step must name a non-null table in the TrailSpec schema."""
-    spec = _get_rb1_data()
+    spec = _get_v1_table_lookup_data()
     lookup_step = next(step for step in spec["steps"] if step["kind"] == "table-lookup")
     del lookup_step["table"]
 
@@ -897,7 +919,7 @@ def test_negative_table_lookup_without_table_fails_schema() -> None:
 
 def test_negative_table_lookup_without_table_fails_cross_check() -> None:
     """The table cross-check fails closed even when its caller bypasses schema validation."""
-    spec = _get_rb1_data()
+    spec = _get_v1_table_lookup_data()
     tables = _get_happy_tables_data()
     lookup_step = next(step for step in spec["steps"] if step["kind"] == "table-lookup")
     lookup_step["table"] = None
@@ -914,7 +936,7 @@ def test_negative_table_lookup_non_string_table_fails_cross_check(
     table_ref: object,
 ) -> None:
     """The cross-check must reject non-string table bindings before membership tests."""
-    spec = _get_rb1_data()
+    spec = _get_v1_table_lookup_data()
     tables = _get_happy_tables_data()
     lookup_step = next(step for step in spec["steps"] if step["kind"] == "table-lookup")
     lookup_step["table"] = table_ref
@@ -928,7 +950,7 @@ def test_negative_table_lookup_non_string_table_fails_cross_check(
 
 def test_negative_unbound_table_ref() -> None:
     """Mutation check: a misspelled table reference must fail the cross-document check."""
-    spec = _get_rb1_data()
+    spec = _get_v1_table_lookup_data()
     tables = _get_happy_tables_data()
     for step in spec["steps"]:
         if step.get("table"):
@@ -938,7 +960,7 @@ def test_negative_unbound_table_ref() -> None:
         validate_trail_table_refs(spec, tables)
     assert "queue-pikc" in str(exc_info.value)
 
-    restored = _get_rb1_data()
+    restored = _get_v1_table_lookup_data()
     assert validate_trail_table_refs(restored, tables)["ok"] is True
 
 
@@ -947,7 +969,7 @@ def test_cli_tables_flag_runs_cross_check(tmp_path, capsys) -> None:
     just the two independent validators — an unbound reference must fail the COMMAND."""
     from scripts.orchestration.validate_trailspec import main
 
-    spec = _get_rb1_data()
+    spec = _get_v1_table_lookup_data()
     for step in spec["steps"]:
         if step.get("table"):
             step["table"] = "queue-pikc"  # misspelled
@@ -959,7 +981,9 @@ def test_cli_tables_flag_runs_cross_check(tmp_path, capsys) -> None:
     assert rc == 1
     assert "queue-pikc" in capsys.readouterr().out
 
-    rc_ok = main(["--spec", str(_RB1_PATH), "--tables", str(DEFAULT_DECISION_TABLES_PATH), "--json"])
+    good_spec = tmp_path / "v1-good-ref.trail.yaml"
+    good_spec.write_text(yaml.dump(_get_v1_table_lookup_data()), encoding="utf-8")
+    rc_ok = main(["--spec", str(good_spec), "--tables", str(DEFAULT_DECISION_TABLES_PATH), "--json"])
     assert rc_ok == 0
     out_ok = capsys.readouterr().out
     assert '"table_refs"' in out_ok

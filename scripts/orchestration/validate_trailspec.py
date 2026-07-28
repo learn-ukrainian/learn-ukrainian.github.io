@@ -57,11 +57,17 @@ DECISION_TABLES_SCHEMA_PATH = (
 DECISION_TABLES_V1_SCHEMA_PATH = (
     PROJECT_ROOT / "agents_extensions/shared/schemas/decision-tables.v1.schema.json"
 )
+ESTATE_REGISTRY_SCHEMA_PATH = (
+    PROJECT_ROOT / "agents_extensions/shared/schemas/estate-registry.v1.schema.json"
+)
 DEFAULT_DECISION_TABLES_PATH = (
     PROJECT_ROOT / "scripts/config/trails/decision-tables.v0.yaml"
 )
 DEFAULT_DECISION_TABLES_V1_PATH = (
     PROJECT_ROOT / "scripts/config/trails/decision-tables.v1.yaml"
+)
+DEFAULT_ESTATE_REGISTRY_PATH = (
+    PROJECT_ROOT / "scripts/config/trails/estate.v1.yaml"
 )
 
 _TRAIL_SCHEMA_PATHS = {
@@ -757,6 +763,34 @@ def validate_registry(
         return load_and_validate_registry(registry_path, as_of=resolved_as_of)
     except RedCIKnownFailuresValidationError as exc:
         raise TrailSpecValidationError(str(exc)) from exc
+
+
+def validate_estate_registry_data(
+    registry_data: dict[str, Any],
+    *,
+    schema_path: Path = ESTATE_REGISTRY_SCHEMA_PATH,
+) -> dict[str, Any]:
+    """Validate raw loaded dict against EstateRegistry schema."""
+    _validate_against_schema(
+        registry_data, schema_path=schema_path, label="EstateRegistry"
+    )
+    return {
+        "ok": True,
+        "schema_version": registry_data.get("schema_version"),
+        "version": registry_data.get("version"),
+        "refused_surfaces_count": len(registry_data.get("refused_mutation_surfaces", [])),
+    }
+
+
+def validate_estate_registry(
+    registry_path: Path = DEFAULT_ESTATE_REGISTRY_PATH,
+    *,
+    schema_path: Path = ESTATE_REGISTRY_SCHEMA_PATH,
+) -> dict[str, Any]:
+    """Validate an estate-registry YAML/JSON file."""
+    registry_data = _load_yaml_or_json(registry_path)
+    return validate_estate_registry_data(registry_data, schema_path=schema_path)
+
 
 
 def validate_trailspec(
