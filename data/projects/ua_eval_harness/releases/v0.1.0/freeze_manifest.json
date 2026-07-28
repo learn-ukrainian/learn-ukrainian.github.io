@@ -1,0 +1,336 @@
+{
+  "artifacts": [
+    {
+      "path": "data/projects/ua_eval_harness/heldout_manifest_config.json",
+      "role": "dataset_configuration",
+      "sha256": "99f63edb8beed1bb712f76a51fffd6fa211703374a1c447b22f5c44293b61fb7"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/heldout_manifest_v1.json",
+      "role": "heldout_gold_manifest",
+      "sha256": "56eb4fc17a5ed6967c5c13fbdc9fde964d1b8fb08bde7da7f15cf535486735dd"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/scoring_disposition_config.json",
+      "role": "calque_disposition_configuration",
+      "sha256": "ecda338a95aa8cc8fe862ba67556101be119ad9391766221616304ce5928218a"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/scoring_dispositions_v1.json",
+      "role": "calque_scoring_dispositions",
+      "sha256": "44498d4c2ffcf8c0d3afed51bc82fa482be6b68ff6f05a3bcda035adbf5311a8"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/releases/v0.1.0/split_integrity.json",
+      "role": "upstream_split_integrity_receipt",
+      "sha256": "c10b1bba913364aff6ad0c0d9cbbafa9b611b3fb733a94e7fe73081be4b5b7c5"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/evalset_v1.jsonl",
+      "role": "development_fixture_excluded_from_results",
+      "sha256": "34a47de1a8826a60895898bd8d94c5d794159a9ea291a51a7f85790a3bb7f976"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/minimal_edit_prompt_v1.txt",
+      "role": "task_instruction",
+      "sha256": "f121546dcbaf602c58c7d85977ad792eb9be402dd1e01a6a556ba966dac2c96a"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/model_output_schema_v1.json",
+      "role": "model_output_contract",
+      "sha256": "93fda1b52e570cfc3c6431bb77e55d4e0047bf9cf92c45e4c5107b10e47ba710"
+    },
+    {
+      "path": "scripts/projects/ua_eval_harness/build_heldout_manifest.py",
+      "role": "dataset_extractor",
+      "sha256": "d4774721fb1b7fdc750bbc9dea0c9aa193b9c9d9b203568146dd3bd3e557e47b"
+    },
+    {
+      "path": "scripts/projects/ua_eval_harness/build_scoring_dispositions.py",
+      "role": "calque_disposition_builder",
+      "sha256": "c4627a0c038248c4d63b273475ed4e505b3df88ad7e134d2d8651df60fc5c5df"
+    },
+    {
+      "path": "scripts/config/vesum_source.lock.json",
+      "role": "vesum_source_lock",
+      "sha256": "27362c3112579cbd8378314189c6c2032ac1d3db5f89f155f5557bb31a3d0fa6"
+    },
+    {
+      "path": "scripts/rag/vesum_reingest.py",
+      "role": "vesum_marker_parser",
+      "sha256": "d98ffb7f3dfd7503c901e554e02dbef61c728672ba554a2d2d8c50fc01059477"
+    },
+    {
+      "path": "scripts/projects/ua_eval_harness/evaluate_model.py",
+      "role": "saved_response_scorer",
+      "sha256": "358ee1419533577fb185615c8a80b15688214a89fe3003d9fe9425954511402a"
+    },
+    {
+      "path": "scripts/projects/ua_eval_harness/run_codex_baseline.py",
+      "role": "optional_live_model_runner",
+      "sha256": "06453da9cf0750aac5065650c510f4d03e1d7d2ef9ca21be1fefd719c1f1590b"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v1/generation_requests.jsonl",
+      "role": "source_only_generation_requests",
+      "sha256": "ec7d5b4e4216d484d3d2243f4a09c4cf82aab423ec918acb424fcf76f2ebdf83"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v1/identity.responses.jsonl",
+      "role": "identity_saved_responses",
+      "sha256": "eb9414fb71b6a520f9bd3d3d7e709840c908ee2c8c85de30a005f2b3f223a7c6"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v1/identity.report.json",
+      "role": "identity_aggregate_report",
+      "sha256": "b278dd289783c027162c80ec48b6857db968b2834c50d6fe1fbae30022205142"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v1/fixture-rules.responses.jsonl",
+      "role": "deterministic_saved_responses",
+      "sha256": "cc22f750fcfd889f1054a7d48d010efe7add9a610ffc9ba2e2f139236cf29321"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v1/fixture-rules.report.json",
+      "role": "deterministic_aggregate_report",
+      "sha256": "0759ba0c49c6a834acede64e0faa62c7197a6b3d5b53f4761e4eef2d479055c5"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v1/gpt-5.6-terra.responses.jsonl",
+      "role": "real_model_saved_responses",
+      "sha256": "e966913bd151f6a54170bc91442388cb68688965c9951c2d76088199c0ebe63b"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v1/gpt-5.6-terra.report.json",
+      "role": "real_model_aggregate_report",
+      "sha256": "2567fb9e96c94c3a165e24607907e98edb7fc86e25634c9d788fdc10e9f19952"
+    }
+  ],
+  "baselines": [
+    {
+      "decoding": {
+        "deterministic": true
+      },
+      "generator_kind": "identity",
+      "gold_fields_supplied": [],
+      "model": "identity-v1",
+      "model_version": "1",
+      "prompt_sha256": "f121546dcbaf602c58c7d85977ad792eb9be402dd1e01a6a556ba966dac2c96a",
+      "provider": "builtin",
+      "run_id": "ua-gec-calque-grammar-heldout-v1--identity-v1",
+      "runner": "ua_eval_saved_response_runner.v1",
+      "runner_version": "ua_eval_saved_response_runner.v1;source_sha256=a956c70f6a088baeace45e23f7482f418a9f1ca75e55597c23a93533fdf168b2",
+      "saved_response_path": "data/projects/ua_eval_harness/baselines/v1/identity.responses.jsonl",
+      "saved_response_sha256": "eb9414fb71b6a520f9bd3d3d7e709840c908ee2c8c85de30a005f2b3f223a7c6"
+    },
+    {
+      "decoding": {
+        "deterministic": true
+      },
+      "generator_kind": "fixture-rules",
+      "gold_fields_supplied": [],
+      "model": "train-fixture-literal-rules-v1",
+      "model_version": "b04a6b65067ce4047462d53d01918486b610dedadad7c03aeb9429c0032ebd4e",
+      "prompt_sha256": "f121546dcbaf602c58c7d85977ad792eb9be402dd1e01a6a556ba966dac2c96a",
+      "provider": "builtin",
+      "run_id": "ua-gec-calque-grammar-heldout-v1--train-fixture-literal-rules-v1",
+      "runner": "ua_eval_saved_response_runner.v1",
+      "runner_version": "ua_eval_saved_response_runner.v1;source_sha256=a956c70f6a088baeace45e23f7482f418a9f1ca75e55597c23a93533fdf168b2;fixtures_sha256=34a47de1a8826a60895898bd8d94c5d794159a9ea291a51a7f85790a3bb7f976",
+      "saved_response_path": "data/projects/ua_eval_harness/baselines/v1/fixture-rules.responses.jsonl",
+      "saved_response_sha256": "cc22f750fcfd889f1054a7d48d010efe7add9a610ffc9ba2e2f139236cf29321"
+    },
+    {
+      "decoding": {
+        "seed": "not_exposed",
+        "structured_output_schema_sha256": "93fda1b52e570cfc3c6431bb77e55d4e0047bf9cf92c45e4c5107b10e47ba710",
+        "temperature": "provider_default_not_exposed",
+        "top_p": "provider_default_not_exposed"
+      },
+      "generator_kind": "model",
+      "gold_fields_supplied": [],
+      "model": "gpt-5.6-terra",
+      "model_version": "gpt-5.6-terra",
+      "prompt_sha256": "f121546dcbaf602c58c7d85977ad792eb9be402dd1e01a6a556ba966dac2c96a",
+      "provider": "openai-subscription-via-codex-cli",
+      "run_id": "ua-gec-calque-grammar-heldout-v1--gpt-5.6-terra--codex-cli",
+      "runner": "ua_eval_saved_response_runner.v1",
+      "runner_version": "ua_eval_codex_cli_batch_runner.v1;source_sha256=06453da9cf0750aac5065650c510f4d03e1d7d2ef9ca21be1fefd719c1f1590b;codex-cli 0.145.0",
+      "saved_response_path": "data/projects/ua_eval_harness/baselines/v1/gpt-5.6-terra.responses.jsonl",
+      "saved_response_sha256": "e966913bd151f6a54170bc91442388cb68688965c9951c2d76088199c0ebe63b"
+    }
+  ],
+  "calque_scoring_disposition": {
+    "activation_dependency": 5092,
+    "benchmark_disposition_meaning": "separate calque scoring decision",
+    "counts": {
+      "contested": 11,
+      "excluded_as_regional_standardization": 0,
+      "excluded_as_register_standardization": 3,
+      "excluded_from_headline_calque": 16,
+      "heritage_conflict": 2,
+      "included_in_headline_calque": 338,
+      "items_by_disposition": {
+        "CONTESTED": 11,
+        "HEADLINE_CALQUE": 185,
+        "HERITAGE_CONFLICT": 1,
+        "REGIONAL_STANDARDIZATION": 0,
+        "REGISTER_STANDARDIZATION": 2
+      },
+      "raw_style_collision_annotations": 73,
+      "raw_style_collision_spans": 49,
+      "raw_style_collision_spans_by_marker": {
+        "arch": 3,
+        "bad": 34,
+        "rare": 2,
+        "slang": 10
+      },
+      "upstream_f_calque_annotations": 354
+    },
+    "evidence_receipt": {
+      "known_absent_markers": [
+        "coll"
+      ],
+      "parser": "scripts/rag/vesum_reingest.py",
+      "parser_sha256": "d98ffb7f3dfd7503c901e554e02dbef61c728672ba554a2d2d8c50fc01059477",
+      "release_asset_sha256": "e33803783ac138e6f3af2cf0e9428ba146c0ecfda7f5c41fe83ae00c7af24be9",
+      "release_version": "v6.8.0",
+      "source_lock": "scripts/config/vesum_source.lock.json",
+      "source_lock_sha256": "27362c3112579cbd8378314189c6c2032ac1d3db5f89f155f5557bb31a3d0fa6",
+      "style_markers": [
+        "arch",
+        "bad",
+        "coll",
+        "dialect",
+        "rare",
+        "slang"
+      ],
+      "tag_semantics": {
+        "arch_meaning": "застаріле/архаїчне/(інколи) діалектне",
+        "arch_source_line": 114,
+        "dedicated_dial_tag": false,
+        "source": "brown-uk/dict_uk doc/tags.txt",
+        "upstream_commit": "bcb5ccd9585a79dbbbb7c8c5e241adcd8a64f824"
+      }
+    },
+    "fail_closed": true,
+    "upstream_tag": "F/Calque",
+    "upstream_tag_meaning": "UA-GEC standardization label"
+  },
+  "contamination": {
+    "disclosures": [
+      "The public task instruction contains no examples.",
+      "The deterministic literal-rule baseline derives rules from 52 train-only development fixtures.",
+      "A two-item source-only transport smoke informed one formatting clarification; no gold or score was inspected.",
+      "The real model route was selected from the operator's pre-existing model assignment, not benchmark scores.",
+      "No held-out target, edit, or score entered model generation."
+    ],
+    "excluded_data_classes": [
+      "Hramatka and teacher feedback",
+      "Atlas or other product-private state",
+      "factuality or BIO fixtures",
+      "private canaries",
+      "curriculum and learner payloads"
+    ],
+    "forbidden_destinations": [
+      "Daily Practice inventories",
+      "training or fine-tuning inventories",
+      "synthetic-data, DPO, or preference-data pipelines"
+    ]
+  },
+  "release": {
+    "id": "ua-gec-calque-grammar-public-v0",
+    "issue": 4626,
+    "parent_epic": 2156,
+    "status": "immutable",
+    "version": "0.1.0"
+  },
+  "reporting": {
+    "aggregate_only": true,
+    "forbidden_item_fields": [
+      "edit",
+      "edits",
+      "exclusions",
+      "item_id",
+      "raw_response",
+      "reference",
+      "references",
+      "response_sha256",
+      "source_sha256",
+      "target",
+      "target_sha256"
+    ],
+    "verified_report_paths": [
+      "data/projects/ua_eval_harness/baselines/v1/identity.report.json",
+      "data/projects/ua_eval_harness/baselines/v1/fixture-rules.report.json",
+      "data/projects/ua_eval_harness/baselines/v1/gpt-5.6-terra.report.json"
+    ]
+  },
+  "schema_version": "ua_eval_release_freeze.v1",
+  "split_integrity": {
+    "annotation_layer": "gec-fluency",
+    "development_fixture_count": 52,
+    "development_fixtures_in_heldout_results": 0,
+    "document_proof": "The frozen split receipt retains the exact pinned metadata document and author ID sets; the verifier recomputes both intersections and requires its test documents to equal the held-out manifest document set.",
+    "manifest_payload_sha256": "6e9f0097faaa84f9f6b2225295bf1aba8657325e3f587b3f55b69044291f0ba9",
+    "partition": "test",
+    "sentence_disposition": {
+      "excluded": 2013,
+      "included": 677,
+      "upstream_test": 2690
+    },
+    "train_test_author_overlap": 0,
+    "train_test_document_overlap": 0,
+    "upstream_test_authors": 76,
+    "upstream_test_documents": 166,
+    "upstream_train_authors": 752,
+    "upstream_train_documents": 1706
+  },
+  "task_contract": {
+    "calque_disposition_id": "ua-gec-calque-dispositions-v1",
+    "calque_disposition_sha256": "44498d4c2ffcf8c0d3afed51bc82fa482be6b68ff6f05a3bcda035adbf5311a8",
+    "manifest_id": "ua-gec-calque-grammar-heldout-v1",
+    "model_output_schema_sha256": "93fda1b52e570cfc3c6431bb77e55d4e0047bf9cf92c45e4c5107b10e47ba710",
+    "predicate": {
+      "annotation_layer": "gec-fluency",
+      "arbitrary_item_quota": null,
+      "exclusion_reason": "no_calque_or_grammar_edit",
+      "included_exact_tags": [
+        "F/Calque"
+      ],
+      "included_tag_prefixes": [
+        "G/"
+      ],
+      "partition": "test",
+      "record_unit": "m2_tokenized_sentence",
+      "reference_policy": "apply_only_in_scope_edits_per_annotator",
+      "selection_policy": "include_every_sentence_with_at_least_one_in_scope_edit"
+    },
+    "prompt_sha256": "f121546dcbaf602c58c7d85977ad792eb9be402dd1e01a6a556ba966dac2c96a",
+    "scorer_id": "ua_eval_exact_token_edits.v1",
+    "scorer_sha256": "358ee1419533577fb185615c8a80b15688214a89fe3003d9fe9425954511402a",
+    "task": "minimal-edit Ukrainian calque and grammar correction"
+  },
+  "upstream": {
+    "citation": "Syvokon, Nahorna, Kuchmiichuk, and Osidach. UA-GEC. UNLP 2023.",
+    "commit": "4757f72f192c4a41e4c8fb1d9690a948f87cf6d6",
+    "dataset": "UA-GEC",
+    "file_sha256": {
+      "LICENSE": "f5b745ef98087f531e719ee8ca6a96809444573ecc7173c6fa68eaad39b3cc3f",
+      "README.md": "e0aa163c7471ff9e876f5f294252b9e406b2ec832b10a6ded894ea322796e875",
+      "data/gec-fluency/test/gec-fluency.test.m2": "a7e91f93747492e4acda1fef261a948080228032f0871c0b3c14438f85397330",
+      "data/metadata.csv": "6f92f0734cd4a8b126b416f2bc19b518e739f6b3e1aaeef46a4bf5e4e97ab3f9"
+    },
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "repository": "https://github.com/grammarly/ua-gec",
+    "version": "2.0"
+  },
+  "version_policy": {
+    "any_frozen_byte_change": "requires a new semantic version and freeze directory",
+    "historical_freezes": "retained and independently verifiable",
+    "in_place_edits": "forbidden",
+    "major": "dataset, eligibility predicate, gold, split, primary metric, or incompatible contract change",
+    "minor": "backward-compatible task, scorer, runner, or baseline addition",
+    "patch": "documentation or packaging correction with unchanged dataset, task, scorer, and baseline results"
+  }
+}

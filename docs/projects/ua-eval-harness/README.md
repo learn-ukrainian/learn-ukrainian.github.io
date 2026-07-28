@@ -14,7 +14,7 @@ calques and grammar from UA-GEC. The final package must provide deterministic
 gold extraction, standard edit scoring, version-pinned baselines, and a
 stranger-runnable release without private product data or provider secrets.
 
-Oleksiy's direction for the project is:
+The accepted project direction is:
 
 - no dedicated Ukrainian calque harness is known;
 - UA-GEC reuse is welcome;
@@ -84,6 +84,27 @@ The frozen predicate includes every tokenized sentence with an `F/Calque` or
 observed result, not a quota. The manifest preserves upstream sentence
 locators, writer/document splits, original tags, attribution,
 source/reference hashes, and explicit inclusion/exclusion reasons.
+
+`F/Calque` remains an unchanged **UA-GEC standardization label**, not a claim
+that this benchmark independently adjudicated every source form as a calque.
+The separate `scoring_dispositions_v1.json` records the benchmark decision for
+all 354 annotator-level `F/Calque` edits (293 unique spans). Its hash-locked
+dict_uk/VESUM v6.8.0 probe finds 49 unique spans with exact style-marker
+collisions: 34 `bad`, 10 `slang`, 3 `arch`, and 2 `rare`. The release admits
+338 annotations to headline calque recall and fails closed on 16:
+
+- 3 are conversational/register standardizations;
+- 2 are heritage conflicts;
+- 11 remain contested.
+
+Attestation or a style marker is evidence, not automatic contextual
+adjudication. In particular, the shared surface `була` is not heritage-flagged:
+the `arch` analysis belongs to adjective `булий`, while the sentence uses the
+clean verb analysis `бути`. The committed receipts and tests cover that
+morphological collision, the bounded `тьоті`, `кришею`, `рижого`, and
+`Спікери` decisions, all 10 slang collisions, upstream-label preservation, and
+fail-closed abstention. Full contextual marker activation remains tracked by
+issue #5092; no five-token seed participates in public scoring.
 
 Verify the committed artifact without an upstream checkout:
 
@@ -175,8 +196,30 @@ report.
 
 The complete [v1 baseline receipts](../../../data/projects/ua_eval_harness/baselines/v1/README.md)
 include identity, train-fixture literal rules, and a source-only
-`gpt-5.6-terra` run. Terra scores 0.2439 edit F0.5 and 0.1610 exact-sentence
-accuracy; the report retains all 677 raw responses and full run provenance.
+`gpt-5.6-terra` run. Across all retained UA-GEC standardization and grammar
+labels, Terra scores 0.2439 edit F0.5 and 0.1610 exact-sentence accuracy. Its
+heritage-safe headline calque recall is 0.1410 (33/234 selected-reference
+annotations). The report retains all 677 raw responses and full run
+provenance. Calque precision is intentionally `null`: untyped hypothesis-only
+false positives cannot honestly be assigned to the calque tag.
+
+## Immutable release freeze
+
+Release `0.1.0` is pinned by one
+[freeze manifest](../../../data/projects/ua_eval_harness/releases/v0.1.0/freeze_manifest.json).
+It records the exact dataset, task, prompt, schema, scorer, runner, request,
+saved-response, and report hashes together with split-integrity and generation
+provenance. Verify every frozen byte and the aggregate-report privacy contract
+offline:
+
+```bash
+.venv/bin/python scripts/projects/ua_eval_harness/verify_release_freeze.py
+```
+
+The Ukrainian-first
+[contamination policy](contamination-policy.md) documents the complete leakage
+disclosure, train-fixture separation, prohibited product/training reuse, and
+semantic version-bump rules. Frozen bytes are never edited in place.
 
 ## Ownership and data boundaries
 

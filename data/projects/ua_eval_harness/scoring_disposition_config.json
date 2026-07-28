@@ -1,0 +1,118 @@
+{
+  "schema_version": "ua_eval_scoring_disposition_config.v1",
+  "disposition_id": "ua-gec-calque-dispositions-v1",
+  "manifest_id": "ua-gec-calque-grammar-heldout-v1",
+  "manifest_payload_sha256": "6e9f0097faaa84f9f6b2225295bf1aba8657325e3f587b3f55b69044291f0ba9",
+  "upstream_tag": "F/Calque",
+  "evidence": {
+    "source_lock": "scripts/config/vesum_source.lock.json",
+    "source_lock_sha256": "27362c3112579cbd8378314189c6c2032ac1d3db5f89f155f5557bb31a3d0fa6",
+    "parser": "scripts/rag/vesum_reingest.py",
+    "parser_sha256": "d98ffb7f3dfd7503c901e554e02dbef61c728672ba554a2d2d8c50fc01059477",
+    "release_asset_sha256": "e33803783ac138e6f3af2cf0e9428ba146c0ecfda7f5c41fe83ae00c7af24be9",
+    "release_version": "v6.8.0",
+    "style_markers": [
+      "arch",
+      "bad",
+      "coll",
+      "dialect",
+      "rare",
+      "slang"
+    ],
+    "known_absent_markers": [
+      "coll"
+    ]
+  },
+  "policy": {
+    "attestation_alone": "evidence_only",
+    "bad_marker": "HEADLINE_CALQUE",
+    "arch_coll_dialect_without_contextual_adjudication": "HERITAGE_CONFLICT",
+    "rare_or_slang_without_contextual_adjudication": "CONTESTED",
+    "confirmed_authentic_regional_or_dialect": "REGIONAL_STANDARDIZATION",
+    "confirmed_colloquial_or_register_standardization": "REGISTER_STANDARDIZATION",
+    "unflagged_upstream_annotation": "HEADLINE_CALQUE",
+    "headline_includes": [
+      "HEADLINE_CALQUE"
+    ],
+    "contextual_adjudication": "bounded_receipts_only",
+    "activation_dependency": 5092,
+    "fail_closed": true
+  },
+  "tag_semantics": {
+    "source": "brown-uk/dict_uk doc/tags.txt",
+    "upstream_commit": "bcb5ccd9585a79dbbbb7c8c5e241adcd8a64f824",
+    "arch_source_line": 114,
+    "arch_meaning": "застаріле/архаїчне/(інколи) діалектне",
+    "dedicated_dial_tag": false
+  },
+  "contextual_adjudications": [
+    {
+      "item_id": "ua-gec-test-0017-s0010",
+      "start": 13,
+      "end": 14,
+      "source_span": [
+        "тьоті"
+      ],
+      "disposition": "REGISTER_STANDARDIZATION",
+      "reason": "pre-Soviet attestation plus a conversational register label support colloquial standardization, not an adjudicated calque",
+      "evidence": [
+        "Грінченко 1907: headword тьотя",
+        "СУМ-11: headword тьотя; marker розм."
+      ]
+    },
+    {
+      "item_id": "ua-gec-test-0111-s0007",
+      "start": 22,
+      "end": 23,
+      "source_span": [
+        "кришею"
+      ],
+      "disposition": "HERITAGE_CONFLICT",
+      "reason": "pre-Soviet attestation and the VESUM arch marker require contextual heritage adjudication",
+      "evidence": [
+        "Грінченко 1907: headword криша",
+        "dict_uk/VESUM v6.8.0: lemma криша; marker arch"
+      ]
+    },
+    {
+      "item_id": "ua-gec-test-0339-s0007",
+      "start": 4,
+      "end": 5,
+      "source_span": [
+        "була"
+      ],
+      "disposition": "HEADLINE_CALQUE",
+      "reason": "the arch marker belongs to the adjectival lemma булий; clean verb бути analyses and sentence context prove a false surface collision",
+      "evidence": [
+        "dict_uk/VESUM v6.8.0: clean verb lemma бути and arch adjective lemma булий share surface була"
+      ]
+    },
+    {
+      "item_id": "ua-gec-test-0430-s0010",
+      "start": 0,
+      "end": 1,
+      "source_span": [
+        "Спікери"
+      ],
+      "disposition": "CONTESTED",
+      "reason": "dictionary attestation covers parliamentary and sports senses, not enough to adjudicate presentation-speaker usage",
+      "evidence": [
+        "СУМ-11: headword спікер; parliamentary and sports senses"
+      ]
+    },
+    {
+      "item_id": "ua-gec-test-0843-s0006",
+      "start": 9,
+      "end": 10,
+      "source_span": [
+        "рижого"
+      ],
+      "disposition": "REGISTER_STANDARDIZATION",
+      "reason": "pre-Soviet attestation plus a conversational register label support colloquial standardization, not an adjudicated calque",
+      "evidence": [
+        "Грінченко 1907: headword рижий",
+        "СУМ-11: headword рижий; marker розм."
+      ]
+    }
+  ]
+}
