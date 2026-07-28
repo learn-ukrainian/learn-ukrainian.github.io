@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "trail-run-result.v1",
+  "title": "Trail runner result v1 schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "command",
+    "exit_class",
+    "outcome",
+    "run_id",
+    "state",
+    "cursor_step",
+    "data",
+    "error"
+  ],
+  "properties": {
+    "schema_version": {"const": "trail-run-result.v1"},
+    "command": {
+      "enum": ["begin", "status", "step", "resume", "verify-chain", "close"]
+    },
+    "exit_class": {"enum": [0, 20, 21, 22, 23, 24]},
+    "outcome": {"type": "string", "minLength": 1},
+    "run_id": {"type": ["string", "null"]},
+    "state": {"type": ["string", "null"]},
+    "cursor_step": {"type": ["string", "null"]},
+    "data": {"type": "object"},
+    "error": {"type": ["string", "null"]}
+  }
+}
