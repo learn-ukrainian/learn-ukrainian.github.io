@@ -209,6 +209,22 @@ def test_negative_retry_once_with_stop_code(tmp_path) -> None:
     assert "Registry schema violation" in str(exc_info2.value)
 
 
+def test_negative_empty_required_matchers(tmp_path) -> None:
+    """Negative schema test (codex re-review F001): an entry whose
+    matcher.lines.required is EMPTY would match on check_name alone, classifying
+    every failure of that check as known — minItems 1 must reject it."""
+    data = _get_valid_registry_data()
+    data["entries"][0]["matcher"]["lines"]["required"] = []
+
+    reg_path = tmp_path / "empty_required.json"
+    reg_path.write_text(json.dumps(data), encoding="utf-8")
+
+    with pytest.raises(RedCIKnownFailuresValidationError) as exc_info:
+        load_and_validate_registry(reg_path, as_of="2026-07-28T12:00:00Z")
+
+    assert "Registry schema violation" in str(exc_info.value)
+
+
 def test_negative_receipt_empty_signature_lines(tmp_path) -> None:
     """Negative schema test: a receipt with zero normalized signature lines is not a
     signature (glm F3) — minItems 1 must reject it."""
