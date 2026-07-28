@@ -275,11 +275,34 @@ def _validate_v11_invocation_fields(spec_data: dict[str, Any]) -> None:
                 )
 
         if command["adapter"] == "shell":
-            for index, token in enumerate(argv[:-1]):
-                if token == "-c" and _PARAMETER_REFERENCE.search(argv[index + 1]):
+            # Fail-closed shell-invocation shape (review finding on #5963): matching
+            # only a literal "-c" token let `sh -lc`, `bash --login -c`, `-ec`, etc.
+            # smuggle parameter interpolation into a shell-interpreted program string.
+            # The shell adapter execs argv DIRECTLY, so a plain command with parameters
+            # as discrete argv elements is safe. But if argv[0] is a shell binary (or a
+            # wrapper that could reach one), the ONLY accepted shape is exactly
+            # [sh|bash, -c, <program>] and the program token may not reference
+            # parameters — every other flag spelling or layout is rejected outright.
+            _SHELL_BINARIES = {"sh", "bash", "zsh", "dash", "ksh"}
+            _WRAPPER_BINARIES = {"env", "nohup", "stdbuf", "nice", "timeout", "xargs"}
+            argv0_base = argv[0].rsplit("/", 1)[-1]
+            if argv0_base in _WRAPPER_BINARIES:
+                raise TrailSpecValidationError(
+                    f"Unsupported shell invocation shape in step '{step_id}': wrapper "
+                    f"'{argv0_base}' indirection is not allowed for the shell adapter"
+                )
+            if argv0_base in _SHELL_BINARIES:
+                if len(argv) != 3 or argv0_base not in ("sh", "bash") or argv[1] != "-c":
                     raise TrailSpecValidationError(
-                        f"Unquoted parameter interpolation prohibited: shell step '{step_id}' "
-                        "must pass parameters through argv/environment, not a -c program"
+                        f"Unsupported shell invocation shape in step '{step_id}': "
+                        "shell-binary invocations accept exactly [sh|bash, -c, "
+                        "<program>] — no other flags or argument layouts"
+                    )
+                if _PARAMETER_REFERENCE.search(argv[2]):
+                    raise TrailSpecValidationError(
+                        f"Unquoted parameter interpolation prohibited: shell step "
+                        f"'{step_id}' must pass parameters through argv/environment, "
+                        "not a -c program"
                     )
 
         values_to_check = [*argv, *environment.values()]

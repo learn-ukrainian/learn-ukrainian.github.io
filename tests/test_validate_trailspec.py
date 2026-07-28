@@ -417,6 +417,30 @@ def test_negative_v11_rejects_undeclared_or_shell_interpolated_parameters() -> N
 
     assert "Unquoted parameter interpolation prohibited" in str(exc_info.value)
 
+    # Review finding on #5963: every alternate flag spelling that reaches a shell
+    # program string must be REJECTED as an unsupported shape, not silently accepted.
+    for bypass_argv in (
+        ["sh", "-lc", "observer --issue {issue_number}"],
+        ["sh", "-ec", "observer --issue {issue_number}"],
+        ["bash", "--login", "-c", "observer --issue {issue_number}"],
+        ["zsh", "-c", "observer --issue {issue_number}"],
+        ["/bin/bash", "-lc", "observer --issue {issue_number}"],
+        ["env", "bash", "-c", "observer --issue {issue_number}"],
+    ):
+        bypass = _get_happy_v11_trail_data()
+        bypass["steps"][0]["command"]["argv"] = bypass_argv
+        with pytest.raises(TrailSpecValidationError) as exc_info:
+            validate_trailspec_data(
+                bypass, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH
+            )
+        assert "Unsupported shell invocation shape" in str(exc_info.value), bypass_argv
+
+    # A shell-binary invocation in the exact sanctioned shape WITHOUT parameter
+    # references remains valid (the guard narrows interpolation, not shell use).
+    sanctioned = _get_happy_v11_trail_data()
+    sanctioned["steps"][0]["command"]["argv"] = ["sh", "-c", "observer --issue fixed"]
+    validate_trailspec_data(sanctioned, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
+
     untyped = _get_happy_v11_trail_data()
     untyped["parameters"]["issue_number"] = "free-form-prose"
     with pytest.raises(TrailSpecValidationError) as exc_info:
