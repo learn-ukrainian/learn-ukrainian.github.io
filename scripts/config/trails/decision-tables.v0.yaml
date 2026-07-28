@@ -115,7 +115,7 @@ tables:
       - {when: "closing a session or preparing rollover", then: "handoff carries: assignment scope · epic phase · IN-FLIGHT with watcher ids · verdict/finalize state per open PR · NEXT ACTION ordered list · operator-pending items · pace/disk at last dispatch"}
       - {when: "any of those unknown", then: "reconstruct from tool output before writing; a handoff row must never be from memory"}
       - {when: "file exceeds 40KB", then: "archive older sessions before writing more"}
-    blocked_on: "closure-gate integration lands with T1.2 (#5880 step 5)"
+    blocked_on: "runner-backed closure-gate integration (receipt-chain validation ships with the trail runner; the lease-release hooks half of T1.2 landed via #5896)"
 
   summon-vs-park:
     mode: static
