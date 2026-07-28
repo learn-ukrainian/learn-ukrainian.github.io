@@ -35,6 +35,13 @@ from pathlib import Path
 from urllib.parse import quote
 
 from ..result import ParseResult
+from ..trail_isolation import (
+    GROK_TRAIL_DENY_TOOLS,
+    GROK_TRAIL_TOOLS,
+    TrailIsolationError,
+    assert_trail_isolation_config,
+    trail_isolation_requested,
+)
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
@@ -73,6 +80,17 @@ _MCP_REVIEW_DENY_RULES: tuple[str, ...] = (
 GROK_ALLOWED_MODELS: frozenset[str] = frozenset({"grok-4.5"})
 GROK_BUILD_DEFAULT_MODEL = "grok-4.5"
 GROK_BUILD_DEFAULT_EFFORT = os.environ.get("LEARN_UK_GROK_BUILD_EFFORT", "high")
+_TRAIL_ISOLATION_TOOL_CONFIG_KEYS: frozenset[str] = frozenset(
+    {
+        "allowed_tools",
+        "mcp_config_path",
+        "setting_sources",
+        "strict_mcp_config",
+        "tools",
+        "trail_isolation",
+        "trail_isolation_cwd",
+    }
+)
 
 
 def grok_session_dir(grok_home: Path, cwd: Path, session_id: str) -> Path:
@@ -109,6 +127,17 @@ class GrokBuildAdapter:
         if mode not in self.supported_modes:
             raise ValueError(f"GrokBuildAdapter: unsupported mode {mode!r} (supported: {sorted(self.supported_modes)})")
         tc = tool_config or {}
+        trail_isolation = trail_isolation_requested(tc)
+        trail_cwd: Path | None = None
+        if trail_isolation:
+            if mode != "read-only":
+                raise TrailIsolationError("Grok trail isolation requires mode='read-only'")
+            unsupported = sorted(set(tc) - _TRAIL_ISOLATION_TOOL_CONFIG_KEYS)
+            if unsupported:
+                raise TrailIsolationError(
+                    f"Grok trail isolation refuses incompatible tool_config keys: {unsupported}"
+                )
+            trail_cwd = assert_trail_isolation_config(tc, profile="grok")
         review_isolation = bool(tc.get("review_isolation"))
         review_write_root: Path | None = None
         if review_isolation:
@@ -136,7 +165,7 @@ class GrokBuildAdapter:
             prompt = _adapt_prompt_for_grok_build_mcp(prompt)
 
         cmd: list[str] = [grok_bin]
-        execution_cwd = cwd
+        execution_cwd = trail_cwd or cwd
         # Prompt: inline via -p for the common case; a hyphen-leading prompt
         # would be misparsed by clap as a flag, so route those through a temp
         # --prompt-file instead (robust for any content).
@@ -182,7 +211,9 @@ class GrokBuildAdapter:
         # parent-owned OS sandbox limits them to the sealed view; explicit deny
         # rules remove shell/write/nested execution even though headless tool
         # calls require an execution-capable permission mode.
-        if review_isolation:
+        if trail_isolation:
+            permission_mode = "default"
+        elif review_isolation:
             permission_mode = str(tc.get("permission_mode") or "bypassPermissions")
         else:
             permission_mode = "bypassPermissions" if mcp_read_only else _MODE_PERMISSION[mode]
@@ -194,7 +225,21 @@ class GrokBuildAdapter:
             cmd.append("--disable-web-search")
             for rule in _MCP_REVIEW_DENY_RULES:
                 cmd.extend(["--deny", rule])
-        if review_isolation:
+        if trail_isolation:
+            cmd.extend(
+                [
+                    "--no-plan",
+                    "--no-memory",
+                    "--no-subagents",
+                    "--disable-web-search",
+                    "--verbatim",
+                ]
+            )
+            for rule in GROK_TRAIL_DENY_TOOLS:
+                cmd.extend(["--deny", rule])
+            for rule in GROK_TRAIL_TOOLS:
+                cmd.extend(["--allow", rule])
+        elif review_isolation:
             cmd.extend(
                 [
                     "--always-approve",

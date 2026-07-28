@@ -15,6 +15,7 @@ from pathlib import Path
 
 from ..errors import AgentRuntimeError
 from ..result import ParseResult
+from ..trail_isolation import TrailIsolationError, trail_isolation_requested
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
@@ -95,6 +96,10 @@ class GlmAdapter:
         tool_config: dict | None = None,
         effort: str | None = None,
     ) -> InvocationPlan:
+        if trail_isolation_requested(tool_config):
+            raise TrailIsolationError(
+                "trail isolation refused for GLM: opencode does not enforce tool restrictions"
+            )
         assert_glm_egress_allowed("GlmAdapter")
 
         if mode not in self.supported_modes:

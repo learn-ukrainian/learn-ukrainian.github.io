@@ -73,6 +73,7 @@ from .failover import (
 from .registry import AGENTS, get_agent_entry
 from .result import ParseResult, Result
 from .telemetry import InvocationTelemetry, resolve_invocation_telemetry
+from .trail_isolation import prepare_trail_isolation
 from .usage import has_headroom, write_record
 from .watchdog import (
     WatchdogState,
@@ -1066,7 +1067,9 @@ def _execute_invocation_plan(
     # review_isolation, replace ambient agent env + wrap argv with the
     # fail-closed OS sandbox policy. Never silently weaken.
     review_cmd = list(plan.cmd)
-    review_cwd = cwd
+    # InvocationPlan.cwd is the authoritative spawn location. Trail isolation
+    # uses this to isolate native Grok from ambient project MCP configuration.
+    review_cwd = Path(getattr(plan, "cwd", None) or cwd)
     isolation_evidence: dict | None = None
     isolation_capability_digest: str | None = None
     isolation_prompt_digest: str | None = None
@@ -2224,7 +2227,7 @@ def _invoke_with_runner_failover(
     raise AgentUnavailableError(f"Agent {agent_name!r} has an empty runner failover route set")
 
 
-def invoke(
+def _invoke_impl(
     agent_name: str,
     prompt: str,
     *,
@@ -2246,7 +2249,7 @@ def invoke(
     event_sink: Callable[..., None] | None = None,
     effort: str | None = None,
 ) -> Result:
-    """Single entry point for all agent CLI invocations.
+    """Runner implementation after any parent-owned isolation preparation.
 
     Args:
         agent_name: Registry key. Must be in AGENTS and have
@@ -2533,3 +2536,56 @@ def invoke(
         isolation_prompt_digest=execution.isolation_prompt_digest,
         isolation_prompt_transport=execution.isolation_prompt_transport,
     )
+
+
+def invoke(
+    agent_name: str,
+    prompt: str,
+    *,
+    mode: str = "read-only",
+    cwd: Path | None = None,
+    model: str | None = None,
+    task_id: str | None = None,
+    session_id: str | None = None,
+    tool_config: dict | None = None,
+    entrypoint: str = "runtime",
+    hard_timeout: int = 86400,
+    stall_timeout: int = 180,
+    stdout_silence_timeout: int | None = None,
+    initial_response_timeout: int | None = None,
+    event_sink: Callable[..., None] | None = None,
+    effort: str | None = None,
+) -> Result:
+    """Invoke an agent CLI, provisioning trail isolation before any spawn.
+
+    ``tool_config={"trail_isolation": ...}`` is handled before adapter
+    planning. Unsupported adapters refuse before spawn, while supported
+    profiles receive a private one-server MCP configuration that is removed
+    after success, refusal, timeout, or adapter error.
+    """
+    launch = prepare_trail_isolation(
+        agent_name=agent_name,
+        mode=mode,
+        tool_config=tool_config,
+    )
+    try:
+        return _invoke_impl(
+            agent_name,
+            prompt,
+            mode=mode,
+            cwd=cwd,
+            model=model,
+            task_id=task_id,
+            session_id=session_id,
+            tool_config=launch.tool_config if launch is not None else tool_config,
+            entrypoint=entrypoint,
+            hard_timeout=hard_timeout,
+            stall_timeout=stall_timeout,
+            stdout_silence_timeout=stdout_silence_timeout,
+            initial_response_timeout=initial_response_timeout,
+            event_sink=event_sink,
+            effort=effort,
+        )
+    finally:
+        if launch is not None:
+            launch.cleanup()

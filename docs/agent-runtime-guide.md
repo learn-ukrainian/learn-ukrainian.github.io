@@ -98,6 +98,51 @@ level. Runner rejects invocations requesting an unsupported mode with
 `ValueError` if missing. This prevents "write to wherever Python happens
 to be running" bugs.
 
+## Weak-driver trail isolation (P5)
+
+Trail drivers are never given a shell, workspace writes, GitHub mutation, or
+ambient MCP access. A certifiable weak session must use the explicit runtime
+profile:
+
+```python
+invoke(
+    "grok",  # or "kimi" with harness="kimicc"
+    prompt,
+    mode="read-only",
+    cwd=Path.cwd(),
+    tool_config={"trail_isolation": True},
+)
+```
+
+The runner creates a private MCP configuration with exactly one `trail`
+server and exactly three visible tools:
+
+| Tool | Parent-owned P3 runner action |
+| --- | --- |
+| `trail_status` | `trail_runner.py status --run-id …` |
+| `trail_step` | `trail_runner.py step --run-id … --expected-step …` |
+| `trail_summon` | Reads the `summons` returned by `status`; P3 creates those atomically when it parks a run. |
+
+The MCP server has no generic command, begin, resume, verify-chain, or close
+tool. `trail_step` is the only execution request and P3 still validates the
+SQLite-authoritative current cursor before it launches the pinned command.
+
+The admission policy is fail-closed:
+
+- Native Grok gets a private MCP cwd, an exact three-tool allowlist, explicit
+  allows for those tools, and explicit denies for Bash, reads/writes/edits,
+  web, and discovery tools.
+- Kimi is eligible only through `tool_config={"harness": "kimicc", "trail_isolation": True}`.
+  KimiCC forwards Claude Code's exact `--tools`, `--allowedTools`,
+  `--strict-mcp-config`, and empty `--setting-sources` profile.
+- Native Kimi, GLM/opencode, Hermes Grok, and every unproven harness refuse
+  before spawn. GLM currently ignores tool restrictions, so a refusal is more
+  honest than a pretend sandbox.
+
+The boundary prevents accidental weak-driver deviation, not a malicious
+process sharing the same Unix account. CI, branch protection, and merge guards
+remain required controls.
+
 ## Stall detection — why we don't kill healthy slow calls
 
 Previous code used `subprocess.run(timeout=N)` and killed anything that
