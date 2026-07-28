@@ -117,11 +117,10 @@ resolve_auth_token() {
     AUTH_SOURCE="GLM_API_KEY"
     return 0
   fi
-  if [ -n "${ANTHROPIC_AUTH_TOKEN:-}" ]; then
-    _resolved_auth="$ANTHROPIC_AUTH_TOKEN"
-    AUTH_SOURCE="ANTHROPIC_AUTH_TOKEN"
-    return 0
-  fi
+  # r3 security review: NO ambient ANTHROPIC_AUTH_TOKEN fallback — a credential
+  # intended for Anthropic must never be transmitted to the Z.AI endpoint.
+  # GLM credentials are explicit only: GLMCC_AUTH_TOKEN / ZAI_API_KEY /
+  # ZHIPU_API_KEY / GLM_API_KEY.
   return 1
 }
 
