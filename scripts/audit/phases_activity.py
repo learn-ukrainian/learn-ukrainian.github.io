@@ -30,6 +30,7 @@ from .checks.activity_validation import (
     check_duplicate_options,
     check_english_hints_in_activities,
     check_fill_in_answer_in_options,
+    check_indeclinable_case_drills,
     check_mark_the_words_answers_in_text,
     check_morpheme_patterns,
     check_morpheme_pedagogy,
@@ -57,15 +58,14 @@ from .config import (
 from .parsing import AuditContext, AuditState
 
 
-def _print_violations(violations: list, label: str, icon: str = "\u26a0\ufe0f",
-                      show_fix: bool = False) -> None:
+def _print_violations(violations: list, label: str, icon: str = "\u26a0\ufe0f", show_fix: bool = False) -> None:
     """Print a violation list with consistent formatting."""
     if not violations:
         return
     print(f"  {icon}  {label}: {len(violations)}")
     for v in violations:
         print(f"     \u2192 {v['issue']}")
-        if show_fix and v.get('fix'):
+        if show_fix and v.get("fix"):
             print(f"     Fix: {v['fix']}")
 
 
@@ -81,7 +81,7 @@ def _run_yaml_lint_and_schema(ctx: AuditContext) -> list:
             for v in lint_errors:
                 print(f"     \u274c [LINT] line {v['line']}: {v['message']}")
                 print(f"        Fix: {v['fix']}")
-            if any(v['severity'] == 'critical' for v in lint_errors):
+            if any(v["severity"] == "critical" for v in lint_errors):
                 sys.exit(1)
 
     if yaml_file.exists():
@@ -89,7 +89,7 @@ def _run_yaml_lint_and_schema(ctx: AuditContext) -> list:
         if yaml_schema_violations:
             print(f"  \u274c YAML schema violations: {len(yaml_schema_violations)}")
             for v in yaml_schema_violations:
-                severity_icon = "\u274c" if v['severity'] == 'error' else "\u26a0\ufe0f"
+                severity_icon = "\u274c" if v["severity"] == "error" else "\u26a0\ufe0f"
                 print(f"     {severity_icon} [{v['type']}] {v['message']}")
 
     return yaml_schema_violations
@@ -116,7 +116,9 @@ def _run_activity_format_checks(activities: list) -> tuple[list, list, list, lis
     return mark_words, hints, ec_hints, malformed_cloze, cloze_syntax, ec_format, invalid_types
 
 
-def validate_yaml_activities(ctx: AuditContext, state: AuditState) -> tuple[list, list, list, list, list, list, list, list, list]:
+def validate_yaml_activities(
+    ctx: AuditContext, state: AuditState
+) -> tuple[list, list, list, list, list, list, list, list, list]:
     """Run all YAML activity validation checks."""
     yaml_schema_violations = []
     forbidden_type_violations = []
@@ -125,11 +127,19 @@ def validate_yaml_activities(ctx: AuditContext, state: AuditState) -> tuple[list
         yaml_schema_violations = _run_yaml_lint_and_schema(ctx)
 
     if ctx.yaml_activities:
-        (mark_words_violations, hint_violations, error_correction_hint_violations,
-         malformed_cloze_violations, cloze_syntax_violations,
-         error_correction_violations, invalid_type_violations) = _run_activity_format_checks(ctx.yaml_activities)
+        (
+            mark_words_violations,
+            hint_violations,
+            error_correction_hint_violations,
+            malformed_cloze_violations,
+            cloze_syntax_violations,
+            error_correction_violations,
+            invalid_type_violations,
+        ) = _run_activity_format_checks(ctx.yaml_activities)
 
-        forbidden_type_violations = check_forbidden_activity_types(ctx.yaml_activities, ctx.level_code, ctx.module_focus)
+        forbidden_type_violations = check_forbidden_activity_types(
+            ctx.yaml_activities, ctx.level_code, ctx.module_focus
+        )
         if forbidden_type_violations:
             print(f"  \U0001f534 FORBIDDEN activity types in seminar track: {len(forbidden_type_violations)}")
             for v in forbidden_type_violations:
@@ -145,10 +155,17 @@ def validate_yaml_activities(ctx: AuditContext, state: AuditState) -> tuple[list
         error_correction_violations = []
         invalid_type_violations = []
 
-    return (yaml_schema_violations, mark_words_violations, hint_violations,
-            error_correction_hint_violations, malformed_cloze_violations,
-            cloze_syntax_violations, error_correction_violations,
-            invalid_type_violations, forbidden_type_violations)
+    return (
+        yaml_schema_violations,
+        mark_words_violations,
+        hint_violations,
+        error_correction_hint_violations,
+        malformed_cloze_violations,
+        cloze_syntax_violations,
+        error_correction_violations,
+        invalid_type_violations,
+        forbidden_type_violations,
+    )
 
 
 def _print_detailed_violations(violations: list, label: str) -> None:
@@ -157,11 +174,11 @@ def _print_detailed_violations(violations: list, label: str) -> None:
         return
     print(f"  \u26a0\ufe0f  {label}: {len(violations)}")
     for v in violations:
-        severity = "\U0001f534" if v['severity'] == 'critical' else "\u26a0\ufe0f"
+        severity = "\U0001f534" if v["severity"] == "critical" else "\u26a0\ufe0f"
         print(f"     {severity} [{v['type']}] {v.get('activity', '')}")
         print(f"        Issue: {v['message']}")
         print(f"        Fix: {v.get('suggestion', v.get('fix', ''))}")
-        if 'pedagogical_issue' in v:
+        if "pedagogical_issue" in v:
             print(f"        Why: {v['pedagogical_issue']}")
 
 
@@ -176,12 +193,13 @@ def _check_answer_correctness(activities: list) -> list:
     violations.extend(check_unjumble_runon_answer(activities))
     violations.extend(check_unjumble_out_of_scope_dative(activities))
     violations.extend(check_duplicate_options(activities))
+    violations.extend(check_indeclinable_case_drills(activities))
     return violations
 
 
 def _check_external_urls(ctx: AuditContext, state: AuditState) -> None:
     """Check external resource URLs in reading activities for seminar tracks."""
-    if ctx.level_code.lower() not in ['lit', 'hist', 'istorio', 'bio']:
+    if ctx.level_code.lower() not in ["lit", "hist", "istorio", "bio"]:
         return
 
     external_url_violations = check_external_resources(ctx.yaml_activities, ctx.module_title)
@@ -190,13 +208,13 @@ def _check_external_urls(ctx: AuditContext, state: AuditState) -> None:
 
     print(f"  \U0001f517 External URL validation issues: {len(external_url_violations)}")
     for v in external_url_violations:
-        severity = "\U0001f534" if v['severity'] == 'critical' else "\u26a0\ufe0f"
+        severity = "\U0001f534" if v["severity"] == "critical" else "\u26a0\ufe0f"
         print(f"     {severity} [{v['type']}] {v['activity']}")
         print(f"        URL: {v.get('url', 'N/A')}")
         print(f"        Issue: {v['message']}")
-        if v.get('suggested_url'):
+        if v.get("suggested_url"):
             print(f"        \u2705 Suggested fix: {v['suggested_url']}")
-            if ctx.yaml_file and fix_external_resource_url(ctx.yaml_file, v['url'], v['suggested_url']):
+            if ctx.yaml_file and fix_external_resource_url(ctx.yaml_file, v["url"], v["suggested_url"]):
                 print(f"        \u2713 AUTO-FIXED: URL updated in {ctx.yaml_file.name}")
             else:
                 print(f"        Fix: {v.get('suggestion', '')}")
@@ -219,18 +237,20 @@ def validate_activity_answers(ctx: AuditContext, state: AuditState) -> None:
     _print_detailed_violations(check_morpheme_pedagogy(ctx.yaml_activities), "pedagogically weak morpheme activities")
     _print_detailed_violations(
         check_english_hints_in_activities(ctx.yaml_activities, ctx.level_code, ctx.module_num),
-        "English hints in A2+ activities"
+        "English hints in A2+ activities",
     )
-    _print_detailed_violations(check_unjumble_empty_jumbled(ctx.yaml_activities), "unjumble activities with empty jumbled fields")
+    _print_detailed_violations(
+        check_unjumble_empty_jumbled(ctx.yaml_activities), "unjumble activities with empty jumbled fields"
+    )
 
     seminar_pairing_violations = check_seminar_reading_pairing(ctx.yaml_activities, ctx.level_code)
     _print_detailed_violations(seminar_pairing_violations, "Seminar reading-analysis pairing issues")
-    if any(v['severity'] == 'critical' for v in seminar_pairing_violations):
+    if any(v["severity"] == "critical" for v in seminar_pairing_violations):
         state.has_critical_failure = True
 
     answer_correctness_violations = _check_answer_correctness(ctx.yaml_activities)
     _print_detailed_violations(answer_correctness_violations, "Activity answer correctness issues")
-    if any(v['severity'] == 'critical' for v in answer_correctness_violations):
+    if any(v["severity"] == "critical" for v in answer_correctness_violations):
         state.has_critical_failure = True
 
     _check_external_urls(ctx, state)
@@ -238,14 +258,14 @@ def validate_activity_answers(ctx: AuditContext, state: AuditState) -> None:
 
 def _get_density_target(act_type: str, config: dict, level_code: str, module_focus: str | None) -> int:
     """Get the minimum item count for an activity type based on complexity config."""
-    density_target = config['min_items_per_activity']
+    density_target = config["min_items_per_activity"]
     if act_type in ACTIVITY_COMPLEXITY:
         specific_key = f"{level_code}-{module_focus}" if module_focus else level_code
         complexity_rules = ACTIVITY_COMPLEXITY[act_type].get(specific_key)
         if not complexity_rules:
             complexity_rules = ACTIVITY_COMPLEXITY[act_type].get(level_code, {})
-        if 'min_items' in complexity_rules:
-            density_target = complexity_rules['min_items']
+        if "min_items" in complexity_rules:
+            density_target = complexity_rules["min_items"]
     return density_target
 
 
@@ -254,30 +274,35 @@ def _process_yaml_activities(ctx: AuditContext, state: AuditState) -> None:
     print(f"  \U0001f4cb Found YAML activities file ({len(ctx.yaml_activities)} activities)")
     for activity in ctx.yaml_activities:
         act_type = activity.type.lower()
-        if act_type not in VALID_ACTIVITY_TYPES and act_type.replace('-', '') not in [t.replace('-', '') for t in VALID_ACTIVITY_TYPES]:
+        if act_type not in VALID_ACTIVITY_TYPES and act_type.replace("-", "") not in [
+            t.replace("-", "") for t in VALID_ACTIVITY_TYPES
+        ]:
             continue
 
         state.activity_count += 1
         state.total_activities += 1
         state.found_activity_types.append(act_type)
 
-        items = count_items('', activity)
+        items = count_items("", activity)
         density_target = _get_density_target(act_type, ctx.config, ctx.level_code, ctx.module_focus)
-        title = getattr(activity, 'title', act_type)
+        title = getattr(activity, "title", act_type)
 
-        state.activity_details.append({
-            'title': title, 'type': act_type,
-            'items': items, 'target': density_target,
-            'status': '\u2705' if items >= density_target else '\u274c'
-        })
+        state.activity_details.append(
+            {
+                "title": title,
+                "type": act_type,
+                "items": items,
+                "target": density_target,
+                "status": "\u2705" if items >= density_target else "\u274c",
+            }
+        )
 
         if items >= density_target:
             state.valid_density_count += 1
         else:
-            state.low_density_activities.append({
-                'title': title, 'type': act_type,
-                'items': items, 'target': density_target
-            })
+            state.low_density_activities.append(
+                {"title": title, "type": act_type, "items": items, "target": density_target}
+            )
 
         print(f"  > {title}: {items} items (min {density_target})")
 
@@ -319,25 +344,28 @@ def process_activity_sections(ctx: AuditContext, state: AuditState) -> None:
             state.activity_count += 1
             state.total_activities += 1
             items = count_items(text)
-            density_target = ctx.config['min_items_per_activity']
+            density_target = ctx.config["min_items_per_activity"]
             if matched_act_type in ACTIVITY_COMPLEXITY:
-                 complexity_rules = ACTIVITY_COMPLEXITY[matched_act_type].get(ctx.level_code, {})
-                 if 'min_items' in complexity_rules:
-                     density_target = complexity_rules['min_items']
+                complexity_rules = ACTIVITY_COMPLEXITY[matched_act_type].get(ctx.level_code, {})
+                if "min_items" in complexity_rules:
+                    density_target = complexity_rules["min_items"]
 
-            state.activity_details.append({
-                'title': title, 'type': matched_act_type,
-                'items': items, 'target': density_target,
-                'status': '\u2705' if items >= density_target else '\u274c'
-            })
+            state.activity_details.append(
+                {
+                    "title": title,
+                    "type": matched_act_type,
+                    "items": items,
+                    "target": density_target,
+                    "status": "\u2705" if items >= density_target else "\u274c",
+                }
+            )
 
             if items >= density_target:
                 state.valid_density_count += 1
             else:
-                state.low_density_activities.append({
-                    'title': title, 'type': matched_act_type,
-                    'items': items, 'target': density_target
-                })
+                state.low_density_activities.append(
+                    {"title": title, "type": matched_act_type, "items": items, "target": density_target}
+                )
 
             status_icon = "\U0001f3ae"
             note = f"Activity ({items} items, min {density_target})"
@@ -362,81 +390,92 @@ def process_activity_sections(ctx: AuditContext, state: AuditState) -> None:
         state.table_rows.append(f"| **{title}** | {status_icon} | {display_count} | {note} |")
 
 
-def run_activity_pedagogical_checks(ctx: AuditContext, state: AuditState,
-                                     yaml_schema_violations: list,
-                                     mark_words_violations: list,
-                                     hint_violations: list,
-                                     error_correction_hint_violations: list,
-                                     malformed_cloze_violations: list,
-                                     cloze_syntax_violations: list,
-                                     error_correction_violations: list,
-                                     invalid_type_violations: list) -> None:
+def run_activity_pedagogical_checks(
+    ctx: AuditContext,
+    state: AuditState,
+    yaml_schema_violations: list,
+    mark_words_violations: list,
+    hint_violations: list,
+    error_correction_hint_violations: list,
+    malformed_cloze_violations: list,
+    cloze_syntax_violations: list,
+    error_correction_violations: list,
+    invalid_type_violations: list,
+) -> None:
     """Run activity-specific pedagogical checks."""
     ukrainian_content_violations = check_activity_ukrainian_content(ctx.content, ctx.level_code)
     for v in ukrainian_content_violations:
-        state.pedagogical_violations.append({
-            'type': v['type'], 'severity': 'error',
-            'issue': v['issue'], 'fix': v['fix']
-        })
+        state.pedagogical_violations.append(
+            {"type": v["type"], "severity": "error", "issue": v["issue"], "fix": v["fix"]}
+        )
 
     resources_violations = check_resources_placement(ctx.content)
     for v in resources_violations:
-        state.pedagogical_violations.append({
-            'type': v['type'], 'severity': 'warning',
-            'issue': v['issue'], 'fix': v['fix']
-        })
+        state.pedagogical_violations.append(
+            {"type": v["type"], "severity": "warning", "issue": v["issue"], "fix": v["fix"]}
+        )
 
     missing_resources_violations = check_resources_required(ctx.content)
     for v in missing_resources_violations:
-        state.pedagogical_violations.append({
-            'type': v['type'], 'severity': 'warning',
-            'issue': v['issue'], 'fix': v['fix']
-        })
+        state.pedagogical_violations.append(
+            {"type": v["type"], "severity": "warning", "issue": v["issue"], "fix": v["fix"]}
+        )
 
     unjumble_violations = check_unjumble_word_match(ctx.content)
     for v in unjumble_violations:
-        state.pedagogical_violations.append({
-            'type': v['type'], 'severity': 'error',
-            'issue': v['issue'], 'fix': v['fix']
-        })
+        state.pedagogical_violations.append(
+            {"type": v["type"], "severity": "error", "issue": v["issue"], "fix": v["fix"]}
+        )
 
     header_violations = check_activity_header_format(ctx.content)
     for v in header_violations:
-        state.pedagogical_violations.append({
-            'type': v['type'], 'severity': 'error',
-            'issue': v['issue'], 'fix': v['fix']
-        })
+        state.pedagogical_violations.append(
+            {"type": v["type"], "severity": "error", "issue": v["issue"], "fix": v["fix"]}
+        )
 
     # Append all violation lists to pedagogical violations
-    for violation_list in [mark_words_violations, hint_violations,
-                          error_correction_hint_violations, malformed_cloze_violations,
-                          cloze_syntax_violations, error_correction_violations,
-                          invalid_type_violations]:
+    for violation_list in [
+        mark_words_violations,
+        hint_violations,
+        error_correction_hint_violations,
+        malformed_cloze_violations,
+        cloze_syntax_violations,
+        error_correction_violations,
+        invalid_type_violations,
+    ]:
         for v in violation_list:
-            state.pedagogical_violations.append({
-                'type': v['type'], 'severity': v['severity'],
-                'issue': v['issue'], 'fix': v['fix']
-            })
+            state.pedagogical_violations.append(
+                {"type": v["type"], "severity": v["severity"], "issue": v["issue"], "fix": v["fix"]}
+            )
 
     # V6 modules use activity-v2.schema.json; the audit may still validate against
     # the old activities-base.schema.json causing false positives. Make schema
     # violations non-blocking for V6 plan-based modules until schemas are unified.
     is_v6 = ctx.plan_data is not None
     for v in yaml_schema_violations:
-        state.pedagogical_violations.append({
-            'type': v['type'], 'severity': v['severity'],
-            'issue': v['message'],
-            'fix': 'Fix the activity YAML to match the schema in schemas/activity-v2.schema.json',
-            'blocking': not is_v6,
-        })
+        state.pedagogical_violations.append(
+            {
+                "type": v["type"],
+                "severity": v["severity"],
+                "issue": v["message"],
+                "fix": "Fix the activity YAML to match the schema in schemas/activity-v2.schema.json",
+                "blocking": not is_v6,
+            }
+        )
 
     if not ctx.skip_activities:
-        advanced_presence_violations = check_advanced_activities_presence(state.found_activity_types, ctx.level_code, ctx.module_focus)
+        advanced_presence_violations = check_advanced_activities_presence(
+            state.found_activity_types, ctx.level_code, ctx.module_focus
+        )
     else:
         advanced_presence_violations = []
     for v in advanced_presence_violations:
-        state.pedagogical_violations.append({
-            'type': v['type'], 'severity': v['severity'],
-            'blocking': v.get('blocking', True),
-            'issue': v['issue'], 'fix': v['fix']
-        })
+        state.pedagogical_violations.append(
+            {
+                "type": v["type"],
+                "severity": v["severity"],
+                "blocking": v.get("blocking", True),
+                "issue": v["issue"],
+                "fix": v["fix"],
+            }
+        )
