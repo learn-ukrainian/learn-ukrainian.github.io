@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -83,7 +84,7 @@ def test_driver_requires_certified_model_and_valid_epic() -> None:
 
 
 def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
-    sustained = run_launcher("start-codex-driver.sh", "--epic", "devops")
+    sustained = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-5.6-sol")
     assert sustained.returncode == 0, sustained.stderr
     assert "would probe" in sustained.stdout
     assert sustained.stdout.index("would claim lease") < sustained.stdout.index("would mint and bootstrap")
@@ -94,6 +95,86 @@ def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
     assert "--model gpt-5.6-sol" in governor.stdout
     assert "governor SESSION_EPIC=<unset>" in governor.stdout
     assert "would claim lease" not in governor.stdout
+
+
+def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
+    """Build a provider-neutral driver whose canary failure is observable."""
+    root = tmp_path / "repo"
+    for relative in (
+        "start-claude-driver.sh",
+        "scripts/lib/handoff_identity.sh",
+        "scripts/lib/launcher_core.sh",
+        "scripts/lib/session_supervisor.sh",
+    ):
+        destination = root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPO / relative, destination)
+
+    claim_marker = tmp_path / "lease-claimed"
+    close_marker = tmp_path / "lease-closed"
+    python_stub = root / ".venv" / "bin" / "python"
+    python_stub.parent.mkdir(parents=True)
+    python_stub.write_text(
+        f'''#!/usr/bin/env bash
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" ]]; then
+  touch {os.fspath(claim_marker)!r}
+  cat <<'JSON'
+{{"identity":{{"lease":{{"session_id":"session-test","lease_id":"lease-test","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
+JSON
+  exit 0
+fi
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "agents_extensions.shared.session_streams" ]]; then
+  touch {os.fspath(close_marker)!r}
+  exit 0
+fi
+exec {os.fspath(REPO / ".venv" / "bin" / "python")!r} "$@"
+''',
+        encoding="utf-8",
+    )
+    python_stub.chmod(0o755)
+
+    adapter = root / "scripts" / "launchers" / "claude.sh"
+    adapter.parent.mkdir(parents=True, exist_ok=True)
+    adapter.write_text(
+        """#!/usr/bin/env bash
+launcher_adapter_validate() { :; }
+launcher_adapter_preflight() { :; }
+launcher_adapter_canary() { return 1; }
+launcher_adapter_exec() { printf 'PROVIDER_EXEC\\n'; }
+""",
+        encoding="utf-8",
+    )
+    adapter.chmod(0o755)
+    initialized = subprocess.run(
+        ["git", "init", "-q", "-b", "main", os.fspath(root)],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert initialized.returncode == 0, initialized.stderr
+    return root / "start-claude-driver.sh", claim_marker, close_marker
+
+
+def test_canary_failure_closes_lease_and_refuses_driver_launch(tmp_path: Path) -> None:
+    launcher, claim_marker, close_marker = _core_canary_failure_fixture(tmp_path)
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    result = subprocess.run(
+        ["bash", os.fspath(launcher), "--epic", "devops"],
+        cwd=launcher.parent,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert result.returncode == 1
+    assert claim_marker.is_file()
+    # Mutation guard: deleting the shared-core close call leaves this marker
+    # absent and recreates the six-hour lease leak for every provider driver.
+    assert close_marker.is_file()
+    assert "PROVIDER_EXEC" not in result.stdout
 
 
 def test_harness_contracts_and_redacted_kimi_glm_credentials(tmp_path: Path) -> None:

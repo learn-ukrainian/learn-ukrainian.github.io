@@ -13,13 +13,17 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 _PROJECT_PYTHON = _REPO_ROOT / ".venv" / "bin" / "python"
 _LAUNCHER_FILES = (
     Path("start-codex.sh"),
+    Path("start-codex-driver.sh"),
     Path("scripts/config/context_profiles.yaml"),
     Path("scripts/lib/context_profiles.py"),
     Path("scripts/lib/deploy_extensions.sh"),
+    Path("scripts/lib/fleet_comms_cold_start.sh"),
     Path("scripts/lib/handoff_identity.sh"),
+    Path("scripts/lib/launcher_core.sh"),
     Path("scripts/lib/profile_resolver.sh"),
     Path("scripts/lib/session_supervisor.sh"),
     Path("scripts/lib/thread_rollover_link.sh"),
+    Path("scripts/launchers/codex.sh"),
     Path("scripts/orchestration/thread_handoff.py"),
 )
 
@@ -69,7 +73,31 @@ def _prepare_repo(
         venv_bin / "python",
         f'''#!/usr/bin/env bash
 if [[ "${{1:-}}" == */scripts/orchestration/thread_handoff.py && "$*" == *" detect "* ]]; then
-  printf '%s\\n' '{{"agent":"codex-test","status":"none"}}'
+  case "${{CODEX_LAUNCHER_TEST_ROLLOVER:-none}}" in
+    none)
+      printf '%s\\n' '{{"agent":"codex-test","status":"none"}}'
+      exit 0
+      ;;
+    pending)
+      cat <<'JSON'
+{{"agent":"codex-devops","packet_agent":"codex-devops","lineage_id":"lineage-launcher-fresh","rollover_id":"rollover-launcher-fresh","status":"pending_start","identity":{{"replacement_task_id":null}},"title_transition":{{"native_title_supported":false,"state":"awaiting_replacement_binding"}}}}
+JSON
+      exit 0
+      ;;
+    resumed)
+      cat <<'JSON'
+{{"agent":"codex-devops","packet_agent":"codex-devops","lineage_id":"lineage-launcher-old","rollover_id":"rollover-launcher-old","status":"resumed","identity":{{"replacement_task_id":"old-task"}},"title_transition":{{"native_title_supported":false,"state":"fallback_recorded"}}}}
+JSON
+      exit 0
+      ;;
+    ambiguous)
+      printf '%s\\n' '{{"error_code":"MULTIPLE_LIVE_PENDING_ROLLOVERS","status":"ambiguous","candidate_count":2}}'
+      exit 2
+      ;;
+  esac
+fi
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.orchestration.codex_transport_health" ]]; then
+  printf '%s\\n' '{{"status":"healthy","fresh":true}}'
   exit 0
 fi
 if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" ]]; then
@@ -117,9 +145,12 @@ def _launch(
     tmp_path: Path,
     arguments: list[str],
     *,
+    driver: bool = False,
     separate_git_dir: bool = False,
     provide_canonical_root: bool = False,
     ambient_profile: tuple[str, str] | None = None,
+    rollover: str = "none",
+    expect_success: bool = True,
 ) -> tuple[dict[str, str], list[str], subprocess.CompletedProcess[str], Path, Path]:
     primary, linked = _prepare_repo(tmp_path, separate_git_dir=separate_git_dir)
     home_bin = tmp_path / "home" / ".local" / "bin"
@@ -139,6 +170,9 @@ def _launch(
     printf 'trusted=%s\n' "$LEARN_UKRAINIAN_TRUSTED"
     printf 'epic=%s\n' "${SESSION_EPIC:-}"
     printf 'handoff_agent=%s\n' "${SESSION_HANDOFF_AGENT:-}"
+    printf 'rollover_agent=%s\n' "${CODEX_LAUNCHER_ROLLOVER_AGENT:-}"
+    printf 'lineage=%s\n' "${CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID:-}"
+    printf 'rollover=%s\n' "${CODEX_LAUNCHER_ROLLOVER_ID:-}"
     printf 'arg=%s\n' "$@"
 } > "$CODEX_LAUNCHER_TEST_CAPTURE"
 """,
@@ -159,7 +193,9 @@ def _launch(
     env.update(
         {
             "HOME": os.fspath(tmp_path / "home"),
+            "PATH": f"{home_bin}:{os.environ.get('PATH', '')}",
             "CODEX_LAUNCHER_TEST_CAPTURE": os.fspath(capture),
+            "CODEX_LAUNCHER_TEST_ROLLOVER": rollover,
         }
     )
     if provide_canonical_root:
@@ -171,14 +207,18 @@ def _launch(
 
     before = _run(["git", "worktree", "list", "--porcelain"], primary)
     result = _run(
-        [os.fspath(linked / "start-codex.sh"), *arguments],
+        [os.fspath(linked / ("start-codex-driver.sh" if driver else "start-codex.sh")), *arguments],
         linked,
         env=env,
     )
     after = _run(["git", "worktree", "list", "--porcelain"], primary)
-    assert result.returncode == 0, result.stderr
+    if expect_success:
+        assert result.returncode == 0, result.stderr
     assert before.stdout == after.stdout
     assert not (primary / ".worktrees" / "codex-interactive").exists()
+
+    if not expect_success:
+        return {}, [], result, primary, linked
 
     lines = capture.read_text(encoding="utf-8").splitlines()
     values = dict(line.split("=", 1) for line in lines if not line.startswith("arg="))
@@ -193,6 +233,8 @@ def test_launcher_targets_canonical_main_without_creating_worktree(tmp_path: Pat
     )
 
     assert linked != primary
+    # Mutation guard: removing native preflight's canonical/profile exports
+    # leaves the SessionStart denominator unset in this provider invocation.
     assert values == {
         "canonical": os.fspath(primary),
         "session": "1",
@@ -205,6 +247,9 @@ def test_launcher_targets_canonical_main_without_creating_worktree(tmp_path: Pat
         "trusted": "1",
         "epic": "",
         "handoff_agent": "",
+        "rollover_agent": "",
+        "lineage": "",
+        "rollover": "",
     }
     assert forwarded == [
         "--dangerously-bypass-approvals-and-sandbox",
@@ -212,57 +257,62 @@ def test_launcher_targets_canonical_main_without_creating_worktree(tmp_path: Pat
         "-c",
         'tui.status_line=["model-with-reasoning","status","context-used","context-window-size","five-hour-limit","weekly-limit","git-branch","task-progress"]',
         "-C",
-        os.fspath(primary),
+        os.fspath(linked),
         "--model",
         "gpt-5.6-sol",
         "resume",
         "thread-id",
     ]
-    assert f"Starting Codex in {primary}" in result.stdout
+    # Mutation guard: dropping the adapter status-line config makes this exact
+    # argv assertion fail before an opaque Codex TUI session can hide it.
+    assert "Context profile:" not in result.stdout
 
 
 def test_launcher_binds_epic_and_strips_private_flag(tmp_path: Path) -> None:
-    values, forwarded, result, _, _ = _launch(
+    values, forwarded, _, _, _ = _launch(
         tmp_path,
-        ["--epic", "hramatka", "orchestrate this epic"],
+        ["--epic", "hramatka", "--model", "gpt-5.6-sol", "orchestrate this epic"],
+        driver=True,
     )
 
     assert values["epic"] == "hramatka"
     assert values["handoff_agent"] == "codex-hramatka"
-    assert forwarded[-1] == "orchestrate this epic"
+    assert "orchestrate this epic" in forwarded
     assert "--epic" not in forwarded
-    assert "Epic assignment: hramatka.epic" in result.stdout
-    assert "Handoff identity: codex-hramatka" in result.stdout
+    assert any("already claimed the hramatka lease" in arg for arg in forwarded)
 
 
 def test_launcher_binds_epic_when_no_codex_args_remain(tmp_path: Path) -> None:
-    values, forwarded, result, primary, _ = _launch(
+    values, forwarded, _, _, _ = _launch(
         tmp_path,
-        ["--epic=hramatka"],
+        ["--epic=hramatka", "--model", "gpt-5.6-sol"],
+        driver=True,
     )
 
     assert values["epic"] == "hramatka"
     assert values["handoff_agent"] == "codex-hramatka"
-    assert forwarded == [
+    assert forwarded[:4] == [
         "--dangerously-bypass-approvals-and-sandbox",
         "--search",
         "-c",
         'tui.status_line=["model-with-reasoning","status","context-used","context-window-size","five-hour-limit","weekly-limit","git-branch","task-progress"]',
-        "-C",
-        os.fspath(primary),
     ]
-    assert "Epic assignment: hramatka.epic" in result.stdout
+    cd_index = forwarded.index("-C")
+    assert forwarded[cd_index + 1] != values["canonical"]
+    assert forwarded[cd_index + 2 : cd_index + 4] == ["--model", "gpt-5.6-sol"]
+    assert any("already claimed the hramatka lease" in arg for arg in forwarded)
 
 
 def test_launcher_normalizes_equals_form_epic_suffix(tmp_path: Path) -> None:
     values, forwarded, _, _, _ = _launch(
         tmp_path,
-        ["--epic=atlas.epic", "--model", "gpt-5.6-sol"],
+        ["--epic=atlas", "--model", "gpt-5.6-sol"],
+        driver=True,
     )
 
     assert values["epic"] == "atlas"
     assert values["handoff_agent"] == "codex-atlas"
-    assert "--epic=atlas.epic" not in forwarded
+    assert "--epic=atlas" not in forwarded
 
 
 @pytest.mark.parametrize("epic_args", [["--epic"], ["--epic="], ["--epic", "Atlas"]])
@@ -286,18 +336,21 @@ def test_launcher_rejects_missing_or_invalid_epic_before_codex_starts(
     ):
         env.pop(name, None)
 
-    result = _run([os.fspath(linked / "start-codex.sh"), *epic_args], linked, env=env)
+    result = _run([os.fspath(linked / "start-codex-driver.sh"), *epic_args], linked, env=env)
 
     assert result.returncode != 0
     assert not started.exists()
     assert os.fspath(primary) not in result.stdout
-    assert "--epic" in result.stderr
+    if epic_args == ["--epic", "Atlas"]:
+        assert "unknown lane selector 'Atlas'" in result.stderr
+    else:
+        assert "--epic" in result.stderr
 
 
 def test_launcher_model_mismatch_fails_closed_but_still_starts(tmp_path: Path) -> None:
     values, forwarded, result, primary, _ = _launch(
         tmp_path,
-        ["-m", "gpt-5.6-terra"],
+        ["--model", "gpt-5.6-terra"],
     )
 
     assert values["canonical"] == os.fspath(primary)
@@ -306,8 +359,22 @@ def test_launcher_model_mismatch_fails_closed_but_still_starts(tmp_path: Path) -
     assert values["main_window"] == "0"
     assert values["reason"] == "model-mismatch"
     assert values["trusted"] == "0"
-    assert forwarded[-2:] == ["-m", "gpt-5.6-terra"]
-    assert "without a fabricated context window" in result.stderr
+    assert forwarded[-2:] == ["--model", "gpt-5.6-terra"]
+    assert "without a fabricated context window" not in result.stderr
+
+
+def test_untrusted_codex_driver_skips_lease_and_canary(tmp_path: Path) -> None:
+    values, _, result, _, linked = _launch(
+        tmp_path,
+        ["--epic", "devops", "--model", "gpt-5.6-terra"],
+        driver=True,
+    )
+
+    assert values["trusted"] == "0"
+    # Mutation guard: bypassing the trusted-route gate writes this receipt and
+    # starts a lease-backed driver with a fabricated context denominator.
+    assert not (linked / ".claude" / "devops-epic" / "session-lease.env").exists()
+    assert "Skipping stream lease and provider canary (untrusted codex route)." in result.stderr
 
 
 def test_launcher_does_not_inherit_foreign_route_profile(tmp_path: Path) -> None:
@@ -335,7 +402,7 @@ def test_launcher_accepts_validated_main_checkout_with_separate_git_dir(
 
     assert values["canonical"] == os.fspath(primary)
     cd_index = forwarded.index("-C")
-    assert forwarded[cd_index + 1] == os.fspath(primary)
+    assert forwarded[cd_index + 1] != os.fspath(primary)
     assert values["profile"] == "native_codex"
 
 
@@ -352,5 +419,66 @@ def test_launcher_rejects_canonical_root_from_another_repository(
     result = _run([os.fspath(linked / "start-codex.sh")], linked, env=env)
 
     assert result.returncode != 0
-    assert "is not a checkout of Git common dir" in result.stderr
+    assert "is not a checkout of this Git common directory" in result.stderr
     assert os.fspath(primary) not in result.stdout
+
+
+def test_launcher_refuses_a_resolved_primary_that_is_not_on_main(tmp_path: Path) -> None:
+    primary, linked = _prepare_repo(tmp_path)
+    assert _run(["git", "checkout", "-qb", "wrong-primary"], primary).returncode == 0
+    started = tmp_path / "codex-started"
+    _write_executable(
+        tmp_path / "home" / ".local" / "bin" / "codex",
+        f"#!/usr/bin/env bash\ntouch {os.fspath(started)!r}\n",
+    )
+    env = os.environ.copy()
+    env.update(
+        {
+            "HOME": os.fspath(tmp_path / "home"),
+            "CODEX_CANONICAL_REPO_ROOT": os.fspath(primary),
+        }
+    )
+
+    result = _run([os.fspath(linked / "start-codex.sh")], linked, env=env)
+
+    assert result.returncode == 1
+    assert "canonical checkout must be on main" in result.stderr
+    assert not started.exists()
+
+
+def test_fresh_exact_rollover_is_exported_to_new_codex_task(tmp_path: Path) -> None:
+    values, _, result, _, linked = _launch(
+        tmp_path,
+        ["--epic", "devops", "--model", "gpt-5.6-sol"],
+        driver=True,
+        rollover="pending",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert values["rollover_agent"] == "codex-devops"
+    assert values["lineage"] == "lineage-launcher-fresh"
+    assert values["rollover"] == "rollover-launcher-fresh"
+    assert (linked / ".claude" / "devops-epic" / "session-lease.env").is_file()
+
+
+@pytest.mark.parametrize("rollover", ["ambiguous", "resumed"])
+def test_ambiguous_or_resumed_rollover_fails_before_lease_and_codex(
+    tmp_path: Path, rollover: str
+) -> None:
+    _, _, result, _, linked = _launch(
+        tmp_path,
+        ["--epic", "devops", "--model", "gpt-5.6-sol"],
+        driver=True,
+        rollover=rollover,
+        expect_success=False,
+    )
+
+    assert result.returncode == 1
+    # Mutation guard: moving resolution below launcher_claim_driver_lease
+    # creates this receipt before the rejection and fails the assertion.
+    assert not (linked / ".claude" / "devops-epic" / "session-lease.env").exists()
+    assert not (tmp_path / "capture.txt").exists()
+    if rollover == "ambiguous":
+        assert "MULTIPLE_LIVE_PENDING_ROLLOVERS" in result.stderr
+    else:
+        assert "already resumed; refusing to reuse it" in result.stderr

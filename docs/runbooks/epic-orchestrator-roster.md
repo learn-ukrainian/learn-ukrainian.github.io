@@ -33,7 +33,9 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 `codex · grok · gemini · claude`. The core owns all launcher flags; provider
 CLI flags follow `--`. Each driver validates the lane, claims the lease, runs
 the provider canary, and injects the `drive-epic` binding before the provider
-process starts.
+process starts. Codex additionally performs its transport-health probe during
+adapter preflight, before it claims the lease; a degraded probe refuses the
+launch without acquiring a lane.
 
 **Fable 5 is the DEFAULT Anthropic driver seat** (operator decision 2026-07-28).
 `./start-claude-driver.sh --epic <epic>` pins Fable by default; pass

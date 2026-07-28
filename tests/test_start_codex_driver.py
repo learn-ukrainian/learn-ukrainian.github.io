@@ -27,8 +27,13 @@ def _runtime_launcher(tmp_path: Path) -> tuple[Path, Path]:
     root = tmp_path / "repo"
     for relative in (
         "start-codex-driver.sh",
+        "scripts/config/context_profiles.yaml",
+        "scripts/lib/context_profiles.py",
+        "scripts/lib/deploy_extensions.sh",
         "scripts/lib/launcher_core.sh",
         "scripts/lib/handoff_identity.sh",
+        "scripts/lib/profile_resolver.sh",
+        "scripts/lib/thread_rollover_link.sh",
         "scripts/launchers/codex.sh",
     ):
         target = root / relative
@@ -38,13 +43,16 @@ def _runtime_launcher(tmp_path: Path) -> tuple[Path, Path]:
     probe = root / ".venv" / "bin" / "python"
     probe.parent.mkdir(parents=True)
     probe.write_text(
-        """#!/usr/bin/env bash
-if [ "${PROBE_STUB_EXIT:-0}" = "0" ]; then
-  printf '%s\\n' '{"status":"healthy","fresh":true}'
-else
-  printf '%s\\n' '{"status":"degraded","fresh":true,"failure_class":"test"}'
+        f"""#!/usr/bin/env bash
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.orchestration.codex_transport_health" ]]; then
+  if [ "${{PROBE_STUB_EXIT:-0}}" = "0" ]; then
+    printf '%s\\n' '{{"status":"healthy","fresh":true}}'
+  else
+    printf '%s\\n' '{{"status":"degraded","fresh":true,"failure_class":"test"}}'
+  fi
+  exit "${{PROBE_STUB_EXIT:-0}}"
 fi
-exit "${PROBE_STUB_EXIT:-0}"
+exec {os.fspath(REPO / ".venv" / "bin" / "python")!r} "$@"
 """,
         encoding="utf-8",
     )
@@ -60,6 +68,14 @@ printf 'CODEX_EXEC %s\\n' "$*"
         encoding="utf-8",
     )
     codex.chmod(0o755)
+    initialized = subprocess.run(
+        ["git", "init", "-q", "-b", "main", os.fspath(root)],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert initialized.returncode == 0, initialized.stderr
     return root / "start-codex-driver.sh", executable_dir
 
 
@@ -85,7 +101,9 @@ def _run_runtime_governor(
 
 
 def test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic() -> None:
-    result = run_launcher("start-codex-driver.sh", "--epic", "devops")
+    result = run_launcher(
+        "start-codex-driver.sh", "--epic", "devops", "--model", "gpt-5.6-sol"
+    )
     assert result.returncode == 0, result.stderr
     assert "would probe" in result.stdout
     assert result.stdout.index("would probe") < result.stdout.index("would claim lease")
@@ -146,7 +164,9 @@ def test_codex_driver_rejects_unknown_selector_in_default_and_governor_modes(
 
 
 def test_default_driver_forwards_epic_binding_and_extra_provider_flags() -> None:
-    result = run_launcher("start-codex-driver.sh", "devops", "--verbose", "--foo=bar")
+    result = run_launcher(
+        "start-codex-driver.sh", "devops", "--model", "gpt-5.6-sol", "--verbose", "--foo=bar"
+    )
     assert result.returncode == 0, result.stderr
     assert "would claim lease" in result.stdout
     argv = _would_exec_argv(result)

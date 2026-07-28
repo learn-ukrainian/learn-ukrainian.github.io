@@ -145,7 +145,7 @@ launcher_defaults() {
 }
 
 launcher_need_value() {
-  if [ "$#" -lt 2 ] || [ -z "${2:-}" ]; then
+  if [ -z "${2:-}" ]; then
     launcher_error "$1 requires a value; run --help."
     exit 2
   fi
@@ -310,26 +310,43 @@ launcher_validate_driver_certification() {
   esac
 }
 
-launcher_claim_driver_lease() {
-  local stream task_id instance_id harness handoff
-  stream="$(launcher_selector_stream "$LC_EPIC")"
+launcher_prepare_driver_identity() {
+  local handoff harness
   case "$LC_PROVIDER" in
     claude) handoff="$(handoff_identity_for_epic "$LC_EPIC")"; harness="claude-code" ;;
     codex) handoff="$(handoff_identity_for_codex_epic "$LC_EPIC")"; harness="codex-cli" ;;
     gemini) handoff="$(handoff_identity_for_gemini_epic "$LC_EPIC")"; harness="agy" ;;
     grok) handoff="$(handoff_identity_for_grok_epic "$LC_EPIC")"; harness="grok-tui" ;;
   esac
+  LC_DRIVER_HANDOFF="$handoff"
+  LC_DRIVER_HARNESS="$harness"
   export SESSION_EPIC="$LC_EPIC"
-  export SESSION_HANDOFF_AGENT="$handoff"
+  export SESSION_HANDOFF_AGENT="$LC_DRIVER_HANDOFF"
+}
+
+launcher_claim_driver_lease() {
+  local stream task_id instance_id
+  stream="$(launcher_selector_stream "$LC_EPIC")"
+  launcher_prepare_driver_identity
   if [ "$LC_DRY_RUN" = "1" ]; then
-    printf 'launcher: would claim lease stream=%s agent=%s harness=%s\n' "$stream" "$LC_PROVIDER" "$harness"
+    printf 'launcher: would claim lease stream=%s agent=%s harness=%s\n' "$stream" "$LC_PROVIDER" "$LC_DRIVER_HARNESS"
     return 0
   fi
   # shellcheck source=scripts/lib/session_supervisor.sh
   source "$LC_ROOT/scripts/lib/session_supervisor.sh"
   task_id="${SESSION_TASK_ID:-launcher-${LC_PROVIDER}-driver}"
   instance_id="${SESSION_INSTANCE_ID:-${LC_PROVIDER}-$$}"
-  claim_session_supervisor_env "$stream" "$LC_PROVIDER" "$harness" "$task_id" "$instance_id" "$LC_SESSION_ROOT" "start-${LC_PROVIDER}-driver.sh" "$LC_EPIC"
+  claim_session_supervisor_env "$stream" "$LC_PROVIDER" "$LC_DRIVER_HARNESS" "$task_id" "$instance_id" "$LC_SESSION_ROOT" "start-${LC_PROVIDER}-driver.sh" "$LC_EPIC"
+}
+
+launcher_close_failed_driver_lease() {
+  # A provider canary runs after the lease claim. Close the exact exported
+  # session-stream envelope before refusing the launch, so another certified
+  # driver is not blocked behind this failed cold start until its TTL expires.
+  if ! "$LC_SESSION_ROOT/.venv/bin/python" \
+      -m agents_extensions.shared.session_streams hook close >/dev/null 2>&1; then
+    launcher_error "failed to close the ${LC_PROVIDER} driver lease after provider canary failure."
+  fi
 }
 
 launcher_bind_drive_epic() {
@@ -370,8 +387,22 @@ launcher_main() {
   launcher_adapter_preflight
 
   if [ "$LC_MODE" = "driver" ] && [ "$LC_GOVERNOR" = "0" ]; then
+    local canary_rc=0
+    launcher_prepare_driver_identity
+    if [ "$LC_DRY_RUN" != "1" ] && declare -F launcher_adapter_prelease >/dev/null 2>&1; then
+      launcher_adapter_prelease
+    fi
+    if [ "${LC_DRIVER_LEASE_ENABLED:-1}" != "1" ]; then
+      printf 'Skipping stream lease and provider canary (untrusted %s route).\n' "$LC_PROVIDER" >&2
+      launcher_adapter_exec
+      return
+    fi
     launcher_claim_driver_lease
-    launcher_adapter_canary || exit $?
+    launcher_adapter_canary || canary_rc=$?
+    if [ "$canary_rc" -ne 0 ]; then
+      launcher_close_failed_driver_lease
+      exit "$canary_rc"
+    fi
     launcher_bind_drive_epic
   fi
   if [ "$LC_MODE" = "driver" ] && [ "$LC_GOVERNOR" = "1" ] && [ "$LC_DRY_RUN" = "1" ]; then
