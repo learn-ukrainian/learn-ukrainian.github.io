@@ -35,7 +35,7 @@
 # this seat built; PRs reviewed-only have none and the hygiene step handles absence.
 schema_version: trailspec.v1
 trail_id: rb3-pr-lifecycle
-version: "2.0.0"
+version: "2.0.1"
 title: RB3 PR lifecycle — formal review, verdict, gate, arm, babysit, hygiene
 seats:
   - grok-daily
@@ -97,13 +97,17 @@ steps:
       normally RETURNS with the reply delivered (live shape: "✅ <Seat> finished
       (N chars)"); its true state is read from the ask ledger in the next step —
       never from the absence of an error (silent ask deaths are the #5900 class;
-      the #5893 retry-watchdog refires once).
-    command: sh -c '.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr {pr_number} --reviewer {reviewer_seat} 2>&1 | tail -5 > batch_state/rb3-review-fire-{pr_number}.txt || { echo fire-unrecorded; exit 0; }; echo review-fired'
+      the #5893 retry-watchdog refires once). The invocation's exit status is
+      captured WITHOUT a masking pipeline (r1: `| tail` made the token report
+      tail's status — the documented tee-masks-rc class): non-zero routes to the
+      stuck-request judgment, since a ledger row may or may not exist.
+    command: sh -c 'OUT=$(.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr {pr_number} --reviewer {reviewer_seat} 2>&1); RC=$?; printf "%s\n" "$OUT" | tail -5 > batch_state/rb3-review-fire-{pr_number}.txt || { echo fire-unrecorded; exit 0; }; [ "$RC" -eq 0 ] && echo review-fired || echo fire-failed'
     evidence_predicate:
-      command: sh -c 'test -s batch_state/rb3-review-fire-{pr_number}.txt && echo review-fired || echo fire-unrecorded'
-      success_pattern: '^(review-fired|fire-unrecorded)$'
+      command: sh -c 'test -s batch_state/rb3-review-fire-{pr_number}.txt && echo fire-recorded || echo fire-unrecorded'
+      success_pattern: '^(fire-recorded|fire-unrecorded)$'
     transitions:
       review_fired: poll_request_state
+      fire_failed: resolve_stuck_request
       fire_unrecorded: STOP-precondition-failed
     kind: mechanical
     blocked_on: null
@@ -266,9 +270,11 @@ steps:
       `git pull` (manual `git branch -d/-D` is guard-BLOCKED by design — the
       v1.0.0 command could never run); the dispatch worktree (bound from the
       RB-2 record; reviewed-only PRs have none) is removed worktree-FIRST.
-      A worktree holding uncommitted content is never force-removed (#M-10) —
-      that stops for judgment.
-    command: sh -c 'if [ -n "{worktree_path}" ] && [ -d "{worktree_path}" ]; then if git -C "{worktree_path}" status --porcelain 2>/dev/null | grep -q .; then echo hygiene-blocked-dirty; exit 0; fi; git worktree remove --force "{worktree_path}" >/dev/null 2>&1 || { echo hygiene-failed; exit 0; }; fi; git pull --ff-only >/dev/null 2>&1 && echo hygiene-complete || echo hygiene-failed'
+      Removal is WITHOUT --force (r1: a pre-check-then-force pair is not atomic
+      and --force deletes what the check missed): git\'s own refusal on any
+      non-clean worktree is the guard, and that refusal stops for judgment —
+      never a second attempt with force.
+    command: sh -c 'if [ -n "{worktree_path}" ] && [ -d "{worktree_path}" ]; then git worktree remove "{worktree_path}" >/dev/null 2>&1 || { echo hygiene-blocked-dirty; exit 0; }; fi; git pull --ff-only >/dev/null 2>&1 && echo hygiene-complete || echo hygiene-failed'
     evidence_predicate:
       command: sh -c 'if [ -n "{worktree_path}" ] && [ -d "{worktree_path}" ]; then echo hygiene-failed; else git rev-parse --is-inside-work-tree >/dev/null 2>&1 && echo hygiene-complete || echo hygiene-failed; fi'
       success_pattern: '^(hygiene-complete|hygiene-failed|hygiene-blocked-dirty)$'
