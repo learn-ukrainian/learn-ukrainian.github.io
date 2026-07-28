@@ -90,8 +90,8 @@ def test_happy_path_example_trail() -> None:
     res = validate_trailspec(spec_path=DEFAULT_EXAMPLE_TRAIL_PATH)
     assert res["ok"] is True
     assert res["spec"]["trail_id"] == "rb3-pr-lifecycle"
-    assert res["spec"]["version"] == "2.0.1"
-    assert res["spec"]["steps_count"] == 13
+    assert res["spec"]["version"] == "2.0.2"
+    assert res["spec"]["steps_count"] == 14
     assert len(res["spec"]["trail_hash"]) == 64
 
 

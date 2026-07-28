@@ -35,7 +35,7 @@
 # this seat built; PRs reviewed-only have none and the hygiene step handles absence.
 schema_version: trailspec.v1
 trail_id: rb3-pr-lifecycle
-version: "2.0.1"
+version: "2.0.2"
 title: RB3 PR lifecycle — formal review, verdict, gate, arm, babysit, hygiene
 seats:
   - grok-daily
@@ -197,7 +197,7 @@ steps:
       success_pattern: '^(inputs-recorded|inputs-unavailable)$'
     transitions:
       gate_pass_arm: arm_automerge
-      gate_wait: poll_request_state
+      gate_wait: gate_wait_poll
       gate_draft: STOP-manual-intervention
       gate_stale_head: request_review
       gate_ci_red: handed_to_red_ci_triage
@@ -205,6 +205,28 @@ steps:
       inputs_unavailable: STOP-precondition-failed
     kind: table-lookup
     table: review-gate-arm
+    blocked_on: null
+
+  - step_id: gate_wait_poll
+    intent: >-
+      Dedicated paced poll for the gate's WAIT outcome (r2 finding: polling the
+      original bridge request busy-loops — by gate time that request has
+      normally replied; the blocker is some OTHER requested review of this head
+      that is not yet terminal-and-published). This step re-captures the
+      COMPLETE gate inputs fresh (same fields as gate_inputs, distinct receipt)
+      and hands back to the table, which either still waits (returning here —
+      pacing between iterations is the orchestration layer's, the trail's
+      self-loop convention) or takes a different row on the changed condition.
+      Formal-review and publication records stay seat-applied from these
+      receipts until head-bound request records land (header BLOCKED-ON).
+    command: sh -c 'gh pr view {pr_number} --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup,autoMergeRequest > batch_state/rb3-gatewait-{pr_number}.json || { echo inputs-unavailable; exit 0; }; jq -e ".headRefOid" batch_state/rb3-gatewait-{pr_number}.json >/dev/null 2>&1 && echo inputs-recaptured || echo inputs-unavailable'
+    evidence_predicate:
+      command: sh -c 'jq -e ".headRefOid" batch_state/rb3-gatewait-{pr_number}.json >/dev/null 2>&1 && echo inputs-recaptured || echo inputs-unavailable'
+      success_pattern: '^(inputs-recaptured|inputs-unavailable)$'
+    transitions:
+      inputs_recaptured: gate_inputs
+      inputs_unavailable: STOP-precondition-failed
+    kind: mechanical
     blocked_on: null
 
   - step_id: arm_automerge
