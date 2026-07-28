@@ -55,6 +55,23 @@ def test_governor_mode_pins_model_unsets_epic_and_passes_prompt() -> None:
     assert "--epic" not in res.stdout
     assert "dynamic-area-epic-fleet-governor.md" in res.stdout
     assert "TARGET=devops GOAL=AUTO" in res.stdout
+    # Load-bearing guard: an ambient SESSION_EPIC must be UNSET before exec so the
+    # governor never claims the epic-driver lease. The dry-run echoes the resolved
+    # value precisely so removing the `unset` line fails this assertion.
+    assert "SESSION_EPIC=<unset>" in res.stdout
+    assert "should_be_unset" not in res.stdout
+
+
+def test_governor_help_flag_after_governor_shows_usage() -> None:
+    res = _run_driver("--governor", "--help")
+    assert res.returncode == 0, res.stderr
+    assert "Usage:" in res.stdout
+
+
+def test_bare_help_flag_shows_usage() -> None:
+    res = _run_driver("--help")
+    assert res.returncode == 0, res.stderr
+    assert "Usage:" in res.stdout
 
 
 def test_governor_mode_auto_selector_bypasses_validation() -> None:

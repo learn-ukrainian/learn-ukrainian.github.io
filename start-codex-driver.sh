@@ -55,6 +55,9 @@ if [ "$MODE" = "governor" ]; then
   unset SESSION_EPIC
   PROMPT="Follow agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md for one bounded supervision cycle. TARGET=$SELECTOR GOAL=AUTO"
   if [ "${CODEX_DRIVER_DRY_RUN:-0}" = "1" ]; then
+    # SESSION_EPIC is echoed so tests can PROVE the lease-claiming path is off
+    # (review finding: the unset guard was not observable, so its test was vacuous).
+    echo "CODEX_DRIVER_DRY_RUN=1: SESSION_EPIC=${SESSION_EPIC:-<unset>}"
     echo "CODEX_DRIVER_DRY_RUN=1: would exec $ROOT/start-codex.sh --model gpt-5.6-sol \"$PROMPT\" ${*:-}"
     exit 0
   fi
