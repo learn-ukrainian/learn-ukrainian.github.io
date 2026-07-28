@@ -48,7 +48,7 @@
     {
       "path": "scripts/projects/ua_eval_harness/build_scoring_dispositions.py",
       "role": "calque_disposition_builder",
-      "sha256": "38317861c5f5fe5761282f8ba0c04308a0bcf653aac17d2e54e6bfb48053aece"
+      "sha256": "c4627a0c038248c4d63b273475ed4e505b3df88ad7e134d2d8651df60fc5c5df"
     },
     {
       "path": "scripts/config/vesum_source.lock.json",

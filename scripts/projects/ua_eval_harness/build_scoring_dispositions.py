@@ -57,6 +57,14 @@ VALID_DISPOSITIONS = frozenset(
         "CONTESTED",
     }
 )
+POLICY_DISPOSITION_KEYS = (
+    "bad_marker",
+    "arch_coll_dialect_without_contextual_adjudication",
+    "rare_or_slang_without_contextual_adjudication",
+    "confirmed_authentic_regional_or_dialect",
+    "confirmed_colloquial_or_register_standardization",
+    "unflagged_upstream_annotation",
+)
 
 
 class DispositionError(ValueError):
@@ -85,50 +93,74 @@ def _canonical_sha256(value: Any) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+def _validated_policy(policy: Mapping[str, Any]) -> tuple[dict[str, str], frozenset[str]]:
+    dispositions: dict[str, str] = {}
+    for key in POLICY_DISPOSITION_KEYS:
+        status = str(policy.get(key, ""))
+        if status not in VALID_DISPOSITIONS:
+            raise DispositionError(f"policy {key} has invalid disposition: {status!r}")
+        dispositions[key] = status
+    raw_headline = policy.get("headline_includes")
+    if not isinstance(raw_headline, list) or not raw_headline:
+        raise DispositionError("policy headline_includes must be a non-empty array")
+    headline_includes = frozenset(str(status) for status in raw_headline)
+    if not headline_includes <= VALID_DISPOSITIONS:
+        raise DispositionError("policy headline_includes contains an invalid disposition")
+    if policy.get("fail_closed") is not True:
+        raise DispositionError("disposition policy must fail closed")
+    return dispositions, headline_includes
+
+
 def decide_disposition(
     *,
     source_span: Sequence[str],
     attested: bool,
     style_markers: Sequence[str],
+    policy: Mapping[str, Any],
     contextual_disposition: str | None = None,
     contextual_reason: str | None = None,
 ) -> tuple[str, bool, str]:
     """Return the benchmark disposition without changing the upstream tag."""
+    policy_dispositions, headline_includes = _validated_policy(policy)
     if contextual_disposition is not None:
-        if contextual_disposition not in VALID_DISPOSITIONS:
+        if contextual_disposition not in set(policy_dispositions.values()):
             raise DispositionError(f"unsupported contextual disposition: {contextual_disposition}")
         if not contextual_reason:
             raise DispositionError("contextual disposition requires a reason")
         return (
             contextual_disposition,
-            contextual_disposition == "HEADLINE_CALQUE",
+            contextual_disposition in headline_includes,
             contextual_reason,
         )
     marker_set = set(style_markers)
     if marker_set & {"arch", "coll", "dialect"}:
+        status = policy_dispositions["arch_coll_dialect_without_contextual_adjudication"]
         return (
-            "HERITAGE_CONFLICT",
-            False,
+            status,
+            status in headline_includes,
             "pinned stylistic marker evidence lacks contextual adjudication; fail closed",
         )
     if marker_set & {"rare", "slang"}:
+        status = policy_dispositions["rare_or_slang_without_contextual_adjudication"]
         return (
-            "CONTESTED",
-            False,
+            status,
+            status in headline_includes,
             "pinned register evidence does not adjudicate calque status; fail closed",
         )
     if marker_set == {"bad"}:
+        status = policy_dispositions["bad_marker"]
         return (
-            "HEADLINE_CALQUE",
-            True,
+            status,
+            status in headline_includes,
             "the bad marker supports nonstandard-form status but does not replace the upstream calque label",
         )
     if marker_set:
         raise DispositionError(f"unhandled style markers: {sorted(marker_set)}")
     del attested, source_span
+    status = policy_dispositions["unflagged_upstream_annotation"]
     return (
-        "HEADLINE_CALQUE",
-        True,
+        status,
+        status in headline_includes,
         "no reproducible dialect/heritage conflict candidate was detected",
     )
 
@@ -219,6 +251,10 @@ def build_dispositions(
         raise DispositionError("held-out manifest ID does not match disposition config")
     if manifest["integrity"]["payload_sha256"] != config.get("manifest_payload_sha256"):
         raise DispositionError("held-out manifest payload does not match disposition config")
+    policy = config.get("policy")
+    if not isinstance(policy, Mapping):
+        raise DispositionError("disposition policy is missing")
+    _validated_policy(policy)
     evidence_config = config["evidence"]
     lock_path = ROOT / str(evidence_config["source_lock"])
     parser_path = ROOT / str(evidence_config["parser"])
@@ -283,6 +319,7 @@ def build_dispositions(
             source_span=record["source_span"],
             attested=bool(record["source_span"]) and all(value["analysis_count"] > 0 for value in form_evidence),
             style_markers=markers,
+            policy=policy,
             contextual_disposition=(str(adjudication["disposition"]) if adjudication is not None else None),
             contextual_reason=(str(adjudication["reason"]) if adjudication is not None else None),
         )
@@ -334,10 +371,10 @@ def build_dispositions(
             "upstream_tag_preserved": True,
             "upstream_tag_meaning": "UA-GEC standardization label",
             "benchmark_disposition_meaning": "separate calque scoring decision",
-            "headline_includes": config["policy"]["headline_includes"],
+            "headline_includes": policy["headline_includes"],
             "fail_closed": True,
-            "activation_dependency": config["policy"]["activation_dependency"],
-            "contextual_adjudication": config["policy"]["contextual_adjudication"],
+            "activation_dependency": policy["activation_dependency"],
+            "contextual_adjudication": policy["contextual_adjudication"],
         },
         "evidence_receipt": {
             "source_lock": evidence_config["source_lock"],
@@ -355,12 +392,12 @@ def build_dispositions(
             "raw_style_collision_annotations": style_annotation_count,
             "raw_style_collision_spans": len(style_span_markers),
             "raw_style_collision_spans_by_marker": dict(sorted(style_marker_span_counts.items())),
-            "included_in_headline_calque": counts["HEADLINE_CALQUE"],
+            "included_in_headline_calque": sum(bool(row[8]) for row in rows),
             "excluded_as_regional_standardization": counts["REGIONAL_STANDARDIZATION"],
             "excluded_as_register_standardization": counts["REGISTER_STANDARDIZATION"],
             "heritage_conflict": counts["HERITAGE_CONFLICT"],
             "contested": counts["CONTESTED"],
-            "excluded_from_headline_calque": len(rows) - counts["HEADLINE_CALQUE"],
+            "excluded_from_headline_calque": sum(not bool(row[8]) for row in rows),
             "items_by_disposition": {status: len(item_sets[status]) for status in sorted(VALID_DISPOSITIONS)},
         },
         "rows": rows,
@@ -386,6 +423,12 @@ def validate_dispositions(
         raise DispositionError("disposition manifest payload mismatch")
     if dispositions.get("semantics", {}).get("upstream_tag_preserved") is not True:
         raise DispositionError("upstream-tag preservation receipt is missing")
+    raw_headline_includes = dispositions.get("semantics", {}).get("headline_includes")
+    if not isinstance(raw_headline_includes, list):
+        raise DispositionError("headline disposition semantics are missing")
+    headline_includes = frozenset(str(status) for status in raw_headline_includes)
+    if not headline_includes or not headline_includes <= VALID_DISPOSITIONS:
+        raise DispositionError("headline disposition semantics are invalid")
     if config is not None:
         if dispositions.get("disposition_id") != config.get("disposition_id"):
             raise DispositionError("disposition config ID mismatch")
@@ -405,6 +448,12 @@ def validate_dispositions(
         }
         if dispositions.get("evidence_receipt") != expected_receipt:
             raise DispositionError("disposition evidence receipt does not match config")
+        policy = config.get("policy")
+        if not isinstance(policy, Mapping):
+            raise DispositionError("disposition policy is missing")
+        _validated_policy(policy)
+        if list(raw_headline_includes) != policy["headline_includes"]:
+            raise DispositionError("headline disposition semantics do not match config")
         for path_key, hash_key in (
             ("source_lock", "source_lock_sha256"),
             ("parser", "parser_sha256"),
@@ -453,7 +502,7 @@ def validate_dispositions(
         status = str(row["disposition"])
         if status not in VALID_DISPOSITIONS:
             raise DispositionError(f"invalid disposition: {status}")
-        if bool(row["headline_calque"]) != (status == "HEADLINE_CALQUE"):
+        if bool(row["headline_calque"]) != (status in headline_includes):
             raise DispositionError("headline flag contradicts disposition")
         if not row["reason"]:
             raise DispositionError("disposition reason is missing")
@@ -486,12 +535,12 @@ def validate_dispositions(
         "raw_style_collision_annotations": style_annotation_count,
         "raw_style_collision_spans": len(style_spans),
         "raw_style_collision_spans_by_marker": dict(sorted(style_marker_span_counts.items())),
-        "included_in_headline_calque": status_counts["HEADLINE_CALQUE"],
+        "included_in_headline_calque": sum(bool(row[8]) for row in rows),
         "excluded_as_regional_standardization": status_counts["REGIONAL_STANDARDIZATION"],
         "excluded_as_register_standardization": status_counts["REGISTER_STANDARDIZATION"],
         "heritage_conflict": status_counts["HERITAGE_CONFLICT"],
         "contested": status_counts["CONTESTED"],
-        "excluded_from_headline_calque": len(rows) - status_counts["HEADLINE_CALQUE"],
+        "excluded_from_headline_calque": sum(not bool(row[8]) for row in rows),
     }
     if any(counts.get(key) != value for key, value in expected_counts.items()):
         raise DispositionError("disposition counts are stale")

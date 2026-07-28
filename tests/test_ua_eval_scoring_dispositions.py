@@ -6,12 +6,17 @@ import json
 import pytest
 
 from scripts.projects.ua_eval_harness.build_scoring_dispositions import (
+    DEFAULT_CONFIG,
     DEFAULT_MANIFEST,
     DEFAULT_OUTPUT,
     DispositionError,
     decide_disposition,
     validate_dispositions,
 )
+
+
+def _policy() -> dict:
+    return json.loads(DEFAULT_CONFIG.read_text(encoding="utf-8"))["policy"]
 
 
 def _committed() -> tuple[dict, dict]:
@@ -40,6 +45,7 @@ def test_confirmed_dialect_is_standardization_not_headline_calque() -> None:
         source_span=["діалектна"],
         attested=True,
         style_markers=["dialect"],
+        policy=_policy(),
         contextual_disposition="REGIONAL_STANDARDIZATION",
         contextual_reason="context and independent heritage evidence confirm authentic usage",
     )
@@ -54,12 +60,28 @@ def test_ambiguous_register_and_heritage_evidence_abstains() -> None:
         source_span=["слово"],
         attested=True,
         style_markers=["arch"],
+        policy=_policy(),
     )[0:2] == ("HERITAGE_CONFLICT", False)
     assert decide_disposition(
         source_span=["слово"],
         attested=True,
         style_markers=["slang"],
+        policy=_policy(),
     )[0:2] == ("CONTESTED", False)
+
+
+def test_disposition_logic_consumes_the_frozen_policy_mapping() -> None:
+    policy = _policy()
+    policy["bad_marker"] = "CONTESTED"
+
+    status, headline, _reason = decide_disposition(
+        source_span=["слово"],
+        attested=True,
+        style_markers=["bad"],
+        policy=policy,
+    )
+
+    assert (status, headline) == ("CONTESTED", False)
 
 
 def test_no_silent_override_of_upstream_tag() -> None:
