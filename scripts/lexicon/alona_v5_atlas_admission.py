@@ -22,6 +22,7 @@ if str(ROOT) not in sys.path:
 
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.grow_lexicon_from_content import _vesum_pos
+from scripts.sync.promote_module import _write_atomically
 
 PRACTICE_SCHEMA = "alona-v5-practice-seed-v1"
 PUBLIC_SCHEMA = "alona-v5-atlas-admission-seed-v1"
@@ -194,8 +195,10 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    _write_atomically(
+        path,
+        (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8"),
+    )
 
 
 def main(argv: list[str] | None = None) -> int:

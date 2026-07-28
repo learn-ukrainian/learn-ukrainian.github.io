@@ -1,5 +1,5 @@
 {
-  "fingerprint": "344c2b5192fda27a1117876c9183b20588fc9fb50f300d2ad45d3c13459a552b",
+  "fingerprint": "2f4f0cbc51d552b3429212c1cfc99d66fc41d474a657ca9116b64d74784621fd",
   "inputs": {
     "lexicon_code": [
       {
@@ -8,7 +8,7 @@
       },
       {
         "path": "scripts/lexicon/alona_v5_atlas_admission.py",
-        "sha256": "d62089069184ac1b803280592a9bd08904112d7f80fba25a51372438391d3221"
+        "sha256": "5ac4de1968e4b2f3a4523f714f6922bb55d5e54ae232f7580141f79738d8ef14"
       },
       {
         "path": "scripts/lexicon/anchor_curation_evidence.py",

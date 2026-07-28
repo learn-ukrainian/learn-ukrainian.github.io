@@ -76,6 +76,24 @@ def test_normalize_rows_projects_private_v5_input_to_replayable_schema() -> None
     ]
 
 
+def test_write_json_uses_shared_atomic_write_helper(tmp_path: Path, monkeypatch) -> None:
+    output = tmp_path / "nested" / "seed.json"
+    observed: dict[str, object] = {}
+
+    def write_atomically(path: Path, content: bytes) -> None:
+        observed["path"] = path
+        observed["content"] = content
+
+    monkeypatch.setattr(admission, "_write_atomically", write_atomically)
+
+    admission._write_json(output, {"lemma": "відомий"})
+
+    assert observed == {
+        "path": output,
+        "content": b'{\n  "lemma": "\xd0\xb2\xd1\x96\xd0\xb4\xd0\xbe\xd0\xbc\xd0\xb8\xd0\xb9"\n}\n',
+    }
+
+
 def test_practice_seed_reports_no_hit_and_retains_duplicate_attestations(tmp_path: Path) -> None:
     manifest = _manifest(
         tmp_path / "manifest.json",
