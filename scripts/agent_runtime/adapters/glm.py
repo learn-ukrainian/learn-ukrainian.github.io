@@ -148,23 +148,34 @@ class GlmAdapter:
         plan: InvocationPlan | None = None,
         call_start_time: float | None = None,
     ) -> ParseResult:
-        _ = (output_file, plan, call_start_time)
+        _ = (output_file, call_start_time)
         rate_limited = bool(_RATE_LIMIT_RE.search(f"{stderr or ''}\n{stdout or ''}"))
         text = _extract_text_from_stdout(stdout)
-        usable = bool(text)
+
+        from ai_agent_bridge._opencode import read_opencode_turn_status
+
+        cwd = plan.cwd if plan is not None else None
+        turn_status = read_opencode_turn_status(stdout, cwd=cwd)
+
+        usable = bool(text) and turn_status.outcome == "completed"
         ok = returncode == 0 and usable and not rate_limited
 
         stderr_excerpt: str | None = None
         if not ok:
-            source = (stderr or "").strip() or (stdout or "").strip() or ""
-            stderr_excerpt = source[:500] if source else f"opencode exit code {returncode}"
+            if turn_status.outcome in ("permission_rejected", "aborted") or (
+                returncode == 0 and turn_status.outcome != "completed"
+            ):
+                stderr_excerpt = f"opencode turn aborted ({turn_status.outcome}/{turn_status.reason})"
+            else:
+                source = (stderr or "").strip() or (stdout or "").strip() or ""
+                stderr_excerpt = source[:500] if source else f"opencode exit code {returncode}"
 
         return ParseResult(
             ok=ok,
             response=text if ok else "",
             stderr_excerpt=stderr_excerpt,
             rate_limited=rate_limited,
-            session_id=None,
+            session_id=turn_status.session_id,
             tokens=None,
             tool_calls=[],
         )
