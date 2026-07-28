@@ -128,8 +128,11 @@ def test_negative_non_summon_step_lacks_predicate() -> None:
 def test_negative_dangling_transition() -> None:
     """Negative invariant test: dangling transition target fails validation."""
     data = _get_happy_example_data()
-    # Corrupt a copy: set transition to non-existent step
-    data["steps"][0]["transitions"]["success"] = "non_existent_step_123"
+    # Corrupt a copy: replace a real transition of a step selected by id (not by
+    # index — step order is not part of this test's contract) with a dangling
+    # target.
+    step = next(s for s in data["steps"] if s["step_id"] == "request_review")
+    step["transitions"]["review_fired"] = "non_existent_step_123"
 
     with pytest.raises(TrailSpecValidationError) as exc_info:
         validate_trailspec_data(data, spec_schema_path=TRAIL_SPEC_SCHEMA_PATH)
