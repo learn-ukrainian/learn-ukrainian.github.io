@@ -1805,6 +1805,15 @@ def _heritage_availability_level(pair: dict[str, Any]) -> str:
     return _normalize_cefr(pair.get("cefrAvailability")) or HERITAGE_DEFAULT_AVAILABILITY
 
 
+def _curated_prompt_en(frame: dict[str, Any]) -> str | None:
+    """Return curator-supplied English only; never manufacture a translation."""
+    for field in ("sentence_en", "prompt_en", "sentence_with_slot_en"):
+        english = _clean_text(frame.get(field))
+        if english and not re.match(r"^context sentence for\b", english, flags=re.IGNORECASE):
+            return english
+    return None
+
+
 def _heritage_frame_errors(frame: Any, kind: str) -> list[str]:
     errors: list[str] = []
     if not isinstance(frame, dict):
@@ -2059,6 +2068,8 @@ def _build_heritage_items(
             "corrections": _clean_text_list(pair.get("corrections")),
             "sourceFamily": _clean_text(pair.get("sourceFamily")) or "",
         }
+        if prompt_en := _curated_prompt_en(frame):
+            item["promptEn"] = prompt_en
         rat_uk = _clean_text(pair.get("rationaleUk"))
         if rat_uk:
             item["rationaleUk"] = rat_uk
@@ -2158,6 +2169,8 @@ def _build_paronym_items(
             "citations": citations,
             "origin": origin,
         }
+        if prompt_en := _curated_prompt_en(frame):
+            item["promptEn"] = prompt_en
         # simple shuffle using deck seed if possible; fall back to list as-is
         # (real shuffle happens via rng in caller path for determinism; here keep order stable)
         items.append(_strip_paronym_option_metadata(item) if public_options else item)

@@ -2371,8 +2371,18 @@ describe('LexiconPractice', () => {
     expect(screen.getByLabelText('Вставте слово „згодом” у пропуск.')).toBeInTheDocument();
   });
 
-  test('cloze reveals a usable sentence English only after feedback', async () => {
+  test('cloze shows a usable sentence English before feedback for A1', () => {
     seedRecognitionMastery('knyha');
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
+    render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="cloze" />);
+
+    expect(screen.getByTestId('practice-cloze-sentence-en')).toHaveTextContent('I am reading a book.');
+  });
+
+  test('cloze A2 UK chrome hides sentence English before and reveals it after incorrect feedback', async () => {
+    seedRecognitionMastery('knyha');
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A2');
+    document.documentElement.dataset.chromeLocale = 'uk';
     const user = userEvent.setup();
     render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="cloze" />);
 
@@ -2384,12 +2394,29 @@ describe('LexiconPractice', () => {
     expect(screen.getByTestId('practice-cloze-sentence-en')).toHaveTextContent('I am reading a book.');
   });
 
+  test('cloze A2 UK chrome reveals sentence English after correct feedback', async () => {
+    seedRecognitionMastery('knyha');
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A2');
+    document.documentElement.dataset.chromeLocale = 'uk';
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="cloze" />);
+
+    expect(screen.queryByTestId('practice-cloze-sentence-en')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'книгу' }));
+    await user.click(screen.getByRole('button', { name: /Перевірити/ }));
+
+    expect(screen.getByTestId('practice-cloze-sentence-en')).toHaveTextContent('I am reading a book.');
+  });
+
   test('cloze omits blank or placeholder sentence English after feedback', async () => {
     seedRecognitionMastery('knyha');
     const user = userEvent.setup();
     const deck = sampleDeck();
     deck.cloze[0] = { ...deck.cloze[0]!, clozeEn: 'Context sentence for книгу' };
     render(<LexiconPractice initialDeck={deck} autoStart initialMode="cloze" />);
+
+    expect(screen.queryByTestId('practice-cloze-sentence-en')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'робота' }));
     await user.click(screen.getByRole('button', { name: /Перевірити/ }));

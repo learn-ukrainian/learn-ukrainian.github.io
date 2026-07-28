@@ -16,6 +16,7 @@ from scripts.audit.generate_practice_deck import (
     _build_heritage_items,
     _build_lexeme,
     _build_paradigm_items,
+    _build_paronym_items,
     _declension_category,
     _eligible_decoys,
     _meaning_mc_eligible,
@@ -473,6 +474,23 @@ def test_heritage_item_options_are_valid_and_do_not_mark_calque() -> None:
             break
 
     assert "heritage options must not visually mark the calque pre-answer" in validate_heritage_item(marked)
+
+
+def test_heritage_builder_copies_curated_prompt_en_and_suppresses_placeholders() -> None:
+    pair = _fixture_heritage_pair()
+    lexemes = _fixture_lexemes()
+    pair["frames"][0]["sentence_en"] = "I am reading a book."
+
+    item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
+    assert item["promptEn"] == "I am reading a book."
+
+    pair["frames"][0].pop("sentence_en")
+    item_without_en = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
+    assert "promptEn" not in item_without_en
+
+    pair["frames"][0]["sentence_en"] = "Context sentence for книгу"
+    placeholder_item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
+    assert "promptEn" not in placeholder_item
 
 
 def test_heritage_pair_native_slug_must_resolve_without_native_lemma_fallback(
@@ -1177,6 +1195,35 @@ def test_paronym_pairs_emit_items_both_directions_and_validate(capsys: pytest.Ca
     assert validate_paronym_pair(pair) == []
     for it in b1_items + b2_items:
         assert validate_paronym_item(it) == []
+
+
+def test_paronym_builder_copies_optional_curated_prompt_en() -> None:
+    lex_a = {"lemmaId": "бігати", "lemma": "бігати", "cefr": "B1"}
+    lex_b = {"lemmaId": "бігти", "lemma": "бігти", "cefr": "B1"}
+    pair = {
+        "slugA": "бігати",
+        "slugB": "бігти",
+        "distinction_gloss_uk": "Бігати регулярно, бігти конкретно зараз.",
+        "citations": ["fixture-test"],
+        "frames": [{
+            "sentence_with_slot": "Він ___ вранці.",
+            "prompt_en": "He ___ in the morning.",
+            "answer_form": "бігає",
+            "confusable_form": "біжить",
+            "origin": "fixture",
+        }],
+    }
+
+    item = _build_paronym_items(pair, lex_a, lex_b, "deck-v1")[0]
+    assert item["promptEn"] == "He ___ in the morning."
+
+    pair["frames"][0].pop("prompt_en")
+    item_without_en = _build_paronym_items(pair, lex_a, lex_b, "deck-v1")[0]
+    assert "promptEn" not in item_without_en
+
+    pair["frames"][0]["prompt_en"] = "Context sentence for бігати"
+    placeholder_item = _build_paronym_items(pair, lex_a, lex_b, "deck-v1")[0]
+    assert "promptEn" not in placeholder_item
 
 
 def test_paronym_missing_slug_skips_with_warn(capsys: pytest.CaptureFixture[str]) -> None:
