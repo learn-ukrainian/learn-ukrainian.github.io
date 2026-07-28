@@ -127,6 +127,12 @@ def load_and_validate_registry(
                         f"Unanchored regex in entry '{entry_id}': '{val}' "
                         "(regex matchers must be anchored with ^...$)"
                     )
+                try:
+                    re.compile(val)
+                except re.error as exc:
+                    raise RedCIKnownFailuresValidationError(
+                        f"Malformed regex in entry '{entry_id}': '{val}' ({exc})"
+                    ) from exc
 
         # Parse & check timestamps
         governance = entry.get("governance", {})
