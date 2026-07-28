@@ -168,6 +168,29 @@ def validate_trailspec_data(
                     f"Dangling transition in step '{step_id}' (label '{label}'): target '{target}' does not exist in steps, stop_codes, or terminal_outcomes"
                 )
 
+    # Invariant 4: Graph reachability — every step must be reachable from the first step
+    if steps:
+        first_step_id = steps[0].get("step_id")
+        step_id_to_step = {s.get("step_id"): s for s in steps if s.get("step_id")}
+
+        visited: set[str] = set()
+        queue = [first_step_id] if first_step_id in step_id_to_step else []
+        while queue:
+            curr = queue.pop()
+            if curr in visited:
+                continue
+            visited.add(curr)
+            curr_step = step_id_to_step.get(curr, {})
+            for target in curr_step.get("transitions", {}).values():
+                if target in step_id_to_step and target not in visited:
+                    queue.append(target)
+
+        unreachable = sorted(step_ids - visited)
+        if unreachable:
+            raise TrailSpecValidationError(
+                f"Unreachable step(s) {unreachable}: not reachable from start step '{first_step_id}'"
+            )
+
     trail_hash = compute_trail_hash(spec_data)
     return {
         "ok": True,

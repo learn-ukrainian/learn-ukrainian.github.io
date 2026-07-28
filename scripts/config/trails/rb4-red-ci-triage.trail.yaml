@@ -21,9 +21,14 @@
 #   head can CANCEL the live head's run via the workflow concurrency group.
 # - A merge checkout's content is not the branch's content — signatures must be read
 #   from the failing run's logs, never inferred from local state.
+#
+# v0.4.2 fixes:
+# - signature_recorded transition routes to head_currency_check (was unreachable).
+# - locate_failing_run parses run id from failing check row URL in batch_state/rb4-checks-{pr_number}.txt
+#   instead of gh run list --branch (which could pick a newer pending run).
 schema_version: trailspec.v1
 trail_id: rb4-red-ci-triage
-version: "0.4.1"
+version: "0.4.2"
 title: RB4 Red-CI triage — signature, allowlist, staleness, bounded rerun
 seats:
   - grok-daily
@@ -57,17 +62,20 @@ steps:
 
   - step_id: locate_failing_run
     intent: >-
-      Resolve the failing run id for the PR's branch (live shape: JSON array of
-      {databaseId, status, conclusion}; the newest run for the head branch). The run
-      id is recorded for every later step — signatures come from THIS run's logs,
-      never from local reproduction alone.
-    command: sh -c 'gh run list --branch {head_branch} --limit 1 --json databaseId,status,conclusion | tee batch_state/rb4-run-{pr_number}.json'
+      Resolve the failing run id from the FAILING row's URL field in
+      batch_state/rb4-checks-{pr_number}.txt (live shape: URL containing
+      /actions/runs/<run_id>/). The receipt is written to
+      batch_state/rb4-run-{pr_number}.json in [{"databaseId": <run_id>}] shape for
+      downstream consumers. Signatures come from THIS failing run's logs.
+    command: >-
+      sh -c 'RUN=$(awk -F"\t" "\$2==\"fail\" {print \$4}" batch_state/rb4-checks-{pr_number}.txt | sed -E -n "s|.*/actions/runs/([0-9]+).*|\1|p" | head -1); case "$RUN" in [0-9]*) printf "[{\"databaseId\": %s}]\n" "$RUN" > batch_state/rb4-run-{pr_number}.json; echo run-located;; *) echo no-failing-run;; esac'
     evidence_predicate:
-      command: jq -r '.[0].databaseId // ""' batch_state/rb4-run-{pr_number}.json
-      success_pattern: '^[0-9]+$'
+      command: >-
+        sh -c 'RUN=$(awk -F"\t" "\$2==\"fail\" {print \$4}" batch_state/rb4-checks-{pr_number}.txt | sed -E -n "s|.*/actions/runs/([0-9]+).*|\1|p" | head -1); case "$RUN" in [0-9]*) echo run-located;; *) echo no-failing-run;; esac'
+      success_pattern: '^(run-located|no-failing-run)$'
     transitions:
       run_located: extract_signature
-      no_run_for_branch: STOP-precondition-failed
+      no_failing_run: STOP-precondition-failed
     kind: mechanical
     blocked_on: null
 
@@ -83,7 +91,7 @@ steps:
       command: test -s batch_state/rb4-signature-{pr_number}.txt && echo signature-recorded
       success_pattern: '^signature-recorded$'
     transitions:
-      signature_recorded: staleness_probe
+      signature_recorded: head_currency_check
       logs_empty: STOP-manual-intervention
     kind: mechanical
     blocked_on: null
