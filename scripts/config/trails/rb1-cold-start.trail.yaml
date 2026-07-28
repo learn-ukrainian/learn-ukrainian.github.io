@@ -277,13 +277,15 @@ steps:
 
   - step_id: sweep_stale_refs
     intent: >-
-      Session-start hygiene: gather worktrees and open PR head branches side by side to detect stale candidates.
+      Session-start hygiene: presence check for dispatch worktrees under .worktrees/*.
+      Correlating worktrees against open PR branches (which of them are stale) is
+      driver judgment beyond this mechanical presence probe.
     command:
       adapter: shell
       argv:
         - sh
         - -c
-        - git worktree list --porcelain >/dev/null && gh pr list --state open --json headRefName --limit 30 >/dev/null && { test $(git worktree list | grep -c ".worktrees") -eq 0 && echo no_stale_candidates || echo stale_candidates_present; }
+        - test $(git worktree list | grep -c ".worktrees") -eq 0 && echo no_stale_candidates || echo stale_candidates_present
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
       timeout_seconds: 30
@@ -341,7 +343,9 @@ steps:
 
   - step_id: pick_next
     intent: >-
-      Pick the next unblocked action from the lane queue via the queue-pick decision table.
+      Observe whether any open PR exists as a queue signal. This is an existence
+      check only — actual task selection is driver judgment performed outside this
+      mechanical step.
     command:
       adapter: shell
       argv:
@@ -373,7 +377,9 @@ steps:
 
   - step_id: route_lane
     intent: >-
-      Route the picked task by model-x-harness fit using the routing decision table.
+      Observe lane-capacity signals (disk headroom and codexbar pace for the claude
+      lane). Routing a task by model-x-harness fit is driver judgment beyond this
+      probe; absent pace data is recorded honestly as a partial-data receipt.
     command:
       adapter: shell
       argv:
