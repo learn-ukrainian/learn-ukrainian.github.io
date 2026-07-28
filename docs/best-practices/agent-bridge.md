@@ -235,12 +235,13 @@ After a PR merges, do **not** leave dispatch worktrees forever:
 # Safe default (dry-run):
 .venv/bin/python scripts/orchestration/reap_worktrees.py
 
-# Recommended post-merge cleanup (MERGED/CLOSED + dirty auto preserve-then-reap):
+# Recommended post-merge cleanup (dirty worktrees are preserved):
 .venv/bin/python scripts/orchestration/reap_worktrees.py --apply --merged
 ```
 
-`--merged` enables `--safe-only`, auto preserve-then-reap for dirty MERGED/CLOSED
-trees, and branch prune. Open PRs are never reaped just because HEAD matches
+`--merged` restricts cleanup to exact merged-PR heads and enables branch
+pruning. Dirty trees remain untouched unless a human explicitly adds
+`--preserve-then-reap`. Open PRs are never reaped just because HEAD matches
 `origin/<branch>`.
 
 ### Hermes / DeepSeek isolation (Sol #213 class)
