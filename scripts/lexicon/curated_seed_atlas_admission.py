@@ -349,9 +349,9 @@ def main(argv: list[str] | None = None) -> int:
         "--target-lemma",
         action="append",
         default=[],
-        help="Lemma permitted for --fill-existing-glosses; repeat for every reviewed target.",
+        help="Lemma permitted for an explicit fill repair; repeat for every reviewed target.",
     )
-    parser.add_argument("--write", action="store_true", help="Write a manifest changed by --fill-existing-glosses.")
+    parser.add_argument("--write", action="store_true", help="Write a manifest changed by an explicit fill repair.")
     args = parser.parse_args(argv)
     rows = read_public_seed(args.input) if args.input.suffix == ".json" else normalize_rows(_read_jsonl(args.input))
     if args.write and not (args.fill_existing_glosses or args.fill_existing_pos):
