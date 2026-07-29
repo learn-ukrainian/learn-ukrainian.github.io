@@ -7,7 +7,7 @@ from types import SimpleNamespace
 from scripts.orchestration import install_worktree_cleanup_launchd as launchd
 
 
-def test_rendered_plist_runs_both_repositories_every_fifteen_minutes(
+def test_rendered_plist_runs_both_repositories_every_four_hours(
     tmp_path: Path,
 ) -> None:
     public = tmp_path / "public"
@@ -19,12 +19,12 @@ def test_rendered_plist_runs_both_repositories_every_fifteen_minutes(
             public_repo=public,
             private_repo=private,
             home=home,
-            interval_minutes=15,
+            interval_minutes=240,
         )
     )
 
     assert payload["Label"] == launchd.LABEL
-    assert payload["StartInterval"] == 900
+    assert payload["StartInterval"] == 14_400
     assert payload["RunAtLoad"] is True
     assert payload["ProgramArguments"] == [
         str(public / ".venv" / "bin" / "python"),
@@ -35,7 +35,7 @@ def test_rendered_plist_runs_both_repositories_every_fifteen_minutes(
         "--repo-root",
         str(private),
         "--receipt-dir",
-        str(home / ".codex" / "worktree-cleanup" / "receipts" / "v1"),
+        str(home / ".codex" / "worktree-cleanup" / "receipts" / "v2"),
     ]
     assert "/opt/homebrew/bin" in payload["EnvironmentVariables"]["PATH"]
 
@@ -160,7 +160,7 @@ def test_uninstall_preserves_receipts(tmp_path: Path, monkeypatch) -> None:
     destination = launchd.plist_path(home)
     destination.parent.mkdir(parents=True)
     destination.write_text("plist", encoding="utf-8")
-    receipt = launchd.state_dir(home) / "receipts" / "v1" / "receipt.json"
+    receipt = launchd.state_dir(home) / "receipts" / "v2" / "receipt.json"
     receipt.parent.mkdir(parents=True)
     receipt.write_text("{}", encoding="utf-8")
 

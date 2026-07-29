@@ -1,7 +1,7 @@
 # Worktree cleanup
 
-This runbook covers immediate post-merge cleanup and the local macOS safety
-backstop for both Learn Ukrainian repositories.
+This runbook covers immediate post-merge cleanup and the local macOS Git
+hygiene backstop for both Learn Ukrainian repositories.
 
 ## Safety contract
 
@@ -68,12 +68,25 @@ Apply:
 .venv/bin/python scripts/orchestration/scheduled_worktree_cleanup.py --apply
 ```
 
-Each run fetches and prunes `origin`, probes process working directories, runs
-the exact-merged-PR reaper for both repository roots, reports orphaned worktree
-directories, and writes an immutable JSON receipt under:
+Each run performs the following in both repository roots:
+
+1. fetches `origin` and prunes deleted remote refs;
+2. prunes stale Git worktree registrations;
+3. removes clean, inactive worktrees that have exact finalized-PR or settled
+   dispatch evidence, plus old detached worktrees already contained by
+   `origin/main`;
+4. deletes local branches whose upstream is gone only when their exact head is
+   proven merged or is already an ancestor of `origin/main`;
+5. preserves and reports unproven gone branches and orphaned worktree
+   directories;
+6. runs `git gc --auto`;
+7. writes an immutable JSON receipt.
+
+Dirty worktrees, open PRs, active/non-terminal tasks, checked-out branches, and
+unmerged branch heads remain untouched.
 
 ```text
-~/.codex/worktree-cleanup/receipts/v1/
+~/.codex/worktree-cleanup/receipts/v2/
 ```
 
 An unavailable fetch or process-activity probe blocks apply for that
@@ -87,7 +100,7 @@ Render the plist without writing system configuration:
 .venv/bin/python scripts/orchestration/install_worktree_cleanup_launchd.py render
 ```
 
-The job runs at load and every 15 minutes. It uses the public checkout's exact
+The job runs at load and every 4 hours. It uses the public checkout's exact
 `.venv/bin/python`, passes both repository roots explicitly, and persists logs
 under:
 

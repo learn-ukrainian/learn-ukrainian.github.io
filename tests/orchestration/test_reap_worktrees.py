@@ -3,6 +3,7 @@ from __future__ import annotations
 import fcntl
 import json
 import os
+import shutil
 import subprocess
 import time
 from pathlib import Path
@@ -484,6 +485,7 @@ def test_squash_merge_branch_force_delete(
 
     result = result_for(results, worktree_path)
     assert result.action == "removed"
+    assert result.branch_pruned is True
     assert not worktree_path.exists()
 
     # Check that the branch was indeed deleted
@@ -495,6 +497,26 @@ def test_squash_merge_branch_force_delete(
         timeout=30,
     )
     assert "codex/squash-merged" not in proc.stdout
+
+
+def test_prune_branch_refuses_branch_checked_out_in_another_worktree(
+    tmp_path: Path,
+) -> None:
+    repo = init_repo(tmp_path)
+    branch = "codex/checked-out-during-prune"
+    worktree = add_worktree(repo, branch)
+    expected_head = git(repo, "rev-parse", branch)
+
+    error = rw._prune_branch(
+        repo,
+        branch,
+        force=True,
+        expected_head=expected_head,
+    )
+
+    assert error is not None
+    assert git(repo, "rev-parse", branch) == expected_head
+    assert git(worktree, "branch", "--show-current") == branch
 
 
 def test_open_pr_matching_origin_is_not_reaped(
@@ -671,6 +693,28 @@ def test_reaper_lock_rejects_concurrent_cleanup(
                 live_cwds=set(),
             )
         fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+def test_missing_registered_worktree_is_reported_not_crashed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/missing-registration")
+    shutil.rmtree(worktree)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert result.reason == "registered worktree path is missing; run git worktree prune"
 
 
 def test_merged_flag_does_not_remove_settled_dispatch_without_merged_pr(
