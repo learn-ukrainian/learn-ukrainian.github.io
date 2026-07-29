@@ -758,3 +758,28 @@ def test_bash_shell_var_reassignment_not_expanded(repo: Path):
     # Must not allow (would dirty tracked file under bash's true binding).
     assert result.returncode == 2, result.stderr
     assert "unresolved_shell_variable" in result.stderr or "tracked_primary" in result.stderr
+
+
+def test_unreadable_git_metadata_inside_any_repo_fails_closed(tmp_path, monkeypatch):
+    """git-resolution failure for a target under ANY .git tree denies; it never
+    silently passes as 'outside every repository' (r5 review F001)."""
+    repo_like = tmp_path / "sibling-repo"
+    (repo_like / ".git").mkdir(parents=True)
+    target = repo_like / "agents_extensions" / "shared" / "rules" / "x.md"
+    target.parent.mkdir(parents=True)
+
+    monkeypatch.setattr(hook, "_git_output", lambda *_a, **_k: None)
+    decision, error = hook._rail_write_decision([str(target)], cwd=str(tmp_path))
+    assert decision is None
+    assert error == "rail_path_guard_repository_unreadable"
+
+
+def test_positively_confirmed_non_repository_target_is_not_a_rail(tmp_path, monkeypatch):
+    """A target with no .git anywhere above it is a confirmed non-repository write."""
+    target = tmp_path / "plain" / "notes.md"
+    target.parent.mkdir(parents=True)
+
+    monkeypatch.setattr(hook, "_git_output", lambda *_a, **_k: None)
+    decision, error = hook._rail_write_decision([str(target)], cwd=str(tmp_path))
+    assert error is None
+    assert decision is not None and decision.allowed

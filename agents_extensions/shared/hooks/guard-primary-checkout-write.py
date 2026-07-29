@@ -146,8 +146,6 @@ def _rail_write_decision(raw_targets: list[str], *, cwd: str):
     task_id = os.environ.get("LEARN_UK_RAIL_TASK_ID") or "local-hook"
     if receipt_id and not os.environ.get("LEARN_UK_RAIL_TASK_ID"):
         return None, "rail_approval_task_context_missing"
-    caller_root = _git_output(cwd, "rev-parse", "--show-toplevel")
-    caller_root_path = Path(caller_root).resolve() if caller_root is not None else None
     try:
         for raw in raw_targets:
             target = _resolve(raw, cwd).resolve()
@@ -161,9 +159,24 @@ def _rail_write_decision(raw_targets: list[str], *, cwd: str):
             root = _git_output(str(target_cwd), "rev-parse", "--show-toplevel")
             head_sha = _git_output(str(target_cwd), "rev-parse", "HEAD")
             if root is None or head_sha is None:
-                if caller_root_path is not None and target.is_relative_to(caller_root_path):
+                # `root is None` proves only that the git invocation FAILED
+                # (timeout, OSError, non-zero exit) — not that the target is
+                # outside every repository. Allow only a POSITIVELY-confirmed
+                # non-repository location: walk the target's parents to the
+                # filesystem root and require that no `.git` entry exists
+                # anywhere. Any other resolution failure fails CLOSED.
+                probe = target_cwd
+                inside_some_repo = False
+                while True:
+                    if (probe / ".git").exists():
+                        inside_some_repo = True
+                        break
+                    if probe == probe.parent:
+                        break
+                    probe = probe.parent
+                if inside_some_repo:
                     return None, "rail_path_guard_repository_unreadable"
-                continue  # A target outside every repository cannot be a repository rail path.
+                continue  # Positively confirmed: no repository anywhere above the target.
             relative_path = target.relative_to(Path(root).resolve()).as_posix()
             decision = rail_guard.decide_rail_path_mutation_with_production_receipt(
                 task_id=task_id,
