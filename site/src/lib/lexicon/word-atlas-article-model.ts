@@ -65,7 +65,15 @@ export interface VerbParadigm {
   past?: Record<string, string>;
 }
 
-export type MorphologyParadigm = NounParadigm | VerbParadigm | { kind: "other" };
+export interface ParticipleParadigm {
+  kind: "participle";
+  voice: "active" | "passive";
+  aspect: "perfective" | "imperfective";
+  verb?: string;
+  verb_url_slug?: string;
+}
+
+export type MorphologyParadigm = NounParadigm | VerbParadigm | ParticipleParadigm | { kind: "other" };
 
 export interface Enrichment {
   stress?: { form: string; source: string };
@@ -375,6 +383,7 @@ export function buildWordAtlasArticleView(
   const paradigm = enrichment?.morphology?.paradigm ?? null;
   const nounParadigm = paradigm?.kind === "noun" ? paradigm : null;
   const verbParadigm = paradigm?.kind === "verb" ? paradigm : null;
+  const participleParadigm = paradigm?.kind === "participle" ? paradigm : null;
   const markedForms = enrichment?.morphology?.marked_forms ?? [];
   const markedFormGroups: Array<{ marker_label: string; forms: typeof markedForms }> = [];
   for (const form of markedForms) {
@@ -455,6 +464,7 @@ export function buildWordAtlasArticleView(
     headerStress,
     nounParadigm,
     verbParadigm,
+    participleParadigm,
     markedFormGroups,
     isFullyMarked,
     isExpressionLikeEntry,

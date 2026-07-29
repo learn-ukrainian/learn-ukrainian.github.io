@@ -1,5 +1,5 @@
 {
-  "fingerprint": "76d089eb20667917bef9f39844345f967083719e0c6018e5152796b2001faf84",
+  "fingerprint": "e21a9fc99528aae2ca527e6d696a20c30a1da4e91a6d869dfa99ba21470ab485",
   "inputs": {
     "lexicon_code": [
       {
@@ -84,7 +84,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "0307b5c171f3ad3585666100c1055769013f2db18888f7a2ac36a63b78cf6f6f"
+        "sha256": "3a96223510b9ce6e1f1666bad590e24150aab09e928389e55396ceeff12e92c8"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -176,7 +176,7 @@
       },
       {
         "path": "scripts/lexicon/promote_grow_candidates.py",
-        "sha256": "c4a0fe8e365601a6208b681356a923479a49c7c34eba2752209aa7baff82861e"
+        "sha256": "d1b652b940b1812f5d256a3b3e26b0fa7592b67cd26fba6f8546c7775c8f2b35"
       },
       {
         "path": "scripts/lexicon/promote_teacher_lesson_intake.py",

@@ -50,7 +50,7 @@ import sqlite3
 import sys
 import time
 import unicodedata
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from functools import lru_cache
 from html.parser import HTMLParser
 from pathlib import Path
@@ -62,7 +62,7 @@ import requests
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from scripts.lexicon.build_data_manifest import _slug_for_url
+from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
 from scripts.lexicon.build_kaikki_lookup import _clean_gloss as _clean_translation_gloss
 from scripts.lexicon.build_kaikki_lookup import lookup_key as kaikki_lookup_key
@@ -143,6 +143,7 @@ SLOVNYK_CACHE = _default_slovnyk_cache()
 
 _CYRILLIC_WORD_CHARS = "A-Za-zА-Яа-яЄєІіЇїҐґ0-9'’ʼ-"
 _LATIN_RE = re.compile(r"[A-Za-z]")
+_CYRILLIC_RE = re.compile(r"[А-Яа-яЄєІіЇїҐґ]")
 _UKRAINIAN_TEXT_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ -]+$")
 _STRESS_MARK_RE = re.compile("[\u0300\u0301]")
 _NON_CACHE_CHARS_RE = re.compile(r"[^0-9A-Za-zА-Яа-яЄєІіЇїҐґ'’ʼ-]+")
@@ -817,6 +818,109 @@ def _build_verb_paradigm(forms: list[dict[str, str]]) -> dict | None:
         paradigm["imperative"] = collapsed_imperative
     if collapsed_past:
         paradigm["past"] = collapsed_past
+    return paradigm
+
+
+def _participle_analysis(forms: Sequence[Mapping[str, object]]) -> tuple[str, str] | None:
+    """Return the unambiguous VESUM voice/aspect for a participle form set."""
+    tags = {str(row.get("tags") or "") for row in forms}
+    voices = {
+        voice
+        for marker, voice in (("pasv", "passive"), ("actv", "active"))
+        if any("adjp" in tag.split(":") and marker in tag.split(":") for tag in tags)
+    }
+    aspects = {
+        aspect
+        for marker, aspect in (("perf", "perfective"), ("imperf", "imperfective"))
+        if any(marker in tag.split(":") for tag in tags)
+    }
+    if len(voices) != 1 or len(aspects) != 1:
+        return None
+    return next(iter(voices)), next(iter(aspects))
+
+
+_PARTICIPLE_PARENT_RE = re.compile(
+    r"\b(?:дієпр\.?|дієприкметник)\b.*?\bдо\s+([А-Яа-яЄєІіЇїҐґ'’ʼ-]+)",
+    re.IGNORECASE,
+)
+
+
+def _participle_parent_from_hints(hints: Sequence[object]) -> str | None:
+    """Extract a VESUM-attested infinitive from a sourced Ukrainian definition.
+
+    A VESUM participle analysis records voice and aspect but not the generating
+    verb.  Dictionary wording such as ``Дієпр. пас. мин. ч. до прийняти`` is
+    the deterministic parent source; require an infinitive VESUM analysis
+    before presenting it to a learner.
+    """
+    for hint in hints:
+        if not isinstance(hint, str):
+            continue
+        match = _PARTICIPLE_PARENT_RE.search(strip_acute_stress(hint))
+        if not match:
+            continue
+        parent = match.group(1)
+        try:
+            analyses = verify_word(parent)
+        except Exception:
+            continue
+        if any(
+            str(row.get("pos") or "") == "verb"
+            and "inf" in str(row.get("tags") or "").split(":")
+            for row in analyses
+        ):
+            return parent
+    return None
+
+
+def _entry_participle_hints(entry: Mapping[str, object]) -> list[str]:
+    """Collect source-definition text that can name a participle's parent verb."""
+    hints: list[str] = []
+    gloss = entry.get("gloss")
+    if isinstance(gloss, str):
+        hints.append(gloss)
+    enrichment = entry.get("enrichment")
+    if not isinstance(enrichment, Mapping):
+        return hints
+    meaning = enrichment.get("meaning")
+    if isinstance(meaning, Mapping):
+        definitions = meaning.get("definitions")
+        if isinstance(definitions, list):
+            for definition in definitions:
+                if isinstance(definition, str):
+                    hints.append(definition)
+                elif isinstance(definition, Mapping):
+                    for key in ("text", "definition", "value"):
+                        value = definition.get(key)
+                        if isinstance(value, str):
+                            hints.append(value)
+    cards = enrichment.get("definition_cards")
+    if isinstance(cards, list):
+        for card in cards:
+            if not isinstance(card, Mapping):
+                continue
+            definitions = card.get("definitions")
+            if isinstance(definitions, list):
+                hints.extend(item for item in definitions if isinstance(item, str))
+    return hints
+
+
+def _build_participle_paradigm(
+    forms: Sequence[Mapping[str, object]],
+    *,
+    parent_hints: Sequence[object] = (),
+    available_lemmas: set[str] | None = None,
+) -> dict[str, str] | None:
+    analysis = _participle_analysis(forms)
+    if analysis is None:
+        return None
+    voice, aspect = analysis
+    paradigm: dict[str, str] = {"kind": "participle", "voice": voice, "aspect": aspect}
+    parent = _participle_parent_from_hints(parent_hints)
+    if parent:
+        paradigm["verb"] = parent
+        if available_lemmas is not None and _lemma_key(parent) in available_lemmas:
+            paradigm["verb_url_slug"] = _slug_for_url(parent)
     return paradigm
 
 
@@ -2350,7 +2454,12 @@ def _is_slovnyk_warning_candidate(entry: dict[str, Any], status: dict[str, Any])
     )
 
 
-def _morphology(lemma: str) -> dict | None:
+def _morphology(
+    lemma: str,
+    *,
+    parent_hints: Sequence[object] = (),
+    available_lemmas: set[str] | None = None,
+) -> dict | None:
     """Full VESUM paradigm for a single-token lemma, decoded and de-duplicated.
 
     Style/register-marked forms (нестягнені, застарілі, розмовні … — any tag token
@@ -2416,7 +2525,11 @@ def _morphology(lemma: str) -> dict | None:
         "forms": forms_out,
         "source": "VESUM",
     }
-    paradigm = _build_paradigm(pos_raw, decoded)
+    paradigm = _build_participle_paradigm(
+        forms,
+        parent_hints=parent_hints,
+        available_lemmas=available_lemmas,
+    ) or _build_paradigm(pos_raw, decoded)
     if paradigm:
         morphology["paradigm"] = paradigm
     stressed_forms = {
@@ -5124,9 +5237,23 @@ def _slovnyk_ukreng_translation(lemma: str, cache: dict[str, Any] | None) -> dic
     return block
 
 
+def _is_learner_english_text(value: object) -> bool:
+    """Accept an English learner gloss, never a Ukrainian-only dictionary note."""
+    return isinstance(value, str) and bool(value.strip()) and bool(_LATIN_RE.search(value))
+
+
+def _is_cyrillic_only_gloss(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and bool(value.strip())
+        and bool(_CYRILLIC_RE.search(value))
+        and not _LATIN_RE.search(value)
+    )
+
+
 def _entry_has_learner_english_anchor(entry: dict[str, Any]) -> bool:
     gloss = entry.get("gloss")
-    if isinstance(gloss, str) and gloss.strip():
+    if _is_learner_english_text(gloss):
         return True
     enrichment = entry.get("enrichment")
     if not isinstance(enrichment, dict):
@@ -5134,14 +5261,76 @@ def _entry_has_learner_english_anchor(entry: dict[str, Any]) -> bool:
     translation = enrichment.get("translation")
     if isinstance(translation, dict):
         terms = translation.get("en")
-        if isinstance(terms, list) and any(isinstance(term, str) and term.strip() for term in terms):
+        if isinstance(terms, list) and any(_is_learner_english_text(term) for term in terms):
             return True
     meaning = enrichment.get("meaning")
     if isinstance(meaning, dict) and meaning.get("source") == KAIKKI_SOURCE:
         definitions = meaning.get("definitions")
-        if isinstance(definitions, list) and any(isinstance(item, str) and item.strip() for item in definitions):
+        if isinstance(definitions, list) and any(_is_learner_english_text(item) for item in definitions):
             return True
     return False
+
+
+def apply_participle_presentation(
+    entry: dict[str, Any],
+    *,
+    parent_hints: Sequence[object] = (),
+    available_lemmas: set[str] | None = None,
+) -> bool:
+    """Attach VESUM-backed participle morphology to a candidate or Atlas entry.
+
+    This deliberately does not generate a gloss.  It only turns a VESUM
+    ``adjp:pasv`` / ``adjp:actv`` analysis plus an attested dictionary parent
+    into learner-facing morphology before promotion or during enrichment.
+    """
+    lemma = str(entry.get("lemma") or "").strip()
+    if not lemma:
+        return False
+    hints = [*parent_hints, *_entry_participle_hints(entry)]
+    morphology = _morphology(lemma, parent_hints=hints, available_lemmas=available_lemmas)
+    if not isinstance(morphology, dict):
+        return False
+    paradigm = morphology.get("paradigm")
+    if not isinstance(paradigm, dict) or paradigm.get("kind") != "participle":
+        return False
+    enrichment_raw = entry.get("enrichment")
+    enrichment: dict[str, Any] = dict(enrichment_raw) if isinstance(enrichment_raw, Mapping) else {}
+    enrichment["morphology"] = morphology
+    sources = list(enrichment.get("sources") or []) if isinstance(enrichment.get("sources"), list) else []
+    if "VESUM" not in sources:
+        sources.append("VESUM")
+    enrichment["sources"] = sorted(sources)
+    entry["enrichment"] = enrichment
+    return True
+
+
+def promotion_entry_gate_violations(entries: Sequence[Mapping[str, Any]]) -> list[str]:
+    """Return deterministic learner-gloss and participle violations for new entries."""
+    violations: list[str] = []
+    for entry in entries:
+        lemma = str(entry.get("lemma") or "<missing lemma>")
+        if _is_cyrillic_only_gloss(entry.get("gloss")):
+            violations.append(f"{lemma}: top-level learner gloss is Cyrillic-only; English gloss required")
+        try:
+            analyses = verify_word(lemma)
+        except Exception:
+            continue
+        analysis = _participle_analysis(analyses)
+        if analysis is None:
+            continue
+        expected_voice, expected_aspect = analysis
+        enrichment = entry.get("enrichment")
+        morphology = enrichment.get("morphology") if isinstance(enrichment, Mapping) else None
+        paradigm = morphology.get("paradigm") if isinstance(morphology, Mapping) else None
+        if not isinstance(paradigm, Mapping) or paradigm.get("kind") != "participle":
+            violations.append(f"{lemma}: VESUM participle requires participle presentation")
+            continue
+        if paradigm.get("voice") != expected_voice or paradigm.get("aspect") != expected_aspect:
+            violations.append(f"{lemma}: participle presentation disagrees with VESUM voice/aspect")
+        parent = _participle_parent_from_hints(_entry_participle_hints(entry))
+        if parent and paradigm.get("verb") != parent:
+            violations.append(f"{lemma}: VESUM participle dictionary parent {parent!r} is missing")
+    return violations
 
 
 def _fill_learner_english_anchor_from_slovnyk_cache(
@@ -5650,6 +5839,7 @@ def enrich_entry(
     pointer_antonym_relations: list[dict[str, Any]] | None = None,
     pointer_homonym_relations: list[dict[str, Any]] | None = None,
     pointer_paronym_relations: list[dict[str, Any]] | None = None,
+    available_lemmas: set[str] | None = None,
 ) -> bool:
     """Enrich a single manifest entry in place (dictionary-grounded).
     Returns True if any enrichment was attached. Extracted from enrich() so the
@@ -5825,7 +6015,11 @@ def enrich_entry(
     cefr = _cefr(conn, lemma)
     if cefr:
         block["cefr"] = cefr
-    morph = _morphology(base)
+    morph = _morphology(
+        base,
+        parent_hints=_entry_participle_hints(entry),
+        available_lemmas=available_lemmas,
+    )
     if morph:
         block["morphology"] = morph
     entry["heritage_status"] = _finalize_heritage_status(
@@ -5992,6 +6186,11 @@ def enrich(
 
         entries = list(stream_manifest_entries_sqlite(Path(staged["path"])))
         _normalize_manifest_entries({"entries": entries})
+        available_lemmas = {
+            _lemma_key(str(entry.get("lemma") or ""))
+            for entry in entries
+            if str(entry.get("lemma") or "").strip()
+        }
 
         cefr_path = work_dir / "seals" / "cefr.sqlite"
         unique_words = cefr_candidate_words(
@@ -6061,6 +6260,7 @@ def enrich(
                     *pointer_paronym_relations.get(entry_key or "", []),
                     *corpus_for_entry.get("paronym", []),
                 ],
+                available_lemmas=available_lemmas,
             ):
                 enriched += 1
     finally:

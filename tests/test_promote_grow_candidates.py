@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon import promote_grow_candidates as promote
 from scripts.lexicon.source_attribution import BALLA_LABEL, attach_official_url
 
@@ -83,6 +84,110 @@ def test_manifest_entry_prefers_curated_candidate_gloss_over_meaning() -> None:
     )
 
     assert entry["gloss"] == "pineapple"
+
+
+def test_manifest_entry_curates_english_pryjnyatyi_gloss() -> None:
+    entry = promote.manifest_entry_from_candidate(
+        _candidate(
+            lemma="прийнятий",
+            pos="adj",
+            gloss="Дієпр. пас. мин. ч. до прийня́ти.",
+            enrichment={
+                "meaning": {
+                    "definitions": ["Дієпр. пас. мин. ч. до прийня́ти."],
+                    "source": "fixture dictionary",
+                },
+                "sources": ["fixture dictionary"],
+            },
+        )
+    )
+
+    assert entry["gloss"] == "accepted; admitted; adopted"
+    assert entry["enrichment"]["translation"] == {
+        "en": ["accepted", "admitted", "adopted"],
+        "source": "Atlas learner curation (#5918)",
+    }
+
+
+def test_promote_dry_run_rejects_cyrillic_only_top_level_gloss(tmp_path: Path) -> None:
+    manifest_path = _write_manifest(tmp_path, [_entry("авто")])
+    before = manifest_path.read_text(encoding="utf-8")
+    candidates_path = _write_candidates(
+        tmp_path,
+        [_candidate("мама", gloss="мама", enrichment={"meaning": {"definitions": ["мама"]}})],
+        [],
+    )
+
+    with pytest.raises(promote.SelfCheckError):
+        promote.promote_grow_candidates(
+            candidates_path=candidates_path,
+            manifest_path=manifest_path,
+            needs_review_path=tmp_path / "grow_needs_review.json",
+            fingerprint_path=tmp_path / "lexicon-manifest.fingerprint.json",
+            self_check=lambda _path: 0,
+            fingerprint_writer=_fingerprint_writer,
+        )
+
+    assert manifest_path.read_text(encoding="utf-8") == before
+
+
+def test_promote_pryjnyatyi_uses_english_gloss_and_participle_presentation(
+    tmp_path: Path, monkeypatch
+) -> None:
+    participle_forms = [
+        {"word_form": "прийнятий", "tags": "adj:m:v_naz:adjp:pasv:perf", "pos": "adj"},
+        {"word_form": "прийнята", "tags": "adj:f:v_naz:adjp:pasv:perf", "pos": "adj"},
+    ]
+    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: participle_forms)
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "verify_word",
+        lambda word: (
+            [{"lemma": "прийняти", "pos": "verb", "tags": "verb:perf:inf"}]
+            if word == "прийняти"
+            else [{"lemma": "прийнятий", "pos": "adj", "tags": "adj:m:v_naz:adjp:pasv:perf"}]
+        ),
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    manifest_path = _write_manifest(tmp_path, [_entry("прийняти")])
+    candidates_path = _write_candidates(
+        tmp_path,
+        [
+            _candidate(
+                "прийнятий",
+                pos="adj",
+                gloss="Дієпр. пас. мин. ч. до прийня́ти.",
+                enrichment={
+                    "meaning": {
+                        "definitions": ["Дієпр. пас. мин. ч. до прийня́ти."],
+                        "source": "fixture dictionary",
+                    },
+                    "sources": ["fixture dictionary"],
+                },
+            )
+        ],
+        [],
+    )
+
+    promote.promote_grow_candidates(
+        candidates_path=candidates_path,
+        manifest_path=manifest_path,
+        needs_review_path=tmp_path / "grow_needs_review.json",
+        fingerprint_path=tmp_path / "lexicon-manifest.fingerprint.json",
+        write=True,
+        self_check=lambda _path: 0,
+        fingerprint_writer=_fingerprint_writer,
+    )
+
+    entry = next(item for item in _read_json(manifest_path)["entries"] if item["lemma"] == "прийнятий")
+    assert entry["gloss"] == "accepted; admitted; adopted"
+    assert entry["enrichment"]["morphology"]["paradigm"] == {
+        "kind": "participle",
+        "voice": "passive",
+        "aspect": "perfective",
+        "verb": "прийняти",
+        "verb_url_slug": "прийняти",
+    }
 
 
 def test_manifest_entry_omits_provenance_when_candidate_has_none() -> None:
