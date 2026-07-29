@@ -413,6 +413,14 @@ data/lexicon/slovnyk_cache/
 # reads them (it hydrates the published release-asset manifest).
 # Regenerate on demand via scripts/lexicon/enrich_manifest.py.
 data/lexicon/cache/
+# Local mirror of the remote Atlas 20k runner work-dir (default
+# /home/ops/atlas-runner/run-20k on the VPS): ledger.sqlite, network-cache.sqlite,
+# reduce/enrich candidates. The VPS itself has no backup; scripts/backup-data.sh
+# (#6014) already backs up all of data/, so mirroring here — instead of building a
+# second backup mechanism — makes the runner state durable for free (#5884).
+# Refresh via scripts/lexicon/runner/durable_mirror.py snapshot; see
+# docs/runbooks/atlas-20k-runner-durability.md.
+data/lexicon/runner-mirror/
 # Generated build artifact: regenerate on demand with
 #   .venv/bin/python -m scripts.lexicon.grow_lexicon_from_content (#3675 P2; promotion = P3)
 data/lexicon/grow_candidates.json
