@@ -247,6 +247,14 @@ def run_git_nul_separated(cmd: list[str]) -> list[str]:
     return decoded
 
 
+def get_diff_range_head(diff_range: str) -> str:
+    """Return the revision containing files at the right side of a git range."""
+    for separator in ("...", ".."):
+        if separator in diff_range:
+            return diff_range.rsplit(separator, 1)[1]
+    return "HEAD"
+
+
 def get_files_to_check(diff_range: str | None = None, staged_only: bool = False, scan_all: bool = False) -> tuple[list[str], str, str]:
     """Return tuple of (list_of_relative_path_strings, mode_description, rev_target)."""
     if scan_all:
@@ -260,7 +268,7 @@ def get_files_to_check(diff_range: str | None = None, staged_only: bool = False,
         return filter_rel_paths(paths), "staged git index (:path)", ""
 
     if diff_range:
-        rev_target = diff_range.split("..")[-1] if ".." in diff_range else "HEAD"
+        rev_target = get_diff_range_head(diff_range)
         cmd = ["git", "diff", "-z", "--name-only", "--diff-filter=ACMRT", diff_range]
         paths = run_git_nul_separated(cmd)
         return filter_rel_paths(paths), f"git diff ({diff_range})", rev_target
@@ -324,32 +332,41 @@ def get_public_personal_identifier_paths(revision: str = "") -> list[str]:
     return [path for path in paths if is_public_personal_identifier_path(path)]
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Lint repository for OPSEC leaks.")
-    parser.add_argument("diff_range", nargs="?", help="Git diff range (e.g. origin/main..HEAD)")
+    parser.add_argument("diff_range", nargs="?", help="Git diff range (e.g. origin/main...HEAD)")
     parser.add_argument("--staged", action="store_true", help="Inspect staged git index blobs")
     parser.add_argument("--all", action="store_true", help="Explicitly scan all tracked files in repo")
     parser.add_argument(
         "--public-identifiers",
         action="store_true",
-        help="Scan all learner-facing files for scrubbed personal identifiers only",
+        help="Scan learner-facing files for scrubbed personal identifiers only",
     )
     parser.add_argument(
         "--revision",
         help="Read --public-identifiers files from this git revision instead of HEAD",
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
-    if args.public_identifiers and (args.diff_range or args.staged or args.all):
-        parser.error("--public-identifiers cannot be combined with a diff range, --staged, or --all")
+    if args.public_identifiers and (args.staged or args.all):
+        parser.error("--public-identifiers cannot be combined with --staged or --all")
     if args.revision and not args.public_identifiers:
         parser.error("--revision requires --public-identifiers")
+    if args.revision and args.diff_range:
+        parser.error("--revision cannot be combined with a diff range")
 
     try:
         if args.public_identifiers:
-            rel_paths = get_public_personal_identifier_paths(args.revision or "HEAD")
-            mode_str = "all tracked learner-facing files (--public-identifiers)"
-            rev_target = args.revision or "HEAD"
+            if args.diff_range:
+                changed_paths, diff_mode, rev_target = get_files_to_check(args.diff_range)
+                rel_paths = [
+                    path for path in changed_paths if is_public_personal_identifier_path(path)
+                ]
+                mode_str = f"changed learner-facing files (--public-identifiers; {diff_mode})"
+            else:
+                rel_paths = get_public_personal_identifier_paths(args.revision or "HEAD")
+                mode_str = "all tracked learner-facing files (--public-identifiers)"
+                rev_target = args.revision or "HEAD"
         else:
             rel_paths, mode_str, rev_target = get_files_to_check(args.diff_range, staged_only=args.staged, scan_all=args.all)
     except Exception as exc:
@@ -369,10 +386,14 @@ def main() -> int:
         if content is None:
             disk_path = REPO_ROOT / rel_path
             if not disk_path.is_file():
+                print(f"💥 Fail-closed unreadable selected file: {rel_path}", file=sys.stderr)
+                total_findings += 1
                 continue
             try:
                 content = disk_path.read_text(encoding="utf-8", errors="ignore")
-            except Exception:
+            except OSError as exc:
+                print(f"💥 Fail-closed unreadable selected file: {rel_path}: {exc}", file=sys.stderr)
+                total_findings += 1
                 continue
 
         findings = check_content(

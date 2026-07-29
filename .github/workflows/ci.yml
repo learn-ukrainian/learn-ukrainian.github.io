@@ -318,8 +318,16 @@ jobs:
         run: .venv/bin/python scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
 
       - name: Gate scrubbed public identifiers and teacher-cloze answers
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          .venv/bin/python scripts/audit/lint_opsec_leaks.py --public-identifiers
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            .venv/bin/python scripts/audit/lint_opsec_leaks.py \
+              "${PR_BASE_SHA}...${PR_HEAD_SHA}" --public-identifiers
+          else
+            .venv/bin/python scripts/audit/lint_opsec_leaks.py --public-identifiers
+          fi
           .venv/bin/python scripts/audit/check_teacher_cloze_content.py
 
       - name: Check locked modules are not published

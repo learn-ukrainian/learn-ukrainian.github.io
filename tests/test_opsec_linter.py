@@ -3,6 +3,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts/audit"))
 
+import lint_opsec_leaks as opsec_linter
 from lint_opsec_leaks import check_content
 
 
@@ -68,3 +69,67 @@ def test_scrubbed_personal_identifier_is_not_checked_in_private_code_or_as_subst
 
     assert code_findings == []
     assert substring_findings == []
+
+
+def test_public_identifier_pr_mode_scans_only_changed_public_paths(monkeypatch):
+    changed_public_path = "site/src/data/changed.json"
+    unchanged_public_path = "docs/unchanged.md"
+    scanned_paths: list[str] = []
+
+    monkeypatch.setattr(
+        opsec_linter,
+        "get_files_to_check",
+        lambda diff_range: ([changed_public_path, "scripts/private_import.py"], "git diff", "pr-head"),
+    )
+
+    def get_content(path: str, rev: str) -> str:
+        scanned_paths.append(path)
+        assert rev == "pr-head"
+        return "clean content"
+
+    monkeypatch.setattr(opsec_linter, "get_git_content", get_content)
+
+    assert opsec_linter.main(["base...pr-head", "--public-identifiers"]) == 0
+    assert scanned_paths == [changed_public_path]
+    assert unchanged_public_path not in scanned_paths
+
+
+def test_public_identifier_pr_mode_rejects_a_leak_in_a_changed_public_path(monkeypatch):
+    changed_public_path = "docs/changed.md"
+    marker = opsec_linter._SCRUBBED_PERSONAL_IDENTIFIER_TOKENS[0]
+
+    monkeypatch.setattr(
+        opsec_linter,
+        "get_files_to_check",
+        lambda diff_range: ([changed_public_path], "git diff", "pr-head"),
+    )
+    monkeypatch.setattr(opsec_linter, "get_git_content", lambda path, rev: marker)
+
+    assert opsec_linter.main(["base...pr-head", "--public-identifiers"]) == 1
+
+
+def test_public_identifier_full_tree_mode_scans_every_public_path(monkeypatch):
+    public_paths = ["site/src/data/a.json", "docs/b.md"]
+    scanned_paths: list[str] = []
+
+    monkeypatch.setattr(opsec_linter, "get_public_personal_identifier_paths", lambda revision: public_paths)
+
+    def get_content(path: str, rev: str) -> str:
+        scanned_paths.append(path)
+        assert rev == "HEAD"
+        return "clean content"
+
+    monkeypatch.setattr(opsec_linter, "get_git_content", get_content)
+
+    assert opsec_linter.main(["--public-identifiers"]) == 0
+    assert scanned_paths == public_paths
+
+
+def test_symmetric_diff_uses_its_head_for_blob_reads(monkeypatch):
+    monkeypatch.setattr(opsec_linter, "run_git_nul_separated", lambda cmd: ["site/src/data/a.json"])
+
+    paths, mode, revision = opsec_linter.get_files_to_check("base-sha...head-sha")
+
+    assert paths == ["site/src/data/a.json"]
+    assert mode == "git diff (base-sha...head-sha)"
+    assert revision == "head-sha"
