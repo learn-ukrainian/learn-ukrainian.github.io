@@ -10,9 +10,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from collections import Counter
 from collections.abc import Iterable
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +28,15 @@ from scripts.sync.promote_module import _write_atomically
 
 PRACTICE_SCHEMA = "curated-v5-practice-seed-v1"
 PUBLIC_SCHEMA = "curated-v5-admission-seed-v1"
+_ASPECT_NOTE_RE = re.compile(r"\s*\((?:perf|impf)\)\s*$", re.IGNORECASE)
+
+
+@dataclass(frozen=True)
+class GlossFillResult:
+    """Result of applying an explicit curated-seed gloss allowlist."""
+
+    applied: tuple[str, ...]
+    skipped_existing: tuple[str, ...]
 
 
 def _text(value: object) -> str:
@@ -131,6 +142,70 @@ def candidates_for_manifest(rows: list[dict[str, Any]], manifest_path: Path) -> 
     return {"auto_merge": candidates, "needs_review": []}
 
 
+def fill_missing_manifest_glosses(
+    rows: Iterable[dict[str, Any]],
+    manifest: dict[str, Any],
+    target_lemmas: Iterable[str],
+) -> GlossFillResult:
+    """Fill selected blank Atlas glosses from the curated seed's English field.
+
+    The allowlist is deliberately mandatory at the call site: a seed can contain
+    many rows, while a repair must not broaden beyond its reviewed targets.  A
+    seed English string is copied verbatim except for a trailing aspect marker,
+    which is metadata rather than learner-facing gloss text.
+    """
+    entries = manifest.get("entries")
+    if not isinstance(entries, list) or not all(isinstance(entry, dict) for entry in entries):
+        raise ValueError("manifest entries must be objects")
+
+    targets = {_lemma_key(_text(lemma)) for lemma in target_lemmas if _text(lemma)}
+    if not targets:
+        raise ValueError("at least one target lemma is required")
+
+    seed_glosses: dict[str, str] = {}
+    for row in rows:
+        lemma = _text(row.get("lemma"))
+        key = _lemma_key(lemma)
+        if key not in targets:
+            continue
+        gloss = _clean_seed_gloss(_text(row.get("gloss")))
+        if not gloss:
+            raise ValueError(f"target seed row has no English gloss: {lemma}")
+        prior = seed_glosses.get(key)
+        if prior is not None and prior != gloss:
+            raise ValueError(f"target seed has conflicting English glosses: {lemma}")
+        seed_glosses[key] = gloss
+
+    missing_seed = sorted(targets - set(seed_glosses))
+    if missing_seed:
+        raise ValueError(f"target lemmas missing from curated seed: {', '.join(missing_seed)}")
+
+    manifest_entries = {
+        _lemma_key(_text(entry.get("lemma"))): entry
+        for entry in entries
+        if _text(entry.get("lemma"))
+    }
+    missing_manifest = sorted(targets - set(manifest_entries))
+    if missing_manifest:
+        raise ValueError(f"target lemmas missing from Atlas manifest: {', '.join(missing_manifest)}")
+
+    applied: list[str] = []
+    skipped_existing: list[str] = []
+    for key in sorted(targets):
+        entry = manifest_entries[key]
+        if _text(entry.get("gloss")):
+            skipped_existing.append(_text(entry.get("lemma")))
+            continue
+        entry["gloss"] = seed_glosses[key]
+        applied.append(_text(entry.get("lemma")))
+    return GlossFillResult(applied=tuple(applied), skipped_existing=tuple(skipped_existing))
+
+
+def _clean_seed_gloss(gloss: str) -> str:
+    """Drop only a terminal perfective/imperfective annotation from seed English."""
+    return _ASPECT_NOTE_RE.sub("", gloss).strip()
+
+
 def _cefr(entry: dict[str, Any]) -> tuple[str, str] | None:
     enrichment = entry.get("enrichment")
     value = enrichment.get("cefr") if isinstance(enrichment, dict) else None
@@ -209,8 +284,38 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--candidates-out", type=Path)
     parser.add_argument("--practice-seed-out", type=Path)
     parser.add_argument("--report-out", type=Path)
+    parser.add_argument(
+        "--fill-existing-glosses",
+        action="store_true",
+        help="Fill explicit blank manifest glosses from the curated seed English.",
+    )
+    parser.add_argument(
+        "--target-lemma",
+        action="append",
+        default=[],
+        help="Lemma permitted for --fill-existing-glosses; repeat for every reviewed target.",
+    )
+    parser.add_argument("--write", action="store_true", help="Write a manifest changed by --fill-existing-glosses.")
     args = parser.parse_args(argv)
     rows = read_public_seed(args.input) if args.input.suffix == ".json" else normalize_rows(_read_jsonl(args.input))
+    if args.write and not args.fill_existing_glosses:
+        parser.error("--write requires --fill-existing-glosses")
+    if args.fill_existing_glosses:
+        if not args.manifest:
+            parser.error("--fill-existing-glosses requires --manifest")
+        if not args.target_lemma:
+            parser.error("--fill-existing-glosses requires at least one --target-lemma")
+        manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
+        if not isinstance(manifest, dict):
+            raise ValueError(f"manifest must contain an object: {args.manifest}")
+        result = fill_missing_manifest_glosses(rows, manifest, args.target_lemma)
+        if args.write and result.applied:
+            _write_json(args.manifest, manifest)
+        print(
+            "Seed gloss fill: "
+            f"applied={len(result.applied)} skipped_existing={len(result.skipped_existing)} "
+            f"written={str(bool(args.write and result.applied)).lower()}"
+        )
     if args.public_seed_out:
         write_public_seed(rows, args.public_seed_out)
     if args.candidates_out:
