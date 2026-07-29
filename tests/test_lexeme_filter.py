@@ -95,6 +95,23 @@ def test_practice_keeps_canonical_lemma_normalized_from_an_inflected_surface():
     assert is_practice_eligible(entry) is True
 
 
+def test_practice_keeps_canonicalized_headword_without_form_of():
+    # VESUM canonicalization creates a real headword, not an alias route. Its source
+    # label must not exclude it when it has no actual form_of relationship.
+    entry = _noun(primary_source="built_vocabulary_canonicalized")
+
+    assert is_practice_eligible(entry) is True
+
+
+def test_practice_uses_form_of_not_form_source_for_exclusion():
+    # The manifest builder emits built_vocabulary_form only alongside form_of (covered
+    # in test_lexicon_build_manifest.py). This synthetic entry locks the predicate's
+    # deliberate contract: the relationship, not provenance, determines exclusion.
+    entry = _noun(primary_source="built_vocabulary_form")
+
+    assert is_practice_eligible(entry) is True
+
+
 def test_practice_rejects_glossless():
     assert is_practice_eligible(_noun(gloss=None)) is False
 
