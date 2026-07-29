@@ -39,10 +39,27 @@ const excludedTeacherClozeIds = new Set([
   'teacher_cloze_581',
   'teacher_cloze_1521',
 ]);
+const privateTeacherNameMarkers = ['alona', 'альона', 'алёна'];
+
+function containsPrivateTeacherName(value: unknown): boolean {
+  if (typeof value === 'string') {
+    const normalized = value.toLowerCase();
+    return privateTeacherNameMarkers.some((marker) => normalized.includes(marker));
+  }
+  if (Array.isArray(value)) {
+    return value.some(containsPrivateTeacherName);
+  }
+  if (value && typeof value === 'object') {
+    return Object.values(value).some(containsPrivateTeacherName);
+  }
+  return false;
+}
 
 /** Removes teacher-cloze cards whose public content must not be served. */
 export function filterTeacherClozeItems<T extends { clozeId: string }>(items: readonly T[]): T[] {
-  return items.filter((item) => !excludedTeacherClozeIds.has(item.clozeId));
+  return items.filter(
+    (item) => !excludedTeacherClozeIds.has(item.clozeId) && !containsPrivateTeacherName(item),
+  );
 }
 
 const defaultTeacherLemmas: string[] = Array.from(

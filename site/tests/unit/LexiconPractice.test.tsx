@@ -783,10 +783,15 @@ beforeEach(() => {
 });
 
 describe('LexiconPractice', () => {
-  test('filters excluded teacher cloze cards before they reach the practice deck', () => {
+  test('filters excluded and private-name teacher cloze cards before they reach the practice deck', () => {
     expect(
       filterTeacherClozeItems([
         { clozeId: 'teacher_cloze_57' },
+        { clozeId: 'teacher_cloze_safe_but_private_lemma', lemma: 'Альона' },
+        {
+          clozeId: 'teacher_cloze_safe_but_private_option',
+          options: [{ lemmaId: 'alona', label: 'Alona' }],
+        },
         { clozeId: 'teacher_cloze_safe' },
       ]),
     ).toEqual([{ clozeId: 'teacher_cloze_safe' }]);

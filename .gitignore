@@ -425,11 +425,9 @@ data/lexicon/curated-v5-admission-seed.json
 data/lexicon/curated-v5-practice-seed.json
 data/lexicon/curated-v5-admission-report.json
 data/lexicon/curated-v5-grow-candidates.json
-# Retain the prior output paths for one transition cycle.
+# Retain only legacy Atlas-specific output paths for one transition cycle.
 data/lexicon/curated-v5-atlas-admission-seed.json
-data/lexicon/curated-v5-practice-seed.json
 data/lexicon/curated-v5-atlas-admission-report.json
-data/lexicon/curated-v5-grow-candidates.json
 # Ohoiko corpus intake full source inventory (~31 MB, 111,200 rows): deterministic,
 # regenerable output of committed code over the private corpus (#4223). It does NOT
 # belong in git history — regenerate on demand into this path (main checkout only):
