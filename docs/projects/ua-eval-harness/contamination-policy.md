@@ -1,120 +1,128 @@
-# Політика замороження й запобігання витоку
+# Release freeze and contamination policy
 
-Ця політика стосується публічного оцінювання виправлень українських кальок і
-граматики `ua-gec-calque-grammar-public-v0` версії `0.1.0`. Вона не поширює
-оцінювальний набір на продукти, навчальні корпуси чи інші дослідницькі задачі.
+This policy applies to the `ua-gec-calque-grammar-public-v0` release family.
+The immutable `0.1.0` freeze remains valid; corrective release `0.1.1`
+preserves its dataset, task, scorer, and results. This policy does not
+authorize reuse of the evaluation set in products, training corpora, or
+unrelated research tasks.
 
-## Заморожений склад
+## Frozen release contents
 
-Єдиним машинним реєстром релізу є
-`data/projects/ua_eval_harness/releases/v0.1.0/freeze_manifest.json`. Він
-фіксує SHA-256 для:
+Each release has a machine-readable record under
+`data/projects/ua_eval_harness/releases/`. It records SHA-256 hashes for:
 
-- конфігурації й маніфесту вибірки, окремого disposition-маніфесту для
-  calque scoring та його конфігурації;
-- інструкції, схеми відповіді, екстрактора, оцінювача й необов'язкового
-  провайдерного запускатора;
-- VESUM source lock, marker parser і builder benchmark-dispositions;
-- пакета запитів, усіх збережених відповідей і агрегованих звітів трьох
-  базових систем;
-- 52 тренувальних прикладів, які дозволено використовувати лише як
-  development-fixtures і які не входять до held-out результатів.
+- the dataset configuration and manifest;
+- the separate calque scoring-disposition manifest and its configuration;
+- the task instruction, output schema, extractor, scorer, and optional
+  provider runner;
+- the VESUM source lock, marker parser, and scoring-disposition builder;
+- the source-only request packet, saved responses, and aggregate reports for
+  all three baselines;
+- 52 training-derived examples that may be used only as development fixtures
+  and do not contribute to held-out results.
 
-Перевірка не потребує мережі або провайдерних ключів:
+Verification requires neither network access nor provider credentials:
 
 ```bash
 .venv/bin/python scripts/projects/ua_eval_harness/verify_release_freeze.py
 ```
 
-Будь-яка невідповідність байтів, метаданих запуску, prompt/scorer receipt,
-покриття відповідей або політики агрегованих звітів завершує перевірку
-помилкою.
+The verifier fails if it finds a mismatch in artifact bytes, run metadata,
+prompt or scorer receipts, response coverage, or aggregate-report policy.
 
-## Цілісність поділу
+## Split integrity
 
-Джерелом є UA-GEC 2.0 на commit
-`4757f72f192c4a41e4c8fb1d9690a948f87cf6d6`. Хеші `LICENSE`, `README.md`,
-`data/metadata.csv` і `gec-fluency.test.m2` зафіксовано в freeze manifest.
+The source is UA-GEC 2.0 at commit
+`4757f72f192c4a41e4c8fb1d9690a948f87cf6d6`. The freeze records hashes for
+`LICENSE`, `README.md`, `data/metadata.csv`, and
+`data/gec-fluency/test/gec-fluency.test.m2`.
 
-Екстрактор перевіряє, що:
+The extractor verifies that:
 
-1. кожен document ID у metadata унікальний і має рівно один partition;
-2. множина документів у test M2 точно дорівнює множині test-документів у
-   metadata;
-3. автори train і test не перетинаються;
-4. усі 2 690 test-речень мають disposition: 677 включено, 2 013 виключено.
+1. every document ID in the metadata is unique and belongs to exactly one
+   partition;
+2. the document set in the test M2 file exactly matches the metadata's test
+   partition;
+3. the training and test partitions have no authors in common;
+4. all 2,690 test sentences have a disposition: 677 included and 2,013
+   excluded.
 
-Отже, перетин train/test становить нуль і на рівні авторів, і на рівні
-документів. 52 старі development-fixtures походять із train і залишаються
-окремими від held-out оцінювання.
+The training and test partitions therefore have zero author overlap and zero
+document overlap. The 52 development fixtures come from the training
+partition and remain separate from the held-out evaluation.
 
-## UA-GEC label і benchmark disposition
+## Upstream labels and benchmark dispositions
 
-`F/Calque` зберігається без змін як upstream label стандартизації UA-GEC. Це
-не є автоматичним твердженням нашого benchmark, що кожна початкова форма —
-калька. Окремий `scoring_dispositions_v1.json` містить рішення й причину для
-всіх 354 annotator-level edits.
+The release preserves `F/Calque` unchanged as an upstream UA-GEC
+standardization label. The label alone does not assert that every original
+form is a calque under this benchmark. A separate
+`scoring_dispositions_v1.json` records the decision and reason for all 354
+annotator-level edits.
 
-Відтворюваний exact-style probe використовує зафіксований dict_uk/VESUM
-`v6.8.0`. Серед 293 унікальних `F/Calque` spans він фіксує 49 style-marker
-collisions: 34 `bad`, 10 `slang`, 3 `arch`, 2 `rare`. Окремого `dial` token у
-цьому джерелі немає; офіційна семантика `arch` охоплює застаріле, архаїчне й
-інколи діалектне вживання. Тому реліз не заявляє «нуль діалектних
-конфліктів».
+The reproducible surface-form probe uses the pinned dict_uk/VESUM v6.8.0
+release. Across 293 unique `F/Calque` spans, the probe finds 49 collisions with
+style markers: 34 `bad`, 10 `slang`, 3 `arch`, and 2 `rare`. The source does
+not provide a dedicated `dial` token. Its published `arch` semantics cover
+obsolete and archaic usage and may also cover dialectal usage. The benchmark
+therefore does not claim that there are zero dialect conflicts.
 
-Headline calque recall включає 338 annotations. Ще 16 не входять до headline:
-3 register-standardization, 2 heritage-conflict і 11 contested. Attestation
-або marker є evidence, а не готовим contextual adjudication. Випадки
-`тьоті`, `кришею`, `рижого`, `Спікери` та false surface collision `була`
-зафіксовано окремими regression receipts. Повну активацію marker-aware
-contextual policy відстежує #5092; п'ятислівний prototype seed не
-використовується.
+Headline calque recall includes 338 annotations. The remaining 16 are outside
+the headline metric: 3 register-standardization cases, 2 heritage conflicts,
+and 11 contested cases. Attestation or a style marker is evidence, not a
+complete contextual decision. The release records separate regression
+receipts for `тьоті`, `кришею`, `рижого`, `Спікери`, and the false
+surface-form collision `була`. Broader marker-aware contextual activation is
+outside this release; unresolved cases fail closed. The five-word prototype
+seed is not used.
 
-## Відомі контакти з даними
+## Known contact with evaluation data
 
-- Публічна інструкція не містить прикладів.
-- Детермінована literal-rule baseline будує правила лише з 52 train-derived
-  development-fixtures. Це навмисно слабка діагностична baseline, не
-  held-out-навчання.
-- Перед повним запуском дві source-only позиції було використано для
-  транспортної перевірки. Після неї уточнено лише вимогу зберігати пробіли й
-  пунктуацію. Gold-відповіді, edits і scores не переглядалися.
-- Реальну модель обрано за наперед чинним operator routing, а не за
-  результатами цього benchmark.
-- Під час генерації моделі передавалися тільки ID, source, source hash і
-  prompt hash. Gold targets, references, edits та score були відсутні.
+- The public task instruction contains no examples.
+- The deterministic literal-rule baseline derives rules only from the 52
+  training-derived development fixtures. It is an intentionally weak
+  diagnostic baseline, not training on the held-out set.
+- Two source-only items were used for a transport check before the complete
+  run. That check led only to a clarification that spaces and punctuation must
+  be preserved. Gold responses, edits, and scores were not inspected.
+- The evaluated model configuration was fixed before generation and was not
+  selected using benchmark results.
+- Generation requests contained only the item ID, source sentence, source
+  hash, and prompt hash. They did not contain gold targets, references, edits,
+  or scores.
 
-## Заборонене повторне використання
+## Prohibited reuse
 
-Публічні source, gold, IDs, hashes і похідні правила цього held-out набору
-заборонено додавати до:
+Public source sentences, gold corrections, IDs, hashes, and derived rules from
+this held-out set must not be added to:
 
-- Daily Practice або іншого learner-exercise inventory;
-- будь-якого training, fine-tuning, synthetic-data, preference-data чи DPO
-  inventory;
-- Hramatka, teacher-feedback або приватних regression/canary наборів;
-- Atlas чи іншого приватного продуктового стану.
+- learner-facing exercise inventories;
+- training, fine-tuning, synthetic-data, or preference-data corpora;
+- teacher-feedback data or private regression corpora;
+- any non-public application state.
 
-Збіг, знайдений після замороження, є contamination incident. Такий реліз не
-можна мовчки «виправити»: потрібні окремий incident record, нова версія,
-повторна екстракція, нові baselines і новий freeze manifest.
+A match discovered after the release freeze is a contamination incident. The
+affected release must not be silently repaired. Resolution requires a recorded
+incident, a new release version, a fresh extraction, new baselines, and a new
+freeze manifest.
 
-## Безпечне звітування
+## Safe reporting
 
-Публічні score reports містять тільки агрегати, support, uncertainty та
-provenance. Вони не можуть містити item IDs, source/target text, edit spans,
-raw responses або content hashes. Збережені model responses є окремими
-публічними артефактами для відтворення оцінки; звіт не дублює їх.
+Public score reports contain only aggregates, support counts, uncertainty
+estimates, and provenance. They must not contain item IDs, source or target
+text, edit spans, raw responses, or content hashes. Saved model responses are
+separate public artifacts that permit reproduction of the scores; aggregate
+reports do not duplicate them.
 
-## Версіонування
+## Versioning
 
-Заморожені байти не редагують на місці.
+Frozen bytes are never edited in place.
 
-- `PATCH`: документаційне або пакувальне виправлення без зміни dataset,
-  task, scorer чи результатів.
-- `MINOR`: сумісне доповнення task contract, scorer, runner або baselines.
-- `MAJOR`: зміна dataset, eligibility predicate, gold, split, primary metric
-  або несумісна зміна контракту.
+- `PATCH`: documentation or packaging corrections that do not change the
+  dataset, task, scorer, or results.
+- `MINOR`: backward-compatible additions to the task contract, scorer, runner,
+  or baselines.
+- `MAJOR`: changes to the dataset, eligibility rule, gold data, split, primary
+  metric, or any incompatible contract change.
 
-Кожна нова версія отримує окрему директорію freeze; старі freeze manifests
-зберігаються та мають залишатися незалежно перевірними.
+Each new release version receives its own freeze directory. Older freeze
+manifests remain available and independently verifiable.

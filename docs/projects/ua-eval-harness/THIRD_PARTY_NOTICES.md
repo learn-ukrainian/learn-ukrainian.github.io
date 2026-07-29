@@ -45,7 +45,7 @@ The benchmark-disposition evidence receipts were derived from:
   [`bcb5ccd9585a79dbbbb7c8c5e241adcd8a64f824`](https://github.com/brown-uk/dict_uk/tree/bcb5ccd9585a79dbbbb7c8c5e241adcd8a64f824)
 - **Pinned release asset:**
   [`dict_corp_vis.txt.bz2`](https://github.com/brown-uk/dict_uk/releases/download/v6.8.0/dict_corp_vis.txt.bz2),
-  SHA-256
+  retrieved `2026-07-30`, size `18,195,377` bytes, SHA-256
   `e33803783ac138e6f3af2cf0e9428ba146c0ecfda7f5c41fe83ae00c7af24be9`
 - **License:** [Creative Commons Attribution-NonCommercial-ShareAlike 4.0
   International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)

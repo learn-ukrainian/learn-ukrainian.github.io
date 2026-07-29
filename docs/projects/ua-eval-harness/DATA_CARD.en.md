@@ -171,8 +171,8 @@ parser can also preserve comment-level dialect evidence. The release therefore
 does not claim that the dataset has no dialect conflicts. It makes no automatic
 regional exclusion, and any unresolved register, heritage, regional, or
 dialect-sensitive case stays outside headline calque scoring. Broader
-contextual activation of dictionary markers remains tracked in
-[issue #5092](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5092).
+contextual activation of dictionary markers is outside this release, and
+unresolved cases fail closed.
 
 This conservative boundary affects only the headline calque claim. Overall
 exact-edit metrics continue to report performance over all selected UA-GEC
@@ -219,9 +219,9 @@ It is not suitable for:
   cultural appropriateness, or human language competence;
 - drawing conclusions about individual authors or source-language groups;
 - grading learners, hiring, or other high-stakes decisions;
-- training, fine-tuning, synthetic corruption, preference data, or DPO;
-- serving as content for Daily Practice, Hramatka, teacher-feedback
-  inventories, Atlas, private regression sets, or private canaries.
+- training, fine-tuning, synthetic corruption, or preference data;
+- serving as learner exercises, teacher-feedback inventories, private
+  regression corpora, or non-public application state.
 
 ## Limitations
 
@@ -278,10 +278,10 @@ exclude item text, IDs, edits, raw responses, and content hashes.
 
 Public held-out source text, gold targets, IDs, hashes, and derived rules must
 not enter training or fine-tuning data, synthetic-data or preference-data
-pipelines, Daily Practice, Hramatka, teacher-feedback inventories, Atlas,
-private product data, regression sets, or canaries. A discovered leak is a
-contamination incident: the affected release requires a recorded incident, a
-new version, a new extraction, new baselines, and a new freeze.
+pipelines, learner exercises, teacher-feedback inventories, non-public
+application data, or regression corpora. A discovered leak is a contamination
+incident: the affected release requires a recorded incident, a new version, a
+new extraction, new baselines, and a new freeze.
 
 The complete restrictions and disclosures are in the
 [contamination policy](contamination-policy.md).
