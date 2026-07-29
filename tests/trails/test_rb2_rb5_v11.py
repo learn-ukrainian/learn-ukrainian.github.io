@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import re
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +18,19 @@ from scripts.orchestration.validate_trailspec import PROJECT_ROOT, validate_trai
 
 RB2_PATH = PROJECT_ROOT / "scripts/config/trails/rb2-dispatch-loop.trail.yaml"
 RB5_PATH = PROJECT_ROOT / "scripts/config/trails/rb5-session-close.trail.yaml"
+
+# Mirrors scripts.delegate._RUNTIME_TMP_TERMINAL_STATUSES, the dispatch task-status vocabulary.
+DELEGATE_TERMINAL_STATUSES = {
+    "done",
+    "timeout",
+    "needs_finalize",
+    "no_deliverable",
+    "failed",
+    "crashed",
+    "rate_limited",
+    "cancelled",
+    "dry_run",
+}
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -60,6 +74,21 @@ def test_each_transition_has_one_receipt_only_predicate(path: Path) -> None:
             assert evidence["clauses"]
             assert {clause["source"] for clause in evidence["clauses"]} == {"command_receipt"}
         assert len(predicate_ids) == len(set(predicate_ids))
+
+
+def test_finalize_settle_matches_delegate_terminal_status_vocabulary() -> None:
+    """The status case arms accept delegate.py's underscore-form terminal states."""
+    spec = _load(RB2_PATH)
+    finalize_settle = next(step for step in spec["steps"] if step["step_id"] == "finalize_settle")
+    command = finalize_settle["command"]["argv"][2]
+    matched_statuses = {
+        status
+        for case_arm in re.findall(r'(?:case "\$S" in|;;)\s*([^)]*)\)\s*echo', command)
+        for status in case_arm.split("|")
+        if status != "*"
+    }
+
+    assert matched_statuses == DELEGATE_TERMINAL_STATUSES
 
 
 def _assert_rb2_cleanup_is_non_force(spec: dict[str, Any]) -> None:

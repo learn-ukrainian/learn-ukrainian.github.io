@@ -227,7 +227,7 @@ steps:
     intent: Observe the settled task status and route only its typed receipt token.
     command:
       adapter: shell
-      argv: [sh, -c, 'S=$(jq -r ".status // empty" "batch_state/tasks/$TASK_ID.json" 2>/dev/null); case "$S" in done) echo done;; timeout|silence-timeout) echo timeout;; needs-finalize|no-deliverable) echo attention;; failed|crashed) echo failed;; rate-limited) echo rate-limited;; cancelled|dry-run) echo aborted;; *) echo unknown-status;; esac']
+      argv: [sh, -c, 'S=$(jq -r ".status // empty" "batch_state/tasks/$TASK_ID.json" 2>/dev/null); case "$S" in done) echo done;; timeout) echo timeout;; needs_finalize|no_deliverable) echo attention;; failed|crashed) echo failed;; rate_limited) echo rate-limited;; cancelled|dry_run) echo aborted;; *) echo unknown-status;; esac']
       environment: {TRAIL_INVOCATION_ID: "{invocation_id}", TASK_ID: "{task_id}"}
       timeout_seconds: 30
       mutation_class: observe
