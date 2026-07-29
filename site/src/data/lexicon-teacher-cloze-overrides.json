@@ -1,0 +1,9 @@
+{
+  "excludedClozeIds": [
+    "teacher_cloze_192",
+    "teacher_cloze_512",
+    "teacher_cloze_515",
+    "teacher_cloze_3150",
+    "teacher_cloze_4574"
+  ]
+}

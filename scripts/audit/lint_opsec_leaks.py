@@ -23,6 +23,7 @@ import os
 import re
 import subprocess
 import sys
+import unicodedata
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -56,6 +57,35 @@ _FORBIDDEN_PATTERNS = [
     (re.compile(r"-----BEGIN\s+(?:[A-Z0-9_-]+\s+)?PRIVATE\s+KEY-----", re.IGNORECASE), "Private Key Header (PKCS#1/PKCS#8/OpenSSH/RSA/EC/DSA/Encrypted)"),
     (re.compile(r"passwordless\s+SSH", re.IGNORECASE), "Raw SSH auth method disclosure"),
 ]
+
+# Personal identifiers scrubbed from public learner-facing content.  Match the
+# name stems rather than only their nominative forms: Ukrainian declension can
+# produce Альони, Альоні, Альону, Альоною, or Альоно.  The leading word boundary
+# prevents an embedded substring such as батальона from being treated as a name.
+_SCRUBBED_PERSONAL_IDENTIFIER_TOKENS = ("alona", "альона")
+_PERSONAL_IDENTIFIER_PATTERNS = tuple(
+    (
+        token,
+        re.compile(
+            rf"(?<!\w){re.escape(stem)}\w*\b",
+            re.IGNORECASE,
+        ),
+    )
+    for token, stem in (("alona", "alona"), ("альона", "альон"))
+)
+
+# This is deliberately exact rather than a broad directory exemption.  Tests
+# exercise the detector directly, so no public learner-facing file is allowed
+# to carry a regression marker.
+_PERSONAL_IDENTIFIER_PATH_ALLOWLIST: frozenset[str] = frozenset()
+
+_PUBLIC_PERSONAL_IDENTIFIER_ROOTS = (
+    # All files that may be shipped by the static site, including pages, their
+    # supporting source, and already-built public assets.
+    Path("site/src"),
+    Path("site/public"),
+    Path("docs"),
+)
 
 # File extensions to skip (strictly binary / generated / virtual environment files)
 _SKIP_EXTENSIONS = {
@@ -112,12 +142,43 @@ def is_section_citation(line: str, filename: str, p0: int, p1: int, p2: int, p3:
     return False
 
 
-def check_content(content: str, filename: str) -> list[tuple[int, str, str]]:
+def is_public_personal_identifier_path(filename: str) -> bool:
+    """Return whether a path is a learner-facing tree protected from name leaks."""
+    normalized = Path(filename.replace("\\", "/"))
+    return any(normalized.is_relative_to(root) for root in _PUBLIC_PERSONAL_IDENTIFIER_ROOTS)
+
+
+def check_personal_identifiers(content: str, filename: str) -> list[tuple[int, str, str]]:
+    """Return scrubbed personal-name findings in public learner-facing content only."""
+    normalized_filename = filename.replace("\\", "/")
+    if (
+        normalized_filename in _PERSONAL_IDENTIFIER_PATH_ALLOWLIST
+        or not is_public_personal_identifier_path(normalized_filename)
+    ):
+        return []
+
+    findings: list[tuple[int, str, str]] = []
+    for line_number, line in enumerate(unicodedata.normalize("NFC", content).splitlines(), 1):
+        for token, pattern in _PERSONAL_IDENTIFIER_PATTERNS:
+            if pattern.search(line):
+                findings.append((line_number, token, "Scrubbed personal identifier"))
+    return findings
+
+
+def check_content(
+    content: str,
+    filename: str,
+    *,
+    include_infrastructure: bool = True,
+) -> list[tuple[int, str, str]]:
     """Scan string content line by line for OPSEC leaks.
 
     Returns list of (line_num, match_str, description).
     """
     findings: list[tuple[int, str, str]] = []
+    if not include_infrastructure:
+        return check_personal_identifiers(content, filename)
+
     lines = content.splitlines()
 
     is_linter_itself = filename.replace("\\", "/").endswith("lint_opsec_leaks.py")
@@ -158,7 +219,7 @@ def check_content(content: str, filename: str) -> list[tuple[int, str, str]]:
             if pattern.search(line):
                 findings.append((idx, line.strip(), desc))
 
-    return findings
+    return findings + check_personal_identifiers(content, filename)
 
 
 def get_git_content(rel_path: str, rev: str = "") -> str | None:
@@ -191,23 +252,37 @@ def run_git_nul_separated(cmd: list[str]) -> list[str]:
     return decoded
 
 
-def get_files_to_check(diff_range: str | None = None, staged_only: bool = False, scan_all: bool = False) -> tuple[list[str], str, str]:
+def get_diff_range_head(diff_range: str) -> str:
+    """Return the revision containing files at the right side of a git range."""
+    for separator in ("...", ".."):
+        if separator in diff_range:
+            return diff_range.rsplit(separator, 1)[1]
+    return "HEAD"
+
+
+def get_files_to_check(
+    diff_range: str | None = None,
+    staged_only: bool = False,
+    scan_all: bool = False,
+    *,
+    apply_infrastructure_skips: bool = True,
+) -> tuple[list[str], str, str]:
     """Return tuple of (list_of_relative_path_strings, mode_description, rev_target)."""
     if scan_all:
         cmd = ["git", "ls-files", "-z"]
         paths = run_git_nul_separated(cmd)
-        return filter_rel_paths(paths), "all tracked files (--all)", "HEAD"
+        return filter_rel_paths(paths, apply_infrastructure_skips=apply_infrastructure_skips), "all tracked files (--all)", "HEAD"
 
     if staged_only:
         cmd = ["git", "diff", "--cached", "-z", "--name-only", "--diff-filter=ACMRT"]
         paths = run_git_nul_separated(cmd)
-        return filter_rel_paths(paths), "staged git index (:path)", ""
+        return filter_rel_paths(paths, apply_infrastructure_skips=apply_infrastructure_skips), "staged git index (:path)", ""
 
     if diff_range:
-        rev_target = diff_range.split("..")[-1] if ".." in diff_range else "HEAD"
+        rev_target = get_diff_range_head(diff_range)
         cmd = ["git", "diff", "-z", "--name-only", "--diff-filter=ACMRT", diff_range]
         paths = run_git_nul_separated(cmd)
-        return filter_rel_paths(paths), f"git diff ({diff_range})", rev_target
+        return filter_rel_paths(paths, apply_infrastructure_skips=apply_infrastructure_skips), f"git diff ({diff_range})", rev_target
 
     # Sol F004 / Fable F007: Explicit pre-push ref environment check
     pre_push_local = os.environ.get("PRE_PUSH_LOCAL_REF") or os.environ.get("PRE_COMMIT_TO_REF", "")
@@ -216,13 +291,13 @@ def get_files_to_check(diff_range: str | None = None, staged_only: bool = False,
         range_spec = f"{pre_push_remote}..{pre_push_local}"
         cmd = ["git", "diff", "-z", "--name-only", "--diff-filter=ACMRT", range_spec]
         paths = run_git_nul_separated(cmd)
-        return filter_rel_paths(paths), f"pre-push range ({range_spec})", pre_push_local
+        return filter_rel_paths(paths, apply_infrastructure_skips=apply_infrastructure_skips), f"pre-push range ({range_spec})", pre_push_local
 
     # Default logic: staged > feature branch diff > HEAD~1..HEAD
     cmd_staged = ["git", "diff", "--cached", "-z", "--name-only", "--diff-filter=ACMRT"]
     staged_paths = run_git_nul_separated(cmd_staged)
     if staged_paths:
-        return filter_rel_paths(staged_paths), "staged git index (:path)", ""
+        return filter_rel_paths(staged_paths, apply_infrastructure_skips=apply_infrastructure_skips), "staged git index (:path)", ""
 
     # Feature branch diff mode
     try:
@@ -232,42 +307,84 @@ def get_files_to_check(diff_range: str | None = None, staged_only: bool = False,
             cmd = ["git", "diff", "-z", "--name-only", "--diff-filter=ACMRT", "origin/main..HEAD"]
             paths = run_git_nul_separated(cmd)
             if paths:
-                return filter_rel_paths(paths), "git diff (origin/main..HEAD)", "HEAD"
+                return filter_rel_paths(paths, apply_infrastructure_skips=apply_infrastructure_skips), "git diff (origin/main..HEAD)", "HEAD"
     except Exception:
         pass
 
     # Default commit range check for push/local
     cmd = ["git", "diff", "-z", "--name-only", "--diff-filter=ACMRT", "HEAD~1..HEAD"]
     paths = run_git_nul_separated(cmd)
-    return filter_rel_paths(paths), "recent commit (HEAD~1..HEAD)", "HEAD"
+    return filter_rel_paths(paths, apply_infrastructure_skips=apply_infrastructure_skips), "recent commit (HEAD~1..HEAD)", "HEAD"
 
 
-def filter_rel_paths(paths: list[str]) -> list[str]:
-    """Filter relative path strings by extension and skip patterns (F001: preserve scripts/audit/ via filter_rel_paths)."""
+def filter_rel_paths(
+    paths: list[str], *, apply_infrastructure_skips: bool = True
+) -> list[str]:
+    """Filter paths by extension and, for infrastructure scans, skip patterns."""
     valid_paths: list[str] = []
     for rel_str in paths:
         path_obj = Path(rel_str)
         if path_obj.suffix.lower() in _SKIP_EXTENSIONS:
             continue
         normalized = rel_str.replace("\\", "/")
-        if normalized.startswith("scripts/audit/"):
-            valid_paths.append(rel_str)
-            continue
-        if any(sub in normalized for sub in _SKIP_PATH_SUBSTRINGS):
+        if (
+            apply_infrastructure_skips
+            and not normalized.startswith("scripts/audit/")
+            and any(sub in normalized for sub in _SKIP_PATH_SUBSTRINGS)
+        ):
             continue
         valid_paths.append(rel_str)
     return valid_paths
 
 
-def main() -> int:
+def get_public_personal_identifier_paths(revision: str = "") -> list[str]:
+    """Return all tracked learner-facing files that must be free of scrubbed names."""
+    command = ["git", "ls-files", "-z"]
+    if revision:
+        command = ["git", "ls-tree", "-rz", "--name-only", revision]
+    paths = run_git_nul_separated(command)
+    return [path for path in paths if is_public_personal_identifier_path(path)]
+
+
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Lint repository for OPSEC leaks.")
-    parser.add_argument("diff_range", nargs="?", help="Git diff range (e.g. origin/main..HEAD)")
+    parser.add_argument("diff_range", nargs="?", help="Git diff range (e.g. origin/main...HEAD)")
     parser.add_argument("--staged", action="store_true", help="Inspect staged git index blobs")
     parser.add_argument("--all", action="store_true", help="Explicitly scan all tracked files in repo")
-    args = parser.parse_args()
+    parser.add_argument(
+        "--public-identifiers",
+        action="store_true",
+        help="Scan learner-facing files for scrubbed personal identifiers only",
+    )
+    parser.add_argument(
+        "--revision",
+        help="Read --public-identifiers files from this git revision instead of HEAD",
+    )
+    args = parser.parse_args(argv)
+
+    if args.public_identifiers and (args.staged or args.all):
+        parser.error("--public-identifiers cannot be combined with --staged or --all")
+    if args.revision and not args.public_identifiers:
+        parser.error("--revision requires --public-identifiers")
+    if args.revision and args.diff_range:
+        parser.error("--revision cannot be combined with a diff range")
 
     try:
-        rel_paths, mode_str, rev_target = get_files_to_check(args.diff_range, staged_only=args.staged, scan_all=args.all)
+        if args.public_identifiers:
+            if args.diff_range:
+                changed_paths, diff_mode, rev_target = get_files_to_check(
+                    args.diff_range, apply_infrastructure_skips=False
+                )
+                rel_paths = [
+                    path for path in changed_paths if is_public_personal_identifier_path(path)
+                ]
+                mode_str = f"changed learner-facing files (--public-identifiers; {diff_mode})"
+            else:
+                rel_paths = get_public_personal_identifier_paths(args.revision or "HEAD")
+                mode_str = "all tracked learner-facing files (--public-identifiers)"
+                rev_target = args.revision or "HEAD"
+        else:
+            rel_paths, mode_str, rev_target = get_files_to_check(args.diff_range, staged_only=args.staged, scan_all=args.all)
     except Exception as exc:
         print(f"💥 Fail-closed git error: {exc}", file=sys.stderr)
         return 1
@@ -285,13 +402,21 @@ def main() -> int:
         if content is None:
             disk_path = REPO_ROOT / rel_path
             if not disk_path.is_file():
+                print(f"💥 Fail-closed unreadable selected file: {rel_path}", file=sys.stderr)
+                total_findings += 1
                 continue
             try:
                 content = disk_path.read_text(encoding="utf-8", errors="ignore")
-            except Exception:
+            except OSError as exc:
+                print(f"💥 Fail-closed unreadable selected file: {rel_path}: {exc}", file=sys.stderr)
+                total_findings += 1
                 continue
 
-        findings = check_content(content, rel_path)
+        findings = check_content(
+            content,
+            rel_path,
+            include_infrastructure=not args.public_identifiers,
+        )
 
         if findings:
             total_findings += len(findings)
@@ -301,7 +426,7 @@ def main() -> int:
 
     if total_findings > 0:
         print(f"\n💥 Total OPSEC leaks found: {total_findings}")
-        print("Please remove raw infrastructure IPs, host keys, and auth details before submitting!")
+        print("Please remove OPSEC-sensitive infrastructure details and scrubbed identifiers before submitting!")
         return 1
 
     print("✅ OPSEC check passed. Zero leaks detected.")
