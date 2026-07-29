@@ -465,7 +465,10 @@ def test_build_agent_env_passes_rail_approval_context_to_workers():
             "PATH": "/usr/bin",
             "HOME": "/Users/example",
             "LEARN_UK_RAIL_APPROVAL_RECEIPT": "rail-approval-753c6b55268844d581e16fdba41487af",
-            "LEARN_UK_RAIL_TASK_ID": "rail-p8-rb2-rb5",
+            # Deliberately contains the substring ``sk-`` (as any ``task-…`` id
+            # does): must survive the value-pattern redactor, not just the name
+            # filter (glm review FR-001 on #5997).
+            "LEARN_UK_RAIL_TASK_ID": "task-4956",
             "LEARN_UK_UNRELATED": "drop-me",
         },
         clear=True,
@@ -475,6 +478,6 @@ def test_build_agent_env_passes_rail_approval_context_to_workers():
     assert env["LEARN_UK_RAIL_APPROVAL_RECEIPT"] == (
         "rail-approval-753c6b55268844d581e16fdba41487af"
     )
-    assert env["LEARN_UK_RAIL_TASK_ID"] == "rail-p8-rb2-rb5"
+    assert env["LEARN_UK_RAIL_TASK_ID"] == "task-4956"
     # Only the two exact rail names are admitted — no blanket LEARN_UK_ prefix.
     assert "LEARN_UK_UNRELATED" not in env

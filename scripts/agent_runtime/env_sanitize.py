@@ -65,6 +65,12 @@ _SAFE_VALUE_NAME_ALLOWLIST = {
     "TMPDIR",
     "LU_RUNTIME_TMP_BASE_ROOT",
     "LU_RUNTIME_TMP_ROOT",
+    # Same trap as the tmp lease controls: a rail dispatch task id such as
+    # ``task-4956`` contains the substring ``sk-`` and would be stripped by the
+    # value redactor even though its NAME is allowlisted (glm review FR-001 on
+    # #5997, escalated: ``task-`` ids are the common case, not a hypothetical).
+    "LEARN_UK_RAIL_APPROVAL_RECEIPT",
+    "LEARN_UK_RAIL_TASK_ID",
 }
 
 _PROVIDER_SECRET_ALLOWLIST = {
