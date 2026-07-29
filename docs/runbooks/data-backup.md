@@ -19,13 +19,16 @@ untracked Git path is outside the declared recovery roots. This prevents a
 partial backup from appearing successful.
 
 The old `learn-ukrainian-data` Drive folder is a read-only legacy recovery
-source. Do not use it as the new restic repository path.
+source. Do not use it as the new restic repository path; the script rejects a
+restic rclone path with that final directory name.
 
 ## Safety model
 
 - `init`, `backup`, and `restore` are previews unless `--execute` is explicit.
 - A backup executes from a private copy-on-write staging tree outside the
   checkout.
+- On Linux filesystems without reflink support, only a bounded source tree of
+  at most 64 MiB may fall back to a normal copy; larger trees fail closed.
 - Every `*.db`, `*.sqlite`, and `*.sqlite3` under the selected roots is rebuilt
   in staging with SQLite's online backup command and must pass
   `PRAGMA quick_check` before upload.
@@ -121,14 +124,17 @@ stale path reported by the next run before removing it.
 
 Each successful snapshot contains `BACKUP-RECEIPT.json` with:
 
-- UTC creation time, stable host label, Git SHA, and backup exit code;
+- UTC creation time, stable host label, Git SHA, and receipt preparation status;
 - the selected root labels with file and byte counts;
 - whether a tracked-worktree patch was needed;
 - the count of untracked non-ignored files not included (normally zero);
 - exclusions, known missing paths, and the restore command.
 
 The receipt intentionally records only top-level recovery labels, not private
-inner path names. The remote repository itself is encrypted.
+inner path names. The remote repository itself is encrypted. The final process
+exit code belongs to the operator log: an in-snapshot file cannot truthfully
+contain the outcome of the repository check that runs after the snapshot is
+committed.
 
 List snapshots and perform periodic integrity checks:
 

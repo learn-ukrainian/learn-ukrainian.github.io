@@ -40,6 +40,7 @@ readonly PASSWORD_FILE="${RESTIC_PASSWORD_FILE:-}"
 readonly BACKUP_TAG="${LU_BACKUP_TAG:-learn-ukrainian-data}"
 readonly BACKUP_HOST="${LU_BACKUP_HOST:-learn-ukrainian}"
 readonly MIN_RESTIC_VERSION="0.19.0"
+readonly MAX_FULL_COPY_BYTES=$((64 * 1024 * 1024))
 readonly CLOUD_ROOT="${HOME}/Library/CloudStorage"
 readonly TMP_ROOT="${LU_BACKUP_TMPDIR:-${TMPDIR:-/tmp}}"
 readonly LOCK_DIR="$TMP_ROOT/learn-ukrainian-backup.${UID}.lock"
@@ -50,6 +51,7 @@ STAGED_ROOT=""
 LOCK_HELD=0
 LEGACY_DIR=""
 RESTIC_EXCLUDES=()
+LEGACY_EXCLUDES=()
 BACKUP_PATHS=()
 
 usage() {
@@ -233,7 +235,7 @@ validate_password_file() {
 }
 
 validate_repository_config() {
-  local remote_spec remote_name
+  local remote_spec remote_name remote_path
 
   [[ -n "$REPOSITORY" ]] ||
     die "Set LU_BACKUP_REPOSITORY to rclone:<remote>:<path>."
@@ -242,8 +244,15 @@ validate_repository_config() {
 
   remote_spec=${REPOSITORY#rclone:}
   remote_name=${remote_spec%%:*}
+  remote_path=${remote_spec#*:}
   [[ -n "$remote_name" && "$remote_spec" == *:* && "${remote_spec#*:}" != "" ]] ||
     die "Invalid rclone repository. Expected rclone:<remote>:<path>."
+  remote_path=${remote_path%/}
+  case "$remote_path" in
+    learn-ukrainian-data|*/learn-ukrainian-data)
+      die "Refusing to initialize or write restic inside the legacy mutable backup path."
+      ;;
+  esac
 
   if ! rclone listremotes | grep -Fqx "$remote_name:"; then
     die "rclone remote '$remote_name:' is not configured. Run 'rclone config' first."
@@ -283,7 +292,9 @@ validate_source_symlinks() {
   local link relative target resolved
   local source_real
 
+  [[ ! -L "$SOURCE" ]] || die "Backup source must not be a symlink: data"
   source_real="$(canonical_existing_dir "$SOURCE")"
+  LEGACY_EXCLUDES=()
   while IFS= read -r -d '' link; do
     relative=${link#"$SOURCE"/}
     target="$(readlink "$link")"
@@ -295,6 +306,7 @@ validate_source_symlinks() {
         die "Legacy symlink found but the legacy Drive directory is unavailable: $relative"
       path_is_within "$resolved" "$LEGACY_DIR" ||
         die "Known legacy symlink points outside the legacy backup: $relative -> $target"
+      LEGACY_EXCLUDES+=("$relative")
       echo "EXCLUDED legacy Drive symlink: $relative -> $target"
       continue
     fi
@@ -461,6 +473,7 @@ check_staging_space() {
 clone_tree() {
   local source=$1
   local destination=$2
+  local source_bytes source_files
 
   case "$(uname -s)" in
     Darwin)
@@ -468,8 +481,18 @@ clone_tree() {
         die "APFS copy-on-write staging failed; refusing a full data copy."
       ;;
     Linux)
-      cp -a --reflink=always "$source" "$destination" ||
-        die "Copy-on-write staging failed; refusing a full data copy."
+      if cp -a --reflink=always "$source" "$destination" 2>/dev/null; then
+        return
+      fi
+      if [[ -e "$destination" ]]; then
+        find "$destination" -depth -delete
+      fi
+      read -r source_bytes source_files < <(tree_file_stats "$source")
+      ((source_bytes <= MAX_FULL_COPY_BYTES)) ||
+        die "Copy-on-write staging failed for $source_files files (${source_bytes} bytes); refusing a large full copy."
+      info "Copy-on-write unavailable; using bounded full-copy fallback (${source_bytes} bytes)."
+      cp -a "$source" "$destination" ||
+        die "Bounded full-copy staging failed."
       ;;
     *)
       die "Copy-on-write staging is unsupported on this operating system."
@@ -516,16 +539,20 @@ stage_sqlite_databases() {
 
 build_restic_excludes() {
   local root=$1
+  local relative
 
   RESTIC_EXCLUDES=(
     --exclude "$root/qdrant"
-    --exclude "$root/textbooks"
-    --exclude "$root/vesum"
     --exclude '**/*.db-wal'
     --exclude '**/*.db-shm'
     --exclude '**/__pycache__/**'
     --exclude '**/.DS_Store'
   )
+  if ((${#LEGACY_EXCLUDES[@]} > 0)); then
+    for relative in "${LEGACY_EXCLUDES[@]}"; do
+      RESTIC_EXCLUDES+=(--exclude "$root/$relative")
+    done
+  fi
 }
 
 source_for_backup_path() {
@@ -582,7 +609,7 @@ create_worktree_patch() {
 write_backup_receipt() {
   local inventory_file="$STAGE_DIR/path-inventory.jsonl"
   local relative bytes files git_sha git_dirty untracked_count
-  local inventory_json known_missing created_at
+  local inventory_json known_missing created_at exclusions_json
 
   : > "$inventory_file"
   for relative in "${BACKUP_PATHS[@]}"; do
@@ -610,6 +637,17 @@ write_backup_receipt() {
     known_missing='[".claude/atlas-epic/plans/curated-seed"]'
   fi
   created_at="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+  exclusions_json='["data/qdrant", "*.db-wal", "*.db-shm", "__pycache__", ".DS_Store"]'
+  if ((${#LEGACY_EXCLUDES[@]} > 0)); then
+    for relative in "${LEGACY_EXCLUDES[@]}"; do
+      exclusions_json="$(
+        jq -cn \
+          --argjson current "$exclusions_json" \
+          --arg path "data/$relative legacy symlink" \
+          '$current + [$path]'
+      )"
+    done
+  fi
 
   jq -n \
     --arg created_at "$created_at" \
@@ -620,6 +658,7 @@ write_backup_receipt() {
     --argjson untracked_count "$untracked_count" \
     --argjson paths "$inventory_json" \
     --argjson known_missing "$known_missing" \
+    --argjson exclusions "$exclusions_json" \
     '{
       schema_version: 1,
       created_at_utc: $created_at,
@@ -628,18 +667,10 @@ write_backup_receipt() {
       git_tracked_changes: $git_dirty,
       git_untracked_files_not_included: $untracked_count,
       tag: $tag,
-      backup_exit_code: 0,
+      receipt_status: "prepared-before-snapshot-write",
       paths: $paths,
       known_missing_paths: $known_missing,
-      exclusions: [
-        "data/qdrant",
-        "data/textbooks legacy symlink",
-        "data/vesum legacy symlink",
-        "*.db-wal",
-        "*.db-shm",
-        "__pycache__",
-        ".DS_Store"
-      ],
+      exclusions: $exclusions,
       restore_command: "./scripts/backup-data.sh restore latest --to /absolute/empty/directory --execute"
     }' > "$STAGED_ROOT/BACKUP-RECEIPT.json"
   BACKUP_PATHS+=("BACKUP-RECEIPT.json")
@@ -800,7 +831,7 @@ run_init() {
 }
 
 run_doctor() {
-  local failures=0
+  local failures=0 validation_output
 
   echo "Backup source: $SOURCE"
   echo "Repository: ${REPOSITORY:-<unset>}"
@@ -816,12 +847,16 @@ run_doctor() {
   done
 
   if [[ "$failures" -eq 0 ]]; then
-    validate_environment
-    validate_source
-    if repository_is_initialized; then
-      echo "OK: restic repository is initialized"
+    if validation_output="$( (validate_environment; validate_source) 2>&1)"; then
+      [[ -z "$validation_output" ]] || printf '%s\n' "$validation_output"
+      if repository_is_initialized; then
+        echo "OK: restic repository is initialized"
+      else
+        echo "NOT READY: restic repository is not initialized"
+        failures=$((failures + 1))
+      fi
     else
-      echo "NOT READY: restic repository is not initialized"
+      printf 'NOT READY: %s\n' "$validation_output" >&2
       failures=$((failures + 1))
     fi
   fi

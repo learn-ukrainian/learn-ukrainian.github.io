@@ -108,7 +108,7 @@ if [[ "${1:-}" == "backup" && -n "${FAKE_REQUIRED_RELATIVE:-}" ]]; then
     >> "$FAKE_RESTIC_LOG"
 fi
 if [[ "${1:-}" == "backup" && -f "$PWD/BACKUP-RECEIPT.json" ]]; then
-  jq -c '{exit: .backup_exit_code, paths: [.paths[].path]}' \
+  jq -c '{status: .receipt_status, paths: [.paths[].path]}' \
     "$PWD/BACKUP-RECEIPT.json" >> "$FAKE_RESTIC_LOG"
 fi
 exit 0
@@ -191,7 +191,7 @@ def test_execute_stages_a_consistent_wal_database_and_cleans_up(
     assert "Creating consistent SQLite snapshot: data/live.db" in result.stdout
     assert "db_rows=<2>" in _log(environment)
     assert "staged_required=<.claude/atlas-epic/HANDOFF.md>" in _log(environment)
-    assert '"exit":0' in _log(environment)
+    assert '"status":"prepared-before-snapshot-write"' in _log(environment)
     assert '".claude/atlas-epic"' in _log(environment)
     assert '"batch_state"' in _log(environment)
     assert list(staging.iterdir()) == []
@@ -275,6 +275,19 @@ def test_backup_fails_closed_for_uncovered_untracked_path(
     assert "arg=<backup>" not in _log(environment)
 
 
+def test_refuses_legacy_mutable_backup_as_restic_repository(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    environment["LU_BACKUP_REPOSITORY"] = "rclone:testdrive:Projects/learn-ukrainian-data"
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    assert "Refusing to initialize or write restic inside the legacy" in result.stderr
+    assert "arg=<backup>" not in _log(environment)
+
+
 def test_symlink_policy_excludes_known_legacy_links_and_rejects_escapes(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
     tmp_path: Path,
@@ -295,6 +308,40 @@ def test_symlink_policy_excludes_known_legacy_links_and_rejects_escapes(
 
     assert rejected.returncode != 0
     assert "Absolute symlink is not backup-safe" in rejected.stderr
+
+
+def test_real_textbooks_directory_is_included(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, staging, _legacy = backup_environment
+    textbooks = source / "textbooks"
+    textbooks.mkdir()
+    (textbooks / "local-source.txt").write_text("preserve\n", encoding="utf-8")
+    environment["FAKE_REQUIRED_RELATIVE"] = "data/textbooks/local-source.txt"
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert "staged_required=<data/textbooks/local-source.txt>" in _log(environment)
+    assert str(textbooks) not in _log(environment)
+    assert list(staging.iterdir()) == []
+
+
+def test_data_root_must_not_be_a_symlink(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    external_data = tmp_path / "external-data"
+    external_data.mkdir()
+    source.rmdir()
+    source.symlink_to(external_data)
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    assert "Backup source must not be a symlink: data" in result.stderr
+    assert "arg=<backup>" not in _log(environment)
 
 
 def test_restore_is_a_dry_run_and_refuses_unsafe_targets(
@@ -359,6 +406,21 @@ def test_init_requires_execute_before_creating_repository(
     assert executed.returncode == 0, executed.stderr
     assert "arg=<init>" in _log(environment)
     assert "arg=<check>" in _log(environment)
+
+
+def test_doctor_summarizes_validation_failure(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    atlas_epic = source.parent / ".claude" / "atlas-epic"
+    (atlas_epic / "HANDOFF.md").unlink()
+    atlas_epic.rmdir()
+
+    result = _run(environment, "doctor")
+
+    assert result.returncode != 0
+    assert "NOT READY: ERROR: Required recovery path is missing" in result.stderr
+    assert "Doctor found 1 blocking problem(s)." in result.stderr
 
 
 def test_refuses_staging_inside_project_checkout(
