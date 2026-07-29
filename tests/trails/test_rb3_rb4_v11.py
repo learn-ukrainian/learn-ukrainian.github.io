@@ -48,6 +48,25 @@ def _assert_retry_once_stops(spec: dict[str, Any]) -> None:
     assert allowlist["transitions"]["matched_retry_once"]["target"] == "STOP-manual-intervention"
 
 
+def _assert_rb3_babysit_routing(spec: dict[str, Any]) -> None:
+    steps = _steps(spec)
+    assert (
+        steps["observe_babysit_registration"]["transitions"]["registration_observed"]["target"]
+        == "observe_babysit_state"
+    )
+    transitions = steps["observe_babysit_state"]["transitions"]
+    assert {
+        outcome: transition["target"] for outcome, transition in transitions.items()
+    } == {
+        "pr_merged": "post_merge_hygiene",
+        "blocking_red": "handed_to_red_ci_triage",
+        "disarmed_open": "observe_gate_inputs",
+        "automerge_armed": "register_babysit",
+        "still_armed": "observe_babysit_state",
+        "babysit_state_unreadable": "STOP-precondition-failed",
+    }
+
+
 @pytest.mark.parametrize(
     ("path", "trail_id", "version"),
     [(RB3_PATH, "rb3-pr-lifecycle", "2.1.0"), (RB4_PATH, "rb4-red-ci-triage", "0.5.0")],
@@ -163,6 +182,29 @@ def test_rb3_review_gate_evaluates_all_eight_typed_inputs() -> None:
     )
     assert "evaluate_named_table" in evaluation_program
     assert evaluation["command"]["environment"]["GATE_FACTS_RECEIPT"] == "{gate_facts_receipt}"
+
+
+def test_rb3_babysit_registration_continues_to_bounded_state_observation() -> None:
+    """A durable registration hands control to the bounded lifecycle observation."""
+    _assert_rb3_babysit_routing(_load(RB3_PATH))
+
+
+def test_negative_rb3_babysit_registration_stop_rewire_fails_routing_contract() -> None:
+    """Mutation proof: restoring the inverted registration STOP fails this contract."""
+    spec = _load(RB3_PATH)
+    _steps(spec)["observe_babysit_registration"]["transitions"]["registration_observed"][
+        "target"
+    ] = "STOP-manual-intervention"
+    with pytest.raises(AssertionError):
+        _assert_rb3_babysit_routing(spec)
+
+
+def test_rb3_review_in_flight_self_loops_for_driver_owned_pacing() -> None:
+    """Each invocation observes one request state, so in-flight review remains paced."""
+    review_request = _steps(_load(RB3_PATH))["observe_review_request"]
+    assert review_request["transitions"]["review_in_flight"]["target"] == (
+        "observe_review_request"
+    )
 
 
 def test_rb3_former_judgment_nodes_are_receipt_observations_or_stops() -> None:

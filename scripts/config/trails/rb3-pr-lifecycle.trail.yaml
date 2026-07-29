@@ -129,7 +129,7 @@ steps:
           predicate_id: rb3-review-replied
           clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: review-replied}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
       review_in_flight:
-        target: STOP-manual-intervention
+        target: observe_review_request
         evidence:
           predicate_id: rb3-review-in-flight
           clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: review-in-flight}]
@@ -335,7 +335,7 @@ steps:
       outcome_decoder: {source: stdout-token}
     transitions:
       arm_command_succeeded:
-        target: observe_automerge_state
+        target: observe_babysit_state
         evidence:
           predicate_id: rb3-arm-command-succeeded
           clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: arm-command-succeeded}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
@@ -346,13 +346,14 @@ steps:
           clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: arm-command-failed}]
     blocked_on: null
 
-  - step_id: observe_automerge_state
-    intent: Re-observe whether the successful arm command left the PR armed or immediately merged.
+  - step_id: observe_babysit_state
+    intent: Observe one bounded babysit state; driver-owned pacing re-invokes this step while auto-merge remains armed.
     command:
       adapter: shell
-      argv: [sh, -c, 'S=$(gh pr view "$PR_NUMBER" --json state,autoMergeRequest 2>/dev/null); case "$S" in *"MERGED"*) echo pr-merged;; *enabledAt*) echo automerge-armed;; *) echo arm-not-observed;; esac']
+      argv: [sh, -c, 'S=$(gh pr view "$PR_NUMBER" --json state,autoMergeRequest,statusCheckRollup 2>/dev/null); F=$(printf "%s" "$S" | jq "[.statusCheckRollup[]? | select(.conclusion==\"FAILURE\" or .conclusion==\"TIMED_OUT\" or .conclusion==\"CANCELLED\")] | length" 2>/dev/null); case "$S" in *"MERGED"*) echo pr-merged;; "") echo babysit-state-unreadable;; *) if [ "${F:-0}" -gt 0 ] 2>/dev/null; then echo blocking-red; elif printf "%s" "$S" | grep -q enabledAt; then if grep -qw "$PR_NUMBER" ".agent/$HANDOFF_AGENT-babysit-prs.txt" 2>/dev/null; then echo still-armed; else echo automerge-armed; fi; else echo disarmed-open; fi;; esac']
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
         PR_NUMBER: "{pr_number}"
       timeout_seconds: 30
       mutation_class: observe
@@ -361,18 +362,33 @@ steps:
       pr_merged:
         target: post_merge_hygiene
         evidence:
-          predicate_id: rb3-arm-observed-merged
+          predicate_id: rb3-babysit-state-merged
           clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: pr-merged}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      blocking_red:
+        target: handed_to_red_ci_triage
+        evidence:
+          predicate_id: rb3-babysit-state-blocking-red
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: blocking-red}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      disarmed_open:
+        target: observe_gate_inputs
+        evidence:
+          predicate_id: rb3-babysit-state-disarmed-open
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: disarmed-open}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
       automerge_armed:
         target: register_babysit
         evidence:
-          predicate_id: rb3-arm-observed-armed
+          predicate_id: rb3-babysit-state-armed
           clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: automerge-armed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
-      arm_not_observed:
-        target: STOP-rearm-failed
+      still_armed:
+        target: observe_babysit_state
         evidence:
-          predicate_id: rb3-arm-not-observed
-          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: arm-not-observed}]
+          predicate_id: rb3-babysit-state-still-armed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: still-armed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      babysit_state_unreadable:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: rb3-babysit-state-unreadable
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: babysit-state-unreadable}]
     blocked_on: null
 
   - step_id: register_babysit
@@ -414,7 +430,7 @@ steps:
       outcome_decoder: {source: stdout-token}
     transitions:
       registration_observed:
-        target: STOP-manual-intervention
+        target: observe_babysit_state
         evidence:
           predicate_id: rb3-babysit-registration-observed
           clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: registration-observed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
