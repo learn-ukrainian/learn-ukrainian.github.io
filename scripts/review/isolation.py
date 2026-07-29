@@ -1716,6 +1716,11 @@ def resolve_trusted_reviewer_executable(
             [
                 home / ".hermes" / "node" / "lib" / "node_modules" / "@openai" / "codex",
                 home / ".local" / "share" / "codex",
+                # npm user-prefix install (`npm i -g` with prefix ~/.local): the
+                # #5950 CLI rollback reinstalled codex here, and the seat died
+                # with trusted_reviewer_not_found until this root was trusted
+                # (#5978). Package-scoped, same trust level as the hermes root.
+                home / ".local" / "lib" / "node_modules" / "@openai" / "codex",
             ]
         )
     elif engine_key == "claude":
