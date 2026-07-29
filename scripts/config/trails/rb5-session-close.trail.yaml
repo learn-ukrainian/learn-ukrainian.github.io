@@ -1,44 +1,13 @@
-# RB-5 — session close (T2 DRAFT, extraction from drive-epic SKILL §8/§8a + the
-# handoff-completeness decision table + the machine-checked handoff-readiness
-# predicate #3138 + the #M-10a close sweep). Part of #5885.
-#
-# DRAFT STATUS: authored against today's substrate; certification waits for T1.4/5.
-# Two pieces are deliberately NOT drafted as steps (RB-4 r3/r4 precedent — never ship
-# unreachable speculative machinery):
-# - The runner-backed receipt-chain closure gate (design v2: "no receipt chain → no
-#   close"). No trail runner emits StepReceipt rows yet, so a chain-validation step
-#   could never pass; it ships WITH the trail runner. Today's close is receipt-backed
-#   by this trail's OWN tee'd receipts (readiness + worktree snapshots).
-# - The fenced lease release. The hardened SessionEnd hook owns it (T1.2, #5896,
-#   deployed): identity-fenced, symlink-refusing, fires on process exit. A driver
-#   command for it would be invented machinery.
-#
-# Fleet-comms: the file handoff stays authoritative in EVERY plane mode (mode today:
-# shadow); nothing in this trail flips cutovers or retires file handoffs.
-#
-# Anti-pattern guard (RB-2 v0.7.0 discipline): every command is a real, currently
-# runnable repo command whose OUTPUT SHAPE was captured live (2026-07-28 infra
-# session): handoff_ready --json check vocabulary ok|red|unknown with [status,
-# detail] pairs; inbox "pending: N (oldest ...)"; `git rev-list --count
-# origin/main..main` bare integer; `git worktree list --porcelain` worktree/HEAD/
-# branch triplets. Every MECHANICAL step is single-signal; the compound readiness
-# JSON is captured ONCE and split into per-field single-signal compares (the RB-4
-# probe→compare pattern).
-#
-# Live-captured hazard this trail encodes: the readiness predicate's in-flight
-# counter is repo-GLOBAL — on 2026-07-28 it flagged two dispatches that both
-# belonged to OTHER lanes (concurrent multi-lane operation is the norm). Per-lane
-# attribution is mechanically impossible until runner-emitted step receipts exist,
-# so a non-zero count routes to judgment, never to a guess and never to a silent
-# proceed.
-schema_version: trailspec.v1
+# RB-5 session close. The terminal step is observation only; TrailExecutor.close()
+# is the sole closure gate and re-observes the complete receipt chain.
+schema_version: trailspec.v1.1
 trail_id: rb5-session-close
-version: "0.1.6"
-title: RB5 Session close — inbox drain, readiness receipts, hygiene sweep, handoff gate
-seats:
-  - grok-daily
-  - glm-trial
-  - judgment
+version: "1.0.0"
+title: RB5 Session close — receipt observations and closure-gate handoff
+seats: [grok, glm-local, kimi]
+parameters:
+  handoff_agent: string
+  handoff_file: string
 stop_codes:
   - STOP-precondition-failed
   - STOP-manual-intervention
@@ -48,279 +17,275 @@ terminal_outcomes:
   - back_to_dispatch_loop
 steps:
   - step_id: assert_primary_checkout
-    intent: >-
-      FAIL-CLOSED entry assertion (r6 finding): every relative path in this trail
-      (.venv, batch_state) and every checkout-dependent signal (readiness tree,
-      the ahead count) assumes the PRIMARY main checkout — an assumption v0.1.5
-      narrated but never enforced, so a run from a clean feature worktree could
-      close over that worktree's own unpushed state while inspecting an
-      unrelated main ref. Discriminator (live-verified both directions
-      2026-07-28): in the primary checkout git-dir equals git-common-dir; in a
-      linked worktree they differ. The primary must also BE on main (layout A);
-      anything else stops before a single receipt is written.
-    command: sh -c 'G=$(git rev-parse --git-dir 2>/dev/null); C=$(git rev-parse --git-common-dir 2>/dev/null); B=$(git symbolic-ref --short -q HEAD); if [ -z "$G" ] || [ -z "$C" ]; then echo not-primary-checkout; elif [ "$G" != "$C" ]; then echo not-primary-checkout; elif [ "$B" != "main" ]; then echo primary-off-main; else echo primary-confirmed; fi'
-    evidence_predicate:
-      command: sh -c 'G=$(git rev-parse --git-dir 2>/dev/null); C=$(git rev-parse --git-common-dir 2>/dev/null); B=$(git symbolic-ref --short -q HEAD); if [ -z "$G" ] || [ -z "$C" ]; then echo not-primary-checkout; elif [ "$G" != "$C" ]; then echo not-primary-checkout; elif [ "$B" != "main" ]; then echo primary-off-main; else echo primary-confirmed; fi'
-      success_pattern: '^(primary-confirmed|not-primary-checkout|primary-off-main)$'
+    intent: Observe the primary main checkout before any close receipt is written.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'G=$(git rev-parse --git-dir 2>/dev/null); C=$(git rev-parse --git-common-dir 2>/dev/null); B=$(git symbolic-ref --short -q HEAD); if [ -z "$G" ] || [ -z "$C" ] || [ "$G" != "$C" ]; then echo not-primary-checkout; elif [ "$B" = main ]; then echo primary-confirmed; else echo primary-off-main; fi']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      primary_confirmed: drain_slot_inbox
-      not_primary_checkout: STOP-precondition-failed
-      primary_off_main: STOP-precondition-failed
-    kind: mechanical
+      primary_confirmed: {target: drain_slot_inbox, evidence: {predicate_id: primary-confirmed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: primary-confirmed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      not_primary_checkout: {target: STOP-precondition-failed, evidence: {predicate_id: primary-not-primary, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: not-primary-checkout}]}}
+      primary_off_main: {target: STOP-precondition-failed, evidence: {predicate_id: primary-off-main, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: primary-off-main}]}}
     blocked_on: null
 
   - step_id: drain_slot_inbox
-    intent: >-
-      OPENING live-driver inbox drain (drive-epic 8a pattern): surface every
-      pending slot delivery before the close sequence starts. The 8a
-      "immediately before handoff" guarantee is NOT this step's — deliveries can
-      arrive during the readiness and sweep interval (r2 finding), so
-      final_inbox_recheck re-proves pending: 0 right before the handoff gate.
-      Live output shape: "<agent> inbox:" then "pending: N (oldest ...)". NOTE
-      (live-verified in the #5915 r1 review): show is not a pure read — it expires
-      stale deliveries via an UPDATE; a read-only DB fails loudly here, which is a
-      precondition failure, not a skip. The wrapper normalizes output + exit
-      status into exactly the three transition tokens (r3 finding: raw bridge
-      output plus a boolean predicate cannot discriminate pending-work from a
-      broken DB).
-    command: sh -c 'OUT=$(.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} show {handoff_agent} 2>&1); RC=$?; printf "%s\n" "$OUT" > batch_state/rb5-inbox-{handoff_agent}.txt || { echo db-not-writable; exit 0; }; if [ "$RC" -ne 0 ]; then echo db-not-writable; elif printf "%s" "$OUT" | grep -qE "pending:[[:space:]]+0([^0-9]|$)"; then echo empty; elif printf "%s" "$OUT" | grep -qE "pending:[[:space:]]+[0-9]+"; then echo pending-deliveries; else echo db-not-writable; fi'
-    evidence_predicate:
-      command: sh -c 'OUT=$(cat batch_state/rb5-inbox-{handoff_agent}.txt 2>/dev/null); if printf "%s" "$OUT" | grep -qE "pending:[[:space:]]+0([^0-9]|$)"; then echo empty; elif printf "%s" "$OUT" | grep -qE "pending:[[:space:]]+[0-9]+"; then echo pending-deliveries; else echo db-not-writable; fi'
-      success_pattern: '^(empty|pending-deliveries|db-not-writable)$'
+    intent: Refresh an inbox receipt; bridge expiry behavior makes this a local write.
+    command:
+      adapter: shell
+      argv: [sh, -c, '.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for "$HANDOFF_AGENT" show "$HANDOFF_AGENT" > "batch_state/rb5-inbox-$HANDOFF_AGENT.txt" 2>&1 && echo inbox-receipt-written || echo inbox-refresh-failed']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
+      timeout_seconds: 30
+      mutation_class: local-write
+      outcome_decoder: {source: stdout-token}
     transitions:
-      empty: readiness_snapshot
-      pending_deliveries: apply_deliveries
-      db_not_writable: STOP-precondition-failed
-    kind: mechanical
+      inbox_receipt_written: {target: observe_slot_inbox, evidence: {predicate_id: close-inbox-receipt-written, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: inbox-receipt-written}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      inbox_refresh_failed: {target: STOP-precondition-failed, evidence: {predicate_id: close-inbox-refresh-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: inbox-refresh-failed}]}}
+    blocked_on: null
+
+  - step_id: observe_slot_inbox
+    intent: Observe the inbox receipt and stop rather than pretending to consume deliveries.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'P=$(awk "/pending:/{print \$2}" "batch_state/rb5-inbox-$HANDOFF_AGENT.txt" 2>/dev/null); case "$P" in 0) echo empty;; "") echo inbox-unreadable;; *[!0-9]*) echo inbox-unreadable;; *) echo pending-deliveries;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
+    transitions:
+      empty: {target: readiness_snapshot, evidence: {predicate_id: close-inbox-empty, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: empty}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      pending_deliveries: {target: apply_deliveries, evidence: {predicate_id: close-inbox-pending, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: pending-deliveries}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      inbox_unreadable: {target: STOP-precondition-failed, evidence: {predicate_id: close-inbox-unreadable, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: inbox-unreadable}]}}
     blocked_on: null
 
   - step_id: apply_deliveries
     intent: >-
-      The 8a contract is live-driver consumption, not worker acknowledgement
-      ("never claim the handoff is complete because a one-shot worker acknowledged
-      it"): judgment READS each pending delivery, APPLIES it (an action taken, a
-      queue item updated, or an unresolved request recorded in the handoff), then
-      acks with `ack --consumed-by-live-driver <id> ...` (flag live-verified to
-      exist — a #5886 review claim to the contrary was refuted by probe). Control
-      returns to the drain step to re-prove pending: 0.
-    command: null
-    evidence_predicate: null
+      Former judgment/summon. Observe an externally written delivery-consumption
+      receipt; a missing receipt stops and this trail never fabricates an acknowledgement.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'test -s "batch_state/rb5-deliveries-consumed-$HANDOFF_AGENT.receipt" && echo deliveries-consumed || echo deliveries-unresolved']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      deliveries_consumed: drain_slot_inbox
-      cannot_apply: STOP-manual-intervention
-    kind: summon
+      deliveries_consumed: {target: drain_slot_inbox, evidence: {predicate_id: deliveries-receipt-present, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: deliveries-consumed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      deliveries_unresolved: {target: STOP-manual-intervention, evidence: {predicate_id: deliveries-receipt-missing, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: deliveries-unresolved}]}}
     blocked_on: null
 
   - step_id: readiness_snapshot
-    intent: >-
-      Capture the machine-checked handoff-readiness predicate (#3138) ONCE into a
-      receipt; later steps split it into single-signal compares. Live shape
-      (2026-07-28): JSON with branch/pr/ready and checks.{tree_clean, no_inflight,
-      branch_pushed, pr_checks_green}, each a [status, detail] pair with status
-      vocabulary ok|red|unknown. The predicate is run, never asserted in prose
-      (#M-4); its compound `ready` boolean is deliberately NOT the signal here —
-      pr_checks_green is legitimately `unknown` at close when no PR is open, and
-      branch_pushed conflates behind-origin (benign) with ahead-of-origin (a real
-      stop) — the split steps read the fields this trail can act on soundly.
-    command: sh -c '.venv/bin/python -m scripts.orchestration.handoff_ready --json | tee batch_state/rb5-ready-{handoff_agent}.json'
-    evidence_predicate:
-      command: sh -c 'jq -e ".checks | has(\"tree_clean\")" batch_state/rb5-ready-{handoff_agent}.json >/dev/null 2>&1 && echo snapshot-recorded || echo predicate-unavailable'
-      success_pattern: '^(snapshot-recorded|predicate-unavailable)$'
+    intent: Capture handoff readiness once; later steps observe its immutable receipt.
+    command:
+      adapter: shell
+      argv: [sh, -c, '.venv/bin/python -m scripts.orchestration.handoff_ready --json > "batch_state/rb5-ready-$HANDOFF_AGENT.json" 2>/dev/null && echo readiness-recorded || echo readiness-failed']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
+      timeout_seconds: 30
+      mutation_class: local-write
+      outcome_decoder: {source: stdout-token}
     transitions:
-      snapshot_recorded: tree_clean_check
-      predicate_unavailable: STOP-precondition-failed
-    kind: mechanical
+      readiness_recorded: {target: tree_clean_check, evidence: {predicate_id: readiness-snapshot-written, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: readiness-recorded}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      readiness_failed: {target: STOP-precondition-failed, evidence: {predicate_id: readiness-snapshot-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: readiness-failed}]}}
     blocked_on: null
 
   - step_id: tree_clean_check
-    intent: >-
-      Single-signal read of checks.tree_clean from the recorded receipt. A dirty
-      tree at close is never auto-resolved — uncommitted work is never deleted and
-      never blind-committed (#M-10 class); it is judgment's to place, so the trail
-      stops.
-    command: sh -c 'V=$(jq -r ".checks.tree_clean[0] // empty" batch_state/rb5-ready-{handoff_agent}.json); case "$V" in ok) echo tree-clean;; red) echo tree-dirty;; *) echo receipt-unreadable;; esac'
-    evidence_predicate:
-      command: sh -c 'V=$(jq -r ".checks.tree_clean[0] // empty" batch_state/rb5-ready-{handoff_agent}.json); case "$V" in ok) echo tree-clean;; red) echo tree-dirty;; *) echo receipt-unreadable;; esac'
-      success_pattern: '^(tree-clean|tree-dirty|receipt-unreadable)$'
+    intent: Observe the recorded tree-clean field; dirty work is never altered by this trail.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'V=$(jq -r ".checks.tree_clean[0] // empty" "batch_state/rb5-ready-$HANDOFF_AGENT.json" 2>/dev/null); case "$V" in ok) echo tree-clean;; red) echo tree-dirty;; *) echo receipt-unreadable;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      tree_clean: inflight_check
-      tree_dirty: STOP-manual-intervention
-      receipt_unreadable: STOP-precondition-failed
-    kind: mechanical
+      tree_clean: {target: inflight_check, evidence: {predicate_id: tree-clean, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: tree-clean}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      tree_dirty: {target: STOP-manual-intervention, evidence: {predicate_id: tree-dirty, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: tree-dirty}]}}
+      receipt_unreadable: {target: STOP-precondition-failed, evidence: {predicate_id: tree-receipt-unreadable, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: receipt-unreadable}]}}
     blocked_on: null
 
   - step_id: inflight_check
-    intent: >-
-      Single-signal read of checks.no_inflight from the recorded receipt. The
-      counter is repo-GLOBAL (live-captured 2026-07-28: it flagged two dispatches
-      that were both OTHER lanes' live work), so a non-zero count is an attribution
-      question this trail cannot answer mechanically — it routes to judgment,
-      never to a guess and never past the close.
-    command: sh -c 'V=$(jq -r ".checks.no_inflight[0] // empty" batch_state/rb5-ready-{handoff_agent}.json); case "$V" in ok) echo in-flight-none;; red) echo in-flight-present;; *) echo receipt-unreadable;; esac'
-    evidence_predicate:
-      command: sh -c 'V=$(jq -r ".checks.no_inflight[0] // empty" batch_state/rb5-ready-{handoff_agent}.json); case "$V" in ok) echo in-flight-none;; red) echo in-flight-present;; *) echo receipt-unreadable;; esac'
-      success_pattern: '^(in-flight-none|in-flight-present|receipt-unreadable)$'
+    intent: Observe the global in-flight receipt; attribution remains an explicit stop boundary.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'V=$(jq -r ".checks.no_inflight[0] // empty" "batch_state/rb5-ready-$HANDOFF_AGENT.json" 2>/dev/null); case "$V" in ok) echo in-flight-none;; red) echo in-flight-present;; *) echo receipt-unreadable;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      in_flight_none: primary_ahead_check
-      in_flight_present: resolve_inflight
-      receipt_unreadable: STOP-precondition-failed
-    kind: mechanical
+      in_flight_none: {target: fetch_primary_state, evidence: {predicate_id: inflight-none, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: in-flight-none}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      in_flight_present: {target: resolve_inflight, evidence: {predicate_id: inflight-present, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: in-flight-present}]}}
+      receipt_unreadable: {target: STOP-precondition-failed, evidence: {predicate_id: inflight-receipt-unreadable, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: receipt-unreadable}]}}
     blocked_on: null
 
   - step_id: resolve_inflight
     intent: >-
-      Judgment attributes each non-terminal batch_state/tasks/<id>.json row (the
-      task FILE is truth; the active-list API can omit live tasks — #5207). A live
-      dispatch of THIS seat's own means the session is not closable: the settle
-      obligation belongs to the dispatch loop, so the trail hands back. Rows all
-      confirmed other-lane (cwd/brief/epic evidence, never provider name alone)
-      proceed. Anything unattributable stops.
-    command: null
-    evidence_predicate: null
+      Former judgment/summon. Observe a signed attribution receipt; absent or
+      ambiguous attribution stops instead of classifying other lanes from memory.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'R="batch_state/rb5-inflight-attribution-$HANDOFF_AGENT.receipt"; test -s "$R" || { echo attribution-missing; exit 0; }; V=$(awk -F= "/^outcome=/{print \$2}" "$R"); case "$V" in own_dispatch_live) echo own-dispatch-live;; all_other_lane) echo all-other-lane;; *) echo attribution-ambiguous;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      own_dispatch_live: back_to_dispatch_loop
-      all_other_lane: primary_ahead_check
-      ownership_ambiguous: STOP-manual-intervention
-    kind: summon
-    blocked_on: "per-lane in-flight attribution needs runner-emitted step receipts (#5885)"
+      own_dispatch_live: {target: back_to_dispatch_loop, evidence: {predicate_id: inflight-own-dispatch, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: own-dispatch-live}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      all_other_lane: {target: fetch_primary_state, evidence: {predicate_id: inflight-other-lane, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: all-other-lane}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      attribution_missing: {target: STOP-manual-intervention, evidence: {predicate_id: inflight-attribution-missing, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: attribution-missing}]}}
+      attribution_ambiguous: {target: STOP-manual-intervention, evidence: {predicate_id: inflight-attribution-ambiguous, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: attribution-ambiguous}]}}
+    blocked_on: null
+
+  - step_id: fetch_primary_state
+    intent: Refresh origin/main before the separate ahead-count observation.
+    command:
+      adapter: shell
+      argv: [git, fetch, origin, --quiet]
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}"}
+      timeout_seconds: 60
+      mutation_class: local-write
+      outcome_decoder: {source: stdout-token}
+    transitions:
+      fetched: {target: primary_ahead_check, evidence: {predicate_id: primary-fetch-complete, clauses: [{source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      fetch_failed: {target: STOP-precondition-failed, evidence: {predicate_id: primary-fetch-failed, clauses: [{source: command_receipt, field: exit_code, op: eq, value: 1}]}}
+    blocked_on: null
 
   - step_id: primary_ahead_check
-    intent: >-
-      Unpushed local commits on the primary checkout at close violate the PRs-only
-      discipline and would strand work invisible to every other machine — that is
-      the stop this step exists for. Behind-origin is BENIGN at close (other lanes
-      merge continuously; live-captured 2026-07-28: origin/main moved ahead of a
-      freshly-fetched local within the same session). The readiness predicate's
-      branch_pushed field conflates the two directions, so this step counts only
-      the ahead direction (live shape: bare integer, "0" when clean). FAILS
-      CLOSED (r1 finding): a failed fetch means the remote state could not be
-      verified, so the count is unavailable — a stale tracking ref must never
-      read as primary-clean. Counts origin/main..HEAD — HEAD IS main here, the
-      entry assertion guarantees it (r6: counting the main ref from an arbitrary
-      checkout inspected the wrong subject).
-    command: sh -c 'git fetch origin --quiet 2>/dev/null || { echo count-unavailable; exit 0; }; N=$(git rev-list --count origin/main..HEAD 2>/dev/null); case "$N" in "") echo count-unavailable;; *[!0-9]*) echo count-unavailable;; 0) echo primary-clean;; *) echo primary-ahead;; esac'
-    evidence_predicate:
-      command: sh -c 'git fetch origin --quiet 2>/dev/null || { echo count-unavailable; exit 0; }; N=$(git rev-list --count origin/main..HEAD 2>/dev/null); case "$N" in "") echo count-unavailable;; *[!0-9]*) echo count-unavailable;; 0) echo primary-clean;; *) echo primary-ahead;; esac'
-      success_pattern: '^(primary-clean|primary-ahead|count-unavailable)$'
+    intent: Observe only the refreshed origin/main..HEAD ahead count.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'N=$(git rev-list --count origin/main..HEAD 2>/dev/null); case "$N" in 0) echo primary-clean;; ""|*[!0-9]*) echo count-unavailable;; *) echo primary-ahead;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      primary_clean: worktree_receipt
-      primary_ahead: STOP-manual-intervention
-      count_unavailable: STOP-precondition-failed
-    kind: mechanical
+      primary_clean: {target: worktree_receipt, evidence: {predicate_id: primary-ahead-none, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: primary-clean}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      primary_ahead: {target: STOP-manual-intervention, evidence: {predicate_id: primary-ahead-present, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: primary-ahead}]}}
+      count_unavailable: {target: STOP-precondition-failed, evidence: {predicate_id: primary-count-unavailable, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: count-unavailable}]}}
     blocked_on: null
 
   - step_id: worktree_receipt
-    intent: >-
-      Record the worktree estate into a receipt and read ONE signal from it: the
-      worktree count (live shape: "worktree <path>" / "HEAD <sha>" / "branch <ref>"
-      triplets, blank-line separated). Exactly one worktree (the primary) proceeds;
-      more routes the recorded receipt to the sweep judgment — the #M-10a close
-      sweep is disposition-per-worktree work this trail cannot do mechanically
-      (merged-clean vs uncommitted vs other-lane-live all look alike to a count).
-      The command emits the transition vocabulary itself (sibling sweep of the r1
-      fail-closed class: a bare count narrates the branching instead of enforcing
-      it, and a failed listing must not read as any worktree state).
-    command: sh -c 'git worktree list --porcelain > batch_state/rb5-worktrees-{handoff_agent}.txt 2>/dev/null || { echo receipt-unwritable; exit 0; }; N=$(grep -c "^worktree " batch_state/rb5-worktrees-{handoff_agent}.txt); case "$N" in 1) echo primary-only;; 0) echo receipt-unwritable;; *) echo extra-worktrees;; esac'
-    evidence_predicate:
-      command: sh -c 'N=$(grep -c "^worktree " batch_state/rb5-worktrees-{handoff_agent}.txt 2>/dev/null); case "$N" in 1) echo primary-only;; ""|0) echo receipt-unwritable;; *) echo extra-worktrees;; esac'
-      success_pattern: '^(primary-only|extra-worktrees|receipt-unwritable)$'
+    intent: Capture a worktree receipt before the sweep decision is re-observed.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'git worktree list --porcelain > "batch_state/rb5-worktrees-$HANDOFF_AGENT.txt" 2>/dev/null && echo worktree-receipt-written || echo worktree-receipt-failed']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
+      timeout_seconds: 30
+      mutation_class: local-write
+      outcome_decoder: {source: stdout-token}
     transitions:
-      primary_only: final_inbox_recheck
-      extra_worktrees: sweep_judgment
-      receipt_unwritable: STOP-precondition-failed
-    kind: mechanical
+      worktree_receipt_written: {target: observe_worktree_count, evidence: {predicate_id: worktree-receipt-written, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: worktree-receipt-written}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      worktree_receipt_failed: {target: STOP-precondition-failed, evidence: {predicate_id: worktree-receipt-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: worktree-receipt-failed}]}}
+    blocked_on: null
+
+  - step_id: observe_worktree_count
+    intent: Observe worktree count from the recorded receipt; no sweep happens in this step.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'N=$(grep -c "^worktree " "batch_state/rb5-worktrees-$HANDOFF_AGENT.txt" 2>/dev/null); case "$N" in 1) echo primary-only;; 0) echo receipt-unreadable;; *) echo extra-worktrees;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
+    transitions:
+      primary_only: {target: final_inbox_recheck, evidence: {predicate_id: worktree-primary-only, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: primary-only}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      extra_worktrees: {target: sweep_judgment, evidence: {predicate_id: worktree-extra, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: extra-worktrees}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      receipt_unreadable: {target: STOP-precondition-failed, evidence: {predicate_id: worktree-receipt-unreadable, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: receipt-unreadable}]}}
     blocked_on: null
 
   - step_id: sweep_judgment
     intent: >-
-      Judgment applies the close-sweep rules to the recorded worktree receipt:
-      OWN worktrees that are merged and clean are reaped (worktree removal BEFORE
-      local-branch cleanup); uncommitted work is NEVER deleted (#M-10); other
-      lanes' worktrees are hands-off and get LISTED in the handoff instead
-      (live-captured 2026-07-28: 8 of 9 extra worktrees were other lanes' active
-      work — a mass sweep would have killed live dispatches). Own uncommitted
-      work found at close stops the trail — placing it is not a close-time call.
-    command: null
-    evidence_predicate: null
+      Former judgment/summon. Observe a completed external sweep receipt; this trail
+      does not delete another lane's worktree or manufacture a sweep-success token.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'R="batch_state/rb5-sweep-$HANDOFF_AGENT.receipt"; test -s "$R" || { echo sweep-receipt-missing; exit 0; }; V=$(awk -F= "/^outcome=/{print \$2}" "$R"); case "$V" in sweep_applied) echo sweep-observed;; own_uncommitted_work) echo own-uncommitted-work;; *) echo sweep-receipt-invalid;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      sweep_applied: final_inbox_recheck
-      own_uncommitted_work: STOP-manual-intervention
-    kind: summon
+      sweep_observed: {target: final_inbox_recheck, evidence: {predicate_id: sweep-receipt-applied, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: sweep-observed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      own_uncommitted_work: {target: STOP-manual-intervention, evidence: {predicate_id: sweep-own-uncommitted, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: own-uncommitted-work}]}}
+      sweep_receipt_missing: {target: STOP-manual-intervention, evidence: {predicate_id: sweep-receipt-missing, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: sweep-receipt-missing}]}}
+      sweep_receipt_invalid: {target: STOP-manual-intervention, evidence: {predicate_id: sweep-receipt-invalid, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: sweep-receipt-invalid}]}}
     blocked_on: null
 
   - step_id: final_inbox_recheck
-    intent: >-
-      The 8a contract enforced at the RIGHT moment (r2 finding): deliveries that
-      arrived during the readiness and sweep interval must be consumed before the
-      handoff is written or declared — an empty inbox observed at the START of
-      the close is not an empty inbox NOW. Only pending: 0 HERE may proceed to
-      the handoff gate; a late delivery routes to judgment consumption and the
-      close re-verifies from the top (the delivery may have changed the world
-      the readiness receipts described). Same normalized three-token wrapper as
-      the opening drain (r3 finding).
-    command: sh -c 'OUT=$(.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} show {handoff_agent} 2>&1); RC=$?; printf "%s\n" "$OUT" > batch_state/rb5-inbox-final-{handoff_agent}.txt || { echo db-not-writable; exit 0; }; if [ "$RC" -ne 0 ]; then echo db-not-writable; elif printf "%s" "$OUT" | grep -qE "pending:[[:space:]]+0([^0-9]|$)"; then echo empty; elif printf "%s" "$OUT" | grep -qE "pending:[[:space:]]+[0-9]+"; then echo pending-deliveries; else echo db-not-writable; fi'
-    evidence_predicate:
-      command: sh -c 'OUT=$(cat batch_state/rb5-inbox-final-{handoff_agent}.txt 2>/dev/null); if printf "%s" "$OUT" | grep -qE "pending:[[:space:]]+0([^0-9]|$)"; then echo empty; elif printf "%s" "$OUT" | grep -qE "pending:[[:space:]]+[0-9]+"; then echo pending-deliveries; else echo db-not-writable; fi'
-      success_pattern: '^(empty|pending-deliveries|db-not-writable)$'
+    intent: Refresh the final inbox receipt before observing its contents again.
+    command:
+      adapter: shell
+      argv: [sh, -c, '.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for "$HANDOFF_AGENT" show "$HANDOFF_AGENT" > "batch_state/rb5-inbox-final-$HANDOFF_AGENT.txt" 2>&1 && echo final-inbox-receipt-written || echo final-inbox-refresh-failed']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
+      timeout_seconds: 30
+      mutation_class: local-write
+      outcome_decoder: {source: stdout-token}
     transitions:
-      empty: write_handoff
-      pending_deliveries: apply_deliveries
-      db_not_writable: STOP-precondition-failed
-    kind: mechanical
+      final_inbox_receipt_written: {target: observe_final_inbox, evidence: {predicate_id: final-inbox-receipt-written, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: final-inbox-receipt-written}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      final_inbox_refresh_failed: {target: STOP-precondition-failed, evidence: {predicate_id: final-inbox-refresh-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: final-inbox-refresh-failed}]}}
+    blocked_on: null
+
+  - step_id: observe_final_inbox
+    intent: Observe the final inbox receipt; late deliveries return to explicit consumption evidence.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'P=$(awk "/pending:/{print \$2}" "batch_state/rb5-inbox-final-$HANDOFF_AGENT.txt" 2>/dev/null); case "$P" in 0) echo empty;; "") echo inbox-unreadable;; *[!0-9]*) echo inbox-unreadable;; *) echo pending-deliveries;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
+    transitions:
+      empty: {target: write_handoff, evidence: {predicate_id: final-inbox-empty, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: empty}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      pending_deliveries: {target: apply_deliveries, evidence: {predicate_id: final-inbox-pending, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: pending-deliveries}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      inbox_unreadable: {target: STOP-precondition-failed, evidence: {predicate_id: final-inbox-unreadable, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: inbox-unreadable}]}}
     blocked_on: null
 
   - step_id: write_handoff
     intent: >-
-      Judgment WRITES the current-session handoff block (r3 finding: a gate that
-      only tests pre-existing non-emptiness would accept a stale handoff and a
-      fresh session would always stop — the write must be an explicit step).
-      Content comes from the handoff-completeness table rows, reconstructed from
-      tool output and THIS trail's receipts (readiness + worktrees + inbox),
-      never from memory; the 40KB archive rule applies before appending. Currency
-      of the written block is judgment's obligation here until the runner-backed
-      receipt chain can prove it mechanically.
-    command: null
-    evidence_predicate: null
+      Former judgment/summon. Observe the externally authored current-session handoff
+      receipt; no command in this trail writes or asserts handoff completeness.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'test -s "$HANDOFF_FILE" && echo handoff-receipt-present || echo handoff-receipt-missing']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_FILE: "{handoff_file}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      handoff_written: handoff_gate
-      cannot_reconstruct: STOP-manual-intervention
-    kind: summon
+      handoff_receipt_present: {target: handoff_gate, evidence: {predicate_id: handoff-receipt-present, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: handoff-receipt-present}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      handoff_receipt_missing: {target: STOP-manual-intervention, evidence: {predicate_id: handoff-receipt-missing, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: handoff-receipt-missing}]}}
     blocked_on: null
 
   - step_id: handoff_gate
-    intent: >-
-      The handoff-completeness table is the content contract (every row
-      reconstructed from tool output, never memory; IN-FLIGHT with watcher ids;
-      NEXT ACTION ordered list; operator-pending items; the 40KB archive rule).
-      Prose completeness is not machine-checkable until the closure-gate
-      integration lands, so the mechanical signal here is presence+non-empty of
-      the seat's handoff file only — the seat applies the table rows to the file
-      it just wrote, and the receipt records that the gate was consulted.
-    command: sh -c 'test -s {handoff_file} && echo handoff-present || echo handoff-absent'
-    evidence_predicate:
-      command: sh -c 'test -s {handoff_file} && echo handoff-present || echo handoff-absent'
-      success_pattern: '^(handoff-present|handoff-absent)$'
+    intent: Observe the handoff receipt size boundary before the terminal closure observation.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'test -s "$HANDOFF_FILE" || { echo handoff-missing; exit 0; }; N=$(wc -c < "$HANDOFF_FILE"); [ "$N" -le 40960 ] && echo handoff-gate-passed || echo handoff-too-large']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_FILE: "{handoff_file}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      handoff_present: close_declaration
-      handoff_absent: STOP-manual-intervention
-    kind: table-lookup
-    table: handoff-completeness
-    blocked_on: "runner-backed closure-gate integration (receipt-chain validation ships with the trail runner; lease-release hooks landed with T1.2 #5896)"
+      handoff_gate_passed: {target: close_declaration, evidence: {predicate_id: handoff-gate-passed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: handoff-gate-passed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      handoff_missing: {target: STOP-manual-intervention, evidence: {predicate_id: handoff-gate-missing, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: handoff-missing}]}}
+      handoff_too_large: {target: STOP-manual-intervention, evidence: {predicate_id: handoff-gate-too-large, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: handoff-too-large}]}}
+    blocked_on: null
 
   - step_id: close_declaration
     intent: >-
-      The close is declared only over this trail's own receipts — both snapshot
-      files must exist and be non-empty, so "closed clean" is receipt-backed
-      rather than asserted. The fenced lease release is NOT commanded here: the
-      hardened SessionEnd hook (T1.2, #5896) owns it on process exit. When the
-      trail runner lands, the receipt-chain closure gate supersedes this step's
-      two-file check with full-chain validation.
-    command: sh -c 'test -s batch_state/rb5-ready-{handoff_agent}.json && test -s batch_state/rb5-worktrees-{handoff_agent}.txt && echo receipts-complete || echo receipts-missing'
-    evidence_predicate:
-      command: sh -c 'test -s batch_state/rb5-ready-{handoff_agent}.json && test -s batch_state/rb5-worktrees-{handoff_agent}.txt && echo receipts-complete || echo receipts-missing'
-      success_pattern: '^(receipts-complete|receipts-missing)$'
+      Terminal observation only. It proves required local receipts exist; it does not
+      invoke close or release leases. TrailExecutor.close() is the sole closure gate.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'test -s "batch_state/rb5-ready-$HANDOFF_AGENT.json" && test -s "batch_state/rb5-worktrees-$HANDOFF_AGENT.txt" && test -s "$HANDOFF_FILE" && echo closure-inputs-observed || echo closure-inputs-missing']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}", HANDOFF_FILE: "{handoff_file}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      receipts_complete: closed_handoff_written
-      receipts_missing: STOP-precondition-failed
-    kind: mechanical
+      closure_inputs_observed: {target: closed_handoff_written, evidence: {predicate_id: closure-inputs-observed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: closure-inputs-observed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      closure_inputs_missing: {target: STOP-precondition-failed, evidence: {predicate_id: closure-inputs-missing, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: closure-inputs-missing}]}}
     blocked_on: null

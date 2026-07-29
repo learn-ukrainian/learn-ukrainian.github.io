@@ -1,43 +1,16 @@
-# RB-2 — dispatch loop (T2 DRAFT, extraction from drive-epic SKILL steps 3/4/4a + the
-# infra driver's dispatch-brief checklist and settle discipline). Part of #5885.
-#
-# DRAFT STATUS: authored against today's substrate per the panel's draft-now ruling;
-# certification waits for T1.4/5.
-#
-# Anti-pattern guard (the #5860 r1 lessons, tightened across the #5915 r1-r3 sealed
-# reviews): every command is a real, currently runnable repo command whose OUTPUT
-# SHAPE was captured live (2026-07-27/28 infra session); every MECHANICAL step is
-# single-signal (transition derivable from its own predicate's vocabulary; multi-
-# signal branchings are split); where proof is impossible the trail FAILS CLOSED and
-# says so. Live-lookup tables (width, lane-routing) are procedures by design: their
-# steps' predicates prove the table's INPUTS were captured, and the SEAT records the
-# applied decision as a receipt line — an auditable write obligation, not a machine
-# derivation (stated per the r3 review).
-#
-# RETRY MODEL (r3/r4 findings): trailspec.v1 has no cross-step variable rebinding,
-# so a re-fire ends THIS invocation at `refired_new_invocation` after dispatching the
-# -retry worker. What the predicate PROVES is only that the retry worker is running;
-# binding a fresh RB-2 invocation to the -retry id is an ORCHESTRATION-LAYER
-# OBLIGATION declared here (the runner that starts trails must start one per live
-# dispatch id) — when honored, a second failure hits the -retry suffix gate FIRST
-# (before any cleanup) and stops with the table's exact code. Declared, not
-# machine-proven: a v1.1 invocation-binding form is the proposed fix.
-#
-# kind-wait note (spec v1.1 carry-over): trailspec.v1 has no `wait` kind — settle
-# waiting is a summon whose documentation-predicate covers arming ONE Monitor
-# settle-loop and idling on its event (a Monitor arm is a harness action with no repo
-# command to predicate on — encoding it as mechanical was the r3 finding). SCHEMA
-# NOTE for v1.1 (proposal, operator/advisor call — not built): per-transition
-# evidence predicates + an invocation-parameter rebinding form would let the retry
-# arc and multi-signal branchings collapse back into fewer steps.
-schema_version: trailspec.v1
+# RB-2 dispatch loop. TrailSpec v1.1 keeps every action receipt-bound: dispatches
+# and cleanup are mutations, while decisions and settlement are re-observations.
+schema_version: trailspec.v1.1
 trail_id: rb2-dispatch-loop
-version: "0.7.0"
-title: RB2 Dispatch loop — brief, dispatch, settle, finalize
-seats:
-  - grok-daily
-  - glm-trial
-  - judgment
+version: "1.0.0"
+title: RB2 Dispatch loop — brief, dispatch, bounded settlement, and recovery
+seats: [grok, glm-local, kimi]
+parameters:
+  handoff_agent: string
+  lane: string
+  task_id: string
+  brief_path: string
+  overlap_reason: string
 stop_codes:
   - STOP-precondition-failed
   - STOP-concurrency-conflict
@@ -52,436 +25,370 @@ terminal_outcomes:
 steps:
   - step_id: drain_slot_inbox
     intent: >-
-      Mandatory inbox-drain substep (drive-epic 4a pattern): surface pending slot
-      deliveries before firing new work. Live output shape: "<agent> inbox:" then
-      "pending: N (oldest ...)". NOTE (live-verified in the #5915 r1 review): show is
-      not a pure read — it expires stale deliveries via an UPDATE; a read-only DB
-      fails loudly here, which is a precondition failure, not a skip.
-    command: .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} show {handoff_agent}
-    evidence_predicate:
-      command: .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} show {handoff_agent}
-      success_pattern: 'pending:\s+0'
+      Refresh this seat's inbox receipt. The bridge may expire stale deliveries, so
+      this is an honest local write; the next step alone interprets the receipt.
+    command:
+      adapter: shell
+      argv: [sh, -c, '.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for "$HANDOFF_AGENT" show "$HANDOFF_AGENT" > "batch_state/rb2-inbox-$HANDOFF_AGENT.txt" 2>&1 && echo inbox-receipt-written || echo inbox-refresh-failed']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
+      timeout_seconds: 30
+      mutation_class: local-write
+      outcome_decoder: {source: stdout-token}
     transitions:
-      empty: disk_floor_check
-      pending_deliveries: drain_once
-      db_not_writable: STOP-precondition-failed
-    kind: mechanical
+      inbox_receipt_written: {target: observe_slot_inbox, evidence: {predicate_id: inbox-receipt-written, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: inbox-receipt-written}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      inbox_refresh_failed: {target: STOP-precondition-failed, evidence: {predicate_id: inbox-refresh-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: inbox-refresh-failed}]}}
+    blocked_on: null
+
+  - step_id: observe_slot_inbox
+    intent: Observe only the immutable inbox receipt written by drain_slot_inbox.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'P=$(awk "/pending:/{print \$2}" "batch_state/rb2-inbox-$HANDOFF_AGENT.txt" 2>/dev/null); case "$P" in 0) echo empty;; "") echo inbox-unreadable;; *[!0-9]*) echo inbox-unreadable;; *) echo pending-deliveries;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
+    transitions:
+      empty: {target: disk_floor_check, evidence: {predicate_id: inbox-empty, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: empty}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      pending_deliveries: {target: drain_once, evidence: {predicate_id: inbox-pending, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: pending-deliveries}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      inbox_unreadable: {target: STOP-precondition-failed, evidence: {predicate_id: inbox-unreadable, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: inbox-unreadable}]}}
     blocked_on: null
 
   - step_id: drain_once
-    intent: >-
-      Run the thread-coalesced inbox worker exactly once, then re-check.
-      Still-pending after one drain needs handling this trail cannot do mechanically.
-    command: .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} run {handoff_agent}
-    evidence_predicate:
-      command: .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} show {handoff_agent}
-      success_pattern: 'pending:\s+0'
+    intent: Apply the bridge's one-shot inbox worker; re-observation remains separate.
+    command:
+      adapter: shell
+      argv: [.venv/bin/python, scripts/ai_agent_bridge/__main__.py, inbox, --for, "{handoff_agent}", run, "{handoff_agent}"]
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}"}
+      timeout_seconds: 60
+      mutation_class: local-write
+      outcome_decoder: {source: stdout-token}
     transitions:
-      drained: disk_floor_check
-      still_pending: STOP-manual-intervention
-    kind: mechanical
+      drained: {target: drain_slot_inbox, evidence: {predicate_id: drain-worker-complete, clauses: [{source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      drain_failed: {target: STOP-manual-intervention, evidence: {predicate_id: drain-worker-failed, clauses: [{source: command_receipt, field: exit_code, op: eq, value: 1}]}}
     blocked_on: null
 
   - step_id: disk_floor_check
-    intent: >-
-      The width table's dominant clause ("DISK WINS every conflict") checked alone:
-      free space on / must clear the floor for at least one dispatch worktree
-      (~0.5 GB each; floor 10G for estate headroom — live probe shape: a bare avail
-      field like "184G"). Below the floor no quota argument can widen; reaping
-      finished worktrees is the recovery.
-    command: df -h / | awk 'NR==2 {print $4}'
-    evidence_predicate:
-      command: df -h / | awk 'NR==2 {print $4}'
-      success_pattern: '^([1-9][0-9]|[0-9]{3,})[GT]i?$'
+    intent: Observe whether the available root filesystem capacity satisfies the 10G dispatch floor.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'A=$(df -Pk / | awk "NR==2 {print \$4}"); case "$A" in ""|*[!0-9]*) echo disk-unreadable;; *) [ "$A" -ge 10485760 ] && echo floor-cleared || echo below-floor;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      floor_cleared: width_weigh
-      below_floor: parked_no_capacity
-    kind: mechanical
+      floor_cleared: {target: observe_width_decision, evidence: {predicate_id: disk-floor-cleared, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: floor-cleared}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      below_floor: {target: parked_no_capacity, evidence: {predicate_id: disk-below-floor, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: below-floor}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      disk_unreadable: {target: STOP-precondition-failed, evidence: {predicate_id: disk-unreadable, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: disk-unreadable}]}}
     blocked_on: null
 
-  - step_id: width_weigh
+  - step_id: observe_width_decision
     intent: >-
-      Width is a LIVE-LOOKUP table: the weighing of per-lane pace stage + reserve
-      against in-flight load is the table's procedure. This step's machine obligation
-      is input completeness — the ANDed predicate proves each input class (codexbar
-      pace rows, disk, worktree footprint) is present so the lookup never runs blind.
-      The SEAT then appends the applied decision to the same receipt as a line
-      "decision: capacity_ok|no_capacity — <one-line basis>" — an auditable write
-      obligation (r3 review: the decision must be recorded, and it is recorded BY THE
-      SEAT applying the table, not derived by this predicate).
-    command: sh -c 'R=batch_state/rb2-width-receipt.txt; codexbar usage --json > "$R" 2>&1; df -h / >> "$R"; du -sh .worktrees >> "$R"; cat "$R"'
-    evidence_predicate:
-      command: sh -c 'R=batch_state/rb2-width-receipt.txt; grep -q -e "provider" "$R" && grep -q -e "%" "$R" && grep -q -e ".worktrees" "$R" && echo all-inputs-present'
-      success_pattern: '^all-inputs-present$'
+      Former live-lookup judgment. Observe a separately authored width receipt; no
+      command invents capacity approval. Missing or malformed evidence stops.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'R="batch_state/rb2-width-$TASK_ID.receipt"; test -s "$R" || { echo width-receipt-missing; exit 0; }; V=$(awk -F= "/^outcome=/{print \$2}" "$R"); case "$V" in capacity_ok) echo capacity-ok;; no_capacity) echo no-capacity;; *) echo width-receipt-invalid;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", TASK_ID: "{task_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      capacity_ok: route_lane
-      no_capacity: parked_no_capacity
-      receipt_incomplete: STOP-precondition-failed
-    kind: table-lookup
-    table: width
+      capacity_ok: {target: observe_lane_decision, evidence: {predicate_id: width-capacity-ok, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: capacity-ok}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      no_capacity: {target: parked_no_capacity, evidence: {predicate_id: width-no-capacity, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: no-capacity}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      width_receipt_missing: {target: STOP-manual-intervention, evidence: {predicate_id: width-receipt-missing, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: width-receipt-missing}]}}
+      width_receipt_invalid: {target: STOP-manual-intervention, evidence: {predicate_id: width-receipt-invalid, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: width-receipt-invalid}]}}
     blocked_on: null
 
-  - step_id: route_lane
-    intent: >-
-      Lane-routing is a LIVE-LOOKUP table applied to the served routing SSOT. The
-      step fetches the document to a receipt (offline fallback: the shared rules
-      file — same content); the predicate proves the receipt is the real assignment
-      document (live first heading: "Per-Task Model Assignment"). The resolved lane
-      is recorded in the brief the next step authors — the auditable resolution
-      artifact. check-model capability confirmation exists only for agy/kimi today
-      (live CLI --agent choices); other lanes rely on the routing doc + fallback
-      substitutions. No sanctioned lane for the family is a hard stop.
-    command: sh -c 'curl -s --max-time 3 "http://127.0.0.1:8765/api/rules?format=markdown" -o batch_state/rb2-rules-receipt.md || cp agents_extensions/shared/rules/model-assignment.md batch_state/rb2-rules-receipt.md'
-    evidence_predicate:
-      command: grep -c -e "Per-Task Model Assignment" -e "model-assignment" batch_state/rb2-rules-receipt.md
-      success_pattern: '^[1-9][0-9]*$'
+  - step_id: observe_lane_decision
+    intent: Observe the routing receipt bound to the requested lane before authoring or dispatching.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'R="batch_state/rb2-lane-$TASK_ID.receipt"; test -s "$R" || { echo lane-receipt-missing; exit 0; }; grep -Fxq "lane=$LANE" "$R" && echo lane-resolved || echo lane-receipt-invalid']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", TASK_ID: "{task_id}", LANE: "{lane}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      lane_resolved: author_brief
-      no_sanctioned_lane: STOP-precondition-failed
-      rules_unreadable: STOP-precondition-failed
-    kind: table-lookup
-    table: lane-routing
+      lane_resolved: {target: author_brief, evidence: {predicate_id: lane-receipt-matches, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: lane-resolved}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      lane_receipt_missing: {target: STOP-manual-intervention, evidence: {predicate_id: lane-receipt-missing, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: lane-receipt-missing}]}}
+      lane_receipt_invalid: {target: STOP-manual-intervention, evidence: {predicate_id: lane-receipt-invalid, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: lane-receipt-invalid}]}}
     blocked_on: null
 
   - step_id: author_brief
     intent: >-
-      Judgment authors the brief AND the research-registry classification together —
-      the same cognitive act. Registry duty: pass dimensions explicitly derivable
-      from the issue text, omit the rest (pointer-free is legal and deliberate; never
-      invent; never infer from provider/agent name). The resolved lane from
-      route_lane is recorded here. Brief conventions: numbered steps, worktree-only,
-      #M-4 evidence preamble, tests + mutation checks, hard exclusions, no auto-merge
-      by worker, one-line finalize comment on the tracking issue. Step 0 lives here:
-      sibling search by ISSUE REFERENCE (gh pr list --state all --search "<issue-nr>"
-      — live shape: JSON array, [] clear) + issue timeline; residual-scope judgment
-      on any hit. No explicit acceptance criteria → failed precondition, never a
-      guessed brief.
-    command: null
-    evidence_predicate: null
+      Former judgment/summon. Observe a non-empty external brief receipt; authoring
+      and research classification happen outside this trail and cannot be fabricated.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'test -s "$BRIEF_PATH" && echo brief-receipt-present || echo brief-receipt-missing']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", BRIEF_PATH: "{brief_path}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      brief_written_and_classified: dispatch_worker
-      siblings_change_scope: STOP-manual-intervention
-      no_clear_spec: STOP-precondition-failed
-    kind: summon
+      brief_receipt_present: {target: dispatch_worker, evidence: {predicate_id: brief-receipt-present, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: brief-receipt-present}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      brief_receipt_missing: {target: STOP-manual-intervention, evidence: {predicate_id: brief-receipt-missing, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: brief-receipt-missing}]}}
     blocked_on: null
 
   - step_id: dispatch_worker
     intent: >-
-      Fire the dispatch, teeing all output to the per-task log later steps triage.
-      This step's OWN signal is the task state file: present with status
-      spawning|running means dispatched. Absent task file routes to log triage — the
-      log, not this predicate, discriminates refusal from spawn error.
-    command: sh -c '.venv/bin/python scripts/delegate.py dispatch --agent {lane} --task-id {task_id} --prompt-file {brief_path} --worktree --mode danger {research_flags} 2>&1 | tee batch_state/rb2-dispatch-{task_id}.log'
-    evidence_predicate:
-      command: jq -r '.status // ""' batch_state/tasks/{task_id}.json
-      success_pattern: '^(spawning|running)$'
+      Dispatch exactly once while retaining combined output. Only the recorded benign
+      overlap refusal is re-observed; every other nonzero result remains a failure.
+    command:
+      adapter: shell
+      argv: [bash, -c, 'mkdir -p batch_state; MKDIR_STATUS=$?; if [ "$MKDIR_STATUS" -ne 0 ]; then echo dispatch-failed; exit "$MKDIR_STATUS"; fi; LOG="batch_state/rb2-dispatch-$TASK_ID.log"; .venv/bin/python scripts/delegate.py dispatch --agent "$LANE" --task-id "$TASK_ID" --prompt-file "$BRIEF_PATH" --worktree --mode danger 2>&1 | tee "$LOG" >&2; PIPE_STATUSES=("${PIPESTATUS[@]}"); DISPATCH_STATUS="${PIPE_STATUSES[0]}"; TEE_STATUS="${PIPE_STATUSES[1]}"; if [ "$TEE_STATUS" -ne 0 ]; then echo dispatch-failed; exit "$TEE_STATUS"; fi; if [ "$DISPATCH_STATUS" -eq 0 ]; then echo dispatched; exit 0; fi; if grep -Fq "No actual path overlap was found" "$LOG"; then echo dispatched; exit 0; fi; echo dispatch-failed; exit "$DISPATCH_STATUS"']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}", BRIEF_PATH: "{brief_path}"}
+      timeout_seconds: 120
+      mutation_class: remote-mutation
+      outcome_decoder: {source: stdout-token}
     transitions:
-      dispatched: await_settle
-      no_task_file: triage_dispatch_log
-    kind: mechanical
+      dispatched: {target: observe_dispatch_state, evidence: {predicate_id: dispatch-command-complete, clauses: [{source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      dispatch_failed: {target: STOP-unrecoverable-error, evidence: {predicate_id: dispatch-command-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: dispatch-failed}]}}
     blocked_on: null
 
-  - step_id: triage_dispatch_log
-    intent: >-
-      Single-signal log triage: the teed dispatch log either contains a write-path
-      REFUSE or it does not. REFUSE present routes to the benign-refusal proof;
-      REFUSE absent with no task file is a spawn error.
-    command: grep -e "REFUSE" batch_state/rb2-dispatch-{task_id}.log
-    evidence_predicate:
-      command: grep -c -e "REFUSE" batch_state/rb2-dispatch-{task_id}.log
-      success_pattern: '^[0-9]+$'
+  - step_id: observe_dispatch_state
+    intent: Re-observe the task state written by dispatch; no predicate executes a dispatch command.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'S=$(jq -r ".status // empty" "batch_state/tasks/$TASK_ID.json" 2>/dev/null); case "$S" in spawning|running) echo dispatched;; "") grep -Fq "No actual path overlap was found" "batch_state/rb2-dispatch-$TASK_ID.log" 2>/dev/null && echo overlap-refused || echo task-receipt-missing;; *) echo dispatch-not-running;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", TASK_ID: "{task_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      refuse_present: triage_refusal
-      refuse_absent_spawn_error: STOP-unrecoverable-error
-    kind: mechanical
-    blocked_on: null
-
-  - step_id: triage_refusal
-    intent: >-
-      FAIL-CLOSED refusal semantics (no claim to prove an actual overlap — that
-      shape has never been live-captured): the ONLY refusal proven benign is the
-      disjointness-proof gap whose live-captured text is "No actual path overlap was
-      found". That exact phrase routes to judgment for an override decision; every
-      other refusal text is treated as a real concurrency conflict BY DESIGN.
-    command: grep -e "No actual path overlap was found" batch_state/rb2-dispatch-{task_id}.log
-    evidence_predicate:
-      command: grep -c -e "No actual path overlap was found" batch_state/rb2-dispatch-{task_id}.log
-      success_pattern: '^[0-9]+$'
-    transitions:
-      provably_benign: approve_override
-      not_provably_benign: STOP-concurrency-conflict
-    kind: mechanical
+      dispatched: {target: await_settle, evidence: {predicate_id: dispatch-state-running, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: dispatched}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      overlap_refused: {target: approve_override, evidence: {predicate_id: dispatch-overlap-refused, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: overlap-refused}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      task_receipt_missing: {target: STOP-unrecoverable-error, evidence: {predicate_id: dispatch-state-missing, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: task-receipt-missing}]}}
+      dispatch_not_running: {target: finalize_settle, evidence: {predicate_id: dispatch-state-terminal, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: dispatch-not-running}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
     blocked_on: null
 
   - step_id: approve_override
     intent: >-
-      Judgment reviews the refusal text and the undeclared writer it names, and
-      writes the override reason (who the writer is, why the write surfaces are
-      disjoint). A weak seat never self-approves an ownership override.
-    command: null
-    evidence_predicate: null
+      Former judgment/summon. Observe the external override receipt naming the task and
+      reason; absence or a mismatch stops rather than fabricating an approval.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'R="batch_state/rb2-overlap-$TASK_ID.receipt"; test -s "$R" || { echo override-receipt-missing; exit 0; }; grep -Fxq "task_id=$TASK_ID" "$R" && grep -Fxq "reason=$OVERLAP_REASON" "$R" && echo override-approved || echo override-receipt-invalid']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", TASK_ID: "{task_id}", OVERLAP_REASON: "{overlap_reason}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      override_approved: override_dispatch
-      override_denied: STOP-concurrency-conflict
-    kind: summon
+      override_approved: {target: override_dispatch, evidence: {predicate_id: override-receipt-approved, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: override-approved}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      override_receipt_missing: {target: STOP-concurrency-conflict, evidence: {predicate_id: override-receipt-missing, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: override-receipt-missing}]}}
+      override_receipt_invalid: {target: STOP-concurrency-conflict, evidence: {predicate_id: override-receipt-invalid, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: override-receipt-invalid}]}}
     blocked_on: null
 
   - step_id: override_dispatch
     intent: >-
-      Re-run the identical dispatch with the approved --allow-path-overlap reason.
-      Admitted shapes (live-captured): "would-refuse recorded (override); admitted
-      under refuse" or "admitted; paths disjoint". A second refusal is a hard stop.
-    command: sh -c '.venv/bin/python scripts/delegate.py dispatch --agent {lane} --task-id {task_id} --prompt-file {brief_path} --worktree --mode danger {research_flags} --allow-path-overlap "{overlap_reason}" 2>&1 | tee batch_state/rb2-dispatch-{task_id}-override.log'
-    evidence_predicate:
-      command: grep -c -e "admitted under refuse" -e "admitted; paths disjoint" batch_state/rb2-dispatch-{task_id}-override.log
-      success_pattern: '^[1-9]'
+      Dispatch once with an externally observed overlap approval and retain combined
+      output; success is re-observed separately.
+    command:
+      adapter: shell
+      argv: [bash, -c, 'mkdir -p batch_state || exit 1; LOG="batch_state/rb2-override-dispatch-$TASK_ID.log"; .venv/bin/python scripts/delegate.py dispatch --agent "$LANE" --task-id "$TASK_ID" --prompt-file "$BRIEF_PATH" --worktree --mode danger --allow-path-overlap "$OVERLAP_REASON" 2>&1 | tee "$LOG" >&2; PIPE_STATUSES=("${PIPESTATUS[@]}"); DISPATCH_STATUS="${PIPE_STATUSES[0]}"; TEE_STATUS="${PIPE_STATUSES[1]}"; if [ "$TEE_STATUS" -ne 0 ]; then exit "$TEE_STATUS"; fi; if [ "$DISPATCH_STATUS" -eq 0 ]; then echo override-dispatch-issued; exit 0; fi; echo override-dispatch-failed; exit "$DISPATCH_STATUS"']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}", BRIEF_PATH: "{brief_path}", OVERLAP_REASON: "{overlap_reason}"}
+      timeout_seconds: 120
+      mutation_class: remote-mutation
+      outcome_decoder: {source: stdout-token}
     transitions:
-      dispatched: await_settle
-      refused_again: STOP-concurrency-conflict
-    kind: mechanical
+      override_dispatch_issued: {target: observe_override_dispatch, evidence: {predicate_id: override-dispatch-issued, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: override-dispatch-issued}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      override_dispatch_failed: {target: STOP-concurrency-conflict, evidence: {predicate_id: override-dispatch-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: override-dispatch-failed}]}}
+    blocked_on: null
+
+  - step_id: observe_override_dispatch
+    intent: Re-observe the task state after the approved override mutation.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'S=$(jq -r ".status // empty" "batch_state/tasks/$TASK_ID.json" 2>/dev/null); case "$S" in spawning|running) echo override-running;; *) echo override-state-missing;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", TASK_ID: "{task_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
+    transitions:
+      override_running: {target: await_settle, evidence: {predicate_id: override-state-running, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: override-running}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      override_state_missing: {target: STOP-concurrency-conflict, evidence: {predicate_id: override-state-missing, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: override-state-missing}]}}
     blocked_on: null
 
   - step_id: await_settle
     intent: >-
-      Settle wait (kind-wait header note): the seat arms ONE Monitor settle-loop
-      over the task status file — the file is truth (the active-list API can omit
-      live tasks); poll cadence 60-90s; emit exactly once when status leaves
-      {spawning, running, ""} — then idles on the settle event, whose payload is the
-      terminal status string the next step routes. Arming a Monitor is a harness
-      action with no repo command to predicate on, which is why this whole
-      arm-and-wait is ONE summon with a documentation-predicate (r3 finding: a
-      mechanical arm step had no derivable evidence). Never keyword-grep worker logs
-      as completion; never poll with scheduled wakeups. A watch that outlives its
-      Monitor (session end, watcher reaped) is re-armed, not forgotten.
-    command: null
-    evidence_predicate: null
+      Former wait/summon. A bounded observation may prove a terminal task receipt;
+      an active task stops because TrailSpec v1.1 has no approved wait primitive.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'S=$(jq -r ".status // empty" "batch_state/tasks/$TASK_ID.json" 2>/dev/null); case "$S" in spawning|running|"") echo settlement-pending;; *) echo settlement-observed;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", TASK_ID: "{task_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      settle_event: finalize_settle
-      watcher_lost: await_settle
-    kind: summon
+      settlement_observed: {target: finalize_settle, evidence: {predicate_id: settlement-terminal-observed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: settlement-observed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      settlement_pending: {target: STOP-manual-intervention, evidence: {predicate_id: settlement-wait-unavailable, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: settlement-pending}]}}
     blocked_on: null
 
   - step_id: finalize_settle
-    intent: >-
-      Route the terminal status through the settle-status table — every row mapped
-      with the table's own dispositions: done and both timeout flavors go to the
-      success-path deliverable check (an open PR satisfies the table's "gh pr list"
-      check before any worktree digging); the attention states needs_finalize and
-      no_deliverable go to the ATTENTION-path deliverable check whose no-PR branch is
-      finalize-BY-HAND (the table's words — never an automatic retry; #5855-class
-      false negatives are disproven by checking the branch first); failed/crashed go
-      to failure-evidence reading then cleanup then the bounded re-fire;
-      rate_limited reroutes per fallback substitutions (the seat NOTES the substitution in the brief/receipt — a write obligation); cancelled/dry_run are
-      terminal-not-success; a spurious settle with status still spawning/running
-      re-enters the wait; anything else is unknown.
-    command: jq -r '.status // ""' batch_state/tasks/{task_id}.json
-    evidence_predicate:
-      command: jq -r '.status // ""' batch_state/tasks/{task_id}.json
-      success_pattern: '^(done|failed|timeout|silence-timeout|rate_limited|cancelled|crashed|dry_run|needs_finalize|no_deliverable|spawning|running)$'
+    intent: Observe the settled task status and route only its typed receipt token.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'S=$(jq -r ".status // empty" "batch_state/tasks/$TASK_ID.json" 2>/dev/null); case "$S" in done) echo done;; timeout) echo timeout;; needs_finalize|no_deliverable) echo attention;; failed|crashed) echo failed;; rate_limited) echo rate-limited;; cancelled|dry_run) echo aborted;; *) echo unknown-status;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", TASK_ID: "{task_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      done: verify_deliverable_success
-      timeout: verify_deliverable_timeout
-      silence_timeout: verify_deliverable_timeout
-      needs_finalize: verify_deliverable_attention
-      no_deliverable: verify_deliverable_attention
-      failed: retry_suffix_gate
-      crashed: retry_suffix_gate
-      rate_limited: route_lane
-      cancelled: aborted
-      dry_run: aborted
-      still_spawning_or_running: await_settle
-      unknown_status: STOP-unknown
-    kind: table-lookup
-    table: settle-status
+      done: {target: verify_deliverable_success, evidence: {predicate_id: settle-done, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: done}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      timeout: {target: verify_deliverable_timeout, evidence: {predicate_id: settle-timeout, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: timeout}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      attention: {target: verify_deliverable_attention, evidence: {predicate_id: settle-attention, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: attention}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      failed: {target: retry_suffix_gate, evidence: {predicate_id: settle-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: failed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      rate_limited: {target: STOP-manual-intervention, evidence: {predicate_id: settle-rate-limited, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: rate-limited}]}}
+      aborted: {target: aborted, evidence: {predicate_id: settle-aborted, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: aborted}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      unknown_status: {target: STOP-unknown, evidence: {predicate_id: settle-unknown, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: unknown-status}]}}
     blocked_on: null
 
   - step_id: verify_deliverable_success
-    intent: >-
-      Success/timeout path: an open PR for the dispatch branch is the deliverable
-      receipt (live shape: JSON array with a number field; [] means none). Reading
-      the produced CONTENT before the review gate is RB-3's entry. No PR routes to
-      the commits-ahead check (silent-exit class), which may end in the bounded
-      re-fire.
-    command: gh pr list --state open --head {lane}/{task_id} --json number,title --limit 3
-    evidence_predicate:
-      command: gh pr list --state open --head {lane}/{task_id} --json number --limit 3
-      success_pattern: '"number"'
+    intent: Observe whether the dispatched branch has an open PR deliverable.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'PR_JSON=$(gh pr list --state open --head "$LANE/$TASK_ID" --json number --limit 3) || { echo deliverable-check-failed; exit 0; }; PR_COUNT=$(printf "%s" "$PR_JSON" | jq -e "if type == \"array\" then length else error(\"expected PR array\") end") || { echo deliverable-check-failed; exit 0; }; case "$PR_COUNT" in 0) echo no-pr;; *[!0-9]*|"") echo deliverable-check-failed;; *) echo pr-open;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      pr_open: handed_to_pr_lifecycle
-      no_pr_for_branch: commits_ahead_check
-    kind: mechanical
+      pr_open: {target: handed_to_pr_lifecycle, evidence: {predicate_id: success-pr-open, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: pr-open}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      no_pr: {target: commits_ahead_check, evidence: {predicate_id: success-pr-absent, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: no-pr}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      deliverable_check_failed: {target: STOP-precondition-failed, evidence: {predicate_id: success-deliverable-check-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: deliverable-check-failed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
     blocked_on: null
 
   - step_id: verify_deliverable_timeout
-    intent: >-
-      Timeout path (timeout / silence-timeout): the same PR receipt check. An open
-      PR is finalize-BY-HAND (a died-at-deadline worker's deliverable needs eyes).
-      No PR routes into the commits-ahead/dirty-tree chain, whose clean-and-empty
-      outcome reaches the bounded failed/crashed retry — the table's disposition for
-      a deliverable-less timeout ("treat as the failed|crashed rows").
-    command: gh pr list --state open --head {lane}/{task_id} --json number,title --limit 3
-    evidence_predicate:
-      command: gh pr list --state open --head {lane}/{task_id} --json number --limit 3
-      success_pattern: '"number"'
+    intent: Observe the timeout deliverable; an open PR requires human finalization.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'PR_JSON=$(gh pr list --state open --head "$LANE/$TASK_ID" --json number --limit 3) || { echo deliverable-check-failed; exit 0; }; PR_COUNT=$(printf "%s" "$PR_JSON" | jq -e "if type == \"array\" then length else error(\"expected PR array\") end") || { echo deliverable-check-failed; exit 0; }; case "$PR_COUNT" in 0) echo no-pr;; *[!0-9]*|"") echo deliverable-check-failed;; *) echo pr-open;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      pr_open: STOP-manual-intervention
-      no_pr_for_branch: commits_ahead_check
-    kind: mechanical
+      pr_open: {target: STOP-manual-intervention, evidence: {predicate_id: timeout-pr-open, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: pr-open}]}}
+      no_pr: {target: commits_ahead_check, evidence: {predicate_id: timeout-pr-absent, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: no-pr}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      deliverable_check_failed: {target: STOP-precondition-failed, evidence: {predicate_id: timeout-deliverable-check-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: deliverable-check-failed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
     blocked_on: null
 
   - step_id: verify_deliverable_attention
-    intent: >-
-      Attention path (timeout flavors + needs_finalize / no_deliverable): the same
-      PR check, but the table's disposition here is finalize BY HAND — an OPEN PR
-      also routes to judgment (a died worker's deliverable needs eyes before RB-3's
-      babysit could auto-merge it), and a missing PR runs the commit-verification
-      PROBE — recorded evidence for the human, never a route into the automatic
-      retry chain (three live #5855-class false negatives this session all had real
-      deliverables the status missed).
-    command: gh pr list --state open --head {lane}/{task_id} --json number,title --limit 3
-    evidence_predicate:
-      command: gh pr list --state open --head {lane}/{task_id} --json number --limit 3
-      success_pattern: '"number"'
+    intent: Observe the attention-path deliverable; this path never automatically retries.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'PR_JSON=$(gh pr list --state open --head "$LANE/$TASK_ID" --json number --limit 3) || { echo deliverable-check-failed; exit 0; }; PR_COUNT=$(printf "%s" "$PR_JSON" | jq -e "if type == \"array\" then length else error(\"expected PR array\") end") || { echo deliverable-check-failed; exit 0; }; case "$PR_COUNT" in 0) echo no-pr;; *[!0-9]*|"") echo deliverable-check-failed;; *) echo pr-open;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      pr_open: STOP-manual-intervention
-      no_pr_for_branch: attention_absence_probe
-    kind: mechanical
-    blocked_on: null
-
-  - step_id: attention_absence_probe
-    intent: >-
-      The table's commit-verification for attention states, with the table's
-      disposition kept intact: run the commits-beyond-base probe (base bound inline
-      from worktree_base_sha) and RECORD its result into the attention receipt — then
-      finalize BY HAND regardless of the count (r5 finding: the attention path must
-      never reach the automatic retry chain; the probe informs the human, it does not
-      route). The single transition to the stop is deliberate: verification is an
-      evidence obligation here, not a branch point.
-    command: sh -c 'B=$(jq -r ".worktree_base_sha" batch_state/tasks/{task_id}.json); git -C .worktrees/dispatch/{lane}/{task_id} rev-list --count "$B"..HEAD | tee batch_state/rb2-attention-{task_id}.txt'
-    evidence_predicate:
-      command: test -s batch_state/rb2-attention-{task_id}.txt && echo probe-recorded
-      success_pattern: '^probe-recorded$'
-    transitions:
-      probe_recorded: STOP-manual-intervention
-    kind: mechanical
+      pr_open: {target: STOP-manual-intervention, evidence: {predicate_id: attention-pr-open, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: pr-open}]}}
+      no_pr: {target: STOP-manual-intervention, evidence: {predicate_id: attention-pr-absent, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: no-pr}]}}
+      deliverable_check_failed: {target: STOP-precondition-failed, evidence: {predicate_id: attention-deliverable-check-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: deliverable-check-failed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
     blocked_on: null
 
   - step_id: commits_ahead_check
-    intent: >-
-      Single-signal: count commits the dispatch worktree carries beyond its recorded
-      base, read from the task file's worktree_base_sha field (live-verified key) —
-      no unbound placeholders. Non-zero means finished-but-unpushed work — judgment
-      finalize, never a blind refire over real work. Zero falls through to the
-      dirty-tree check.
-    command: sh -c 'B=$(jq -r ".worktree_base_sha" batch_state/tasks/{task_id}.json); git -C .worktrees/dispatch/{lane}/{task_id} rev-list --count "$B"..HEAD'
-    evidence_predicate:
-      command: sh -c 'B=$(jq -r ".worktree_base_sha" batch_state/tasks/{task_id}.json); git -C .worktrees/dispatch/{lane}/{task_id} rev-list --count "$B"..HEAD'
-      success_pattern: '^[0-9]+$'
+    intent: Observe the worktree's commits beyond its recorded base before any cleanup.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'B=$(jq -r ".worktree_base_sha // empty" "batch_state/tasks/$TASK_ID.json" 2>/dev/null); W=".worktrees/dispatch/$LANE/$TASK_ID"; test -n "$B" && test -d "$W" || { echo worktree-unreadable; exit 0; }; N=$(git -C "$W" rev-list --count "$B"..HEAD 2>/dev/null); case "$N" in 0) echo no-commits;; ""|*[!0-9]*) echo worktree-unreadable;; *) echo commits-present;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      commits_present: STOP-manual-intervention
-      no_commits: dirty_tree_check
-    kind: mechanical
+      no_commits: {target: dirty_tree_check, evidence: {predicate_id: commits-none, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: no-commits}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      commits_present: {target: STOP-manual-intervention, evidence: {predicate_id: commits-present, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: commits-present}]}}
+      worktree_unreadable: {target: STOP-unrecoverable-error, evidence: {predicate_id: commits-unreadable, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: worktree-unreadable}]}}
     blocked_on: null
 
   - step_id: dirty_tree_check
-    intent: >-
-      Single-signal: count dirty entries in the dispatch worktree. Non-zero means
-      uncommitted work — judgment finalize (never delete uncommitted work). Zero
-      means provably no deliverable anywhere → the failure-evidence read precedes
-      the bounded re-fire.
-    command: sh -c 'git -C .worktrees/dispatch/{lane}/{task_id} status --porcelain | wc -l | tr -d " "'
-    evidence_predicate:
-      command: sh -c 'git -C .worktrees/dispatch/{lane}/{task_id} status --porcelain | wc -l | tr -d " "'
-      success_pattern: '^[0-9]+$'
+    intent: Observe the failed worktree's dirty state; uncommitted work is never removed.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'W=".worktrees/dispatch/$LANE/$TASK_ID"; test -d "$W" || { echo worktree-unreadable; exit 0; }; git -C "$W" status --porcelain | grep -q . && echo dirty-entries-present || echo clean-and-empty']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      dirty_entries_present: STOP-manual-intervention
-      clean_and_empty: read_failure_evidence
-    kind: mechanical
+      clean_and_empty: {target: retry_suffix_gate, evidence: {predicate_id: worktree-clean-empty, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: clean-and-empty}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      dirty_entries_present: {target: STOP-manual-intervention, evidence: {predicate_id: worktree-dirty, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: dirty-entries-present}]}}
+      worktree_unreadable: {target: STOP-unrecoverable-error, evidence: {predicate_id: worktree-unreadable, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: worktree-unreadable}]}}
     blocked_on: null
 
   - step_id: retry_suffix_gate
-    intent: >-
-      FIRST-MATCH gate for failed/crashed (r4 finding: the stop must precede any
-      cleanup): a task id already carrying -retry has consumed its single re-fire —
-      stop immediately with the table's exact code, PRESERVING the failed retry's
-      worktree and logs for forensics. Only a first-attempt id proceeds to
-      failure-evidence reading and cleanup.
-    command: sh -c 'case "{task_id}" in *-retry) echo already-retried ;; *) echo first-attempt ;; esac'
-    evidence_predicate:
-      command: sh -c 'case "{task_id}" in *-retry) echo already-retried ;; *) echo first-attempt ;; esac'
-      success_pattern: '^(already-retried|first-attempt)$'
+    intent: Observe the bounded retry suffix before cleanup; retries are preserved for forensics.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'case "$TASK_ID" in *-retry) echo already-retried;; *) echo first-attempt;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", TASK_ID: "{task_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      first_attempt: read_failure_evidence
-      already_retried: STOP-unrecoverable-error
-    kind: mechanical
-    blocked_on: null
-
-  - step_id: read_failure_evidence
-    intent: >-
-      The settle-status row's action verbatim: read stderr_excerpt AND the logs.
-      Both the task file's stderr_excerpt field (live-verified key) and the teed
-      dispatch log are concatenated into the failure receipt, preserving the cause
-      for the -retry brief and audit. An empty excerpt is still evidence.
-    command: sh -c '{ jq -r ".stderr_excerpt // \"(no stderr recorded)\"" batch_state/tasks/{task_id}.json; echo "--- dispatch log tail ---"; tail -40 batch_state/rb2-dispatch-{task_id}.log 2>/dev/null || echo "(no dispatch log)"; } | tee batch_state/rb2-failure-{task_id}.txt'
-    evidence_predicate:
-      command: test -s batch_state/rb2-failure-{task_id}.txt && echo evidence-recorded
-      success_pattern: '^evidence-recorded$'
-    transitions:
-      evidence_recorded: cleanup_failed_worktree
-      task_file_unreadable: STOP-unrecoverable-error
-    kind: mechanical
+      first_attempt: {target: cleanup_failed_worktree, evidence: {predicate_id: retry-first-attempt, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: first-attempt}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      already_retried: {target: STOP-unrecoverable-error, evidence: {predicate_id: retry-already-consumed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: already-retried}]}}
     blocked_on: null
 
   - step_id: cleanup_failed_worktree
     intent: >-
-      The settle-status row's action verbatim, ENFORCED (r5 finding: no swallowed
-      branch-delete): remove the worktree, then delete the never-merged branch with
-      -D — failures are not suppressed, and the predicate proves BOTH absences
-      (worktree gone from the registry AND no branch ref remains). A harness whose
-      write guard blocks manual branch -D fails this step honestly into
-      STOP-manual-intervention — a dangling branch is never accepted as cleaned.
-    command: sh -c 'git worktree remove --force .worktrees/dispatch/{lane}/{task_id} && git branch -D {lane}/{task_id}'
-    evidence_predicate:
-      command: sh -c '(git worktree list | grep -q -e "dispatch/{lane}/{task_id}") && exit 1; (git branch --list "{lane}/{task_id}" | grep -q .) && exit 1; echo fully-cleaned'
-      success_pattern: '^fully-cleaned$'
+      Remove only a clean, proven-unmerged worktree without force. Branch deletion is
+      deliberately omitted: a failed branch remains for forensics and approved cleanup.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'git worktree remove ".worktrees/dispatch/$LANE/$TASK_ID" && echo worktree-removed || echo removal-failed']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}"}
+      timeout_seconds: 60
+      mutation_class: local-write
+      outcome_decoder: {source: stdout-token}
     transitions:
-      cleaned: retry_gate
-      removal_failed: STOP-manual-intervention
-    kind: mechanical
+      worktree_removed: {target: observe_cleanup, evidence: {predicate_id: cleanup-command-complete, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: worktree-removed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      removal_failed: {target: STOP-manual-intervention, evidence: {predicate_id: cleanup-command-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: removal-failed}]}}
     blocked_on: null
 
-  - step_id: retry_gate
-    intent: >-
-      Defense-in-depth suffix re-check on the re-fire path (the authoritative
-      first-match gate is retry_suffix_gate, which runs BEFORE any cleanup): a task
-      id already carrying -retry stops as STOP-unrecoverable-error (the table's
-      exact code). Otherwise the retry id <task_id>-retry is recorded to a receipt
-      for the re-fire step.
-    command: sh -c 'case "{task_id}" in *-retry) echo already-retried ;; *) echo "{task_id}-retry" > batch_state/rb2-retry-{task_id}.txt; cat batch_state/rb2-retry-{task_id}.txt ;; esac'
-    evidence_predicate:
-      command: sh -c 'case "{task_id}" in *-retry) echo already-retried ;; *) cat batch_state/rb2-retry-{task_id}.txt ;; esac'
-      success_pattern: '^(already-retried|.+-retry)$'
+  - step_id: observe_cleanup
+    intent: Re-observe only that the worktree is absent; the branch receipt remains available for forensics.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'git worktree list --porcelain | grep -Fq ".worktrees/dispatch/$LANE/$TASK_ID" && echo worktree-still-present || echo worktree-absent']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      retry_id_recorded: dispatch_retry
-      already_retried: STOP-unrecoverable-error
-    kind: mechanical
+      worktree_absent: {target: dispatch_retry, evidence: {predicate_id: cleanup-observed-absent, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: worktree-absent}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      worktree_still_present: {target: STOP-manual-intervention, evidence: {predicate_id: cleanup-observed-present, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: worktree-still-present}]}}
     blocked_on: null
 
   - step_id: dispatch_retry
-    intent: >-
-      Fire ONCE under the recorded -retry id (read from the receipt), same brief and
-      lane, teeing to the retry log — then this invocation ENDS at the terminal
-      refired_new_invocation. trailspec.v1 cannot rebind {task_id} mid-trail (r3
-      finding), so the -retry task is owned by a NEW invocation of this same trail
-      whose {task_id} IS the -retry id: its settle, verification, and retry gate all
-      address the right task, and its retry_gate stops on the -retry suffix —
-      bounded without rebinding.
-    command: sh -c 'RID=$(cat batch_state/rb2-retry-{task_id}.txt); .venv/bin/python scripts/delegate.py dispatch --agent {lane} --task-id "$RID" --prompt-file {brief_path} --worktree --mode danger {research_flags} 2>&1 | tee "batch_state/rb2-dispatch-$RID.log"'
-    evidence_predicate:
-      command: sh -c 'RID=$(cat batch_state/rb2-retry-{task_id}.txt); jq -r ".status // \"\"" "batch_state/tasks/$RID.json"'
-      success_pattern: '^(spawning|running)$'
+    intent: Dispatch one new invocation under the bounded retry task id.
+    command:
+      adapter: shell
+      argv: [sh, -c, '.venv/bin/python scripts/delegate.py dispatch --agent "$LANE" --task-id "$TASK_ID-retry" --prompt-file "$BRIEF_PATH" --worktree --mode danger && echo retry-dispatch-issued || echo retry-dispatch-failed']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}", BRIEF_PATH: "{brief_path}"}
+      timeout_seconds: 120
+      mutation_class: remote-mutation
+      outcome_decoder: {source: stdout-token}
     transitions:
-      retry_dispatched: refired_new_invocation
-      retry_spawn_failed: STOP-unrecoverable-error
-    kind: mechanical
+      retry_dispatch_issued: {target: observe_retry_dispatch, evidence: {predicate_id: retry-dispatch-issued, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: retry-dispatch-issued}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      retry_dispatch_failed: {target: STOP-unrecoverable-error, evidence: {predicate_id: retry-dispatch-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: retry-dispatch-failed}]}}
+    blocked_on: null
+
+  - step_id: observe_retry_dispatch
+    intent: Re-observe the retry task receipt instead of claiming dispatch success from the mutation output.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'S=$(jq -r ".status // empty" "batch_state/tasks/$TASK_ID-retry.json" 2>/dev/null); case "$S" in spawning|running) echo retry-running;; *) echo retry-receipt-missing;; esac']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", TASK_ID: "{task_id}"}
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
+    transitions:
+      retry_running: {target: refired_new_invocation, evidence: {predicate_id: retry-state-running, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: retry-running}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      retry_receipt_missing: {target: STOP-unrecoverable-error, evidence: {predicate_id: retry-state-missing, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: retry-receipt-missing}]}}
     blocked_on: null
