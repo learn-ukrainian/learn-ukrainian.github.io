@@ -1136,6 +1136,7 @@ def _rail_path_admission_error(
     mode: str,
     owned_paths: Sequence[str] | None,
     receipt_id: str | None = None,
+    head_sha: str | None = None,
 ) -> str | None:
     """Return a P6 refusal before write-path ownership creates any state.
 
@@ -1154,23 +1155,25 @@ def _rail_path_admission_error(
             decide_rail_path_mutation_with_production_receipt,
         )
 
-    try:
-        head_sha = subprocess.run(
-            ["git", "rev-parse", "HEAD"],
-            cwd=_REPO_ROOT,
-            capture_output=True,
-            check=False,
-            text=True,
-            timeout=5,
-        )
-    except (OSError, subprocess.TimeoutExpired) as exc:
-        return f"❌ rail-path admission refused: cannot read current HEAD ({type(exc).__name__})"
-    if head_sha.returncode != 0:
-        return "❌ rail-path admission refused: cannot read current HEAD"
+    if head_sha is None:
+        try:
+            head_sha_proc = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=_REPO_ROOT,
+                capture_output=True,
+                check=False,
+                text=True,
+                timeout=5,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            return f"❌ rail-path admission refused: cannot read current HEAD ({type(exc).__name__})"
+        if head_sha_proc.returncode != 0:
+            return "❌ rail-path admission refused: cannot read current HEAD"
+        head_sha = head_sha_proc.stdout.strip()
     decision = decide_rail_path_mutation_with_production_receipt(
         task_id=task_id,
         candidate_paths=owned_paths or (),
-        head_sha=head_sha.stdout.strip(),
+        head_sha=head_sha,
         receipt_id=receipt_id,
     )
     if decision.allowed:
@@ -1192,6 +1195,32 @@ def _rail_path_admission_advisory(
     if mode in _WRITE_CAPABLE_MODES and not owned_paths:
         return RAIL_ADMISSION_NO_PATH_ADVISORY
     return None
+
+
+def _dispatch_is_receipt_bound(
+    *,
+    receipt_id: str | None,
+    owned_paths: Sequence[str] | None,
+) -> bool:
+    """Whether pre-admission worktree reuse must remain immutable.
+
+    A production receipt binds a precise worktree base, so its dispatch must
+    never rebase an existing checkout before rail admission. The same rule
+    applies to an explicitly declared rail path even before a receipt is
+    supplied: malformed candidates fail closed here and receive their precise
+    refusal from the admission guard later.
+    """
+    if receipt_id is not None:
+        return True
+    try:
+        from scripts.orchestration.rail_path_guard import rail_paths_from_candidates
+    except ImportError:  # pragma: no cover - flat script path
+        from orchestration.rail_path_guard import rail_paths_from_candidates  # type: ignore
+
+    try:
+        return bool(rail_paths_from_candidates(owned_paths or ()))
+    except ValueError:
+        return True
 
 
 def _with_rail_admission_state(
@@ -2429,6 +2458,64 @@ def _apply_dispatch_sparse_checkout(
     return telemetry
 
 
+def _resolve_worktree_base_sha(
+    *,
+    agent: str,
+    task_id: str,
+    raw_path: str,
+    base: str,
+    branch: str | None,
+    allow_rebase: bool = True,
+) -> str:
+    """Resolve one immutable base SHA before rail admission or creation.
+
+    A dispatch receipt and its worker must bind the same checkout state. This
+    helper performs moving-ref validation first, then returns the SHA passed to
+    both rail admission and :func:`_ensure_worktree`. The latter must not
+    fetch, rebase, or dereference a branch again when the SHA is supplied.
+    """
+    worktree_path = _normalize_worktree_path(raw_path)
+    requested_branch = _validate_branch_reuse_name(branch) if branch else None
+
+    if worktree_path.exists():
+        if not worktree_path.is_dir():
+            raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
+        _validate_existing_worktree(
+            path=worktree_path,
+            expected_branch=requested_branch or _derive_worktree_branch(agent, task_id),
+            base=requested_branch or base,
+            # Receipt-bound dispatches must leave a reused worktree untouched
+            # until admission succeeds. Ordinary follow-ups retain the
+            # established auto-rebase behavior.
+            allow_rebase=allow_rebase,
+        )
+        resolved = _resolve_sha(worktree_path)
+        if resolved is None:
+            raise RuntimeError(f"could not resolve HEAD for existing worktree {worktree_path}")
+        return resolved
+
+    if requested_branch:
+        _fetch_existing_branch(requested_branch)
+        return _require_local_branch_is_ancestor_of_origin(requested_branch)
+
+    origin_ref = _origin_base_ref(base)
+    if _fetch_base(base):
+        resolved = _resolve_sha(_REPO_ROOT, origin_ref)
+        if resolved is not None:
+            return resolved
+
+    branch_name = _base_branch_name(base)
+    raise RuntimeError(
+        f"could not fetch origin/{branch_name} and {origin_ref} is "
+        f"unresolvable — refusing to branch from possibly-stale local "
+        f"{branch_name}. Check connectivity and that "
+        "`git remote get-url origin` points at the canonical remote "
+        "(github.com:learn-ukrainian/learn-ukrainian.github.io), then "
+        f"run `git fetch origin {branch_name}` and retry the dispatch. "
+        "Do NOT use the primary checkout as a freshness source."
+    )
+
+
 def _ensure_worktree(
     *,
     agent: str,
@@ -2436,6 +2523,7 @@ def _ensure_worktree(
     raw_path: str,
     base: str = "main",
     branch: str | None = None,
+    resolved_base_sha: str | None = None,
     dry_run: bool = False,
     full_checkout: bool = False,
     sparse_include: Sequence[str] = (),
@@ -2465,8 +2553,9 @@ def _ensure_worktree(
     }
 
     if requested_branch:
-        _fetch_existing_branch(requested_branch)
-        _require_local_branch_is_ancestor_of_origin(requested_branch)
+        if resolved_base_sha is None:
+            _fetch_existing_branch(requested_branch)
+            _require_local_branch_is_ancestor_of_origin(requested_branch)
         occupied_paths = _branch_worktree_paths(requested_branch)
         elsewhere = [path for path in occupied_paths if path != worktree_path]
         if elsewhere:
@@ -2497,19 +2586,28 @@ def _ensure_worktree(
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
         telemetry["reused"] = True
-        telemetry["rebased"] = _validate_existing_worktree(
-            path=worktree_path,
-            expected_branch=worktree_branch,
-            # For --branch reuse the staleness/fast-forward reference is the
-            # requested branch ITSELF (origin/<branch>), never origin/main: a
-            # follow-up worktree for an existing PR is almost always behind
-            # main (main moved since the PR branched), and validating against
-            # main would spuriously fail the dry-run or rebase a PR branch
-            # onto main as a validation side effect. (review-4905-grok)
-            base=requested_branch or base,
-            allow_rebase=not dry_run,
-        )
-        telemetry["base_sha"] = _resolve_sha(worktree_path)
+        if resolved_base_sha is None:
+            telemetry["rebased"] = _validate_existing_worktree(
+                path=worktree_path,
+                expected_branch=worktree_branch,
+                # For --branch reuse the staleness/fast-forward reference is the
+                # requested branch ITSELF (origin/<branch>), never origin/main: a
+                # follow-up worktree for an existing PR is almost always behind
+                # main (main moved since the PR branched), and validating against
+                # main would spuriously fail the dry-run or rebase a PR branch
+                # onto main as a validation side effect. (review-4905-grok)
+                base=requested_branch or base,
+                allow_rebase=not dry_run,
+            )
+        actual_sha = _resolve_sha(worktree_path)
+        if actual_sha is None:
+            raise RuntimeError(f"could not resolve HEAD for existing worktree {worktree_path}")
+        if resolved_base_sha is not None and actual_sha != resolved_base_sha:
+            raise WorktreeStaleBase(
+                "existing worktree HEAD changed after immutable-base resolution; "
+                f"expected {resolved_base_sha}, found {actual_sha}. Refusing worker spawn."
+            )
+        telemetry["base_sha"] = actual_sha
         if dry_run:
             return worktree_path, worktree_branch, telemetry
         # Reused worktrees may predate this provisioning hook; the helper is
@@ -2535,7 +2633,9 @@ def _ensure_worktree(
     # origin-prefixed ``base`` (``--base origin/main``, the mandated form)
     # fetches ``main`` and branches from ``origin/main`` — not the
     # unresolvable ``origin/origin/main``.
-    if requested_branch:
+    if resolved_base_sha is not None:
+        worktree_base_ref = resolved_base_sha
+    elif requested_branch:
         # Attach directly to the fetched PR/follow-up branch.  Never branch
         # from origin/main here: that was the follow-up-dispatch footgun.
         worktree_base_ref = requested_branch
@@ -2563,7 +2663,7 @@ def _ensure_worktree(
     worktree_path.parent.mkdir(parents=True, exist_ok=True)
 
     add_command = ["git", "worktree", "add"]
-    if requested_branch:
+    if requested_branch and resolved_base_sha is None:
         # ``-B`` intentionally resets a behind local tracking ref to the SHA
         # fetched from origin. _require_local_branch_is_ancestor_of_origin()
         # already refused any local-only commits, and branch holders were
@@ -2577,6 +2677,10 @@ def _ensure_worktree(
                 f"origin/{requested_branch}",
             ]
         )
+    elif requested_branch:
+        # The branch was resolved before rail admission. Reset only to that
+        # immutable commit, never a ref that might move before creation.
+        add_command.extend(["-B", requested_branch, str(worktree_path), worktree_base_ref])
     else:
         add_command.extend(["-b", worktree_branch, str(worktree_path), worktree_base_ref])
     proc = subprocess.run(
@@ -2589,13 +2693,38 @@ def _ensure_worktree(
     if proc.returncode != 0:
         stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
         raise RuntimeError(stderr)
+    actual_sha = _resolve_sha(worktree_path)
+    if actual_sha is None:
+        raise RuntimeError(f"could not resolve HEAD for created worktree {worktree_path}")
+    if resolved_base_sha is not None and actual_sha != resolved_base_sha:
+        raise WorktreeStaleBase(
+            "created worktree HEAD differs from immutable base; "
+            f"expected {resolved_base_sha}, found {actual_sha}. Refusing worker spawn."
+        )
+    telemetry["base_sha"] = actual_sha
+    if requested_branch and resolved_base_sha is not None:
+        # `git worktree add -B <branch> <path> <sha>` does not configure an
+        # upstream. Restore the tracking contract the non-SHA branch path
+        # gets from `--track`, after verifying the immutable checkout and
+        # before any provisioning or worker side effect.
+        upstream_proc = subprocess.run(
+            ["git", "branch", "--set-upstream-to", f"origin/{requested_branch}", requested_branch],
+            cwd=worktree_path,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if upstream_proc.returncode != 0:
+            detail = (upstream_proc.stderr or upstream_proc.stdout or "git branch failed").strip()
+            raise RuntimeError(
+                f"could not configure upstream origin/{requested_branch} for {worktree_path}: {detail}"
+            )
     _provision_data_symlinks(worktree_path, _REPO_ROOT)
     telemetry["sparse"] = _apply_dispatch_sparse_checkout(
         worktree_path,
         full_checkout=full_checkout,
         sparse_include=sparse_include,
     )
-    telemetry["base_sha"] = _resolve_sha(worktree_path)
     return worktree_path, worktree_branch, telemetry
 
 
@@ -3571,83 +3700,6 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             )
             return 2
 
-    # P6 rail-path admission runs before the ownership ledger. A refusal must
-    # leave no task-state, worktree, branch, or claim residue for a rail write.
-    rail_admission_advisory = _rail_path_admission_advisory(
-        mode=str(args.mode),
-        owned_paths=getattr(args, "research_owned_path", None),
-    )
-    if rail_admission_advisory is not None:
-        print(rail_admission_advisory, file=sys.stderr)
-    rail_admission_error = _rail_path_admission_error(
-        task_id=task_id,
-        mode=str(args.mode),
-        owned_paths=getattr(args, "research_owned_path", None),
-        receipt_id=getattr(args, "rail_approval_receipt", None),
-    )
-    if rail_admission_error:
-        print(rail_admission_error, file=sys.stderr)
-        return 2
-
-    # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
-    # Runs before task-state write / worktree / branch side effects so a refuse
-    # leaves no residue. Read-only modes are exempt inside the helper.
-    # Dry-run must leave zero residue (same contract as tmp-lease reap) — skip
-    # the shared ownership ledger entirely (Claude CF #5649 r11).
-    if not bool(getattr(args, "dry_run", False)):
-        try:
-            from scripts.guardrails.delegate_ownership import (
-                GuardMode,
-                admit_write_paths,
-                env_guard_mode,
-            )
-        except ImportError:  # pragma: no cover - flat script path
-            from guardrails.delegate_ownership import (  # type: ignore
-                GuardMode,
-                admit_write_paths,
-                env_guard_mode,
-            )
-
-        guard_mode = env_guard_mode()
-        try:
-            ownership = admit_write_paths(
-                task_id=task_id,
-                mode=str(args.mode),
-                owned_paths=getattr(args, "research_owned_path", None),
-                allow_path_overlap=getattr(args, "allow_path_overlap", None),
-                pid=os.getpid(),
-                guard_mode=guard_mode,
-            )
-        except Exception as own_exc:
-            # WARN (opt-in via DELEGATE_OWNERSHIP_MODE=warn): never crash on ledger I/O.
-            # REFUSE (default after #5645): fail closed so conflicts cannot proceed.
-            print(
-                f"⚠️  write-path ownership: ledger error: {own_exc}",
-                file=sys.stderr,
-            )
-            if guard_mode == GuardMode.REFUSE:
-                print(
-                    f"❌ write-path ownership refused (ledger error) for task_id={task_id!r}",
-                    file=sys.stderr,
-                )
-                return 2
-        else:
-            if ownership.would_refuse or ownership.override_reason:
-                # Only report a conflict count when there ARE conflicts: an
-                # unprovable-disjointness refusal has none, and printing
-                # "conflicts=0" next to it reads as a guard bug (#5340-adjacent).
-                suffix = f" (conflicts={len(ownership.conflicts)})" if ownership.conflicts else ""
-                print(
-                    f"⚠️  write-path ownership: {ownership.reason}{suffix}",
-                    file=sys.stderr,
-                )
-            if not ownership.admitted:
-                print(
-                    f"❌ write-path ownership refused for task_id={task_id!r}: {ownership.reason}",
-                    file=sys.stderr,
-                )
-                return 2
-
     # Resolve prompt: literal --prompt, or - for stdin, or --prompt-file.
     if args.prompt_file:
         prompt = Path(args.prompt_file).read_text()
@@ -3713,6 +3765,113 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print(f"❌ invalid --output-schema: {exc}", file=sys.stderr)
         return 2
 
+    # Resolve once before rail admission. Fetching or rebasing after receipt
+    # validation could detach the worker's actual HEAD from the approved base.
+    # Only a receipt-bound rail dispatch forbids the established reuse-rebase
+    # behavior during this pre-resolution step.
+    resolved_worktree_base_sha: str | None = None
+    resolved_worktree_raw: str | None = None
+    receipt_bound_dispatch = _dispatch_is_receipt_bound(
+        receipt_id=getattr(args, "rail_approval_receipt", None),
+        owned_paths=getattr(args, "research_owned_path", None),
+    )
+    if worktree_arg:
+        resolved_worktree_raw = (
+            str(_auto_worktree_path(dispatch_agent, task_id))
+            if worktree_arg == "auto"
+            else worktree_arg
+        )
+        try:
+            resolved_worktree_base_sha = _resolve_worktree_base_sha(
+                agent=dispatch_agent,
+                task_id=task_id,
+                raw_path=resolved_worktree_raw,
+                base=getattr(args, "base", None) or "main",
+                branch=requested_branch,
+                allow_rebase=not bool(getattr(args, "dry_run", False)) and not receipt_bound_dispatch,
+            )
+        except (ValueError, RuntimeError) as exc:
+            print(f"❌ failed to resolve immutable worktree base for {task_id!r}: {exc}", file=sys.stderr)
+            return 1
+
+    # P6 rail-path admission runs before the ownership ledger. A refusal must
+    # leave no task-state, worktree, branch, or claim residue for a rail write.
+    rail_admission_advisory = _rail_path_admission_advisory(
+        mode=str(args.mode),
+        owned_paths=getattr(args, "research_owned_path", None),
+    )
+    if rail_admission_advisory is not None:
+        print(rail_admission_advisory, file=sys.stderr)
+    rail_admission_error = _rail_path_admission_error(
+        task_id=task_id,
+        mode=str(args.mode),
+        owned_paths=getattr(args, "research_owned_path", None),
+        receipt_id=getattr(args, "rail_approval_receipt", None),
+        head_sha=resolved_worktree_base_sha,
+    )
+    if rail_admission_error:
+        print(rail_admission_error, file=sys.stderr)
+        return 2
+
+    # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
+    # Runs before task-state write / worktree / branch side effects so a refuse
+    # leaves no residue. Read-only modes are exempt inside the helper.
+    # Dry-run must leave zero residue (same contract as tmp-lease reap) — skip
+    # the shared ownership ledger entirely (Claude CF #5649 r11).
+    if not bool(getattr(args, "dry_run", False)):
+        try:
+            from scripts.guardrails.delegate_ownership import (
+                GuardMode,
+                admit_write_paths,
+                env_guard_mode,
+            )
+        except ImportError:  # pragma: no cover - flat script path
+            from guardrails.delegate_ownership import (  # type: ignore
+                GuardMode,
+                admit_write_paths,
+                env_guard_mode,
+            )
+
+        guard_mode = env_guard_mode()
+        try:
+            ownership = admit_write_paths(
+                task_id=task_id,
+                mode=str(args.mode),
+                owned_paths=getattr(args, "research_owned_path", None),
+                allow_path_overlap=getattr(args, "allow_path_overlap", None),
+                pid=os.getpid(),
+                guard_mode=guard_mode,
+            )
+        except Exception as own_exc:
+            # WARN (opt-in via DELEGATE_OWNERSHIP_MODE=warn): never crash on ledger I/O.
+            # REFUSE (default after #5645): fail closed so conflicts cannot proceed.
+            print(
+                f"⚠️  write-path ownership: ledger error: {own_exc}",
+                file=sys.stderr,
+            )
+            if guard_mode == GuardMode.REFUSE:
+                print(
+                    f"❌ write-path ownership refused (ledger error) for task_id={task_id!r}",
+                    file=sys.stderr,
+                )
+                return 2
+        else:
+            if ownership.would_refuse or ownership.override_reason:
+                # Only report a conflict count when there ARE conflicts: an
+                # unprovable-disjointness refusal has none, and printing
+                # "conflicts=0" next to it reads as a guard bug (#5340-adjacent).
+                suffix = f" (conflicts={len(ownership.conflicts)})" if ownership.conflicts else ""
+                print(
+                    f"⚠️  write-path ownership: {ownership.reason}{suffix}",
+                    file=sys.stderr,
+                )
+            if not ownership.admitted:
+                print(
+                    f"❌ write-path ownership refused for task_id={task_id!r}: {ownership.reason}",
+                    file=sys.stderr,
+                )
+                return 2
+
     if getattr(args, "dry_run", False):
         dry_run_worktree: Path | None = None
         dry_run_branch: str | None = None
@@ -3731,6 +3890,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                     raw_path=resolved_raw,
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
+                    resolved_base_sha=resolved_worktree_base_sha,
                     dry_run=True,
                     full_checkout=full_checkout,
                     sparse_include=sparse_include,
@@ -3848,6 +4008,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 raw_path=resolved_raw,
                 base=getattr(args, "base", None) or "main",
                 branch=requested_branch,
+                resolved_base_sha=resolved_worktree_base_sha,
                 full_checkout=full_checkout,
                 sparse_include=sparse_include,
             )

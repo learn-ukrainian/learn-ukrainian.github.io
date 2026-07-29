@@ -30,8 +30,10 @@ from typing import Any
 # pos value the manifest carries for Latin/Ukrainian grammar metaterms.
 GRAMMAR_TERM_POS = "grammar term"
 
-# Inflected / normalized duplicates of a canonical lemma (e.g. "Іване" voc. of "Іван",
-# "автобусом" instr. of "автобус"). Not study headwords — the #3450 class.
+# Source labels emitted while resolving inflected / normalized vocabulary (e.g. "Іване"
+# voc. of "Іван", "автобусом" instr. of "автобус"). They are used by consumers that
+# need to treat every derived source conservatively, but are *not* a practice-exclusion
+# list: normalization/canonicalization may produce a legitimate canonical lemma.
 DERIVED_FORM_SOURCES = frozenset(
     {
         "built_vocabulary_form",
@@ -119,7 +121,16 @@ def is_practice_eligible(entry: dict[str, Any]) -> bool:
         return False
     if not _has_text(entry.get("gloss")):
         return False
-    if entry.get("primary_source") in DERIVED_FORM_SOURCES:
+    # Three-way policy for form-derived provenance:
+    # 1. Any actual ``form_of`` relation is an alias/form row, so exclude it.
+    # 2. ``built_vocabulary_form`` is an alias route by construction, including
+    #    malformed rows that have lost that relation, so exclude it.
+    # 3. ``built_vocabulary_normalized`` and ``built_vocabulary_canonicalized``
+    #    without ``form_of`` can be canonical lemmas, so admit them when the
+    #    remaining practice checks pass.
+    if entry.get("form_of"):
+        return False
+    if entry.get("primary_source") == "built_vocabulary_form":
         return False
     if entry.get("primary_source") == SURZHYK_SOURCE:
         return False

@@ -2873,10 +2873,10 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
     # At minimum: git fetch + git rev-parse --verify + git worktree add + git rev-parse HEAD.
     assert any(c[:3] == ["git", "worktree", "add"] for c in calls)
     assert any(c[:2] == ["git", "fetch"] for c in calls)
-    # Fix 1: the worktree add MUST branch from origin/main, not local main.
+    # Rail admission and worktree creation share one immutable resolved SHA.
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
-    assert add_cmd[-1] == "origin/main", (
-        f"worktree must be created from origin/main, got base={add_cmd[-1]!r}"
+    assert add_cmd[-1] == "deadbeef", (
+        f"worktree must be created from the resolved SHA, got base={add_cmd[-1]!r}"
     )
     captured = capsys.readouterr()
     assert "issue-1383-smoke" in captured.out
@@ -2912,11 +2912,10 @@ def test_fetch_base_plain_branch_unchanged(monkeypatch):
     assert fetch_cmd == ["git", "fetch", "origin", "main"]
 
 
-def test_dispatch_origin_prefixed_base_branches_from_remote_ref(
+def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
     tmp_tasks_dir, tmp_path, monkeypatch, capsys
 ):
-    """base="origin/main" must produce `worktree add ... origin/main`,
-    never the unresolvable `origin/origin/main`."""
+    """base="origin/main" must fetch that ref and create from its SHA."""
     import argparse
 
     class _FakeStdin:
@@ -2953,8 +2952,8 @@ def test_dispatch_origin_prefixed_base_branches_from_remote_ref(
     fetch_cmd = next(c for c in calls if c[:2] == ["git", "fetch"])
     assert fetch_cmd == ["git", "fetch", "origin", "main"]
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
-    assert add_cmd[-1] == "origin/main", (
-        f"worktree must be created from origin/main, got base={add_cmd[-1]!r}"
+    assert add_cmd[-1] == "feedc0de", (
+        f"worktree must use the resolved SHA, got base={add_cmd[-1]!r}"
     )
 
 

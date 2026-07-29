@@ -39,6 +39,14 @@ class GlossFillResult:
     skipped_existing: tuple[str, ...]
 
 
+@dataclass(frozen=True)
+class PosFillResult:
+    """Result of applying an explicit VESUM-backed POS repair."""
+
+    applied: tuple[str, ...]
+    skipped_existing: tuple[str, ...]
+
+
 def _text(value: object) -> str:
     return str(value or "").strip()
 
@@ -206,6 +214,57 @@ def _clean_seed_gloss(gloss: str) -> str:
     return _ASPECT_NOTE_RE.sub("", gloss).strip()
 
 
+def fill_missing_manifest_pos(
+    manifest: dict[str, Any],
+    target_lemmas: Iterable[str],
+) -> PosFillResult:
+    """Fill selected blank Atlas POS fields from their VESUM lemma analyses.
+
+    This repair is deliberately target-scoped: only explicitly named lemmas
+    may have their POS auto-filled from VESUM. Existing POS values are
+    preserved rather than overwritten.
+    """
+    entries = manifest.get("entries")
+    if not isinstance(entries, list) or not all(isinstance(entry, dict) for entry in entries):
+        raise ValueError("manifest entries must be objects")
+
+    targets = {_lemma_key(_text(lemma)) for lemma in target_lemmas if _text(lemma)}
+    if not targets:
+        raise ValueError("at least one target lemma is required")
+
+    manifest_entries = {
+        _lemma_key(_text(entry.get("lemma"))): entry
+        for entry in entries
+        if _text(entry.get("lemma"))
+    }
+    missing_manifest = sorted(targets - set(manifest_entries))
+    if missing_manifest:
+        raise ValueError(f"target lemmas missing from Atlas manifest: {', '.join(missing_manifest)}")
+
+    resolved_pos: dict[str, str] = {}
+    for key in sorted(targets):
+        entry = manifest_entries[key]
+        lemma = _text(entry.get("lemma"))
+        if _text(entry.get("pos")):
+            continue
+        pos = _vesum_pos(lemma)
+        if not pos:
+            raise ValueError(f"target lemma has no VESUM POS: {lemma}")
+        resolved_pos[key] = pos
+
+    applied: list[str] = []
+    skipped_existing: list[str] = []
+    for key in sorted(targets):
+        entry = manifest_entries[key]
+        lemma = _text(entry.get("lemma"))
+        if key not in resolved_pos:
+            skipped_existing.append(lemma)
+            continue
+        entry["pos"] = resolved_pos[key]
+        applied.append(lemma)
+    return PosFillResult(applied=tuple(applied), skipped_existing=tuple(skipped_existing))
+
+
 def _cefr(entry: dict[str, Any]) -> tuple[str, str] | None:
     enrichment = entry.get("enrichment")
     value = enrichment.get("cefr") if isinstance(enrichment, dict) else None
@@ -278,7 +337,7 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", type=Path, required=True, help="Raw v5 JSONL or public v5 seed JSON")
+    parser.add_argument("--input", type=Path, help="Raw v5 JSONL or public v5 seed JSON")
     parser.add_argument("--public-seed-out", type=Path)
     parser.add_argument("--manifest", type=Path)
     parser.add_argument("--candidates-out", type=Path)
@@ -290,32 +349,73 @@ def main(argv: list[str] | None = None) -> int:
         help="Fill explicit blank manifest glosses from the curated seed English.",
     )
     parser.add_argument(
+        "--fill-existing-pos",
+        action="store_true",
+        help="Fill explicit blank manifest POS fields from VESUM lemma analyses.",
+    )
+    parser.add_argument(
         "--target-lemma",
         action="append",
         default=[],
-        help="Lemma permitted for --fill-existing-glosses; repeat for every reviewed target.",
+        help="Lemma permitted for an explicit fill repair; repeat for every reviewed target.",
     )
-    parser.add_argument("--write", action="store_true", help="Write a manifest changed by --fill-existing-glosses.")
+    parser.add_argument("--write", action="store_true", help="Write a manifest changed by an explicit fill repair.")
     args = parser.parse_args(argv)
-    rows = read_public_seed(args.input) if args.input.suffix == ".json" else normalize_rows(_read_jsonl(args.input))
-    if args.write and not args.fill_existing_glosses:
-        parser.error("--write requires --fill-existing-glosses")
-    if args.fill_existing_glosses:
+    needs_seed_rows = bool(
+        args.fill_existing_glosses
+        or args.public_seed_out
+        or args.candidates_out
+        or args.practice_seed_out
+        or args.report_out
+    )
+    if args.input is None:
+        if needs_seed_rows:
+            parser.error("--input is required for seed-derived output or --fill-existing-glosses")
+        rows: list[dict[str, Any]] = []
+    else:
+        rows = (
+            read_public_seed(args.input)
+            if args.input.suffix == ".json"
+            else normalize_rows(_read_jsonl(args.input))
+        )
+    if args.write and not (args.fill_existing_glosses or args.fill_existing_pos):
+        parser.error("--write requires --fill-existing-glosses or --fill-existing-pos")
+
+    manifest: dict[str, Any] | None = None
+    if args.fill_existing_glosses or args.fill_existing_pos:
         if not args.manifest:
-            parser.error("--fill-existing-glosses requires --manifest")
+            parser.error("--fill-existing-glosses/--fill-existing-pos requires --manifest")
         if not args.target_lemma:
-            parser.error("--fill-existing-glosses requires at least one --target-lemma")
+            parser.error("--fill-existing-glosses/--fill-existing-pos requires at least one --target-lemma")
         manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
         if not isinstance(manifest, dict):
             raise ValueError(f"manifest must contain an object: {args.manifest}")
+
+    wrote_manifest = False
+    if args.fill_existing_glosses:
+        assert manifest is not None
         result = fill_missing_manifest_glosses(rows, manifest, args.target_lemma)
         if args.write and result.applied:
+            assert args.manifest is not None
             _write_json(args.manifest, manifest)
+            wrote_manifest = True
         print(
             "Seed gloss fill: "
-            f"applied={len(result.applied)} skipped_existing={len(result.skipped_existing)} "
-            f"written={str(bool(args.write and result.applied)).lower()}"
+            f"applied={len(result.applied)} skipped_existing={len(result.skipped_existing)}"
         )
+    if args.fill_existing_pos:
+        assert manifest is not None
+        pos_result = fill_missing_manifest_pos(manifest, args.target_lemma)
+        if args.write and pos_result.applied:
+            assert args.manifest is not None
+            _write_json(args.manifest, manifest)
+            wrote_manifest = True
+        print(
+            "VESUM POS fill: "
+            f"applied={len(pos_result.applied)} skipped_existing={len(pos_result.skipped_existing)}"
+        )
+    if args.fill_existing_glosses or args.fill_existing_pos:
+        print(f"Manifest written={str(wrote_manifest).lower()}")
     if args.public_seed_out:
         write_public_seed(rows, args.public_seed_out)
     if args.candidates_out:

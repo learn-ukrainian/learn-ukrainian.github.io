@@ -16,8 +16,11 @@ enforcement layer uses the same schema and binding rules.
 
 from __future__ import annotations
 
+import importlib.machinery
+import importlib.util
 import json
 import re
+import sys
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -180,9 +183,23 @@ class RailApprovalReceiptStore(Protocol):
 
 def _monitor_api_get(path: str) -> tuple[int, str, Mapping[str, str]]:
     """Use the established Monitor client rather than a caller-chosen URL."""
-    from scripts.ai_agent_bridge.monitor_client import MonitorClient
 
-    return MonitorClient()._get(path)
+    bridge_dir = PROJECT_ROOT / "scripts" / "ai_agent_bridge"
+    package_name = "_rail_path_guard_monitor_client"
+    package_spec = importlib.machinery.ModuleSpec(package_name, loader=None, is_package=True)
+    package_spec.submodule_search_locations = [str(bridge_dir)]
+    package = importlib.util.module_from_spec(package_spec)
+    sys.modules[package_name] = package
+
+    client_name = f"{package_name}.monitor_client"
+    client_spec = importlib.util.spec_from_file_location(client_name, bridge_dir / "monitor_client.py")
+    if client_spec is None or client_spec.loader is None:
+        raise ImportError("could not load the Monitor client")
+    client_module = importlib.util.module_from_spec(client_spec)
+    sys.modules[client_name] = client_module
+    client_spec.loader.exec_module(client_module)
+
+    return client_module.MonitorClient()._get(path)
 
 
 class MonitorRailApprovalReceiptStore:
