@@ -32,8 +32,10 @@ Project-local wrappers for interactive agent sessions:
 ./start-codex.sh       # native Codex
 ./start-grok.sh        # native Grok Build TUI
 ./start-gemini.sh      # native Gemini / Antigravity AGY Build TUI
-./start-kimi.sh        # native Kimi Code
-./start-glm.sh         # GLM through Claude Code
+./start-kimi.sh        # native Kimi Code (default harness)
+./start-kimicc.sh      # Claude Code routed to Kimi (compat → start-kimi --harness claude-code)
+./start-glm.sh         # Claude Code routed to Z.AI GLM
+./start-glmcc.sh       # same GLM route under the historical name
 ./start-claude-driver.sh --epic devops
 ./start-codex-driver.sh --epic devops
 ./start-gemini-driver.sh --epic devops
@@ -45,12 +47,13 @@ lane via `scripts/delegate.py --agent kimi` or the project bridge/runtime. Inter
 Kimi is `kimi` (user npm global at `~/.local/bin/kimi` is preferred;
 `~/.kimi-code/bin/kimi` is the legacy standalone binary and last-resort fallback).
 Do not use `~/.hermes/node/bin` — that Node tree is Hermes-private only.
-Use `./start-kimi.sh --harness claude-code` for Kimi through Claude Code.
+Use `./start-kimicc.sh` or `./start-kimi.sh --harness claude-code` for Kimi through Claude Code.
 
 ### Parallel routes and original Claude config
 
-`start-codex.sh --harness claude-code` and
-`start-kimi.sh --harness claude-code` route through process-scoped
+`start-codex.sh --harness claude-code`,
+`start-kimicc.sh` / `start-kimi.sh --harness claude-code`, and
+`start-glmcc.sh` / `start-glm.sh` route through process-scoped
 configuration. They **never rewrite** the live `~/.claude/settings.json`. That means:
 
 - `./start-claude.sh` always keeps the original Anthropic / Claude Code setup
@@ -89,15 +92,16 @@ repository.
 
 ### Kimi through Claude Code
 
-`start-kimi.sh --harness claude-code` is **Claude Code UI + Kimi models** (not the native Kimi TUI).
+`start-kimicc.sh` (or `start-kimi.sh --harness claude-code`) is **Claude Code UI + Kimi models** (not the native Kimi TUI).
 Use it when you want Claude Code ergonomics with K3 or K2.7 in a second
 terminal while native Claude runs in the first.
 
 ```bash
-./start-kimi.sh --harness claude-code                # coding endpoint + isolated config
-./start-kimi.sh --harness claude-code --model k2.7
-./start-kimi.sh --harness claude-code --endpoint platform
-./start-kimi.sh --harness claude-code --no-isolate-config
+./start-kimicc.sh                                    # coding endpoint + isolated config
+./start-kimicc.sh --model k2.7
+./start-kimicc.sh --endpoint platform
+./start-kimicc.sh --no-isolate-config
+./start-kimi.sh --harness claude-code                # same route, explicit harness
 ```
 
 **Defaults (operator lane):** `--endpoint coding` (subscription),
@@ -136,6 +140,35 @@ or the project bridge/runtime). Do not point headless jobs at kimicc.
 
 K2.7 requires **Thinking ON** in the Claude Code TUI (`Tab`) or the endpoint
 rejects requests. Official guide: [Use Kimi in Claude Code](https://platform.kimi.ai/docs/guide/claude-code-kimi).
+
+### GLM through Claude Code (Z.AI)
+
+`start-glmcc.sh` / `start-glm.sh` routes Claude Code to the Z.AI Anthropic-compatible
+endpoint (`https://api.z.ai/api/anthropic`) per
+[Z.AI Claude Code docs](https://docs.z.ai/scenario-example/develop-tools/claude).
+
+```bash
+./start-glmcc.sh                     # coding endpoint + isolated ~/.claude-glmcc
+./start-glmcc.sh --endpoint platform
+./start-glm.sh --model glm-5.2
+```
+
+**Credentials (first match wins):** `GLMCC_AUTH_TOKEN`, `ZAI_API_KEY`,
+`ZHIPU_API_KEY`, `GLM_API_KEY`, then owner-only `~/.secret/zai.key`
+(mode `0600` or `0400`). Override the file path with `GLMCC_SECRET_FILE`.
+File-backed keys are loaded into process-scoped `ANTHROPIC_AUTH_TOKEN` only —
+they are never re-exported as `ZAI_*`, never written to
+`~/.claude/settings.json`, and never printed by dry-run. Ambient
+`ANTHROPIC_AUTH_TOKEN` is deliberately rejected as a GLM credential.
+
+Create the secret file once (avoid putting the key on the shell command line
+or in shell history):
+
+```bash
+mkdir -p ~/.secret
+touch ~/.secret/zai.key && chmod 600 ~/.secret/zai.key
+${EDITOR:-nano} ~/.secret/zai.key   # paste the key alone, save, quit
+```
 
 The trusted `agents_extensions/codex/config.toml` overlay gives Codex App and
 CLI the same Sol/high root and Terra/medium V2 defaults. `start-codex.sh`

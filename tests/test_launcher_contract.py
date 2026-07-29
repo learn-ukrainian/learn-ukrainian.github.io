@@ -1,4 +1,4 @@
-"""Contract coverage for the ten-script public launcher estate."""
+"""Contract coverage for the public launcher estate."""
 
 from __future__ import annotations
 
@@ -20,9 +20,14 @@ PUBLIC = (
     "start-grok.sh",
     "start-grok-driver.sh",
     "start-kimi.sh",
+    "start-kimicc.sh",
     "start-glm.sh",
+    "start-glmcc.sh",
 )
-RETIRED = tuple(f"start-{name}.sh" for name in ("claudex", "kimicc", "glmcc")) + tuple(
+# Compat wrappers forward into the shared adapters; they are part of PUBLIC.
+COMPAT = ("start-kimicc.sh", "start-glmcc.sh")
+assert set(COMPAT).issubset(PUBLIC)
+RETIRED = tuple(f"start-{name}.sh" for name in ("claudex",)) + tuple(
     f"start-{provider}-drive.sh" for provider in ("gemini", "grok", "opus", "sonnet")
 )
 
@@ -67,7 +72,19 @@ def test_unknown_launcher_flag_exits_usage_error(name: str) -> None:
     assert "run --help" in result.stderr
 
 
-@pytest.mark.parametrize("name", ("start-claude.sh", "start-codex.sh", "start-gemini.sh", "start-grok.sh", "start-kimi.sh", "start-glm.sh"))
+@pytest.mark.parametrize(
+    "name",
+    (
+        "start-claude.sh",
+        "start-codex.sh",
+        "start-gemini.sh",
+        "start-grok.sh",
+        "start-kimi.sh",
+        "start-kimicc.sh",
+        "start-glm.sh",
+        "start-glmcc.sh",
+    ),
+)
 def test_interactive_launchers_reject_driver_epic(name: str) -> None:
     result = run_launcher(name, "--epic", "devops")
     assert result.returncode == 2
@@ -245,6 +262,48 @@ def test_session_and_durable_helper_roots_are_deliberately_distinct() -> None:
     assert "LC_SESSION_ROOT" in core and "LC_DURABLE_HELPER_ROOT" in core
     assert 'kimicc_configure_route "$LC_SESSION_ROOT" "$LC_SESSION_ROOT" "$LC_DURABLE_HELPER_ROOT"' in kimi
     assert "durable_helper_dir" in route
+
+
+def test_compat_wrappers_forward_to_shared_adapters() -> None:
+    kimicc = (REPO / "start-kimicc.sh").read_text(encoding="utf-8")
+    glmcc = (REPO / "start-glmcc.sh").read_text(encoding="utf-8")
+    assert 'exec "$ROOT/start-kimi.sh" --harness claude-code "$@"' in kimicc
+    assert 'exec "$ROOT/start-glm.sh" "$@"' in glmcc
+    # Wrappers must not set route credentials themselves — isolation stays in
+    # the shared route helpers.
+    for body in (kimicc, glmcc):
+        assert "ANTHROPIC_AUTH_TOKEN" not in body
+        assert "ANTHROPIC_BASE_URL" not in body
+        assert "ZAI_API_KEY" not in body
+    # Sol P2: kimicc must reject a later --harness override.
+    assert "--harness|--harness=*" in kimicc
+
+
+def test_compat_kimicc_rejects_harness_override() -> None:
+    result = run_launcher("start-kimicc.sh", "--harness", "kimi-code")
+    assert result.returncode == 2
+    assert "always uses Claude Code" in result.stderr
+
+
+def test_compat_kimicc_and_glmcc_dry_run(tmp_path: Path) -> None:
+    home = tmp_path / "home"
+    kimi = run_launcher(
+        "start-kimicc.sh",
+        "--model",
+        "k3",
+        env={"HOME": str(home), "KIMICC_AUTH_TOKEN": "kimi-compat-secret"},
+    )
+    assert kimi.returncode == 0, kimi.stderr
+    assert "credential_source=KIMICC_AUTH_TOKEN" in kimi.stdout
+    assert "kimi-compat-secret" not in kimi.stdout + kimi.stderr
+
+    glm = run_launcher(
+        "start-glmcc.sh",
+        env={"HOME": str(home), "ZAI_API_KEY": "glm-compat-secret"},
+    )
+    assert glm.returncode == 0, glm.stderr
+    assert "credential_source=ZAI_API_KEY" in glm.stdout
+    assert "glm-compat-secret" not in glm.stdout + glm.stderr
 
 
 def test_retired_names_are_absent_from_tracked_content() -> None:

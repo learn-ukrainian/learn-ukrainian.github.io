@@ -31,6 +31,11 @@ CLAUDE_ROUTE_ENV_KEYS=(
   CLAUDE_CODE_MAX_CONTEXT_TOKENS
   CLAUDE_CODE_AUTO_COMPACT_WINDOW
   CLAUDE_CODE_EFFORT_LEVEL
+  CLAUDE_CODE_USE_BEDROCK
+  CLAUDE_CODE_USE_VERTEX
+  CLAUDE_CODE_USE_FOUNDRY
+  CLAUDE_CODE_USE_MANTLE
+  CLAUDE_CODE_USE_ANTHROPIC_AWS
 )
 
 # Print space-separated route keys present under settings.json env (if any).
@@ -90,6 +95,11 @@ keys = [
     "CLAUDE_CODE_MAX_CONTEXT_TOKENS",
     "CLAUDE_CODE_AUTO_COMPACT_WINDOW",
     "CLAUDE_CODE_EFFORT_LEVEL",
+    "CLAUDE_CODE_USE_BEDROCK",
+    "CLAUDE_CODE_USE_VERTEX",
+    "CLAUDE_CODE_USE_FOUNDRY",
+    "CLAUDE_CODE_USE_MANTLE",
+    "CLAUDE_CODE_USE_ANTHROPIC_AWS",
 ]
 present = [k for k in keys if k in env]
 print(" ".join(present))
@@ -102,49 +112,92 @@ PY
   done
 }
 
-# Refuse launch when settings.json would override process-scoped route env.
-# Pass-through when CLAUDE_CONFIG_DIR is set to a non-default isolated dir, or
-# when CLAUDE_ROUTE_GUARD_ALLOW_SETTINGS_ENV=1 (explicit operator override).
+# Refuse launch when any Claude settings scope that Claude Code actually loads
+# would override process-scoped route env.
+#
+# Scopes inspected (user → project → local), matching
+# https://code.claude.com/docs/en/settings :
+#   1) ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json
+#   2) <project>/.claude/settings.json
+#   3) <project>/.claude/settings.local.json
+#
+# CLAUDE_SETTINGS_PATH is NEVER trusted as a replacement for those real paths —
+# an ambient redirect would let the guard inspect a clean decoy while Claude
+# still loads the pinned scopes. If set, it is checked in addition only.
+# Emergency only: CLAUDE_ROUTE_GUARD_ALLOW_SETTINGS_ENV=1.
 assert_claude_settings_route_clean() {
   local route_name="${1:-alternate Claude route}"
-  local settings_path="${CLAUDE_SETTINGS_PATH:-${HOME}/.claude/settings.json}"
-  local config_dir="${CLAUDE_CONFIG_DIR:-}"
-  local conflict_output
-  local conflicts=()
-  local line
+  local project_dir="${2:-}"
+  local config_dir="${CLAUDE_CONFIG_DIR:-${HOME}/.claude}"
+  local settings_path conflict_output line git_common primary_root
+  local -a settings_paths=()
+  local -a conflicts=()
+  local -a seen_paths=()
+  local path_already_seen=0
 
   if [ "${CLAUDE_ROUTE_GUARD_ALLOW_SETTINGS_ENV:-0}" = "1" ]; then
     echo "Warning: CLAUDE_ROUTE_GUARD_ALLOW_SETTINGS_ENV=1 — settings.json env may override $route_name." >&2
     return 0
   fi
 
-  # Isolated config dir means we are not reading the operator's live settings.
-  if [ -n "$config_dir" ] && [ "$config_dir" != "${HOME}/.claude" ]; then
-    return 0
+  settings_paths+=("${config_dir}/settings.json")
+  if [ -n "$project_dir" ]; then
+    settings_paths+=("${project_dir}/.claude/settings.json")
+    settings_paths+=("${project_dir}/.claude/settings.local.json")
+    # Linked worktrees: Claude Code resolves project/local settings against the
+    # primary checkout (git common dir parent), not only the worktree path.
+    # https://code.claude.com/docs/en/settings
+    git_common="$(env -u GIT_DIR -u GIT_WORK_TREE -u GIT_COMMON_DIR \
+      git -C "$project_dir" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+    if [ -n "$git_common" ]; then
+      primary_root="$(dirname "$git_common")"
+      if [ -n "$primary_root" ] && [ "$primary_root" != "$project_dir" ]; then
+        settings_paths+=("${primary_root}/.claude/settings.json")
+        settings_paths+=("${primary_root}/.claude/settings.local.json")
+      fi
+    fi
+  fi
+  # Additional inspection only — never a substitute for the scopes above.
+  if [ -n "${CLAUDE_SETTINGS_PATH:-}" ]; then
+    settings_paths+=("$CLAUDE_SETTINGS_PATH")
   fi
 
-  conflict_output="$(claude_settings_conflicting_route_keys "$settings_path")" || return $?
-  while IFS= read -r line; do
-    [ -n "$line" ] && conflicts+=("$line")
-  done <<< "$conflict_output"
+  for settings_path in "${settings_paths[@]}"; do
+    path_already_seen=0
+    for seen in "${seen_paths[@]+"${seen_paths[@]}"}"; do
+      if [ "$seen" = "$settings_path" ]; then
+        path_already_seen=1
+        break
+      fi
+    done
+    if [ "$path_already_seen" = 1 ]; then
+      continue
+    fi
+    seen_paths+=("$settings_path")
+
+    conflict_output="$(claude_settings_conflicting_route_keys "$settings_path")" || return $?
+    while IFS= read -r line; do
+      [ -n "$line" ] && conflicts+=("$settings_path:$line")
+    done <<< "$conflict_output"
+  done
 
   if ((${#conflicts[@]} == 0)); then
     return 0
   fi
 
-  echo "Error: $route_name refuses to launch because $settings_path pins route env keys:" >&2
+  echo "Error: $route_name refuses to launch because Claude settings pin route env keys:" >&2
   printf '  - %s\n' "${conflicts[@]}" >&2
   echo >&2
-  echo "Claude Code applies settings.json env OVER process environment, so these" >&2
-  echo "pins would hijack native Claude and this launcher. We do NOT rewrite that" >&2
-  echo "file (original config must stay operator-owned)." >&2
+  echo "Claude Code merges user/project/local settings over process environment, so these" >&2
+  echo "pins would hijack this launcher's allowlisted route. We do NOT rewrite those" >&2
+  echo "files (config must stay operator-owned)." >&2
   echo >&2
   echo "Options:" >&2
-  echo "  1) Remove those keys from settings.json env (recommended; keep Method-1 env routing)." >&2
-  echo "  2) Launch with an isolated config dir, e.g. CLAUDE_CONFIG_DIR=\$HOME/.claude-kimicc" >&2
+  echo "  1) Remove those keys from the listed settings.json env blocks." >&2
+  echo "  2) Point CLAUDE_CONFIG_DIR at a clean isolated directory and clear project/local pins." >&2
   echo "  3) Emergency only: CLAUDE_ROUTE_GUARD_ALLOW_SETTINGS_ENV=1 (not recommended)." >&2
   echo >&2
   echo "cc-switch and similar tools often write these keys — prefer project launchers" >&2
-  echo "(./start-claude.sh, ./start-codex.sh --harness claude-code, ./start-kimi.sh --harness claude-code) over global switches." >&2
+  echo "(./start-claude.sh, ./start-glmcc.sh, ./start-kimicc.sh) over global switches." >&2
   return 1
 }
