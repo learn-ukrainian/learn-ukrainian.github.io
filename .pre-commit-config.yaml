@@ -136,6 +136,18 @@ repos:
         files: ^site/src/content/docs/.*\.mdx$
         stages: [pre-commit]
 
+      - id: check-ua-eval-public-doc-language
+        name: check public UA-eval English document language
+        entry: >-
+          bash scripts/pre_commit/project_python.sh
+          scripts/audit/check_ua_eval_public_doc_language.py --files
+        language: system
+        files: >-
+          (?x)^docs/projects/ua-eval-harness/
+          (DATA_CARD\.en|README|RELEASE_NOTES|REPRODUCING|THIRD_PARTY_NOTICES|
+          contamination-policy)\.md$
+        stages: [pre-commit]
+
       - id: check-mdx-forward-parity
         name: check forward MDX parity
         entry: bash scripts/pre_commit/project_python.sh scripts/audit/check_mdx_forward_parity.py --files

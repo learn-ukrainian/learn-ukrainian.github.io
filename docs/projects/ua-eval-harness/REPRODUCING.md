@@ -86,8 +86,8 @@ The asset and the derived evidence are licensed under CC BY-NC-SA 4.0. See
 pinned revision, license, and evidence receipts.
 
 VESUM attestations and style markers identify candidates; they do not decide
-contextual calque status automatically. Broader contextual activation remains
-tracked in issue #5092. Public v0 excludes unresolved records from headline
+contextual calque status automatically. Broader contextual activation is
+outside this release. Public v0 excludes unresolved records from headline
 scoring.
 
 ## Evaluate another model
