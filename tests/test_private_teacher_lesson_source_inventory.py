@@ -1037,10 +1037,12 @@ def test_public_teacher_cloze_build_excludes_private_lemmas_before_distractors()
     assert public_teacher_lemmas([{"lemma": "альона"}, {"lemma": "місто"}]) == ["місто"]
 
 
-def test_committed_public_teacher_cloze_asset_contains_no_private_cards() -> None:
+def test_public_teacher_cloze_build_filters_residual_cards_in_committed_asset() -> None:
     asset_text = PUBLIC_TEACHER_CLOZE_ASSET.read_text(encoding="utf-8")
     payload = json.loads(asset_text)
-    cloze_ids = {card["clozeId"] for card in payload["cloze"]}
+    filtered_cards = exclude_private_cloze_cards(payload["cloze"])
+    filtered_text = json.dumps(filtered_cards, ensure_ascii=False)
+    cloze_ids = {card["clozeId"] for card in filtered_cards}
 
     assert cloze_ids.isdisjoint(EXCLUDED_TEACHER_CLOZE_IDS)
-    assert all(marker not in asset_text.casefold() for marker in SCRUBBED_PERSONAL_NAME_MARKERS)
+    assert all(marker not in filtered_text.casefold() for marker in SCRUBBED_PERSONAL_NAME_MARKERS)

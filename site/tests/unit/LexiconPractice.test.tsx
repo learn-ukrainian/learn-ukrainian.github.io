@@ -27,7 +27,7 @@ import {
   type ReviewLogEntry,
 } from '@site/src/lib/lexicon/srs';
 import { LEARNER_LEVEL_STORAGE_KEY, type CefrLevel } from '@site/src/lib/lexicon/levels';
-import { type CustomSet } from '@site/src/lib/lexicon/custom-decks';
+import { filterTeacherClozeItems, type CustomSet } from '@site/src/lib/lexicon/custom-decks';
 import { type DailyWord } from '@site/src/lib/lexicon/daily';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
@@ -783,6 +783,15 @@ beforeEach(() => {
 });
 
 describe('LexiconPractice', () => {
+  test('filters excluded teacher cloze cards before they reach the practice deck', () => {
+    expect(
+      filterTeacherClozeItems([
+        { clozeId: 'teacher_cloze_57' },
+        { clozeId: 'teacher_cloze_safe' },
+      ]),
+    ).toEqual([{ clozeId: 'teacher_cloze_safe' }]);
+  });
+
   test('keeps the K3 setup DOM order and Stress mode visible after switching to A2', async () => {
     const { fn } = mockShardFetch({ A1: 4, A2: 4 });
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
