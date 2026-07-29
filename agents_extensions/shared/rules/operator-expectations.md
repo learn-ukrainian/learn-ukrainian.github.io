@@ -13,6 +13,8 @@ tie-breakers.
 1. **Quality work.** No heuristics when a proper algorithm exists, no threshold-lowering, no
    "for now". One excellent module beats ten mediocre ones — this is education for real
    learners; bad pedagogy creates durable learner errors.
+   - No self-authored partial-done bars; no "when you want" for in-scope residual;
+     residual unfinished work is queue, not ceremony.
 2. **Best practices.** Research the established best practice BEFORE implementing or deciding —
    `docs/best-practices/`, prior art, authoritative sources, current standards. Never ship the
    first thing that works. Fix root causes, not symptoms.
