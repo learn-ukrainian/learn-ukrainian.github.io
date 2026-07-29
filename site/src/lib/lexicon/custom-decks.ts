@@ -33,10 +33,14 @@ export function getDeviceId(): string {
 }
 
 import teacherClozeData from '../../data/lexicon-teacher-cloze.json';
+import { filterTeacherClozeItems } from './teacher-cloze-overrides';
 
 const defaultTeacherLemmas: string[] = Array.from(
   new Set(
-    ((teacherClozeData as { cloze?: Array<{ lemmaId?: string; lemma?: string }> }).cloze ?? [])
+    filterTeacherClozeItems(
+      (teacherClozeData as { cloze?: Array<{ clozeId: string; lemmaId?: string; lemma?: string }> })
+        .cloze ?? [],
+    )
       .map((c) => c.lemmaId || c.lemma)
       .filter((k): k is string => Boolean(k)),
   ),
