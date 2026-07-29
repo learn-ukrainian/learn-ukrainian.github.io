@@ -305,7 +305,7 @@ GEMMA_SURFACE_ROUTE = ReviewerRoute(
 # longer returns this route; seminar/factual now flows through the tooled
 # opencode route below so the reviewer can ground factual claims against the
 # sources MCP. An ungrounded agy reviewer cannot catch the gemma fabrication
-# class documented in docs/projects/ua-eval-harness/model-evidence.md.
+# class documented in docs/projects/qg-quality-gate/model-evidence.md.
 FRONTIER_FACTUAL_ROUTE = ReviewerRoute(
     route_name="agy_frontier",
     bridge_command=("ask-agy", "--to-model", FRONTIER_MODEL_ID, "--review"),

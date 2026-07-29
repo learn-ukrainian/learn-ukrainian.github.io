@@ -155,4 +155,4 @@ on the anchor passage [scoped: our traps, our domains, stated N].
 3. #4632 native-expert IAA → §3/§6 validation paragraphs (status either way).
 4. Freeze manifest hashes → §7 reproducibility statement.
 5. Bibliography: lang-uk leaderboard (RANLP-2025 Paniv), ZNO-Eval, UA-GEC, MamayLM misc, Lapa cite,
-   TruthfulQA/FActScore/SAFE — keys collected in docs/projects/ua-eval-harness/model-evidence.md.
+   TruthfulQA/FActScore/SAFE — keys collected in docs/projects/qg-quality-gate/model-evidence.md.
