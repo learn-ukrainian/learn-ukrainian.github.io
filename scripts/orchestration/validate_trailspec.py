@@ -809,7 +809,6 @@ def validate_estate_registry(
     return validate_estate_registry_data(registry_data, schema_path=schema_path)
 
 
-
 def validate_trailspec(
     *,
     spec_path: Path = DEFAULT_EXAMPLE_TRAIL_PATH,
