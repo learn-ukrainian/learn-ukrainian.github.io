@@ -84,7 +84,15 @@ def test_practice_rejects_surzhyk_to_avoid():
 
 def test_practice_rejects_derived_forms():
     for src in DERIVED_FORM_SOURCES:
-        assert is_practice_eligible(_noun(primary_source=src)) is False
+        assert is_practice_eligible(
+            _noun(primary_source=src, form_of={"lemma": "хліб", "url_slug": "khlib"})
+        ) is False
+
+
+def test_practice_keeps_canonical_lemma_normalized_from_an_inflected_surface():
+    entry = _noun(primary_source="built_vocabulary_normalized")
+
+    assert is_practice_eligible(entry) is True
 
 
 def test_practice_rejects_glossless():

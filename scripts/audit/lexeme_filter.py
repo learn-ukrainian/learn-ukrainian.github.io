@@ -30,8 +30,9 @@ from typing import Any
 # pos value the manifest carries for Latin/Ukrainian grammar metaterms.
 GRAMMAR_TERM_POS = "grammar term"
 
-# Inflected / normalized duplicates of a canonical lemma (e.g. "Іване" voc. of "Іван",
-# "автобусом" instr. of "автобус"). Not study headwords — the #3450 class.
+# Source labels used by inflected / normalized duplicate routes (e.g. "Іване" voc. of
+# "Іван", "автобусом" instr. of "автобус"). Their ``form_of`` relationship, rather
+# than this shared provenance label alone, identifies them as non-study headwords.
 DERIVED_FORM_SOURCES = frozenset(
     {
         "built_vocabulary_form",
@@ -119,7 +120,10 @@ def is_practice_eligible(entry: dict[str, Any]) -> bool:
         return False
     if not _has_text(entry.get("gloss")):
         return False
-    if entry.get("primary_source") in DERIVED_FORM_SOURCES:
+    # ``built_vocabulary_normalized`` can also produce a canonical lemma from
+    # an inflected source surface. Exclude only entries that retain an actual
+    # form-of relation; provenance alone would incorrectly remove that lemma.
+    if entry.get("form_of"):
         return False
     if entry.get("primary_source") == SURZHYK_SOURCE:
         return False
