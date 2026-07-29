@@ -170,9 +170,11 @@ touch ~/.secret/zai.key && chmod 600 ~/.secret/zai.key
 ${EDITOR:-nano} ~/.secret/zai.key   # paste the key alone, save, quit
 ```
 
-The trusted `agents_extensions/codex/config.toml` overlay gives Codex App and
-CLI the same Sol/high root and Terra/medium V2 defaults. `start-codex.sh`
-launches the CLI with:
+The trusted `agents_extensions/codex/config.toml` overlay leaves the root model
+and reasoning effort user-selectable while giving Codex App and CLI the same
+Terra/medium V2 child defaults. Personal root defaults belong in
+`~/.codex/config.toml`; task-specific choices come from the model picker or CLI
+flags. `start-codex.sh` launches the CLI with:
 
 - interactive Codex in dangerous bypass mode
 - live web search; project config supplies Codex 0.145 multi-agent V2
