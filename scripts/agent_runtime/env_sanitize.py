@@ -38,6 +38,13 @@ _SAFE_NAME_ALLOWLIST = {
     "AGENT_NO_MERGE",
     "HOME",
     "LANG",
+    # P6 rail-approval context (#5885): opaque receipt/task identifiers, not
+    # credentials. The worker-side write hook re-fetches and verifies the
+    # receipt externally; without these names a dispatched worker can never
+    # perform an approved rail write (delegate.py sets them, this filter
+    # silently dropped them — burned 2026-07-29).
+    "LEARN_UK_RAIL_APPROVAL_RECEIPT",
+    "LEARN_UK_RAIL_TASK_ID",
     "LOGNAME",
     "PATH",
     "TMPDIR",
@@ -58,6 +65,12 @@ _SAFE_VALUE_NAME_ALLOWLIST = {
     "TMPDIR",
     "LU_RUNTIME_TMP_BASE_ROOT",
     "LU_RUNTIME_TMP_ROOT",
+    # Same trap as the tmp lease controls: a rail dispatch task id such as
+    # ``task-4956`` contains the substring ``sk-`` and would be stripped by the
+    # value redactor even though its NAME is allowlisted (glm review FR-001 on
+    # #5997, escalated: ``task-`` ids are the common case, not a hypothetical).
+    "LEARN_UK_RAIL_APPROVAL_RECEIPT",
+    "LEARN_UK_RAIL_TASK_ID",
 }
 
 _PROVIDER_SECRET_ALLOWLIST = {

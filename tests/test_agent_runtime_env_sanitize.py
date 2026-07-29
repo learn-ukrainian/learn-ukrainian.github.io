@@ -452,3 +452,32 @@ def test_runner_gemini_subprocess_does_not_get_gh_token(tmp_path):
 
     assert outcome.returncode == 0
     assert outcome.parse.ok is True
+
+
+def test_build_agent_env_passes_rail_approval_context_to_workers():
+    """P6 rail receipts (#5885): delegate.py exports these two names for an
+    approved rail dispatch; the worker-side write hook needs them to resolve
+    the receipt. The sanitizer silently dropping them meant no dispatched
+    worker could ever perform an approved rail write (burned 2026-07-29)."""
+    with patch.dict(
+        "os.environ",
+        {
+            "PATH": "/usr/bin",
+            "HOME": "/Users/example",
+            "LEARN_UK_RAIL_APPROVAL_RECEIPT": "rail-approval-753c6b55268844d581e16fdba41487af",
+            # Deliberately contains the substring ``sk-`` (as any ``task-…`` id
+            # does): must survive the value-pattern redactor, not just the name
+            # filter (glm review FR-001 on #5997).
+            "LEARN_UK_RAIL_TASK_ID": "task-4956",
+            "LEARN_UK_UNRELATED": "drop-me",
+        },
+        clear=True,
+    ):
+        env = build_agent_env(provider="codex")
+
+    assert env["LEARN_UK_RAIL_APPROVAL_RECEIPT"] == (
+        "rail-approval-753c6b55268844d581e16fdba41487af"
+    )
+    assert env["LEARN_UK_RAIL_TASK_ID"] == "task-4956"
+    # Only the two exact rail names are admitted — no blanket LEARN_UK_ prefix.
+    assert "LEARN_UK_UNRELATED" not in env
