@@ -1,5 +1,5 @@
 {
-  "fingerprint": "53f14aa890c0915cedd730c6ca60596572b330472825fe1788f5e4189fb06002",
+  "fingerprint": "58e977847ba6fb99805e2249039618e99253aeb93d43cc589c3d601a64134d48",
   "inputs": {
     "lexicon_code": [
       {
@@ -180,7 +180,7 @@
       },
       {
         "path": "scripts/lexicon/promote_teacher_lesson_intake.py",
-        "sha256": "99eb174d108a18087bc6a895bb81e35de11078dcfc6e899b1c512edd7977a306"
+        "sha256": "81ad1a9103594abee149199a5eecd6dd0a88f5538facdcc424057defddc071f7"
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
