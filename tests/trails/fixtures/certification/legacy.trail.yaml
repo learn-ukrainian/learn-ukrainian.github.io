@@ -1,0 +1,18 @@
+schema_version: trailspec.v1
+trail_id: legacy-certification-fixture
+version: 1.0.0
+title: Legacy certification fixture
+seats:
+  - grok-daily
+stop_codes:
+  - STOP-unknown
+terminal_outcomes:
+  - done
+steps:
+  - step_id: inspect
+    intent: Inspect only
+    command: null
+    evidence_predicate: null
+    transitions:
+      inspected: done
+    kind: summon

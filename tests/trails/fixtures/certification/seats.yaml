@@ -1,0 +1,3 @@
+endpoints:
+  - name: certification-seat
+    state: live

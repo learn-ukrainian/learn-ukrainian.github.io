@@ -1,0 +1,45 @@
+schema_version: trailspec.v1.1
+trail_id: rb3-certification-fixture
+version: 1.1.0
+title: Synthetic certification fixture
+seats:
+  - certification-seat
+parameters: {}
+stop_codes:
+  - STOP-unknown
+terminal_outcomes:
+  - done
+steps:
+  - step_id: start
+    intent: Exercise a synthetic P3 transition
+    command:
+      adapter: typed-primitive
+      argv:
+        - synthetic-trail-primitive
+        - --invocation-id
+        - "{invocation_id}"
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+      timeout_seconds: 1
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
+    transitions:
+      accepted:
+        target: done
+        evidence:
+          predicate_id: accepted
+          clauses:
+            - source: command_receipt
+              field: actor_outcome
+              op: eq
+              value: accepted
+      refused:
+        target: STOP-unknown
+        evidence:
+          predicate_id: refused
+          clauses:
+            - source: command_receipt
+              field: actor_outcome
+              op: eq
+              value: refused
