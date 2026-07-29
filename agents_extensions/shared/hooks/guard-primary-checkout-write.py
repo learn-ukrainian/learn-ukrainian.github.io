@@ -59,10 +59,12 @@ for one shell invocation. Prefer fixing the cwd / using a worktree instead.
 """
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
 import re
 import shlex
+import subprocess
 import sys
 from pathlib import Path
 
@@ -91,6 +93,110 @@ def _load_containment():
     except Exception:  # pragma: no cover - defensive fail-open
         return None
     return wc
+
+
+def _load_rail_path_guard():
+    """Load the one shared P6 decision module from source or a deployed copy.
+
+    The hook has no local approval-file escape hatch. If the module cannot be
+    loaded, the caller blocks the write rather than guessing that a target is
+    non-rail.
+    """
+    here = Path(__file__).resolve()
+    for parent in (here.parent, *here.parents):
+        candidate = parent / "scripts" / "orchestration" / "rail_path_guard.py"
+        if not candidate.is_file():
+            continue
+        spec = importlib.util.spec_from_file_location("rail_path_guard", candidate)
+        if spec is None or spec.loader is None:
+            return None
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        spec.loader.exec_module(module)
+        return module
+    return None
+
+
+def _git_output(cwd: str, *args: str) -> str | None:
+    try:
+        completed = subprocess.run(
+            ["git", "-C", cwd, *args],
+            capture_output=True,
+            check=False,
+            text=True,
+            timeout=3,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if completed.returncode != 0:
+        return None
+    value = completed.stdout.strip()
+    return value or None
+
+
+def _rail_write_decision(raw_targets: list[str], *, cwd: str):
+    """Classify hook write targets through the one P6 decision module."""
+    try:
+        rail_guard = _load_rail_path_guard()
+    except Exception:
+        return None, "rail_path_guard_unavailable"
+    if rail_guard is None:
+        return None, "rail_path_guard_unavailable"
+    receipt_id = os.environ.get("LEARN_UK_RAIL_APPROVAL_RECEIPT")
+    task_id = os.environ.get("LEARN_UK_RAIL_TASK_ID") or "local-hook"
+    if receipt_id and not os.environ.get("LEARN_UK_RAIL_TASK_ID"):
+        return None, "rail_approval_task_context_missing"
+    try:
+        for raw in raw_targets:
+            target = _resolve(raw, cwd).resolve()
+            # A payload running in one worktree can name an absolute target in
+            # another worktree. Resolve Git from the *target's* parent, not the
+            # payload cwd, or an absolute cross-worktree rail write is laundered
+            # into `.worktrees/.../agents_extensions/...` and misses the deny-list.
+            target_cwd = target if target.is_dir() else target.parent
+            while not target_cwd.exists() and target_cwd != target_cwd.parent:
+                target_cwd = target_cwd.parent
+            root = _git_output(str(target_cwd), "rev-parse", "--show-toplevel")
+            head_sha = _git_output(str(target_cwd), "rev-parse", "HEAD")
+            if root is None or head_sha is None:
+                # `root is None` proves only that the git invocation FAILED
+                # (timeout, OSError, non-zero exit) — not that the target is
+                # outside every repository. Allow only a POSITIVELY-confirmed
+                # non-repository location: walk the target's parents to the
+                # filesystem root and require that no `.git` entry exists
+                # anywhere. Any other resolution failure fails CLOSED.
+                probe = target_cwd
+                inside_some_repo = False
+                while True:
+                    if (probe / ".git").exists():
+                        inside_some_repo = True
+                        break
+                    if probe == probe.parent:
+                        break
+                    probe = probe.parent
+                if inside_some_repo:
+                    return None, "rail_path_guard_repository_unreadable"
+                continue  # Positively confirmed: no repository anywhere above the target.
+            relative_path = target.relative_to(Path(root).resolve()).as_posix()
+            decision = rail_guard.decide_rail_path_mutation_with_production_receipt(
+                task_id=task_id,
+                candidate_paths=(relative_path,),
+                head_sha=head_sha,
+                receipt_id=receipt_id,
+            )
+            if not decision.allowed:
+                return decision, None
+        return (
+            rail_guard.decide_rail_path_mutation_with_production_receipt(
+                task_id=task_id,
+                candidate_paths=(),
+                head_sha="0" * 40,
+                receipt_id=receipt_id,
+            ),
+            None,
+        )
+    except Exception:
+        return None, "rail_path_guard_decision_unreadable"
 
 
 # ---------------------------------------------------------------------------
@@ -851,8 +957,6 @@ def main() -> int:
         return 0
 
     wc = _load_containment()
-    if wc is None:
-        return 0  # can't classify without the shared predicate → allow
 
     tool_input = _tool_input(payload)
     cwd = _payload_cwd(payload)
@@ -865,6 +969,88 @@ def main() -> int:
         raw_targets = bash_write_targets(command)
     else:
         raw_targets = write_tool_targets(tool_input)
+
+    # P6 rail protection applies in every registered worktree, not only the
+    # primary checkout.  It intentionally runs before the older primary-only
+    # containment guard, and it fails closed if the module/repository/path is
+    # unreadable.  No X-Agent/model/tier metadata reaches this decision.
+    if raw_targets:
+        if tool_name == "Bash":
+            assignments, ambiguous = parse_shell_assignments(command)
+        else:
+            assignments, ambiguous = {}, set()
+        expanded_targets: list[str] = []
+        for raw in raw_targets:
+            expanded = expand_shell_target(raw, assignments, ambiguous=ambiguous)
+            if is_unresolved_shell_var(expanded):
+                sys.stderr.write(
+                    "BLOCKED by rail-path guard: unresolved_shell_variable write target; "
+                    "cannot prove it is outside a rail path.\n"
+                )
+                return 2
+            expanded_targets.append(expanded)
+        rail_decision, rail_error = _rail_write_decision(expanded_targets, cwd=cwd)
+        if rail_error is not None or rail_decision is None:
+            sys.stderr.write(
+                "BLOCKED by rail-path guard: shared decision module is unreadable "
+                f"({rail_error or 'unknown error'}); failing closed.\n"
+            )
+            return 2
+        if not rail_decision.allowed:
+            paths = ", ".join(rail_decision.rail_paths) or "(unreadable path)"
+            sys.stderr.write(
+                "BLOCKED by rail-path guard: rail mutation requires a current, "
+                "externally verified approval receipt.\n"
+                f"  reason: {rail_decision.reason}\n"
+                f"  rail paths: {paths}\n"
+            )
+            return 2
+
+    # Git commands mutate outside shell redirections/write-tool payloads, so
+    # they need their own rail pass. This executes for every path-scoped intent
+    # before the primary-containment branch below decides whether the worktree
+    # is the protected primary or an isolated dispatch tree.
+    git_intents: list[dict[str, object]] = []
+    if tool_name == "Bash" and command:
+        try:
+            git_intents = bash_git_write_intents(command)
+            for intent in git_intents:
+                if intent.get("allowlisted"):
+                    continue
+                paths = list(intent.get("paths") or [])
+                if not paths:
+                    # Pathless whole-tree mutators (apply/am/stash pop|apply)
+                    # cannot be enumerated in this fast hook for a non-primary
+                    # worktree. The residual is covered by the CI rail-path job
+                    # + merge guard diff of actual changed files; never treat
+                    # this deliberate non-enumeration as an implicit rail allow.
+                    continue
+                git_cwd = _effective_git_cwd(intent, cwd)
+                rail_decision, rail_error = _rail_write_decision(paths, cwd=str(git_cwd))
+                if rail_error is not None or rail_decision is None:
+                    sys.stderr.write(
+                        "BLOCKED by rail-path guard: shared decision module is unreadable "
+                        f"({rail_error or 'unknown error'}); failing closed.\n"
+                    )
+                    return 2
+                if not rail_decision.allowed:
+                    paths_text = ", ".join(rail_decision.rail_paths) or "(unreadable path)"
+                    sys.stderr.write(
+                        "BLOCKED by rail-path guard: git-mediated rail mutation requires a current, "
+                        "externally verified approval receipt.\n"
+                        f"  reason: {rail_decision.reason}\n"
+                        f"  rail paths: {paths_text}\n"
+                    )
+                    return 2
+        except Exception:  # pragma: no cover - parser/OS failure must not bypass P6
+            sys.stderr.write(
+                "BLOCKED by rail-path guard: cannot inspect git-mediated write targets; "
+                "failing closed.\n"
+            )
+            return 2
+
+    if wc is None:
+        return 0  # P6 ran above; the older primary-only predicate is unavailable.
 
     # Enforce only while the primary checkout sits on a protected branch. If the
     # human has deliberately checked the primary tree onto a feature branch, git
@@ -881,7 +1067,7 @@ def main() -> int:
     allow_primary_git = os.environ.get("LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "") == "1"
     if tool_name == "Bash" and command and not allow_primary_git:
         try:
-            for intent in bash_git_write_intents(command):
+            for intent in git_intents:
                 if intent.get("allowlisted"):
                     continue
                 git_cwd = _effective_git_cwd(intent, cwd)

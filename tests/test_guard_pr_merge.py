@@ -4,7 +4,8 @@ Exercises the pure decision logic in
 ``agents_extensions/shared/hooks/guard-pr-merge.py``:
 
   * `gh pr merge` detection (incl. wrappers, a positional PR number, and the
-    `--admin` / `--disable-auto` segments this hook deliberately leaves alone),
+    `--disable-auto` segment it deliberately leaves alone; P6 keeps `--admin`
+    visible so rail authorization has no bypass),
   * the quote-aware tokenizer (a `gh pr merge` inside a quoted commit body is NOT a merge),
   * failing/pending check classification against the advisory allowlist,
   * the fail-CLOSED `main()` decision (block on draft, red checks, pending-without-auto,
@@ -28,9 +29,12 @@ from pathlib import Path
 
 import pytest
 
+from scripts.orchestration import rail_path_guard as shared_rail_guard
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-pr-merge.py"
 _URL = "https://github.com/owner/repo/pull/5"
+_RECEIPT_ID = "rail-approval-" + "2" * 32
 
 
 def _load_hook():
@@ -58,6 +62,7 @@ def _run(
     checks: tuple[list[str], list[str]] | None = ([], []),
     owner_repo: str | None = "owner/repo",
     protected: bool | None = False,
+    changed_paths: list[str] | None = None,
 ) -> int:
     """Drive main() with a simulated stdin payload + monkeypatched network calls.
 
@@ -69,9 +74,25 @@ def _run(
     monkeypatch.setattr(
         guard,
         "_pr_meta",
-        lambda p, repo=None, cwd=None: {"isDraft": False, "baseRefName": "main", "url": _URL} if meta is None else meta,
+        lambda p, repo=None, cwd=None: (
+            {
+                "isDraft": False,
+                "baseRefName": "main",
+                "body": "",
+                "headRefOid": "a" * 40,
+                "number": 5,
+                "url": _URL,
+            }
+            if meta is None
+            else meta
+        ),
     )
     monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: checks)
+    monkeypatch.setattr(
+        guard,
+        "_pr_changed_paths",
+        lambda p, repo=None, cwd=None: ["README.md"] if changed_paths is None else changed_paths,
+    )
     monkeypatch.setattr(guard, "_owner_repo_from_url", lambda u: owner_repo)
     monkeypatch.setattr(guard, "_base_protected", lambda o, b: protected)
     return guard.main()
@@ -87,8 +108,8 @@ def _run(
         (["gh", "pr", "merge", "123", "--squash", "--delete-branch"], True),
         (["gh", "pr", "merge", "--auto", "--squash"], True),
         (["sudo", "gh", "pr", "merge", "5"], True),
-        # guard-admin-merge.py's job — never double-judge.
-        (["gh", "pr", "merge", "5", "--admin"], False),
+        # P6 keeps admin merges visible to the shared rail-path guard.
+        (["gh", "pr", "merge", "5", "--admin"], True),
         # Disarms auto-merge rather than merging; it is the remedy, not the offence.
         (["gh", "pr", "merge", "5", "--disable-auto"], False),
         (["gh", "pr", "view", "5"], False),
@@ -110,6 +131,140 @@ def test_is_advisory():
     assert guard._is_advisory("pip-audit (advisory)")
     assert not guard._is_advisory("boundary-and-tests")
     assert not guard._is_advisory("Test (pytest)")
+
+
+def test_rail_diff_refuses_merge_without_external_receipt(monkeypatch):
+    assert (
+        _run(
+            monkeypatch,
+            "gh pr merge 5 --squash",
+            changed_paths=["agents_extensions/shared/hooks/guard-pr-merge.py"],
+        )
+        == 2
+    )
+
+
+def test_unrelated_bracketed_filename_does_not_block_merge_guard(monkeypatch):
+    """The full PR diff is classified as literal paths, never glob patterns."""
+    assert (
+        _run(
+            monkeypatch,
+            "gh pr merge 5 --squash",
+            changed_paths=["docs/some[draft].md"],
+        )
+        == 0
+    )
+
+
+def test_rail_merge_check_is_mutation_honest(monkeypatch):
+    """Removing the merge-layer call turns the same rail PR into an observable allow."""
+    assert (
+        _run(
+            monkeypatch,
+            "gh pr merge 5 --squash",
+            changed_paths=["agents_extensions/shared/hooks/guard-pr-merge.py"],
+        )
+        == 2
+    )
+
+    monkeypatch.setattr(guard, "_rail_path_decision", lambda *_args, **_kwargs: (type("D", (), {"allowed": True})(), None))
+
+    assert _run(monkeypatch, "gh pr merge 5 --squash") == 0
+
+
+class _MergeReceiptStore:
+    source_id = "operator-approval-api"
+    source_kind = "api"
+
+    def __init__(self, receipts: dict[str, dict]) -> None:
+        self.receipts = receipts
+
+    def fetch_rail_approval_receipt(self, receipt_id: str) -> dict:
+        return self.receipts[receipt_id]
+
+
+def _merge_receipt(*, owned_paths: list[str]) -> dict:
+    return {
+        "schema_version": "rail-approval-receipt.v1",
+        "receipt_id": _RECEIPT_ID,
+        "issuer": "advisor",
+        "issued_at": "2026-07-28T00:00:00Z",
+        "expires_at": "2099-07-30T00:00:00Z",
+        "action": "rail-path-mutation",
+        "task_id": "pr-5",
+        "head_sha": "a" * 40,
+        "owned_paths": owned_paths,
+    }
+
+
+def _authoritative_rail_decision(
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    body: str,
+    owned_paths: list[str],
+):
+    """Run the merge guard with a production-shaped receipt resolver seam."""
+    receipt = _merge_receipt(owned_paths=owned_paths)
+    resolver = shared_rail_guard.ApprovedRailApprovalReceiptResolver(
+        _MergeReceiptStore({_RECEIPT_ID: receipt})
+    )
+    monkeypatch.setattr(guard, "_load_rail_path_guard", lambda: shared_rail_guard)
+    monkeypatch.setattr(
+        shared_rail_guard,
+        "build_production_rail_approval_receipt_resolver",
+        lambda: resolver,
+    )
+    monkeypatch.setattr(
+        guard,
+        "_pr_changed_paths",
+        lambda *_args, **_kwargs: ["agents_extensions/shared/hooks/guard-pr-merge.py"],
+    )
+    return guard._rail_path_decision(
+        "999",
+        {
+            "headRefOid": "a" * 40,
+            "number": 5,
+            # This body value is deliberately malicious provenance. The PR ID above,
+            # rather than this text, must bind the receipt task to pr-5.
+            "body": body,
+        },
+        None,
+        None,
+    )
+
+
+def test_merge_ignores_body_task_id_and_derives_the_canonical_pr_task(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    decision, error = _authoritative_rail_decision(
+        monkeypatch,
+        body=(
+            "dispatch_task_id: pr-999\n"
+            f"Rail-Approval-Receipt: {_RECEIPT_ID}"
+        ),
+        owned_paths=["agents_extensions/shared/hooks/guard-pr-merge.py"],
+    )
+
+    assert error is None
+    assert decision.allowed is True
+    assert decision.reason == "rail_approval_verified"
+
+
+def test_merge_refuses_a_receipt_with_a_superset_of_the_current_rail_diff(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    decision, error = _authoritative_rail_decision(
+        monkeypatch,
+        body=f"Rail-Approval-Receipt: {_RECEIPT_ID}",
+        owned_paths=[
+            "agents_extensions/shared/hooks/guard-pr-merge.py",
+            "scripts/orchestration/rail_path_guard.py",
+        ],
+    )
+
+    assert error is None
+    assert decision.allowed is False
+    assert decision.reason == "rail_approval_path_set_mismatch"
 
 
 def test_pr_snapshot_reads_metadata_and_checks_concurrently(monkeypatch):
@@ -145,9 +300,8 @@ def test_unrelated_command_is_untouched(monkeypatch):
     assert _run(monkeypatch, "git push origin main") == 0
 
 
-def test_admin_merge_is_other_guards_job(monkeypatch):
-    # Red checks + --admin → still 0 from THIS hook; guard-admin-merge.py judges it.
-    assert _run(monkeypatch, "gh pr merge 5 --admin", checks=(["Test (pytest)"], [])) == 0
+def test_admin_merge_has_no_rail_path_bypass(monkeypatch):
+    assert _run(monkeypatch, "gh pr merge 5 --admin", checks=(["Test (pytest)"], [])) == 2
 
 
 def test_disable_auto_is_not_a_merge(monkeypatch):
@@ -222,8 +376,9 @@ def _fake_gh(monkeypatch, *, returncode: int, stdout: str, stderr: str = ""):
 
 
 def test_pr_meta_parses_draft(monkeypatch):
-    _fake_gh(monkeypatch, returncode=0, stdout='{"isDraft":true,"baseRefName":"main"}')
-    assert guard._pr_meta("5") == {"isDraft": True, "baseRefName": "main"}
+    payload = {"isDraft": True, "baseRefName": "main", "body": "", "number": 5}
+    _fake_gh(monkeypatch, returncode=0, stdout=json.dumps(payload))
+    assert guard._pr_meta("5") == payload
 
 
 def test_pr_meta_error_rc_is_failclosed(monkeypatch):
@@ -234,6 +389,13 @@ def test_pr_meta_error_rc_is_failclosed(monkeypatch):
 def test_pr_meta_without_isdraft_is_failclosed(monkeypatch):
     # An empty/partial payload must not read as "not a draft".
     _fake_gh(monkeypatch, returncode=0, stdout="{}")
+    assert guard._pr_meta("5") is None
+
+
+@pytest.mark.parametrize("number", ["5", 0, -1, True])
+def test_pr_meta_requires_a_github_integer_pr_number(monkeypatch, number):
+    payload = {"isDraft": False, "body": "", "number": number}
+    _fake_gh(monkeypatch, returncode=0, stdout=json.dumps(payload))
     assert guard._pr_meta("5") is None
 
 
@@ -375,7 +537,7 @@ def test_disable_auto_equals_true_is_not_a_merge(monkeypatch):
 def test_admin_equals_true_is_judged_here(monkeypatch):
     # guard-admin-merge.py matches the exact token "--admin" only, so `--admin=true`
     # is invisible to it. Judging it here closes the gap between the two hooks rather
-    # than letting a red admin merge fall between them. (Bare --admin stays its job.)
+    # than letting a red admin merge fall between them. P6 also judges bare --admin.
     assert _run(monkeypatch, "gh pr merge 5 --admin=true", checks=(["Test (pytest)"], [])) == 2
 
 
@@ -518,10 +680,14 @@ def test_cross_repo_url_selector_uses_that_repo(monkeypatch):
         lambda p, repo=None, cwd=None: {
             "isDraft": False,
             "baseRefName": "main",
+            "body": "",
+            "headRefOid": "a" * 40,
+            "number": 9,
             "url": "https://github.com/other/repo/pull/9",
         },
     )
     monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: ([], []))
+    monkeypatch.setattr(guard, "_pr_changed_paths", lambda p, repo=None, cwd=None: ["README.md"])
     monkeypatch.setattr(guard, "_base_protected", lambda o, b: seen.setdefault("repo", o) and True)
     payload = json.dumps({"tool_input": {"command": "gh pr merge https://github.com/other/repo/pull/9 --auto"}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
@@ -532,11 +698,18 @@ def test_cross_repo_url_selector_uses_that_repo(monkeypatch):
 def test_pr_meta_requires_url_field(monkeypatch):
     # url is load-bearing for the protection lookup; gh must actually return it.
     _fake_gh(
-        monkeypatch, returncode=0, stdout='{"isDraft":false,"baseRefName":"main","url":"https://github.com/o/r/pull/5"}'
+        monkeypatch,
+        returncode=0,
+        stdout=(
+            '{"isDraft":false,"baseRefName":"main","body":"","number":5,'
+            '"url":"https://github.com/o/r/pull/5"}'
+        ),
     )
     assert guard._pr_meta("5") == {
         "isDraft": False,
         "baseRefName": "main",
+        "body": "",
+        "number": 5,
         "url": "https://github.com/o/r/pull/5",
     }
 
@@ -615,7 +788,7 @@ def test_flag_looking_value_does_not_force_auto_path():
 
 def test_real_control_flags_still_recognized():
     assert guard._merge_args(["gh", "pr", "merge", "5", "--disable-auto"]) is None
-    assert guard._merge_args(["gh", "pr", "merge", "5", "--admin"]) is None
+    assert guard._merge_args(["gh", "pr", "merge", "5", "--admin"]) == ["5", "--admin"]
     assert guard._flag_enabled(guard._classify(["5", "--auto"])[0], "auto")
 
 
@@ -845,7 +1018,9 @@ def test_backslash_continuation_merge_detected():
 _COLORIZED_JSON = (
     "\x1b[1;37m{\x1b[m\n"
     '  \x1b[1;34m"baseRefName"\x1b[m: \x1b[32m"main"\x1b[m,\n'
+    '  \x1b[1;34m"body"\x1b[m: \x1b[32m""\x1b[m,\n'
     '  \x1b[1;34m"isDraft"\x1b[m: \x1b[35mfalse\x1b[m,\n'
+    '  \x1b[1;34m"number"\x1b[m: \x1b[33m5\x1b[m,\n'
     '  \x1b[1;34m"url"\x1b[m: \x1b[32m"https://github.com/owner/repo/pull/5"\x1b[m\n'
     "\x1b[1;37m}\x1b[m\n"
 )
@@ -867,7 +1042,9 @@ def test_decolorize_recovers_parseable_json():
     parsed = json.loads(cleaned)
     assert parsed == {
         "baseRefName": "main",
+        "body": "",
         "isDraft": False,
+        "number": 5,
         "url": "https://github.com/owner/repo/pull/5",
     }
 
@@ -890,7 +1067,9 @@ def test_colorized_pr_meta_still_parses(monkeypatch):
     monkeypatch.setattr(guard.subprocess, "run", lambda *a, **k: completed)
     assert guard._pr_meta("5") == {
         "baseRefName": "main",
+        "body": "",
         "isDraft": False,
+        "number": 5,
         "url": "https://github.com/owner/repo/pull/5",
     }
 
@@ -898,7 +1077,12 @@ def test_colorized_pr_meta_still_parses(monkeypatch):
 def test_colorized_pr_meta_honors_draft(monkeypatch):
     """The draft bit must be read THROUGH the colorization, not lost to it: a colorized
     draft payload has to still block."""
-    colorized_draft = '\x1b[1;37m{\x1b[m\x1b[1;34m"isDraft"\x1b[m: \x1b[35mtrue\x1b[m, \x1b[1;34m"baseRefName"\x1b[m: \x1b[32m"main"\x1b[m\x1b[1;37m}\x1b[m'
+    colorized_draft = (
+        '\x1b[1;37m{\x1b[m\x1b[1;34m"isDraft"\x1b[m: \x1b[35mtrue\x1b[m, '
+        '\x1b[1;34m"baseRefName"\x1b[m: \x1b[32m"main"\x1b[m, '
+        '\x1b[1;34m"body"\x1b[m: \x1b[32m""\x1b[m, '
+        '\x1b[1;34m"number"\x1b[m: \x1b[33m5\x1b[m\x1b[1;37m}\x1b[m'
+    )
     completed = subprocess.CompletedProcess(args=[], returncode=0, stdout=colorized_draft, stderr="")
     monkeypatch.setattr(guard.subprocess, "run", lambda *a, **k: completed)
     meta = guard._pr_meta("5")

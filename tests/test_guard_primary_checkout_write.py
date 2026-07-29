@@ -224,6 +224,20 @@ def test_dispatch_worktree_write_allowed(repo: Path):
     assert result.returncode == 0, result.stderr
 
 
+def test_dispatch_worktree_rail_write_is_refused_without_receipt(repo: Path):
+    """P6 local layer: worktree isolation never authorizes a control-rail write."""
+    payload = _write_payload(
+        repo,
+        "Edit",
+        ".worktrees/dispatch/claude/task-1/agents_extensions/shared/hooks/guard-pr-merge.py",
+    )
+
+    result = _run(repo, payload)
+
+    assert result.returncode == 2, result.stderr
+    assert "rail_approval_receipt_required" in result.stderr
+
+
 def test_read_only_bash_allowed(repo: Path):
     for command in ("git status", "cat curriculum/tracked.md", "git log --oneline"):
         payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
@@ -517,6 +531,7 @@ def test_git_apply_via_dash_c_worktree_allowed(repo: Path):
 
 
 def test_git_apply_from_worktree_cwd_allowed(repo: Path):
+    """Pinned residual: pathless worktree applies are checked by CI/merge diff layers."""
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     payload = {
         "tool_name": "Bash",
@@ -525,6 +540,45 @@ def test_git_apply_from_worktree_cwd_allowed(repo: Path):
     }
     result = _run(repo, payload)
     assert result.returncode == 0, result.stderr
+
+
+def test_git_add_rail_path_in_worktree_is_refused_without_receipt(repo: Path):
+    """P6 F001: git pathspecs do not bypass rail checks outside primary."""
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(worktree),
+        "tool_input": {
+            "command": "git add agents_extensions/shared/hooks/guard-pr-merge.py",
+        },
+    }
+
+    result = _run(repo, payload)
+
+    assert result.returncode == 2, result.stderr
+    assert "rail_approval_receipt_required" in result.stderr
+
+
+def test_git_worktree_rail_gate_mutation_is_observable(
+    repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Removing the new git-intent rail call turns this blocked write into an allow."""
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(worktree),
+        "tool_input": {
+            "command": "git add agents_extensions/shared/hooks/guard-pr-merge.py",
+        },
+    }
+    monkeypatch.setattr(hook, "_read_payload", lambda: payload)
+
+    assert hook.main() == 2
+
+    allowed = type("_Allowed", (), {"allowed": True, "rail_paths": (), "reason": "non_rail_paths"})()
+    monkeypatch.setattr(hook, "_rail_write_decision", lambda _paths, *, cwd: (allowed, None))
+
+    assert hook.main() == 0
 
 
 def test_git_apply_dash_c_primary_from_worktree_blocked(repo: Path):
@@ -657,8 +711,8 @@ def test_bash_unresolved_shell_var_blocked_with_distinct_reason(repo: Path):
     assert "unresolved_shell_variable" in result.stderr
 
 
-def test_bash_redirect_to_claude_epic_archive_from_subdir_allowed(repo: Path):
-    """#5404: cwd inside gitignored epic dir + relative archive path allowed."""
+def test_bash_redirect_to_claude_epic_archive_from_subdir_is_rail_guarded(repo: Path):
+    """P6: all .claude paths are rail configuration even when gitignored."""
     epic = repo / ".claude" / "atlas-epic"
     epic.mkdir(parents=True, exist_ok=True)
     (epic / "archive").mkdir(exist_ok=True)
@@ -673,7 +727,8 @@ def test_bash_redirect_to_claude_epic_archive_from_subdir_allowed(repo: Path):
         "tool_input": {"command": "echo x > archive/t.md"},
     }
     result = _run(repo, payload)
-    assert result.returncode == 0, result.stderr
+    assert result.returncode == 2, result.stderr
+    assert "rail_approval_receipt_required" in result.stderr
 
 
 def test_bash_untracked_non_ignored_still_blocked(repo: Path):
@@ -703,3 +758,28 @@ def test_bash_shell_var_reassignment_not_expanded(repo: Path):
     # Must not allow (would dirty tracked file under bash's true binding).
     assert result.returncode == 2, result.stderr
     assert "unresolved_shell_variable" in result.stderr or "tracked_primary" in result.stderr
+
+
+def test_unreadable_git_metadata_inside_any_repo_fails_closed(tmp_path, monkeypatch):
+    """git-resolution failure for a target under ANY .git tree denies; it never
+    silently passes as 'outside every repository' (r5 review F001)."""
+    repo_like = tmp_path / "sibling-repo"
+    (repo_like / ".git").mkdir(parents=True)
+    target = repo_like / "agents_extensions" / "shared" / "rules" / "x.md"
+    target.parent.mkdir(parents=True)
+
+    monkeypatch.setattr(hook, "_git_output", lambda *_a, **_k: None)
+    decision, error = hook._rail_write_decision([str(target)], cwd=str(tmp_path))
+    assert decision is None
+    assert error == "rail_path_guard_repository_unreadable"
+
+
+def test_positively_confirmed_non_repository_target_is_not_a_rail(tmp_path, monkeypatch):
+    """A target with no .git anywhere above it is a confirmed non-repository write."""
+    target = tmp_path / "plain" / "notes.md"
+    target.parent.mkdir(parents=True)
+
+    monkeypatch.setattr(hook, "_git_output", lambda *_a, **_k: None)
+    decision, error = hook._rail_write_decision([str(target)], cwd=str(tmp_path))
+    assert error is None
+    assert decision is not None and decision.allowed
