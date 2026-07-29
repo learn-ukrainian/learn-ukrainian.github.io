@@ -241,18 +241,26 @@ def fill_missing_manifest_pos(
     if missing_manifest:
         raise ValueError(f"target lemmas missing from Atlas manifest: {', '.join(missing_manifest)}")
 
+    resolved_pos: dict[str, str] = {}
+    for key in sorted(targets):
+        entry = manifest_entries[key]
+        lemma = _text(entry.get("lemma"))
+        if _text(entry.get("pos")):
+            continue
+        pos = _vesum_pos(lemma)
+        if not pos:
+            raise ValueError(f"target lemma has no VESUM POS: {lemma}")
+        resolved_pos[key] = pos
+
     applied: list[str] = []
     skipped_existing: list[str] = []
     for key in sorted(targets):
         entry = manifest_entries[key]
         lemma = _text(entry.get("lemma"))
-        if _text(entry.get("pos")):
+        if key not in resolved_pos:
             skipped_existing.append(lemma)
             continue
-        pos = _vesum_pos(lemma)
-        if not pos:
-            raise ValueError(f"target lemma has no VESUM POS: {lemma}")
-        entry["pos"] = pos
+        entry["pos"] = resolved_pos[key]
         applied.append(lemma)
     return PosFillResult(applied=tuple(applied), skipped_existing=tuple(skipped_existing))
 

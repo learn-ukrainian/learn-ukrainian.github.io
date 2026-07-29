@@ -158,6 +158,24 @@ def test_fill_missing_manifest_pos_rejects_unverified_target(monkeypatch) -> Non
         admission.fill_missing_manifest_pos(manifest, ["помішувати"])
 
 
+def test_fill_missing_manifest_pos_does_not_mutate_when_later_target_is_unverified(monkeypatch) -> None:
+    manifest = {
+        "entries": [
+            {"lemma": "помішувати", "pos": None},
+            {"lemma": "шукати", "pos": None},
+        ]
+    }
+    monkeypatch.setattr(admission, "_vesum_pos", lambda lemma: "verb" if lemma == "помішувати" else None)
+
+    with pytest.raises(ValueError, match="no VESUM POS: шукати"):
+        admission.fill_missing_manifest_pos(manifest, ["помішувати", "шукати"])
+
+    assert manifest["entries"] == [
+        {"lemma": "помішувати", "pos": None},
+        {"lemma": "шукати", "pos": None},
+    ]
+
+
 def test_main_fills_pos_without_input_seed(tmp_path: Path, monkeypatch) -> None:
     manifest_path = _manifest(
         tmp_path / "manifest.json",
