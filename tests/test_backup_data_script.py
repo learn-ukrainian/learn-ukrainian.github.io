@@ -392,6 +392,23 @@ def test_data_root_must_not_be_a_symlink(
     assert "arg=<backup>" not in _log(environment)
 
 
+def test_claude_parent_must_not_be_a_symlink(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    claude_directory = source.parent / ".claude"
+    external_claude = tmp_path / "external-claude"
+    claude_directory.rename(external_claude)
+    claude_directory.symlink_to(external_claude, target_is_directory=True)
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    assert "Recovery parent must not be a symlink: .claude" in result.stderr
+    assert "arg=<backup>" not in _log(environment)
+
+
 def test_restore_is_a_dry_run_and_refuses_unsafe_targets(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
     tmp_path: Path,
@@ -466,6 +483,31 @@ def test_init_requires_execute_before_creating_repository(
     assert executed.returncode == 0, executed.stderr
     assert "arg=<init>" in _log(environment)
     assert "arg=<check>" in _log(environment)
+
+
+def test_verify_checks_repository_and_rejects_snapshot_arguments(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+
+    metadata_check = _run(environment, "verify")
+
+    assert metadata_check.returncode == 0, metadata_check.stderr
+    assert "arg=<check>" in _log(environment)
+    assert "arg=<--read-data>" not in _log(environment)
+
+    Path(environment["FAKE_RESTIC_LOG"]).write_text("", encoding="utf-8")
+    data_check = _run(environment, "verify", "--read-data")
+
+    assert data_check.returncode == 0, data_check.stderr
+    assert "arg=<check> arg=<--read-data>" in _log(environment)
+
+    Path(environment["FAKE_RESTIC_LOG"]).write_text("", encoding="utf-8")
+    rejected = _run(environment, "verify", "latest")
+
+    assert rejected.returncode != 0
+    assert "does not accept snapshot IDs" in rejected.stderr
+    assert _log(environment) == ""
 
 
 def test_doctor_summarizes_validation_failure(

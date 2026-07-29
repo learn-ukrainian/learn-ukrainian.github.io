@@ -145,10 +145,12 @@ List snapshots and perform periodic integrity checks:
 ```bash
 ./scripts/backup-data.sh snapshots
 ./scripts/backup-data.sh verify
-./scripts/backup-data.sh verify latest --read-data
+./scripts/backup-data.sh verify --read-data
 ```
 
-`--read-data` downloads and verifies selected repository data and may be slow.
+`verify` checks the repository rather than one snapshot: restic does not
+support a positional snapshot ID for `check`. `--read-data` downloads and
+verifies repository data and may be slow.
 Use it for a periodic restore drill, not necessarily after every backup.
 
 ## Restore drill

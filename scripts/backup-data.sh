@@ -61,7 +61,7 @@ Usage:
   ./scripts/backup-data.sh init [--execute]
   ./scripts/backup-data.sh backup [--execute]
   ./scripts/backup-data.sh snapshots
-  ./scripts/backup-data.sh verify [SNAPSHOT] [--read-data]
+  ./scripts/backup-data.sh verify [--read-data]
   ./scripts/backup-data.sh restore SNAPSHOT --to ABSOLUTE_EMPTY_DIR [--execute]
 
 Safety:
@@ -364,6 +364,8 @@ discover_backup_paths() {
   local epic
 
   BACKUP_PATHS=()
+  [[ ! -L "$PROJECT_ROOT/.claude" ]] ||
+    die "Recovery parent must not be a symlink: .claude"
   [[ -d "$PROJECT_ROOT/.claude/atlas-epic" ]] ||
     die "Required recovery path is missing: .claude/atlas-epic"
   [[ ! -L "$PROJECT_ROOT/.claude/atlas-epic" ]] ||
@@ -950,7 +952,6 @@ main() {
       restic snapshots --host "$BACKUP_HOST" --tag "$BACKUP_TAG"
       ;;
     verify)
-      snapshot=""
       read_data=0
       while [[ $# -gt 0 ]]; do
         case "$1" in
@@ -961,8 +962,7 @@ main() {
             die "Unknown option: $1"
             ;;
           *)
-            [[ -z "$snapshot" ]] || die "verify accepts at most one snapshot ID."
-            snapshot=$1
+            die "verify checks the repository and does not accept snapshot IDs."
             ;;
         esac
         shift
@@ -970,13 +970,7 @@ main() {
       validate_environment
       require_initialized_repository
       if [[ "$read_data" -eq 1 ]]; then
-        if [[ -n "$snapshot" ]]; then
-          restic check --read-data "$snapshot"
-        else
-          restic check --read-data
-        fi
-      elif [[ -n "$snapshot" ]]; then
-        restic check "$snapshot"
+        restic check --read-data
       else
         restic check
       fi
