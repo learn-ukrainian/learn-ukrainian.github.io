@@ -2021,7 +2021,7 @@ Operational rules:
 
 The first PR MUST contain only:
 
-- `docs/projects/ua-eval-harness/grammar-lexical-gate-design.md`;
+- `docs/projects/qg-quality-gate/grammar-lexical-gate-design.md`;
 - `schemas/ua-grammar-lexical-evidence.v2.schema.json`;
 - `schemas/ua-grammar-lexical-score.v2.schema.json`;
 - schema validation tests and golden fixture skeletons if explicitly included in the approved Phase 0 scope.

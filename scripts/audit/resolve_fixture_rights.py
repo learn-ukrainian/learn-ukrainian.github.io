@@ -23,8 +23,8 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_FIXTURE_DIR = REPO_ROOT / "tests/fixtures/qg_bakeoff"
 DEFAULT_RIGHTS_JSON = REPO_ROOT / "tests/fixtures/qg_bakeoff_rights/rights.json"
-DEFAULT_MATRIX_DOC = REPO_ROOT / "docs/projects/ua-eval-harness/fixture-rights-matrix.md"
-DEFAULT_REPLACE_LIST = REPO_ROOT / "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+DEFAULT_MATRIX_DOC = REPO_ROOT / "docs/projects/qg-quality-gate/fixture-rights-matrix.md"
+DEFAULT_REPLACE_LIST = REPO_ROOT / "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
 DEFAULT_LICENSE_MAP = Path(__file__).with_name("source_license_map.json")
 DEFAULT_SOURCES_DB = REPO_ROOT / "data/sources.db"
 DEFAULT_VESUM_DB = REPO_ROOT / "data/vesum.db"
@@ -804,7 +804,7 @@ def render_matrix_doc(rows: list[dict[str, Any]], license_map: Path) -> str:
         "",
         "## Method",
         "",
-        "This matrix replaces the prior LLM-labeled rights pass. The resolver now extracts fixture evidence rows mechanically, searches quoted text against local SQLite source rows, applies only committed `scripts/audit/source_license_map.json` entries for license labels, and marks rows from `docs/projects/ua-eval-harness/fixture-rights-replace-list.md` as `REPLACE`. Any remaining unmatched quote or matched-but-unmapped source fails closed as `UNKNOWN`; the committed matrix must have zero such rows.",
+        "This matrix replaces the prior LLM-labeled rights pass. The resolver now extracts fixture evidence rows mechanically, searches quoted text against local SQLite source rows, applies only committed `scripts/audit/source_license_map.json` entries for license labels, and marks rows from `docs/projects/qg-quality-gate/fixture-rights-replace-list.md` as `REPLACE`. Any remaining unmatched quote or matched-but-unmapped source fails closed as `UNKNOWN`; the committed matrix must have zero such rows.",
         "",
         "Pointer provenance rows contain no redistributable source quote and are classified `POINTER` with verdict `SHIP`.",
         "",

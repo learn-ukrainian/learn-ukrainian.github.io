@@ -42,7 +42,7 @@ MULTI_RUN_DIR_UNSUPPORTED = "multi_run_dir_unsupported"
 # passages must not silently move the arming gate's class-M/class-U denominators
 # (7/4) or its required-artifact set — the spec fixes them at "the 4-fixture tooled
 # matrix" with "class-M alignment >= 4/7" / "honesty >= 3/4"
-# (docs/projects/ua-eval-harness/calibration_criteria.md §5 E3). Expanding this
+# (docs/projects/qg-quality-gate/calibration_criteria.md §5 E3). Expanding this
 # tuple is a DELIBERATE re-calibration: bump the denominators/thresholds in one
 # reviewed commit, never as a side effect of adding a bakeoff fixture.
 CANARY_FIXTURE_SLUGS: tuple[str, ...] = ("koliadky", "kupalski", "vesnianky", "zhnyvarski")

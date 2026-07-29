@@ -104,7 +104,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -158,7 +158,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -356,7 +356,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -430,7 +430,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "U-class invented genre; evidence is a negative search log and adjacent real chunks, not a redistributable source quote.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -600,7 +600,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -822,7 +822,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "U-class invented genre; evidence is a negative search log and adjacent real chunks, not a redistributable source quote.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -840,7 +840,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -1010,7 +1010,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Verification text names a source chunk but quotes only the fabricated claim phrase; rewrite against an explicit source anchor.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -1108,7 +1108,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "U-class invented relic; no exact source attestation, only negative heritage/literary searches.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -1198,7 +1198,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -1388,7 +1388,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -1478,7 +1478,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -1706,7 +1706,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Resolver FTS matched an unrelated external article; fixture text lacks that chunk ID and must be re-authored.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -1744,7 +1744,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Resolver FTS matched an unrelated external article; fixture text lacks that chunk ID and must be re-authored.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -1762,7 +1762,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "U-class invented manuscript; resolver FTS matched an unrelated external article and no exact source attestation exists.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -1854,7 +1854,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -2060,7 +2060,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Resolver FTS matched an unrelated external article; fixture text lacks that chunk ID and must be re-authored.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -2138,7 +2138,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Fabricated distractor phrase coincidentally FTS-matches a school textbook; fabricated-by-us text needs an explicit FABRICATED_TEXT disposition (#4742 Class B, with the U-class question).",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -2156,7 +2156,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Quote exists in the ingested Wikipedia article, but resolver FTS ranks an unlicensed school-textbook match first — resolver needs licensed-table preference ordering (#4742 Class D).",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -2194,7 +2194,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "U-class invented manuscript; resolver FTS matched an unrelated external article and no exact source attestation exists.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -2324,7 +2324,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -2380,7 +2380,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -2532,7 +2532,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Resolver FTS matched an unrelated external article; fixture text lacks that chunk ID and must be re-authored.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -2670,7 +2670,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Resolver FTS matched a school textbook; fixture text lacks that chunk ID and must be re-authored.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -2688,7 +2688,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "U-class invented work; resolver FTS matched an unrelated external article and no exact source attestation exists.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -2760,7 +2760,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -2868,7 +2868,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -3048,7 +3048,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -3102,7 +3102,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -3352,7 +3352,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "U-class invented manuscript; resolver FTS matched an unrelated external article and no exact source attestation exists.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -3584,7 +3584,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "U-class invented named relic; no exact source attestation, only negative Wikipedia/literary checks.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -3694,7 +3694,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -3730,7 +3730,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -3894,7 +3894,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -3912,7 +3912,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Verification text names a source chunk but quotes only the fabricated claim phrase; rewrite against an explicit source anchor.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -4002,7 +4002,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -4148,7 +4148,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -4220,7 +4220,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -4256,7 +4256,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "U-class invented clenod; no exact source attestation, only adjacent real clenod/election chunks.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -4328,7 +4328,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
@@ -4382,7 +4382,7 @@
       "similarity": null,
       "quote": null,
       "license_basis": "Copyrighted-source distractor evidence cannot ship as a pointer under strict distractor handling; re-author against PD/CC evidence.",
-      "license_basis_url": "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
+      "license_basis_url": "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
     }
   },
   {
