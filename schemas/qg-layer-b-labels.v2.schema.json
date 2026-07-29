@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learn-ukrainian.github.io/schemas/qg-layer-b-labels.v2.schema.json",
   "title": "QG Layer B labels v2",
-  "description": "Versioned sidecar labels for QG Layer B Phase 0. This schema validates the normative shape in docs/projects/ua-eval-harness/layerb-entailment-gate-design.md §7; it does not change Layer A or Layer B runtime behavior.",
+  "description": "Versioned sidecar labels for QG Layer B Phase 0. This schema validates the normative shape in docs/projects/qg-quality-gate/layerb-entailment-gate-design.md §7; it does not change Layer A or Layer B runtime behavior.",
   "$comment": "JSON Schema cannot compare sibling offsets, verify UTF-8 SHA-256 digests, derive stable identities, validate normalized-to-raw mappings, or inspect source bytes. tests/test_qg_layer_b_labels_schema.py validates those cross-field invariants against supplied immutable reference outputs: non-empty half-open spans; ordered, non-overlapping segments; one event-output per candidate; recorded hash integrity; normalized-to-raw round trips; source_index exclusion from stable identity; and canonical-source identity consistency. The helper is test-only and is not a runtime gate.",
   "type": "object",
   "additionalProperties": false,

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learn-ukrainian.github.io/schemas/ua-grammar-lexical-evidence.v2.schema.json",
   "title": "Ukrainian grammar and lexical evidence v2",
-  "description": "Normative per-artifact evidence contract for the Ukrainian grammar and lexical gate. It implements the static shape in docs/projects/ua-eval-harness/grammar-lexical-gate-design.md §§3, 4, 7, and 9; it does not implement or enable gate runtime behavior.",
+  "description": "Normative per-artifact evidence contract for the Ukrainian grammar and lexical gate. It implements the static shape in docs/projects/qg-quality-gate/grammar-lexical-gate-design.md §§3, 4, 7, and 9; it does not implement or enable gate runtime behavior.",
   "$comment": "JSON Schema validates closed shapes, registered enums, and SHA-256 syntax. It cannot prove raw offset ordering or exhaustiveness, SHA-256 contents, detector-manifest equality, terminal candidate state, source lineage, candidate uniqueness, or coverage arithmetic. The Layer A reason, local-recognizer decision, and lexical-fusion registers are retained as explicit compatibility definitions because Dec-010 requires them but §9.1 does not add fields for them. tests/test_grammar_lexical_schemas.py keeps those Phase 0 checks test-only.",
   "type": "object",
   "additionalProperties": false,

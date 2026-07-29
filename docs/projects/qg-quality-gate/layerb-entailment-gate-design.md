@@ -898,7 +898,7 @@ These categories overlap and must be treated as a set union. Counts derive from 
 
 The first PR MUST contain only:
 
-- `docs/projects/ua-eval-harness/layerb-entailment-gate-design.md`
+- `docs/projects/qg-quality-gate/layerb-entailment-gate-design.md`
 - A versioned JSON Schema, such as `schemas/qg-layer-b-labels.v2.schema.json`
 - A Layer B annotation guide.
 - Schema validation tests.
