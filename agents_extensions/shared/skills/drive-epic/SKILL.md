@@ -93,7 +93,7 @@ the build/review queue. **Step 0 of any dispatch:** `gh pr list --state all --se
 carry it). If nothing genuinely fits a free lane, log it and leave it idle — never
 manufacture busywork (quality > utilization).
 
-### NO FABRICATED DONE (binding all epic drivers)
+### 2a. NO FABRICATED DONE (binding all epic drivers)
 
 - Never invent acceptance thresholds the operator, issue, or epic goal did not set.
 - Never declare a goal done while measured residual remains in the same mandate unless
@@ -102,8 +102,6 @@ manufacture busywork (quality > utilization).
 - Never relabel unfinished work as an intentional skip without issue text or tool proof.
 - Before "done" or handback, quote the tool residual count; `residual > 0` requires a
   next dispatch in the same session.
-- **Grok seat:** higher fabrication risk — enforce this harder; global
-  `~/.grok/Agents.md` mirrors this rule.
 
 ### 3. Route by model × harness fit
 Decide the lane from `/api/rules` + `model_catalog.yaml`, **never** from the provider
