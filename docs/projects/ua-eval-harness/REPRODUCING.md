@@ -1,8 +1,9 @@
-# Відтворення public v0
+# Reproducing public v0
 
-## Швидка перевірка без credentials
+## Quick check without provider credentials
 
-Потрібні Git, `uv` і CPython 3.12.8. Провайдерний обліковий запис не потрібен.
+Requirements: Git, `uv`, and CPython 3.12.8. No provider account, API key,
+private repository, product state, or live model call is required.
 
 ```bash
 git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
@@ -11,12 +12,12 @@ uv venv --python 3.12.8
 .venv/bin/python scripts/projects/ua_eval_harness/smoke_public_v0.py
 ```
 
-Smoke спочатку перевіряє freeze manifest і всі 21 frozen artifact hashes.
-Потім заново оцінює identity, deterministic fixture-rule і збережений
-`gpt-5.6-terra` run. Усі три нові report objects мають точно збігтися із
-закоміченими звітами.
+The smoke test first validates the release freeze and the SHA-256 hashes of all
+21 frozen artifacts. It then re-scores the identity baseline, the deterministic
+fixture-rule baseline, and the saved `gpt-5.6-terra` run. Each newly generated
+JSON report must exactly match its committed report.
 
-Очікуване завершення:
+Expected output:
 
 ```text
 identity: 677 responses, edit F0.5=0.0000, headline calque R=0.0000, exact=0.0000
@@ -25,12 +26,13 @@ gpt-5.6-terra saved run: 677 responses, edit F0.5=0.2439, headline calque R=0.14
 public v0 smoke passed: frozen scoring reproduced without provider credentials
 ```
 
-Значення загального F0.5, основної повноти виправлення кальок і відсутньої
-влучності для кальок пояснено в
-[українському описі даних](DATA_CARD.uk.md). Цей документ зосереджено на
-командах і технічній перевірці результатів.
+The [English data card](DATA_CARD.en.md) defines overall edit F0.5, headline
+calque recall, and why calque precision is not reported. This guide focuses on
+the commands and technical verification of those results.
 
-Окремі fail-closed команди:
+## Individual fail-closed checks
+
+Run the checks separately when diagnosing a failure:
 
 ```bash
 .venv/bin/python scripts/projects/ua_eval_harness/verify_release_freeze.py
@@ -46,11 +48,12 @@ public v0 smoke passed: frozen scoring reproduced without provider credentials
   --output /tmp/ua-eval-terra-report.json
 ```
 
-Остання команда записує тимчасовий звіт; вона не змінює frozen artifacts.
+The last command writes a temporary report. It does not modify any frozen
+artifact.
 
-## Відтворення dataset із pinned upstream
+## Rebuild the dataset from the pinned upstream source
 
-Ця перевірка додатково потребує clone UA-GEC на точному commit:
+This check also requires a UA-GEC checkout at the pinned commit:
 
 ```bash
 git clone https://github.com/grammarly/ua-gec.git /tmp/ua-gec
@@ -61,13 +64,16 @@ git -C /tmp/ua-gec checkout 4757f72f192c4a41e4c8fb1d9690a948f87cf6d6
   --check
 ```
 
-Екстрактор перевіряє upstream file hashes, license/version evidence,
-writer/document split, усі 2 690 sentence dispositions і точний payload hash.
+The extractor verifies the upstream file hashes, license and version evidence,
+author and document separation between the training and test partitions, all
+2,690 sentence dispositions, and the final payload hash.
 
-Для повного відтворення heritage/style disposition завантажте pinned
-dict_uk/VESUM v6.8.0 asset, SHA-256
-`e33803783ac138e6f3af2cf0e9428ba146c0ecfda7f5c41fe83ae00c7af24be9`, і
-запустіть:
+## Rebuild the scoring dispositions
+
+To reproduce the heritage and style evidence, download the pinned
+dict_uk/VESUM v6.8.0 release asset with SHA-256
+`e33803783ac138e6f3af2cf0e9428ba146c0ecfda7f5c41fe83ae00c7af24be9`, then
+run:
 
 ```bash
 .venv/bin/python scripts/projects/ua_eval_harness/build_scoring_dispositions.py \
@@ -75,43 +81,26 @@ dict_uk/VESUM v6.8.0 asset, SHA-256
   --check
 ```
 
-Asset та derived evidence мають CC BY-NC-SA 4.0; точний URL, revision і
-license receipt наведено в
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). VESUM attestation/style
-markers є candidate evidence, не автоматичним contextual adjudication.
-Повніша contextual activation залишається залежністю issue #5092; public v0
-fail closed виключає unresolved records із headline scoring.
+The asset and the derived evidence are licensed under CC BY-NC-SA 4.0. See
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the exact download URL,
+pinned revision, license, and evidence receipts.
 
-## English quickstart
+VESUM attestations and style markers identify candidates; they do not decide
+contextual calque status automatically. Broader contextual activation remains
+tracked in issue #5092. Public v0 excludes unresolved records from headline
+scoring.
 
-Requirements: Git, `uv`, and CPython 3.12.8. No provider account, API key,
-private repository, product state, or live model call is required.
+## Evaluate another model
 
-```bash
-git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
-cd learn-ukrainian.github.io
-uv venv --python 3.12.8
-.venv/bin/python scripts/projects/ua_eval_harness/smoke_public_v0.py
-```
-
-The smoke verifies the immutable release manifest, validates all complete
-saved-response runs, re-scores all 677 responses in each run, and requires
-byte-equivalent report objects. It reads only the public files committed under
-`data/projects/ua_eval_harness` and the public scorer/extractor scripts.
-
-The [English data card](DATA_CARD.en.md) defines overall edit F0.5, headline
-calque recall, and why calque precision is not reported. This guide focuses on
-the commands and technical verification of those results.
-
-To score a new saved-response file, first create a source-only request packet:
+Create a source-only request packet:
 
 ```bash
 .venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py prepare \
   --output /tmp/ua-eval-requests.jsonl
 ```
 
-Generate responses outside the scorer using only the request fields, then
-import them with versioned model/provider/decoding metadata:
+Generate responses outside the scorer using only the request fields. Then
+import them with versioned model, provider, and decoding metadata:
 
 ```bash
 .venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py import \
@@ -125,6 +114,7 @@ import them with versioned model/provider/decoding metadata:
   --output /tmp/score-report.json
 ```
 
-The importer rejects incomplete coverage, duplicate IDs, source/prompt drift,
-response tampering, and gold-shaped fields. Live generation is optional and
-outside the credential-free reproduction path.
+The importer rejects incomplete coverage, duplicate IDs, drift in source or
+prompt hashes, tampered responses, and fields that resemble hidden gold data.
+Live generation is optional and remains outside the credential-free
+reproduction path.
