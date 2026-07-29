@@ -1,39 +1,21 @@
-# RB-4 — red-CI triage (T2 DRAFT, extraction from the red-ci-triage decision table +
-# the #0H rerun/update-branch discipline). Part of #5885. Prerequisite for the glm
-# bounded-driver trial (per-seat prerequisites in the trails design).
+# RB-4 — red-CI triage.  TrailSpec v1.1 migration for #5885 P9.
 #
-# DRAFT STATUS: authored against today's substrate; certification waits for T1.4/5.
-# The known-failure-class lookup is a fail-closed gate: an absent registry or
-# structured receipt is table-unknown, and a lookup error stops. NO rerun step exists
-# in this draft: TrailSpec v1 cannot express the per-claimant predicate required by
-# the raceless primitive. A matched retry-once is data that stops for manual handling;
-# unknown signatures never retry-until-green.
-#
-# Anti-pattern guard (RB-2 v0.7.0 discipline, seven-round-reviewed): every command is
-# a real, currently runnable repo command whose OUTPUT SHAPE was captured live
-# (2026-07-27/28 infra session — the #5896 shard-2 triage: three red rounds, signature
-# extraction via --log-failed, the stale-head rerun hazard, base-side reproduction
-# work); every MECHANICAL step is single-signal; multi-signal branchings are split;
-# base-reproduction is judgment and encoded as a summon, not faked mechanical.
-#
-# Live-captured hazards this trail encodes (both burned this repo before):
-# - `gh run rerun` re-tests the ORIGINAL pinned merge SHA; a rerun on a superseded
-#   head can CANCEL the live head's run via the workflow concurrency group.
-# - A merge checkout's content is not the branch's content — signatures must be read
-#   from the failing run's logs, never inferred from local state.
-#
-# v0.4.2 fixes:
-# - signature_recorded transition routes to head_currency_check (was unreachable).
-# - locate_failing_run parses run id from failing check row URL in batch_state/rb4-checks-{pr_number}.txt
-#   instead of gh run list --branch (which could pick a newer pending run).
-schema_version: trailspec.v1
+# This rail deliberately does not contain a rerun primitive.  A registry action of
+# retry-once is observed data that parks at STOP-manual-intervention; P13 owns the
+# claimant-ledger and any future remote rerun mutation.
+schema_version: trailspec.v1.1
 trail_id: rb4-red-ci-triage
-version: "0.4.3"
-title: RB4 Red-CI triage — signature, lookup, and staleness
+version: "0.5.0"
+title: RB4 Red-CI triage — receipt-bound signature, currency, and non-rerun routing
 seats:
-  - grok-daily
-  - glm-trial
-  - judgment
+  - grok
+  - glm-local
+  - kimi
+parameters:
+  pr_number: integer
+  triage_facts_receipt: string
+  signature_receipt_path: string
+  known_failures_registry_path: string
 stop_codes:
   - STOP-precondition-failed
   - STOP-manual-intervention
@@ -43,180 +25,313 @@ terminal_outcomes:
   - back_to_pr_lifecycle
 steps:
   - step_id: snapshot_checks
-    intent: >-
-      Snapshot the PR's check table (live shape: tab-separated lines
-      "<name>\t<pass|fail|pending|skipping>\t<duration>\t<url>"). The red count is
-      parsed from the STATUS FIELD, never whole-line grep (a passing check named
-      "failure-report" must not read as red — r1 finding); a non-zero fail-field
-      count proceeds to triage, zero returns to the PR lifecycle.
-    command: sh -c 'gh pr checks {pr_number} 2>/dev/null | tee batch_state/rb4-checks-{pr_number}.txt'
-    evidence_predicate:
-      command: sh -c 'awk -F"\t" "\$2==\"fail\"" batch_state/rb4-checks-{pr_number}.txt | wc -l | tr -d " "'
-      success_pattern: '^[0-9]+$'
+    intent: Observe the PR check table and emit only the measured red/green availability state.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'OUT=$(gh pr checks "$PR_NUMBER" 2>/dev/null); RC=$?; mkdir -p batch_state; printf "%s\n" "$OUT" > "batch_state/rb4-checks-$PR_NUMBER.txt"; if [ "$RC" -ne 0 ]; then echo checks-unreadable; elif printf "%s\n" "$OUT" | awk -F "\t" ''$2=="fail" {found=1} END {exit !found}''; then echo red-present; else echo all-green; fi']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      red_present: locate_failing_run
-      all_green: back_to_pr_lifecycle
-      checks_unreadable: STOP-precondition-failed
-    kind: mechanical
+      red_present:
+        target: locate_failing_run
+        evidence:
+          predicate_id: rb4-checks-red-present
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: red-present}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      all_green:
+        target: back_to_pr_lifecycle
+        evidence:
+          predicate_id: rb4-checks-all-green
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: all-green}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      checks_unreadable:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: rb4-checks-unreadable
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: checks-unreadable}]
     blocked_on: null
 
   - step_id: locate_failing_run
     intent: >-
-      Resolve the failing run id from the FAILING row's URL field in
-      batch_state/rb4-checks-{pr_number}.txt (live shape: URL containing
-      /actions/runs/<run_id>/). The receipt is written to
-      batch_state/rb4-run-{pr_number}.json in [{"databaseId": <run_id>}] shape for
-      downstream consumers. Signatures come from THIS failing run's logs.
-    command: >-
-      sh -c 'RUN=$(awk -F"\t" "\$2==\"fail\" {print \$4}" batch_state/rb4-checks-{pr_number}.txt | sed -E -n "s|.*/actions/runs/([0-9]+).*|\1|p" | head -1); case "$RUN" in [0-9]*) printf "[{\"databaseId\": %s}]\n" "$RUN" > batch_state/rb4-run-{pr_number}.json; echo run-located;; *) echo no-failing-run;; esac'
-    evidence_predicate:
-      command: >-
-        sh -c 'RUN=$(awk -F"\t" "\$2==\"fail\" {print \$4}" batch_state/rb4-checks-{pr_number}.txt | sed -E -n "s|.*/actions/runs/([0-9]+).*|\1|p" | head -1); case "$RUN" in [0-9]*) echo run-located;; *) echo no-failing-run;; esac'
-      success_pattern: '^(run-located|no-failing-run)$'
+      Preserve the v0.4.3 property: derive the run ID from the failing check URL,
+      never a branch-wide run list.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'RUN=$(awk -F "\t" ''$2=="fail" {print $4}'' "batch_state/rb4-checks-$PR_NUMBER.txt" | sed -E -n ''s|.*/actions/runs/([0-9]+).*|\1|p'' | head -1); case "$RUN" in [0-9]*) printf "{\"databaseId\":%s}\n" "$RUN" > "batch_state/rb4-run-$PR_NUMBER.json" && echo run-located;; *) echo no-failing-run;; esac']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      run_located: extract_signature
-      no_failing_run: STOP-precondition-failed
-    kind: mechanical
+      run_located:
+        target: extract_signature
+        evidence:
+          predicate_id: rb4-run-located-from-check-url
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: run-located}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      no_failing_run:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: rb4-run-not-located
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: no-failing-run}]
     blocked_on: null
 
   - step_id: extract_signature
-    intent: >-
-      Extract the failure signature from the failing run's logs into a receipt (live
-      shapes: pytest's "short test summary info" FAILED lines; bash "command not
-      found" lines with script path + line number; assertion excerpts). The receipt
-      is the signature of record for the allowlist match and any PR note — a triage
-      claim without this receipt is not tool-backed.
-    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); gh run view "$RUN" --log-failed 2>/dev/null | grep -E "FAILED |Error|error:|command not found|short test summary" | head -30 | tee batch_state/rb4-signature-{pr_number}.txt'
-    evidence_predicate:
-      command: test -s batch_state/rb4-signature-{pr_number}.txt && echo signature-recorded
-      success_pattern: '^signature-recorded$'
+    intent: Record failure-signature text from the exact failing run before any table evaluation.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'RUN=$(jq -r ''.databaseId // empty'' "batch_state/rb4-run-$PR_NUMBER.json" 2>/dev/null); OUT=$(gh run view "$RUN" --log-failed 2>/dev/null | grep -E ''FAILED |Error|error:|command not found|short test summary'' | head -30); mkdir -p batch_state; printf "%s\n" "$OUT" > "batch_state/rb4-signature-$PR_NUMBER.txt"; test -n "$OUT" && echo signature-recorded || echo signature-empty']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      signature_recorded: head_currency_check
-      logs_empty: STOP-manual-intervention
-    kind: mechanical
+      signature_recorded:
+        target: head_currency_check
+        evidence:
+          predicate_id: rb4-signature-recorded
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: signature-recorded}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      signature_empty:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb4-signature-empty
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: signature-empty}]
     blocked_on: null
 
   - step_id: head_currency_check
     intent: >-
-      Before any staleness reasoning, prove the failing run belongs to the PR's
-      CURRENT head: compare the run's headSha with the PR's headRefOid (both live gh
-      JSON fields). A run for a superseded head has been replaced by the newer
-      head's own CI — nothing here may act on it (the burned hazard: acting on a
-      stale head's run cancels or misleads the live one); control returns to the PR
-      lifecycle, which watches the current run. FAILS CLOSED (r2 finding):
-      equality may mean current only for two validated, non-empty 40-hex SHAs —
-      failed gh lookups (empty equals empty) are their own lookup-failed outcome
-      and stop.
-    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); R=$(gh run view "$RUN" --json headSha --jq .headSha); P=$(gh pr view {pr_number} --json headRefOid --jq .headRefOid); case "$R$P" in *[!0-9a-f]*|"") echo lookup-failed; exit 0;; esac; [ "${#R}" = "40" ] && [ "${#P}" = "40" ] || { echo lookup-failed; exit 0; }; [ "$R" = "$P" ] && echo head-current || echo head-superseded'
-    evidence_predicate:
-      command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); R=$(gh run view "$RUN" --json headSha --jq .headSha); P=$(gh pr view {pr_number} --json headRefOid --jq .headRefOid); case "$R$P" in *[!0-9a-f]*|"") echo lookup-failed; exit 0;; esac; [ "${#R}" = "40" ] && [ "${#P}" = "40" ] || { echo lookup-failed; exit 0; }; [ "$R" = "$P" ] && echo head-current || echo head-superseded'
-      success_pattern: '^(head-current|head-superseded|lookup-failed)$'
+      Preserve the reachable current-head check: only two valid equal 40-hex SHAs
+      are current.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'RUN=$(jq -r ''.databaseId // empty'' "batch_state/rb4-run-$PR_NUMBER.json" 2>/dev/null); R=$(gh run view "$RUN" --json headSha --jq .headSha 2>/dev/null); P=$(gh pr view "$PR_NUMBER" --json headRefOid --jq .headRefOid 2>/dev/null); case "$R$P" in *[!0-9a-f]*|"") echo head-lookup-failed; exit 0;; esac; [ "${#R}" = 40 ] && [ "${#P}" = 40 ] || { echo head-lookup-failed; exit 0; }; printf "{\"run_head\":\"%s\",\"pr_head\":\"%s\"}\n" "$R" "$P" > "batch_state/rb4-head-$PR_NUMBER.json"; [ "$R" = "$P" ] && echo head-current || echo head-superseded']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      head_current: staleness_probe
-      head_superseded: back_to_pr_lifecycle
-      lookup_failed: STOP-precondition-failed
-    kind: mechanical
+      head_current:
+        target: staleness_probe
+        evidence:
+          predicate_id: rb4-head-current
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: head-current}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      head_superseded:
+        target: back_to_pr_lifecycle
+        evidence:
+          predicate_id: rb4-head-superseded
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: head-superseded}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      head_lookup_failed:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: rb4-head-lookup-failed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: head-lookup-failed}]
     blocked_on: null
 
   - step_id: staleness_probe
-    intent: >-
-      BEFORE any rerun decision, capture both timestamps into one receipt: the
-      failing run's createdAt and origin/main's tip commit time (live shapes: ISO
-      timestamps from gh run view --json createdAt and git log -1 --format=%cI).
-      A run created BEFORE main's tip may have tested a merge against a since-fixed
-      base — the burned-in hazard: rerunning it re-tests the stale pinned SHA and can
-      cancel the live head's run via the concurrency group. HONEST APPROXIMATION
-      NOTE: %cI is commit time, not push time; it can only UNDER-detect staleness,
-      and the under-detected case falls through to the fail-closed allowlist path
-      (registry absent → STOP-unknown), never to a rerun — the safe direction. The
-      comparison itself is the next step's single signal.
-    command: sh -c 'RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json); { gh run view "$RUN" --json createdAt --jq .createdAt; git log -1 --format=%cI origin/main; } | tee batch_state/rb4-staleness-{pr_number}.txt'
-    evidence_predicate:
-      command: sh -c 'test "$(wc -l < batch_state/rb4-staleness-{pr_number}.txt | tr -d " ")" = "2" && echo both-timestamps'
-      success_pattern: '^both-timestamps$'
+    intent: Observe the run and origin/main timestamps in one receipt before comparison.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'RUN=$(jq -r ''.databaseId // empty'' "batch_state/rb4-run-$PR_NUMBER.json" 2>/dev/null); R=$(gh run view "$RUN" --json createdAt --jq .createdAt 2>/dev/null); M=$(git log -1 --format=%cI origin/main 2>/dev/null); printf "%s\n%s\n" "$R" "$M" > "batch_state/rb4-staleness-$PR_NUMBER.txt"; test -n "$R" && test -n "$M" && echo timestamps-recorded || echo timestamps-unavailable']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      timestamps_recorded: staleness_compare
-      probe_failed: STOP-precondition-failed
-    kind: mechanical
+      timestamps_recorded:
+        target: staleness_compare
+        evidence:
+          predicate_id: rb4-timestamps-recorded
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: timestamps-recorded}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      timestamps_unavailable:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: rb4-timestamps-unavailable
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: timestamps-unavailable}]
     blocked_on: null
 
   - step_id: staleness_compare
-    intent: >-
-      Single-signal EPOCH compare of the two recorded timestamps, normalized in the
-      venv interpreter (r1 finding: mixed Z/offset ISO forms do not sort
-      lexicographically — a UTC run stamp vs an offset-form commit stamp misorders;
-      datetime.fromisoformat handles both and compares instants). FAILS CLOSED: a
-      missing or malformed receipt is its own outcome routing to a stop, never a
-      silent run-current.
-    command: sh -c '.venv/bin/python -c "import sys,datetime as d; L=open(\"batch_state/rb4-staleness-{pr_number}.txt\").read().split(); R=d.datetime.fromisoformat(L[0].replace(\"Z\",\"+00:00\")); M=d.datetime.fromisoformat(L[1].replace(\"Z\",\"+00:00\")); print(\"run-predates-main\" if R<M else \"run-current\")" 2>/dev/null || echo receipt-unusable'
-    evidence_predicate:
-      command: sh -c '.venv/bin/python -c "import sys,datetime as d; L=open(\"batch_state/rb4-staleness-{pr_number}.txt\").read().split(); R=d.datetime.fromisoformat(L[0].replace(\"Z\",\"+00:00\")); M=d.datetime.fromisoformat(L[1].replace(\"Z\",\"+00:00\")); print(\"run-predates-main\" if R<M else \"run-current\")" 2>/dev/null || echo receipt-unusable'
-      success_pattern: '^(run-predates-main|run-current|receipt-unusable)$'
+    intent: Compare the two observed instants; malformed receipts fail closed.
+    command:
+      adapter: shell
+      argv: [.venv/bin/python, -c, 'import datetime as d, os; p="batch_state/rb4-staleness-" + os.environ["PR_NUMBER"] + ".txt"; lines=open(p, encoding="utf-8").read().split(); run=d.datetime.fromisoformat(lines[0].replace("Z", "+00:00")); main=d.datetime.fromisoformat(lines[1].replace("Z", "+00:00")); print("run-predates-main" if run < main else "run-current")']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      run_predates_main: fire_update_branch
-      run_current: allowlist_match
-      receipt_unusable: STOP-precondition-failed
-    kind: mechanical
+      run_predates_main:
+        target: fire_update_branch
+        evidence:
+          predicate_id: rb4-run-predates-main
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: run-predates-main}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      run_current:
+        target: observe_triage_facts
+        evidence:
+          predicate_id: rb4-run-current
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: run-current}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+    blocked_on: null
+
+  - step_id: observe_triage_facts
+    intent: Observe complete typed facts for P2's red-ci-triage table.
+    command:
+      adapter: shell
+      argv: [.venv/bin/python, -c, 'import json, os; d=json.load(open(os.environ["TRIAGE_FACTS_RECEIPT"], encoding="utf-8")); ok=set(d)=={"known_failure_class","reproduces_on_main","base_fixed_after_ci"} and d.get("known_failure_class") in {"matched","not-matched"} and type(d.get("reproduces_on_main")) is bool and type(d.get("base_fixed_after_ci")) is bool; print("triage-facts-complete" if ok else "triage-facts-invalid")']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        TRIAGE_FACTS_RECEIPT: "{triage_facts_receipt}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
+    transitions:
+      triage_facts_complete:
+        target: evaluate_red_ci_triage
+        evidence:
+          predicate_id: rb4-triage-facts-complete
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: triage-facts-complete}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      triage_facts_invalid:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: rb4-triage-facts-invalid
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: triage-facts-invalid}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+    blocked_on: null
+
+  - step_id: evaluate_red_ci_triage
+    intent: Evaluate P2's red-ci-triage table from the observed typed receipt.
+    command:
+      adapter: shell
+      argv: [.venv/bin/python, -c, 'import json, os; from pathlib import Path; from scripts.orchestration.trail_predicates import evaluate_named_table, load_decision_tables; facts=json.load(open(os.environ["TRIAGE_FACTS_RECEIPT"], encoding="utf-8")); print(evaluate_named_table(load_decision_tables(Path(os.environ["TABLES_PATH"])), os.environ["TABLE_ID"], facts))']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        TRIAGE_FACTS_RECEIPT: "{triage_facts_receipt}"
+        TABLES_PATH: scripts/config/trails/decision-tables.v1.yaml
+        TABLE_ID: red-ci-triage
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
+    transitions:
+      apply_known_failure_action:
+        target: allowlist_match
+        evidence:
+          predicate_id: rb4-triage-known-failure
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: apply-known-failure-action}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      note_pre_existing_ci:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb4-triage-pre-existing
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: note-pre-existing-ci}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      update_branch:
+        target: fire_update_branch
+        evidence:
+          predicate_id: rb4-triage-base-fixed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: update-branch}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      stop_unknown:
+        target: STOP-unknown
+        evidence:
+          predicate_id: rb4-triage-unknown
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: STOP-unknown}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
     blocked_on: null
 
   - step_id: fire_update_branch
-    intent: >-
-      The table's stale-base disposition: gh pr update-branch refreshes the merge
-      base so CI re-tests reality (live-burned alternative: gh run rerun on the
-      superseded head canceled the live head's run via the concurrency group —
-      #0H). The trail ends here; the new head's CI is watched by the PR lifecycle.
-    command: gh pr update-branch {pr_number}
-    evidence_predicate:
-      command: sh -c 'gh pr view {pr_number} --json mergeStateStatus --jq .mergeStateStatus'
-      success_pattern: '^(BLOCKED|CLEAN|BEHIND|UNKNOWN|UNSTABLE)$'
+    intent: Mutate the PR branch only after a stale-base table disposition; state is re-observed separately.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'gh pr update-branch "$PR_NUMBER" >/dev/null 2>&1 && echo update-branch-command-succeeded || echo update-branch-command-failed']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: remote-mutation
+      outcome_decoder: {source: stdout-token}
     transitions:
-      update_fired: triaged_update_branch_fired
-      update_refused: STOP-manual-intervention
-    kind: mechanical
+      update_branch_command_succeeded:
+        target: observe_updated_branch
+        evidence:
+          predicate_id: rb4-update-branch-command-succeeded
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: update-branch-command-succeeded}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      update_branch_command_failed:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb4-update-branch-command-failed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: update-branch-command-failed}]
+    blocked_on: null
+
+  - step_id: observe_updated_branch
+    intent: Re-observe a changed PR head against the head-currency receipt after update-branch.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'OLD=$(jq -r ''.pr_head // empty'' "batch_state/rb4-head-$PR_NUMBER.json" 2>/dev/null); NEW=$(gh pr view "$PR_NUMBER" --json headRefOid --jq .headRefOid 2>/dev/null); case "$OLD$NEW" in *[!0-9a-f]*|"") echo updated-head-unreadable; exit 0;; esac; [ "${#OLD}" = 40 ] && [ "${#NEW}" = 40 ] || { echo updated-head-unreadable; exit 0; }; [ "$OLD" != "$NEW" ] && echo updated-head-observed || echo updated-head-unchanged']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
+    transitions:
+      updated_head_observed:
+        target: triaged_update_branch_fired
+        evidence:
+          predicate_id: rb4-updated-head-observed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: updated-head-observed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      updated_head_unchanged:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb4-updated-head-unchanged
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: updated-head-unchanged}]
+      updated_head_unreadable:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: rb4-updated-head-unreadable
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: updated-head-unreadable}]
     blocked_on: null
 
   - step_id: allowlist_match
-    intent: >-
-      ENFORCED fail-closed lookup: the checked-in registry and the structured
-      signature receipt are both required. The extraction CLI normalizes the captured
-      job failure into batch_state/rb4-signature-{pr_number}.json; text logs alone are
-      not a matchable receipt. The lookup evaluates every matching entry, records the
-      deterministic as-of instant, and never contacts GitHub itself. Missing input,
-      unknown, ambiguity, expiry, or lookup failure stops. A matched retry-once is
-      only recorded data here — TrailSpec v1 has no retry execution transition.
-    command: |-
-      sh -c '
-        REG=scripts/config/trails/red-ci-known-failures.yaml
-        RECEIPT=batch_state/rb4-signature-{pr_number}.json
-        OUT=batch_state/rb4-lookup-{pr_number}.json
-        SIGNAL=batch_state/rb4-lookup-signal-{pr_number}.txt
-        if [ ! -f "$REG" ] || [ ! -f "$RECEIPT" ]; then
-          RESULT=table-unknown
-        else
-          RUN=$(jq -r ".[0].databaseId" batch_state/rb4-run-{pr_number}.json)
-          REPO=$(gh repo view --json databaseId --jq .databaseId) || RESULT=lookup-failed
-          if [ -n "${REPO:-}" ] && [ "${RESULT:-}" != lookup-failed ]; then
-            AS_OF=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-            .venv/bin/python scripts/orchestration/red_ci_known_failures.py lookup \
-              --registry "$REG" --receipt "$RECEIPT" --repository-id "$REPO" \
-              --pr {pr_number} --run-id "$RUN" --as-of "$AS_OF" --output "$OUT" \
-              >/dev/null && RESULT=$(jq -r \
-                "if .status == \"matched\" then \"matched-\" + .action.kind else \"table-unknown\" end" \
-                "$OUT") || RESULT=lookup-failed
-          fi
-        fi
-        printf "%s\n" "$RESULT" > "$SIGNAL"
-        printf "%s\n" "$RESULT"
-      '
-    evidence_predicate:
-      command: sh -c 'cat batch_state/rb4-lookup-signal-{pr_number}.txt'
-      success_pattern: '^(table-unknown|lookup-failed|matched-retry-once|matched-note-and-proceed|matched-stop)$'
+    intent: Observe the fail-closed known-failure registry outcome; retry-once remains a manual STOP.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'RUN=$(jq -r ''.databaseId // empty'' "batch_state/rb4-run-$PR_NUMBER.json" 2>/dev/null); REPO=$(gh repo view --json databaseId --jq .databaseId 2>/dev/null); OUT="batch_state/rb4-lookup-$PR_NUMBER.json"; if [ -z "$RUN" ] || [ -z "$REPO" ]; then echo lookup-failed; elif .venv/bin/python scripts/orchestration/red_ci_known_failures.py lookup --registry "$KNOWN_FAILURES_REGISTRY_PATH" --receipt "$SIGNATURE_RECEIPT_PATH" --repository-id "$REPO" --pr "$PR_NUMBER" --run-id "$RUN" --as-of "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --output "$OUT" >/dev/null 2>&1; then jq -r ''if .status == "matched" then "matched-" + .action.kind else "table-unknown" end'' "$OUT"; else echo lookup-failed; fi']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+        SIGNATURE_RECEIPT_PATH: "{signature_receipt_path}"
+        KNOWN_FAILURES_REGISTRY_PATH: "{known_failures_registry_path}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      table_unknown: STOP-unknown
-      lookup_failed: STOP-precondition-failed
-      matched_retry_once: STOP-manual-intervention
-      matched_note_and_proceed: back_to_pr_lifecycle
-      matched_stop: STOP-manual-intervention
-    kind: table-lookup
-    table: red-ci-triage
-    blocked_on: "operator-gated rerun primitive remains out of scope (#5885)"
+      matched_retry_once:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb4-allowlist-retry-once-stops
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: matched-retry-once}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      matched_note_and_proceed:
+        target: back_to_pr_lifecycle
+        evidence:
+          predicate_id: rb4-allowlist-note-and-proceed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: matched-note-and-proceed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      matched_stop:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb4-allowlist-stop
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: matched-stop}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      table_unknown:
+        target: STOP-unknown
+        evidence:
+          predicate_id: rb4-allowlist-unknown
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: table-unknown}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      lookup_failed:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: rb4-allowlist-failed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: lookup-failed}]
+    blocked_on: null

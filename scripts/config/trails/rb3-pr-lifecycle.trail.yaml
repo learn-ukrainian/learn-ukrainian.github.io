@@ -1,47 +1,23 @@
-# RB-3 — PR lifecycle (T2 TIGHTENING REWRITE, v2.0.0, supersedes the #5860 EXAMPLE
-# trail v1.0.0). Part of #5885. Sole owner of finalize (design v2 §T2).
+# RB-3 — PR lifecycle.  TrailSpec v1.1 migration for #5885 P9.
 #
-# WHY A REWRITE: v1.0.0 was the pre-discipline reference example and encoded
-# aspirational machinery — `gh pr edit --add-reviewer {reviewer_seat}` (review seats
-# are NOT GitHub accounts; the real flow is the bridge's formal review-pr), a stale
-# blocked_on for decision tables that have since landed (#5886), a vacuous babysit
-# predicate (success_pattern "state" matches any JSON), a wrong worktree layout
-# (.worktrees/pr-N does not exist; real layout is .worktrees/dispatch/<lane>/<task>),
-# and `git branch -d` which the repo's guard BLOCKS (local refs are pruned by the
-# post-merge hook on `git pull`; manual deletion is forbidden by design).
-#
-# Anti-pattern guard (RB-2 v0.7.0 discipline): every command is a real, currently
-# runnable repo command whose OUTPUT SHAPE was captured live (2026-07-28 infra
-# session, the #5922/#5923/#5924 arcs): `review-pr` runs the FULL review and returns
-# "✅ <Seat> finished (N chars)" + "✅ Message sent to <slot> (ID: N)", or dies
-# silently (the #5900 class — the ask retry-watchdog #5893 covers one refire);
-# `asks --task-id review-pr-N` rows are "ID TASK TO STATUS CONSUMPTION SENT" with
-# STATUS values sent | processing | replied (reply #N) | timed-out | failed;
-# `gh pr merge --auto --squash --delete-branch` is SILENT on success (rc=0) — the
-# real signal is `gh pr view --json autoMergeRequest -q .autoMergeRequest.enabledAt`
-# returning an ISO stamp ("2026-07-28T07:18:44Z") vs null; an already-green PR
-# merges IMMEDIATELY and silently on arm (state must be read after arming); the
-# babysit file is space-separated PR numbers at .agent/{handoff_agent}-babysit-prs.txt.
-#
-# Deliberately NOT drafted (RB-4 precedent — no unreachable speculative machinery):
-# - The formal-CF ledger join ("requested for THIS head" via fleet-comms
-#   formal_review_jobs + github_publications) — the review-gate-arm table documents
-#   it; head-bound request records for sealed dispatches are BLOCKED-ON T2
-#   certification (table input note). Until then the head binding is applied by the
-#   seat FROM the receipts this trail records.
-# - A `kind: wait` state — trailspec.v1 has none (v1.1 proposal, operator-gated);
-#   the poll steps self-loop with pacing owned by the orchestration layer.
-# Placeholder binding: {worktree_path} comes from the RB-2 dispatch record for heads
-# this seat built; PRs reviewed-only have none and the hygiene step handles absence.
-schema_version: trailspec.v1
+# Every former judgment/summon node is now an observation of its durable receipt.
+# This trail never manufactures a judgment-success outcome: a missing, malformed, or
+# non-terminal receipt parks for intervention.  The P2 review-gate-arm table is
+# evaluated through its shared pure evaluator with all eight typed facts.
+schema_version: trailspec.v1.1
 trail_id: rb3-pr-lifecycle
-version: "2.0.3"
-title: RB3 PR lifecycle — formal review, verdict, gate, arm, babysit, hygiene
+version: "2.1.0"
+title: RB3 PR lifecycle — receipt-bound review, gate, arm, and hygiene
 seats:
-  - grok-daily
-  - glm-trial
-  - flash-queue
-  - judgment
+  - grok
+  - glm-local
+  - kimi
+parameters:
+  pr_number: integer
+  reviewer_seat: string
+  handoff_agent: string
+  worktree_path: string
+  gate_facts_receipt: string
 stop_codes:
   - STOP-precondition-failed
   - STOP-manual-intervention
@@ -54,272 +30,485 @@ terminal_outcomes:
   - handed_to_red_ci_triage
   - aborted
 steps:
-  - step_id: drain_slot_inbox
-    intent: >-
-      Mandatory inbox-drain substep (drive-epic 4a pattern; the design requires it
-      in RB-1/2/3/5): a verdict or coordination note that already arrived must be
-      consumed before firing a new review round. Normalized three-token wrapper
-      with a fail-closed receipt write (the RB-5 r3/r4 review classes: raw bridge
-      output cannot discriminate pending-work from a broken DB, and a failed
-      receipt write must never read as empty).
-    command: sh -c 'OUT=$(.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for {handoff_agent} show {handoff_agent} 2>&1); RC=$?; printf "%s\n" "$OUT" > batch_state/rb3-inbox-{pr_number}.txt || { echo db-not-writable; exit 0; }; if [ "$RC" -ne 0 ]; then echo db-not-writable; elif printf "%s" "$OUT" | grep -qE "pending:[[:space:]]+0([^0-9]|$)"; then echo empty; elif printf "%s" "$OUT" | grep -qE "pending:[[:space:]]+[0-9]+"; then echo pending-deliveries; else echo db-not-writable; fi'
-    evidence_predicate:
-      command: sh -c 'OUT=$(cat batch_state/rb3-inbox-{pr_number}.txt 2>/dev/null); if printf "%s" "$OUT" | grep -qE "pending:[[:space:]]+0([^0-9]|$)"; then echo empty; elif printf "%s" "$OUT" | grep -qE "pending:[[:space:]]+[0-9]+"; then echo pending-deliveries; else echo db-not-writable; fi'
-      success_pattern: '^(empty|pending-deliveries|db-not-writable)$'
+  - step_id: observe_slot_inbox
+    intent: Observe the inbox receipt before requesting a new review round.
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - 'OUT=$(.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for "$HANDOFF_AGENT" show "$HANDOFF_AGENT" 2>&1); case "$OUT" in *"pending: 0"*) echo inbox-empty;; *"pending:"*) echo inbox-pending;; *) echo inbox-unreadable;; esac'
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      empty: request_review
-      pending_deliveries: apply_deliveries
-      db_not_writable: STOP-precondition-failed
-    kind: mechanical
+      inbox_empty:
+        target: request_independent_review
+        evidence:
+          predicate_id: rb3-inbox-empty
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: inbox-empty}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      inbox_pending:
+        target: observe_delivery_application_receipt
+        evidence:
+          predicate_id: rb3-inbox-pending
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: inbox-pending}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      inbox_unreadable:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: rb3-inbox-unreadable
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: inbox-unreadable}]
     blocked_on: null
 
-  - step_id: apply_deliveries
-    intent: >-
-      Judgment reads and applies each pending delivery (a verdict already in the
-      inbox may make the review round below redundant), acks with
-      `ack --consumed-by-live-driver`, then control returns to the drain to
-      re-prove pending: 0.
-    command: null
-    evidence_predicate: null
+  - step_id: observe_delivery_application_receipt
+    intent: Observe a receipt proving that the live driver consumed pending deliveries.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'jq -e --argjson pr "$PR_NUMBER" ''.pr == $pr and .outcome == "deliveries-consumed"'' "batch_state/rb3-deliveries-$PR_NUMBER.json" >/dev/null 2>&1 && echo delivery-receipted || echo delivery-receipt-missing']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      deliveries_consumed: drain_slot_inbox
-      cannot_apply: STOP-manual-intervention
-    kind: summon
+      delivery_receipted:
+        target: observe_slot_inbox
+        evidence:
+          predicate_id: rb3-delivery-receipted
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: delivery-receipted}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      delivery_receipt_missing:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb3-delivery-receipt-missing
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: delivery-receipt-missing}]
     blocked_on: null
 
-  - step_id: request_review
-    intent: >-
-      Fire the formal cross-family review via the bridge (review seats are bridge
-      seats, never GitHub reviewers — the v1.0.0 `--add-reviewer` flow was
-      invented). {reviewer_seat} comes from the lane-routing table: outside the
-      author's model family, and never a seat whose fix instructions are under
-      review (review-gate-arm row). The invocation runs the FULL review and
-      normally RETURNS with the reply delivered (live shape: "✅ <Seat> finished
-      (N chars)"); its true state is read from the ask ledger in the next step —
-      never from the absence of an error (silent ask deaths are the #5900 class;
-      the #5893 retry-watchdog refires once). The invocation's exit status is
-      captured WITHOUT a masking pipeline (r1: `| tail` made the token report
-      tail's status — the documented tee-masks-rc class): non-zero routes to the
-      stuck-request judgment, since a ledger row may or may not exist.
-    command: sh -c 'OUT=$(.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr {pr_number} --reviewer {reviewer_seat} 2>&1); RC=$?; printf "%s\n" "$OUT" | tail -5 > batch_state/rb3-review-fire-{pr_number}.txt || { echo fire-unrecorded; exit 0; }; [ "$RC" -eq 0 ] && echo review-fired || echo fire-failed'
-    evidence_predicate:
-      command: sh -c 'test -s batch_state/rb3-review-fire-{pr_number}.txt && echo fire-recorded || echo fire-unrecorded'
-      success_pattern: '^(fire-recorded|fire-unrecorded)$'
+  - step_id: request_independent_review
+    intent: Request the designated independent review; subsequent state is observed separately.
+    command:
+      adapter: shell
+      argv: [sh, -c, '.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr "$PR_NUMBER" --reviewer "$REVIEWER_SEAT" >/dev/null 2>&1 && echo review-request-command-succeeded || echo review-request-command-failed']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+        REVIEWER_SEAT: "{reviewer_seat}"
+      timeout_seconds: 30
+      mutation_class: remote-mutation
+      outcome_decoder: {source: stdout-token}
     transitions:
-      review_fired: poll_request_state
-      fire_failed: resolve_stuck_request
-      fire_unrecorded: STOP-precondition-failed
-    kind: mechanical
+      review_request_command_succeeded:
+        target: observe_review_request
+        evidence:
+          predicate_id: rb3-review-request-succeeded
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: review-request-command-succeeded}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      review_request_command_failed:
+        target: observe_stuck_request_resolution
+        evidence:
+          predicate_id: rb3-review-request-failed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: review-request-command-failed}]
     blocked_on: null
 
-  - step_id: poll_request_state
-    intent: >-
-      Read the ask ledger for this PR's review task (live row shape: "ID TASK TO
-      STATUS CONSUMPTION SENT"; STATUS vocabulary sent | processing | replied |
-      timed-out | failed). The requester OWNS its request state (drive-epic §6):
-      sent/processing self-loop (pacing is the orchestration layer's; v1 has no
-      wait kind); replied advances to the verdict read; timed-out/failed stay
-      UNRESOLVED (review-gate-arm: they never silently clear) and route to
-      judgment for an explicitly recorded cancel-or-retell.
-    command: sh -c 'ROW=$(.venv/bin/python scripts/ai_agent_bridge/__main__.py asks --task-id review-pr-{pr_number} 2>/dev/null | tail -1); printf "%s\n" "$ROW" > batch_state/rb3-askstate-{pr_number}.txt || { echo ledger-unreadable; exit 0; }; case "$ROW" in *replied*) echo replied;; *processing*|*sent*) echo in-flight;; *timed-out*|*failed*) echo request-unresolved;; *) echo ledger-unreadable;; esac'
-    evidence_predicate:
-      command: sh -c 'ROW=$(cat batch_state/rb3-askstate-{pr_number}.txt 2>/dev/null); case "$ROW" in *replied*) echo replied;; *processing*|*sent*) echo in-flight;; *timed-out*|*failed*) echo request-unresolved;; *) echo ledger-unreadable;; esac'
-      success_pattern: '^(replied|in-flight|request-unresolved|ledger-unreadable)$'
+  - step_id: observe_review_request
+    intent: Observe the ask ledger state rather than inferring review completion from dispatch output.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'ROW=$(.venv/bin/python scripts/ai_agent_bridge/__main__.py asks --task-id "review-pr-$PR_NUMBER" 2>/dev/null | tail -1); case "$ROW" in *replied*) echo review-replied;; *processing*|*sent*) echo review-in-flight;; *timed-out*|*failed*) echo review-unresolved;; *) echo review-ledger-unreadable;; esac']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      replied: read_verdict
-      in_flight: poll_request_state
-      request_unresolved: resolve_stuck_request
-      ledger_unreadable: STOP-precondition-failed
-    kind: mechanical
+      review_replied:
+        target: observe_verdict_receipt
+        evidence:
+          predicate_id: rb3-review-replied
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: review-replied}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      review_in_flight:
+        target: observe_review_request
+        evidence:
+          predicate_id: rb3-review-in-flight
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: review-in-flight}]
+      review_unresolved:
+        target: observe_stuck_request_resolution
+        evidence:
+          predicate_id: rb3-review-unresolved
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: review-unresolved}]
+      review_ledger_unreadable:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: rb3-review-ledger-unreadable
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: review-ledger-unreadable}]
     blocked_on: null
 
-  - step_id: resolve_stuck_request
-    intent: >-
-      Judgment resolves a timed-out/failed review request the only honest ways:
-      cancel it with a RECORDED reason on the PR (review-gate-arm: absent that,
-      the request stays unresolved and blocks arming forever) and re-request, or
-      escalate a repeatedly-dying seat. A weak seat never quietly re-fires over
-      an unresolved request.
-    command: null
-    evidence_predicate: null
+  - step_id: observe_stuck_request_resolution
+    intent: Observe the judgment receipt for a timed-out or failed review request.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'jq -r ''.outcome // "missing"'' "batch_state/rb3-stuck-request-$PR_NUMBER.json" 2>/dev/null | grep -Ex ''cancelled-and-rerequested|escalated'' || echo resolution-receipt-missing']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      cancelled_and_rerequested: poll_request_state
-      escalated: STOP-manual-intervention
-    kind: summon
+      cancelled_and_rerequested:
+        target: request_independent_review
+        evidence:
+          predicate_id: rb3-stuck-rerequested
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: cancelled-and-rerequested}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      escalated:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb3-stuck-escalated
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: escalated}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      resolution_receipt_missing:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb3-stuck-receipt-missing
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: resolution-receipt-missing}]
     blocked_on: null
 
-  - step_id: read_verdict
-    intent: >-
-      Judgment reads the verdict CONTENT (never just pass/fail): findings verified
-      against the real artifact before adoption, deltas applied or refuted with
-      probes, and the verdict PUBLISHED as a PR comment naming the reviewed head
-      (publication is part of the gate — a broker reply alone is not published).
-      APPROVE bound to the current head advances to the gate table;
-      REQUEST CHANGES routes to the fix round; a reviewer-vs-author split or
-      cross-seat conflict is contested and stops.
-    command: null
-    evidence_predicate: null
+  - step_id: observe_verdict_receipt
+    intent: Observe the published current-head verdict receipt; no verdict token is fabricated by this step.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'jq -r ''.outcome // "missing"'' "batch_state/rb3-verdict-$PR_NUMBER.json" 2>/dev/null | grep -Ex ''approve-current-head|request-changes|contested'' || echo verdict-receipt-missing']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      approve_current_head: gate_inputs
-      request_changes: fix_round
-      contested: STOP-contested
-    kind: summon
+      approve_current_head:
+        target: observe_gate_inputs
+        evidence:
+          predicate_id: rb3-verdict-approved-current-head
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: approve-current-head}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      request_changes:
+        target: observe_fix_round_receipt
+        evidence:
+          predicate_id: rb3-verdict-request-changes
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: request-changes}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      contested:
+        target: STOP-contested
+        evidence:
+          predicate_id: rb3-verdict-contested
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: contested}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      verdict_receipt_missing:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb3-verdict-receipt-missing
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: verdict-receipt-missing}]
     blocked_on: null
 
-  - step_id: fix_round
-    intent: >-
-      Judgment applies or dispatches the fixes (mutation-checking every guard the
-      review named, and sweeping the CLASS the finding belongs to — the #M-16
-      sibling rule), pushes to the SAME branch, and the new head re-enters the
-      review loop: a new head invalidates every prior verdict (review-gate-arm;
-      the 2026-07-27 #5886 burn).
-    command: null
-    evidence_predicate: null
+  - step_id: observe_fix_round_receipt
+    intent: Observe a receipt proving the fix round pushed a new head or could not proceed.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'jq -r ''.outcome // "missing"'' "batch_state/rb3-fix-round-$PR_NUMBER.json" 2>/dev/null | grep -Ex ''new-head-pushed|cannot-fix'' || echo fix-receipt-missing']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      new_head_pushed: request_review
-      cannot_fix: aborted
-    kind: summon
+      new_head_pushed:
+        target: request_independent_review
+        evidence:
+          predicate_id: rb3-fix-new-head
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: new-head-pushed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      cannot_fix:
+        target: aborted
+        evidence:
+          predicate_id: rb3-fix-cannot-fix
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: cannot-fix}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      fix_receipt_missing:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb3-fix-receipt-missing
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: fix-receipt-missing}]
     blocked_on: null
 
-  - step_id: gate_inputs
-    intent: >-
-      Machine obligation = input completeness for the review-gate-arm table (the
-      RB-2 width_weigh pattern): capture draft state, current head, merge state,
-      CI rollup, and auto-merge state into ONE receipt the seat applies the table
-      rows FROM. The table itself decides (draft → never arm; any requested
-      review of THIS head not terminal-and-published → wait; stale-head verdict →
-      re-request; conflict → stop; blocking CI red → red-CI triage; all green +
-      bound verdict → arm). The formal-CF ledger join is documented in the table
-      inputs and remains seat-applied until head-bound request records land.
-    command: sh -c 'gh pr view {pr_number} --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup,autoMergeRequest > batch_state/rb3-gate-{pr_number}.json || { echo inputs-unavailable; exit 0; }; jq -e ".headRefOid" batch_state/rb3-gate-{pr_number}.json >/dev/null 2>&1 && echo inputs-recorded || echo inputs-unavailable'
-    evidence_predicate:
-      command: sh -c 'jq -e ".headRefOid" batch_state/rb3-gate-{pr_number}.json >/dev/null 2>&1 && echo inputs-recorded || echo inputs-unavailable'
-      success_pattern: '^(inputs-recorded|inputs-unavailable)$'
+  - step_id: observe_gate_inputs
+    intent: Observe a complete, exactly typed eight-field receipt for review-gate-arm.
+    command:
+      adapter: shell
+      argv: [.venv/bin/python, -c, 'import json, os; d=json.load(open(os.environ["GATE_FACTS_RECEIPT"], encoding="utf-8")); expected={"is_draft","current_head_reviews_terminal_published","reviewer_is_independent","requested_changes_resolved","has_stale_approval","verdicts_conflict","blocking_ci","has_current_cross_family_approval"}; ok=set(d)==expected and all(type(d[k]) is bool for k in expected-{"blocking_ci"}) and d.get("blocking_ci") in {"green","red"}; print("gate-facts-complete" if ok else "gate-facts-invalid")']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        GATE_FACTS_RECEIPT: "{gate_facts_receipt}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      gate_pass_arm: arm_automerge
-      gate_wait: gate_wait_poll
-      gate_draft: STOP-manual-intervention
-      gate_stale_head: request_review
-      gate_ci_red: handed_to_red_ci_triage
-      gate_contested: STOP-contested
-      inputs_unavailable: STOP-precondition-failed
-    kind: table-lookup
-    table: review-gate-arm
+      gate_facts_complete:
+        target: evaluate_review_gate
+        evidence:
+          predicate_id: rb3-gate-facts-complete
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: gate-facts-complete}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      gate_facts_invalid:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: rb3-gate-facts-invalid
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: gate-facts-invalid}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
     blocked_on: null
 
-  - step_id: gate_wait_poll
-    intent: >-
-      Dedicated paced poll for the gate's WAIT outcome (r2 finding: polling the
-      original bridge request busy-loops — by gate time that request has
-      normally replied; the blocker is some OTHER requested review of this head
-      that is not yet terminal-and-published). This step re-captures the
-      COMPLETE gate inputs fresh (same fields as gate_inputs, distinct receipt)
-      and hands back to the table, which either still waits (returning here —
-      pacing between iterations is the orchestration layer's, the trail's
-      self-loop convention) or takes a different row on the changed condition.
-      Formal-review and publication records stay seat-applied from these
-      receipts until head-bound request records land (header BLOCKED-ON).
-    command: sh -c 'gh pr view {pr_number} --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup,autoMergeRequest > batch_state/rb3-gatewait-{pr_number}.json || { echo inputs-unavailable; exit 0; }; jq -e ".headRefOid" batch_state/rb3-gatewait-{pr_number}.json >/dev/null 2>&1 && echo inputs-recaptured || echo inputs-unavailable'
-    evidence_predicate:
-      command: sh -c 'jq -e ".headRefOid" batch_state/rb3-gatewait-{pr_number}.json >/dev/null 2>&1 && echo inputs-recaptured || echo inputs-unavailable'
-      success_pattern: '^(inputs-recaptured|inputs-unavailable)$'
+  - step_id: evaluate_review_gate
+    intent: Evaluate P2's complete review-gate-arm table from the observed typed receipt.
+    command:
+      adapter: shell
+      argv: [.venv/bin/python, -c, 'import json, os; from pathlib import Path; from scripts.orchestration.trail_predicates import evaluate_named_table, load_decision_tables; facts=json.load(open(os.environ["GATE_FACTS_RECEIPT"], encoding="utf-8")); print(evaluate_named_table(load_decision_tables(Path(os.environ["TABLES_PATH"])), os.environ["TABLE_ID"], facts))']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        GATE_FACTS_RECEIPT: "{gate_facts_receipt}"
+        TABLES_PATH: scripts/config/trails/decision-tables.v1.yaml
+        TABLE_ID: review-gate-arm
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      inputs_recaptured: gate_inputs
-      inputs_unavailable: STOP-precondition-failed
-    kind: mechanical
+      arm_automerge:
+        target: arm_automerge
+        evidence:
+          predicate_id: rb3-gate-passed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: arm-automerge}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      wait_current_head_reviews:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb3-gate-review-unresolved
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: wait-current-head-reviews}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      request_independent_review:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb3-gate-reviewer-not-independent
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: request-independent-review}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      wait_requested_changes:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb3-gate-requested-changes-unresolved
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: wait-requested-changes}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      request_current_head_review:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb3-gate-stale-approval
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: request-current-head-review}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      hold_draft:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb3-gate-draft
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: hold-draft}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      delegate_red_ci_triage:
+        target: handed_to_red_ci_triage
+        evidence:
+          predicate_id: rb3-gate-blocking-ci-red
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: delegate-red-ci-triage}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      stop_contested:
+        target: STOP-contested
+        evidence:
+          predicate_id: rb3-gate-contested
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: STOP-contested}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      stop_unknown:
+        target: STOP-unknown
+        evidence:
+          predicate_id: rb3-gate-unknown
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: STOP-unknown}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
     blocked_on: null
 
   - step_id: arm_automerge
-    intent: >-
-      Arm auto-merge the moment the gate passes (#0H: a ready PR must not sit).
-      Live-captured: the arm command is SILENT on success (rc=0) — the real
-      signal is the enabledAt probe; and an already-green PR merges IMMEDIATELY
-      and silently, so state is read after arming (the documented gotcha). Never
-      armed on a draft, never over blocking red — the gate table upstream owns
-      those refusals; an arm refusal here is a hard stop, never a retry loop.
-    command: sh -c 'gh pr merge {pr_number} --auto --squash --delete-branch >/dev/null 2>&1; S=$(gh pr view {pr_number} --json state,autoMergeRequest 2>/dev/null); printf "%s\n" "$S" > batch_state/rb3-arm-{pr_number}.json || { echo arm-unrecorded; exit 0; }; case "$S" in *\"MERGED\"*) echo merged-immediately;; *enabledAt*) echo armed;; *) echo arm-refused;; esac'
-    evidence_predicate:
-      command: sh -c 'S=$(cat batch_state/rb3-arm-{pr_number}.json 2>/dev/null); case "$S" in *\"MERGED\"*) echo merged-immediately;; *enabledAt*) echo armed;; *) echo arm-refused;; esac'
-      success_pattern: '^(armed|merged-immediately|arm-refused)$'
+    intent: Execute the remote arm mutation only after the exact gate-passed outcome.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'gh pr merge "$PR_NUMBER" --auto --squash --delete-branch >/dev/null 2>&1 && echo arm-command-succeeded || echo arm-command-failed']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: remote-mutation
+      outcome_decoder: {source: stdout-token}
     transitions:
-      armed: babysit_registration
-      merged_immediately: post_merge_hygiene
-      arm_refused: STOP-rearm-failed
-    kind: mechanical
+      arm_command_succeeded:
+        target: observe_babysit_state
+        evidence:
+          predicate_id: rb3-arm-command-succeeded
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: arm-command-succeeded}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      arm_command_failed:
+        target: STOP-rearm-failed
+        evidence:
+          predicate_id: rb3-arm-command-failed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: arm-command-failed}]
     blocked_on: null
 
-  - step_id: babysit_registration
-    intent: >-
-      Register the armed PR in the babysit file (live shape: space-separated PR
-      numbers in .agent/{handoff_agent}-babysit-prs.txt) — ARMED ≠ MERGED: a PR
-      leaves the books only at state MERGED. Idempotent append; the babysit
-      check step then polls state. Persistent-watcher arming is harness-specific
-      and owned by the orchestration layer, never claimed by this trail.
-    command: sh -c 'F=.agent/{handoff_agent}-babysit-prs.txt; grep -qw "{pr_number}" "$F" 2>/dev/null || printf "%s " "{pr_number}" >> "$F" || { echo register-failed; exit 0; }; grep -qw "{pr_number}" "$F" && echo registered || echo register-failed'
-    evidence_predicate:
-      command: sh -c 'grep -qw "{pr_number}" .agent/{handoff_agent}-babysit-prs.txt && echo registered || echo register-failed'
-      success_pattern: '^(registered|register-failed)$'
+  - step_id: observe_babysit_state
+    intent: Observe one bounded babysit state; driver-owned pacing re-invokes this step while auto-merge remains armed.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'S=$(gh pr view "$PR_NUMBER" --json state,autoMergeRequest,statusCheckRollup 2>/dev/null); F=$(printf "%s" "$S" | jq "[.statusCheckRollup[]? | select(.conclusion==\"FAILURE\" or .conclusion==\"TIMED_OUT\" or .conclusion==\"CANCELLED\")] | length" 2>/dev/null); case "$S" in *"MERGED"*) echo pr-merged;; "") echo babysit-state-unreadable;; *) if [ "${F:-0}" -gt 0 ] 2>/dev/null; then echo blocking-red; elif printf "%s" "$S" | grep -q enabledAt; then if grep -qw "$PR_NUMBER" ".agent/$HANDOFF_AGENT-babysit-prs.txt" 2>/dev/null; then echo still-armed; else echo automerge-armed; fi; else echo disarmed-open; fi;; esac']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      registered: babysit_check
-      register_failed: STOP-precondition-failed
-    kind: mechanical
+      pr_merged:
+        target: post_merge_hygiene
+        evidence:
+          predicate_id: rb3-babysit-state-merged
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: pr-merged}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      blocking_red:
+        target: handed_to_red_ci_triage
+        evidence:
+          predicate_id: rb3-babysit-state-blocking-red
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: blocking-red}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      disarmed_open:
+        target: observe_gate_inputs
+        evidence:
+          predicate_id: rb3-babysit-state-disarmed-open
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: disarmed-open}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      automerge_armed:
+        target: register_babysit
+        evidence:
+          predicate_id: rb3-babysit-state-armed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: automerge-armed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      still_armed:
+        target: observe_babysit_state
+        evidence:
+          predicate_id: rb3-babysit-state-still-armed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: still-armed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      babysit_state_unreadable:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: rb3-babysit-state-unreadable
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: babysit-state-unreadable}]
     blocked_on: null
 
-  - step_id: babysit_check
-    intent: >-
-      One babysit poll over the armed PR (self-loop pacing owned by the
-      orchestration layer): MERGED advances to hygiene; blocking red hands off to
-      the red-CI triage trail; disarmed-but-open (enabledAt gone, not merged)
-      re-enters the GATE — never a blind re-arm, because whatever disarmed it may
-      have been a new head or a review event the gate must re-check.
-    command: sh -c 'S=$(gh pr view {pr_number} --json state,autoMergeRequest,statusCheckRollup 2>/dev/null); printf "%s\n" "$S" > batch_state/rb3-babysit-{pr_number}.json || { echo poll-failed; exit 0; }; F=$(printf "%s" "$S" | jq "[.statusCheckRollup[]? | select(.conclusion==\"FAILURE\" or .conclusion==\"TIMED_OUT\" or .conclusion==\"CANCELLED\")] | length" 2>/dev/null); case "$S" in *\"MERGED\"*) echo merged;; "") echo poll-failed;; *) if [ "${F:-0}" -gt 0 ] 2>/dev/null; then echo ci-red; elif printf "%s" "$S" | grep -q enabledAt; then echo still-armed; else echo disarmed; fi;; esac'
-    evidence_predicate:
-      command: sh -c 'S=$(cat batch_state/rb3-babysit-{pr_number}.json 2>/dev/null); test -n "$S" && echo poll-recorded || echo poll-failed'
-      success_pattern: '^(poll-recorded|poll-failed)$'
+  - step_id: register_babysit
+    intent: Record the armed PR locally; registration is re-observed before polling.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'F=".agent/$HANDOFF_AGENT-babysit-prs.txt"; mkdir -p .agent; grep -qw "$PR_NUMBER" "$F" 2>/dev/null || printf "%s " "$PR_NUMBER" >> "$F"; grep -qw "$PR_NUMBER" "$F" && echo registration-written || echo registration-write-failed']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: local-write
+      outcome_decoder: {source: stdout-token}
     transitions:
-      merged: post_merge_hygiene
-      ci_red: handed_to_red_ci_triage
-      disarmed: gate_inputs
-      still_armed: babysit_check
-      poll_failed: STOP-precondition-failed
-    kind: mechanical
+      registration_written:
+        target: observe_babysit_registration
+        evidence:
+          predicate_id: rb3-babysit-registration-written
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: registration-written}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      registration_write_failed:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: rb3-babysit-registration-failed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: registration-write-failed}]
+    blocked_on: null
+
+  - step_id: observe_babysit_registration
+    intent: Re-observe the babysit registration before considering later lifecycle state.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'grep -qw "$PR_NUMBER" ".agent/$HANDOFF_AGENT-babysit-prs.txt" 2>/dev/null && echo registration-observed || echo registration-missing']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
+    transitions:
+      registration_observed:
+        target: observe_babysit_state
+        evidence:
+          predicate_id: rb3-babysit-registration-observed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: registration-observed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      registration_missing:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: rb3-babysit-registration-missing
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: registration-missing}]
     blocked_on: null
 
   - step_id: post_merge_hygiene
-    intent: >-
-      Real hygiene, matching the guards: the remote branch is already deleted by
-      --delete-branch; the LOCAL branch is pruned by the post-merge hook on
-      `git pull` (manual `git branch -d/-D` is guard-BLOCKED by design — the
-      v1.0.0 command could never run); the dispatch worktree (bound from the
-      RB-2 record; reviewed-only PRs have none) is removed worktree-FIRST.
-      Removal is WITHOUT --force (r1: a pre-check-then-force pair is not atomic
-      and --force deletes what the check missed): git\'s own refusal on any
-      non-clean worktree is the guard, and that refusal stops for judgment —
-      never a second attempt with force. The outcome token is RECEIPTED and the
-      predicate reads the receipt (r4: an independently re-derived predicate
-      reported success for any absent-worktree state, masking a failed pull).
-    command: sh -c 'R=hygiene-complete; if [ -n "{worktree_path}" ] && [ -d "{worktree_path}" ]; then if git worktree remove "{worktree_path}" >/dev/null 2>&1; then :; else R=hygiene-blocked-dirty; fi; fi; if [ "$R" = "hygiene-complete" ]; then git pull --ff-only >/dev/null 2>&1 || R=hygiene-failed; fi; printf "%s\n" "$R" > batch_state/rb3-hygiene-{pr_number}.txt || { echo receipt-unwritable; exit 0; }; echo "$R"'
-    evidence_predicate:
-      command: sh -c 'R=$(cat batch_state/rb3-hygiene-{pr_number}.txt 2>/dev/null); case "$R" in hygiene-complete|hygiene-failed|hygiene-blocked-dirty) echo "$R";; *) echo receipt-unwritable;; esac'
-      success_pattern: '^(hygiene-complete|hygiene-failed|hygiene-blocked-dirty|receipt-unwritable)$'
+    intent: Perform local hygiene after a separate observation proved the PR merged.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'if [ -n "$WORKTREE_PATH" ] && [ -d "$WORKTREE_PATH" ]; then git worktree remove "$WORKTREE_PATH" >/dev/null 2>&1 || { echo hygiene-command-failed; exit 0; }; fi; git pull --ff-only >/dev/null 2>&1 && echo hygiene-command-succeeded || echo hygiene-command-failed']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        WORKTREE_PATH: "{worktree_path}"
+      timeout_seconds: 30
+      mutation_class: local-write
+      outcome_decoder: {source: stdout-token}
     transitions:
-      hygiene_complete: finalize_note
-      hygiene_failed: STOP-hygiene-failed
-      hygiene_blocked_dirty: STOP-manual-intervention
-      receipt_unwritable: STOP-precondition-failed
-    kind: mechanical
+      hygiene_command_succeeded:
+        target: observe_hygiene_state
+        evidence:
+          predicate_id: rb3-hygiene-command-succeeded
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: hygiene-command-succeeded}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      hygiene_command_failed:
+        target: STOP-hygiene-failed
+        evidence:
+          predicate_id: rb3-hygiene-command-failed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: hygiene-command-failed}]
     blocked_on: null
 
-  - step_id: finalize_note
-    intent: >-
-      The lane's binding finalize discipline (2026-07-27 operator ruling): a
-      one-line update on the tracking issue naming the merged PR, plus the
-      handoff row. Prose is judgment's; the trail records that the obligation
-      was discharged, and the close is then terminal.
-    command: null
-    evidence_predicate: null
+  - step_id: observe_hygiene_state
+    intent: Re-observe that the bound worktree is absent after hygiene.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'if [ -n "$WORKTREE_PATH" ] && [ -d "$WORKTREE_PATH" ]; then echo worktree-still-present; else echo hygiene-observed; fi']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        WORKTREE_PATH: "{worktree_path}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
     transitions:
-      note_posted: merged_and_cleaned
-      cannot_post: STOP-manual-intervention
-    kind: summon
+      hygiene_observed:
+        target: observe_finalize_note_receipt
+        evidence:
+          predicate_id: rb3-hygiene-observed
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: hygiene-observed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      worktree_still_present:
+        target: STOP-hygiene-failed
+        evidence:
+          predicate_id: rb3-hygiene-worktree-present
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: worktree-still-present}]
+    blocked_on: null
+
+  - step_id: observe_finalize_note_receipt
+    intent: Observe the tracking-note receipt rather than claiming a judgment action succeeded.
+    command:
+      adapter: shell
+      argv: [sh, -c, 'jq -e --argjson pr "$PR_NUMBER" ''.pr == $pr and .outcome == "note-posted"'' "batch_state/rb3-finalize-$PR_NUMBER.json" >/dev/null 2>&1 && echo finalize-note-receipted || echo finalize-note-receipt-missing']
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        PR_NUMBER: "{pr_number}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder: {source: stdout-token}
+    transitions:
+      finalize_note_receipted:
+        target: merged_and_cleaned
+        evidence:
+          predicate_id: rb3-finalize-note-receipted
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: finalize-note-receipted}, {source: command_receipt, field: exit_code, op: eq, value: 0}]
+      finalize_note_receipt_missing:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: rb3-finalize-note-missing
+          clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: finalize-note-receipt-missing}]
     blocked_on: null

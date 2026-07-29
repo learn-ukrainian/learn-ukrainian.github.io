@@ -212,8 +212,8 @@ def test_happy_path_example_trail() -> None:
     res = validate_trailspec(spec_path=DEFAULT_EXAMPLE_TRAIL_PATH)
     assert res["ok"] is True
     assert res["spec"]["trail_id"] == "rb3-pr-lifecycle"
-    assert res["spec"]["version"] == "2.0.3"
-    assert res["spec"]["steps_count"] == 14
+    assert res["spec"]["version"] == "2.1.0"
+    assert res["spec"]["steps_count"] == 16
     assert len(res["spec"]["trail_hash"]) == 64
 
 
@@ -230,7 +230,7 @@ def test_happy_path_step_receipt() -> None:
 
 def test_v1_is_schema_valid_but_execution_ineligible() -> None:
     """v1 can be inspected and hashed, but its prose predicates cannot be executed."""
-    res = validate_trailspec_data(_get_happy_example_data())
+    res = validate_trailspec_data(_get_v1_table_lookup_data())
 
     assert res["ok"] is True
     assert res["execution_eligible"] is False
@@ -583,22 +583,22 @@ def test_stop_vocabulary_has_18_codes_and_never_reports_16() -> None:
     assert "16-item" not in message
 
 
-def test_negative_non_summon_step_lacks_predicate() -> None:
-    """Negative invariant test: non-summon step without evidence_predicate fails validation."""
+def test_negative_v11_transition_lacks_receipt_predicate() -> None:
+    """Negative invariant test: v1.1 transition without receipt evidence fails schema validation."""
     data = _get_happy_example_data()
-    # Corrupt a copy: remove evidence_predicate from mechanical step 'request_review'
-    data["steps"][0]["evidence_predicate"] = None
+    # Corrupt a copy: remove evidence from a receipt-bound v1.1 transition.
+    del data["steps"][0]["transitions"]["inbox_empty"]["evidence"]
 
     with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_trailspec_data(data, spec_schema_path=TRAIL_SPEC_SCHEMA_PATH)
+        validate_trailspec_data(data, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
 
     err_msg = str(exc_info.value)
-    assert "evidence_predicate" in err_msg
-    assert "steps[0]" in err_msg or "request_review" in err_msg
+    assert "'evidence' is a required property" in err_msg
+    assert "$.steps[0].transitions.inbox_empty" in err_msg
 
     # Mutation check: restore original copy -> passes
     restored = _get_happy_example_data()
-    res = validate_trailspec_data(restored, spec_schema_path=TRAIL_SPEC_SCHEMA_PATH)
+    res = validate_trailspec_data(restored, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
     assert res["ok"] is True
 
 
@@ -608,11 +608,11 @@ def test_negative_dangling_transition() -> None:
     # Corrupt a copy: replace a real transition of a step selected by id (not by
     # index — step order is not part of this test's contract) with a dangling
     # target.
-    step = next(s for s in data["steps"] if s["step_id"] == "request_review")
-    step["transitions"]["review_fired"] = "non_existent_step_123"
+    step = next(s for s in data["steps"] if s["step_id"] == "observe_slot_inbox")
+    step["transitions"]["inbox_empty"]["target"] = "non_existent_step_123"
 
     with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_trailspec_data(data, spec_schema_path=TRAIL_SPEC_SCHEMA_PATH)
+        validate_trailspec_data(data, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
 
     err_msg = str(exc_info.value)
     assert "Dangling transition" in err_msg
@@ -620,7 +620,7 @@ def test_negative_dangling_transition() -> None:
 
     # Mutation check: restore original copy -> passes
     restored = _get_happy_example_data()
-    res = validate_trailspec_data(restored, spec_schema_path=TRAIL_SPEC_SCHEMA_PATH)
+    res = validate_trailspec_data(restored, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
     assert res["ok"] is True
 
 
@@ -628,24 +628,13 @@ def test_negative_unreachable_step() -> None:
     """Negative invariant test: a spec with an unreachable/orphan step fails validation."""
     data = _get_happy_example_data()
     # Add an orphan step that no step transitions to
-    orphan_step = {
-        "step_id": "orphan_step_xyz",
-        "intent": "Unreachable step for testing",
-        "command": "echo orphan",
-        "evidence_predicate": {
-            "command": "echo orphan",
-            "success_pattern": "^orphan$",
-        },
-        "transitions": {
-            "success": "request_review",
-        },
-        "kind": "mechanical",
-        "blocked_on": None,
-    }
+    orphan_step = copy.deepcopy(data["steps"][0])
+    orphan_step["step_id"] = "orphan_step_xyz"
+    orphan_step["intent"] = "Unreachable v1.1 step for testing"
     data["steps"].append(orphan_step)
 
     with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_trailspec_data(data, spec_schema_path=TRAIL_SPEC_SCHEMA_PATH)
+        validate_trailspec_data(data, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
 
     err_msg = str(exc_info.value)
     assert "Unreachable step(s)" in err_msg
@@ -653,7 +642,7 @@ def test_negative_unreachable_step() -> None:
 
     # Mutation check: restore original copy -> passes
     restored = _get_happy_example_data()
-    res = validate_trailspec_data(restored, spec_schema_path=TRAIL_SPEC_SCHEMA_PATH)
+    res = validate_trailspec_data(restored, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
     assert res["ok"] is True
 
 
@@ -661,18 +650,18 @@ def test_negative_unknown_stop_code() -> None:
     """Negative invariant test: unknown stop_code not in the 18-code vocabulary fails."""
     data = _get_happy_example_data()
     # Corrupt a copy: add an invalid stop code
-    data["stop_codes"].append("STOP-FORBIDDEN-CUSTOM-CODE")
+    data["stop_codes"].append("STOP-forbidden-custom-code")
 
     with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_trailspec_data(data, spec_schema_path=TRAIL_SPEC_SCHEMA_PATH)
+        validate_trailspec_data(data, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
 
     err_msg = str(exc_info.value)
     assert "Unknown stop_code(s)" in err_msg
-    assert "STOP-FORBIDDEN-CUSTOM-CODE" in err_msg
+    assert "STOP-forbidden-custom-code" in err_msg
 
     # Mutation check: restore original copy -> passes
     restored = _get_happy_example_data()
-    res = validate_trailspec_data(restored, spec_schema_path=TRAIL_SPEC_SCHEMA_PATH)
+    res = validate_trailspec_data(restored, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
     assert res["ok"] is True
 
 
@@ -877,10 +866,15 @@ def test_rb4_lookup_routes_never_make_a_rerun_reachable() -> None:
     """Stage 2 may return retry data but must not execute or route a rerun."""
     spec = yaml.safe_load(_RB4_PATH.read_text(encoding="utf-8"))
     lookup_step = next(step for step in spec["steps"] if step["step_id"] == "allowlist_match")
-    commands = "\n".join(step["command"] for step in spec["steps"])
+    commands = "\n".join(
+        "\n".join(step["command"]["argv"]) for step in spec["steps"]
+    )
 
-    assert "red_ci_known_failures.py lookup" in lookup_step["command"]
-    assert lookup_step["transitions"]["matched_retry_once"] == "STOP-manual-intervention"
+    assert "red_ci_known_failures.py lookup" in "\n".join(lookup_step["command"]["argv"])
+    assert (
+        lookup_step["transitions"]["matched_retry_once"]["target"]
+        == "STOP-manual-intervention"
+    )
     assert "gh run rerun" not in commands
 
 
