@@ -138,14 +138,14 @@ steps:
       overlap refusal is re-observed; every other nonzero result remains a failure.
     command:
       adapter: shell
-      argv: [bash, -c, 'mkdir -p batch_state || exit 1; LOG="batch_state/rb2-dispatch-$TASK_ID.log"; .venv/bin/python scripts/delegate.py dispatch --agent "$LANE" --task-id "$TASK_ID" --prompt-file "$BRIEF_PATH" --worktree --mode danger 2>&1 | tee "$LOG" >&2; PIPE_STATUSES=("${PIPESTATUS[@]}"); DISPATCH_STATUS="${PIPE_STATUSES[0]}"; TEE_STATUS="${PIPE_STATUSES[1]}"; if [ "$TEE_STATUS" -ne 0 ]; then exit "$TEE_STATUS"; fi; if [ "$DISPATCH_STATUS" -eq 0 ]; then echo dispatched; exit 0; fi; if grep -Fq "No actual path overlap was found" "$LOG"; then echo dispatched; exit 0; fi; exit "$DISPATCH_STATUS"']
+      argv: [bash, -c, 'mkdir -p batch_state; MKDIR_STATUS=$?; if [ "$MKDIR_STATUS" -ne 0 ]; then echo dispatch-failed; exit "$MKDIR_STATUS"; fi; LOG="batch_state/rb2-dispatch-$TASK_ID.log"; .venv/bin/python scripts/delegate.py dispatch --agent "$LANE" --task-id "$TASK_ID" --prompt-file "$BRIEF_PATH" --worktree --mode danger 2>&1 | tee "$LOG" >&2; PIPE_STATUSES=("${PIPESTATUS[@]}"); DISPATCH_STATUS="${PIPE_STATUSES[0]}"; TEE_STATUS="${PIPE_STATUSES[1]}"; if [ "$TEE_STATUS" -ne 0 ]; then echo dispatch-failed; exit "$TEE_STATUS"; fi; if [ "$DISPATCH_STATUS" -eq 0 ]; then echo dispatched; exit 0; fi; if grep -Fq "No actual path overlap was found" "$LOG"; then echo dispatched; exit 0; fi; echo dispatch-failed; exit "$DISPATCH_STATUS"']
       environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}", BRIEF_PATH: "{brief_path}"}
       timeout_seconds: 120
       mutation_class: remote-mutation
       outcome_decoder: {source: stdout-token}
     transitions:
       dispatched: {target: observe_dispatch_state, evidence: {predicate_id: dispatch-command-complete, clauses: [{source: command_receipt, field: exit_code, op: eq, value: 0}]}}
-      dispatch_failed: {target: STOP-unrecoverable-error, evidence: {predicate_id: dispatch-command-failed, clauses: [{source: command_receipt, field: exit_code, op: eq, value: 1}]}}
+      dispatch_failed: {target: STOP-unrecoverable-error, evidence: {predicate_id: dispatch-command-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: dispatch-failed}]}}
     blocked_on: null
 
   - step_id: observe_dispatch_state
@@ -250,7 +250,7 @@ steps:
     intent: Observe whether the dispatched branch has an open PR deliverable.
     command:
       adapter: shell
-      argv: [sh, -c, 'gh pr list --state open --head "$LANE/$TASK_ID" --json number --limit 3 | jq -e "length > 0" >/dev/null 2>&1 && echo pr-open || echo no-pr']
+      argv: [sh, -c, 'PR_JSON=$(gh pr list --state open --head "$LANE/$TASK_ID" --json number --limit 3) || { echo deliverable-check-failed; exit 0; }; PR_COUNT=$(printf "%s" "$PR_JSON" | jq -e "if type == \"array\" then length else error(\"expected PR array\") end") || { echo deliverable-check-failed; exit 0; }; case "$PR_COUNT" in 0) echo no-pr;; *[!0-9]*|"") echo deliverable-check-failed;; *) echo pr-open;; esac']
       environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}"}
       timeout_seconds: 30
       mutation_class: observe
@@ -258,13 +258,14 @@ steps:
     transitions:
       pr_open: {target: handed_to_pr_lifecycle, evidence: {predicate_id: success-pr-open, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: pr-open}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
       no_pr: {target: commits_ahead_check, evidence: {predicate_id: success-pr-absent, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: no-pr}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      deliverable_check_failed: {target: STOP-precondition-failed, evidence: {predicate_id: success-deliverable-check-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: deliverable-check-failed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
     blocked_on: null
 
   - step_id: verify_deliverable_timeout
     intent: Observe the timeout deliverable; an open PR requires human finalization.
     command:
       adapter: shell
-      argv: [sh, -c, 'gh pr list --state open --head "$LANE/$TASK_ID" --json number --limit 3 | jq -e "length > 0" >/dev/null 2>&1 && echo pr-open || echo no-pr']
+      argv: [sh, -c, 'PR_JSON=$(gh pr list --state open --head "$LANE/$TASK_ID" --json number --limit 3) || { echo deliverable-check-failed; exit 0; }; PR_COUNT=$(printf "%s" "$PR_JSON" | jq -e "if type == \"array\" then length else error(\"expected PR array\") end") || { echo deliverable-check-failed; exit 0; }; case "$PR_COUNT" in 0) echo no-pr;; *[!0-9]*|"") echo deliverable-check-failed;; *) echo pr-open;; esac']
       environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}"}
       timeout_seconds: 30
       mutation_class: observe
@@ -272,13 +273,14 @@ steps:
     transitions:
       pr_open: {target: STOP-manual-intervention, evidence: {predicate_id: timeout-pr-open, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: pr-open}]}}
       no_pr: {target: commits_ahead_check, evidence: {predicate_id: timeout-pr-absent, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: no-pr}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
+      deliverable_check_failed: {target: STOP-precondition-failed, evidence: {predicate_id: timeout-deliverable-check-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: deliverable-check-failed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
     blocked_on: null
 
   - step_id: verify_deliverable_attention
     intent: Observe the attention-path deliverable; this path never automatically retries.
     command:
       adapter: shell
-      argv: [sh, -c, 'gh pr list --state open --head "$LANE/$TASK_ID" --json number --limit 3 | jq -e "length > 0" >/dev/null 2>&1 && echo pr-open || echo no-pr']
+      argv: [sh, -c, 'PR_JSON=$(gh pr list --state open --head "$LANE/$TASK_ID" --json number --limit 3) || { echo deliverable-check-failed; exit 0; }; PR_COUNT=$(printf "%s" "$PR_JSON" | jq -e "if type == \"array\" then length else error(\"expected PR array\") end") || { echo deliverable-check-failed; exit 0; }; case "$PR_COUNT" in 0) echo no-pr;; *[!0-9]*|"") echo deliverable-check-failed;; *) echo pr-open;; esac']
       environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}"}
       timeout_seconds: 30
       mutation_class: observe
@@ -286,6 +288,7 @@ steps:
     transitions:
       pr_open: {target: STOP-manual-intervention, evidence: {predicate_id: attention-pr-open, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: pr-open}]}}
       no_pr: {target: STOP-manual-intervention, evidence: {predicate_id: attention-pr-absent, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: no-pr}]}}
+      deliverable_check_failed: {target: STOP-precondition-failed, evidence: {predicate_id: attention-deliverable-check-failed, clauses: [{source: command_receipt, field: actor_outcome, op: eq, value: deliverable-check-failed}, {source: command_receipt, field: exit_code, op: eq, value: 0}]}}
     blocked_on: null
 
   - step_id: commits_ahead_check

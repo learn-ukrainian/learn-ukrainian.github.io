@@ -13,7 +13,7 @@ import pytest
 import yaml
 
 from scripts.orchestration.trails.closure import TrailClosureGate
-from scripts.orchestration.trails.executor import TrailExecutor
+from scripts.orchestration.trails.executor import DefaultReceiptPredicateEvaluator, TrailExecutor
 from scripts.orchestration.trails.models import CommandExecution, ExitClass
 from scripts.orchestration.trails.store import TrailStore
 from scripts.orchestration.validate_trailspec import PROJECT_ROOT, validate_trailspec
@@ -192,6 +192,14 @@ def _run_rb2_shell_step(
     )
 
 
+def _matching_transition_labels(
+    step: dict[str, Any], *, actor_outcome: str, exit_code: int
+) -> list[str]:
+    return DefaultReceiptPredicateEvaluator().matching_labels(
+        step, {"actor_outcome": actor_outcome, "exit_code": exit_code}
+    )
+
+
 def _write_fake_delegate(tmp_path: Path) -> None:
     fake_python = tmp_path / ".venv/bin/python"
     fake_python.parent.mkdir(parents=True)
@@ -200,6 +208,43 @@ def _write_fake_delegate(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     fake_python.chmod(0o755)
+
+
+def _write_fake_gh(tmp_path: Path) -> Path:
+    fake_gh = tmp_path / "bin/gh"
+    fake_gh.parent.mkdir(parents=True)
+    fake_gh.write_text(
+        "#!/bin/sh\nprintf '%s\\n' \"$FAKE_GH_OUTPUT\"\nexit \"$FAKE_GH_EXIT\"\n",
+        encoding="utf-8",
+    )
+    fake_gh.chmod(0o755)
+    return fake_gh.parent
+
+
+def _write_fake_tee(tmp_path: Path) -> Path:
+    fake_tee = tmp_path / "bin/tee"
+    fake_tee.parent.mkdir(parents=True)
+    fake_tee.write_text(
+        "#!/bin/sh\nexit \"$FAKE_TEE_EXIT\"\n",
+        encoding="utf-8",
+    )
+    fake_tee.chmod(0o755)
+    return fake_tee.parent
+
+
+def _assert_dispatch_failure_routes_by_token(spec: dict[str, Any]) -> None:
+    dispatch = _rb2_step(spec, "dispatch_worker")
+    assert dispatch["transitions"]["dispatch_failed"]["evidence"]["clauses"] == [
+        {
+            "source": "command_receipt",
+            "field": "actor_outcome",
+            "op": "eq",
+            "value": "dispatch-failed",
+        }
+    ]
+    assert _matching_transition_labels(
+        dispatch, actor_outcome="dispatch-failed", exit_code=17
+    ) == ["dispatch_failed"]
 
 
 def test_rb2_benign_overlap_refusal_reaches_approval_or_concurrency_stop(
@@ -247,10 +292,10 @@ def test_rb2_benign_overlap_refusal_reaches_approval_or_concurrency_stop(
     )
 
 
-def test_rb2_dispatch_wrappers_log_combined_output_without_masking_failures(
+def test_rb2_dispatch_wrappers_log_combined_output_and_route_failure_tokens(
     tmp_path: Path,
 ) -> None:
-    """Both wrappers retain output, and non-benign delegate failures preserve their status."""
+    """Both wrappers retain output, and dispatch failure selects its token transition."""
     spec = _load(RB2_PATH)
     dispatch = _rb2_step(spec, "dispatch_worker")
     override = _rb2_step(spec, "override_dispatch")
@@ -268,7 +313,10 @@ def test_rb2_dispatch_wrappers_log_combined_output_without_masking_failures(
     failed_override = _run_rb2_shell_step(override, tmp_path, environment)
 
     assert failed_dispatch.returncode == 17
-    assert failed_dispatch.stdout == ""
+    assert failed_dispatch.stdout == "dispatch-failed\n"
+    assert _matching_transition_labels(
+        dispatch, actor_outcome=failed_dispatch.stdout.strip(), exit_code=failed_dispatch.returncode
+    ) == ["dispatch_failed"]
     assert failed_override.returncode == 17
     assert failed_override.stdout == "override-dispatch-failed\n"
     assert (tmp_path / "batch_state/rb2-dispatch-failed-task.log").read_text(
@@ -277,6 +325,102 @@ def test_rb2_dispatch_wrappers_log_combined_output_without_masking_failures(
     assert (tmp_path / "batch_state/rb2-override-dispatch-failed-task.log").read_text(
         encoding="utf-8"
     ) == "ordinary failure\n"
+
+
+def test_rb2_dispatch_emits_failure_token_for_setup_and_tee_errors(tmp_path: Path) -> None:
+    """Setup and log-capture failures preserve status and select dispatch_failed."""
+    spec = _load(RB2_PATH)
+    dispatch = _rb2_step(spec, "dispatch_worker")
+    environment = {
+        "TASK_ID": "setup-task",
+        "LANE": "grok",
+        "BRIEF_PATH": "brief.md",
+        "FAKE_DISPATCH_OUTPUT": "success",
+        "FAKE_DISPATCH_EXIT": "0",
+    }
+
+    (tmp_path / "batch_state").write_text("not a directory\n", encoding="utf-8")
+    setup_failure = _run_rb2_shell_step(dispatch, tmp_path, environment)
+    assert setup_failure.returncode == 1
+    assert setup_failure.stdout == "dispatch-failed\n"
+    assert _matching_transition_labels(
+        dispatch, actor_outcome=setup_failure.stdout.strip(), exit_code=setup_failure.returncode
+    ) == ["dispatch_failed"]
+
+    tee_tmp_path = tmp_path / "tee-failure"
+    tee_tmp_path.mkdir()
+    _write_fake_delegate(tee_tmp_path)
+    fake_bin = _write_fake_tee(tee_tmp_path)
+    tee_failure = _run_rb2_shell_step(
+        dispatch,
+        tee_tmp_path,
+        {**environment, "PATH": f"{fake_bin}:{os.environ['PATH']}", "FAKE_TEE_EXIT": "2"},
+    )
+    assert tee_failure.returncode == 2
+    assert tee_failure.stdout == "dispatch-failed\n"
+    assert _matching_transition_labels(
+        dispatch, actor_outcome=tee_failure.stdout.strip(), exit_code=tee_failure.returncode
+    ) == ["dispatch_failed"]
+
+
+def test_rb2_dispatch_failure_token_pin_rejects_the_old_exit_code_predicate() -> None:
+    """Mutation check: reintroducing exit-code 1 makes the status-17 pin fail."""
+    spec = _load(RB2_PATH)
+    _assert_dispatch_failure_routes_by_token(spec)
+
+    mutated = copy.deepcopy(spec)
+    mutated_dispatch = _rb2_step(mutated, "dispatch_worker")
+    mutated_dispatch["transitions"]["dispatch_failed"]["evidence"]["clauses"].append(
+        {"source": "command_receipt", "field": "exit_code", "op": "eq", "value": 1}
+    )
+
+    mutated_selection = _matching_transition_labels(
+        mutated_dispatch, actor_outcome="dispatch-failed", exit_code=17
+    )
+    assert mutated_selection == []
+    with pytest.raises(AssertionError):
+        assert mutated_selection == ["dispatch_failed"]
+
+
+@pytest.mark.parametrize(
+    ("gh_output", "gh_exit", "expected_outcome"),
+    [
+        ("network unavailable", "1", "deliverable-check-failed"),
+        ("[]", "0", "no-pr"),
+        ("not JSON", "0", "deliverable-check-failed"),
+    ],
+)
+def test_rb2_deliverable_probes_distinguish_pr_absence_from_check_failures(
+    tmp_path: Path, gh_output: str, gh_exit: str, expected_outcome: str
+) -> None:
+    """All settle paths fail closed unless gh returns validated JSON with no PRs."""
+    spec = _load(RB2_PATH)
+    fake_bin = _write_fake_gh(tmp_path)
+    environment = {
+        "TASK_ID": "deliverable-task",
+        "LANE": "grok",
+        "FAKE_GH_OUTPUT": gh_output,
+        "FAKE_GH_EXIT": gh_exit,
+        "PATH": f"{fake_bin}:{os.environ['PATH']}",
+    }
+
+    for step_id in (
+        "verify_deliverable_success",
+        "verify_deliverable_timeout",
+        "verify_deliverable_attention",
+    ):
+        step = _rb2_step(spec, step_id)
+        result = _run_rb2_shell_step(step, tmp_path, environment)
+
+        assert result.returncode == 0
+        assert result.stdout == f"{expected_outcome}\n"
+        selected = _matching_transition_labels(
+            step, actor_outcome=result.stdout.strip(), exit_code=result.returncode
+        )
+        expected_label = expected_outcome.replace("-", "_")
+        assert selected == [expected_label]
+        if expected_outcome == "deliverable-check-failed":
+            assert step["transitions"][expected_label]["target"] == "STOP-precondition-failed"
 
 
 class _TerminalSource:
