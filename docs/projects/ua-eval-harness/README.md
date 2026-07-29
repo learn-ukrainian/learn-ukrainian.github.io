@@ -198,7 +198,7 @@ The complete [v1 baseline receipts](../../../data/projects/ua_eval_harness/basel
 include identity, train-fixture literal rules, and a source-only
 `gpt-5.6-terra` run. Across all retained UA-GEC standardization and grammar
 labels, Terra scores 0.2439 edit F0.5 and 0.1610 exact-sentence accuracy. Its
-heritage-safe headline calque recall is 0.1410 (33/234 selected-reference
+heritage-aware headline calque recall is 0.1410 (33/234 selected-reference
 annotations). The report retains all 677 raw responses and full run
 provenance. Calque precision is intentionally `null`: untyped hypothesis-only
 false positives cannot honestly be assigned to the calque tag.
