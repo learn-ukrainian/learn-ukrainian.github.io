@@ -125,6 +125,122 @@ def test_fill_missing_manifest_glosses_rejects_missing_target_seed() -> None:
         admission.fill_missing_manifest_glosses([], manifest, ["лоток"])
 
 
+def test_fill_missing_manifest_pos_uses_vesum_for_explicit_blank_target(monkeypatch) -> None:
+    manifest = {
+        "entries": [
+            {"lemma": "помішувати", "pos": None},
+            {"lemma": "обставини", "pos": "noun:pl"},
+        ]
+    }
+    monkeypatch.setattr(admission, "_vesum_pos", lambda lemma: "verb" if lemma == "помішувати" else None)
+
+    result = admission.fill_missing_manifest_pos(manifest, ["помішувати"])
+
+    assert result == admission.PosFillResult(applied=("помішувати",), skipped_existing=())
+    assert manifest["entries"][0]["pos"] == "verb"
+    assert manifest["entries"][1]["pos"] == "noun:pl"
+
+
+def test_fill_missing_manifest_pos_preserves_existing_pos(monkeypatch) -> None:
+    manifest = {"entries": [{"lemma": "обставини", "pos": "noun:pl"}]}
+    monkeypatch.setattr(admission, "_vesum_pos", lambda lemma: pytest.fail(f"unexpected VESUM lookup: {lemma}"))
+
+    result = admission.fill_missing_manifest_pos(manifest, ["обставини"])
+
+    assert result == admission.PosFillResult(applied=(), skipped_existing=("обставини",))
+
+
+def test_fill_missing_manifest_pos_rejects_unverified_target(monkeypatch) -> None:
+    manifest = {"entries": [{"lemma": "помішувати", "pos": None}]}
+    monkeypatch.setattr(admission, "_vesum_pos", lambda lemma: None)
+
+    with pytest.raises(ValueError, match="no VESUM POS"):
+        admission.fill_missing_manifest_pos(manifest, ["помішувати"])
+
+
+def test_fill_missing_manifest_pos_does_not_mutate_when_later_target_is_unverified(monkeypatch) -> None:
+    manifest = {
+        "entries": [
+            {"lemma": "помішувати", "pos": None},
+            {"lemma": "шукати", "pos": None},
+        ]
+    }
+    monkeypatch.setattr(admission, "_vesum_pos", lambda lemma: "verb" if lemma == "помішувати" else None)
+
+    with pytest.raises(ValueError, match="no VESUM POS: шукати"):
+        admission.fill_missing_manifest_pos(manifest, ["помішувати", "шукати"])
+
+    assert manifest["entries"] == [
+        {"lemma": "помішувати", "pos": None},
+        {"lemma": "шукати", "pos": None},
+    ]
+
+
+def test_main_fills_pos_without_input_seed(tmp_path: Path, monkeypatch) -> None:
+    manifest_path = _manifest(
+        tmp_path / "manifest.json",
+        [{"lemma": "помішувати", "pos": None}],
+    )
+    monkeypatch.setattr(admission, "_vesum_pos", lambda lemma: "verb" if lemma == "помішувати" else None)
+
+    result = admission.main(
+        [
+            "--manifest",
+            str(manifest_path),
+            "--fill-existing-pos",
+            "--target-lemma",
+            "помішувати",
+            "--write",
+        ]
+    )
+
+    assert result == 0
+    persisted = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert persisted["entries"][0]["pos"] == "verb"
+
+
+def test_main_persists_gloss_fill_before_later_pos_fill_failure(tmp_path: Path, monkeypatch) -> None:
+    input_path = tmp_path / "seed.jsonl"
+    input_path.write_text(
+        "\n".join(
+            (
+                json.dumps({"lemma": "лоток", "gloss": "tray"}),
+                json.dumps({"lemma": "невідоме", "gloss": "unknown"}),
+            )
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    manifest_path = _manifest(
+        tmp_path / "manifest.json",
+        [
+            {"lemma": "лоток", "gloss": None, "pos": "noun"},
+            {"lemma": "невідоме", "gloss": "unknown", "pos": None},
+        ],
+    )
+    monkeypatch.setattr(admission, "_vesum_pos", lambda lemma: None)
+
+    with pytest.raises(ValueError, match="target lemma has no VESUM POS: невідоме"):
+        admission.main(
+            [
+                "--input",
+                str(input_path),
+                "--manifest",
+                str(manifest_path),
+                "--fill-existing-glosses",
+                "--fill-existing-pos",
+                "--target-lemma",
+                "лоток",
+                "--target-lemma",
+                "невідоме",
+                "--write",
+            ]
+        )
+
+    persisted = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert persisted["entries"][0]["gloss"] == "tray"
+
+
 def test_write_json_uses_shared_atomic_write_helper(tmp_path: Path, monkeypatch) -> None:
     output = tmp_path / "nested" / "seed.json"
     observed: dict[str, object] = {}
