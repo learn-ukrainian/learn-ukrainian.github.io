@@ -19,6 +19,7 @@ from scripts.orchestration.trails.trail_certification import (
     CertificationCase,
     CertificationSubject,
     CoverageRequirements,
+    HermeticCertificationError,
     HermeticFixture,
     P3Action,
     TrailCertificationError,
@@ -316,6 +317,120 @@ def test_attestation_schema_rejects_unknown_damage_event_codes(tmp_path: Path) -
 
     with pytest.raises(TrailCertificationError, match="schema violation"):
         validate_certification_attestation_data(malformed)
+
+
+def _probe_executor(adapter: str, escape: bool):
+    """Executor subclass that fires one synthetic command probe at the hermetic guard."""
+
+    class _ProbeExecutor(certification_module.TrailExecutor):
+        def begin(self, **kwargs):
+            cwd = self.project_root / "outside-the-fixture" if escape else self.project_root
+            self.command_runner({"adapter": adapter}, cwd)
+            raise AssertionError("the hermetic guard did not refuse the probe")
+
+    return _ProbeExecutor
+
+
+def test_hermetic_guard_refuses_command_cwd_escape(tmp_path: Path, monkeypatch) -> None:
+    case = _case(
+        case_id="hermetic-escape",
+        transition="accepted",
+        outcome="terminal",
+        exit_class=ExitClass.OK,
+        state="terminal",
+    )
+    monkeypatch.setattr(certification_module, "TrailExecutor", _probe_executor("shell", escape=True))
+
+    with pytest.raises(HermeticCertificationError, match="escaped its fixture root"):
+        _harness(tmp_path).run(
+            certification_id="hermetic-escape",
+            subject=_subject(),
+            fixture=_fixture(),
+            cases=(case,),
+        )
+
+
+def test_hermetic_guard_refuses_unknown_command_adapter(tmp_path: Path, monkeypatch) -> None:
+    case = _case(
+        case_id="hermetic-adapter",
+        transition="accepted",
+        outcome="terminal",
+        exit_class=ExitClass.OK,
+        state="terminal",
+    )
+    monkeypatch.setattr(
+        certification_module, "TrailExecutor", _probe_executor("live-network", escape=False)
+    )
+
+    with pytest.raises(HermeticCertificationError, match="unknown adapter"):
+        _harness(tmp_path).run(
+            certification_id="hermetic-adapter",
+            subject=_subject(),
+            fixture=_fixture(),
+            cases=(case,),
+        )
+
+
+def test_missed_stop_mismatch_derives_the_missed_stop_damage_event(tmp_path: Path) -> None:
+    case = _case(
+        case_id="missed-stop-derived",
+        transition="refused",
+        outcome="stop_parked",
+        exit_class=ExitClass.STOP_PARKED,
+        state="parked",
+        stop_code="STOP-other",
+    )
+
+    attestation = _harness(tmp_path).run(
+        certification_id="missed-stop-derived",
+        subject=_subject(),
+        fixture=_fixture(),
+        cases=(case,),
+    ).attestation
+
+    assert attestation["cases"][0]["passed"] is False
+    assert attestation["cases"][0]["observed"]["stop_code"] == "STOP-unknown"
+    assert attestation["damage_event_codes"] == ["missed-stop"]
+    assert attestation["status"]["demote"] is True
+    assert attestation["status"]["harness_passed"] is False
+
+
+def test_attestation_output_is_immutable_across_reruns(tmp_path: Path) -> None:
+    case = _case(
+        case_id="immutable",
+        transition="accepted",
+        outcome="terminal",
+        exit_class=ExitClass.OK,
+        state="terminal",
+    )
+    harness = _harness(tmp_path)
+    harness.run(
+        certification_id="immutable", subject=_subject(), fixture=_fixture(), cases=(case,)
+    )
+
+    with pytest.raises(TrailCertificationError, match="already exists"):
+        harness.run(
+            certification_id="immutable", subject=_subject(), fixture=_fixture(), cases=(case,)
+        )
+
+
+def test_trail_hash_drift_between_p3_and_submitted_spec_is_refused(tmp_path: Path, monkeypatch) -> None:
+    case = _case(
+        case_id="hash-drift",
+        transition="accepted",
+        outcome="terminal",
+        exit_class=ExitClass.OK,
+        state="terminal",
+    )
+    monkeypatch.setattr(certification_module, "compute_trail_hash", lambda spec: "0" * 64)
+
+    with pytest.raises(TrailCertificationError, match="differs from the submitted TrailSpec"):
+        _harness(tmp_path).run(
+            certification_id="hash-drift",
+            subject=_subject(),
+            fixture=_fixture(),
+            cases=(case,),
+        )
 
 
 def test_new_p14_files_are_not_rail_paths() -> None:
