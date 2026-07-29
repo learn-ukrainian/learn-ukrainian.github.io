@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import os
+import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -130,6 +132,79 @@ def test_non_rail_paths_are_unaffected_without_receipt() -> None:
     assert decision.allowed is True
     assert decision.reason == "non_rail_paths"
     assert decision.rail_paths == ()
+
+
+def test_path_classification_imports_without_jsonschema_but_receipt_validation_denies(
+    tmp_path: Path,
+) -> None:
+    """#5992: only receipt validation, not path classification, needs jsonschema."""
+    poison = tmp_path / "poison"
+    poison.mkdir()
+    (poison / "jsonschema.py").write_text(
+        "raise ImportError('jsonschema deliberately masked')\n", encoding="utf-8"
+    )
+    receipt = _receipt()
+    script = f"""
+import importlib.util
+import json
+from pathlib import Path
+import sys
+
+spec = importlib.util.spec_from_file_location('masked_rail_guard', {str(Path(__file__).resolve().parents[1] / 'scripts/orchestration/rail_path_guard.py')!r})
+module = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = module
+spec.loader.exec_module(module)
+
+class Store:
+    source_id = 'test-api'
+    source_kind = 'api'
+    def fetch_rail_approval_receipt(self, receipt_id):
+        return {receipt!r}
+
+resolver = module.ApprovedRailApprovalReceiptResolver(Store(), now=lambda: module.datetime(2026, 7, 28, tzinfo=module.UTC))
+non_rail = module.decide_rail_path_mutation_with_production_receipt(
+    task_id='not-used', candidate_paths=('docs/notes.md',), head_sha={'a' * 40!r}, receipt_id=None
+)
+rail = module.decide_rail_path_mutation_with_production_receipt(
+    task_id={TASK!r}, candidate_paths=({OWNED_RAIL_PATH!r},), head_sha={'a' * 40!r}, receipt_id={RECEIPT_ID!r}, resolver=resolver
+)
+print(json.dumps({{'non_rail': non_rail.reason, 'rail': rail.reason}}))
+"""
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(poison)
+    python = Path(__file__).resolve().parents[1] / ".venv/bin/python"
+
+    result = subprocess.run(
+        [str(python), "-c", script],
+        check=False,
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=30,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout) == {
+        "non_rail": "non_rail_paths",
+        "rail": "rail_approval_validator_unavailable",
+    }
+
+
+def test_direct_receipt_authorization_maps_missing_validator_to_its_own_reason(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Direct receipt callers must not misreport a missing validator as invalid."""
+    receipt = _direct_payload_receipt()
+
+    def unavailable():
+        raise guard.RailApprovalValidatorUnavailableError("validator unavailable")
+
+    monkeypatch.setattr(guard, "_validator", unavailable)
+
+    decision = _decide(OWNED_RAIL_PATH, receipt=receipt)
+
+    assert decision.allowed is False
+    assert decision.reason == "rail_approval_validator_unavailable"
 
 
 def test_rail_path_without_receipt_is_refused() -> None:

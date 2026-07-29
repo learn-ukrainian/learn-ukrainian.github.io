@@ -50,8 +50,11 @@ Coverage limitations (documented, by design)
   enforcement layer is #4445/#4446/#4449 instead. See
   ``docs/runbooks/codex-hooks.md``.
 
-The hook fails **open**: any parse/import/git error exits 0 (allow). It is a
-safety net, not a chokepoint — physical isolation is the real guarantee.
+The primary-checkout containment layer fails **open**: any
+parse/import/git error there exits 0 (allow). The separate P6 rail layer fails
+**closed** whenever it sees a write target or path-scoped git intent it cannot
+classify. Physical isolation remains the primary-checkout guarantee; P6
+authorization is intentionally a chokepoint for control-rail mutations.
 
 Emergency override (explicit operator only): set
 ``LEARN_UK_ALLOW_PRIMARY_GIT_WRITE=1`` to skip the git-mediated primary block
@@ -67,6 +70,7 @@ import shlex
 import subprocess
 import sys
 from pathlib import Path
+from typing import Optional
 
 # ---------------------------------------------------------------------------
 # shared containment predicate (issue #4444) — imported, never re-derived
@@ -117,7 +121,7 @@ def _load_rail_path_guard():
     return None
 
 
-def _git_output(cwd: str, *args: str) -> str | None:
+def _git_output(cwd: str, *args: str) -> Optional[str]:  # noqa: UP045 - Python 3.9 parser
     try:
         completed = subprocess.run(
             ["git", "-C", cwd, *args],
@@ -138,8 +142,10 @@ def _rail_write_decision(raw_targets: list[str], *, cwd: str):
     """Classify hook write targets through the one P6 decision module."""
     try:
         rail_guard = _load_rail_path_guard()
-    except Exception:
-        return None, "rail_path_guard_unavailable"
+    except Exception as exc:
+        return None, (
+            f"rail_path_guard_unavailable:{type(exc).__name__}: {exc}"
+        )
     if rail_guard is None:
         return None, "rail_path_guard_unavailable"
     receipt_id = os.environ.get("LEARN_UK_RAIL_APPROVAL_RECEIPT")
@@ -567,6 +573,10 @@ def _inplace_edit_targets(segment: list[str], cmd_index: int) -> list[str]:
             if tok in ("-e", "-f"):
                 skip_next = True
             continue
+        # BSD sed's ``-i ''`` has an empty backup suffix. It is neither a
+        # script nor a file, and must not consume the real inline script.
+        if tok == "":
+            continue
         # Positional token.
         if not has_explicit_script and not first_positional_seen:
             first_positional_seen = True  # inline script (no -e); never a file
@@ -601,14 +611,16 @@ def bash_write_targets(command: str) -> list[str]:
 # ---------------------------------------------------------------------------
 
 
-def _git_global_prefix(args: list[str]) -> tuple[str | None, list[str]]:
+def _git_global_prefix(
+    args: list[str],
+) -> tuple[Optional[str], list[str]]:  # noqa: UP045 - Python 3.9 parser
     """Strip git global options; return optional ``-C`` path and remaining args.
 
     Handles ``-C <path>``, ``-C<path>``, and common no-arg globals (``-c`` is
     two-token). Unknown long options with ``=`` are skipped; bare long options
     that take a value are not fully modeled — fail-open if we cannot parse.
     """
-    c_path: str | None = None
+    c_path: Optional[str] = None  # noqa: UP045 - Python 3.9 parser
     i = 0
     n = len(args)
     while i < n:
@@ -920,7 +932,7 @@ def expand_shell_target(
     target: str,
     assignments: dict[str, str],
     *,
-    ambiguous: set[str] | None = None,
+    ambiguous: Optional[set[str]] = None,  # noqa: UP045 - Python 3.9 parser
 ) -> str:
     """Expand a pure ``$VAR`` / ``${VAR}`` write target when assignment is known.
 
@@ -956,8 +968,6 @@ def main() -> int:
     if not tool_name:
         return 0
 
-    wc = _load_containment()
-
     tool_input = _tool_input(payload)
     cwd = _payload_cwd(payload)
     command = ""
@@ -969,6 +979,32 @@ def main() -> int:
         raw_targets = bash_write_targets(command)
     else:
         raw_targets = write_tool_targets(tool_input)
+
+    # A supported interpreter is required to import the shared rail classifier
+    # (it uses Python 3.11 stdlib features). Under an older interpreter we
+    # cannot classify a write without duplicating that classifier, so deny
+    # writes and path-scoped git mutations before attempting the import.
+    git_intents: list[dict[str, object]] = []
+    if tool_name == "Bash" and command:
+        try:
+            git_intents = bash_git_write_intents(command)
+        except Exception:  # pragma: no cover - parser failure must not bypass P6
+            sys.stderr.write(
+                "BLOCKED by rail-path guard: cannot inspect git-mediated write targets; "
+                "failing closed.\n"
+            )
+            return 2
+    has_path_scoped_git_intent = any(
+        not intent.get("allowlisted") and bool(intent.get("paths"))
+        for intent in git_intents
+    )
+    if sys.version_info < (3, 11) and (raw_targets or has_path_scoped_git_intent):
+        sys.stderr.write(
+            "BLOCKED by rail-path guard: "
+            f"rail_path_guard_python_too_old:{sys.version_info.major}.{sys.version_info.minor}; "
+            "failing closed.\n"
+        )
+        return 2
 
     # P6 rail protection applies in every registered worktree, not only the
     # primary checkout.  It intentionally runs before the older primary-only
@@ -1010,44 +1046,43 @@ def main() -> int:
     # they need their own rail pass. This executes for every path-scoped intent
     # before the primary-containment branch below decides whether the worktree
     # is the protected primary or an isolated dispatch tree.
-    git_intents: list[dict[str, object]] = []
-    if tool_name == "Bash" and command:
-        try:
-            git_intents = bash_git_write_intents(command)
-            for intent in git_intents:
-                if intent.get("allowlisted"):
-                    continue
-                paths = list(intent.get("paths") or [])
-                if not paths:
-                    # Pathless whole-tree mutators (apply/am/stash pop|apply)
-                    # cannot be enumerated in this fast hook for a non-primary
-                    # worktree. The residual is covered by the CI rail-path job
-                    # + merge guard diff of actual changed files; never treat
-                    # this deliberate non-enumeration as an implicit rail allow.
-                    continue
-                git_cwd = _effective_git_cwd(intent, cwd)
-                rail_decision, rail_error = _rail_write_decision(paths, cwd=str(git_cwd))
-                if rail_error is not None or rail_decision is None:
-                    sys.stderr.write(
-                        "BLOCKED by rail-path guard: shared decision module is unreadable "
-                        f"({rail_error or 'unknown error'}); failing closed.\n"
-                    )
-                    return 2
-                if not rail_decision.allowed:
-                    paths_text = ", ".join(rail_decision.rail_paths) or "(unreadable path)"
-                    sys.stderr.write(
-                        "BLOCKED by rail-path guard: git-mediated rail mutation requires a current, "
-                        "externally verified approval receipt.\n"
-                        f"  reason: {rail_decision.reason}\n"
-                        f"  rail paths: {paths_text}\n"
-                    )
-                    return 2
-        except Exception:  # pragma: no cover - parser/OS failure must not bypass P6
-            sys.stderr.write(
-                "BLOCKED by rail-path guard: cannot inspect git-mediated write targets; "
-                "failing closed.\n"
-            )
-            return 2
+    try:
+        for intent in git_intents:
+            if intent.get("allowlisted"):
+                continue
+            paths = list(intent.get("paths") or [])
+            if not paths:
+                # Pathless whole-tree mutators (apply/am/stash pop|apply)
+                # cannot be enumerated in this fast hook for a non-primary
+                # worktree. The residual is covered by the CI rail-path job
+                # + merge guard diff of actual changed files; never treat
+                # this deliberate non-enumeration as an implicit rail allow.
+                continue
+            git_cwd = _effective_git_cwd(intent, cwd)
+            rail_decision, rail_error = _rail_write_decision(paths, cwd=str(git_cwd))
+            if rail_error is not None or rail_decision is None:
+                sys.stderr.write(
+                    "BLOCKED by rail-path guard: shared decision module is unreadable "
+                    f"({rail_error or 'unknown error'}); failing closed.\n"
+                )
+                return 2
+            if not rail_decision.allowed:
+                paths_text = ", ".join(rail_decision.rail_paths) or "(unreadable path)"
+                sys.stderr.write(
+                    "BLOCKED by rail-path guard: git-mediated rail mutation requires a current, "
+                    "externally verified approval receipt.\n"
+                    f"  reason: {rail_decision.reason}\n"
+                    f"  rail paths: {paths_text}\n"
+                )
+                return 2
+    except Exception:  # pragma: no cover - parser/OS failure must not bypass P6
+        sys.stderr.write(
+            "BLOCKED by rail-path guard: cannot inspect git-mediated write targets; "
+            "failing closed.\n"
+        )
+        return 2
+
+    wc = _load_containment()
 
     if wc is None:
         return 0  # P6 ran above; the older primary-only predicate is unavailable.
