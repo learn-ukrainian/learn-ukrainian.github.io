@@ -198,7 +198,7 @@ The complete [v1 baseline receipts](../../../data/projects/ua_eval_harness/basel
 include identity, train-fixture literal rules, and a source-only
 `gpt-5.6-terra` run. Across all retained UA-GEC standardization and grammar
 labels, Terra scores 0.2439 edit F0.5 and 0.1610 exact-sentence accuracy. Its
-heritage-safe headline calque recall is 0.1410 (33/234 selected-reference
+heritage-aware headline calque recall is 0.1410 (33/234 selected-reference
 annotations). The report retains all 677 raw responses and full run
 provenance. Calque precision is intentionally `null`: untyped hypothesis-only
 false positives cannot honestly be assigned to the calque tag.
@@ -223,11 +223,13 @@ semantic version-bump rules. Frozen bytes are never edited in place.
 
 ## Public v0
 
-The stranger-runnable release is documented by the Ukrainian-first
-[data card](DATA_CARD.uk.md), bilingual
-[reproduction guide](REPRODUCING.md), and complete
-[third-party notices](THIRD_PARTY_NOTICES.md). A clean checkout can reproduce
-all frozen reports without provider credentials:
+The stranger-runnable release is documented by separate
+[English](DATA_CARD.en.md) and [Ukrainian](DATA_CARD.uk.md) data cards, a
+bilingual [reproduction guide](REPRODUCING.md), and complete
+[third-party notices](THIRD_PARTY_NOTICES.md). The English card is the factual
+source; the Ukrainian card presents the same release for Ukrainian NLP
+researchers in independently authored Ukrainian prose. A clean checkout can
+reproduce all frozen reports without provider credentials:
 
 ```bash
 uv venv --python 3.12.8

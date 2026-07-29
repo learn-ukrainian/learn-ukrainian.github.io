@@ -25,10 +25,10 @@ gpt-5.6-terra saved run: 677 responses, edit F0.5=0.2439, headline calque R=0.14
 public v0 smoke passed: frozen scoring reproduced without provider credentials
 ```
 
-`Edit F0.5` охоплює всі вибрані upstream-мітки стандартизації та граматики.
-`Headline calque R` використовує окремий heritage-safe disposition і не
-враховує підтверджені register/heritage conflicts та невирішені cases.
-Calque precision дорівнює `null`, бо hypothesis-only edits не мають типів.
+Значення загального F0.5, основної повноти виправлення кальок і відсутньої
+влучності для кальок пояснено в
+[українському описі даних](DATA_CARD.uk.md). Цей документ зосереджено на
+командах і технічній перевірці результатів.
 
 Окремі fail-closed команди:
 
@@ -99,10 +99,9 @@ saved-response runs, re-scores all 677 responses in each run, and requires
 byte-equivalent report objects. It reads only the public files committed under
 `data/projects/ua_eval_harness` and the public scorer/extractor scripts.
 
-The printed overall edit F0.5 covers every selected upstream standardization
-and grammar label. Headline calque recall uses the separate heritage-safe
-benchmark disposition. Calque precision is intentionally null because
-hypothesis-only edits are untyped.
+The [English data card](DATA_CARD.en.md) defines overall edit F0.5, headline
+calque recall, and why calque precision is not reported. This guide focuses on
+the commands and technical verification of those results.
 
 To score a new saved-response file, first create a source-only request packet:
 
