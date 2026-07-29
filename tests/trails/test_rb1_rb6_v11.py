@@ -76,7 +76,9 @@ def test_rb6_references_estate_registry_entries() -> None:
     assert "vps" in vps_aliases
     assert "hramatka-api" in services
     assert "learn-ukrainian-infra-private" in repos
-    assert "https://learn-ukrainian.github.io/" in sites
+    # Exact-set equality (not substring membership): stricter, and it avoids the
+    # URL-substring pattern CodeQL flags (py/incomplete-url-substring-sanitization).
+    assert sites == {"https://learn-ukrainian.github.io/"}
 
     # Refused surfaces check
     assert "pilot-vps" in refused
@@ -110,8 +112,11 @@ def _assert_registry_consumed_by_commands(estate_data: dict, rb6_data: dict) -> 
         assert repo["local_path"] in step_commands, (
             f"registry repo path '{repo['local_path']}' is not consumed by any RB-6 probe command"
         )
+    # Token equality (not substring): the URL must appear as a standalone shell
+    # token of a probe command — stricter, and clear of the CodeQL URL-substring rule.
+    command_tokens = step_commands.split()
     for site in surfaces["public_sites"]:
-        assert site["url"] in step_commands, (
+        assert any(token == site["url"] for token in command_tokens), (
             f"registry site url '{site['url']}' is not consumed by any RB-6 probe command"
         )
 
