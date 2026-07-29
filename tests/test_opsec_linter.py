@@ -71,6 +71,39 @@ def test_scrubbed_personal_identifier_is_not_checked_in_private_code_or_as_subst
     assert substring_findings == []
 
 
+def test_scrubbed_personal_identifier_matches_ukrainian_declensions_and_latin_stem():
+    forms = ("Альона", "Альони", "Альоні", "Альону", "Альоною", "Альоно", "Alona")
+
+    findings = check_content("\n".join(forms), "site/src/pages/index.astro")
+
+    assert findings == [
+        (1, "альона", "Scrubbed personal identifier"),
+        (2, "альона", "Scrubbed personal identifier"),
+        (3, "альона", "Scrubbed personal identifier"),
+        (4, "альона", "Scrubbed personal identifier"),
+        (5, "альона", "Scrubbed personal identifier"),
+        (6, "альона", "Scrubbed personal identifier"),
+        (7, "alona", "Scrubbed personal identifier"),
+    ]
+
+
+def test_scrubbed_personal_identifier_stem_does_not_match_embedded_words():
+    findings = check_content(
+        "value = 'malonated'; noun = 'батальона'",
+        "docs/safety.md",
+    )
+
+    assert findings == []
+
+
+def test_scrubbed_personal_identifier_scans_site_source_and_public_assets():
+    source_findings = check_content("const owner = 'Alona'", "site/src/lib/owner.ts")
+    asset_findings = check_content("Альони", "site/public/lexicon/owner.json")
+
+    assert source_findings == [(1, "alona", "Scrubbed personal identifier")]
+    assert asset_findings == [(1, "альона", "Scrubbed personal identifier")]
+
+
 def test_public_identifier_pr_mode_scans_only_changed_public_paths(monkeypatch):
     changed_public_path = "site/src/data/changed.json"
     unchanged_public_path = "docs/unchanged.md"

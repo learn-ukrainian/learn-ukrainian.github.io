@@ -58,17 +58,20 @@ _FORBIDDEN_PATTERNS = [
     (re.compile(r"passwordless\s+SSH", re.IGNORECASE), "Raw SSH auth method disclosure"),
 ]
 
-# Personal identifiers scrubbed from public learner-facing content.  Keep the
-# canonical Latin spelling and its Ukrainian rendering together: either form
-# is a leak when it appears as a standalone token in a shipped data, component,
-# or documentation file.
+# Personal identifiers scrubbed from public learner-facing content.  Match the
+# name stems rather than only their nominative forms: Ukrainian declension can
+# produce Альони, Альоні, Альону, Альоною, or Альоно.  The leading word boundary
+# prevents an embedded substring such as батальона from being treated as a name.
 _SCRUBBED_PERSONAL_IDENTIFIER_TOKENS = ("alona", "альона")
 _PERSONAL_IDENTIFIER_PATTERNS = tuple(
     (
         token,
-        re.compile(rf"(?<!\w){re.escape(token)}(?!\w)", re.IGNORECASE),
+        re.compile(
+            rf"(?<!\w){re.escape(stem)}\w*\b",
+            re.IGNORECASE,
+        ),
     )
-    for token in _SCRUBBED_PERSONAL_IDENTIFIER_TOKENS
+    for token, stem in (("alona", "alona"), ("альона", "альон"))
 )
 
 # This is deliberately exact rather than a broad directory exemption.  Tests
@@ -77,8 +80,10 @@ _PERSONAL_IDENTIFIER_PATTERNS = tuple(
 _PERSONAL_IDENTIFIER_PATH_ALLOWLIST: frozenset[str] = frozenset()
 
 _PUBLIC_PERSONAL_IDENTIFIER_ROOTS = (
-    Path("site/src/data"),
-    Path("site/src/components"),
+    # All files that may be shipped by the static site, including pages, their
+    # supporting source, and already-built public assets.
+    Path("site/src"),
+    Path("site/public"),
     Path("docs"),
 )
 
