@@ -48,3 +48,23 @@ def test_public_ip_flagged_even_with_low_octet_numbers_unless_heading():
     content_heading = "### 4.1.3.1 Section Heading"
     findings_heading = check_content(content_heading, "doc.py")
     assert len(findings_heading) == 0
+
+
+def test_scrubbed_personal_identifier_is_blocked_in_public_content():
+    findings = check_content(
+        "export const source = 'Alona';\nconst sourceUk = 'АЛЬОНА';",
+        "site/src/components/LexiconPractice.tsx",
+    )
+
+    assert findings == [
+        (1, "alona", "Scrubbed personal identifier"),
+        (2, "альона", "Scrubbed personal identifier"),
+    ]
+
+
+def test_scrubbed_personal_identifier_is_not_checked_in_private_code_or_as_substring():
+    code_findings = check_content("owner = 'Alona'", "scripts/private_import.py")
+    substring_findings = check_content("value = 'malonated'", "docs/safety.md")
+
+    assert code_findings == []
+    assert substring_findings == []

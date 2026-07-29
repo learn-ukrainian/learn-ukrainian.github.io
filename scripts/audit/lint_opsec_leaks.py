@@ -23,6 +23,7 @@ import os
 import re
 import subprocess
 import sys
+import unicodedata
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -56,6 +57,30 @@ _FORBIDDEN_PATTERNS = [
     (re.compile(r"-----BEGIN\s+(?:[A-Z0-9_-]+\s+)?PRIVATE\s+KEY-----", re.IGNORECASE), "Private Key Header (PKCS#1/PKCS#8/OpenSSH/RSA/EC/DSA/Encrypted)"),
     (re.compile(r"passwordless\s+SSH", re.IGNORECASE), "Raw SSH auth method disclosure"),
 ]
+
+# Personal identifiers scrubbed from public learner-facing content.  Keep the
+# canonical Latin spelling and its Ukrainian rendering together: either form
+# is a leak when it appears as a standalone token in a shipped data, component,
+# or documentation file.
+_SCRUBBED_PERSONAL_IDENTIFIER_TOKENS = ("alona", "альона")
+_PERSONAL_IDENTIFIER_PATTERNS = tuple(
+    (
+        token,
+        re.compile(rf"(?<!\w){re.escape(token)}(?!\w)", re.IGNORECASE),
+    )
+    for token in _SCRUBBED_PERSONAL_IDENTIFIER_TOKENS
+)
+
+# This is deliberately exact rather than a broad directory exemption.  Tests
+# exercise the detector directly, so no public learner-facing file is allowed
+# to carry a regression marker.
+_PERSONAL_IDENTIFIER_PATH_ALLOWLIST: frozenset[str] = frozenset()
+
+_PUBLIC_PERSONAL_IDENTIFIER_ROOTS = (
+    Path("site/src/data"),
+    Path("site/src/components"),
+    Path("docs"),
+)
 
 # File extensions to skip (strictly binary / generated / virtual environment files)
 _SKIP_EXTENSIONS = {
@@ -112,12 +137,43 @@ def is_section_citation(line: str, filename: str, p0: int, p1: int, p2: int, p3:
     return False
 
 
-def check_content(content: str, filename: str) -> list[tuple[int, str, str]]:
+def is_public_personal_identifier_path(filename: str) -> bool:
+    """Return whether a path is a learner-facing tree protected from name leaks."""
+    normalized = Path(filename.replace("\\", "/"))
+    return any(normalized.is_relative_to(root) for root in _PUBLIC_PERSONAL_IDENTIFIER_ROOTS)
+
+
+def check_personal_identifiers(content: str, filename: str) -> list[tuple[int, str, str]]:
+    """Return scrubbed personal-name findings in public learner-facing content only."""
+    normalized_filename = filename.replace("\\", "/")
+    if (
+        normalized_filename in _PERSONAL_IDENTIFIER_PATH_ALLOWLIST
+        or not is_public_personal_identifier_path(normalized_filename)
+    ):
+        return []
+
+    findings: list[tuple[int, str, str]] = []
+    for line_number, line in enumerate(unicodedata.normalize("NFC", content).splitlines(), 1):
+        for token, pattern in _PERSONAL_IDENTIFIER_PATTERNS:
+            if pattern.search(line):
+                findings.append((line_number, token, "Scrubbed personal identifier"))
+    return findings
+
+
+def check_content(
+    content: str,
+    filename: str,
+    *,
+    include_infrastructure: bool = True,
+) -> list[tuple[int, str, str]]:
     """Scan string content line by line for OPSEC leaks.
 
     Returns list of (line_num, match_str, description).
     """
     findings: list[tuple[int, str, str]] = []
+    if not include_infrastructure:
+        return check_personal_identifiers(content, filename)
+
     lines = content.splitlines()
 
     is_linter_itself = filename.replace("\\", "/").endswith("lint_opsec_leaks.py")
@@ -158,7 +214,7 @@ def check_content(content: str, filename: str) -> list[tuple[int, str, str]]:
             if pattern.search(line):
                 findings.append((idx, line.strip(), desc))
 
-    return findings
+    return findings + check_personal_identifiers(content, filename)
 
 
 def get_git_content(rel_path: str, rev: str = "") -> str | None:
@@ -259,15 +315,43 @@ def filter_rel_paths(paths: list[str]) -> list[str]:
     return valid_paths
 
 
+def get_public_personal_identifier_paths(revision: str = "") -> list[str]:
+    """Return all tracked learner-facing files that must be free of scrubbed names."""
+    command = ["git", "ls-files", "-z"]
+    if revision:
+        command = ["git", "ls-tree", "-rz", "--name-only", revision]
+    paths = run_git_nul_separated(command)
+    return [path for path in paths if is_public_personal_identifier_path(path)]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Lint repository for OPSEC leaks.")
     parser.add_argument("diff_range", nargs="?", help="Git diff range (e.g. origin/main..HEAD)")
     parser.add_argument("--staged", action="store_true", help="Inspect staged git index blobs")
     parser.add_argument("--all", action="store_true", help="Explicitly scan all tracked files in repo")
+    parser.add_argument(
+        "--public-identifiers",
+        action="store_true",
+        help="Scan all learner-facing files for scrubbed personal identifiers only",
+    )
+    parser.add_argument(
+        "--revision",
+        help="Read --public-identifiers files from this git revision instead of HEAD",
+    )
     args = parser.parse_args()
 
+    if args.public_identifiers and (args.diff_range or args.staged or args.all):
+        parser.error("--public-identifiers cannot be combined with a diff range, --staged, or --all")
+    if args.revision and not args.public_identifiers:
+        parser.error("--revision requires --public-identifiers")
+
     try:
-        rel_paths, mode_str, rev_target = get_files_to_check(args.diff_range, staged_only=args.staged, scan_all=args.all)
+        if args.public_identifiers:
+            rel_paths = get_public_personal_identifier_paths(args.revision or "HEAD")
+            mode_str = "all tracked learner-facing files (--public-identifiers)"
+            rev_target = args.revision or "HEAD"
+        else:
+            rel_paths, mode_str, rev_target = get_files_to_check(args.diff_range, staged_only=args.staged, scan_all=args.all)
     except Exception as exc:
         print(f"💥 Fail-closed git error: {exc}", file=sys.stderr)
         return 1
@@ -291,7 +375,11 @@ def main() -> int:
             except Exception:
                 continue
 
-        findings = check_content(content, rel_path)
+        findings = check_content(
+            content,
+            rel_path,
+            include_infrastructure=not args.public_identifiers,
+        )
 
         if findings:
             total_findings += len(findings)
@@ -301,7 +389,7 @@ def main() -> int:
 
     if total_findings > 0:
         print(f"\n💥 Total OPSEC leaks found: {total_findings}")
-        print("Please remove raw infrastructure IPs, host keys, and auth details before submitting!")
+        print("Please remove OPSEC-sensitive infrastructure details and scrubbed identifiers before submitting!")
         return 1
 
     print("✅ OPSEC check passed. Zero leaks detected.")
