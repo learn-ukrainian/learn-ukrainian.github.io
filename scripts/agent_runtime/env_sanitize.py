@@ -38,6 +38,13 @@ _SAFE_NAME_ALLOWLIST = {
     "AGENT_NO_MERGE",
     "HOME",
     "LANG",
+    # P6 rail-approval context (#5885): opaque receipt/task identifiers, not
+    # credentials. The worker-side write hook re-fetches and verifies the
+    # receipt externally; without these names a dispatched worker can never
+    # perform an approved rail write (delegate.py sets them, this filter
+    # silently dropped them — burned 2026-07-29).
+    "LEARN_UK_RAIL_APPROVAL_RECEIPT",
+    "LEARN_UK_RAIL_TASK_ID",
     "LOGNAME",
     "PATH",
     "TMPDIR",
