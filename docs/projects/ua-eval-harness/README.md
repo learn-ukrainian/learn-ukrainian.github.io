@@ -223,13 +223,13 @@ semantic version-bump rules. Frozen bytes are never edited in place.
 
 ## Public v0
 
-The stranger-runnable release is documented by separate
-[English](DATA_CARD.en.md) and [Ukrainian](DATA_CARD.uk.md) data cards, a
-bilingual [reproduction guide](REPRODUCING.md), and complete
-[third-party notices](THIRD_PARTY_NOTICES.md). The English card is the factual
-source; the Ukrainian card presents the same release for Ukrainian NLP
-researchers in independently authored Ukrainian prose. A clean checkout can
-reproduce all frozen reports without provider credentials:
+The stranger-runnable release is documented by the authoritative
+[English data card](DATA_CARD.en.md), the [reproduction guide](REPRODUCING.md),
+and complete [third-party notices](THIRD_PARTY_NOTICES.md). The superseded
+Ukrainian translation is preserved in the
+[documentation archive](../../archive/ua-eval-harness/README.md) and is not
+part of the current release. A clean checkout can reproduce all frozen reports
+without provider credentials:
 
 ```bash
 uv venv --python 3.12.8
