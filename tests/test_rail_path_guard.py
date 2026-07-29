@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -172,7 +173,11 @@ print(json.dumps({{'non_rail': non_rail.reason, 'rail': rail.reason}}))
 """
     env = os.environ.copy()
     env["PYTHONPATH"] = str(poison)
-    python = Path(__file__).resolve().parents[1] / ".venv/bin/python"
+    # Mirror tests/test_guard_primary_checkout_write.py's `_python()` fallback:
+    # a missing venv must not turn this test into a low-signal FileNotFoundError
+    # (sealed review F001 on #6001).
+    venv_python = Path(__file__).resolve().parents[1] / ".venv/bin/python"
+    python = venv_python if venv_python.exists() else Path(sys.executable)
 
     result = subprocess.run(
         [str(python), "-c", script],
