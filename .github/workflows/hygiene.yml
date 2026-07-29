@@ -9,7 +9,7 @@ name: Hygiene (advisory)
 # change is a non-event, not a silent regression.
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.ref }}
   cancel-in-progress: true
 
 permissions:

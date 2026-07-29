@@ -13,7 +13,7 @@ name: CI
 # path-filtered required check. Every required job below is unconditional.
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.ref }}
   # PRs cancel their own stale runs. `main` and `merge_group` must never
   # cancel themselves — that was why 14 of the last 30 `main` runs were
   # cancelled and 0 succeeded.

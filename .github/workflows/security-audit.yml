@@ -7,7 +7,7 @@ name: Security Audit (advisory)
 # only once the existing backlog is drained, or branch protection would wedge.
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.ref }}
   cancel-in-progress: true
 
 permissions:

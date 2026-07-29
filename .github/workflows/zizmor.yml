@@ -10,7 +10,7 @@ name: GitHub Actions Security Analysis with zizmor 🌈
 # triage plan — some checkouts legitimately need credentials.
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.ref }}
   cancel-in-progress: true
 
 on:
