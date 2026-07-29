@@ -149,7 +149,12 @@ Prepare a source-only packet:
   --output /tmp/ua-eval-requests.jsonl
 ```
 
-Generate one response for each request, then import and score it:
+Generate one response for each request, then import and score it. The
+provider-neutral batch runner can call an arbitrary executable through a
+shell-free argument or standard-input interface, retain resumable receipts,
+and write import-ready metadata. See
+[REPRODUCING.md](REPRODUCING.md#evaluate-another-model) for its configuration
+contract and complete command.
 
 ```bash
 .venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py import \

@@ -1,0 +1,29 @@
+{
+  "alias_resolution": {
+    "evidence": "provider model-list output, release documentation, or immutable receipt",
+    "requested": "provider-facing model alias",
+    "resolved": "exact model revision returned by the provider"
+  },
+  "auth_environment": [
+    "PROVIDER_API_KEY"
+  ],
+  "command_identity": {
+    "name": "provider command",
+    "version": "exact command version"
+  },
+  "decoding": {
+    "max_output_tokens": "not_exposed",
+    "safety": "not_exposed",
+    "seed": "not_exposed",
+    "stop": "not_exposed",
+    "temperature": "not_exposed",
+    "top_k": "not_exposed",
+    "top_p": "not_exposed"
+  },
+  "model": "public model name",
+  "model_version": "exact model revision",
+  "provider": "provider name",
+  "route": "provider route or endpoint class",
+  "run_id": "stable unique run identifier",
+  "schema_version": "ua_eval_model_run_config.v1"
+}
