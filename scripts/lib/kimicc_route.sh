@@ -167,7 +167,7 @@ kimicc_configure_route() {
     mkdir -p "$CLAUDE_CONFIG_DIR"
     echo "Isolated Claude config: $CLAUDE_CONFIG_DIR (original ~/.claude untouched)"
   fi
-  if ! assert_claude_settings_route_clean "KimiCC"; then
+  if ! assert_claude_settings_route_clean "KimiCC" "$project_dir"; then
     return 1
   fi
 

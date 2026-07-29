@@ -27,11 +27,13 @@ launcher_usage() {
     kimi) provider_env='  KIMICC_AUTH_TOKEN, MOONSHOT_API_KEY, KIMI_API_KEY
                              Explicit Kimi credentials for --harness claude-code.' ;;
     glm) provider_env='  GLMCC_AUTH_TOKEN, ZAI_API_KEY, ZHIPU_API_KEY, GLM_API_KEY
-                             Explicit GLM credentials.' ;;
+                             Explicit GLM credentials (preferred over the secret file).
+  ~/.secret/zai.key        Owner-only fallback (mode 0600/0400) when env is unset.
+  GLMCC_SECRET_FILE        Override path for the file-backed Z.AI key.' ;;
   esac
   case "$LC_PROVIDER:$LC_MODE" in
-    kimi:interactive) example_three='./start-kimi.sh --harness claude-code --endpoint coding' ;;
-    glm:interactive) example_three='./start-glm.sh --endpoint platform' ;;
+    kimi:interactive) example_three='./start-kimicc.sh --endpoint coding' ;;
+    glm:interactive) example_three='./start-glmcc.sh --endpoint coding' ;;
     *:driver) example_three="./${name} --epic devops" ;;
     *) example_three="./start-${LC_PROVIDER}-driver.sh --epic devops" ;;
   esac
@@ -119,6 +121,11 @@ launcher_clear_foreign_route_state() {
   unset CLAUDE_CODE_SUBAGENT_MODEL CLAUDE_CODE_EFFORT_LEVEL
   unset CLAUDE_CODE_MAX_CONTEXT_TOKENS CLAUDE_CODE_AUTO_COMPACT_WINDOW
   unset CLAUDE_CODE_API_KEY_HELPER_TTL_MS API_TIMEOUT_MS
+  # Provider-selector switches (Bedrock/Vertex/Foundry/Mantle/AWS) must not
+  # survive into an alternate Claude-Code route — settings env can also pin
+  # them, which the route guard refuses separately.
+  unset CLAUDE_CODE_USE_BEDROCK CLAUDE_CODE_USE_VERTEX CLAUDE_CODE_USE_FOUNDRY
+  unset CLAUDE_CODE_USE_MANTLE CLAUDE_CODE_USE_ANTHROPIC_AWS
   unset LEARN_UKRAINIAN_TRANSPORT LEARN_UKRAINIAN_REQUESTED_PROFILE_ID
   unset LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH
   unset LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH
