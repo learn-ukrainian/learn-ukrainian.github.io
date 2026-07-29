@@ -131,3 +131,12 @@ def test_receipt_registry_refuses_overwriting_an_issued_receipt(tmp_path) -> Non
         assert "already exists" in str(exc)
     else:  # pragma: no cover - this must never become an overwrite allow
         raise AssertionError("receipt registry allowed an issued receipt to be overwritten")
+
+
+def test_endpoint_rejects_malformed_receipt_id_as_client_error(monkeypatch) -> None:
+    """A malformed id is a 422 client error, never a retryable 503 (r6 review P3)."""
+    app = FastAPI()
+    app.include_router(rail_approval_router.router, prefix="/api/rail-approvals")
+    client = TestClient(app)
+    response = client.get("/api/rail-approvals/not-a-receipt-id")
+    assert response.status_code == 422
