@@ -317,7 +317,7 @@ outputs under `/tmp` unless a durable audit report is explicitly in scope.
 
 The source-language-agnostic evidence contract for #2156 / #4307 lives in:
 
-- `docs/projects/ua-eval-harness/schema.md`
+- `docs/projects/qg-quality-gate/schema.md`
 - `scripts/audit/qg_schema.py`
 
 `qg_schema.py` is a library module, not a CLI. Downstream scorer adapters should
