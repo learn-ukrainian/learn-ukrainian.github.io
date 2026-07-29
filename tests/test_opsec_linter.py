@@ -79,7 +79,7 @@ def test_public_identifier_pr_mode_scans_only_changed_public_paths(monkeypatch):
     monkeypatch.setattr(
         opsec_linter,
         "get_files_to_check",
-        lambda diff_range: ([changed_public_path, "scripts/private_import.py"], "git diff", "pr-head"),
+        lambda diff_range, **kwargs: ([changed_public_path, "scripts/private_import.py"], "git diff", "pr-head"),
     )
 
     def get_content(path: str, rev: str) -> str:
@@ -101,11 +101,38 @@ def test_public_identifier_pr_mode_rejects_a_leak_in_a_changed_public_path(monke
     monkeypatch.setattr(
         opsec_linter,
         "get_files_to_check",
-        lambda diff_range: ([changed_public_path], "git diff", "pr-head"),
+        lambda diff_range, **kwargs: ([changed_public_path], "git diff", "pr-head"),
     )
     monkeypatch.setattr(opsec_linter, "get_git_content", lambda path, rev: marker)
 
     assert opsec_linter.main(["base...pr-head", "--public-identifiers"]) == 1
+
+
+def test_public_identifier_pr_mode_scans_public_path_with_infrastructure_skip_substring(monkeypatch):
+    changed_public_path = "docs/references/external/changed.md"
+    marker = opsec_linter._SCRUBBED_PERSONAL_IDENTIFIER_TOKENS[0]
+    scanned_paths: list[str] = []
+
+    monkeypatch.setattr(opsec_linter, "run_git_nul_separated", lambda cmd: [changed_public_path])
+
+    def get_content(path: str, rev: str) -> str:
+        scanned_paths.append(path)
+        assert rev == "pr-head"
+        return marker
+
+    monkeypatch.setattr(opsec_linter, "get_git_content", get_content)
+
+    assert opsec_linter.main(["base...pr-head", "--public-identifiers"]) == 1
+    assert scanned_paths == [changed_public_path]
+
+
+def test_infrastructure_path_filter_keeps_its_skip_list():
+    skipped_path = "docs/references/external/private.md"
+
+    assert opsec_linter.filter_rel_paths([skipped_path]) == []
+    assert opsec_linter.filter_rel_paths(
+        [skipped_path], apply_infrastructure_skips=False
+    ) == [skipped_path]
 
 
 def test_public_identifier_full_tree_mode_scans_every_public_path(monkeypatch):

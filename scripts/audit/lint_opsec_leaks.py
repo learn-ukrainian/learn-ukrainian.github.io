@@ -255,23 +255,29 @@ def get_diff_range_head(diff_range: str) -> str:
     return "HEAD"
 
 
-def get_files_to_check(diff_range: str | None = None, staged_only: bool = False, scan_all: bool = False) -> tuple[list[str], str, str]:
+def get_files_to_check(
+    diff_range: str | None = None,
+    staged_only: bool = False,
+    scan_all: bool = False,
+    *,
+    apply_infrastructure_skips: bool = True,
+) -> tuple[list[str], str, str]:
     """Return tuple of (list_of_relative_path_strings, mode_description, rev_target)."""
     if scan_all:
         cmd = ["git", "ls-files", "-z"]
         paths = run_git_nul_separated(cmd)
-        return filter_rel_paths(paths), "all tracked files (--all)", "HEAD"
+        return filter_rel_paths(paths, apply_infrastructure_skips=apply_infrastructure_skips), "all tracked files (--all)", "HEAD"
 
     if staged_only:
         cmd = ["git", "diff", "--cached", "-z", "--name-only", "--diff-filter=ACMRT"]
         paths = run_git_nul_separated(cmd)
-        return filter_rel_paths(paths), "staged git index (:path)", ""
+        return filter_rel_paths(paths, apply_infrastructure_skips=apply_infrastructure_skips), "staged git index (:path)", ""
 
     if diff_range:
         rev_target = get_diff_range_head(diff_range)
         cmd = ["git", "diff", "-z", "--name-only", "--diff-filter=ACMRT", diff_range]
         paths = run_git_nul_separated(cmd)
-        return filter_rel_paths(paths), f"git diff ({diff_range})", rev_target
+        return filter_rel_paths(paths, apply_infrastructure_skips=apply_infrastructure_skips), f"git diff ({diff_range})", rev_target
 
     # Sol F004 / Fable F007: Explicit pre-push ref environment check
     pre_push_local = os.environ.get("PRE_PUSH_LOCAL_REF") or os.environ.get("PRE_COMMIT_TO_REF", "")
@@ -280,13 +286,13 @@ def get_files_to_check(diff_range: str | None = None, staged_only: bool = False,
         range_spec = f"{pre_push_remote}..{pre_push_local}"
         cmd = ["git", "diff", "-z", "--name-only", "--diff-filter=ACMRT", range_spec]
         paths = run_git_nul_separated(cmd)
-        return filter_rel_paths(paths), f"pre-push range ({range_spec})", pre_push_local
+        return filter_rel_paths(paths, apply_infrastructure_skips=apply_infrastructure_skips), f"pre-push range ({range_spec})", pre_push_local
 
     # Default logic: staged > feature branch diff > HEAD~1..HEAD
     cmd_staged = ["git", "diff", "--cached", "-z", "--name-only", "--diff-filter=ACMRT"]
     staged_paths = run_git_nul_separated(cmd_staged)
     if staged_paths:
-        return filter_rel_paths(staged_paths), "staged git index (:path)", ""
+        return filter_rel_paths(staged_paths, apply_infrastructure_skips=apply_infrastructure_skips), "staged git index (:path)", ""
 
     # Feature branch diff mode
     try:
@@ -296,28 +302,31 @@ def get_files_to_check(diff_range: str | None = None, staged_only: bool = False,
             cmd = ["git", "diff", "-z", "--name-only", "--diff-filter=ACMRT", "origin/main..HEAD"]
             paths = run_git_nul_separated(cmd)
             if paths:
-                return filter_rel_paths(paths), "git diff (origin/main..HEAD)", "HEAD"
+                return filter_rel_paths(paths, apply_infrastructure_skips=apply_infrastructure_skips), "git diff (origin/main..HEAD)", "HEAD"
     except Exception:
         pass
 
     # Default commit range check for push/local
     cmd = ["git", "diff", "-z", "--name-only", "--diff-filter=ACMRT", "HEAD~1..HEAD"]
     paths = run_git_nul_separated(cmd)
-    return filter_rel_paths(paths), "recent commit (HEAD~1..HEAD)", "HEAD"
+    return filter_rel_paths(paths, apply_infrastructure_skips=apply_infrastructure_skips), "recent commit (HEAD~1..HEAD)", "HEAD"
 
 
-def filter_rel_paths(paths: list[str]) -> list[str]:
-    """Filter relative path strings by extension and skip patterns (F001: preserve scripts/audit/ via filter_rel_paths)."""
+def filter_rel_paths(
+    paths: list[str], *, apply_infrastructure_skips: bool = True
+) -> list[str]:
+    """Filter paths by extension and, for infrastructure scans, skip patterns."""
     valid_paths: list[str] = []
     for rel_str in paths:
         path_obj = Path(rel_str)
         if path_obj.suffix.lower() in _SKIP_EXTENSIONS:
             continue
         normalized = rel_str.replace("\\", "/")
-        if normalized.startswith("scripts/audit/"):
-            valid_paths.append(rel_str)
-            continue
-        if any(sub in normalized for sub in _SKIP_PATH_SUBSTRINGS):
+        if (
+            apply_infrastructure_skips
+            and not normalized.startswith("scripts/audit/")
+            and any(sub in normalized for sub in _SKIP_PATH_SUBSTRINGS)
+        ):
             continue
         valid_paths.append(rel_str)
     return valid_paths
@@ -358,7 +367,9 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.public_identifiers:
             if args.diff_range:
-                changed_paths, diff_mode, rev_target = get_files_to_check(args.diff_range)
+                changed_paths, diff_mode, rev_target = get_files_to_check(
+                    args.diff_range, apply_infrastructure_skips=False
+                )
                 rel_paths = [
                     path for path in changed_paths if is_public_personal_identifier_path(path)
                 ]
