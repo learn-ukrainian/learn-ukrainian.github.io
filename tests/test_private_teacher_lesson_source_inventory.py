@@ -1,14 +1,21 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import yaml
 
 from scripts.audit import source_inventory_review_decisions as decisions
 from scripts.audit.source_inventory_intake import read_source_inventory
+from scripts.lexicon.build_teacher_deck_cloze import (
+    EXCLUDED_TEACHER_CLOZE_IDS,
+    exclude_private_cloze_cards,
+    public_teacher_lemmas,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SCRUBBED_PERSONAL_NAME_MARKERS = ("alona", "альона", "алёна")
+PUBLIC_TEACHER_CLOZE_ASSET = PROJECT_ROOT / "site/src/data/lexicon-teacher-cloze.json"
 PRIVATE_TEACHER_INVENTORY = (
     PROJECT_ROOT
     / "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml"
@@ -1006,3 +1013,34 @@ def test_private_teacher_rows_199_218_decision_ledger_covers_pending_seed() -> N
     }
 
     assert ledger_keys == inventory_keys
+
+
+def test_public_teacher_cloze_build_scrubs_private_cards_and_distractors() -> None:
+    cards = [
+        {"clozeId": "teacher_cloze_57", "lemma": "private"},
+        {"clozeId": "teacher_cloze_581", "lemma": "private"},
+        {"clozeId": "teacher_cloze_1521", "lemma": "private"},
+        {
+            "clozeId": "teacher_cloze_safe_but_private_distractor",
+            "lemma": "слово",
+            "options": [{"lemmaId": "альона", "label": "Альона"}],
+        },
+        {"clozeId": "teacher_cloze_safe", "lemma": "слово"},
+    ]
+
+    assert exclude_private_cloze_cards(cards) == [
+        {"clozeId": "teacher_cloze_safe", "lemma": "слово"},
+    ]
+
+
+def test_public_teacher_cloze_build_excludes_private_lemmas_before_distractors() -> None:
+    assert public_teacher_lemmas([{"lemma": "альона"}, {"lemma": "місто"}]) == ["місто"]
+
+
+def test_committed_public_teacher_cloze_asset_contains_no_private_cards() -> None:
+    asset_text = PUBLIC_TEACHER_CLOZE_ASSET.read_text(encoding="utf-8")
+    payload = json.loads(asset_text)
+    cloze_ids = {card["clozeId"] for card in payload["cloze"]}
+
+    assert cloze_ids.isdisjoint(EXCLUDED_TEACHER_CLOZE_IDS)
+    assert all(marker not in asset_text.casefold() for marker in SCRUBBED_PERSONAL_NAME_MARKERS)

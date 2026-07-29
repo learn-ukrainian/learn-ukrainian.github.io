@@ -2353,48 +2353,6 @@
       ]
     },
     {
-      "clozeId": "teacher_cloze_57",
-      "lemmaId": "альона",
-      "sentenceFrameId": "teacher_frame_57",
-      "lemma": "альона",
-      "form": "Альона",
-      "sentence": "Але _____ _____ — це\nприкольно.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for альона",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "альона",
-          "label": "Альона",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "верства",
-          "label": "верства",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "перун",
-          "label": "перун",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "червень",
-          "label": "червень",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
       "clozeId": "teacher_cloze_58",
       "lemmaId": "альпи",
       "sentenceFrameId": "teacher_frame_58",
@@ -24356,48 +24314,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "кількість",
           "label": "кількість",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_581",
-      "lemmaId": "вмикати",
-      "sentenceFrameId": "teacher_frame_581",
-      "lemma": "вмикати",
-      "form": "вмикати",
-      "sentence": "Завозити — вивозити, вдихати — видихати, забігати  — \nвибігати, взуватися — роззуватися, вигравати — програвати, \n_____ — вимикати.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for вмикати",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "вмикати",
-          "label": "вмикати",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "альона",
-          "label": "альона",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "заплатити",
-          "label": "заплатити",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "міра",
-          "label": "міра",
           "kind": "distractor"
         }
       ]
@@ -63836,48 +63752,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "злочинець",
           "label": "злочинець",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_1521",
-      "lemmaId": "заручитися підтримкою",
-      "sentenceFrameId": "teacher_frame_1521",
-      "lemma": "підтримкою",
-      "form": "підтримкою",
-      "sentence": "А в скрутнó хвилину ми завжди \nзвертаємося за _____ до таких людей, до їхнього \nдуху, щоб сила їхніх думок допомогла подолати нам \nпрèкрість*.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for заручитися підтримкою",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "заручитися підтримкою",
-          "label": "підтримкою",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "альона",
-          "label": "альона",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "перегнати",
-          "label": "перегнати",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "навколишній",
-          "label": "навколишній",
           "kind": "distractor"
         }
       ]
