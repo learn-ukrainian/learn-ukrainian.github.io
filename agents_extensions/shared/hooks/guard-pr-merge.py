@@ -942,6 +942,8 @@ def _load_rail_path_guard():
         candidate = parent / "scripts" / "orchestration" / "rail_path_guard.py"
         if not candidate.is_file():
             continue
+        if str(parent) not in sys.path:
+            sys.path.insert(0, str(parent))
         spec = importlib.util.spec_from_file_location("rail_path_guard", candidate)
         if spec is None or spec.loader is None:
             return None

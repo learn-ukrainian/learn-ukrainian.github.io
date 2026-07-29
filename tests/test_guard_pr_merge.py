@@ -289,6 +289,67 @@ def test_pr_ref_requires_explicit_selector():
     assert guard._pr_ref(["5", "--squash"]) == "5"
 
 
+def test_hook_loader_reaches_default_receipt_store_from_outside_repo(tmp_path) -> None:
+    """The deployed hook must bootstrap its source root before loading the guard."""
+    receipt = {
+        "schema_version": "rail-approval-receipt.v1",
+        "receipt_id": _RECEIPT_ID,
+        "issuer": "advisor",
+        "issued_at": "2026-07-28T00:00:00Z",
+        "expires_at": "2099-07-30T00:00:00Z",
+        "action": "rail-path-mutation",
+        "task_id": "pr-5",
+        "head_sha": "a" * 40,
+        "owned_paths": ["agents_extensions/shared/hooks/guard-pr-merge.py"],
+    }
+    script = f'''\
+import importlib.util
+import json
+import sys
+import urllib.request
+n=0
+repo_root = {str(REPO_ROOT)!r}
+sys.path[:] = [entry for entry in sys.path if entry != repo_root]
+spec = importlib.util.spec_from_file_location("guard_pr_merge_subprocess", {str(HOOK_PATH)!r})
+hook = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = hook
+spec.loader.exec_module(hook)
+rail_guard = hook._load_rail_path_guard()
+assert rail_guard is not None
+assert sys.path[0] == {str(REPO_ROOT)!r}
+class Response:
+    status = 200
+    headers = {{}}
+    def read(self):
+        return {json.dumps(json.dumps(receipt))}.encode("utf-8")
+    def __enter__(self):
+        return self
+    def __exit__(self, *_args):
+        return False
+def urlopen(request, timeout):
+    global n
+    n += 1
+    assert request.full_url.endswith("/api/rail-approvals/{_RECEIPT_ID}")
+    return Response()
+urllib.request.urlopen = urlopen
+store = rail_guard.MonitorRailApprovalReceiptStore()
+assert store.fetch_rail_approval_receipt({_RECEIPT_ID!r})["receipt_id"] == {_RECEIPT_ID!r}
+assert n == 1
+print("store-layer-reached")
+'''
+
+    result = subprocess.run(
+        [str(REPO_ROOT / ".venv" / "bin" / "python"), "-c", script],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "store-layer-reached"
+
+
 # --- main() decision (fail-closed) -----------------------------------------
 
 
