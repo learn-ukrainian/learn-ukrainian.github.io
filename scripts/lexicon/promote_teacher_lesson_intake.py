@@ -95,7 +95,7 @@ from scripts.verification.vesum import verify_words
 # Keep this committed ledger path until #5995 ships its coordinated ledger scrub and rename.
 DEFAULT_FULL_DECISIONS = (
     PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/2026-07-23-private-teacher-full-document-intake.yaml"
+    / "data/lexicon/source-inventory-review-decisions/2026-07-23-alona-full-document-intake.yaml"
 )
 DEFAULT_CURATED_INVENTORY = (
     PROJECT_ROOT
