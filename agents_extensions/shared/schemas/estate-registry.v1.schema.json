@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "estate-registry.v1",
+  "title": "Estate Registry v1 schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "version",
+    "title",
+    "surfaces",
+    "refused_mutation_surfaces"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "estate-registry.v1"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "vps_hosts",
+        "services",
+        "repositories",
+        "public_sites",
+        "worktrees",
+        "branches",
+        "babysit_files",
+        "dispatch_tasks"
+      ],
+      "properties": {
+        "vps_hosts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "ssh_alias", "role", "mutation_policy"],
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "ssh_alias": {"type": "string", "minLength": 1},
+              "role": {"type": "string", "minLength": 1},
+              "mutation_policy": {"enum": ["refused", "judgment_only", "allowed"]}
+            }
+          }
+        },
+        "services": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "host_alias", "systemd_unit", "mutation_policy"],
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "host_alias": {"type": "string", "minLength": 1},
+              "systemd_unit": {"type": "string", "minLength": 1},
+              "mutation_policy": {"enum": ["refused", "judgment_only", "allowed"]}
+            }
+          }
+        },
+        "repositories": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "local_path", "visibility", "mutation_policy"],
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "local_path": {"type": "string", "minLength": 1},
+              "visibility": {"enum": ["public", "private"]},
+              "mutation_policy": {"enum": ["refused", "judgment_only", "allowed"]}
+            }
+          }
+        },
+        "public_sites": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "url", "mutation_policy"],
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "url": {"type": "string", "format": "uri"},
+              "mutation_policy": {"enum": ["refused", "judgment_only", "allowed"]}
+            }
+          }
+        },
+        "worktrees": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["surface_id", "path_pattern", "mutation_policy"],
+            "properties": {
+              "surface_id": {"type": "string", "minLength": 1},
+              "path_pattern": {"type": "string", "minLength": 1},
+              "mutation_policy": {"enum": ["refused", "judgment_only", "allowed"]}
+            }
+          }
+        },
+        "branches": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["surface_id", "scope", "mutation_policy"],
+            "properties": {
+              "surface_id": {"type": "string", "minLength": 1},
+              "scope": {"type": "string", "minLength": 1},
+              "mutation_policy": {"enum": ["refused", "judgment_only", "allowed"]}
+            }
+          }
+        },
+        "babysit_files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["surface_id", "path_pattern", "mutation_policy"],
+            "properties": {
+              "surface_id": {"type": "string", "minLength": 1},
+              "path_pattern": {"type": "string", "minLength": 1},
+              "mutation_policy": {"enum": ["refused", "judgment_only", "allowed"]}
+            }
+          }
+        },
+        "dispatch_tasks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["surface_id", "mutation_policy"],
+            "properties": {
+              "surface_id": {"type": "string", "minLength": 1},
+              "mutation_policy": {"enum": ["refused", "judgment_only", "allowed"]}
+            }
+          }
+        }
+      }
+    },
+    "refused_mutation_surfaces": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  }
+}

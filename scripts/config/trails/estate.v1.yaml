@@ -1,0 +1,43 @@
+schema_version: estate-registry.v1
+version: "1.0.0"
+title: Estate surface registry seed
+surfaces:
+  vps_hosts:
+    - name: pilot-vps
+      ssh_alias: vps
+      role: pilot_host
+      mutation_policy: refused
+  services:
+    - name: hramatka-api
+      host_alias: vps
+      systemd_unit: hramatka-api
+      mutation_policy: refused
+  repositories:
+    - name: learn-ukrainian-infra-private
+      local_path: ~/projects/learn-ukrainian-infra-private
+      visibility: private
+      mutation_policy: refused
+  public_sites:
+    - name: public-site
+      url: https://learn-ukrainian.github.io/
+      mutation_policy: refused
+  worktrees:
+    - surface_id: worktree-list
+      path_pattern: ".worktrees/*"
+      mutation_policy: judgment_only
+  branches:
+    - surface_id: git-branches
+      scope: local_and_remote
+      mutation_policy: judgment_only
+  babysit_files:
+    - surface_id: babysit-file
+      path_pattern: "batch_state/babysit/*"
+      mutation_policy: judgment_only
+  dispatch_tasks:
+    - surface_id: dispatch-task-queue
+      mutation_policy: judgment_only
+refused_mutation_surfaces:
+  - pilot-vps
+  - hramatka-api
+  - learn-ukrainian-infra-private
+  - public-site

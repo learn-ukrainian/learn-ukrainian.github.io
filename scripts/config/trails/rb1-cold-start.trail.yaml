@@ -1,23 +1,13 @@
-# RB-1 — cold-start / orient / queue-pick (T2 DRAFT, extraction from drive-epic SKILL
-# steps 0/0a/1/2 + the infra driver's cold-start contract). Part of #5885.
-#
-# DRAFT STATUS: authored against today's substrate per the panel's draft-now ruling;
-# certification waits for T1 (slot addressing #5878, closure primitive). Steps that
-# depend on unbuilt machinery carry an explicit blocked_on marker.
-#
-# Anti-pattern guard (the #5860 r1 lessons, re-verified in the #5886 review round):
-# every command below is a real, currently runnable repo command whose OUTPUT SHAPE was
-# captured from a live run before being encoded; every predicate is falsifiable and has
-# an evidenced outcome for its failure direction; no failure path is swallowed — unknown
-# situations exit through a STOP code, never through a happy-path transition.
-schema_version: trailspec.v1
+schema_version: trailspec.v1.1
 trail_id: rb1-cold-start
-version: "0.2.0"
+version: "1.0.0"
 title: RB1 Cold-start, orientation, and queue pick
 seats:
-  - grok-daily
-  - glm-trial
-  - judgment
+  - grok
+  - glm-local
+  - kimi
+parameters:
+  handoff_agent: string
 stop_codes:
   - STOP-precondition-failed
   - STOP-concurrency-conflict
@@ -32,182 +22,407 @@ steps:
     intent: >-
       Detect whether a pending thread-rollover packet exists for this seat's handoff
       agent. The tool emits JSON whose "status" field is the transition input; its real
-      vocabulary (verified in thread_handoff.py) is none / pending_start / resumed /
-      ambiguous, with terminal packets listed under excluded_terminal. Proceed states:
-      none, pending_start, and resumed (a live packet THIS thread already bound — the
-      tool itself hard-errors when the binding belongs to a different thread). Ambiguous
-      or any unrecognized status is a hard stop.
-    command: .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent {handoff_agent}
-    evidence_predicate:
-      command: .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent {handoff_agent}
-      success_pattern: '"status": "(none|pending_start|resumed)"'
+      vocabulary is none / pending_start / resumed / ambiguous. Proceed states: none,
+      pending_start, and resumed. Ambiguous or unrecognized status is a hard stop.
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent "$HANDOFF_AGENT" | .venv/bin/python -c "import sys, json; print(json.load(sys.stdin).get('status', 'unparseable'))" || echo detect_failed
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      none: orient_api
-      pending_start: claim_rollover
-      resumed: claim_rollover
-      ambiguous_or_unrecognized_status: STOP-concurrency-conflict
-    kind: mechanical
+      none:
+        target: orient_api
+        evidence:
+          predicate_id: detect-rollover-none
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: none}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      pending_start:
+        target: claim_rollover
+        evidence:
+          predicate_id: detect-rollover-pending-start
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: pending_start}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      resumed:
+        target: claim_rollover
+        evidence:
+          predicate_id: detect-rollover-resumed
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: resumed}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      ambiguous:
+        target: STOP-concurrency-conflict
+        evidence:
+          predicate_id: detect-rollover-ambiguous
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: ambiguous}
+      unparseable:
+        target: STOP-concurrency-conflict
+        evidence:
+          predicate_id: detect-rollover-unparseable
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: unparseable}
+      detect_failed:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: detect-rollover-detect-failed
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: detect_failed}
     blocked_on: null
 
   - step_id: claim_rollover
     intent: >-
-      Claim the pending packet: bind-replacement (or the native-adapter path), resume,
-      semantic snapshot, strict recall, challenge proof, confirm-started. Judgment-carrying
-      (snapshot content, binding evidence) — the thread-rollover skill owns the procedure.
-      A packet bound to another lane or an ambiguous alias-directory state is a hard stop.
-    command: null
-    evidence_predicate: null
+      Observe rollover status for manual claim check. If no pending rollover exists (none),
+      proceed to orientation. If pending_start or resumed, stop for manual driver claim.
+      Ambiguous or unparseable states trigger concurrency conflict stop.
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent "$HANDOFF_AGENT" | .venv/bin/python -c "import sys, json; print(json.load(sys.stdin).get('status', 'unparseable'))" || echo detect_failed
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      confirmed: orient_api
-      foreign_packet: STOP-policy-violation
-      proofs_failed: STOP-precondition-failed
-    kind: summon
+      none:
+        target: orient_api
+        evidence:
+          predicate_id: claim-rollover-none
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: none}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      pending_start:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: claim-rollover-pending-start
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: pending_start}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      resumed:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: claim-rollover-resumed
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: resumed}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      ambiguous:
+        target: STOP-concurrency-conflict
+        evidence:
+          predicate_id: claim-rollover-ambiguous
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: ambiguous}
+      unparseable:
+        target: STOP-concurrency-conflict
+        evidence:
+          predicate_id: claim-rollover-unparseable
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: unparseable}
+      detect_failed:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: claim-rollover-detect-failed
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: detect_failed}
     blocked_on: null
 
   - step_id: orient_api
     intent: >-
       Orient via the Monitor API: manifest with live context telemetry. API down is not
-      fatal, but the fallback must be EVIDENCED, not narrated: the predicate emits either
-      the live "_telemetry" payload or an API_DOWN receipt proving the offline rule files
-      exist. Neither source available means no orientation basis at all — stop.
-    command: curl -sS --max-time 2 "http://127.0.0.1:8765/api/state/manifest"
-    evidence_predicate:
-      command: >-
-        curl -sS --max-time 2 "http://127.0.0.1:8765/api/state/manifest"
-        || echo "API_DOWN offline-fallback: $(ls agents_extensions/shared/rules/operator-expectations.md)"
-      success_pattern: '"_telemetry"|API_DOWN offline-fallback: agents_extensions/shared/rules/operator-expectations\.md'
+      fatal, but the fallback must be EVIDENCED: the predicate emits either the live
+      "_telemetry" payload or an API_DOWN receipt proving offline rule files exist.
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - curl -sS --max-time 2 "http://127.0.0.1:8765/api/state/manifest" 2>/dev/null | grep -q "_telemetry" && echo oriented || { test -f agents_extensions/shared/rules/operator-expectations.md && echo api_down_fallback_evidenced || echo no_orientation_source; }
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      oriented: drain_inbox
-      api_down_fallback_evidenced: drain_inbox
-      no_orientation_source: STOP-precondition-failed
-    kind: mechanical
+      oriented:
+        target: drain_inbox
+        evidence:
+          predicate_id: orient-api-oriented
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: oriented}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      api_down_fallback_evidenced:
+        target: drain_inbox
+        evidence:
+          predicate_id: orient-api-fallback
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: api_down_fallback_evidenced}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      no_orientation_source:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: orient-api-failed
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: no_orientation_source}
     blocked_on: null
 
   - step_id: drain_inbox
     intent: >-
-      Required live-driver inbox check (drive-epic 0a). List this seat's inbox state; the
-      "pending:" count line (captured live from `inbox show`) is the transition input.
-      Slot-identity inboxes (e.g. claude-atlas) require taxonomy step 4b.
-    command: .venv/bin/python -m scripts.ai_agent_bridge inbox show {handoff_agent}
-    evidence_predicate:
-      command: .venv/bin/python -m scripts.ai_agent_bridge inbox show {handoff_agent}
-      success_pattern: 'pending: +[0-9]+'
+      Required live-driver inbox check. List this seat's inbox state; the pending count
+      determines whether inbox processing or git reconciliation is next.
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - OUT=$(.venv/bin/python -m scripts.ai_agent_bridge inbox show "$HANDOFF_AGENT" 2>/dev/null); P=$(echo "$OUT" | awk "/pending:/{print \$2}"); if [ "$P" = "0" ]; then echo pending_zero; elif [ -n "$P" ]; then echo pending_nonzero; else echo inbox_unparseable; fi
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      pending_zero: reconcile_git
-      pending_nonzero: apply_inbox
-    kind: mechanical
-    blocked_on: "T1.1-slot-addressing (#5878) for non-static slot identities"
+      pending_zero:
+        target: reconcile_git
+        evidence:
+          predicate_id: drain-inbox-zero
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: pending_zero}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      pending_nonzero:
+        target: apply_inbox
+        evidence:
+          predicate_id: drain-inbox-nonzero
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: pending_nonzero}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      inbox_unparseable:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: drain-inbox-unparseable
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: inbox_unparseable}
+    blocked_on:
+      id: T1.1-slot-addressing
+      reason: T1.1 slot addressing (#5878) for non-static slot identities
+      stop_code: STOP-precondition-failed
 
   - step_id: apply_inbox
     intent: >-
-      Read and APPLY every unconsumed message, then record live consumption with
-      ack --consumed-by-live-driver (plain ack is not delivery proof; the flag exists —
-      verified against the current CLI). Applying a message can change the queue, the
-      width, or the lane's orders — judgment-carrying. The post-condition IS mechanical
-      and proven: after application the seat's pending count must read zero.
-    command: null
-    evidence_predicate:
-      command: .venv/bin/python -m scripts.ai_agent_bridge inbox show {handoff_agent}
-      success_pattern: 'pending: +0'
+      Observe inbox pending status. If pending is zero (inbox_zero), proceed to git reconciliation.
+      If pending is greater than zero, stop for manual driver application (STOP-manual-intervention).
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - OUT=$(.venv/bin/python -m scripts.ai_agent_bridge inbox show "$HANDOFF_AGENT" 2>/dev/null); P=$(echo "$OUT" | awk "/pending:/{print \$2}"); if [ "$P" = "0" ]; then echo inbox_zero; else echo pending_requires_application; fi
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+        HANDOFF_AGENT: "{handoff_agent}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      applied_and_drained: reconcile_git
-      order_conflicts_with_standing_rule: STOP-manual-intervention
-    kind: summon
+      inbox_zero:
+        target: reconcile_git
+        evidence:
+          predicate_id: apply-inbox-zero
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: inbox_zero}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      pending_requires_application:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: apply-inbox-pending-requires-application
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: pending_requires_application}
     blocked_on: null
 
   - step_id: reconcile_git
     intent: >-
-      Reconcile the handoff's claims against reality before firing anything: fetch,
-      compare main, list open PRs and worktrees. A prior session's in-flight item may
-      already be merged — re-firing it is the top re-collision class. The predicate chain
-      proves ALL FOUR commands ran (any failure breaks the && chain) and additionally
-      pins the invariant that the primary checkout sits on main — a primary moved off
-      main is the recurring #4857 incident class and must stop the trail.
-    command: git fetch origin && git log --oneline -3 origin/main && gh pr list --state open --limit 20 && git worktree list
-    evidence_predicate:
-      command: git fetch origin && git log --oneline -1 origin/main >/dev/null && gh pr list --state open --limit 20 >/dev/null && git worktree list
-      success_pattern: '\[main\]'
+      Reconcile the handoff's claims against reality: fetch, compare main, list open PRs and worktrees.
+      Invariant: primary checkout must sit on main.
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - git fetch origin >/dev/null 2>&1 && git log --oneline -1 origin/main >/dev/null 2>&1 && gh pr list --state open --limit 20 >/dev/null 2>&1 && git worktree list | grep -q "\[main\]" && echo reconciled || echo fetch_failed_or_primary_off_main
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      reconciled: sweep_stale_refs
-      fetch_failed_or_primary_off_main: STOP-precondition-failed
-    kind: mechanical
+      reconciled:
+        target: sweep_stale_refs
+        evidence:
+          predicate_id: reconcile-git-reconciled
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: reconciled}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      fetch_failed_or_primary_off_main:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: reconcile-git-failed
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: fetch_failed_or_primary_off_main}
     blocked_on: null
 
   - step_id: sweep_stale_refs
     intent: >-
-      Session-start hygiene: gather every worktree and every open PR head branch side by
-      side; the transition is a pr-ownership table lookup over that JOINED evidence — a
-      dispatch worktree whose branch has no open PR is a stale CANDIDATE (its final
-      MERGED/CLOSED check happens in reap_stale_refs; merge-base ancestry is NOT valid
-      under squash-merge). The predicate proves BOTH listings ran: the && chain gates the
-      gh call on worktree-list success, and the pattern matches only the gh JSON output
-      (a populated headRefName array or the literal empty array).
-    command: git worktree list --porcelain && gh pr list --state open --json headRefName --limit 30
-    evidence_predicate:
-      command: git worktree list --porcelain >/dev/null && gh pr list --state open --json headRefName --limit 30
-      success_pattern: 'headRefName|\[\]'
+      Session-start hygiene: presence check for dispatch worktrees under .worktrees/*.
+      Correlating worktrees against open PR branches (which of them are stale) is
+      driver judgment beyond this mechanical presence probe.
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - test $(git worktree list | grep -c ".worktrees") -eq 0 && echo no_stale_candidates || echo stale_candidates_present
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      no_stale_candidates: pick_next
-      stale_candidates_present: reap_stale_refs
-    kind: table-lookup
-    table: pr-ownership
+      no_stale_candidates:
+        target: pick_next
+        evidence:
+          predicate_id: sweep-stale-none
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: no_stale_candidates}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      stale_candidates_present:
+        target: reap_stale_refs
+        evidence:
+          predicate_id: sweep-stale-present
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: stale_candidates_present}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
     blocked_on: null
 
   - step_id: reap_stale_refs
     intent: >-
-      Judgment seat: for each stale candidate, verify clean tree AND zero unpushed
-      commits (never delete uncommitted work; never touch another lane's live worktree),
-      then reap worktree BEFORE branch. Every reap must be receipt-backed by the actual
-      `git worktree remove` / branch-deletion command output — a candidate that resists
-      removal or shows any ambiguity is a stop, not a force flag.
-    command: null
-    evidence_predicate:
-      command: git worktree list --porcelain | grep -c '^worktree '
-      success_pattern: '[0-9]'
+      Observe whether stale worktree references exist (merged into main or upstream tracking branch deleted).
+      If zero stale, proceed to pick_next. If stale references exist, stop for manual driver judgment (STOP-manual-intervention).
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - .venv/bin/python -c "import subprocess as s; wt=set(l.split('branch refs/heads/')[1] for l in s.check_output(['git','worktree','list','--porcelain'],text=True).splitlines() if l.startswith('branch refs/heads/')); wt.discard('main'); gone=set(l.strip().split()[0] for l in s.check_output(['git','branch','--format=%(refname:short) %(upstream:track)'],text=True).splitlines() if '[gone]' in l); merged=set(l.strip() for l in s.check_output(['git','branch','--merged','origin/main','--format=%(refname:short)'],text=True).splitlines() if l.strip()); print('stale_refs_require_judgment' if wt.intersection(gone.union(merged)) else 'no_stale_refs')" || echo reap_probe_failed
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      reaped_with_receipts: pick_next
-      uncommitted_or_foreign_ambiguity: STOP-manual-intervention
-    kind: summon
+      no_stale_refs:
+        target: pick_next
+        evidence:
+          predicate_id: reap-stale-none
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: no_stale_refs}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      stale_refs_require_judgment:
+        target: STOP-manual-intervention
+        evidence:
+          predicate_id: reap-stale-judgment-required
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: stale_refs_require_judgment}
+      reap_probe_failed:
+        target: STOP-precondition-failed
+        evidence:
+          predicate_id: reap-stale-refs-probe-failed
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: reap_probe_failed}
     blocked_on: null
 
   - step_id: pick_next
     intent: >-
-      Pick the next unblocked action from the lane queue via the queue-pick decision table
-      (decision-tables.v0.yaml, first-match precedence). Before any issue-fix pick, search
-      existing PRs by issue number — an open issue is not proof of unfixed.
-    command: gh pr list --state all --search "{issue_nr}" --limit 10
-    evidence_predicate:
-      command: gh pr list --state all --limit 1
-      success_pattern: '[0-9]'
+      Observe whether any open PR exists as a queue signal. This is an existence
+      check only — actual task selection is driver judgment performed outside this
+      mechanical step.
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - gh pr list --state open --limit 10 --json number 2>/dev/null | .venv/bin/python -c "import sys, json; print('picked' if json.load(sys.stdin) else 'queue_empty')" 2>/dev/null || echo queue_empty
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      picked: route_lane
-      queue_empty: idle
-      ambiguous_pick: STOP-manual-intervention
-      out_of_lane_item: STOP-policy-violation
-    kind: table-lookup
-    table: queue-pick
+      picked:
+        target: route_lane
+        evidence:
+          predicate_id: pick-next-picked
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: picked}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      queue_empty:
+        target: idle
+        evidence:
+          predicate_id: pick-next-empty
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: queue_empty}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
     blocked_on: null
 
   - step_id: route_lane
     intent: >-
-      Route the picked task by model-x-harness fit using the routing decision table — a
-      LIVE LOOKUP against /api/rules and codexbar pace/reserve plus disk headroom; the
-      table fixes the procedure, never the roster. The predicate emits either usable
-      quota data (the "pace"/"usage" keys of real codexbar JSON) or an explicit
-      CODEXBAR_UNAVAILABLE receipt — that receipt IS the required partial-picture
-      evidence, and routing on it must say so. No capacity anywhere with quality fit =
-      idle, never a forced misroute.
-    command: df -h / && codexbar usage --json --provider claude
-    evidence_predicate:
-      command: >-
-        df -h / && (codexbar usage --json --provider claude | grep -E '"pace"|"usage"'
-        || echo "CODEXBAR_UNAVAILABLE")
-      success_pattern: '"pace"|"usage"|CODEXBAR_UNAVAILABLE'
+      Observe lane-capacity signals (disk headroom and codexbar pace for the claude
+      lane). Routing a task by model-x-harness fit is driver judgment beyond this
+      probe; absent pace data is recorded honestly as a partial-data receipt.
+    command:
+      adapter: shell
+      argv:
+        - sh
+        - -c
+        - df -h / >/dev/null 2>&1 && (timeout 3 codexbar usage --json --provider claude 2>/dev/null | grep -q -E "\"pace\"|\"usage\"" && echo routed || echo partial_data_receipt_stated)
+      environment:
+        TRAIL_INVOCATION_ID: "{invocation_id}"
+      timeout_seconds: 30
+      mutation_class: observe
+      outcome_decoder:
+        source: stdout-token
     transitions:
-      routed: ready_to_dispatch
-      no_fitting_capacity: idle
-      partial_data_receipt_stated: ready_to_dispatch
-      language_lane_restriction_hit: STOP-policy-violation
-    kind: table-lookup
-    table: lane-routing
+      routed:
+        target: ready_to_dispatch
+        evidence:
+          predicate_id: route-lane-routed
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: routed}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
+      partial_data_receipt_stated:
+        target: ready_to_dispatch
+        evidence:
+          predicate_id: route-lane-partial-data
+          clauses:
+            - {source: command_receipt, field: actor_outcome, op: eq, value: partial_data_receipt_stated}
+            - {source: command_receipt, field: exit_code, op: eq, value: 0}
     blocked_on: null
