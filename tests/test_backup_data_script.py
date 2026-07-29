@@ -211,6 +211,54 @@ def test_execute_rejects_a_corrupt_database_before_upload(
     assert list(staging.iterdir()) == []
 
 
+def test_execute_refuses_when_full_tree_would_exceed_staging_space(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    (source / "valuable.txt").write_text("sole copy\n", encoding="utf-8")
+    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
+    _write_executable(
+        fake_bin / "df",
+        """#!/bin/bash
+printf '%s\\n' 'Filesystem 1024-blocks Used Available Capacity Mounted on'
+printf '%s\\n' 'testfs 4194304 0 2097152 0% /staging'
+""",
+    )
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode != 0
+    assert "Insufficient staging space" in result.stderr
+    assert "arg=<backup>" not in _log(environment)
+
+
+def test_darwin_rejects_cross_volume_copy_on_write_staging(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
+    _write_executable(fake_bin / "uname", "#!/bin/bash\nprintf '%s\\n' Darwin\n")
+    _write_executable(
+        fake_bin / "stat",
+        """#!/bin/bash
+if [[ "${1:-}" == '-f' && "${2:-}" == '%d' ]]; then
+  case "${3:-}" in
+    */project/*) printf '%s\\n' 101 ;;
+    *) printf '%s\\n' 202 ;;
+  esac
+  exit 0
+fi
+exec /usr/bin/stat "$@"
+""",
+    )
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode != 0
+    assert "requires source and staging on the same volume" in result.stderr
+    assert "arg=<backup>" not in _log(environment)
+
+
 def test_execute_snapshots_sqlite3_database_from_batch_state(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
@@ -386,6 +434,18 @@ def test_restore_is_a_dry_run_and_refuses_unsafe_targets(
     )
     assert symlink_result.returncode != 0
     assert "must not be a symlink" in symlink_result.stderr
+
+
+def test_restore_refuses_filesystem_root_as_project_overlap(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+
+    result = _run(environment, "restore", "latest", "--to", "/")
+
+    assert result.returncode != 0
+    assert "Restore target must be outside the project checkout" in result.stderr
+    assert "arg=<restore>" not in _log(environment)
 
 
 def test_init_requires_execute_before_creating_repository(

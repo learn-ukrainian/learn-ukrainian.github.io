@@ -171,6 +171,20 @@ file_mode() {
   stat -c '%a' "$path"
 }
 
+filesystem_device() {
+  local path=$1
+  local device
+
+  if device="$(stat -f '%d' "$path" 2>/dev/null)" &&
+    [[ "$device" =~ ^[0-9]+$ ]]; then
+    printf '%s\n' "$device"
+    return
+  fi
+  device="$(stat -c '%d' "$path")" || return 1
+  [[ "$device" =~ ^[0-9]+$ ]] || return 1
+  printf '%s\n' "$device"
+}
+
 canonical_existing_dir() {
   local path=$1
   [[ -d "$path" ]] || return 1
@@ -182,6 +196,10 @@ canonical_target() {
   local parent base
 
   [[ "$path" == /* ]] || die "Path must be absolute: $path"
+  [[ "$path" != "/" ]] || {
+    printf '/\n'
+    return
+  }
   parent="$(dirname "$path")"
   base="$(basename "$path")"
   [[ "$base" != "." && "$base" != ".." ]] || die "Unsafe target path: $path"
@@ -193,6 +211,7 @@ canonical_target() {
 path_is_within() {
   local child=$1
   local parent=$2
+  [[ "$parent" == "/" && "$child" == /* ]] && return
   [[ "$child" == "$parent" || "$child" == "$parent/"* ]]
 }
 
@@ -459,11 +478,12 @@ available_kib() {
 }
 
 check_staging_space() {
-  local db_bytes required_kib free_kib
+  local source_bytes db_bytes required_kib free_kib
   local -r safety_kib=$((2 * 1024 * 1024))
 
+  source_bytes="$(backup_tree_size_bytes)"
   db_bytes="$(db_size_bytes)"
-  required_kib=$(((db_bytes + 1023) / 1024 + safety_kib))
+  required_kib=$(((source_bytes + db_bytes + 1023) / 1024 + safety_kib))
   free_kib="$(available_kib)"
   [[ "$free_kib" =~ ^[0-9]+$ ]] || die "Could not determine staging free space."
   ((free_kib >= required_kib)) ||
@@ -473,10 +493,16 @@ check_staging_space() {
 clone_tree() {
   local source=$1
   local destination=$2
-  local source_bytes source_files
+  local source_bytes source_files source_device destination_device
 
   case "$(uname -s)" in
     Darwin)
+      source_device="$(filesystem_device "$source")" ||
+        die "Could not determine source volume for copy-on-write staging: $source"
+      destination_device="$(filesystem_device "$(dirname "$destination")")" ||
+        die "Could not determine staging volume for copy-on-write staging: $destination"
+      [[ "$source_device" == "$destination_device" ]] ||
+        die "APFS copy-on-write staging requires source and staging on the same volume."
       /bin/cp -cRp "$source" "$destination" ||
         die "APFS copy-on-write staging failed; refusing a full data copy."
       ;;
@@ -579,6 +605,17 @@ tree_file_stats() {
     count=$((count + 1))
   done < <(find "$tree" -type f -print0)
   printf '%s %s\n' "$total" "$count"
+}
+
+backup_tree_size_bytes() {
+  local total=0 relative source_path bytes files
+
+  for relative in "${BACKUP_PATHS[@]}"; do
+    source_path="$(source_for_backup_path "$relative")"
+    read -r bytes files < <(tree_file_stats "$source_path")
+    total=$((total + bytes))
+  done
+  printf '%s\n' "$total"
 }
 
 print_backup_selection() {

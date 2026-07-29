@@ -27,6 +27,10 @@ restic rclone path with that final directory name.
 - `init`, `backup`, and `restore` are previews unless `--execute` is explicit.
 - A backup executes from a private copy-on-write staging tree outside the
   checkout.
+- Staging capacity is checked against every selected recovery tree, SQLite
+  snapshot overhead, and a 2 GiB reserve before an execute path starts.
+- On macOS, source and staging must be on the same volume before APFS
+  copy-on-write staging; a cross-volume staging location fails closed.
 - On Linux filesystems without reflink support, only a bounded source tree of
   at most 64 MiB may fall back to a normal copy; larger trees fail closed.
 - Every `*.db`, `*.sqlite`, and `*.sqlite3` under the selected roots is rebuilt
