@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import copy
+import os
 import re
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -171,6 +173,110 @@ def test_former_judgment_and_summon_nodes_are_observe_or_stop() -> None:
                 transition["target"].startswith("STOP-")
                 for transition in step["transitions"].values()
             )
+
+
+def _rb2_step(spec: dict[str, Any], step_id: str) -> dict[str, Any]:
+    return next(step for step in spec["steps"] if step["step_id"] == step_id)
+
+
+def _run_rb2_shell_step(
+    step: dict[str, Any], tmp_path: Path, environment: dict[str, str]
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        step["command"]["argv"],
+        cwd=tmp_path,
+        env={**os.environ, **environment},
+        check=False,
+        text=True,
+        capture_output=True,
+    )
+
+
+def _write_fake_delegate(tmp_path: Path) -> None:
+    fake_python = tmp_path / ".venv/bin/python"
+    fake_python.parent.mkdir(parents=True)
+    fake_python.write_text(
+        "#!/bin/sh\nprintf '%s\\n' \"$FAKE_DISPATCH_OUTPUT\"\nexit \"$FAKE_DISPATCH_EXIT\"\n",
+        encoding="utf-8",
+    )
+    fake_python.chmod(0o755)
+
+
+def test_rb2_benign_overlap_refusal_reaches_approval_or_concurrency_stop(
+    tmp_path: Path,
+) -> None:
+    """A logged benign refusal reaches approval; missing or denied approval stops safely."""
+    spec = _load(RB2_PATH)
+    dispatch = _rb2_step(spec, "dispatch_worker")
+    observe_dispatch = _rb2_step(spec, "observe_dispatch_state")
+    approve_override = _rb2_step(spec, "approve_override")
+    _write_fake_delegate(tmp_path)
+    environment = {
+        "TASK_ID": "overlap-task",
+        "LANE": "grok",
+        "BRIEF_PATH": "brief.md",
+        "OVERLAP_REASON": "approved-reason",
+        "FAKE_DISPATCH_OUTPUT": "No actual path overlap was found",
+        "FAKE_DISPATCH_EXIT": "1",
+    }
+
+    benign_refusal = _run_rb2_shell_step(dispatch, tmp_path, environment)
+
+    assert benign_refusal.returncode == 0
+    assert benign_refusal.stdout == "dispatched\n"
+    assert (
+        tmp_path / "batch_state/rb2-dispatch-overlap-task.log"
+    ).read_text(encoding="utf-8") == "No actual path overlap was found\n"
+    observed_refusal = _run_rb2_shell_step(observe_dispatch, tmp_path, environment)
+    assert observed_refusal.stdout == "overlap-refused\n"
+    assert observe_dispatch["transitions"]["overlap_refused"]["target"] == "approve_override"
+
+    missing_approval = _run_rb2_shell_step(approve_override, tmp_path, environment)
+    assert missing_approval.stdout == "override-receipt-missing\n"
+    assert (
+        approve_override["transitions"]["override_receipt_missing"]["target"]
+        == "STOP-concurrency-conflict"
+    )
+    receipt = tmp_path / "batch_state/rb2-overlap-overlap-task.receipt"
+    receipt.write_text("task_id=overlap-task\nreason=denied\n", encoding="utf-8")
+    denied_approval = _run_rb2_shell_step(approve_override, tmp_path, environment)
+    assert denied_approval.stdout == "override-receipt-invalid\n"
+    assert (
+        approve_override["transitions"]["override_receipt_invalid"]["target"]
+        == "STOP-concurrency-conflict"
+    )
+
+
+def test_rb2_dispatch_wrappers_log_combined_output_without_masking_failures(
+    tmp_path: Path,
+) -> None:
+    """Both wrappers retain output, and non-benign delegate failures preserve their status."""
+    spec = _load(RB2_PATH)
+    dispatch = _rb2_step(spec, "dispatch_worker")
+    override = _rb2_step(spec, "override_dispatch")
+    _write_fake_delegate(tmp_path)
+    environment = {
+        "TASK_ID": "failed-task",
+        "LANE": "grok",
+        "BRIEF_PATH": "brief.md",
+        "OVERLAP_REASON": "approved-reason",
+        "FAKE_DISPATCH_OUTPUT": "ordinary failure",
+        "FAKE_DISPATCH_EXIT": "17",
+    }
+
+    failed_dispatch = _run_rb2_shell_step(dispatch, tmp_path, environment)
+    failed_override = _run_rb2_shell_step(override, tmp_path, environment)
+
+    assert failed_dispatch.returncode == 17
+    assert failed_dispatch.stdout == ""
+    assert failed_override.returncode == 17
+    assert failed_override.stdout == "override-dispatch-failed\n"
+    assert (tmp_path / "batch_state/rb2-dispatch-failed-task.log").read_text(
+        encoding="utf-8"
+    ) == "ordinary failure\n"
+    assert (tmp_path / "batch_state/rb2-override-dispatch-failed-task.log").read_text(
+        encoding="utf-8"
+    ) == "ordinary failure\n"
 
 
 class _TerminalSource:

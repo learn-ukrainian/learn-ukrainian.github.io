@@ -133,11 +133,13 @@ steps:
     blocked_on: null
 
   - step_id: dispatch_worker
-    intent: Dispatch exactly once; a separate observation reads the task state receipt.
+    intent: >-
+      Dispatch exactly once while retaining combined output. Only the recorded benign
+      overlap refusal is re-observed; every other nonzero result remains a failure.
     command:
       adapter: shell
-      argv: [.venv/bin/python, scripts/delegate.py, dispatch, --agent, "{lane}", --task-id, "{task_id}", --prompt-file, "{brief_path}", --worktree, --mode, danger]
-      environment: {TRAIL_INVOCATION_ID: "{invocation_id}"}
+      argv: [bash, -c, 'mkdir -p batch_state || exit 1; LOG="batch_state/rb2-dispatch-$TASK_ID.log"; .venv/bin/python scripts/delegate.py dispatch --agent "$LANE" --task-id "$TASK_ID" --prompt-file "$BRIEF_PATH" --worktree --mode danger 2>&1 | tee "$LOG" >&2; PIPE_STATUSES=("${PIPESTATUS[@]}"); DISPATCH_STATUS="${PIPE_STATUSES[0]}"; TEE_STATUS="${PIPE_STATUSES[1]}"; if [ "$TEE_STATUS" -ne 0 ]; then exit "$TEE_STATUS"; fi; if [ "$DISPATCH_STATUS" -eq 0 ]; then echo dispatched; exit 0; fi; if grep -Fq "No actual path overlap was found" "$LOG"; then echo dispatched; exit 0; fi; exit "$DISPATCH_STATUS"']
+      environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}", BRIEF_PATH: "{brief_path}"}
       timeout_seconds: 120
       mutation_class: remote-mutation
       outcome_decoder: {source: stdout-token}
@@ -180,10 +182,12 @@ steps:
     blocked_on: null
 
   - step_id: override_dispatch
-    intent: Dispatch once with an externally observed overlap approval; success is re-observed separately.
+    intent: >-
+      Dispatch once with an externally observed overlap approval and retain combined
+      output; success is re-observed separately.
     command:
       adapter: shell
-      argv: [sh, -c, '.venv/bin/python scripts/delegate.py dispatch --agent "$LANE" --task-id "$TASK_ID" --prompt-file "$BRIEF_PATH" --worktree --mode danger --allow-path-overlap "$OVERLAP_REASON" && echo override-dispatch-issued || echo override-dispatch-failed']
+      argv: [bash, -c, 'mkdir -p batch_state || exit 1; LOG="batch_state/rb2-override-dispatch-$TASK_ID.log"; .venv/bin/python scripts/delegate.py dispatch --agent "$LANE" --task-id "$TASK_ID" --prompt-file "$BRIEF_PATH" --worktree --mode danger --allow-path-overlap "$OVERLAP_REASON" 2>&1 | tee "$LOG" >&2; PIPE_STATUSES=("${PIPESTATUS[@]}"); DISPATCH_STATUS="${PIPE_STATUSES[0]}"; TEE_STATUS="${PIPE_STATUSES[1]}"; if [ "$TEE_STATUS" -ne 0 ]; then exit "$TEE_STATUS"; fi; if [ "$DISPATCH_STATUS" -eq 0 ]; then echo override-dispatch-issued; exit 0; fi; echo override-dispatch-failed; exit "$DISPATCH_STATUS"']
       environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}", BRIEF_PATH: "{brief_path}", OVERLAP_REASON: "{overlap_reason}"}
       timeout_seconds: 120
       mutation_class: remote-mutation
