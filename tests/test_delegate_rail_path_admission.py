@@ -21,8 +21,13 @@ RAIL_PATH = "agents_extensions/shared/hooks/guard-pr-merge.py"
 
 
 def _git(cwd: Path, *args: str) -> str:
+    # The agent-runtime Git shim rejects pushes to `main` when its
+    # AGENT_NO_MERGE guard is inherited. These fixtures push disposable
+    # scratch repos and must not inherit that ambient policy.
+    environment = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    environment.pop("AGENT_NO_MERGE", None)
     return subprocess.run(
-        ["git", *args], cwd=cwd, check=True, capture_output=True, text=True
+        ["git", *args], cwd=cwd, check=True, capture_output=True, text=True, env=environment
     ).stdout.strip()
 
 
