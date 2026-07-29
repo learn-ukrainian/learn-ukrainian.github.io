@@ -74,11 +74,11 @@ def test_codex_manifest_uses_only_supported_result_event() -> None:
     assert "PostToolUseFailure" not in hooks
 
 
-def test_codex_app_and_cli_share_bounded_native_context_defaults() -> None:
+def test_codex_project_config_leaves_root_model_user_selectable() -> None:
     config = tomllib.loads(PROJECT_CONFIG.read_text(encoding="utf-8"))
 
-    assert config["model"] == "gpt-5.6-sol"
-    assert config["model_reasoning_effort"] == "high"
+    assert "model" not in config
+    assert "model_reasoning_effort" not in config
     assert config["features"] == {
         "multi_agent": True,
         "remote_compaction_v2": True,

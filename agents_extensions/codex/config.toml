@@ -1,8 +1,8 @@
-# Shared project defaults for Codex App, CLI, and IDE surfaces.
+# Shared project behavior for Codex App, CLI, and IDE surfaces.
+# Root model and reasoning defaults intentionally remain user-scoped so the
+# desktop model picker can override them for each task.
 # Codex owns context compaction; repository hooks add durable fleet hydration
 # only when a launcher has explicitly bound an epic driver.
-model = "gpt-5.6-sol"
-model_reasoning_effort = "high"
 
 [features]
 multi_agent = true
