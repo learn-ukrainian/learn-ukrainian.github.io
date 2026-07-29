@@ -83,8 +83,14 @@ import {
   type CefrLevel,
 } from '../lib/lexicon/levels';
 import { dateSeed, deckSeed, pickDaily, type DailyWord } from '../lib/lexicon/daily';
-import { getTeacherLessonVirtualDeck, readLocalCustomSets, saveLocalCustomSet, deleteLocalCustomSet, type CustomSet } from '../lib/lexicon/custom-decks';
-import { filterTeacherClozeItems } from '../lib/lexicon/teacher-cloze-overrides';
+import {
+  filterTeacherClozeItems,
+  getTeacherLessonVirtualDeck,
+  readLocalCustomSets,
+  saveLocalCustomSet,
+  deleteLocalCustomSet,
+  type CustomSet,
+} from '../lib/lexicon/custom-decks';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
 import { usablePracticeSentenceEnglish } from '../lib/lexicon/practice-sentence-en';
 import { searchShardForQuery, type SearchRow, type SearchShardManifest } from '../lib/lexicon/search';

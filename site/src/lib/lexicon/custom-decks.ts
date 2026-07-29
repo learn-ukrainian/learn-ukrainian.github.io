@@ -33,7 +33,17 @@ export function getDeviceId(): string {
 }
 
 import teacherClozeData from '../../data/lexicon-teacher-cloze.json';
-import { filterTeacherClozeItems } from './teacher-cloze-overrides';
+
+const excludedTeacherClozeIds = new Set([
+  'teacher_cloze_57',
+  'teacher_cloze_581',
+  'teacher_cloze_1521',
+]);
+
+/** Removes teacher-cloze cards whose public content must not be served. */
+export function filterTeacherClozeItems<T extends { clozeId: string }>(items: readonly T[]): T[] {
+  return items.filter((item) => !excludedTeacherClozeIds.has(item.clozeId));
+}
 
 const defaultTeacherLemmas: string[] = Array.from(
   new Set(

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { filterTeacherClozeItems } from '@site/src/lib/lexicon/teacher-cloze-overrides';
+import { filterTeacherClozeItems } from '@site/src/lib/lexicon/custom-decks';
 
 describe('teacher cloze overrides', () => {
   test('never returns excluded cards with an English placeholder lemma', () => {
