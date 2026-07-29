@@ -50,6 +50,19 @@ def test_rejects_english_multiword_teacher_answer(tmp_path: Path) -> None:
     ]
 
 
+def test_rejects_single_word_english_teacher_answer(tmp_path: Path) -> None:
+    card = _valid_card()
+    card["lemma"] = "lesson"
+    cloze_path, overrides_path = _write_gate_files(tmp_path, [card])
+
+    errors = validate_teacher_cloze_content(cloze_path, overrides_path)
+
+    assert errors == [
+        "teacher-cloze teacher_cloze_1 lemma: must include Ukrainian content in Cyrillic; "
+        "got 'lesson'"
+    ]
+
+
 def test_rejects_multiword_english_answer_with_cyrillic_text(tmp_path: Path) -> None:
     card = _valid_card()
     card["lemma"] = "curated private урок"
