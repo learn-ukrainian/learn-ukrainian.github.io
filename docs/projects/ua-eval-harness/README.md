@@ -216,7 +216,7 @@ offline:
 .venv/bin/python scripts/projects/ua_eval_harness/verify_release_freeze.py
 ```
 
-The Ukrainian-first
+The English
 [contamination policy](contamination-policy.md) documents the complete leakage
 disclosure, train-fixture separation, prohibited product/training reuse, and
 semantic version-bump rules. Frozen bytes are never edited in place.
