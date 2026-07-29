@@ -28,8 +28,6 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any, Protocol
 
-from jsonschema import Draft202012Validator, FormatChecker
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAIL_APPROVAL_RECEIPT_SCHEMA_PATH = (
     PROJECT_ROOT / "agents_extensions/shared/schemas/rail-approval-receipt.v1.schema.json"
@@ -169,6 +167,10 @@ class RailApprovalReceiptError(ValueError):
     """A receipt could not prove authorization for a rail mutation."""
 
 
+class RailApprovalValidatorUnavailableError(RailApprovalReceiptError):
+    """The optional schema validator is unavailable for receipt authorization."""
+
+
 class RailApprovalReceiptStore(Protocol):
     """A provisioned external receipt source, never a caller-controlled file."""
 
@@ -301,6 +303,12 @@ def _validator() -> Draft202012Validator:
     global _RECEIPT_VALIDATOR
     if _RECEIPT_VALIDATOR is not None:
         return _RECEIPT_VALIDATOR
+    try:
+        from jsonschema import Draft202012Validator, FormatChecker
+    except ImportError as exc:
+        raise RailApprovalValidatorUnavailableError(
+            "rail approval receipt validator is unavailable"
+        ) from exc
     try:
         schema = json.loads(RAIL_APPROVAL_RECEIPT_SCHEMA_PATH.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
@@ -594,6 +602,8 @@ def _receipt_authorizes(
     """Return a refusal reason, or ``None`` only for a current path binding."""
     try:
         payload = validate_rail_approval_receipt_data(receipt.payload)
+    except RailApprovalValidatorUnavailableError:
+        return "rail_approval_validator_unavailable"
     except RailApprovalReceiptError:
         return "invalid_rail_approval_receipt"
     if payload["issuer"] not in APPROVED_ISSUERS:
@@ -694,6 +704,12 @@ def decide_rail_path_mutation_with_production_receipt(
         return preliminary
     try:
         receipt = (resolver or build_production_rail_approval_receipt_resolver()).fetch(receipt_id)
+    except RailApprovalValidatorUnavailableError:
+        return RailPathDecision(
+            RailPathDecisionKind.DENY,
+            "rail_approval_validator_unavailable",
+            preliminary.rail_paths,
+        )
     except RailApprovalReceiptError as exc:
         reason = (
             "expired_rail_approval_receipt"

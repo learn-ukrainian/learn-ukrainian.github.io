@@ -23,6 +23,7 @@ import importlib.util
 import json
 import os
 import subprocess
+from collections import namedtuple
 from pathlib import Path
 
 import pytest
@@ -37,6 +38,7 @@ _GIT_ENV = {
     "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_NAMESPACE", "GIT_CEILING_DIRECTORIES",
     "GIT_DISCOVERY_ACROSS_FILESYSTEM", "GIT_COMMON_DIR",
 }
+_RAIL_ENV = {"LEARN_UK_RAIL_APPROVAL_RECEIPT", "LEARN_UK_RAIL_TASK_ID"}
 
 
 def _load_hook():
@@ -76,6 +78,8 @@ hook = _load_hook()
         ("sudo tee /etc/hosts", ["/etc/hosts"]),
         # In-place editors — script excluded, files kept.
         ('sed -i "s/x/y/" real.py', ["real.py"]),
+        ("sed -i '' 's/a/b/' f", ["f"]),
+        ("sed -i '' f", []),
         ('sed -i.bak -e "s/a/b/" f1 f2', ["f1", "f2"]),
         ('perl -pi -e "s/x/y/" z.txt', ["z.txt"]),
         # Leading env assignment before the command word.
@@ -154,7 +158,7 @@ def test_write_tool_targets_apply_patch_move():
 
 
 def _clean_env() -> dict[str, str]:
-    return {k: v for k, v in os.environ.items() if k not in _GIT_ENV}
+    return {k: v for k, v in os.environ.items() if k not in _GIT_ENV | _RAIL_ENV}
 
 
 def _git(repo: Path, *args: str) -> None:
@@ -243,6 +247,104 @@ def test_read_only_bash_allowed(repo: Path):
         payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
         result = _run(repo, payload)
         assert result.returncode == 0, f"{command!r}: {result.stderr}"
+
+
+def test_read_only_bash_redirect_is_allowed_when_jsonschema_is_masked(
+    repo: Path, tmp_path: Path
+) -> None:
+    """#5992: loading the path classifier must not require receipt validation."""
+    poison = tmp_path / "poison"
+    poison.mkdir()
+    (poison / "jsonschema.py").write_text(
+        "raise ImportError('jsonschema deliberately masked')\n", encoding="utf-8"
+    )
+    env = _clean_env()
+    env["PYTHONPATH"] = str(poison)
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(repo),
+        "tool_input": {"command": "git status 2>/dev/null"},
+    }
+
+    result = subprocess.run(
+        [_python(), str(HOOK_PATH)],
+        input=json.dumps(payload),
+        cwd=repo,
+        check=False,
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=30,
+    )
+
+    assert result.returncode == 0, result.stderr
+
+
+def test_old_python_denies_write_targets_and_path_scoped_git_before_classifier_load(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Python <3.11 cannot import the classifier, so P6 refuses classified writes."""
+    VersionInfo = namedtuple("VersionInfo", "major minor micro releaselevel serial")
+    monkeypatch.setattr(hook.sys, "version_info", VersionInfo(3, 9, 6, "final", 0))
+    monkeypatch.setattr(
+        hook,
+        "_load_rail_path_guard",
+        lambda: (_ for _ in ()).throw(AssertionError("must not load classifier")),
+    )
+
+    for command in ("echo x > /tmp/target", "git add docs/notes.md"):
+        monkeypatch.setattr(
+            hook,
+            "_read_payload",
+            lambda command=command: {
+                "tool_name": "Bash",
+                "tool_input": {"command": command},
+            },
+        )
+
+        assert hook.main() == 2
+        assert "rail_path_guard_python_too_old:3.9" in capsys.readouterr().err
+
+
+def test_old_python_leaves_read_only_commands_untouched(
+    monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """No write target or path-scoped git intent leaves the old hook behavior intact."""
+    VersionInfo = namedtuple("VersionInfo", "major minor micro releaselevel serial")
+    monkeypatch.setattr(hook.sys, "version_info", VersionInfo(3, 9, 6, "final", 0))
+    monkeypatch.setattr(
+        hook,
+        "_read_payload",
+        lambda: {"tool_name": "Bash", "tool_input": {"command": "git status"}},
+    )
+    monkeypatch.setattr(hook, "_load_containment", lambda: None)
+    monkeypatch.setattr(
+        hook,
+        "_load_rail_path_guard",
+        lambda: (_ for _ in ()).throw(AssertionError("must not load classifier")),
+    )
+
+    assert hook.main() == 0
+
+
+def test_rail_classifier_load_failure_reports_underlying_exception(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A real loader failure gives the next incident its actual cause (#5992)."""
+    monkeypatch.setattr(
+        hook,
+        "_read_payload",
+        lambda: {"tool_name": "Bash", "tool_input": {"command": "echo x > /tmp/target"}},
+    )
+
+    def fail_load():
+        raise RuntimeError("forced rail loader failure")
+
+    monkeypatch.setattr(hook, "_load_rail_path_guard", fail_load)
+
+    assert hook.main() == 2
+    stderr = capsys.readouterr().err
+    assert "RuntimeError: forced rail loader failure" in stderr
 
 
 def test_bash_tool_input_workdir_controls_relative_write_resolution(repo: Path):
