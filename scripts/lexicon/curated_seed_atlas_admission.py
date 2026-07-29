@@ -371,7 +371,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.fill_existing_glosses:
         assert manifest is not None
         result = fill_missing_manifest_glosses(rows, manifest, args.target_lemma)
-        wrote_manifest = bool(args.write and result.applied)
+        if args.write and result.applied:
+            assert args.manifest is not None
+            _write_json(args.manifest, manifest)
+            wrote_manifest = True
         print(
             "Seed gloss fill: "
             f"applied={len(result.applied)} skipped_existing={len(result.skipped_existing)}"
@@ -379,14 +382,14 @@ def main(argv: list[str] | None = None) -> int:
     if args.fill_existing_pos:
         assert manifest is not None
         pos_result = fill_missing_manifest_pos(manifest, args.target_lemma)
-        wrote_manifest = wrote_manifest or bool(args.write and pos_result.applied)
+        if args.write and pos_result.applied:
+            assert args.manifest is not None
+            _write_json(args.manifest, manifest)
+            wrote_manifest = True
         print(
             "VESUM POS fill: "
             f"applied={len(pos_result.applied)} skipped_existing={len(pos_result.skipped_existing)}"
         )
-    if args.write and wrote_manifest:
-        assert args.manifest is not None and manifest is not None
-        _write_json(args.manifest, manifest)
     if args.fill_existing_glosses or args.fill_existing_pos:
         print(f"Manifest written={str(wrote_manifest).lower()}")
     if args.public_seed_out:
