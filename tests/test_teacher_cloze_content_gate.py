@@ -50,6 +50,19 @@ def test_rejects_english_multiword_teacher_answer(tmp_path: Path) -> None:
     ]
 
 
+def test_rejects_multiword_english_answer_with_cyrillic_text(tmp_path: Path) -> None:
+    card = _valid_card()
+    card["lemma"] = "curated private урок"
+    cloze_path, overrides_path = _write_gate_files(tmp_path, [card])
+
+    errors = validate_teacher_cloze_content(cloze_path, overrides_path)
+
+    assert errors == [
+        "teacher-cloze teacher_cloze_1 lemma: must not be an English multi-word descriptive phrase; "
+        "got 'curated private урок'"
+    ]
+
+
 def test_excluded_card_is_removed_before_answer_validation(tmp_path: Path) -> None:
     excluded = _valid_card("teacher_cloze_2")
     excluded["form"] = "curated private teacher lesson"

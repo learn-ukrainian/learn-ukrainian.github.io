@@ -78,15 +78,15 @@ def _is_non_linguistic(value: str) -> bool:
 
 
 def _validate_answer_value(value: Any) -> str | None:
-    """Return a reason when a learner answer is an English descriptor, not a form."""
+    """Return a reason for invalid input or multiple ASCII words in an answer."""
     if not isinstance(value, str) or not value.strip():
         return "must be a non-empty string"
     if _is_non_linguistic(value):
         return None
-    if _CYRILLIC_LETTER_RE.search(value):
-        return None
     if len(_ASCII_WORD_RE.findall(value)) >= 2:
         return "must not be an English multi-word descriptive phrase"
+    if _CYRILLIC_LETTER_RE.search(value):
+        return None
     return None
 
 
