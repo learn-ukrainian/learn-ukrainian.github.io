@@ -5,8 +5,9 @@ Pure inline fixtures (no 39 MB manifest needed): the predicate is data-shape log
 
 from __future__ import annotations
 
+import pytest
+
 from scripts.audit.lexeme_filter import (
-    DERIVED_FORM_SOURCES,
     GRAMMAR_TERM_POS,
     SURFACE_CLOZE,
     SURFACE_DAILY,
@@ -82,33 +83,56 @@ def test_practice_rejects_surzhyk_to_avoid():
     assert is_practice_eligible(_noun(primary_source=SURZHYK_SOURCE)) is False
 
 
-def test_practice_rejects_derived_forms():
-    for src in DERIVED_FORM_SOURCES:
-        assert is_practice_eligible(
-            _noun(primary_source=src, form_of={"lemma": "хліб", "url_slug": "khlib"})
-        ) is False
+@pytest.mark.parametrize(
+    ("primary_source", "form_of", "expected"),
+    [
+        pytest.param(
+            "built_vocabulary_normalized",
+            {"lemma": "хліб", "url_slug": "khlib"},
+            False,
+            id="form-of-set-normalized",
+        ),
+        pytest.param(
+            "built_vocabulary_canonicalized",
+            {"lemma": "хліб", "url_slug": "khlib"},
+            False,
+            id="form-of-set-canonicalized",
+        ),
+        pytest.param(
+            "built_vocabulary_form",
+            {"lemma": "хліб", "url_slug": "khlib"},
+            False,
+            id="form-of-set-form-source",
+        ),
+        pytest.param(
+            "built_vocabulary_form",
+            None,
+            False,
+            id="form-source-without-form-of",
+        ),
+        pytest.param(
+            "built_vocabulary_normalized",
+            None,
+            True,
+            id="normalized-canonical-lemma-without-form-of",
+        ),
+        pytest.param(
+            "built_vocabulary_canonicalized",
+            None,
+            True,
+            id="canonicalized-canonical-lemma-without-form-of",
+        ),
+    ],
+)
+def test_practice_derived_source_form_of_policy_matrix(
+    primary_source: str, form_of: dict[str, str] | None, expected: bool
+) -> None:
+    """Only aliases and built form rows are excluded from otherwise-valid cards."""
+    entry = _noun(primary_source=primary_source)
+    if form_of is not None:
+        entry["form_of"] = form_of
 
-
-def test_practice_keeps_canonical_lemma_normalized_from_an_inflected_surface():
-    entry = _noun(primary_source="built_vocabulary_normalized")
-
-    assert is_practice_eligible(entry) is True
-
-
-def test_practice_keeps_canonicalized_headword_without_form_of():
-    # VESUM canonicalization creates a real headword, not an alias route. Its source
-    # label must not exclude it when it has no actual form_of relationship.
-    entry = _noun(primary_source="built_vocabulary_canonicalized")
-
-    assert is_practice_eligible(entry) is True
-
-
-def test_practice_rejects_form_source_missing_its_form_of_relation():
-    # The builder must pair this provenance with ``form_of``. A malformed row
-    # must remain excluded rather than becoming a study-card candidate.
-    entry = _noun(primary_source="built_vocabulary_form")
-
-    assert is_practice_eligible(entry) is False
+    assert is_practice_eligible(entry) is expected
 
 
 def test_practice_rejects_glossless():
