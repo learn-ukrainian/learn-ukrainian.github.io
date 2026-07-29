@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from scripts.lexicon import curated_seed_atlas_admission as admission
 
 
@@ -74,6 +76,53 @@ def test_normalize_rows_projects_private_v5_input_to_replayable_schema() -> None
             "provenance": {"source_file": "ukrlib-example", "credit": "Автор"},
         }
     ]
+
+
+def test_fill_missing_manifest_glosses_updates_only_explicit_blank_targets() -> None:
+    manifest = {
+        "entries": [
+            {"lemma": "Лоток", "gloss": None},
+            {"lemma": "опік", "gloss": "Burn"},
+            {"lemma": "інші", "gloss": None},
+        ]
+    }
+    result = admission.fill_missing_manifest_glosses(
+        [
+            {"lemma": "лоток", "gloss": "Food container / Tray"},
+            {"lemma": "опік", "gloss": "Burn"},
+            {"lemma": "інші", "gloss": "Other"},
+        ],
+        manifest,
+        ["ЛОТОК", "опік"],
+    )
+
+    assert result.applied == ("Лоток",)
+    assert result.skipped_existing == ("опік",)
+    assert manifest["entries"] == [
+        {"lemma": "Лоток", "gloss": "Food container / Tray"},
+        {"lemma": "опік", "gloss": "Burn"},
+        {"lemma": "інші", "gloss": None},
+    ]
+
+
+def test_fill_missing_manifest_glosses_strips_terminal_aspect_note() -> None:
+    manifest = {"entries": [{"lemma": "доглянути", "gloss": ""}]}
+
+    result = admission.fill_missing_manifest_glosses(
+        [{"lemma": "Доглянути", "gloss": "To look after / care for (perf)"}],
+        manifest,
+        ["доглянути"],
+    )
+
+    assert result.applied == ("доглянути",)
+    assert manifest["entries"][0]["gloss"] == "To look after / care for"
+
+
+def test_fill_missing_manifest_glosses_rejects_missing_target_seed() -> None:
+    manifest = {"entries": [{"lemma": "лоток", "gloss": None}]}
+
+    with pytest.raises(ValueError, match="missing from curated seed"):
+        admission.fill_missing_manifest_glosses([], manifest, ["лоток"])
 
 
 def test_write_json_uses_shared_atomic_write_helper(tmp_path: Path, monkeypatch) -> None:
