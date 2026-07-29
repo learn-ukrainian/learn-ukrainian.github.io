@@ -59,12 +59,11 @@ form is a calque under this benchmark. A separate
 annotator-level edits.
 
 The reproducible surface-form probe uses the pinned dict_uk/VESUM v6.8.0
-release, which was the latest stable upstream release available when public v0
-was frozen. Across 293 unique `F/Calque` spans, the probe finds 49 collisions
-with style markers: 34 `bad`, 10 `slang`, 3 `arch`, and 2 `rare`. The source
-does not provide a dedicated `dial` token. Its published `arch` semantics
-cover obsolete and archaic usage and may also cover dialectal usage. The
-benchmark therefore does not claim that there are zero dialect conflicts.
+release. Across 293 unique `F/Calque` spans, the probe finds 49 collisions with
+style markers: 34 `bad`, 10 `slang`, 3 `arch`, and 2 `rare`. The source does
+not provide a dedicated `dial` token. Its published `arch` semantics cover
+obsolete and archaic usage and may also cover dialectal usage. The benchmark
+therefore does not claim that there are zero dialect conflicts.
 
 Headline calque recall includes 338 annotations. The remaining 16 are outside
 the headline metric: 3 register-standardization cases, 2 heritage conflicts,
