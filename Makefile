@@ -34,8 +34,8 @@ practice-admit-curated-seed:
 	$(MAKE) atlas-local-practice-refresh
 
 atlas:
-	$(PYTHON) -m scripts.lexicon.build_data_manifest
-	$(PYTHON) scripts/lexicon/enrich_manifest.py
+	$(PYTHON) -m scripts.lexicon.build_data_manifest --write
+	$(PYTHON) scripts/lexicon/enrich_manifest.py --write
 	$(PYTHON) -m scripts.audit.generate_search_index
 	$(PYTHON) scripts/lexicon/export_open_dataset.py
 	$(PYTHON) -m scripts.audit.generate_daily_pool
