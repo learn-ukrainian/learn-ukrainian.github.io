@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import json
+import sys
+import types
+import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -222,6 +225,35 @@ def test_unreadable_receipt_store_fails_closed() -> None:
 
     with pytest.raises(guard.RailApprovalReceiptError, match="could not re-fetch"):
         resolver.fetch(RECEIPT_ID)
+
+
+def test_default_monitor_fetch_does_not_import_bridge_package(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The by-file client load preserves its relative import without bridge startup."""
+    package_name = "scripts.ai_agent_bridge"
+    monkeypatch.setitem(sys.modules, package_name, types.ModuleType(package_name))
+    monkeypatch.delitem(sys.modules, f"{package_name}.monitor_client", raising=False)
+
+    class Response:
+        status = 200
+
+        def __init__(self) -> None:
+            self.headers: dict[str, str] = {}
+
+        def read(self) -> bytes:
+            return json.dumps(_receipt()).encode("utf-8")
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args: object) -> bool:
+            return False
+
+    monkeypatch.setattr(urllib.request, "urlopen", lambda *_args, **_kwargs: Response())
+
+    receipt = guard.MonitorRailApprovalReceiptStore().fetch_rail_approval_receipt(RECEIPT_ID)
+
+    assert receipt["receipt_id"] == RECEIPT_ID
+    assert f"{package_name}.monitor_client" not in sys.modules
 
 
 @pytest.mark.parametrize(
