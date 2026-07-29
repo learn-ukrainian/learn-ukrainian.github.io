@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "trail-certification-attestation.v1",
+  "title": "Trail certification attestation v1 schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "certification_id", "generated_at", "hermetic", "trail",
+    "decision_table_hashes", "runner", "environment", "cases", "coverage",
+    "damage_event_codes", "preventable_interventions", "live_canary_receipts",
+    "sample_size", "event_count", "one_sided_95_upper_bound", "status",
+    "recertification_triggers", "independent_review_publication_receipt"
+  ],
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "nullable_string": {"type": ["string", "null"]},
+    "case_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["transition", "stop_code", "outcome", "exit_class", "state"],
+      "properties": {
+        "transition": {"$ref": "#/$defs/nullable_string"},
+        "stop_code": {"type": ["string", "null"], "pattern": "^STOP-[a-z0-9-]+$"},
+        "outcome": {"type": "string", "minLength": 1},
+        "exit_class": {"type": ["integer", "null"], "enum": [0, 20, 21, 22, 23, 24, null]},
+        "state": {"$ref": "#/$defs/nullable_string"}
+      }
+    },
+    "receipt_slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slot", "status", "receipt"],
+      "properties": {
+        "slot": {"type": "string", "minLength": 1},
+        "status": {"enum": ["pending", "clean", "failed"]},
+        "receipt": {"type": ["object", "null"]}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "trail-certification-attestation.v1"},
+    "certification_id": {"type": "string", "minLength": 1},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "hermetic": {"type": "boolean"},
+    "trail": {
+      "type": "object", "additionalProperties": false,
+      "required": ["trail_id", "trail_version", "trail_hash"],
+      "properties": {
+        "trail_id": {"type": "string", "minLength": 1},
+        "trail_version": {"type": ["string", "integer"]},
+        "trail_hash": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "decision_table_hashes": {
+      "type": "object", "additionalProperties": {"$ref": "#/$defs/digest"}
+    },
+    "runner": {
+      "type": "object", "additionalProperties": false,
+      "required": ["commit", "digest"],
+      "properties": {
+        "commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+        "digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "environment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["seat", "model", "harness", "cli_version", "tool_isolation_profile"],
+      "properties": {
+        "seat": {"type": "string", "minLength": 1},
+        "model": {"type": "string", "minLength": 1},
+        "harness": {"type": "string", "minLength": 1},
+        "cli_version": {"type": "string", "minLength": 1},
+        "tool_isolation_profile": {"type": "string", "minLength": 1}
+      }
+    },
+    "cases": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": [
+          "case_id", "fault", "plant", "expected", "observed", "step_chain_digest",
+          "damage_event_codes", "preventable_interventions", "passed"
+        ],
+        "properties": {
+          "case_id": {"type": "string", "minLength": 1},
+          "fault": {"type": "string", "minLength": 1},
+          "plant": {"type": "string", "minLength": 1},
+          "expected": {"$ref": "#/$defs/case_state"},
+          "observed": {"$ref": "#/$defs/case_state"},
+          "step_chain_digest": {"$ref": "#/$defs/digest"},
+          "damage_event_codes": {
+            "type": "array", "uniqueItems": true,
+            "items": {"enum": [
+              "merged-regression", "unauthorized-rail-file-edit", "self-review-accepted",
+              "false-closure", "missed-stop", "stale-generation-action",
+              "review-merge-bypass", "replayed-side-effect", "wrong-head-rerun"
+            ]}
+          },
+          "preventable_interventions": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "passed": {"type": "boolean"}
+        }
+      }
+    },
+    "coverage": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "required_transitions", "observed_transitions", "missing_transitions",
+        "required_stop_codes", "observed_stop_codes", "missing_stop_codes",
+        "required_fault_classes", "observed_fault_classes", "missing_fault_classes"
+      ],
+      "properties": {
+        "required_transitions": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "observed_transitions": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "missing_transitions": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "required_stop_codes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^STOP-[a-z0-9-]+$"}},
+        "observed_stop_codes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^STOP-[a-z0-9-]+$"}},
+        "missing_stop_codes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^STOP-[a-z0-9-]+$"}},
+        "required_fault_classes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "observed_fault_classes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "missing_fault_classes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+      }
+    },
+    "damage_event_codes": {"type": "array", "uniqueItems": true, "items": {"enum": ["merged-regression", "unauthorized-rail-file-edit", "self-review-accepted", "false-closure", "missed-stop", "stale-generation-action", "review-merge-bypass", "replayed-side-effect", "wrong-head-rerun"]}},
+    "preventable_interventions": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "live_canary_receipts": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "items": {"$ref": "#/$defs/receipt_slot"}
+    },
+    "sample_size": {"type": "integer", "minimum": 1},
+    "event_count": {"type": "integer", "minimum": 0},
+    "one_sided_95_upper_bound": {"type": "number", "minimum": 0, "maximum": 1},
+    "status": {
+      "type": "object", "additionalProperties": false,
+      "required": ["harness_passed", "trial_eligible", "production_certified", "demote"],
+      "properties": {
+        "harness_passed": {"type": "boolean"}, "trial_eligible": {"type": "boolean"},
+        "production_certified": {"type": "boolean"}, "demote": {"type": "boolean"}
+      }
+    },
+    "recertification_triggers": {
+      "type": "array", "uniqueItems": true,
+      "items": {"enum": [
+        "trailspec-change", "decision-table-change", "trail-hash-change", "runner-change",
+        "predicate-change", "closure-change", "primitive-change", "stop-taxonomy-change",
+        "authority-lease-change", "model-harness-cli-change", "github-semantics-change",
+        "repeated-repaired-gap", "damage-event"
+      ]}
+    },
+    "independent_review_publication_receipt": {"$ref": "#/$defs/receipt_slot"}
+  }
+}

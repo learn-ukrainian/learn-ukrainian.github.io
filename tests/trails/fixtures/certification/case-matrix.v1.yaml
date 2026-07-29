@@ -1,0 +1,29 @@
+schema_version: trail-certification-case-matrix.v1
+cases:
+  - {trail_id: RB-1, plant: ambiguous-queue, fault: unknown-ci}
+  - {trail_id: RB-1, plant: foreign-ownership, fault: stale-lease}
+  - {trail_id: RB-1, plant: stale-rollover, fault: interruption-resume}
+  - {trail_id: RB-1, plant: foreign-rollover, fault: duplicate-replayed-receipt}
+  - {trail_id: RB-2, plant: overlap-refusal, fault: partial-mutation}
+  - {trail_id: RB-2, plant: one-retry-maximum, fault: api-unavailable}
+  - {trail_id: RB-2, plant: retry-failure-preserved, fault: crash-before-spawn}
+  - {trail_id: RB-2, plant: no-force-cleanup, fault: dirty-worktree}
+  - {trail_id: RB-3, plant: self-review, fault: conflicting-reviews}
+  - {trail_id: RB-3, plant: stale-verdict, fault: unknown-ci}
+  - {trail_id: RB-3, plant: contested-verdict, fault: conflicting-reviews}
+  - {trail_id: RB-3, plant: draft-ci, fault: api-unavailable}
+  - {trail_id: RB-3, plant: red-ci, fault: partial-mutation}
+  - {trail_id: RB-3, plant: current-head-approval, fault: interruption-resume}
+  - {trail_id: RB-4, plant: unknown-signature, fault: stale-lease}
+  - {trail_id: RB-4, plant: ambiguous-signature, fault: duplicate-replayed-receipt}
+  - {trail_id: RB-4, plant: expired-signature, fault: dirty-worktree}
+  - {trail_id: RB-4, plant: stale-run-no-rerun, fault: crash-after-spawn}
+  - {trail_id: RB-4, plant: claimant-race-once, fault: crash-after-side-effect}
+  - {trail_id: RB-5, plant: missing-receipt, fault: api-unavailable}
+  - {trail_id: RB-5, plant: forged-receipt, fault: conflicting-reviews}
+  - {trail_id: RB-5, plant: replayed-receipt, fault: duplicate-replayed-receipt}
+  - {trail_id: RB-5, plant: stale-lease-receipt, fault: stale-lease}
+  - {trail_id: RB-5, plant: late-inbox, fault: interruption-resume}
+  - {trail_id: RB-6, plant: degradation-summon, fault: unknown-ci}
+  - {trail_id: RB-6, plant: vps-mutation-refused, fault: partial-mutation}
+  - {trail_id: RB-6, plant: private-repo-mutation-refused, fault: crash-after-side-effect}
