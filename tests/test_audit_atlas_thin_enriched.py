@@ -22,6 +22,7 @@ def test_has_learner_english_anchor_accepts_supported_anchor_shapes() -> None:
 
 
 def test_has_learner_english_anchor_rejects_ukrainian_only_enrichment() -> None:
+    assert not has_learner_english_anchor({"gloss": "Дієпр. пас. мин. ч. до прийняти."})
     assert not has_learner_english_anchor(
         {
             "enrichment": {

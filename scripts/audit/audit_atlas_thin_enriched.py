@@ -22,7 +22,7 @@ DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
+from scripts.lexicon.enrich_manifest import _entry_has_learner_english_anchor
 from scripts.lexicon.manifest_io import load_manifest
 
 
@@ -31,33 +31,9 @@ def old_gate_enriched(entry: dict[str, Any]) -> bool:
     return bool(entry.get("enrichment"))
 
 
-def _has_nonempty_string(value: object) -> bool:
-    return isinstance(value, str) and bool(value.strip())
-
-
-def _has_nonempty_list(value: object) -> bool:
-    return isinstance(value, list) and any(_has_nonempty_string(item) for item in value)
-
-
 def has_learner_english_anchor(entry: dict[str, Any]) -> bool:
     """Return True when an entry has a learner-facing English meaning anchor."""
-    if _has_nonempty_string(entry.get("gloss")):
-        return True
-
-    enrichment = entry.get("enrichment")
-    if not isinstance(enrichment, dict):
-        return False
-
-    translation = enrichment.get("translation")
-    if isinstance(translation, dict) and _has_nonempty_list(translation.get("en")):
-        return True
-
-    meaning = enrichment.get("meaning")
-    if not isinstance(meaning, dict):
-        return False
-    if meaning.get("source") != KAIKKI_SOURCE:
-        return False
-    return _has_nonempty_list(meaning.get("definitions"))
+    return _entry_has_learner_english_anchor(entry)
 
 
 def thin_old_gate_entries(manifest: dict[str, Any]) -> list[dict[str, Any]]:

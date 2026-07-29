@@ -112,6 +112,7 @@ export default function WordAtlasArticle({
     headerStress,
     nounParadigm,
     verbParadigm,
+    participleParadigm,
     markedFormGroups,
     isFullyMarked,
     isExpressionLikeEntry,
@@ -430,6 +431,45 @@ export default function WordAtlasArticle({
                       </tbody>
                     </table>
                   ))}
+                </>
+              ) : participleParadigm ? (
+                <>
+                  <p>
+                    <strong>
+                      {participleParadigm.voice === "passive" ? "Пасивний" : "Активний"} дієприкметник
+                      {participleParadigm.aspect === "perfective" ? " доконаного виду" : " недоконаного виду"}
+                    </strong>
+                    {participleParadigm.verb && (
+                      <>
+                        {" "}від {participleParadigm.verb_url_slug ? (
+                          <a href={`/lexicon/${participleParadigm.verb_url_slug}`} className="ukr">
+                            {participleParadigm.verb}
+                          </a>
+                        ) : (
+                          <span className="ukr">{participleParadigm.verb}</span>
+                        )}
+                      </>
+                    )}
+                  </p>
+                  {!isFullyMarked && enrichment.morphology.forms.length > 0 && (
+                    <table className="paradigm-table">
+                      <caption>Форми дієприкметника</caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">Форма</th>
+                          <th scope="col">Позначка</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {enrichment.morphology.forms.slice(0, 24).map((form) => (
+                          <tr key={`${form.form}-${form.label}`}>
+                            <td className="form">{form.stress ?? stressDisplay(form.form)}</td>
+                            <td className="case-name">{form.label}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
                 </>
               ) : (
                 !isFullyMarked && enrichment.morphology.forms.length > 0 && (

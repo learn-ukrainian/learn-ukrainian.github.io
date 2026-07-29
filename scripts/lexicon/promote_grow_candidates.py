@@ -44,8 +44,11 @@ from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.enrich_manifest import (
     _entry_has_learner_english_anchor,
     _fill_learner_english_anchor_from_slovnyk_cache,
+    _is_cyrillic_only_gloss,
     _load_slovnyk_cache_file,
     _slovnyk_cache_path,
+    apply_participle_presentation,
+    promotion_entry_gate_violations,
 )
 from scripts.lexicon.fill_from_content import ModuleInfo, _load_manifest, _manifest_entry
 from scripts.lexicon.lemma_normalization import strip_acute_stress
@@ -61,6 +64,13 @@ DEFAULT_CANDIDATES = PROJECT_ROOT / "data" / "lexicon" / "grow_candidates.json"
 DEFAULT_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_NEEDS_REVIEW = PROJECT_ROOT / "data" / "lexicon" / "grow_needs_review.json"
 PRIMARY_SOURCE = "content_lexicon_grow"
+_CURATED_PARTICIPLE_LEARNER_GLOSSES = {
+    # Source intake records the Ukrainian dictionary cross-reference
+    # ``Дієпр. пас. мин. ч. до прийняти``.  The learner-facing meaning is
+    # intentionally English; VESUM supplies the independent POS/voice/aspect.
+    "прийнятий": ("accepted", "admitted", "adopted"),
+}
+_CURATED_PARTICIPLE_GLOSS_SOURCE = "Atlas learner curation (#5918)"
 APPROVAL_LEDGER_KIND = "atlas_grow_promotion_ledger"
 NEEDS_REVIEW_LEDGER_KIND = "atlas_grow_needs_review_decisions"
 ALLOWED_LEDGER_DECISIONS = frozenset({"approve", "deferred", "reject"})
@@ -206,6 +216,7 @@ def promote_grow_candidates(
     promoted: list[str] = []
     skipped_existing: list[str] = []
     newly_promoted_entries: list[dict[str, Any]] = []
+    newly_promoted_hints: list[tuple[dict[str, Any], tuple[str, ...]]] = []
     for candidate in promote_queue:
         lemma = strip_acute_stress(_candidate_lemma(candidate))
         key = _lemma_key(lemma)
@@ -217,6 +228,14 @@ def promote_grow_candidates(
         existing_keys.add(key)
         promoted.append(lemma)
         newly_promoted_entries.append(entry)
+        newly_promoted_hints.append((entry, _candidate_participle_hints(candidate)))
+
+    for entry, hints in newly_promoted_hints:
+        apply_participle_presentation(
+            entry,
+            parent_hints=hints,
+            available_lemmas=existing_keys,
+        )
 
     # Fill before validation: the prospective gate must inspect the exact post-fill
     # manifest state that would ship, including its translation/source enrichment.
@@ -227,6 +246,12 @@ def promote_grow_candidates(
 
     if promoted:
         _refresh_manifest_metadata(manifest)
+
+    # A dry run must surface the same deterministic admission failures as a
+    # write.  Otherwise a malformed candidate can look promotable until the
+    # irreversible step is attempted.
+    if promoted:
+        _validate_new_entry_learner_gates(newly_promoted_entries)
 
     manifest_written = False
     fingerprint_written = False
@@ -271,6 +296,9 @@ def manifest_entry_from_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
     """Build one live manifest entry from a P2 enriched candidate."""
     lemma = strip_acute_stress(_candidate_lemma(candidate))
     gloss = _candidate_gloss(candidate)
+    curated_glosses = _CURATED_PARTICIPLE_LEARNER_GLOSSES.get(_lemma_key(lemma))
+    if curated_glosses and _is_cyrillic_only_gloss(gloss):
+        gloss = "; ".join(curated_glosses)
     pos = _clean_optional_str(candidate.get("pos"))
     base_entry = _manifest_entry(
         lemma,
@@ -287,6 +315,20 @@ def manifest_entry_from_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             base_entry[field] = candidate[field]
     if "pos" in candidate:
         base_entry["pos"] = candidate.get("pos")
+    if curated_glosses:
+        enrichment_raw = base_entry.get("enrichment")
+        enrichment: dict[str, Any] = dict(enrichment_raw) if isinstance(enrichment_raw, Mapping) else {}
+        translation = enrichment.get("translation")
+        if not isinstance(translation, Mapping) or not translation.get("en"):
+            enrichment["translation"] = {
+                "en": list(curated_glosses),
+                "source": _CURATED_PARTICIPLE_GLOSS_SOURCE,
+            }
+        sources = list(enrichment.get("sources") or []) if isinstance(enrichment.get("sources"), list) else []
+        if _CURATED_PARTICIPLE_GLOSS_SOURCE not in sources:
+            sources.append(_CURATED_PARTICIPLE_GLOSS_SOURCE)
+        enrichment["sources"] = sorted(sources)
+        base_entry["enrichment"] = enrichment
     return base_entry
 
 
@@ -900,6 +942,41 @@ def _candidate_gloss(candidate: Mapping[str, Any]) -> str | None:
         if gloss:
             return gloss
     return None
+
+
+def _candidate_participle_hints(candidate: Mapping[str, Any]) -> tuple[str, ...]:
+    """Keep source-definition wording available for deterministic parent lookup."""
+    hints: list[str] = []
+    for key in ("gloss", "approved_gloss"):
+        value = candidate.get(key)
+        if isinstance(value, str) and value.strip():
+            hints.append(value)
+    enrichment = candidate.get("enrichment")
+    if isinstance(enrichment, Mapping):
+        meaning = enrichment.get("meaning")
+        if isinstance(meaning, Mapping):
+            definitions = meaning.get("definitions")
+            if isinstance(definitions, list):
+                for definition in definitions:
+                    if isinstance(definition, str):
+                        hints.append(definition)
+                    elif isinstance(definition, Mapping):
+                        for key in ("text", "definition", "value"):
+                            value = definition.get(key)
+                            if isinstance(value, str):
+                                hints.append(value)
+    return tuple(hints)
+
+
+def _validate_new_entry_learner_gates(entries: Sequence[Mapping[str, Any]]) -> None:
+    """Fail closed before a promote write when learner/gloss morphology is invalid."""
+    violations = promotion_entry_gate_violations(entries)
+    if not violations:
+        return
+    print("=== NEW-ENTRY LEARNER GATES ===", file=sys.stderr)
+    for violation in violations[:20]:
+        print(f"  {violation}", file=sys.stderr)
+    raise SelfCheckError(2)
 
 
 def _meaning_text(meaning: object) -> str | None:

@@ -357,6 +357,64 @@ def test_morphology_can_use_base_form_from_pair_lemma(monkeypatch) -> None:
     assert morphology["forms"][0] == {"form": "варити", "label": "інфінітив"}
 
 
+def test_vesum_passive_participle_gets_presentation_and_verified_parent(monkeypatch) -> None:
+    """Regression fixture for «прийнятий» (adjp:pasv:perf, #5918)."""
+    rows = [
+        {"word_form": "прийнятий", "tags": "adj:m:v_naz:adjp:pasv:perf", "pos": "adj"},
+        {"word_form": "прийнята", "tags": "adj:f:v_naz:adjp:pasv:perf", "pos": "adj"},
+    ]
+    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "verify_word",
+        lambda word: (
+            [{"lemma": "прийняти", "pos": "verb", "tags": "verb:perf:inf"}]
+            if word == "прийняти"
+            else [
+                {"lemma": "прийнятий", "pos": "adj", "tags": "adj:m:v_naz:adjp:pasv:perf"}
+            ]
+        ),
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+
+    entry: dict[str, object] = {
+        "lemma": "прийнятий",
+        "gloss": "accepted; admitted; adopted",
+        "enrichment": {
+            "meaning": {"definitions": ["Дієпр. пас. мин. ч. до прийня́ти."], "source": "fixture"}
+        },
+    }
+
+    assert enrich_manifest_module.apply_participle_presentation(
+        entry,
+        available_lemmas={"прийняти", "прийнятий"},
+    )
+    paradigm = entry["enrichment"]["morphology"]["paradigm"]
+    assert paradigm == {
+        "kind": "participle",
+        "voice": "passive",
+        "aspect": "perfective",
+        "verb": "прийняти",
+        "verb_url_slug": "прийняти",
+    }
+    assert enrich_manifest_module.promotion_entry_gate_violations([entry]) == []
+
+
+def test_participle_gate_rejects_bare_adjective_and_cyrillic_gloss(monkeypatch) -> None:
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "verify_word",
+        lambda word: [{"lemma": word, "pos": "adj", "tags": "adj:m:v_naz:adjp:pasv:perf"}],
+    )
+
+    violations = enrich_manifest_module.promotion_entry_gate_violations(
+        [{"lemma": "прийнятий", "gloss": "Дієпр. пас. мин. ч. до прийняти."}]
+    )
+
+    assert any("Cyrillic-only" in violation for violation in violations)
+    assert any("requires participle presentation" in violation for violation in violations)
+
+
 # --- #4891: style-marked forms segregated out of the modern paradigm ---
 
 
