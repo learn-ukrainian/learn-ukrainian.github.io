@@ -11,7 +11,6 @@ sys.path.insert(0, str(REPO_ROOT / "scripts"))
 from audit.check_ua_eval_public_doc_language import (
     PUBLIC_ENGLISH_DOCS,
     governed_paths,
-    mask_code,
     scan_text,
 )
 
@@ -42,7 +41,7 @@ The prose returns to English.
     assert scan_text(text) == []
 
 
-def test_masks_multiline_and_variable_width_code_spans() -> None:
+def test_allows_multiline_and_variable_width_code_spans() -> None:
     text = """English ``first `український`
 second`` prose.
 
@@ -53,12 +52,36 @@ second`` prose.
 ````
 """
 
-    masked = mask_code(text)
+    assert scan_text(text) == []
 
-    assert "український" not in masked
-    assert "Український" not in masked
-    assert masked.count("\n") == text.count("\n")
-    assert len(masked) == len(text)
+
+def test_rejects_unclosed_fence_instead_of_hiding_rest_of_document() -> None:
+    text = """# Examples
+
+```text
+Example output.
+
+Український prose that must not be hidden.
+"""
+
+    findings = scan_text(text)
+
+    assert len(findings) == 1
+    assert findings[0].line == 3
+    assert "Unclosed fenced code block" in findings[0].message
+
+
+def test_stray_backticks_cannot_mask_across_markdown_blocks() -> None:
+    text = """English paragraph with a stray ` backtick.
+
+Український prose in another paragraph with ` another backtick.
+"""
+
+    findings = scan_text(text)
+
+    assert len(findings) == 1
+    assert findings[0].line == 3
+    assert "Український prose" in findings[0].excerpt
 
 
 def test_rejects_visible_markdown_formatting_and_link_labels() -> None:

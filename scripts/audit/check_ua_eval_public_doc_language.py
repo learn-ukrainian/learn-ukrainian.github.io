@@ -9,6 +9,9 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from markdown_it import MarkdownIt
+from markdown_it.token import Token
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PUBLIC_ENGLISH_DOCS = (
     Path("docs/projects/ua-eval-harness/DATA_CARD.en.md"),
@@ -19,7 +22,7 @@ PUBLIC_ENGLISH_DOCS = (
 )
 
 _CYRILLIC_RE = re.compile(r"[\u0400-\u052f]")
-_FENCE_OPEN_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
+_MARKDOWN = MarkdownIt("commonmark")
 
 
 @dataclass(frozen=True, order=True)
@@ -30,12 +33,10 @@ class Finding:
     line: int
     column: int
     excerpt: str
+    message: str = "Cyrillic is not allowed in English running prose"
 
     def format(self) -> str:
-        return (
-            f"{display_path(self.path)}:{self.line}:{self.column}: "
-            f"Cyrillic is not allowed in English running prose: {self.excerpt}"
-        )
+        return f"{display_path(self.path)}:{self.line}:{self.column}: {self.message}: {self.excerpt}"
 
 
 def display_path(path: Path) -> str:
@@ -47,118 +48,120 @@ def display_path(path: Path) -> str:
         return str(path)
 
 
-def _mask(text: str) -> str:
-    """Replace content with spaces without changing offsets or line breaks."""
+def _token_span(token: Token, fallback: tuple[int, int]) -> tuple[int, int]:
+    if token.map is None:
+        return fallback
+    return token.map[0], token.map[1]
 
-    return "".join(char if char in "\r\n" else " " for char in text)
+
+def _visible_fragments(
+    tokens: list[Token],
+    fallback_span: tuple[int, int],
+) -> list[tuple[str, tuple[int, int]]]:
+    """Return rendered text fragments while excluding parsed Markdown code."""
+
+    fragments: list[tuple[str, tuple[int, int]]] = []
+    for token in tokens:
+        span = _token_span(token, fallback_span)
+        if token.type in {"code_block", "code_inline", "fence"}:
+            continue
+        if token.children:
+            fragments.extend(_visible_fragments(token.children, span))
+        elif token.content:
+            fragments.append((token.content, span))
+    return fragments
 
 
-def _mask_fenced_code(text: str) -> str:
-    """Mask CommonMark backtick and tilde fenced code blocks."""
+def _fence_is_closed(token: Token, source_lines: list[str]) -> bool:
+    """Return whether a parsed root-level fence has an explicit closing line."""
 
-    output: list[str] = []
-    fence_char: str | None = None
-    fence_width = 0
+    if token.map is None or not token.markup:
+        return False
+    start, end = token.map
+    marker = re.escape(token.markup[0])
+    width = len(token.markup)
+    closing = re.compile(rf"^ {{0,3}}{marker}{{{width},}}[ \t]*$")
+    return any(closing.fullmatch(source_lines[index]) for index in range(start + 1, min(end, len(source_lines))))
 
-    for line in text.splitlines(keepends=True):
-        body = line.rstrip("\r\n")
-        if fence_char is not None:
-            output.append(_mask(line))
-            closing = re.fullmatch(
-                rf" {{0,3}}{re.escape(fence_char)}{{{fence_width},}}[ \t]*",
-                body,
+
+def _unclosed_fence_findings(tokens: list[Token], source_lines: list[str], path: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    for token in tokens:
+        if token.type != "fence" or _fence_is_closed(token, source_lines):
+            continue
+        line_index = token.map[0] if token.map is not None else 0
+        excerpt = source_lines[line_index].strip() if source_lines else ""
+        findings.append(
+            Finding(
+                path=path,
+                line=line_index + 1,
+                column=1,
+                excerpt=excerpt,
+                message="Unclosed fenced code block is not allowed because it can hide later prose",
             )
-            if closing:
-                fence_char = None
-                fence_width = 0
-            continue
-
-        opening = _FENCE_OPEN_RE.match(body)
-        if opening is None:
-            output.append(line)
-            continue
-
-        marker, info = opening.groups()
-        if marker[0] == "`" and "`" in info:
-            output.append(line)
-            continue
-
-        fence_char = marker[0]
-        fence_width = len(marker)
-        output.append(_mask(line))
-
-    return "".join(output)
+        )
+    return findings
 
 
-def _backtick_run_length(text: str, start: int) -> int:
-    end = start
-    while end < len(text) and text[end] == "`":
+def _cyrillic_word(fragment: str, position: int) -> str:
+    start = position
+    end = position + 1
+    while start > 0 and _CYRILLIC_RE.fullmatch(fragment[start - 1]):
+        start -= 1
+    while end < len(fragment) and _CYRILLIC_RE.fullmatch(fragment[end]):
         end += 1
-    return end - start
+    return fragment[start:end]
 
 
-def _find_matching_backtick_run(text: str, start: int, width: int) -> int | None:
-    cursor = start
-    while cursor < len(text):
-        candidate = text.find("`", cursor)
-        if candidate < 0:
-            return None
-        candidate_width = _backtick_run_length(text, candidate)
-        if candidate_width == width:
-            return candidate
-        cursor = candidate + candidate_width
-    return None
+def _source_location(
+    fragment: str,
+    position: int,
+    span: tuple[int, int],
+    source_lines: list[str],
+) -> tuple[int, int, str]:
+    """Map a rendered Cyrillic fragment back to its source line."""
 
+    start_line, end_line = span
+    relative_line = fragment[:position].count("\n")
+    preferred_line = min(start_line + relative_line, max(start_line, end_line - 1))
+    word = _cyrillic_word(fragment, position)
+    candidate_lines = [preferred_line, *range(start_line, end_line)]
 
-def _mask_inline_code(text: str) -> str:
-    """Mask CommonMark-style inline code spans, including multiline spans."""
-
-    output = list(text)
-    cursor = 0
-    while cursor < len(text):
-        opening = text.find("`", cursor)
-        if opening < 0:
-            break
-        width = _backtick_run_length(text, opening)
-        closing = _find_matching_backtick_run(text, opening + width, width)
-        if closing is None:
-            cursor = opening + width
+    seen: set[int] = set()
+    for line_index in candidate_lines:
+        if line_index in seen or not (0 <= line_index < len(source_lines)):
             continue
-        for index in range(opening, closing + width):
-            if output[index] not in "\r\n":
-                output[index] = " "
-        cursor = closing + width
-    return "".join(output)
+        seen.add(line_index)
+        column = source_lines[line_index].find(word)
+        if column >= 0:
+            return line_index + 1, column + 1, source_lines[line_index].strip()
 
-
-def mask_code(text: str) -> str:
-    """Mask explicit Markdown code while preserving source coordinates."""
-
-    return _mask_inline_code(_mask_fenced_code(text))
+    excerpt = fragment.splitlines()[relative_line].strip()
+    return preferred_line + 1, 1, excerpt
 
 
 def scan_text(text: str, path: Path = Path("<memory>")) -> list[Finding]:
     """Return Cyrillic occurrences outside explicit Markdown code."""
 
-    masked_lines = mask_code(text).splitlines()
     source_lines = text.splitlines()
-    findings: list[Finding] = []
+    tokens = _MARKDOWN.parse(text)
+    findings = _unclosed_fence_findings(tokens, source_lines, path)
 
-    for line_number, masked_line in enumerate(masked_lines, start=1):
-        match = _CYRILLIC_RE.search(masked_line)
+    for fragment, span in _visible_fragments(tokens, (0, len(source_lines))):
+        match = _CYRILLIC_RE.search(fragment)
         if match is None:
             continue
-        excerpt = source_lines[line_number - 1].strip()
+        line, column, excerpt = _source_location(fragment, match.start(), span, source_lines)
         findings.append(
             Finding(
                 path=path,
-                line=line_number,
-                column=match.start() + 1,
+                line=line,
+                column=column,
                 excerpt=excerpt,
             )
         )
 
-    return findings
+    return sorted(set(findings))
 
 
 def governed_paths() -> list[Path]:
