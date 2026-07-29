@@ -220,9 +220,9 @@ def fill_missing_manifest_pos(
 ) -> PosFillResult:
     """Fill selected blank Atlas POS fields from their VESUM lemma analyses.
 
-    This repair is deliberately target-scoped: the supplied curated seed admits
-    practice examples, while VESUM alone supplies the grammatical category.
-    Existing POS values are preserved rather than overwritten.
+    This repair is deliberately target-scoped: only explicitly named lemmas
+    may have their POS auto-filled from VESUM. Existing POS values are
+    preserved rather than overwritten.
     """
     entries = manifest.get("entries")
     if not isinstance(entries, list) or not all(isinstance(entry, dict) for entry in entries):
