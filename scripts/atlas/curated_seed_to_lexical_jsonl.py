@@ -1,4 +1,4 @@
-"""Convert Alona curated seed JSONL (v5 shape) → ADR-017 lexical source JSONL.
+"""Convert curated private teacher-lesson seed JSONL (v5 shape) → ADR-017 lexical source JSONL.
 
 The seed rows look like::
 
@@ -169,8 +169,8 @@ def convert_seed_row(row: dict[str, Any], *, deck_slug: str) -> list[dict[str, A
 def convert_seed_file(
     input_path: Path,
     *,
-    deck_slug: str = "alona-curated-v5",
-    deck_title: str = "Alona curated seed v5",
+    deck_slug: str = "curated-teacher-v5",
+    deck_title: str = "Curated private teacher-lesson seed v5",
 ) -> list[dict[str, Any]]:
     """Read seed JSONL and emit de-duplicated ADR-017 records."""
     rows = [
@@ -230,10 +230,10 @@ def write_jsonl(path: Path, records: list[dict[str, Any]]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", type=Path, required=True, help="Alona seed JSONL (v5 shape)")
+    parser.add_argument("--input", type=Path, required=True, help="Curated private teacher-lesson seed JSONL (v5 shape)")
     parser.add_argument("--output", type=Path, required=True, help="ADR-017 lexical JSONL")
-    parser.add_argument("--deck-slug", default="alona-curated-v5")
-    parser.add_argument("--deck-title", default="Alona curated seed v5")
+    parser.add_argument("--deck-slug", default="curated-teacher-v5")
+    parser.add_argument("--deck-title", default="Curated private teacher-lesson seed v5")
     args = parser.parse_args(argv)
     records = convert_seed_file(
         args.input, deck_slug=args.deck_slug, deck_title=args.deck_title

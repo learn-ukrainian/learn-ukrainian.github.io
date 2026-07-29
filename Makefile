@@ -1,6 +1,6 @@
 PYTHON ?= .venv/bin/python
 
-CURATED_SEED_INPUT ?= .claude/atlas-epic/plans/alona-truth/v5-curated-with-provenance.jsonl
+CURATED_SEED_INPUT ?= .claude/atlas-epic/plans/curated-seed/v5-curated-with-provenance.jsonl
 CURATED_SEED_DIR ?= data/lexicon
 CURATED_SEED_PUBLIC_SEED := $(CURATED_SEED_DIR)/curated-v5-admission-seed.json
 CURATED_SEED_CANDIDATES := $(CURATED_SEED_DIR)/curated-v5-grow-candidates.json
@@ -34,8 +34,8 @@ practice-admit-curated-seed:
 	$(MAKE) atlas-local-practice-refresh
 
 atlas:
-	$(PYTHON) -m scripts.lexicon.build_data_manifest
-	$(PYTHON) scripts/lexicon/enrich_manifest.py
+	$(PYTHON) -m scripts.lexicon.build_data_manifest --write
+	$(PYTHON) scripts/lexicon/enrich_manifest.py --write
 	$(PYTHON) -m scripts.audit.generate_search_index
 	$(PYTHON) scripts/lexicon/export_open_dataset.py
 	$(PYTHON) -m scripts.audit.generate_daily_pool

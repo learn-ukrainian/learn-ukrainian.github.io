@@ -83,7 +83,14 @@ import {
   type CefrLevel,
 } from '../lib/lexicon/levels';
 import { dateSeed, deckSeed, pickDaily, type DailyWord } from '../lib/lexicon/daily';
-import { getTeacherLessonVirtualDeck, readLocalCustomSets, saveLocalCustomSet, deleteLocalCustomSet, type CustomSet } from '../lib/lexicon/custom-decks';
+import {
+  filterTeacherClozeItems,
+  getTeacherLessonVirtualDeck,
+  readLocalCustomSets,
+  saveLocalCustomSet,
+  deleteLocalCustomSet,
+  type CustomSet,
+} from '../lib/lexicon/custom-decks';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
 import { usablePracticeSentenceEnglish } from '../lib/lexicon/practice-sentence-en';
 import { searchShardForQuery, type SearchRow, type SearchShardManifest } from '../lib/lexicon/search';
@@ -2209,7 +2216,6 @@ function LexiconPracticeIsland({
 
         // Merge teacher deck pre-generated cloze items if active
         if (deckFilter === 'virtual_teacher_lesson') {
-          const teacherDeck = getTeacherLessonVirtualDeck();
           try {
             const teacherClozeShard = await getShardJson<{ cloze?: PracticeClozeItem[] }>(
               `${shardBaseUrl}/practice-cloze.teacher.json`,
@@ -2218,7 +2224,10 @@ function LexiconPracticeIsland({
             if (teacherClozeShard?.cloze && teacherClozeShard.cloze.length > 0) {
               nextDeck = {
                 ...nextDeck!,
-                cloze: [...(nextDeck!.cloze ?? []), ...teacherClozeShard.cloze],
+                cloze: [
+                  ...(nextDeck!.cloze ?? []),
+                  ...filterTeacherClozeItems(teacherClozeShard.cloze),
+                ],
               };
             }
           } catch {

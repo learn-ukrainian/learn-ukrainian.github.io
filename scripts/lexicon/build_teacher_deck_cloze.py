@@ -16,6 +16,50 @@ SOURCES_DB = REPO_ROOT / "data/sources.db"
 OUTPUT_PUBLIC_JSON = REPO_ROOT / "site/public/lexicon/practice-cloze.teacher.json"
 OUTPUT_SRC_JSON = REPO_ROOT / "site/src/data/lexicon-teacher-cloze.json"
 
+# These cards contain private-teacher content or reference it as a distractor.
+# Exclude them before either public artifact is written; the browser-side filter
+# remains only as a defense in depth for previously deployed shards.
+EXCLUDED_TEACHER_CLOZE_IDS = frozenset(
+    {
+        "teacher_cloze_57",
+        "teacher_cloze_581",
+        "teacher_cloze_1521",
+    }
+)
+PRIVATE_TEACHER_LEMMA_MARKERS = frozenset({"alona", "альона", "алёна"})
+
+
+def contains_private_teacher_name(value: object) -> bool:
+    """Return whether a card field contains a private teacher-name marker."""
+    if isinstance(value, str):
+        normalised = value.casefold()
+        return any(marker in normalised for marker in PRIVATE_TEACHER_LEMMA_MARKERS)
+    if isinstance(value, dict):
+        return any(contains_private_teacher_name(item) for item in value.values())
+    if isinstance(value, list):
+        return any(contains_private_teacher_name(item) for item in value)
+    return False
+
+
+def public_teacher_lemmas(entries: list[dict[str, object]]) -> list[str]:
+    """Select intake lemmas that may contribute to public cards or distractors."""
+    return [
+        str(entry["lemma"])
+        for entry in entries
+        if entry.get("lemma") and not contains_private_teacher_name(entry["lemma"])
+    ]
+
+
+def exclude_private_cloze_cards(cards: list[dict[str, object]]) -> list[dict[str, object]]:
+    """Return only teacher-cloze cards permitted in public artifacts."""
+    return [
+        card
+        for card in cards
+        if card.get("clozeId") not in EXCLUDED_TEACHER_CLOZE_IDS
+        and not contains_private_teacher_name(card)
+    ]
+
+
 def main():
     if not INTAKE_JSON.exists() or not SOURCES_DB.exists():
         print(f"Error: Missing {INTAKE_JSON} or {SOURCES_DB}")
@@ -25,7 +69,7 @@ def main():
         teacher_cand = json.load(f)
 
     teacher_entries = teacher_cand.get("auto_merge", [])
-    teacher_lemmas = [c["lemma"] for c in teacher_entries if c.get("lemma")]
+    teacher_lemmas = public_teacher_lemmas(teacher_entries)
 
     conn = sqlite3.connect(SOURCES_DB)
 
@@ -120,7 +164,7 @@ def main():
             }
         )
 
-    payload = {"cloze": extracted_cloze}
+    payload = {"cloze": exclude_private_cloze_cards(extracted_cloze)}
 
     OUTPUT_PUBLIC_JSON.parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_PUBLIC_JSON, "w", encoding="utf-8") as f:
@@ -130,7 +174,7 @@ def main():
     with open(OUTPUT_SRC_JSON, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
-    print(f"Successfully generated {len(extracted_cloze)} Cloze items -> {OUTPUT_PUBLIC_JSON} and {OUTPUT_SRC_JSON}")
+    print(f"Successfully generated {len(payload['cloze'])} Cloze items -> {OUTPUT_PUBLIC_JSON} and {OUTPUT_SRC_JSON}")
 
 if __name__ == "__main__":
     main()
