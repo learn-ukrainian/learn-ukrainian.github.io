@@ -39,11 +39,8 @@ ls -lah data/sources.db
     --corpora textbook_sections,external,wikipedia,ukrainian_wiki --dry-run
 # Expected: all four show "up_to_date: true"
 
-# 3) GDrive backup is fresh (<24h old)
-#    Path resolution: $LU_GDRIVE_DATA env var if set, else glob the
-#    per-user GoogleDrive mount. (Email is not hardcoded — see #1577 Phase 1 Q4.)
-GDRIVE="${LU_GDRIVE_DATA:-$(ls -d "$HOME/Library/CloudStorage/"GoogleDrive-*/"My Drive/Projects/learn-ukrainian-data" 2>/dev/null | head -1)}"
-ls -lah "$GDRIVE/sources.db"
+# 3) The latest versioned snapshot is fresh (<24h old)
+./scripts/backup-data.sh snapshots
 
 # 4) #1569 multi-agent writer support is merged (compile.py --writer flag exists)
 .venv/bin/python scripts/wiki/compile.py --help | grep -A1 -- "--writer"
@@ -212,15 +209,16 @@ Pace: ~15 units/s for compiled-wiki chunks. 30K chunks → ~33 min.
 
 ---
 
-## Refresh GDrive backup
+## Create a fresh versioned backup
 
 ```bash
-./scripts/backup-data.sh
+./scripts/backup-data.sh backup
+./scripts/backup-data.sh backup --execute
 ```
 
 Captures sources.db (now with the new `ukrainian_wiki` corpus) plus
-`data/embeddings/` (which has the new dense shards). After this, the
-rebuild is durable across hardware failures.
+`data/embeddings/` (which has the new dense shards) in an encrypted snapshot.
+After this, the rebuild is durable across hardware failures.
 
 ---
 

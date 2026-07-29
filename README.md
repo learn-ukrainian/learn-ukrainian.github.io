@@ -151,16 +151,18 @@ All work happens on `main` — no feature branches. Use `git worktree` for
 isolation when needed. Read `CLAUDE.md` + `docs/best-practices/` before
 touching pipeline code.
 
-Back up the large local state (SQLite DBs + MLX-encoded dense shards) to
-Google Drive manually whenever it matters:
+Back up gitignored epic handoffs/plans, local fleet state, SQLite databases,
+and MLX-encoded dense shards as encrypted, versioned restic snapshots:
 
 ```bash
-./scripts/backup-data.sh
+./scripts/backup-data.sh doctor
+./scripts/backup-data.sh backup            # preview
+./scripts/backup-data.sh backup --execute  # create a snapshot
 ```
 
-This rsyncs all of `data/` to the Google Drive for Desktop mount. No cron,
-no rclone config — Drive handles the upload in the background. See the
-script's top comment for details.
+The backup uses an rclone remote without writing through the Google Drive
+Desktop mount. Setup, verification, and staging-only restore instructions are
+in [docs/runbooks/data-backup.md](docs/runbooks/data-backup.md).
 
 ## Contributing
 

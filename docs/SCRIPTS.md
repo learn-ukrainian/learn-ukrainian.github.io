@@ -419,30 +419,25 @@ Wikipedia, and dictionary inputs.
 ### Recovery: when `data/sources.db` is empty or corrupt
 
 If `data/sources.db` is found at 0 bytes or with broken schema (the
-2026-04-25 wipe pattern), restore from the Google Drive backup —
-**do NOT run `build_sources_db.py --force`**, that rebuilds from
-JSONL inputs which lack the post-#1427 `ukrainian_wiki` table and
-the post-#1555 chunker policy.
+2026-04-25 wipe pattern), restore a versioned snapshot into an empty staging
+directory. **Do not restore over live `data/` and do not run
+`build_sources_db.py --force`**: that rebuilds from JSONL inputs which lack the
+post-#1427 `ukrainian_wiki` table and the post-#1555 chunker policy.
 
 ```bash
-# 1) Snapshot whatever is currently on disk (in case the "wipe" was
-#    actually something subtler and we want forensic evidence).
-cp data/sources.db "data/sources.db.bak-$(date +%Y%m%d-%H%M%S)"
-ls -lah data/sources.db data/sources.db.bak-*
+# 1) List snapshots and preview a staging-only restore.
+./scripts/backup-data.sh snapshots
+./scripts/backup-data.sh restore latest \
+  --to /absolute/path/to/empty-recovery-directory
 
-# 2) Check the GDrive backup age. Anything <30 days is fine; older
-#    than that means more re-ingest work after restore.
-#    Path resolution: $LU_GDRIVE_DATA env var if set, else glob the
-#    per-user GoogleDrive mount. (Email is not hardcoded in committed
-#    code — see #1577 Phase 1 Q4.)
-GDRIVE="${LU_GDRIVE_DATA:-$(ls -d "$HOME/Library/CloudStorage/"GoogleDrive-*/"My Drive/Projects/learn-ukrainian-data" 2>/dev/null | head -1)}"
-ls -lah "$GDRIVE/sources.db"
+# 2) Execute after checking the selected snapshot and target.
+./scripts/backup-data.sh restore latest \
+  --to /absolute/path/to/empty-recovery-directory \
+  --execute
 
-# 3) Restore from backup.
-cp "$GDRIVE/sources.db" data/sources.db
-
-# 4) Verify the restore worked: row counts should be non-trivial.
-sqlite3 data/sources.db "
+# 3) Verify the staged database. Row counts should be non-trivial.
+sqlite3 /absolute/path/to/empty-recovery-directory/data/sources.db "
+  PRAGMA quick_check;
   SELECT 'textbooks',         COUNT(*) FROM textbooks UNION ALL
   SELECT 'literary_texts',    COUNT(*) FROM literary_texts UNION ALL
   SELECT 'external_articles', COUNT(*) FROM external_articles UNION ALL
@@ -450,7 +445,11 @@ sqlite3 data/sources.db "
   SELECT 'ukrainian_wiki',    COUNT(*) FROM ukrainian_wiki;
 "
 
-# 5) Re-ingest any tables that were added AFTER the backup date.
+# 4) Stop writers, preserve the damaged live database outside the project,
+#    and copy back only the verified staged database. The backup script
+#    deliberately does not overwrite live data.
+
+# 5) Re-ingest any tables that were added AFTER the snapshot date.
 #    For backups older than 2026-04-23, ukrainian_wiki is missing.
 #    Use the per-subdir loop (NOT `wiki/ --encode` — that command is
 #    broken until #1570 ships, see scripts/wiki/ingest_ukrainian_wiki.py).
@@ -474,10 +473,13 @@ done
 .venv/bin/python scripts/wiki/cold_encode.py \
     --corpora ukrainian_wiki --resume
 
-# 7) Refresh the GDrive backup so the next session starts from a
-#    clean point.
-./scripts/backup-data.sh
+# 7) Preview and create a fresh versioned snapshot.
+./scripts/backup-data.sh backup
+./scripts/backup-data.sh backup --execute
 ```
+
+See `docs/runbooks/data-backup.md` for setup, integrity checks, exclusions,
+and the complete restore drill.
 
 ### Fetch Wikipedia Articles
 
