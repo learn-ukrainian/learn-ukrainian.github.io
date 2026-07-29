@@ -264,6 +264,11 @@ citations, pinned revisions, license evidence, and modification notices. The
 MIT license for repository software does not replace the licenses that apply
 to UA-GEC-derived data or VESUM-derived evidence.
 
+Commercial users should not rely on the code's MIT license alone: the project
+grants no separate commercial license for the VESUM-derived evidence. Anyone
+considering commercial use must assess compliance with CC BY-NC-SA 4.0 or
+replace that evidence. This card is not legal advice.
+
 ## Privacy, safety, and contamination
 
 The release preserves upstream pseudonymous document and author IDs. It does
