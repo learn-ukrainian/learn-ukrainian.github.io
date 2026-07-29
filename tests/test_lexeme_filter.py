@@ -103,13 +103,12 @@ def test_practice_keeps_canonicalized_headword_without_form_of():
     assert is_practice_eligible(entry) is True
 
 
-def test_practice_uses_form_of_not_form_source_for_exclusion():
-    # The manifest builder emits built_vocabulary_form only alongside form_of (covered
-    # in test_lexicon_build_manifest.py). This synthetic entry locks the predicate's
-    # deliberate contract: the relationship, not provenance, determines exclusion.
+def test_practice_rejects_form_source_missing_its_form_of_relation():
+    # The builder must pair this provenance with ``form_of``. A malformed row
+    # must remain excluded rather than becoming a study-card candidate.
     entry = _noun(primary_source="built_vocabulary_form")
 
-    assert is_practice_eligible(entry) is True
+    assert is_practice_eligible(entry) is False
 
 
 def test_practice_rejects_glossless():

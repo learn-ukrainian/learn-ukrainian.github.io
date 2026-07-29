@@ -158,6 +158,29 @@ def test_fill_missing_manifest_pos_rejects_unverified_target(monkeypatch) -> Non
         admission.fill_missing_manifest_pos(manifest, ["помішувати"])
 
 
+def test_main_fills_pos_without_input_seed(tmp_path: Path, monkeypatch) -> None:
+    manifest_path = _manifest(
+        tmp_path / "manifest.json",
+        [{"lemma": "помішувати", "pos": None}],
+    )
+    monkeypatch.setattr(admission, "_vesum_pos", lambda lemma: "verb" if lemma == "помішувати" else None)
+
+    result = admission.main(
+        [
+            "--manifest",
+            str(manifest_path),
+            "--fill-existing-pos",
+            "--target-lemma",
+            "помішувати",
+            "--write",
+        ]
+    )
+
+    assert result == 0
+    persisted = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert persisted["entries"][0]["pos"] == "verb"
+
+
 def test_main_persists_gloss_fill_before_later_pos_fill_failure(tmp_path: Path, monkeypatch) -> None:
     input_path = tmp_path / "seed.jsonl"
     input_path.write_text(

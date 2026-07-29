@@ -125,6 +125,11 @@ def is_practice_eligible(entry: dict[str, Any]) -> bool:
     # form-of relation; provenance alone would incorrectly remove that lemma.
     if entry.get("form_of"):
         return False
+    # A ``built_vocabulary_form`` row is an alias route by construction.  Do
+    # not let a malformed row with a missing relation become drillable merely
+    # because it otherwise has a valid-looking lexeme shape.
+    if entry.get("primary_source") == "built_vocabulary_form":
+        return False
     if entry.get("primary_source") == SURZHYK_SOURCE:
         return False
     if not is_surface_admitted(entry, SURFACE_PRACTICE):

@@ -329,7 +329,7 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", type=Path, required=True, help="Raw v5 JSONL or public v5 seed JSON")
+    parser.add_argument("--input", type=Path, help="Raw v5 JSONL or public v5 seed JSON")
     parser.add_argument("--public-seed-out", type=Path)
     parser.add_argument("--manifest", type=Path)
     parser.add_argument("--candidates-out", type=Path)
@@ -353,7 +353,23 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--write", action="store_true", help="Write a manifest changed by an explicit fill repair.")
     args = parser.parse_args(argv)
-    rows = read_public_seed(args.input) if args.input.suffix == ".json" else normalize_rows(_read_jsonl(args.input))
+    needs_seed_rows = bool(
+        args.fill_existing_glosses
+        or args.public_seed_out
+        or args.candidates_out
+        or args.practice_seed_out
+        or args.report_out
+    )
+    if args.input is None:
+        if needs_seed_rows:
+            parser.error("--input is required for seed-derived output or --fill-existing-glosses")
+        rows: list[dict[str, Any]] = []
+    else:
+        rows = (
+            read_public_seed(args.input)
+            if args.input.suffix == ".json"
+            else normalize_rows(_read_jsonl(args.input))
+        )
     if args.write and not (args.fill_existing_glosses or args.fill_existing_pos):
         parser.error("--write requires --fill-existing-glosses or --fill-existing-pos")
 
