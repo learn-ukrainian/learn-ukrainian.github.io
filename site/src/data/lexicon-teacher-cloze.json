@@ -2354,10 +2354,10 @@
     },
     {
       "clozeId": "teacher_cloze_57",
-      "lemmaId": "curated-private-teacher-lesson",
+      "lemmaId": "олена",
       "sentenceFrameId": "teacher_frame_57",
-      "lemma": "curated private teacher-lesson",
-      "form": "Curated private teacher-lesson",
+      "lemma": "олена",
+      "form": "Олена",
       "sentence": "Але _____ _____ — це\nприкольно.",
       "blankCase": "context",
       "caseRule": {
@@ -2366,12 +2366,12 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "знахідний"
       },
-      "clozeEn": "Context sentence for curated private teacher-lesson",
+      "clozeEn": "Context sentence for Олена",
       "options": [
         {
           "optionId": "opt_ans",
-          "lemmaId": "curated-private-teacher-lesson",
-          "label": "Curated private teacher-lesson",
+          "lemmaId": "олена",
+          "label": "Олена",
           "kind": "answer"
         },
         {
@@ -24384,8 +24384,8 @@
         },
         {
           "optionId": "opt_dec_0",
-          "lemmaId": "curated-private-teacher-lesson",
-          "label": "curated private teacher-lesson",
+          "lemmaId": "олена",
+          "label": "олена",
           "kind": "distractor"
         },
         {
@@ -63864,8 +63864,8 @@
         },
         {
           "optionId": "opt_dec_0",
-          "lemmaId": "curated-private-teacher-lesson",
-          "label": "curated private teacher-lesson",
+          "lemmaId": "олена",
+          "label": "олена",
           "kind": "distractor"
         },
         {

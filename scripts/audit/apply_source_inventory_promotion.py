@@ -32,6 +32,10 @@ _PRIVATE_PROVENANCE_MARKERS = (
     "\\users\\",
     "native-reviewer-lessons",
     ".docx",
+    # Retain scrubbed name variants as regression guards for private provenance.
+    "alona",
+    "альона",
+    "алёна",
 )
 
 
