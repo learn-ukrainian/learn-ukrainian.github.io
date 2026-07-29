@@ -144,6 +144,18 @@ def test_rail_diff_refuses_merge_without_external_receipt(monkeypatch):
     )
 
 
+def test_unrelated_bracketed_filename_does_not_block_merge_guard(monkeypatch):
+    """The full PR diff is classified as literal paths, never glob patterns."""
+    assert (
+        _run(
+            monkeypatch,
+            "gh pr merge 5 --squash",
+            changed_paths=["docs/some[draft].md"],
+        )
+        == 0
+    )
+
+
 def test_rail_merge_check_is_mutation_honest(monkeypatch):
     """Removing the merge-layer call turns the same rail PR into an observable allow."""
     assert (

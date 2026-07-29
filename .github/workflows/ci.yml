@@ -695,8 +695,11 @@ jobs:
 
       - name: Rail approval declaration
         env:
-          RAIL_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          RAIL_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          RAIL_EVENT_NAME: ${{ github.event_name }}
+          RAIL_BASE_SHA: >-
+            ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha ||
+                github.event.before }}
+          RAIL_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
           RAIL_PR_BODY: ${{ github.event.pull_request.body || '' }}
         run: |
           .venv/bin/python - <<'PY'
@@ -704,8 +707,17 @@ jobs:
           import subprocess
           import sys
 
-          from scripts.orchestration.rail_path_guard import inspect_rail_approval_declaration
+          from scripts.orchestration.rail_path_guard import (
+              RailCIEventDisposition,
+              inspect_rail_approval_declaration,
+              inspect_rail_ci_event,
+          )
 
+          event_name = os.environ.get("RAIL_EVENT_NAME", "")
+          if event_name in {"push", "workflow_dispatch"}:
+              dispatch = inspect_rail_ci_event(event_name=event_name)
+              print(f"rail approval declaration={dispatch.disposition} reason={dispatch.reason}")
+              raise SystemExit(0)
           base = os.environ.get("RAIL_BASE_SHA") or "origin/main"
           head = os.environ["RAIL_HEAD_SHA"]
           changed = subprocess.run(
@@ -717,12 +729,30 @@ jobs:
               print("rail approval declaration could not read the candidate diff", file=sys.stderr)
               raise SystemExit(2)
           try:
+              candidate_paths = [
+                  path.decode("utf-8", errors="surrogateescape")
+                  for path in changed.stdout.split(b"\0")
+                  if path
+              ]
+              dispatch = inspect_rail_ci_event(
+                  event_name=event_name,
+                  candidate_paths=candidate_paths,
+              )
+          except Exception:
+              print("rail approval declaration could not classify the candidate diff", file=sys.stderr)
+              raise SystemExit(2)
+          if dispatch.disposition is RailCIEventDisposition.DENY:
+              print(
+                  dispatch.reason + ": " + ", ".join(dispatch.rail_paths),
+                  file=sys.stderr,
+              )
+              raise SystemExit(2)
+          if dispatch.disposition is RailCIEventDisposition.SKIP:
+              print(f"rail approval declaration={dispatch.disposition} reason={dispatch.reason}")
+              raise SystemExit(0)
+          try:
               declaration = inspect_rail_approval_declaration(
-                  candidate_paths=[
-                      path.decode("utf-8", errors="surrogateescape")
-                      for path in changed.stdout.split(b"\0")
-                      if path
-                  ],
+                  candidate_paths=candidate_paths,
                   body=os.environ.get("RAIL_PR_BODY", ""),
               )
           except Exception:

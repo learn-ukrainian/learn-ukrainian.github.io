@@ -83,6 +83,34 @@ def test_rail_patterns_are_full_path_globs_not_substrings() -> None:
     assert not guard.is_rail_path("docs/notes/agents_extensions/shared/rules.md")
 
 
+def test_bracketed_filenames_are_literal_path_candidates() -> None:
+    """Glob metacharacters in a filename are data, never candidate patterns."""
+    rail_path = ".claude/x[1].md"
+    non_rail_path = "docs/some[draft].md"
+
+    assert guard.normalize_repository_path(rail_path) == rail_path
+    assert guard.is_rail_path(rail_path) is True
+    assert guard.normalize_repository_path(non_rail_path) == non_rail_path
+    assert guard.is_rail_path(non_rail_path) is False
+    assert guard.rail_paths_from_candidates([rail_path, non_rail_path]) == (rail_path,)
+
+
+@pytest.mark.parametrize(
+    ("path", "message"),
+    [
+        ("", "non-empty string"),
+        ("/docs/example.md", "relative POSIX path"),
+        ("docs/../example.md", "not normalized"),
+        (r"docs\\example.md", "relative POSIX path"),
+    ],
+)
+def test_normalize_repository_path_keeps_structural_rejections(
+    path: str, message: str
+) -> None:
+    with pytest.raises(guard.RailApprovalReceiptError, match=message):
+        guard.normalize_repository_path(path)
+
+
 def test_receipt_id_grammar_is_identical_in_code_and_the_versioned_schema() -> None:
     schema = json.loads(guard.RAIL_APPROVAL_RECEIPT_SCHEMA_PATH.read_text(encoding="utf-8"))
 
@@ -294,6 +322,37 @@ def test_rail_diff_declaration_accepts_one_exact_trailer_without_authorizing(
     assert declaration.receipt_id == RECEIPT_ID
 
 
+def test_rail_ci_event_dispatch_is_honest_about_declaration_context() -> None:
+    pull_request = guard.inspect_rail_ci_event(
+        event_name="pull_request",
+        candidate_paths=[OWNED_RAIL_PATH],
+    )
+    merge_group_rail = guard.inspect_rail_ci_event(
+        event_name="merge_group",
+        candidate_paths=[OWNED_RAIL_PATH],
+    )
+    merge_group_non_rail = guard.inspect_rail_ci_event(
+        event_name="merge_group",
+        candidate_paths=["docs/some[draft].md"],
+    )
+    push = guard.inspect_rail_ci_event(event_name="push")
+
+    assert pull_request.disposition is guard.RailCIEventDisposition.DECLARATION
+    assert pull_request.rail_paths == (OWNED_RAIL_PATH,)
+    assert merge_group_rail.disposition is guard.RailCIEventDisposition.DENY
+    assert merge_group_rail.reason == (
+        "merge-queue flow does not carry a rail declaration; "
+        "merge rail PRs via the direct auto-merge path"
+    )
+    assert merge_group_rail.rail_paths == (OWNED_RAIL_PATH,)
+    assert merge_group_non_rail.disposition is guard.RailCIEventDisposition.SKIP
+    assert merge_group_non_rail.reason == (
+        "merge-queue diff has no rail paths; declaration check skipped"
+    )
+    assert push.disposition is guard.RailCIEventDisposition.SKIP
+    assert push.reason == "post-merge informational — enforcement happened at PR time"
+
+
 def _direct_payload_receipt(**overrides: object) -> guard.VerifiedRailApprovalReceipt:
     """Build a receipt the way a direct-payload caller (delegate.py) can: NO resolver.
 
@@ -344,6 +403,11 @@ def test_ci_gate_requires_the_shared_rail_path_module() -> None:
     workflow_path = Path(__file__).resolve().parents[1] / ".github/workflows/ci.yml"
     workflow = yaml.safe_load(workflow_path.read_text(encoding="utf-8"))
     rail_job = workflow["jobs"]["rail-path"]
+    rail_step = next(
+        step
+        for step in rail_job["steps"]
+        if isinstance(step, dict) and step.get("name") == "Rail approval declaration"
+    )
     run_steps = "\n".join(
         str(step.get("run", "")) for step in rail_job["steps"] if isinstance(step, dict)
     )
@@ -351,7 +415,17 @@ def test_ci_gate_requires_the_shared_rail_path_module() -> None:
     assert rail_job["name"] == "Rail approval declaration"
     assert "Rail approval declaration" in [step.get("name") for step in rail_job["steps"] if isinstance(step, dict)]
     assert "edited" in workflow[True]["pull_request"]["types"]
+    assert "merge_group" in workflow[True]
+    assert workflow[True]["push"]["branches"] == ["main"]
     assert "inspect_rail_approval_declaration" in run_steps
+    assert "inspect_rail_ci_event" in run_steps
+    assert "RAIL_EVENT_NAME" in run_steps
+    assert rail_step["env"]["RAIL_EVENT_NAME"] == "${{ github.event_name }}"
+    assert "github.event.merge_group.base_sha" in rail_step["env"]["RAIL_BASE_SHA"]
+    assert "github.event.merge_group.head_sha" in rail_step["env"]["RAIL_HEAD_SHA"]
+    assert 'event_name in {"push", "workflow_dispatch"}' in run_steps
+    assert "RailCIEventDisposition.DENY" in run_steps
+    assert "RailCIEventDisposition.SKIP" in run_steps
     assert "decide_rail_path_mutation" not in run_steps
     assert "build_production_rail_approval_receipt_resolver" not in run_steps
     assert "rail-path" in workflow["jobs"]["ci-gate"]["needs"]

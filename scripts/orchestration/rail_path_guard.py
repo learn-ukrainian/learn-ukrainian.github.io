@@ -110,6 +110,14 @@ class RailApprovalDeclarationKind(StrEnum):
     MULTIPLE = "multiple"
 
 
+class RailCIEventDisposition(StrEnum):
+    """How the rail CI job must handle one GitHub Actions event."""
+
+    DECLARATION = "declaration"
+    SKIP = "skip"
+    DENY = "deny"
+
+
 class RailApprovalPathBinding(StrEnum):
     """How a receipt's owned paths bind to the current candidate paths."""
 
@@ -143,6 +151,15 @@ class RailApprovalDeclaration:
     def is_present(self) -> bool:
         """Whether one syntactically valid, still-untrusted locator was found."""
         return self.kind is RailApprovalDeclarationKind.PRESENT
+
+
+@dataclass(frozen=True, slots=True)
+class RailCIEventDispatch:
+    """Event-scoped instruction for the non-authoritative rail CI job."""
+
+    disposition: RailCIEventDisposition
+    reason: str
+    rail_paths: tuple[str, ...] = ()
 
 
 class RailApprovalReceiptError(ValueError):
@@ -288,8 +305,6 @@ def normalize_repository_path(value: object) -> str:
     parts = value.split("/")
     if any(part in {"", ".", ".."} for part in parts):
         raise RailApprovalReceiptError("candidate path is not normalized")
-    if any(any(char in part for char in "*?[") for part in parts):
-        raise RailApprovalReceiptError("candidate path must be exact, not a glob")
     return "/".join(parts)
 
 
@@ -325,6 +340,56 @@ def rail_paths_from_candidates(candidate_paths: Sequence[str]) -> tuple[str, ...
     """Normalize candidate paths and return the protected subset, fail-closed on bad input."""
     normalized = tuple(normalize_repository_path(path) for path in candidate_paths)
     return tuple(path for path in normalized if is_rail_path(path))
+
+
+def inspect_rail_ci_event(
+    *,
+    event_name: object,
+    candidate_paths: Sequence[str] | None = None,
+) -> RailCIEventDispatch:
+    """Apply the rail CI job's event-scoped declaration policy.
+
+    Only ``pull_request`` carries a body that can declare an untrusted receipt
+    locator. Merge queues receive the exact group diff but no corresponding PR
+    body, so rail changes must be refused there; ordinary merge-queue changes
+    remain an explicit successful skip. A push to ``main`` is post-merge
+    informational only because enforcement already happened at PR time.
+    """
+    if not isinstance(event_name, str):
+        raise RailApprovalReceiptError("rail approval declaration received an unsupported CI event")
+    if event_name == "push":
+        return RailCIEventDispatch(
+            RailCIEventDisposition.SKIP,
+            "post-merge informational — enforcement happened at PR time",
+        )
+    if event_name == "workflow_dispatch":
+        return RailCIEventDispatch(
+            RailCIEventDisposition.SKIP,
+            "manual informational — enforcement happened at PR time",
+        )
+    if event_name not in {"pull_request", "merge_group"}:
+        raise RailApprovalReceiptError("rail approval declaration received an unsupported CI event")
+    if candidate_paths is None:
+        raise RailApprovalReceiptError("rail approval declaration requires candidate paths")
+
+    rail_paths = rail_paths_from_candidates(candidate_paths)
+    if event_name == "pull_request":
+        return RailCIEventDispatch(
+            RailCIEventDisposition.DECLARATION,
+            "pull-request declaration required",
+            rail_paths,
+        )
+    if rail_paths:
+        return RailCIEventDispatch(
+            RailCIEventDisposition.DENY,
+            "merge-queue flow does not carry a rail declaration; "
+            "merge rail PRs via the direct auto-merge path",
+            rail_paths,
+        )
+    return RailCIEventDispatch(
+        RailCIEventDisposition.SKIP,
+        "merge-queue diff has no rail paths; declaration check skipped",
+    )
 
 
 def parse_rail_approval_declaration(body: object) -> RailApprovalDeclaration:
