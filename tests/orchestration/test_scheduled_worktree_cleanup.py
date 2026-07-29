@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 from dataclasses import replace
 from pathlib import Path
@@ -131,6 +132,268 @@ def test_lock_contention_marks_repository_run_failed(
     assert result["errors"] == ["cleanup lock held"]
 
 
+def test_stale_worktree_registration_is_pruned_before_reaping(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    branch = "codex/stale-registration"
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / "stale-registration"
+    _git(repo, "worktree", "add", "-b", branch, str(worktree), "main")
+    shutil.rmtree(worktree)
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_live_cwd_paths",
+        lambda _repo: set(),
+    )
+
+    result = cleanup._repo_result(repo, apply=True)
+
+    assert result["errors"] == []
+    assert result["worktree_prune"]["ok"] is True
+    registered = cleanup.reap_worktrees.list_git_worktrees(repo)
+    assert all(item.path != worktree for item in registered)
+
+
+def _gone_branch(repo: Path, branch: str) -> str:
+    _git(repo, "branch", branch, "main")
+    _git(repo, "push", "origin", branch)
+    _git(repo, "branch", "--set-upstream-to", f"origin/{branch}", branch)
+    head_sha = _git(repo, "rev-parse", branch)
+    _git(repo, "push", "origin", "--delete", branch)
+    return head_sha
+
+
+def test_exact_merged_gone_branch_is_deleted(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    branch = "codex/merged-gone"
+    head_sha = _gone_branch(repo, branch)
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, candidate: (
+            [
+                cleanup.reap_worktrees.PullRequestState(
+                    number=42,
+                    state="MERGED",
+                    head_sha=head_sha,
+                )
+            ]
+            if candidate == branch
+            else [],
+            None,
+        ),
+    )
+
+    dry_run = cleanup.cleanup_gone_local_branches(repo, apply=False)
+    applied = cleanup.cleanup_gone_local_branches(repo, apply=True)
+
+    assert dry_run == [
+        {
+            "action": "would_delete",
+            "branch": branch,
+            "head_sha": head_sha,
+            "reason": "upstream gone; exact head of MERGED PR #42",
+        }
+    ]
+    assert applied[0]["action"] == "deleted"
+    assert _git(repo, "branch", "--list", branch) == ""
+
+
+def test_unproven_gone_branch_is_preserved(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    _git(repo, "checkout", "-b", "source-work")
+    (repo / "local.txt").write_text("not merged\n", encoding="utf-8")
+    _git(repo, "add", "local.txt")
+    _git(repo, "commit", "-m", "local only")
+    _git(repo, "checkout", "main")
+    branch = "codex/unproven-gone"
+    _git(repo, "branch", branch, "source-work")
+    _git(repo, "push", "origin", branch)
+    _git(repo, "branch", "--set-upstream-to", f"origin/{branch}", branch)
+    _git(repo, "push", "origin", "--delete", branch)
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+
+    result = cleanup.cleanup_gone_local_branches(repo, apply=True)
+
+    row = next(item for item in result if item["branch"] == branch)
+    assert row["action"] == "skipped"
+    assert "no exact merged-PR" in row["reason"]
+    assert _git(repo, "branch", "--list", branch) != ""
+
+
+def test_pr_query_failure_preserves_branch_and_reports_error(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    branch = "codex/pr-query-failed"
+    _gone_branch(repo, branch)
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], "gh pr list failed: offline"),
+    )
+
+    result = cleanup.cleanup_gone_local_branches(repo, apply=True)
+
+    assert result == [
+        {
+            "action": "error",
+            "branch": branch,
+            "head_sha": _git(repo, "rev-parse", branch),
+            "reason": "upstream gone but PR state could not be verified",
+            "error": "gh pr list failed: offline",
+        }
+    ]
+    assert _git(repo, "branch", "--list", branch) != ""
+
+
+def test_open_pr_preserves_gone_branch(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    branch = "codex/open-pr"
+    head_sha = _gone_branch(repo, branch)
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: (
+            [
+                cleanup.reap_worktrees.PullRequestState(
+                    number=99,
+                    state="OPEN",
+                    head_sha=head_sha,
+                )
+            ],
+            None,
+        ),
+    )
+
+    result = cleanup.cleanup_gone_local_branches(repo, apply=True)
+
+    assert result[0]["action"] == "skipped"
+    assert result[0]["reason"] == "upstream gone but PR #99 is OPEN"
+    assert _git(repo, "branch", "--list", branch) != ""
+
+
+def test_checked_out_branch_is_not_deleted(
+    tmp_path: Path,
+) -> None:
+    repo = _repo(tmp_path)
+    branch = "codex/checked-out"
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / "checked-out"
+    _git(repo, "worktree", "add", "-b", branch, str(worktree), "main")
+    expected_head = _git(repo, "rev-parse", branch)
+
+    error = cleanup._delete_local_branch(
+        repo,
+        branch=branch,
+        expected_head=expected_head,
+    )
+
+    assert error is not None
+    assert _git(repo, "branch", "--list", branch) != ""
+    assert _git(worktree, "branch", "--show-current") == branch
+
+
+def test_origin_main_ancestor_with_gone_upstream_is_deleted(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    branch = "codex/ancestor-gone"
+    _git(repo, "checkout", "-b", branch)
+    (repo / "merged.txt").write_text("merged remotely\n", encoding="utf-8")
+    _git(repo, "add", "merged.txt")
+    _git(repo, "commit", "-m", "merged branch commit")
+    _git(repo, "push", "-u", "origin", branch)
+    branch_head = _git(repo, "rev-parse", "HEAD")
+    _git(repo, "push", "origin", f"{branch}:main")
+    _git(repo, "checkout", "main")
+    assert _git(repo, "rev-parse", "HEAD") != branch_head
+    _git(repo, "push", "origin", "--delete", branch)
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+
+    result = cleanup.cleanup_gone_local_branches(repo, apply=True)
+
+    assert result[0]["action"] == "deleted"
+    assert "ancestor of origin/main" in result[0]["reason"]
+    assert _git(repo, "branch", "--list", branch) == ""
+
+
+def test_repository_run_fails_closed_when_hygiene_lock_is_held(
+    tmp_path: Path,
+) -> None:
+    repo = _repo(tmp_path)
+
+    with cleanup._GitHygieneLock(repo):
+        result = cleanup._repo_result(repo, apply=False)
+
+    assert result["fetch"] is None
+    assert result["errors"] == [
+        f"another scheduled Git hygiene run holds "
+        f"{repo / '.git' / 'scheduled-git-hygiene.lock'}"
+    ]
+
+
+def test_worktree_prune_failure_stops_repository_run(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    monkeypatch.setattr(
+        cleanup,
+        "_worktree_prune",
+        lambda _repo, *, apply: {
+            "action": "pruned",
+            "detail": "cannot prune",
+            "ok": False,
+        },
+    )
+
+    result = cleanup._repo_result(repo, apply=True)
+
+    assert result["results"] == []
+    assert result["branches"] == []
+    assert result["maintenance"] is None
+    assert result["errors"] == ["worktree prune failed; cleanup skipped"]
+
+
+def test_lock_contention_is_aggregated_in_receipt(
+    tmp_path: Path,
+) -> None:
+    repo = _repo(tmp_path)
+
+    with cleanup._GitHygieneLock(repo):
+        receipt = cleanup.build_receipt(
+            [repo],
+            apply=True,
+            observed_at="2026-07-29T10:00:00Z",
+        )
+
+    assert receipt["schema_version"] == "scheduled-git-hygiene.v2"
+    assert receipt["summary"]["errors"] == 1
+    assert "another scheduled Git hygiene run holds" in (
+        receipt["repositories"][0]["errors"][0]
+    )
+
+
 def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> None:
     public = tmp_path / "public"
     private = tmp_path / "private"
@@ -143,7 +406,11 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
             "results": [
                 {
                     "action": "removed" if repo_root == public else "skipped",
+                    "branch_pruned": repo_root == public,
                 }
+            ],
+            "branches": [
+                {"action": "deleted"} if repo_root == public else {"action": "skipped"}
             ],
             "orphans": [{"path": "orphan"}] if repo_root == private else [],
             "errors": [],
@@ -161,10 +428,35 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
     assert receipt["summary"] == {
         "repositories": 2,
         "removed": 1,
+        "branches_deleted": 2,
         "orphans_reported": 1,
         "errors": 0,
     }
     assert receipt["mode"] == "apply"
+
+
+def test_git_maintenance_failure_is_reported(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
+    monkeypatch.setattr(
+        cleanup,
+        "_git_maintenance",
+        lambda _repo, *, apply: {
+            "action": "ran",
+            "ok": False,
+            "detail": "gc failed",
+        },
+    )
+
+    result = cleanup._repo_result(repo, apply=True)
+
+    assert result["errors"] == ["git maintenance failed: gc failed"]
 
 
 def test_receipt_write_is_atomic_and_private(tmp_path: Path) -> None:
@@ -176,7 +468,7 @@ def test_receipt_write_is_atomic_and_private(tmp_path: Path) -> None:
         "repositories": [],
     }
 
-    receipt_dir = tmp_path / "state" / "receipts" / "v1"
+    receipt_dir = tmp_path / "state" / "receipts" / "v2"
     path = cleanup.write_receipt(receipt, receipt_dir)
 
     assert json.loads(path.read_text(encoding="utf-8")) == receipt

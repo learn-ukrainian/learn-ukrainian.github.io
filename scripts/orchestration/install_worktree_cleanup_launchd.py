@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install the dual-repository worktree cleanup LaunchAgent on macOS."""
+"""Install the dual-repository Git hygiene LaunchAgent on macOS."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.orchestration import scheduled_worktree_cleanup
 
 LABEL = "com.learn-ukrainian.worktree-cleanup"
-DEFAULT_INTERVAL_MINUTES = 15
+DEFAULT_INTERVAL_MINUTES = 240
 LAUNCHD_PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 
@@ -67,7 +67,7 @@ def build_plist(
             "--repo-root",
             str(private_repo),
             "--receipt-dir",
-            str(runtime / "receipts" / "v1"),
+            str(runtime / "receipts" / "v2"),
         ],
         "RunAtLoad": True,
         "StandardErrorPath": str(runtime / "logs" / "stderr.log"),
@@ -173,7 +173,7 @@ def install(
         runtime,
         runtime / "logs",
         runtime / "receipts",
-        runtime / "receipts" / "v1",
+        runtime / "receipts" / "v2",
     ):
         directory.mkdir(parents=True, exist_ok=True, mode=0o700)
         os.chmod(directory, 0o700)

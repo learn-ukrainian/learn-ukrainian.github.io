@@ -63,6 +63,7 @@ class ReapResult:
     dirty: bool | None
     pr: dict[str, Any] | None = None
     error: str | None = None
+    branch_pruned: bool = False
 
 
 def sanitized_git_env() -> dict[str, str]:
@@ -544,14 +545,32 @@ def _remove_worktree(repo_root: Path, info: WorktreeInfo) -> str | None:
     return None
 
 
-def _prune_branch(repo_root: Path, branch: str | None, force: bool = False) -> str | None:
+def _prune_branch(
+    repo_root: Path,
+    branch: str | None,
+    force: bool = False,
+    expected_head: str | None = None,
+) -> str | None:
     if not branch:
         return None
+    if expected_head is None:
+        flag = "-D" if force else "-d"
+        proc = _run(["git", "branch", flag, "--", branch], cwd=repo_root)
+        return None if proc.returncode == 0 else _format_failure(proc)
+
+    current = _run(
+        ["git", "rev-parse", "--verify", f"refs/heads/{branch}"],
+        cwd=repo_root,
+    )
+    if (
+        current.returncode != 0
+        or (current.stdout or "").strip() != expected_head
+    ):
+        return "branch HEAD changed during cleanup"
+
     flag = "-D" if force else "-d"
-    proc = _run(["git", "branch", flag, branch], cwd=repo_root)
-    if proc.returncode != 0:
-        return _format_failure(proc)
-    return None
+    deleted = _run(["git", "branch", flag, "--", branch], cwd=repo_root)
+    return None if deleted.returncode == 0 else _format_failure(deleted)
 
 
 def _reap_qualified_worktree(
@@ -656,13 +675,20 @@ def _reap_qualified_worktree(
         )
 
     branch_prune_error = None
+    branch_pruned = False
     if (
         prune_merged_branches
         and pr_state is not None
         and pr_state.state == "MERGED"
         and pr_state.head_sha == current_head
     ):
-        branch_prune_error = _prune_branch(repo_root, info.branch, force=True)
+        branch_prune_error = _prune_branch(
+            repo_root,
+            info.branch,
+            force=True,
+            expected_head=current_head,
+        )
+        branch_pruned = branch_prune_error is None
 
     if branch_prune_error is not None:
         return ReapResult(
@@ -682,6 +708,7 @@ def _reap_qualified_worktree(
         reason=reason,
         dirty=dirty,
         pr=_pr_dict(pr_state),
+        branch_pruned=branch_pruned,
     )
 
 
@@ -726,6 +753,21 @@ def reap_worktrees(
                         branch=info.branch,
                         action="skipped",
                         reason="outside repo .worktrees/",
+                        dirty=None,
+                    )
+                )
+                continue
+
+            if not info.path.is_dir():
+                results.append(
+                    ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=(
+                            "registered worktree path is missing; "
+                            "run git worktree prune"
+                        ),
                         dirty=None,
                     )
                 )
