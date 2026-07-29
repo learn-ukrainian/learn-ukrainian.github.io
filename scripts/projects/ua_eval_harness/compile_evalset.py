@@ -2,8 +2,8 @@
 """Compile the Ukrainian Calque + Grammar Evaluation Dataset (UNLP 2027 target).
 
 Reads curated gold UA-GEC entries, loads and applies the taxonomy specification from
-``docs/projects/ua-eval-harness/taxonomy.yaml``, executes the Heritage Dialect
-Safeguard check, and outputs a HuggingFace-compatible JSONL evalset.
+``data/projects/ua_eval_harness/development/taxonomy.yaml``, executes the Heritage
+Dialect Safeguard check, and outputs a HuggingFace-compatible JSONL evalset.
 
 Usage
 -----
@@ -30,7 +30,9 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 DEFAULT_GOLD_FIXTURE = ROOT / "data" / "ua-gec-gold" / "ua-gec-gold.json"
-DEFAULT_TAXONOMY_PATH = ROOT / "docs" / "projects" / "ua-eval-harness" / "taxonomy.yaml"
+DEFAULT_TAXONOMY_PATH = (
+    ROOT / "data" / "projects" / "ua_eval_harness" / "development" / "taxonomy.yaml"
+)
 DEFAULT_OUTPUT_JSONL = ROOT / "data" / "projects" / "ua_eval_harness" / "evalset_v1.jsonl"
 
 
