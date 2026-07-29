@@ -67,5 +67,6 @@ Run with:
 ## Backup
 
 ```bash
-./scripts/backup-data.sh
+./scripts/backup-data.sh backup
+./scripts/backup-data.sh backup --execute
 ```
