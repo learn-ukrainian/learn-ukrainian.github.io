@@ -1136,6 +1136,7 @@ def _rail_path_admission_error(
     mode: str,
     owned_paths: Sequence[str] | None,
     receipt_id: str | None = None,
+    head_sha: str | None = None,
 ) -> str | None:
     """Return a P6 refusal before write-path ownership creates any state.
 
@@ -1154,23 +1155,25 @@ def _rail_path_admission_error(
             decide_rail_path_mutation_with_production_receipt,
         )
 
-    try:
-        head_sha = subprocess.run(
-            ["git", "rev-parse", "HEAD"],
-            cwd=_REPO_ROOT,
-            capture_output=True,
-            check=False,
-            text=True,
-            timeout=5,
-        )
-    except (OSError, subprocess.TimeoutExpired) as exc:
-        return f"❌ rail-path admission refused: cannot read current HEAD ({type(exc).__name__})"
-    if head_sha.returncode != 0:
-        return "❌ rail-path admission refused: cannot read current HEAD"
+    if head_sha is None:
+        try:
+            head_sha_proc = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=_REPO_ROOT,
+                capture_output=True,
+                check=False,
+                text=True,
+                timeout=5,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            return f"❌ rail-path admission refused: cannot read current HEAD ({type(exc).__name__})"
+        if head_sha_proc.returncode != 0:
+            return "❌ rail-path admission refused: cannot read current HEAD"
+        head_sha = head_sha_proc.stdout.strip()
     decision = decide_rail_path_mutation_with_production_receipt(
         task_id=task_id,
         candidate_paths=owned_paths or (),
-        head_sha=head_sha.stdout.strip(),
+        head_sha=head_sha,
         receipt_id=receipt_id,
     )
     if decision.allowed:
@@ -2429,6 +2432,63 @@ def _apply_dispatch_sparse_checkout(
     return telemetry
 
 
+def _resolve_worktree_base_sha(
+    *,
+    agent: str,
+    task_id: str,
+    raw_path: str,
+    base: str,
+    branch: str | None,
+) -> str:
+    """Resolve one immutable base SHA before rail admission or creation.
+
+    A dispatch receipt and its worker must bind the same checkout state.  This
+    helper performs all ref-moving validation first, then returns the one SHA
+    that the caller passes both to rail admission and :func:`_ensure_worktree`.
+    The latter must not fetch, rebase, or dereference a branch again.
+    """
+    worktree_path = _normalize_worktree_path(raw_path)
+    requested_branch = _validate_branch_reuse_name(branch) if branch else None
+
+    if worktree_path.exists():
+        if not worktree_path.is_dir():
+            raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
+        _validate_existing_worktree(
+            path=worktree_path,
+            expected_branch=requested_branch or _derive_worktree_branch(agent, task_id),
+            base=requested_branch or base,
+            # Admission refusals must leave an existing worktree untouched.
+            # A stale reuse therefore fails closed here rather than rebasing
+            # before its receipt has been verified.
+            allow_rebase=False,
+        )
+        resolved = _resolve_sha(worktree_path)
+        if resolved is None:
+            raise RuntimeError(f"could not resolve HEAD for existing worktree {worktree_path}")
+        return resolved
+
+    if requested_branch:
+        _fetch_existing_branch(requested_branch)
+        return _require_local_branch_is_ancestor_of_origin(requested_branch)
+
+    origin_ref = _origin_base_ref(base)
+    if _fetch_base(base):
+        resolved = _resolve_sha(_REPO_ROOT, origin_ref)
+        if resolved is not None:
+            return resolved
+
+    branch_name = _base_branch_name(base)
+    raise RuntimeError(
+        f"could not fetch origin/{branch_name} and {origin_ref} is "
+        f"unresolvable — refusing to branch from possibly-stale local "
+        f"{branch_name}. Check connectivity and that "
+        "`git remote get-url origin` points at the canonical remote "
+        "(github.com:learn-ukrainian/learn-ukrainian.github.io), then "
+        f"run `git fetch origin {branch_name}` and retry the dispatch. "
+        "Do NOT use the primary checkout as a freshness source."
+    )
+
+
 def _ensure_worktree(
     *,
     agent: str,
@@ -2436,6 +2496,7 @@ def _ensure_worktree(
     raw_path: str,
     base: str = "main",
     branch: str | None = None,
+    resolved_base_sha: str | None = None,
     dry_run: bool = False,
     full_checkout: bool = False,
     sparse_include: Sequence[str] = (),
@@ -2464,7 +2525,7 @@ def _ensure_worktree(
         "sparse": None,
     }
 
-    if requested_branch:
+    if requested_branch and resolved_base_sha is None:
         _fetch_existing_branch(requested_branch)
         _require_local_branch_is_ancestor_of_origin(requested_branch)
         occupied_paths = _branch_worktree_paths(requested_branch)
@@ -2497,19 +2558,28 @@ def _ensure_worktree(
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
         telemetry["reused"] = True
-        telemetry["rebased"] = _validate_existing_worktree(
-            path=worktree_path,
-            expected_branch=worktree_branch,
-            # For --branch reuse the staleness/fast-forward reference is the
-            # requested branch ITSELF (origin/<branch>), never origin/main: a
-            # follow-up worktree for an existing PR is almost always behind
-            # main (main moved since the PR branched), and validating against
-            # main would spuriously fail the dry-run or rebase a PR branch
-            # onto main as a validation side effect. (review-4905-grok)
-            base=requested_branch or base,
-            allow_rebase=not dry_run,
-        )
-        telemetry["base_sha"] = _resolve_sha(worktree_path)
+        if resolved_base_sha is None:
+            telemetry["rebased"] = _validate_existing_worktree(
+                path=worktree_path,
+                expected_branch=worktree_branch,
+                # For --branch reuse the staleness/fast-forward reference is the
+                # requested branch ITSELF (origin/<branch>), never origin/main: a
+                # follow-up worktree for an existing PR is almost always behind
+                # main (main moved since the PR branched), and validating against
+                # main would spuriously fail the dry-run or rebase a PR branch
+                # onto main as a validation side effect. (review-4905-grok)
+                base=requested_branch or base,
+                allow_rebase=not dry_run,
+            )
+        actual_sha = _resolve_sha(worktree_path)
+        if actual_sha is None:
+            raise RuntimeError(f"could not resolve HEAD for existing worktree {worktree_path}")
+        if resolved_base_sha is not None and actual_sha != resolved_base_sha:
+            raise WorktreeStaleBase(
+                "existing worktree HEAD changed after immutable-base resolution; "
+                f"expected {resolved_base_sha}, found {actual_sha}. Refusing worker spawn."
+            )
+        telemetry["base_sha"] = actual_sha
         if dry_run:
             return worktree_path, worktree_branch, telemetry
         # Reused worktrees may predate this provisioning hook; the helper is
@@ -2535,7 +2605,9 @@ def _ensure_worktree(
     # origin-prefixed ``base`` (``--base origin/main``, the mandated form)
     # fetches ``main`` and branches from ``origin/main`` — not the
     # unresolvable ``origin/origin/main``.
-    if requested_branch:
+    if resolved_base_sha is not None:
+        worktree_base_ref = resolved_base_sha
+    elif requested_branch:
         # Attach directly to the fetched PR/follow-up branch.  Never branch
         # from origin/main here: that was the follow-up-dispatch footgun.
         worktree_base_ref = requested_branch
@@ -2563,7 +2635,7 @@ def _ensure_worktree(
     worktree_path.parent.mkdir(parents=True, exist_ok=True)
 
     add_command = ["git", "worktree", "add"]
-    if requested_branch:
+    if requested_branch and resolved_base_sha is None:
         # ``-B`` intentionally resets a behind local tracking ref to the SHA
         # fetched from origin. _require_local_branch_is_ancestor_of_origin()
         # already refused any local-only commits, and branch holders were
@@ -2577,6 +2649,11 @@ def _ensure_worktree(
                 f"origin/{requested_branch}",
             ]
         )
+    elif requested_branch:
+        # The SHA was checked against origin/<branch> before rail admission.
+        # Reset the local branch to that immutable commit, never a ref which
+        # could move between receipt validation and `git worktree add`.
+        add_command.extend(["-B", requested_branch, str(worktree_path), worktree_base_ref])
     else:
         add_command.extend(["-b", worktree_branch, str(worktree_path), worktree_base_ref])
     proc = subprocess.run(
@@ -2589,13 +2666,21 @@ def _ensure_worktree(
     if proc.returncode != 0:
         stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
         raise RuntimeError(stderr)
+    actual_sha = _resolve_sha(worktree_path)
+    if actual_sha is None:
+        raise RuntimeError(f"could not resolve HEAD for created worktree {worktree_path}")
+    if resolved_base_sha is not None and actual_sha != resolved_base_sha:
+        raise WorktreeStaleBase(
+            "created worktree HEAD differs from immutable base; "
+            f"expected {resolved_base_sha}, found {actual_sha}. Refusing worker spawn."
+        )
+    telemetry["base_sha"] = actual_sha
     _provision_data_symlinks(worktree_path, _REPO_ROOT)
     telemetry["sparse"] = _apply_dispatch_sparse_checkout(
         worktree_path,
         full_checkout=full_checkout,
         sparse_include=sparse_include,
     )
-    telemetry["base_sha"] = _resolve_sha(worktree_path)
     return worktree_path, worktree_branch, telemetry
 
 
@@ -3571,6 +3656,29 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             )
             return 2
 
+    # Resolve the worktree base exactly once before rail admission.  Fetching or
+    # rebasing after a receipt has been checked would let a moving ref detach
+    # the worker's actual HEAD from the approved base.
+    resolved_worktree_base_sha: str | None = None
+    resolved_worktree_raw: str | None = None
+    if worktree_arg:
+        resolved_worktree_raw = (
+            str(_auto_worktree_path(args.agent, task_id))
+            if worktree_arg == "auto"
+            else worktree_arg
+        )
+        try:
+            resolved_worktree_base_sha = _resolve_worktree_base_sha(
+                agent=args.agent,
+                task_id=task_id,
+                raw_path=resolved_worktree_raw,
+                base=getattr(args, "base", None) or "main",
+                branch=requested_branch,
+            )
+        except (ValueError, RuntimeError) as exc:
+            print(f"❌ failed to resolve immutable worktree base for {task_id!r}: {exc}", file=sys.stderr)
+            return 1
+
     # P6 rail-path admission runs before the ownership ledger. A refusal must
     # leave no task-state, worktree, branch, or claim residue for a rail write.
     rail_admission_advisory = _rail_path_admission_advisory(
@@ -3584,6 +3692,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         mode=str(args.mode),
         owned_paths=getattr(args, "research_owned_path", None),
         receipt_id=getattr(args, "rail_approval_receipt", None),
+        head_sha=resolved_worktree_base_sha,
     )
     if rail_admission_error:
         print(rail_admission_error, file=sys.stderr)
@@ -3731,6 +3840,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                     raw_path=resolved_raw,
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
+                    resolved_base_sha=resolved_worktree_base_sha,
                     dry_run=True,
                     full_checkout=full_checkout,
                     sparse_include=sparse_include,
@@ -3848,6 +3958,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 raw_path=resolved_raw,
                 base=getattr(args, "base", None) or "main",
                 branch=requested_branch,
+                resolved_base_sha=resolved_worktree_base_sha,
                 full_checkout=full_checkout,
                 sparse_include=sparse_include,
             )
