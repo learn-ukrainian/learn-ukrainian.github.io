@@ -107,8 +107,18 @@ if [[ "${1:-}" == "backup" && -n "${FAKE_REQUIRED_RELATIVE:-}" ]]; then
   printf 'staged_required=<%s>\n' "$FAKE_REQUIRED_RELATIVE" \
     >> "$FAKE_RESTIC_LOG"
 fi
+if [[ "${1:-}" == "backup" && -n "${FAKE_FORBIDDEN_RELATIVES:-}" ]]; then
+  for forbidden in $FAKE_FORBIDDEN_RELATIVES; do
+    test ! -e "$PWD/$forbidden"
+    printf 'staged_excluded=<%s>\n' "$forbidden" >> "$FAKE_RESTIC_LOG"
+  done
+fi
 if [[ "${1:-}" == "backup" && -f "$PWD/BACKUP-RECEIPT.json" ]]; then
-  jq -c '{status: .receipt_status, paths: [.paths[].path]}' \
+  jq -c '{
+    status: .receipt_status,
+    paths: [.paths[].path],
+    data: (.paths[] | select(.path == "data"))
+  }' \
     "$PWD/BACKUP-RECEIPT.json" >> "$FAKE_RESTIC_LOG"
 fi
 exit 0
@@ -208,6 +218,27 @@ def test_execute_rejects_a_corrupt_database_before_upload(
     assert result.returncode != 0
     assert "SQLite online backup failed: data/corrupt.db" in result.stderr
     assert "arg=<backup>" not in _log(environment)
+    assert list(staging.iterdir()) == []
+
+
+def test_receipt_counts_match_post_exclusion_snapshot_contents(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, staging, _legacy = backup_environment
+    (source / "qdrant").mkdir()
+    (source / "qdrant" / "retired.bin").write_bytes(b"not recoverable")
+    (source / "__pycache__").mkdir()
+    (source / "__pycache__" / "cache.pyc").write_bytes(b"not recoverable")
+    (source / "sidecar.db-wal").write_bytes(b"not recoverable")
+    (source / ".DS_Store").write_bytes(b"not recoverable")
+    (source / "keep.txt").write_bytes(b"keep\n")
+    environment["FAKE_FORBIDDEN_RELATIVES"] = "data/qdrant data/__pycache__ data/sidecar.db-wal data/.DS_Store"
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert '"data":{"path":"data","files":1,"bytes":5}' in _log(environment)
+    assert _log(environment).count("staged_excluded=<") == 4
     assert list(staging.iterdir()) == []
 
 

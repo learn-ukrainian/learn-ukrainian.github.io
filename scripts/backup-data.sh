@@ -565,6 +565,35 @@ stage_sqlite_databases() {
   done < <(list_sqlite_sources)
 }
 
+remove_staged_path() {
+  local path=$1
+
+  [[ -e "$path" || -L "$path" ]] || return 0
+  path_is_within "$path" "$STAGED_ROOT" ||
+    die "Refusing to remove an exclusion outside the private staging tree."
+  find "$path" -depth -delete ||
+    die "Could not remove excluded content from private staging: ${path#"$STAGED_ROOT"/}"
+}
+
+remove_staged_exclusions() {
+  local directory relative
+
+  info "Removing excluded content from the private staging tree."
+  remove_staged_path "$STAGED_ROOT/data/qdrant"
+  if ((${#LEGACY_EXCLUDES[@]} > 0)); then
+    for relative in "${LEGACY_EXCLUDES[@]}"; do
+      remove_staged_path "$STAGED_ROOT/data/$relative"
+    done
+  fi
+  while IFS= read -r -d '' directory; do
+    remove_staged_path "$directory"
+  done < <(find "$STAGED_ROOT" -type d -name __pycache__ -prune -print0)
+  find "$STAGED_ROOT" -type f \
+    \( -name '*.db-wal' -o -name '*.db-shm' -o -name '.DS_Store' \) \
+    -delete ||
+    die "Could not remove excluded sidecars from the private staging tree."
+}
+
 build_restic_excludes() {
   local root=$1
   local relative
@@ -728,6 +757,7 @@ prepare_staging_tree() {
     clone_tree "$source_path" "$destination"
   done
   stage_sqlite_databases
+  remove_staged_exclusions
   create_worktree_patch
   write_backup_receipt
 }

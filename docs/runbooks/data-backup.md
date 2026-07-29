@@ -134,6 +134,10 @@ Each successful snapshot contains `BACKUP-RECEIPT.json` with:
 - the count of untracked non-ignored files not included (normally zero);
 - exclusions, known missing paths, and the restore command.
 
+Path counts are calculated after exclusions are removed from the private
+staging tree, so they describe recoverable snapshot files rather than raw
+source-tree contents.
+
 The receipt intentionally records only top-level recovery labels, not private
 inner path names. The remote repository itself is encrypted. The final process
 exit code belongs to the operator log: an in-snapshot file cannot truthfully
