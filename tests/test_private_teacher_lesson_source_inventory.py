@@ -265,7 +265,7 @@ def test_private_teacher_rows_99_118_inventory_is_pending_review_metadata() -> N
 
     inventory_text = PRIVATE_TEACHER_ROWS_99_118_INVENTORY.read_text(encoding="utf-8")
     assert ".docx" not in inventory_text
-    assert "alona" not in inventory_text.lower()
+    assert "private-teacher-full-document" not in inventory_text.lower()
     assert "native-reviewer-lessons" not in inventory_text
 
 
@@ -331,7 +331,7 @@ def test_private_teacher_rows_139_158_inventory_is_pending_review_metadata() -> 
 
     inventory_text = PRIVATE_TEACHER_ROWS_139_158_INVENTORY.read_text(encoding="utf-8")
     assert ".docx" not in inventory_text
-    assert "alona" not in inventory_text.lower()
+    assert "private-teacher-full-document" not in inventory_text.lower()
     assert "native-reviewer-lessons" not in inventory_text
 
 
@@ -366,7 +366,7 @@ def test_private_teacher_rows_159_178_inventory_is_pending_review_metadata() -> 
 
     inventory_text = PRIVATE_TEACHER_ROWS_159_178_INVENTORY.read_text(encoding="utf-8")
     assert ".docx" not in inventory_text
-    assert "alona" not in inventory_text.lower()
+    assert "private-teacher-full-document" not in inventory_text.lower()
     assert "native-reviewer-lessons" not in inventory_text
 
 
@@ -404,7 +404,7 @@ def test_private_teacher_rows_179_198_inventory_is_pending_review_metadata() -> 
         encoding="utf-8"
     )
     assert ".docx" not in inventory_text
-    assert "alona" not in inventory_text.lower()
+    assert "private-teacher-full-document" not in inventory_text.lower()
     assert "native-reviewer-lessons" not in inventory_text
 
 
@@ -443,7 +443,7 @@ def test_private_teacher_rows_199_218_inventory_is_pending_review_metadata() -> 
         encoding="utf-8"
     )
     assert ".docx" not in inventory_text
-    assert "alona" not in inventory_text.lower()
+    assert "private-teacher-full-document" not in inventory_text.lower()
     assert "native-reviewer-lessons" not in inventory_text
 
 
@@ -601,7 +601,7 @@ def test_private_teacher_sixth_decision_ledger_stays_review_only() -> None:
 
     ledger_text = PRIVATE_TEACHER_SIXTH_LEDGER.read_text(encoding="utf-8")
     assert ".docx" not in ledger_text
-    assert "alona" not in ledger_text.lower()
+    assert "private-teacher-full-document" not in ledger_text.lower()
     assert "native-reviewer-lessons" not in ledger_text
 
 
@@ -656,7 +656,7 @@ def test_private_teacher_eighth_decision_ledger_stays_review_only() -> None:
 
     ledger_text = PRIVATE_TEACHER_EIGHTH_LEDGER.read_text(encoding="utf-8")
     assert ".docx" not in ledger_text
-    assert "alona" not in ledger_text.lower()
+    assert "private-teacher-full-document" not in ledger_text.lower()
     assert "native-reviewer-lessons" not in ledger_text
 
 
@@ -686,7 +686,7 @@ def test_private_teacher_ninth_decision_ledger_stays_review_only() -> None:
 
     ledger_text = PRIVATE_TEACHER_NINTH_LEDGER.read_text(encoding="utf-8")
     assert ".docx" not in ledger_text
-    assert "alona" not in ledger_text.lower()
+    assert "private-teacher-full-document" not in ledger_text.lower()
     assert "native-reviewer-lessons" not in ledger_text
 
 
@@ -716,7 +716,7 @@ def test_private_teacher_tenth_decision_ledger_stays_review_only() -> None:
 
     ledger_text = PRIVATE_TEACHER_TENTH_LEDGER.read_text(encoding="utf-8")
     assert ".docx" not in ledger_text
-    assert "alona" not in ledger_text.lower()
+    assert "private-teacher-full-document" not in ledger_text.lower()
     assert "native-reviewer-lessons" not in ledger_text
 
 
@@ -747,7 +747,7 @@ def test_private_teacher_eleventh_decision_ledger_stays_review_only() -> None:
 
     ledger_text = PRIVATE_TEACHER_ELEVENTH_LEDGER.read_text(encoding="utf-8")
     assert ".docx" not in ledger_text
-    assert "alona" not in ledger_text.lower()
+    assert "private-teacher-full-document" not in ledger_text.lower()
     assert "native-reviewer-lessons" not in ledger_text
 
 

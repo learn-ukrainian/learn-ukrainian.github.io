@@ -1,6 +1,6 @@
 PYTHON ?= .venv/bin/python
 
-CURATED_SEED_INPUT ?= .claude/atlas-epic/plans/alona-truth/v5-curated-with-provenance.jsonl
+CURATED_SEED_INPUT ?= .claude/atlas-epic/plans/curated-seed/v5-curated-with-provenance.jsonl
 CURATED_SEED_DIR ?= data/lexicon
 CURATED_SEED_PUBLIC_SEED := $(CURATED_SEED_DIR)/curated-v5-admission-seed.json
 CURATED_SEED_CANDIDATES := $(CURATED_SEED_DIR)/curated-v5-grow-candidates.json

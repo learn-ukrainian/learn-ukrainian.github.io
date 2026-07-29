@@ -1,4 +1,4 @@
-"""Alona v5 seed → ADR-017 lexical JSONL converter + projection fixture."""
+"""Curated private teacher-lesson v5 seed → ADR-017 lexical JSONL converter + projection fixture."""
 
 from __future__ import annotations
 
@@ -8,10 +8,10 @@ from pathlib import Path
 
 import pytest
 
-from scripts.atlas import alona_seed_to_lexical_jsonl as convert
+from scripts.atlas import curated_seed_to_lexical_jsonl as convert
 from scripts.atlas import lexical_projection as projection
 
-FIXTURE = Path(__file__).resolve().parent / "fixtures" / "atlas" / "alona_v5_sample.jsonl"
+FIXTURE = Path(__file__).resolve().parent / "fixtures" / "atlas" / "curated_v5_sample.jsonl"
 ROOT = Path(__file__).resolve().parents[1]
 REAL_VESUM = ROOT / "data" / "vesum.db"
 
@@ -83,7 +83,7 @@ def test_convert_seed_keeps_distinct_titled_works_from_one_corpus_file(tmp_path:
 
 @pytest.mark.skipif(not REAL_VESUM.is_file(), reason="vesum.db not available in worktree")
 def test_sample_seed_round_trips_through_projection(tmp_path: Path) -> None:
-    """End-to-end: Alona sample → ADR JSONL → SQLite projection with FKs ON."""
+    """End-to-end: Curated private teacher-lesson sample → ADR JSONL → SQLite projection with FKs ON."""
     lexical_path = tmp_path / "lexical.jsonl"
     db_path = tmp_path / "atlas-v2.db"
     export_path = tmp_path / "export.jsonl"

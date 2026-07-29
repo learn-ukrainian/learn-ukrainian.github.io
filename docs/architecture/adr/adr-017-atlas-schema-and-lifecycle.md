@@ -41,7 +41,7 @@ The builder reads declared source inputs, validates them, and writes a fresh
 projection with `PRAGMA foreign_keys = ON`. Inputs include curriculum YAML,
 wiki articles, reviewed files under `data/lexicon/`, and explicitly admitted
 curated evidence files, for example
-`plans/alona-truth/v3-curated-with-provenance.jsonl`. A source file records its
+`plans/curated-seed/v3-curated-with-provenance.jsonl`. A source file records its
 own revision, provenance, and admission state; a release manifest may be an
 input or compatibility export, but is not a replacement SSOT for newly
 accepted editorial records.
@@ -180,7 +180,7 @@ preserve, not permission to wipe it.
 
 - #5791 implements the builder schema, round-trip fixture, foreign-key checks,
   and normalized/legacy shard-parity fixtures.
-- #5790 resolves Alona seed and sentence rights before any candidate is
+- #5790 resolves Curated private teacher-lesson seed and sentence rights before any candidate is
   admitted as an attestation or public Practice content.
 - The inventory's unmapped form, morphology, pronunciation, and prescription
   data requires separately approved target models before legacy removal.

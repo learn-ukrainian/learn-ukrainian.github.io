@@ -32,9 +32,6 @@ _PRIVATE_PROVENANCE_MARKERS = (
     "\\users\\",
     "native-reviewer-lessons",
     ".docx",
-    "alona",
-    "альона",
-    "алёна",
 )
 
 

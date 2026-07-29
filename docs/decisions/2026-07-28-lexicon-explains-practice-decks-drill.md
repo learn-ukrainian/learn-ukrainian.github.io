@@ -40,7 +40,7 @@
 
 - This does not forbid a lexicon article from displaying a cited attestation
   that a deck also uses.
-- This does not freeze #5910's `make alona-v5-admit` transitional factory; the
+- This does not freeze #5910's `make curated-v5-admit` transitional factory; the
   end-state ownership remains split.
 
 ## Evidence

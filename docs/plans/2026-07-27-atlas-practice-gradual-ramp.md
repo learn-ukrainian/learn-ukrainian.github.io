@@ -9,7 +9,7 @@
 
 | Track | Scope | Timeline |
 | --- | --- | --- |
-| **Track T — Teacher homework** | Full **Alona v5** list (~1k active seed) in Practice | **Immediate** — next driver ships this; **not** “by winter,” **not** capped at 50 words |
+| **Track T — Teacher homework** | Full **Curated private teacher-lesson v5** list (~1k active seed) in Practice | **Immediate** — next driver ships this; **not** “by winter,” **not** capped at 50 words |
 | **Track A — Atlas-wide ramp** | Grow practice pool toward “any atlas word” (~17k→more) | Gradual waves below; advisors lock triggers |
 
 A **32–50 gold slice** is only a **factory smoke test**. It must never be treated as the teacher-list delivery.
@@ -20,7 +20,7 @@ A **32–50 gold slice** is only a **factory smoke test**. It must never be trea
 
 | Horizon | Learner experience |
 | --- | --- |
-| **Now (Track T)** | Practice the **teacher’s full Alona word list** in the app |
+| **Now (Track T)** | Practice the **teacher’s full Curated private teacher-lesson word list** in the app |
 | **Now (product)** | Browse a large Word Atlas; practice pool smaller than atlas |
 | **Near** | Curated decks feel complete; CTA works for those words |
 | **Mid** | Most “everyday” atlas words are practiceable; banner becomes rare |
@@ -37,7 +37,7 @@ A **32–50 gold slice** is only a **factory smoke test**. It must never be trea
 **Should we ramp the whole atlas (Track A)?**
 **Yes — gradually.**
 
-**Should the Alona teacher list wait for that ramp?**
+**Should the Curated private teacher-lesson teacher list wait for that ramp?**
 **No.** Track T is unblocked homework priority and runs **ahead of** Wave 1–4 calendar language.
 
 ---
@@ -64,7 +64,7 @@ SOURCES → LEXICAL CORE (lemmas / senses / attestations / rights)
 | --- | --- |
 | Atlas articles (`data/atlas.db`) | ~17.4k |
 | Practice pool (union A1–C1 lemmaIds) | ~4.9k |
-| Alona v5 active seed | ~1.0k (not-in-VESUM skipped) |
+| Curated private teacher-lesson v5 active seed | ~1.0k (not-in-VESUM skipped) |
 | Practice lexemes gzip budget / level | 180 KB gzip / 1.6 MB raw (headroom today) |
 
 Banner **“Not in the practice pool yet”** = not in `practice-index.*`, **not** “empty atlas page.”
@@ -83,7 +83,7 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 | **Quality** | No surzhyk junk, no derived-only debris, no ambiguous cloze |
 
 **Ramp rule:** expand only what passes gates. Prefer empty mode shard over bad cards.
-**Track T rule:** admit full Alona list for recognition/practice; cloze only where sentence is clean.
+**Track T rule:** admit full Curated private teacher-lesson list for recognition/practice; cloze only where sentence is clean.
 
 ---
 
@@ -95,10 +95,10 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 | --- | --- |
 | Practice hub live | Done |
 | Open lexical plan + projection schema | Done |
-| Alona v5 seed frozen (VESUM skip; no renames) | Done |
+| Curated private teacher-lesson v5 seed frozen (VESUM skip; no renames) | Done |
 | Seed → ADR-017 converter | Done (#5901) |
 | Factory smoke 32–50 | Mechanism PR #5905 (smoke only) |
-| **Track T: full Alona v5 (~1k) in Practice** | **P0 next driver** — homework |
+| **Track T: full Curated private teacher-lesson v5 (~1k) in Practice** | **P0 next driver** — homework |
 
 **Infra change?** None. Stay static.
 **Do not** bury Track T in “Wave 1 autumn.”
@@ -113,7 +113,7 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 | W1.b Durable enrich cache | #5884 | No silent loss on cleanup |
 | W1.c Banner UX | Soften gloss-only vs pool-miss | Clear copy |
 
-**Advisor checkpoint A:** after Track T full Alona is live — static still healthy?
+**Advisor checkpoint A:** after Track T full Curated private teacher-lesson is live — static still healthy?
 
 ---
 
@@ -173,7 +173,7 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 
 | Cadence | Activity |
 | --- | --- |
-| **Immediate** | Track T full Alona practice admission |
+| **Immediate** | Track T full Curated private teacher-lesson practice admission |
 | **Weekly** | Curated deck merges after Track T |
 | **Biweekly** | Track A pool batches (after Track T) |
 | **Monthly** | Infra trigger dashboard |
@@ -188,7 +188,7 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 
 | ID | Question | Driver recommendation |
 | --- | --- | --- |
-| **DC-0** | Confirm Track T full Alona is **not** gated by Wave 1–4 calendar? | **Confirm** — homework is immediate |
+| **DC-0** | Confirm Track T full Curated private teacher-lesson is **not** gated by Wave 1–4 calendar? | **Confirm** — homework is immediate |
 | **DC-1** | Gradual atlas ramp vs freeze pool ~5k? | **Ramp gradually** after Track T |
 | **DC-2** | 80% gzip — split shards vs raise limits? | **Split first** |
 | **DC-3** | When design on-demand practice? | After Wave 2 ~10–15k **or** 80% budget |
@@ -211,9 +211,9 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 
 ## 8. Immediate next actions (ordered)
 
-1. **Track T:** full Alona v5 (~1029) into Practice — extend #5905 / #5792 (not stop at 40)
-2. Local smoke: several Alona lemmas → Practice CTA works
-3. Banner-rate sample on random non-Alona atlas pages
+1. **Track T:** full Curated private teacher-lesson v5 (~1029) into Practice — extend #5905 / #5792 (not stop at 40)
+2. Local smoke: several Curated private teacher-lesson lemmas → Practice CTA works
+3. Banner-rate sample on random non-Curated private teacher-lesson atlas pages
 4. Advisor finish on this draft → lock DC-0…DC-5 for Track A
 5. Only after Track T: Wave 2 batch 2.1
 
