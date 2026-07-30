@@ -175,6 +175,7 @@ def test_backup_defaults_to_repository_dry_run(
     assert "Backup preview only" in result.stdout
     assert "arg=<backup>" in _log(environment)
     assert "arg=<--dry-run>" in _log(environment)
+    assert "arg=<--option> arg=<rclone.connections=1>" in _log(environment)
     assert source_file.read_text(encoding="utf-8") == "do not mutate\n"
     assert list(staging.iterdir()) == []
 
