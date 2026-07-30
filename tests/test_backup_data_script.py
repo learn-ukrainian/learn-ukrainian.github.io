@@ -97,6 +97,9 @@ fi
 if [[ "${1:-}" == "cat" && "${FAKE_REPOSITORY_STATE:-initialized}" != "initialized" ]]; then
   exit 1
 fi
+if [[ "${1:-}" == "cat" && -z "${RESTIC_REPOSITORY:-}" ]]; then
+  exit 78
+fi
 if [[ "${1:-}" == "backup" && -n "${FAKE_DB_RELATIVE:-}" ]]; then
   rows="$(sqlite3 "file:$PWD/$FAKE_DB_RELATIVE?mode=ro&immutable=1" \
     'SELECT COUNT(*) FROM recovery_probe;')"
@@ -204,6 +207,30 @@ def test_execute_stages_a_consistent_wal_database_and_cleans_up(
     assert '"status":"prepared-before-snapshot-write"' in _log(environment)
     assert '".claude/atlas-epic"' in _log(environment)
     assert '"batch_state"' in _log(environment)
+    assert list(staging.iterdir()) == []
+
+
+def test_execute_snapshots_checkpointed_wal_database_without_sidecars(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, staging, _legacy = backup_environment
+    database = source / "checkpointed.db"
+    connection = sqlite3.connect(database)
+    connection.execute("PRAGMA journal_mode=WAL")
+    connection.execute("CREATE TABLE recovery_probe (value TEXT NOT NULL)")
+    connection.execute("INSERT INTO recovery_probe VALUES ('checkpointed')")
+    connection.commit()
+    connection.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+    connection.close()
+    assert not database.with_name("checkpointed.db-wal").exists()
+    assert not database.with_name("checkpointed.db-shm").exists()
+    environment["FAKE_DB_RELATIVE"] = "data/checkpointed.db"
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert "Using verified immutable fallback" in result.stdout
+    assert "db_rows=<1>" in _log(environment)
     assert list(staging.iterdir()) == []
 
 
@@ -556,13 +583,25 @@ def test_doctor_summarizes_validation_failure(
     assert "Doctor found 1 blocking problem(s)." in result.stderr
 
 
-def test_refuses_staging_inside_project_checkout(
+def test_doctor_checks_initialized_repository_with_validated_environment(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, _source, _staging, _legacy = backup_environment
-    environment["LU_BACKUP_TMPDIR"] = str(REPO_ROOT / "batch_state")
+
+    result = _run(environment, "doctor")
+
+    assert result.returncode == 0, result.stderr
+    assert "OK: restic repository is initialized" in result.stdout
+    assert "Doctor checks passed." in result.stdout
+
+
+def test_refuses_staging_inside_project_checkout(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    environment["LU_BACKUP_TMPDIR"] = str(source.parent / "batch_state")
 
     result = _run(environment, "backup")
 
     assert result.returncode != 0
-    assert "Staging directory must be outside the project checkout" in result.stderr
+    assert "Staging directory must be outside the selected project checkout" in result.stderr
