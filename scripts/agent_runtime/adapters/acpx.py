@@ -1,11 +1,21 @@
-"""AcpxAdapter — experimental read-only shadow transport for ACPX (#6027).
+"""ACPX experimental read-only shadow transport (#6027, #6043).
 
-Wraps ``acpx codex exec`` (https://www.npmjs.com/package/acpx), a headless CLI
-client for the Agent Client Protocol (ACP). This adapter is Stage 0/1 scaffolding
-only: a feature-flagged, direct-only, observability seat for exactly one
-read-only/stateless Codex ACP participant. It is never registered for model
-selection, catalog, review eligibility, or failover (see registry.py entry
-``cli_available: False``).
+Wraps the project-local ``acpx@0.13.0`` headless CLI
+(https://www.npmjs.com/package/acpx) for the Agent Client Protocol (ACP).
+
+Two **separate** direct-only seats share this module:
+
+- ``AcpxAdapter`` / ``acpx-codex-shadow`` (#6027) — fixed Codex participant
+  via ``acpx … codex exec``
+- ``AcpxGrokShadowAdapter`` / ``acpx-grok-shadow`` (#6043) — fixed Grok
+  participant via a custom ``--agent`` command that forces native Grok
+  ``agent … --agent-profile <hash-pinned-no-tool-profile> --no-leader stdio``
+  (never the built-in ``grok-build`` name, which cannot place parent flags
+  before ``stdio``)
+
+Neither seat is registered for model selection, catalog, review eligibility,
+or failover (``cli_available: False``). They are not a second coordination
+plane: native Codex/Grok remain authoritative under shadow compare.
 
 Contract captured empirically from the pinned local ``acpx@0.13.0`` install
 (``node_modules/acpx``), not guessed:
@@ -13,10 +23,10 @@ Contract captured empirically from the pinned local ``acpx@0.13.0`` install
 - ``exec`` is always one-shot and never reuses a saved session or queue
   owner — confirmed by reading ``handleExec`` in ``dist/cli.js``, which calls
   ``runOnce()`` directly instead of the queue-owner path ``prompt`` uses.
-  This is what makes ``codex exec`` structurally safe for a stateless,
-  no-queue, non-persistent shadow call: we never need to reject "queue" or
-  "session" behavior at our own layer because the CLI subcommand itself has
-  none.
+  This is what makes ``codex exec`` / custom-agent ``exec`` structurally safe
+  for a stateless, no-queue, non-persistent shadow call: we never need to
+  reject "queue" or "session" behavior at our own layer because the CLI
+  subcommand itself has none.
 - Exit codes (``src/types.ts`` EXIT_CODES): SUCCESS=0, ERROR=1, USAGE=2,
   TIMEOUT=3, NO_SESSION=4, PERMISSION_DENIED=5, INTERRUPTED=130.
 - ``--format json --json-strict`` streams the raw ACP JSON-RPC exchange as
@@ -36,8 +46,12 @@ Contract captured empirically from the pinned local ``acpx@0.13.0`` install
   ``params.update.content == {"type": "text", "text": "..."}``; the terminal
   ``session/prompt`` response carries ``result.stopReason`` in
   ``{"end_turn", "max_tokens", "max_turn_requests", "refusal", "cancelled"}``.
+- Auth method selection under ``--auth-policy fail`` is explicit via non-secret
+  per-process selectors such as ``ACPX_AUTH_CHAT_GPT=1`` (Codex ChatGPT login)
+  and ``ACPX_AUTH_CACHED_TOKEN=1`` (Grok cached native login). Never invent
+  additional selectors; never read/store/log credentials.
 
-Confinement is structural, not probabilistic: every invocation this adapter
+Confinement is structural, not probabilistic: every invocation either adapter
 builds passes ``--deny-all --no-fs --no-terminal --allowed-tools ""
 --auth-policy fail --non-interactive-permissions fail --max-turns 1
 --prompt-retries 0`` unconditionally. There is no code path that can loosen
@@ -46,15 +60,18 @@ any of these — a caller cannot pass permission/tool overrides through
 markers plus local correlation/idempotency metadata — and rejects anything
 else before spawn).
 
-Issue: #6027
+Issues: #6027 (Codex pilot), #6043 (second Grok pilot).
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
 import re
+import shlex
+import shutil
 import subprocess
 from functools import lru_cache
 from pathlib import Path
@@ -87,12 +104,34 @@ PINNED_VERSION = "0.13.0"
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 _PINNED_BINARY = _REPO_ROOT / "node_modules" / ".bin" / "acpx"
 
+# Exact reviewed native Grok CLI semver for the Grok ACPX shadow seat (#6043).
+# Built-in acpx ``grok-build`` is intentionally unused: it expands to
+# ``grok agent stdio`` without a place for parent flags required by Grok
+# 0.2.114 (``--model`` / ``--reasoning-effort`` / ``--no-leader`` must appear
+# before ``stdio``).
+PINNED_GROK_VERSION = "0.2.114"
+GROK_SHADOW_MODEL = "grok-4.5"
+GROK_SHADOW_EFFORT = "high"
+_GROK_PROFILE_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "profiles" / "acpx-grok-read-only.md"
+_GROK_PROFILE_SHA256 = "5831398f7204be279e908371b5f0990d5e5e725a323091232e184083649d7158"
+# Non-secret acpx 0.13.0 auth-method selector for a cached native Grok login.
+GROK_AUTH_CACHED_TOKEN_ENV = "ACPX_AUTH_CACHED_TOKEN"
+# Ambient XAI API-key selectors that would compete with cached_token under
+# --auth-policy fail. Scrubbed from the child env so the only accepted path
+# is the cached native login selector above. Never read as credential values.
+_GROK_XAI_API_KEY_ENV_UNSETS: tuple[str, ...] = (
+    "XAI_API_KEY",
+    "GROK_API_KEY",
+    "ACPX_AUTH_XAI_API_KEY",
+    "ACPX_AUTH_API_KEY",
+)
+
 # tool_config allowlist. Anything outside this set is rejected before spawn
 # — this is the enforcement point for "unsupported permission/tool config"
 # in the approved reject-before-spawn list. No key here can loosen
-# confinement; "target_agent" can only ever be re-affirmed as "codex".
-# "correlation_id"/"idempotency_key" are local runtime metadata only (see
-# _require_local_metadata_field): never forwarded to the ACP wire protocol.
+# confinement; each seat re-affirms its own fixed target_agent ("codex" or
+# "grok"). "correlation_id"/"idempotency_key" are local runtime metadata only
+# (see _require_local_metadata_field): never forwarded to the ACP wire protocol.
 _ALLOWED_TOOL_CONFIG_KEYS = frozenset(
     {"acpx_shadow", "target_agent", "correlation_id", "idempotency_key"}
 )
@@ -206,7 +245,12 @@ def _probe_acpx_version(binary: str) -> str:
     return (proc.stdout or "").strip()
 
 
-def _require_local_metadata_field(name: str, value: str | None) -> str:
+def _require_local_metadata_field(
+    name: str,
+    value: str | None,
+    *,
+    adapter_label: str = "AcpxAdapter",
+) -> str:
     """Validate a local runtime-metadata identifier, or refuse before spawn.
 
     Applies to ``task_id``, ``correlation_id``, and ``idempotency_key``:
@@ -215,18 +259,201 @@ def _require_local_metadata_field(name: str, value: str | None) -> str:
     protocol flags, argv, or stdin — see ``_ALLOWED_TOOL_CONFIG_KEYS``.
     """
     if value is None or not value.strip():
-        raise AcpxShadowRefusalError(f"AcpxAdapter: {name} must be a non-empty local identifier")
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: {name} must be a non-empty local identifier"
+        )
     stripped = value.strip()
     if len(stripped) > _METADATA_FIELD_MAX_LEN:
         raise AcpxShadowRefusalError(
-            f"AcpxAdapter: {name} exceeds the {_METADATA_FIELD_MAX_LEN}-char bound for local metadata"
+            f"{adapter_label}: {name} exceeds the {_METADATA_FIELD_MAX_LEN}-char "
+            "bound for local metadata"
         )
     if not _METADATA_FIELD_RE.match(stripped):
         raise AcpxShadowRefusalError(
-            f"AcpxAdapter: {name}={stripped!r} must match a bounded local identifier "
+            f"{adapter_label}: {name}={stripped!r} must match a bounded local identifier "
             f"pattern ({_METADATA_FIELD_RE.pattern}); refusing to forward unsafe metadata"
         )
     return stripped
+
+
+def _require_shadow_transport(*, adapter_label: str) -> None:
+    transport = os.environ.get(TRANSPORT_ENV, "off").strip().lower()
+    if transport != "shadow":
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: refusing to spawn ({TRANSPORT_ENV}={transport!r}); "
+            f"set {TRANSPORT_ENV}=shadow to enable the experimental ACPX shadow seat "
+            "(default is off)"
+        )
+
+
+def _require_shadow_tool_config(
+    tool_config: dict | None,
+    *,
+    adapter_label: str,
+    required_target: str,
+) -> dict[str, Any]:
+    tc = dict(tool_config or {})
+    unsupported_keys = set(tc) - _ALLOWED_TOOL_CONFIG_KEYS
+    if unsupported_keys:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: unsupported tool_config keys {sorted(unsupported_keys)!r}; "
+            f"only {sorted(_ALLOWED_TOOL_CONFIG_KEYS)!r} are recognized"
+        )
+    if tc.get("acpx_shadow") is not True:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: tool_config must set acpx_shadow=True as an explicit "
+            "per-call marker of shadow intent; the feature flag alone is not enough"
+        )
+    target_agent = tc.get("target_agent", required_target)
+    if target_agent != required_target:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: target_agent={target_agent!r} rejected; this seat supports "
+            f"exactly one ACP participant: {required_target}"
+        )
+    return tc
+
+
+def _require_non_primary_worktree(cwd: Path, *, adapter_label: str) -> None:
+    if _worktree_containment.classify_repo_path(cwd, cwd=cwd) == "primary_checkout":
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: refusing to spawn against the protected primary checkout "
+            f"({cwd}); run ACPX shadow calls from a worktree"
+        )
+
+
+def _require_pinned_acpx_binary(*, adapter_label: str) -> str:
+    if not _PINNED_BINARY.is_file():
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: pinned binary not found at {_PINNED_BINARY}; run "
+            f"`npm install acpx@{PINNED_VERSION} --save-exact --save-dev` first. "
+            "A global/PATH acpx binary is never used as a substitute."
+        )
+    binary = str(_PINNED_BINARY)
+    observed_version = _probe_acpx_version(binary)
+    if observed_version != PINNED_VERSION:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: resolved acpx binary reports version {observed_version!r} "
+            f"(expected pinned {PINNED_VERSION!r}); refusing to spawn on a version mismatch"
+        )
+    return binary
+
+
+def _confinement_prefix_argv(binary: str, cwd: Path) -> list[str]:
+    """Shared structural confinement flags for every ACPX shadow seat."""
+    return [
+        binary,
+        "--cwd",
+        str(cwd),
+        "--format",
+        "json",
+        "--json-strict",
+        "--auth-policy",
+        "fail",
+        "--deny-all",
+        "--non-interactive-permissions",
+        "fail",
+        "--no-fs",
+        "--no-terminal",
+        "--allowed-tools",
+        "",
+        "--max-turns",
+        "1",
+        "--prompt-retries",
+        "0",
+    ]
+
+
+_GROK_VERSION_RE = re.compile(r"\Agrok\s+(\d+\.\d+\.\d+)(?:\s|$)")
+
+
+@lru_cache(maxsize=4)
+def _probe_grok_version(binary: str) -> str:
+    """Return exact semver from ``<binary> --version``, or "" on any failure.
+
+    Native Grok 0.2.114 prints ``grok 0.2.114 (<sha>) [stable]``. Wrong,
+    missing, or unparseable output fails closed before prompt.
+    """
+    try:
+        proc = subprocess.run(
+            [binary, "--version"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return ""
+    if proc.returncode != 0:
+        return ""
+    text = (proc.stdout or "").strip()
+    match = _GROK_VERSION_RE.match(text)
+    return match.group(1) if match else ""
+
+
+def _resolve_grok_binary() -> str:
+    """Resolve the installed ``grok`` CLI to an absolute path, or refuse.
+
+    Uses PATH lookup then ``Path.resolve()`` so the shell-safe ``--agent``
+    command embeds an absolute binary. Does not fall back to inventing paths.
+    """
+    found = shutil.which("grok")
+    if not found:
+        raise AcpxShadowRefusalError(
+            "AcpxGrokShadowAdapter: grok binary not found on PATH; install the "
+            f"native Grok CLI at exact semver {PINNED_GROK_VERSION} before using "
+            "the acpx-grok-shadow seat"
+        )
+    resolved = Path(found).resolve()
+    if not resolved.is_file():
+        raise AcpxShadowRefusalError(
+            f"AcpxGrokShadowAdapter: resolved grok path {resolved} is not a file"
+        )
+    return str(resolved)
+
+
+def _require_grok_profile() -> str:
+    """Return the exact project-owned no-tool profile, or refuse before spawn."""
+    try:
+        content = _GROK_PROFILE_PATH.read_bytes()
+    except OSError as exc:
+        raise AcpxShadowRefusalError(
+            f"AcpxGrokShadowAdapter: required no-tool Grok profile unavailable at "
+            f"{_GROK_PROFILE_PATH}: {exc}"
+        ) from exc
+    observed = hashlib.sha256(content).hexdigest()
+    if observed != _GROK_PROFILE_SHA256:
+        raise AcpxShadowRefusalError(
+            "AcpxGrokShadowAdapter: no-tool Grok profile digest mismatch "
+            f"(observed {observed!r}, expected {_GROK_PROFILE_SHA256!r}); "
+            "refusing to spawn with an unreviewed tool policy"
+        )
+    return str(_GROK_PROFILE_PATH)
+
+
+def _build_grok_agent_command(abs_grok: str, profile_path: str) -> str:
+    """Shell-safe single ``--agent`` value with required Grok 0.2.114 argv order.
+
+    Exact token order (parent flags before ``stdio``)::
+
+        ABS_GROK agent --model grok-4.5 --reasoning-effort high
+        --agent-profile ABS_PROFILE --no-leader stdio
+
+    Never uses the ACPX built-in ``grok-build`` name.
+    """
+    return shlex.join(
+        [
+            abs_grok,
+            "agent",
+            "--model",
+            GROK_SHADOW_MODEL,
+            "--reasoning-effort",
+            GROK_SHADOW_EFFORT,
+            "--agent-profile",
+            profile_path,
+            "--no-leader",
+            "stdio",
+        ]
+    )
 
 
 class AcpxAdapter:
@@ -293,32 +520,12 @@ class AcpxAdapter:
                 f"AcpxAdapter: unsupported mode {mode!r}; only 'read-only' is permitted for the ACPX shadow seat"
             )
 
-        transport = os.environ.get(TRANSPORT_ENV, "off").strip().lower()
-        if transport != "shadow":
-            raise AcpxShadowRefusalError(
-                f"AcpxAdapter: refusing to spawn ({TRANSPORT_ENV}={transport!r}); "
-                f"set {TRANSPORT_ENV}=shadow to enable the experimental ACPX shadow seat "
-                "(default is off)"
-            )
-
-        tc = dict(tool_config or {})
-        unsupported_keys = set(tc) - _ALLOWED_TOOL_CONFIG_KEYS
-        if unsupported_keys:
-            raise AcpxShadowRefusalError(
-                f"AcpxAdapter: unsupported tool_config keys {sorted(unsupported_keys)!r}; "
-                f"only {sorted(_ALLOWED_TOOL_CONFIG_KEYS)!r} are recognized"
-            )
-        if tc.get("acpx_shadow") is not True:
-            raise AcpxShadowRefusalError(
-                "AcpxAdapter: tool_config must set acpx_shadow=True as an explicit "
-                "per-call marker of shadow intent; the feature flag alone is not enough"
-            )
-        target_agent = tc.get("target_agent", "codex")
-        if target_agent != "codex":
-            raise AcpxShadowRefusalError(
-                f"AcpxAdapter: target_agent={target_agent!r} rejected; this seat supports "
-                "exactly one ACP participant: codex"
-            )
+        _require_shadow_transport(adapter_label="AcpxAdapter")
+        tc = _require_shadow_tool_config(
+            tool_config,
+            adapter_label="AcpxAdapter",
+            required_target="codex",
+        )
 
         validated_task_id = _require_local_metadata_field("task_id", task_id)
         correlation_id = _require_local_metadata_field("correlation_id", tc.get("correlation_id"))
@@ -330,41 +537,10 @@ class AcpxAdapter:
                 "`exec` only and never resumes a named or persistent ACP session"
             )
 
-        if _worktree_containment.classify_repo_path(cwd, cwd=cwd) == "primary_checkout":
-            raise AcpxShadowRefusalError(
-                f"AcpxAdapter: refusing to spawn against the protected primary checkout "
-                f"({cwd}); run ACPX shadow calls from a worktree"
-            )
+        _require_non_primary_worktree(cwd, adapter_label="AcpxAdapter")
+        binary = _require_pinned_acpx_binary(adapter_label="AcpxAdapter")
 
-        binary = self._resolve_pinned_binary()
-        observed_version = _probe_acpx_version(binary)
-        if observed_version != PINNED_VERSION:
-            raise AcpxShadowRefusalError(
-                f"AcpxAdapter: resolved acpx binary reports version {observed_version!r} "
-                f"(expected pinned {PINNED_VERSION!r}); refusing to spawn on a version mismatch"
-            )
-
-        cmd: list[str] = [
-            binary,
-            "--cwd",
-            str(cwd),
-            "--format",
-            "json",
-            "--json-strict",
-            "--auth-policy",
-            "fail",
-            "--deny-all",
-            "--non-interactive-permissions",
-            "fail",
-            "--no-fs",
-            "--no-terminal",
-            "--allowed-tools",
-            "",
-            "--max-turns",
-            "1",
-            "--prompt-retries",
-            "0",
-        ]
+        cmd: list[str] = _confinement_prefix_argv(binary, cwd)
         if model:
             cmd.extend(["--model", model])
         if effort is not None:
@@ -392,6 +568,11 @@ class AcpxAdapter:
 
     @classmethod
     def _resolve_pinned_binary(cls) -> str:
+        """Resolve the project-local acpx binary path without version probing.
+
+        Kept for callers/tests that only need the path check. Version pin
+        enforcement lives in :func:`_require_pinned_acpx_binary`.
+        """
         if not _PINNED_BINARY.is_file():
             raise AcpxShadowRefusalError(
                 f"AcpxAdapter: pinned binary not found at {_PINNED_BINARY}; run "
@@ -565,5 +746,176 @@ class AcpxAdapter:
         happens, so the runner's stdout streaming watchdog is a complete
         liveness signal on its own.
         """
+        _ = plan
+        return ()
+
+
+class AcpxGrokShadowAdapter:
+    """Adapter for a fixed Grok Build ACP participant via ACPX (#6043).
+
+    Separate public class from :class:`AcpxAdapter` — not a generic
+    caller-selectable multipurpose adapter. Canonical seat name is
+    ``acpx-grok-shadow``; fixed per-call target is ``target_agent="grok"``.
+
+    Builds one confined shape only:
+
+    - project-local ``acpx@0.13.0``
+    - custom ``--agent`` command from the absolute installed Grok binary at
+      exact semver :data:`PINNED_GROK_VERSION`, never the built-in
+      ``grok-build`` name
+    - exact hash-pinned project profile with no tools plus an explicit
+      write/shell/subagent/web/MCP/memory denylist
+    - fixed model/effort ``grok-4.5`` / ``high`` inside that agent command
+    - ``ACPX_AUTH_CACHED_TOKEN=1`` under ``--auth-policy fail``, with ambient
+      XAI API-key auth selectors scrubbed
+    - one-shot ``exec``, no session, deny-all / no-fs / no-terminal
+    """
+
+    name: str = "acpx-grok-shadow"
+    # Fixed effective model baked into the --agent command. Telemetry must
+    # report this value; callers may only pass None or the same string.
+    default_model: str = GROK_SHADOW_MODEL
+    supported_modes: frozenset[str] = frozenset({"read-only"})
+
+    def build_invocation(
+        self,
+        *,
+        prompt: str,
+        mode: str,
+        cwd: Path,
+        model: str | None,
+        task_id: str | None,
+        session_id: str | None,
+        tool_config: dict | None,
+        effort: str | None = None,
+    ) -> InvocationPlan:
+        """Build the confined Grok ACPX shadow invocation, or refuse before spawn.
+
+        Refusal conditions (all raise :class:`AcpxShadowRefusalError` unless
+        noted), matching the approved #6043 contract:
+
+        - ``mode`` is not ``"read-only"`` (plain ``ValueError``)
+        - ``LU_ACPX_TRANSPORT`` is not exactly ``"shadow"``
+        - missing ``acpx_shadow=True`` or unsupported ``tool_config`` keys
+        - ``target_agent`` is not ``"grok"``
+        - ``session_id`` is not None
+        - ``cwd`` is the protected primary checkout
+        - project-local acpx missing / wrong version
+        - Grok binary missing / wrong / unparseable version
+        - no-tool profile missing or changed from its reviewed digest
+        - caller ``model`` is not ``None`` or ``grok-4.5``
+        - caller ``effort`` is not ``None`` or ``high``
+        - missing/blank/oversized/unsafe local metadata fields
+        """
+        if mode not in self.supported_modes:
+            raise ValueError(
+                f"AcpxGrokShadowAdapter: unsupported mode {mode!r}; only 'read-only' "
+                "is permitted for the ACPX shadow seat"
+            )
+
+        _require_shadow_transport(adapter_label="AcpxGrokShadowAdapter")
+        tc = _require_shadow_tool_config(
+            tool_config,
+            adapter_label="AcpxGrokShadowAdapter",
+            required_target="grok",
+        )
+
+        if model is not None and model != GROK_SHADOW_MODEL:
+            raise AcpxShadowRefusalError(
+                f"AcpxGrokShadowAdapter: model={model!r} rejected; caller may only pass "
+                f"None or {GROK_SHADOW_MODEL!r} (effective model is always {GROK_SHADOW_MODEL!r})"
+            )
+        if effort is not None and effort != GROK_SHADOW_EFFORT:
+            raise AcpxShadowRefusalError(
+                f"AcpxGrokShadowAdapter: effort={effort!r} rejected; caller may only pass "
+                f"None or {GROK_SHADOW_EFFORT!r} (effective effort is always {GROK_SHADOW_EFFORT!r})"
+            )
+
+        validated_task_id = _require_local_metadata_field(
+            "task_id", task_id, adapter_label="AcpxGrokShadowAdapter"
+        )
+        correlation_id = _require_local_metadata_field(
+            "correlation_id",
+            tc.get("correlation_id"),
+            adapter_label="AcpxGrokShadowAdapter",
+        )
+        idempotency_key = _require_local_metadata_field(
+            "idempotency_key",
+            tc.get("idempotency_key"),
+            adapter_label="AcpxGrokShadowAdapter",
+        )
+
+        if session_id is not None:
+            raise AcpxShadowRefusalError(
+                "AcpxGrokShadowAdapter: session_id must be None; the ACPX shadow seat is "
+                "one-shot `exec` only and never resumes a named or persistent ACP session"
+            )
+
+        _require_non_primary_worktree(cwd, adapter_label="AcpxGrokShadowAdapter")
+        acpx_binary = _require_pinned_acpx_binary(adapter_label="AcpxGrokShadowAdapter")
+
+        grok_binary = _resolve_grok_binary()
+        observed_grok = _probe_grok_version(grok_binary)
+        if observed_grok != PINNED_GROK_VERSION:
+            raise AcpxShadowRefusalError(
+                f"AcpxGrokShadowAdapter: resolved grok binary reports version "
+                f"{observed_grok!r} (expected pinned {PINNED_GROK_VERSION!r}); "
+                "refusing to spawn on a version mismatch"
+            )
+
+        profile_path = _require_grok_profile()
+        agent_command = _build_grok_agent_command(grok_binary, profile_path)
+        cmd: list[str] = _confinement_prefix_argv(acpx_binary, cwd)
+        # --agent is a single shell-safe command string. Do not combine with a
+        # positional agent token (acpx grammar), and never emit built-in
+        # "grok-build".
+        cmd.extend(["--agent", agent_command, "exec", "-f", "-"])
+
+        return InvocationPlan(
+            cmd=cmd,
+            cwd=cwd,
+            stdin_payload=prompt,
+            output_file=None,
+            env_overrides={GROK_AUTH_CACHED_TOKEN_ENV: "1"},
+            env_unsets=_GROK_XAI_API_KEY_ENV_UNSETS,
+            liveness_paths=(),
+            metadata={
+                "acpx_shadow": True,
+                "acpx_pinned_version": PINNED_VERSION,
+                "grok_pinned_version": PINNED_GROK_VERSION,
+                "grok_profile_sha256": _GROK_PROFILE_SHA256,
+                "target_agent": "grok",
+                # Effective values are fixed; never fabricate caller-supplied
+                # alternatives in telemetry.
+                "model": GROK_SHADOW_MODEL,
+                "effort": GROK_SHADOW_EFFORT,
+                "task_id": validated_task_id,
+                "correlation_id": correlation_id,
+                "idempotency_key": idempotency_key,
+            },
+        )
+
+    def parse_response(
+        self,
+        *,
+        stdout: str,
+        stderr: str,
+        returncode: int,
+        output_file: Path | None,
+        plan: InvocationPlan | None = None,
+        call_start_time: float | None = None,
+    ) -> ParseResult:
+        """Parse ACPX NDJSON using the same fail-closed Codex shadow parser."""
+        return AcpxAdapter().parse_response(
+            stdout=stdout,
+            stderr=stderr,
+            returncode=returncode,
+            output_file=output_file,
+            plan=plan,
+            call_start_time=call_start_time,
+        )
+
+    def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
+        """No fallback liveness files — acpx streams NDJSON directly to stdout."""
         _ = plan
         return ()

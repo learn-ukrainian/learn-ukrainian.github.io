@@ -1,4 +1,4 @@
-"""Tests for AcpxAdapter — the experimental ACPX read-only shadow seat (#6027).
+"""Tests for ACPX shadow seats — Codex (#6027) and Grok (#6043).
 
 The NDJSON transcripts below (inlined as module-level constants rather than
 ``tests/fixtures/acpx/*.ndjson`` files, to keep this seat's changed-file
@@ -13,17 +13,23 @@ suite verifies against. No test in this file spawns a real subprocess or
 touches the network; all process-lifecycle categories (success, cancel,
 timeout, crash, malformed/partial NDJSON, duplicate replay, auth failure) are
 exercised as pure ``parse_response()`` calls over fixture stdout, exactly as
-the runner would call the adapter after collecting subprocess output.
+the runner would call the adapter after collecting subprocess output. Grok
+build-invocation tests mock binary resolution and version probes only.
 """
 
 from __future__ import annotations
 
+import shlex
 from pathlib import Path
 
 import pytest
 
 from scripts.agent_runtime.adapters import acpx as acpx_module
-from scripts.agent_runtime.adapters.acpx import AcpxAdapter, AcpxShadowRefusalError
+from scripts.agent_runtime.adapters.acpx import (
+    AcpxAdapter,
+    AcpxGrokShadowAdapter,
+    AcpxShadowRefusalError,
+)
 
 _SUCCESS_NDJSON = (
     '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
@@ -892,3 +898,505 @@ def test_parse_response_nonzero_exit_with_end_turn_still_fails():
     )
     assert result.ok is False
     assert result.response == ""
+
+
+# ---------------------------------------------------------------------------
+# AcpxGrokShadowAdapter — second bounded shadow seat (#6043)
+# ---------------------------------------------------------------------------
+
+
+def _stub_grok(monkeypatch, tmp_path: Path, *, version: str = "0.2.114") -> Path:
+    """Point the Grok seat at a fake absolute grok binary + version probe."""
+    grok = tmp_path / "fake-grok-bin"
+    grok.write_text("#!/bin/sh\necho stub-grok\n", encoding="utf-8")
+    grok.chmod(0o755)
+    monkeypatch.setattr(acpx_module, "_resolve_grok_binary", lambda: str(grok.resolve()))
+    monkeypatch.setattr(acpx_module, "_probe_grok_version", lambda _binary: version)
+    return grok.resolve()
+
+
+def _build_grok(
+    adapter: AcpxGrokShadowAdapter,
+    *,
+    cwd: Path,
+    prompt: str = "ping",
+    model: str | None = None,
+    task_id: str | None = "t-1",
+    session_id: str | None = None,
+    tool_config: dict | None = None,
+    effort: str | None = None,
+):
+    if tool_config is None:
+        tool_config = {
+            "acpx_shadow": True,
+            "target_agent": "grok",
+            "correlation_id": "corr-1",
+            "idempotency_key": "idem-1",
+        }
+    return adapter.build_invocation(
+        prompt=prompt,
+        mode="read-only",
+        cwd=cwd,
+        model=model,
+        task_id=task_id,
+        session_id=session_id,
+        tool_config=tool_config,
+        effort=effort,
+    )
+
+
+def test_grok_adapter_identity_is_read_only_only():
+    adapter = AcpxGrokShadowAdapter()
+    assert adapter.name == "acpx-grok-shadow"
+    assert adapter.default_model == "grok-4.5"
+    assert adapter.supported_modes == frozenset({"read-only"})
+
+
+def test_grok_build_invocation_refuses_when_flag_unset(tmp_path, monkeypatch):
+    monkeypatch.delenv(acpx_module.TRANSPORT_ENV, raising=False)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="LU_ACPX_TRANSPORT"):
+        _build_grok(adapter, cwd=tmp_path)
+
+
+def test_grok_build_invocation_refuses_when_flag_off(tmp_path, monkeypatch):
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "off")
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError):
+        _build_grok(adapter, cwd=tmp_path)
+
+
+def test_grok_build_invocation_requires_explicit_shadow_marker(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="acpx_shadow"):
+        _build_grok(adapter, cwd=tmp_path, tool_config={})
+
+
+def test_grok_build_invocation_rejects_unsupported_tool_config(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="unsupported tool_config"):
+        _build_grok(
+            adapter,
+            cwd=tmp_path,
+            tool_config={
+                "acpx_shadow": True,
+                "target_agent": "grok",
+                "allowed_tools": ["Bash"],
+            },
+        )
+
+
+def test_grok_build_invocation_rejects_non_grok_target(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="target_agent"):
+        _build_grok(
+            adapter,
+            cwd=tmp_path,
+            tool_config={
+                "acpx_shadow": True,
+                "target_agent": "codex",
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem-1",
+            },
+        )
+
+
+def test_grok_build_invocation_rejects_session_id(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="session_id"):
+        _build_grok(adapter, cwd=tmp_path, session_id="prior-session")
+
+
+def test_grok_build_invocation_rejects_wrong_model(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="model="):
+        _build_grok(adapter, cwd=tmp_path, model="grok-3")
+
+
+def test_grok_build_invocation_rejects_wrong_effort(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="effort="):
+        _build_grok(adapter, cwd=tmp_path, effort="low")
+
+
+def test_grok_build_invocation_refuses_primary_checkout(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    monkeypatch.setattr(
+        acpx_module._worktree_containment,
+        "classify_repo_path",
+        lambda *_args, **_kwargs: "primary_checkout",
+    )
+    adapter = AcpxGrokShadowAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="primary checkout"):
+        _build_grok(adapter, cwd=tmp_path)
+
+
+def test_grok_build_invocation_rejects_acpx_version_mismatch(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path, version="0.12.1")
+    _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="version"):
+        _build_grok(adapter, cwd=tmp_path)
+
+
+def test_grok_build_invocation_rejects_grok_version_mismatch(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path, version="0.2.100")
+    adapter = AcpxGrokShadowAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="grok binary reports version"):
+        _build_grok(adapter, cwd=tmp_path)
+
+
+def test_grok_build_invocation_rejects_unparseable_grok_version(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path, version="")
+    adapter = AcpxGrokShadowAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="version"):
+        _build_grok(adapter, cwd=tmp_path)
+
+
+def test_grok_build_invocation_fixed_command_and_ordering(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    grok = _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+
+    plan = _build_grok(adapter, cwd=tmp_path, prompt="shadow compare prompt")
+
+    assert plan.cmd[0] == str(acpx_module._PINNED_BINARY)
+    assert Path(plan.cmd[0]).is_absolute() or plan.cmd[0].startswith(str(tmp_path))
+    assert "grok-build" not in plan.cmd
+    assert "codex" not in plan.cmd
+    assert plan.cmd[-3:] == ["exec", "-f", "-"]
+    assert "--agent" in plan.cmd
+    agent_idx = plan.cmd.index("--agent")
+    agent_cmd = plan.cmd[agent_idx + 1]
+    # Single --agent argument: absolute shell-safe binary + exact argv order.
+    expected_agent = " ".join(
+        [
+            shlex.quote(str(grok)),
+            "agent",
+            "--model",
+            "grok-4.5",
+            "--reasoning-effort",
+            "high",
+            "--agent-profile",
+            str(acpx_module._GROK_PROFILE_PATH),
+            "--no-leader",
+            "stdio",
+        ]
+    )
+    assert agent_cmd == expected_agent
+    tokens = shlex.split(agent_cmd)
+    assert tokens[0] == str(grok)
+    assert Path(tokens[0]).is_absolute()
+    assert tokens[1:] == [
+        "agent",
+        "--model",
+        "grok-4.5",
+        "--reasoning-effort",
+        "high",
+        "--agent-profile",
+        str(acpx_module._GROK_PROFILE_PATH),
+        "--no-leader",
+        "stdio",
+    ]
+    # --agent must not be combined with a positional agent name before exec.
+    assert plan.cmd[agent_idx + 2] == "exec"
+
+    pairs = list(zip(plan.cmd, plan.cmd[1:], strict=False))
+    assert ("--auth-policy", "fail") in pairs
+    assert ("--non-interactive-permissions", "fail") in pairs
+    assert ("--allowed-tools", "") in pairs
+    assert ("--max-turns", "1") in pairs
+    assert ("--prompt-retries", "0") in pairs
+    assert "--deny-all" in plan.cmd
+    assert "--no-fs" in plan.cmd
+    assert "--no-terminal" in plan.cmd
+    assert "--model" not in plan.cmd  # model lives only inside --agent
+    assert plan.stdin_payload == "shadow compare prompt"
+    assert "shadow compare prompt" not in plan.cmd
+
+
+def test_grok_build_invocation_accepts_none_or_fixed_model_and_effort(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+
+    for model, effort in ((None, None), ("grok-4.5", None), (None, "high"), ("grok-4.5", "high")):
+        plan = _build_grok(adapter, cwd=tmp_path, model=model, effort=effort)
+        assert plan.metadata["model"] == "grok-4.5"
+        assert plan.metadata["effort"] == "high"
+        assert plan.metadata["target_agent"] == "grok"
+        assert plan.metadata["grok_pinned_version"] == "0.2.114"
+        assert plan.metadata["acpx_pinned_version"] == "0.13.0"
+
+
+def test_grok_build_invocation_auth_env_sets_cached_token_and_scrubs_xai_keys(
+    tmp_path, monkeypatch
+):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+
+    plan = _build_grok(adapter, cwd=tmp_path)
+    assert plan.env_overrides == {"ACPX_AUTH_CACHED_TOKEN": "1"}
+    assert "XAI_API_KEY" in plan.env_unsets
+    assert "GROK_API_KEY" in plan.env_unsets
+    assert "ACPX_AUTH_XAI_API_KEY" in plan.env_unsets
+    assert "ACPX_AUTH_API_KEY" in plan.env_unsets
+    # Never forward credentials into argv, stdin, or metadata.
+    for blob in (plan.cmd, [plan.stdin_payload], list(plan.metadata.values())):
+        serialized = " ".join(str(x) for x in blob)
+        assert "sk-" not in serialized
+        assert "xai-" not in serialized.lower() or "xai_api_key" not in serialized.lower()
+
+
+def test_grok_build_invocation_stamps_metadata_without_forwarding(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+
+    plan = _build_grok(
+        adapter,
+        cwd=tmp_path,
+        prompt="investigate flaky test",
+        task_id="task-grok-42",
+        tool_config={
+            "acpx_shadow": True,
+            "target_agent": "grok",
+            "correlation_id": "corr-g.1",
+            "idempotency_key": "idem-g:9",
+        },
+    )
+    assert plan.metadata["task_id"] == "task-grok-42"
+    assert plan.metadata["correlation_id"] == "corr-g.1"
+    assert plan.metadata["idempotency_key"] == "idem-g:9"
+    for value in ("task-grok-42", "corr-g.1", "idem-g:9"):
+        assert value not in plan.cmd
+        assert value not in plan.stdin_payload
+
+
+def test_grok_build_invocation_rejects_write_mode(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+
+    with pytest.raises(ValueError, match="mode"):
+        adapter.build_invocation(
+            prompt="ping",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model=None,
+            task_id="t-1",
+            session_id=None,
+            tool_config={
+                "acpx_shadow": True,
+                "target_agent": "grok",
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem-1",
+            },
+        )
+
+
+def test_grok_parse_response_success_compatible_with_codex_parser():
+    adapter = AcpxGrokShadowAdapter()
+    result = adapter.parse_response(
+        stdout=_SUCCESS_NDJSON,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.response == "Hello world."
+    assert result.session_id is None
+    assert result.tool_calls == []
+
+
+def test_grok_parse_response_timeout_and_auth_fail_closed():
+    adapter = AcpxGrokShadowAdapter()
+    timeout = adapter.parse_response(
+        stdout=_TIMEOUT_NDJSON, stderr="", returncode=3, output_file=None
+    )
+    assert timeout.ok is False
+    assert "TIMEOUT" in timeout.stderr_excerpt
+
+    auth = adapter.parse_response(
+        stdout=_AUTH_REQUIRED_NDJSON, stderr="", returncode=1, output_file=None
+    )
+    assert auth.ok is False
+    assert "AUTH_REQUIRED" in auth.stderr_excerpt
+
+
+def test_grok_parse_response_cancel_crash_malformed_replay_fail_closed():
+    adapter = AcpxGrokShadowAdapter()
+    for stdout, rc, needle in (
+        (_CANCELLED_NDJSON, 0, "cancelled"),
+        (_CRASH_NO_TERMINAL_NDJSON, -9, "without a terminal"),
+        (_MALFORMED_LINE_NDJSON, -9, "malformed"),
+        (_DUPLICATE_REPLAY_NDJSON, 0, "duplicate"),
+        (_AGENT_DISCONNECTED_NDJSON, 1, "AGENT_DISCONNECTED"),
+    ):
+        result = adapter.parse_response(stdout=stdout, stderr="", returncode=rc, output_file=None)
+        assert result.ok is False
+        assert result.response == ""
+        assert needle.lower() in (result.stderr_excerpt or "").lower()
+
+
+def test_codex_adapter_unchanged_still_targets_codex_only(tmp_path, monkeypatch):
+    """Regression: Codex seat must not become a generic multi-agent adapter."""
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+    plan = _build(adapter, cwd=tmp_path)
+    assert adapter.name == "acpx-codex-shadow"
+    assert "codex" in plan.cmd
+    assert "exec" in plan.cmd
+    assert "--agent" not in plan.cmd
+    assert "grok-build" not in plan.cmd
+    assert plan.env_overrides == {}
+    assert plan.env_unsets == ()
+    with pytest.raises(AcpxShadowRefusalError, match="target_agent"):
+        _build(
+            adapter,
+            cwd=tmp_path,
+            tool_config={
+                "acpx_shadow": True,
+                "target_agent": "grok",
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem-1",
+            },
+        )
+
+
+def test_build_grok_agent_command_quotes_absolute_paths_with_spaces(tmp_path):
+    abs_path = tmp_path / "path with spaces" / "grok"
+    profile_path = tmp_path / "profile with spaces" / "read only.md"
+    abs_path.parent.mkdir(parents=True)
+    profile_path.parent.mkdir(parents=True)
+    abs_path.write_text("#!/bin/sh\n", encoding="utf-8")
+    profile_path.write_text("---\nname: read-only\n---\n", encoding="utf-8")
+    cmd = acpx_module._build_grok_agent_command(str(abs_path), str(profile_path))
+    tokens = shlex.split(cmd)
+    assert tokens[0] == str(abs_path)
+    assert tokens[1:] == [
+        "agent",
+        "--model",
+        "grok-4.5",
+        "--reasoning-effort",
+        "high",
+        "--agent-profile",
+        str(profile_path),
+        "--no-leader",
+        "stdio",
+    ]
+
+
+def test_grok_profile_is_exact_and_digest_mismatch_fails_closed(tmp_path, monkeypatch):
+    assert acpx_module._require_grok_profile() == str(acpx_module._GROK_PROFILE_PATH)
+
+    changed = tmp_path / "changed-profile.md"
+    changed.write_text("---\nname: changed\n---\n", encoding="utf-8")
+    monkeypatch.setattr(acpx_module, "_GROK_PROFILE_PATH", changed)
+    with pytest.raises(AcpxShadowRefusalError, match="digest mismatch"):
+        acpx_module._require_grok_profile()
+
+
+def test_probe_grok_version_parses_semver_and_fails_closed(monkeypatch, tmp_path):
+    binary = tmp_path / "grok"
+    binary.write_text("#!/bin/sh\n", encoding="utf-8")
+    binary.chmod(0o755)
+
+    class _Proc:
+        def __init__(self, stdout: str, stderr: str = "", returncode: int = 0):
+            self.stdout = stdout
+            self.stderr = stderr
+            self.returncode = returncode
+
+    monkeypatch.setattr(
+        acpx_module.subprocess,
+        "run",
+        lambda *_a, **_k: _Proc("grok 0.2.114 (0c785038798) [stable]\n"),
+    )
+    acpx_module._probe_grok_version.cache_clear()
+    assert acpx_module._probe_grok_version(str(binary)) == "0.2.114"
+
+    monkeypatch.setattr(
+        acpx_module.subprocess,
+        "run",
+        lambda *_a, **_k: _Proc("not a version string"),
+    )
+    acpx_module._probe_grok_version.cache_clear()
+    assert acpx_module._probe_grok_version(str(binary)) == ""
+
+    monkeypatch.setattr(
+        acpx_module.subprocess,
+        "run",
+        lambda *_a, **_k: _Proc(
+            "wrapper 9.9.9; grok 0.2.114 (0c785038798) [stable]\n"
+        ),
+    )
+    acpx_module._probe_grok_version.cache_clear()
+    assert acpx_module._probe_grok_version(str(binary)) == ""
+
+    monkeypatch.setattr(
+        acpx_module.subprocess,
+        "run",
+        lambda *_a, **_k: _Proc(
+            "grok 0.2.114 (0c785038798) [stable]\n",
+            "fatal: startup failed\n",
+            returncode=1,
+        ),
+    )
+    acpx_module._probe_grok_version.cache_clear()
+    assert acpx_module._probe_grok_version(str(binary)) == ""
+
+    def _boom(*_a, **_k):
+        raise OSError("missing")
+
+    monkeypatch.setattr(acpx_module.subprocess, "run", _boom)
+    acpx_module._probe_grok_version.cache_clear()
+    assert acpx_module._probe_grok_version(str(binary)) == ""

@@ -194,6 +194,7 @@ def test_registry_has_known_agents():
         "agy",
         "cursor",
         "acpx-codex-shadow",
+        "acpx-grok-shadow",
     }
 
 
@@ -206,6 +207,18 @@ def test_acpx_codex_shadow_entry_is_direct_only():
     assert entry["resume_policy"] == "never"
     assert entry["capabilities"] == frozenset()
     assert "acpx-codex-shadow" not in available_agents()
+
+
+def test_acpx_grok_shadow_entry_is_direct_only():
+    entry = get_agent_entry("acpx-grok-shadow")
+    assert entry["adapter"] == "scripts.agent_runtime.adapters.acpx:AcpxGrokShadowAdapter"
+    # Fixed effective model/effort live inside the custom --agent command;
+    # this direct-only seat must not advertise a catalog model.
+    assert entry["default_model"] is None
+    assert entry["cli_available"] is False
+    assert entry["resume_policy"] == "never"
+    assert entry["capabilities"] == frozenset()
+    assert "acpx-grok-shadow" not in available_agents()
 
 
 def test_cursor_entry_is_well_formed():

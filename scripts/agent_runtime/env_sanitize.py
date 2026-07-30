@@ -103,6 +103,13 @@ _PROVIDER_SECRET_ALLOWLIST = {
 }
 
 _PROVIDER_SAFE_NAME_ALLOWLIST = {
+    "acpx-grok-shadow": {
+        # acpx@0.13.0 treats this as a non-secret auth-method selector:
+        # the literal value "1" chooses Grok's agent-managed cached_token
+        # method. It is not a cached token or credential value. Real XAI
+        # API-key selectors remain outside every allowlist and are stripped.
+        "ACPX_AUTH_CACHED_TOKEN",
+    },
     "gemini": {
         "GEMINI_AUTH_MODE",
     },

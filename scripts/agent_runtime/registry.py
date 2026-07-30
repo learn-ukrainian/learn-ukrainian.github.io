@@ -287,6 +287,23 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": False,
         "resume_policy": "never",
     },
+    "acpx-grok-shadow": {
+        # Second experimental read-only shadow transport (#6043). Direct-only:
+        # never returned by ``available_agents()`` (cli_available False), never
+        # a dispatch/routing/review/failover candidate. Callers must import
+        # ``AcpxGrokShadowAdapter`` directly and pass
+        # ``tool_config={"acpx_shadow": True, "target_agent": "grok"}`` with
+        # ``LU_ACPX_TRANSPORT=shadow`` set — see adapters/acpx.py. Fixed
+        # effective model/effort live inside the custom --agent command; do
+        # not advertise a catalog model here. Not a new coordination plane —
+        # native Grok remains authoritative.
+        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxGrokShadowAdapter",
+        "default_model": None,
+        "cost_tier": "unknown",
+        "capabilities": frozenset(),
+        "cli_available": False,
+        "resume_policy": "never",
+    },
     "agy": {
         # Antigravity CLI shipping Gemini Flash 3.6 (was 3.5) on a separate meter from
         # gemini-cli. Added 2026-05-20 for the seminar-writer ADR bakeoff

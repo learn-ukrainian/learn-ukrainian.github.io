@@ -192,6 +192,27 @@ def test_build_agent_env_preserves_safe_allowlist_and_applies_overrides_first():
     assert "UNRELATED" not in env
 
 
+def test_acpx_grok_cached_login_selector_survives_without_xai_credentials():
+    with patch.dict(
+        "os.environ",
+        {
+            "PATH": "/usr/bin",
+            "HOME": "/Users/example",
+            "XAI_API_KEY": "xai-secret",
+            "ACPX_AUTH_XAI_API_KEY": "xai-selector-secret",
+        },
+        clear=True,
+    ):
+        env = build_agent_env(
+            provider="acpx-grok-shadow",
+            overrides={"ACPX_AUTH_CACHED_TOKEN": "1"},
+        )
+
+    assert env["ACPX_AUTH_CACHED_TOKEN"] == "1"
+    assert "XAI_API_KEY" not in env
+    assert "ACPX_AUTH_XAI_API_KEY" not in env
+
+
 def test_hermes_home_override_reaches_hermes_backed_agents():
     with patch.dict(
         "os.environ",
