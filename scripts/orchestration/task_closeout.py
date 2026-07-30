@@ -800,12 +800,11 @@ def cmd_init(args: argparse.Namespace) -> int:
     adapter = GhGitHubAdapter(Path(args.repo_root))
     issue = adapter.read_issue(identity["repository"], identity["github_issue_number"])
     registered_epics = adapter.registered_stream_epics()
-    # Native precedence needs no audit at all; only fetch the live snapshot
-    # when native parentage doesn't already resolve the identity's exact epic.
+    # Native precedence needs no audit at all: any native parent — matching or
+    # not — decides the outcome alone in resolve_membership. Only fetch the
+    # live audit snapshot when native parentage is absent.
     membership_report = (
-        None
-        if issue["parent_epic"] == identity["stream_epic"]
-        else adapter.membership_audit_report()
+        None if issue["parent_epic"] is not None else adapter.membership_audit_report()
     )
     membership = task_lifecycle.resolve_membership(
         issue_number=identity["github_issue_number"],

@@ -622,6 +622,30 @@ def test_cmd_init_accepts_native_membership_without_a_live_audit(
     assert ledger["identity"]["stream_epic"] == 10
 
 
+def test_cmd_init_rejects_wrong_native_parent_without_a_live_audit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Review finding F003 (PR #6030): a native parent that disagrees with the
+    identity's stream epic is a conclusive, deterministic rejection on its
+    own — ``cmd_init`` must not fetch a live membership audit first. Fetching
+    the audit here would let an unrelated audit failure (or the ``_fail_audit``
+    stub below) mask the correct stream-membership error."""
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=99)
+    )
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
+
+    def _fail_audit(self) -> dict:
+        raise AssertionError("a wrong native parent must not trigger a live membership audit")
+
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "membership_audit_report", _fail_audit)
+
+    with pytest.raises(task_lifecycle.LifecycleError, match="stream epic"):
+        task_closeout.cmd_init(_init_args(tmp_path, identity_path))
+    assert not (tmp_path / "lifecycle.json").exists()
+
+
 def test_cmd_init_accepts_unique_body_membership(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
