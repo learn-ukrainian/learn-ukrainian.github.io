@@ -136,8 +136,9 @@ def test_classify_rights_admission_is_explicit_and_fail_closed() -> None:
 
     assert rights["status"] == "private_local"
     assert rights["redistributable"] is False
-    assert admission["mode"] == "pending_operator_redistribution_go"
-    assert admission["practice"] is False
+    assert rights["reason"] == "private_local_teacher_material_not_redistributable"
+    assert admission["mode"] == "local_practice_private_teacher"
+    assert admission["practice"] is True
 
     rights, admission = rebuild.classify_rights_admission("ok", "source/chunk/1")
 
@@ -181,10 +182,10 @@ def test_refresh_rights_ledger_mirrors_explicit_states(tmp_path: Path) -> None:
     refreshed_seed = [json.loads(line) for line in (package / "curated-seed.jsonl").read_text(encoding="utf-8").splitlines()]
     refreshed_admission = [json.loads(line) for line in (package / "practice-admission.jsonl").read_text(encoding="utf-8").splitlines()]
     assert refreshed_seed[0]["rights"]["status"] == "private_local"
-    assert refreshed_seed[0]["admission"]["mode"] == "pending_operator_redistribution_go"
+    assert refreshed_seed[0]["admission"]["mode"] == "local_practice_private_teacher"
     assert refreshed_seed[1]["admission"]["reason"] == "no_document_hit_vesum_forms"
-    assert refreshed_admission[0]["practice"] is False
-    assert receipt["practice_admitted"] == 0
+    assert refreshed_admission[0]["practice"] is True
+    assert receipt["practice_admitted"] == 1
     assert rebuild._tree_checksums(package) == rebuild._tree_checksums(mirror)
 
 

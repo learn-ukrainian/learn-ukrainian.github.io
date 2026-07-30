@@ -2917,13 +2917,14 @@ def read_manifest(path: Path) -> list[dict[str, Any]]:
     return [entry for entry in entries if isinstance(entry, dict)]
 
 
-def read_practice_seed(path: Path) -> list[dict[str, Any]]:
+def read_practice_seed(path: Path, *, allow_local_private: bool = False) -> list[dict[str, Any]]:
     """Read a reviewed practice admission overlay.
 
     The source Atlas entry remains authoritative for learner-facing lexical
     metadata.  A seed can only admit an already-public Atlas slug and attach a
     source-backed example; it cannot create a second Atlas entry or fabricate
-    a CEFR level.
+    a CEFR level. A local-only seed is accepted only through the explicit
+    local-private path and permits recognition drills without an example.
     """
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict) or payload.get("schema") != "curated-v5-practice-seed-v1":
@@ -2932,6 +2933,9 @@ def read_practice_seed(path: Path) -> list[dict[str, Any]]:
     if not isinstance(entries, list) or not entries:
         raise ValueError(f"practice seed entries must be a nonempty list: {path}")
 
+    local_only = payload.get("localOnly") is True
+    if local_only and not allow_local_private:
+        raise ValueError(f"local-only practice seed requires --local-practice-seed: {path}")
     validated: list[dict[str, Any]] = []
     for index, row in enumerate(entries):
         if not isinstance(row, dict):
@@ -2941,9 +2945,25 @@ def read_practice_seed(path: Path) -> list[dict[str, Any]]:
         cefr = _normalize_cefr(row.get("cefr"))
         example = _clean_text(row.get("example"))
         provenance = row.get("provenance")
-        if not lemma or not slug or not cefr or not example or not isinstance(provenance, dict):
+        is_local_recognition = (
+            local_only
+            and row.get("sentenceStatus") == "has_candidates"
+            and row.get("admissionMode") == "local_practice_private_teacher"
+        )
+        if not lemma or not slug or not cefr:
             raise ValueError(
-                f"practice seed entries[{index}] requires lemma, slug, CEFR, example, and provenance: {path}"
+                f"practice seed entries[{index}] requires lemma, slug, and CEFR: {path}"
+            )
+        if is_local_recognition:
+            if example or provenance is not None:
+                raise ValueError(f"local-only practice seed entries[{index}] must not contain example or provenance: {path}")
+            validated.append(row)
+            continue
+        if local_only:
+            raise ValueError(f"local-only practice seed entries[{index}] must be local recognition rows: {path}")
+        if not example or not isinstance(provenance, dict):
+            raise ValueError(
+                f"practice seed entries[{index}] requires example and provenance: {path}"
             )
         if row.get("sentenceStatus") != "ok":
             raise ValueError(f"practice seed entries[{index}] must retain sentenceStatus=ok: {path}")
@@ -2988,17 +3008,22 @@ def merge_practice_seed_entries(
 
         admission = target.get("surface_admission")
         merged_admission = dict(admission) if isinstance(admission, dict) else {}
-        merged_admission[SURFACE_CLOZE] = bool(merged_admission.get(SURFACE_CLOZE))
+        is_local_recognition = seed.get("admissionMode") == "local_practice_private_teacher"
+        merged_admission[SURFACE_CLOZE] = False if is_local_recognition else bool(merged_admission.get(SURFACE_CLOZE))
         merged_admission["practice"] = True
-        merged[target_index] = {
+        merged_entry = {
             **target,
             "surface_admission": merged_admission,
-            "practice_example": {
+        }
+        if is_local_recognition:
+            merged_entry["local_practice_private_teacher"] = True
+        else:
+            merged_entry["practice_example"] = {
                 "text": seed["example"],
                 "provenance": seed["provenance"],
                 "seedRow": seed.get("seedRow"),
-            },
-        }
+            }
+        merged[target_index] = merged_entry
     return merged
 
 
@@ -3271,6 +3296,11 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         help="Reviewed practice admission overlay; each row must already exist in Atlas.",
     )
+    parser.add_argument(
+        "--local-practice-seed",
+        type=Path,
+        help="Private local recognition-only overlay; do not use for public output.",
+    )
     parser.add_argument("--vesum-fixture", type=Path)
     parser.add_argument("--target", type=int, default=DEFAULT_TARGET)
     parser.add_argument("--raw-limit", type=int, default=DEFAULT_RAW_LIMIT)
@@ -3292,8 +3322,15 @@ def main(argv: list[str] | None = None) -> int:
         return run_broken_validator_fixtures()
 
     entries = read_manifest(args.manifest) if args.manifest else read_atlas_db(args.atlas_db)
+    if args.practice_seed and args.local_practice_seed:
+        parser.error("--practice-seed and --local-practice-seed are mutually exclusive")
     if args.practice_seed:
         entries = merge_practice_seed_entries(entries, read_practice_seed(args.practice_seed))
+    if args.local_practice_seed:
+        entries = merge_practice_seed_entries(
+            entries,
+            read_practice_seed(args.local_practice_seed, allow_local_private=True),
+        )
     allowlist = ReviewedSourceAllowlist.from_path(args.reviewed_allowlist)
     cloze_sources = read_cloze_sources(args.cloze_sources)
     heritage_pairs = read_heritage_pairs(args.heritage_pairs)

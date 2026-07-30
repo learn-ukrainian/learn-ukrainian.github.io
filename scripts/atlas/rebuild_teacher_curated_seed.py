@@ -32,7 +32,7 @@ PACKAGE_FILES = (
     "package-manifest.json",
 )
 PRIVATE_LOCAL = "private_local"
-PENDING_REDISTRIBUTION_GO = "pending_operator_redistribution_go"
+LOCAL_PRACTICE_PRIVATE_TEACHER = "local_practice_private_teacher"
 NO_HIT_REASON = "no_document_hit_vesum_forms"
 
 
@@ -241,8 +241,9 @@ def _has_locator(value: object) -> bool:
 def classify_rights_admission(sentence_status: str, locator: object) -> tuple[dict[str, object], dict[str, object]]:
     """Return fail-closed row rights and Practice admission for a restored seed row.
 
-    A document hit is not redistribution permission.  The only candidate state
-    below remains local-only until an operator explicitly grants redistribution.
+    A document hit is not redistribution permission. Locator-backed private
+    teacher material may be used in local recognition Practice, but remains
+    unavailable to every public redistribution path.
     """
     if sentence_status == "no_hit_strict_vesum":
         return (
@@ -275,12 +276,12 @@ def classify_rights_admission(sentence_status: str, locator: object) -> tuple[di
             {
                 "status": PRIVATE_LOCAL,
                 "redistributable": False,
-                "reason": "private_local_teacher_material_pending_operator_redistribution_go",
+                "reason": "private_local_teacher_material_not_redistributable",
             },
             {
-                "practice": False,
-                "mode": PENDING_REDISTRIBUTION_GO,
-                "reason": "private_local_rights_require_operator_redistribution_go",
+                "practice": True,
+                "mode": LOCAL_PRACTICE_PRIVATE_TEACHER,
+                "reason": "private_local_teacher_material_local_practice_only",
             },
         )
     return (
@@ -385,7 +386,7 @@ def refresh_rights_ledger(*, package_root: Path, drive_root: Path) -> dict[str, 
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         if not isinstance(manifest, dict):
             raise ValueError(f"package manifest must be an object: {manifest_path}")
-        manifest["state"] = "rights_ledger_refreshed_pending_operator_redistribution_go"
+        manifest["state"] = "rights_ledger_refreshed_local_practice_private_teacher"
         admission_modes = Counter(str(row["admission"]["mode"]) for row in refreshed_seed)
         rights_statuses = Counter(str(row["rights"]["status"]) for row in refreshed_seed)
         manifest["row_counts"] = {
@@ -405,7 +406,8 @@ def refresh_rights_ledger(*, package_root: Path, drive_root: Path) -> dict[str, 
             "redistribution": "operator GO required before redistributable may become true",
             "has_candidates_with_locator": {
                 "rights_status": PRIVATE_LOCAL,
-                "admission_mode": PENDING_REDISTRIBUTION_GO,
+                "admission_mode": LOCAL_PRACTICE_PRIVATE_TEACHER,
+                "practice": "local recognition only; public redistribution remains blocked",
             },
             "no_hit_strict_vesum": {
                 "admission_mode": "quarantined_no_document_hit",
@@ -417,7 +419,7 @@ def refresh_rights_ledger(*, package_root: Path, drive_root: Path) -> dict[str, 
         source_recon = json.loads(source_recon_path.read_text(encoding="utf-8"))
         if not isinstance(source_recon, dict):
             raise ValueError(f"source recon must be an object: {source_recon_path}")
-        source_recon["admission"] = "rights_ledger_refreshed_pending_operator_redistribution_go"
+        source_recon["admission"] = "rights_ledger_refreshed_local_practice_private_teacher"
         source_recon["rights_refresh"] = {
             "rights_statuses": dict(sorted(rights_statuses.items())),
             "admission_modes": dict(sorted(admission_modes.items())),

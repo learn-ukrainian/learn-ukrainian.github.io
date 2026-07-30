@@ -28,6 +28,7 @@ from scripts.sync.promote_module import _write_atomically
 
 PRACTICE_SCHEMA = "curated-v5-practice-seed-v1"
 PUBLIC_SCHEMA = "curated-v5-admission-seed-v1"
+LOCAL_PRACTICE_PRIVATE_TEACHER = "local_practice_private_teacher"
 _ASPECT_NOTE_RE = re.compile(r"\s*\((?:perf|impf)\)\s*$", re.IGNORECASE)
 
 
@@ -303,10 +304,6 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
     cefr_sources: Counter[str] = Counter()
     for row in rows:
         lemma = _text(row.get("lemma"))
-        target = routes.get(_lemma_key(lemma)) or routes_by_slug.get(_text(row.get("slug")))
-        if target is None:
-            atlas_failures.append({"seedRow": row.get("seedRow"), "lemma": lemma, "reason": "missing_public_route"})
-            continue
         status = _text(row.get("sentenceStatus"))
         status_counts[status] += 1
         admission = row.get("admission")
@@ -320,12 +317,23 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
                 }
             )
             continue
-        if status != "ok":
+        local_recognition = (
+            status == "has_candidates"
+            and _text(admission.get("mode")) == LOCAL_PRACTICE_PRIVATE_TEACHER
+        )
+        if status != "ok" and not local_recognition:
+            skipped_not_admitted.append(
+                {
+                    "seedRow": row.get("seedRow"),
+                    "lemma": lemma,
+                    "mode": _text(admission.get("mode")),
+                    "reason": "unsupported_practice_sentence_status",
+                }
+            )
             continue
-        example = _text(row.get("example"))
-        provenance = row.get("provenance")
-        if not example or not isinstance(provenance, dict):
-            atlas_failures.append({"seedRow": row.get("seedRow"), "lemma": lemma, "reason": "ok_row_missing_attestation"})
+        target = routes.get(_lemma_key(lemma)) or routes_by_slug.get(_text(row.get("slug")))
+        if target is None:
+            atlas_failures.append({"seedRow": row.get("seedRow"), "lemma": lemma, "reason": "missing_public_route"})
             continue
         cefr = _cefr(target)
         if cefr is None:
@@ -333,7 +341,24 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
             continue
         level, source = cefr
         cefr_sources[source] += 1
-        practice_rows.append({"seedRow": row.get("seedRow"), "lemma": _text(target.get("lemma")), "slug": _text(target.get("url_slug")), "cefr": level, "example": example, "provenance": provenance, "sentenceStatus": "ok"})
+        practice_row: dict[str, Any] = {
+            "seedRow": row.get("seedRow"),
+            "lemma": _text(target.get("lemma")),
+            "slug": _text(target.get("url_slug")),
+            "cefr": level,
+            "sentenceStatus": status,
+        }
+        if local_recognition:
+            practice_row["admissionMode"] = LOCAL_PRACTICE_PRIVATE_TEACHER
+        else:
+            example = _text(row.get("example"))
+            provenance = row.get("provenance")
+            if not example or not isinstance(provenance, dict):
+                atlas_failures.append({"seedRow": row.get("seedRow"), "lemma": lemma, "reason": "ok_row_missing_attestation"})
+                continue
+            practice_row["example"] = example
+            practice_row["provenance"] = provenance
+        practice_rows.append(practice_row)
     report = {
         "schema": "curated-v5-admission-report-v1",
         "counts": {
@@ -347,7 +372,20 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
         "practice_skipped_not_admitted": skipped_not_admitted,
         "practice_skipped_no_cefr": skipped_no_cefr,
     }
-    seed = {"schema": PRACTICE_SCHEMA, "deckSlug": "curated-v5-full", "title": "Curated v5 practice admission", "selectionNote": "All sentence_status=ok rows whose public Atlas route has pipeline-derived CEFR. Recognition-first; no cloze targets.", "entries": practice_rows}
+    local_only = any(row.get("admissionMode") == LOCAL_PRACTICE_PRIVATE_TEACHER for row in practice_rows)
+    seed = {
+        "schema": PRACTICE_SCHEMA,
+        "deckSlug": "curated-v5-full",
+        "title": "Curated v5 practice admission",
+        "selectionNote": (
+            "Locator-backed private teacher rows with public Atlas routes and pipeline-derived CEFR; "
+            "local recognition only, never cloze or public export."
+            if local_only
+            else "All sentence_status=ok rows whose public Atlas route has pipeline-derived CEFR. Recognition-first; no cloze targets."
+        ),
+        "localOnly": local_only,
+        "entries": practice_rows,
+    }
     return seed, report
 
 
@@ -366,6 +404,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--candidates-out", type=Path)
     parser.add_argument("--practice-seed-out", type=Path)
     parser.add_argument("--report-out", type=Path)
+    parser.add_argument(
+        "--allow-missing-routes",
+        action="store_true",
+        help="Permit local-only recognition output while reporting unresolved Atlas routes.",
+    )
     parser.add_argument(
         "--fill-existing-glosses",
         action="store_true",
@@ -403,6 +446,8 @@ def main(argv: list[str] | None = None) -> int:
         )
     if args.write and not (args.fill_existing_glosses or args.fill_existing_pos):
         parser.error("--write requires --fill-existing-glosses or --fill-existing-pos")
+    if args.allow_missing_routes and (args.public_seed_out or args.candidates_out):
+        parser.error("--allow-missing-routes is restricted to local Practice output")
 
     manifest: dict[str, Any] | None = None
     if args.fill_existing_glosses or args.fill_existing_pos:
@@ -453,7 +498,7 @@ def main(argv: list[str] | None = None) -> int:
             _write_json(args.practice_seed_out, seed)
         if args.report_out:
             _write_json(args.report_out, report)
-        if report["atlas_failures"]:
+        if report["atlas_failures"] and not args.allow_missing_routes:
             print(f"Atlas admission has {len(report['atlas_failures'])} hard failure(s)", file=sys.stderr)
             return 1
     return 0

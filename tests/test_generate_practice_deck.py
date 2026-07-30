@@ -103,6 +103,42 @@ def test_curated_v5_seed_admits_existing_atlas_entries_with_provenance() -> None
         assert lexemes[row["slug"]]["exampleProvenance"] == row["provenance"]
 
 
+def test_local_practice_seed_requires_explicit_opt_in_and_never_creates_a_cloze_example(tmp_path: Path) -> None:
+    seed_path = tmp_path / "local-seed.json"
+    seed_path.write_text(
+        json.dumps(
+            {
+                "schema": "curated-v5-practice-seed-v1",
+                "localOnly": True,
+                "entries": [
+                    {
+                        "seedRow": 1,
+                        "lemma": "слово",
+                        "slug": "слово",
+                        "cefr": "A1",
+                        "sentenceStatus": "has_candidates",
+                        "admissionMode": "local_practice_private_teacher",
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="requires --local-practice-seed"):
+        read_practice_seed(seed_path)
+
+    merged = merge_practice_seed_entries(
+        [{"lemma": "слово", "url_slug": "слово", "gloss": "word", "enrichment": {"cefr": "A1"}}],
+        read_practice_seed(seed_path, allow_local_private=True),
+    )
+
+    assert merged[0]["surface_admission"] == {"cloze": False, "practice": True}
+    assert merged[0]["local_practice_private_teacher"] is True
+    assert "practice_example" not in merged[0]
+
+
 def test_practice_seed_entries_are_selected_before_ordinary_course_entries() -> None:
     entries = [
         {
