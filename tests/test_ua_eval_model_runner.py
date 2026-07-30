@@ -224,6 +224,7 @@ def _run(
             output_path=output,
             metadata_path=metadata,
             state_dir=state,
+            failed_output_path=tmp_path / "failed.jsonl",
             batch_size=batch_size,
             workers=1,
             timeout=10,
@@ -420,6 +421,10 @@ def test_retries_and_preserves_failure_receipts(tmp_path: Path) -> None:
     }
     state = json.loads((state_dir / "batch-0000.json").read_text())
     assert state["failed_attempts"] == generation["failed_attempts"]
+    failed_rows = [json.loads(line) for line in (tmp_path / "failed.jsonl").read_text().splitlines()]
+    assert len(failed_rows) == 1
+    assert failed_rows[0]["raw_provider_output"] == ""
+    assert failed_rows[0]["provider_stderr"] == ""
     invocation_paths = [Path(path) for path in (tmp_path / "calls.log").read_text().splitlines()]
     assert len(invocation_paths) == 2
     for path in invocation_paths:
