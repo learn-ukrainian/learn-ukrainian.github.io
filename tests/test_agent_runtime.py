@@ -200,6 +200,8 @@ def test_registry_has_known_agents():
 def test_acpx_codex_shadow_entry_is_direct_only():
     entry = get_agent_entry("acpx-codex-shadow")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.acpx:AcpxAdapter"
+    # ACPX itself chooses the Codex model when this direct-only seat omits --model.
+    assert entry["default_model"] is None
     assert entry["cli_available"] is False
     assert entry["resume_policy"] == "never"
     assert entry["capabilities"] == frozenset()

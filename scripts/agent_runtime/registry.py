@@ -279,7 +279,9 @@ AGENTS: dict[str, AgentEntry] = {
         # ``AcpxAdapter`` directly and pass ``tool_config={"acpx_shadow": True}``
         # with ``LU_ACPX_TRANSPORT=shadow`` set — see adapters/acpx.py.
         "adapter": "scripts.agent_runtime.adapters.acpx:AcpxAdapter",
-        "default_model": "codex-acp-default",
+        # ACPX resolves its own agent default when no --model is supplied;
+        # this direct-only seat must not advertise an invented catalog model.
+        "default_model": None,
         "cost_tier": "unknown",
         "capabilities": frozenset(),
         "cli_available": False,
