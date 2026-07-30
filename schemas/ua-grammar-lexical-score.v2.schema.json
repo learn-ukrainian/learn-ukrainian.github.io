@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learn-ukrainian.github.io/schemas/ua-grammar-lexical-score.v2.schema.json",
   "title": "Ukrainian grammar and lexical scorecard v2",
-  "description": "Normative per-model scorecard contract from docs/projects/ua-eval-harness/grammar-lexical-gate-design.md §9.2. This schema defines data shape only and does not implement bakeoff aggregation or ranking.",
+  "description": "Normative per-model scorecard contract from docs/projects/qg-quality-gate/grammar-lexical-gate-design.md §9.2. This schema defines data shape only and does not implement bakeoff aggregation or ranking.",
   "$comment": "Output invariants from §9.2: outputs_total equals the sum of outputs_pass, outputs_fail_content, and outputs_needs_audit; outputs_total equals the count of unique output_artifact_ids; aggregate eligible/scored/error counts equal exact sums of unique per-artifact records. Duplicate IDs, absent artifacts, or sum mismatches produce INELIGIBLE_COVERAGE. Rates publish only when eligible and scored word counts are equal. JSON Schema cannot compute these cross-field totals; tests/test_grammar_lexical_schemas.py validates representative Phase 0 contract data without runtime aggregation.",
   "type": "object",
   "additionalProperties": false,

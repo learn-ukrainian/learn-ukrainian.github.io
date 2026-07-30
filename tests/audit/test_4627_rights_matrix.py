@@ -12,7 +12,7 @@ def test_all_fixture_evidence_has_rights_matrix_row():
     with open(matrix_path, encoding="utf-8") as f:
         rights_data = json.load(f)
 
-    replace_list_path = Path("docs/projects/ua-eval-harness/fixture-rights-replace-list.md")
+    replace_list_path = Path("docs/projects/qg-quality-gate/fixture-rights-replace-list.md")
     replace_keys = set(load_replace_list(replace_list_path))
 
     valid_classifications = {"POINTER", "QUOTED_TEXT"}
