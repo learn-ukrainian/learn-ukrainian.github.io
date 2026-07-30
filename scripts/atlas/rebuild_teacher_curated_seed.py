@@ -309,6 +309,13 @@ def _sync_tree(source: Path, destination: Path) -> None:
 
 def _restore_tree(backup: Path, destination: Path) -> None:
     """Restore a verified pre-refresh copy after a dual-write failure."""
+    backup_files = {path.relative_to(backup) for path in backup.rglob("*") if path.is_file()}
+    backup_directories = {path.relative_to(backup) for path in backup.rglob("*") if path.is_dir()}
+    for path in sorted(destination.rglob("*"), reverse=True):
+        if path.is_file() and path.relative_to(destination) not in backup_files:
+            path.unlink()
+        elif path.is_dir() and path.relative_to(destination) not in backup_directories:
+            path.rmdir()
     _sync_tree(backup, destination)
     if _tree_checksums(backup) != _tree_checksums(destination):
         raise RuntimeError(f"rollback checksum mismatch: {destination}")
@@ -351,7 +358,7 @@ def refresh_rights_ledger(*, package_root: Path, drive_root: Path) -> dict[str, 
         refreshed["admission"] = admission
         refreshed_seed.append(refreshed)
         ledger["rightsStatus"] = rights["status"]
-        ledger["redistributable"] = False
+        ledger["redistributable"] = rights["redistributable"]
         ledger["rightsReason"] = rights["reason"]
         refreshed_ledger.append(ledger)
         admissions.append(

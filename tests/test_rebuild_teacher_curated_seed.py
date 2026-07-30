@@ -186,3 +186,49 @@ def test_refresh_rights_ledger_mirrors_explicit_states(tmp_path: Path) -> None:
     assert refreshed_admission[0]["practice"] is False
     assert receipt["practice_admitted"] == 0
     assert rebuild._tree_checksums(package) == rebuild._tree_checksums(mirror)
+
+
+def test_refresh_rights_ledger_rolls_back_both_copies_after_post_sync_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    package = tmp_path / "package"
+    mirror = tmp_path / "drive" / "teacher-seed"
+    package.mkdir()
+    mirror.parent.mkdir(parents=True)
+    seed_row = {"seedRow": 1, "lemma": "слово", "sentenceStatus": "has_candidates"}
+    ledger_row = {
+        "seedRow": 1,
+        "lemma": "слово",
+        "sentenceStatus": "has_candidates",
+        "locator": "chunk/1",
+    }
+    _write(package / "curated-seed.jsonl", json.dumps(seed_row, ensure_ascii=False) + "\n")
+    _write(package / "rights-ledger.jsonl", json.dumps(ledger_row, ensure_ascii=False) + "\n")
+    _write(package / "practice-admission.jsonl", "")
+    _write(package / "package-manifest.json", json.dumps({"schema": "teacher-curated-seed-recovery-v1"}))
+    _write(package / "source-recon.json", "{}")
+    shutil.copytree(package, mirror)
+    package_before = {path.relative_to(package): path.read_bytes() for path in package.rglob("*") if path.is_file()}
+    mirror_before = {path.relative_to(mirror): path.read_bytes() for path in mirror.rglob("*") if path.is_file()}
+
+    original_sync_tree = rebuild._sync_tree
+    sync_calls = 0
+
+    def fail_after_drive_sync(source: Path, destination: Path) -> None:
+        nonlocal sync_calls
+        sync_calls += 1
+        if sync_calls == 2:
+            raise OSError("simulated local package sync failure")
+        original_sync_tree(source, destination)
+
+    monkeypatch.setattr(rebuild, "_sync_tree", fail_after_drive_sync)
+
+    with pytest.raises(OSError, match="simulated local package sync failure"):
+        rebuild.refresh_rights_ledger(package_root=package, drive_root=mirror)
+
+    assert {
+        path.relative_to(package): path.read_bytes() for path in package.rglob("*") if path.is_file()
+    } == package_before
+    assert {
+        path.relative_to(mirror): path.read_bytes() for path in mirror.rglob("*") if path.is_file()
+    } == mirror_before
