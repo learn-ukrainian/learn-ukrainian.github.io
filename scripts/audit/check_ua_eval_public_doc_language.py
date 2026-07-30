@@ -92,8 +92,9 @@ def _link_destinations(
     destinations: list[tuple[str, tuple[int, int]]] = []
     for token in tokens:
         span = _token_span(token, fallback_span)
-        if token.type == "link_open":
-            destination = token.attrGet("href")
+        destination_attribute = {"link_open": "href", "image": "src"}.get(token.type)
+        if destination_attribute is not None:
+            destination = token.attrGet(destination_attribute)
             if destination:
                 destinations.append((destination, span))
         if token.children:
