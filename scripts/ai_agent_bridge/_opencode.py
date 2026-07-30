@@ -159,7 +159,7 @@ AB_POOL_MAX_OUTPUT_TOKENS_ENV = "AB_POOL_MAX_OUTPUT_TOKENS"
 # ``:free`` route is pool-starved (2×300s dead-air, 2026-07-07) — avoid.
 # MUST run toolless (agent="chat"): gemma is not a tool-calling model.
 #
-# ROLE (user probes 2026-07-05, docs/projects/ua-eval-harness/model-evidence.md):
+# ROLE (user probes 2026-07-05, docs/projects/qg-quality-gate/model-evidence.md):
 # a cheap Google-family lane to OFFLOAD from the metered lanes (Claude / Codex).
 # Ukrainian is fluent + surface-clean (VESUM-valid, 0 russicisms). USE IT FOR:
 #   • cheap SURFACE review — reliably flags russicisms / calques, Latin-letter
