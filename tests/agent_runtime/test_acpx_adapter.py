@@ -782,6 +782,36 @@ def test_parse_response_unrecognized_schema_fails_closed():
     assert "unrecognized NDJSON schema" in result.stderr_excerpt
 
 
+@pytest.mark.parametrize(
+    ("stdout", "schema"),
+    [
+        ('{"jsonrpc":"2.0","method":"session/update","params":[]}\n', "params"),
+        ('{"jsonrpc":"2.0","method":"session/update","params":{"update":[]}}\n', "update"),
+        (
+            '{"jsonrpc":"2.0","method":"session/update","params":{"update":'
+            '{"sessionUpdate":"agent_message_chunk","content":[]}}}\n',
+            "content",
+        ),
+        ('{"jsonrpc":"2.0","id":2,"result":[]}\n', "result"),
+        ('{"jsonrpc":"2.0","id":null,"error":[]}\n', "error"),
+        ('{"jsonrpc":"2.0","id":null,"error":{"message":"bad","data":[]}}\n', "error.data"),
+        ('{"jsonrpc":"2.0","id":{},"result":{"stopReason":"end_turn"}}\n', "response id"),
+        ('{"jsonrpc":"2.0","id":[],"result":{"stopReason":"end_turn"}}\n', "response id"),
+    ],
+    ids=["params", "update", "content", "result", "error", "error-data", "object-id", "list-id"],
+)
+def test_parse_response_malformed_json_rpc_containers_fail_closed(stdout, schema):
+    result = AcpxAdapter().parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.response == ""
+    assert schema in result.stderr_excerpt
+
+
 def test_parse_response_empty_stdout_fails_closed():
     adapter = AcpxAdapter()
     result = adapter.parse_response(stdout="", stderr="boom", returncode=1, output_file=None)

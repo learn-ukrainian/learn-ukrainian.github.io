@@ -432,10 +432,21 @@ class AcpxAdapter:
         tokens: int | None = None
 
         for event in events:
+            if "params" in event and not isinstance(event["params"], dict):
+                return self._closed("unrecognized JSON-RPC params schema", stderr)
+
             if event.get("method") == "session/update":
-                update = (event.get("params") or {}).get("update") or {}
+                params = event.get("params")
+                if not isinstance(params, dict):
+                    return self._closed("unrecognized session/update params schema", stderr)
+                update = params.get("update")
+                if not isinstance(update, dict):
+                    return self._closed("unrecognized session/update update schema", stderr)
                 if update.get("sessionUpdate") == "agent_message_chunk":
-                    text = (update.get("content") or {}).get("text")
+                    content = update.get("content")
+                    if not isinstance(content, dict):
+                        return self._closed("unrecognized agent_message_chunk content schema", stderr)
+                    text = content.get("text")
                     if isinstance(text, str):
                         message_chunks.append(text)
                 elif update.get("sessionUpdate") == "usage_update":
@@ -453,16 +464,23 @@ class AcpxAdapter:
                 # or a notification we don't track. Not a terminal marker.
                 continue
 
+            if has_result and not isinstance(event["result"], dict):
+                return self._closed("unrecognized JSON-RPC result schema", stderr)
+            if has_error and not isinstance(event["error"], dict):
+                return self._closed("unrecognized JSON-RPC error schema", stderr)
+
             event_id = event.get("id")
             if event_id is not None:
+                if isinstance(event_id, bool) or not isinstance(event_id, (str, int, float)):
+                    return self._closed("unrecognized JSON-RPC response id schema", stderr)
                 if event_id in terminal_ids:
                     duplicate = True
                 terminal_ids.add(event_id)
 
             if has_error:
-                final_error = event.get("error") or {}
+                final_error = event["error"]
             elif has_result:
-                result = event.get("result") or {}
+                result = event["result"]
                 if "stopReason" in result:
                     final_stop_reason = result["stopReason"]
                     stop_reason_response_count += 1
@@ -474,6 +492,8 @@ class AcpxAdapter:
             return self._closed("multiple terminal stopReason responses detected in one-shot exec stream", stderr)
 
         if final_error is not None:
+            if "data" in final_error and not isinstance(final_error["data"], dict):
+                return self._closed("unrecognized ACPX error.data schema", stderr)
             data = final_error.get("data") or {}
             label = data.get("detailCode") or data.get("acpxCode") or "RUNTIME"
             message = final_error.get("message", "acpx error")
