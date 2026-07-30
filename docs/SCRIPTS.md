@@ -1339,7 +1339,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 | Fire-and-forget execution — run code, commit, push | **`scripts/delegate.py dispatch`** | Yes |
 | Durable fleet coordination / topology | **`scripts.fleet_comms`** (`plane-status`, …) + **file dual-write handoffs** (authoritative in every plane mode) | Hand-off files only as existing lane diaries; never invent a third bus |
 | Formal cross-family PR review | **`review-pr` / `publish-review-verdict`** | No (review evidence) |
-| Experimental structured Codex invocation | **ACPX adapter** (feature-flagged, default-off/shadow) | **No** (read-only/stateless; see onboarding runbook) |
+| Experimental structured Codex / Grok invocation | **ACPX adapters** `acpx-codex-shadow` + `acpx-grok-shadow` (feature-flagged, default-off/shadow; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
 | Buzz relay coordination | **Deferred** — not in this rollout | N/A |
 | Watch a long-running process (builds, reviews) emit events — **Claude only** | **`Monitor` tool** (Claude Code built-in) | N/A |
 | Watch a long-running process — **Gemini / Codex** | Shell-poll the Monitor API | N/A |
@@ -1351,7 +1351,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 - `ai_agent_bridge` is for **communication**. `delegate.py dispatch` is for **execution**. Don't confuse them.
 - **`discuss` is not formal review.** Use `review-pr` / `publish-review-verdict` for CF.
 - Query `.venv/bin/python -m scripts.fleet_comms plane-status` — never hard-code a live plane mode.
-- ACPX is optional experimental transport only; rollback is feature-flag off + native runtime.
+- ACPX is optional experimental transport only (two direct-only seats: Codex pilot + Grok second pilot on broker-centrality evidence with limited direct-runtime sample); rollback is feature-flag off + native runtime. Grok + Codex ACPX is not a new coordination plane.
 - Never run a polling loop to check a background task — use `Monitor` or the bash `run_in_background` completion notification.
 
 ### Channel bridge — preferred for multi-turn

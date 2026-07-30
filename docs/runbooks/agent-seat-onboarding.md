@@ -39,7 +39,7 @@ caps or live modes.
 | **`discuss`** (bridge) | Bounded multi-agent deliberation and design input | Implementation, merge authority, or the formal cross-family review gate |
 | **`scripts/delegate.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
 | **Fleet-comms + file handoffs** | Durable coordination and authority today; **file dual-write remains authoritative in every current plane mode** | Competing message buses; silent plane/retention/eligibility flips |
-| **ACPX** | Experimental **structured invocation transport only** — initially one read-only/stateless Codex participant behind a default-off/shadow feature flag | Persistent sessions, backlog, auto-retries, agent-to-agent chat, plane flips, review eligibility |
+| **ACPX** | Experimental **structured invocation transport only** — two direct-only read-only/stateless shadow seats (Codex, Grok) behind a default-off/shadow feature flag; not a coordination plane | Persistent sessions, backlog, auto-retries, agent-to-agent chat, plane flips, review eligibility |
 | **Buzz** | **Explicitly deferred** | Anything in this rollout — relay-as-authority conflicts with the current authority model |
 
 ### Discuss is not formal review
@@ -86,24 +86,55 @@ become a second coordination plane.
 ### ACPX — experimental transport boundary
 
 ACPX is **not** a coordination product and **not** a second fleet bus.
+Two direct-only shadow seats (Codex + Grok) are **not a new coordination plane** —
+fleet-comms + file dual-write stay authoritative, and native Codex / native
+Grok stay authoritative under shadow compare.
 
-**Exact contract (#6027):**
+**Seat-selection evidence (#6043, API-backed):** in the 2026-07-30 snapshot
+from `/api/comms/live-activity?limit=500&minutes=120`, all **95** broker
+dispatches had sender counts **Codex 26**, **grok-atlas 25**, and
+**Claude 22** among the three busiest senders; the remaining **22** were
+**Gemini 11**, **OpenCode 6**, **GLM 4**, and **AGY 1**. The same-day
+30-day runtime sample from
+`/api/runtime/usage?days=30` had **Codex 20**, **Claude 15**, and **Grok 1**.
+Broker centrality is therefore strong for Grok, while **direct-runtime
+evidence remains limited** — Grok is a deliberately conservative second
+pilot, not fleet-wide enablement. These are dated selection-evidence
+snapshots, not permanent routing weights.
+
+**Exact contract (#6027 Codex pilot, #6043 Grok second pilot):**
 
 - Feature flag `LU_ACPX_TRANSPORT=off|shadow`, **default `off`**.
-- Direct-only seat name `acpx-codex-shadow`; never registered for dispatch,
-  routing, review, or failover.
-- Local pin `acpx@0.13.0` — the adapter refuses to spawn on any other
+- Direct-only seat names `acpx-codex-shadow` and `acpx-grok-shadow`; never
+  registered for dispatch, routing, review, or failover.
+- Local pin `acpx@0.13.0` — both adapters refuse to spawn on any other
   resolved binary version.
+- Grok seat additionally preflights the installed native Grok CLI at exact
+  semver `0.2.114` and refuses wrong/missing/unparseable versions before
+  prompt.
 - Every invocation requires a non-empty, bounded, local `task_id`,
-  `correlation_id`, and `idempotency_key`, plus `tool_config={"acpx_shadow":
-  True, "target_agent": "codex"}`, targets **Codex**, and runs against a
-  read-only, non-primary worktree.
+  `correlation_id`, and `idempotency_key`, plus
+  `tool_config={"acpx_shadow": True, "target_agent": "codex"|"grok"}`, and
+  runs against a read-only, non-primary worktree.
 
 **In scope (approved):**
 
-- Feature-flagged adapter (default off / shadow comparison).
-- Exactly one read-only/stateless **Codex** ACP participant for structured
-  invocation.
+- Feature-flagged adapters (default off / shadow comparison).
+- Exactly one read-only/stateless **Codex** ACP participant
+  (`acpx-codex-shadow`) and exactly one read-only/stateless **Grok** ACP
+  participant (`acpx-grok-shadow`) for structured invocation.
+- Grok fixed effective model/effort: `grok-4.5` / `high` (caller may pass
+  only `None` or those exact values; metadata never fabricates otherwise).
+- Grok ACP server command (single custom agent argument; never built-in
+  `grok-build`, which cannot force `--no-leader`): absolute resolved Grok
+  binary plus exact argv order
+  `agent --model grok-4.5 --reasoning-effort high --agent-profile
+  <hash-pinned-project-no-tool-profile> --no-leader stdio`.
+- The project-owned Grok profile is digest-checked before every spawn. Its
+  empty tool allowlist plus explicit denylist removes write, shell, subagent,
+  memory, web, MCP, and LSP tools inside the Grok ACP server. This is required
+  in addition to ACPX `--deny-all --no-fs --no-terminal --allowed-tools ""`:
+  ACPX client flags alone do not remove native Grok tools.
 - Correlation / idempotency fields recorded as **evidence** (local runtime
   metadata only — never ACP protocol flags, argv, or stdin; never published
   to fleet-comms, dispatch authority, or review evidence), not as a new
@@ -119,6 +150,8 @@ ACPX is **not** a coordination product and **not** a second fleet bus.
 - Plane-mode or retention changes via ACPX
 - Review-eligibility changes via ACPX
 - Primary-checkout writes or write-mode ACP work
+- Treating Grok + Codex ACPX as a coordination plane, review bus, or
+  fleet-comms replacement
 
 **Do not invent CLI flags, endpoints, or review eligibility here.** The
 adapter's argv is fully confined and callers only ever set the `tool_config`
@@ -145,6 +178,7 @@ floating CLI surface.
 | --- | --- |
 | Feature flag off | Expected default — use native `runner.invoke` / bridge / discuss paths |
 | `AUTH_REQUIRED` with an existing ChatGPT Codex login | Verify `codex login status`, then set the non-secret per-process selector `ACPX_AUTH_CHAT_GPT=1`; `--auth-policy fail` deliberately refuses implicit method selection |
+| `AUTH_REQUIRED` on the Grok shadow seat | Establish the native Grok CLI's cached login outside this adapter; the Grok adapter automatically sets the non-secret per-process selector `ACPX_AUTH_CACHED_TOKEN=1` and scrubs ambient XAI API-key auth selectors so cached native login is the only accepted path |
 | Other auth failure | Fail closed; do not retry in-adapter; fix credentials outside the adapter and never store or log API keys in the repository |
 | Timeout / cancel | Treat as terminal for that prompt; no auto-replay |
 | Crash / malformed NDJSON | Classify and record; do not promote partial output to authority |
@@ -156,9 +190,12 @@ floating CLI surface.
 
 1. Disable the ACPX feature flag (default-off posture).
 2. Continue on native agent runtime transport
-   (`scripts/agent_runtime/` via `runner.invoke`, bridge, `delegate.py`).
+   (`scripts/agent_runtime/` via `runner.invoke`, bridge, `delegate.py`) —
+   native Codex and native Grok remain the authoritative paths.
 3. Leave fleet-comms plane mode and formal-review eligibility unchanged.
 4. Keep file dual-write handoffs current.
+5. Grok + Codex ACPX seats are independent observability pilots only; turning
+   either (or both) off is not a plane cutover.
 
 ### Buzz — deferred
 

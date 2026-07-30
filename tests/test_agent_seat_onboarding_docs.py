@@ -96,6 +96,7 @@ def test_five_ownership_surfaces(onboarding: str) -> None:
     assert "structured" in lower and "transport" in lower
     assert "read-only" in lower or "read only" in lower
     assert "codex" in lower
+    assert "grok" in lower
     assert "feature flag" in lower or "feature-flag" in lower or "default-off" in lower
     # Buzz deferred
     assert "buzz" in lower
@@ -254,12 +255,54 @@ def test_acpx_default_off_rollback(onboarding: str, all_owned: dict[str, str]) -
     assert "rollback" in runtime or "flag off" in runtime or ("default" in runtime and "off" in runtime)
 
 
+def test_acpx_second_pilot_grok_evidence_and_boundary(onboarding: str, all_owned: dict[str, str]) -> None:
+    """#6043 — Grok second pilot: broker evidence, two seats, not a new plane."""
+    lower = onboarding.lower()
+    assert "acpx-codex-shadow" in onboarding
+    assert "acpx-grok-shadow" in onboarding
+    assert "95" in onboarding
+    assert "codex 26" in lower or "codex **26**" in lower or "**codex 26**" in lower
+    assert "grok-atlas" in lower
+    assert "claude 22" in lower or "claude **22**" in lower or "**claude 22**" in lower
+    assert "remaining **22**" in onboarding
+    assert "gemini 11" in lower or "gemini **11**" in lower or "**gemini 11**" in lower
+    assert "opencode 6" in lower or "opencode **6**" in lower or "**opencode 6**" in lower
+    assert "glm 4" in lower or "glm **4**" in lower or "**glm 4**" in lower
+    assert "agy 1" in lower or "agy **1**" in lower or "**agy 1**" in lower
+    assert "grok 1" in lower or "grok **1**" in lower or "**grok 1**" in lower
+    assert "broker" in lower
+    assert "direct-runtime" in lower or "direct runtime" in lower
+    assert "2026-07-30" in onboarding
+    assert "minutes=120" in onboarding
+    assert "not permanent routing weights" in lower
+    assert "not a new coordination plane" in lower or "not** a new coordination plane" in lower
+    assert "0.2.114" in onboarding
+    assert "grok-4.5" in onboarding
+    assert "--no-leader" in onboarding
+    assert "--agent-profile" in onboarding
+    assert "digest-checked" in lower
+    assert "client flags alone do not remove native grok tools" in lower
+    assert "grok-build" in lower
+    assert "ACPX_AUTH_CACHED_TOKEN=1" in onboarding
+    runtime = all_owned["docs/agent-runtime-guide.md"]
+    assert "acpx-grok-shadow" in runtime
+    assert "AcpxGrokShadowAdapter" in runtime
+    assert "ACPX_AUTH_CACHED_TOKEN=1" in runtime
+    assert "not a new coordination plane" in runtime.lower()
+    scripts = all_owned["docs/SCRIPTS.md"].lower()
+    assert "acpx-grok-shadow" in scripts or "grok second pilot" in scripts
+    assert "not a new coordination plane" in scripts
+
+
 def test_acpx_does_not_fabricate_cli_flags(onboarding: str) -> None:
     """Stable boundary only — no invented acpx subcommands in the onboarding contract."""
-    # This exact non-secret selector is live-proven against the pinned ACPX
-    # and an existing `codex login` ChatGPT session. Keep every other ACPX_*
-    # assignment forbidden so the docs cannot grow an imagined auth surface.
-    allowed_auth_selector = "ACPX_AUTH_CHAT_GPT=1"
+    # Live-proven non-secret selectors only. Codex ChatGPT login (#6027) and
+    # Grok cached_token (#6043). Keep every other ACPX_* assignment forbidden
+    # so the docs cannot grow an imagined auth surface.
+    allowed_auth_selectors = (
+        "ACPX_AUTH_CHAT_GPT=1",
+        "ACPX_AUTH_CACHED_TOKEN=1",
+    )
     forbidden_cli = re.compile(
         r"""
         (?:
@@ -273,10 +316,14 @@ def test_acpx_does_not_fabricate_cli_flags(onboarding: str) -> None:
     )
     failures: list[str] = []
     for line_no, line in enumerate(onboarding.splitlines(), start=1):
-        if forbidden_cli.search(line.replace(allowed_auth_selector, "")):
+        scrubbed = line
+        for allowed in allowed_auth_selectors:
+            scrubbed = scrubbed.replace(allowed, "")
+        if forbidden_cli.search(scrubbed):
             failures.append(f"agent-seat-onboarding.md:{line_no}: {line.strip()}")
     assert not failures, "Fabricated ACPX CLI surface:\n" + "\n".join(failures)
-    assert allowed_auth_selector in onboarding
+    for allowed in allowed_auth_selectors:
+        assert allowed in onboarding
     assert "do not invent" in onboarding.lower() or "do **not** invent" in onboarding.lower()
 
 

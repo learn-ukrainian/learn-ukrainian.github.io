@@ -70,32 +70,58 @@ Ownership matrix, troubleshooting, and seat smoke (including ACPX scope):
 
 ACPX is an **experimental, feature-flagged structured invocation transport** —
 not a coordination plane and not a replacement for `discuss`, fleet-comms, or
-authoritative file handoffs.
+authoritative file handoffs. **Grok + Codex ACPX is not a new coordination plane** —
+two direct-only shadow seats only.
 
-Approved boundary (#6027):
+**Why Grok is the second pilot (#6043, API-backed):** in the 2026-07-30
+snapshot from `/api/comms/live-activity?limit=500&minutes=120`, all **95**
+broker dispatches had sender counts **Codex 26**, **grok-atlas 25**, and
+**Claude 22** among the three busiest senders; the remaining **22** were
+**Gemini 11**, **OpenCode 6**, **GLM 4**, and **AGY 1**. The same-day
+30-day sample from
+`/api/runtime/usage?days=30` had **Codex 20**, **Claude 15**, and **Grok 1**.
+Broker centrality is high; direct-runtime evidence is still limited — hence
+a thin second shadow pilot, not fleet-wide enablement. These are dated
+selection-evidence snapshots, not permanent routing weights.
+
+Approved boundary (#6027 Codex, #6043 Grok):
 
 - Feature flag `LU_ACPX_TRANSPORT=off|shadow`, **default `off`**; rollback =
   set it back to `off` (or unset) to fall back to the native `runner.invoke`
-  transport.
-- Direct-only seat `acpx-codex-shadow` (`scripts/agent_runtime/adapters/acpx.py:AcpxAdapter`)
-  — never returned by `available_agents()`, never a dispatch/routing/review/
-  failover candidate.
-- Local pin `acpx@0.13.0` (`node_modules/.bin/acpx`); the adapter refuses to
+  transport (native Codex / native Grok remain authoritative).
+- Direct-only seats:
+  - `acpx-codex-shadow` (`scripts/agent_runtime/adapters/acpx.py:AcpxAdapter`)
+  - `acpx-grok-shadow` (`scripts/agent_runtime/adapters/acpx.py:AcpxGrokShadowAdapter`)
+  — never returned by `available_agents()`, never dispatch/routing/review/
+  failover candidates.
+- Local pin `acpx@0.13.0` (`node_modules/.bin/acpx`); both adapters refuse to
   spawn on any other resolved version.
-- Initially **one** read-only/stateless **Codex** ACP participant
-  (`tool_config={"acpx_shadow": True, "target_agent": "codex"}`).
+- Grok seat also preflights the installed native Grok CLI at exact semver
+  `0.2.114` (wrong/missing/unparseable → refuse before prompt).
+- Codex participant:
+  `tool_config={"acpx_shadow": True, "target_agent": "codex"}`.
+- Grok participant:
+  `tool_config={"acpx_shadow": True, "target_agent": "grok"}`.
+  Fixed effective model/effort `grok-4.5` / `high`. Custom agent command
+  (never built-in `grok-build`): absolute Grok binary +
+  `agent --model grok-4.5 --reasoning-effort high --agent-profile
+  <hash-pinned-project-no-tool-profile> --no-leader stdio`. The project-owned
+  profile is digest-checked before every spawn and removes write, shell,
+  subagent, memory, web, MCP, and LSP tools at the Grok server boundary.
 - Adapter safety contract: one in-flight prompt, zero backlog, zero automatic
   prompt retries, bounded timeout/cancellation, required non-empty/bounded
   `task_id`, `correlation_id`, and `idempotency_key` (local runtime metadata
   only — never ACP protocol flags, argv, or stdin; never published to
   fleet-comms, dispatch authority, or review evidence), primary-checkout and
-  write-permission refusal.
+  write-permission refusal. ACPX client confinement and the Grok no-tool
+  profile are both required: client flags alone do not remove native Grok
+  tools.
 - Correlation / shadow telemetry is **evidence only** — the existing participant
   result stays authoritative under shadow compare.
-- ACPX authentication selection is explicit. For an existing local ChatGPT
-  Codex login, verify `codex login status`, then set the non-secret selector
-  `ACPX_AUTH_CHAT_GPT=1` for the bounded process. A missing selector fails
-  closed under `--auth-policy fail`; never put API keys in repo files or logs.
+- ACPX authentication selection is explicit under `--auth-policy fail`:
+  - Codex ChatGPT login: non-secret selector `ACPX_AUTH_CHAT_GPT=1`
+  - Grok cached native login: adapter sets `ACPX_AUTH_CACHED_TOKEN=1` and
+    scrubs ambient XAI API-key auth selectors (never read/store/log credentials)
 - Standard ACP usage reports `used` (tokens currently in context) and `size`
   (context-window capacity). Shadow telemetry records `used`; it must never
   report `size` as consumed tokens.
