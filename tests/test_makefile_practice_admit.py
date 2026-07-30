@@ -26,3 +26,24 @@ def test_curated_admit_dry_run_consumes_only_the_local_practice_overlay() -> Non
     assert "enrich_manifest.py --write" not in output
     assert "atlas:build-db" not in output
     assert "atlas-local-practice-refresh" not in output
+
+
+def test_gold_slice_dry_run_uses_bounded_local_static_shards_without_cloze() -> None:
+    result = subprocess.run(
+        ["make", "-n", "practice-gold-curated-seed"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    output = result.stdout
+    assert 'test "40" -ge 32' in output
+    assert 'test "40" -le 50' in output
+    assert 'site/public/lexicon' in output
+    assert '--target "40"' in output
+    assert "--seed-selection representative" in output
+    assert "--disable-cloze" in output
+    assert '--vesum-db "data/vesum.db"' in output
+    assert "practice-deck-publish" not in output
+    assert "atlas-local-practice-refresh" not in output

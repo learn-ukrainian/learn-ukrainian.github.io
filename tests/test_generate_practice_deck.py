@@ -11,6 +11,7 @@ from scripts.audit.generate_practice_deck import (
     DRILL_MODES,
     BuildConfig,
     JsonVesumVerifier,
+    RealVesumVerifier,
     ReviewedSourceAllowlist,
     _build_classify_items,
     _build_heritage_items,
@@ -204,6 +205,50 @@ def test_local_practice_seed_rows_are_selected_before_ordinary_course_entries() 
     assert [entry["url_slug"] for entry, _lexeme in selected] == ["справедливий"]
 
 
+def test_representative_seed_selection_round_robins_available_cefr_and_pos_strata() -> None:
+    entries = [
+        {
+            "lemma": lemma,
+            "url_slug": lemma,
+            "gloss": "fixture gloss",
+            "pos": pos,
+            "enrichment": {"cefr": {"level": cefr}},
+            "surface_admission": {"practice": True, "cloze": False},
+            "local_practice_private_teacher": True,
+        }
+        for lemma, cefr, pos in (
+            ("а", "A1", "noun"),
+            ("б", "A1", "noun"),
+            ("в", "A1", "verb"),
+            ("г", "A2", "noun"),
+            ("ґ", "A2", "verb"),
+        )
+    ]
+
+    selected, _lexemes, _by_plain_lemma, _by_id = _select_practice_lexemes(
+        entries,
+        JsonVesumVerifier.from_path(VESUM),
+        BuildConfig(target=5, source_label="fixture", seed_selection="representative"),
+    )
+
+    assert [entry["url_slug"] for entry, _lexeme in selected] == ["а", "г", "в", "ґ", "б"]
+
+
+def test_real_vesum_verifier_uses_an_explicit_database_path(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    observed: dict[str, object] = {}
+
+    def fake_verify_words(words: list[str], *, pos_filter: str | None, db_path: Path) -> dict[str, list[dict]]:
+        observed.update(words=words, pos_filter=pos_filter, db_path=db_path)
+        return {word: [] for word in words}
+
+    from scripts.verification import vesum
+
+    monkeypatch.setattr(vesum, "verify_words", fake_verify_words)
+    database = tmp_path / "vesum-shadow.db"
+    assert RealVesumVerifier(database).verify_words(["слово"], pos_filter="noun") == {"слово": []}
+    assert observed == {"words": ["слово"], "pos_filter": "noun", "db_path": database}
+
+
 def test_practice_seed_entries_are_selected_before_ordinary_course_entries() -> None:
     entries = [
         {
@@ -338,6 +383,13 @@ def test_manifest_cloze_fields_are_ignored_without_curated_sources() -> None:
     assert shards["A1"]["index"]["counts"]["lexemes"] == 7
     assert shards["A1"]["index"]["counts"]["cloze"] == 0
     assert shards["A1"]["cloze"]["cloze"] == []
+
+
+def test_disable_cloze_emits_no_cards_even_when_curated_sources_are_available() -> None:
+    shards = _build(BuildConfig(cloze_enabled=False))
+
+    assert all(not item["hasCloze"] for shard in shards.values() for item in shard["index"]["items"])
+    assert all(not shard["cloze"]["cloze"] for shard in shards.values())
 
 
 def test_deck_version_changes_when_any_deck_input_changes() -> None:

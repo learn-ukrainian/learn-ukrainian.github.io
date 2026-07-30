@@ -161,6 +161,8 @@ class BuildConfig:
     gzip_limit: int = DEFAULT_GZIP_LIMIT
     fixture_note: str | None = None
     source_label: str = "manifest"
+    seed_selection: str = "priority"
+    cloze_enabled: bool = True
 
 
 @dataclass(frozen=True)
@@ -275,6 +277,9 @@ def _build_cloze_provenance(provenance: dict[str, Any]) -> dict[str, Any]:
 class RealVesumVerifier:
     """Runtime adapter for the production VESUM helper."""
 
+    def __init__(self, db_path: Path | None = None) -> None:
+        self.db_path = db_path
+
     def verify_words(
         self,
         words: list[str],
@@ -282,7 +287,7 @@ class RealVesumVerifier:
     ) -> dict[str, list[dict[str, Any]]]:
         from scripts.verification.vesum import verify_words
 
-        return verify_words(words, pos_filter=pos_filter)
+        return verify_words(words, pos_filter=pos_filter, db_path=self.db_path)
 
 
 class JsonVesumVerifier:
@@ -2470,6 +2475,55 @@ def _level_payload(
     return payload
 
 
+def _representative_seed_entries(
+    seed_entries: list[dict[str, Any]],
+    limit: int,
+) -> list[dict[str, Any]]:
+    """Select seed entries evenly across available CEFR/POS strata.
+
+    This is deliberately only an explicit gold-slice profile.  Normal decks
+    retain their priority ordering; a small verification deck needs coverage
+    across the admitted set without inventing any lexical metadata.
+    """
+    strata: dict[int, dict[str, list[dict[str, Any]]]] = {}
+    for entry in seed_entries:
+        level = _cefr_level(entry) or ""
+        rank = CEFR_RANK.get(level, len(CEFR_RANK))
+        pos = _clean_text(entry.get("pos")) or "other"
+        strata.setdefault(rank, {}).setdefault(pos, []).append(entry)
+
+    level_queues: dict[int, list[dict[str, Any]]] = {}
+    for rank, pos_groups in strata.items():
+        for entries in pos_groups.values():
+            entries.sort(key=_stable_lemma_id)
+        queue: list[dict[str, Any]] = []
+        while True:
+            added = False
+            for pos in sorted(pos_groups):
+                entries = pos_groups[pos]
+                if entries:
+                    queue.append(entries.pop(0))
+                    added = True
+            if not added:
+                break
+        level_queues[rank] = queue
+
+    selected: list[dict[str, Any]] = []
+    while len(selected) < limit:
+        added = False
+        for rank in sorted(level_queues):
+            entries = level_queues[rank]
+            if not entries:
+                continue
+            selected.append(entries.pop(0))
+            added = True
+            if len(selected) == limit:
+                break
+        if not added:
+            break
+    return selected
+
+
 def _select_practice_lexemes(
     entries: list[dict[str, Any]],
     verifier: VesumVerifier,
@@ -2494,6 +2548,8 @@ def _select_practice_lexemes(
     course_entries = [entry for entry in non_seed_entries if _course_usage(entry)]
     fill_entries = [entry for entry in non_seed_entries if not _course_usage(entry)]
     seed_entries.sort(key=_stable_lemma_id)
+    if config.seed_selection == "representative":
+        seed_entries = _representative_seed_entries(seed_entries, config.target)
     course_entries.sort(key=_course_key)
     fill_entries.sort(
         key=lambda entry: (CEFR_RANK.get(_cefr_level(entry) or "", len(CEFR_RANK)), _stable_lemma_id(entry))
@@ -2599,7 +2655,7 @@ def build_practice_shards(
         for level in CEFR_ORDER
     }
     for _entry, lexeme in lexemes_by_entry:
-        if is_surface_admitted(_entry, SURFACE_CLOZE):
+        if config.cloze_enabled and is_surface_admitted(_entry, SURFACE_CLOZE):
             source_rows = [
                 *cloze_by_lemma_id.get(lexeme["lemmaId"], []),
                 *cloze_by_lemma.get(lexeme["lemmaPlain"], []),
@@ -3303,10 +3359,26 @@ def main(argv: list[str] | None = None) -> int:
         help="Private local recognition-only overlay; do not use for public output.",
     )
     parser.add_argument("--vesum-fixture", type=Path)
+    parser.add_argument(
+        "--vesum-db",
+        type=Path,
+        help="Explicit VESUM database path, including a validated local shadow.",
+    )
     parser.add_argument("--target", type=int, default=DEFAULT_TARGET)
     parser.add_argument("--raw-limit", type=int, default=DEFAULT_RAW_LIMIT)
     parser.add_argument("--gzip-limit", type=int, default=DEFAULT_GZIP_LIMIT)
     parser.add_argument("--fixture-note", type=str)
+    parser.add_argument(
+        "--seed-selection",
+        choices=("priority", "representative"),
+        default="priority",
+        help="How an explicit practice seed is selected before course/fill entries.",
+    )
+    parser.add_argument(
+        "--disable-cloze",
+        action="store_true",
+        help="Emit no cloze cards, even for otherwise cloze-admitted entries.",
+    )
     parser.add_argument(
         "--broken-validator-fixtures",
         action="store_true",
@@ -3345,7 +3417,7 @@ def main(argv: list[str] | None = None) -> int:
         verifier = (
             JsonVesumVerifier.from_path(args.vesum_fixture)
             if args.vesum_fixture
-            else RealVesumVerifier()
+            else RealVesumVerifier(args.vesum_db)
         )
         _lexemes_by_entry, all_lexemes, by_plain_lemma, _lexemes_by_id = _select_practice_lexemes(
             entries,
@@ -3359,7 +3431,7 @@ def main(argv: list[str] | None = None) -> int:
     verifier: VesumVerifier = (
         JsonVesumVerifier.from_path(args.vesum_fixture)
         if args.vesum_fixture
-        else RealVesumVerifier()
+        else RealVesumVerifier(args.vesum_db)
     )
     config = BuildConfig(
         target=args.target,
@@ -3367,6 +3439,8 @@ def main(argv: list[str] | None = None) -> int:
         gzip_limit=args.gzip_limit,
         fixture_note=args.fixture_note,
         source_label="fixture" if args.vesum_fixture or args.manifest else "atlas.db",
+        seed_selection=args.seed_selection,
+        cloze_enabled=not args.disable_cloze,
     )
     shards = build_practice_shards(
         entries,
