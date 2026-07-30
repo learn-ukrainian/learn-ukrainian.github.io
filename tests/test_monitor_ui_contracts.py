@@ -106,6 +106,9 @@ def test_runtime_page_renders_read_only_acpx_shadow_transport_overview():
     assert "transport.default_mode" in html
     assert "seat.evidence?.total" in html
     assert "seat.evidence_state" in html
+    assert "aggregate_evidence" not in html
+    assert "snapshot.shadow_calls" not in html
+    assert "transport.default ??" not in html
     assert "ACPX Shadow Transport" in html
     assert "Native runtime authoritative" in html
     assert "ACPX evidence is observational only." in html

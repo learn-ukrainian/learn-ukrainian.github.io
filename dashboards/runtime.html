@@ -220,25 +220,21 @@ function displayValue(value) {
   return String(value);
 }
 
-function shadowCallCount(snapshot, seats) {
-  const aggregate = snapshot.aggregate_evidence || snapshot.evidence || {};
-  const count = aggregate.shadow_calls ?? aggregate.calls ?? aggregate.invocations ?? snapshot.shadow_calls;
-  if (typeof count === 'number') return count;
-  return seats.reduce((total, seat) => total + Number(seat.evidence?.total ?? seat.shadow_calls ?? seat.calls ?? seat.invocations ?? 0), 0);
+function shadowCallCount(seats) {
+  return seats.reduce((total, seat) => {
+    const count = Number(seat.evidence?.total);
+    return total + (Number.isFinite(count) ? count : 0);
+  }, 0);
 }
 
 function normalizeSeats(snapshot) {
-  const rawSeats = snapshot.seats;
-  if (Array.isArray(rawSeats)) return rawSeats;
-  if (rawSeats && typeof rawSeats === 'object') return Object.entries(rawSeats).map(([name, seat]) => ({ name, ...(seat || {}) }));
-  return [];
+  return Array.isArray(snapshot.seats) ? snapshot.seats : [];
 }
 
 function seatEvidenceSummary(seat) {
-  if (typeof seat.summary === 'string') return seat.summary;
   const evidence = seat.evidence && typeof seat.evidence === 'object' ? seat.evidence : {};
-  const total = evidence.total ?? seat.shadow_calls ?? seat.calls ?? seat.invocations;
-  if (typeof total !== 'number') return 'No shadow calls in window';
+  const total = Number(evidence.total);
+  if (!Number.isFinite(total)) return 'No shadow calls in window';
   const outcomes = ['ok', 'error', 'rate_limited', 'timeout'].filter(key => evidence[key]).map(key => `${key} ${evidence[key]}`);
   const state = seat.evidence_state ? `${displayLabel(seat.evidence_state)} · ` : '';
   return `${state}${total} shadow calls${outcomes.length ? ` (${outcomes.join(', ')})` : ''}`;
@@ -249,15 +245,14 @@ function renderAcpx(snapshot) {
   const transport = snapshot.transport || {};
   const seats = normalizeSeats(snapshot);
   const seatSlots = [seats[0], seats[1]];
-  const safety = snapshot.safety || snapshot.safety_booleans || {};
-  const aggregate = snapshot.aggregate_evidence || snapshot.evidence || {};
+  const safety = snapshot.safety || {};
   const pins = snapshot.pins || {};
-  const calls = shadowCallCount(snapshot, seats);
-  const mode = transport.mode ?? snapshot.transport_mode ?? snapshot.mode;
+  const calls = shadowCallCount(seats);
+  const mode = transport.mode;
   const facts = [
     ['Monitor env mode', mode, 'mode'],
-    ['Default', transport.default ?? transport.default_mode ?? snapshot.default_transport ?? snapshot.default_mode],
-    ['Authority', displayLabel(transport.authority ?? snapshot.authority)],
+    ['Default', transport.default_mode],
+    ['Authority', displayLabel(transport.authority)],
     ['Shadow calls', calls],
     ['ACPX pin', pins.acpx ? `v${pins.acpx}` : null],
     ['Grok CLI pin', pins.grok_cli ? `v${pins.grok_cli}` : null],
@@ -279,7 +274,6 @@ function renderAcpx(snapshot) {
       <div class="acpx-seat-detail">${escapeHtml(detail)}</div>
     </div>`;
   });
-  const aggregateFacts = Object.entries(aggregate).filter(([, value]) => typeof value !== 'object').slice(0, 3);
   const safeWhenFalse = {
     backlog: 'No backlog',
     retries: 'No retries',
@@ -299,7 +293,7 @@ function renderAcpx(snapshot) {
     ? `<span class="pill info">Max ${escapeHtml(safety.max_in_flight)} in flight</span>`
     : '';
   const noCallsCopy = calls === 0 ? '<div class="empty">No shadow calls in window</div>' : '';
-  const factMarkup = facts.concat(aggregateFacts.map(([key, value]) => [displayLabel(key), value])).map(([label, value, kind]) => {
+  const factMarkup = facts.map(([label, value, kind]) => {
     if (kind === 'mode') {
       const modeClass = value === 'shadow' ? 'info' : value === 'off' ? 'gray' : 'err';
       return `<div class="acpx-fact"><dt>${escapeHtml(label)}</dt><dd><span class="pill ${modeClass}">${escapeHtml(displayLabel(value))}</span></dd></div>`;
