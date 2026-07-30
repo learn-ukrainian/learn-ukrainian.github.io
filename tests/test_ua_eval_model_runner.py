@@ -138,7 +138,9 @@ if mode == "extra":
     responses[0]["extra"] = "no"
 payload = {"responses": responses}
 text = json.dumps(payload, ensure_ascii=False)
-if mode == "ndjson":
+if mode in {"ndjson", "fenced_ndjson"}:
+    if mode == "fenced_ndjson":
+        text = "```json\\n" + text + "\\n```"
     event = {
         "type": "event",
         "message": {
@@ -245,9 +247,7 @@ def test_runs_source_only_batches_outside_repository_and_writes_metadata(
     assert generation["retry_counts"] == {"0": 0, "1": 0, "2": 0}
     call_paths = (tmp_path / "calls.log").read_text().splitlines()
     assert call_paths
-    assert all(
-        not Path(path).resolve().is_relative_to(runner.ROOT) for path in call_paths
-    )
+    assert all(not Path(path).resolve().is_relative_to(runner.ROOT) for path in call_paths)
     assert all(Path(path).is_dir() for path in call_paths)
 
 
@@ -261,13 +261,9 @@ def test_packet_firewall_rejects_unknown_and_gold_shaped_fields(
 
 
 def test_committed_packet_and_example_config_match_runner_contract() -> None:
-    packet = Path(
-        "data/projects/ua_eval_harness/baselines/v1/generation_requests.jsonl"
-    )
+    packet = Path("data/projects/ua_eval_harness/baselines/v1/generation_requests.jsonl")
     header, requests, packet_sha256 = runner.load_source_only_packet(packet)
-    config = runner.load_run_config(
-        Path("data/projects/ua_eval_harness/model_run_config.example.json")
-    )
+    config = runner.load_run_config(Path("data/projects/ua_eval_harness/model_run_config.example.json"))
 
     assert header["request_count"] == runner.EXPECTED_REQUEST_COUNT
     assert len(requests) == runner.EXPECTED_REQUEST_COUNT
@@ -281,9 +277,9 @@ def test_run_config_requires_exact_alias_decoding_and_tool_receipts(
 ) -> None:
     for index, override in enumerate(
         (
-        {"alias_resolution": "ambiguous"},
-        {"decoding": {"temperature": 0}},
-        {"command_identity": {"name": "missing-version"}},
+            {"alias_resolution": "ambiguous"},
+            {"decoding": {"temperature": 0}},
+            {"command_identity": {"name": "missing-version"}},
         )
     ):
         config_dir = tmp_path / str(index)
@@ -299,8 +295,17 @@ def test_accepts_only_narrow_machine_response_wrappers() -> None:
         f"<think>provider trace</think>{payload}",
         ["item-1"],
     ) == [{"item_id": "item-1", "raw_response": "fixed"}]
+    assert runner.parse_provider_response(
+        f"```json\n{payload}\n```",
+        ["item-1"],
+    ) == [{"item_id": "item-1", "raw_response": "fixed"}]
     with pytest.raises(runner.RunnerError):
         runner.parse_provider_response(f"Explanation: {payload}", ["item-1"])
+    with pytest.raises(runner.RunnerError):
+        runner.parse_provider_response(
+            f"```json\n{payload}\n```\nExplanation",
+            ["item-1"],
+        )
 
 
 @pytest.mark.parametrize(
@@ -330,28 +335,51 @@ def test_retries_and_preserves_failure_receipts(tmp_path: Path) -> None:
     generation = metadata["generation_metadata"]
     assert generation["retry_counts"] == {"0": 1}
     assert len(generation["failed_attempts"]) == 1
-    assert generation["failed_attempts"][0] == {
+    failed = generation["failed_attempts"][0]
+    assert failed == {
         "batch_index": 0,
         "attempt": 1,
-        "attempted_at": generation["failed_attempts"][0]["attempted_at"],
+        "attempted_at": failed["attempted_at"],
         "error_class": "RunnerError",
         "message_tail": "provider command returned nonzero status 9",
+        "invocation_directory_token": failed["invocation_directory_token"],
+        "stdout_sha256": _sha(""),
+        "stderr_sha256": _sha(""),
     }
     state = json.loads((state_dir / "batch-0000.json").read_text())
     assert state["failed_attempts"] == generation["failed_attempts"]
+    invocation_paths = [Path(path) for path in (tmp_path / "calls.log").read_text().splitlines()]
+    assert len(invocation_paths) == 2
+    for path in invocation_paths:
+        assert (path / "stdout.txt").is_file()
+        assert (path / "stderr.txt").is_file()
+        assert (path / "process-receipt.json").is_file()
+        acceptance = json.loads((path / "acceptance-receipt.json").read_text())
+        assert acceptance["accepted"] is (path == invocation_paths[-1])
+
+
+def test_accepts_fenced_json_and_preserves_raw_provider_output(tmp_path: Path) -> None:
+    raw, output, metadata_path, _ = _run(
+        tmp_path,
+        mode="fenced_ndjson",
+    )
+    raw_row = json.loads(raw.read_text())
+    assert "```json" in raw_row["raw_provider_output"]
+    assert len(output.read_text().splitlines()) == runner.EXPECTED_REQUEST_COUNT
+    metadata = json.loads(metadata_path.read_text())
+    assert metadata["generation_metadata"]["response_normalization"] == [
+        "extract final assistant text from an NDJSON event stream when needed",
+        "remove one exact optional JSON code fence before schema validation",
+    ]
 
 
 def test_resume_is_idempotent_and_does_not_reinvoke_provider(tmp_path: Path) -> None:
     raw, output, metadata, state = _run(tmp_path)
     calls_before = (tmp_path / "calls.log").read_text()
-    artifacts_before = {
-        path: path.read_bytes() for path in (raw, output, metadata, state / "batch-0000.json")
-    }
+    artifacts_before = {path: path.read_bytes() for path in (raw, output, metadata, state / "batch-0000.json")}
     _run(tmp_path)
     assert (tmp_path / "calls.log").read_text() == calls_before
-    assert {
-        path: path.read_bytes() for path in artifacts_before
-    } == artifacts_before
+    assert {path: path.read_bytes() for path in artifacts_before} == artifacts_before
 
 
 def test_completed_state_binding_mismatch_is_a_hard_failure(tmp_path: Path) -> None:
@@ -385,9 +413,7 @@ def test_runner_metadata_imports_and_saved_response_validates(tmp_path: Path) ->
         "".join(_canonical(row) + "\n" for row in requests),
         encoding="utf-8",
     )
-    prompt = (
-        Path("data/projects/ua_eval_harness/minimal_edit_prompt_v1.txt").resolve()
-    )
+    prompt = Path("data/projects/ua_eval_harness/minimal_edit_prompt_v1.txt").resolve()
     config = _config(tmp_path)
     script = _fake_script(tmp_path)
     log = tmp_path / "calls.log"

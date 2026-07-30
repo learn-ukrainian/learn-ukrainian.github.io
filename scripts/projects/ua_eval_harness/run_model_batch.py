@@ -96,6 +96,10 @@ THOUGHT_WRAPPER = re.compile(
     r"^\s*<(?:think|thought)>.*?</(?:think|thought)>\s*",
     re.DOTALL | re.IGNORECASE,
 )
+JSON_FENCE = re.compile(
+    r"\A```(?:json)?[ \t]*\r?\n(?P<body>.*)\r?\n```[ \t]*\Z",
+    re.DOTALL | re.IGNORECASE,
+)
 
 
 class RunnerError(ValueError):
@@ -133,9 +137,7 @@ def _publish_text(path: Path, text: str) -> None:
         except OSError as exc:
             raise RunnerError(f"cannot validate existing immutable receipt: {path}") from exc
         if existing != text:
-            raise RunnerError(
-                f"refusing to replace a different immutable receipt: {path}"
-            ) from None
+            raise RunnerError(f"refusing to replace a different immutable receipt: {path}") from None
 
 
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -177,17 +179,12 @@ def load_source_only_packet(path: Path) -> tuple[dict[str, Any], list[dict[str, 
         "prompt_sha256",
     ]:
         raise RunnerError("request header violates the gold firewall")
-    if (
-        header["request_count"] != EXPECTED_REQUEST_COUNT
-        or len(rows) - 1 != EXPECTED_REQUEST_COUNT
-    ):
+    if header["request_count"] != EXPECTED_REQUEST_COUNT or len(rows) - 1 != EXPECTED_REQUEST_COUNT:
         raise RunnerError("request packet must contain exactly 677 request rows")
     for field in ("manifest_id", "prompt_path"):
         if not isinstance(header[field], str) or not header[field]:
             raise RunnerError(f"request header has empty {field}")
-    if not _is_hash(header["manifest_payload_sha256"]) or not _is_hash(
-        header["prompt_sha256"]
-    ):
+    if not _is_hash(header["manifest_payload_sha256"]) or not _is_hash(header["prompt_sha256"]):
         raise RunnerError("request header hash is malformed")
 
     requests: list[dict[str, str]] = []
@@ -204,10 +201,7 @@ def load_source_only_packet(path: Path) -> tuple[dict[str, Any], list[dict[str, 
             raise RunnerError(f"request row {number} has missing or duplicate item_id")
         if not row["source"] or row["prompt_sha256"] != header["prompt_sha256"]:
             raise RunnerError(f"request row {number} source or prompt hash mismatch")
-        payload = {
-            field: row[field]
-            for field in ("item_id", "source", "source_sha256", "prompt_sha256")
-        }
+        payload = {field: row[field] for field in ("item_id", "source", "source_sha256", "prompt_sha256")}
         if not _is_hash(row["source_sha256"]) or not _is_hash(row["request_sha256"]):
             raise RunnerError(f"request row {number} has malformed hashes")
         if (
@@ -261,9 +255,7 @@ def load_run_config(path: Path) -> dict[str, Any]:
     if not isinstance(config["decoding"], dict) or set(config["decoding"]) != DECODING_FIELDS:
         raise RunnerError("run config must declare every decoding field")
     auth = config.get("auth_environment", [])
-    if not isinstance(auth, list) or any(
-        not isinstance(name, str) or not ENV_NAME.fullmatch(name) for name in auth
-    ):
+    if not isinstance(auth, list) or any(not isinstance(name, str) or not ENV_NAME.fullmatch(name) for name in auth):
         raise RunnerError("run config auth_environment must contain environment variable names")
     return config
 
@@ -299,23 +291,23 @@ def _temporary_parent() -> Path:
 def _batch_prompt(instruction: str, batch: Sequence[Mapping[str, str]]) -> str:
     payload = {
         "instruction": instruction,
-        "records": [
-            {"item_id": row["item_id"], "source": row["source"]} for row in batch
-        ],
+        "records": [{"item_id": row["item_id"], "source": row["source"]} for row in batch],
     }
     return (
         "Return exactly one JSON object with exactly this shape: "
         '{"responses":[{"item_id":"...","raw_response":"..."}]}. '
         "Return one row for every supplied item_id in the same order. "
-        "Do not add fields, explanations, or code fences.\n\n"
-        + _canonical_json(payload)
+        "Do not add fields, explanations, or code fences.\n\n" + _canonical_json(payload)
     )
 
 
 def _parse_exact_object(text: str) -> dict[str, Any]:
     candidate = text.strip()
     if candidate.startswith("```"):
-        raise RunnerError("provider response contains a code fence")
+        match = JSON_FENCE.fullmatch(candidate)
+        if match is None:
+            raise RunnerError("provider response contains a non-exact code fence")
+        candidate = match.group("body").strip()
     if not candidate.startswith("{"):
         unwrapped = THOUGHT_WRAPPER.sub("", candidate, count=1)
         if unwrapped == candidate:
@@ -340,9 +332,7 @@ def _assistant_text_from_event(event: Any) -> str | None:
             return content
         if isinstance(content, list):
             fragments = [
-                part.get("text")
-                for part in content
-                if isinstance(part, dict) and isinstance(part.get("text"), str)
+                part.get("text") for part in content if isinstance(part, dict) and isinstance(part.get("text"), str)
             ]
             if fragments:
                 return "".join(fragments)
@@ -371,9 +361,7 @@ def _validate_provider_payload(
             raise RunnerError("provider response row values must be strings")
         if row["item_id"] != expected_id:
             raise RunnerError("provider response IDs must exactly match requested order")
-        normalized.append(
-            {"item_id": row["item_id"], "raw_response": row["raw_response"]}
-        )
+        normalized.append({"item_id": row["item_id"], "raw_response": row["raw_response"]})
     return normalized
 
 
@@ -398,13 +386,64 @@ def parse_provider_response(
                     if found is not None:
                         assistant_text = found
         except json.JSONDecodeError:
-            raise RunnerError(
-                "provider response is not a JSON response or NDJSON event stream"
-            ) from None
+            raise RunnerError("provider response is not a JSON response or NDJSON event stream") from None
         if assistant_text is None:
             raise RunnerError("provider response has no assistant text event")
         payload = _parse_exact_object(assistant_text)
     return _validate_provider_payload(payload, expected_ids)
+
+
+def _subprocess_text(value: str | bytes | None) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return value
+
+
+def _write_process_receipts(
+    invocation_cwd: Path,
+    *,
+    attempted_at: str,
+    returncode: int | None,
+    stdout: str,
+    stderr: str,
+) -> dict[str, Any]:
+    stdout_sha256 = _sha256_text(stdout)
+    stderr_sha256 = _sha256_text(stderr)
+    _publish_text(invocation_cwd / "stdout.txt", stdout)
+    _publish_text(invocation_cwd / "stderr.txt", stderr)
+    receipt = {
+        "attempted_at": attempted_at,
+        "finished_at": _now(),
+        "returncode": returncode,
+        "stdout_sha256": stdout_sha256,
+        "stderr_sha256": stderr_sha256,
+    }
+    _publish_text(
+        invocation_cwd / "process-receipt.json",
+        json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+    )
+    return receipt
+
+
+def _write_acceptance_receipt(
+    invocation_cwd: Path,
+    *,
+    accepted: bool,
+    error_class: str | None = None,
+    message: str | None = None,
+) -> None:
+    receipt = {
+        "accepted": accepted,
+        "error_class": error_class,
+        "message": message,
+        "recorded_at": _now(),
+    }
+    _publish_text(
+        invocation_cwd / "acceptance-receipt.json",
+        json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+    )
 
 
 def _state_path(state_dir: Path, batch_index: int) -> Path:
@@ -445,8 +484,7 @@ def _load_state(
         raise RunnerError(f"completed state batch mismatch: {path.name}")
     if (
         not isinstance(state["raw_provider_output"], str)
-        or _sha256_text(state["raw_provider_output"])
-        != state["raw_provider_output_sha256"]
+        or _sha256_text(state["raw_provider_output"]) != state["raw_provider_output_sha256"]
     ):
         raise RunnerError(f"completed state raw output mismatch: {path.name}")
     parsed = parse_provider_response(state["raw_provider_output"], expected_ids)
@@ -492,6 +530,8 @@ def _run_one_batch(
     started_at = _now()
     for attempt in range(1, retries + 2):
         attempt_at = _now()
+        invocation_cwd: Path | None = None
+        process_receipt: dict[str, Any] | None = None
         try:
             invocation_cwd = Path(
                 tempfile.mkdtemp(
@@ -515,12 +555,18 @@ def _run_one_batch(
                 timeout=timeout,
                 check=False,
             )
+            process_receipt = _write_process_receipts(
+                invocation_cwd,
+                attempted_at=attempt_at,
+                returncode=result.returncode,
+                stdout=result.stdout,
+                stderr=result.stderr,
+            )
             if result.returncode:
-                raise RunnerError(
-                    f"provider command returned nonzero status {result.returncode}"
-                )
+                raise RunnerError(f"provider command returned nonzero status {result.returncode}")
             raw_output = result.stdout
             responses = parse_provider_response(raw_output, expected_ids)
+            _write_acceptance_receipt(invocation_cwd, accepted=True)
             state = {
                 "schema_version": STATE_SCHEMA,
                 "binding_sha256": binding_sha256,
@@ -533,9 +579,7 @@ def _run_one_batch(
                 "attempts": attempt,
                 "failed_attempts": failures,
             }
-            state_text = (
-                json.dumps(state, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
-            )
+            state_text = json.dumps(state, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
             _publish_text(path, state_text)
             return _load_state(
                 path,
@@ -544,6 +588,25 @@ def _run_one_batch(
                 expected_ids=expected_ids,
             )
         except (RunnerError, subprocess.TimeoutExpired) as exc:
+            if invocation_cwd is not None and process_receipt is None:
+                process_receipt = _write_process_receipts(
+                    invocation_cwd,
+                    attempted_at=attempt_at,
+                    returncode=None,
+                    stdout=_subprocess_text(getattr(exc, "stdout", None)),
+                    stderr=_subprocess_text(getattr(exc, "stderr", None)),
+                )
+            if invocation_cwd is not None:
+                _write_acceptance_receipt(
+                    invocation_cwd,
+                    accepted=False,
+                    error_class=type(exc).__name__,
+                    message=str(exc)[-240:],
+                )
+            evidence = process_receipt or {
+                "stdout_sha256": _sha256_text(""),
+                "stderr_sha256": _sha256_text(""),
+            }
             failures.append(
                 {
                     "batch_index": batch_index,
@@ -551,6 +614,9 @@ def _run_one_batch(
                     "attempted_at": attempt_at,
                     "error_class": type(exc).__name__,
                     "message_tail": str(exc)[-240:],
+                    "invocation_directory_token": (invocation_cwd.name if invocation_cwd is not None else None),
+                    "stdout_sha256": evidence["stdout_sha256"],
+                    "stderr_sha256": evidence["stderr_sha256"],
                 }
             )
     raise RunnerError(f"batch {batch_index} exhausted {retries + 1} attempts")
@@ -575,13 +641,7 @@ def run(
 ) -> None:
     """Execute or resume a complete source-only model run."""
 
-    if (
-        batch_size < 1
-        or workers < 1
-        or timeout < 1
-        or retries < 0
-        or prompt_mode not in {"argument", "stdin"}
-    ):
+    if batch_size < 1 or workers < 1 or timeout < 1 or retries < 0 or prompt_mode not in {"argument", "stdin"}:
         raise RunnerError("batch, worker, timeout, retry, or prompt-mode bounds are invalid")
     header, requests, packet_sha256 = load_source_only_packet(requests_path)
     try:
@@ -674,9 +734,7 @@ def run(
             }
         )
     response_ids = [row["item_id"] for row in normalized]
-    if response_ids != [row["item_id"] for row in requests] or len(
-        set(response_ids)
-    ) != EXPECTED_REQUEST_COUNT:
+    if response_ids != [row["item_id"] for row in requests] or len(set(response_ids)) != EXPECTED_REQUEST_COUNT:
         raise RunnerError("final aggregation does not exactly cover the request packet")
 
     raw_text = "".join(_canonical_json(row) + "\n" for row in raw_rows)
@@ -704,15 +762,13 @@ def run(
         "generated_at": max(receipt["completed_at"] for receipt in batch_receipts),
         "gold_fields_supplied": [],
         "batch_receipts": batch_receipts,
-        "retry_counts": {
-            str(receipt["batch_index"]): receipt["attempts"] - 1
-            for receipt in batch_receipts
-        },
+        "retry_counts": {str(receipt["batch_index"]): receipt["attempts"] - 1 for receipt in batch_receipts},
         "failed_attempts": failed_attempts,
-        "isolation": (
-            "each provider invocation used a retained working directory "
-            "outside the repository"
-        ),
+        "response_normalization": [
+            "extract final assistant text from an NDJSON event stream when needed",
+            "remove one exact optional JSON code fence before schema validation",
+        ],
+        "isolation": ("each provider invocation used a retained working directory outside the repository"),
     }
     metadata = {
         "schema_version": METADATA_SCHEMA,
