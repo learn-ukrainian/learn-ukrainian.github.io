@@ -1,0 +1,772 @@
+{
+  "diagnostics": {
+    "over_edit_rate": 0.37518463810930575,
+    "over_edited_outputs": 254,
+    "unchanged_outputs": 341,
+    "unchanged_rate": 0.5036927621861153,
+    "untyped_false_positive_edits": 351
+  },
+  "edit_correction": {
+    "f0_5": 0.19335142469470828,
+    "false_negative": 974,
+    "false_positive": 351,
+    "headline": false,
+    "precision": 0.24516129032258063,
+    "recall": 0.10477941176470588,
+    "scope": "all retained UA-GEC standardization labels plus grammar labels",
+    "true_positive": 114
+  },
+  "exact_sentence": {
+    "accuracy": 0.10782865583456426,
+    "correct": 73,
+    "total": 677
+  },
+  "headline_calque": {
+    "admitted_annotation_support": 338,
+    "disposition_counts": {
+      "contested": 11,
+      "excluded_as_regional_standardization": 0,
+      "excluded_as_register_standardization": 3,
+      "excluded_from_headline_calque": 16,
+      "heritage_conflict": 2,
+      "included_in_headline_calque": 338,
+      "items_by_disposition": {
+        "CONTESTED": 11,
+        "HEADLINE_CALQUE": 185,
+        "HERITAGE_CONFLICT": 1,
+        "REGIONAL_STANDARDIZATION": 0,
+        "REGISTER_STANDARDIZATION": 2
+      },
+      "raw_style_collision_annotations": 73,
+      "raw_style_collision_spans": 49,
+      "raw_style_collision_spans_by_marker": {
+        "arch": 3,
+        "bad": 34,
+        "rare": 2,
+        "slang": 10
+      },
+      "upstream_f_calque_annotations": 354
+    },
+    "excluded_annotation_support": 16,
+    "false_negative": 209,
+    "precision": null,
+    "precision_note": "Saved-response edits are untyped, so false positives cannot be attributed specifically to calque spans; standard overall edit precision remains in edit_correction.",
+    "recall": 0.09523809523809523,
+    "scope": "F/Calque annotations admitted by the separate benchmark disposition",
+    "selected_reference_dispositions": {
+      "CONTESTED": 11,
+      "HEADLINE_CALQUE": 231,
+      "HERITAGE_CONFLICT": 1,
+      "REGISTER_STANDARDIZATION": 2
+    },
+    "selected_reference_support": 231,
+    "true_positive": 22,
+    "upstream_annotation_support": 354
+  },
+  "manifest": {
+    "calque_disposition_id": "ua-gec-calque-dispositions-v1",
+    "calque_disposition_sha256": "44498d4c2ffcf8c0d3afed51bc82fa482be6b68ff6f05a3bcda035adbf5311a8",
+    "id": "ua-gec-calque-grammar-heldout-v1",
+    "items": 677,
+    "payload_sha256": "6e9f0097faaa84f9f6b2225295bf1aba8657325e3f587b3f55b69044291f0ba9"
+  },
+  "per_tag": {
+    "F/Calque": {
+      "false_negative": 223,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.08979591836734693,
+      "recall_95_ci_wilson": [
+        0.060047411736508016,
+        0.1322093731554617
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 245,
+      "support": 354,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 22
+    },
+    "G/Aspect": {
+      "false_negative": 12,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.14285714285714285,
+      "recall_95_ci_wilson": [
+        0.040093921271464966,
+        0.39941379496970353
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 14,
+      "support": 16,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 2
+    },
+    "G/Case": {
+      "false_negative": 233,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.08984375,
+      "recall_95_ci_wilson": [
+        0.06061336726621258,
+        0.1312015149581351
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 256,
+      "support": 391,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 23
+    },
+    "G/Comparison": {
+      "false_negative": 5,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.43448246478317476
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 5,
+      "support": 9,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/Conjunction": {
+      "false_negative": 40,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.08762160119728664
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 40,
+      "support": 61,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/Gender": {
+      "false_negative": 36,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.2653061224489796,
+      "recall_95_ci_wilson": [
+        0.16211282134957408,
+        0.4026228897131079
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 49,
+      "support": 76,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 13
+    },
+    "G/Number": {
+      "false_negative": 49,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.3,
+      "recall_95_ci_wilson": [
+        0.2053660525763799,
+        0.4154431723877268
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 70,
+      "support": 85,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 21
+    },
+    "G/Other": {
+      "false_negative": 1,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.5,
+      "recall_95_ci_wilson": [
+        0.09453120573423074,
+        0.9054687942657693
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 2,
+      "support": 13,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 1
+    },
+    "G/PartVoice": {
+      "false_negative": 8,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.1111111111111111,
+      "recall_95_ci_wilson": [
+        0.019890887638544907,
+        0.434999705576656
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 9,
+      "support": 12,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 1
+    },
+    "G/Participle": {
+      "false_negative": 1,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.7934506856227626
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 1,
+      "support": 2,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/Particle": {
+      "false_negative": 0,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 1.0,
+      "recall_95_ci_wilson": [
+        0.34238022750665303,
+        1.0
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 2,
+      "support": 7,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 2
+    },
+    "G/Prep": {
+      "false_negative": 90,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.05263157894736842,
+      "recall_95_ci_wilson": [
+        0.02268811304914955,
+        0.11734886117037888
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 95,
+      "support": 143,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 5
+    },
+    "G/Tense": {
+      "false_negative": 59,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.078125,
+      "recall_95_ci_wilson": [
+        0.03383117690855046,
+        0.17019537354162906
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 64,
+      "support": 77,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 5
+    },
+    "G/UngrammaticalStructure": {
+      "false_negative": 163,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.1043956043956044,
+      "recall_95_ci_wilson": [
+        0.06785706458953694,
+        0.15728892321216303
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 182,
+      "support": 270,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 19
+    },
+    "G/VerbAForm": {
+      "false_negative": 9,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.2991450484195441
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 9,
+      "support": 18,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    },
+    "G/VerbVoice": {
+      "false_negative": 45,
+      "precision": null,
+      "precision_note": "Hypothesis-only false positives are untyped and reported in overall edit precision.",
+      "recall": 0.0,
+      "recall_95_ci_wilson": [
+        0.0,
+        0.07865159873288836
+      ],
+      "recall_denominator_note": "Recall uses the deterministic best-reference selection for this saved run; selected_reference_support may vary by run.",
+      "selected_reference_support": 45,
+      "support": 74,
+      "support_definition": "all eligible upstream annotations across retained references",
+      "true_positive": 0
+    }
+  },
+  "saved_run": {
+    "decoding": {
+      "max_output_tokens": "not explicitly set; route maximum is 262144",
+      "safety": "no benchmark-specific override; OpenRouter catalog is_moderated=false",
+      "seed": "not exposed by OpenCode 1.17.13",
+      "stop": "not exposed by OpenCode 1.17.13",
+      "temperature": "not exposed by OpenCode 1.17.13",
+      "top_k": "not exposed by OpenCode 1.17.13",
+      "top_p": "not exposed by OpenCode 1.17.13"
+    },
+    "generation_metadata": {
+      "alias_resolution": {
+        "evidence": "OpenCode and OpenRouter model catalogs retrieved 2026-07-30; exact OpenRouter route requested",
+        "requested": "openrouter/google/gemma-4-31b-it",
+        "resolved": "google/gemma-4-31b-it"
+      },
+      "batch_receipts": [
+        {
+          "attempts": 1,
+          "batch_index": 0,
+          "batch_sha256": "0ae61a693ccff332eb3f7816b360ef731d7fe8a8063f23792cad8e1150f13c42",
+          "completed_at": "2026-07-30T01:20:42.356485Z",
+          "raw_provider_output_sha256": "d845d9ce7957782fc78040d2eea2a6fe9b090ecab9f5c62f859dc8506177e33c",
+          "started_at": "2026-07-30T01:20:16.186102Z",
+          "state_sha256": "2e97a390df8129dc176498151dbdb3166e1e7da643b21d9b18d0df94508fba40"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 1,
+          "batch_sha256": "b038bc74a1a8ce4e5b0b9b77e3985d4b4ae4faa8cbcd419234d685ec91c9499e",
+          "completed_at": "2026-07-30T01:20:51.780112Z",
+          "raw_provider_output_sha256": "b22b4aef8b36e617831a4e95129a96044f885d6db04b33b632dca33bcb64d3ba",
+          "started_at": "2026-07-30T01:20:42.357225Z",
+          "state_sha256": "8d9b211c26f318de783f531b040f2c8041f302ecd2d379cde5675b7978f29bcb"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 2,
+          "batch_sha256": "9e7ab3be159435fcae41127d984514c7f49d97176b746a295e361d5dea6df0f3",
+          "completed_at": "2026-07-30T01:21:10.837076Z",
+          "raw_provider_output_sha256": "8c29a3854f7d7ea084e4a55eeda64d5f61d5d38bcc4c308afd1852d6756c3bee",
+          "started_at": "2026-07-30T01:20:51.780744Z",
+          "state_sha256": "afe8460d558a4bdf669799ae7c9dbc4ca60e9a0a337542eeebdb35db94088996"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 3,
+          "batch_sha256": "6f0f04b62eb2c7d4d3d54b2239cc6e542ee1da42f480617c844da34526bcec97",
+          "completed_at": "2026-07-30T01:21:40.325333Z",
+          "raw_provider_output_sha256": "88b5db468657890523fc01e5808c7739da540cb2bd5fca3eacf7012eccc9e8b4",
+          "started_at": "2026-07-30T01:21:10.837727Z",
+          "state_sha256": "9f109a29553a4939004bdf3f9748bc3b661c509a58a975ff985135027fc0c8bf"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 4,
+          "batch_sha256": "2476f4a220ecfcc784c49b5a0930e88763c827a272bfa746db181af4ac6b9ed7",
+          "completed_at": "2026-07-30T01:22:10.397635Z",
+          "raw_provider_output_sha256": "b397c77442be16b00a9db088908f71287d675663c5b2421208064a9acda1fe4b",
+          "started_at": "2026-07-30T01:21:40.326084Z",
+          "state_sha256": "210c4330ea9673cdb654e5011242ba70a6782ee974e4572a737d32123ba0a9e0"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 5,
+          "batch_sha256": "c5383986e0f454f12de65408eb07ed011c069d6898ce78c9701bb87bee6a8cee",
+          "completed_at": "2026-07-30T01:23:16.710110Z",
+          "raw_provider_output_sha256": "2ded8f14282a7bfef5d3ed71b27e04a6a2126dcb89f0b847c555a9e0ab38cd9d",
+          "started_at": "2026-07-30T01:22:10.398586Z",
+          "state_sha256": "a89a3e0857ae5895521afae2a0f213d231efaae9d9f29be77d0f4298c4ad9f10"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 6,
+          "batch_sha256": "564353e191fd63e3598b8733200685f7bf12b71f5b2af5f46aa7efc5698b5ab9",
+          "completed_at": "2026-07-30T01:23:28.646630Z",
+          "raw_provider_output_sha256": "b8187faf5a1edb15e3f3d9eec9e79332f20a50b481d44a48d8f39816795bf953",
+          "started_at": "2026-07-30T01:23:16.710877Z",
+          "state_sha256": "770f3a2ee5bf28bb548f5fbf0a6094090c6f2c7b556253dccc8913076bcd13ee"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 7,
+          "batch_sha256": "2d4eebf6ab5dff9a29dc0af0c76a5d8dccd1336f8ce9b402c774cacd12dab7a0",
+          "completed_at": "2026-07-30T01:24:22.006547Z",
+          "raw_provider_output_sha256": "f8e63f72d0c3d853be91eab5893936a6dc94a6a50149d5e9be8f9fcded1baf08",
+          "started_at": "2026-07-30T01:23:28.647302Z",
+          "state_sha256": "ca8cd1269ced9bcb1824b14704223a074b7d3d24f34263729d6bc79eaaaf2ee7"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 8,
+          "batch_sha256": "e432a0fdbb8567eddf811c6521c9f915b45d7193635675b214c2c8be838f2ef1",
+          "completed_at": "2026-07-30T01:25:27.169920Z",
+          "raw_provider_output_sha256": "04a917624cfb4e14f2cbc66f2aa55bad5f3a0efe5c2e655696100bbfef3c8d7d",
+          "started_at": "2026-07-30T01:24:22.007331Z",
+          "state_sha256": "24c257924aa9010accdef5f65c4c9b8c941c38e20d0b1606979ad8b606c5d36d"
+        },
+        {
+          "attempts": 2,
+          "batch_index": 9,
+          "batch_sha256": "238e0e4a42c868bf3786b21d08866c28e70c229249755be122518ff026037905",
+          "completed_at": "2026-07-30T01:26:16.553379Z",
+          "raw_provider_output_sha256": "91b39b5365819ecd15ac067cba7c97d51dabdcfa0099c72a757a6cb7bc180961",
+          "started_at": "2026-07-30T01:25:27.170624Z",
+          "state_sha256": "ec76e34817948ba917378218ec53a17d2b5a86d5fe3704d632467d2276c61e82"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 10,
+          "batch_sha256": "00de3f0cba0c302ca21eddcbf9740928d48f5efea9a52146915fbd1867fa2243",
+          "completed_at": "2026-07-30T01:26:26.146390Z",
+          "raw_provider_output_sha256": "01b21206c72f614af393a47c1d4b45d7d9f10aec2a537689d944fb519007b2da",
+          "started_at": "2026-07-30T01:26:16.554174Z",
+          "state_sha256": "6093b880fbb56e6b78bf7d105ad51b5fabd15713c4c416ec3f9b4f6d14a87cdc"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 11,
+          "batch_sha256": "baf120a30848b1aec57ac0546514832e5eaf4f3bed86d023c52835e42f9c41b6",
+          "completed_at": "2026-07-30T01:27:12.400240Z",
+          "raw_provider_output_sha256": "2187e601cb400436f90b43879487bfb2e141addaf26518bffa80c56530fd7575",
+          "started_at": "2026-07-30T01:26:26.147112Z",
+          "state_sha256": "9bfbc51a4b0e4e410d6d2d46b2356ceadba4598213c47817c07caf3f42d28b5e"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 12,
+          "batch_sha256": "f3e56ab0b7a16cb687f29ac5c7edcc86943e682416caf4b6525dbead9961001f",
+          "completed_at": "2026-07-30T01:27:22.105869Z",
+          "raw_provider_output_sha256": "a96214686bab33f73b4579dd66ea036b18ab70d19a4354b029405aa0bc8d3bf1",
+          "started_at": "2026-07-30T01:27:12.401063Z",
+          "state_sha256": "4de2ce27beebb14221e40a878a0b0585300ac5b290d39e79416fb7a4caa87259"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 13,
+          "batch_sha256": "5608030050a8e6788425c7fca536002795704251df1f04942babfdc8ae96a42a",
+          "completed_at": "2026-07-30T01:27:32.132056Z",
+          "raw_provider_output_sha256": "b5f94b0bd169c22be91ddd431ac64b47cafb73b9a07997a308e026edd19f7d80",
+          "started_at": "2026-07-30T01:27:22.106652Z",
+          "state_sha256": "fadccde305125416bbf9eae1849e09fefdf613598ff0de5005bf580aa4ced7ef"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 14,
+          "batch_sha256": "ae4d616b0585cfaa90e7066ebe1336ec7c231447209c246caf3cb22c9bf0b9a4",
+          "completed_at": "2026-07-30T01:27:42.736110Z",
+          "raw_provider_output_sha256": "698bb0972ecdcad1b4ffbf37362e905b09abb8c101ed86f12dc202cabae9f5aa",
+          "started_at": "2026-07-30T01:27:32.132721Z",
+          "state_sha256": "7730776b6086e03d5e6e8989abe498a58b3aae69c36add2cfb51922e98b80033"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 15,
+          "batch_sha256": "6ef9dce791aeefd7d7c84fed3b2faa4eb72805c3c6aae6166c87783fc0661575",
+          "completed_at": "2026-07-30T01:27:52.779582Z",
+          "raw_provider_output_sha256": "35bd2e9b95f548cbc408c246cad3a6b87d2f8e0c7eb14945f227bf1c54627ae9",
+          "started_at": "2026-07-30T01:27:42.736737Z",
+          "state_sha256": "6a81abcff071ce2247756a19e351bf3dde2605d16901c25b0993e8134cff9a14"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 16,
+          "batch_sha256": "2cb8aa960d0e7d11d66437bb82d4dac2a6f6d963590007ff6cbc3578fd28da03",
+          "completed_at": "2026-07-30T01:28:35.988432Z",
+          "raw_provider_output_sha256": "8981f27d4feb3694e64d0ac1fd913e8f6d7f7fa1e97e40ca5ec0130d82ca44a8",
+          "started_at": "2026-07-30T01:27:52.780236Z",
+          "state_sha256": "dbdf85202ed468e5c77c85b69113ac12e61008d5d6531dcfce569ae369ead26d"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 17,
+          "batch_sha256": "5d94e7ad4c4370f37164bbe1f980640360895eeb4ce770ebcbdc8560d5d7b4a1",
+          "completed_at": "2026-07-30T01:28:47.388889Z",
+          "raw_provider_output_sha256": "d7376f6cee9192f7a7ed6242dad8739f92649d19b26457a37727ba9fec71bb5c",
+          "started_at": "2026-07-30T01:28:35.989386Z",
+          "state_sha256": "ab67fbbafc07d8412ba36d3be8d37da4ff400089614da47adebd6ca26bb6d648"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 18,
+          "batch_sha256": "e00ac8cc3f94b15046cfd77d18914fd0fb8e70c98133bbbab18ffe6d867b8e9f",
+          "completed_at": "2026-07-30T01:29:27.940299Z",
+          "raw_provider_output_sha256": "ef02d0bdd06f5de73cf6502012b496741466d48038151503dcac8df31cd765b0",
+          "started_at": "2026-07-30T01:28:47.389645Z",
+          "state_sha256": "525c0f3aa3cf5269fde524034ff8b845556e1b138d2a59fbc595e1157a904ee0"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 19,
+          "batch_sha256": "c89631ec550b9979144fdf1be934248833b43b735c069ec5ba3a3159e0bff962",
+          "completed_at": "2026-07-30T01:30:19.189607Z",
+          "raw_provider_output_sha256": "6d328ffefde08b2ee5c61565a5d04f8dbc7fefede7cff9f1c1d4430565cdd37f",
+          "started_at": "2026-07-30T01:29:27.941176Z",
+          "state_sha256": "ff167e151cfab467cbc0a4de45a14160e9d76c3a4ed6071a6550fe167f2c7f9e"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 20,
+          "batch_sha256": "ecc5dec738443fb9d55382b9a774f562b93c34240409c1b30d702d1c703eb906",
+          "completed_at": "2026-07-30T01:30:56.367268Z",
+          "raw_provider_output_sha256": "b105e9d6ba0f51c221cec5cb807ba3560e8848f7189a02f62d55723eb48ef54f",
+          "started_at": "2026-07-30T01:30:19.190460Z",
+          "state_sha256": "845235fe132d304eb0464c6b75cdcb2e114acf4cb104230007385a94e38b2a8f"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 21,
+          "batch_sha256": "295cc9f8ea2fd9bb41a1899f2b6546c3a94ea1946f30328ac64c0e536e44375e",
+          "completed_at": "2026-07-30T01:31:41.153709Z",
+          "raw_provider_output_sha256": "5f44da01f6d31140638e76398fbb22dcb9d219e32dae8df9c57f56a19e164e14",
+          "started_at": "2026-07-30T01:30:56.367965Z",
+          "state_sha256": "ec923668dceee11207e78d0f0bab24428a944947dd20e960dffee40476842cca"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 22,
+          "batch_sha256": "54900993f43f9341798e5ba5beed3424ee5d5de9563cfca7389454ce62c96a1b",
+          "completed_at": "2026-07-30T01:32:36.212479Z",
+          "raw_provider_output_sha256": "8de1e9920e00252bdbeae59a99560c6a515697a612908033cd267fece64361b3",
+          "started_at": "2026-07-30T01:31:41.154522Z",
+          "state_sha256": "7797167e5d785a23a01a6978dcdd03f64965a00caf0ef34356aba0d161b530b6"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 23,
+          "batch_sha256": "7b36c14702344da7518fd5ae71d45540942e16db3bff99d56c3462df5aad2463",
+          "completed_at": "2026-07-30T01:33:30.067882Z",
+          "raw_provider_output_sha256": "d0783dd127fe3b41dd4da9a9f2ed77882352245ed95f7358a83323ab0fb29643",
+          "started_at": "2026-07-30T01:32:36.215762Z",
+          "state_sha256": "5995326d793e1da51e38c2d38caa42f6fe41a8da2f7fcd05c06a81ef9c2b5ddf"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 24,
+          "batch_sha256": "8261c661f95d6b652fc128282d3ce729b853c5ce5be783f0ec5bcdc50191cc4a",
+          "completed_at": "2026-07-30T01:34:10.483161Z",
+          "raw_provider_output_sha256": "0fa3a80e6c5f543064327fd79f3516015862e04c06335e22aaf85999ce5aae10",
+          "started_at": "2026-07-30T01:33:30.069333Z",
+          "state_sha256": "c8c374326b04811c0a3d4f18c2776bc4978dca7d03c8ec6524c0ae1ea7044cb5"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 25,
+          "batch_sha256": "e8eee970dd7275ceaa4f682e75170a8603eee4dae1c75be806054b9bf342c400",
+          "completed_at": "2026-07-30T01:34:57.488058Z",
+          "raw_provider_output_sha256": "c6251f8ff6a35c5dc753857307aa7d9f8e8b08bec0f525c0b3d59e5a6e368084",
+          "started_at": "2026-07-30T01:34:10.484035Z",
+          "state_sha256": "350962cc91683be91f733184e0e4a915e43e825bcf433bfab3e6ec07d963abfc"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 26,
+          "batch_sha256": "bdec2e5aaad686d2fb878e68a45269f45f9bed6efa6b8da2cc606978faaee122",
+          "completed_at": "2026-07-30T01:36:04.095371Z",
+          "raw_provider_output_sha256": "9eb85dd998495a7b8cf92d9a2791c8b10f1bfd5288663be7d6a2c566b5d5df68",
+          "started_at": "2026-07-30T01:34:57.488819Z",
+          "state_sha256": "253a9c2fa8cf3505a6177fdb0b637485b9c0f6e7c69c549bc4f774e2b53b2ae3"
+        },
+        {
+          "attempts": 2,
+          "batch_index": 27,
+          "batch_sha256": "fab4bd648a0f776d01f5eecfa4e1e7f53ea11623f491a130b9bf94824b7746e6",
+          "completed_at": "2026-07-30T01:37:32.227885Z",
+          "raw_provider_output_sha256": "1c0cfc537bd6bf22072f012d92323412fd3afa2ffdea5ad44c3a0aeb3396cd33",
+          "started_at": "2026-07-30T01:36:04.096656Z",
+          "state_sha256": "22a4d033c00fd6b076a1bbbd5427e68b9eaa7da8cee16e06dd0f45617de62068"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 28,
+          "batch_sha256": "a336c44aaec60f41bc551296c4a167743c489826a6693e93c07a92b9eeeb981b",
+          "completed_at": "2026-07-30T01:38:20.930409Z",
+          "raw_provider_output_sha256": "88ec32b533c864e5f47d0029e165938d8cf767e0e118cc0eda0450385b9b7a46",
+          "started_at": "2026-07-30T01:37:32.229448Z",
+          "state_sha256": "e893f197bdc593e44b0af0a75a285242afea50d97d67bb4d6fa435acf030602d"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 29,
+          "batch_sha256": "38d93a7ebd8fe8d22d0409ed2a40b577c7ec8285691ef31a78b79354538712bd",
+          "completed_at": "2026-07-30T01:39:04.971253Z",
+          "raw_provider_output_sha256": "1086ca201294f420080fb84e556df39c83cba9326089afc88065dae4052e596a",
+          "started_at": "2026-07-30T01:38:20.931234Z",
+          "state_sha256": "5d74774500f993be973ca867989ac78fadf03e19bcc840a32dc74d756bfa1a48"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 30,
+          "batch_sha256": "dad7297ae7aa1f175f70654b08a2fd6b5d795ac3a9e3854a735bb95115b63c49",
+          "completed_at": "2026-07-30T01:41:48.189643Z",
+          "raw_provider_output_sha256": "963ca510486f869052837409b6e06ea16ef887528d200890578c757ef89dbbc4",
+          "started_at": "2026-07-30T01:39:04.971833Z",
+          "state_sha256": "4fff20cf7f435a2535245a7b2099855985010006b436b8b47f89d1b2a5e7a5a7"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 31,
+          "batch_sha256": "76de3c2d4e8e1988fcfbbf83d00d362810dfa50fad8b288e85ffe9219b824584",
+          "completed_at": "2026-07-30T01:42:36.799900Z",
+          "raw_provider_output_sha256": "b26ab9acd8b12ca6cb2b1d7046f5991f0fd494c5264bc2fb471e6da6ca797a28",
+          "started_at": "2026-07-30T01:41:48.190817Z",
+          "state_sha256": "719ae989eb09a4ae727a9531dff3623042740e5f6bfc666e7836a350054202ff"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 32,
+          "batch_sha256": "8fa5ddb7bca10b77dd9ea4dce350eb828e1330a19dba459d1b26d57c9be8f0f4",
+          "completed_at": "2026-07-30T01:42:47.837540Z",
+          "raw_provider_output_sha256": "41c50cb5872bc9d83248c3f9b407aa693e85400e8097f68bc1907ba452377037",
+          "started_at": "2026-07-30T01:42:36.800857Z",
+          "state_sha256": "13e5d4cea4c025706958f6973c11088ecc5577fe5c66996b41940e40b08a6de6"
+        },
+        {
+          "attempts": 1,
+          "batch_index": 33,
+          "batch_sha256": "77d989607df5a8185848894840a5c08babc59efc26e26f1982258233c612f632",
+          "completed_at": "2026-07-30T01:43:13.662717Z",
+          "raw_provider_output_sha256": "594b96b9236b5b05b73973940ce4124010a5a8e876669bc05ae83ad6c999d73c",
+          "started_at": "2026-07-30T01:42:47.838259Z",
+          "state_sha256": "f0815259c5d1891062c570272c10dcf405327f8e71ff2d0b2a38d68ff226202f"
+        }
+      ],
+      "batch_size": 20,
+      "command_identity": {
+        "name": "OpenCode",
+        "version": "1.17.13"
+      },
+      "command_sha256": "4177d8164e757f4568771f1497b99ca999ea9974e5b7044ca441dca3aa959858",
+      "config_sha256": "826e7c3149a9606b0c5101bf17e5adec53745000720dc5113ebd95739c440e6d",
+      "failed_attempts": [
+        {
+          "attempt": 1,
+          "attempted_at": "2026-07-30T01:25:27.170627Z",
+          "batch_index": 9,
+          "error_class": "RunnerError",
+          "invocation_directory_token": "ua-eval-model-0009-01-_sq3br27",
+          "message_tail": "tagged response has an unterminated block",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_sha256": "c392cc21996ee53a143423e263e6a0a3b0b7a03818229adda334230c18d899ef"
+        },
+        {
+          "attempt": 1,
+          "attempted_at": "2026-07-30T01:36:04.096664Z",
+          "batch_index": 27,
+          "error_class": "RunnerError",
+          "invocation_directory_token": "ua-eval-model-0027-01-n6ei72gf",
+          "message_tail": "provider response count does not match the batch",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_sha256": "b93ca04d427f59e3b3b6cf7f683c919cb140c3ad081b3f9f01c7556d5e692da1"
+        }
+      ],
+      "generated_at": "2026-07-30T01:43:13.662717Z",
+      "gold_fields_supplied": [],
+      "isolation": "each provider invocation used a retained working directory outside the repository",
+      "model_output_sha256": "8c24c21a10557f679f302fb5fcbe2387f3f7bd7086c908e523d37c5da51d9586",
+      "prompt_mode": "argument",
+      "prompt_sha256": "f121546dcbaf602c58c7d85977ad792eb9be402dd1e01a6a556ba966dac2c96a",
+      "raw_output_sha256": "99d373000acf73f5eb8c06bbee25dc8221e3484b73ad9403e6f6b29072d1041f",
+      "request_packet_sha256": "77afe3da4ea590e060602af53b60ac8f350369f8a323521dee99f42100815fca",
+      "request_schema": "ua_eval_generation_requests.v1",
+      "response_count": 677,
+      "response_ids_sha256": "fbdfb6b7e1a27a40521ff9e6ebf0805eaa89cfcf32651d629a229ff8b0eeb4f0",
+      "response_normalization": [
+        "extract final assistant text from a recognized NDJSON event when needed",
+        "remove one exact optional transport code fence before schema validation"
+      ],
+      "retry_counts": {
+        "0": 0,
+        "1": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "2": 0,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0,
+        "24": 0,
+        "25": 0,
+        "26": 0,
+        "27": 1,
+        "28": 0,
+        "29": 0,
+        "3": 0,
+        "30": 0,
+        "31": 0,
+        "32": 0,
+        "33": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 1
+      },
+      "route": "OpenCode 1.17.13 -> OpenRouter paid -> google/gemma-4-31b-it",
+      "run_started_at": "2026-07-30T01:20:16.186102Z",
+      "timeout_seconds": 1800,
+      "transport_protocol": "tagged_text_blocks.v1",
+      "workers": 1
+    },
+    "generator_kind": "model",
+    "gold_fields_supplied": [],
+    "input_fields": [
+      "item_id",
+      "source",
+      "source_sha256",
+      "prompt_sha256"
+    ],
+    "model": "google/gemma-4-31b-it",
+    "model_version": "OpenRouter catalog entry created=1775148486",
+    "path": "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.responses.jsonl",
+    "prompt_sha256": "f121546dcbaf602c58c7d85977ad792eb9be402dd1e01a6a556ba966dac2c96a",
+    "provider": "OpenRouter",
+    "run_id": "ua-gec-calque-grammar-public-v0--gemma-4-31b-it-openrouter--2026-07-30",
+    "runner": "ua_eval_saved_response_runner.v1",
+    "runner_version": "ua_eval_provider_neutral_batch_runner.v1.1",
+    "sha256": "f6e59c2ad31f1e6a74296f66d2d693117e30a9214e147e355a24fc2cd79a469f"
+  },
+  "schema_version": "ua_eval_score_report.v1",
+  "scorer": {
+    "alignment_note": "This dependency-free v1 uses a pinned Wagner-Fischer token aligner. It implements the official exact-edit metric semantics but does not claim byte-for-byte ERRANT alignment parity in ambiguous alignments.",
+    "beta": 0.5,
+    "id": "ua_eval_exact_token_edits.v1",
+    "implementation_sha256": "358ee1419533577fb185615c8a80b15688214a89fe3003d9fe9425954511402a",
+    "matching": "exact source token span plus exact replacement text",
+    "reference_policy": "best F0.5 upstream annotator per sentence; deterministic tie-break",
+    "standard_metric_reference": {
+      "commit": "fbff22905f8c9a3677c900d56599284151c029e6",
+      "evaluate_py_sha256": "6e37b7a41a3a3c303647ca29507cd51b4b6deb9b0952c2a62d8e0b0374fae31a",
+      "repository": "https://github.com/asivokon/unlp-2023-shared-task",
+      "semantic_contract": "Correction true positives require an exact source span and exact replacement; precision, recall, and F0.5 are primary."
+    }
+  },
+  "uncertainty": {
+    "confidence": 0.95,
+    "edit_f0_5": [
+      0.16039461265522448,
+      0.22564973868408014
+    ],
+    "exact_sentence_accuracy": [
+      0.08567208271787297,
+      0.12998522895125553
+    ],
+    "method": "sentence_bootstrap_percentile",
+    "samples": 1000,
+    "seed": 2156
+  }
+}
