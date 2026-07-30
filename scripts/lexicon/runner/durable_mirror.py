@@ -265,7 +265,12 @@ def require_durable(mirror_dir: Path, *, max_age_hours: float = DEFAULT_MAX_AGE_
             f"durable mirror at {mirror_dir} file_count mismatch "
             f"({manifest.get('file_count')} != {len(files)})"
         )
-    generated_at = float(manifest["generated_at"])
+    try:
+        generated_at = float(manifest["generated_at"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise DurableMirrorError(
+            f"durable mirror at {mirror_dir} has invalid generated_at={manifest.get('generated_at')!r}"
+        ) from exc
     now = time.time()
     # Reject future-dated manifests (clock skew / corruption); small 5m skew tolerance.
     if generated_at > now + 300:

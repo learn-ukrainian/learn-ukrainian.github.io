@@ -238,3 +238,15 @@ def test_snapshot_refuses_live_pid_by_default(tmp_path: Path) -> None:
     _populate(source)
     with pytest.raises(DurableMirrorError, match="live runner"):
         snapshot(str(source), mirror, allow_live=False)
+
+
+def test_require_rejects_bad_generated_at(tmp_path: Path) -> None:
+    source = tmp_path / "work"
+    mirror = tmp_path / "mirror"
+    _populate(source)
+    snapshot(str(source), mirror, allow_live=True)
+    manifest = read_manifest(mirror)
+    manifest["generated_at"] = "not-a-number"
+    write_manifest(manifest, mirror)
+    with pytest.raises(DurableMirrorError, match="invalid generated_at"):
+        require_durable(mirror)
