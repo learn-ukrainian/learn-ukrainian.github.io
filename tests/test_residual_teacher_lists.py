@@ -130,6 +130,13 @@ def test_load_package_rows_missing_seed_file_raises(tmp_path: Path) -> None:
         residual.load_package_rows(tmp_path)
 
 
+def test_load_package_rows_missing_admission_file_raises(tmp_path: Path) -> None:
+    _write_jsonl_file(tmp_path / "curated-seed.jsonl", [_seed_row(1, "Справедливий")])
+
+    with pytest.raises(FileNotFoundError, match=r"practice-admission\.jsonl not found"):
+        residual.load_package_rows(tmp_path)
+
+
 def test_load_package_rows_accepts_agreeing_package(tmp_path: Path) -> None:
     seed_rows = [_seed_row(1, "Справедливий"), _seed_row(2, "Оренда", practice=False, mode="quarantined_no_document_hit")]
     _write_jsonl_file(tmp_path / "curated-seed.jsonl", seed_rows)

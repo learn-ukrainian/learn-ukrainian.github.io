@@ -103,9 +103,15 @@ def load_package_rows(package_root: Path) -> list[dict[str, Any]]:
             "teacher package (.claude/atlas-epic/plans/curated-seed/); rebuild it with "
             "scripts/atlas/rebuild_teacher_curated_seed.py before running residual reporting."
         )
+    if not admission_path.is_file():
+        raise FileNotFoundError(
+            f"practice-admission.jsonl not found under {package_root}. This is the gitignored private "
+            "teacher rights ledger (.claude/atlas-epic/plans/curated-seed/), dual-written alongside "
+            "curated-seed.jsonl; rebuild it with scripts/atlas/rebuild_teacher_curated_seed.py before "
+            "running residual reporting."
+        )
     seed_rows = _read_jsonl(seed_path)
-    if admission_path.is_file():
-        verify_admission_consistency(seed_rows, _read_jsonl(admission_path))
+    verify_admission_consistency(seed_rows, _read_jsonl(admission_path))
     return seed_rows
 
 
