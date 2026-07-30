@@ -175,3 +175,29 @@ def test_cli_dry_run_snapshot_does_not_write_manifest(tmp_path: Path) -> None:
 
     assert main(["snapshot", "--source", str(source), "--mirror-dir", str(mirror), "--dry-run"]) == 0
     assert not (mirror / "manifest.json").exists()
+
+
+def test_verify_fails_when_extra_files_present(tmp_path: Path) -> None:
+    """F001: unexpected files in the mirror are verification failures."""
+    source = tmp_path / "work"
+    mirror = tmp_path / "mirror"
+    _populate(source)
+    snapshot(str(source), mirror)
+    (mirror / "sneaky.extra").write_text("nope", encoding="utf-8")
+    manifest = read_manifest(mirror)
+    result = verify_manifest(manifest, mirror)
+    assert result.ok is False
+    assert any(path.endswith("sneaky.extra") or path == "sneaky.extra" for path in result.extra)
+
+
+def test_require_durable_fails_on_future_generated_at(tmp_path: Path) -> None:
+    """F002: future-dated manifests fail closed (not treated as age zero)."""
+    source = tmp_path / "work"
+    mirror = tmp_path / "mirror"
+    _populate(source)
+    snapshot(str(source), mirror)
+    manifest = read_manifest(mirror)
+    manifest["generated_at"] = time.time() + 3600
+    write_manifest(manifest, mirror)
+    with pytest.raises(DurableMirrorError, match="future"):
+        require_durable(mirror, max_age_hours=24.0)

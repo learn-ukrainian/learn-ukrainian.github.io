@@ -139,7 +139,7 @@ def verify_manifest(manifest: dict[str, Any], mirror_dir: Path) -> VerifyResult:
             mismatched.append(rel_path)
     on_disk = {path.relative_to(mirror_dir).as_posix() for path in _iter_files(mirror_dir)}
     extra = sorted(on_disk - expected_paths)
-    return VerifyResult(ok=not missing and not mismatched, missing=missing, mismatched=mismatched, extra=extra)
+    return VerifyResult(ok=not missing and not mismatched and not extra, missing=missing, mismatched=mismatched, extra=extra)
 
 
 def sync_source_to_mirror(source: str, mirror_dir: Path, *, dry_run: bool = False) -> None:
@@ -184,7 +184,14 @@ def require_durable(mirror_dir: Path, *, max_age_hours: float = DEFAULT_MAX_AGE_
     :class:`DurableMirrorError`.
     """
     manifest = read_manifest(mirror_dir)
-    age_hours = max(0.0, time.time() - float(manifest["generated_at"])) / 3600.0
+    generated_at = float(manifest["generated_at"])
+    now = time.time()
+    # Reject future-dated manifests (clock skew / corruption); small 5m skew tolerance.
+    if generated_at > now + 300:
+        raise DurableMirrorError(
+            f"durable mirror at {mirror_dir} has future generated_at={generated_at} (now={now})"
+        )
+    age_hours = max(0.0, now - generated_at) / 3600.0
     if age_hours > max_age_hours:
         raise DurableMirrorError(
             f"durable mirror at {mirror_dir} is {age_hours:.1f}h old (max {max_age_hours}h) — refresh with `snapshot` first"
