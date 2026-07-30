@@ -36,12 +36,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.lexicon.build_data_manifest import _lemma_key
-from scripts.lexicon.curated_seed_atlas_admission import (
-    _manifest_entries,
-    normalize_rows,
-    prepare_practice_seed,
-)
+from scripts.lexicon.curated_seed_atlas_admission import normalize_rows, prepare_practice_seed
 from scripts.lexicon.manifest_io import DEFAULT_MANIFEST, load_manifest
 
 DEFAULT_PACKAGE_ROOT = ROOT / ".claude" / "atlas-epic" / "plans" / "curated-seed"
@@ -115,17 +110,6 @@ def load_package_rows(package_root: Path) -> list[dict[str, Any]]:
     return seed_rows
 
 
-def _routes_by_lemma_key(manifest_path: Path) -> dict[str, dict[str, Any]]:
-    """Public-route lemma index, matching ``prepare_practice_seed``'s own filter."""
-    return {
-        _lemma_key(str(entry.get("lemma") or "")): entry
-        for entry in _manifest_entries(manifest_path)
-        if str(entry.get("lemma") or "").strip()
-        and str(entry.get("url_slug") or "").strip()
-        and entry.get("pos") != "grammar term"
-    }
-
-
 def classify_residuals(rows: list[dict[str, Any]], manifest_path: Path) -> dict[str, Any]:
     """Split the existing admission classifier's failures into named residuals.
 
@@ -146,18 +130,14 @@ def classify_residuals(rows: list[dict[str, Any]], manifest_path: Path) -> dict[
         else:
             other_atlas_failures.append(failure)
 
-    routes = _routes_by_lemma_key(manifest_path)
-    no_cefr: list[dict[str, Any]] = []
-    for entry in report["practice_skipped_no_cefr"]:
-        lemma = str(entry.get("lemma") or "")
-        target = routes.get(_lemma_key(lemma))
-        no_cefr.append(
-            {
-                "seedRow": entry.get("seedRow"),
-                "lemma": entry.get("lemma"),
-                "url_slug": str(target.get("url_slug") or "") if target else "",
-            }
-        )
+    no_cefr: list[dict[str, Any]] = [
+        {
+            "seedRow": entry.get("seedRow"),
+            "lemma": entry.get("lemma"),
+            "url_slug": str(entry.get("url_slug") or ""),
+        }
+        for entry in report["practice_skipped_no_cefr"]
+    ]
 
     summary: dict[str, Any] = {
         "schema": SUMMARY_SCHEMA,

@@ -67,6 +67,25 @@ def test_classify_residuals_splits_missing_route_and_no_cefr(tmp_path: Path) -> 
     assert "other_atlas_failures" not in result["summary"]
 
 
+def test_classify_residuals_no_cefr_records_url_slug_from_slug_matched_route(tmp_path: Path) -> None:
+    """The manifest route lives under a homograph lemma (``учителька`` for
+    the ``вчителька`` route, mirroring ``_slug_for_url``'s own docstring
+    example), so ``prepare_practice_seed`` only resolves it via the slug
+    fallback. The residual ``no_cefr`` entry must carry that resolved
+    ``url_slug`` rather than re-deriving it from a lemma-only index that
+    would miss the match."""
+    manifest = _manifest(
+        tmp_path / "manifest.json",
+        [{"lemma": "учителька", "url_slug": "вчителька", "pos": "noun"}],
+    )
+    rows = [_seed_row(1, "Вчителька", status="ok", mode="admitted", reason="rights_cleared", extra={"example": "Вчителька увійшла.", "provenance": {"source_file": "x", "credit": "y"}})]
+
+    result = residual.classify_residuals(rows, manifest)
+
+    assert result["missing_route"] == []
+    assert result["no_cefr"] == [{"seedRow": 1, "lemma": "вчителька", "url_slug": "вчителька"}]
+
+
 def test_classify_residuals_ignores_rows_not_admitted_to_practice(tmp_path: Path) -> None:
     manifest = _manifest(tmp_path / "manifest.json", [])
     rows = [
