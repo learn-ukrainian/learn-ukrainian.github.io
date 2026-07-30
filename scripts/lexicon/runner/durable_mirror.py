@@ -115,12 +115,32 @@ def read_manifest(mirror_dir: Path) -> dict[str, Any]:
     manifest_path = mirror_dir / MANIFEST_NAME
     if not manifest_path.is_file():
         raise DurableMirrorError(f"no durable mirror manifest at {manifest_path}")
-    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    try:
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise DurableMirrorError(f"unreadable durable mirror manifest at {manifest_path}: {exc}") from exc
     if not isinstance(payload, dict) or payload.get("schema") != "atlas-runner-mirror-manifest":
         raise DurableMirrorError(f"{manifest_path} is not a runner-mirror manifest")
     if payload.get("schema_version") != MANIFEST_SCHEMA_VERSION:
         raise DurableMirrorError(f"{manifest_path} has unsupported schema_version {payload.get('schema_version')!r}")
     return payload
+
+
+
+def _safe_mirror_rel_path(mirror_dir: Path, rel_path: str) -> Path:
+    """Resolve a manifest path only if it stays inside ``mirror_dir``."""
+    if not isinstance(rel_path, str) or not rel_path or rel_path.startswith("/"):
+        raise DurableMirrorError(f"unsafe manifest path: {rel_path!r}")
+    parts = Path(rel_path).parts
+    if any(part in ("", ".", "..") for part in parts):
+        raise DurableMirrorError(f"unsafe manifest path: {rel_path!r}")
+    disk_path = (mirror_dir / rel_path).resolve()
+    mirror_real = mirror_dir.resolve()
+    try:
+        disk_path.relative_to(mirror_real)
+    except ValueError as exc:
+        raise DurableMirrorError(f"manifest path escapes mirror: {rel_path!r}") from exc
+    return disk_path
 
 
 def verify_manifest(manifest: dict[str, Any], mirror_dir: Path) -> VerifyResult:
@@ -129,9 +149,11 @@ def verify_manifest(manifest: dict[str, Any], mirror_dir: Path) -> VerifyResult:
     mismatched: list[str] = []
     expected_paths: set[str] = set()
     for entry in manifest.get("files", []):
+        if not isinstance(entry, dict) or "path" not in entry:
+            raise DurableMirrorError("manifest entry missing path")
         rel_path = str(entry["path"])
         expected_paths.add(rel_path)
-        disk_path = mirror_dir / rel_path
+        disk_path = _safe_mirror_rel_path(mirror_dir, rel_path)
         if not disk_path.is_file():
             missing.append(rel_path)
             continue
@@ -218,8 +240,12 @@ def _cmd_snapshot(args: argparse.Namespace) -> int:
 
 
 def _cmd_verify(args: argparse.Namespace) -> int:
-    manifest = read_manifest(args.mirror_dir)
-    result = verify_manifest(manifest, args.mirror_dir)
+    try:
+        manifest = read_manifest(args.mirror_dir)
+        result = verify_manifest(manifest, args.mirror_dir)
+    except DurableMirrorError as exc:
+        print(f"FAILED: {exc}", file=sys.stderr)
+        return 2
     if result.ok:
         print(f"OK: {args.mirror_dir} matches its manifest ({manifest['file_count']} files)")
         return 0

@@ -201,3 +201,23 @@ def test_require_durable_fails_on_future_generated_at(tmp_path: Path) -> None:
     write_manifest(manifest, mirror)
     with pytest.raises(DurableMirrorError, match="future"):
         require_durable(mirror, max_age_hours=24.0)
+
+
+def test_verify_rejects_path_escape(tmp_path: Path) -> None:
+    source = tmp_path / "work"
+    mirror = tmp_path / "mirror"
+    _populate(source)
+    snapshot(str(source), mirror)
+    manifest = read_manifest(mirror)
+    manifest["files"].append({"path": "../outside.txt", "bytes": 1, "sha256": "0" * 64})
+    write_manifest(manifest, mirror)
+    with pytest.raises(DurableMirrorError, match="unsafe|escape"):
+        verify_manifest(read_manifest(mirror), mirror)
+
+
+def test_read_manifest_rejects_invalid_json(tmp_path: Path) -> None:
+    mirror = tmp_path / "mirror"
+    mirror.mkdir()
+    (mirror / "manifest.json").write_text("{not-json", encoding="utf-8")
+    with pytest.raises(DurableMirrorError, match="unreadable"):
+        read_manifest(mirror)
