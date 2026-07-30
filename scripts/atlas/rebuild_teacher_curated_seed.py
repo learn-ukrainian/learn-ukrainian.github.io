@@ -234,7 +234,7 @@ def _tree_checksums(root: Path) -> dict[str, str]:
 
 def _has_locator(value: object) -> bool:
     if isinstance(value, Mapping):
-        return bool(value)
+        return any(str(v or "").strip() for v in value.values())
     return bool(str(value or "").strip())
 
 

@@ -256,3 +256,14 @@ def test_refresh_rights_ledger_rolls_back_both_copies_after_post_sync_failure(
     assert {
         path.relative_to(mirror): path.read_bytes() for path in mirror.rglob("*") if path.is_file()
     } == mirror_before
+
+
+def test_has_locator_rejects_empty_mapping_values() -> None:
+    from scripts.atlas.rebuild_teacher_curated_seed import _has_locator, classify_rights_admission
+
+    assert _has_locator({"source_file": None, "offset": None}) is False
+    assert _has_locator({"note": ""}) is False
+    assert _has_locator({"locator": "teacher_doc_paragraphs:1"}) is True
+    rights, admission = classify_rights_admission("has_candidates", {"source_file": None})
+    assert rights["status"] == "quarantined_missing_document_locator"
+    assert admission.get("practice") is False
