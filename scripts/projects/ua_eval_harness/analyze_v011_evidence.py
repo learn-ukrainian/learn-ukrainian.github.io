@@ -69,6 +69,16 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
     return rows
 
 
+def read_json(path: Path) -> dict[str, Any]:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise EvidenceError(f"cannot read {path}: {exc}") from exc
+    if not isinstance(value, dict):
+        raise EvidenceError(f"invalid JSON evidence object: {path}")
+    return value
+
+
 def ordered_responses(path: Path, expected_ids: Sequence[str]) -> dict[str, str]:
     """Require complete, unique *and manifest-ordered* saved-response rows."""
     rows = read_jsonl(path)
@@ -89,7 +99,7 @@ def verify_inputs() -> tuple[
     dict[tuple[Any, ...], dict[str, Any]],
     dict[str, dict[str, str]],
 ]:
-    freeze_v011.validate_freeze(freeze_v011._read_json(freeze_v011.DEFAULT_OUTPUT))
+    freeze_v011.validate_freeze(read_json(freeze_v011.DEFAULT_OUTPUT))
     manifest, items = load_manifest(MANIFEST)
     _, disposition_lookup = load_dispositions(DISPOSITIONS, manifest=manifest)
     expected_ids = [str(item["id"]) for item in items]
@@ -136,7 +146,8 @@ def disposition_summary(item: Mapping[str, Any], lookup: Mapping[tuple[Any, ...]
 
 
 def classify_pair(gpt: Any, gemma: Any) -> str:
-    # Exact edit matching is measurement evidence, not linguistic adjudication.
+    """Compare exact-edit measurements, not linguistic quality."""
+    # Negated error counts make fewer false positives/negatives rank higher.
     left = (gpt.tp, -gpt.fp, -gpt.fn, gpt.exact)
     right = (gemma.tp, -gemma.fp, -gemma.fn, gemma.exact)
     if left == right:
@@ -167,7 +178,12 @@ def build_analysis() -> tuple[list[dict[str, Any]], dict[str, Any]]:
         statuses, possible_defect, protected_risk, entries = disposition_summary(item, lookup)
         pair = classify_pair(gpt, gemma)
         same_output = responses["gpt_5_6_terra"][item_id] == responses["gemma_4_31b_it"][item_id]
-        uncertainty = sorted(set((["needs_ua_review"] if possible_defect or protected_risk else []) + (["multiple_references"] if len(item["references"]) > 1 else []) + ["exact_mismatch_not_linguistic_error"]))
+        uncertainty = ["exact_mismatch_not_linguistic_error"]
+        if possible_defect or protected_risk:
+            uncertainty.append("needs_ua_review")
+        if len(item["references"]) > 1:
+            uncertainty.append("multiple_references")
+        uncertainty.sort()
         next_disposition = "needs_ua_review" if possible_defect or protected_risk else "measurement_only"
         row = {
             "item_id": item_id,
