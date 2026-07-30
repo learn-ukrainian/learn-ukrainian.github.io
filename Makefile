@@ -6,8 +6,11 @@ CURATED_SEED_PRACTICE_SEED := $(CURATED_SEED_DIR)/curated-v5-practice-seed.json
 CURATED_SEED_REPORT := $(CURATED_SEED_DIR)/curated-v5-admission-report.json
 CURATED_SEED_LOCAL_SMOKE_OUT ?= batch_state/curated-v5-local-practice
 CURATED_SEED_LOCAL_SMOKE_TARGET ?= 700
+CURATED_SEED_GOLD_TARGET ?= 40
+CURATED_SEED_GOLD_OUT ?= site/public/lexicon
+CURATED_SEED_GOLD_VESUM_DB ?= data/vesum.db
 
-.PHONY: atlas-practice-api-hydrate atlas-export-runtime atlas-local-practice-refresh practice-admit-curated-seed atlas atlas-publish practice-deck practice-deck-publish open-dataset open-dataset-publish
+.PHONY: atlas-practice-api-hydrate atlas-export-runtime atlas-local-practice-refresh practice-admit-curated-seed practice-gold-curated-seed atlas atlas-publish practice-deck practice-deck-publish open-dataset open-dataset-publish
 
 # Refresh practice JSON API copies + /atlas runtime for local/dev word-page CTA.
 atlas-practice-api-hydrate:
@@ -27,6 +30,16 @@ practice-admit-curated-seed:
 	@test -f "$(CURATED_SEED_INPUT)" || { echo "missing private curated seed input" >&2; exit 2; }
 	$(PYTHON) -m scripts.lexicon.curated_seed_atlas_admission --input "$(CURATED_SEED_INPUT)" --manifest site/src/data/lexicon-manifest.json --practice-seed-out "$(CURATED_SEED_PRACTICE_SEED)" --report-out "$(CURATED_SEED_REPORT)" --allow-missing-routes
 	$(PYTHON) scripts/audit/generate_practice_deck.py --manifest site/src/data/lexicon-manifest.json --local-practice-seed "$(CURATED_SEED_PRACTICE_SEED)" --out-dir "$(CURATED_SEED_LOCAL_SMOKE_OUT)" --target "$(CURATED_SEED_LOCAL_SMOKE_TARGET)"
+
+# Local-only vertical slice: these ignored static shards temporarily replace
+# hydrated practice shards so the existing /lexicon browser path can smoke them.
+# Restore the published local deck afterwards with `npm --prefix site run hydrate:practice`.
+practice-gold-curated-seed:
+	@test -f "$(CURATED_SEED_INPUT)" || { echo "missing private curated seed input" >&2; exit 2; }
+	@test "$(CURATED_SEED_GOLD_TARGET)" -ge 32 && test "$(CURATED_SEED_GOLD_TARGET)" -le 50 || { echo "gold target must be between 32 and 50" >&2; exit 2; }
+	@test -f "$(CURATED_SEED_GOLD_VESUM_DB)" || { echo "missing explicit VESUM database for gold slice" >&2; exit 2; }
+	$(PYTHON) -m scripts.lexicon.curated_seed_atlas_admission --input "$(CURATED_SEED_INPUT)" --manifest site/src/data/lexicon-manifest.json --practice-seed-out "$(CURATED_SEED_PRACTICE_SEED)" --report-out "$(CURATED_SEED_REPORT)" --allow-missing-routes
+	$(PYTHON) scripts/audit/generate_practice_deck.py --manifest site/src/data/lexicon-manifest.json --local-practice-seed "$(CURATED_SEED_PRACTICE_SEED)" --out-dir "$(CURATED_SEED_GOLD_OUT)" --target "$(CURATED_SEED_GOLD_TARGET)" --seed-selection representative --disable-cloze --vesum-db "$(CURATED_SEED_GOLD_VESUM_DB)"
 
 atlas:
 	$(PYTHON) -m scripts.lexicon.build_data_manifest --write
