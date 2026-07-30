@@ -114,6 +114,53 @@ def test_stop_disables_before_bootout(tmp_path: Path, monkeypatch) -> None:
     assert [command[0] for command in commands] == ["disable", "print", "bootout", "print"]
 
 
+def test_stop_waits_for_delayed_launchd_unload(tmp_path: Path, monkeypatch) -> None:
+    commands: list[list[str]] = []
+    sleeps: list[float] = []
+    print_results = iter([0, 0, 1])
+
+    def fake_launchctl(command: list[str]) -> subprocess.CompletedProcess[str]:
+        commands.append(command)
+        returncode = next(print_results) if command[0] == "print" else 0
+        return subprocess.CompletedProcess(command, returncode, "", "not loaded" if returncode else "")
+
+    monkeypatch.setattr(supervisor, "_launchctl", fake_launchctl)
+    monkeypatch.setattr(supervisor, "_sleep", sleeps.append)
+
+    result = supervisor.stop(home=tmp_path / "home")
+
+    assert result["loaded"] is False
+    assert [command[0] for command in commands] == ["disable", "print", "bootout", "print", "print"]
+    assert sleeps == [supervisor._STOP_UNLOAD_POLL_SECONDS]
+
+
+def test_stop_fails_after_bounded_launchd_unload_wait(tmp_path: Path, monkeypatch) -> None:
+    commands: list[list[str]] = []
+    sleeps: list[float] = []
+    clock = iter([100.0, 100.0, 112.0])
+
+    def fake_launchctl(command: list[str]) -> subprocess.CompletedProcess[str]:
+        commands.append(command)
+        return subprocess.CompletedProcess(command, 0, "service remains registered", "")
+
+    monkeypatch.setattr(supervisor, "_launchctl", fake_launchctl)
+    monkeypatch.setattr(supervisor, "_monotonic", lambda: next(clock))
+    monkeypatch.setattr(supervisor, "_sleep", sleeps.append)
+
+    try:
+        supervisor.stop(home=tmp_path / "home")
+    except supervisor.LaunchdError as exc:
+        message = str(exc)
+    else:
+        raise AssertionError("stop() should fail when launchd never unloads the service")
+
+    assert f"within {supervisor._STOP_UNLOAD_TIMEOUT_SECONDS:.1f}s after bootout" in message
+    assert supervisor._target() in message
+    assert "last launchctl print exit 0" in message
+    assert [command[0] for command in commands] == ["disable", "print", "bootout", "print", "print"]
+    assert sleeps == [supervisor._STOP_UNLOAD_POLL_SECONDS]
+
+
 def test_unexpected_exit_records_signal_and_stderr_tail(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
 

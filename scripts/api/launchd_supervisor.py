@@ -15,6 +15,7 @@ import signal
 import subprocess
 import sys
 import threading
+import time
 from collections import deque
 from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
@@ -27,6 +28,8 @@ LABEL = "com.learn-ukrainian.monitor-api"
 PORT = 8765
 THROTTLE_INTERVAL_SECONDS = 30
 _LOG_ROTATE_BYTES = 10 * 1024 * 1024
+_STOP_UNLOAD_TIMEOUT_SECONDS = 12.0
+_STOP_UNLOAD_POLL_SECONDS = 0.1
 
 
 class LaunchdError(RuntimeError):
@@ -193,6 +196,32 @@ def _loaded_readback() -> subprocess.CompletedProcess[str]:
     return _launchctl(["print", _target()])
 
 
+def _monotonic() -> float:
+    return time.monotonic()
+
+
+def _sleep(seconds: float) -> None:
+    time.sleep(seconds)
+
+
+def _wait_for_unload() -> None:
+    """Wait for launchd's asynchronous bootout to remove the service."""
+    deadline = _monotonic() + _STOP_UNLOAD_TIMEOUT_SECONDS
+    while True:
+        readback = _loaded_readback()
+        if readback.returncode != 0:
+            return
+
+        remaining = deadline - _monotonic()
+        if remaining <= 0:
+            raise LaunchdError(
+                "launchd service did not unload within "
+                f"{_STOP_UNLOAD_TIMEOUT_SECONDS:.1f}s after bootout: {_target()} "
+                f"(last launchctl print exit {readback.returncode})"
+            )
+        _sleep(min(_STOP_UNLOAD_POLL_SECONDS, remaining))
+
+
 def _failure(action: str, result: subprocess.CompletedProcess[str]) -> LaunchdError:
     detail = result.stderr.strip() or result.stdout.strip() or f"exit {result.returncode}"
     return LaunchdError(f"launchctl {action} failed: {detail}")
@@ -267,10 +296,7 @@ def stop(*, home: Path) -> dict[str, object]:
         booted_out = _launchctl(["bootout", _target()])
         if booted_out.returncode != 0:
             raise _failure("bootout", booted_out)
-
-    readback = _loaded_readback()
-    if readback.returncode == 0:
-        raise LaunchdError(f"launchd service remains loaded after stop: {_target()}")
+        _wait_for_unload()
     return {"action": "stop", "label": LABEL, "loaded": False, "plist_path": str(plist_path(home))}
 
 
