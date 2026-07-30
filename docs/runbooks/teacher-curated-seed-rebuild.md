@@ -27,6 +27,41 @@ run without `--drive-root`, refuses to reuse an existing destination unless
 `--replace-existing` is explicit, and verifies the copied checksums. A sole
 local package is intentionally a failure.
 
+## Rights-ledger refresh after table recovery
+
+Once an authoritative private table has been restored, refresh its existing
+package and the same Drive mirror together. The refresh is deterministic and
+does not create sentences, locators, CEFR, or redistribution permission.
+
+- `no_hit_strict_vesum` receives admission mode
+  `quarantined_no_document_hit` with reason
+  `no_document_hit_vesum_forms`.
+- `has_candidates` with a retained locator remains rights status
+  `private_local`, with admission mode
+  `pending_operator_redistribution_go` and `practice: false`.
+- A candidate without a locator is fail-closed as
+  `quarantined_missing_document_locator`.
+
+`pending_operator_redistribution_go` means that local evidence exists but the
+operator has not granted redistribution. It is not a license and does not make
+a row available to Practice or public export. The receipt hashes every mirrored
+file except itself and is refreshed only after a staged checksum-equivalent
+Drive copy is ready.
+
+```bash
+DRIVE_RECOVERY_ROOT="/absolute/path/to/My Drive/Projects/learn-ukrainian-incident-recovery/2026-07-30/atlas-epic-dual-write/teacher-curated-seed"
+
+.venv/bin/python -m scripts.atlas.rebuild_teacher_curated_seed \
+  --package-root .claude/atlas-epic/plans/curated-seed \
+  --drive-root "$DRIVE_RECOVERY_ROOT" \
+  --refresh-rights-ledger
+```
+
+Run the admission helper directly against the checksum-verified Atlas manifest
+for a dry-run report. Its `practice_skipped_not_admitted` count is distinct from
+`practice_skipped_no_cefr`: a pending rights row must never be mislabeled as a
+missing-CEFR row.
+
 ## Run the recovery scaffold
 
 Set the two machine-local paths before running the command. The first is the

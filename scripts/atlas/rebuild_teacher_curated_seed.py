@@ -13,6 +13,7 @@ import argparse
 import hashlib
 import json
 import shutil
+import tempfile
 from collections import Counter
 from collections.abc import Iterable, Mapping
 from datetime import UTC, datetime
@@ -30,6 +31,23 @@ PACKAGE_FILES = (
     "source-recon.json",
     "package-manifest.json",
 )
+PRIVATE_LOCAL = "private_local"
+PENDING_REDISTRIBUTION_GO = "pending_operator_redistribution_go"
+NO_HIT_REASON = "no_document_hit_vesum_forms"
+
+
+def _read_jsonl(path: Path) -> list[dict[str, object]]:
+    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    if not all(isinstance(row, dict) for row in rows):
+        raise ValueError(f"JSONL rows must be objects: {path}")
+    return rows
+
+
+def _write_jsonl(path: Path, rows: Iterable[Mapping[str, object]]) -> None:
+    path.write_text(
+        "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in rows),
+        encoding="utf-8",
+    )
 
 
 def _sha256(path: Path) -> str:
@@ -205,6 +223,243 @@ def _package_checksums(root: Path, names: Iterable[str] = PACKAGE_FILES) -> dict
     return {name: _sha256(root / name) for name in names}
 
 
+def _tree_checksums(root: Path) -> dict[str, str]:
+    """Hash every mirrored package file except its self-referential receipt."""
+    return {
+        path.relative_to(root).as_posix(): _sha256(path)
+        for path in sorted(root.rglob("*"))
+        if path.is_file() and path.name != "receipt.json"
+    }
+
+
+def _has_locator(value: object) -> bool:
+    if isinstance(value, Mapping):
+        return any(str(v or "").strip() for v in value.values())
+    return bool(str(value or "").strip())
+
+
+def classify_rights_admission(sentence_status: str, locator: object) -> tuple[dict[str, object], dict[str, object]]:
+    """Return fail-closed row rights and Practice admission for a restored seed row.
+
+    A document hit is not redistribution permission.  The only candidate state
+    below remains local-only until an operator explicitly grants redistribution.
+    """
+    if sentence_status == "no_hit_strict_vesum":
+        return (
+            {
+                "status": PRIVATE_LOCAL,
+                "redistributable": False,
+                "reason": NO_HIT_REASON,
+            },
+            {
+                "practice": False,
+                "mode": "quarantined_no_document_hit",
+                "reason": NO_HIT_REASON,
+            },
+        )
+    if sentence_status == "has_candidates":
+        if not _has_locator(locator):
+            return (
+                {
+                    "status": "quarantined_missing_document_locator",
+                    "redistributable": False,
+                    "reason": "has_candidates_without_document_locator",
+                },
+                {
+                    "practice": False,
+                    "mode": "quarantined_missing_document_locator",
+                    "reason": "has_candidates_without_document_locator",
+                },
+            )
+        return (
+            {
+                "status": PRIVATE_LOCAL,
+                "redistributable": False,
+                "reason": "private_local_teacher_material_pending_operator_redistribution_go",
+            },
+            {
+                "practice": False,
+                "mode": PENDING_REDISTRIBUTION_GO,
+                "reason": "private_local_rights_require_operator_redistribution_go",
+            },
+        )
+    return (
+        {
+            "status": "quarantined_unreviewed_sentence_status",
+            "redistributable": False,
+            "reason": f"unsupported_sentence_status_{sentence_status or 'missing'}",
+        },
+        {
+            "practice": False,
+            "mode": "quarantined_unreviewed_sentence_status",
+            "reason": f"unsupported_sentence_status_{sentence_status or 'missing'}",
+        },
+    )
+
+
+def _sync_tree(source: Path, destination: Path) -> None:
+    """Copy a staged package file-by-file without relying on cloud dir-renames."""
+    for path in sorted(source.rglob("*")):
+        if path.is_dir():
+            continue
+        target = destination / path.relative_to(source)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, target)
+
+
+def _restore_tree(backup: Path, destination: Path) -> None:
+    """Restore a verified pre-refresh copy after a dual-write failure."""
+    backup_files = {path.relative_to(backup) for path in backup.rglob("*") if path.is_file()}
+    backup_directories = {path.relative_to(backup) for path in backup.rglob("*") if path.is_dir()}
+    for path in sorted(destination.rglob("*"), reverse=True):
+        if path.is_file() and path.relative_to(destination) not in backup_files:
+            path.unlink()
+        elif path.is_dir() and path.relative_to(destination) not in backup_directories:
+            path.rmdir()
+    _sync_tree(backup, destination)
+    if _tree_checksums(backup) != _tree_checksums(destination):
+        raise RuntimeError(f"rollback checksum mismatch: {destination}")
+
+
+def refresh_rights_ledger(*, package_root: Path, drive_root: Path) -> dict[str, object]:
+    """Refresh explicit rights/admission records and mirror the whole private package.
+
+    This path never derives a sentence, locator, CEFR value, or redistribution
+    permission.  It only classifies the restored strict-VESUM retrieval states.
+    """
+    if not package_root.is_dir():
+        raise ValueError(f"package root does not exist: {package_root}")
+    if not drive_root.is_dir():
+        raise ValueError(f"Drive mirror root does not exist: {drive_root}")
+    if _tree_checksums(package_root) != _tree_checksums(drive_root):
+        raise ValueError("local package and Drive mirror differ before refresh; inspect before replacing either copy")
+
+    seed_rows = _read_jsonl(package_root / "curated-seed.jsonl")
+    ledger_rows = _read_jsonl(package_root / "rights-ledger.jsonl")
+    ledger_by_row = {row.get("seedRow"): row for row in ledger_rows}
+    if len(ledger_by_row) != len(ledger_rows):
+        raise ValueError("rights ledger contains duplicate seedRow values")
+    if len({row.get("seedRow") for row in seed_rows}) != len(seed_rows):
+        raise ValueError("curated seed contains duplicate seedRow values")
+    if {row.get("seedRow") for row in seed_rows} != set(ledger_by_row):
+        raise ValueError("curated seed and rights ledger seedRow values differ")
+
+    refreshed_seed: list[dict[str, object]] = []
+    refreshed_ledger: list[dict[str, object]] = []
+    admissions: list[dict[str, object]] = []
+    for seed in seed_rows:
+        seed_row = seed.get("seedRow")
+        ledger = dict(ledger_by_row[seed_row])
+        status = str(seed.get("sentenceStatus") or "").strip()
+        ledger_status = str(ledger.get("sentenceStatus") or "").strip()
+        if ledger_status != status:
+            raise ValueError(f"seed row {seed_row} has mismatched rights-ledger sentence status")
+        rights, admission = classify_rights_admission(status, ledger.get("locator"))
+        refreshed = dict(seed)
+        refreshed["rights"] = rights
+        refreshed["admission"] = admission
+        refreshed_seed.append(refreshed)
+        ledger["rightsStatus"] = rights["status"]
+        ledger["redistributable"] = rights["redistributable"]
+        ledger["rightsReason"] = rights["reason"]
+        refreshed_ledger.append(ledger)
+        admissions.append(
+            {
+                "seedRow": seed_row,
+                "lemma": seed.get("lemma"),
+                "practice": admission["practice"],
+                "mode": admission["mode"],
+                "reason": admission["reason"],
+                "exampleCount": ledger.get("exampleCount", 0),
+            }
+        )
+
+    parent = package_root.parent
+    with tempfile.TemporaryDirectory(prefix=f".{package_root.name}.refresh-", dir=parent) as temporary:
+        staged_root = Path(temporary) / package_root.name
+        shutil.copytree(package_root, staged_root)
+        _write_jsonl(staged_root / "curated-seed.jsonl", refreshed_seed)
+        _write_jsonl(staged_root / "rights-ledger.jsonl", refreshed_ledger)
+        _write_jsonl(staged_root / "practice-admission.jsonl", admissions)
+        manifest_path = staged_root / "package-manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if not isinstance(manifest, dict):
+            raise ValueError(f"package manifest must be an object: {manifest_path}")
+        manifest["state"] = "rights_ledger_refreshed_pending_operator_redistribution_go"
+        admission_modes = Counter(str(row["admission"]["mode"]) for row in refreshed_seed)
+        rights_statuses = Counter(str(row["rights"]["status"]) for row in refreshed_seed)
+        manifest["row_counts"] = {
+            "curated_seed": len(refreshed_seed),
+            "rights_ledger": len(refreshed_ledger),
+            "practice_admission": len(admissions),
+            "rows_no_hit": sum(row.get("sentenceStatus") == "no_hit_strict_vesum" for row in refreshed_seed),
+            "rows_with_candidates": sum(row.get("sentenceStatus") == "has_candidates" for row in refreshed_seed),
+            "rights_private_local": sum(row["rights"]["status"] == PRIVATE_LOCAL for row in refreshed_seed),
+            "practice_admitted": sum(row["admission"]["practice"] is True for row in refreshed_seed),
+            "quarantined_missing_document_locator": admission_modes["quarantined_missing_document_locator"],
+            "quarantined_unreviewed_sentence_status": admission_modes[
+                "quarantined_unreviewed_sentence_status"
+            ],
+        }
+        manifest["rights_admission_policy"] = {
+            "redistribution": "operator GO required before redistributable may become true",
+            "has_candidates_with_locator": {
+                "rights_status": PRIVATE_LOCAL,
+                "admission_mode": PENDING_REDISTRIBUTION_GO,
+            },
+            "no_hit_strict_vesum": {
+                "admission_mode": "quarantined_no_document_hit",
+                "reason": NO_HIT_REASON,
+            },
+        }
+        _write_json(manifest_path, manifest)
+        source_recon_path = staged_root / "source-recon.json"
+        source_recon = json.loads(source_recon_path.read_text(encoding="utf-8"))
+        if not isinstance(source_recon, dict):
+            raise ValueError(f"source recon must be an object: {source_recon_path}")
+        source_recon["admission"] = "rights_ledger_refreshed_pending_operator_redistribution_go"
+        source_recon["rights_refresh"] = {
+            "rights_statuses": dict(sorted(rights_statuses.items())),
+            "admission_modes": dict(sorted(admission_modes.items())),
+            "practice_admitted": manifest["row_counts"]["practice_admitted"],
+        }
+        _write_json(source_recon_path, source_recon)
+        receipt = {
+            "schema": "teacher-curated-seed-recovery-receipt-v1",
+            "created_at": datetime.now(UTC).isoformat(),
+            "state": manifest["state"],
+            "document_policy": "master_docx private vault only",
+            "row_count": len(refreshed_seed),
+            "rows_no_hit": manifest["row_counts"]["rows_no_hit"],
+            "rows_with_candidates": manifest["row_counts"]["rows_with_candidates"],
+            "practice_admitted": manifest["row_counts"]["practice_admitted"],
+            "drive_mirror": str(drive_root),
+            "package_sha256": _tree_checksums(staged_root),
+        }
+        _write_json(staged_root / "receipt.json", receipt)
+
+        with (
+            tempfile.TemporaryDirectory(prefix=f".{package_root.name}.backup-", dir=parent) as local_temporary,
+            tempfile.TemporaryDirectory(prefix=f".{drive_root.name}.backup-", dir=drive_root.parent) as drive_temporary,
+        ):
+            local_backup = Path(local_temporary) / package_root.name
+            drive_backup = Path(drive_temporary) / drive_root.name
+            shutil.copytree(package_root, local_backup)
+            shutil.copytree(drive_root, drive_backup)
+            try:
+                _sync_tree(staged_root, drive_root)
+                if _tree_checksums(staged_root) != _tree_checksums(drive_root):
+                    raise RuntimeError("Drive mirror checksum mismatch after refresh")
+                _sync_tree(staged_root, package_root)
+                if _tree_checksums(staged_root) != _tree_checksums(package_root):
+                    raise RuntimeError("local package checksum mismatch after refresh")
+            except Exception:
+                _restore_tree(drive_backup, drive_root)
+                _restore_tree(local_backup, package_root)
+                raise
+    return receipt
+
+
 def build_package(
     *,
     package_root: Path,
@@ -268,13 +523,26 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--package-root", type=Path, required=True)
     parser.add_argument("--drive-root", type=Path)
     parser.add_argument("--replace-existing", action="store_true")
+    parser.add_argument(
+        "--refresh-rights-ledger",
+        action="store_true",
+        help="Refresh explicit local-only rights/admission states for a restored package.",
+    )
     parser.add_argument("--source-inventory-root", type=Path, default=ROOT / "data/lexicon/source-inventory")
     parser.add_argument(
         "--decision-root", type=Path, default=ROOT / "data/lexicon/source-inventory-review-decisions"
     )
     parser.add_argument("--cloze-path", type=Path, default=ROOT / "site/src/data/lexicon-teacher-cloze.json")
-    parser.add_argument("--drive-source-root", type=Path, required=True)
+    parser.add_argument("--drive-source-root", type=Path)
     args = parser.parse_args(argv)
+    if args.refresh_rights_ledger:
+        if args.drive_root is None:
+            parser.error("--refresh-rights-ledger requires --drive-root")
+        receipt = refresh_rights_ledger(package_root=args.package_root, drive_root=args.drive_root)
+        print(json.dumps(receipt, ensure_ascii=False, indent=2))
+        return 0
+    if args.drive_source_root is None:
+        parser.error("--drive-source-root is required unless --refresh-rights-ledger is used")
     receipt = build_package(
         package_root=args.package_root,
         drive_root=args.drive_root,
