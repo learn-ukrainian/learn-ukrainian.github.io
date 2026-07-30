@@ -339,6 +339,8 @@ def refresh_rights_ledger(*, package_root: Path, drive_root: Path) -> dict[str, 
     ledger_by_row = {row.get("seedRow"): row for row in ledger_rows}
     if len(ledger_by_row) != len(ledger_rows):
         raise ValueError("rights ledger contains duplicate seedRow values")
+    if len({row.get("seedRow") for row in seed_rows}) != len(seed_rows):
+        raise ValueError("curated seed contains duplicate seedRow values")
     if {row.get("seedRow") for row in seed_rows} != set(ledger_by_row):
         raise ValueError("curated seed and rights ledger seedRow values differ")
 

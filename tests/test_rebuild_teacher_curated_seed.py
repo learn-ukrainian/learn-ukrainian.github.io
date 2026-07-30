@@ -188,6 +188,30 @@ def test_refresh_rights_ledger_mirrors_explicit_states(tmp_path: Path) -> None:
     assert rebuild._tree_checksums(package) == rebuild._tree_checksums(mirror)
 
 
+def test_refresh_rights_ledger_rejects_duplicate_curated_seed_rows(tmp_path: Path) -> None:
+    package = tmp_path / "package"
+    mirror = tmp_path / "drive" / "teacher-seed"
+    package.mkdir()
+    mirror.parent.mkdir(parents=True)
+    seed_rows = [
+        {"seedRow": 1, "lemma": "слово", "sentenceStatus": "has_candidates"},
+        {"seedRow": 1, "lemma": "інше", "sentenceStatus": "no_hit_strict_vesum"},
+    ]
+    ledger_rows = [
+        {"seedRow": 1, "lemma": "слово", "sentenceStatus": "has_candidates", "locator": "chunk/1"},
+        {"seedRow": 2, "lemma": "інше", "sentenceStatus": "no_hit_strict_vesum", "locator": None},
+    ]
+    for name, rows in (("curated-seed.jsonl", seed_rows), ("rights-ledger.jsonl", ledger_rows)):
+        _write(package / name, "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows))
+    _write(package / "practice-admission.jsonl", "")
+    _write(package / "package-manifest.json", json.dumps({"schema": "teacher-curated-seed-recovery-v1"}))
+    _write(package / "source-recon.json", "{}")
+    shutil.copytree(package, mirror)
+
+    with pytest.raises(ValueError, match="curated seed contains duplicate seedRow values"):
+        rebuild.refresh_rights_ledger(package_root=package, drive_root=mirror)
+
+
 def test_refresh_rights_ledger_rolls_back_both_copies_after_post_sync_failure(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
