@@ -103,6 +103,107 @@ def test_curated_v5_seed_admits_existing_atlas_entries_with_provenance() -> None
         assert lexemes[row["slug"]]["exampleProvenance"] == row["provenance"]
 
 
+def test_local_practice_seed_requires_explicit_opt_in_and_never_creates_a_cloze_example(tmp_path: Path) -> None:
+    seed_path = tmp_path / "local-seed.json"
+    seed_path.write_text(
+        json.dumps(
+            {
+                "schema": "curated-v5-practice-seed-v1",
+                "localOnly": True,
+                "entries": [
+                    {
+                        "seedRow": 1,
+                        "lemma": "слово",
+                        "slug": "слово",
+                        "cefr": "A1",
+                        "sentenceStatus": "has_candidates",
+                        "admissionMode": "local_practice_private_teacher",
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="requires --local-practice-seed"):
+        read_practice_seed(seed_path)
+
+    merged = merge_practice_seed_entries(
+        [{"lemma": "слово", "url_slug": "слово", "gloss": "word", "enrichment": {"cefr": "A1"}}],
+        read_practice_seed(seed_path, allow_local_private=True),
+    )
+
+    assert merged[0]["surface_admission"] == {"cloze": False, "practice": True}
+    assert merged[0]["local_practice_private_teacher"] is True
+    assert "practice_example" not in merged[0]
+
+
+def test_local_practice_seed_accepts_attested_rows_alongside_local_recognition_rows(tmp_path: Path) -> None:
+    seed_path = tmp_path / "mixed-seed.json"
+    seed_path.write_text(
+        json.dumps(
+            {
+                "schema": "curated-v5-practice-seed-v1",
+                "localOnly": True,
+                "entries": [
+                    {
+                        "seedRow": 1,
+                        "lemma": "слово",
+                        "slug": "слово",
+                        "cefr": "A1",
+                        "sentenceStatus": "has_candidates",
+                        "admissionMode": "local_practice_private_teacher",
+                    },
+                    {
+                        "seedRow": 2,
+                        "lemma": "речення",
+                        "slug": "речення",
+                        "cefr": "A1",
+                        "sentenceStatus": "ok",
+                        "example": "Це речення.",
+                        "provenance": {"source_file": "fixture", "credit": "Fixture"},
+                    },
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    rows = read_practice_seed(seed_path, allow_local_private=True)
+
+    assert [row["seedRow"] for row in rows] == [1, 2]
+
+
+def test_local_practice_seed_rows_are_selected_before_ordinary_course_entries() -> None:
+    entries = [
+        {
+            "lemma": "справедливий",
+            "url_slug": "справедливий",
+            "gloss": "fair",
+            "enrichment": {"cefr": {"level": "A2"}},
+            "surface_admission": {"practice": True, "cloze": False},
+            "local_practice_private_teacher": True,
+        },
+        {
+            "lemma": "витирати",
+            "url_slug": "витирати",
+            "gloss": "wipe",
+            "enrichment": {"cefr": {"level": "A2"}},
+            "course_usage": [{"module": "fixture"}],
+        },
+    ]
+
+    selected, _lexemes, _by_plain_lemma, _by_id = _select_practice_lexemes(
+        entries,
+        JsonVesumVerifier.from_path(VESUM),
+        BuildConfig(target=1, source_label="fixture"),
+    )
+
+    assert [entry["url_slug"] for entry, _lexeme in selected] == ["справедливий"]
+
+
 def test_practice_seed_entries_are_selected_before_ordinary_course_entries() -> None:
     entries = [
         {

@@ -2,10 +2,10 @@ PYTHON ?= .venv/bin/python
 
 CURATED_SEED_INPUT ?= .claude/atlas-epic/plans/curated-seed/v5-curated-with-provenance.jsonl
 CURATED_SEED_DIR ?= data/lexicon
-CURATED_SEED_PUBLIC_SEED := $(CURATED_SEED_DIR)/curated-v5-admission-seed.json
-CURATED_SEED_CANDIDATES := $(CURATED_SEED_DIR)/curated-v5-grow-candidates.json
 CURATED_SEED_PRACTICE_SEED := $(CURATED_SEED_DIR)/curated-v5-practice-seed.json
 CURATED_SEED_REPORT := $(CURATED_SEED_DIR)/curated-v5-admission-report.json
+CURATED_SEED_LOCAL_SMOKE_OUT ?= batch_state/curated-v5-local-practice
+CURATED_SEED_LOCAL_SMOKE_TARGET ?= 700
 
 .PHONY: atlas-practice-api-hydrate atlas-export-runtime atlas-local-practice-refresh practice-admit-curated-seed atlas atlas-publish practice-deck practice-deck-publish open-dataset open-dataset-publish
 
@@ -25,13 +25,8 @@ atlas-local-practice-refresh: atlas-practice-api-hydrate atlas-export-runtime
 
 practice-admit-curated-seed:
 	@test -f "$(CURATED_SEED_INPUT)" || { echo "missing private curated seed input" >&2; exit 2; }
-	$(PYTHON) -m scripts.lexicon.curated_seed_atlas_admission --input "$(CURATED_SEED_INPUT)" --public-seed-out "$(CURATED_SEED_PUBLIC_SEED)" --manifest site/src/data/lexicon-manifest.json --candidates-out "$(CURATED_SEED_CANDIDATES)"
-	$(PYTHON) -m scripts.lexicon.promote_grow_candidates --candidates "$(CURATED_SEED_CANDIDATES)" --allow-preexisting-conformance --write
-	$(PYTHON) scripts/lexicon/enrich_manifest.py --write
-	$(PYTHON) -m scripts.lexicon.curated_seed_atlas_admission --input "$(CURATED_SEED_PUBLIC_SEED)" --manifest site/src/data/lexicon-manifest.json --practice-seed-out "$(CURATED_SEED_PRACTICE_SEED)" --report-out "$(CURATED_SEED_REPORT)"
-	npm --prefix site run atlas:build-db
-	$(PYTHON) scripts/audit/generate_practice_deck.py --practice-seed "$(CURATED_SEED_PRACTICE_SEED)"
-	$(MAKE) atlas-local-practice-refresh
+	$(PYTHON) -m scripts.lexicon.curated_seed_atlas_admission --input "$(CURATED_SEED_INPUT)" --manifest site/src/data/lexicon-manifest.json --practice-seed-out "$(CURATED_SEED_PRACTICE_SEED)" --report-out "$(CURATED_SEED_REPORT)" --allow-missing-routes
+	$(PYTHON) scripts/audit/generate_practice_deck.py --manifest site/src/data/lexicon-manifest.json --local-practice-seed "$(CURATED_SEED_PRACTICE_SEED)" --out-dir "$(CURATED_SEED_LOCAL_SMOKE_OUT)" --target "$(CURATED_SEED_LOCAL_SMOKE_TARGET)"
 
 atlas:
 	$(PYTHON) -m scripts.lexicon.build_data_manifest --write

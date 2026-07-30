@@ -38,15 +38,17 @@ does not create sentences, locators, CEFR, or redistribution permission.
   `no_document_hit_vesum_forms`.
 - `has_candidates` with a retained locator remains rights status
   `private_local`, with admission mode
-  `pending_operator_redistribution_go` and `practice: false`.
+  `local_practice_private_teacher` and `practice: true`. This is a
+  recognition-only local Practice admission; it does not authorize a public
+  Practice seed, cloze example, or redistribution.
 - A candidate without a locator is fail-closed as
   `quarantined_missing_document_locator`.
 
-`pending_operator_redistribution_go` means that local evidence exists but the
+`local_practice_private_teacher` means that local evidence exists but the
 operator has not granted redistribution. It is not a license and does not make
-a row available to Practice or public export. The receipt hashes every mirrored
-file except itself and is refreshed only after a staged checksum-equivalent
-Drive copy is ready.
+a row available to public export. The receipt hashes every mirrored file except
+itself and is refreshed only after a staged checksum-equivalent Drive copy is
+ready.
 
 ```bash
 DRIVE_RECOVERY_ROOT="/absolute/path/to/My Drive/Projects/learn-ukrainian-incident-recovery/2026-07-30/atlas-epic-dual-write/teacher-curated-seed"
@@ -100,12 +102,14 @@ CURATED_SEED_INPUT=.claude/atlas-epic/plans/curated-seed/curated-seed.jsonl \
   make practice-admit-curated-seed
 ```
 
-The Make target runs the existing admission helper, candidate promotion,
-enrichment, `generate_practice_deck.py`, API hydration, and Atlas runtime
-export. Its learner-facing output is the per-level
-`site/public/api/lexicon/practice-index.<level>.json` and
-`practice-lexemes.<level>.json` path. The recovery scaffold intentionally
-cannot pass this admission smoke: its zero rows are proof that the lost
-selection has not been fabricated. Once the authoritative table is restored,
-review its row count against the expected 1,018 rows before any Atlas or
-Practice write.
+The Make target runs the admission helper against the existing real Atlas
+manifest, then consumes the resulting local-only recognition overlay with
+`generate_practice_deck.py`. It writes smoke shards only under the ignored
+`batch_state/curated-v5-local-practice/` directory; it does not promote missing
+Atlas candidates, enrich or publish the manifest, hydrate public API shards, or
+export a public Practice runtime. Its default 700-item target keeps this a
+bounded local smoke rather than a public-scale deck rebuild. The recovery
+scaffold intentionally cannot pass this admission smoke: its zero rows are
+proof that the lost selection has not been fabricated. Once the authoritative
+table is restored, review its row count against the expected 1,018 rows before
+any Atlas or Practice write.

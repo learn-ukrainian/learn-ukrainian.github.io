@@ -273,7 +273,16 @@ def test_practice_seed_reports_no_hit_and_retains_duplicate_attestations(tmp_pat
     rows = [
         {"seedRow": 1, "lemma": "відомий", "sentenceStatus": "ok", "example": "Відомий приклад.", "provenance": provenance, "admission": admitted},
         {"seedRow": 2, "lemma": "відомий", "sentenceStatus": "ok", "example": "Другий приклад.", "provenance": provenance, "admission": admitted},
-        {"seedRow": 3, "lemma": "рідкісний", "sentenceStatus": "no_hit", "admission": admitted},
+        {
+            "seedRow": 3,
+            "lemma": "рідкісний",
+            "sentenceStatus": "no_hit",
+            "admission": {
+                "practice": False,
+                "mode": "quarantined_no_document_hit",
+                "reason": "no_document_hit_vesum_forms",
+            },
+        },
         {"seedRow": 4, "lemma": "неоцінений", "sentenceStatus": "ok", "example": "Неоцінений приклад.", "provenance": provenance, "admission": admitted},
     ]
 
@@ -287,11 +296,122 @@ def test_practice_seed_reports_no_hit_and_retains_duplicate_attestations(tmp_pat
         "atlas_failures": 0,
         "sentence_status": {"no_hit": 1, "ok": 3},
         "practice_admitted_rows": 2,
-        "practice_skipped_not_admitted": 0,
+        "practice_skipped_not_admitted": 1,
         "practice_skipped_no_cefr": 1,
         "practice_cefr_sources": {"PULS": 2},
     }
     assert report["practice_skipped_no_cefr"] == [{"seedRow": 4, "lemma": "неоцінений"}]
+
+
+def test_private_local_candidates_admit_recognition_only_when_route_and_cefr_exist(tmp_path: Path) -> None:
+    manifest = _manifest(
+        tmp_path / "manifest.json",
+        [{"lemma": "відомий", "url_slug": "відомий", "pos": "adj", "enrichment": {"cefr": "A2"}}],
+    )
+    rows = [
+        {
+            "seedRow": 1,
+            "lemma": "відомий",
+            "sentenceStatus": "has_candidates",
+            "admission": {
+                "practice": True,
+                "mode": "local_practice_private_teacher",
+                "reason": "private_local_teacher_material_local_practice_only",
+            },
+        }
+    ]
+
+    seed, report = admission.prepare_practice_seed(rows, manifest)
+
+    assert seed["localOnly"] is True
+    assert seed["entries"] == [
+        {
+            "seedRow": 1,
+            "lemma": "відомий",
+            "slug": "відомий",
+            "cefr": "A2",
+            "sentenceStatus": "has_candidates",
+            "admissionMode": "local_practice_private_teacher",
+        }
+    ]
+    assert report["counts"]["practice_admitted_rows"] == 1
+    assert report["counts"]["practice_skipped_no_cefr"] == 0
+
+
+def test_cli_allows_missing_routes_only_for_local_practice_output(tmp_path: Path) -> None:
+    manifest = _manifest(tmp_path / "manifest.json", [])
+    seed_input = tmp_path / "seed.jsonl"
+    seed_input.write_text(
+        json.dumps(
+            {
+                "seedRow": 1,
+                "lemma": "відомий",
+                "sentenceStatus": "has_candidates",
+                "admission": {"practice": True, "mode": "local_practice_private_teacher"},
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    assert admission.main(
+        [
+            "--input",
+            str(seed_input),
+            "--manifest",
+            str(manifest),
+            "--practice-seed-out",
+            str(tmp_path / "practice.json"),
+            "--report-out",
+            str(tmp_path / "report.json"),
+            "--allow-missing-routes",
+        ]
+    ) == 0
+    with pytest.raises(SystemExit) as error:
+        admission.main(
+            [
+                "--input",
+                str(seed_input),
+                "--manifest",
+                str(manifest),
+                "--public-seed-out",
+                str(tmp_path / "public.json"),
+                "--allow-missing-routes",
+            ]
+    )
+    assert error.value.code == 2
+
+    attestation_manifest = _manifest(
+        tmp_path / "attestation-manifest.json",
+        [{"lemma": "відомий", "url_slug": "відомий", "pos": "adj", "enrichment": {"cefr": "A2"}}],
+    )
+    seed_input.write_text(
+        json.dumps(
+            {
+                "seedRow": 2,
+                "lemma": "відомий",
+                "sentenceStatus": "ok",
+                "admission": {"practice": True, "mode": "admitted"},
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    assert admission.main(
+        [
+            "--input",
+            str(seed_input),
+            "--manifest",
+            str(attestation_manifest),
+            "--practice-seed-out",
+            str(tmp_path / "attestation-practice.json"),
+            "--report-out",
+            str(tmp_path / "attestation-report.json"),
+            "--allow-missing-routes",
+        ]
+    ) == 1
 
 
 def test_practice_seed_reports_rights_gate_separately_from_missing_cefr(tmp_path: Path) -> None:

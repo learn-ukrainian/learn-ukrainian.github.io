@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_curated_admit_dry_run_refreshes_practice_api_and_atlas_runtime() -> None:
+def test_curated_admit_dry_run_consumes_only_the_local_practice_overlay() -> None:
     result = subprocess.run(
         ["make", "-n", "practice-admit-curated-seed"],
         cwd=ROOT,
@@ -18,7 +18,11 @@ def test_curated_admit_dry_run_refreshes_practice_api_and_atlas_runtime() -> Non
     )
 
     output = result.stdout
-    deck = output.index("generate_practice_deck.py --practice-seed")
-    hydrate = output.index("hydrate-lexicon-api-shards.ts")
-    export = output.index("scripts.atlas.export_runtime_shards")
-    assert deck < hydrate < export
+    assert "generate_practice_deck.py --manifest site/src/data/lexicon-manifest.json --local-practice-seed" in output
+    assert "--allow-missing-routes" in output
+    assert '--target "700"' in output
+    assert 'batch_state/curated-v5-local-practice' in output
+    assert "promote_grow_candidates" not in output
+    assert "enrich_manifest.py --write" not in output
+    assert "atlas:build-db" not in output
+    assert "atlas-local-practice-refresh" not in output
