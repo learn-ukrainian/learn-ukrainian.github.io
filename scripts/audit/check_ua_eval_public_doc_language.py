@@ -22,7 +22,7 @@ PUBLIC_ENGLISH_DOCS = (
     Path("docs/projects/ua-eval-harness/contamination-policy.md"),
 )
 
-_CYRILLIC_RE = re.compile(r"[\u0400-\u052f]")
+_CYRILLIC_RE = re.compile(r"[\u0400-\u052f]+")
 _NON_PUBLIC_PATTERNS = (
     re.compile(r"\b(?:Daily Practice|Hramatka|Atlas)\b", re.IGNORECASE),
     re.compile(r"\b(?:Codex CLI|operator routing|fleet[- ]comms)\b", re.IGNORECASE),
@@ -111,28 +111,32 @@ def _unclosed_fence_findings(tokens: list[Token], source_lines: list[str], path:
     return findings
 
 
-def _cyrillic_word(fragment: str, position: int) -> str:
-    start = position
-    end = position + 1
-    while start > 0 and _CYRILLIC_RE.fullmatch(fragment[start - 1]):
-        start -= 1
-    while end < len(fragment) and _CYRILLIC_RE.fullmatch(fragment[end]):
-        end += 1
-    return fragment[start:end]
+def _nth_index(text: str, needle: str, occurrence: int) -> int:
+    """Return the zero-based offset of one exact occurrence, or ``-1``."""
+
+    start = 0
+    for _ in range(occurrence + 1):
+        index = text.find(needle, start)
+        if index < 0:
+            return -1
+        start = index + len(needle)
+    return index
 
 
 def _source_location(
     fragment: str,
     position: int,
+    needle: str,
     span: tuple[int, int],
     source_lines: list[str],
 ) -> tuple[int, int, str]:
-    """Map a rendered Cyrillic fragment back to its source line."""
+    """Map an exact rendered-text match back to its source line."""
 
     start_line, end_line = span
     relative_line = fragment[:position].count("\n")
     preferred_line = min(start_line + relative_line, max(start_line, end_line - 1))
-    word = _cyrillic_word(fragment, position)
+    fragment_line_start = fragment.rfind("\n", 0, position) + 1
+    occurrence = fragment[fragment_line_start:position].count(needle)
     candidate_lines = [preferred_line, *range(start_line, end_line)]
 
     seen: set[int] = set()
@@ -140,7 +144,7 @@ def _source_location(
         if line_index in seen or not (0 <= line_index < len(source_lines)):
             continue
         seen.add(line_index)
-        column = source_lines[line_index].find(word)
+        column = _nth_index(source_lines[line_index], needle, occurrence)
         if column >= 0:
             return line_index + 1, column + 1, source_lines[line_index].strip()
 
@@ -156,11 +160,11 @@ def scan_text(text: str, path: Path = Path("<memory>")) -> list[Finding]:
     findings = _unclosed_fence_findings(tokens, source_lines, path)
 
     for fragment, span in _visible_fragments(tokens, (0, len(source_lines))):
-        cyrillic_match = _CYRILLIC_RE.search(fragment)
-        if cyrillic_match is not None:
+        for cyrillic_match in _CYRILLIC_RE.finditer(fragment):
             line, column, excerpt = _source_location(
                 fragment,
                 cyrillic_match.start(),
+                cyrillic_match.group(0),
                 span,
                 source_lines,
             )
@@ -174,24 +178,23 @@ def scan_text(text: str, path: Path = Path("<memory>")) -> list[Finding]:
             )
 
         for pattern in _NON_PUBLIC_PATTERNS:
-            non_public_match = pattern.search(fragment)
-            if non_public_match is None:
-                continue
-            line, column, excerpt = _source_location(
-                fragment,
-                non_public_match.start(),
-                span,
-                source_lines,
-            )
-            findings.append(
-                Finding(
-                    path=path,
-                    line=line,
-                    column=column,
-                    excerpt=excerpt,
-                    message="Internal project terminology is not allowed in public release prose",
+            for non_public_match in pattern.finditer(fragment):
+                line, column, excerpt = _source_location(
+                    fragment,
+                    non_public_match.start(),
+                    non_public_match.group(0),
+                    span,
+                    source_lines,
                 )
-            )
+                findings.append(
+                    Finding(
+                        path=path,
+                        line=line,
+                        column=column,
+                        excerpt=excerpt,
+                        message="Internal project terminology is not allowed in public release prose",
+                    )
+                )
 
     return sorted(set(findings))
 

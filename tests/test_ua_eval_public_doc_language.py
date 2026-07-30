@@ -20,10 +20,10 @@ def test_rejects_hybrid_running_prose() -> None:
 
     findings = scan_text(text)
 
-    assert len(findings) == 1
-    assert findings[0].line == 3
-    assert findings[0].column == 7
-    assert "Smoke спочатку" in findings[0].excerpt
+    assert len(findings) == 2
+    assert [finding.line for finding in findings] == [3, 3]
+    assert [finding.column for finding in findings] == [7, 16]
+    assert all("Smoke спочатку" in finding.excerpt for finding in findings)
 
 
 def test_allows_ukrainian_only_in_explicit_code() -> None:
@@ -89,7 +89,7 @@ def test_rejects_visible_markdown_formatting_and_link_labels() -> None:
 
     findings = scan_text(text)
 
-    assert [finding.line for finding in findings] == [1, 2]
+    assert [finding.line for finding in findings] == [1, 2, 2]
 
 
 def test_rejects_internal_project_terms_in_running_prose() -> None:
@@ -98,7 +98,34 @@ def test_rejects_internal_project_terms_in_running_prose() -> None:
     findings = scan_text(text)
 
     assert len(findings) == 3
+    assert [finding.column for finding in findings] == [
+        text.index("issue") + 1,
+        text.index("Hramatka") + 1,
+        text.index("canaries") + 1,
+    ]
     assert all("Internal project terminology" in finding.message for finding in findings)
+
+
+def test_rejects_every_repeated_internal_term_in_one_fragment() -> None:
+    text = "Atlas notes mention Atlas again.\n"
+
+    findings = scan_text(text)
+
+    assert len(findings) == 2
+    assert [finding.column for finding in findings] == [
+        text.index("Atlas") + 1,
+        text.rindex("Atlas") + 1,
+    ]
+
+
+def test_reports_multiline_internal_term_on_its_source_line() -> None:
+    text = "Public release prose continues here.\nHramatka is an internal product name.\n"
+
+    findings = scan_text(text)
+
+    assert len(findings) == 1
+    assert findings[0].line == 2
+    assert findings[0].column == 1
 
 
 def test_allows_internal_looking_tokens_only_as_code_evidence() -> None:
