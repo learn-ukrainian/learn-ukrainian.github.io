@@ -54,6 +54,29 @@ RESTIC_EXCLUDES=()
 LEGACY_EXCLUDES=()
 BACKUP_PATHS=()
 
+write_restic_gate_receipt() {
+  local snapshot_id=$1
+  local mirror_root="$SOURCE/lexicon/runner-mirror"
+  local git_sha
+
+  # Most backups have no runner mirror. Do not create unrelated data paths for
+  # them; when a mirror exists, failure to write its live gate receipt is fatal.
+  [[ -e "$mirror_root" ]] || return 0
+  [[ ! -L "$mirror_root" && -d "$mirror_root" ]] ||
+    die "Runner mirror root must be a real directory: $mirror_root"
+  [[ -x "$REPO_ROOT/.venv/bin/python" ]] ||
+    die "Runner mirror receipt writer requires $REPO_ROOT/.venv/bin/python"
+  git_sha="$(git -C "$PROJECT_ROOT" rev-parse HEAD)"
+  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/lexicon/runner/durable_mirror.py" \
+    write-restic-gate-receipt \
+    --mirror-root "$mirror_root" \
+    --restic-snapshot-id "$snapshot_id" \
+    --host "$BACKUP_HOST" \
+    --git-sha "$git_sha" \
+    --mirror-root-relative-to-data "lexicon/runner-mirror" ||
+    die "Could not write the runner mirror restic gate receipt after backup."
+}
+
 usage() {
   cat <<'EOF'
 Usage:
@@ -792,7 +815,7 @@ prepare_staging_tree() {
 
 run_backup() {
   local execute=$1
-  local backup_root
+  local backup_root backup_output snapshot_id
 
   validate_environment
   validate_source
@@ -831,15 +854,22 @@ run_backup() {
   backup_root="$STAGED_ROOT/data"
   build_restic_excludes "$backup_root"
   info "Creating encrypted, versioned restic snapshot."
+  backup_output="$STAGE_DIR/restic-backup.jsonl"
   (
     cd "$STAGED_ROOT"
     restic_repository_command backup "${BACKUP_PATHS[@]}" \
       --host "$BACKUP_HOST" \
       --tag "$BACKUP_TAG" \
+      --json \
       "${RESTIC_EXCLUDES[@]}"
-  )
+  ) | tee "$backup_output"
+  if ! snapshot_id="$(jq -er 'select(.message_type == "summary") | .snapshot_id // empty' "$backup_output")" ||
+    [[ ! "$snapshot_id" =~ ^[0-9a-f]{64}$ ]]; then
+    die "Restic backup completed without a valid snapshot ID; refusing to claim runner-mirror durability."
+  fi
   info "Checking repository metadata after backup."
   restic_repository_command check
+  write_restic_gate_receipt "$snapshot_id"
   info "Backup and repository check complete."
 }
 

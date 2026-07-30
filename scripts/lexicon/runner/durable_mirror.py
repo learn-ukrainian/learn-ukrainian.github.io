@@ -34,11 +34,15 @@ import sys
 import time
 from collections.abc import Sequence
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 MANIFEST_NAME = "manifest.json"
 MANIFEST_SCHEMA_VERSION = 1
+RESTIC_GATE_RECEIPT_NAME = "RESTIC-GATE-RECEIPT.json"
+RESTIC_GATE_RECEIPT_SCHEMA = "atlas-runner-restic-gate-receipt"
+RESTIC_GATE_RECEIPT_SCHEMA_VERSION = 1
 IGNORED_DIR_NAMES = {"__pycache__"}
 IGNORED_FILE_NAMES = {".DS_Store"}
 IGNORED_SUFFIXES = {".pid", ".lock"}
@@ -130,6 +134,133 @@ def read_manifest(mirror_dir: Path) -> dict[str, Any]:
     return payload
 
 
+def _utc_now() -> str:
+    return datetime.now(UTC).isoformat(timespec="microseconds").replace("+00:00", "Z")
+
+
+def _parse_utc_timestamp(value: Any, *, field_name: str) -> float:
+    if not isinstance(value, str):
+        raise DurableMirrorError(f"restic gate receipt has invalid {field_name}={value!r}")
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise DurableMirrorError(f"restic gate receipt has invalid {field_name}={value!r}") from exc
+    if parsed.tzinfo is None:
+        raise DurableMirrorError(f"restic gate receipt has invalid {field_name}={value!r}")
+    timestamp = parsed.timestamp()
+    if not math.isfinite(timestamp):
+        raise DurableMirrorError(f"restic gate receipt has non-finite {field_name}={value!r}")
+    return timestamp
+
+
+def _manifest_fingerprint(mirror_dir: Path, manifest: dict[str, Any]) -> dict[str, Any]:
+    """Return the stable fields a restic receipt binds for one mirror."""
+    manifest_path = mirror_dir / MANIFEST_NAME
+    try:
+        file_count = int(manifest["file_count"])
+        generated_at = float(manifest["generated_at"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise DurableMirrorError(f"cannot fingerprint invalid mirror manifest at {manifest_path}") from exc
+    if file_count < 0 or not math.isfinite(generated_at):
+        raise DurableMirrorError(f"cannot fingerprint invalid mirror manifest at {manifest_path}")
+    return {
+        "manifest_sha256": _sha256_file(manifest_path),
+        "generated_at": generated_at,
+        "file_count": file_count,
+    }
+
+
+def write_restic_gate_receipt(
+    mirror_root: Path,
+    *,
+    restic_snapshot_id: str,
+    host: str,
+    git_sha: str,
+    mirror_root_relative_to_data: str = "lexicon/runner-mirror",
+) -> Path:
+    """Record manifests covered by a completed restic snapshot, atomically.
+
+    This receipt is deliberately local. It lets a pre-wipe gate prove that a
+    current mirror was included in a successful restic backup without access
+    to restic credentials or its remote repository.
+    """
+    if not restic_snapshot_id or not isinstance(restic_snapshot_id, str):
+        raise DurableMirrorError("restic gate receipt requires a restic snapshot id")
+    if not host or not isinstance(host, str):
+        raise DurableMirrorError("restic gate receipt requires a host label")
+    if not git_sha or not isinstance(git_sha, str):
+        raise DurableMirrorError("restic gate receipt requires a git sha")
+    if mirror_root.is_symlink() or not mirror_root.is_dir():
+        raise DurableMirrorError(f"restic gate mirror root must be a real directory: {mirror_root}")
+
+    mirrors: dict[str, dict[str, Any]] = {}
+    for candidate in sorted(mirror_root.iterdir()):
+        if candidate.is_symlink():
+            raise DurableMirrorError(f"symlink not allowed in restic gate mirror root: {candidate}")
+        if not candidate.is_dir() or not (candidate / MANIFEST_NAME).is_file():
+            continue
+        mirrors[candidate.name] = _manifest_fingerprint(candidate, read_manifest(candidate))
+
+    receipt = {
+        "schema": RESTIC_GATE_RECEIPT_SCHEMA,
+        "schema_version": RESTIC_GATE_RECEIPT_SCHEMA_VERSION,
+        "created_at_utc": _utc_now(),
+        "restic_snapshot_id": restic_snapshot_id,
+        "host": host,
+        "git_sha": git_sha,
+        "mirror_root_relative_to_data": mirror_root_relative_to_data,
+        "mirrors": mirrors,
+    }
+    receipt_path = mirror_root / RESTIC_GATE_RECEIPT_NAME
+    temp_path = receipt_path.with_suffix(".json.tmp")
+    temp_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temp_path.replace(receipt_path)
+    return receipt_path
+
+
+def _require_restic_gate_receipt(mirror_dir: Path, manifest: dict[str, Any]) -> None:
+    receipt_path = mirror_dir.parent / RESTIC_GATE_RECEIPT_NAME
+    if receipt_path.is_symlink() or not receipt_path.is_file():
+        raise DurableMirrorError(
+            f"no restic gate receipt for durable mirror at {mirror_dir}; "
+            "run `./scripts/backup-data.sh backup --execute` after snapshot"
+        )
+    try:
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise DurableMirrorError(f"unreadable restic gate receipt at {receipt_path}: {exc}") from exc
+    if not isinstance(receipt, dict) or receipt.get("schema") != RESTIC_GATE_RECEIPT_SCHEMA:
+        raise DurableMirrorError(f"{receipt_path} is not a restic gate receipt")
+    if receipt.get("schema_version") != RESTIC_GATE_RECEIPT_SCHEMA_VERSION:
+        raise DurableMirrorError(f"{receipt_path} has unsupported schema_version {receipt.get('schema_version')!r}")
+    created_at = _parse_utc_timestamp(receipt.get("created_at_utc"), field_name="created_at_utc")
+    snapshot_id = receipt.get("restic_snapshot_id")
+    if (
+        not isinstance(snapshot_id, str)
+        or len(snapshot_id) != 64
+        or any(c not in "0123456789abcdef" for c in snapshot_id)
+    ):
+        raise DurableMirrorError(f"{receipt_path} has invalid restic_snapshot_id")
+    mirrors = receipt.get("mirrors")
+    if not isinstance(mirrors, dict):
+        raise DurableMirrorError(f"{receipt_path} has invalid mirrors map")
+    recorded = mirrors.get(mirror_dir.name)
+    if not isinstance(recorded, dict):
+        raise DurableMirrorError(f"{receipt_path} does not cover mirror {mirror_dir.name!r}")
+
+    current = _manifest_fingerprint(mirror_dir, manifest)
+    if created_at < current["generated_at"]:
+        raise DurableMirrorError(
+            f"{receipt_path} predates the current mirror manifest; "
+            "run `./scripts/backup-data.sh backup --execute` after snapshot"
+        )
+    for fingerprint_field, value in current.items():
+        if recorded.get(fingerprint_field) != value:
+            raise DurableMirrorError(
+                f"{receipt_path} does not cover the current mirror manifest ({fingerprint_field} mismatch); "
+                "run `./scripts/backup-data.sh backup --execute` after snapshot"
+            )
+
 
 def _safe_mirror_rel_path(mirror_dir: Path, rel_path: str) -> Path:
     """Resolve a manifest path only if it stays inside ``mirror_dir``."""
@@ -167,7 +298,9 @@ def verify_manifest(manifest: dict[str, Any], mirror_dir: Path) -> VerifyResult:
             mismatched.append(rel_path)
     on_disk = {path.relative_to(mirror_dir).as_posix() for path in _iter_files(mirror_dir)}
     extra = sorted(on_disk - expected_paths)
-    return VerifyResult(ok=not missing and not mismatched and not extra, missing=missing, mismatched=mismatched, extra=extra)
+    return VerifyResult(
+        ok=not missing and not mismatched and not extra, missing=missing, mismatched=mismatched, extra=extra
+    )
 
 
 def sync_source_to_mirror(source: str, mirror_dir: Path, *, dry_run: bool = False) -> None:
@@ -192,7 +325,6 @@ def sync_source_to_mirror(source: str, mirror_dir: Path, *, dry_run: bool = Fals
         cmd.append("--dry-run")
     cmd.extend([source_arg, dest_arg])
     subprocess.run(cmd, check=True)
-
 
 
 def _is_remote_rsync_source(source: str) -> bool:
@@ -292,10 +424,7 @@ def require_durable(mirror_dir: Path, *, max_age_hours: float = DEFAULT_MAX_AGE_
     if len(files) == 0 or file_count == 0:
         raise DurableMirrorError(f"durable mirror at {mirror_dir} is empty")
     if file_count != len(files):
-        raise DurableMirrorError(
-            f"durable mirror at {mirror_dir} file_count mismatch "
-            f"({file_count} != {len(files)})"
-        )
+        raise DurableMirrorError(f"durable mirror at {mirror_dir} file_count mismatch ({file_count} != {len(files)})")
     try:
         generated_at = float(manifest["generated_at"])
     except (KeyError, TypeError, ValueError) as exc:
@@ -309,9 +438,7 @@ def require_durable(mirror_dir: Path, *, max_age_hours: float = DEFAULT_MAX_AGE_
     now = time.time()
     # Reject future-dated manifests (clock skew / corruption); small 5m skew tolerance.
     if generated_at > now + 300:
-        raise DurableMirrorError(
-            f"durable mirror at {mirror_dir} has future generated_at={generated_at} (now={now})"
-        )
+        raise DurableMirrorError(f"durable mirror at {mirror_dir} has future generated_at={generated_at} (now={now})")
     age_hours = max(0.0, now - generated_at) / 3600.0
     if age_hours > max_age_hours:
         raise DurableMirrorError(
@@ -326,6 +453,7 @@ def require_durable(mirror_dir: Path, *, max_age_hours: float = DEFAULT_MAX_AGE_
         raise DurableMirrorError(
             f"durable mirror at {mirror_dir} is empty — refusing to treat an empty mirror as durable"
         )
+    _require_restic_gate_receipt(mirror_dir, manifest)
     return manifest
 
 
@@ -362,6 +490,22 @@ def _cmd_require(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_write_restic_gate_receipt(args: argparse.Namespace) -> int:
+    try:
+        receipt_path = write_restic_gate_receipt(
+            args.mirror_root,
+            restic_snapshot_id=args.restic_snapshot_id,
+            host=args.host,
+            git_sha=args.git_sha,
+            mirror_root_relative_to_data=args.mirror_root_relative_to_data,
+        )
+    except DurableMirrorError as exc:
+        print(f"FAILED: {exc}", file=sys.stderr)
+        return 2
+    print(f"wrote restic gate receipt: {receipt_path}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -370,7 +514,9 @@ def build_parser() -> argparse.ArgumentParser:
     snap.add_argument("--source", required=True, help="Local path or user@host:/path to mirror from")
     snap.add_argument("--mirror-dir", type=Path, required=True)
     snap.add_argument("--dry-run", action="store_true", help="rsync --dry-run; do not write a manifest")
-    snap.add_argument("--allow-live", action="store_true", help="allow snapshot while enrich-driver.pid is present (best-effort)")
+    snap.add_argument(
+        "--allow-live", action="store_true", help="allow snapshot while enrich-driver.pid is present (best-effort)"
+    )
     snap.set_defaults(func=_cmd_snapshot)
 
     verify = subparsers.add_parser("verify", help="recompute checksums and compare against manifest.json")
@@ -381,6 +527,17 @@ def build_parser() -> argparse.ArgumentParser:
     require.add_argument("--mirror-dir", type=Path, required=True)
     require.add_argument("--max-age-hours", type=float, default=DEFAULT_MAX_AGE_HOURS)
     require.set_defaults(func=_cmd_require)
+
+    receipt = subparsers.add_parser(
+        "write-restic-gate-receipt",
+        help="write a local receipt binding runner manifests to a completed restic snapshot",
+    )
+    receipt.add_argument("--mirror-root", type=Path, required=True)
+    receipt.add_argument("--restic-snapshot-id", required=True)
+    receipt.add_argument("--host", required=True)
+    receipt.add_argument("--git-sha", required=True)
+    receipt.add_argument("--mirror-root-relative-to-data", default="lexicon/runner-mirror")
+    receipt.set_defaults(func=_cmd_write_restic_gate_receipt)
 
     return parser
 

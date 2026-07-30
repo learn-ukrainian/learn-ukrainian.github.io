@@ -84,10 +84,12 @@ covers it:
 ATLAS_RUNNER_HOST=ops@<runner-host> scripts/lexicon/runner/mirror_20k_runner.sh
 ```
 
-Before any cleanup, fail closed on a stale/missing/corrupt mirror instead of
-guessing:
+Before any cleanup, execute the full durability order — **snapshot → restic
+backup → receipt gate → wipe**. The gate rejects a stale, missing, corrupt,
+or not-yet-backed-up mirror instead of guessing:
 
 ```bash
+./scripts/backup-data.sh backup --execute
 scripts/lexicon/runner/mirror_20k_runner.sh --require-only
 ```
 

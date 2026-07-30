@@ -6,7 +6,7 @@
 #
 # Usage:
 #   scripts/lexicon/runner/mirror_20k_runner.sh                 # sync + snapshot
-#   scripts/lexicon/runner/mirror_20k_runner.sh --require-only   # just check freshness
+#   scripts/lexicon/runner/mirror_20k_runner.sh --require-only   # verify a backed-up mirror
 #
 # Env overrides:
 #   ATLAS_RUNNER_HOST  ssh destination, e.g. ops@atlas-runner.example (required to sync)
@@ -39,3 +39,4 @@ $DURABLE_MIRROR snapshot --source "$SOURCE" --mirror-dir "$MIRROR_DIR"
 echo
 echo "mirror refreshed. Push it into the restic backup bus before any cleanup:"
 echo "  cd $REPO && ./scripts/backup-data.sh backup && ./scripts/backup-data.sh backup --execute"
+echo "  $0 --require-only"

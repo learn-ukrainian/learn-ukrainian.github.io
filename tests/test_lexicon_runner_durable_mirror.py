@@ -16,6 +16,7 @@ from scripts.lexicon.runner.durable_mirror import (
     snapshot,
     verify_manifest,
     write_manifest,
+    write_restic_gate_receipt,
 )
 
 
@@ -29,6 +30,15 @@ def _populate(root: Path) -> None:
     (root / "enrich.log").write_text("noop\n", encoding="utf-8")
     (root / "enrich-driver.pid").write_text("12345\n", encoding="utf-8")
     (root / ".DS_Store").write_bytes(b"\x00")
+
+
+def _write_current_restic_receipt(mirror: Path) -> None:
+    write_restic_gate_receipt(
+        mirror.parent,
+        restic_snapshot_id="a" * 64,
+        host="teacher",
+        git_sha="b" * 40,
+    )
 
 
 def test_build_manifest_excludes_pid_and_ds_store(tmp_path: Path) -> None:
@@ -148,9 +158,33 @@ def test_require_durable_succeeds_for_fresh_verified_mirror(tmp_path: Path) -> N
     mirror = tmp_path / "mirror"
     _populate(source)
     snapshot(str(source), mirror, allow_live=True)
+    _write_current_restic_receipt(mirror)
 
     manifest = require_durable(mirror)
     assert manifest["file_count"] == 4
+
+
+def test_require_durable_fails_without_restic_receipt(tmp_path: Path) -> None:
+    source = tmp_path / "work"
+    mirror = tmp_path / "mirror-root" / "run-20k"
+    _populate(source)
+    snapshot(str(source), mirror, allow_live=True)
+
+    with pytest.raises(DurableMirrorError, match="no restic gate receipt"):
+        require_durable(mirror)
+
+
+def test_require_durable_fails_when_manifest_changes_after_receipt(tmp_path: Path) -> None:
+    source = tmp_path / "work"
+    mirror = tmp_path / "mirror-root" / "run-20k"
+    _populate(source)
+    snapshot(str(source), mirror, allow_live=True)
+    _write_current_restic_receipt(mirror)
+    (source / "ledger.sqlite").write_bytes(b"updated-ledger-bytes")
+    snapshot(str(source), mirror, allow_live=True)
+
+    with pytest.raises(DurableMirrorError, match=r"predates|does not cover the current mirror manifest"):
+        require_durable(mirror)
 
 
 def test_cli_snapshot_then_verify_then_require(tmp_path: Path) -> None:
@@ -160,6 +194,7 @@ def test_cli_snapshot_then_verify_then_require(tmp_path: Path) -> None:
 
     assert main(["snapshot", "--source", str(source), "--mirror-dir", str(mirror), "--allow-live"]) == 0
     assert main(["verify", "--mirror-dir", str(mirror)]) == 0
+    _write_current_restic_receipt(mirror)
     assert main(["require", "--mirror-dir", str(mirror)]) == 0
 
 
@@ -211,7 +246,7 @@ def test_verify_rejects_path_escape(tmp_path: Path) -> None:
     manifest = read_manifest(mirror)
     manifest["files"].append({"path": "../outside.txt", "bytes": 1, "sha256": "0" * 64})
     write_manifest(manifest, mirror)
-    with pytest.raises(DurableMirrorError, match="unsafe|escape"):
+    with pytest.raises(DurableMirrorError, match=r"unsafe|escape"):
         verify_manifest(read_manifest(mirror), mirror)
 
 

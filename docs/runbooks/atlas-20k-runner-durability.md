@@ -50,7 +50,8 @@ open-dataset export, not for private durability of in-progress runner state.
   --mirror-dir data/lexicon/runner-mirror/run-20k
 
 # Fail closed unless the mirror is present, non-empty, internally verified,
-# and newer than --max-age-hours (default 24). Exit 2 on any failure:
+# newer than --max-age-hours (default 24), and covered by the local restic
+# receipt written after a successful backup. Exit 2 on any failure:
 .venv/bin/python scripts/lexicon/runner/durable_mirror.py require \
   --mirror-dir data/lexicon/runner-mirror/run-20k
 ```
@@ -85,14 +86,19 @@ scripts/lexicon/runner/mirror_20k_runner.sh --require-only   # gate only, no syn
    ```
 
 3. Before touching, cleaning, or wiping `$WORK_DIR` on the VPS, or before
-   deleting the local `data/lexicon/runner-mirror/` copy, gate on a fresh
-   verified mirror:
+   deleting the local `data/lexicon/runner-mirror/` copy, gate on a fresh,
+   verified mirror covered by the successful restic backup:
 
    ```bash
    scripts/lexicon/runner/mirror_20k_runner.sh --require-only
    ```
 
-   A nonzero exit means: do not proceed. Re-sync (step 1) and re-check.
+   A nonzero exit means: do not proceed. Re-run the full order — **snapshot →
+   `backup --execute` → `--require-only` → wipe** — so the local
+   `RESTIC-GATE-RECEIPT.json` binds the current `manifest.json` checksum to
+   the restic snapshot. The receipt has no repository location, password, or
+   credentials; it records only the snapshot ID, host label, Git SHA, time,
+   and per-mirror manifest fingerprint.
 
 ## Restore drill
 
