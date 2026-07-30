@@ -29,7 +29,8 @@ STATE_SCHEMA = "ua_eval_model_batch_state.v1"
 CONFIG_SCHEMA = "ua_eval_model_run_config.v1"
 METADATA_SCHEMA = "ua_eval_model_run_metadata.v1"
 RUNNER_VERSION = "ua_eval_provider_neutral_batch_runner.v1.1"
-TRANSPORT_PROTOCOL = "json_object_with_unicode_escaped_quotes.v1"
+JSON_TRANSPORT_PROTOCOL = "json_object_with_unicode_escaped_quotes.v1"
+TAGGED_TRANSPORT_PROTOCOL = "tagged_text_blocks.v1"
 EXPECTED_REQUEST_COUNT = 677
 GOLD_FIELDS = frozenset(
     {
@@ -101,6 +102,12 @@ JSON_FENCE = re.compile(
     r"\A```(?:json)?[ \t]*\r?\n(?P<body>.*?)(?:\r?\n)?```[ \t]*\Z",
     re.DOTALL | re.IGNORECASE,
 )
+TAGGED_FENCE = re.compile(
+    r"\A```(?:text|plaintext)?[ \t]*\r?\n(?P<body>.*?)(?:\r?\n)?```[ \t]*\Z",
+    re.DOTALL | re.IGNORECASE,
+)
+TAGGED_HEADER = re.compile(r"<<<UA-EVAL-RESPONSE item_id=(?P<item_id>[A-Za-z0-9_-]+)>>>\n")
+TAGGED_END = "\n<<<UA-EVAL-END>>>"
 
 
 class RunnerError(ValueError):
@@ -289,11 +296,34 @@ def _temporary_parent() -> Path:
     raise RunnerError("no scratch directory is available outside the repository")
 
 
-def _batch_prompt(instruction: str, batch: Sequence[Mapping[str, str]]) -> str:
+def _transport_protocol(response_format: str) -> str:
+    if response_format == "json":
+        return JSON_TRANSPORT_PROTOCOL
+    if response_format == "tagged":
+        return TAGGED_TRANSPORT_PROTOCOL
+    raise RunnerError("response format must be json or tagged")
+
+
+def _batch_prompt(
+    instruction: str,
+    batch: Sequence[Mapping[str, str]],
+    response_format: str = "json",
+) -> str:
     payload = {
         "instruction": instruction,
         "records": [{"item_id": row["item_id"], "source": row["source"]} for row in batch],
     }
+    if response_format == "tagged":
+        return (
+            "Return one plain-text block for every supplied item_id in the same "
+            "order, using exactly this form:\n"
+            "<<<UA-EVAL-RESPONSE item_id=THE_EXACT_ITEM_ID>>>\n"
+            "THE_CORRECTED_SENTENCE\n"
+            "<<<UA-EVAL-END>>>\n"
+            "Do not escape sentence characters. Do not add fields, explanations, "
+            "or code fences.\n\n" + _canonical_json(payload)
+        )
+    _transport_protocol(response_format)
     return (
         "Return exactly one JSON object with exactly this shape: "
         '{"responses":[{"item_id":"...","raw_response":"..."}]}. '
@@ -374,11 +404,65 @@ def _validate_provider_payload(
     return normalized
 
 
+def _ndjson_assistant_text(raw_text: str) -> str:
+    assistant_text: str | None = None
+    try:
+        for line in raw_text.splitlines():
+            if line.strip():
+                found = _assistant_text_from_event(json.loads(line))
+                if found is not None:
+                    assistant_text = found
+    except json.JSONDecodeError:
+        raise RunnerError("provider response is not a direct response or NDJSON event stream") from None
+    if assistant_text is None:
+        raise RunnerError("provider response has no assistant text event")
+    return assistant_text
+
+
+def _parse_tagged_response(text: str, expected_ids: Sequence[str]) -> list[dict[str, str]]:
+    candidate = text.strip()
+    if candidate.startswith("```"):
+        match = TAGGED_FENCE.fullmatch(candidate)
+        if match is None:
+            raise RunnerError("provider response contains a non-exact code fence")
+        candidate = match.group("body")
+    responses: list[dict[str, str]] = []
+    position = 0
+    while position < len(candidate):
+        match = TAGGED_HEADER.match(candidate, position)
+        if match is None:
+            raise RunnerError("tagged response has an invalid block header")
+        content_start = match.end()
+        content_end = candidate.find(TAGGED_END, content_start)
+        if content_end < 0:
+            raise RunnerError("tagged response has an unterminated block")
+        responses.append(
+            {
+                "item_id": match.group("item_id"),
+                "raw_response": candidate[content_start:content_end],
+            }
+        )
+        position = content_end + len(TAGGED_END)
+        if position < len(candidate):
+            if candidate[position] != "\n":
+                raise RunnerError("tagged response has text between blocks")
+            position += 1
+    return _validate_provider_payload({"responses": responses}, expected_ids)
+
+
 def parse_provider_response(
     raw_text: str,
     expected_ids: Sequence[str],
+    response_format: str = "json",
 ) -> list[dict[str, str]]:
-    """Accept direct JSON or the final assistant text in an NDJSON event stream."""
+    """Accept a direct response or final assistant text from an NDJSON stream."""
+
+    _transport_protocol(response_format)
+    if response_format == "tagged":
+        candidate = raw_text
+        if not candidate.lstrip().startswith(("<<<UA-EVAL-RESPONSE", "```")):
+            candidate = _ndjson_assistant_text(raw_text)
+        return _parse_tagged_response(candidate, expected_ids)
 
     try:
         payload = _parse_exact_object(raw_text)
@@ -387,18 +471,7 @@ def parse_provider_response(
     except RunnerError:
         payload = None
     if payload is None or set(payload) != {"responses"}:
-        assistant_text: str | None = None
-        try:
-            for line in raw_text.splitlines():
-                if line.strip():
-                    found = _assistant_text_from_event(json.loads(line))
-                    if found is not None:
-                        assistant_text = found
-        except json.JSONDecodeError:
-            raise RunnerError("provider response is not a JSON response or NDJSON event stream") from None
-        if assistant_text is None:
-            raise RunnerError("provider response has no assistant text event")
-        payload = _parse_exact_object(assistant_text)
+        payload = _parse_exact_object(_ndjson_assistant_text(raw_text))
     return _validate_provider_payload(payload, expected_ids)
 
 
@@ -465,6 +538,7 @@ def _load_state(
     binding_sha256: str,
     batch_sha256: str,
     expected_ids: Sequence[str],
+    response_format: str,
 ) -> dict[str, Any]:
     try:
         state_text = path.read_text(encoding="utf-8")
@@ -496,7 +570,11 @@ def _load_state(
         or _sha256_text(state["raw_provider_output"]) != state["raw_provider_output_sha256"]
     ):
         raise RunnerError(f"completed state raw output mismatch: {path.name}")
-    parsed = parse_provider_response(state["raw_provider_output"], expected_ids)
+    parsed = parse_provider_response(
+        state["raw_provider_output"],
+        expected_ids,
+        response_format,
+    )
     if (
         state["responses"] != parsed
         or not isinstance(state["attempts"], int)
@@ -522,6 +600,7 @@ def _run_one_batch(
     environment: Mapping[str, str],
     state_dir: Path,
     binding_sha256: str,
+    response_format: str,
 ) -> dict[str, Any]:
     expected_ids = [row["item_id"] for row in batch]
     batch_sha256 = _sha256_text(_canonical_json(list(batch)))
@@ -532,9 +611,10 @@ def _run_one_batch(
             binding_sha256=binding_sha256,
             batch_sha256=batch_sha256,
             expected_ids=expected_ids,
+            response_format=response_format,
         )
 
-    prompt = _batch_prompt(instruction, batch)
+    prompt = _batch_prompt(instruction, batch, response_format)
     failures: list[dict[str, Any]] = []
     started_at = _now()
     for attempt in range(1, retries + 2):
@@ -574,7 +654,11 @@ def _run_one_batch(
             if result.returncode:
                 raise RunnerError(f"provider command returned nonzero status {result.returncode}")
             raw_output = result.stdout
-            responses = parse_provider_response(raw_output, expected_ids)
+            responses = parse_provider_response(
+                raw_output,
+                expected_ids,
+                response_format,
+            )
             _write_acceptance_receipt(invocation_cwd, accepted=True)
             state = {
                 "schema_version": STATE_SCHEMA,
@@ -595,6 +679,7 @@ def _run_one_batch(
                 binding_sha256=binding_sha256,
                 batch_sha256=batch_sha256,
                 expected_ids=expected_ids,
+                response_format=response_format,
             )
         except (RunnerError, subprocess.TimeoutExpired) as exc:
             if invocation_cwd is not None and process_receipt is None:
@@ -647,11 +732,13 @@ def run(
     workers: int = 1,
     timeout: int = 1800,
     retries: int = 1,
+    response_format: str = "json",
 ) -> None:
     """Execute or resume a complete source-only model run."""
 
     if batch_size < 1 or workers < 1 or timeout < 1 or retries < 0 or prompt_mode not in {"argument", "stdin"}:
         raise RunnerError("batch, worker, timeout, retry, or prompt-mode bounds are invalid")
+    transport_protocol = _transport_protocol(response_format)
     header, requests, packet_sha256 = load_source_only_packet(requests_path)
     try:
         instruction = prompt_path.read_text(encoding="utf-8")
@@ -680,7 +767,8 @@ def run(
                 "command": command_hash,
                 "config": config_hash,
                 "runner_version": RUNNER_VERSION,
-                "transport_protocol": TRANSPORT_PROTOCOL,
+                "transport_protocol": transport_protocol,
+                "batch_size": batch_size,
             }
         )
     )
@@ -713,6 +801,7 @@ def run(
                 environment=environment,
                 state_dir=state_dir,
                 binding_sha256=binding_sha256,
+                response_format=response_format,
             )
             futures[future] = index
             return True
@@ -736,6 +825,7 @@ def run(
         responses = parse_provider_response(
             state["raw_provider_output"],
             expected_ids,
+            response_format,
         )
         raw_rows.append(
             {
@@ -775,7 +865,7 @@ def run(
         "request_packet_sha256": packet_sha256,
         "prompt_sha256": header["prompt_sha256"],
         "request_schema": REQUEST_SCHEMA,
-        "transport_protocol": TRANSPORT_PROTOCOL,
+        "transport_protocol": transport_protocol,
         "response_count": len(normalized),
         "response_ids_sha256": _sha256_text(_canonical_json(response_ids)),
         "raw_output_sha256": _sha256_text(raw_text),
@@ -792,7 +882,7 @@ def run(
         "failed_attempts": failed_attempts,
         "response_normalization": [
             "extract final assistant text from a recognized NDJSON event when needed",
-            "remove one exact optional JSON code fence before schema validation",
+            "remove one exact optional transport code fence before schema validation",
         ],
         "isolation": ("each provider invocation used a retained working directory outside the repository"),
     }
@@ -832,6 +922,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--timeout", type=int, default=1800)
     parser.add_argument("--retries", type=int, default=1)
+    parser.add_argument(
+        "--response-format",
+        choices=["json", "tagged"],
+        default="json",
+    )
     args = parser.parse_args(argv)
     try:
         run(
@@ -849,6 +944,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             workers=args.workers,
             timeout=args.timeout,
             retries=args.retries,
+            response_format=args.response_format,
         )
     except (RunnerError, OSError) as exc:
         print(f"error: {exc}", file=sys.stderr)
