@@ -17,7 +17,6 @@ from collections import Counter
 from collections.abc import Iterable, Mapping
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 import yaml
 
