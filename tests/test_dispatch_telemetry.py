@@ -340,7 +340,7 @@ def test_resolve_dispatch_start_telemetry_kimi_resolves_binary(tmp_path, monkeyp
 
 def test_kimicc_telemetry_records_the_headless_k3_route(tmp_path):
     plan = InvocationPlan(
-        cmd=["kimicc_headless.sh", "--model", "k3"],
+        cmd=["kimicc_headless.sh", "--model", "k3", "--effort", "high"],
         cwd=tmp_path,
         metadata={"harness": "kimicc", "kimicc_alias": "k3", "claude_bin": "claude"},
     )
@@ -359,12 +359,54 @@ def test_kimicc_telemetry_records_the_headless_k3_route(tmp_path):
             requested_effort=None,
         )
 
-    assert (at_dispatch.model, at_dispatch.effort) == ("k3", "max")
+    assert (at_dispatch.model, at_dispatch.effort) == ("k3", "high")
     assert (after_spawn.model, after_spawn.effort, after_spawn.cli_version) == (
         "k3",
-        "max",
+        "high",
         "2.1.220",
     )
+
+
+def test_kimicc_telemetry_prefers_explicit_effort_and_does_not_default_k2_7(tmp_path):
+    override_plan = InvocationPlan(
+        cmd=["kimicc_headless.sh", "--model", "k3", "--effort", "max"],
+        cwd=tmp_path,
+        metadata={"harness": "kimicc", "kimicc_alias": "k3", "claude_bin": "claude"},
+    )
+    k2_7_plan = InvocationPlan(
+        cmd=["kimicc_headless.sh", "--model", "k2.7"],
+        cwd=tmp_path,
+        metadata={"harness": "kimicc", "kimicc_alias": "k2.7", "claude_bin": "claude"},
+    )
+
+    with patch("agent_runtime.telemetry.claude_cli_version", return_value="2.1.220"):
+        at_dispatch = resolve_dispatch_start_telemetry(
+            agent_name="kimi",
+            requested_model="k3",
+            requested_effort="max",
+            harness="kimicc",
+        )
+        after_spawn = resolve_invocation_telemetry(
+            agent_name="kimi",
+            plan=override_plan,
+            requested_model=None,
+            requested_effort=None,
+        )
+        k2_7_dispatch = resolve_dispatch_start_telemetry(
+            agent_name="kimi",
+            requested_model="k2.7",
+            requested_effort=None,
+            harness="kimicc",
+        )
+        k2_7_after_spawn = resolve_invocation_telemetry(
+            agent_name="kimi",
+            plan=k2_7_plan,
+            requested_model=None,
+            requested_effort=None,
+        )
+
+    assert (at_dispatch.effort, after_spawn.effort) == ("max", "max")
+    assert (k2_7_dispatch.effort, k2_7_after_spawn.effort) == ("not-exposed", "not-exposed")
 
 
 def setup_function() -> None:

@@ -195,7 +195,9 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
         return None
     if agent_name == "kimi":
         if plan.metadata.get("harness") == "kimicc":
-            return "max" if plan.metadata.get("kimicc_alias") == "k3" else _NOT_EXPOSED
+            return _arg_after(plan.cmd, "--effort") or (
+                "high" if plan.metadata.get("kimicc_alias") == "k3" else _NOT_EXPOSED
+            )
         # K3 is always-max; the k2.7 coding models expose no effort knob.
         # Read the resolved model off the plan so telemetry never mislabels
         # an ignored caller request as effective (#5326 multi-model lane).
@@ -242,6 +244,7 @@ def _resolve_effort_from_defaults(
     agent_name: str,
     requested_effort: str | None,
     *,
+    requested_model: str | None = None,
     harness: str | None = None,
 ) -> str | None:
     # These CLIs do not expose a per-invocation effort value.  A deliberate
@@ -255,7 +258,9 @@ def _resolve_effort_from_defaults(
         return _hermes_configured_effort() or _NOT_EXPOSED
     if agent_name == "kimi":
         if harness == "kimicc":
-            return requested_effort if requested_effort else "max"
+            if requested_effort:
+                return requested_effort
+            return "high" if (requested_model or "k3") == "k3" else _NOT_EXPOSED
         # Without a plan the resolved model is unknowable (K3 is always-max,
         # the k2.7 models expose no effort knob) — report the honest marker
         # rather than guessing.
@@ -430,7 +435,12 @@ def resolve_dispatch_start_telemetry(
         _warn_unknown("model", agent_name, "no explicit override or readable default")
         model = _UNKNOWN
 
-    effort = _resolve_effort_from_defaults(agent_name, requested_effort, harness=harness)
+    effort = _resolve_effort_from_defaults(
+        agent_name,
+        requested_effort,
+        requested_model=requested_model,
+        harness=harness,
+    )
     if not effort:
         _warn_unknown("effort", agent_name, "no explicit override or readable default")
         effort = _UNKNOWN
@@ -462,6 +472,7 @@ def resolve_invocation_telemetry(
     effort = _resolve_effort_from_plan(agent_name, plan) or _resolve_effort_from_defaults(
         agent_name,
         requested_effort,
+        requested_model=requested_model,
     )
     if not effort:
         _warn_unknown("effort", agent_name, "invocation plan had no effort flag")

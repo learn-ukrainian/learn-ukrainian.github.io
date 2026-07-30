@@ -138,8 +138,12 @@ class KimiccHarness:
             cmd.extend(["--agent", str(tc["agent"])])
         if tc.get("max_budget_usd") is not None:
             cmd.extend(["--max-budget-usd", f"{float(tc['max_budget_usd']):.2f}"])
-        if effort:
-            cmd.extend(["--effort", effort])
+        # KimiCC, unlike native Kimi Code, routes through Claude Code and
+        # supports an invocation-scoped effort. K3's approved default is high;
+        # an explicit runtime request remains the effective child argv value.
+        effective_effort = effort or ("high" if route["kimicc_alias"] == "k3" else None)
+        if effective_effort:
+            cmd.extend(["--effort", effective_effort])
 
         return InvocationPlan(
             cmd=cmd,

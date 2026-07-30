@@ -248,10 +248,17 @@ kimicc_configure_route() {
   export CLAUDE_CODE_MAX_CONTEXT_TOKENS="$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS"
   export CLAUDE_CODE_AUTO_COMPACT_WINDOW="$LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS"
 
-  if [ "$MODEL_ALIAS" = "k3" ]; then
-    export CLAUDE_CODE_EFFORT_LEVEL="${KIMICC_EFFORT_LEVEL:-max}"
-  elif [ -n "${KIMICC_EFFORT_LEVEL:-}" ]; then
+  # KimiCC uses Claude Code's effort control, unlike native `kimi-code` where
+  # K3 is max-only. Keep the K3 default specific to this route and clear any
+  # inherited route state so K2.7 does not acquire a fabricated K3 setting.
+  unset CLAUDE_CODE_EFFORT_LEVEL
+  if [ -n "${KIMICC_EFFORT_LEVEL:-}" ]; then
     export CLAUDE_CODE_EFFORT_LEVEL="$KIMICC_EFFORT_LEVEL"
+  elif [ "$MODEL_ALIAS" = "k3" ]; then
+    export CLAUDE_CODE_EFFORT_LEVEL="high"
+  fi
+  if [ "${LAUNCHER_DRY_RUN:-0}" = "1" ]; then
+    printf 'KimiCC route: effort=%s\n' "${CLAUDE_CODE_EFFORT_LEVEL:-not-exposed}"
   fi
   # The interactive launcher reads this non-secret resolution note after the
   # helper returns; exporting also makes the shared helper's contract explicit.

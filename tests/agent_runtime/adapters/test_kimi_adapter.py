@@ -80,9 +80,53 @@ def test_kimicc_harness_is_opt_in_and_native_kimi_remains_default(tmp_path, monk
     assert native.cmd[0] == str(tmp_path / "kimi")
     assert kimicc.cmd[0].endswith("scripts/agent_runtime/kimicc_headless.sh")
     assert kimicc.cmd[kimicc.cmd.index("--model") + 1] == "k3"
+    assert kimicc.cmd[kimicc.cmd.index("--effort") + 1] == "high"
     assert kimicc.metadata["harness"] == "kimicc"
     assert kimicc.env_overrides["KIMICC_CLAUDE_BIN"] == str(claude)
     assert "CLAUDE_CONFIG_DIR" in kimicc.env_unsets
+
+
+def test_kimicc_harness_default_and_override_effort_are_concrete_child_argv(tmp_path, monkeypatch):
+    claude = tmp_path / "claude"
+    claude.write_text("#!/bin/sh\n", encoding="utf-8")
+    claude.chmod(0o755)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+
+    native_k3 = _build(tmp_path, monkeypatch, model="k3", effort="high")
+    default = KimiccHarness().build_invocation(
+        prompt="Inspect the target.",
+        mode="read-only",
+        cwd=tmp_path,
+        model="k3",
+        task_id="kimi-kimicc-default-effort",
+        session_id=None,
+        tool_config=None,
+    )
+    override = KimiccHarness().build_invocation(
+        prompt="Inspect the target.",
+        mode="read-only",
+        cwd=tmp_path,
+        model="k3",
+        task_id="kimi-kimicc-override-effort",
+        session_id=None,
+        tool_config=None,
+        effort="max",
+    )
+    k2_7 = KimiccHarness().build_invocation(
+        prompt="Inspect the target.",
+        mode="read-only",
+        cwd=tmp_path,
+        model="k2.7",
+        task_id="kimi-kimicc-k2-7-effort",
+        session_id=None,
+        tool_config=None,
+    )
+
+    assert KIMI_DEFAULT_EFFORT == "max"
+    assert "--effort" not in native_k3.cmd
+    assert default.cmd[default.cmd.index("--effort") + 1] == "high"
+    assert override.cmd[override.cmd.index("--effort") + 1] == "max"
+    assert "--effort" not in k2_7.cmd
 
 
 def test_kimicc_harness_uses_claude_stream_json_parser(tmp_path, monkeypatch):
