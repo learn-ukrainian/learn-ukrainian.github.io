@@ -75,6 +75,7 @@ def verify_admission_consistency(seed_rows: list[dict[str, Any]], admission_rows
     by_row = {row.get("seedRow"): row for row in admission_rows}
     if len(by_row) != len(admission_rows):
         raise ValueError("practice-admission.jsonl contains duplicate seedRow values")
+    seed_row_keys = {row.get("seedRow") for row in seed_rows}
     for row in seed_rows:
         seed_row = row.get("seedRow")
         ledger = by_row.get(seed_row)
@@ -86,6 +87,11 @@ def verify_admission_consistency(seed_rows: list[dict[str, Any]], admission_rows
             raise ValueError(f"seed row {seed_row}: practice flag disagrees between the two package files")
         if str(ledger.get("mode") or "") != str(admission.get("mode") or ""):
             raise ValueError(f"seed row {seed_row}: admission mode disagrees between the two package files")
+    extra_seed_rows = set(by_row) - seed_row_keys
+    if extra_seed_rows:
+        raise ValueError(
+            f"practice-admission.jsonl has seedRow(s) not in curated-seed.jsonl: {sorted(extra_seed_rows)}"
+        )
 
 
 def load_package_rows(package_root: Path) -> list[dict[str, Any]]:

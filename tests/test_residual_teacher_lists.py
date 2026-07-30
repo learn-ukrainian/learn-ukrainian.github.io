@@ -203,3 +203,31 @@ def test_verify_admission_consistency_detects_duplicate_admission_rows() -> None
 
     with pytest.raises(ValueError, match="duplicate seedRow"):
         residual.verify_admission_consistency(seed_rows, admission_rows)
+
+
+def test_verify_admission_consistency_detects_extra_admission_seed_row() -> None:
+    """practice-admission.jsonl carrying a seedRow absent from curated-seed.jsonl
+    means the package drifted between writes just as much as a missing row does
+    (#6065 F001) — the original check only looked one direction."""
+    seed_rows = [_seed_row(1, "Справедливий")]
+    admission_rows = [
+        {"seedRow": 1, "lemma": "Справедливий", "practice": True, "mode": "local_practice_private_teacher"},
+        {"seedRow": 2, "lemma": "Оренда", "practice": True, "mode": "local_practice_private_teacher"},
+    ]
+
+    with pytest.raises(ValueError, match=r"seedRow\(s\) not in curated-seed\.jsonl"):
+        residual.verify_admission_consistency(seed_rows, admission_rows)
+
+
+def test_load_package_rows_detects_extra_admission_seed_row(tmp_path: Path) -> None:
+    _write_jsonl_file(tmp_path / "curated-seed.jsonl", [_seed_row(1, "Справедливий")])
+    _write_jsonl_file(
+        tmp_path / "practice-admission.jsonl",
+        [
+            {"seedRow": 1, "lemma": "Справедливий", "practice": True, "mode": "local_practice_private_teacher"},
+            {"seedRow": 2, "lemma": "Оренда", "practice": True, "mode": "local_practice_private_teacher"},
+        ],
+    )
+
+    with pytest.raises(ValueError, match=r"seedRow\(s\) not in curated-seed\.jsonl"):
+        residual.load_package_rows(tmp_path)
