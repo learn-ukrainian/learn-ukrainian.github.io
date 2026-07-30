@@ -190,7 +190,10 @@ Persisted comparison evidence contains only target, outcome classes, parity,
 durations, token counts when exposed, and digests of correlation/idempotency
 values—never prompts, responses, raw identifiers, paths, sessions, commands,
 stderr, auth material, or tool data. The read-only Runtime dashboard aggregates
-that evidence; it cannot send or control ACPX traffic.
+that evidence; it cannot send or control ACPX traffic. The supporting native
+and shadow pilot-leg usage rows also suppress task/run/session identifiers,
+paths, telemetry labels, and stderr while retaining structured operational
+counts and outcomes.
 
 #### Safety and budgets (adapter contract)
 

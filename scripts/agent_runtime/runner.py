@@ -106,6 +106,9 @@ _MCP_TOOL_EVENT_RE = re.compile(
 )
 _MCP_TRANSPORT_FAILURE_RE = re.compile(r"ERROR\s+rmcp::transport::worker:")
 _MCP_FAILURE_URL_RE = re.compile(r"url \((?P<url>https?://[^)\s]+)\)")
+_PRIVACY_LIMITED_USAGE_ENTRYPOINTS = frozenset(
+    {"acpx-pilot-native", "acpx-pilot-shadow"}
+)
 
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.
@@ -682,10 +685,13 @@ def _build_usage_record(
     """Assemble the usage record dict per design doc § 4.5 schema."""
     # Ensure unbounded strings are capped so the JSON stays under POSIX PIPE_BUF (4KB)
     # to maintain atomic append guarantees in usage.py.
-    safe_cwd = str(cwd)[-250:] if cwd else ""
-    safe_task_id = task_id[:100] if task_id else None
-    safe_provider_session_id = session_id[:100] if session_id else None
-    telemetry_source = os.environ.get("LU_TELEMETRY_SOURCE")
+    privacy_limited = entrypoint in _PRIVACY_LIMITED_USAGE_ENTRYPOINTS
+    safe_cwd = None if privacy_limited else (str(cwd)[-250:] if cwd else "")
+    safe_task_id = None if privacy_limited else (task_id[:100] if task_id else None)
+    safe_provider_session_id = (
+        None if privacy_limited else (session_id[:100] if session_id else None)
+    )
+    telemetry_source = None if privacy_limited else os.environ.get("LU_TELEMETRY_SOURCE")
 
     record = {
         "ts": datetime.now(UTC).isoformat(),
@@ -695,12 +701,12 @@ def _build_usage_record(
         "cwd": safe_cwd,
         "model": model,
         "mode": mode,
-        "run_id": current_run_id()[:100],
-        "session_id": current_session_id()[:100],
+        "run_id": None if privacy_limited else current_run_id()[:100],
+        "session_id": None if privacy_limited else current_session_id()[:100],
         "provider_session_id": safe_provider_session_id,
-        "level": os.environ.get("LU_TELEMETRY_LEVEL"),
-        "slug": os.environ.get("LU_TELEMETRY_SLUG"),
-        "track": os.environ.get("LU_TELEMETRY_TRACK"),
+        "level": None if privacy_limited else os.environ.get("LU_TELEMETRY_LEVEL"),
+        "slug": None if privacy_limited else os.environ.get("LU_TELEMETRY_SLUG"),
+        "track": None if privacy_limited else os.environ.get("LU_TELEMETRY_TRACK"),
         "source": telemetry_source[:100] if telemetry_source else None,
         "duration_s": round(duration_s, 2),
         "input_chars": input_chars,
@@ -709,7 +715,11 @@ def _build_usage_record(
         "outcome": outcome,
         "rate_limited": rate_limited,
         "stalled": stalled,
-        "stderr_excerpt": (stderr_excerpt or "")[:500] if stderr_excerpt else None,
+        "stderr_excerpt": (
+            None
+            if privacy_limited
+            else ((stderr_excerpt or "")[:500] if stderr_excerpt else None)
+        ),
         "tokens": tokens,
     }
     safe_substitution = _safe_substitution_record(substitution)

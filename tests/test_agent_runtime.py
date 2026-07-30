@@ -116,6 +116,7 @@ from agent_runtime.errors import (
 )
 from agent_runtime.registry import AGENTS, available_agents, get_agent_entry
 from agent_runtime.runner import (
+    _build_usage_record,
     _enforce_resume_policy,
     _ensure_write_cwd_isolated,
     _is_temp_file,
@@ -208,6 +209,55 @@ def test_acpx_codex_shadow_entry_is_direct_only():
     assert entry["resume_policy"] == "never"
     assert entry["capabilities"] == frozenset()
     assert "acpx-codex-shadow" not in available_agents()
+
+
+@pytest.mark.parametrize("entrypoint", ["acpx-pilot-native", "acpx-pilot-shadow"])
+def test_acpx_pilot_usage_records_strip_sensitive_context(
+    entrypoint,
+    tmp_path,
+    monkeypatch,
+):
+    monkeypatch.setenv("LU_TELEMETRY_LEVEL", "secret-level")
+    monkeypatch.setenv("LU_TELEMETRY_SLUG", "secret-slug")
+    monkeypatch.setenv("LU_TELEMETRY_TRACK", "secret-track")
+    monkeypatch.setenv("LU_TELEMETRY_SOURCE", "secret-source")
+
+    record = _build_usage_record(
+        agent="codex",
+        entrypoint=entrypoint,
+        model="model",
+        mode="read-only",
+        task_id="secret-task",
+        cwd=tmp_path / "secret-worktree",
+        session_id="secret-provider-session",
+        duration_s=1.25,
+        input_chars=12,
+        output_chars=7,
+        returncode=1,
+        outcome="error",
+        rate_limited=False,
+        stalled=False,
+        stderr_excerpt="secret stderr",
+        tokens=3,
+    )
+
+    for key in (
+        "task_id",
+        "cwd",
+        "run_id",
+        "session_id",
+        "provider_session_id",
+        "level",
+        "slug",
+        "track",
+        "source",
+        "stderr_excerpt",
+    ):
+        assert record[key] is None
+    assert record["entrypoint"] == entrypoint
+    assert record["outcome"] == "error"
+    assert record["duration_s"] == 1.25
+    assert record["tokens"] == 3
 
 
 def test_acpx_grok_shadow_entry_is_direct_only():
