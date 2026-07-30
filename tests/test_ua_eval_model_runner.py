@@ -156,6 +156,16 @@ if mode in {"ndjson", "fenced_ndjson", "opencode_ndjson"}:
             },
         }
     print(json.dumps(event))
+elif mode in {"tagged", "tagged_fence"}:
+    tagged = "\\n".join(
+        f'<<<UA-EVAL-RESPONSE item_id={row["item_id"]}>>>'
+        f'\\n{row["raw_response"]}\\n<<<UA-EVAL-END>>>'
+        for row in responses
+    )
+    if mode == "tagged_fence":
+        tagged = "```text\\n" + tagged + "\\n```"
+    event = {"type": "text", "part": {"type": "text", "text": tagged}}
+    print(json.dumps(event))
 elif mode == "thought":
     print("<think>provider trace</think>" + text)
 else:
@@ -178,6 +188,7 @@ def _run(
     retries: int = 0,
     batch_size: int = 677,
     prompt_mode: str = "argument",
+    response_format: str = "json",
 ) -> tuple[Path, Path, Path, Path]:
     requests, prompt = _packet(tmp_path)
     environment = {
@@ -217,6 +228,7 @@ def _run(
             workers=1,
             timeout=10,
             retries=retries,
+            response_format=response_format,
         )
     finally:
         for name, value in previous.items():
@@ -250,7 +262,7 @@ def test_runs_source_only_batches_outside_repository_and_writes_metadata(
     assert set(metadata["decoding"]) == runner.DECODING_FIELDS
     assert generation["gold_fields_supplied"] == []
     assert generation["response_count"] == runner.EXPECTED_REQUEST_COUNT
-    assert generation["transport_protocol"] == runner.TRANSPORT_PROTOCOL
+    assert generation["transport_protocol"] == runner.JSON_TRANSPORT_PROTOCOL
     assert len(generation["batch_receipts"]) == 3
     assert generation["retry_counts"] == {"0": 0, "1": 0, "2": 0}
     call_paths = (tmp_path / "calls.log").read_text().splitlines()
@@ -330,6 +342,44 @@ def test_batch_transport_declares_unambiguous_json_escaping() -> None:
     ]
 
 
+@pytest.mark.parametrize("mode", ["tagged", "tagged_fence"])
+def test_tagged_transport_preserves_sentence_characters(
+    tmp_path: Path,
+    mode: str,
+) -> None:
+    raw, output, metadata_path, _ = _run(
+        tmp_path,
+        mode=mode,
+        response_format="tagged",
+    )
+    assert len(raw.read_text().splitlines()) == 1
+    outputs = [json.loads(line) for line in output.read_text().splitlines()]
+    assert len(outputs) == runner.EXPECTED_REQUEST_COUNT
+    assert outputs[0]["raw_response"] == "source sentence 0"
+    metadata = json.loads(metadata_path.read_text())
+    assert metadata["generation_metadata"]["transport_protocol"] == runner.TAGGED_TRANSPORT_PROTOCOL
+
+
+def test_tagged_transport_rejects_wrong_order_and_extra_text() -> None:
+    valid = '<<<UA-EVAL-RESPONSE item_id=item-1>>>\nA "quoted" sentence with a backslash \\\\.\n<<<UA-EVAL-END>>>'
+    assert runner.parse_provider_response(
+        valid,
+        ["item-1"],
+        "tagged",
+    ) == [
+        {
+            "item_id": "item-1",
+            "raw_response": 'A "quoted" sentence with a backslash \\\\.',
+        }
+    ]
+    with pytest.raises(runner.RunnerError):
+        runner.parse_provider_response(
+            f"{valid}\nExplanation",
+            ["item-1"],
+            "tagged",
+        )
+
+
 @pytest.mark.parametrize(
     "mode",
     ["malformed", "duplicate", "missing", "unknown", "out_of_order", "extra"],
@@ -391,7 +441,7 @@ def test_accepts_fenced_json_and_preserves_raw_provider_output(tmp_path: Path) -
     metadata = json.loads(metadata_path.read_text())
     assert metadata["generation_metadata"]["response_normalization"] == [
         "extract final assistant text from a recognized NDJSON event when needed",
-        "remove one exact optional JSON code fence before schema validation",
+        "remove one exact optional transport code fence before schema validation",
     ]
 
 
