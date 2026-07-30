@@ -728,6 +728,7 @@ def run(
     output_path: Path,
     metadata_path: Path,
     state_dir: Path,
+    failed_output_path: Path | None = None,
     batch_size: int = 40,
     workers: int = 1,
     timeout: int = 1800,
@@ -854,8 +855,31 @@ def run(
 
     raw_text = "".join(_canonical_json(row) + "\n" for row in raw_rows)
     output_text = "".join(_canonical_json(row) + "\n" for row in normalized)
+    failed_rows: list[dict[str, Any]] = []
+    for failure in failed_attempts:
+        token = failure["invocation_directory_token"]
+        if not isinstance(token, str) or not token.startswith("ua-eval-model-"):
+            raise RunnerError("failed attempt has an invalid invocation token")
+        invocation_dir = _temporary_parent() / token
+        try:
+            stdout = (invocation_dir / "stdout.txt").read_text(encoding="utf-8")
+            stderr = (invocation_dir / "stderr.txt").read_text(encoding="utf-8")
+        except OSError as exc:
+            raise RunnerError("cannot read retained failed-attempt output") from exc
+        if _sha256_text(stdout) != failure["stdout_sha256"] or _sha256_text(stderr) != failure["stderr_sha256"]:
+            raise RunnerError("retained failed-attempt output hash mismatch")
+        failed_rows.append(
+            {
+                **failure,
+                "raw_provider_output": stdout,
+                "provider_stderr": stderr,
+            }
+        )
+    failed_text = "".join(_canonical_json(row) + "\n" for row in failed_rows)
     _publish_text(raw_output_path, raw_text)
     _publish_text(output_path, output_text)
+    if failed_output_path is not None and failed_rows:
+        _publish_text(failed_output_path, failed_text)
     generation_metadata = {
         "route": config["route"],
         "alias_resolution": config["alias_resolution"],
@@ -917,6 +941,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--raw-output", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--metadata-output", type=Path, required=True)
+    parser.add_argument("--failed-output", type=Path)
     parser.add_argument("--state-dir", type=Path, required=True)
     parser.add_argument("--batch-size", type=int, default=40)
     parser.add_argument("--workers", type=int, default=1)
@@ -940,6 +965,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             output_path=args.output,
             metadata_path=args.metadata_output,
             state_dir=args.state_dir,
+            failed_output_path=args.failed_output,
             batch_size=args.batch_size,
             workers=args.workers,
             timeout=args.timeout,
