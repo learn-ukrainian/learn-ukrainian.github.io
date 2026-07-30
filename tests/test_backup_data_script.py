@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import sqlite3
 import subprocess
 from pathlib import Path
@@ -225,6 +226,21 @@ def test_execute_snapshots_checkpointed_wal_database_without_sidecars(
     assert not database.with_name("checkpointed.db-wal").exists()
     assert not database.with_name("checkpointed.db-shm").exists()
     environment["FAKE_DB_RELATIVE"] = "data/checkpointed.db"
+    real_sqlite3 = shutil.which("sqlite3", path=os.environ["PATH"])
+    assert real_sqlite3 is not None
+    environment["REAL_SQLITE3"] = real_sqlite3
+    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
+    _write_executable(
+        fake_bin / "sqlite3",
+        """#!/bin/bash
+set -eu
+if [[ "${1:-}" == "-readonly" && "${2:-}" == */checkpointed.db ]]; then
+  printf '%s\n' 'simulated read-only open failure' >&2
+  exit 14
+fi
+exec "$REAL_SQLITE3" "$@"
+""",
+    )
 
     result = _run(environment, "backup", "--execute")
 
