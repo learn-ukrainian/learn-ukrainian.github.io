@@ -272,6 +272,21 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "bridge_only",
     },
+    "acpx-codex-shadow": {
+        # Experimental read-only shadow transport (#6027). Direct-only: never
+        # returned by ``available_agents()`` (cli_available False), never a
+        # dispatch/routing/review/failover candidate. Callers must import
+        # ``AcpxAdapter`` directly and pass ``tool_config={"acpx_shadow": True}``
+        # with ``LU_ACPX_TRANSPORT=shadow`` set — see adapters/acpx.py.
+        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxAdapter",
+        # ACPX resolves its own agent default when no --model is supplied;
+        # this direct-only seat must not advertise an invented catalog model.
+        "default_model": None,
+        "cost_tier": "unknown",
+        "capabilities": frozenset(),
+        "cli_available": False,
+        "resume_policy": "never",
+    },
     "agy": {
         # Antigravity CLI shipping Gemini Flash 3.6 (was 3.5) on a separate meter from
         # gemini-cli. Added 2026-05-20 for the seminar-writer ADR bakeoff

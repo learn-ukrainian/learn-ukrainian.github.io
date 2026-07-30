@@ -5,6 +5,8 @@ Current operational reference for repo-local scripts and agent workflows.
 - Main build entry point: `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree`
 - Validation pipeline after content exists: `npm run audit`, `npm run pipeline`, `npm run generate:json`
 - This document intentionally omits retired pipelines and legacy script paths
+- **Seat onboarding (ownership matrix, ACPX boundary, Kimi native vs KimiCC, Buzz deferral):**
+  [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md)
 
 Before guessing CLI flags, run the tool's `--help`. The repo standard lives in
 `agents_extensions/shared/rules/cli-help-standard.md`, and touched CLIs are expected to
@@ -93,7 +95,12 @@ repository.
 ### Kimi through Claude Code
 
 `start-kimicc.sh` (or `start-kimi.sh --harness claude-code`) is **Claude Code UI + Kimi models** (not the native Kimi TUI).
-Use it when you want Claude Code ergonomics with K3 or K2.7 in a second
+It is a **bounded explicit opt-in**. Native Kimi Code remains the **default**
+interactive and headless/fleet route. On KimiCC, **K3 defaults to effort
+`high`**; native Kimi K3 stays **max-only**. Do not collapse those policies.
+See [`agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
+
+Use KimiCC when you want Claude Code ergonomics with K3 or K2.7 in a second
 terminal while native Claude runs in the first.
 
 ```bash
@@ -105,10 +112,11 @@ terminal while native Claude runs in the first.
 ```
 
 **Defaults (operator lane):** `--endpoint coding` (subscription),
-`--isolate-config` (CLAUDE_CONFIG_DIR=$HOME/.claude-kimicc). Interactive
-launchers reject `--epic`; use a certified provider driver for lease-bound work.
-Overrides: `--endpoint platform`, `--no-isolate-config`; env:
-`KIMICC_AUTH_TOKEN`, `MOONSHOT_API_KEY`, or `KIMI_API_KEY`.
+`--isolate-config` (CLAUDE_CONFIG_DIR=$HOME/.claude-kimicc), K3 effort **`high`**
+on the KimiCC route. Interactive launchers reject `--epic`; use a certified
+provider driver for lease-bound work. Overrides: `--endpoint platform`,
+`--no-isolate-config`; env: `KIMICC_AUTH_TOKEN`, `MOONSHOT_API_KEY`, or
+`KIMI_API_KEY` (and supported KimiCC effort overrides when set).
 
 **Subscription auth (no platform API key):** run `kimi login` once — the
 launcher picks up the OAuth credential automatically
@@ -1313,9 +1321,10 @@ The Monitor API exposes the same read-only JSON at `/api/decisions/lineage`.
 
 ## Inter-Agent Communication
 
-Claude, Gemini, and Codex coordinate through three distinct primitives. Pick the right one for the job.
+Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right one for the job.
 
 > **Authoritative sources:**
+> - [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md) — **canonical ownership matrix** (`discuss` / `delegate` / fleet-comms / ACPX / Buzz deferred), formal CF separation, Kimi routes
 > - [`docs/best-practices/agent-bridge.md`](best-practices/agent-bridge.md) — channel bridge mechanics, pinned context, include chains, bridge `discuss`
 > - [`docs/best-practices/agent-cooperation.md`](best-practices/agent-cooperation.md) — agent roles, Green Team protocol, review discipline
 >
@@ -1325,9 +1334,13 @@ Claude, Gemini, and Codex coordinate through three distinct primitives. Pick the
 
 | Need | Tool | Write access? |
 | --- | --- | --- |
-| Sustained topic-scoped discussion, multi-turn, pinned context | **`ai_agent_bridge post` / `ai_agent_bridge discuss`** (channel bridge) | No (Q&A only) |
+| Sustained topic-scoped discussion, multi-turn, pinned context | **`ai_agent_bridge post` / `ai_agent_bridge discuss`** (channel bridge) | No (Q&A only; **not** formal CF) |
 | One-off drive-by question to another agent | **`ask-claude` / `ask-agy` / `ask-codex`** | No by default; opt-in via `--allow-write` |
 | Fire-and-forget execution — run code, commit, push | **`scripts/delegate.py dispatch`** | Yes |
+| Durable fleet coordination / topology | **`scripts.fleet_comms`** (`plane-status`, …) + **file dual-write handoffs** (authoritative in every plane mode) | Hand-off files only as existing lane diaries; never invent a third bus |
+| Formal cross-family PR review | **`review-pr` / `publish-review-verdict`** | No (review evidence) |
+| Experimental structured Codex invocation | **ACPX adapter** (feature-flagged, default-off/shadow) | **No** (read-only/stateless; see onboarding runbook) |
+| Buzz relay coordination | **Deferred** — not in this rollout | N/A |
 | Watch a long-running process (builds, reviews) emit events — **Claude only** | **`Monitor` tool** (Claude Code built-in) | N/A |
 | Watch a long-running process — **Gemini / Codex** | Shell-poll the Monitor API | N/A |
 | Read project state (track health, failing modules, build status) | **Monitor API** — `http://localhost:8765` | N/A |
@@ -1336,6 +1349,9 @@ Claude, Gemini, and Codex coordinate through three distinct primitives. Pick the
 - Channel-first for anything >1 turn. The pinned `context.md` eliminates re-pasting project setup on every round.
 - `ask-*` is not deprecated for genuine one-shots. `ask-gemini` is retired; use `ask-agy` for Gemini-family one-shots.
 - `ai_agent_bridge` is for **communication**. `delegate.py dispatch` is for **execution**. Don't confuse them.
+- **`discuss` is not formal review.** Use `review-pr` / `publish-review-verdict` for CF.
+- Query `.venv/bin/python -m scripts.fleet_comms plane-status` — never hard-code a live plane mode.
+- ACPX is optional experimental transport only; rollback is feature-flag off + native runtime.
 - Never run a polling loop to check a background task — use `Monitor` or the bash `run_in_background` completion notification.
 
 ### Channel bridge — preferred for multi-turn

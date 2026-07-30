@@ -114,7 +114,7 @@ from agent_runtime.errors import (
     AgentUnavailableError,
     RateLimitedError,
 )
-from agent_runtime.registry import AGENTS, get_agent_entry
+from agent_runtime.registry import AGENTS, available_agents, get_agent_entry
 from agent_runtime.runner import (
     _enforce_resume_policy,
     _ensure_write_cwd_isolated,
@@ -193,7 +193,19 @@ def test_registry_has_known_agents():
         "qwen",
         "agy",
         "cursor",
+        "acpx-codex-shadow",
     }
+
+
+def test_acpx_codex_shadow_entry_is_direct_only():
+    entry = get_agent_entry("acpx-codex-shadow")
+    assert entry["adapter"] == "scripts.agent_runtime.adapters.acpx:AcpxAdapter"
+    # ACPX itself chooses the Codex model when this direct-only seat omits --model.
+    assert entry["default_model"] is None
+    assert entry["cli_available"] is False
+    assert entry["resume_policy"] == "never"
+    assert entry["capabilities"] == frozenset()
+    assert "acpx-codex-shadow" not in available_agents()
 
 
 def test_cursor_entry_is_well_formed():

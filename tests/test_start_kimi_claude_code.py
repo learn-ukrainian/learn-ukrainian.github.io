@@ -63,6 +63,28 @@ def test_kimi_catalog_aliases_use_the_endpoint_allowlist(endpoint: str, alias: s
     assert f"would exec claude --model {escaped_model}" in result.stdout
 
 
+def test_kimicc_interactive_dry_run_reports_k3_high_and_explicit_override(tmp_path: Path) -> None:
+    env = {**_KIMI_CREDENTIALS, "KIMICC_AUTH_TOKEN": "test-key", "HOME": str(tmp_path / "home")}
+    default = run_launcher("start-kimicc.sh", env=env)
+    override = run_launcher("start-kimicc.sh", env={**env, "KIMICC_EFFORT_LEVEL": "max"})
+
+    assert default.returncode == override.returncode == 0
+    assert "KimiCC route: effort=high" in default.stdout
+    assert "KimiCC route: effort=max" in override.stdout
+
+
+def test_kimicc_interactive_k2_7_dry_run_has_no_k3_effort_default(tmp_path: Path) -> None:
+    result = run_launcher(
+        "start-kimicc.sh",
+        "--model",
+        "k2.7",
+        env={**_KIMI_CREDENTIALS, "KIMICC_AUTH_TOKEN": "test-key", "HOME": str(tmp_path / "home")},
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "KimiCC route: effort=not-exposed" in result.stdout
+
+
 def test_kimi_rejects_unknown_model_endpoint_and_isolation_value(tmp_path: Path) -> None:
     env = {**_KIMI_CREDENTIALS, "KIMICC_AUTH_TOKEN": "test-key", "HOME": str(tmp_path / "home")}
     model = run_launcher("start-kimi.sh", "--harness", "claude-code", "--model", "unknown", env=env)
