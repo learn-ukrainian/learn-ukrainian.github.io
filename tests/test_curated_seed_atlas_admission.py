@@ -379,8 +379,39 @@ def test_cli_allows_missing_routes_only_for_local_practice_output(tmp_path: Path
                 str(tmp_path / "public.json"),
                 "--allow-missing-routes",
             ]
-        )
+    )
     assert error.value.code == 2
+
+    attestation_manifest = _manifest(
+        tmp_path / "attestation-manifest.json",
+        [{"lemma": "відомий", "url_slug": "відомий", "pos": "adj", "enrichment": {"cefr": "A2"}}],
+    )
+    seed_input.write_text(
+        json.dumps(
+            {
+                "seedRow": 2,
+                "lemma": "відомий",
+                "sentenceStatus": "ok",
+                "admission": {"practice": True, "mode": "admitted"},
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    assert admission.main(
+        [
+            "--input",
+            str(seed_input),
+            "--manifest",
+            str(attestation_manifest),
+            "--practice-seed-out",
+            str(tmp_path / "attestation-practice.json"),
+            "--report-out",
+            str(tmp_path / "attestation-report.json"),
+            "--allow-missing-routes",
+        ]
+    ) == 1
 
 
 def test_practice_seed_reports_rights_gate_separately_from_missing_cefr(tmp_path: Path) -> None:

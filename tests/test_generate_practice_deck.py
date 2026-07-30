@@ -139,6 +139,34 @@ def test_local_practice_seed_requires_explicit_opt_in_and_never_creates_a_cloze_
     assert "practice_example" not in merged[0]
 
 
+def test_local_practice_seed_rows_are_selected_before_ordinary_course_entries() -> None:
+    entries = [
+        {
+            "lemma": "справедливий",
+            "url_slug": "справедливий",
+            "gloss": "fair",
+            "enrichment": {"cefr": {"level": "A2"}},
+            "surface_admission": {"practice": True, "cloze": False},
+            "local_practice_private_teacher": True,
+        },
+        {
+            "lemma": "витирати",
+            "url_slug": "витирати",
+            "gloss": "wipe",
+            "enrichment": {"cefr": {"level": "A2"}},
+            "course_usage": [{"module": "fixture"}],
+        },
+    ]
+
+    selected, _lexemes, _by_plain_lemma, _by_id = _select_practice_lexemes(
+        entries,
+        JsonVesumVerifier.from_path(VESUM),
+        BuildConfig(target=1, source_label="fixture"),
+    )
+
+    assert [entry["url_slug"] for entry, _lexeme in selected] == ["справедливий"]
+
+
 def test_practice_seed_entries_are_selected_before_ordinary_course_entries() -> None:
     entries = [
         {

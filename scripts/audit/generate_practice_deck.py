@@ -2483,7 +2483,10 @@ def _select_practice_lexemes(
     seed_entries = [
         entry
         for entry in eligible
-        if isinstance(entry.get("practice_example"), dict)
+        if (
+            isinstance(entry.get("practice_example"), dict)
+            or entry.get("local_practice_private_teacher") is True
+        )
         and is_surface_admitted(entry, SURFACE_PRACTICE)
     ]
     seed_entry_ids = {id(entry) for entry in seed_entries}

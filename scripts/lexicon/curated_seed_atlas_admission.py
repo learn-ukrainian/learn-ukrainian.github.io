@@ -498,8 +498,13 @@ def main(argv: list[str] | None = None) -> int:
             _write_json(args.practice_seed_out, seed)
         if args.report_out:
             _write_json(args.report_out, report)
-        if report["atlas_failures"] and not args.allow_missing_routes:
-            print(f"Atlas admission has {len(report['atlas_failures'])} hard failure(s)", file=sys.stderr)
+        hard_failures = [
+            failure
+            for failure in report["atlas_failures"]
+            if failure.get("reason") != "missing_public_route" or not args.allow_missing_routes
+        ]
+        if hard_failures:
+            print(f"Atlas admission has {len(hard_failures)} hard failure(s)", file=sys.stderr)
             return 1
     return 0
 
