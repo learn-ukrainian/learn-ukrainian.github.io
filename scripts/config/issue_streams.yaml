@@ -30,7 +30,10 @@ streams:
     epics: [4913]
   benchmark-2156:
     title: "Public Ukrainian calque + grammar evaluation — UA-GEC benchmark"
-    epics: [2156]
+    epics: [6057]  # compatibility key retained; completed v0.1.1 epic #2156 is historical
+  open-model-data:
+    title: "Ukrainian open-model data infrastructure"
+    epics: [6056]
   core-quality:
     title: "Core-track deterministic quality"
     epics: [4274]
@@ -44,5 +47,5 @@ streams:
     title: "Cross-seminar gates (reading links, self-convergence)"
     epics: [3120, 3079]
   hramatka:
-    title: "Hramatka teacher lesson service (user-gated)"
+    title: "Hramatka teacher lesson service — product qualification & release"
     epics: [4542]
