@@ -110,7 +110,7 @@ snapshots, not permanent routing weights.
 - Local pin `acpx@0.13.0` — both adapters refuse to spawn on any other
   resolved binary version.
 - Grok seat additionally preflights the installed native Grok CLI at exact
-  semver `0.2.114` and refuses wrong/missing/unparseable versions before
+  semver `0.2.117` and refuses wrong/missing/unparseable versions before
   prompt.
 - Every invocation requires a non-empty, bounded, local `task_id`,
   `correlation_id`, and `idempotency_key`, plus
@@ -158,6 +158,39 @@ adapter's argv is fully confined and callers only ever set the `tool_config`
 keys it allowlists (`acpx_shadow`, `target_agent`, `correlation_id`,
 `idempotency_key`); this runbook describes ownership and safety, not a
 floating CLI surface.
+
+#### Explicit comparison pilot
+
+Run the dedicated pilot only from a dispatch/registered worktree. The prompt
+arrives on stdin rather than argv. Codex additionally requires its non-secret
+ChatGPT auth-method selector:
+
+```bash
+printf '%s\n' 'Reply with exactly READY.' |
+  ACPX_AUTH_CHAT_GPT=1 LU_ACPX_TRANSPORT=shadow \
+  .venv/bin/python -m scripts.agent_runtime.acpx_pilot \
+  --target codex --cwd . --task-id pilot-6063 \
+  --correlation-id pilot-6063-codex-v1 \
+  --idempotency-key pilot-6063-codex-v1
+```
+
+For Grok, use the same command with `--target grok` and omit
+`ACPX_AUTH_CHAT_GPT=1`; the adapter selects the existing cached Grok login.
+
+This surface calls the native seat first and exactly one ACPX shadow second.
+The native outcome and exit disposition remain authoritative even when the
+shadow fails or disagrees. One global non-blocking lock admits at most one
+comparison; contention returns immediately with no queue. A previously
+executed idempotency-key digest suppresses both calls, and there are no
+automatic retries or sessions. Runner failover is disabled for both pilot
+calls, so the command cannot silently add a second native or shadow attempt.
+
+The local terminal result may show both responses for operator inspection.
+Persisted comparison evidence contains only target, outcome classes, parity,
+durations, token counts when exposed, and digests of correlation/idempotency
+values—never prompts, responses, raw identifiers, paths, sessions, commands,
+stderr, auth material, or tool data. The read-only Runtime dashboard aggregates
+that evidence; it cannot send or control ACPX traffic.
 
 #### Safety and budgets (adapter contract)
 

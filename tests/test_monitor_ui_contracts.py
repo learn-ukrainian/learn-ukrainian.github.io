@@ -106,13 +106,20 @@ def test_runtime_page_renders_read_only_acpx_shadow_transport_overview():
     assert "transport.default_mode" in html
     assert "seat.evidence?.total" in html
     assert "seat.evidence_state" in html
+    assert "snapshot.comparison_evidence" in html
+    assert "comparison.classification_parity" in html
+    assert "Duplicates suppressed" in html
+    assert "Busy refusals" in html
+    assert "safeWhenTrue" in html
+    assert "explicit_pilot_only: 'Explicit pilot only'" in html
+    assert "Object.hasOwn(safeWhenTrue, key) && value === true" in html
     assert "aggregate_evidence" not in html
     assert "snapshot.shadow_calls" not in html
     assert "transport.default ??" not in html
     assert "ACPX Shadow Transport" in html
     assert "Native runtime authoritative" in html
     assert "ACPX evidence is observational only." in html
-    assert "No shadow calls in window" in html
+    assert "No shadow calls or comparisons in window" in html
     assert "ACPX pin" in html
     assert "No dispatch authority" in html
     assert 'class="acpx-rail"' in html

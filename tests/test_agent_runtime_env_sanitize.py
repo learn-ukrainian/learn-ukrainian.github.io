@@ -213,6 +213,41 @@ def test_acpx_grok_cached_login_selector_survives_without_xai_credentials():
     assert "ACPX_AUTH_XAI_API_KEY" not in env
 
 
+def test_acpx_codex_chatgpt_selector_survives_without_api_credentials():
+    with patch.dict(
+        "os.environ",
+        {
+            "PATH": "/usr/bin",
+            "HOME": "/Users/example",
+            "OPENAI_API_KEY": "openai-secret",
+            "ACPX_AUTH_CHAT_GPT": "1",
+        },
+        clear=True,
+    ):
+        env = build_agent_env(provider="acpx-codex-shadow")
+
+    assert env["ACPX_AUTH_CHAT_GPT"] == "1"
+    assert "OPENAI_API_KEY" not in env
+
+
+def test_acpx_auth_method_selectors_require_literal_one():
+    with patch.dict(
+        "os.environ",
+        {
+            "PATH": "/usr/bin",
+            "HOME": "/Users/example",
+            "ACPX_AUTH_CHAT_GPT": "unexpected",
+            "ACPX_AUTH_CACHED_TOKEN": "unexpected",
+        },
+        clear=True,
+    ):
+        codex_env = build_agent_env(provider="acpx-codex-shadow")
+        grok_env = build_agent_env(provider="acpx-grok-shadow")
+
+    assert "ACPX_AUTH_CHAT_GPT" not in codex_env
+    assert "ACPX_AUTH_CACHED_TOKEN" not in grok_env
+
+
 def test_hermes_home_override_reaches_hermes_backed_agents():
     with patch.dict(
         "os.environ",

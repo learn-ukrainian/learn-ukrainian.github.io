@@ -247,13 +247,22 @@ function renderAcpx(snapshot) {
   const seatSlots = [seats[0], seats[1]];
   const safety = snapshot.safety || {};
   const pins = snapshot.pins || {};
+  const comparison = snapshot.comparison_evidence || {};
   const calls = shadowCallCount(seats);
+  const comparisons = Number(comparison.comparisons);
+  const parity = Number(comparison.classification_parity);
+  const mismatches = Number(comparison.classification_mismatch);
   const mode = transport.mode;
   const facts = [
     ['Monitor env mode', mode, 'mode'],
     ['Default', transport.default_mode],
     ['Authority', displayLabel(transport.authority)],
     ['Shadow calls', calls],
+    ['Comparisons', Number.isFinite(comparisons) ? comparisons : null],
+    ['Class parity', Number.isFinite(parity) && Number.isFinite(comparisons) ? `${parity} / ${comparisons}` : null],
+    ['Class mismatches', Number.isFinite(mismatches) ? mismatches : null],
+    ['Duplicates suppressed', comparison.duplicates_suppressed],
+    ['Busy refusals', comparison.busy_refusals],
     ['ACPX pin', pins.acpx ? `v${pins.acpx}` : null],
     ['Grok CLI pin', pins.grok_cli ? `v${pins.grok_cli}` : null],
     ['Pin validation', pins.validation ? displayLabel(pins.validation) : null],
@@ -285,14 +294,18 @@ function renderAcpx(snapshot) {
     failover_authority: 'No failover authority',
     review_authority: 'No review authority',
   };
+  const safeWhenTrue = {
+    explicit_pilot_only: 'Explicit pilot only',
+  };
   const safetyMarkup = Object.entries(safety).filter(([, value]) => typeof value === 'boolean').map(([key, value]) => {
     if (Object.hasOwn(safeWhenFalse, key) && value === false) return `<span class="pill ok">${escapeHtml(safeWhenFalse[key])}</span>`;
+    if (Object.hasOwn(safeWhenTrue, key) && value === true) return `<span class="pill ok">${escapeHtml(safeWhenTrue[key])}</span>`;
     return `<span class="pill ${value ? 'warn' : 'gray'}">${escapeHtml(displayLabel(key))}: ${value ? 'enabled' : 'not enabled'}</span>`;
   }).join('');
   const inFlightMarkup = Number.isFinite(Number(safety.max_in_flight))
     ? `<span class="pill info">Max ${escapeHtml(safety.max_in_flight)} in flight</span>`
     : '';
-  const noCallsCopy = calls === 0 ? '<div class="empty">No shadow calls in window</div>' : '';
+  const noCallsCopy = calls === 0 && comparisons === 0 ? '<div class="empty">No shadow calls or comparisons in window</div>' : '';
   const factMarkup = facts.map(([label, value, kind]) => {
     if (kind === 'mode') {
       const modeClass = value === 'shadow' ? 'info' : value === 'off' ? 'gray' : 'err';

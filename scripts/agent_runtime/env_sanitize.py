@@ -103,6 +103,12 @@ _PROVIDER_SECRET_ALLOWLIST = {
 }
 
 _PROVIDER_SAFE_NAME_ALLOWLIST = {
+    "acpx-codex-shadow": {
+        # Non-secret acpx@0.13.0 auth-method selector. The literal value "1"
+        # chooses the existing Codex ChatGPT login; no credential is carried
+        # in this variable.
+        "ACPX_AUTH_CHAT_GPT",
+    },
     "acpx-grok-shadow": {
         # acpx@0.13.0 treats this as a non-secret auth-method selector:
         # the literal value "1" chooses Grok's agent-managed cached_token
@@ -260,6 +266,8 @@ def build_agent_env(
         if _looks_sensitive_value(value):
             continue
         if _is_provider_safe_name(name, provider):
+            if name.upper().startswith("ACPX_AUTH_") and value != "1":
+                continue
             env[name] = value
             continue
         if _looks_sensitive_name(name):

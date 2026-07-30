@@ -204,6 +204,7 @@ def test_acpx_codex_shadow_entry_is_direct_only():
     # ACPX itself chooses the Codex model when this direct-only seat omits --model.
     assert entry["default_model"] is None
     assert entry["cli_available"] is False
+    assert entry["direct_only"] is True
     assert entry["resume_policy"] == "never"
     assert entry["capabilities"] == frozenset()
     assert "acpx-codex-shadow" not in available_agents()
@@ -216,6 +217,7 @@ def test_acpx_grok_shadow_entry_is_direct_only():
     # this direct-only seat must not advertise a catalog model.
     assert entry["default_model"] is None
     assert entry["cli_available"] is False
+    assert entry["direct_only"] is True
     assert entry["resume_policy"] == "never"
     assert entry["capabilities"] == frozenset()
     assert "acpx-grok-shadow" not in available_agents()

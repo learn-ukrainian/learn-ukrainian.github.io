@@ -97,7 +97,7 @@ Approved boundary (#6027 Codex, #6043 Grok):
 - Local pin `acpx@0.13.0` (`node_modules/.bin/acpx`); both adapters refuse to
   spawn on any other resolved version.
 - Grok seat also preflights the installed native Grok CLI at exact semver
-  `0.2.114` (wrong/missing/unparseable → refuse before prompt).
+  `0.2.117` (wrong/missing/unparseable → refuse before prompt).
 - Codex participant:
   `tool_config={"acpx_shadow": True, "target_agent": "codex"}`.
 - Grok participant:
@@ -118,6 +118,12 @@ Approved boundary (#6027 Codex, #6043 Grok):
   tools.
 - Correlation / shadow telemetry is **evidence only** — the existing participant
   result stays authoritative under shadow compare.
+- The only supported comparison caller is
+  `scripts.agent_runtime.acpx_pilot`: an explicit worktree-only command that
+  runs native first, then one shadow under a global non-blocking lock. It
+  suppresses replayed idempotency digests before either call, never queues or
+  retries, and persists sanitized classification/parity/duration/token
+  aggregates for `GET /api/runtime/acpx`.
 - ACPX authentication selection is explicit under `--auth-policy fail`:
   - Codex ChatGPT login: non-secret selector `ACPX_AUTH_CHAT_GPT=1`
   - Grok cached native login: adapter sets `ACPX_AUTH_CACHED_TOKEN=1` and
