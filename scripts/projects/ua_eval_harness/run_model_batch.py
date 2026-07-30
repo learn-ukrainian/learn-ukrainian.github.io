@@ -29,7 +29,7 @@ REQUEST_SCHEMA = "ua_eval_generation_requests.v1"
 STATE_SCHEMA = "ua_eval_model_batch_state.v1"
 CONFIG_SCHEMA = "ua_eval_model_run_config.v1"
 METADATA_SCHEMA = "ua_eval_model_run_metadata.v1"
-RUNNER_VERSION = "ua_eval_provider_neutral_batch_runner.v1.2"
+RUNNER_VERSION = "ua_eval_provider_neutral_batch_runner.v1.3"
 JSON_TRANSPORT_PROTOCOL = "json_object_with_unicode_escaped_quotes.v1"
 TAGGED_TRANSPORT_PROTOCOL = "tagged_text_blocks.v1"
 EXPECTED_REQUEST_COUNT = 677
@@ -94,6 +94,20 @@ CONFIG_FIELDS = frozenset(
 )
 ALIAS_FIELDS = frozenset({"requested", "resolved", "evidence"})
 COMMAND_IDENTITY_FIELDS = frozenset({"name", "version"})
+FAILED_ATTEMPT_FIELDS = frozenset(
+    {
+        "batch_index",
+        "attempt",
+        "attempted_at",
+        "error_class",
+        "message_tail",
+        "invocation_directory_token",
+        "stdout_sha256",
+        "stderr_sha256",
+        "raw_provider_output",
+        "provider_stderr",
+    }
+)
 ENV_NAME = re.compile(r"^[A-Z_][A-Z0-9_]*$")
 THOUGHT_WRAPPER = re.compile(
     r"^\s*<(?:think|thought)>.*?</(?:think|thought)>\s*",
@@ -535,6 +549,31 @@ def _state_path(state_dir: Path, batch_index: int) -> Path:
     return state_dir / f"batch-{batch_index:04d}.json"
 
 
+def _valid_failed_attempts(value: Any, attempts: int) -> bool:
+    if not isinstance(value, list) or len(value) != attempts - 1:
+        return False
+    for failure in value:
+        if not isinstance(failure, dict) or set(failure) != FAILED_ATTEMPT_FIELDS:
+            return False
+        token = failure["invocation_directory_token"]
+        if (
+            type(failure["batch_index"]) is not int
+            or failure["batch_index"] < 0
+            or type(failure["attempt"]) is not int
+            or failure["attempt"] < 1
+            or not isinstance(failure["attempted_at"], str)
+            or not isinstance(failure["error_class"], str)
+            or not isinstance(failure["message_tail"], str)
+            or (token is not None and (not isinstance(token, str) or not token.startswith("ua-eval-model-")))
+            or not isinstance(failure["raw_provider_output"], str)
+            or not isinstance(failure["provider_stderr"], str)
+            or _sha256_text(failure["raw_provider_output"]) != failure["stdout_sha256"]
+            or _sha256_text(failure["provider_stderr"]) != failure["stderr_sha256"]
+        ):
+            return False
+    return True
+
+
 def _load_state(
     path: Path,
     *,
@@ -578,14 +617,10 @@ def _load_state(
         expected_ids,
         response_format,
     )
-    if (
-        state["responses"] != parsed
-        or not isinstance(state["attempts"], int)
-        or state["attempts"] < 1
-        or not isinstance(state["failed_attempts"], list)
-        or len(state["failed_attempts"]) != state["attempts"] - 1
-    ):
+    if state["responses"] != parsed or not isinstance(state["attempts"], int) or state["attempts"] < 1:
         raise RunnerError(f"completed state response mismatch: {path.name}")
+    if not _valid_failed_attempts(state["failed_attempts"], state["attempts"]):
+        raise RunnerError(f"completed state failed-attempt mismatch: {path.name}")
     state["state_sha256"] = _sha256_text(state_text)
     return state
 
@@ -624,6 +659,8 @@ def _run_one_batch(
         attempt_at = _now()
         invocation_cwd: Path | None = None
         process_receipt: dict[str, Any] | None = None
+        provider_stdout = ""
+        provider_stderr = ""
         try:
             invocation_cwd = Path(
                 tempfile.mkdtemp(
@@ -647,12 +684,14 @@ def _run_one_batch(
                 timeout=timeout,
                 check=False,
             )
+            provider_stdout = result.stdout
+            provider_stderr = result.stderr
             process_receipt = _write_process_receipts(
                 invocation_cwd,
                 attempted_at=attempt_at,
                 returncode=result.returncode,
-                stdout=result.stdout,
-                stderr=result.stderr,
+                stdout=provider_stdout,
+                stderr=provider_stderr,
             )
             if result.returncode:
                 raise RunnerError(f"provider command returned nonzero status {result.returncode}")
@@ -686,6 +725,10 @@ def _run_one_batch(
             )
         except (RunnerError, subprocess.TimeoutExpired, OSError) as exc:
             message = str(exc)
+            if getattr(exc, "stdout", None) is not None:
+                provider_stdout = _subprocess_text(exc.stdout)
+            if getattr(exc, "stderr", None) is not None:
+                provider_stderr = _subprocess_text(exc.stderr)
             if isinstance(exc, OSError) and exc.errno == errno.E2BIG:
                 message = (
                     "provider command exceeded the operating-system argument limit; "
@@ -696,8 +739,8 @@ def _run_one_batch(
                     invocation_cwd,
                     attempted_at=attempt_at,
                     returncode=None,
-                    stdout=_subprocess_text(getattr(exc, "stdout", None)),
-                    stderr=_subprocess_text(getattr(exc, "stderr", None)),
+                    stdout=provider_stdout,
+                    stderr=provider_stderr,
                 )
             if invocation_cwd is not None:
                 _write_acceptance_receipt(
@@ -720,6 +763,8 @@ def _run_one_batch(
                     "invocation_directory_token": (invocation_cwd.name if invocation_cwd is not None else None),
                     "stdout_sha256": evidence["stdout_sha256"],
                     "stderr_sha256": evidence["stderr_sha256"],
+                    "raw_provider_output": provider_stdout,
+                    "provider_stderr": provider_stderr,
                 }
             )
     raise RunnerError(f"batch {batch_index} exhausted {retries + 1} attempts")
@@ -828,7 +873,7 @@ def run(
     raw_rows: list[dict[str, Any]] = []
     normalized: list[dict[str, str]] = []
     batch_receipts: list[dict[str, Any]] = []
-    failed_attempts: list[dict[str, Any]] = []
+    recorded_failures: list[dict[str, Any]] = []
     for index, batch in batches:
         state = completed[index]
         expected_ids = [row["item_id"] for row in batch]
@@ -846,7 +891,7 @@ def run(
             }
         )
         normalized.extend(responses)
-        failed_attempts.extend(state["failed_attempts"])
+        recorded_failures.extend(state["failed_attempts"])
         batch_receipts.append(
             {
                 "batch_index": index,
@@ -865,25 +910,19 @@ def run(
     raw_text = "".join(_canonical_json(row) + "\n" for row in raw_rows)
     output_text = "".join(_canonical_json(row) + "\n" for row in normalized)
     failed_rows: list[dict[str, Any]] = []
-    for failure in failed_attempts:
-        token = failure["invocation_directory_token"]
-        if token is None:
-            stdout = ""
-            stderr = ""
-        else:
-            if not isinstance(token, str) or not token.startswith("ua-eval-model-"):
-                raise RunnerError("failed attempt has an invalid invocation token")
-            invocation_dir = _temporary_parent() / token
-            try:
-                stdout = (invocation_dir / "stdout.txt").read_text(encoding="utf-8")
-                stderr = (invocation_dir / "stderr.txt").read_text(encoding="utf-8")
-            except OSError as exc:
-                raise RunnerError("cannot read retained failed-attempt output") from exc
+    failed_attempts: list[dict[str, Any]] = []
+    for failure in recorded_failures:
+        stdout = failure["raw_provider_output"]
+        stderr = failure["provider_stderr"]
         if _sha256_text(stdout) != failure["stdout_sha256"] or _sha256_text(stderr) != failure["stderr_sha256"]:
             raise RunnerError("retained failed-attempt output hash mismatch")
+        summary = {
+            key: value for key, value in failure.items() if key not in {"raw_provider_output", "provider_stderr"}
+        }
+        failed_attempts.append(summary)
         failed_rows.append(
             {
-                **failure,
+                **summary,
                 "raw_provider_output": stdout,
                 "provider_stderr": stderr,
             }

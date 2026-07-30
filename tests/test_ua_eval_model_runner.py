@@ -118,6 +118,10 @@ log.write_text(old + os.getcwd() + "\\n")
 mode = os.environ.get("FAKE_MODE", "success")
 if mode == "fail_first" and not old:
     raise SystemExit(9)
+if mode == "noisy_fail_first" and not old:
+    print("transient provider stdout")
+    print("transient provider stderr", file=sys.stderr)
+    raise SystemExit(9)
 if mode == "malformed":
     print("not json")
     raise SystemExit(0)
@@ -433,7 +437,12 @@ def test_retries_and_preserves_failure_receipts(tmp_path: Path) -> None:
         "stderr_sha256": _sha(""),
     }
     state = json.loads((state_dir / "batch-0000.json").read_text())
-    assert state["failed_attempts"] == generation["failed_attempts"]
+    state_failure = state["failed_attempts"][0]
+    assert {
+        key: value for key, value in state_failure.items() if key not in {"raw_provider_output", "provider_stderr"}
+    } == failed
+    assert state_failure["raw_provider_output"] == ""
+    assert state_failure["provider_stderr"] == ""
     failed_rows = [json.loads(line) for line in (tmp_path / "failed.jsonl").read_text().splitlines()]
     assert len(failed_rows) == 1
     assert failed_rows[0]["raw_provider_output"] == ""
@@ -479,6 +488,65 @@ def test_recovered_scratch_directory_failure_preserves_empty_receipt(
     assert failed_rows[0]["provider_stderr"] == ""
 
 
+def test_resume_with_failed_attempt_does_not_reopen_scratch_directory(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    raw, output, metadata, state = _run(
+        tmp_path,
+        mode="noisy_fail_first",
+        retries=1,
+    )
+    artifacts_before = {
+        path: path.read_bytes()
+        for path in (
+            raw,
+            output,
+            metadata,
+            state / "batch-0000.json",
+            tmp_path / "failed.jsonl",
+        )
+    }
+    calls_before = (tmp_path / "calls.log").read_text()
+
+    def reject_scratch_access() -> Path:
+        raise AssertionError("completed resume must not access scratch directories")
+
+    monkeypatch.setattr(runner, "_temporary_parent", reject_scratch_access)
+    _run(
+        tmp_path,
+        mode="noisy_fail_first",
+        retries=1,
+    )
+
+    assert (tmp_path / "calls.log").read_text() == calls_before
+    assert {path: path.read_bytes() for path in artifacts_before} == artifacts_before
+    failed_row = json.loads((tmp_path / "failed.jsonl").read_text())
+    assert failed_row["raw_provider_output"] == "transient provider stdout\n"
+    assert failed_row["provider_stderr"] == "transient provider stderr\n"
+
+
+def test_completed_state_rejects_tampered_failed_attempt_output(
+    tmp_path: Path,
+) -> None:
+    _, _, _, state = _run(
+        tmp_path,
+        mode="noisy_fail_first",
+        retries=1,
+    )
+    state_path = state / "batch-0000.json"
+    payload = json.loads(state_path.read_text())
+    payload["failed_attempts"][0]["raw_provider_output"] = "tampered"
+    state_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(runner.RunnerError, match="failed-attempt mismatch"):
+        _run(
+            tmp_path,
+            mode="noisy_fail_first",
+            retries=1,
+        )
+
+
 def test_accepts_fenced_json_and_preserves_raw_provider_output(tmp_path: Path) -> None:
     raw, output, metadata_path, _ = _run(
         tmp_path,
@@ -521,14 +589,11 @@ def test_argument_limit_failure_is_retained_with_portable_guidance(
 
     invocation_dirs = list(invocation_parent.glob("ua-eval-model-*"))
     assert len(invocation_dirs) == 1
-    acceptance = json.loads(
-        (invocation_dirs[0] / "acceptance-receipt.json").read_text()
-    )
+    acceptance = json.loads((invocation_dirs[0] / "acceptance-receipt.json").read_text())
     assert acceptance["accepted"] is False
     assert acceptance["error_class"] == "OSError"
     assert acceptance["message"] == (
-        "provider command exceeded the operating-system argument limit; "
-        "use prompt mode stdin or a smaller batch size"
+        "provider command exceeded the operating-system argument limit; use prompt mode stdin or a smaller batch size"
     )
 
 
