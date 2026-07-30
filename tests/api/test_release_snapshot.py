@@ -7,7 +7,6 @@ import os
 import shutil
 import socket
 import subprocess
-import sys
 import time
 import urllib.error
 import urllib.request
@@ -18,16 +17,11 @@ import pytest
 from scripts.api import release_snapshot
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.release_layout import MANIFEST_NAME, is_release_root
+from scripts.common.repo_root import main_checkout_root
 from scripts.path_safety import safe_join
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-# Prefer the repo venv when present; fall back to the running interpreter so
-# bare review worktrees (no .venv symlink) stay testable (cf. #4918, #4926).
-VENV_PYTHON = (
-    PROJECT_ROOT / ".venv" / "bin" / "python"
-    if (PROJECT_ROOT / ".venv" / "bin" / "python").exists()
-    else Path(sys.executable)
-)
+VENV_PYTHON = main_checkout_root(PROJECT_ROOT) / ".venv" / "bin" / "python"
 
 
 def _run_git(repo_root: Path, *args: str) -> str:
@@ -196,6 +190,7 @@ def test_running_release_keeps_serving_archived_code_after_checkout_mutation(tmp
     process = subprocess.Popen(
         [
             str(VENV_PYTHON),
+            "-B",
             "-m",
             "uvicorn",
             "scripts.api.main:app",
@@ -229,6 +224,9 @@ def test_running_release_keeps_serving_archived_code_after_checkout_mutation(tmp
     finally:
         process.terminate()
         process.wait(timeout=5)
+
+    assert release_snapshot.verify_release(release_dir, sha).sha == sha
+    assert not list((release_dir / "scripts").rglob("*.pyc"))
 
 
 def test_git_service_environment_targets_live_checkout(tmp_path: Path) -> None:
