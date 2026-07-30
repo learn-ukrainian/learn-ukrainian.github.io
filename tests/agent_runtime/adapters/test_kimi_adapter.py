@@ -83,6 +83,7 @@ def test_kimicc_harness_is_opt_in_and_native_kimi_remains_default(tmp_path, monk
     assert kimicc.cmd[kimicc.cmd.index("--effort") + 1] == "high"
     assert kimicc.metadata["harness"] == "kimicc"
     assert kimicc.env_overrides["KIMICC_CLAUDE_BIN"] == str(claude)
+    assert kimicc.env_overrides["KIMICC_EFFORT_LEVEL"] == "high"
     assert "CLAUDE_CONFIG_DIR" in kimicc.env_unsets
 
 
@@ -125,8 +126,11 @@ def test_kimicc_harness_default_and_override_effort_are_concrete_child_argv(tmp_
     assert KIMI_DEFAULT_EFFORT == "max"
     assert "--effort" not in native_k3.cmd
     assert default.cmd[default.cmd.index("--effort") + 1] == "high"
+    assert default.env_overrides["KIMICC_EFFORT_LEVEL"] == "high"
     assert override.cmd[override.cmd.index("--effort") + 1] == "max"
+    assert override.env_overrides["KIMICC_EFFORT_LEVEL"] == "max"
     assert "--effort" not in k2_7.cmd
+    assert "KIMICC_EFFORT_LEVEL" not in k2_7.env_overrides
 
 
 def test_kimicc_harness_uses_claude_stream_json_parser(tmp_path, monkeypatch):

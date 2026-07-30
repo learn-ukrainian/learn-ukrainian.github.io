@@ -145,10 +145,17 @@ class KimiccHarness:
         if effective_effort:
             cmd.extend(["--effort", effective_effort])
 
+        env_overrides = {"KIMICC_CLAUDE_BIN": claude_bin}
+        if effective_effort:
+            # The wrapper derives Claude Code's environment default from this
+            # value. Mirror the exact child argv so an explicit override does
+            # not depend on undocumented environment-versus-flag precedence.
+            env_overrides["KIMICC_EFFORT_LEVEL"] = effective_effort
+
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
-            env_overrides={"KIMICC_CLAUDE_BIN": claude_bin},
+            env_overrides=env_overrides,
             # --bare does not need or own a persistent Claude config. Removing
             # an inherited config keeps this headless route operator-config-free.
             env_unsets=("CLAUDE_CONFIG_DIR",),
