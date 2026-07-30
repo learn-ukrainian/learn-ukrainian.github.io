@@ -9,31 +9,39 @@
 
 | Field | Value |
 | --- | --- |
-| **Last refreshed** | 2026-07-28 (#2156 public evaluation ownership reconciled; #4913 internal boundary retained) |
+| **Last refreshed** | 2026-07-30 (open-model data #6056 and benchmark v0.2 #6057 activated; related ownership realigned) |
 | **Refresh trigger** | Every session handoff that lands a milestone; every stream-epic board change |
 | **Curriculum KPI** | Modules passing audit per week (curriculum streams; each milestone carries its own outcome measure) |
-| **Mission** | Full Ukrainian curriculum with decolonized pedagogy, real textbook grounding, RAG-verified vocabulary, adversarial review. Quality non-negotiable. |
+| **Mission** | Help people and AI produce measurably better, authentically Ukrainian language through decolonized learning products and reusable, evidence-backed open-model infrastructure. Quality non-negotiable. |
 | **Pipeline** | V7 (`scripts/build/v7_build.py` → `linear_pipeline.py`). V5/V6 obsolete, do not extend. |
 
 ---
 
 ## The goal chain (read top-down before picking work)
 
-Learners and teachers are the only customers. Every stream must trace to this chain:
+The product users are learners and teachers. Ukrainian NLP researchers and
+open-weight model teams are the beneficiaries of our public infrastructure. Every
+stream must trace to this chain:
 
-1. **Products**: the LU curriculum site (learners) and Hramatka (teachers).
-2. **Kept honest by**: internal QG machinery (#4913) and the separately owned
-   public UA-GEC calque + grammar evaluation (#2156).
-3. **Which runs on**: the fleet — build pipeline, dispatch, comms, leases, CI.
-4. **Community give-back**: the public UA-GEC calque + grammar evaluation
-   package (code and reproducible evidence, not a broad leaderboard).
+1. **Ultimate outcome**: people and AI produce measurably better, authentically
+   Ukrainian language without erasing legitimate historical, regional, dialectal,
+   or register variation.
+2. **Products**: the LU curriculum site (learners) and Hramatka (teachers).
+3. **Reusable community infrastructure**: audited, provenance-rich source data;
+   morphology/tokenizer diagnostics; model-ready export contracts (#6056); and
+   narrow, contamination-resistant public evaluation (#2156, #6057).
+4. **Kept honest by**: internal QG machinery (#4913), frozen evidence contracts,
+   Ukrainian linguistic review, and strict separation of public evaluation gold,
+   private product evidence, and future training data.
+5. **Which runs on**: the fleet — build pipeline, dispatch, comms, leases, and CI.
 
 **The trace is falsifiable, not vibes:** every queued item names its stream milestone,
-the specific done-condition it advances, and the learner/teacher outcome that condition
-protects. "Improves the fleet" alone is not a trace. Exceptions require an owning issue,
-a reason, and an expiry; an exception living past one session forces a milestone
-re-baseline. Pre-approved exception classes (no logging hesitation): emergency CI/main
-breakage; green out-of-lane PRs abandoned >1h per `AGENTS.md`; operator direct orders.
+the specific done-condition it advances, and the learner/teacher or open-weight
+research outcome that condition protects. "Improves the fleet" alone is not a trace.
+Exceptions require an owning issue, a reason, and an expiry; an exception living past
+one session forces a milestone re-baseline. Pre-approved exception classes (no logging
+hesitation): emergency CI/main breakage; green out-of-lane PRs abandoned >1h per
+`AGENTS.md`; operator direct orders.
 
 ---
 
@@ -52,12 +60,13 @@ is the single source of truth for membership (auditor:
 | infra-harness | #4707 | Infra & fleet reliability (hooks, dispatch, routing) |
 | devops | #5703 | DevOps automation, CI, release & launcher reliability |
 | eval-harness | #4913 | Internal QG schemas, validators, quality gates, product adapters, and private calibration |
-| benchmark-2156 | #2156 | Public UA-GEC-derived calque + grammar gold, standard scoring, baselines, freeze, and release |
+| benchmark-2156 | #6057 (successor to closed #2156) | Closed #2156 owns the completed public v0.1.1 release; #6057 owns separately frozen v0.2 error analysis, controls, coverage, and future baselines |
+| open-model-data | #6056 | Audited source data, provenance contracts, morphology/tokenizer diagnostics, and consumer-specific model-ready exports |
 | core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |
 | seminars-folk | #2836 | FOLK re-research + rebuild |
 | seminars-bio | #4431, #4215 | BIO readiness + builds |
 | seminars-cross | #3120, #3079 | Cross-seminar gates |
-| hramatka | #4542 | Teacher lesson service (user-gated) |
+| hramatka | #4542 | Teacher lesson service, production-path qualification, and teacher-ready release |
 
 Rules for every orchestrator (Claude, Codex UI, agy, cursor): work from your stream epic;
 link new issues to a stream at creation; orphans get flagged at every cold start.
@@ -79,7 +88,8 @@ epic-board state and bind only once that stream's driver (State: the operator) c
 | --- | --- | --- | --- |
 | infra-harness | ACTIVE *(proposed)* | Weak-driver rails T1 (T1.1 slot addressing ✅ #5878; T1.2 lease lifecycle; T1.3 glm canary lane) | T1.2 + T1.3 merged with mutation-checked tests. (The fleet-comms decision packet — dual-write parity + authority-signal evidence for any future plane change, file handoff never dropped unilaterally per `fleet-comms-coordination.md` — is the NEXT milestone, not this one.) |
 | eval-harness | *(operator to set)* | Internal product-quality machinery under #4913 *(driver to confirm)* | Current internal milestone is confirmed on #4913 without absorbing public gold or release work |
-| benchmark-2156 | ACTIVE | Governance truth freeze (#5966), then held-out manifest (#5967) | #5966 merged and closed; #5967 then manifests every eligible upstream held-out UA-GEC record with provenance and exclusions |
+| benchmark-2156 | ACTIVE | Analyze all v0.1.1 errors and model disagreements; freeze the v0.2 evidence plan (#6059) | All 677 items have auditable dispositions; benchmark defects are separated from model errors; category coverage, uncertainty targets, no-change/hard-positive needs, contamination controls, and stop conditions are frozen before any new model run |
+| open-model-data | ACTIVE | Audit the 5,000-record literary candidate (#6058) | Every record class has evidenced provenance, rights/training/redistribution status, duplicate analysis, balance receipts, and an explicit publish/train/no-go disposition; no upload, release, or model training is performed |
 | atlas-practice | ACTIVE *(proposed)* | Practice Hub deck experience stable after the D10 wave (#5877–#5883) *(driver to confirm)* | A bounded soak: 7 days with no new daily-deck defect filed; then next #4700 item |
 | atlas-intake | ACTIVE *(proposed)* | 20k enrichment run with durable storage (#5884) *(driver to confirm)* | Enriched dataset persisted off-repo with a tracked pointer; refetch never needed |
 | corpus-channels | *(operator to set)* | *(VACANT — driver to set from #4706; the slot-addressing work formerly listed here is infra-harness scope)* | — |

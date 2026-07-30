@@ -1,6 +1,9 @@
 # Ukrainian Open-Model Data Infrastructure: North Star
 
 > **Status:** Operator-confirmed strategic direction; evidence snapshot
+> **Approval receipt:** Operator issued **GO REALIGN** for the stream and issue
+> realignment on 2026-07-30; recorded in
+> [PR #6060](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6060).
 > **Recorded:** 2026-07-30
 > **Applies to:** Ukrainian model evaluation, dataset work, training-data
 > preparation, and UNLP ecosystem monitoring
@@ -31,6 +34,21 @@ This direction implements the existing accepted decision to prioritize grammar
 and lexical naturalness while parking model fine-tuning. It also preserves the
 accepted boundary between public evaluation gold, private product data, and
 future training data.
+
+## GitHub execution homes
+
+- [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
+  owns audited open-model data infrastructure, provenance contracts,
+  morphology/tokenizer diagnostics, and consumer-specific exporters.
+- [#6057](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6057)
+  owns the separately frozen public benchmark v0.2 design and release.
+- [#4913](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4913)
+  owns internal Ukrainian validators, quality gates, product adapters, and
+  private calibration.
+- [#4542](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4542)
+  owns Hramatka teacher-product behavior and production-path qualification.
+- [#2156](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2156)
+  remains closed with the immutable public v0.1.1 evaluation freeze.
 
 ## Why the size of Ukrainian matters
 
