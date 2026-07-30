@@ -191,23 +191,31 @@ def sync_source_to_mirror(source: str, mirror_dir: Path, *, dry_run: bool = Fals
     subprocess.run(cmd, check=True)
 
 
+
+def _is_remote_rsync_source(source: str) -> bool:
+    """True for rsync remote forms ``host:path`` / ``user@host:path`` (not Windows drive)."""
+    if source.startswith("/"):
+        return False
+    # Windows-style local drive: C:\...
+    if len(source) >= 2 and source[1] == ":" and source[0].isalpha():
+        return False
+    return ":" in source
+
+
+def _remote_host_and_path(source: str) -> tuple[str, str]:
+    host, _, remote_path = source.partition(":")
+    if not host or not remote_path:
+        raise DurableMirrorError(f"invalid remote source: {source!r}")
+    return host, remote_path
+
+
 def snapshot(source: str, mirror_dir: Path, *, dry_run: bool = False, allow_live: bool = False) -> dict[str, Any]:
     """rsync ``source`` into ``mirror_dir`` and (re)write its checksummed manifest."""
     # Fail closed when the source still looks live (local or remote): pid file means
     # SQLite may still be mutating. Remote check is best-effort via ssh test -f.
     if not allow_live:
-        if "@" not in source:
-            pid = Path(source) / "enrich-driver.pid"
-            if pid.is_file():
-                raise DurableMirrorError(
-                    f"refusing to snapshot live runner at {source} (found enrich-driver.pid); "
-                    "stop the runner or pass --allow-live for an emergency best-effort copy"
-                )
-        else:
-            # user@host:/path  or  host:/path
-            host, _, remote_path = source.partition(":")
-            if not remote_path:
-                raise DurableMirrorError(f"invalid remote source: {source!r}")
+        if _is_remote_rsync_source(source):
+            host, remote_path = _remote_host_and_path(source)
             remote_pid = f"{remote_path.rstrip('/')}/enrich-driver.pid"
             probe = subprocess.run(
                 ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", host, "test", "-f", remote_pid],
@@ -217,6 +225,13 @@ def snapshot(source: str, mirror_dir: Path, *, dry_run: bool = False, allow_live
             if probe.returncode == 0:
                 raise DurableMirrorError(
                     f"refusing to snapshot live remote runner at {source} (found enrich-driver.pid); "
+                    "stop the runner or pass --allow-live for an emergency best-effort copy"
+                )
+        else:
+            pid = Path(source) / "enrich-driver.pid"
+            if pid.is_file():
+                raise DurableMirrorError(
+                    f"refusing to snapshot live runner at {source} (found enrich-driver.pid); "
                     "stop the runner or pass --allow-live for an emergency best-effort copy"
                 )
     sync_source_to_mirror(source, mirror_dir, dry_run=dry_run)
