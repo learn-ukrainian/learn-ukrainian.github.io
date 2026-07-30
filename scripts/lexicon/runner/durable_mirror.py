@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import subprocess
 import sys
 import time
@@ -190,8 +191,16 @@ def sync_source_to_mirror(source: str, mirror_dir: Path, *, dry_run: bool = Fals
     subprocess.run(cmd, check=True)
 
 
-def snapshot(source: str, mirror_dir: Path, *, dry_run: bool = False) -> dict[str, Any]:
+def snapshot(source: str, mirror_dir: Path, *, dry_run: bool = False, allow_live: bool = False) -> dict[str, Any]:
     """rsync ``source`` into ``mirror_dir`` and (re)write its checksummed manifest."""
+    # Fail closed on local live runners: a pid file means SQLite may still be mutating.
+    if not allow_live and "@" not in source:
+        pid = Path(source) / "enrich-driver.pid"
+        if pid.is_file():
+            raise DurableMirrorError(
+                f"refusing to snapshot live runner at {source} (found enrich-driver.pid); "
+                "stop the runner or pass allow_live=True for an emergency best-effort copy"
+            )
     sync_source_to_mirror(source, mirror_dir, dry_run=dry_run)
     if dry_run:
         # Preview prospective payload from a local source; remote sources get a
@@ -225,6 +234,8 @@ def require_durable(mirror_dir: Path, *, max_age_hours: float = DEFAULT_MAX_AGE_
     (VPS work-dir wipe, local cache purge) must call this first and abort on
     :class:`DurableMirrorError`.
     """
+    if not math.isfinite(max_age_hours) or max_age_hours < 0:
+        raise DurableMirrorError(f"invalid max_age_hours={max_age_hours!r} (must be finite and >= 0)")
     manifest = read_manifest(mirror_dir)
     files = manifest.get("files")
     if not isinstance(files, list):
@@ -261,7 +272,7 @@ def require_durable(mirror_dir: Path, *, max_age_hours: float = DEFAULT_MAX_AGE_
 
 
 def _cmd_snapshot(args: argparse.Namespace) -> int:
-    manifest = snapshot(args.source, args.mirror_dir, dry_run=args.dry_run)
+    manifest = snapshot(args.source, args.mirror_dir, dry_run=args.dry_run, allow_live=args.allow_live)
     print(
         f"{'would snapshot' if args.dry_run else 'snapshotted'} {args.source} -> {args.mirror_dir}: "
         f"{manifest['file_count']} files, {manifest['total_bytes']} bytes"
@@ -301,6 +312,7 @@ def build_parser() -> argparse.ArgumentParser:
     snap.add_argument("--source", required=True, help="Local path or user@host:/path to mirror from")
     snap.add_argument("--mirror-dir", type=Path, required=True)
     snap.add_argument("--dry-run", action="store_true", help="rsync --dry-run; do not write a manifest")
+    snap.add_argument("--allow-live", action="store_true", help="allow snapshot while enrich-driver.pid is present (best-effort)")
     snap.set_defaults(func=_cmd_snapshot)
 
     verify = subparsers.add_parser("verify", help="recompute checksums and compare against manifest.json")

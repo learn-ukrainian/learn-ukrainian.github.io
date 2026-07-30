@@ -53,7 +53,7 @@ def test_snapshot_syncs_and_writes_verifiable_manifest(tmp_path: Path) -> None:
     mirror = tmp_path / "mirror"
     _populate(source)
 
-    manifest = snapshot(str(source), mirror)
+    manifest = snapshot(str(source), mirror, allow_live=True)
 
     assert (mirror / "manifest.json").is_file()
     assert (mirror / "ledger.sqlite").read_bytes() == b"fake-ledger-bytes"
@@ -69,10 +69,10 @@ def test_snapshot_delete_removes_stale_mirror_files(tmp_path: Path) -> None:
     source = tmp_path / "work"
     mirror = tmp_path / "mirror"
     _populate(source)
-    snapshot(str(source), mirror)
+    snapshot(str(source), mirror, allow_live=True)
 
     (source / "network-cache.sqlite").unlink()
-    manifest = snapshot(str(source), mirror)
+    manifest = snapshot(str(source), mirror, allow_live=True)
 
     assert not (mirror / "network-cache.sqlite").exists()
     assert "network-cache.sqlite" not in {entry["path"] for entry in manifest["files"]}
@@ -82,7 +82,7 @@ def test_verify_detects_corruption(tmp_path: Path) -> None:
     source = tmp_path / "work"
     mirror = tmp_path / "mirror"
     _populate(source)
-    snapshot(str(source), mirror)
+    snapshot(str(source), mirror, allow_live=True)
 
     (mirror / "ledger.sqlite").write_bytes(b"corrupted")
 
@@ -95,7 +95,7 @@ def test_verify_detects_missing_file(tmp_path: Path) -> None:
     source = tmp_path / "work"
     mirror = tmp_path / "mirror"
     _populate(source)
-    snapshot(str(source), mirror)
+    snapshot(str(source), mirror, allow_live=True)
 
     (mirror / "enrich.log").unlink()
 
@@ -124,7 +124,7 @@ def test_require_durable_fails_closed_when_stale(tmp_path: Path) -> None:
     mirror = tmp_path / "mirror"
     _populate(source)
     stale_time = time.time() - 48 * 3600
-    manifest = snapshot(str(source), mirror)
+    manifest = snapshot(str(source), mirror, allow_live=True)
     manifest["generated_at"] = stale_time
     write_manifest(manifest, mirror)
 
@@ -136,7 +136,7 @@ def test_require_durable_fails_closed_on_corruption(tmp_path: Path) -> None:
     source = tmp_path / "work"
     mirror = tmp_path / "mirror"
     _populate(source)
-    snapshot(str(source), mirror)
+    snapshot(str(source), mirror, allow_live=True)
     (mirror / "ledger.sqlite").write_bytes(b"tampered")
 
     with pytest.raises(DurableMirrorError, match="failed verification"):
@@ -147,7 +147,7 @@ def test_require_durable_succeeds_for_fresh_verified_mirror(tmp_path: Path) -> N
     source = tmp_path / "work"
     mirror = tmp_path / "mirror"
     _populate(source)
-    snapshot(str(source), mirror)
+    snapshot(str(source), mirror, allow_live=True)
 
     manifest = require_durable(mirror)
     assert manifest["file_count"] == 4
@@ -158,7 +158,7 @@ def test_cli_snapshot_then_verify_then_require(tmp_path: Path) -> None:
     mirror = tmp_path / "mirror"
     _populate(source)
 
-    assert main(["snapshot", "--source", str(source), "--mirror-dir", str(mirror)]) == 0
+    assert main(["snapshot", "--source", str(source), "--mirror-dir", str(mirror), "--allow-live"]) == 0
     assert main(["verify", "--mirror-dir", str(mirror)]) == 0
     assert main(["require", "--mirror-dir", str(mirror)]) == 0
 
@@ -173,7 +173,7 @@ def test_cli_dry_run_snapshot_does_not_write_manifest(tmp_path: Path) -> None:
     mirror = tmp_path / "mirror"
     _populate(source)
 
-    assert main(["snapshot", "--source", str(source), "--mirror-dir", str(mirror), "--dry-run"]) == 0
+    assert main(["snapshot", "--source", str(source), "--mirror-dir", str(mirror), "--dry-run", "--allow-live"]) == 0
     assert not (mirror / "manifest.json").exists()
 
 
@@ -182,7 +182,7 @@ def test_verify_fails_when_extra_files_present(tmp_path: Path) -> None:
     source = tmp_path / "work"
     mirror = tmp_path / "mirror"
     _populate(source)
-    snapshot(str(source), mirror)
+    snapshot(str(source), mirror, allow_live=True)
     (mirror / "sneaky.extra").write_text("nope", encoding="utf-8")
     manifest = read_manifest(mirror)
     result = verify_manifest(manifest, mirror)
@@ -195,7 +195,7 @@ def test_require_durable_fails_on_future_generated_at(tmp_path: Path) -> None:
     source = tmp_path / "work"
     mirror = tmp_path / "mirror"
     _populate(source)
-    snapshot(str(source), mirror)
+    snapshot(str(source), mirror, allow_live=True)
     manifest = read_manifest(mirror)
     manifest["generated_at"] = time.time() + 3600
     write_manifest(manifest, mirror)
@@ -207,7 +207,7 @@ def test_verify_rejects_path_escape(tmp_path: Path) -> None:
     source = tmp_path / "work"
     mirror = tmp_path / "mirror"
     _populate(source)
-    snapshot(str(source), mirror)
+    snapshot(str(source), mirror, allow_live=True)
     manifest = read_manifest(mirror)
     manifest["files"].append({"path": "../outside.txt", "bytes": 1, "sha256": "0" * 64})
     write_manifest(manifest, mirror)
@@ -221,3 +221,20 @@ def test_read_manifest_rejects_invalid_json(tmp_path: Path) -> None:
     (mirror / "manifest.json").write_text("{not-json", encoding="utf-8")
     with pytest.raises(DurableMirrorError, match="unreadable"):
         read_manifest(mirror)
+
+
+def test_require_rejects_nan_max_age(tmp_path: Path) -> None:
+    source = tmp_path / "work"
+    mirror = tmp_path / "mirror"
+    _populate(source)
+    snapshot(str(source), mirror, allow_live=True)
+    with pytest.raises(DurableMirrorError, match="invalid max_age"):
+        require_durable(mirror, max_age_hours=float("nan"))
+
+
+def test_snapshot_refuses_live_pid_by_default(tmp_path: Path) -> None:
+    source = tmp_path / "work"
+    mirror = tmp_path / "mirror"
+    _populate(source)
+    with pytest.raises(DurableMirrorError, match="live runner"):
+        snapshot(str(source), mirror, allow_live=False)
