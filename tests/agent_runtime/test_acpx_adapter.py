@@ -120,6 +120,21 @@ _AUTH_REQUIRED_NDJSON = (
     '"data":{"acpxCode":"RUNTIME","detailCode":"AUTH_REQUIRED","origin":"acp","sessionId":"unknown"}}}\n'
 )
 
+_USAGE_BODY_NDJSON = (
+    '{"jsonrpc":"2.0","method":"session/update","params":{"update":'
+    '{"sessionUpdate":"usage_update","inputTokens":3,"output_tokens":4}}}\n'
+)
+
+_USAGE_META_NDJSON = (
+    '{"jsonrpc":"2.0","method":"session/update","params":{"update":'
+    '{"sessionUpdate":"usage_update","_meta":{"usage":{"total_tokens":24}}}}}\n'
+)
+
+_INVALID_USAGE_NDJSON = (
+    '{"jsonrpc":"2.0","method":"session/update","params":{"update":'
+    '{"sessionUpdate":"usage_update","totalTokens":"unknown"}}}\n'
+)
+
 
 def _stub_binary(monkeypatch, tmp_path: Path, *, version: str = "0.13.0") -> Path:
     """Point the adapter at a fake pinned binary + version probe.
@@ -574,6 +589,98 @@ def test_parse_response_success():
     assert result.session_id is None
     assert result.tokens is None
     assert result.tool_calls == []
+
+
+# ---------------------------------------------------------------------------
+# parse_response — terminal stopReason schema
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "stop_reason_json",
+    ['"unknown_stop_reason"', "42", "null"],
+    ids=["unknown", "non-string", "null"],
+)
+def test_parse_response_unrecognized_stop_reason_fails_closed(stop_reason_json):
+    adapter = AcpxAdapter()
+    terminal = '{"stopReason":"end_turn"}'
+    replacement = f'{{"stopReason":{stop_reason_json}}}'
+    result = adapter.parse_response(
+        stdout=_SUCCESS_NDJSON.replace(terminal, replacement),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.response == ""
+    assert "unrecognized terminal stopReason schema" in result.stderr_excerpt
+
+
+def test_parse_response_recognizes_max_tokens_stop_reason():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_SUCCESS_NDJSON.replace('"end_turn"', '"max_tokens"'),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.response == "Hello world."
+    assert result.stderr_excerpt is None
+
+
+def test_parse_response_multiple_stop_reason_results_fails_closed():
+    adapter = AcpxAdapter()
+    second_terminal = '{"jsonrpc":"2.0","id":3,"result":{"stopReason":"max_tokens"}}\n'
+    result = adapter.parse_response(
+        stdout=_SUCCESS_NDJSON + second_terminal,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.response == ""
+    assert "multiple terminal stopReason responses" in result.stderr_excerpt
+
+
+def test_parse_response_uses_last_valid_usage_total():
+    adapter = AcpxAdapter()
+    terminal = '{"jsonrpc":"2.0","id":2,"result":{"stopReason":"end_turn"}}\n'
+    result = adapter.parse_response(
+        stdout=_SUCCESS_NDJSON.replace(terminal, _USAGE_BODY_NDJSON + _USAGE_META_NDJSON + terminal),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.tokens == 24
+
+
+def test_parse_response_sums_usage_input_and_output_tokens():
+    adapter = AcpxAdapter()
+    terminal = '{"jsonrpc":"2.0","id":2,"result":{"stopReason":"end_turn"}}\n'
+    result = adapter.parse_response(
+        stdout=_SUCCESS_NDJSON.replace(terminal, _USAGE_BODY_NDJSON + terminal),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.tokens == 7
+
+
+def test_parse_response_invalid_usage_tokens_fail_closed():
+    adapter = AcpxAdapter()
+    terminal = '{"jsonrpc":"2.0","id":2,"result":{"stopReason":"end_turn"}}\n'
+    result = adapter.parse_response(
+        stdout=_SUCCESS_NDJSON.replace(terminal, _INVALID_USAGE_NDJSON + terminal),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.response == ""
+    assert "invalid totalTokens" in result.stderr_excerpt
 
 
 # ---------------------------------------------------------------------------

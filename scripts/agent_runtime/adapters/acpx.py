@@ -108,8 +108,54 @@ _METADATA_FIELD_MAX_LEN = 200
 _METADATA_FIELD_RE = re.compile(r"^[A-Za-z0-9._:-]+$")
 
 # Real ACP `StopReason` values (agentclientprotocol/sdk schema.json
-# `$defs.StopReason`). "cancelled" is handled as its own failure path.
+# `$defs.StopReason`). "cancelled" is recognized but handled as its own
+# failure path.
+_STOP_REASONS = frozenset(
+    {"end_turn", "max_tokens", "max_turn_requests", "refusal", "cancelled"}
+)
 _STOP_REASON_CANCELLED = "cancelled"
+_MISSING_STOP_REASON = object()
+
+_USAGE_TOTAL_FIELDS = ("total_tokens", "totalTokens", "size", "used")
+_USAGE_INPUT_FIELDS = ("input_tokens", "inputTokens")
+_USAGE_OUTPUT_FIELDS = ("output_tokens", "outputTokens")
+
+
+def _usage_total_from_update(update: dict[str, Any]) -> tuple[int | None, str | None]:
+    """Return a usage total, or an error for an invalid exposed token field.
+
+    ACPX exposes usage either under ``update._meta.usage`` or directly on
+    the ``usage_update`` body. An explicit total is authoritative; when it
+    is absent, both input and output token counts are required to calculate
+    one. Updates without any usable total are ignored by the caller, while a
+    present but non-integer or negative recognized field fails closed.
+    """
+    meta = update.get("_meta")
+    usage: object = update
+    if isinstance(meta, dict) and "usage" in meta:
+        usage = meta["usage"]
+
+    if not isinstance(usage, dict):
+        return None, "usage_update carried a non-object usage payload"
+
+    fields = _USAGE_TOTAL_FIELDS + _USAGE_INPUT_FIELDS + _USAGE_OUTPUT_FIELDS
+    for field in fields:
+        if field not in usage:
+            continue
+        value = usage[field]
+        if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+            return None, f"usage_update carried invalid {field}={value!r}"
+
+    for field in _USAGE_TOTAL_FIELDS:
+        if field in usage:
+            return usage[field], None
+
+    input_tokens = next((usage[field] for field in _USAGE_INPUT_FIELDS if field in usage), None)
+    output_tokens = next((usage[field] for field in _USAGE_OUTPUT_FIELDS if field in usage), None)
+    if input_tokens is not None and output_tokens is not None:
+        return input_tokens + output_tokens, None
+
+    return None, None
 
 
 class AcpxShadowRefusalError(ValueError):
@@ -353,11 +399,13 @@ class AcpxAdapter:
         Fails closed (``ok=False``) on any of: no output at all, a line that
         isn't valid JSON, a line that doesn't look like a JSON-RPC message, a
         duplicate terminal (``result``/``error``) message for the same
-        request id, a terminal ``error`` object, a stream that ends without
-        ever reaching a terminal ``stopReason``, or ``stopReason ==
-        "cancelled"``. There is no best-effort partial-success path — see
-        module docstring and the approved contract's "must fail closed"
-        requirement.
+        request id, more than one terminal ``stopReason`` response, a
+        terminal ``error`` object, a stream that ends without ever reaching
+        a terminal ``stopReason``, or ``stopReason == "cancelled"``. There
+        is no best-effort partial-success path — see module docstring and the
+        approved contract's "must fail closed" requirement. The last valid
+        ``usage_update`` token total is retained when ACPX exposes one;
+        malformed token fields in such an update also fail closed.
         """
         _ = output_file, plan, call_start_time
         lines = [line for line in stdout.splitlines() if line.strip()]
@@ -379,7 +427,9 @@ class AcpxAdapter:
         duplicate = False
         message_chunks: list[str] = []
         final_error: dict[str, Any] | None = None
-        final_stop_reason: str | None = None
+        final_stop_reason: object = _MISSING_STOP_REASON
+        stop_reason_response_count = 0
+        tokens: int | None = None
 
         for event in events:
             if event.get("method") == "session/update":
@@ -388,6 +438,12 @@ class AcpxAdapter:
                     text = (update.get("content") or {}).get("text")
                     if isinstance(text, str):
                         message_chunks.append(text)
+                elif update.get("sessionUpdate") == "usage_update":
+                    usage_total, usage_error = _usage_total_from_update(update)
+                    if usage_error is not None:
+                        return self._closed(usage_error, stderr)
+                    if usage_total is not None:
+                        tokens = usage_total
                 continue
 
             has_result = "result" in event
@@ -407,12 +463,15 @@ class AcpxAdapter:
                 final_error = event.get("error") or {}
             elif has_result:
                 result = event.get("result") or {}
-                stop_reason = result.get("stopReason")
-                if stop_reason is not None:
-                    final_stop_reason = stop_reason
+                if "stopReason" in result:
+                    final_stop_reason = result["stopReason"]
+                    stop_reason_response_count += 1
 
         if duplicate:
             return self._closed("duplicate terminal response replay detected for the same request id", stderr)
+
+        if stop_reason_response_count > 1:
+            return self._closed("multiple terminal stopReason responses detected in one-shot exec stream", stderr)
 
         if final_error is not None:
             data = final_error.get("data") or {}
@@ -420,8 +479,14 @@ class AcpxAdapter:
             message = final_error.get("message", "acpx error")
             return self._closed(f"acpx {label}: {message}", stderr)
 
-        if final_stop_reason is None:
+        if final_stop_reason is _MISSING_STOP_REASON:
             return self._closed(f"acpx exec stream ended without a terminal response (rc={returncode})", stderr)
+
+        if not isinstance(final_stop_reason, str) or final_stop_reason not in _STOP_REASONS:
+            return self._closed(
+                f"unrecognized terminal stopReason schema: {final_stop_reason!r}",
+                stderr,
+            )
 
         if final_stop_reason == _STOP_REASON_CANCELLED:
             return self._closed("acpx prompt turn cancelled (stopReason=cancelled)", stderr)
@@ -437,7 +502,7 @@ class AcpxAdapter:
             stderr_excerpt=None,
             rate_limited=False,
             session_id=None,
-            tokens=None,
+            tokens=tokens,
             tool_calls=[],
         )
 
