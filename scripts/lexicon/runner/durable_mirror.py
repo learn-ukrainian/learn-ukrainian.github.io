@@ -193,14 +193,32 @@ def sync_source_to_mirror(source: str, mirror_dir: Path, *, dry_run: bool = Fals
 
 def snapshot(source: str, mirror_dir: Path, *, dry_run: bool = False, allow_live: bool = False) -> dict[str, Any]:
     """rsync ``source`` into ``mirror_dir`` and (re)write its checksummed manifest."""
-    # Fail closed on local live runners: a pid file means SQLite may still be mutating.
-    if not allow_live and "@" not in source:
-        pid = Path(source) / "enrich-driver.pid"
-        if pid.is_file():
-            raise DurableMirrorError(
-                f"refusing to snapshot live runner at {source} (found enrich-driver.pid); "
-                "stop the runner or pass allow_live=True for an emergency best-effort copy"
+    # Fail closed when the source still looks live (local or remote): pid file means
+    # SQLite may still be mutating. Remote check is best-effort via ssh test -f.
+    if not allow_live:
+        if "@" not in source:
+            pid = Path(source) / "enrich-driver.pid"
+            if pid.is_file():
+                raise DurableMirrorError(
+                    f"refusing to snapshot live runner at {source} (found enrich-driver.pid); "
+                    "stop the runner or pass --allow-live for an emergency best-effort copy"
+                )
+        else:
+            # user@host:/path  or  host:/path
+            host, _, remote_path = source.partition(":")
+            if not remote_path:
+                raise DurableMirrorError(f"invalid remote source: {source!r}")
+            remote_pid = f"{remote_path.rstrip('/')}/enrich-driver.pid"
+            probe = subprocess.run(
+                ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", host, "test", "-f", remote_pid],
+                check=False,
+                capture_output=True,
             )
+            if probe.returncode == 0:
+                raise DurableMirrorError(
+                    f"refusing to snapshot live remote runner at {source} (found enrich-driver.pid); "
+                    "stop the runner or pass --allow-live for an emergency best-effort copy"
+                )
     sync_source_to_mirror(source, mirror_dir, dry_run=dry_run)
     if dry_run:
         # Preview prospective payload from a local source; remote sources get a
