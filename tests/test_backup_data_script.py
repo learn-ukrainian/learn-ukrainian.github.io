@@ -595,7 +595,19 @@ def test_doctor_checks_initialized_repository_with_validated_environment(
     assert "Doctor checks passed." in result.stdout
 
 
-def test_refuses_staging_inside_project_checkout(
+def test_refuses_staging_inside_script_checkout(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    environment["LU_BACKUP_TMPDIR"] = str(REPO_ROOT / "scripts")
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    assert "Staging directory must be outside the project checkout" in result.stderr
+
+
+def test_refuses_staging_inside_selected_project_checkout(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
