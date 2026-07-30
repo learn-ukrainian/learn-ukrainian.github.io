@@ -1,0 +1,518 @@
+"""Tests for AcpxAdapter — the experimental ACPX read-only shadow seat (#6027).
+
+Fixtures under ``tests/fixtures/acpx/`` are bounded NDJSON transcripts. Two of
+them (``timeout.ndjson``, and the shape of ``auth_required.ndjson`` /
+``agent_disconnected.ndjson``) mirror byte-for-byte or structurally the real
+output captured live against the pinned local ``acpx@0.13.0`` binary and the
+``acpxCode``/``detailCode``/``EXIT_CODES`` constants read directly out of
+``node_modules/acpx/dist/*.js`` — see the module docstring in
+``scripts/agent_runtime/adapters/acpx.py`` for the captured contract this
+suite verifies against. No test in this file spawns a real subprocess or
+touches the network; all process-lifecycle categories (success, cancel,
+timeout, crash, malformed/partial NDJSON, duplicate replay, auth failure) are
+exercised as pure ``parse_response()`` calls over fixture stdout, exactly as
+the runner would call the adapter after collecting subprocess output.
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+
+from scripts.agent_runtime.adapters import acpx as acpx_module
+from scripts.agent_runtime.adapters.acpx import AcpxAdapter, AcpxShadowRefusalError
+
+FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "acpx"
+
+
+def _read_fixture(name: str) -> str:
+    return (FIXTURES / name).read_text(encoding="utf-8")
+
+
+def _stub_binary(monkeypatch, tmp_path: Path, *, version: str = "0.13.0") -> Path:
+    """Point the adapter at a fake pinned binary + version probe.
+
+    Avoids depending on the real npm-installed ``node_modules/.bin/acpx``
+    being present in whatever environment runs this suite.
+    """
+    binary = tmp_path / "fake-acpx-bin"
+    binary.write_text("#!/bin/sh\necho stub\n", encoding="utf-8")
+    binary.chmod(0o755)
+    monkeypatch.setattr(acpx_module, "_PINNED_BINARY", binary)
+    monkeypatch.setattr(acpx_module, "_probe_acpx_version", lambda _binary: version)
+    return binary
+
+
+def _shadow_env(monkeypatch) -> None:
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "shadow")
+
+
+def _build(
+    adapter: AcpxAdapter,
+    *,
+    cwd: Path,
+    prompt: str = "ping",
+    model: str | None = None,
+    session_id: str | None = None,
+    tool_config: dict | None = None,
+    effort: str | None = None,
+):
+    if tool_config is None:
+        tool_config = {"acpx_shadow": True}
+    return adapter.build_invocation(
+        prompt=prompt,
+        mode="read-only",
+        cwd=cwd,
+        model=model,
+        task_id="t-1",
+        session_id=session_id,
+        tool_config=tool_config,
+        effort=effort,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Registry-level identity
+# ---------------------------------------------------------------------------
+
+
+def test_adapter_identity_is_read_only_only():
+    adapter = AcpxAdapter()
+    assert adapter.name == "acpx-codex-shadow"
+    assert adapter.supported_modes == frozenset({"read-only"})
+
+
+# ---------------------------------------------------------------------------
+# Flag-off rollback (feature flag gate)
+# ---------------------------------------------------------------------------
+
+
+def test_build_invocation_refuses_when_flag_unset(tmp_path, monkeypatch):
+    monkeypatch.delenv(acpx_module.TRANSPORT_ENV, raising=False)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="LU_ACPX_TRANSPORT"):
+        _build(adapter, cwd=tmp_path)
+
+
+def test_build_invocation_refuses_when_flag_off(tmp_path, monkeypatch):
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "off")
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError):
+        _build(adapter, cwd=tmp_path)
+
+
+def test_build_invocation_refuses_unknown_flag_value(tmp_path, monkeypatch):
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "live")
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError):
+        _build(adapter, cwd=tmp_path)
+
+
+def test_build_invocation_succeeds_when_flag_shadow(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    plan = _build(adapter, cwd=tmp_path)
+    assert plan.cmd[0] == str(acpx_module._PINNED_BINARY)
+
+
+# ---------------------------------------------------------------------------
+# Shadow marker + tool_config allowlist
+# ---------------------------------------------------------------------------
+
+
+def test_build_invocation_requires_explicit_shadow_marker(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="acpx_shadow"):
+        _build(adapter, cwd=tmp_path, tool_config={})
+
+
+def test_build_invocation_rejects_unsupported_tool_config_keys(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="unsupported tool_config"):
+        _build(
+            adapter,
+            cwd=tmp_path,
+            tool_config={"acpx_shadow": True, "mcp_servers": {"sources": {"url": "http://x"}}},
+        )
+
+
+def test_build_invocation_rejects_non_codex_target(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="target_agent"):
+        _build(
+            adapter,
+            cwd=tmp_path,
+            tool_config={"acpx_shadow": True, "target_agent": "claude"},
+        )
+
+
+# ---------------------------------------------------------------------------
+# No persistent session
+# ---------------------------------------------------------------------------
+
+
+def test_build_invocation_rejects_non_null_session_id(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="session_id"):
+        _build(adapter, cwd=tmp_path, session_id="some-prior-session")
+
+
+def test_build_invocation_never_uses_session_or_prompt_subcommand(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    plan = _build(adapter, cwd=tmp_path)
+    assert "codex" in plan.cmd and "exec" in plan.cmd
+    assert "prompt" not in plan.cmd
+    assert "sessions" not in plan.cmd
+    assert "-s" not in plan.cmd
+    assert "--session" not in plan.cmd
+
+
+# ---------------------------------------------------------------------------
+# Version pin
+# ---------------------------------------------------------------------------
+
+
+def test_build_invocation_rejects_version_mismatch(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path, version="0.12.1")
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="version"):
+        _build(adapter, cwd=tmp_path)
+
+
+def test_build_invocation_rejects_missing_binary(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    monkeypatch.setattr(acpx_module, "_PINNED_BINARY", tmp_path / "does-not-exist")
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="pinned binary not found"):
+        _build(adapter, cwd=tmp_path)
+
+
+def test_build_invocation_rejects_unreadable_version_probe(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path, version="")
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="version"):
+        _build(adapter, cwd=tmp_path)
+
+
+# ---------------------------------------------------------------------------
+# Argv / permission confinement — structural, not probabilistic
+# ---------------------------------------------------------------------------
+
+
+def test_build_invocation_argv_is_fully_confined(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    plan = _build(adapter, cwd=tmp_path, prompt="investigate the flaky test")
+
+    assert plan.cwd == tmp_path
+    assert plan.stdin_payload == "investigate the flaky test"
+    # Prompt travels via stdin (-f -), never as a bare argv token.
+    assert "investigate the flaky test" not in plan.cmd
+    assert plan.cmd[-3:] == ["exec", "-f", "-"]
+
+    pairs = list(zip(plan.cmd, plan.cmd[1:], strict=False))
+    assert ("--auth-policy", "fail") in pairs
+    assert ("--non-interactive-permissions", "fail") in pairs
+    assert ("--allowed-tools", "") in pairs
+    assert ("--max-turns", "1") in pairs
+    assert ("--prompt-retries", "0") in pairs
+    assert ("--format", "json") in pairs
+    assert "--deny-all" in plan.cmd
+    assert "--no-fs" in plan.cmd
+    assert "--no-terminal" in plan.cmd
+    assert "--json-strict" in plan.cmd
+    assert "--model" not in plan.cmd  # omitted entirely when caller passes none
+
+
+def test_build_invocation_passes_model_only_when_given(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    plan = _build(adapter, cwd=tmp_path, model="gpt-5.6-terra")
+    pairs = list(zip(plan.cmd, plan.cmd[1:], strict=False))
+    assert ("--model", "gpt-5.6-terra") in pairs
+
+
+def test_build_invocation_ignores_unsupported_effort_without_raising(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    plan = _build(adapter, cwd=tmp_path, effort="xhigh")
+    assert plan is not None  # did not raise
+
+
+def test_build_invocation_rejects_write_mode(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(ValueError, match="mode"):
+        adapter.build_invocation(
+            prompt="ping",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config={"acpx_shadow": True},
+        )
+
+
+def test_liveness_signal_paths_is_empty(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    plan = _build(adapter, cwd=tmp_path)
+    assert adapter.liveness_signal_paths(plan) == ()
+
+
+# ---------------------------------------------------------------------------
+# Protected primary checkout refusal
+# ---------------------------------------------------------------------------
+
+
+def test_build_invocation_refuses_protected_primary_checkout(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    monkeypatch.setattr(
+        acpx_module._worktree_containment,
+        "classify_repo_path",
+        lambda *_args, **_kwargs: "primary_checkout",
+    )
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="primary checkout"):
+        _build(adapter, cwd=tmp_path)
+
+
+def test_build_invocation_allows_non_primary_cwd(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    monkeypatch.setattr(
+        acpx_module._worktree_containment,
+        "classify_repo_path",
+        lambda *_args, **_kwargs: "dispatch_worktree",
+    )
+    adapter = AcpxAdapter()
+
+    plan = _build(adapter, cwd=tmp_path)
+    assert plan.cwd == tmp_path
+
+
+# ---------------------------------------------------------------------------
+# parse_response — success
+# ---------------------------------------------------------------------------
+
+
+def test_parse_response_success():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_read_fixture("success.ndjson"),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.response == "Hello world."
+    assert result.stderr_excerpt is None
+    assert result.rate_limited is False
+    assert result.session_id is None
+    assert result.tokens is None
+    assert result.tool_calls == []
+
+
+# ---------------------------------------------------------------------------
+# parse_response — cancellation
+# ---------------------------------------------------------------------------
+
+
+def test_parse_response_cancelled_fails_closed():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_read_fixture("cancelled.ndjson"),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.response == ""
+    assert "cancelled" in result.stderr_excerpt.lower()
+
+
+# ---------------------------------------------------------------------------
+# parse_response — timeout (byte-for-byte capture of the real 0.13.0 binary)
+# ---------------------------------------------------------------------------
+
+
+def test_parse_response_timeout_fails_closed():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_read_fixture("timeout.ndjson"),
+        stderr="",
+        returncode=3,  # EXIT_CODES.TIMEOUT captured from node_modules/acpx/dist
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.response == ""
+    assert "TIMEOUT" in result.stderr_excerpt
+    assert result.rate_limited is False
+
+
+# ---------------------------------------------------------------------------
+# parse_response — crash / agent disconnect
+# ---------------------------------------------------------------------------
+
+
+def test_parse_response_crash_with_no_terminal_marker_fails_closed():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_read_fixture("crash_no_terminal.ndjson"),
+        stderr="",
+        returncode=-9,  # signaled: the runner killed the process
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.response == ""
+    assert "no terminal response" in result.stderr_excerpt or "rc=-9" in result.stderr_excerpt
+
+
+def test_parse_response_agent_disconnected_fails_closed():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_read_fixture("agent_disconnected.ndjson"),
+        stderr="",
+        returncode=1,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.response == ""
+    assert "AGENT_DISCONNECTED" in result.stderr_excerpt
+
+
+# ---------------------------------------------------------------------------
+# parse_response — malformed / partial NDJSON
+# ---------------------------------------------------------------------------
+
+
+def test_parse_response_malformed_line_fails_closed():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_read_fixture("malformed_line.ndjson"),
+        stderr="",
+        returncode=-9,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.response == ""
+    assert "malformed NDJSON" in result.stderr_excerpt
+
+
+def test_parse_response_unrecognized_schema_fails_closed():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_read_fixture("unrecognized_schema.ndjson"),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.response == ""
+    assert "unrecognized NDJSON schema" in result.stderr_excerpt
+
+
+def test_parse_response_empty_stdout_fails_closed():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(stdout="", stderr="boom", returncode=1, output_file=None)
+    assert result.ok is False
+    assert result.response == ""
+    assert "no NDJSON output" in result.stderr_excerpt
+    assert "boom" in result.stderr_excerpt
+
+
+# ---------------------------------------------------------------------------
+# parse_response — duplicate terminal replay
+# ---------------------------------------------------------------------------
+
+
+def test_parse_response_duplicate_terminal_replay_fails_closed():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_read_fixture("duplicate_replay.ndjson"),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.response == ""
+    assert "duplicate" in result.stderr_excerpt.lower()
+
+
+# ---------------------------------------------------------------------------
+# parse_response — authentication failure
+# ---------------------------------------------------------------------------
+
+
+def test_parse_response_auth_required_fails_closed():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_read_fixture("auth_required.ndjson"),
+        stderr="",
+        returncode=1,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.response == ""
+    assert "AUTH_REQUIRED" in result.stderr_excerpt
+    assert result.rate_limited is False
+
+
+# ---------------------------------------------------------------------------
+# parse_response — never best-effort on a nonzero exit with an otherwise
+# complete-looking stream (belt and suspenders on the fail-closed posture)
+# ---------------------------------------------------------------------------
+
+
+def test_parse_response_nonzero_exit_with_end_turn_still_fails():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_read_fixture("success.ndjson"),
+        stderr="unexpected trailing crash",
+        returncode=1,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.response == ""

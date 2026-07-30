@@ -1,0 +1,2 @@
+{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":false,"writeTextFile":false},"terminal":false},"clientInfo":{"name":"acpx","version":"0.13.0"}}}
+{"jsonrpc":"2.0","id":null,"error":{"code":-32603,"message":"Authentication required for codex and --auth-policy is 'fail'","data":{"acpxCode":"RUNTIME","detailCode":"AUTH_REQUIRED","origin":"acp","sessionId":"unknown"}}}
