@@ -99,22 +99,72 @@ Create a source-only request packet:
   --output /tmp/ua-eval-requests.jsonl
 ```
 
-Generate responses outside the scorer using only the request fields. Then
-import them with versioned model, provider, and decoding metadata:
+The provider-neutral runner accepts any executable that can read the generated
+batch prompt from its final argument or standard input and return the required
+JSON object. Copy
+`data/projects/ua_eval_harness/model_run_config.example.json`, then replace
+every descriptive value with the exact provider, route, model revision, alias
+resolution, decoding controls, and command version used for the run. The
+machine-readable contract is
+`data/projects/ua_eval_harness/model_run_config_schema_v1.json`.
+
+For a command that reads the prompt from standard input:
+
+```bash
+.venv/bin/python scripts/projects/ua_eval_harness/run_model_batch.py \
+  --requests /tmp/ua-eval-requests.jsonl \
+  --prompt data/projects/ua_eval_harness/minimal_edit_prompt_v1.txt \
+  --config /tmp/model-run-config.json \
+  --executable /path/to/provider-command \
+  --command-arg=batch \
+  --command-arg=--json \
+  --prompt-mode stdin \
+  --raw-output /tmp/ua-eval-run/raw-provider-output.jsonl \
+  --output /tmp/ua-eval-run/model-output.jsonl \
+  --metadata-output /tmp/ua-eval-run/model-metadata.json \
+  --state-dir /tmp/ua-eval-run/state \
+  --batch-size 40 \
+  --workers 1 \
+  --timeout 1800 \
+  --retries 1
+```
+
+Use `--prompt-mode argument` when the command expects the complete prompt as
+its final argument. Repeat `--command-arg` for each literal command argument;
+the runner never invokes a shell.
+
+Every provider invocation uses a retained working directory outside the
+repository. The child process receives only a small standard environment plus
+the environment-variable names explicitly allowed by the run config. Gold
+targets, references, edit spans, and scores are neither loaded nor supplied.
+
+Completed batch states are immutable and bound to the request packet, prompt,
+run config, model, and command. Re-running the same command with the same state
+directory verifies and reuses completed batches. A binding mismatch or an
+attempt to replace a different receipt fails closed. The metadata records
+timestamps, retries, exact response coverage, provider routing, alias
+resolution, decoding controls, command identity, and cryptographic receipts.
+
+The raw-provider-output file may contain provider transport events or model
+trace wrappers. Retain it for local auditing, but publish only the normalized
+model output, import metadata, saved responses, and aggregate score unless the
+provider's terms and disclosure policy explicitly permit more.
+
+Import the normalized output with the generated metadata, then score it:
 
 ```bash
 .venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py import \
   --requests /tmp/ua-eval-requests.jsonl \
-  --model-output /tmp/model-output.jsonl \
-  --metadata /tmp/model-metadata.json \
-  --output /tmp/saved-responses.jsonl
+  --model-output /tmp/ua-eval-run/model-output.jsonl \
+  --metadata /tmp/ua-eval-run/model-metadata.json \
+  --output /tmp/ua-eval-run/saved-responses.jsonl
 
 .venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py score \
-  --responses /tmp/saved-responses.jsonl \
-  --output /tmp/score-report.json
+  --responses /tmp/ua-eval-run/saved-responses.jsonl \
+  --output /tmp/ua-eval-run/score-report.json
 ```
 
 The importer rejects incomplete coverage, duplicate IDs, drift in source or
-prompt hashes, tampered responses, and fields that resemble hidden gold data.
-Live generation is optional and remains outside the credential-free
-reproduction path.
+prompt hashes, tampered responses, malformed provenance, and fields that
+resemble hidden gold data. Live generation remains optional and outside the
+credential-free reproduction path.

@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "alias_resolution": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "requested": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "resolved": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "requested",
+        "resolved",
+        "evidence"
+      ],
+      "type": "object"
+    },
+    "auth_environment": {
+      "items": {
+        "pattern": "^[A-Z_][A-Z0-9_]*$",
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "command_identity": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ],
+      "type": "object"
+    },
+    "decoding": {
+      "additionalProperties": false,
+      "properties": {
+        "max_output_tokens": {},
+        "safety": {},
+        "seed": {},
+        "stop": {},
+        "temperature": {},
+        "top_k": {},
+        "top_p": {}
+      },
+      "required": [
+        "temperature",
+        "top_p",
+        "top_k",
+        "seed",
+        "max_output_tokens",
+        "stop",
+        "safety"
+      ],
+      "type": "object"
+    },
+    "model": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "model_version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "provider": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "route": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "ua_eval_model_run_config.v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "run_id",
+    "provider",
+    "route",
+    "model",
+    "model_version",
+    "alias_resolution",
+    "decoding",
+    "command_identity"
+  ],
+  "type": "object"
+}
