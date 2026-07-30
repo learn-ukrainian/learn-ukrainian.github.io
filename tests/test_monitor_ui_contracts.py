@@ -99,6 +99,35 @@ def test_runtime_page_keeps_primary_monitor_nav():
         assert f'href="{href}"' in html
 
 
+def test_runtime_page_renders_read_only_acpx_shadow_transport_overview():
+    html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
+
+    assert "/api/runtime/acpx?days=7" in html
+    assert "transport.default_mode" in html
+    assert "seat.evidence?.total" in html
+    assert "seat.evidence_state" in html
+    assert "aggregate_evidence" not in html
+    assert "snapshot.shadow_calls" not in html
+    assert "transport.default ??" not in html
+    assert "ACPX Shadow Transport" in html
+    assert "Native runtime authoritative" in html
+    assert "ACPX evidence is observational only." in html
+    assert "No shadow calls in window" in html
+    assert "ACPX pin" in html
+    assert "No dispatch authority" in html
+    assert 'class="acpx-rail"' in html
+    assert "@media (max-width: 820px)" in html
+    assert 'aria-labelledby="acpx-heading"' in html
+
+
+def test_runtime_page_acpx_panel_has_no_mutating_transport_controls():
+    html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
+    acpx_panel = html[html.index('id="acpx-heading"') : html.index('function renderAgents')]
+
+    for prohibited in ["<form", "acpx-send", "acpx-post", "acpx-chat", "acpx-session", "acpx-toggle", "acpx-retry", "acpx-cancel"]:
+        assert prohibited not in acpx_panel
+
+
 def test_routing_page_uses_live_monitor_sources():
     html = (DASHBOARDS / "routing.html").read_text(encoding="utf-8")
     assert "Static snapshot" not in html

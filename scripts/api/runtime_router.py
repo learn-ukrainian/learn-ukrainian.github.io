@@ -19,6 +19,19 @@ from .config import BATCH_STATE_DIR
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from agent_runtime.adapters.acpx import (
+    GROK_SHADOW_EFFORT,
+    GROK_SHADOW_MODEL,
+    PINNED_GROK_VERSION,
+    AcpxAdapter,
+    AcpxGrokShadowAdapter,
+)
+from agent_runtime.adapters.acpx import (
+    PINNED_VERSION as ACPX_PINNED_VERSION,
+)
+from agent_runtime.adapters.acpx import (
+    TRANSPORT_ENV as ACPX_TRANSPORT_ENV,
+)
 from agent_runtime.adapters.gemini import has_gemini_oauth_credentials, resolve_gemini_auth_mode
 from agent_runtime.usage import has_headroom
 
@@ -64,24 +77,18 @@ def _usage_day_from_name(path: Path) -> date | None:
         return None
 
 
-def _usage_files(*, days: int, agent: str | None = None, entrypoint: str | None = None) -> list[Path]:
+def _usage_files(*, days: int) -> list[Path]:
     if not USAGE_DIR.exists():
         return []
     today = datetime.now(UTC).date()
     earliest = today - timedelta(days=max(1, days) - 1)
     files: list[Path] = []
+    # Hyphens are valid in both agent and entrypoint names, so the filename's
+    # ``<agent>-<entrypoint>`` segment is intentionally not parsed here.
+    # Callers apply exact filters to the JSONL record fields instead.
     for path in sorted(USAGE_DIR.glob("usage_*.jsonl")):
         day = _usage_day_from_name(path)
         if day is None or day < earliest or day > today:
-            continue
-        name = path.stem.removeprefix("usage_")
-        prefix = name.rsplit("_", 1)[0]
-        if "-" not in prefix:
-            continue
-        file_agent, file_entrypoint = prefix.split("-", 1)
-        if agent and file_agent != agent:
-            continue
-        if entrypoint and file_entrypoint != entrypoint:
             continue
         files.append(path)
     return files
@@ -131,7 +138,7 @@ def _update_outcome_bucket(bucket: dict[str, Any], record: dict[str, Any]) -> No
 def list_runtime_agents() -> list[dict[str, Any]]:
     agents: list[dict[str, Any]] = []
     for path in sorted(ADAPTERS_DIR.glob("*.py")):
-        if path.stem in {"__init__", "base", "hermes_grok", "hermes_qwen"} or path.stem.startswith("_"):
+        if path.stem in {"__init__", "acpx", "base", "hermes_grok", "hermes_qwen"} or path.stem.startswith("_"):
             continue
         try:
             module = importlib.import_module(f"agent_runtime.adapters.{path.stem}")
@@ -179,7 +186,7 @@ def summarize_runtime_usage(
     by_entrypoint: dict[str, dict[str, Any]] = defaultdict(_new_outcome_bucket)
     total = 0
 
-    for record in _iter_usage_records(_usage_files(days=window_days, agent=agent, entrypoint=entrypoint)):
+    for record in _iter_usage_records(_usage_files(days=window_days)):
         record_agent = record.get("agent")
         record_entrypoint = record.get("entrypoint")
         if agent and record_agent != agent:
@@ -197,6 +204,86 @@ def summarize_runtime_usage(
         "records_total": total,
         "by_agent": dict(by_agent),
         "by_entrypoint": dict(by_entrypoint),
+    }
+
+
+def acpx_shadow_overview(*, days: int = 7) -> dict[str, Any]:
+    """Return a sanitized ACPX shadow posture and evidence snapshot.
+
+    This is deliberately not a transport-health probe. It reads the configured
+    mode plus already-persisted aggregate usage evidence; it never launches an
+    agent, checks credentials, or exposes per-call identifiers and excerpts.
+    """
+    window_days = min(max(1, int(days)), 30)
+    configured_mode = os.environ.get(ACPX_TRANSPORT_ENV, "off").strip().lower()
+    mode = configured_mode if configured_mode in {"off", "shadow"} else "invalid"
+
+    seat_specs = (
+        {
+            "name": AcpxAdapter.name,
+            "target": "codex",
+            "model": AcpxAdapter.default_model,
+            "effort": None,
+        },
+        {
+            "name": AcpxGrokShadowAdapter.name,
+            "target": "grok",
+            "model": GROK_SHADOW_MODEL,
+            "effort": GROK_SHADOW_EFFORT,
+        },
+    )
+    evidence_by_seat = {
+        str(seat["name"]): _new_outcome_bucket()
+        for seat in seat_specs
+    }
+    records = _iter_usage_records(_usage_files(days=window_days))
+    for record in records:
+        record_agent = str(record.get("agent") or "")
+        if record_agent in evidence_by_seat:
+            _update_outcome_bucket(evidence_by_seat[record_agent], record)
+
+    seats: list[dict[str, Any]] = []
+    for seat in seat_specs:
+        evidence = evidence_by_seat[str(seat["name"])]
+        seats.append({
+            **seat,
+            "read_only": True,
+            "stateless": True,
+            "evidence_state": "observed" if evidence["total"] else "no_evidence",
+            "evidence": {
+                "window_days": window_days,
+                **evidence,
+            },
+        })
+
+    return {
+        "generated_at": _isoformat_z(datetime.now(UTC)),
+        "transport": {
+            "mode": mode,
+            "scope": "monitor_process",
+            "default_mode": "off",
+            "authority": "native_runtime",
+            "posture": "evidence_only",
+            "writable": False,
+        },
+        "pins": {
+            "acpx": ACPX_PINNED_VERSION,
+            "grok_cli": PINNED_GROK_VERSION,
+            "validation": "before_spawn",
+        },
+        "seats": seats,
+        "safety": {
+            "max_in_flight": 1,
+            "backlog": False,
+            "retries": False,
+            "sessions": False,
+            "chat": False,
+            "mutations": False,
+            "dispatch_authority": False,
+            "routing_authority": False,
+            "failover_authority": False,
+            "review_authority": False,
+        },
     }
 
 
@@ -261,6 +348,12 @@ async def runtime_usage(
     days: int = Query(7, ge=1, le=30),
 ):
     return await asyncio.to_thread(summarize_runtime_usage, days=days, agent=agent, entrypoint=entrypoint)
+
+
+@router.get("/acpx")
+async def runtime_acpx(days: int = Query(7, ge=1, le=30)):
+    """Read-only ACPX shadow posture and aggregate evidence; never probe."""
+    return await asyncio.to_thread(acpx_shadow_overview, days=days)
 
 
 @router.get("/headroom")

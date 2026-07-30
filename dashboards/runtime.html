@@ -57,9 +57,32 @@ tr:last-child td { border-bottom: none; }
 .pill.err { background: rgba(248,81,73,0.15); color: var(--red); }
 .pill.warn { background: rgba(210,153,34,0.15); color: var(--yellow); }
 .pill.gray { background: rgba(72,79,88,0.2); color: var(--text2); }
+.pill.info { background: rgba(57,210,192,0.12); color: var(--cyan); }
+.acpx-card { border-left-color: var(--cyan); }
+.acpx-rail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(170px, 0.72fr) minmax(0, 1fr); gap: 12px; align-items: stretch; }
+.acpx-seat, .acpx-spine { border: 1px solid var(--border); border-radius: 10px; background: var(--bg3); padding: 14px; }
+.acpx-seat { min-width: 0; }
+.acpx-seat-name { color: var(--text); font-weight: 700; font-size: 13px; overflow-wrap: anywhere; }
+.acpx-seat-detail { margin-top: 8px; color: var(--text2); font-size: 12px; line-height: 1.45; }
+.acpx-spine { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-color: rgba(57,210,192,0.45); background: rgba(57,210,192,0.06); }
+.acpx-spine::before, .acpx-spine::after { content: ''; display: block; width: 1px; height: 16px; background: var(--cyan); opacity: 0.7; }
+.acpx-spine-title { color: var(--cyan); font-size: 12px; font-weight: 700; margin: 8px 0 4px; }
+.acpx-spine-copy { color: var(--text2); font-size: 11px; line-height: 1.4; }
+.acpx-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+.acpx-fact { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+.acpx-fact dt { color: var(--text3); font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.acpx-fact dd { margin: 5px 0 0; color: var(--text); font-size: 13px; overflow-wrap: anywhere; }
+.acpx-safety { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
 @media (max-width: 820px) {
   .usage-row { grid-template-columns: 1fr; }
   .topbar { flex-wrap: wrap; }
+  .acpx-rail { grid-template-columns: 1fr; }
+  .acpx-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .acpx-spine { min-height: 110px; }
+  .acpx-spine::before, .acpx-spine::after { width: 30px; height: 1px; }
+}
+@media (max-width: 520px) {
+  .acpx-summary { grid-template-columns: 1fr; }
 }
 </style>
 <link rel="stylesheet" href="/monitor.css">
@@ -68,7 +91,7 @@ tr:last-child td { border-bottom: none; }
 <div class="topbar">
   <div>
     <h1>Runtime</h1>
-    <div class="sub">Agent runtime usage, headroom, and recent calls</div>
+    <div class="sub">Agent runtime usage, shadow evidence, headroom, and recent calls</div>
   </div>
   <div class="spacer"></div>
   <button class="btn" onclick="refreshRuntime()">Refresh</button>
@@ -92,6 +115,12 @@ tr:last-child td { border-bottom: none; }
     <div class="card-header"><h2>&#128736; Agents</h2><div class="muted">Installed adapters and defaults</div></div>
     <div class="banner" id="agents-banner"></div>
     <div id="agents-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="card acpx-card" aria-labelledby="acpx-heading">
+    <div class="card-header"><h2 id="acpx-heading">&#8644; ACPX Shadow Transport</h2><div class="muted">Read-only evidence · last 7 days</div></div>
+    <div class="banner" id="acpx-banner" role="status"></div>
+    <div id="acpx-content" class="empty" aria-live="polite">Loading shadow transport snapshot...</div>
   </section>
 
   <section class="card orange">
@@ -180,6 +209,106 @@ function renderAgents(agents) {
   </table>`;
 }
 
+function displayLabel(key) {
+  return String(key || 'unknown').replace(/[_-]+/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+}
+
+function displayValue(value) {
+  if (value === true) return 'Enabled';
+  if (value === false) return 'Not enabled';
+  if (value == null || value === '') return 'Not reported';
+  return String(value);
+}
+
+function shadowCallCount(seats) {
+  return seats.reduce((total, seat) => {
+    const count = Number(seat.evidence?.total);
+    return total + (Number.isFinite(count) ? count : 0);
+  }, 0);
+}
+
+function normalizeSeats(snapshot) {
+  return Array.isArray(snapshot.seats) ? snapshot.seats : [];
+}
+
+function seatEvidenceSummary(seat) {
+  const evidence = seat.evidence && typeof seat.evidence === 'object' ? seat.evidence : {};
+  const total = Number(evidence.total);
+  if (!Number.isFinite(total)) return 'No shadow calls in window';
+  const outcomes = ['ok', 'error', 'rate_limited', 'timeout'].filter(key => evidence[key]).map(key => `${key} ${evidence[key]}`);
+  const state = seat.evidence_state ? `${displayLabel(seat.evidence_state)} · ` : '';
+  return `${state}${total} shadow calls${outcomes.length ? ` (${outcomes.join(', ')})` : ''}`;
+}
+
+function renderAcpx(snapshot) {
+  const content = document.getElementById('acpx-content');
+  const transport = snapshot.transport || {};
+  const seats = normalizeSeats(snapshot);
+  const seatSlots = [seats[0], seats[1]];
+  const safety = snapshot.safety || {};
+  const pins = snapshot.pins || {};
+  const calls = shadowCallCount(seats);
+  const mode = transport.mode;
+  const facts = [
+    ['Monitor env mode', mode, 'mode'],
+    ['Default', transport.default_mode],
+    ['Authority', displayLabel(transport.authority)],
+    ['Shadow calls', calls],
+    ['ACPX pin', pins.acpx ? `v${pins.acpx}` : null],
+    ['Grok CLI pin', pins.grok_cli ? `v${pins.grok_cli}` : null],
+    ['Pin validation', pins.validation ? displayLabel(pins.validation) : null],
+    ['Snapshot', formatTs(snapshot.generated_at)],
+  ];
+  const seatMarkup = seatSlots.map((seat, index) => {
+    if (!seat) return `<div class="acpx-seat"><div class="acpx-seat-name">Shadow seat ${index + 1}</div><div class="acpx-seat-detail">No seat telemetry reported.</div></div>`;
+    const name = seat.name || seat.id || seat.agent || `Shadow seat ${index + 1}`;
+    const detail = seatEvidenceSummary(seat);
+    const observed = seat.evidence_state === 'observed';
+    const target = displayLabel(seat.target || 'shadow');
+    const model = seat.model || 'Model not reported';
+    const effort = seat.effort ? ` · ${displayLabel(seat.effort)} effort` : '';
+    return `<div class="acpx-seat">
+      <div class="acpx-seat-name">${escapeHtml(name)}</div>
+      <div class="acpx-seat-detail"><span class="pill ${observed ? 'info' : 'gray'}">${observed ? 'Evidence observed' : 'No evidence'}</span></div>
+      <div class="acpx-seat-detail">${escapeHtml(target)} · <span class="mono">${escapeHtml(model)}</span>${escapeHtml(effort)}</div>
+      <div class="acpx-seat-detail">${escapeHtml(detail)}</div>
+    </div>`;
+  });
+  const safeWhenFalse = {
+    backlog: 'No backlog',
+    retries: 'No retries',
+    sessions: 'No sessions',
+    chat: 'No chat',
+    mutations: 'No mutations',
+    dispatch_authority: 'No dispatch authority',
+    routing_authority: 'No routing authority',
+    failover_authority: 'No failover authority',
+    review_authority: 'No review authority',
+  };
+  const safetyMarkup = Object.entries(safety).filter(([, value]) => typeof value === 'boolean').map(([key, value]) => {
+    if (Object.hasOwn(safeWhenFalse, key) && value === false) return `<span class="pill ok">${escapeHtml(safeWhenFalse[key])}</span>`;
+    return `<span class="pill ${value ? 'warn' : 'gray'}">${escapeHtml(displayLabel(key))}: ${value ? 'enabled' : 'not enabled'}</span>`;
+  }).join('');
+  const inFlightMarkup = Number.isFinite(Number(safety.max_in_flight))
+    ? `<span class="pill info">Max ${escapeHtml(safety.max_in_flight)} in flight</span>`
+    : '';
+  const noCallsCopy = calls === 0 ? '<div class="empty">No shadow calls in window</div>' : '';
+  const factMarkup = facts.map(([label, value, kind]) => {
+    if (kind === 'mode') {
+      const modeClass = value === 'shadow' ? 'info' : value === 'off' ? 'gray' : 'err';
+      return `<div class="acpx-fact"><dt>${escapeHtml(label)}</dt><dd><span class="pill ${modeClass}">${escapeHtml(displayLabel(value))}</span></dd></div>`;
+    }
+    return `<div class="acpx-fact"><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(displayValue(value))}</dd></div>`;
+  }).join('');
+  content.innerHTML = `${noCallsCopy}<div class="acpx-rail" aria-label="Two-seat ACPX shadow rail">
+    ${seatMarkup[0]}
+    <div class="acpx-spine"><div class="acpx-spine-title">Native runtime authoritative</div><div class="acpx-spine-copy">ACPX evidence is observational only.</div></div>
+    ${seatMarkup[1]}
+  </div>
+  <dl class="acpx-summary">${factMarkup}</dl>
+  ${safetyMarkup || inFlightMarkup ? `<div class="acpx-safety" aria-label="Reported safety boundaries">${inFlightMarkup}${safetyMarkup}</div>` : '<div class="empty">Safety boundaries not reported.</div>'}`;
+}
+
 function segment(count, total, cls, label) {
   if (!count) return '';
   const pct = total ? Math.max((count / total) * 100, 8) : 0;
@@ -256,6 +385,15 @@ function startRefresh() {
 
 async function loadRuntime() {
   let agents = [];
+
+  try {
+    const data = await fetchJson('/api/runtime/acpx?days=7');
+    renderAcpx(data && typeof data === 'object' ? data : {});
+    setBanner('acpx-banner', '');
+  } catch (error) {
+    setBanner('acpx-banner', `ACPX snapshot unavailable: ${error.message}`);
+    document.getElementById('acpx-content').innerHTML = '<div class="empty">Shadow transport evidence is unavailable. No agent or provider health is inferred.</div>';
+  }
 
   try {
     const data = await fetchJson('/api/runtime/agents');
