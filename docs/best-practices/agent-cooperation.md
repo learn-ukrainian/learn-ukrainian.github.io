@@ -7,6 +7,37 @@
 >
 > **Runtime layer:** All agent CLI invocations route through `scripts/agent_runtime/`.
 > If you're touching an agent subprocess, read [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md) first.
+>
+> **Seat onboarding (canonical ownership matrix):**
+> [`docs/runbooks/agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md) —
+> `discuss` vs `delegate.py` vs fleet-comms/file handoffs vs experimental ACPX vs
+> Buzz deferred; Kimi native max-only vs KimiCC high default; formal `review-pr`
+> separation; fresh-agent smoke.
+
+---
+
+## Cooperation surfaces (ownership — do not conflate)
+
+| Surface | Role | Authority |
+| --- | --- | --- |
+| **`discuss`** (bridge) | Bounded deliberation / design input | Never implementation; never the formal cross-family review gate |
+| **`scripts/delegate.py dispatch`** | Isolated implementation execution | Worktree writes only; not durable fleet authority |
+| **Fleet-comms + file handoffs** | Durable coordination | **File dual-write remains authoritative in every current plane mode** — query `plane-status`, never hard-code live mode |
+| **ACPX** | Experimental structured invocation transport (default-off/shadow; one read-only/stateless Codex participant) | Not a second bus; correlation evidence ≠ authority; rollback = flag off + native transport |
+| **Buzz** | **Deferred** | Relay-as-authority conflicts with the current model — out of scope |
+
+**Discussion is not formal review.** Design panels and same-family helpers do not
+seal PRs. Formal CF:
+
+```bash
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR_NUMBER> --reviewer codex|claude|glm
+.venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict ...
+```
+
+Use explicit project entrypoints (no bare `ab` — on many hosts that is ApacheBench).
+
+Full onboarding contract, budgets, troubleshooting, and no-auth smoke:
+[`agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md).
 
 ---
 
@@ -424,6 +455,10 @@ mcp__message-broker__send_message(
 ### What `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` is — and isn't
 
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` runs bounded rounds (default 2, max 4) of parallel agent responses on a topic, short-circuiting when all agents end with `[AGREE]`. Transcript lands in the named channel with `parent_id` threading.
+
+**It is NOT formal cross-family review.** Discussion output is design input only.
+Independent PR CF remains `review-pr` / `publish-review-verdict` (see ownership
+matrix in [`agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md)).
 
 **It is NOT a quorum mechanism.** Three agents don't form an independent jury — Claude/Gemini/Codex all trained on overlapping internet corpora and have **correlated blind spots** (e.g., Russian-imperial framings show up in all three model families' priors). Math-voting on agent agreement isn't trustworthy.
 

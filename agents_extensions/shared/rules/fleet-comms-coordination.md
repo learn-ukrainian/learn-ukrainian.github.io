@@ -18,13 +18,16 @@ that skill). Do not reintroduce claims Sol rejected (see §Plane modes).
 | Layer | Role | Where |
 | --- | --- | --- |
 | **This rule** | Binding musts for every TUI/UI cold-start | `/api/rules` + offline path |
+| **Seat onboarding contract** | Task-oriented ownership matrix (discuss / delegate / fleet-comms / ACPX / Buzz deferred), Kimi routes, smoke | `docs/runbooks/agent-seat-onboarding.md` |
 | **`drive-epic` skill** | Method playbook (orient → topology → route → dispatch → settle → CF → merge → handoff) | `agents_extensions/shared/skills/drive-epic/SKILL.md` |
 | **Epic roster runbook** | Operator seat routing (which model drives which epic) | `docs/runbooks/epic-orchestrator-roster.md` |
-| **Live routing data** | Caps, ladders, formal CF pins | `/api/rules` model-assignment + `scripts/config/model_catalog.yaml` + `scripts/config/fleet_communications.yaml` |
+| **Live routing data** | Caps, ladders, formal CF pins, **live plane mode** | `/api/rules` model-assignment + `scripts/config/model_catalog.yaml` + `scripts/config/fleet_communications.yaml` + `plane-status` |
 | **Launchers** | Lease claim + dual-aware pointer (not a second design) | interactive `start-*.sh`, provider `start-*-driver.sh` |
 
-**Golden rule (from drive-epic):** rules + skill teach **method**; roster/caps are **live
-data** — always re-read; never hard-code from memory.
+**Golden rule (from drive-epic):** rules + skill teach **method**; roster/caps/modes are
+**live data** — always re-read; never hard-code from memory. Fresh supported seats start
+at the **onboarding contract** for ownership and experimental ACPX scope; this rule does
+**not** duplicate mutable model pins, effort ladders, or a hard-coded live plane mode.
 
 ## Two halves (do not conflate)
 
@@ -120,9 +123,26 @@ Every epic driver session (any harness) MUST:
   DevOps independently uses `epic:5703`. Codex never concurrently co-owns a same-stream
   lease and remains a formal-CF **review** + coding lane.
 
+## Ownership pointer (do not invent a second design)
+
+Supported fleet seats cold-start through:
+
+1. This rule (binding fleet-comms musts).
+2. **`docs/runbooks/agent-seat-onboarding.md`** — ownership matrix for `discuss`,
+   `delegate.py dispatch`, fleet-comms + authoritative file handoffs, experimental
+   ACPX (default-off/shadow, one read-only/stateless Codex participant), and
+   **Buzz deferred**. Also covers Kimi native (default; K3 max-only) vs explicit
+   KimiCC (K3 defaults `high`), rollback, and no-auth fresh-agent smoke.
+
+Discussion is never formal CF. Formal CF remains `review-pr` /
+`publish-review-verdict` only. ACPX is structured invocation transport, not a
+coordination authority. File dual-write stays authoritative in every plane mode.
+
 ## Offline fallback path
 
 `agents_extensions/shared/rules/fleet-comms-coordination.md` (this file).
 Served in `GET /api/rules` (`scripts/api/rules_router.py` `RULE_SOURCES`).
+Onboarding contract (not served as a rules blob; linked from this rule):
+`docs/runbooks/agent-seat-onboarding.md`.
 
 </critical>

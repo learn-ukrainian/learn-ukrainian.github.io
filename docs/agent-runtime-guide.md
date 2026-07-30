@@ -38,20 +38,56 @@ No other subprocess building anywhere else in the codebase. If you find
 yourself writing `subprocess.Popen([..., "claude", ...])` — stop. Use
 `runner.invoke()`.
 
-## KimiCC headless route
+## Kimi routes and KimiCC headless route
 
-The native Kimi Code lane remains the default. To opt into Kimi K3 through the
-headless Claude Code harness, dispatch `--agent kimi --harness kimicc`. The
-adapter runs `claude -p --bare` through `scripts/agent_runtime/kimicc_headless.sh`;
-that wrapper sources the same `scripts/lib/kimicc_route.sh` used by
-`start-kimi.sh --harness claude-code`, resolves the catalog route, applies the route guard and
-context profile, then resolves credentials immediately before `exec`.
+**Native Kimi is the default** interactive and headless/fleet route
+(`./start-kimi.sh`, `delegate.py --agent kimi`, bridge). Native **Kimi K3 is
+max-only** — the native adapter does not accept a non-max effort ladder for K3.
+
+**KimiCC is bounded explicit opt-in** (`./start-kimicc.sh`,
+`start-kimi.sh --harness claude-code`, or runtime `harness=kimicc`). On the
+KimiCC route, **K3 defaults to `high`** in interactive and headless/runtime
+paths; supported effort overrides must remain observable in telemetry. Do not
+weaken the native Kimi registry to match KimiCC.
+
+To opt into Kimi through the headless Claude Code harness, dispatch
+`--agent kimi --harness kimicc`. The adapter runs `claude -p --bare` through
+`scripts/agent_runtime/kimicc_headless.sh`; that wrapper sources the same
+`scripts/lib/kimicc_route.sh` used by `start-kimi.sh --harness claude-code`,
+resolves the catalog route, applies the route guard and context profile, then
+resolves credentials immediately before `exec`.
 
 For `kimi login` OAuth, headless runs export one fresh token at spawn and never
 write `~/.claude` or an isolated Claude config. Kimi access tokens last roughly
 15 minutes, so a long-running headless call must be relaunched; unlike the
 interactive launcher, this stateless `--bare` route does not install an
 `apiKeyHelper` refresh loop.
+
+Ownership matrix, troubleshooting, and seat smoke (including ACPX scope):
+[`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
+
+## ACPX experimental transport (runtime boundary)
+
+ACPX is an **experimental, feature-flagged structured invocation transport** —
+not a coordination plane and not a replacement for `discuss`, fleet-comms, or
+authoritative file handoffs.
+
+Approved boundary (#6027):
+
+- Default **off** / shadow-compare posture; rollback = flag off + native
+  `runner.invoke` transport.
+- Initially **one** read-only/stateless **Codex** ACP participant.
+- Adapter safety contract: one in-flight prompt, zero backlog, zero automatic
+  prompt retries, bounded timeout/cancellation, required correlation/idempotency
+  fields, primary-checkout and write-permission refusal.
+- Correlation / shadow telemetry is **evidence only** — the existing participant
+  result stays authoritative under shadow compare.
+- **Buzz is deferred** (relay-as-authority conflicts with file dual-write).
+
+Do **not** invent ACPX CLI flags or endpoints in callers. Consume the reviewed
+runtime pin and feature flag owned by the integration worker; exact command
+wording is reconciled at assembly time against that pin. Full operator contract:
+[`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
 
 ## Add a new agent in 20 lines
 
