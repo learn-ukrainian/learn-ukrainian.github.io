@@ -170,26 +170,8 @@ def _manifest_fingerprint(mirror_dir: Path, manifest: dict[str, Any]) -> dict[st
     }
 
 
-def write_restic_gate_receipt(
-    mirror_root: Path,
-    *,
-    restic_snapshot_id: str,
-    host: str,
-    git_sha: str,
-    mirror_root_relative_to_data: str = "lexicon/runner-mirror",
-) -> Path:
-    """Record manifests covered by a completed restic snapshot, atomically.
-
-    This receipt is deliberately local. It lets a pre-wipe gate prove that a
-    current mirror was included in a successful restic backup without access
-    to restic credentials or its remote repository.
-    """
-    if not restic_snapshot_id or not isinstance(restic_snapshot_id, str):
-        raise DurableMirrorError("restic gate receipt requires a restic snapshot id")
-    if not host or not isinstance(host, str):
-        raise DurableMirrorError("restic gate receipt requires a host label")
-    if not git_sha or not isinstance(git_sha, str):
-        raise DurableMirrorError("restic gate receipt requires a git sha")
+def _fingerprint_mirrors(mirror_root: Path) -> dict[str, dict[str, Any]]:
+    """Fingerprint every manifest-bearing mirror below a real mirror root."""
     if mirror_root.is_symlink() or not mirror_root.is_dir():
         raise DurableMirrorError(f"restic gate mirror root must be a real directory: {mirror_root}")
 
@@ -200,6 +182,40 @@ def write_restic_gate_receipt(
         if not candidate.is_dir() or not (candidate / MANIFEST_NAME).is_file():
             continue
         mirrors[candidate.name] = _manifest_fingerprint(candidate, read_manifest(candidate))
+    return mirrors
+
+
+def write_restic_gate_receipt(
+    mirror_root: Path,
+    *,
+    restic_snapshot_id: str,
+    host: str,
+    git_sha: str,
+    mirror_root_relative_to_data: str = "lexicon/runner-mirror",
+    receipt_root: Path | None = None,
+) -> Path:
+    """Record manifests covered by a completed restic snapshot, atomically.
+
+    This receipt is deliberately local. It lets a pre-wipe gate prove that a
+    current mirror was included in a successful restic backup without access
+    to restic credentials or its remote repository. ``mirror_root`` is the
+    tree included in restic; when ``receipt_root`` is distinct, it must still
+    have exactly the same manifest fingerprints before the receipt is written.
+    """
+    if not restic_snapshot_id or not isinstance(restic_snapshot_id, str):
+        raise DurableMirrorError("restic gate receipt requires a restic snapshot id")
+    if not host or not isinstance(host, str):
+        raise DurableMirrorError("restic gate receipt requires a host label")
+    if not git_sha or not isinstance(git_sha, str):
+        raise DurableMirrorError("restic gate receipt requires a git sha")
+    mirrors = _fingerprint_mirrors(mirror_root)
+    receipt_root = receipt_root or mirror_root
+    if receipt_root.resolve() != mirror_root.resolve():
+        receipt_mirrors = _fingerprint_mirrors(receipt_root)
+        if receipt_mirrors != mirrors:
+            raise DurableMirrorError(
+                "live runner mirrors changed after staging; refusing to write a receipt for content not backed up"
+            )
 
     receipt = {
         "schema": RESTIC_GATE_RECEIPT_SCHEMA,
@@ -211,7 +227,7 @@ def write_restic_gate_receipt(
         "mirror_root_relative_to_data": mirror_root_relative_to_data,
         "mirrors": mirrors,
     }
-    receipt_path = mirror_root / RESTIC_GATE_RECEIPT_NAME
+    receipt_path = receipt_root / RESTIC_GATE_RECEIPT_NAME
     temp_path = receipt_path.with_suffix(".json.tmp")
     temp_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     temp_path.replace(receipt_path)
@@ -498,6 +514,7 @@ def _cmd_write_restic_gate_receipt(args: argparse.Namespace) -> int:
             host=args.host,
             git_sha=args.git_sha,
             mirror_root_relative_to_data=args.mirror_root_relative_to_data,
+            receipt_root=args.receipt_root,
         )
     except DurableMirrorError as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
@@ -537,6 +554,11 @@ def build_parser() -> argparse.ArgumentParser:
     receipt.add_argument("--host", required=True)
     receipt.add_argument("--git-sha", required=True)
     receipt.add_argument("--mirror-root-relative-to-data", default="lexicon/runner-mirror")
+    receipt.add_argument(
+        "--receipt-root",
+        type=Path,
+        help="live mirror root where the receipt is written; must match --mirror-root",
+    )
     receipt.set_defaults(func=_cmd_write_restic_gate_receipt)
 
     return parser

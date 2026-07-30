@@ -56,20 +56,27 @@ BACKUP_PATHS=()
 
 write_restic_gate_receipt() {
   local snapshot_id=$1
-  local mirror_root="$SOURCE/lexicon/runner-mirror"
+  local staged_mirror_root="$STAGED_ROOT/data/lexicon/runner-mirror"
+  local live_mirror_root="$SOURCE/lexicon/runner-mirror"
   local git_sha
 
-  # Most backups have no runner mirror. Do not create unrelated data paths for
-  # them; when a mirror exists, failure to write its live gate receipt is fatal.
-  [[ -e "$mirror_root" ]] || return 0
-  [[ ! -L "$mirror_root" && -d "$mirror_root" ]] ||
-    die "Runner mirror root must be a real directory: $mirror_root"
+  # The staged tree is the copy restic uploaded. Do not create unrelated data
+  # paths when it has no mirror; if a live mirror appeared after staging, it is
+  # not covered by this snapshot and must not receive a receipt.
+  if [[ ! -e "$staged_mirror_root" ]]; then
+    [[ ! -e "$live_mirror_root" && ! -L "$live_mirror_root" ]] ||
+      die "Runner mirror appeared after staging; refusing to claim restic durability."
+    return 0
+  fi
+  [[ ! -L "$staged_mirror_root" && -d "$staged_mirror_root" ]] ||
+    die "Staged runner mirror root must be a real directory: $staged_mirror_root"
   [[ -x "$REPO_ROOT/.venv/bin/python" ]] ||
     die "Runner mirror receipt writer requires $REPO_ROOT/.venv/bin/python"
   git_sha="$(git -C "$PROJECT_ROOT" rev-parse HEAD)"
   "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/lexicon/runner/durable_mirror.py" \
     write-restic-gate-receipt \
-    --mirror-root "$mirror_root" \
+    --mirror-root "$staged_mirror_root" \
+    --receipt-root "$live_mirror_root" \
     --restic-snapshot-id "$snapshot_id" \
     --host "$BACKUP_HOST" \
     --git-sha "$git_sha" \
