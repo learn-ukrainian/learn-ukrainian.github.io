@@ -18,7 +18,7 @@ import subprocess
 import sys
 import tempfile
 from collections.abc import Mapping, Sequence
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import FIRST_COMPLETED, Future, ThreadPoolExecutor, wait
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -326,6 +326,10 @@ def _parse_exact_object(text: str) -> dict[str, Any]:
 def _assistant_text_from_event(event: Any) -> str | None:
     if not isinstance(event, dict):
         return None
+    if event.get("type") == "text":
+        part = event.get("part")
+        if isinstance(part, dict) and part.get("type") == "text" and isinstance(part.get("text"), str):
+            return part["text"]
     if event.get("role") == "assistant":
         content = event.get("text", event.get("content"))
         if isinstance(content, str):
@@ -680,9 +684,16 @@ def run(
     state_dir.mkdir(parents=True, exist_ok=True)
     completed: dict[int, dict[str, Any]] = {}
     environment = _child_environment(config.get("auth_environment", []))
+    batch_iterator = iter(batches)
     with ThreadPoolExecutor(max_workers=workers) as executor:
-        futures = {
-            executor.submit(
+        futures: dict[Future[dict[str, Any]], int] = {}
+
+        def submit_next() -> bool:
+            try:
+                index, batch = next(batch_iterator)
+            except StopIteration:
+                return False
+            future = executor.submit(
                 _run_one_batch,
                 index,
                 batch,
@@ -695,11 +706,18 @@ def run(
                 environment=environment,
                 state_dir=state_dir,
                 binding_sha256=binding_sha256,
-            ): index
-            for index, batch in batches
-        }
-        for future in as_completed(futures):
-            completed[futures[future]] = future.result()
+            )
+            futures[future] = index
+            return True
+
+        for _ in range(min(workers, len(batches))):
+            submit_next()
+        while futures:
+            done, _ = wait(futures, return_when=FIRST_COMPLETED)
+            for future in done:
+                index = futures.pop(future)
+                completed[index] = future.result()
+                submit_next()
 
     raw_rows: list[dict[str, Any]] = []
     normalized: list[dict[str, str]] = []
@@ -765,7 +783,7 @@ def run(
         "retry_counts": {str(receipt["batch_index"]): receipt["attempts"] - 1 for receipt in batch_receipts},
         "failed_attempts": failed_attempts,
         "response_normalization": [
-            "extract final assistant text from an NDJSON event stream when needed",
+            "extract final assistant text from a recognized NDJSON event when needed",
             "remove one exact optional JSON code fence before schema validation",
         ],
         "isolation": ("each provider invocation used a retained working directory outside the repository"),
