@@ -266,6 +266,8 @@ def load_run_config(path: Path) -> dict[str, Any]:
     auth = config.get("auth_environment", [])
     if not isinstance(auth, list) or any(not isinstance(name, str) or not ENV_NAME.fullmatch(name) for name in auth):
         raise RunnerError("run config auth_environment must contain environment variable names")
+    if len(auth) != len(set(auth)):
+        raise RunnerError("run config auth_environment must not contain duplicate names")
     return config
 
 
@@ -865,14 +867,18 @@ def run(
     failed_rows: list[dict[str, Any]] = []
     for failure in failed_attempts:
         token = failure["invocation_directory_token"]
-        if not isinstance(token, str) or not token.startswith("ua-eval-model-"):
-            raise RunnerError("failed attempt has an invalid invocation token")
-        invocation_dir = _temporary_parent() / token
-        try:
-            stdout = (invocation_dir / "stdout.txt").read_text(encoding="utf-8")
-            stderr = (invocation_dir / "stderr.txt").read_text(encoding="utf-8")
-        except OSError as exc:
-            raise RunnerError("cannot read retained failed-attempt output") from exc
+        if token is None:
+            stdout = ""
+            stderr = ""
+        else:
+            if not isinstance(token, str) or not token.startswith("ua-eval-model-"):
+                raise RunnerError("failed attempt has an invalid invocation token")
+            invocation_dir = _temporary_parent() / token
+            try:
+                stdout = (invocation_dir / "stdout.txt").read_text(encoding="utf-8")
+                stderr = (invocation_dir / "stderr.txt").read_text(encoding="utf-8")
+            except OSError as exc:
+                raise RunnerError("cannot read retained failed-attempt output") from exc
         if _sha256_text(stdout) != failure["stdout_sha256"] or _sha256_text(stderr) != failure["stderr_sha256"]:
             raise RunnerError("retained failed-attempt output hash mismatch")
         failed_rows.append(

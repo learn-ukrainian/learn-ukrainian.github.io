@@ -311,6 +311,18 @@ def test_run_config_requires_exact_alias_decoding_and_tool_receipts(
             runner.load_run_config(config)
 
 
+def test_run_config_rejects_duplicate_auth_environment_names(
+    tmp_path: Path,
+) -> None:
+    config = _config(
+        tmp_path,
+        auth_environment=["FAKE_LOG", "FAKE_LOG"],
+    )
+
+    with pytest.raises(runner.RunnerError, match="must not contain duplicate names"):
+        runner.load_run_config(config)
+
+
 def test_accepts_only_narrow_machine_response_wrappers() -> None:
     payload = '{"responses":[{"item_id":"item-1","raw_response":"fixed"}]}'
     assert runner.parse_provider_response(
@@ -434,6 +446,37 @@ def test_retries_and_preserves_failure_receipts(tmp_path: Path) -> None:
         assert (path / "process-receipt.json").is_file()
         acceptance = json.loads((path / "acceptance-receipt.json").read_text())
         assert acceptance["accepted"] is (path == invocation_paths[-1])
+
+
+def test_recovered_scratch_directory_failure_preserves_empty_receipt(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original_mkdtemp = runner.tempfile.mkdtemp
+    calls = 0
+
+    def fail_once(*args: object, **kwargs: object) -> str:
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise OSError(errno.ENOSPC, "No space left on device")
+        return original_mkdtemp(*args, **kwargs)
+
+    monkeypatch.setattr(runner.tempfile, "mkdtemp", fail_once)
+    _, output, metadata_path, _ = _run(
+        tmp_path,
+        retries=1,
+    )
+
+    assert len(output.read_text().splitlines()) == runner.EXPECTED_REQUEST_COUNT
+    metadata = json.loads(metadata_path.read_text())
+    failed = metadata["generation_metadata"]["failed_attempts"]
+    assert len(failed) == 1
+    assert failed[0]["invocation_directory_token"] is None
+    failed_rows = [json.loads(line) for line in (tmp_path / "failed.jsonl").read_text().splitlines()]
+    assert len(failed_rows) == 1
+    assert failed_rows[0]["raw_provider_output"] == ""
+    assert failed_rows[0]["provider_stderr"] == ""
 
 
 def test_accepts_fenced_json_and_preserves_raw_provider_output(tmp_path: Path) -> None:
