@@ -32,6 +32,46 @@ def test_rendered_plist_uses_throttled_abnormal_exit_restart(tmp_path: Path) -> 
     ]
 
 
+def test_api_child_disables_bytecode_writes(tmp_path: Path, monkeypatch) -> None:
+    repo = tmp_path / "repo"
+    monkeypatch.setenv("PYTHONDONTWRITEBYTECODE", "0")
+
+    command, launch_dir, environment, release_line = supervisor._prepare_api_command(
+        repo,
+        live_mode=True,
+        port=8765,
+    )
+
+    assert command[:4] == [
+        str(repo / ".venv" / "bin" / "python"),
+        "-B",
+        "-m",
+        "uvicorn",
+    ]
+    assert launch_dir == repo
+    assert environment["PYTHONDONTWRITEBYTECODE"] == "1"
+    assert release_line == "WARNING: API live mode enabled; serving mutable checkout code"
+
+    inherited = subprocess.run(
+        [
+            str(_VENV_PYTHON),
+            "-B",
+            "-c",
+            (
+                "import json, os, sys; "
+                "print(json.dumps({'env': os.environ['PYTHONDONTWRITEBYTECODE'], "
+                "'dont_write': sys.dont_write_bytecode}))"
+            ),
+        ],
+        cwd=tmp_path,
+        env=environment,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert json.loads(inherited.stdout) == {"env": "1", "dont_write": True}
+
+
 def test_install_and_uninstall_preserve_crash_evidence(tmp_path: Path, monkeypatch) -> None:
     repo = tmp_path / "repo"
     interpreter = repo / ".venv" / "bin" / "python"

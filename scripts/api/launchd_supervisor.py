@@ -402,9 +402,11 @@ def _prepare_api_command(repo_root: Path, *, live_mode: bool, port: int) -> tupl
     environment["LEARN_UK_REPO_ROOT"] = str(repo_root)
     environment["GIT_DIR"] = str(repo_root / ".git")
     environment["GIT_WORK_TREE"] = str(repo_root)
+    environment["PYTHONDONTWRITEBYTECODE"] = "1"
     environment["PYTHONPATH"] = str(launch_dir) + os.pathsep + environment.get("PYTHONPATH", "")
     command = [
         str(repo_root / ".venv" / "bin" / "python"),
+        "-B",
         "-m",
         "uvicorn",
         "scripts.api.main:app",

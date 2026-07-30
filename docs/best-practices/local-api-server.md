@@ -23,6 +23,10 @@ is an alias for backward compatibility.
 Monitor API path. They use the immutable release snapshot model (not reload
 mode) under a per-user macOS LaunchAgent:
 
+- The managed Python child runs with `-B` and
+  `PYTHONDONTWRITEBYTECODE=1`. The environment setting is inherited by
+  subprocesses that preserve their parent environment, so runtime imports
+  cannot add `__pycache__` files that invalidate the release manifest.
 - Label: `com.learn-ukrainian.monitor-api`
 - Restart policy: `KeepAlive.SuccessfulExit=false`; the foreground runner turns
   any unexpected API exit, including an unexpected zero exit, into a failed
@@ -62,6 +66,24 @@ logs/api.launchd.stderr.log
 Use `launchctl print "gui/$(id -u)/com.learn-ukrainian.monitor-api"` for
 low-level launchd readback. The plist, crash record, and logs are local runtime
 state; they must not be committed.
+
+### Recovering a Bytecode-Contaminated Release
+
+Prevention does not make an already-altered release reusable. If the crash
+record reports `release manifest verification failed`, first confirm that the
+exact failed release contains runtime-created `__pycache__` or `.pyc` files.
+Then:
+
+1. Run `./services.sh stop api` and confirm port 8765 has no listener.
+2. Confirm that no process has its current working directory inside the exact
+   failed SHA directory with `lsof -nP -d cwd`.
+3. Move only that exact generated SHA directory out of
+   `.runtime/api/releases/` into a recoverable quarantine location. Do not
+   delete the release root, weaken verification, or automate deletion after a
+   verification failure.
+4. Run `./services.sh start api` to build a clean release from `HEAD`.
+5. Check `/api/health`, confirm the new release contains no `.pyc` files, and
+   run `verify_release()` against the published release.
 
 `delegate.py dispatch` intentionally warns rather than blocks if the Monitor
 API health probe is unreachable. File-based dispatch fallbacks still work and
