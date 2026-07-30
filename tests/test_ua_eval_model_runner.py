@@ -250,6 +250,7 @@ def test_runs_source_only_batches_outside_repository_and_writes_metadata(
     assert set(metadata["decoding"]) == runner.DECODING_FIELDS
     assert generation["gold_fields_supplied"] == []
     assert generation["response_count"] == runner.EXPECTED_REQUEST_COUNT
+    assert generation["transport_protocol"] == runner.TRANSPORT_PROTOCOL
     assert len(generation["batch_receipts"]) == 3
     assert generation["retry_counts"] == {"0": 0, "1": 0, "2": 0}
     call_paths = (tmp_path / "calls.log").read_text().splitlines()
@@ -314,6 +315,19 @@ def test_accepts_only_narrow_machine_response_wrappers() -> None:
             f"```json\n{payload}\n```\nExplanation",
             ["item-1"],
         )
+
+
+def test_batch_transport_declares_unambiguous_json_escaping() -> None:
+    prompt = runner._batch_prompt(
+        "Correct the sentence.",
+        [{"item_id": "item-1", "source": 'A "quoted" source.'}],
+    )
+    envelope, payload = prompt.split("\n\n", 1)
+    assert "JSON Unicode escape \\u0022" in envelope
+    assert "every backslash character as \\u005c" in envelope
+    assert json.loads(payload)["records"] == [
+        {"item_id": "item-1", "source": 'A "quoted" source.'},
+    ]
 
 
 @pytest.mark.parametrize(
