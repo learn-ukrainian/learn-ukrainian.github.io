@@ -95,6 +95,10 @@ info() {
   echo "==> $*"
 }
 
+restic_repository_command() {
+  restic "$@" --option rclone.connections=1
+}
+
 cleanup() {
   local status=$?
 
@@ -301,7 +305,7 @@ validate_environment() {
 repository_is_initialized() {
   RESTIC_REPOSITORY="$REPOSITORY" \
     RESTIC_PASSWORD_FILE="$PASSWORD_FILE" \
-    restic cat config >/dev/null 2>&1
+    restic_repository_command cat config >/dev/null 2>&1
 }
 
 require_initialized_repository() {
@@ -801,7 +805,7 @@ run_backup() {
     build_restic_excludes "$backup_root"
     (
       cd "$PROJECT_ROOT"
-      restic backup "${BACKUP_PATHS[@]}" \
+      restic_repository_command backup "${BACKUP_PATHS[@]}" \
         --dry-run \
         --verbose=2 \
         --host "$BACKUP_HOST" \
@@ -829,13 +833,13 @@ run_backup() {
   info "Creating encrypted, versioned restic snapshot."
   (
     cd "$STAGED_ROOT"
-    restic backup "${BACKUP_PATHS[@]}" \
+    restic_repository_command backup "${BACKUP_PATHS[@]}" \
       --host "$BACKUP_HOST" \
       --tag "$BACKUP_TAG" \
       "${RESTIC_EXCLUDES[@]}"
   )
   info "Checking repository metadata after backup."
-  restic check
+  restic_repository_command check
   info "Backup and repository check complete."
 }
 
@@ -893,13 +897,13 @@ run_restore() {
   args=(restore "$snapshot" --target "$target_real" --overwrite never)
   if [[ "$execute" -eq 0 ]]; then
     info "Restore preview only; no files will be written."
-    restic "${args[@]}" --dry-run --verbose=2
+    restic_repository_command "${args[@]}" --dry-run --verbose=2
     echo "Preview complete. Re-run with --execute to restore into: $target_real"
     return
   fi
 
   acquire_lock
-  restic "${args[@]}"
+  restic_repository_command "${args[@]}"
   info "Restore complete. Validate the staged data before any live import: $target_real"
 }
 
@@ -918,8 +922,8 @@ run_init() {
     return
   fi
   acquire_lock
-  restic init
-  restic check
+  restic_repository_command init
+  restic_repository_command check
   info "Repository initialized and checked."
 }
 
@@ -1003,7 +1007,7 @@ main() {
       [[ $# -eq 0 ]] || die "snapshots does not accept arguments."
       validate_environment
       require_initialized_repository
-      restic snapshots --host "$BACKUP_HOST" --tag "$BACKUP_TAG"
+      restic_repository_command snapshots --host "$BACKUP_HOST" --tag "$BACKUP_TAG"
       ;;
     verify)
       read_data=0
@@ -1024,9 +1028,9 @@ main() {
       validate_environment
       require_initialized_repository
       if [[ "$read_data" -eq 1 ]]; then
-        restic check --read-data
+        restic_repository_command check --read-data
       else
-        restic check
+        restic_repository_command check
       fi
       ;;
     restore)
