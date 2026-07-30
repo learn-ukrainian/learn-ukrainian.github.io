@@ -1,7 +1,9 @@
 # ADR 016: Base Model Leapfrogging & Data/Harness Value Preservation
 
-> **Superseded for current strategy:** The durable-asset insight is retained,
-> but the unsupported model-ranking and production-policy claims below are not
+> **Superseded for current strategy:** Only the general asset-category insight
+> is retained: data, evidence, and evaluation tooling can outlast one model
+> generation. Specific model rankings, inventory counts, data-quality,
+> purity/decolonization, and production-policy claims below are not
 > authoritative. Use
 > [Ukrainian Open-Model Data Infrastructure: North Star](../strategy/UKRAINIAN_OPEN_MODEL_DATA_INFRASTRUCTURE_NORTH_STAR.md)
 > for the evidence-backed direction and current data boundaries. This file is
@@ -27,25 +29,17 @@ The UNLP community invested heavy compute and human annotation resources into fi
 
 ## 2. Strategic Asset Allocation: Where Our Value Lies
 
-Our project's durable competitive advantage is **NOT** in custom fine-tuned model weights. Our durable assets are **Model-Agnostic Engine Components**:
+The historical proposal identified four potentially durable asset categories.
+This is not a current inventory or a quality assessment:
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     DURABLE PROJECT ASSETS (Immune to Model Leaps)      │
-├─────────────────────────────────────────────────────────────────────────┤
-│ 1. Curated Decolonized Corpus (`data/sources.db`)                        │
-│    • 137,700 literary chunks, 54,900 textbook chunks, tagged by period │
-├─────────────────────────────────────────────────────────────────────────┤
-│ 2. Morphological Ground Truth Engine (`data/vesum.db`)                   │
-│    • 409,000 lemmas & 6.7M inflected forms for deterministic audit      │
-├─────────────────────────────────────────────────────────────────────────┤
-│ 3. Deterministic QG Linter & Euphony Rules (`scripts/audit/`)            │
-│    • Rules enforcing State Standard 2024 & zero-Russianism gates        │
-├─────────────────────────────────────────────────────────────────────────┤
-│ 4. Hramatka Prompt Harness V3 (Dynamic System Constraints)               │
-│    • Runtime structural control enforcing 8/8 activity types & density  │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+1. Literary and reference source inventories, pending provenance, rights,
+   quality, and balance audits.
+2. VESUM-backed morphology integration, with the exact version, counts,
+   semantics, and license pinned for each use.
+3. Validation and evidence tooling, limited to the rules and behavior that
+   tests actually verify.
+4. Prompt and evaluation harnesses, durable only where their interfaces,
+   inputs, and results remain reproducible across models.
 
 ---
 
