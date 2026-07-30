@@ -177,8 +177,8 @@ else:
 
 
 def _venv_python() -> Path:
-    executable = Path(".venv/bin/python").resolve()
-    assert executable.is_file(), "tests require the repository .venv/bin/python"
+    executable = Path(os.environ.get("UA_EVAL_TEST_PYTHON", ".venv/bin/python")).resolve()
+    assert executable.is_file(), "tests require UA_EVAL_TEST_PYTHON or the repository .venv/bin/python"
     return executable
 
 
