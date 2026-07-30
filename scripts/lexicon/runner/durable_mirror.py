@@ -283,12 +283,18 @@ def require_durable(mirror_dir: Path, *, max_age_hours: float = DEFAULT_MAX_AGE_
     files = manifest.get("files")
     if not isinstance(files, list):
         raise DurableMirrorError(f"durable mirror at {mirror_dir} has invalid files list")
-    if len(files) == 0 or int(manifest.get("file_count") or 0) == 0:
+    try:
+        file_count = int(manifest.get("file_count") or 0)
+    except (TypeError, ValueError) as exc:
+        raise DurableMirrorError(
+            f"durable mirror at {mirror_dir} has invalid file_count={manifest.get('file_count')!r}"
+        ) from exc
+    if len(files) == 0 or file_count == 0:
         raise DurableMirrorError(f"durable mirror at {mirror_dir} is empty")
-    if int(manifest.get("file_count") or 0) != len(files):
+    if file_count != len(files):
         raise DurableMirrorError(
             f"durable mirror at {mirror_dir} file_count mismatch "
-            f"({manifest.get('file_count')} != {len(files)})"
+            f"({file_count} != {len(files)})"
         )
     try:
         generated_at = float(manifest["generated_at"])
