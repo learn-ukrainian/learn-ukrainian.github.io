@@ -1,0 +1,27 @@
+{
+  "alias_resolution": {
+    "evidence": "OpenCode and OpenRouter model catalogs retrieved 2026-07-30; exact OpenRouter route requested",
+    "requested": "openrouter/google/gemma-4-31b-it",
+    "resolved": "google/gemma-4-31b-it"
+  },
+  "auth_environment": [],
+  "command_identity": {
+    "name": "OpenCode",
+    "version": "1.17.13"
+  },
+  "decoding": {
+    "max_output_tokens": "not explicitly set; route maximum is 262144",
+    "safety": "no benchmark-specific override; OpenRouter catalog is_moderated=false",
+    "seed": "not exposed by OpenCode 1.17.13",
+    "stop": "not exposed by OpenCode 1.17.13",
+    "temperature": "not exposed by OpenCode 1.17.13",
+    "top_k": "not exposed by OpenCode 1.17.13",
+    "top_p": "not exposed by OpenCode 1.17.13"
+  },
+  "model": "google/gemma-4-31b-it",
+  "model_version": "OpenRouter catalog entry created=1775148486",
+  "provider": "OpenRouter",
+  "route": "OpenCode 1.17.13 -> OpenRouter paid -> google/gemma-4-31b-it",
+  "run_id": "ua-gec-calque-grammar-public-v0--gemma-4-31b-it-openrouter--2026-07-30",
+  "schema_version": "ua_eval_model_run_config.v1"
+}
