@@ -97,7 +97,7 @@ THOUGHT_WRAPPER = re.compile(
     re.DOTALL | re.IGNORECASE,
 )
 JSON_FENCE = re.compile(
-    r"\A```(?:json)?[ \t]*\r?\n(?P<body>.*)\r?\n```[ \t]*\Z",
+    r"\A```(?:json)?[ \t]*\r?\n(?P<body>.*?)(?:\r?\n)?```[ \t]*\Z",
     re.DOTALL | re.IGNORECASE,
 )
 
