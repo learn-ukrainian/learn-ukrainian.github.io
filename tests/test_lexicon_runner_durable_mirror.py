@@ -262,3 +262,14 @@ def test_require_rejects_nan_generated_at(tmp_path: Path) -> None:
     write_manifest(manifest, mirror)
     with pytest.raises(DurableMirrorError, match="non-finite"):
         require_durable(mirror)
+
+
+def test_build_manifest_rejects_symlinks(tmp_path: Path) -> None:
+    source = tmp_path / "work"
+    _populate(source)
+    target = tmp_path / "elsewhere"
+    target.mkdir()
+    (target / "x.txt").write_text("x", encoding="utf-8")
+    (source / "linkdir").symlink_to(target, target_is_directory=True)
+    with pytest.raises(DurableMirrorError, match="symlink"):
+        build_manifest(source)

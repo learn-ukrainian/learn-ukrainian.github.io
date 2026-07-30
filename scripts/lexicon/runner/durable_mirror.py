@@ -68,6 +68,9 @@ def _sha256_file(path: Path) -> str:
 def _iter_files(root: Path) -> list[Path]:
     files: list[Path] = []
     for path in sorted(root.rglob("*")):
+        # Fail closed: symlinks can hide state or escape the tree after restore.
+        if path.is_symlink():
+            raise DurableMirrorError(f"symlink not allowed in durable mirror tree: {path}")
         if path.is_dir():
             continue
         if path.name in IGNORED_FILE_NAMES or path.suffix in IGNORED_SUFFIXES:
