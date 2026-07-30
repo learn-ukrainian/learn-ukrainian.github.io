@@ -147,6 +147,16 @@ def test_rejects_tracker_reference_hidden_in_link_destination() -> None:
     assert findings[0].column == text.index(destination) + 1
 
 
+def test_rejects_bare_tracker_url_in_visible_prose() -> None:
+    destination = "https://github.com/example/project/pull/5092"
+    text = f"Details were tracked at {destination} outside the release.\n"
+
+    findings = scan_text(text)
+
+    assert len(findings) == 1
+    assert findings[0].column == text.index(destination) + 1
+
+
 def test_allows_internal_looking_tokens_only_as_code_evidence() -> None:
     text = "A migration test may contain the literal path `issues/1234`.\n"
 

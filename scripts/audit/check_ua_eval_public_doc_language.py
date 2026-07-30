@@ -198,7 +198,7 @@ def scan_text(text: str, path: Path = Path("<memory>")) -> list[Finding]:
                 )
             )
 
-        for pattern in _NON_PUBLIC_PATTERNS:
+        for pattern in (*_NON_PUBLIC_PATTERNS, *_NON_PUBLIC_LINK_PATTERNS):
             for non_public_match in pattern.finditer(fragment):
                 line, column, excerpt = _source_location(
                     fragment,
