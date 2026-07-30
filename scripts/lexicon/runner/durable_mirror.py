@@ -177,7 +177,7 @@ def sync_source_to_mirror(source: str, mirror_dir: Path, *, dry_run: bool = Fals
     mirror_dir.mkdir(parents=True, exist_ok=True)
     source_arg = source if source.endswith("/") else f"{source}/"
     dest_arg = f"{mirror_dir}/"
-    cmd = ["rsync", "-az", "--delete", "--exclude", MANIFEST_NAME]
+    cmd = ["rsync", "-az", "--delete", "--exclude", f"/{MANIFEST_NAME}"]
     for dir_name in IGNORED_DIR_NAMES:
         cmd.extend(["--exclude", dir_name])
     for file_name in IGNORED_FILE_NAMES:
@@ -226,6 +226,16 @@ def require_durable(mirror_dir: Path, *, max_age_hours: float = DEFAULT_MAX_AGE_
     :class:`DurableMirrorError`.
     """
     manifest = read_manifest(mirror_dir)
+    files = manifest.get("files")
+    if not isinstance(files, list):
+        raise DurableMirrorError(f"durable mirror at {mirror_dir} has invalid files list")
+    if len(files) == 0 or int(manifest.get("file_count") or 0) == 0:
+        raise DurableMirrorError(f"durable mirror at {mirror_dir} is empty")
+    if int(manifest.get("file_count") or 0) != len(files):
+        raise DurableMirrorError(
+            f"durable mirror at {mirror_dir} file_count mismatch "
+            f"({manifest.get('file_count')} != {len(files)})"
+        )
     generated_at = float(manifest["generated_at"])
     now = time.time()
     # Reject future-dated manifests (clock skew / corruption); small 5m skew tolerance.
