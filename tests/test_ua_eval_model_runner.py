@@ -547,6 +547,37 @@ def test_completed_state_rejects_tampered_failed_attempt_output(
         )
 
 
+@pytest.mark.parametrize(
+    ("field", "value"),
+    (
+        ("batch_index", 1),
+        ("attempt", 2),
+        ("invocation_directory_token", "ua-eval-model-0001-01-wrong"),
+    ),
+)
+def test_completed_state_rejects_misattributed_failed_attempt(
+    tmp_path: Path,
+    field: str,
+    value: object,
+) -> None:
+    _, _, _, state = _run(
+        tmp_path,
+        mode="noisy_fail_first",
+        retries=1,
+    )
+    state_path = state / "batch-0000.json"
+    payload = json.loads(state_path.read_text())
+    payload["failed_attempts"][0][field] = value
+    state_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(runner.RunnerError, match="failed-attempt mismatch"):
+        _run(
+            tmp_path,
+            mode="noisy_fail_first",
+            retries=1,
+        )
+
+
 def test_accepts_fenced_json_and_preserves_raw_provider_output(tmp_path: Path) -> None:
     raw, output, metadata_path, _ = _run(
         tmp_path,

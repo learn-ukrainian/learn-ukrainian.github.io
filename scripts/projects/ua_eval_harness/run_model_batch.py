@@ -549,22 +549,23 @@ def _state_path(state_dir: Path, batch_index: int) -> Path:
     return state_dir / f"batch-{batch_index:04d}.json"
 
 
-def _valid_failed_attempts(value: Any, attempts: int) -> bool:
+def _valid_failed_attempts(value: Any, attempts: int, batch_index: int) -> bool:
     if not isinstance(value, list) or len(value) != attempts - 1:
         return False
-    for failure in value:
+    for expected_attempt, failure in enumerate(value, start=1):
         if not isinstance(failure, dict) or set(failure) != FAILED_ATTEMPT_FIELDS:
             return False
         token = failure["invocation_directory_token"]
+        token_prefix = f"ua-eval-model-{batch_index:04d}-{expected_attempt:02d}-"
         if (
             type(failure["batch_index"]) is not int
-            or failure["batch_index"] < 0
+            or failure["batch_index"] != batch_index
             or type(failure["attempt"]) is not int
-            or failure["attempt"] < 1
+            or failure["attempt"] != expected_attempt
             or not isinstance(failure["attempted_at"], str)
             or not isinstance(failure["error_class"], str)
             or not isinstance(failure["message_tail"], str)
-            or (token is not None and (not isinstance(token, str) or not token.startswith("ua-eval-model-")))
+            or (token is not None and (not isinstance(token, str) or not token.startswith(token_prefix)))
             or not isinstance(failure["raw_provider_output"], str)
             or not isinstance(failure["provider_stderr"], str)
             or _sha256_text(failure["raw_provider_output"]) != failure["stdout_sha256"]
@@ -577,6 +578,7 @@ def _valid_failed_attempts(value: Any, attempts: int) -> bool:
 def _load_state(
     path: Path,
     *,
+    batch_index: int,
     binding_sha256: str,
     batch_sha256: str,
     expected_ids: Sequence[str],
@@ -617,9 +619,9 @@ def _load_state(
         expected_ids,
         response_format,
     )
-    if state["responses"] != parsed or not isinstance(state["attempts"], int) or state["attempts"] < 1:
+    if state["responses"] != parsed or type(state["attempts"]) is not int or state["attempts"] < 1:
         raise RunnerError(f"completed state response mismatch: {path.name}")
-    if not _valid_failed_attempts(state["failed_attempts"], state["attempts"]):
+    if not _valid_failed_attempts(state["failed_attempts"], state["attempts"], batch_index):
         raise RunnerError(f"completed state failed-attempt mismatch: {path.name}")
     state["state_sha256"] = _sha256_text(state_text)
     return state
@@ -646,6 +648,7 @@ def _run_one_batch(
     if path.exists():
         return _load_state(
             path,
+            batch_index=batch_index,
             binding_sha256=binding_sha256,
             batch_sha256=batch_sha256,
             expected_ids=expected_ids,
@@ -718,6 +721,7 @@ def _run_one_batch(
             _publish_text(path, state_text)
             return _load_state(
                 path,
+                batch_index=batch_index,
                 binding_sha256=binding_sha256,
                 batch_sha256=batch_sha256,
                 expected_ids=expected_ids,
