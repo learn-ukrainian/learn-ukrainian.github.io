@@ -9,7 +9,7 @@
 > for the evidence-backed direction and current data boundaries. This file is
 > retained as historical context.
 >
-> **Status**: APPROVED / ARCHITECTURAL STRATEGY  
+> **Status**: SUPERSEDED — historical context only
 > **Date**: July 24, 2026  
 > **Authors**: Lead Architecture Review, UNLP Case Study Task Force  
 > **Target Epic**: #4542 (Hramatka Long-Term Strategy & Model Agnosticism)
