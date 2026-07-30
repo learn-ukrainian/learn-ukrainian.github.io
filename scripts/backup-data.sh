@@ -299,7 +299,9 @@ validate_environment() {
 }
 
 repository_is_initialized() {
-  restic cat config >/dev/null 2>&1
+  RESTIC_REPOSITORY="$REPOSITORY" \
+    RESTIC_PASSWORD_FILE="$PASSWORD_FILE" \
+    restic cat config >/dev/null 2>&1
 }
 
 require_initialized_repository() {
@@ -531,10 +533,32 @@ clone_tree() {
 sqlite_backup_command() {
   local source_db=$1
   local destination_db=$2
+  local immutable_check readonly_error source_uri
 
   [[ "$source_db" != *"'"* && "$destination_db" != *"'"* ]] ||
     die "SQLite backup paths may not contain a single quote."
-  sqlite3 -readonly "$source_db" ".backup '$destination_db'"
+  if readonly_error="$(
+    sqlite3 -readonly "$source_db" ".backup '$destination_db'" 2>&1
+  )"; then
+    return
+  fi
+
+  if [[ ! -e "$source_db-wal" && ! -e "$source_db-shm" && ! -e "$source_db-journal" ]]; then
+    source_uri=${source_db//%/%25}
+    source_uri=${source_uri//#/%23}
+    source_uri=${source_uri//\?/%3F}
+    source_uri="file:$source_uri?mode=ro&immutable=1"
+    if immutable_check="$(
+      sqlite3 "$source_uri" 'PRAGMA quick_check;' 2>/dev/null
+    )" && [[ "$immutable_check" == "ok" ]]; then
+      info "Using verified immutable fallback for SQLite source without journal sidecars."
+      sqlite3 "$source_uri" ".backup '$destination_db'"
+      return
+    fi
+  fi
+
+  [[ -z "$readonly_error" ]] || printf '%s\n' "$readonly_error" >&2
+  return 1
 }
 
 stage_sqlite_databases() {
