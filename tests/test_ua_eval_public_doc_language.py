@@ -99,7 +99,7 @@ def test_rejects_internal_project_terms_in_running_prose() -> None:
 
     assert len(findings) == 3
     assert [finding.column for finding in findings] == [
-        text.index("issue") + 1,
+        text.index("#1234") + 1,
         text.index("Hramatka") + 1,
         text.index("canaries") + 1,
     ]
@@ -126,6 +126,25 @@ def test_reports_multiline_internal_term_on_its_source_line() -> None:
     assert len(findings) == 1
     assert findings[0].line == 2
     assert findings[0].column == 1
+
+
+def test_rejects_bare_tracker_number_in_visible_prose() -> None:
+    text = "The release was tracked elsewhere at #5092.\n"
+
+    findings = scan_text(text)
+
+    assert len(findings) == 1
+    assert findings[0].column == text.index("#5092") + 1
+
+
+def test_rejects_tracker_reference_hidden_in_link_destination() -> None:
+    destination = "https://github.com/example/project/issues/5092"
+    text = f"See [public-looking notes]({destination}).\n"
+
+    findings = scan_text(text)
+
+    assert len(findings) == 1
+    assert findings[0].column == text.index(destination) + 1
 
 
 def test_allows_internal_looking_tokens_only_as_code_evidence() -> None:

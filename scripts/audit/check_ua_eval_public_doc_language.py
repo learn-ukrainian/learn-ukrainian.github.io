@@ -26,9 +26,12 @@ _CYRILLIC_RE = re.compile(r"[\u0400-\u052f]+")
 _NON_PUBLIC_PATTERNS = (
     re.compile(r"\b(?:Daily Practice|Hramatka|Atlas)\b", re.IGNORECASE),
     re.compile(r"\b(?:Codex CLI|operator routing|fleet[- ]comms)\b", re.IGNORECASE),
-    re.compile(r"\b(?:issue|epic|pull request|PR)\s+#\d+\b", re.IGNORECASE),
+    re.compile(r"#\d{3,}\b"),
     re.compile(r"\bDPO\b"),
     re.compile(r"\bcanar(?:y|ies)\b", re.IGNORECASE),
+)
+_NON_PUBLIC_LINK_PATTERNS = (
+    re.compile(r"https?://github\.com/[^)\s]+/(?:issues|pull)/\d+\b", re.IGNORECASE),
 )
 _MARKDOWN = MarkdownIt("commonmark")
 
@@ -78,6 +81,24 @@ def _visible_fragments(
         elif token.content:
             fragments.append((token.content, span))
     return fragments
+
+
+def _link_destinations(
+    tokens: list[Token],
+    fallback_span: tuple[int, int],
+) -> list[tuple[str, tuple[int, int]]]:
+    """Return Markdown link destinations with their enclosing source spans."""
+
+    destinations: list[tuple[str, tuple[int, int]]] = []
+    for token in tokens:
+        span = _token_span(token, fallback_span)
+        if token.type == "link_open":
+            destination = token.attrGet("href")
+            if destination:
+                destinations.append((destination, span))
+        if token.children:
+            destinations.extend(_link_destinations(token.children, span))
+    return destinations
 
 
 def _fence_is_closed(token: Token, source_lines: list[str]) -> bool:
@@ -181,6 +202,26 @@ def scan_text(text: str, path: Path = Path("<memory>")) -> list[Finding]:
             for non_public_match in pattern.finditer(fragment):
                 line, column, excerpt = _source_location(
                     fragment,
+                    non_public_match.start(),
+                    non_public_match.group(0),
+                    span,
+                    source_lines,
+                )
+                findings.append(
+                    Finding(
+                        path=path,
+                        line=line,
+                        column=column,
+                        excerpt=excerpt,
+                        message="Internal project terminology is not allowed in public release prose",
+                    )
+                )
+
+    for destination, span in _link_destinations(tokens, (0, len(source_lines))):
+        for pattern in _NON_PUBLIC_LINK_PATTERNS:
+            for non_public_match in pattern.finditer(destination):
+                line, column, excerpt = _source_location(
+                    destination,
                     non_public_match.start(),
                     non_public_match.group(0),
                     span,
