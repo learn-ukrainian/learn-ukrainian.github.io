@@ -31,6 +31,7 @@ def test_agents_endpoint_returns_known_adapters():
     agents = response.json()["agents"]
     names = {agent["name"] for agent in agents}
     assert {"claude", "gemini", "codex"} <= names
+    assert not any(name.startswith("acpx-") for name in names)
     codex = next(agent for agent in agents if agent["name"] == "codex")
     assert codex["binary"] == "codex"
     assert codex["default_model"] == "gpt-5.6-terra"
@@ -86,6 +87,87 @@ def test_usage_aggregates_by_agent(tmp_path, monkeypatch):
     assert data["by_agent"]["codex"]["error"] == 1
     assert data["by_agent"]["codex"]["total_duration_s"] == 14.5
     assert data["by_entrypoint"]["bridge"]["rate_limited"] == 1
+
+
+def test_acpx_overview_is_read_only_and_aggregates_hyphenated_seats(
+    tmp_path,
+    monkeypatch,
+):
+    usage_dir = tmp_path / "api_usage"
+    today = datetime.now(UTC)
+    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    monkeypatch.setenv("LU_ACPX_TRANSPORT", "shadow")
+
+    _write_usage_file(
+        usage_dir / f"usage_acpx-grok-shadow-runner_{today:%Y-%m-%d}.jsonl",
+        [
+            {
+                "ts": _iso(today - timedelta(minutes=2)),
+                "agent": "acpx-grok-shadow",
+                "entrypoint": "runner",
+                "model": "grok-4.5",
+                "duration_s": 6.25,
+                "outcome": "ok",
+                "task_id": "must-not-leak",
+                "cwd": "/private/must-not-leak",
+                "stderr_excerpt": "must-not-leak",
+                "provider_session_id": "must-not-leak",
+            }
+        ],
+    )
+
+    response = client.get("/api/runtime/acpx?days=7")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["transport"] == {
+        "mode": "shadow",
+        "scope": "monitor_process",
+        "default_mode": "off",
+        "authority": "native_runtime",
+        "posture": "evidence_only",
+        "writable": False,
+    }
+    assert data["pins"] == {
+        "acpx": "0.13.0",
+        "grok_cli": "0.2.114",
+        "validation": "before_spawn",
+    }
+    assert data["safety"]["max_in_flight"] == 1
+    assert data["safety"]["chat"] is False
+    assert data["safety"]["mutations"] is False
+
+    seats = {seat["name"]: seat for seat in data["seats"]}
+    assert seats["acpx-codex-shadow"]["evidence_state"] == "no_evidence"
+    assert seats["acpx-codex-shadow"]["evidence"]["total"] == 0
+    assert seats["acpx-grok-shadow"]["evidence_state"] == "observed"
+    assert seats["acpx-grok-shadow"]["evidence"]["ok"] == 1
+    assert seats["acpx-grok-shadow"]["evidence"]["total_duration_s"] == 6.25
+
+    serialized = response.text
+    for private_field in (
+        "task_id",
+        "cwd",
+        "stderr_excerpt",
+        "provider_session_id",
+        "must-not-leak",
+    ):
+        assert private_field not in serialized
+
+
+def test_acpx_overview_sanitizes_unrecognized_transport_mode(
+    tmp_path,
+    monkeypatch,
+):
+    monkeypatch.setattr(runtime_router, "USAGE_DIR", tmp_path / "missing")
+    monkeypatch.setenv("LU_ACPX_TRANSPORT", "secret-looking-invalid-value")
+
+    response = client.get("/api/runtime/acpx")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["transport"]["mode"] == "invalid"
+    assert "secret-looking-invalid-value" not in response.text
 
 
 def test_headroom_rejects_missing_params():

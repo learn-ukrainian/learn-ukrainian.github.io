@@ -1270,6 +1270,67 @@ Aggregated usage counts from `batch_state/api_usage/usage_*.jsonl`.
 }
 ```
 
+### `GET /api/runtime/acpx?days=7`
+
+Read-only ACPX shadow posture and sanitized aggregate evidence. This endpoint
+never launches an ACPX participant, checks credentials, or returns prompts,
+results, paths, commands, session identifiers, or per-call metadata. A seat
+with no records reports `no_evidence`; that is not a provider-health claim.
+
+```json
+{
+  "generated_at": "2026-07-30T12:00:00Z",
+  "transport": {
+    "mode": "off",
+    "scope": "monitor_process",
+    "default_mode": "off",
+    "authority": "native_runtime",
+    "posture": "evidence_only",
+    "writable": false
+  },
+  "pins": {
+    "acpx": "0.13.0",
+    "grok_cli": "0.2.114",
+    "validation": "before_spawn"
+  },
+  "seats": [
+    {
+      "name": "acpx-codex-shadow",
+      "target": "codex",
+      "model": "codex-acp-default",
+      "effort": null,
+      "read_only": true,
+      "stateless": true,
+      "evidence_state": "no_evidence",
+      "evidence": {
+        "window_days": 7,
+        "total": 0,
+        "ok": 0,
+        "error": 0,
+        "timeout": 0,
+        "rate_limited": 0,
+        "total_duration_s": 0.0
+      }
+    }
+  ],
+  "safety": {
+    "max_in_flight": 1,
+    "backlog": false,
+    "retries": false,
+    "sessions": false,
+    "chat": false,
+    "mutations": false,
+    "dispatch_authority": false,
+    "routing_authority": false,
+    "failover_authority": false,
+    "review_authority": false
+  }
+}
+```
+
+`transport.mode` reflects the Monitor API process environment, not a global
+fleet switch; each TUI invocation still supplies its own default-off flag.
+
 ### `GET /api/runtime/headroom?agent=codex&model=gpt-5.5`
 
 Quota gate for one `(agent, model)` pair.
