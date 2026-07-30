@@ -227,6 +227,13 @@ def snapshot(source: str, mirror_dir: Path, *, dry_run: bool = False, allow_live
                     f"refusing to snapshot live remote runner at {source} (found enrich-driver.pid); "
                     "stop the runner or pass --allow-live for an emergency best-effort copy"
                 )
+            if probe.returncode != 1:
+                # ssh failure / remote error — fail closed (not "pid absent")
+                detail = (probe.stderr or probe.stdout or b"").decode("utf-8", errors="replace").strip()
+                raise DurableMirrorError(
+                    f"could not probe remote runner liveness at {source} "
+                    f"(ssh exit {probe.returncode}): {detail or 'no detail'}"
+                )
         else:
             pid = Path(source) / "enrich-driver.pid"
             if pid.is_file():
