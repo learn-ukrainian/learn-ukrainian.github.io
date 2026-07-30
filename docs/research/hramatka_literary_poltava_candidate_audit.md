@@ -89,7 +89,7 @@ The concentration table shows that this is not demonstrated to be a balanced Pol
 
 ## Heuristic quality signals
 
-The non-adjudicative signal counts are `{"low_cyrillic_ratio_signal":59,"ocr_or_layout_noise_signal":752,"repetition_signal":1,"russian_only_letter_signal":1496}`. The Russian-only-letter signal detects any occurrence of `ы`, `э`, `ъ`, or `ё`; it does not decide whether an occurrence is a quotation, historical orthography, OCR corruption, a proper name, or non-Ukrainian prose. The low Cyrillic-ratio signal marks texts where fewer than half of alphabetic characters match the script test used by the tool. The OCR/layout signal detects replacement characters, surrogate damage, long punctuation runs, or spaced dot runs. The repetition signal identifies a high repeated-token ratio only in texts longer than twelve normalized words.
+The non-adjudicative signal counts are `{"low_cyrillic_ratio_signal":58,"ocr_or_layout_noise_signal":752,"repetition_signal":1,"russian_only_letter_signal":1496}`. The Russian-only-letter signal detects any occurrence of `ы`, `э`, `ъ`, or `ё`; it does not decide whether an occurrence is a quotation, historical orthography, OCR corruption, a proper name, or non-Ukrainian prose. The low Cyrillic-ratio signal marks texts where fewer than half of alphabetic characters match the script test used by the tool. The OCR/layout signal detects replacement characters, surrogate damage, long punctuation runs, or spaced dot runs. The repetition signal identifies a high repeated-token ratio only in texts longer than twelve normalized words.
 
 These flags route records for human review; they are not labels and do not authorize automatic deletion. Ukrainian linguists and textual scholars must review contextual evidence before assigning language, dialect, calque, OCR, or authenticity judgments. In particular, this audit does not establish the earlier descriptions `pure`, `native`, `decolonized`, or `Poltava standard`.
 
@@ -110,6 +110,7 @@ After those gates, the rebuild should preserve full sampling receipts, run exact
 - Heuristic anomaly flags are signals, not linguistic or legal adjudications.
 - No record-level external catalog, license, publisher, estate, or government/legal citation was supplied; this audit makes no external rights assertion.
 - The labels pure, native, decolonized, and Poltava standard are unestablished by this audit.
+- Duplicate normalization treats straight and curly Ukrainian apostrophes as punctuation, so apostrophe placement and encoding are not preserved in token shingles.
 - Similarity thresholds do not capture all paraphrase, quotation, or shared-source relationships.
 - Counts are record counts, not token-weighted or work-weighted measures of representation.
 - Database source-file and URL values are lineage clues, not verified acquisition or rights evidence.

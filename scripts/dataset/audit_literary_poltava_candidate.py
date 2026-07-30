@@ -113,7 +113,7 @@ def token_shingles(text: str, width: int = 3) -> set[str]:
 
 def jaccard(left: set[str], right: set[str]) -> float:
     union = left | right
-    return len(left & right) / len(union) if union else 1.0
+    return len(left & right) / len(union) if union else 0.0
 
 
 def connected_clusters(edges: list[tuple[int, int, float]]) -> list[dict[str, Any]]:
@@ -158,7 +158,8 @@ def load_records(path: Path) -> list[dict[str, Any]]:
 
 def database_rows(path: Path, ids: list[int]) -> dict[int, dict[str, Any]]:
     uri = f"file:{path.resolve().as_posix()}?mode=ro"
-    with sqlite3.connect(uri, uri=True) as connection:
+    connection = sqlite3.connect(uri, uri=True)
+    try:
         columns = [row[1] for row in connection.execute("PRAGMA table_info(literary_texts)")]
         required = {"id", "chunk_id", "source_file", "work_id", "genre", "source_url"}
         missing = required - set(columns)
@@ -180,6 +181,8 @@ def database_rows(path: Path, ids: list[int]) -> dict[int, dict[str, Any]]:
                         strict=True,
                     )
                 )
+    finally:
+        connection.close()
     return rows
 
 
@@ -228,7 +231,7 @@ def anomaly_flags(record: dict[str, Any], row: dict[str, Any] | None) -> list[st
     text = record.get("text") if isinstance(record.get("text"), str) else ""
     flags: list[str] = []
     letters = [character for character in text if character.isalpha()]
-    if letters and sum("А" <= c.upper() <= "Я" or c.upper() == "І" for c in letters) / len(letters) < 0.50:
+    if letters and sum("CYRILLIC" in unicodedata.name(character, "") for character in letters) / len(letters) < 0.50:
         flags.append("low_cyrillic_ratio_signal")
     if RUSSIAN_ONLY & set(text.casefold()):
         flags.append("russian_only_letter_signal")
@@ -433,6 +436,7 @@ def audit(
             "Heuristic anomaly flags are signals, not linguistic or legal adjudications.",
             "No record-level external catalog, license, publisher, estate, or government/legal citation was supplied; this audit makes no external rights assertion.",
             "The labels pure, native, decolonized, and Poltava standard are unestablished by this audit.",
+            "Duplicate normalization treats straight and curly Ukrainian apostrophes as punctuation, so apostrophe placement and encoding are not preserved in token shingles.",
         ],
         "stale_claim_inventory": STALE_CLAIMS,
     }
