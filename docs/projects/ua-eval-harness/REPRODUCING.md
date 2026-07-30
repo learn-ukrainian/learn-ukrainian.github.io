@@ -1,4 +1,4 @@
-# Reproducing public v0
+# Reproducing public release 0.1.1
 
 ## Quick check without provider credentials
 
@@ -9,13 +9,14 @@ private repository, product state, or live model call is required.
 git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
 uv venv --python 3.12.8
-.venv/bin/python scripts/projects/ua_eval_harness/smoke_public_v0.py
+.venv/bin/python scripts/projects/ua_eval_harness/smoke_public_v011.py
 ```
 
-The smoke test first validates the release freeze and the SHA-256 hashes of all
-21 frozen artifacts. It then re-scores the identity baseline, the deterministic
-fixture-rule baseline, and the saved `gpt-5.6-terra` run. Each newly generated
-JSON report must exactly match its committed report.
+The smoke test first validates both the historical `0.1.0` freeze and the
+additive `0.1.1` freeze, including the SHA-256 hashes of all 45 artifacts
+listed by `0.1.1`. It then re-scores the identity baseline, deterministic
+fixture-rule baseline, saved `gpt-5.6-terra` run, and saved Gemma 4 run. Each
+newly generated JSON report must exactly match its committed report.
 
 Expected output:
 
@@ -23,7 +24,8 @@ Expected output:
 identity: 677 responses, edit F0.5=0.0000, headline calque R=0.0000, exact=0.0000
 deterministic fixture rules: 677 responses, edit F0.5=0.0000, headline calque R=0.0000, exact=0.0000
 gpt-5.6-terra saved run: 677 responses, edit F0.5=0.2439, headline calque R=0.1410, exact=0.1610
-public v0 smoke passed: frozen scoring reproduced without provider credentials
+gemma-4-31b-it saved run: 677 responses, edit F0.5=0.1934, headline calque R=0.0952, exact=0.1078
+public v0.1.1 smoke passed: both freezes and all saved scoring results reproduced without provider credentials
 ```
 
 The [English data card](DATA_CARD.en.md) defines overall edit F0.5, headline
@@ -36,6 +38,8 @@ Run the checks separately when diagnosing a failure:
 
 ```bash
 .venv/bin/python scripts/projects/ua_eval_harness/verify_release_freeze.py
+
+.venv/bin/python scripts/projects/ua_eval_harness/verify_release_freeze_v011.py
 
 .venv/bin/python scripts/projects/ua_eval_harness/build_scoring_dispositions.py \
   --verify-existing
@@ -50,6 +54,34 @@ Run the checks separately when diagnosing a failure:
 
 The last command writes a temporary report. It does not modify any frozen
 artifact.
+
+To reproduce the added Gemma import and score independently:
+
+```bash
+UA_EVAL_TMP=$(mktemp -d /tmp/ua-eval-gemma.XXXXXX)
+
+.venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py import \
+  --requests data/projects/ua_eval_harness/baselines/v1/generation_requests.jsonl \
+  --model-output data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.model-output.jsonl \
+  --metadata data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.metadata.json \
+  --output "$UA_EVAL_TMP/responses.jsonl"
+
+.venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py score \
+  --responses data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.responses.jsonl \
+  --output "$UA_EVAL_TMP/report.json"
+
+cmp "$UA_EVAL_TMP/responses.jsonl" \
+  data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.responses.jsonl
+cmp "$UA_EVAL_TMP/report.json" \
+  data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.report.json
+```
+
+These commands create a unique retained temporary directory. The first `cmp`
+proves that import reproduced the committed responses. The scorer then reads
+that byte-verified committed file because its path is part of the report
+receipt. The second `cmp` proves that scoring reproduced the committed report.
+Both comparisons must exit with status zero; frozen artifacts are never used
+as output targets.
 
 ## Rebuild the dataset from the pinned upstream source
 

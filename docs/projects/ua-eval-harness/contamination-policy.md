@@ -17,18 +17,19 @@ Each release has a machine-readable record under
   provider runner;
 - the VESUM source lock, marker parser, and scoring-disposition builder;
 - the source-only request packet, saved responses, and aggregate reports for
-  all three baselines;
+  all four saved runs;
 - 52 training-derived examples that may be used only as development fixtures
   and do not contribute to held-out results.
 
 Verification requires neither network access nor provider credentials:
 
 ```bash
-.venv/bin/python scripts/projects/ua_eval_harness/verify_release_freeze.py
+.venv/bin/python scripts/projects/ua_eval_harness/verify_release_freeze_v011.py
 ```
 
-The verifier fails if it finds a mismatch in artifact bytes, run metadata,
-prompt or scorer receipts, response coverage, or aggregate-report policy.
+The verifier first validates the historical `0.1.0` freeze, then validates the
+additive `0.1.1` artifact hashes, run metadata, prompt and scorer receipts,
+response coverage, rejected-attempt evidence, and aggregate reports.
 
 ## Split integrity
 
@@ -89,6 +90,10 @@ seed is not used.
 - Generation requests contained only the item ID, source sentence, source
   hash, and prompt hash. They did not contain gold targets, references, edits,
   or scores.
+- The Gemma 4 reference run retained exactly one valid response for each of
+  677 source-only requests. Two first attempts failed strict transport
+  validation and were preserved separately; their retries succeeded without
+  manual repair.
 
 ## Prohibited reuse
 
