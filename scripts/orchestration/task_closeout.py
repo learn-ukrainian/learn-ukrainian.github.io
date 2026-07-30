@@ -88,6 +88,29 @@ class GhGitHubAdapter:
             ) from exc
         return sorted({epic for epics in registry.values() for epic in epics})
 
+    def membership_audit_report(self) -> dict[str, Any]:
+        """One fresh, live issue-stream membership audit snapshot.
+
+        Feeds :func:`task_lifecycle.resolve_membership` for the canonical
+        native-or-unique-body proof. Callers that need membership for more
+        than one issue in a single observation (the lifecycle issue and a
+        transferred-scope follow-up issue) must call this ONCE and carry the
+        same snapshot through both resolutions rather than re-auditing.
+
+        Scoped to ``self.repo_root`` — never the auditor module's own
+        checkout — so a closeout invocation configured for another
+        checkout/worktree audits and caches against the SAME repository it is
+        validating membership for.
+        """
+        from scripts.orchestration import issue_stream_audit
+
+        try:
+            return issue_stream_audit.run_audit(self.repo_root)
+        except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            raise task_lifecycle.LifecycleError(
+                f"cannot run the issue-stream membership audit: {exc}"
+            ) from exc
+
     @staticmethod
     def _owner_name(repository: str) -> tuple[str, str]:
         try:
@@ -293,6 +316,22 @@ class GhGitHubAdapter:
         identity = ledger["identity"]
         repository = identity["repository"]
         issue = self.read_issue(repository, identity["github_issue_number"])
+        follow_up = self._follow_up(
+            repository,
+            identity["github_issue_number"],
+            issue["body"],
+            ledger["remaining_scope"],
+        )
+        # Native GitHub parentage is conclusive on its own — present (even a
+        # mismatched) native parent must never fall through to body evidence,
+        # so it never needs a live audit. Only a missing native parent (on
+        # the lifecycle issue itself, or on the transferred-scope follow-up
+        # read above) leaves body evidence as the sole path, and that is the
+        # only case that justifies fetching the live membership snapshot.
+        needs_membership_audit = issue.get("parent_epic") is None or (
+            follow_up is not None and follow_up.get("parent_epic") is None
+        )
+        membership_audit = self.membership_audit_report() if needs_membership_audit else None
         pr_number = ledger["pr"]["number"]
         pr: dict[str, Any] = {
             "number": None,
@@ -320,16 +359,12 @@ class GhGitHubAdapter:
         return {
             "repository": repository,
             "registered_stream_epics": self.registered_stream_epics(),
+            "membership_audit": membership_audit,
             "issue": issue,
             "pr": pr,
             "comments": comments,
             "deployments": deployments,
-            "follow_up": self._follow_up(
-                repository,
-                identity["github_issue_number"],
-                issue["body"],
-                ledger["remaining_scope"],
-            ),
+            "follow_up": follow_up,
         }
 
     def observe(
@@ -348,6 +383,7 @@ class GhGitHubAdapter:
             github = {
                 "repository": identity["repository"],
                 "registered_stream_epics": [],
+                "membership_audit": None,
                 "issue": {
                     "number": identity["github_issue_number"],
                     "state": None,
@@ -763,12 +799,25 @@ def cmd_init(args: argparse.Namespace) -> int:
     identity = task_identity.validate_identity(_json_file(Path(args.identity_file)))
     adapter = GhGitHubAdapter(Path(args.repo_root))
     issue = adapter.read_issue(identity["repository"], identity["github_issue_number"])
-    if identity["stream_epic"] not in adapter.registered_stream_epics():
+    registered_epics = adapter.registered_stream_epics()
+    # Native precedence needs no audit at all: any native parent — matching or
+    # not — decides the outcome alone in resolve_membership. Only fetch the
+    # live audit snapshot when native parentage is absent.
+    membership_report = (
+        None if issue["parent_epic"] is not None else adapter.membership_audit_report()
+    )
+    membership = task_lifecycle.resolve_membership(
+        issue_number=identity["github_issue_number"],
+        stream_epic=identity["stream_epic"],
+        native_parent_epic=issue["parent_epic"],
+        registered_epics=registered_epics,
+        membership_report=membership_report,
+    )
+    if not membership["valid"]:
         raise task_lifecycle.LifecycleError(
-            "task identity stream epic is absent from scripts/config/issue_streams.yaml"
+            "issue membership does not resolve to the identity's exact registered "
+            f"stream epic: {membership['reason']}"
         )
-    if issue["parent_epic"] != identity["stream_epic"]:
-        raise task_lifecycle.LifecycleError("issue is not a native child of the identity's exact stream epic")
     now = args.now or utc_now()
     snapshot = task_lifecycle.build_ac_snapshot(
         issue["body"], _load_policy(Path(args.ac_policy)), finalized_at=now

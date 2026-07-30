@@ -22,7 +22,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
 
-from scripts.orchestration import task_identity
+from scripts.orchestration import issue_stream_audit, task_identity
 
 SCHEMA_VERSION = "task-lifecycle.v1"
 AC_SCHEMA_VERSION = "acceptance-criteria.v1"
@@ -132,6 +132,121 @@ def lifecycle_id(identity: Mapping[str, Any]) -> str:
             "stream_epic": canonical["stream_epic"],
         }
     )
+
+
+def resolve_membership(
+    *,
+    issue_number: int,
+    stream_epic: int,
+    native_parent_epic: int | None,
+    registered_epics: list[int] | None,
+    membership_report: Mapping[str, Any] | None,
+    max_age_s: int = 3600,
+) -> dict[str, Any]:
+    """Canonical native-or-unique-body membership proof (issue #6028).
+
+    This is the ONE validator every membership gate in the fleet must call:
+    lifecycle initialization (``task_closeout.cmd_init``), observation/
+    reconciliation (:func:`evaluate`), and every remote mutation gate
+    (``task_closeout._assert_mutation_ready``) — so drift discovered by any
+    one of them is enforced identically by all the others.
+
+    Native GitHub sub-issue parentage is authoritative and takes precedence
+    over any body-derived evidence: if ``native_parent_epic`` is set at all,
+    it alone decides the outcome — a native parent that differs from
+    ``stream_epic`` is a hard rejection, never a fall-through to body
+    evidence. Only when there is NO native parent does a fresh
+    ``issue_stream_audit`` effective-membership proof get consulted, and only
+    when it resolves this exact issue to exactly one effective epic equal to
+    ``stream_epic``. That proof is sourced entirely from the epic-side
+    checklist/reference ``issue_stream_audit`` already interprets — never from
+    the child issue's own body, so a child's own ``Refs #<epic>`` prose can
+    never establish membership here.
+
+    Fails **closed** — ``valid: False`` — for every failure mode: the
+    identity's stream epic absent from the registry, a native parent that
+    disagrees, and (for the body path) audit evidence that is missing, stale,
+    malformed, orphaned, wrong-epic, multi-homed, or otherwise ambiguous.
+
+    The return value always carries the four AC-PROVENANCE fields — method
+    (``"native"`` / ``"body"`` / ``None``), epic, the audit's
+    ``generated_at``, and a deterministic digest of the effective-membership
+    index that was consulted — so every caller can persist identical
+    provenance regardless of which path accepted (or rejected) the proof.
+    """
+    if not isinstance(registered_epics, list) or stream_epic not in registered_epics:
+        return {
+            "valid": False,
+            "method": None,
+            "epic": None,
+            "generated_at": None,
+            "digest": None,
+            "reason": "identity stream epic is absent from the registered issue-stream epics",
+        }
+    if native_parent_epic is not None:
+        if native_parent_epic == stream_epic:
+            return {
+                "valid": True,
+                "method": "native",
+                "epic": stream_epic,
+                "generated_at": None,
+                "digest": None,
+                "reason": None,
+            }
+        return {
+            "valid": False,
+            "method": None,
+            "epic": native_parent_epic,
+            "generated_at": None,
+            "digest": None,
+            "reason": (
+                "issue has a native parent epic that differs from the identity's "
+                "exact registered stream epic"
+            ),
+        }
+    validated_report = issue_stream_audit.validate_membership_report(membership_report, max_age_s)
+    if validated_report is None:
+        return {
+            "valid": False,
+            "method": None,
+            "epic": None,
+            "generated_at": None,
+            "digest": None,
+            "reason": "fresh issue-stream membership audit evidence is missing, stale, or malformed",
+        }
+    generated_at = validated_report.get("generated_at")
+    index = validated_report.get("effective_membership") or {}
+    evidence_digest = digest(index)
+    entry = index.get(str(issue_number))
+    if not isinstance(entry, dict) or not entry.get("unique_stream"):
+        return {
+            "valid": False,
+            "method": None,
+            "epic": None,
+            "generated_at": generated_at,
+            "digest": evidence_digest,
+            "reason": "issue is orphaned or ambiguously multi-homed in the fresh membership audit",
+        }
+    if stream_epic not in (entry.get("epics") or []):
+        return {
+            "valid": False,
+            "method": None,
+            "epic": None,
+            "generated_at": generated_at,
+            "digest": evidence_digest,
+            "reason": (
+                "membership audit resolves the issue to a different epic than the "
+                "identity's exact stream epic"
+            ),
+        }
+    return {
+        "valid": True,
+        "method": entry.get("via"),
+        "epic": stream_epic,
+        "generated_at": generated_at,
+        "digest": evidence_digest,
+        "reason": None,
+    }
 
 
 def parse_issue_acceptance_criteria(body: str) -> list[dict[str, Any]]:
@@ -917,14 +1032,22 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
     if github.get("repository") != identity["repository"]:
         hard.append("authoritative GitHub repository does not match task identity")
     registered_epics = github.get("registered_stream_epics")
-    if not isinstance(registered_epics, list) or identity["stream_epic"] not in registered_epics:
-        hard.append("identity stream epic is absent from the registered issue-stream epics")
     if issue.get("number") != identity["github_issue_number"]:
         hard.append("authoritative GitHub issue does not match task identity")
     if issue.get("url") != identity["github_issue_url"]:
         hard.append("authoritative GitHub issue URL does not match task identity")
-    if issue.get("parent_epic") != identity["stream_epic"]:
-        hard.append("issue is not linked to the identity's exact registered stream epic")
+    membership = resolve_membership(
+        issue_number=identity["github_issue_number"],
+        stream_epic=identity["stream_epic"],
+        native_parent_epic=issue.get("parent_epic"),
+        registered_epics=registered_epics,
+        membership_report=github.get("membership_audit"),
+    )
+    if not membership["valid"]:
+        hard.append(
+            "issue membership does not resolve to the identity's exact registered "
+            f"stream epic: {membership['reason']}"
+        )
 
     issue_criteria: list[dict[str, Any]] = []
     try:
@@ -1117,10 +1240,18 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
         follow_up = github.get("follow_up") or {}
         if follow_up.get("number") != remaining["follow_up_issue"]:
             hard.append("authoritative follow-up issue does not match transferred scope")
-        if follow_up.get("parent_epic") != remaining["follow_up_stream_epic"]:
-            hard.append("follow-up issue does not have the exact transferred stream epic")
-        if remaining["follow_up_stream_epic"] not in (registered_epics or []):
-            hard.append("follow-up issue epic is absent from the registered issue-stream epics")
+        follow_up_membership = resolve_membership(
+            issue_number=remaining["follow_up_issue"],
+            stream_epic=remaining["follow_up_stream_epic"],
+            native_parent_epic=follow_up.get("parent_epic"),
+            registered_epics=registered_epics,
+            membership_report=github.get("membership_audit"),
+        )
+        if not follow_up_membership["valid"]:
+            hard.append(
+                "follow-up issue membership does not resolve to the transferred "
+                f"stream epic: {follow_up_membership['reason']}"
+            )
         if not follow_up.get("reciprocal_links_verified"):
             hard.append("original and follow-up issues are not reciprocally linked")
 
@@ -1200,6 +1331,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
         "preclose_missing_evidence": preclose_missing,
         "preclose_unchecked": preclose_unchecked,
         "goal_reached": goal_reached,
+        "membership": membership,
     }
 
 
@@ -1227,6 +1359,7 @@ def reconcile(
                 "last_success_state": result["last_success_state"],
                 "goal_reached": result["goal_reached"],
                 "valid_evidence": result["valid_evidence"],
+                "membership": result["membership"],
             },
         },
     }

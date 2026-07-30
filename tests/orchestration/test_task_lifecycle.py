@@ -643,3 +643,321 @@ def test_every_lifecycle_boundary_survives_durable_resume(
 
     assert resumed == task_lifecycle.validate_lifecycle(ledger)
     assert task_lifecycle.carrier_projection(resumed)["current_state"] == state
+
+
+# --------------------------------------------------------------------------- #
+# #6028 — resolve_membership: the ONE canonical native-or-unique-body proof
+# shared by lifecycle initialization, reconciliation, and every mutation gate.
+# --------------------------------------------------------------------------- #
+def _fresh_report(now: float, index: dict) -> dict:
+    return {
+        "generated_at": now,
+        "effective_membership": index,
+        "open_issue_numbers": [42, 10],
+    }
+
+
+def test_resolve_membership_native_success() -> None:
+    result = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=10,
+        registered_epics=[10, 20],
+        membership_report=None,
+    )
+    assert result == {
+        "valid": True,
+        "method": "native",
+        "epic": 10,
+        "generated_at": None,
+        "digest": None,
+        "reason": None,
+    }
+
+
+def test_resolve_membership_unique_body_success() -> None:
+    import time
+
+    now = time.time()
+    report = _fresh_report(
+        now, {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}}
+    )
+
+    result = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=None,
+        registered_epics=[10, 20],
+        membership_report=report,
+    )
+
+    assert result["valid"] is True
+    assert result["method"] == "body"
+    assert result["epic"] == 10
+    assert result["generated_at"] == now
+    assert result["digest"].startswith("sha256:")
+
+
+def test_resolve_membership_native_precedence_over_conflicting_body_evidence() -> None:
+    """Native parentage decides the outcome outright — a native parent that
+    disagrees with the identity's stream epic is rejected, never falls
+    through to body evidence even when body evidence would say otherwise."""
+    import time
+
+    report = _fresh_report(
+        time.time(),
+        {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}},
+    )
+
+    result = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=20,
+        registered_epics=[10, 20],
+        membership_report=report,
+    )
+
+    assert result["valid"] is False
+    assert result["method"] is None
+    assert "native parent epic" in result["reason"]
+
+
+def test_resolve_membership_rejects_missing_audit_evidence() -> None:
+    result = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=None,
+        registered_epics=[10],
+        membership_report=None,
+    )
+    assert result["valid"] is False
+    assert result["method"] is None
+    assert "missing" in result["reason"]
+
+
+def test_resolve_membership_rejects_stale_audit_evidence() -> None:
+    import time
+
+    report = _fresh_report(
+        time.time() - 10_000,
+        {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}},
+    )
+    result = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=None,
+        registered_epics=[10],
+        membership_report=report,
+    )
+    assert result["valid"] is False
+    assert "stale" in result["reason"]
+
+
+def test_resolve_membership_rejects_malformed_audit_evidence() -> None:
+    import time
+
+    report = _fresh_report(time.time(), {"42": {"epics": [10]}})  # missing required fields
+    result = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=None,
+        registered_epics=[10],
+        membership_report=report,
+    )
+    assert result["valid"] is False
+    assert "malformed" in result["reason"]
+
+
+def test_resolve_membership_rejects_orphan() -> None:
+    """No native parent AND no entry at all in the fresh audit index — this is
+    also the shape a CHILD-SIDE-ONLY ``Refs #10`` reference produces: the
+    auditor's effective-membership index is built exclusively from what the
+    epic body says, so a mention that lives only in the child issue's own
+    prose never creates an entry here."""
+    import time
+
+    report = _fresh_report(time.time(), {})
+    result = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=None,
+        registered_epics=[10],
+        membership_report=report,
+    )
+    assert result["valid"] is False
+    assert "orphan" in result["reason"]
+
+
+def test_resolve_membership_rejects_wrong_epic() -> None:
+    import time
+
+    report = _fresh_report(
+        time.time(),
+        {"42": {"epics": [20], "streams": ["other"], "via": "body", "unique_stream": True}},
+    )
+    result = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=None,
+        registered_epics=[10, 20],
+        membership_report=report,
+    )
+    assert result["valid"] is False
+    assert "different epic" in result["reason"]
+
+
+def test_resolve_membership_rejects_multi_home() -> None:
+    import time
+
+    report = _fresh_report(
+        time.time(),
+        {
+            "42": {
+                "epics": [10, 20],
+                "streams": ["infra", "other"],
+                "via": "body",
+                "unique_stream": False,
+            }
+        },
+    )
+    result = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=None,
+        registered_epics=[10, 20],
+        membership_report=report,
+    )
+    assert result["valid"] is False
+    assert "ambiguously multi-homed" in result["reason"]
+
+
+def test_resolve_membership_rejects_unregistered_stream_epic() -> None:
+    result = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=10,
+        registered_epics=[99],
+        membership_report=None,
+    )
+    assert result["valid"] is False
+    assert "registered issue-stream" in result["reason"]
+
+
+def test_resolve_membership_digest_is_deterministic_over_the_index() -> None:
+    import time
+
+    now = time.time()
+    index = {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}}
+    first = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=None,
+        registered_epics=[10],
+        membership_report=_fresh_report(now, index),
+    )
+    second = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=None,
+        registered_epics=[10],
+        membership_report=_fresh_report(now, dict(index)),
+    )
+    changed = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=None,
+        registered_epics=[10],
+        membership_report=_fresh_report(
+            now,
+            {
+                **index,
+                "7": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True},
+            },
+        ),
+    )
+    assert first["digest"] == second["digest"]
+    assert first["digest"] != changed["digest"]
+
+
+# --------------------------------------------------------------------------- #
+# #6028 — evaluate()/reconcile() wire resolve_membership in for the primary
+# issue and drift is caught fresh on every subsequent reconcile.
+# --------------------------------------------------------------------------- #
+def test_evaluate_accepts_unique_body_membership_and_records_provenance() -> None:
+    import time
+
+    ledger = _ready_evidence(_ledger())
+    observation = _observation(_body())
+    observation["github"]["issue"]["parent_epic"] = None
+    now = time.time()
+    observation["github"]["membership_audit"] = _fresh_report(
+        now, {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}}
+    )
+
+    result = task_lifecycle.evaluate(ledger, observation)
+
+    assert result["state"] != "BLOCKED_WITH_RECEIPT"
+    assert result["membership"] == {
+        "valid": True,
+        "method": "body",
+        "epic": 10,
+        "generated_at": now,
+        "digest": result["membership"]["digest"],
+        "reason": None,
+    }
+    assert result["membership"]["digest"].startswith("sha256:")
+
+
+def test_evaluate_rejects_body_membership_without_fresh_audit() -> None:
+    ledger = _ready_evidence(_ledger())
+    observation = _observation(_body())
+    observation["github"]["issue"]["parent_epic"] = None
+    observation["github"]["membership_audit"] = None
+
+    result = task_lifecycle.evaluate(ledger, observation)
+
+    assert result["state"] == "BLOCKED_WITH_RECEIPT"
+    assert "issue membership" in " ".join(result["hard_blockers"])
+    assert result["membership"]["valid"] is False
+
+
+def test_reconcile_persists_membership_provenance_in_the_receipt() -> None:
+    import time
+
+    ledger = _ready_evidence(_ledger())
+    observation = _observation(_body())
+    observation["github"]["issue"]["parent_epic"] = None
+    now = time.time()
+    observation["github"]["membership_audit"] = _fresh_report(
+        now, {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}}
+    )
+
+    _updated, receipt, _ = task_lifecycle.reconcile(ledger, observation, now=NOW)
+
+    projection = receipt["observation"]["projection"]
+    assert projection["membership"]["method"] == "body"
+    assert projection["membership"]["epic"] == 10
+
+
+def test_membership_drift_blocks_a_later_reconcile() -> None:
+    """Membership accepted on one reconcile is NOT cached — a later
+    reconcile with an observation that no longer proves membership (native
+    parent gone, no fresh body audit) must fail closed, even though the
+    ledger previously reconciled cleanly."""
+    ledger = _ready_evidence(_ledger())
+    first_observation = _observation(_body())
+    ledger, first_receipt, _ = task_lifecycle.reconcile(ledger, first_observation, now=NOW)
+    assert first_receipt["state"] != "BLOCKED_WITH_RECEIPT"
+
+    drifted_observation = _observation(_body())
+    drifted_observation["github"]["issue"]["parent_epic"] = None
+    drifted_observation["github"]["membership_audit"] = None
+
+    ledger, second_receipt, replayed = task_lifecycle.reconcile(
+        ledger, drifted_observation, now="2026-07-16T11:00:00Z"
+    )
+
+    assert replayed is False
+    assert second_receipt["state"] == "BLOCKED_WITH_RECEIPT"
+    assert "issue membership" in " ".join(second_receipt["hard_blockers"])
+    assert ledger["current_state"] == "BLOCKED_WITH_RECEIPT"

@@ -63,33 +63,38 @@ def load_registry(path: Path = REGISTRY_PATH) -> dict[str, list[int]]:
     return registry
 
 
-def _gh_json(args: list[str], timeout_s: float = 30.0):
+def _gh_json(args: list[str], timeout_s: float = 30.0, *, cwd: Path = ROOT):
     proc = subprocess.run(
-        ["gh", *args], capture_output=True, text=True, timeout=timeout_s, cwd=ROOT
+        ["gh", *args], capture_output=True, text=True, timeout=timeout_s, cwd=cwd
     )
     if proc.returncode != 0:
         raise RuntimeError(f"gh {' '.join(args[:3])}… failed: {proc.stderr.strip()[:200]}")
     return json.loads(proc.stdout)
 
 
-def fetch_open_issues() -> list[dict]:
+def fetch_open_issues(repo_root: Path = ROOT) -> list[dict]:
     return _gh_json(
         ["issue", "list", "--state", "open", "--limit", "500",
-         "--json", "number,title"]
+         "--json", "number,title"],
+        cwd=repo_root,
     )
 
 
-_REPO_CACHE: dict[str, str] = {}
+# Keyed by resolved repo root so a closeout invocation configured for one
+# checkout never reuses another checkout's owner/name (a caller auditing two
+# different worktrees in the same process must not cross-contaminate).
+_REPO_CACHE: dict[str, tuple[str, str]] = {}
 
 
-def _repo_owner_name() -> tuple[str, str]:
-    """Resolve the actual owner/name once — GraphQL -f fields do NOT expand
-    the gh {owner}/{repo} placeholders (REST paths do). Caught by live probe."""
-    if not _REPO_CACHE:
-        data = _gh_json(["repo", "view", "--json", "owner,name"])
-        _REPO_CACHE["owner"] = data["owner"]["login"]
-        _REPO_CACHE["name"] = data["name"]
-    return _REPO_CACHE["owner"], _REPO_CACHE["name"]
+def _repo_owner_name(repo_root: Path = ROOT) -> tuple[str, str]:
+    """Resolve the actual owner/name once per repo root — GraphQL -f fields do
+    NOT expand the gh {owner}/{repo} placeholders (REST paths do). Caught by
+    live probe."""
+    key = str(repo_root)
+    if key not in _REPO_CACHE:
+        data = _gh_json(["repo", "view", "--json", "owner,name"], cwd=repo_root)
+        _REPO_CACHE[key] = (data["owner"]["login"], data["name"])
+    return _REPO_CACHE[key]
 
 
 # GraphQL subIssues pagination (item 7, PR #4998 corrective pass): an "exact"
@@ -114,9 +119,9 @@ _SUBISSUES_NEXT_PAGE_QUERY = (
 _MAX_SUBISSUE_PAGES = 50
 
 
-def _fetch_subissues_page(epic: int, cursor: str | None) -> dict:
+def _fetch_subissues_page(epic: int, cursor: str | None, repo_root: Path = ROOT) -> dict:
     """One GraphQL page of ``issue.subIssues`` (+ ``body`` on the first page)."""
-    owner, name = _repo_owner_name()
+    owner, name = _repo_owner_name(repo_root)
     if cursor is None:
         args = [
             "-F", "number=" + str(epic),
@@ -130,7 +135,7 @@ def _fetch_subissues_page(epic: int, cursor: str | None) -> dict:
             "-f", f"cursor={cursor}",
             "-f", _SUBISSUES_NEXT_PAGE_QUERY,
         ]
-    data = _gh_json(["api", "graphql", *args])
+    data = _gh_json(["api", "graphql", *args], cwd=repo_root)
     return (data.get("data") or {}).get("repository", {}).get("issue") or {}
 
 
@@ -165,13 +170,15 @@ def _paginate_subissues(
     return native, body
 
 
-def fetch_epic_membership(epic: int) -> tuple[set[int], set[int]]:
+def fetch_epic_membership(epic: int, repo_root: Path = ROOT) -> tuple[set[int], set[int]]:
     """Return (native_sub_issue_numbers, body_reference_numbers) for one epic.
 
     Native sub-issues are paginated (see ``_paginate_subissues``) so an epic
     with more than 100 children is not silently truncated to its first page.
     """
-    native, body = _paginate_subissues(epic, _fetch_subissues_page)
+    native, body = _paginate_subissues(
+        epic, lambda e, c: _fetch_subissues_page(e, c, repo_root)
+    )
     refs = {int(m) for m in ISSUE_REF_RE.findall(body)}
     return native, refs
 
@@ -298,17 +305,28 @@ def _effective_membership(
     return index
 
 
-def run_audit() -> dict:
-    registry = load_registry()
-    open_issues = fetch_open_issues()
+def run_audit(repo_root: Path | None = None) -> dict:
+    """Run one live audit, scoped to ``repo_root`` (defaults to this module's
+    own checkout, ``ROOT``, preserving the plain-CLI default behavior).
+
+    Every input — the stream registry, ``gh`` execution cwd for open-issue and
+    epic-membership fetches, and the cache the report is written to — uses the
+    SAME resolved root, so a caller auditing a non-default checkout (e.g. a
+    closeout invocation bound to another worktree) never validates membership
+    against, or writes a cache into, this module's own repo instead.
+    """
+    root = repo_root.resolve() if repo_root is not None else ROOT
+    registry = load_registry(root / "scripts" / "config" / "issue_streams.yaml")
+    open_issues = fetch_open_issues(root)
     membership = {
-        epic: fetch_epic_membership(epic)
+        epic: fetch_epic_membership(epic, root)
         for epics in registry.values()
         for epic in epics
     }
     report = classify(open_issues, registry, membership)
-    CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
-    CACHE_PATH.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
+    cache_path = root / "batch_state" / "issue_stream_audit.json"
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
     return report
 
 
@@ -386,6 +404,37 @@ def _valid_open_numbers(value: object) -> bool:
     return isinstance(value, list) and all(_is_positive_int(n) for n in value)
 
 
+def validate_membership_report(report: object, max_age_s: int) -> dict | None:
+    """Validate an already-fetched (in-memory) audit report and return it, or
+    ``None`` if it fails closed.
+
+    Same freshness/shape rules as :func:`read_membership_index` — extracted so
+    a caller carrying one fresh live ``run_audit()`` snapshot through a single
+    observation (task_lifecycle's canonical membership validator) can apply
+    the exact same fail-closed semantics as the file-cache path below, without
+    a second round trip through disk.
+    """
+    if not isinstance(report, dict):
+        return None
+
+    generated_at = report.get("generated_at")
+    if isinstance(generated_at, bool) or not isinstance(generated_at, (int, float)):
+        return None
+    if not math.isfinite(generated_at):
+        return None
+    age = time.time() - generated_at
+    if age > max_age_s or age < -CACHE_FUTURE_SKEW_S:
+        return None
+
+    index = report.get("effective_membership")
+    if not _valid_membership_index(index):
+        return None
+    open_numbers = report.get("open_issue_numbers")
+    if open_numbers is not None and not _valid_open_numbers(open_numbers):
+        return None
+    return report
+
+
 def read_membership_index(max_age_s: int, *, cache_path: Path | None = None) -> dict | None:
     """Return the effective issue→epic membership index from a FRESH cache.
 
@@ -406,25 +455,7 @@ def read_membership_index(max_age_s: int, *, cache_path: Path | None = None) -> 
         report = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return None
-    if not isinstance(report, dict):
-        return None
-
-    generated_at = report.get("generated_at")
-    if isinstance(generated_at, bool) or not isinstance(generated_at, (int, float)):
-        return None
-    if not math.isfinite(generated_at):
-        return None
-    age = time.time() - generated_at
-    if age > max_age_s or age < -CACHE_FUTURE_SKEW_S:
-        return None
-
-    index = report.get("effective_membership")
-    if not _valid_membership_index(index):
-        return None
-    open_numbers = report.get("open_issue_numbers")
-    if open_numbers is not None and not _valid_open_numbers(open_numbers):
-        return None
-    return report
+    return validate_membership_report(report, max_age_s)
 
 
 def make_membership_resolver(report: dict) -> MembershipResolver:
