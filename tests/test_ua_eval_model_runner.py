@@ -138,16 +138,23 @@ if mode == "extra":
     responses[0]["extra"] = "no"
 payload = {"responses": responses}
 text = json.dumps(payload, ensure_ascii=False)
-if mode in {"ndjson", "fenced_ndjson"}:
+if mode in {"ndjson", "fenced_ndjson", "opencode_ndjson"}:
     if mode == "fenced_ndjson":
         text = "```json\\n" + text + "\\n```"
-    event = {
-        "type": "event",
-        "message": {
-            "role": "assistant",
-            "content": [{"type": "text", "text": text}],
-        },
-    }
+    if mode == "opencode_ndjson":
+        text = "```json\\n" + text + "\\n```"
+        event = {
+            "type": "text",
+            "part": {"type": "text", "text": text},
+        }
+    else:
+        event = {
+            "type": "event",
+            "message": {
+                "role": "assistant",
+                "content": [{"type": "text", "text": text}],
+            },
+        }
     print(json.dumps(event))
 elif mode == "thought":
     print("<think>provider trace</think>" + text)
@@ -361,16 +368,26 @@ def test_retries_and_preserves_failure_receipts(tmp_path: Path) -> None:
 def test_accepts_fenced_json_and_preserves_raw_provider_output(tmp_path: Path) -> None:
     raw, output, metadata_path, _ = _run(
         tmp_path,
-        mode="fenced_ndjson",
+        mode="opencode_ndjson",
     )
     raw_row = json.loads(raw.read_text())
     assert "```json" in raw_row["raw_provider_output"]
     assert len(output.read_text().splitlines()) == runner.EXPECTED_REQUEST_COUNT
     metadata = json.loads(metadata_path.read_text())
     assert metadata["generation_metadata"]["response_normalization"] == [
-        "extract final assistant text from an NDJSON event stream when needed",
+        "extract final assistant text from a recognized NDJSON event when needed",
         "remove one exact optional JSON code fence before schema validation",
     ]
+
+
+def test_stops_scheduling_after_first_exhausted_batch(tmp_path: Path) -> None:
+    with pytest.raises(runner.RunnerError, match="batch 0 exhausted"):
+        _run(
+            tmp_path,
+            mode="malformed",
+            batch_size=300,
+        )
+    assert len((tmp_path / "calls.log").read_text().splitlines()) == 1
 
 
 def test_resume_is_idempotent_and_does_not_reinvoke_provider(tmp_path: Path) -> None:
