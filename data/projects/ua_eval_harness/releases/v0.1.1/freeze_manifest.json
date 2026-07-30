@@ -1,0 +1,348 @@
+{
+  "artifacts": [
+    {
+      "path": "data/projects/ua_eval_harness/heldout_manifest_config.json",
+      "role": "v0.1.0_dataset_configuration",
+      "sha256": "99f63edb8beed1bb712f76a51fffd6fa211703374a1c447b22f5c44293b61fb7"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/heldout_manifest_v1.json",
+      "role": "v0.1.0_heldout_gold_manifest",
+      "sha256": "56eb4fc17a5ed6967c5c13fbdc9fde964d1b8fb08bde7da7f15cf535486735dd"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/scoring_disposition_config.json",
+      "role": "v0.1.0_calque_disposition_configuration",
+      "sha256": "ecda338a95aa8cc8fe862ba67556101be119ad9391766221616304ce5928218a"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/scoring_dispositions_v1.json",
+      "role": "v0.1.0_calque_scoring_dispositions",
+      "sha256": "44498d4c2ffcf8c0d3afed51bc82fa482be6b68ff6f05a3bcda035adbf5311a8"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/releases/v0.1.0/split_integrity.json",
+      "role": "v0.1.0_upstream_split_integrity_receipt",
+      "sha256": "c10b1bba913364aff6ad0c0d9cbbafa9b611b3fb733a94e7fe73081be4b5b7c5"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/evalset_v1.jsonl",
+      "role": "v0.1.0_development_fixture_excluded_from_results",
+      "sha256": "34a47de1a8826a60895898bd8d94c5d794159a9ea291a51a7f85790a3bb7f976"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/minimal_edit_prompt_v1.txt",
+      "role": "v0.1.0_task_instruction",
+      "sha256": "f121546dcbaf602c58c7d85977ad792eb9be402dd1e01a6a556ba966dac2c96a"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/model_output_schema_v1.json",
+      "role": "v0.1.0_model_output_contract",
+      "sha256": "93fda1b52e570cfc3c6431bb77e55d4e0047bf9cf92c45e4c5107b10e47ba710"
+    },
+    {
+      "path": "scripts/projects/ua_eval_harness/build_heldout_manifest.py",
+      "role": "v0.1.0_dataset_extractor",
+      "sha256": "d4774721fb1b7fdc750bbc9dea0c9aa193b9c9d9b203568146dd3bd3e557e47b"
+    },
+    {
+      "path": "scripts/projects/ua_eval_harness/build_scoring_dispositions.py",
+      "role": "v0.1.0_calque_disposition_builder",
+      "sha256": "c4627a0c038248c4d63b273475ed4e505b3df88ad7e134d2d8651df60fc5c5df"
+    },
+    {
+      "path": "scripts/config/vesum_source.lock.json",
+      "role": "v0.1.0_vesum_source_lock",
+      "sha256": "27362c3112579cbd8378314189c6c2032ac1d3db5f89f155f5557bb31a3d0fa6"
+    },
+    {
+      "path": "scripts/rag/vesum_reingest.py",
+      "role": "v0.1.0_vesum_marker_parser",
+      "sha256": "d98ffb7f3dfd7503c901e554e02dbef61c728672ba554a2d2d8c50fc01059477"
+    },
+    {
+      "path": "scripts/projects/ua_eval_harness/evaluate_model.py",
+      "role": "v0.1.0_saved_response_scorer",
+      "sha256": "358ee1419533577fb185615c8a80b15688214a89fe3003d9fe9425954511402a"
+    },
+    {
+      "path": "scripts/projects/ua_eval_harness/run_codex_baseline.py",
+      "role": "v0.1.0_optional_live_model_runner",
+      "sha256": "06453da9cf0750aac5065650c510f4d03e1d7d2ef9ca21be1fefd719c1f1590b"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v1/generation_requests.jsonl",
+      "role": "v0.1.0_source_only_generation_requests",
+      "sha256": "ec7d5b4e4216d484d3d2243f4a09c4cf82aab423ec918acb424fcf76f2ebdf83"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v1/identity.responses.jsonl",
+      "role": "v0.1.0_identity_saved_responses",
+      "sha256": "eb9414fb71b6a520f9bd3d3d7e709840c908ee2c8c85de30a005f2b3f223a7c6"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v1/identity.report.json",
+      "role": "v0.1.0_identity_aggregate_report",
+      "sha256": "b278dd289783c027162c80ec48b6857db968b2834c50d6fe1fbae30022205142"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v1/fixture-rules.responses.jsonl",
+      "role": "v0.1.0_deterministic_saved_responses",
+      "sha256": "cc22f750fcfd889f1054a7d48d010efe7add9a610ffc9ba2e2f139236cf29321"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v1/fixture-rules.report.json",
+      "role": "v0.1.0_deterministic_aggregate_report",
+      "sha256": "0759ba0c49c6a834acede64e0faa62c7197a6b3d5b53f4761e4eef2d479055c5"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v1/gpt-5.6-terra.responses.jsonl",
+      "role": "v0.1.0_real_model_saved_responses",
+      "sha256": "e966913bd151f6a54170bc91442388cb68688965c9951c2d76088199c0ebe63b"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v1/gpt-5.6-terra.report.json",
+      "role": "v0.1.0_real_model_aggregate_report",
+      "sha256": "2567fb9e96c94c3a165e24607907e98edb7fc86e25634c9d788fdc10e9f19952"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/releases/v0.1.0/freeze_manifest.json",
+      "role": "v0.1.0_release_manifest",
+      "sha256": "b88765eec0d8cfe08fd98fca2bd01d47c4fe284d4c23c1e0c980a9040a808800"
+    },
+    {
+      "path": "scripts/projects/ua_eval_harness/verify_release_freeze.py",
+      "role": "v0.1.0_compatibility_verifier",
+      "sha256": "93449a776a1f262202cbe928068c4dc6714c11d0bf3d70f6ca06f5e4f894a769"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/releases/v0.1.1/split_integrity.json",
+      "role": "v0.1.1_upstream_split_integrity_receipt",
+      "sha256": "0374ef66ad6e87c03deb3714d95df46bc01a804e32e78645d954d447ca3e7d75"
+    },
+    {
+      "path": "docs/projects/ua-eval-harness/README.md",
+      "role": "public_package_guide",
+      "sha256": "b838b96cd211a748c0152021fe089be0e37f811f43e84c98b448f4d00f42db86"
+    },
+    {
+      "path": "docs/projects/ua-eval-harness/DATA_CARD.en.md",
+      "role": "public_data_card",
+      "sha256": "6f8689aa817b5b97441c8c8e7863c7abc554cf8367e8598367ae84d6b28c8df1"
+    },
+    {
+      "path": "docs/projects/ua-eval-harness/RELEASE_NOTES.md",
+      "role": "public_release_notes",
+      "sha256": "44a42d2cf129518811e99390478eb60808695be19979bc28013bf90eb72e78c8"
+    },
+    {
+      "path": "docs/projects/ua-eval-harness/REPRODUCING.md",
+      "role": "public_reproduction_guide",
+      "sha256": "dcc4792451934106a4edc5399871fd4968342e11efb275a9fe1433c8928aaab5"
+    },
+    {
+      "path": "docs/projects/ua-eval-harness/THIRD_PARTY_NOTICES.md",
+      "role": "public_third_party_notices",
+      "sha256": "17300060a8d4c0ad9360e5dd85f36746d2526edd1955d733b8e4af9435f58304"
+    },
+    {
+      "path": "docs/projects/ua-eval-harness/contamination-policy.md",
+      "role": "public_contamination_policy",
+      "sha256": "b47f49c9e7407369a11e431327dcb0b0fd812127f65d6e3347eb0ab02f8de687"
+    },
+    {
+      "path": "scripts/projects/ua_eval_harness/run_model_batch.py",
+      "role": "provider_neutral_model_runner",
+      "sha256": "7342241d91ef236e73f570c95f0622d701907daf5187d1ea4504a1cdb0bc8021"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/model_run_config_schema_v1.json",
+      "role": "provider_neutral_run_config_schema",
+      "sha256": "c7912c01d7b44a8344757d1f66957d84981b40d2ceb77153b9aa020f16614e77"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/model_run_config.example.json",
+      "role": "provider_neutral_run_config_example",
+      "sha256": "9e5fcfb2ac08a12b7a2a12f5edd6fbf229c73d7eb6643e5e73e42da4523ffae1"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v2/README.md",
+      "role": "gemma_baseline_guide",
+      "sha256": "35963e0d2171553215c6729ff7d7290718b6d2b28ac03fbd58f58b4b0c04b345"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.failed-attempts.jsonl",
+      "role": "gemma_rejected_attempt_evidence",
+      "sha256": "da0e9545321bc7506954ebeddd29e47161d09ebcd6c9d2df2ffba56bbbead9f1"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.metadata.json",
+      "role": "gemma_generation_metadata",
+      "sha256": "82d54ba3f669ac04509121537b4e3452d88861cacd0da2254cb923aba7e181e2"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.model-output.jsonl",
+      "role": "gemma_normalized_model_output",
+      "sha256": "8c24c21a10557f679f302fb5fcbe2387f3f7bd7086c908e523d37c5da51d9586"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.raw-provider-output.jsonl",
+      "role": "gemma_successful_raw_provider_output",
+      "sha256": "99d373000acf73f5eb8c06bbee25dc8221e3484b73ad9403e6f6b29072d1041f"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.report.json",
+      "role": "gemma_aggregate_report",
+      "sha256": "5c50e17373f17a8c844c35e68198fa32dafcd8ad022d308d45adf7773f8e32ea"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.responses.jsonl",
+      "role": "gemma_saved_responses",
+      "sha256": "f6e59c2ad31f1e6a74296f66d2d693117e30a9214e147e355a24fc2cd79a469f"
+    },
+    {
+      "path": "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.run-config.json",
+      "role": "gemma_run_configuration",
+      "sha256": "b2630fa7d58b92c110582885ee5f13f42306c22c5b316405f1efd734a99ea911"
+    },
+    {
+      "path": "scripts/projects/ua_eval_harness/verify_release_freeze_v011.py",
+      "role": "v0.1.1_release_verifier",
+      "sha256": "1ffb9730e26ce3a42b38136a3e0bfbf64af8a69b05649e39ec57476849b7dd56"
+    },
+    {
+      "path": "scripts/projects/ua_eval_harness/smoke_public_v011.py",
+      "role": "v0.1.1_public_smoke_test",
+      "sha256": "572e9e500ed725800c9a3732947f9ad5a698de6b0c62bfa4c20ba3dae90f0609"
+    },
+    {
+      "path": "tests/test_ua_eval_public_v011.py",
+      "role": "v0.1.1_smoke_regression_test",
+      "sha256": "864359ea38911acd19cb45991d808408a9bea89e15525721f2804aa3ebeabb73"
+    }
+  ],
+  "baselines": {
+    "gemma_4_reference": {
+      "batch_count": 34,
+      "failed_attempt_count": 2,
+      "gold_fields_supplied": [],
+      "metrics": {
+        "edit_f0_5": 0.19335142469470828,
+        "edit_precision": 0.24516129032258063,
+        "edit_recall": 0.10477941176470588,
+        "exact_sentence_accuracy": 0.10782865583456426,
+        "exact_sentence_correct": 73,
+        "headline_calque_recall": 0.09523809523809523
+      },
+      "model": "google/gemma-4-31b-it",
+      "model_version": "OpenRouter catalog entry created=1775148486",
+      "prompt_sha256": "f121546dcbaf602c58c7d85977ad792eb9be402dd1e01a6a556ba966dac2c96a",
+      "provider": "OpenRouter",
+      "report_path": "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.report.json",
+      "report_sha256": "5c50e17373f17a8c844c35e68198fa32dafcd8ad022d308d45adf7773f8e32ea",
+      "request_count": 677,
+      "request_packet_sha256": "77afe3da4ea590e060602af53b60ac8f350369f8a323521dee99f42100815fca",
+      "route": "OpenCode 1.17.13 -> OpenRouter paid -> google/gemma-4-31b-it",
+      "run_id": "ua-gec-calque-grammar-public-v0--gemma-4-31b-it-openrouter--2026-07-30",
+      "runner_version": "ua_eval_provider_neutral_batch_runner.v1.1",
+      "saved_response_path": "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.responses.jsonl",
+      "saved_response_sha256": "f6e59c2ad31f1e6a74296f66d2d693117e30a9214e147e355a24fc2cd79a469f"
+    },
+    "historical_results_version": "0.1.0",
+    "historical_saved_runs": 3,
+    "total_saved_runs": 4
+  },
+  "compatibility": {
+    "dataset_task_scorer_and_v0.1.0_results": "unchanged",
+    "previous_artifact_count": 21,
+    "previous_freeze_path": "data/projects/ua_eval_harness/releases/v0.1.0/freeze_manifest.json",
+    "previous_freeze_sha256": "b88765eec0d8cfe08fd98fca2bd01d47c4fe284d4c23c1e0c980a9040a808800",
+    "previous_version": "0.1.0"
+  },
+  "provider_neutral_workflow": {
+    "complete_coverage_required": 677,
+    "config_example": "data/projects/ua_eval_harness/model_run_config.example.json",
+    "config_schema": "data/projects/ua_eval_harness/model_run_config_schema_v1.json",
+    "generation_and_scoring_are_separate": true,
+    "runner": "scripts/projects/ua_eval_harness/run_model_batch.py"
+  },
+  "release": {
+    "id": "ua-gec-calque-grammar-public-v0",
+    "release_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/tag/0.1.1",
+    "status": "immutable",
+    "version": "0.1.1"
+  },
+  "reporting": {
+    "aggregate_reports_exclude_item_content": true,
+    "generation_evidence_is_stored_separately": true,
+    "raw_successful_output_is_separate": true,
+    "rejected_attempt_evidence_is_separate": true
+  },
+  "schema_version": "ua_eval_release_freeze.v2",
+  "split_integrity": {
+    "included_sentences": 677,
+    "receipt_path": "data/projects/ua_eval_harness/releases/v0.1.1/split_integrity.json",
+    "receipt_sha256": "0374ef66ad6e87c03deb3714d95df46bc01a804e32e78645d954d447ca3e7d75",
+    "test_authors": 76,
+    "test_documents": 166,
+    "train_authors": 752,
+    "train_documents": 1706,
+    "train_test_author_overlap": 0,
+    "train_test_document_overlap": 0
+  },
+  "task_contract": {
+    "calque_disposition_id": "ua-gec-calque-dispositions-v1",
+    "calque_disposition_sha256": "44498d4c2ffcf8c0d3afed51bc82fa482be6b68ff6f05a3bcda035adbf5311a8",
+    "manifest_id": "ua-gec-calque-grammar-heldout-v1",
+    "model_output_schema_sha256": "93fda1b52e570cfc3c6431bb77e55d4e0047bf9cf92c45e4c5107b10e47ba710",
+    "predicate": {
+      "annotation_layer": "gec-fluency",
+      "arbitrary_item_quota": null,
+      "exclusion_reason": "no_calque_or_grammar_edit",
+      "included_exact_tags": [
+        "F/Calque"
+      ],
+      "included_tag_prefixes": [
+        "G/"
+      ],
+      "partition": "test",
+      "record_unit": "m2_tokenized_sentence",
+      "reference_policy": "apply_only_in_scope_edits_per_annotator",
+      "selection_policy": "include_every_sentence_with_at_least_one_in_scope_edit"
+    },
+    "prompt_sha256": "f121546dcbaf602c58c7d85977ad792eb9be402dd1e01a6a556ba966dac2c96a",
+    "scorer_id": "ua_eval_exact_token_edits.v1",
+    "scorer_sha256": "358ee1419533577fb185615c8a80b15688214a89fe3003d9fe9425954511402a",
+    "task": "minimal-edit Ukrainian calque and grammar correction"
+  },
+  "upstream": {
+    "citation": "Syvokon, Nahorna, Kuchmiichuk, and Osidach. UA-GEC. UNLP 2023.",
+    "commit": "4757f72f192c4a41e4c8fb1d9690a948f87cf6d6",
+    "dataset": "UA-GEC",
+    "file_sha256": {
+      "LICENSE": "f5b745ef98087f531e719ee8ca6a96809444573ecc7173c6fa68eaad39b3cc3f",
+      "README.md": "e0aa163c7471ff9e876f5f294252b9e406b2ec832b10a6ded894ea322796e875",
+      "data/gec-fluency/test/gec-fluency.test.m2": "a7e91f93747492e4acda1fef261a948080228032f0871c0b3c14438f85397330",
+      "data/metadata.csv": "6f92f0734cd4a8b126b416f2bc19b518e739f6b3e1aaeef46a4bf5e4e97ab3f9"
+    },
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "repository": "https://github.com/grammarly/ua-gec",
+    "version": "2.0"
+  },
+  "version_policy": {
+    "any_frozen_byte_change": "requires a new semantic version and freeze directory",
+    "historical_freezes": "retained and independently verifiable",
+    "in_place_edits": "forbidden"
+  },
+  "vesum": {
+    "asset_sha256": "e33803783ac138e6f3af2cf0e9428ba146c0ecfda7f5c41fe83ae00c7af24be9",
+    "asset_size_bytes": 18195377,
+    "asset_url": "https://github.com/brown-uk/dict_uk/releases/download/v6.8.0/dict_corp_vis.txt.bz2",
+    "license": "CC BY-NC-SA 4.0",
+    "project": "brown-uk/dict_uk",
+    "retrieved": "2026-07-30",
+    "upstream_commit": "bcb5ccd9585a79dbbbb7c8c5e241adcd8a64f824",
+    "version": "v6.8.0"
+  }
+}
