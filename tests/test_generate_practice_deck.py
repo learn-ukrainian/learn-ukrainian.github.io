@@ -139,6 +139,43 @@ def test_local_practice_seed_requires_explicit_opt_in_and_never_creates_a_cloze_
     assert "practice_example" not in merged[0]
 
 
+def test_local_practice_seed_accepts_attested_rows_alongside_local_recognition_rows(tmp_path: Path) -> None:
+    seed_path = tmp_path / "mixed-seed.json"
+    seed_path.write_text(
+        json.dumps(
+            {
+                "schema": "curated-v5-practice-seed-v1",
+                "localOnly": True,
+                "entries": [
+                    {
+                        "seedRow": 1,
+                        "lemma": "слово",
+                        "slug": "слово",
+                        "cefr": "A1",
+                        "sentenceStatus": "has_candidates",
+                        "admissionMode": "local_practice_private_teacher",
+                    },
+                    {
+                        "seedRow": 2,
+                        "lemma": "речення",
+                        "slug": "речення",
+                        "cefr": "A1",
+                        "sentenceStatus": "ok",
+                        "example": "Це речення.",
+                        "provenance": {"source_file": "fixture", "credit": "Fixture"},
+                    },
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    rows = read_practice_seed(seed_path, allow_local_private=True)
+
+    assert [row["seedRow"] for row in rows] == [1, 2]
+
+
 def test_local_practice_seed_rows_are_selected_before_ordinary_course_entries() -> None:
     entries = [
         {

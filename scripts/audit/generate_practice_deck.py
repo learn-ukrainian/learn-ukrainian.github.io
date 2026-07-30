@@ -2962,8 +2962,6 @@ def read_practice_seed(path: Path, *, allow_local_private: bool = False) -> list
                 raise ValueError(f"local-only practice seed entries[{index}] must not contain example or provenance: {path}")
             validated.append(row)
             continue
-        if local_only:
-            raise ValueError(f"local-only practice seed entries[{index}] must be local recognition rows: {path}")
         if not example or not isinstance(provenance, dict):
             raise ValueError(
                 f"practice seed entries[{index}] requires example and provenance: {path}"
