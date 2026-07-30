@@ -5,15 +5,16 @@
 | Field | Value |
 | --- | --- |
 | Release | `ua-gec-calque-grammar-public-v0` |
-| Semantic version | `0.1.0` |
+| Semantic version | `0.1.1` |
 | Task | Minimal-edit correction of Ukrainian calques and grammar |
 | Evaluation items | 677 held-out UA-GEC sentences |
 | Acceptable references | 918 annotator references |
 | In-scope annotations | 1,608 `F/Calque` or `G/*` annotations |
 | Source | UA-GEC 2.0, `gec-fluency/test` |
 
-The `v0` suffix is part of the release name; `0.1.0` is the semantic version
-of this frozen release.
+The `v0` suffix is part of the release name; `0.1.1` is the semantic version
+of the current frozen release. The historical `0.1.0` freeze remains
+byte-identical and independently verifiable.
 
 This release is for researchers and practitioners evaluating systems that make
 minimal corrections to Ukrainian sentences. It provides a public evaluation
@@ -76,6 +77,8 @@ The denominator depends on two stages:
 4. For the saved `gpt-5.6-terra` run, the selected references contain 234
    admitted annotations; 33 exact matches give recall
    `33 / 234 = 0.1410`.
+5. For the saved Gemma 4 run, the selected references contain 231 admitted
+   annotations; 22 exact matches give recall `22 / 231 = 0.0952`.
 
 Calque precision is not reported. Model-produced edits do not carry error-type
 labels, so an edit that appears only in the hypothesis cannot be assigned
@@ -185,18 +188,23 @@ standardization and grammar labels.
 | Identity v1 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 |
 | Train-fixture literal rules v1 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 |
 | `gpt-5.6-terra` | 0.3110 | 0.1309 | 0.2439 | 0.1410 | 0.1610 |
+| Gemma 4 31B IT | 0.2452 | 0.1048 | 0.1934 | 0.0952 | 0.1078 |
 
 For the `gpt-5.6-terra` run, the 95% sentence-bootstrap interval is
 0.2073–0.2780 for overall edit F0.5 and 0.1344–0.1891 for exact-sentence
 accuracy. These intervals describe uncertainty for this dataset and run; they
 do not turn the release into a general comparison of model quality.
 
+For the Gemma 4 run, the corresponding 95% intervals are 0.1604–0.2256 for
+overall edit F0.5 and 0.0857–0.1300 for exact-sentence accuracy.
+
 All 677 responses from each saved run are retained. Re-scoring those responses
-is deterministic. Live regeneration of the `gpt-5.6-terra` responses is not
-byte-reproducible because the provider did not expose temperature, top-p, or a
-seed. The saved run records its model, provider, prompt, decoding metadata,
-runner, responses, and report through versioned metadata and cryptographic
-receipts.
+is deterministic. Live regeneration of the model responses is not
+byte-reproducible because the providers did not expose all decoding controls.
+Each saved run records its model, provider, prompt, decoding metadata, runner,
+responses, and report through versioned metadata and cryptographic receipts.
+The Gemma 4 evidence also separates raw successful output, normalized output,
+and two rejected first attempts; both retries succeeded without manual repair.
 
 The zero-scoring identity and literal-rule baselines are diagnostic controls,
 not evidence that the task is impossible or that one model is generally
@@ -293,6 +301,6 @@ reproduce the saved baseline scores without provider credentials, rebuild the
 evaluation data from the pinned upstream sources, and score another model's
 saved responses.
 
-Release `0.1.0` is immutable. A documentation-only correction may be released
-as a patch without changing the dataset, task, scorer, or baseline results;
-any frozen-byte change requires a new semantic version and a separate freeze.
+Releases `0.1.0` and `0.1.1` are both immutable. The `0.1.1` packaging patch
+does not change the dataset, task, scorer, or historical results. Any
+frozen-byte change requires a new semantic version and a separate freeze.

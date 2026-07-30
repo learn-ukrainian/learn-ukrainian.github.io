@@ -11,10 +11,10 @@ quality, or an assessment of any person.
 
 ## Release status
 
-Release `0.1.0` is the current immutable freeze. Release `0.1.1` is a
-corrective packaging release in preparation: it preserves the dataset, task,
-scorer, and `0.1.0` results while improving the public documentation,
-provenance, and model-response workflow. See
+Release `0.1.1` is the current immutable freeze. It preserves the dataset,
+task, scorer, and all `0.1.0` results while adding a provider-neutral
+model-response workflow and a complete Gemma 4 reference run. The historical
+`0.1.0` freeze remains byte-identical and independently verifiable. See
 [RELEASE_NOTES.md](RELEASE_NOTES.md) for the exact boundary.
 
 ## Start here
@@ -53,17 +53,18 @@ model-provider account or credential.
 git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
 uv venv --python 3.12.8
-.venv/bin/python scripts/projects/ua_eval_harness/smoke_public_v0.py
+.venv/bin/python scripts/projects/ua_eval_harness/smoke_public_v011.py
 ```
 
 The smoke test validates the release manifest and re-scores every saved
-baseline response. The expected `0.1.0` result is:
+baseline response. The expected `0.1.1` result is:
 
 ```text
 identity: 677 responses, edit F0.5=0.0000, headline calque R=0.0000, exact=0.0000
 deterministic fixture rules: 677 responses, edit F0.5=0.0000, headline calque R=0.0000, exact=0.0000
 gpt-5.6-terra saved run: 677 responses, edit F0.5=0.2439, headline calque R=0.1410, exact=0.1610
-public v0 smoke passed: frozen scoring reproduced without provider credentials
+gemma-4-31b-it saved run: 677 responses, edit F0.5=0.1934, headline calque R=0.0952, exact=0.1078
+public v0.1.1 smoke passed: both freezes and all saved scoring results reproduced without provider credentials
 ```
 
 For individual verification commands, upstream rebuild instructions, and the
@@ -127,18 +128,23 @@ reliable error-type labels. Overall exact-edit precision still covers every
 predicted edit. The [English data card](DATA_CARD.en.md) defines the metrics
 and their limitations in detail.
 
-## Saved `0.1.0` baselines
+## Saved baselines
 
 | Saved run | Edit P | Edit R | Edit F0.5 | Headline calque R | Exact sentence |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Identity v1 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 |
 | Train-fixture literal rules v1 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 |
 | `gpt-5.6-terra` | 0.3110 | 0.1309 | 0.2439 | 0.1410 | 0.1610 |
+| Gemma 4 31B IT | 0.2452 | 0.1048 | 0.1934 | 0.0952 | 0.1078 |
 
-These controls demonstrate the scorer and saved-response workflow. They do not
-establish a general ranking of model quality. Live regeneration is not
-expected to be byte-identical when a provider does not expose deterministic
-decoding controls; the saved responses and scoring results are reproducible.
+The first three runs belong to the historical `0.1.0` freeze. The Gemma 4
+reference run was added in `0.1.1`; its raw successful output, two rejected
+first attempts, normalized responses, metadata, and aggregate report are
+stored separately under `baselines/v2/`. These runs demonstrate the scorer and
+saved-response workflow. They do not establish a general ranking of model
+quality. Live regeneration is not expected to be byte-identical when a
+provider does not expose deterministic decoding controls; the saved responses,
+import, and scoring results are reproducible.
 
 ## Evaluate another system
 
