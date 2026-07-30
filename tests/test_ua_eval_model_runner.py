@@ -302,10 +302,11 @@ def test_accepts_only_narrow_machine_response_wrappers() -> None:
         f"<think>provider trace</think>{payload}",
         ["item-1"],
     ) == [{"item_id": "item-1", "raw_response": "fixed"}]
-    assert runner.parse_provider_response(
-        f"```json\n{payload}\n```",
-        ["item-1"],
-    ) == [{"item_id": "item-1", "raw_response": "fixed"}]
+    for fenced in (f"```json\n{payload}\n```", f"```json\n{payload}```"):
+        assert runner.parse_provider_response(
+            fenced,
+            ["item-1"],
+        ) == [{"item_id": "item-1", "raw_response": "fixed"}]
     with pytest.raises(runner.RunnerError):
         runner.parse_provider_response(f"Explanation: {payload}", ["item-1"])
     with pytest.raises(runner.RunnerError):
