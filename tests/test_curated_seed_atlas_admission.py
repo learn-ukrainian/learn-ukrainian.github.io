@@ -286,7 +286,42 @@ def test_practice_seed_reports_no_hit_and_retains_duplicate_attestations(tmp_pat
         "atlas_failures": 0,
         "sentence_status": {"no_hit": 1, "ok": 3},
         "practice_admitted_rows": 2,
+        "practice_skipped_not_admitted": 0,
         "practice_skipped_no_cefr": 1,
         "practice_cefr_sources": {"PULS": 2},
     }
     assert report["practice_skipped_no_cefr"] == [{"seedRow": 4, "lemma": "неоцінений"}]
+
+
+def test_practice_seed_reports_rights_gate_separately_from_missing_cefr(tmp_path: Path) -> None:
+    manifest = _manifest(
+        tmp_path / "manifest.json",
+        [{"lemma": "відомий", "url_slug": "відомий", "pos": "adj"}],
+    )
+    rows = [
+        {
+            "seedRow": 1,
+            "lemma": "відомий",
+            "sentenceStatus": "has_candidates",
+            "admission": {
+                "practice": False,
+                "mode": "pending_operator_redistribution_go",
+                "reason": "private_local_rights_require_operator_redistribution_go",
+            },
+        }
+    ]
+
+    seed, report = admission.prepare_practice_seed(rows, manifest)
+
+    assert seed["entries"] == []
+    assert report["counts"]["practice_admitted_rows"] == 0
+    assert report["counts"]["practice_skipped_not_admitted"] == 1
+    assert report["counts"]["practice_skipped_no_cefr"] == 0
+    assert report["practice_skipped_not_admitted"] == [
+        {
+            "seedRow": 1,
+            "lemma": "відомий",
+            "mode": "pending_operator_redistribution_go",
+            "reason": "private_local_rights_require_operator_redistribution_go",
+        }
+    ]

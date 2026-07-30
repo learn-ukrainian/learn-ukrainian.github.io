@@ -86,6 +86,15 @@ def normalize_rows(rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
             # The public projection never carries a path to the private source
             # document; only corpus attestation provenance survives.
             row["provenance"] = provenance
+        admission = raw.get("admission")
+        if isinstance(admission, dict):
+            # This is a gate, not a rights assertion: it keeps dry-runs from
+            # counting a private/local row as Practice-eligible.
+            row["admission"] = {
+                "practice": admission.get("practice") is True,
+                "mode": _text(admission.get("mode")),
+                "reason": _text(admission.get("reason")),
+            }
         normalized.append(row)
     return normalized
 
@@ -287,6 +296,7 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
     }
     routes_by_slug = {_text(entry.get("url_slug")): entry for entry in public_entries}
     atlas_failures: list[dict[str, Any]] = []
+    skipped_not_admitted: list[dict[str, Any]] = []
     skipped_no_cefr: list[dict[str, Any]] = []
     practice_rows: list[dict[str, Any]] = []
     status_counts: Counter[str] = Counter()
@@ -299,6 +309,17 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
             continue
         status = _text(row.get("sentenceStatus"))
         status_counts[status] += 1
+        admission = row.get("admission")
+        if isinstance(admission, dict) and admission.get("practice") is not True:
+            skipped_not_admitted.append(
+                {
+                    "seedRow": row.get("seedRow"),
+                    "lemma": lemma,
+                    "mode": _text(admission.get("mode")),
+                    "reason": _text(admission.get("reason")),
+                }
+            )
+            continue
         if status != "ok":
             continue
         example = _text(row.get("example"))
@@ -319,9 +340,11 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
             "active_seed_rows": len(rows), "unique_seed_lemmas": len({_lemma_key(_text(row.get("lemma"))) for row in rows}),
             "public_atlas_rows": len(rows) - len(atlas_failures), "atlas_failures": len(atlas_failures),
             "sentence_status": dict(sorted(status_counts.items())), "practice_admitted_rows": len(practice_rows),
+            "practice_skipped_not_admitted": len(skipped_not_admitted),
             "practice_skipped_no_cefr": len(skipped_no_cefr), "practice_cefr_sources": dict(sorted(cefr_sources.items())),
         },
         "atlas_failures": atlas_failures,
+        "practice_skipped_not_admitted": skipped_not_admitted,
         "practice_skipped_no_cefr": skipped_no_cefr,
     }
     seed = {"schema": PRACTICE_SCHEMA, "deckSlug": "curated-v5-full", "title": "Curated v5 practice admission", "selectionNote": "All sentence_status=ok rows whose public Atlas route has pipeline-derived CEFR. Recognition-first; no cloze targets.", "entries": practice_rows}
