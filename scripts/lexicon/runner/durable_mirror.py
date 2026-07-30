@@ -293,6 +293,10 @@ def require_durable(mirror_dir: Path, *, max_age_hours: float = DEFAULT_MAX_AGE_
         raise DurableMirrorError(
             f"durable mirror at {mirror_dir} has invalid generated_at={manifest.get('generated_at')!r}"
         ) from exc
+    if not math.isfinite(generated_at):
+        raise DurableMirrorError(
+            f"durable mirror at {mirror_dir} has non-finite generated_at={manifest.get('generated_at')!r}"
+        )
     now = time.time()
     # Reject future-dated manifests (clock skew / corruption); small 5m skew tolerance.
     if generated_at > now + 300:

@@ -250,3 +250,15 @@ def test_require_rejects_bad_generated_at(tmp_path: Path) -> None:
     write_manifest(manifest, mirror)
     with pytest.raises(DurableMirrorError, match="invalid generated_at"):
         require_durable(mirror)
+
+
+def test_require_rejects_nan_generated_at(tmp_path: Path) -> None:
+    source = tmp_path / "work"
+    mirror = tmp_path / "mirror"
+    _populate(source)
+    snapshot(str(source), mirror, allow_live=True)
+    manifest = read_manifest(mirror)
+    manifest["generated_at"] = float("nan")
+    write_manifest(manifest, mirror)
+    with pytest.raises(DurableMirrorError, match="non-finite"):
+        require_durable(mirror)
