@@ -54,6 +54,36 @@ RESTIC_EXCLUDES=()
 LEGACY_EXCLUDES=()
 BACKUP_PATHS=()
 
+write_restic_gate_receipt() {
+  local snapshot_id=$1
+  local staged_mirror_root="$STAGED_ROOT/data/lexicon/runner-mirror"
+  local live_mirror_root="$SOURCE/lexicon/runner-mirror"
+  local git_sha
+
+  # The staged tree is the copy restic uploaded. Do not create unrelated data
+  # paths when it has no mirror; if a live mirror appeared after staging, it is
+  # not covered by this snapshot and must not receive a receipt.
+  if [[ ! -e "$staged_mirror_root" ]]; then
+    [[ ! -e "$live_mirror_root" && ! -L "$live_mirror_root" ]] ||
+      die "Runner mirror appeared after staging; refusing to claim restic durability."
+    return 0
+  fi
+  [[ ! -L "$staged_mirror_root" && -d "$staged_mirror_root" ]] ||
+    die "Staged runner mirror root must be a real directory: $staged_mirror_root"
+  [[ -x "$REPO_ROOT/.venv/bin/python" ]] ||
+    die "Runner mirror receipt writer requires $REPO_ROOT/.venv/bin/python"
+  git_sha="$(git -C "$PROJECT_ROOT" rev-parse HEAD)"
+  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/lexicon/runner/durable_mirror.py" \
+    write-restic-gate-receipt \
+    --mirror-root "$staged_mirror_root" \
+    --receipt-root "$live_mirror_root" \
+    --restic-snapshot-id "$snapshot_id" \
+    --host "$BACKUP_HOST" \
+    --git-sha "$git_sha" \
+    --mirror-root-relative-to-data "lexicon/runner-mirror" ||
+    die "Could not write the runner mirror restic gate receipt after backup."
+}
+
 usage() {
   cat <<'EOF'
 Usage:
@@ -792,7 +822,7 @@ prepare_staging_tree() {
 
 run_backup() {
   local execute=$1
-  local backup_root
+  local backup_root backup_output snapshot_id
 
   validate_environment
   validate_source
@@ -831,15 +861,22 @@ run_backup() {
   backup_root="$STAGED_ROOT/data"
   build_restic_excludes "$backup_root"
   info "Creating encrypted, versioned restic snapshot."
+  backup_output="$STAGE_DIR/restic-backup.jsonl"
   (
     cd "$STAGED_ROOT"
     restic_repository_command backup "${BACKUP_PATHS[@]}" \
       --host "$BACKUP_HOST" \
       --tag "$BACKUP_TAG" \
+      --json \
       "${RESTIC_EXCLUDES[@]}"
-  )
+  ) | tee "$backup_output"
+  if ! snapshot_id="$(jq -er 'select(.message_type == "summary") | .snapshot_id // empty' "$backup_output")" ||
+    [[ ! "$snapshot_id" =~ ^[0-9a-f]{64}$ ]]; then
+    die "Restic backup completed without a valid snapshot ID; refusing to claim runner-mirror durability."
+  fi
   info "Checking repository metadata after backup."
   restic_repository_command check
+  write_restic_gate_receipt "$snapshot_id"
   info "Backup and repository check complete."
 }
 

@@ -72,6 +72,30 @@ Tail progress:
 tail -f /home/ops/atlas-runner/run-20k/enrich.log | grep --line-buffered '"event"'
 ```
 
+## Durability (#5884)
+
+`$WORK_DIR` on the VPS has no backup of its own — a runner wipe or local
+cleanup means a full ULIF refetch. After every fetch/reduce/enrich phase
+(and always before touching/cleaning `$WORK_DIR`), sync it into this repo's
+`data/` so the existing restic backup (`scripts/backup-data.sh`, #6014)
+covers it:
+
+```bash
+ATLAS_RUNNER_HOST=ops@<runner-host> scripts/lexicon/runner/mirror_20k_runner.sh
+```
+
+Before any cleanup, execute the full durability order — **snapshot → restic
+backup → receipt gate → wipe**. The gate rejects a stale, missing, corrupt,
+or not-yet-backed-up mirror instead of guessing:
+
+```bash
+./scripts/backup-data.sh backup --execute
+scripts/lexicon/runner/mirror_20k_runner.sh --require-only
+```
+
+Full recipe, restore drill, and coordination with #6014's restic bus:
+[`docs/runbooks/atlas-20k-runner-durability.md`](../../../docs/runbooks/atlas-20k-runner-durability.md).
+
 ## Out of scope for this driver
 
 - `finalize.py` (publication archive)

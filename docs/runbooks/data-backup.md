@@ -144,6 +144,14 @@ exit code belongs to the operator log: an in-snapshot file cannot truthfully
 contain the outcome of the repository check that runs after the snapshot is
 committed.
 
+When `data/lexicon/runner-mirror/` exists, a successful `backup --execute`
+also writes its local `RESTIC-GATE-RECEIPT.json` **after** the repository
+check. This is distinct from the in-snapshot `BACKUP-RECEIPT.json`: it binds
+each current runner-mirror `manifest.json` checksum to the completed restic
+snapshot so the pre-wipe gate works without credentials or network access.
+See [the Atlas runner durability runbook](atlas-20k-runner-durability.md) for
+the required snapshot → backup → gate → wipe order.
+
 List snapshots and perform periodic integrity checks:
 
 ```bash

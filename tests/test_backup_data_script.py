@@ -2,13 +2,18 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import os
 import shutil
 import sqlite3
 import subprocess
+import time
 from pathlib import Path
 
 import pytest
+
+from scripts.lexicon.runner.durable_mirror import DurableMirrorError, require_durable
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = REPO_ROOT / "scripts" / "backup-data.sh"
@@ -125,6 +130,21 @@ if [[ "${1:-}" == "backup" && -f "$PWD/BACKUP-RECEIPT.json" ]]; then
   }' \
     "$PWD/BACKUP-RECEIPT.json" >> "$FAKE_RESTIC_LOG"
 fi
+if [[ "${1:-}" == "backup" && -n "${FAKE_MUTATED_LIVE_STATE_SOURCE:-}" ]]; then
+  cp "$FAKE_MUTATED_LIVE_STATE_SOURCE" "$FAKE_MUTATED_LIVE_STATE_DESTINATION"
+  cp "$FAKE_MUTATED_LIVE_MANIFEST_SOURCE" "$FAKE_MUTATED_LIVE_MANIFEST_DESTINATION"
+fi
+if [[ "${1:-}" == "backup" ]]; then
+  for argument in "$@"; do
+    if [[ "$argument" == "--json" ]]; then
+      printf '%s\n' '{"message_type":"summary","snapshot_id":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}'
+      break
+    fi
+  done
+fi
+if [[ "${1:-}" == "check" && "${FAKE_RESTIC_CHECK_FAIL:-0}" == "1" ]]; then
+  exit 70
+fi
 exit 0
 """,
     )
@@ -210,6 +230,140 @@ def test_execute_stages_a_consistent_wal_database_and_cleans_up(
     assert '".claude/atlas-epic"' in _log(environment)
     assert '"batch_state"' in _log(environment)
     assert list(staging.iterdir()) == []
+
+
+def test_execute_writes_live_restic_gate_receipt_only_after_check(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    mirror = source / "lexicon" / "runner-mirror" / "run-20k"
+    mirror.mkdir(parents=True)
+    (mirror / "runner-state.txt").write_bytes(b"runner-state")
+    manifest = {
+        "schema": "atlas-runner-mirror-manifest",
+        "schema_version": 1,
+        "generated_at": 1.0,
+        "file_count": 1,
+        "total_bytes": 12,
+        "files": [{"path": "runner-state.txt", "bytes": 12, "sha256": hashlib.sha256(b"runner-state").hexdigest()}],
+    }
+    (mirror / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    receipt_path = mirror.parent / "RESTIC-GATE-RECEIPT.json"
+
+    preview = _run(environment, "backup")
+
+    assert preview.returncode == 0, preview.stderr
+    assert not receipt_path.exists()
+
+    executed = _run(environment, "backup", "--execute")
+
+    assert executed.returncode == 0, executed.stderr
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["restic_snapshot_id"] == "a" * 64
+    assert (
+        receipt["mirrors"]["run-20k"]["manifest_sha256"]
+        == hashlib.sha256((mirror / "manifest.json").read_bytes()).hexdigest()
+    )
+
+
+def test_execute_does_not_write_restic_gate_receipt_when_check_fails(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    mirror = source / "lexicon" / "runner-mirror" / "run-20k"
+    mirror.mkdir(parents=True)
+    (mirror / "state.txt").write_text("state\n", encoding="utf-8")
+    (mirror / "manifest.json").write_text(
+        json.dumps(
+            {
+                "schema": "atlas-runner-mirror-manifest",
+                "schema_version": 1,
+                "generated_at": 1.0,
+                "file_count": 1,
+                "total_bytes": 6,
+                "files": [{"path": "state.txt", "bytes": 6, "sha256": hashlib.sha256(b"state\n").hexdigest()}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    environment["FAKE_RESTIC_CHECK_FAIL"] = "1"
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode != 0
+    assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json").exists()
+
+
+def test_execute_fails_closed_when_live_runner_mirror_changes_after_staging(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    """A staged manifest A must never produce a live receipt for mutated manifest B."""
+    environment, source, staging, _legacy = backup_environment
+    mirror = source / "lexicon" / "runner-mirror" / "run-20k"
+    mirror.mkdir(parents=True)
+    state_path = mirror / "runner-state.txt"
+    original_state = b"runner-state-before-race"
+    state_path.write_bytes(original_state)
+    (mirror / "manifest.json").write_text(
+        json.dumps(
+            {
+                "schema": "atlas-runner-mirror-manifest",
+                "schema_version": 1,
+                "generated_at": time.time(),
+                "file_count": 1,
+                "total_bytes": len(original_state),
+                "files": [
+                    {
+                        "path": "runner-state.txt",
+                        "bytes": len(original_state),
+                        "sha256": hashlib.sha256(original_state).hexdigest(),
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    mutated_state = b"runner-state-after-race"
+    mutation_dir = staging.parent / "race-mutation"
+    mutation_dir.mkdir()
+    mutated_state_source = mutation_dir / "runner-state.txt"
+    mutated_state_source.write_bytes(mutated_state)
+    mutated_manifest_source = mutation_dir / "manifest.json"
+    mutated_manifest_source.write_text(
+        json.dumps(
+            {
+                "schema": "atlas-runner-mirror-manifest",
+                "schema_version": 1,
+                "generated_at": time.time(),
+                "file_count": 1,
+                "total_bytes": len(mutated_state),
+                "files": [
+                    {
+                        "path": "runner-state.txt",
+                        "bytes": len(mutated_state),
+                        "sha256": hashlib.sha256(mutated_state).hexdigest(),
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    environment.update(
+        {
+            "FAKE_MUTATED_LIVE_STATE_SOURCE": str(mutated_state_source),
+            "FAKE_MUTATED_LIVE_STATE_DESTINATION": str(state_path),
+            "FAKE_MUTATED_LIVE_MANIFEST_SOURCE": str(mutated_manifest_source),
+            "FAKE_MUTATED_LIVE_MANIFEST_DESTINATION": str(mirror / "manifest.json"),
+        }
+    )
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode != 0
+    assert "refusing to write a receipt for content not backed up" in result.stderr
+    assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json").exists()
+    with pytest.raises(DurableMirrorError, match="no restic gate receipt"):
+        require_durable(mirror)
 
 
 def test_execute_snapshots_checkpointed_wal_database_without_sidecars(
