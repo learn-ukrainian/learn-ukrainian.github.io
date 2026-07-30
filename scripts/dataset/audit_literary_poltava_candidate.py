@@ -469,36 +469,223 @@ def audit(
 
 def render_report(summary: dict[str, Any]) -> str:
     concentrations = summary["concentrations"]
+    duplicate_counts = summary["duplicate_counts"]
+    inventory_rows = [
+        (
+            f"| `{inventory['path']}` | `{inventory['sha256']}` | "
+            f"{inventory['text_count']} | {inventory['unique_normalized_text_count']} |"
+        )
+        for inventory in summary["evaluation_inventories"]
+    ]
+    concentration_rows = [
+        f"| Author | {name} | {count} |"
+        for name, count in concentrations["author_top_20"][:10]
+    ]
+    concentration_rows.extend(
+        f"| Language period | `{name}` | {count} |"
+        for name, count in concentrations["language_period"]
+    )
+    concentration_rows.extend(
+        f"| Genre | `{name}` | {count} |"
+        for name, count in concentrations["genre"][:10]
+    )
+    concentration_rows.extend(
+        f"| Source-file proxy | `{name}` | {count} |"
+        for name, count in concentrations["acquisition_channel_proxy_source_file_top_20"][:10]
+    )
     return "\n".join(
         [
             "# Literary Poltava candidate audit",
             "",
-            "## Observed facts",
+            "## Decision and scope",
+            "",
+            f"**Verdict: `{summary['collection_verdict']}`.** {summary['verdict_reason']}",
+            "",
+            "This dossier audits the frozen candidate as evidence, not as a releasable "
+            "dataset. It answers whether the committed JSONL can presently support claims "
+            "of traceable provenance, known rights, deduplication, evaluation isolation, "
+            "balanced composition, or linguistically adjudicated quality. It does not "
+            "train a model, generate benchmark responses, upload data, obtain licenses, "
+            "or convert heuristic observations into expert judgments. A negative verdict "
+            "therefore closes this audit while intentionally blocking the candidate from "
+            "training and publication.",
+            "",
+            "The unit of analysis is one JSONL record joined by its numeric `lit-` "
+            "identifier to one `literary_texts` row in the operator-supplied SQLite "
+            "database. The committed receipts preserve a disposition for every record. "
+            "They are tied to the exact input hashes below, so substituting either input "
+            "requires a fresh run and a fresh decision.",
+            "",
+            "## Frozen inputs and reproducibility contract",
             "",
             f"- Frozen JSONL SHA-256: `{summary['input_hashes']['dataset_sha256']}`.",
             f"- Source database SHA-256: `{summary['input_hashes']['sources_db_sha256']}`.",
-            f"- Records: {summary['record_count']}; unique IDs: {summary['unique_ids']}; joined database rows: {summary['source_db_rows_joined']}.",
-            f"- Missing database rows: {summary['source_db_rows_missing']}; all records lack recorded rights evidence.",
-            f"- Missing rights/provenance fields: {canonical_json(summary['metadata_missing_counts'])}.",
-            f"- Anomaly signals (heuristic only): {canonical_json(summary['anomaly_signal_counts'])}.",
-            f"- Exact duplicate clusters: {summary['duplicate_counts']['exact_clusters']}; near-duplicate clusters: {summary['duplicate_counts']['near_clusters']}.",
-            f"- Evaluation overlaps: {canonical_json(summary['evaluation_overlap_counts'])}.",
+            f"- Records: {summary['record_count']}; unique IDs: {summary['unique_ids']}.",
+            f"- Joined database rows: {summary['source_db_rows_joined']}; missing rows: {summary['source_db_rows_missing']}.",
+            f"- Required JSONL-field missing counts: `{canonical_json(summary['required_field_missing'])}`.",
             "",
-            "## Inferences",
+            "The audit opens SQLite through URI `mode=ro`, selects only the lineage "
+            "columns recorded in `input_contract.json`, and hashes both inputs before and "
+            "after reading. It stops if an input changes during the run. The database is "
+            "gitignored runtime material rather than a repository artifact; its own "
+            "acquisition history is not established here. Reproduction therefore requires "
+            "an operator-supplied file with the recorded SHA-256. The committed lineage "
+            "projection hash and record dispositions allow reviewers to verify what the "
+            "audit saw without pretending that the database itself has known provenance.",
             "",
-            f"- **Verdict: {summary['collection_verdict']}** — {summary['verdict_reason']}",
-            "- The top author concentrations are recorded in the machine-readable receipt: "
-            + canonical_json(concentrations["author_top_20"][:5])
-            + ".",
+            "All required JSONL fields are checked for presence. Record IDs are parsed "
+            "deterministically, and the joined row preserves its chunk, work, source-file, "
+            "genre, URL, author, work, and year values. A successful join means only that "
+            "the local rows correspond; it is not evidence that the edition, scanning "
+            "source, chain of custody, or legal status is known.",
+            "",
+            "## Rights and provenance gate",
+            "",
+            f"Every one of the {summary['record_count']} records is excluded pending "
+            "rights and provenance evidence. The supplied schemas do not provide an "
+            "authoritative external catalog identifier, acquisition source, edition or "
+            "editor, license, copyright status, redistribution permission, model-training "
+            "permission, translation origin, region, or register. The aggregate missing "
+            f"counts are `{canonical_json(summary['metadata_missing_counts'])}`.",
+            "",
+            "The audit applies a fail-closed rule: absence of a license or permission is "
+            "not interpreted as permission, public-domain status, fair use, or an implied "
+            "right to redistribute or train. It also makes no jurisdiction-specific legal "
+            "conclusion. A future rebuild must attach record- or work-level evidence that "
+            "a qualified reviewer can inspect. Assertions in filenames, source URLs, "
+            "historical dates, or earlier project documents do not substitute for that "
+            "evidence.",
+            "",
+            "This failure is collection-wide and decisive. Duplicate removal, linguistic "
+            "cleanup, or a favorable contamination result cannot cure it. The appropriate "
+            "remediation is a rights-cleared rebuild rather than editing these records in "
+            "place and retaining an unverifiable lineage.",
+            "",
+            "## Duplicate audit",
+            "",
+            "For exact comparison, text is normalized to Unicode NFC, case-folded, stripped "
+            "of punctuation through non-word-character replacement, and collapsed to "
+            "single spaces. Equal normalized strings become one connected cluster. For "
+            "near comparison, every non-exact pair is evaluated with three-token-shingle "
+            "Jaccard similarity at a threshold of 0.90. A shingle-cardinality ratio "
+            "pre-filter is mathematically necessary for a pair to reach that threshold, "
+            "so it cannot discard a qualifying pair. Connected components, member indexes, "
+            "and scored edges are written to `duplicate_clusters.json`.",
+            "",
+            f"The frozen candidate has {duplicate_counts['exact_clusters']} exact clusters "
+            f"covering {duplicate_counts['exact_records']} records and "
+            f"{duplicate_counts['near_clusters']} near cluster covering "
+            f"{duplicate_counts['near_records']} records. These counts describe text "
+            "similarity after the declared normalization; they do not determine which "
+            "edition is authoritative or whether similar passages are legitimate textual "
+            "reuse. A rebuild should deduplicate only after provenance is recovered, so a "
+            "keeper can be selected using source quality and rights evidence rather than "
+            "arbitrary record order.",
+            "",
+            "## Evaluation-contamination audit",
+            "",
+            "The contamination check expands the compact held-out manifest using its "
+            "declared item and reference layouts. It inventories source strings and every "
+            "reference target instead of hashing only the compact outer object. JSONL "
+            "evaluation material is traversed for source, target, text, and reference "
+            "fields. Candidate strings and evaluation strings use the same normalization "
+            "as the exact duplicate pass; non-exact pairs use the same 0.90 three-token "
+            "shingle threshold.",
+            "",
+            "| Evaluation inventory | SHA-256 | Texts | Unique normalized texts |",
+            "| --- | --- | ---: | ---: |",
+            *inventory_rows,
+            "",
+            f"No candidate overlap was found: `{canonical_json(summary['evaluation_overlap_counts'])}`. "
+            "This result is limited to the exact frozen inventories and algorithms named "
+            "above. It does not establish absence of overlap with private prompts, prior "
+            "versions, unlisted test sets, or semantic paraphrases below the threshold. "
+            "Any future training view must preserve these exclusions and rerun the check "
+            "against the then-current evaluation inventories.",
+            "",
+            "## Composition and balance observations",
+            "",
+            "The following counts expose composition rather than certify balance. Author "
+            "and language-period values come from the candidate; genre and source-file "
+            "proxies come from the joined database. A source-file label is only a grouping "
+            "proxy and is not an acquisition receipt. Large collective, unknown, scholarly, "
+            "chronicle, or encyclopedia groups can dominate model behavior even when the "
+            "raw record count appears large.",
+            "",
+            "| Dimension | Value | Records |",
+            "| --- | --- | ---: |",
+            *concentration_rows,
+            "",
+            "The concentration table shows that this is not demonstrated to be a balanced "
+            "Poltava literary sample. Period tags include modern, middle Ukrainian, and old "
+            "East Slavic material; the audit does not validate those labels or infer a "
+            "single contemporary regional standard from them. Similarly, author strings "
+            "such as collective or unknown prevent reliable author-level diversity claims. "
+            "A rebuild needs a documented sampling frame, explicit targets by period, "
+            "genre, author, region, and register, and a report of both counts and text "
+            "volume before a balance claim can be evaluated.",
+            "",
+            "## Heuristic quality signals",
+            "",
+            f"The non-adjudicative signal counts are `{canonical_json(summary['anomaly_signal_counts'])}`. "
+            "The Russian-only-letter signal detects any occurrence of `ы`, `э`, `ъ`, or "
+            "`ё`; it does not decide whether an occurrence is a quotation, historical "
+            "orthography, OCR corruption, a proper name, or non-Ukrainian prose. The low "
+            "Cyrillic-ratio signal marks texts where fewer than half of alphabetic "
+            "characters match the script test used by the tool. The OCR/layout signal "
+            "detects replacement characters, surrogate damage, long punctuation runs, or "
+            "spaced dot runs. The repetition signal identifies a high repeated-token ratio "
+            "only in texts longer than twelve normalized words.",
+            "",
+            "These flags route records for human review; they are not labels and do not "
+            "authorize automatic deletion. Ukrainian linguists and textual scholars must "
+            "review contextual evidence before assigning language, dialect, calque, OCR, "
+            "or authenticity judgments. In particular, this audit does not establish the "
+            "earlier descriptions `pure`, `native`, `decolonized`, or `Poltava standard`.",
+            "",
+            "## Record dispositions and evidence artifacts",
+            "",
+            "`record_dispositions.jsonl` contains exactly one line per candidate record in "
+            "input order. Each line records the candidate ID and line, joined database ID "
+            "and lineage projection, missing lineage fields, the ten missing rights or "
+            "metadata fields, heuristic anomaly signals, evaluation-overlap status, and a "
+            "fail-closed disposition. An evaluation overlap would take the stricter "
+            "`excluded_evaluation_overlap` disposition; otherwise the current candidate "
+            "uses `excluded_pending_rights_and_provenance`.",
+            "",
+            "`audit_summary.json` provides aggregate counts and the collection verdict. "
+            "`input_contract.json` binds the dataset, runtime database, selected lineage "
+            "projection, and evaluation inventories. `duplicate_clusters.json` contains "
+            "the normalization and cluster evidence. `evaluation_overlap.json` contains "
+            "the expanded inventory receipts and matching results. Together these artifacts "
+            "support review of the decision without converting unknown facts into positive "
+            "claims.",
+            "",
+            "## Required rebuild controls",
+            "",
+            "A replacement collection should begin from independently identified works, "
+            "not from the present random export. Before inclusion, each work needs an "
+            "external catalog or source identifier, acquisition receipt, edition/editor "
+            "record, and source URL or physical-location citation. It also needs an "
+            "explicitly reviewed copyright status, license, redistribution permission, and "
+            "model-training permission. Translation origin, language period, region, "
+            "register, genre, author, and work identifiers should be reviewable fields "
+            "rather than inferred marketing descriptions.",
+            "",
+            "After those gates, the rebuild should preserve full sampling receipts, run "
+            "exact and near deduplication, freeze evaluation inventories, exclude every "
+            "overlap, and route anomaly signals to Ukrainian experts. It should publish "
+            "aggregate balance tables and unresolved unknowns. Only a subsequent audit "
+            "against newly frozen hashes can decide whether release or training is "
+            "permissible; this dossier supplies no such permission.",
             "",
             "## Unknowns and limits",
             "",
             *[f"- {item}" for item in summary["limitations"]],
-            "",
-            "## Recommendations",
-            "",
-            "- Rebuild from sources with per-work external catalog identifiers, acquisition receipts, edition/editor, license, copyright, redistribution, and explicit model-training permissions.",
-            "- Exclude every record marked as evaluation overlap from any future training view; have Ukrainian linguistic experts review all anomaly signals and any regional/standard claim.",
+            "- Similarity thresholds do not capture all paraphrase, quotation, or shared-source relationships.",
+            "- Counts are record counts, not token-weighted or work-weighted measures of representation.",
+            "- Database source-file and URL values are lineage clues, not verified acquisition or rights evidence.",
+            "- No external legal, bibliographic, archival, linguistic, or regional adjudication was performed.",
             "",
             "## Stale-claim inventory",
             "",
