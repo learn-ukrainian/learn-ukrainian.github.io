@@ -264,6 +264,11 @@ def test_acpx_second_pilot_grok_evidence_and_boundary(onboarding: str, all_owned
     assert "codex 26" in lower or "codex **26**" in lower or "**codex 26**" in lower
     assert "grok-atlas" in lower
     assert "claude 22" in lower or "claude **22**" in lower or "**claude 22**" in lower
+    assert "remaining **22**" in onboarding
+    assert "gemini 11" in lower or "gemini **11**" in lower or "**gemini 11**" in lower
+    assert "opencode 6" in lower or "opencode **6**" in lower or "**opencode 6**" in lower
+    assert "glm 4" in lower or "glm **4**" in lower or "**glm 4**" in lower
+    assert "agy 1" in lower or "agy **1**" in lower or "**agy 1**" in lower
     assert "grok 1" in lower or "grok **1**" in lower or "**grok 1**" in lower
     assert "broker" in lower
     assert "direct-runtime" in lower or "direct runtime" in lower

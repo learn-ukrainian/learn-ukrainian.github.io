@@ -76,7 +76,9 @@ two direct-only shadow seats only.
 **Why Grok is the second pilot (#6043, API-backed):** in the 2026-07-30
 snapshot from `/api/comms/live-activity?limit=500&minutes=120`, all **95**
 broker dispatches had sender counts **Codex 26**, **grok-atlas 25**, and
-**Claude 22**. The same-day 30-day sample from
+**Claude 22** among the three busiest senders; the remaining **22** were
+**Gemini 11**, **OpenCode 6**, **GLM 4**, and **AGY 1**. The same-day
+30-day sample from
 `/api/runtime/usage?days=30` had **Codex 20**, **Claude 15**, and **Grok 1**.
 Broker centrality is high; direct-runtime evidence is still limited — hence
 a thin second shadow pilot, not fleet-wide enablement. These are dated

@@ -49,7 +49,10 @@ Contract captured empirically from the pinned local ``acpx@0.13.0`` install
 - Auth method selection under ``--auth-policy fail`` is explicit via non-secret
   per-process selectors such as ``ACPX_AUTH_CHAT_GPT=1`` (Codex ChatGPT login)
   and ``ACPX_AUTH_CACHED_TOKEN=1`` (Grok cached native login). Never invent
-  additional selectors; never read/store/log credentials.
+  additional selectors; never read/store/log credentials. The Grok selector
+  was verified live against the pinned custom ``--agent`` command: the
+  selector produced a successful one-shot response, while the same runtime
+  path with the selector stripped failed closed as ``AUTH_REQUIRED``.
 
 Confinement is structural, not probabilistic: every invocation either adapter
 builds passes ``--deny-all --no-fs --no-terminal --allowed-tools ""
