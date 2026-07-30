@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import json
 import textwrap
 
 import pytest
 
+from scripts.orchestration import issue_stream_audit
 from scripts.orchestration.issue_stream_audit import (
     _MAX_SUBISSUE_PAGES,
     _paginate_subissues,
@@ -14,6 +16,7 @@ from scripts.orchestration.issue_stream_audit import (
     make_issue_resolver,
     make_membership_resolver,
     read_membership_index,
+    run_audit,
     validate_membership_report,
 )
 
@@ -436,3 +439,147 @@ def test_paginate_subissues_bounded_against_runaway_pagination():
     native, _body = _paginate_subissues(100, fetch_page)
     assert calls["n"] == _MAX_SUBISSUE_PAGES
     assert len(native) == _MAX_SUBISSUE_PAGES
+
+
+# --------------------------------------------------------------------------- #
+# Review finding F001 (PR #6030) — ``run_audit`` must carry an explicit repo
+# root all the way through registry lookup, ``gh`` execution cwd, and the
+# cache it writes, instead of the module's own ``ROOT``. Fake ``gh`` via
+# ``subprocess.run`` (not a higher-level seam) so the cwd threading itself is
+# proven, not assumed.
+# --------------------------------------------------------------------------- #
+class _FakeCompletedProcess:
+    def __init__(self, stdout: str) -> None:
+        self.stdout = stdout
+        self.stderr = ""
+        self.returncode = 0
+
+
+def _make_repo(root, *, epics: list[int]) -> None:
+    (root / "scripts" / "config").mkdir(parents=True)
+    (root / "scripts" / "config" / "issue_streams.yaml").write_text(
+        "streams:\n  s:\n    title: s\n    epics: " + json.dumps(epics) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _fake_gh_run(calls, *, owner: str, name: str, open_issues: list[dict]):
+    """A ``subprocess.run`` stand-in recording every ``(args, cwd)`` pair and
+    answering the exact three ``gh`` calls ``run_audit`` makes for a registry
+    with a single epic and no native/body children."""
+
+    def _run(args, capture_output, text, timeout, cwd):
+        calls.append((tuple(args), cwd))
+        assert args[0] == "gh"
+        if args[1:3] == ["issue", "list"]:
+            return _FakeCompletedProcess(json.dumps(open_issues))
+        if args[1:3] == ["repo", "view"]:
+            return _FakeCompletedProcess(
+                json.dumps({"owner": {"login": owner}, "name": name})
+            )
+        if args[1] == "api" and args[2] == "graphql":
+            return _FakeCompletedProcess(
+                json.dumps(
+                    {
+                        "data": {
+                            "repository": {
+                                "issue": {
+                                    "body": "",
+                                    "subIssues": {
+                                        "nodes": [],
+                                        "pageInfo": {
+                                            "hasNextPage": False,
+                                            "endCursor": None,
+                                        },
+                                    },
+                                }
+                            }
+                        }
+                    }
+                )
+            )
+        raise AssertionError(f"unexpected gh invocation: {args}")
+
+    return _run
+
+
+def test_run_audit_scopes_registry_gh_execution_and_cache_to_explicit_root(
+    tmp_path, monkeypatch
+):
+    """A non-default ``repo_root`` passed to ``run_audit`` must be honored for
+    the registry, every ``gh`` call's cwd, and the cache write — never the
+    auditor module's own ``ROOT`` (finding F001: a closeout invocation
+    configured for another checkout must not validate against, or cache
+    into, the wrong repository)."""
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    other_root = tmp_path / "unrelated-checkout"
+    _make_repo(other_root, epics=[999])
+
+    target_root = tmp_path / "target-checkout"
+    _make_repo(target_root, epics=[100])
+
+    calls: list[tuple[tuple, object]] = []
+    monkeypatch.setattr(
+        issue_stream_audit.subprocess,
+        "run",
+        _fake_gh_run(calls, owner="acme", name="target-repo", open_issues=[]),
+    )
+
+    report = run_audit(target_root)
+
+    assert report["streams"] == {"s": [100]}
+    # Every gh subprocess call ran with cwd pinned to the requested root —
+    # never the unrelated sibling root, never the module's own ROOT.
+    assert calls, "expected at least one gh invocation"
+    assert {cwd for _args, cwd in calls} == {target_root.resolve()}
+
+    cache_path = target_root / "batch_state" / "issue_stream_audit.json"
+    assert cache_path.exists()
+    assert not (other_root / "batch_state" / "issue_stream_audit.json").exists()
+
+
+def test_run_audit_default_root_preserves_module_root_behavior(tmp_path, monkeypatch):
+    """Calling ``run_audit()`` with no argument must still resolve against the
+    module's own ``ROOT`` — the fix must not change plain CLI behavior."""
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    fake_root = tmp_path / "module-root-stand-in"
+    _make_repo(fake_root, epics=[7])
+    monkeypatch.setattr(issue_stream_audit, "ROOT", fake_root)
+
+    calls: list[tuple[tuple, object]] = []
+    monkeypatch.setattr(
+        issue_stream_audit.subprocess,
+        "run",
+        _fake_gh_run(calls, owner="acme", name="default-repo", open_issues=[]),
+    )
+
+    report = run_audit()
+
+    assert report["streams"] == {"s": [7]}
+    assert {cwd for _args, cwd in calls} == {fake_root}
+    assert (fake_root / "batch_state" / "issue_stream_audit.json").exists()
+
+
+def test_repo_owner_name_cache_keyed_by_root_does_not_leak(tmp_path, monkeypatch):
+    """``_repo_owner_name`` must resolve independently per root — a cache
+    warmed for one checkout must not answer for a different one."""
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    root_a = tmp_path / "repo-a"
+    root_b = tmp_path / "repo-b"
+    root_a.mkdir()
+    root_b.mkdir()
+
+    answers = {str(root_a): ("owner-a", "repo-a"), str(root_b): ("owner-b", "repo-b")}
+
+    def _run(args, capture_output, text, timeout, cwd):
+        assert args[1:3] == ["repo", "view"]
+        owner, name = answers[str(cwd)]
+        return _FakeCompletedProcess(json.dumps({"owner": {"login": owner}, "name": name}))
+
+    monkeypatch.setattr(issue_stream_audit.subprocess, "run", _run)
+
+    assert issue_stream_audit._repo_owner_name(root_a) == ("owner-a", "repo-a")
+    assert issue_stream_audit._repo_owner_name(root_b) == ("owner-b", "repo-b")
+    # Re-resolving root_a must still return root_a's own answer, not root_b's
+    # (proves the cache key is the root, not a single shared slot).
+    assert issue_stream_audit._repo_owner_name(root_a) == ("owner-a", "repo-a")

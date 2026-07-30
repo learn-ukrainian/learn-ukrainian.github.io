@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.orchestration import task_closeout, task_identity, task_lifecycle
+from scripts.orchestration import issue_stream_audit, task_closeout, task_identity, task_lifecycle
 
 NOW = "2026-07-16T10:00:00Z"
 HEAD = "a" * 40
@@ -311,6 +311,32 @@ def test_missing_authorization_is_durable_and_nonmutating(tmp_path: Path) -> Non
     assert result["remote_mutation_performed"] is False
     assert ledger["current_state"] == "BLOCKED_WITH_RECEIPT"
     assert "--authorize" in ledger["mutation_receipts"][-1]["detail"]
+
+
+def test_membership_audit_report_forwards_adapter_repo_root(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Review finding F001 (PR #6030): ``GhGitHubAdapter.membership_audit_report``
+    must carry ``self.repo_root`` into ``issue_stream_audit.run_audit`` — every
+    call site that reaches it (init/reconcile/mutation/closeout, all routed
+    through this one adapter method) must audit and cache against the
+    checkout the adapter itself was constructed for, never the auditor
+    module's own ``ROOT``."""
+    captured: dict[str, object] = {}
+
+    def fake_run_audit(repo_root: Path) -> dict:
+        captured["repo_root"] = repo_root
+        return {"ok": True, "effective_membership": {}}
+
+    monkeypatch.setattr(issue_stream_audit, "run_audit", fake_run_audit)
+
+    adapter = task_closeout.GhGitHubAdapter(tmp_path)
+    report = adapter.membership_audit_report()
+
+    assert report == {"ok": True, "effective_membership": {}}
+    assert captured["repo_root"] == adapter.repo_root
+    assert adapter.repo_root == tmp_path.resolve()
+    assert adapter.repo_root != issue_stream_audit.ROOT
 
 
 def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Path) -> None:

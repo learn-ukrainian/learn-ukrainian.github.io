@@ -96,11 +96,16 @@ class GhGitHubAdapter:
         than one issue in a single observation (the lifecycle issue and a
         transferred-scope follow-up issue) must call this ONCE and carry the
         same snapshot through both resolutions rather than re-auditing.
+
+        Scoped to ``self.repo_root`` — never the auditor module's own
+        checkout — so a closeout invocation configured for another
+        checkout/worktree audits and caches against the SAME repository it is
+        validating membership for.
         """
         from scripts.orchestration import issue_stream_audit
 
         try:
-            return issue_stream_audit.run_audit()
+            return issue_stream_audit.run_audit(self.repo_root)
         except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired) as exc:
             raise task_lifecycle.LifecycleError(
                 f"cannot run the issue-stream membership audit: {exc}"
