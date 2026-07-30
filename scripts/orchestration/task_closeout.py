@@ -316,16 +316,20 @@ class GhGitHubAdapter:
         identity = ledger["identity"]
         repository = identity["repository"]
         issue = self.read_issue(repository, identity["github_issue_number"])
-        # Native precedence needs no audit. Only fetch the live membership
-        # snapshot when it's actually needed to resolve body evidence — for
-        # the lifecycle issue itself, or for a transferred-scope follow-up
-        # issue (whose own native status isn't known until read below). One
-        # fetch is shared by both resolutions — never a second live audit
-        # within this observation.
-        remaining = ledger["remaining_scope"]
-        needs_membership_audit = (
-            issue.get("parent_epic") != identity["stream_epic"]
-            or (remaining["status"] == "transferred" and remaining.get("follow_up_issue"))
+        follow_up = self._follow_up(
+            repository,
+            identity["github_issue_number"],
+            issue["body"],
+            ledger["remaining_scope"],
+        )
+        # Native GitHub parentage is conclusive on its own — present (even a
+        # mismatched) native parent must never fall through to body evidence,
+        # so it never needs a live audit. Only a missing native parent (on
+        # the lifecycle issue itself, or on the transferred-scope follow-up
+        # read above) leaves body evidence as the sole path, and that is the
+        # only case that justifies fetching the live membership snapshot.
+        needs_membership_audit = issue.get("parent_epic") is None or (
+            follow_up is not None and follow_up.get("parent_epic") is None
         )
         membership_audit = self.membership_audit_report() if needs_membership_audit else None
         pr_number = ledger["pr"]["number"]
@@ -360,12 +364,7 @@ class GhGitHubAdapter:
             "pr": pr,
             "comments": comments,
             "deployments": deployments,
-            "follow_up": self._follow_up(
-                repository,
-                identity["github_issue_number"],
-                issue["body"],
-                ledger["remaining_scope"],
-            ),
+            "follow_up": follow_up,
         }
 
     def observe(

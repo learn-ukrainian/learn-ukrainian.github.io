@@ -432,6 +432,111 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
     assert deployment_call[deployment_call.index("--method") + 1] == "GET"
 
 
+def _transferred_ledger_and_reader(
+    tmp_path: Path,
+    *,
+    primary_parent_epic: int | None,
+    follow_up_parent_epic: int | None,
+    follow_up_issue: int = 99,
+) -> tuple[dict, list[int], object]:
+    """Build a lifecycle whose remaining scope was transferred to a follow-up
+    issue, plus a ``read_issue`` stub that records every issue number it is
+    asked to read and reports the given native parents for the primary (#42)
+    and follow-up (``follow_up_issue``) issues."""
+    _, ledger = _ledger(tmp_path)
+    ledger["remaining_scope"] = {
+        "status": "transferred",
+        "summary": "remaining work moved to the follow-up issue",
+        "follow_up_issue": follow_up_issue,
+        "follow_up_stream_epic": 20,
+        "evidence_ids": [],
+    }
+    calls: list[int] = []
+    parents = {42: primary_parent_epic, follow_up_issue: follow_up_parent_epic}
+
+    def _read_issue(self, repository: str, issue_number: int) -> dict:
+        calls.append(issue_number)
+        return {
+            "number": issue_number,
+            "state": "OPEN",
+            "body": f"Refs #{follow_up_issue}" if issue_number == 42 else "Refs #42",
+            "url": f"https://github.com/{repository}/issues/{issue_number}",
+            "closed_at": None,
+            "parent_epic": parents[issue_number],
+        }
+
+    return ledger, calls, _read_issue
+
+
+def test_github_observation_skips_audit_when_primary_and_follow_up_are_native(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Review finding F001 (PR #6030 second pass): a transferred-scope
+    follow-up must not force a live membership audit when both the primary
+    issue and the follow-up already have authoritative native parents."""
+    ledger, calls, read_issue = _transferred_ledger_and_reader(
+        tmp_path, primary_parent_epic=10, follow_up_parent_epic=20
+    )
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", read_issue)
+
+    def _fail_audit(self) -> dict:
+        raise AssertionError("native primary + native follow-up must not trigger a live audit")
+
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "membership_audit_report", _fail_audit)
+    adapter = task_closeout.GhGitHubAdapter(tmp_path)
+    monkeypatch.setattr(adapter, "registered_stream_epics", lambda: [10, 20])
+    monkeypatch.setattr(adapter, "_read_pr", lambda repository, pr_number: {"number": pr_number, "checks": []})
+    monkeypatch.setattr(adapter, "_comments", lambda repository, pr_number: [])
+
+    github = adapter._github_observation(ledger)
+
+    assert github["membership_audit"] is None
+    assert github["follow_up"]["number"] == 99
+    assert calls.count(42) == 1
+    assert calls.count(99) == 1
+
+
+@pytest.mark.parametrize(
+    "primary_parent_epic,follow_up_parent_epic",
+    [
+        (None, 20),
+        (10, None),
+        (None, None),
+    ],
+    ids=["primary-lacks-native", "follow-up-lacks-native", "both-lack-native"],
+)
+def test_github_observation_fetches_audit_when_either_relevant_issue_lacks_native_parent(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    primary_parent_epic: int | None,
+    follow_up_parent_epic: int | None,
+) -> None:
+    """Body evidence (and therefore a live audit) is still required whenever
+    the primary issue or the present transferred follow-up has no native
+    parent to resolve membership on its own."""
+    ledger, calls, read_issue = _transferred_ledger_and_reader(
+        tmp_path,
+        primary_parent_epic=primary_parent_epic,
+        follow_up_parent_epic=follow_up_parent_epic,
+    )
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", read_issue)
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter,
+        "membership_audit_report",
+        lambda self: {"sentinel": True},
+    )
+    adapter = task_closeout.GhGitHubAdapter(tmp_path)
+    monkeypatch.setattr(adapter, "registered_stream_epics", lambda: [10, 20])
+    monkeypatch.setattr(adapter, "_read_pr", lambda repository, pr_number: {"number": pr_number, "checks": []})
+    monkeypatch.setattr(adapter, "_comments", lambda repository, pr_number: [])
+
+    github = adapter._github_observation(ledger)
+
+    assert github["membership_audit"] == {"sentinel": True}
+    assert calls.count(42) == 1
+    assert calls.count(99) == 1
+
+
 def _identity_dict(**overrides: object) -> dict:
     identity = task_identity.build_identity(
         repository="org/repo",
