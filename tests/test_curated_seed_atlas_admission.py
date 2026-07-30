@@ -269,11 +269,12 @@ def test_practice_seed_reports_no_hit_and_retains_duplicate_attestations(tmp_pat
         ],
     )
     provenance = {"source_file": "ukrlib-example", "credit": "Автор"}
+    admitted = {"practice": True, "mode": "admitted", "reason": "rights_cleared"}
     rows = [
-        {"seedRow": 1, "lemma": "відомий", "sentenceStatus": "ok", "example": "Відомий приклад.", "provenance": provenance},
-        {"seedRow": 2, "lemma": "відомий", "sentenceStatus": "ok", "example": "Другий приклад.", "provenance": provenance},
-        {"seedRow": 3, "lemma": "рідкісний", "sentenceStatus": "no_hit"},
-        {"seedRow": 4, "lemma": "неоцінений", "sentenceStatus": "ok", "example": "Неоцінений приклад.", "provenance": provenance},
+        {"seedRow": 1, "lemma": "відомий", "sentenceStatus": "ok", "example": "Відомий приклад.", "provenance": provenance, "admission": admitted},
+        {"seedRow": 2, "lemma": "відомий", "sentenceStatus": "ok", "example": "Другий приклад.", "provenance": provenance, "admission": admitted},
+        {"seedRow": 3, "lemma": "рідкісний", "sentenceStatus": "no_hit", "admission": admitted},
+        {"seedRow": 4, "lemma": "неоцінений", "sentenceStatus": "ok", "example": "Неоцінений приклад.", "provenance": provenance, "admission": admitted},
     ]
 
     seed, report = admission.prepare_practice_seed(rows, manifest)
@@ -324,4 +325,29 @@ def test_practice_seed_reports_rights_gate_separately_from_missing_cefr(tmp_path
             "mode": "pending_operator_redistribution_go",
             "reason": "private_local_rights_require_operator_redistribution_go",
         }
+    ]
+
+
+@pytest.mark.parametrize("invalid_admission", [pytest.param(None, id="missing"), pytest.param("admitted", id="non_mapping")])
+def test_practice_seed_fails_closed_for_missing_or_invalid_admission(tmp_path: Path, invalid_admission: object) -> None:
+    manifest = _manifest(
+        tmp_path / "manifest.json",
+        [{"lemma": "відомий", "url_slug": "відомий", "pos": "adj", "enrichment": {"cefr": "A2"}}],
+    )
+    row = {
+        "seedRow": 1,
+        "lemma": "відомий",
+        "sentenceStatus": "ok",
+        "example": "Відомий приклад.",
+        "provenance": {"source_file": "ukrlib-example", "credit": "Автор"},
+    }
+    if invalid_admission is not None:
+        row["admission"] = invalid_admission
+
+    seed, report = admission.prepare_practice_seed([row], manifest)
+
+    assert seed["entries"] == []
+    assert report["counts"]["practice_skipped_not_admitted"] == 1
+    assert report["practice_skipped_not_admitted"] == [
+        {"seedRow": 1, "lemma": "відомий", "mode": "", "reason": "missing_admission_record"}
     ]

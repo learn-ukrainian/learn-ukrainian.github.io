@@ -310,13 +310,13 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
         status = _text(row.get("sentenceStatus"))
         status_counts[status] += 1
         admission = row.get("admission")
-        if isinstance(admission, dict) and admission.get("practice") is not True:
+        if not isinstance(admission, dict) or admission.get("practice") is not True:
             skipped_not_admitted.append(
                 {
                     "seedRow": row.get("seedRow"),
                     "lemma": lemma,
-                    "mode": _text(admission.get("mode")),
-                    "reason": _text(admission.get("reason")),
+                    "mode": _text(admission.get("mode")) if isinstance(admission, dict) else "",
+                    "reason": _text(admission.get("reason")) if isinstance(admission, dict) else "missing_admission_record",
                 }
             )
             continue
