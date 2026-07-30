@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import time
 from copy import deepcopy
 from pathlib import Path
 
@@ -403,6 +404,161 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
         if any(value.endswith("/deployments") for value in args) and "-f" in args
     )
     assert deployment_call[deployment_call.index("--method") + 1] == "GET"
+
+
+def _identity_dict(**overrides: object) -> dict:
+    identity = task_identity.build_identity(
+        repository="org/repo",
+        stream_epic=10,
+        stream_epic_url=None,
+        github_issue_number=42,
+        github_issue_url=None,
+        semantic_title="Enforce task closeout",
+        task_family="infrastructure",
+        role="implementer",
+        predecessor_task_id="thread-old",
+        replacement_task_id="thread-new",
+        lineage_id="lineage-closeout",
+        generation=2,
+        terminal_goal="merge",
+        lifecycle_state="confirmed",
+    )
+    identity.update(overrides)
+    return identity
+
+
+def _write_json(path: Path, payload: object) -> Path:
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    return path
+
+
+def _init_args(tmp_path: Path, identity_path: Path) -> object:
+    policy_path = _write_json(
+        tmp_path / "policy.json",
+        {"AC-IMPL": {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]}},
+    )
+    return task_closeout.build_parser().parse_args(
+        [
+            "--repo-root",
+            str(tmp_path),
+            "init",
+            "--identity-file",
+            str(identity_path),
+            "--ac-policy",
+            str(policy_path),
+            "--author-family",
+            "codex",
+            "--required-check",
+            "CI Gate",
+            "--state-file",
+            str(tmp_path / "lifecycle.json"),
+            "--now",
+            NOW,
+        ]
+    )
+
+
+def _stub_read_issue(*, parent_epic: int | None) -> object:
+    def _read_issue(self, repository: str, issue_number: int) -> dict:
+        return {
+            "number": issue_number,
+            "state": "OPEN",
+            "body": "- [ ] **AC-IMPL** — Implementation is verified.\n",
+            "url": f"https://github.com/{repository}/issues/{issue_number}",
+            "closed_at": None,
+            "parent_epic": parent_epic,
+        }
+
+    return _read_issue
+
+
+def test_cmd_init_accepts_native_membership_without_a_live_audit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=10)
+    )
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
+
+    def _fail_audit(self) -> dict:
+        raise AssertionError("native membership must not trigger a live membership audit")
+
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "membership_audit_report", _fail_audit)
+
+    assert task_closeout.cmd_init(_init_args(tmp_path, identity_path)) == 0
+    ledger = task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")
+    assert ledger["identity"]["stream_epic"] == 10
+
+
+def test_cmd_init_accepts_unique_body_membership(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=None)
+    )
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter,
+        "membership_audit_report",
+        lambda self: {
+            "generated_at": time.time(),
+            "effective_membership": {
+                "42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}
+            },
+            "open_issue_numbers": [42, 10],
+        },
+    )
+
+    assert task_closeout.cmd_init(_init_args(tmp_path, identity_path)) == 0
+    ledger = task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")
+    assert ledger["identity"]["stream_epic"] == 10
+
+
+def test_cmd_init_rejects_orphaned_issue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=None)
+    )
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter,
+        "membership_audit_report",
+        lambda self: {
+            "generated_at": time.time(),
+            "effective_membership": {},
+            "open_issue_numbers": [42, 10],
+        },
+    )
+
+    with pytest.raises(task_lifecycle.LifecycleError, match="stream epic"):
+        task_closeout.cmd_init(_init_args(tmp_path, identity_path))
+    assert not (tmp_path / "lifecycle.json").exists()
+
+
+def test_mutation_gates_fail_closed_on_membership_drift(tmp_path: Path) -> None:
+    """The exact same membership validator gates init, reconcile, AND every
+    mutation action — a lifecycle that reconciled fine while native must
+    still block sync-acs, arm-auto-merge, and close-issue once native
+    parentage disappears with no fresh body-audit evidence available."""
+    path, _ = _ledger(tmp_path, review=False)
+    drifted = _observation()
+    drifted["github"]["issue"]["parent_epic"] = None
+    adapter = FakeAdapter(drifted)
+
+    for action in ("sync-acs", "arm-auto-merge", "close-issue"):
+        with pytest.raises(task_lifecycle.LifecycleError, match="stream epic"):
+            task_closeout.perform_mutation(
+                path,
+                adapter,
+                action=action,
+                authorized_by="codex/5297",
+                branch="codex/42-closeout",
+                worktree="/repo/.worktrees/dispatch/codex/42-closeout",
+                now=NOW,
+            )
+    assert adapter.calls == []
 
 
 def test_github_read_failure_becomes_a_blocked_receipt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

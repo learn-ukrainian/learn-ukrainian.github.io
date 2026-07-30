@@ -386,6 +386,37 @@ def _valid_open_numbers(value: object) -> bool:
     return isinstance(value, list) and all(_is_positive_int(n) for n in value)
 
 
+def validate_membership_report(report: object, max_age_s: int) -> dict | None:
+    """Validate an already-fetched (in-memory) audit report and return it, or
+    ``None`` if it fails closed.
+
+    Same freshness/shape rules as :func:`read_membership_index` — extracted so
+    a caller carrying one fresh live ``run_audit()`` snapshot through a single
+    observation (task_lifecycle's canonical membership validator) can apply
+    the exact same fail-closed semantics as the file-cache path below, without
+    a second round trip through disk.
+    """
+    if not isinstance(report, dict):
+        return None
+
+    generated_at = report.get("generated_at")
+    if isinstance(generated_at, bool) or not isinstance(generated_at, (int, float)):
+        return None
+    if not math.isfinite(generated_at):
+        return None
+    age = time.time() - generated_at
+    if age > max_age_s or age < -CACHE_FUTURE_SKEW_S:
+        return None
+
+    index = report.get("effective_membership")
+    if not _valid_membership_index(index):
+        return None
+    open_numbers = report.get("open_issue_numbers")
+    if open_numbers is not None and not _valid_open_numbers(open_numbers):
+        return None
+    return report
+
+
 def read_membership_index(max_age_s: int, *, cache_path: Path | None = None) -> dict | None:
     """Return the effective issue→epic membership index from a FRESH cache.
 
@@ -406,25 +437,7 @@ def read_membership_index(max_age_s: int, *, cache_path: Path | None = None) -> 
         report = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return None
-    if not isinstance(report, dict):
-        return None
-
-    generated_at = report.get("generated_at")
-    if isinstance(generated_at, bool) or not isinstance(generated_at, (int, float)):
-        return None
-    if not math.isfinite(generated_at):
-        return None
-    age = time.time() - generated_at
-    if age > max_age_s or age < -CACHE_FUTURE_SKEW_S:
-        return None
-
-    index = report.get("effective_membership")
-    if not _valid_membership_index(index):
-        return None
-    open_numbers = report.get("open_issue_numbers")
-    if open_numbers is not None and not _valid_open_numbers(open_numbers):
-        return None
-    return report
+    return validate_membership_report(report, max_age_s)
 
 
 def make_membership_resolver(report: dict) -> MembershipResolver:

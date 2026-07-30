@@ -14,6 +14,7 @@ from scripts.orchestration.issue_stream_audit import (
     make_issue_resolver,
     make_membership_resolver,
     read_membership_index,
+    validate_membership_report,
 )
 
 
@@ -340,6 +341,32 @@ def test_read_membership_index_rejects_malformed_open_numbers(tmp_path):
     report["open_issue_numbers"] = [42, "100", -1, True]
     cache.write_text(json.dumps(report), encoding="utf-8")
     assert read_membership_index(3600, cache_path=cache) is None
+
+
+# --------------------------------------------------------------------------- #
+# #6028 — validate_membership_report: same fail-closed rules as
+# read_membership_index, applied to an in-memory (not file-cached) report, so
+# task_lifecycle.resolve_membership can carry one live run_audit() snapshot
+# through a single observation without a second round trip through disk.
+# --------------------------------------------------------------------------- #
+def test_validate_membership_report_accepts_fresh_in_memory_report():
+    import time
+
+    report = _valid_report(time.time())
+    assert validate_membership_report(report, 3600) == report
+
+
+def test_validate_membership_report_rejects_stale_in_memory_report():
+    import time
+
+    report = _valid_report(time.time() - 10_000)
+    assert validate_membership_report(report, 3600) is None
+
+
+def test_validate_membership_report_rejects_non_dict():
+    assert validate_membership_report(None, 3600) is None
+    assert validate_membership_report("not-a-report", 3600) is None
+    assert validate_membership_report([], 3600) is None
 
 
 # --------------------------------------------------------------------------- #
