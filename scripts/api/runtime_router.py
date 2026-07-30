@@ -232,13 +232,19 @@ def acpx_shadow_overview(*, days: int = 7) -> dict[str, Any]:
             "effort": GROK_SHADOW_EFFORT,
         },
     )
+    evidence_by_seat = {
+        str(seat["name"]): _new_outcome_bucket()
+        for seat in seat_specs
+    }
+    records = _iter_usage_records(_usage_files(days=window_days))
+    for record in records:
+        record_agent = str(record.get("agent") or "")
+        if record_agent in evidence_by_seat:
+            _update_outcome_bucket(evidence_by_seat[record_agent], record)
+
     seats: list[dict[str, Any]] = []
     for seat in seat_specs:
-        usage = summarize_runtime_usage(days=window_days, agent=str(seat["name"]))
-        evidence = _new_outcome_bucket()
-        observed = usage["by_agent"].get(seat["name"])
-        if isinstance(observed, dict):
-            evidence.update(observed)
+        evidence = evidence_by_seat[str(seat["name"])]
         seats.append({
             **seat,
             "read_only": True,

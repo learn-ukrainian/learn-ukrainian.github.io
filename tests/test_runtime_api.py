@@ -97,6 +97,14 @@ def test_acpx_overview_is_read_only_and_aggregates_hyphenated_seats(
     today = datetime.now(UTC)
     monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
     monkeypatch.setenv("LU_ACPX_TRANSPORT", "shadow")
+    original_iter = runtime_router._iter_usage_records
+    iter_calls: list[tuple] = []
+
+    def tracked_iter(paths):
+        iter_calls.append(tuple(paths))
+        return original_iter(paths)
+
+    monkeypatch.setattr(runtime_router, "_iter_usage_records", tracked_iter)
 
     _write_usage_file(
         usage_dir / f"usage_acpx-grok-shadow-runner_{today:%Y-%m-%d}.jsonl",
@@ -119,6 +127,7 @@ def test_acpx_overview_is_read_only_and_aggregates_hyphenated_seats(
     response = client.get("/api/runtime/acpx?days=7")
 
     assert response.status_code == 200
+    assert len(iter_calls) == 1
     data = response.json()
     assert data["transport"] == {
         "mode": "shadow",
