@@ -34,8 +34,10 @@ mode) under a per-user macOS LaunchAgent:
 - Crash-loop protection: `ThrottleInterval=30`, so `launchd` cannot respawn a
   repeatedly failing server faster than once every 30 seconds.
 - Operator stop: `./services.sh stop api` disables and unloads the agent before
-  the listener is signalled. It remains stopped across terminal close and
-  login; only a later `start` or `restart` enables it again.
+  the listener is signalled. Because `launchctl bootout` completes
+  asynchronously, the supervisor waits up to 12 seconds for launchd to confirm
+  removal before reporting a stop failure. The API remains stopped across
+  terminal close and login; only a later `start` or `restart` enables it again.
 
 The normal start path installs or reconciles the plist automatically. To
 inspect or remove it explicitly, run these commands from the merged primary
