@@ -153,7 +153,7 @@
     {
       "path": "scripts/projects/ua_eval_harness/run_model_batch.py",
       "role": "provider_neutral_model_runner",
-      "sha256": "7342241d91ef236e73f570c95f0622d701907daf5187d1ea4504a1cdb0bc8021"
+      "sha256": "bf8a471a1a68295444a697ac5fd252a48695e57d561b82d70a8e65b672c29b32"
     },
     {
       "path": "data/projects/ua_eval_harness/model_run_config_schema_v1.json",
@@ -223,7 +223,7 @@
     {
       "path": "tests/test_ua_eval_model_runner.py",
       "role": "v0.1.1_model_runner_regression_test",
-      "sha256": "dbade5a00df012a0ba554d10b580ee2e7efc171ad339b60caf0df5cd297db1c0"
+      "sha256": "d01f9f81a3fc983f1e7b5407d0358e9e24131c979a95dadeab104feeecf57c44"
     }
   ],
   "baselines": {
