@@ -98,16 +98,27 @@ Artifact SHA-256 values:
 From a clean repository root with the project environment installed:
 
 ```bash
+UA_EVAL_TMP=$(mktemp -d /tmp/ua-eval-gemma.XXXXXX)
+
 .venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py import \
   --requests data/projects/ua_eval_harness/baselines/v1/generation_requests.jsonl \
   --model-output data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.model-output.jsonl \
   --metadata data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.metadata.json \
-  --output data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.responses.jsonl
+  --output "$UA_EVAL_TMP/responses.jsonl"
 
 .venv/bin/python scripts/projects/ua_eval_harness/evaluate_model.py score \
   --responses data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.responses.jsonl \
-  --output data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.report.json
+  --output "$UA_EVAL_TMP/report.json"
+
+cmp "$UA_EVAL_TMP/responses.jsonl" \
+  data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.responses.jsonl
+cmp "$UA_EVAL_TMP/report.json" \
+  data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.report.json
 ```
 
-The immutable writer verifies that existing outputs are byte-identical. It
-refuses to replace a different response or report.
+The commands create a unique retained temporary directory. The first `cmp`
+proves that import reproduced the committed responses. The scorer then reads
+that byte-verified committed file because its path is part of the report
+receipt. The second `cmp` proves that scoring reproduced the committed report.
+Both comparisons must exit with status zero; frozen artifacts are never used
+as output targets.
