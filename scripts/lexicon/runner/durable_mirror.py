@@ -151,6 +151,8 @@ def verify_manifest(manifest: dict[str, Any], mirror_dir: Path) -> VerifyResult:
     for entry in manifest.get("files", []):
         if not isinstance(entry, dict) or "path" not in entry:
             raise DurableMirrorError("manifest entry missing path")
+        if "bytes" not in entry or "sha256" not in entry:
+            raise DurableMirrorError(f"manifest entry missing bytes/sha256: {entry.get('path')!r}")
         rel_path = str(entry["path"])
         expected_paths.add(rel_path)
         disk_path = _safe_mirror_rel_path(mirror_dir, rel_path)
@@ -172,7 +174,11 @@ def sync_source_to_mirror(source: str, mirror_dir: Path, *, dry_run: bool = Fals
     state, since versioning/history is the downstream restic bus's job, not
     this mirror's.
     """
-    mirror_dir.mkdir(parents=True, exist_ok=True)
+    if not dry_run:
+        mirror_dir.mkdir(parents=True, exist_ok=True)
+    elif not mirror_dir.exists():
+        # Dry-run against a missing dest: no filesystem side effects.
+        return
     source_arg = source if source.endswith("/") else f"{source}/"
     dest_arg = f"{mirror_dir}/"
     cmd = ["rsync", "-az", "--delete", "--exclude", MANIFEST_NAME]
@@ -192,7 +198,17 @@ def snapshot(source: str, mirror_dir: Path, *, dry_run: bool = False) -> dict[st
     """rsync ``source`` into ``mirror_dir`` and (re)write its checksummed manifest."""
     sync_source_to_mirror(source, mirror_dir, dry_run=dry_run)
     if dry_run:
-        return build_manifest(mirror_dir)
+        # Do not invent counts from a mirror that rsync did not write into.
+        return {
+            "schema": "atlas-runner-mirror-manifest",
+            "schema_version": MANIFEST_SCHEMA_VERSION,
+            "generated_at": time.time(),
+            "file_count": 0,
+            "total_bytes": 0,
+            "files": [],
+            "dry_run": True,
+            "source": source,
+        }
     manifest = build_manifest(mirror_dir)
     write_manifest(manifest, mirror_dir)
     return manifest
