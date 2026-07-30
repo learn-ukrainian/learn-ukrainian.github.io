@@ -92,6 +92,13 @@ Approved boundary (#6027):
   write-permission refusal.
 - Correlation / shadow telemetry is **evidence only** — the existing participant
   result stays authoritative under shadow compare.
+- ACPX authentication selection is explicit. For an existing local ChatGPT
+  Codex login, verify `codex login status`, then set the non-secret selector
+  `ACPX_AUTH_CHAT_GPT=1` for the bounded process. A missing selector fails
+  closed under `--auth-policy fail`; never put API keys in repo files or logs.
+- Standard ACP usage reports `used` (tokens currently in context) and `size`
+  (context-window capacity). Shadow telemetry records `used`; it must never
+  report `size` as consumed tokens.
 - **Buzz is deferred** (relay-as-authority conflicts with file dual-write).
 
 Do **not** invent ACPX CLI flags, endpoints, or review-eligibility changes in

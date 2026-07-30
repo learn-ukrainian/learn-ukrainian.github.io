@@ -256,6 +256,10 @@ def test_acpx_default_off_rollback(onboarding: str, all_owned: dict[str, str]) -
 
 def test_acpx_does_not_fabricate_cli_flags(onboarding: str) -> None:
     """Stable boundary only — no invented acpx subcommands in the onboarding contract."""
+    # This exact non-secret selector is live-proven against the pinned ACPX
+    # and an existing `codex login` ChatGPT session. Keep every other ACPX_*
+    # assignment forbidden so the docs cannot grow an imagined auth surface.
+    allowed_auth_selector = "ACPX_AUTH_CHAT_GPT=1"
     forbidden_cli = re.compile(
         r"""
         (?:
@@ -269,9 +273,10 @@ def test_acpx_does_not_fabricate_cli_flags(onboarding: str) -> None:
     )
     failures: list[str] = []
     for line_no, line in enumerate(onboarding.splitlines(), start=1):
-        if forbidden_cli.search(line):
+        if forbidden_cli.search(line.replace(allowed_auth_selector, "")):
             failures.append(f"agent-seat-onboarding.md:{line_no}: {line.strip()}")
     assert not failures, "Fabricated ACPX CLI surface:\n" + "\n".join(failures)
+    assert allowed_auth_selector in onboarding
     assert "do not invent" in onboarding.lower() or "do **not** invent" in onboarding.lower()
 
 

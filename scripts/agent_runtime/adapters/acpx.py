@@ -116,9 +116,10 @@ _STOP_REASONS = frozenset(
 _STOP_REASON_CANCELLED = "cancelled"
 _MISSING_STOP_REASON = object()
 
-_USAGE_TOTAL_FIELDS = ("total_tokens", "totalTokens", "size", "used")
+_USAGE_TOTAL_FIELDS = ("total_tokens", "totalTokens")
 _USAGE_INPUT_FIELDS = ("input_tokens", "inputTokens")
 _USAGE_OUTPUT_FIELDS = ("output_tokens", "outputTokens")
+_USAGE_CONTEXT_FIELDS = ("used", "size")
 
 
 def _usage_total_from_update(update: dict[str, Any]) -> tuple[int | None, str | None]:
@@ -127,8 +128,11 @@ def _usage_total_from_update(update: dict[str, Any]) -> tuple[int | None, str | 
     ACPX exposes usage either under ``update._meta.usage`` or directly on
     the ``usage_update`` body. An explicit total is authoritative; when it
     is absent, both input and output token counts are required to calculate
-    one. Updates without any usable total are ignored by the caller, while a
-    present but non-integer or negative recognized field fails closed.
+    one. Standard ACP ``UsageUpdate`` instead carries ``used`` (tokens
+    currently in context) and ``size`` (the total context-window capacity);
+    report ``used`` and never mistake ``size`` for consumed tokens. Updates
+    without any usable token count are ignored by the caller, while a present
+    but non-integer or negative recognized field fails closed.
     """
     meta = update.get("_meta")
     usage: object = update
@@ -138,7 +142,12 @@ def _usage_total_from_update(update: dict[str, Any]) -> tuple[int | None, str | 
     if not isinstance(usage, dict):
         return None, "usage_update carried a non-object usage payload"
 
-    fields = _USAGE_TOTAL_FIELDS + _USAGE_INPUT_FIELDS + _USAGE_OUTPUT_FIELDS
+    fields = (
+        _USAGE_TOTAL_FIELDS
+        + _USAGE_INPUT_FIELDS
+        + _USAGE_OUTPUT_FIELDS
+        + _USAGE_CONTEXT_FIELDS
+    )
     for field in fields:
         if field not in usage:
             continue
@@ -154,6 +163,13 @@ def _usage_total_from_update(update: dict[str, Any]) -> tuple[int | None, str | 
     output_tokens = next((usage[field] for field in _USAGE_OUTPUT_FIELDS if field in usage), None)
     if input_tokens is not None and output_tokens is not None:
         return input_tokens + output_tokens, None
+
+    has_used = "used" in usage
+    has_size = "size" in usage
+    if has_used or has_size:
+        if not (has_used and has_size):
+            return None, "usage_update must carry both used and size for standard ACP usage"
+        return usage["used"], None
 
     return None, None
 

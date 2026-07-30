@@ -144,11 +144,13 @@ floating CLI surface.
 | Symptom | What to do |
 | --- | --- |
 | Feature flag off | Expected default — use native `runner.invoke` / bridge / discuss paths |
-| Auth failure | Fail closed; do not retry in-adapter; fix credentials outside the adapter |
+| `AUTH_REQUIRED` with an existing ChatGPT Codex login | Verify `codex login status`, then set the non-secret per-process selector `ACPX_AUTH_CHAT_GPT=1`; `--auth-policy fail` deliberately refuses implicit method selection |
+| Other auth failure | Fail closed; do not retry in-adapter; fix credentials outside the adapter and never store or log API keys in the repository |
 | Timeout / cancel | Treat as terminal for that prompt; no auto-replay |
 | Crash / malformed NDJSON | Classify and record; do not promote partial output to authority |
 | Duplicate correlation id | Treat as replay protection; do not double-apply side effects (there should be none) |
 | Shadow mismatch | Keep the existing native/participant result authoritative; file evidence for infra |
+| Implausibly large token usage matching a model context limit | Treat as a telemetry defect: standard ACP `used` is the live context count and `size` is capacity; never record `size` as consumed tokens |
 
 #### Rollback
 

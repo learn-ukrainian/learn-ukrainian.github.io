@@ -130,6 +130,11 @@ _USAGE_META_NDJSON = (
     '{"sessionUpdate":"usage_update","_meta":{"usage":{"total_tokens":24}}}}}\n'
 )
 
+_USAGE_CONTEXT_NDJSON = (
+    '{"jsonrpc":"2.0","method":"session/update","params":{"update":'
+    '{"sessionUpdate":"usage_update","used":321,"size":258400}}}\n'
+)
+
 _INVALID_USAGE_NDJSON = (
     '{"jsonrpc":"2.0","method":"session/update","params":{"update":'
     '{"sessionUpdate":"usage_update","totalTokens":"unknown"}}}\n'
@@ -667,6 +672,19 @@ def test_parse_response_sums_usage_input_and_output_tokens():
     )
     assert result.ok is True
     assert result.tokens == 7
+
+
+def test_parse_response_reports_context_used_not_window_size():
+    adapter = AcpxAdapter()
+    terminal = '{"jsonrpc":"2.0","id":2,"result":{"stopReason":"end_turn"}}\n'
+    result = adapter.parse_response(
+        stdout=_SUCCESS_NDJSON.replace(terminal, _USAGE_CONTEXT_NDJSON + terminal),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.tokens == 321
 
 
 def test_parse_response_invalid_usage_tokens_fail_closed():
