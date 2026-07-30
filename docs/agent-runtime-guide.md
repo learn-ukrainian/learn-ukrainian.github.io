@@ -74,19 +74,29 @@ authoritative file handoffs.
 
 Approved boundary (#6027):
 
-- Default **off** / shadow-compare posture; rollback = flag off + native
-  `runner.invoke` transport.
-- Initially **one** read-only/stateless **Codex** ACP participant.
+- Feature flag `LU_ACPX_TRANSPORT=off|shadow`, **default `off`**; rollback =
+  set it back to `off` (or unset) to fall back to the native `runner.invoke`
+  transport.
+- Direct-only seat `acpx-codex-shadow` (`scripts/agent_runtime/adapters/acpx.py:AcpxAdapter`)
+  — never returned by `available_agents()`, never a dispatch/routing/review/
+  failover candidate.
+- Local pin `acpx@0.13.0` (`node_modules/.bin/acpx`); the adapter refuses to
+  spawn on any other resolved version.
+- Initially **one** read-only/stateless **Codex** ACP participant
+  (`tool_config={"acpx_shadow": True, "target_agent": "codex"}`).
 - Adapter safety contract: one in-flight prompt, zero backlog, zero automatic
-  prompt retries, bounded timeout/cancellation, required correlation/idempotency
-  fields, primary-checkout and write-permission refusal.
+  prompt retries, bounded timeout/cancellation, required non-empty/bounded
+  `task_id`, `correlation_id`, and `idempotency_key` (local runtime metadata
+  only — never ACP protocol flags, argv, or stdin; never published to
+  fleet-comms, dispatch authority, or review evidence), primary-checkout and
+  write-permission refusal.
 - Correlation / shadow telemetry is **evidence only** — the existing participant
   result stays authoritative under shadow compare.
 - **Buzz is deferred** (relay-as-authority conflicts with file dual-write).
 
-Do **not** invent ACPX CLI flags or endpoints in callers. Consume the reviewed
-runtime pin and feature flag owned by the integration worker; exact command
-wording is reconciled at assembly time against that pin. Full operator contract:
+Do **not** invent ACPX CLI flags, endpoints, or review-eligibility changes in
+callers — the adapter's argv is fully confined and callers only ever set
+`tool_config` keys the adapter allowlists. Full operator contract:
 [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
 
 ## Add a new agent in 20 lines

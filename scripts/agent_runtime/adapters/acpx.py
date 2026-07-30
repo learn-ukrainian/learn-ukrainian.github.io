@@ -42,8 +42,9 @@ builds passes ``--deny-all --no-fs --no-terminal --allowed-tools ""
 --auth-policy fail --non-interactive-permissions fail --max-turns 1
 --prompt-retries 0`` unconditionally. There is no code path that can loosen
 any of these — a caller cannot pass permission/tool overrides through
-``tool_config`` (the adapter allowlists exactly two keys and rejects
-anything else before spawn).
+``tool_config`` (the adapter allowlists a fixed set of keys — shadow/target
+markers plus local correlation/idempotency metadata — and rejects anything
+else before spawn).
 
 Issue: #6027
 """
@@ -53,6 +54,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import subprocess
 from functools import lru_cache
 from pathlib import Path
@@ -89,7 +91,21 @@ _PINNED_BINARY = _REPO_ROOT / "node_modules" / ".bin" / "acpx"
 # — this is the enforcement point for "unsupported permission/tool config"
 # in the approved reject-before-spawn list. No key here can loosen
 # confinement; "target_agent" can only ever be re-affirmed as "codex".
-_ALLOWED_TOOL_CONFIG_KEYS = frozenset({"acpx_shadow", "target_agent"})
+# "correlation_id"/"idempotency_key" are local runtime metadata only (see
+# _require_local_metadata_field): never forwarded to the ACP wire protocol.
+_ALLOWED_TOOL_CONFIG_KEYS = frozenset(
+    {"acpx_shadow", "target_agent", "correlation_id", "idempotency_key"}
+)
+
+# Bounds for task_id/correlation_id/idempotency_key: opaque local identifiers
+# used only for this adapter's own InvocationPlan.metadata (telemetry/dedup
+# bookkeeping upstream of this seat). Never sent as ACP protocol flags, argv,
+# or stdin, and never published to fleet-comms/dispatch authority/review
+# evidence. Restricted to a safe identifier charset and a bounded length so
+# a caller cannot smuggle newlines or oversized payloads into process
+# metadata via these fields.
+_METADATA_FIELD_MAX_LEN = 200
+_METADATA_FIELD_RE = re.compile(r"^[A-Za-z0-9._:-]+$")
 
 # Real ACP `StopReason` values (agentclientprotocol/sdk schema.json
 # `$defs.StopReason`). "cancelled" is handled as its own failure path.
@@ -126,6 +142,29 @@ def _probe_acpx_version(binary: str) -> str:
     except (OSError, subprocess.TimeoutExpired):
         return ""
     return (proc.stdout or "").strip()
+
+
+def _require_local_metadata_field(name: str, value: str | None) -> str:
+    """Validate a local runtime-metadata identifier, or refuse before spawn.
+
+    Applies to ``task_id``, ``correlation_id``, and ``idempotency_key``:
+    each must be non-empty, bounded, and restricted to a safe local
+    identifier charset. These values never leave this adapter as ACP
+    protocol flags, argv, or stdin — see ``_ALLOWED_TOOL_CONFIG_KEYS``.
+    """
+    if value is None or not value.strip():
+        raise AcpxShadowRefusalError(f"AcpxAdapter: {name} must be a non-empty local identifier")
+    stripped = value.strip()
+    if len(stripped) > _METADATA_FIELD_MAX_LEN:
+        raise AcpxShadowRefusalError(
+            f"AcpxAdapter: {name} exceeds the {_METADATA_FIELD_MAX_LEN}-char bound for local metadata"
+        )
+    if not _METADATA_FIELD_RE.match(stripped):
+        raise AcpxShadowRefusalError(
+            f"AcpxAdapter: {name}={stripped!r} must match a bounded local identifier "
+            f"pattern ({_METADATA_FIELD_RE.pattern}); refusing to forward unsafe metadata"
+        )
+    return stripped
 
 
 class AcpxAdapter:
@@ -169,18 +208,24 @@ class AcpxAdapter:
           (the env var alone is not sufficient per-call proof of intent).
         - ``tool_config["target_agent"]`` names anything other than
           ``"codex"``.
-        - ``tool_config`` carries any key outside the two-key allowlist.
+        - ``tool_config`` carries any key outside ``_ALLOWED_TOOL_CONFIG_KEYS``.
         - ``session_id`` is not None (this seat never resumes a session).
         - ``mode`` is not ``"read-only"``.
         - ``cwd`` resolves to the protected primary checkout.
         - the resolved local binary is missing, unversionable, or reports a
           version other than :data:`PINNED_VERSION`.
+        - ``task_id``, ``tool_config["correlation_id"]``, or
+          ``tool_config["idempotency_key"]`` is missing, blank, oversized, or
+          contains characters outside the local-identifier charset (see
+          ``_require_local_metadata_field``).
 
-        ``task_id`` is accepted for signature parity with the protocol but
-        not otherwise used — this shadow seat has no output file or rollout
-        log to annotate with it.
+        ``task_id``, ``correlation_id``, and ``idempotency_key`` are local
+        runtime metadata only: they are validated then stamped into
+        ``InvocationPlan.metadata`` for this adapter's own bookkeeping. They
+        are never turned into ACP protocol flags, never appear in ``cmd`` or
+        ``stdin_payload``, and are never published to fleet-comms, dispatch
+        authority, or review evidence.
         """
-        _ = task_id
         if mode not in self.supported_modes:
             raise ValueError(
                 f"AcpxAdapter: unsupported mode {mode!r}; only 'read-only' is permitted for the ACPX shadow seat"
@@ -212,6 +257,10 @@ class AcpxAdapter:
                 f"AcpxAdapter: target_agent={target_agent!r} rejected; this seat supports "
                 "exactly one ACP participant: codex"
             )
+
+        validated_task_id = _require_local_metadata_field("task_id", task_id)
+        correlation_id = _require_local_metadata_field("correlation_id", tc.get("correlation_id"))
+        idempotency_key = _require_local_metadata_field("idempotency_key", tc.get("idempotency_key"))
 
         if session_id is not None:
             raise AcpxShadowRefusalError(
@@ -270,7 +319,13 @@ class AcpxAdapter:
             output_file=None,
             env_overrides={},
             liveness_paths=(),
-            metadata={"acpx_shadow": True, "acpx_pinned_version": PINNED_VERSION},
+            metadata={
+                "acpx_shadow": True,
+                "acpx_pinned_version": PINNED_VERSION,
+                "task_id": validated_task_id,
+                "correlation_id": correlation_id,
+                "idempotency_key": idempotency_key,
+            },
         )
 
     @classmethod

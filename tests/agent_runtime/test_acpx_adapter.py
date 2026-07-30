@@ -1,9 +1,11 @@
 """Tests for AcpxAdapter — the experimental ACPX read-only shadow seat (#6027).
 
-Fixtures under ``tests/fixtures/acpx/`` are bounded NDJSON transcripts. Two of
-them (``timeout.ndjson``, and the shape of ``auth_required.ndjson`` /
-``agent_disconnected.ndjson``) mirror byte-for-byte or structurally the real
-output captured live against the pinned local ``acpx@0.13.0`` binary and the
+The NDJSON transcripts below (inlined as module-level constants rather than
+``tests/fixtures/acpx/*.ndjson`` files, to keep this seat's changed-file
+footprint bounded) are bounded fixtures. ``_TIMEOUT_NDJSON``, and the shape of
+``_AUTH_REQUIRED_NDJSON`` / ``_AGENT_DISCONNECTED_NDJSON``, mirror
+byte-for-byte or structurally the real output captured live against the
+pinned local ``acpx@0.13.0`` binary and the
 ``acpxCode``/``detailCode``/``EXIT_CODES`` constants read directly out of
 ``node_modules/acpx/dist/*.js`` — see the module docstring in
 ``scripts/agent_runtime/adapters/acpx.py`` for the captured contract this
@@ -23,11 +25,100 @@ import pytest
 from scripts.agent_runtime.adapters import acpx as acpx_module
 from scripts.agent_runtime.adapters.acpx import AcpxAdapter, AcpxShadowRefusalError
 
-FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "acpx"
+_SUCCESS_NDJSON = (
+    '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
+    '"clientCapabilities":{"fs":{"readTextFile":false,"writeTextFile":false},"terminal":false},'
+    '"clientInfo":{"name":"acpx","version":"0.13.0"}}}\n'
+    '{"jsonrpc":"2.0","id":0,"result":{"protocolVersion":1,"agentCapabilities":{}}}\n'
+    '{"jsonrpc":"2.0","id":1,"method":"session/new","params":{"cwd":"/repo","mcpServers":[]}}\n'
+    '{"jsonrpc":"2.0","id":1,"result":{"sessionId":"sess-fixture-001"}}\n'
+    '{"jsonrpc":"2.0","id":2,"method":"session/prompt","params":{"sessionId":"sess-fixture-001",'
+    '"prompt":[{"type":"text","text":"ping"}]}}\n'
+    '{"jsonrpc":"2.0","method":"session/update","params":{"sessionId":"sess-fixture-001",'
+    '"update":{"sessionUpdate":"agent_message_chunk","content":{"type":"text","text":"Hello "}}}}\n'
+    '{"jsonrpc":"2.0","method":"session/update","params":{"sessionId":"sess-fixture-001",'
+    '"update":{"sessionUpdate":"agent_message_chunk","content":{"type":"text","text":"world."}}}}\n'
+    '{"jsonrpc":"2.0","id":2,"result":{"stopReason":"end_turn"}}\n'
+)
 
+_CANCELLED_NDJSON = (
+    '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
+    '"clientCapabilities":{"fs":{"readTextFile":false,"writeTextFile":false},"terminal":false},'
+    '"clientInfo":{"name":"acpx","version":"0.13.0"}}}\n'
+    '{"jsonrpc":"2.0","id":0,"result":{"protocolVersion":1,"agentCapabilities":{}}}\n'
+    '{"jsonrpc":"2.0","id":2,"method":"session/prompt","params":{"sessionId":"sess-fixture-002",'
+    '"prompt":[{"type":"text","text":"ping"}]}}\n'
+    '{"jsonrpc":"2.0","method":"session/update","params":{"sessionId":"sess-fixture-002",'
+    '"update":{"sessionUpdate":"agent_message_chunk","content":{"type":"text","text":"partial answer"}}}}\n'
+    '{"jsonrpc":"2.0","id":2,"result":{"stopReason":"cancelled"}}\n'
+)
 
-def _read_fixture(name: str) -> str:
-    return (FIXTURES / name).read_text(encoding="utf-8")
+_TIMEOUT_NDJSON = (
+    '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
+    '"clientCapabilities":{"fs":{"readTextFile":false,"writeTextFile":false},"terminal":false},'
+    '"clientInfo":{"name":"acpx","version":"0.13.0"}}}\n'
+    '{"jsonrpc":"2.0","id":null,"error":{"code":-32070,"message":"Timed out after 5000ms",'
+    '"data":{"acpxCode":"TIMEOUT","origin":"cli","sessionId":"unknown"}}}\n'
+)
+
+_CRASH_NO_TERMINAL_NDJSON = (
+    '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
+    '"clientCapabilities":{"fs":{"readTextFile":false,"writeTextFile":false},"terminal":false},'
+    '"clientInfo":{"name":"acpx","version":"0.13.0"}}}\n'
+    '{"jsonrpc":"2.0","id":0,"result":{"protocolVersion":1,"agentCapabilities":{}}}\n'
+    '{"jsonrpc":"2.0","id":2,"method":"session/prompt","params":{"sessionId":"sess-fixture-003",'
+    '"prompt":[{"type":"text","text":"ping"}]}}\n'
+    '{"jsonrpc":"2.0","method":"session/update","params":{"sessionId":"sess-fixture-003",'
+    '"update":{"sessionUpdate":"agent_message_chunk","content":{"type":"text","text":"star"}}}}\n'
+)
+
+_AGENT_DISCONNECTED_NDJSON = (
+    '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
+    '"clientCapabilities":{"fs":{"readTextFile":false,"writeTextFile":false},"terminal":false},'
+    '"clientInfo":{"name":"acpx","version":"0.13.0"}}}\n'
+    '{"jsonrpc":"2.0","id":0,"result":{"protocolVersion":1,"agentCapabilities":{}}}\n'
+    '{"jsonrpc":"2.0","id":null,"error":{"code":-32603,'
+    '"message":"codex-acp process exited unexpectedly (code 1)",'
+    '"data":{"acpxCode":"RUNTIME","detailCode":"AGENT_DISCONNECTED","origin":"cli","sessionId":"unknown"}}}\n'
+)
+
+_MALFORMED_LINE_NDJSON = (
+    '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
+    '"clientCapabilities":{"fs":{"readTextFile":false,"writeTextFile":false},"terminal":false},'
+    '"clientInfo":{"name":"acpx","version":"0.13.0"}}}\n'
+    '{"jsonrpc":"2.0","id":0,"result":{"protocolVersion":1,"agentCapabilities":{}}}\n'
+    '{"jsonrpc":"2.0","method":"session/update","params":{"sessionId":"sess-fixture-004",'
+    '"update":{"sessionUpdate":"agent_mess\n'
+)
+
+_UNRECOGNIZED_SCHEMA_NDJSON = (
+    '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
+    '"clientCapabilities":{"fs":{"readTextFile":false,"writeTextFile":false},"terminal":false},'
+    '"clientInfo":{"name":"acpx","version":"0.13.0"}}}\n'
+    '{"unexpected":"payload","reason":"neither method, result, nor error"}\n'
+)
+
+_DUPLICATE_REPLAY_NDJSON = (
+    '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
+    '"clientCapabilities":{"fs":{"readTextFile":false,"writeTextFile":false},"terminal":false},'
+    '"clientInfo":{"name":"acpx","version":"0.13.0"}}}\n'
+    '{"jsonrpc":"2.0","id":0,"result":{"protocolVersion":1,"agentCapabilities":{}}}\n'
+    '{"jsonrpc":"2.0","id":2,"method":"session/prompt","params":{"sessionId":"sess-fixture-005",'
+    '"prompt":[{"type":"text","text":"ping"}]}}\n'
+    '{"jsonrpc":"2.0","method":"session/update","params":{"sessionId":"sess-fixture-005",'
+    '"update":{"sessionUpdate":"agent_message_chunk","content":{"type":"text","text":"pong"}}}}\n'
+    '{"jsonrpc":"2.0","id":2,"result":{"stopReason":"end_turn"}}\n'
+    '{"jsonrpc":"2.0","id":2,"result":{"stopReason":"end_turn"}}\n'
+)
+
+_AUTH_REQUIRED_NDJSON = (
+    '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
+    '"clientCapabilities":{"fs":{"readTextFile":false,"writeTextFile":false},"terminal":false},'
+    '"clientInfo":{"name":"acpx","version":"0.13.0"}}}\n'
+    '{"jsonrpc":"2.0","id":null,"error":{"code":-32603,'
+    '"message":"Authentication required for codex and --auth-policy is \'fail\'",'
+    '"data":{"acpxCode":"RUNTIME","detailCode":"AUTH_REQUIRED","origin":"acp","sessionId":"unknown"}}}\n'
+)
 
 
 def _stub_binary(monkeypatch, tmp_path: Path, *, version: str = "0.13.0") -> Path:
@@ -54,18 +145,23 @@ def _build(
     cwd: Path,
     prompt: str = "ping",
     model: str | None = None,
+    task_id: str | None = "t-1",
     session_id: str | None = None,
     tool_config: dict | None = None,
     effort: str | None = None,
 ):
     if tool_config is None:
-        tool_config = {"acpx_shadow": True}
+        tool_config = {
+            "acpx_shadow": True,
+            "correlation_id": "corr-1",
+            "idempotency_key": "idem-1",
+        }
     return adapter.build_invocation(
         prompt=prompt,
         mode="read-only",
         cwd=cwd,
         model=model,
-        task_id="t-1",
+        task_id=task_id,
         session_id=session_id,
         tool_config=tool_config,
         effort=effort,
@@ -162,6 +258,131 @@ def test_build_invocation_rejects_non_codex_target(tmp_path, monkeypatch):
             cwd=tmp_path,
             tool_config={"acpx_shadow": True, "target_agent": "claude"},
         )
+
+
+# ---------------------------------------------------------------------------
+# Local correlation_id / idempotency_key / task_id metadata
+# ---------------------------------------------------------------------------
+
+
+def test_build_invocation_requires_non_empty_task_id(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="task_id"):
+        _build(adapter, cwd=tmp_path, task_id=None)
+
+
+def test_build_invocation_rejects_blank_task_id(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="task_id"):
+        _build(adapter, cwd=tmp_path, task_id="   ")
+
+
+def test_build_invocation_requires_correlation_id(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="correlation_id"):
+        _build(
+            adapter,
+            cwd=tmp_path,
+            tool_config={"acpx_shadow": True, "idempotency_key": "idem-1"},
+        )
+
+
+def test_build_invocation_rejects_blank_correlation_id(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="correlation_id"):
+        _build(
+            adapter,
+            cwd=tmp_path,
+            tool_config={"acpx_shadow": True, "correlation_id": "  ", "idempotency_key": "idem-1"},
+        )
+
+
+def test_build_invocation_requires_idempotency_key(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="idempotency_key"):
+        _build(
+            adapter,
+            cwd=tmp_path,
+            tool_config={"acpx_shadow": True, "correlation_id": "corr-1"},
+        )
+
+
+def test_build_invocation_rejects_oversized_correlation_id(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="correlation_id"):
+        _build(
+            adapter,
+            cwd=tmp_path,
+            tool_config={
+                "acpx_shadow": True,
+                "correlation_id": "x" * 201,
+                "idempotency_key": "idem-1",
+            },
+        )
+
+
+def test_build_invocation_rejects_unsafe_idempotency_key_characters(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="idempotency_key"):
+        _build(
+            adapter,
+            cwd=tmp_path,
+            tool_config={
+                "acpx_shadow": True,
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem\n1",
+            },
+        )
+
+
+def test_build_invocation_stamps_local_metadata_without_forwarding_to_argv_or_stdin(
+    tmp_path, monkeypatch
+):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    plan = _build(
+        adapter,
+        cwd=tmp_path,
+        prompt="investigate the flaky test",
+        task_id="task-42",
+        tool_config={
+            "acpx_shadow": True,
+            "correlation_id": "corr-abc.123",
+            "idempotency_key": "idem-xyz:9",
+        },
+    )
+
+    assert plan.metadata["task_id"] == "task-42"
+    assert plan.metadata["correlation_id"] == "corr-abc.123"
+    assert plan.metadata["idempotency_key"] == "idem-xyz:9"
+
+    # Never turned into ACP protocol flags, argv tokens, or stdin content.
+    for value in ("task-42", "corr-abc.123", "idem-xyz:9"):
+        assert value not in plan.cmd
+        assert value not in plan.stdin_payload
 
 
 # ---------------------------------------------------------------------------
@@ -341,7 +562,7 @@ def test_build_invocation_allows_non_primary_cwd(tmp_path, monkeypatch):
 def test_parse_response_success():
     adapter = AcpxAdapter()
     result = adapter.parse_response(
-        stdout=_read_fixture("success.ndjson"),
+        stdout=_SUCCESS_NDJSON,
         stderr="",
         returncode=0,
         output_file=None,
@@ -363,7 +584,7 @@ def test_parse_response_success():
 def test_parse_response_cancelled_fails_closed():
     adapter = AcpxAdapter()
     result = adapter.parse_response(
-        stdout=_read_fixture("cancelled.ndjson"),
+        stdout=_CANCELLED_NDJSON,
         stderr="",
         returncode=0,
         output_file=None,
@@ -381,7 +602,7 @@ def test_parse_response_cancelled_fails_closed():
 def test_parse_response_timeout_fails_closed():
     adapter = AcpxAdapter()
     result = adapter.parse_response(
-        stdout=_read_fixture("timeout.ndjson"),
+        stdout=_TIMEOUT_NDJSON,
         stderr="",
         returncode=3,  # EXIT_CODES.TIMEOUT captured from node_modules/acpx/dist
         output_file=None,
@@ -400,7 +621,7 @@ def test_parse_response_timeout_fails_closed():
 def test_parse_response_crash_with_no_terminal_marker_fails_closed():
     adapter = AcpxAdapter()
     result = adapter.parse_response(
-        stdout=_read_fixture("crash_no_terminal.ndjson"),
+        stdout=_CRASH_NO_TERMINAL_NDJSON,
         stderr="",
         returncode=-9,  # signaled: the runner killed the process
         output_file=None,
@@ -413,7 +634,7 @@ def test_parse_response_crash_with_no_terminal_marker_fails_closed():
 def test_parse_response_agent_disconnected_fails_closed():
     adapter = AcpxAdapter()
     result = adapter.parse_response(
-        stdout=_read_fixture("agent_disconnected.ndjson"),
+        stdout=_AGENT_DISCONNECTED_NDJSON,
         stderr="",
         returncode=1,
         output_file=None,
@@ -431,7 +652,7 @@ def test_parse_response_agent_disconnected_fails_closed():
 def test_parse_response_malformed_line_fails_closed():
     adapter = AcpxAdapter()
     result = adapter.parse_response(
-        stdout=_read_fixture("malformed_line.ndjson"),
+        stdout=_MALFORMED_LINE_NDJSON,
         stderr="",
         returncode=-9,
         output_file=None,
@@ -444,7 +665,7 @@ def test_parse_response_malformed_line_fails_closed():
 def test_parse_response_unrecognized_schema_fails_closed():
     adapter = AcpxAdapter()
     result = adapter.parse_response(
-        stdout=_read_fixture("unrecognized_schema.ndjson"),
+        stdout=_UNRECOGNIZED_SCHEMA_NDJSON,
         stderr="",
         returncode=0,
         output_file=None,
@@ -471,7 +692,7 @@ def test_parse_response_empty_stdout_fails_closed():
 def test_parse_response_duplicate_terminal_replay_fails_closed():
     adapter = AcpxAdapter()
     result = adapter.parse_response(
-        stdout=_read_fixture("duplicate_replay.ndjson"),
+        stdout=_DUPLICATE_REPLAY_NDJSON,
         stderr="",
         returncode=0,
         output_file=None,
@@ -489,7 +710,7 @@ def test_parse_response_duplicate_terminal_replay_fails_closed():
 def test_parse_response_auth_required_fails_closed():
     adapter = AcpxAdapter()
     result = adapter.parse_response(
-        stdout=_read_fixture("auth_required.ndjson"),
+        stdout=_AUTH_REQUIRED_NDJSON,
         stderr="",
         returncode=1,
         output_file=None,
@@ -509,7 +730,7 @@ def test_parse_response_auth_required_fails_closed():
 def test_parse_response_nonzero_exit_with_end_turn_still_fails():
     adapter = AcpxAdapter()
     result = adapter.parse_response(
-        stdout=_read_fixture("success.ndjson"),
+        stdout=_SUCCESS_NDJSON,
         stderr="unexpected trailing crash",
         returncode=1,
         output_file=None,

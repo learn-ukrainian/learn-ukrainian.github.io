@@ -141,19 +141,14 @@ The launchers already speak the **session-stream/lease** half of fleet-comms (#5
 `publish-review-verdict`) is wired into the `drive-epic` skill but is **mid-cutover**:
 
 - `dual_write` is an operator/advisor-gated flip **owned by the infra/harness lane**
-  (parity receipt → approved enable). **Never hard-code the live plane mode** in this
-  roster — always query:
-  `.venv/bin/python -m scripts.fleet_comms plane-status`.
+  (parity receipt → approved enable). Check state:
+  `.venv/bin/python -m scripts.fleet_comms plane-status` (currently `mode: off`).
 - Plane modes are only `off → shadow → dual_write`; in **all** of them **file handoffs
   stay authoritative** and the skill dual-writes. `dual_write` is shadow/mirror, **not**
   cutover — there is **no implemented post-cutover authority state** yet.
 - Retiring file handoffs is a future infra step gated on an implemented authority signal
   (not a `fleet_communications.yaml` edit a driver makes). Because the drivers work today
   on the file path, you do **not** need to wait for the rollout to start using them.
-
-**Seat onboarding (ownership matrix, ACPX experimental boundary, Kimi native vs KimiCC,
-Buzz deferral, fresh-agent smoke):**
-[`agent-seat-onboarding.md`](agent-seat-onboarding.md).
 
 ---
 

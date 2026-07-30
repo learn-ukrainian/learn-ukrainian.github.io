@@ -87,12 +87,26 @@ become a second coordination plane.
 
 ACPX is **not** a coordination product and **not** a second fleet bus.
 
+**Exact contract (#6027):**
+
+- Feature flag `LU_ACPX_TRANSPORT=off|shadow`, **default `off`**.
+- Direct-only seat name `acpx-codex-shadow`; never registered for dispatch,
+  routing, review, or failover.
+- Local pin `acpx@0.13.0` — the adapter refuses to spawn on any other
+  resolved binary version.
+- Every invocation requires a non-empty, bounded, local `task_id`,
+  `correlation_id`, and `idempotency_key`, plus `tool_config={"acpx_shadow":
+  True, "target_agent": "codex"}`, targets **Codex**, and runs against a
+  read-only, non-primary worktree.
+
 **In scope (approved):**
 
 - Feature-flagged adapter (default off / shadow comparison).
 - Exactly one read-only/stateless **Codex** ACP participant for structured
   invocation.
-- Correlation / idempotency fields recorded as **evidence**, not as a new
+- Correlation / idempotency fields recorded as **evidence** (local runtime
+  metadata only — never ACP protocol flags, argv, or stdin; never published
+  to fleet-comms, dispatch authority, or review evidence), not as a new
   authority source.
 - Rollback = turn the feature flag off and use the existing native transport.
 
@@ -106,10 +120,11 @@ ACPX is **not** a coordination product and **not** a second fleet bus.
 - Review-eligibility changes via ACPX
 - Primary-checkout writes or write-mode ACP work
 
-**Do not invent CLI flags or endpoints here.** The stable contract is the
-runtime feature flag + adapter boundary owned by the integration worker. Exact
-command wording is reconciled during assembly against the reviewed pin; this
-runbook describes ownership and safety, not a floating CLI surface.
+**Do not invent CLI flags, endpoints, or review eligibility here.** The
+adapter's argv is fully confined and callers only ever set the `tool_config`
+keys it allowlists (`acpx_shadow`, `target_agent`, `correlation_id`,
+`idempotency_key`); this runbook describes ownership and safety, not a
+floating CLI surface.
 
 #### Safety and budgets (adapter contract)
 

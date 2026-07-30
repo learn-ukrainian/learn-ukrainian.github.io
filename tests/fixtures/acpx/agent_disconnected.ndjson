@@ -1,3 +1,0 @@
-{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":false,"writeTextFile":false},"terminal":false},"clientInfo":{"name":"acpx","version":"0.13.0"}}}
-{"jsonrpc":"2.0","id":0,"result":{"protocolVersion":1,"agentCapabilities":{}}}
-{"jsonrpc":"2.0","id":null,"error":{"code":-32603,"message":"codex-acp process exited unexpectedly (code 1)","data":{"acpxCode":"RUNTIME","detailCode":"AGENT_DISCONNECTED","origin":"cli","sessionId":"unknown"}}}

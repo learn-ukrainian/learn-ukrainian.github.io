@@ -1,2 +1,0 @@
-{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":false,"writeTextFile":false},"terminal":false},"clientInfo":{"name":"acpx","version":"0.13.0"}}}
-{"unexpected":"payload","reason":"neither method, result, nor error"}

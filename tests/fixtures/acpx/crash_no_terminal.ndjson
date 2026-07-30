@@ -1,4 +1,0 @@
-{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":false,"writeTextFile":false},"terminal":false},"clientInfo":{"name":"acpx","version":"0.13.0"}}}
-{"jsonrpc":"2.0","id":0,"result":{"protocolVersion":1,"agentCapabilities":{}}}
-{"jsonrpc":"2.0","id":2,"method":"session/prompt","params":{"sessionId":"sess-fixture-003","prompt":[{"type":"text","text":"ping"}]}}
-{"jsonrpc":"2.0","method":"session/update","params":{"sessionId":"sess-fixture-003","update":{"sessionUpdate":"agent_message_chunk","content":{"type":"text","text":"star"}}}}
