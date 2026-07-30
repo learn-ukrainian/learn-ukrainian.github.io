@@ -57,3 +57,8 @@ def test_ordered_responses_rejects_invalid_id_sequences(tmp_path: Path) -> None:
         path.write_text("".join(analysis.canonical(row) + "\n" for row in value), encoding="utf-8")
         with pytest.raises(analysis.EvidenceError):
             analysis.ordered_responses(path, ids)
+
+
+def test_report_metrics_rejects_missing_sections_cleanly() -> None:
+    with pytest.raises(analysis.EvidenceError, match="missing aggregate section: edit_correction"):
+        analysis.report_metrics({})

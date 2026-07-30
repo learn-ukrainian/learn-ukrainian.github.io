@@ -24,7 +24,6 @@ if str(ROOT) not in sys.path:
 from scripts.projects.ua_eval_harness import verify_release_freeze_v011 as freeze_v011
 from scripts.projects.ua_eval_harness.evaluate_model import (
     EvaluationError,
-    align_token_edits,
     load_dispositions,
     load_manifest,
     load_saved_responses,
@@ -84,7 +83,12 @@ def ordered_responses(path: Path, expected_ids: Sequence[str]) -> dict[str, str]
     return {item_id: str(row.get("raw_response", "")) for item_id, row in zip(actual_ids, response_rows, strict=True)}
 
 
-def verify_inputs() -> tuple[dict[str, Any], list[dict[str, Any]], dict[tuple[Any, ...], dict[str, Any]]]:
+def verify_inputs() -> tuple[
+    dict[str, Any],
+    list[dict[str, Any]],
+    dict[tuple[Any, ...], dict[str, Any]],
+    dict[str, dict[str, str]],
+]:
     freeze_v011.validate_freeze(freeze_v011._read_json(freeze_v011.DEFAULT_OUTPUT))
     manifest, items = load_manifest(MANIFEST)
     _, disposition_lookup = load_dispositions(DISPOSITIONS, manifest=manifest)
@@ -93,20 +97,27 @@ def verify_inputs() -> tuple[dict[str, Any], list[dict[str, Any]], dict[tuple[An
     request_ids = [str(row.get("item_id", "")) for row in request_rows[1:]]
     if request_ids != expected_ids:
         raise EvidenceError("generation requests missing, reordered, or mismatched")
-    for path in RUNS.values():
+    responses: dict[str, dict[str, str]] = {}
+    for name, path in RUNS.items():
         # Existing loader validates content hashes and response/request receipts.
-        load_saved_responses(path, manifest=manifest, items=items)
-        ordered_responses(path, expected_ids)
-    return manifest, items, disposition_lookup
+        _, validated = load_saved_responses(path, manifest=manifest, items=items)
+        ordered = ordered_responses(path, expected_ids)
+        if validated != ordered:
+            raise EvidenceError(f"saved-response loaders disagree for {path}")
+        responses[name] = ordered
+    return manifest, items, disposition_lookup, responses
 
 
 def report_metrics(report: Mapping[str, Any]) -> dict[str, Any]:
-    return {
-        "edit_correction": report["edit_correction"],
-        "exact_sentence": report["exact_sentence"],
-        "diagnostics": report["diagnostics"],
-        "headline_calque": report["headline_calque"],
-    }
+    try:
+        return {
+            "edit_correction": report["edit_correction"],
+            "exact_sentence": report["exact_sentence"],
+            "diagnostics": report["diagnostics"],
+            "headline_calque": report["headline_calque"],
+        }
+    except KeyError as exc:
+        raise EvidenceError(f"frozen report missing aggregate section: {exc.args[0]}") from exc
 
 
 def disposition_summary(item: Mapping[str, Any], lookup: Mapping[tuple[Any, ...], Mapping[str, Any]]) -> tuple[list[str], bool, bool, list[dict[str, Any]]]:
@@ -134,9 +145,7 @@ def classify_pair(gpt: Any, gemma: Any) -> str:
 
 
 def build_analysis() -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    _manifest, items, lookup = verify_inputs()
-    expected_ids = [str(item["id"]) for item in items]
-    responses = {name: ordered_responses(path, expected_ids) for name, path in RUNS.items()}
+    _manifest, items, lookup, responses = verify_inputs()
     reproduced: dict[str, Any] = {}
     for name, path in REPORTS.items():
         derived = score_saved_run(RUNS[name], bootstrap_samples=0)
