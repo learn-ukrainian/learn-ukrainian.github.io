@@ -28,7 +28,8 @@ REQUEST_SCHEMA = "ua_eval_generation_requests.v1"
 STATE_SCHEMA = "ua_eval_model_batch_state.v1"
 CONFIG_SCHEMA = "ua_eval_model_run_config.v1"
 METADATA_SCHEMA = "ua_eval_model_run_metadata.v1"
-RUNNER_VERSION = "ua_eval_provider_neutral_batch_runner.v1"
+RUNNER_VERSION = "ua_eval_provider_neutral_batch_runner.v1.1"
+TRANSPORT_PROTOCOL = "json_object_with_unicode_escaped_quotes.v1"
 EXPECTED_REQUEST_COUNT = 677
 GOLD_FIELDS = frozenset(
     {
@@ -297,6 +298,10 @@ def _batch_prompt(instruction: str, batch: Sequence[Mapping[str, str]]) -> str:
         "Return exactly one JSON object with exactly this shape: "
         '{"responses":[{"item_id":"...","raw_response":"..."}]}. '
         "Return one row for every supplied item_id in the same order. "
+        "Inside raw_response JSON strings, encode every quotation-mark character "
+        "as the JSON Unicode escape \\u0022 and every backslash character as "
+        "\\u005c. Write each Unicode escape with exactly one backslash; never "
+        "copy input JSON escape syntax. "
         "Do not add fields, explanations, or code fences.\n\n" + _canonical_json(payload)
     )
 
@@ -674,6 +679,8 @@ def run(
                 "model": config["model"],
                 "command": command_hash,
                 "config": config_hash,
+                "runner_version": RUNNER_VERSION,
+                "transport_protocol": TRANSPORT_PROTOCOL,
             }
         )
     )
@@ -768,6 +775,7 @@ def run(
         "request_packet_sha256": packet_sha256,
         "prompt_sha256": header["prompt_sha256"],
         "request_schema": REQUEST_SCHEMA,
+        "transport_protocol": TRANSPORT_PROTOCOL,
         "response_count": len(normalized),
         "response_ids_sha256": _sha256_text(_canonical_json(response_ids)),
         "raw_output_sha256": _sha256_text(raw_text),
