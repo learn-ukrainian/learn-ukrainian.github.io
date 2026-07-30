@@ -1,5 +1,12 @@
 # ADR 016: Base Model Leapfrogging & Data/Harness Value Preservation
 
+> **Superseded for current strategy:** The durable-asset insight is retained,
+> but the unsupported model-ranking and production-policy claims below are not
+> authoritative. Use
+> [Ukrainian Open-Model Data Infrastructure: North Star](../strategy/UKRAINIAN_OPEN_MODEL_DATA_INFRASTRUCTURE_NORTH_STAR.md)
+> for the evidence-backed direction and current data boundaries. This file is
+> retained as historical context.
+>
 > **Status**: APPROVED / ARCHITECTURAL STRATEGY  
 > **Date**: July 24, 2026  
 > **Authors**: Lead Architecture Review, UNLP Case Study Task Force  
@@ -12,6 +19,7 @@
 The UNLP community invested heavy compute and human annotation resources into fine-tuning **Gemma 3** into **Lapa / Lapa-Ukrainian** to improve Ukrainian tokenization and grammar. Shortly after release, Google launched **Gemma 4 31B**, whose base capabilities and native multilingual tokenization immediately outperformed the custom fine-tuned Lapa model.
 
 ### **The "Base Model Leapfrogging" Reality**:
+
 1. **Model Weights Deprecate Rapidly**: Fine-tuning an $N$-th generation base model (e.g. Gemma 3 or Gemma 4) carries high risk because the next frontier base model ($N+1$) will inevitably crush the custom fine-tune.
 2. **Compute Sunk Cost Risk**: Investing heavy financial resources in custom weight training on mid-tier open models provides short-lived returns compared to leveraging frontier API models (Gemini 3.6 Flash).
 

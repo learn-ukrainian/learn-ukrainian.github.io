@@ -1,5 +1,12 @@
 # Architectural Strategy: How to Make Google DeepMind & Gemma Teams Notice Our Work
 
+> **Superseded:** This visibility-first strategy is not the project's current
+> north star. Use
+> [Ukrainian Open-Model Data Infrastructure: North Star](UKRAINIAN_OPEN_MODEL_DATA_INFRASTRUCTURE_NORTH_STAR.md)
+> for current direction. The probability estimates and publication-readiness
+> claims below were not evidence-backed and must not guide work. This file is
+> retained only as historical context.
+>
 > **Purpose**: Tactical roadmap for establishing our Ukrainian benchmark suite and datasets as industry-standard evaluation baselines recognized by Google DeepMind and the open-source AI community.  
 > **Date**: July 24, 2026
 
@@ -32,6 +39,7 @@ Google AI, Gemma, and DeepMind research teams do **not** discover private code r
 ## 3. The 3-Step Execution Plan to Maximizing Visibility
 
 ### **Step 1: Open-Source the Benchmark Suite (`zno-textbook-drill-v1`)**
+
 - Build an automated 1-command evaluation CLI:
   ```bash
   python scripts/eval/run_benchmark.py --model google/gemma-4-31b-it --output report.json
@@ -39,9 +47,11 @@ Google AI, Gemma, and DeepMind research teams do **not** discover private code r
 - Tests models on 5 dimensions: VESUM morphological precision, zero-Russianism linter, State Standard 2024 compliance, 8/8 activity density, and phonoaesthetic euphony (*милозвучність*).
 
 ### **Step 2: Publish Datasets on HuggingFace Hub**
+
 - Upload `hramatka-uk-pedagogy-v1` and `hramatka-literary-poltava-v1` with paper-grade documentation, metadata tags, and dataset cards.
 
 ### **Step 3: Publish Technical Report**
+
 - Title: *"Empirical Qualification of Gemma 4 31B and Gemini 3.6 Flash on Ukrainian Pedagogical Authoring and Decolonization"*.
 - Submit to HuggingFace Papers and share with the UNLP & Google DeepMind research communities.
 
