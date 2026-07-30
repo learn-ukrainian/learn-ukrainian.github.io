@@ -49,11 +49,16 @@ Our project's durable competitive advantage is **NOT** in custom fine-tuned mode
 
 ---
 
-## 3. Operational Policy
+## 3. Historical proposals and current disposition
 
-1. **Use Frontier API Models for Production**: Rely on **Gemini 3.6 Flash** (12s, 10/10 PASS) and **Gemini 3.1 Pro** for production lesson generation today.
-2. **Keep Open Models Light & Zero-Shot / Harness-Driven**: Do not spend heavy compute or hundreds of dollars fine-tuning Gemma 4 31B. Use lightweight prompt harness constraints and rely on our deterministic QG linters to clean output.
-3. **Dataset Contribution**: Publish our clean datasets (`hramatka_literary_poltava_v1`) for the open-source UNLP community, but keep our project's primary focus on curriculum engine architecture.
+1. The model-specific production recommendation was never supported by a
+   reproducible qualification and is withdrawn.
+2. The recommendation not to train local model weights now is retained by the
+   current north star, with future training requiring a scoped need and
+   approval.
+3. The instruction to publish `hramatka_literary_poltava_v1` as a clean dataset
+   is withdrawn. It is an internal candidate collection pending provenance,
+   rights, deduplication, split, contamination, and linguistic audits.
 
 ---
 
