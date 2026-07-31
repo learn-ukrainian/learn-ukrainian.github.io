@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UA evaluation v0.2 qualified reviewer decision import",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "item_id", "source_sha256", "review_state", "decision", "uncertainty", "source_citations", "rationale", "first_pass_reviews", "final_resolution"],
+  "$defs": {
+    "citation": {"type": "object", "additionalProperties": false, "required": ["kind", "locator", "supports"], "properties": {"kind": {"enum": ["primary_source", "dictionary", "grammar", "corpus", "editorial_policy", "other"]}, "locator": {"type": "string", "minLength": 1}, "supports": {"type": "string", "minLength": 1}}},
+    "reviewer": {"type": "object", "additionalProperties": false, "required": ["reviewer_id", "human", "ukrainian_qualification", "qualification_evidence", "test_fixture"], "properties": {"reviewer_id": {"type": "string", "minLength": 1}, "human": {"const": true}, "ukrainian_qualification": {"enum": ["native_or_near_native_ukrainian_editor", "credentialed_ukrainian_linguist", "qualified_ukrainian_language_reviewer"]}, "qualification_evidence": {"type": "string", "minLength": 1}, "test_fixture": {"type": "boolean"}}},
+    "review": {"type": "object", "additionalProperties": false, "required": ["reviewer", "proposed_decision", "uncertainty", "source_citations", "rationale"], "properties": {"reviewer": {"$ref": "#/$defs/reviewer"}, "proposed_decision": {"enum": ["benchmark_defect", "valid_alternative", "model_error", "protected_variation", "unresolved"]}, "uncertainty": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true}, "source_citations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/citation"}}, "rationale": {"type": "string", "minLength": 1}}},
+    "resolution": {"type": "object", "additionalProperties": false, "required": ["kind"], "properties": {"kind": {"enum": ["first_pass_agreement", "third_human_adjudication", "unresolved_conflict"]}, "third_review": {"$ref": "#/$defs/review"}}}
+  },
+  "properties": {
+    "schema_version": {"const": "ua_eval_v02_reviewer_decision.v1"},
+    "item_id": {"type": "string", "minLength": 1},
+    "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "review_state": {"enum": ["adjudicated", "unresolved"]},
+    "decision": {"enum": ["benchmark_defect", "valid_alternative", "model_error", "protected_variation", "unresolved"]},
+    "uncertainty": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "source_citations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/citation"}},
+    "rationale": {"type": "string", "minLength": 1},
+    "first_pass_reviews": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/review"}},
+    "final_resolution": {"$ref": "#/$defs/resolution"}
+  }
+}

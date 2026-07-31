@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UA evaluation v0.2 pending review-packet row",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "packet_order", "item_id", "review_state", "decision", "frozen_receipts", "blind_reviewer_view", "coordinator_priority_metadata", "data_handling"],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "properties": {
+    "schema_version": {"const": "ua_eval_v02_review_packet.v1"},
+    "packet_order": {"type": "integer", "minimum": 1},
+    "item_id": {"type": "string", "minLength": 1},
+    "review_state": {"const": "pending"},
+    "decision": {"type": "null"},
+    "frozen_receipts": {"type": "object", "additionalProperties": false, "required": ["freeze_manifest_sha256", "heldout_manifest_sha256", "item_evidence_file_sha256", "source_sha256"], "properties": {"freeze_manifest_sha256": {"$ref": "#/$defs/sha256"}, "heldout_manifest_sha256": {"$ref": "#/$defs/sha256"}, "item_evidence_file_sha256": {"$ref": "#/$defs/sha256"}, "source_sha256": {"$ref": "#/$defs/sha256"}}},
+    "blind_reviewer_view": {"type": "object", "additionalProperties": false, "required": ["source", "references", "reference_count", "observed_tags", "uncertainty", "instruction"], "properties": {"source": {"type": "string"}, "references": {"type": "array"}, "reference_count": {"type": "integer", "minimum": 1}, "observed_tags": {"type": "array", "items": {"type": "string"}}, "uncertainty": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true}, "instruction": {"const": "Make a linguistic judgment; exact measurement and saved model output are not linguistic authority."}}},
+    "coordinator_priority_metadata": {"type": "object", "additionalProperties": false, "required": ["signals", "measurement_note"], "properties": {"signals": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["needs_ua_review", "possible_benchmark_defect", "protected_variation_risk"]}}, "measurement_note": {"const": "Priority signals are evidence-routing flags, not adjudicated truth."}}},
+    "data_handling": {"type": "object", "additionalProperties": false, "required": ["classification", "training_or_export_eligible"], "properties": {"classification": {"const": "evaluation_only"}, "training_or_export_eligible": {"const": false}}}
+  }
+}
