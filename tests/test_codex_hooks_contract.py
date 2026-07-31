@@ -274,6 +274,21 @@ def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
     assert ".claude/devops-epic/CODEX-DRIVER-HANDOFF.md" in context
     assert "continue only from the capsule's next_drive_boundary" in context
 
+    legacy = subprocess.run(
+        ["bash", os.fspath(compact_hook)],
+        input=json.dumps({"hook_event_name": "PostCompact", "model": "claude-sonnet-5"}),
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment,
+        timeout=10,
+    )
+
+    assert legacy.returncode == 0, legacy.stderr
+    legacy_output = json.loads(legacy.stdout)
+    assert "hookSpecificOutput" not in legacy_output
+    assert legacy_output["additionalContext"] == context
+
 
 def test_bound_codex_driver_without_exact_diary_is_blocked_without_fallback(
     tmp_path: Path,
