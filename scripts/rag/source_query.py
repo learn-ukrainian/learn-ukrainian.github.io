@@ -780,12 +780,10 @@ def ulif_lookup(word: str) -> dict[str, object]:
 
         # A confirmed registry hit does not have to expose an inflection table:
         # adverbs and other non-inflecting headwords can legitimately return
-        # relation data only.  Search-list membership establishes the hit;
-        # reaching this point with valid WebForms state establishes that every
-        # available tab was consumed.  Reserve ``parse_error`` for malformed or
-        # incomplete responses handled above, rather than inventing a missing
-        # paradigm requirement.
-        status = "ok"
+        # relation data only.  Some structured content is still required; a
+        # content-empty response is not usable lexical evidence and therefore
+        # fails closed instead of being cached as a successful lookup.
+        status = "ok" if sections else "parse_error"
         stored = sources_db.store_ulif_dictua_entry(
             word=requested_word,
             canonical_headword=canonical_headword,

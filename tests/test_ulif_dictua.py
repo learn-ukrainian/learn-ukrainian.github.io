@@ -209,6 +209,25 @@ def test_confirmed_relation_only_headword_is_complete_without_paradigm(tmp_path,
     assert record["parser_version"] == "ulif-dictua-v2"
 
 
+def test_confirmed_but_content_empty_headword_fails_closed(tmp_path, monkeypatch):
+    db_path = tmp_path / "sources.db"
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
+    monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
+    empty_html = _without_paradigm(_fixture("privit-paradigm.html"))
+    monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: _Response(empty_html))
+    monkeypatch.setattr(
+        source_query._SESSION,
+        "post",
+        lambda *args, **kwargs: _Response(empty_html),
+    )
+
+    record = source_query.query_ulif("привіт", source_query.ULIF_SECTIONS)
+
+    assert record["status"] == "parse_error"
+    assert record["sections"] == {}
+    assert sources_db.get_ulif_dictua_entry("привіт")["status"] == "parse_error"
+
+
 def test_transient_error_is_not_persisted_as_a_negative_cache(tmp_path, monkeypatch):
     db_path = tmp_path / "sources.db"
     monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)

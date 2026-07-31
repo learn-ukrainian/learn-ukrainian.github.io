@@ -283,11 +283,11 @@ def parse_dictua_envelope(
     if status == "not_found":
         sections = {}
 
-    # A successful fetch can legitimately have no paradigm: non-inflecting
-    # headwords may expose only synonym/antonym/phraseology tabs, or no
-    # structured section at all.  The fetch envelope owns completeness; this
-    # reducer must not turn a source ``ok`` into ``parse_error`` merely because
-    # an inflection table is absent.
+    # A successful fetch can legitimately have no paradigm when at least one
+    # relation section was parsed.  A content-empty envelope remains unusable
+    # evidence and must fail closed even if its source status says ``ok``.
+    if status == "ok" and not sections:
+        status = "parse_error"
 
     return {
         "body_sha256": body_sha256 or "",

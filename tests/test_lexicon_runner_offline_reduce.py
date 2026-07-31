@@ -204,6 +204,15 @@ def test_reduce_accepts_confirmed_headword_without_inflection_table():
     assert artifact["sections"]["synonyms"]
 
 
+def test_reduce_rejects_content_empty_ok_envelope():
+    artifact = parse_dictua_envelope(
+        {"lemma": "дуже", "status": "ok", "responses": []}
+    )
+
+    assert artifact["status"] == "parse_error"
+    assert artifact["sections"] == {}
+
+
 def test_strip_raw_html_removes_nested_keys():
     payload = {"rows": [[{"raw_html": "<b>x</b>", "text": "x"}]], "raw_html": "<table/>"}
     cleaned = strip_raw_html(payload)
