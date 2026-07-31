@@ -16,6 +16,13 @@ import {
   deleteLocalCustomSet,
 } from '../lib/lexicon/custom-decks';
 import { parseDocumentFile, extractDocumentClozeItems, parsePlainTextWithTranslations, type ImportedDeck } from '../lib/lexicon/document-importer';
+import {
+  buildAtlasAttestationIndex,
+  classifyPasteCandidates,
+  summarizePasteCandidates,
+  type AtlasAttestationRow,
+  type PasteCandidate,
+} from '../lib/lexicon/paste-text-vocab';
 import type { PracticeClozeItem } from '../lib/lexicon/srs';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
 
@@ -24,12 +31,29 @@ interface LexiconCustomDeckManagerProps {
   activeDeckFilter: string;
   onSelectDeckFilter: (filterId: string) => void;
   onClose: () => void;
+  shardBaseUrl?: string;
 }
 
-interface CandidateWord {
-  text: string;
-  level: 'A1' | 'A2' | 'B1' | 'B2';
-  selected: boolean;
+type CandidateWord = PasteCandidate;
+
+// Module-level cache: the Atlas attestation index is ~4MB and shared by every
+// wizard open in this tab session, so fetch it once.
+let attestationIndexPromise: Promise<Map<string, AtlasAttestationRow>> | null = null;
+
+function loadAttestationIndex(shardBaseUrl: string): Promise<Map<string, AtlasAttestationRow>> {
+  if (!attestationIndexPromise) {
+    attestationIndexPromise = fetch(`${shardBaseUrl}/search-index.json`)
+      .then((res) => {
+        if (!res.ok) throw new Error(`Attestation index fetch failed: ${res.status}`);
+        return res.json() as Promise<AtlasAttestationRow[]>;
+      })
+      .then((rows) => buildAtlasAttestationIndex(rows))
+      .catch((err) => {
+        attestationIndexPromise = null; // allow retry on next open
+        throw err;
+      });
+  }
+  return attestationIndexPromise;
 }
 
 export function LexiconCustomDeckManager({
@@ -37,6 +61,7 @@ export function LexiconCustomDeckManager({
   activeDeckFilter,
   onSelectDeckFilter,
   onClose,
+  shardBaseUrl = '/lexicon',
 }: LexiconCustomDeckManagerProps) {
   const [customSets, setCustomSets] = useState<CustomSet[]>(() => readLocalCustomSets());
   const [activeTab, setActiveTab] = useState<'decks' | 'wizard'>('decks');
@@ -54,7 +79,9 @@ export function LexiconCustomDeckManager({
   // Candidates extracted from document or paste
   const [candidates, setCandidates] = useState<CandidateWord[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [levelFilter, setLevelFilter] = useState<'ALL' | 'A1' | 'A2' | 'B1' | 'B2'>('ALL');
+  const [levelFilter, setLevelFilter] = useState<'ALL' | 'A1' | 'A2' | 'B1' | 'B2' | 'UNVERIFIED'>('ALL');
+  const [isClassifying, setIsClassifying] = useState(false);
+  const [attestationError, setAttestationError] = useState<string | null>(null);
 
   // Drive sync state
   const [isDriveSyncing, setIsDriveSyncing] = useState(false);
@@ -109,24 +136,33 @@ export function LexiconCustomDeckManager({
     }
   }, [chromeLocale]);
 
-  // Process raw text into candidate words with CEFR heuristics
-  const processTextToCandidates = useCallback((words: string[], defaultTitle = ''): void => {
+  // Extract candidate words, then classify each against the VESUM-verified
+  // Atlas index: attested words get a real CEFR level + gloss, everything
+  // else is flagged "unverified" and left deselected (#5882 — no silent invent).
+  const processTextToCandidates = useCallback(async (words: string[], defaultTitle = ''): Promise<void> => {
     const uniqueWords = Array.from(new Set(words.map((w) => w.toLowerCase().trim()).filter((w) => w.length >= 2)));
-    const parsedCandidates: CandidateWord[] = uniqueWords.map((word) => {
-      // Basic CEFR level distribution heuristic
-      let level: 'A1' | 'A2' | 'B1' | 'B2' = 'A1';
-      if (word.length > 8) level = 'B2';
-      else if (word.length > 6) level = 'B1';
-      else if (word.length > 4) level = 'A2';
-      return { text: word, level, selected: true };
-    });
 
-    setCandidates(parsedCandidates);
+    setIsClassifying(true);
+    setAttestationError(null);
+    let index: Map<string, AtlasAttestationRow>;
+    try {
+      index = await loadAttestationIndex(shardBaseUrl);
+    } catch {
+      index = new Map();
+      setAttestationError(
+        chromeLocale === 'uk'
+          ? 'Не вдалося перевірити слова за словником Atlas. Усі слова позначені як неперевірені.'
+          : 'Could not verify words against the Atlas dictionary. All words are flagged unverified.',
+      );
+    }
+    setIsClassifying(false);
+
+    setCandidates(classifyPasteCandidates(uniqueWords, index));
     if (defaultTitle && !deckTitle) {
       setDeckTitle(defaultTitle);
     }
     setWizardStep(2);
-  }, [deckTitle]);
+  }, [deckTitle, chromeLocale, shardBaseUrl]);
 
   const [importedClozeItems, setImportedClozeItems] = useState<PracticeClozeItem[]>([]);
 
@@ -138,31 +174,22 @@ export function LexiconCustomDeckManager({
       if (parsed.cloze_items) {
         setImportedClozeItems(parsed.cloze_items);
       }
-      processTextToCandidates(parsed.lemma_keys, parsed.title);
+      await processTextToCandidates(parsed.lemma_keys, parsed.title);
     } catch (err: any) {
       setParseError(err?.message || 'Failed to read document');
     }
   }, [processTextToCandidates]);
 
-  const handlePasteSubmit = useCallback(() => {
+  const handlePasteSubmit = useCallback(async () => {
     if (!pastedText.trim()) return;
     const { lemmaKeys, wordTranslations } = parsePlainTextWithTranslations(pastedText);
     const clozes = extractDocumentClozeItems(pastedText, lemmaKeys, wordTranslations);
     setImportedClozeItems(clozes);
-    processTextToCandidates(lemmaKeys, chromeLocale === 'uk' ? 'Моя імпортована колода' : 'My Imported Deck');
+    await processTextToCandidates(lemmaKeys, chromeLocale === 'uk' ? 'Моя імпортована колода' : 'My Imported Deck');
   }, [pastedText, processTextToCandidates, chromeLocale]);
 
-  // CEFR Distribution Counts
-  const cefrCounts = useMemo(() => {
-    const counts = { A1: 0, A2: 0, B1: 0, B2: 0, total: candidates.length, selected: 0 };
-    for (const c of candidates) {
-      if (c.selected) {
-        counts.selected++;
-        counts[c.level]++;
-      }
-    }
-    return counts;
-  }, [candidates]);
+  // Attestation + CEFR distribution counts (real Atlas data, never invented)
+  const cefrCounts = useMemo(() => summarizePasteCandidates(candidates), [candidates]);
 
   // Toggle individual word selection
   const toggleCandidateSelection = useCallback((index: number) => {
@@ -171,10 +198,13 @@ export function LexiconCustomDeckManager({
     );
   }, []);
 
-  // Bulk level toggles
-  const toggleLevelSelection = useCallback((level: 'A1' | 'A2' | 'B1' | 'B2', enable: boolean) => {
+  // Bulk toggles: a specific CEFR level, or every unverified (unattested) candidate
+  const toggleGroupSelection = useCallback((group: 'A1' | 'A2' | 'B1' | 'B2' | 'UNVERIFIED', enable: boolean) => {
     setCandidates((prev) =>
-      prev.map((item) => (item.level === level ? { ...item, selected: enable } : item))
+      prev.map((item) => {
+        const inGroup = group === 'UNVERIFIED' ? item.status === 'unverified' : item.cefr === group;
+        return inGroup ? { ...item, selected: enable } : item;
+      })
     );
   }, []);
 
@@ -213,7 +243,8 @@ export function LexiconCustomDeckManager({
   // Filtered Candidates for Grid View
   const filteredCandidates = useMemo(() => {
     return candidates.map((item, originalIdx) => ({ ...item, originalIdx })).filter((item) => {
-      if (levelFilter !== 'ALL' && item.level !== levelFilter) return false;
+      if (levelFilter === 'UNVERIFIED' && item.status !== 'unverified') return false;
+      else if (levelFilter !== 'ALL' && levelFilter !== 'UNVERIFIED' && item.cefr !== levelFilter) return false;
       if (searchQuery && !item.text.includes(searchQuery.toLowerCase().trim())) return false;
       return true;
     });
@@ -481,10 +512,13 @@ export function LexiconCustomDeckManager({
                       <button
                         type="button"
                         className="btn btn-accent"
-                        onClick={handlePasteSubmit}
+                        onClick={() => void handlePasteSubmit()}
+                        disabled={isClassifying}
                         style={{ marginTop: '0.75rem', width: '100%' }}
                       >
-                        ⚡ {chromeLocale === 'uk' ? 'Витягнути слова' : 'Extract Words'}
+                        {isClassifying
+                          ? (chromeLocale === 'uk' ? '⏳ Перевірка за словником...' : '⏳ Checking dictionary...')
+                          : `⚡ ${chromeLocale === 'uk' ? 'Витягнути слова' : 'Extract Words'}`}
                       </button>
                     </div>
                   )}
@@ -512,13 +546,31 @@ export function LexiconCustomDeckManager({
                     </div>
                   </div>
 
-                  {/* CEFR Distribution Bar */}
+                  {/* CEFR + Attestation Distribution Bar */}
                   <div className="cefr-distribution-bar">
-                    <div className="cefr-seg-a1" style={{ width: `${(cefrCounts.A1 / (cefrCounts.selected || 1)) * 100}%` }} title={`A1: ${cefrCounts.A1}`} />
-                    <div className="cefr-seg-a2" style={{ width: `${(cefrCounts.A2 / (cefrCounts.selected || 1)) * 100}%` }} title={`A2: ${cefrCounts.A2}`} />
-                    <div className="cefr-seg-b1" style={{ width: `${(cefrCounts.B1 / (cefrCounts.selected || 1)) * 100}%` }} title={`B1: ${cefrCounts.B1}`} />
-                    <div className="cefr-seg-b2" style={{ width: `${(cefrCounts.B2 / (cefrCounts.selected || 1)) * 100}%` }} title={`B2: ${cefrCounts.B2}`} />
+                    <div className="cefr-seg-a1" style={{ width: `${(cefrCounts.byLevel.A1 / (cefrCounts.selected || 1)) * 100}%` }} title={`A1: ${cefrCounts.byLevel.A1}`} />
+                    <div className="cefr-seg-a2" style={{ width: `${(cefrCounts.byLevel.A2 / (cefrCounts.selected || 1)) * 100}%` }} title={`A2: ${cefrCounts.byLevel.A2}`} />
+                    <div className="cefr-seg-b1" style={{ width: `${(cefrCounts.byLevel.B1 / (cefrCounts.selected || 1)) * 100}%` }} title={`B1: ${cefrCounts.byLevel.B1}`} />
+                    <div className="cefr-seg-b2" style={{ width: `${(cefrCounts.byLevel.B2 / (cefrCounts.selected || 1)) * 100}%` }} title={`B2: ${cefrCounts.byLevel.B2}`} />
+                    <div className="cefr-seg-c1" style={{ width: `${(cefrCounts.byLevel.C1 / (cefrCounts.selected || 1)) * 100}%` }} title={`C1: ${cefrCounts.byLevel.C1}`} />
+                    <div className="cefr-seg-c2" style={{ width: `${(cefrCounts.byLevel.C2 / (cefrCounts.selected || 1)) * 100}%` }} title={`C2: ${cefrCounts.byLevel.C2}`} />
                   </div>
+
+                  {/* Attestation banner — every candidate is checked against the Atlas
+                      dictionary; nothing outside it is treated as confirmed vocabulary. */}
+                  <div style={{ display: 'flex', gap: '1rem', fontSize: '0.78rem', color: '#94a3b8', margin: '0.5rem 0 0.75rem' }}>
+                    <span>✅ {chromeLocale === 'uk' ? `У словнику: ${cefrCounts.attested}` : `In dictionary: ${cefrCounts.attested}`}</span>
+                    <span>❓ {chromeLocale === 'uk' ? `Неперевірено: ${cefrCounts.unverified}` : `Unverified: ${cefrCounts.unverified}`}</span>
+                  </div>
+                  {attestationError ? (
+                    <p style={{ color: '#fbbf24', fontSize: '0.8rem', marginBottom: '0.5rem' }}>{attestationError}</p>
+                  ) : cefrCounts.unverified > 0 ? (
+                    <p style={{ color: '#94a3b8', fontSize: '0.78rem', marginBottom: '0.5rem' }}>
+                      {chromeLocale === 'uk'
+                        ? 'Неперевірені слова відсутні в нашому словнику Atlas і не обрані за замовчуванням — перегляньте перед додаванням.'
+                        : "Unverified words aren't in our Atlas dictionary yet and are deselected by default — review before adding."}
+                    </p>
+                  ) : null}
 
                   {/* Level Filters & Search */}
                   <div style={{ display: 'flex', gap: '0.4rem', margin: '0.75rem 0', flexWrap: 'wrap' }}>
@@ -529,7 +581,7 @@ export function LexiconCustomDeckManager({
                       onChange={(e) => setSearchQuery(e.target.value)}
                       style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', fontSize: '0.8rem', flex: 1 }}
                     />
-                    {(['ALL', 'A1', 'A2', 'B1', 'B2'] as const).map((lvl) => (
+                    {(['ALL', 'A1', 'A2', 'B1', 'B2', 'UNVERIFIED'] as const).map((lvl) => (
                       <button
                         key={lvl}
                         type="button"
@@ -537,8 +589,22 @@ export function LexiconCustomDeckManager({
                         onClick={() => setLevelFilter(lvl)}
                         style={{ fontSize: '0.75rem' }}
                       >
-                        {lvl}
+                        {lvl === 'UNVERIFIED' ? '❓' : lvl}
                       </button>
+                    ))}
+                  </div>
+
+                  {/* Bulk group toggles, including the unverified group */}
+                  <div style={{ display: 'flex', gap: '0.3rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+                    {(['A1', 'A2', 'B1', 'B2', 'UNVERIFIED'] as const).map((group) => (
+                      <React.Fragment key={group}>
+                        <button type="button" className="btn btn-sm" style={{ fontSize: '0.7rem' }} onClick={() => toggleGroupSelection(group, true)}>
+                          +{group === 'UNVERIFIED' ? '❓' : group}
+                        </button>
+                        <button type="button" className="btn btn-sm" style={{ fontSize: '0.7rem' }} onClick={() => toggleGroupSelection(group, false)}>
+                          -{group === 'UNVERIFIED' ? '❓' : group}
+                        </button>
+                      </React.Fragment>
                     ))}
                   </div>
 
@@ -549,10 +615,15 @@ export function LexiconCustomDeckManager({
                         key={item.originalIdx}
                         className={`word-inspector-chip ${item.selected ? 'selected' : 'excluded'}`}
                         onClick={() => toggleCandidateSelection(item.originalIdx)}
+                        title={item.status === 'unverified'
+                          ? (chromeLocale === 'uk' ? 'Немає в словнику Atlas — неперевірено' : 'Not in the Atlas dictionary — unverified')
+                          : (item.gloss ?? undefined)}
                       >
                         <span>{item.selected ? '✓' : '✗'}</span>
                         <span>{item.text}</span>
-                        <span className={`word-chip-badge badge-${item.level.toLowerCase()}`}>{item.level}</span>
+                        <span className={`word-chip-badge badge-${item.cefr ? item.cefr.toLowerCase() : 'unverified'}`}>
+                          {item.cefr ?? '❓'}
+                        </span>
                       </div>
                     ))}
                   </div>

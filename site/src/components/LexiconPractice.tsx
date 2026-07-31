@@ -3206,6 +3206,7 @@ function LexiconPracticeIsland({
             <LexiconCustomDeckManager
               chromeLocale={chromeLocale}
               activeDeckFilter={selectedDeckFilter}
+              shardBaseUrl={shardBaseUrl}
               onSelectDeckFilter={(id) => {
                 // F2 (PR #5837 review): route through the same guarded switch flow as the
                 // deck-filter chips — the manager must offer a fresh session too, not
