@@ -1,0 +1,16 @@
+{
+  "acquisition": {"receipt_id": "receipt.synthetic-001", "retrieved_on": "2026-07-31", "source_or_catalog_url": "https://example.invalid/catalog/synthetic-work"},
+  "bibliographic": {"edition": "Synthetic test edition", "editor": "Synthetic editor", "publisher": "Synthetic publisher", "translation_origin": "original-language synthetic fixture"},
+  "content": {"hash_scope": "synthetic fixture text bytes", "sha256": "8c31f75b4d77164d2b22d4130c4570a2e01d1e084f06578f2b555c0e9c3948ea"},
+  "contract_schema_sha256": "f2577b57f0c7e97d04934eb78dacc718d2c5b46345d93cba7fecc446f0674292",
+  "derivation": {"kind": "source", "parent_content_sha256": null, "transform_receipt_id": null},
+  "description": {"author": "Synthetic author", "date": "2026", "genre": "synthetic", "period": "modern", "region": "synthetic fixture", "register": "neutral"},
+  "evidence": [{"citation": "Synthetic rights-holder grant and exact synthetic license terms", "evidence_id": "evidence.synthetic-rights", "retrieved_on": "2026-07-31", "sha256": "a1b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0", "url": "https://example.invalid/evidence/synthetic-license-terms"}],
+  "record_id": "record.synthetic-001",
+  "review": {"confidence": "high", "qualification": "Synthetic fixture reviewer; no legal adjudication", "reviewer_id": "reviewer.synthetic-001", "unresolved": false},
+  "rights": {"copyright": {"evidence_ids": ["evidence.synthetic-rights"], "jurisdiction": "synthetic-test", "legal_conclusion": "not_asserted", "license_expression": null, "license_terms_evidence_id": null, "status": "granted"}, "license": {"evidence_ids": ["evidence.synthetic-rights"], "jurisdiction": "synthetic-test", "legal_conclusion": "not_asserted", "license_expression": "Synthetic-Validation-License-1.0", "license_terms_evidence_id": "evidence.synthetic-rights", "status": "granted"}, "model_training": {"evidence_ids": ["evidence.synthetic-rights"], "jurisdiction": "synthetic-test", "legal_conclusion": "not_asserted", "license_expression": null, "license_terms_evidence_id": null, "status": "granted"}, "redistribution": {"evidence_ids": ["evidence.synthetic-rights"], "jurisdiction": "synthetic-test", "legal_conclusion": "not_asserted", "license_expression": null, "license_terms_evidence_id": null, "status": "granted"}},
+  "schema_version": "source_record_v1",
+  "source_id": "source.synthetic-001",
+  "usage": {"contamination_exclusion_ids": [], "role": "training_candidate"},
+  "work_id": "work.synthetic-001"
+}
