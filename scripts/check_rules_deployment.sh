@@ -43,6 +43,7 @@ tracked_mirror_source() {
             ;;
         .agents/skills/*)
             relative="${mirror#.agents/skills/}"
+            path_matches_declared_entry "$relative" "$ORPHAN_PATHS_AGENTS" && return 1
             printf '%s\n' "agents_extensions/shared/skills/$relative"
             ;;
         .codex/*)

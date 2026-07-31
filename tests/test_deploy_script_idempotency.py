@@ -9,6 +9,8 @@ import subprocess
 import time
 from pathlib import Path
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -257,6 +259,62 @@ def test_tracked_mirror_drift_is_detected_before_deploy(tmp_path: Path) -> None:
     deploy = _run(repo, DEPLOY_SCRIPT)
     assert deploy.returncode == 0, deploy.stderr + deploy.stdout
     assert _run_tracked_mirror_check(repo).returncode == 0
+
+
+@pytest.mark.parametrize(
+    ("mirror_relative", "source_relative"),
+    (
+        (".claude/hooks/auto-audit.sh", "agents_extensions/shared/hooks/auto-audit.sh"),
+        (".agent/hooks/auto-audit.sh", "agents_extensions/shared/hooks/auto-audit.sh"),
+        (
+            ".agents/skills/post-build-review/SKILL.md",
+            "agents_extensions/shared/skills/post-build-review/SKILL.md",
+        ),
+        (".codex/hooks/session-setup.sh", "agents_extensions/shared/hooks/session-setup.sh"),
+        (".codex/hooks.json", "agents_extensions/codex/hooks.json"),
+    ),
+)
+def test_tracked_mirror_resolves_each_deploy_source(
+    tmp_path: Path,
+    mirror_relative: str,
+    source_relative: str,
+) -> None:
+    """Shared and overlay mirrors must resolve to their actual canonical source."""
+    repo = _init_checkout(tmp_path)
+    source = repo / source_relative
+    mirror = repo / mirror_relative
+    mirror.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, mirror)
+    _init_git_history(repo)
+
+    clean = _run_tracked_mirror_check(repo)
+    assert clean.returncode == 0, clean.stderr + clean.stdout
+
+    mirror.write_text(mirror.read_text(encoding="utf-8") + "\n# drift\n", encoding="utf-8")
+    drift = _run_tracked_mirror_check(repo)
+    output = drift.stdout + drift.stderr
+    assert drift.returncode != 0
+    assert f"{source_relative} -> {mirror_relative}" in output
+
+
+def test_tracked_agents_skill_declared_orphan_is_skipped(tmp_path: Path) -> None:
+    """Destination-only .agents skills remain governed by their explicit allowlist."""
+    repo = _init_checkout(tmp_path)
+    orphan_config = repo / ORPHAN_PATHS_FILE
+    orphan_config.write_text(
+        orphan_config.read_text(encoding="utf-8").replace(
+            'ORPHAN_PATHS_AGENTS=""',
+            'ORPHAN_PATHS_AGENTS="local-skill"',
+        ),
+        encoding="utf-8",
+    )
+    mirror = repo / ".agents/skills/local-skill/SKILL.md"
+    mirror.parent.mkdir(parents=True, exist_ok=True)
+    mirror.write_text("destination-only skill\n", encoding="utf-8")
+    _init_git_history(repo)
+
+    result = _run_tracked_mirror_check(repo)
+    assert result.returncode == 0, result.stderr + result.stdout
 
 
 def test_rules_workflow_checks_mirrors_before_deploy() -> None:
