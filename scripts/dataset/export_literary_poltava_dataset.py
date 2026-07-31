@@ -5,13 +5,6 @@ must not be regenerated in place because its replacement would lose the frozen
 evidence that records why it is not eligible for training or publication.
 """
 
-from pathlib import Path
-
-REPO_ROOT = Path(__file__).resolve().parents[2]
-DATASET_DIR = REPO_ROOT / "data" / "datasets" / "hramatka_literary_poltava_v1"
-CANDIDATE_JSONL = DATASET_DIR / "hramatka_literary_poltava_v1.jsonl"
-
-
 class LiteraryCandidateSafetyError(RuntimeError):
     """Raised when an executable path targets the failed literary candidate."""
 
