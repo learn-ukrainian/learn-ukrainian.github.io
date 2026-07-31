@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+import scripts.audit.generate_practice_deck as generate_practice_deck
 from scripts.audit.generate_practice_deck import (
     DEFAULT_TARGET,
     DRILL_MODES,
@@ -1142,7 +1143,9 @@ def test_source_inventory_cloze_requires_explicit_cloze_admission() -> None:
     assert "knyha" in cloze_ids
 
 
-def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(tmp_path: Path) -> None:
+def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     inventory_path = tmp_path / "sentence-inventory.json"
     inventory_path.write_text(
         json.dumps(
@@ -1158,6 +1161,8 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(tmp_
                         "cefr": "A1",
                         "uses": ["example"],
                         "provenance": {
+                            "status": "unreviewed",
+                            "path": "attacker-controlled-path",
                             "source": "textbook",
                             "label": "Fixture textbook",
                             "locator": "fixture-1",
@@ -1177,6 +1182,13 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(tmp_
     candidates = read_sentence_inventory(inventory_path)
     assert candidates[0]["sentence"] == "Це ___."
     assert candidates[0]["form"] == "книга"
+    assert candidates[0]["provenance"]["status"] == "sentence_inventory"
+    assert candidates[0]["provenance"]["path"] == str(inventory_path)
+
+    # Force the route that previously built duplicate answer/lemma labels for
+    # the nominative form "книга".  Inventory cloze must override it with the
+    # valid no-pair strategy.
+    monkeypatch.setattr(generate_practice_deck, "_option_strategy_for_level", lambda _level, _rng: "two-pair")
 
     shards = build_practice_shards(
         read_manifest(MANIFEST),
@@ -1191,6 +1203,10 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(tmp_
     assert cloze["blankCase"] == "nominative"
     assert cloze["number"] == "singular"
     assert "clozeEn" not in cloze
+    labels = [option["label"] for option in cloze["options"]]
+    assert len(labels) == len(set(labels)) == 4
+    assert {option["strategy"] for option in cloze["options"]} == {"no-pair"}
+    assert validate_option_set(cloze) == []
     assert cloze["provenance"] == {
         "status": "sentence_inventory",
         "path": str(inventory_path),

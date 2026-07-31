@@ -979,13 +979,19 @@ def _make_options(
     lexemes: list[dict[str, Any]],
     rng: random.Random,
 ) -> list[dict[str, str]]:
-    strategy = _option_strategy_for_level(answer["cefr"], rng)
+    # A nominative-identification cloze has the lemma itself as its answer.
+    # A two-pair set would therefore repeat that label as the same-root lemma
+    # distractor.  Use four distinct roots instead of constructing an invalid
+    # option set that validation must discard.
+    rule_id = cloze.get("caseRule", {}).get("ruleId") if isinstance(cloze.get("caseRule"), dict) else None
+    force_no_pair = rule_id == "nominative_identification"
+    strategy = "no-pair" if force_no_pair else _option_strategy_for_level(answer["cefr"], rng)
     options = (
         _make_no_pair_options(cloze, answer, lexemes, rng)
         if strategy == "no-pair"
         else _make_two_pair_options(cloze, answer, lexemes, rng)
     )
-    if not options:
+    if not options and not force_no_pair:
         strategy = "two-pair"
         options = _make_two_pair_options(cloze, answer, lexemes, rng)
     for option in options:
@@ -3293,10 +3299,11 @@ def read_sentence_inventory(path: Path | None) -> list[dict[str, Any]]:
         blanked_sentence, replacements = pattern.subn("___", sentence)
         if replacements != 1:
             continue
+        source_fields = {key: value for key, value in source_provenance.items() if key not in {"status", "path"}}
         provenance = {
             "status": "sentence_inventory",
             "path": provenance_path,
-            **source_provenance,
+            **source_fields,
             "license": license_info,
         }
         candidates.append(
