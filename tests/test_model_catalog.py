@@ -376,3 +376,65 @@ def test_critical_ladder_anthropic_authority_is_fable_not_opus():
     assert "claude-fable-5" in flat
     assert "claude-opus-5" not in flat
     assert flat.index("claude-fable-5") < flat.index("claude-sonnet-5")
+
+
+def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
+    """The Sol→Luna lane must be explicit, bounded, and source-blind testable."""
+    catalog = load_model_catalog()
+    route = catalog["execution_routing"]["sol_advised_bounded"]
+
+    advisor = route["advisor"]
+    assert advisor["model_id"] == "gpt-5.6-sol"
+    assert advisor["effort"] == "high"
+    assert "bounded_advisory_envelope" in catalog["models"][advisor["model_id"]]["roles"]
+    assert advisor["output_fields"] == [
+        "task_contract",
+        "constraints",
+        "risk_boundaries",
+        "acceptance_evidence",
+        "escalation_triggers",
+    ]
+
+    preferred = route["preferred_worker"]
+    assert preferred["model_id"] == "gpt-5.6-luna"
+    assert preferred["effort"] == "xhigh"
+    assert {
+        "bounded_implementation",
+        "bounded_investigation",
+    } <= set(catalog["models"][preferred["model_id"]]["roles"])
+    assert preferred["requires"] == ["complete_advisory_envelope"]
+    assert preferred["task_types"] == ["bounded_implementation", "bounded_investigation"]
+    assert preferred["escalate_to"] == "gpt-5.6-sol"
+    assert set(preferred["prohibited_decisions"]) == {
+        "consequential_architecture",
+        "security",
+        "release",
+        "high_risk_go_no_go",
+    }
+    assert set(preferred["escalation_triggers"]) == {
+        "unresolved_consequential_ambiguity",
+        "broader_integration",
+        "final_disposition",
+    }
+
+    direct = route["direct_worker"]
+    assert direct == {
+        "model_id": "gpt-5.6-luna",
+        "effort": "medium",
+        "task_types": ["simple_evidence", "mechanical_checks"],
+        "constraints": ["no_consequential_decisions"],
+    }
+    assert route["autonomous_fallback"] == {
+        "model_id": "gpt-5.6-terra",
+        "effort": "high",
+        "when": ["missing_advisory_envelope", "broader_autonomous_integration"],
+    }
+
+    models = catalog["models"]
+    assert models[advisor["model_id"]]["family"] == "openai"
+    assert models[preferred["model_id"]]["family"] == "openai"
+    assert route["review_boundary"] == {
+        "advisory_family": "openai",
+        "advisory_satisfies_cross_family_review": False,
+        "independent_cross_family_review_required": True,
+    }
