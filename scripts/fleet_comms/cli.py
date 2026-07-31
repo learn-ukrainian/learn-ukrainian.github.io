@@ -308,6 +308,28 @@ def cmd_github_metrics(args: argparse.Namespace) -> int:
     return EXIT_OK if payload.get("ok", True) else EXIT_ERROR
 
 
+def cmd_acp_discuss(args: argparse.Namespace) -> int:
+    """Run the explicitly enabled bounded ACPX discussion (stdin-only prompt)."""
+    from scripts.agent_runtime.acpx_discuss import AcpxDiscussionError, run_discussion
+
+    prompt = sys.stdin.read()
+    try:
+        payload = run_discussion(
+            prompt=prompt,
+            cwd=Path(args.cwd),
+            task_id=args.task_id,
+            correlation_id=args.correlation_id,
+            idempotency_key=args.idempotency_key,
+            rounds=args.rounds,
+            root=Path(args.root).expanduser() if args.root else None,
+        )
+    except AcpxDiscussionError as exc:
+        sys.stderr.write(str(exc) + "\n")
+        return EXIT_ERROR
+    sys.stdout.write(_json_dump(payload, indent=None if args.json else 2))
+    return EXIT_OK if payload["state"] == "COMPLETE" else EXIT_ERROR
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.fleet_comms",
@@ -512,6 +534,19 @@ def build_parser() -> argparse.ArgumentParser:
     )
     gh_metrics.add_argument("--limit", type=int, default=30, help="Max merged PRs")
     gh_metrics.set_defaults(func=cmd_github_metrics)
+
+    acp = sub.add_parser(
+        "acp-discuss",
+        help="Bounded active ACPX Codex↔Grok discussion; prompt is accepted only on stdin",
+    )
+    acp.add_argument("--cwd", required=True, help="Registered worktree for both fixed participants")
+    acp.add_argument("--task-id", required=True)
+    acp.add_argument("--correlation-id", required=True)
+    acp.add_argument("--idempotency-key", required=True)
+    acp.add_argument("--rounds", type=int, default=2, help="Discussion rounds (1-3; default 2)")
+    acp.add_argument("--root", default=None, help="Fleet-comms storage root")
+    acp.add_argument("--json", action="store_true", help="Emit compact JSON")
+    acp.set_defaults(func=cmd_acp_discuss)
 
     return parser
 

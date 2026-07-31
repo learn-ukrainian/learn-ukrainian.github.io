@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 from fastapi.testclient import TestClient
 
@@ -11,6 +13,7 @@ import scripts.api.runtime_router as runtime_router
 from scripts.api.main import app
 
 client = TestClient(app, raise_server_exceptions=False)
+DASHBOARDS = Path(__file__).resolve().parents[1] / "dashboards"
 
 
 def _iso(dt: datetime) -> str:
@@ -22,6 +25,57 @@ def _write_usage_file(path, records: list[dict]) -> None:
     with open(path, "w", encoding="utf-8") as handle:
         for record in records:
             handle.write(json.dumps(record) + "\n")
+
+
+def _write_acp_db(root, conversations: list[tuple], events: list[tuple]) -> None:
+    root.mkdir(parents=True, exist_ok=True)
+    connection = sqlite3.connect(root / "comms.sqlite3")
+    try:
+        connection.executescript(
+            """
+            CREATE TABLE acp_conversations (
+                conversation_id TEXT PRIMARY KEY,
+                task_digest TEXT,
+                correlation_digest TEXT,
+                idempotency_digest TEXT,
+                rounds_requested INTEGER,
+                participants_json TEXT,
+                created_at TEXT,
+                deadline_at TEXT,
+                token_budget INTEGER,
+                content_budget_bytes INTEGER
+            );
+            CREATE TABLE acp_conversation_events (
+                event_id TEXT,
+                conversation_id TEXT,
+                sequence INTEGER,
+                event_type TEXT,
+                state TEXT,
+                sender TEXT,
+                recipient TEXT,
+                round INTEGER,
+                outcome TEXT,
+                duration_ms INTEGER,
+                token_count INTEGER,
+                leg_key_digest TEXT,
+                message_id TEXT,
+                metadata_json TEXT,
+                created_at TEXT,
+                UNIQUE(conversation_id, sequence)
+            );
+            """
+        )
+        connection.executemany(
+            "INSERT INTO acp_conversations VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            conversations,
+        )
+        connection.executemany(
+            "INSERT INTO acp_conversation_events VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            events,
+        )
+        connection.commit()
+    finally:
+        connection.close()
 
 
 def test_agents_endpoint_returns_known_adapters():
@@ -231,6 +285,221 @@ def test_acpx_overview_sanitizes_unrecognized_transport_mode(
     data = response.json()
     assert data["transport"]["mode"] == "invalid"
     assert "secret-looking-invalid-value" not in response.text
+
+
+def test_acp_conversation_api_is_ordered_allowlisted_and_read_only(tmp_path, monkeypatch):
+    root = tmp_path / "plane"
+    now = datetime.now(UTC)
+    conversation = (
+        "conv-001",
+        "task-digest-must-not-leak",
+        "correlation-digest-must-not-leak",
+        "idempotency-digest-must-not-leak",
+        2,
+        '["root", "codex", "grok", "poisoned"]',
+        _iso(now - timedelta(minutes=5)),
+        _iso(now + timedelta(minutes=5)),
+        999,
+        12345,
+    )
+    events = [
+        (
+            "event-1", "conv-001", 1, "created", "CREATED", "root", None, None,
+            "queued", 0, 0, "leg-secret", "message-secret", '{"body":"must-not-leak"}',
+            _iso(now - timedelta(minutes=5)),
+        ),
+        (
+            "event-2", "conv-001", 2, "participant_message", "INITIAL_FANOUT", "root", "codex", 1,
+            "running", 100, 12, "leg-secret", "message-secret", '{"prompt":"must-not-leak"}',
+            _iso(now - timedelta(minutes=4)),
+        ),
+        (
+            "event-3", "conv-001", 3, "participant_message", "INITIAL_COMPLETE", "root", "grok", 1,
+            "succeeded", 200, 15, "leg-secret", "message-secret", '{"response":"must-not-leak"}',
+            _iso(now - timedelta(minutes=3)),
+        ),
+        (
+            "event-4", "conv-001", 4, "synthesis_complete", "COMPLETE", "root", None, 2,
+            "succeeded", 300, 8, "leg-secret", "message-secret", '{"credential":"must-not-leak"}',
+            _iso(now - timedelta(minutes=2)),
+        ),
+    ]
+    _write_acp_db(root, [conversation], events)
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+    db_path = root / "comms.sqlite3"
+    before = db_path.stat().st_mtime_ns
+
+    collection = client.get("/api/runtime/acp/conversations")
+    detail = client.get("/api/runtime/acp/conversations/conv-001")
+
+    assert collection.status_code == 200
+    assert collection.json()["availability"] == "available"
+    assert collection.json()["conversations"] == [
+        {
+            "conversation_id": "conv-001",
+            "current_state": "COMPLETE",
+            "classification": "complete",
+            "participants": ["root", "codex", "grok"],
+            "rounds_requested": 2,
+            "rounds_completed": 1,
+            "created_at": _iso(now - timedelta(minutes=5)),
+            "updated_at": _iso(now - timedelta(minutes=2)),
+            "total_duration_ms": 600,
+            "total_tokens": 35,
+            "synthesis_state": "complete",
+            "duplicate_suppressed": False,
+            "termination_reason": None,
+        }
+    ]
+    assert detail.status_code == 200
+    timeline = detail.json()
+    assert [event["sequence"] for event in timeline["events"]] == [1, 2, 3, 4]
+    assert timeline["events"][1]["sender"] == "root"
+    assert timeline["events"][1]["recipient"] == "codex"
+    assert db_path.stat().st_mtime_ns == before
+    assert not (root / "comms.sqlite3-journal").exists()
+    assert not (root / "comms.sqlite3-wal").exists()
+    for private_value in (
+        "task_digest", "correlation_digest", "idempotency_digest", "deadline_at",
+        "token_budget", "content_budget_bytes", "metadata_json", "message_id",
+        "leg_key_digest", "must-not-leak", "leg-secret", "message-secret",
+    ):
+        assert private_value not in detail.text
+
+
+def test_acp_conversations_refuse_poisoned_rows_and_hide_unavailable_storage(tmp_path, monkeypatch):
+    root = tmp_path / "plane"
+    now = datetime.now(UTC)
+    conversation = (
+        "conv-good", "secret", "secret", "secret", 1, "not-json", _iso(now), None, 1, 1,
+    )
+    events = [
+        (
+            "event-good", "conv-good", 1, "CALL_TERMINAL", "INITIAL_FANOUT", "root", "grok", 1,
+            "timeout", 4, 2, "secret", "secret", '{broken', _iso(now),
+        ),
+        (
+            "event-busy", "conv-good", 2, "CALL_TERMINAL", "INITIAL_FANOUT", "root", "codex", 1,
+            "busy", 0, 0, "secret", "secret", "{}", _iso(now),
+        ),
+        (
+            "event-duplicate", "conv-good", 3, "duplicate_suppressed", "PARTIAL_COMPLETE", "root", None, 1,
+            "duplicate_suppressed", 0, 0, "secret", "secret", '{"body":"must-not-leak"}', _iso(now),
+        ),
+        (
+            "event-poison", "conv-good", 4, "prompt body must not leak", "COMPLETE", "intruder", "grok", 1,
+            "succeeded", 4, 2, "secret", "secret", '{"body":"must-not-leak"}', _iso(now),
+        ),
+    ]
+    _write_acp_db(root, [conversation], events)
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+
+    response = client.get("/api/runtime/acp/conversations/conv-good")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["current_state"] == "PARTIAL_COMPLETE"
+    assert data["termination_reason"] == "duplicate_suppressed"
+    assert data["duplicate_suppressed"] is True
+    assert len(data["events"]) == 3
+    assert data["events"][0]["event_type"] == "CALL_TERMINAL"
+    assert data["events"][0]["outcome"] == "failed"
+    assert data["events"][1]["recipient"] == "codex"
+    assert data["events"][1]["outcome"] == "partial"
+    assert "must-not-leak" not in response.text
+    assert client.get("/api/runtime/acp/conversations/not-found").status_code == 404
+
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "missing"))
+    missing = client.get("/api/runtime/acp/conversations")
+    assert missing.json() == {"availability": "unavailable", "conversations": []}
+
+
+def test_acp_summary_prefers_terminal_wall_duration_and_token_total(tmp_path, monkeypatch):
+    root = tmp_path / "plane"
+    now = datetime.now(UTC)
+    conversation = (
+        "conv-total", "task", "correlation", "idempotency", 1, '["codex","grok"]',
+        _iso(now), _iso(now + timedelta(minutes=5)), 160_000, 512 * 1024,
+    )
+    events = [
+        (
+            "event-1", "conv-total", 1, "CREATED", "CREATED", None, None, None,
+            None, None, None, None, None, "{}", _iso(now),
+        ),
+        (
+            "event-2", "conv-total", 2, "CALL_TERMINAL", "INITIAL_FANOUT", "codex", "root", 1,
+            "ok", 100, 2, "leg-1", "message-1", "{}", _iso(now),
+        ),
+        (
+            "event-3", "conv-total", 3, "CALL_TERMINAL", "INITIAL_FANOUT", "grok", "root", 1,
+            "ok", 200, 3, "leg-2", "message-2", "{}", _iso(now),
+        ),
+        (
+            "event-4", "conv-total", 4, "STATE", "COMPLETE", None, None, None,
+            None, 250, 5, None, None, "{}", _iso(now + timedelta(milliseconds=250)),
+        ),
+    ]
+    _write_acp_db(root, [conversation], events)
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+
+    summary = client.get("/api/runtime/acp/conversations").json()["conversations"][0]
+
+    assert summary["total_duration_ms"] == 250
+    assert summary["total_tokens"] == 5
+
+
+def test_runtime_page_has_a_separate_read_only_active_acp_timeline():
+    html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
+    acp_panel = html[html.index('id="acp-heading"') : html.index('id="acpx-heading"')]
+
+    assert "Active ACP Conversations" in acp_panel
+    assert "/api/runtime/acp/conversations?limit=12" in html
+    assert "/api/runtime/acp/conversations/${encodeURIComponent(summary.conversation_id)}" in html
+    assert "Loading active conversations..." in acp_panel
+    assert "No active ACP conversations." in html
+    assert "Conversation storage is unavailable." in html
+    assert "Malformed conversation data" in html
+    assert "Root</div><div class=\"acp-lane\">Codex</div><div class=\"acp-lane\">Grok" in html
+    assert "round ${event.round}" in html
+    assert "seq ${event.sequence}" in html
+    assert "Duplicate suppressed" in html
+    assert "Ended: ${displayLabel(conversation.termination_reason)}" in html
+    assert "acpStateClass" in html
+    assert "acpStateLabel" in html
+    for label in ["Queued", "Running", "Succeeded", "Partial", "Cancelled", "Failed"]:
+        assert label in html
+    for state in ["COMPLETE", "PARTIAL_COMPLETE", "CANCELLED", "FAILED", "CREATED"]:
+        assert state in html
+
+    for prohibited in [
+        "<form",
+        "acp-send",
+        "acp-post",
+        "acp-retry",
+        "acp-cancel",
+        "acp-route",
+        "acp-review",
+        "acp-config",
+    ]:
+        assert prohibited not in acp_panel
+
+    assert html.index('id="acp-heading"') < html.index('id="acpx-heading"')
+    assert "ACPX Shadow Transport" in html
+    assert "ACPX evidence is observational only." in html
+
+
+def test_acp_termination_reason_allowlists_budget_and_deadline_events():
+    assert runtime_router._acp_termination(
+        [{"event_type": "BUDGET_EXHAUSTED"}], "PARTIAL_COMPLETE"
+    ) == "budget_exhausted"
+    assert runtime_router._acp_termination(
+        [{"event_type": "DEADLINE_EXCEEDED"}], "PARTIAL_COMPLETE"
+    ) == "deadline_exceeded"
+    assert runtime_router._acp_termination(
+        [{"event_type": "CALL_TERMINAL", "outcome": "failed"}], "PARTIAL_COMPLETE"
+    ) is None
+    assert runtime_router._acp_classification("CANCELLED") == "cancelled"
+    assert runtime_router._acp_termination([], "CANCELLED") == "cancelled"
 
 
 def test_headroom_rejects_missing_params():

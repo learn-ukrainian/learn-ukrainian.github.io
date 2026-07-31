@@ -70,8 +70,11 @@ Ownership matrix, troubleshooting, and seat smoke (including ACPX scope):
 
 ACPX is an **experimental, feature-flagged structured invocation transport** —
 not a coordination plane and not a replacement for `discuss`, fleet-comms, or
-authoritative file handoffs. **Grok + Codex ACPX is not a new coordination plane** —
-two direct-only shadow seats only.
+authoritative file handoffs. **Grok + Codex ACPX is not a new coordination plane.**
+The shadow pilot remains transport evidence only; the separately
+approved active path is a controller-scheduled, bounded conversation DAG whose
+durable state and timeline are written through existing fleet-comms and file
+handoffs.
 
 **Why Grok is the second pilot (#6043, API-backed):** in the 2026-07-30
 snapshot from `/api/comms/live-activity?limit=500&minutes=120`, all **95**
@@ -86,9 +89,11 @@ selection-evidence snapshots, not permanent routing weights.
 
 Approved boundary (#6027 Codex, #6043 Grok):
 
-- Feature flag `LU_ACPX_TRANSPORT=off|shadow`, **default `off`**; rollback =
-  set it back to `off` (or unset) to fall back to the native `runner.invoke`
-  transport (native Codex / native Grok remain authoritative).
+- Feature flag `LU_ACPX_TRANSPORT=off|shadow|active`, **default `off`**.
+  `shadow` retains the comparison pilot below. `active` is accepted only by
+  the explicit fleet-comms `acp-discuss` controller; it is never a generic
+  runner, routing, dispatch, failover, or review setting. Rollback is setting
+  the flag to `off` (or unsetting it) and using native transport.
 - Direct-only seats:
   - `acpx-codex-shadow` (`scripts/agent_runtime/adapters/acpx.py:AcpxAdapter`)
   - `acpx-grok-shadow` (`scripts/agent_runtime/adapters/acpx.py:AcpxGrokShadowAdapter`)
@@ -132,6 +137,46 @@ Approved boundary (#6027 Codex, #6043 Grok):
   (context-window capacity). Shadow telemetry records `used`; it must never
   report `size` as consumed tokens.
 - **Buzz is deferred** (relay-as-authority conflicts with file dual-write).
+
+### Active ACP conversation: controller-owned and bounded
+
+Only the explicit controller accepts `LU_ACPX_TRANSPORT=active`. It accepts a
+task **on standard input**, never in argv, and schedules exactly the approved
+participants: `codex,grok`.
+
+```bash
+printf '%s\n' 'Compare the two bounded options and name risks.' |
+  LU_ACPX_TRANSPORT=active ACPX_AUTH_CHAT_GPT=1 \
+  .venv/bin/python -m scripts.fleet_comms acp-discuss --cwd . \
+  --task-id acp-6078 --correlation-id acp-6078-v1 \
+  --idempotency-key acp-6078-v1 --rounds 2 --json
+```
+
+The default is two rounds and the hard maximum is three. The DAG runs the
+initial Codex and Grok calls in parallel, permits one bounded peer
+cross-response per participant, then requires authoritative native-Codex
+synthesis. It admits at most two participant calls and five model calls by
+default, including synthesis. There are no persistent sessions, tools,
+unrestricted loops, hidden failover, or retries. Each model call has a
+300-second deadline; the complete conversation has a 1,200-second deadline,
+with a reliable-token budget of 160k or a 512 KiB content ceiling.
+
+Idempotency is durable: replay suppression occurs before scheduling and an
+orphaned reservation is terminal rather than retried. The controller never
+holds a lock across model I/O. It records typed partial results and
+append-only state/timeline events through fleet-comms and file handoffs, which
+remain authoritative. The task, participant responses, credentials, paths,
+sessions, tool data, and raw model content do not enter metadata APIs.
+
+Runtime exposes body-free, read-only observability only:
+`GET /api/runtime/acp/conversations` and
+`GET /api/runtime/acp/conversations/{conversation_id}`. The visual timeline is
+read-only and cannot launch, steer, retry, or otherwise control a
+conversation. A token field named `size` is context-window capacity, never
+consumed-token accounting.
+
+This is deliberation transport, not formal cross-family review. It does not
+produce review authority or replace `review-pr` / `publish-review-verdict`.
 
 Do **not** invent ACPX CLI flags, endpoints, or review-eligibility changes in
 callers — the adapter's argv is fully confined and callers only ever set

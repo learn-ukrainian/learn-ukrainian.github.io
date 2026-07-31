@@ -76,6 +76,8 @@ import re
 import shlex
 import shutil
 import subprocess
+from contextlib import contextmanager
+from contextvars import ContextVar
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -136,8 +138,24 @@ _GROK_XAI_API_KEY_ENV_UNSETS: tuple[str, ...] = (
 # "grok"). "correlation_id"/"idempotency_key" are local runtime metadata only
 # (see _require_local_metadata_field): never forwarded to the ACP wire protocol.
 _ALLOWED_TOOL_CONFIG_KEYS = frozenset(
-    {"acpx_shadow", "target_agent", "correlation_id", "idempotency_key"}
+    {"acpx_shadow", "acpx_discussion", "target_agent", "correlation_id", "idempotency_key"}
 )
+
+# Active ACPX is deliberately not a generally selectable adapter mode.  The
+# discussion controller enters this process-local scope immediately around a
+# direct-only invocation; all other callers, including normal runner routing,
+# continue to receive the shadow-only refusal.
+_ACTIVE_DISCUSSION_SCOPE: ContextVar[bool] = ContextVar("acpx_active_discussion", default=False)
+
+
+@contextmanager
+def active_discussion_scope():
+    """Permit exactly one controller-owned active ACPX call in this context."""
+    token = _ACTIVE_DISCUSSION_SCOPE.set(True)
+    try:
+        yield
+    finally:
+        _ACTIVE_DISCUSSION_SCOPE.reset(token)
 
 # Bounds for task_id/correlation_id/idempotency_key: opaque local identifiers
 # used only for this adapter's own InvocationPlan.metadata (telemetry/dedup
@@ -289,6 +307,14 @@ def _require_shadow_transport(*, adapter_label: str) -> None:
         )
 
 
+def _require_discussion_transport(*, adapter_label: str) -> None:
+    transport = os.environ.get(TRANSPORT_ENV, "off").strip().lower()
+    if transport != "active" or not _ACTIVE_DISCUSSION_SCOPE.get():
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: active ACPX is accepted only by the explicit discussion controller"
+        )
+
+
 def _require_shadow_tool_config(
     tool_config: dict | None,
     *,
@@ -302,11 +328,16 @@ def _require_shadow_tool_config(
             f"{adapter_label}: unsupported tool_config keys {sorted(unsupported_keys)!r}; "
             f"only {sorted(_ALLOWED_TOOL_CONFIG_KEYS)!r} are recognized"
         )
-    if tc.get("acpx_shadow") is not True:
-        raise AcpxShadowRefusalError(
-            f"{adapter_label}: tool_config must set acpx_shadow=True as an explicit "
-            "per-call marker of shadow intent; the feature flag alone is not enough"
-        )
+    active = tc.get("acpx_discussion") is True
+    if active:
+        _require_discussion_transport(adapter_label=adapter_label)
+    else:
+        _require_shadow_transport(adapter_label=adapter_label)
+        if tc.get("acpx_shadow") is not True:
+            raise AcpxShadowRefusalError(
+                f"{adapter_label}: tool_config must set acpx_shadow=True as an explicit "
+                "per-call marker of shadow intent; the feature flag alone is not enough"
+            )
     target_agent = tc.get("target_agent", required_target)
     if target_agent != required_target:
         raise AcpxShadowRefusalError(
@@ -523,7 +554,6 @@ class AcpxAdapter:
                 f"AcpxAdapter: unsupported mode {mode!r}; only 'read-only' is permitted for the ACPX shadow seat"
             )
 
-        _require_shadow_transport(adapter_label="AcpxAdapter")
         tc = _require_shadow_tool_config(
             tool_config,
             adapter_label="AcpxAdapter",
@@ -816,7 +846,6 @@ class AcpxGrokShadowAdapter:
                 "is permitted for the ACPX shadow seat"
             )
 
-        _require_shadow_transport(adapter_label="AcpxGrokShadowAdapter")
         tc = _require_shadow_tool_config(
             tool_config,
             adapter_label="AcpxGrokShadowAdapter",

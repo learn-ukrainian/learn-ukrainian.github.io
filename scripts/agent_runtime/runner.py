@@ -107,7 +107,7 @@ _MCP_TOOL_EVENT_RE = re.compile(
 _MCP_TRANSPORT_FAILURE_RE = re.compile(r"ERROR\s+rmcp::transport::worker:")
 _MCP_FAILURE_URL_RE = re.compile(r"url \((?P<url>https?://[^)\s]+)\)")
 _PRIVACY_LIMITED_USAGE_ENTRYPOINTS = frozenset(
-    {"acpx-pilot-native", "acpx-pilot-shadow"}
+    {"acpx-pilot-native", "acpx-pilot-shadow", "acpx-discuss", "acpx-discuss-synthesis"}
 )
 
 # In-process cache of instantiated adapters. Adapters are stateless so we
@@ -2640,6 +2640,7 @@ def _invoke_direct_only(
     tool_config: dict,
     hard_timeout: int = 300,
     effort: str | None = None,
+    entrypoint: str = "acpx-pilot-shadow",
 ) -> Result:
     """Invoke one explicitly marked direct-only, read-only shadow seat.
 
@@ -2656,6 +2657,8 @@ def _invoke_direct_only(
         raise AgentUnavailableError(
             f"Agent {agent_name!r} is not an unavailable direct-only seat"
         )
+    if entrypoint not in {"acpx-pilot-shadow", "acpx-discuss"}:
+        raise ValueError("ACPX direct-only invocation entrypoint was altered")
     return _invoke_impl(
         agent_name,
         prompt,
@@ -2665,7 +2668,7 @@ def _invoke_direct_only(
         task_id=task_id,
         session_id=None,
         tool_config=tool_config,
-        entrypoint="acpx-pilot-shadow",
+        entrypoint=entrypoint,
         hard_timeout=hard_timeout,
         effort=effort,
         allow_direct_only=True,
@@ -2691,7 +2694,13 @@ def _invoke_native_once(
         raise AgentUnavailableError(
             f"Agent {agent_name!r} is not a supported ACPX pilot native seat"
         )
-    if mode != "read-only" or session_id is not None or entrypoint != "acpx-pilot-native":
+    permitted_entrypoints = {"acpx-pilot-native", "acpx-discuss-synthesis"}
+    if (
+        mode != "read-only"
+        or session_id is not None
+        or entrypoint not in permitted_entrypoints
+        or (entrypoint == "acpx-discuss-synthesis" and agent_name != "codex")
+    ):
         raise ValueError("ACPX pilot native invocation contract was altered")
     return _invoke_impl(
         agent_name,

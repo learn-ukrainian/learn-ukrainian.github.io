@@ -39,7 +39,7 @@ caps or live modes.
 | **`discuss`** (bridge) | Bounded multi-agent deliberation and design input | Implementation, merge authority, or the formal cross-family review gate |
 | **`scripts/delegate.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
 | **Fleet-comms + file handoffs** | Durable coordination and authority today; **file dual-write remains authoritative in every current plane mode** | Competing message buses; silent plane/retention/eligibility flips |
-| **ACPX** | Experimental **structured invocation transport only** — two direct-only read-only/stateless shadow seats (Codex, Grok) behind a default-off/shadow feature flag; not a coordination plane | Persistent sessions, backlog, auto-retries, agent-to-agent chat, plane flips, review eligibility |
+| **ACPX** | Experimental **structured invocation transport only** — default-off shadow seats plus one explicit fleet-comms `acp-discuss` controller for a bounded Codex/Grok conversation; not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
 | **Buzz** | **Explicitly deferred** | Anything in this rollout — relay-as-authority conflicts with the current authority model |
 
 ### Discuss is not formal review
@@ -104,7 +104,9 @@ snapshots, not permanent routing weights.
 
 **Exact contract (#6027 Codex pilot, #6043 Grok second pilot):**
 
-- Feature flag `LU_ACPX_TRANSPORT=off|shadow`, **default `off`**.
+- Feature flag `LU_ACPX_TRANSPORT=off|shadow|active`, **default `off`**.
+  `shadow` is the unchanged comparison pilot. `active` is accepted only by the
+  explicit `acp-discuss` controller described below.
 - Direct-only seat names `acpx-codex-shadow` and `acpx-grok-shadow`; never
   registered for dispatch, routing, review, or failover.
 - Local pin `acpx@0.13.0` — both adapters refuse to spawn on any other
@@ -146,7 +148,7 @@ snapshots, not permanent routing weights.
 - Persistent or named ACP sessions
 - Queued prompt backlog
 - Automatic prompt retries
-- Direct ACP agent-to-agent chat
+- Unrestricted ACP agent-to-agent chat or any chat surface outside the bounded controller DAG
 - Plane-mode or retention changes via ACPX
 - Review-eligibility changes via ACPX
 - Primary-checkout writes or write-mode ACP work
@@ -158,6 +160,50 @@ adapter's argv is fully confined and callers only ever set the `tool_config`
 keys it allowlists (`acpx_shadow`, `target_agent`, `correlation_id`,
 `idempotency_key`); this runbook describes ownership and safety, not a
 floating CLI surface.
+
+#### Active controller-backed ACP conversation
+
+The active path is a **bounded fleet-comms-backed conversation**, not a new
+bus. It is accepted only by `.venv/bin/python -m scripts.fleet_comms
+acp-discuss` with `LU_ACPX_TRANSPORT=active`; generic runtime callers cannot
+turn it on. Pass the task on stdin and never place task or model-response data
+in argv:
+
+```bash
+printf '%s\n' 'Compare the two bounded options and name risks.' |
+  LU_ACPX_TRANSPORT=active ACPX_AUTH_CHAT_GPT=1 \
+  .venv/bin/python -m scripts.fleet_comms acp-discuss --cwd . \
+  --task-id acp-6078 --correlation-id acp-6078-v1 \
+  --idempotency-key acp-6078-v1 --rounds 2 --json
+```
+
+Participants are exactly `codex,grok`. Two rounds are the default and three is
+the hard maximum: parallel initial participant calls, a bounded peer
+cross-response, then authoritative native-Codex synthesis. The controller
+allows at most two participant calls and five model calls by default,
+including synthesis. It starts no persistent session, tool-enabled run,
+unrestricted loop, hidden failover, or retry. Each model call is capped at 300
+seconds, the whole conversation at 1,200 seconds, and content at 160k reliable
+tokens or 512 KiB.
+
+Replay suppression is durable and occurs before scheduling. An orphaned reservation
+is terminal: never retry it. Locks must not cover model I/O.
+Typed partial results, idempotency disposition, and append-only
+state/timeline events are durably recorded through existing fleet-comms and
+file handoffs; those handoffs retain authority. This conversation neither
+changes plane/retention state nor gains dispatch, routing, failover, or review
+authority.
+
+The privacy boundary is strict: task bodies, model responses, credentials,
+paths, session data, and tool data do not appear in Runtime metadata. The only
+approved observability routes are `GET /api/runtime/acp/conversations` and
+`GET /api/runtime/acp/conversations/{conversation_id}`. They, and the visual
+timeline built from them, are body-free and read-only: no dashboard control
+can start, steer, retry, or cancel a conversation. Standard ACP token `size`
+means context-window capacity, never consumed-token accounting.
+
+This is deliberation transport, not formal cross-family review. It cannot
+replace `review-pr` / `publish-review-verdict` or provide review eligibility.
 
 #### Explicit comparison pilot
 

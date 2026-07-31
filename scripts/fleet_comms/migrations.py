@@ -149,6 +149,45 @@ _V2_STATEMENTS = (
        ADD COLUMN sealed_verdict_artifact_id TEXT""",
 )
 
+# #6078: bounded ACPX discussions are a distinct, metadata-only lifecycle.
+# Directed prompt/response content remains in comms_messages plus artifacts.
+_V3_STATEMENTS = (
+    """CREATE TABLE IF NOT EXISTS acp_conversations (
+        conversation_id TEXT PRIMARY KEY,
+        task_digest TEXT NOT NULL,
+        correlation_digest TEXT NOT NULL,
+        idempotency_digest TEXT NOT NULL UNIQUE,
+        rounds_requested INTEGER NOT NULL CHECK (rounds_requested BETWEEN 1 AND 3),
+        participants_json TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        deadline_at TEXT NOT NULL,
+        token_budget INTEGER NOT NULL CHECK (token_budget >= 0),
+        content_budget_bytes INTEGER NOT NULL CHECK (content_budget_bytes >= 0),
+        FOREIGN KEY (conversation_id) REFERENCES conversations(conversation_id)
+    )""",
+    """CREATE TABLE IF NOT EXISTS acp_conversation_events (
+        event_id TEXT PRIMARY KEY,
+        conversation_id TEXT NOT NULL,
+        sequence INTEGER NOT NULL,
+        event_type TEXT NOT NULL,
+        state TEXT NOT NULL,
+        sender TEXT,
+        recipient TEXT,
+        round INTEGER,
+        outcome TEXT,
+        duration_ms INTEGER,
+        token_count INTEGER,
+        leg_key_digest TEXT,
+        message_id TEXT,
+        metadata_json TEXT NOT NULL DEFAULT '{}',
+        created_at TEXT NOT NULL,
+        UNIQUE (conversation_id, sequence),
+        FOREIGN KEY (conversation_id) REFERENCES acp_conversations(conversation_id),
+        FOREIGN KEY (message_id) REFERENCES comms_messages(message_id)
+    )""",
+    "CREATE INDEX IF NOT EXISTS idx_acp_conversation_events_conversation ON acp_conversation_events(conversation_id, sequence)",
+)
+
 MIGRATIONS = (
     Migration(version=1, name="fleet-comms-v1-contracts", statements=_V1_STATEMENTS),
     Migration(
@@ -156,6 +195,7 @@ MIGRATIONS = (
         name="fleet-comms-v2-sealed-verdict-artifact",
         statements=_V2_STATEMENTS,
     ),
+    Migration(version=3, name="fleet-comms-v3-acpx-discussions", statements=_V3_STATEMENTS),
 )
 
 

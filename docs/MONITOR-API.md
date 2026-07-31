@@ -1359,6 +1359,27 @@ with no records reports `no_evidence`; that is not a provider-health claim.
 }
 ```
 
+### `GET /api/runtime/acp/conversations`
+
+Read-only, body-free metadata for controller-scheduled ACP conversations. The
+route exposes durable fleet-comms/file-handoff timeline metadata and typed
+partial-result state, not task bodies, participant responses, credentials,
+paths, session identifiers, tool data, or raw model content. It cannot start,
+retry, steer, or otherwise control a conversation.
+
+`token_size`, when present, is a context-window capacity value; it is never
+consumed-token accounting. Query the detail route with the returned
+`conversation_id` for one sanitized conversation record.
+
+### `GET /api/runtime/acp/conversations/{conversation_id}`
+
+Read-only detail for one controller-scheduled conversation. It provides the
+same privacy-preserving metadata plus append-only timeline events and typed
+partial-result dispositions. A detail response never restores task text or
+model output, and must not be treated as fleet authority, a dispatch surface,
+or formal cross-family review evidence. The Runtime visual timeline consumes
+this read-only data only; it has no dashboard controls.
+
 `transport.mode` reflects the Monitor API process environment, not a global
 fleet switch; each TUI invocation still supplies its own default-off flag.
 
