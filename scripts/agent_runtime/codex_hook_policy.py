@@ -122,7 +122,6 @@ def _run_enforce_venv(
     payload: str,
 ) -> GuardResult:
     environment = os.environ.copy()
-    environment["LEARN_UK_HOOK_PROVIDER"] = "codex"
     environment["LEARN_UK_CANONICAL_ROOT"] = str(canonical_root)
     guard = hooks_dir / "enforce-venv.sh"
     try:
@@ -183,16 +182,16 @@ def main() -> int:
     args = parser.parse_args()
     payload = sys.stdin.read()
     tool_name = _tool_name(payload)
-    rewrite_result = None
+    venv_result = None
     if tool_name == "Bash":
-        rewrite_result = _run_enforce_venv(
+        venv_result = _run_enforce_venv(
             args.hooks_dir,
             args.canonical_root,
             payload,
         )
-        if rewrite_result.returncode:
-            _emit(rewrite_result)
-            return rewrite_result.returncode
+        if venv_result.returncode:
+            _emit(venv_result)
+            return venv_result.returncode
 
     local_specs = LOCAL_BASH_GUARDS if tool_name == "Bash" else ()
     local_results = _run_specs(
@@ -209,8 +208,8 @@ def main() -> int:
         merge_code = _result_code(_run_merge_guards(args.python_bin, args.hooks_dir, payload))
         if merge_code:
             return merge_code
-        if rewrite_result is not None:
-            _emit(rewrite_result)
+        if venv_result is not None:
+            _emit(venv_result)
     return 0
 
 

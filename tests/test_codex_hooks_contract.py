@@ -368,7 +368,7 @@ def test_non_rewrite_guard_stdout_fails_closed(
     assert "not-json" in captured.err
 
 
-def test_codex_policy_venv_rewrite_timeout_fails_closed(
+def test_codex_policy_venv_guard_timeout_fails_closed(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
@@ -384,7 +384,7 @@ def test_codex_policy_venv_rewrite_timeout_fails_closed(
     assert "blocking the tool call fail-closed" in result.stderr
 
 
-def test_codex_entry_rewrites_bare_python_from_worktree_without_local_venv(
+def test_codex_entry_rejects_bare_python_from_worktree_with_copyable_command(
     tmp_path: Path,
 ) -> None:
     primary, worktree = _make_linked_worktree(tmp_path)
@@ -409,15 +409,13 @@ def test_codex_entry_rewrites_bare_python_from_worktree_without_local_venv(
         timeout=30,
     )
 
-    assert completed.returncode == 0, completed.stderr
-    output = json.loads(completed.stdout)
-    specific = output["hookSpecificOutput"]
-    assert specific["hookEventName"] == "PreToolUse"
-    assert specific["permissionDecision"] == "allow"
-    assert specific["updatedInput"]["command"] == (f'{primary}/.venv/bin/python -c "print(1)"')
+    assert completed.returncode == 2
+    assert completed.stdout == ""
+    assert "Unqualified interpreter blocked" in completed.stderr
+    assert f'{primary}/.venv/bin/python -c "print(1)"' in completed.stderr
 
 
-def test_claude_python_rewrite_shape_remains_compatible(tmp_path: Path) -> None:
+def test_claude_bare_python_is_rejected_without_rewrite_output(tmp_path: Path) -> None:
     canonical = tmp_path / "canonical"
     canonical.mkdir()
     _make_exact_python_checkout(canonical)
@@ -442,15 +440,12 @@ def test_claude_python_rewrite_shape_remains_compatible(tmp_path: Path) -> None:
         timeout=10,
     )
 
-    assert completed.returncode == 0, completed.stderr
-    assert json.loads(completed.stdout) == {
-        "modifiedInput": {
-            "command": f"{canonical}/.venv/bin/python --version",
-        }
-    }
+    assert completed.returncode == 2
+    assert completed.stdout == ""
+    assert f"{canonical}/.venv/bin/python --version" in completed.stderr
 
 
-def test_python_rewrite_preserves_checkout_path_metacharacters(tmp_path: Path) -> None:
+def test_python_rejection_shell_quotes_checkout_path_metacharacters(tmp_path: Path) -> None:
     canonical = tmp_path / "checkout&pipe|root"
     canonical.mkdir()
     _make_exact_python_checkout(canonical)
@@ -475,12 +470,41 @@ def test_python_rewrite_preserves_checkout_path_metacharacters(tmp_path: Path) -
         timeout=10,
     )
 
-    assert completed.returncode == 0, completed.stderr
-    updated = json.loads(completed.stdout)["hookSpecificOutput"]["updatedInput"]
-    assert updated["command"] == (f'{canonical}/.venv/bin/python -c "print(1)"')
+    assert completed.returncode == 2
+    assert completed.stdout == ""
+    assert r'checkout\&pipe\|root/.venv/bin/python -c "print(1)"' in completed.stderr
 
 
-def test_bare_python_rewrite_blocks_a_canonical_version_mismatch(tmp_path: Path) -> None:
+def test_qualified_project_python_passes_without_output(tmp_path: Path) -> None:
+    canonical = tmp_path / "checkout"
+    canonical.mkdir()
+    _make_exact_python_checkout(canonical)
+    payload = {
+        "hook_event_name": "PreToolUse",
+        "cwd": str(canonical),
+        "tool_name": "Bash",
+        "tool_input": {"command": ".venv/bin/python --version"},
+    }
+    environment = os.environ.copy()
+    environment["LEARN_UK_CANONICAL_ROOT"] = str(canonical)
+
+    completed = subprocess.run(
+        ["bash", str(VENV_HOOK)],
+        cwd=canonical,
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment,
+        timeout=10,
+    )
+
+    assert completed.returncode == 0
+    assert completed.stdout == ""
+    assert completed.stderr == ""
+
+
+def test_bare_python_rejection_blocks_a_canonical_version_mismatch(tmp_path: Path) -> None:
     canonical = tmp_path / "checkout"
     canonical.mkdir()
     _make_exact_python_checkout(canonical)

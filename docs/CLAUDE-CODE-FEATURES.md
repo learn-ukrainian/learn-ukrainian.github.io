@@ -11,7 +11,7 @@ Hooks run automatically on specific events. Configured in `claude_extensions/set
 | Event | Hook script | Timeout | What it does |
 |-------|------------|---------|--------------|
 | **SessionStart** | `session-setup.sh` | 10s | Validates environment: venv, env vars, MCP sources server, gemini-cli auth, stale builds, MEMORY.md line count, deploy drift, open GH issues |
-| **PreToolUse** (Bash) | `enforce-venv.sh` | 3s | Rewrites bare `python3`/`python` → `.venv/bin/python` before every Bash call |
+| **PreToolUse** (Bash) | `enforce-venv.sh` | 3s | Rejects bare `python3`/`python` and prints a copyable `.venv/bin/python` replacement |
 | **UserPromptSubmit** | `check-gemini-inbox.sh` | 5s | Checks message broker DB for unread Gemini messages, injects alert |
 | **PostCompact** | `post-compact.sh` | 10s | After context compaction: restores in-progress modules, open issues, key reminders |
 | **FileChanged** (`curriculum/l2-uk-en/**/*.md`) | `auto-audit.sh` | 30s | Auto-runs `audit_module.py` on changed curriculum files (skips orchestration/audit/review) |
@@ -194,7 +194,7 @@ User types message
   └── check-gemini-inbox.sh → alerts on unread Gemini messages
 
 Claude runs Bash command
-  └── enforce-venv.sh → rewrites python → .venv/bin/python
+  └── enforce-venv.sh → rejects bare python and prints the project interpreter command
 
 Curriculum .md file changes
   └── auto-audit.sh → runs audit_module.py

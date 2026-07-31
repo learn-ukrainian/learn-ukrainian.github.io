@@ -67,7 +67,7 @@ Re-verified against the current OpenAI Codex Hooks reference on 2026-07-26:
 
 The Codex manifest therefore sends each tool event through one tracked,
 deterministic entry point:
-`scripts/agent_runtime/codex_hook_entry.sh`. The Bash-command venv rewrite has
+`scripts/agent_runtime/codex_hook_entry.sh`. The Bash-command venv guard has
 its own 3-second fail-closed deadline. `PreToolUse` local policy checks then run
 sequentially with their former 3–5 second individual deadlines. The two
 independent, network-backed merge guards run concurrently with separate
@@ -79,12 +79,12 @@ without letting one slow merge guard starve the other.
 `codex_hook_policy.py` converts an individual guard timeout into exit code `2`
 with a concrete reason. Per the Codex `PreToolUse` contract, exit `2` blocks the
 tool call; a timeout therefore fails closed. The manifest's 45-second outer
-timeout remains a last-resort ceiling above the 3-second rewrite, local-chain,
+timeout remains a last-resort ceiling above the 3-second venv guard, local-chain,
 and concurrent network-guard budgets.
 
-Only the venv rewrite may write the final Codex JSON response to stdout.
-Unexpected stdout from any policy guard is redirected to diagnostics and
-fails closed, preventing multiple payloads from corrupting the hook response.
+No policy guard writes a Codex JSON response to stdout. Unexpected stdout is
+redirected to diagnostics and fails closed, preventing multiple payloads from
+corrupting the hook response.
 
 Merge commands must name the PR explicitly. This removes the preliminary
 current-branch discovery call and prevents the guard from checking one PR while
@@ -95,9 +95,9 @@ after those results identify the exact base.
 The entry point resolves the exact tool worktree from structured hook input and
 the canonical checkout from Git's common directory. Python policies use the
 canonical checkout's `.venv/bin/python`, so a linked worktree does not need its
-own `.venv` symlink. Bare `python`/`python3` calls are rewritten to that absolute
-project interpreter using the Codex `updatedInput` schema. If the project
-interpreter is genuinely absent, the policy blocks instead of falling back to a
+own `.venv` symlink. Bare `python`/`python3` calls are rejected with one
+shell-quoted, copyable command using that absolute project interpreter. If the
+project interpreter is genuinely absent, the policy blocks instead of falling back to a
 system interpreter.
 
 `UserPromptSubmit` invokes the inbox hook with recipient `codex`; the shared
