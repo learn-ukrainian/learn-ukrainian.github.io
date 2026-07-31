@@ -135,6 +135,72 @@ def test_runtime_page_acpx_panel_has_no_mutating_transport_controls():
         assert prohibited not in acpx_panel
 
 
+def test_runtime_page_renders_recent_body_free_acp_observability_without_controls():
+    html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
+    acp_panel = html[html.index('id="acp-heading"') : html.index('id="acpx-heading"')]
+
+    assert "ACP Conversations" in acp_panel
+    assert "Read-only, body-free event history" in acp_panel
+    assert 'href="/acp.html"' in acp_panel
+    assert "Open ACP conversations" in acp_panel
+    assert "/api/runtime/acp/conversations" not in html
+
+    for prohibited in [
+        "<form",
+        "acp-send",
+        "acp-post",
+        "acp-session",
+        "acp-toggle",
+        "acp-retry",
+        "acp-cancel",
+        "acp-route",
+        "acp-review",
+        "acp-config",
+    ]:
+        assert prohibited not in acp_panel
+
+
+def test_acp_page_is_a_read_only_master_detail_event_timeline():
+    html = (DASHBOARDS / "acp.html").read_text(encoding="utf-8")
+
+    assert '<link rel="stylesheet" href="/monitor.css">' in html
+    assert '<a class="active" href="/acp.html">Conversations</a>' in html
+    assert "/api/runtime/acp/conversations?limit=50" in html
+    assert "/api/runtime/acp/conversations/" in html
+    assert "new URLSearchParams(location.search).get('conversation')" in html
+    assert "Recent conversations" in html
+    assert "Event flow" in html
+    assert "Body-free by design." in html
+    assert "conversation.updated_at" in html
+    assert "event.outcome" in html
+    assert "event.duration_ms" in html
+    assert "event.token_count" in html
+    assert "Conversation storage is unavailable." in html
+    assert "Malformed conversation data" in html
+    assert "No recent ACP conversations." in html
+    assert "@media (max-width: 880px)" in html
+    assert ":focus-visible" in html
+    assert "prefers-reduced-motion" in html
+    for href in PRIMARY_NAV_HREFS:
+        assert f'href="{href}"' in html
+
+    for prohibited in [
+        "<form",
+        "acp-send",
+        "acp-post",
+        "acp-start",
+        "acp-session",
+        "acp-toggle",
+        "acp-retry",
+        "acp-cancel",
+        "acp-route",
+        "acp-review",
+        "acp-config",
+        "fetch(url, { method:",
+    ]:
+        assert prohibited not in html
+
+
 def test_routing_page_uses_live_monitor_sources():
     html = (DASHBOARDS / "routing.html").read_text(encoding="utf-8")
     assert "Static snapshot" not in html

@@ -138,6 +138,21 @@ Discussion is never formal CF. Formal CF remains `review-pr` /
 `publish-review-verdict` only. ACPX is structured invocation transport, not a
 coordination authority. File dual-write stays authoritative in every plane mode.
 
+## Bounded ACP panel (approved selection)
+
+Every supported fleet orchestrator may explicitly invoke the fixed Codex↔Grok
+ACP panel for **one consequential, read-only design or risk comparison** when
+that direct cross-provider critique is materially useful. Its sole surface is
+`python -m scripts.fleet_comms acp-discuss`; do not add automatic launcher or
+`delegate.py` use. The default is two rounds and the hard maximum is three.
+
+Admission is one conversation repository-wide: return `busy` when occupied,
+with zero queue and zero automatic retry. On busy or when ACPX is unready, use
+the bounded bridge `discuss` path instead. ACP output is deliberation evidence:
+a typed partial outcome is valid evidence but never a successful discussion,
+formal review, or coordination authority. The exact command, primary-install
+and body-free `acp-verify` E2E/replay procedure are in the onboarding contract.
+
 ## Offline fallback path
 
 `agents_extensions/shared/rules/fleet-comms-coordination.md` (this file).

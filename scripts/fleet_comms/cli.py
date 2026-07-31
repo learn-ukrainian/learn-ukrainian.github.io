@@ -26,6 +26,8 @@ import json
 import os
 import sqlite3
 import sys
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
@@ -47,6 +49,21 @@ EXIT_ERROR = 3
 
 class FleetCommsCliError(RuntimeError):
     """CLI refused an operation."""
+
+
+@contextmanager
+def _active_acpx_transport() -> Iterator[None]:
+    """Authorize ACPX active mode only for the explicit ``acp-discuss`` call."""
+    variable = "LU_ACPX_TRANSPORT"
+    previous = os.environ.get(variable)
+    os.environ[variable] = "active"
+    try:
+        yield
+    finally:
+        if previous is None:
+            os.environ.pop(variable, None)
+        else:
+            os.environ[variable] = previous
 
 
 def _json_dump(payload: Any, *, indent: int | None = 2) -> str:
@@ -309,25 +326,72 @@ def cmd_github_metrics(args: argparse.Namespace) -> int:
 
 
 def cmd_acp_discuss(args: argparse.Namespace) -> int:
-    """Run the explicitly enabled bounded ACPX discussion (stdin-only prompt)."""
-    from scripts.agent_runtime.acpx_discuss import AcpxDiscussionError, run_discussion
+    """Run the explicitly authorized bounded ACPX discussion (stdin-only prompt)."""
+    from scripts.agent_runtime.acpx_discuss import (
+        AcpxDiscussionBusyError,
+        AcpxDiscussionError,
+        run_discussion,
+    )
 
     prompt = sys.stdin.read()
     try:
-        payload = run_discussion(
-            prompt=prompt,
-            cwd=Path(args.cwd),
-            task_id=args.task_id,
-            correlation_id=args.correlation_id,
-            idempotency_key=args.idempotency_key,
-            rounds=args.rounds,
-            root=Path(args.root).expanduser() if args.root else None,
+        with _active_acpx_transport():
+            payload = run_discussion(
+                prompt=prompt,
+                cwd=Path(args.cwd),
+                task_id=args.task_id,
+                correlation_id=args.correlation_id,
+                idempotency_key=args.idempotency_key,
+                rounds=args.rounds,
+                root=Path(args.root).expanduser() if args.root else None,
+            )
+    except AcpxDiscussionBusyError:
+        sys.stdout.write(
+            _json_dump(
+                {
+                    "classification": "busy",
+                    "state": "BUSY",
+                    "queued": False,
+                    "retryable": False,
+                },
+                indent=None,
+            )
         )
+        return EXIT_ERROR
     except AcpxDiscussionError as exc:
         sys.stderr.write(str(exc) + "\n")
         return EXIT_ERROR
     sys.stdout.write(_json_dump(payload, indent=None if args.json else 2))
     return EXIT_OK if payload["state"] == "COMPLETE" else EXIT_ERROR
+
+
+def cmd_acp_verify(args: argparse.Namespace) -> int:
+    """Verify one body-free durable ACP conversation receipt."""
+    from scripts.agent_runtime.acpx_discuss import (
+        AcpxDiscussionError,
+        AcpxDiscussionNotFoundError,
+        verify_discussion_receipt,
+    )
+
+    root = (
+        Path(args.root).expanduser()
+        if args.root
+        else default_plane_root(repo_root=Path.cwd())
+    )
+    try:
+        payload = verify_discussion_receipt(
+            root=root,
+            conversation_id=args.conversation_id,
+            require_replay=args.require_replay,
+        )
+    except AcpxDiscussionNotFoundError as exc:
+        sys.stderr.write(str(exc) + "\n")
+        return EXIT_NOT_FOUND
+    except AcpxDiscussionError as exc:
+        sys.stderr.write(str(exc) + "\n")
+        return EXIT_ERROR
+    sys.stdout.write(_json_dump(payload, indent=None if args.json else 2))
+    return EXIT_OK if payload["verified"] else EXIT_ERROR
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -547,6 +611,20 @@ def build_parser() -> argparse.ArgumentParser:
     acp.add_argument("--root", default=None, help="Fleet-comms storage root")
     acp.add_argument("--json", action="store_true", help="Emit compact JSON")
     acp.set_defaults(func=cmd_acp_discuss)
+
+    verify = sub.add_parser(
+        "acp-verify",
+        help="Read-only verification of one durable, body-free ACP receipt",
+    )
+    verify.add_argument("--conversation-id", required=True)
+    verify.add_argument("--root", default=None, help="Fleet-comms storage root")
+    verify.add_argument(
+        "--require-replay",
+        action="store_true",
+        help="Require an observed idempotent replay receipt",
+    )
+    verify.add_argument("--json", action="store_true", help="Emit compact JSON")
+    verify.set_defaults(func=cmd_acp_verify)
 
     return parser
 

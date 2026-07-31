@@ -140,13 +140,23 @@ Approved boundary (#6027 Codex, #6043 Grok):
 
 ### Active ACP conversation: controller-owned and bounded
 
-Only the explicit controller accepts `LU_ACPX_TRANSPORT=active`. It accepts a
-task **on standard input**, never in argv, and schedules exactly the approved
-participants: `codex,grok`.
+Only the explicit `acp-discuss` command activates
+`LU_ACPX_TRANSPORT=active`, scoped to its controller call and restored on
+exit. It accepts a task **on standard input**, never in argv, and schedules
+exactly the approved participants: `codex,grok`.
+
+Every supported fleet orchestrator may explicitly select this fixed panel for
+one consequential read-only design or risk comparison when direct
+cross-provider critique is materially useful. `acp-discuss` is the sole
+surface: never invoke it automatically from a launcher or `delegate.py`.
+Admission is one conversation repository-wide; `busy` returns immediately with
+no queue or automatic retry, and bridge `discuss` is the fallback when ACPX is
+busy or unready. A typed partial result is inspectable evidence, not success,
+formal review, or coordination authority.
 
 ```bash
 printf '%s\n' 'Compare the two bounded options and name risks.' |
-  LU_ACPX_TRANSPORT=active ACPX_AUTH_CHAT_GPT=1 \
+  ACPX_AUTH_CHAT_GPT=1 \
   .venv/bin/python -m scripts.fleet_comms acp-discuss --cwd . \
   --task-id acp-6078 --correlation-id acp-6078-v1 \
   --idempotency-key acp-6078-v1 --rounds 2 --json
@@ -162,11 +172,30 @@ unrestricted loops, hidden failover, or retries. Each model call has a
 with a reliable-token budget of 160k or a 512 KiB content ceiling.
 
 Idempotency is durable: replay suppression occurs before scheduling and an
-orphaned reservation is terminal rather than retried. The controller never
-holds a lock across model I/O. It records typed partial results and
-append-only state/timeline events through fleet-comms and file handoffs, which
-remain authoritative. The task, participant responses, credentials, paths,
-sessions, tool data, and raw model content do not enter metadata APIs.
+orphaned reservation is terminal rather than retried. One single-host,
+repository-wide admission file lock is held for the conversation, including
+model I/O; no SQLite transaction is held across model I/O. It records typed
+partial results and append-only state/timeline events through fleet-comms and
+file handoffs, which remain authoritative. The task, participant responses,
+credentials, paths, sessions, tool data, and raw model content do not enter
+metadata APIs.
+
+The shared primary checkout owns the one pinned local `acpx@0.13.0` install;
+dispatch worktrees resolve that install rather than creating a global or
+floating copy. For E2E/replay verification, run the real stdin-only
+`acp-discuss` command once from a registered worktree, then repeat the
+identical task, correlation, and idempotency values. The second call must
+replay the recorded terminal disposition without scheduling model work.
+Finally verify the body-free receipt:
+
+```bash
+.venv/bin/python -m scripts.fleet_comms acp-verify \
+  --conversation-id conversation_<id> --require-replay --json
+```
+
+`verified: true` proves complete participant rounds, native synthesis, and the
+replay receipt without reading message bodies. Never reinterpret this check as
+permission to retry a failed or partial conversation.
 
 Unless `FLEET_COMMS_ROOT` is explicitly set, fleet-comms storage resolves
 through Git's common directory to the primary checkout at

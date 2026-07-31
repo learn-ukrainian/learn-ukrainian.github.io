@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import io
 import json
+import os
 import sqlite3
 from pathlib import Path
 
@@ -144,3 +146,147 @@ def test_formal_job_get_missing_db(tmp_path: Path, capsys) -> None:
 def test_get_formal_review_job_empty_id(tmp_path: Path) -> None:
     with pytest.raises(FleetCommsCliError, match="review_id is required"):
         get_formal_review_job("  ", root=tmp_path)
+
+
+def test_acp_discuss_cli_scopes_active_transport_and_restores_environment(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys,
+) -> None:
+    from scripts.agent_runtime import acpx_discuss
+
+    observed: list[str | None] = []
+
+    def fake_run_discussion(**_kwargs):
+        observed.append(os.environ.get("LU_ACPX_TRANSPORT"))
+        return {"state": "COMPLETE"}
+
+    monkeypatch.setenv("LU_ACPX_TRANSPORT", "shadow")
+    monkeypatch.setattr(acpx_discuss, "run_discussion", fake_run_discussion)
+    monkeypatch.setattr("sys.stdin", io.StringIO("bounded design question"))
+
+    rc = main(
+        [
+            "acp-discuss",
+            "--cwd",
+            str(tmp_path),
+            "--task-id",
+            "task-6094",
+            "--correlation-id",
+            "corr-6094",
+            "--idempotency-key",
+            "idem-6094",
+            "--rounds",
+            "2",
+            "--json",
+        ]
+    )
+
+    assert rc == EXIT_OK
+    assert observed == ["active"]
+    assert os.environ["LU_ACPX_TRANSPORT"] == "shadow"
+    assert json.loads(capsys.readouterr().out) == {"state": "COMPLETE"}
+
+
+def test_acp_discuss_cli_busy_is_body_free_no_queue_json(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys,
+) -> None:
+    from scripts.agent_runtime import acpx_discuss
+
+    def refuse_busy(**_kwargs):
+        raise acpx_discuss.AcpxDiscussionBusyError("private holder details")
+
+    monkeypatch.setattr(acpx_discuss, "run_discussion", refuse_busy)
+    monkeypatch.setattr("sys.stdin", io.StringIO("bounded design question"))
+
+    rc = main(
+        [
+            "acp-discuss",
+            "--cwd",
+            str(tmp_path),
+            "--task-id",
+            "task-6094",
+            "--correlation-id",
+            "corr-6094",
+            "--idempotency-key",
+            "idem-6094",
+            "--json",
+        ]
+    )
+
+    output = capsys.readouterr()
+    assert rc == EXIT_ERROR
+    assert json.loads(output.out) == {
+        "classification": "busy",
+        "queued": False,
+        "retryable": False,
+        "state": "BUSY",
+    }
+    assert output.err == ""
+    assert "private holder details" not in output.out
+
+
+def test_acp_verify_cli_exit_codes_and_compact_receipt(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys,
+) -> None:
+    from scripts.agent_runtime import acpx_discuss
+
+    conversation_id = "conversation_" + ("a" * 32)
+    monkeypatch.setattr(
+        acpx_discuss,
+        "verify_discussion_receipt",
+        lambda **_kwargs: {
+            "conversation_id": conversation_id,
+            "verified": True,
+            "content_included": False,
+        },
+    )
+
+    rc = main(
+        [
+            "acp-verify",
+            "--conversation-id",
+            conversation_id,
+            "--root",
+            str(tmp_path),
+            "--require-replay",
+            "--json",
+        ]
+    )
+
+    assert rc == EXIT_OK
+    assert json.loads(capsys.readouterr().out) == {
+        "content_included": False,
+        "conversation_id": conversation_id,
+        "verified": True,
+    }
+
+
+def test_acp_verify_cli_maps_missing_receipt_to_not_found(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys,
+) -> None:
+    from scripts.agent_runtime import acpx_discuss
+
+    def missing(**_kwargs):
+        raise acpx_discuss.AcpxDiscussionNotFoundError("receipt missing")
+
+    monkeypatch.setattr(acpx_discuss, "verify_discussion_receipt", missing)
+
+    rc = main(
+        [
+            "acp-verify",
+            "--conversation-id",
+            "conversation_" + ("b" * 32),
+            "--root",
+            str(tmp_path),
+        ]
+    )
+
+    assert rc == EXIT_NOT_FOUND
+    assert "receipt missing" in capsys.readouterr().err
