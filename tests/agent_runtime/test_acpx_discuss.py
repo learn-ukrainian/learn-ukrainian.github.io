@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import shutil
 import sqlite3
+import subprocess
 import threading
 from pathlib import Path
 
@@ -532,27 +533,197 @@ def test_deadline_exceeded_is_partial_without_synthesis(tmp_path, monkeypatch):
     assert synthesis_called is False
 
 
-def test_process_wide_busy_rejects_without_queueing_or_retries(tmp_path, monkeypatch):
+def test_repository_wide_busy_rejects_without_queueing_or_retries(tmp_path, monkeypatch):
     calls = 0
 
     def participant(*_args, **_kwargs):
         nonlocal calls
         calls += 1
-        raise AssertionError("global capacity refusal must not invoke a participant")
+        raise AssertionError("repository admission refusal must not invoke a participant")
 
     controller = _controller(tmp_path, monkeypatch, participant, lambda *_a, **_k: _result("codex", "partial"))
-    assert acpx_discuss._PARTICIPANT_SLOTS.acquire(blocking=False)
-    assert acpx_discuss._PARTICIPANT_SLOTS.acquire(blocking=False)
     try:
-        payload = _run(controller, rounds=1)
+        with acpx_discuss._discussion_admission(controller.store.root):
+            with pytest.raises(acpx_discuss.AcpxDiscussionBusyError, match="already running"):
+                _run(controller, rounds=1)
     finally:
-        acpx_discuss._PARTICIPANT_SLOTS.release()
-        acpx_discuss._PARTICIPANT_SLOTS.release()
         controller.close()
 
-    assert payload["state"] == "PARTIAL_COMPLETE"
     assert calls == 0
-    assert {item["outcome"] for item in payload["participant_outcomes"]} == {"busy"}
+
+
+def test_terminal_replay_bypasses_repository_busy_admission(tmp_path, monkeypatch):
+    calls: list[str] = []
+
+    def participant(agent: str, _prompt: str, **_kwargs):
+        calls.append(agent)
+        return _result(agent, f"{agent} evidence")
+
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        participant,
+        lambda agent, _prompt, **_kwargs: _result(agent, "synthesis"),
+    )
+    try:
+        first = _run(controller, rounds=1)
+        with acpx_discuss._discussion_admission(controller.store.root):
+            replay = _run(controller, rounds=1)
+    finally:
+        controller.close()
+
+    assert first["state"] == "COMPLETE"
+    assert replay["conversation_id"] == first["conversation_id"]
+    assert replay["duplicate_suppressed"] is True
+    assert sorted(calls) == ["acpx-codex-shadow", "acpx-grok-shadow"]
+
+
+def test_crashed_process_releases_repository_admission_lock(tmp_path):
+    root = tmp_path / "plane"
+    root.mkdir()
+    repo_root = Path(__file__).resolve().parents[2]
+    code = """
+import os
+import sys
+from pathlib import Path
+from scripts.agent_runtime.acpx_discuss import _discussion_admission
+with _discussion_admission(Path(sys.argv[1])):
+    os._exit(17)
+"""
+    completed = subprocess.run(
+        [str(repo_root / ".venv" / "bin" / "python"), "-c", code, str(root)],
+        cwd=repo_root,
+        check=False,
+    )
+
+    assert completed.returncode == 17
+    with acpx_discuss._discussion_admission(root):
+        pass
+
+
+def test_body_free_receipt_verifies_complete_replayed_conversation(tmp_path, monkeypatch):
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        lambda agent, _prompt, **_kwargs: _result(agent, "private participant body"),
+        lambda agent, _prompt, **_kwargs: _result(agent, "private synthesis body"),
+    )
+    try:
+        first = _run(controller, rounds=2)
+        replay = _run(controller, rounds=2)
+    finally:
+        controller.close()
+
+    receipt = acpx_discuss.verify_discussion_receipt(
+        root=tmp_path / "plane",
+        conversation_id=first["conversation_id"],
+        require_replay=True,
+    )
+
+    assert replay["duplicate_suppressed"] is True
+    assert receipt["verified"] is True
+    assert receipt["content_included"] is False
+    assert receipt["successful_rounds"] == 2
+    assert receipt["duplicate_suppressed_count"] == 1
+    assert receipt["checks"] == {
+        "storage_metadata_valid": True,
+        "fixed_participants": True,
+        "terminal_complete": True,
+        "all_rounds_succeeded": True,
+        "synthesis_succeeded": True,
+        "replay_observed": True,
+    }
+    serialized = str(receipt)
+    assert "private participant body" not in serialized
+    assert "private synthesis body" not in serialized
+
+
+def test_body_free_receipt_reports_partial_without_claiming_success(tmp_path, monkeypatch):
+    def participant(agent: str, _prompt: str, **_kwargs):
+        if agent.endswith("grok-shadow"):
+            raise AgentTimeoutError("fixture timeout")
+        return _result(agent, "private codex body")
+
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        participant,
+        lambda agent, _prompt, **_kwargs: _result(agent, "private partial synthesis"),
+    )
+    try:
+        result = _run(controller, rounds=1)
+    finally:
+        controller.close()
+
+    receipt = acpx_discuss.verify_discussion_receipt(
+        root=tmp_path / "plane",
+        conversation_id=result["conversation_id"],
+    )
+
+    assert result["state"] == "PARTIAL_COMPLETE"
+    assert receipt["verified"] is False
+    assert "terminal_complete" in receipt["reasons"]
+    assert "all_rounds_succeeded" in receipt["reasons"]
+    assert receipt["content_included"] is False
+
+
+def test_body_free_receipt_never_reflects_poisoned_storage_text(tmp_path, monkeypatch):
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        lambda agent, _prompt, **_kwargs: _result(agent, "private participant body"),
+        lambda agent, _prompt, **_kwargs: _result(agent, "private synthesis body"),
+    )
+    try:
+        result = _run(controller, rounds=1)
+        controller.conn.execute(
+            """UPDATE acp_conversation_events
+               SET outcome = 'PRIVATE_PROMPT', created_at = 'PRIVATE_RESPONSE'
+               WHERE conversation_id = ? AND event_type = 'CALL_TERMINAL'
+                 AND sender = 'grok'""",
+            (result["conversation_id"],),
+        )
+        controller.conn.execute(
+            "UPDATE acp_conversations SET created_at = 'PRIVATE_TASK' WHERE conversation_id = ?",
+            (result["conversation_id"],),
+        )
+        controller.conn.execute(
+            """UPDATE acp_conversation_events SET created_at = 'PRIVATE_TERMINAL'
+               WHERE conversation_id = ? AND event_type = 'STATE' AND state = 'COMPLETE'""",
+            (result["conversation_id"],),
+        )
+        controller.conn.commit()
+    finally:
+        controller.close()
+
+    receipt = acpx_discuss.verify_discussion_receipt(
+        root=tmp_path / "plane",
+        conversation_id=result["conversation_id"],
+    )
+
+    serialized = str(receipt)
+    assert receipt["verified"] is False
+    assert receipt["checks"]["storage_metadata_valid"] is False
+    assert receipt["participant_outcomes"][1]["outcomes"] == {"other_failure": 1}
+    assert "PRIVATE_PROMPT" not in serialized
+    assert "PRIVATE_RESPONSE" not in serialized
+    assert "PRIVATE_TASK" not in serialized
+    assert "PRIVATE_TERMINAL" not in serialized
+    assert "private participant body" not in serialized
+    assert "private synthesis body" not in serialized
+
+
+def test_body_free_receipt_refuses_missing_or_invalid_conversation(tmp_path):
+    with pytest.raises(acpx_discuss.AcpxDiscussionError, match="canonical"):
+        acpx_discuss.verify_discussion_receipt(
+            root=tmp_path,
+            conversation_id="not-a-conversation",
+        )
+    with pytest.raises(acpx_discuss.AcpxDiscussionNotFoundError, match="storage"):
+        acpx_discuss.verify_discussion_receipt(
+            root=tmp_path,
+            conversation_id="conversation_" + ("a" * 32),
+        )
 
 
 def test_errors_are_terminal_once_per_leg_without_retry_or_failover(tmp_path, monkeypatch):

@@ -87,8 +87,16 @@ from .base import InvocationPlan
 
 try:
     from scripts.guardrails import worktree_containment as _worktree_containment
+    from scripts.guardrails.worktree_containment import (
+        NotAGitRepositoryError,
+        resolve_main_root,
+    )
 except ImportError:  # pragma: no cover - stripped sys.path flavor
     from guardrails import worktree_containment as _worktree_containment  # type: ignore[import-not-found, no-redef]
+    from guardrails.worktree_containment import (  # type: ignore[import-not-found, no-redef]
+        NotAGitRepositoryError,
+        resolve_main_root,
+    )
 
 _logger = logging.getLogger(__name__)
 
@@ -107,7 +115,10 @@ PINNED_VERSION = "0.13.0"
 # install silently take over. "No global binary authority" per the approved
 # Stage 0/1 contract.
 _REPO_ROOT = Path(__file__).resolve().parents[3]
-_PINNED_BINARY = _REPO_ROOT / "node_modules" / ".bin" / "acpx"
+_DEFAULT_PINNED_BINARY = _REPO_ROOT / "node_modules" / ".bin" / "acpx"
+# Keep this separately patchable for hermetic adapter tests.  An explicit
+# override is authoritative and must never silently fall back to another tree.
+_PINNED_BINARY = _DEFAULT_PINNED_BINARY
 
 # Exact reviewed native Grok CLI semver for the Grok ACPX shadow seat (#6043).
 # Built-in acpx ``grok-build`` is intentionally unused: it expands to
@@ -355,14 +366,45 @@ def _require_non_primary_worktree(cwd: Path, *, adapter_label: str) -> None:
         )
 
 
-def _require_pinned_acpx_binary(*, adapter_label: str) -> str:
-    if not _PINNED_BINARY.is_file():
+def _require_pinned_acpx_binary(*, adapter_label: str, cwd: Path) -> str:
+    """Resolve the exact local ACPX pin, sharing the primary install with worktrees.
+
+    A source worktree normally has no independent ``node_modules`` tree.  If
+    this module's default local candidate is absent, resolve the canonical
+    primary checkout from the invocation cwd and accept only that checkout's
+    identically pinned binary.  Never consult PATH or a global install.
+
+    Tests may explicitly patch :data:`_PINNED_BINARY`; an override remains
+    authoritative so an isolated test cannot accidentally borrow a developer
+    checkout's installation.
+    """
+    candidate = _PINNED_BINARY
+    if not candidate.is_file() and candidate == _DEFAULT_PINNED_BINARY:
+        try:
+            main_root = resolve_main_root(cwd)
+        except NotAGitRepositoryError:
+            main_root = None
+        if main_root is not None:
+            primary_candidate = main_root / "node_modules" / ".bin" / "acpx"
+            if primary_candidate.is_file():
+                candidate = primary_candidate
+
+    if not candidate.is_file():
+        primary_hint = ""
+        if _PINNED_BINARY == _DEFAULT_PINNED_BINARY:
+            try:
+                primary_hint = (
+                    f"; canonical primary candidate is "
+                    f"{resolve_main_root(cwd) / 'node_modules' / '.bin' / 'acpx'}"
+                )
+            except NotAGitRepositoryError:
+                primary_hint = "; cwd is not inside a Git checkout, so no canonical primary install is available"
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: pinned binary not found at {_PINNED_BINARY}; run "
-            f"`npm install acpx@{PINNED_VERSION} --save-exact --save-dev` first. "
+            f"{adapter_label}: pinned binary not found at {candidate}{primary_hint}; run "
+            f"`npm install acpx@{PINNED_VERSION} --save-exact --save-dev` in the canonical primary checkout. "
             "A global/PATH acpx binary is never used as a substitute."
         )
-    binary = str(_PINNED_BINARY)
+    binary = str(candidate)
     observed_version = _probe_acpx_version(binary)
     if observed_version != PINNED_VERSION:
         raise AcpxShadowRefusalError(
@@ -571,7 +613,7 @@ class AcpxAdapter:
             )
 
         _require_non_primary_worktree(cwd, adapter_label="AcpxAdapter")
-        binary = _require_pinned_acpx_binary(adapter_label="AcpxAdapter")
+        binary = _require_pinned_acpx_binary(adapter_label="AcpxAdapter", cwd=cwd)
 
         cmd: list[str] = _confinement_prefix_argv(binary, cwd)
         if model:
@@ -884,7 +926,7 @@ class AcpxGrokShadowAdapter:
             )
 
         _require_non_primary_worktree(cwd, adapter_label="AcpxGrokShadowAdapter")
-        acpx_binary = _require_pinned_acpx_binary(adapter_label="AcpxGrokShadowAdapter")
+        acpx_binary = _require_pinned_acpx_binary(adapter_label="AcpxGrokShadowAdapter", cwd=cwd)
 
         grok_binary = _resolve_grok_binary()
         observed_grok = _probe_grok_version(grok_binary)

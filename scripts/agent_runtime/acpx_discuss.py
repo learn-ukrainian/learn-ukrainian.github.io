@@ -7,15 +7,19 @@ direct-only ACPX seats, while the final synthesis is a fresh native Codex call.
 
 from __future__ import annotations
 
+import errno
+import fcntl
 import hashlib
 import json
 import os
+import re
 import sqlite3
 import sys
 import threading
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from concurrent.futures import ThreadPoolExecutor, wait
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -50,6 +54,8 @@ CONTENT_BUDGET_BYTES = 512 * 1024
 
 _TERMINAL = frozenset({"COMPLETE", "PARTIAL_COMPLETE", "FAILED", "CANCELLED"})
 _PARTICIPANT_SLOTS = threading.BoundedSemaphore(2)
+_LOCAL_ADMISSION = threading.Lock()
+_CONVERSATION_ID = re.compile(r"conversation_[0-9a-f]{32}")
 _NEXT = {
     # A CREATED reservation may be recovered after a crash only as terminal
     # partial; it is never re-executed.
@@ -65,6 +71,14 @@ _NEXT = {
 
 class AcpxDiscussionError(RuntimeError):
     """Typed refusal or state-machine failure for the bounded controller."""
+
+
+class AcpxDiscussionBusyError(AcpxDiscussionError):
+    """Another ACP discussion owns the repository-wide single-host admission."""
+
+
+class AcpxDiscussionNotFoundError(AcpxDiscussionError):
+    """The requested durable ACP discussion receipt does not exist."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -106,6 +120,26 @@ def _safe_tokens(value: object) -> int | None:
     return value if isinstance(value, int) and not isinstance(value, bool) and value >= 0 else None
 
 
+def _safe_receipt_timestamp(value: object) -> str | None:
+    """Allow only the controller's normalized UTC timestamp representation."""
+    if not isinstance(value, str):
+        return None
+    try:
+        datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
+    except ValueError:
+        return None
+    return value
+
+
+def _safe_receipt_outcome(value: object) -> str:
+    """Collapse untrusted persisted outcomes into a fixed body-free vocabulary."""
+    if value == "ok":
+        return "ok"
+    if value in {"timeout", "rate_limited", "error", "busy", "orphan"}:
+        return str(value)
+    return "other_failure"
+
+
 def _expired_deadline(value: object) -> bool:
     """Fail closed unless a persisted UTC deadline is valid and in the past."""
     if not isinstance(value, str):
@@ -115,6 +149,45 @@ def _expired_deadline(value: object) -> bool:
     except ValueError:
         return False
     return datetime.now(UTC) > parsed
+
+
+@contextmanager
+def _discussion_admission(root: Path) -> Iterator[None]:
+    """Acquire one no-wait ACP slot for this repository on the current host.
+
+    The local mutex closes same-process platform differences in ``flock``
+    semantics. The file lock covers independent worktree processes sharing the
+    canonical fleet-comms root. A host crash releases both automatically; the
+    persistent lock file is only an inode and contains no runtime data.
+    """
+    if not _LOCAL_ADMISSION.acquire(blocking=False):
+        raise AcpxDiscussionBusyError("another ACP discussion is already running")
+    descriptor: int | None = None
+    locked = False
+    try:
+        flags = os.O_CREAT | os.O_RDWR
+        flags |= getattr(os, "O_CLOEXEC", 0)
+        flags |= getattr(os, "O_NOFOLLOW", 0)
+        try:
+            descriptor = os.open(root / "acp-discuss.lock", flags, 0o600)
+            os.fchmod(descriptor, 0o600)
+            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            locked = True
+        except OSError as exc:
+            if exc.errno in {errno.EACCES, errno.EAGAIN}:
+                raise AcpxDiscussionBusyError(
+                    "another ACP discussion is already running"
+                ) from None
+            raise AcpxDiscussionError(
+                f"unable to acquire the ACP admission lock: {exc}"
+            ) from exc
+        yield
+    finally:
+        if descriptor is not None:
+            if locked:
+                fcntl.flock(descriptor, fcntl.LOCK_UN)
+            os.close(descriptor)
+        _LOCAL_ADMISSION.release()
 
 
 class AcpxDiscussionController:
@@ -438,6 +511,26 @@ class AcpxDiscussionController:
             return existing, self._replay(existing)
         return conversation_id, None
 
+    def _terminal_replay(self, idempotency_digest: str) -> dict[str, Any] | None:
+        """Replay completed work before admission so duplicates never report busy."""
+        row = self.conn.execute(
+            "SELECT conversation_id FROM acp_conversations WHERE idempotency_digest = ?",
+            (idempotency_digest,),
+        ).fetchone()
+        if row is None:
+            return None
+        conversation_id = str(row[0])
+        state = self._state(conversation_id)
+        if state not in _TERMINAL:
+            return None
+        self._append(
+            conversation_id,
+            event_type="DUPLICATE_SUPPRESSED",
+            state=state,
+            outcome="duplicate_suppressed",
+        )
+        return self._replay(conversation_id)
+
     def _call_wave(
         self,
         *,
@@ -551,7 +644,16 @@ class AcpxDiscussionController:
         pool.shutdown(wait=False, cancel_futures=True)
         return sorted(outcomes, key=lambda item: item.participant)
 
-    def run(self, *, prompt: str, cwd: Path, task_id: str, correlation_id: str, idempotency_key: str, rounds: int = DEFAULT_ROUNDS) -> dict[str, Any]:
+    def run(
+        self,
+        *,
+        prompt: str,
+        cwd: Path,
+        task_id: str,
+        correlation_id: str,
+        idempotency_key: str,
+        rounds: int = DEFAULT_ROUNDS,
+    ) -> dict[str, Any]:
         if os.environ.get(TRANSPORT_ENV, "off").strip().lower() != "active":
             raise AcpxDiscussionError("LU_ACPX_TRANSPORT=active is required by acp-discuss")
         if not prompt.strip():
@@ -566,10 +668,42 @@ class AcpxDiscussionController:
         task_id = _require_local_metadata_field("task_id", task_id, adapter_label="AcpxDiscuss")
         correlation_id = _require_local_metadata_field("correlation_id", correlation_id, adapter_label="AcpxDiscuss")
         idempotency_key = _require_local_metadata_field("idempotency_key", idempotency_key, adapter_label="AcpxDiscuss")
+        idempotency_digest = _digest(idempotency_key)
+        replay = self._terminal_replay(idempotency_digest)
+        if replay is not None:
+            return replay
+        with _discussion_admission(self.store.root):
+            return self._run_admitted(
+                prompt=prompt,
+                cwd=resolved_cwd,
+                task_id=task_id,
+                correlation_id=correlation_id,
+                idempotency_key=idempotency_key,
+                idempotency_digest=idempotency_digest,
+                rounds=rounds,
+            )
+
+    def _run_admitted(
+        self,
+        *,
+        prompt: str,
+        cwd: Path,
+        task_id: str,
+        correlation_id: str,
+        idempotency_key: str,
+        idempotency_digest: str,
+        rounds: int,
+    ) -> dict[str, Any]:
         started = self.clock()
         deadline = started + WHOLE_TIMEOUT_SECONDS
         deadline_at = (datetime.now(UTC) + timedelta(seconds=WHOLE_TIMEOUT_SECONDS)).strftime("%Y-%m-%dT%H:%M:%SZ")
-        conversation_id, replay = self._reserve(task_digest=_digest(task_id), correlation_digest=_digest(correlation_id), idempotency_digest=_digest(idempotency_key), rounds=rounds, deadline_at=deadline_at)
+        conversation_id, replay = self._reserve(
+            task_digest=_digest(task_id),
+            correlation_digest=_digest(correlation_id),
+            idempotency_digest=idempotency_digest,
+            rounds=rounds,
+            deadline_at=deadline_at,
+        )
         if replay is not None:
             return replay
         if self.cancelled():
@@ -585,7 +719,7 @@ class AcpxDiscussionController:
         content_used = sum(len(prompt.encode("utf-8")) for _participant in PARTICIPANTS)
         outcomes = self._call_wave(
             conversation_id=conversation_id, task_id=task_id, correlation_id=correlation_id,
-            idempotency_key=idempotency_key, cwd=resolved_cwd, round_no=1,
+            idempotency_key=idempotency_key, cwd=cwd, round_no=1,
             prompts={p: prompt for p in PARTICIPANTS},
             deliveries={p: ("root", prompt, None) for p in PARTICIPANTS},
             state="INITIAL_FANOUT", deadline=deadline,
@@ -626,7 +760,7 @@ class AcpxDiscussionController:
             prior_messages = {item.participant: item.message_id for item in outcomes}
             outcomes = self._call_wave(
                 conversation_id=conversation_id, task_id=task_id, correlation_id=correlation_id,
-                idempotency_key=idempotency_key, cwd=resolved_cwd, round_no=round_no,
+                idempotency_key=idempotency_key, cwd=cwd, round_no=round_no,
                 prompts=prompts,
                 deliveries={
                     "codex": ("grok", prior.get("grok") or "[unavailable]", prior_messages.get("grok")),
@@ -686,7 +820,7 @@ class AcpxDiscussionController:
                 kind="request",
             )
             try:
-                synthesis_result = self.synthesis_call("codex", synthesis_prompt, mode="read-only", cwd=resolved_cwd, task_id=task_id, session_id=None, entrypoint="acpx-discuss-synthesis", hard_timeout=max(1, min(CALL_TIMEOUT_SECONDS, int(deadline - self.clock()))))
+                synthesis_result = self.synthesis_call("codex", synthesis_prompt, mode="read-only", cwd=cwd, task_id=task_id, session_id=None, entrypoint="acpx-discuss-synthesis", hard_timeout=max(1, min(CALL_TIMEOUT_SECONDS, int(deadline - self.clock()))))
                 if synthesis_result.ok:
                     synthesis = synthesis_result.response
             except BaseException as exc:
@@ -772,3 +906,156 @@ def run_discussion(**kwargs: Any) -> dict[str, Any]:
         return controller.run(**kwargs)
     finally:
         controller.close()
+
+
+def verify_discussion_receipt(
+    *,
+    root: Path,
+    conversation_id: str,
+    require_replay: bool = False,
+) -> dict[str, Any]:
+    """Verify a durable ACP receipt using metadata-only, read-only storage."""
+    if _CONVERSATION_ID.fullmatch(conversation_id) is None:
+        raise AcpxDiscussionError("conversation_id must be a canonical ACP conversation ID")
+    db_path = root.expanduser().resolve() / "comms.sqlite3"
+    if not db_path.is_file():
+        raise AcpxDiscussionNotFoundError("ACP conversation storage was not found")
+    try:
+        connection = sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True)
+        connection.row_factory = sqlite3.Row
+        row = connection.execute(
+            """SELECT conversation_id, rounds_requested, participants_json, created_at
+               FROM acp_conversations WHERE conversation_id = ?""",
+            (conversation_id,),
+        ).fetchone()
+        if row is None:
+            raise AcpxDiscussionNotFoundError(
+                f"ACP conversation {conversation_id} was not found"
+            )
+        events = connection.execute(
+            """SELECT sequence, event_type, state, sender, round, outcome,
+                      duration_ms, token_count, created_at
+               FROM acp_conversation_events
+               WHERE conversation_id = ? ORDER BY sequence""",
+            (conversation_id,),
+        ).fetchall()
+    except AcpxDiscussionNotFoundError:
+        raise
+    except sqlite3.Error as exc:
+        raise AcpxDiscussionError(f"unable to verify ACP conversation storage: {exc}") from exc
+    finally:
+        if "connection" in locals():
+            connection.close()
+
+    if not events:
+        raise AcpxDiscussionError("ACP conversation has no lifecycle events")
+    try:
+        participants = json.loads(str(row["participants_json"]))
+    except (TypeError, ValueError, json.JSONDecodeError):
+        participants = None
+    rounds_value = row["rounds_requested"]
+    rounds_requested = (
+        rounds_value
+        if isinstance(rounds_value, int)
+        and not isinstance(rounds_value, bool)
+        and 1 <= rounds_value <= MAX_ROUNDS
+        else 0
+    )
+    created_at = _safe_receipt_timestamp(row["created_at"])
+    terminal_calls = [event for event in events if event["event_type"] == "CALL_TERMINAL"]
+    outcome_counts: dict[str, dict[str, int]] = {
+        participant: {} for participant in PARTICIPANTS
+    }
+    successful_legs: set[tuple[int, str]] = set()
+    rounds_observed = 0
+    for event in terminal_calls:
+        participant = str(event["sender"] or "")
+        round_no = event["round"]
+        outcome = _safe_receipt_outcome(event["outcome"])
+        if participant not in outcome_counts:
+            continue
+        outcome_counts[participant][outcome] = (
+            outcome_counts[participant].get(outcome, 0) + 1
+        )
+        if isinstance(round_no, int) and not isinstance(round_no, bool) and round_no > 0:
+            rounds_observed = max(rounds_observed, round_no)
+            if outcome == "ok":
+                successful_legs.add((round_no, participant))
+    successful_rounds = sum(
+        all((round_no, participant) in successful_legs for participant in PARTICIPANTS)
+        for round_no in range(1, rounds_requested + 1)
+    )
+    synthesis_events = [
+        event for event in events if event["event_type"] == "SYNTHESIS_TERMINAL"
+    ]
+    synthesis_outcome = (
+        _safe_receipt_outcome(synthesis_events[-1]["outcome"])
+        if synthesis_events
+        else "missing"
+    )
+    replay_count = sum(
+        event["event_type"] == "DUPLICATE_SUPPRESSED" for event in events
+    )
+    final_event = events[-1]
+    final_state = (
+        str(final_event["state"])
+        if final_event["state"] in _TERMINAL
+        else "UNKNOWN"
+    )
+    updated_at = _safe_receipt_timestamp(final_event["created_at"])
+    terminal_state_event = next(
+        (
+            event
+            for event in reversed(events)
+            if event["event_type"] == "STATE" and event["state"] in _TERMINAL
+        ),
+        None,
+    )
+    participants_exact = participants == list(PARTICIPANTS)
+    storage_metadata_valid = (
+        rounds_requested > 0
+        and created_at is not None
+        and updated_at is not None
+        and terminal_state_event is not None
+    )
+    terminal_complete = final_state == "COMPLETE"
+    rounds_complete = successful_rounds == rounds_requested
+    synthesis_complete = synthesis_outcome == "ok"
+    replay_complete = replay_count > 0 or not require_replay
+    checks = {
+        "storage_metadata_valid": storage_metadata_valid,
+        "fixed_participants": participants_exact,
+        "terminal_complete": terminal_complete,
+        "all_rounds_succeeded": rounds_complete,
+        "synthesis_succeeded": synthesis_complete,
+        "replay_observed": replay_complete,
+    }
+    reasons = [name for name, passed in checks.items() if not passed]
+    duration_ms = terminal_state_event["duration_ms"] if terminal_state_event else None
+    token_count = terminal_state_event["token_count"] if terminal_state_event else None
+    return {
+        "conversation_id": conversation_id,
+        "verified": not reasons,
+        "content_included": False,
+        "state": final_state,
+        "participants": list(PARTICIPANTS),
+        "rounds_requested": rounds_requested,
+        "rounds_observed": rounds_observed,
+        "successful_rounds": successful_rounds,
+        "participant_outcomes": [
+            {
+                "participant": participant,
+                "terminal_calls": sum(outcome_counts[participant].values()),
+                "outcomes": outcome_counts[participant],
+            }
+            for participant in PARTICIPANTS
+        ],
+        "synthesis_outcome": synthesis_outcome,
+        "duplicate_suppressed_count": replay_count,
+        "created_at": created_at,
+        "updated_at": updated_at,
+        "duration_ms": _safe_tokens(duration_ms),
+        "token_count": _safe_tokens(token_count),
+        "checks": checks,
+        "reasons": reasons,
+    }

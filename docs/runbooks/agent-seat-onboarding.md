@@ -165,17 +165,52 @@ floating CLI surface.
 
 The active path is a **bounded fleet-comms-backed conversation**, not a new
 bus. It is accepted only by `.venv/bin/python -m scripts.fleet_comms
-acp-discuss` with `LU_ACPX_TRANSPORT=active`; generic runtime callers cannot
+acp-discuss`, which scopes `LU_ACPX_TRANSPORT=active` to the controller call
+and restores the prior environment on exit; generic runtime callers cannot
 turn it on. Pass the task on stdin and never place task or model-response data
 in argv:
 
 ```bash
 printf '%s\n' 'Compare the two bounded options and name risks.' |
-  LU_ACPX_TRANSPORT=active ACPX_AUTH_CHAT_GPT=1 \
+  ACPX_AUTH_CHAT_GPT=1 \
   .venv/bin/python -m scripts.fleet_comms acp-discuss --cwd . \
   --task-id acp-6078 --correlation-id acp-6078-v1 \
   --idempotency-key acp-6078-v1 --rounds 2 --json
 ```
+
+### When an orchestrator may use the ACP panel
+
+Every supported fleet orchestrator may **explicitly** use this fixed
+Codex↔Grok panel for one consequential, read-only design or risk comparison
+when direct cross-provider critique is materially useful. It is not an
+automatic launcher or `delegate.py` feature, and `acp-discuss` is the sole
+surface. Use the default two rounds; three is the hard maximum.
+
+Admission is one conversation repository-wide. If it is occupied, return
+`busy` immediately: there is no queue, wait, automatic retry, or hidden
+failover. On `busy`, unavailable ACPX, or an unready participant, use the
+bounded bridge `discuss` path instead. A typed partial ACP outcome is valid
+evidence to inspect, but not a successful discussion, formal review, or
+coordination authority.
+
+### Shared ACPX install and E2E/replay verification
+
+ACPX is installed once at the shared primary checkout as the pinned local
+`acpx@0.13.0`; a dispatch worktree resolves that primary install and must not
+create its own global or floating ACPX installation. For an E2E/replay check,
+run the real stdin-only `acp-discuss` command from a registered worktree with
+one bounded read-only task, then repeat the **identical** task, correlation,
+and idempotency values. The first terminal result is evidence; the second must
+be durable replay suppression, never another model run. Then run:
+
+```bash
+.venv/bin/python -m scripts.fleet_comms acp-verify \
+  --conversation-id conversation_<id> --require-replay --json
+```
+
+The verifier is read-only and body-free. `verified: true` requires the fixed
+participants to succeed in every requested round, successful native synthesis,
+terminal `COMPLETE`, and an observed replay. It never authorizes a retry.
 
 Participants are exactly `codex,grok`. Two rounds are the default and three is
 the hard maximum: parallel initial participant calls, a bounded peer
@@ -186,9 +221,10 @@ unrestricted loop, hidden failover, or retry. Each model call is capped at 300
 seconds, the whole conversation at 1,200 seconds, and content at 160k reliable
 tokens or 512 KiB.
 
-Replay suppression is durable and occurs before scheduling. An orphaned reservation
-is terminal: never retry it. Locks must not cover model I/O.
-Typed partial results, idempotency disposition, and append-only
+Replay suppression is durable and occurs before scheduling. An orphaned
+reservation is terminal: never retry it. The single-host repository admission
+file lock covers the conversation, including model I/O; no SQLite transaction
+may cover model I/O. Typed partial results, idempotency disposition, and append-only
 state/timeline events are durably recorded through existing fleet-comms and
 file handoffs; those handoffs retain authority. This conversation neither
 changes plane/retention state nor gains dispatch, routing, failover, or review

@@ -23,7 +23,7 @@
 | **`discuss`** (bridge) | Bounded deliberation / design input | Never implementation; never the formal cross-family review gate |
 | **`scripts/delegate.py dispatch`** | Isolated implementation execution | Worktree writes only; not durable fleet authority |
 | **Fleet-comms + file handoffs** | Durable coordination | **File dual-write remains authoritative in every current plane mode** — query `plane-status`, never hard-code live mode |
-| **ACPX** | Experimental structured invocation transport (default-off/shadow; one read-only/stateless Codex participant) | Not a second bus; correlation evidence ≠ authority; rollback = flag off + native transport |
+| **ACPX** | Explicit fixed Codex↔Grok panel for one consequential read-only design/risk comparison (default-off/shadow) | Sole surface `acp-discuss`; no automatic launcher/delegate use, queue, retry, formal review, or authority |
 | **Buzz** | **Deferred** | Relay-as-authority conflicts with the current model — out of scope |
 
 **Discussion is not formal review.** Design panels and same-family helpers do not
@@ -38,6 +38,12 @@ Use explicit project entrypoints (no bare `ab` — on many hosts that is ApacheB
 
 Full onboarding contract, budgets, troubleshooting, and no-auth smoke:
 [`agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md).
+
+Use ACPX only when direct Codex↔Grok critique is materially useful; otherwise
+use bounded bridge `discuss`. The panel defaults to two rounds (three maximum),
+admits one repository-wide conversation, and returns `busy` rather than
+queueing or retrying. A partial result is evidence to inspect, never success or
+the independent review gate.
 
 ---
 

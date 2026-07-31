@@ -480,6 +480,86 @@ def test_build_invocation_rejects_missing_binary(tmp_path, monkeypatch):
         _build(adapter, cwd=tmp_path)
 
 
+def _set_default_binary_candidate(monkeypatch, candidate: Path) -> None:
+    """Make a test-local module candidate eligible for primary fallback."""
+    monkeypatch.setattr(acpx_module, "_DEFAULT_PINNED_BINARY", candidate)
+    monkeypatch.setattr(acpx_module, "_PINNED_BINARY", candidate)
+
+
+def test_build_invocation_resolves_primary_pin_from_linked_worktree(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "codex" / "acp"
+    worktree.mkdir(parents=True)
+    module_candidate = worktree / "node_modules" / ".bin" / "acpx"
+    _set_default_binary_candidate(monkeypatch, module_candidate)
+    primary_binary = primary / "node_modules" / ".bin" / "acpx"
+    primary_binary.parent.mkdir(parents=True)
+    primary_binary.write_text("#!/bin/sh\n", encoding="utf-8")
+    primary_binary.chmod(0o755)
+    monkeypatch.setattr(acpx_module, "resolve_main_root", lambda cwd: primary)
+    monkeypatch.setattr(acpx_module, "_probe_acpx_version", lambda _binary: "0.13.0")
+
+    plan = _build(AcpxAdapter(), cwd=worktree)
+
+    assert plan.cmd[0] == str(primary_binary)
+
+
+def test_build_invocation_explicit_binary_override_never_uses_primary(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    override = _stub_binary(monkeypatch, tmp_path)
+    monkeypatch.setattr(
+        acpx_module,
+        "resolve_main_root",
+        lambda _cwd: pytest.fail("explicit binary override must remain authoritative"),
+    )
+
+    plan = _build(AcpxAdapter(), cwd=tmp_path)
+
+    assert plan.cmd[0] == str(override)
+
+
+def test_build_invocation_non_git_cwd_refuses_without_global_fallback(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    candidate = tmp_path / "worktree" / "node_modules" / ".bin" / "acpx"
+    _set_default_binary_candidate(monkeypatch, candidate)
+    monkeypatch.setattr(
+        acpx_module,
+        "resolve_main_root",
+        lambda cwd: (_ for _ in ()).throw(acpx_module.NotAGitRepositoryError(str(cwd))),
+    )
+
+    with pytest.raises(AcpxShadowRefusalError, match="no canonical primary install is available"):
+        _build(AcpxAdapter(), cwd=tmp_path)
+
+
+def test_build_invocation_refuses_when_primary_pin_is_missing(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    candidate = tmp_path / "worktree" / "node_modules" / ".bin" / "acpx"
+    primary = tmp_path / "primary"
+    _set_default_binary_candidate(monkeypatch, candidate)
+    monkeypatch.setattr(acpx_module, "resolve_main_root", lambda _cwd: primary)
+
+    with pytest.raises(AcpxShadowRefusalError, match=str(primary / "node_modules" / ".bin" / "acpx")):
+        _build(AcpxAdapter(), cwd=tmp_path)
+
+
+def test_build_invocation_rejects_primary_pin_version_mismatch(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    candidate = tmp_path / "worktree" / "node_modules" / ".bin" / "acpx"
+    primary = tmp_path / "primary"
+    primary_binary = primary / "node_modules" / ".bin" / "acpx"
+    primary_binary.parent.mkdir(parents=True)
+    primary_binary.write_text("#!/bin/sh\n", encoding="utf-8")
+    primary_binary.chmod(0o755)
+    _set_default_binary_candidate(monkeypatch, candidate)
+    monkeypatch.setattr(acpx_module, "resolve_main_root", lambda _cwd: primary)
+    monkeypatch.setattr(acpx_module, "_probe_acpx_version", lambda _binary: "0.12.1")
+
+    with pytest.raises(AcpxShadowRefusalError, match="version"):
+        _build(AcpxAdapter(), cwd=tmp_path)
+
+
 def test_build_invocation_rejects_unreadable_version_probe(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
     _stub_binary(monkeypatch, tmp_path, version="")

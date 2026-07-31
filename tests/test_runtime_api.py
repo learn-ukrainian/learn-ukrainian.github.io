@@ -448,33 +448,23 @@ def test_acp_summary_prefers_terminal_wall_duration_and_token_total(tmp_path, mo
     assert summary["total_tokens"] == 5
 
 
-def test_runtime_page_has_a_separate_read_only_active_acp_timeline():
+def test_runtime_page_links_to_the_dedicated_read_only_acp_conversations_page():
     html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
     acp_panel = html[html.index('id="acp-heading"') : html.index('id="acpx-heading"')]
 
-    assert "Active ACP Conversations" in acp_panel
-    assert "/api/runtime/acp/conversations?limit=12" in html
-    assert "/api/runtime/acp/conversations/${encodeURIComponent(summary.conversation_id)}" in html
-    assert "Loading active conversations..." in acp_panel
-    assert "No active ACP conversations." in html
-    assert "Conversation storage is unavailable." in html
-    assert "Malformed conversation data" in html
-    assert "Root</div><div class=\"acp-lane\">Codex</div><div class=\"acp-lane\">Grok" in html
-    assert "round ${event.round}" in html
-    assert "seq ${event.sequence}" in html
-    assert "Duplicate suppressed" in html
-    assert "Ended: ${displayLabel(conversation.termination_reason)}" in html
-    assert "acpStateClass" in html
-    assert "acpStateLabel" in html
-    for label in ["Queued", "Running", "Succeeded", "Partial", "Cancelled", "Failed"]:
-        assert label in html
-    for state in ["COMPLETE", "PARTIAL_COMPLETE", "CANCELLED", "FAILED", "CREATED"]:
-        assert state in html
+    assert "ACP Conversations" in acp_panel
+    assert "Read-only, body-free event history" in acp_panel
+    assert 'href="/acp.html"' in acp_panel
+    assert "/api/runtime/acp/conversations" not in html
+    assert (DASHBOARDS / "acp.html").is_file()
 
     for prohibited in [
         "<form",
         "acp-send",
         "acp-post",
+        "acp-start",
+        "acp-session",
+        "acp-toggle",
         "acp-retry",
         "acp-cancel",
         "acp-route",

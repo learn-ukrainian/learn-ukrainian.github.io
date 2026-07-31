@@ -945,6 +945,17 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
         "keep",
     ),
     PageContract(
+        "acp.html",
+        "/acp.html",
+        "Readable, read-only ACP conversation ledger and event timeline.",
+        "/api/runtime/acp/conversations*.",
+        "Single-shot live body-free fetch on page load; the browser uses its platform-default request timeout and does not poll.",
+        ("humans",),
+        "Complements runtime and channels without exposing message composition.",
+        "low",
+        "keep as the canonical ACP conversation observer",
+    ),
+    PageContract(
         "cost.html",
         "/cost.html",
         "Cost reports.",

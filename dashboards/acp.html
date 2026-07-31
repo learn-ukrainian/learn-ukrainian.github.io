@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACP Conversations - ukraine-ops</title>
+<link rel="icon" href="data:,">
+<style>
+:root { --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d; --text: #e6edf3; --text2: #8b949e; --text3: #6e7681; --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922; --purple: #bc8cff; --cyan: #39d2c0; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+a { color: var(--blue); }
+.topbar { display: flex; align-items: center; gap: 14px; padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--bg2); }
+.topbar h1 { margin: 0; font-size: 22px; }
+.sub, .muted { color: var(--text2); font-size: 13px; }
+.spacer { flex: 1; }
+.meta { text-align: right; color: var(--text3); font-size: 12px; }
+.container { max-width: 1480px; margin: 0 auto; padding: 24px; }
+.intro { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin: 4px 0 20px; }
+.eyebrow { color: var(--cyan); font-size: 11px; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+.intro h2 { margin: 5px 0 8px; font-size: clamp(24px, 3.2vw, 38px); letter-spacing: -.035em; }
+.intro p { max-width: 670px; margin: 0; color: var(--text2); line-height: 1.5; }
+.privacy { max-width: 350px; border-left: 3px solid var(--purple); background: rgba(188, 140, 255, .07); color: var(--text2); font-size: 12px; line-height: 1.5; padding: 12px 14px; }
+.privacy strong { color: var(--text); }
+.banner { display: none; margin: 0 0 16px; padding: 11px 13px; border: 1px solid rgba(248,81,73,.45); border-radius: 8px; background: rgba(248,81,73,.12); color: #ffaaa4; font-size: 13px; }
+.workspace { display: grid; grid-template-columns: minmax(280px, .8fr) minmax(0, 1.6fr); gap: 16px; align-items: start; }
+.ledger, .detail { min-width: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--bg2); }
+.ledger { overflow: hidden; }
+.section-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.section-head h3 { margin: 0; font-size: 13px; letter-spacing: .02em; }
+.count { color: var(--text3); font-size: 12px; }
+.conversation-list { display: grid; gap: 1px; background: var(--border); }
+.conversation-row { display: block; padding: 14px 16px; background: var(--bg2); color: var(--text); text-decoration: none; border-left: 3px solid transparent; outline-offset: -3px; }
+.conversation-row:hover { background: var(--bg3); text-decoration: none; }
+.conversation-row:focus-visible { outline: 2px solid var(--blue); }
+.conversation-row[aria-current="true"] { border-left-color: var(--cyan); background: rgba(57,210,192,.08); }
+.row-top, .detail-title { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.conversation-id { min-width: 0; overflow-wrap: anywhere; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 12px; font-weight: 750; }
+.row-meta { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; color: var(--text3); font-size: 11px; }
+.pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 3px 8px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.pill.ok { color: var(--green); background: rgba(63,185,80,.14); }.pill.err { color: var(--red); background: rgba(248,81,73,.14); }.pill.warn { color: var(--yellow); background: rgba(210,153,34,.14); }.pill.gray { color: var(--text2); background: rgba(139,148,158,.12); }.pill.info { color: var(--cyan); background: rgba(57,210,192,.13); }
+.detail { min-height: 500px; padding: 20px; }
+.detail-empty { display: grid; place-items: center; min-height: 440px; color: var(--text3); text-align: center; line-height: 1.55; }
+.detail-title h3 { margin: 0; font-size: 16px; }
+.detail-sub { margin: 7px 0 0; color: var(--text3); font-size: 12px; }
+.facts { display: flex; flex-wrap: wrap; gap: 7px; margin: 16px 0 18px; }
+.participants { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; padding: 12px 0 18px; border-bottom: 1px solid var(--border); }
+.participants-label { color: var(--text3); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.lane { color: var(--text2); border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.timeline-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 19px 0 12px; }.timeline-head h4 { margin: 0; font-size: 13px; }
+.timeline { position: relative; display: grid; gap: 0; padding-left: 28px; }.timeline::before { content: ""; position: absolute; left: 8px; top: 7px; bottom: 7px; width: 2px; background: linear-gradient(var(--cyan), rgba(57,210,192,.18)); }
+.event { position: relative; padding: 0 0 18px 14px; }.event:last-child { padding-bottom: 0; }.event::before { content: ""; position: absolute; left: -25px; top: 4px; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--cyan); background: var(--bg2); box-shadow: 0 0 0 4px var(--bg2); }
+.event-top { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }.event-flow { color: var(--cyan); font-size: 12px; font-weight: 800; }.event-time { color: var(--text3); font-size: 11px; }.event-type { color: var(--text); font-size: 12px; }.event-facts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.empty { padding: 18px 16px; color: var(--text3); font-size: 13px; line-height: 1.5; }
+@media (max-width: 880px) { .topbar, .intro { align-items: flex-start; flex-wrap: wrap; }.meta { text-align: left; }.workspace { grid-template-columns: 1fr; }.detail { min-height: 360px; }.privacy { max-width: none; }.conversation-row { padding: 13px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
+</style>
+<link rel="stylesheet" href="/monitor.css">
+</head>
+<body>
+<header class="topbar">
+  <div><h1>ACP Conversations</h1><div class="sub">Bounded conversation observability</div></div>
+  <div class="spacer"></div>
+  <div class="meta"><div>Read-only metadata</div><div id="last-refresh">Loading…</div></div>
+  <nav class="monitor-nav" aria-label="Monitor sections">
+    <a href="/">Home</a><a href="/orient.html">Orient</a><a href="/channels.html">Channels</a><a href="/comms.html">Comms</a><a href="/artifacts/">Artifacts</a><a href="/runtime.html">Runtime</a><a class="active" href="/acp.html">Conversations</a><a href="/docs">API</a>
+  </nav>
+</header>
+<main class="container">
+  <section class="intro" aria-labelledby="page-heading">
+    <div><div class="eyebrow">Conversation event rail</div><h2 id="page-heading">Follow the flow, not the payload.</h2><p>Recent bounded ACP conversations are shown as state transitions and allowlisted operational metadata. Select a conversation to inspect its chronological event rail.</p></div>
+    <aside class="privacy"><strong>Body-free by design.</strong> Prompts, responses, paths, credentials, commands, sessions, and artifact bodies never appear here. This page cannot send, start, retry, cancel, route, or review a conversation.</aside>
+  </section>
+  <div class="banner" id="error-banner" role="status"></div>
+  <section class="workspace" aria-label="ACP conversation browser">
+    <aside class="ledger" aria-labelledby="ledger-heading"><div class="section-head"><h3 id="ledger-heading">Recent conversations</h3><span class="count" id="conversation-count">Loading</span></div><div class="conversation-list" id="conversation-list" aria-live="polite"><div class="empty">Loading recent conversations…</div></div></aside>
+    <section class="detail" aria-labelledby="detail-heading"><div id="conversation-detail" class="detail-empty"><div><strong id="detail-heading">Select a conversation</strong><br>Its body-free timeline will appear here.</div></div></section>
+  </section>
+</main>
+<script>
+const LIST_URL = '/api/runtime/acp/conversations?limit=50';
+const DETAIL_URL = '/api/runtime/acp/conversations/';
+
+function escapeHtml(value) { const node = document.createElement('span'); node.textContent = value == null ? '' : String(value); return node.innerHTML; }
+function formatTs(value) { if (!value) return '—'; const date = new Date(value); return Number.isNaN(date.getTime()) ? escapeHtml(String(value)) : date.toLocaleString(); }
+function formatDurationMs(value) { return Number.isFinite(value) ? value >= 60000 ? `${(value / 60000).toFixed(1)}m` : `${(value / 1000).toFixed(1)}s` : '—'; }
+function label(value) { return String(value || 'unknown').replace(/[_-]+/g, ' ').replace(/\b\w/g, character => character.toUpperCase()); }
+function stateClass(state) { if (state === 'COMPLETE') return 'ok'; if (state === 'PARTIAL' || state === 'PARTIAL_COMPLETE') return 'warn'; if (state === 'FAILED' || state === 'CANCELLED') return 'err'; if (state === 'CREATED') return 'gray'; return 'info'; }
+function stateLabel(state) { if (state === 'COMPLETE') return 'Succeeded'; if (state === 'PARTIAL' || state === 'PARTIAL_COMPLETE') return 'Partial'; if (state === 'FAILED') return 'Failed'; if (state === 'CANCELLED') return 'Cancelled'; if (state === 'CREATED') return 'Queued'; return 'Running'; }
+function outcomeClass(outcome) { if (outcome === 'succeeded') return 'ok'; if (outcome === 'failed' || outcome === 'cancelled' || outcome === 'deadline_exceeded') return 'err'; if (outcome === 'partial' || outcome === 'budget_exhausted') return 'warn'; if (outcome === 'queued') return 'gray'; return 'info'; }
+function eventStatus(event) { return typeof event.outcome === 'string' && event.outcome ? { className: outcomeClass(event.outcome), text: label(event.outcome) } : { className: stateClass(event.state), text: stateLabel(event.state) }; }
+function selectedId() { return new URLSearchParams(location.search).get('conversation'); }
+function eventFacts(event) { const facts = []; if (Number.isFinite(event.duration_ms)) facts.push(`Duration ${formatDurationMs(event.duration_ms)}`); if (Number.isFinite(event.token_count)) facts.push(`Tokens ${event.token_count}`); return facts.map(fact => `<span class="pill gray">${escapeHtml(fact)}</span>`).join(''); }
+function eventFlow(event) { const sender = typeof event.sender === 'string' ? event.sender : 'system'; const recipient = typeof event.recipient === 'string' ? event.recipient : ''; return recipient ? `${sender} → ${recipient}` : sender; }
+async function fetchJson(url) { const response = await fetch(url); const text = await response.text(); let data = {}; try { data = text ? JSON.parse(text) : {}; } catch { data = { detail: text }; } if (!response.ok) throw new Error(data.detail || data.error || `HTTP ${response.status}`); return data; }
+function renderList(conversations, activeId) { const content = document.getElementById('conversation-list'); document.getElementById('conversation-count').textContent = `${conversations.length} recent`; if (!conversations.length) { content.innerHTML = '<div class="empty">No recent ACP conversations. Run no action from this page; it observes persisted metadata only.</div>'; return; } content.innerHTML = conversations.map(conversation => { const id = conversation && typeof conversation.conversation_id === 'string' ? conversation.conversation_id : null; if (!id) return ''; const selected = id === activeId; const href = `/acp.html?conversation=${encodeURIComponent(id)}`; return `<a class="conversation-row" href="${href}" ${selected ? 'aria-current="true"' : ''}><div class="row-top"><span class="conversation-id">${escapeHtml(id)}</span><span class="pill ${stateClass(conversation.current_state)}">${escapeHtml(stateLabel(conversation.current_state))}</span></div><div class="row-meta"><span>${escapeHtml((conversation.participants || []).map(label).join(' · ') || 'Participants unavailable')}</span><span>Rounds ${Number(conversation.rounds_completed) || 0}/${Number(conversation.rounds_requested) || 0}</span><span>Updated ${escapeHtml(formatTs(conversation.updated_at))}</span></div></a>`; }).join(''); }
+function renderDetail(conversation) { const detail = document.getElementById('conversation-detail'); const events = Array.isArray(conversation.events) ? conversation.events : []; const facts = [`Rounds ${Number(conversation.rounds_completed) || 0}/${Number(conversation.rounds_requested) || 0}`, `Started ${formatTs(conversation.created_at)}`, `Updated ${formatTs(conversation.updated_at)}`, `Duration ${formatDurationMs(conversation.total_duration_ms)}`, `Tokens ${Number.isFinite(conversation.total_tokens) ? conversation.total_tokens : '—'}`, `Synthesis ${label(conversation.synthesis_state)}`]; if (conversation.duplicate_suppressed) facts.push('Duplicate suppressed'); if (conversation.termination_reason) facts.push(`Ended ${label(conversation.termination_reason)}`); const participants = Array.isArray(conversation.participants) ? conversation.participants : []; const timeline = events.length ? `<div class="timeline">${events.map(event => { const status = eventStatus(event); return `<article class="event"><div class="event-top"><span class="event-flow">${escapeHtml(eventFlow(event))}</span><span class="event-type">${escapeHtml(label(event.event_type))}</span><span class="pill ${status.className}">${escapeHtml(status.text)}</span><span class="event-time">${escapeHtml(formatTs(event.created_at))}</span></div>${eventFacts(event) ? `<div class="event-facts">${eventFacts(event)}</div>` : ''}</article>`; }).join('')}</div>` : '<div class="empty">No allowlisted timeline events were recorded for this conversation.</div>'; detail.className = ''; detail.innerHTML = `<div class="detail-title"><div><h3 id="detail-heading" class="conversation-id">${escapeHtml(conversation.conversation_id || 'Conversation')}</h3><p class="detail-sub">Chronological, allowlisted event metadata</p></div><span class="pill ${stateClass(conversation.current_state)}">${escapeHtml(stateLabel(conversation.current_state))}</span></div><div class="facts">${facts.map(fact => `<span class="pill gray">${escapeHtml(fact)}</span>`).join('')}</div><div class="participants"><span class="participants-label">Participants</span>${participants.map(participant => `<span class="lane">${escapeHtml(label(participant))}</span>`).join('') || '<span class="muted">Not reported</span>'}</div><div class="timeline-head"><h4>Event flow</h4><span class="count">${events.length} allowlisted events</span></div>${timeline}`; }
+function showError(message) { const banner = document.getElementById('error-banner'); banner.textContent = message; banner.style.display = 'block'; }
+async function loadPage() { try { const snapshot = await fetchJson(LIST_URL); if (!snapshot || typeof snapshot !== 'object' || !Array.isArray(snapshot.conversations)) throw new Error('Malformed conversation data'); if (snapshot.availability === 'unavailable') { document.getElementById('conversation-count').textContent = 'Unavailable'; document.getElementById('conversation-list').innerHTML = '<div class="empty">Conversation storage is unavailable. No routing or provider health is inferred.</div>'; document.getElementById('conversation-detail').innerHTML = '<div><strong id="detail-heading">Timeline unavailable</strong><br>Restore read-only conversation storage, then refresh the page.</div>'; return; } const conversations = snapshot.conversations.filter(item => item && typeof item.conversation_id === 'string'); const activeId = conversations.some(item => item.conversation_id === selectedId()) ? selectedId() : conversations[0]?.conversation_id; renderList(conversations, activeId); if (!activeId) { document.getElementById('conversation-detail').innerHTML = '<div><strong id="detail-heading">No recent conversations</strong><br>There is no persisted body-free timeline to display.</div>'; return; } try { renderDetail(await fetchJson(`${DETAIL_URL}${encodeURIComponent(activeId)}`)); } catch (error) { document.getElementById('conversation-detail').innerHTML = '<div><strong id="detail-heading">Timeline unavailable</strong><br>The selected conversation could not be loaded.</div>'; showError(`Conversation detail unavailable: ${error.message}`); } } catch (error) { document.getElementById('conversation-count').textContent = 'Error'; document.getElementById('conversation-list').innerHTML = '<div class="empty">Recent conversations could not be loaded.</div>'; document.getElementById('conversation-detail').innerHTML = '<div><strong id="detail-heading">Timeline unavailable</strong><br>Check the read-only Runtime API and refresh.</div>'; showError(`ACP conversations unavailable: ${error.message}`); } finally { document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()}`; } }
+loadPage();
+</script>
+</body>
+</html>
