@@ -128,7 +128,7 @@ def discover_database(codex_home: Path | str, explicit: Path | str | None = None
     home = _home(codex_home)
     if explicit is not None:
         path = Path(os.path.abspath(os.path.expanduser(str(explicit))))
-        if path.parent != home or not os.path.lexists(path):
+        if path.parent.resolve() != home or not os.path.lexists(path):
             raise ReconcileError(f"explicit DB is not directly under Codex home: {path}")
         if stat.S_ISLNK(os.lstat(path).st_mode) or not stat.S_ISREG(os.lstat(path).st_mode):
             raise ReconcileError(f"explicit DB is not a regular file: {path}")

@@ -352,6 +352,9 @@ def test_uuid_archived_identity_and_symlinks_are_suspicious(tmp_path: Path) -> N
 def test_explicit_database_must_be_real_and_directly_under_home(tmp_path: Path) -> None:
     home = tmp_path / "codex"
     database = _db(home)
+    logical_home = tmp_path / "codex-link"
+    logical_home.symlink_to(home, target_is_directory=True)
+    assert reconcile.discover_database(logical_home, logical_home / database.name) == logical_home / database.name
     with pytest.raises(reconcile.ReconcileError, match="directly under"):
         reconcile.discover_database(home, tmp_path / "state_5.sqlite")
     link = home / "state_link.sqlite"
