@@ -35,13 +35,15 @@ def test_artifact_store_round_trip_and_dedup(tmp_path: Path) -> None:
 
 
 def test_artifact_store_uses_durable_sqlite_and_private_modes(tmp_path: Path) -> None:
-    root = tmp_path / "v1"
+    root = tmp_path / "fresh" / "fleet-comms" / "v1"
     with ArtifactStore(root=root) as store:
         store.store_text("private conversation", producer="test")
         assert store.connection.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
         assert store.connection.execute("PRAGMA synchronous").fetchone()[0] == 2
         assert store.connection.execute("PRAGMA foreign_keys").fetchone()[0] == 1
         assert store.connection.execute("PRAGMA busy_timeout").fetchone()[0] == 5_000
+        assert stat.S_IMODE((tmp_path / "fresh").stat().st_mode) == 0o700
+        assert stat.S_IMODE((tmp_path / "fresh" / "fleet-comms").stat().st_mode) == 0o700
         assert stat.S_IMODE(root.stat().st_mode) == 0o700
         assert stat.S_IMODE((root / "blobs").stat().st_mode) == 0o700
         assert stat.S_IMODE(store.blob_root.stat().st_mode) == 0o700

@@ -123,7 +123,7 @@ def _run_git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
             check=False,
             env=sanitized_git_env(),
         )
-    except OSError as exc:
+    except FileNotFoundError as exc:
         # Root resolution promises an on-disk .git fallback when Git cannot
         # execute. Represent an unavailable subprocess as a failed probe so
         # callers reach that fallback rather than aborting.

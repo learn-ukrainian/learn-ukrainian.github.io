@@ -118,6 +118,18 @@ def test_resolve_main_root_uses_filesystem_fallback_when_git_cannot_execute(
     assert wc.resolve_main_root(layout.dispatch_wt) == layout.main
 
 
+def test_git_probe_propagates_non_missing_executable_errors(
+    layout: Layout, monkeypatch: pytest.MonkeyPatch
+):
+    def forbidden_git(*_args, **_kwargs):
+        raise PermissionError("git execution forbidden")
+
+    monkeypatch.setattr(wc.subprocess, "run", forbidden_git)
+
+    with pytest.raises(PermissionError, match="forbidden"):
+        wc.resolve_main_root(layout.main)
+
+
 # ---------------------------------------------------------------------------
 # classify_repo_path
 # ---------------------------------------------------------------------------

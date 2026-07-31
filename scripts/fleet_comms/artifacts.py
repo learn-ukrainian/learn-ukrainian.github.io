@@ -340,8 +340,24 @@ class ArtifactStore:
 
     @classmethod
     def _prepare_private_dir(cls, path: Path) -> None:
-        path.mkdir(mode=_PRIVATE_DIR_MODE, parents=True, exist_ok=True)
-        cls._tighten_owned_mode(path, _PRIVATE_DIR_MODE, require_dir=True)
+        missing: list[Path] = []
+        candidate = path
+        while not candidate.exists():
+            missing.append(candidate)
+            parent = candidate.parent
+            if parent == candidate:
+                break
+            candidate = parent
+
+        for directory in reversed(missing):
+            directory.mkdir(mode=_PRIVATE_DIR_MODE, exist_ok=True)
+            cls._tighten_owned_mode(
+                directory,
+                _PRIVATE_DIR_MODE,
+                require_dir=True,
+            )
+        if not missing:
+            cls._tighten_owned_mode(path, _PRIVATE_DIR_MODE, require_dir=True)
 
     @staticmethod
     def _tighten_owned_mode(path: Path, mode: int, *, require_dir: bool) -> None:
