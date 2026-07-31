@@ -48,8 +48,9 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
     there; this REVERSES the 2026-07-24 "Opus replaces Fable as default Anthropic advisor"
     ruling.
 * **Escalatory Advisor / Critical Authority Reviews** (reserved for architecture, security, or design escalation):
-  * **Top advisors @ `xhigh`**: `claude-fable-5` · `gpt-5.6-sol` — the ONLY top-tier
-    advisor seats (operator 2026-07-26). Fable's cost is accepted for advisor turns:
+  * **Top advisors**: `claude-fable-5` · `gpt-5.6-sol` — the ONLY top-tier
+    advisor seats. Sol starts at `high`; use `xhigh`/`max` only for an explicit
+    escalation, never as the bounded-advisory default. Fable's cost is accepted for advisor turns:
     they are rare, short, and decision-bearing; never spend them on queue grind.
   * **Other advisors**: `gemini-3.1-pro-high` · `gemini-3.6-flash-high` ·
     `kimi-k3-max` · `glm-5.2` · `grok-4.5` @ `high`.
@@ -168,26 +169,26 @@ The knowledge-monopoly + quota-burn cycle (only the Anthropic frontier seat hold
 system; letting it drive daily exhausts the weekly in ~2 days; cheaper drivers then degrade
 the system until it returns) is broken by ROLE SPLIT, not by a better single driver:
 
-- **Daily driver: `grok-4.5`** — owns the epic loops (dispatch, babysit, settle, reap,
+* **Daily driver: `grok-4.5`** — owns the epic loops (dispatch, babysit, settle, reap,
   re-fire) under the mechanical rails (evidence-mandatory reviews, lease lifecycle,
   merge/stamp guards, delegate origin-sync). Operator-rated the best price/quality
   orchestrator currently available.
-- **Summoned judgment: `claude-fable-5`** — NOT a resident driver. One or two SHORT
+* **Summoned judgment: `claude-fable-5`** — NOT a resident driver. One or two SHORT
   scheduled sessions per day: read the fleet's verdicts, correct course, lock designs,
   write the next precise briefs, leave. Drive dispatch-heavy, never inline-heavy
   (measured 2026-07-26: a dispatch-heavy Fable orchestration hour costs ~2 weekly-quota
   points; inline-heavy driving is what burns the window in days). Also the escalation
   target and top Anthropic advisor seat.
-- **Understudy trial: `glm-5.2`** — sanctioned as a BOUNDED driver trial on one epic under
+* **Understudy trial: `glm-5.2`** — sanctioned as a BOUNDED driver trial on one epic under
   the standard capsule/handoff contract (operator 2026-07-26; untested as driver, repeatedly
   the sharpest cheap seat on code review). Evaluate against the same rails; report before
   widening.
-- **GPT lane never orchestrates as primary.** If it did, the seat would be Sol — and it is
+* **GPT lane never orchestrates as primary.** If it did, the seat would be Sol — and it is
   not worth it: orientation alone consumes ~33% of the GPT context window before any work
   (operator measurement 2026-07-26). Sol stays advisor/escalation-only; the codex seat
   remains a named ALTERNATE (HydrationCapsuleV1 exists to cut exactly that orientation
   cost), never the daily driver.
-- Session-cadence seats stay unchanged for kimi (capable, slow), agy (compaction loses
+* Session-cadence seats stay unchanged for kimi (capable, slow), agy (compaction loses
   orchestration state — not a driver), gemini CLI (retired → agy).
 
   When an orchestrator needs **formal sealed CF**, request it via
@@ -209,11 +210,23 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   | kimi | false |
   <!-- fleet-roster-projection:end formal_review_eligible -->
 
-- **Advisor = `gpt-5.6-sol` @ `xhigh` (on-demand, NOT a standing worker).** Same as codex
-  formal-CF / authority escalate (coding + sealed review seat — not a driver) — convene for the hard,
-  high-judgment calls only: architecture, high-stakes design/spec/ADR review, difficult debugging, final
-  synthesis. Consult BEFORE committing a substantive design; do not use for routine work.
-- **Workers = every other lane** — `gpt-5.6-terra` / `gpt-5.6-luna` (codex coding, not driver),
+* **Advisor = `gpt-5.6-sol` @ `high` (on-demand, NOT a standing worker).** The
+  `execution_routing.sol_advised_bounded` catalog route makes Sol produce a bounded
+  envelope containing the task contract, exact owned paths, maximum changed-file
+  and non-test-LOC ceilings, constraints, risk boundaries, acceptance evidence,
+  and escalation triggers. Do not use Sol for routine work; explicit escalation
+  may raise effort to `xhigh`/`max`.
+* **Sol-advised bounded execution:** when that envelope is complete, prefer
+  `gpt-5.6-luna` @ `xhigh` for bounded implementation or investigation. Luna must
+  follow the envelope rather than re-decide its contract, and must escalate
+  any owned-path or scope-ceiling overrun, consequential architecture, security,
+  release, high-risk go/no-go, unresolved consequential ambiguity, broader
+  integration, or final disposition. Keep direct Luna @ `medium` for simple
+  evidence/mechanical work only. If no stable envelope exists or broader
+  autonomous integration is needed, use Terra.
+* **Review boundary:** Sol and Luna are both OpenAI-family seats. Sol's advisory
+  output never satisfies the independent cross-family review gate.
+* **Workers = every other lane** — `gpt-5.6-terra` / `gpt-5.6-luna` (codex coding, not driver),
   `cursor`, `kimi`, `deepseek`, `pool` (**Laguna family exact IDs:** default **`laguna-s-2.1`** gen-2 S; light **`laguna-xs-2.1`** gen-2 XS; fallback only **`laguna-m.1`** gen-1 — never invent s2/m2 orthography),
   `gemma`, `glm` (LOCAL-ONLY), plus non-orchestrating use of the seats above. They do the build /
   implementation / mechanical / review work. Keep lanes busy; queue rather than idle.
@@ -247,16 +260,16 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 
 | Work type | 1st pick | 2nd | 3rd | gate / never |
 | --- | --- | --- | --- | --- |
-| **Coding / impl / fixtures** | **codex** — `terra` default · `luna` = fast-bounded | **agy** — default `gemini-3.6-flash-high` (agentic workhorse ≈ Terra/Sonnet class); Pro only for deep | cursor · grok | claude seat = only ≤5-LOC CI-fix-I-caused; luna never sole authority |
+| **Coding / impl / fixtures** | **Luna @ `xhigh`** after a complete Sol envelope; otherwise **codex** — `terra` default · Luna @ `medium` = simple evidence/mechanical | **agy** — default `gemini-3.6-flash-high` (agentic workhorse ≈ Terra/Sonnet class); Pro only for deep | cursor · grok | claude seat = only ≤5-LOC CI-fix-I-caused; Luna never sole authority |
 | **Code review** (cross-family = outside author's family) | **critical only:** Opus/Fable ↔ Sol (authority) | **high/medium/low formal CF defaults:** `gpt-5.6-terra` · `claude-sonnet-5` · `gemini-3.6-flash-high` · native `grok-4.5` (Cursor **`grok-4.5` explicit** if native dark) · Kimi K3 · GLM-5.2 · DeepSeek V4 Pro · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 · DeepSeek Flash · Gemini 3.5 Flash | `review-pr` pins Terra/Sonnet5/GLM @ **high**; resolve-reviewer walks `model_catalog.yaml` ladders; cost never lowers quality floor within a risk rung |
 | **UK content authoring** (author immersion-first, never translate) | **agy** (A1–A2 voice) ≈ **codex** | **claude** (B1–C2, sparingly — save the window) | **grok-4.5** | **LANGUAGE-LANES RULE below binds**: only these four; cursor/deepseek/kimi/pool/glm/gemma excluded |
 | **Content / factual / CEFR review** (VESUM-gated) | **agy** (pedagogy/CEFR, + `sources` MCP) | **codex** · **grok-4.5** | **claude** (judgment tier) | **LANGUAGE-LANES RULE below binds**; NO grok as a QG judge seat (separate standing ban); FOLK stays cross-family GPT↔Claude per the folk rubric |
-| **Research / recon / triage** | **luna** (fast bounded) | Explore-haiku (grep/find) | terra (deeper) | luna never sole authority on consequential calls |
+| **Research / recon / triage** | **Luna @ `xhigh`** inside a complete Sol envelope; direct Luna @ `medium` for simple evidence | Explore-haiku (grep/find) | terra (deeper or no envelope) | Luna never sole authority on consequential calls |
 | **Live web fact-check** (pricing/URL/citation currency) | any opencode model — pool (FREE) · glm (LOCAL) · deepseek | — | — | browsing = harness property, not a model trait |
 
 **LANGUAGE-LANES RULE (HARD, user order 2026-07-17): ALL language-related work — Ukrainian authoring, linguistic/content review, CEFR/russicism analysis, anything that judges Ukrainian text — routes ONLY to claude, codex, gemini (agy), or grok-4.5.** deepseek, glm, kimi, cursor, pool, and gemma are excluded from every language seat (deepseek's former VESUM-gated content-review default is retired; gemma's surface-review slice applies to non-language work only). Standing carve-outs still bind on top: NO deepseek for folk (moot under this rule, kept for history), grok is never a QG judge seat, folk review pairing stays GPT↔Claude. Code/infra/tooling work is unaffected.
 
-**Advisor (on-demand, HARD calls only): `gpt-5.6-sol @ high–max`** — architecture, high-stakes design/ADR review, difficult debugging, final synthesis. Convene BEFORE committing a substantive design; never for routine. **Excluded:** qwen (cost). **LOCAL-ONLY:** glm (China-egress, never CI). **Cross-family review gate holds:** the reviewer must be outside the author's model family.
+**Advisor (on-demand, HARD calls only): `gpt-5.6-sol @ high` by default** — architecture, high-stakes design/ADR review, difficult debugging, final synthesis, or a bounded advisory envelope. Raise effort only for an explicit escalation; never use Sol for routine work. **Excluded:** qwen (cost). **LOCAL-ONLY:** glm (China-egress, never CI). **Cross-family review gate holds:** the reviewer must be outside the author's model family.
 
 **Kimi onboarding (native `kimi`):** dispatch with `.venv/bin/python scripts/delegate.py dispatch --agent kimi`; explicitly select `--model k3` whenever the task is consequential. K3 is the frontier-practical Moonshot seat (max-only effort); `k2.7-coding` and its high-speed variant are routine workers. Current quota affects selection only among models that clear the task's quality floor. Kimi is a clean cross-family reviewer for GPT/Google/Claude/xAI authors, but not for Composer 2.5 because both conservatively share Moonshot lineage.
 
@@ -397,9 +410,9 @@ All three tiers expose **272K context (~258.4K effectively usable before the con
 
 | Tier | Model id | Use for | Effort policy |
 | --- | --- | --- | --- |
-| Sol | `gpt-5.6-sol` | Frontier lead: hard architecture, high-stakes advisory/review, difficult debugging, final synthesis | **FLOOR = `high`** (user 2026-07-09: never dispatch Sol below high); `high`–`max` |
+| Sol | `gpt-5.6-sol` | Frontier lead: hard architecture, high-stakes advisory/review, bounded advisory envelopes, difficult debugging, final synthesis | **START = `high`** (never below high); `xhigh`/`max` only for explicit escalation |
 | Terra | `gpt-5.6-terra` | Balanced default: normal implementation, scoped planning, investigations, standard reviews (≈5.5-level quality, cheaper) | default `high`; `xhigh` for the hardest cells |
-| Luna | `gpt-5.6-luna` | Fast bounded worker: recon, test/log triage, mechanical checks, draft summaries. **NEVER sole authority** on consequential decisions or release approval | `medium` default |
+| Luna | `gpt-5.6-luna` | Fast bounded worker: Sol-enveloped implementation/investigation at `xhigh`; simple recon, test/log triage, mechanical checks, draft summaries at `medium`. **NEVER sole authority** on consequential decisions or release approval | `xhigh` inside a stable Sol envelope; `medium` for simple evidence/mechanical work |
 
 Policy: **prefer 5.6 for NEW work**; retain 5.5/5.4 only for pinned workflows (qg_bakeoff arms, the V7 pipeline reviewer seat until spot-checked post-reset), proven compatibility, or quota pressure. Codex dispatch + `ask-codex` defaults = `gpt-5.6-terra`.
 

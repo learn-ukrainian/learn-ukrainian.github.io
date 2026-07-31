@@ -376,3 +376,140 @@ def test_critical_ladder_anthropic_authority_is_fable_not_opus():
     assert "claude-fable-5" in flat
     assert "claude-opus-5" not in flat
     assert flat.index("claude-fable-5") < flat.index("claude-sonnet-5")
+
+
+def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
+    """The Sol→Luna lane must be explicit, bounded, and source-blind testable."""
+    catalog = load_model_catalog()
+    route = catalog["execution_routing"]["sol_advised_bounded"]
+
+    advisor = route["advisor"]
+    assert advisor["model_id"] == "gpt-5.6-sol"
+    assert advisor["effort"] == "high"
+    assert "bounded_advisory_envelope" in catalog["models"][advisor["model_id"]]["roles"]
+    assert advisor["output_fields"] == [
+        "task_contract",
+        "owned_paths",
+        "max_changed_files",
+        "max_non_test_loc",
+        "constraints",
+        "risk_boundaries",
+        "acceptance_evidence",
+        "escalation_triggers",
+    ]
+
+    preferred = route["preferred_worker"]
+    assert preferred["model_id"] == "gpt-5.6-luna"
+    assert preferred["effort"] == "xhigh"
+    assert {
+        "bounded_implementation",
+        "bounded_investigation",
+    } <= set(catalog["models"][preferred["model_id"]]["roles"])
+    assert preferred["requires"] == ["complete_advisory_envelope", "objective_scope_ceiling"]
+    assert preferred["task_types"] == ["bounded_implementation", "bounded_investigation"]
+    assert preferred["escalate_to"] == "gpt-5.6-sol"
+    assert set(preferred["prohibited_decisions"]) == {
+        "consequential_architecture",
+        "security",
+        "release",
+        "high_risk_go_no_go",
+    }
+    assert set(preferred["escalation_triggers"]) == {
+        "scope_ceiling_exceeded",
+        "unresolved_consequential_ambiguity",
+        "broader_integration",
+        "final_disposition",
+    }
+
+    direct = route["direct_worker"]
+    assert direct == {
+        "model_id": "gpt-5.6-luna",
+        "effort": "medium",
+        "task_types": ["simple_evidence", "mechanical_checks"],
+        "constraints": ["no_consequential_decisions"],
+    }
+    assert route["autonomous_fallback"] == {
+        "model_id": "gpt-5.6-terra",
+        "effort": "high",
+        "when": ["missing_advisory_envelope", "broader_autonomous_integration"],
+    }
+
+    models = catalog["models"]
+    assert models[advisor["model_id"]]["family"] == "openai"
+    assert models[preferred["model_id"]]["family"] == "openai"
+    assert route["review_boundary"] == {
+        "advisory_family": "openai",
+        "advisory_satisfies_cross_family_review": False,
+        "independent_cross_family_review_required": True,
+    }
+
+
+@pytest.mark.parametrize(
+    ("field", "member"),
+    [
+        ("task_types", "bounded_investigation"),
+        ("prohibited_decisions", "security"),
+        ("escalation_triggers", "final_disposition"),
+    ],
+)
+def test_catalog_rejects_luna_safety_set_member_removal(field, member):
+    broken = deepcopy(load_model_catalog())
+    broken["execution_routing"]["sol_advised_bounded"]["preferred_worker"][field].remove(member)
+
+    with pytest.raises(ModelCatalogError, match=rf"preferred_worker\.{field} must include exactly"):
+        validate_catalog(broken)
+
+
+@pytest.mark.parametrize(
+    ("section", "field", "operation", "value", "message"),
+    [
+        ("advisor", "model_id", "set", "missing-model", "advisor.model_id references unknown model"),
+        ("preferred_worker", "model_id", "set", "poolside/laguna-m.1", "preferred_worker.model_id must reference an active model"),
+        ("direct_worker", "model_id", "set", "missing-model", "direct_worker.model_id references unknown model"),
+        ("autonomous_fallback", "model_id", "set", "missing-model", "autonomous_fallback.model_id references unknown model"),
+        ("preferred_worker", "escalate_to", "set", "missing-model", "preferred_worker.escalate_to references unknown model"),
+        ("advisor", "effort", "set", "ultra", "advisor.effort must be one of"),
+        ("preferred_worker", "effort", "set", "ultra", "preferred_worker.effort must be one of"),
+        ("direct_worker", "effort", "set", "ultra", "direct_worker.effort must be one of"),
+        ("autonomous_fallback", "effort", "set", "ultra", "autonomous_fallback.effort must be one of"),
+        ("advisor", "role", "set", "unbounded", "advisor.role must be"),
+        (
+            "advisor",
+            "output_fields",
+            "set",
+            ["task_contract", "constraints", "risk_boundaries", "acceptance_evidence", "escalation_triggers"],
+            "output_fields must be exactly",
+        ),
+        ("advisor", "output_fields", "delete", None, "advisor must define exactly"),
+        (
+            "preferred_worker",
+            "requires",
+            "set",
+            ["complete_advisory_envelope"],
+            "requires must bind",
+        ),
+        (
+            "preferred_worker",
+            "escalation_triggers",
+            "set",
+            ["unresolved_consequential_ambiguity", "broader_integration", "final_disposition"],
+            "must include",
+        ),
+        ("preferred_worker", "prohibited_decisions", "delete", None, "preferred_worker must define exactly"),
+        ("review_boundary", "advisory_family", "set", "anthropic", "must match the advisor model family"),
+        ("review_boundary", "advisory_satisfies_cross_family_review", "set", True, "must remain false"),
+        ("review_boundary", "independent_cross_family_review_required", "set", False, "must remain true"),
+    ],
+)
+def test_catalog_rejects_malformed_sol_advised_route(
+    section, field, operation, value, message
+):
+    broken = deepcopy(load_model_catalog())
+    target = broken["execution_routing"]["sol_advised_bounded"][section]
+    if operation == "delete":
+        del target[field]
+    else:
+        target[field] = value
+
+    with pytest.raises(ModelCatalogError, match=message):
+        validate_catalog(broken)
