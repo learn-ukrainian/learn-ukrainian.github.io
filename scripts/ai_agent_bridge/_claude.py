@@ -55,6 +55,32 @@ from ._review_worktree import (
 )
 
 VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
+CLAUDE_DEFAULT_ASK_MODEL = "claude-sonnet-5"
+CLAUDE_ADVISORY_MODEL = "claude-opus-5"
+
+
+def resolve_claude_ask_model(msg_type: str, to_model: str | None) -> str:
+    """Resolve one-shot Claude routing without conflating asks and reviews.
+
+    Advisory consultations are a distinct, non-binding message type.  The
+    operator pins that seat to Opus and forbids a silent Sonnet substitution;
+    ordinary asks keep the practical Sonnet default.  Formal review routing is
+    owned by the reviewer resolver and does not use this rule.
+    """
+    if msg_type.casefold() == "advisory":
+        if to_model not in (None, CLAUDE_ADVISORY_MODEL):
+            raise ValueError(
+                "Claude advisory consultations require "
+                f"--to-model {CLAUDE_ADVISORY_MODEL}; got {to_model}. "
+                "Do not substitute Sonnet for the advisory seat."
+            )
+        return CLAUDE_ADVISORY_MODEL
+    return resolve_model_selection(
+        lane="ask-claude",
+        to_model=to_model,
+        model=None,
+        default=CLAUDE_DEFAULT_ASK_MODEL,
+    )
 
 
 def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query",
@@ -83,9 +109,10 @@ def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query"
         formal_review=formal_review,
         has_target=has_target,
     )
-    effective_model = resolve_model_selection(
-        lane="ask-claude", to_model=to_model, model=None, default="claude-sonnet-5"
-    )
+    try:
+        effective_model = resolve_claude_ask_model(msg_type, to_model)
+    except ValueError as exc:
+        raise SystemExit(f"ask-claude: {exc}") from exc
     msg_id = send_message(
         content,
         task_id,

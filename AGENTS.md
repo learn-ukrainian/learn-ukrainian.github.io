@@ -80,6 +80,8 @@ eats it. Full protocol: `agents_extensions/shared/rules/workflow.md` § Work int
 - Keep changes scoped to the requested files and behavior.
 - Run relevant verification before finalizing, or state why verification was not run.
 - Final reports must include changed files, verification performed, and final `git status --short --branch`.
+- New material blocking, mutating, network-dependent, or always-loaded guardrails must follow
+  `docs/best-practices/guardrail-lifecycle.md`; do not blanket-retrofit historical controls.
 
 ---
 
