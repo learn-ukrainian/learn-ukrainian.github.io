@@ -12,6 +12,18 @@
             "additionalContextLimit": 1200
           }
         ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CODEX_COMPACT_SESSION_START=1 bash \"$(git rev-parse --show-toplevel)/.codex/hooks/post-compact.sh\"",
+            "timeout": 10,
+            "statusMessage": "Hydrating bound fleet-driver context",
+            "additionalContextLimit": 800
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -48,20 +60,6 @@
             "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh\" user-prompt-submit",
             "timeout": 5,
             "statusMessage": "Checking cross-agent inbox"
-          }
-        ]
-      }
-    ],
-    "PostCompact": [
-      {
-        "matcher": "manual|auto",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/post-compact.sh\"",
-            "timeout": 10,
-            "statusMessage": "Hydrating bound fleet-driver context",
-            "additionalContextLimit": 800
           }
         ]
       }

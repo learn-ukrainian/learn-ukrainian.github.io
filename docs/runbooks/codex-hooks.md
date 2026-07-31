@@ -111,12 +111,18 @@ edit the separate user-level `~/.codex/hooks.json`.
 
 The project hook layer protects and augments **Codex CLI** sessions; native
 Codex still owns compaction. An ordinary Codex task receives a concise
-SessionStart capsule and has a silent `PostCompact`. Only a launcher-bound
-Codex epic may receive one bounded, exact-stream hydration capsule. That
-capsule requires `.claude/<epic>-epic/CODEX-DRIVER-HANDOFF.md`: the hook never
-substitutes `INTERIM-DRIVER-HANDOFF.md` or `CLAUDE-DRIVER-HANDOFF.md` into a
-Codex post-compaction response. A missing exact Codex handoff is a blocked
-capsule, not a generic replay.
+`SessionStart` capsule and remains silent after compaction. A launcher-bound
+Codex epic instead receives one bounded, exact-stream hydration capsule through
+the `SessionStart` `compact` matcher. That capsule requires
+`.claude/<epic>-epic/CODEX-DRIVER-HANDOFF.md`: the hook never substitutes
+`INTERIM-DRIVER-HANDOFF.md` or `CLAUDE-DRIVER-HANDOFF.md`. A missing exact
+Codex handoff is a blocked capsule, not a generic replay.
+
+Codex CLI 0.146 reports `ignoring additionalContextLimit for PostCompact hook
+... this event cannot emit additionalContext`. `PostCompact` may still run its
+command, but cannot deliver its stdout as model context. Do not use it for
+Codex hydration; keep the bounded launcher-bound capsule on `SessionStart`
+with matcher `compact`.
 
 The canonical checkout's `.venv/bin/python` must report exactly the version in
 the canonical `.python-version` file (currently `Python 3.12.8`). Linked
@@ -138,14 +144,17 @@ Codex Desktop is different: a recorded Desktop test showed hook commands and
 their UI labels run, but hook `additionalContext` was not delivered to the
 task. Do not use Desktop `SessionStart`, `PostCompact`, or inbox context output
 as continuity proof. Use a trusted dispatch worktree, native task context, and
-the durable launcher handoff/board for a bound driver. The CLI receives the
-same project hooks after trust; Desktop hook behavior remains manual and
-observational.
+the durable launcher handoff/board for a bound driver. The CLI can receive the
+bounded `SessionStart` `compact` capsule after trust; Desktop hook behavior
+remains manual and observational.
 
 After changing hook sources, run `npm run agents:deploy`, then re-trust the
 changed project hooks in the CLI/Desktop hook UI before testing. Verify a fresh
-CLI task, an ordinary PostCompact (silent), an exact Codex-driver hydration,
-and one repeated inbox prompt. The no-auth health check remains:
+CLI task, a `SessionStart` `compact` event for an exact Codex-driver hydration,
+an ordinary Codex compaction with no repository-authored context, and one
+repeated inbox prompt. Confirm that a CLI 0.146 startup no longer prints the
+`PostCompact` `additionalContextLimit` warning. The no-auth health check
+remains:
 
 ```bash
 .venv/bin/python -m scripts.orchestration.codex_transport_health status --json
@@ -177,8 +186,11 @@ audits were removed from the synchronous hook. The hook now points to
 a stop condition, but SessionStart renders the existing concise exact-identity
 inventory rather than injecting the full lease JSON.
 
-`PostCompact` remains read-only. Its curriculum scan and rollover-health read
-have separate two-second deadlines under the existing 10-second outer ceiling.
+`PostCompact` is not a Codex context-delivery boundary. The shared continuity
+script's underlying reads remain read-only and have separate two-second
+deadlines for the curriculum scan and rollover-health read under the existing
+10-second outer ceiling; Codex reaches that script through `SessionStart`
+`compact`.
 
 ## Pytest stamp and pre-push guard
 
