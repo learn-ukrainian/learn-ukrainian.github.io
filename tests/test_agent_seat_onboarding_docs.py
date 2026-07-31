@@ -103,6 +103,17 @@ def test_five_ownership_surfaces(onboarding: str) -> None:
     assert "deferred" in lower
 
 
+def test_human_comms_pages_have_distinct_read_only_roles(onboarding: str) -> None:
+    lower = onboarding.lower()
+    for page in ("acp conversations", "channels", "broker ops", "build events"):
+        assert page in lower
+    assert "readable codex↔grok acp transcripts" in lower
+    assert "shared channel, thread, context, and delivery visibility" in lower
+    assert "no browser message composition" in lower
+    assert "replaces the retired duplicate comms activity feed" in lower
+    assert "legacy send, post, and acknowledgement apis remain" in lower
+
+
 def test_authoritative_file_handoff_wording(all_owned: dict[str, str]) -> None:
     """File dual-write stays authoritative in every current plane mode."""
     onboarding = all_owned["docs/runbooks/agent-seat-onboarding.md"]
@@ -286,6 +297,26 @@ def test_routine_acp_panel_is_explicit_bounded_and_non_authoritative(
     ):
         assert "acp-discuss" in body
         assert "formal review" in body.lower()
+
+
+def test_fleet_wide_acp_means_caller_parity_not_participant_expansion(onboarding: str) -> None:
+    lower = onboarding.lower()
+    assert "caller-access parity" in lower
+    for caller in ("claude", "codex", "agy/gemini", "grok", "kimi and kimicc", "cursor"):
+        assert caller in lower
+    assert "participants remain exactly\ncodex and grok" in lower
+    assert "do not add, rotate, or silently substitute" in lower
+    assert "ordinary workers and review-only seats" in lower
+    for lifecycle_path in (
+        "startup",
+        "stream claim",
+        "dispatch",
+        "ci",
+        "pr events",
+        "formal\nreview",
+        "plane-status",
+    ):
+        assert lifecycle_path in lower
 
 
 def test_acpx_second_pilot_grok_evidence_and_boundary(onboarding: str, all_owned: dict[str, str]) -> None:

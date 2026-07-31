@@ -52,8 +52,6 @@ DASHBOARD_LOADS = {
     ],
     "comms.html": [
         "/api/comms/messages?limit=1&offset=0",
-        "/api/build/events/active",
-        "/api/build/events/recent?limit=40",
         "/api/comms/batch-progress",
         "/api/comms/zombies",
     ],

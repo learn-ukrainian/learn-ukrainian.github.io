@@ -58,24 +58,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 
 .empty-state { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; }
 .empty-state code { background: var(--bg2); padding: 2px 6px; border-radius: 4px; color: var(--text); }
-
-/* Post Form */
-.post-form { padding: 16px 24px; border-top: 1px solid var(--border); background: var(--bg2); flex-shrink: 0; }
-.post-error { color: var(--red); font-size: 12px; margin-bottom: 8px; display: none; }
-.post-success { color: var(--green); font-size: 12px; margin-bottom: 8px; display: none; }
-.post-row { display: flex; gap: 12px; margin-bottom: 8px; align-items: flex-end; }
-.post-textarea { flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px; resize: vertical; min-height: 70px; }
-.post-textarea:focus { outline: none; border-color: var(--accent); }
-.post-controls { display: flex; justify-content: space-between; align-items: center; }
-.post-recipients { display: flex; gap: 12px; font-size: 12px; color: var(--text2); align-items: center; }
-.recipient-cb { display: flex; align-items: center; gap: 4px; cursor: pointer; }
-.post-btn { background: var(--accent); color: #fff; border: none; padding: 8px 24px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
-.post-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.post-btn:hover:not(:disabled) { opacity: 0.9; }
-.parent-id-container { font-size: 12px; color: var(--text3); display: flex; align-items: center; gap: 8px; }
-.parent-id-container input { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 4px 8px; border-radius: 4px; width: 80px; font-family: monospace; font-size: 11px; }
-.msg-reply { font-size: 10px; color: var(--text3); cursor: pointer; }
-.msg-reply:hover { color: var(--accent); text-decoration: underline; }
+.read-only-note { padding: 9px 24px; border-bottom: 1px solid var(--border); background: var(--bg2); color: var(--text2); font-size: 12px; flex-shrink: 0; }
+.read-only-note strong { color: var(--text); }
 
 /* Deliveries Dropdown */
 .deliveries-toggle { cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 6px; color: var(--text2); }
@@ -159,6 +143,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
       <!-- header content injected -->
     </div>
 
+    <div class="read-only-note">
+      <strong>Read-only observer.</strong> Follow and filter channel traffic here; send messages from your agent TUI or the canonical project bridge CLI.
+    </div>
+
     <!-- Live-discussion strip (#1731 pain #5). Hidden by default; the
          renderer flips `.active` when an `ab discuss` thread is live. -->
     <div class="discussion-strip" id="discussion-strip"></div>
@@ -179,25 +167,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
       <!-- messages injected -->
     </div>
 
-    <div class="post-form">
-      <div id="post-error" class="post-error"></div>
-      <div id="post-success" class="post-success">Message posted successfully!</div>
-      <div class="post-row">
-        <textarea id="post-body" class="post-textarea" placeholder="Type a message... (Markdown/code supported)"></textarea>
-      </div>
-      <div class="post-controls">
-        <div class="post-recipients" id="post-recipients">
-          <!-- checkboxes injected -->
-        </div>
-        <div style="display:flex;gap:16px;align-items:center;">
-          <div class="parent-id-container" id="parent-id-container" style="display:none;">
-            Reply to: <input type="text" id="post-parent-id" placeholder="Msg ID" readonly>
-            <span style="cursor:pointer;color:var(--red);" onclick="clearReply()">✕</span>
-          </div>
-          <button id="post-btn" class="post-btn" disabled>Post</button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div class="main-panel" id="main-empty" style="justify-content:center; align-items:center;">
@@ -237,15 +206,8 @@ const DOM = {
   mainEmpty: document.getElementById('main-empty'),
   channelHeader: document.getElementById('channel-header'),
   messagesArea: document.getElementById('messages-area'),
-  postBody: document.getElementById('post-body'),
-  postBtn: document.getElementById('post-btn'),
-  postRecipients: document.getElementById('post-recipients'),
-  postError: document.getElementById('post-error'),
-  postSuccess: document.getElementById('post-success'),
   refreshStatus: document.getElementById('refresh-status'),
   errorBanner: document.getElementById('error-banner'),
-  parentIdContainer: document.getElementById('parent-id-container'),
-  postParentId: document.getElementById('post-parent-id'),
   // #1731 pain #3 + #5
   threadBar: document.getElementById('thread-bar'),
   threadSelect: document.getElementById('thread-select'),
@@ -305,7 +267,7 @@ async function loadChannels() {
 
 function renderSidebar() {
   if (channels.length === 0) {
-    DOM.sidebar.innerHTML = '<div class="empty-state">No channels yet<br><br>Create one via CLI:<br><code>ab channel new &lt;name&gt;</code></div>';
+    DOM.sidebar.innerHTML = '<div class="empty-state">No channels yet<br><br>Create one via the project bridge CLI:<br><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py channel new &lt;name&gt;</code></div>';
     return;
   }
 
@@ -345,7 +307,6 @@ async function selectChannel(name) {
   DOM.mainEmpty.style.display = 'none';
   DOM.mainPanel.style.display = 'flex';
   DOM.messagesArea.innerHTML = '<div class="empty-state">Loading messages...</div>';
-  clearReply();
   // Each channel switch is a clean slate — drop any thread filter
   // from the prior channel and forget which DOM nodes we rendered,
   // otherwise the delta-render in renderMessages would skip messages
@@ -383,18 +344,6 @@ async function loadChannelDetail(name, isBackground = false) {
 
     renderChannelHeader(meta);
     renderMessages(msgs, isBackground);
-
-    if (!isBackground) {
-      const subs = meta.subscribers || [];
-      DOM.postRecipients.innerHTML = '<span style="font-weight:600;">To:</span> ' + subs.map(s => {
-        const safe = escapeHTML(s);
-        return `
-        <label class="recipient-cb">
-          <input type="checkbox" value="${safe}" checked> ${safe}
-        </label>
-      `;
-      }).join('');
-    }
   } catch(e) {
     if (!isBackground) {
       DOM.messagesArea.innerHTML = `<div class="empty-state">Failed to load channel details: ${escapeHTML(e.message)}</div>`;
@@ -478,17 +427,6 @@ window.toggleDeliveries = async function() {
   }
 };
 
-window.replyTo = function(id) {
-  DOM.parentIdContainer.style.display = 'flex';
-  DOM.postParentId.value = id;
-  DOM.postBody.focus();
-};
-
-window.clearReply = function() {
-  DOM.parentIdContainer.style.display = 'none';
-  DOM.postParentId.value = '';
-};
-
 // Render a single message (#1731 pain #2: full body, no 300-char
 // truncation; pain #4: from-user class for orange accent). Pure —
 // returns HTML string, no DOM mutation.
@@ -496,7 +434,6 @@ function renderMessageHTML(m) {
   const safeAuthor = escapeHTML(m.from_agent || 'unknown');
   const safeAuthorCls = escapeHTML((m.from_agent || '').toLowerCase());
   const safeIdHtml = escapeHTML(String(m.id || ''));
-  const safeIdJs = escapeJSAttrString(safeIdHtml);
   const safeTime = escapeHTML(
     m.timestamp
       ? (() => {
@@ -527,7 +464,6 @@ function renderMessageHTML(m) {
         <span class="msg-author ${safeAuthorCls}">${safeAuthor}</span>
         ${roundHtml}
         ${threadHtml}
-        <span class="msg-reply" onclick="replyTo('${safeIdJs}')">Reply</span>
       </div>
       <div>
         <div class="msg-body" id="msg-body-${safeIdHtml}">${safeBody}</div>
@@ -811,64 +747,6 @@ async function applyInitialParams() {
   updateLocationParams();
 }
 
-// Post Form Handlers
-DOM.postBody.addEventListener('input', () => {
-  DOM.postBtn.disabled = DOM.postBody.value.trim().length === 0;
-});
-
-DOM.postBody.addEventListener('focus', () => {
-  stopAutoRefresh();
-});
-
-DOM.postBody.addEventListener('blur', () => {
-  if (DOM.postBody.value.trim() === '') {
-    startAutoRefresh();
-  }
-});
-
-DOM.postBtn.addEventListener('click', async () => {
-  const body = DOM.postBody.value.trim();
-  if (!body || !activeChannel) return;
-
-  DOM.postBtn.disabled = true;
-  DOM.postError.style.display = 'none';
-  DOM.postSuccess.style.display = 'none';
-
-  const to_agents = Array.from(DOM.postRecipients.querySelectorAll('input:checked')).map(cb => cb.value);
-  const parent_id = DOM.postParentId.value.trim();
-
-  const payload = {
-    body,
-    to_agents,
-    from_agent: 'user',
-    auto_snapshot: false
-  };
-  if (parent_id) payload.parent_id = parent_id;
-
-  try {
-    await api(`/api/comms/channels/${encodeURIComponent(activeChannel)}/post`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    DOM.postBody.value = '';
-    DOM.postBtn.disabled = true;
-    startAutoRefresh();
-    clearReply();
-
-    DOM.postSuccess.style.display = 'block';
-    setTimeout(() => { DOM.postSuccess.style.display = 'none'; }, 3000);
-
-    await loadChannelDetail(activeChannel);
-    DOM.messagesArea.scrollTop = DOM.messagesArea.scrollHeight;
-  } catch(e) {
-    DOM.postError.textContent = `Post failed: ${e.message}`;
-    DOM.postError.style.display = 'block';
-    DOM.postBtn.disabled = false;
-  }
-});
-
 // Refresh Logic
 function startAutoRefresh() {
   if (autoRefreshTimer) clearInterval(autoRefreshTimer);
@@ -877,13 +755,6 @@ function startAutoRefresh() {
   }, 5000);
   DOM.refreshStatus.textContent = 'Auto-refresh active';
   DOM.refreshStatus.style.color = 'var(--text3)';
-}
-
-function stopAutoRefresh() {
-  if (autoRefreshTimer) clearInterval(autoRefreshTimer);
-  autoRefreshTimer = null;
-  DOM.refreshStatus.textContent = 'Auto-refresh paused (typing)';
-  DOM.refreshStatus.style.color = 'var(--yellow)';
 }
 
 // Global listeners

@@ -52,6 +52,10 @@ fleet_comms_cold_clause() {
     "Topology: \`.venv/bin/python -m scripts.fleet_comms plane-status\` (+ metrics/backlog/dead-letters). " \
     "Formal CF: \`.venv/bin/python -m scripts.ai_agent_bridge review-pr <PR_NUMBER> --reviewer <cross-family>\` " \
     "then publish-review-verdict (PR number required; never self-seal). " \
+    "Optional ACP advisory: eligible orchestrators may explicitly run the fixed read-only Codex↔Grok " \
+    "\`.venv/bin/python -m scripts.fleet_comms acp-discuss\` panel for consequential comparison only; never auto-launch it. " \
+    "On busy, unready, or partial outcome use bounded bridge \`discuss\`; ACP is neither coordination authority " \
+    "nor formal review, and \`acp-verify\` verifies a receipt rather than authorizing retry. " \
     "Continuity: stream lease already claimed; dual-write \`.claude/<epic>-epic/*-DRIVER-HANDOFF.md\`."
 }
 

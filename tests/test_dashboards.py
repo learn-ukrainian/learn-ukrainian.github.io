@@ -123,7 +123,6 @@ class TestApiEndpoints:
         "/api/comms/batch-progress",
         "/api/comms/health",
         "/api/comms/messages",
-        "/api/comms/send",
         "/api/comms/stats",
         "/api/comms/zombies",
         "/api/dashboard/overview",
