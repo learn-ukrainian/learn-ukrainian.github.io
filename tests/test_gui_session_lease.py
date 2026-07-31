@@ -5,6 +5,7 @@ import sqlite3
 from datetime import timedelta
 from pathlib import Path
 
+from agents_extensions.shared.session_streams import store as session_stream_store
 from agents_extensions.shared.session_streams.model import isoformat_z, utc_now
 from scripts.orchestration import gui_session_lease
 
@@ -307,7 +308,10 @@ def test_archived_and_absent_native_tasks_are_recovery_only(tmp_path: Path) -> N
     assert absent["thread"]["status_type"] == "absent"  # type: ignore[index]
 
 
-def test_cli_recovery_requires_archived_predecessor_and_is_exactly_replayable(tmp_path: Path) -> None:
+def test_cli_recovery_requires_archived_predecessor_and_is_exactly_replayable(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
     predecessor_root = tmp_path / "predecessor"
     predecessor_root.mkdir()
     state_db, _ = _codex_fixture(predecessor_root, task_id=PREDECESSOR_ID)
@@ -379,6 +383,9 @@ def test_cli_recovery_requires_archived_predecessor_and_is_exactly_replayable(tm
         "lease-successor",
     ]
     assert gui_session_lease.main(recover) == 0
+    shifted_now = utc_now() + timedelta(seconds=2)
+    monkeypatch.setattr(gui_session_lease, "utc_now", lambda: shifted_now)
+    monkeypatch.setattr(session_stream_store, "utc_now", lambda: shifted_now)
     assert gui_session_lease.main(recover) == 0
     with sqlite3.connect(session_db) as connection:
         connection.row_factory = sqlite3.Row
