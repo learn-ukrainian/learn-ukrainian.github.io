@@ -4,7 +4,7 @@
 > **Approval receipt:** Operator issued **GO REALIGN** for the stream and issue
 > realignment on 2026-07-30; recorded in
 > [PR #6060](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6060).
-> **Recorded:** 2026-07-30
+> **Recorded:** 2026-07-30; existing-asset baseline refreshed 2026-07-31
 > **Applies to:** Ukrainian model evaluation, dataset work, training-data
 > preparation, and UNLP ecosystem monitoring
 > **Does not authorize:** model training, dataset publication, or mixing
@@ -195,6 +195,25 @@ Those exports must stay distinct and carry lineage back to the source record.
 
 ## What this project can credibly contribute
 
+### Existing-asset baseline
+
+The [existing-corpus recovery audit](../research/EXISTING_CORPUS_ASSET_RECOVERY_AND_LINEAGE_AUDIT.md)
+now establishes a deterministic baseline before any acquisition. The
+public/external human-authored text view contains 189,150 database rows and
+50,298,925 lexical words; the separate private-reference view contains 5,786
+rows and 681,925 words. Google Drive retains 229 literary JSONL source files,
+which reconcile by filename stem to all 229 literary database source groups.
+The repository also retains 12,347 tracked archive files and six historical
+FOLK package versions with Git recovery locators.
+
+This is an inventory, not an admission decision. The baseline records zero
+source-record admissions and zero redistribution-cleared assets. It keeps
+human-authored, machine-generated direct Ukrainian, machine-translated,
+private-reference, evaluation-only, and unknown-origin material mechanically
+separate. The invalid 5,000-record export may locate an underlying work but
+cannot establish source, edition, rights, acquisition lineage, or contamination
+status.
+
 ### Already available
 
 - Public Ukrainian calque-and-grammar evaluation release `0.1.1`: 677 held-out
@@ -204,18 +223,19 @@ Those exports must stay distinct and carry lineage back to the source record.
 - A working provenance and evidence architecture for heritage-sensitive
   language judgments.
 - A weekly Ukrainian NLP ecosystem watch.
-- A 5,000-record literary export that can become a useful candidate collection
-  after an audit.
+- A 5,000-record literary export retained only as a locator for independently
+  reconstructing original-source evidence; it is not provenance authority or a
+  candidate training collection.
 
 ### Immediate work
 
 1. Maintain a source-linked UNLP asset and gap map. Record datasets, licenses,
    task coverage, model baselines, and unresolved gaps without claiming that
    our work is unique before comparison.
-2. Audit the 5,000-record literary export. Resolve source lineage, rights,
-   deduplication, split strategy, period and genre balance, translation
-   provenance, and quality. Until then, call it a **candidate collection**, not
-   a pure or training-ready dataset.
+2. After one real open-weight consumer documents a bounded need, reconstruct a
+   one-source-family micro-pilot from an original catalogue, edition, website,
+   archive, or retained acquisition artifact already represented in the corpus.
+   The 5,000-record export may be used only to locate the underlying work.
 3. Analyze errors and model disagreements in the 677-item evaluation. Use them
    to define the next annotation categories rather than merely adding model
    rows to a table.

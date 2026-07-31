@@ -1,0 +1,89 @@
+[
+  {
+    "asset_id": "fixture.human_source",
+    "asset_kind": "source_collection",
+    "coverage": {
+      "genres": {"prose": 2},
+      "grades": {},
+      "periods": {"modern": 2},
+      "regions": {},
+      "registers": {},
+      "subjects": {}
+    },
+    "data_boundary": "public_or_external_source",
+    "details": {"fixture": true},
+    "eligibility": {
+      "evaluation_only": false,
+      "excluded_pending_review": true,
+      "internal_rag_reference": true,
+      "potential_training_admission": false,
+      "provenance_investigation": true,
+      "redistribution_investigation": false,
+      "synthetic_research_only": false
+    },
+    "evidence_refs": ["fixture:human-source"],
+    "label": "Fixture human source",
+    "lifecycle_states": ["current", "ingested"],
+    "limitations": ["Fixture metadata; contains no corpus body."],
+    "lineage": {
+      "content_hash_status": "recorded",
+      "ingestion_status": "ingested",
+      "provenance_status": "partial",
+      "raw_artifact_presence": "complete"
+    },
+    "measurement_scope": "distinct_content",
+    "metrics": {
+      "characters": 33,
+      "content_units": 2,
+      "lexical_words": 5,
+      "rows": 2,
+      "unit_label": "database_rows",
+      "whitespace_tokens": 6
+    },
+    "origin_class": "human_authored_source",
+    "rights_status": "not_reconstructed",
+    "schema_version": "existing_asset_inventory_v1"
+  },
+  {
+    "asset_id": "fixture.synthetic_eval",
+    "asset_kind": "evaluation_collection",
+    "coverage": {
+      "genres": {},
+      "grades": {"B1": 1},
+      "periods": {},
+      "regions": {},
+      "registers": {},
+      "subjects": {}
+    },
+    "data_boundary": "evaluation_only",
+    "details": {"fixture": true},
+    "eligibility": {
+      "evaluation_only": true,
+      "excluded_pending_review": true,
+      "internal_rag_reference": false,
+      "potential_training_admission": false,
+      "provenance_investigation": false,
+      "redistribution_investigation": false,
+      "synthetic_research_only": false
+    },
+    "evidence_refs": ["fixture:synthetic-eval"],
+    "label": "Fixture evaluation asset",
+    "lifecycle_states": ["current"],
+    "limitations": ["Evaluation boundary."],
+    "lineage": {
+      "content_hash_status": "recorded",
+      "ingestion_status": "not_applicable",
+      "provenance_status": "complete",
+      "raw_artifact_presence": "complete"
+    },
+    "measurement_scope": "metadata_only",
+    "metrics": {
+      "content_units": 1,
+      "rows": 1,
+      "unit_label": "evaluation_items"
+    },
+    "origin_class": "machine_generated_ukrainian",
+    "rights_status": "evaluation_only",
+    "schema_version": "existing_asset_inventory_v1"
+  }
+]

@@ -1,0 +1,260 @@
+{
+  "counts": {
+    "by_data_boundary": {
+      "evaluation_only": 3,
+      "mixed": 2,
+      "private_reference": 3,
+      "project_internal": 11,
+      "public_or_external_source": 20,
+      "unknown": 2
+    },
+    "by_lifecycle_state": {
+      "archived_in_current_git": 1,
+      "current": 32,
+      "database_only_or_raw_source_unresolved": 1,
+      "ingested": 25,
+      "planned_but_not_evidenced_as_built": 1,
+      "raw_but_uningested": 2,
+      "raw_on_google_drive": 3,
+      "recoverable_from_git_history": 1,
+      "unknown_or_potentially_lost": 2
+    },
+    "by_origin_class": {
+      "human_authored_source": 24,
+      "human_revised_synthetic": 0,
+      "machine_generated_ukrainian": 7,
+      "machine_translated_ukrainian": 2,
+      "unknown_origin": 8
+    },
+    "ledger_records": 41
+  },
+  "distinct_content_totals": {
+    "by_data_boundary": {
+      "evaluation_only": {
+        "characters": 0,
+        "content_units_by_unit_label": {
+          "annotated_error_pairs": 8937,
+          "exam_tasks": 1646
+        },
+        "lexical_words": 0,
+        "whitespace_tokens": 0
+      },
+      "private_reference": {
+        "characters": 6358334,
+        "content_units_by_unit_label": {
+          "database_rows": 5786
+        },
+        "lexical_words": 681925,
+        "whitespace_tokens": 660738
+      },
+      "project_internal": {
+        "characters": 40568287,
+        "content_units_by_unit_label": {
+          "database_rows": 22385,
+          "module_files": 356,
+          "translated_markdown_files": 554
+        },
+        "lexical_words": 5151268,
+        "whitespace_tokens": 5289399
+      },
+      "public_or_external_source": {
+        "characters": 347026636,
+        "content_units_by_unit_label": {
+          "database_rows": 189150,
+          "lexical_rows": 677855,
+          "morphological_forms": 6691276
+        },
+        "lexical_words": 50298925,
+        "whitespace_tokens": 53370473
+      }
+    },
+    "by_origin_class": {
+      "human_authored_source": {
+        "characters": 353384970,
+        "content_units_by_unit_label": {
+          "annotated_error_pairs": 8937,
+          "database_rows": 194936,
+          "exam_tasks": 1646,
+          "lexical_rows": 525303,
+          "morphological_forms": 6691276
+        },
+        "lexical_words": 50980850,
+        "whitespace_tokens": 54031211
+      },
+      "machine_generated_ukrainian": {
+        "characters": 8142689,
+        "content_units_by_unit_label": {
+          "module_files": 351
+        },
+        "lexical_words": 1097874,
+        "whitespace_tokens": 1181889
+      },
+      "machine_translated_ukrainian": {
+        "characters": 20722962,
+        "content_units_by_unit_label": {
+          "lexical_rows": 122441,
+          "translated_markdown_files": 554
+        },
+        "lexical_words": 2585416,
+        "whitespace_tokens": 2624445
+      },
+      "unknown_origin": {
+        "characters": 11702636,
+        "content_units_by_unit_label": {
+          "database_rows": 22385,
+          "lexical_rows": 30111,
+          "module_files": 5
+        },
+        "lexical_words": 1467978,
+        "whitespace_tokens": 1483065
+      }
+    }
+  },
+  "eligibility_views": {
+    "evaluation_only": [
+      "eval.ua_gec_errors",
+      "eval.ua_gec_heldout_v1",
+      "eval.zno_tasks"
+    ],
+    "excluded_pending_review": [
+      "curriculum.bio.current",
+      "curriculum.core.a1",
+      "curriculum.core.a2",
+      "curriculum.core.b1",
+      "curriculum.core.b2",
+      "curriculum.folk.current",
+      "db.external_articles",
+      "db.literary_texts",
+      "db.project_wiki",
+      "db.textbooks.private",
+      "db.textbooks.public",
+      "db.wikipedia",
+      "drive.deferred_textbook_scans",
+      "drive.literary_raw_reconciliation",
+      "drive.orphan_ocr",
+      "drive.raw_source_topology",
+      "drive.textbook_raw_reconciliation",
+      "eval.ua_gec_errors",
+      "eval.ua_gec_heldout_v1",
+      "eval.zno_tasks",
+      "git.folk_archived_plans_without_module_evidence",
+      "git.folk_historical_modules",
+      "git.tracked_archives",
+      "git.unreachable_object_pool",
+      "lexicon.balla_en_uk",
+      "lexicon.dmklinger_uk_en",
+      "lexicon.esum_cognate_forms",
+      "lexicon.esum_etymology",
+      "lexicon.frazeolohichnyi",
+      "lexicon.grinchenko",
+      "lexicon.puls_cefr",
+      "lexicon.style_guide",
+      "lexicon.sum11",
+      "lexicon.ukrajinet",
+      "lexicon.vesum",
+      "lexicon.wiktionary",
+      "synthetic.hramatka_uk_pedagogy_v1",
+      "translation.kubedojo_uk",
+      "view.literary_period.middle_ukrainian",
+      "view.literary_period.modern",
+      "view.literary_period.old_east_slavic"
+    ],
+    "internal_rag_reference": [
+      "db.external_articles",
+      "db.literary_texts",
+      "db.project_wiki",
+      "db.textbooks.public",
+      "db.wikipedia",
+      "lexicon.balla_en_uk",
+      "lexicon.dmklinger_uk_en",
+      "lexicon.esum_cognate_forms",
+      "lexicon.esum_etymology",
+      "lexicon.frazeolohichnyi",
+      "lexicon.grinchenko",
+      "lexicon.puls_cefr",
+      "lexicon.style_guide",
+      "lexicon.sum11",
+      "lexicon.ukrajinet",
+      "lexicon.vesum",
+      "lexicon.wiktionary"
+    ],
+    "potential_training_admission": [],
+    "provenance_investigation": [
+      "curriculum.bio.current",
+      "db.external_articles",
+      "db.literary_texts",
+      "db.project_wiki",
+      "db.textbooks.private",
+      "db.textbooks.public",
+      "db.wikipedia",
+      "drive.literary_raw_reconciliation",
+      "drive.orphan_ocr",
+      "drive.raw_source_topology",
+      "drive.textbook_raw_reconciliation",
+      "git.folk_archived_plans_without_module_evidence",
+      "git.folk_historical_modules",
+      "git.tracked_archives",
+      "git.unreachable_object_pool",
+      "lexicon.balla_en_uk",
+      "lexicon.dmklinger_uk_en",
+      "lexicon.esum_cognate_forms",
+      "lexicon.esum_etymology",
+      "lexicon.frazeolohichnyi",
+      "lexicon.grinchenko",
+      "lexicon.puls_cefr",
+      "lexicon.style_guide",
+      "lexicon.sum11",
+      "lexicon.ukrajinet",
+      "lexicon.vesum",
+      "lexicon.wiktionary",
+      "view.literary_period.middle_ukrainian",
+      "view.literary_period.modern",
+      "view.literary_period.old_east_slavic"
+    ],
+    "redistribution_investigation": [
+      "db.external_articles",
+      "db.literary_texts",
+      "db.textbooks.public",
+      "db.wikipedia",
+      "drive.literary_raw_reconciliation",
+      "lexicon.balla_en_uk",
+      "lexicon.dmklinger_uk_en",
+      "lexicon.esum_cognate_forms",
+      "lexicon.esum_etymology",
+      "lexicon.frazeolohichnyi",
+      "lexicon.grinchenko",
+      "lexicon.puls_cefr",
+      "lexicon.style_guide",
+      "lexicon.sum11",
+      "lexicon.ukrajinet",
+      "lexicon.vesum",
+      "lexicon.wiktionary"
+    ],
+    "synthetic_research_only": [
+      "curriculum.core.a1",
+      "curriculum.core.a2",
+      "curriculum.core.b1",
+      "curriculum.core.b2",
+      "curriculum.folk.current",
+      "git.folk_historical_modules",
+      "synthetic.hramatka_uk_pedagogy_v1",
+      "translation.kubedojo_uk"
+    ]
+  },
+  "ledger_sha256": "ac6a1da8db2dbfbf831e74d58d987674c06ebaeca7b8067aad1ee6c353d196bf",
+  "measurement_contract": {
+    "characters": "Python len() of stored Unicode strings.",
+    "lexical_words": "[^\\W\\d_]+(?:[’'][^\\W\\d_]+)*",
+    "model_token_counts": "not_run; tokenizer-specific measurement remains pending",
+    "whitespace_tokens": "Python str.split(); proxy only, not model tokens."
+  },
+  "repo_head": "a78f59553e35614c3e335c7099a55ba4cb2fd981",
+  "safety_assertions": {
+    "potential_training_admission_assets": 0,
+    "redistribution_cleared_assets": 0,
+    "source_record_v1_admissions": 0
+  },
+  "schema_sha256": "1504bc0f2c31f187a3e8fa4b900f4d182f7e98fec0bc816482f0a7bdf75e7260",
+  "schema_version": "existing_asset_inventory_summary_v1",
+  "snapshot_date": "2026-07-31"
+}
