@@ -42,11 +42,12 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
   * **Codex seat**: `gpt-5.6-terra` (standard practical review)
   * **GLM seat**: `glm-5.2` (local-only)
   * **Gemini seat**: `gemini-3.6-flash-high`
-* **Complex Non-Advisory Tasks & Deep Reviews**:
-  * **Anthropic Opus seat**: `claude-opus-5` (complex coding, deep reasoning). NOT an
-    advisor seat — operator ruling 2026-07-26: weak in the advisor role and over-verbose
-    there; this REVERSES the 2026-07-24 "Opus replaces Fable as default Anthropic advisor"
-    ruling.
+* **Complex Tasks, Deep Reviews & Anthropic Advisory Consultations**:
+  * **Anthropic Opus seat**: `claude-opus-5` (complex coding, deep reasoning, and
+    non-binding advisory consultation). Operator directive 2026-07-31: when requesting
+    Anthropic advisory input, use `ab ask-claude --type advisory --to-model claude-opus-5`;
+    never substitute Sonnet. This consultation does not confer designated approval
+    authority and does not satisfy the formal cross-family review gate.
 * **Escalatory Advisor / Critical Authority Reviews** (reserved for architecture, security, or design escalation):
   * **Top advisors**: `claude-fable-5` · `gpt-5.6-sol` — the ONLY top-tier
     advisor seats. Sol starts at `high`; use `xhigh`/`max` only for an explicit
@@ -62,6 +63,11 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
 
 *Everyday routine PRs use practical seats (`sonnet` / `terra`). Do not burn advisor seats on routine work.*
 
+**Three-role boundary (operator directive 2026-07-31):** advisory consultation is
+non-binding model input (Anthropic → Opus); designated approval authority is the current
+identity roster in `operator-expectations.md`; formal review is selected independently by
+the canonical reviewer resolver. A routing-table change must never grant approval authority
+or count as a formal review.
 
 **Lane updates (user-reported 2026-07-18):**
 - **grok**: the lane now offers **grok-4.5 only**, with selectable reasoning effort

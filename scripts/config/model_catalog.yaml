@@ -133,20 +133,22 @@ models:
     family: anthropic
     tier: frontier_authority
     lifecycle: active
-    roles: [architecture, critical_review, security_review, orchestration, agentic_coding]
+    roles: [advisory_consultation, architecture, critical_review, security_review, agentic_coding]
     transports: [native_claude, cursor]
     strengths: [deep_reasoning, long_horizon_agentic, high_precision_and_recall_code_review]
     weaknesses: [verbose_by_default, over_delegates_to_subagents, elevated_refusal_surface]
     notes: >-
-      Anthropic advisor + escalation TARGET seat (replaced Fable 5 on 2026-07-24 at half
-      the token cost). Effort ladder low..max; drive at high, xhigh for the hard turn.
-      Thinking is ON by default and disabling it is invalid above high effort.
-      Separate rate-limit bucket from the Opus 4.x pool.
+      Anthropic advisory-consultation seat (operator directive 2026-07-31). Advisory is
+      non-binding and does not confer designated approval authority or satisfy formal review.
+      Effort ladder low..max; use high for advisory and xhigh only for a documented hard turn.
+      Thinking is ON by default and disabling it is invalid above high effort. Separate
+      rate-limit bucket from the Opus 4.x pool.
     sources:
       - https://platform.claude.com/docs/en/about-claude/models/overview
-  # Retained alongside claude-opus-5 (which since 2026-07-26 is a coding seat, not an
-  # advisor — the advisor roster points at claude-fable-5 + gpt-5.6-sol), but
-  # this id is still referenced by scripts/context_canary.py, scripts/pipeline/dispatch.py,
+  # Retained alongside claude-opus-5. Opus is the non-binding Anthropic advisory-
+  # consultation seat; designated approval authority remains identity-scoped and the
+  # current advisor roster still points at claude-fable-5 + gpt-5.6-sol. This legacy id
+  # is still referenced by scripts/context_canary.py, scripts/pipeline/dispatch.py,
   # ai_agent_bridge/openai_proxy.py and _dispatch_wrappers.py. Removing the entry
   # broke collection with KeyError: 'claude-opus-4-8'.
   claude-opus-4-8:
@@ -590,16 +592,16 @@ orchestrator_seats:
     escalate_effort: xhigh
     escalate_when: deep_single_shot_or_architecture
     note: >-
-      Fable 5 is the Anthropic orchestration/judgment seat (operator 2026-07-26;
-      REVERSES the 2026-07-24 Opus-as-default ruling — operator: Opus 5 is weak in
-      the advisor role and over-verbose). Fable runs in the SUMMONED cadence, not
+      Fable 5 remains the Anthropic orchestration and designated-authority seat.
+      Non-binding Anthropic advisory consultations route separately to Opus 5 under
+      the operator's 2026-07-31 directive. Fable runs in the SUMMONED cadence, not
       as a resident daily driver: grok-4.5 owns the daily epic loops; Fable takes
       1-2 short scheduled judgment sessions/day (verdict reads, course corrections,
       design locks, briefs) driven dispatch-heavy, never inline-heavy — measured
       2026-07-26 at ~2 weekly-quota points per orchestration hour in that style.
       Escalation stays CROSS-FAMILY to Sol @ xhigh; Claude is an escalation TARGET,
-      not an escalator. Opus 5 remains a complex-coding/deep-reasoning seat only —
-      not an advisor, not an orchestrator. Driving is `high`, not `xhigh`.
+      not an escalator. Opus 5 is not an orchestrator and its advisory output does
+      not confer approval authority. Driving is `high`, not `xhigh`.
   codex:
     model_id: gpt-5.6-terra
     effort: high
@@ -649,7 +651,7 @@ formal_cf_defaults:
     model_id: claude-sonnet-5
     effort: high
     # Others escalate TO Claude: Fable 5 @ xhigh is the Anthropic advisor/authority
-    # seat (operator 2026-07-26 — Opus 5 de-advisored; reverses the 2026-07-24 swap).
+    # seat. Opus 5 advisory consultations are non-binding and separate from formal CF.
     escalate_model_id: claude-fable-5
     escalate_effort: xhigh
   glm:

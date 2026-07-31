@@ -606,7 +606,11 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     ask_claude_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_claude_parser.add_argument("--task-id", required=True, help="Task ID (required for session tracking)")
-    ask_claude_parser.add_argument("--type", default="query", help="Message type (default: query)")
+    ask_claude_parser.add_argument(
+        "--type",
+        default="query",
+        help="Message type (default: query; use advisory to pin claude-opus-5)",
+    )
     ask_claude_parser.add_argument("--data", help="Path to data file to attach")
     ask_claude_parser.add_argument(
         "--new-session", dest="new_session", action="store_true", help="Force new session even if one exists"

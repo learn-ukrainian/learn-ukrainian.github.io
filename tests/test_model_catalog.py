@@ -367,15 +367,23 @@ def test_catalog_rejects_future_review_date():
 
 
 def test_critical_ladder_anthropic_authority_is_fable_not_opus():
-    """Operator 2026-07-26: Opus 5 is de-advisored. The critical (authority)
-    ladder must route Anthropic authority reviews to Fable and must not list
-    Opus at all — otherwise the resolver dispatches authority reviews to the
-    explicitly de-advisored model whenever the OpenAI rung is excluded."""
+    """Advisory consultation must not silently become approval authority.
+
+    The critical authority ladder routes Anthropic approval reviews to Fable.
+    Opus remains the separate, non-binding advisory-consultation seat.
+    """
     ladder = load_model_catalog()["review_ladders"]["critical"]
     flat = [model for rung in ladder for model in rung]
     assert "claude-fable-5" in flat
     assert "claude-opus-5" not in flat
     assert flat.index("claude-fable-5") < flat.index("claude-sonnet-5")
+
+
+def test_opus_advisory_capability_does_not_grant_orchestration() -> None:
+    """Model capability metadata must preserve the routing/authority boundary."""
+    roles = set(load_model_catalog()["models"]["claude-opus-5"]["roles"])
+    assert "advisory_consultation" in roles
+    assert "orchestration" not in roles
 
 
 def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
