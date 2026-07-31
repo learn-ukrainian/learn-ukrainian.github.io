@@ -211,6 +211,15 @@ def test_acpx_codex_shadow_entry_is_direct_only():
     assert "acpx-codex-shadow" not in available_agents()
 
 
+def test_unavailable_non_direct_seat_has_accurate_loader_guidance():
+    with pytest.raises(AgentUnavailableError) as exc_info:
+        _load_adapter("qwen")
+
+    message = str(exc_info.value)
+    assert "no enabled runtime CLI/adapter" in message
+    assert "Direct-only" not in message
+
+
 @pytest.mark.parametrize("entrypoint", ["acpx-pilot-native", "acpx-pilot-shadow"])
 def test_acpx_pilot_usage_records_strip_sensitive_context(
     entrypoint,

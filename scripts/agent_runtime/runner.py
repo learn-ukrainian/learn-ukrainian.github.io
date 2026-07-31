@@ -568,11 +568,21 @@ def _load_adapter(name: str, *, allow_direct_only: bool = False) -> AgentAdapter
 
     direct_only_allowed = allow_direct_only and entry.get("direct_only") is True
     if not entry["cli_available"] and not direct_only_allowed:
+        if entry.get("direct_only") is True:
+            detail = (
+                "Direct-only seats require their dedicated bounded invocation "
+                "surface and never participate in normal routing, dispatch, "
+                "review, or failover."
+            )
+        else:
+            detail = (
+                "This seat has no enabled runtime CLI/adapter. Enable its "
+                "intended adapter or launcher and flip the registry flag only "
+                "when the seat is operational."
+            )
         raise AgentUnavailableError(
             f"Agent {name!r} is registered but not available "
-            f"(cli_available=False). Direct-only seats require their dedicated "
-            f"bounded invocation surface and never participate in normal "
-            f"routing, dispatch, review, or failover."
+            f"(cli_available=False). {detail}"
         )
 
     # Permission is checked before cache access. A prior direct-only load must
