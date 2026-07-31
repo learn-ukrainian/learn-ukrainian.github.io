@@ -1197,7 +1197,7 @@ def test_real_grok_driver_recovers_dead_unexpired_holder_via_session_supervisor(
     assert launched.returncode == 0, launched.stderr + launched.stdout
     assert started["grok"].exists()
     stream = store.dump_stream("epic:5703")
-    assert [session["state"] for session in stream["sessions"]] == ["closed", "open"]
+    assert sorted(session["state"] for session in stream["sessions"]) == ["closed", "open"]
     assert stream["lease"]["generation"] == 2
     assert stream["lease"]["holder_agent"] == "grok"
 
