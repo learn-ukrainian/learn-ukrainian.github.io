@@ -153,6 +153,24 @@ def test_app_holder_migration_preserves_legacy_process_projection_and_indexes(tm
             "'2026-07-31T10:00:00Z', '2026-07-31T10:01:00Z', 60, 1, ?)",
             (int(cursor.lastrowid),),
         )
+        connection.execute(
+            "INSERT INTO entries("
+            "stream_id, session_id, agent, harness, ts, type, body, body_sha256, origin, "
+            "writer_lease_id, writer_instance_id, fencing_token, idempotency_key"
+            ") VALUES ('epic:4707', 'session-legacy', 'codex', 'codex', "
+            "'2026-07-31T10:00:02Z', 'note', 'legacy live entry', ?, 'live', "
+            "'lease-legacy', 'runtime-legacy', 1, 'legacy-live')",
+            ("a" * 64,),
+        )
+        connection.execute(
+            "INSERT INTO entries("
+            "stream_id, session_id, agent, harness, ts, type, body, body_sha256, origin, "
+            "writer_lease_id, writer_instance_id, fencing_token, idempotency_key"
+            ") VALUES ('epic:4707', 'session-legacy', 'codex', 'codex', "
+            "'2026-07-31T10:00:03Z', 'note', 'legacy migrated entry', ?, 'migration', "
+            "NULL, NULL, NULL, 'legacy-migration')",
+            ("b" * 64,),
+        )
 
     connection = SessionStreamDatabase(path).connect()
     try:
@@ -163,6 +181,16 @@ def test_app_holder_migration_preserves_legacy_process_projection_and_indexes(tm
         assert projection["holder_process_id"] == 41001
         assert event["holder_kind"] == "process"
         assert event["holder_process_id"] == 41001
+        migrated_entries = {
+            str(row["idempotency_key"]): (row["writer_holder_kind"], row["writer_receipt_digest"])
+            for row in connection.execute(
+                "SELECT idempotency_key, writer_holder_kind, writer_receipt_digest FROM entries"
+            )
+        }
+        assert migrated_entries == {
+            "legacy-live": ("process", None),
+            "legacy-migration": (None, None),
+        }
         assert "lease_events_stream_order" in indexes
         assert connection.execute("PRAGMA foreign_key_check").fetchall() == []
     finally:

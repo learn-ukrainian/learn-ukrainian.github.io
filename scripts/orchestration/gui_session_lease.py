@@ -130,9 +130,9 @@ class CodexGuiSessionLeaseAdapter(StructuredReadbackAdapter):
         return VerifiedAppLifecycleProof(receipt=receipt, verifier_id=self.verifier_id)
 
     @staticmethod
-    def _state_envelope(*, task_id: str, state_db: Path, record: CleanupThreadRecord | None) -> dict[str, object]:
+    def _state_envelope(*, task_id: str, record: CleanupThreadRecord | None) -> dict[str, object]:
         observed_at = isoformat_z(utc_now())
-        authority = f"codex-state-sha256:{sha256_text(str(state_db.resolve()))}"
+        authority = "codex-native-state-db:v1"
         if record is None:
             return {
                 "schema_version": SCHEMA_VERSION,
@@ -183,10 +183,10 @@ class CodexGuiSessionLeaseAdapter(StructuredReadbackAdapter):
         except CodexStateMissingTaskError:
             if not require_recovery_state:
                 raise ValueError("active GUI proof requires an exact native task row") from None
-            envelope = cls._state_envelope(task_id=task_id, state_db=db, record=None)
+            envelope = cls._state_envelope(task_id=task_id, record=None)
             return cls._allowlisted(envelope)
         if require_recovery_state:
-            envelope = cls._state_envelope(task_id=task_id, state_db=db, record=record)
+            envelope = cls._state_envelope(task_id=task_id, record=record)
             return cls._allowlisted(envelope)
         if record.archived:
             raise ValueError("archived Codex task cannot hold or renew a GUI lease")
@@ -237,9 +237,7 @@ class CodexGuiSessionLeaseAdapter(StructuredReadbackAdapter):
                     envelope = {
                         "schema_version": output["schemaVersion"],
                         "source": READ_THREAD_SOURCE,
-                        "source_authority": (
-                            f"codex-rollout-sha256:{sha256_text(str(rollout.resolve()))}:call:{call_id}"
-                        ),
+                        "source_authority": (f"codex-native-read-thread:v1:call-sha256:{sha256_text(call_id)}"),
                         "observed_at": timestamp,
                         "thread": {
                             "id": thread["id"],
