@@ -1,11 +1,26 @@
 # Gap Analysis: Public Ukrainian Datasets vs. Our Unique Literary Alignment Asset
 
-> **Purpose**: Survey of public HuggingFace/GitHub Ukrainian datasets to verify dataset novelty and confirm that our literary/pedagogical instruction dataset fills an unserved gap in the UNLP research ecosystem.  
+> **Current authority — superseded research claims:**
+> [Issue #6058](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6058)
+> and its merged [Literary Poltava candidate audit](hramatka_literary_poltava_candidate_audit.md)
+> are the current authority for the candidate called
+> `hramatka_literary_poltava_v1`. The audit's `rebuild_required` verdict finds
+> no evidence for rights, provenance, redistribution, or model-training
+> permission. This document does **not** authorize training, upload, release,
+> redistribution, publication, or claims of purity, uniqueness, provenance,
+> or rights. It remains only as historical research notes.
+>
+> **Historical purpose**: former survey intended to support a novelty and gap
+> claim; its candidate-specific conclusions are unestablished.
 > **Date**: July 24, 2026
 
 ---
 
-## 1. Survey of Publicly Available Ukrainian Datasets
+## Historical survey of publicly available Ukrainian datasets
+
+This survey's scope, completeness, comparative characterizations, and overlap
+conclusions were not revalidated by the merged audit. They must not be used to
+make a current claim about third-party datasets or the candidate collection.
 
 We evaluated all major public Ukrainian datasets on HuggingFace Hub and GitHub (`lang-uk`, `UNLP`, HuggingFace Datasets registry):
 
@@ -18,9 +33,11 @@ We evaluated all major public Ukrainian datasets on HuggingFace Hub and GitHub (
 
 ---
 
-## 2. The Gap: What DOES NOT Exist in Public AI Research
+## Historical gap hypothesis
 
-Our investigation confirms that **NO dataset currently exists in the public domain** that provides:
+This document formerly asserted that no public dataset supplied the following
+features. That conclusion is unestablished and is retained as a record of the
+earlier hypothesis only:
 
 1. **Instruction-Formatted Literary Prose (Poltava Standard)**:
    - Zero datasets exist that format authentic 19th–21st century Ukrainian literature (Shevchenko, Kulish, Franko, Lesya Ukrainka, Kostenko) into prompt-response instruction triples (`<|im_start|>user ... <|im_end|>`).
@@ -31,9 +48,11 @@ Our investigation confirms that **NO dataset currently exists in the public doma
 
 ---
 
-## 3. The Asset We Are Preparing for UNLP & AI Research Teams
+## Historical description of a proposed asset
 
-We are building and releasing **`hramatka_literary_poltava_v1`**:
+This was a proposed description of **`hramatka_literary_poltava_v1`**, not an
+accurate current inventory, release notice, or authorization to use the
+candidate:
 
 ```
 ┌───────────────────────────────────────────────────────────────────────────┐
@@ -53,10 +72,18 @@ We are building and releasing **`hramatka_literary_poltava_v1`**:
 
 ---
 
-## 4. Value Proposition for UNLP Researchers & Google DeepMind
+## Historical value proposition
 
-- **For UNLP Researchers**: Replaces flawed machine-translated Alpaca datasets with authentic native Ukrainian literary prose.
-- **For Google DeepMind / Gemma Team**: Provides a high-precision, non-English instruction-tuning dataset to train Gemma 5 / Gemini 4 on high-register Ukrainian.
+The following value claims were proposal-era aspirations, not verified facts:
+
+- The candidate could replace machine-translated instruction data with
+  authentic native Ukrainian literary prose.
+- The candidate could supply high-precision instruction-tuning material for
+  high-register Ukrainian.
+
+They cannot support release, redistribution, upload, training, or publication.
+The audit requires a rights-cleared rebuild before any separately authorized
+future evaluation of such claims.
 
 ---
 

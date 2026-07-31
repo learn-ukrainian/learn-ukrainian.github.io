@@ -1,11 +1,25 @@
 # UNLP & lang-uk GitHub Dataset Survey & Assessment
 
-> **Purpose**: Comparative evaluation of public UNLP (Ukrainian Natural Language Processing / lang-uk) datasets vs. our curated repository corpus for fine-tuning open LLMs (Gemma 4 31B, Llama 4, Mistral) to Poltava literary standard.  
+> **Current authority — superseded and non-operational:**
+> [Issue #6058](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6058)
+> and its merged [Literary Poltava candidate audit](hramatka_literary_poltava_candidate_audit.md)
+> are the current authority for the Literary Poltava candidate. The audit's
+> `rebuild_required` verdict excludes every candidate record pending rights and
+> provenance evidence. This survey does **not** authorize training, upload,
+> release, redistribution, publication, or claims of purity, provenance,
+> rights, or readiness. It is historical context only.
+>
+> **Historical purpose**: former comparative survey and proposed fine-tuning
+> rationale; do not treat it as a current assessment or action plan.
 > **Date**: July 23, 2026
 
 ---
 
-## 1. Survey of Public UNLP / lang-uk Datasets
+## Historical survey of public UNLP / lang-uk datasets
+
+The comparisons and repository integration statements below are historical
+notes. They were not revalidated by the merged audit and must not be used as
+current quality, licensing, provenance, or use-authority conclusions.
 
 | Dataset | Provider | Size | Content / Focus | Quality Assessment for Poltava Literary Alignment | Integration Status in Our Repo |
 | :--- | :--- | :---: | :--- | :--- | :--- |
@@ -17,24 +31,33 @@
 
 ---
 
-## 2. Strengths & Limitations of Public Datasets
+## Historical strengths and limitations discussion
 
 ### A. Strengths of UNLP Datasets (`UA-GEC`, `VESUM`, `UberText`)
+
 - **Scale**: `UberText` provides massive token volume required for foundational language modeling.
 - **Precision Error Data**: `UA-GEC` is the single best dataset for training grammar-error detection models (correcting Surzhyk, calques, and spelling mistakes).
 - **Morphological Ground Truth**: `VESUM` guarantees 100% accurate inflected forms and part-of-speech tags.
 
-### B. Why Public Datasets Need Our Curated Corpus (`data/sources.db`)
-Public web corpora (`UberText`) are collected from modern internet sources. In Ukrainian, generic web crawls contain three major systemic contaminants:
+### B. Historical rationale for a proposed corpus
+
+This section records a former rationale. It does not establish that the
+repository corpus is curated, rights-cleared, linguistically superior, or fit
+for use. It also does not determine the quality of public web corpora.
+
+The proposal characterized generic web crawls as having three systemic issues:
 1. **Soviet Administrative Calques (*канцеляризми*)**: Awkward phrasing translated literally from Russian legal and news texts.
 2. **Semantic Surzhyk**: Valid Ukrainian words used with Russian semantic meanings.
 3. **Phonoaesthetic Violations**: Disregarding native Ukrainian euphony (*милозвучність*, alternation of *у/в* and *і/й*).
 
 ---
 
-## 3. The Combined Hybrid Fine-Tuning Strategy
+## Withdrawn historical hybrid fine-tuning proposal
 
-To fine-tune open models (Gemma 4 31B) to match Gemini 3.6 Flash level quality, we combine public UNLP datasets with our curated repository corpus:
+This diagram records a proposed combination of public datasets with the
+candidate corpus. It is not a workflow to execute and does not establish
+permission to combine, upload, train on, release, redistribute, or publish any
+data.
 
 ```
                   ┌─────────────────────────────────────────┐
@@ -65,10 +88,13 @@ To fine-tune open models (Gemma 4 31B) to match Gemini 3.6 Flash level quality, 
 
 ---
 
-## 4. Conclusion & Action Item
+## Historical conclusion
 
-- Public UNLP datasets (**`UA-GEC`** and **`VESUM`**) are world-class gold standards that we already rely on for dictionary verification and error detection.
-- For fine-tuning LLMs specifically into **fluent, decolonized, literary Ukrainian (Poltava standard)**, `UberText` must be paired with our **`hramatka_literary_poltava_v1`** dataset to filter out modern web calques and restore native phonoaesthetic euphony.
+The former conclusion that a candidate dataset should be paired with public
+datasets for fine-tuning is withdrawn. The quality labels and use assertions
+above are historical, not current authority. No use of the candidate is
+authorized unless a future separately approved effort first completes a
+rights-cleared rebuild and fresh audit.
 
 ---
 

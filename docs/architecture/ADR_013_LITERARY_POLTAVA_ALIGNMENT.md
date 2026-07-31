@@ -1,13 +1,28 @@
 # ADR 013: Literary Ukrainian Alignment (Poltava Standard) & Open Model Training Strategy
 
-> **Status**: APPROVED / IMPLEMENTATION  
+> **Current authority — superseded and non-operational:**
+> [Issue #6058](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6058)
+> and its merged [Literary Poltava candidate audit](../research/hramatka_literary_poltava_candidate_audit.md)
+> are the current authority for `hramatka_literary_poltava_v1`. The audit's
+> `rebuild_required` verdict finds rights and provenance unknown and excludes
+> every candidate record pending evidence. This ADR does **not** authorize
+> training, upload, release, redistribution, or any purity, provenance, or
+> rights claim. It is retained only as a historical record of a withdrawn
+> proposal; do not follow its decision or strategy language.
+>
+> **Historical status**: formerly APPROVED / IMPLEMENTATION; withdrawn for
+> current use
 > **Date**: July 23, 2026  
 > **Authors**: Lead Architecture Review, Sol (`gpt-5.6-sol`), UNLP Dataset Task Force  
 > **Target Epic**: #4542 (Hramatka Model Alignment & UNLP Dataset Release)
 
 ---
 
-## Context & Problem Statement
+## Historical context and problem statement
+
+The text in this section records the rationale that informed the July 2026
+proposal. It is not a verified characterization of the candidate corpus or a
+current implementation direction.
 
 Modern Literary Ukrainian (*сучасна українська літературна мова*) is historically grounded in the **Poltava-Middle Dnieper dialect region** (Kotlyarevsky, Shevchenko, Nechuy-Levytsky, Marko Vovchok, Rylsky, Franko/Lesya Ukrainka synthesis).
 
@@ -16,35 +31,50 @@ General-purpose open models (Gemma 4 31B, Llama 4, Mistral) are pre-trained on u
 2. **Semantic Surzhyk**: Valid Ukrainian words assigned Russian meanings (e.g. *лук* as onion instead of bow).
 3. **Phonoaesthetic Violations**: Disregarding Ukrainian euphony rules (*милозвучність*, proper alternation of *у/в* and *і/й*).
 
-Prompt engineering alone cannot fix missing pre-training distributions. To make open models like Gemma 4 31B truly fluent in high-register literary Ukrainian, we must fine-tune them on clean, chronologically tagged Ukrainian literature and textbooks.
+The historical proposal asserted that prompt engineering alone could not fix
+missing pre-training distributions and proposed fine-tuning on purportedly
+clean, chronologically tagged Ukrainian literature and textbooks. The merged
+audit now prevents treating those descriptions as established or actionable.
 
 ---
 
-## Decision 1: Utilizing Our Pristine Corpus (`data/sources.db`)
+## Historical Decision 1: Proposed corpus use (`data/sources.db`)
 
-Our repository contains the largest curated, decolonized, and chronologically tagged Ukrainian corpus available:
+This ADR previously described the repository as containing the largest curated,
+decolonized, and chronologically tagged Ukrainian corpus available:
 - **137,723 Literary Text Chunks**: Tagged by author, work, year, genre, and language period (Early Ruthenian $\rightarrow$ 19th c. Poltava Classic $\rightarrow$ Modern Literary 2019 Pravopys).
 - **54,979 Grade 1–11 Textbook Chunks**: Pure normative school Ukrainian across subjects.
 - **1,029 Curated Wikipedia Articles**.
 
-We do **not** rely on unverified external web dumps. Our corpus is hand-verified, cleaned, and free of Soviet administrative calques.
+These were proposal-era assertions, not audit-backed findings. They must not be
+read as evidence of provenance, rights, linguistic quality, decolonization, or
+fitness for any downstream use.
 
 ---
 
-## Decision 2: Release of `hramatka_literary_poltava_v1` Dataset for UNLP
+## Historical Decision 2: Proposed release of `hramatka_literary_poltava_v1`
 
-We have built and exported **`hramatka_literary_poltava_v1`**:
+The proposal stated that **`hramatka_literary_poltava_v1`** had been built and
+exported:
 - **Dataset Path**: `data/datasets/hramatka_literary_poltava_v1/hramatka_literary_poltava_v1.jsonl`
 - **Exporter Script**: `scripts/dataset/export_literary_poltava_dataset.py`
 - **Passage Count**: 5,000 curated, high-register literary passages tagged by author and period.
 
 ---
 
-## Fine-Tuning Strategy for Gemma 4 31B
+## Withdrawn historical fine-tuning strategy
 
-1. **Continued Pre-Training / SFT**: Fine-tune Gemma 4 31B on `hramatka_literary_poltava_v1.jsonl` using QLoRA / LoRA causal language modeling.
-2. **Pedagogical Alignment (DPO)**: Pair the fine-tuned Gemma base model with our `hramatka_uk_pedagogy_v1.jsonl` preference pairs to enforce 8/8 activity density and zero-Russianism pedagogical rules.
-3. **Target Outcome**: An open-weights Gemma model that rivals Gemini 3.6 Flash in both literary euphony (*милозвучність*) and B1 lesson authoring density.
+The following was a historical proposal, not a plan to execute:
+
+1. Continued pre-training or SFT on the candidate collection.
+2. Pedagogical preference alignment using a separate claimed dataset.
+3. An open-weights model outcome framed around literary euphony and lesson
+   authoring.
+
+No part of this proposal authorizes training, model adaptation, dataset upload,
+redistribution, release, or publication. A future, separately approved effort
+would first need a rights-cleared rebuild and a new audit; this document grants
+no permission.
 
 ---
 
