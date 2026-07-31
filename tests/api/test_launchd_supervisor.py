@@ -21,6 +21,9 @@ def test_rendered_plist_uses_throttled_abnormal_exit_restart(tmp_path: Path) -> 
     assert payload["Label"] == supervisor.LABEL
     assert payload["KeepAlive"] == {"SuccessfulExit": False}
     assert payload["ThrottleInterval"] == supervisor.THROTTLE_INTERVAL_SECONDS
+    assert payload["EnvironmentVariables"] == {
+        "PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    }
     assert payload["RunAtLoad"] is True
     assert payload["ProgramArguments"] == [
         str(repo / ".venv" / "bin" / "python"),
@@ -95,6 +98,32 @@ def test_install_and_uninstall_preserve_crash_evidence(tmp_path: Path, monkeypat
     assert removed["crash_evidence_preserved"] is True
     assert not supervisor.plist_path(home).exists()
     assert evidence.exists()
+
+
+def test_status_rejects_plist_without_required_environment(tmp_path: Path, monkeypatch) -> None:
+    repo = tmp_path / "repo"
+    home = tmp_path / "home"
+    destination = supervisor.plist_path(home)
+    destination.parent.mkdir(parents=True)
+    legacy_payload = supervisor.build_plist(repo_root=repo)
+    legacy_payload.pop("EnvironmentVariables")
+    destination.write_bytes(plistlib.dumps(legacy_payload))
+    monkeypatch.setattr(
+        supervisor,
+        "_loaded_readback",
+        lambda: subprocess.CompletedProcess(["launchctl", "print"], 0, "", ""),
+    )
+
+    stale_status, stale_exit = supervisor.status(home=home)
+
+    assert stale_status["valid_plist"] is False
+    assert stale_exit == 1
+
+    destination.write_bytes(supervisor.render_plist(repo_root=repo))
+    current_status, current_exit = supervisor.status(home=home)
+
+    assert current_status["valid_plist"] is True
+    assert current_exit == 0
 
 
 def test_stop_disables_before_bootout(tmp_path: Path, monkeypatch) -> None:
