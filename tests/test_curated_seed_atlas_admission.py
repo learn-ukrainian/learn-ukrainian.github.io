@@ -300,7 +300,25 @@ def test_practice_seed_reports_no_hit_and_retains_duplicate_attestations(tmp_pat
         "practice_skipped_no_cefr": 1,
         "practice_cefr_sources": {"PULS": 2},
     }
-    assert report["practice_skipped_no_cefr"] == [{"seedRow": 4, "lemma": "неоцінений"}]
+    assert report["practice_skipped_no_cefr"] == [{"seedRow": 4, "lemma": "неоцінений", "url_slug": "неоцінений"}]
+
+
+def test_practice_seed_no_cefr_records_url_slug_when_route_matched_via_slug(tmp_path: Path) -> None:
+    """The manifest route for this seed row lives under a homograph lemma
+    (mirroring ``вчителька`` / ``учителька`` — see ``_slug_for_url``'s
+    docstring), so the lemma-key lookup misses and the slug fallback is
+    what actually resolves ``target``. The no-CEFR residual record must
+    still carry that resolved ``url_slug``, not an empty string."""
+    manifest = _manifest(
+        tmp_path / "manifest.json",
+        [{"lemma": "учителька", "url_slug": "вчителька", "pos": "noun"}],
+    )
+    rows = [{"seedRow": 1, "lemma": "вчителька", "slug": "вчителька", "sentenceStatus": "ok", "example": "Вчителька увійшла.", "provenance": {"source_file": "x", "credit": "y"}, "admission": {"practice": True, "mode": "admitted", "reason": "rights_cleared"}}]
+
+    seed, report = admission.prepare_practice_seed(rows, manifest)
+
+    assert seed["entries"] == []
+    assert report["practice_skipped_no_cefr"] == [{"seedRow": 1, "lemma": "вчителька", "url_slug": "вчителька"}]
 
 
 def test_private_local_candidates_admit_recognition_only_when_route_and_cefr_exist(tmp_path: Path) -> None:

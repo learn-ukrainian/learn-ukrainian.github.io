@@ -337,7 +337,9 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
             continue
         cefr = _cefr(target)
         if cefr is None:
-            skipped_no_cefr.append({"seedRow": row.get("seedRow"), "lemma": lemma})
+            skipped_no_cefr.append(
+                {"seedRow": row.get("seedRow"), "lemma": lemma, "url_slug": _text(target.get("url_slug"))}
+            )
             continue
         level, source = cefr
         cefr_sources[source] += 1
