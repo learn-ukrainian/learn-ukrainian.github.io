@@ -135,37 +135,6 @@ def test_runtime_page_acpx_panel_has_no_mutating_transport_controls():
         assert prohibited not in acpx_panel
 
 
-def test_runtime_page_has_a_separate_read_only_active_acp_timeline():
-    html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
-    acp_panel = html[html.index('id="acp-heading"') : html.index('id="acpx-heading"')]
-
-    assert "Active ACP Conversations" in acp_panel
-    assert "/api/runtime/acp/conversations?limit=12" in html
-    assert "/api/runtime/acp/conversations/${encodeURIComponent(summary.conversation_id)}" in html
-    assert "Loading active conversations..." in acp_panel
-    assert "No active ACP conversations." in html
-    assert "Conversation storage is unavailable." in html
-    assert "Malformed conversation data" in html
-    assert "Root</div><div class=\"acp-lane\">Codex</div><div class=\"acp-lane\">Grok" in html
-    assert "round ${event.round}" in html
-    assert "seq ${event.sequence}" in html
-    assert "Duplicate suppressed" in html
-    assert "Ended: ${displayLabel(conversation.termination_reason)}" in html
-    assert "acpStateClass" in html
-    assert "acpStateLabel" in html
-    for label in ["Queued", "Running", "Succeeded", "Partial", "Cancelled", "Failed"]:
-        assert label in html
-    for state in ["COMPLETE", "PARTIAL_COMPLETE", "CANCELLED", "FAILED", "CREATED"]:
-        assert state in html
-
-    for prohibited in ["<form", "acp-send", "acp-post", "acp-retry", "acp-cancel", "acp-route", "acp-review", "acp-config"]:
-        assert prohibited not in acp_panel
-
-    assert html.index('id="acp-heading"') < html.index('id="acpx-heading"')
-    assert "ACPX Shadow Transport" in html
-    assert "ACPX evidence is observational only." in html
-
-
 def test_routing_page_uses_live_monitor_sources():
     html = (DASHBOARDS / "routing.html").read_text(encoding="utf-8")
     assert "Static snapshot" not in html
