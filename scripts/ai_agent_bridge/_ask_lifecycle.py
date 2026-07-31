@@ -1018,6 +1018,9 @@ def _import_message_plane() -> Any | None:
 def _plane_root() -> Path:
     if _PLANE_ROOT_OVERRIDE is not None:
         return _PLANE_ROOT_OVERRIDE
+    plane_mod = _import_message_plane()
+    if plane_mod is not None:
+        return Path(plane_mod.default_plane_root(repo_root=REPO_ROOT))
     env = os.environ.get("FLEET_COMMS_ROOT")
     if env:
         return Path(env)

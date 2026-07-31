@@ -319,6 +319,20 @@ def _enable_plane(monkeypatch, tmp_path, mode: str) -> None:
     monkeypatch.setattr(lifecycle, "_PLANE_ROOT_OVERRIDE", tmp_path / "fleet-comms-v1")
 
 
+def test_plane_root_uses_shared_primary_root_resolver(monkeypatch, tmp_path):
+    resolved = tmp_path / "primary" / "batch_state" / "fleet-comms" / "v1"
+    plane_mod = Mock()
+    plane_mod.default_plane_root.return_value = resolved
+    monkeypatch.setattr(lifecycle, "_PLANE_ROOT_OVERRIDE", None)
+    monkeypatch.setattr(lifecycle, "_import_message_plane", lambda: plane_mod)
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path / "linked-worktree")
+
+    assert lifecycle._plane_root() == resolved
+    plane_mod.default_plane_root.assert_called_once_with(
+        repo_root=tmp_path / "linked-worktree"
+    )
+
+
 def test_message_plane_off_is_noop_for_register_and_reply(bridge_db, monkeypatch, tmp_path):
     """Default off: no fleet_request_id, reply path unchanged."""
     _enable_plane(monkeypatch, tmp_path, "off")

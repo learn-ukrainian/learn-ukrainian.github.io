@@ -18,6 +18,7 @@ import re
 import shutil
 import sqlite3
 import tempfile
+import time
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -25,9 +26,13 @@ from typing import Any
 
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.migrations import apply_migrations
+from scripts.fleet_comms.paths import DEFAULT_ROOT_REL, default_plane_root
 
-DEFAULT_ROOT = Path("batch_state/fleet-comms/v1")
+DEFAULT_ROOT = DEFAULT_ROOT_REL
 _SAFE_NAME = re.compile(r"^[A-Za-z0-9._@+=,-][A-Za-z0-9._@+=, -]{0,200}$")
+_PRIVATE_DIR_MODE = 0o700
+_PRIVATE_FILE_MODE = 0o600
+_BUSY_TIMEOUT_MS = 5_000
 
 
 def _utc_now() -> str:
@@ -68,16 +73,33 @@ class ArtifactStore:
     """SQLite metadata + content-addressed blob store."""
 
     def __init__(self, root: Path | None = None, *, repo_root: Path | None = None) -> None:
-        base = repo_root or Path.cwd()
-        self.root = (root if root is not None else base / DEFAULT_ROOT).resolve()
+        self.root = (
+            Path(root).resolve()
+            if root is not None
+            else default_plane_root(repo_root=repo_root)
+        )
         self.blob_root = self.root / "blobs" / "sha256"
         self.db_path = self.root / "comms.sqlite3"
-        self.root.mkdir(parents=True, exist_ok=True)
-        self.blob_root.mkdir(parents=True, exist_ok=True)
-        self._conn = sqlite3.connect(str(self.db_path))
+        self._prepare_private_dir(self.root)
+        self._prepare_private_dir(self.root / "blobs")
+        self._prepare_private_dir(self.blob_root)
+        self._conn = sqlite3.connect(
+            str(self.db_path),
+            timeout=_BUSY_TIMEOUT_MS / 1_000,
+        )
         self._conn.row_factory = sqlite3.Row
+        self._conn.execute(f"PRAGMA busy_timeout = {_BUSY_TIMEOUT_MS}")
+        self._enable_wal()
+        self._conn.execute("PRAGMA synchronous = FULL")
         self._conn.execute("PRAGMA foreign_keys = ON")
+        self._tighten_owned_mode(self.db_path, _PRIVATE_FILE_MODE, require_dir=False)
         apply_migrations(self._conn)
+        for suffix in ("-wal", "-shm"):
+            self._tighten_owned_mode(
+                Path(f"{self.db_path}{suffix}"),
+                _PRIVATE_FILE_MODE,
+                require_dir=False,
+            )
 
     def close(self) -> None:
         self._conn.close()
@@ -114,7 +136,7 @@ class ArtifactStore:
             logical_filename = self._validate_filename(logical_filename)
         digest = hashlib.sha256(data).hexdigest()
         dest = self.blob_path_for(digest)
-        dest.parent.mkdir(parents=True, exist_ok=True)
+        self._prepare_private_dir(dest.parent)
 
         existing = self._conn.execute(
             "SELECT * FROM artifacts WHERE sha256 = ?", (digest,)
@@ -308,10 +330,43 @@ class ArtifactStore:
                 handle.flush()
                 os.fsync(handle.fileno())
             os.replace(tmp_path, dest)
+            self._tighten_owned_mode(dest, _PRIVATE_FILE_MODE, require_dir=False)
         except Exception:
             with contextlib.suppress(OSError):
                 tmp_path.unlink(missing_ok=True)
             raise
+
+    @classmethod
+    def _prepare_private_dir(cls, path: Path) -> None:
+        path.mkdir(mode=_PRIVATE_DIR_MODE, parents=True, exist_ok=True)
+        cls._tighten_owned_mode(path, _PRIVATE_DIR_MODE, require_dir=True)
+
+    @staticmethod
+    def _tighten_owned_mode(path: Path, mode: int, *, require_dir: bool) -> None:
+        """Tighten only owned, non-symlink store paths."""
+        try:
+            stat_result = path.lstat()
+        except OSError:
+            return
+        if path.is_symlink() or stat_result.st_uid != os.getuid():
+            return
+        if require_dir != path.is_dir():
+            return
+        path.chmod(mode)
+
+    def _enable_wal(self) -> None:
+        """Establish WAL even when multiple first-openers race."""
+        deadline = time.monotonic() + (_BUSY_TIMEOUT_MS / 1_000)
+        while True:
+            try:
+                row = self._conn.execute("PRAGMA journal_mode = WAL").fetchone()
+                if row is None or str(row[0]).lower() != "wal":
+                    raise ArtifactStoreError("fleet communications database refused WAL mode")
+                return
+            except sqlite3.OperationalError as exc:
+                if "locked" not in str(exc).lower() or time.monotonic() >= deadline:
+                    raise
+                time.sleep(0.05)
 
     def _row_to_record(self, row: sqlite3.Row) -> ArtifactRecord:
         digest = str(row["sha256"])

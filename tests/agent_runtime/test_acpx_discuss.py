@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import shutil
 import sqlite3
 import threading
 from pathlib import Path
@@ -11,6 +12,8 @@ import pytest
 from scripts.agent_runtime import acpx_discuss
 from scripts.agent_runtime.errors import AgentTimeoutError
 from scripts.agent_runtime.result import Result
+from scripts.fleet_comms.artifacts import ArtifactStore
+from scripts.fleet_comms.message_plane import default_plane_root
 
 
 def _result(agent: str, response: str, *, tokens: int = 5) -> Result:
@@ -90,6 +93,52 @@ def test_two_participants_are_parallel_and_completed_replay_makes_no_calls(tmp_p
     edges = {(str(row[0]), str(row[1])) for row in rows}
     assert {("root", "codex"), ("root", "grok"), ("codex", "root"), ("grok", "root"), ("codex", "grok"), ("grok", "codex")} <= edges
     assert any(row[2] is not None for row in rows)
+
+
+def test_conversation_survives_dispatch_worktree_cleanup(tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_ACPX_TRANSPORT", "active")
+    monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
+    monkeypatch.setattr(acpx_discuss, "classify_repo_path", lambda *_a, **_k: "dispatch_worktree")
+    primary = tmp_path / "primary"
+    (primary / ".git").mkdir(parents=True)
+    worktree = primary / ".worktrees" / "dispatch" / "codex" / "acp-proof"
+    worktree.mkdir(parents=True)
+    (worktree / ".git").write_text(
+        f"gitdir: {primary / '.git' / 'worktrees' / 'acp-proof'}\n",
+        encoding="utf-8",
+    )
+    root = default_plane_root(repo_root=worktree)
+    with ArtifactStore(repo_root=worktree) as default_store:
+        assert default_store.root == root
+    controller = acpx_discuss.AcpxDiscussionController(
+        root=root,
+        participant_call=lambda agent, _prompt, **_kwargs: _result(agent, f"{agent} evidence"),
+        synthesis_call=lambda agent, _prompt, **_kwargs: _result(agent, "durable synthesis"),
+    )
+    try:
+        payload = controller.run(
+            prompt="Prove cleanup durability.",
+            cwd=worktree,
+            task_id="task-6087",
+            correlation_id="corr-6087",
+            idempotency_key="idem-6087",
+            rounds=1,
+        )
+    finally:
+        controller.close()
+
+    shutil.rmtree(primary / ".worktrees")
+
+    assert root == primary / "batch_state" / "fleet-comms" / "v1"
+    assert not worktree.exists()
+    with ArtifactStore(root=root) as reopened:
+        row = reopened.connection.execute(
+            "SELECT state FROM acp_conversation_events "
+            "WHERE conversation_id = ? ORDER BY sequence DESC LIMIT 1",
+            (payload["conversation_id"],),
+        ).fetchone()
+        assert row is not None
+        assert row[0] == "COMPLETE"
 
 
 def test_three_rounds_repeat_cross_exchange_and_complete(tmp_path, monkeypatch):

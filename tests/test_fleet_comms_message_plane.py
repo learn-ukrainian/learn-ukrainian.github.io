@@ -11,6 +11,7 @@ from scripts.fleet_comms.contracts import CompletionState
 from scripts.fleet_comms.message_plane import (
     MAX_CONTINUATIONS,
     MessagePlane,
+    default_plane_root,
     invocation_digest,
     resolve_plane_mode,
 )
@@ -36,6 +37,39 @@ def test_resolve_plane_mode_env_unset_uses_configured_default(
     assert resolve_plane_mode(None) == "off"
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "dual_write")
     assert resolve_plane_mode(None) == "dual_write"
+
+
+def test_default_plane_root_anchors_linked_worktree_to_primary(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
+    primary = tmp_path / "primary"
+    (primary / ".git").mkdir(parents=True)
+    worktree = primary / ".worktrees" / "dispatch" / "codex" / "proof"
+    worktree.mkdir(parents=True)
+    (worktree / ".git").write_text(
+        f"gitdir: {primary / '.git' / 'worktrees' / 'proof'}\n",
+        encoding="utf-8",
+    )
+
+    expected = primary / "batch_state" / "fleet-comms" / "v1"
+    assert default_plane_root(repo_root=primary) == expected
+    assert default_plane_root(repo_root=worktree) == expected
+
+
+def test_default_plane_root_preserves_override_and_non_git_fallback(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    isolated = tmp_path / "isolated"
+    isolated.mkdir()
+    override = tmp_path / "explicit-plane"
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(override))
+    assert default_plane_root(repo_root=isolated) == override
+
+    monkeypatch.delenv("FLEET_COMMS_ROOT")
+    assert default_plane_root(repo_root=isolated) == (
+        isolated / "batch_state" / "fleet-comms" / "v1"
+    )
 
 
 def test_configured_default_fail_open_on_malformed_yaml(
