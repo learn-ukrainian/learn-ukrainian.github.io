@@ -13,6 +13,7 @@ import PracticeSessionSummary, { type SessionSummaryStats } from '@site/src/comp
 import PracticeErrorBoundary from '@site/src/components/PracticeErrorBoundary';
 import {
   SRS_STORAGE_KEY,
+  DAILY_PRACTICE_DECK_SIZE,
   cardKey,
   loadState,
   saveState,
@@ -26,9 +27,9 @@ import {
   type PracticeRating,
   type ReviewLogEntry,
 } from '@site/src/lib/lexicon/srs';
-import { LEARNER_LEVEL_STORAGE_KEY, type CefrLevel } from '@site/src/lib/lexicon/levels';
+import { LEARNER_LEVEL_STORAGE_KEY, filterByCumulativeLevel, type CefrLevel } from '@site/src/lib/lexicon/levels';
 import { CUSTOM_SETS_STORAGE_KEY, filterTeacherClozeItems, type CustomSet } from '@site/src/lib/lexicon/custom-decks';
-import { type DailyWord } from '@site/src/lib/lexicon/daily';
+import { dateSeed, pickDaily, type DailyWord } from '@site/src/lib/lexicon/daily';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
 
@@ -1206,6 +1207,69 @@ describe('LexiconPractice', () => {
     expect(requested.some((u) => u.includes('practice-synonym'))).toBe(false);
     expect(requested.some((u) => u.includes('practice-paronym'))).toBe(false);
     expect(requested.some((u) => u.includes('practice-heritage'))).toBe(false);
+  });
+
+  test('resets the daily re-roll offset when the local calendar day changes while the tab stays open (#6146)', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      const { fn } = mockShardFetch({ A1: 24 });
+      vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+      const dayOneNoon = new Date(2026, 5, 23, 12, 0, 0);
+      vi.setSystemTime(dayOneNoon);
+
+      const user = userEvent.setup({ delay: null });
+      render(<LexiconPractice />);
+      await screen.findByTestId('practice-daily-deck');
+
+      const readFeaturedLemmaIds = async () => {
+        const summary = screen.getByTestId('practice-daily-summary');
+        if (summary.getAttribute('aria-expanded') !== 'true') {
+          await user.click(summary);
+        }
+        return Array.from(document.querySelectorAll('.daily-deck-row'))
+          .map((row) => row.querySelector('[data-testid^="practice-daily-why-"]')?.getAttribute('data-testid'))
+          .filter((id): id is string => Boolean(id))
+          .map((id) => id.replace('practice-daily-why-', ''))
+          .sort();
+      };
+
+      const dayOneDefaultIds = await readFeaturedLemmaIds();
+
+      // Re-roll on day one so the featured set diverges from the day's default draw.
+      await user.click(screen.getByTestId('practice-daily-reroll'));
+      let rolledIds: string[] = [];
+      await waitFor(async () => {
+        rolledIds = await readFeaturedLemmaIds();
+        expect(rolledIds).not.toEqual(dayOneDefaultIds);
+      });
+
+      // Jump the clock past local midnight with NO further interaction — this is the
+      // "tab stayed open overnight" scenario the fix targets. Only the armed midnight
+      // timer (not a click) can catch this rollover.
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(13 * 60 * 60 * 1000);
+      });
+
+      const dayOnePool = dailyPoolFixture({ A1: 24 });
+      const eligiblePool = filterByCumulativeLevel(dayOnePool, 'A1');
+      const expectedDayTwoDefaultIds = pickDaily(
+        eligiblePool,
+        dateSeed(new Date(2026, 5, 24)),
+        DAILY_PRACTICE_DECK_SIZE,
+      )
+        .map((word) => word.slug)
+        .sort();
+
+      await waitFor(async () => {
+        expect(await readFeaturedLemmaIds()).toEqual(expectedDayTwoDefaultIds);
+      });
+      // Sanity: the reset actually changed the draw — day two's default is not merely
+      // coincidentally equal to what the still-elevated day-one re-roll count produced.
+      expect(rolledIds).not.toEqual(expectedDayTwoDefaultIds);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   test('a real regenerated daily-pool row with pos renders on the card (#5856 fix-round-2)', async () => {

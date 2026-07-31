@@ -1517,15 +1517,46 @@ function LexiconPracticeIsland({
   const [dailyLexemes, setDailyLexemes] = useState<Map<string, PracticeLexeme>>(() => new Map());
   const [dailySnapshotLoading, setDailySnapshotLoading] = useState(false);
   const [dailyReRollCount, setDailyReRollCount] = useState(() => readDailyReRollCount(todayKey()));
+  // #6146: the calendar day `dailyReRollCount` was established for. `useState`'s
+  // initializer only runs at mount, so a tab left open across local midnight would
+  // otherwise keep applying yesterday's re-roll offset to today's `dateSeed` — the
+  // picks-fetch effect below and the midnight timer both compare against this to
+  // catch the rollover and reset the count back to the day's default draw (0).
+  const dailyReRollDateRef = useRef(todayKey());
   // #6132: explicit re-draw of today's featured set — see the effect below that folds
   // this count into the pickDaily seed via `reRollSeed`.
   const reRollDailyPicks = useCallback(() => {
     const dateKey = todayKey();
+    // #6146: a tap landing before the day-rollover reset has run (midnight timer not
+    // yet fired, effect not yet re-run) must not continue incrementing yesterday's
+    // count — start the new day's re-roll sequence at 1, not stale-count + 1.
+    const dayChanged = dailyReRollDateRef.current !== dateKey;
+    dailyReRollDateRef.current = dateKey;
     setDailyReRollCount((count) => {
-      const next = count + 1;
+      const next = (dayChanged ? 0 : count) + 1;
       writeDailyReRollCount(dateKey, next);
       return next;
     });
+  }, []);
+  // #6146: catch a day rollover while the tab stays open (idle, no props changing) by
+  // arming a timer for the next local midnight rather than polling. On fire, reset the
+  // re-roll count if the day actually advanced, then rearm for the following midnight.
+  useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+    const armForNextMidnight = () => {
+      const now = new Date();
+      const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 5);
+      timeoutId = setTimeout(() => {
+        const currentDateKey = todayKey();
+        if (dailyReRollDateRef.current !== currentDateKey) {
+          dailyReRollDateRef.current = currentDateKey;
+          setDailyReRollCount(0);
+        }
+        armForNextMidnight();
+      }, Math.max(0, nextMidnight.getTime() - now.getTime()));
+    };
+    armForNextMidnight();
+    return () => clearTimeout(timeoutId);
   }, []);
   const [hoveredMode, setHoveredMode] = useState<VisiblePracticeModeFilter | null>(null);
   const [publishedLevels] = useState<Set<CefrLevel>>(
@@ -1779,6 +1810,20 @@ function LexiconPracticeIsland({
   // still produces a deterministic, testable draw, it just adds a third seed term.
   useEffect(() => {
     if (sessionPhase !== 'idle') return;
+
+    // #6146: defends against the midnight timer not having fired yet (e.g. this effect
+    // re-runs from an unrelated dependency change in the first seconds of a new day) —
+    // re-check the rollover here too rather than trusting the timer alone. Bail this run;
+    // the reset below re-triggers the effect (dailyReRollCount is a dependency) with the
+    // correct day-zero count.
+    const currentDateKey = todayKey();
+    if (dailyReRollDateRef.current !== currentDateKey) {
+      dailyReRollDateRef.current = currentDateKey;
+      if (dailyReRollCount !== 0) {
+        setDailyReRollCount(0);
+        return;
+      }
+    }
 
     let cancelled = false;
     setDailySnapshotLoading(true);
