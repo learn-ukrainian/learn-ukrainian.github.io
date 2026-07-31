@@ -15,20 +15,166 @@
       "required": ["complete", "expected_rows", "expected_lexical_words", "processed_rows", "processed_lexical_words", "inaccessible_sources", "source_results"],
       "properties": {
         "complete": {"type": "boolean"},
-        "expected_rows": {"type": "integer", "minimum": 0},
-        "expected_lexical_words": {"type": "integer", "minimum": 0},
-        "processed_rows": {"type": "integer", "minimum": 0},
-        "processed_lexical_words": {"type": "integer", "minimum": 0},
-        "inaccessible_sources": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["source_family", "reason"], "properties": {"source_family": {"type": "string"}, "reason": {"type": "string"}}}},
-        "source_results": {"type": "array", "items": {"type": "object"}}
+        "expected_rows": {"$ref": "#/$defs/count"},
+        "expected_lexical_words": {"$ref": "#/$defs/count"},
+        "processed_rows": {"$ref": "#/$defs/count"},
+        "processed_lexical_words": {"$ref": "#/$defs/count"},
+        "inaccessible_sources": {"type": "array", "items": {"$ref": "#/$defs/inaccessibleSource"}},
+        "source_results": {"type": "array", "items": {"$ref": "#/$defs/sourceResult"}}
       }
     },
-    "admission_safety": {"type": "object", "required": ["zero_current_admissions", "training_eligible_rows", "training_eligible_lexical_words", "excluded_rows", "excluded_lexical_words", "exclusion_reason_row_counts"]},
-    "vesum": {"type": "object", "required": ["snapshot_id", "interface", "tokens_attested", "tokens_unknown", "tokens_with_lemma", "tokens_with_pos", "tokens_with_usage_marker", "distinct_lemmas_observed", "pos_token_distribution", "usage_marker_token_distribution"]},
-    "unknown_forms": {"type": "object", "required": ["distinct_normalized_forms", "top_by_frequency"]},
-    "distributions": {"type": "object", "required": ["source_family", "period", "genre", "register", "origin"]},
-    "outputs": {"type": "object", "required": ["review_candidates"]},
-    "measurement_contract": {"type": "object", "required": ["lexical_words", "normalization", "primary_analysis", "record_text_in_receipt", "tokenizer_diagnostics"]},
-    "determinism": {"type": "object", "required": ["serialization", "candidate_order", "timestamps_omitted"]}
+    "admission_safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["zero_current_admissions", "training_eligible_rows", "training_eligible_lexical_words", "excluded_rows", "excluded_lexical_words", "exclusion_reason_row_counts"],
+      "properties": {
+        "zero_current_admissions": {"type": "boolean"},
+        "training_eligible_rows": {"$ref": "#/$defs/count"},
+        "training_eligible_lexical_words": {"$ref": "#/$defs/count"},
+        "excluded_rows": {"$ref": "#/$defs/count"},
+        "excluded_lexical_words": {"$ref": "#/$defs/count"},
+        "exclusion_reason_row_counts": {"$ref": "#/$defs/countMap"}
+      }
+    },
+    "vesum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["snapshot_id", "interface", "tokens_attested", "tokens_unknown", "tokens_with_lemma", "tokens_with_pos", "tokens_with_usage_marker", "distinct_lemmas_observed", "pos_token_distribution", "usage_marker_token_distribution"],
+      "properties": {
+        "snapshot_id": {"type": "string", "minLength": 1},
+        "interface": {"const": "scripts.verification.vesum.verify_words"},
+        "tokens_attested": {"$ref": "#/$defs/count"},
+        "tokens_unknown": {"$ref": "#/$defs/count"},
+        "tokens_with_lemma": {"$ref": "#/$defs/count"},
+        "tokens_with_pos": {"$ref": "#/$defs/count"},
+        "tokens_with_usage_marker": {"$ref": "#/$defs/count"},
+        "distinct_lemmas_observed": {"$ref": "#/$defs/count"},
+        "pos_token_distribution": {"$ref": "#/$defs/countMap"},
+        "usage_marker_token_distribution": {"$ref": "#/$defs/countMap"}
+      }
+    },
+    "unknown_forms": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["distinct_normalized_forms", "top_by_frequency"],
+      "properties": {
+        "distinct_normalized_forms": {"$ref": "#/$defs/count"},
+        "top_by_frequency": {"type": "array", "items": {"$ref": "#/$defs/unknownForm"}}
+      }
+    },
+    "distributions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_family", "period", "genre", "register", "origin"],
+      "properties": {
+        "source_family": {"$ref": "#/$defs/distribution"},
+        "period": {"$ref": "#/$defs/distribution"},
+        "genre": {"$ref": "#/$defs/distribution"},
+        "register": {"$ref": "#/$defs/distribution"},
+        "origin": {"$ref": "#/$defs/distribution"}
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["review_candidates"],
+      "properties": {
+        "review_candidates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["bytes", "records", "sha256"],
+          "properties": {
+            "bytes": {"$ref": "#/$defs/count"},
+            "records": {"$ref": "#/$defs/count"},
+            "sha256": {"$ref": "#/$defs/sha256"}
+          }
+        }
+      }
+    },
+    "measurement_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lexical_words", "normalization", "primary_analysis", "record_text_in_receipt", "tokenizer_diagnostics"],
+      "properties": {
+        "lexical_words": {"type": "string", "minLength": 1},
+        "normalization": {"type": "string", "minLength": 1},
+        "primary_analysis": {"type": "string", "minLength": 1},
+        "record_text_in_receipt": {"const": false},
+        "tokenizer_diagnostics": {"type": "string", "minLength": 1}
+      }
+    },
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["serialization", "candidate_order", "timestamps_omitted"],
+      "properties": {
+        "serialization": {"type": "string", "minLength": 1},
+        "candidate_order": {"type": "string", "minLength": 1},
+        "timestamps_omitted": {"const": true}
+      }
+    }
+  },
+  "$defs": {
+    "count": {"type": "integer", "minimum": 0},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "countMap": {
+      "type": "object",
+      "propertyNames": {"minLength": 1},
+      "additionalProperties": {"$ref": "#/$defs/count"}
+    },
+    "inaccessibleSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_family", "reason"],
+      "properties": {
+        "source_family": {"type": "string", "minLength": 1},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "sourceCount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rows", "lexical_words"],
+      "properties": {
+        "rows": {"$ref": "#/$defs/count"},
+        "lexical_words": {"$ref": "#/$defs/count"}
+      }
+    },
+    "sourceResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actual", "expected", "inventory_asset_id", "matches_expected", "source_family"],
+      "properties": {
+        "actual": {"$ref": "#/$defs/sourceCount"},
+        "expected": {"$ref": "#/$defs/sourceCount"},
+        "inventory_asset_id": {"type": "string", "minLength": 1},
+        "matches_expected": {"type": "boolean"},
+        "source_family": {"type": "string", "minLength": 1}
+      }
+    },
+    "distributionBucket": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rows", "lexical_words"],
+      "properties": {
+        "rows": {"$ref": "#/$defs/count"},
+        "lexical_words": {"$ref": "#/$defs/count"}
+      }
+    },
+    "distribution": {
+      "type": "object",
+      "propertyNames": {"minLength": 1},
+      "additionalProperties": {"$ref": "#/$defs/distributionBucket"}
+    },
+    "unknownForm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["normalized_form", "token_count", "source_distribution"],
+      "properties": {
+        "normalized_form": {"type": "string", "minLength": 1},
+        "token_count": {"$ref": "#/$defs/count"},
+        "source_distribution": {"$ref": "#/$defs/countMap"}
+      }
+    }
   }
 }

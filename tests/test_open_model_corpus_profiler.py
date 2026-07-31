@@ -6,18 +6,20 @@ import json
 import sqlite3
 from pathlib import Path
 
+import pytest
 from jsonschema import Draft202012Validator
 
+import scripts.projects.open_model_data.profile_corpus as profiler_module
 from scripts.projects.open_model_data.profile_corpus import (
     canonical_json,
+    main,
     normalize_form,
     profile_corpus,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-CANDIDATE_SCHEMA = (
-    ROOT / "data/projects/open_model_data/contracts/review_candidate_v1.schema.json"
-)
+CANDIDATE_SCHEMA = ROOT / "data/projects/open_model_data/contracts/review_candidate_v1.schema.json"
+RECEIPT_SCHEMA = ROOT / "data/projects/open_model_data/contracts/corpus_profile_receipt_v1.schema.json"
 
 
 def test_normalization_removes_stress_without_erasing_ukrainian_diacritics() -> None:
@@ -168,6 +170,11 @@ def test_profiles_fixture_with_pinned_vesum_and_byte_stable_outputs(tmp_path: Pa
     assert by_form["london"]["candidate_category"] == "foreign_language_candidate"
     assert all(candidate["review_disposition"] == "unresolved" for candidate in candidates)
 
+    receipt_schema = json.loads(RECEIPT_SCHEMA.read_text(encoding="utf-8"))
+    invalid_receipt = json.loads(first.summary_path.read_text(encoding="utf-8"))
+    invalid_receipt["admission_safety"]["zero_current_admissions"] = "false"
+    assert list(Draft202012Validator(receipt_schema).iter_errors(invalid_receipt))
+
 
 def test_reports_inaccessible_required_source_without_reducing_denominator(tmp_path: Path) -> None:
     _write_vesum(tmp_path / "vesum.db")
@@ -181,3 +188,86 @@ def test_reports_inaccessible_required_source_without_reducing_denominator(tmp_p
         {"reason": "FileNotFoundError", "source_family": "fixture_documents"}
     ]
     assert result.candidates_path.read_bytes() == b""
+
+
+def test_cli_exit_codes_report_complete_and_incomplete_coverage(tmp_path: Path) -> None:
+    _write_sources(tmp_path / "sources.db")
+    _write_vesum(tmp_path / "vesum.db")
+    complete_config = tmp_path / "complete.json"
+    complete_config.write_text(canonical_json(_config()) + "\n", encoding="utf-8")
+
+    common = ["--input-root", str(tmp_path)]
+    assert (
+        main(
+            [
+                "--config",
+                str(complete_config),
+                *common,
+                "--summary-output",
+                str(tmp_path / "complete-summary.json"),
+                "--candidates-output",
+                str(tmp_path / "complete-candidates.jsonl"),
+            ]
+        )
+        == 0
+    )
+
+    missing_config = tmp_path / "missing.json"
+    missing_config.write_text(
+        canonical_json(_config(database="missing.db")) + "\n",
+        encoding="utf-8",
+    )
+    assert (
+        main(
+            [
+                "--config",
+                str(missing_config),
+                *common,
+                "--summary-output",
+                str(tmp_path / "missing-summary.json"),
+                "--candidates-output",
+                str(tmp_path / "missing-candidates.jsonl"),
+            ]
+        )
+        == 2
+    )
+
+
+def test_runtime_candidate_schema_is_enforced(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _write_sources(tmp_path / "sources.db")
+    _write_vesum(tmp_path / "vesum.db")
+    schema = json.loads(CANDIDATE_SCHEMA.read_text(encoding="utf-8"))
+    schema["properties"]["candidate_category"]["enum"] = ["impossible_fixture_category"]
+    strict_schema = tmp_path / "strict-candidate.schema.json"
+    strict_schema.write_text(canonical_json(schema) + "\n", encoding="utf-8")
+    monkeypatch.setattr(profiler_module, "CANDIDATE_SCHEMA_PATH", strict_schema)
+
+    with pytest.raises(ValueError, match="review candidate does not satisfy its schema"):
+        _run(tmp_path, _config(), "invalid-candidate")
+
+
+def test_invalid_receipt_does_not_replace_prior_output(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _write_sources(tmp_path / "sources.db")
+    _write_vesum(tmp_path / "vesum.db")
+    schema = json.loads(RECEIPT_SCHEMA.read_text(encoding="utf-8"))
+    schema["properties"]["profile_id"] = {"const": "impossible-profile-id"}
+    strict_schema = tmp_path / "strict-receipt.schema.json"
+    strict_schema.write_text(canonical_json(schema) + "\n", encoding="utf-8")
+    monkeypatch.setattr(profiler_module, "RECEIPT_SCHEMA_PATH", strict_schema)
+
+    config_path = tmp_path / "invalid-receipt-config.json"
+    config_path.write_text(canonical_json(_config()) + "\n", encoding="utf-8")
+    summary_path = tmp_path / "existing-summary.json"
+    summary_path.write_bytes(b"known-good-prior-output\n")
+
+    with pytest.raises(ValueError, match="aggregate receipt does not satisfy its schema"):
+        profile_corpus(
+            config_path=config_path,
+            input_root=tmp_path,
+            summary_output=summary_path,
+            candidates_output=tmp_path / "invalid-receipt-candidates.jsonl",
+        )
+    assert summary_path.read_bytes() == b"known-good-prior-output\n"

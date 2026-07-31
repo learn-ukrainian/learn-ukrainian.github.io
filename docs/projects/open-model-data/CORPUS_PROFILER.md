@@ -27,6 +27,11 @@ The profiler:
    VESUM/lemma/POS/usage-marker counts, unknown-form frequency, output hashes,
    and explicit inaccessible sources.
 
+Every candidate's data-dependent fields are checked before emission, and each
+source/category shape is validated against `review_candidate_v1`. The aggregate
+receipt is fully schema-validated in memory before it can replace an existing
+receipt on disk.
+
 Candidate categories are triage labels, not error verdicts. A VESUM-unknown
 historical, dialectal, proper-name, or foreign-language form remains an
 unresolved protected/contextual candidate with `automatic_error_label=false`.

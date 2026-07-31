@@ -34,20 +34,15 @@ if str(ROOT) not in sys.path:
 from scripts.projects.open_model_data.inventory_existing_assets import WORD_RE
 from scripts.verification.vesum import verify_words
 
-CONFIG_SCHEMA_PATH = (
-    ROOT / "data/projects/open_model_data/contracts/corpus_profile_config_v1.schema.json"
-)
-CANDIDATE_SCHEMA_PATH = (
-    ROOT / "data/projects/open_model_data/contracts/review_candidate_v1.schema.json"
-)
-RECEIPT_SCHEMA_PATH = (
-    ROOT / "data/projects/open_model_data/contracts/corpus_profile_receipt_v1.schema.json"
-)
+CONFIG_SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/corpus_profile_config_v1.schema.json"
+CANDIDATE_SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/review_candidate_v1.schema.json"
+RECEIPT_SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/corpus_profile_receipt_v1.schema.json"
 
 SCHEMA_VERSION = "corpus_profile_receipt_v1"
 CANDIDATE_SCHEMA_VERSION = "review_candidate_v1"
 IDENTIFIER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 CYRILLIC_RE = re.compile(r"[\u0400-\u052f]")
+CANDIDATE_LOCATOR_RE = re.compile(r"^sqlite:[^#]+#[^/]+/.+$")
 APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "‘": "'", "`": "'", "´": "'"})
 STRESS_MARKS = frozenset({"\u0300", "\u0301"})
 USAGE_MARKERS = frozenset({"alt", "arch", "bad", "obsc", "rare", "slang", "subst", "vulg"})
@@ -114,10 +109,7 @@ def _load_and_validate_config(path: Path) -> dict[str, Any]:
     config = _load_json(path)
     errors = sorted(Draft202012Validator(schema).iter_errors(config), key=lambda item: list(item.path))
     if errors:
-        messages = [
-            f"{'.'.join(str(part) for part in error.path) or '<root>'}: {error.message}"
-            for error in errors
-        ]
+        messages = [f"{'.'.join(str(part) for part in error.path) or '<root>'}: {error.message}" for error in errors]
         raise ValueError("profile config invalid:\n" + "\n".join(messages))
     source_families = [source["source_family"] for source in config["sources"]]
     if len(source_families) != len(set(source_families)):
@@ -164,18 +156,18 @@ def _source_query(source: Mapping[str, Any], columns: set[str]) -> tuple[str, tu
     ]
     for name, dimension in sorted(adapter["dimensions"].items()):
         if "column" in dimension:
-            selections.append(f'{_identifier(dimension["column"])} AS {_identifier("__" + name)}')
+            selections.append(f"{_identifier(dimension['column'])} AS {_identifier('__' + name)}")
     parameters: tuple[Any, ...] = ()
     where = ""
     if exclusion:
         values = tuple(exclusion["values"])
         placeholders = ",".join("?" for _ in values)
-        where = f' WHERE {_identifier(exclusion["column"])} NOT IN ({placeholders})'
+        where = f" WHERE {_identifier(exclusion['column'])} NOT IN ({placeholders})"
         parameters = values
     query = (
-        f'SELECT {", ".join(selections)} FROM {_identifier(adapter["table"])}'
-        f'{where} ORDER BY {_identifier(adapter["id_column"])} ASC, '
-        f'{_identifier(adapter["locator_column"])} ASC'
+        f"SELECT {', '.join(selections)} FROM {_identifier(adapter['table'])}"
+        f"{where} ORDER BY {_identifier(adapter['id_column'])} ASC, "
+        f"{_identifier(adapter['locator_column'])} ASC"
     )
     return query, parameters
 
@@ -233,8 +225,7 @@ def _gate_reasons(source: Mapping[str, Any], origin: str) -> tuple[str, ...]:
         (evidence["provenance_status"] == "complete", "provenance_incomplete"),
         (evidence["rights_status"] == "granted", "rights_not_granted"),
         (
-            evidence["origin_status"] == "verified_human_authorship"
-            and origin == "human_authored_source",
+            evidence["origin_status"] == "verified_human_authorship" and origin == "human_authored_source",
             "origin_not_verified",
         ),
         (evidence["contamination_status"] == "cleared", "contamination_not_cleared"),
@@ -274,10 +265,7 @@ def _candidate_record(
         "candidate_category": category,
         "confidence": confidence,
         "evidence_status": "vesum_unknown_context_required",
-        "locator": (
-            f'sqlite:{source["adapter"]["database"]}#'
-            f'{source["adapter"]["table"]}/{locator}'
-        ),
+        "locator": (f"sqlite:{source['adapter']['database']}#{source['adapter']['table']}/{locator}"),
         "normalized_form": normalized,
         "origin": origin,
         "period": period,
@@ -285,7 +273,7 @@ def _candidate_record(
         "review_disposition": "unresolved",
         "schema_version": CANDIDATE_SCHEMA_VERSION,
         "source_family": source["source_family"],
-        "source_record_id": f'{source["inventory_asset_id"]}:{record_id}',
+        "source_record_id": f"{source['inventory_asset_id']}:{record_id}",
         "surface_form": surface,
         "token_count_in_record": token_count,
         "vesum_evidence": {
@@ -323,13 +311,67 @@ def _prepare_spool(path: Path) -> sqlite3.Connection:
     return connection
 
 
-def _validate_output(path: Path, schema_path: Path) -> None:
+def _build_validator(schema_path: Path) -> Draft202012Validator:
     schema = _load_json(schema_path)
     Draft202012Validator.check_schema(schema)
-    value = _load_json(path)
-    errors = sorted(Draft202012Validator(schema).iter_errors(value), key=lambda item: list(item.path))
+    return Draft202012Validator(schema)
+
+
+def _validate_value(
+    value: Mapping[str, Any],
+    *,
+    validator: Draft202012Validator,
+    label: str,
+) -> None:
+    errors = sorted(validator.iter_errors(value), key=lambda item: list(item.path))
     if errors:
-        raise ValueError(f"generated output does not satisfy {schema_path.name}: {errors[0].message}")
+        path = ".".join(str(part) for part in errors[0].path) or "<root>"
+        raise ValueError(f"{label} does not satisfy its schema at {path}: {errors[0].message}")
+
+
+def _validate_candidate(
+    candidate: Mapping[str, Any],
+    *,
+    validator: Draft202012Validator,
+    fully_validated_shapes: set[tuple[Any, Any]],
+) -> None:
+    """Enforce every dynamic field and schema-check each source/category shape.
+
+    Full jsonschema evaluation on all multi-million candidates roughly doubles
+    profiler runtime.  The record builder has one fixed shape per
+    source/category pair, so each pair is checked by the canonical schema once;
+    the data-dependent constraints are then checked for every record.
+    """
+    required_strings = {
+        "source_record_id": 3,
+        "source_family": 3,
+        "surface_form": 1,
+        "normalized_form": 1,
+        "period": 1,
+        "register": 1,
+        "origin": 1,
+    }
+    for field, minimum in required_strings.items():
+        value = candidate.get(field)
+        if not isinstance(value, str) or len(value) < minimum:
+            raise ValueError(f"review candidate has invalid {field}")
+    locator = candidate.get("locator")
+    if not isinstance(locator, str) or CANDIDATE_LOCATOR_RE.search(locator) is None:
+        raise ValueError("review candidate has invalid locator")
+    token_count = candidate.get("token_count_in_record")
+    if type(token_count) is not int or token_count < 1:
+        raise ValueError("review candidate has invalid token_count_in_record")
+
+    vesum_evidence = candidate.get("vesum_evidence")
+    if not isinstance(vesum_evidence, Mapping):
+        raise ValueError("review candidate has invalid vesum_evidence")
+    if vesum_evidence.get("lookup_form") != candidate["normalized_form"]:
+        raise ValueError("review candidate lookup_form differs from normalized_form")
+
+    shape = (candidate.get("source_family"), candidate.get("candidate_category"))
+    if shape not in fully_validated_shapes:
+        _validate_value(candidate, validator=validator, label="review candidate")
+        fully_validated_shapes.add(shape)
 
 
 def profile_corpus(
@@ -341,6 +383,9 @@ def profile_corpus(
 ) -> ProfileRunResult:
     """Profile every accessible configured record and write deterministic outputs."""
     config = _load_and_validate_config(config_path)
+    candidate_validator = _build_validator(CANDIDATE_SCHEMA_PATH)
+    receipt_validator = _build_validator(RECEIPT_SCHEMA_PATH)
+    fully_validated_candidate_shapes: set[tuple[Any, Any]] = set()
     vesum_path = input_root / config["vesum"]["database"]
     if not vesum_path.is_file():
         raise FileNotFoundError(f"VESUM database inaccessible: {config['vesum']['database']}")
@@ -420,11 +465,7 @@ def profile_corpus(
                                 counts["processed_rows"] += 1
                                 counts["processed_lexical_words"] += word_count
                                 for axis in distributions:
-                                    value = (
-                                        source["source_family"]
-                                        if axis == "source_family"
-                                        else record[axis]
-                                    )
+                                    value = source["source_family"] if axis == "source_family" else record[axis]
                                     _add_distribution(
                                         distributions,
                                         axis,
@@ -489,6 +530,11 @@ def profile_corpus(
                                         register=record["register"],
                                         origin=record["origin"],
                                     )
+                                    _validate_candidate(
+                                        candidate,
+                                        validator=candidate_validator,
+                                        fully_validated_shapes=fully_validated_candidate_shapes,
+                                    )
                                     candidates.write(canonical_json(candidate) + "\n")
                                     candidate_count += 1
                             spool.commit()
@@ -500,17 +546,14 @@ def profile_corpus(
                             "expected": expected,
                             "inventory_asset_id": source["inventory_asset_id"],
                             "matches_expected": (
-                                source_rows == expected["rows"]
-                                and source_words == expected["lexical_words"]
+                                source_rows == expected["rows"] and source_words == expected["lexical_words"]
                             ),
                             "source_family": source["source_family"],
                         }
                     )
             os.replace(temporary_candidates, candidates_output)
 
-            unknown_distinct = int(
-                spool.execute("SELECT COUNT(DISTINCT normalized) FROM unknown_forms").fetchone()[0]
-            )
+            unknown_distinct = int(spool.execute("SELECT COUNT(DISTINCT normalized) FROM unknown_forms").fetchone()[0])
             lemma_distinct = int(spool.execute("SELECT COUNT(*) FROM lemmas").fetchone()[0])
             top_unknown: list[dict[str, Any]] = []
             top_rows = spool.execute(
@@ -574,9 +617,7 @@ def profile_corpus(
             "serialization": "UTF-8 canonical JSON with sorted keys and LF",
             "timestamps_omitted": True,
         },
-        "distributions": {
-            axis: dict(sorted(values.items())) for axis, values in sorted(distributions.items())
-        },
+        "distributions": {axis: dict(sorted(values.items())) for axis, values in sorted(distributions.items())},
         "measurement_contract": {
             "lexical_words": r"[^\W\d_]+(?:[’'][^\W\d_]+)*",
             "normalization": "NFKD; strip acute/grave stress only; canonical apostrophe; casefold; NFC",
@@ -611,15 +652,13 @@ def profile_corpus(
             "usage_marker_token_distribution": dict(sorted(usage_counts.items())),
         },
     }
+    _validate_value(summary, validator=receipt_validator, label="aggregate receipt")
     _write_json_atomic(summary_output, summary)
-    _validate_output(summary_output, RECEIPT_SCHEMA_PATH)
     return ProfileRunResult(summary=summary, summary_path=summary_output, candidates_path=candidates_output)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(
-        description="Stream configured corpus records through pinned VESUM diagnostics"
-    )
+    parser = argparse.ArgumentParser(description="Stream configured corpus records through pinned VESUM diagnostics")
     parser.add_argument("--config", required=True, type=Path)
     parser.add_argument("--input-root", required=True, type=Path)
     parser.add_argument("--summary-output", required=True, type=Path)
