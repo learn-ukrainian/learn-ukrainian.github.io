@@ -89,3 +89,4 @@ def test_contract_endpoint_exposes_route_and_page_contracts():
     assert any(item["pattern"] == "/api/worktrees" for item in data["route_contracts"])
     assert any(item["pattern"] == "/ws/batch" and item["kind"] == "websocket" for item in data["route_contracts"])
     assert any(item["file"] == "routing.html" and item["url"] == "/routing.html" for item in data["page_contracts"])
+    assert any(item["file"] == "acp.html" and item["url"] == "/acp.html" for item in data["page_contracts"])
