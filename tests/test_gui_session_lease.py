@@ -97,8 +97,57 @@ def _base(session_db: Path, state_db: Path) -> list[str]:
     ]
 
 
+def _append_active_readback(rollout: Path, *, sequence: int) -> None:
+    observed_at = isoformat_z(utc_now())
+    call_id = f"call-native-read-thread-{sequence}"
+    call = {
+        "timestamp": observed_at,
+        "type": "response_item",
+        "payload": {
+            "type": "function_call",
+            "name": "read_thread",
+            "call_id": call_id,
+            "arguments": json.dumps(
+                {
+                    "threadId": TASK_ID,
+                    "turnLimit": 1,
+                    "includeOutputs": False,
+                    "maxOutputCharsPerItem": 400,
+                },
+                sort_keys=True,
+            ),
+        },
+    }
+    output = {
+        "timestamp": observed_at,
+        "type": "response_item",
+        "payload": {
+            "type": "function_call_output",
+            "call_id": call_id,
+            "output": json.dumps(
+                {
+                    "schemaVersion": 1,
+                    "thread": {
+                        "id": TASK_ID,
+                        "kind": "codex",
+                        "hostId": "local",
+                        "status": {"type": "active", "activeFlags": []},
+                        "cwd": str(rollout.parent),
+                        "createdAt": 100,
+                        "updatedAt": 200 + sequence,
+                    },
+                },
+                sort_keys=True,
+            ),
+        },
+    }
+    with rollout.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(call, sort_keys=True) + "\n")
+        handle.write(json.dumps(output, sort_keys=True) + "\n")
+
+
 def test_source_blind_cli_lifecycle_and_exact_replay(tmp_path: Path, capsys) -> None:
-    state_db, _ = _codex_fixture(tmp_path)
+    state_db, rollout = _codex_fixture(tmp_path)
     session_db = tmp_path / "session-streams.sqlite3"
     acquire = [
         *_base(session_db, state_db),
@@ -113,6 +162,7 @@ def test_source_blind_cli_lifecycle_and_exact_replay(tmp_path: Path, capsys) -> 
         "lease-gui",
     ]
     assert gui_session_lease.main(acquire) == 0
+    _append_active_readback(rollout, sequence=1)
     assert gui_session_lease.main(acquire) == 0
     assert gui_session_lease.main([*_base(session_db, state_db), "renew"]) == 0
     append = [
@@ -126,6 +176,7 @@ def test_source_blind_cli_lifecycle_and_exact_replay(tmp_path: Path, capsys) -> 
         "gui-canary-1",
     ]
     assert gui_session_lease.main(append) == 0
+    _append_active_readback(rollout, sequence=2)
     assert gui_session_lease.main(append) == 0
     assert (
         gui_session_lease.main(
@@ -142,6 +193,7 @@ def test_source_blind_cli_lifecycle_and_exact_replay(tmp_path: Path, capsys) -> 
     )
     close = [*_base(session_db, state_db), "close", "--reason", "canary complete"]
     assert gui_session_lease.main(close) == 0
+    _append_active_readback(rollout, sequence=3)
     assert gui_session_lease.main(close) == 0
     capsys.readouterr()
 
@@ -149,11 +201,30 @@ def test_source_blind_cli_lifecycle_and_exact_replay(tmp_path: Path, capsys) -> 
         assert connection.execute("SELECT COUNT(*) FROM sessions").fetchone()[0] == 1
         assert connection.execute("SELECT COUNT(*) FROM entries").fetchone()[0] == 1
         assert connection.execute("SELECT state FROM stream_leases").fetchone()[0] == "released"
+        event_counts = dict(
+            connection.execute("SELECT event_type, COUNT(*) FROM lease_events GROUP BY event_type").fetchall()
+        )
+        assert event_counts["acquired"] == 1
+        assert event_counts["appended"] == 1
+        assert event_counts["released"] == 1
+        assert (
+            connection.execute(
+                "SELECT COUNT(DISTINCT json_extract(proof_json, '$.receipt_digest')) "
+                "FROM lease_events WHERE event_type IN ('acquired', 'appended', 'released')"
+            ).fetchone()[0]
+            == 3
+        )
+        assert (
+            connection.execute(
+                "SELECT entry.writer_receipt_digest = json_extract(event.proof_json, '$.receipt_digest') "
+                "FROM entries AS entry JOIN lease_events AS event "
+                "ON event.stream_id = entry.stream_id AND event.event_type = 'appended'"
+            ).fetchone()[0]
+            == 1
+        )
         proofs = "\n".join(row[0] for row in connection.execute("SELECT proof_json FROM lease_events"))
         transition_proof = json.loads(
-            connection.execute(
-                "SELECT proof_json FROM lease_events WHERE event_type = 'transitioned'"
-            ).fetchone()[0]
+            connection.execute("SELECT proof_json FROM lease_events WHERE event_type = 'transitioned'").fetchone()[0]
         )
     assert TASK_ID in proofs
     assert "private title" not in proofs

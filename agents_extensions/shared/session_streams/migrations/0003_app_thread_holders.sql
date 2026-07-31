@@ -23,7 +23,7 @@ CREATE TABLE lease_events (
     generation INTEGER NOT NULL CHECK (generation > 0),
     fencing_token INTEGER NOT NULL CHECK (fencing_token > 0),
     event_type TEXT NOT NULL CHECK (event_type IN (
-        'acquired', 'heartbeat', 'transitioned', 'released',
+        'acquired', 'heartbeat', 'appended', 'transitioned', 'released',
         'stale_observed', 'force_closed', 'recovered'
     )),
     holder_kind TEXT NOT NULL CHECK (holder_kind IN ('process', 'app_thread')),

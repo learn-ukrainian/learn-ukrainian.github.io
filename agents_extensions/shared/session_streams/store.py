@@ -199,14 +199,25 @@ class SessionStreamStore:
                     receipt_event = connection.execute(
                         "SELECT 1 FROM lease_events WHERE stream_id = ? AND session_id = ? AND lease_id = ? "
                         "AND generation = ? AND fencing_token = ? AND event_type = 'acquired' "
-                        "AND json_extract(proof_json, '$.receipt_digest') = ? LIMIT 1",
+                        "AND json_extract(proof_json, '$.receipt.operation') = 'acquire' "
+                        "AND json_extract(proof_json, '$.receipt.session_id') = ? "
+                        "AND json_extract(proof_json, '$.receipt.lease_id') = ? "
+                        "AND json_extract(proof_json, '$.receipt.generation') = ? "
+                        "AND json_extract(proof_json, '$.receipt.fencing_token') = ? "
+                        "AND json_extract(proof_json, '$.receipt.holder.task_id') = ? "
+                        "AND json_extract(proof_json, '$.receipt_digest') = "
+                        "json_extract(proof_json, '$.receipt.receipt_digest') LIMIT 1",
                         (
                             stream_id,
                             existing.session_id,
                             existing.lease_id,
                             existing.generation,
                             existing.fencing_token,
-                            self._proof_digest(app_proof),
+                            existing.session_id,
+                            existing.lease_id,
+                            existing.generation,
+                            existing.fencing_token,
+                            existing.holder.task_id,
                         ),
                     ).fetchone()
                     if receipt_event is not None:
@@ -496,28 +507,62 @@ class SessionStreamStore:
         with self._transaction(now=current_time) as connection:
             session = self._session_row(connection, lease.stream_id, lease.session_id)
             if session["state"] == SessionState.CLOSED.value:
-                historical_lease = connection.execute(
-                    "SELECT 1 FROM lease_events WHERE "
-                    "stream_id = ? AND session_id = ? AND lease_id = ? "
-                    "AND generation = ? AND fencing_token = ? "
-                    "AND holder_agent = ? AND holder_harness = ? AND holder_instance_id = ? "
-                    "AND holder_kind = ? AND holder_task_id IS ? AND holder_process_id IS ? "
-                    "AND json_extract(proof_json, '$.receipt_digest') IS ? LIMIT 1",
-                    (
-                        lease.stream_id,
-                        lease.session_id,
-                        lease.lease_id,
-                        lease.generation,
-                        lease.fencing_token,
-                        lease.holder.agent,
-                        lease.holder.harness,
-                        lease.holder.instance_id,
-                        lease.holder.holder_kind.value,
-                        lease.holder.task_id,
-                        lease.holder.process_id,
-                        self._proof_digest(app_proof),
-                    ),
-                ).fetchone()
+                if app_proof is None:
+                    historical_lease = connection.execute(
+                        "SELECT 1 FROM lease_events WHERE "
+                        "stream_id = ? AND session_id = ? AND lease_id = ? "
+                        "AND generation = ? AND fencing_token = ? "
+                        "AND holder_agent = ? AND holder_harness = ? AND holder_instance_id = ? "
+                        "AND holder_kind = ? AND holder_task_id IS ? AND holder_process_id IS ? "
+                        "AND json_extract(proof_json, '$.receipt_digest') IS NULL LIMIT 1",
+                        (
+                            lease.stream_id,
+                            lease.session_id,
+                            lease.lease_id,
+                            lease.generation,
+                            lease.fencing_token,
+                            lease.holder.agent,
+                            lease.holder.harness,
+                            lease.holder.instance_id,
+                            lease.holder.holder_kind.value,
+                            lease.holder.task_id,
+                            lease.holder.process_id,
+                        ),
+                    ).fetchone()
+                else:
+                    historical_lease = connection.execute(
+                        "SELECT 1 FROM lease_events WHERE "
+                        "stream_id = ? AND session_id = ? AND lease_id = ? "
+                        "AND generation = ? AND fencing_token = ? AND event_type = 'released' "
+                        "AND holder_agent = ? AND holder_harness = ? AND holder_instance_id = ? "
+                        "AND holder_kind = ? AND holder_task_id IS ? AND holder_process_id IS ? "
+                        "AND json_extract(proof_json, '$.receipt.operation') = 'close' "
+                        "AND json_extract(proof_json, '$.receipt.session_id') = ? "
+                        "AND json_extract(proof_json, '$.receipt.lease_id') = ? "
+                        "AND json_extract(proof_json, '$.receipt.generation') = ? "
+                        "AND json_extract(proof_json, '$.receipt.fencing_token') = ? "
+                        "AND json_extract(proof_json, '$.receipt.holder.task_id') = ? "
+                        "AND json_extract(proof_json, '$.receipt_digest') = "
+                        "json_extract(proof_json, '$.receipt.receipt_digest') LIMIT 1",
+                        (
+                            lease.stream_id,
+                            lease.session_id,
+                            lease.lease_id,
+                            lease.generation,
+                            lease.fencing_token,
+                            lease.holder.agent,
+                            lease.holder.harness,
+                            lease.holder.instance_id,
+                            lease.holder.holder_kind.value,
+                            lease.holder.task_id,
+                            lease.holder.process_id,
+                            lease.session_id,
+                            lease.lease_id,
+                            lease.generation,
+                            lease.fencing_token,
+                            lease.holder.task_id,
+                        ),
+                    ).fetchone()
                 if historical_lease is not None:
                     return SessionState.CLOSED
                 raise LeaseConflictError("closed session does not match the supplied historical lease")
@@ -983,11 +1028,45 @@ class SessionStreamStore:
                     or existing["writer_instance_id"] != lease.holder.instance_id
                     or int(existing["fencing_token"] or 0) != lease.fencing_token
                     or existing["writer_holder_kind"] != lease.holder.holder_kind.value
-                    or existing["writer_receipt_digest"] != self._proof_digest(app_proof)
                 ):
                     raise LeaseConflictError("idempotency key already binds different immutable content")
+                if app_proof is not None:
+                    receipt_event = connection.execute(
+                        "SELECT 1 FROM lease_events WHERE stream_id = ? AND session_id = ? AND lease_id = ? "
+                        "AND generation = ? AND fencing_token = ? AND event_type = 'appended' "
+                        "AND json_extract(proof_json, '$.idempotency_key') = ? "
+                        "AND json_extract(proof_json, '$.body_sha256') = ? "
+                        "AND json_extract(proof_json, '$.receipt.operation') = 'append' "
+                        "AND json_extract(proof_json, '$.receipt.session_id') = ? "
+                        "AND json_extract(proof_json, '$.receipt.lease_id') = ? "
+                        "AND json_extract(proof_json, '$.receipt.generation') = ? "
+                        "AND json_extract(proof_json, '$.receipt.fencing_token') = ? "
+                        "AND json_extract(proof_json, '$.receipt.holder.task_id') = ? "
+                        "AND json_extract(proof_json, '$.receipt_digest') = ? "
+                        "AND json_extract(proof_json, '$.receipt_digest') = "
+                        "json_extract(proof_json, '$.receipt.receipt_digest') LIMIT 1",
+                        (
+                            lease.stream_id,
+                            lease.session_id,
+                            lease.lease_id,
+                            lease.generation,
+                            lease.fencing_token,
+                            idempotency_key,
+                            body_sha256,
+                            lease.session_id,
+                            lease.lease_id,
+                            lease.generation,
+                            lease.fencing_token,
+                            lease.holder.task_id,
+                            existing["writer_receipt_digest"],
+                        ),
+                    ).fetchone()
+                    if receipt_event is None:
+                        raise LeaseConflictError("idempotent append lacks exact immutable receipt evidence")
+                elif existing["writer_receipt_digest"] is not None:
+                    raise LeaseConflictError("process append unexpectedly carries an app receipt")
                 return entry
-            self._require_current_lease(connection, lease, require_valid_at=current_time)
+            lease_row = self._require_current_lease(connection, lease, require_valid_at=current_time)
             cursor = connection.execute(
                 "INSERT INTO entries("
                 "stream_id, session_id, agent, harness, ts, type, body, body_sha256, origin, "
@@ -1015,6 +1094,25 @@ class SessionStreamStore:
                 connection.execute(
                     "INSERT INTO entry_refs(entry_id, ordinal, kind, target_entry_id, uri) VALUES (?, ?, ?, ?, ?)",
                     (entry_id, ordinal, ref.kind, ref.target_entry_id, ref.uri),
+                )
+            if app_proof is not None:
+                event_id = self._insert_lease_event_from_row(
+                    connection,
+                    row=lease_row,
+                    event_type="appended",
+                    timestamp=timestamp,
+                    proof={
+                        "kind": "session_stream_app_append.v1",
+                        "entry_id": entry_id,
+                        "idempotency_key": idempotency_key,
+                        "body_sha256": body_sha256,
+                        **self._proof_payload(app_proof),
+                    },
+                    reason="verified GUI-native entry append",
+                )
+                connection.execute(
+                    "UPDATE stream_leases SET version = version + 1, last_event_id = ? WHERE stream_id = ?",
+                    (event_id, lease.stream_id),
                 )
             row = connection.execute("SELECT * FROM entries WHERE entry_id = ?", (entry_id,)).fetchone()
             if row is None:
