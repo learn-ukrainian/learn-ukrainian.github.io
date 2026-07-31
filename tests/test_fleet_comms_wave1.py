@@ -97,6 +97,53 @@ def test_artifact_store_rejects_traversal_filename(tmp_path: Path) -> None:
             store.store_text("x", producer="t", logical_filename="/abs/name.txt")
 
 
+def test_artifact_store_deferred_commit_requires_active_transaction(tmp_path: Path) -> None:
+    with ArtifactStore(root=tmp_path / "v1") as store:
+        persisted = store.store_text("persisted", producer="t")
+
+        with pytest.raises(ArtifactStoreError, match="caller-owned active transaction"):
+            store.store_text("uncommitted", producer="t", commit=False)
+        with pytest.raises(ArtifactStoreError, match="caller-owned active transaction"):
+            store.reference("message-uncommitted", persisted.artifact_id, commit=False)
+
+        store.connection.execute("BEGIN IMMEDIATE")
+        try:
+            deferred = store.store_text("deferred", producer="t", commit=False)
+            store.reference("message-deferred", deferred.artifact_id, commit=False)
+            store.connection.commit()
+        except Exception:
+            store.connection.rollback()
+            raise
+
+        assert store.connection.execute(
+            "SELECT 1 FROM message_artifacts WHERE message_id = ? AND artifact_id = ?",
+            ("message-deferred", deferred.artifact_id),
+        ).fetchone() is not None
+
+
+def test_artifact_reference_default_commit_rolls_back_failed_stub(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    with ArtifactStore(root=tmp_path / "v1") as store:
+        persisted = store.store_text("persisted", producer="t")
+        original_stub = store._ensure_message_stub
+
+        def fail_after_stub(message_id: str) -> None:
+            original_stub(message_id)
+            raise sqlite3.IntegrityError("injected link failure")
+
+        monkeypatch.setattr(store, "_ensure_message_stub", fail_after_stub)
+
+        with pytest.raises(sqlite3.IntegrityError):
+            store.reference("message-failed", persisted.artifact_id)
+
+        assert store.connection.in_transaction is False
+        assert store.connection.execute(
+            "SELECT 1 FROM comms_messages WHERE message_id = ?",
+            ("message-failed",),
+        ).fetchone() is None
+
+
 def test_artifact_import_materialize_and_gc(tmp_path: Path) -> None:
     src = tmp_path / "src.bin"
     src.write_bytes(b"payload-bytes")

@@ -293,25 +293,39 @@ class AcpxDiscussionController:
         kind: str = "reply",
     ) -> str:
         """Persist directed content in the existing message/artifact mechanism."""
-        artifact = self.store.store_text(
-            body,
-            producer=f"acpx-discuss:{sender}",
-            retention_class="acpx-discussion",
-            logical_filename=f"{sender}-message.txt",
-        )
         message_id = new_id("message")
-        self.conn.execute(
-            """INSERT INTO comms_messages(
-                message_id, conversation_id, in_reply_to, kind, sender, recipient, body_inline,
-                body_artifact_id, content_sha256, metadata_json, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-            (
-                message_id, conversation_id, reply_to, kind, sender, recipient, body,
-                artifact.artifact_id, artifact.sha256, json.dumps({"acpx_discussion": True}), _now(),
-            ),
-        )
-        self.conn.commit()
-        self.store.reference(message_id, artifact.artifact_id, relation="body")
+        try:
+            # The blob itself is durable before its SQLite row is created. Keep
+            # that row, the message, and its GC-visible reference in one SQLite
+            # transaction: a crash exposes either all three records or none.
+            self.conn.execute("BEGIN IMMEDIATE")
+            artifact = self.store.store_text(
+                body,
+                producer=f"acpx-discuss:{sender}",
+                retention_class="acpx-discussion",
+                logical_filename=f"{sender}-message.txt",
+                commit=False,
+            )
+            self.conn.execute(
+                """INSERT INTO comms_messages(
+                    message_id, conversation_id, in_reply_to, kind, sender, recipient, body_inline,
+                    body_artifact_id, content_sha256, metadata_json, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    message_id, conversation_id, reply_to, kind, sender, recipient, body,
+                    artifact.artifact_id, artifact.sha256, json.dumps({"acpx_discussion": True}), _now(),
+                ),
+            )
+            self.store.reference(
+                message_id,
+                artifact.artifact_id,
+                relation="body",
+                commit=False,
+            )
+            self.conn.commit()
+        except Exception:
+            self.conn.rollback()
+            raise
         return message_id
 
     def _replay(self, conversation_id: str) -> dict[str, Any]:

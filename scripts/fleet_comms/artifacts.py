@@ -131,7 +131,11 @@ class ArtifactStore:
         mime_type: str | None = None,
         logical_filename: str | None = None,
         artifact_id: str | None = None,
+        commit: bool = True,
     ) -> ArtifactRecord:
+        """Store bytes; ``commit=False`` requires a caller-owned active transaction."""
+        if not commit:
+            self._require_active_transaction_for_deferred_commit()
         if not producer or not producer.strip():
             raise ArtifactStoreError("producer is required")
         if logical_filename is not None:
@@ -164,9 +168,11 @@ class ArtifactStore:
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
                 (aid, digest, len(data), mime, logical_filename, producer, retention_class, created),
             )
-            self._conn.commit()
+            if commit:
+                self._conn.commit()
         except Exception:
-            self._conn.rollback()
+            if commit:
+                self._conn.rollback()
             raise
         row = self._conn.execute(
             "SELECT * FROM artifacts WHERE artifact_id = ?", (aid,)
@@ -183,13 +189,18 @@ class ArtifactStore:
         retention_class: str = "default",
         logical_filename: str | None = None,
         mime_type: str = "text/plain; charset=utf-8",
+        commit: bool = True,
     ) -> ArtifactRecord:
+        """Store text; ``commit=False`` requires a caller-owned active transaction."""
+        if not commit:
+            self._require_active_transaction_for_deferred_commit()
         return self.store_bytes(
             text.encode("utf-8"),
             producer=producer,
             retention_class=retention_class,
             logical_filename=logical_filename,
             mime_type=mime_type,
+            commit=commit,
         )
 
     def import_path(
@@ -268,18 +279,37 @@ class ArtifactStore:
             raise ArtifactStoreError(f"blob digest mismatch for {artifact_id}")
         return data
 
-    def reference(self, message_id: str, artifact_id: str, relation: str = "body") -> None:
-        """Link artifact to a message so GC will not delete it."""
+    def reference(
+        self,
+        message_id: str,
+        artifact_id: str,
+        relation: str = "body",
+        *,
+        commit: bool = True,
+    ) -> None:
+        """Link artifact to a message so GC will not delete it.
+
+        ``commit=False`` is only safe when the caller owns an active transaction
+        and will commit or roll it back.
+        """
+        if not commit:
+            self._require_active_transaction_for_deferred_commit()
         if not message_id or not artifact_id:
             raise ArtifactStoreError("message_id and artifact_id required")
         self.get(artifact_id)  # ensure exists
-        self._ensure_message_stub(message_id)
-        self._conn.execute(
-            """INSERT OR IGNORE INTO message_artifacts(message_id, artifact_id, relation)
-               VALUES (?, ?, ?)""",
-            (message_id, artifact_id, relation),
-        )
-        self._conn.commit()
+        try:
+            self._ensure_message_stub(message_id)
+            self._conn.execute(
+                """INSERT OR IGNORE INTO message_artifacts(message_id, artifact_id, relation)
+                   VALUES (?, ?, ?)""",
+                (message_id, artifact_id, relation),
+            )
+            if commit:
+                self._conn.commit()
+        except Exception:
+            if commit:
+                self._conn.rollback()
+            raise
 
     def is_referenced(self, artifact_id: str) -> bool:
         row = self._conn.execute(
@@ -429,4 +459,9 @@ class ArtifactStore:
             ) VALUES (?, ?, 'note', 'artifact-store', '', ?)""",
             (message_id, conv, now),
         )
-        self._conn.commit()
+
+    def _require_active_transaction_for_deferred_commit(self) -> None:
+        if not self._conn.in_transaction:
+            raise ArtifactStoreError(
+                "commit=False requires a caller-owned active transaction"
+            )

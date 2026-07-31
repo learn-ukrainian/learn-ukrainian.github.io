@@ -142,6 +142,134 @@ def test_conversation_survives_dispatch_worktree_cleanup(tmp_path, monkeypatch):
         assert row[0] == "COMPLETE"
 
 
+class _InjectedPersistenceCrash(RuntimeError):
+    """Simulates process loss at a named ACP body-persistence boundary."""
+
+
+@pytest.mark.parametrize("boundary", ("blob", "artifact", "message", "link"))
+def test_message_persistence_rolls_back_every_precommit_boundary(
+    tmp_path, monkeypatch, boundary
+):
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        lambda *_a, **_k: _result("codex", "unused"),
+        lambda *_a, **_k: _result("codex", "unused"),
+    )
+    conversation_id, replay = controller._reserve(
+        task_digest="task",
+        correlation_digest="correlation",
+        idempotency_digest=f"crash-{boundary}",
+        rounds=1,
+        deadline_at="2099-01-01T00:00:00Z",
+    )
+    assert replay is None
+
+    if boundary == "blob":
+        original_write = controller.store._write_blob_atomic
+
+        def crash_after_blob_write(dest, data):
+            original_write(dest, data)
+            raise _InjectedPersistenceCrash("after blob write")
+
+        monkeypatch.setattr(controller.store, "_write_blob_atomic", crash_after_blob_write)
+    elif boundary == "artifact":
+        original_store_text = controller.store.store_text
+
+        def crash_after_artifact(*args, **kwargs):
+            original_store_text(*args, **kwargs)
+            raise _InjectedPersistenceCrash("after artifact insert")
+
+        monkeypatch.setattr(controller.store, "store_text", crash_after_artifact)
+    elif boundary == "message":
+        def crash_before_link(*_args, **_kwargs):
+            raise _InjectedPersistenceCrash("after message insert")
+
+        monkeypatch.setattr(controller.store, "reference", crash_before_link)
+    else:
+        original_reference = controller.store.reference
+
+        def crash_after_link(*args, **kwargs):
+            original_reference(*args, **kwargs)
+            raise _InjectedPersistenceCrash("after link insert")
+
+        monkeypatch.setattr(controller.store, "reference", crash_after_link)
+
+    root = controller.store.root
+    try:
+        with pytest.raises(_InjectedPersistenceCrash):
+            controller._message(
+                conversation_id,
+                sender="codex",
+                recipient="root",
+                body="crash-boundary body",
+                reply_to=None,
+            )
+    finally:
+        controller.close()
+
+    with ArtifactStore(root=root) as reopened:
+        assert reopened.connection.execute(
+            "SELECT COUNT(*) FROM comms_messages WHERE conversation_id = ?",
+            (conversation_id,),
+        ).fetchone()[0] == 0
+        assert reopened.connection.execute(
+            "SELECT COUNT(*) FROM message_artifacts",
+        ).fetchone()[0] == 0
+        assert reopened.connection.execute(
+            "SELECT COUNT(*) FROM artifacts",
+        ).fetchone()[0] == 0
+        assert reopened.garbage_collect_unreferenced(grace_seconds=0) == []
+
+
+def test_committed_message_body_is_gc_visible_after_zero_grace(tmp_path, monkeypatch):
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        lambda *_a, **_k: _result("codex", "unused"),
+        lambda *_a, **_k: _result("codex", "unused"),
+    )
+    root = controller.store.root
+    try:
+        conversation_id, replay = controller._reserve(
+            task_digest="task",
+            correlation_digest="correlation",
+            idempotency_digest="committed-message",
+            rounds=1,
+            deadline_at="2099-01-01T00:00:00Z",
+        )
+        assert replay is None
+        message_id = controller._message(
+            conversation_id,
+            sender="codex",
+            recipient="root",
+            body="durable body",
+            reply_to=None,
+        )
+        artifact_id = controller.conn.execute(
+            "SELECT body_artifact_id FROM comms_messages WHERE message_id = ?",
+            (message_id,),
+        ).fetchone()[0]
+        assert controller.conn.execute(
+            "SELECT 1 FROM message_artifacts WHERE message_id = ? AND artifact_id = ?",
+            (message_id, artifact_id),
+        ).fetchone() is not None
+    finally:
+        controller.close()
+
+    with ArtifactStore(root=root) as reopened:
+        assert reopened.connection.execute(
+            "SELECT 1 FROM comms_messages WHERE message_id = ?",
+            (message_id,),
+        ).fetchone() is not None
+        assert reopened.connection.execute(
+            "SELECT 1 FROM message_artifacts WHERE message_id = ? AND artifact_id = ?",
+            (message_id, artifact_id),
+        ).fetchone() is not None
+        assert reopened.garbage_collect_unreferenced(grace_seconds=0) == []
+        assert reopened.get(artifact_id).artifact_id == artifact_id
+
+
 def test_three_rounds_repeat_cross_exchange_and_complete(tmp_path, monkeypatch):
     calls: list[str] = []
 
