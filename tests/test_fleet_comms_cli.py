@@ -24,7 +24,7 @@ def _seed_plane_db(root: Path) -> Path:
     db_path = root / "comms.sqlite3"
     conn = sqlite3.connect(str(db_path))
     try:
-        assert apply_migrations(conn) == 2
+        assert apply_migrations(conn) == 3
         conn.execute(
             """INSERT INTO formal_review_jobs(
                 review_id, repository, pr_number, head_sha, gate_kind,

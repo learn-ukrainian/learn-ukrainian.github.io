@@ -99,12 +99,15 @@ def test_migrations_are_idempotent_and_reject_unknown_future_version(tmp_path: P
     db_path = tmp_path / "messages.db"
     conn = sqlite3.connect(db_path)
     conn.execute("CREATE TABLE deliveries (delivery_id TEXT PRIMARY KEY, status TEXT)")
-    assert apply_migrations(conn) == 2
+    assert apply_migrations(conn) == 3
     first = conn.execute("SELECT version, checksum FROM comms_schema_migrations").fetchall()
-    assert apply_migrations(conn) == 2
+    assert apply_migrations(conn) == 3
     assert conn.execute("SELECT version, checksum FROM comms_schema_migrations").fetchall() == first
     assert {"request_id", "endpoint_id", "expires_at", "fence_token"}.issubset(
         {row[1] for row in conn.execute("PRAGMA table_info(deliveries)")}
+    )
+    assert {"acp_conversations", "acp_conversation_events"}.issubset(
+        {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
     )
     conn.execute(
         "INSERT INTO comms_schema_migrations(version, name, checksum, applied_at) VALUES (99, 'future', 'x', 'now')"
