@@ -97,13 +97,6 @@ _ACP_OUTCOMES = frozenset({
     "budget_exhausted",
     "deadline_exceeded",
 })
-_ACP_TERMINATIONS = frozenset({
-    "duplicate_suppressed",
-    "budget_exhausted",
-    "deadline_exceeded",
-    "cancelled",
-    "failed",
-})
 _ACP_MESSAGE_EVENTS = frozenset({
     "PARTICIPANT_MESSAGE",
     "PARTICIPANT_COMPLETE",
@@ -601,17 +594,15 @@ def _acp_synthesis_state(events: list[dict[str, Any]], current_state: str | None
 
 
 def _acp_termination(events: list[dict[str, Any]], current_state: str | None) -> str | None:
+    terminal_events = {
+        "DUPLICATE_SUPPRESSED": "duplicate_suppressed",
+        "BUDGET_EXHAUSTED": "budget_exhausted",
+        "DEADLINE_EXCEEDED": "deadline_exceeded",
+    }
     for event in reversed(events):
-        outcome = event.get("outcome")
-        if outcome in _ACP_TERMINATIONS:
-            return outcome
-        event_type = event.get("event_type")
-        if event_type == "DUPLICATE_SUPPRESSED":
-            return "duplicate_suppressed"
-        if event_type == "BUDGET_EXHAUSTED":
-            return "budget_exhausted"
-        if event_type == "DEADLINE_EXCEEDED":
-            return "deadline_exceeded"
+        reason = terminal_events.get(event.get("event_type"))
+        if reason:
+            return reason
     if current_state == "CANCELLED":
         return "cancelled"
     if current_state == "FAILED":

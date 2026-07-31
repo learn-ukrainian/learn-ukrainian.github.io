@@ -495,6 +495,9 @@ def test_acp_termination_reason_allowlists_budget_and_deadline_events():
     assert runtime_router._acp_termination(
         [{"event_type": "DEADLINE_EXCEEDED"}], "PARTIAL_COMPLETE"
     ) == "deadline_exceeded"
+    assert runtime_router._acp_termination(
+        [{"event_type": "CALL_TERMINAL", "outcome": "failed"}], "PARTIAL_COMPLETE"
+    ) is None
     assert runtime_router._acp_classification("CANCELLED") == "cancelled"
     assert runtime_router._acp_termination([], "CANCELLED") == "cancelled"
 
