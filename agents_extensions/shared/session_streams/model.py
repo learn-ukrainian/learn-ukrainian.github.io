@@ -36,6 +36,13 @@ class SessionState(StrEnum):
     CLOSED = "closed"
 
 
+class HolderKind(StrEnum):
+    """The runtime identity class that owns a fenced stream lease."""
+
+    PROCESS = "process"
+    APP_THREAD = "app_thread"
+
+
 @dataclass(frozen=True)
 class LeaseHolder:
     """Exact harness-owned identity for one lease holder."""
@@ -43,8 +50,9 @@ class LeaseHolder:
     agent: str
     harness: str
     instance_id: str
-    process_id: int
+    process_id: int | None = None
     task_id: str | None = None
+    holder_kind: HolderKind = HolderKind.PROCESS
 
     def validate(self) -> None:
         for label, value in (
@@ -56,8 +64,24 @@ class LeaseHolder:
                 raise ValueError(f"{label} must be a non-empty path-safe identity")
         if self.task_id is not None and not IDENTITY_RE.fullmatch(self.task_id):
             raise ValueError("task_id must be a path-safe identity when supplied")
-        if self.process_id <= 0:
-            raise ValueError("process_id must be a positive integer")
+        if self.holder_kind is HolderKind.PROCESS:
+            if not isinstance(self.process_id, int) or self.process_id <= 0:
+                raise ValueError("process_id must be a positive integer for a process holder")
+        elif self.holder_kind is HolderKind.APP_THREAD:
+            if self.process_id is not None:
+                raise ValueError("process_id must be null for an app_thread holder")
+            if self.task_id is None:
+                raise ValueError("task_id is required for an app_thread holder")
+            try:
+                import uuid
+
+                parsed = uuid.UUID(self.task_id)
+            except (AttributeError, ValueError) as exc:
+                raise ValueError("task_id must be a canonical UUID for an app_thread holder") from exc
+            if str(parsed) != self.task_id.lower():
+                raise ValueError("task_id must be a canonical UUID for an app_thread holder")
+        else:  # pragma: no cover - StrEnum construction prevents this normally.
+            raise ValueError("holder_kind must be process or app_thread")
 
 
 @dataclass(frozen=True)
@@ -219,8 +243,5 @@ def entry_as_dict(entry: Entry) -> dict[str, Any]:
         "body": entry.body,
         "body_sha256": entry.body_sha256,
         "idempotency_key": entry.idempotency_key,
-        "refs": [
-            {"kind": ref.kind, "uri": ref.uri, "target_entry_id": ref.target_entry_id}
-            for ref in entry.refs
-        ],
+        "refs": [{"kind": ref.kind, "uri": ref.uri, "target_entry_id": ref.target_entry_id} for ref in entry.refs],
     }

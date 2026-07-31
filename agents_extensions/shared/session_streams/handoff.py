@@ -29,6 +29,7 @@ class HandoffStatus:
     holder_agent: str | None
     holder_harness: str | None
     holder_instance_id: str | None
+    holder_kind: str | None
     holder_process_id: int | None
     holder_process_alive: bool | None
     expires_at: str | None
@@ -46,6 +47,7 @@ class HandoffStatus:
             "holder_agent": self.holder_agent,
             "holder_harness": self.holder_harness,
             "holder_instance_id": self.holder_instance_id,
+            "holder_kind": self.holder_kind,
             "holder_process_id": self.holder_process_id,
             "holder_process_alive": self.holder_process_alive,
             "expires_at": self.expires_at,
@@ -90,6 +92,7 @@ def diagnose_handoff(
             holder_agent=None,
             holder_harness=None,
             holder_instance_id=None,
+            holder_kind=None,
             holder_process_id=None,
             holder_process_alive=None,
             expires_at=None,
@@ -109,6 +112,7 @@ def diagnose_handoff(
             holder_agent=None,
             holder_harness=None,
             holder_instance_id=None,
+            holder_kind=None,
             holder_process_id=None,
             holder_process_alive=None,
             expires_at=None,
@@ -121,6 +125,7 @@ def diagnose_handoff(
     expired = False
     if expires_at:
         expired = current >= parse_timestamp(expires_at)
+    holder_kind = str(lease.get("holder_kind") or "process")
     pid = int(lease.get("holder_process_id") or 0)
     probe = getattr(store, "_process_probe", None)
     alive = bool(probe(pid)) if callable(probe) else _process_alive(pid)
@@ -129,8 +134,10 @@ def diagnose_handoff(
     # Dead holder PID is claimable even before wall-clock TTL expires. A crashed
     # local process cannot renew; requiring expiry left launchers blocked for the
     # full launcher TTL (often 6h). Live holders remain untouchable.
-    claimable = lease_state == "active" and not alive
-    if lease_state == "active" and alive and not expired:
+    claimable = lease_state == "active" and holder_kind == "process" and not alive
+    if lease_state == "active" and holder_kind != "process":
+        reason = "app-thread holder requires verified GUI lifecycle recovery; PID handoff refused"
+    elif lease_state == "active" and alive and not expired:
         reason = "live unexpired lease — only the holder may close; claim refused"
     elif lease_state == "active" and alive and expired:
         reason = "lease expired but holder PID still live — claim refused"
@@ -150,6 +157,7 @@ def diagnose_handoff(
         holder_agent=str(lease.get("holder_agent") or "") or None,
         holder_harness=str(lease.get("holder_harness") or "") or None,
         holder_instance_id=str(lease.get("holder_instance_id") or "") or None,
+        holder_kind=holder_kind,
         holder_process_id=pid or None,
         holder_process_alive=alive,
         expires_at=expires_at or None,
@@ -260,8 +268,7 @@ def claim_stream(
             },
         },
         "next": (
-            "Dual-write fold + stream tail; bind exact rollover packet if any "
-            "(#5398: never generic detect with N>1)."
+            "Dual-write fold + stream tail; bind exact rollover packet if any (#5398: never generic detect with N>1)."
         ),
     }
 

@@ -10,10 +10,18 @@ from typing import Any
 
 import pytest
 
+from agents_extensions.shared.session_streams.app_lifecycle import VerifiedAppLifecycleProof, make_receipt
 from agents_extensions.shared.session_streams.db import MigrationError, SessionStreamDatabase, load_migrations
 from agents_extensions.shared.session_streams.dual_write import ATLAS_HANDOFF_PATH, mirror_atlas_handoff
-from agents_extensions.shared.session_streams.hooks import clean_exit_hook, heartbeat_hook
-from agents_extensions.shared.session_streams.model import EntryRef, EntryType, LeaseHolder, SessionState
+from agents_extensions.shared.session_streams.hooks import clean_exit_hook, heartbeat_hook, lease_from_environment
+from agents_extensions.shared.session_streams.model import (
+    EntryRef,
+    EntryType,
+    HolderKind,
+    LeaseHolder,
+    SessionState,
+    isoformat_z,
+)
 from agents_extensions.shared.session_streams.store import (
     ContentRejectedError,
     LeaseConflictError,
@@ -60,6 +68,52 @@ def _open(store: SessionStreamStore, *, holder: LeaseHolder | None = None, strea
     )
 
 
+def _app_holder(task_id: str = "019fb7a7-5e56-7760-8f53-0980ec7f0d0b") -> LeaseHolder:
+    return LeaseHolder(
+        agent="codex",
+        harness="codex-desktop",
+        instance_id="desktop-runtime",
+        task_id=task_id,
+        process_id=None,
+        holder_kind=HolderKind.APP_THREAD,
+    )
+
+
+def _app_proof(
+    operation: str,
+    holder: LeaseHolder,
+    *,
+    now: datetime = NOW,
+    stream: str = "epic:4707",
+    lease=None,
+    state: str = "active",
+    rollover_id: str | None = None,
+    session_id: str | None = None,
+    lease_id: str | None = None,
+    generation: int | None = None,
+    fencing_token: int | None = None,
+):
+    receipt = make_receipt(
+        operation=operation,
+        provider="codex-desktop",
+        adapter_version="test-v1",
+        holder=holder,
+        state=state,
+        observed_at=isoformat_z(now),
+        valid_until=isoformat_z(now + timedelta(seconds=20)),
+        source_schema_digest="a" * 64,
+        source_authority="test-native-readback",
+        readback_digest="b" * 64,
+        stream_id=stream,
+        session_id=lease.session_id if lease else session_id,
+        lease_id=lease.lease_id if lease else lease_id,
+        generation=lease.generation if lease else generation,
+        fencing_token=lease.fencing_token if lease else fencing_token,
+        rollover_id=rollover_id,
+    )
+    return VerifiedAppLifecycleProof(receipt=receipt, verifier_id="test-adapter")
+
+
 def test_schema_migration_wal_and_fingerprint(tmp_path: Path) -> None:
     database = SessionStreamDatabase(tmp_path / "streams.sqlite3")
     connection = database.connect(now=NOW)
@@ -71,9 +125,7 @@ def test_schema_migration_wal_and_fingerprint(tmp_path: Path) -> None:
         ).fetchone()
         versions = [
             int(row[0])
-            for row in connection.execute(
-                "SELECT version FROM schema_migrations ORDER BY version"
-            ).fetchall()
+            for row in connection.execute("SELECT version FROM schema_migrations ORDER BY version").fetchall()
         ]
         assert versions == [m.version for m in migrations]
         assert str(connection.execute("PRAGMA journal_mode").fetchone()[0]).lower() == "wal"
@@ -92,6 +144,321 @@ def test_schema_migration_wal_and_fingerprint(tmp_path: Path) -> None:
         "foreign_key_violations": [],
         "schema_versions": [m.version for m in load_migrations()],
     }
+
+
+def test_app_thread_requires_verified_fresh_exact_proofs_and_can_renew_after_expiry(tmp_path: Path) -> None:
+    store = _store(tmp_path)
+    holder = _app_holder()
+    with pytest.raises(LeaseConflictError, match="verified fresh"):
+        store.open_session(stream_id="epic:4707", holder=holder, lineage_id="lineage-app", ttl_seconds=10, now=NOW)
+    lease = store.open_session(
+        stream_id="epic:4707",
+        holder=holder,
+        lineage_id="lineage-app",
+        ttl_seconds=10,
+        session_id="session-app",
+        lease_id="lease-app",
+        now=NOW,
+        app_proof=_app_proof(
+            "acquire", holder, session_id="session-app", lease_id="lease-app", generation=1, fencing_token=1
+        ),
+    )
+    repeated = store.open_session(
+        stream_id="epic:4707",
+        holder=holder,
+        lineage_id="lineage-app",
+        ttl_seconds=10,
+        session_id="session-app",
+        lease_id="lease-app",
+        now=NOW,
+        app_proof=_app_proof(
+            "acquire", holder, session_id="session-app", lease_id="lease-app", generation=1, fencing_token=1
+        ),
+    )
+    assert repeated == lease
+    with pytest.raises(LeaseConflictError, match="requires a verified"):
+        store.append_entry(
+            lease, entry_type=EntryType.NOTE, body="No unproven GUI writes.", idempotency_key="app-1", now=NOW
+        )
+    expired = NOW + timedelta(seconds=11)
+    with pytest.raises(LeaseConflictError, match="TTL has expired"):
+        store.append_entry(
+            lease,
+            entry_type=EntryType.NOTE,
+            body="Expired holder cannot append.",
+            idempotency_key="app-2",
+            now=expired,
+            app_proof=_app_proof("append", holder, lease=lease, now=expired),
+        )
+    renewed = store.heartbeat(lease, now=expired, app_proof=_app_proof("renew", holder, lease=lease, now=expired))
+    entry = store.append_entry(
+        renewed,
+        entry_type=EntryType.NOTE,
+        body="Renewed GUI holder can append.",
+        idempotency_key="app-3",
+        now=expired + timedelta(seconds=1),
+        app_proof=_app_proof("append", holder, lease=renewed, now=expired + timedelta(seconds=1)),
+    )
+    assert entry.body == "Renewed GUI holder can append."
+
+
+def test_app_recovery_requires_terminal_predecessor_and_exact_rollover(tmp_path: Path) -> None:
+    store = _store(tmp_path)
+    predecessor = _app_holder()
+    lease = store.open_session(
+        stream_id="epic:4707",
+        holder=predecessor,
+        lineage_id="lineage-app",
+        ttl_seconds=10,
+        session_id="session-app",
+        lease_id="lease-app",
+        now=NOW,
+        app_proof=_app_proof(
+            "acquire", predecessor, session_id="session-app", lease_id="lease-app", generation=1, fencing_token=1
+        ),
+    )
+    successor = _app_holder("119fb7a7-5e56-7760-8f53-0980ec7f0d0b")
+    rollover = "rollover-c88026bc03f24420976fbf17c9cda05a"
+    predecessor_proof = _app_proof("recover", predecessor, lease=lease, state="terminal", rollover_id=rollover)
+    successor_proof = _app_proof(
+        "recover",
+        successor,
+        rollover_id=rollover,
+        session_id="session-next",
+        lease_id="lease-next",
+        generation=2,
+        fencing_token=2,
+    )
+    with pytest.raises(LeaseConflictError, match="rollover continuity"):
+        store.recover_app_session(
+            lease,
+            successor=successor,
+            lineage_id="lineage-next",
+            ttl_seconds=10,
+            rollover_id=rollover,
+            predecessor_proof=predecessor_proof,
+            successor_proof=_app_proof(
+                "recover",
+                successor,
+                rollover_id="rollover-wrong",
+                session_id="session-next",
+                lease_id="lease-next",
+                generation=2,
+                fencing_token=2,
+            ),
+            session_id="session-next",
+            lease_id="lease-next",
+            now=NOW + timedelta(seconds=1),
+        )
+    recovered = store.recover_app_session(
+        lease,
+        successor=successor,
+        lineage_id="lineage-next",
+        ttl_seconds=10,
+        rollover_id=rollover,
+        predecessor_proof=predecessor_proof,
+        successor_proof=successor_proof,
+        session_id="session-next",
+        lease_id="lease-next",
+        now=NOW + timedelta(seconds=1),
+    )
+    assert (recovered.generation, recovered.fencing_token) == (2, 2)
+    assert (
+        store.recover_app_session(
+            lease,
+            successor=successor,
+            lineage_id="lineage-next",
+            ttl_seconds=10,
+            rollover_id=rollover,
+            predecessor_proof=predecessor_proof,
+            successor_proof=successor_proof,
+            session_id="session-next",
+            lease_id="lease-next",
+            now=NOW + timedelta(seconds=1),
+        )
+        == recovered
+    )
+    with pytest.raises(LeaseConflictError):
+        store.append_entry(
+            lease,
+            entry_type=EntryType.NOTE,
+            body="Stale predecessor.",
+            idempotency_key="stale-app",
+            now=NOW + timedelta(seconds=2),
+            app_proof=_app_proof("append", predecessor, lease=lease, now=NOW + timedelta(seconds=2)),
+        )
+
+
+def test_app_thread_mixed_holder_contention_and_hook_identity_without_pid(tmp_path: Path) -> None:
+    process_holder = _holder(instance="process", process_id=42001)
+    app_holder = _app_holder()
+
+    process_store = _store(tmp_path / "process-first")
+    _open(process_store, holder=process_holder)
+    with pytest.raises(LifecycleError, match="already has live session"):
+        process_store.open_session(
+            stream_id="epic:4707",
+            holder=app_holder,
+            lineage_id="lineage-app",
+            ttl_seconds=10,
+            session_id="session-app",
+            lease_id="lease-app",
+            now=NOW,
+            app_proof=_app_proof(
+                "acquire",
+                app_holder,
+                session_id="session-app",
+                lease_id="lease-app",
+                generation=2,
+                fencing_token=2,
+            ),
+        )
+
+    app_store = _store(tmp_path / "app-first")
+    app_store.open_session(
+        stream_id="epic:4707",
+        holder=app_holder,
+        lineage_id="lineage-app",
+        ttl_seconds=10,
+        session_id="session-app",
+        lease_id="lease-app",
+        now=NOW,
+        app_proof=_app_proof(
+            "acquire", app_holder, session_id="session-app", lease_id="lease-app", generation=1, fencing_token=1
+        ),
+    )
+    with pytest.raises(LifecycleError, match="already has live session"):
+        app_store.open_session(
+            stream_id="epic:4707",
+            holder=process_holder,
+            lineage_id="lineage-process",
+            ttl_seconds=10,
+            session_id="session-process",
+            lease_id="lease-process",
+            now=NOW,
+        )
+    second_app = _app_holder("119fb7a7-5e56-7760-8f53-0980ec7f0d0b")
+    with pytest.raises(LifecycleError, match="already has live session"):
+        app_store.open_session(
+            stream_id="epic:4707",
+            holder=second_app,
+            lineage_id="lineage-second",
+            ttl_seconds=10,
+            session_id="session-second",
+            lease_id="lease-second",
+            now=NOW,
+            app_proof=_app_proof(
+                "acquire",
+                second_app,
+                session_id="session-second",
+                lease_id="lease-second",
+                generation=2,
+                fencing_token=2,
+            ),
+        )
+
+    hook_lease = lease_from_environment(
+        {
+            "SESSION_STREAM_ID": "epic:4707",
+            "SESSION_STREAM_SESSION_ID": "session-app",
+            "SESSION_STREAM_LEASE_ID": "lease-app",
+            "SESSION_STREAM_GENERATION": "1",
+            "SESSION_STREAM_FENCING_TOKEN": "1",
+            "SESSION_STREAM_AGENT": "codex",
+            "SESSION_STREAM_HARNESS": "codex-desktop",
+            "SESSION_STREAM_INSTANCE_ID": "desktop-runtime",
+            "SESSION_STREAM_TASK_ID": app_holder.task_id or "",
+            "SESSION_STREAM_HOLDER_KIND": "app_thread",
+            "SESSION_STREAM_HEARTBEAT_AT": isoformat_z(NOW),
+            "SESSION_STREAM_EXPIRES_AT": isoformat_z(NOW + timedelta(seconds=10)),
+            "SESSION_STREAM_TTL_SECONDS": "10",
+            "SESSION_STREAM_VERSION": "1",
+        }
+    )
+    assert hook_lease.holder == app_holder
+    hook_result = heartbeat_hook(
+        app_store,
+        hook_lease,
+        now=NOW + timedelta(seconds=1),
+        app_proof=_app_proof("renew", app_holder, lease=hook_lease, now=NOW + timedelta(seconds=1)),
+    )
+    assert hook_result.action == "heartbeat"
+    assert hook_result.state == "open"
+
+
+def test_concurrent_app_renew_and_recover_remain_fenced_to_one_final_holder(tmp_path: Path) -> None:
+    store = _store(tmp_path)
+    predecessor = _app_holder()
+    lease = store.open_session(
+        stream_id="epic:4707",
+        holder=predecessor,
+        lineage_id="lineage-app",
+        ttl_seconds=10,
+        session_id="session-app",
+        lease_id="lease-app",
+        now=NOW,
+        app_proof=_app_proof(
+            "acquire", predecessor, session_id="session-app", lease_id="lease-app", generation=1, fencing_token=1
+        ),
+    )
+    successor = _app_holder("119fb7a7-5e56-7760-8f53-0980ec7f0d0b")
+    rollover = "rollover-concurrent"
+    barrier = Barrier(2)
+
+    def renew() -> str:
+        barrier.wait(timeout=5)
+        try:
+            store.heartbeat(
+                lease,
+                now=NOW + timedelta(seconds=1),
+                app_proof=_app_proof("renew", predecessor, lease=lease, now=NOW + timedelta(seconds=1)),
+            )
+        except LeaseConflictError:
+            return "fenced"
+        return "renewed"
+
+    def recover() -> str:
+        barrier.wait(timeout=5)
+        store.recover_app_session(
+            lease,
+            successor=successor,
+            lineage_id="lineage-next",
+            ttl_seconds=10,
+            rollover_id=rollover,
+            predecessor_proof=_app_proof(
+                "recover",
+                predecessor,
+                lease=lease,
+                state="terminal",
+                rollover_id=rollover,
+                now=NOW + timedelta(seconds=1),
+            ),
+            successor_proof=_app_proof(
+                "recover",
+                successor,
+                rollover_id=rollover,
+                session_id="session-next",
+                lease_id="lease-next",
+                generation=2,
+                fencing_token=2,
+                now=NOW + timedelta(seconds=1),
+            ),
+            session_id="session-next",
+            lease_id="lease-next",
+            now=NOW + timedelta(seconds=1),
+        )
+        return "recovered"
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        results = {executor.submit(renew), executor.submit(recover)}
+        outcomes = {future.result() for future in results}
+
+    assert "recovered" in outcomes
+    projection = store.lease_projection("epic:4707")
+    assert projection is not None
+    assert projection[1] == "active"
+    assert projection[0].holder == successor
+    assert (projection[0].generation, projection[0].fencing_token) == (2, 2)
 
 
 def test_migration_fingerprint_drift_fails_closed(tmp_path: Path) -> None:
@@ -141,9 +508,7 @@ def test_concurrent_first_open_serializes_migration_and_session_contention(tmp_p
     assert results.count("lifecycle-conflict") == 7
     connection = SessionStreamDatabase(database_path).connect(read_only=True)
     try:
-        assert connection.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == len(
-            load_migrations()
-        )
+        assert connection.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == len(load_migrations())
     finally:
         connection.close()
 
@@ -393,19 +758,25 @@ def test_valid_lease_untouchable_and_crash_force_close_opens_distinct_session(tm
 def test_open_rolling_closed_state_machine_and_sql_immutability(tmp_path: Path) -> None:
     store = _store(tmp_path)
     lease = _open(store)
-    assert store.transition_session(
-        lease,
-        to_state=SessionState.ROLLING,
-        reason="prepared exact rollover",
-        now=NOW + timedelta(seconds=1),
-    ) is SessionState.ROLLING
+    assert (
+        store.transition_session(
+            lease,
+            to_state=SessionState.ROLLING,
+            reason="prepared exact rollover",
+            now=NOW + timedelta(seconds=1),
+        )
+        is SessionState.ROLLING
+    )
     assert heartbeat_hook(store, lease, now=NOW + timedelta(seconds=1)).state == "rolling"
-    assert store.transition_session(
-        lease,
-        to_state=SessionState.OPEN,
-        reason="same live run resumed",
-        now=NOW + timedelta(seconds=2),
-    ) is SessionState.OPEN
+    assert (
+        store.transition_session(
+            lease,
+            to_state=SessionState.OPEN,
+            reason="same live run resumed",
+            now=NOW + timedelta(seconds=2),
+        )
+        is SessionState.OPEN
+    )
     entry = store.append_entry(
         lease,
         entry_type=EntryType.NEXT_ACTION,
