@@ -4,12 +4,12 @@
 health tool for stale `threads.rollout_path` rows. It never changes the
 installed Codex CLI and never deletes a rollout file.
 
-The tool only considers a missing path eligible when it is an absolute
-`rollout-*.jsonl` path below the selected Codex home's `sessions/` or
-`archived_sessions/` directory, the row is unpinned, and `updated_at` is at
-least 24 hours old. Outside, malformed, recent, pinned, present, and unknown
-schema rows are protected. The age window can be lowered for temporary tests,
-but the production default is 24 hours.
+Eligibility requires an absolute `rollout-*.jsonl` path under the row's
+selected `sessions/` or `archived_sessions/` root, a filename ending in its
+canonical UUID, an unpinned row, and `updated_at` at least 24 hours old. UUID,
+archived, path, symlink, foreign-key, trigger, and unknown-schema mismatches are
+protected. The age window can be lowered for tests; production defaults to 24
+hours.
 
 ## Scan
 
@@ -31,34 +31,38 @@ rows remain:
   --codex-home "$HOME/.codex" --fail-on-stale
 ```
 
-Review the `eligible_stale_ids` list and the per-row classification. The list
-is the confirmation input for the next step; do not infer an apply count from
-another scan or from the database directly.
+Review `eligible_stale_ids`, each classification, and `eligible_digest`. This
+canonical SHA-256 covers sorted eligible fingerprints (`id`, `rollout_path`,
+`updated_at`, `pinned`, `archived`) and must be copied exactly with the count;
+do not infer either value from another scan or the database.
 
 ## Apply
 
-Close Codex and stop any process that can write the selected state database.
-Then pass the exact `eligible_stale` count from the reviewed scan and the
-explicit acknowledgement flag. The tool creates a uniquely named SQLite
-backup with restrictive permissions before opening one `BEGIN IMMEDIATE`
-transaction. Every candidate is re-read and its ID, path, update time, pin
-state, and filesystem absence are checked again inside that transaction.
+Close Codex and stop every process that can write the selected database. Pass
+both reviewed values and acknowledgement. Apply opens the writable database,
+enables foreign keys/busy timeout, acquires `BEGIN IMMEDIATE`, then uses a
+separate read connection under that lock to create and integrity-check the
+backup. It revalidates digest-bound identity and filesystem absence, deletes
+matching spawn edges before thread rows, and commits only after those deletes.
 
 ```bash
 .venv/bin/python scripts/hygiene/codex_rollout_reconcile.py apply \
   --codex-home "$HOME/.codex" \
   --db "$HOME/.codex/state_5.sqlite" \
   --expected-eligible-stale 3 \
+  --expected-eligible-digest "64-hex-digest-from-reviewed-scan" \
   --confirm-stale
 ```
 
-A count mismatch refuses before backup creation or any write. Changed or newly
-present candidates are skipped safely. Matching `thread_spawn_edges` are
-removed for deleted thread IDs; declared foreign keys handle dependent dynamic
-tools. The receipt printed to stdout includes the backup path, deleted and
-skipped counts, remaining classifications, SQLite `integrity_check`, and
-post-apply parity. Keep that receipt with the backup path for operator review;
-the repository does not write receipts or local state files.
+A count or digest mismatch refuses before backup creation or any write, so a
+same-count substitution cannot be applied. Changed or newly present candidates
+are skipped safely, but a skipped row must still exist for post-apply parity to
+pass. The receipt printed to stdout includes the backup path, actual deleted
+IDs/count, skipped counts, remaining classifications, SQLite
+`integrity_check`, and post-apply parity. If verification fails after commit,
+the receipt says `post_commit_verification_failed` and
+`mutation_committed: true`; it never reports a successful mutation as a
+rollback or as zero deletion.
 
 ## Verify
 
@@ -84,10 +88,9 @@ backup and has restrictive permissions. Do not restore while Codex is running.
 Use SQLite's restore command rather than copying a live database file:
 
 ```bash
-DB="$HOME/.codex/state_5.sqlite"
-BACKUP="/absolute/path/from-the-receipt/state_5-before-reconcile-<id>.sqlite"
-sqlite3 "$DB" ".restore '$BACKUP'"
-sqlite3 "$DB" "PRAGMA integrity_check;"
+sqlite3 "/absolute/path/to/codex-home/state_5.sqlite" \
+  ".restore '/absolute/path/from-the-receipt/state_5-before-reconcile-<id>.sqlite'"
+sqlite3 "/absolute/path/to/codex-home/state_5.sqlite" "PRAGMA integrity_check;"
 codex doctor --json
 ```
 
