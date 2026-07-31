@@ -69,6 +69,15 @@ ATLAS_RUNNER_HOST=ops@<runner-host> scripts/lexicon/runner/mirror_20k_runner.sh
 scripts/lexicon/runner/mirror_20k_runner.sh --require-only   # gate only, no sync
 ```
 
+`health_20k_runner.sh` is a status-only, fail-closed probe for atlas drivers:
+it requires `ATLAS_RUNNER_HOST`, checks the remote work-dir over SSH, then
+requires a fresh, restic-covered local mirror. It never starts enrichment or
+changes runner state:
+
+```bash
+ATLAS_RUNNER_HOST=ops@<runner-host> scripts/lexicon/runner/health_20k_runner.sh
+```
+
 ## Required workflow
 
 1. After every fetch/reduce/enrich phase on the VPS (or at minimum daily
