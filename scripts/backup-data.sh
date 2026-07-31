@@ -9,6 +9,7 @@
 #
 # Covers:
 #   .claude/*-epic/  Gitignored driver plans and handoffs
+#   .agent/          Gitignored agent recovery state
 #   batch_state/     Gitignored local fleet/delegate state
 #   data/            SQLite databases, embeddings, and private inputs
 #
@@ -96,7 +97,7 @@ Usage:
 
 Safety:
   - init, backup, and restore are previews unless --execute is supplied.
-  - backup requires epic state, batch_state/, data/, and full source coverage.
+  - backup requires epic state, .agent/, batch_state/, data/, and full source coverage.
   - successful snapshots contain BACKUP-RECEIPT.json and a restore command.
   - restore refuses non-empty, project, cloud, and legacy-backup targets.
   - no command prunes or deletes snapshots.
@@ -387,6 +388,8 @@ validate_tree_symlinks() {
   while IFS= read -r -d '' link; do
     relative=${link#"$tree"/}
     target="$(readlink "$link")"
+    [[ -e "$link" ]] ||
+      die "Broken symlink in $label: $relative -> $target"
     resolved="$(realpath "$link" 2>/dev/null)" ||
       die "Broken symlink in $label: $relative -> $target"
     [[ "$target" != /* ]] ||
@@ -394,6 +397,17 @@ validate_tree_symlinks() {
     path_is_within "$resolved" "$tree_real" ||
       die "Symlink escapes $label: $relative -> $target"
   done < <(find "$tree" -type l -print0)
+}
+
+validate_tree_file_types() {
+  local tree=$1
+  local label=$2
+  local entry relative
+
+  while IFS= read -r -d '' entry; do
+    relative=${entry#"$tree"/}
+    die "Unsupported special file type in $label: $relative"
+  done < <(find "$tree" ! -type d ! -type f ! -type l -print0)
 }
 
 discover_backup_paths() {
@@ -410,6 +424,10 @@ discover_backup_paths() {
     die "Required recovery path is missing: batch_state"
   [[ ! -L "$PROJECT_ROOT/batch_state" ]] ||
     die "Required recovery path must not be a symlink: batch_state"
+  [[ -d "$PROJECT_ROOT/.agent" ]] ||
+    die "Required recovery path is missing: .agent"
+  [[ ! -L "$PROJECT_ROOT/.agent" ]] ||
+    die "Required recovery path must not be a symlink: .agent"
 
   for epic in "$PROJECT_ROOT"/.claude/*-epic; do
     [[ -d "$epic" ]] || continue
@@ -419,7 +437,7 @@ discover_backup_paths() {
       die "Epic recovery path has an unsafe label: $(basename "$epic")"
     BACKUP_PATHS+=(".claude/$(basename "$epic")")
   done
-  BACKUP_PATHS+=("batch_state" "data")
+  BACKUP_PATHS+=(".agent" "batch_state" "data")
 }
 
 path_has_backup_coverage() {
@@ -473,6 +491,7 @@ validate_source() {
     [[ "$relative" != "data" ]] || continue
     validate_tree_symlinks "$PROJECT_ROOT/$relative" "$relative"
   done
+  validate_tree_file_types "$PROJECT_ROOT/.agent" ".agent"
 }
 
 acquire_lock() {
@@ -647,7 +666,10 @@ remove_staged_exclusions() {
     remove_staged_path "$directory"
   done < <(find "$STAGED_ROOT" -type d -name __pycache__ -prune -print0)
   find "$STAGED_ROOT" -type f \
-    \( -name '*.db-wal' -o -name '*.db-shm' -o -name '.DS_Store' \) \
+    \( -name '*.db-wal' -o -name '*.db-shm' \
+      -o -name '*.sqlite-wal' -o -name '*.sqlite-shm' \
+      -o -name '*.sqlite3-wal' -o -name '*.sqlite3-shm' \
+      -o -name '.DS_Store' \) \
     -delete ||
     die "Could not remove excluded sidecars from the private staging tree."
 }
@@ -660,6 +682,10 @@ build_restic_excludes() {
     --exclude "$root/qdrant"
     --exclude '**/*.db-wal'
     --exclude '**/*.db-shm'
+    --exclude '**/*.sqlite-wal'
+    --exclude '**/*.sqlite-shm'
+    --exclude '**/*.sqlite3-wal'
+    --exclude '**/*.sqlite3-shm'
     --exclude '**/__pycache__/**'
     --exclude '**/.DS_Store'
   )
@@ -763,7 +789,7 @@ write_backup_receipt() {
     known_missing='[".claude/atlas-epic/plans/curated-seed"]'
   fi
   created_at="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
-  exclusions_json='["data/qdrant", "*.db-wal", "*.db-shm", "__pycache__", ".DS_Store"]'
+  exclusions_json='["data/qdrant", "*.db-wal", "*.db-shm", "*.sqlite-wal", "*.sqlite-shm", "*.sqlite3-wal", "*.sqlite3-shm", "__pycache__", ".DS_Store"]'
   if ((${#LEGACY_EXCLUDES[@]} > 0)); then
     for relative in "${LEGACY_EXCLUDES[@]}"; do
       exclusions_json="$(

@@ -8,12 +8,13 @@ prune snapshots, or restore directly over live project data.
 Every snapshot contains these roots, in priority order:
 
 - every `.claude/*-epic/` directory, including driver plans and handoffs;
+- `.agent/`, including local agent recovery state and session-stream databases;
 - `batch_state/`;
 - `data/`, including SQLite databases, embeddings, and private inputs;
 - `GIT-WORKTREE.patch` when tracked changes have not been committed; and
 - `BACKUP-RECEIPT.json`.
 
-The script fails closed when `.claude/atlas-epic`, `batch_state`, `data`, or
+The script fails closed when `.claude/atlas-epic`, `.agent`, `batch_state`, `data`, or
 the destination configuration is missing. It also fails when a non-ignored
 untracked Git path is outside the declared recovery roots. This prevents a
 partial backup from appearing successful.
@@ -33,14 +34,17 @@ restic rclone path with that final directory name.
   copy-on-write staging; a cross-volume staging location fails closed.
 - On Linux filesystems without reflink support, only a bounded source tree of
   at most 64 MiB may fall back to a normal copy; larger trees fail closed.
-- Every `*.db`, `*.sqlite`, and `*.sqlite3` under the selected roots is rebuilt
+- Every `*.db`, `*.sqlite`, and `*.sqlite3` under the selected roots (including
+  `.agent/`) is rebuilt
   in staging with SQLite's online backup command and must pass
   `PRAGMA quick_check` before upload.
-- SQLite WAL/SHM files, `__pycache__`, `.DS_Store`, and retired `qdrant/` data
-  are excluded.
+- SQLite WAL/SHM sidecars for `*.db`, `*.sqlite`, and `*.sqlite3` databases,
+  plus `__pycache__`, `.DS_Store`, and retired `qdrant/` data, are excluded.
 - The legacy `data/textbooks` and `data/vesum` symlinks are excluded only when
   they resolve inside the old Drive backup. Other absolute or escaping
   symlinks stop the backup.
+- `.agent/` must be a real directory. Broken, absolute, or escaping symlinks
+  below it, and unsupported special files, stop the backup before restic runs.
 - Restore accepts only an absolute empty or nonexistent directory outside the
   project, cloud mounts, and the legacy backup.
 - There is intentionally no `forget`, `prune`, or snapshot-delete command.
@@ -180,7 +184,7 @@ mkdir -p /absolute/path/to/recovery-parent
   --execute
 ```
 
-The restored tree contains `.claude/`, `batch_state/`, `data/`, and the JSON
+The restored tree contains `.claude/`, `.agent/`, `batch_state/`, `data/`, and the JSON
 receipt. Validate the receipt and databases before any live import:
 
 ```bash
@@ -200,6 +204,12 @@ rsync -a "$RECOVERY_DIR/.claude/" "$PROJECT_DIR/.claude/"
 rsync -a "$RECOVERY_DIR/batch_state/" "$PROJECT_DIR/batch_state/"
 ```
 
+Before any selective `.agent/` import, stop every `.agent` writer. Never
+overwrite the live `.agent/` root as a whole, and never use `rsync --delete`.
+Review and import only the required recovery files after validating their
+databases and schema compatibility. Do not blindly reactivate stale locks,
+wake state, caches, deployed mirrors, hooks, or executables from a snapshot.
+
 If `GIT-WORKTREE.patch` exists, inspect it and run a check before deciding to
 apply it:
 
@@ -207,8 +217,8 @@ apply it:
 git -C "$PROJECT_DIR" apply --check "$RECOVERY_DIR/GIT-WORKTREE.patch"
 ```
 
-Do not use `rsync --delete`. Copy `data/` back only after validating the
-specific recovery target and stopping its writers.
+Copy `data/` back only after validating the specific recovery target and
+stopping its writers.
 
 For an incident:
 
@@ -231,8 +241,8 @@ Drive backup, or another directory containing files.
   from committed configuration and release artifacts.
 - `_quarantine/`: incident evidence remains separately managed.
 - `data/qdrant/`: retired and rebuildable under ADR-005/006.
-- SQLite `*.db-wal` and `*.db-shm`: transient state incorporated into each
-  staged online database backup.
+- SQLite WAL/SHM sidecars for `*.db`, `*.sqlite`, and `*.sqlite3`: transient
+  state incorporated into each staged online database backup.
 - `data/textbooks` and `data/vesum` when they are legacy Drive symlinks. Their
   targets remain in the legacy backup until a separate migration is planned.
 
