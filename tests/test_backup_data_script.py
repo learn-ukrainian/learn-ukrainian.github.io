@@ -38,6 +38,7 @@ def backup_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path, Path
         fake_bin,
         source,
         project / ".claude" / "atlas-epic",
+        project / ".agent",
         project / "batch_state",
         staging,
         legacy,
@@ -45,6 +46,10 @@ def backup_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path, Path
     ):
         directory.mkdir(parents=True)
     (project / "README.md").write_text("fixture\n", encoding="utf-8")
+    (project / ".gitignore").write_text(
+        ".agent\n.claude\nbatch_state\n",
+        encoding="utf-8",
+    )
     (project / ".claude" / "atlas-epic" / "HANDOFF.md").write_text(
         "recover me\n",
         encoding="utf-8",
@@ -53,9 +58,13 @@ def backup_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path, Path
         "recover me too\n",
         encoding="utf-8",
     )
+    (project / ".agent" / "recovery-state.json").write_text(
+        '{"schema_version": 1}\n',
+        encoding="utf-8",
+    )
     subprocess.run(["git", "init", "-q", str(project)], check=True)
     subprocess.run(
-        ["git", "-C", str(project), "add", "README.md"],
+        ["git", "-C", str(project), "add", "README.md", ".gitignore"],
         check=True,
     )
     subprocess.run(
@@ -126,9 +135,34 @@ if [[ "${1:-}" == "backup" && -f "$PWD/BACKUP-RECEIPT.json" ]]; then
   jq -c '{
     status: .receipt_status,
     paths: [.paths[].path],
+    agent: (.paths[] | select(.path == ".agent")),
     data: (.paths[] | select(.path == "data"))
   }' \
     "$PWD/BACKUP-RECEIPT.json" >> "$FAKE_RESTIC_LOG"
+fi
+if [[ "${1:-}" == "backup" && -n "${FAKE_SNAPSHOT_DIR:-}" ]]; then
+  mkdir -p "$FAKE_SNAPSHOT_DIR"
+  cp -a "$PWD/." "$FAKE_SNAPSHOT_DIR/"
+fi
+if [[ "${1:-}" == "restore" && -n "${FAKE_SNAPSHOT_DIR:-}" ]]; then
+  dry_run=0
+  restore_target=""
+  shift
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --dry-run) dry_run=1 ;;
+      --target)
+        shift
+        restore_target="${1:-}"
+        ;;
+    esac
+    shift
+  done
+  if [[ "$dry_run" == 0 ]]; then
+    test -n "$restore_target"
+    mkdir -p "$restore_target"
+    cp -a "$FAKE_SNAPSHOT_DIR/." "$restore_target/"
+  fi
 fi
 if [[ "${1:-}" == "backup" && -n "${FAKE_MUTATED_LIVE_STATE_SOURCE:-}" ]]; then
   cp "$FAKE_MUTATED_LIVE_STATE_SOURCE" "$FAKE_MUTATED_LIVE_STATE_DESTINATION"
@@ -228,6 +262,7 @@ def test_execute_stages_a_consistent_wal_database_and_cleans_up(
     assert "staged_required=<.claude/atlas-epic/HANDOFF.md>" in _log(environment)
     assert '"status":"prepared-before-snapshot-write"' in _log(environment)
     assert '".claude/atlas-epic"' in _log(environment)
+    assert '".agent"' in _log(environment)
     assert '"batch_state"' in _log(environment)
     assert list(staging.iterdir()) == []
 
@@ -430,12 +465,20 @@ def test_receipt_counts_match_post_exclusion_snapshot_contents(
     (source / "sidecar.db-wal").write_bytes(b"not recoverable")
     (source / ".DS_Store").write_bytes(b"not recoverable")
     (source / "keep.txt").write_bytes(b"keep\n")
-    environment["FAKE_FORBIDDEN_RELATIVES"] = "data/qdrant data/__pycache__ data/sidecar.db-wal data/.DS_Store"
+    (source / "keep-wal").write_bytes(b"keep\n")
+    environment.update(
+        {
+            "FAKE_FORBIDDEN_RELATIVES": (
+                "data/qdrant data/__pycache__ data/sidecar.db-wal data/.DS_Store"
+            ),
+            "FAKE_REQUIRED_RELATIVE": "data/keep-wal",
+        }
+    )
 
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode == 0, result.stderr
-    assert '"data":{"path":"data","files":1,"bytes":5}' in _log(environment)
+    assert '"data":{"path":"data","files":2,"bytes":10}' in _log(environment)
     assert _log(environment).count("staged_excluded=<") == 4
     assert list(staging.iterdir()) == []
 
@@ -514,6 +557,102 @@ def test_execute_snapshots_sqlite3_database_from_batch_state(
     assert list(staging.iterdir()) == []
 
 
+def test_execute_restores_agent_wal_database_without_sidecars(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, staging, _legacy = backup_environment
+    database = (
+        source.parent
+        / ".agent"
+        / "session-streams"
+        / "v1"
+        / "session-streams.sqlite3"
+    )
+    database.parent.mkdir(parents=True)
+    connection = sqlite3.connect(database)
+    try:
+        connection.execute("PRAGMA journal_mode=WAL")
+        connection.execute("PRAGMA wal_autocheckpoint=0")
+        connection.execute("CREATE TABLE recovery_probe (value TEXT NOT NULL)")
+        connection.execute("INSERT INTO recovery_probe VALUES ('first')")
+        connection.commit()
+        connection.execute("INSERT INTO recovery_probe VALUES ('latest')")
+        connection.commit()
+        assert database.with_name("session-streams.sqlite3-wal").exists()
+        environment.update(
+            {
+                "FAKE_DB_RELATIVE": ".agent/session-streams/v1/session-streams.sqlite3",
+                "FAKE_FORBIDDEN_RELATIVES": " ".join(
+                    [
+                        ".agent/session-streams/v1/session-streams.sqlite3-wal",
+                        ".agent/session-streams/v1/session-streams.sqlite3-shm",
+                    ]
+                ),
+                "FAKE_SNAPSHOT_DIR": str(tmp_path / "snapshot"),
+            }
+        )
+
+        backed_up = _run(environment, "backup", "--execute")
+    finally:
+        connection.close()
+
+    assert backed_up.returncode == 0, backed_up.stderr
+    assert "db_rows=<2>" in _log(environment)
+    assert _log(environment).count("staged_excluded=<") == 2
+    assert list(staging.iterdir()) == []
+
+    restore_target = tmp_path / "separate-restore-target"
+    restored = _run(
+        environment,
+        "restore",
+        "latest",
+        "--to",
+        str(restore_target),
+        "--execute",
+    )
+
+    assert restored.returncode == 0, restored.stderr
+    restored_database = (
+        restore_target / ".agent" / "session-streams" / "v1" / database.name
+    )
+    assert not restored_database.with_name(f"{database.name}-wal").exists()
+    assert not restored_database.with_name(f"{database.name}-shm").exists()
+    with sqlite3.connect(f"file:{restored_database}?mode=ro", uri=True) as restored_connection:
+        rows = restored_connection.execute(
+            "SELECT value FROM recovery_probe ORDER BY rowid"
+        ).fetchall()
+    assert rows == [("first",), ("latest",)]
+    assert (restore_target / ".agent").is_dir()
+    assert restore_target != source.parent
+
+
+def test_execute_stages_agent_recovery_file_and_receipt_label(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, staging, _legacy = backup_environment
+    environment["FAKE_REQUIRED_RELATIVE"] = ".agent/recovery-state.json"
+    snapshot = tmp_path / "snapshot"
+    environment["FAKE_SNAPSHOT_DIR"] = str(snapshot)
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert "staged_required=<.agent/recovery-state.json>" in _log(environment)
+    assert '"agent":{"path":".agent","files":1,"bytes":22}' in _log(environment)
+    receipt_path = snapshot / "BACKUP-RECEIPT.json"
+    receipt_text = receipt_path.read_text(encoding="utf-8")
+    receipt = json.loads(receipt_text)
+    assert next(path for path in receipt["paths"] if path["path"] == ".agent") == {
+        "path": ".agent",
+        "files": 1,
+        "bytes": 22,
+    }
+    assert ".agent/recovery-state.json" not in receipt_text
+    assert list(staging.iterdir()) == []
+
+
 def test_execute_preserves_tracked_changes_as_a_patch(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
@@ -541,6 +680,83 @@ def test_backup_fails_closed_when_required_repo_state_is_missing(
 
     assert result.returncode != 0
     assert "Required recovery path is missing: .claude/atlas-epic" in result.stderr
+    assert "arg=<backup>" not in _log(environment)
+
+
+def test_backup_fails_closed_when_agent_recovery_root_is_missing(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    agent_root = source.parent / ".agent"
+    (agent_root / "recovery-state.json").unlink()
+    agent_root.rmdir()
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    assert "Required recovery path is missing: .agent" in result.stderr
+    assert "arg=<backup>" not in _log(environment)
+
+
+def test_backup_fails_closed_when_agent_recovery_root_is_a_symlink(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    agent_root = source.parent / ".agent"
+    external_root = tmp_path / "external-agent"
+    agent_root.rename(external_root)
+    agent_root.symlink_to(external_root, target_is_directory=True)
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    assert "Required recovery path must not be a symlink: .agent" in result.stderr
+    assert "arg=<backup>" not in _log(environment)
+
+
+@pytest.mark.parametrize(
+    ("target", "expected_error"),
+    [
+        ("missing-target", "Broken symlink in .agent"),
+        ("/tmp/agent-outside", "Absolute symlink is not backup-safe in .agent"),
+        ("../agent-outside", "Symlink escapes .agent"),
+    ],
+)
+def test_backup_fails_closed_for_unsafe_agent_symlink(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+    target: str,
+    expected_error: str,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    agent_root = source.parent / ".agent"
+    if target == "../agent-outside":
+        (source.parent / "agent-outside").mkdir()
+    elif target == "/tmp/agent-outside":
+        external_root = tmp_path / "agent-outside"
+        external_root.mkdir()
+        target = str(external_root)
+    (agent_root / "unsafe-link").symlink_to(target)
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    assert expected_error in result.stderr
+    assert "arg=<backup>" not in _log(environment)
+
+
+def test_backup_fails_closed_for_agent_special_file(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    fifo = source.parent / ".agent" / "writer.pipe"
+    os.mkfifo(fifo)
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    assert "Unsupported special file type in .agent: writer.pipe" in result.stderr
     assert "arg=<backup>" not in _log(environment)
 
 
