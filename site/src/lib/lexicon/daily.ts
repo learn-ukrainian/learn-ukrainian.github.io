@@ -64,3 +64,15 @@ export function deckSeed(deckId: string): number {
   }
   return hash >>> 0;
 }
+
+/**
+ * #6132: deterministic contribution for an explicit re-roll (the learner asking to
+ * see a different pick set without waiting for the calendar day to change).
+ * Combines additively with `dateSeed`/`deckSeed` the same way they combine with each
+ * other. `count` is 0 for the day's default draw and increments once per re-roll tap;
+ * multiplying by a large prime keeps consecutive counts from producing near-identical
+ * permutations under `pickDaily`'s mulberry32-style generator.
+ */
+export function reRollSeed(count: number): number {
+  return (count * 104729) >>> 0;
+}

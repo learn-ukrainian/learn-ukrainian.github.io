@@ -439,6 +439,37 @@ export interface SelectionHistoryItem {
   lapsed?: boolean;
 }
 
+/**
+ * #6132: seed for a freshly started session's spacing/anti-monotony history — the
+ * learner's most recent SAME LOCAL CALENDAR DAY reviews, converted from the
+ * persisted (cross-session) `reviews` log. `selectNextPracticeItem`'s history param
+ * resets to `[]` at the start of every new session; without a seed, `applySpacingFilters`
+ * (word-repeat window) and `candidatePenalty` (mode anti-monotony) start blind, so a
+ * second same-day session opened with the same opening picks as the first. `reviews` is
+ * append-only chronological, so the tail is already the most recent.
+ */
+export function recentSessionHistory(
+  reviews: ReviewLogEntry[],
+  nowTime: number,
+  limit = 12,
+): SelectionHistoryItem[] {
+  const now = new Date(nowTime);
+  const sameDay = reviews.filter((entry) => {
+    const at = new Date(entry.review);
+    return (
+      at.getFullYear() === now.getFullYear() &&
+      at.getMonth() === now.getMonth() &&
+      at.getDate() === now.getDate()
+    );
+  });
+  return sameDay.slice(-limit).map((entry) => ({
+    itemId: `${entry.lemmaId}:${entry.mode}`,
+    lemmaId: entry.lemmaId,
+    mode: entry.mode,
+    blankCase: entry.blankCase,
+  }));
+}
+
 export interface PracticeSelection {
   itemId: string;
   lemma: PracticeLexeme;

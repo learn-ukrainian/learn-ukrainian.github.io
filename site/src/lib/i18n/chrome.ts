@@ -288,6 +288,7 @@ const en = {
   'practice.verdict.wrong': 'Wrong',
   'practice.verdict.calque': 'Calque',
   'practice.wordsTitle': 'Words of the day',
+  'practice.reRoll': 'Shuffle words',
 
   // Practice session chrome residuals (#5355)
   'practice.sessionComplete': 'Session complete',
@@ -590,6 +591,7 @@ const uk: Record<ChromeKey, string> = {
   'practice.verdict.wrong': 'Неправильно',
   'practice.verdict.calque': 'Калька',
   'practice.wordsTitle': 'Слова дня',
+  'practice.reRoll': 'Перемішати слова',
 
   // Practice session chrome residuals (#5355)
   'practice.sessionComplete': 'Сесію завершено',
