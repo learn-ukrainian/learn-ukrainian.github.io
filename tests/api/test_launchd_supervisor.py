@@ -21,6 +21,9 @@ def test_rendered_plist_uses_throttled_abnormal_exit_restart(tmp_path: Path) -> 
     assert payload["Label"] == supervisor.LABEL
     assert payload["KeepAlive"] == {"SuccessfulExit": False}
     assert payload["ThrottleInterval"] == supervisor.THROTTLE_INTERVAL_SECONDS
+    assert payload["EnvironmentVariables"] == {
+        "PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    }
     assert payload["RunAtLoad"] is True
     assert payload["ProgramArguments"] == [
         str(repo / ".venv" / "bin" / "python"),

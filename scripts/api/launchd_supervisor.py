@@ -27,6 +27,7 @@ from scripts.api.release_snapshot import build_release, prune_releases
 LABEL = "com.learn-ukrainian.monitor-api"
 PORT = 8765
 THROTTLE_INTERVAL_SECONDS = 30
+_LAUNCHD_PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 _LOG_ROTATE_BYTES = 10 * 1024 * 1024
 _STOP_UNLOAD_TIMEOUT_SECONDS = 12.0
 _STOP_UNLOAD_POLL_SECONDS = 0.1
@@ -145,6 +146,7 @@ def build_plist(*, repo_root: Path) -> dict[str, object]:
         "KeepAlive": {"SuccessfulExit": False},
         # launchd applies this between restarts, preventing a crash-loop spin.
         "ThrottleInterval": THROTTLE_INTERVAL_SECONDS,
+        "EnvironmentVariables": {"PATH": _LAUNCHD_PATH},
         "StandardOutPath": str(_launchd_stdout_path(root)),
         "StandardErrorPath": str(_launchd_stderr_path(root)),
         "WorkingDirectory": str(root),
