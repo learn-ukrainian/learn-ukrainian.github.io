@@ -1,7 +1,7 @@
 #!/bin/bash
-# Hook: PreToolUse (Bash) — Enforce .venv/bin/python usage
-# Rewrites bare `python3` or `python` commands to the canonical project venv.
-# Prevents accidentally using system Python instead of project venv.
+# Hook: PreToolUse (Bash) — Enforce .venv/bin/python usage.
+# Rejects bare `python3` or `python` commands with one copyable replacement.
+# It never rewrites a command behind the caller's back.
 
 # Read tool input from stdin
 INPUT=$(cat)
@@ -57,24 +57,15 @@ if echo "$COMMAND" | grep -qE '^python3?[[:space:]]'; then
     exit 2
   fi
 
+  printf -v QUOTED_PYTHON '%q' "$PYTHON_BIN"
   case "$COMMAND" in
-    python3*) FIXED="${PYTHON_BIN}${COMMAND#python3}" ;;
-    python*) FIXED="${PYTHON_BIN}${COMMAND#python}" ;;
+    python3*) FIXED="${QUOTED_PYTHON}${COMMAND#python3}" ;;
+    python*) FIXED="${QUOTED_PYTHON}${COMMAND#python}" ;;
   esac
 
-  if [ "${LEARN_UK_HOOK_PROVIDER:-claude}" = "codex" ]; then
-    jq -n --arg command "$FIXED" '{
-      hookSpecificOutput: {
-        hookEventName: "PreToolUse",
-        permissionDecision: "allow",
-        updatedInput: {command: $command}
-      }
-    }'
-  else
-    jq -n --arg command "$FIXED" '{modifiedInput: {command: $command}}'
-  fi
-  exit 0
+  printf 'Unqualified interpreter blocked. Run this command instead:\n  %s\n' "$FIXED" >&2
+  exit 2
 fi
 
-# No modification needed
+# Qualified commands pass through unchanged.
 exit 0

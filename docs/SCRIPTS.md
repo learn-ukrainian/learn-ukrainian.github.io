@@ -257,7 +257,8 @@ Runs on every session start, new or resumed.
 
 ### `enforce-venv.sh`
 
-Intercepts bare `python` and `python3` shell calls and rewrites them to `.venv/bin/python`.
+Rejects bare `python` and `python3` shell calls and prints one shell-quoted,
+copyable command using the canonical checkout's `.venv/bin/python`.
 
 ### `check-gemini-inbox.sh`
 
