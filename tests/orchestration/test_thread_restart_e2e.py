@@ -1153,8 +1153,8 @@ def test_real_cross_family_driver_launchers_refuse_before_second_provider_execut
         cwd=primary,
         env=env,
         stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
         text=True,
     )
     try:
