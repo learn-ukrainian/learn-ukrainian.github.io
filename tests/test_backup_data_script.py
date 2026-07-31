@@ -629,16 +629,27 @@ def test_execute_restores_agent_wal_database_without_sidecars(
 
 def test_execute_stages_agent_recovery_file_and_receipt_label(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
 ) -> None:
     environment, _source, staging, _legacy = backup_environment
     environment["FAKE_REQUIRED_RELATIVE"] = ".agent/recovery-state.json"
+    snapshot = tmp_path / "snapshot"
+    environment["FAKE_SNAPSHOT_DIR"] = str(snapshot)
 
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode == 0, result.stderr
     assert "staged_required=<.agent/recovery-state.json>" in _log(environment)
     assert '"agent":{"path":".agent","files":1,"bytes":22}' in _log(environment)
-    assert '".agent/recovery-state.json"' not in _log(environment).splitlines()[-1]
+    receipt_path = snapshot / "BACKUP-RECEIPT.json"
+    receipt_text = receipt_path.read_text(encoding="utf-8")
+    receipt = json.loads(receipt_text)
+    assert next(path for path in receipt["paths"] if path["path"] == ".agent") == {
+        "path": ".agent",
+        "files": 1,
+        "bytes": 22,
+    }
+    assert ".agent/recovery-state.json" not in receipt_text
     assert list(staging.iterdir()) == []
 
 
