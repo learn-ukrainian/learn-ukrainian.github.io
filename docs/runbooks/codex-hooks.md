@@ -107,6 +107,55 @@ queries Codex-addressed messages rather than silently reporting Claude's inbox.
 The repository deploy manages project-local `.codex/hooks.json`; it does not
 edit the separate user-level `~/.codex/hooks.json`.
 
+## Continuity boundaries: native CLI and Desktop
+
+The project hook layer protects and augments **Codex CLI** sessions; native
+Codex still owns compaction. An ordinary Codex task receives a concise
+SessionStart capsule and has a silent `PostCompact`. Only a launcher-bound
+Codex epic may receive one bounded, exact-stream hydration capsule. That
+capsule requires `.claude/<epic>-epic/CODEX-DRIVER-HANDOFF.md`: the hook never
+substitutes `INTERIM-DRIVER-HANDOFF.md` or `CLAUDE-DRIVER-HANDOFF.md` into a
+Codex post-compaction response. A missing exact Codex handoff is a blocked
+capsule, not a generic replay.
+
+The canonical checkout's `.venv/bin/python` must report exactly the version in
+the canonical `.python-version` file (currently `Python 3.12.8`). Linked
+worktrees intentionally have no local `.venv`; `SessionStart` and bare
+`python`/`python3` rewrites use the canonical interpreter. A missing or
+mismatched canonical interpreter blocks a bare-interpreter rewrite instead of
+silently using a system Python. Qualified interpreter commands keep their
+existing behavior.
+
+`UserPromptSubmit` inbox notices are recipient-and-native-session scoped. The
+hook stores only the sorted pending message-ID list under ignored
+`.agent/runtime/`, atomically replacing it when the list changes. Identical
+pending IDs are shown once per session; a new pending ID is shown again. It
+does not store message text, claim, or acknowledge broker messages. If a hook
+cannot establish a session identity or write this local state, it fails open
+and reports the notice rather than suppressing it.
+
+Codex Desktop is different: a recorded Desktop test showed hook commands and
+their UI labels run, but hook `additionalContext` was not delivered to the
+task. Do not use Desktop `SessionStart`, `PostCompact`, or inbox context output
+as continuity proof. Use a trusted dispatch worktree, native task context, and
+the durable launcher handoff/board for a bound driver. The CLI receives the
+same project hooks after trust; Desktop hook behavior remains manual and
+observational.
+
+After changing hook sources, run `npm run agents:deploy`, then re-trust the
+changed project hooks in the CLI/Desktop hook UI before testing. Verify a fresh
+CLI task, an ordinary PostCompact (silent), an exact Codex-driver hydration,
+and one repeated inbox prompt. The no-auth health check remains:
+
+```bash
+.venv/bin/python -m scripts.orchestration.codex_transport_health status --json
+```
+
+To roll back, revert the tracked source change and rerun `npm run agents:deploy`;
+then re-trust the deployed commands. Do not delete `.agent/runtime/` inbox
+watermarks, rollover packets, or local state databases as part of rollback:
+old ID-only watermarks are harmless and naturally cease to match a new session.
+
 ## Session availability and rollover deadlines
 
 `SessionStart` is an availability path with a 15-second outer ceiling. Its

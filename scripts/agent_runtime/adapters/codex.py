@@ -9,8 +9,8 @@ Key design points:
 
 - **Bridge-only warm resume.** CodexAdapter has ``resume_policy="bridge_only"``
   in the registry: dispatch/delegate invocations stay fresh-session via the
-  runner policy gate, while ``ab discuss`` bridge rounds may resume a prior
-  Codex CLI session for prompt-cache reuse (#1894).
+  runner policy gate, while an exact bridge task/thread may resume its prior
+  Codex CLI session and retain native reasoning/compaction state (#1894).
 - **All three modes supported:** read-only, workspace-write, danger.
   Mode → flag mapping matches ``_codex.py::_codex_bridge_flags`` and
   ``dispatch.py::_codex_dispatch_flags``.
@@ -18,9 +18,10 @@ Key design points:
   agent message to a file; we read it in ``parse_response``. The file path
   goes into ``liveness_signal_paths`` so the runner's mtime poller catches
   Codex writing progress even when stdout is quiet.
-- **Session ID parsed from stdout.** The CLI prints "session id: <uuid>"
-  somewhere in stdout; we extract it so bridge callers can feed it into
-  later rounds.
+- **Session ID bound to the invocation.** Older CLIs printed
+  ``session id: <uuid>`` on stdout. Current CLIs persist it in the matched
+  rollout's ``session_meta`` event. We accept either source so bridge callers
+  can feed the exact session into later rounds.
 
 Issue: #1184
 """
@@ -47,6 +48,10 @@ _logger = logging.getLogger(__name__)
 
 # Matches the session id line in Codex stdout. Case-insensitive.
 _SESSION_RE = re.compile(r"session id:\s*([0-9a-f-]{8,})", re.IGNORECASE)
+_SESSION_ID_VALUE_RE = re.compile(
+    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+    re.IGNORECASE,
+)
 
 # Stderr phrases that indicate the provider rate-limited us. Ordered
 # roughly by specificity — specific phrases first, generic last.
@@ -147,6 +152,7 @@ class CodexAdapter:
     # ``_candidate_rollout_dirs`` so the post-call rollout scan looks in
     # the scoped sessions/ dir, not the user's real ``~/.codex/sessions/``.
     _codex_home_scope: str | None = None
+    _resume_session_id: str | None = None
 
     def build_invocation(
         self,
@@ -205,6 +211,7 @@ class CodexAdapter:
         # between consecutive calls on the same adapter instance).
         # Codex 2026-04-10 audit.
         self._reset_per_invocation_state()
+        self._resume_session_id = session_id
 
         discussion_readonly = _discussion_readonly_requested(tool_config)
         if discussion_readonly and mode != "read-only":
@@ -274,19 +281,13 @@ class CodexAdapter:
         if effort is not None:
             # Per-invocation override of ~/.codex/config.toml (#1396).
             cmd.extend(["-c", f"model_reasoning_effort={effort}"])
-        cmd.extend(
-            [
-                "--skip-git-repo-check",
-                "-C",
-                str(execution_cwd),
-                "--color",
-                "never",
-                "-o",
-                str(output_path),
-                "-m",
-                model or self.default_model,
-            ]
-        )
+        cmd.append("--skip-git-repo-check")
+        if not has_session_to_resume:
+            # ``codex exec resume`` does not accept -C or --color. It resumes
+            # the original session boundary and the subprocess itself still
+            # runs from execution_cwd.
+            cmd.extend(["-C", str(execution_cwd), "--color", "never"])
+        cmd.extend(["-o", str(output_path), "-m", model or self.default_model])
         # Review isolation (#5285): ignore user/project config when the bridge
         # marks the invocation as a fail-closed review. Missing flags on an
         # older binary are the caller's responsibility to feature-detect; the
@@ -305,12 +306,19 @@ class CodexAdapter:
         # after the enable to actually suppress ``multi_agent``. The 2026-05-22
         # ab ask-codex `codex-node-repl-leak-2026-05-22` diagnosis flagged
         # this ordering as a secondary leak path (see PR #2230 follow-up).
+        if has_session_to_resume and tc.get("review_isolation"):
+            raise ValueError("CodexAdapter: sealed review sessions cannot resume")
         if tc.get("review_isolation"):
             # Codex's internal read-only mode cancels stdio MCP calls even
             # when approval_policy=never. The verified parent OS sandbox is
             # the review boundary, so bypass only the nested Codex sandbox to
             # keep the sole sealed read-only MCP tool usable.
             cmd.append("--dangerously-bypass-approvals-and-sandbox")
+        elif has_session_to_resume and mode == "read-only":
+            # ``resume`` has no -s/--sandbox flag, but accepts config
+            # overrides. Reassert the requested boundary instead of inheriting
+            # a broader mode if a caller changes delivery metadata mid-thread.
+            cmd.extend(["-c", 'sandbox_mode="read-only"'])
         else:
             cmd.extend(self._mode_flags(mode))
         cmd.extend(self._tool_config_flags(tool_config))
@@ -543,11 +551,15 @@ class CodexAdapter:
             call_failed = returncode != 0 or not durable_output
             rate_limited = pattern_hit and call_failed
 
-        # Session id comes from stdout in Codex.
+        # Older Codex CLIs printed the session id on stdout. Current CLIs keep
+        # stdout quiet and persist it in the invocation-matched rollout's
+        # session_meta record.
         session_id: str | None = None
         session_match = _SESSION_RE.search(stdout or "")
         if session_match:
             session_id = session_match.group(1)
+        elif plan is not None:
+            session_id = self._read_session_id_from_rollout(plan)
 
         rollout_trace = ""
         if plan is not None:
@@ -764,15 +776,22 @@ class CodexAdapter:
         Taking the snapshot eagerly (in build_invocation) instead of
         lazily (on the first check_early_reap call) is correct: we
         want to capture the state of the sessions dir at the MOMENT
-        the call begins, not at some arbitrary later time when the
-        new rollout may already have been created. Any file present
-        when build_invocation runs is "pre-existing" and therefore
-        cannot be the current call's rollout.
+        the call begins, not at some arbitrary later time when a fresh
+        rollout may already have been created. For resumed sessions, Codex
+        appends to a pre-existing rollout; its captured byte length is the
+        current invocation's safe scan boundary.
         """
         self._last_early_reap_check = 0.0
         self._last_early_reap_mtime = 0.0
         self._rollout_snapshot = self._snapshot_preexisting_rollouts()
+        self._rollout_start_offsets = {}
+        for rollout in self._rollout_snapshot:
+            try:
+                self._rollout_start_offsets[rollout] = rollout.stat().st_size
+            except OSError:
+                continue
         self._bound_rollout = None
+        self._resume_session_id = None
 
     def _read_latest_rollout_task_complete(
         self,
@@ -788,17 +807,13 @@ class CodexAdapter:
         because concurrent Codex runs in the same repo would
         cross-contaminate. Instead we:
 
-        1. Snapshot the set of rollout files that existed at the
-           moment check_early_reap first runs (stored on the adapter
-           as ``_rollout_snapshot``).
-        2. On every scan, ignore any file in the snapshot.
-        3. From the non-snapshot candidates, pick the one with the
-           newest mtime. This is guaranteed to be a file Codex created
-           AFTER our call started.
-        4. Once we find a candidate, we cache it as ``_bound_rollout``
-           — any future calls return the SAME file, so the runner's
-           parse_response always sees the rollout scoped to THIS
-           invocation.
+        1. Fresh calls ignore files in the build-time snapshot and prompt-bind
+           one newly created candidate.
+        2. Resumed calls session-ID-bind the original rollout and prompt-match
+           only bytes appended after its build-time length.
+        3. Once bound, later scans keep the same file and the same byte
+           boundary, so prior turns cannot satisfy task completion or pollute
+           current-turn tool telemetry.
 
         Also checks yesterday's sessions dir for UTC-midnight rollover.
 
@@ -813,23 +828,22 @@ class CodexAdapter:
 
             # 4. Scan our bound rollout for task_complete
             last_message = ""
-            with open(rollout_to_scan, encoding="utf-8", errors="replace") as f:
-                for line in f:
-                    line = line.strip()
-                    if not line:
-                        continue
-                    try:
-                        event = _json.loads(line)
-                    except _json.JSONDecodeError:
-                        continue
-                    if event.get("type") != "event_msg":
-                        continue
-                    payload = event.get("payload") or {}
-                    if payload.get("type") != "task_complete":
-                        continue
-                    msg = payload.get("last_agent_message")
-                    if isinstance(msg, str) and msg:
-                        last_message = msg
+            for line in self._read_rollout_segment(rollout_to_scan).splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    event = _json.loads(line)
+                except _json.JSONDecodeError:
+                    continue
+                if event.get("type") != "event_msg":
+                    continue
+                payload = event.get("payload") or {}
+                if payload.get("type") != "task_complete":
+                    continue
+                msg = payload.get("last_agent_message")
+                if isinstance(msg, str) and msg:
+                    last_message = msg
 
             return last_message
         except Exception:
@@ -854,15 +868,31 @@ class CodexAdapter:
                 all_candidates.extend(directory.glob("rollout-*.jsonl"))
             except OSError:
                 continue
-        new_candidates = [path for path in all_candidates if path not in snapshot]
-        if not new_candidates:
-            return None
 
         def mtime(path: Path) -> float:
             try:
                 return path.stat().st_mtime
             except OSError:
                 return 0.0
+
+        # Current Codex appends every resumed turn to the original session
+        # rollout instead of creating a new file. That exact file is therefore
+        # present in the pre-invocation snapshot. Bind it by BOTH the trusted
+        # stored session ID and this invocation's normalized prompt before
+        # applying the fresh-call snapshot exclusion below.
+        resume_session_id = getattr(self, "_resume_session_id", None)
+        if resume_session_id:
+            for candidate in sorted(all_candidates, key=mtime, reverse=True):
+                if (
+                    self._read_rollout_session_id(candidate) == resume_session_id
+                    and self._rollout_matches_plan(candidate, plan)
+                ):
+                    self._bound_rollout = candidate
+                    return candidate
+
+        new_candidates = [path for path in all_candidates if path not in snapshot]
+        if not new_candidates:
+            return None
 
         for candidate in sorted(new_candidates, key=mtime, reverse=True):
             if self._rollout_matches_plan(candidate, plan):
@@ -875,10 +905,62 @@ class CodexAdapter:
         rollout = self._select_rollout_for_plan(plan)
         if rollout is None:
             return ""
+        return self._read_rollout_segment(rollout)
+
+    def _read_rollout_segment(self, rollout: Path) -> str:
+        """Read only bytes appended during the current invocation.
+
+        A fresh invocation owns a newly created rollout and starts at byte zero.
+        A resumed invocation appends to a pre-existing session rollout, whose
+        starting length was captured synchronously in ``build_invocation``.
+        """
+        offsets: dict[Path, int] = getattr(self, "_rollout_start_offsets", {})
+        start_offset = offsets.get(rollout, 0)
         try:
-            return rollout.read_text(encoding="utf-8", errors="replace")
+            with open(rollout, "rb") as stream:
+                stream.seek(start_offset)
+                return stream.read().decode("utf-8", errors="replace")
         except OSError:
             return ""
+
+    def _read_session_id_from_rollout(self, plan: InvocationPlan) -> str | None:
+        """Read the exact invocation's session id from ``session_meta``.
+
+        The rollout selector first proves that a fresh file or the exact
+        resumed session contains this plan's normalized prompt in the current
+        invocation segment. Never take an ID from the globally newest rollout:
+        concurrent Codex calls may share the same date directory.
+        """
+        rollout = self._select_rollout_for_plan(plan)
+        if rollout is None:
+            return None
+        return self._read_rollout_session_id(rollout)
+
+    @staticmethod
+    def _read_rollout_session_id(rollout: Path) -> str | None:
+        """Read one validated session UUID from a rollout's opening metadata."""
+        try:
+            with open(rollout, encoding="utf-8", errors="replace") as stream:
+                for line_number, line in enumerate(stream, start=1):
+                    if line_number > 25:
+                        break
+                    try:
+                        event = _json.loads(line)
+                    except (TypeError, ValueError):
+                        continue
+                    if event.get("type") != "session_meta":
+                        continue
+                    payload = event.get("payload")
+                    if not isinstance(payload, dict):
+                        return None
+                    for key in ("session_id", "id"):
+                        candidate = payload.get(key)
+                        if isinstance(candidate, str) and _SESSION_ID_VALUE_RE.fullmatch(candidate):
+                            return candidate
+                    return None
+        except OSError:
+            return None
+        return None
 
     def _rollout_matches_plan(self, rollout_path: Path, plan: InvocationPlan) -> bool:
         """Return True when a rollout's user prompt matches this invocation.
@@ -893,48 +975,47 @@ class CodexAdapter:
             return True
 
         try:
-            with open(rollout_path, encoding="utf-8", errors="replace") as f:
-                for line in f:
-                    line = line.strip()
-                    if not line:
-                        continue
-                    try:
-                        event = _json.loads(line)
-                    except _json.JSONDecodeError:
-                        continue
+            for line in self._read_rollout_segment(rollout_path).splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    event = _json.loads(line)
+                except _json.JSONDecodeError:
+                    continue
 
-                    payload = event.get("payload") or {}
-                    if not isinstance(payload, dict):
-                        continue
+                payload = event.get("payload") or {}
+                if not isinstance(payload, dict):
+                    continue
 
-                    if (
-                        event.get("type") == "event_msg"
-                        and payload.get("type") == "user_message"
-                        and isinstance(payload.get("message"), str)
-                        and _normalize_payload_for_rollout_match(payload["message"]) == expected
-                    ):
-                        return True
+                if (
+                    event.get("type") == "event_msg"
+                    and payload.get("type") == "user_message"
+                    and isinstance(payload.get("message"), str)
+                    and _normalize_payload_for_rollout_match(payload["message"]) == expected
+                ):
+                    return True
 
-                    if (
-                        event.get("type") == "response_item"
-                        and payload.get("type") == "message"
-                        and payload.get("role") == "user"
-                    ):
-                        content = payload.get("content")
-                        if isinstance(content, list):
-                            parts: list[str] = []
-                            for item in content:
-                                if isinstance(item, dict):
-                                    text = item.get("text")
-                                    if isinstance(text, str):
-                                        parts.append(text)
-                            if parts:
-                                candidates = [*parts, "\n".join(parts)]
-                                if any(
-                                    _normalize_payload_for_rollout_match(candidate) == expected
-                                    for candidate in candidates
-                                ):
-                                    return True
+                if (
+                    event.get("type") == "response_item"
+                    and payload.get("type") == "message"
+                    and payload.get("role") == "user"
+                ):
+                    content = payload.get("content")
+                    if isinstance(content, list):
+                        parts: list[str] = []
+                        for item in content:
+                            if isinstance(item, dict):
+                                text = item.get("text")
+                                if isinstance(text, str):
+                                    parts.append(text)
+                        if parts:
+                            candidates = [*parts, "\n".join(parts)]
+                            if any(
+                                _normalize_payload_for_rollout_match(candidate) == expected
+                                for candidate in candidates
+                            ):
+                                return True
             return False
         except Exception:
             return False

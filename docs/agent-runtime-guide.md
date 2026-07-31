@@ -207,15 +207,23 @@ rate-limit headroom checks, mode validation, cwd enforcement.
 
 | Path | Resume? | Why |
 | --- | --- | --- |
-| Your interactive Claude Code | not affected by runtime | Keep `--continue`, handoffs, etc. The runtime doesn't touch your session. |
-| Bridge `_claude.py` / `_gemini.py` | **yes** | Cache economics — 95% of our tokens are cache reads. Dropping resume here would reproduce the 2026-03-21 cost fiasco (5.8B tokens in 2 days, rate-limited for a week). |
-| Bridge `_codex.py` | **no** | Codex quota is per-message, not per-token. Resume saves nothing. And cross-worktree session carry-over is the #1 footgun (Codex's own warning, msg #28506). |
+| Native interactive task | not controlled by runtime | Resume the native task. Codex retains reasoning and owns compaction; do not rebuild it from visible messages. |
+| Bridge `_claude.py` / `_gemini.py` | **yes** | Cache warmth and multi-turn coherence inside the exact bridge identity. |
+| Bridge `_codex.py` | **yes** | Preserve native Codex reasoning and compaction for the exact `task_id`; `--new-session` is the explicit reset. |
+| Channel inbox | **yes** for resumable agents | Exact `agent + channel + thread_id`; resumed prompts contain only unseen deliveries. |
+| Sealed review | **no** | A review checkout is an isolation boundary and must not inherit a normal-worktree session. |
+| `/v1/chat/completions` proxy | **no** | Stateless compatibility endpoint; the caller owns and supplies the full message history. |
 | `delegate.py` (future, coding tasks) | **no** | Worktree is the isolation boundary. Resume across worktrees is an incoherence footgun. |
 | `dispatch.py` pipeline | **no** | Already fresh-session today. Don't regress. |
 
-Enforced at TWO layers:
-1. **Adapter-level** (defensive): `CodexAdapter.build_invocation()` ignores `session_id` even when passed. Belt.
-2. **Caller-level** (declarative): `runner.invoke()` raises `ValueError` if the caller's `entrypoint` is not "bridge" and the adapter's `resume_policy` is "bridge_only", or always if `resume_policy` is "never". Suspenders.
+The runner enforces the boundary: it raises `ValueError` if a caller passes a
+session to a `bridge_only` adapter from any entrypoint other than `bridge`, and
+always rejects a session for `resume_policy="never"`. Codex turns a permitted
+session into `codex exec resume <session-id>`.
+
+Do not infer proxy conversation identity from `user`, model, request ID, or
+prompt text. Do not automatically replay ambiguous bridge failures: a
+write-capable call may have completed side effects before transport failed.
 
 If you need to change this policy, edit `registry.py`, not the call site.
 

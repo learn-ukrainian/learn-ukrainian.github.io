@@ -508,7 +508,7 @@ def _build_thread_prompt(
 
     latest_message = unseen[-1]
     review_prefix = review_protocol_prefix() if _uses_review_protocol(thread_messages) else ""
-    if agent == "claude" and has_session:
+    if agent in {"claude", "codex"} and has_session:
         sections = [
             review_prefix,
             f"Continue the existing bridge session for channel #{claimed.channel}.",
@@ -708,7 +708,8 @@ def _invoke_thread(
     gemini_auth_mode: str | None = None,
 ) -> Any:
     task_id = _thread_session_key(claimed.channel, claimed.thread_id)
-    existing_session = _get_session_id(task_id, agent) if agent == "claude" else None
+    resumable_agent = agent in {"claude", "codex"}
+    existing_session = _get_session_id(task_id, agent) if resumable_agent else None
     has_session = existing_session is not None
     prompt = _build_thread_prompt(agent, claimed, has_session=has_session)
     session_id = existing_session
@@ -772,7 +773,7 @@ def _invoke_thread(
                 cwd=REPO_ROOT,
                 model=requested_model,
                 task_id=task_id,
-                session_id=session_id if agent == "claude" else None,
+                session_id=session_id if resumable_agent else None,
                 tool_config=_with_discussion_readonly_tool_config(
                     tool_config,
                     mode=mode,
@@ -785,7 +786,7 @@ def _invoke_thread(
         stop_heartbeats.set()
         heartbeat_thread.join(timeout=1.0)
 
-    if agent == "claude" and result.ok:
+    if resumable_agent and result.ok:
         persisted_session = result.session_id or session_to_store or existing_session
         if persisted_session:
             _set_session_id(task_id, agent, persisted_session)

@@ -252,15 +252,24 @@ if [ -n "${LEARN_UKRAINIAN_CLAUDEX_RUN_ID:-}" ]; then
   fi
 fi
 
-# 1. Check .venv exists and has correct Python
-if [ ! -f "$PROJECT_DIR/.venv/bin/python" ]; then
-  ISSUES+=("VENV MISSING: .venv/bin/python not found. Recreate: rm -rf .venv && ~/.pyenv/versions/3.12.8/bin/python -m venv .venv")
+# 1. Check the canonical venv against the repository's exact Python pin. Linked
+# worktrees deliberately do not carry a local .venv, so this must not inspect
+# PROJECT_DIR here.
+PYTHON_VERSION_FILE="$CANONICAL_ROOT/.python-version"
+CANONICAL_PYTHON="$CANONICAL_ROOT/.venv/bin/python"
+if [ ! -f "$PYTHON_VERSION_FILE" ]; then
+  ISSUES+=("PYTHON VERSION PIN MISSING: expected .python-version at $PYTHON_VERSION_FILE")
+elif [ ! -x "$CANONICAL_PYTHON" ]; then
+  ISSUES+=("VENV MISSING: canonical .venv/bin/python not found. Recreate it with the version in .python-version.")
 else
-  PY_VERSION=$(run_bounded 1 "$PROJECT_DIR/.venv/bin/python" --version 2>/dev/null)
-  if [[ "$PY_VERSION" != *"3.12"* ]]; then
-    ISSUES+=("VENV WRONG PYTHON: Expected 3.12.x, got $PY_VERSION")
+  EXPECTED_PYTHON_VERSION=$(head -1 "$PYTHON_VERSION_FILE" | tr -d '[:space:]')
+  PY_VERSION=$(run_bounded 1 "$CANONICAL_PYTHON" --version 2>&1)
+  if [ -z "$EXPECTED_PYTHON_VERSION" ] || [ "$PY_VERSION" != "Python $EXPECTED_PYTHON_VERSION" ]; then
+    ISSUES+=("VENV WRONG PYTHON: Expected Python ${EXPECTED_PYTHON_VERSION:-<missing pin>}, got ${PY_VERSION:-<unavailable>}")
   fi
+  unset EXPECTED_PYTHON_VERSION
 fi
+unset PYTHON_VERSION_FILE CANONICAL_PYTHON
 
 # 2. Claude-only environment diagnostics do not belong in Codex context.
 if [ "$IS_CODEX_SESSION" = "0" ] && [ -z "$CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS" ]; then

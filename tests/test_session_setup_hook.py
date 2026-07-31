@@ -20,6 +20,17 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 _HOOK_TEST = _REPO_ROOT / "scripts" / "audit" / "test_session_setup_hook.sh"
 
 
+def _canonical_python() -> Path:
+    result = subprocess.run(
+        ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        check=True,
+        text=True,
+    )
+    return Path(result.stdout.strip()).parent / ".venv" / "bin" / "python"
+
+
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
 def test_session_setup_hook_handoff_fixtures() -> None:
     assert _HOOK_TEST.is_file(), f"missing hook test: {_HOOK_TEST}"
@@ -86,11 +97,15 @@ def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
     agent_dir.mkdir()
     (agent_dir / "canary-x.json").write_text("{}", encoding="utf-8")
 
-    # Mock other things to avoid unrelated warnings/issues
-    venv_bin = project_dir / ".venv" / "bin"
+    # Linked worktrees do not have a local venv: SessionStart must resolve the
+    # canonical checkout interpreter and exact pin instead.
+    canonical_dir = tmp_path / "canonical"
+    canonical_dir.mkdir()
+    venv_bin = canonical_dir / ".venv" / "bin"
     venv_bin.mkdir(parents=True)
     (venv_bin / "python").write_text("#!/bin/sh\necho 'Python 3.12.8'", encoding="utf-8")
     (venv_bin / "python").chmod(0o755)
+    (canonical_dir / ".python-version").write_text("3.12.8\n", encoding="utf-8")
 
     db_dir = project_dir / ".mcp" / "servers" / "message-broker"
     db_dir.mkdir(parents=True)
@@ -116,7 +131,8 @@ def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
         "XDG_STATE_HOME": str(tmp_path / "xdg-state"),
         "GH_CONFIG_DIR": str(tmp_path / "gh-config"),
         "PATH": f"{venv_bin}:{os.environ.get('PATH', '')}",
-        "CODEX_CANONICAL_REPO_ROOT": str(project_dir),
+        "PYTHONPATH": os.environ.get("PYTHONPATH", ""),
+        "CODEX_CANONICAL_REPO_ROOT": str(canonical_dir),
         "LEARN_UKRAINIAN_REQUESTED_PROFILE_ID": "native_claude",
         "CLAUDE_PROFILE_RESOLVER_SH": str(
             _REPO_ROOT / "scripts/lib/profile_resolver.sh"
@@ -124,11 +140,14 @@ def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
         "CLAUDE_PROFILE_RESOLVER_PY": str(
             _REPO_ROOT / "scripts/lib/context_profiles.py"
         ),
-        "CLAUDE_PROFILE_RESOLVER_PYTHON": str(_REPO_ROOT / ".venv/bin/python"),
+        "CLAUDE_PROFILE_RESOLVER_PYTHON": str(_canonical_python()),
         "CLAUDE_SESSION_RECORD_SCRIPT": str(
             _REPO_ROOT / "scripts/lib/session_record.py"
         ),
-        "CLAUDE_SESSION_RECORD_PYTHON": str(_REPO_ROOT / ".venv/bin/python"),
+        "CLAUDE_SESSION_RECORD_PYTHON": str(_canonical_python()),
+        "SESSION_BOUNDED_RUNNER": str(
+            _REPO_ROOT / "scripts" / "agent_runtime" / "bounded_command.py"
+        ),
     }
 
     result = subprocess.run(
@@ -148,3 +167,5 @@ def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
         pytest.fail(f"Failed to parse JSON output: {e}\nStdout: {result.stdout}\nStderr: {result.stderr}")
 
     assert "DEPLOY DRIFT" not in context, f"False positive drift detected! Context:\n{context}"
+    assert "VENV MISSING" not in context
+    assert "VENV WRONG PYTHON" not in context

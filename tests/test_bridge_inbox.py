@@ -87,6 +87,7 @@ def _ok_result(
     stderr_excerpt: str | None = None,
     rate_limited: bool = False,
     returncode: int | None = 0,
+    session_id: str | None = None,
 ) -> Result:
     return Result(
         ok=ok,
@@ -96,7 +97,7 @@ def _ok_result(
         response=response,
         stderr_excerpt=stderr_excerpt,
         duration_s=0.1,
-        session_id=None,
+        session_id=session_id,
         rate_limited=rate_limited,
         stalled=False,
         returncode=returncode,
@@ -122,6 +123,94 @@ def test_run_inbox_single_thread_single_delivery(mock_invoke):
     assert len(messages) == 2
     assert messages[-1]["from_agent"] == "claude"
     assert messages[-1]["parent_id"] == thread[0]["message_id"]
+
+
+@patch("ai_agent_bridge._inbox.runtime_invoke")
+def test_run_inbox_codex_cold_call_persists_runtime_session(mock_invoke):
+    thread = _make_thread("codex", count=1)
+    mock_invoke.return_value = _ok_result(
+        "codex",
+        session_id="codex-session-one",
+    )
+
+    summary = _inbox.run_inbox("codex")
+
+    assert summary.deliveries_delivered == 1
+    assert mock_invoke.call_args.kwargs["session_id"] is None
+    task_id = _inbox._thread_session_key("topic", str(thread[0]["thread_id"]))
+    assert _inbox._get_session_id(task_id, "codex") == "codex-session-one"
+
+
+@patch("ai_agent_bridge._inbox.runtime_invoke")
+def test_run_inbox_codex_same_thread_resumes_with_unseen_only_prompt(mock_invoke):
+    thread = _make_thread("codex", count=1)
+    mock_invoke.return_value = _ok_result(
+        "codex",
+        session_id="codex-session-one",
+    )
+    _inbox.run_inbox("codex")
+
+    follow_up = _channels.post(
+        "topic",
+        "user",
+        "message-2",
+        to_agents=["codex"],
+        parent_id=str(thread[0]["message_id"]),
+        auto_snapshot=False,
+    )
+    mock_invoke.reset_mock()
+    mock_invoke.return_value = _ok_result("codex", session_id="codex-session-one")
+
+    summary = _inbox.run_inbox("codex")
+
+    assert summary.deliveries_delivered == 1
+    assert mock_invoke.call_args.kwargs["session_id"] == "codex-session-one"
+    prompt = mock_invoke.call_args.args[1]
+    assert "Continue the existing bridge session" in prompt
+    assert "message-2" in prompt
+    assert "message-1" not in prompt
+    assert str(follow_up["message_id"]) not in prompt
+
+
+@patch("ai_agent_bridge._inbox.runtime_invoke")
+def test_run_inbox_codex_sessions_are_isolated_by_thread(mock_invoke):
+    first = _make_thread("codex", channel="first", count=1)
+    second = _make_thread("codex", channel="second", count=1)
+    first_task_id = _inbox._thread_session_key("first", str(first[0]["thread_id"]))
+    _inbox._set_session_id(first_task_id, "codex", "first-session")
+    mock_invoke.return_value = _ok_result("codex", session_id="second-session")
+
+    summary = _inbox.run_inbox("codex")
+
+    assert summary.threads_processed == 2
+    calls_by_channel = {
+        "first" if "#first" in call.args[1] else "second": call
+        for call in mock_invoke.call_args_list
+    }
+    assert calls_by_channel["first"].kwargs["session_id"] == "first-session"
+    assert calls_by_channel["second"].kwargs["session_id"] is None
+    second_task_id = _inbox._thread_session_key("second", str(second[0]["thread_id"]))
+    assert _inbox._get_session_id(second_task_id, "codex") == "second-session"
+
+
+@patch("ai_agent_bridge._inbox.runtime_invoke")
+def test_run_inbox_failed_codex_result_does_not_overwrite_session(mock_invoke):
+    thread = _make_thread("codex", count=1)
+    task_id = _inbox._thread_session_key("topic", str(thread[0]["thread_id"]))
+    _inbox._set_session_id(task_id, "codex", "existing-session")
+    mock_invoke.return_value = _ok_result(
+        "codex",
+        ok=False,
+        response="",
+        stderr_excerpt="backend failed",
+        session_id="unexpected-session",
+        returncode=1,
+    )
+
+    _inbox.run_inbox("codex")
+
+    assert mock_invoke.call_args.kwargs["session_id"] == "existing-session"
+    assert _inbox._get_session_id(task_id, "codex") == "existing-session"
 
 
 @patch("ai_agent_bridge._inbox.runtime_invoke")

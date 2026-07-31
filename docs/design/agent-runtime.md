@@ -181,11 +181,11 @@ class Result:
 AGENTS: dict[str, dict] = {
     "codex": {
         "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
-        "default_model": "gpt-5.5",
+        "default_model": "gpt-5.6-terra",
         "cost_tier": "medium",
         "capabilities": {"code_writing", "code_review", "debugging", "adversarial_review"},
         "cli_available": True,
-        "resume_policy": "never",      # §6.3 — Codex is fresh-session-only always
+        "resume_policy": "bridge_only", # §6.3 — exact bridge identity only
     },
     "claude": {
         "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
@@ -402,30 +402,62 @@ Keep these names. They already match the shape the code uses (`_codex.py:16`, `d
 - The worst 2-day stretch (Mar 20–21) hit 5.8B tokens and rate-limited the account for a week.
 - Top-cost sessions were multi-subagent interactive sessions with cold-cache reloads of SESSION-HANDOFF docs.
 
-**The runtime's impact on cache economics** (Session B in §6.3.1) is different for each provider:
+**The runtime's impact on continuity and cache economics** (Session B in
+§6.3.1) is different for each provider:
 
-| Provider | Resume saves cost? | Resume causes harm? |
+| Provider | Resume benefit | Resume boundary |
 | --- | --- | --- |
-| Anthropic (Claude) | **YES** — warm prompt cache reused across bridge calls on same task_id | No — Claude `-p --resume <uuid>` is well-scoped to a session |
-| Google (Gemini) | Likely yes (caching mechanics unclear but similar model) | No — multi-turn bridge coherence |
-| OpenAI (Codex) | **NO** — Codex quota is per-message, not per-token; resume doesn't save slots | **YES** — resume + `-C` flag limitation = cross-worktree contamination (see Codex's consultation, footgun #5) |
+| Anthropic (Claude) | Warm prompt cache and multi-turn coherence | Exact bridge task/thread |
+| Google (Gemini) | Multi-turn coherence; provider caching may also help | Exact bridge task/thread |
+| OpenAI (Codex) | Retains native reasoning state and compaction across turns | Exact bridge task/thread only; never a dispatch/review worktree |
 
-**Policy (enforced in two layers):**
+For Codex, continuity is a quality requirement, not merely a token-cost
+optimization. OpenAI's
+[ARC-AGI-3 harness analysis](https://openai.com/index/how-two-settings-tripled-our-arc-agi-3-scores/)
+demonstrated the failure caused by replaying visible history while discarding
+reasoning state. The
+[Responses API](https://developers.openai.com/blog/responses-api) and
+[compaction guidance](https://developers.openai.com/api/docs/guides/compaction)
+describe the platform-native state model that `codex exec resume` preserves.
 
-Layer 1 — adapter default (`resume_policy` in registry):
-- `CodexAdapter` has `resume_policy="never"` and **ignores `session_id` even if passed**. Belt + suspenders.
-- `ClaudeAdapter` / `GeminiAdapter` have `resume_policy="bridge_only"`.
+**Policy (enforced at the runtime boundary):**
 
-Layer 2 — caller enforcement:
-- `_claude.py`, `_gemini.py`, `_codex.py` (bridge messaging) → may pass `session_id` from the existing SQLite `sessions` table.
-- `scripts/delegate.py` (future) → hard-refuses to pass `session_id`; asserts runtime-side that `resume_policy != "bridge_only" OR entrypoint != "delegate"`.
-- `scripts/build/dispatch.py` → never passes `session_id` (already true today).
+- `CodexAdapter`, `ClaudeAdapter`, and resumable bridge agents use
+  `resume_policy="bridge_only"`.
+- `runner.invoke()` accepts their session IDs only when
+  `entrypoint="bridge"`.
+- Delegate, dispatch, consult, and sealed review calls pass no session ID. A
+  worktree or sealed review checkout is an isolation boundary, never a
+  continuation boundary.
+
+Bridge identities are deliberately narrow:
+
+| Surface | Continuity identity | Contract |
+| --- | --- | --- |
+| Direct `ask-codex` | Exact `task_id` | Resume unless `--new-session` is requested. A sealed review is always fresh. |
+| Channel inbox | Exact `agent + channel + thread_id` | Resume within the thread; a resumed prompt contains only unseen deliveries. |
+| `discuss` | Discussion-local session | Reuse only inside the bounded discussion. |
+| Delegate/dispatch/review | None | Always fresh. |
+| `/v1/chat/completions` proxy | None | Stateless; the caller supplies the complete visible history. |
+
+Do not infer proxy continuity from `user`, model, request ID, or prompt text.
+That would risk cross-client session leakage and duplicate history. A failed
+bridge invocation does not overwrite a known-good session and is not
+automatically replayed: a write-capable call may have completed side effects
+before transport failure. Direct callers use `--new-session` for an explicit
+reset.
 
 #### 6.3.1 Clarification: two different meanings of "session"
 
-**Session A** = the user's interactive Claude Code workflow (this terminal, `--continue`, handoff docs, autocompact). **Unaffected by the runtime.** Keep doing handoffs; they are necessary when context gets heavy. Separate optimization work can shrink handoff docs to reduce cold-reload cost, but that is not this issue.
+**Session A** = the user's native interactive agent task. For Codex TUI/App,
+resume the existing task and let native compaction manage long context.
+Repository PostCompact hooks stay silent for ordinary Codex tasks; only a
+launcher-bound epic driver receives its exact bounded hydration capsule.
 
-**Session B** = bridge subprocess `claude -p --resume <uuid>` invocations. **This is what the resume policy above applies to.** Each Session B invocation is a short-lived subprocess that runs for seconds; the UUID lets Anthropic's prompt cache hit across multiple bridge calls on the same `task_id`.
+**Session B** = short-lived bridge subprocess invocations. This is what the
+resume policy above applies to. Claude resumes with its provider session ID;
+Codex uses `codex exec resume <session-id>` so native reasoning and compaction
+continue across bridge turns without crossing into a worktree.
 
 ### 6.4 Headroom check semantics
 
@@ -447,9 +479,9 @@ Load loudly — `GrokAdapter.build_invocation()` raises `NotImplementedError` wi
 | Concurrent usage log corruption | `os.open(O_APPEND\|O_CREAT\|O_WRONLY) + os.write()` — POSIX atomicity guarantee for sub-PIPE_BUF writes. No filelock. |
 | Stall detection missing (kills healthy slow calls) | Streaming stdout watchdog (primary) + `liveness_signal_paths()` mtime polling (fallback). New `"stalled"` outcome distinguishes from hard timeout. |
 | Protocol drift as we add agents | `_template.py` living adapter as canonical reference. Protocol tests assert every registered adapter implements the protocol correctly. `mypy --strict` on the `agent_runtime` package. |
-| Resume footgun in coding tasks (Codex) | Enforced at two layers: adapter `resume_policy="never"` + caller-side enforcement in `delegate.py` and `dispatch.py`. Codex adapter defensively ignores `session_id` even if passed. |
+| Resume footgun across coding worktrees | Registry policy plus `runner.invoke()` allow session IDs only at `entrypoint="bridge"`; delegate, dispatch, consult, and review stay fresh. |
 | MCP tool restrictions lost during migration | `tool_config` in protocol. Phase 3 AC explicitly asserts dispatch.py reviewer paths still carry only the reviewer tool list. Integration test locks this. |
-| Cost regression from breaking resume | Data-driven policy: Claude/Gemini bridge paths KEEP resume for cache warmth. Only Codex and delegate/dispatch paths go fresh-only. |
+| Quality/cost regression from breaking resume | Claude/Gemini keep bridge continuity; Codex keeps exact bridge continuity for native reasoning/compaction; delegate/dispatch/review remain fresh. |
 | Future agents add features we can't handle | `tool_config: dict[str, Any]` is deliberately untyped. Adapters ignore keys they don't understand. Forward-compatible. |
 | Rate-limit false positives from "429" in URLs | `\b429\b` regex boundaries + specific phrases (`"HTTP 429"`, `"status 429"`). Applied to both new runtime and existing `dispatch.py` as free cleanup. |
 | Error signal loss when Gemini call fails with empty stderr | Runner auto-tails the newest liveness file into the error log on failure. Free feature given liveness_signal_paths is already in play. |
@@ -542,7 +574,7 @@ This is AC #11 on #1184. The guide is shipped in the same PR as the runtime code
 | 10 | User feedback | NEW §10 documentation requirements — 4 artifacts shipped in Phase 1, AC-gated |
 | 11 | User feedback + both reviewers | NEW §7 vulnerabilities + mitigations table |
 | 12 | User feedback (Session A/B clarification) | Added §6.3.1 distinguishing interactive Claude Code sessions from bridge subprocess resume |
-| 13 | Token-usage data (HIGH) | §6.3 resume policy is data-driven: Claude/Gemini bridge keep resume for cache warmth, Codex always fresh, delegate/dispatch always fresh |
+| 13 | Token-usage and continuity data (HIGH) | §6.3 resume policy is data-driven: bridge-only agents retain exact bridge continuity; delegate/dispatch/review always start fresh |
 
 **Deliberately cut from v1 (ship in v2 if needed):**
 

@@ -640,9 +640,9 @@ def _enforce_resume_policy(
 ) -> None:
     """Enforce resume policy from the registry.
 
-    Design doc § 6.3: Codex is always fresh-session. Claude/Gemini bridge
-    paths may keep resume (cache economics). delegate/dispatch never use
-    resume (worktree is the isolation boundary).
+    Design doc § 6.3: bridge-only agents may resume through the bridge.
+    Delegate, dispatch, and consult never resume because a worktree is the
+    isolation boundary.
 
     If a caller tries to pass ``session_id`` when policy forbids it, we
     raise ValueError. This is a hard invariant — we'd rather crash loudly

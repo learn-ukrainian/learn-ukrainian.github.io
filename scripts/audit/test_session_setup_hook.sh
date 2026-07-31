@@ -5,6 +5,9 @@ unset GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_COMMON_DIR GIT_DIR GIT_INDEX_FILE
 unset GIT_OBJECT_DIRECTORY GIT_PREFIX GIT_WORK_TREE
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+GIT_COMMON_DIR="$(git -C "$REPO_ROOT" rev-parse --path-format=absolute --git-common-dir)"
+CANONICAL_ROOT="$(dirname "$GIT_COMMON_DIR")"
+VENV_PYTHON="$CANONICAL_ROOT/.venv/bin/python"
 HOOK="$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh"
 POST_COMPACT_HOOK="$REPO_ROOT/agents_extensions/shared/hooks/post-compact.sh"
 TMP_ROOT="$(mktemp -d)"
@@ -61,6 +64,7 @@ fi
 printf "Python 3.12.8\n"
 PYEOF
   printf 'fixture db\n' > "$root/.mcp/servers/message-broker/messages.db"
+  printf '3.12.8\n' > "$root/.python-version"
   chmod +x "$root/.venv/bin/python"
   mkdir -p "$root/scripts/orchestration"
   touch "$root/scripts/orchestration/thread_handoff.py"
@@ -102,14 +106,14 @@ run_hook() {
     CLAUDEX_SUPERVISOR_TEST_STATE_ROOT="$root" \
     CLAUDE_PROFILE_RESOLVER_SH="$REPO_ROOT/scripts/lib/profile_resolver.sh" \
     CLAUDE_PROFILE_RESOLVER_PY="$REPO_ROOT/scripts/lib/context_profiles.py" \
-    CLAUDE_PROFILE_RESOLVER_PYTHON="$REPO_ROOT/.venv/bin/python" \
+    CLAUDE_PROFILE_RESOLVER_PYTHON="$VENV_PYTHON" \
     CLAUDE_HANDOFF_IDENTITY_SH="$REPO_ROOT/scripts/lib/handoff_identity.sh" \
     CLAUDE_SESSION_RECORD_SCRIPT="$REPO_ROOT/scripts/lib/session_record.py" \
-    CLAUDE_SESSION_RECORD_PYTHON="$REPO_ROOT/.venv/bin/python" \
+    CLAUDE_SESSION_RECORD_PYTHON="$VENV_PYTHON" \
     SESSION_BOUNDED_RUNNER="$REPO_ROOT/scripts/agent_runtime/bounded_command.py" \
     CLAUDEX_SUPERVISOR_SCRIPT="$REPO_ROOT/scripts/orchestration/claudex_supervisor.py" \
-    CLAUDEX_SUPERVISOR_PYTHON="$REPO_ROOT/.venv/bin/python" \
-    THREAD_ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$REPO_ROOT/.venv/bin/python}" \
+    CLAUDEX_SUPERVISOR_PYTHON="$VENV_PYTHON" \
+    THREAD_ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$VENV_PYTHON}" \
     THREAD_ROLLOVER_SCRIPT="$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
     SESSION_HANDOFF_AGENT="$handoff_agent" \
     SESSION_EPIC="$session_epic" \
@@ -124,7 +128,7 @@ prepare_fixture() {
 
   HOME="$TMP_ROOT/home" XDG_CONFIG_HOME="$TMP_ROOT/xdg-config" XDG_CACHE_HOME="$TMP_ROOT/xdg-cache" XDG_DATA_HOME="$TMP_ROOT/xdg-data" XDG_STATE_HOME="$TMP_ROOT/xdg-state" GH_CONFIG_DIR="$TMP_ROOT/gh" \
     CODEX_CANONICAL_REPO_ROOT="$root" PATH="/usr/bin:/bin" \
-    "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 prepare --agent "$agent" --active-thread-id "$thread_id" >/dev/null
 }
 
@@ -145,18 +149,18 @@ resume_fixture() {
   local intended_title
   local db_path
 
-  rollover_id=$("$REPO_ROOT/.venv/bin/python" -c \
+  rollover_id=$("$VENV_PYTHON" -c \
     'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["replacement"]["rollover_id"])' \
     "$state_file")
-  source_thread_id=$("$REPO_ROOT/.venv/bin/python" -c \
+  source_thread_id=$("$VENV_PYTHON" -c \
     'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["active"]["thread_id"])' \
     "$state_file")
-  intended_title=$("$REPO_ROOT/.venv/bin/python" -c \
+  intended_title=$("$VENV_PYTHON" -c \
     'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["replacement"]["display"]["title"])' \
     "$state_file")
   db_path="$root/state_session-fixture.sqlite"
 
-  "$REPO_ROOT/.venv/bin/python" - "$db_path" "$source_thread_id" "$replacement_thread_id" "$root" <<'PYEOF'
+  "$VENV_PYTHON" - "$db_path" "$source_thread_id" "$replacement_thread_id" "$root" <<'PYEOF'
 import sqlite3
 import sys
 
@@ -175,21 +179,21 @@ with sqlite3.connect(db_path) as connection:
     )
 PYEOF
 
-  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+  "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 native-action --agent "$agent" \
     --state-file "$state_file" --rollover-id "$rollover_id" --action create >/dev/null
-  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+  "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 record-native-result --agent "$agent" \
     --state-file "$state_file" --rollover-id "$rollover_id" --action create --succeeded \
     --evidence "fixture create_thread returned $replacement_thread_id" >/dev/null
-  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+  "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 register-created --agent "$agent" \
     --state-file "$state_file" --rollover-id "$rollover_id" --replacement-thread-id "$replacement_thread_id" \
     --db "$db_path" --evidence "fixture exact native create result" >/dev/null
-  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+  "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 native-action --agent "$agent" \
     --state-file "$state_file" --rollover-id "$rollover_id" --action title --db "$db_path" >/dev/null
-  "$REPO_ROOT/.venv/bin/python" - "$db_path" "$replacement_thread_id" "$intended_title" <<'PYEOF'
+  "$VENV_PYTHON" - "$db_path" "$replacement_thread_id" "$intended_title" <<'PYEOF'
 import sqlite3
 import sys
 
@@ -197,16 +201,16 @@ db_path, replacement_id, intended_title = sys.argv[1:]
 with sqlite3.connect(db_path) as connection:
     connection.execute("UPDATE threads SET title = ? WHERE id = ?", (intended_title, replacement_id))
 PYEOF
-  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+  "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 record-native-result --agent "$agent" \
     --state-file "$state_file" --rollover-id "$rollover_id" --action title --succeeded \
     --evidence "fixture set_thread_title acknowledged" >/dev/null
-  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+  "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 reconcile-native --agent "$agent" \
     --state-file "$state_file" --rollover-id "$rollover_id" --action title --db "$db_path" >/dev/null
 
   HOME="$TMP_ROOT/home" XDG_CONFIG_HOME="$TMP_ROOT/xdg-config" XDG_CACHE_HOME="$TMP_ROOT/xdg-cache" XDG_DATA_HOME="$TMP_ROOT/xdg-data" XDG_STATE_HOME="$TMP_ROOT/xdg-state" GH_CONFIG_DIR="$TMP_ROOT/gh" PATH="/usr/bin:/bin" \
-    "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 resume --agent "$agent" \
     --state-file "$state_file" --rollover-id "$rollover_id" \
     --replacement-thread-id "$replacement_thread_id" >/dev/null
@@ -216,7 +220,7 @@ run_post_compact() {
   local root="$1"
   HOME="$TMP_ROOT/home" XDG_CONFIG_HOME="$TMP_ROOT/xdg-config" XDG_CACHE_HOME="$TMP_ROOT/xdg-cache" XDG_DATA_HOME="$TMP_ROOT/xdg-data" XDG_STATE_HOME="$TMP_ROOT/xdg-state" GH_CONFIG_DIR="$TMP_ROOT/gh" \
     CLAUDE_PROJECT_DIR="$root" SESSION_HANDOFF_AGENT="codex" CODEX_CANONICAL_REPO_ROOT="$root" \
-    THREAD_ROLLOVER_PYTHON="$REPO_ROOT/.venv/bin/python" \
+    THREAD_ROLLOVER_PYTHON="$VENV_PYTHON" \
     THREAD_ROLLOVER_SCRIPT="$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
     SESSION_BOUNDED_RUNNER="$REPO_ROOT/scripts/agent_runtime/bounded_command.py" \
     "$POST_COMPACT_HOOK"
@@ -457,13 +461,11 @@ output="$(run_hook "$fixture_root" 0 codex "$other_thread_id")"
 assert_contains "$output" "live rollover is already bound to a different replacement thread" "resumed bound other thread"
 assert_contains "$output" "$replacement_thread_id" "resumed bound other thread"
 
-# 16. PostCompact remains read-only and surfaces packet health only.
+# 16. An explicit Codex non-driver stays silent after native compaction.
 setup_fixture "$fixture_root"
 prepare_fixture "$fixture_root" codex old-thread
 output="$(run_post_compact "$fixture_root")"
-assert_contains "$output" "Thread rollover health (read-only)" "post compact health"
-assert_contains "$output" '\"status\": \"pending_start\"' "post compact packet"
-assert_not_contains "$output" "confirm-started" "post compact no confirmation"
+[ "$output" = "" ] || fail "explicit Codex non-driver PostCompact: expected no context"
 
 # 17. #5201: --epic harness resolves to the claude-infra slot. A live
 #     pending_start packet under claude-infra MUST surface at SessionStart —
@@ -533,7 +535,7 @@ native_record="$fixture_root/.agent/sessions/official-native-session.json"
 setup_fixture "$fixture_root"
 mkdir -p "$fixture_root/transcripts"
 sol_transcript="$fixture_root/transcripts/sol.jsonl"
-supervisor_run_id=$("$REPO_ROOT/.venv/bin/python" - "$fixture_root" "$REPO_ROOT" <<'PYEOF'
+supervisor_run_id=$("$VENV_PYTHON" - "$fixture_root" "$REPO_ROOT" <<'PYEOF'
 import os
 import sys
 from pathlib import Path
