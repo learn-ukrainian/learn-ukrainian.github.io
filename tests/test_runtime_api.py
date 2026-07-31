@@ -375,11 +375,11 @@ def test_acp_conversations_refuse_poisoned_rows_and_hide_unavailable_storage(tmp
     )
     events = [
         (
-            "event-good", "conv-good", 1, "CALL_TERMINAL", "PARTIAL_COMPLETE", "root", "grok", 1,
+            "event-good", "conv-good", 1, "CALL_TERMINAL", "INITIAL_FANOUT", "root", "grok", 1,
             "timeout", 4, 2, "secret", "secret", '{broken', _iso(now),
         ),
         (
-            "event-busy", "conv-good", 2, "CALL_TERMINAL", "PARTIAL_COMPLETE", "root", "codex", 1,
+            "event-busy", "conv-good", 2, "CALL_TERMINAL", "INITIAL_FANOUT", "root", "codex", 1,
             "busy", 0, 0, "secret", "secret", "{}", _iso(now),
         ),
         (
@@ -403,7 +403,7 @@ def test_acp_conversations_refuse_poisoned_rows_and_hide_unavailable_storage(tmp
     assert data["duplicate_suppressed"] is True
     assert len(data["events"]) == 3
     assert data["events"][0]["event_type"] == "CALL_TERMINAL"
-    assert data["events"][0]["outcome"] == "partial"
+    assert data["events"][0]["outcome"] == "failed"
     assert data["events"][1]["recipient"] == "codex"
     assert data["events"][1]["outcome"] == "partial"
     assert "must-not-leak" not in response.text

@@ -531,7 +531,7 @@ def _acp_event_type(value: Any) -> str | None:
     return normalized if normalized in _ACP_EVENT_TYPES else None
 
 
-def _acp_outcome(value: Any, state: str) -> str | None:
+def _acp_outcome(value: Any) -> str | None:
     if not isinstance(value, str):
         return None
     normalized = value.strip().lower()
@@ -539,8 +539,10 @@ def _acp_outcome(value: Any, state: str) -> str | None:
         return normalized
     if normalized == "ok":
         return "succeeded"
-    if normalized in {"busy", "error", "timeout", "rate_limited", "orphan"}:
-        return "partial" if state in {"PARTIAL", "PARTIAL_COMPLETE"} else "failed"
+    if normalized in {"busy", "orphan"}:
+        return "partial"
+    if normalized in {"error", "timeout", "rate_limited"}:
+        return "failed"
     return None
 
 
@@ -639,7 +641,7 @@ def _sanitize_acp_event(row: sqlite3.Row) -> dict[str, Any] | None:
     round_number = _acp_int(row["round"], minimum=1)
     if round_number is not None:
         event["round"] = round_number
-    outcome = _acp_outcome(row["outcome"], state)
+    outcome = _acp_outcome(row["outcome"])
     if outcome:
         event["outcome"] = outcome
     duration_ms = _acp_int(row["duration_ms"])
