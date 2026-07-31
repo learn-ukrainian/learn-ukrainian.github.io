@@ -27,6 +27,14 @@ def example_record() -> dict[str, object]:
 
 def test_schema_and_synthetic_example_are_admitted() -> None:
     schema, schema_hash = CONTRACT.load_schema()
+    committed_receipt = CONTRACT.validate_path(EXAMPLE)
+    assert committed_receipt["contract_schema_sha256"] == schema_hash
+    assert committed_receipt["input_kind"] == "source_record_v1"
+    assert committed_receipt["admitted_records"] == 1
+    assert committed_receipt["rejected_records"] == 0
+    assert committed_receipt["results"] == [
+        {"admitted": True, "record_id": "record.synthetic-001", "reasons": []}
+    ]
     record = example_record()
     assert list(Draft202012Validator(schema).iter_errors(record)) == []
     result = CONTRACT.validate_record(record, Draft202012Validator(schema), schema_hash)
@@ -90,6 +98,35 @@ def test_derived_requires_complete_lineage_and_schema_hash() -> None:
     stale = copy.deepcopy(derived)
     stale["contract_schema_sha256"] = "b" * 64
     assert "contract_schema_sha256_mismatch" in CONTRACT.validate_record(stale, validator, schema_hash)["reasons"]
+
+
+def test_remaining_fail_closed_admission_reasons() -> None:
+    schema, schema_hash = CONTRACT.load_schema()
+    validator = Draft202012Validator(schema)
+    source_with_lineage = example_record()
+    source_with_lineage["derivation"]["parent_content_sha256"] = "a" * 64
+    assert "source_record_has_derivation_lineage" in CONTRACT.validate_record(
+        source_with_lineage, validator, schema_hash
+    )["reasons"]
+    missing_evidence_reference = example_record()
+    missing_evidence_reference["rights"]["copyright"]["evidence_ids"] = ["evidence.missing"]
+    assert "copyright_evidence_reference_missing" in CONTRACT.validate_record(
+        missing_evidence_reference, validator, schema_hash
+    )["reasons"]
+    missing_terms_receipt = example_record()
+    missing_terms_receipt["rights"]["license"]["license_terms_evidence_id"] = "evidence.missing"
+    assert "license_exact_terms_evidence_missing" in CONTRACT.validate_record(
+        missing_terms_receipt, validator, schema_hash
+    )["reasons"]
+    unresolved = example_record()
+    unresolved["review"]["unresolved"] = True
+    assert "review_unresolved" in CONTRACT.validate_record(unresolved, validator, schema_hash)["reasons"]
+    excluded = example_record()
+    excluded["usage"]["role"] = "excluded"
+    assert "record_marked_excluded" in CONTRACT.validate_record(excluded, validator, schema_hash)["reasons"]
+    schema_invalid = example_record()
+    del schema_invalid["rights"]
+    assert CONTRACT.validate_record(schema_invalid, validator, schema_hash)["reasons"] == ["schema_invalid"]
 
 
 def test_legacy_candidate_is_content_blind_deterministic_and_unchanged() -> None:
