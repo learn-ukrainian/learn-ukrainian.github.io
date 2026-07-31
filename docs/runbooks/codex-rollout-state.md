@@ -2,14 +2,15 @@
 
 `scripts/hygiene/codex_rollout_reconcile.py` is a project-owned, dry-run-first
 health tool for stale `threads.rollout_path` rows. It never changes the
-installed Codex CLI and never deletes a rollout file.
+installed Codex CLI or deletes a rollout file.
 
 Eligibility requires an absolute `rollout-*.jsonl` path under the row's
 selected `sessions/` or `archived_sessions/` root, a filename ending in its
 canonical UUID, an unpinned row, and `updated_at` at least 24 hours old. UUID,
 archived, path, symlink, foreign-key, trigger, and unknown-schema mismatches are
-protected. The age window can be lowered for tests; production defaults to 24
-hours.
+protected. A missing rollout root is also suspicious; harmless INSERT/UPDATE
+maintenance triggers are accepted, while DELETE or unrecognized triggers are
+not. Tests may lower the 24-hour age window.
 
 ## Scan
 

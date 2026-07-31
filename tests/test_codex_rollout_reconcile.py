@@ -287,14 +287,32 @@ def test_unknown_dependency_protects_missing_rows_and_refuses_apply(tmp_path: Pa
     assert not (tmp_path / "backups").exists()
 
 
-def test_delete_trigger_is_unsupported(tmp_path: Path) -> None:
+def test_update_trigger_is_allowed_but_delete_trigger_is_unsupported(tmp_path: Path) -> None:
     home = tmp_path / "codex"
     database = _db(home)
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            "CREATE TRIGGER maintain_thread AFTER UPDATE ON threads BEGIN SELECT 1; END"
+        )
+    report = reconcile.scan(codex_home=home, db_path=database, now=NOW)
+    assert report["counts"]["eligible_stale"] == 1
+    assert report["schema_issues"] == []
     with sqlite3.connect(database) as connection:
         connection.execute("CREATE TRIGGER block_thread_delete BEFORE DELETE ON threads BEGIN SELECT RAISE(ABORT, 'blocked'); END")
     report = reconcile.scan(codex_home=home, db_path=database, now=NOW)
     assert report["counts"]["eligible_stale"] == 0
     assert any("trigger" in issue for issue in report["schema_issues"])
+
+
+def test_missing_rollout_root_is_suspicious(tmp_path: Path) -> None:
+    home = tmp_path / "codex"
+    database = _db(home)
+    home.joinpath("sessions").rename(home / "sessions-away")
+
+    report = reconcile.scan(codex_home=home, db_path=database, now=NOW)
+
+    assert report["counts"]["eligible_stale"] == 0
+    assert report["counts"]["suspicious_path"] == 6
 
 
 def test_uuid_archived_identity_and_symlinks_are_suspicious(tmp_path: Path) -> None:

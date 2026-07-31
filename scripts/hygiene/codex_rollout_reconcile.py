@@ -108,11 +108,11 @@ def _schema_issues(connection: sqlite3.Connection) -> tuple[set[str], set[str], 
         )
         if "thread_id" not in dynamic_columns or not has_cascade:
             issues.append("thread_dynamic_tools lacks its declared threads CASCADE foreign key")
-    triggers = connection.execute(
-        "SELECT name FROM sqlite_master WHERE type = 'trigger' AND tbl_name = 'threads'"
-    ).fetchall()
-    if triggers:
-        issues.append("delete triggers on threads are not supported")
+    for (sql,) in connection.execute("SELECT sql FROM sqlite_master WHERE type = 'trigger' AND tbl_name = 'threads'"):
+        event = re.search(r"\b(?:BEFORE|AFTER|INSTEAD\s+OF)\s+(INSERT|UPDATE|DELETE)\b", str(sql), re.I)
+        if event is None or event.group(1).upper() == "DELETE":
+            issues.append("delete or unrecognized triggers on threads are not supported")
+            break
     return tables, thread_columns, issues
 
 def _compatible(path: Path) -> bool:
@@ -196,7 +196,7 @@ def _path_state(raw: Any, home: Path, thread_id: str, archived: bool) -> tuple[s
         if not path.name.endswith(f"{thread_id}.jsonl"):
             return "invalid", path
         if not os.path.lexists(root):
-            return "missing", path
+            return "invalid", path
         root_mode = os.lstat(root).st_mode
         if stat.S_ISLNK(root_mode) or not stat.S_ISDIR(root_mode):
             return "invalid", path
