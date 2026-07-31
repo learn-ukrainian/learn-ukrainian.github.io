@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agent Comms - ukraine-ops</title>
+<title>Broker Ops - ukraine-ops</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="/monitor.css">
 <style>
@@ -54,34 +54,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 
 .track-detail { font-size: 11px; color: var(--text3); margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* Live activity feed */
-.live-layout { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 32px; }
-@media (max-width: 1100px) { .live-layout { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 700px) { .live-layout { grid-template-columns: 1fr; } }
-
-.feed-col { min-width: 0; }
-.feed-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
-.feed-title .count { font-size: 11px; color: var(--text3); font-weight: 400; }
-
-.feed-item { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; font-size: 12px; }
-.feed-item:hover { border-color: var(--accent); }
-.feed-item .fi-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-.feed-item .fi-track { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: var(--bg3); color: var(--text2); }
-.feed-item .fi-age { font-size: 10px; color: var(--text3); }
-.feed-item .fi-slug { font-weight: 600; margin-bottom: 2px; }
-.feed-item .fi-detail { color: var(--text2); font-size: 11px; }
-.feed-item .fi-phase { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 4px; font-weight: 600; }
-.phase-A { background: rgba(188,140,255,0.15); color: var(--purple); }
-.phase-B { background: rgba(88,166,255,0.15); color: var(--blue); }
-.phase-C { background: rgba(63,185,80,0.15); color: var(--green); }
-.phase-F { background: rgba(210,153,34,0.15); color: var(--yellow); }
-
-.feed-item.dispatch { border-left: 2px solid var(--purple); }
-.feed-item.completion { border-left: 2px solid var(--green); }
-.feed-item.building { border-left: 2px solid var(--orange); }
-
-.empty-feed { color: var(--text3); font-size: 12px; padding: 16px; text-align: center; }
-
 /* Zombie alerts */
 .zombies { margin-bottom: 32px; }
 .zombie-alert { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
@@ -89,20 +61,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .zombie-alert.warning { border-left: 3px solid var(--yellow); }
 .zombie-type { font-size: 12px; font-weight: 600; min-width: 120px; }
 .zombie-detail { font-size: 12px; color: var(--text2); flex: 1; }
-.zombie-action { font-size: 11px; color: var(--accent); cursor: pointer; white-space: nowrap; }
-.zombie-action:hover { text-decoration: underline; }
 .no-zombies { font-size: 13px; color: var(--text3); padding: 12px; }
-
-/* Compose panel */
-.compose-panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 16px; }
-.compose-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-.compose-row:last-child { margin-bottom: 0; }
-.compose-panel select, .compose-panel input, .compose-panel textarea {
-  background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: 4px; padding: 6px 10px; font-size: 12px; font-family: inherit;
-}
-.compose-panel textarea { resize: vertical; min-height: 36px; }
-.compose-btn { background: var(--accent); color: #fff; border: none; border-radius: 4px; padding: 8px 20px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-.compose-btn:hover { opacity: 0.85; }
 
 /* GitHub issue links */
 a.gh-issue { color: var(--accent); text-decoration: none; font-weight: 600; }
@@ -132,13 +91,7 @@ a.gh-issue:hover { text-decoration: underline; }
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 
-/* Pulse animation for active items */
-@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-.pulse { animation: pulse 2s ease-in-out infinite; }
-.dot-live { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); margin-right: 4px; animation: pulse 1.5s ease-in-out infinite; }
-
 /* Clickable items */
-.feed-item { cursor: pointer; }
 .msg-table tr { cursor: pointer; }
 
 /* Detail panel (slide-out) */
@@ -180,7 +133,7 @@ a.gh-issue:hover { text-decoration: underline; }
 
 <div class="top-bar">
   <div class="top-left">
-    <h1>Agent Comms</h1>
+    <h1>Broker Ops</h1>
   </div>
   <div style="display:flex;align-items:center;gap:16px;">
     <span class="refresh-info" id="refresh-info">Loading...</span>
@@ -206,34 +159,20 @@ a.gh-issue:hover { text-decoration: underline; }
 
 <div class="health-bar" id="health-bar"></div>
 
+<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--text2);">
+  <strong style="color:var(--text);">Read-only legacy operations.</strong>
+  Build activity now lives on <a href="/build-events.html" style="color:var(--accent);">Build Events</a>; send agent messages from the TUIs or canonical project bridge CLI.
+</div>
+
 <div class="tabs">
-  <div class="tab active" data-tab="live">Live Activity</div>
-  <div class="tab" data-tab="batch">Batch Progress</div>
+  <div class="tab active" data-tab="batch">Batch Progress</div>
   <div class="tab" data-tab="zombies">Zombies</div>
-  <div class="tab" data-tab="messages">Messages</div>
+  <div class="tab" data-tab="messages">Legacy Messages</div>
   <div class="tab" data-tab="stats">Stats</div>
 </div>
 
-<!-- LIVE ACTIVITY -->
-<div class="tab-panel active" id="tab-live">
-  <div class="live-layout">
-    <div class="feed-col">
-      <div class="feed-title"><span class="dot-live"></span> Building Now <span class="count" id="building-count"></span></div>
-      <div id="feed-building"></div>
-    </div>
-    <div class="feed-col">
-      <div class="feed-title">Recent Completions <span class="count" id="completions-count"></span></div>
-      <div id="feed-completions"></div>
-    </div>
-    <div class="feed-col">
-      <div class="feed-title">Dispatch Feed <span class="count" id="dispatch-count"></span></div>
-      <div id="feed-dispatches"></div>
-    </div>
-  </div>
-</div>
-
 <!-- BATCH PROGRESS -->
-<div class="tab-panel" id="tab-batch">
+<div class="tab-panel active" id="tab-batch">
   <div class="track-grid" id="track-grid"></div>
 </div>
 
@@ -255,25 +194,7 @@ a.gh-issue:hover { text-decoration: underline; }
     <div style="color:var(--text2);">
       This tab still shows the raw broker-messages table used by the <code>ask-claude</code> / <code>ask-gemini</code> / <code>ask-codex</code> CLI commands. Those commands are NOT deprecated and will keep working.
       <br><br>
-      For sustained multi-agent conversations, code reviews, design debates, and anything that benefits from pinned context + threaded history, use the new <a href="/channels.html" style="color:var(--accent);">Channels dashboard</a>. See <code>docs/best-practices/agent-bridge.md</code> for when to use each. (#1190)
-    </div>
-  </div>
-  <!-- Compose panel -->
-  <div class="compose-panel" id="compose-panel">
-    <div class="compose-row">
-      <select id="compose-from"><option value="claude">Claude</option><option value="gemini">Gemini</option></select>
-      <span style="color:var(--text3)">→</span>
-      <select id="compose-to"><option value="gemini">Gemini</option><option value="claude">Claude</option></select>
-      <select id="compose-type">
-        <option value="message">message</option><option value="request">request</option>
-        <option value="response">response</option><option value="handoff">handoff</option>
-        <option value="feedback">feedback</option><option value="query">query</option>
-      </select>
-      <input id="compose-task" placeholder="task_id (optional)" style="flex:1;min-width:120px;">
-    </div>
-    <div class="compose-row">
-      <textarea id="compose-content" placeholder="Message content..." rows="2" style="flex:1;"></textarea>
-      <button class="compose-btn" onclick="sendMessage()">Send</button>
+      For sustained multi-agent conversations, code reviews, design debates, and anything that benefits from pinned context + threaded history, send from the project bridge CLI and follow the thread in the read-only <a href="/channels.html" style="color:var(--accent);">Channels dashboard</a>. See <code>docs/best-practices/agent-bridge.md</code> for when to use each. (#1190)
     </div>
   </div>
   <table class="msg-table">
@@ -299,7 +220,6 @@ a.gh-issue:hover { text-decoration: underline; }
 <script>
 const MESSAGE_LIMIT = 50;
 const CONVERSATION_LIMIT = 100;
-const DISPATCH_LIMIT = 30;
 const FULL_REFRESH_MS = 30000;
 const HEALTH_REFRESH_MS = 15000;
 
@@ -384,73 +304,6 @@ async function showConversation(taskId) {
   `);
 }
 
-async function showMessage(msgId) {
-  // Fetch the specific message's task_id first, then show the full conversation
-  const res = await fetch(`/api/comms/messages?limit=1&offset=0`);
-  // For now, find it from the messages we already have, or just fetch conversation
-  // We'll use the task_id from the row data attribute
-  const el = document.querySelector(`[data-msg-id="${msgId}"]`);
-  const taskId = el ? el.dataset.taskId : null;
-  if (taskId) {
-    showConversation(taskId);
-  } else {
-    openDetail(`<div class="detail-header"><h2>Message #${msgId}</h2><div class="detail-sub">No task_id — standalone message</div></div>`);
-  }
-}
-
-function showBuildDetail(track, slug, phase, status, taskId) {
-  const safeTrack = escapeHtmlAttribute(track);
-  const safeSlug = escapeHtmlAttribute(slug);
-  const safePhase = escapeHtmlAttribute(phase);
-  const safeStatus = escapeHtmlAttribute(status);
-  const safeTaskId = escapeHtmlAttribute(taskId);
-  let html = `
-    <div class="detail-header">
-      <h2>${safeSlug}</h2>
-      <div class="detail-sub">${safeTrack} &middot; ${safePhase} &middot; ${safeStatus}</div>
-    </div>
-    <div class="detail-section">
-      <h3>Module Info</h3>
-      <div class="detail-kv">
-        <span class="k">Track</span><span class="v">${safeTrack}</span>
-        <span class="k">Slug</span><span class="v">${safeSlug}</span>
-        <span class="k">Phase</span><span class="v">${safePhase}</span>
-        <span class="k">Status</span><span class="v">${safeStatus}</span>
-        <span class="k">Task ID</span><span class="v">${safeTaskId || 'n/a'}</span>
-      </div>
-    </div>
-  `;
-  openDetail(html);
-  // If there's a task_id, also load the conversation thread
-  if (taskId) {
-    const params = new URLSearchParams({ limit: String(CONVERSATION_LIMIT) });
-    fetch(`/api/comms/conversation/${encodeURIComponent(taskId)}?${params}`)
-      .then(r => r.json())
-      .then(data => {
-        if (data.messages && data.messages.length > 0) {
-          const msgsHtml = data.messages.map(m => {
-            const typeClass = m.message_type === 'error' ? 'error' : m.message_type === 'response' ? 'response' : 'query';
-            const ts = m.timestamp ? new Date(m.timestamp).toLocaleTimeString() : '';
-            const from = escapeHtmlAttribute(m.from_llm || '');
-            const to = escapeHtmlAttribute(m.to_llm || '');
-            const type = escapeHtmlAttribute(m.message_type || '');
-            const body = escapeHtmlAttribute(m.preview || '');
-            return `
-              <div class="thread-msg ${typeClass}">
-                <div class="tm-header">
-                  <span class="tm-from">${from} &rarr; ${to}</span>
-                  <span class="tm-time">#${escapeHtmlAttribute(m.id)} &middot; ${escapeHtmlAttribute(ts)} &middot; ${type}</span>
-                </div>
-                <div class="tm-body">${body}</div>
-              </div>
-            `;
-          }).join('');
-          document.getElementById('detail-content').innerHTML += `<div class="detail-section"><h3>Conversation Thread (${data.count})</h3>${msgsHtml}</div>`;
-        }
-      });
-  }
-}
-
 // Tab switching
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -471,169 +324,6 @@ function timeAgo(seconds) {
 
 function healthColor(h) {
   return { healthy: 'var(--green)', stalled: 'var(--yellow)', dead: 'var(--red)', complete: 'var(--blue)', unknown: 'var(--gray)' }[h] || 'var(--gray)';
-}
-
-function phaseClass(phase) {
-  if (phase.includes('A')) return 'phase-A';
-  if (phase.includes('B')) return 'phase-B';
-  if (phase.includes('C')) return 'phase-C';
-  if (phase.includes('F')) return 'phase-F';
-  return '';
-}
-
-function phaseLabel(phase) {
-  return phase.replace('Phase ', '');
-}
-
-// ========= LIVE ACTIVITY =========
-async function loadLiveActivity() {
-  try {
-    const [activeRes, recentRes] = await Promise.all([
-      fetch('/api/build/events/active'),
-      fetch(`/api/build/events/recent?limit=${Math.max(DISPATCH_LIMIT, 40)}`),
-    ]);
-    if (!activeRes.ok) throw new Error(`active HTTP ${activeRes.status}`);
-    if (!recentRes.ok) throw new Error(`recent HTTP ${recentRes.status}`);
-    const activeData = await activeRes.json();
-    const recentData = await recentRes.json();
-    const now = Date.now();
-
-    // Building Now — modules with recent dispatch activity (#1309: build/events)
-    const building = (activeData.active || []).map(b => ({
-      track: b.level,
-      slug: b.slug,
-      phase: b.current_phase || '',
-      phase_status: 'in progress',
-      task_id: '',
-      seconds_ago: Math.round(b.age_s || 0),
-    }));
-    document.getElementById('building-count').textContent = `(${building.length})`;
-    const buildEl = document.getElementById('feed-building');
-    if (building.length === 0) {
-      buildEl.innerHTML = '<div class="empty-feed">No active builds detected</div>';
-    } else {
-      buildEl.innerHTML = building.map(b => {
-        const track = escapeHtmlAttribute(b.track || '');
-        const slug = escapeHtmlAttribute(b.slug || '');
-        const phase = escapeHtmlAttribute(b.phase || '');
-        const phaseStatus = escapeHtmlAttribute(b.phase_status || '');
-        const taskId = escapeHtmlAttribute(b.task_id || '');
-        const mode = b.mode ? `(${escapeHtmlAttribute(b.mode)})` : '';
-        return `
-          <div class="feed-item building build-row"
-               data-build-track="${track}"
-               data-build-slug="${slug}"
-               data-build-phase="${phase}"
-               data-build-status="${phaseStatus}"
-               data-task-id="${taskId}">
-            <div class="fi-top">
-              <span class="fi-track">${track}</span>
-              <span class="fi-age">${timeAgo(b.seconds_ago)} ago</span>
-            </div>
-            <div class="fi-slug">${slug}</div>
-            <div class="fi-detail">
-              <span class="fi-phase ${phaseClass(b.phase || '')}">${escapeHtmlAttribute(phaseLabel(b.phase || ''))}</span>
-              ${phaseStatus}
-              ${mode}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    // Recent Completions — successful build events
-    const completions = (recentData.events || [])
-      .filter(e => e.ok === true)
-      .slice(0, 30)
-      .map(e => {
-        const ts = e.ts ? new Date(e.ts).getTime() : now;
-        return {
-          track: e.level,
-          slug: e.slug,
-          type: e.phase || 'phase',
-          size_kb: e.duration_s != null ? String(e.duration_s) : '',
-          seconds_ago: Math.max(0, Math.round((now - ts) / 1000)),
-        };
-      });
-    document.getElementById('completions-count').textContent = `(${completions.length})`;
-    const compEl = document.getElementById('feed-completions');
-    if (completions.length === 0) {
-      compEl.innerHTML = '<div class="empty-feed">No completions in last hour</div>';
-    } else {
-      compEl.innerHTML = completions.map(c => {
-        const track = escapeHtmlAttribute(c.track || '');
-        const slug = escapeHtmlAttribute(c.slug || '');
-        const type = escapeHtmlAttribute(c.type || '');
-        const sizeKb = escapeHtmlAttribute(c.size_kb ?? '');
-        return `
-          <div class="feed-item completion build-row"
-               data-build-track="${track}"
-               data-build-slug="${slug}"
-               data-build-phase="${type}"
-               data-build-status="completed"
-               data-task-id="">
-            <div class="fi-top">
-              <span class="fi-track">${track}</span>
-              <span class="fi-age">${timeAgo(c.seconds_ago)} ago</span>
-            </div>
-            <div class="fi-slug">${slug}</div>
-            <div class="fi-detail">${type}${sizeKb ? ` &middot; ${sizeKb}s` : ''}</div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    // Dispatch Feed — recent build events (replaces deprecated live-activity dispatches)
-    const dispatches = (recentData.events || []).slice(0, DISPATCH_LIMIT).map(e => {
-      const ts = e.ts ? new Date(e.ts).getTime() : now;
-      return {
-        task_id: e.task_id || '',
-        from: e.agent || 'pipeline',
-        to: e.level || '',
-        type: e.ok ? 'success' : 'error',
-        slug: e.slug || '',
-        phase: e.phase || '',
-        preview: `${e.phase || 'phase'} ${e.ok ? 'ok' : 'failed'}${e.duration_s != null ? ` (${e.duration_s}s)` : ''}`,
-        seconds_ago: Math.max(0, Math.round((now - ts) / 1000)),
-      };
-    });
-    document.getElementById('dispatch-count').textContent = `(${dispatches.length})`;
-    const dispEl = document.getElementById('feed-dispatches');
-    if (dispatches.length === 0) {
-      dispEl.innerHTML = '<div class="empty-feed">No recent messages</div>';
-    } else {
-      dispEl.innerHTML = dispatches.map(d => {
-        const parsed = parseTaskId(d.task_id || '');
-        const slug = parsed?.slug || d.slug || d.task_id || 'build event';
-        const phase = parsed?.phaseKey || d.phase || '';
-        const isFinished = (d.preview || '').includes('finished');
-        const isError = d.type === 'error' || (d.preview || '').includes('Error');
-        const borderClass = isError ? 'style="border-left-color:var(--red)"' : isFinished ? 'style="border-left-color:var(--green)"' : '';
-        const taskId = escapeHtmlAttribute(d.task_id || '');
-        return `
-          <div class="feed-item dispatch ${taskId ? 'conversation-row' : ''}" ${borderClass} data-task-id="${taskId}">
-            <div class="fi-top">
-              <span>${d.from} &rarr; ${d.to}</span>
-              <span class="fi-age">${timeAgo(d.seconds_ago)} ago</span>
-            </div>
-            <div class="fi-slug">${escapeHtmlAttribute(slug)}${phase ? ' <span class="fi-phase ' + phaseClass('Phase ' + phase) + '">' + escapeHtmlAttribute(phase) + '</span>' : ''}</div>
-            <div class="fi-detail">${escapeHtmlAttribute((d.preview || '').substring(0, 100))}</div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    // Update the tab label
-    const activeCount = building.length;
-    document.querySelector('[data-tab="live"]').innerHTML =
-      activeCount > 0
-        ? `<span class="dot-live"></span> Live Activity (${activeCount})`
-        : 'Live Activity';
-
-  } catch(e) {
-    document.getElementById('feed-building').innerHTML =
-      `<div style="color:var(--red)">Failed: ${e.message}</div>`;
-  }
 }
 
 // ========= BATCH PROGRESS =========
@@ -734,18 +424,12 @@ async function loadZombies() {
       else if (z.type === 'orphan_pid') detail = `PID ${z.pid} (${z.file}) — task: ${z.task_id || 'none'}`;
       else detail = JSON.stringify(z);
 
-      const messageId = escapeHtmlAttribute(z.message_id || '');
-      const action = messageId
-        ? `<span class="zombie-action" data-message-id="${messageId}">Ack</span>`
-        : '';
-
       const taskId = escapeHtmlAttribute(z.task_id || '');
 
       return `
         <div class="zombie-alert ${z.severity} ${taskId ? 'conversation-row' : ''}" data-task-id="${taskId}" style="${taskId ? 'cursor:pointer' : ''}">
           <span class="zombie-type">${z.type}</span>
           <span class="zombie-detail">${detail}</span>
-          ${action}
         </div>
       `;
     }).join('');
@@ -755,39 +439,12 @@ async function loadZombies() {
   }
 }
 
-async function ackMsg(id) {
-  await fetch(`/api/comms/acknowledge/${id}`, { method: 'POST' });
-  loadZombies();
-}
-
 // ========= GITHUB LINK UTILITY =========
 const GH_REPO = 'learn-ukrainian/learn-ukrainian.github.io';
 function linkifyGitHub(text) {
   // Replace #NNN references with clickable GitHub links
   return (text || '').replace(/#(\d{2,4})\b/g,
     '<a class="gh-issue" href="https://github.com/' + GH_REPO + '/issues/$1" target="_blank" title="GitHub Issue #$1">#$1</a>');
-}
-
-// ========= COMPOSE / SEND =========
-async function sendMessage() {
-  const from_llm = document.getElementById('compose-from').value;
-  const to_llm = document.getElementById('compose-to').value;
-  const content = document.getElementById('compose-content').value.trim();
-  const task_id = document.getElementById('compose-task').value.trim();
-  const message_type = document.getElementById('compose-type').value;
-  if (!content) return;
-  try {
-    const res = await fetch('/api/comms/send', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ from_llm, to_llm, content, task_id, message_type }),
-    });
-    const data = await res.json();
-    if (data.sent) {
-      document.getElementById('compose-content').value = '';
-      loadMessages();
-    }
-  } catch(e) { console.error('Send failed:', e); }
 }
 
 // ========= MESSAGES =========
@@ -822,32 +479,10 @@ function onConversationRowClick(event) {
   const target = event.target instanceof Element ? event.target : event.target.parentElement;
   if (!target) return;
 
-  const action = target.closest('.zombie-action');
-  if (action) {
-    const messageId = action.dataset.messageId || '';
-    if (messageId) ackMsg(messageId);
-    return;
-  }
-
   const row = target.closest('.conversation-row');
   const taskId = row ? (row.dataset.taskId || '') : '';
   if (!taskId) return;
   showConversation(taskId);
-}
-
-function onBuildRowClick(event) {
-  const target = event.target instanceof Element ? event.target : event.target.parentElement;
-  if (!target) return;
-
-  const row = target.closest('.build-row');
-  if (!row) return;
-  showBuildDetail(
-    row.dataset.buildTrack || '',
-    row.dataset.buildSlug || '',
-    row.dataset.buildPhase || '',
-    row.dataset.buildStatus || '',
-    row.dataset.taskId || ''
-  );
 }
 
 // ========= STATS =========
@@ -898,7 +533,6 @@ async function refreshAll() {
   document.getElementById('refresh-info').textContent = `Updated ${now} (#${refreshCount})`;
 
   await Promise.all([
-    loadLiveActivity(),
     loadBatchProgress(),
     loadZombies(),
     loadMessages(),
@@ -914,9 +548,6 @@ async function refreshHealthOnly() {
   }
 }
 
-document.getElementById('feed-building').addEventListener('click', onBuildRowClick);
-document.getElementById('feed-completions').addEventListener('click', onBuildRowClick);
-document.getElementById('feed-dispatches').addEventListener('click', onConversationRowClick);
 document.getElementById('zombie-list').addEventListener('click', onConversationRowClick);
 document.getElementById('msg-tbody').addEventListener('click', onConversationRowClick);
 

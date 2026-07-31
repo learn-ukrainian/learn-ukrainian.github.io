@@ -143,7 +143,7 @@ coordination authority. File dual-write stays authoritative in every plane mode.
 Every supported fleet orchestrator may explicitly invoke the fixed Codex↔Grok
 ACP panel for **one consequential, read-only design or risk comparison** when
 that direct cross-provider critique is materially useful. Its sole surface is
-`python -m scripts.fleet_comms acp-discuss`; do not add automatic launcher or
+`.venv/bin/python -m scripts.fleet_comms acp-discuss`; do not add automatic launcher or
 `delegate.py` use. The default is two rounds and the hard maximum is three.
 
 Admission is one conversation repository-wide: return `busy` when occupied,

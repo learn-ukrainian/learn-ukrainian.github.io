@@ -43,6 +43,12 @@ curl -s http://localhost:8765/api/orient   # parse git, health, delegate, govern
 | Open PRs | `gh pr list` (not full orient replay) |
 | Usage limits | CodaxBar.app + `/api/runtime/agents` |
 
+For consequential read-only architecture or risk comparison, an eligible
+orchestrator may explicitly consult the fixed Codex↔Grok ACP panel. It is
+optional, never automatic, and does not replace fleet coordination or formal
+review. Follow `docs/runbooks/agent-seat-onboarding.md` for the only supported
+invocation, busy/unready/partial fallback, and receipt-verification contract.
+
 ## After local writes
 
 `curl -s 'http://localhost:8765/api/orient?fresh=true'`

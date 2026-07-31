@@ -7,6 +7,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 HELPER = REPO / "scripts/lib/fleet_comms_cold_start.sh"
 RULE = REPO / "agents_extensions/shared/rules/fleet-comms-coordination.md"
+CURSOR_COLD_START = REPO / "agents_extensions/cursor/rules/cold-start.md"
 
 # Public wrappers dispatch driver lifecycle through one shared core.
 LAUNCHERS = (
@@ -54,6 +55,38 @@ def test_prompt_injecting_launchers_include_plane_and_cf_surfaces() -> None:
     text = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
     assert "fleet_comms_cold_clause" in text or "plane-status" in text
     assert "fleet-comms" in text
+
+
+def test_shared_launcher_clause_onboards_explicit_only_acp_advisory() -> None:
+    helper = HELPER.read_text(encoding="utf-8")
+    for required in (
+        "acp-discuss",
+        "fixed read-only Codex↔Grok",
+        "consequential comparison only",
+        "never auto-launch",
+        "busy, unready, or partial",
+        "bounded bridge",
+        "discuss",
+        "neither coordination authority",
+        "nor formal review",
+        "acp-verify",
+        "rather than authorizing retry",
+    ):
+        assert required in helper
+
+
+def test_cursor_cold_start_points_to_same_acp_contract() -> None:
+    body = CURSOR_COLD_START.read_text(encoding="utf-8")
+    assert "agent-seat-onboarding.md" in body
+    assert "fixed Codex↔Grok ACP panel" in body
+    assert "optional, never automatic" in body
+    assert "does not replace fleet coordination or formal" in body
+
+
+def test_no_launcher_auto_invokes_acp() -> None:
+    launcher_paths = [REPO / "scripts/lib/launcher_core.sh", *REPO.glob("start-*.sh")]
+    for path in launcher_paths:
+        assert "acp-discuss" not in path.read_text(encoding="utf-8"), path.name
 
 
 def test_agents_md_carries_fleet_comms_mid_cutover_digest() -> None:

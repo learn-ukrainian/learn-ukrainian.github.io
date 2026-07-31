@@ -50,7 +50,7 @@ def test_index_page_uses_shared_parchment_monitor_design():
     [
         ("orient.html", '<a class="active" href="/orient.html">Orient</a>', "One-page session orientation snapshot"),
         ("channels.html", '<a class="active" href="/channels.html">Channels</a>', "Agent Channels"),
-        ("comms.html", '<a class="active" href="/comms.html">Comms</a>', "Agent Comms"),
+        ("comms.html", '<a class="active" href="/comms.html">Comms</a>', "Broker Ops"),
     ],
 )
 def test_playground_page_uses_shared_parchment_monitor_design(filename, active_link, heading):
@@ -73,6 +73,14 @@ def test_channels_page_has_shareable_deeplink_contract():
     assert "history.replaceState" in html
     assert "pendingThreadParam" in html
     assert "startsWith(pendingThreadParam)" in html
+
+
+def test_channels_page_is_a_read_only_observer() -> None:
+    html = (DASHBOARDS / "channels.html").read_text(encoding="utf-8")
+    assert "Read-only observer." in html
+    assert "agent TUI or the canonical project bridge CLI" in html
+    for prohibited in ("post-form", "post-btn", "replyTo", "/post", "method: 'POST'"):
+        assert prohibited not in html
 
 
 def test_orient_page_renders_active_discussions_widget():
@@ -342,12 +350,22 @@ def test_operational_track_filters_treat_empty_sets_as_valid():
     assert "let operationalTrackIds = null" in wiki_html
 
 
-def test_comms_recent_completions_open_build_detail_without_fake_task_ids():
+def test_comms_page_is_read_only_legacy_ops_without_duplicate_build_activity():
     html = (DASHBOARDS / "comms.html").read_text(encoding="utf-8")
-    assert 'class="feed-item completion build-row"' in html
-    assert 'data-build-status="completed"' in html
-    assert "feed-completions').addEventListener('click', onBuildRowClick)" in html
-    assert "v5-${" not in html
+    assert "Read-only legacy operations." in html
+    assert 'href="/build-events.html"' in html
+    assert "Legacy Messages" in html
+    for prohibited in (
+        "Live Activity",
+        "/api/build/events/active",
+        "/api/build/events/recent",
+        "compose-panel",
+        "sendMessage",
+        "/api/comms/send",
+        "/api/comms/acknowledge",
+        "method: 'POST'",
+    ):
+        assert prohibited not in html
 
 
 def test_artifacts_page_uses_metadata_endpoint_and_filters():

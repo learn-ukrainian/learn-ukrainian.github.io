@@ -42,6 +42,20 @@ caps or live modes.
 | **ACPX** | Experimental **structured invocation transport only** — default-off shadow seats plus one explicit fleet-comms `acp-discuss` controller for a bounded Codex/Grok conversation; not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
 | **Buzz** | **Explicitly deferred** | Anything in this rollout — relay-as-authority conflicts with the current authority model |
 
+### Human overview pages
+
+| Page | Canonical observer role | Browser boundary |
+| --- | --- | --- |
+| **ACP Conversations** (`/acp.html`) | Readable Codex↔Grok ACP transcripts plus the operational event rail | Read-only; cannot start, steer, retry, or cancel ACP |
+| **Channels** (`/channels.html`) | Shared channel, thread, context, and delivery visibility | Read-only; send from an agent TUI or the project bridge CLI |
+| **Broker Ops** (`/comms.html`) | Legacy broker messages, zombies, batch progress, and health during migration | Read-only; no browser message composition |
+| **Build Events** (`/build-events.html`) | Active and recent build activity | Replaces the retired duplicate Comms activity feed |
+
+The legacy send, post, and acknowledgement APIs remain available to their
+current project CLI callers. Do not remove those routes or the Broker Ops page
+until caller telemetry proves the old paths are unused and every unique
+operations panel has a canonical replacement.
+
 ### Discuss is not formal review
 
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` produces design
@@ -219,6 +233,28 @@ failover. On `busy`, unavailable ACPX, or an unready participant, use the
 bounded bridge `discuss` path instead. A typed partial ACP outcome is valid
 evidence to inspect, but not a successful discussion, formal review, or
 coordination authority.
+
+Fleet-wide means **caller-access parity**, not participant expansion. The live
+caller classes below may request the same fixed panel when acting as the
+accountable orchestrator; ordinary workers and review-only seats receive the
+contract for awareness but do not start conversations independently.
+
+| Caller class | ACP access | Boundary |
+| --- | --- | --- |
+| Claude orchestrators | Eligible caller | Explicit advisory invocation only |
+| Codex orchestrators | Eligible caller | Explicit advisory invocation only |
+| AGY/Gemini orchestrators | Eligible caller | Explicit advisory invocation only |
+| Grok orchestrators | Eligible caller | Explicit advisory invocation only |
+| Kimi and KimiCC orchestrators | Eligible caller | Explicit advisory invocation only |
+| Cursor orchestrators with an explicit model | Eligible caller | Never use an automatic/opaque model route |
+| Dispatch-only, worker, and review-only seats | Awareness only | The accountable orchestrator owns invocation |
+
+Caller identity never changes panel membership: participants remain exactly
+Codex and Grok. Do not add, rotate, or silently substitute a participant when
+one is unavailable. Supporting a new participant requires a separately
+approved provider adapter with the same no-tool, read-only confinement. ACP
+must stay idle during startup, stream claim, dispatch, CI, PR events, formal
+review, and plane-status checks.
 
 ### Shared ACPX install and E2E/replay verification
 
