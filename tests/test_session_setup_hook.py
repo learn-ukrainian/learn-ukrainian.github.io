@@ -10,8 +10,10 @@ makes the guard load-bearing: it runs in the required ``Test (pytest)`` job.
 
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
+import time
 from pathlib import Path
 
 import pytest
@@ -58,9 +60,62 @@ def test_legacy_table_parser_avoids_gnu_sed_anchor_escape() -> None:
     assert "\\`" not in parser_line
 
 
+def test_session_setup_reports_machine_repairs_without_applying_them(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    subprocess.run(["git", "init", "-q", str(project)], check=True, timeout=30)
+    subprocess.run(
+        ["git", "-C", str(project), "config", "--local", "core.bare", "true"],
+        check=True,
+        timeout=30,
+    )
+
+    pyenv_root = tmp_path / "pyenv"
+    lock = pyenv_root / "shims" / ".pyenv-shim"
+    lock.parent.mkdir(parents=True)
+    lock.write_text("", encoding="utf-8")
+    old = time.time() - 180
+    lock.touch()
+    os.utime(lock, (old, old))
+
+    node_modules = project / "node_modules"
+    node_modules.symlink_to(node_modules)
+    env = os.environ.copy()
+    env.update(
+        {
+            "CLAUDE_PROJECT_DIR": str(project),
+            "CLAUDE_NON_INTERACTIVE": "1",
+            "PYENV_ROOT": str(pyenv_root),
+        }
+    )
+
+    result = subprocess.run(
+        ["bash", str(_REPO_ROOT / "agents_extensions/shared/hooks/session-setup.sh")],
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert result.returncode == 0
+    assert lock.is_file(), "startup must not delete a heuristic-age pyenv lock"
+    assert node_modules.is_symlink(), "startup must not remove machine state"
+    core_bare = subprocess.run(
+        ["git", "-C", str(project), "config", "--get", "core.bare"],
+        capture_output=True,
+        check=True,
+        text=True,
+        timeout=30,
+    )
+    assert core_bare.stdout.strip() == "false", "core.bare is the bounded repair exception"
+    assert "inspect it" in result.stderr
+    assert "check_self_symlinks.py --fix" in result.stderr
+
+
 def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
     import json
-    import os
 
     # 1. Setup the project structure
     project_dir = tmp_path / "project"

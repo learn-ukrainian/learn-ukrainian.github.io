@@ -1299,10 +1299,10 @@ def _resolve_primary_integrity_error(*, mode: str) -> str | None:
 
     #5803 follow-up: a worker detached the primary (`checkout: moving from main
     to FETCH_HEAD`) and every worktree branched afterwards would inherit a
-    wrong base. The watchdog repairs detached+clean+idle drift conservatively
-    and reports anything else as unrepaired — in which case new dispatches must
-    stop (running ones are never killed). Read-only dispatches stay allowed for
-    preflight and diagnosis, same contract as the dirty-primary guard.
+    wrong base. The watchdog only diagnoses and records drift here; new
+    write-capable dispatches stop until an operator explicitly repairs the
+    checkout. Read-only dispatches stay allowed for preflight and diagnosis,
+    same contract as the dirty-primary guard.
     """
     if mode not in _WRITE_CAPABLE_MODES:
         return None
@@ -1313,7 +1313,7 @@ def _resolve_primary_integrity_error(*, mode: str) -> str | None:
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_primary_integrity import check_primary_integrity
 
-        ok, message = check_primary_integrity(_REPO_ROOT, fix=True, tasks_dir=_TASKS_DIR)
+        ok, message = check_primary_integrity(_REPO_ROOT, fix=False, tasks_dir=_TASKS_DIR)
     except Exception as exc:
         print(
             f"⚠️  primary-integrity watchdog errored ({type(exc).__name__}: {exc}); "
@@ -1323,8 +1323,6 @@ def _resolve_primary_integrity_error(*, mode: str) -> str | None:
         return None
 
     if ok:
-        if "repaired" in message:
-            _append_dispatch_event("primary_integrity_repaired_pre_dispatch", detail=message)
         return None
 
     return (
@@ -1332,10 +1330,9 @@ def _resolve_primary_integrity_error(*, mode: str) -> str | None:
         "write-capable dispatch (it would branch from a wrong base). Running "
         "dispatches are not touched.\n"
         f"   watchdog: {message}\n"
-        "   The first detection only records a baseline — if the drift is "
-        "detached+clean+idle and main is stable, simply retry the dispatch and "
-        "the watchdog re-attaches HEAD automatically. Otherwise inspect the "
-        "primary checkout manually; evidence is under "
+        "   Inspect the primary checkout and run the explicit doctor only when "
+        "appropriate: .venv/bin/python scripts/audit/check_primary_integrity.py "
+        "--fix. Evidence is under "
         "data/telemetry/primary-integrity/events.jsonl."
     )
 
@@ -3537,17 +3534,16 @@ def _run_worker(
     # Post-worker primary-integrity sweep (#5803 follow-up): if THIS worker
     # touched the primary checkout, the drift is caught here while its
     # task_id/agent/pid are still known, so the drift event names the likely
-    # actor. Conservative: repairs only detached+clean+idle drift and never
-    # raises into teardown. Runs after final_state is persisted, so this task
-    # no longer counts as a running dispatch for the repair gate.
+    # actor. Diagnostic only: never switches the human's checkout. Runs after
+    # final_state is persisted.
     try:
         try:
             from scripts.audit.check_primary_integrity import check_primary_integrity
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_primary_integrity import check_primary_integrity
 
-        pi_ok, pi_message = check_primary_integrity(_REPO_ROOT, fix=True, tasks_dir=_TASKS_DIR)
-        if not pi_ok or "repaired" in pi_message:
+        pi_ok, pi_message = check_primary_integrity(_REPO_ROOT, fix=False, tasks_dir=_TASKS_DIR)
+        if not pi_ok:
             _append_dispatch_event(
                 "primary_integrity_post_worker",
                 task_id=task_id,

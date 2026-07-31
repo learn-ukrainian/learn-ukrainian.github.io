@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -128,3 +129,27 @@ def test_cli_heal_still_heals_operator_context(primary_repo: Path) -> None:
     assert _is_detached(primary_repo) is False
     state = primary_head_state(primary_repo)
     assert state["ok"] is True and state["branch"] == "main"
+
+
+def test_post_checkout_hook_diagnoses_without_reattaching(primary_repo: Path) -> None:
+    guardrails = primary_repo / "scripts" / "guardrails"
+    guardrails.mkdir(parents=True)
+    for name in ("assert_primary_on_main.py", "worktree_containment.py"):
+        shutil.copy2(_REPO_ROOT / "scripts" / "guardrails" / name, guardrails / name)
+    hook = guardrails / "primary_post_checkout_heal.sh"
+    shutil.copy2(
+        _REPO_ROOT / "scripts" / "guardrails" / "primary_post_checkout_heal.sh",
+        hook,
+    )
+    hook.chmod(0o755)
+    venv_bin = primary_repo / ".venv" / "bin"
+    venv_bin.mkdir(parents=True)
+    venv_bin.joinpath("python").symlink_to(_REPO_ROOT / ".venv" / "bin" / "python")
+
+    assert _run(primary_repo, "git", "switch", "--detach", "HEAD").returncode == 0
+    result = _run(primary_repo, "bash", str(hook))
+
+    assert result.returncode == 0
+    assert _is_detached(primary_repo)
+    assert "explicit doctor" in result.stderr
+    assert "assert_primary_on_main.py --heal" in result.stderr

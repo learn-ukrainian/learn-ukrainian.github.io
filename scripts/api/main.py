@@ -670,8 +670,9 @@ def _self_symlink_canary() -> bool:
     the looping ancestor makes ``spawn`` return ``ELOOP``, so every npm build
     dies instantly with exit 194 and no output — looking like "Astro is broken"
     when it is not. The loop is gitignored so CI cannot catch it; only a local
-    canary can. On detection it auto-removes the looping link and logs an alert.
-    Never raises: the canary must not break health collection. See the autopsy
+    canary can. On detection it reports the link without removing it; repair is
+    an explicit doctor action. Never raises: the canary must not break health
+    collection. See the autopsy
     ``docs/bug-autopsies/node-modules-eloop-symlink.md``.
     """
     try:
@@ -679,24 +680,23 @@ def _self_symlink_canary() -> bool:
     except ImportError:  # path-flavoured import for test/script contexts
         from audit.check_self_symlinks import check_self_symlinks  # noqa: PLC0415 — script-path fallback
     try:
-        ok, message = check_self_symlinks(PROJECT_ROOT, fix=True)
+        ok, message = check_self_symlinks(PROJECT_ROOT, fix=False)
     except Exception:
         logger.exception("node_modules ELOOP canary failed to run")
         return True  # fail-open: don't raise a false alarm on canary error
-    if "removed" in message or not ok:
+    if not ok:
         logger.warning("node_modules ELOOP canary: %s", message)
     return ok
 
 
 def _primary_integrity_canary() -> bool:
-    """Detection + conservative repair canary for primary-checkout drift.
+    """Read-only checkout diagnostic for primary-checkout drift.
 
     #5803 follow-up: a worker detached the primary checkout (`checkout: moving
     from main to FETCH_HEAD`). Git-layer prevention was proven impossible
     against a same-UID process (design panel: gpt-5.6-sol + agy), so this
-    canary DETECTS and repairs ONLY detached+clean+idle drift; anything else
-    (dirty tree, op in progress, running dispatch, main moved unexpectedly)
-    alerts and preserves evidence without touching the human's checkout.
+    canary detects drift and records diagnostic evidence without switching,
+    fetching, or pulling the human's checkout.
     Never raises: the canary must not break health collection.
     """
     try:
@@ -708,13 +708,13 @@ def _primary_integrity_canary() -> bool:
     try:
         ok, message = check_primary_integrity(
             PROJECT_ROOT,
-            fix=True,
+            fix=False,
             tasks_dir=PROJECT_ROOT / "batch_state" / "tasks",
         )
     except Exception:
         logger.exception("primary-integrity canary failed to run")
         return True  # fail-open: don't raise a false alarm on canary error
-    if not ok or "repaired" in message:
+    if not ok:
         logger.warning("primary-integrity canary: %s", message)
     return ok
 

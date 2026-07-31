@@ -247,6 +247,29 @@ def test_health_includes_core_bare_canary():
     assert health["git_core_bare_ok"] is True
 
 
+def test_health_canaries_do_not_apply_general_repairs(monkeypatch):
+    import scripts.audit.check_primary_integrity as primary_check
+    import scripts.audit.check_self_symlinks as symlink_check
+
+    fix_values: list[bool] = []
+
+    def check_symlinks(_repo: Path, *, fix: bool):
+        fix_values.append(fix)
+        return False, "loop detected"
+
+    def check_primary(_repo: Path, *, fix: bool, tasks_dir: Path):
+        assert tasks_dir.name == "tasks"
+        fix_values.append(fix)
+        return False, "primary detached"
+
+    monkeypatch.setattr(symlink_check, "check_self_symlinks", check_symlinks)
+    monkeypatch.setattr(primary_check, "check_primary_integrity", check_primary)
+
+    assert api_main._self_symlink_canary() is False
+    assert api_main._primary_integrity_canary() is False
+    assert fix_values == [False, False]
+
+
 def test_orient_swallows_failing_subquery(monkeypatch):
     _patch_orient_sources(monkeypatch)
 

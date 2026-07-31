@@ -32,9 +32,10 @@ Usage::
     python scripts/audit/check_primary_integrity.py          # check only
     python scripts/audit/check_primary_integrity.py --fix    # repair when safe
 
-Wired into: ``cmd_dispatch`` pre-dispatch gate, ``_run_worker`` post-exit
-sweep (both in ``scripts/delegate.py``), and the Monitor API health-orient
-canary (``scripts/api/main.py``).
+Wired read-only into: ``cmd_dispatch`` pre-dispatch gate, ``_run_worker``
+post-exit sweep (both in ``scripts/delegate.py``), and the Monitor API
+health-orient canary (``scripts/api/main.py``). ``--fix`` is an explicit
+operator doctor action and is not called by those automatic paths.
 """
 
 from __future__ import annotations
