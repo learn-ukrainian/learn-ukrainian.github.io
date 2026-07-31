@@ -62,7 +62,7 @@ def sha256(path: Path) -> str:
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     try:
         rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise EvidenceError(f"cannot read {path}: {exc}") from exc
     if not rows or not all(isinstance(row, dict) for row in rows):
         raise EvidenceError(f"invalid JSONL evidence: {path}")
@@ -72,7 +72,7 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
 def read_json(path: Path) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise EvidenceError(f"cannot read {path}: {exc}") from exc
     if not isinstance(value, dict):
         raise EvidenceError(f"invalid JSON evidence object: {path}")

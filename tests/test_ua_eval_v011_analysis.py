@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -20,6 +21,9 @@ def test_analysis_reproduces_metrics_and_complete_join(tmp_path: Path) -> None:
     assert summary["counts"]["needs_ua_review"] == 14
     assert summary["counts"]["possible_benchmark_defect"] == 12
     assert summary["counts"]["protected_variation_risk"] == 3
+    assert summary["counts"]["gpt_measurement_win"] == 181
+    assert summary["counts"]["gemma_measurement_win"] == 147
+    assert summary["counts"]["tie_exact_measurement"] == 349
     gaps = summary["category_gap_evidence"]
     assert gaps["strata"]["clean_no_change_control"]["items"] == 0
     assert gaps["strata"]["hard_positive_must_not_normalize"]["items"] == 0
@@ -62,3 +66,14 @@ def test_ordered_responses_rejects_invalid_id_sequences(tmp_path: Path) -> None:
 def test_report_metrics_rejects_missing_sections_cleanly() -> None:
     with pytest.raises(analysis.EvidenceError, match="missing aggregate section: edit_correction"):
         analysis.report_metrics({})
+
+
+@pytest.mark.parametrize("reader", [analysis.read_json, analysis.read_jsonl])
+def test_json_readers_normalize_unicode_decode_errors(
+    tmp_path: Path,
+    reader: Callable[[Path], object],
+) -> None:
+    path = tmp_path / "undecodable.json"
+    path.write_bytes(b"\xff")
+    with pytest.raises(analysis.EvidenceError, match="cannot read"):
+        reader(path)
