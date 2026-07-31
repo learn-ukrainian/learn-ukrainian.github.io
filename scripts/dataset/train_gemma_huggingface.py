@@ -1,51 +1,74 @@
-"""HuggingFace SFT Trainer Script for Fine-Tuning Gemma 4 31B on Literary Ukrainian.
-
-Usage:
-    pip install transformers datasets peft trl accelerate bitsandbytes
-    python scripts/dataset/train_gemma_huggingface.py \
-        --dataset_path data/datasets/hramatka_literary_poltava_v1/hramatka_literary_poltava_v1.jsonl \
-        --model_id google/gemma-4-31b-it \
-        --output_dir ./gemma-4-31b-uk-poltava-lora
-"""
+"""HuggingFace SFT entry point with a fail-closed Literary Poltava guard."""
 
 import argparse
-import os
+from pathlib import Path
 
-import torch
-from datasets import load_dataset
-from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-    BitsAndBytesConfig,
-    TrainingArguments,
+REPO_ROOT = Path(__file__).resolve().parents[2]
+CANDIDATE_JSONL = (
+    REPO_ROOT / "data" / "datasets" / "hramatka_literary_poltava_v1" / "hramatka_literary_poltava_v1.jsonl"
 )
-from trl import SFTTrainer
 
 
-def train():
-    parser = argparse.ArgumentParser(description="Fine-tune Gemma 4 31B on Literary Ukrainian")
-    parser.add_argument(
-        "--dataset_path",
-        type=str,
-        default="data/datasets/hramatka_literary_poltava_v1/hramatka_literary_poltava_v1.jsonl",
-    )
+class LiteraryCandidateSafetyError(ValueError):
+    """Raised when training targets the failed literary candidate."""
+
+
+def resolved_dataset_path(dataset_path: str) -> Path:
+    """Resolve a caller-supplied path using normal local-path semantics."""
+    return Path(dataset_path).expanduser().resolve()
+
+
+def refuse_rebuild_required_candidate(dataset_path: str) -> Path:
+    """Return a safe path or refuse before importing model/training dependencies."""
+    resolved_path = resolved_dataset_path(dataset_path)
+    if resolved_path == CANDIDATE_JSONL.resolve():
+        raise LiteraryCandidateSafetyError(
+            "Refusing to train on hramatka_literary_poltava_v1: audit #6058 marks "
+            "this candidate rebuild_required. Supply a separately rebuilt, "
+            "rights-cleared dataset."
+        )
+    return resolved_path
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Fine-tune Gemma 4 31B on an approved dataset")
+    parser.add_argument("--dataset_path", type=str, default=str(CANDIDATE_JSONL))
     parser.add_argument("--model_id", type=str, default="google/gemma-4-31b-it")
     parser.add_argument("--output_dir", type=str, default="./gemma-4-31b-uk-poltava-lora")
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch_size", type=int, default=2)
     parser.add_argument("--learning_rate", type=float, default=2e-4)
-    args = parser.parse_args()
+    return parser.parse_args()
 
-    print(f"Loading dataset from {args.dataset_path}...")
-    dataset = load_dataset("json", data_files=args.dataset_path, split="train")
 
-    def formatting_func(example):
+def train() -> None:
+    args = parse_args()
+    dataset_path = refuse_rebuild_required_candidate(args.dataset_path)
+
+    import torch
+    from datasets import load_dataset
+    from peft import LoraConfig, prepare_model_for_kbit_training
+    from transformers import (
+        AutoModelForCausalLM,
+        AutoTokenizer,
+        BitsAndBytesConfig,
+        TrainingArguments,
+    )
+    from trl import SFTTrainer
+
+    print(f"Loading dataset from {dataset_path}...")
+    dataset = load_dataset("json", data_files=str(dataset_path), split="train")
+
+    def formatting_func(example: dict[str, str]) -> str:
         text = example["text"]
         author = example.get("author", "")
         work = example.get("work", "")
-        prompt = f"<|im_start|>system\nТи — видатний український письменник і редактор класичної української літератури.<|im_end|>\n<|im_start|>user\nНапиши фрагмент тексту у стилі української літературної класики (автор: {author}, твір: {work}):<|im_end|>\n<|im_start|>assistant\n{text}<|im_end|>"
-        return prompt
+        return (
+            "<|im_start|>system\nТи — видатний український письменник і редактор класичної "
+            "української літератури.<|im_end|>\n<|im_start|>user\nНапиши фрагмент тексту у стилі "
+            f"української літературної класики (автор: {author}, твір: {work}):<|im_end|>\n"
+            f"<|im_start|>assistant\n{text}<|im_end|>"
+        )
 
     print("Configuring 4-bit QLoRA quantization...")
     bnb_config = BitsAndBytesConfig(
@@ -54,20 +77,16 @@ def train():
         bnb_4bit_compute_dtype=torch.bfloat16,
         bnb_4bit_use_double_quant=True,
     )
-
     print(f"Loading tokenizer and model {args.model_id}...")
     tokenizer = AutoTokenizer.from_pretrained(args.model_id, trust_remote_code=True)
     tokenizer.pad_token = tokenizer.eos_token
-
     model = AutoModelForCausalLM.from_pretrained(
         args.model_id,
         quantization_config=bnb_config,
         device_map="auto",
         trust_remote_code=True,
     )
-
     model = prepare_model_for_kbit_training(model)
-
     lora_config = LoraConfig(
         r=16,
         lora_alpha=32,
@@ -76,7 +95,6 @@ def train():
         bias="none",
         task_type="CAUSAL_LM",
     )
-
     training_args = TrainingArguments(
         output_dir=args.output_dir,
         per_device_train_batch_size=args.batch_size,
@@ -93,7 +111,6 @@ def train():
         save_strategy="epoch",
         push_to_hub=False,
     )
-
     trainer = SFTTrainer(
         model=model,
         train_dataset=dataset,
@@ -103,10 +120,8 @@ def train():
         tokenizer=tokenizer,
         args=training_args,
     )
-
     print("Starting SFT Fine-Tuning for Gemma 4 31B...")
     trainer.train()
-
     print(f"Saving fine-tuned LoRA weights to {args.output_dir}...")
     trainer.model.save_pretrained(args.output_dir)
     tokenizer.save_pretrained(args.output_dir)
