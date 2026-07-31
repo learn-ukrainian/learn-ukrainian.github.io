@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sqlite3
 import stat
 from pathlib import Path
 
@@ -54,6 +55,36 @@ def test_artifact_store_uses_durable_sqlite_and_private_modes(tmp_path: Path) ->
                 ).fetchone()[0] == 1
             finally:
                 store.connection.rollback()
+
+
+def test_artifact_store_wal_setup_retries_fast_lock_failures(monkeypatch) -> None:
+    class FakeCursor:
+        def fetchone(self):
+            return ("wal",)
+
+    class RacingConnection:
+        calls = 0
+
+        def execute(self, _statement):
+            self.calls += 1
+            if self.calls < 3:
+                raise sqlite3.OperationalError("database is locked")
+            return FakeCursor()
+
+    sleeps: list[float] = []
+    connection = RacingConnection()
+    store = ArtifactStore.__new__(ArtifactStore)
+    store._conn = connection
+    monkeypatch.setattr("scripts.fleet_comms.artifacts.time.monotonic", lambda: 0.0)
+    monkeypatch.setattr(
+        "scripts.fleet_comms.artifacts.time.sleep",
+        lambda seconds: sleeps.append(seconds),
+    )
+
+    store._enable_wal()
+
+    assert connection.calls == 3
+    assert sleeps == [0.05, 0.05]
 
 
 def test_artifact_store_rejects_traversal_filename(tmp_path: Path) -> None:

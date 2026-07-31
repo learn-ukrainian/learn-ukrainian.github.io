@@ -85,11 +85,13 @@ class ArtifactStore:
         self._prepare_private_dir(self.blob_root)
         self._conn = sqlite3.connect(
             str(self.db_path),
-            timeout=_BUSY_TIMEOUT_MS / 1_000,
+            # WAL initialization owns its bounded retry loop below. Install
+            # the normal statement busy timeout only after WAL is established.
+            timeout=0,
         )
         self._conn.row_factory = sqlite3.Row
-        self._conn.execute(f"PRAGMA busy_timeout = {_BUSY_TIMEOUT_MS}")
         self._enable_wal()
+        self._conn.execute(f"PRAGMA busy_timeout = {_BUSY_TIMEOUT_MS}")
         self._conn.execute("PRAGMA synchronous = FULL")
         self._conn.execute("PRAGMA foreign_keys = ON")
         self._tighten_owned_mode(self.db_path, _PRIVATE_FILE_MODE, require_dir=False)

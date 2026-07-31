@@ -106,6 +106,18 @@ def test_resolve_main_root_raises_outside_repo(layout: Layout):
         wc.resolve_main_root(layout.outside)
 
 
+def test_resolve_main_root_uses_filesystem_fallback_when_git_cannot_execute(
+    layout: Layout, monkeypatch: pytest.MonkeyPatch
+):
+    def missing_git(*_args, **_kwargs):
+        raise FileNotFoundError("git unavailable")
+
+    monkeypatch.setattr(wc.subprocess, "run", missing_git)
+
+    assert wc.resolve_main_root(layout.main) == layout.main
+    assert wc.resolve_main_root(layout.dispatch_wt) == layout.main
+
+
 # ---------------------------------------------------------------------------
 # classify_repo_path
 # ---------------------------------------------------------------------------
