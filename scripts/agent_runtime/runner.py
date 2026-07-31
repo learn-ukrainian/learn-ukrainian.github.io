@@ -2326,7 +2326,11 @@ def _invoke_impl(
     """
     # ---------- 1. Resolve adapter ----------
     _validate_agent_name(agent_name)
-    adapter = _load_adapter(agent_name, allow_direct_only=allow_direct_only)
+    adapter = (
+        _load_adapter(agent_name, allow_direct_only=True)
+        if allow_direct_only
+        else _load_adapter(agent_name)
+    )
 
     # ---------- 2. Validate mode ----------
     if mode not in adapter.supported_modes:
