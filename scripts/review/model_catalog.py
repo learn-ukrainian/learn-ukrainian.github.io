@@ -33,7 +33,7 @@ GLM_ROUTE_FIELDS = (
     "coding_model_id",
     "context_profile",
 )
-VALID_CODEX_EFFORTS = frozenset({"low", "medium", "high", "xhigh", "max", "ultra"})
+VALID_CODEX_EFFORTS = frozenset({"low", "medium", "high", "xhigh", "max"})
 EXECUTION_ROUTE_KEYS = frozenset(
     {"advisor", "preferred_worker", "direct_worker", "autonomous_fallback", "review_boundary"}
 )
