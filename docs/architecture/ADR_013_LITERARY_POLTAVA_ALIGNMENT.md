@@ -12,6 +12,7 @@
 >
 > **Historical status**: formerly APPROVED / IMPLEMENTATION; withdrawn for
 > current use
+>
 > **Date**: July 23, 2026  
 > **Authors**: Lead Architecture Review, Sol (`gpt-5.6-sol`), UNLP Dataset Task Force  
 > **Target Epic**: #4542 (Hramatka Model Alignment & UNLP Dataset Release)
