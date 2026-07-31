@@ -333,6 +333,7 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
                 and payload.get("Label") == LABEL
                 and payload.get("KeepAlive") == {"SuccessfulExit": False}
                 and payload.get("ThrottleInterval") == THROTTLE_INTERVAL_SECONDS
+                and payload.get("EnvironmentVariables") == {"PATH": _LAUNCHD_PATH}
             )
         except (OSError, ValueError, plistlib.InvalidFileException) as exc:
             parse_error = str(exc)
