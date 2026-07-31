@@ -33,6 +33,7 @@ import {
   parseCardKey,
   previewRatingIntervals,
   rateCard,
+  recentSessionHistory,
   resolveSessionCompletion,
   readNewCardsDailyState,
   readPracticeSessionSnapshots,
@@ -82,7 +83,7 @@ import {
   normalizeCefrLevel,
   type CefrLevel,
 } from '../lib/lexicon/levels';
-import { dateSeed, deckSeed, pickDaily, type DailyWord } from '../lib/lexicon/daily';
+import { dateSeed, deckSeed, pickDaily, reRollSeed, type DailyWord } from '../lib/lexicon/daily';
 import {
   filterTeacherClozeItems,
   getTeacherLessonVirtualDeck,
@@ -381,6 +382,7 @@ interface CompletionOutcome {
 }
 
 const STREAK_KEY = 'lu-lexicon-practice-streak';
+const DAILY_REROLL_KEY = 'lu-lexicon-daily-reroll';
 const MASTERED_THRESHOLD = 21;
 type SessionPhase = 'idle' | 'active' | 'summary';
 
@@ -732,6 +734,33 @@ function previousDayKey(date = new Date()): string {
   return todayKey(previous);
 }
 
+/**
+ * #6132: re-roll count for today's featured/daily pick set — how many times the
+ * learner has tapped «Перемішати» since the calendar day started. Scoped to
+ * `dateKey` so a day change (not just a page reload) resets the draw back to the
+ * default (count 0), matching the existing dateSeed(today) behavior it composes with.
+ */
+function readDailyReRollCount(dateKey: string): number {
+  if (typeof window === 'undefined') return 0;
+  try {
+    const raw = window.localStorage.getItem(DAILY_REROLL_KEY);
+    if (!raw) return 0;
+    const parsed = JSON.parse(raw) as { date?: string; count?: number };
+    return parsed.date === dateKey && typeof parsed.count === 'number' ? parsed.count : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function writeDailyReRollCount(dateKey: string, count: number): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(DAILY_REROLL_KEY, JSON.stringify({ date: dateKey, count }));
+  } catch {
+    // Persisting the re-roll count is best-effort; the in-memory count still applies.
+  }
+}
+
 function readStreak(): StreakState {
   try {
     const raw = window.localStorage.getItem(STREAK_KEY);
@@ -894,6 +923,16 @@ function historyFromSelection(selection: PracticeSelection): SelectionHistoryIte
     choicePolarity: selection.choicePolarity,
     lapsed: selection.lapsed,
   };
+}
+
+/**
+ * #6132: a fresh session's `history` starts from the learner's most recent same-day
+ * reviews instead of always `[]`, so `selectNextPracticeItem`'s spacing/anti-monotony
+ * logic reacts immediately — without this, starting a second same-day session opened
+ * with the exact same opening picks as the first.
+ */
+function seedCrossSessionHistory(now: Date): SelectionHistoryItem[] {
+  return recentSessionHistory(loadState().reviews, now.getTime());
 }
 
 function reviewLemmaId(selection: PracticeSelection): string {
@@ -1477,6 +1516,17 @@ function LexiconPracticeIsland({
   const [dailySnapshot, setDailySnapshot] = useState<DailyPracticeDeckSnapshot | null>(null);
   const [dailyLexemes, setDailyLexemes] = useState<Map<string, PracticeLexeme>>(() => new Map());
   const [dailySnapshotLoading, setDailySnapshotLoading] = useState(false);
+  const [dailyReRollCount, setDailyReRollCount] = useState(() => readDailyReRollCount(todayKey()));
+  // #6132: explicit re-draw of today's featured set — see the effect below that folds
+  // this count into the pickDaily seed via `reRollSeed`.
+  const reRollDailyPicks = useCallback(() => {
+    const dateKey = todayKey();
+    setDailyReRollCount((count) => {
+      const next = count + 1;
+      writeDailyReRollCount(dateKey, next);
+      return next;
+    });
+  }, []);
   const [hoveredMode, setHoveredMode] = useState<VisiblePracticeModeFilter | null>(null);
   const [publishedLevels] = useState<Set<CefrLevel>>(
     () => new Set(PUBLISHED_PRACTICE_LEVELS as unknown as CefrLevel[]),
@@ -1624,11 +1674,12 @@ function LexiconPracticeIsland({
     const nextSeed = makePracticeSessionSeed();
     setSessionSeed(nextSeed);
     sessionStartedAtRef.current = Date.now();
-    setHistory([]);
+    const seededHistory = seedCrossSessionHistory(new Date());
+    setHistory(seededHistory);
     const reviewSlots = sessionBudget === 'until-zero' ? plan.dueReviews : Math.min(plan.dueReviews, sessionBudget);
     const snapshot: PracticeSessionSnapshot = {
       sessionSeed: nextSeed,
-      history: [],
+      history: seededHistory,
       budget: sessionBudget,
       completed: 0,
       modeFilter: mode,
@@ -1721,6 +1772,11 @@ function LexiconPracticeIsland({
   // deck filter draws the daily picks FROM THAT DECK instead — pickDaily(deckPool,
   // dateSeed(now) + deckSeed(deckId), 12) — so the featured zone (and its default
   // session) react to the learner's deck choice, not just the atlas-global pool.
+  //
+  // #6132: the operator's complaint was the SAME 12 every session that day, with no
+  // way to see a different set without waiting for UTC midnight. `dailyReRollCount`
+  // (persisted per calendar day) folds into the seed via `reRollSeed` — a re-roll tap
+  // still produces a deterministic, testable draw, it just adds a third seed term.
   useEffect(() => {
     if (sessionPhase !== 'idle') return;
 
@@ -1744,7 +1800,11 @@ function LexiconPracticeIsland({
             shardJsonCacheRef.current,
           );
           const eligiblePool = filterByCumulativeLevel(pool, learnerLevel);
-          picks = pickDaily(eligiblePool, dateSeed(now), DAILY_PRACTICE_DECK_SIZE);
+          picks = pickDaily(
+            eligiblePool,
+            dateSeed(now) + reRollSeed(dailyReRollCount),
+            DAILY_PRACTICE_DECK_SIZE,
+          );
 
           // Fetch lexeme cores only for levels represented among today's picks —
           // or all selected-level cores for the defined fallback when the daily
@@ -1845,7 +1905,7 @@ function LexiconPracticeIsland({
           });
           displayablePicks = pickDaily(
             deckPool,
-            dateSeed(now) + deckSeed(selectedDeckFilter),
+            dateSeed(now) + deckSeed(selectedDeckFilter) + reRollSeed(dailyReRollCount),
             DAILY_PRACTICE_DECK_SIZE,
           );
         } else {
@@ -1879,7 +1939,7 @@ function LexiconPracticeIsland({
           }));
           displayablePicks = picks.length > 0
             ? picks
-            : pickDaily(fallbackPool, dateSeed(now), DAILY_PRACTICE_DECK_SIZE);
+            : pickDaily(fallbackPool, dateSeed(now) + reRollSeed(dailyReRollCount), DAILY_PRACTICE_DECK_SIZE);
         }
 
         const snapshot: DailyPracticeDeckSnapshot = {
@@ -1925,11 +1985,27 @@ function LexiconPracticeIsland({
     shardBaseUrl,
     selectedDeckFilter,
     customSets,
+    dailyReRollCount,
   ]);
 
   const indexForStats = (deck?.index ?? dueIndex ?? []).filter(
     (item) => !focusedLemmaId || item.lemmaId === focusedLemmaId
   );
+
+  // #6132 mode honesty: the lightweight index shard (`dueIndex`, or `deck.index` once
+  // loaded) already carries each lemma's available modes, so the mode grid can show a
+  // real per-mode count for the ACTIVE deck filter before the learner ever taps a card
+  // — instead of mixed silently collapsing toward whichever modes happen to have
+  // content and leaving an empty tap as the only way to discover a mode has nothing.
+  const modeCounts = useMemo(() => {
+    const filtered = filterIndexByDeckFilter(indexForStats, selectedDeckFilter, customSets);
+    const counts: Partial<Record<VisiblePracticeModeFilter, number>> = { mixed: filtered.length };
+    for (const visibleMode of MODE_CARD_ORDER) {
+      if (visibleMode === 'mixed') continue;
+      counts[visibleMode] = filtered.filter((item) => item.modes.includes(visibleMode)).length;
+    }
+    return counts;
+  }, [indexForStats, selectedDeckFilter, customSets]);
 
   const sessionPoolConstraints = useMemo(
     () =>
@@ -2544,10 +2620,11 @@ function LexiconPracticeIsland({
     );
     const plan = computeSessionScope(index, budget, { dailyNewCount });
     const nextSeed = resume?.sessionSeed ?? makePracticeSessionSeed();
+    const seededHistory = resume ? resume.history : seedCrossSessionHistory(new Date());
     if (resume) {
       sessionStartedAtRef.current = resume.startedAt;
       setSessionSeed(nextSeed);
-      setHistory(resume.history);
+      setHistory(seededHistory);
       setSessionCompleted(resume.completed);
       setPlannedReviews(resume.plannedReviews ?? plan.dueReviews);
       setPlannedTotal(resume.plannedTotal ?? plan.plannedTotal);
@@ -2559,14 +2636,14 @@ function LexiconPracticeIsland({
     } else {
       sessionStartedAtRef.current = Date.now();
       setSessionSeed(nextSeed);
-      setHistory([]);
+      setHistory(seededHistory);
       resetSessionTracking(plan, budget);
     }
     setSessionPhase('active');
     const reviewSlots = budget === 'until-zero' ? plan.dueReviews : Math.min(plan.dueReviews, budget);
     const snapshot: PracticeSessionSnapshot = {
       sessionSeed: nextSeed,
-      history: resume?.history ?? [],
+      history: seededHistory,
       budget,
       completed: resume?.completed ?? 0,
       modeFilter: nextMode,
@@ -3314,6 +3391,7 @@ function LexiconPracticeIsland({
                   learnerLevel={learnerLevel}
                   deckTitleUk={activeDeckTitles?.uk}
                   deckTitleEn={activeDeckTitles?.en}
+                  onReRoll={reRollDailyPicks}
                 />
               )}
             </div>
@@ -3424,6 +3502,8 @@ function LexiconPracticeIsland({
               >
                 {MODE_CARD_ORDER.map((practiceMode) => {
                   const meta = MODE_META[practiceMode];
+                  const modeCount = modeCounts[practiceMode] ?? 0;
+                  const modeEmpty = practiceMode !== 'mixed' && modeCount === 0;
                   return (
                     <button
                       key={practiceMode}
@@ -3431,6 +3511,8 @@ function LexiconPracticeIsland({
                       className="k3-mode-card"
                       data-mode={practiceMode}
                       data-accent={meta.accent}
+                      data-mode-count={modeCount}
+                      data-mode-empty={modeEmpty ? 'true' : undefined}
                       aria-describedby="mode-detail-line"
                       onMouseEnter={() => setHoveredMode(practiceMode)}
                       onMouseLeave={() => setHoveredMode(null)}
@@ -3440,6 +3522,13 @@ function LexiconPracticeIsland({
                     >
                       <span className="k3-mode-title">{chromeLocale === 'uk' ? meta.title : meta.en}</span>
                       <span className="k3-mode-step">{chromeLocale === 'uk' ? meta.step : meta.stepEn}</span>
+                      <span
+                        className="k3-mode-count"
+                        aria-hidden="true"
+                        data-testid={`practice-mode-count-${practiceMode}`}
+                      >
+                        {modeCount}
+                      </span>
                     </button>
                   );
                 })}

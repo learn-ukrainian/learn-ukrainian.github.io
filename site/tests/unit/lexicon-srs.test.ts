@@ -22,6 +22,7 @@ import {
   parseCardKey,
   rateCard,
   readDailyPracticeDeckSnapshot,
+  recentSessionHistory,
   refillDailyPracticeDeckSnapshot,
   saveState,
   selectDailyPracticeDeckItems,
@@ -1209,6 +1210,48 @@ describe('lexicon SRS facade', () => {
     expect(uaPlural(5)).toBe('правильних');
     expect(uaPlural(11)).toBe('правильних');
     expect(uaPlural(21)).toBe('правильна');
+  });
+});
+
+describe('recentSessionHistory (#6132 cross-session anti-repeat)', () => {
+  test('seeds from the same-day tail of the persisted review log', () => {
+    const reviews = [reviewEntry(0, 'alpha'), reviewEntry(1, 'beta'), reviewEntry(2, 'gamma')];
+    const history = recentSessionHistory(reviews, NOW.getTime());
+
+    expect(history).toHaveLength(3);
+    expect(history.map((item) => item.lemmaId)).toEqual(['alpha', 'beta', 'gamma']);
+    expect(history.every((item) => item.mode === 'flashcards')).toBe(true);
+  });
+
+  test('drops reviews from a different local calendar day', () => {
+    const yesterday: ReviewLogEntry = {
+      ...reviewEntry(0, 'stale'),
+      review: NOW.getTime() - DAY_MS,
+    };
+    const today = reviewEntry(1, 'fresh');
+
+    const history = recentSessionHistory([yesterday, today], NOW.getTime());
+
+    expect(history.map((item) => item.lemmaId)).toEqual(['fresh']);
+  });
+
+  test('caps to the most recent `limit` entries, keeping chronological order', () => {
+    const reviews = Array.from({ length: 20 }, (_, index) => reviewEntry(index, `word-${index}`));
+
+    const history = recentSessionHistory(reviews, NOW.getTime(), 5);
+
+    expect(history).toHaveLength(5);
+    expect(history.map((item) => item.lemmaId)).toEqual([
+      'word-15',
+      'word-16',
+      'word-17',
+      'word-18',
+      'word-19',
+    ]);
+  });
+
+  test('an empty review log seeds an empty history (first-ever session)', () => {
+    expect(recentSessionHistory([], NOW.getTime())).toEqual([]);
   });
 });
 

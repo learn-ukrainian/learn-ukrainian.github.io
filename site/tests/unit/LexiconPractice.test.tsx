@@ -27,7 +27,7 @@ import {
   type ReviewLogEntry,
 } from '@site/src/lib/lexicon/srs';
 import { LEARNER_LEVEL_STORAGE_KEY, type CefrLevel } from '@site/src/lib/lexicon/levels';
-import { filterTeacherClozeItems, type CustomSet } from '@site/src/lib/lexicon/custom-decks';
+import { CUSTOM_SETS_STORAGE_KEY, filterTeacherClozeItems, type CustomSet } from '@site/src/lib/lexicon/custom-decks';
 import { type DailyWord } from '@site/src/lib/lexicon/daily';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
@@ -476,6 +476,23 @@ function sampleDeckWithOnlyMode(lemmaId: string, mode: PracticeMode): PracticeDe
       clozeIds: [],
     })),
     cloze: [],
+  };
+}
+
+/**
+ * #6132: two possible modes only (flashcards on every lemma, cloze on `knyha` alone) —
+ * deliberately excludes matching/choice, whose distractor pools are drawn from the
+ * WHOLE deck by design (`meaningDistractors`/`orderedChoiceOptions`), which would make
+ * "no forbidden lemma anywhere in the DOM" an invalid assertion for those modes.
+ */
+function customDeckMixedFixture(): PracticeDeckData {
+  const baseDeck = sampleDeck();
+  return {
+    ...baseDeck,
+    index: baseDeck.index.map((item) => ({
+      ...item,
+      modes: (item.lemmaId === 'knyha' ? ['flashcards', 'cloze'] : ['flashcards']) as PracticeMode[],
+    })),
   };
 }
 
@@ -4086,6 +4103,83 @@ describe('LexiconPractice', () => {
       await waitFor(() =>
         expect(screen.getByTestId('practice-session-scope')).toHaveTextContent(/3 нових/),
       );
+    });
+
+    test('#6132 mixed-mode session started from a custom deck never draws a lemma outside it', async () => {
+      // 'knyha'/'robota' are IN the deck; 'misto'/'shkola' (sampleDeck's other two
+      // lemmas) are NOT. Only 'knyha' carries cloze — proving the MIXED path (not
+      // just a single mode card, already covered above) respects the deck filter
+      // whichever of its modes gets drawn.
+      const customSet: CustomSet = {
+        id: 'test_custom_deck_mixed',
+        title: 'Дві слова',
+        lemma_keys: ['книга', 'робота'],
+        cloze_items: [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        device_id: 'test_device',
+        revision: 1,
+      };
+      localStorage.setItem(CUSTOM_SETS_STORAGE_KEY, JSON.stringify([customSet]));
+
+      for (let attempt = 0; attempt < 10; attempt += 1) {
+        const user = userEvent.setup();
+        const { container, unmount } = render(
+          <LexiconPractice initialDeck={customDeckMixedFixture()} autoStart={false} />,
+        );
+
+        await user.click(screen.getByRole('button', { name: /Дві слова/i }));
+        await user.click(container.querySelector<HTMLButtonElement>('[data-mode="mixed"]')!);
+
+        const clozeStage = screen.queryByTestId('practice-cloze');
+        if (clozeStage) {
+          expect(clozeStage.textContent).not.toMatch(/місто|школа/);
+        } else {
+          const flashcardWord = container.querySelector('.flashcard-word')?.textContent ?? '';
+          expect(['книга', 'робота']).toContain(flashcardWord);
+        }
+
+        unmount();
+      }
+    });
+
+    test('#6132 mode grid shows a real per-mode count, honest about which modes are empty', async () => {
+      // Custom sets load once at mount (`useState(() => readLocalCustomSets())`), so seed
+      // localStorage BEFORE render — matching the established pattern in the other
+      // Custom Set tests above (e.g. "dashboard session estimate narrows...").
+      const customSet: CustomSet = {
+        id: 'test_custom_deck_mode_counts',
+        title: 'Лічильник',
+        lemma_keys: ['робота'],
+        cloze_items: [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        device_id: 'test_device',
+        revision: 1,
+      };
+      localStorage.setItem(CUSTOM_SETS_STORAGE_KEY, JSON.stringify([customSet]));
+
+      const user = userEvent.setup();
+      const { container } = render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
+
+      // sampleDeck: 4 lemmas carry flashcards/matching/choice, only 'книга' carries cloze,
+      // and no lemma carries heritage — the grid must say so BEFORE any tap, not just
+      // fail closed with an empty-state message after the learner has already committed.
+      expect(screen.getByTestId('practice-mode-count-flashcards')).toHaveTextContent('4');
+      expect(screen.getByTestId('practice-mode-count-cloze')).toHaveTextContent('1');
+      expect(screen.getByTestId('practice-mode-count-heritage')).toHaveTextContent('0');
+      expect(container.querySelector('[data-mode="heritage"]')).toHaveAttribute('data-mode-empty', 'true');
+      expect(container.querySelector('[data-mode="flashcards"]')).not.toHaveAttribute('data-mode-empty');
+
+      // Narrowing to a 1-word custom deck (no cloze) must narrow the counts too, not just
+      // the session-size estimate — a mixed session from this deck has nothing to draw
+      // from cloze, and the grid should say so for THIS deck, not the full level.
+      await user.click(screen.getByRole('button', { name: /Лічильник/i }));
+
+      await waitFor(() =>
+        expect(screen.getByTestId('practice-mode-count-flashcards')).toHaveTextContent('1'),
+      );
+      expect(screen.getByTestId('practice-mode-count-cloze')).toHaveTextContent('0');
     });
   });
 });
