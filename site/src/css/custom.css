@@ -1074,6 +1074,8 @@ details.solution-block > *:last-child {
 .cefr-seg-a2 { background: #3b82f6; }
 .cefr-seg-b1 { background: #a855f7; }
 .cefr-seg-b2 { background: #f97316; }
+.cefr-seg-c1 { background: #ec4899; }
+.cefr-seg-c2 { background: #eab308; }
 
 /* Interactive Word Chips */
 .word-chip-grid {
@@ -1133,6 +1135,9 @@ details.solution-block > *:last-child {
 .badge-a2 { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
 .badge-b1 { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
 .badge-b2 { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
+.badge-c1 { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+.badge-c2 { background: rgba(234, 179, 8, 0.2); color: #fbbf24; }
+.badge-unverified { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
 
 /* Dropzone */
 .importer-dropzone {
