@@ -122,16 +122,20 @@ def test_codex_project_config_leaves_root_model_user_selectable() -> None:
 
 def test_codex_compaction_has_one_bounded_hydration_path() -> None:
     hooks = _manifest()["hooks"]
-    session_group = hooks["SessionStart"][0]
-    compact_group = hooks["PostCompact"][0]
+    session_groups = hooks["SessionStart"]
+    session_group, compact_group = session_groups
 
     assert session_group["matcher"] == "startup|resume|clear"
     assert session_group["hooks"][0]["additionalContextLimit"] == 1200
-    assert compact_group["matcher"] == "manual|auto"
+    assert compact_group["matcher"] == "compact"
+    assert "CODEX_COMPACT_SESSION_START=1" in compact_group["hooks"][0]["command"]
+    assert 'post-compact.sh"' in compact_group["hooks"][0]["command"]
+    assert compact_group["hooks"][0]["timeout"] == 10
     assert compact_group["hooks"][0]["additionalContextLimit"] == 800
+    assert "PostCompact" not in hooks
 
 
-def test_ordinary_codex_start_is_concise_and_postcompact_is_silent(
+def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
     tmp_path: Path,
 ) -> None:
     deployed_hooks = tmp_path / ".codex" / "hooks"
@@ -178,17 +182,18 @@ def test_ordinary_codex_start_is_concise_and_postcompact_is_silent(
 
     compacted = subprocess.run(
         ["bash", os.fspath(compact_hook)],
+        input=json.dumps({"source": "compact", "model": "gpt-5.6-sol"}),
         text=True,
         capture_output=True,
         check=False,
-        env=environment,
+        env=environment | {"CODEX_COMPACT_SESSION_START": "1"},
         timeout=10,
     )
     assert compacted.returncode == 0, compacted.stderr
     assert compacted.stdout == ""
 
 
-def test_explicit_non_driver_codex_postcompact_is_silent(tmp_path: Path) -> None:
+def test_explicit_non_driver_codex_compact_session_start_is_silent(tmp_path: Path) -> None:
     compact_hook = tmp_path / ".codex" / "hooks" / "post-compact.sh"
     compact_hook.parent.mkdir(parents=True)
     shutil.copy2(POST_COMPACT_HOOK, compact_hook)
@@ -203,10 +208,11 @@ def test_explicit_non_driver_codex_postcompact_is_silent(tmp_path: Path) -> None
 
     completed = subprocess.run(
         ["bash", os.fspath(compact_hook)],
+        input=json.dumps({"source": "compact", "model": "gpt-5.6-sol"}),
         text=True,
         capture_output=True,
         check=False,
-        env=environment,
+        env=environment | {"CODEX_COMPACT_SESSION_START": "1"},
         timeout=10,
     )
 
@@ -251,6 +257,26 @@ def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
 
     compacted = subprocess.run(
         ["bash", os.fspath(compact_hook)],
+        input=json.dumps({"source": "compact", "model": "gpt-5.6-sol"}),
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment | {"CODEX_COMPACT_SESSION_START": "1"},
+        timeout=10,
+    )
+
+    assert compacted.returncode == 0, compacted.stderr
+    hook_output = json.loads(compacted.stdout)["hookSpecificOutput"]
+    assert hook_output["hookEventName"] == "SessionStart"
+    context = hook_output["additionalContext"]
+    assert "CODEX FLEET-DRIVER HYDRATION" in context
+    assert '"schema_name":"HydrationCapsuleV1"' in context
+    assert ".claude/devops-epic/CODEX-DRIVER-HANDOFF.md" in context
+    assert "continue only from the capsule's next_drive_boundary" in context
+
+    legacy = subprocess.run(
+        ["bash", os.fspath(compact_hook)],
+        input=json.dumps({"hook_event_name": "PostCompact", "model": "claude-sonnet-5"}),
         text=True,
         capture_output=True,
         check=False,
@@ -258,12 +284,10 @@ def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
         timeout=10,
     )
 
-    assert compacted.returncode == 0, compacted.stderr
-    context = json.loads(compacted.stdout)["additionalContext"]
-    assert "CODEX FLEET-DRIVER HYDRATION" in context
-    assert '"schema_name":"HydrationCapsuleV1"' in context
-    assert ".claude/devops-epic/CODEX-DRIVER-HANDOFF.md" in context
-    assert "continue only from the capsule's next_drive_boundary" in context
+    assert legacy.returncode == 0, legacy.stderr
+    legacy_output = json.loads(legacy.stdout)
+    assert "hookSpecificOutput" not in legacy_output
+    assert legacy_output["additionalContext"] == context
 
 
 def test_bound_codex_driver_without_exact_diary_is_blocked_without_fallback(
@@ -287,15 +311,18 @@ def test_bound_codex_driver_without_exact_diary_is_blocked_without_fallback(
 
     completed = subprocess.run(
         ["bash", os.fspath(compact_hook)],
+        input=json.dumps({"source": "compact", "model": "gpt-5.6-sol"}),
         text=True,
         capture_output=True,
         check=False,
-        env=environment,
+        env=environment | {"CODEX_COMPACT_SESSION_START": "1"},
         timeout=10,
     )
 
     assert completed.returncode == 0, completed.stderr
-    context = json.loads(completed.stdout)["additionalContext"]
+    hook_output = json.loads(completed.stdout)["hookSpecificOutput"]
+    assert hook_output["hookEventName"] == "SessionStart"
+    context = hook_output["additionalContext"]
     assert "CODEX FLEET-DRIVER HYDRATION BLOCKED" in context
     assert "CODEX-DRIVER-HANDOFF.md" in context
     assert "CLAUDE-DRIVER-HANDOFF.md" not in context
