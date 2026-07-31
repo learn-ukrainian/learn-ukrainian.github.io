@@ -59,6 +59,11 @@ def _run(
     records: list[dict[str, Any]] | None = None,
 ) -> PilotResult:
     monkeypatch.setenv("LU_ACPX_TRANSPORT", "shadow")
+    monkeypatch.setattr(
+        acpx_pilot,
+        "classify_repo_path",
+        lambda *_args, **_kwargs: "dispatch_worktree",
+    )
     evidence = tmp_path / "evidence"
     captured = records if records is not None else []
     return run_pilot(
@@ -163,6 +168,11 @@ def test_duplicate_idempotency_key_suppresses_both_model_calls(tmp_path, monkeyp
 
 def test_busy_lock_refuses_without_queueing_or_model_calls(tmp_path, monkeypatch):
     monkeypatch.setenv("LU_ACPX_TRANSPORT", "shadow")
+    monkeypatch.setattr(
+        acpx_pilot,
+        "classify_repo_path",
+        lambda *_args, **_kwargs: "dispatch_worktree",
+    )
     lock_path = tmp_path / "pilot.lock"
     lock_path.touch()
     handle = open(lock_path, "a+", encoding="utf-8")  # noqa: SIM115
@@ -199,7 +209,11 @@ def test_busy_lock_refuses_without_queueing_or_model_calls(tmp_path, monkeypatch
 
 def test_pilot_refuses_primary_checkout_before_any_model_call(tmp_path, monkeypatch):
     monkeypatch.setenv("LU_ACPX_TRANSPORT", "shadow")
-    primary = Path.cwd().parents[3]
+    monkeypatch.setattr(
+        acpx_pilot,
+        "classify_repo_path",
+        lambda *_args, **_kwargs: "primary_checkout",
+    )
     called = False
 
     def call(*_args, **_kwargs):
@@ -211,7 +225,7 @@ def test_pilot_refuses_primary_checkout_before_any_model_call(tmp_path, monkeypa
         run_pilot(
             target="codex",
             prompt="Return READY",
-            cwd=primary,
+            cwd=tmp_path,
             task_id="task-6063",
             correlation_id="corr-3",
             idempotency_key="idem-3",
