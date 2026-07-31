@@ -23,6 +23,7 @@ from .config import BATCH_STATE_DIR
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from agent_runtime.adapters.acpx import (
+    ACPX_SUPPORTED_PARTICIPANTS,
     GROK_SHADOW_EFFORT,
     GROK_SHADOW_MODEL,
     PINNED_GROK_VERSION,
@@ -52,7 +53,8 @@ router = APIRouter(tags=["runtime"])
 ADAPTERS_DIR = Path(__file__).resolve().parent.parent / "agent_runtime" / "adapters"
 USAGE_DIR = BATCH_STATE_DIR / "api_usage"
 _KNOWN_OUTCOMES = ("ok", "error", "timeout", "rate_limited")
-_ACP_PARTICIPANTS = ("root", "codex", "grok")
+_ACP_LEGACY_PARTICIPANTS = ("codex", "grok")
+_ACP_ENABLED_PARTICIPANTS = frozenset(ACPX_SUPPORTED_PARTICIPANTS)
 _ACP_STATES = frozenset({
     "CREATED",
     "INITIAL_FANOUT",
@@ -560,6 +562,22 @@ def _acp_identifier(value: Any) -> str | None:
     return value
 
 
+def _acp_discussion_participants(value: Any) -> tuple[str, str]:
+    """Return a privacy-safe enabled pair, tolerating legacy stored shapes."""
+    try:
+        decoded = json.loads(value) if isinstance(value, str) else value
+    except (TypeError, ValueError, json.JSONDecodeError):
+        decoded = None
+    enabled: list[str] = []
+    if isinstance(decoded, list):
+        for item in decoded:
+            if item in _ACP_ENABLED_PARTICIPANTS and item not in enabled:
+                enabled.append(item)
+    if len(enabled) == 2:
+        return enabled[0], enabled[1]
+    return _ACP_LEGACY_PARTICIPANTS
+
+
 def _acp_timestamp(value: Any) -> str | None:
     if not isinstance(value, str):
         return None
@@ -616,7 +634,9 @@ def _acp_termination(events: list[dict[str, Any]], current_state: str | None) ->
     return None
 
 
-def _sanitize_acp_event(row: sqlite3.Row) -> dict[str, Any] | None:
+def _sanitize_acp_event(
+    row: sqlite3.Row, *, allowed_lanes: frozenset[str]
+) -> dict[str, Any] | None:
     sequence = _acp_int(row["sequence"])
     state = _acp_text(row["state"], allowed=_ACP_STATES)
     event_type = _acp_event_type(row["event_type"])
@@ -629,8 +649,8 @@ def _sanitize_acp_event(row: sqlite3.Row) -> dict[str, Any] | None:
         "state": state,
         "created_at": created_at,
     }
-    sender = _acp_text(row["sender"], allowed=frozenset(_ACP_PARTICIPANTS))
-    recipient = _acp_text(row["recipient"], allowed=frozenset(_ACP_PARTICIPANTS))
+    sender = _acp_text(row["sender"], allowed=allowed_lanes)
+    recipient = _acp_text(row["recipient"], allowed=allowed_lanes)
     if sender:
         event["sender"] = sender
     if recipient:
@@ -650,7 +670,11 @@ def _sanitize_acp_event(row: sqlite3.Row) -> dict[str, Any] | None:
     return event
 
 
-def _acp_events(connection: sqlite3.Connection, conversation_id: str) -> list[dict[str, Any]]:
+def _acp_events(
+    connection: sqlite3.Connection,
+    conversation_id: str,
+    participants: tuple[str, str],
+) -> list[dict[str, Any]]:
     try:
         rows = connection.execute(
             """
@@ -665,11 +689,18 @@ def _acp_events(connection: sqlite3.Connection, conversation_id: str) -> list[di
         ).fetchall()
     except sqlite3.Error:
         return []
-    events = [event for row in rows if (event := _sanitize_acp_event(row)) is not None]
+    allowed_lanes = frozenset({"root", "codex", *participants})
+    events = [
+        event
+        for row in rows
+        if (event := _sanitize_acp_event(row, allowed_lanes=allowed_lanes)) is not None
+    ]
     return events
 
 
-def _acp_rounds_completed(events: list[dict[str, Any]]) -> int:
+def _acp_rounds_completed(
+    events: list[dict[str, Any]], participants: tuple[str, str]
+) -> int:
     lanes_by_round: dict[int, set[str]] = defaultdict(set)
     for event in events:
         if event.get("event_type") not in _ACP_MESSAGE_EVENTS:
@@ -678,23 +709,34 @@ def _acp_rounds_completed(events: list[dict[str, Any]]) -> int:
         if not isinstance(round_number, int):
             continue
         for lane in (event.get("sender"), event.get("recipient")):
-            if lane in {"codex", "grok"}:
+            if lane in participants:
                 lanes_by_round[round_number].add(lane)
     completed = 0
     for round_number in sorted(lanes_by_round):
-        if round_number != completed + 1 or lanes_by_round[round_number] != {"codex", "grok"}:
+        if round_number != completed + 1 or lanes_by_round[round_number] != set(participants):
             break
         completed = round_number
     return completed
 
 
-def _acp_summary(row: sqlite3.Row, events: list[dict[str, Any]]) -> dict[str, Any] | None:
+def _acp_summary(
+    row: sqlite3.Row,
+    events: list[dict[str, Any]],
+    participants: tuple[str, str],
+) -> dict[str, Any] | None:
     conversation_id = _acp_identifier(row["conversation_id"])
     created_at = _acp_timestamp(row["created_at"])
     rounds_requested = _acp_int(row["rounds_requested"], minimum=1)
     if conversation_id is None or created_at is None or rounds_requested is None:
         return None
     current_state = events[-1]["state"] if events else "CREATED"
+    deadline_at = _acp_timestamp(row["deadline_at"])
+    terminal = current_state in {"COMPLETE", "PARTIAL_COMPLETE", "FAILED", "CANCELLED"}
+    deadline = _parse_iso_datetime(deadline_at)
+    expired = not terminal and (deadline is None or datetime.now(UTC) > deadline)
+    stale_or_unhealthy = expired or current_state in {
+        "PARTIAL", "PARTIAL_COMPLETE", "FAILED", "CANCELLED",
+    }
     updated_at = events[-1]["created_at"] if events else created_at
     terminal_event = next(
         (
@@ -725,10 +767,13 @@ def _acp_summary(row: sqlite3.Row, events: list[dict[str, Any]]) -> dict[str, An
         "conversation_id": conversation_id,
         "current_state": current_state,
         "classification": _acp_classification(current_state),
-        "participants": list(_ACP_PARTICIPANTS),
+        "participants": list(participants),
         "rounds_requested": rounds_requested,
-        "rounds_completed": _acp_rounds_completed(events),
+        "rounds_completed": _acp_rounds_completed(events, participants),
         "created_at": created_at,
+        "deadline_at": deadline_at,
+        "expired": expired,
+        "stale_or_unhealthy": stale_or_unhealthy,
         "updated_at": updated_at,
         "total_duration_ms": duration_ms,
         "total_tokens": total_tokens,
@@ -760,18 +805,20 @@ def list_acp_conversations(*, limit: int = 50) -> dict[str, Any]:
     try:
         rows = connection.execute(
             """
-            SELECT conversation_id, rounds_requested, created_at
+            SELECT conversation_id, rounds_requested, participants_json, created_at, deadline_at
             FROM acp_conversations
             ORDER BY created_at DESC, conversation_id ASC
             LIMIT ?
             """,
             (limit,),
         ).fetchall()
-        conversations = [
-            summary
-            for row in rows
-            if (summary := _acp_summary(row, _acp_events(connection, row["conversation_id"]))) is not None
-        ]
+        conversations = []
+        for row in rows:
+            participants = _acp_discussion_participants(row["participants_json"])
+            events = _acp_events(connection, row["conversation_id"], participants)
+            summary = _acp_summary(row, events, participants)
+            if summary is not None:
+                conversations.append(summary)
     except sqlite3.Error:
         return {"availability": "unavailable", "conversations": []}
     finally:
@@ -789,13 +836,14 @@ def get_acp_conversation(conversation_id: str) -> dict[str, Any] | None:
         return None
     try:
         row = connection.execute(
-            "SELECT conversation_id, rounds_requested, created_at FROM acp_conversations WHERE conversation_id = ?",
+            "SELECT conversation_id, rounds_requested, participants_json, created_at, deadline_at FROM acp_conversations WHERE conversation_id = ?",
             (safe_id,),
         ).fetchone()
         if row is None:
             return None
-        events = _acp_events(connection, safe_id)
-        summary = _acp_summary(row, events)
+        participants = _acp_discussion_participants(row["participants_json"])
+        events = _acp_events(connection, safe_id, participants)
+        summary = _acp_summary(row, events, participants)
         return {**summary, "events": events} if summary is not None else None
     except sqlite3.Error:
         return None
@@ -850,7 +898,9 @@ def _acp_transcript_body(value: Any, *, remaining_bytes: int) -> str | None:
 
 
 def _acp_transcript_entries(
-    connection: sqlite3.Connection, conversation_id: str
+    connection: sqlite3.Connection,
+    conversation_id: str,
+    participants: tuple[str, str],
 ) -> list[dict[str, Any]] | None:
     """Read a bounded, allowlisted ACP transcript without exposing store IDs."""
     try:
@@ -884,8 +934,9 @@ def _acp_transcript_entries(
     remaining_bytes = _ACP_TRANSCRIPT_MAX_RESPONSE_BYTES
     for row in rows:
         kind = _acp_text(row["kind"], allowed=_ACP_TRANSCRIPT_KINDS)
-        sender = _acp_text(row["sender"], allowed=frozenset(_ACP_PARTICIPANTS))
-        recipient = _acp_text(row["recipient"], allowed=frozenset(_ACP_PARTICIPANTS))
+        allowed_lanes = frozenset({"root", "codex", *participants})
+        sender = _acp_text(row["sender"], allowed=allowed_lanes)
+        recipient = _acp_text(row["recipient"], allowed=allowed_lanes)
         created_at = _acp_timestamp(row["created_at"])
         body = _acp_transcript_body(row["body_inline"], remaining_bytes=remaining_bytes)
         if None in (kind, sender, recipient, created_at, body):
@@ -923,11 +974,12 @@ def get_acp_conversation_transcript(conversation_id: str) -> dict[str, Any] | No
         ):
             return None
         conversation = connection.execute(
-            "SELECT 1 FROM acp_conversations WHERE conversation_id = ?", (safe_id,)
+            "SELECT participants_json FROM acp_conversations WHERE conversation_id = ?", (safe_id,)
         ).fetchone()
         if conversation is None:
             return None
-        entries = _acp_transcript_entries(connection, safe_id)
+        participants = _acp_discussion_participants(conversation["participants_json"])
+        entries = _acp_transcript_entries(connection, safe_id, participants)
         return {"conversation_id": safe_id, "messages": entries} if entries is not None else None
     except sqlite3.Error:
         return None

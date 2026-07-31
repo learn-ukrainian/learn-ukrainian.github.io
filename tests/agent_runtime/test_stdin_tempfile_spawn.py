@@ -18,8 +18,11 @@ sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
 from agent_runtime.runner import (
     _STDIN_TEMP_PREFIX,
+    AgentOutputLimitError,
     _cleanup_stdin_temp,
+    _execute_invocation_plan,
     _prepare_stdin_handle,
+    _raise_for_kill_reason,
     _spawn_subprocess,
 )
 
@@ -145,3 +148,106 @@ def test_initial_response_timeout_kills_silent_child(clean_env, tmp_path, monkey
     elapsed = __import__("time").monotonic() - started
     assert exc_info.value.kind == "initial_response_timeout"
     assert elapsed < 15
+
+
+def test_acpx_direct_route_output_limit_kills_child_and_raises_typed_error(tmp_path, monkeypatch):
+    from agent_runtime import runner as runtime_runner
+    from agent_runtime.adapters.base import InvocationPlan
+    from agent_runtime.result import ParseResult
+
+    class AcpxFixtureAdapter:
+        def parse_response(self, *, returncode: int, **_kwargs):
+            return ParseResult(ok=False, response="", stderr_excerpt=f"rc={returncode}")
+
+        def liveness_signal_paths(self, _plan):
+            return ()
+
+    monkeypatch.setattr(runtime_runner, "_ACPX_DIRECT_OUTPUT_LIMIT_BYTES", 4 * 1024)
+    plan = InvocationPlan(
+        cmd=[
+            _TEST_PYTHON,
+            "-c",
+            "import sys,time; "
+            "[sys.stdout.write('x' * 1024 + '\\n') for _ in range(16)]; "
+            "sys.stdout.flush(); time.sleep(60)",
+        ],
+        cwd=tmp_path,
+    )
+    execution = _execute_invocation_plan(
+        agent_name="acpx-codex-shadow",
+        adapter=AcpxFixtureAdapter(),
+        plan=plan,
+        prompt="fixture",
+        mode="read-only",
+        cwd=tmp_path,
+        model="fixture",
+        task_id="fixture",
+        session_id=None,
+        entrypoint="acpx-discuss",
+        hard_timeout=30,
+        stall_timeout=30,
+    )
+
+    assert execution.kill_reason == "output_limit"
+    assert execution.duration_s < 15
+    monkeypatch.setattr(runtime_runner, "write_record", lambda _record: None)
+    with pytest.raises(AgentOutputLimitError) as error:
+        _raise_for_kill_reason(
+            agent_name="acpx-codex-shadow",
+            kill_reason=execution.kill_reason,
+            execution=execution,
+            prompt="fixture",
+            entrypoint="acpx-discuss",
+            model="fixture",
+            mode="read-only",
+            task_id="fixture",
+            cwd=tmp_path,
+            session_id=None,
+            stdout_silence_timeout=None,
+            initial_response_timeout=None,
+            stall_timeout=30,
+            hard_timeout=30,
+        )
+    assert error.value.limit_bytes == 4 * 1024
+    assert error.value.observed_bytes > error.value.limit_bytes
+
+
+def test_non_acpx_route_has_no_streamed_output_limit(tmp_path, monkeypatch):
+    from agent_runtime import runner as runtime_runner
+    from agent_runtime.adapters.base import InvocationPlan
+    from agent_runtime.result import ParseResult
+
+    class FixtureAdapter:
+        def parse_response(self, *, returncode: int, **_kwargs):
+            return ParseResult(ok=True, response="ok", stderr_excerpt=None)
+
+        def liveness_signal_paths(self, _plan):
+            return ()
+
+    monkeypatch.setattr(runtime_runner, "_ACPX_DIRECT_OUTPUT_LIMIT_BYTES", 4 * 1024)
+    assert runtime_runner._streamed_output_limit(
+        agent_name="codex", entrypoint="runtime",
+    ) is None
+    execution = _execute_invocation_plan(
+        agent_name="codex",
+        adapter=FixtureAdapter(),
+        plan=InvocationPlan(
+            cmd=[
+                _TEST_PYTHON,
+                "-c",
+                "import sys; [sys.stdout.write('x' * 1024 + '\\n') for _ in range(16)]",
+            ],
+            cwd=tmp_path,
+        ),
+        prompt="fixture",
+        mode="read-only",
+        cwd=tmp_path,
+        model="fixture",
+        task_id="fixture",
+        session_id=None,
+        entrypoint="runtime",
+        hard_timeout=30,
+        stall_timeout=30,
+    )
+    assert execution.kill_reason is None
+    assert execution.returncode == 0

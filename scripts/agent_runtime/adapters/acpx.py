@@ -152,6 +152,21 @@ _ALLOWED_TOOL_CONFIG_KEYS = frozenset(
     {"acpx_shadow", "acpx_discussion", "target_agent", "correlation_id", "idempotency_key"}
 )
 
+# Fixed ACPX built-ins that are safe to expose only through the bounded
+# discussion controller.  This is deliberately a small declarative registry,
+# rather than a caller-selectable adapter: consumers can enumerate the proven
+# participants without duplicating seat names, while each adapter below still
+# hard-codes its one target.
+ACPX_SUPPORTED_PARTICIPANTS: dict[str, dict[str, str | None]] = {
+    "codex": {"seat": "acpx-codex-shadow", "agent": "codex", "model": None},
+    "grok": {"seat": "acpx-grok-shadow", "agent": "grok", "model": GROK_SHADOW_MODEL},
+    "claude": {"seat": "acpx-claude-shadow", "agent": "claude", "model": None},
+    "kimi": {"seat": "acpx-kimi-shadow", "agent": "kimi", "model": None},
+    "kimicc": {"seat": "acpx-kimicc-shadow", "agent": "kimi", "model": "kimi-code/k3"},
+    "cursor": {"seat": "acpx-cursor-shadow", "agent": "cursor", "model": None},
+    "pool": {"seat": "acpx-pool-shadow", "agent": "pool", "model": None},
+}
+
 # Active ACPX is deliberately not a generally selectable adapter mode.  The
 # discussion controller enters this process-local scope immediately around a
 # direct-only invocation; all other callers, including normal runner routing,
@@ -349,6 +364,35 @@ def _require_shadow_tool_config(
                 f"{adapter_label}: tool_config must set acpx_shadow=True as an explicit "
                 "per-call marker of shadow intent; the feature flag alone is not enough"
             )
+    target_agent = tc.get("target_agent", required_target)
+    if target_agent != required_target:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: target_agent={target_agent!r} rejected; this seat supports "
+            f"exactly one ACP participant: {required_target}"
+        )
+    return tc
+
+
+def _require_active_discussion_tool_config(
+    tool_config: dict | None,
+    *,
+    adapter_label: str,
+    required_target: str,
+) -> dict[str, Any]:
+    """Require the controller-owned active discussion marker before spawn."""
+    tc = dict(tool_config or {})
+    unsupported_keys = set(tc) - _ALLOWED_TOOL_CONFIG_KEYS
+    if unsupported_keys:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: unsupported tool_config keys {sorted(unsupported_keys)!r}; "
+            f"only {sorted(_ALLOWED_TOOL_CONFIG_KEYS)!r} are recognized"
+        )
+    if tc.get("acpx_discussion") is not True:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: this direct-only seat requires acpx_discussion=True "
+            "from the active discussion controller"
+        )
+    _require_discussion_transport(adapter_label=adapter_label)
     target_agent = tc.get("target_agent", required_target)
     if target_agent != required_target:
         raise AcpxShadowRefusalError(
@@ -630,7 +674,10 @@ class AcpxAdapter:
             cwd=cwd,
             stdin_payload=prompt,
             output_file=None,
-            env_overrides={},
+            # Non-secret selector for the existing Codex ChatGPT login. The
+            # sanitizer allowlists only this literal route marker; no token is
+            # read, stored, or forwarded by the controller.
+            env_overrides={"ACPX_AUTH_CHAT_GPT": "1"},
             liveness_paths=(),
             metadata={
                 "acpx_shadow": True,
@@ -823,6 +870,126 @@ class AcpxAdapter:
         """
         _ = plan
         return ()
+
+
+class _AcpxBuiltinDiscussionAdapter:
+    """Shared implementation for one fixed built-in ACPX discussion seat.
+
+    Subclasses set constants only; callers cannot choose an ACP participant,
+    permissions, session, or (where pinned) model through this base class.
+    """
+
+    name: str
+    target_agent: str
+    fixed_model: str | None = None
+    auth_env: str | None = None
+    default_model: str = "acpx-built-in-default"
+    supported_modes: frozenset[str] = frozenset({"read-only"})
+
+    def build_invocation(
+        self,
+        *,
+        prompt: str,
+        mode: str,
+        cwd: Path,
+        model: str | None,
+        task_id: str | None,
+        session_id: str | None,
+        tool_config: dict | None,
+        effort: str | None = None,
+    ) -> InvocationPlan:
+        if mode not in self.supported_modes:
+            raise ValueError(
+                f"{type(self).__name__}: unsupported mode {mode!r}; only 'read-only' is permitted"
+            )
+        tc = _require_active_discussion_tool_config(
+            tool_config,
+            adapter_label=type(self).__name__,
+            required_target=self.target_agent,
+        )
+        if self.fixed_model is not None and model not in {None, self.fixed_model}:
+            raise AcpxShadowRefusalError(
+                f"{type(self).__name__}: model={model!r} rejected; caller may only pass None "
+                f"or {self.fixed_model!r}"
+            )
+        if session_id is not None:
+            raise AcpxShadowRefusalError(
+                f"{type(self).__name__}: session_id must be None; this seat is one-shot `exec` only"
+            )
+        validated_task_id = _require_local_metadata_field(
+            "task_id", task_id, adapter_label=type(self).__name__
+        )
+        correlation_id = _require_local_metadata_field(
+            "correlation_id", tc.get("correlation_id"), adapter_label=type(self).__name__
+        )
+        idempotency_key = _require_local_metadata_field(
+            "idempotency_key", tc.get("idempotency_key"), adapter_label=type(self).__name__
+        )
+        _require_non_primary_worktree(cwd, adapter_label=type(self).__name__)
+        binary = _require_pinned_acpx_binary(adapter_label=type(self).__name__, cwd=cwd)
+        cmd = _confinement_prefix_argv(binary, cwd)
+        if self.fixed_model is not None:
+            cmd.extend(["--model", self.fixed_model])
+        cmd.extend([self.target_agent, "exec", "-f", "-"])
+        metadata: dict[str, Any] = {
+            "acpx_discussion": True,
+            "acpx_pinned_version": PINNED_VERSION,
+            "target_agent": self.target_agent,
+            "task_id": validated_task_id,
+            "correlation_id": correlation_id,
+            "idempotency_key": idempotency_key,
+        }
+        if self.fixed_model is not None:
+            metadata["model"] = self.fixed_model
+        if effort is not None:
+            _logger.debug("%s: effort=%r has no ACPX flag equivalent; ignoring", type(self).__name__, effort)
+        return InvocationPlan(
+            cmd=cmd,
+            cwd=cwd,
+            stdin_payload=prompt,
+            output_file=None,
+            env_overrides={} if self.auth_env is None else {self.auth_env: "1"},
+            liveness_paths=(),
+            metadata=metadata,
+        )
+
+    def parse_response(self, **kwargs: Any) -> ParseResult:
+        """Reuse the established fail-closed ACPX NDJSON parser."""
+        return AcpxAdapter().parse_response(**kwargs)
+
+    def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
+        _ = plan
+        return ()
+
+
+class AcpxClaudeShadowAdapter(_AcpxBuiltinDiscussionAdapter):
+    name = "acpx-claude-shadow"
+    target_agent = "claude"
+
+
+class AcpxKimiShadowAdapter(_AcpxBuiltinDiscussionAdapter):
+    name = "acpx-kimi-shadow"
+    target_agent = "kimi"
+    auth_env = "ACPX_AUTH_LOGIN"
+
+
+class AcpxKimiCcShadowAdapter(_AcpxBuiltinDiscussionAdapter):
+    name = "acpx-kimicc-shadow"
+    target_agent = "kimi"
+    fixed_model = "kimi-code/k3"
+    default_model = fixed_model
+    auth_env = "ACPX_AUTH_LOGIN"
+
+
+class AcpxCursorShadowAdapter(_AcpxBuiltinDiscussionAdapter):
+    name = "acpx-cursor-shadow"
+    target_agent = "cursor"
+    auth_env = "ACPX_AUTH_CURSOR_LOGIN"
+
+
+class AcpxPoolShadowAdapter(_AcpxBuiltinDiscussionAdapter):
+    name = "acpx-pool-shadow"
+    target_agent = "pool"
 
 
 class AcpxGrokShadowAdapter:

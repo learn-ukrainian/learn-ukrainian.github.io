@@ -353,10 +353,13 @@ def test_acp_conversation_api_is_ordered_allowlisted_and_read_only(tmp_path, mon
             "conversation_id": "conv-001",
             "current_state": "COMPLETE",
             "classification": "complete",
-            "participants": ["root", "codex", "grok"],
+            "participants": ["codex", "grok"],
             "rounds_requested": 2,
             "rounds_completed": 1,
             "created_at": _iso(now - timedelta(minutes=5)),
+            "deadline_at": _iso(now + timedelta(minutes=5)),
+            "expired": False,
+            "stale_or_unhealthy": False,
             "updated_at": _iso(now - timedelta(minutes=2)),
             "total_duration_ms": 600,
             "total_tokens": 35,
@@ -374,7 +377,7 @@ def test_acp_conversation_api_is_ordered_allowlisted_and_read_only(tmp_path, mon
     assert not (root / "comms.sqlite3-journal").exists()
     assert not (root / "comms.sqlite3-wal").exists()
     for private_value in (
-        "task_digest", "correlation_digest", "idempotency_digest", "deadline_at",
+        "task_digest", "correlation_digest", "idempotency_digest",
         "token_budget", "content_budget_bytes", "metadata_json", "message_id",
         "leg_key_digest", "must-not-leak", "leg-secret", "message-secret",
     ):
@@ -690,6 +693,29 @@ def test_acp_summary_prefers_terminal_wall_duration_and_token_total(tmp_path, mo
 
     assert summary["total_duration_ms"] == 250
     assert summary["total_tokens"] == 5
+
+
+def test_acp_summary_marks_expired_and_partial_conversations_unhealthy(tmp_path, monkeypatch):
+    root = tmp_path / "plane"
+    now = datetime.now(UTC)
+    conversation = (
+        "conv-expired", "task", "correlation", "idempotency", 1, '[]',
+        _iso(now - timedelta(minutes=10)), _iso(now - timedelta(minutes=1)), 1, 1,
+    )
+    events = [
+        (
+            "event-1", "conv-expired", 1, "STATE", "PARTIAL", None, None, None,
+            None, None, None, None, None, "{}", _iso(now - timedelta(minutes=2)),
+        ),
+    ]
+    _write_acp_db(root, [conversation], events)
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+
+    summary = client.get("/api/runtime/acp/conversations").json()["conversations"][0]
+
+    assert summary["deadline_at"] == _iso(now - timedelta(minutes=1))
+    assert summary["expired"] is True
+    assert summary["stale_or_unhealthy"] is True
 
 
 def test_runtime_page_links_to_the_dedicated_read_only_acp_conversations_page():

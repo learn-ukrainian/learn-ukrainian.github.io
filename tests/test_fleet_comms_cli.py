@@ -7,6 +7,7 @@ import json
 import os
 import sqlite3
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -186,6 +187,61 @@ def test_acp_discuss_cli_scopes_active_transport_and_restores_environment(
     assert observed == ["active"]
     assert os.environ["LU_ACPX_TRANSPORT"] == "shadow"
     assert json.loads(capsys.readouterr().out) == {"state": "COMPLETE"}
+
+
+def test_launcher_transport_routes_supported_bridge_command_to_durable_acp(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys,
+) -> None:
+    from scripts.ai_agent_bridge import _channels, _channels_cli, _config, _db
+
+    db_path = tmp_path / "bridge.db"
+    monkeypatch.setattr(_config, "DB_PATH", db_path)
+    monkeypatch.setattr(_db, "DB_PATH", db_path)
+    monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
+    monkeypatch.setattr(_channels, "context_sha256", lambda path: "")
+    monkeypatch.setattr(
+        _channels,
+        "load_channel_context",
+        lambda channel: {"body": "", "revs": {}, "missing": []},
+    )
+    monkeypatch.setenv("LU_AGENT_COMM_TRANSPORT", "acp")
+    _channels.create_channel("architecture", exist_ok=False)
+    observed: dict[str, object] = {}
+
+    def fake_run_discussion(**kwargs):
+        observed.update(kwargs)
+        return {
+            "conversation_id": "conversation_" + ("a" * 32),
+            "state": "COMPLETE",
+            "rounds_completed": 2,
+            "synthesis": "ACP synthesis",
+        }
+
+    monkeypatch.setattr("agent_runtime.acpx_discuss.run_discussion", fake_run_discussion)
+    monkeypatch.setattr(
+        "agent_runtime.runner.invoke",
+        lambda *_a, **_k: pytest.fail("eligible ACP discussion must not call bridge runtime"),
+    )
+    args = SimpleNamespace(
+        channel="architecture",
+        body="Compare the bounded options.",
+        with_agents="kimicc,pool",
+        max_rounds=2,
+        review=False,
+        models=None,
+    )
+
+    assert _channels_cli._handle_discuss(args) == 0
+    assert observed["participants"] == ("kimicc", "pool")
+    assert "Compare the bounded options." in str(observed["prompt"])
+    assert "--- monitor: project state" not in str(observed["prompt"])
+    output = capsys.readouterr().out
+    assert "transport: ACP (kimicc, pool)" in output
+    assert "/acp.html?conversation=conversation_" in output
+    messages = _channels.read("architecture", tail=10)
+    assert any("[ACP COMPLETE]" in message["body"] for message in messages)
 
 
 def test_acp_discuss_cli_busy_is_body_free_no_queue_json(

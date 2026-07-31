@@ -51,9 +51,11 @@ from ai_llm.fallback import (
     run_gemini_fallback_ladder,
 )
 
+from .adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 from .adapters.base import AgentAdapter
 from .env_sanitize import build_agent_env
 from .errors import (
+    AgentRuntimeError,
     AgentStalledError,
     AgentTimeoutError,
     AgentUnavailableError,
@@ -109,10 +111,35 @@ _MCP_FAILURE_URL_RE = re.compile(r"url \((?P<url>https?://[^)\s]+)\)")
 _PRIVACY_LIMITED_USAGE_ENTRYPOINTS = frozenset(
     {"acpx-pilot-native", "acpx-pilot-shadow", "acpx-discuss", "acpx-discuss-synthesis"}
 )
+_ACPX_DIRECT_OUTPUT_LIMIT_BYTES = 256 * 1024
 
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.
 _ADAPTER_CACHE: dict[str, AgentAdapter] = {}
+
+
+class AgentOutputLimitError(AgentRuntimeError):
+    """A bounded ACP direct-route invocation exceeded its streamed-output cap."""
+
+    def __init__(self, agent: str, limit_bytes: int, observed_bytes: int):
+        self.agent = agent
+        self.limit_bytes = limit_bytes
+        self.observed_bytes = observed_bytes
+        super().__init__(
+            f"{agent} exceeded streamed_output_limit={limit_bytes} bytes "
+            f"(observed={observed_bytes})"
+        )
+
+
+def _streamed_output_limit(*, agent_name: str, entrypoint: str) -> int | None:
+    """Return the opt-in cap for isolated ACP direct-only seats only."""
+    acpx_seats = {str(route["seat"]) for route in ACPX_SUPPORTED_PARTICIPANTS.values()}
+    if (
+        agent_name in acpx_seats
+        and entrypoint in {"acpx-pilot-shadow", "acpx-discuss"}
+    ):
+        return _ACPX_DIRECT_OUTPUT_LIMIT_BYTES
+    return None
 
 
 def _resolve_plan_telemetry(
@@ -1150,6 +1177,9 @@ def _execute_invocation_plan(
     stderr_master_fd: int | None = None
     stdin_handle: Any = subprocess.DEVNULL
     stdin_temp_path: Path | None = None
+    output_limit = _streamed_output_limit(agent_name=agent_name, entrypoint=entrypoint)
+    observed_output_stdout_lines = 0
+    streamed_output_bytes = 0
 
     try:
         try:
@@ -1220,6 +1250,13 @@ def _execute_invocation_plan(
         kill_reason: str | None = None
         returncode: int | None = None
         while True:
+            if output_limit is not None:
+                new_stdout_lines = watchdog_state.stdout_lines[observed_output_stdout_lines:]
+                observed_output_stdout_lines = len(watchdog_state.stdout_lines)
+                streamed_output_bytes += sum(
+                    len(line.encode("utf-8", errors="replace"))
+                    for line in new_stdout_lines
+                )
             if mcp_observer is not None:
                 observed_stdout_lines = mcp_observer.observe_lines(
                     watchdog_state.stdout_lines,
@@ -1235,6 +1272,11 @@ def _execute_invocation_plan(
 
             returncode = proc.poll()
             if returncode is not None:
+                break
+
+            if output_limit is not None and streamed_output_bytes > output_limit:
+                kill_reason = "output_limit"
+                _kill_process_tree(proc)
                 break
 
             if early_reap_check is not None:
@@ -1422,6 +1464,33 @@ def _raise_for_kill_reason(
     record_substitution = substitution if substitution is not None else parse.substitution
     if kill_reason == "hard_timeout" and parse.ok:
         return
+    if kill_reason == "output_limit":
+        limit_bytes = _streamed_output_limit(agent_name=agent_name, entrypoint=entrypoint) or 0
+        observed_bytes = len(execution.stdout_text.encode("utf-8", errors="replace"))
+        record = _build_usage_record(
+            agent=agent_name,
+            entrypoint=entrypoint,
+            model=model,
+            mode=mode,
+            task_id=task_id,
+            cwd=cwd,
+            session_id=session_id,
+            duration_s=execution.duration_s,
+            input_chars=len(prompt),
+            output_chars=len(execution.stdout_text),
+            returncode=execution.returncode,
+            outcome="error",
+            rate_limited=False,
+            stalled=False,
+            stderr_excerpt=(
+                f"streamed_output_limit exceeded: limit={limit_bytes} "
+                f"observed={observed_bytes}"
+            ),
+            tokens=None,
+            substitution=record_substitution,
+        )
+        write_record(record)
+        raise AgentOutputLimitError(agent_name, limit_bytes, observed_bytes)
     if kill_reason == "stdout_silence_timeout":
         record = _build_usage_record(
             agent=agent_name,

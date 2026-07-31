@@ -393,6 +393,11 @@ launcher_main() {
   LC_MODE="$2"
   shift 2
   LC_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+  # Every interactive and driver launcher exports the same routine ACP route;
+  # sourcing the helper starts no process. Driver prompt binding later reuses
+  # its functions and is intentionally idempotent.
+  # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
+  source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"
   launcher_clear_foreign_route_state
   launcher_defaults
   launcher_parse "$@"

@@ -15,6 +15,7 @@ from scripts.agent_runtime.errors import AgentTimeoutError
 from scripts.agent_runtime.result import Result
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.message_plane import default_plane_root
+from scripts.guardrails.worktree_containment import resolve_main_root
 
 
 def _result(agent: str, response: str, *, tokens: int = 5) -> Result:
@@ -94,6 +95,50 @@ def test_two_participants_are_parallel_and_completed_replay_makes_no_calls(tmp_p
     edges = {(str(row[0]), str(row[1])) for row in rows}
     assert {("root", "codex"), ("root", "grok"), ("codex", "root"), ("grok", "root"), ("codex", "grok"), ("grok", "codex")} <= edges
     assert any(row[2] is not None for row in rows)
+
+
+def test_enabled_nondefault_pair_uses_fixed_acp_seats_and_persists_participants(
+    tmp_path, monkeypatch
+):
+    calls: list[tuple[str, str]] = []
+
+    def participant(agent: str, _prompt: str, **kwargs):
+        calls.append((agent, kwargs["tool_config"]["target_agent"]))
+        return _result(agent, f"{agent} evidence")
+
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        participant,
+        lambda agent, _prompt, **_kwargs: _result(agent, "synthesis"),
+    )
+    try:
+        result = controller.run(
+            prompt="Compare the two bounded options.",
+            cwd=Path.cwd(),
+            task_id="task-6130",
+            correlation_id="corr-6130",
+            idempotency_key="idem-6130-generic",
+            rounds=1,
+            participants=("claude", "kimicc"),
+        )
+        stored = controller.conn.execute(
+            "SELECT participants_json FROM acp_conversations WHERE conversation_id = ?",
+            (result["conversation_id"],),
+        ).fetchone()[0]
+    finally:
+        controller.close()
+
+    assert sorted(calls) == [
+        ("acpx-claude-shadow", "claude"),
+        ("acpx-kimicc-shadow", "kimi"),
+    ]
+    assert stored == '["claude", "kimicc"]'
+    receipt = acpx_discuss.verify_discussion_receipt(
+        root=tmp_path / "plane", conversation_id=result["conversation_id"]
+    )
+    assert receipt["participants"] == ["claude", "kimicc"]
+    assert receipt["checks"]["fixed_participants"] is True
 
 
 def test_conversation_survives_dispatch_worktree_cleanup(tmp_path, monkeypatch):
@@ -364,7 +409,12 @@ def test_orphan_reservation_is_terminal_partial_without_model_retry(tmp_path, mo
         called = True
         raise AssertionError("orphan must not be retried")
 
-    controller = _controller(tmp_path, monkeypatch, participant, participant)
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        participant,
+        lambda agent, _prompt, **_kwargs: _result(agent, "synthesis"),
+    )
     try:
         _conversation, replay = controller._reserve(
             task_digest="a", correlation_digest="b", idempotency_digest=acpx_discuss._digest("idem-1"),
@@ -433,19 +483,23 @@ def test_orphan_recovery_is_terminal_from_every_midflight_state(
             )
 
         replay_payload = _run(controller, key=key)
-        terminal = controller.conn.execute(
+        terminal_events = controller.conn.execute(
             """SELECT event_type, state, outcome
                FROM acp_conversation_events
                WHERE conversation_id = ?
-               ORDER BY sequence DESC LIMIT 1""",
+                 AND event_type IN ('ORPHAN_RESERVATION', 'DUPLICATE_SUPPRESSED')
+               ORDER BY sequence""",
             (conversation_id,),
-        ).fetchone()
+        ).fetchall()
     finally:
         controller.close()
 
     assert replay_payload["state"] == "PARTIAL_COMPLETE"
     assert replay_payload["duplicate_suppressed"] is True
-    assert tuple(terminal) == ("ORPHAN_RESERVATION", "PARTIAL_COMPLETE", "orphan")
+    assert [tuple(event) for event in terminal_events] == [
+        ("ORPHAN_RESERVATION", "PARTIAL_COMPLETE", "orphan"),
+        ("DUPLICATE_SUPPRESSED", "PARTIAL_COMPLETE", "duplicate_suppressed"),
+    ]
 
 
 def test_live_duplicate_refuses_without_mutating_original_reservation(tmp_path, monkeypatch):
@@ -710,6 +764,7 @@ def test_crashed_process_releases_repository_admission_lock(tmp_path):
     root = tmp_path / "plane"
     root.mkdir()
     repo_root = Path(__file__).resolve().parents[2]
+    python = resolve_main_root(repo_root) / ".venv" / "bin" / "python"
     code = """
 import os
 import sys
@@ -719,7 +774,7 @@ with _discussion_admission(Path(sys.argv[1])):
     os._exit(17)
 """
     completed = subprocess.run(
-        [str(repo_root / ".venv" / "bin" / "python"), "-c", code, str(root)],
+        [str(python), "-c", code, str(root)],
         cwd=repo_root,
         check=False,
     )
@@ -872,6 +927,121 @@ def test_errors_are_terminal_once_per_leg_without_retry_or_failover(tmp_path, mo
     assert sorted(calls) == ["acpx-codex-shadow", "acpx-grok-shadow"]
     assert payload["state"] == "PARTIAL_COMPLETE"
     assert {item["outcome"] for item in payload["participant_outcomes"]} == {"error"}
+
+
+def test_fast_participant_is_persisted_before_slow_participant_finishes(tmp_path, monkeypatch):
+    fast_recorded = threading.Event()
+
+    def participant(agent: str, _prompt: str, **_kwargs):
+        if agent.endswith("codex-shadow"):
+            assert fast_recorded.wait(timeout=1)
+            return _result(agent, "slow")
+        return _result(agent, "fast")
+
+    controller = _controller(tmp_path, monkeypatch, participant, lambda *_a, **_k: _result("codex", "unused"))
+    original_append = controller._append
+
+    def observing_append(*args, **kwargs):
+        original_append(*args, **kwargs)
+        if kwargs.get("event_type") == "CALL_TERMINAL" and kwargs.get("sender") == "grok":
+            fast_recorded.set()
+
+    controller._append = observing_append  # type: ignore[method-assign]
+    try:
+        conversation_id, replay = controller._reserve(
+            task_digest="task", correlation_digest="corr", idempotency_digest="idem",
+            rounds=1, deadline_at="2099-01-01T00:00:00Z",
+        )
+        assert replay is None
+        outcomes = controller._call_wave(
+            conversation_id=conversation_id,
+            task_id="task",
+            correlation_id="corr",
+            idempotency_key="idem",
+            cwd=Path.cwd(),
+            round_no=1,
+            prompts={"codex": "prompt", "grok": "prompt"},
+            deliveries={"codex": ("root", "prompt", None), "grok": ("root", "prompt", None)},
+            state="INITIAL_FANOUT",
+            deadline=controller.clock() + 10,
+        )
+    finally:
+        controller.close()
+
+    assert fast_recorded.is_set()
+    assert [outcome.participant for outcome in outcomes] == ["codex", "grok"]
+
+
+def test_expired_recovery_is_terminal_without_provider_retry(tmp_path, monkeypatch):
+    calls: list[str] = []
+
+    def participant(agent: str, _prompt: str, **_kwargs):
+        calls.append(agent)
+        return _result(agent, "must not run")
+
+    controller = _controller(tmp_path, monkeypatch, participant, participant)
+    try:
+        conversation_id, replay = controller._reserve(
+            task_digest="task", correlation_digest="corr", idempotency_digest="expired-idem",
+            rounds=1, deadline_at="2000-01-01T00:00:00Z",
+        )
+        assert replay is None
+        controller._append(
+            conversation_id, event_type="STATE", state="INITIAL_FANOUT", transition=True,
+        )
+    finally:
+        controller.close()
+
+    recovered = acpx_discuss.recover_expired_discussions(root=tmp_path / "plane")
+    conn = sqlite3.connect(tmp_path / "plane" / "comms.sqlite3")
+    try:
+        event = conn.execute(
+            "SELECT event_type, state, outcome FROM acp_conversation_events "
+            "WHERE conversation_id = ? ORDER BY sequence DESC LIMIT 1",
+            (conversation_id,),
+        ).fetchone()
+    finally:
+        conn.close()
+
+    assert recovered == [conversation_id]
+    assert tuple(event) == ("ORPHAN_RESERVATION", "PARTIAL_COMPLETE", "orphan")
+    assert calls == []
+
+
+def test_next_admitted_discussion_recovers_expired_reservation_before_new_calls(
+    tmp_path, monkeypatch
+):
+    calls: list[str] = []
+
+    def participant(agent: str, _prompt: str, **_kwargs):
+        calls.append(agent)
+        return _result(agent, "fresh evidence")
+
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        participant,
+        lambda agent, _prompt, **_kwargs: _result(agent, "synthesis"),
+    )
+    try:
+        expired_id, _ = controller._reserve(
+            task_digest="old-task",
+            correlation_digest="old-corr",
+            idempotency_digest="old-idem",
+            rounds=1,
+            deadline_at="2000-01-01T00:00:00Z",
+        )
+        controller._append(
+            expired_id, event_type="STATE", state="INITIAL_FANOUT", transition=True
+        )
+        fresh = _run(controller, key="fresh-idem", rounds=1)
+        expired_state = controller._state(expired_id)
+    finally:
+        controller.close()
+
+    assert expired_state == "PARTIAL_COMPLETE"
+    assert fresh["state"] == "COMPLETE"
+    assert sorted(calls) == ["acpx-codex-shadow", "acpx-grok-shadow"]
 
 
 def test_racing_reservations_never_expose_a_conversation_without_created_event(tmp_path, monkeypatch):

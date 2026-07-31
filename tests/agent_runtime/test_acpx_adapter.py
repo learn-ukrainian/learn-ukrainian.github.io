@@ -26,10 +26,17 @@ import pytest
 
 from scripts.agent_runtime.adapters import acpx as acpx_module
 from scripts.agent_runtime.adapters.acpx import (
+    ACPX_SUPPORTED_PARTICIPANTS,
     AcpxAdapter,
+    AcpxClaudeShadowAdapter,
+    AcpxCursorShadowAdapter,
     AcpxGrokShadowAdapter,
+    AcpxKimiCcShadowAdapter,
+    AcpxKimiShadowAdapter,
+    AcpxPoolShadowAdapter,
     AcpxShadowRefusalError,
 )
+from scripts.agent_runtime.env_sanitize import build_agent_env
 
 _SUCCESS_NDJSON = (
     '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
@@ -1416,7 +1423,10 @@ def test_codex_adapter_unchanged_still_targets_codex_only(tmp_path, monkeypatch)
     assert "exec" in plan.cmd
     assert "--agent" not in plan.cmd
     assert "grok-build" not in plan.cmd
-    assert plan.env_overrides == {}
+    assert plan.env_overrides == {"ACPX_AUTH_CHAT_GPT": "1"}
+    assert build_agent_env(provider=adapter.name, overrides=plan.env_overrides)[
+        "ACPX_AUTH_CHAT_GPT"
+    ] == "1"
     assert plan.env_unsets == ()
     with pytest.raises(AcpxShadowRefusalError, match="target_agent"):
         _build(
@@ -1429,6 +1439,127 @@ def test_codex_adapter_unchanged_still_targets_codex_only(tmp_path, monkeypatch)
                 "idempotency_key": "idem-1",
             },
         )
+
+
+@pytest.mark.parametrize(
+    ("adapter_class", "participant", "acpx_agent", "fixed_model", "auth_env"),
+    [
+        (AcpxClaudeShadowAdapter, "claude", "claude", None, None),
+        (AcpxKimiShadowAdapter, "kimi", "kimi", None, "ACPX_AUTH_LOGIN"),
+        (AcpxKimiCcShadowAdapter, "kimicc", "kimi", "kimi-code/k3", "ACPX_AUTH_LOGIN"),
+        (AcpxCursorShadowAdapter, "cursor", "cursor", None, "ACPX_AUTH_CURSOR_LOGIN"),
+        (AcpxPoolShadowAdapter, "pool", "pool", None, None),
+    ],
+)
+def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
+    tmp_path, monkeypatch, adapter_class, participant, acpx_agent, fixed_model, auth_env
+):
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = adapter_class()
+    tool_config = {
+        "acpx_discussion": True,
+        "target_agent": acpx_agent,
+        "correlation_id": "corr-1",
+        "idempotency_key": "idem-1",
+    }
+
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    with pytest.raises(AcpxShadowRefusalError, match="discussion controller"):
+        adapter.build_invocation(
+            prompt="ping",
+            mode="read-only",
+            cwd=tmp_path,
+            model=fixed_model,
+            task_id="t-1",
+            session_id=None,
+            tool_config=tool_config,
+        )
+
+    with acpx_module.active_discussion_scope():
+        plan = adapter.build_invocation(
+            prompt="ping",
+            mode="read-only",
+            cwd=tmp_path,
+            model=fixed_model,
+            task_id="t-1",
+            session_id=None,
+            tool_config=tool_config,
+        )
+
+    assert adapter.name == f"acpx-{participant}-shadow"
+    assert plan.cmd[-4:] == [acpx_agent, "exec", "-f", "-"]
+    assert plan.env_overrides == ({} if auth_env is None else {auth_env: "1"})
+    sanitized_env = build_agent_env(provider=adapter.name, overrides=plan.env_overrides)
+    if auth_env is not None:
+        assert sanitized_env[auth_env] == "1"
+    assert plan.metadata["target_agent"] == acpx_agent
+    assert plan.metadata["acpx_discussion"] is True
+    assert "--deny-all" in plan.cmd
+    assert "--no-fs" in plan.cmd
+    assert "--no-terminal" in plan.cmd
+    assert ("--allowed-tools", "") in zip(plan.cmd, plan.cmd[1:], strict=False)
+    if fixed_model is None:
+        assert "--model" not in plan.cmd
+        assert "model" not in plan.metadata
+    else:
+        assert ("--model", fixed_model) in zip(plan.cmd, plan.cmd[1:], strict=False)
+        assert plan.metadata["model"] == fixed_model
+
+
+def test_builtin_discussion_seat_rejects_shadow_marker_wrong_target_and_session(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxClaudeShadowAdapter()
+    base = {"target_agent": "claude", "correlation_id": "corr-1", "idempotency_key": "idem-1"}
+    with pytest.raises(AcpxShadowRefusalError, match="acpx_discussion"):
+        adapter.build_invocation(
+            prompt="ping", mode="read-only", cwd=tmp_path, model=None, task_id="t-1", session_id=None,
+            tool_config={"acpx_shadow": True, **base},
+        )
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    with acpx_module.active_discussion_scope():
+        with pytest.raises(AcpxShadowRefusalError, match="target_agent"):
+            adapter.build_invocation(
+                prompt="ping", mode="read-only", cwd=tmp_path, model=None, task_id="t-1", session_id=None,
+                tool_config={"acpx_discussion": True, **base, "target_agent": "pool"},
+            )
+        with pytest.raises(AcpxShadowRefusalError, match="session_id"):
+            adapter.build_invocation(
+                prompt="ping", mode="read-only", cwd=tmp_path, model=None, task_id="t-1", session_id="prior",
+                tool_config={"acpx_discussion": True, **base},
+            )
+
+
+def test_kimicc_rejects_a_caller_model_other_than_its_exact_pin(tmp_path, monkeypatch):
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    _stub_binary(monkeypatch, tmp_path)
+    with acpx_module.active_discussion_scope(), pytest.raises(AcpxShadowRefusalError, match="model="):
+        AcpxKimiCcShadowAdapter().build_invocation(
+            prompt="ping",
+            mode="read-only",
+            cwd=tmp_path,
+            model="kimi-code/other",
+            task_id="t-1",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "kimi",
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem-1",
+            },
+        )
+
+
+def test_supported_participant_registry_has_only_fixed_direct_seats():
+    assert ACPX_SUPPORTED_PARTICIPANTS == {
+        "codex": {"seat": "acpx-codex-shadow", "agent": "codex", "model": None},
+        "grok": {"seat": "acpx-grok-shadow", "agent": "grok", "model": "grok-4.5"},
+        "claude": {"seat": "acpx-claude-shadow", "agent": "claude", "model": None},
+        "kimi": {"seat": "acpx-kimi-shadow", "agent": "kimi", "model": None},
+        "kimicc": {"seat": "acpx-kimicc-shadow", "agent": "kimi", "model": "kimi-code/k3"},
+        "cursor": {"seat": "acpx-cursor-shadow", "agent": "cursor", "model": None},
+        "pool": {"seat": "acpx-pool-shadow", "agent": "pool", "model": None},
+    }
 
 
 def test_build_grok_agent_command_quotes_absolute_paths_with_spaces(tmp_path):
