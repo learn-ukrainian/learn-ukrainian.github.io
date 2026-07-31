@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/corpus_profile_config_v1.schema.json",
+  "title": "Ukrainian Data Foundry corpus profile configuration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile_id", "source_snapshot_id", "record_batch_size", "top_unknown_limit", "vesum", "sources"],
+  "properties": {
+    "schema_version": {"const": "corpus_profile_config_v1"},
+    "profile_id": {"$ref": "#/$defs/id"},
+    "source_snapshot_id": {"$ref": "#/$defs/id"},
+    "record_batch_size": {"type": "integer", "minimum": 1, "maximum": 4096},
+    "top_unknown_limit": {"type": "integer", "minimum": 0, "maximum": 1000},
+    "vesum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["database", "snapshot_id", "interface", "batch_size"],
+      "properties": {
+        "database": {"$ref": "#/$defs/relativePath"},
+        "snapshot_id": {"$ref": "#/$defs/id"},
+        "interface": {"const": "scripts.verification.vesum.verify_words"},
+        "batch_size": {"type": "integer", "minimum": 1, "maximum": 500}
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/source"}
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$"},
+    "identifier": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+    "relativePath": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "column": {"$ref": "#/$defs/identifier"},
+        "constant": {"type": "string", "minLength": 1}
+      },
+      "oneOf": [
+        {"required": ["column"]},
+        {"required": ["constant"]}
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_family", "inventory_asset_id", "adapter", "evidence", "expected"],
+      "properties": {
+        "source_family": {"$ref": "#/$defs/id"},
+        "inventory_asset_id": {"$ref": "#/$defs/id"},
+        "adapter": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "database", "table", "id_column", "text_column", "locator_column", "dimensions"],
+          "properties": {
+            "kind": {"const": "sqlite_query_v1"},
+            "database": {"$ref": "#/$defs/relativePath"},
+            "table": {"$ref": "#/$defs/identifier"},
+            "id_column": {"$ref": "#/$defs/identifier"},
+            "text_column": {"$ref": "#/$defs/identifier"},
+            "locator_column": {"$ref": "#/$defs/identifier"},
+            "dimensions": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["period", "genre", "register", "origin"],
+              "properties": {
+                "period": {"$ref": "#/$defs/dimension"},
+                "genre": {"$ref": "#/$defs/dimension"},
+                "register": {"$ref": "#/$defs/dimension"},
+                "origin": {"$ref": "#/$defs/dimension"}
+              }
+            },
+            "exclude": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["column", "values"],
+              "properties": {
+                "column": {"$ref": "#/$defs/identifier"},
+                "values": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+              }
+            }
+          }
+        },
+        "evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["provenance_status", "rights_status", "origin_status", "contamination_status", "permitted_use"],
+          "properties": {
+            "provenance_status": {"enum": ["complete", "partial", "missing"]},
+            "rights_status": {"enum": ["granted", "not_reconstructed", "unknown", "conflicting", "denied"]},
+            "origin_status": {"enum": ["verified_human_authorship", "inventory_classified", "unknown"]},
+            "contamination_status": {"enum": ["cleared", "not_checked", "conflicting"]},
+            "permitted_use": {"enum": ["training_eligible", "evaluation_only", "private_reference", "provenance_investigation", "rights_redistribution_investigation", "unresolved", "excluded"]}
+          }
+        },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rows", "lexical_words"],
+          "properties": {
+            "rows": {"type": "integer", "minimum": 0},
+            "lexical_words": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    }
+  }
+}
