@@ -318,6 +318,7 @@ def launcher_environment(tmp_path: Path, *providers: str) -> tuple[dict[str, str
         encoding="utf-8",
     )
     fake_npm.chmod(0o755)
+    # The Gemini driver intentionally reaches the provider through the AGY transport binary.
     executable_names = {"gemini": "agy"}
     started = {provider: started_dir / provider for provider in providers}
     for provider, marker in started.items():
@@ -1160,7 +1161,9 @@ def test_real_cross_family_driver_launchers_refuse_before_second_provider_execut
         deadline = time.monotonic() + 10
         while not started[first_provider].exists() and time.monotonic() < deadline:
             time.sleep(0.05)
-        assert started[first_provider].exists(), first.communicate(timeout=10)
+        assert started[first_provider].exists(), (
+            f"{first_provider} launcher did not reach provider stub; returncode={first.poll()}"
+        )
         second = run(
             [primary / f"start-{second_provider}-driver.sh", "devops", "--model", second_model],
             cwd=primary,
