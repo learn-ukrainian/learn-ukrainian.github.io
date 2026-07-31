@@ -1,0 +1,324 @@
+{
+  "category_gap_evidence": {
+    "eligible_tag_item_support": {
+      "F/Calque": 194,
+      "G/Aspect": 15,
+      "G/Case": 193,
+      "G/Comparison": 6,
+      "G/Conjunction": 45,
+      "G/Gender": 47,
+      "G/Number": 55,
+      "G/Other": 13,
+      "G/PartVoice": 11,
+      "G/Participle": 1,
+      "G/Particle": 4,
+      "G/Prep": 84,
+      "G/Tense": 49,
+      "G/UngrammaticalStructure": 169,
+      "G/VerbAForm": 9,
+      "G/VerbVoice": 38
+    },
+    "interpretation": "Counts describe frozen v0.1.1 measurement gaps. Protected-risk rows are review seeds, not hard-positive controls.",
+    "strata": {
+      "calque_lexical_choice": {
+        "gemma_over_edited": 63,
+        "gemma_unchanged": 112,
+        "gemma_under_edited": 176,
+        "gpt_over_edited": 79,
+        "gpt_unchanged": 77,
+        "gpt_under_edited": 158,
+        "items": 194,
+        "model_measurement_disagreement": 107
+      },
+      "clean_no_change_control": {
+        "items": 0
+      },
+      "cognate_contested_or_protected_review": {
+        "gemma_over_edited": 5,
+        "gemma_unchanged": 9,
+        "gemma_under_edited": 14,
+        "gpt_over_edited": 5,
+        "gpt_unchanged": 7,
+        "gpt_under_edited": 13,
+        "items": 14,
+        "model_measurement_disagreement": 7
+      },
+      "core_grammar": {
+        "gemma_over_edited": 220,
+        "gemma_unchanged": 268,
+        "gemma_under_edited": 489,
+        "gpt_over_edited": 217,
+        "gpt_unchanged": 256,
+        "gpt_under_edited": 478,
+        "items": 557,
+        "model_measurement_disagreement": 264
+      },
+      "hard_positive_must_not_normalize": {
+        "items": 0
+      },
+      "multiple_acceptable_references": {
+        "gemma_over_edited": 96,
+        "gemma_unchanged": 97,
+        "gemma_under_edited": 196,
+        "gpt_over_edited": 100,
+        "gpt_unchanged": 72,
+        "gpt_under_edited": 173,
+        "items": 241,
+        "model_measurement_disagreement": 135
+      }
+    }
+  },
+  "counts": {
+    "gemma_measurement_win": 147,
+    "gemma_over_edited": 254,
+    "gemma_unchanged": 341,
+    "gemma_under_edited": 595,
+    "gpt_measurement_win": 181,
+    "gpt_over_edited": 258,
+    "gpt_unchanged": 310,
+    "gpt_under_edited": 572,
+    "needs_ua_review": 14,
+    "possible_benchmark_defect": 12,
+    "protected_variation_risk": 3,
+    "tie_exact_measurement": 349
+  },
+  "input_sha256": {
+    "data/projects/ua_eval_harness/baselines/v1/fixture-rules.responses.jsonl": "cc22f750fcfd889f1054a7d48d010efe7add9a610ffc9ba2e2f139236cf29321",
+    "data/projects/ua_eval_harness/baselines/v1/generation_requests.jsonl": "ec7d5b4e4216d484d3d2243f4a09c4cf82aab423ec918acb424fcf76f2ebdf83",
+    "data/projects/ua_eval_harness/baselines/v1/gpt-5.6-terra.report.json": "2567fb9e96c94c3a165e24607907e98edb7fc86e25634c9d788fdc10e9f19952",
+    "data/projects/ua_eval_harness/baselines/v1/gpt-5.6-terra.responses.jsonl": "e966913bd151f6a54170bc91442388cb68688965c9951c2d76088199c0ebe63b",
+    "data/projects/ua_eval_harness/baselines/v1/identity.responses.jsonl": "eb9414fb71b6a520f9bd3d3d7e709840c908ee2c8c85de30a005f2b3f223a7c6",
+    "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.report.json": "5c50e17373f17a8c844c35e68198fa32dafcd8ad022d308d45adf7773f8e32ea",
+    "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.responses.jsonl": "f6e59c2ad31f1e6a74296f66d2d693117e30a9214e147e355a24fc2cd79a469f",
+    "data/projects/ua_eval_harness/heldout_manifest_config.json": "99f63edb8beed1bb712f76a51fffd6fa211703374a1c447b22f5c44293b61fb7",
+    "data/projects/ua_eval_harness/heldout_manifest_v1.json": "56eb4fc17a5ed6967c5c13fbdc9fde964d1b8fb08bde7da7f15cf535486735dd",
+    "data/projects/ua_eval_harness/releases/v0.1.1/freeze_manifest.json": "b95edea210ae9133059181a4e2d161c8682108bfcacdde50f98adaae2221e65f",
+    "data/projects/ua_eval_harness/scoring_disposition_config.json": "ecda338a95aa8cc8fe862ba67556101be119ad9391766221616304ce5928218a",
+    "data/projects/ua_eval_harness/scoring_dispositions_v1.json": "44498d4c2ffcf8c0d3afed51bc82fa482be6b68ff6f05a3bcda035adbf5311a8"
+  },
+  "items": 677,
+  "limitations": [
+    "Exact mismatch is not automatically a linguistic error.",
+    "VESUM/dictionary markers are evidence, not contextual adjudication.",
+    "Saved model output is never authority.",
+    "No matched prompt-variation run exists; prompt sensitivity is uninterpretable."
+  ],
+  "measurement_comparison_by_eligible_tag": {
+    "F/Calque": {
+      "gemma_measurement_win": 50,
+      "gpt_measurement_win": 57,
+      "tie_exact_measurement": 87
+    },
+    "G/Aspect": {
+      "gemma_measurement_win": 6,
+      "gpt_measurement_win": 2,
+      "tie_exact_measurement": 7
+    },
+    "G/Case": {
+      "gemma_measurement_win": 34,
+      "gpt_measurement_win": 65,
+      "tie_exact_measurement": 94
+    },
+    "G/Comparison": {
+      "gpt_measurement_win": 2,
+      "tie_exact_measurement": 4
+    },
+    "G/Conjunction": {
+      "gemma_measurement_win": 6,
+      "gpt_measurement_win": 9,
+      "tie_exact_measurement": 30
+    },
+    "G/Gender": {
+      "gemma_measurement_win": 16,
+      "gpt_measurement_win": 9,
+      "tie_exact_measurement": 22
+    },
+    "G/Number": {
+      "gemma_measurement_win": 12,
+      "gpt_measurement_win": 14,
+      "tie_exact_measurement": 29
+    },
+    "G/Other": {
+      "gemma_measurement_win": 5,
+      "gpt_measurement_win": 1,
+      "tie_exact_measurement": 7
+    },
+    "G/PartVoice": {
+      "gemma_measurement_win": 6,
+      "gpt_measurement_win": 2,
+      "tie_exact_measurement": 3
+    },
+    "G/Participle": {
+      "tie_exact_measurement": 1
+    },
+    "G/Particle": {
+      "gpt_measurement_win": 3,
+      "tie_exact_measurement": 1
+    },
+    "G/Prep": {
+      "gemma_measurement_win": 23,
+      "gpt_measurement_win": 23,
+      "tie_exact_measurement": 38
+    },
+    "G/Tense": {
+      "gemma_measurement_win": 11,
+      "gpt_measurement_win": 11,
+      "tie_exact_measurement": 27
+    },
+    "G/UngrammaticalStructure": {
+      "gemma_measurement_win": 41,
+      "gpt_measurement_win": 47,
+      "tie_exact_measurement": 81
+    },
+    "G/VerbAForm": {
+      "gemma_measurement_win": 4,
+      "gpt_measurement_win": 2,
+      "tie_exact_measurement": 3
+    },
+    "G/VerbVoice": {
+      "gemma_measurement_win": 2,
+      "gpt_measurement_win": 10,
+      "tie_exact_measurement": 26
+    }
+  },
+  "purpose": "frozen-evidence measurement; not linguistic adjudication or a model ranking",
+  "reference_count_distribution": {
+    "1": 436,
+    "2": 241
+  },
+  "reproduced_aggregate_metrics": {
+    "gemma_4_31b_it": {
+      "diagnostics": {
+        "over_edit_rate": 0.37518463810930575,
+        "over_edited_outputs": 254,
+        "unchanged_outputs": 341,
+        "unchanged_rate": 0.5036927621861153,
+        "untyped_false_positive_edits": 351
+      },
+      "edit_correction": {
+        "f0_5": 0.19335142469470828,
+        "false_negative": 974,
+        "false_positive": 351,
+        "headline": false,
+        "precision": 0.24516129032258063,
+        "recall": 0.10477941176470588,
+        "scope": "all retained UA-GEC standardization labels plus grammar labels",
+        "true_positive": 114
+      },
+      "exact_sentence": {
+        "accuracy": 0.10782865583456426,
+        "correct": 73,
+        "total": 677
+      },
+      "headline_calque": {
+        "admitted_annotation_support": 338,
+        "disposition_counts": {
+          "contested": 11,
+          "excluded_as_regional_standardization": 0,
+          "excluded_as_register_standardization": 3,
+          "excluded_from_headline_calque": 16,
+          "heritage_conflict": 2,
+          "included_in_headline_calque": 338,
+          "items_by_disposition": {
+            "CONTESTED": 11,
+            "HEADLINE_CALQUE": 185,
+            "HERITAGE_CONFLICT": 1,
+            "REGIONAL_STANDARDIZATION": 0,
+            "REGISTER_STANDARDIZATION": 2
+          },
+          "raw_style_collision_annotations": 73,
+          "raw_style_collision_spans": 49,
+          "raw_style_collision_spans_by_marker": {
+            "arch": 3,
+            "bad": 34,
+            "rare": 2,
+            "slang": 10
+          },
+          "upstream_f_calque_annotations": 354
+        },
+        "excluded_annotation_support": 16,
+        "false_negative": 209,
+        "precision": null,
+        "precision_note": "Saved-response edits are untyped, so false positives cannot be attributed specifically to calque spans; standard overall edit precision remains in edit_correction.",
+        "recall": 0.09523809523809523,
+        "scope": "F/Calque annotations admitted by the separate benchmark disposition",
+        "selected_reference_dispositions": {
+          "CONTESTED": 11,
+          "HEADLINE_CALQUE": 231,
+          "HERITAGE_CONFLICT": 1,
+          "REGISTER_STANDARDIZATION": 2
+        },
+        "selected_reference_support": 231,
+        "true_positive": 22,
+        "upstream_annotation_support": 354
+      }
+    },
+    "gpt_5_6_terra": {
+      "diagnostics": {
+        "over_edit_rate": 0.3810930576070901,
+        "over_edited_outputs": 258,
+        "unchanged_outputs": 310,
+        "unchanged_rate": 0.45790251107828656,
+        "untyped_false_positive_edits": 319
+      },
+      "edit_correction": {
+        "f0_5": 0.24390243902439027,
+        "false_negative": 956,
+        "false_positive": 319,
+        "headline": false,
+        "precision": 0.31101511879049676,
+        "recall": 0.13090909090909092,
+        "scope": "all retained UA-GEC standardization labels plus grammar labels",
+        "true_positive": 144
+      },
+      "exact_sentence": {
+        "accuracy": 0.16100443131462333,
+        "correct": 109,
+        "total": 677
+      },
+      "headline_calque": {
+        "admitted_annotation_support": 338,
+        "disposition_counts": {
+          "contested": 11,
+          "excluded_as_regional_standardization": 0,
+          "excluded_as_register_standardization": 3,
+          "excluded_from_headline_calque": 16,
+          "heritage_conflict": 2,
+          "included_in_headline_calque": 338,
+          "items_by_disposition": {
+            "CONTESTED": 11,
+            "HEADLINE_CALQUE": 185,
+            "HERITAGE_CONFLICT": 1,
+            "REGIONAL_STANDARDIZATION": 0,
+            "REGISTER_STANDARDIZATION": 2
+          },
+          "raw_style_collision_annotations": 73,
+          "raw_style_collision_spans": 49,
+          "raw_style_collision_spans_by_marker": {
+            "arch": 3,
+            "bad": 34,
+            "rare": 2,
+            "slang": 10
+          },
+          "upstream_f_calque_annotations": 354
+        },
+        "excluded_annotation_support": 16,
+        "false_negative": 201,
+        "precision": null,
+        "precision_note": "Saved-response edits are untyped, so false positives cannot be attributed specifically to calque spans; standard overall edit precision remains in edit_correction.",
+        "recall": 0.14102564102564102,
+        "scope": "F/Calque annotations admitted by the separate benchmark disposition",
+        "selected_reference_dispositions": {
+          "CONTESTED": 11,
+          "HEADLINE_CALQUE": 234,
+          "HERITAGE_CONFLICT": 1,
+          "REGISTER_STANDARDIZATION": 2
+        },
+        "selected_reference_support": 234,
+        "true_positive": 33,
+        "upstream_annotation_support": 354
+      }
+    }
+  },
+  "schema_version": "ua_eval_v011_evidence_analysis.v1"
+}
