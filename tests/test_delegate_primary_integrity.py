@@ -106,18 +106,16 @@ def test_gate_blocks_unrepaired_drift(primary_repo):
     assert (primary_repo / "README.md").read_text() == "human work\n"
 
 
-def test_gate_repairs_safe_drift_then_allows(primary_repo):
+def test_gate_never_repairs_safe_drift_implicitly(primary_repo):
     _git(primary_repo, "checkout", "-q", "--detach", "HEAD")
 
-    # First call records the stable-main baseline and blocks.
-    error = delegate._resolve_primary_integrity_error(mode="danger")
-    assert error is not None
-    assert "baseline" in error
+    first = delegate._resolve_primary_integrity_error(mode="danger")
+    second = delegate._resolve_primary_integrity_error(mode="danger")
 
-    # Second call: main observed stable → watchdog repairs → dispatch allowed.
-    assert delegate._resolve_primary_integrity_error(mode="danger") is None
-    proc = _git(primary_repo, "symbolic-ref", "-q", "HEAD")
-    assert proc.stdout.strip() == "refs/heads/main"
+    assert first is not None and second is not None
+    assert "explicit doctor" in second
+    proc = _git(primary_repo, "symbolic-ref", "-q", "HEAD", check=False)
+    assert proc.returncode != 0
 
 
 def test_gate_defers_while_dispatch_running(primary_repo):

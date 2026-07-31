@@ -18,9 +18,9 @@ SESSION_START_STARTED_SECONDS=$SECONDS
 #    session) made every Claude Bash tool call take 60+ seconds for
 #    two days straight.
 #
-#    Defensive: if the sentinel is older than 1 minute, it is
-#    definitely stale (real rehashes complete in <1s) — delete it.
-#    The 1-minute threshold avoids racing against an active rehash.
+#    Diagnostic only: if the sentinel is older than 1 minute, report it and
+#    leave removal to the explicit operator repair command. Session startup
+#    must not delete machine state from an age heuristic.
 #
 #    Using `find -mmin +1` instead of `stat`: portable across BSD
 #    (macOS) and GNU (Homebrew coreutils) without flag-flavor
@@ -29,7 +29,7 @@ SESSION_START_STARTED_SECONDS=$SECONDS
 PYENV_SHIM_LOCK="${PYENV_ROOT:-$HOME/.pyenv}/shims/.pyenv-shim"
 if [ -f "$PYENV_SHIM_LOCK" ] && \
    [ -n "$(find "$PYENV_SHIM_LOCK" -mmin +1 -type f 2>/dev/null)" ]; then
-  rm -f "$PYENV_SHIM_LOCK"
+  echo "WARNING: pyenv rehash lock is older than one minute; inspect it, then remove it explicitly if stale: rm -f \"$PYENV_SHIM_LOCK\"" >&2
 fi
 
 # Repo-health canary: core.bare MUST be false on this working repo. A stray
@@ -49,13 +49,12 @@ fi
 # UPWARD and prepending every ancestor node_modules/.bin; resolving the loop
 # makes `spawn` return ELOOP, so EVERY npm build dies instantly with exit 194
 # and no output — looking like "Astro is broken" when it is not. Gitignored, so
-# CI can't catch it; only a local canary can. Auto-heal the exact absolute
-# self-link case here (the general loop case is healed by the API-orient Python
-# canary in scripts/api/main.py). See docs/bug-autopsies/node-modules-eloop-symlink.md.
+# CI can't catch it; only a local canary can. Detect the exact absolute
+# self-link here and leave repair to the explicit doctor command. See
+# docs/bug-autopsies/node-modules-eloop-symlink.md.
 for _nm in "$_LU_REPO/node_modules" "$_LU_REPO/site/node_modules"; do
   if [ -L "$_nm" ] && [ "$(readlink "$_nm" 2>/dev/null)" = "$_nm" ]; then
-    rm -f "$_nm" \
-      && echo "⚠️  repo-health: removed self-referential symlink $_nm (was breaking npm with spawn ELOOP)" >&2
+    echo "WARNING: self-referential symlink detected at $_nm (npm spawn ELOOP). Inspect it, then run: .venv/bin/python scripts/audit/check_self_symlinks.py --fix" >&2
   fi
 done
 
@@ -351,19 +350,13 @@ if [ "$CODEX_NORMAL_TASK" = "0" ]; then
   fi
 fi
 
-# Keep only the local protected-branch canary on the synchronous path.
+# Keep only the local protected-branch diagnostic on the synchronous path.
 if [ -x "$PROJECT_DIR/.venv/bin/python" ] \
     && [ -f "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" ]; then
   if ! run_bounded 2 "$PROJECT_DIR/.venv/bin/python" \
       "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" \
       --cwd "$PROJECT_DIR" --quiet 2>/dev/null; then
-    if run_bounded 2 "$PROJECT_DIR/.venv/bin/python" \
-        "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" \
-        --cwd "$PROJECT_DIR" --heal 2>/dev/null; then
-      INFO+=("PRIMARY HEAD was off main/detached — auto-healed to main (#4857). Prefer worktrees for all branch work.")
-    else
-      ISSUES+=("PRIMARY HEAD is detached or not on main (#4857). Run: .venv/bin/python scripts/guardrails/assert_primary_on_main.py --heal.")
-    fi
+    ISSUES+=("PRIMARY HEAD is detached or not on main (#4857). Inspect it, then run the explicit doctor if appropriate: .venv/bin/python scripts/guardrails/assert_primary_on_main.py --heal.")
   fi
 fi
 

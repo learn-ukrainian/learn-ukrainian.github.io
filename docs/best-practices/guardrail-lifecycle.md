@@ -36,3 +36,14 @@ Record deterministic checks, independent review where required, and source-blind
 proof. Compare observed false positives with the budget. Delete a redundant guardrail when
 its replacement proof and sunset criterion are satisfied; do not keep dual enforcement
 indefinitely for reassurance.
+
+## Startup mutation boundary
+
+Session startup and health-orientation paths diagnose machine and checkout drift; they do
+not switch branches, fetch, pull, remove symlinks, or delete age-classified lock files.
+Repairs remain explicit operator actions through the named `--fix` or `--heal` command.
+
+The sole automatic repair exception is `core.bare=true` in this non-bare primary layout.
+That value makes the primary and all linked worktrees unusable, while resetting the exact
+local Git key to `false` is bounded and preserves repository content. Any broader startup
+repair requires a new proposal card and present-tense operator or advisor approval.

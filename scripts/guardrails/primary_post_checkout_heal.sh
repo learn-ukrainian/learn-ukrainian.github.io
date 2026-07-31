@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Git post-checkout hook fragment: keep the PRIMARY worktree on main.
+# Git post-checkout hook fragment: diagnose a PRIMARY worktree off main.
 #
 # Git has already moved HEAD when this runs. If the main worktree is detached
-# or on a non-main branch, heal immediately and warn. Added worktrees are
-# ignored (feature branches are expected there).
+# or on a non-main branch, warn without moving HEAD, fetching, or pulling.
+# Added worktrees are ignored (feature branches are expected there).
 #
 # Install via scripts/install_git_hooks.sh. Safe to re-run.
 
@@ -40,14 +40,14 @@ if [ ! -x "$PY" ]; then
   PY="$(cd "$GIT_COMMON/.." && pwd)/.venv/bin/python"
 fi
 if [ ! -x "$PY" ]; then
-  echo "WARNING: primary-on-main heal skipped; project .venv/bin/python is unavailable." >&2
+  echo "WARNING: primary-on-main diagnostic skipped; project .venv/bin/python is unavailable." >&2
   exit 0
 fi
 
-# Heal quietly if broken; always allow the checkout to complete (we already moved).
+# Diagnose quietly if broken; always allow the checkout to complete (Git has
+# already moved it). Repair remains an explicit operator action.
 if ! "$PY" "$ROOT/scripts/guardrails/assert_primary_on_main.py" --cwd "$ROOT" --quiet 2>/dev/null; then
-  echo "WARNING: primary left main/detached — auto-healing to main…" >&2
-  "$PY" "$ROOT/scripts/guardrails/assert_primary_on_main.py" --cwd "$ROOT" --heal || true
+  echo "WARNING: primary is off main/detached. Inspect it, then run the explicit doctor if appropriate: .venv/bin/python scripts/guardrails/assert_primary_on_main.py --heal" >&2
 fi
 
 exit 0
