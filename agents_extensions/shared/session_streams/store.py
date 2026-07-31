@@ -764,31 +764,55 @@ class SessionStreamStore:
                 successor_event = connection.execute(
                     "SELECT 1 FROM lease_events WHERE stream_id = ? AND session_id = ? AND lease_id = ? "
                     "AND generation = ? AND fencing_token = ? AND event_type = 'recovered' "
-                    "AND json_extract(proof_json, '$.receipt_digest') = ? "
-                    "AND json_extract(proof_json, '$.rollover_id') = ? LIMIT 1",
+                    "AND json_extract(proof_json, '$.rollover_id') = ? "
+                    "AND json_extract(proof_json, '$.receipt.rollover_id') = ? "
+                    "AND json_extract(proof_json, '$.receipt.session_id') = ? "
+                    "AND json_extract(proof_json, '$.receipt.lease_id') = ? "
+                    "AND json_extract(proof_json, '$.receipt.generation') = ? "
+                    "AND json_extract(proof_json, '$.receipt.fencing_token') = ? "
+                    "AND json_extract(proof_json, '$.receipt.holder.task_id') = ? "
+                    "AND json_extract(proof_json, '$.receipt_digest') = "
+                    "json_extract(proof_json, '$.receipt.receipt_digest') LIMIT 1",
                     (
                         predecessor.stream_id,
                         session_id,
                         lease_id,
                         generation,
                         fencing_token,
-                        self._proof_digest(successor_proof),
                         rollover_id,
+                        rollover_id,
+                        session_id,
+                        lease_id,
+                        generation,
+                        fencing_token,
+                        successor.task_id,
                     ),
                 ).fetchone()
                 predecessor_event = connection.execute(
                     "SELECT 1 FROM lease_events WHERE stream_id = ? AND session_id = ? AND lease_id = ? "
                     "AND generation = ? AND fencing_token = ? AND event_type = 'released' "
-                    "AND json_extract(proof_json, '$.receipt_digest') = ? "
-                    "AND json_extract(proof_json, '$.rollover_id') = ? LIMIT 1",
+                    "AND json_extract(proof_json, '$.rollover_id') = ? "
+                    "AND json_extract(proof_json, '$.receipt.rollover_id') = ? "
+                    "AND json_extract(proof_json, '$.receipt.session_id') = ? "
+                    "AND json_extract(proof_json, '$.receipt.lease_id') = ? "
+                    "AND json_extract(proof_json, '$.receipt.generation') = ? "
+                    "AND json_extract(proof_json, '$.receipt.fencing_token') = ? "
+                    "AND json_extract(proof_json, '$.receipt.holder.task_id') = ? "
+                    "AND json_extract(proof_json, '$.receipt_digest') = "
+                    "json_extract(proof_json, '$.receipt.receipt_digest') LIMIT 1",
                     (
                         predecessor.stream_id,
                         predecessor.session_id,
                         predecessor.lease_id,
                         predecessor.generation,
                         predecessor.fencing_token,
-                        self._proof_digest(predecessor_proof),
                         rollover_id,
+                        rollover_id,
+                        predecessor.session_id,
+                        predecessor.lease_id,
+                        predecessor.generation,
+                        predecessor.fencing_token,
+                        predecessor.holder.task_id,
                     ),
                 ).fetchone()
                 if successor_event is not None and predecessor_event is not None:
