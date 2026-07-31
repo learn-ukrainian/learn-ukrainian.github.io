@@ -79,4 +79,5 @@ no permission.
 
 ---
 
-*Recorded and approved for the Learn Ukrainian Architecture Registry (July 2026).*
+*Recorded as a historical, non-operational record for the Learn Ukrainian
+Architecture Registry (July 2026).*
