@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/source_record_v1.schema.json",
+  "title": "Open-model source record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_schema_sha256", "record_id", "work_id", "source_id", "acquisition", "bibliographic", "description", "content", "derivation", "rights", "evidence", "review", "usage"],
+  "properties": {
+    "schema_version": {"const": "source_record_v1"},
+    "contract_schema_sha256": {"$ref": "#/$defs/sha256"},
+    "record_id": {"$ref": "#/$defs/id"},
+    "work_id": {"$ref": "#/$defs/id"},
+    "source_id": {"$ref": "#/$defs/id"},
+    "acquisition": {"type": "object", "additionalProperties": false, "required": ["receipt_id", "source_or_catalog_url", "retrieved_on"], "properties": {"receipt_id": {"$ref": "#/$defs/id"}, "source_or_catalog_url": {"type": "string", "format": "uri"}, "retrieved_on": {"$ref": "#/$defs/date"}}},
+    "bibliographic": {"type": "object", "additionalProperties": false, "required": ["edition", "editor", "publisher", "translation_origin"], "properties": {"edition": {"type": "string", "minLength": 1}, "editor": {"type": "string", "minLength": 1}, "publisher": {"type": "string", "minLength": 1}, "translation_origin": {"type": "string", "minLength": 1}}},
+    "description": {"type": "object", "additionalProperties": false, "required": ["author", "date", "period", "genre", "register", "region"], "properties": {"author": {"type": "string", "minLength": 1}, "date": {"type": "string", "minLength": 1}, "period": {"type": "string", "minLength": 1}, "genre": {"type": "string", "minLength": 1}, "register": {"type": "string", "minLength": 1}, "region": {"type": "string", "minLength": 1}}},
+    "content": {"type": "object", "additionalProperties": false, "required": ["sha256", "hash_scope"], "properties": {"sha256": {"$ref": "#/$defs/sha256"}, "hash_scope": {"type": "string", "minLength": 1}}},
+    "derivation": {"type": "object", "additionalProperties": false, "required": ["kind", "parent_content_sha256", "transform_receipt_id"], "properties": {"kind": {"enum": ["source", "derived"]}, "parent_content_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}, "transform_receipt_id": {"anyOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]}}},
+    "rights": {"type": "object", "additionalProperties": false, "required": ["copyright", "license", "redistribution", "model_training"], "properties": {"copyright": {"$ref": "#/$defs/rightsStatement"}, "license": {"$ref": "#/$defs/rightsStatement"}, "redistribution": {"$ref": "#/$defs/rightsStatement"}, "model_training": {"$ref": "#/$defs/rightsStatement"}}},
+    "evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidence"}},
+    "review": {"type": "object", "additionalProperties": false, "required": ["reviewer_id", "qualification", "confidence", "unresolved"], "properties": {"reviewer_id": {"$ref": "#/$defs/id"}, "qualification": {"type": "string", "minLength": 1}, "confidence": {"enum": ["low", "medium", "high"]}, "unresolved": {"type": "boolean"}}},
+    "usage": {"type": "object", "additionalProperties": false, "required": ["role", "contamination_exclusion_ids"], "properties": {"role": {"enum": ["training_candidate", "evaluation_only", "excluded"]}, "contamination_exclusion_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}, "uniqueItems": true}}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "date": {"type": "string", "format": "date"},
+    "evidence": {"type": "object", "additionalProperties": false, "required": ["evidence_id", "citation", "url", "retrieved_on", "sha256"], "properties": {"evidence_id": {"$ref": "#/$defs/id"}, "citation": {"type": "string", "minLength": 1}, "url": {"type": "string", "format": "uri"}, "retrieved_on": {"$ref": "#/$defs/date"}, "sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}}},
+    "rightsStatement": {"type": "object", "additionalProperties": false, "required": ["status", "jurisdiction", "evidence_ids", "legal_conclusion", "license_expression", "license_terms_evidence_id"], "properties": {"status": {"enum": ["granted", "unknown", "conflicting", "denied"]}, "jurisdiction": {"type": "string", "minLength": 1}, "evidence_ids": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}, "uniqueItems": true}, "legal_conclusion": {"enum": ["not_asserted", "reviewed_conclusion"]}, "license_expression": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]}, "license_terms_evidence_id": {"anyOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]}}}
+  }
+}
