@@ -206,12 +206,21 @@ private owner-only filesystem modes. The standard data-backup run snapshots
 this database through SQLite's online backup mechanism and verifies the staged
 copy before encrypted retention; do not copy WAL files manually.
 
-Runtime exposes body-free, read-only observability only:
+Runtime keeps its fleet-facing observability body-free through
 `GET /api/runtime/acp/conversations` and
-`GET /api/runtime/acp/conversations/{conversation_id}`. The visual timeline is
-read-only and cannot launch, steer, retry, or otherwise control a
-conversation. A token field named `size` is context-window capacity, never
-consumed-token accounting.
+`GET /api/runtime/acp/conversations/{conversation_id}`. The dedicated
+Conversations page may additionally call
+`GET /api/runtime/acp/conversations/{conversation_id}/transcript` from a direct
+loopback connection and loopback URL host. That endpoint returns a bounded
+allowlist of inline request, reply, and synthesis text. It sets
+`Cache-Control: no-store`, ignores forwarding headers, and exposes no message
+IDs, artifact references, hashes, artifact paths, or session metadata as
+separate fields.
+The body text itself is the conversation and can naturally mention paths or
+commands. The page renders each body as inert text and never writes it to
+browser storage. It cannot launch, steer, retry, or otherwise control a
+conversation. A token field named
+`size` is context-window capacity, never consumed-token accounting.
 
 This is deliberation transport, not formal cross-family review. It does not
 produce review authority or replace `review-pr` / `publish-review-verdict`.

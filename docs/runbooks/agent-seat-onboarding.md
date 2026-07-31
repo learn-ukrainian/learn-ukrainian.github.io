@@ -258,12 +258,19 @@ changes plane/retention state nor gains dispatch, routing, failover, or review
 authority.
 
 The privacy boundary is strict: task bodies, model responses, credentials,
-paths, session data, and tool data do not appear in Runtime metadata. The only
-approved observability routes are `GET /api/runtime/acp/conversations` and
-`GET /api/runtime/acp/conversations/{conversation_id}`. They, and the visual
-timeline built from them, are body-free and read-only: no dashboard control
-can start, steer, retry, or cancel a conversation. Standard ACP token `size`
-means context-window capacity, never consumed-token accounting.
+paths, session data, and tool data do not appear in Runtime metadata. The
+fleet-facing observability routes remain
+`GET /api/runtime/acp/conversations` and
+`GET /api/runtime/acp/conversations/{conversation_id}`; both are body-free.
+The local Conversations page may also read
+`GET /api/runtime/acp/conversations/{conversation_id}/transcript`. This
+separate route requires both a direct loopback peer and a loopback URL host,
+ignores forwarding headers, returns only bounded inline request/reply/synthesis
+text plus display metadata, and sets `Cache-Control: no-store`. The page uses
+inert text rendering and no browser storage. All three routes are read-only:
+no dashboard control can start, steer, retry, or cancel a conversation.
+Standard ACP token `size` means context-window capacity, never consumed-token
+accounting.
 
 This is deliberation transport, not formal cross-family review. It cannot
 replace `review-pr` / `publish-review-verdict` or provide review eligibility.
