@@ -72,6 +72,14 @@ def test_default_plane_root_preserves_override_and_non_git_fallback(
     )
 
 
+def test_message_plane_preserves_public_root_constants() -> None:
+    import scripts.fleet_comms.message_plane as message_plane
+    from scripts.fleet_comms.paths import DEFAULT_ROOT_REL, ENV_ROOT
+
+    assert message_plane.DEFAULT_ROOT_REL is DEFAULT_ROOT_REL
+    assert message_plane.ENV_ROOT is ENV_ROOT
+
+
 def test_configured_default_fail_open_on_malformed_yaml(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
