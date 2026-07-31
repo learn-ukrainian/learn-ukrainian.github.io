@@ -42,6 +42,21 @@ if echo "$COMMAND" | grep -qE '^python3?[[:space:]]'; then
     exit 2
   fi
 
+  PYTHON_VERSION_FILE="${CANONICAL_ROOT:+$CANONICAL_ROOT/}.python-version"
+  if [ ! -f "$PYTHON_VERSION_FILE" ]; then
+    printf 'Unqualified interpreter blocked: project Python pin is missing at %s\n' \
+      "$PYTHON_VERSION_FILE" >&2
+    exit 2
+  fi
+  EXPECTED_PYTHON_VERSION=$(head -1 "$PYTHON_VERSION_FILE" | tr -d '[:space:]')
+  ACTUAL_PYTHON_VERSION=$("$PYTHON_BIN" --version 2>&1)
+  if [ -z "$EXPECTED_PYTHON_VERSION" ] \
+    || [ "$ACTUAL_PYTHON_VERSION" != "Python $EXPECTED_PYTHON_VERSION" ]; then
+    printf 'Unqualified interpreter blocked: expected Python %s, got %s\n' \
+      "${EXPECTED_PYTHON_VERSION:-<missing pin>}" "${ACTUAL_PYTHON_VERSION:-<unavailable>}" >&2
+    exit 2
+  fi
+
   case "$COMMAND" in
     python3*) FIXED="${PYTHON_BIN}${COMMAND#python3}" ;;
     python*) FIXED="${PYTHON_BIN}${COMMAND#python}" ;;

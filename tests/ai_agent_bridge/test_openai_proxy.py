@@ -253,6 +253,47 @@ def test_message_flatten_preserves_role_order(monkeypatch):
     assert prompt.index("[assistant]: first assistant") < prompt.index("[user]: second user")
 
 
+def test_codex_proxy_is_stateless_and_uses_caller_supplied_history(monkeypatch):
+    prompts = []
+    backend_kwargs = []
+
+    def backend(model, messages, **kwargs):
+        prompts.append(kwargs["prompt"])
+        backend_kwargs.append(kwargs)
+        return proxy.CompletionResponse(content="ok")
+
+    monkeypatch.setitem(proxy._ROUTABLE_MODELS, "codex", _route_with_backend("codex", backend))
+
+    first = _client().post(
+        "/v1/chat/completions",
+        json={
+            "model": "codex",
+            "user": "same-user",
+            "messages": [{"role": "user", "content": "first"}],
+        },
+    )
+    second = _client().post(
+        "/v1/chat/completions",
+        json={
+            "model": "codex",
+            "user": "same-user",
+            "messages": [
+                {"role": "user", "content": "first"},
+                {"role": "assistant", "content": "answer"},
+                {"role": "user", "content": "second"},
+            ],
+        },
+    )
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+    assert len(prompts) == 2
+    assert all("session_id" not in kwargs for kwargs in backend_kwargs)
+    assert prompts[0] == "--- Round 1 ---\n[user]: first"
+    assert "[assistant]: answer" in prompts[1]
+    assert "[user]: second" in prompts[1]
+
+
 def test_healthz_endpoint_returns_backend_status(monkeypatch):
     # Clear any cached state from other tests to keep this test isolated
     with proxy._healthz_cache_lock:

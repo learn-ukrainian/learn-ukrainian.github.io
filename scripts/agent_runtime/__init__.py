@@ -31,9 +31,9 @@ DESIGN PRINCIPLES:
   to batch_state/api_usage/ so the existing /api/batch/usage endpoint
   surfaces per-agent + per-entrypoint cost data automatically.
 - Resume policy is data-driven. See docs/design/agent-runtime.md § 6.3.
-  Claude/Gemini bridge paths keep resume for cache warmth (cost economics);
-  Codex always fresh-session (coherence footgun); delegate/dispatch always
-  fresh (worktree is the isolation boundary).
+  Bridge-only agents, including Codex, may keep task-scoped bridge continuity;
+  delegate/dispatch always start fresh because the worktree is the isolation
+  boundary.
 
 HOW TO ADD A NEW AGENT:
 

@@ -48,6 +48,14 @@ def _run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
     )
 
 
+def _make_exact_python_checkout(root: Path) -> None:
+    python = root / ".venv" / "bin" / "python"
+    python.parent.mkdir(parents=True)
+    python.write_text("#!/bin/bash\nprintf 'Python 3.12.8\\n'\n", encoding="utf-8")
+    python.chmod(0o755)
+    (root / ".python-version").write_text("3.12.8\n", encoding="utf-8")
+
+
 def _make_linked_worktree(tmp_path: Path) -> tuple[Path, Path]:
     primary = tmp_path / "primary"
     worktree = tmp_path / "linked"
@@ -56,6 +64,7 @@ def _make_linked_worktree(tmp_path: Path) -> tuple[Path, Path]:
     _run(["git", "config", "user.email", "hooks@example.invalid"], cwd=primary)
     _run(["git", "config", "user.name", "Hook Tests"], cwd=primary)
     (primary / "README.md").write_text("hook test\n", encoding="utf-8")
+    (primary / ".python-version").write_text("3.12.8\n", encoding="utf-8")
     _run(["git", "add", "README.md"], cwd=primary)
     _run(["git", "commit", "-m", "test fixture"], cwd=primary)
     (primary / ".venv").symlink_to(PRIMARY_ROOT / ".venv", target_is_directory=True)
@@ -166,6 +175,32 @@ def test_ordinary_codex_start_is_concise_and_postcompact_is_silent(
     assert compacted.stdout == ""
 
 
+def test_explicit_non_driver_codex_postcompact_is_silent(tmp_path: Path) -> None:
+    compact_hook = tmp_path / ".codex" / "hooks" / "post-compact.sh"
+    compact_hook.parent.mkdir(parents=True)
+    shutil.copy2(POST_COMPACT_HOOK, compact_hook)
+    environment = os.environ.copy()
+    environment.update(
+        {
+            "CLAUDE_PROJECT_DIR": os.fspath(tmp_path),
+            "CODEX_CANONICAL_REPO_ROOT": os.fspath(tmp_path),
+            "SESSION_HANDOFF_AGENT": "codex",
+        }
+    )
+
+    completed = subprocess.run(
+        ["bash", os.fspath(compact_hook)],
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment,
+        timeout=10,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert completed.stdout == ""
+
+
 def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
     tmp_path: Path,
 ) -> None:
@@ -173,7 +208,7 @@ def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
     deployed_hooks.mkdir(parents=True)
     compact_hook = deployed_hooks / "post-compact.sh"
     shutil.copy2(POST_COMPACT_HOOK, compact_hook)
-    diary = tmp_path / ".claude" / "devops-epic" / "CLAUDE-DRIVER-HANDOFF.md"
+    diary = tmp_path / ".claude" / "devops-epic" / "CODEX-DRIVER-HANDOFF.md"
     diary.parent.mkdir(parents=True)
     diary.write_text("# durable driver state\n", encoding="utf-8")
     bounded_runner = tmp_path / "bounded_command.py"
@@ -214,8 +249,43 @@ def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
     context = json.loads(compacted.stdout)["additionalContext"]
     assert "CODEX FLEET-DRIVER HYDRATION" in context
     assert '"schema_name":"HydrationCapsuleV1"' in context
-    assert ".claude/devops-epic/CLAUDE-DRIVER-HANDOFF.md" in context
+    assert ".claude/devops-epic/CODEX-DRIVER-HANDOFF.md" in context
     assert "continue only from the capsule's next_drive_boundary" in context
+
+
+def test_bound_codex_driver_without_exact_diary_is_blocked_without_fallback(
+    tmp_path: Path,
+) -> None:
+    compact_hook = tmp_path / ".codex" / "hooks" / "post-compact.sh"
+    compact_hook.parent.mkdir(parents=True)
+    shutil.copy2(POST_COMPACT_HOOK, compact_hook)
+    fallback = tmp_path / ".claude" / "devops-epic" / "CLAUDE-DRIVER-HANDOFF.md"
+    fallback.parent.mkdir(parents=True)
+    fallback.write_text("# shared driver state\n", encoding="utf-8")
+    environment = os.environ.copy()
+    environment.update(
+        {
+            "CLAUDE_PROJECT_DIR": os.fspath(tmp_path),
+            "CODEX_CANONICAL_REPO_ROOT": os.fspath(tmp_path),
+            "SESSION_HANDOFF_AGENT": "codex-devops",
+            "SESSION_EPIC": "devops",
+        }
+    )
+
+    completed = subprocess.run(
+        ["bash", os.fspath(compact_hook)],
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment,
+        timeout=10,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    context = json.loads(completed.stdout)["additionalContext"]
+    assert "CODEX FLEET-DRIVER HYDRATION BLOCKED" in context
+    assert "CODEX-DRIVER-HANDOFF.md" in context
+    assert "CLAUDE-DRIVER-HANDOFF.md" not in context
 
 
 def test_codex_tool_events_have_one_deterministic_command_hook() -> None:
@@ -334,15 +404,18 @@ def test_codex_entry_rewrites_bare_python_from_worktree_without_local_venv(
     assert specific["updatedInput"]["command"] == (f'{primary}/.venv/bin/python -c "print(1)"')
 
 
-def test_claude_python_rewrite_shape_remains_compatible() -> None:
+def test_claude_python_rewrite_shape_remains_compatible(tmp_path: Path) -> None:
+    canonical = tmp_path / "canonical"
+    canonical.mkdir()
+    _make_exact_python_checkout(canonical)
     payload = {
         "hook_event_name": "PreToolUse",
-        "cwd": str(PRIMARY_ROOT),
+        "cwd": str(canonical),
         "tool_name": "Bash",
         "tool_input": {"command": "python --version"},
     }
     environment = os.environ.copy()
-    environment["LEARN_UK_CANONICAL_ROOT"] = str(PRIMARY_ROOT)
+    environment["LEARN_UK_CANONICAL_ROOT"] = str(canonical)
     environment.pop("LEARN_UK_HOOK_PROVIDER", None)
 
     completed = subprocess.run(
@@ -359,7 +432,7 @@ def test_claude_python_rewrite_shape_remains_compatible() -> None:
     assert completed.returncode == 0, completed.stderr
     assert json.loads(completed.stdout) == {
         "modifiedInput": {
-            "command": f"{PRIMARY_ROOT}/.venv/bin/python --version",
+            "command": f"{canonical}/.venv/bin/python --version",
         }
     }
 
@@ -367,10 +440,7 @@ def test_claude_python_rewrite_shape_remains_compatible() -> None:
 def test_python_rewrite_preserves_checkout_path_metacharacters(tmp_path: Path) -> None:
     canonical = tmp_path / "checkout&pipe|root"
     canonical.mkdir()
-    (canonical / ".venv").symlink_to(
-        PRIMARY_ROOT / ".venv",
-        target_is_directory=True,
-    )
+    _make_exact_python_checkout(canonical)
     payload = {
         "hook_event_name": "PreToolUse",
         "cwd": str(canonical),
@@ -395,6 +465,36 @@ def test_python_rewrite_preserves_checkout_path_metacharacters(tmp_path: Path) -
     assert completed.returncode == 0, completed.stderr
     updated = json.loads(completed.stdout)["hookSpecificOutput"]["updatedInput"]
     assert updated["command"] == (f'{canonical}/.venv/bin/python -c "print(1)"')
+
+
+def test_bare_python_rewrite_blocks_a_canonical_version_mismatch(tmp_path: Path) -> None:
+    canonical = tmp_path / "checkout"
+    canonical.mkdir()
+    _make_exact_python_checkout(canonical)
+    (canonical / ".python-version").write_text("3.12.7\n", encoding="utf-8")
+    payload = {
+        "hook_event_name": "PreToolUse",
+        "cwd": str(canonical),
+        "tool_name": "Bash",
+        "tool_input": {"command": "python --version"},
+    }
+    environment = os.environ.copy()
+    environment["LEARN_UK_CANONICAL_ROOT"] = str(canonical)
+    environment["LEARN_UK_HOOK_PROVIDER"] = "codex"
+
+    completed = subprocess.run(
+        ["bash", str(VENV_HOOK)],
+        cwd=canonical,
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment,
+        timeout=10,
+    )
+
+    assert completed.returncode == 2
+    assert "expected Python 3.12.7" in completed.stderr
 
 
 def _make_inbox_db(project: Path) -> None:
@@ -451,3 +551,52 @@ def test_inbox_hook_targets_requested_provider(tmp_path: Path) -> None:
     assert "CODEX INBOX: 1 unread message" in context
     assert "codex-only message" in context
     assert "claude-only message" not in context
+
+
+def test_inbox_dedupes_by_recipient_and_native_session_and_reemits_new_ids(
+    tmp_path: Path,
+) -> None:
+    _make_inbox_db(tmp_path)
+    environment = os.environ.copy()
+    environment.update(
+        {
+            "CLAUDE_PROJECT_DIR": str(tmp_path),
+            "LEARN_UK_HOOK_RECIPIENT": "codex",
+            "CODEX_THREAD_ID": "codex-native-session",
+        }
+    )
+
+    first = subprocess.run(
+        ["bash", str(INBOX_HOOK)], input="{}", text=True, capture_output=True,
+        check=False, env=environment, timeout=10,
+    )
+    second = subprocess.run(
+        ["bash", str(INBOX_HOOK)], input="{}", text=True, capture_output=True,
+        check=False, env=environment, timeout=10,
+    )
+    assert first.returncode == second.returncode == 0
+    assert "CODEX INBOX: 1 unread message" in first.stdout
+    assert second.stdout == ""
+
+    db = tmp_path / ".mcp" / "servers" / "message-broker" / "messages.db"
+    with sqlite3.connect(db) as connection:
+        connection.execute(
+            "INSERT INTO messages (from_llm, to_llm, message_type, task_id, content, timestamp, acknowledged, claimed_by) VALUES (?, ?, 'status', 'hooks', ?, '2026-07-26T00:00:00Z', 0, NULL)",
+            ("claude", "codex", "new codex message"),
+        )
+    third = subprocess.run(
+        ["bash", str(INBOX_HOOK)], input="{}", text=True, capture_output=True,
+        check=False, env=environment, timeout=10,
+    )
+    assert third.returncode == 0
+    third_context = json.loads(third.stdout)["hookSpecificOutput"]["additionalContext"]
+    assert "CODEX INBOX: 2 unread message(s)" in third_context
+
+    claude_environment = environment | {"LEARN_UK_HOOK_RECIPIENT": "claude"}
+    provider_isolation = subprocess.run(
+        ["bash", str(INBOX_HOOK)], input="{}", text=True, capture_output=True,
+        check=False, env=claude_environment, timeout=10,
+    )
+    assert provider_isolation.returncode == 0
+    provider_context = json.loads(provider_isolation.stdout)["hookSpecificOutput"]["additionalContext"]
+    assert "CLAUDE INBOX: 1 unread message(s)" in provider_context

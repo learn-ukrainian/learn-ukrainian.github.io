@@ -10,6 +10,7 @@ if [ "${GEMINI_SESSION:-}" = "1" ] || [ "${LEARN_UKRAINIAN_PIPELINE:-}" = "1" ];
   exit 0
 fi
 
+HOOK_INPUT=$(cat)
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
 DB="$PROJECT_DIR/.mcp/servers/message-broker/messages.db"
 RECIPIENT="${LEARN_UK_HOOK_RECIPIENT:-claude}"
@@ -25,11 +26,40 @@ if [ ! -f "$DB" ]; then
   exit 0
 fi
 
-# Count unclaimed, unacknowledged messages for this hook's provider.
-COUNT=$(sqlite3 "$DB" "SELECT COUNT(*) FROM messages WHERE to_llm='$RECIPIENT' AND acknowledged=0 AND claimed_by IS NULL" 2>/dev/null)
+# Count unclaimed, unacknowledged messages for this hook's provider. Keep the
+# pending IDs separate from previews: the session-local dedupe state may never
+# contain message content.
+PENDING_IDS=$(sqlite3 "$DB" "SELECT id FROM messages WHERE to_llm='$RECIPIENT' AND acknowledged=0 AND claimed_by IS NULL ORDER BY id ASC" 2>/dev/null)
+COUNT=$(printf '%s\n' "$PENDING_IDS" | sed '/^$/d' | wc -l | tr -d ' ')
 
 if [ -z "$COUNT" ] || [ "$COUNT" -eq 0 ]; then
   exit 0
+fi
+
+# A UserPromptSubmit hook can fire repeatedly before another worker claims or
+# acknowledges its message. Suppress only an identical recipient/session ID
+# list. No session identity or unavailable state is deliberately fail-open.
+SESSION_ID="${LEARN_UK_HOOK_SESSION_ID:-${LEARN_UKRAINIAN_SESSION_ID:-${CODEX_THREAD_ID:-${CODEX_SESSION_ID:-}}}}"
+if [ -z "$SESSION_ID" ]; then
+  SESSION_ID=$(printf '%s' "$HOOK_INPUT" | jq -r '.session_id // empty' 2>/dev/null)
+fi
+if [ -n "$SESSION_ID" ]; then
+  STATE_DIR="$PROJECT_DIR/.agent/runtime"
+  STATE_KEY=$(printf '%s\n%s' "$RECIPIENT" "$SESSION_ID" | cksum | awk '{print $1 "-" $2}')
+  STATE_FILE="$STATE_DIR/inbox-${STATE_KEY}.ids"
+  if mkdir -p "$STATE_DIR" 2>/dev/null; then
+    STATE_TMP=$(mktemp "$STATE_DIR/.inbox-${STATE_KEY}.XXXXXX" 2>/dev/null || true)
+    if [ -n "$STATE_TMP" ]; then
+      printf '%s\n' "$PENDING_IDS" > "$STATE_TMP"
+      if [ -f "$STATE_FILE" ] && cmp -s "$STATE_TMP" "$STATE_FILE"; then
+        rm -f "$STATE_TMP"
+        exit 0
+      fi
+      if ! mv -f "$STATE_TMP" "$STATE_FILE" 2>/dev/null; then
+        rm -f "$STATE_TMP"
+      fi
+    fi
+  fi
 fi
 
 # Get message previews (only unclaimed)

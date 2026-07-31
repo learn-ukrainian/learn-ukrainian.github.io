@@ -8,13 +8,12 @@ Resume policy is data-driven (see docs/design/agent-runtime.md § 6.3):
 
 - ``bridge_only`` — Session resume allowed ONLY when caller is the bridge
   (multi-turn task_id messaging). Forbidden for delegate/dispatch. Claude
-  and Gemini use this policy because their providers charge per cache-read
-  token; dropping resume would reproduce the March 20-21 cost fiasco.
-- ``never`` — No resume ever. Codex uses this because (a) its quota is
-  per-message so resume saves nothing, and (b) session-across-worktree
-  contamination is the #1 footgun flagged in Codex's own consultation.
-- The runner does NOT enforce resume policy — callers do. The policy is
-  stored here for documentation and for delegate.py's assertion layer.
+  and Gemini use it for cache warmth; Codex uses it to preserve its native
+  conversation reasoning and compaction without exposing sessions to worktrees.
+- ``never`` — No resume ever. Use this for agents whose sessions cannot be
+  safely continued by the runtime.
+- The runner enforces resume policy at its invocation boundary. This keeps
+  bridge-only continuity out of delegate, dispatch, and consult worktrees.
 
 Issue: #1184
 """

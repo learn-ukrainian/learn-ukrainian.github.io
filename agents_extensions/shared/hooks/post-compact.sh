@@ -26,10 +26,6 @@ CONTEXT=""
 # exception: hydrate only its exact stream and point at the durable shadow
 # diary instead of scanning every rollover or curriculum artifact.
 POST_COMPACT_AGENT="${SESSION_HANDOFF_AGENT:-}"
-POST_COMPACT_AGENT_EXPLICIT=0
-if [ -n "$POST_COMPACT_AGENT" ]; then
-  POST_COMPACT_AGENT_EXPLICIT=1
-fi
 if [ -z "$POST_COMPACT_AGENT" ] \
   && { [[ "${0:-}" == *"/.codex/"* ]] || [ -n "${CODEX_THREAD_ID:-}${CODEX_SESSION_ID:-}${CODEX_SESSION:-}" ]; }; then
   POST_COMPACT_AGENT="codex"
@@ -37,26 +33,21 @@ fi
 case "$POST_COMPACT_AGENT" in
   codex|codex-*)
     if [ -z "${SESSION_EPIC:-}" ]; then
-      if [ "$POST_COMPACT_AGENT_EXPLICIT" = "0" ]; then
-        exit 0
-      fi
+      # Native Codex compaction is self-contained for non-driver tasks. This
+      # includes explicitly tagged Codex sessions: they must never fall through
+      # into the shared Claude-oriented replay below.
+      exit 0
     else
       DIARY_REL=".claude/${SESSION_EPIC}-epic/CODEX-DRIVER-HANDOFF.md"
       if [ ! -f "$PROJECT_DIR/$DIARY_REL" ]; then
-        for candidate in \
-          ".claude/${SESSION_EPIC}-epic/INTERIM-DRIVER-HANDOFF.md" \
-          ".claude/${SESSION_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md"; do
-          if [ -f "$PROJECT_DIR/$candidate" ]; then
-            DIARY_REL="$candidate"
-            break
-          fi
-        done
+        HYDRATION_RC=2
+        HYDRATION="Exact Codex driver handoff is missing: $DIARY_REL"
+      else
+        HYDRATION_RC=0
+        HYDRATION=$(run_bounded 2 "$BOUNDED_PYTHON" \
+          -m scripts.session_canary.codex_lane hydrate --epic "$SESSION_EPIC" 2>&1) \
+          || HYDRATION_RC=$?
       fi
-
-      HYDRATION_RC=0
-      HYDRATION=$(run_bounded 2 "$BOUNDED_PYTHON" \
-        -m scripts.session_canary.codex_lane hydrate --epic "$SESSION_EPIC" 2>&1) \
-        || HYDRATION_RC=$?
       if [ "$HYDRATION_RC" -eq 0 ]; then
         CONTEXT="CODEX FLEET-DRIVER HYDRATION
 $HYDRATION

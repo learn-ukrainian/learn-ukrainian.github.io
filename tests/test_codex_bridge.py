@@ -18,6 +18,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
+from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.errors import AgentStalledError, RateLimitedError
 from agent_runtime.result import Result
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
@@ -261,6 +262,7 @@ def test_codex_bridge_runtime_mode_invalid_mode_falls_back_read_only():
 @patch("ai_agent_bridge._codex.acknowledge")
 @patch("ai_agent_bridge._codex.send_message", return_value=99)
 @patch("ai_agent_bridge._codex.set_session")
+@patch("ai_agent_bridge._codex.get_session", return_value={"codex": "session-existing"})
 @patch("ai_agent_bridge._codex.build_codex_prompt", return_value="bridge prompt")
 @patch(
     "ai_agent_bridge._codex._fetch_codex_message",
@@ -280,6 +282,7 @@ def test_process_for_codex_invokes_runtime_with_bridge_shape(
     mock_invoke,
     mock_fetch_message,
     mock_build_prompt,
+    mock_get_session,
     mock_set_session,
     mock_send_message,
     mock_acknowledge,
@@ -303,13 +306,14 @@ def test_process_for_codex_invokes_runtime_with_bridge_shape(
         process_for_codex(7)
 
     mock_fetch_message.assert_called_once_with(7)
+    mock_get_session.assert_called_once_with("issue-1177")
     mock_build_prompt.assert_called_once()
     kwargs = mock_invoke.call_args.kwargs
     assert kwargs["mode"] == "read-only"
     assert kwargs["model"] == "gpt-5.4"
     assert kwargs["entrypoint"] == "bridge"
     assert kwargs["tool_config"] is None
-    assert kwargs["session_id"] is None
+    assert kwargs["session_id"] == "session-existing"
     assert kwargs["hard_timeout"] == 900
     assert kwargs["stall_timeout"] == 600
     mock_set_session.assert_called_once_with("issue-1177", "codex", "session-123")
@@ -334,6 +338,7 @@ def test_process_for_codex_invokes_runtime_with_bridge_shape(
 @patch("ai_agent_bridge._codex.acknowledge")
 @patch("ai_agent_bridge._codex.send_message", return_value=100)
 @patch("ai_agent_bridge._codex.set_session")
+@patch("ai_agent_bridge._codex.get_session", return_value={"codex": "session-existing"})
 @patch("ai_agent_bridge._codex.build_codex_prompt", return_value="bridge prompt")
 @patch(
     "ai_agent_bridge._codex._fetch_codex_message",
@@ -349,10 +354,11 @@ def test_process_for_codex_invokes_runtime_with_bridge_shape(
     },
 )
 @patch("agent_runtime.runner.invoke")
-def test_process_for_codex_uses_workspace_write_mode_and_never_resumes(
+def test_process_for_codex_new_session_starts_cold_even_when_session_exists(
     mock_invoke,
     mock_fetch_message,
     mock_build_prompt,
+    mock_get_session,
     mock_set_session,
     mock_send_message,
     mock_acknowledge,
@@ -373,9 +379,10 @@ def test_process_for_codex_uses_workspace_write_mode_and_never_resumes(
     )
 
     with patch.dict(os.environ, {"CODEX_BRIDGE_MODE": "workspace-write"}, clear=True):
-        process_for_codex(8, new_session=False)
+        process_for_codex(8, new_session=True)
 
     mock_fetch_message.assert_called_once_with(8)
+    mock_get_session.assert_not_called()
     mock_build_prompt.assert_called_once()
     kwargs = mock_invoke.call_args.kwargs
     assert kwargs["mode"] == "workspace-write"
@@ -405,6 +412,124 @@ def test_process_for_codex_uses_workspace_write_mode_and_never_resumes(
     mock_acknowledge.assert_called_once_with(8)
 
 
+def test_process_for_codex_cold_starts_without_stored_session(monkeypatch):
+    captured: dict[str, object] = {}
+    message = {
+        "id": 10,
+        "task_id": "issue-1179",
+        "from": "gemini",
+        "to": "codex",
+        "type": "query",
+        "content": "bridge content",
+        "data": None,
+        "timestamp": "2026-04-10T12:00:00Z",
+    }
+    result = Result(
+        ok=True,
+        agent="codex",
+        model="gpt-5.6-terra",
+        mode="read-only",
+        response="Codex response",
+        stderr_excerpt=None,
+        duration_s=1.0,
+        session_id=None,
+        rate_limited=False,
+        stalled=False,
+        returncode=0,
+        usage_record={},
+    )
+    monkeypatch.setattr("ai_agent_bridge._codex._fetch_codex_message", lambda _message_id: message)
+    monkeypatch.setattr("ai_agent_bridge._codex.get_session", lambda _task_id: {"codex": None})
+    monkeypatch.setattr("ai_agent_bridge._codex.has_codex_headroom", lambda _model: (True, ""))
+    monkeypatch.setattr("ai_agent_bridge._codex.build_codex_prompt", lambda *_args, **_kwargs: "bridge prompt")
+    monkeypatch.setattr("ai_agent_bridge._codex.agent_runner.invoke", lambda *_args, **kwargs: captured.update(kwargs) or result)
+    monkeypatch.setattr("ai_agent_bridge._codex.send_message", lambda **_kwargs: 11)
+    monkeypatch.setattr("ai_agent_bridge._codex.acknowledge", lambda *_args: None)
+    monkeypatch.setattr("ai_agent_bridge._codex.record_ask_reply", lambda *_args: None)
+
+    process_for_codex(10)
+
+    assert captured["session_id"] is None
+
+
+def test_codex_adapter_reads_session_id_from_matching_rollout(tmp_path, monkeypatch):
+    adapter = CodexAdapter()
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+    today = datetime.now(UTC)
+    sessions_today = (
+        fake_home
+        / ".codex"
+        / "sessions"
+        / f"{today.year:04d}"
+        / f"{today.month:02d}"
+        / f"{today.day:02d}"
+    )
+    sessions_today.mkdir(parents=True)
+
+    plan = adapter.build_invocation(
+        prompt="continuity probe",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="continuity-probe",
+        session_id=None,
+        tool_config=None,
+    )
+    session_id = "019fb7cd-8344-7440-a3ff-a60c45f62b73"
+    rollout = sessions_today / f"rollout-2026-07-31T12-52-06-{session_id}.jsonl"
+    rollout.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "type": "session_meta",
+                        "payload": {"id": session_id, "session_id": session_id},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "type": "event_msg",
+                        "payload": {"type": "user_message", "message": "continuity probe"},
+                    }
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    output_file = tmp_path / "output.txt"
+    output_file.write_text("done", encoding="utf-8")
+
+    result = adapter.parse_response(
+        stdout="",
+        stderr="",
+        returncode=0,
+        output_file=output_file,
+        plan=plan,
+    )
+
+    assert result.ok is True
+    assert result.session_id == session_id
+
+    resumed = adapter.build_invocation(
+        prompt="continuity follow-up",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="continuity-probe",
+        session_id=session_id,
+        tool_config=None,
+    )
+    assert resumed.cmd[1:3] == ["exec", "resume"]
+    assert resumed.cmd[-2:] == [session_id, "-"]
+    assert "-C" not in resumed.cmd
+    assert "--color" not in resumed.cmd
+    assert "-s" not in resumed.cmd
+    assert 'sandbox_mode="read-only"' in resumed.cmd
+
+
 def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_path):
     checkout = ProvisionedReviewWorktree(
         path=tmp_path / "review-checkout",
@@ -431,6 +556,7 @@ def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_
         },
     )
     monkeypatch.setattr("ai_agent_bridge._codex.has_codex_headroom", lambda _model: (True, ""))
+    monkeypatch.setattr("ai_agent_bridge._codex.get_session", lambda _task_id: {"codex": "session-existing"})
     monkeypatch.setattr("ai_agent_bridge._codex.provision_review_worktree", fake_checkout)
     monkeypatch.setattr(
         ProvisionedReviewWorktree,
@@ -475,6 +601,7 @@ def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_
     process_for_codex(9, review=True)
 
     assert captured["cwd"] == checkout.path
+    assert captured["session_id"] is None
     assert str(captured["prompt"]).endswith("SEALED_DOSSIER")
 
 

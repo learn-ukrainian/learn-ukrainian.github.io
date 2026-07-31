@@ -9,8 +9,8 @@ Key design points:
 
 - **Bridge-only warm resume.** CodexAdapter has ``resume_policy="bridge_only"``
   in the registry: dispatch/delegate invocations stay fresh-session via the
-  runner policy gate, while ``ab discuss`` bridge rounds may resume a prior
-  Codex CLI session for prompt-cache reuse (#1894).
+  runner policy gate, while an exact bridge task/thread may resume its prior
+  Codex CLI session and retain native reasoning/compaction state (#1894).
 - **All three modes supported:** read-only, workspace-write, danger.
   Mode → flag mapping matches ``_codex.py::_codex_bridge_flags`` and
   ``dispatch.py::_codex_dispatch_flags``.
@@ -18,9 +18,10 @@ Key design points:
   agent message to a file; we read it in ``parse_response``. The file path
   goes into ``liveness_signal_paths`` so the runner's mtime poller catches
   Codex writing progress even when stdout is quiet.
-- **Session ID parsed from stdout.** The CLI prints "session id: <uuid>"
-  somewhere in stdout; we extract it so bridge callers can feed it into
-  later rounds.
+- **Session ID bound to the invocation.** Older CLIs printed
+  ``session id: <uuid>`` on stdout. Current CLIs persist it in the matched
+  rollout's ``session_meta`` event. We accept either source so bridge callers
+  can feed the exact session into later rounds.
 
 Issue: #1184
 """
@@ -47,6 +48,10 @@ _logger = logging.getLogger(__name__)
 
 # Matches the session id line in Codex stdout. Case-insensitive.
 _SESSION_RE = re.compile(r"session id:\s*([0-9a-f-]{8,})", re.IGNORECASE)
+_SESSION_ID_VALUE_RE = re.compile(
+    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+    re.IGNORECASE,
+)
 
 # Stderr phrases that indicate the provider rate-limited us. Ordered
 # roughly by specificity — specific phrases first, generic last.
@@ -274,19 +279,13 @@ class CodexAdapter:
         if effort is not None:
             # Per-invocation override of ~/.codex/config.toml (#1396).
             cmd.extend(["-c", f"model_reasoning_effort={effort}"])
-        cmd.extend(
-            [
-                "--skip-git-repo-check",
-                "-C",
-                str(execution_cwd),
-                "--color",
-                "never",
-                "-o",
-                str(output_path),
-                "-m",
-                model or self.default_model,
-            ]
-        )
+        cmd.append("--skip-git-repo-check")
+        if not has_session_to_resume:
+            # ``codex exec resume`` does not accept -C or --color. It resumes
+            # the original session boundary and the subprocess itself still
+            # runs from execution_cwd.
+            cmd.extend(["-C", str(execution_cwd), "--color", "never"])
+        cmd.extend(["-o", str(output_path), "-m", model or self.default_model])
         # Review isolation (#5285): ignore user/project config when the bridge
         # marks the invocation as a fail-closed review. Missing flags on an
         # older binary are the caller's responsibility to feature-detect; the
@@ -305,12 +304,19 @@ class CodexAdapter:
         # after the enable to actually suppress ``multi_agent``. The 2026-05-22
         # ab ask-codex `codex-node-repl-leak-2026-05-22` diagnosis flagged
         # this ordering as a secondary leak path (see PR #2230 follow-up).
+        if has_session_to_resume and tc.get("review_isolation"):
+            raise ValueError("CodexAdapter: sealed review sessions cannot resume")
         if tc.get("review_isolation"):
             # Codex's internal read-only mode cancels stdio MCP calls even
             # when approval_policy=never. The verified parent OS sandbox is
             # the review boundary, so bypass only the nested Codex sandbox to
             # keep the sole sealed read-only MCP tool usable.
             cmd.append("--dangerously-bypass-approvals-and-sandbox")
+        elif has_session_to_resume and mode == "read-only":
+            # ``resume`` has no -s/--sandbox flag, but accepts config
+            # overrides. Reassert the requested boundary instead of inheriting
+            # a broader mode if a caller changes delivery metadata mid-thread.
+            cmd.extend(["-c", 'sandbox_mode="read-only"'])
         else:
             cmd.extend(self._mode_flags(mode))
         cmd.extend(self._tool_config_flags(tool_config))
@@ -543,11 +549,15 @@ class CodexAdapter:
             call_failed = returncode != 0 or not durable_output
             rate_limited = pattern_hit and call_failed
 
-        # Session id comes from stdout in Codex.
+        # Older Codex CLIs printed the session id on stdout. Current CLIs keep
+        # stdout quiet and persist it in the invocation-matched rollout's
+        # session_meta record.
         session_id: str | None = None
         session_match = _SESSION_RE.search(stdout or "")
         if session_match:
             session_id = session_match.group(1)
+        elif plan is not None:
+            session_id = self._read_session_id_from_rollout(plan)
 
         rollout_trace = ""
         if plan is not None:
@@ -879,6 +889,40 @@ class CodexAdapter:
             return rollout.read_text(encoding="utf-8", errors="replace")
         except OSError:
             return ""
+
+    def _read_session_id_from_rollout(self, plan: InvocationPlan) -> str | None:
+        """Read the exact invocation's session id from ``session_meta``.
+
+        The rollout selector first proves that the file contains this plan's
+        normalized user prompt and was created after the invocation snapshot.
+        Never take an ID from the globally newest rollout: concurrent Codex
+        calls may share the same date directory.
+        """
+        rollout = self._select_rollout_for_plan(plan)
+        if rollout is None:
+            return None
+        try:
+            with open(rollout, encoding="utf-8", errors="replace") as stream:
+                for line_number, line in enumerate(stream, start=1):
+                    if line_number > 25:
+                        break
+                    try:
+                        event = _json.loads(line)
+                    except (TypeError, ValueError):
+                        continue
+                    if event.get("type") != "session_meta":
+                        continue
+                    payload = event.get("payload")
+                    if not isinstance(payload, dict):
+                        return None
+                    for key in ("session_id", "id"):
+                        candidate = payload.get(key)
+                        if isinstance(candidate, str) and _SESSION_ID_VALUE_RE.fullmatch(candidate):
+                            return candidate
+                    return None
+        except OSError:
+            return None
+        return None
 
     def _rollout_matches_plan(self, rollout_path: Path, plan: InvocationPlan) -> bool:
         """Return True when a rollout's user prompt matches this invocation.

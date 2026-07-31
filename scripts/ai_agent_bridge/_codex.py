@@ -1,8 +1,9 @@
 """Codex interaction: ask_codex and process_for_codex.
 
 Phase 4 of #1184 migrated the bridge subprocess path onto
-scripts.agent_runtime. Codex bridge calls now always start fresh,
-consistent with the runtime's resume_policy="never" for Codex.
+scripts.agent_runtime. Normal bridge calls may resume their task-scoped Codex
+conversation; the runtime's ``bridge_only`` policy keeps every non-bridge
+entrypoint fresh.
 """
 
 import json
@@ -21,7 +22,7 @@ from agent_runtime.errors import (
 from ._ask_contract import resolve_model_selection, response_provenance
 from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
 from ._config import REPO_ROOT
-from ._db import get_db, set_session
+from ._db import get_db, get_session, set_session
 from ._messaging import acknowledge, send_message
 from ._prompts import build_codex_prompt
 from ._review_safety import (
@@ -285,16 +286,17 @@ def _render_codex_chain_content(content_template: str, issue_num: int, task_id: 
 def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bool = False, review: bool = False):
     """Read message addressed to Codex, invoke via agent_runtime, send response.
 
-    Phase 4: routes through scripts.agent_runtime.runner.invoke(). Resume
-    is dropped (Codex resume_policy="never" in the registry); new_session
-    parameter is accepted for backward compatibility but now always True
-    in effect.
+    Phase 4: routes through scripts.agent_runtime.runner.invoke(). Normal
+    bridge calls resume the task-scoped Codex session when one exists;
+    ``new_session`` and sealed reviews always start a fresh session.
     """
     msg = _fetch_codex_message(message_id)
     if not msg:
         return
 
-    _ = new_session  # No-op: Codex always starts fresh (resume_policy="never")
+    codex_session_id = None
+    if msg["task_id"] and not new_session and not review:
+        codex_session_id = get_session(msg["task_id"])["codex"]
     timeout_val = _resolve_codex_bridge_timeout(no_timeout)
     model = _extract_target_model(msg)
     effort = _extract_effort(msg)
@@ -311,7 +313,12 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
         print(f"   Model: {model}")
     if effort:
         print(f"   Effort: {effort}")
-    print("   Session: NEW (Codex runtime always fresh)")
+    if review:
+        print("   Session: EPHEMERAL (sealed review)")
+    elif codex_session_id:
+        print(f"   Session: RESUME ({codex_session_id[:8]}...)")
+    else:
+        print("   Session: NEW")
     if timeout_val == _NO_TIMEOUT_CODEX_BRIDGE_TIMEOUT_SECONDS:
         print("   Hard timeout: no-timeout requested (24h ceiling)")
     else:
@@ -354,7 +361,7 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
                 model=model,
                 effort=effort,
                 task_id=msg["task_id"],
-                session_id=None,  # Codex resume_policy="never"
+                session_id=codex_session_id,
                 tool_config=review_tool_config,
                 entrypoint="bridge",
                 hard_timeout=timeout_val,
@@ -392,7 +399,7 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
         )
         return
 
-    # Persist session ID for observability (though we never reuse it).
+    # Persist a successful session ID for later task-scoped bridge continuity.
     if result.session_id and msg["task_id"]:
         set_session(msg["task_id"], "codex", result.session_id)
 
