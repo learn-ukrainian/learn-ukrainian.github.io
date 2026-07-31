@@ -445,6 +445,22 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
 
 
 @pytest.mark.parametrize(
+    ("field", "member"),
+    [
+        ("task_types", "bounded_investigation"),
+        ("prohibited_decisions", "security"),
+        ("escalation_triggers", "final_disposition"),
+    ],
+)
+def test_catalog_rejects_luna_safety_set_member_removal(field, member):
+    broken = deepcopy(load_model_catalog())
+    broken["execution_routing"]["sol_advised_bounded"]["preferred_worker"][field].remove(member)
+
+    with pytest.raises(ModelCatalogError, match=rf"preferred_worker\.{field} must include exactly"):
+        validate_catalog(broken)
+
+
+@pytest.mark.parametrize(
     ("section", "field", "operation", "value", "message"),
     [
         ("advisor", "model_id", "set", "missing-model", "advisor.model_id references unknown model"),

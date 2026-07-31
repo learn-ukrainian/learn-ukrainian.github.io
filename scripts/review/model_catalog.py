@@ -56,6 +56,18 @@ ADVISOR_OUTPUT_FIELDS = [
     "acceptance_evidence",
     "escalation_triggers",
 ]
+LUNA_TASK_TYPES = frozenset({"bounded_implementation", "bounded_investigation"})
+LUNA_PROHIBITED_DECISIONS = frozenset(
+    {"consequential_architecture", "security", "release", "high_risk_go_no_go"}
+)
+LUNA_ESCALATION_TRIGGERS = frozenset(
+    {
+        "scope_ceiling_exceeded",
+        "unresolved_consequential_ambiguity",
+        "broader_integration",
+        "final_disposition",
+    }
+)
 
 
 class ModelCatalogError(ValueError):
@@ -138,11 +150,17 @@ def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
             "execution_routing.sol_advised_bounded.preferred_worker.requires must bind a complete envelope "
             "and objective scope ceiling"
         )
-    if "scope_ceiling_exceeded" not in preferred["escalation_triggers"]:
-        raise ModelCatalogError(
-            "execution_routing.sol_advised_bounded.preferred_worker.escalation_triggers must include "
-            "'scope_ceiling_exceeded'"
-        )
+    expected_luna_sets = {
+        "task_types": LUNA_TASK_TYPES,
+        "prohibited_decisions": LUNA_PROHIBITED_DECISIONS,
+        "escalation_triggers": LUNA_ESCALATION_TRIGGERS,
+    }
+    for field, expected in expected_luna_sets.items():
+        if set(preferred[field]) != expected:
+            raise ModelCatalogError(
+                f"execution_routing.sol_advised_bounded.preferred_worker.{field} must include exactly "
+                f"{sorted(expected)}"
+            )
     _require_active_execution_model(
         models,
         preferred["escalate_to"],
