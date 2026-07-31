@@ -6,7 +6,10 @@
  * doubles as a client-side attestation source with zero extra bundle cost.
  * A pasted word is "atlas_attested" only when it resolves to a real Atlas
  * row; everything else is "unverified" and deselected by default so no
- * unattested string is ever silently treated as confirmed vocabulary.
+ * unattested string is ever silently treated as confirmed vocabulary. An
+ * attested row with no parseable CEFR level is also left deselected — it
+ * needs manual review, and no level is ever invented (e.g. defaulting it
+ * to A1) just to make it selectable.
  */
 
 import { CEFR_LEVELS, parseCefrLevel, type CefrLevel } from './levels';
@@ -68,13 +71,15 @@ export function classifyPasteCandidates(
   return lemmaKeys.map((text) => {
     const row = attestationIndex.get(text.toLocaleLowerCase());
     if (row) {
+      const cefr = parseCefrLevel(row.c);
       return {
         text,
-        cefr: parseCefrLevel(row.c),
+        cefr,
         status: 'atlas_attested',
         atlasSlug: row.s,
         gloss: cleanGloss(row.g),
-        selected: true,
+        // No parseable CEFR level → leave deselected for manual review, never invent one.
+        selected: cefr !== null,
       };
     }
     return {

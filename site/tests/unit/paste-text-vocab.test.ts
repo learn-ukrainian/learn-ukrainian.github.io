@@ -59,11 +59,14 @@ describe('classifyPasteCandidates', () => {
     });
   });
 
-  test('never invents a CEFR level for an Atlas row missing one', () => {
+  test('never invents a CEFR level for an Atlas row missing one, and leaves it deselected', () => {
     const [candidate] = classifyPasteCandidates(['абракадабра'], index);
-    expect(candidate.status).toBe('atlas_attested');
-    expect(candidate.cefr).toBeNull();
-    expect(candidate.gloss).toBeNull();
+    expect(candidate).toMatchObject({
+      status: 'atlas_attested',
+      cefr: null,
+      gloss: null,
+      selected: false,
+    });
   });
 
   test('treats a blank Atlas gloss as null rather than an empty invented string', () => {
@@ -89,6 +92,21 @@ describe('summarizePasteCandidates', () => {
     expect(summary.byLevel.A1).toBe(1);
     expect(summary.byLevel.A2).toBe(1);
     expect(summary.byLevel.B1).toBe(0);
+  });
+
+  test('does not count an attested word with no CEFR level as selected or leveled', () => {
+    const index = buildAtlasAttestationIndex(SAMPLE_ROWS);
+    const candidates = classifyPasteCandidates(
+      ['привіт', 'абракадабра'],
+      index,
+    );
+    const summary = summarizePasteCandidates(candidates);
+    expect(summary.total).toBe(2);
+    // both resolve to real Atlas rows, so both count as attested...
+    expect(summary.attested).toBe(2);
+    // ...but the one with no parseable CEFR level is deselected, not invented as A1
+    expect(summary.selected).toBe(1);
+    expect(summary.byLevel.A1).toBe(1);
   });
 
   test('excludes deselected candidates from the level tally even if attested', () => {
