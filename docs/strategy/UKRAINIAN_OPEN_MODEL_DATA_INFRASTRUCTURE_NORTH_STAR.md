@@ -42,8 +42,9 @@ future training data.
 ## GitHub execution homes
 
 - [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
-  owns audited open-model data infrastructure, provenance contracts,
-  morphology/tokenizer diagnostics, and consumer-specific exporters.
+  owns the Ukrainian Data Foundry: provenance and rights contracts,
+  full-corpus diagnostics, candidate review and adjudication, mechanically
+  disjoint consumer exports, recipes, and reference validation.
 - [#6057](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6057)
   owns the separately frozen public benchmark v0.2 design and release.
 - [#4913](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4913)

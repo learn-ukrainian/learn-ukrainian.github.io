@@ -87,6 +87,7 @@ record eligible.
 - `private_reference`
 - `provenance_investigation`
 - `rights_redistribution_investigation`
+- `unresolved`
 - `excluded`
 
 ### Evidence state
