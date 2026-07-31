@@ -13,15 +13,20 @@
     "baseline": {
       "poc_thin_pages": 672,
       "search_no_visible_gloss": 43,
-      "old_gate_no_english_anchor": 50
+      "old_gate_no_english_anchor": 43
     },
     "candidate": {
       "poc_thin_pages": 672,
       "search_no_visible_gloss": 43,
       "old_gate_no_english_anchor": 50
     },
-    "regressions": {},
-    "override_reason": null,
+    "regressions": {
+      "old_gate_no_english_anchor": {
+        "baseline": 43,
+        "candidate": 50
+      }
+    },
+    "override_reason": "#6064 PULS residual work: the candidate is 43→50; the five affected PULS-backed teacher lemmas remain explicitly scoped for follow-up enrichment.",
     "bootstrap": false
   },
   "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON."
