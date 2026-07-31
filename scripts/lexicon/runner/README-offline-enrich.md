@@ -84,6 +84,13 @@ covers it:
 ATLAS_RUNNER_HOST=ops@<runner-host> scripts/lexicon/runner/mirror_20k_runner.sh
 ```
 
+Atlas drivers can prove this run's remote work-dir and local durability state
+without starting enrichment by running:
+
+```bash
+ATLAS_RUNNER_HOST=ops@<runner-host> scripts/lexicon/runner/health_20k_runner.sh
+```
+
 Before any cleanup, execute the full durability order — **snapshot → restic
 backup → receipt gate → wipe**. The gate rejects a stale, missing, corrupt,
 or not-yet-backed-up mirror instead of guessing:
