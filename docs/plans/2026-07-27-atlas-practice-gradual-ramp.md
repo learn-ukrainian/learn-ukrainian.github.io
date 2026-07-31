@@ -1,16 +1,69 @@
-# Plan of record (DRAFT for advisors): Atlas + Practice gradual ramp
+# Plan of record: Atlas + Practice gradual ramp
 
-**Status:** DRAFT — needs advisor review (Sol + Fable) before **long-tail** infra lock
-**Date:** 2026-07-27 (revised same day — teacher-list priority)
-**Epic:** #4387 (Word Atlas + Practice Hub)
-**Author seat:** interim atlas driver (Grok) — architecture draft for advisors, not a solo lock
+**Status:** §0 **operator ramp sequence** is binding (operator **2026-08-01**; scale = **lemmas**, not words).
 
-### CRITICAL split (operator 2026-07-27 evening)
+**Track T** priority remains operator-locked. **Track A** wave thresholds, **DC-1…DC-5**, and long-tail **server / ~250k-lemma delivery** remain draft pending Sol + Fable advisor lock.
+**Date:** 2026-07-27 (Track T split); **2026-08-01** (operator ramp sequence + ticket board).  
+**Epic:** #4387 (Word Atlas + Practice Hub)  
+**Mandate board:** #6132 (sub-issues #6134–#6143 and related open tickets)  
+**Related:** #4920 (backend / ~250k serving), #6142 (past 20k expand), ULIF #5224 / #5230
+
+---
+
+## 0. Operator ramp sequence (binding)
+
+**Intent (operator, plain language):**
+
+1. Establish a **solid base dictionary** (~**10k lemmas** — honest, enriched-enough core; **lemmas**, not surface word-forms).  
+2. **Work out Practice** on that base (multi-mode factory + sessions that feel real).  
+3. **Expand atlas ~20k lemmas** and **enrich**.  
+4. **Expand Practice again** (re-run factory on the larger atlas).  
+5. **Iterate** the same loop toward full coverage (~**250k** lemmas — architecture changes for serving; see #4920).
+
+**This is the product growth spine.** Residual tickets (#6064, etc.) are **wire under the spine**, not a substitute for it.
+
+| Stage | Atlas | Practice | Notes |
+| --- | --- | --- | --- |
+| **S1 — Base dict** | ~10k **lemmas** solid core (or current live base if already larger) | Not yet “done” | Quality over hollow shells; scale counts are **lemmas** |
+| **S2 — Practice on base** | Freeze vanity growth if practice is empty | Factory + session variety on existing sources | Prefer empty mode over bad cards |
+| **S3 — Expand ~20k lemmas + enrich** | Cohort / ULIF / intake (~20.3k **lemma** cohort file exists) | Re-run factory after enrich | 20k lemmas is a **checkpoint**, not the product |
+| **S4 — Practice catch-up** | — | Regen shards; thin modes grow from real sources | Ticket board #6134–#6141 |
+| **S5 — Iterate to full** | Beyond 20k → toward ~250k **lemmas** | Regen every expand wave | Static-first until #4920-class serving |
+
+### Current position (tool-backed order of magnitude, 2026-08-01)
+
+| Layer | Approx | Implication |
+| --- | --- | --- |
+| Live public atlas | ~17–18k **lemmas** (entries) | Already **past a pure 10k-lemma freeze** — treat as **base+** |
+| 20k cohort list | ~20 323 lemmas | Expand/enrich phase material (#6142) |
+| Practice index (sum A1–C1 items) | ~4.8–5k **lemma** rows (levels overlap) | **Practice lagging atlas** — S2/S4 is the active catch-up |
+| Teacher private seed | ~1k package | Track T (parallel homework track) |
+
+**Terminology:** atlas scale figures are **lemmas** (dictionary heads), not orthographic word-forms or tokens.
+
+**Policy:** Do **not** “collect 250k lemmas first.” Do **not** sell residual CEFR crumbs as the product.  
+**After every atlas expand wave:** practice factory regen + quality gates.  
+**20k lemmas is temporary.** **~250k lemmas needs backend / entry-model serving** (#4920), not infinite static Pages blobs.
+
+### Ticket map (follow GH, not private queues)
+
+| Stage | Primary tickets |
+| --- | --- |
+| S2/S4 practice factory & modes | #6134 #6136 #6137 #6138 #6139 #6141 #3797 |
+| Session / any deck | #6135 #5882 #5718 #6143 |
+| Heritage (important **subtask**) | #6140 |
+| S3/S5 expand | #6142 #3936 #5230 #5224 |
+| Teacher residual wire | #6064 |
+| ~250k architecture | #4920 #4378 #4384 |
+
+---
+
+### CRITICAL split (operator 2026-07-27 evening — still binding)
 
 | Track | Scope | Timeline |
 | --- | --- | --- |
-| **Track T — Teacher homework** | Full **Curated private teacher-lesson v5** list (~1k active seed) in Practice | **Immediate** — next driver ships this; **not** “by winter,” **not** capped at 50 words |
-| **Track A — Atlas-wide ramp** | Grow practice pool toward “any atlas word” (~17k→more) | Gradual waves below; advisors lock triggers |
+| **Track T — Teacher homework** | Full **Curated private teacher-lesson v5** list (~1k active **lemmas**) in Practice | **Immediate** — parallel to Track A; **not** capped at 50 lemmas |
+| **Track A — Atlas-wide ramp** | Grow practice pool toward “any atlas **lemma**” (live ~17k→20k→more **lemmas**) | Gradual waves; operator sequence §0 |
 
 A **32–50 gold slice** is only a **factory smoke test**. It must never be treated as the teacher-list delivery.
 
@@ -20,18 +73,18 @@ A **32–50 gold slice** is only a **factory smoke test**. It must never be trea
 
 | Horizon | Learner experience |
 | --- | --- |
-| **Now (Track T)** | Practice the **teacher’s full Curated private teacher-lesson word list** in the app |
+| **Now (Track T)** | Practice the **teacher’s full Curated private teacher-lesson lemma list** in the app |
 | **Now (product)** | Browse a large Word Atlas; practice pool smaller than atlas |
-| **Near** | Curated decks feel complete; CTA works for those words |
-| **Mid** | Most “everyday” atlas words are practiceable; banner becomes rare |
-| **Far** | **Practice any public atlas word** — static pool covers the head; long-tail may use server assist |
+| **Near** | Curated decks feel complete; CTA works for those lemmas |
+| **Mid** | Most “everyday” atlas **lemmas** are practiceable; banner becomes rare |
+| **Far** | **Practice any public atlas lemma** — static pool covers the head; long-tail may use server assist |
 
 **Non-negotiables (already decided):**
 
 - Static-first practice (offline-capable shards)
 - Quality gates over coverage vanity
 - Rights-aware examples (no fake sentences, no textbook exercise traps)
-- CODE decides word validity (VESUM / triage), not LLM dictionary judgment
+- CODE decides **lemma** validity (VESUM / triage), not LLM dictionary judgment
 - Non-commercial permanent project
 
 **Should we ramp the whole atlas (Track A)?**
@@ -57,7 +110,7 @@ SOURCES → LEXICAL CORE (lemmas / senses / attestations / rights)
          LEARNER APP
               │
               ▼ later
-    “any word” = pool ≈ atlas  OR  on-demand cards from same core
+    “any lemma” = pool ≈ atlas  OR  on-demand cards from same core
 ```
 
 | Metric (2026-07-27, tool-backed) | Value |
@@ -142,11 +195,11 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 
 ---
 
-### Wave 3 — Toward “most words” · later
+### Wave 3 — Toward “most lemmas” · later
 
 | Goal | Approach |
 | --- | --- |
-| Pool ~20–40k stretch | Batch from atlas.db; fail closed |
+| Pool ~20–40k **lemmas** stretch | Batch from atlas.db; fail closed |
 | Atlas depth | Phase-2 paced ULIF/wiki; durable caches |
 | Cloze | Attestation-backed only |
 
@@ -161,7 +214,7 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 | Capability | Server | LLM (only if approved) |
 | --- | --- | --- |
 | Long-tail practice cards | Assemble from DB | Optional distractors with gates |
-| Cloze rare words | Corpus API first | Only rights-safe + VESUM-checked |
+| Cloze rare lemmas | Corpus API first | Only rights-safe + VESUM-checked |
 | Search | API if client FTS too big | No |
 | Sync / analytics | Accounts + FSRS | No |
 
@@ -186,9 +239,10 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 
 ## 6. Decision cards for advisors (Track A)
 
+**Operator-settled direction:** §0 and Track T’s immediate full Curated private teacher-lesson delivery are binding; they are not awaiting advisor approval.
+
 | ID | Question | Driver recommendation |
 | --- | --- | --- |
-| **DC-0** | Confirm Track T full Curated private teacher-lesson is **not** gated by Wave 1–4 calendar? | **Confirm** — homework is immediate |
 | **DC-1** | Gradual atlas ramp vs freeze pool ~5k? | **Ramp gradually** after Track T |
 | **DC-2** | 80% gzip — split shards vs raise limits? | **Split first** |
 | **DC-3** | When design on-demand practice? | After Wave 2 ~10–15k **or** 80% budget |
@@ -214,7 +268,7 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 1. **Track T:** full Curated private teacher-lesson v5 (~1029) into Practice — extend #5905 / #5792 (not stop at 40)
 2. Local smoke: several Curated private teacher-lesson lemmas → Practice CTA works
 3. Banner-rate sample on random non-Curated private teacher-lesson atlas pages
-4. Advisor finish on this draft → lock DC-0…DC-5 for Track A
+4. Advisor finish on the remaining Track A draft → lock DC-1…DC-5 (wave thresholds and long-tail infrastructure)
 5. Only after Track T: Wave 2 batch 2.1
 
 ---
@@ -230,8 +284,8 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 
 ## 10. Advisor ask
 
-Review as **architecture / ramp design**, not code nits. Explicitly affirm **DC-0** (teacher list is immediate). Return APPROVE / APPROVE-WITH-CHANGES / BLOCK on DC-0…DC-5.
+Review the remaining **Track A architecture / ramp design**, not code nits. §0 and Track T’s immediate teacher-list delivery are operator-settled; return APPROVE / APPROVE-WITH-CHANGES / BLOCK on DC-1…DC-5.
 
 ---
 
-*Draft for advisor consensus. Track T priority is operator-locked; Track A thresholds need advisors + operator GO.*
+*§0’s operator ramp sequence and Track T priority are binding. Only the remaining Track A thresholds, DC-1…DC-5, and long-tail server / ~250k-lemma infrastructure await advisors + operator GO.*
