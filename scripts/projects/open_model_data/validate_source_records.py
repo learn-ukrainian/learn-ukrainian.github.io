@@ -50,7 +50,7 @@ def load_schema() -> tuple[dict[str, Any], str]:
     return schema, sha256_file(SCHEMA_PATH)
 
 
-def load_records(path: Path) -> list[dict[str, Any]]:
+def load_records(path: Path) -> list[Any]:
     """Load one JSON record, a JSON list, or JSONL deterministically."""
     raw = path.read_text(encoding="utf-8")
     if path.suffix == ".jsonl":
@@ -76,7 +76,11 @@ def _semantic_reasons(record: dict[str, Any], schema_hash: str) -> list[str]:
         derivation.get(field) is None for field in ("parent_content_sha256", "transform_receipt_id")
     ):
         reasons.append("derived_record_missing_lineage")
-    evidence_ids = {item["evidence_id"] for item in record.get("evidence", []) if "evidence_id" in item}
+    evidence = record.get("evidence", [])
+    evidence_id_list = [item["evidence_id"] for item in evidence if "evidence_id" in item]
+    evidence_ids = set(evidence_id_list)
+    if len(evidence_ids) != len(evidence_id_list):
+        reasons.append("duplicate_evidence_id")
     for right_name in REQUIRED_GRANTED_RIGHTS:
         statement = record.get("rights", {}).get(right_name, {})
         if statement.get("status") != "granted":
@@ -85,7 +89,7 @@ def _semantic_reasons(record: dict[str, Any], schema_hash: str) -> list[str]:
             reasons.append(f"{right_name}_evidence_reference_missing")
     license_statement = record.get("rights", {}).get("license", {})
     terms_id = license_statement.get("license_terms_evidence_id")
-    evidence_by_id = {item.get("evidence_id"): item for item in record.get("evidence", [])}
+    evidence_by_id = {item.get("evidence_id"): item for item in evidence}
     if license_statement.get("status") == "granted":
         if not license_statement.get("license_expression"):
             reasons.append("license_expression_missing")
@@ -120,22 +124,30 @@ def validate_path(path: Path) -> dict[str, Any]:
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
     records = load_records(path)
     outcomes: list[dict[str, Any]] = []
-    legacy_input = False
+    legacy_records = 0
     for record in records:
-        if record.get("schema_version") != "source_record_v1":
-            legacy_input = True
+        if not isinstance(record, dict) or record.get("schema_version") != "source_record_v1":
+            legacy_records += 1
             outcomes.append({"admitted": False, "record_id": None, "reasons": list(LEGACY_MISSING_FIELDS)})
         else:
             outcomes.append(validate_record(record, validator, schema_hash))
     counts = Counter(reason for outcome in outcomes for reason in outcome["reasons"])
+    all_legacy = bool(outcomes) and legacy_records == len(outcomes)
+    input_kind = "legacy_non_contract" if all_legacy else "mixed" if legacy_records else "source_record_v1"
     return {
         "admitted_records": sum(outcome["admitted"] for outcome in outcomes),
+        "contract_records": len(outcomes) - legacy_records,
         "contract_schema_sha256": schema_hash,
-        "input_kind": "legacy_non_contract" if legacy_input else "source_record_v1",
+        "input_kind": input_kind,
         "input_sha256": sha256_file(path),
+        "legacy_records": legacy_records,
         "rejected_records": len(outcomes) - sum(outcome["admitted"] for outcome in outcomes),
         "rejection_reason_counts": dict(sorted(counts.items())),
-        "results": [] if legacy_input else sorted(outcomes, key=lambda item: (str(item["record_id"]), canonical_json(item))),
+        "results": (
+            []
+            if all_legacy
+            else sorted(outcomes, key=lambda item: (str(item["record_id"]), canonical_json(item)))
+        ),
         "total_records": len(outcomes),
         "validator_version": "source_record_v1",
     }

@@ -39,7 +39,9 @@ JSON Schema validates structure. The validator additionally requires the
 current schema hash, complete derivation consistency, referenced evidence, a
 resolved review, and `granted` status for all four rights/permission fields.
 It also invokes `Draft202012Validator.check_schema` before use and requires a
-granted license to carry the exact-terms receipt described above.
+granted license to carry the exact-terms receipt described above. Evidence IDs
+must be unique within a record so that array order cannot change which receipt
+is resolved.
 `unknown`, `conflicting`, or `denied` status fails closed. This is an admission
 rule, not a claim that a grant is legally sufficient.
 
@@ -61,3 +63,6 @@ The tracked example is synthetic and clearly marked as such. It is a schema and
 admission fixture, not source data or a release artifact. A supplied legacy
 JSONL candidate is classified as non-contract input and receives deterministic
 aggregate fail-closed reasons for the ten previously evidenced missing fields.
+For a mixed JSON list, the receipt reports separate contract and legacy counts
+and retains each per-record disposition; only an all-legacy input suppresses
+record-level output.

@@ -58,6 +58,9 @@ def test_granted_license_requires_exact_terms_receipt() -> None:
     missing_receipt = example_record()
     missing_receipt["evidence"][0]["sha256"] = None
     assert "license_exact_terms_receipt_incomplete" in CONTRACT.validate_record(missing_receipt, validator, schema_hash)["reasons"]
+    duplicate_receipt = example_record()
+    duplicate_receipt["evidence"].append(copy.deepcopy(duplicate_receipt["evidence"][0]))
+    assert "duplicate_evidence_id" in CONTRACT.validate_record(duplicate_receipt, validator, schema_hash)["reasons"]
 
 
 def test_derived_requires_complete_lineage_and_schema_hash() -> None:
@@ -84,5 +87,27 @@ def test_legacy_candidate_is_content_blind_deterministic_and_unchanged() -> None
     assert first["input_sha256"] == before == "06923700a0f5a6bbb077221325b8b7cc2b5e0a094100569494af32acd52c3424"
     assert set(first["rejection_reason_counts"]) == set(CONTRACT.LEGACY_MISSING_FIELDS)
     assert first["input_kind"] == "legacy_non_contract"
+    assert first["legacy_records"] == 5000
+    assert first["contract_records"] == 0
     assert first["results"] == []
     assert CONTRACT.sha256_file(OLD_CANDIDATE) == before
+
+
+def test_mixed_batch_preserves_per_record_dispositions(tmp_path: Path) -> None:
+    mixed_path = tmp_path / "mixed.json"
+    mixed_path.write_text(
+        json.dumps([example_record(), "legacy content is not emitted"]),
+        encoding="utf-8",
+    )
+
+    result = CONTRACT.validate_path(mixed_path)
+
+    assert result["input_kind"] == "mixed"
+    assert result["contract_records"] == 1
+    assert result["legacy_records"] == 1
+    assert result["admitted_records"] == 1
+    assert result["rejected_records"] == 1
+    assert result["results"] == [
+        {"admitted": False, "record_id": None, "reasons": list(CONTRACT.LEGACY_MISSING_FIELDS)},
+        {"admitted": True, "record_id": "record.synthetic-001", "reasons": []},
+    ]
