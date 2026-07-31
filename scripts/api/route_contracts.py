@@ -949,7 +949,7 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
         "/acp.html",
         "Readable, read-only ACP conversation ledger and event timeline.",
         "/api/runtime/acp/conversations*.",
-        "Live body-free reads from the shared fleet-comms SQLite store with a 5s client timeout.",
+        "Single-shot live body-free fetch on page load; the browser uses its platform-default request timeout and does not poll.",
         ("humans",),
         "Complements runtime and channels without exposing message composition.",
         "low",
