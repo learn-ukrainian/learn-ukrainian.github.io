@@ -84,6 +84,9 @@ def test_rail_patterns_are_full_path_globs_not_substrings() -> None:
     assert guard.is_rail_path("agents_extensions/codex/agents/infra.md")
     assert guard.is_rail_path("scripts/config/trails/rb1.trail.yaml")
     assert guard.is_rail_path("agents_extensions/shared/schemas/trailspec/v2/schema.json")
+    assert guard.is_rail_path("scripts/orchestration/rail_status.py")
+    assert guard.is_rail_path("scripts/fleet_comms/review_publisher.py")
+    assert guard.is_rail_path("scripts/ai_agent_bridge/_review_verdict.py")
     assert not guard.is_rail_path("docs/model_catalog.yaml-not-a-rail")
     assert not guard.is_rail_path("docs/notes/agents_extensions/shared/rules.md")
 
