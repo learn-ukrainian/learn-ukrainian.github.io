@@ -389,6 +389,9 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
     assert "bounded_advisory_envelope" in catalog["models"][advisor["model_id"]]["roles"]
     assert advisor["output_fields"] == [
         "task_contract",
+        "owned_paths",
+        "max_changed_files",
+        "max_non_test_loc",
         "constraints",
         "risk_boundaries",
         "acceptance_evidence",
@@ -402,7 +405,7 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
         "bounded_implementation",
         "bounded_investigation",
     } <= set(catalog["models"][preferred["model_id"]]["roles"])
-    assert preferred["requires"] == ["complete_advisory_envelope"]
+    assert preferred["requires"] == ["complete_advisory_envelope", "objective_scope_ceiling"]
     assert preferred["task_types"] == ["bounded_implementation", "bounded_investigation"]
     assert preferred["escalate_to"] == "gpt-5.6-sol"
     assert set(preferred["prohibited_decisions"]) == {
@@ -412,6 +415,7 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
         "high_risk_go_no_go",
     }
     assert set(preferred["escalation_triggers"]) == {
+        "scope_ceiling_exceeded",
         "unresolved_consequential_ambiguity",
         "broader_integration",
         "final_disposition",
@@ -448,12 +452,33 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
         ("direct_worker", "model_id", "set", "missing-model", "direct_worker.model_id references unknown model"),
         ("autonomous_fallback", "model_id", "set", "missing-model", "autonomous_fallback.model_id references unknown model"),
         ("preferred_worker", "escalate_to", "set", "missing-model", "preferred_worker.escalate_to references unknown model"),
-        ("advisor", "effort", "set", "ultra", "advisor.effort must be one of"),
-        ("preferred_worker", "effort", "set", "ultra", "preferred_worker.effort must be one of"),
-        ("direct_worker", "effort", "set", "ultra", "direct_worker.effort must be one of"),
-        ("autonomous_fallback", "effort", "set", "ultra", "autonomous_fallback.effort must be one of"),
+        ("advisor", "effort", "set", "extreme", "advisor.effort must be one of"),
+        ("preferred_worker", "effort", "set", "extreme", "preferred_worker.effort must be one of"),
+        ("direct_worker", "effort", "set", "extreme", "direct_worker.effort must be one of"),
+        ("autonomous_fallback", "effort", "set", "extreme", "autonomous_fallback.effort must be one of"),
         ("advisor", "role", "set", "unbounded", "advisor.role must be"),
+        (
+            "advisor",
+            "output_fields",
+            "set",
+            ["task_contract", "constraints", "risk_boundaries", "acceptance_evidence", "escalation_triggers"],
+            "output_fields must be exactly",
+        ),
         ("advisor", "output_fields", "delete", None, "advisor must define exactly"),
+        (
+            "preferred_worker",
+            "requires",
+            "set",
+            ["complete_advisory_envelope"],
+            "requires must bind",
+        ),
+        (
+            "preferred_worker",
+            "escalation_triggers",
+            "set",
+            ["unresolved_consequential_ambiguity", "broader_integration", "final_disposition"],
+            "must include",
+        ),
         ("preferred_worker", "prohibited_decisions", "delete", None, "preferred_worker must define exactly"),
         ("review_boundary", "advisory_satisfies_cross_family_review", "set", True, "must remain false"),
         ("review_boundary", "independent_cross_family_review_required", "set", False, "must remain true"),

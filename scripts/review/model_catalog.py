@@ -33,7 +33,7 @@ GLM_ROUTE_FIELDS = (
     "coding_model_id",
     "context_profile",
 )
-VALID_CODEX_EFFORTS = frozenset({"low", "medium", "high", "xhigh", "max"})
+VALID_CODEX_EFFORTS = frozenset({"low", "medium", "high", "xhigh", "max", "ultra"})
 EXECUTION_ROUTE_KEYS = frozenset(
     {"advisor", "preferred_worker", "direct_worker", "autonomous_fallback", "review_boundary"}
 )
@@ -46,7 +46,16 @@ FALLBACK_KEYS = frozenset({"model_id", "effort", "when"})
 REVIEW_BOUNDARY_KEYS = frozenset(
     {"advisory_family", "advisory_satisfies_cross_family_review", "independent_cross_family_review_required"}
 )
-ADVISOR_OUTPUT_FIELDS = ["task_contract", "constraints", "risk_boundaries", "acceptance_evidence", "escalation_triggers"]
+ADVISOR_OUTPUT_FIELDS = [
+    "task_contract",
+    "owned_paths",
+    "max_changed_files",
+    "max_non_test_loc",
+    "constraints",
+    "risk_boundaries",
+    "acceptance_evidence",
+    "escalation_triggers",
+]
 
 
 class ModelCatalogError(ValueError):
@@ -124,6 +133,16 @@ def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
     _require_execution_effort(preferred["effort"], "execution_routing.sol_advised_bounded.preferred_worker.effort")
     for field in ("requires", "task_types", "prohibited_decisions", "escalation_triggers"):
         _require_string_list(preferred[field], f"execution_routing.sol_advised_bounded.preferred_worker.{field}")
+    if set(preferred["requires"]) != {"complete_advisory_envelope", "objective_scope_ceiling"}:
+        raise ModelCatalogError(
+            "execution_routing.sol_advised_bounded.preferred_worker.requires must bind a complete envelope "
+            "and objective scope ceiling"
+        )
+    if "scope_ceiling_exceeded" not in preferred["escalation_triggers"]:
+        raise ModelCatalogError(
+            "execution_routing.sol_advised_bounded.preferred_worker.escalation_triggers must include "
+            "'scope_ceiling_exceeded'"
+        )
     _require_active_execution_model(
         models,
         preferred["escalate_to"],
