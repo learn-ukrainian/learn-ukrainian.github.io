@@ -168,6 +168,15 @@ append-only state/timeline events through fleet-comms and file handoffs, which
 remain authoritative. The task, participant responses, credentials, paths,
 sessions, tool data, and raw model content do not enter metadata APIs.
 
+Unless `FLEET_COMMS_ROOT` is explicitly set, fleet-comms storage resolves
+through Git's common directory to the primary checkout at
+`batch_state/fleet-comms/v1`. A discussion launched from a dispatch worktree
+therefore keeps its timeline after that worktree is removed. The SQLite store
+uses WAL journaling, full synchronous commits, a bounded busy timeout, and
+private owner-only filesystem modes. The standard data-backup run snapshots
+this database through SQLite's online backup mechanism and verifies the staged
+copy before encrypted retention; do not copy WAL files manually.
+
 Runtime exposes body-free, read-only observability only:
 `GET /api/runtime/acp/conversations` and
 `GET /api/runtime/acp/conversations/{conversation_id}`. The visual timeline is

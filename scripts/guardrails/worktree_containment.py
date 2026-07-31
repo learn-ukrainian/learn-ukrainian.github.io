@@ -114,13 +114,25 @@ class WriteDecision:
 
 def _run_git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
     """Run a read-only git command scoped to ``cwd`` with sanitized env."""
-    return subprocess.run(
-        ["git", "-C", str(cwd), *args],
-        capture_output=True,
-        text=True,
-        check=False,
-        env=sanitized_git_env(),
-    )
+    argv = ["git", "-C", str(cwd), *args]
+    try:
+        return subprocess.run(
+            argv,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=sanitized_git_env(),
+        )
+    except FileNotFoundError as exc:
+        # Root resolution promises an on-disk .git fallback when Git cannot
+        # execute. Represent an unavailable subprocess as a failed probe so
+        # callers reach that fallback rather than aborting.
+        return subprocess.CompletedProcess(
+            argv,
+            returncode=127,
+            stdout="",
+            stderr=str(exc),
+        )
 
 
 def _git_dir_for(path: Path) -> Path:

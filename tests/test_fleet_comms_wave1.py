@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sqlite3
+import stat
 from pathlib import Path
 
 import pytest
@@ -30,6 +32,61 @@ def test_artifact_store_round_trip_and_dedup(tmp_path: Path) -> None:
         b = store.store_bytes(b"hello fleet", producer="other")
         assert b.artifact_id == a.artifact_id  # content-addressed reuse
         assert b.sha256 == a.sha256
+
+
+def test_artifact_store_uses_durable_sqlite_and_private_modes(tmp_path: Path) -> None:
+    root = tmp_path / "fresh" / "fleet-comms" / "v1"
+    with ArtifactStore(root=root) as store:
+        store.store_text("private conversation", producer="test")
+        assert store.connection.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
+        assert store.connection.execute("PRAGMA synchronous").fetchone()[0] == 2
+        assert store.connection.execute("PRAGMA foreign_keys").fetchone()[0] == 1
+        assert store.connection.execute("PRAGMA busy_timeout").fetchone()[0] == 5_000
+        assert stat.S_IMODE((tmp_path / "fresh").stat().st_mode) == 0o700
+        assert stat.S_IMODE((tmp_path / "fresh" / "fleet-comms").stat().st_mode) == 0o700
+        assert stat.S_IMODE(root.stat().st_mode) == 0o700
+        assert stat.S_IMODE((root / "blobs").stat().st_mode) == 0o700
+        assert stat.S_IMODE(store.blob_root.stat().st_mode) == 0o700
+        assert stat.S_IMODE(store.db_path.stat().st_mode) == 0o600
+
+        with ArtifactStore(root=root) as reader:
+            store.connection.execute("BEGIN IMMEDIATE")
+            try:
+                assert reader.connection.execute(
+                    "SELECT COUNT(*) FROM artifacts"
+                ).fetchone()[0] == 1
+            finally:
+                store.connection.rollback()
+
+
+def test_artifact_store_wal_setup_retries_fast_lock_failures(monkeypatch) -> None:
+    class FakeCursor:
+        def fetchone(self):
+            return ("wal",)
+
+    class RacingConnection:
+        calls = 0
+
+        def execute(self, _statement):
+            self.calls += 1
+            if self.calls < 3:
+                raise sqlite3.OperationalError("database is locked")
+            return FakeCursor()
+
+    sleeps: list[float] = []
+    connection = RacingConnection()
+    store = ArtifactStore.__new__(ArtifactStore)
+    store._conn = connection
+    monkeypatch.setattr("scripts.fleet_comms.artifacts.time.monotonic", lambda: 0.0)
+    monkeypatch.setattr(
+        "scripts.fleet_comms.artifacts.time.sleep",
+        lambda seconds: sleeps.append(seconds),
+    )
+
+    store._enable_wal()
+
+    assert connection.calls == 3
+    assert sleeps == [0.05, 0.05]
 
 
 def test_artifact_store_rejects_traversal_filename(tmp_path: Path) -> None:

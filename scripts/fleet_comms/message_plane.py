@@ -31,18 +31,20 @@ from pathlib import Path
 from typing import Any, Literal
 
 from scripts.fleet_comms.contracts import CompletionState
+from scripts.fleet_comms.paths import (
+    DEFAULT_ROOT_REL,  # re-exported for compatibility
+    ENV_ROOT,  # re-exported for compatibility
+    default_plane_root,
+)
 from scripts.fleet_comms.request_executor import RequestExecutor, RequestRecord
 
 logger = logging.getLogger(__name__)
 
 PlaneMode = Literal["off", "shadow", "dual_write"]
 ENV_MODE = "FLEET_COMMS_MESSAGE_PLANE"
-ENV_ROOT = "FLEET_COMMS_ROOT"
 ENV_TELEMETRY = "FLEET_COMMS_PLANE_TELEMETRY"
 # Max centrally configured continuation segments for length_limited (Sol).
 MAX_CONTINUATIONS = 2
-# Conventional relative layout under the plane root (batch_state/fleet-comms/v1).
-DEFAULT_ROOT_REL = Path("batch_state") / "fleet-comms" / "v1"
 DEFAULT_TELEMETRY_NAME = Path("telemetry") / "plane-parity.jsonl"
 _TELEMETRY_SUMMARY_LIMIT = 50
 
@@ -102,15 +104,6 @@ def resolve_plane_mode(raw: str | None = None) -> PlaneMode:
     if value in {"dual-write", "dualwrite"}:
         return "dual_write"
     raise ValueError(f"invalid FLEET_COMMS_MESSAGE_PLANE={value!r} (use off|shadow|dual_write)")
-
-
-def default_plane_root(*, repo_root: Path | None = None) -> Path:
-    """Resolve plane storage root (env override or batch_state/fleet-comms/v1)."""
-    env = os.environ.get(ENV_ROOT)
-    if env:
-        return Path(env).expanduser()
-    base = repo_root if repo_root is not None else Path.cwd()
-    return (base / DEFAULT_ROOT_REL).resolve()
 
 
 def default_parity_telemetry_path(root: Path | None = None) -> Path:

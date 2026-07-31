@@ -492,18 +492,24 @@ def test_execute_snapshots_sqlite3_database_from_batch_state(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, staging, _legacy = backup_environment
-    database = source.parent / "batch_state" / "monitor.sqlite3"
+    database = (
+        source.parent / "batch_state" / "fleet-comms" / "v1" / "comms.sqlite3"
+    )
+    database.parent.mkdir(parents=True)
     connection = sqlite3.connect(database)
     connection.execute("CREATE TABLE recovery_probe (value TEXT NOT NULL)")
     connection.execute("INSERT INTO recovery_probe VALUES ('batch')")
     connection.commit()
     connection.close()
-    environment["FAKE_DB_RELATIVE"] = "batch_state/monitor.sqlite3"
+    environment["FAKE_DB_RELATIVE"] = "batch_state/fleet-comms/v1/comms.sqlite3"
 
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode == 0, result.stderr
-    assert "consistent SQLite snapshot: batch_state/monitor.sqlite3" in result.stdout
+    assert (
+        "consistent SQLite snapshot: batch_state/fleet-comms/v1/comms.sqlite3"
+        in result.stdout
+    )
     assert "db_rows=<1>" in _log(environment)
     assert list(staging.iterdir()) == []
 
