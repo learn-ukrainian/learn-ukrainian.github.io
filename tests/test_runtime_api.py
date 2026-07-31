@@ -64,6 +64,19 @@ def _write_acp_db(root, conversations: list[tuple], events: list[tuple]) -> None
                 created_at TEXT,
                 UNIQUE(conversation_id, sequence)
             );
+            CREATE TABLE comms_messages (
+                message_id TEXT PRIMARY KEY,
+                conversation_id TEXT NOT NULL,
+                in_reply_to TEXT,
+                kind TEXT NOT NULL,
+                sender TEXT NOT NULL,
+                recipient TEXT,
+                body_inline TEXT,
+                body_artifact_id TEXT,
+                content_sha256 TEXT,
+                metadata_json TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL
+            );
             """
         )
         connection.executemany(
@@ -406,6 +419,196 @@ def test_acp_runtime_api_hides_persisted_message_content_and_references(
         artifact_id,
     ):
         assert private_value not in response.text
+
+
+def test_acp_transcript_is_loopback_only_ordered_allowlisted_and_no_store(tmp_path, monkeypatch):
+    root = tmp_path / "plane"
+    now = datetime.now(UTC)
+    conversation = (
+        "conv-transcript", "secret", "secret", "secret", 1, "[]", _iso(now), None, 1, 1,
+    )
+    events = [
+        (
+            "event-later", "conv-transcript", 2, "CALL_TERMINAL", "INITIAL_FANOUT", "codex", "root", 1,
+            "ok", 1, 1, "secret", "message-later", "{}", _iso(now + timedelta(seconds=2)),
+        ),
+        (
+            "event-early", "conv-transcript", 1, "CALL_RESERVED", "INITIAL_FANOUT", "root", "codex", 1,
+            "queued", 1, 1, "secret", "message-early", "{}", _iso(now + timedelta(seconds=1)),
+        ),
+        (
+            "event-synthesis", "conv-transcript", 3, "SYNTHESIS_TERMINAL", "COMPLETE", "codex", "root", None,
+            "ok", 1, 1, "secret", "message-synthesis", "{}", _iso(now + timedelta(seconds=3)),
+        ),
+    ]
+    _write_acp_db(root, [conversation], events)
+    connection = sqlite3.connect(root / "comms.sqlite3")
+    try:
+        connection.executemany(
+            """INSERT INTO comms_messages(
+                message_id, conversation_id, kind, sender, recipient, body_inline,
+                body_artifact_id, content_sha256, metadata_json, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            [
+                (
+                    "message-later", "conv-transcript", "reply", "codex", "root", "second body",
+                    "artifact-secret", "hash-secret", '{"credential":"secret"}', _iso(now + timedelta(seconds=2)),
+                ),
+                (
+                    "message-early", "conv-transcript", "request", "root", "codex", "first body",
+                    "artifact-secret", "hash-secret", '{"command":"secret"}', _iso(now + timedelta(seconds=1)),
+                ),
+                (
+                    "message-synthesis", "conv-transcript", "synthesis", "codex", "root", "final synthesis",
+                    "artifact-secret", "hash-secret", '{}', _iso(now + timedelta(seconds=3)),
+                ),
+            ],
+        )
+        connection.commit()
+    finally:
+        connection.close()
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+
+    loopback_client = TestClient(
+        app,
+        raise_server_exceptions=False,
+        client=("127.0.0.1", 50000),
+        base_url="http://localhost",
+    )
+    response = loopback_client.get("/api/runtime/acp/conversations/conv-transcript/transcript")
+
+    assert response.status_code == 200
+    assert response.headers["cache-control"] == "no-store"
+    assert response.json() == {
+        "conversation_id": "conv-transcript",
+        "messages": [
+            {
+                "ordinal": 1,
+                "kind": "request",
+                "sender": "root",
+                "recipient": "codex",
+                "created_at": _iso(now + timedelta(seconds=1)),
+                "body": "first body",
+                "round": 1,
+            },
+            {
+                "ordinal": 2,
+                "kind": "reply",
+                "sender": "codex",
+                "recipient": "root",
+                "created_at": _iso(now + timedelta(seconds=2)),
+                "body": "second body",
+                "round": 1,
+            },
+            {
+                "ordinal": 3,
+                "kind": "synthesis",
+                "sender": "codex",
+                "recipient": "root",
+                "created_at": _iso(now + timedelta(seconds=3)),
+                "body": "final synthesis",
+            },
+        ],
+    }
+    for private_value in (
+        "message-later", "message-early", "artifact-secret", "hash-secret", "metadata_json", "secret",
+    ):
+        assert private_value not in response.text
+
+    remote = TestClient(
+        app,
+        raise_server_exceptions=False,
+        client=("203.0.113.10", 50000),
+        base_url="http://localhost",
+    )
+    denied = remote.get("/api/runtime/acp/conversations/conv-transcript/transcript")
+    assert denied.status_code == 403
+    assert denied.headers["cache-control"] == "no-store"
+    assert denied.json() == {"detail": "Forbidden"}
+
+    for host in ("127.0.0.1", "::1", "::ffff:127.0.0.1"):
+        loopback = TestClient(
+            app,
+            raise_server_exceptions=False,
+            client=(host, 50000),
+            base_url="http://localhost",
+        )
+        assert loopback.get("/api/runtime/acp/conversations/conv-transcript/transcript").status_code == 200
+
+    rebound = TestClient(
+        app,
+        raise_server_exceptions=False,
+        client=("127.0.0.1", 50000),
+        base_url="http://monitor.example",
+    )
+    assert rebound.get("/api/runtime/acp/conversations/conv-transcript/transcript").status_code == 403
+
+
+def test_acp_transcript_hides_unavailable_malformed_and_body_free_routes(tmp_path, monkeypatch):
+    root = tmp_path / "plane"
+    now = datetime.now(UTC)
+    conversation = (
+        "conv-malformed", "secret", "secret", "secret", 1, "[]", _iso(now), None, 1, 1,
+    )
+    _write_acp_db(root, [conversation], [])
+    connection = sqlite3.connect(root / "comms.sqlite3")
+    try:
+        connection.executemany(
+            """INSERT INTO comms_messages(
+                message_id, conversation_id, kind, sender, recipient, body_inline, metadata_json, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+            [
+                ("message-private", "conv-malformed", "reply", "codex", "root", "body only in transcript", '{"path":"secret"}', _iso(now)),
+                ("message-unlinked", "conv-malformed", "reply", "codex", "root", "must not appear", '{}', _iso(now)),
+            ],
+        )
+        connection.execute(
+            """INSERT INTO acp_conversation_events VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            ("event-private", "conv-malformed", 1, "CALL_TERMINAL", "COMPLETE", "codex", "root", 1, "ok", 1, 1, "secret", "message-private", "{}", _iso(now)),
+        )
+        connection.commit()
+    finally:
+        connection.close()
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+
+    loopback_client = TestClient(
+        app,
+        raise_server_exceptions=False,
+        client=("127.0.0.1", 50000),
+        base_url="http://localhost",
+    )
+    body_free = client.get("/api/runtime/acp/conversations/conv-malformed")
+    transcript = loopback_client.get("/api/runtime/acp/conversations/conv-malformed/transcript")
+    malformed = loopback_client.get("/api/runtime/acp/conversations/not%20an%20id/transcript")
+    missing = loopback_client.get("/api/runtime/acp/conversations/not-found/transcript")
+
+    assert body_free.status_code == 200
+    assert "body only in transcript" not in body_free.text
+    assert transcript.status_code == 200
+    assert transcript.json()["messages"][0]["body"] == "body only in transcript"
+    assert "must not appear" not in transcript.text
+    assert malformed.status_code == 404
+    assert missing.status_code == 404
+    assert malformed.headers["cache-control"] == "no-store"
+    assert missing.headers["cache-control"] == "no-store"
+
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "missing"))
+    unavailable = loopback_client.get("/api/runtime/acp/conversations/conv-malformed/transcript")
+    assert unavailable.status_code == 404
+    assert unavailable.headers["cache-control"] == "no-store"
+
+    malformed_root = tmp_path / "malformed"
+    malformed_root.mkdir()
+    malformed_db = sqlite3.connect(malformed_root / "comms.sqlite3")
+    try:
+        malformed_db.execute("CREATE TABLE unrelated (value TEXT)")
+        malformed_db.commit()
+    finally:
+        malformed_db.close()
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(malformed_root))
+    malformed_storage = loopback_client.get("/api/runtime/acp/conversations/conv-malformed/transcript")
+    assert malformed_storage.status_code == 404
+    assert malformed_storage.headers["cache-control"] == "no-store"
 
 
 def test_acp_conversations_refuse_poisoned_rows_and_hide_unavailable_storage(tmp_path, monkeypatch):

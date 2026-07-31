@@ -160,17 +160,30 @@ def test_runtime_page_renders_recent_body_free_acp_observability_without_control
         assert prohibited not in acp_panel
 
 
-def test_acp_page_is_a_read_only_master_detail_event_timeline():
+def test_acp_page_is_a_read_only_master_detail_conversation_reader():
     html = (DASHBOARDS / "acp.html").read_text(encoding="utf-8")
 
     assert '<link rel="stylesheet" href="/monitor.css">' in html
     assert '<a class="active" href="/acp.html">Conversations</a>' in html
     assert "/api/runtime/acp/conversations?limit=50" in html
     assert "/api/runtime/acp/conversations/" in html
+    assert "const TRANSCRIPT_SUFFIX = '/transcript'" in html
+    assert "Local-only transcript access." in html
+    assert "Chronological local transcript" in html
+    assert "Operational event rail" in html
+    assert "make('details', 'event-rail')" in html
+    assert "message-body" in html
+    assert "body.textContent = message.body" in html
+    assert "white-space: pre-wrap" in html
+    assert "Transcript is local-only. Open this page at localhost on the API host." in html
+    assert "Transcript is unavailable on this local Monitor instance." in html
+    assert "This conversation has no transcript messages." in html
+    assert "Transcript data was malformed and was not rendered." in html
+    assert "Transcript could not be loaded." in html
     assert "new URLSearchParams(location.search).get('conversation')" in html
     assert "Recent conversations" in html
     assert "Event flow" in html
-    assert "Body-free by design." in html
+    assert "Message bodies are requested only from the loopback Monitor API." in html
     assert "conversation.updated_at" in html
     assert "event.outcome" in html
     assert "event.duration_ms" in html
@@ -197,6 +210,9 @@ def test_acp_page_is_a_read_only_master_detail_event_timeline():
         "acp-review",
         "acp-config",
         "fetch(url, { method:",
+        "localStorage",
+        "sessionStorage",
+        "navigator.clipboard",
     ]:
         assert prohibited not in html
 

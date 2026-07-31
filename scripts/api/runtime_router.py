@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import importlib
 import inspect
+import ipaddress
 import json
 import os
 import sqlite3
@@ -14,7 +15,8 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi.responses import JSONResponse
 
 from .config import BATCH_STATE_DIR
 
@@ -105,6 +107,10 @@ _ACP_MESSAGE_EVENTS = frozenset({
     "CALL_TERMINAL",
     "SYNTHESIS_TERMINAL",
 })
+_ACP_TRANSCRIPT_KINDS = frozenset({"request", "reply", "synthesis"})
+_ACP_TRANSCRIPT_MAX_MESSAGES = 32
+_ACP_TRANSCRIPT_MAX_BODY_BYTES = 256 * 1024
+_ACP_TRANSCRIPT_MAX_RESPONSE_BYTES = 512 * 1024
 _ACP_EVENT_TYPE_ALIASES = {
     "created": "CONVERSATION_CREATED",
     "conversation_created": "CONVERSATION_CREATED",
@@ -797,6 +803,138 @@ def get_acp_conversation(conversation_id: str) -> dict[str, Any] | None:
         connection.close()
 
 
+def _acp_transcript_client_is_loopback(request: Request) -> bool:
+    """Accept only direct loopback peers addressed through a loopback host.
+
+    ``request.client`` is supplied by the accepted connection, rather than a
+    forwarding header. Requiring a loopback URL host as well closes the usual
+    DNS-rebinding path from a non-local browser origin.
+    """
+    client = request.client
+    client_host = client.host if client else None
+    if not isinstance(client_host, str):
+        return False
+    try:
+        client_address = ipaddress.ip_address(client_host)
+    except ValueError:
+        return False
+    client_mapped = getattr(client_address, "ipv4_mapped", None)
+    if not client_address.is_loopback and not (client_mapped and client_mapped.is_loopback):
+        return False
+
+    url_host = request.url.hostname
+    if url_host == "localhost":
+        return True
+    if not isinstance(url_host, str):
+        return False
+    try:
+        url_address = ipaddress.ip_address(url_host)
+    except ValueError:
+        return False
+    url_mapped = getattr(url_address, "ipv4_mapped", None)
+    return url_address.is_loopback or bool(url_mapped and url_mapped.is_loopback)
+
+
+def _acp_transcript_body(value: Any, *, remaining_bytes: int) -> str | None:
+    """Return a bounded JSON-safe body or reject the whole malformed row."""
+    if not isinstance(value, str):
+        return None
+    try:
+        encoded = value.encode("utf-8")
+        serialized = json.dumps(value, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    except UnicodeError:
+        return None
+    if len(encoded) > _ACP_TRANSCRIPT_MAX_BODY_BYTES or len(serialized) > remaining_bytes:
+        return None
+    return value
+
+
+def _acp_transcript_entries(
+    connection: sqlite3.Connection, conversation_id: str
+) -> list[dict[str, Any]] | None:
+    """Read a bounded, allowlisted ACP transcript without exposing store IDs."""
+    try:
+        rows = connection.execute(
+            """
+            SELECT messages.kind, messages.sender, messages.recipient,
+                   messages.body_inline, messages.created_at, event_round.round
+            FROM comms_messages AS messages
+            JOIN (
+                SELECT message_id, MIN(sequence) AS message_sequence,
+                       CASE
+                           WHEN MIN(round) = MAX(round) AND MIN(round) >= 1
+                           THEN MIN(round)
+                       END AS round
+                FROM acp_conversation_events
+                WHERE conversation_id = ? AND message_id IS NOT NULL
+                GROUP BY message_id
+            ) AS event_round ON event_round.message_id = messages.message_id
+            WHERE messages.conversation_id = ?
+            ORDER BY event_round.message_sequence ASC
+            LIMIT ?
+            """,
+            (conversation_id, conversation_id, _ACP_TRANSCRIPT_MAX_MESSAGES + 1),
+        ).fetchall()
+    except sqlite3.Error:
+        return None
+    if len(rows) > _ACP_TRANSCRIPT_MAX_MESSAGES:
+        return None
+
+    entries: list[dict[str, Any]] = []
+    remaining_bytes = _ACP_TRANSCRIPT_MAX_RESPONSE_BYTES
+    for row in rows:
+        kind = _acp_text(row["kind"], allowed=_ACP_TRANSCRIPT_KINDS)
+        sender = _acp_text(row["sender"], allowed=frozenset(_ACP_PARTICIPANTS))
+        recipient = _acp_text(row["recipient"], allowed=frozenset(_ACP_PARTICIPANTS))
+        created_at = _acp_timestamp(row["created_at"])
+        body = _acp_transcript_body(row["body_inline"], remaining_bytes=remaining_bytes)
+        if None in (kind, sender, recipient, created_at, body):
+            continue
+        entry: dict[str, Any] = {
+            "ordinal": len(entries) + 1,
+            "kind": kind,
+            "sender": sender,
+            "recipient": recipient,
+            "created_at": created_at,
+            "body": body,
+        }
+        round_number = _acp_int(row["round"], minimum=1)
+        if round_number is not None:
+            entry["round"] = round_number
+        entries.append(entry)
+        remaining_bytes -= len(
+            json.dumps(body, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+        )
+    return entries
+
+
+def get_acp_conversation_transcript(conversation_id: str) -> dict[str, Any] | None:
+    """Return a single bounded ACP transcript, or ``None`` without diagnostics."""
+    safe_id = _acp_identifier(conversation_id)
+    if safe_id is None:
+        return None
+    connection = _open_acp_db_readonly()
+    if connection is None:
+        return None
+    try:
+        if not all(
+            _acp_table_exists(connection, table)
+            for table in ("acp_conversations", "acp_conversation_events", "comms_messages")
+        ):
+            return None
+        conversation = connection.execute(
+            "SELECT 1 FROM acp_conversations WHERE conversation_id = ?", (safe_id,)
+        ).fetchone()
+        if conversation is None:
+            return None
+        entries = _acp_transcript_entries(connection, safe_id)
+        return {"conversation_id": safe_id, "messages": entries} if entries is not None else None
+    except sqlite3.Error:
+        return None
+    finally:
+        connection.close()
+
+
 @router.get("/agents")
 async def runtime_agents():
     agents = await asyncio.to_thread(list_runtime_agents)
@@ -831,6 +969,22 @@ async def runtime_acp_conversation(conversation_id: str):
     if conversation is None:
         raise HTTPException(status_code=404, detail="Conversation not found")
     return conversation
+
+
+@router.get("/acp/conversations/{conversation_id}/transcript")
+async def runtime_acp_conversation_transcript(conversation_id: str, request: Request):
+    """Read body-inline ACP content for the local UI only; never mutate storage."""
+    no_store = {"Cache-Control": "no-store"}
+    if not _acp_transcript_client_is_loopback(request):
+        return JSONResponse(status_code=403, content={"detail": "Forbidden"}, headers=no_store)
+    transcript = await asyncio.to_thread(get_acp_conversation_transcript, conversation_id)
+    if transcript is None:
+        return JSONResponse(
+            status_code=404,
+            content={"detail": "Conversation not found"},
+            headers=no_store,
+        )
+    return JSONResponse(content=transcript, headers=no_store)
 
 
 @router.get("/headroom")
