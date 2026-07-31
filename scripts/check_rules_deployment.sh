@@ -57,7 +57,6 @@ tracked_mirror_source() {
             ;;
         .gemini/*)
             relative="${mirror#.gemini/}"
-            path_matches_declared_entry "$relative" "$ORPHAN_PATHS_GEMINI" && return 1
             if [[ "$relative" == rules/* ]]; then
                 printf '%s\n' "agents_extensions/shared/$relative"
             elif [[ "$relative" == skills/* ]]; then
@@ -70,6 +69,7 @@ tracked_mirror_source() {
                     printf '%s\n' "gemini_extensions/$relative"
                 fi
             else
+                path_matches_declared_entry "$relative" "$ORPHAN_PATHS_GEMINI" && return 1
                 printf '%s\n' "gemini_extensions/$relative"
             fi
             ;;

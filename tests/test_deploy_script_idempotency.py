@@ -272,6 +272,18 @@ def test_tracked_mirror_drift_is_detected_before_deploy(tmp_path: Path) -> None:
         ),
         (".codex/hooks/session-setup.sh", "agents_extensions/shared/hooks/session-setup.sh"),
         (".codex/hooks.json", "agents_extensions/codex/hooks.json"),
+        (
+            ".gemini/rules/fleet-comms-coordination.md",
+            "agents_extensions/shared/rules/fleet-comms-coordination.md",
+        ),
+        (
+            ".gemini/skills/post-build-review/SKILL.md",
+            "agents_extensions/shared/skills/post-build-review/SKILL.md",
+        ),
+        (
+            ".gemini/skills/full-rebuild-bio/SKILL.md",
+            "gemini_extensions/skills/full-rebuild-bio/SKILL.md",
+        ),
     ),
 )
 def test_tracked_mirror_resolves_each_deploy_source(
