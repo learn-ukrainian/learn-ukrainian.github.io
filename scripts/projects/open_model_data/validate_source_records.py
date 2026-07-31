@@ -8,6 +8,7 @@ import json
 from collections import Counter
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 from jsonschema import Draft202012Validator, FormatChecker
 
@@ -63,10 +64,30 @@ def _schema_errors(record: dict[str, Any], validator: Draft202012Validator) -> l
     return sorted(error.message for error in validator.iter_errors(record))
 
 
+def _is_absolute_http_url(value: str) -> bool:
+    """Validate provenance URLs without optional jsonschema format packages."""
+    if any(character.isspace() for character in value):
+        return False
+    try:
+        parsed = urlsplit(value)
+        _ = parsed.port
+    except ValueError:
+        return False
+    return (
+        parsed.scheme in {"http", "https"}
+        and parsed.hostname is not None
+        and parsed.username is None
+        and parsed.password is None
+    )
+
+
 def _semantic_reasons(record: dict[str, Any], schema_hash: str) -> list[str]:
     reasons: list[str] = []
     if record.get("contract_schema_sha256") != schema_hash:
         reasons.append("contract_schema_sha256_mismatch")
+    acquisition_url = record.get("acquisition", {}).get("source_or_catalog_url", "")
+    if not _is_absolute_http_url(acquisition_url):
+        reasons.append("acquisition_source_or_catalog_url_invalid")
     derivation = record.get("derivation", {})
     if derivation.get("kind") == "source" and any(
         derivation.get(field) is not None for field in ("parent_content_sha256", "transform_receipt_id")
@@ -81,6 +102,8 @@ def _semantic_reasons(record: dict[str, Any], schema_hash: str) -> list[str]:
     evidence_ids = set(evidence_id_list)
     if len(evidence_ids) != len(evidence_id_list):
         reasons.append("duplicate_evidence_id")
+    if any(not _is_absolute_http_url(item.get("url", "")) for item in evidence):
+        reasons.append("evidence_url_invalid")
     for right_name in REQUIRED_GRANTED_RIGHTS:
         statement = record.get("rights", {}).get(right_name, {})
         if statement.get("status") != "granted":

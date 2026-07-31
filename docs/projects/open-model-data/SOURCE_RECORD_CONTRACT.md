@@ -41,7 +41,9 @@ resolved review, and `granted` status for all four rights/permission fields.
 It also invokes `Draft202012Validator.check_schema` before use and requires a
 granted license to carry the exact-terms receipt described above. Evidence IDs
 must be unique within a record so that array order cannot change which receipt
-is resolved.
+is resolved. Acquisition and evidence locations must be absolute HTTP(S) URLs
+without embedded credentials; admission checks this directly and does not
+depend on optional JSON Schema format packages.
 `unknown`, `conflicting`, or `denied` status fails closed. This is an admission
 rule, not a claim that a grant is legally sufficient.
 

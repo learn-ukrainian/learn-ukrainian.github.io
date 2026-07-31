@@ -63,6 +63,21 @@ def test_granted_license_requires_exact_terms_receipt() -> None:
     assert "duplicate_evidence_id" in CONTRACT.validate_record(duplicate_receipt, validator, schema_hash)["reasons"]
 
 
+def test_provenance_urls_are_validated_without_optional_format_packages() -> None:
+    schema, schema_hash = CONTRACT.load_schema()
+    validator = Draft202012Validator(schema)
+    invalid_acquisition = example_record()
+    invalid_acquisition["acquisition"]["source_or_catalog_url"] = "not a url"
+    assert "acquisition_source_or_catalog_url_invalid" in CONTRACT.validate_record(
+        invalid_acquisition, validator, schema_hash
+    )["reasons"]
+    invalid_evidence = example_record()
+    invalid_evidence["evidence"][0]["url"] = "https://named-user@example.invalid/terms"
+    assert "evidence_url_invalid" in CONTRACT.validate_record(invalid_evidence, validator, schema_hash)[
+        "reasons"
+    ]
+
+
 def test_derived_requires_complete_lineage_and_schema_hash() -> None:
     schema, schema_hash = CONTRACT.load_schema()
     validator = Draft202012Validator(schema)
