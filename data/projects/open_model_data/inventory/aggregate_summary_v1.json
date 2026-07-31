@@ -248,7 +248,7 @@
     "model_token_counts": "not_run; tokenizer-specific measurement remains pending",
     "whitespace_tokens": "Python str.split(); proxy only, not model tokens."
   },
-  "repo_head": "08ba3d8f2556ff613cf279e3f8382c07cdc213cd",
+  "repo_head": "a78f59553e35614c3e335c7099a55ba4cb2fd981",
   "safety_assertions": {
     "potential_training_admission_assets": 0,
     "redistribution_cleared_assets": 0,

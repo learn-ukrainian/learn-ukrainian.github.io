@@ -969,15 +969,18 @@ def screen_unreachable_commits(
             repo_root,
             "diff-tree",
             "--root",
+            "-m",
             "--no-commit-id",
             "--name-only",
             "-r",
             commit_id,
         ).splitlines()
         scoped_paths = sorted(
-            path
-            for path in paths
-            if path.startswith(SCOPED_RECOVERY_PREFIXES)
+            {
+                path
+                for path in paths
+                if path.startswith(SCOPED_RECOVERY_PREFIXES)
+            }
         )
         if scoped_paths:
             scoped_hits.append({"commit": commit_id, "paths": scoped_paths})

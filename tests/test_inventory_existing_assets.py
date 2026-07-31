@@ -123,7 +123,10 @@ def test_unreachable_commits_are_path_screened(monkeypatch: pytest.MonkeyPatch) 
         )
     )
 
+    screened_arguments: list[tuple[str, ...]] = []
+
     def fake_run_git(_repo_root: Path, *arguments: str) -> str:
+        screened_arguments.append(arguments)
         commit_id = arguments[-1]
         if commit_id == "a" * 40:
             return "docs/example.md\n"
@@ -135,6 +138,7 @@ def test_unreachable_commits_are_path_screened(monkeypatch: pytest.MonkeyPatch) 
 
     result = inventory.screen_unreachable_commits(ROOT, fsck)
 
+    assert all("-m" in arguments for arguments in screened_arguments)
     assert result == {
         "screened_commits": 2,
         "scoped_commit_count": 1,
