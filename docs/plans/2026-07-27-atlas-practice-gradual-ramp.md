@@ -1,7 +1,8 @@
 # Plan of record: Atlas + Practice gradual ramp
 
-**Status:** PLAN OF RECORD — operator sequence confirmed **2026-08-01** (driver: grok-atlas).  
-Long-tail **server / 250k delivery** still needs advisor lock when that phase starts (Sol + Fable).  
+**Status:** §0 **operator ramp sequence** is binding (operator **2026-08-01**; scale = **lemmas**, not words).
+
+**Track T** priority remains operator-locked. **Track A** wave thresholds, **DC-1…DC-5**, and long-tail **server / ~250k-lemma delivery** remain draft pending Sol + Fable advisor lock.
 **Date:** 2026-07-27 (Track T split); **2026-08-01** (operator ramp sequence + ticket board).  
 **Epic:** #4387 (Word Atlas + Practice Hub)  
 **Mandate board:** #6132 (sub-issues #6134–#6143 and related open tickets)  
@@ -238,9 +239,10 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 
 ## 6. Decision cards for advisors (Track A)
 
+**Operator-settled direction:** §0 and Track T’s immediate full Curated private teacher-lesson delivery are binding; they are not awaiting advisor approval.
+
 | ID | Question | Driver recommendation |
 | --- | --- | --- |
-| **DC-0** | Confirm Track T full Curated private teacher-lesson is **not** gated by Wave 1–4 calendar? | **Confirm** — homework is immediate |
 | **DC-1** | Gradual atlas ramp vs freeze pool ~5k? | **Ramp gradually** after Track T |
 | **DC-2** | 80% gzip — split shards vs raise limits? | **Split first** |
 | **DC-3** | When design on-demand practice? | After Wave 2 ~10–15k **or** 80% budget |
@@ -266,7 +268,7 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 1. **Track T:** full Curated private teacher-lesson v5 (~1029) into Practice — extend #5905 / #5792 (not stop at 40)
 2. Local smoke: several Curated private teacher-lesson lemmas → Practice CTA works
 3. Banner-rate sample on random non-Curated private teacher-lesson atlas pages
-4. Advisor finish on this draft → lock DC-0…DC-5 for Track A
+4. Advisor finish on the remaining Track A draft → lock DC-1…DC-5 (wave thresholds and long-tail infrastructure)
 5. Only after Track T: Wave 2 batch 2.1
 
 ---
@@ -282,8 +284,8 @@ Example: `інвалідність` is a rich A2 atlas entry with morphology; it
 
 ## 10. Advisor ask
 
-Review as **architecture / ramp design**, not code nits. Explicitly affirm **DC-0** (teacher list is immediate). Return APPROVE / APPROVE-WITH-CHANGES / BLOCK on DC-0…DC-5.
+Review the remaining **Track A architecture / ramp design**, not code nits. §0 and Track T’s immediate teacher-list delivery are operator-settled; return APPROVE / APPROVE-WITH-CHANGES / BLOCK on DC-1…DC-5.
 
 ---
 
-*Draft for advisor consensus. Track T priority is operator-locked; Track A thresholds need advisors + operator GO.*
+*§0’s operator ramp sequence and Track T priority are binding. Only the remaining Track A thresholds, DC-1…DC-5, and long-tail server / ~250k-lemma infrastructure await advisors + operator GO.*
