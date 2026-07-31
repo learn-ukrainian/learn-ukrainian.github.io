@@ -44,7 +44,7 @@ if ! command -v ssh >/dev/null 2>&1; then
 fi
 
 remote_work_dir="$RUN_ROOT/$WORK_DIR_NAME"
-if ! ssh -o BatchMode=yes -- "$ATLAS_RUNNER_HOST" "test -d -- $(printf '%q' "$remote_work_dir")"; then
+if ! ssh -o BatchMode=yes -o ConnectTimeout=10 -- "$ATLAS_RUNNER_HOST" "test -d -- $(printf '%q' "$remote_work_dir")"; then
   printf 'runner SSH work-dir check failed: remote work-dir is unavailable.\n' >&2
   print_summary
   exit 2
