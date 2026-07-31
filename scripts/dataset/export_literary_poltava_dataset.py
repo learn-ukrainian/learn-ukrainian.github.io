@@ -18,7 +18,7 @@ def refuse_rebuild_required_candidate() -> None:
     )
 
 
-def export_literary_dataset(limit: int = 5000) -> dict[str, object]:
+def export_literary_dataset(limit: int = 5000) -> None:
     """Refuse the unsafe export entry point before any side effect occurs."""
     del limit
     refuse_rebuild_required_candidate()
