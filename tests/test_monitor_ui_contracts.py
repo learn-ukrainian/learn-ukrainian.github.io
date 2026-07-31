@@ -153,9 +153,9 @@ def test_runtime_page_has_a_separate_read_only_active_acp_timeline():
     assert "Ended: ${displayLabel(conversation.termination_reason)}" in html
     assert "acpStateClass" in html
     assert "acpStateLabel" in html
-    for label in ["Queued", "Running", "Succeeded", "Partial", "Failed"]:
+    for label in ["Queued", "Running", "Succeeded", "Partial", "Cancelled", "Failed"]:
         assert label in html
-    for state in ["COMPLETE", "PARTIAL_COMPLETE", "FAILED", "CREATED"]:
+    for state in ["COMPLETE", "PARTIAL_COMPLETE", "CANCELLED", "FAILED", "CREATED"]:
         assert state in html
 
     for prohibited in ["<form", "acp-send", "acp-post", "acp-retry", "acp-cancel", "acp-route", "acp-review", "acp-config"]:

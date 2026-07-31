@@ -53,12 +53,12 @@ _PARTICIPANT_SLOTS = threading.BoundedSemaphore(2)
 _NEXT = {
     # A CREATED reservation may be recovered after a crash only as terminal
     # partial; it is never re-executed.
-    "CREATED": {"INITIAL_FANOUT", "PARTIAL_COMPLETE"},
+    "CREATED": {"INITIAL_FANOUT", "PARTIAL_COMPLETE", "CANCELLED"},
     "INITIAL_FANOUT": {"INITIAL_COMPLETE", "PARTIAL"},
-    "INITIAL_COMPLETE": {"CROSS_EXCHANGE", "SYNTHESIS"},
-    "PARTIAL": {"CROSS_EXCHANGE", "SYNTHESIS"},
+    "INITIAL_COMPLETE": {"CROSS_EXCHANGE", "SYNTHESIS", "CANCELLED"},
+    "PARTIAL": {"CROSS_EXCHANGE", "SYNTHESIS", "CANCELLED"},
     "CROSS_EXCHANGE": {"CROSS_EXCHANGE_COMPLETE", "PARTIAL"},
-    "CROSS_EXCHANGE_COMPLETE": {"SYNTHESIS"},
+    "CROSS_EXCHANGE_COMPLETE": {"CROSS_EXCHANGE", "SYNTHESIS", "CANCELLED"},
     "SYNTHESIS": _TERMINAL,
 }
 
@@ -116,12 +116,14 @@ class AcpxDiscussionController:
         participant_call: Callable[..., Result] = _invoke_direct_only,
         synthesis_call: Callable[..., Result] = _invoke_native_once,
         clock: Callable[[], float] = time.monotonic,
+        cancelled: Callable[[], bool] | None = None,
     ) -> None:
         self.store = ArtifactStore(root=root)
         self.conn = self.store.connection
         self.participant_call = participant_call
         self.synthesis_call = synthesis_call
         self.clock = clock
+        self.cancelled = cancelled or (lambda: False)
 
     def close(self) -> None:
         self.store.close()
@@ -185,7 +187,16 @@ class AcpxDiscussionController:
             raise AcpxDiscussionError("conversation has no state event")
         return str(row[0])
 
-    def _message(self, conversation_id: str, *, sender: str, recipient: str, body: str, reply_to: str | None) -> str:
+    def _message(
+        self,
+        conversation_id: str,
+        *,
+        sender: str,
+        recipient: str,
+        body: str,
+        reply_to: str | None,
+        kind: str = "reply",
+    ) -> str:
         """Persist directed content in the existing message/artifact mechanism."""
         artifact = self.store.store_text(
             body,
@@ -198,9 +209,9 @@ class AcpxDiscussionController:
             """INSERT INTO comms_messages(
                 message_id, conversation_id, in_reply_to, kind, sender, recipient, body_inline,
                 body_artifact_id, content_sha256, metadata_json, created_at
-            ) VALUES (?, ?, ?, 'reply', ?, ?, ?, ?, ?, ?, ?)""",
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
-                message_id, conversation_id, reply_to, sender, recipient, body,
+                message_id, conversation_id, reply_to, kind, sender, recipient, body,
                 artifact.artifact_id, artifact.sha256, json.dumps({"acpx_discussion": True}), _now(),
             ),
         )
@@ -210,20 +221,118 @@ class AcpxDiscussionController:
 
     def _replay(self, conversation_id: str) -> dict[str, Any]:
         synthesis = self.conn.execute(
-            "SELECT body_inline FROM comms_messages WHERE conversation_id = ? AND sender = 'codex' AND recipient = 'root' ORDER BY created_at DESC LIMIT 1",
+            """SELECT body_inline FROM comms_messages
+               WHERE conversation_id = ? AND kind = 'synthesis'
+               ORDER BY created_at DESC LIMIT 1""",
             (conversation_id,),
         ).fetchone()
+        if synthesis is None:
+            # Backward-compatible recovery for conversations completed before
+            # the synthesis-specific message kind was introduced.
+            synthesis = self.conn.execute(
+                """SELECT body_inline FROM comms_messages
+                   WHERE conversation_id = ? AND sender = 'codex' AND recipient = 'root'
+                   ORDER BY created_at DESC LIMIT 1""",
+                (conversation_id,),
+            ).fetchone()
         state = self._state(conversation_id)
+        final_event = self.conn.execute(
+            """SELECT metadata_json FROM acp_conversation_events
+               WHERE conversation_id = ? AND event_type = 'STATE'
+                 AND state IN ('COMPLETE', 'PARTIAL_COMPLETE', 'FAILED', 'CANCELLED')
+               ORDER BY sequence DESC LIMIT 1""",
+            (conversation_id,),
+        ).fetchone()
+        try:
+            final_metadata = json.loads(str(final_event[0])) if final_event is not None else {}
+        except (TypeError, ValueError, json.JSONDecodeError):
+            final_metadata = {}
+        terminal_rows = self.conn.execute(
+            """SELECT sender, outcome, duration_ms, token_count, round
+               FROM acp_conversation_events
+               WHERE conversation_id = ? AND event_type = 'CALL_TERMINAL'
+               ORDER BY round,
+                        CASE sender WHEN 'codex' THEN 0 WHEN 'grok' THEN 1 ELSE 2 END,
+                        sequence""",
+            (conversation_id,),
+        ).fetchall()
+        participant_outcomes = [
+            {
+                "participant": str(row[0]),
+                "outcome": str(row[1]),
+                "duration_ms": int(row[2] or 0),
+                "tokens": _safe_tokens(row[3]),
+            }
+            for row in terminal_rows
+        ]
+        derived_rounds = max((int(row[4] or 0) for row in terminal_rows), default=0)
+        derived_tokens = sum(item["tokens"] or 0 for item in participant_outcomes)
+
+        def saved_count(name: str, fallback: int) -> int:
+            value = final_metadata.get(name)
+            return value if isinstance(value, int) and not isinstance(value, bool) and value >= 0 else fallback
+
         return {
             "conversation_id": conversation_id,
             "state": state,
-            "classification": "complete" if state == "COMPLETE" else "partial",
-            "participant_outcomes": [],
-            "rounds_completed": 0,
-            "duration_ms": 0,
-            "tokens": 0,
+            "classification": (
+                "complete"
+                if state == "COMPLETE"
+                else "cancelled"
+                if state == "CANCELLED"
+                else "partial"
+            ),
+            "participant_outcomes": participant_outcomes,
+            "rounds_completed": saved_count("rounds_completed", derived_rounds),
+            "duration_ms": saved_count("duration_ms", 0),
+            "tokens": saved_count("tokens", derived_tokens),
             "synthesis": str(synthesis[0]) if synthesis else None,
             "duplicate_suppressed": True,
+        }
+
+    def _cancelled_payload(
+        self,
+        conversation_id: str,
+        *,
+        started: float,
+        rounds_completed: int,
+        token_used: int,
+        outcomes: list[ParticipantOutcome],
+    ) -> dict[str, Any]:
+        """Persist an explicit terminal cancellation after in-flight work settles."""
+        duration_ms = max(0, int((self.clock() - started) * 1000))
+        participant_outcomes = [
+            {
+                "participant": item.participant,
+                "outcome": item.outcome,
+                "duration_ms": item.duration_ms,
+                "tokens": item.tokens,
+            }
+            for item in outcomes
+        ]
+        self._append(
+            conversation_id,
+            event_type="STATE",
+            state="CANCELLED",
+            duration_ms=duration_ms,
+            token_count=token_used,
+            metadata={
+                "rounds_completed": rounds_completed,
+                "duration_ms": duration_ms,
+                "tokens": token_used,
+            },
+            transition=True,
+        )
+        return {
+            "conversation_id": conversation_id,
+            "state": "CANCELLED",
+            "classification": "cancelled",
+            "participant_outcomes": participant_outcomes,
+            "rounds_completed": rounds_completed,
+            "duration_ms": duration_ms,
+            "tokens": token_used,
+            "synthesis": None,
+            "duplicate_suppressed": False,
         }
 
     def _reserve(
@@ -270,6 +379,12 @@ class AcpxDiscussionController:
             existing = str(row[0])
             state = self._state(existing)
             if state in _TERMINAL:
+                self._append(
+                    existing,
+                    event_type="DUPLICATE_SUPPRESSED",
+                    state=state,
+                    outcome="duplicate_suppressed",
+                )
                 return existing, self._replay(existing)
             # A prior process reserved but did not finish. No retry is legal.
             self._append(existing, event_type="ORPHAN_RESERVATION", state="PARTIAL_COMPLETE", outcome="orphan", transition=True)
@@ -302,6 +417,7 @@ class AcpxDiscussionController:
                 recipient=participant,
                 body=body,
                 reply_to=reply_to,
+                kind="request" if sender == "root" else "reply",
             )
             self._append(
                 conversation_id,
@@ -409,6 +525,14 @@ class AcpxDiscussionController:
         conversation_id, replay = self._reserve(task_digest=_digest(task_id), correlation_digest=_digest(correlation_id), idempotency_digest=_digest(idempotency_key), rounds=rounds, deadline_at=deadline_at)
         if replay is not None:
             return replay
+        if self.cancelled():
+            return self._cancelled_payload(
+                conversation_id,
+                started=started,
+                rounds_completed=0,
+                token_used=0,
+                outcomes=[],
+            )
 
         self._append(conversation_id, event_type="STATE", state="INITIAL_FANOUT", transition=True)
         content_used = sum(len(prompt.encode("utf-8")) for _participant in PARTICIPANTS)
@@ -434,6 +558,14 @@ class AcpxDiscussionController:
         initial_state = "INITIAL_COMPLETE" if all(item.outcome == "ok" for item in outcomes) else "PARTIAL"
         self._append(conversation_id, event_type="STATE", state=initial_state, transition=True)
         rounds_completed = 1
+        if self.cancelled():
+            return self._cancelled_payload(
+                conversation_id,
+                started=started,
+                rounds_completed=rounds_completed,
+                token_used=token_used,
+                outcomes=all_outcomes,
+            )
 
         for round_no in range(2, rounds + 1):
             if self.clock() >= deadline or budget_exhausted:
@@ -471,6 +603,14 @@ class AcpxDiscussionController:
             rounds_completed = round_no
             next_state = "CROSS_EXCHANGE_COMPLETE" if all(item.outcome == "ok" for item in outcomes) else "PARTIAL"
             self._append(conversation_id, event_type="STATE", state=next_state, transition=True)
+            if self.cancelled():
+                return self._cancelled_payload(
+                    conversation_id,
+                    started=started,
+                    rounds_completed=rounds_completed,
+                    token_used=token_used,
+                    outcomes=all_outcomes,
+                )
 
         self._append(conversation_id, event_type="STATE", state="SYNTHESIS", transition=True)
         evidence = "\n\n".join(f"{item.participant} round response:\n{item.response}" for item in all_outcomes if item.response)
@@ -491,7 +631,12 @@ class AcpxDiscussionController:
                 f"\n\nTask:\n{prompt}\n\nEvidence:\n{evidence or '[none]'}"
             )
             synthesis_request = self._message(
-                conversation_id, sender="root", recipient="codex", body=synthesis_prompt, reply_to=None
+                conversation_id,
+                sender="root",
+                recipient="codex",
+                body=synthesis_prompt,
+                reply_to=None,
+                kind="request",
             )
             try:
                 synthesis_result = self.synthesis_call("codex", synthesis_prompt, mode="read-only", cwd=resolved_cwd, task_id=task_id, session_id=None, entrypoint="acpx-discuss-synthesis", hard_timeout=max(1, min(CALL_TIMEOUT_SECONDS, int(deadline - self.clock()))))
@@ -500,7 +645,14 @@ class AcpxDiscussionController:
             except BaseException as exc:
                 synthesis_error = exc
         if synthesis is not None:
-            synth_message = self._message(conversation_id, sender="codex", recipient="root", body=synthesis, reply_to=synthesis_request)
+            synth_message = self._message(
+                conversation_id,
+                sender="codex",
+                recipient="root",
+                body=synthesis,
+                reply_to=synthesis_request,
+                kind="synthesis",
+            )
             self._append(
                 conversation_id,
                 event_type="SYNTHESIS_TERMINAL",
@@ -527,16 +679,38 @@ class AcpxDiscussionController:
             and rounds_completed == rounds
         )
         final_state = "COMPLETE" if complete else "PARTIAL_COMPLETE"
-        self._append(conversation_id, event_type="STATE", state=final_state, transition=True)
         synthesis_tokens = _safe_tokens(synthesis_result.usage_record.get("tokens")) if synthesis_result else None
         tokens = token_used + (synthesis_tokens or 0)
+        duration_ms = max(0, int((self.clock() - started) * 1000))
+        participant_outcomes = [
+            {
+                "participant": item.participant,
+                "outcome": item.outcome,
+                "duration_ms": item.duration_ms,
+                "tokens": item.tokens,
+            }
+            for item in all_outcomes
+        ]
+        self._append(
+            conversation_id,
+            event_type="STATE",
+            state=final_state,
+            duration_ms=duration_ms,
+            token_count=tokens,
+            metadata={
+                "rounds_completed": rounds_completed,
+                "duration_ms": duration_ms,
+                "tokens": tokens,
+            },
+            transition=True,
+        )
         return {
             "conversation_id": conversation_id,
             "state": final_state,
             "classification": "complete" if final_state == "COMPLETE" else "partial",
-            "participant_outcomes": [{"participant": item.participant, "outcome": item.outcome, "duration_ms": item.duration_ms, "tokens": item.tokens} for item in all_outcomes],
+            "participant_outcomes": participant_outcomes,
             "rounds_completed": rounds_completed,
-            "duration_ms": max(0, int((self.clock() - started) * 1000)),
+            "duration_ms": duration_ms,
             "tokens": tokens,
             "synthesis": synthesis,
             "duplicate_suppressed": False,

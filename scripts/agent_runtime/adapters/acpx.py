@@ -331,11 +331,13 @@ def _require_shadow_tool_config(
     active = tc.get("acpx_discussion") is True
     if active:
         _require_discussion_transport(adapter_label=adapter_label)
-    elif tc.get("acpx_shadow") is not True:
-        raise AcpxShadowRefusalError(
-            f"{adapter_label}: tool_config must set acpx_shadow=True as an explicit "
-            "per-call marker of shadow intent; the feature flag alone is not enough"
-        )
+    else:
+        _require_shadow_transport(adapter_label=adapter_label)
+        if tc.get("acpx_shadow") is not True:
+            raise AcpxShadowRefusalError(
+                f"{adapter_label}: tool_config must set acpx_shadow=True as an explicit "
+                "per-call marker of shadow intent; the feature flag alone is not enough"
+            )
     target_agent = tc.get("target_agent", required_target)
     if target_agent != required_target:
         raise AcpxShadowRefusalError(
@@ -552,7 +554,6 @@ class AcpxAdapter:
                 f"AcpxAdapter: unsupported mode {mode!r}; only 'read-only' is permitted for the ACPX shadow seat"
             )
 
-        _require_shadow_transport(adapter_label="AcpxAdapter")
         tc = _require_shadow_tool_config(
             tool_config,
             adapter_label="AcpxAdapter",
@@ -845,7 +846,6 @@ class AcpxGrokShadowAdapter:
                 "is permitted for the ACPX shadow seat"
             )
 
-        _require_shadow_transport(adapter_label="AcpxGrokShadowAdapter")
         tc = _require_shadow_tool_config(
             tool_config,
             adapter_label="AcpxGrokShadowAdapter",

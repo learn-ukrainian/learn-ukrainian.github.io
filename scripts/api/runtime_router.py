@@ -571,7 +571,9 @@ def _acp_classification(state: str | None) -> str:
         return "complete"
     if state in {"PARTIAL", "PARTIAL_COMPLETE"}:
         return "partial"
-    if state in {"FAILED", "CANCELLED"}:
+    if state == "CANCELLED":
+        return "cancelled"
+    if state == "FAILED":
         return "failed"
     if state == "CREATED":
         return "queued"
@@ -695,8 +697,30 @@ def _acp_summary(row: sqlite3.Row, events: list[dict[str, Any]]) -> dict[str, An
         return None
     current_state = events[-1]["state"] if events else "CREATED"
     updated_at = events[-1]["created_at"] if events else created_at
-    duration_ms = sum(event.get("duration_ms", 0) for event in events)
-    total_tokens = sum(event.get("token_count", 0) for event in events)
+    terminal_event = next(
+        (
+            event
+            for event in reversed(events)
+            if event.get("event_type") == "STATE"
+            and event.get("state") in {"COMPLETE", "PARTIAL_COMPLETE", "FAILED", "CANCELLED"}
+        ),
+        None,
+    )
+    terminal_duration = terminal_event.get("duration_ms") if terminal_event else None
+    if isinstance(terminal_duration, int):
+        duration_ms = terminal_duration
+    elif terminal_event:
+        start = _parse_iso_datetime(created_at)
+        finish = _parse_iso_datetime(terminal_event.get("created_at"))
+        duration_ms = max(0, round((finish - start).total_seconds() * 1000)) if start and finish else 0
+    else:
+        duration_ms = sum(event.get("duration_ms", 0) for event in events)
+    terminal_tokens = terminal_event.get("token_count") if terminal_event else None
+    total_tokens = (
+        terminal_tokens
+        if isinstance(terminal_tokens, int)
+        else sum(event.get("token_count", 0) for event in events)
+    )
     termination = _acp_termination(events, current_state)
     return {
         "conversation_id": conversation_id,

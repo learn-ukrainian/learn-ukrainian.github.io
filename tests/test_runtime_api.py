@@ -406,6 +406,40 @@ def test_acp_conversations_refuse_poisoned_rows_and_hide_unavailable_storage(tmp
     assert missing.json() == {"availability": "unavailable", "conversations": []}
 
 
+def test_acp_summary_prefers_terminal_wall_duration_and_token_total(tmp_path, monkeypatch):
+    root = tmp_path / "plane"
+    now = datetime.now(UTC)
+    conversation = (
+        "conv-total", "task", "correlation", "idempotency", 1, '["codex","grok"]',
+        _iso(now), _iso(now + timedelta(minutes=5)), 160_000, 512 * 1024,
+    )
+    events = [
+        (
+            "event-1", "conv-total", 1, "CREATED", "CREATED", None, None, None,
+            None, None, None, None, None, "{}", _iso(now),
+        ),
+        (
+            "event-2", "conv-total", 2, "CALL_TERMINAL", "INITIAL_FANOUT", "codex", "root", 1,
+            "ok", 100, 2, "leg-1", "message-1", "{}", _iso(now),
+        ),
+        (
+            "event-3", "conv-total", 3, "CALL_TERMINAL", "INITIAL_FANOUT", "grok", "root", 1,
+            "ok", 200, 3, "leg-2", "message-2", "{}", _iso(now),
+        ),
+        (
+            "event-4", "conv-total", 4, "STATE", "COMPLETE", None, None, None,
+            None, 250, 5, None, None, "{}", _iso(now + timedelta(milliseconds=250)),
+        ),
+    ]
+    _write_acp_db(root, [conversation], events)
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+
+    summary = client.get("/api/runtime/acp/conversations").json()["conversations"][0]
+
+    assert summary["total_duration_ms"] == 250
+    assert summary["total_tokens"] == 5
+
+
 def test_acp_termination_reason_allowlists_budget_and_deadline_events():
     assert runtime_router._acp_termination(
         [{"event_type": "BUDGET_EXHAUSTED"}], "PARTIAL_COMPLETE"
@@ -413,6 +447,8 @@ def test_acp_termination_reason_allowlists_budget_and_deadline_events():
     assert runtime_router._acp_termination(
         [{"event_type": "DEADLINE_EXCEEDED"}], "PARTIAL_COMPLETE"
     ) == "deadline_exceeded"
+    assert runtime_router._acp_classification("CANCELLED") == "cancelled"
+    assert runtime_router._acp_termination([], "CANCELLED") == "cancelled"
 
 
 def test_headroom_rejects_missing_params():

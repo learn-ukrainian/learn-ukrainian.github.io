@@ -246,6 +246,25 @@ def test_build_invocation_succeeds_when_flag_shadow(tmp_path, monkeypatch):
     assert plan.cmd[0] == str(acpx_module._PINNED_BINARY)
 
 
+def test_build_invocation_active_requires_controller_scope(tmp_path, monkeypatch):
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+    tool_config = {
+        "acpx_discussion": True,
+        "target_agent": "codex",
+        "correlation_id": "corr-1",
+        "idempotency_key": "idem-1",
+    }
+
+    with pytest.raises(AcpxShadowRefusalError, match="discussion controller"):
+        _build(adapter, cwd=tmp_path, tool_config=tool_config)
+
+    with acpx_module.active_discussion_scope():
+        plan = _build(adapter, cwd=tmp_path, tool_config=tool_config)
+    assert plan.cmd[0] == str(acpx_module._PINNED_BINARY)
+
+
 # ---------------------------------------------------------------------------
 # Shadow marker + tool_config allowlist
 # ---------------------------------------------------------------------------
@@ -970,6 +989,26 @@ def test_grok_build_invocation_refuses_when_flag_off(tmp_path, monkeypatch):
 
     with pytest.raises(AcpxShadowRefusalError):
         _build_grok(adapter, cwd=tmp_path)
+
+
+def test_grok_build_invocation_active_requires_controller_scope(tmp_path, monkeypatch):
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    adapter = AcpxGrokShadowAdapter()
+    tool_config = {
+        "acpx_discussion": True,
+        "target_agent": "grok",
+        "correlation_id": "corr-1",
+        "idempotency_key": "idem-1",
+    }
+
+    with pytest.raises(AcpxShadowRefusalError, match="discussion controller"):
+        _build_grok(adapter, cwd=tmp_path, tool_config=tool_config)
+
+    with acpx_module.active_discussion_scope():
+        plan = _build_grok(adapter, cwd=tmp_path, tool_config=tool_config)
+    assert plan.cmd[0] == str(acpx_module._PINNED_BINARY)
 
 
 def test_grok_build_invocation_requires_explicit_shadow_marker(tmp_path, monkeypatch):

@@ -69,6 +69,11 @@ def test_two_participants_are_parallel_and_completed_replay_makes_no_calls(tmp_p
             "SELECT sender, recipient, in_reply_to FROM comms_messages WHERE conversation_id = ?",
             (first["conversation_id"],),
         ).fetchall()
+        duplicate_events = controller.conn.execute(
+            """SELECT COUNT(*) FROM acp_conversation_events
+               WHERE conversation_id = ? AND event_type = 'DUPLICATE_SUPPRESSED'""",
+            (first["conversation_id"],),
+        ).fetchone()[0]
     finally:
         controller.close()
 
@@ -77,9 +82,76 @@ def test_two_participants_are_parallel_and_completed_replay_makes_no_calls(tmp_p
     assert sorted(calls) == ["acpx-codex-shadow", "acpx-codex-shadow", "acpx-grok-shadow", "acpx-grok-shadow"]
     assert second["duplicate_suppressed"] is True
     assert second["synthesis"] == "authoritative synthesis"
+    assert second["participant_outcomes"] == first["participant_outcomes"]
+    assert second["rounds_completed"] == first["rounds_completed"]
+    assert second["duration_ms"] == first["duration_ms"]
+    assert second["tokens"] == first["tokens"]
+    assert duplicate_events == 1
     edges = {(str(row[0]), str(row[1])) for row in rows}
     assert {("root", "codex"), ("root", "grok"), ("codex", "root"), ("grok", "root"), ("codex", "grok"), ("grok", "codex")} <= edges
     assert any(row[2] is not None for row in rows)
+
+
+def test_three_rounds_repeat_cross_exchange_and_complete(tmp_path, monkeypatch):
+    calls: list[str] = []
+
+    def participant(agent: str, _prompt: str, **_kwargs):
+        calls.append(agent)
+        return _result(agent, f"{agent} evidence {len(calls)}")
+
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        participant,
+        lambda agent, _prompt, **_kwargs: _result(agent, "three-round synthesis"),
+    )
+    try:
+        payload = _run(controller, rounds=3)
+    finally:
+        controller.close()
+
+    assert payload["state"] == "COMPLETE"
+    assert payload["rounds_completed"] == 3
+    assert len(calls) == 6
+    assert len(payload["participant_outcomes"]) == 6
+
+
+def test_cancellation_settles_current_wave_and_persists_terminal_state(tmp_path, monkeypatch):
+    cancelled = threading.Event()
+    synthesis_called = False
+
+    def participant(agent: str, _prompt: str, **_kwargs):
+        cancelled.set()
+        return _result(agent, f"{agent} evidence")
+
+    def synthesis(*_args, **_kwargs):
+        nonlocal synthesis_called
+        synthesis_called = True
+        return _result("codex", "must not run")
+
+    monkeypatch.setenv("LU_ACPX_TRANSPORT", "active")
+    monkeypatch.setattr(acpx_discuss, "classify_repo_path", lambda *_a, **_k: "dispatch_worktree")
+    controller = acpx_discuss.AcpxDiscussionController(
+        root=tmp_path / "plane",
+        participant_call=participant,
+        synthesis_call=synthesis,
+        cancelled=cancelled.is_set,
+    )
+    try:
+        payload = _run(controller)
+        replay = _run(controller)
+    finally:
+        controller.close()
+
+    assert payload["state"] == "CANCELLED"
+    assert payload["classification"] == "cancelled"
+    assert payload["rounds_completed"] == 1
+    assert len(payload["participant_outcomes"]) == 2
+    assert payload["synthesis"] is None
+    assert synthesis_called is False
+    assert replay["state"] == "CANCELLED"
+    assert replay["classification"] == "cancelled"
+    assert replay["duplicate_suppressed"] is True
 
 
 def test_one_participant_failure_is_partial_and_synthesis_uses_available_evidence(tmp_path, monkeypatch):
