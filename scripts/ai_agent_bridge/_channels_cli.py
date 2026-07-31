@@ -1484,6 +1484,14 @@ def _handle_discuss(args) -> int:
         return 1
 
     # ── validate inputs ────────────────────────────────────────────
+    acp_routine = (
+        os.environ.get("LU_AGENT_COMM_TRANSPORT", "bridge").strip().lower() == "acp"
+    )
+    acp_participant_routes: dict[str, dict[str, str | None]] = {}
+    if acp_routine:
+        from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+
+        acp_participant_routes = ACPX_SUPPORTED_PARTICIPANTS
     with_agents = _parse_csv(args.with_agents)
     if not with_agents:
         print("❌ --with requires at least one agent", file=sys.stderr)
@@ -1494,15 +1502,20 @@ def _handle_discuss(args) -> int:
             file=sys.stderr,
         )
         return 1
-    unknown = [a for a in with_agents if a not in _channels.get_valid_agents()]
+    valid_agents = set(_channels.get_valid_agents()) | set(acp_participant_routes)
+    unknown = [a for a in with_agents if a not in valid_agents]
     if unknown:
         print(
             f"❌ unknown agent(s): {', '.join(unknown)} "
-            f"(valid: {', '.join(sorted(_channels.get_valid_agents()))})",
+            f"(valid: {', '.join(sorted(valid_agents))})",
             file=sys.stderr,
         )
         return 1
-    non_cli_agents = [agent for agent in with_agents if not _cli_available_agent(agent)]
+    non_cli_agents = [
+        agent
+        for agent in with_agents
+        if agent not in acp_participant_routes and not _cli_available_agent(agent)
+    ]
     if non_cli_agents:
         print(
             "❌ ab discuss cannot spawn non-CLI participant(s): "
@@ -1571,6 +1584,105 @@ def _handle_discuss(args) -> int:
     )
     print(f"   root message: {root_id[:12]} / thread {correlation_id[:12]}")
     print()
+
+    # Fleet launchers set this default. Keep the legacy implementation below
+    # only as an explicit, durably recorded exception for surfaces ACP does
+    # not yet cover; an ACP failure never silently replays provider calls over
+    # the bridge.
+    if acp_routine:
+        exception_reason: str | None = None
+        if args.review:
+            exception_reason = "formal-review evidence transport is not migrated to ACP"
+        elif agent_models:
+            exception_reason = "per-participant model overrides are not supported by bounded ACP routes"
+        elif len(with_agents) != 2:
+            exception_reason = "bounded ACP discussions require exactly two participants"
+        else:
+            unsupported = [agent for agent in with_agents if agent not in acp_participant_routes]
+            if unsupported:
+                exception_reason = "unsupported ACP participant(s): " + ", ".join(unsupported)
+
+        if exception_reason is not None:
+            _channels.post(
+                args.channel,
+                "user",
+                f"[TRANSPORT_EXCEPTION bridge] {exception_reason}",
+                parent_id=root_id,
+                correlation_id=correlation_id,
+                kind="system",
+                auto_snapshot=False,
+                verify_citations=False,
+            )
+            print(f"   transport exception: bridge ({exception_reason})")
+        else:
+            from agent_runtime.acpx_discuss import run_discussion
+
+            acp_rounds = min(max_rounds, 3)
+            if max_rounds != acp_rounds:
+                print(f"   ACP bounded-round cap: {max_rounds} → {acp_rounds}")
+            try:
+                # ACP already persists and exchanges the current conversation.
+                # Do not copy the bridge's volatile project-wide monitor dump
+                # into every participant leg: it dominated short discussions
+                # and multiplied token cost without changing the task. Keep a
+                # bounded slice of stable channel context plus the exact root.
+                channel_context = _channels.load_channel_context(args.channel)["body"].strip()
+                if len(channel_context) > 24_000:
+                    channel_context = channel_context[:24_000] + "\n[context truncated]"
+                acp_prompt = (
+                    (f"--- pinned channel context ---\n{channel_context}\n\n" if channel_context else "")
+                    + f"--- discussion task ---\n{body}\n\n"
+                    + "Produce an independent first take from the supplied text only. "
+                    + "No tools, files, terminal, or external lookup are available."
+                )
+                previous_transport = os.environ.get("LU_ACPX_TRANSPORT")
+                os.environ["LU_ACPX_TRANSPORT"] = "active"
+                try:
+                    payload = run_discussion(
+                        prompt=acp_prompt,
+                        cwd=REPO_ROOT,
+                        task_id=f"discuss-{correlation_id[:8]}",
+                        correlation_id=correlation_id,
+                        idempotency_key=f"ab-discuss:{correlation_id}",
+                        rounds=acp_rounds,
+                        participants=tuple(with_agents),
+                    )
+                finally:
+                    if previous_transport is None:
+                        os.environ.pop("LU_ACPX_TRANSPORT", None)
+                    else:
+                        os.environ["LU_ACPX_TRANSPORT"] = previous_transport
+            except Exception as exc:
+                _channels.post(
+                    args.channel,
+                    "user",
+                    f"[ACP_FAILURE no-bridge-retry] {type(exc).__name__}: {exc}",
+                    parent_id=root_id,
+                    correlation_id=correlation_id,
+                    kind="system",
+                    auto_snapshot=False,
+                    verify_citations=False,
+                )
+                print(f"❌ ACP discussion failed without bridge retry: {exc}", file=sys.stderr)
+                return 1
+
+            conversation_id = str(payload["conversation_id"])
+            state = str(payload["state"])
+            synthesis = str(payload.get("synthesis") or "[no synthesis available]")
+            _channels.post(
+                args.channel,
+                "codex",
+                f"[ACP {state}] conversation={conversation_id}\n\n{synthesis}",
+                parent_id=root_id,
+                correlation_id=correlation_id,
+                kind="reply",
+                auto_snapshot=False,
+                verify_citations=False,
+            )
+            print(f"   transport: ACP ({', '.join(with_agents)})")
+            print(f"   conversation: /acp.html?conversation={conversation_id}")
+            print(f"   state: {state}; rounds: {payload.get('rounds_completed', 0)}")
+            return 0 if state == "COMPLETE" else 1
 
     discussion_session_ids: dict[str, str] = {}
 

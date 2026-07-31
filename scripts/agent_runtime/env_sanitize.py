@@ -116,6 +116,18 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
         # API-key selectors remain outside every allowlist and are stripped.
         "ACPX_AUTH_CACHED_TOKEN",
     },
+    "acpx-kimi-shadow": {
+        # Non-secret acpx auth-method selector for the existing Kimi login.
+        "ACPX_AUTH_LOGIN",
+    },
+    "acpx-kimicc-shadow": {
+        # KimiCC K3 uses the same existing Kimi login through its fixed route.
+        "ACPX_AUTH_LOGIN",
+    },
+    "acpx-cursor-shadow": {
+        # Non-secret acpx auth-method selector for the existing Cursor login.
+        "ACPX_AUTH_CURSOR_LOGIN",
+    },
     "gemini": {
         "GEMINI_AUTH_MODE",
     },

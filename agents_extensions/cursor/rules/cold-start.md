@@ -43,11 +43,15 @@ curl -s http://localhost:8765/api/orient   # parse git, health, delegate, govern
 | Open PRs | `gh pr list` (not full orient replay) |
 | Usage limits | CodaxBar.app + `/api/runtime/agents` |
 
-For consequential read-only architecture or risk comparison, an eligible
-orchestrator may explicitly consult the fixed Codex↔Grok ACP panel. It is
-optional, never automatic, and does not replace fleet coordination or formal
-review. Follow `docs/runbooks/agent-seat-onboarding.md` for the only supported
-invocation, busy/unready/partial fallback, and receipt-verification contract.
+Fleet launchers route eligible two-seat read-only `ab discuss` calls through
+the durable ACP controller automatically. Enabled participants are Codex,
+Grok, Claude, Kimi, KimiCC K3, Cursor, and Pool. Bridge transport is a named,
+durably recorded exception for unsupported participants/counts, model
+overrides, formal review, or non-read-only semantics; an ACP failure never
+silently replays provider calls over bridge. ACP does not replace fleet
+coordination or formal review. Follow
+`docs/runbooks/agent-seat-onboarding.md` for the direct operator command,
+busy/partial behavior, and receipt-verification contract.
 
 ## After local writes
 

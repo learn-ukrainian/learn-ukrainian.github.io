@@ -374,8 +374,10 @@ launcher_close_failed_driver_lease() {
 
 launcher_bind_drive_epic() {
   local fleet_clause
-  # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
-  source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"
+  if [ -r "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh" ]; then
+    # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
+    source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"
+  fi
   if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
     fleet_clause="$(fleet_comms_cold_clause)"
   else
@@ -393,6 +395,14 @@ launcher_main() {
   LC_MODE="$2"
   shift 2
   LC_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+  # Keep route selection self-contained for minimal/synthetic launchers while
+  # sourcing the richer cold-start clause whenever the full checkout is
+  # present. Neither path starts an ACP process.
+  export LU_AGENT_COMM_TRANSPORT="${LU_AGENT_COMM_TRANSPORT:-acp}"
+  if [ -r "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh" ]; then
+    # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
+    source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"
+  fi
   launcher_clear_foreign_route_state
   launcher_defaults
   launcher_parse "$@"

@@ -15,6 +15,9 @@
 
 # shellcheck disable=SC2034  # PROJECT_DIR is provided by the sourcing launcher
 
+# Select ACP for eligible `ab discuss` calls without starting any process.
+export LU_AGENT_COMM_TRANSPORT="${LU_AGENT_COMM_TRANSPORT:-acp}"
+
 fleet_comms_rule_relpath() {
   printf '%s' "agents_extensions/shared/rules/fleet-comms-coordination.md"
 }
@@ -52,10 +55,11 @@ fleet_comms_cold_clause() {
     "Topology: \`.venv/bin/python -m scripts.fleet_comms plane-status\` (+ metrics/backlog/dead-letters). " \
     "Formal CF: \`.venv/bin/python -m scripts.ai_agent_bridge review-pr <PR_NUMBER> --reviewer <cross-family>\` " \
     "then publish-review-verdict (PR number required; never self-seal). " \
-    "Optional ACP advisory: eligible orchestrators may explicitly run the fixed read-only Codex↔Grok " \
-    "\`.venv/bin/python -m scripts.fleet_comms acp-discuss\` panel for consequential comparison only; never auto-launch it. " \
-    "On busy, unready, or partial outcome use bounded bridge \`discuss\`; ACP is neither coordination authority " \
-    "nor formal review, and \`acp-verify\` verifies a receipt rather than authorizing retry. " \
+    "Eligible two-seat read-only \`ab discuss\` calls automatically use ACP when every requested participant " \
+    "has an enabled route (Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, or Pool); cold start launches nothing. " \
+    "Bridge transport is an observable exception only for unsupported participants/counts or model overrides, " \
+    "formal review until separately migrated, write/dispatch/inbox semantics, or typed ACP unhealthy/partial failure; name it in durable coordination evidence. " \
+    "ACP is neither coordination authority nor formal review, and \`acp-verify\` verifies a receipt rather than authorizing retry. " \
     "Continuity: stream lease already claimed; dual-write \`.claude/<epic>-epic/*-DRIVER-HANDOFF.md\`."
 }
 

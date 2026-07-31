@@ -266,23 +266,33 @@ def test_acpx_default_off_rollback(onboarding: str, all_owned: dict[str, str]) -
     assert "rollback" in runtime or "flag off" in runtime or ("default" in runtime and "off" in runtime)
 
 
-def test_routine_acp_panel_is_explicit_bounded_and_non_authoritative(
+def test_routine_acp_panel_selection_hierarchy_is_bounded_and_non_authoritative(
     onboarding: str, all_owned: dict[str, str]
 ) -> None:
     """The approved routine panel remains a finite deliberation, not a bus."""
     lower = onboarding.lower()
-    assert "explicitly" in lower
-    assert "consequential" in lower
+    assert "automatically selects" in lower
     assert "read-only" in lower
+    assert "exactly two enabled participants" in lower
+    for participant in ("codex", "grok", "claude", "kimi", "kimicc k3", "cursor", "pool"):
+        assert participant in lower
     assert "acp-discuss" in onboarding
-    assert "the sole\nsurface" in lower or "the sole surface" in lower
     assert "default two rounds" in lower
     assert "hard maximum" in lower
     assert "repository-wide" in lower
     assert "busy" in lower
     assert "no queue" in lower
     assert "automatic retry" in lower
-    assert "bridge `discuss`" in lower
+    assert "bridge transport is an observable exception only" in lower
+    for exception in (
+        "unsupported\nparticipant/count",
+        "per-participant model override",
+        "formal review until\nseparately migrated",
+        "write / dispatch / inbox semantics",
+        "typed acp\nunhealthy or partial failure",
+        "do not\nsilently fall back",
+    ):
+        assert exception in lower
     assert "partial" in lower and "not a successful discussion" in lower
     assert "shared primary checkout" in lower
     assert "e2e/replay" in lower
@@ -299,13 +309,14 @@ def test_routine_acp_panel_is_explicit_bounded_and_non_authoritative(
         assert "formal review" in body.lower()
 
 
-def test_fleet_wide_acp_means_caller_parity_not_participant_expansion(onboarding: str) -> None:
+def test_fleet_wide_acp_covers_callers_and_enabled_participants(onboarding: str) -> None:
     lower = onboarding.lower()
     assert "caller-access parity" in lower
     for caller in ("claude", "codex", "agy/gemini", "grok", "kimi and kimicc", "cursor"):
         assert caller in lower
-    assert "participants remain exactly\ncodex and grok" in lower
-    assert "do not add, rotate, or silently substitute" in lower
+    for participant in ("codex", "grok", "claude", "kimi", "kimicc k3", "cursor", "pool"):
+        assert participant in lower
+    assert "do not rotate or silently\nsubstitute" in lower
     assert "ordinary workers and review-only seats" in lower
     for lifecycle_path in (
         "startup",

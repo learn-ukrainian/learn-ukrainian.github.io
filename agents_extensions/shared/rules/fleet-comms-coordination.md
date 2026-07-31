@@ -140,18 +140,25 @@ coordination authority. File dual-write stays authoritative in every plane mode.
 
 ## Bounded ACP panel (approved selection)
 
-Every supported fleet orchestrator may explicitly invoke the fixed Codex↔Grok
-ACP panel for **one consequential, read-only design or risk comparison** when
-that direct cross-provider critique is materially useful. Its sole surface is
-`.venv/bin/python -m scripts.fleet_comms acp-discuss`; do not add automatic launcher or
-`delegate.py` use. The default is two rounds and the hard maximum is three.
+For eligible two-seat **read-only agent communication**, ACP is the routine
+transport. Fleet launchers make the project `discuss` command select the durable ACP controller
+automatically when both requested participants have enabled routes: Codex,
+Grok, Claude, Kimi, KimiCC K3, Cursor, or Pool. The direct
+`.venv/bin/python -m scripts.fleet_comms acp-discuss` surface remains available
+to operators. Selection starts no process at cold start and does not change
+`delegate.py`. The default is two rounds and the hard maximum is three.
 
-Admission is one conversation repository-wide: return `busy` when occupied,
-with zero queue and zero automatic retry. On busy or when ACPX is unready, use
-the bounded bridge `discuss` path instead. ACP output is deliberation evidence:
-a typed partial outcome is valid evidence but never a successful discussion,
-formal review, or coordination authority. The exact command, primary-install
-and body-free `acp-verify` E2E/replay procedure are in the onboarding contract.
+Bridge transport is an observable exception only: use it for an unsupported
+participant/count, a per-participant model override, formal review until
+separately migrated, write / dispatch / inbox semantics, or a typed ACP
+unhealthy or partial failure. Name
+the exception in the task handoff or other durable coordination evidence;
+never silently fall back. Admission is one conversation repository-wide:
+return `busy` when occupied, with zero queue and zero automatic retry. ACP
+output is deliberation evidence: a typed partial outcome is valid evidence but
+never a successful discussion, formal review, or coordination authority. The
+exact command, primary-install and body-free `acp-verify` E2E/replay procedure
+are in the onboarding contract.
 
 ## Offline fallback path
 

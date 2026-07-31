@@ -36,10 +36,10 @@ caps or live modes.
 
 | Surface | Owns | Never owns |
 | --- | --- | --- |
-| **`discuss`** (bridge) | Bounded multi-agent deliberation and design input | Implementation, merge authority, or the formal cross-family review gate |
+| **`discuss`** (bridge) | An observable exception for agent communication that ACP cannot serve; bounded multi-agent deliberation and design input | Implementation, merge authority, or the formal cross-family review gate |
 | **`scripts/delegate.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
 | **Fleet-comms + file handoffs** | Durable coordination and authority today; **file dual-write remains authoritative in every current plane mode** | Competing message buses; silent plane/retention/eligibility flips |
-| **ACPX** | Experimental **structured invocation transport only** — default-off shadow seats plus one explicit fleet-comms `acp-discuss` controller for a bounded Codex/Grok conversation; not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
+| **ACPX** | Routine first-choice structured transport for eligible two-seat read-only communication; fleet launchers make `ab discuss` select it automatically for Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, and Pool; not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
 | **Buzz** | **Explicitly deferred** | Anything in this rollout — relay-as-authority conflicts with the current authority model |
 
 ### Human overview pages
@@ -219,40 +219,44 @@ printf '%s\n' 'Compare the two bounded options and name risks.' |
   --idempotency-key acp-6078-v1 --rounds 2 --json
 ```
 
-### When an orchestrator may use the ACP panel
+### Selecting the ACP panel
 
-Every supported fleet orchestrator may **explicitly** use this fixed
-Codex↔Grok panel for one consequential, read-only design or risk comparison
-when direct cross-provider critique is materially useful. It is not an
-automatic launcher or `delegate.py` feature, and `acp-discuss` is the sole
-surface. Use the default two rounds; three is the hard maximum.
+Every fleet launcher exports ACP as the routine transport. The project
+`discuss` command automatically selects the durable ACP controller when the request names
+exactly two enabled participants: Codex, Grok, Claude, Kimi, KimiCC K3,
+Cursor, or Pool. The direct `acp-discuss` command remains available for
+operators and tests. Selection starts no process at cold start and does not
+change `delegate.py`. Use the default two rounds; three is the hard maximum.
 
-Admission is one conversation repository-wide. If it is occupied, return
-`busy` immediately: there is no queue, wait, automatic retry, or hidden
-failover. On `busy`, unavailable ACPX, or an unready participant, use the
-bounded bridge `discuss` path instead. A typed partial ACP outcome is valid
-evidence to inspect, but not a successful discussion, formal review, or
-coordination authority.
+Bridge transport is an observable exception only for an unsupported
+participant/count, a per-participant model override, formal review until
+separately migrated, write / dispatch / inbox semantics, or a typed ACP
+unhealthy or partial failure. Record the named
+exception in the task handoff or other durable coordination evidence; do not
+silently fall back. Admission is one conversation repository-wide. If it is
+occupied, return `busy` immediately: there is no queue, wait, automatic retry,
+or hidden failover. A typed partial ACP outcome is valid evidence to inspect,
+but not a successful discussion, formal review, or coordination authority.
 
-Fleet-wide means **caller-access parity**, not participant expansion. The live
-caller classes below may request the same fixed panel when acting as the
-accountable orchestrator; ordinary workers and review-only seats receive the
-contract for awareness but do not start conversations independently.
+Fleet-wide means caller-access parity plus the enabled participant set above.
+The live caller classes below may request any supported two-seat panel when
+acting as the accountable orchestrator; ordinary workers and review-only seats
+receive the contract for awareness but do not start conversations independently.
 
 | Caller class | ACP access | Boundary |
 | --- | --- | --- |
-| Claude orchestrators | Eligible caller | Explicit advisory invocation only |
-| Codex orchestrators | Eligible caller | Explicit advisory invocation only |
-| AGY/Gemini orchestrators | Eligible caller | Explicit advisory invocation only |
-| Grok orchestrators | Eligible caller | Explicit advisory invocation only |
-| Kimi and KimiCC orchestrators | Eligible caller | Explicit advisory invocation only |
-| Cursor orchestrators with an explicit model | Eligible caller | Never use an automatic/opaque model route |
+| Claude orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
+| Codex orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
+| AGY/Gemini orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
+| Grok orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
+| Kimi and KimiCC orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
+| Cursor orchestrators with an explicit model | Eligible caller | Explicit routine ACP selection only; never use an automatic/opaque model route |
 | Dispatch-only, worker, and review-only seats | Awareness only | The accountable orchestrator owns invocation |
 
-Caller identity never changes panel membership: participants remain exactly
-Codex and Grok. Do not add, rotate, or silently substitute a participant when
-one is unavailable. Supporting a new participant requires a separately
-approved provider adapter with the same no-tool, read-only confinement. ACP
+Caller identity never changes route eligibility. Do not rotate or silently
+substitute a participant when one is unavailable. Supporting a new participant
+requires a separately approved provider adapter with the same no-tool,
+read-only confinement. ACP
 must stay idle during startup, stream claim, dispatch, CI, PR events, formal
 review, and plane-status checks.
 
@@ -414,8 +418,18 @@ headless route) and [`docs/SCRIPTS.md`](../SCRIPTS.md) (launcher flags).
 On some machines `ab` is ApacheBench. Always use the explicit project entrypoints:
 
 ```bash
-# Deliberation (not formal review)
-.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss <channel> "..." --with ...
+# Direct operator surface for the default Codex/Grok panel.
+printf '%s\n' 'Bounded read-only task.' | ACPX_AUTH_CHAT_GPT=1 \
+  .venv/bin/python -m scripts.fleet_comms acp-discuss --cwd . \
+  --task-id acp-task --correlation-id acp-task-v1 --idempotency-key acp-task-v1
+
+# Normal fleet-TUI surface: automatically ACP-backed for an enabled pair.
+.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss <channel> "..." \
+  --with claude,kimicc
+
+# The same command uses bridge only for a named exception.
+.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss <channel> "..." \
+  --with agy,codex
 
 # Formal CF
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR_NUMBER> --reviewer codex
