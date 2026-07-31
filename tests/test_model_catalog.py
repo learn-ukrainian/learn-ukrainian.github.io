@@ -438,3 +438,36 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
         "advisory_satisfies_cross_family_review": False,
         "independent_cross_family_review_required": True,
     }
+
+
+@pytest.mark.parametrize(
+    ("section", "field", "operation", "value", "message"),
+    [
+        ("advisor", "model_id", "set", "missing-model", "advisor.model_id references unknown model"),
+        ("preferred_worker", "model_id", "set", "poolside/laguna-m.1", "preferred_worker.model_id must reference an active model"),
+        ("direct_worker", "model_id", "set", "missing-model", "direct_worker.model_id references unknown model"),
+        ("autonomous_fallback", "model_id", "set", "missing-model", "autonomous_fallback.model_id references unknown model"),
+        ("preferred_worker", "escalate_to", "set", "missing-model", "preferred_worker.escalate_to references unknown model"),
+        ("advisor", "effort", "set", "ultra", "advisor.effort must be one of"),
+        ("preferred_worker", "effort", "set", "ultra", "preferred_worker.effort must be one of"),
+        ("direct_worker", "effort", "set", "ultra", "direct_worker.effort must be one of"),
+        ("autonomous_fallback", "effort", "set", "ultra", "autonomous_fallback.effort must be one of"),
+        ("advisor", "role", "set", "unbounded", "advisor.role must be"),
+        ("advisor", "output_fields", "delete", None, "advisor must define exactly"),
+        ("preferred_worker", "prohibited_decisions", "delete", None, "preferred_worker must define exactly"),
+        ("review_boundary", "advisory_satisfies_cross_family_review", "set", True, "must remain false"),
+        ("review_boundary", "independent_cross_family_review_required", "set", False, "must remain true"),
+    ],
+)
+def test_catalog_rejects_malformed_sol_advised_route(
+    section, field, operation, value, message
+):
+    broken = deepcopy(load_model_catalog())
+    target = broken["execution_routing"]["sol_advised_bounded"][section]
+    if operation == "delete":
+        del target[field]
+    else:
+        target[field] = value
+
+    with pytest.raises(ModelCatalogError, match=message):
+        validate_catalog(broken)

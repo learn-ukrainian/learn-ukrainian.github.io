@@ -33,6 +33,20 @@ GLM_ROUTE_FIELDS = (
     "coding_model_id",
     "context_profile",
 )
+VALID_CODEX_EFFORTS = frozenset({"low", "medium", "high", "xhigh", "max"})
+EXECUTION_ROUTE_KEYS = frozenset(
+    {"advisor", "preferred_worker", "direct_worker", "autonomous_fallback", "review_boundary"}
+)
+ADVISOR_KEYS = frozenset({"model_id", "effort", "role", "output_fields"})
+PREFERRED_WORKER_KEYS = frozenset(
+    {"model_id", "effort", "requires", "task_types", "escalate_to", "prohibited_decisions", "escalation_triggers"}
+)
+DIRECT_WORKER_KEYS = frozenset({"model_id", "effort", "task_types", "constraints"})
+FALLBACK_KEYS = frozenset({"model_id", "effort", "when"})
+REVIEW_BOUNDARY_KEYS = frozenset(
+    {"advisory_family", "advisory_satisfies_cross_family_review", "independent_cross_family_review_required"}
+)
+ADVISOR_OUTPUT_FIELDS = ["task_contract", "constraints", "risk_boundaries", "acceptance_evidence", "escalation_triggers"]
 
 
 class ModelCatalogError(ValueError):
@@ -55,6 +69,109 @@ def _require_string_list(value: Any, label: str) -> list[str]:
     if not isinstance(value, list) or not value or not all(isinstance(item, str) and item.strip() for item in value):
         raise ModelCatalogError(f"{label} must be a non-empty list of strings")
     return [item.strip() for item in value]
+
+
+def _require_exact_keys(value: dict[str, Any], expected: frozenset[str], label: str) -> None:
+    if set(value) != expected:
+        raise ModelCatalogError(f"{label} must define exactly {sorted(expected)}")
+
+
+def _require_active_execution_model(models: dict[str, Any], value: Any, label: str) -> str:
+    model_id = _require_string(value, label)
+    if model_id not in models:
+        raise ModelCatalogError(f"{label} references unknown model {model_id!r}")
+    if models[model_id]["lifecycle"] != "active":
+        raise ModelCatalogError(f"{label} must reference an active model")
+    return model_id
+
+
+def _require_execution_effort(value: Any, label: str) -> None:
+    effort = _require_string(value, label)
+    if effort not in VALID_CODEX_EFFORTS:
+        raise ModelCatalogError(f"{label} must be one of {sorted(VALID_CODEX_EFFORTS)}")
+
+
+def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
+    execution_routing = _require_mapping(raw, "execution_routing")
+    route = _require_mapping(execution_routing.get("sol_advised_bounded"), "execution_routing.sol_advised_bounded")
+    _require_exact_keys(route, EXECUTION_ROUTE_KEYS, "execution_routing.sol_advised_bounded")
+
+    advisor = _require_mapping(route["advisor"], "execution_routing.sol_advised_bounded.advisor")
+    _require_exact_keys(advisor, ADVISOR_KEYS, "execution_routing.sol_advised_bounded.advisor")
+    advisor_model_id = _require_active_execution_model(
+        models,
+        advisor["model_id"],
+        "execution_routing.sol_advised_bounded.advisor.model_id",
+    )
+    _require_execution_effort(advisor["effort"], "execution_routing.sol_advised_bounded.advisor.effort")
+    if advisor["role"] != "bounded_advisory_envelope":
+        raise ModelCatalogError(
+            "execution_routing.sol_advised_bounded.advisor.role must be 'bounded_advisory_envelope'"
+        )
+    if advisor["output_fields"] != ADVISOR_OUTPUT_FIELDS:
+        raise ModelCatalogError(
+            "execution_routing.sol_advised_bounded.advisor.output_fields must be exactly "
+            f"{ADVISOR_OUTPUT_FIELDS!r}"
+        )
+
+    preferred = _require_mapping(route["preferred_worker"], "execution_routing.sol_advised_bounded.preferred_worker")
+    _require_exact_keys(preferred, PREFERRED_WORKER_KEYS, "execution_routing.sol_advised_bounded.preferred_worker")
+    _require_active_execution_model(
+        models,
+        preferred["model_id"],
+        "execution_routing.sol_advised_bounded.preferred_worker.model_id",
+    )
+    _require_execution_effort(preferred["effort"], "execution_routing.sol_advised_bounded.preferred_worker.effort")
+    for field in ("requires", "task_types", "prohibited_decisions", "escalation_triggers"):
+        _require_string_list(preferred[field], f"execution_routing.sol_advised_bounded.preferred_worker.{field}")
+    _require_active_execution_model(
+        models,
+        preferred["escalate_to"],
+        "execution_routing.sol_advised_bounded.preferred_worker.escalate_to",
+    )
+
+    direct = _require_mapping(route["direct_worker"], "execution_routing.sol_advised_bounded.direct_worker")
+    _require_exact_keys(direct, DIRECT_WORKER_KEYS, "execution_routing.sol_advised_bounded.direct_worker")
+    _require_active_execution_model(
+        models,
+        direct["model_id"],
+        "execution_routing.sol_advised_bounded.direct_worker.model_id",
+    )
+    _require_execution_effort(direct["effort"], "execution_routing.sol_advised_bounded.direct_worker.effort")
+    for field in ("task_types", "constraints"):
+        _require_string_list(direct[field], f"execution_routing.sol_advised_bounded.direct_worker.{field}")
+
+    fallback = _require_mapping(
+        route["autonomous_fallback"],
+        "execution_routing.sol_advised_bounded.autonomous_fallback",
+    )
+    _require_exact_keys(fallback, FALLBACK_KEYS, "execution_routing.sol_advised_bounded.autonomous_fallback")
+    _require_active_execution_model(
+        models,
+        fallback["model_id"],
+        "execution_routing.sol_advised_bounded.autonomous_fallback.model_id",
+    )
+    _require_execution_effort(fallback["effort"], "execution_routing.sol_advised_bounded.autonomous_fallback.effort")
+    _require_string_list(fallback["when"], "execution_routing.sol_advised_bounded.autonomous_fallback.when")
+
+    boundary = _require_mapping(route["review_boundary"], "execution_routing.sol_advised_bounded.review_boundary")
+    _require_exact_keys(boundary, REVIEW_BOUNDARY_KEYS, "execution_routing.sol_advised_bounded.review_boundary")
+    advisory_family = _require_string(
+        boundary["advisory_family"],
+        "execution_routing.sol_advised_bounded.review_boundary.advisory_family",
+    )
+    if advisory_family != models[advisor_model_id]["family"]:
+        raise ModelCatalogError(
+            "execution_routing.sol_advised_bounded.review_boundary.advisory_family must match the advisor model family"
+        )
+    if boundary["advisory_satisfies_cross_family_review"] is not False:
+        raise ModelCatalogError(
+            "execution_routing.sol_advised_bounded.review_boundary.advisory_satisfies_cross_family_review must remain false"
+        )
+    if boundary["independent_cross_family_review_required"] is not True:
+        raise ModelCatalogError(
+            "execution_routing.sol_advised_bounded.review_boundary.independent_cross_family_review_required must remain true"
+        )
 
 
 def validate_catalog(data: Any) -> dict[str, Any]:
@@ -151,6 +268,8 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 raise ModelCatalogError(
                     f"models.{model_id}.glm_routes.glmcc_alias must be model id or listed in models.{model_id}.aliases"
                 )
+
+    _validate_execution_routing(catalog.get("execution_routing"), models)
 
     candidates = _require_mapping(catalog.get("review_candidates"), "review_candidates")
     for name, raw in candidates.items():
