@@ -106,6 +106,9 @@ _MCP_TOOL_EVENT_RE = re.compile(
 )
 _MCP_TRANSPORT_FAILURE_RE = re.compile(r"ERROR\s+rmcp::transport::worker:")
 _MCP_FAILURE_URL_RE = re.compile(r"url \((?P<url>https?://[^)\s]+)\)")
+_PRIVACY_LIMITED_USAGE_ENTRYPOINTS = frozenset(
+    {"acpx-pilot-native", "acpx-pilot-shadow"}
+)
 
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.
@@ -548,7 +551,7 @@ def _is_temp_file(path: Path) -> bool:
         return False
 
 
-def _load_adapter(name: str) -> AgentAdapter:
+def _load_adapter(name: str, *, allow_direct_only: bool = False) -> AgentAdapter:
     """Import the adapter class for ``name`` and cache the instance.
 
     Raises:
@@ -556,9 +559,6 @@ def _load_adapter(name: str) -> AgentAdapter:
             entry has ``cli_available: False``, or the adapter module
             cannot be imported.
     """
-    if name in _ADAPTER_CACHE:
-        return _ADAPTER_CACHE[name]
-
     try:
         entry = get_agent_entry(name)
     except KeyError:
@@ -566,13 +566,29 @@ def _load_adapter(name: str) -> AgentAdapter:
             f"Agent {name!r} is not in the registry. Available: {sorted(AGENTS.keys())}"
         ) from None
 
-    if not entry["cli_available"]:
+    direct_only_allowed = allow_direct_only and entry.get("direct_only") is True
+    if not entry["cli_available"] and not direct_only_allowed:
+        if entry.get("direct_only") is True:
+            detail = (
+                "Direct-only seats require their dedicated bounded invocation "
+                "surface and never participate in normal routing, dispatch, "
+                "review, or failover."
+            )
+        else:
+            detail = (
+                "This seat has no enabled runtime CLI/adapter. Enable its "
+                "intended adapter or launcher and flip the registry flag only "
+                "when the seat is operational."
+            )
         raise AgentUnavailableError(
             f"Agent {name!r} is registered but not available "
-            f"(cli_available=False). This usually means its CLI does not "
-            f"exist yet (e.g., grok). Implement adapters/{name}.py and "
-            f"flip the registry flag to enable it."
+            f"(cli_available=False). {detail}"
         )
+
+    # Permission is checked before cache access. A prior direct-only load must
+    # never make the same adapter reachable through normal ``invoke()``.
+    if name in _ADAPTER_CACHE:
+        return _ADAPTER_CACHE[name]
 
     dotted_path = entry["adapter"]
     if ":" not in dotted_path:
@@ -679,10 +695,13 @@ def _build_usage_record(
     """Assemble the usage record dict per design doc § 4.5 schema."""
     # Ensure unbounded strings are capped so the JSON stays under POSIX PIPE_BUF (4KB)
     # to maintain atomic append guarantees in usage.py.
-    safe_cwd = str(cwd)[-250:] if cwd else ""
-    safe_task_id = task_id[:100] if task_id else None
-    safe_provider_session_id = session_id[:100] if session_id else None
-    telemetry_source = os.environ.get("LU_TELEMETRY_SOURCE")
+    privacy_limited = entrypoint in _PRIVACY_LIMITED_USAGE_ENTRYPOINTS
+    safe_cwd = None if privacy_limited else (str(cwd)[-250:] if cwd else "")
+    safe_task_id = None if privacy_limited else (task_id[:100] if task_id else None)
+    safe_provider_session_id = (
+        None if privacy_limited else (session_id[:100] if session_id else None)
+    )
+    telemetry_source = None if privacy_limited else os.environ.get("LU_TELEMETRY_SOURCE")
 
     record = {
         "ts": datetime.now(UTC).isoformat(),
@@ -692,12 +711,12 @@ def _build_usage_record(
         "cwd": safe_cwd,
         "model": model,
         "mode": mode,
-        "run_id": current_run_id()[:100],
-        "session_id": current_session_id()[:100],
+        "run_id": None if privacy_limited else current_run_id()[:100],
+        "session_id": None if privacy_limited else current_session_id()[:100],
         "provider_session_id": safe_provider_session_id,
-        "level": os.environ.get("LU_TELEMETRY_LEVEL"),
-        "slug": os.environ.get("LU_TELEMETRY_SLUG"),
-        "track": os.environ.get("LU_TELEMETRY_TRACK"),
+        "level": None if privacy_limited else os.environ.get("LU_TELEMETRY_LEVEL"),
+        "slug": None if privacy_limited else os.environ.get("LU_TELEMETRY_SLUG"),
+        "track": None if privacy_limited else os.environ.get("LU_TELEMETRY_TRACK"),
         "source": telemetry_source[:100] if telemetry_source else None,
         "duration_s": round(duration_s, 2),
         "input_chars": input_chars,
@@ -706,7 +725,11 @@ def _build_usage_record(
         "outcome": outcome,
         "rate_limited": rate_limited,
         "stalled": stalled,
-        "stderr_excerpt": (stderr_excerpt or "")[:500] if stderr_excerpt else None,
+        "stderr_excerpt": (
+            None
+            if privacy_limited
+            else ((stderr_excerpt or "")[:500] if stderr_excerpt else None)
+        ),
         "tokens": tokens,
     }
     safe_substitution = _safe_substitution_record(substitution)
@@ -2248,6 +2271,8 @@ def _invoke_impl(
     initial_response_timeout: int | None = None,
     event_sink: Callable[..., None] | None = None,
     effort: str | None = None,
+    allow_direct_only: bool = False,
+    allow_runner_failover: bool = True,
 ) -> Result:
     """Runner implementation after any parent-owned isolation preparation.
 
@@ -2311,7 +2336,11 @@ def _invoke_impl(
     """
     # ---------- 1. Resolve adapter ----------
     _validate_agent_name(agent_name)
-    adapter = _load_adapter(agent_name)
+    adapter = (
+        _load_adapter(agent_name, allow_direct_only=True)
+        if allow_direct_only
+        else _load_adapter(agent_name)
+    )
 
     # ---------- 2. Validate mode ----------
     if mode not in adapter.supported_modes:
@@ -2340,10 +2369,15 @@ def _invoke_impl(
 
     # ---------- 5. Pre-call rate-limit check ----------
     effective_model = model or adapter.default_model
-    failover_chain = load_failover_chain(
-        agent_name,
-        effective_model=effective_model,
+    failover_chain = (
+        load_failover_chain(agent_name, effective_model=effective_model)
+        if allow_runner_failover
+        else None
     )
+    if allow_direct_only and failover_chain is not None:
+        raise AgentUnavailableError(
+            f"Direct-only agent {agent_name!r} may not use runner failover"
+        )
     if failover_chain is not None:
         return _invoke_with_runner_failover(
             agent_name=agent_name,
@@ -2401,11 +2435,16 @@ def _invoke_impl(
         )
 
     # ---------- 6. Build invocation plan ----------
+    # Direct-only transports may use an adapter-owned model default that is
+    # intentionally a telemetry label rather than an argv override. Preserve
+    # a caller's explicit ``None`` for those adapters while retaining the
+    # effective label for headroom and usage records.
+    plan_model = model if allow_direct_only else effective_model
     plan = adapter.build_invocation(
         prompt=prompt,
         mode=mode,
         cwd=effective_cwd,
-        model=effective_model,
+        model=plan_model,
         task_id=task_id,
         session_id=session_id,
         tool_config=tool_config,
@@ -2589,3 +2628,82 @@ def invoke(
     finally:
         if launch is not None:
             launch.cleanup()
+
+
+def _invoke_direct_only(
+    agent_name: str,
+    prompt: str,
+    *,
+    cwd: Path,
+    model: str | None = None,
+    task_id: str,
+    tool_config: dict,
+    hard_timeout: int = 300,
+    effort: str | None = None,
+) -> Result:
+    """Invoke one explicitly marked direct-only, read-only shadow seat.
+
+    This surface is deliberately narrower than :func:`invoke`: it cannot
+    resume a session, select a write-capable mode, enter normal
+    routing/failover/catalog selection, or choose its own entrypoint. The
+    bounded ACPX comparison pilot is the only supported caller.
+    """
+    try:
+        entry = get_agent_entry(agent_name)
+    except KeyError:
+        raise AgentUnavailableError(f"Agent {agent_name!r} is not in the registry") from None
+    if entry.get("direct_only") is not True or entry["cli_available"]:
+        raise AgentUnavailableError(
+            f"Agent {agent_name!r} is not an unavailable direct-only seat"
+        )
+    return _invoke_impl(
+        agent_name,
+        prompt,
+        mode="read-only",
+        cwd=cwd,
+        model=model,
+        task_id=task_id,
+        session_id=None,
+        tool_config=tool_config,
+        entrypoint="acpx-pilot-shadow",
+        hard_timeout=hard_timeout,
+        effort=effort,
+        allow_direct_only=True,
+        allow_runner_failover=False,
+    )
+
+
+def _invoke_native_once(
+    agent_name: str,
+    prompt: str,
+    *,
+    mode: str = "read-only",
+    cwd: Path,
+    model: str | None = None,
+    task_id: str,
+    session_id: str | None = None,
+    entrypoint: str = "acpx-pilot-native",
+    hard_timeout: int = 300,
+    effort: str | None = None,
+) -> Result:
+    """Invoke one native ACPX-pilot authority call without runner failover."""
+    if agent_name not in {"codex", "grok"}:
+        raise AgentUnavailableError(
+            f"Agent {agent_name!r} is not a supported ACPX pilot native seat"
+        )
+    if mode != "read-only" or session_id is not None or entrypoint != "acpx-pilot-native":
+        raise ValueError("ACPX pilot native invocation contract was altered")
+    return _invoke_impl(
+        agent_name,
+        prompt,
+        mode=mode,
+        cwd=cwd,
+        model=model,
+        task_id=task_id,
+        session_id=None,
+        tool_config=None,
+        entrypoint=entrypoint,
+        hard_timeout=hard_timeout,
+        effort=effort,
+        allow_runner_failover=False,
+    )

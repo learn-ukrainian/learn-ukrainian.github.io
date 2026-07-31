@@ -276,7 +276,7 @@ def test_acpx_second_pilot_grok_evidence_and_boundary(onboarding: str, all_owned
     assert "minutes=120" in onboarding
     assert "not permanent routing weights" in lower
     assert "not a new coordination plane" in lower or "not** a new coordination plane" in lower
-    assert "0.2.114" in onboarding
+    assert "0.2.117" in onboarding
     assert "grok-4.5" in onboarding
     assert "--no-leader" in onboarding
     assert "--agent-profile" in onboarding
@@ -284,6 +284,11 @@ def test_acpx_second_pilot_grok_evidence_and_boundary(onboarding: str, all_owned
     assert "client flags alone do not remove native grok tools" in lower
     assert "grok-build" in lower
     assert "ACPX_AUTH_CACHED_TOKEN=1" in onboarding
+    assert "scripts.agent_runtime.acpx_pilot" in onboarding
+    assert "global non-blocking lock" in lower
+    assert "idempotency-key digest" in lower
+    assert "runtime dashboard" in lower
+    assert "cannot send or control acpx traffic" in lower
     runtime = all_owned["docs/agent-runtime-guide.md"]
     assert "acpx-grok-shadow" in runtime
     assert "AcpxGrokShadowAdapter" in runtime

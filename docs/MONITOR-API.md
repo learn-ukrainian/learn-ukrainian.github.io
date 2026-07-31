@@ -1290,8 +1290,38 @@ with no records reports `no_evidence`; that is not a provider-health claim.
   },
   "pins": {
     "acpx": "0.13.0",
-    "grok_cli": "0.2.114",
+    "grok_cli": "0.2.117",
     "validation": "before_spawn"
+  },
+  "comparison_evidence": {
+    "window_days": 7,
+    "state": "observed",
+    "attempts": 3,
+    "comparisons": 2,
+    "classification_parity": 2,
+    "classification_mismatch": 0,
+    "duplicates_suppressed": 1,
+    "busy_refusals": 0,
+    "native": {
+      "total": 2,
+      "ok": 2,
+      "error": 0,
+      "timeout": 0,
+      "rate_limited": 0,
+      "total_duration_s": 8.2,
+      "tokens_observed": 1,
+      "total_tokens": 125
+    },
+    "shadow": {
+      "total": 2,
+      "ok": 2,
+      "error": 0,
+      "timeout": 0,
+      "rate_limited": 0,
+      "total_duration_s": 11.4,
+      "tokens_observed": 1,
+      "total_tokens": 138
+    }
   },
   "seats": [
     {
@@ -1315,6 +1345,7 @@ with no records reports `no_evidence`; that is not a provider-health claim.
   ],
   "safety": {
     "max_in_flight": 1,
+    "explicit_pilot_only": true,
     "backlog": false,
     "retries": false,
     "sessions": false,

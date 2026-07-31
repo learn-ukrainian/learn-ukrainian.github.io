@@ -34,6 +34,7 @@ class AgentEntry(TypedDict):
     capabilities: frozenset[str]
     cli_available: bool
     bridge_spawnable: NotRequired[bool]
+    direct_only: NotRequired[bool]
     resume_policy: str  # "bridge_only" | "never"
 
 
@@ -275,9 +276,8 @@ AGENTS: dict[str, AgentEntry] = {
     "acpx-codex-shadow": {
         # Experimental read-only shadow transport (#6027). Direct-only: never
         # returned by ``available_agents()`` (cli_available False), never a
-        # dispatch/routing/review/failover candidate. Callers must import
-        # ``AcpxAdapter`` directly and pass ``tool_config={"acpx_shadow": True}``
-        # with ``LU_ACPX_TRANSPORT=shadow`` set — see adapters/acpx.py.
+        # dispatch/routing/review/failover candidate. The bounded pilot is the
+        # sole public runner surface permitted to invoke this marked seat.
         "adapter": "scripts.agent_runtime.adapters.acpx:AcpxAdapter",
         # ACPX resolves its own agent default when no --model is supplied;
         # this direct-only seat must not advertise an invented catalog model.
@@ -285,15 +285,15 @@ AGENTS: dict[str, AgentEntry] = {
         "cost_tier": "unknown",
         "capabilities": frozenset(),
         "cli_available": False,
+        "direct_only": True,
         "resume_policy": "never",
     },
     "acpx-grok-shadow": {
         # Second experimental read-only shadow transport (#6043). Direct-only:
         # never returned by ``available_agents()`` (cli_available False), never
-        # a dispatch/routing/review/failover candidate. Callers must import
-        # ``AcpxGrokShadowAdapter`` directly and pass
-        # ``tool_config={"acpx_shadow": True, "target_agent": "grok"}`` with
-        # ``LU_ACPX_TRANSPORT=shadow`` set — see adapters/acpx.py. Fixed
+        # a dispatch/routing/review/failover candidate. The bounded pilot is
+        # the sole public runner surface permitted to invoke this marked seat.
+        # Fixed
         # effective model/effort live inside the custom --agent command; do
         # not advertise a catalog model here. Not a new coordination plane —
         # native Grok remains authoritative.
@@ -302,6 +302,7 @@ AGENTS: dict[str, AgentEntry] = {
         "cost_tier": "unknown",
         "capabilities": frozenset(),
         "cli_available": False,
+        "direct_only": True,
         "resume_policy": "never",
     },
     "agy": {

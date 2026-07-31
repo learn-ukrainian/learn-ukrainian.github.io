@@ -135,6 +135,31 @@ def _update_outcome_bucket(bucket: dict[str, Any], record: dict[str, Any]) -> No
         bucket["total_duration_s"] = round(bucket["total_duration_s"] + float(duration), 3)
 
 
+def _new_comparison_side() -> dict[str, Any]:
+    side = {key: 0 for key in _KNOWN_OUTCOMES}
+    side.update({"total": 0, "total_duration_s": 0.0, "tokens_observed": 0, "total_tokens": 0})
+    return side
+
+
+def _update_comparison_side(
+    side: dict[str, Any],
+    record: dict[str, Any],
+    *,
+    prefix: str,
+) -> None:
+    outcome = str(record.get(f"{prefix}_outcome") or "")
+    side["total"] += 1
+    if outcome in _KNOWN_OUTCOMES:
+        side[outcome] += 1
+    duration = record.get(f"{prefix}_duration_s")
+    if isinstance(duration, (int, float)) and not isinstance(duration, bool):
+        side["total_duration_s"] = round(side["total_duration_s"] + float(duration), 3)
+    tokens = record.get(f"{prefix}_tokens")
+    if isinstance(tokens, int) and not isinstance(tokens, bool) and tokens >= 0:
+        side["tokens_observed"] += 1
+        side["total_tokens"] += tokens
+
+
 def list_runtime_agents() -> list[dict[str, Any]]:
     agents: list[dict[str, Any]] = []
     for path in sorted(ADAPTERS_DIR.glob("*.py")):
@@ -236,11 +261,38 @@ def acpx_shadow_overview(*, days: int = 7) -> dict[str, Any]:
         str(seat["name"]): _new_outcome_bucket()
         for seat in seat_specs
     }
+    comparison = {
+        "attempts": 0,
+        "comparisons": 0,
+        "classification_parity": 0,
+        "classification_mismatch": 0,
+        "duplicates_suppressed": 0,
+        "busy_refusals": 0,
+        "native": _new_comparison_side(),
+        "shadow": _new_comparison_side(),
+    }
     records = _iter_usage_records(_usage_files(days=window_days))
     for record in records:
         record_agent = str(record.get("agent") or "")
         if record_agent in evidence_by_seat:
             _update_outcome_bucket(evidence_by_seat[record_agent], record)
+        if (
+            record_agent == "acpx-shadow-pilot"
+            and record.get("event") == "acpx_shadow_comparison"
+        ):
+            comparison["attempts"] += 1
+            if record.get("duplicate") is True:
+                comparison["duplicates_suppressed"] += 1
+            if record.get("busy") is True:
+                comparison["busy_refusals"] += 1
+            if record.get("executed") is True:
+                comparison["comparisons"] += 1
+                if record.get("classification_parity") is True:
+                    comparison["classification_parity"] += 1
+                elif record.get("classification_parity") is False:
+                    comparison["classification_mismatch"] += 1
+                _update_comparison_side(comparison["native"], record, prefix="native")
+                _update_comparison_side(comparison["shadow"], record, prefix="shadow")
 
     seats: list[dict[str, Any]] = []
     for seat in seat_specs:
@@ -271,9 +323,15 @@ def acpx_shadow_overview(*, days: int = 7) -> dict[str, Any]:
             "grok_cli": PINNED_GROK_VERSION,
             "validation": "before_spawn",
         },
+        "comparison_evidence": {
+            "window_days": window_days,
+            "state": "observed" if comparison["attempts"] else "no_evidence",
+            **comparison,
+        },
         "seats": seats,
         "safety": {
             "max_in_flight": 1,
+            "explicit_pilot_only": True,
             "backlog": False,
             "retries": False,
             "sessions": False,

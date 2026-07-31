@@ -123,6 +123,46 @@ def test_acpx_overview_is_read_only_and_aggregates_hyphenated_seats(
             }
         ],
     )
+    _write_usage_file(
+        usage_dir / f"usage_acpx-shadow-pilot-acpx-pilot_{today:%Y-%m-%d}.jsonl",
+        [
+            {
+                "ts": _iso(today - timedelta(minutes=1)),
+                "agent": "acpx-shadow-pilot",
+                "entrypoint": "acpx-pilot",
+                "event": "acpx_shadow_comparison",
+                "model": "native-plus-shadow",
+                "outcome": "ok",
+                "target": "grok",
+                "executed": True,
+                "duplicate": False,
+                "busy": False,
+                "native_outcome": "ok",
+                "shadow_outcome": "ok",
+                "classification_parity": True,
+                "native_duration_s": 4.0,
+                "shadow_duration_s": 6.25,
+                "native_tokens": 12,
+                "shadow_tokens": 15,
+                "correlation_digest": "must-not-leak",
+                "idempotency_digest": "must-not-leak",
+            },
+            {
+                "ts": _iso(today),
+                "agent": "acpx-shadow-pilot",
+                "entrypoint": "acpx-pilot",
+                "event": "acpx_shadow_comparison",
+                "model": "native-plus-shadow",
+                "outcome": "ok",
+                "target": "grok",
+                "executed": False,
+                "duplicate": True,
+                "busy": False,
+                "correlation_digest": "must-not-leak",
+                "idempotency_digest": "must-not-leak",
+            },
+        ],
+    )
 
     response = client.get("/api/runtime/acpx?days=7")
 
@@ -139,12 +179,24 @@ def test_acpx_overview_is_read_only_and_aggregates_hyphenated_seats(
     }
     assert data["pins"] == {
         "acpx": "0.13.0",
-        "grok_cli": "0.2.114",
+        "grok_cli": "0.2.117",
         "validation": "before_spawn",
     }
     assert data["safety"]["max_in_flight"] == 1
+    assert data["safety"]["explicit_pilot_only"] is True
     assert data["safety"]["chat"] is False
     assert data["safety"]["mutations"] is False
+    comparison = data["comparison_evidence"]
+    assert comparison["state"] == "observed"
+    assert comparison["attempts"] == 2
+    assert comparison["comparisons"] == 1
+    assert comparison["classification_parity"] == 1
+    assert comparison["classification_mismatch"] == 0
+    assert comparison["duplicates_suppressed"] == 1
+    assert comparison["native"]["ok"] == 1
+    assert comparison["native"]["total_tokens"] == 12
+    assert comparison["shadow"]["total_duration_s"] == 6.25
+    assert comparison["shadow"]["total_tokens"] == 15
 
     seats = {seat["name"]: seat for seat in data["seats"]}
     assert seats["acpx-codex-shadow"]["evidence_state"] == "no_evidence"
@@ -159,6 +211,8 @@ def test_acpx_overview_is_read_only_and_aggregates_hyphenated_seats(
         "cwd",
         "stderr_excerpt",
         "provider_session_id",
+        "correlation_digest",
+        "idempotency_digest",
         "must-not-leak",
     ):
         assert private_field not in serialized

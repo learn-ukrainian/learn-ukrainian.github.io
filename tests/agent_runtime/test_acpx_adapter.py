@@ -905,7 +905,7 @@ def test_parse_response_nonzero_exit_with_end_turn_still_fails():
 # ---------------------------------------------------------------------------
 
 
-def _stub_grok(monkeypatch, tmp_path: Path, *, version: str = "0.2.114") -> Path:
+def _stub_grok(monkeypatch, tmp_path: Path, *, version: str = "0.2.117") -> Path:
     """Point the Grok seat at a fake absolute grok binary + version probe."""
     grok = tmp_path / "fake-grok-bin"
     grok.write_text("#!/bin/sh\necho stub-grok\n", encoding="utf-8")
@@ -1168,7 +1168,7 @@ def test_grok_build_invocation_accepts_none_or_fixed_model_and_effort(tmp_path, 
         assert plan.metadata["model"] == "grok-4.5"
         assert plan.metadata["effort"] == "high"
         assert plan.metadata["target_agent"] == "grok"
-        assert plan.metadata["grok_pinned_version"] == "0.2.114"
+        assert plan.metadata["grok_pinned_version"] == "0.2.117"
         assert plan.metadata["acpx_pinned_version"] == "0.13.0"
 
 
@@ -1359,10 +1359,10 @@ def test_probe_grok_version_parses_semver_and_fails_closed(monkeypatch, tmp_path
     monkeypatch.setattr(
         acpx_module.subprocess,
         "run",
-        lambda *_a, **_k: _Proc("grok 0.2.114 (0c785038798) [stable]\n"),
+        lambda *_a, **_k: _Proc("grok 0.2.117 (f1c06093089f)\n"),
     )
     acpx_module._probe_grok_version.cache_clear()
-    assert acpx_module._probe_grok_version(str(binary)) == "0.2.114"
+    assert acpx_module._probe_grok_version(str(binary)) == "0.2.117"
 
     monkeypatch.setattr(
         acpx_module.subprocess,
@@ -1376,7 +1376,7 @@ def test_probe_grok_version_parses_semver_and_fails_closed(monkeypatch, tmp_path
         acpx_module.subprocess,
         "run",
         lambda *_a, **_k: _Proc(
-            "wrapper 9.9.9; grok 0.2.114 (0c785038798) [stable]\n"
+            "wrapper 9.9.9; grok 0.2.117 (f1c06093089f)\n"
         ),
     )
     acpx_module._probe_grok_version.cache_clear()
@@ -1386,7 +1386,7 @@ def test_probe_grok_version_parses_semver_and_fails_closed(monkeypatch, tmp_path
         acpx_module.subprocess,
         "run",
         lambda *_a, **_k: _Proc(
-            "grok 0.2.114 (0c785038798) [stable]\n",
+            "grok 0.2.117 (f1c06093089f)\n",
             "fatal: startup failed\n",
             returncode=1,
         ),

@@ -125,6 +125,18 @@ def _install_fake_runtime(
     )
 
     adapter = _FailoverTestAdapter()
+    monkeypatch.setitem(
+        runner_mod.AGENTS,
+        "failover-test",
+        {
+            "adapter": "tests.fake:FailoverTestAdapter",
+            "default_model": "primary-model",
+            "cost_tier": "test",
+            "capabilities": frozenset(),
+            "cli_available": True,
+            "resume_policy": "never",
+        },
+    )
     runner_mod._ADAPTER_CACHE["failover-test"] = adapter
 
     records: list[dict[str, Any]] = []
