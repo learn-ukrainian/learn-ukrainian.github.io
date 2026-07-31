@@ -600,3 +600,16 @@ def test_inbox_dedupes_by_recipient_and_native_session_and_reemits_new_ids(
     assert provider_isolation.returncode == 0
     provider_context = json.loads(provider_isolation.stdout)["hookSpecificOutput"]["additionalContext"]
     assert "CLAUDE INBOX: 1 unread message(s)" in provider_context
+
+    new_session_environment = environment | {"CODEX_THREAD_ID": "another-codex-session"}
+    session_isolation = subprocess.run(
+        ["bash", str(INBOX_HOOK)], input="{}", text=True, capture_output=True,
+        check=False, env=new_session_environment, timeout=10,
+    )
+    assert session_isolation.returncode == 0
+    session_context = json.loads(session_isolation.stdout)["hookSpecificOutput"]["additionalContext"]
+    assert "CODEX INBOX: 2 unread message(s)" in session_context
+
+    state_files = list((tmp_path / ".agent" / "runtime").glob("inbox-*.ids"))
+    assert len(state_files) == 3
+    assert all(len(path.stem.removeprefix("inbox-")) == 64 for path in state_files)

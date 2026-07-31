@@ -45,9 +45,12 @@ if [ -z "$SESSION_ID" ]; then
 fi
 if [ -n "$SESSION_ID" ]; then
   STATE_DIR="$PROJECT_DIR/.agent/runtime"
-  STATE_KEY=$(printf '%s\n%s' "$RECIPIENT" "$SESSION_ID" | cksum | awk '{print $1 "-" $2}')
+  STATE_KEY=""
+  if command -v shasum >/dev/null 2>&1; then
+    STATE_KEY=$(printf '%s\n%s' "$RECIPIENT" "$SESSION_ID" | shasum -a 256 | awk '{print $1}')
+  fi
   STATE_FILE="$STATE_DIR/inbox-${STATE_KEY}.ids"
-  if mkdir -p "$STATE_DIR" 2>/dev/null; then
+  if [ -n "$STATE_KEY" ] && mkdir -p "$STATE_DIR" 2>/dev/null; then
     STATE_TMP=$(mktemp "$STATE_DIR/.inbox-${STATE_KEY}.XXXXXX" 2>/dev/null || true)
     if [ -n "$STATE_TMP" ]; then
       printf '%s\n' "$PENDING_IDS" > "$STATE_TMP"
