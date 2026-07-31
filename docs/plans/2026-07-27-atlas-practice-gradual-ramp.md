@@ -1,16 +1,66 @@
-# Plan of record (DRAFT for advisors): Atlas + Practice gradual ramp
+# Plan of record: Atlas + Practice gradual ramp
 
-**Status:** DRAFT — needs advisor review (Sol + Fable) before **long-tail** infra lock
-**Date:** 2026-07-27 (revised same day — teacher-list priority)
-**Epic:** #4387 (Word Atlas + Practice Hub)
-**Author seat:** interim atlas driver (Grok) — architecture draft for advisors, not a solo lock
+**Status:** PLAN OF RECORD — operator sequence confirmed **2026-08-01** (driver: grok-atlas).  
+Long-tail **server / 250k delivery** still needs advisor lock when that phase starts (Sol + Fable).  
+**Date:** 2026-07-27 (Track T split); **2026-08-01** (operator ramp sequence + ticket board).  
+**Epic:** #4387 (Word Atlas + Practice Hub)  
+**Mandate board:** #6132 (sub-issues #6134–#6143 and related open tickets)  
+**Related:** #4920 (backend / ~250k serving), #6142 (past 20k expand), ULIF #5224 / #5230
 
-### CRITICAL split (operator 2026-07-27 evening)
+---
+
+## 0. Operator ramp sequence (binding)
+
+**Intent (operator, plain language):**
+
+1. Establish a **solid base dictionary** (~**10k** class — honest, enriched-enough core).  
+2. **Work out Practice** on that base (multi-mode factory + sessions that feel real).  
+3. **Expand atlas ~20k** and **enrich**.  
+4. **Expand Practice again** (re-run factory on the larger atlas).  
+5. **Iterate** the same loop toward full coverage (~**250k** lemmas — architecture changes for serving; see #4920).
+
+**This is the product growth spine.** Residual tickets (#6064, etc.) are **wire under the spine**, not a substitute for it.
+
+| Stage | Atlas | Practice | Notes |
+| --- | --- | --- | --- |
+| **S1 — Base dict** | ~10k solid core (or current live base if already larger) | Not yet “done” | Quality over hollow shells |
+| **S2 — Practice on base** | Freeze vanity growth if practice is empty | Factory + session variety on existing sources | Prefer empty mode over bad cards |
+| **S3 — Expand ~20k + enrich** | Cohort / ULIF / intake (~20.3k cohort file exists) | Re-run factory after enrich | 20k is a **checkpoint**, not the product |
+| **S4 — Practice catch-up** | — | Regen shards; thin modes grow from real sources | Ticket board #6134–#6141 |
+| **S5 — Iterate to full** | Beyond 20k → toward ~250k | Regen every expand wave | Static-first until #4920-class serving |
+
+### Current position (tool-backed order of magnitude, 2026-08-01)
+
+| Layer | Approx | Implication |
+| --- | --- | --- |
+| Live public atlas | ~17–18k entries | Already **past a pure 10k freeze** — treat as **base+** |
+| 20k cohort list | ~20 323 lemmas | Expand/enrich phase material (#6142) |
+| Practice index (sum A1–C1 items) | ~4.8–5k | **Practice lagging atlas** — S2/S4 is the active catch-up |
+| Teacher private seed | ~1k package | Track T (parallel homework track) |
+
+**Policy:** Do **not** “collect 250k first.” Do **not** sell residual CEFR crumbs as the product.  
+**After every atlas expand wave:** practice factory regen + quality gates.  
+**20k is temporary.** **250k needs backend / entry-model serving** (#4920), not infinite static Pages blobs.
+
+### Ticket map (follow GH, not private queues)
+
+| Stage | Primary tickets |
+| --- | --- |
+| S2/S4 practice factory & modes | #6134 #6136 #6137 #6138 #6139 #6141 #3797 |
+| Session / any deck | #6135 #5882 #5718 #6143 |
+| Heritage (important **subtask**) | #6140 |
+| S3/S5 expand | #6142 #3936 #5230 #5224 |
+| Teacher residual wire | #6064 |
+| ~250k architecture | #4920 #4378 #4384 |
+
+---
+
+### CRITICAL split (operator 2026-07-27 evening — still binding)
 
 | Track | Scope | Timeline |
 | --- | --- | --- |
-| **Track T — Teacher homework** | Full **Curated private teacher-lesson v5** list (~1k active seed) in Practice | **Immediate** — next driver ships this; **not** “by winter,” **not** capped at 50 words |
-| **Track A — Atlas-wide ramp** | Grow practice pool toward “any atlas word” (~17k→more) | Gradual waves below; advisors lock triggers |
+| **Track T — Teacher homework** | Full **Curated private teacher-lesson v5** list (~1k active seed) in Practice | **Immediate** — parallel to Track A; **not** capped at 50 words |
+| **Track A — Atlas-wide ramp** | Grow practice pool toward “any atlas word” (live ~17k→20k→more) | Gradual waves; operator sequence §0 |
 
 A **32–50 gold slice** is only a **factory smoke test**. It must never be treated as the teacher-list delivery.
 
