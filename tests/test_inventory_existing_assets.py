@@ -112,3 +112,39 @@ def test_committed_summary_matches_ledger_hash() -> None:
         "redistribution_cleared_assets": 0,
         "source_record_v1_admissions": 0,
     }
+
+
+def test_unreachable_commits_are_path_screened(monkeypatch: pytest.MonkeyPatch) -> None:
+    fsck = "\n".join(
+        (
+            "unreachable commit " + "a" * 40,
+            "unreachable commit " + "b" * 40,
+            "unreachable tree " + "c" * 40,
+        )
+    )
+
+    def fake_run_git(_repo_root: Path, *arguments: str) -> str:
+        commit_id = arguments[-1]
+        if commit_id == "a" * 40:
+            return "docs/example.md\n"
+        if commit_id == "b" * 40:
+            return "archive/recoverable.md\ncurriculum/l2-uk-en/a1/example.md\n"
+        raise AssertionError(arguments)
+
+    monkeypatch.setattr(inventory, "_run_git", fake_run_git)
+
+    result = inventory.screen_unreachable_commits(ROOT, fsck)
+
+    assert result == {
+        "screened_commits": 2,
+        "scoped_commit_count": 1,
+        "scoped_path_hits": [
+            {
+                "commit": "b" * 40,
+                "paths": [
+                    "archive/recoverable.md",
+                    "curriculum/l2-uk-en/a1/example.md",
+                ],
+            }
+        ],
+    }

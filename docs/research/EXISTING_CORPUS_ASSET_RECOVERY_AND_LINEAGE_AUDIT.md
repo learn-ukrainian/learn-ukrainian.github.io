@@ -36,11 +36,13 @@ classes separate and points to the evidence needed for later reconstruction.
 | Raw lineage unresolved | Two textbook source IDs are database-only or raw-chunk unresolved | Reconstruct from retained edition/catalogue evidence during a consumer-scoped audit |
 | Unknown/potentially lost | Four orphan OCR text files, the exact unsatisfactory BIO subset, and anything never committed or retained | Preserve locators and uncertainty; Git cannot recover never-committed bytes |
 
-The read-only `git fsck --full --no-reflogs --unreachable` result was not empty:
-it found 242 commits, 801 trees, and 253 blobs. All 242 unreachable commits were
-path-screened; none contained scoped `archive/**` or
-`curriculum/l2-uk-en/**` paths. This evidence does not authorize repository-wide
-garbage collection.
+At the ledger snapshot, the read-only
+`git fsck --full --no-reflogs --unreachable` result was not empty: it found 254
+commits, 843 trees, and 259 blobs. The collector path-screened all 254
+unreachable commits and recorded the screen with the object counts; none
+touched scoped `archive/**` or `curriculum/l2-uk-en/**` paths. This evidence
+does not authorize repository-wide garbage collection. Counts can change when
+Git refs or maintenance state change, so the ledger is the canonical snapshot.
 
 No tracked filename under the scoped archive trees matched common model-weight
 or adapter suffixes (`.safetensors`, `.gguf`, `.onnx`, `.bin`, `.pt`, `.pth`,

@@ -241,14 +241,14 @@
       "translation.kubedojo_uk"
     ]
   },
-  "ledger_sha256": "4220cf9975b8fcb545b0f7a3e9cfd51f660f4cfacbc35cf26f212492ce6e5a03",
+  "ledger_sha256": "ac6a1da8db2dbfbf831e74d58d987674c06ebaeca7b8067aad1ee6c353d196bf",
   "measurement_contract": {
     "characters": "Python len() of stored Unicode strings.",
     "lexical_words": "[^\\W\\d_]+(?:[’'][^\\W\\d_]+)*",
     "model_token_counts": "not_run; tokenizer-specific measurement remains pending",
     "whitespace_tokens": "Python str.split(); proxy only, not model tokens."
   },
-  "repo_head": "a1f46ee7263f97213c9de196b021e0f8a9efb8e0",
+  "repo_head": "08ba3d8f2556ff613cf279e3f8382c07cdc213cd",
   "safety_assertions": {
     "potential_training_admission_assets": 0,
     "redistribution_cleared_assets": 0,

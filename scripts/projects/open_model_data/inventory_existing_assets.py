@@ -126,6 +126,7 @@ WEIGHT_SUFFIXES = (
     ".pth",
     ".safetensors",
 )
+SCOPED_RECOVERY_PREFIXES = ("archive/", "curriculum/l2-uk-en/")
 
 ELIGIBILITY_KEYS = (
     "internal_rag_reference",
@@ -952,6 +953,41 @@ def _run_git(repo_root: Path, *arguments: str) -> str:
     return result.stdout
 
 
+def screen_unreachable_commits(
+    repo_root: Path,
+    fsck_output: str,
+) -> dict[str, Any]:
+    """Path-screen every unreachable commit without reading file bodies."""
+    commit_ids = sorted(
+        line.split()[2]
+        for line in fsck_output.splitlines()
+        if re.match(r"unreachable commit [0-9a-f]+$", line)
+    )
+    scoped_hits: list[dict[str, Any]] = []
+    for commit_id in commit_ids:
+        paths = _run_git(
+            repo_root,
+            "diff-tree",
+            "--root",
+            "--no-commit-id",
+            "--name-only",
+            "-r",
+            commit_id,
+        ).splitlines()
+        scoped_paths = sorted(
+            path
+            for path in paths
+            if path.startswith(SCOPED_RECOVERY_PREFIXES)
+        )
+        if scoped_paths:
+            scoped_hits.append({"commit": commit_id, "paths": scoped_paths})
+    return {
+        "screened_commits": len(commit_ids),
+        "scoped_commit_count": len(scoped_hits),
+        "scoped_path_hits": scoped_hits,
+    }
+
+
 def collect_git_records(repo_root: Path) -> list[dict[str, Any]]:
     tracked = _run_git(repo_root, "ls-files").splitlines()
     archive_counts = {
@@ -1064,6 +1100,22 @@ def collect_git_records(repo_root: Path) -> list[dict[str, Any]]:
         match = re.match(r"unreachable (blob|commit|tree) ", line)
         if match:
             unreachable[match.group(1)] += 1
+    unreachable_screen = screen_unreachable_commits(repo_root, fsck)
+    if unreachable_screen["screened_commits"] != unreachable["commit"]:
+        raise ValueError("unreachable commit count and path-screen count disagree")
+    if unreachable_screen["scoped_commit_count"]:
+        screen_limitation = (
+            f"All {unreachable['commit']} unreachable commits were path-screened; "
+            f"{unreachable_screen['scoped_commit_count']} touched scoped paths and "
+            "require manual inspection. Do not garbage-collect repo-wide based on "
+            "this inventory."
+        )
+    else:
+        screen_limitation = (
+            f"All {unreachable['commit']} unreachable commits were path-screened; "
+            "none touched scoped archive or curriculum paths. Do not garbage-collect "
+            "repo-wide based on this inventory."
+        )
     records.append(
         make_record(
             asset_id="git.unreachable_object_pool",
@@ -1088,12 +1140,11 @@ def collect_git_records(repo_root: Path) -> list[dict[str, Any]]:
                 provenance_investigation=True,
             ),
             evidence_refs=("git:fsck--full--no-reflogs--unreachable",),
-            limitations=(
-                "All unreachable commits were path-screened separately; none contained "
-                "scoped archive or curriculum paths. Do not garbage-collect repo-wide "
-                "based on this inventory.",
-            ),
-            details={"counts_by_object_type": dict(sorted(unreachable.items()))},
+            limitations=(screen_limitation,),
+            details={
+                "counts_by_object_type": dict(sorted(unreachable.items())),
+                "path_screen": unreachable_screen,
+            },
         )
     )
     return records
