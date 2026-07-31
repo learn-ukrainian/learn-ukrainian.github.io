@@ -33,6 +33,7 @@ from scripts.audit.generate_practice_deck import (
     read_manifest,
     read_paronym_pairs,
     read_practice_seed,
+    read_sentence_inventory,
     validate_classify_item,
     validate_heritage_item,
     validate_heritage_pair,
@@ -232,6 +233,18 @@ def test_representative_seed_selection_round_robins_available_cefr_and_pos_strat
     )
 
     assert [entry["url_slug"] for entry, _lexeme in selected] == ["а", "г", "в", "ґ", "б"]
+
+
+def test_source_backed_priority_lexemes_precede_general_course_fill() -> None:
+    entries = read_manifest(MANIFEST)
+    selected, _lexemes, _by_plain_lemma, _by_id = _select_practice_lexemes(
+        entries,
+        JsonVesumVerifier.from_path(VESUM),
+        BuildConfig(target=1, source_label="fixture"),
+        {"knyha"},
+    )
+
+    assert [entry["url_slug"] for entry, _lexeme in selected] == ["knyha"]
 
 
 def test_real_vesum_verifier_uses_an_explicit_database_path(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -1127,6 +1140,104 @@ def test_source_inventory_cloze_requires_explicit_cloze_admission() -> None:
         for item in level["cloze"]["cloze"]
     }
     assert "knyha" in cloze_ids
+
+
+def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(tmp_path: Path) -> None:
+    inventory_path = tmp_path / "sentence-inventory.json"
+    inventory_path.write_text(
+        json.dumps(
+            {
+                "schema": "atlas-sentence-inventory",
+                "schemaVersion": 1,
+                "rows": [
+                    {
+                        "lemma": "книга",
+                        "lemmaId": "knyha",
+                        "sentence": "Це книга.",
+                        "targetForm": "книга",
+                        "cefr": "A1",
+                        "uses": ["example"],
+                        "provenance": {
+                            "source": "textbook",
+                            "label": "Fixture textbook",
+                            "locator": "fixture-1",
+                            "title": "Fixture page",
+                        },
+                        "license": {
+                            "status": "not_openly_licensed",
+                            "useBasis": "short educational quotation with attribution",
+                        },
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    candidates = read_sentence_inventory(inventory_path)
+    assert candidates[0]["sentence"] == "Це ___."
+    assert candidates[0]["form"] == "книга"
+
+    shards = build_practice_shards(
+        read_manifest(MANIFEST),
+        ReviewedSourceAllowlist.from_payload(
+            [{"status": "sentence_inventory", "path": str(inventory_path)}]
+        ),
+        JsonVesumVerifier.from_path(VESUM),
+        candidates,
+        BuildConfig(),
+    )
+    cloze = next(item for item in shards["A1"]["cloze"]["cloze"] if item["clozeId"] == "knyha:inventory:1")
+    assert cloze["blankCase"] == "nominative"
+    assert cloze["number"] == "singular"
+    assert "clozeEn" not in cloze
+    assert cloze["provenance"] == {
+        "status": "sentence_inventory",
+        "path": str(inventory_path),
+        "source": "textbook",
+        "label": "Fixture textbook",
+        "locator": "fixture-1",
+        "title": "Fixture page",
+        "license": {
+            "status": "not_openly_licensed",
+            "useBasis": "short educational quotation with attribution",
+        },
+    }
+
+
+def test_sentence_inventory_rejects_ambiguous_or_repeated_target_forms(tmp_path: Path) -> None:
+    inventory_path = tmp_path / "sentence-inventory.json"
+    inventory_path.write_text(
+        json.dumps(
+            {
+                "schema": "atlas-sentence-inventory",
+                "schemaVersion": 1,
+                "rows": [
+                    {
+                        "lemma": "книга",
+                        "lemmaId": "knyha",
+                        "sentence": "книга і книга.",
+                        "targetForm": "книга",
+                        "uses": ["example"],
+                        "provenance": {"source": "textbook", "label": "Fixture textbook"},
+                        "license": {"status": "fixture"},
+                    },
+                    {
+                        "lemma": "книга",
+                        "lemmaId": "knyha",
+                        "sentence": "Це книга.",
+                        "targetForm": "книги",
+                        "uses": ["example"],
+                        "provenance": {"source": "textbook", "label": "Fixture textbook"},
+                        "license": {"status": "fixture"},
+                    },
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    assert read_sentence_inventory(inventory_path) == []
 
 
 def test_cloze_output_preserves_sentence_cefr() -> None:

@@ -1,12 +1,12 @@
 {
-  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-practice-deck/lexicon-practice-deck-atlas-practice-v1-fa1f37b28c7aa8cd.json.gz",
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-practice-deck/lexicon-practice-deck-atlas-practice-v1-2b27aea6faa8d7c1.json.gz",
   "release_tag": "atlas-practice-deck",
-  "deck_version": "atlas-practice-v1-fa1f37b28c7aa8cd",
+  "deck_version": "atlas-practice-v1-2b27aea6faa8d7c1",
   "package_schema_version": 1,
-  "gz_sha256": "378e94e46dc2ddf373c37566f7af99d624b255b4f8f72080d472b2c69e2cd150",
-  "package_sha256": "17e94debe0cabf4bbeabc2569a77e21a1752a51506e76eda444e78535e8909c6",
-  "gz_bytes": 618842,
-  "package_bytes": 14431270,
+  "gz_sha256": "bdd1d04b83aec6bf407b49bb4f2d737304f1e192b7232b54db54288e9235c392",
+  "package_sha256": "cc5cd555bea7382605892d2bb0d687c7d002e78dba0925e7176583313ff6cc1a",
+  "gz_bytes": 806014,
+  "package_bytes": 19432520,
   "file_count": 45,
   "files": [
     {
@@ -14,13 +14,13 @@
       "kind": "index",
       "level": "A1",
       "schema": "atlas-practice-index",
-      "bytes": 318943,
-      "sha256": "3bca7eda6b9eae935b64dab0f8fbaac3fdeb0d62386e5c9110d23d0d68590e91",
+      "bytes": 410252,
+      "sha256": "083b55cd5e2d93fe14c5b3b0debca3c3dfa7deceac9f35ddc5a6b5d4287eb5bd",
       "counts": {
-        "lexemes": 1150,
-        "cloze": 22,
-        "clozeEligibleLexemes": 22,
-        "clozeCoverage": 0.0191
+        "lexemes": 1470,
+        "cloze": 59,
+        "clozeEligibleLexemes": 59,
+        "clozeCoverage": 0.0401
       }
     },
     {
@@ -28,40 +28,40 @@
       "kind": "lexemes",
       "level": "A1",
       "schema": "atlas-practice-lexemes",
-      "bytes": 562939,
-      "sha256": "71e63510050ac7b8f59c612e6491a05bccbf64e6632fb10d5b108d43320127d0"
+      "bytes": 794881,
+      "sha256": "de09c00d733ef7c4f2459fe8183a11a78f32581e0ccbc639caf63a7f54a6787c"
     },
     {
       "path": "practice-cloze.A1.json",
       "kind": "cloze",
       "level": "A1",
       "schema": "atlas-practice-cloze",
-      "bytes": 44822,
-      "sha256": "d09107c1f4a10f7279420b2b1df59c74238b4d41ebf569cddd10663b9456ebee"
+      "bytes": 123114,
+      "sha256": "65a8e0843118f2191b27748e72da1bbaa701b029cf7caf440379884b703e3545"
     },
     {
       "path": "practice-stress.A1.json",
       "kind": "stress",
       "level": "A1",
       "schema": "atlas-practice-stress",
-      "bytes": 382927,
-      "sha256": "b989848a8984772015d032abf0bf9c9f62fb0071e717a572be35623bb08eb7ee"
+      "bytes": 601557,
+      "sha256": "059b434c55cec8a6274c8cfa5d6419d08676819c7ee94f823c91112f84a80a7b"
     },
     {
       "path": "practice-classify.A1.json",
       "kind": "classify",
       "level": "A1",
       "schema": "atlas-practice-classify",
-      "bytes": 437057,
-      "sha256": "b8c65819663320b6417372756a56ec695d45d118d26844705f1c7d5051fd72a7"
+      "bytes": 658624,
+      "sha256": "2428f684dbee532e7806af42a98df8b8b7655d3bc71494eca96344e064642e7e"
     },
     {
       "path": "practice-paradigm.A1.json",
       "kind": "paradigm",
       "level": "A1",
       "schema": "atlas-practice-paradigm",
-      "bytes": 533851,
-      "sha256": "8f389e7731315c348c6a05f5027a89286440d7399b56c6a7b82683dce43fc11c"
+      "bytes": 988873,
+      "sha256": "d6f582eb21f633b8748f2b63d5c6019dfd7a54d7d39372d6dbd80e53e0dbb294"
     },
     {
       "path": "practice-synonym.A1.json",
@@ -69,7 +69,7 @@
       "level": "A1",
       "schema": "atlas-practice-synonym",
       "bytes": 317,
-      "sha256": "35c8ecb21cd4c308f7c2a3fac0f3bc2194d256a3a6edc3626aaf540ef491af45"
+      "sha256": "fa2d7ce52d7d49c94bf7720e931070e4bca750a3ef0c5ae3f9c8b4b497754200"
     },
     {
       "path": "practice-heritage.A1.json",
@@ -77,7 +77,7 @@
       "level": "A1",
       "schema": "atlas-practice-heritage",
       "bytes": 319,
-      "sha256": "0071e39e7e0722d3e6bb38163a1d5c8e4aed3a0fe9c53a3b0c468bae0af38945"
+      "sha256": "045a9f33d97bb5d7e4dea4718f7f4e3b05270b7b94233d39189f84cd73d1e167"
     },
     {
       "path": "practice-paronym.A1.json",
@@ -85,20 +85,20 @@
       "level": "A1",
       "schema": "atlas-practice-paronym",
       "bytes": 4389,
-      "sha256": "2593ac37f3a165d935e3d960a0f6c771568e1546dc92dc15df8f59dc14ea5f61"
+      "sha256": "7bc27b57ed17aba2eac28fe5e6217ed4990d48cc18fcd220299a83b6d27c9be4"
     },
     {
       "path": "practice-index.A2.json",
       "kind": "index",
       "level": "A2",
       "schema": "atlas-practice-index",
-      "bytes": 282036,
-      "sha256": "e172076bf73cb8c9835188e4a20d017da95c064eaa48c42d1ed1f12e11436852",
+      "bytes": 346443,
+      "sha256": "98a7346baa7a345242e7c39e298b8660872bada309272a58a3eab457dcba7a5b",
       "counts": {
-        "lexemes": 967,
-        "cloze": 0,
-        "clozeEligibleLexemes": 0,
-        "clozeCoverage": 0.0
+        "lexemes": 1195,
+        "cloze": 7,
+        "clozeEligibleLexemes": 7,
+        "clozeCoverage": 0.0059
       }
     },
     {
@@ -106,56 +106,56 @@
       "kind": "lexemes",
       "level": "A2",
       "schema": "atlas-practice-lexemes",
-      "bytes": 474613,
-      "sha256": "bccaa62629d7f962da3a36a630de70b6529ae35236ab9178d52a462fc59cf2ba"
+      "bytes": 634356,
+      "sha256": "711483aa2d6e74a9b761ffb6d8bfc7d7ba4def78c5cd06a5329ac0f73dadfd88"
     },
     {
       "path": "practice-cloze.A2.json",
       "kind": "cloze",
       "level": "A2",
       "schema": "atlas-practice-cloze",
-      "bytes": 313,
-      "sha256": "e63838c10b919c3809dbd8d3bc1d7ba63ee993e69417de2052e00bae844e7f37"
+      "bytes": 16934,
+      "sha256": "711ae27755462da424ee4e10e8742c9ac120d31bdf1cfba16017f10f0ac5b8b2"
     },
     {
       "path": "practice-stress.A2.json",
       "kind": "stress",
       "level": "A2",
       "schema": "atlas-practice-stress",
-      "bytes": 395787,
-      "sha256": "5c9fd430e49166fa18751da6294a807bcf77731aeb9da76b30d6cc1d730b83ad"
+      "bytes": 547174,
+      "sha256": "20e0505bbe328aac57581a16d08e2dea0069fac3483312a29b72b67d838c29c1"
     },
     {
       "path": "practice-classify.A2.json",
       "kind": "classify",
       "level": "A2",
       "schema": "atlas-practice-classify",
-      "bytes": 1121136,
-      "sha256": "5dc7b06fb224fca010c3a27a79388037b9ed7ecec07b0560d64d57992945d5fa"
+      "bytes": 1599353,
+      "sha256": "0d9bc2f8cf18e3bd44a85a068400cf6e3a86b553b7796a3ae8fe2925c1516787"
     },
     {
       "path": "practice-paradigm.A2.json",
       "kind": "paradigm",
       "level": "A2",
       "schema": "atlas-practice-paradigm",
-      "bytes": 420424,
-      "sha256": "01688fd9a43f940676aad1078fd115ab8cd2dbd0eb0786d899fbb1168d199122"
+      "bytes": 710539,
+      "sha256": "0d3de5b84c94a603124d868204dc4fd586034cfae3705cd7f1058812c7ebac46"
     },
     {
       "path": "practice-synonym.A2.json",
       "kind": "synonym",
       "level": "A2",
       "schema": "atlas-practice-synonym",
-      "bytes": 5082,
-      "sha256": "646cb6785da11768ca6287ee79a42c6ff30408d8146aa110d6bee687fec31fd2"
+      "bytes": 8155,
+      "sha256": "498075798422da74e35511d14eb4d9ecf8ab11e60f372caf047c3d8306458bfd"
     },
     {
       "path": "practice-heritage.A2.json",
       "kind": "heritage",
       "level": "A2",
       "schema": "atlas-practice-heritage",
-      "bytes": 46068,
-      "sha256": "d521350fd3cb4f6794857a7cb95eb8c9db1d8fd157097f6cefbf5d5b56891a69"
+      "bytes": 46070,
+      "sha256": "45dd4738714d52dc30c8a8756203862af39c0b10a3a68435850fcdff8ba2c051"
     },
     {
       "path": "practice-paronym.A2.json",
@@ -163,20 +163,20 @@
       "level": "A2",
       "schema": "atlas-practice-paronym",
       "bytes": 4352,
-      "sha256": "40d9f64ec26be04dda8a18d39fbd09556d43bf2d7e7e41640171433c642700cb"
+      "sha256": "27f2158de020054403120ffe62d4848070b6d63ba3a46645f6f74da308cdbe31"
     },
     {
       "path": "practice-index.B1.json",
       "kind": "index",
       "level": "B1",
       "schema": "atlas-practice-index",
-      "bytes": 433748,
-      "sha256": "bbd9d7ad72e144c1b8280c01e8452c2295e84ede44d44451c16bc302be493665",
+      "bytes": 301736,
+      "sha256": "ce20e525510e05765daf7bfcc58b6a8c3838a6321941495cc29746171cc0f598",
       "counts": {
-        "lexemes": 1485,
-        "cloze": 0,
-        "clozeEligibleLexemes": 0,
-        "clozeCoverage": 0.0
+        "lexemes": 1031,
+        "cloze": 4,
+        "clozeEligibleLexemes": 4,
+        "clozeCoverage": 0.0039
       }
     },
     {
@@ -184,74 +184,74 @@
       "kind": "lexemes",
       "level": "B1",
       "schema": "atlas-practice-lexemes",
-      "bytes": 748382,
-      "sha256": "889f8c144c68ce974506725d90210efccaefdcfece4c745675075bda8be83f28"
+      "bytes": 573561,
+      "sha256": "9c8617d72c60a9a020afae5e89dd21592bf5497c2bfa2d976964b72c96a8b308"
     },
     {
       "path": "practice-cloze.B1.json",
       "kind": "cloze",
       "level": "B1",
       "schema": "atlas-practice-cloze",
-      "bytes": 313,
-      "sha256": "b52e6b0276cf747c8f17f737473b4e7505bfe24f4f4d7a255368f26c598a516f"
+      "bytes": 10068,
+      "sha256": "e05e4b464fbfdd57afe8eb5bcf4f7c82cf17a68dfe808d2e81d11ed5db8e7cc2"
     },
     {
       "path": "practice-stress.B1.json",
       "kind": "stress",
       "level": "B1",
       "schema": "atlas-practice-stress",
-      "bytes": 447184,
-      "sha256": "acd020331eea84ec0a8a0a127b832b8e6189ad82fffda1bb96d7f30c39843fce"
+      "bytes": 486450,
+      "sha256": "abf6daf15b042f7175245ec1fc9b00dcac159edb0a8061e423debb1a62033f9a"
     },
     {
       "path": "practice-classify.B1.json",
       "kind": "classify",
       "level": "B1",
       "schema": "atlas-practice-classify",
-      "bytes": 1449662,
-      "sha256": "8eabbd89d6aa5db75f2695646e6a5fe7c2702df4bc1743c7019b28c96859ae40"
+      "bytes": 1599664,
+      "sha256": "6317018aab5095467e4f0a88b56cb4393eb331b7b3c12c25a9c0de624269e16a"
     },
     {
       "path": "practice-paradigm.B1.json",
       "kind": "paradigm",
       "level": "B1",
       "schema": "atlas-practice-paradigm",
-      "bytes": 583013,
-      "sha256": "8cb000c6e35cd7289a4b7a1e32256ed6f078851d138b3f905b55aae7c02ae23e"
+      "bytes": 738393,
+      "sha256": "1510f3ca39bd2c281ee5fe9fb4aae18550647e6862cab59a6b9f9b6b984f23a4"
     },
     {
       "path": "practice-synonym.B1.json",
       "kind": "synonym",
       "level": "B1",
       "schema": "atlas-practice-synonym",
-      "bytes": 112522,
-      "sha256": "02855e837ece1089565605fccbd521a3d4f4546fd5b302b34fbce095c88bd3a7"
+      "bytes": 153232,
+      "sha256": "56e044de79c579e35737d3213358db2a7ca4f18b7f4844d8cc017ddbe9611052"
     },
     {
       "path": "practice-heritage.B1.json",
       "kind": "heritage",
       "level": "B1",
       "schema": "atlas-practice-heritage",
-      "bytes": 101345,
-      "sha256": "4f98b6f36be1be890e577bcc19814b3d4904160da04ffda9e55bd226cc86b8fb"
+      "bytes": 101328,
+      "sha256": "6dcffff18e8c833f8eba2c48f4288ee4f2d5a105383f33594b30d83de7439a80"
     },
     {
       "path": "practice-paronym.B1.json",
       "kind": "paronym",
       "level": "B1",
       "schema": "atlas-practice-paronym",
-      "bytes": 2223,
-      "sha256": "9ec27c67912e0fca4e7fa13b765db4e4292679044f9f42e0fcd0c1f2165fa751"
+      "bytes": 3184,
+      "sha256": "06231b21771082c48b3bf4667a12190989561b753e4772d87e8c4123f31184d0"
     },
     {
       "path": "practice-index.B2.json",
       "kind": "index",
       "level": "B2",
       "schema": "atlas-practice-index",
-      "bytes": 254117,
-      "sha256": "dde76d0b0fae6e2e06a5e23b1be1a85f4b477cf626f113f772a337cd1b5b7b47",
+      "bytes": 277373,
+      "sha256": "18a427abfe9ad4f256b0f02c615f234f84879bf4824692ac415a138fcd1379b5",
       "counts": {
-        "lexemes": 853,
+        "lexemes": 940,
         "cloze": 0,
         "clozeEligibleLexemes": 0,
         "clozeCoverage": 0.0
@@ -262,8 +262,8 @@
       "kind": "lexemes",
       "level": "B2",
       "schema": "atlas-practice-lexemes",
-      "bytes": 443931,
-      "sha256": "0e6e5011647eb92edfb56549c4171b6cbadd6db29c1cd0d88c9d07dab68b6547"
+      "bytes": 558711,
+      "sha256": "7b386c82895f0864029b9b28567ab5fbeec90f8d6560ae729b5432395731d512"
     },
     {
       "path": "practice-cloze.B2.json",
@@ -271,65 +271,65 @@
       "level": "B2",
       "schema": "atlas-practice-cloze",
       "bytes": 313,
-      "sha256": "a6198ebda0ce13f4b6ce19c1656367ff3fb25627ab657ab84f521d91467e0f26"
+      "sha256": "5c76f45c34572e80f796b3c193ea3057bd55175831a1d044b85d62a59e1e59a8"
     },
     {
       "path": "practice-stress.B2.json",
       "kind": "stress",
       "level": "B2",
       "schema": "atlas-practice-stress",
-      "bytes": 301091,
-      "sha256": "ce0346ab68d20d0bfdfc948821bdffabdb9ac5a2c058c8fa208b9fc92eac22ed"
+      "bytes": 487216,
+      "sha256": "16ccaeb029ef727dfa0de729e06f8992e15d9a6aaea9b24c51e510e45647c182"
     },
     {
       "path": "practice-classify.B2.json",
       "kind": "classify",
       "level": "B2",
       "schema": "atlas-practice-classify",
-      "bytes": 901024,
-      "sha256": "8f7d39b33194cd2e352591ccf3c897274258b97defa45981c964087d4c478cc8"
+      "bytes": 1510824,
+      "sha256": "201ee2bcf509c788157089f58127dbf0d122f5c60bd4439c3f06f4af6f37cd82"
     },
     {
       "path": "practice-paradigm.B2.json",
       "kind": "paradigm",
       "level": "B2",
       "schema": "atlas-practice-paradigm",
-      "bytes": 400063,
-      "sha256": "f618911359a6475acf23da2fe183f3daa5caba0b9e256dd3029c6dd47a1d469d"
+      "bytes": 803166,
+      "sha256": "eb8df756e24ca4999fb8ff14ac3309c413f9601b4e4184e3e479ad051240c16c"
     },
     {
       "path": "practice-synonym.B2.json",
       "kind": "synonym",
       "level": "B2",
       "schema": "atlas-practice-synonym",
-      "bytes": 40785,
-      "sha256": "5d0aa8a58ab627b2c2bc953e1479517386f61982a57514796dd8a4ea6f147e9b"
+      "bytes": 64856,
+      "sha256": "3ae0b011c25fe2c68d48c5d1f9e0acbc1141606c86ec8a911b32df7dc5ec31d9"
     },
     {
       "path": "practice-heritage.B2.json",
       "kind": "heritage",
       "level": "B2",
       "schema": "atlas-practice-heritage",
-      "bytes": 20155,
-      "sha256": "b66db20acb1c233baa28bb31050035c16f5a014e74a92f1168ee40633622add8"
+      "bytes": 15123,
+      "sha256": "8e382642bbcba4a3d8027fc8495a88bc2a53c0b32db94140c71370a783551742"
     },
     {
       "path": "practice-paronym.B2.json",
       "kind": "paronym",
       "level": "B2",
       "schema": "atlas-practice-paronym",
-      "bytes": 2137,
-      "sha256": "06b309191d412dce1b9c3afb8bed24fad5b4d11c23af1a6fa87c74dcf41da8c8"
+      "bytes": 2181,
+      "sha256": "53d3d4d3e1d9f0d1e97067e05d1783384eb9ba8039feaafab8cacbc0a4aca676"
     },
     {
       "path": "practice-index.C1.json",
       "kind": "index",
       "level": "C1",
       "schema": "atlas-practice-index",
-      "bytes": 121869,
-      "sha256": "20107f01a6c762c0a4482c6a79f6ebc9499cc3e660156eac309da076c558481f",
+      "bytes": 159085,
+      "sha256": "889eb076f129a1bee22c9b70b532db83837de4c25bc04f98c60c1739199b5ce4",
       "counts": {
-        "lexemes": 403,
+        "lexemes": 529,
         "cloze": 0,
         "clozeEligibleLexemes": 0,
         "clozeCoverage": 0.0
@@ -340,8 +340,8 @@
       "kind": "lexemes",
       "level": "C1",
       "schema": "atlas-practice-lexemes",
-      "bytes": 229361,
-      "sha256": "2bab0bfc294fa40c20324ca2c3f492668dd538115b03f918f1272b1324bbf4b4"
+      "bytes": 314140,
+      "sha256": "1700f0ddaed3293ebfd73f63401226142afaee59fea36e2cd31a380d5d48c354"
     },
     {
       "path": "practice-cloze.C1.json",
@@ -349,55 +349,55 @@
       "level": "C1",
       "schema": "atlas-practice-cloze",
       "bytes": 313,
-      "sha256": "577e31a109511a1f4029851e867e5285bed6f5bbefe29488605e5f947b1dcb1c"
+      "sha256": "73223b973c265f29f3070f074a25a1f2453e3f85fb66b471bb9d2d6853123836"
     },
     {
       "path": "practice-stress.C1.json",
       "kind": "stress",
       "level": "C1",
       "schema": "atlas-practice-stress",
-      "bytes": 200434,
-      "sha256": "690e1d5616d14ca6c46b3d9c539a44c7ee54dabf515ae1105e06900e041f1796"
+      "bytes": 268630,
+      "sha256": "a7bfb93e913e341e07fe56384d33da01ffe13258407ed5f32bdb636a818c298b"
     },
     {
       "path": "practice-classify.C1.json",
       "kind": "classify",
       "level": "C1",
       "schema": "atlas-practice-classify",
-      "bytes": 585487,
-      "sha256": "4aa79f3d4e84591f9335851fc69370104622540fd30975f40aaf238e0c2ccb12"
+      "bytes": 784587,
+      "sha256": "f0c8177ba496ffb50bb310f31b8e12135c0a43f6b5851c7190e2da55110136f3"
     },
     {
       "path": "practice-paradigm.C1.json",
       "kind": "paradigm",
       "level": "C1",
       "schema": "atlas-practice-paradigm",
-      "bytes": 342080,
-      "sha256": "8e4e8a93e5d646caf7eba7afe46e0d863eac7f61dc7d4cd6b7c400031ed49a34"
+      "bytes": 475142,
+      "sha256": "d2576306094a5d9467dca73a1355310c760e34e669e6ea25ab5c7224ffea3b13"
     },
     {
       "path": "practice-synonym.C1.json",
       "kind": "synonym",
       "level": "C1",
       "schema": "atlas-practice-synonym",
-      "bytes": 16896,
-      "sha256": "e60b23bf2d5ad8e6533832ea048f8569bec3cccf0559828637c374582d22b59c"
+      "bytes": 28424,
+      "sha256": "a0429b53a63aabb8bf0d34a24ead99bfdc5e9620ea5b72e63faf0620aaae78c9"
     },
     {
       "path": "practice-heritage.C1.json",
       "kind": "heritage",
       "level": "C1",
       "schema": "atlas-practice-heritage",
-      "bytes": 319,
-      "sha256": "856b156cf04216feb479cd5b1829f0fb8c41d1496f9e3b3cad1345edbcaa807b"
+      "bytes": 2751,
+      "sha256": "8063bbad7cea8a669ff6f126e4fac85c46d1f3a67fa3dc0578179edffb34a29e"
     },
     {
       "path": "practice-paronym.C1.json",
       "kind": "paronym",
       "level": "C1",
       "schema": "atlas-practice-paronym",
-      "bytes": 2164,
-      "sha256": "5441d776a721c6887dd231cd460b0fec6aa99932fe1833a261a5a2f0d6960b36"
+      "bytes": 3040,
+      "sha256": "a87ee37ce82eb7531f5d4fe711a45fd6e57ff580ee5df51a67af39f20860e3b5"
     }
   ],
   "note": "Pins GitHub Release asset practice deck for #3796; hydrate it build/test time instead of committing shards. Deck versions fingerprint public atlas DB entries, heritage pairs, synonym verdicts, and cloze sources; the first publish after that input expansion mints a new versioned asset by design."

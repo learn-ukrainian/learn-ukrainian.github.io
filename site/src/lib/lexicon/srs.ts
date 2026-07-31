@@ -157,7 +157,7 @@ export interface PracticeClozeItem {
   lemma?: string;
   acceptedAlt?: string[];
   caseRule: PracticeCaseRule;
-  clozeEn: string;
+  clozeEn?: string;
   options: PracticeClozeOption[];
   attribution?: PracticeClozeAttribution;
 }

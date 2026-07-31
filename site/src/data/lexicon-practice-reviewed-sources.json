@@ -1,6 +1,10 @@
 {
   "reviewed": [
     {
+      "status": "sentence_inventory",
+      "path": "site/src/data/lexicon-sentence-inventory.json"
+    },
+    {
       "status": "reviewed",
       "path": "curriculum/l2-uk-en/a1/a1-finale/vocabulary.yaml"
     },
