@@ -77,16 +77,18 @@ For bounded implementation or investigation, read the machine-readable
 before dispatching:
 
 1. Ask `gpt-5.6-sol` at `high` for an advisory envelope containing the task
-   contract, constraints, risk boundaries, acceptance evidence, and escalation
-   triggers.
+   contract, exact owned paths, maximum changed-file and non-test-LOC ceilings,
+   constraints, risk boundaries, acceptance evidence, and escalation triggers.
 2. If the envelope is complete and the work is bounded, hand it to
    `gpt-5.6-luna` at `xhigh`. Luna executes within that contract; it does not
    re-decide the task.
 3. Use direct Luna at `medium` only for simple evidence or mechanical checks.
    Use Terra when the envelope is missing or broader autonomous integration is
    required.
-4. Luna escalates consequential architecture, security, release, high-risk
-   go/no-go, unresolved consequential ambiguity, broader integration, and final
+4. The accountable orchestrator checks the owned paths and ceilings before
+   dispatch and again against Luna's returned diff. Luna escalates any ceiling
+   overrun, consequential architecture, security, release, high-risk go/no-go,
+   unresolved consequential ambiguity, broader integration, and final
    disposition. Sol's advisory is same-family context and never replaces the
    required independent cross-family review.
 

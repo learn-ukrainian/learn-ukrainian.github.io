@@ -169,26 +169,26 @@ The knowledge-monopoly + quota-burn cycle (only the Anthropic frontier seat hold
 system; letting it drive daily exhausts the weekly in ~2 days; cheaper drivers then degrade
 the system until it returns) is broken by ROLE SPLIT, not by a better single driver:
 
-- **Daily driver: `grok-4.5`** — owns the epic loops (dispatch, babysit, settle, reap,
+* **Daily driver: `grok-4.5`** — owns the epic loops (dispatch, babysit, settle, reap,
   re-fire) under the mechanical rails (evidence-mandatory reviews, lease lifecycle,
   merge/stamp guards, delegate origin-sync). Operator-rated the best price/quality
   orchestrator currently available.
-- **Summoned judgment: `claude-fable-5`** — NOT a resident driver. One or two SHORT
+* **Summoned judgment: `claude-fable-5`** — NOT a resident driver. One or two SHORT
   scheduled sessions per day: read the fleet's verdicts, correct course, lock designs,
   write the next precise briefs, leave. Drive dispatch-heavy, never inline-heavy
   (measured 2026-07-26: a dispatch-heavy Fable orchestration hour costs ~2 weekly-quota
   points; inline-heavy driving is what burns the window in days). Also the escalation
   target and top Anthropic advisor seat.
-- **Understudy trial: `glm-5.2`** — sanctioned as a BOUNDED driver trial on one epic under
+* **Understudy trial: `glm-5.2`** — sanctioned as a BOUNDED driver trial on one epic under
   the standard capsule/handoff contract (operator 2026-07-26; untested as driver, repeatedly
   the sharpest cheap seat on code review). Evaluate against the same rails; report before
   widening.
-- **GPT lane never orchestrates as primary.** If it did, the seat would be Sol — and it is
+* **GPT lane never orchestrates as primary.** If it did, the seat would be Sol — and it is
   not worth it: orientation alone consumes ~33% of the GPT context window before any work
   (operator measurement 2026-07-26). Sol stays advisor/escalation-only; the codex seat
   remains a named ALTERNATE (HydrationCapsuleV1 exists to cut exactly that orientation
   cost), never the daily driver.
-- Session-cadence seats stay unchanged for kimi (capable, slow), agy (compaction loses
+* Session-cadence seats stay unchanged for kimi (capable, slow), agy (compaction loses
   orchestration state — not a driver), gemini CLI (retired → agy).
 
   When an orchestrator needs **formal sealed CF**, request it via
@@ -212,19 +212,21 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
 
 * **Advisor = `gpt-5.6-sol` @ `high` (on-demand, NOT a standing worker).** The
   `execution_routing.sol_advised_bounded` catalog route makes Sol produce a bounded
-  envelope containing the task contract, constraints, risk boundaries, acceptance
-  evidence, and escalation triggers. Do not use Sol for routine work; explicit
-  escalation may raise effort to `xhigh`/`max`.
+  envelope containing the task contract, exact owned paths, maximum changed-file
+  and non-test-LOC ceilings, constraints, risk boundaries, acceptance evidence,
+  and escalation triggers. Do not use Sol for routine work; explicit escalation
+  may raise effort to `xhigh`/`max`.
 * **Sol-advised bounded execution:** when that envelope is complete, prefer
   `gpt-5.6-luna` @ `xhigh` for bounded implementation or investigation. Luna must
   follow the envelope rather than re-decide its contract, and must escalate
-  consequential architecture, security, release, high-risk go/no-go, unresolved
-  consequential ambiguity, broader integration, or final disposition. Keep direct
-  Luna @ `medium` for simple evidence/mechanical work only. If no stable envelope
-  exists or broader autonomous integration is needed, use Terra.
+  any owned-path or scope-ceiling overrun, consequential architecture, security,
+  release, high-risk go/no-go, unresolved consequential ambiguity, broader
+  integration, or final disposition. Keep direct Luna @ `medium` for simple
+  evidence/mechanical work only. If no stable envelope exists or broader
+  autonomous integration is needed, use Terra.
 * **Review boundary:** Sol and Luna are both OpenAI-family seats. Sol's advisory
   output never satisfies the independent cross-family review gate.
-- **Workers = every other lane** — `gpt-5.6-terra` / `gpt-5.6-luna` (codex coding, not driver),
+* **Workers = every other lane** — `gpt-5.6-terra` / `gpt-5.6-luna` (codex coding, not driver),
   `cursor`, `kimi`, `deepseek`, `pool` (**Laguna family exact IDs:** default **`laguna-s-2.1`** gen-2 S; light **`laguna-xs-2.1`** gen-2 XS; fallback only **`laguna-m.1`** gen-1 — never invent s2/m2 orthography),
   `gemma`, `glm` (LOCAL-ONLY), plus non-orchestrating use of the seats above. They do the build /
   implementation / mechanical / review work. Keep lanes busy; queue rather than idle.
