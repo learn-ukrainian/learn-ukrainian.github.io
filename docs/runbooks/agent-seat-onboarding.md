@@ -148,7 +148,7 @@ snapshots, not permanent routing weights.
 - Persistent or named ACP sessions
 - Queued prompt backlog
 - Automatic prompt retries
-- Unrestricted ACP chat or a chat surface outside the bounded controller DAG
+- Unrestricted ACP agent-to-agent chat or any chat surface outside the bounded controller DAG
 - Plane-mode or retention changes via ACPX
 - Review-eligibility changes via ACPX
 - Primary-checkout writes or write-mode ACP work

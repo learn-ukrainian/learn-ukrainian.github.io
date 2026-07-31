@@ -315,6 +315,86 @@ def test_live_duplicate_refuses_without_mutating_original_reservation(tmp_path, 
         controller.close()
 
 
+def test_concurrent_expired_orphan_recovery_returns_idempotent_replays(
+    tmp_path, monkeypatch
+):
+    seed = _controller(
+        tmp_path,
+        monkeypatch,
+        lambda *_a, **_k: pytest.fail("orphan must not invoke participants"),
+        lambda *_a, **_k: pytest.fail("orphan must not invoke synthesis"),
+    )
+    digest = acpx_discuss._digest("racing-orphan")
+    try:
+        conversation_id, replay = seed._reserve(
+            task_digest="a",
+            correlation_digest="b",
+            idempotency_digest=digest,
+            rounds=2,
+            deadline_at="2000-01-01T00:00:00Z",
+        )
+        assert replay is None
+        seed._append(
+            conversation_id,
+            event_type="STATE",
+            state="INITIAL_FANOUT",
+            transition=True,
+        )
+    finally:
+        seed.close()
+
+    recovery_barrier = threading.Barrier(2)
+    original_append = acpx_discuss.AcpxDiscussionController._append
+
+    def synchronized_append(self, *args, **kwargs):
+        if kwargs.get("event_type") == "ORPHAN_RESERVATION":
+            recovery_barrier.wait(timeout=2)
+        return original_append(self, *args, **kwargs)
+
+    monkeypatch.setattr(
+        acpx_discuss.AcpxDiscussionController,
+        "_append",
+        synchronized_append,
+    )
+    returned: list[tuple[str, dict | None]] = []
+    errors: list[BaseException] = []
+
+    def recover():
+        controller = _controller(
+            tmp_path,
+            monkeypatch,
+            lambda *_a, **_k: pytest.fail("orphan must not invoke participants"),
+            lambda *_a, **_k: pytest.fail("orphan must not invoke synthesis"),
+        )
+        try:
+            try:
+                returned.append(
+                    controller._reserve(
+                        task_digest="a",
+                        correlation_digest="b",
+                        idempotency_digest=digest,
+                        rounds=2,
+                        deadline_at="2000-01-01T00:00:00Z",
+                    )
+                )
+            except BaseException as exc:
+                errors.append(exc)
+        finally:
+            controller.close()
+
+    threads = [threading.Thread(target=recover) for _ in range(2)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=3)
+
+    assert errors == []
+    assert len(returned) == 2
+    assert {item[0] for item in returned} == {conversation_id}
+    assert all(item[1]["state"] == "PARTIAL_COMPLETE" for item in returned)
+    assert all(item[1]["duplicate_suppressed"] is True for item in returned)
+
+
 def test_active_mode_refuses_primary_checkout_and_shadow_stays_shadow_only(tmp_path, monkeypatch):
     monkeypatch.setenv("LU_ACPX_TRANSPORT", "active")
     monkeypatch.setattr(acpx_discuss, "classify_repo_path", lambda *_a, **_k: "primary_checkout")

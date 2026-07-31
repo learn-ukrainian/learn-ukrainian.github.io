@@ -414,7 +414,27 @@ class AcpxDiscussionController:
                     "a reservation for this idempotency key is still in progress"
                 ) from None
             # An expired prior reservation did not finish. No retry is legal.
-            self._append(existing, event_type="ORPHAN_RESERVATION", state="PARTIAL_COMPLETE", outcome="orphan", transition=True)
+            try:
+                self._append(
+                    existing,
+                    event_type="ORPHAN_RESERVATION",
+                    state="PARTIAL_COMPLETE",
+                    outcome="orphan",
+                    transition=True,
+                )
+            except AcpxDiscussionError:
+                # Another recovery caller may have won the serialized terminal
+                # transition after our pre-check. That is an idempotent replay,
+                # not a new error or permission to re-execute model calls.
+                raced_state = self._state(existing)
+                if raced_state not in _TERMINAL:
+                    raise
+                self._append(
+                    existing,
+                    event_type="DUPLICATE_SUPPRESSED",
+                    state=raced_state,
+                    outcome="duplicate_suppressed",
+                )
             return existing, self._replay(existing)
         return conversation_id, None
 

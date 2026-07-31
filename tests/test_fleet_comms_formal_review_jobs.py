@@ -271,14 +271,14 @@ def test_load_sealed_verdict_missing(tmp_path: Path) -> None:
             svc.load_sealed_verdict(job.review_id)
 
 
-def test_migration_v2_adds_sealed_column(tmp_path: Path) -> None:
+def test_migrations_retain_sealed_column_after_acpx_v3(tmp_path: Path) -> None:
     import sqlite3
 
     from scripts.fleet_comms.migrations import apply_migrations
 
     db = tmp_path / "c.sqlite3"
     conn = sqlite3.connect(str(db))
-    assert apply_migrations(conn) == 2
+    assert apply_migrations(conn) == 3
     cols = {row[1] for row in conn.execute("PRAGMA table_info(formal_review_jobs)")}
     assert "sealed_verdict_artifact_id" in cols
     conn.close()

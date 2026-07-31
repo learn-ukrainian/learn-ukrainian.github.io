@@ -30,7 +30,7 @@ def test_read_plane_status_defaults_to_configured_mode(tmp_path: Path, monkeypat
     assert status["mode"] == "shadow"
     assert status["enabled"] is True
     assert status["read_only"] is True
-    assert status["schema"]["known_version"] == 2
+    assert status["schema"]["known_version"] == 3
     assert status["schema"]["applied_version"] is None
     assert status["schema"]["db_exists"] is False
     assert status["parity_telemetry"]["exists"] is False
@@ -44,7 +44,7 @@ def test_read_plane_status_with_schema_and_telemetry(tmp_path: Path, monkeypatch
     conn = sqlite3.connect(str(db_path))
     try:
         applied = apply_migrations(conn)
-        assert applied == 2
+        assert applied == 3
     finally:
         conn.close()
 
@@ -62,8 +62,8 @@ def test_read_plane_status_with_schema_and_telemetry(tmp_path: Path, monkeypatch
     assert status["mode"] == "shadow"
     assert status["enabled"] is True
     assert status["schema"]["db_exists"] is True
-    assert status["schema"]["applied_version"] == 2
-    assert status["schema"]["applied_name"] == "fleet-comms-v2-sealed-verdict-artifact"
+    assert status["schema"]["applied_version"] == 3
+    assert status["schema"]["applied_name"] == "fleet-comms-v3-acpx-discussions"
     assert status["parity_telemetry"]["exists"] is True
     assert status["parity_telemetry"]["event_count"] == 3
     assert status["parity_telemetry"]["parity_ok_count"] == 1
@@ -92,7 +92,7 @@ def test_api_plane_status_endpoint(tmp_path: Path, monkeypatch) -> None:
     assert data["plane_root"] == str(tmp_path / "plane")
     assert data["parity_telemetry"]["exists"] is True
     assert data["parity_telemetry"]["event_count"] == 1
-    assert data["schema"]["known_version"] == 2
+    assert data["schema"]["known_version"] == 3
 
 
 def test_api_plane_status_invalid_mode(monkeypatch) -> None:

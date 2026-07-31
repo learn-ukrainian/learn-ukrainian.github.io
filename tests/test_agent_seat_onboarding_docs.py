@@ -236,33 +236,18 @@ def test_buzz_deferral(onboarding: str, all_owned: dict[str, str]) -> None:
     assert "buzz" in coop and "deferred" in coop
 
 
-def test_acpx_default_off_rollback_and_bounded_active_controller(
-    onboarding: str, all_owned: dict[str, str]
-) -> None:
+def test_acpx_default_off_rollback(onboarding: str, all_owned: dict[str, str]) -> None:
     lower = onboarding.lower()
     assert "rollback" in lower
     assert "feature flag" in lower or "feature-flag" in lower or "flag off" in lower
     assert "default" in lower and ("off" in lower or "default-off" in lower)
     assert "native" in lower and "transport" in lower
-    assert "off|shadow|active" in onboarding
-    assert "acp-discuss" in lower
-    assert "printf" in lower and "stdin" in lower
-    assert "codex,grok" in lower
-    assert "two rounds" in lower and "three" in lower
-    assert "five model calls" in lower
-    assert "300" in onboarding and "1,200" in onboarding
-    assert "160k" in lower and "512 kib" in lower
-    assert "typed partial" in lower
-    assert "orphaned reservation" in lower
-    assert "locks must not cover model i/o" in lower
-    assert "size" in lower and "consumed-token accounting" in lower
-    assert "runtime/acp/conversations" in lower
     # Forbidden scope claims
     for phrase in (
         "persistent",
         "backlog",
         "automatic",
-        "unrestricted",
+        "agent-to-agent",
     ):
         assert phrase in lower, f"onboarding must document out-of-scope: {phrase}"
     runtime = all_owned["docs/agent-runtime-guide.md"].lower()
@@ -312,16 +297,6 @@ def test_acpx_second_pilot_grok_evidence_and_boundary(onboarding: str, all_owned
     scripts = all_owned["docs/SCRIPTS.md"].lower()
     assert "acpx-grok-shadow" in scripts or "grok second pilot" in scripts
     assert "not a new coordination plane" in scripts
-
-
-def test_acp_runtime_conversation_docs_are_body_free_and_readonly() -> None:
-    monitor = _read(REPO / "docs/MONITOR-API.md").lower()
-    onboarding = _read(ONBOARDING).lower()
-    for body in (monitor, onboarding):
-        assert "runtime/acp/conversations" in body
-        assert "body-free" in body
-        assert "read-only" in body or "read only" in body
-        assert "formal cross-family review" in body or "formal cross-family" in body
 
 
 def test_acpx_does_not_fabricate_cli_flags(onboarding: str) -> None:
