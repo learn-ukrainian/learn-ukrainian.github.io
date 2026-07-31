@@ -126,3 +126,18 @@ def test_mixed_batch_preserves_per_record_dispositions(tmp_path: Path) -> None:
         {"admitted": False, "record_id": None, "reasons": list(CONTRACT.LEGACY_MISSING_FIELDS)},
         {"admitted": True, "record_id": "record.synthetic-001", "reasons": []},
     ]
+
+
+def test_empty_input_has_an_explicit_receipt_kind(tmp_path: Path) -> None:
+    empty_path = tmp_path / "empty.json"
+    empty_path.write_text("[]", encoding="utf-8")
+
+    result = CONTRACT.validate_path(empty_path)
+
+    assert result["input_kind"] == "empty"
+    assert result["total_records"] == 0
+    assert result["contract_records"] == 0
+    assert result["legacy_records"] == 0
+    assert result["admitted_records"] == 0
+    assert result["rejected_records"] == 0
+    assert result["results"] == []

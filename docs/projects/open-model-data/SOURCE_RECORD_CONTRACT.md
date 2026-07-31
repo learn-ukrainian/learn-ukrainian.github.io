@@ -67,4 +67,5 @@ JSONL candidate is classified as non-contract input and receives deterministic
 aggregate fail-closed reasons for the ten previously evidenced missing fields.
 For a mixed JSON list, the receipt reports separate contract and legacy counts
 and retains each per-record disposition; only an all-legacy input suppresses
-record-level output.
+record-level output. A zero-record input is labeled `empty`, not contract
+conformant.

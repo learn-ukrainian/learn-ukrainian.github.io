@@ -156,7 +156,14 @@ def validate_path(path: Path) -> dict[str, Any]:
             outcomes.append(validate_record(record, validator, schema_hash))
     counts = Counter(reason for outcome in outcomes for reason in outcome["reasons"])
     all_legacy = bool(outcomes) and legacy_records == len(outcomes)
-    input_kind = "legacy_non_contract" if all_legacy else "mixed" if legacy_records else "source_record_v1"
+    if not outcomes:
+        input_kind = "empty"
+    elif all_legacy:
+        input_kind = "legacy_non_contract"
+    elif legacy_records:
+        input_kind = "mixed"
+    else:
+        input_kind = "source_record_v1"
     return {
         "admitted_records": sum(outcome["admitted"] for outcome in outcomes),
         "contract_records": len(outcomes) - legacy_records,
