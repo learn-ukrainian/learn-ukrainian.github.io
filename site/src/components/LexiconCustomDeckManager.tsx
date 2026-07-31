@@ -84,7 +84,7 @@ export function LexiconCustomDeckManager({
   // Candidates extracted from document or paste
   const [candidates, setCandidates] = useState<CandidateWord[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [levelFilter, setLevelFilter] = useState<'ALL' | 'A1' | 'A2' | 'B1' | 'B2' | 'UNVERIFIED'>('ALL');
+  const [levelFilter, setLevelFilter] = useState<'ALL' | 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'UNVERIFIED'>('ALL');
   const [isClassifying, setIsClassifying] = useState(false);
   const [attestationError, setAttestationError] = useState<string | null>(null);
 
@@ -601,7 +601,7 @@ export function LexiconCustomDeckManager({
                       onChange={(e) => setSearchQuery(e.target.value)}
                       style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', fontSize: '0.8rem', flex: 1 }}
                     />
-                    {(['ALL', 'A1', 'A2', 'B1', 'B2', 'UNVERIFIED'] as const).map((lvl) => (
+                    {(['ALL', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'UNVERIFIED'] as const).map((lvl) => (
                       <button
                         key={lvl}
                         type="button"
