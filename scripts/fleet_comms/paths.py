@@ -18,7 +18,7 @@ def default_plane_root(*, repo_root: Path | None = None) -> Path:
     """Resolve fleet state beneath the primary checkout, unless explicitly overridden."""
     env = os.environ.get(ENV_ROOT)
     if env:
-        return Path(env).expanduser()
+        return Path(env).expanduser().resolve()
 
     candidate = repo_root if repo_root is not None else Path.cwd()
     try:

@@ -72,6 +72,20 @@ def test_default_plane_root_preserves_override_and_non_git_fallback(
     )
 
 
+def test_default_plane_root_makes_relative_override_stable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    caller_root = tmp_path / "caller"
+    caller_root.mkdir()
+    monkeypatch.chdir(caller_root)
+    monkeypatch.setenv("FLEET_COMMS_ROOT", "relative-plane")
+
+    resolved = default_plane_root(repo_root=tmp_path / "ignored")
+
+    assert resolved == caller_root / "relative-plane"
+    assert resolved.is_absolute()
+
+
 def test_message_plane_preserves_public_root_constants() -> None:
     import scripts.fleet_comms.message_plane as message_plane
     from scripts.fleet_comms.paths import DEFAULT_ROOT_REL, ENV_ROOT
