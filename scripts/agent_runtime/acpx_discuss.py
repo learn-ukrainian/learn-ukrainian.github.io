@@ -106,6 +106,17 @@ def _safe_tokens(value: object) -> int | None:
     return value if isinstance(value, int) and not isinstance(value, bool) and value >= 0 else None
 
 
+def _expired_deadline(value: object) -> bool:
+    """Fail closed unless a persisted UTC deadline is valid and in the past."""
+    if not isinstance(value, str):
+        return False
+    try:
+        parsed = datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=UTC)
+    except ValueError:
+        return False
+    return datetime.now(UTC) > parsed
+
+
 class AcpxDiscussionController:
     """Append-only controller; every DB transaction is committed before I/O."""
 
@@ -382,7 +393,8 @@ class AcpxDiscussionController:
         except sqlite3.IntegrityError:
             self.conn.rollback()
             row = self.conn.execute(
-                "SELECT conversation_id FROM acp_conversations WHERE idempotency_digest = ?",
+                """SELECT conversation_id, deadline_at
+                   FROM acp_conversations WHERE idempotency_digest = ?""",
                 (idempotency_digest,),
             ).fetchone()
             if row is None:
@@ -397,7 +409,11 @@ class AcpxDiscussionController:
                     outcome="duplicate_suppressed",
                 )
                 return existing, self._replay(existing)
-            # A prior process reserved but did not finish. No retry is legal.
+            if not _expired_deadline(row[1]):
+                raise AcpxDiscussionError(
+                    "a reservation for this idempotency key is still in progress"
+                ) from None
+            # An expired prior reservation did not finish. No retry is legal.
             self._append(existing, event_type="ORPHAN_RESERVATION", state="PARTIAL_COMPLETE", outcome="orphan", transition=True)
             return existing, self._replay(existing)
         return conversation_id, None

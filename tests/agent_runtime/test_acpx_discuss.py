@@ -190,7 +190,7 @@ def test_orphan_reservation_is_terminal_partial_without_model_retry(tmp_path, mo
     try:
         _conversation, replay = controller._reserve(
             task_digest="a", correlation_digest="b", idempotency_digest=acpx_discuss._digest("idem-1"),
-            rounds=1, deadline_at="2099-01-01T00:00:00Z",
+            rounds=1, deadline_at="2000-01-01T00:00:00Z",
         )
         assert replay is None
         replay_payload = _run(controller, rounds=1)
@@ -243,7 +243,7 @@ def test_orphan_recovery_is_terminal_from_every_midflight_state(
             correlation_digest="b",
             idempotency_digest=acpx_discuss._digest(key),
             rounds=2,
-            deadline_at="2099-01-01T00:00:00Z",
+            deadline_at="2000-01-01T00:00:00Z",
         )
         assert replay is None
         for state in progression:
@@ -268,6 +268,51 @@ def test_orphan_recovery_is_terminal_from_every_midflight_state(
     assert replay_payload["state"] == "PARTIAL_COMPLETE"
     assert replay_payload["duplicate_suppressed"] is True
     assert tuple(terminal) == ("ORPHAN_RESERVATION", "PARTIAL_COMPLETE", "orphan")
+
+
+def test_live_duplicate_refuses_without_mutating_original_reservation(tmp_path, monkeypatch):
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        lambda *_a, **_k: pytest.fail("duplicate must not invoke participants"),
+        lambda *_a, **_k: pytest.fail("duplicate must not invoke synthesis"),
+    )
+    digest = acpx_discuss._digest("live-duplicate")
+    try:
+        conversation_id, replay = controller._reserve(
+            task_digest="a",
+            correlation_digest="b",
+            idempotency_digest=digest,
+            rounds=2,
+            deadline_at="2099-01-01T00:00:00Z",
+        )
+        assert replay is None
+        controller._append(
+            conversation_id,
+            event_type="STATE",
+            state="INITIAL_FANOUT",
+            transition=True,
+        )
+
+        with pytest.raises(acpx_discuss.AcpxDiscussionError, match="still in progress"):
+            controller._reserve(
+                task_digest="a",
+                correlation_digest="b",
+                idempotency_digest=digest,
+                rounds=2,
+                deadline_at="2099-01-01T00:00:00Z",
+            )
+
+        assert controller._state(conversation_id) == "INITIAL_FANOUT"
+        controller._append(
+            conversation_id,
+            event_type="STATE",
+            state="INITIAL_COMPLETE",
+            transition=True,
+        )
+        assert controller._state(conversation_id) == "INITIAL_COMPLETE"
+    finally:
+        controller.close()
 
 
 def test_active_mode_refuses_primary_checkout_and_shadow_stays_shadow_only(tmp_path, monkeypatch):
@@ -404,6 +449,7 @@ def test_errors_are_terminal_once_per_leg_without_retry_or_failover(tmp_path, mo
 def test_racing_reservations_never_expose_a_conversation_without_created_event(tmp_path, monkeypatch):
     barrier = threading.Barrier(2)
     returned: list[tuple[str, dict | None]] = []
+    errors: list[BaseException] = []
 
     def reserve():
         barrier.wait(timeout=2)
@@ -411,10 +457,13 @@ def test_racing_reservations_never_expose_a_conversation_without_created_event(t
             tmp_path, monkeypatch, lambda *_a, **_k: _result("codex", "x"), lambda *_a, **_k: _result("codex", "x")
         )
         try:
-            returned.append(controller._reserve(
-                task_digest="a", correlation_digest="b", idempotency_digest="same-key", rounds=1,
-                deadline_at="2099-01-01T00:00:00Z",
-            ))
+            try:
+                returned.append(controller._reserve(
+                    task_digest="a", correlation_digest="b", idempotency_digest="same-key", rounds=1,
+                    deadline_at="2099-01-01T00:00:00Z",
+                ))
+            except acpx_discuss.AcpxDiscussionError as exc:
+                errors.append(exc)
         finally:
             controller.close()
 
@@ -423,7 +472,9 @@ def test_racing_reservations_never_expose_a_conversation_without_created_event(t
         thread.start()
     for thread in threads:
         thread.join(timeout=3)
-    assert len(returned) == 2
+    assert len(returned) == 1
+    assert len(errors) == 1
+    assert "still in progress" in str(errors[0])
     conversation_ids = {item[0] for item in returned}
     assert len(conversation_ids) == 1
     conversation_id = next(iter(conversation_ids))
