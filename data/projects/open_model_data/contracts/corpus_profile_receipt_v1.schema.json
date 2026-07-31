@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/corpus_profile_receipt_v1.schema.json",
+  "title": "Ukrainian Data Foundry aggregate corpus profile receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile_id", "source_snapshot_id", "coverage", "admission_safety", "vesum", "unknown_forms", "distributions", "outputs", "measurement_contract", "determinism"],
+  "properties": {
+    "schema_version": {"const": "corpus_profile_receipt_v1"},
+    "profile_id": {"type": "string", "minLength": 3},
+    "source_snapshot_id": {"type": "string", "minLength": 3},
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["complete", "expected_rows", "expected_lexical_words", "processed_rows", "processed_lexical_words", "inaccessible_sources", "source_results"],
+      "properties": {
+        "complete": {"type": "boolean"},
+        "expected_rows": {"type": "integer", "minimum": 0},
+        "expected_lexical_words": {"type": "integer", "minimum": 0},
+        "processed_rows": {"type": "integer", "minimum": 0},
+        "processed_lexical_words": {"type": "integer", "minimum": 0},
+        "inaccessible_sources": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["source_family", "reason"], "properties": {"source_family": {"type": "string"}, "reason": {"type": "string"}}}},
+        "source_results": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "admission_safety": {"type": "object", "required": ["zero_current_admissions", "training_eligible_rows", "training_eligible_lexical_words", "excluded_rows", "excluded_lexical_words", "exclusion_reason_row_counts"]},
+    "vesum": {"type": "object", "required": ["snapshot_id", "interface", "tokens_attested", "tokens_unknown", "tokens_with_lemma", "tokens_with_pos", "tokens_with_usage_marker", "distinct_lemmas_observed", "pos_token_distribution", "usage_marker_token_distribution"]},
+    "unknown_forms": {"type": "object", "required": ["distinct_normalized_forms", "top_by_frequency"]},
+    "distributions": {"type": "object", "required": ["source_family", "period", "genre", "register", "origin"]},
+    "outputs": {"type": "object", "required": ["review_candidates"]},
+    "measurement_contract": {"type": "object", "required": ["lexical_words", "normalization", "primary_analysis", "record_text_in_receipt", "tokenizer_diagnostics"]},
+    "determinism": {"type": "object", "required": ["serialization", "candidate_order", "timestamps_omitted"]}
+  }
+}

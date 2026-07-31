@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/review_candidate_v1.schema.json",
+  "title": "Ukrainian Data Foundry unresolved review candidate v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source_record_id", "source_family", "locator", "surface_form", "normalized_form", "token_count_in_record", "vesum_evidence", "period", "register", "origin", "candidate_category", "confidence", "evidence_status", "automatic_error_label", "review_disposition"],
+  "properties": {
+    "schema_version": {"const": "review_candidate_v1"},
+    "source_record_id": {"type": "string", "minLength": 3},
+    "source_family": {"type": "string", "minLength": 3},
+    "locator": {"type": "string", "pattern": "^sqlite:[^#]+#[^/]+/.+$"},
+    "surface_form": {"type": "string", "minLength": 1},
+    "normalized_form": {"type": "string", "minLength": 1},
+    "token_count_in_record": {"type": "integer", "minimum": 1},
+    "vesum_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attested", "lookup_form", "analyses"],
+      "properties": {
+        "attested": {"const": false},
+        "lookup_form": {"type": "string", "minLength": 1},
+        "analyses": {"type": "array", "maxItems": 0}
+      }
+    },
+    "period": {"type": "string", "minLength": 1},
+    "register": {"type": "string", "minLength": 1},
+    "origin": {"type": "string", "minLength": 1},
+    "candidate_category": {"enum": ["non_ukrainian_form_candidate", "proper_name_candidate", "protected_variation_candidate", "foreign_language_candidate"]},
+    "confidence": {"enum": ["low", "medium", "high"]},
+    "evidence_status": {"const": "vesum_unknown_context_required"},
+    "automatic_error_label": {"const": false},
+    "review_disposition": {"const": "unresolved"}
+  }
+}
