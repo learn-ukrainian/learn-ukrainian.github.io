@@ -12,6 +12,103 @@ cd "$PROJECT_ROOT"
 # shellcheck disable=SC1091
 source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"
 
+path_matches_declared_entry() {
+    local relative="$1"
+    local entries="$2"
+    local entry normalized
+    for entry in $entries; do
+        normalized="${entry%/}"
+        if [[ "$relative" == "$normalized" || "$relative" == "$normalized/"* ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+tracked_mirror_source() {
+    local mirror="$1"
+    local relative skill_name skill_relative
+
+    case "$mirror" in
+        .claude/*)
+            relative="${mirror#.claude/}"
+            path_matches_declared_entry "$relative" "$ORPHAN_PATHS_CLAUDE" && return 1
+            path_matches_declared_entry "$relative" "$CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS" && return 1
+            printf '%s\n' "agents_extensions/shared/$relative"
+            ;;
+        .agent/*)
+            relative="${mirror#.agent/}"
+            [[ -e "agents_extensions/shared/$relative" || -L "agents_extensions/shared/$relative" ]] || return 1
+            printf '%s\n' "agents_extensions/shared/$relative"
+            ;;
+        .agents/skills/*)
+            relative="${mirror#.agents/skills/}"
+            printf '%s\n' "agents_extensions/shared/skills/$relative"
+            ;;
+        .codex/*)
+            relative="${mirror#.codex/}"
+            path_matches_declared_entry "$relative" "$ORPHAN_PATHS_CODEX" && return 1
+            if path_matches_declared_entry "$relative" "$CODEX_OVERLAY_PATHS"; then
+                printf '%s\n' "agents_extensions/codex/$relative"
+            else
+                printf '%s\n' "agents_extensions/shared/$relative"
+            fi
+            ;;
+        .gemini/*)
+            relative="${mirror#.gemini/}"
+            path_matches_declared_entry "$relative" "$ORPHAN_PATHS_GEMINI" && return 1
+            if [[ "$relative" == rules/* ]]; then
+                printf '%s\n' "agents_extensions/shared/$relative"
+            elif [[ "$relative" == skills/* ]]; then
+                skill_name="${relative#skills/}"
+                skill_name="${skill_name%%/*}"
+                skill_relative="${relative#skills/"$skill_name"/}"
+                if [[ -d "agents_extensions/shared/skills/$skill_name" ]]; then
+                    printf '%s\n' "agents_extensions/shared/skills/$skill_name/$skill_relative"
+                else
+                    printf '%s\n' "gemini_extensions/$relative"
+                fi
+            else
+                printf '%s\n' "gemini_extensions/$relative"
+            fi
+            ;;
+        *) return 1 ;;
+    esac
+}
+
+check_tracked_mirrors() {
+    local mirror source failed=0
+    if ! git rev-parse --git-dir >/dev/null 2>&1; then
+        echo "::error::Tracked-mirror verification requires a Git checkout."
+        return 1
+    fi
+
+    while IFS= read -r -d '' mirror; do
+        source="$(tracked_mirror_source "$mirror" || true)"
+        [[ -n "$source" ]] || continue
+        if [[ ! -e "$source" && ! -L "$source" ]]; then
+            echo "::error::Tracked deploy mirror has no canonical source: $mirror (expected $source)"
+            failed=1
+        elif ! cmp -s "$source" "$mirror"; then
+            echo "::error::Committed deploy-mirror drift: $source -> $mirror"
+            failed=1
+        fi
+    done < <(git ls-files -z -- .claude .agent .agents .codex .gemini)
+
+    if [[ "$failed" -eq 0 ]]; then
+        echo "OK: committed deploy mirrors match their canonical sources"
+    fi
+    return "$failed"
+}
+
+if [[ "${1:-}" == "--tracked-mirrors-only" ]]; then
+    check_tracked_mirrors
+    exit $?
+elif [[ $# -ne 0 ]]; then
+    echo "Usage: scripts/check_rules_deployment.sh [--tracked-mirrors-only]" >&2
+    exit 2
+fi
+
 check_pair() {
     local src="$1"
     local dst="$2"

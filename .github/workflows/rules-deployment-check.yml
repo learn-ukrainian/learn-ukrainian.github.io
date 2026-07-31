@@ -14,6 +14,7 @@ on:
       - 'scripts/lint/**/*.py'
       - 'agents_extensions/shared/**'
       - 'gemini_extensions/**'
+      - '.gemini/**'
       - 'tests/test_deploy_script_idempotency.py'
   pull_request:
     paths:
@@ -24,6 +25,7 @@ on:
       - 'scripts/lint/**/*.py'
       - 'agents_extensions/shared/**'
       - 'gemini_extensions/**'
+      - '.gemini/**'
       - 'tests/test_deploy_script_idempotency.py'
   workflow_dispatch:
 
@@ -45,6 +47,9 @@ jobs:
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
           .venv/bin/python -m pip install pytest pyyaml
+
+      - name: Verify committed mirrors before deploy
+        run: bash scripts/check_rules_deployment.sh --tracked-mirrors-only
 
       - name: Verify deploy script is idempotent (rules/prompts sync)
         run: |

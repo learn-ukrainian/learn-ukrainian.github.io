@@ -41,6 +41,7 @@ def _resolve_project_python() -> Path:
 PROJECT_PYTHON = _resolve_project_python()
 DEPLOY_SCRIPT = Path("scripts/deploy_prompts.sh")
 CHECK_SCRIPT = Path("scripts/check_rules_deployment.sh")
+DEPLOY_WORKFLOW = Path(".github/workflows/rules-deployment-check.yml")
 ORPHAN_PATHS_FILE = Path("scripts/deploy_orphan_paths.sh")
 AGENT_DEPLOY_MANIFEST = Path(".deploy-state/shared-to-agent.manifest")
 ORPHAN_PATH_VARS = (
@@ -126,6 +127,17 @@ def _run(repo: Path, script: Path) -> subprocess.CompletedProcess[str]:
         check=False,
         text=True,
         timeout=120,
+    )
+
+
+def _run_tracked_mirror_check(repo: Path) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["bash", str(CHECK_SCRIPT), "--tracked-mirrors-only"],
+        cwd=repo,
+        capture_output=True,
+        check=False,
+        text=True,
+        timeout=30,
     )
 
 
@@ -216,6 +228,45 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
     assert codex_hooks_diff.returncode == 0, (
         f"Codex hooks drift after fresh deploy:\nstdout: {codex_hooks_diff.stdout}\nstderr: {codex_hooks_diff.stderr}"
     )
+
+
+def test_tracked_mirror_drift_is_detected_before_deploy(tmp_path: Path) -> None:
+    """A committed mirror mismatch must fail before deploy can overwrite it."""
+    repo = _init_checkout(tmp_path)
+    source = repo / "gemini_extensions/hooks/check-claude-inbox.sh"
+    mirror = repo / ".gemini/hooks/check-claude-inbox.sh"
+    mirror.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, mirror)
+    _init_git_history(repo)
+
+    clean = _run_tracked_mirror_check(repo)
+    assert clean.returncode == 0, clean.stderr + clean.stdout
+
+    mirror.write_text(mirror.read_text(encoding="utf-8") + "\n# committed drift\n", encoding="utf-8")
+    commit = _run_command(repo, ["git", "add", str(mirror)])
+    assert commit.returncode == 0, commit.stderr
+    commit = _run_command(repo, ["git", "commit", "-qm", "introduce mirror drift"])
+    assert commit.returncode == 0, commit.stderr
+
+    drift = _run_tracked_mirror_check(repo)
+    output = drift.stdout + drift.stderr
+    assert drift.returncode != 0
+    assert "Committed deploy-mirror drift" in output
+    assert "gemini_extensions/hooks/check-claude-inbox.sh -> .gemini/hooks/check-claude-inbox.sh" in output
+
+    deploy = _run(repo, DEPLOY_SCRIPT)
+    assert deploy.returncode == 0, deploy.stderr + deploy.stdout
+    assert _run_tracked_mirror_check(repo).returncode == 0
+
+
+def test_rules_workflow_checks_mirrors_before_deploy() -> None:
+    """CI must inspect committed mirrors before its mutating deploy step."""
+    workflow = (REPO_ROOT / DEPLOY_WORKFLOW).read_text(encoding="utf-8")
+    preflight = "bash scripts/check_rules_deployment.sh --tracked-mirrors-only"
+    deploy = "bash scripts/deploy_prompts.sh"
+
+    assert "- '.gemini/**'" in workflow
+    assert workflow.index(preflight) < workflow.index(deploy)
 
 
 def test_agent_manifest_reaps_retired_hook_without_touching_agent_state(tmp_path: Path) -> None:
