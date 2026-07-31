@@ -124,8 +124,8 @@ class AgentAdapter(Protocol):
             model: Model override, or None to use self.default_model.
             task_id: Optional task identifier for session tracking / logging.
             session_id: Session to resume, if the adapter's resume_policy
-                allows it. Adapters with resume_policy="never" (Codex)
-                MUST defensively ignore this even if passed.
+                allows it. Adapters with resume_policy="never" MUST
+                defensively ignore this even if passed.
             tool_config: Adapter-specific tool configuration. For Claude and
                 Gemini this carries MCP server names and allowed tools.
                 Structure is adapter-defined; keys the adapter doesn't

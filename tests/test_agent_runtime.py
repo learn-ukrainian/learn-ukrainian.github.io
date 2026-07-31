@@ -3,7 +3,7 @@
 Covers:
 - Adapter loading from registry
 - Mode validation and cwd requirement for write modes
-- Resume policy enforcement (Codex "never", Claude/Gemini "bridge_only")
+- Resume policy enforcement (Codex/Claude/Gemini "bridge_only", generic "never")
 - CodexAdapter flag building for each mode
 - CodexAdapter parse_response for ok/error/rate-limited cases
 - Usage record building and writing
@@ -475,7 +475,9 @@ def test_load_adapter_cached():
 
 def test_resume_policy_never_allows_none():
     # No error when session_id is None
-    _enforce_resume_policy("codex", session_id=None, entrypoint="bridge")
+    _enforce_resume_policy("grok-build", session_id=None, entrypoint="bridge")
+    with pytest.raises(ValueError, match="resume_policy='never'"):
+        _enforce_resume_policy("grok-build", session_id="uuid", entrypoint="bridge")
 
 
 def test_resume_policy_bridge_only_allows_bridge():
