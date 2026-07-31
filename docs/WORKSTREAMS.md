@@ -9,7 +9,7 @@
 
 | Field | Value |
 | --- | --- |
-| **Last refreshed** | 2026-07-31 (existing-asset inventory #6107 establishes the evidence baseline before the #6082 micro-pilot) |
+| **Last refreshed** | 2026-07-31 (Ukrainian Data Foundry chain #6119–#6123 replaces the superseded #6082 micro-pilot) |
 | **Refresh trigger** | Every session handoff that lands a milestone; every stream-epic board change |
 | **Curriculum KPI** | Modules passing audit per week (curriculum streams; each milestone carries its own outcome measure) |
 | **Mission** | Help people and AI produce measurably better, authentically Ukrainian language through decolonized learning products and reusable, evidence-backed open-model infrastructure. Quality non-negotiable. |
@@ -28,7 +28,8 @@ stream must trace to this chain:
    or register variation.
 2. **Products**: the LU curriculum site (learners) and Hramatka (teachers).
 3. **Reusable community infrastructure**: audited, provenance-rich source data;
-   morphology/tokenizer diagnostics; model-ready export contracts (#6056); and
+   the Ukrainian Data Foundry's morphology diagnostics, review-candidate
+   extraction, and model-ready export contracts (#6056); and
    narrow, contamination-resistant public evaluation (#2156, #6057).
 4. **Kept honest by**: internal QG machinery (#4913), frozen evidence contracts,
    Ukrainian linguistic review, and strict separation of public evaluation gold,
@@ -61,7 +62,7 @@ is the single source of truth for membership (auditor:
 | devops | #5703 | DevOps automation, CI, release & launcher reliability |
 | eval-harness | #4913 | Internal QG schemas, validators, quality gates, product adapters, and private calibration |
 | benchmark-2156 | #6057 (successor to closed #2156) | Closed #2156 owns the completed public v0.1.1 release; #6057 owns separately frozen v0.2 error analysis, controls, coverage, and future baselines |
-| open-model-data | #6056 | Audited source data, provenance contracts, morphology/tokenizer diagnostics, and consumer-specific model-ready exports |
+| open-model-data | #6056 | Ukrainian Data Foundry: audited sources, streaming profiling, morphology evidence, qualified correction review, disjoint exports, recipes, and reference validation |
 | core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |
 | seminars-folk | #2836 | FOLK re-research + rebuild |
 | seminars-bio | #4431, #4215 | BIO readiness + builds |
@@ -88,8 +89,8 @@ epic-board state and bind only once that stream's driver (State: the operator) c
 | --- | --- | --- | --- |
 | infra-harness | ACTIVE *(proposed)* | Weak-driver rails T1 (T1.1 slot addressing ✅ #5878; T1.2 lease lifecycle; T1.3 glm canary lane) | T1.2 + T1.3 merged with mutation-checked tests. (The fleet-comms decision packet — dual-write parity + authority-signal evidence for any future plane change, file handoff never dropped unilaterally per `fleet-comms-coordination.md` — is the NEXT milestone, not this one.) |
 | eval-harness | *(operator to set)* | Internal product-quality machinery under #4913 *(driver to confirm)* | Current internal milestone is confirmed on #4913 without absorbing public gold or release work |
-| benchmark-2156 | ACTIVE | Build and adjudicate the v0.2 controlled evaluation slice (#6084) | A contract-conformant slice covers clean controls, protected positives, and documented category gaps; every acquired item has licensing, provenance, and contamination evidence; two independent qualified Ukrainian humans review each item under the frozen conflict protocol; no model run is required |
-| open-model-data | ACTIVE | Build a rights-cleared source-record micro-pilot around one documented open-weight consumer need (#6082), using the existing-asset baseline from #6107 | A deliberately small independently sourced pilot first selects an original source already represented in the corpus, conforms to the frozen source-record contract, carries official provenance/rights/license/training evidence and contamination exclusions, and has deterministic admission receipts; the invalid 5,000-record export is a locator only, and no public release, upload, or model training is performed |
+| benchmark-2156 | ACTIVE | Acquire and adjudicate the coverage-complete v0.2 evaluation inventory (#6084) | Every frozen category minimum and statistical stop condition is met; every item carries licensing, provenance, contamination, and qualified Ukrainian-human evidence under [#6074](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6074); unresolved conflicts remain non-headline, and no model run is required |
+| open-model-data | ACTIVE | Deliver the Ukrainian Data Foundry reference build under #6056: architecture (#6119) → full-corpus profiling (#6120) → qualified correction review (#6121) → disjoint exporters and recipes (#6122) → end-to-end validation (#6123) | Versioned fail-closed interfaces and deterministic receipts cover provenance through adjudication; full-corpus coverage and unknowns are measured; training, correction, preference, quality-filter, and evaluation views are mechanically disjoint; recipes and the frozen baseline harness validate end to end; #6082 remains superseded history, and no release, upload, training, OCR, or external outreach is performed |
 | atlas-practice | ACTIVE *(proposed)* | Practice Hub deck experience stable after the D10 wave (#5877–#5883) *(driver to confirm)* | A bounded soak: 7 days with no new daily-deck defect filed; then next #4700 item |
 | atlas-intake | ACTIVE *(proposed)* | 20k enrichment run with durable storage (#5884) *(driver to confirm)* | Enriched dataset persisted off-repo with a tracked pointer; refetch never needed |
 | corpus-channels | *(operator to set)* | *(VACANT — driver to set from #4706; the slot-addressing work formerly listed here is infra-harness scope)* | — |

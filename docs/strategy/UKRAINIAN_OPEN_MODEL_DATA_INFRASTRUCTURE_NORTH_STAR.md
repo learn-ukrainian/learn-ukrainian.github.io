@@ -1,10 +1,13 @@
-# Ukrainian Open-Model Data Infrastructure: North Star
+# Ukrainian Data Foundry: North Star
 
 > **Status:** Operator-confirmed strategic direction; evidence snapshot
 > **Approval receipt:** Operator issued **GO REALIGN** for the stream and issue
 > realignment on 2026-07-30; recorded in
 > [PR #6060](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6060).
-> **Recorded:** 2026-07-30; existing-asset baseline refreshed 2026-07-31
+> Operator approved the Ukrainian Data Foundry architecture, replacement issue
+> chain, and first implementation on 2026-07-31.
+> **Recorded:** 2026-07-30; Foundry direction and existing-asset baseline
+> refreshed 2026-07-31
 > **Applies to:** Ukrainian model evaluation, dataset work, training-data
 > preparation, and UNLP ecosystem monitoring
 > **Does not authorize:** model training, dataset publication, or mixing
@@ -15,8 +18,9 @@
 Our ultimate goal is to help AI produce measurably better, authentically
 Ukrainian language.
 
-We will pursue that goal by giving open-weight model teams reusable Ukrainian
-language infrastructure:
+We will pursue that goal through an open Ukrainian Data Foundry: reusable
+infrastructure that Ukrainian and open-weight model teams can run on our
+corpus, their corpora, or other licensed collections. The Foundry provides:
 
 - trusted and well-documented data;
 - morphology-aware coverage and diagnostics;
@@ -38,8 +42,9 @@ future training data.
 ## GitHub execution homes
 
 - [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
-  owns audited open-model data infrastructure, provenance contracts,
-  morphology/tokenizer diagnostics, and consumer-specific exporters.
+  owns the Ukrainian Data Foundry: provenance and rights contracts,
+  full-corpus diagnostics, candidate review and adjudication, mechanically
+  disjoint consumer exports, recipes, and reference validation.
 - [#6057](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6057)
   owns the separately frozen public benchmark v0.2 design and release.
 - [#4913](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4913)
@@ -229,36 +234,39 @@ status.
 
 ### Immediate work
 
-1. Maintain a source-linked UNLP asset and gap map. Record datasets, licenses,
-   task coverage, model baselines, and unresolved gaps without claiming that
-   our work is unique before comparison.
-2. After one real open-weight consumer documents a bounded need, reconstruct a
-   one-source-family micro-pilot from an original catalogue, edition, website,
-   archive, or retained acquisition artifact already represented in the corpus.
-   The 5,000-record export may be used only to locate the underlying work.
-3. Analyze errors and model disagreements in the 677-item evaluation. Use them
-   to define the next annotation categories rather than merely adding model
-   rows to a table.
-4. Design the next evaluation slice with no-change controls, heritage and
-   dialect hard positives, multiple acceptable references, and category
-   coverage targets.
-5. Specify one canonical source-record schema and separate exporters for
-   training, preference, filtering, and evaluation views.
-6. Build morphology and tokenizer coverage reports that open-weight teams can
-   run before and after adaptation.
+1. Define and implement the versioned Foundry interfaces from source and
+   provenance evidence through streaming normalization, language-span
+   handling, classification, morphology evidence, candidate generation,
+   qualified Ukrainian-human adjudication, and separate consumer views.
+2. Profile the complete locally accessible public/external human-authored
+   corpus before any admission decision. Report measured coverage and explicit
+   unknowns; do not convert inventory rows or VESUM forms into rights-cleared
+   contextual training text.
+3. Emit evidence-backed grammar, calque, collocation, and
+   Russian-interference review candidates. Keep every candidate unresolved
+   until contextual evidence and qualified Ukrainian-human adjudication exist.
+4. Build mechanically separate training, correction, preference,
+   quality-filter, and evaluation exporters with end-to-end lineage,
+   exact/near-duplicate controls, and frozen benchmark exclusions.
+5. Add reproducible preparation and training recipes, then validate an
+   end-to-end reference build against the frozen baseline harness. Recipes do
+   not authorize a training run.
+6. Independently acquire and adjudicate the coverage-complete v0.2 evaluation
+   inventory under its frozen evidence plan and qualified-review protocol.
 
-### Collaboration target
+### Later validation and collaboration
 
-After the audits, offer narrow assets to Lapa, `lang-uk`, UA-GEC, and other
-open-weight Ukrainian teams:
+After a usable reference build exists, it may be validated with Lapa,
+`lang-uk`, UA-GEC, and other open-weight Ukrainian teams through:
 
 - data slices they can inspect and reproduce;
 - diagnostics they can run on any new base model;
 - failure-focused evaluation with protected legitimate variation; and
 - evidence-backed annotation guidelines.
 
-The offer should start with their unmet need, not with our desire to publish a
-dataset.
+External feedback may prioritize later adapters, acquisition, or release work.
+It is not a prerequisite for building the architecture, full-corpus profiler,
+correction intake, separate exporters, recipes, or reference validation.
 
 ## Model-running policy
 
