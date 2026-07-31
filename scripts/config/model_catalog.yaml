@@ -133,7 +133,7 @@ models:
     family: anthropic
     tier: frontier_authority
     lifecycle: active
-    roles: [advisory, architecture, critical_review, security_review, orchestration, agentic_coding]
+    roles: [advisory_consultation, architecture, critical_review, security_review, agentic_coding]
     transports: [native_claude, cursor]
     strengths: [deep_reasoning, long_horizon_agentic, high_precision_and_recall_code_review]
     weaknesses: [verbose_by_default, over_delegates_to_subagents, elevated_refusal_surface]

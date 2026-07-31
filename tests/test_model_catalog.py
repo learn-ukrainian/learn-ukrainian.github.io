@@ -379,6 +379,13 @@ def test_critical_ladder_anthropic_authority_is_fable_not_opus():
     assert flat.index("claude-fable-5") < flat.index("claude-sonnet-5")
 
 
+def test_opus_advisory_capability_does_not_grant_orchestration() -> None:
+    """Model capability metadata must preserve the routing/authority boundary."""
+    roles = set(load_model_catalog()["models"]["claude-opus-5"]["roles"])
+    assert "advisory_consultation" in roles
+    assert "orchestration" not in roles
+
+
 def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
     """The Sol→Luna lane must be explicit, bounded, and source-blind testable."""
     catalog = load_model_catalog()
