@@ -88,4 +88,89 @@ future evaluation of such claims.
 
 ---
 
+## How the historical hypothesis would need to be re-tested
+
+The earlier document collapsed several different questions into a single
+novelty claim. Those questions must be kept separate. Whether a public
+collection exists is an inventory question. Whether two collections overlap is
+a record-lineage and content-comparison question. Whether a collection
+represents literary, regional, historical, or pedagogical Ukrainian well is a
+linguistic and coverage question. Whether a record may be redistributed or
+used for model training is a rights-and-permission question. A positive answer
+to any one question supplies no evidence for the others.
+
+A future inventory would therefore need stable dataset identifiers, canonical
+catalog or source URLs, version or retrieval dates, declared maintainers, and
+the terms attached to the exact version examined. Descriptions copied from a
+catalog page would be evidence about the publisher's claim, not independent
+confirmation of corpus composition or quality. Likewise, a repository import
+or database join would show that bytes were locally available, not where each
+record originated or which downstream uses were permitted.
+
+The candidate-specific side of a comparison would require record-level source
+identity, work and edition identity, acquisition receipts, content hashes, and
+derivation lineage. It would also require separately evidenced copyright,
+license, redistribution, and model-training fields. Unknown or conflicting
+status would remain unresolved and fail closed. Cleaning language, removing
+duplicates, or attaching internal metadata could improve a technical artifact,
+but none of those operations can reconstruct a missing external lineage or
+grant a missing permission.
+
+### Comparison dimensions that remain potentially useful
+
+The historical notes point toward real research dimensions, but not toward a
+verified winner. A future comparison could describe:
+
+- source genre and time-period coverage;
+- regional, dialectal, conversational, archaic, cognate, and marked-language
+  coverage;
+- whether content is raw text, correction pairs, question-answer material, or
+  another documented structure;
+- the presence and provenance of linguistic annotations;
+- exact duplicate and near-duplicate overlap under a frozen method;
+- the availability of stable record-level citations and hashes;
+- declared usage restrictions and contamination exclusions;
+- one documented consumer need that the proposed records actually satisfy.
+
+These dimensions must not be compressed into labels such as *clean*,
+*decolonized*, *gold*, *native*, or *unique* without criteria and attributed
+evidence. In particular, a text's literary register does not establish its
+rights status, and a permissive license does not establish linguistic
+representativeness. Instruction formatting is also a transformation, not
+proof of novelty: the underlying work, source edition, and transformation
+lineage still determine whether the record is independent and usable.
+
+### Ukrainian quality without erasing variation
+
+The durable quality question is broader than removing obvious calques. A
+useful Ukrainian collection must make it possible to distinguish documented
+errors from legitimate historical, regional, dialectal, conversational,
+archaic, cognate, or register-marked forms. That requires qualified Ukrainian
+review, source citations, uncertainty, and an explicit unresolved state.
+Automated morphology or exact-string comparison can route evidence, but it
+cannot by itself decide that a less frequent or non-modern form is wrong.
+
+Coverage claims would need denominators and frozen category definitions.
+Examples selected because they demonstrate a desired contrast cannot also
+serve as uncontaminated evidence that a system handles that contrast. Public
+evaluation material must remain separated from training and preference data.
+The useful outcome is therefore a reproducible coverage and provenance
+contract, not a temporary claim that one collection or model is best.
+
+### Successor boundary
+
+The immediate successor to these notes is not a release. It is a
+provenance-rich source-record contract followed, only under a separately
+approved issue, by a deliberately small rights-cleared pilot around one real
+consumer need. Such a pilot would test whether official source and rights
+evidence can be collected, reviewed, hashed, and validated without carrying
+forward the failed candidate's assumptions. It would not inherit the
+candidate's proposed name, counts, purity language, or release trajectory.
+
+Until that evidence exists, the tables and diagrams above remain historical
+inputs for forming questions. They are not a current market survey, dataset
+card, admission decision, training plan, or publication record.
+
+---
+
 *Analysis recorded for the Learn Ukrainian Architecture Registry.*
