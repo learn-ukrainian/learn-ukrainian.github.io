@@ -23,7 +23,7 @@
 | **`discuss`** (bridge) | Bounded deliberation / design input | Never implementation; never the formal cross-family review gate |
 | **`scripts/delegate.py dispatch`** | Isolated implementation execution | Worktree writes only; not durable fleet authority |
 | **Fleet-comms + file handoffs** | Durable coordination | **File dual-write remains authoritative in every current plane mode** — query `plane-status`, never hard-code live mode |
-| **ACPX** | Experimental structured invocation transport (default-off/shadow; one read-only/stateless Codex participant) | Not a second bus; correlation evidence ≠ authority; rollback = flag off + native transport |
+| **ACPX** | Experimental structured invocation transport: default-off shadow pilot plus an explicit `acp-discuss` controller for the bounded Codex/Grok active conversation | Not a second bus; fleet-comms/file handoffs remain authoritative; active conversation is not formal review; rollback = flag off |
 | **Buzz** | **Deferred** | Relay-as-authority conflicts with the current model — out of scope |
 
 **Discussion is not formal review.** Design panels and same-family helpers do not
@@ -38,6 +38,23 @@ Use explicit project entrypoints (no bare `ab` — on many hosts that is ApacheB
 
 Full onboarding contract, budgets, troubleshooting, and no-auth smoke:
 [`agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md).
+
+### Bounded ACP conversation is not a review lane
+
+`LU_ACPX_TRANSPORT=active` is accepted only by
+`.venv/bin/python -m scripts.fleet_comms acp-discuss`. The task is supplied on
+stdin, with only Codex and Grok participating: two rounds by default, three at
+most, parallel initial responses, bounded peer cross-response, then
+authoritative native-Codex synthesis. It is a controller-scheduled DAG with
+at most two participant calls and five model calls by default, including
+synthesis. It has no persistent sessions, tools, retries, hidden failover, or
+unrestricted loop. Its durable append-only state and timeline flow through
+existing fleet-comms/file handoffs; ACPX remains transport, not authority.
+
+The Runtime conversation list/detail routes and visual timeline are body-free
+and read-only. They cannot initiate or control a conversation. Full command,
+privacy boundary, deadlines, replay handling, and troubleshooting remain in
+the [seat-onboarding runbook](../runbooks/agent-seat-onboarding.md).
 
 ---
 
