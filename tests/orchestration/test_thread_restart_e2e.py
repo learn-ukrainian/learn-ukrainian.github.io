@@ -12,12 +12,15 @@ import os
 import shutil
 import sqlite3
 import subprocess
+import time
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
 
+from agents_extensions.shared.session_streams.app_lifecycle import VerifiedAppLifecycleProof, make_receipt
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.model import EntryType, LeaseHolder
+from agents_extensions.shared.session_streams.model import EntryType, HolderKind, LeaseHolder, isoformat_z
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -101,11 +104,17 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
             [
                 "start-codex.sh",
                 "start-codex-driver.sh",
+                "start-claude-driver.sh",
+                "start-gemini-driver.sh",
+                "start-grok-driver.sh",
                 # The consolidated launchers source the shared core + provider
                 # adapter (PR #5958); fixture repos must ship them or the staged
                 # driver dies at `source` before any behavior under test runs.
                 "scripts/lib/launcher_core.sh",
                 "scripts/launchers/codex.sh",
+                "scripts/launchers/claude.sh",
+                "scripts/launchers/gemini.sh",
+                "scripts/launchers/grok.sh",
                 "scripts/lib/codex_cc_route.sh",
                 "scripts/lib/fleet_comms_cold_start.sh",
                 "scripts/orchestration/codex_transport_health.py",
@@ -245,6 +254,7 @@ def seed_driver_stream(
     stream_id: str,
     close: bool,
     instance_id: str = "fixture-seed",
+    process_id: int | None = None,
 ) -> SessionStreamStore:
     store = SessionStreamStore(
         SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3")
@@ -255,7 +265,7 @@ def seed_driver_stream(
             agent="fixture",
             harness="pytest",
             instance_id=instance_id,
-            process_id=os.getpid(),
+            process_id=os.getpid() if process_id is None else process_id,
             task_id=instance_id,
         ),
         lineage_id=f"lineage-{instance_id}",
@@ -287,6 +297,54 @@ def seed_driver_stream(
 
 def load_lease(primary: Path, packet: dict) -> dict:
     return json.loads((primary / packet["state_file"]).read_text(encoding="utf-8"))
+
+
+def launcher_environment(tmp_path: Path, *providers: str) -> tuple[dict[str, str], dict[str, Path]]:
+    """Return an isolated launcher environment with observable provider stubs."""
+    fake_bin = tmp_path / "bin"
+    fake_home_bin = tmp_path / "home" / ".local" / "bin"
+    fake_bin.mkdir(parents=True)
+    fake_home_bin.mkdir(parents=True)
+    started_dir = tmp_path / "provider-started"
+    started_dir.mkdir()
+
+    fake_npm = fake_home_bin / "npm"
+    fake_npm.write_text(
+        "#!/bin/bash\n"
+        "set -e\n"
+        "mkdir -p .codex/hooks\n"
+        "cp agents_extensions/codex/hooks.json .codex/hooks.json\n"
+        "cp agents_extensions/shared/hooks/session-setup.sh .codex/hooks/session-setup.sh\n",
+        encoding="utf-8",
+    )
+    fake_npm.chmod(0o755)
+    # The Gemini driver intentionally reaches the provider through the AGY transport binary.
+    executable_names = {"gemini": "agy"}
+    started = {provider: started_dir / provider for provider in providers}
+    for provider, marker in started.items():
+        executable = fake_home_bin / executable_names.get(provider, provider)
+        executable.write_text(
+            f"#!/bin/bash\ntouch {os.fspath(marker)!r}\n"
+            'if [ "${LAUNCHER_TEST_HOLD_PROVIDER:-0}" = 1 ]; then read -r; fi\n',
+            encoding="utf-8",
+        )
+        executable.chmod(0o755)
+
+    env = os.environ.copy()
+    for key in tuple(env):
+        if key.startswith(("SESSION_", "LEARN_UKRAINIAN_", "CODEX_LAUNCHER_ROLLOVER_")) or key in {
+            "CODEX_CANONICAL_REPO_ROOT",
+            "CODEX_SESSION",
+        }:
+            env.pop(key, None)
+    env.update(
+        {
+            "HOME": os.fspath(tmp_path / "home"),
+            "PATH": f"{fake_bin}:{fake_home_bin}:/usr/bin:/bin",
+            "PYENV_ROOT": os.fspath(tmp_path / "pyenv"),
+        }
+    )
+    return env, started
 
 
 def assert_cleanup_locked(primary: Path, packet: dict) -> None:
@@ -1069,3 +1127,152 @@ def test_real_codex_devops_launcher_refuses_second_live_devops_driver(
     assert len(store.dump_stream("epic:5703")["sessions"]) == 1
     assert store.dump_stream("epic:5703")["sessions"][0]["state"] == "open"
     assert git(primary, "status", "--short", "--untracked-files=all").stdout == ""
+
+
+@pytest.mark.parametrize(
+    ("first_provider", "second_provider", "first_model", "second_model"),
+    (
+        ("grok", "codex", "grok-4.5", "gpt-5.6-sol"),
+        ("claude", "gemini", "claude-fable-5", "gemini-3.1-pro-high"),
+    ),
+)
+def test_real_cross_family_driver_launchers_refuse_before_second_provider_executes(
+    tmp_path: Path,
+    first_provider: str,
+    second_provider: str,
+    first_model: str,
+    second_model: str,
+) -> None:
+    primary, _ = init_repo(tmp_path, bootstrap_sources=True)
+    if second_provider == "codex":
+        prepare_cli_driver_rollover(primary, active_thread_id=SOURCE_THREAD_ID)
+    env, started = launcher_environment(tmp_path, first_provider, second_provider)
+    env["LAUNCHER_TEST_HOLD_PROVIDER"] = "1"
+    first = subprocess.Popen(
+        [primary / f"start-{first_provider}-driver.sh", "devops", "--model", first_model],
+        cwd=primary,
+        env=env,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        text=True,
+    )
+    try:
+        deadline = time.monotonic() + 10
+        while not started[first_provider].exists() and time.monotonic() < deadline:
+            time.sleep(0.05)
+        assert started[first_provider].exists(), (
+            f"{first_provider} launcher did not reach provider stub; returncode={first.poll()}"
+        )
+        second = run(
+            [primary / f"start-{second_provider}-driver.sh", "devops", "--model", second_model],
+            cwd=primary,
+            env=env,
+        )
+    finally:
+        first.terminate()
+        first.communicate(timeout=10)
+
+    assert second.returncode == 1
+    assert "already has live session" in second.stderr
+    assert not started[second_provider].exists()
+    stream = SessionStreamStore(
+        SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3")
+    ).dump_stream("epic:5703")
+    assert len(stream["sessions"]) == 1
+    assert stream["sessions"][0]["state"] == "open"
+    assert stream["lease"]["holder_agent"] == first_provider
+
+
+def test_real_grok_driver_recovers_dead_unexpired_holder_via_session_supervisor(tmp_path: Path) -> None:
+    primary, _ = init_repo(tmp_path, bootstrap_sources=True)
+    store = seed_driver_stream(
+        primary,
+        stream_id="epic:5703",
+        close=False,
+        instance_id="dead-holder",
+        process_id=99999999,
+    )
+    env, started = launcher_environment(tmp_path, "grok")
+
+    launched = run([primary / "start-grok-driver.sh", "devops"], cwd=primary, env=env)
+
+    assert launched.returncode == 0, launched.stderr + launched.stdout
+    assert started["grok"].exists()
+    stream = store.dump_stream("epic:5703")
+    assert sorted(session["state"] for session in stream["sessions"]) == ["closed", "open"]
+    assert stream["lease"]["generation"] == 2
+    assert stream["lease"]["holder_agent"] == "grok"
+
+
+def test_real_grok_driver_refuses_expired_app_thread_holder_before_provider_executes(
+    tmp_path: Path,
+) -> None:
+    primary, _ = init_repo(tmp_path, bootstrap_sources=True)
+    store = SessionStreamStore(
+        SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3")
+    )
+    holder = LeaseHolder(
+        agent="codex",
+        harness="codex-desktop",
+        instance_id="desktop-live-thread",
+        task_id=SOURCE_THREAD_ID,
+        process_id=None,
+        holder_kind=HolderKind.APP_THREAD,
+    )
+    observed_at = datetime.now(UTC) - timedelta(seconds=2)
+    proof = VerifiedAppLifecycleProof(
+        receipt=make_receipt(
+            operation="acquire",
+            provider="codex-desktop",
+            adapter_version="e2e-test",
+            holder=holder,
+            state="active",
+            observed_at=isoformat_z(observed_at),
+            valid_until=isoformat_z(observed_at + timedelta(seconds=20)),
+            source_schema_digest="a" * 64,
+            source_authority="e2e-structured-readback",
+            readback_digest="b" * 64,
+            stream_id="epic:5703",
+            session_id="session-app-thread",
+            lease_id="lease-app-thread",
+            generation=1,
+            fencing_token=1,
+        ),
+        verifier_id="e2e-adapter",
+    )
+    store.open_session(
+        stream_id="epic:5703",
+        holder=holder,
+        lineage_id="lineage-app-thread",
+        ttl_seconds=1,
+        session_id="session-app-thread",
+        lease_id="lease-app-thread",
+        now=observed_at,
+        app_proof=proof,
+    )
+    env, started = launcher_environment(tmp_path, "grok")
+
+    launched = run([primary / "start-grok-driver.sh", "devops"], cwd=primary, env=env)
+
+    assert launched.returncode == 1
+    assert "app-thread holder requires verified GUI lifecycle recovery" in launched.stderr
+    assert not started["grok"].exists()
+    stream = store.dump_stream("epic:5703")
+    assert stream["sessions"][0]["state"] == "open"
+    assert stream["lease"]["holder_kind"] == HolderKind.APP_THREAD.value
+
+
+def test_real_grok_driver_launches_single_holder(tmp_path: Path) -> None:
+    primary, _ = init_repo(tmp_path, bootstrap_sources=True)
+    env, started = launcher_environment(tmp_path, "grok")
+
+    launched = run([primary / "start-grok-driver.sh", "devops"], cwd=primary, env=env)
+
+    assert launched.returncode == 0, launched.stderr + launched.stdout
+    assert started["grok"].exists()
+    stream = SessionStreamStore(
+        SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3")
+    ).dump_stream("epic:5703")
+    assert [session["state"] for session in stream["sessions"]] == ["open"]
+    assert stream["lease"]["holder_agent"] == "grok"
