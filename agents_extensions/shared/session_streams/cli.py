@@ -433,6 +433,7 @@ def _handoff_status(store: SessionStreamStore, args: argparse.Namespace) -> int:
     print(f"lease_expired:       {status.lease_expired}")
     print(f"holder:              {status.holder_agent or '—'}/{status.holder_harness or '—'}")
     print(f"holder_instance_id:  {status.holder_instance_id or '—'}")
+    print(f"holder_kind:         {status.holder_kind or '—'}")
     print(f"holder_process_id:   {status.holder_process_id or '—'} alive={status.holder_process_alive}")
     print(f"expires_at:          {status.expires_at or '—'}")
     print(f"heartbeat_at:        {status.heartbeat_at or '—'}")

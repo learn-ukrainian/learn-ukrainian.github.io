@@ -7,7 +7,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime
 
-from .model import Lease, LeaseHolder
+from .app_lifecycle import VerifiedAppLifecycleProof
+from .model import HolderKind, Lease, LeaseHolder
 from .store import SessionStreamStore
 
 ENV_PREFIX = "SESSION_STREAM_"
@@ -32,12 +33,17 @@ def lease_from_environment(environment: Mapping[str, str] | None = None) -> Leas
             raise ValueError(f"missing required hook environment: {ENV_PREFIX}{name}")
         return value
 
+    holder_kind = HolderKind(values.get(f"{ENV_PREFIX}HOLDER_KIND", "process"))
+    process_id = values.get(f"{ENV_PREFIX}PROCESS_ID", "").strip()
+    if holder_kind is HolderKind.PROCESS and not process_id:
+        raise ValueError(f"missing required hook environment: {ENV_PREFIX}PROCESS_ID")
     holder = LeaseHolder(
         agent=required("AGENT"),
         harness=required("HARNESS"),
         instance_id=required("INSTANCE_ID"),
         task_id=values.get(f"{ENV_PREFIX}TASK_ID") or None,
-        process_id=int(required("PROCESS_ID")),
+        process_id=int(process_id) if process_id else None,
+        holder_kind=holder_kind,
     )
     holder.validate()
     return Lease(
@@ -59,9 +65,10 @@ def heartbeat_hook(
     lease: Lease,
     *,
     now: datetime | None = None,
+    app_proof: VerifiedAppLifecycleProof | None = None,
 ) -> HookResult:
     """Renew the exact holder without relying on model-authored commands."""
-    renewed = store.heartbeat(lease, now=now)
+    renewed = store.heartbeat(lease, now=now, app_proof=app_proof)
     return HookResult(
         action="heartbeat",
         stream_id=renewed.stream_id,
@@ -76,9 +83,10 @@ def clean_exit_hook(
     lease: Lease,
     *,
     now: datetime | None = None,
+    app_proof: VerifiedAppLifecycleProof | None = None,
 ) -> HookResult:
     """Close the exact session idempotently when its harness exits cleanly."""
-    state = store.close_session(lease, now=now)
+    state = store.close_session(lease, now=now, app_proof=app_proof)
     return HookResult(
         action="close",
         stream_id=lease.stream_id,

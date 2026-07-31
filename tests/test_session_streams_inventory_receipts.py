@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sqlite3
 from pathlib import Path
 
 import yaml
@@ -82,13 +83,14 @@ def test_inventory_does_not_use_hard_coded_exclusive_list(tmp_path: Path) -> Non
 
 def test_schema_applies_inventory_receipts_migration(tmp_path: Path) -> None:
     migrations = load_migrations()
-    assert [m.version for m in migrations] == [1, 2]
+    assert [m.version for m in migrations] == [1, 2, 3]
     assert "inventory_receipts" in migrations[1].name
+    assert "app_thread_holders" in migrations[2].name
     db = SessionStreamDatabase(tmp_path / "streams.sqlite3")
     conn = db.connect()
     try:
         versions = [int(r[0]) for r in conn.execute("SELECT version FROM schema_migrations ORDER BY 1")]
-        assert versions == [1, 2]
+        assert versions == [1, 2, 3]
         for table in (
             "stream_migration_state",
             "stream_inventory_receipts",
@@ -103,6 +105,96 @@ def test_schema_applies_inventory_receipts_migration(tmp_path: Path) -> None:
             assert row is not None, table
     finally:
         conn.close()
+
+
+def test_app_holder_migration_preserves_legacy_process_projection_and_indexes(tmp_path: Path) -> None:
+    path = tmp_path / "legacy.sqlite3"
+    migrations = load_migrations()
+    with sqlite3.connect(path) as connection:
+        connection.execute("PRAGMA foreign_keys = ON")
+        connection.executescript(migrations[0].sql)
+        connection.execute(
+            "INSERT INTO schema_migrations VALUES (?, ?, ?, ?)",
+            (1, migrations[0].name, migrations[0].sha256, "2026-07-31T10:00:00Z"),
+        )
+        connection.executescript(migrations[1].sql)
+        connection.execute(
+            "INSERT INTO schema_migrations VALUES (?, ?, ?, ?)",
+            (2, migrations[1].name, migrations[1].sha256, "2026-07-31T10:00:01Z"),
+        )
+        connection.execute("INSERT INTO streams VALUES ('epic:4707', 'epic', 4707, '2026-07-31T10:00:00Z')")
+        connection.execute(
+            "INSERT INTO sessions VALUES "
+            "('session-legacy', 'epic:4707', 'open', 'lineage-legacy', "
+            "'2026-07-31T10:00:00Z', '2026-07-31T10:00:00Z', NULL, 1)"
+        )
+        connection.execute(
+            "INSERT INTO session_events("
+            "stream_id, session_id, from_state, to_state, ts, agent, harness, reason, proof_json"
+            ") VALUES ('epic:4707', 'session-legacy', NULL, 'open', "
+            "'2026-07-31T10:00:00Z', 'codex', 'codex', 'legacy fixture', '{}')"
+        )
+        cursor = connection.execute(
+            "INSERT INTO lease_events("
+            "stream_id, session_id, lease_id, generation, fencing_token, event_type, "
+            "holder_agent, holder_harness, holder_instance_id, holder_task_id, holder_process_id, "
+            "ttl_seconds, ts, proof_json, reason"
+            ") VALUES ('epic:4707', 'session-legacy', 'lease-legacy', 1, 1, 'acquired', "
+            "'codex', 'codex', 'runtime-legacy', 'task-legacy', 41001, 60, "
+            "'2026-07-31T10:00:00Z', '{}', 'legacy fixture')"
+        )
+        connection.execute(
+            "INSERT INTO stream_leases("
+            "stream_id, session_id, lease_id, generation, fencing_token, state, holder_agent, "
+            "holder_harness, holder_instance_id, holder_task_id, holder_process_id, heartbeat_at, "
+            "expires_at, ttl_seconds, version, last_event_id"
+            ") VALUES ('epic:4707', 'session-legacy', 'lease-legacy', 1, 1, 'active', "
+            "'codex', 'codex', 'runtime-legacy', 'task-legacy', 41001, "
+            "'2026-07-31T10:00:00Z', '2026-07-31T10:01:00Z', 60, 1, ?)",
+            (int(cursor.lastrowid),),
+        )
+        connection.execute(
+            "INSERT INTO entries("
+            "stream_id, session_id, agent, harness, ts, type, body, body_sha256, origin, "
+            "writer_lease_id, writer_instance_id, fencing_token, idempotency_key"
+            ") VALUES ('epic:4707', 'session-legacy', 'codex', 'codex', "
+            "'2026-07-31T10:00:02Z', 'note', 'legacy live entry', ?, 'live', "
+            "'lease-legacy', 'runtime-legacy', 1, 'legacy-live')",
+            ("a" * 64,),
+        )
+        connection.execute(
+            "INSERT INTO entries("
+            "stream_id, session_id, agent, harness, ts, type, body, body_sha256, origin, "
+            "writer_lease_id, writer_instance_id, fencing_token, idempotency_key"
+            ") VALUES ('epic:4707', 'session-legacy', 'codex', 'codex', "
+            "'2026-07-31T10:00:03Z', 'note', 'legacy migrated entry', ?, 'migration', "
+            "NULL, NULL, NULL, 'legacy-migration')",
+            ("b" * 64,),
+        )
+
+    connection = SessionStreamDatabase(path).connect()
+    try:
+        projection = connection.execute("SELECT * FROM stream_leases").fetchone()
+        event = connection.execute("SELECT * FROM lease_events").fetchone()
+        indexes = {str(row[1]) for row in connection.execute("PRAGMA index_list('lease_events')")}
+        assert projection["holder_kind"] == "process"
+        assert projection["holder_process_id"] == 41001
+        assert event["holder_kind"] == "process"
+        assert event["holder_process_id"] == 41001
+        migrated_entries = {
+            str(row["idempotency_key"]): (row["writer_holder_kind"], row["writer_receipt_digest"])
+            for row in connection.execute(
+                "SELECT idempotency_key, writer_holder_kind, writer_receipt_digest FROM entries"
+            )
+        }
+        assert migrated_entries == {
+            "legacy-live": ("process", None),
+            "legacy-migration": (None, None),
+        }
+        assert "lease_events_stream_order" in indexes
+        assert connection.execute("PRAGMA foreign_key_check").fetchall() == []
+    finally:
+        connection.close()
 
 
 def test_register_manifest_inventory_writes_receipts(tmp_path: Path) -> None:
