@@ -329,6 +329,18 @@ def test_tracked_agents_skill_declared_orphan_is_skipped(tmp_path: Path) -> None
     assert result.returncode == 0, result.stderr + result.stdout
 
 
+def test_tracked_claude_glob_orphan_is_skipped(tmp_path: Path) -> None:
+    """Glob allowlist entries retain the same semantics as deploy's diff excludes."""
+    repo = _init_checkout(tmp_path)
+    mirror = repo / ".claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md"
+    mirror.parent.mkdir(parents=True, exist_ok=True)
+    mirror.write_text("runtime-only handoff\n", encoding="utf-8")
+    _init_git_history(repo)
+
+    result = _run_tracked_mirror_check(repo)
+    assert result.returncode == 0, result.stderr + result.stdout
+
+
 def test_rules_workflow_checks_mirrors_before_deploy() -> None:
     """CI must inspect committed mirrors before its mutating deploy step."""
     workflow = (REPO_ROOT / DEPLOY_WORKFLOW).read_text(encoding="utf-8")

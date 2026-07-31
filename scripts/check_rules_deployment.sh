@@ -18,7 +18,9 @@ path_matches_declared_entry() {
     local entry normalized
     for entry in $entries; do
         normalized="${entry%/}"
-        if [[ "$relative" == "$normalized" || "$relative" == "$normalized/"* ]]; then
+        # Entries intentionally use deploy-compatible globs such as *-epic.
+        # shellcheck disable=SC2053
+        if [[ "$relative" == $normalized || "$relative" == $normalized/* ]]; then
             return 0
         fi
     done
