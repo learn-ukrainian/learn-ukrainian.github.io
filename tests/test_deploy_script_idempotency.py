@@ -323,7 +323,15 @@ def test_rules_workflow_checks_mirrors_before_deploy() -> None:
     preflight = "bash scripts/check_rules_deployment.sh --tracked-mirrors-only"
     deploy = "bash scripts/deploy_prompts.sh"
 
-    assert "- '.gemini/**'" in workflow
+    for path_filter in (
+        "agents_extensions/codex/**",
+        ".claude/**",
+        ".agent/**",
+        ".agents/**",
+        ".codex/**",
+        ".gemini/**",
+    ):
+        assert workflow.count(f"- '{path_filter}'") == 2
     assert workflow.index(preflight) < workflow.index(deploy)
 
 
