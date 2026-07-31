@@ -182,7 +182,6 @@ def main() -> int:
     args = parser.parse_args()
     payload = sys.stdin.read()
     tool_name = _tool_name(payload)
-    venv_result = None
     if tool_name == "Bash":
         venv_result = _run_enforce_venv(
             args.hooks_dir,
@@ -208,8 +207,6 @@ def main() -> int:
         merge_code = _result_code(_run_merge_guards(args.python_bin, args.hooks_dir, payload))
         if merge_code:
             return merge_code
-        if venv_result is not None:
-            _emit(venv_result)
     return 0
 
 
