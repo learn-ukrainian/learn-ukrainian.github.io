@@ -130,12 +130,19 @@ def test_audit_is_deterministic_fail_closed_and_covers_all_rows(tmp_path: Path) 
     assert [row["id"] for row in dispositions] == ["lit-1", "lit-2", "lit-3", "lit-4", "lit-5"]
     assert dispositions[0]["disposition"] == "excluded_evaluation_overlap"
     assert "russian_only_letter_signal" in dispositions[2]["anomaly_signals"]
+    report_text = report.read_text(encoding="utf-8")
+    assert "`encoding_damage_signal` detects replacement characters or surrogate damage" in report_text
+    assert "its observed count is `0`" in report_text
+    assert "`ocr_or_layout_noise_signal` detects long punctuation runs or spaced dot runs" in report_text
 
 
 def test_empty_similarity_and_ukrainian_cyrillic_signal_are_fail_safe() -> None:
     assert AUDIT.jaccard(set(), set()) == 0.0
     flags = AUDIT.anomaly_flags({"text": "Її Єва ґречно їде."}, None)
     assert "low_cyrillic_ratio_signal" not in flags
+    damage_flags = AUDIT.anomaly_flags({"text": "Пошкоджено � текст."}, None)
+    assert "encoding_damage_signal" in damage_flags
+    assert "ocr_or_layout_noise_signal" not in damage_flags
 
 
 @pytest.mark.parametrize(

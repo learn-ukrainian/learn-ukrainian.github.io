@@ -657,10 +657,12 @@ def render_report(summary: dict[str, Any]) -> str:
             "`ё`; it does not decide whether an occurrence is a quotation, historical "
             "orthography, OCR corruption, a proper name, or non-Ukrainian prose. The low "
             "Cyrillic-ratio signal marks texts where fewer than half of alphabetic "
-            "characters match the script test used by the tool. The OCR/layout signal "
-            "detects replacement characters, surrogate damage, long punctuation runs, or "
-            "spaced dot runs. The repetition signal identifies a high repeated-token ratio "
-            "only in texts longer than twelve normalized words.",
+            "characters match the script test used by the tool. The separate "
+            "`encoding_damage_signal` detects replacement characters or surrogate damage; "
+            f"its observed count is `{summary['anomaly_signal_counts'].get('encoding_damage_signal', 0)}`. "
+            "The `ocr_or_layout_noise_signal` detects long punctuation runs or spaced dot "
+            "runs. The repetition signal identifies a high repeated-token ratio only in "
+            "texts longer than twelve normalized words.",
             "",
             "These flags route records for human review; they are not labels and do not "
             "authorize automatic deletion. Ukrainian linguists and textual scholars must "
