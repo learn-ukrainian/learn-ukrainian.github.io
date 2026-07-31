@@ -494,6 +494,15 @@ def test_codex_adapter_reads_session_id_from_matching_rollout(tmp_path, monkeypa
                         "payload": {"type": "user_message", "message": "continuity probe"},
                     }
                 ),
+                json.dumps(
+                    {
+                        "type": "event_msg",
+                        "payload": {
+                            "type": "task_complete",
+                            "last_agent_message": "initial turn done",
+                        },
+                    }
+                ),
             ]
         )
         + "\n",
@@ -542,6 +551,10 @@ def test_codex_adapter_reads_session_id_from_matching_rollout(tmp_path, monkeypa
             )
             + "\n"
         )
+
+    assert adapter._read_latest_rollout_task_complete(resumed) == ""
+
+    with rollout.open("a", encoding="utf-8") as stream:
         stream.write(
             json.dumps(
                 {
@@ -566,6 +579,9 @@ def test_codex_adapter_reads_session_id_from_matching_rollout(tmp_path, monkeypa
     )
     assert resumed_result.session_id == session_id
     assert adapter._read_latest_rollout_task_complete(resumed) == "follow-up done"
+    resumed_trace = adapter._read_latest_rollout_trace(resumed)
+    assert "initial turn done" not in resumed_trace
+    assert "follow-up done" in resumed_trace
 
     for mode in ("workspace-write", "danger"):
         resumed_write = adapter.build_invocation(

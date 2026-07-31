@@ -776,14 +776,20 @@ class CodexAdapter:
         Taking the snapshot eagerly (in build_invocation) instead of
         lazily (on the first check_early_reap call) is correct: we
         want to capture the state of the sessions dir at the MOMENT
-        the call begins, not at some arbitrary later time when the
-        new rollout may already have been created. Any file present
-        when build_invocation runs is "pre-existing" and therefore
-        cannot be the current call's rollout.
+        the call begins, not at some arbitrary later time when a fresh
+        rollout may already have been created. For resumed sessions, Codex
+        appends to a pre-existing rollout; its captured byte length is the
+        current invocation's safe scan boundary.
         """
         self._last_early_reap_check = 0.0
         self._last_early_reap_mtime = 0.0
         self._rollout_snapshot = self._snapshot_preexisting_rollouts()
+        self._rollout_start_offsets = {}
+        for rollout in self._rollout_snapshot:
+            try:
+                self._rollout_start_offsets[rollout] = rollout.stat().st_size
+            except OSError:
+                continue
         self._bound_rollout = None
         self._resume_session_id = None
 
@@ -801,17 +807,13 @@ class CodexAdapter:
         because concurrent Codex runs in the same repo would
         cross-contaminate. Instead we:
 
-        1. Snapshot the set of rollout files that existed at the
-           moment check_early_reap first runs (stored on the adapter
-           as ``_rollout_snapshot``).
-        2. On every scan, ignore any file in the snapshot.
-        3. From the non-snapshot candidates, pick the one with the
-           newest mtime. This is guaranteed to be a file Codex created
-           AFTER our call started.
-        4. Once we find a candidate, we cache it as ``_bound_rollout``
-           — any future calls return the SAME file, so the runner's
-           parse_response always sees the rollout scoped to THIS
-           invocation.
+        1. Fresh calls ignore files in the build-time snapshot and prompt-bind
+           one newly created candidate.
+        2. Resumed calls session-ID-bind the original rollout and prompt-match
+           only bytes appended after its build-time length.
+        3. Once bound, later scans keep the same file and the same byte
+           boundary, so prior turns cannot satisfy task completion or pollute
+           current-turn tool telemetry.
 
         Also checks yesterday's sessions dir for UTC-midnight rollover.
 
@@ -826,23 +828,22 @@ class CodexAdapter:
 
             # 4. Scan our bound rollout for task_complete
             last_message = ""
-            with open(rollout_to_scan, encoding="utf-8", errors="replace") as f:
-                for line in f:
-                    line = line.strip()
-                    if not line:
-                        continue
-                    try:
-                        event = _json.loads(line)
-                    except _json.JSONDecodeError:
-                        continue
-                    if event.get("type") != "event_msg":
-                        continue
-                    payload = event.get("payload") or {}
-                    if payload.get("type") != "task_complete":
-                        continue
-                    msg = payload.get("last_agent_message")
-                    if isinstance(msg, str) and msg:
-                        last_message = msg
+            for line in self._read_rollout_segment(rollout_to_scan).splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    event = _json.loads(line)
+                except _json.JSONDecodeError:
+                    continue
+                if event.get("type") != "event_msg":
+                    continue
+                payload = event.get("payload") or {}
+                if payload.get("type") != "task_complete":
+                    continue
+                msg = payload.get("last_agent_message")
+                if isinstance(msg, str) and msg:
+                    last_message = msg
 
             return last_message
         except Exception:
@@ -904,18 +905,31 @@ class CodexAdapter:
         rollout = self._select_rollout_for_plan(plan)
         if rollout is None:
             return ""
+        return self._read_rollout_segment(rollout)
+
+    def _read_rollout_segment(self, rollout: Path) -> str:
+        """Read only bytes appended during the current invocation.
+
+        A fresh invocation owns a newly created rollout and starts at byte zero.
+        A resumed invocation appends to a pre-existing session rollout, whose
+        starting length was captured synchronously in ``build_invocation``.
+        """
+        offsets: dict[Path, int] = getattr(self, "_rollout_start_offsets", {})
+        start_offset = offsets.get(rollout, 0)
         try:
-            return rollout.read_text(encoding="utf-8", errors="replace")
+            with open(rollout, "rb") as stream:
+                stream.seek(start_offset)
+                return stream.read().decode("utf-8", errors="replace")
         except OSError:
             return ""
 
     def _read_session_id_from_rollout(self, plan: InvocationPlan) -> str | None:
         """Read the exact invocation's session id from ``session_meta``.
 
-        The rollout selector first proves that the file contains this plan's
-        normalized user prompt and was created after the invocation snapshot.
-        Never take an ID from the globally newest rollout: concurrent Codex
-        calls may share the same date directory.
+        The rollout selector first proves that a fresh file or the exact
+        resumed session contains this plan's normalized prompt in the current
+        invocation segment. Never take an ID from the globally newest rollout:
+        concurrent Codex calls may share the same date directory.
         """
         rollout = self._select_rollout_for_plan(plan)
         if rollout is None:
@@ -961,48 +975,47 @@ class CodexAdapter:
             return True
 
         try:
-            with open(rollout_path, encoding="utf-8", errors="replace") as f:
-                for line in f:
-                    line = line.strip()
-                    if not line:
-                        continue
-                    try:
-                        event = _json.loads(line)
-                    except _json.JSONDecodeError:
-                        continue
+            for line in self._read_rollout_segment(rollout_path).splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    event = _json.loads(line)
+                except _json.JSONDecodeError:
+                    continue
 
-                    payload = event.get("payload") or {}
-                    if not isinstance(payload, dict):
-                        continue
+                payload = event.get("payload") or {}
+                if not isinstance(payload, dict):
+                    continue
 
-                    if (
-                        event.get("type") == "event_msg"
-                        and payload.get("type") == "user_message"
-                        and isinstance(payload.get("message"), str)
-                        and _normalize_payload_for_rollout_match(payload["message"]) == expected
-                    ):
-                        return True
+                if (
+                    event.get("type") == "event_msg"
+                    and payload.get("type") == "user_message"
+                    and isinstance(payload.get("message"), str)
+                    and _normalize_payload_for_rollout_match(payload["message"]) == expected
+                ):
+                    return True
 
-                    if (
-                        event.get("type") == "response_item"
-                        and payload.get("type") == "message"
-                        and payload.get("role") == "user"
-                    ):
-                        content = payload.get("content")
-                        if isinstance(content, list):
-                            parts: list[str] = []
-                            for item in content:
-                                if isinstance(item, dict):
-                                    text = item.get("text")
-                                    if isinstance(text, str):
-                                        parts.append(text)
-                            if parts:
-                                candidates = [*parts, "\n".join(parts)]
-                                if any(
-                                    _normalize_payload_for_rollout_match(candidate) == expected
-                                    for candidate in candidates
-                                ):
-                                    return True
+                if (
+                    event.get("type") == "response_item"
+                    and payload.get("type") == "message"
+                    and payload.get("role") == "user"
+                ):
+                    content = payload.get("content")
+                    if isinstance(content, list):
+                        parts: list[str] = []
+                        for item in content:
+                            if isinstance(item, dict):
+                                text = item.get("text")
+                                if isinstance(text, str):
+                                    parts.append(text)
+                        if parts:
+                            candidates = [*parts, "\n".join(parts)]
+                            if any(
+                                _normalize_payload_for_rollout_match(candidate) == expected
+                                for candidate in candidates
+                            ):
+                                return True
             return False
         except Exception:
             return False
