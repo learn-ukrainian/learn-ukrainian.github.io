@@ -3,6 +3,8 @@ import json
 import sqlite3
 from pathlib import Path
 
+import pytest
+
 SCRIPT = Path(__file__).parents[1] / "scripts/dataset/audit_literary_poltava_candidate.py"
 SPEC = importlib.util.spec_from_file_location("literary_audit", SCRIPT)
 AUDIT = importlib.util.module_from_spec(SPEC)
@@ -134,3 +136,45 @@ def test_empty_similarity_and_ukrainian_cyrillic_signal_are_fail_safe() -> None:
     assert AUDIT.jaccard(set(), set()) == 0.0
     flags = AUDIT.anomaly_flags({"text": "Її Єва ґречно їде."}, None)
     assert "low_cyrillic_ratio_signal" not in flags
+
+
+@pytest.mark.parametrize(
+    ("records", "message"),
+    [
+        ([{"_line": 1}], "required fields missing"),
+        (
+            [
+                {
+                    "_line": 1,
+                    "id": "lit-abc",
+                    "author": "Автор",
+                    "work": "Твір",
+                    "year": 1900,
+                    "language_period": "modern",
+                    "dialect_standard": "candidate",
+                    "text": "Текст.",
+                }
+            ],
+            "id must match lit-<integer>",
+        ),
+        (
+            [
+                {
+                    "_line": line,
+                    "id": "lit-1",
+                    "author": "Автор",
+                    "work": "Твір",
+                    "year": 1900,
+                    "language_period": "modern",
+                    "dialect_standard": "candidate",
+                    "text": "Текст.",
+                }
+                for line in (1, 2)
+            ],
+            "source IDs must be unique",
+        ),
+    ],
+)
+def test_record_validation_fails_closed(records: list[dict[str, object]], message: str) -> None:
+    with pytest.raises(ValueError, match=message):
+        AUDIT.validate_records(records)

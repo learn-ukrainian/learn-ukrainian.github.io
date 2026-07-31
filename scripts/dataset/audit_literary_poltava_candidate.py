@@ -156,6 +156,28 @@ def load_records(path: Path) -> list[dict[str, Any]]:
     return records
 
 
+def validate_records(records: list[dict[str, Any]]) -> tuple[list[int], dict[str, int]]:
+    required_missing = {
+        field: sum(not record.get(field) for record in records)
+        for field in REQUIRED_FIELDS
+    }
+    missing = {field: count for field, count in required_missing.items() if count}
+    if missing:
+        raise ValueError(f"candidate required fields missing: {canonical_json(missing)}")
+    ids: list[int] = []
+    for record in records:
+        raw_id = str(record["id"])
+        match = re.fullmatch(r"lit-([0-9]+)", raw_id)
+        if not match:
+            raise ValueError(
+                f"record line {record['_line']} id must match lit-<integer>: {raw_id!r}"
+            )
+        ids.append(int(match.group(1)))
+    if len(set(ids)) != len(ids):
+        raise ValueError("candidate source IDs must be unique")
+    return ids, required_missing
+
+
 def database_rows(path: Path, ids: list[int]) -> dict[int, dict[str, Any]]:
     uri = f"file:{path.resolve().as_posix()}?mode=ro"
     connection = sqlite3.connect(uri, uri=True)
@@ -256,7 +278,7 @@ def audit(
 ) -> dict[str, Any]:
     input_hashes_before = {"dataset_sha256": sha256_file(dataset), "sources_db_sha256": sha256_file(source_db)}
     records = load_records(dataset)
-    ids = [int(str(record.get("id", "")).removeprefix("lit-")) for record in records]
+    ids, required_missing = validate_records(records)
     rows = database_rows(source_db, ids)
     normalized = [normalized_text(str(record.get("text", ""))) for record in records]
     exact_groups: dict[str, list[int]] = collections.defaultdict(list)
@@ -300,7 +322,6 @@ def audit(
             eval_overlap.append({"record_index": index, "kind": "exact"})
         elif any(jaccard(shingles[index], eval_set) >= NEAR_THRESHOLD for eval_set in eval_shingles):
             eval_overlap.append({"record_index": index, "kind": "near"})
-    required_missing = {field: sum(not record.get(field) for record in records) for field in REQUIRED_FIELDS}
     author_counts = collections.Counter(str(record.get("author") or "<missing>") for record in records)
     work_counts = collections.Counter(str(record.get("work") or "<missing>") for record in records)
     period_counts = collections.Counter(str(record.get("language_period") or "<missing>") for record in records)
