@@ -141,6 +141,24 @@ apostrophe handling and separates Ukrainian-script, foreign-script, mixed, and
 encoding-candidate spans. Aggregate or public receipts never contain record
 text.
 
+### 2a. Language spans and lexical evidence
+
+Russian quotations, Russian character dialogue, Ukrainian-phonetic Russian,
+mixed/surzhyk candidates, historical East Slavic material, Church Slavonic,
+and modern Ukrainian narration are not interchangeable. The Foundry classifies
+bounded spans on four independent axes: language identity, representation,
+discourse role, and downstream disposition. It preserves the original text and
+records offsets and evidence; it never silently translates or rewrites a
+source.
+
+The binding evidence routing, observed corpus cases, dictionary roles, rights
+posture, and #6121 regression set are recorded in the
+[language-span and lexical-evidence contract](../research/UKRAINIAN_DATA_FOUNDRY_LANGUAGE_SPAN_AND_LEXICAL_EVIDENCE.md).
+In particular, a VESUM miss routes to Ukrainian-source escalation, a direct
+`r2u` hit is positive Russian lexical evidence rather than a contextual
+verdict, and phonetic Russian requires span-gated reconstruction before
+Russian morphology and `r2u` validation.
+
 ### 3. Morphology evidence
 
 The morphology layer queries the pinned VESUM interface in bounded batches. It
@@ -233,6 +251,12 @@ unresolved, or excluded state—not `training_eligible`.
   flattened or silently corrected.
 - Machine-generated lessons, FOLK/BIO material, and KubeDojo translations
   remain mechanically separate from human-authored candidate data.
+- Russian quotations and character speech remain faithful source evidence;
+  they are annotated and masked or excluded from a modern-normative training
+  view rather than corrected in place.
+- Dictionary evidence remains source-specific. ULIF synonym groups,
+  `slovnyk.me` dictionaries, `r2u`, VESUM, and heritage attestations retain
+  their distinct authority, period, register, provenance, and rights scope.
 
 ### Evaluation contamination
 
