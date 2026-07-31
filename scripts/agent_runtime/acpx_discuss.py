@@ -153,7 +153,18 @@ class AcpxDiscussionController:
                 (conversation_id,),
             ).fetchone()
             current = str(row[0]) if row is not None else None
-            if transition and current is not None and state not in _NEXT.get(current, set()):
+            orphan_recovery = (
+                event_type == "ORPHAN_RESERVATION"
+                and state == "PARTIAL_COMPLETE"
+                and current is not None
+                and current not in _TERMINAL
+            )
+            if (
+                transition
+                and current is not None
+                and state not in _NEXT.get(current, set())
+                and not orphan_recovery
+            ):
                 raise AcpxDiscussionError(f"invalid ACPX transition {current} -> {state}")
             sequence = int(
                 self.conn.execute(

@@ -202,6 +202,74 @@ def test_orphan_reservation_is_terminal_partial_without_model_retry(tmp_path, mo
     assert called is False
 
 
+@pytest.mark.parametrize(
+    ("crash_state", "progression"),
+    [
+        ("INITIAL_FANOUT", ["INITIAL_FANOUT"]),
+        ("INITIAL_COMPLETE", ["INITIAL_FANOUT", "INITIAL_COMPLETE"]),
+        ("PARTIAL", ["INITIAL_FANOUT", "PARTIAL"]),
+        (
+            "CROSS_EXCHANGE",
+            ["INITIAL_FANOUT", "INITIAL_COMPLETE", "CROSS_EXCHANGE"],
+        ),
+        (
+            "CROSS_EXCHANGE_COMPLETE",
+            [
+                "INITIAL_FANOUT",
+                "INITIAL_COMPLETE",
+                "CROSS_EXCHANGE",
+                "CROSS_EXCHANGE_COMPLETE",
+            ],
+        ),
+        (
+            "SYNTHESIS",
+            ["INITIAL_FANOUT", "INITIAL_COMPLETE", "SYNTHESIS"],
+        ),
+    ],
+)
+def test_orphan_recovery_is_terminal_from_every_midflight_state(
+    tmp_path, monkeypatch, crash_state, progression
+):
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        lambda *_a, **_k: pytest.fail("orphan must not invoke participants"),
+        lambda *_a, **_k: pytest.fail("orphan must not invoke synthesis"),
+    )
+    key = f"orphan-{crash_state}"
+    try:
+        conversation_id, replay = controller._reserve(
+            task_digest="a",
+            correlation_digest="b",
+            idempotency_digest=acpx_discuss._digest(key),
+            rounds=2,
+            deadline_at="2099-01-01T00:00:00Z",
+        )
+        assert replay is None
+        for state in progression:
+            controller._append(
+                conversation_id,
+                event_type="STATE",
+                state=state,
+                transition=True,
+            )
+
+        replay_payload = _run(controller, key=key)
+        terminal = controller.conn.execute(
+            """SELECT event_type, state, outcome
+               FROM acp_conversation_events
+               WHERE conversation_id = ?
+               ORDER BY sequence DESC LIMIT 1""",
+            (conversation_id,),
+        ).fetchone()
+    finally:
+        controller.close()
+
+    assert replay_payload["state"] == "PARTIAL_COMPLETE"
+    assert replay_payload["duplicate_suppressed"] is True
+    assert tuple(terminal) == ("ORPHAN_RESERVATION", "PARTIAL_COMPLETE", "orphan")
+
+
 def test_active_mode_refuses_primary_checkout_and_shadow_stays_shadow_only(tmp_path, monkeypatch):
     monkeypatch.setenv("LU_ACPX_TRANSPORT", "active")
     monkeypatch.setattr(acpx_discuss, "classify_repo_path", lambda *_a, **_k: "primary_checkout")
