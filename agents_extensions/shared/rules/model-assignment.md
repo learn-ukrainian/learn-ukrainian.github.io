@@ -210,19 +210,19 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   | kimi | false |
   <!-- fleet-roster-projection:end formal_review_eligible -->
 
-- **Advisor = `gpt-5.6-sol` @ `high` (on-demand, NOT a standing worker).** The
+* **Advisor = `gpt-5.6-sol` @ `high` (on-demand, NOT a standing worker).** The
   `execution_routing.sol_advised_bounded` catalog route makes Sol produce a bounded
   envelope containing the task contract, constraints, risk boundaries, acceptance
   evidence, and escalation triggers. Do not use Sol for routine work; explicit
   escalation may raise effort to `xhigh`/`max`.
-- **Sol-advised bounded execution:** when that envelope is complete, prefer
+* **Sol-advised bounded execution:** when that envelope is complete, prefer
   `gpt-5.6-luna` @ `xhigh` for bounded implementation or investigation. Luna must
   follow the envelope rather than re-decide its contract, and must escalate
   consequential architecture, security, release, high-risk go/no-go, unresolved
   consequential ambiguity, broader integration, or final disposition. Keep direct
   Luna @ `medium` for simple evidence/mechanical work only. If no stable envelope
   exists or broader autonomous integration is needed, use Terra.
-- **Review boundary:** Sol and Luna are both OpenAI-family seats. Sol's advisory
+* **Review boundary:** Sol and Luna are both OpenAI-family seats. Sol's advisory
   output never satisfies the independent cross-family review gate.
 - **Workers = every other lane** — `gpt-5.6-terra` / `gpt-5.6-luna` (codex coding, not driver),
   `cursor`, `kimi`, `deepseek`, `pool` (**Laguna family exact IDs:** default **`laguna-s-2.1`** gen-2 S; light **`laguna-xs-2.1`** gen-2 XS; fallback only **`laguna-m.1`** gen-1 — never invent s2/m2 orthography),
