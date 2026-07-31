@@ -488,7 +488,9 @@ def test_approved_publication_refuses_if_head_moves_during_path_snapshot(
     payload = _sealed(review_evidence=_approved_evidence())
 
     with ArtifactStore(root=tmp_path / "plane") as store:
-        with pytest.raises(ReviewPublisherError, match="rail_snapshot_head_changed"):
+        with pytest.raises(
+            ReviewPublisherError, match=r"^rail_snapshot_head_changed"
+        ):
             publish_sealed_verdict(
                 payload,
                 current_head_sha=_SHA_A,
@@ -509,7 +511,9 @@ def test_approved_publication_refuses_incomplete_paginated_path_snapshot(
     payload = _sealed(review_evidence=_approved_evidence())
 
     with ArtifactStore(root=tmp_path / "plane") as store:
-        with pytest.raises(ReviewPublisherError, match="rail_snapshot_file_count_mismatch"):
+        with pytest.raises(
+            ReviewPublisherError, match=r"^rail_snapshot_file_count_mismatch"
+        ):
             publish_sealed_verdict(
                 payload,
                 current_head_sha=_SHA_A,

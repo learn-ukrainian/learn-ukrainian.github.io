@@ -398,7 +398,7 @@ def execute_publication(
                 resolver=rail_receipt_resolver,
             )
         except RailStatusError as exc:
-            raise ReviewPublisherError(f"rail_status_unreadable: {exc}") from exc
+            raise ReviewPublisherError(str(exc)) from exc
         rail_status_posted = True
         rail_status_reason = rail_result.reason
         if not rail_result.allowed:
