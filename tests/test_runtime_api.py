@@ -379,11 +379,15 @@ def test_acp_conversations_refuse_poisoned_rows_and_hide_unavailable_storage(tmp
             "timeout", 4, 2, "secret", "secret", '{broken', _iso(now),
         ),
         (
-            "event-duplicate", "conv-good", 2, "duplicate_suppressed", "PARTIAL_COMPLETE", "root", None, 1,
+            "event-busy", "conv-good", 2, "CALL_TERMINAL", "PARTIAL_COMPLETE", "root", "codex", 1,
+            "busy", 0, 0, "secret", "secret", "{}", _iso(now),
+        ),
+        (
+            "event-duplicate", "conv-good", 3, "duplicate_suppressed", "PARTIAL_COMPLETE", "root", None, 1,
             "duplicate_suppressed", 0, 0, "secret", "secret", '{"body":"must-not-leak"}', _iso(now),
         ),
         (
-            "event-poison", "conv-good", 3, "prompt body must not leak", "COMPLETE", "intruder", "grok", 1,
+            "event-poison", "conv-good", 4, "prompt body must not leak", "COMPLETE", "intruder", "grok", 1,
             "succeeded", 4, 2, "secret", "secret", '{"body":"must-not-leak"}', _iso(now),
         ),
     ]
@@ -397,9 +401,11 @@ def test_acp_conversations_refuse_poisoned_rows_and_hide_unavailable_storage(tmp
     assert data["current_state"] == "PARTIAL_COMPLETE"
     assert data["termination_reason"] == "duplicate_suppressed"
     assert data["duplicate_suppressed"] is True
-    assert len(data["events"]) == 2
+    assert len(data["events"]) == 3
     assert data["events"][0]["event_type"] == "CALL_TERMINAL"
     assert data["events"][0]["outcome"] == "partial"
+    assert data["events"][1]["recipient"] == "codex"
+    assert data["events"][1]["outcome"] == "partial"
     assert "must-not-leak" not in response.text
     assert client.get("/api/runtime/acp/conversations/not-found").status_code == 404
 

@@ -539,7 +539,7 @@ def _acp_outcome(value: Any, state: str) -> str | None:
         return normalized
     if normalized == "ok":
         return "succeeded"
-    if normalized in {"error", "timeout", "rate_limited", "orphan"}:
+    if normalized in {"busy", "error", "timeout", "rate_limited", "orphan"}:
         return "partial" if state in {"PARTIAL", "PARTIAL_COMPLETE"} else "failed"
     return None
 
