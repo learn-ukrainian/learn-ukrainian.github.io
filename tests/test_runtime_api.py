@@ -10,6 +10,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 import scripts.api.runtime_router as runtime_router
+from scripts.agent_runtime.acpx_discuss import AcpxDiscussionController
 from scripts.api.main import app
 
 client = TestClient(app, raise_server_exceptions=False)
@@ -365,6 +366,46 @@ def test_acp_conversation_api_is_ordered_allowlisted_and_read_only(tmp_path, mon
         "leg_key_digest", "must-not-leak", "leg-secret", "message-secret",
     ):
         assert private_value not in detail.text
+
+
+def test_acp_runtime_api_hides_persisted_message_content_and_references(
+    tmp_path, monkeypatch
+):
+    root = tmp_path / "plane"
+    controller = AcpxDiscussionController(root=root)
+    try:
+        conversation_id, replay = controller._reserve(
+            task_digest="task-digest",
+            correlation_digest="correlation-digest",
+            idempotency_digest="idempotency-digest",
+            rounds=1,
+            deadline_at="2099-01-01T00:00:00Z",
+        )
+        assert replay is None
+        message_id = controller._message(
+            conversation_id,
+            sender="codex",
+            recipient="root",
+            body="private ACP body must not leak",
+            reply_to=None,
+        )
+        artifact_id = controller.conn.execute(
+            "SELECT body_artifact_id FROM comms_messages WHERE message_id = ?",
+            (message_id,),
+        ).fetchone()[0]
+    finally:
+        controller.close()
+
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+    response = client.get(f"/api/runtime/acp/conversations/{conversation_id}")
+
+    assert response.status_code == 200
+    for private_value in (
+        "private ACP body must not leak",
+        message_id,
+        artifact_id,
+    ):
+        assert private_value not in response.text
 
 
 def test_acp_conversations_refuse_poisoned_rows_and_hide_unavailable_storage(tmp_path, monkeypatch):
