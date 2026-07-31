@@ -152,6 +152,7 @@ class CodexAdapter:
     # ``_candidate_rollout_dirs`` so the post-call rollout scan looks in
     # the scoped sessions/ dir, not the user's real ``~/.codex/sessions/``.
     _codex_home_scope: str | None = None
+    _resume_session_id: str | None = None
 
     def build_invocation(
         self,
@@ -210,6 +211,7 @@ class CodexAdapter:
         # between consecutive calls on the same adapter instance).
         # Codex 2026-04-10 audit.
         self._reset_per_invocation_state()
+        self._resume_session_id = session_id
 
         discussion_readonly = _discussion_readonly_requested(tool_config)
         if discussion_readonly and mode != "read-only":
@@ -783,6 +785,7 @@ class CodexAdapter:
         self._last_early_reap_mtime = 0.0
         self._rollout_snapshot = self._snapshot_preexisting_rollouts()
         self._bound_rollout = None
+        self._resume_session_id = None
 
     def _read_latest_rollout_task_complete(
         self,
@@ -864,15 +867,31 @@ class CodexAdapter:
                 all_candidates.extend(directory.glob("rollout-*.jsonl"))
             except OSError:
                 continue
-        new_candidates = [path for path in all_candidates if path not in snapshot]
-        if not new_candidates:
-            return None
 
         def mtime(path: Path) -> float:
             try:
                 return path.stat().st_mtime
             except OSError:
                 return 0.0
+
+        # Current Codex appends every resumed turn to the original session
+        # rollout instead of creating a new file. That exact file is therefore
+        # present in the pre-invocation snapshot. Bind it by BOTH the trusted
+        # stored session ID and this invocation's normalized prompt before
+        # applying the fresh-call snapshot exclusion below.
+        resume_session_id = getattr(self, "_resume_session_id", None)
+        if resume_session_id:
+            for candidate in sorted(all_candidates, key=mtime, reverse=True):
+                if (
+                    self._read_rollout_session_id(candidate) == resume_session_id
+                    and self._rollout_matches_plan(candidate, plan)
+                ):
+                    self._bound_rollout = candidate
+                    return candidate
+
+        new_candidates = [path for path in all_candidates if path not in snapshot]
+        if not new_candidates:
+            return None
 
         for candidate in sorted(new_candidates, key=mtime, reverse=True):
             if self._rollout_matches_plan(candidate, plan):
@@ -901,6 +920,11 @@ class CodexAdapter:
         rollout = self._select_rollout_for_plan(plan)
         if rollout is None:
             return None
+        return self._read_rollout_session_id(rollout)
+
+    @staticmethod
+    def _read_rollout_session_id(rollout: Path) -> str | None:
+        """Read one validated session UUID from a rollout's opening metadata."""
         try:
             with open(rollout, encoding="utf-8", errors="replace") as stream:
                 for line_number, line in enumerate(stream, start=1):

@@ -529,6 +529,59 @@ def test_codex_adapter_reads_session_id_from_matching_rollout(tmp_path, monkeypa
     assert "-s" not in resumed.cmd
     assert 'sandbox_mode="read-only"' in resumed.cmd
 
+    with rollout.open("a", encoding="utf-8") as stream:
+        stream.write(
+            json.dumps(
+                {
+                    "type": "event_msg",
+                    "payload": {
+                        "type": "user_message",
+                        "message": "continuity follow-up",
+                    },
+                }
+            )
+            + "\n"
+        )
+        stream.write(
+            json.dumps(
+                {
+                    "type": "event_msg",
+                    "payload": {
+                        "type": "task_complete",
+                        "last_agent_message": "follow-up done",
+                    },
+                }
+            )
+            + "\n"
+        )
+
+    resumed_output = tmp_path / "resumed-output.txt"
+    resumed_output.write_text("follow-up done", encoding="utf-8")
+    resumed_result = adapter.parse_response(
+        stdout="",
+        stderr="",
+        returncode=0,
+        output_file=resumed_output,
+        plan=resumed,
+    )
+    assert resumed_result.session_id == session_id
+    assert adapter._read_latest_rollout_task_complete(resumed) == "follow-up done"
+
+    for mode in ("workspace-write", "danger"):
+        resumed_write = adapter.build_invocation(
+            prompt=f"{mode} follow-up",
+            mode=mode,
+            cwd=tmp_path,
+            model=None,
+            task_id="continuity-probe",
+            session_id=session_id,
+            tool_config=None,
+        )
+        assert "--dangerously-bypass-approvals-and-sandbox" in resumed_write.cmd
+        assert "--enable" in resumed_write.cmd
+        assert "multi_agent" in resumed_write.cmd
+        assert "-s" not in resumed_write.cmd
+
 
 def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_path):
     checkout = ProvisionedReviewWorktree(
