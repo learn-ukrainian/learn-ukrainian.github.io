@@ -37,23 +37,26 @@ interface LexiconCustomDeckManagerProps {
 type CandidateWord = PasteCandidate;
 
 // Module-level cache: the Atlas attestation index is ~4MB and shared by every
-// wizard open in this tab session, so fetch it once.
-let attestationIndexPromise: Promise<Map<string, AtlasAttestationRow>> | null = null;
+// wizard open in this tab session, so fetch it once per shard base URL.
+const attestationIndexPromises = new Map<string, Promise<Map<string, AtlasAttestationRow>>>();
 
-function loadAttestationIndex(shardBaseUrl: string): Promise<Map<string, AtlasAttestationRow>> {
-  if (!attestationIndexPromise) {
-    attestationIndexPromise = fetch(`${shardBaseUrl}/search-index.json`)
+export function loadAttestationIndex(shardBaseUrl: string): Promise<Map<string, AtlasAttestationRow>> {
+  const key = shardBaseUrl.trim().replace(/\/+$/, '');
+  let promise = attestationIndexPromises.get(key);
+  if (!promise) {
+    promise = fetch(`${key}/search-index.json`)
       .then((res) => {
         if (!res.ok) throw new Error(`Attestation index fetch failed: ${res.status}`);
         return res.json() as Promise<AtlasAttestationRow[]>;
       })
       .then((rows) => buildAtlasAttestationIndex(rows))
       .catch((err) => {
-        attestationIndexPromise = null; // allow retry on next open
+        attestationIndexPromises.delete(key); // allow retry on next open
         throw err;
       });
+    attestationIndexPromises.set(key, promise);
   }
-  return attestationIndexPromise;
+  return promise;
 }
 
 export function LexiconCustomDeckManager({
@@ -199,7 +202,7 @@ export function LexiconCustomDeckManager({
   }, []);
 
   // Bulk toggles: a specific CEFR level, or every unverified (unattested) candidate
-  const toggleGroupSelection = useCallback((group: 'A1' | 'A2' | 'B1' | 'B2' | 'UNVERIFIED', enable: boolean) => {
+  const toggleGroupSelection = useCallback((group: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'UNVERIFIED', enable: boolean) => {
     setCandidates((prev) =>
       prev.map((item) => {
         const inGroup = group === 'UNVERIFIED' ? item.status === 'unverified' : item.cefr === group;
@@ -596,7 +599,7 @@ export function LexiconCustomDeckManager({
 
                   {/* Bulk group toggles, including the unverified group */}
                   <div style={{ display: 'flex', gap: '0.3rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
-                    {(['A1', 'A2', 'B1', 'B2', 'UNVERIFIED'] as const).map((group) => (
+                    {(['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'UNVERIFIED'] as const).map((group) => (
                       <React.Fragment key={group}>
                         <button type="button" className="btn btn-sm" style={{ fontSize: '0.7rem' }} onClick={() => toggleGroupSelection(group, true)}>
                           +{group === 'UNVERIFIED' ? '❓' : group}
