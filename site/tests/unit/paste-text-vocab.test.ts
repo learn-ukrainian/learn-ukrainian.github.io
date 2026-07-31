@@ -2,8 +2,11 @@ import { describe, expect, test } from 'vitest';
 import {
   buildAtlasAttestationIndex,
   classifyPasteCandidates,
+  isSaveEligiblePasteCandidate,
+  selectSaveEligiblePasteCandidates,
   summarizePasteCandidates,
   type AtlasAttestationRow,
+  type PasteCandidate,
 } from '@site/src/lib/lexicon/paste-text-vocab';
 import { parsePlainTextWithTranslations } from '@site/src/lib/lexicon/document-importer';
 
@@ -118,6 +121,50 @@ describe('summarizePasteCandidates', () => {
     const summary = summarizePasteCandidates(candidates);
     expect(summary.selected).toBe(0);
     expect(summary.byLevel.A1).toBe(0);
+  });
+});
+
+describe('isSaveEligiblePasteCandidate (#6073 F001 — fail-closed save gate)', () => {
+  const index = buildAtlasAttestationIndex(SAMPLE_ROWS);
+
+  test('an atlas-attested word with a real CEFR level is save-eligible', () => {
+    const [candidate] = classifyPasteCandidates(['привіт'], index);
+    expect(isSaveEligiblePasteCandidate(candidate)).toBe(true);
+  });
+
+  test('an unverified word is never save-eligible, even if manually selected', () => {
+    const [candidate] = classifyPasteCandidates(['вигаданеслово'], index);
+    expect(isSaveEligiblePasteCandidate({ ...candidate, selected: true })).toBe(false);
+  });
+
+  test('an atlas-attested word with no parseable CEFR level is never save-eligible, even if manually selected', () => {
+    const [candidate] = classifyPasteCandidates(['абракадабра'], index);
+    expect(isSaveEligiblePasteCandidate({ ...candidate, selected: true })).toBe(false);
+  });
+});
+
+describe('selectSaveEligiblePasteCandidates (#6073 F001 — final materialization gate)', () => {
+  const index = buildAtlasAttestationIndex(SAMPLE_ROWS);
+
+  test('keeps only selected candidates that are also save-eligible', () => {
+    const candidates: PasteCandidate[] = classifyPasteCandidates(
+      ['привіт', 'книжка', 'вигаданеслово', 'абракадабра'],
+      index,
+    );
+    // Simulate a bulk-select/individual-click bug upstream that force-selected
+    // ineligible rows anyway — the materialization gate must still reject them.
+    const corrupted = candidates.map((c) => ({ ...c, selected: true }));
+    const materialized = selectSaveEligiblePasteCandidates(corrupted);
+
+    expect(materialized.map((c) => c.text)).toEqual(['привіт', 'книжка']);
+  });
+
+  test('drops a save-eligible candidate the user deselected', () => {
+    const candidates = classifyPasteCandidates(['привіт'], index).map((c) => ({
+      ...c,
+      selected: false,
+    }));
+    expect(selectSaveEligiblePasteCandidates(candidates)).toEqual([]);
   });
 });
 

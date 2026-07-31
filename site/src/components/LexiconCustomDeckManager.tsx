@@ -19,6 +19,8 @@ import { parseDocumentFile, extractDocumentClozeItems, parsePlainTextWithTransla
 import {
   buildAtlasAttestationIndex,
   classifyPasteCandidates,
+  isSaveEligiblePasteCandidate,
+  selectSaveEligiblePasteCandidates,
   summarizePasteCandidates,
   type AtlasAttestationRow,
   type PasteCandidate,
@@ -194,20 +196,27 @@ export function LexiconCustomDeckManager({
   // Attestation + CEFR distribution counts (real Atlas data, never invented)
   const cefrCounts = useMemo(() => summarizePasteCandidates(candidates), [candidates]);
 
-  // Toggle individual word selection
+  // Toggle individual word selection. Selecting (not deselecting) is fail-closed:
+  // a candidate with no real Atlas CEFR level can never be flipped to selected,
+  // so `selected` always predicts what will actually be saved (#6073 F001).
   const toggleCandidateSelection = useCallback((index: number) => {
     setCandidates((prev) =>
-      prev.map((item, idx) => (idx === index ? { ...item, selected: !item.selected } : item))
+      prev.map((item, idx) => {
+        if (idx !== index) return item;
+        const nextSelected = !item.selected;
+        if (nextSelected && !isSaveEligiblePasteCandidate(item)) return item;
+        return { ...item, selected: nextSelected };
+      })
     );
   }, []);
 
-  // Bulk toggles: a specific CEFR level, or every unverified (unattested) candidate
-  const toggleGroupSelection = useCallback((group: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'UNVERIFIED', enable: boolean) => {
+  // Bulk toggle for a specific CEFR level. Unverified candidates have no CEFR
+  // group and are intentionally excluded from bulk-select (#6073 F001) — never
+  // invent a level to make them selectable, and never let a bulk action move
+  // them into a saved deck.
+  const toggleGroupSelection = useCallback((group: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2', enable: boolean) => {
     setCandidates((prev) =>
-      prev.map((item) => {
-        const inGroup = group === 'UNVERIFIED' ? item.status === 'unverified' : item.cefr === group;
-        return inGroup ? { ...item, selected: enable } : item;
-      })
+      prev.map((item) => (item.cefr === group ? { ...item, selected: enable } : item))
     );
   }, []);
 
@@ -215,7 +224,11 @@ export function LexiconCustomDeckManager({
   const handleSaveDeck = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      const selectedWords = candidates.filter((c) => c.selected).map((c) => c.text);
+      // Fail-closed final gate (#6073 F001): only atlas-attested candidates with a
+      // real CEFR level are ever materialized into a saved deck, regardless of how
+      // `selected` got set — no unverified/no-CEFR word can reach practice and hit
+      // a downstream level-invent fallback.
+      const selectedWords = selectSaveEligiblePasteCandidates(candidates).map((c) => c.text);
       if (selectedWords.length === 0 || !deckTitle.trim()) return;
 
       const saved = saveLocalCustomSet({
@@ -540,7 +553,11 @@ export function LexiconCustomDeckManager({
                         : `Selected words: ${cefrCounts.selected} of ${cefrCounts.total}`}
                     </div>
                     <div style={{ display: 'flex', gap: '0.3rem' }}>
-                      <button type="button" className="btn btn-sm" onClick={() => setCandidates((prev) => prev.map((c) => ({ ...c, selected: true })))}>
+                      <button
+                        type="button"
+                        className="btn btn-sm"
+                        onClick={() => setCandidates((prev) => prev.map((c) => ({ ...c, selected: isSaveEligiblePasteCandidate(c) })))}
+                      >
                         {chromeLocale === 'uk' ? 'Обрати всі' : 'Select All'}
                       </button>
                       <button type="button" className="btn btn-sm" onClick={() => setCandidates((prev) => prev.map((c) => ({ ...c, selected: false })))}>
@@ -597,15 +614,17 @@ export function LexiconCustomDeckManager({
                     ))}
                   </div>
 
-                  {/* Bulk group toggles, including the unverified group */}
+                  {/* Bulk group toggles by CEFR level. Unverified candidates have no
+                      level group and are deliberately excluded — never bulk-select
+                      them into a saved deck (#6073 F001). */}
                   <div style={{ display: 'flex', gap: '0.3rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
-                    {(['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'UNVERIFIED'] as const).map((group) => (
+                    {(['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const).map((group) => (
                       <React.Fragment key={group}>
                         <button type="button" className="btn btn-sm" style={{ fontSize: '0.7rem' }} onClick={() => toggleGroupSelection(group, true)}>
-                          +{group === 'UNVERIFIED' ? '❓' : group}
+                          +{group}
                         </button>
                         <button type="button" className="btn btn-sm" style={{ fontSize: '0.7rem' }} onClick={() => toggleGroupSelection(group, false)}>
-                          -{group === 'UNVERIFIED' ? '❓' : group}
+                          -{group}
                         </button>
                       </React.Fragment>
                     ))}

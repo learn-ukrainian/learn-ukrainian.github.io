@@ -93,6 +93,28 @@ export function classifyPasteCandidates(
   });
 }
 
+/**
+ * A candidate is safe to persist into a saved deck only when it resolves to a
+ * real Atlas row with a real CEFR level. Unverified words and attested rows
+ * with no parseable CEFR level are never save-eligible — nothing downstream
+ * (e.g. a practice-session level fallback) may invent a level just because a
+ * bulk toggle or a stray click left `selected` true on an unqualified row.
+ */
+export function isSaveEligiblePasteCandidate(candidate: PasteCandidate): boolean {
+  return candidate.status === 'atlas_attested' && candidate.cefr !== null;
+}
+
+/**
+ * The fail-closed save set: candidates the user selected AND that are
+ * save-eligible. This is the final gate before a paste-text deck is
+ * persisted — the authoritative check regardless of how `selected` got set.
+ */
+export function selectSaveEligiblePasteCandidates(
+  candidates: readonly PasteCandidate[],
+): PasteCandidate[] {
+  return candidates.filter((c) => c.selected && isSaveEligiblePasteCandidate(c));
+}
+
 /** Tally selection/attestation/CEFR counts for the wizard's review step. */
 export function summarizePasteCandidates(
   candidates: readonly PasteCandidate[],
