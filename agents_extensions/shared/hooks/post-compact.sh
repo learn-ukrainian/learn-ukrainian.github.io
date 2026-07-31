@@ -1,6 +1,8 @@
 #!/bin/bash
-# Hook: PostCompact — fires after context compaction
-# Injects a concise context reminder so the agent doesn't lose track.
+# Hook: Claude invokes this as PostCompact after context compaction. Codex invokes
+# it from SessionStart(source=compact), because Codex PostCompact cannot emit
+# model-visible additionalContext. Inject a concise context reminder so the agent
+# doesn't lose track.
 
 # Skip in non-interactive mode
 if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UKRAINIAN_PIPELINE" ] || [ -n "$GEMINI_SESSION" ]; then
@@ -20,6 +22,16 @@ run_bounded() {
   "$BOUNDED_PYTHON" "$BOUNDED_RUNNER" --timeout "$timeout_seconds" -- "$@"
 }
 CONTEXT=""
+
+emit_context() {
+  local context="$1"
+  if [ "${CODEX_COMPACT_SESSION_START:-}" = "1" ]; then
+    printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":%s}}' \
+      "$(printf '%s' "$context" | jq -Rs '.')"
+  else
+    printf '{"additionalContext": %s}' "$(printf '%s' "$context" | jq -Rs '.')"
+  fi
+}
 
 # Ordinary Codex tasks use the runtime's native remote compaction and need no
 # repository-authored context replay. A launcher-bound fleet driver is the
@@ -59,7 +71,7 @@ ${HYDRATION:-Hydration helper unavailable.}
 Shadow diary: $DIARY_REL
 Do not select the next queue action until the stream lease or diary is repaired."
       fi
-      printf '{"additionalContext": %s}' "$(printf '%s' "$CONTEXT" | jq -Rs '.')"
+      emit_context "$CONTEXT"
       exit 0
     fi
     ;;
@@ -110,5 +122,5 @@ KEY REMINDERS:
   - Read audit/ and review/ files before fixing modules
   - MEMORY: ~/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/memory/MEMORY.md"
 
-printf '{"additionalContext": %s}' "$(printf '%s' "CONTEXT RESTORED AFTER COMPACTION:$CONTEXT" | jq -Rs '.')"
+emit_context "CONTEXT RESTORED AFTER COMPACTION:$CONTEXT"
 exit 0
