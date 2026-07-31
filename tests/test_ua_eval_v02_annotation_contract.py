@@ -149,6 +149,9 @@ def test_packet_file_is_jsonl() -> None:
     path = ROOT / "data/projects/ua_eval_harness/v0.2/review_packet_priority_v1.jsonl"
     rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
     packet.validate_packet_rows(rows)
+    assert [packet.canonical(row) for row in rows] == [
+        packet.canonical(row) for row in packet.build_rows()
+    ]
 
 
 def test_packet_schema_rejects_nonpending_row() -> None:
