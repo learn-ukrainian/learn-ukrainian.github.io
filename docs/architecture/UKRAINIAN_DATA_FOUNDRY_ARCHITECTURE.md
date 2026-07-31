@@ -1,0 +1,299 @@
+# Ukrainian Data Foundry Architecture
+
+> **Status:** Operator-approved architecture; implementation contract
+> **Owner:** [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
+> **Architecture issue:** [#6119](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6119)
+> **Recorded:** 2026-07-31
+> **Does not authorize:** model training, fine-tuning, weight publication,
+> dataset upload or release, redistribution, researcher outreach, private-data
+> disclosure, or OCR
+
+## Purpose
+
+The Ukrainian Data Foundry is reusable, corpus-portable infrastructure for
+preparing and measuring Ukrainian language data. Ukrainian and open-weight
+model teams must be able to run it on this project's corpus, their own corpora,
+or other licensed collections without transferring those collections to this
+project.
+
+The Foundry's job is to make evidence and boundaries explicit:
+
+- what a record is and where it came from;
+- which uses are permitted and which remain unknown;
+- which Ukrainian period, genre, register, region, and origin it represents;
+- what VESUM can and cannot attest about its forms;
+- which passages need contextual grammar, calque, collocation, or
+  Russian-interference review;
+- which decisions were made by qualified Ukrainian humans; and
+- which mechanically disjoint view, if any, may consume the record.
+
+It is not a project-owned general-purpose model and does not claim that one
+corpus or one profiler can make a model fluent. The first profiler component is
+a foundation for later adjudication, exporters, recipes, and measurement.
+
+## Architecture
+
+```text
+Sources and provenance
+        ↓
+Streaming normalization and language-span handling
+        ↓
+Period · genre · register · region · origin classification
+        ↓
+VESUM morphology and unknown-form evidence
+        ↓
+Grammar · calque · collocation · Russian-interference candidates
+        ↓
+Qualified Ukrainian-human adjudication
+        ↓
+Mechanically separate training · correction · preference · evaluation views
+        ↓
+Frozen baseline harness and before/after measurement
+```
+
+Every arrow is a versioned interface. Passing through a layer adds evidence;
+it never silently erases an earlier classification, changes unknown into
+permission, or promotes a candidate into a human decision.
+
+## Record classifications
+
+The interfaces preserve four independent classification axes. Missing metadata
+is recorded as `unknown` or `unresolved`; it is never inferred merely to make a
+record eligible.
+
+### Authorship origin
+
+- `human_authored`
+- `machine_generated`
+- `machine_translated`
+- `human_revised_synthetic`
+- `unknown`
+
+### Intended linguistic use
+
+- `modern_literary_ukrainian`
+- `historical_literary_ukrainian`
+- `historical_documents`
+- `folk_heritage`
+- `regional_dialectal`
+- `conversational_marked_register`
+- `quoted_foreign_or_multilingual`
+- `unresolved`
+
+### Permitted-use state
+
+- `training_eligible`
+- `evaluation_only`
+- `private_reference`
+- `provenance_investigation`
+- `rights_redistribution_investigation`
+- `excluded`
+
+### Evidence state
+
+- `vesum_attested`
+- `vesum_attested_with_usage_marker`
+- `vesum_unknown`
+- `foreign_language_candidate`
+- `ocr_encoding_candidate`
+- `proper_name_candidate`
+- `requires_contextual_review`
+
+These axes are not substitutes for each other. A VESUM-attested form can still
+occur in a case, agreement, government, syntax, collocation, or semantic-calque
+error. A VESUM-unknown form can be a proper name, historical form, dialect
+form, quotation, encoding defect, or genuine non-Ukrainian candidate.
+
+## Interfaces and state transitions
+
+### 1. Source and provenance record
+
+The existing `source_record_v1` contract remains the admission authority. A
+Foundry adapter supplies a stable source-record identifier, non-published
+locator, content-hash scope, acquisition lineage, bibliographic evidence,
+rights evidence, authorship origin, contamination exclusions, and review
+state.
+
+Inventory membership is not admission. The #6107 recovery baseline currently
+records zero source-record admissions and zero redistribution-cleared assets.
+The invalid 5,000-record export may locate an underlying work but cannot prove
+source, edition, rights, acquisition lineage, or contamination status.
+
+### 2. Corpus adapter and normalized record
+
+The profiler consumes an explicit, validated adapter configuration. An adapter
+maps a streaming source such as read-only SQLite rows or JSON Lines objects to
+a common record without assuming a personal filesystem path or this project's
+database schema.
+
+The normalized record carries:
+
+- stable record and source-record identifiers;
+- a non-published source locator;
+- text available only in the local processing stream;
+- source family plus known period, genre, register, region, and origin;
+- permitted-use, rights, provenance, and contamination states; and
+- explicit `unknown` values for unavailable dimensions.
+
+Normalization is deterministic and versioned. It records Unicode and
+apostrophe handling and separates Ukrainian-script, foreign-script, mixed, and
+encoding-candidate spans. Aggregate or public receipts never contain record
+text.
+
+### 3. Morphology evidence
+
+The morphology layer queries the pinned VESUM interface in bounded batches. It
+records token totals, attested and unknown counts, lemma/POS evidence, and
+usage-marker coverage where the pinned database supports them.
+
+VESUM is a deterministic morphological authority, not a contextual sentence
+judge. `vesum_unknown` means "requires classification". It never means
+"confirmed error". The regression phenomenon `звучит` must be detectable as a
+VESUM-unknown/non-Ukrainian candidate while `звучить` is attested, but both the
+candidate record and tests preserve the non-adjudicative boundary.
+
+### 4. Review candidate
+
+A candidate extractor emits no correction gold. Each candidate contains:
+
+- source-record and local-record identifiers;
+- a bounded, non-published locator rather than source text;
+- surface and normalized forms;
+- VESUM evidence;
+- source period, register, region, and origin;
+- candidate category and evidence/confidence state; and
+- `review_disposition: unresolved`.
+
+Historical, heritage, dialectal, marked-register, proper-name, foreign, and
+multilingual candidates are protected from automatic correction. Grammar,
+calque, collocation, government, syntax, and semantic layers may consume these
+candidates later, but must retain their provenance and uncertainty.
+
+### 5. Qualified adjudication
+
+Only a separate correction-data contract may promote a candidate. It must
+record qualified Ukrainian-human reviewer evidence, independent first-pass
+decisions, conflict handling, citations, rationale, uncertainty, protected
+variation, and export disposition.
+
+The promotion path is fail closed:
+
+```text
+profiled candidate
+  → provenance and rights screened
+  → exact/near-duplicate and evaluation contamination clear
+  → independent qualified Ukrainian-human reviews
+  → conflict resolved by a distinct qualified Ukrainian human or unresolved
+  → destination-specific export eligibility
+```
+
+An unresolved or protected record remains non-exportable. Synthetic fixtures
+and model outputs cannot stand in for qualified human decisions.
+
+### 6. Consumer views
+
+Continued-pretraining, correction/instruction, preference, quality-filter, and
+evaluation views are separate schemas and artifacts. They share lineage, not
+payloads. No view is constructed by renaming or filtering a mixed export after
+publication.
+
+A non-evaluation view requires all of the following:
+
+- complete source-record admission evidence;
+- granted destination-specific rights;
+- known permitted use and authorship origin;
+- exact and near-duplicate disposition;
+- contamination checks against all frozen evaluation inventories and derived
+  rules; and
+- the required qualified adjudication state for that destination.
+
+Failure or absence at any gate yields an investigation, private, evaluation,
+unresolved, or excluded state—not `training_eligible`.
+
+## Safety invariants
+
+### Rights and provenance
+
+- Unknown rights are not permission.
+- Public accessibility is not redistribution or model-training permission.
+- Source-family inventory counts do not establish record-level admission.
+- Private references stay private even when they improve internal evidence.
+- Aggregate receipts expose logical provenance references, never personal
+  mount paths or confidential source content.
+
+### Authorship and variation
+
+- Human-authored, machine-generated, machine-translated, human-revised
+  synthetic, and unknown-origin material remain distinct.
+- Franko, Hrushevsky, folk material, historical documents, quotations,
+  dialects, archaisms, and marked registers do not automatically define modern
+  literary Ukrainian.
+- Legitimate Ukrainian variation is preserved and labeled rather than
+  flattened or silently corrected.
+- Machine-generated lessons, FOLK/BIO material, and KubeDojo translations
+  remain mechanically separate from human-authored candidate data.
+
+### Evaluation contamination
+
+- Closed #2156 and public v0.1.1 remain unchanged and immutable.
+- #6057/#6084 remain the separately frozen, coverage-complete v0.2 evaluation
+  home.
+- Evaluation source IDs, text, references, edits, dispositions, hashes,
+  derived rules, exact duplicates, and near duplicates are denied from every
+  training, correction, preference, and quality-filter export.
+- Generation receives source-only requests; gold and adjudication notes never
+  enter prompts.
+
+### Determinism and privacy
+
+- Sources are read-only and ordered by stable identifiers.
+- Normalization, tokenization, batching, aggregation, sorting, serialization,
+  and hash scopes are versioned.
+- Repeated runs over identical inputs produce byte-stable outputs.
+- Full candidate files and local runtime state remain uncommitted.
+- Committed receipts contain safe aggregate counts, schema/config hashes,
+  logical provenance references, limitations, and explicit unresolved
+  denominators—never copyrighted corpus text or private data.
+
+## First implementation: full-corpus profiler
+
+Issue #6120 delivers the first substantial component. It must process every
+locally accessible public/external human-authored record, not an arbitrary
+sample. The current evidence baseline is 189,150 rows and 50,298,925 lexical
+words across literary, public/external textbook, external article/transcript,
+and Ukrainian Wikipedia families. Private references and all other origin/use
+classes are measured or excluded separately rather than silently removed from
+the denominator.
+
+The profiler reports:
+
+- processed and excluded rows and lexical words;
+- source-family, period, genre, register, region, origin, and permitted-use
+  distributions with explicit unknowns;
+- VESUM-attested and unknown token counts;
+- lemma, POS, and usage-marker coverage where supported;
+- unknown-form frequency and source distribution; and
+- provenance-linked unresolved review candidates.
+
+Tokenizer diagnostics are optional in this first component unless an existing
+approved interface can be included without compromising the full-corpus
+morphology deliverable.
+
+## Execution chain
+
+1. [#6119](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6119)
+   merges this architecture and aligns the control plane.
+2. [#6120](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6120)
+   implements and runs the full-corpus profiler.
+3. [#6121](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6121)
+   implements the correction-data intake and qualified adjudication flow.
+4. [#6122](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6122)
+   implements disjoint exporters and reproducible preparation/training
+   recipes without running training.
+5. [#6123](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6123)
+   validates the end-to-end reference build and frozen baseline harness.
+
+External validation may follow a built artifact. It is not a prerequisite for
+any step above. Dataset release, upload, redistribution, model training, weight
+publication, private-data disclosure, researcher contact, and OCR each require
+separate present-tense authorization.
