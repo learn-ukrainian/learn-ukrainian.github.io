@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import shlex
 import shutil
 import sqlite3
 import subprocess
@@ -48,10 +49,20 @@ def _run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
     )
 
 
-def _make_exact_python_checkout(root: Path) -> None:
+def _make_exact_python_checkout(root: Path, *, delegate: Path | None = None) -> None:
     python = root / ".venv" / "bin" / "python"
     python.parent.mkdir(parents=True)
-    python.write_text("#!/bin/bash\nprintf 'Python 3.12.8\\n'\n", encoding="utf-8")
+    script = "#!/bin/bash\nprintf 'Python 3.12.8\\n'\n"
+    if delegate is not None:
+        script = (
+            "#!/bin/bash\n"
+            "if [ \"${1:-}\" = \"--version\" ]; then\n"
+            "  printf 'Python 3.12.8\\n'\n"
+            "  exit 0\n"
+            "fi\n"
+            f"exec {shlex.quote(os.fspath(delegate))} \"$@\"\n"
+        )
+    python.write_text(script, encoding="utf-8")
     python.chmod(0o755)
     (root / ".python-version").write_text("3.12.8\n", encoding="utf-8")
 
@@ -64,10 +75,12 @@ def _make_linked_worktree(tmp_path: Path) -> tuple[Path, Path]:
     _run(["git", "config", "user.email", "hooks@example.invalid"], cwd=primary)
     _run(["git", "config", "user.name", "Hook Tests"], cwd=primary)
     (primary / "README.md").write_text("hook test\n", encoding="utf-8")
-    (primary / ".python-version").write_text("3.12.8\n", encoding="utf-8")
+    _make_exact_python_checkout(
+        primary,
+        delegate=PRIMARY_ROOT / ".venv" / "bin" / "python",
+    )
     _run(["git", "add", "README.md"], cwd=primary)
     _run(["git", "commit", "-m", "test fixture"], cwd=primary)
-    (primary / ".venv").symlink_to(PRIMARY_ROOT / ".venv", target_is_directory=True)
     _run(["git", "worktree", "add", "-b", "codex/hooks-test", str(worktree)], cwd=primary)
     return primary, worktree
 
