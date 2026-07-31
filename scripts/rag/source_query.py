@@ -402,7 +402,7 @@ def grac_collocations(
 # ══════════════════════════════════════════════════════════════════
 
 ULIF_BASE = "https://lcorp.ulif.org.ua/dictua"
-ULIF_PARSER_VERSION = "ulif-dictua-v1"
+ULIF_PARSER_VERSION = "ulif-dictua-v2"
 # DictUA returns 403 under aggressive access patterns; a cache miss makes at
 # most four POSTs, each spaced far enough apart to keep that sequence polite.
 ULIF_REQUEST_DELAY_SECONDS = 1.0
@@ -778,12 +778,14 @@ def ulif_lookup(word: str) -> dict[str, object]:
             # earlier page's token remaining valid in the same ASP.NET session.
             tab_tokens = next_tokens
 
-        if not sections:
-            status = "not_found"
-        elif "paradigm" not in sections:
-            status = "parse_error"
-        else:
-            status = "ok"
+        # A confirmed registry hit does not have to expose an inflection table:
+        # adverbs and other non-inflecting headwords can legitimately return
+        # relation data only.  Search-list membership establishes the hit;
+        # reaching this point with valid WebForms state establishes that every
+        # available tab was consumed.  Reserve ``parse_error`` for malformed or
+        # incomplete responses handled above, rather than inventing a missing
+        # paradigm requirement.
+        status = "ok"
         stored = sources_db.store_ulif_dictua_entry(
             word=requested_word,
             canonical_headword=canonical_headword,

@@ -209,6 +209,15 @@ profiled candidate
 An unresolved or protected record remains non-exportable. Synthetic fixtures
 and model outputs cannot stand in for qualified human decisions.
 
+The implemented #6121 boundary is the
+[correction-factory runbook](../runbooks/ukrainian-data-foundry-correction-factory.md).
+Its four versioned schemas and deterministic CLI enforce original span
+preservation, source-specific evidence, evaluation-contamination joins, two
+independent Ukrainian-human first passes, a distinct third-human conflict
+path, and fail-closed handoff. Every resulting record remains explicitly
+ineligible for model training or export; #6122 owns that separate consumer
+boundary.
+
 ### 6. Consumer views
 
 Continued-pretraining, correction/instruction, preference, quality-filter, and
