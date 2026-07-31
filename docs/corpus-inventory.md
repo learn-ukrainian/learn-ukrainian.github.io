@@ -4,7 +4,8 @@
 > verify_quote, RAG grounding, or deciding whether to scrape something new). Sessions
 > kept re-discovering the corpus from scratch — this doc is the durable, current answer.
 >
-> **Last refreshed: 2026-07-10** (by querying `data/sources.db` directly — see
+> **Last refreshed: 2026-07-31** (by querying `data/sources.db` directly and
+> reconciling retained raw-source identities — see
 > [§ Refreshing this doc](#refreshing-this-doc)). When the corpus grows, update this file
 > AND `docs/best-practices/v7-design-and-corpus.md` §2 (the #M-11 SSOT cross-links here).
 
@@ -12,13 +13,14 @@
 
 ## TL;DR
 
-- The live store is **`data/sources.db`** — a **1.6 GB SQLite + FTS5** database. The MCP
+- The live store is **`data/sources.db`** — a **1.8 GB SQLite + FTS5** database. The MCP
   `sources` server (port 8766) reads it; every `mcp__sources__*` tool, `verify_quote`,
   `search_literary`, etc. hit this file.
-- It holds **~137.7K literary chunks + 50.9K textbook chunks + ~1M dictionary rows +
+- It holds **137.7K literary chunks + 55.0K textbook chunks + ~1M dictionary rows +
   22.4K wiki + Wikipedia** across ~27 content/dictionary tables.
 - It is **BUILT from a Google Drive mount**, not local `data/`. That split is the #1
-  gotcha — see [§ Architecture](#architecture).
+  gotcha — see
+  [§ Architecture](#architecture--where-the-data-lives-the-1-gotcha).
 - **What we have a LOT of:** chronicles (litopys/izbornyk), Грушевський, encyclopedias,
   authored literature (Франко/Нечуй/Гончар/Шевченко…), and dictionaries (СУМ-11, Грінченко,
   ЕСУМ, ukrajinet WordNet, Балла).
@@ -39,12 +41,14 @@
         │ reads literary + textbooks ← GDRIVE_DATA  ←  Google Drive mount, NOT local data/!
         │ reads external             ← data/external_articles/  (local)
         ▼
-  data/sources.db  (1.6 GB SQLite + FTS5)  ←  what the MCP `sources` server serves
+  data/sources.db  (1.8 GB SQLite + FTS5)  ←  what the MCP `sources` server serves
 ```
 
-- **`GDRIVE_DATA`** = `~/Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com/My Drive/Projects/learn-ukrainian-data`
-  (228 `literary_texts/*.jsonl` ≈ 137.7K chunks + `textbook_chunks/grade-*/`). This is the
-  rebuild source of record.
+- **`GDRIVE_DATA`** is resolved by `scripts/wiki/config.py` from
+  `LU_GDRIVE_DATA` or the standard Google Drive mount pattern. It contains 229
+  `literary_texts/*.jsonl` files and 158 public
+  `textbook_chunks/grade-*/*.jsonl` files. Never commit an operator-specific
+  mount path. This is the rebuild source of record.
 - **⚠️ DIR MISMATCH:** scrapers write to LOCAL `data/literary_texts/`, but `build_sources_db.py`
   reads literary from **`GDRIVE_DATA/literary_texts/`**. A freshly-scraped jsonl in `data/`
   is **invisible** to a `--force` rebuild until it's also placed on the GDrive mount.
@@ -57,6 +61,7 @@
   `INSERT INTO <name>_fts(<name>_fts) VALUES('rebuild')`.
 
 ### Safe recipe to ADD literary content (no destructive rebuild)
+
 Used 2026-06-15 to land the expanded folk corpus (#3193) without a `--force`:
 1. Scrape → `data/literary_texts/<source>.jsonl`.
 2. **Copy the jsonl to `GDRIVE_DATA/literary_texts/`** (so a future `--force` keeps it).
@@ -66,6 +71,7 @@ Used 2026-06-15 to land the expanded folk corpus (#3193) without a `--force`:
 4. Verify via the MCP: `mcp__sources__search_literary` / `verify_quote`.
 
 ### Reclaiming local disk — symlink a Drive-duplicated FILE (verify identity per file)
+
 Some files in `data/` are byte-identical copies of what already sits on the Drive mount but were
 never deleted locally. For a file **proven identical** to its Drive copy, replace the local file
 with a **symlink to the streamed Drive copy** — it takes 0 local bytes when idle and materializes
@@ -105,23 +111,25 @@ to `unified_dense` → `rerank_candidates` → `data/embeddings/manifest.db` + s
 
 ---
 
-## Table inventory (`data/sources.db`, 2026-07-10)
+## Table inventory (`data/sources.db`, 2026-07-31)
 
 ### Content corpora
+
 | Table | Rows | MCP tool | What it is |
-|---|---:|---|---|
+| --- | ---: | --- | --- |
 | `literary_texts` / `literary_fts` | **137,723** | `search_literary` | Primary sources: chronicles, encyclopedias, authored literature, scholarly works, **folk primaries (35)**. See [breakdown](#literary_texts-breakdown). |
-| `textbooks` / `textbooks_fts` | **50,933** (168 `source_file`s) | `search_text` | School textbooks, grades 1–11 (Заболотний, Авраменко, Большакова, Вашуленко…), plus **8 private ULP/Ohoiko refs** — see [§ Private reference sources](#private-reference-sources-textbooks). |
+| `textbooks` / `textbooks_fts` | **54,979** (168 `source_file`s) | `search_text` | 49,193 public/external school-textbook rows across grades 1–11 plus 5,786 rows from **8 private ULP/Ohoiko refs** — see [§ Private reference sources](#private-reference-sources-textbooks). |
 | `textbook_sections` | 7,250 | (internal) | Section hierarchy for textbook chunks. |
 | `zno_documents` | **33** | (direct SQL) | ZNO/NMT booklet metadata (2010–2025, Ukrainian language). Ingest: `scripts/ingest/zno_ingest.py`. |
-| `zno_tasks` / `zno_tasks_fts` | **366** | (direct SQL) | Parsed ZNO tasks from zno.osvita.ua; FTS on `stem`, `options_json`, `topic_tag`. **2019–2021** task coverage: 116 / 116 / 134. Consumer: #4506 paronym/stress worksheets. |
+| `zno_tasks` / `zno_tasks_fts` | **1,646** | (direct SQL) | Parsed ZNO tasks from zno.osvita.ua; FTS on `stem`, `options_json`, `topic_tag`. Consumer: #4506 paronym/stress worksheets. |
 | `ukrainian_wiki` / `_fts` | 22,385 | `search_sources` | Our OWN compiled wiki pedagogy (`wiki/**`), keyed by article slug + track. |
 | `external_articles` / `external_fts` | 1,205 | `search_external` | Curated external articles + YouTube/blog transcripts (register/decolonization tagged). |
-| `wikipedia` / `_fts` | 1,026 | `query_wikipedia` | Cached Ukrainian Wikipedia articles (+ `wikipedia_negative_cache` 243). |
+| `wikipedia` / `_fts` | 1,029 | `query_wikipedia` | Cached Ukrainian Wikipedia articles (+ a separate negative cache). |
 
 ### Dictionaries & lexical resources
+
 | Table | Rows | MCP tool | What it is |
-|---|---:|---|---|
+| --- | ---: | --- | --- |
 | `sum11` | 127,069 | `search_definitions` | СУМ-11 explanatory dict. ⚠ partly Sovietized (~5.6% flagged; each row carries `sovietization_risk`). |
 | `esum_cognate_forms` | 134,836 | `search_esum` | ЕСУМ cognate/related forms. |
 | `esum_etymology` | 36,177 | `search_esum` | ЕСУМ etymology (vols 1–6, А–Я). |
@@ -145,8 +153,8 @@ they are local-only references for RAG grounding and must **never** be quoted ve
 in pipeline outputs.
 
 | `source_file` | `author` | Chunks | What it is |
-|---|---|---:|---|
-| `ulp-1-00-lesson-notes` … `ulp-6-00-lesson-notes` | Ukrainian Lessons Podcast | 40 each (240 total) | ULP Seasons 1–6 lesson-note books. Ingest: `scripts/ingest/ulp_lesson_notes_ingest.py`. |
+| --- | --- | ---: | --- |
+| `ulp-1-00-lesson-notes` … `ulp-6-00-lesson-notes` | Ukrainian Lessons Podcast | 4,286 total | ULP Seasons 1–6 lesson-note chunks. Ingest: `scripts/ingest/ulp_lesson_notes_ingest.py` / `ulp_to_jsonl.py`. |
 | `anna-ohoiko-1000-words-2nd-ed` | Anna Ohoiko | 1,000 | «1000 Most Useful Ukrainian Words» (2nd ed.). Ingest: `scripts/ingest/ohoiko_books_ingest.py`. |
 | `anna-ohoiko-500-verbs` | Anna Ohoiko | 500 | «500+ Ukrainian Verbs». Ingest: `scripts/ingest/ohoiko_verbs_ingest.py`. |
 
@@ -161,8 +169,9 @@ in pipeline outputs.
 ## `literary_texts` breakdown
 
 ### By genre (137,723 chunks)
+
 | Genre | Chunks | | Genre | Chunks |
-|---|---:|---|---|---:|
+| --- | ---: | --- | --- | ---: |
 | scholarly | 40,480 | | drama | 1,183 |
 | prose | 33,186 | | letters | 1,175 |
 | chronicle | 18,777 | | legal | 1,022 |
@@ -176,6 +185,7 @@ in pipeline outputs.
 | | | | **folk** (carol/duma/spring/harvest/historical_song) | **35** |
 
 ### Key sources (by `source_file` / `work`)
+
 - **Chronicles (litopys.org.ua / izbornyk):** Іпатіївський (1,865), Величко (1,678+1,676), Новгородський
   (1,120), Лаврентіївський (1,033), Київський, Самовидець, ПВЛ, Литовсько-білоруські літописи.
   Scraped by `scrape_litopys.py` / `batch_scrape_izbornyk.py`. (litopys.org.ua = izbornyk.org.ua,
@@ -205,6 +215,14 @@ in pipeline outputs.
   ```
 
 ## Known gaps & caveats
+
+- **#6107 — recovery and lineage baseline:** the
+  [existing-corpus audit](research/EXISTING_CORPUS_ASSET_RECOVERY_AND_LINEAGE_AUDIT.md)
+  and machine-readable ledger reconcile all 229 literary JSONL source stems to
+  the 229 database groups, separate 49,193 public textbook rows from 5,786
+  private rows, and identify two database textbook sources whose raw chunk is
+  unresolved. No collection is thereby training-admitted or
+  redistribution-cleared.
 - **#4594 — deterministic gap audit:** see
   [docs/corpus-gap-audit.md](corpus-gap-audit.md) for the 2026-07-06 register × domain ×
   CEFR/track evidence table and DRAFT consumer-driven acquisition queue.
@@ -215,9 +233,11 @@ in pipeline outputs.
   or ingesting Грушевський/Драгоманов folk anthologies as tagged primaries would deepen #3162.
 - **СУМ-11 Sovietization** (~5.6% flagged) and **ukrajinet auto-translation** — see the
   `mcp-sources-and-dictionaries` rule for the per-tool caveats.
-- **Dir mismatch** (scraper-local vs builder-GDrive) — see [§ Architecture](#architecture).
+- **Dir mismatch** (scraper-local vs builder-GDrive) — see
+  [§ Architecture](#architecture--where-the-data-lives-the-1-gotcha).
 
 ## Refreshing this doc
+
 ```bash
 # row counts per table:
 .venv/bin/python -c "import sqlite3; d=sqlite3.connect('data/sources.db'); \

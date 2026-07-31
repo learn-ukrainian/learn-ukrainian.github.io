@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/existing_asset_inventory_v1.schema.json",
+  "title": "Existing Ukrainian asset inventory record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "asset_id",
+    "label",
+    "asset_kind",
+    "origin_class",
+    "data_boundary",
+    "lifecycle_states",
+    "measurement_scope",
+    "metrics",
+    "coverage",
+    "lineage",
+    "rights_status",
+    "eligibility",
+    "evidence_refs",
+    "limitations",
+    "details"
+  ],
+  "properties": {
+    "schema_version": {"const": "existing_asset_inventory_v1"},
+    "asset_id": {"$ref": "#/$defs/id"},
+    "label": {"type": "string", "minLength": 1},
+    "asset_kind": {
+      "enum": [
+        "source_collection",
+        "lexical_resource",
+        "curriculum_collection",
+        "translated_collection",
+        "evaluation_collection",
+        "archive_collection",
+        "recovery_candidate",
+        "raw_asset_collection",
+        "git_object_pool"
+      ]
+    },
+    "origin_class": {
+      "enum": [
+        "human_authored_source",
+        "machine_generated_ukrainian",
+        "machine_translated_ukrainian",
+        "human_revised_synthetic",
+        "unknown_origin"
+      ]
+    },
+    "data_boundary": {
+      "enum": [
+        "public_or_external_source",
+        "private_reference",
+        "evaluation_only",
+        "project_internal",
+        "mixed",
+        "unknown"
+      ]
+    },
+    "lifecycle_states": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "current",
+          "archived_in_current_git",
+          "recoverable_from_git_history",
+          "raw_on_google_drive",
+          "ingested",
+          "raw_but_uningested",
+          "database_only_or_raw_source_unresolved",
+          "planned_but_not_evidenced_as_built",
+          "unknown_or_potentially_lost"
+        ]
+      }
+    },
+    "measurement_scope": {
+      "enum": ["distinct_content", "overlap_view", "metadata_only"]
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit_label"],
+      "properties": {
+        "unit_label": {"type": "string", "minLength": 1},
+        "content_units": {"type": "integer", "minimum": 0},
+        "files": {"type": "integer", "minimum": 0},
+        "source_groups": {"type": "integer", "minimum": 0},
+        "works": {"type": "integer", "minimum": 0},
+        "characters": {"type": "integer", "minimum": 0},
+        "lexical_words": {"type": "integer", "minimum": 0},
+        "whitespace_tokens": {"type": "integer", "minimum": 0},
+        "rows": {"type": "integer", "minimum": 0}
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grades", "periods", "genres", "registers", "regions", "subjects"],
+      "properties": {
+        "grades": {"$ref": "#/$defs/countMap"},
+        "periods": {"$ref": "#/$defs/countMap"},
+        "genres": {"$ref": "#/$defs/countMap"},
+        "registers": {"$ref": "#/$defs/countMap"},
+        "regions": {"$ref": "#/$defs/countMap"},
+        "subjects": {"$ref": "#/$defs/countMap"}
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw_artifact_presence",
+        "ingestion_status",
+        "content_hash_status",
+        "provenance_status"
+      ],
+      "properties": {
+        "raw_artifact_presence": {
+          "enum": ["complete", "partial", "absent", "not_applicable", "unknown"]
+        },
+        "ingestion_status": {
+          "enum": ["ingested", "partially_ingested", "not_ingested", "not_applicable", "unknown"]
+        },
+        "content_hash_status": {
+          "enum": ["recorded", "partial", "not_measured", "not_applicable", "unknown"]
+        },
+        "provenance_status": {
+          "enum": ["complete", "partial", "unresolved", "not_applicable", "unknown"]
+        }
+      }
+    },
+    "rights_status": {
+      "enum": [
+        "not_reconstructed",
+        "known_restrictions",
+        "evaluation_only",
+        "not_applicable",
+        "unknown"
+      ]
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "internal_rag_reference",
+        "provenance_investigation",
+        "potential_training_admission",
+        "redistribution_investigation",
+        "evaluation_only",
+        "synthetic_research_only",
+        "excluded_pending_review"
+      ],
+      "properties": {
+        "internal_rag_reference": {"type": "boolean"},
+        "provenance_investigation": {"type": "boolean"},
+        "potential_training_admission": {"type": "boolean"},
+        "redistribution_investigation": {"type": "boolean"},
+        "evaluation_only": {"type": "boolean"},
+        "synthetic_research_only": {"type": "boolean"},
+        "excluded_pending_review": {"type": "boolean"}
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "limitations": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "details": {"type": "object"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,159}$"},
+    "countMap": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    }
+  }
+}
