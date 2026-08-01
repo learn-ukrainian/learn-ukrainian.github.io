@@ -1203,6 +1203,7 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
     assert cloze["blankCase"] == "nominative"
     assert cloze["number"] == "singular"
     assert "clozeEn" not in cloze
+    assert cloze["caseRule"]["feedback"] == "словникова (називний) форма: книга"
     labels = [option["label"] for option in cloze["options"]]
     assert len(labels) == len(set(labels)) == 4
     assert {option["strategy"] for option in cloze["options"]} == {"no-pair"}
@@ -1219,6 +1220,60 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
             "useBasis": "short educational quotation with attribution",
         },
     }
+    assert cloze["attribution"] == {
+        "source": "textbook",
+        "label": "Fixture textbook",
+        "locator": "fixture-1",
+        "title": "Fixture page",
+    }
+
+
+@pytest.mark.parametrize("license_status", ["not_openly_licensed", "copyrighted_source"])
+def test_sentence_inventory_rejects_restricted_cloze_without_displayable_attribution(
+    tmp_path: Path, license_status: str
+) -> None:
+    inventory_path = tmp_path / "sentence-inventory.json"
+    inventory_path.write_text(
+        json.dumps(
+            {
+                "schema": "atlas-sentence-inventory",
+                "schemaVersion": 1,
+                "rows": [
+                    {
+                        "lemma": "книга",
+                        "lemmaId": "knyha",
+                        "sentence": "Це книга.",
+                        "targetForm": "книга",
+                        "cefr": "A1",
+                        "uses": ["example"],
+                        "provenance": {"source": "textbook", "locator": "fixture-1"},
+                        "license": {
+                            "status": license_status,
+                            "useBasis": "short educational quotation with attribution",
+                        },
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    shards = build_practice_shards(
+        read_manifest(MANIFEST),
+        ReviewedSourceAllowlist.from_payload(
+            [{"status": "sentence_inventory", "path": str(inventory_path)}]
+        ),
+        JsonVesumVerifier.from_path(VESUM),
+        read_sentence_inventory(inventory_path),
+        BuildConfig(),
+    )
+
+    assert all(
+        item["clozeId"] != "knyha:inventory:1"
+        for level in shards.values()
+        for item in level["cloze"]["cloze"]
+    )
 
 
 def test_sentence_inventory_rejects_ambiguous_or_repeated_target_forms(tmp_path: Path) -> None:

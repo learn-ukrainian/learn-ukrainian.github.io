@@ -2561,6 +2561,26 @@ describe('LexiconPractice', () => {
     expect(screen.getByText(/CC-BY 2.0 FR/)).toBeInTheDocument();
   });
 
+  test('cloze renders a visible source credit for an inventory sentence', () => {
+    seedRecognitionMastery('knyha');
+    const deck = sampleDeck();
+    deck.cloze[0] = {
+      ...deck.cloze[0],
+      attribution: {
+        source: 'textbook',
+        label: 'Підручник для початківців',
+        title: 'Урок 1',
+        locator: 'с. 12',
+      },
+    };
+
+    render(<LexiconPractice initialDeck={deck} autoStart initialMode="cloze" />);
+
+    expect(screen.getByTestId('practice-cloze-source-attribution')).toHaveTextContent(
+      'Джерело: Підручник для початківців (textbook) — Урок 1, с. 12',
+    );
+  });
+
   test('today scope uses review + capped-new denominator, not whole deck', async () => {
     const { fn } = mockShardFetch({ A1: 1150 });
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);

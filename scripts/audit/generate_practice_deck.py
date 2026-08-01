@@ -128,6 +128,7 @@ CASE_RULES = {
         "trigger": "dictionary form",
         "triggerLabel": "словникова форма",
         "feedbackTemplate": "словникова форма ({lemma} -> {form})",
+        "sameFormFeedbackTemplate": "словникова (називний) форма: {form}",
     },
     "accusative_direct_object": {
         "case": "accusative",
@@ -255,6 +256,35 @@ def _build_tatoeba_attribution(provenance: Any) -> dict[str, Any] | None:
             "license": en_license,
         },
     }
+
+
+def _license_requires_displayable_attribution(provenance: Any) -> bool:
+    if not isinstance(provenance, dict):
+        return False
+    license_info = provenance.get("license")
+    if not isinstance(license_info, dict):
+        return False
+    status = _clean_text(license_info.get("status"))
+    use_basis = _clean_text(license_info.get("useBasis"))
+    return status in {"not_openly_licensed", "copyrighted_source"} and bool(
+        use_basis and "attribution" in use_basis.casefold()
+    )
+
+
+def _build_source_attribution(provenance: Any) -> dict[str, str] | None:
+    """Map inventory bibliographic metadata into the cloze UI credit shape."""
+    if not isinstance(provenance, dict):
+        return None
+    source = _clean_text(provenance.get("source"))
+    label = _clean_text(provenance.get("label"))
+    if not source or not label:
+        return None
+    attribution = {"source": source, "label": label}
+    for key in ("locator", "title"):
+        value = _clean_text(provenance.get(key))
+        if value:
+            attribution[key] = value
+    return attribution
 
 
 def _build_cloze_provenance(provenance: dict[str, Any]) -> dict[str, Any]:
@@ -768,13 +798,16 @@ def _case_rule_payload(rule_id: str, lemma: str, form: str) -> dict[str, str] | 
     rule = CASE_RULES.get(rule_id)
     if not rule:
         return None
+    feedback_template = str(rule["feedbackTemplate"])
+    if _plain(lemma) == _plain(form):
+        feedback_template = str(rule.get("sameFormFeedbackTemplate", feedback_template))
     return {
         "ruleId": rule_id,
         "case": str(rule["case"]),
         "caseLabel": CASE_LABELS_UA[str(rule["case"])],
         "trigger": str(rule["trigger"]),
         "triggerLabel": str(rule["triggerLabel"]),
-        "feedback": str(rule["feedbackTemplate"]).format(lemma=lemma, form=form),
+        "feedback": feedback_template.format(lemma=lemma, form=form),
     }
 
 
@@ -1261,6 +1294,12 @@ def _build_cloze_items(
         attribution = _build_tatoeba_attribution(provenance)
         if _is_tatoeba_provenance(provenance) and attribution is None:
             continue
+        if inventory_candidate:
+            inventory_attribution = _build_source_attribution(provenance)
+            if _license_requires_displayable_attribution(provenance) and inventory_attribution is None:
+                continue
+            if inventory_attribution is not None:
+                attribution = inventory_attribution
         item = {
             "clozeId": cloze_id,
             "lemmaId": lexeme["lemmaId"],
