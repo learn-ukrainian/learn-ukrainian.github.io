@@ -436,12 +436,12 @@ def _check_level(
                 # Heritage items sit at max(lexeme cefr, curator availability floor)
                 # (#4719/#4720), so their native lexeme may live in a LOWER-level
                 # shard. The static client loads lexeme shards cumulatively, keeping
-                # that join resolvable (generate_practice_deck.py, heritage placement
-                # note) — mirror that here for heritage ONLY; all other drill kinds
-                # remain strictly same-level.
-                if kind == "heritage" and str(lemma_id) in (lower_lexeme_ids or set()):
+                # that join resolvable (generate_practice_deck.py, availability-floor
+                # placement notes) — mirror that here for floor-placed synonym and
+                # heritage items; all other drill kinds remain strictly same-level.
+                if kind in {"heritage", "synonym"} and str(lemma_id) in (lower_lexeme_ids or set()):
                     pass
-                elif kind == "heritage":
+                elif kind in {"heritage", "synonym"}:
                     errors.append(
                         f"{prefix} lemmaId {lemma_id!r} missing from lexeme shards at or below {level}"
                     )

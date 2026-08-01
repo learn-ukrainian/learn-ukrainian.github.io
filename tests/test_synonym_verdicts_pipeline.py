@@ -17,6 +17,7 @@ from scripts.audit.generate_practice_deck import (
     BuildConfig,
     JsonVesumVerifier,
     ReviewedSourceAllowlist,
+    apply_size_budgets,
     build_practice_shards,
     format_a2_synonym_nomination_report,
     nominate_a2_synonym_pairs,
@@ -356,9 +357,13 @@ def test_flagged_a2_synonym_pair_emits_at_a2() -> None:
     assert shards.get("B1", {}).get("synonym", {}).get("synonym", []) == []
 
 
-def test_unflagged_both_leg_a2_synonym_pair_does_not_emit_at_a2() -> None:
-    manifest = _a2_synonym_fixture_manifest()
+def test_unflagged_both_leg_a2_synonym_pair_stays_at_default_b1_floor() -> None:
+    manifest = [
+        *_a2_synonym_fixture_manifest(),
+        make_mock_manifest_entry("парк", "park", "park"),
+    ]
     verifier = _a2_synonym_fixture_verifier()
+    verifier.payload["парк"] = [{"lemma": "парк", "pos": "noun"}]
     verdicts = {
         "approved": [
             {
@@ -379,7 +384,112 @@ def test_unflagged_both_leg_a2_synonym_pair_does_not_emit_at_a2() -> None:
         synonym_verdicts=verdicts,
     )
     assert shards["A2"]["synonym"]["synonym"] == []
-    assert shards.get("B1", {}).get("synonym", {}).get("synonym", []) == []
+    b1_synonyms = shards["B1"]["synonym"]["synonym"]
+    assert {item["prompt"] for item in b1_synonyms} == {"друг", "товариш"}
+    assert all(item["answer"] in {"друг", "товариш"} for item in b1_synonyms)
+
+
+def test_approved_verdict_emits_without_manifest_relation_links() -> None:
+    words = [
+        ("слово", "word"),
+        ("термін", "term"),
+        ("мова", "language"),
+        ("книга", "book"),
+        ("звук", "sound"),
+        ("парк", "park"),
+    ]
+    manifest = [make_mock_manifest_entry(lemma, lemma, gloss) for lemma, gloss in words]
+    verifier = JsonVesumVerifier(
+        {lemma: [{"lemma": lemma, "pos": "noun"}] for lemma, _gloss in words}
+    )
+    verdicts = {
+        "approved": [{"a": "слово", "b": "термін", "polarity": "synonym"}],
+        "rejected": [],
+    }
+
+    shards = build_practice_shards(
+        manifest,
+        ReviewedSourceAllowlist.from_payload([]),
+        verifier,
+        cloze_sources=None,
+        config=BuildConfig(target=20),
+        synonym_verdicts=verdicts,
+    )
+
+    items = shards["B1"]["synonym"]["synonym"]
+    assert {(item["prompt"], item["answer"]) for item in items} == {
+        ("слово", "термін"),
+        ("термін", "слово"),
+    }
+
+
+def test_rejected_verdict_without_manifest_relation_never_emits() -> None:
+    words = [
+        ("слово", "word"),
+        ("термін", "term"),
+        ("мова", "language"),
+        ("книга", "book"),
+        ("звук", "sound"),
+        ("парк", "park"),
+    ]
+    manifest = [make_mock_manifest_entry(lemma, lemma, gloss) for lemma, gloss in words]
+    verifier = JsonVesumVerifier(
+        {lemma: [{"lemma": lemma, "pos": "noun"}] for lemma, _gloss in words}
+    )
+    verdicts = {
+        "approved": [],
+        "rejected": [{"a": "слово", "b": "термін", "polarity": "synonym"}],
+    }
+
+    shards = build_practice_shards(
+        manifest,
+        ReviewedSourceAllowlist.from_payload([]),
+        verifier,
+        cloze_sources=None,
+        config=BuildConfig(target=20),
+        synonym_verdicts=verdicts,
+    )
+
+    assert shards["B1"]["synonym"]["synonym"] == []
+
+
+def test_budget_refresh_preserves_lower_prompt_synonym_index_tag() -> None:
+    manifest = [
+        make_a1_mock_manifest_entry("кіт", "kit", "cat"),
+        make_a1_mock_manifest_entry("кицька", "kytska", "kitty"),
+        make_a1_mock_manifest_entry("пес", "pes", "dog"),
+        make_a1_mock_manifest_entry("миша", "mysha", "mouse"),
+        make_a1_mock_manifest_entry("риба", "ryba", "fish"),
+        make_mock_manifest_entry("сад", "sad", "garden"),
+    ]
+    verifier = JsonVesumVerifier(
+        {
+            lemma: [{"lemma": lemma, "pos": "noun"}]
+            for lemma in ("кіт", "кицька", "пес", "миша", "риба", "сад")
+        }
+    )
+    shards = build_practice_shards(
+        manifest,
+        ReviewedSourceAllowlist.from_payload([]),
+        verifier,
+        cloze_sources=None,
+        config=BuildConfig(target=20),
+        synonym_verdicts={
+            "approved": [{"a": "кіт", "b": "кицька", "polarity": "synonym"}],
+            "rejected": [],
+        },
+    )
+    shards["B1"]["classify"]["classify"] = [
+        {"classifyId": f"fixture-{index}", "lemmaId": "сад", "evidence": "x" * 10_000}
+        for index in range(20)
+    ]
+
+    apply_size_budgets(shards, raw_limit=100_000, gzip_limit=100_000)
+
+    a1_index = shards["A1"]["index"]["items"]
+    tagged = {item["lemma"] for item in a1_index if "synonym" in item["modes"]}
+    assert {"кіт", "кицька"}.issubset(tagged)
+    assert len(shards["B1"]["classify"]["classify"]) < 20
 
 
 def test_b1_synonym_behavior_unchanged_with_a2_exception_mechanism() -> None:
@@ -463,6 +573,7 @@ def test_flagged_a1_leg_synonym_pair_never_emits_at_a1(
         make_a1_mock_manifest_entry("пес", "pes", "dog"),
         make_a1_mock_manifest_entry("миша", "mysha", "mouse"),
         make_a1_mock_manifest_entry("риба", "ryba", "fish"),
+        make_mock_manifest_entry("сад", "sad", "garden"),
     ]
     verifier = JsonVesumVerifier(
         {
@@ -471,6 +582,7 @@ def test_flagged_a1_leg_synonym_pair_never_emits_at_a1(
             "пес": [{"lemma": "пес", "pos": "noun"}],
             "миша": [{"lemma": "миша", "pos": "noun"}],
             "риба": [{"lemma": "риба", "pos": "noun"}],
+            "сад": [{"lemma": "сад", "pos": "noun"}],
         }
     )
     verdicts = {
@@ -494,10 +606,11 @@ def test_flagged_a1_leg_synonym_pair_never_emits_at_a1(
         config=BuildConfig(target=20),
         synonym_verdicts=verdicts,
     )
-    # Never available at A1; and (flag ignored) an A1 leg can never reach the B1+ floor.
+    # Never available at A1; the invalid A2 flag is ignored and the approved pair
+    # remains available at the default B1 floor.
     assert shards.get("A1", {}).get("synonym", {}).get("synonym", []) == []
     assert shards.get("A2", {}).get("synonym", {}).get("synonym", []) == []
-    assert shards.get("B1", {}).get("synonym", {}).get("synonym", []) == []
+    assert shards["B1"]["synonym"]["synonym"]
     captured = capsys.readouterr()
     assert "a2Exception ignored" in captured.err
     assert "both legs must be A2 vocabulary" in captured.err
