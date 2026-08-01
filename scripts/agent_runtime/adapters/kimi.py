@@ -5,11 +5,11 @@ newline-delimited events in ``--output-format stream-json`` mode. OAuth
 credentials stay in Kimi's own home directory; this adapter never reads or
 injects them.
 
-Kimi Code 0.27.0 evidence (2026-07-17): ``kimi --yolo -p \"…\"`` exits with
-``error: Cannot combine --prompt with --yolo.`` Bare ``kimi -p`` also writes
-without an approval prompt. Consequently, headless workspace-write and danger
-must be flagless (delegate.py already verifies their worktrees), while
-read-only is refused because the CLI cannot guarantee it.
+Kimi Code prompt mode runs with automatic tool approval and cannot be combined
+with its interactive permission or plan flags. Consequently, headless
+workspace-write and danger must be flagless (delegate.py already verifies
+their worktrees), while read-only is refused because the CLI cannot guarantee
+it.
 """
 
 from __future__ import annotations
@@ -34,6 +34,7 @@ _logger = logging.getLogger(__name__)
 KIMI_DEFAULT_MODEL = "k2.7-coding"
 KIMI_BRIDGE_DEFAULT_MODEL = "k3"
 KIMI_DEFAULT_EFFORT = "max"
+KIMI_PROJECT_SKILLS_RELATIVE = Path("agents_extensions") / "shared" / "skills"
 # Catalog-backed aliases keep dispatch, the native launcher, and KimiCC in
 # lockstep. The managed seat's usage window depletes fast (operator,
 # 2026-07-16), so dispatch defaults to the coding model; K3 (always-max
@@ -65,7 +66,7 @@ _MODE_FLAGS: dict[str, tuple[str, ...]] = {
 
 _READ_ONLY_REFUSAL = (
     "kimi headless auto-approves mutations; read-only cannot be guaranteed "
-    "on CLI 0.27 — use another agent"
+    "in native prompt mode — use another agent"
 )
 
 
@@ -139,7 +140,7 @@ class KimiAdapter:
         if session_id:
             cmd.extend(["--session", session_id])
 
-        for skills_dir in _as_string_list(config.get("kimi_skills_dirs")):
+        for skills_dir in _resolve_kimi_skills_dirs(cwd=cwd, config=config):
             cmd.extend(["--skills-dir", skills_dir])
         for add_dir in _as_string_list(config.get("kimi_add_dirs")):
             cmd.extend(["--add-dir", add_dir])
@@ -254,6 +255,49 @@ def _as_string_list(value: Any) -> list[str]:
         return []
     values = value if isinstance(value, list | tuple) else [value]
     return [str(item) for item in values if str(item).strip()]
+
+
+def _resolve_kimi_skills_dirs(*, cwd: Path, config: dict[str, Any]) -> list[str]:
+    """Resolve native Kimi skill roots without relying on ignored mirrors.
+
+    Layout-A worktrees contain the canonical shared skill sources but not the
+    gitignored ``.claude``/``.codex``/``.agents`` deployment mirrors. Native
+    Kimi's ``--skills-dir`` is therefore pointed at the canonical project
+    directory by default. Because that flag replaces Kimi's automatic user
+    and project scan, its Kimi-specific and generic user roots are carried
+    forward explicitly. Callers may override or disable the default by
+    supplying ``kimi_skills_dirs`` (including an empty list).
+    """
+
+    if "kimi_skills_dirs" in config:
+        candidates = _as_string_list(config.get("kimi_skills_dirs"))
+    else:
+        project_skills = cwd / KIMI_PROJECT_SKILLS_RELATIVE
+        if not project_skills.is_dir():
+            return []
+        kimi_home_value = os.environ.get("KIMI_CODE_HOME")
+        kimi_home = (
+            Path(kimi_home_value).expanduser()
+            if kimi_home_value
+            else Path.home() / ".kimi-code"
+        )
+        candidates = [
+            str(cwd / ".kimi-code" / "skills"),
+            str(cwd / ".kimi" / "skills"),
+            str(project_skills.resolve()),
+            str(kimi_home / "skills"),
+            str(Path.home() / ".agents" / "skills"),
+        ]
+        candidates = [candidate for candidate in candidates if Path(candidate).is_dir()]
+
+    resolved: list[str] = []
+    seen: set[str] = set()
+    for candidate in candidates:
+        normalized = str(Path(candidate).expanduser())
+        if normalized not in seen:
+            resolved.append(normalized)
+            seen.add(normalized)
+    return resolved
 
 
 def _assistant_text(value: Any) -> str:

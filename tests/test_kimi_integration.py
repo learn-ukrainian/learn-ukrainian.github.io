@@ -152,7 +152,7 @@ def test_fetch_kimi_message_returns_none_for_an_unaddressed_row(monkeypatch, cap
 def test_check_model_refuses_read_only_native_kimi_probe():
     with pytest.raises(
         ValueError,
-        match=r"kimi headless auto-approves mutations; read-only cannot be guaranteed on CLI 0.27",
+        match=r"kimi headless auto-approves mutations; read-only cannot be guaranteed in native prompt mode",
     ):
         _build_kimi_probe_plan("k3")
 
