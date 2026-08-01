@@ -52,10 +52,10 @@ DEFAULT_RAW_LIMIT = 1_600_000
 DEFAULT_GZIP_LIMIT = 180_000
 # Cloze cards are the intentionally denser mode: their production emit drops
 # builder-only diagnostics before budgeting, while preserving every field used
-# by the client and static validators.  These limits are sized from the full
-# current canonical 6000-lemma build: B1 measures 1,949,044 raw / 209,612 gzip bytes.
-DEFAULT_CLOZE_RAW_LIMIT = 2_000_000
-DEFAULT_CLOZE_GZIP_LIMIT = 210_000
+# by the client and static validators.  These limits leave measured headroom
+# for the source-preserved inventory cards admitted by the identity-decoy gate.
+DEFAULT_CLOZE_RAW_LIMIT = 2_250_000
+DEFAULT_CLOZE_GZIP_LIMIT = 240_000
 SCHEMA_VERSION = 1
 CEFR_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
 CEFR_RANK = {level: index for index, level in enumerate(CEFR_ORDER)}
@@ -1120,6 +1120,7 @@ def _option_pos_bucket(pos: Any) -> str:
 def _eligible_dictionary_decoys(
     answer: dict[str, Any],
     lexemes: list[dict[str, Any]],
+    answer_surface: Any | None = None,
 ) -> list[tuple[dict[str, Any], str]]:
     """Return same-POS dictionary forms for an inventory identity cloze.
 
@@ -1151,7 +1152,13 @@ def _eligible_dictionary_decoys(
 
     # A capitalized source lemma should not be the only capitalized option;
     # prefer decoys with the same initial-capital state when the pool allows.
-    answer_cap = _initial_capitalization(answer.get("lemma"))
+    # Inventory rows preserve the source token's capitalization.  The lexeme
+    # lemma is normalized lowercase, so using it here makes a sentence-initial
+    # answer look uniquely capitalized even when a safe capitalized decoy is
+    # available in the practice pool.
+    answer_cap = _initial_capitalization(
+        answer.get("lemma") if answer_surface is None else answer_surface
+    )
     same_capitalization = [
         candidate
         for candidate in candidates
@@ -1267,7 +1274,7 @@ def _make_no_pair_options(
         and _plain(str(cloze.get("form") or "")) == _plain(str(cloze.get("lemma") or ""))
     )
     if is_inventory_identity:
-        decoys = _eligible_dictionary_decoys(answer, lexemes)
+        decoys = _eligible_dictionary_decoys(answer, lexemes, cloze.get("form"))
         answer_length = len(str(cloze.get("form") or ""))
         decoys = [
             candidate
@@ -1279,7 +1286,22 @@ def _make_no_pair_options(
         # same POS and a tight length band, then use the build's seeded RNG so
         # the selected decoys are varied but reproducible.
         rng.shuffle(decoys)
+        answer_cap = _initial_capitalization(cloze.get("form"))
         selected_decoys: list[tuple[dict[str, Any], str]] = []
+        matching_cap: list[tuple[dict[str, Any], str]] = []
+        if answer_cap is not None:
+            # Preserve the capitalization gate while making the selection
+            # surface-aware: one matching-capitalization decoy is enough to
+            # prevent a sentence-initial answer from being revealed, even
+            # when fewer than three matching candidates exist.
+            matching_cap = [
+                candidate
+                for candidate in decoys
+                if _initial_capitalization(candidate[1]) == answer_cap
+            ]
+            if matching_cap:
+                selected_decoys.append(matching_cap[0])
+                decoys = [candidate for candidate in decoys if candidate != matching_cap[0]]
         for candidate in decoys:
             labels = [cloze["form"], *(item[1] for item in selected_decoys), candidate[1]]
             if max(map(len, labels)) - min(map(len, labels)) > 3:
@@ -1287,6 +1309,8 @@ def _make_no_pair_options(
             selected_decoys.append(candidate)
             if len(selected_decoys) == 3:
                 break
+        if answer_cap is not None and not matching_cap:
+            selected_decoys = []
         if len(selected_decoys) < 3:
             return []
         rng.shuffle(selected_decoys)
@@ -4290,9 +4314,16 @@ def apply_size_budgets(
         kept = len(selected)
         if kept == len(original):
             return False
+        original_lemma_count = len(
+            {item_lemma_id(item, index) for index, item in enumerate(original)}
+        )
+        selected_lemma_count = len(
+            {item_lemma_id(item, index) for index, item in enumerate(selected)}
+        )
         print(
             f"WARN: {payload['schema']}.{level} exceeds size budget; "
-            f"trimmed {kind} items {len(original)} -> {kept}",
+            f"trimmed {kind} items {len(original)} -> {kept}; "
+            f"eligible lemmas {original_lemma_count} -> {selected_lemma_count}",
             file=sys.stderr,
         )
         return True
