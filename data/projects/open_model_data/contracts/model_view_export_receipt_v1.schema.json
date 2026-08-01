@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/model_view_export_receipt_v1.schema.json",
+  "title": "Ukrainian Data Foundry model-view export receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "view_kind", "input_artifacts", "output", "schemas", "admission", "deduplication", "evaluation_exclusion_registry", "counts", "determinism", "safety"],
+  "properties": {
+    "schema_version": {"const": "model_view_export_receipt_v1"},
+    "view_kind": {"enum": ["continued_pretraining", "correction_instruction", "preference", "quality_filter", "heldout_evaluation"]},
+    "input_artifacts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/artifact"}},
+    "output": {"$ref": "#/$defs/artifact"},
+    "schemas": {"type": "object", "minProperties": 2, "additionalProperties": {"$ref": "#/$defs/sha256"}},
+    "admission": {
+      "type": "object", "additionalProperties": false,
+      "required": ["applied", "policy", "source_records_total", "source_records_admitted", "source_records_denied"],
+      "properties": {
+        "applied": {"type": "boolean"},
+        "policy": {"const": "recompute source_record_v1 admission; unknown is denial"},
+        "source_records_total": {"type": "integer", "minimum": 0},
+        "source_records_admitted": {"type": "integer", "minimum": 0},
+        "source_records_denied": {"type": "integer", "minimum": 0}
+      }
+    },
+    "deduplication": {
+      "type": "object", "additionalProperties": false,
+      "required": ["applied", "algorithm_version", "partitioning", "normalization", "near_duplicate_threshold", "minimum_containment_characters", "candidate_anchor_characters", "maximum_character_anchors_per_text", "accepted_fingerprints"],
+      "properties": {
+        "applied": {"type": "boolean"},
+        "algorithm_version": {"const": "foundry-intra-view-dedup-v1"},
+        "partitioning": {"enum": ["source text", "exact destination semantic signature, then plain-text context", "not applicable"]},
+        "normalization": {"const": "NFKC; casefold; collapse whitespace"},
+        "near_duplicate_threshold": {"const": 0.9},
+        "minimum_containment_characters": {"const": 32},
+        "candidate_anchor_characters": {"const": 8},
+        "maximum_character_anchors_per_text": {"const": 64},
+        "accepted_fingerprints": {"type": "integer", "minimum": 0}
+      }
+    },
+    "evaluation_exclusion_registry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["algorithm_version", "normalization", "near_duplicate_threshold", "minimum_containment_characters", "candidate_anchor_characters", "maximum_character_anchors_per_text", "artifacts", "exact_fingerprints", "near_fingerprints"],
+      "properties": {
+        "algorithm_version": {"const": "foundry-eval-exclusion-v1"},
+        "normalization": {"const": "NFKC; casefold; collapse whitespace"},
+        "near_duplicate_threshold": {"const": 0.9},
+        "minimum_containment_characters": {"const": 32},
+        "candidate_anchor_characters": {"const": 8},
+        "maximum_character_anchors_per_text": {"const": 64},
+        "artifacts": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["logical_path", "sha256"], "properties": {"logical_path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"}}}},
+        "exact_fingerprints": {"type": "integer", "minimum": 1},
+        "near_fingerprints": {"type": "integer", "minimum": 1}
+      }
+    },
+    "counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "determinism": {"type": "object", "additionalProperties": false, "required": ["serialization", "ordering", "timestamps_omitted"], "properties": {"serialization": {"const": "UTF-8 canonical JSON with sorted keys and LF"}, "ordering": {"enum": ["validated ascending source payload ID", "canonical upstream packet order; unique correction record ID", "evaluation release then item ID"]}, "timestamps_omitted": {"const": true}}},
+    "safety": {"type": "object", "additionalProperties": false, "required": ["local_artifact_written", "training_performed", "upload_performed", "publication_performed", "private_data_exported", "evaluation_data_entered_non_evaluation_view", "test_fixture_mode"], "properties": {"local_artifact_written": {"const": true}, "training_performed": {"const": false}, "upload_performed": {"const": false}, "publication_performed": {"const": false}, "private_data_exported": {"const": false}, "evaluation_data_entered_non_evaluation_view": {"const": false}, "test_fixture_mode": {"type": "boolean"}}}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"view_kind": {"const": "heldout_evaluation"}}, "required": ["view_kind"]},
+      "then": {"properties": {"admission": {"properties": {"applied": {"const": false}}}, "deduplication": {"properties": {"applied": {"const": false}}}}},
+      "else": {"properties": {"admission": {"properties": {"applied": {"const": true}}}, "deduplication": {"properties": {"applied": {"const": true}}}}}
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "artifact": {"type": "object", "additionalProperties": false, "required": ["role", "records", "bytes", "sha256"], "properties": {"role": {"type": "string", "minLength": 1}, "records": {"type": "integer", "minimum": 0}, "bytes": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha256"}}}
+  }
+}

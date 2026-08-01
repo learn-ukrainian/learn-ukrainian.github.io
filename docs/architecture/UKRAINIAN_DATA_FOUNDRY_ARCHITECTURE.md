@@ -238,6 +238,22 @@ A non-evaluation view requires all of the following:
 Failure or absence at any gate yields an investigation, private, evaluation,
 unresolved, or excluded state—not `training_eligible`.
 
+The implemented #6122 boundary is the
+[model-view and recipe runbook](../runbooks/ukrainian-data-foundry-model-views.md).
+It provides separate schemas and commands for continued pretraining,
+correction/instruction, preference, quality-filter, and held-out evaluation
+artifacts. Non-evaluation views revalidate the source and correction contracts,
+all emitted text fields against the complete evaluation-exclusion registry,
+private/origin/rights state, and exact/near duplication inside each output.
+Modern-Ukrainian pretraining retains source bytes and exposes character-level
+loss masks; its payload contract binds every full source or segment to an
+explicit derivation receipt and parent content hash. Tokenizer-specific mask
+projection is part of the bound preparation recipe. Export receipts report
+recomputed source-admission and intra-view deduplication state. Recipe
+manifests pin exact view and receipt hashes, immutable model/tokenizer/code
+revisions, and positive training hyperparameters, while recording
+`training_authorized: false` and `execution_state: not_run`.
+
 ## Safety invariants
 
 ### Rights and provenance

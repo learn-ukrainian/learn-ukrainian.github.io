@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/foundry_source_payload_v1.schema.json",
+  "title": "Ukrainian Data Foundry source payload v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "payload_id", "source_record_id", "source_content_sha256", "derivation", "text", "text_sha256", "origin", "origin_evidence", "private_data", "private_data_review", "normalization", "language_span_review", "test_fixture"],
+  "properties": {
+    "schema_version": {"const": "foundry_source_payload_v1"},
+    "payload_id": {"$ref": "#/$defs/id"},
+    "source_record_id": {"$ref": "#/$defs/id"},
+    "source_content_sha256": {"$ref": "#/$defs/sha256"},
+    "derivation": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "source_start_char", "source_end_char", "receipt_sha256"],
+          "properties": {
+            "kind": {"const": "full_source"},
+            "source_start_char": {"type": "null"},
+            "source_end_char": {"type": "null"},
+            "receipt_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "source_start_char", "source_end_char", "receipt_sha256"],
+          "properties": {
+            "kind": {"const": "character_span"},
+            "source_start_char": {"type": "integer", "minimum": 0},
+            "source_end_char": {"type": "integer", "minimum": 1},
+            "receipt_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        }
+      ]
+    },
+    "text": {"type": "string", "minLength": 1},
+    "text_sha256": {"$ref": "#/$defs/sha256"},
+    "origin": {"enum": ["human_authored", "machine_generated", "machine_translated", "human_revised_synthetic", "unknown"]},
+    "origin_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "method", "receipt_sha256"],
+      "properties": {
+        "status": {"enum": ["verified", "unresolved"]},
+        "method": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "receipt_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+      }
+    },
+    "private_data": {"enum": ["clear", "present", "unknown"]},
+    "private_data_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "method", "receipt_sha256"],
+      "properties": {
+        "status": {"enum": ["complete", "incomplete"]},
+        "method": {"type": "string", "minLength": 1},
+        "receipt_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+      }
+    },
+    "normalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "version", "receipt_sha256"],
+      "properties": {
+        "status": {"enum": ["complete", "incomplete", "unknown"]},
+        "version": {"type": "string", "minLength": 1},
+        "receipt_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+      }
+    },
+    "language_span_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reviewer_qualification", "receipt_sha256", "character_spans"],
+      "properties": {
+        "status": {"enum": ["complete", "incomplete", "unreviewed"]},
+        "reviewer_qualification": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "receipt_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "character_spans": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["start", "end", "language_identity", "representation", "discourse_role", "modern_loss_action", "reason"],
+            "properties": {
+              "start": {"type": "integer", "minimum": 0},
+              "end": {"type": "integer", "minimum": 1},
+              "language_identity": {"enum": ["ukrainian", "russian", "mixed_ukrainian_russian", "historical_east_slavic_unresolved", "church_slavonic_candidate", "other_language", "uncertain"]},
+              "representation": {"enum": ["standard_orthography", "ukrainian_phonetic_rendering_of_russian", "historical_orthography", "transliteration", "ocr_or_encoding_candidate", "unknown"]},
+              "discourse_role": {"enum": ["narration", "quotation", "dialogue", "epigraph", "title", "citation_or_document", "metalinguistic_example", "unknown"]},
+              "modern_loss_action": {"enum": ["retain", "mask_from_loss", "exclude_record"]},
+              "reason": {"enum": ["russian_or_mixed_language", "quoted_or_multilingual", "historical_or_heritage", "dialectal_or_regional", "marked_register", "ocr_or_encoding", "context_uncertain", "other_reviewed"]}
+            }
+          }
+        }
+      }
+    },
+    "test_fixture": {"type": "boolean"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}
