@@ -20,6 +20,18 @@ def test_resolve_reviewer_auto() -> None:
     assert review_pr.resolve_reviewer("glm") == "glm"
 
 
+def test_formal_review_authority_key_is_bounded_and_opaque() -> None:
+    key = review_pr._formal_review_authority_key(
+        "learn-ukrainian/learn-ukrainian.github.io",
+        6191,
+        "a" * 40,
+        "b" * 64,
+    )
+    assert key.startswith("formal-review:")
+    assert len(key) == len("formal-review:") + 64
+    assert "/" not in key
+
+
 def test_build_review_pr_prompt_has_contract_and_cap() -> None:
     model, effort = review_pr.formal_cf_pin("codex")
     prompt = review_pr.build_review_pr_prompt(

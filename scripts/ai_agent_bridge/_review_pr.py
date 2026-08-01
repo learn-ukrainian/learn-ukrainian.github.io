@@ -12,6 +12,7 @@ remain on the critical review ladder only (see model_catalog.yaml).
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -45,6 +46,26 @@ FORMAL_CF_EFFORT: dict[str, str] = {
     REVIEWER_CLAUDE: "high",
     REVIEWER_GLM: "high",
 }
+
+
+def _formal_review_authority_key(
+    repository: str,
+    pr_number: int,
+    head_sha: str,
+    patch_sha256: str,
+) -> str:
+    """Return a bounded opaque key for one exact-head sealed review."""
+    identity = json.dumps(
+        {
+            "repository": repository,
+            "pr_number": pr_number,
+            "head_sha": head_sha,
+            "patch_sha256": patch_sha256,
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return "formal-review:" + hashlib.sha256(identity.encode("utf-8")).hexdigest()
 
 
 class _ReviewPrLifecycle:
@@ -238,7 +259,12 @@ def handle_review_pr(args: argparse.Namespace) -> int:
         sealed_prompt = prompt + evidence
         timeout = 86400 if args.no_timeout else 1800
         worker_id = f"review-pr-acp:{os.getpid()}"
-        authority_key = f"formal-review:{DEFAULT_REPOSITORY}:{pr}:{checkout.sha}:{checkout.patch_digest}"
+        authority_key = _formal_review_authority_key(
+            DEFAULT_REPOSITORY,
+            pr,
+            checkout.sha,
+            checkout.patch_digest,
+        )
         with AuthorityService() as authority:
             authority_job = authority.enqueue_formal_review(
                 repository=DEFAULT_REPOSITORY,
