@@ -1,9 +1,11 @@
 # Ukrainian Data Foundry Architecture
 
 > **Status:** Operator-approved architecture; implementation contract
-> **Owner:** [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
+> **Owner:** [#6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
+> (production successor to completed foundation
+> [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056))
 > **Architecture issue:** [#6119](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6119)
-> **Recorded:** 2026-07-31
+> **Recorded:** 2026-07-31; production execution chain refreshed 2026-08-01
 > **Does not authorize:** model training, fine-tuning, weight publication,
 > dataset upload or release, redistribution, researcher outreach, private-data
 > disclosure, or OCR
@@ -351,7 +353,7 @@ Tokenizer diagnostics are optional in this first component unless an existing
 approved interface can be included without compromising the full-corpus
 morphology deliverable.
 
-## Execution chain
+## Completed v1 execution chain
 
 1. [#6119](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6119)
    merges this architecture and aligns the control plane.
@@ -369,3 +371,43 @@ External validation may follow a built artifact. It is not a prerequisite for
 any step above. Dataset release, upload, redistribution, model training, weight
 publication, private-data disclosure, researcher contact, and OCR each require
 separate present-tense authorization.
+
+## Phase 2–4 production execution chain
+
+The v1 interfaces are foundations, not delivery of the Foundry's ultimate
+outcome. At the start of Phase 2, the corpus profiler covers 189,150 records and
+50,298,925 lexical words, but no real record is training-admitted and the only
+end-to-end correction is a synthetic fixture. Production therefore proceeds
+through the following hard-gated chain under #6164:
+
+1. [#6166](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6166)
+   resolves source, edition, acquisition, rights, permitted-use, origin, and
+   contamination evidence for every real corpus family and admits useful-scale
+   real data where the evidence permits it.
+2. [#6167](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6167)
+   runs a contextual detector across the complete corpus and preserves the
+   difference between Russian quotation, modern interference, phonetic
+   rendering, mixed or historical language, protected Ukrainian variation,
+   and uncertainty.
+3. [#6168](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6168)
+   freezes sampling and stopping rules before labeling, then obtains two
+   independent qualified-Ukrainian-human judgments plus distinct conflict
+   adjudication. Model judgments never substitute for this gate.
+4. [#6169](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6169)
+   emits real disjoint consumer views with lineage, benchmark isolation,
+   tokenizer diagnostics, and loss-mask evidence.
+5. [#6170](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6170)
+   runs one operator-approved, preregistered open-weight treatment and causal
+   ablation only after real data, frozen gold, an exact model revision, and a
+   compute budget exist.
+6. [#6171](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6171)
+   packages the corpus-portable, rights-safe release candidate and requires a
+   clean independent reproduction before publication is considered.
+
+Admission and full-corpus detection begin in parallel. Later stages consume
+their frozen evidence in order. The orchestrator does not stop at intermediate
+PR merges; only the source-family admission, qualified-human review, exact
+training preregistration/budget, and final publication approvals are deliberate
+human gates. No arbitrary row count, agreement score, tokenizer ratio,
+significance threshold, or effect size may be invented to replace evidence-led
+criteria frozen in the owning issue.
