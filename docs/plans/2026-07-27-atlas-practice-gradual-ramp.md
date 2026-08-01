@@ -119,7 +119,32 @@ SOURCES → LEXICAL CORE (lemmas / senses / attestations / rights)
 | Practice pool (union A1–C1 lemmaIds) | ~4.9k |
 | Curated private teacher-lesson v5 active seed | ~1.0k (not-in-VESUM skipped) |
 | Practice lexemes gzip budget / level | 180 KB gzip / 1.6 MB raw (headroom today) |
-| Practice cloze emit budget / level | 210 KB gzip / 2.0 MB raw after diagnostic-field compaction |
+| Practice cloze emit budget / level | 240 KB gzip / 2.25 MB raw after diagnostic-field compaction |
+
+### 2026-08-02 residual-inventory measurement
+
+The hydrated post-#6223 trace has 2,269 unique no-cloze residuals. Of the 1,406
+with sentence-inventory rows, 804 reach `_build_cloze_items`; the remaining 299
+are quality-gate empty and 303 have no reader candidate. Builder v11 admitted
+493 of those 804 candidates after the existing option validators, retaining
+the capitalization and length gates. The other 311 remain fail-closed because
+they cannot form a safe identity option set.
+
+The previous v10 budget produced this trim warning:
+`WARN: atlas-practice-cloze.B1 exceeds size budget; trimmed cloze items 1132 -> 1113`.
+With v11's cloze-only 2.25 MB raw / 240 KB gzip budget, the untrimmed and
+post-budget counts are equal at every published level:
+
+| Level | Untrimmed cards / eligible lemmas | Post-budget cards / eligible lemmas | Raw bytes | Gzip bytes | Residual inventory recovered |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| A1 | 1,033 / 989 | 1,033 / 989 | 1,729,801 | 189,856 | 92 / 455 |
+| A2 | 1,087 / 1,087 | 1,087 / 1,087 | 1,875,917 | 201,725 | 122 / 382 |
+| B1 | 1,269 / 1,269 | 1,269 / 1,269 | 2,202,015 | 237,309 | 156 / 332 |
+| B2 | 696 / 696 | 696 / 696 | 1,218,519 | 131,623 | 92 / 168 |
+| C1 | 183 / 183 | 183 / 183 | 322,395 | 35,435 | 31 / 69 |
+
+The final recovery is 493 / 1,406 residual inventory lemmas, and the published
+cloze payloads remain below both per-level limits.
 
 Banner **“Not in the practice pool yet”** = not in `practice-index.*`, **not** “empty atlas page.”
 Example: `інвалідність` is a rich A2 atlas entry with morphology; it is simply out of the practice pool.

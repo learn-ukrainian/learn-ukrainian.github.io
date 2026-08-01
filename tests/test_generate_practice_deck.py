@@ -1227,6 +1227,53 @@ def test_size_budget_cloze_trim_prioritizes_unique_lemmas(capsys: pytest.Capture
     assert shards["A1"]["index"]["items"][0]["clozeIds"] == ["a:cloze:1"]
 
 
+def test_size_budget_cloze_warning_reports_eligible_lemma_counts(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    cloze_items = [
+        {
+            "clozeId": f"{lemma_id}:cloze:1",
+            "lemmaId": lemma_id,
+            "form": lemma_id,
+            "padding": "x" * 1_500,
+        }
+        for lemma_id in ("a", "b", "c", "d")
+    ]
+    cloze = {"schema": "atlas-practice-cloze", "cloze": cloze_items}
+    probe = {**cloze, "cloze": cloze_items[:3]}
+    raw_budget = generate_practice_deck._size_budget(probe, 1_000_000, 1_000_000)
+
+    apply_size_budgets(
+        {"A1": {"cloze": cloze}},
+        raw_limit=int(raw_budget["rawBytes"]) + 200,
+        gzip_limit=int(raw_budget["gzipBytes"]) + 200,
+    )
+
+    assert "trimmed cloze items 4 -> 3; eligible lemmas 4 -> 3" in capsys.readouterr().err
+
+
+def test_size_budget_uses_dedicated_cloze_limits() -> None:
+    cloze = {
+        "schema": "atlas-practice-cloze",
+        "cloze": [{"clozeId": "a:cloze:1", "lemmaId": "a", "padding": "x" * 500}],
+    }
+    dedicated_budget = generate_practice_deck._size_budget(cloze, 1_000_000, 1_000_000)
+
+    shards = {"A1": {"cloze": cloze}}
+    apply_size_budgets(
+        shards,
+        raw_limit=1,
+        gzip_limit=1,
+        cloze_raw_limit=int(dedicated_budget["rawBytes"]) + 1,
+        cloze_gzip_limit=int(dedicated_budget["gzipBytes"]) + 1,
+    )
+
+    assert len(shards["A1"]["cloze"]["cloze"]) == 1
+    assert shards["A1"]["cloze"]["sizeBudget"]["rawLimitBytes"] == int(
+        dedicated_budget["rawBytes"]
+    ) + 1
+
+
 def test_size_budget_surface_trim_prioritizes_cloze_coverage(capsys: pytest.CaptureFixture[str]) -> None:
     lemma_ids = ("a", "b", "c", "d")
     cloze_lemma_ids = ("a", "c", "d")
@@ -1732,6 +1779,35 @@ def test_inventory_identity_decoys_are_seeded_and_length_matched() -> None:
     assert len(first_decoys) == len(second_decoys) == 3
     assert all(abs(len(label) - len("книга")) <= 3 for label in first_decoys + second_decoys)
     assert first_decoys != second_decoys
+
+
+def test_inventory_identity_decoys_use_attested_surface_capitalization() -> None:
+    lexemes = _fixture_lexemes()
+    answer = next(lexeme for lexeme in lexemes if lexeme["lemmaId"] == "knyha")
+    capitalized_decoy = {
+        **next(lexeme for lexeme in lexemes if lexeme["lemmaId"] == "misto"),
+        "lemmaId": "kyiv",
+        "lemma": "Київ",
+        "gloss": "Kyiv",
+    }
+    cloze = {
+        "clozeId": "knyha:inventory:capitalized",
+        "form": "Книга",
+        "lemma": "книга",
+        "provenance": {"status": "sentence_inventory"},
+        "caseRule": {"ruleId": "nominative_identification"},
+    }
+
+    options = generate_practice_deck._make_no_pair_options(
+        cloze, answer, [*lexemes, capitalized_decoy], random.Random(0)
+    )
+
+    assert len(options) == 4
+    assert any(
+        option["kind"] != "answer" and generate_practice_deck._initial_capitalization(option["label"])
+        for option in options
+    )
+    assert validate_option_set({**cloze, "options": options}) == []
 
 
 def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
