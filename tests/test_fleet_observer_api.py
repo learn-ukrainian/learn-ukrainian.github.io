@@ -142,6 +142,23 @@ def _seed_plane(root: Path) -> None:
                 'legacy-bridge', '2026-08-01T12:07:00Z'
             );
 
+            INSERT INTO authority_deliveries(
+                delivery_id, message_id, recipient, state, deadline_at, lease_owner,
+                lease_expires_at, fence_token, attempt_count, acknowledgment_artifact_id,
+                terminal_sha256, created_at, updated_at, completed_at
+            ) VALUES (
+                'authority-delivery-1', 'authority-message', 'codex', 'failed', NULL, NULL,
+                NULL, 3, 3, NULL, 'terminal-sha', '2026-08-01T12:07:00Z',
+                '2026-08-01T12:08:00Z', '2026-08-01T12:08:00Z'
+            );
+
+            INSERT INTO authority_dead_letters(
+                dead_letter_id, delivery_id, job_id, reason_code, created_at
+            ) VALUES (
+                'authority-dead-letter-1', 'authority-delivery-1', NULL,
+                'attempts_exhausted', '2026-08-01T12:08:00Z'
+            );
+
             INSERT INTO authority_jobs(
                 job_id, job_kind, subject_id, payload_artifact_id, state, deadline_at,
                 lease_owner, lease_expires_at, fence_token, attempt_count, result_artifact_id,
@@ -207,6 +224,31 @@ def test_plane_health_and_overview_expose_pre_flip_read_only_posture(
     assert overview.json()["counts"]["dead_letters"]["total"] == 1
     assert overview.json()["counts"]["acp_conversations"]["total"] == 1
     assert overview.json()["counts"]["authority_jobs"]["total"] == 1
+
+
+def test_plane_health_and_overview_expose_active_authority_posture(
+    client: TestClient, fleet_root: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
+    _seed_plane(fleet_root)
+
+    health = client.get("/api/fleet/health").json()
+    overview = client.get("/api/fleet/overview").json()
+
+    assert health["mode"] == "authority"
+    assert health["authority"] == "fleet_comms_authoritative"
+    assert health["cutover"] == "authority_active"
+    assert overview["authority"] == health["authority"]
+    assert overview["cutover"] == health["cutover"]
+    assert overview["counts"]["dead_letters"]["total"] == 1
+
+    dead_letters = client.get(
+        "/api/fleet/dead-letters",
+        params={"state": "failed", "agent": "codex", "source": "legacy-bridge"},
+    ).json()
+    assert dead_letters["total"] == 1
+    assert dead_letters["dead_letters"][0]["reason"] == "attempts_exhausted"
+    assert dead_letters["dead_letters"][0]["via"] == "queue"
 
 
 def test_message_and_request_filters_are_stable_and_bodies_are_bounded(
@@ -291,6 +333,8 @@ def test_discussion_review_and_dead_letter_metadata_stay_read_only(
     assert discussion_detail.status_code == 200
     assert discussion_detail.headers["cache-control"] == "no-store"
     assert discussion_detail.json()["body_policy"].startswith("redacted_inline")
+    assert discussion_detail.json()["discussion"]["message_count"] == 2
+    assert discussion_detail.json()["discussion"]["latest_message_at"] == "2026-08-01T12:02:00Z"
     assert len(discussion_detail.json()["messages"]["messages"]) == 2
 
     reviews = client.get(

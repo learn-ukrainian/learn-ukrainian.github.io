@@ -306,6 +306,8 @@ def _paged_query(
 def _safe_plane_status() -> dict[str, Any]:
     """Project the existing plane read model without paths or raw telemetry rows."""
     status = read_plane_status(repo_root=Path(PROJECT_ROOT), recent_limit=0)
+    mode = _safe_text(status.get("mode"), fallback="invalid")
+    authority_active = mode == "authority"
     schema = status.get("schema") if isinstance(status.get("schema"), dict) else {}
     telemetry = (
         status.get("parity_telemetry")
@@ -313,11 +315,13 @@ def _safe_plane_status() -> dict[str, Any]:
         else {}
     )
     return {
-        "mode": status.get("mode", "invalid"),
+        "mode": mode,
         "enabled": bool(status.get("enabled")),
         "read_only": True,
-        "authority": "file_handoffs_authoritative",
-        "cutover": "pre_flip_operator_gated",
+        "authority": (
+            "fleet_comms_authoritative" if authority_active else "file_handoffs_authoritative"
+        ),
+        "cutover": "authority_active" if authority_active else "pre_flip_operator_gated",
         "schema": {
             "known_version": schema.get("known_version"),
             "applied_version": schema.get("applied_version"),
@@ -348,7 +352,7 @@ def _count_by_state(connection: sqlite3.Connection, table: str, column: str) -> 
 
 @router.get("/health")
 def fleet_health() -> dict[str, Any]:
-    """Read-only health, mode, schema, and pre-flip authority posture."""
+    """Read-only health, mode, schema, and current authority posture."""
     status = _safe_plane_status()
     return {
         "ok": True,
@@ -365,8 +369,8 @@ def fleet_overview() -> dict[str, Any]:
     status = _safe_plane_status()
     result: dict[str, Any] = {
         "read_only": True,
-        "authority": "file_handoffs_authoritative",
-        "cutover": "pre_flip_operator_gated",
+        "authority": status["authority"],
+        "cutover": status["cutover"],
         "health": status,
         "counts": {
             "requests": {"total": 0, "by_state": {}},
@@ -394,9 +398,12 @@ def fleet_overview() -> dict[str, Any]:
             "total": sum(authority_job_states.values()),
             "by_state": authority_job_states,
         }
-        if _table_exists(connection, "dead_letters"):
+        dead_letter_table = (
+            "authority_dead_letters" if status["mode"] == "authority" else "dead_letters"
+        )
+        if _table_exists(connection, dead_letter_table):
             counts["dead_letters"]["total"] = int(
-                connection.execute("SELECT COUNT(*) FROM dead_letters").fetchone()[0]
+                connection.execute(f"SELECT COUNT(*) FROM {dead_letter_table}").fetchone()[0]
             )
         if _table_exists(connection, "acp_conversations"):
             counts["acp_conversations"]["total"] = int(
@@ -1224,8 +1231,24 @@ def fleet_discussion_detail(
     with _read_connection() as (connection, _availability):
         if connection is None or not _table_exists(connection, "conversations"):
             raise HTTPException(status_code=404, detail="Discussion not found")
+        message_summary = (
+            "(SELECT COUNT(*) FROM comms_messages AS summary_message "
+            "WHERE summary_message.conversation_id = conversation.conversation_id) AS message_count, "
+            "(SELECT MAX(summary_message.created_at) FROM comms_messages AS summary_message "
+            "WHERE summary_message.conversation_id = conversation.conversation_id) AS latest_message_at"
+            if _table_exists(connection, "comms_messages")
+            else "0 AS message_count, NULL AS latest_message_at"
+        )
+        rounds_summary = (
+            "(SELECT MAX(summary_acp.rounds_requested) FROM acp_conversations AS summary_acp "
+            "WHERE summary_acp.conversation_id = conversation.conversation_id) AS rounds_requested"
+            if _table_exists(connection, "acp_conversations")
+            else "NULL AS rounds_requested"
+        )
         row = connection.execute(
-            "SELECT conversation_id, source, title, created_at FROM conversations WHERE conversation_id = ?",
+            "SELECT conversation.conversation_id, conversation.source, conversation.title, "
+            f"conversation.created_at, {message_summary}, {rounds_summary} "
+            "FROM conversations AS conversation WHERE conversation.conversation_id = ?",
             (conversation_id,),
         ).fetchone()
         if row is None:
@@ -1497,7 +1520,7 @@ def fleet_dead_letters(
     limit: int = Query(default=DEFAULT_PAGE_SIZE, ge=1, le=MAX_PAGE_SIZE),
     offset: int = Query(default=0, ge=0),
 ) -> dict[str, Any]:
-    """Dead-letter metadata tied back to a request when optional tables exist."""
+    """Current authority DLQ metadata, or the legacy read projection during rollback."""
     since_value = _normalize_time(since, "since")
     until_value = _normalize_time(until, "until")
     filters = {
@@ -1511,6 +1534,65 @@ def fleet_dead_letters(
         if connection is None:
             return _empty_collection(
                 "dead_letters", limit=limit, offset=offset, availability=availability, filters=filters
+            )
+        if _safe_plane_status()["mode"] == "authority":
+            if not _table_exists(connection, "authority_dead_letters"):
+                return _empty_collection(
+                    "dead_letters",
+                    limit=limit,
+                    offset=offset,
+                    availability="table_missing",
+                    filters=filters,
+                )
+            clauses: list[str] = []
+            params: list[Any] = []
+            if state is not None:
+                clauses.append("COALESCE(delivery.state, job.state) = ?")
+                params.append(state)
+            if agent is not None:
+                clauses.append("COALESCE(delivery.recipient, 'authority-job') = ?")
+                params.append(agent)
+            if source is not None:
+                clauses.append(
+                    "COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), "
+                    "'authority') = ?"
+                )
+                params.append(source)
+            _time_clauses(
+                "letter.created_at",
+                since=since_value,
+                until=until_value,
+                clauses=clauses,
+                params=params,
+            )
+            return _paged_query(
+                connection,
+                key="dead_letters",
+                select_sql=(
+                    "SELECT letter.dead_letter_id, job.subject_id AS request_id, "
+                    "letter.delivery_id, letter.reason_code AS reason, NULL AS successor, "
+                    "COALESCE(delivery.deadline_at, job.deadline_at) AS original_expires_at, "
+                    "letter.created_at, COALESCE(delivery.state, job.state) AS request_state, "
+                    "delivery.recipient AS resolved_recipient, 'authority' AS conversation_source, "
+                    "authority_meta.provenance_json AS authority_provenance_json"
+                ),
+                from_sql=(
+                    " FROM authority_dead_letters AS letter"
+                    " LEFT JOIN authority_deliveries AS delivery"
+                    " ON delivery.delivery_id = letter.delivery_id"
+                    " LEFT JOIN comms_messages AS message"
+                    " ON message.message_id = delivery.message_id"
+                    " LEFT JOIN authority_message_metadata AS authority_meta"
+                    " ON authority_meta.message_id = message.message_id"
+                    " LEFT JOIN authority_jobs AS job ON job.job_id = letter.job_id"
+                ),
+                clauses=clauses,
+                params=params,
+                order_sql="letter.created_at DESC, letter.dead_letter_id ASC",
+                limit=limit,
+                offset=offset,
+                filters=filters,
+                transform=_dead_letter_item,
             )
         if not _table_exists(connection, "dead_letters"):
             return _empty_collection(
