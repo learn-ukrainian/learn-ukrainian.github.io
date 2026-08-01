@@ -773,6 +773,7 @@ def _invoke_thread(
                 cwd=REPO_ROOT,
                 model=requested_model,
                 task_id=task_id,
+                initiator=claimed.deliveries[-1].from_agent,
                 session_id=session_id if resumable_agent else None,
                 tool_config=_with_discussion_readonly_tool_config(
                     tool_config,
@@ -820,6 +821,7 @@ def _invoke_gemini_thread_with_fallback(
                 cwd=REPO_ROOT,
                 model=current_model,
                 task_id=task_id,
+                initiator=claimed.deliveries[-1].from_agent,
                 session_id=None,
                 tool_config=tool_config,
                 entrypoint="bridge",

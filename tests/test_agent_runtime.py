@@ -109,6 +109,7 @@ from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.adapters.gemini import GeminiAdapter, resolve_gemini_auth_mode
+from agent_runtime.attribution import resolve_invocation_attribution
 from agent_runtime.errors import (
     AgentTimeoutError,
     AgentUnavailableError,
@@ -279,6 +280,34 @@ def test_acpx_pilot_usage_records_strip_sensitive_context(
     assert record["outcome"] == "error"
     assert record["duration_s"] == 1.25
     assert record["tokens"] == 3
+
+
+def test_usage_attribution_is_explicit_and_privacy_safe(monkeypatch):
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "claude")
+
+    attribution = resolve_invocation_attribution(
+        explicit="Codex",
+        task_id="routing-6159",
+    )
+
+    assert attribution.initiator == "codex"
+    assert attribution.source == "explicit"
+    assert attribution.task_id == "routing-6159"
+
+
+def test_usage_attribution_detects_codex_desktop(monkeypatch):
+    monkeypatch.delenv("SESSION_HANDOFF_AGENT", raising=False)
+    monkeypatch.setenv("CODEX_THREAD_ID", "thread-6159")
+
+    attribution = resolve_invocation_attribution(task_id="routing-6159")
+
+    assert attribution.initiator == "codex"
+    assert attribution.source == "session_env"
+
+
+def test_usage_attribution_rejects_unsafe_explicit_identity():
+    with pytest.raises(ValueError, match="initiator must be"):
+        resolve_invocation_attribution(explicit="<script>")
 
 
 def test_acpx_grok_shadow_entry_is_direct_only():
@@ -4339,3 +4368,16 @@ def test_non_acpx_route_has_no_streamed_output_limit(tmp_path, monkeypatch):
     )
     assert execution.kill_reason is None
     assert execution.returncode == 0
+
+
+def test_glm_acp_route_has_a_separate_bounded_protocol_envelope():
+    from agent_runtime import runner as runtime_runner
+
+    assert runtime_runner._streamed_output_limit(
+        agent_name="acpx-glm-shadow",
+        entrypoint="acpx-discuss",
+    ) == 512 * 1024
+    assert runtime_runner._streamed_output_limit(
+        agent_name="acpx-kimi-shadow",
+        entrypoint="acpx-discuss",
+    ) == 256 * 1024

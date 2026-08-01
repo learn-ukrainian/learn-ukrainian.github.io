@@ -1467,6 +1467,7 @@ def _handle_discuss(args) -> int:
     try:
         from concurrent.futures import ThreadPoolExecutor, as_completed
 
+        from agent_runtime.attribution import resolve_invocation_attribution
         from agent_runtime.errors import (
             AgentStalledError,
             AgentTimeoutError,
@@ -1484,14 +1485,19 @@ def _handle_discuss(args) -> int:
         return 1
 
     # ── validate inputs ────────────────────────────────────────────
-    acp_routine = (
-        os.environ.get("LU_AGENT_COMM_TRANSPORT", "bridge").strip().lower() == "acp"
-    )
-    acp_participant_routes: dict[str, dict[str, str | None]] = {}
-    if acp_routine:
-        from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+    requested_transport = os.environ.get("LU_AGENT_COMM_TRANSPORT", "acp").strip().lower()
+    if requested_transport not in {"acp", "bridge"}:
+        print(
+            "❌ LU_AGENT_COMM_TRANSPORT must be 'acp' or 'bridge'",
+            file=sys.stderr,
+        )
+        return 1
+    acp_routine = requested_transport == "acp"
+    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
-        acp_participant_routes = ACPX_SUPPORTED_PARTICIPANTS
+    acp_participant_routes: dict[str, dict[str, str | None]] = (
+        ACPX_SUPPORTED_PARTICIPANTS if acp_routine else {}
+    )
     with_agents = _parse_csv(args.with_agents)
     if not with_agents:
         print("❌ --with requires at least one agent", file=sys.stderr)
@@ -1558,6 +1564,12 @@ def _handle_discuss(args) -> int:
     if not body.strip():
         print("❌ empty discussion topic", file=sys.stderr)
         return 1
+    caller_attribution = resolve_invocation_attribution()
+    runtime_initiator = (
+        caller_attribution.initiator
+        if caller_attribution.initiator != "unknown"
+        else None
+    )
 
     # ── post the root question ────────────────────────────────────
     # NOTE: do NOT pass to_agents here — discuss handles fanout itself
@@ -1646,6 +1658,7 @@ def _handle_discuss(args) -> int:
                         idempotency_key=f"ab-discuss:{correlation_id}",
                         rounds=acp_rounds,
                         participants=tuple(with_agents),
+                        initiator=runtime_initiator,
                     )
                 finally:
                     if previous_transport is None:
@@ -1725,6 +1738,7 @@ def _handle_discuss(args) -> int:
                 cwd=REPO_ROOT,
                 model=agent_models.get(agent_name),
                 task_id=f"discuss-{correlation_id[:8]}-r{round_idx}-{agent_name}",
+                initiator=runtime_initiator,
                 # TODO(#1701): keep this flag in the sanitized child-env
                 # allowlist when the runner switches to build_agent_env().
                 tool_config=tool_config,

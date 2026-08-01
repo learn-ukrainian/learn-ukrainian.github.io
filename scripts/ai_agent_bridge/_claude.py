@@ -284,6 +284,7 @@ def _run_claude_sync_via_runtime(
                 model=target_model,
                 effort=effort_to_invoke,
                 task_id=msg.get('task_id'),
+                initiator=msg.get("from"),
                 session_id=session_id_to_pass,
                 tool_config=tool_config,
                 entrypoint="bridge",
