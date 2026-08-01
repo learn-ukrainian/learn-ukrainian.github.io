@@ -9,8 +9,7 @@ DASHBOARDS = ROOT / "dashboards"
 PRIMARY_NAV_HREFS = [
     "/",
     "/orient.html",
-    "/channels.html",
-    "/comms.html",
+    "/fleet.html",
     "/artifacts/",
     "/runtime.html",
     "/docs",
@@ -97,8 +96,7 @@ def test_runtime_page_keeps_primary_monitor_nav():
     assert '<a class="active" href="/runtime.html">Runtime</a>' in html
     for href in [
         "/orient.html",
-        "/channels.html",
-        "/comms.html",
+        "/fleet.html",
         "/artifacts/",
         "/runtime.html",
     ]:
@@ -433,13 +431,12 @@ def test_artifacts_page_uses_metadata_endpoint_and_filters():
     assert "artifact-card" in html
 
 
-def test_artifacts_page_preserves_legacy_dashboard_links():
+def test_artifacts_page_preserves_secondary_dashboard_links():
     html = (DASHBOARDS / "artifacts.html").read_text(encoding="utf-8")
     assert 'href="/"' in html
     for href in [
         "/admin.html",
-        "/channels.html",
-        "/comms.html",
+        "/fleet.html",
         "/audit-dashboard.html",
         "/build-events.html",
         "/consultation.html",
