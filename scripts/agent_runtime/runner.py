@@ -135,10 +135,11 @@ _PRIVACY_LIMITED_USAGE_ENTRYPOINTS = frozenset(
 )
 _ACPX_DIRECT_OUTPUT_LIMIT_BYTES = 256 * 1024
 # Native OpenCode ACP emits a larger JSON-RPC envelope than the text-only and
-# built-in seats. Keep it bounded, but above the production-observed 263,070
+# built-in seats. Keep it bounded, but above the production-observed 1,067,146
 # bytes that otherwise killed a valid concise GLM response before its terminal
-# frame arrived (#6159).
-_ACPX_GLM_OUTPUT_LIMIT_BYTES = 512 * 1024
+# frame arrived (#6159). The parsed response and formal verdict retain their
+# separate, tighter content/evidence bounds.
+_ACPX_GLM_OUTPUT_LIMIT_BYTES = 2 * 1024 * 1024
 
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.

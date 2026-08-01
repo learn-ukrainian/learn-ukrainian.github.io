@@ -4376,7 +4376,7 @@ def test_glm_acp_route_has_a_separate_bounded_protocol_envelope():
     assert runtime_runner._streamed_output_limit(
         agent_name="acpx-glm-shadow",
         entrypoint="acpx-discuss",
-    ) == 512 * 1024
+    ) == 2 * 1024 * 1024
     assert runtime_runner._streamed_output_limit(
         agent_name="acpx-kimi-shadow",
         entrypoint="acpx-discuss",
