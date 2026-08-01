@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_silver_observation_v1.schema.json",
+  "title": "Ukrainian Data Foundry non-authoritative silver observation v1",
+  "oneOf": [
+    {"$ref": "#/$defs/sourceEvidence"},
+    {"$ref": "#/$defs/modelProposal"},
+    {"$ref": "#/$defs/hramatkaFeedback"}
+  ],
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,191}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "candidateId": {"type": "string", "pattern": "^lcc\\.[a-f0-9]{64}$"},
+    "alternative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "transformation_path"],
+      "properties": {
+        "text": {"type": "string", "minLength": 1, "maxLength": 240},
+        "transformation_path": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        }
+      }
+    },
+    "sourceEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "observation_id", "candidate_id", "kind", "source",
+        "source_identity", "query", "status", "supports", "locator",
+        "parser_status", "parser_version", "content_sha256", "rights_posture",
+        "raw_payload_export_allowed", "alternatives"
+      ],
+      "properties": {
+        "schema_version": {"const": "language_contact_silver_observation_v1"},
+        "observation_id": {"$ref": "#/$defs/id"},
+        "candidate_id": {"$ref": "#/$defs/candidateId"},
+        "kind": {"const": "source_evidence"},
+        "source": {
+          "enum": [
+            "vesum", "russian_morphology", "r2u", "ulif_dictua",
+            "slovnyk_me", "heritage_dictionary", "ukrainian_corpus"
+          ]
+        },
+        "source_identity": {"type": "string", "minLength": 2},
+        "query": {"type": "string", "minLength": 1, "maxLength": 240},
+        "status": {
+          "enum": ["attested", "not_found", "ambiguous", "incomplete", "parse_error", "transient_error"]
+        },
+        "supports": {
+          "enum": ["ukrainian_attestation", "russian_attestation", "alternative_candidate", "protected_variation", "context_only", "no_conclusion"]
+        },
+        "locator": {"type": "string", "minLength": 1},
+        "parser_status": {"enum": ["ok", "not_found", "parse_error", "transient_error", "not_applicable"]},
+        "parser_version": {
+          "anyOf": [
+            {"type": "string", "minLength": 1},
+            {"type": "null"}
+          ]
+        },
+        "content_sha256": {
+          "anyOf": [
+            {"$ref": "#/$defs/sha256"},
+            {"type": "null"}
+          ]
+        },
+        "rights_posture": {
+          "enum": ["bounded_internal_reference", "redistribution_granted", "redistribution_unknown", "redistribution_denied"]
+        },
+        "raw_payload_export_allowed": {"const": false},
+        "alternatives": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/alternative"}
+        }
+      }
+    },
+    "modelProposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "observation_id", "candidate_id", "kind", "model_family",
+        "model", "harness", "task_id", "prompt_sha256", "response_sha256",
+        "stance", "challenge_targets", "alternatives"
+      ],
+      "properties": {
+        "schema_version": {"const": "language_contact_silver_observation_v1"},
+        "observation_id": {"$ref": "#/$defs/id"},
+        "candidate_id": {"$ref": "#/$defs/candidateId"},
+        "kind": {"const": "model_proposal"},
+        "model_family": {"enum": ["anthropic", "google", "openai"]},
+        "model": {"type": "string", "minLength": 2},
+        "harness": {"type": "string", "minLength": 2},
+        "task_id": {"$ref": "#/$defs/id"},
+        "prompt_sha256": {"$ref": "#/$defs/sha256"},
+        "response_sha256": {"$ref": "#/$defs/sha256"},
+        "stance": {"enum": ["propose", "challenge", "abstain"]},
+        "challenge_targets": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/id"},
+          "uniqueItems": true
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/alternative"}
+        }
+      }
+    },
+    "hramatkaFeedback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "observation_id", "candidate_id", "kind", "feedback_id",
+        "pseudonymous_actor_id", "consent_receipt_sha256", "privacy_cleared",
+        "permitted_use", "observed_at", "source_surface", "selection_bias",
+        "supports", "alternatives"
+      ],
+      "properties": {
+        "schema_version": {"const": "language_contact_silver_observation_v1"},
+        "observation_id": {"$ref": "#/$defs/id"},
+        "candidate_id": {"$ref": "#/$defs/candidateId"},
+        "kind": {"const": "hramatka_feedback"},
+        "feedback_id": {"$ref": "#/$defs/id"},
+        "pseudonymous_actor_id": {"$ref": "#/$defs/id"},
+        "consent_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "privacy_cleared": {"const": true},
+        "permitted_use": {"const": "research_feedback"},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "source_surface": {"const": "hramatka"},
+        "selection_bias": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["population", "invitation_surface", "self_selected", "limitations"],
+          "properties": {
+            "population": {"type": "string", "minLength": 1},
+            "invitation_surface": {"type": "string", "minLength": 1},
+            "self_selected": {"type": "boolean"},
+            "limitations": {
+              "type": "array",
+              "minItems": 1,
+              "items": {"type": "string", "minLength": 1},
+              "uniqueItems": true
+            }
+          }
+        },
+        "supports": {"enum": ["acceptable_as_is", "correction_candidate", "protected_variation", "no_conclusion"]},
+        "alternatives": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/alternative"}
+        }
+      }
+    }
+  }
+}

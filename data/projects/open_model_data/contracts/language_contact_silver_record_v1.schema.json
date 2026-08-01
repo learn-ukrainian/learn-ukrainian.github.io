@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_silver_record_v1.schema.json",
+  "title": "Ukrainian Data Foundry evidence-tiered non-human silver record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "record_id", "candidate_id", "candidate_sha256",
+    "detector_receipt_sha256", "policy_version", "detector_candidate",
+    "observations", "source_enrichment", "decision", "destination_views",
+    "evaluation_firewall", "claim_boundary", "human_upgrade"
+  ],
+  "properties": {
+    "schema_version": {"const": "language_contact_silver_record_v1"},
+    "record_id": {"type": "string", "pattern": "^silver\\.[a-f0-9]{64}$"},
+    "candidate_id": {"type": "string", "pattern": "^lcc\\.[a-f0-9]{64}$"},
+    "candidate_sha256": {"$ref": "#/$defs/sha256"},
+    "detector_receipt_sha256": {"$ref": "#/$defs/sha256"},
+    "policy_version": {"const": "language-contact-silver-policy-v1"},
+    "detector_candidate": {
+      "$ref": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_candidate_v1.schema.json"
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "$ref": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_silver_observation_v1.schema.json"
+      }
+    },
+    "source_enrichment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "genre", "region", "admission_disposition", "admitted_destination",
+        "admission_receipt_sha256", "operator_packet_sha256", "silver_use",
+        "correction_training_eligible", "redistribution_eligible"
+      ],
+      "properties": {
+        "genre": {"type": "string", "minLength": 1},
+        "region": {"type": "string", "minLength": 1},
+        "admission_disposition": {"enum": ["admitted", "excluded", "investigation_only", "proposed_admission", "unresolved"]},
+        "admitted_destination": {
+          "anyOf": [
+            {"type": "string", "minLength": 1},
+            {"type": "null"}
+          ]
+        },
+        "admission_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "operator_packet_sha256": {"$ref": "#/$defs/sha256"},
+        "silver_use": {"const": "investigation_only"},
+        "correction_training_eligible": {"const": false},
+        "redistribution_eligible": {"const": false}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_grade", "disposition", "signals", "alternatives", "uncertainty"],
+      "properties": {
+        "evidence_grade": {
+          "enum": [
+            "deterministic_source_backed_silver",
+            "independently_triangulated_silver",
+            "model_only_research",
+            "protected",
+            "unresolved"
+          ]
+        },
+        "disposition": {
+          "enum": [
+            "correction", "acceptable_as_is", "protected_variation",
+            "quoted_or_multilingual", "historical_or_register",
+            "technical_or_ocr", "proper_name", "unresolved"
+          ]
+        },
+        "signals": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/signal"}
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/supportedAlternative"}
+        },
+        "uncertainty": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "destination_views": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["faithful_literary", "modern_literary_ukrainian", "correction", "preference"],
+      "properties": {
+        "faithful_literary": {"const": "retain_original"},
+        "modern_literary_ukrainian": {"enum": ["retain_original", "mask_span_from_loss", "protected", "unresolved"]},
+        "correction": {"enum": ["silver_candidate", "not_applicable", "protected", "unresolved"]},
+        "preference": {"enum": ["silver_candidate", "not_applicable", "protected", "unresolved"]}
+      }
+    },
+    "evaluation_firewall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "algorithm_version", "registry_sha256"],
+      "properties": {
+        "status": {"const": "clear"},
+        "algorithm_version": {"const": "foundry-eval-exclusion-v1"},
+        "registry_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "claim_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "human_reviewed", "qualified_human_gold", "headline_gold",
+        "native_acceptance", "reviewer_reliability_counted",
+        "model_training_or_export_eligible"
+      ],
+      "properties": {
+        "human_reviewed": {"const": false},
+        "qualified_human_gold": {"const": false},
+        "headline_gold": {"const": false},
+        "native_acceptance": {"const": false},
+        "reviewer_reliability_counted": {"const": false},
+        "model_training_or_export_eligible": {"const": false}
+      }
+    },
+    "human_upgrade": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["compatible_candidate_id", "target_contract", "performed"],
+      "properties": {
+        "compatible_candidate_id": {"type": "string", "pattern": "^lcc\\.[a-f0-9]{64}$"},
+        "target_contract": {"const": "correction_reviewer_decision_v1"},
+        "performed": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "signal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "identity", "supports", "status"],
+      "properties": {
+        "family": {
+          "enum": [
+            "source_context", "source_metadata", "discourse_structure", "vesum",
+            "russian_morphology", "r2u", "heritage_dictionary", "ulif_dictua",
+            "slovnyk_me", "ukrainian_corpus", "vetted_route", "reconstruction",
+            "model_proposal", "hramatka_feedback"
+          ]
+        },
+        "identity": {"type": "string", "minLength": 1},
+        "supports": {
+          "enum": [
+            "ukrainian_attestation", "russian_attestation", "alternative_candidate",
+            "protected_variation", "quoted_or_multilingual", "context_only",
+            "technical_or_ocr", "proper_name", "no_conclusion"
+          ]
+        },
+        "status": {"enum": ["attested", "not_found", "ambiguous", "incomplete", "parse_error", "transient_error"]}
+      }
+    },
+    "supportedAlternative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "supporting_observation_ids", "transformation_paths"],
+      "properties": {
+        "text": {"type": "string", "minLength": 1, "maxLength": 240},
+        "supporting_observation_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,191}$"}
+        },
+        "transformation_paths": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1},
+            "uniqueItems": true
+          }
+        }
+      }
+    }
+  }
+}

@@ -46,10 +46,80 @@ grade and uncertainty rules, but it cannot satisfy this human contract.
 | Campaign stop evaluation | `language_contact_campaign_receipt_v1.schema.json` |
 | Conflict resolver item/response | `language_contact_resolver_review_item_v1.schema.json` / `language_contact_resolver_response_v1.schema.json` |
 | Real-human gold freeze | `language_contact_gold_freeze_receipt_v1.schema.json` |
+| Non-human evidence observation | `language_contact_silver_observation_v1.schema.json` |
+| Non-human evidence record | `language_contact_silver_record_v1.schema.json` |
+| Non-human evidence receipt | `language_contact_silver_receipt_v1.schema.json` |
 
 All contracts are in `data/projects/open_model_data/contracts/`. The runtime
 validates the schemas before writing output and replaces existing artifacts
 only after all rows and receipts pass validation.
+
+## Non-human silver production
+
+`silver_evidence_factory.py` is the implemented solo-operator path. It streams
+the exact detector artifact, validates its hash/count/byte receipt and every
+candidate span, preserves source/rights/period/register/context lineage, and
+writes one explicitly non-human evidence record per non-evaluation candidate.
+It never calls a network service. Missing R2U, ULIF, `slovnyk.me`, heritage, or
+corpus evidence remains visible as missing or unavailable; absence is not a
+negative linguistic claim.
+
+The five evidence grades are `deterministic_source_backed_silver`,
+`independently_triangulated_silver`, `model_only_research`, `protected`, and
+`unresolved`. A correction needs modern narration, Russian morphology and R2U
+corroboration, plus an alternative attested by at least one separate
+authoritative Ukrainian source. Two independent source identities produce the
+triangulated grade. Model proposals and Hramatka feedback cannot promote a
+record. Protected, historical/register, quoted/multilingual, OCR, proper-name,
+and unresolved dispositions remain separate.
+
+Run it after producing a detector artifact:
+
+```bash
+.venv/bin/python \
+  scripts/projects/open_model_data/silver_evidence_factory.py \
+  --candidates /local/path/language-contact-candidates.jsonl \
+  --detector-receipt /local/path/language-contact-receipt.json \
+  --detector-config \
+  data/projects/open_model_data/detector/language_contact_config_v1.json \
+  --input-root . \
+  --output /local/path/language-contact-silver.jsonl \
+  --receipt-output /local/path/language-contact-silver.receipt.json
+```
+
+The committed non-symbolic validation receipt covers the complete
+`external_articles` source family: 1,205 source rows, 1,837,518 lexical words,
+11,297 detector candidates, and 11,297 byte-stable silver records. Current
+bounded evidence promoted no correction. It routed 5,864 spans as quoted or
+multilingual, 3,943 as protected variation, 25 as proper names, and 1,465 as
+unresolved. Only 131 records reached the independently corroborated `protected`
+grade; 11,166 remain evidence-grade unresolved. This is a measured evidence
+gap, not permission to manufacture replacements. The reproducible detector
+slice config and receipt are under `data/projects/open_model_data/silver/`;
+large row artifacts remain local.
+
+The full production receipt covers all 739,564 detector candidates. It excludes
+61 exact-normalized evaluation matches before output and emits 739,503 real
+records (4,593,515,140 bytes; SHA-256
+`7aac3d87cb93fd456a8f30b0ee98c62917db5586c2cb04a78b598ed7982dddea`).
+The result contains 116,647 independently supported protected records and
+622,856 unresolved records. Its dispositions preserve 297,791 protected
+variations, 195,722 historical/register cases, 95,910 quoted or multilingual
+spans, 27,272 technical/OCR cases, 15,825 proper names, and 106,983 unresolved
+cases. Current bounded sources support zero correction-grade targets: the
+measured correction lane is empty rather than populated from Russian
+reconstructions, single dictionary hits, or model preferences.
+
+All source families remain in their existing admission state. Silver output is
+`investigation_only`, never correction-training eligible, never redistribution
+cleared, and never human gold. Its compatibility target records how a later
+qualified-human decision could upgrade the same candidate without weakening
+the existing human contract.
+An evidence grade never grants a destination: correction and preference views
+remain `not_applicable` unless the source family is admitted for that exact
+destination. Uncorroborated protected/historical routes remain structured as
+`unresolved`; they are not collapsed into the independently supported
+`protected` grade.
 
 ## Full language-contact frame
 
@@ -293,6 +363,8 @@ Ukrainian-phonetic Russian requires a suspicious bounded span and at least one
 preserved reconstruction. Each reconstruction records its gate,
 transformation path, score, Russian morphology result, and `r2u` result. A
 global character substitution is not an accepted input.
+The reconstructed surface is Russian evidence used to query R2U; it is never
+itself emitted as a Ukrainian correction alternative.
 
 ## Import adjudication
 
