@@ -237,7 +237,7 @@ def _try_lock_nb() -> int | None:
     when the lock is held by another process (or the file can't be opened)."""
     try:
         REFRESH_LOCK_PATH.parent.mkdir(parents=True, exist_ok=True)
-        fd = os.open(str(REFRESH_LOCK_PATH), os.O_CREAT | os.O_RDWR, 0o644)
+        fd = os.open(str(REFRESH_LOCK_PATH), os.O_CREAT | os.O_RDWR, 0o600)
     except OSError:
         return None
     try:
