@@ -1,12 +1,18 @@
 """Acceptance coverage for the Phase-2 public recall workflows (#6183).
 
-Proves: real Git and ACP explicit-ID bootstrap/admission then recall,
-provider-neutral byte equivalence (Codex/Kimi/GLM), deterministic ranking and
-caps, scan/pagination behavior, idempotent retry, stale digest / missing
-source / tombstone / partial ACP receipt / unsupported kind failure closure,
-zero Entire CLI invocation, forbidden-field leakage sweeps over every public
-result and capsule, typed provenance traversal, and the 8 KiB handoff cap
-without invalid JSON.
+Proves: real Git, ACP, and rollover explicit-ID bootstrap/admission then
+recall, provider-neutral byte equivalence (Codex/Kimi/GLM), deterministic
+ranking and caps, scan/pagination behavior, idempotent retry, stale digest /
+missing source / tombstone / partial ACP receipt / unsupported kind failure
+closure, zero Entire CLI invocation, forbidden-field leakage sweeps over every
+public result and capsule, typed provenance traversal, and the 8 KiB handoff
+cap without invalid JSON.
+
+The rollover resolver coverage builds a real registry fixture through
+``rollover_registry.record_from_lease`` and exercises the full
+bootstrap → search → explain/handoff recall pipeline, digest determinism,
+lifecycle-field digest mismatch, missing/corrupt source failure closure,
+body-free canary sweeps, and read-only state-root posture.
 """
 
 from __future__ import annotations
@@ -38,14 +44,20 @@ from scripts.entire_context.recall import (
 )
 from scripts.entire_context.resolvers import (
     REASON_DIGEST_MISMATCH,
+    REASON_RESOLUTION_ERROR,
     REASON_SOURCE_MISSING,
     REASON_UNSUPPORTED_KIND,
     ResolutionError,
     resolve_acp_conversation,
     resolve_bootstrap,
     resolve_git_commit,
+    resolve_rollover,
+    rollover_projection,
+    rollover_projection_digest,
 )
 from scripts.entire_context.store import AdmitOutcome, ContextLinkStore
+from scripts.orchestration import task_identity
+from scripts.orchestration.task_family import rollover, rollover_registry
 
 ORIGIN_URL = "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git"
 NAMESPACE = "git:learn-ukrainian/learn-ukrainian.github.io"
@@ -1185,3 +1197,475 @@ def test_all_public_outputs_are_body_free(
     assert_body_free(combined)
     # The commit subject canary never reaches any public output.
     assert COMMIT_SUBJECT_CANARY not in combined
+
+
+# ── rollover registry resolver (#6183) ───────────────────────────────────────
+
+# Canary tokens deliberately placed in body-bearing fields that the strict
+# body-free projection must never emit.
+ROLLOVER_TITLE_CANARY = "zyx-title-canary-991"
+ROLLOVER_THREAD_CANARY = "zyx-thread-canary-992"
+ROLLOVER_PATH_CANARY = "zyx-path-canary"
+ROLLOVER_NATIVE_CANARY = "zyx-native-canary-994"
+ROLLOVER_CONFIRMED_BY_CANARY = "zyx-confirmed-by-canary-995"
+
+ROLLOVER_CANARIES = (
+    ROLLOVER_TITLE_CANARY,
+    ROLLOVER_THREAD_CANARY,
+    ROLLOVER_PATH_CANARY,
+    ROLLOVER_NATIVE_CANARY,
+    ROLLOVER_CONFIRMED_BY_CANARY,
+)
+
+ROLLOVER_AGENT = "codex"
+ROLLOVER_LINEAGE = "lineage-entire-context"
+ROLLOVER_ROLLOVER_ID = "rollover-entire-context"
+ROLLOVER_CANONICAL_ID = f"{ROLLOVER_AGENT}/{ROLLOVER_LINEAGE}/{ROLLOVER_ROLLOVER_ID}"
+
+
+def _build_rollover_lease(
+    *,
+    agent: str = ROLLOVER_AGENT,
+    lineage: str = ROLLOVER_LINEAGE,
+    rollover_id: str = ROLLOVER_ROLLOVER_ID,
+) -> dict:
+    """Build a confirmed lease with canaries in every body-bearing field."""
+    source = ROLLOVER_THREAD_CANARY
+    replacement_id = f"replacement-{ROLLOVER_THREAD_CANARY}"
+    prepared_at = "2026-08-01T09:00:00Z"
+    identity = task_identity.build_identity(
+        repository=task_identity.DEFAULT_REPOSITORY,
+        stream_epic=4707,
+        stream_epic_url=None,
+        github_issue_number=6183,
+        github_issue_url=None,
+        semantic_title=f"Rollover resolver {ROLLOVER_TITLE_CANARY}",
+        task_family="thread-rollover",
+        role=agent,
+        predecessor_task_id=source,
+        replacement_task_id=None,
+        lineage_id=lineage,
+        generation=1,
+        terminal_goal="merge",
+    )
+    title_transition = task_identity.new_title_transition(
+        harness=task_identity.default_harness(agent),
+        visible_title_value=identity["visible_title"],
+        prepared_at=prepared_at,
+    )
+    family_id, operation_id = rollover.transition_identity(
+        lineage_id=lineage,
+        generation=1,
+        rollover_id=rollover_id,
+    )
+    packet_prefix = f".agent/thread-rollovers/{agent}/{lineage}/generation-0001/{rollover_id}"
+    identity, title_transition = task_identity.bind_replacement(
+        identity,
+        title_transition,
+        replacement_task_id=replacement_id,
+        evidence=f"Exact replacement binding {ROLLOVER_NATIVE_CANARY}.",
+        now=prepared_at,
+    )
+    if title_transition["native_title_supported"]:
+        identity, title_transition = task_identity.record_title_acknowledgement(
+            identity,
+            title_transition,
+            replacement_task_id=replacement_id,
+            succeeded=True,
+            evidence=f"Native ack {ROLLOVER_NATIVE_CANARY}.",
+            error="",
+            now=prepared_at,
+        )
+        identity, title_transition = task_identity.record_title_readback(
+            identity,
+            title_transition,
+            replacement_task_id=replacement_id,
+            observed_title=identity["visible_title"],
+            succeeded=True,
+            evidence=f"Native readback {ROLLOVER_NATIVE_CANARY}.",
+            error="",
+            now=prepared_at,
+        )
+    identity = task_identity.mark_confirmed(
+        identity,
+        title_transition,
+        replacement_task_id=replacement_id,
+    )
+    return {
+        "schema_version": 2,
+        "agent": agent,
+        "lineage_id": lineage,
+        "rollover_id": rollover_id,
+        "active": {
+            "thread_id": source,
+            "automation_id": "automation-1",
+            "generation": 0,
+            "lineage_id": lineage,
+            "started_at": prepared_at,
+            "last_seen_at": prepared_at,
+        },
+        "replacement": {
+            "rollover_id": rollover_id,
+            "lineage_id": lineage,
+            "generation": 1,
+            "status": "started",
+            "prepared_at": prepared_at,
+            "thread_id": replacement_id,
+            "resumed_thread_id": None,
+            "confirmed_at": prepared_at,
+            "display": {"title": identity["visible_title"], "title_source": "task_identity_v1"},
+            "identity": identity,
+            "title_transition": title_transition,
+            "tracking": {"stream_epic": 4707, "github_issue": 6183},
+            "native_lifecycle": {
+                "family_id": family_id,
+                "operation_id": operation_id,
+                "source_thread_id": source,
+                "replacement_thread_id": replacement_id,
+                "status": "replacement_created_bound",
+            },
+            "runtime_path": packet_prefix,
+            "handoff_path": f"{packet_prefix}/handoff-{ROLLOVER_PATH_CANARY}.md",
+            "bootstrap_prompt_path": f"{packet_prefix}/bootstrap.md",
+            "semantic_snapshot_path": f"{packet_prefix}/semantic-snapshot.json",
+            "strict_probe_path": f"{packet_prefix}/strict-probe.json",
+            "strict_questions_path": f"{packet_prefix}/strict-questions.json",
+            "strict_answers_path": f"{packet_prefix}/strict-answers.json",
+            "strict_verdict_path": f"{packet_prefix}/strict-verdict-{ROLLOVER_PATH_CANARY}.json",
+            "canary_proof_path": f"{packet_prefix}/canary-pass-{ROLLOVER_PATH_CANARY}.json",
+            "strict_verdict": {"verdict": "PASS", "correct": 10, "k": 10},
+            "canary_proof": {"status": "PASS"},
+        },
+        "cleanup": {
+            "old_automation_ready_to_delete": True,
+            "reason": "test",
+            "confirmed_by": ROLLOVER_CONFIRMED_BY_CANARY,
+        },
+        "updated_at": prepared_at,
+    }
+
+
+def _persist_rollover_fixture(state_root: Path, lease: dict | None = None) -> Path:
+    """Build a registry record through ``record_from_lease`` and persist it to the canonical path."""
+    lease = lease or _build_rollover_lease()
+    lease_path = state_root / ".agent" / "thread-rollovers" / lease["agent"] / lease["lineage_id"] / "lease.json"
+    lease_path.parent.mkdir(parents=True, exist_ok=True)
+    lease_path.write_text(json.dumps(lease, indent=2) + "\n", encoding="utf-8")
+    record = rollover_registry.record_from_lease(state_root, lease_path, lease)
+    canonical = rollover_registry.record_path(
+        state_root,
+        agent=lease["agent"],
+        lineage_id=lease["lineage_id"],
+        rollover_id=lease["rollover_id"],
+    )
+    canonical.parent.mkdir(parents=True, exist_ok=True)
+    canonical.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+    return canonical
+
+
+def _assert_no_rollover_canaries(output: str) -> None:
+    for token in ROLLOVER_CANARIES:
+        assert token not in output, f"rollover body canary leaked: {token!r}"
+
+
+def _snapshot_files(root: Path) -> dict[str, int]:
+    return {str(p.relative_to(root)): p.stat().st_mtime_ns for p in root.rglob("*") if p.is_file()}
+
+
+def test_rollover_bootstrap_then_search_explain_and_handoff(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
+    """Full recall pipeline from a registry fixture built through ``record_from_lease``."""
+    root = tmp_path / "state"
+    root.mkdir()
+    _persist_rollover_fixture(root)
+    db = str(tmp_path / "db.sqlite3")
+
+    # bootstrap-rollover CLI → promoted
+    code, out = run_cli(
+        capsys,
+        "bootstrap-rollover",
+        "--agent",
+        ROLLOVER_AGENT,
+        "--lineage-id",
+        ROLLOVER_LINEAGE,
+        "--rollover-id",
+        ROLLOVER_ROLLOVER_ID,
+        "--rollover-root",
+        str(root),
+        "--db",
+        db,
+    )
+    assert code == 0
+    payload = json.loads(out)
+    assert payload["outcome"] == "promoted"
+    assert payload["excerpt"]["state"] == "CONFIRMED"
+    assert payload["excerpt"]["schema"] == "rollover-projection.v1"
+    assert payload["excerpt"]["key"]["agent"] == ROLLOVER_AGENT
+    assert_body_free(out)
+    _assert_no_rollover_canaries(out)
+
+    # search finds the verified rollover card
+    code, out = run_cli(
+        capsys,
+        "search",
+        "--query",
+        ROLLOVER_LINEAGE,
+        "--repo",
+        str(tmp_path),
+        "--rollover-root",
+        str(root),
+        "--db",
+        db,
+    )
+    assert code == 0
+    result = json.loads(out)
+    assert len(result["results"]) == 1
+    card = result["results"][0]
+    assert card["kind"] == "rollover"
+    assert card["canonical_id"] == ROLLOVER_CANONICAL_ID
+    assert card["excerpt"]["state"] == "CONFIRMED"
+    assert card["excerpt"]["lifecycle_state"] == "confirmed"
+    assert card["excerpt"]["stream_epic"] == 4707
+    assert card["excerpt"]["cleanup_authorized"] is True
+    assert card["excerpt"]["strict_recall_state"] == "passed"
+    assert card["excerpt"]["canary_state"] == "passed"
+    assert card["excerpt"]["confirmation_state"] == "confirmed"
+    assert_body_free(out)
+    _assert_no_rollover_canaries(out)
+
+    # explain-change traverses the single rollover node
+    code, out = run_cli(
+        capsys,
+        "explain-change",
+        "--canonical-id",
+        ROLLOVER_CANONICAL_ID,
+        "--repo",
+        str(tmp_path),
+        "--rollover-root",
+        str(root),
+        "--db",
+        db,
+    )
+    assert code == 0
+    payload = json.loads(out)
+    assert payload["found"] is True
+    assert len(payload["nodes"]) == 1
+    assert payload["nodes"][0]["kind"] == "rollover"
+    assert payload["omitted"] == []
+    assert_body_free(out)
+    _assert_no_rollover_canaries(out)
+
+    # handoff capsule includes the verified rollover item
+    code, out = run_cli(
+        capsys,
+        "handoff",
+        "--locator-id",
+        card["locator_id"],
+        "--repo",
+        str(tmp_path),
+        "--rollover-root",
+        str(root),
+        "--db",
+        db,
+    )
+    assert code == 0
+    capsule = json.loads(out)
+    assert len(capsule["items"]) == 1
+    assert capsule["items"][0]["kind"] == "rollover"
+    assert capsule["omitted"] == []
+    assert_body_free(out)
+    _assert_no_rollover_canaries(out)
+
+
+def test_rollover_resolution_is_deterministic(tmp_path: Path) -> None:
+    """Two resolutions yield byte-identical digest, excerpt, and identity."""
+    root = tmp_path / "state"
+    root.mkdir()
+    _persist_rollover_fixture(root)
+
+    first = resolve_rollover(
+        ROLLOVER_AGENT,
+        ROLLOVER_LINEAGE,
+        ROLLOVER_ROLLOVER_ID,
+        state_root=root,
+        now=utc_now(),
+    )
+    second = resolve_rollover(
+        ROLLOVER_AGENT,
+        ROLLOVER_LINEAGE,
+        ROLLOVER_ROLLOVER_ID,
+        state_root=root,
+        now=utc_now(),
+    )
+    assert first.link.canonical_digest == second.link.canonical_digest
+    assert first.link.canonical_id == second.link.canonical_id == ROLLOVER_CANONICAL_ID
+    assert first.link.locator_id == second.link.locator_id
+    assert first.excerpt == second.excerpt
+    assert first.verification.canonical_digest == second.verification.canonical_digest
+
+    # The digest is independently reproducible from the projection function.
+    record = rollover_registry.load_record(
+        root,
+        agent=ROLLOVER_AGENT,
+        lineage_id=ROLLOVER_LINEAGE,
+        rollover_id=ROLLOVER_ROLLOVER_ID,
+    )
+    assert rollover_projection_digest(rollover_projection(record)) == first.link.canonical_digest
+
+
+def test_rollover_lifecycle_field_change_yields_digest_mismatch(tmp_path: Path) -> None:
+    """A lifecycle-field change in the record produces a digest mismatch on recall."""
+    root = tmp_path / "state"
+    root.mkdir()
+    _persist_rollover_fixture(root)
+    store = make_store(tmp_path)
+    locator_id = admit(
+        store,
+        resolve_rollover(
+            ROLLOVER_AGENT,
+            ROLLOVER_LINEAGE,
+            ROLLOVER_ROLLOVER_ID,
+            state_root=root,
+        ),
+    )
+
+    canonical = rollover_registry.record_path(
+        root,
+        agent=ROLLOVER_AGENT,
+        lineage_id=ROLLOVER_LINEAGE,
+        rollover_id=ROLLOVER_ROLLOVER_ID,
+    )
+    record = json.loads(canonical.read_text(encoding="utf-8"))
+    record["last_successful_boundary"] = "PREDECESSOR_ARCHIVED"
+    record["predecessor_archival"]["state"] = "archived"
+    rollover_registry.validate_record(record)
+    canonical.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+
+    result = recall.search_past_work(
+        store,
+        ROLLOVER_LINEAGE,
+        repo=tmp_path,
+        acp_root=None,
+        rollover_root=root,
+    )
+    assert result["results"] == []
+    assert result["omitted"] == [{"locator_id": locator_id, "reason": REASON_DIGEST_MISMATCH}]
+
+
+def test_rollover_missing_and_corrupt_records_fail_closed(tmp_path: Path) -> None:
+    """Missing records fail as source_missing; corrupt records fail as resolution_error."""
+    # No fixture persisted → source_missing
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_rollover(
+            ROLLOVER_AGENT,
+            ROLLOVER_LINEAGE,
+            ROLLOVER_ROLLOVER_ID,
+            state_root=tmp_path,
+        )
+    assert excinfo.value.reason == REASON_SOURCE_MISSING
+
+    # Bootstrap without a rollover root → source_missing
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_bootstrap(
+            LinkKind.ROLLOVER,
+            ROLLOVER_CANONICAL_ID,
+            repo=tmp_path,
+            acp_root=None,
+            rollover_root=None,
+        )
+    assert excinfo.value.reason == REASON_SOURCE_MISSING
+
+    # Corrupt JSON at the canonical path → resolution_error
+    canonical = rollover_registry.record_path(
+        tmp_path,
+        agent=ROLLOVER_AGENT,
+        lineage_id=ROLLOVER_LINEAGE,
+        rollover_id=ROLLOVER_ROLLOVER_ID,
+    )
+    canonical.parent.mkdir(parents=True, exist_ok=True)
+    canonical.write_text("{not-valid-json\n", encoding="utf-8")
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_rollover(
+            ROLLOVER_AGENT,
+            ROLLOVER_LINEAGE,
+            ROLLOVER_ROLLOVER_ID,
+            state_root=tmp_path,
+        )
+    assert excinfo.value.reason == REASON_RESOLUTION_ERROR
+
+
+def test_rollover_canaries_never_leak(tmp_path: Path) -> None:
+    """Title, thread-ID, path, native-payload, and confirmed-by canaries never appear in output."""
+    root = tmp_path / "state"
+    root.mkdir()
+    _persist_rollover_fixture(root)
+    resolution = resolve_rollover(
+        ROLLOVER_AGENT,
+        ROLLOVER_LINEAGE,
+        ROLLOVER_ROLLOVER_ID,
+        state_root=root,
+    )
+    combined = canonical_json(resolution.link.to_dict()) + canonical_json(resolution.excerpt)
+    combined += canonical_json(resolution.verification.to_dict())
+    assert_body_free(combined)
+    _assert_no_rollover_canaries(combined)
+
+
+def test_remaining_unsupported_kinds_still_fail_closed(tmp_path: Path) -> None:
+    """Every kind except git/acp/rollover fails closed with unsupported_kind."""
+    for kind in (
+        LinkKind.GITHUB_ISSUE,
+        LinkKind.GITHUB_PR,
+        LinkKind.FLEET_RECEIPT,
+        LinkKind.FORMAL_REVIEW,
+        LinkKind.MONITOR_RUN,
+    ):
+        with pytest.raises(ResolutionError) as excinfo:
+            resolve_bootstrap(
+                kind,
+                "test-identifier",
+                repo=tmp_path,
+                acp_root=None,
+                rollover_root=None,
+            )
+        assert excinfo.value.reason == REASON_UNSUPPORTED_KIND
+
+
+def test_rollover_resolution_never_invokes_entire_or_writes_state_root(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """No ``entire`` invocation and no writes under the rollover state root."""
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    marker = tmp_path / "entire-was-called"
+    stub = bin_dir / "entire"
+    stub.write_text('#!/bin/sh\n/bin/touch "$ENTIRE_STUB_MARKER"\nexit 1\n', encoding="utf-8")
+    stub.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
+    monkeypatch.setenv("ENTIRE_STUB_MARKER", str(marker))
+
+    root = tmp_path / "state"
+    root.mkdir()
+    _persist_rollover_fixture(root)
+
+    before = _snapshot_files(root)
+    resolution = resolve_rollover(
+        ROLLOVER_AGENT,
+        ROLLOVER_LINEAGE,
+        ROLLOVER_ROLLOVER_ID,
+        state_root=root,
+    )
+    assert _snapshot_files(root) == before  # resolution is read-only
+
+    store = make_store(tmp_path)
+    locator_id = admit(store, resolution)
+    result = recall.search_past_work(
+        store,
+        ROLLOVER_LINEAGE,
+        repo=tmp_path,
+        acp_root=None,
+        rollover_root=root,
+    )
+    assert len(result["results"]) == 1
+    assert _snapshot_files(root) == before  # recall is also read-only
+    assert not marker.exists()  # entire was never invoked

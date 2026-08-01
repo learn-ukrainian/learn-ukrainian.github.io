@@ -6,9 +6,10 @@ This package implements the local-only slice of the Entire context layer:
 - a deterministic locator-ID derivation over canonical metadata;
 - a caller-owned, rebuildable SQLite projection with an append-only lifecycle
   (pending / promoted / tombstoned) and idempotent admission (:mod:`.store`);
-- explicit, local-only typed resolvers that map an exact Git commit SHA or an
-  exact ACP conversation ID to a verified body-free canonical projection
-  (:mod:`.resolvers`), failing closed for every unsupported kind;
+- explicit, local-only typed resolvers that map an exact Git commit SHA, an
+  exact ACP conversation ID, or an exact ``(agent, lineage_id, rollover_id)``
+  triple to a verified body-free canonical projection (:mod:`.resolvers`),
+  failing closed for every unsupported kind;
 - deterministic promoted-only recall workflows — ``search_past_work``,
   ``explain_change``, and ``prepare_handoff`` — that re-resolve every
   candidate and recompute its canonical digest before it may enter an
@@ -46,6 +47,7 @@ from .resolvers import (
     resolve_acp_conversation,
     resolve_bootstrap,
     resolve_git_commit,
+    resolve_rollover,
     reverify_link,
 )
 from .store import AdmitOutcome, AdmitResult, ContextLinkStore
@@ -74,6 +76,7 @@ __all__ = [
     "resolve_acp_conversation",
     "resolve_bootstrap",
     "resolve_git_commit",
+    "resolve_rollover",
     "reverify_link",
     "search_past_work",
 ]
