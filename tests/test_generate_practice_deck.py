@@ -15,6 +15,7 @@ from scripts.audit.generate_practice_deck import (
     RealVesumVerifier,
     ReviewedSourceAllowlist,
     _build_classify_items,
+    _build_cloze_items,
     _build_heritage_items,
     _build_lexeme,
     _build_paradigm_items,
@@ -717,6 +718,20 @@ def test_heritage_items_wire_mode_counts_and_index_modes() -> None:
     assert a2["index"]["counts"]["modeCoverage"]["heritage"] == 0.1429
     assert "heritage" in index_item["modes"]
 
+    indexed_lemma_ids = {item["lemmaId"] for item in a2["index"]["items"]}
+    for mode in DRILL_MODES:
+        emitted_ids = {
+            item["lemmaId"]
+            for item in a2[mode][mode]
+            if item["lemmaId"] in indexed_lemma_ids
+        }
+        advertised_ids = {
+            item["lemmaId"]
+            for item in a2["index"]["items"]
+            if mode in item["modes"]
+        }
+        assert advertised_ids == emitted_ids
+
 
 def test_heritage_availability_floor_wins_over_native_cefr() -> None:
     entries = json.loads(json.dumps(read_manifest(MANIFEST)))
@@ -745,14 +760,13 @@ def test_heritage_availability_floor_wins_over_native_cefr() -> None:
 
     # #4719: the curator availability floor (b1) WINS over the native lexeme's
     # level (A2) for ITEM placement — B1-flagged calque drills must never reach
-    # learners below the floor. Reachability is preserved via the index-mode
-    # tag on the lexeme's own (A2) entry: at/above the floor, cumulative
-    # loading has both the tag and the B1 item shard.
+    # learners below the floor. The A2 index must not advertise a card that is
+    # only emitted in the B1 heritage shard.
     assert a2_heritage == []
     assert len(b1_heritage) == 1
     assert b1_heritage[0]["lemmaId"] == "knyha"
     assert b1_heritage[0]["cefr"] == "B1"
-    assert "heritage" in index_item["modes"]
+    assert "heritage" not in index_item["modes"]
 
 
 def test_heritage_item_options_are_valid_and_do_not_mark_calque() -> None:
@@ -1414,6 +1428,144 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
     }
 
 
+def test_sentence_inventory_drops_function_identity_unless_curated(tmp_path: Path) -> None:
+    inventory_path = tmp_path / "sentence-inventory.json"
+    inventory_path.write_text(
+        json.dumps(
+            {
+                "schema": "atlas-sentence-inventory",
+                "schemaVersion": 1,
+                "rows": [
+                    {
+                        "lemma": "та",
+                        "lemmaId": "ta",
+                        "sentence": "Це та.",
+                        "targetForm": "та",
+                        "cefr": "A1",
+                        "uses": ["example"],
+                        "provenance": {
+                            "source": "fixture",
+                            "label": "Fixture",
+                            "locator": "function-1",
+                        },
+                        "license": {"status": "fixture"},
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    candidates = read_sentence_inventory(inventory_path)
+    lexeme = _build_lexeme(
+        {
+            "lemma": "та",
+            "url_slug": "ta",
+            "gloss": "and",
+            "pos": "conj",
+            "enrichment": {"cefr": {"level": "A1"}},
+        },
+        JsonVesumVerifier({"та": [{"lemma": "та", "pos": "conj", "tags": "conj"}]}),
+    )
+    assert lexeme is not None
+    allowlist = ReviewedSourceAllowlist.from_payload(
+        [{"status": "sentence_inventory", "path": str(inventory_path)}]
+    )
+    verifier = JsonVesumVerifier({"та": [{"lemma": "та", "pos": "conj", "tags": "conj"}]})
+
+    assert _build_cloze_items(lexeme, candidates, allowlist, verifier, "deck-v6") == []
+
+    curated = [{**candidates[0], "curated": True}]
+    assert len(_build_cloze_items(lexeme, curated, allowlist, verifier, "deck-v6")) == 1
+
+
+def test_sentence_inventory_rejects_controls_pua_and_prefers_language_sources(
+    tmp_path: Path,
+) -> None:
+    def row(
+        lemma: str,
+        lemma_id: str,
+        sentence: str,
+        target_form: str,
+        locator: str,
+    ) -> dict[str, object]:
+        return {
+            "lemma": lemma,
+            "lemmaId": lemma_id,
+            "sentence": sentence,
+            "targetForm": target_form,
+            "cefr": "A1",
+            "uses": ["example"],
+            "provenance": {
+                "source": "textbook",
+                "label": "Fixture textbook",
+                "locator": locator,
+            },
+            "license": {"status": "fixture"},
+        }
+
+    inventory_path = tmp_path / "sentence-inventory.json"
+    inventory_path.write_text(
+        json.dumps(
+            {
+                "schema": "atlas-sentence-inventory",
+                "schemaVersion": 1,
+                "rows": [
+                    row("книга", "knyha", "Це книга.", "книга", "5-klas-ukrmova-1"),
+                    row("книга", "knyha", "У геометрії є книга.", "книга", "10-klas-geometrija-1"),
+                    row("кіт", "kit", "У школі є кіт.", "кіт", "10-klas-geometrija-2"),
+                    row(
+                        "пиво",
+                        "pivo",
+                        "Найімовірніше, першим продуктом, отриманим із використанням мікроорганізмів, є пиво.",
+                        "пиво",
+                        "11-klas-biologiia-1",
+                    ),
+                    row("слово", "slovo-control", "\u0083Це слово.", "слово", "fixture-control"),
+                    row("слово", "slovo-format", "\u200bЦе слово.", "слово", "fixture-format"),
+                    row("слово", "slovo-pua", "Це слово.", "\uf0b7слово", "fixture-pua"),
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    candidates = read_sentence_inventory(inventory_path)
+
+    assert {candidate["lemmaId"] for candidate in candidates} == {"knyha", "kit"}
+    knyha = next(candidate for candidate in candidates if candidate["lemmaId"] == "knyha")
+    assert knyha["provenance"]["locator"] == "5-klas-ukrmova-1"
+    assert next(candidate for candidate in candidates if candidate["lemmaId"] == "kit")["sentence"] == (
+        "У школі є ___."
+    )
+
+
+def test_inventory_identity_decoys_are_seeded_and_length_matched() -> None:
+    lexemes = _fixture_lexemes()
+    answer = next(lexeme for lexeme in lexemes if lexeme["lemmaId"] == "knyha")
+    cloze = {
+        "clozeId": "knyha:inventory:1",
+        "form": "книга",
+        "lemma": "книга",
+        "provenance": {"status": "sentence_inventory"},
+        "caseRule": {"ruleId": "nominative_identification"},
+    }
+
+    first = generate_practice_deck._make_no_pair_options(
+        cloze, answer, lexemes, random.Random(0)
+    )
+    second = generate_practice_deck._make_no_pair_options(
+        cloze, answer, lexemes, random.Random(1)
+    )
+    first_decoys = [option["label"] for option in first if option["kind"] != "answer"]
+    second_decoys = [option["label"] for option in second if option["kind"] != "answer"]
+
+    assert len(first_decoys) == len(second_decoys) == 3
+    assert all(abs(len(label) - len("книга")) <= 3 for label in first_decoys + second_decoys)
+    assert first_decoys != second_decoys
+
+
 def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -1434,9 +1586,9 @@ def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
         entry("місто", "misto", "city", "noun", "A1"),
         entry("школа", "shkola", "school", "noun", "A1"),
         entry("аналогічно", "analogichno", "similarly", "adverb", "A2"),
-        entry("завжди", "zavzhdy", "always", "adv", "A2"),
-        entry("майже", "mayzhe", "almost", "adv", "A2"),
-        entry("часто", "chasto", "often", "adv", "A2"),
+        entry("постійно", "postiino", "always", "adv", "A2"),
+        entry("зазвичай", "zazvychai", "usually", "adv", "A2"),
+        entry("поступово", "postupovo", "gradually", "adv", "A2"),
     ]
     inventory_path = tmp_path / "sentence-inventory.json"
     inventory_path.write_text(
