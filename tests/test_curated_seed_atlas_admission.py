@@ -422,6 +422,67 @@ def test_private_local_no_route_requires_explicit_vesum_attestation(tmp_path: Pa
     assert report["atlas_failures"] == [{"seedRow": 9, "lemma": "виходити з ладу", "reason": "missing_public_route"}]
 
 
+def test_normalize_rows_preserves_attested_matched_lemmas() -> None:
+    rows = admission.normalize_rows(
+        [
+            {
+                "seedRow": 1,
+                "lemma": "щасливої дороги",
+                "vesumAttestation": {
+                    "attested": True,
+                    "method": "head_token",
+                    "matched_lemmas": ["щасливий"],
+                    "matched_forms": ["щасливої"],
+                },
+            }
+        ]
+    )
+    assert rows[0]["vesumAttestation"] == {
+        "attested": True,
+        "method": "head_token",
+        "matched_lemmas": ["щасливий"],
+        "matched_forms": ["щасливої"],
+    }
+
+
+def test_local_no_route_uses_matched_lemma_for_head_cefr(tmp_path: Path) -> None:
+    """Inflected multiword head inherits CEFR via attestation matched_lemmas."""
+    manifest = _manifest(
+        tmp_path / "manifest.json",
+        [
+            {
+                "lemma": "щасливий",
+                "url_slug": "щасливий",
+                "pos": "adj",
+                "enrichment": {"cefr": {"level": "A1", "source": "PULS"}},
+            }
+        ],
+    )
+    rows = admission.normalize_rows(
+        [
+            {
+                "seedRow": 209,
+                "lemma": "щасливої дороги",
+                "gloss": "bon voyage",
+                "sentenceStatus": "has_candidates",
+                "vesumAttestation": {
+                    "attested": True,
+                    "matched_lemmas": ["щасливий"],
+                    "method": "head_token",
+                },
+                "admission": {"practice": True, "mode": "local_practice_private_teacher"},
+            }
+        ]
+    )
+
+    seed, report = admission.prepare_practice_seed(rows, manifest)
+
+    assert report["atlas_failures"] == []
+    assert seed["entries"][0]["cefr"] == "A1"
+    assert "щасливий" in seed["entries"][0]["cefrSource"]
+    assert seed["entries"][0]["localOnly"] is True
+
+
 def test_private_local_public_route_without_cefr_uses_soft_guidance(tmp_path: Path) -> None:
     """Private teacher rows with a public route but empty enrichment still admit."""
     manifest = _manifest(

@@ -102,9 +102,26 @@ def normalize_rows(rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
             }
         attestation = raw.get(VESUM_ATTESTATION_FIELD)
         if isinstance(attestation, dict):
-            # A local no-route row needs an explicit VESUM result; do not treat
-            # a caller-provided truthy value as lexical evidence.
-            row[VESUM_ATTESTATION_FIELD] = {"attested": attestation.get("attested") is True}
+            # Gate on explicit attested=True, but keep matched lemmas/forms so
+            # phrase-head CEFR can resolve dictionary lemmas (not only surface
+            # content tokens). Never accept a bare truthy non-dict as evidence.
+            attested = attestation.get("attested") is True
+            cleaned: dict[str, Any] = {"attested": attested}
+            if attested:
+                lemmas = attestation.get("matched_lemmas")
+                if isinstance(lemmas, list):
+                    cleaned["matched_lemmas"] = [
+                        _text(item) for item in lemmas if _text(item)
+                    ]
+                forms = attestation.get("matched_forms")
+                if isinstance(forms, list):
+                    cleaned["matched_forms"] = [
+                        _text(item) for item in forms if _text(item)
+                    ]
+                method = _text(attestation.get("method"))
+                if method:
+                    cleaned["method"] = method
+            row[VESUM_ATTESTATION_FIELD] = cleaned
         normalized.append(row)
     return normalized
 
@@ -425,23 +442,42 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
                     "lemma": lemma,
                     "mode": LOCAL_PRACTICE_PRIVATE_TEACHER,
                 }
+                gloss = _text(row.get("gloss"))
+                if not gloss:
+                    # Local no-route materialization needs a private gloss for
+                    # the in-memory practice entry (merge/read enforce this).
+                    skipped_not_admitted.append(
+                        {
+                            "seedRow": row.get("seedRow"),
+                            "lemma": lemma,
+                            "mode": LOCAL_PRACTICE_PRIVATE_TEACHER,
+                            "reason": "local_no_route_missing_gloss",
+                        }
+                    )
+                    continue
                 if head_cefr is None:
                     # Private local recognition only: soft level guidance when no
                     # atlas/PULS CEFR exists for any attested token (not inventing
                     # a public CEFR record; explicit unleveled source).
                     level, source = "B1", "local_practice_unleveled (guidance only)"
                     head = {"lemma": lemma, "url_slug": ""}
+                    cefr_source_label = f"local_unleveled:{source}"
                 else:
                     head, (level, source) = head_cefr
+                    head_slug = _text(head.get("url_slug"))
+                    if source == "PULS CEFR":
+                        cefr_source_label = f"puls:{head_slug or lemma}:{source}"
+                    else:
+                        cefr_source_label = f"head_manifest:{head_slug}:{source}"
                 cefr_sources[source if source.startswith("local_practice") else f"head/token CEFR: {source}"] += 1
                 practice_rows.append(
                     {
                         "seedRow": row.get("seedRow"),
                         "lemma": lemma,
-                        "gloss": _text(row.get("gloss")),
+                        "gloss": gloss,
                         "slug": _local_teacher_slug(row.get("seedRow")),
                         "cefr": level,
-                        "cefrSource": f"head_manifest:{_text(head.get('url_slug'))}:{source}",
+                        "cefrSource": cefr_source_label,
                         "sentenceStatus": status,
                         "admissionMode": LOCAL_PRACTICE_PRIVATE_TEACHER,
                         "localOnly": True,
