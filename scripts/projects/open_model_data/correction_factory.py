@@ -46,6 +46,9 @@ DEFAULT_V02_PACKET = (
 )
 
 SHA256_RE = re.compile(r"^[a-f0-9]{64}$")
+SLOVNYK_DICTIONARY_LOCATOR_RE = re.compile(
+    r"^https://slovnyk\.me/dict/(?P<dictionary_slug>[A-Za-z0-9_-]+)/.+$"
+)
 NEAR_DUPLICATE_THRESHOLD = 0.90
 PROTECTED_PERIOD_MARKERS = (
     "historical",
@@ -299,10 +302,15 @@ def _validate_evidence(candidate: Mapping[str, Any]) -> None:
 
     for item in evidence:
         if item["source"] == "slovnyk_me":
-            normalized_identity = item["source_identity"].casefold().replace(" ", "")
+            locator_match = SLOVNYK_DICTIONARY_LOCATOR_RE.fullmatch(item["locator"])
             _require(
-                normalized_identity not in {"slovnyk.me", "slovnykme", "aggregator"},
-                "slovnyk.me evidence must name the underlying dictionary",
+                locator_match is not None,
+                "slovnyk.me evidence requires a per-dictionary /dict/<slug>/ locator",
+            )
+            _require(
+                item["source_identity"].casefold()
+                == locator_match.group("dictionary_slug").casefold(),
+                "slovnyk.me source identity must equal the underlying dictionary slug",
             )
             _require(not item["raw_payload_export_allowed"], "slovnyk.me raw payload cannot enter the packet")
         if item["source"] == "ulif_dictua":

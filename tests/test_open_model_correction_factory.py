@@ -37,10 +37,15 @@ def _evidence(
         "heritage_dictionary": "esum",
         "ukrainian_corpus": "foundry-corpus-snapshot",
     }[source]
+    locator = (
+        f"https://slovnyk.me/dict/{identity}/fixture-query"
+        if source == "slovnyk_me"
+        else f"fixture:{source}/{identity}"
+    )
     return {
         "content_sha256": _hash(f"{source}:{identity}:{status}"),
         "evidence_type": evidence_type,
-        "locator": f"fixture:{source}/{identity}",
+        "locator": locator,
         "official_url": None,
         "parser_status": parser_status,
         "parser_version": f"{source}-fixture-v1",
@@ -503,10 +508,22 @@ def test_slovnyk_me_must_retain_underlying_dictionary_identity(evaluation_regist
             _evidence("slovnyk_me", status="attested", supports="ukrainian_attestation", source_identity="slovnyk.me"),
         ],
     )
-    with pytest.raises(factory.FactoryError, match="underlying dictionary"):
+    with pytest.raises(factory.FactoryError, match="per-dictionary"):
         _validate(candidate, evaluation_registry)
-    candidate["evidence"][1]["source_identity"] = "sum20"
+    candidate["evidence"][1] = _evidence(
+        "slovnyk_me",
+        status="attested",
+        supports="ukrainian_attestation",
+        source_identity="sum20",
+    )
     _validate(candidate, evaluation_registry)
+
+    mismatch = copy.deepcopy(candidate)
+    mismatch["evidence"][1]["locator"] = (
+        "https://slovnyk.me/dict/newsum/fixture-query"
+    )
+    with pytest.raises(factory.FactoryError, match="must equal"):
+        _validate(mismatch, evaluation_registry)
 
 
 def test_evaluation_rights_and_private_data_gates_fail_closed(evaluation_registry) -> None:
