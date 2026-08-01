@@ -162,7 +162,6 @@ def _backup_path(output: Path) -> Path:
         delete=False,
     ) as handle:
         backup = Path(handle.name)
-    backup.unlink()
     return backup
 
 
@@ -184,7 +183,11 @@ def _promote_staged_artifacts(artifacts: Sequence[tuple[Path, Path]]) -> None:
         for temporary, output in artifacts:
             if output.exists():
                 backup = _backup_path(output)
-                os.replace(output, backup)
+                try:
+                    os.replace(output, backup)
+                except Exception:
+                    backup.unlink(missing_ok=True)
+                    raise
                 backups.append((output, backup))
             os.replace(temporary, output)
             promoted.append(output)
