@@ -2,10 +2,10 @@
 
 A context link joins an opaque Entire checkpoint/commit locator to canonical
 GitHub, ACP, Fleet, Monitor, rollover, or formal-review evidence. The schema is
-deliberately body-free: unknown fields are rejected, and any field name or
-value that could carry prompts, responses, transcripts, summaries, raw
-captures, message/artifact bodies, transcript paths, secret/token material, or
-public Entire refs is refused before anything is persisted.
+deliberately body-free: unknown fields are rejected, and fields or values that
+name body-bearing concepts, match known secret/token signatures, look like
+long opaque tokens, or contain public Entire refs are refused before anything
+is persisted.
 """
 
 from __future__ import annotations
@@ -88,7 +88,10 @@ FORBIDDEN_VALUE_PATTERNS = (
     ("public-entire-ref", re.compile(r"refs/entire(?:/|$)")),
 )
 
-LONG_OPAQUE_COMPONENT_RE = re.compile(r"(?:^|[.:/])([A-Za-z0-9_+-]{48,})(?=$|[.:/])")
+LONG_OPAQUE_COMPONENT_RE = re.compile(r"(?:^|[.:/])([A-Za-z0-9_+-]{48,}={0,2})(?=$|[.:/])")
+OPAQUE_DELIMITED_VALUE_RE = re.compile(r"^[A-Za-z0-9_+./:=-]+$")
+OPAQUE_DELIMITER_RE = re.compile(r"[.:/=]")
+GIT_EVIDENCE_LOCATOR_RE = re.compile(r"^git:commit/[0-9a-f]{40}$")
 
 MAX_STRING_BYTES = 1024
 MAX_LIST_ITEMS = 64
@@ -150,7 +153,13 @@ def _reject_forbidden_key(path: str) -> None:
         raise SchemaError(f"field rejected by body-free rule: {path!r} names a forbidden concept")
 
 
-def _validate_scalar(path: str, value: Any, *, reject_long_opaque: bool = False) -> None:
+def _validate_scalar(
+    path: str,
+    value: Any,
+    *,
+    reject_long_opaque: bool = False,
+    long_opaque_exemption: re.Pattern[str] | None = None,
+) -> None:
     if isinstance(value, bool) or value is None or isinstance(value, int | float):
         return
     if not isinstance(value, str):
@@ -162,15 +171,32 @@ def _validate_scalar(path: str, value: Any, *, reject_long_opaque: bool = False)
     for rule, pattern in FORBIDDEN_VALUE_PATTERNS:
         if pattern.search(value):
             raise SchemaError(f"field {path!r} rejected by {rule} rule")
-    if reject_long_opaque and LONG_OPAQUE_COMPONENT_RE.search(value):
-        raise SchemaError(f"field {path!r} rejected by long-opaque-token rule")
+    if reject_long_opaque:
+        collapsed = OPAQUE_DELIMITER_RE.sub("", value)
+        looks_long_opaque = bool(LONG_OPAQUE_COMPONENT_RE.search(value)) or (
+            len(collapsed) >= 48 and OPAQUE_DELIMITED_VALUE_RE.fullmatch(value) is not None
+        )
+        exempt = long_opaque_exemption is not None and long_opaque_exemption.fullmatch(value) is not None
+        if looks_long_opaque and not exempt:
+            raise SchemaError(f"field {path!r} rejected by long-opaque-token rule")
 
 
-def validate_identity(value: str, *, field_name: str, reject_long_opaque: bool = True) -> None:
+def validate_identity(
+    value: str,
+    *,
+    field_name: str,
+    reject_long_opaque: bool = True,
+    long_opaque_exemption: re.Pattern[str] | None = None,
+) -> None:
     """Validate one body-free, path-safe externally supplied identity."""
     if not isinstance(value, str) or not IDENTITY_RE.fullmatch(value):
         raise SchemaError(f"{field_name} must be a path-safe identity")
-    _validate_scalar(field_name, value, reject_long_opaque=reject_long_opaque)
+    _validate_scalar(
+        field_name,
+        value,
+        reject_long_opaque=reject_long_opaque,
+        long_opaque_exemption=long_opaque_exemption,
+    )
 
 
 def validate_facets(facets: dict[str, Any]) -> None:
@@ -310,7 +336,11 @@ class VerificationEvidence:
             raise SchemaError("status must be an allowlisted VerificationStatus")
         if not SHA256_DIGEST_RE.fullmatch(self.canonical_digest):
             raise SchemaError("canonical_digest must be 'sha256:<64 hex>'")
-        validate_identity(self.evidence_locator, field_name="evidence_locator")
+        validate_identity(
+            self.evidence_locator,
+            field_name="evidence_locator",
+            long_opaque_exemption=GIT_EVIDENCE_LOCATOR_RE,
+        )
         try:
             parse_timestamp(self.checked_at)
         except (ValueError, TypeError) as exc:

@@ -139,7 +139,7 @@ def _load_json_file(path: str, label: str) -> dict[str, Any]:
     try:
         raw = Path(path).read_text(encoding="utf-8")
         payload = json.loads(raw)
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise SchemaError(f"{label} is not readable JSON") from exc
     if not isinstance(payload, dict):
         raise SchemaError(f"{label} must be a JSON object")

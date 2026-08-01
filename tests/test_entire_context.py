@@ -179,10 +179,27 @@ def test_non_facet_identity_fields_reject_long_opaque_values(field: str) -> None
         ContextLink.from_dict(payload)
 
 
+@pytest.mark.parametrize("field", ["canonical_id", "entire_checkpoint_id"])
+def test_non_facet_identity_fields_reject_delimiter_split_opaque_values(field: str) -> None:
+    payload = make_link().to_dict()
+    payload.pop("locator_id")
+    payload[field] = "A" * 47 + "." + "A" * 47
+    with pytest.raises(SchemaError, match="long-opaque-token"):
+        ContextLink.from_dict(payload)
+
+
 def test_canonical_namespace_rejects_long_opaque_path_component() -> None:
     payload = make_link().to_dict()
     payload.pop("locator_id")
     payload["canonical_namespace"] = "github:" + "A" * 64
+    with pytest.raises(SchemaError, match="long-opaque-token"):
+        ContextLink.from_dict(payload)
+
+
+def test_canonical_namespace_rejects_delimiter_split_opaque_value() -> None:
+    payload = make_link().to_dict()
+    payload.pop("locator_id")
+    payload["canonical_namespace"] = "github:" + "A" * 30 + "." + "A" * 30
     with pytest.raises(SchemaError, match="long-opaque-token"):
         ContextLink.from_dict(payload)
 
@@ -202,11 +219,25 @@ def test_verification_identity_fields_reject_long_opaque_values(field: str) -> N
         VerificationEvidence.from_dict(payload)
 
 
+@pytest.mark.parametrize("field", ["verifier", "evidence_locator"])
+def test_verification_identity_fields_reject_delimiter_split_opaque_values(field: str) -> None:
+    payload = make_verification().to_dict()
+    payload[field] = "A" * 47 + "." + "A" * 47
+    with pytest.raises(SchemaError, match="long-opaque-token"):
+        VerificationEvidence.from_dict(payload)
+
+
 def test_typed_verification_locator_rejects_long_opaque_path_component() -> None:
     payload = make_verification().to_dict()
     payload["evidence_locator"] = "github:" + "A" * 64
     with pytest.raises(SchemaError, match="long-opaque-token"):
         VerificationEvidence.from_dict(payload)
+
+
+def test_git_commit_evidence_locator_remains_allowed() -> None:
+    payload = make_verification().to_dict()
+    payload["evidence_locator"] = "git:commit/" + GIT_SHA
+    assert VerificationEvidence.from_dict(payload).evidence_locator == payload["evidence_locator"]
 
 
 def test_from_dict_rejects_unsupported_schema_version() -> None:
@@ -672,6 +703,20 @@ def test_cli_admit_rejects_schema_violations(tmp_path: Path) -> None:
     code, out = run_cli(["admit", "--link", str(link_file), "--db", str(db)])
     assert code == cli.EXIT_REFUSED
     assert out["reason"] == "schema_invalid"
+    assert not db.exists()
+
+
+def test_cli_admit_rejects_non_utf8_json_without_traceback(tmp_path: Path) -> None:
+    db = tmp_path / "non-utf8.sqlite3"
+    link_file = tmp_path / "link.json"
+    link_file.write_bytes(b"\xff\xfe\x00\x01")
+
+    code, payload = run_cli(["admit", "--link", str(link_file), "--db", str(db)])
+
+    assert code == cli.EXIT_REFUSED
+    assert payload["outcome"] == "refused"
+    assert payload["reason"] == "schema_invalid"
+    assert "not readable JSON" in payload["detail"]
     assert not db.exists()
 
 
