@@ -16,6 +16,8 @@ from scripts.review.model_catalog import load_model_catalog
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CODEX_PROJECT_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "config.toml"
+SHARED_DOCTRINE = REPO_ROOT / "docs" / "best-practices" / "fleet-shared-doctrine.md"
+ROLE_SCORECARD = REPO_ROOT / "docs" / "best-practices" / "fleet-role-scorecard.md"
 
 
 def test_codex_source_config_defaults_subagents_to_luna_max() -> None:
@@ -69,3 +71,12 @@ def test_review_boundary_rejects_same_family_advisory_output() -> None:
     assert boundary["advisory_family"] == "openai"
     assert boundary["advisory_satisfies_cross_family_review"] is False
     assert boundary["independent_cross_family_review_required"] is True
+
+
+def test_served_doctrine_uses_luna_max_without_overriding_other_recon_seats() -> None:
+    doctrine = SHARED_DOCTRINE.read_text(encoding="utf-8")
+    scorecard = ROLE_SCORECARD.read_text(encoding="utf-8")
+
+    assert "| Luna bounded work / recon | **`max`**" in doctrine
+    assert "| Claude Haiku recon | **`medium`** default" in doctrine
+    assert "Luna `max` with exact owned paths + objective scope ceiling" in scorecard

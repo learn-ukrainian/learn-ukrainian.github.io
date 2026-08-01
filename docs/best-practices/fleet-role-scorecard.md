@@ -31,7 +31,7 @@
 | Code/security CF review | **Author-family-conditional** (see §3) | — | `high`+ | provisional |
 | Critical CF review | Sol ↔ Fable/Opus **cross-family** | — | `xhigh` | provisional |
 | Ukrainian language | Gemini 3.1 Pro (AGY) | LANGUAGE-LANES: codex/claude/grok-4.5 + sources | `high` | provisional (UA primacy AGY; morphology still VESUM-gated) |
-| Recon / triage | Luna, Claude Haiku, Gemini 3.5 Flash | — | `medium`–`high`; never sole release | provisional |
+| Recon / triage | Luna, Claude Haiku, Gemini 3.5 Flash | — | Luna `max` with exact owned paths + objective scope ceiling; others `medium`–`high`; never sole release | provisional |
 
 **One orchestrator per stream.** Advisors recommend; orchestrator owns terminal disposition.
 
@@ -45,7 +45,7 @@
 | **Sol** | Frontier coding/agent claims; synthesis; hard debug; design judgment; multi-agent `ultra` class capabilities in family docs | Expensive; OpenAI-family CF limits if author is OpenAI | OpenAI / Codex | Ceiling advisor; floor `high` |
 | **Opus 4.8** | Durable long agentic sessions; orchestration; architecture | Costly as bulk worker | Anthropic | Prefer orchestrator |
 | **Terra** | Balanced implementer/orchestrator; strong everyday agentic | Not Sol/Fable ceiling | OpenAI / Codex | Orchestrator + worker |
-| **Luna** | Fast recon, cheap mechanical checks | Never sole architecture/security/language/release authority | OpenAI / Codex | Recon |
+| **Luna** | Fast bounded implementation, recon, and mechanical checks | Never sole architecture/security/language/release authority | OpenAI / Codex | Bounded worker / recon |
 | **Claude Haiku** | Fast cheap recon/triage on Anthropic lane; good for log/search skim | Never sole architecture/security/language/release authority | Anthropic | Recon (with Luna / 3.5 Flash) |
 | **Sonnet 5** | Near-flagship coding at better cost; daily driver agentic | Escalate systemic ambiguity | Anthropic | Default worker |
 | **Grok 4.5** | Strong coding agent; token-efficient; good CF review value | Prefer worker/reviewer not sole orchestrator | xAI; SuperGrok Heavy = capacity entitlement (re-verify) | Worker + CF review |

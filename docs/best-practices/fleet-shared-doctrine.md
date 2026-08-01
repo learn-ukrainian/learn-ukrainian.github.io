@@ -87,7 +87,8 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 | Terra (orchestrating hard stream) | **`xhigh`** |
 | Terra (routine implement) | **`medium`–`high`**, escalate with risk |
 | Opus orchestrating | **`high`+** |
-| Luna / Claude Haiku recon | **`medium`** default; never sole authority |
+| Luna bounded work / recon | **`max`** with exact owned paths + objective scope ceiling; never sole authority |
+| Claude Haiku recon | **`medium`** default; never sole authority |
 
 ---
 
