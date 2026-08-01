@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import textwrap
+import threading
 
 import pytest
 
@@ -583,3 +584,190 @@ def test_repo_owner_name_cache_keyed_by_root_does_not_leak(tmp_path, monkeypatch
     # Re-resolving root_a must still return root_a's own answer, not root_b's
     # (proves the cache key is the root, not a single shared slot).
     assert issue_stream_audit._repo_owner_name(root_a) == ("owner-a", "repo-a")
+
+
+# --------------------------------------------------------------------------- #
+# #6145 — detached single-flight refresh state
+# --------------------------------------------------------------------------- #
+def _refresh_paths(tmp_path, monkeypatch):
+    state = tmp_path / "issue_stream_audit_refresh.json"
+    lock = tmp_path / "issue_stream_audit_refresh.lock"
+    monkeypatch.setattr(issue_stream_audit, "REFRESH_STATE_PATH", state)
+    monkeypatch.setattr(issue_stream_audit, "REFRESH_LOCK_PATH", lock)
+    return state
+
+
+def _scheduled_state(run_id="new-run", now=100):
+    return {
+        "schema_version": 1,
+        "run_id": run_id,
+        "phase": "scheduled",
+        "requested_at": now,
+        "started_at": None,
+        "last_outcome": "none",
+        "last_outcome_at": None,
+        "failure_code": None,
+        "cooldown_until": None,
+    }
+
+
+def test_refresh_missing_and_malformed_state_fail_safe_idle(tmp_path, monkeypatch):
+    state_path = _refresh_paths(tmp_path, monkeypatch)
+    assert issue_stream_audit.read_refresh_state(now=100)["phase"] == "idle"
+
+    state_path.write_text('{"phase":"running","run_id":"secret"', encoding="utf-8")
+    public = issue_stream_audit.public_refresh_view(
+        issue_stream_audit.read_refresh_state(now=100)
+    )
+    assert public == {
+        "phase": "idle",
+        "requested_at": None,
+        "started_at": None,
+        "last_outcome": "none",
+        "last_outcome_at": None,
+        "failure_code": None,
+        "retry_after": None,
+    }
+    assert "run_id" not in public
+
+
+def test_schedule_refresh_is_single_flight_and_preserves_previous_outcome(
+    tmp_path, monkeypatch
+):
+    state_path = _refresh_paths(tmp_path, monkeypatch)
+    spawned = []
+    monkeypatch.setattr(issue_stream_audit.time, "time", lambda: 100.0)
+    monkeypatch.setattr(
+        issue_stream_audit, "_spawn_worker", lambda run_id: spawned.append(run_id) or True
+    )
+
+    first = issue_stream_audit.schedule_refresh()
+    second = issue_stream_audit.schedule_refresh(force=True)
+
+    assert first["phase"] == second["phase"] == "scheduled"
+    assert first["run_id"] == second["run_id"]
+    assert spawned == [first["run_id"]]
+    assert json.loads(state_path.read_text(encoding="utf-8"))["run_id"] == first["run_id"]
+
+
+def test_concurrent_schedulers_spawn_exactly_one_worker(tmp_path, monkeypatch):
+    _refresh_paths(tmp_path, monkeypatch)
+    entered = threading.Event()
+    release = threading.Event()
+    spawned = []
+    results = []
+
+    def _spawn(run_id):
+        spawned.append(run_id)
+        entered.set()
+        assert release.wait(timeout=2)
+        return True
+
+    monkeypatch.setattr(issue_stream_audit, "_spawn_worker", _spawn)
+    first = threading.Thread(target=lambda: results.append(issue_stream_audit.schedule_refresh()))
+    first.start()
+    assert entered.wait(timeout=2)
+
+    # The first scheduler still holds the cross-process lock here. The second
+    # request can only observe its scheduled run; it cannot spawn another.
+    results.append(issue_stream_audit.schedule_refresh(force=True))
+    release.set()
+    first.join(timeout=2)
+
+    assert not first.is_alive()
+    assert len(results) == 2
+    assert results[0]["run_id"] == results[1]["run_id"]
+    assert spawned == [results[0]["run_id"]]
+
+
+def test_spawn_failure_cooldown_and_explicit_recovery(tmp_path, monkeypatch):
+    _refresh_paths(tmp_path, monkeypatch)
+    clock = [100.0]
+    monkeypatch.setattr(issue_stream_audit.time, "time", lambda: clock[0])
+    monkeypatch.setattr(issue_stream_audit, "_spawn_worker", lambda _run_id: False)
+
+    failed = issue_stream_audit.schedule_refresh()
+    assert failed["phase"] == "idle"
+    assert failed["last_outcome"] == "failed"
+    assert failed["failure_code"] == "spawn_failed"
+    assert failed["cooldown_until"] == 160
+
+    # Automatic stale requests respect cooldown; explicit fresh=true bypasses it.
+    assert issue_stream_audit.schedule_refresh()["phase"] == "idle"
+    monkeypatch.setattr(issue_stream_audit, "_spawn_worker", lambda _run_id: True)
+    recovering = issue_stream_audit.schedule_refresh(force=True)
+    assert recovering["phase"] == "scheduled"
+    assert recovering["last_outcome"] == "failed"
+    assert recovering["failure_code"] == "spawn_failed"
+
+
+def test_worker_failure_then_success_is_fenced_and_truthful(tmp_path, monkeypatch):
+    state_path = _refresh_paths(tmp_path, monkeypatch)
+    clock = [100.0]
+    monkeypatch.setattr(issue_stream_audit.time, "time", lambda: clock[0])
+    monkeypatch.setattr(issue_stream_audit, "_spawn_worker", lambda _run_id: True)
+
+    scheduled = issue_stream_audit.schedule_refresh()
+    run_id = scheduled["run_id"]
+    monkeypatch.setattr(
+        issue_stream_audit, "run_audit", lambda: (_ for _ in ()).throw(RuntimeError("secret"))
+    )
+    assert issue_stream_audit._run_refresh_worker(run_id) == 1
+    failed = json.loads(state_path.read_text(encoding="utf-8"))
+    assert failed["phase"] == "idle" and failed["failure_code"] == "source_error"
+    assert "secret" not in json.dumps(failed)
+
+    clock[0] = 101.0
+    recovering = issue_stream_audit.schedule_refresh(force=True)
+    assert recovering["last_outcome"] == "failed"
+    monkeypatch.setattr(issue_stream_audit, "run_audit", lambda: {"ok": True})
+    assert issue_stream_audit._run_refresh_worker(recovering["run_id"]) == 0
+    succeeded = json.loads(state_path.read_text(encoding="utf-8"))
+    assert succeeded["phase"] == "idle"
+    assert succeeded["last_outcome"] == "succeeded"
+    assert succeeded["failure_code"] is None
+
+
+def test_worker_lost_reconciles_and_persists_failure(tmp_path, monkeypatch):
+    state_path = _refresh_paths(tmp_path, monkeypatch)
+    running = _scheduled_state(now=100)
+    running.update(phase="running", started_at=101)
+    issue_stream_audit._write_refresh_state_atomic(running)
+
+    observed = issue_stream_audit.read_refresh_state(now=120)
+    persisted = json.loads(state_path.read_text(encoding="utf-8"))
+    assert observed == persisted
+    assert observed["phase"] == "idle"
+    assert observed["failure_code"] == "worker_lost"
+    assert observed["cooldown_until"] == 180
+
+
+def test_stale_worker_run_id_cannot_overwrite_newer_run(tmp_path, monkeypatch):
+    state_path = _refresh_paths(tmp_path, monkeypatch)
+    issue_stream_audit._write_refresh_state_atomic(_scheduled_state("new-run"))
+    called = []
+    monkeypatch.setattr(issue_stream_audit, "run_audit", lambda: called.append(True))
+
+    assert issue_stream_audit._run_refresh_worker("old-run") == 0
+    assert called == []
+    assert json.loads(state_path.read_text(encoding="utf-8"))["run_id"] == "new-run"
+
+
+def test_refresh_state_atomic_replace_never_exposes_partial_json(tmp_path, monkeypatch):
+    state_path = _refresh_paths(tmp_path, monkeypatch)
+    issue_stream_audit._write_refresh_state_atomic(issue_stream_audit._default_refresh_state())
+    failures = []
+
+    def _writer():
+        for run in range(25):
+            issue_stream_audit._write_refresh_state_atomic(_scheduled_state(f"run-{run}", run))
+
+    thread = threading.Thread(target=_writer)
+    thread.start()
+    while thread.is_alive():
+        try:
+            assert isinstance(json.loads(state_path.read_text(encoding="utf-8")), dict)
+        except (AssertionError, json.JSONDecodeError) as exc:
+            failures.append(exc)
+    thread.join()
+    assert failures == []

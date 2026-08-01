@@ -1052,6 +1052,25 @@ _LEAKY_REPORT = {
     "open_issue_numbers": [5, 100],
 }
 
+_IDLE_REFRESH = {
+    "schema_version": 1,
+    "run_id": None,
+    "phase": "idle",
+    "requested_at": None,
+    "started_at": None,
+    "last_outcome": "none",
+    "last_outcome_at": None,
+    "failure_code": None,
+    "cooldown_until": None,
+}
+
+_SCHEDULED_REFRESH = {
+    **_IDLE_REFRESH,
+    "run_id": "internal-run-id",
+    "phase": "scheduled",
+    "requested_at": int(NOW.timestamp()),
+}
+
 
 def _assert_no_private_keys(body: dict[str, Any]) -> None:
     assert "effective_membership" not in body
@@ -1062,10 +1081,28 @@ def _assert_no_private_keys(body: dict[str, Any]) -> None:
 def test_issues_streams_endpoint_strips_private_keys_on_fresh(monkeypatch):
     from scripts.api import issues_router
 
-    monkeypatch.setattr(issues_router.audit, "run_audit", lambda: dict(_LEAKY_REPORT))
+    calls = []
+    monkeypatch.setattr(
+        issues_router.audit, "read_cache",
+        lambda max_age_s: dict(_LEAKY_REPORT) if max_age_s == 3600 else None,
+    )
+    monkeypatch.setattr(
+        issues_router.audit,
+        "schedule_refresh",
+        lambda *, force: calls.append(force) or dict(_SCHEDULED_REFRESH),
+    )
+    monkeypatch.setattr(
+        issues_router.audit,
+        "run_audit",
+        lambda: (_ for _ in ()).throw(AssertionError("request must not run audit")),
+    )
     resp = client.get("/api/issues/streams", params={"fresh": "true"})
     assert resp.status_code == 200
-    _assert_no_private_keys(resp.json())
+    body = resp.json()
+    _assert_no_private_keys(body)
+    assert calls == [True]
+    assert body["refreshing"] is True and body["refresh"]["phase"] == "scheduled"
+    assert "run_id" not in json.dumps(body)
 
 
 def test_issues_streams_endpoint_strips_private_keys_on_cache_hit(monkeypatch):
@@ -1075,9 +1112,19 @@ def test_issues_streams_endpoint_strips_private_keys_on_cache_hit(monkeypatch):
         issues_router.audit, "read_cache",
         lambda max_age_s: dict(_LEAKY_REPORT) if max_age_s == 3600 else None,
     )
+    monkeypatch.setattr(
+        issues_router.audit, "read_refresh_state", lambda: dict(_IDLE_REFRESH)
+    )
+    monkeypatch.setattr(
+        issues_router.audit,
+        "schedule_refresh",
+        lambda **_kwargs: (_ for _ in ()).throw(AssertionError("fresh cache must not schedule")),
+    )
     resp = client.get("/api/issues/streams")
     assert resp.status_code == 200
-    _assert_no_private_keys(resp.json())
+    body = resp.json()
+    _assert_no_private_keys(body)
+    assert body["refreshing"] is False and body["refresh"]["phase"] == "idle"
 
 
 def test_strict_adoption_gate_runs_as_bare_script():
@@ -1114,14 +1161,64 @@ def test_issues_streams_endpoint_strips_private_keys_on_stale_plus_refresh(monke
             return None  # no fresh cache
         return dict(_LEAKY_REPORT)  # stale fallback within the 7-day window
 
-    class _FakePopen:
-        def __init__(self, *a, **k):
-            pass  # never actually spawn a background refresh under test
-
     monkeypatch.setattr(issues_router.audit, "read_cache", _fake_read_cache)
-    monkeypatch.setattr(issues_router.subprocess, "Popen", _FakePopen)
+    calls = []
+    monkeypatch.setattr(
+        issues_router.audit,
+        "schedule_refresh",
+        lambda *, force: calls.append(force) or dict(_SCHEDULED_REFRESH),
+    )
     resp = client.get("/api/issues/streams")
     assert resp.status_code == 200
     body = resp.json()
     assert body["stale"] is True and body["refreshing"] is True
+    assert body["refresh"]["phase"] == "scheduled" and calls == [False]
+    assert "internal-run-id" not in json.dumps(body)
     _assert_no_private_keys(body)
+
+
+def test_issues_streams_no_cache_and_failure_are_bounded_and_private(monkeypatch):
+    from scripts.api import issues_router
+
+    monkeypatch.setattr(issues_router.audit, "read_cache", lambda max_age_s: None)
+    monkeypatch.setattr(
+        issues_router.audit,
+        "schedule_refresh",
+        lambda **_kwargs: (_ for _ in ()).throw(RuntimeError("credential body stderr")),
+    )
+    failed = {
+        **_IDLE_REFRESH,
+        "last_outcome": "failed",
+        "last_outcome_at": int(NOW.timestamp()),
+        "failure_code": "source_error",
+        "cooldown_until": int(NOW.timestamp()) + 60,
+    }
+    monkeypatch.setattr(issues_router.audit, "read_refresh_state", lambda: failed)
+
+    resp = client.get("/api/issues/streams")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["error"] == "issue_stream_state_unavailable"
+    assert body["refreshing"] is False
+    assert body["refresh"]["failure_code"] == "source_error"
+    blob = json.dumps(body)
+    for forbidden in ("credential", "body", "stderr", "run_id", "effective_membership"):
+        assert forbidden not in blob
+
+
+def test_issues_streams_no_cache_schedules_once_and_returns_immediately(monkeypatch):
+    from scripts.api import issues_router
+
+    calls = []
+    monkeypatch.setattr(issues_router.audit, "read_cache", lambda max_age_s: None)
+    monkeypatch.setattr(
+        issues_router.audit,
+        "schedule_refresh",
+        lambda *, force: calls.append(force) or dict(_SCHEDULED_REFRESH),
+    )
+    resp = client.get("/api/issues/streams")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["status"] == "no-cache" and body["ok"] is None
+    assert body["refreshing"] is True and body["refresh"]["phase"] == "scheduled"
+    assert calls == [False]

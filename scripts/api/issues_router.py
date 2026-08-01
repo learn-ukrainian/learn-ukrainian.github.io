@@ -29,7 +29,7 @@ from fastapi import APIRouter, Query
 
 from scripts.orchestration import issue_stream_audit as audit
 
-from .config import LIVE_REPO_ROOT, PROJECT_ROOT
+from .config import PROJECT_ROOT
 
 router = APIRouter(tags=["issues"])
 
@@ -186,40 +186,55 @@ async def issues_map(
 
 @router.get("/streams")
 async def issues_streams(
-    fresh: bool = Query(False, description="Re-run the auditor instead of serving the cache."),
+    fresh: bool = Query(False, description="Schedule a refresh instead of only serving the cache."),
 ):
     """Issue-stream hygiene report (#4708) — orphans, multi-homed, pending links.
 
     Serves ``batch_state/issue_stream_audit.json`` written by
-    ``scripts/orchestration/issue_stream_audit.py``; ``?fresh=true`` re-runs the
-    auditor (network: several ``gh`` calls). Registry:
-    ``scripts/config/issue_streams.yaml``. Degrades to ``{"error": ...}``.
+    ``scripts/orchestration/issue_stream_audit.py``. ``?fresh=true`` is an
+    idempotent scheduling hint: the request returns immediately while one
+    detached, single-flight worker performs the network audit. Registry:
+    ``scripts/config/issue_streams.yaml``.
     """
 
     def _load() -> dict[str, Any]:
         try:
-            if fresh:
-                return _strip_private_index(audit.run_audit())
-            # Default path is CACHE-ONLY (codex F3): a live audit is many gh
-            # calls and must never block a cold-start consumer. Serve a stale
-            # cache with a flag, or report no-cache + kick a background refresh.
             report = audit.read_cache(max_age_s=3600)
-            if report is not None:
-                return _strip_private_index(report)
-            stale = audit.read_cache(max_age_s=7 * 24 * 3600)
-            subprocess.Popen(
-                [str(LIVE_REPO_ROOT / ".venv" / "bin" / "python"),
-                 "-m", "scripts.orchestration.issue_stream_audit", "--json"],
-                cwd=LIVE_REPO_ROOT,
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-            )
-            if stale is not None:
-                return {**_strip_private_index(stale), "stale": True, "refreshing": True}
-            return {"status": "no-cache", "refreshing": True, "ok": None}
-        except Exception as exc:  # degrade, never 500 a state endpoint
-            return {"error": str(exc)[:300], "ok": False}
+            stale = None if report is not None else audit.read_cache(max_age_s=7 * 24 * 3600)
 
-    return await asyncio.to_thread(_load)
+            # A default fresh-cache read is strictly cache-only. Explicit
+            # ``fresh=true``, stale fallback, and no-cache all use the same
+            # detached scheduler; no live GitHub work is request-bound.
+            state = (
+                audit.schedule_refresh(force=fresh)
+                if fresh or report is None
+                else audit.read_refresh_state()
+            )
+
+            if report is not None:
+                payload = _strip_private_index(report)
+            elif stale is not None:
+                payload = {**_strip_private_index(stale), "stale": True}
+            else:
+                payload = {"status": "no-cache", "ok": None}
+            return _with_refresh(payload, state)
+        except Exception:  # degrade without exposing raw exception text
+            return _with_refresh(
+                {"error": "issue_stream_state_unavailable", "ok": False},
+                audit.read_refresh_state(),
+            )
+
+    return _load()
+
+
+def _with_refresh(payload: dict[str, Any], state: dict[str, Any]) -> dict[str, Any]:
+    """Attach the stable privacy-safe refresh projection to one response."""
+    refresh = audit.public_refresh_view(state)
+    return {
+        **_strip_private_index(payload),
+        "refreshing": refresh["phase"] in {"scheduled", "running"},
+        "refresh": refresh,
+    }
 
 
 def _strip_private_index(report: dict[str, Any]) -> dict[str, Any]:

@@ -2029,6 +2029,28 @@ subsection times out, run
 to refresh the issue-stream hygiene cache instead of retrying the full
 orient bundle blindly.
 
+### Issue-stream hygiene — `GET /api/issues/streams`
+
+This endpoint is cache-first and never performs the GitHub audit inside the
+request. A default request serves a cache newer than one hour without
+scheduling work. A stale cache up to seven days old, a missing cache, or
+`?fresh=true` schedules the same detached single-flight worker and returns
+immediately. `fresh=true` is an idempotent scheduling hint, not a request that
+waits for the audit.
+
+Every response contains `refreshing` and a `refresh` object. `refreshing` is
+true exactly while `refresh.phase` is `scheduled` or `running`. The object also
+contains nullable `requested_at`, `started_at`, `last_outcome_at`, and
+`retry_after` epoch timestamps; `last_outcome` (`none`, `succeeded`, or
+`failed`); and a bounded `failure_code`. Failure codes are limited to
+`spawn_failed`, `worker_lost`, `source_unavailable`, `source_timeout`,
+`source_error`, `cache_write_failed`, and `audit_failed`.
+
+Refresh state never includes exception text, stderr, issue bodies,
+credentials, process IDs, lock paths, or the internal worker identifier. The
+private `effective_membership` and `open_issue_numbers` cache indexes remain
+stripped on fresh, stale, active, failed, and recovery responses.
+
 ---
 
 ## Bounded Research Discovery — `/api/knowledge/*` (ADR-011 P2 #4982, P3 #4992)
