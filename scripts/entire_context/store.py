@@ -394,6 +394,68 @@ class ContextLinkStore:
             "last_event_at": events["last_at"] if events else None,
         }
 
+    # ── recall candidate scan and provenance joins ─────────────────────────────
+
+    def candidates(self, *, limit: int = 500) -> list[dict[str, Any]]:
+        """Body-free promoted candidate scan for ranking (deterministic order).
+
+        Pending and tombstoned claims are never candidates. The order is fully
+        derived from the stored locator IDs so recall ranking is reproducible.
+        """
+        capped = max(0, int(limit))
+        with self._connect(write=False) as connection:
+            rows = connection.execute(
+                "SELECT * FROM context_links WHERE state = 'promoted'"
+                " ORDER BY locator_id LIMIT ?",
+                (capped,),
+            ).fetchall()
+        return [self._row_to_link_dict(row) for row in rows]
+
+    def find_related(
+        self,
+        link: dict[str, Any],
+        *,
+        limit: int = 50,
+    ) -> list[tuple[dict[str, Any], str]]:
+        """Body-free promoted provenance joins for explain-change traversal.
+
+        Returns ``(candidate, join)`` pairs using explicit typed joins only:
+        ``same_git_sha`` (commit-backed provenance), ``references_commit`` /
+        ``referenced_by_commit`` (commit ↔ receipt cross-reference), and
+        ``same_canonical_id`` (the same exact identifier in another kind).
+        Namespace equality is deliberately not a join: it would connect every
+        same-repository commit. The seed itself and any non-promoted claim are
+        excluded. Order is deterministic and bounded by ``limit``.
+        """
+        capped = max(0, int(limit))
+        locator_id = str(link["locator_id"])
+        with self._connect(write=False) as connection:
+            rows = connection.execute(
+                "SELECT * FROM context_links WHERE state = 'promoted'"
+                " AND locator_id != ? ORDER BY locator_id",
+                (locator_id,),
+            ).fetchall()
+        related: list[tuple[dict[str, Any], str]] = []
+        seed_sha = link.get("git_sha")
+        seed_id = link.get("canonical_id")
+        for row in rows:
+            candidate = self._row_to_link_dict(row)
+            candidate_sha = candidate.get("git_sha")
+            join: str | None = None
+            if seed_sha and candidate.get("canonical_id") == seed_sha:
+                join = "references_commit"
+            elif candidate_sha and candidate_sha == seed_id:
+                join = "referenced_by_commit"
+            elif seed_sha and candidate_sha == seed_sha:
+                join = "same_git_sha"
+            elif seed_id and candidate.get("canonical_id") == seed_id:
+                join = "same_canonical_id"
+            if join is not None:
+                related.append((candidate, join))
+                if len(related) >= capped:
+                    break
+        return related
+
     # ── rebuild ──────────────────────────────────────────────────────────────
 
     def _projection_snapshot(self, connection: sqlite3.Connection) -> str:
