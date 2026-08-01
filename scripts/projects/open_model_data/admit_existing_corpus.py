@@ -18,7 +18,7 @@ import sys
 import tempfile
 import time
 from collections import Counter
-from collections.abc import Iterator, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, TextIO
@@ -245,9 +245,6 @@ class AtomicJsonl:
         os.fsync(self.handle.fileno())
         self.handle.close()
         return {"bytes": self.bytes_written, "records": self.records, "sha256": self.digest.hexdigest()}
-
-    def replace(self) -> None:
-        os.replace(self.temporary, self.output)
 
     def abort(self) -> None:
         if not self.handle.closed:
