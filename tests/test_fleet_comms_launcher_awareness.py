@@ -60,25 +60,17 @@ def test_prompt_injecting_launchers_include_plane_and_cf_surfaces() -> None:
     assert 'source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"' in text
 
 
-def test_shared_launcher_clause_onboards_routine_acp_selection_hierarchy() -> None:
+def test_shared_launcher_clause_onboards_authority_and_acp_layers() -> None:
     helper = HELPER.read_text(encoding="utf-8")
     for required in (
         "LU_AGENT_COMM_TRANSPORT",
-        "Eligible two-seat read-only",
-        "automatically use ACP",
-        "Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, or Pool",
-        "cold start launches nothing",
-        "observable exception only",
-        "unsupported participants/counts or model overrides",
-        "formal review until separately migrated",
-        "write/dispatch/inbox semantics",
-        "typed ACP unhealthy/partial failure",
-        "durable coordination evidence",
-        "discuss",
-        "neither coordination authority",
-        "nor formal review",
-        "acp-verify",
-        "rather than authorizing retry",
+        "All normal inter-agent asks",
+        "2–6 seat discussions",
+        "sealed formal review provider calls use ACP",
+        "never fall back to bridge/provider execution",
+        "fleet-comms owns durable state",
+        "legacy bridge/channel stores are read-only",
+        "Continuity: stream lease already claimed",
     ):
         assert required in helper
 
