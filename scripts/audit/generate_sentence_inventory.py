@@ -1,4 +1,4 @@
-"""Extract short, source-attested examples for the Word Atlas daily pool.
+"""Extract short, source-attested examples for Word Atlas practice and Daily Word.
 
 The committed inventory contains only learner-facing sentences plus an
 attribution-safe provenance record.  It intentionally never copies a local
@@ -16,13 +16,130 @@ from pathlib import Path
 from typing import Any
 
 DEFAULT_DAILY_POOL = Path("site/src/data/lexicon-daily-pool.json")
+DEFAULT_PRACTICE_LEXEMES_DIR = Path("site/public/lexicon")
 DEFAULT_SOURCES_DB = Path("data/sources.db")
 DEFAULT_VESUM_DB = Path("data/vesum.db")
 DEFAULT_OUT = Path("site/src/data/lexicon-sentence-inventory.json")
+PRACTICE_LEVELS = ("A1", "A2", "B1", "B2", "C1")
+APOSTROPHE_TRANSLATION = str.maketrans(
+    {
+        "’": "'",
+        "ʼ": "'",
+        "ʻ": "'",
+        "ʹ": "'",
+        "＇": "'",
+    }
+)
 
 UK_TOKEN_RE = re.compile(r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:[ʼ'’-][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)*")
 SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+")
 SPACE_RE = re.compile(r"\s+")
+CONTROL_CHAR_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f\u00ad\ufeff\u200b-\u200d]")
+LATIN_CHAR_RE = re.compile(r"[A-Za-z]")
+NON_UKRAINIAN_ALPHA_RE = re.compile(r"[^\W\d_А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]")
+COMBINING_MARK_RE = re.compile(r"[\u0300-\u036f]")
+MIDWORD_JOIN_RE = re.compile(r"[а-щьюяєіїґ][А-ЩЬЮЯЄІЇҐ]")
+ENUMERATION_RE = re.compile(
+    r"(?<!\w)[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:,\s*[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+){3,}[.!?]$"
+)
+TITLE_CASE_RUN_RE = re.compile(
+    r"^\s*(?:[А-ЩЬЮЯЄІЇҐ][а-щьюяєіїґ]+\s+){3,}"
+    r"[А-ЩЬЮЯЄІЇҐ][а-щьюяєіїґ]+\s*[.!?]$"
+)
+ACRONYM_JOIN_RE = re.compile(
+    r"\b[А-ЩЬЮЯЄІЇҐ]{3,}\s+[А-ЩЬЮЯЄІЇҐ][а-щьюяєіїґ]+\b"
+)
+FORMULA_MARKER_RE = re.compile(
+    r"(?:[=<>≤≥→←↔⇒⇔∑√±×÷§]|(?:^|\s)\d+\s*[.)](?:\s|$)|"
+    r"(?<!\w)[A-Za-z]\s*[=<>]|(?:—|–|-)\s*[»>])"
+)
+OPTION_LABEL_RE = re.compile(
+    r"(?<![А-ЩЬЮЯЄІЇҐа-щьюяєіїґ])[А-ЩЬЮЯЄІЇҐ]\s+(?=[А-ЩЬЮЯЄІЇҐ])"
+)
+WORKSHEET_RE = re.compile(
+    r"\b(?:виконай|виконайте|запиши|запишіть|вибери|виберіть|обери|оберіть|"
+    r"познач|позначте|підкресли|підкресліть|випиши|випишіть|спиши|спишіть|"
+    r"перепиши|перепишіть|доповни|доповніть|знайди|знайдіть|доведи|доведіть|"
+    r"прочитай|прочитайте|склади|складіть|заповни|заповніть|перевір|перевірте|"
+    r"запропонуй|запропонуйте|визнач|визначте|назви|назвіть|поміркуй|поміркуйте|"
+    r"поясни|поясніть|вимов|вимовте|добери|доберіть|скопіюй|скопіюйте|"
+    r"збережи|збережіть|зроби|зробіть|обговори|обговоріть|напиши|напишіть|"
+    r"створи|створіть|підсумуй|підсумуймо|уяви|уявіть|обґрунтуй|обґрунтуйте|"
+    r"сформулюй|сформулюйте|порівняй|порівняймо|порівняйте|розкажи|розкажіть|"
+    r"опиши|опишіть|утвори|утворіть|"
+    r"завдан(?:ня|ні)|вправ(?:а|и|у)|запитання|відповід(?:ь|і)|тест|розділ)\b",
+    re.IGNORECASE,
+)
+BRACKET_RE = re.compile(r"[\[\]()]")
+LEADING_NUMBER_RE = re.compile(
+    r"^\s*\d+(?:\.\d+)*\s+(?P<word>[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)"
+)
+MONTH_WORDS = frozenset(
+    {
+        "січня",
+        "лютого",
+        "березня",
+        "квітня",
+        "травня",
+        "червня",
+        "липня",
+        "серпня",
+        "вересня",
+        "жовтня",
+        "листопада",
+        "грудня",
+    }
+)
+LEADING_ITEM_MARKER_RE = re.compile(r"^\s*\d+(?:\.\d+)*\s*[.)•·▪◦°]+\s*")
+BULLET_RE = re.compile(r"[•·▪◦]")
+LEADING_FRAGMENT_RE = re.compile(r"^\s*[,;:…]")
+LEADING_LOWERCASE_RE = re.compile(r"^\s*[а-щьюяєіїґ]")
+QUESTION_PROMPT_RE = re.compile(r"\bу яких\b", re.IGNORECASE)
+SINGLE_LETTER_PAIR_RE = re.compile(
+    r"(?<!\w)[А-ЩЬЮЯЄІЇҐ]\s+[А-ЩЬЮЯЄІЇҐ](?!\w)"
+)
+FORMULA_TERM_RE = re.compile(
+    r"\b(?:ОДЗ|параметр\w*|площин\w*)\b|(?<!\w)[Ьь](?!\w)",
+    re.IGNORECASE,
+)
+DECORATIVE_SYMBOL_RE = re.compile(r"[★☆◆◇◊▪▫●○]")
+MIXED_ALNUM_RE = re.compile(
+    r"(?:[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]\d+|\d+[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ])"
+)
+FILL_BLANK_RE = re.compile(r"_{2,}")
+LEADING_HEADING_RE = re.compile(
+    r"^\s*(?:правило|вправа|завдання|розділ|тема|назва|підсумок)\b",
+    re.IGNORECASE,
+)
+# VESUM contains imperative analyses for common homonymous conjunctions,
+# nouns, and adjectives; these surfaces are retained when their sentence
+# clearly uses the non-imperative reading.
+IMPERATIVE_HOMONYM_EXCEPTIONS = frozenset(
+    {
+        "коли",
+        "при",
+        "нехай",
+        "причини",
+        "обряди",
+        "пар",
+        "наприклад",
+        "напри",
+        "добрий",
+        "синій",
+        "злий",
+        "гори",
+        "вчи",
+        "відходи",
+    }
+)
+MALFORMED_PUNCT_RE = re.compile(r"\s+[,.!?]")
+SLASH_FORM_RE = re.compile(r"/")
+SHORT_TOKEN_RUN_RE = re.compile(
+    r"(?<!\w)(?:[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]{1,2}\s+){3,}"
+    r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]{1,2}(?!\w)"
+)
+TRAILING_SINGLE_TOKEN_RE = re.compile(r"(?:^|\s)[А-ЩЬЮЯЄІЇҐ]\s*[.!?]$")
+UPPERCASE_HEADING_RE = re.compile(r"\b[А-ЩЬЮЯЄІЇҐ]{4,}\b")
 
 TEXTBOOK_LICENSE = {
     "status": "not_openly_licensed",
@@ -48,16 +165,85 @@ def _tokens(text: str) -> list[str]:
     return UK_TOKEN_RE.findall(text)
 
 
+def _vesum_token_variants(token: str) -> tuple[str, ...]:
+    normalized = token.translate(APOSTROPHE_TRANSLATION)
+    return tuple(dict.fromkeys((token, token.casefold(), normalized, normalized.casefold())))
+
+
+def _canonical_surface(value: str) -> str:
+    return value.translate(APOSTROPHE_TRANSLATION).casefold()
+
+
 def _exact_target_present(sentence: str, lemma: str) -> bool:
-    target = lemma.casefold()
-    return any(token.casefold() == target for token in _tokens(sentence))
+    target = _canonical_surface(lemma)
+    return any(_canonical_surface(token) == target for token in _tokens(sentence))
 
 
 def _single_target_surface(sentence: str, lemma: str) -> str | None:
     """Return the one exact target token when a sentence can be safely blanked."""
-    target = lemma.casefold()
-    matches = [token for token in _tokens(sentence) if token.casefold() == target]
+    target = _canonical_surface(lemma)
+    matches = [token for token in _tokens(sentence) if _canonical_surface(token) == target]
     return matches[0] if len(matches) == 1 else None
+
+
+def _is_source_sentence_noise(
+    sentence: str,
+    *,
+    vesum: VesumSentenceVerifier | None = None,
+) -> bool:
+    """Reject textbook worksheet, formula, and OCR fragments before mining.
+
+    The textbook corpus contains exercises alongside prose.  A terminal
+    punctuation mark and one VESUM verb are not enough to distinguish a
+    learner-facing sentence from an algebra variable, answer-choice list, or
+    dictionary/worksheet fragment, especially for one- and two-character
+    lemmas.  These are conservative fail-closed shape gates; they do not make
+    lexical or grammatical claims about a target.
+    """
+    leading_number = LEADING_NUMBER_RE.match(sentence)
+    if LEADING_ITEM_MARKER_RE.match(sentence):
+        return True
+    if leading_number and leading_number.group("word").casefold() not in MONTH_WORDS:
+        return True
+    tokens = _tokens(sentence)
+    if (
+        vesum is not None
+        and tokens
+        and tokens[0].casefold() not in IMPERATIVE_HOMONYM_EXCEPTIONS
+        and vesum.has_imperative(tokens[0])
+    ):
+        return True
+    return any(
+        (
+            CONTROL_CHAR_RE.search(sentence),
+            LATIN_CHAR_RE.search(sentence),
+            NON_UKRAINIAN_ALPHA_RE.search(sentence),
+            COMBINING_MARK_RE.search(sentence),
+            MIDWORD_JOIN_RE.search(sentence),
+            ENUMERATION_RE.search(sentence),
+            TITLE_CASE_RUN_RE.search(sentence),
+            ACRONYM_JOIN_RE.search(sentence),
+            FORMULA_MARKER_RE.search(sentence),
+            len(OPTION_LABEL_RE.findall(sentence)) >= 2,
+            WORKSHEET_RE.search(sentence),
+            BRACKET_RE.search(sentence),
+            BULLET_RE.search(sentence),
+            LEADING_FRAGMENT_RE.search(sentence),
+            LEADING_LOWERCASE_RE.search(sentence),
+            QUESTION_PROMPT_RE.search(sentence),
+            SINGLE_LETTER_PAIR_RE.search(sentence),
+            FORMULA_TERM_RE.search(sentence),
+            DECORATIVE_SYMBOL_RE.search(sentence),
+            MIXED_ALNUM_RE.search(sentence),
+            FILL_BLANK_RE.search(sentence),
+            LEADING_HEADING_RE.search(sentence),
+            MALFORMED_PUNCT_RE.search(sentence),
+            SLASH_FORM_RE.search(sentence),
+            SHORT_TOKEN_RUN_RE.search(sentence),
+            TRAILING_SINGLE_TOKEN_RE.search(sentence),
+            UPPERCASE_HEADING_RE.search(sentence),
+        )
+    )
 
 
 class VesumSentenceVerifier:
@@ -66,16 +252,19 @@ class VesumSentenceVerifier:
     def __init__(self, path: Path) -> None:
         self.conn = sqlite3.connect(path)
         self.cache: dict[str, bool] = {}
+        self.imperative_cache: dict[str, bool] = {}
 
     def has_verb(self, tokens: Iterable[str]) -> bool:
         for token in tokens:
-            key = token.casefold()
+            variants = _vesum_token_variants(token)
+            key = token.translate(APOSTROPHE_TRANSLATION).casefold()
             known = self.cache.get(key)
             if known is None:
+                placeholders = ", ".join("?" for _ in variants)
                 known = (
                     self.conn.execute(
-                        "SELECT 1 FROM forms WHERE word_form IN (?, ?) AND pos = 'verb' LIMIT 1",
-                        (token, key),
+                        f"SELECT 1 FROM forms WHERE word_form IN ({placeholders}) AND pos = 'verb' LIMIT 1",
+                        variants,
                     ).fetchone()
                     is not None
                 )
@@ -84,16 +273,41 @@ class VesumSentenceVerifier:
                 return True
         return False
 
+    def has_imperative(self, token: str) -> bool:
+        """Return whether a surface form has a VESUM imperative analysis.
+
+        This is intentionally used only for the first lexical token of a
+        candidate.  Imperatives later in a sentence can be quoted speech or
+        ordinary prose; a leading imperative is the reliable structural shape
+        of a textbook exercise command.
+        """
+        variants = _vesum_token_variants(token)
+        key = token.translate(APOSTROPHE_TRANSLATION).casefold()
+        known = self.imperative_cache.get(key)
+        if known is None:
+            placeholders = ", ".join("?" for _ in variants)
+            rows = self.conn.execute(
+                f"SELECT tags FROM forms WHERE word_form IN ({placeholders}) AND pos = 'verb'",
+                variants,
+            )
+            known = any(
+                "impr" in (tags := row[0]).split(":")
+                and bool({"1", "2"}.intersection(tags.split(":")))
+                for row in rows
+            )
+            self.imperative_cache[key] = known
+        return known
+
     def close(self) -> None:
         self.conn.close()
 
 
 def _candidate_sentences(text: str, lemma: str, *, vesum: VesumSentenceVerifier | None = None) -> Iterable[str]:
-    """Yield readable, short sentences containing the exact daily lemma.
+    """Yield readable, short sentences containing the exact target lemma.
 
-    We deliberately require the surface to equal the daily lemma.  This keeps
-    the initial inventory lemma-linked without making unverified morphology
-    claims; a later cloze workflow can VESUM-check a separately selected form.
+    We deliberately require the surface to equal the target lemma.  This keeps
+    the inventory lemma-linked without making unverified morphology claims; the
+    cloze workflow separately VESUM-checks the selected form.
     """
     for raw_sentence in SENTENCE_SPLIT_RE.split(_normalise(text)):
         sentence = raw_sentence.strip(" \t\n—–")
@@ -104,9 +318,13 @@ def _candidate_sentences(text: str, lemma: str, *, vesum: VesumSentenceVerifier 
             continue
         if not _exact_target_present(sentence, lemma):
             continue
-        # OCR headings, web addresses, and mixed-language transcript noise are
-        # poor daily-practice examples even when the FTS match is exact.
-        if "http" in sentence.casefold() or sentence.count("*") > 1:
+        # OCR headings, web addresses, formulas, and worksheet noise are poor
+        # practice examples even when the FTS match is exact.
+        if (
+            "http" in sentence.casefold()
+            or sentence.count("*") > 1
+            or _is_source_sentence_noise(sentence, vesum=vesum)
+        ):
             continue
         if vesum is not None and not vesum.has_verb(tokens):
             continue
@@ -238,13 +456,75 @@ def load_daily_targets(path: Path) -> list[dict[str, str]]:
     return [targets[lemma] for lemma in sorted(targets)]
 
 
+def discover_practice_lexeme_paths(directory: Path) -> list[Path]:
+    """Return the complete hydrated A1-C1 Practice lexeme shard set.
+
+    The default inventory target is the public Practice surface, so silently
+    mining only the shards that happen to be present would recreate the old
+    partial-coverage failure.  Callers that intentionally need a smaller
+    fixture can pass explicit paths to ``load_practice_targets`` instead.
+    """
+    paths = [directory / f"practice-lexemes.{level}.json" for level in PRACTICE_LEVELS]
+    missing = [path for path in paths if not path.is_file()]
+    if missing:
+        formatted = ", ".join(str(path) for path in missing)
+        raise FileNotFoundError(f"missing hydrated practice lexeme shards: {formatted}")
+    return paths
+
+
+def load_practice_targets(paths: Iterable[Path]) -> list[dict[str, str]]:
+    """Load lemma-linked targets from hydrated Practice lexeme shards.
+
+    Each shard is authoritative for its level.  ``lemmaId`` is the stable
+    identity used by the deck; duplicate identities across shards are allowed
+    only when their lemma and CEFR agree exactly, and are emitted once.
+    """
+    targets: dict[str, dict[str, str]] = {}
+    for path in paths:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict) or payload.get("schema") != "atlas-practice-lexemes":
+            raise ValueError(f"practice lexeme shard must use atlas-practice-lexemes schema: {path}")
+        if payload.get("schemaVersion") != 1:
+            raise ValueError(f"practice lexeme shard schemaVersion must be 1: {path}")
+        level = _text(payload.get("level"))
+        if level not in PRACTICE_LEVELS:
+            raise ValueError(f"practice lexeme shard has unsupported level {level!r}: {path}")
+        rows = payload.get("lexemes")
+        if not isinstance(rows, list):
+            raise ValueError(f"practice lexeme shard lexemes must be a list: {path}")
+        for index, row in enumerate(rows):
+            if not isinstance(row, dict):
+                raise ValueError(f"practice lexeme {path}:{index + 1} must be an object")
+            lemma = _text(row.get("lemma"))
+            lemma_id = _text(row.get("lemmaId"))
+            if lemma is None or lemma_id is None:
+                raise ValueError(f"practice lexeme {path}:{index + 1} requires lemma and lemmaId")
+            cefr = _text(row.get("cefr")) or level
+            if cefr != level:
+                raise ValueError(
+                    f"practice lexeme {path}:{index + 1} CEFR {cefr!r} does not match shard level {level!r}"
+                )
+            target = {"lemma": lemma, "lemmaId": lemma_id, "cefr": cefr}
+            previous = targets.get(lemma_id)
+            if previous is not None and previous != target:
+                raise ValueError(f"conflicting practice target for lemmaId {lemma_id!r}")
+            targets[lemma_id] = target
+    return [
+        targets[lemma_id]
+        for lemma_id in sorted(
+            targets,
+            key=lambda value: (PRACTICE_LEVELS.index(targets[value]["cefr"]), targets[value]["lemma"], value),
+        )
+    ]
+
+
 def build_inventory(
     targets: Iterable[dict[str, str]],
     sources_db: Path,
     *,
     include_ulp: bool = False,
     vesum_db: Path | None = None,
-    max_per_lemma: int = 3,
+    max_per_lemma: int = 1,
 ) -> list[dict[str, Any]]:
     if max_per_lemma < 1:
         raise ValueError("max_per_lemma must be positive")
@@ -289,7 +569,6 @@ def write_inventory(rows: list[dict[str, Any]], out_path: Path) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--daily-pool", type=Path, default=DEFAULT_DAILY_POOL)
     parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB)
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
@@ -297,12 +576,37 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--max-per-lemma",
         type=int,
-        default=3,
-        help="Maximum distinct source sentences to retain for each daily lemma.",
+        default=1,
+        help="Maximum distinct source sentences to retain for each target lemma.",
+    )
+    target_group = parser.add_mutually_exclusive_group()
+    target_group.add_argument(
+        "--daily-pool",
+        type=Path,
+        help="Use the legacy Daily Word pool as the target set instead of Practice shards.",
+    )
+    target_group.add_argument(
+        "--practice-lexemes-dir",
+        type=Path,
+        default=DEFAULT_PRACTICE_LEXEMES_DIR,
+        help="Directory containing the complete hydrated practice-lexemes.A1-C1.json set.",
+    )
+    target_group.add_argument(
+        "--practice-lexemes",
+        type=Path,
+        action="append",
+        dest="practice_lexeme_paths",
+        help="Explicit practice lexeme shard; repeat for a bounded fixture or selected levels.",
     )
     args = parser.parse_args(argv)
+    if args.daily_pool is not None:
+        targets = load_daily_targets(args.daily_pool)
+    elif args.practice_lexeme_paths:
+        targets = load_practice_targets(args.practice_lexeme_paths)
+    else:
+        targets = load_practice_targets(discover_practice_lexeme_paths(args.practice_lexemes_dir))
     rows = build_inventory(
-        load_daily_targets(args.daily_pool),
+        targets,
         args.sources_db,
         include_ulp=args.include_ulp,
         vesum_db=args.vesum_db,
