@@ -140,6 +140,32 @@ def test_non_rail_paths_are_unaffected_without_receipt() -> None:
     assert decision.rail_paths == ()
 
 
+def test_production_receipt_uses_one_clock_for_resolution_and_authorization() -> None:
+    calls = 0
+
+    def clock() -> datetime:
+        nonlocal calls
+        calls += 1
+        return NOW
+
+    resolver = guard.ApprovedRailApprovalReceiptResolver(
+        _ReceiptStore({RECEIPT_ID: _receipt()}),
+        now=clock,
+    )
+
+    decision = guard.decide_rail_path_mutation_with_production_receipt(
+        task_id=TASK,
+        candidate_paths=[OWNED_RAIL_PATH],
+        head_sha=HEAD,
+        receipt_id=RECEIPT_ID,
+        resolver=resolver,
+    )
+
+    assert decision.allowed is True
+    assert decision.reason == "rail_approval_verified"
+    assert calls == 1
+
+
 def test_path_classification_imports_without_jsonschema_but_receipt_validation_denies(
     tmp_path: Path,
 ) -> None:
