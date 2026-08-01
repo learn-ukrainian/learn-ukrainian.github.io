@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-import os
 import sqlite3
-import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -14,7 +12,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.result import Result
-from ai_agent_bridge import _channels, _channels_cli, _cli, _db
+from ai_agent_bridge import _acp_compat, _channels, _channels_cli, _cli, _db
 
 
 def test_post_preflight_warns_for_large_body():
@@ -64,10 +62,28 @@ def test_post_preflight_skips_non_workspace_write_mode():
 @pytest.fixture(autouse=True)
 def isolate_db(tmp_path, monkeypatch):
     monkeypatch.setenv("LU_AGENT_COMM_TRANSPORT", "bridge")
+    # These tests cover the bounded read-only compatibility soak and its
+    # historical writer behavior. Production authority mode refuses writers.
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "shadow")
     db_file = tmp_path / "messages.db"
     with patch("ai_agent_bridge._config.DB_PATH", db_file), patch("ai_agent_bridge._db.DB_PATH", db_file):
         _db.init_db()
         yield db_file
+
+
+@pytest.mark.parametrize(
+    "argv",
+    [
+        ["post", "topic", "body"],
+        ["channel", "new", "topic"],
+        ["inbox", "ack", "delivery-id"],
+        ["sync", "codex"],
+    ],
+)
+def test_authority_mode_retires_legacy_channel_writers(argv, monkeypatch, capsys):
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
+    assert _run_cli(argv) == 2
+    assert "writes are retired in authority mode" in capsys.readouterr().err
 
 
 def _run_cli(argv: list[str]) -> int:
@@ -351,144 +367,11 @@ def test_channel_set_ttl_persists(capsys):
     assert _channels.get_channel("topic")["max_age_hours"] == 6
 
 
-@patch("agent_runtime.runner.invoke")
-def test_discuss_replies_create_delivered_reply_deliveries(mock_invoke, monkeypatch, capsys):
+def test_bridge_discussion_transport_is_retired(capsys):
     _channels.create_channel("shared")
-    monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
-
-    def _discuss_result(agent: str, *_args, **_kwargs) -> Result:
-        return Result(
-            ok=True,
-            agent=agent,
-            model="test-model",
-            mode="read-only",
-            response=f"{agent} discuss reply [AGREE]",
-            stderr_excerpt=None,
-            duration_s=0.1,
-            session_id=None,
-            rate_limited=False,
-            stalled=False,
-            returncode=0,
-            usage_record={},
-        )
-
-    mock_invoke.side_effect = _discuss_result
-
-    # Round 1 cannot short-circuit (per `_channels_cli.py:1290-1304` — round 1
-    # is parallel fan-out, agents haven't seen each other's replies yet, so
-    # [AGREE] in round 1 means "I'm done with my answer" not cross-agent
-    # assent). Convergence requires ≥ round 2, so use --max-rounds 2 here.
-    # Pre-protocol-fix this test passed with --max-rounds 1; updated 2026-05-05
-    # to match the round-1 short-circuit block (commit 872d8791).
     exit_code = _run_cli(["discuss", "shared", "topic", "--with", "claude,codex", "--max-rounds", "2"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert "✅ converged at round 2" in captured.out
-
-    # Each round produces N*(N-1) reply deliveries (each agent's reply is
-    # delivered to every OTHER agent). With 2 agents × 2 rounds = 4 deliveries.
-    reply_deliveries = _reply_deliveries()
-    assert len(reply_deliveries) == 4
-    # Set collapses duplicates across rounds — still just 2 distinct
-    # (from, to, status) tuples for the 2-agent case.
-    assert {(row["from_agent"], row["to_agent"], row["status"]) for row in reply_deliveries} == {
-        ("claude", "codex", "delivered"),
-        ("codex", "claude", "delivered"),
-    }
-    assert all(row["delivered_at"] is not None for row in reply_deliveries)
-    assert all(row["parent_id"] is not None for row in reply_deliveries)
-
-
-@patch("agent_runtime.runner.invoke")
-def test_discuss_fails_and_warns_when_agent_writes_worktree(
-    mock_invoke,
-    monkeypatch,
-    tmp_path,
-    capsys,
-):
-    _channels.create_channel("shared")
-    monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
-    monkeypatch.setattr(_channels_cli, "REPO_ROOT", tmp_path)
-    git_env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
-    subprocess.run(
-        ["git", "init"],
-        cwd=tmp_path,
-        check=True,
-        capture_output=True,
-        env=git_env,
-        timeout=30
-    )
-    subprocess.run(
-        ["git", "config", "user.email", "test@example.com"],
-        cwd=tmp_path,
-        check=True,
-        env=git_env,
-        timeout=30
-    )
-    subprocess.run(
-        ["git", "config", "user.name", "Test User"],
-        cwd=tmp_path,
-        check=True,
-        env=git_env,
-        timeout=30
-    )
-    (tmp_path / "README.md").write_text("clean\n", encoding="utf-8")
-    subprocess.run(["git", "add", "README.md"], cwd=tmp_path, check=True, env=git_env, timeout=30)
-    subprocess.run(
-        ["git", "commit", "-m", "initial"],
-        cwd=tmp_path,
-        check=True,
-        capture_output=True,
-        env=git_env,
-        timeout=30
-    )
-
-    def _write_attempt(agent: str, *_args, **kwargs) -> Result:
-        assert kwargs["mode"] == "read-only"
-        # tool_config now also carries `is_new_session: True` on round 1 for
-        # resumable agents (#1782 tier-2 warm-cache fix). Test the load-bearing
-        # contract — that discuss participants run in read-only — not the
-        # exact dict shape.
-        assert kwargs["tool_config"].get("discussion_readonly") is True
-        (tmp_path / "unauthorized.txt").write_text("write attempt\n", encoding="utf-8")
-        return Result(
-            ok=True,
-            agent=agent,
-            model="test-model",
-            mode="read-only",
-            response=f"{agent} reply [AGREE]",
-            stderr_excerpt=None,
-            duration_s=0.1,
-            session_id=None,
-            rate_limited=False,
-            stalled=False,
-            returncode=0,
-            usage_record={},
-        )
-
-    mock_invoke.side_effect = _write_attempt
-
-    exit_code = _run_cli(["discuss", "shared", "topic", "--with", "claude", "--max-rounds", "1"])
-
     assert exit_code == 1
-    captured = capsys.readouterr()
-    assert "READ-ONLY DISCUSSION VIOLATION" in captured.err
-    assert "unauthorized.txt" in captured.err
-
-    messages = _channels.read("shared", tail=10)
-    assert any("READ-ONLY DISCUSSION VIOLATION" in msg["body"] for msg in messages)
-    assert not any(msg["from_agent"] == "claude" for msg in messages)
-    rev_count = subprocess.run(
-        ["git", "rev-list", "--count", "HEAD"],
-        cwd=tmp_path,
-        check=True,
-        capture_output=True,
-        text=True,
-        env=git_env,
-        timeout=30
-    ).stdout.strip()
-    assert rev_count == "1"
+    assert "bridge provider transport is retired" in capsys.readouterr().err
 
 
 def test_inbox_show_with_pending_and_failed(capsys):
@@ -912,30 +795,32 @@ def test_ask_claude_reads_body_from_stdin_on_dash(monkeypatch):
     # Every other ask-* handler resolves "-" to stdin; ask-claude must too.
     captured: dict[str, object] = {}
 
-    def _fake_ask_claude(content, *_args, **_kwargs):
-        captured["content"] = content
+    def _fake_acp(target, content, **_kwargs):
+        captured.update(target=target, content=content)
 
-    monkeypatch.setattr(_cli, "ask_claude", _fake_ask_claude)
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", _fake_acp)
     monkeypatch.setattr(sys, "stdin", SimpleNamespace(read=lambda: "the real question body"))
 
     exit_code = _run_cli(["ask-claude", "-", "--task-id", "t-stdin", "--from", "grok-build"])
 
     assert exit_code == 0
+    assert captured["target"] == "claude"
     assert captured["content"] == "the real question body"
 
 
 def test_ask_claude_literal_content_is_not_treated_as_stdin(monkeypatch):
     captured: dict[str, object] = {}
 
-    def _fake_ask_claude(content, *_args, **_kwargs):
-        captured["content"] = content
+    def _fake_acp(target, content, **_kwargs):
+        captured.update(target=target, content=content)
 
-    monkeypatch.setattr(_cli, "ask_claude", _fake_ask_claude)
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", _fake_acp)
     monkeypatch.setattr(sys, "stdin", SimpleNamespace(read=lambda: "SHOULD-NOT-BE-USED"))
 
     exit_code = _run_cli(["ask-claude", "a literal question", "--task-id", "t-lit", "--from", "grok-build"])
 
     assert exit_code == 0
+    assert captured["target"] == "claude"
     assert captured["content"] == "a literal question"
 
 

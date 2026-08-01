@@ -15,7 +15,7 @@ def test_parse_pr_number() -> None:
 
 
 def test_resolve_reviewer_auto() -> None:
-    assert review_pr.resolve_reviewer("auto", claude_available=None) == "codex"
+    assert review_pr.resolve_reviewer("auto", claude_available=None) == "glm"
     assert review_pr.resolve_reviewer("auto", claude_available=False) == "glm"
     assert review_pr.resolve_reviewer("glm") == "glm"
 

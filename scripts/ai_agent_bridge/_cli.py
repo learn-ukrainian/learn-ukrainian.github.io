@@ -1426,311 +1426,101 @@ def _review_target_kwargs(args) -> dict[str, str | int | None]:
     return {"review_branch": branch, "review_pr_number": pr_number}
 
 
+def _handle_acp_compat(args, target: str) -> None:
+    """Route a legacy ask command through the single ACP compatibility shim."""
+    if getattr(args, "background", False):
+        raise SystemExit("legacy ask --background is retired; enqueue through fleet-comms")
+    if getattr(args, "branch", None) is not None or getattr(args, "pr", None) is not None:
+        raise SystemExit("formal review targets require the review-pr command")
+    content = sys.stdin.read() if args.content == "-" else args.content
+    data = Path(args.data).read_text(encoding="utf-8") if getattr(args, "data", None) else None
+    model = getattr(args, "to_model", None) or getattr(args, "model", None)
+    task_id = getattr(args, "task_id", None)
+    if not task_id:
+        raise SystemExit(f"ask-{target} requires --task-id")
+    from ._acp_compat import run_compat_ask
+
+    try:
+        run_compat_ask(
+            target,
+            content,
+            task_id=task_id,
+            source=_resolve_from_llm(args),
+            model=model,
+            effort=getattr(args, "effort", None),
+            data=data,
+            review=bool(getattr(args, "review", False)),
+            output_path=getattr(args, "output_path", None),
+            stdout_only=bool(getattr(args, "stdout_only", False)),
+            hard_timeout=86400 if bool(getattr(args, "no_timeout", False)) else 300,
+        )
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+
+
 def _handle_ask_claude(args):
     """Handle ask-claude subcommand."""
-    data = None
-    if args.data:
-        data = Path(args.data).read_text()
-    # Parity with every other ask-* handler: `-` reads the message body from
-    # stdin. Without this, `ask-claude - --task-id X < prompt.md` sent the
-    # literal string "-" as the message, so Claude received an empty prompt and
-    # the caller got an empty/unhelpful reply (the grok "empty result" bug).
-    content = sys.stdin.read() if args.content == "-" else args.content
-    kwargs = {"review": True} if getattr(args, "review", False) else {}
-    if getattr(args, "effort", None) is not None:
-        kwargs["effort"] = args.effort
-    kwargs.update(_review_target_kwargs(args))
-    from_llm = _resolve_from_llm(args)
-    ask_claude(
-        content,
-        args.task_id,
-        args.type,
-        data,
-        args.new_session,
-        from_llm,
-        args.from_model,
-        args.to_model,
-        **kwargs,
-        **_background_kwargs(args),
-    )
+    _handle_acp_compat(args, "claude")
 
 
 def _handle_ask_codex(args):
     """Handle ask-codex subcommand."""
-    data = None
-    if args.data:
-        data = Path(args.data).read_text()
-    content = sys.stdin.read() if args.content == "-" else args.content
     if args.chain:
-        if args.task_id:
-            raise SystemExit("ask-codex --chain derives issue task IDs automatically; omit --task-id")
-        try:
-            kwargs = {"review": True} if getattr(args, "review", False) else {}
-            if getattr(args, "effort", None) is not None:
-                kwargs["effort"] = args.effort
-            kwargs.update(_review_target_kwargs(args))
-            from_llm = _resolve_from_llm(args)
-            ask_codex_chain(
-                content,
-                args.chain,
-                args.type,
-                data,
-                args.new_session,
-                from_llm,
-                args.from_model,
-                args.to_model,
-                args.no_timeout,
-                **kwargs,
-                **_background_kwargs(args),
-            )
-        except ValueError as exc:
-            raise SystemExit(str(exc)) from exc
-        return
-    if not args.task_id:
-        raise SystemExit("ask-codex requires --task-id unless --chain is used")
-    kwargs = {"review": True} if getattr(args, "review", False) else {}
-    if getattr(args, "effort", None) is not None:
-        kwargs["effort"] = args.effort
-    kwargs.update(_review_target_kwargs(args))
-    from_llm = _resolve_from_llm(args)
-    ask_codex(
-        content,
-        args.task_id,
-        args.type,
-        data,
-        args.new_session,
-        from_llm,
-        args.from_model,
-        args.to_model,
-        args.no_timeout,
-        **kwargs,
-        **_background_kwargs(args),
-    )
+        raise SystemExit("ask-codex --chain is retired; enqueue bounded jobs through fleet-comms")
+    _handle_acp_compat(args, "codex")
 
 
 def _handle_ask_agy(args):
     """Handle ask-agy subcommand."""
-    data = None
-    if args.data:
-        data = Path(args.data).read_text()
-    content = sys.stdin.read() if args.content == "-" else args.content
-    kwargs = {"review": True} if getattr(args, "review", False) else {}
-    if getattr(args, "effort", None) is not None:
-        kwargs["effort"] = args.effort
-    kwargs.update(_review_target_kwargs(args))
-    from_llm = _resolve_from_llm(args)
-    try:
-        ask_agy(
-            content,
-            args.task_id,
-            args.type,
-            data,
-            args.new_session,
-            from_llm,
-            args.from_model,
-            args.to_model,
-            args.no_timeout,
-            stdout_only=getattr(args, "stdout_only", False),
-            output_path=getattr(args, "output_path", None),
-            **kwargs,
-            **_background_kwargs(args),
-        )
-    except ValueError as exc:
-        # Surface sealed-review refusal as a clean CLI error with substitute path.
-        if "agy_isolated_review_unsupported" in str(exc):
-            print(f"❌ {exc}", file=sys.stderr)
-            raise SystemExit(2) from exc
-        raise
+    _handle_acp_compat(args, "agy")
 
 
 def _handle_ask_hermes(args):
     """Handle ask-hermes subcommand."""
-    content = sys.stdin.read() if args.content == "-" else args.content
-    from_llm = _resolve_from_llm(args)
-    ask_hermes(
-        content,
-        args.task_id,
-        msg_type=args.type,
-        data=args.data,
-        model=args.model,
-        from_llm=from_llm,
-        from_model=args.from_model,
-        to_model=args.to_model,
-        effort=getattr(args, "effort", None),
-        no_timeout=args.no_timeout,
-        **_background_kwargs(args),
-    )
+    _handle_acp_compat(args, "hermes")
 
 
 def _handle_ask_opencode(args):
     """Handle ask-opencode subcommand."""
-    content = sys.stdin.read() if args.content == "-" else args.content
-    from_llm = _resolve_from_llm(args)
-    ask_opencode(
-        content,
-        args.task_id,
-        msg_type=args.type,
-        data=args.data,
-        model=args.model,
-        from_llm=from_llm,
-        from_model=args.from_model,
-        to_model=args.to_model,
-        effort=getattr(args, "effort", None),
-        no_timeout=args.no_timeout,
-        **_background_kwargs(args),
-    )
+    _handle_acp_compat(args, "opencode")
 
 
 def _handle_ask_pool(args):
     """Handle ask-pool subcommand."""
-    content = sys.stdin.read() if args.content == "-" else args.content
-    from_llm = _resolve_from_llm(args)
-    ask_pool(
-        content,
-        args.task_id,
-        msg_type=args.type,
-        data=args.data,
-        variant=args.variant,
-        model=args.model,
-        to_model=args.to_model,
-        effort=getattr(args, "effort", None),
-        from_llm=from_llm,
-        from_model=args.from_model,
-        no_timeout=args.no_timeout,
-        **_background_kwargs(args),
-    )
+    _handle_acp_compat(args, "pool")
 
 
 def _handle_ask_glm(args):
     """Handle ask-glm subcommand."""
-    content = sys.stdin.read() if args.content == "-" else args.content
-    from_llm = _resolve_from_llm(args)
-    ask_glm(
-        content,
-        args.task_id,
-        msg_type=args.type,
-        data=args.data,
-        model=args.model,
-        to_model=args.to_model,
-        effort=getattr(args, "effort", None),
-        from_llm=from_llm,
-        from_model=args.from_model,
-        no_timeout=args.no_timeout,
-        **_background_kwargs(args),
-    )
+    _handle_acp_compat(args, "glm")
 
 
 def _handle_ask_gemma(args):
     """Handle ask-gemma subcommand."""
-    content = sys.stdin.read() if args.content == "-" else args.content
-    from_llm = _resolve_from_llm(args)
-    ask_gemma(
-        content,
-        args.task_id,
-        msg_type=args.type,
-        data=args.data,
-        model=args.model,
-        to_model=args.to_model,
-        effort=getattr(args, "effort", None),
-        from_llm=from_llm,
-        from_model=args.from_model,
-        no_timeout=args.no_timeout,
-        **_background_kwargs(args),
-    )
+    _handle_acp_compat(args, "gemma")
 
 
 def _handle_ask_cursor(args):
     """Handle ask-cursor subcommand."""
-    content = sys.stdin.read() if args.content == "-" else args.content
-    from_llm = _resolve_from_llm(args)
-    ask_cursor(
-        content,
-        args.task_id,
-        msg_type=args.type,
-        data=args.data,
-        model=args.model,
-        from_llm=from_llm,
-        from_model=args.from_model,
-        to_model=args.to_model,
-        effort=getattr(args, "effort", None),
-        no_timeout=args.no_timeout,
-        **_background_kwargs(args),
-    )
+    _handle_acp_compat(args, "cursor")
 
 
 def _handle_ask_grok_build(args):
     """Handle ask-grok-build subcommand."""
-    data = None
-    if args.data:
-        data = Path(args.data).read_text()
-    content = sys.stdin.read() if args.content == "-" else args.content
-    from_llm = _resolve_from_llm(args)
-    ask_grok_build(
-        content,
-        args.task_id,
-        msg_type=args.type,
-        data=data,
-        new_session=args.new_session,
-        from_llm=from_llm,
-        from_model=args.from_model,
-        to_model=args.to_model,
-        effort=getattr(args, "effort", None),
-        no_timeout=args.no_timeout,
-        review=args.review,
-        model=args.model,
-        **_review_target_kwargs(args),
-        **_background_kwargs(args),
-    )
+    _handle_acp_compat(args, "grok")
 
 
 def _handle_ask_kimi(args):
     """Handle ask-kimi subcommand."""
-    data = Path(args.data).read_text() if args.data else None
-    content = sys.stdin.read() if args.content == "-" else args.content
-    ask_kimi(
-        content,
-        args.task_id,
-        msg_type=args.type,
-        data=data,
-        new_session=args.new_session,
-        from_llm=_resolve_from_llm(args),
-        from_model=args.from_model,
-        to_model=args.to_model,
-        effort=getattr(args, "effort", None),
-        no_timeout=args.no_timeout,
-        review=args.review,
-        model=args.model,
-        **_review_target_kwargs(args),
-        **_background_kwargs(args),
-    )
+    _handle_acp_compat(args, "kimi")
 
 
 def _handle_ask_gemini(args):
     """Compatibility shim: ask-gemini is retired and delegates to ask-agy."""
-    data = None
-    if args.data:
-        data = Path(args.data).read_text()
-    content = sys.stdin.read() if args.content == "-" else args.content
-    kwargs = {"review": True} if getattr(args, "review", False) else {}
-    kwargs.update(_review_target_kwargs(args))
-    from_llm = _resolve_from_llm(args)
     if not getattr(args, "stdout_only", False):
-        print("⚠️ ask-gemini is retired; routing through ask-agy.", file=sys.stderr)
-    ask_agy(
-        content,
-        args.task_id,
-        args.type,
-        data,
-        new_session=False,
-        from_llm=from_llm,
-        from_model=getattr(args, "from_model", None),
-        to_model=_map_legacy_gemini_model_to_agy(getattr(args, "model", None)) or "gemini-3.6-flash-high",
-        no_timeout=False,
-        stdout_only=getattr(args, "stdout_only", False),
-        output_path=getattr(args, "output_path", None),
-        **kwargs,
-        **_background_kwargs(args),
-    )
+        print("⚠️ ask-gemini is retired; routing through ACP participant agy.", file=sys.stderr)
+    args.to_model = _map_legacy_gemini_model_to_agy(getattr(args, "model", None)) or "gemini-3.6-flash-high"
+    _handle_acp_compat(args, "gemini")
 
 
 def _handle_slot_holder(args):

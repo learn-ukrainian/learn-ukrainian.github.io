@@ -972,7 +972,7 @@ class ProvisionedReviewWorktree:
         fails closed.
         """
         engine_key = engine.strip().lower()
-        if engine_key not in {"codex", "claude", "agy", "grok", "grok-build"}:
+        if engine_key not in {"acp", "codex", "claude", "agy", "grok", "grok-build"}:
             raise ReviewWorktreeError(f"review_prompt_evidence_invalid:unsupported_engine:{engine!r}")
         bundle_dir = self.path / ".review-bundle"
         manifest_path = bundle_dir / "manifest.json"
@@ -1098,7 +1098,7 @@ class ProvisionedReviewWorktree:
         _validate_review_read_sizes(self.path, required_read_paths)
         inline_serialized: str | None = None
         inline_proof: dict[str, Any] | None = None
-        if engine_key in {"codex", "claude"}:
+        if engine_key in {"acp", "codex", "claude"}:
             inline_serialized, inline_proof = _inline_required_evidence(
                 self.path,
                 required_read_paths,
@@ -1186,7 +1186,7 @@ class ProvisionedReviewWorktree:
             },
             "changed_file_content_mode": (
                 "complete_inline_parent_bound"
-                if engine_key in {"codex", "claude"}
+                if engine_key in {"acp", "codex", "claude"}
                 else "complete_via_sealed_snapshot_read_tools"
             ),
             "sealed_snapshot_root": str(self.path),
@@ -1210,7 +1210,7 @@ class ProvisionedReviewWorktree:
             "read_protocol": read_protocol,
             "clean_verdict_gate": (
                 "parent_bound_inline_complete"
-                if engine_key in {"codex", "claude"}
+                if engine_key in {"acp", "codex", "claude"}
                 else "complete_tool_trace_coverage_required"
             ),
         }
@@ -1232,7 +1232,7 @@ class ProvisionedReviewWorktree:
             "the parent-bound inline section below; inspect all files before verdict. "
             "Do not re-read those required paths with tools. The sealed tools remain "
             "available only for targeted unchanged-context proof. "
-            if engine_key in {"codex", "claude"}
+            if engine_key in {"acp", "codex", "claude"}
             else ""
         )
         prompt_evidence = (
@@ -2446,6 +2446,7 @@ def provision_review_worktree(
     *,
     repo_root: Path,
     allow_local_fallback: bool = False,
+    acceptance_mode: str = "runner-isolation",
 ) -> Iterator[ProvisionedReviewWorktree | None]:
     """Yield a neutral, evidence-only snapshot for a branch-targeted review.
 
@@ -2463,6 +2464,8 @@ def provision_review_worktree(
     Post-review acceptance verifies snapshot, bundle, original-source state,
     and requires bound isolation evidence from the runner.
     """
+    if acceptance_mode not in {"runner-isolation", "acp-inline"}:
+        raise ReviewWorktreeError(f"review_acceptance_mode_invalid:{acceptance_mode}")
     sweep_review_temp_orphans()
     if target is None:
         if allow_local_fallback:
@@ -2562,6 +2565,12 @@ def provision_review_worktree(
                 snapshot,
                 context_paths=reviewer_context_paths,
             )
+            # The ACP transport receives every changed byte parent-bound in its
+            # prompt and has no filesystem/terminal tools. Its caller validates
+            # the canonical response against this still-live snapshot. Other
+            # engines must bind the ordinary sandbox runner receipt here.
+            if acceptance_mode == "acp-inline":
+                return
             # Source/snapshot/bundle/isolation evidence must match the run.
             if binder.outcome is None or (binder.outcome == "ok" and binder.response_sha256 is None):
                 raise ReviewWorktreeError("review_result_receipt_missing")
