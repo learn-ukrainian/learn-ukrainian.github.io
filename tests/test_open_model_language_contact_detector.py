@@ -402,7 +402,11 @@ def _mini_config(tmp_path: Path, config: dict, texts: list[str]) -> Path:
     return path
 
 
-def test_receipt_arithmetic_derives_from_rows_and_bytes_are_deterministic(tmp_path: Path, config: dict) -> None:
+def test_receipt_arithmetic_derives_from_rows_and_bytes_are_deterministic(
+    tmp_path: Path,
+    config: dict,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     texts = [
         "Українська мова має живу традицію.",
         "Автор навів: «что вызвало смуту».",
@@ -411,6 +415,16 @@ def test_receipt_arithmetic_derives_from_rows_and_bytes_are_deterministic(tmp_pa
         "Він хотів прийняти участь у події.",
     ]
     config_path = _mini_config(tmp_path, config, texts)
+    candidate_schema_loads = 0
+    original_load_json = detector._load_json
+
+    def counted_load_json(path: Path) -> dict:
+        nonlocal candidate_schema_loads
+        if path == detector.CANDIDATE_SCHEMA_PATH:
+            candidate_schema_loads += 1
+        return original_load_json(path)
+
+    monkeypatch.setattr(detector, "_load_json", counted_load_json)
     outputs = []
     for suffix in ("one", "two"):
         candidates = tmp_path / f"candidates-{suffix}.jsonl"
@@ -423,6 +437,7 @@ def test_receipt_arithmetic_derives_from_rows_and_bytes_are_deterministic(tmp_pa
         )
         outputs.append((result, candidates, receipt))
     first, second = outputs
+    assert candidate_schema_loads == 2
     assert first[1].read_bytes() == second[1].read_bytes()
     assert first[2].read_bytes() == second[2].read_bytes()
     summary = first[0].summary

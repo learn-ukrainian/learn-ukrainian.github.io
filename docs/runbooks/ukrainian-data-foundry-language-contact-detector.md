@@ -56,6 +56,10 @@ linguistically meaningful at that length: local Грінченко/СУМ eviden
 `шо`, `да`, and `мой` even though VESUM misses them and Russian morphology
 recognizes them. An uncorroborated pair of Russian-morphology hits routes to
 `uncertain`; it is not promoted to Russian interference merely by adjacency.
+A capitalized token with Russian-specific orthography cannot corroborate its
+own quotation route. Without independent lowercase Russian evidence, a form
+such as quoted `Ростовъ` remains `uncertain` for human review rather than being
+masked automatically.
 The protected route is itself unresolved evidence, not a claim that every
 context is authentic. In particular, human calibration must distinguish the
 attested dialectal/folkloric particle pattern `да й` from a modern affirmative

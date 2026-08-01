@@ -954,7 +954,7 @@ def _bounded_candidate_span(
             start = max(lower, tokens[first].start_char)
         else:
             break
-    if end <= start or end - start > max_chars or (text[start:end] == text and len(text) > max_chars):
+    if end <= start or end - start > max_chars:
         return None
     return start, end, core_start, core_end, role, boundary_kind
 
@@ -1199,6 +1199,7 @@ def run_detector_on_text(
     vesum_matches: Mapping[str, Sequence[Mapping[str, Any]]],
     config: Mapping[str, Any] | None = None,
     runtime: EvidenceRuntime | None = None,
+    candidate_validator: Draft202012Validator | None = None,
     input_root: Path = ROOT,
 ) -> list[dict[str, Any]]:
     """Emit only positively evidenced, bounded candidates from one record."""
@@ -1232,7 +1233,7 @@ def run_detector_on_text(
         )
         record_hash = sha256_text(text)
         candidates: list[dict[str, Any]] = []
-        validator = Draft202012Validator(_load_json(CANDIDATE_SCHEMA_PATH))
+        active_validator = candidate_validator or Draft202012Validator(_load_json(CANDIDATE_SCHEMA_PATH))
         seen: set[tuple[int, int, str]] = set()
         for cluster in clusters:
             bounded = _bounded_candidate_span(
@@ -1307,7 +1308,7 @@ def run_detector_on_text(
                 "review_state": "unresolved",
                 "queue_route": classification["queue_route"],
             }
-            errors = sorted(validator.iter_errors(candidate), key=lambda item: list(item.path))
+            errors = sorted(active_validator.iter_errors(candidate), key=lambda item: list(item.path))
             if errors:
                 path = ".".join(str(value) for value in errors[0].path) or "<root>"
                 raise ValueError(f"candidate schema violation at {path}: {errors[0].message}")
@@ -1456,12 +1457,10 @@ def stream_detector(
                                 vesum_matches=vesum_matches,
                                 config=config,
                                 runtime=runtime,
+                                candidate_validator=candidate_validator,
                                 input_root=input_root,
                             )
                             for candidate in detected:
-                                errors = sorted(candidate_validator.iter_errors(candidate), key=lambda item: list(item.path))
-                                if errors:
-                                    raise ValueError(f"candidate schema violation: {errors[0].message}")
                                 output.write(canonical_json(candidate) + "\n")
                                 category = candidate["classification"]["category"]
                                 queue_route = candidate["queue_route"]
