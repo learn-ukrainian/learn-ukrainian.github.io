@@ -4,6 +4,12 @@
 > under [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
 > **Boundary:** review intake and adjudication, not model-ready export
 
+> **Current scope:** the implemented contracts below remain the optional
+> qualified-human-gold branch. [#6168](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6168)
+> owns a separate evidence-backed silver branch for the solo-operator critical
+> path. Silver must use a distinct contract and must not be relabelled as
+> `qualified_correction_intake`, `headline_gold`, or human review.
+
 ## What this component produces
 
 The correction factory takes span-aware, unresolved candidates from a local
@@ -15,9 +21,12 @@ detector or enrichment stage and produces two deterministic artifacts:
 2. an adjudicated correction record that preserves the complete candidate and
    qualified-human decision while remaining ineligible for training or export.
 
-The component does not infer corrections. A detector, VESUM miss, Russian
-morphology result, `r2u` hit, dictionary result, exact mismatch, or model vote
-remains evidence until the qualified-human review contract is satisfied.
+This qualified-gold component does not infer corrections. A detector, VESUM
+miss, Russian morphology result, `r2u` hit, dictionary result, exact mismatch,
+or model vote remains evidence until the qualified-human review contract is
+satisfied.
+The separate silver branch may combine such evidence under its own explicit
+grade and uncertainty rules, but it cannot satisfy this human contract.
 
 ## Contracts
 

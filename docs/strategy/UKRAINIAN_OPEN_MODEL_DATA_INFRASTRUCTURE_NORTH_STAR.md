@@ -6,7 +6,10 @@
 > [PR #6060](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6060).
 > Operator approved the Ukrainian Data Foundry architecture, replacement issue
 > chain, and first implementation on 2026-07-31, then issued **GO REALIGN AND
-> EXECUTE PHASE 2–4** on 2026-08-01.
+> EXECUTE PHASE 2–4** on 2026-08-01. On the same date, the operator recorded
+> that this is a solo project with neither budget nor access to a three-person
+> Ukrainian review panel and directed the Foundry to remove that unavailable
+> labour from the critical path.
 > **Recorded:** 2026-07-30; Foundry direction and existing-asset baseline
 > refreshed 2026-08-01
 > **Applies to:** Ukrainian model evaluation, dataset work, training-data
@@ -35,22 +38,60 @@ model weights. Base models can leapfrog a local fine-tune in one release.
 Curated data, provenance, evaluation, and tooling transfer to every new model
 generation.
 
-This direction implements the existing accepted decision to prioritize grammar
-and lexical naturalness while parking model fine-tuning. It also preserves the
-accepted boundary between public evaluation gold, private product data, and
-future training data.
+This direction prioritizes transferable data, grammar, lexical naturalness,
+and evidence over owning model weights. A bounded model treatment is permitted
+only to test whether those artifacts help. The accepted boundary between public
+evaluation gold, private product data, and training data remains intact.
+
+## Solo-operator execution model
+
+The Foundry must be executable by one operator. It cannot make paid or donated
+review labour a prerequisite for useful source preparation, model-ready data,
+or a bounded causal experiment.
+
+The production evidence lanes are therefore distinct:
+
+- **Admitted human-authored text** supports continued pretraining after source,
+  rights, privacy, origin, destination, and contamination gates pass. It does
+  not require new linguistic annotation.
+- **Evidence-backed silver** combines preserved context with deterministic
+  lexical, morphological, corpus, source, and bounded dictionary evidence.
+  Cross-family model proposals may add alternatives and surface disagreement,
+  but model agreement is never linguistic authority. Every record retains its
+  evidence grade, uncertainty, and protected or unresolved disposition.
+- **Hramatka feedback** may add consented teacher observations over time. It is
+  useful product evidence, but its arrival rate, selection effects, and privacy
+  constraints make it an optional upgrade rather than a critical-path gate.
+- **Qualified-human gold** remains a supported optional upgrade. The existing
+  blinded two-reviewer plus distinct-resolver contract applies only when the
+  project later chooses to claim qualified-human gold; no current milestone or
+  release requires that claim.
+
+Evidence-backed silver may be used in an explicitly silver, provenance-complete
+experiment. It must never be reported as human gold, native-speaker acceptance,
+reviewer reliability, or proof that every proposed correction is correct.
+
+The Foundry can credibly promise reusable preparation, diagnostics, evidence,
+and a controlled test of whether those artifacts help. It cannot promise in
+advance that a treatment will make an LLM fluent. The cheapest falsifying check
+always precedes a more expensive run, and a failed prerequisite or null result
+is reported immediately rather than converted into more work.
 
 ## GitHub execution homes
 
 - [#6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
   owns Foundry Phase 2–4: real corpus admission, production contextual
-  language-contact detection, qualified-human gold, real model-ready exports,
-  one preregistered causal open-weight experiment, and a reproducible release
-  candidate. Closed [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
+  language-contact detection, evidence-backed silver with an optional
+  qualified-human upgrade, real model-ready exports, one preregistered causal
+  open-weight experiment, and a reproducible release candidate. Closed
+  [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
   owns the completed interfaces, profiler, exporters, recipes, and synthetic
   reference build on which this production program depends.
 - [#6057](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6057)
-  owns the separately frozen public benchmark v0.2 design and release.
+  is closed as not planned under the solo-operator model while preserving the
+  completed v0.2 error analysis and frozen design. Its reviewer-intensive
+  acquisition is parked; the existing v0.1.1 and licensed external evaluations
+  remain the current measurement surfaces.
 - [#4913](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4913)
   owns internal Ukrainian validators, quality gates, product adapters, and
   private calibration.
@@ -238,38 +279,46 @@ status.
 
 ### Immediate work
 
-1. Admit or explicitly reject every real corpus family across the measured
-   189,150-record / 50,298,925-word denominator under complete source,
-   edition, acquisition, rights, permitted-use, origin, and contamination
-   evidence (#6166). The result must be useful-scale real data, not another
-   one-record demonstration.
-2. In parallel, run the production contextual language-contact detector across
-   that complete corpus (#6167). It must distinguish Russian quotation,
-   modern interference, phonetic Russian rendering, mixed-language spans,
-   historical usage, protected Ukrainian variation, and uncertainty while
-   retaining context and source lineage. VESUM absence is only one signal.
-3. Freeze sampling and stopping rules, then obtain real independent review by
-   qualified Ukrainian humans and conflict adjudication (#6168). GPT, Gemini,
-   and Claude may prepare evidence but cannot satisfy this human gate.
-4. Emit real, mechanically disjoint training, correction, preference,
-   quality-filter, and evaluation views with contamination and tokenizer/loss-
-   mask diagnostics (#6169). No universal tokenizer threshold is presumed.
-5. After present-tense operator approval of the exact model revision, compute
-   budget, and preregistration, run the smallest causal open-weight treatment
-   and ablation that can test whether the Foundry data changes Ukrainian
-   behavior (#6170). Report null or adverse results as first-class outcomes.
-6. Package a corpus-portable, rights-safe release candidate and have an
-   independent party reproduce it from clean instructions on their own corpus
-   (#6171). Publication remains a separate present-tense operator gate.
-7. Independently acquire and adjudicate the coverage-complete v0.2 evaluation
-   inventory under #6084. Public evaluation gold remains mechanically isolated
-   from every training or tuning view.
+1. Maintain the complete fail-closed disposition of all 189,150 records and
+   extend real destination-specific admission beyond the accepted 1,029-record
+   Ukrainian Wikipedia family whenever primary evidence permits (#6166).
+2. Preserve and use the completed production detector's 739,564 contextual
+   candidates across Russian quotation, modern interference, phonetic Russian,
+   mixed, historical, protected, and uncertain routes (#6167). VESUM absence
+   remains one signal rather than a verdict.
+3. Produce real evidence-graded silver correction, retention, protection, and
+   unresolved records without requiring reviewer labour (#6168). Preserve the
+   existing blind human campaign as an optional gold-upgrade path and add an
+   optional, privacy-safe Hramatka feedback intake.
+4. Start the admitted source-text continued-pretraining view immediately and
+   add separately manifested silver correction, preference, and quality-filter
+   views only when their evidence and destination gates pass (#6169). Report an
+   empty or blocked view honestly; never fill it with benchmark or fixture data.
+5. Before any paid or large model run, freeze a text-free feasibility receipt:
+   nonzero eligible inputs, source diversity, evaluation isolation, protected-
+   variation safety probes, tokenizer/mask diagnostics, expected runtime/cost,
+   and the exact decision the run can change. A failed prerequisite stops or
+   redirects the treatment immediately.
+6. After present-tense operator approval of the exact model revision, compute
+   ceiling, and preregistration, run the smallest decision-useful control and
+   ablation (#6170). Keep admitted-text and silver interventions separable and
+   report null, mixed, unsafe, or negative results as valid terminal outcomes.
+7. Package a corpus-portable, rights-safe release candidate and reproduce it in
+   a clean independent environment (#6171). Publication remains a separate
+   present-tense operator gate; qualified-human review is required only for an
+   artifact or claim explicitly designated human gold.
+8. Use frozen v0.1.1 and compatible licensed external human-authored
+   evaluations for the current experiment. The reviewer-intensive v0.2
+   acquisition may resume only if Hramatka or a future collaboration supplies
+   suitable consented evidence without becoming a project staffing dependency.
+   Public evaluation gold remains mechanically isolated from every training or
+   tuning view.
 
 The accountable orchestrator continues from one completed child issue to the
 next. A merged implementation PR is progress, not a stopping condition. Work
-pauses only at the source-family admission decision, qualified-Ukrainian-human
-review, exact training preregistration/budget approval, or final publication
-approval named on #6164.
+pauses only at a source-family admission decision, an exact training
+preregistration/budget approval, or final publication approval named on #6164.
+Choosing to claim human gold pauses only that optional upgrade lane.
 
 ### Completed Foundry v1 reference build
 
@@ -282,9 +331,10 @@ without a model call or gold leakage.
 The integration fixture is the observed `звучит` → `звучить` failure. It uses
 VESUM, Russian morphology, `r2u`, ULIF, a heritage source, per-dictionary
 `slovnyk.me` provenance, and Ukrainian corpus context. It remains synthetic:
-fixture reviewers are not qualified-human evidence, all four non-evaluation
-rows are training-ineligible, and the real corpus still has zero admitted
-training records.
+fixture reviewers are not qualified-human evidence and all four fixture rows
+remain training-ineligible. Separately, the operator has admitted 1,029 real
+Ukrainian Wikipedia records / 2,865,506 lexical words for the declared
+continued-pretraining destination; the remaining corpus is still unresolved.
 
 The reference build is proof that teams can run the Foundry interfaces and
 obtain reproducible evidence. It is not a released dataset, a trained model,
@@ -302,7 +352,8 @@ After a usable reference build exists, it may be validated with Lapa,
 
 External feedback may prioritize later adapters, acquisition, or release work.
 It is not a prerequisite for building the architecture, full-corpus profiler,
-correction intake, separate exporters, recipes, or reference validation.
+silver correction intake, separate exporters, recipes, experiment, or reference
+validation. Hramatka teacher feedback follows the same optional-evidence rule.
 
 ## Model-running policy
 
@@ -330,13 +381,15 @@ naturalness, or our narrower evaluation.
 
 ## Anti-distraction test
 
-Before beginning work, answer all five questions:
+Before beginning work, answer all six questions:
 
 1. Which documented Ukrainian failure or ecosystem gap does this address?
 2. Who in the open-weight Ukrainian community can use the output?
 3. Why do existing data, tools, or benchmarks not already solve it?
 4. What artifact remains useful after the next base model release?
 5. How will we measure improvement without contaminating the evaluation?
+6. What is the cheapest observation that would make us stop before further
+   spending?
 
 If those answers are missing, the work is not ready.
 

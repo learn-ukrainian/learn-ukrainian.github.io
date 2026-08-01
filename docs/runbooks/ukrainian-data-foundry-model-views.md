@@ -5,6 +5,14 @@
 > **Boundary:** local view construction and reproducible manifests, not training
 > or publication
 
+> **Phase 2–4 status:** admitted-source continued pretraining is independent of
+> qualified correction review and may proceed as soon as its source/payload,
+> rights, privacy, origin, destination, and contamination gates pass. The
+> implemented correction-family path below accepts qualified-human records;
+> [#6168](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6168)
+> and [#6169](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6169)
+> own a distinct, explicitly non-human silver contract and exporter path.
+
 ## What this component does
 
 The model-view exporter turns already governed Foundry inputs into five
@@ -72,7 +80,7 @@ Each artifact is homogeneous by origin. Machine-generated, translated,
 human-revised-synthetic, and human-authored material must be exported in
 separate invocations.
 
-### Correction, preference, and quality-filter inputs
+### Qualified-gold correction, preference, and quality-filter inputs
 
 These commands consume the canonical `correction_record_v1` handoff plus the
 exact admitted `source_record_v1` join. The #6121 field
@@ -239,10 +247,12 @@ and recipe behavior while forcing every non-evaluation row to
 `model_training_eligible: false`. Fixture and genuinely eligible records cannot
 share a recipe-bound view.
 
-No real source record or qualified human correction has been admitted by this
-implementation. The exporter makes the missing evidence executable and
-auditable; it does not convert the existing zero-admission corpus inventory
-into permission.
+No qualified human correction has been admitted by this implementation. The
+operator has separately admitted 1,029 Ukrainian Wikipedia source records for
+one declared continued-pretraining destination; that admission does not create
+correction labels or grant any other destination. The exporter makes missing
+evidence executable and auditable rather than converting unresolved inventory
+or silver evidence into human gold.
 
 ## Verification
 
