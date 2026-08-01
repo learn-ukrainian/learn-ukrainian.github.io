@@ -37,6 +37,9 @@ def test_fleet_page_is_a_read_only_consolidated_observer() -> None:
     assert "method: 'POST'" not in html
     assert 'method: "POST"' not in html
     assert "/api/fleet/" in html
+    assert "new URLSearchParams(location.search)" in html
+    assert "hydrateFiltersFromLocation();" in html
+    assert "['conversation', 'filter-conversation']" in html
 
 
 def test_fleet_routes_are_registered_get_only_and_contracted() -> None:

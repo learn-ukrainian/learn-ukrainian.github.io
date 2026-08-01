@@ -87,7 +87,8 @@ def test_orient_page_renders_active_discussions_widget():
     assert "Promise.allSettled" in html
     assert "Discussion lookup unavailable" in html
     assert "renderDiscussions" in html
-    assert "channels.html?channel=" in html
+    assert "fleet.html?conversation=" in html
+    assert "channels.html?channel=" not in html
 
 
 def test_runtime_page_keeps_primary_monitor_nav():
