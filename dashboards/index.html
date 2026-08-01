@@ -279,12 +279,11 @@ function buildStateSummary(pv, trackIds) {
 async function loadStats() {
   let buildState = { current: 0, backlog: 0, builtPct: 0 };
   let pendingConsultations = 0;
-  const [data, pv, cMetrics, summary, comms, weakPoints, orient, runtimeAgents, delegate, buildEvents, wiki, cost, contracts] = await Promise.all([
+  const [data, pv, cMetrics, summary, weakPoints, orient, runtimeAgents, delegate, buildEvents, wiki, cost, contracts] = await Promise.all([
     safeFetch('/api/dashboard/overview'),
     safeFetch('/api/state/pipeline-versions?fresh=true'),
     safeFetch('/api/consultation/metrics'),
     safeFetch('/api/state/summary?fresh=true'),
-    safeFetch('/api/comms/batch-progress'),
     safeFetch('/api/state/weak-points?limit=1'),
     safeFetch('/api/orient'),
     safeFetch('/api/runtime/agents'),
