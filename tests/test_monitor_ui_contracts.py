@@ -185,6 +185,7 @@ def test_acp_page_is_a_read_only_master_detail_conversation_reader():
     assert "function groupTranscript(messages)" in html
     assert "Shared prompt" in html
     assert "Participant responses" in html
+    assert "Other protocol messages" in html
     assert "Final synthesis" in html
     assert "No participant response message was recorded for this round." in html
     assert "No final synthesis message was recorded." in html
@@ -193,6 +194,8 @@ def test_acp_page_is_a_read_only_master_detail_conversation_reader():
     assert "text(value).toLowerCase() === 'root' ? 'Coordinator'" in html
     assert "copy.textContent = body" in html
     assert "transcript.setAttribute('aria-live', 'polite')" not in html
+    assert 'id="conversation-load-status" role="status" aria-live="polite"' in html
+    assert "document.getElementById('conversation-load-status').textContent" in html
     assert "white-space: pre-wrap" in html
     assert "Transcript is local-only. Open this page at localhost on the API host." in html
     assert "Transcript is unavailable on this local Monitor instance." in html
@@ -254,7 +257,8 @@ def test_acp_page_groups_duplicate_fanout_and_keeps_protocol_order():
       {{kind: 'reply', body: 'Peer context', sender: 'grok', recipient: 'codex', created_at: '2026-01-01T00:00:03Z', ordinal: 5, round: 2}},
       {{kind: 'reply', body: 'Refined answer', sender: 'codex', recipient: 'root', created_at: '2026-01-01T00:00:04Z', ordinal: 6, round: 2}},
       {{kind: 'request', body: 'Unanswered prompt', sender: 'root', recipient: 'grok', created_at: '2026-01-01T00:00:05Z', ordinal: 7, round: 3}},
-      {{kind: 'synthesis', body: 'Final answer', sender: 'codex', recipient: 'root', created_at: '2026-01-01T00:00:06Z', ordinal: 8, round: 3}}
+      {{kind: 'notice', body: 'Protocol note', sender: 'root', recipient: 'grok', created_at: '2026-01-01T00:00:06Z', ordinal: 8, round: 3}},
+      {{kind: 'synthesis', body: 'Final answer', sender: 'codex', recipient: 'root', created_at: '2026-01-01T00:00:07Z', ordinal: 9, round: 3}}
     ]}});
     console.log(JSON.stringify({{
       grouped: groupTranscript(messages),
@@ -282,6 +286,7 @@ def test_acp_page_groups_duplicate_fanout_and_keeps_protocol_order():
     assert [item["body"] for item in grouped["rounds"][1]["contexts"]] == ["Peer context"]
     assert [item["body"] for item in grouped["rounds"][1]["replies"]] == ["Refined answer"]
     assert grouped["rounds"][2]["replies"] == []
+    assert [item["body"] for item in grouped["rounds"][2]["other"]] == ["Protocol note"]
     assert [item["body"] for item in grouped["finalization"]] == ["Final answer"]
     assert output["withoutSynthesis"]["finalization"] == []
 

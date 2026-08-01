@@ -49,6 +49,7 @@ a { color: var(--blue); }.topbar { display: flex; align-items: center; gap: 14px
 .protocol-message:first-child { border-top: 0; }
 .protocol-header { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-bottom: 6px; color: var(--text2); font-size: 11px; }
 .protocol-copy { margin: 0; color: var(--text2); font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 @media (max-width: 1180px) { .reader-grid { grid-template-columns: 1fr; } }
 @media (max-width: 880px) { .reader { order: 1; }.ledger { order: 2; } }
 @media (max-width: 640px) { .round-heading, .response-heading, .reader-title { align-items: flex-start; flex-direction: column; }.round-content, .reader { padding: 13px; }.facts { gap: 5px; }.prompt-copy, .context-copy, .response-copy, .synthesis-copy { font-size: 13px; }.message-time { margin-left: 0; width: 100%; } }
@@ -60,6 +61,7 @@ a { color: var(--blue); }.topbar { display: flex; align-items: center; gap: 14px
 <main class="container">
   <section class="intro" aria-labelledby="page-heading"><div><div class="eyebrow">Conversation reader</div><h2 id="page-heading">Read what the agents discussed.</h2><p>Each round shows one shared prompt, the participant responses, and the final synthesis. Raw protocol messages and operational events remain available as secondary evidence.</p></div><aside class="privacy"><strong>Local-only transcript access.</strong> Message bodies are requested only from the loopback Monitor API. This reader has no send, edit, retry, cancel, route, or review controls.</aside></section>
   <div class="banner" id="error-banner" role="status"></div>
+  <div class="sr-only" id="conversation-load-status" role="status" aria-live="polite"></div>
   <section class="workspace" aria-label="ACP conversation browser"><aside class="ledger" aria-labelledby="ledger-heading"><div class="section-head"><h3 id="ledger-heading">Recent conversations</h3><span class="count" id="conversation-count">Loading</span></div><nav class="conversation-list" id="conversation-list" aria-label="Recent ACP conversations" aria-live="polite"><div class="empty">Loading recent conversations…</div></nav></aside><section class="reader" aria-labelledby="detail-heading"><div id="conversation-detail" class="reader-empty"><div><strong id="detail-heading">Select a conversation</strong><br>Its round-by-round discussion will appear here.</div></div></section></section>
 </main>
 <script>
@@ -199,7 +201,12 @@ function renderRound(group) {
   } else {
     responses.append(empty('No participant response message was recorded for this round.'));
   }
+  content.append(responses);
   if (group.other.length) {
+    const otherMessages = make('section', 'responses');
+    const otherHeading = make('div', 'response-heading');
+    otherHeading.append(make('h5', '', 'Other protocol messages'), make('span', 'round-count', `${group.other.length} ${group.other.length === 1 ? 'message' : 'messages'}`));
+    otherMessages.append(otherHeading);
     const grid = make('div', 'response-grid');
     for (const message of group.other) {
       const card = make('article', 'response-card unknown');
@@ -209,9 +216,9 @@ function renderRound(group) {
       card.append(meta, messageCopy('response-copy', message.body));
       grid.append(card);
     }
-    responses.append(grid);
+    otherMessages.append(grid);
+    content.append(otherMessages);
   }
-  content.append(responses);
   block.append(heading, content);
   return block;
 }
@@ -250,7 +257,7 @@ function renderProtocolLog(messages) {
   details.append(summary, body);
   return details;
 }
-function renderTranscript(payload) {
+function renderTranscript(payload, conversationId) {
   const messages = transcriptMessages(payload);
   if (messages === null) { transcriptState('Transcript data was malformed and was not rendered.'); return; }
   if (!messages.length) { transcriptState('This conversation has no transcript messages.'); return; }
@@ -260,8 +267,9 @@ function renderTranscript(payload) {
   conversation.append(renderSynthesis(grouped.finalization), renderProtocolLog(messages));
   const target = document.querySelector('.transcript-state');
   if (target) target.replaceWith(conversation);
+  document.getElementById('conversation-load-status').textContent = `${conversationId || 'Conversation'} loaded: ${grouped.rounds.length} ${grouped.rounds.length === 1 ? 'round' : 'rounds'}.`;
 }
-async function loadTranscript(activeId) { try { renderTranscript(await fetchJson(`${DETAIL_URL}${encodeURIComponent(activeId)}${TRANSCRIPT_SUFFIX}`)); } catch (error) { if (error instanceof ApiError && error.status === 403) transcriptState('Transcript is local-only. Open this page at localhost on the API host.'); else if (error instanceof ApiError && error.status === 404) transcriptState('Transcript is unavailable on this local Monitor instance.'); else { transcriptState('Transcript could not be loaded.'); showError(`Transcript load failure: ${error.message}`); } } }
+async function loadTranscript(activeId) { try { renderTranscript(await fetchJson(`${DETAIL_URL}${encodeURIComponent(activeId)}${TRANSCRIPT_SUFFIX}`), activeId); } catch (error) { if (error instanceof ApiError && error.status === 403) transcriptState('Transcript is local-only. Open this page at localhost on the API host.'); else if (error instanceof ApiError && error.status === 404) transcriptState('Transcript is unavailable on this local Monitor instance.'); else { transcriptState('Transcript could not be loaded.'); showError(`Transcript load failure: ${error.message}`); } } }
 async function loadPage() { try { const snapshot = await fetchJson(LIST_URL); if (!snapshot || typeof snapshot !== 'object' || !Array.isArray(snapshot.conversations)) throw new Error('Malformed conversation data'); if (snapshot.availability === 'unavailable') { document.getElementById('conversation-count').textContent = 'Unavailable'; document.getElementById('conversation-list').replaceChildren(empty('Conversation storage is unavailable. No routing or provider health is inferred.')); setReaderState('Conversation reader unavailable', 'Restore read-only conversation storage, then refresh the page.'); return; } const conversations = snapshot.conversations.filter(item => item && typeof item.conversation_id === 'string'); const activeId = conversations.some(item => item.conversation_id === selectedId()) ? selectedId() : conversations[0]?.conversation_id; renderList(conversations, activeId); if (!activeId) { setReaderState('No recent conversations', 'There is no persisted conversation to display.'); return; } try { const conversation = await fetchJson(`${DETAIL_URL}${encodeURIComponent(activeId)}`); renderDetail(conversation); await loadTranscript(activeId); } catch (error) { setReaderState('Conversation detail unavailable', 'The selected conversation could not be loaded.'); showError(`Conversation detail unavailable: ${error.message}`); } } catch (error) { document.getElementById('conversation-count').textContent = 'Error'; document.getElementById('conversation-list').replaceChildren(empty('Recent conversations could not be loaded.')); setReaderState('Conversation reader unavailable', 'Check the read-only Runtime API and refresh.'); showError(`ACP conversations unavailable: ${error.message}`); } finally { document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()}`; } }
 loadPage();
 </script>
