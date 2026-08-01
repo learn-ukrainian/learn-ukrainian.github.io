@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/hf_model_snapshot_manifest_v1.schema.json",
+  "title": "Immutable Hugging Face model snapshot manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "identifier", "revision", "files", "totals", "resolution"],
+  "properties": {
+    "schema_version": {"const": "hf_model_snapshot_manifest_v1"},
+    "identifier": {"const": "google/gemma-4-31B-it"},
+    "revision": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "files": {
+      "type": "array",
+      "minItems": 9,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "bytes", "sha256"],
+        "properties": {
+          "path": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+          "bytes": {"type": "integer", "minimum": 1},
+          "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bytes", "files"],
+      "properties": {"bytes": {"type": "integer", "minimum": 1}, "files": {"const": 9}}
+    },
+    "resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "revision_header_verified", "large_file_hash_source", "small_file_hash_source", "weights_downloaded"],
+      "properties": {
+        "source": {"const": "https://huggingface.co/google/gemma-4-31B-it"},
+        "revision_header_verified": {"const": true},
+        "large_file_hash_source": {"const": "Hugging Face X-Linked-ETag SHA-256 at immutable revision"},
+        "small_file_hash_source": {"const": "downloaded content SHA-256 at immutable revision"},
+        "weights_downloaded": {"const": false}
+      }
+    }
+  }
+}

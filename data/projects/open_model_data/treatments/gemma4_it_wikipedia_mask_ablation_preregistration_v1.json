@@ -1,0 +1,297 @@
+{
+  "abort_conditions": [
+    "artifact_or_schema_hash_drift",
+    "evaluation_contamination_or_firewall_failure",
+    "arm_drift_beyond_preregistered_loss_policy",
+    "tokenizer_or_mask_projection_mismatch",
+    "missing_or_mismatched_operator_authorization",
+    "nonfinite_loss_or_gradient",
+    "out_of_memory",
+    "checkpoint_reload_failure",
+    "runtime_or_cost_ceiling_breach",
+    "safety_regression",
+    "remote_upload_or_publication_attempt"
+  ],
+  "arms": [
+    {
+      "arm_id": "untreated_it",
+      "initial_model_revision": "842da3794eaa0b77d5f08bae87a17459d91ff475",
+      "loss_policy": "not_applicable",
+      "training_performed": false,
+      "view_role": null
+    },
+    {
+      "arm_id": "faithful_cpt",
+      "initial_model_revision": "842da3794eaa0b77d5f08bae87a17459d91ff475",
+      "loss_policy": "all_non_special_non_padding_text_tokens",
+      "training_performed": true,
+      "view_role": "faithful_view"
+    },
+    {
+      "arm_id": "modern_mask_cpt",
+      "initial_model_revision": "842da3794eaa0b77d5f08bae87a17459d91ff475",
+      "loss_policy": "zero_loss_for_every_token_offset_overlapping_a_character_mask_span",
+      "training_performed": true,
+      "view_role": "modern_view"
+    }
+  ],
+  "artifacts": [
+    {
+      "bytes": 7387,
+      "logical_path": "data/projects/open_model_data/model_views/model_ready_view_production_v1.json",
+      "records": 1,
+      "role": "production_receipt",
+      "sha256": "699af193764a6616c35b3298b018ac41266fed9742dc3f789614acfbd161255d"
+    },
+    {
+      "bytes": 41035325,
+      "logical_path": "batch_state/6170/phase3/wikipedia-faithful.jsonl",
+      "records": 1028,
+      "role": "faithful_view",
+      "sha256": "0cf114d1b9982984f8666f5e856043a851084c6934dbb6ea7ea98486710e9ed1"
+    },
+    {
+      "bytes": 3450,
+      "logical_path": "batch_state/6170/phase3/wikipedia-faithful.receipt.json",
+      "records": 1,
+      "role": "faithful_view_receipt",
+      "sha256": "0da3e4f0ae2d976fcb462b695acd15af7c6bcdef8278be145522263aa3f2ef8c"
+    },
+    {
+      "bytes": 42522745,
+      "logical_path": "batch_state/6170/phase3/wikipedia-modern.jsonl",
+      "records": 1028,
+      "role": "modern_view",
+      "sha256": "c524a89cd2d37fd88cf3ce1e742583fe06252dd125f88b146b73c8453c7a0721"
+    },
+    {
+      "bytes": 3450,
+      "logical_path": "batch_state/6170/phase3/wikipedia-modern.receipt.json",
+      "records": 1,
+      "role": "modern_view_receipt",
+      "sha256": "2a291bbadb4f02540e9c4381a7ae733f2c9c8df1f99d51b26364d408f87b504c"
+    },
+    {
+      "bytes": 8401,
+      "logical_path": "data/projects/open_model_data/treatments/gemma4_it_tokenizer_diagnostics_v1.json",
+      "records": 1,
+      "role": "tokenizer_diagnostics",
+      "sha256": "79891442c302c1f17c8099fd03b44b6c740434acd16249d580529763311d4517"
+    },
+    {
+      "bytes": 999435,
+      "logical_path": "batch_state/6170/phase3/heldout-evaluation.jsonl",
+      "records": 691,
+      "role": "heldout_evaluation_view",
+      "sha256": "c6150efaefd75da7e5db8f9d4aab7949a7261d14319318e905637748309b34f0"
+    },
+    {
+      "bytes": 896527,
+      "logical_path": "data/projects/ua_eval_harness/heldout_manifest_v1.json",
+      "records": 1,
+      "role": "heldout_manifest",
+      "sha256": "56eb4fc17a5ed6967c5c13fbdc9fde964d1b8fb08bde7da7f15cf535486735dd"
+    },
+    {
+      "bytes": 846,
+      "logical_path": "data/projects/ua_eval_harness/minimal_edit_prompt_v1.txt",
+      "records": 1,
+      "role": "minimal_edit_prompt",
+      "sha256": "f121546dcbaf602c58c7d85977ad792eb9be402dd1e01a6a556ba966dac2c96a"
+    },
+    {
+      "bytes": 241285,
+      "logical_path": "data/projects/ua_eval_harness/scoring_dispositions_v1.json",
+      "records": 1,
+      "role": "scoring_dispositions",
+      "sha256": "44498d4c2ffcf8c0d3afed51bc82fa482be6b68ff6f05a3bcda035adbf5311a8"
+    },
+    {
+      "bytes": 4169,
+      "logical_path": "data/projects/ua_eval_harness/scoring_disposition_config.json",
+      "records": 1,
+      "role": "scoring_disposition_config",
+      "sha256": "ecda338a95aa8cc8fe862ba67556101be119ad9391766221616304ce5928218a"
+    },
+    {
+      "bytes": 2009,
+      "logical_path": "data/projects/open_model_data/treatments/gemma4_it_safety_probe_receipt_v1.json",
+      "records": 1,
+      "role": "safety_probe_receipt",
+      "sha256": "ebfaf64adc30a17ce0524a996183d661f131213a8ce477c897897f13c6ec8147"
+    },
+    {
+      "bytes": 215820,
+      "logical_path": "batch_state/6170/treatment-safety-probes.jsonl",
+      "records": 300,
+      "role": "safety_probe_inventory",
+      "sha256": "3d1aaaf274ce5bce60d6da52debf02314102641fa163721ba60f2fb49647faa1"
+    },
+    {
+      "bytes": 1994,
+      "logical_path": "data/projects/open_model_data/treatments/gemma4_it_model_snapshot_manifest_v1.json",
+      "records": 1,
+      "role": "model_snapshot_manifest",
+      "sha256": "f0552bd6ee21764a0fc8c62b76d8458775f4f5e4969d701cf4c0d35c2f86fba1"
+    }
+  ],
+  "claims": {
+    "allowed": [
+      "causal_evidence_for_the_exact_modern_loss_mask_policy_under_this_frozen_recipe"
+    ],
+    "prohibited": [
+      "general_ukrainian_fluency",
+      "human_acceptance_of_silver_labels",
+      "deployment_readiness",
+      "leaderboard_superiority",
+      "dataset_or_weight_release"
+    ]
+  },
+  "compute": {
+    "all_inclusive_ceiling_usd": 100,
+    "authorization_required": true,
+    "hardware": [
+      "A100_80GB",
+      "H100_80GB"
+    ],
+    "provider_class": "ephemeral_gpu_rental",
+    "stage_1": {
+      "entry_gate": "operator authorization, clean Stage 0 preflight, and verified immutable model snapshot",
+      "max_cost_usd": 10,
+      "max_gpu_hours_per_run": 4,
+      "seeds": [
+        6170
+      ],
+      "stage_id": "smoke",
+      "token_budget_per_arm": 1048576,
+      "trained_arms": [
+        "faithful_cpt",
+        "modern_mask_cpt"
+      ]
+    },
+    "stage_2": {
+      "entry_gate": "Stage 1 completed within ten dollars; paired invariants and checkpoint reload passed; no safety abort; total forecast remains within one hundred dollars",
+      "max_cost_usd": 90,
+      "max_gpu_hours_per_run": 9,
+      "seeds": [
+        6170,
+        6171,
+        6172
+      ],
+      "stage_id": "bounded_causal",
+      "token_budget_per_arm": 6187314,
+      "trained_arms": [
+        "faithful_cpt",
+        "modern_mask_cpt"
+      ]
+    }
+  },
+  "evaluation": {
+    "decision_rule": "retain_modern_only_if_paired_f0_5_lower_95_ci_gt_0_and_all_safety_gates_pass_otherwise_no_advance",
+    "generation_constants": {
+      "batch_retry_policy": "transport_retries_only_no_score_conditioned_retry",
+      "do_sample": false,
+      "max_new_tokens": 512,
+      "prompt_role": "minimal_edit_prompt",
+      "temperature": 0,
+      "top_p": 1
+    },
+    "primary": {
+      "contrast": "modern_mask_cpt_minus_faithful_cpt",
+      "metric": "paired_sentence_edit_f0_5",
+      "samples": 10000,
+      "seed": 6170,
+      "uncertainty": "paired_sentence_bootstrap_percentile_95_ci"
+    },
+    "safety": {
+      "clean_no_change_minimum": 120,
+      "gate": "zero_protected_span_failures_and_modern_no_change_edit_rate_not_above_faithful",
+      "gold_status": "deterministic_non_human_proxy_not_linguistic_gold",
+      "inventory_role": "safety_probe_receipt",
+      "protected_span_minimum": 180
+    },
+    "secondary": [
+      "exact_sentence_accuracy",
+      "edit_precision",
+      "edit_recall",
+      "headline_calque_recall",
+      "per_tag_recall",
+      "tokenizer_behavior",
+      "runtime",
+      "cost"
+    ]
+  },
+  "experiment_id": "gemma4-it-wikipedia-mask-ablation-v1",
+  "issue": 6170,
+  "model": {
+    "historical_provider_baseline_role": "measurement_interface_reference_only_not_causal_control",
+    "identifier": "google/gemma-4-31B-it",
+    "initialization_policy": "all arms start from the same immutable local checkpoint snapshot",
+    "loader_class": "transformers.AutoModelForMultimodalLM",
+    "processor_class": "transformers.AutoProcessor",
+    "revision": "842da3794eaa0b77d5f08bae87a17459d91ff475"
+  },
+  "question": {
+    "hypothesis": "Excluding detector-identified non-modern and protected spans from continued-pretraining loss improves frozen Ukrainian minimal-edit behavior without increasing unwanted normalization.",
+    "primary_contrast": "modern_mask_cpt_minus_faithful_cpt",
+    "sole_decision": "retain_or_reject_the_modern_loss_mask_policy_for_this_exact_cpt_recipe"
+  },
+  "schema_version": "treatment_preregistration_v1",
+  "state": "frozen_pending_operator_authorization",
+  "training": {
+    "adapter": {
+      "alpha": 32,
+      "bias": "none",
+      "dropout": 0.05,
+      "rank": 16,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ]
+    },
+    "data": {
+      "checkpoint_selection": "final_checkpoint_only_no_score_based_selection",
+      "cross_record_packing": false,
+      "sequence_length": 4096,
+      "shuffle": "ascending_sha256_of_seed_nul_source_payload_id",
+      "split_key": "lineage.source_payload_id",
+      "split_modulus": 1000,
+      "split_namespace": "gemma4-it-wikipedia-mask-ablation-v1",
+      "validation_buckets": 200
+    },
+    "environment": {
+      "packages": [
+        "accelerate==1.14.0",
+        "bitsandbytes==0.50.0",
+        "datasets==5.0.1",
+        "peft==0.20.0",
+        "tokenizers==0.22.2",
+        "torch==2.13.0",
+        "transformers==5.14.1"
+      ],
+      "python": "3.12.8"
+    },
+    "method": "adapter_only_qlora_continued_pretraining",
+    "optimizer": {
+      "gradient_accumulation_steps": 16,
+      "gradient_checkpointing": true,
+      "learning_rate": "1e-5",
+      "max_grad_norm": "1.0",
+      "micro_batch_size": 1,
+      "name": "paged_adamw_8bit",
+      "warmup_ratio": "0.03",
+      "weight_decay": "0.1"
+    },
+    "quantization": {
+      "bits": 4,
+      "compute_dtype": "bf16",
+      "double_quantization": true,
+      "type": "nf4"
+    }
+  }
+}

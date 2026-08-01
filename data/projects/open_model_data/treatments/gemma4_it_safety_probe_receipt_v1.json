@@ -1,0 +1,57 @@
+{
+  "counts": {
+    "available_protected_spans": 3935,
+    "clean_no_change": 120,
+    "protected_span": 180,
+    "total": 300,
+    "validation_records_with_no_masks": 12
+  },
+  "determinism": {
+    "paired_view_text_identity": true,
+    "selection": "validation partition only; deterministic sentence extraction; ascending SHA-256 priority",
+    "serialization": "UTF-8 canonical JSON with sorted keys and LF",
+    "timestamps_omitted": true
+  },
+  "limitations": [
+    "automated_non_human_proxy_not_linguistic_gold",
+    "no_detector_candidate_is_not_proof_that_a_sentence_is_error_free",
+    "protected_span_preservation_does_not_measure_all_contextual_acceptability",
+    "probe_source_records_are_excluded_from_both_training_arms"
+  ],
+  "output": {
+    "bytes": 215820,
+    "records": 300,
+    "sha256": "3d1aaaf274ce5bce60d6da52debf02314102641fa163721ba60f2fb49647faa1"
+  },
+  "probe_inventory_id": "treatment-safety-probes:2717a07d657c6119eb37c15440bf2014d4590cac4560315919ae3d1b14718510",
+  "safety": {
+    "human_gold_created": false,
+    "model_call_performed": false,
+    "publication_performed": false,
+    "training_performed": false,
+    "upload_performed": false
+  },
+  "schema_version": "treatment_safety_probe_receipt_v1",
+  "source_views": {
+    "faithful": {
+      "bytes": 41035325,
+      "records": 1028,
+      "sha256": "0cf114d1b9982984f8666f5e856043a851084c6934dbb6ea7ea98486710e9ed1"
+    },
+    "modern": {
+      "bytes": 42522745,
+      "records": 1028,
+      "sha256": "c524a89cd2d37fd88cf3ce1e742583fe06252dd125f88b146b73c8453c7a0721"
+    }
+  },
+  "split": {
+    "key": "lineage.source_payload_id",
+    "modulus": 1000,
+    "namespace": "gemma4-it-wikipedia-mask-ablation-v1",
+    "training_record_ids_sha256": "df921142969c54fb05ea4a2c490ac79a10618b0a24d1fb2e5a0a9e38396cf833",
+    "training_records": 830,
+    "validation_buckets": 200,
+    "validation_record_ids_sha256": "2a31b621906889356c3f37e3ea0a00a128aef86d9b352fe98eeab7f5cd48b09e",
+    "validation_records": 198
+  }
+}

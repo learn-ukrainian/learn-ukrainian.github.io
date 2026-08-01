@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/treatment_execution_receipt_v1.schema.json",
+  "title": "Ukrainian Data Foundry treatment execution receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "experiment_id", "preregistration_sha256", "authorization_sha256", "stage", "arm", "seed", "status", "inputs", "runtime", "training", "outputs", "invariants", "safety"],
+  "properties": {
+    "schema_version": {"const": "treatment_execution_receipt_v1"},
+    "experiment_id": {"type": "string", "minLength": 3},
+    "preregistration_sha256": {"$ref": "#/$defs/sha256"},
+    "authorization_sha256": {"$ref": "#/$defs/sha256"},
+    "stage": {"enum": ["smoke", "bounded_causal"]},
+    "arm": {"enum": ["faithful_cpt", "modern_mask_cpt"]},
+    "seed": {"type": "integer", "minimum": 0},
+    "status": {"enum": ["completed", "aborted"]},
+    "inputs": {"type": "array", "minItems": 4, "items": {"$ref": "#/$defs/artifact"}},
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hardware", "environment_sha256", "wall_seconds", "gpu_hours", "cost_usd"],
+      "properties": {
+        "hardware": {"type": "string", "minLength": 3},
+        "environment_sha256": {"$ref": "#/$defs/sha256"},
+        "wall_seconds": {"type": "number", "minimum": 0},
+        "gpu_hours": {"type": "number", "minimum": 0},
+        "cost_usd": {"type": "number", "minimum": 0, "maximum": 100}
+      }
+    },
+    "training": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["optimizer_steps", "raw_tokens", "supervised_tokens", "zero_loss_tokens", "final_loss", "abort_reason"],
+      "properties": {
+        "optimizer_steps": {"type": "integer", "minimum": 0},
+        "raw_tokens": {"type": "integer", "minimum": 0},
+        "supervised_tokens": {"type": "integer", "minimum": 0},
+        "zero_loss_tokens": {"type": "integer", "minimum": 0},
+        "final_loss": {"anyOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
+        "abort_reason": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]}
+      }
+    },
+    "outputs": {"type": "array", "items": {"$ref": "#/$defs/artifact"}},
+    "invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_hashes_match", "paired_constants_match", "evaluation_firewall_passed", "checkpoint_reload_passed", "cost_ceiling_respected"],
+      "properties": {
+        "artifact_hashes_match": {"type": "boolean"},
+        "paired_constants_match": {"type": "boolean"},
+        "evaluation_firewall_passed": {"type": "boolean"},
+        "checkpoint_reload_passed": {"type": "boolean"},
+        "cost_ceiling_respected": {"type": "boolean"}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["upload_performed", "publication_performed", "evaluation_data_used_for_training", "full_weight_tuning_performed"],
+      "properties": {
+        "upload_performed": {"const": false},
+        "publication_performed": {"const": false},
+        "evaluation_data_used_for_training": {"const": false},
+        "full_weight_tuning_performed": {"const": false}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "completed"}}, "required": ["status"]},
+      "then": {"properties": {"training": {"properties": {"abort_reason": {"type": "null"}}}, "outputs": {"minItems": 1}}},
+      "else": {"properties": {"training": {"properties": {"abort_reason": {"type": "string", "minLength": 1}}}}}
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "bytes", "sha256"],
+      "properties": {
+        "role": {"type": "string", "minLength": 2},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

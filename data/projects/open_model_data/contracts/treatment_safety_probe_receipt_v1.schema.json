@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/treatment_safety_probe_receipt_v1.schema.json",
+  "title": "Ukrainian Data Foundry deterministic treatment safety-probe receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "probe_inventory_id", "source_views", "split", "counts", "output", "determinism", "limitations", "safety"],
+  "properties": {
+    "schema_version": {"const": "treatment_safety_probe_receipt_v1"},
+    "probe_inventory_id": {"type": "string", "pattern": "^treatment-safety-probes:[a-f0-9]{64}$"},
+    "source_views": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["faithful", "modern"],
+      "properties": {"faithful": {"$ref": "#/$defs/artifact"}, "modern": {"$ref": "#/$defs/artifact"}}
+    },
+    "split": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "namespace", "modulus", "validation_buckets", "training_records", "validation_records", "training_record_ids_sha256", "validation_record_ids_sha256"],
+      "properties": {
+        "key": {"const": "lineage.source_payload_id"},
+        "namespace": {"const": "gemma4-it-wikipedia-mask-ablation-v1"},
+        "modulus": {"const": 1000},
+        "validation_buckets": {"const": 200},
+        "training_records": {"type": "integer", "minimum": 1},
+        "validation_records": {"type": "integer", "minimum": 1},
+        "training_record_ids_sha256": {"$ref": "#/$defs/sha256"},
+        "validation_record_ids_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clean_no_change", "protected_span", "total", "validation_records_with_no_masks", "available_protected_spans"],
+      "properties": {
+        "clean_no_change": {"type": "integer", "minimum": 120},
+        "protected_span": {"type": "integer", "minimum": 180},
+        "total": {"type": "integer", "minimum": 300},
+        "validation_records_with_no_masks": {"type": "integer", "minimum": 1},
+        "available_protected_spans": {"type": "integer", "minimum": 180}
+      }
+    },
+    "output": {"$ref": "#/$defs/artifact"},
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["serialization", "selection", "timestamps_omitted", "paired_view_text_identity"],
+      "properties": {
+        "serialization": {"const": "UTF-8 canonical JSON with sorted keys and LF"},
+        "selection": {"const": "validation partition only; deterministic sentence extraction; ascending SHA-256 priority"},
+        "timestamps_omitted": {"const": true},
+        "paired_view_text_identity": {"const": true}
+      }
+    },
+    "limitations": {
+      "const": [
+        "automated_non_human_proxy_not_linguistic_gold",
+        "no_detector_candidate_is_not_proof_that_a_sentence_is_error_free",
+        "protected_span_preservation_does_not_measure_all_contextual_acceptability",
+        "probe_source_records_are_excluded_from_both_training_arms"
+      ]
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["training_performed", "model_call_performed", "upload_performed", "publication_performed", "human_gold_created"],
+      "properties": {
+        "training_performed": {"const": false},
+        "model_call_performed": {"const": false},
+        "upload_performed": {"const": false},
+        "publication_performed": {"const": false},
+        "human_gold_created": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bytes", "records", "sha256"],
+      "properties": {
+        "bytes": {"type": "integer", "minimum": 1},
+        "records": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}
