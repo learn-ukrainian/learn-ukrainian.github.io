@@ -1127,6 +1127,33 @@ def test_issues_streams_endpoint_strips_private_keys_on_cache_hit(monkeypatch):
     assert body["refreshing"] is False and body["refresh"]["phase"] == "idle"
 
 
+def test_issues_streams_offloads_sync_state_io_from_event_loop(monkeypatch):
+    from scripts.api import issues_router
+
+    calls = []
+
+    class _AsyncioProbe:
+        @staticmethod
+        async def to_thread(fn, *args, **kwargs):
+            calls.append(fn)
+            return fn(*args, **kwargs)
+
+    monkeypatch.setattr(issues_router, "asyncio", _AsyncioProbe)
+    monkeypatch.setattr(
+        issues_router.audit, "read_cache",
+        lambda max_age_s: dict(_LEAKY_REPORT) if max_age_s == 3600 else None,
+    )
+    monkeypatch.setattr(
+        issues_router.audit, "read_refresh_state", lambda: dict(_IDLE_REFRESH)
+    )
+
+    resp = client.get("/api/issues/streams")
+
+    assert resp.status_code == 200
+    assert len(calls) == 1
+    assert calls[0].__name__ == "_load"
+
+
 def test_strict_adoption_gate_runs_as_bare_script():
     """Regression (ADR-011 P4 review, item 12): running this validator as a bare
     script — ``python scripts/audit/check_research_registry.py``, exactly how

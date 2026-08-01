@@ -224,7 +224,10 @@ async def issues_streams(
                 audit.read_refresh_state(),
             )
 
-    return _load()
+    # Cache/state reads, atomic fsync, flock, and Popen are bounded but still
+    # synchronous OS operations. Keep them off the shared ASGI event loop;
+    # the live GitHub audit itself remains detached in the worker process.
+    return await asyncio.to_thread(_load)
 
 
 def _with_refresh(payload: dict[str, Any], state: dict[str, Any]) -> dict[str, Any]:
