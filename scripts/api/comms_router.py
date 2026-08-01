@@ -54,8 +54,9 @@ from scripts.fleet_comms.migrations import apply_migrations
 from .config import CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
 from .resilience import connect_sqlite
 from .state_helpers import cache_get, cache_set
+from .telemetry.legacy_comms import LegacyCommsTelemetryRoute
 
-router = APIRouter(tags=["comms"])
+router = APIRouter(tags=["comms"], route_class=LegacyCommsTelemetryRoute)
 
 # ==================== DB HELPERS ====================
 
@@ -349,18 +350,16 @@ def _add_agent_activity_actions(activity: dict[str, dict]) -> None:
 
 # ==================== MESSAGES (legacy broker) ====================
 #
-# Everything in this section reads/writes the legacy `messages` table
-# backing the ask-claude / ask-gemini / ask-codex CLI commands. It is
-# DEPRECATED for new conversations as of #1190 Phase B.5, but kept
-# alive because 3 scripts still depend on ask-* (scripts/wiki/compile.py,
-# scripts/audit/naturalness_check.py, scripts/batch/batch_fix_review.py).
+# Everything in this section projects the legacy `messages` table also used by
+# the ask-claude / ask-agy / ask-codex CLI commands. The CLI talks to the bridge
+# and SQLite directly; it does not call these HTTP routes. The HTTP surface is
+# DEPRECATED for new conversations as of #1190 Phase B.5.
 # For new multi-agent conversations, code reviews, and design debates,
 # use the channel bridge endpoints under /api/comms/channels/* and the
 # `ab channel` / `ab post` / `ab discuss` CLI commands.
 #
-# Removal target: once the remaining ask-* consumers are migrated, an
-# ADR in docs/decisions/ will set an expiry date and these routes can
-# be yanked. Until then, they stay.
+# Removal remains gated by #6106: route telemetry, separate direct ask-* usage
+# evidence, an approved observation window, and present-tense deletion approval.
 
 
 @router.get("/messages", deprecated=True)
@@ -377,8 +376,8 @@ async def list_messages(
     """**Deprecated (#1190 B.5).** All broker messages with optional filters.
 
     Use /api/comms/channels/{name}/messages for channel-based
-    conversations. Still backs the legacy comms.html Messages tab
-    and the ask-* CLI path.
+    conversations. The former comms.html page now redirects to the Fleet
+    observer; direct ask-* CLI calls bypass this route.
     """
     conn = _get_db()
     if not conn:

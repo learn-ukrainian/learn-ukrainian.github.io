@@ -1496,6 +1496,37 @@ Response:
 ]
 ```
 
+## Legacy comms route telemetry — `/api/telemetry/legacy-comms-routes`
+
+The API records hourly usage aggregates for the deprecated messages,
+conversations, conversation-detail, send, and acknowledgement HTTP routes.
+The local store is `data/telemetry/legacy_comms_routes.db`; it is ignored by
+git, owner-only (`0600`), and retains 90 days.
+
+The recorder persists only normalized route ID, method, coarse caller class,
+status class, count, and first/last timestamps. It never stores path
+parameters, query values, request or response bodies, credentials, cookies,
+client addresses, or raw headers/User-Agent values. An exact
+`X-Learn-Uk-Caller` value is accepted only from a fixed allowlist; otherwise
+the User-Agent is classified in memory as browser, CLI, programmatic, test, or
+unknown and then discarded.
+
+`GET /api/telemetry/legacy-comms-routes?window=7d` accepts `1h`, `24h`, `7d`,
+`30d`, or `90d`. It returns all five route IDs, including zero-count routes,
+plus:
+
+- `coverage_started_at`: when this local store first began observing;
+- `window_fully_observed`: false until coverage spans the entire request;
+- `by_caller` and `by_status`: body-free aggregate counts;
+- `scope_note`: the explicit boundary that direct `ask-*` CLI calls bypass
+  these HTTP routes and are not counted.
+
+The first telemetry read or matching route request initializes coverage.
+Storage is fail-open for route serving: an unavailable telemetry database is
+logged but never changes the observed route response. This telemetry alone
+cannot authorize route deletion; direct bridge/CLI telemetry and the approved
+zero-use window remain separate gates under #6106.
+
 ## Module Build Token Telemetry — `/api/telemetry/module-builds`
 
 Persists module-build token telemetry as local runtime state. This is the
