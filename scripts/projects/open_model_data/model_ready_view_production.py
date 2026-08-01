@@ -976,6 +976,7 @@ def assemble_production_receipt(
         if code.startswith("excluded_intra_view_duplicate_")
     )
     evidence_grade = silver_receipt["counts"]["by_evidence_grade"]
+    payload_evidence_grade = payload_receipt["counts"]["evidence_grade_counts"]
     identity = {
         "admission": exporter.sha256_file(admission_receipt_path),
         "detector": detector_expected["sha256"],
@@ -1069,8 +1070,12 @@ def assemble_production_receipt(
                 for code, count in sorted(evidence_grade.items())
             ],
             "protected_unresolved": [
-                {"category": code, "records": int(count), "bytes": 0}
-                for code, count in sorted(evidence_grade.items())
+                {
+                    "category": str(row["code"]),
+                    "records": int(row["records"]),
+                    "bytes": 0,
+                }
+                for row in payload_evidence_grade
             ],
         },
         "feasibility": {

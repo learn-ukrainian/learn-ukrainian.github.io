@@ -107,8 +107,14 @@
         "period": {"$ref": "#/$defs/strata"},
         "genre": {"$ref": "#/$defs/strata"},
         "register": {"$ref": "#/$defs/strata"},
-        "evidence_grade": {"$ref": "#/$defs/strata"},
-        "protected_unresolved": {"$ref": "#/$defs/strata"}
+        "evidence_grade": {
+          "description": "Evidence-grade counts over the linked full-corpus silver inventory; silver model-ready lanes remain separately blocked or emitted.",
+          "$ref": "#/$defs/strata"
+        },
+        "protected_unresolved": {
+          "description": "Payload-scoped record counts carrying protected or unresolved operational spans before view-level deduplication; categories may overlap.",
+          "$ref": "#/$defs/strata"
+        }
       }
     },
     "feasibility": {

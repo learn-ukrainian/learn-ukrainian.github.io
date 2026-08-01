@@ -723,6 +723,29 @@ def test_long_character_sequence_rejects_anagram_like_frequency_match() -> None:
     assert exporter.character_sequence_matches(first, second, threshold=0.9) is False
 
 
+@pytest.mark.parametrize("edit_kind", ["insert", "delete"])
+def test_long_character_sequence_detects_realistic_indels(edit_kind: str) -> None:
+    reference = "".join(chr(ord("а") + index % 20) for index in range(50_000))
+    if edit_kind == "insert":
+        chunks = [reference[index : index + 100] for index in range(0, len(reference), 100)]
+        candidate = "я".join(chunks)
+    else:
+        candidate = "".join(
+            character
+            for index, character in enumerate(reference)
+            if index % 100 != 99
+        )
+
+    assert exporter.character_sequence_matches(reference, candidate, threshold=0.9) is True
+
+
+def test_long_character_sequence_detects_clustered_edit_below_boundary() -> None:
+    reference = "".join(chr(ord("а") + index % 20) for index in range(50_000))
+    candidate = reference[:20_000] + ("я" * 4_500) + reference[24_500:]
+
+    assert exporter.character_sequence_matches(reference, candidate, threshold=0.9) is True
+
+
 def test_containment_prefilter_preserves_exact_containment() -> None:
     reference = "три слова тут і ще кілька слів для надійної перевірки"
     candidate = f"Початок матеріалу. {reference}. Завершення матеріалу."

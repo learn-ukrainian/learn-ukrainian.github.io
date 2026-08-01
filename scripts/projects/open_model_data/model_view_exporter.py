@@ -278,8 +278,13 @@ def character_sequence_matches(first: str, second: str, *, threshold: float) -> 
     Exact ``autojunk=False`` matching is retained for bounded strings. On long
     strings, where both difflib modes can take hours on ordinary language, use
     a deterministic multiset q-gram ladder. Its thresholds represent the
-    minimum surviving 2–5-gram overlap under a 10% distributed-edit boundary.
-    This also preserves detection in repetitive text that autojunk suppresses.
+    operational lower envelope for surviving 2–5-grams around a 10% edit
+    boundary: a single substitution, insertion, or deletion disrupts at most
+    ``q`` source q-grams. The ladder is deliberately a bounded detector rather
+    than a claim of formal equivalence to difflib on every adversarial edit
+    layout. Containment, word-shingle, and character-anchor checks remain
+    independent routes, while realistic long-text substitution, insertion,
+    deletion, clustered-edit, and repetitive-text cases are regression-tested.
     """
     if max(len(first), len(second)) <= MAX_EXACT_SEQUENCE_CHARACTERS:
         matcher = SequenceMatcher(None, first, second, autojunk=False)

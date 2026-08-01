@@ -97,6 +97,13 @@ destination-eligible correction-grade records. The 739,503 silver records stay
 available as protected or unresolved evidence; none is relabeled as human gold.
 This is an evidence-grade result, not a reviewer-staffing dependency.
 
+The production receipt keeps two scopes explicit. `evidence_grade` reports the
+linked full-corpus silver inventory (116,647 protected and 622,856 unresolved
+records). `protected_unresolved` reports candidate-bearing records in the
+admitted Wikipedia payload scope (423 protected and 978 unresolved); these
+payload categories overlap because one article can contain both kinds of span.
+They are not interchangeable counts.
+
 The final phase-3 feasibility verdict is `REVISE`: real control and
 loss-masked continued-pretraining inputs, evaluation isolation, protected/no-
 change inventory, recipes, and tokenizer diagnostics exist, but an exact
@@ -201,8 +208,11 @@ containment, character-sequence comparison, and three-token shingle Jaccard at
 Those bounds preserve a 10% distributed-edit candidate without invoking
 `difflib`'s unbounded long-text path, which was measured taking more than ten
 minutes on a single pair of ordinary 48–50k-character Ukrainian articles.
-Tests cover the boundary, repetitive distributed edits, frequency-matched
-non-duplicates, containment, and exhaustive short binary strings.
+Tests cover the boundary, repetitive distributed edits, realistic long-text
+insertions and deletions, clustered edits, frequency-matched non-duplicates,
+containment, and exhaustive short binary strings. The long-text ladder is an
+operational detector around the declared edit boundary, not a formal claim of
+equivalence to every adversarial `difflib` alignment.
 
 Each text contributes at most 64 deterministic, evenly spaced eight-character
 anchors (including both endpoints) to the character candidate index. This
