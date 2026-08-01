@@ -142,6 +142,23 @@ def _seed_plane(root: Path) -> None:
                 'legacy-bridge', '2026-08-01T12:07:00Z'
             );
 
+            INSERT INTO authority_deliveries(
+                delivery_id, message_id, recipient, state, deadline_at, lease_owner,
+                lease_expires_at, fence_token, attempt_count, acknowledgment_artifact_id,
+                terminal_sha256, created_at, updated_at, completed_at
+            ) VALUES (
+                'authority-delivery-1', 'authority-message', 'codex', 'failed', NULL, NULL,
+                NULL, 3, 3, NULL, 'terminal-sha', '2026-08-01T12:07:00Z',
+                '2026-08-01T12:08:00Z', '2026-08-01T12:08:00Z'
+            );
+
+            INSERT INTO authority_dead_letters(
+                dead_letter_id, delivery_id, job_id, reason_code, created_at
+            ) VALUES (
+                'authority-dead-letter-1', 'authority-delivery-1', NULL,
+                'attempts_exhausted', '2026-08-01T12:08:00Z'
+            );
+
             INSERT INTO authority_jobs(
                 job_id, job_kind, subject_id, payload_artifact_id, state, deadline_at,
                 lease_owner, lease_expires_at, fence_token, attempt_count, result_artifact_id,
@@ -223,6 +240,15 @@ def test_plane_health_and_overview_expose_active_authority_posture(
     assert health["cutover"] == "authority_active"
     assert overview["authority"] == health["authority"]
     assert overview["cutover"] == health["cutover"]
+    assert overview["counts"]["dead_letters"]["total"] == 1
+
+    dead_letters = client.get(
+        "/api/fleet/dead-letters",
+        params={"state": "failed", "agent": "codex", "source": "legacy-bridge"},
+    ).json()
+    assert dead_letters["total"] == 1
+    assert dead_letters["dead_letters"][0]["reason"] == "attempts_exhausted"
+    assert dead_letters["dead_letters"][0]["via"] == "queue"
 
 
 def test_message_and_request_filters_are_stable_and_bodies_are_bounded(

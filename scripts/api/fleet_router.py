@@ -398,9 +398,12 @@ def fleet_overview() -> dict[str, Any]:
             "total": sum(authority_job_states.values()),
             "by_state": authority_job_states,
         }
-        if _table_exists(connection, "dead_letters"):
+        dead_letter_table = (
+            "authority_dead_letters" if status["mode"] == "authority" else "dead_letters"
+        )
+        if _table_exists(connection, dead_letter_table):
             counts["dead_letters"]["total"] = int(
-                connection.execute("SELECT COUNT(*) FROM dead_letters").fetchone()[0]
+                connection.execute(f"SELECT COUNT(*) FROM {dead_letter_table}").fetchone()[0]
             )
         if _table_exists(connection, "acp_conversations"):
             counts["acp_conversations"]["total"] = int(
@@ -1517,7 +1520,7 @@ def fleet_dead_letters(
     limit: int = Query(default=DEFAULT_PAGE_SIZE, ge=1, le=MAX_PAGE_SIZE),
     offset: int = Query(default=0, ge=0),
 ) -> dict[str, Any]:
-    """Dead-letter metadata tied back to a request when optional tables exist."""
+    """Current authority DLQ metadata, or the legacy read projection during rollback."""
     since_value = _normalize_time(since, "since")
     until_value = _normalize_time(until, "until")
     filters = {
@@ -1531,6 +1534,65 @@ def fleet_dead_letters(
         if connection is None:
             return _empty_collection(
                 "dead_letters", limit=limit, offset=offset, availability=availability, filters=filters
+            )
+        if _safe_plane_status()["mode"] == "authority":
+            if not _table_exists(connection, "authority_dead_letters"):
+                return _empty_collection(
+                    "dead_letters",
+                    limit=limit,
+                    offset=offset,
+                    availability="table_missing",
+                    filters=filters,
+                )
+            clauses: list[str] = []
+            params: list[Any] = []
+            if state is not None:
+                clauses.append("COALESCE(delivery.state, job.state) = ?")
+                params.append(state)
+            if agent is not None:
+                clauses.append("COALESCE(delivery.recipient, 'authority-job') = ?")
+                params.append(agent)
+            if source is not None:
+                clauses.append(
+                    "COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), "
+                    "'authority') = ?"
+                )
+                params.append(source)
+            _time_clauses(
+                "letter.created_at",
+                since=since_value,
+                until=until_value,
+                clauses=clauses,
+                params=params,
+            )
+            return _paged_query(
+                connection,
+                key="dead_letters",
+                select_sql=(
+                    "SELECT letter.dead_letter_id, job.subject_id AS request_id, "
+                    "letter.delivery_id, letter.reason_code AS reason, NULL AS successor, "
+                    "COALESCE(delivery.deadline_at, job.deadline_at) AS original_expires_at, "
+                    "letter.created_at, COALESCE(delivery.state, job.state) AS request_state, "
+                    "delivery.recipient AS resolved_recipient, 'authority' AS conversation_source, "
+                    "authority_meta.provenance_json AS authority_provenance_json"
+                ),
+                from_sql=(
+                    " FROM authority_dead_letters AS letter"
+                    " LEFT JOIN authority_deliveries AS delivery"
+                    " ON delivery.delivery_id = letter.delivery_id"
+                    " LEFT JOIN comms_messages AS message"
+                    " ON message.message_id = delivery.message_id"
+                    " LEFT JOIN authority_message_metadata AS authority_meta"
+                    " ON authority_meta.message_id = message.message_id"
+                    " LEFT JOIN authority_jobs AS job ON job.job_id = letter.job_id"
+                ),
+                clauses=clauses,
+                params=params,
+                order_sql="letter.created_at DESC, letter.dead_letter_id ASC",
+                limit=limit,
+                offset=offset,
+                filters=filters,
+                transform=_dead_letter_item,
             )
         if not _table_exists(connection, "dead_letters"):
             return _empty_collection(
