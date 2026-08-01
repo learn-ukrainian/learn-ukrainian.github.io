@@ -329,6 +329,11 @@ operation.
 
 ## Panel decisions and disagreements
 
+Exact task/message identities, result hashes, installed-CLI help hashes, and
+the root-repeated 169-test receipt are preserved in the
+[architecture research and advisor receipt](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6162#issuecomment-5150430545).
+The summaries below are conclusions; the linked receipt is the audit pointer.
+
 The design incorporated these independent findings:
 
 - **Kimi K3:** approved the locator-only direction, but identified the public

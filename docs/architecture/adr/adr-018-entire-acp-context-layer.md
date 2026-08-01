@@ -7,6 +7,7 @@
 **Related**: [#4707](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4707),
 [#5880](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5880),
 [#6162](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6162),
+[architecture research and advisor receipt](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6162#issuecomment-5150430545),
 [rollout plan](../../plans/2026-08-01-entire-acp-context-layer-rollout.md)
 
 ## Context
