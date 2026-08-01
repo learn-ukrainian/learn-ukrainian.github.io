@@ -21,11 +21,16 @@ issues orphaning scope). This gate makes drift visible at every cold start.
 from __future__ import annotations
 
 import argparse
+import contextlib
+import fcntl
 import json
 import math
+import os
 import re
+import secrets
 import subprocess
 import sys
+import tempfile
 import time
 from collections.abc import Callable
 from pathlib import Path
@@ -46,6 +51,527 @@ PRIVATE_CACHE_KEYS = ("effective_membership", "open_issue_numbers")
 # A resolver proving issue N is a live child of stream epic E, offline, from a
 # fresh cache. Signature mirrors P1's ``check_research_registry.MembershipResolver``.
 MembershipResolver = Callable[[int, int], bool]
+
+# --------------------------------------------------------------------------- #
+# #6145 — truthful refresh state sidecar (#4707).
+#
+# The refresh worker is explicitly detached and single-flight for both the
+# stale-fallback and ``?fresh=true`` paths. Runtime-only state lives in two
+# gitignored sidecars under ``batch_state/``:
+#
+#   REFRESH_STATE_PATH — JSON state machine (phase, outcome, cooldown, …)
+#   REFRESH_LOCK_PATH  — cross-process ``flock`` advisory lock
+#
+# The scheduler takes the lock, atomically writes ``scheduled`` with a fresh
+# opaque ``run_id``, spawns the worker, and releases. The worker acquires and
+# HOLDS the lock for the entire audit, verifies ``run_id``, writes ``running``,
+# then atomically writes the terminal outcome before release. A stale ``run_id``
+# can never overwrite a newer run. A scheduled worker that never starts or a
+# ``running`` state observed with a free lock is reconciled to
+# ``failed/worker_lost`` after a short deterministic grace.
+# --------------------------------------------------------------------------- #
+REFRESH_STATE_PATH = ROOT / "batch_state" / "issue_stream_audit_refresh.json"
+REFRESH_LOCK_PATH = ROOT / "batch_state" / "issue_stream_audit_refresh.lock"
+
+# Grace for the spawn→acquire race: the scheduler writes ``scheduled``, spawns
+# the worker, and releases the lock. The worker subprocess then acquires it.
+# During that gap a concurrent ``read_refresh_state`` may briefly observe
+# ``scheduled`` — it must not immediately reconcile to ``worker_lost``.
+SCHEDULED_GRACE_S = 15
+
+# Deterministic cooldown after an automatic failure: default/stale requests
+# will not re-schedule until this many seconds have elapsed. Explicit
+# ``?fresh=true`` bypasses the cooldown but is still single-flight.
+FAILURE_COOLDOWN_S = 60
+
+_VALID_PHASES = ("idle", "scheduled", "running")
+_VALID_OUTCOMES = ("none", "succeeded", "failed")
+_VALID_FAILURE_CODES = (
+    "spawn_failed",
+    "worker_lost",
+    "source_unavailable",
+    "source_timeout",
+    "source_error",
+    "cache_write_failed",
+    "audit_failed",
+)
+
+
+# --------------------------------------------------------------------------- #
+# #6145 — refresh state machine: validation, atomic I/O, locking
+# --------------------------------------------------------------------------- #
+def _default_refresh_state() -> dict:
+    """The canonical idle state used when the sidecar is missing or malformed."""
+    return {
+        "schema_version": 1,
+        "run_id": None,
+        "phase": "idle",
+        "requested_at": None,
+        "started_at": None,
+        "last_outcome": "none",
+        "last_outcome_at": None,
+        "failure_code": None,
+        "cooldown_until": None,
+    }
+
+
+def _is_finite_epoch(val: object) -> bool:
+    """True for a real (non-bool) int/float >= 0 suitable as a UTC epoch."""
+    return (
+        isinstance(val, (int, float))
+        and not isinstance(val, bool)
+        and math.isfinite(val)
+        and val >= 0
+    )
+
+
+def _validate_refresh_state(raw: object) -> dict | None:
+    """Structurally + semantically validate the raw sidecar payload.
+
+    Returns a normalized dict on success, or ``None`` when the payload is
+    malformed — the caller MUST treat ``None`` as ``_default_refresh_state()``.
+    A malformed/missing sidecar never claims active work.
+    """
+    if not isinstance(raw, dict) or raw.get("schema_version") != 1:
+        return None
+    phase = raw.get("phase")
+    if phase not in _VALID_PHASES:
+        return None
+    outcome = raw.get("last_outcome", "none")
+    if outcome not in _VALID_OUTCOMES:
+        return None
+    failure_code = raw.get("failure_code")
+    if failure_code is not None and failure_code not in _VALID_FAILURE_CODES:
+        return None
+    run_id = raw.get("run_id")
+    if run_id is not None and not (isinstance(run_id, str) and run_id):
+        return None
+    requested_at = raw.get("requested_at")
+    started_at = raw.get("started_at")
+    last_outcome_at = raw.get("last_outcome_at")
+    cooldown_until = raw.get("cooldown_until")
+    for val in (requested_at, started_at, last_outcome_at, cooldown_until):
+        if val is not None and not _is_finite_epoch(val):
+            return None
+    normalized = {
+        "schema_version": 1,
+        "run_id": run_id if isinstance(run_id, str) else None,
+        "phase": phase,
+        "requested_at": requested_at if _is_finite_epoch(requested_at) else None,
+        "started_at": started_at if _is_finite_epoch(started_at) else None,
+        "last_outcome": outcome,
+        "last_outcome_at": last_outcome_at if _is_finite_epoch(last_outcome_at) else None,
+        "failure_code": failure_code if failure_code in _VALID_FAILURE_CODES else None,
+        "cooldown_until": cooldown_until if _is_finite_epoch(cooldown_until) else None,
+    }
+    if phase == "idle":
+        if (
+            normalized["run_id"] is not None
+            or normalized["requested_at"] is not None
+            or normalized["started_at"] is not None
+        ):
+            return None
+    elif normalized["run_id"] is None or normalized["requested_at"] is None:
+        return None
+    if phase == "scheduled" and normalized["started_at"] is not None:
+        return None
+    if phase == "running" and normalized["started_at"] is None:
+        return None
+    if outcome == "none":
+        if normalized["last_outcome_at"] is not None or failure_code is not None:
+            return None
+    elif normalized["last_outcome_at"] is None:
+        return None
+    if outcome == "failed" and failure_code is None:
+        return None
+    if outcome != "failed" and failure_code is not None:
+        return None
+    if outcome != "failed" and normalized["cooldown_until"] is not None:
+        return None
+    return normalized
+
+
+def _read_refresh_state_raw() -> object | None:
+    """Read the raw sidecar JSON (fail-safe to ``None``)."""
+    try:
+        return json.loads(REFRESH_STATE_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def _write_refresh_state_atomic(state: dict) -> None:
+    """Atomically replace the sidecar via temp-file + ``os.replace``.
+
+    The temp file lives in the same directory so ``os.replace`` is an atomic
+    rename on the same filesystem. A crash mid-write leaves the previous
+    state intact; a reader never observes partial JSON.
+    """
+    REFRESH_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    data = json.dumps(state, ensure_ascii=False)
+    fd, tmp = tempfile.mkstemp(
+        dir=str(REFRESH_STATE_PATH.parent),
+        prefix=".issue_stream_audit_refresh.",
+        suffix=".tmp",
+    )
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            fd = -1
+            handle.write(data)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(tmp, str(REFRESH_STATE_PATH))
+    except Exception:
+        if fd >= 0:
+            with contextlib.suppress(OSError):
+                os.close(fd)
+        with contextlib.suppress(OSError):
+            os.unlink(tmp)
+        raise
+
+
+# --------------------------------------------------------------------------- #
+# Cross-process locking (``flock`` — advisory, macOS/Linux)
+# --------------------------------------------------------------------------- #
+def _try_lock_nb() -> int | None:
+    """Non-blocking ``LOCK_EX`` acquire. Returns an fd on success, ``None``
+    when the lock is held by another process (or the file can't be opened)."""
+    fd: int | None = None
+    try:
+        REFRESH_LOCK_PATH.parent.mkdir(parents=True, exist_ok=True)
+        fd = os.open(str(REFRESH_LOCK_PATH), os.O_CREAT | os.O_RDWR, 0o600)
+        os.fchmod(fd, 0o600)
+    except OSError:
+        if fd is not None:
+            with contextlib.suppress(OSError):
+                os.close(fd)
+        return None
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        return fd
+    except (BlockingIOError, OSError):
+        with contextlib.suppress(OSError):
+            os.close(fd)
+        return None
+
+
+def _release_lock(fd: int) -> None:
+    with contextlib.suppress(OSError):
+        fcntl.flock(fd, fcntl.LOCK_UN)
+    with contextlib.suppress(OSError):
+        os.close(fd)
+
+
+def _acquire_lock_blocking(timeout_s: float) -> int | None:
+    """Bounded blocking acquire of the refresh lock.
+
+    The scheduler releases the lock immediately after spawning the worker, so
+    the worker should acquire it within milliseconds. A bounded retry avoids
+    an indefinite hang if the scheduler crashed while holding the lock.
+    """
+    deadline = time.monotonic() + timeout_s
+    while True:
+        fd = _try_lock_nb()
+        if fd is not None:
+            return fd
+        if time.monotonic() >= deadline:
+            return None
+        time.sleep(0.05)
+
+
+# --------------------------------------------------------------------------- #
+# Reconciliation
+# --------------------------------------------------------------------------- #
+def _apply_worker_lost(state: dict, *, failure_at: float) -> None:
+    """Mutate ``state`` in place to a terminal ``worker_lost`` outcome."""
+    fail_ts = int(failure_at)
+    state["phase"] = "idle"
+    state["run_id"] = None
+    state["requested_at"] = None
+    state["started_at"] = None
+    state["last_outcome"] = "failed"
+    state["failure_code"] = "worker_lost"
+    state["last_outcome_at"] = fail_ts
+    state["cooldown_until"] = fail_ts + FAILURE_COOLDOWN_S
+
+
+def _reconcile_state(raw: dict, *, now: float, lock_is_free: bool) -> dict:
+    """Compute the effective state.
+
+    ``lock_is_free=True``: the caller already holds the refresh lock (scheduler
+    or worker context). Any ``running`` state is inherently stale because the
+    caller has the lock the worker would need — reconcile without probing.
+
+    ``lock_is_free=False``: another process owns the lock, so a valid active
+    state is left unchanged.
+    """
+    state = dict(raw)
+    phase = state.get("phase", "idle")
+
+    if phase == "scheduled":
+        requested_at = state.get("requested_at")
+        if _is_finite_epoch(requested_at) and now - requested_at > SCHEDULED_GRACE_S:
+            _apply_worker_lost(state, failure_at=int(requested_at + SCHEDULED_GRACE_S))
+
+    elif phase == "running" and lock_is_free:
+        _apply_worker_lost(state, failure_at=int(now))
+
+    cooldown = state.get("cooldown_until")
+    if _is_finite_epoch(cooldown) and now >= cooldown:
+        state["cooldown_until"] = None
+
+    return state
+
+
+# --------------------------------------------------------------------------- #
+# Public read + view
+# --------------------------------------------------------------------------- #
+def read_refresh_state(*, now: float | None = None) -> dict:
+    """Read, validate, and reconcile the refresh state. Fail-safe to idle.
+
+    This is the bounded state-observation path used by the router for
+    cache-hit responses. It takes the cross-process lock only long enough to
+    reconcile and, when possible, persist a lost-worker or expired-cooldown
+    transition.
+    """
+    t = now if now is not None else time.time()
+    fd = _try_lock_nb()
+    if fd is None:
+        raw = _validate_refresh_state(_read_refresh_state_raw())
+        return raw if raw is not None else _default_refresh_state()
+    try:
+        raw = _validate_refresh_state(_read_refresh_state_raw())
+        if raw is None:
+            return _default_refresh_state()
+        reconciled = _reconcile_state(raw, now=t, lock_is_free=True)
+        if reconciled != raw:
+            # The observed projection remains truthful even if a filesystem
+            # fault prevents persisting reconciliation. The next scheduler
+            # will retry under the same lock and report a bounded API error if
+            # it cannot persist a new run.
+            with contextlib.suppress(OSError):
+                _write_refresh_state_atomic(reconciled)
+        return reconciled
+    finally:
+        _release_lock(fd)
+
+
+def public_refresh_view(state: dict) -> dict:
+    """Build the public ``refresh`` contract from internal state.
+
+    Never exposes ``run_id``, ``schema_version``, lock paths, PID, exception
+    text, or any internal detail. ``retry_after`` maps to the internal
+    ``cooldown_until``.
+    """
+    return {
+        "phase": state.get("phase", "idle"),
+        "requested_at": state.get("requested_at"),
+        "started_at": state.get("started_at"),
+        "last_outcome": state.get("last_outcome", "none"),
+        "last_outcome_at": state.get("last_outcome_at"),
+        "failure_code": state.get("failure_code"),
+        "retry_after": state.get("cooldown_until"),
+    }
+
+
+# --------------------------------------------------------------------------- #
+# Scheduler + worker
+# --------------------------------------------------------------------------- #
+def _venv_python() -> str:
+    """Path to the venv Python binary for spawning the detached worker."""
+    return str(ROOT / ".venv" / "bin" / "python")
+
+
+def _spawn_worker(run_id: str) -> bool:
+    """Spawn the detached refresh worker subprocess. Returns True on success."""
+    try:
+        subprocess.Popen(
+            [
+                _venv_python(),
+                "-m", "scripts.orchestration.issue_stream_audit",
+                "--refresh-worker", run_id,
+            ],
+            cwd=str(ROOT),
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+            close_fds=True,
+        )
+        return True
+    except OSError:
+        return False
+
+
+def _classify_failure(exc: Exception) -> str:
+    """Map an audit exception to a failure code from the allowlist.
+
+    ``FileNotFoundError``/``PermissionError`` (subclasses of ``OSError``) are
+    checked before the generic ``OSError`` branch so a missing ``gh`` binary
+    is classified as ``source_unavailable`` rather than ``cache_write_failed``.
+    """
+    if isinstance(exc, subprocess.TimeoutExpired):
+        return "source_timeout"
+    if isinstance(exc, (FileNotFoundError, PermissionError)):
+        return "source_unavailable"
+    if isinstance(exc, json.JSONDecodeError):
+        return "source_error"
+    if isinstance(exc, RuntimeError):
+        msg = str(exc).lower()
+        if "timed out" in msg or "timeout" in msg:
+            return "source_timeout"
+        return "source_error"
+    if isinstance(exc, OSError):
+        return "cache_write_failed"
+    return "audit_failed"
+
+
+def schedule_refresh(*, force: bool = False) -> dict:
+    """Single-flight refresh scheduler for both stale-fallback and
+    ``?fresh=true`` paths.
+
+    Takes the lock, atomically writes ``scheduled`` with a fresh opaque
+    ``run_id``, spawns the detached worker, and releases. The worker then
+    acquires and holds the lock for the entire audit.
+
+    ``force=True`` (explicit ``?fresh=true``) bypasses the automatic cooldown
+    but is still single-flight — an active run is observed, not duplicated.
+
+    Returns the reconciled internal state *after* scheduling (or observing an
+    active run). The caller builds the public view via
+    :func:`public_refresh_view`.
+    """
+    now = time.time()
+    fd = _try_lock_nb()
+    if fd is None:
+        # Lock held by a scheduler or worker — an active run is in progress.
+        raw = _validate_refresh_state(_read_refresh_state_raw())
+        if raw is None:
+            raw = _default_refresh_state()
+        return raw
+
+    try:
+        raw = _validate_refresh_state(_read_refresh_state_raw())
+        if raw is None:
+            raw = _default_refresh_state()
+        reconciled = _reconcile_state(raw, now=now, lock_is_free=True)
+        if reconciled != raw:
+            _write_refresh_state_atomic(reconciled)
+
+        # Active run in progress — the spawn→acquire race: the scheduler that
+        # wrote ``scheduled`` released the lock, the worker hasn't acquired it
+        # yet, and we briefly took it. Don't schedule another; the existing
+        # run will proceed once we release.
+        if reconciled["phase"] == "scheduled":
+            return reconciled
+
+        # ``running`` can't survive free-lock reconciliation.
+        assert reconciled["phase"] == "idle"
+
+        # Cooldown gate for automatic requests.
+        cooldown = reconciled.get("cooldown_until")
+        if not force and _is_finite_epoch(cooldown) and now < cooldown:
+            return reconciled
+
+        run_id = secrets.token_hex(8)
+        ts = int(now)
+        scheduled: dict = {
+            "schema_version": 1,
+            "run_id": run_id,
+            "phase": "scheduled",
+            "requested_at": ts,
+            "started_at": None,
+            "last_outcome": reconciled.get("last_outcome", "none"),
+            "last_outcome_at": reconciled.get("last_outcome_at"),
+            "failure_code": reconciled.get("failure_code")
+            if reconciled.get("last_outcome") == "failed"
+            else None,
+            # A retry is now active, so an earlier terminal failure no longer
+            # has a future retry gate even though its outcome remains visible.
+            "cooldown_until": None,
+        }
+        _write_refresh_state_atomic(scheduled)
+
+        if not _spawn_worker(run_id):
+            fail_ts = int(time.time())
+            scheduled.update(
+                phase="idle",
+                run_id=None,
+                requested_at=None,
+                last_outcome="failed",
+                last_outcome_at=fail_ts,
+                failure_code="spawn_failed",
+                cooldown_until=fail_ts + FAILURE_COOLDOWN_S,
+            )
+            _write_refresh_state_atomic(scheduled)
+
+        return scheduled
+    finally:
+        _release_lock(fd)
+
+
+def _run_refresh_worker(run_id: str) -> int:
+    """Detached refresh worker — invoked via ``--refresh-worker RUN_ID``.
+
+    Acquires the lock (bounded retry for the spawn→acquire gap), verifies
+    ``run_id``, writes ``running``, runs the full audit, and atomically
+    writes the terminal outcome before releasing. A stale ``run_id`` (a newer
+    scheduler superseded us) causes an immediate no-op exit.
+    """
+    fd = _acquire_lock_blocking(timeout_s=SCHEDULED_GRACE_S)
+    if fd is None:
+        return 1
+
+    try:
+        raw = _validate_refresh_state(_read_refresh_state_raw())
+        if raw is None:
+            raw = _default_refresh_state()
+        # run_id mismatch → a newer run superseded us; do nothing.
+        if raw.get("run_id") != run_id:
+            return 0
+
+        running = dict(raw)
+        running["phase"] = "running"
+        running["started_at"] = int(time.time())
+        _write_refresh_state_atomic(running)
+
+        try:
+            run_audit()
+        except Exception as exc:
+            code = _classify_failure(exc)
+            fail_ts = int(time.time())
+            current = _validate_refresh_state(_read_refresh_state_raw())
+            if current is None or current.get("run_id") != run_id:
+                return 0
+            _write_refresh_state_atomic({
+                "schema_version": 1,
+                "run_id": None,
+                "phase": "idle",
+                "requested_at": None,
+                "started_at": None,
+                "last_outcome": "failed",
+                "last_outcome_at": fail_ts,
+                "failure_code": code,
+                "cooldown_until": fail_ts + FAILURE_COOLDOWN_S,
+            })
+            return 1
+
+        current = _validate_refresh_state(_read_refresh_state_raw())
+        if current is None or current.get("run_id") != run_id:
+            return 0
+        ok_ts = int(time.time())
+        _write_refresh_state_atomic({
+            "schema_version": 1,
+            "run_id": None,
+            "phase": "idle",
+            "requested_at": None,
+            "started_at": None,
+            "last_outcome": "succeeded",
+            "last_outcome_at": ok_ts,
+            "failure_code": None,
+            "cooldown_until": None,
+        })
+        return 0
+    finally:
+        _release_lock(fd)
 
 
 def load_registry(path: Path = REGISTRY_PATH) -> dict[str, list[int]]:
@@ -587,7 +1113,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--from-cache", action="store_true")
     parser.add_argument("--max-age", type=int, default=3600)
     parser.add_argument("--migrate", action="store_true")
+    parser.add_argument("--refresh-worker", metavar="RUN_ID", help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
+
+    if args.refresh_worker:
+        return _run_refresh_worker(args.refresh_worker)
 
     report = read_cache(args.max_age) if args.from_cache else None
     if report is None:
