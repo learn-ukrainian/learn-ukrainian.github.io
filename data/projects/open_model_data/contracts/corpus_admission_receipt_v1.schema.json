@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/corpus_admission_receipt_v1.schema.json",
+  "title": "Ukrainian Data Foundry corpus admission receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "admission_id", "coverage", "dispositions", "families", "evaluation_exclusion", "outputs", "determinism", "training_eligible_emitted"],
+  "properties": {
+    "schema_version": {"const": "corpus_admission_receipt_v1"},
+    "admission_id": {"type": "string", "minLength": 3},
+    "coverage": {"type": "object", "additionalProperties": false, "required": ["complete", "expected_rows", "expected_lexical_words", "processed_rows", "processed_lexical_words", "inaccessible_families"], "properties": {"complete": {"type": "boolean"}, "expected_rows": {"type": "integer", "minimum": 0}, "expected_lexical_words": {"type": "integer", "minimum": 0}, "processed_rows": {"type": "integer", "minimum": 0}, "processed_lexical_words": {"type": "integer", "minimum": 0}, "inaccessible_families": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["source_family", "reason"], "properties": {"source_family": {"type": "string"}, "reason": {"type": "string"}}}}}},
+    "dispositions": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": false, "required": ["rows", "lexical_words"], "properties": {"rows": {"type": "integer", "minimum": 0}, "lexical_words": {"type": "integer", "minimum": 0}}}},
+    "families": {"type": "array", "items": {"type": "object"}},
+    "evaluation_exclusion": {"type": "object"},
+    "outputs": {"type": "object", "additionalProperties": false, "required": ["manifest"], "properties": {"manifest": {"type": "object", "additionalProperties": false, "required": ["bytes", "records", "sha256"], "properties": {"bytes": {"type": "integer", "minimum": 0}, "records": {"type": "integer", "minimum": 0}, "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}}}},
+    "determinism": {"type": "object"},
+    "training_eligible_emitted": {"const": false}
+  }
+}

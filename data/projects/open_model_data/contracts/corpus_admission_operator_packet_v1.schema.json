@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/corpus_admission_operator_packet_v1.schema.json",
+  "title": "Ukrainian Data Foundry corpus-admission operator packet v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "admission_id", "decision_required", "families", "operator_choices", "total_rows", "total_words"],
+  "properties": {
+    "schema_version": {"const": "corpus_admission_operator_packet_v1"},
+    "admission_id": {"type": "string", "minLength": 3},
+    "decision_required": {"const": true},
+    "families": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["source_family", "current_disposition", "rows", "words", "blocked_by"], "properties": {"source_family": {"type": "string", "minLength": 3}, "current_disposition": {"enum": ["unresolved", "investigation_only", "proposed_admission", "excluded"]}, "rows": {"type": "integer", "minimum": 0}, "words": {"type": "integer", "minimum": 0}, "blocked_by": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}}},
+    "operator_choices": {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 1}},
+    "total_rows": {"type": "integer", "minimum": 0},
+    "total_words": {"type": "integer", "minimum": 0}
+  }
+}
