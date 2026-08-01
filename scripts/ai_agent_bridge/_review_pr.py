@@ -69,10 +69,20 @@ def _formal_review_authority_key(
 
 
 def _canonical_review_response_text(response: str) -> str:
-    """Unwrap only one exact JSON code fence emitted by ACP review seats."""
+    """Extract one JSON object from the two bounded ACP wrapper shapes."""
     stripped = response.strip()
     match = re.fullmatch(r"```json\r?\n(?P<body>.+)\r?\n```", stripped, re.DOTALL)
-    return match.group("body").strip() if match is not None else stripped
+    if match is not None:
+        return match.group("body").strip()
+    object_start = stripped.find("{")
+    if object_start > 0 and "}" not in stripped[:object_start]:
+        try:
+            _value, object_end = json.JSONDecoder().raw_decode(stripped, object_start)
+        except json.JSONDecodeError:
+            return stripped
+        if not stripped[object_end:].strip():
+            return stripped[object_start:object_end]
+    return stripped
 
 
 class _ReviewPrLifecycle:

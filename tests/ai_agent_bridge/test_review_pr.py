@@ -32,11 +32,15 @@ def test_formal_review_authority_key_is_bounded_and_opaque() -> None:
     assert "/" not in key
 
 
-def test_canonical_review_response_unwraps_only_exact_json_fence() -> None:
+def test_canonical_review_response_unwraps_only_single_json_object() -> None:
     payload = '{"schema_version":"code-review-findings.v1"}'
     assert review_pr._canonical_review_response_text(f"```json\n{payload}\n```") == payload
+    leading_text = f"Reviewed the exact head.\n{payload}"
+    assert review_pr._canonical_review_response_text(leading_text) == payload
     with_extra_text = f"Here is the verdict:\n```json\n{payload}\n```"
     assert review_pr._canonical_review_response_text(with_extra_text) == with_extra_text
+    trailing_text = f"{payload}\nThis is extra."
+    assert review_pr._canonical_review_response_text(trailing_text) == trailing_text
 
 
 def test_build_review_pr_prompt_has_contract_and_cap() -> None:
