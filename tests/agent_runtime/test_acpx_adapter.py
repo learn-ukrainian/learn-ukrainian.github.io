@@ -1595,7 +1595,11 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
         path.chmod(0o755)
         binaries[name] = str(path)
     monkeypatch.setattr(acpx_module.shutil, "which", lambda name: binaries.get(name))
-    monkeypatch.setattr(acpx_module, "_probe_participant_cli_version", lambda _path: version)
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_participant_cli_version",
+        lambda _path, _executable: version,
+    )
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
     monkeypatch.delenv("CI", raising=False)
 
@@ -1659,7 +1663,11 @@ def test_new_fleet_discussion_seat_rejects_provider_cli_version_drift(tmp_path, 
         "which",
         lambda name: str({"agy": agy, "node": node}[name]),
     )
-    monkeypatch.setattr(acpx_module, "_probe_participant_cli_version", lambda _path: "9.9.9")
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_participant_cli_version",
+        lambda _path, _executable: "9.9.9",
+    )
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
 
     with acpx_module.active_discussion_scope(), pytest.raises(
@@ -1684,12 +1692,22 @@ def test_new_fleet_discussion_seat_rejects_provider_cli_version_drift(tmp_path, 
 def test_participant_version_probe_accepts_v_prefix_before_build_stamp(tmp_path):
     binary = tmp_path / "hermes"
     binary.write_text(
-        "#!/bin/sh\nprintf '%s\\n' 'Hermes Agent v0.18.2 (2026.7.7.2)'\n",
+        "#!/bin/sh\nprintf '%s\\n' 'Python 3.11.15' "
+        "'Hermes Agent v0.18.2 (2026.7.7.2)'\n",
         encoding="utf-8",
     )
     binary.chmod(0o755)
 
-    assert acpx_module._probe_participant_cli_version(str(binary)) == "0.18.2"
+    assert acpx_module._probe_participant_cli_version(str(binary), "hermes") == "0.18.2"
+
+
+def test_text_agent_digest_mismatch_refuses_before_spawn(tmp_path, monkeypatch):
+    text_agent = tmp_path / "acp_text_agent.mjs"
+    text_agent.write_text("unreviewed confinement change\n", encoding="utf-8")
+    monkeypatch.setattr(acpx_module, "_TEXT_AGENT_PATH", text_agent)
+
+    with pytest.raises(AcpxShadowRefusalError, match="digest mismatch"):
+        acpx_module._require_text_agent(adapter_label="AcpxAgyShadowAdapter")
 
 
 def test_build_grok_agent_command_quotes_absolute_paths_with_spaces(tmp_path):

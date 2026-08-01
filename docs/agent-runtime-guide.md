@@ -93,7 +93,9 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158):
 - Local pin `acpx@0.13.0` (`node_modules/.bin/acpx`); every adapter refuses to
   spawn on any other resolved version.
 - Custom seats also pin their provider CLIs: Grok `0.2.117`, AGY `1.1.9`,
-  OpenCode/GLM `1.17.13`, and Hermes/DeepSeek `0.18.2`.
+  OpenCode/GLM `1.17.13`, and Hermes/DeepSeek `0.18.2`. Provider version
+  parsing is anchored to each reviewed CLI output format, and the project text
+  ACP server is SHA-256 digest-checked before spawn.
 - Codex participant:
   `tool_config={"acpx_shadow": True, "target_agent": "codex"}`.
 - Grok participant:

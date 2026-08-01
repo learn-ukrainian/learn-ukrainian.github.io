@@ -139,6 +139,7 @@ _DEFAULT_PINNED_BINARY = _REPO_ROOT / "node_modules" / ".bin" / "acpx"
 # override is authoritative and must never silently fall back to another tree.
 _PINNED_BINARY = _DEFAULT_PINNED_BINARY
 _TEXT_AGENT_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "acp_text_agent.mjs"
+_TEXT_AGENT_SHA256 = "42761e2bd9ab0e66f5e5779826777b46bd0761cc4673e13285e1fc37418ea679"
 _OPENCODE_DENY_ALL_CONFIG = json.dumps(
     {"permission": {"*": "deny"}, "tools": {"*": False}},
     separators=(",", ":"),
@@ -608,12 +609,16 @@ def _build_grok_agent_command(abs_grok: str, profile_path: str) -> str:
     )
 
 
-_SEMVER_RE = re.compile(r"(?<!\d)(\d+\.\d+\.\d+)(?![\d.])")
+_PROVIDER_VERSION_PATTERNS = {
+    "agy": re.compile(r"^\s*(\d+\.\d+\.\d+)\s*$", re.MULTILINE),
+    "opencode": re.compile(r"^\s*(\d+\.\d+\.\d+)\s*$", re.MULTILINE),
+    "hermes": re.compile(r"^\s*Hermes Agent v(\d+\.\d+\.\d+)(?:\s|$)", re.MULTILINE),
+}
 
 
 @lru_cache(maxsize=16)
-def _probe_participant_cli_version(binary: str) -> str:
-    """Return the first exact semver from ``<binary> --version``."""
+def _probe_participant_cli_version(binary: str, executable: str) -> str:
+    """Return a version anchored to the reviewed provider output format."""
     try:
         proc = subprocess.run(
             [binary, "--version"],
@@ -626,7 +631,10 @@ def _probe_participant_cli_version(binary: str) -> str:
         return ""
     if proc.returncode != 0:
         return ""
-    match = _SEMVER_RE.search(f"{proc.stdout or ''}\n{proc.stderr or ''}")
+    pattern = _PROVIDER_VERSION_PATTERNS.get(executable)
+    if pattern is None:
+        return ""
+    match = pattern.search(f"{proc.stdout or ''}\n{proc.stderr or ''}")
     return match.group(1) if match else ""
 
 
@@ -648,7 +656,7 @@ def _resolve_participant_binary(
         raise AcpxShadowRefusalError(
             f"{adapter_label}: resolved {executable} path {resolved} is not a file"
         )
-    observed = _probe_participant_cli_version(str(resolved))
+    observed = _probe_participant_cli_version(str(resolved), executable)
     if observed != expected_version:
         raise AcpxShadowRefusalError(
             f"{adapter_label}: resolved {executable} binary reports version {observed!r} "
@@ -662,6 +670,17 @@ def _require_text_agent(*, adapter_label: str) -> str:
     if not _TEXT_AGENT_PATH.is_file():
         raise AcpxShadowRefusalError(
             f"{adapter_label}: required text-only ACP server missing at {_TEXT_AGENT_PATH}"
+        )
+    try:
+        observed = hashlib.sha256(_TEXT_AGENT_PATH.read_bytes()).hexdigest()
+    except OSError as exc:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: unable to read text-only ACP server at {_TEXT_AGENT_PATH}: {exc}"
+        ) from exc
+    if observed != _TEXT_AGENT_SHA256:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: text-only ACP server digest mismatch; refusing unreviewed "
+            "confinement code"
         )
     return str(_TEXT_AGENT_PATH)
 

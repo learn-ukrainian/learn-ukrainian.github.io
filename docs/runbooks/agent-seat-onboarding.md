@@ -153,7 +153,8 @@ not permanent routing weights and do not override current CodexBar headroom.
   resolved binary version.
 - Custom participant commands additionally preflight their reviewed provider
   CLI versions: Grok `0.2.117`, AGY `1.1.9`, OpenCode/GLM `1.17.13`, and
-  Hermes/DeepSeek `0.18.2`.
+  Hermes/DeepSeek `0.18.2`. Each version is parsed only from its reviewed CLI
+  output shape, and the project text ACP server is digest-checked before use.
 - Every invocation requires a non-empty, bounded, local `task_id`,
   `correlation_id`, and `idempotency_key`, a fixed target from the participant
   registry, and a read-only, non-primary worktree.
