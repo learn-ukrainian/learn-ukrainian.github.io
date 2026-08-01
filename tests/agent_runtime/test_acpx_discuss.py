@@ -1008,6 +1008,44 @@ def test_expired_recovery_is_terminal_without_provider_retry(tmp_path, monkeypat
     assert calls == []
 
 
+def test_recovery_ignores_authority_native_discussion_rows(tmp_path, monkeypatch):
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        lambda agent, _prompt, **_kwargs: _result(agent, f"{agent} evidence"),
+        lambda agent, _prompt, **_kwargs: _result(agent, "synthesis"),
+    )
+    authority_conversation_id = "conversation_" + ("a" * 32)
+    try:
+        controller.conn.execute(
+            "INSERT INTO conversations(conversation_id, created_at, source, title) "
+            "VALUES (?, '2000-01-01T00:00:00Z', 'authority-discussion', 'authority')",
+            (authority_conversation_id,),
+        )
+        controller.conn.execute(
+            """INSERT INTO acp_conversations(
+                   conversation_id, task_digest, correlation_digest, idempotency_digest,
+                   rounds_requested, participants_json, created_at, deadline_at,
+                   token_budget, content_budget_bytes
+               ) VALUES (?, 'task', 'correlation', 'authority-idempotency', 1,
+                         '["codex","grok"]', '2000-01-01T00:00:00Z',
+                         '2000-01-01T00:00:00Z', 100, 100)""",
+            (authority_conversation_id,),
+        )
+        controller.conn.commit()
+
+        payload = _run(controller, key="fresh-acpx-after-authority", rounds=1)
+        authority_events = controller.conn.execute(
+            "SELECT COUNT(*) FROM acp_conversation_events WHERE conversation_id = ?",
+            (authority_conversation_id,),
+        ).fetchone()[0]
+    finally:
+        controller.close()
+
+    assert payload["state"] == "COMPLETE"
+    assert authority_events == 0
+
+
 def test_next_admitted_discussion_recovers_expired_reservation_before_new_calls(
     tmp_path, monkeypatch
 ):
