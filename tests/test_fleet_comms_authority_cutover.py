@@ -619,6 +619,22 @@ def test_legacy_sqlite_import_preserves_bridge_and_channel_metadata(tmp_path: Pa
                 "2037-01-01T00:01:00Z",
             ),
         )
+        conn.execute(
+            """INSERT INTO channel_messages VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (
+                "channel-2",
+                "coordination",
+                "thread-1",
+                "channel-1",
+                "corr-1",
+                "claude",
+                "reply",
+                "channel reply",
+                "",
+                "",
+                "2037-01-01T00:02:00Z",
+            ),
+        )
         conn.execute("INSERT INTO deliveries VALUES (?, ?)", ("channel-1", "claude"))
         conn.commit()
     finally:
@@ -626,13 +642,17 @@ def test_legacy_sqlite_import_preserves_bridge_and_channel_metadata(tmp_path: Pa
 
     with AuthorityService(root=_root(tmp_path)) as service:
         result = service.import_legacy_sqlite(legacy, source="legacy-broker-v1")
-        assert result.imported == 2
+        assert result.imported == 3
         channel = service.get_channel("coordination")
         assert channel.subscribers == ("claude", "codex")
         imported_channel = service.get_message(result.message_ids[1])
         assert imported_channel.correlation_id == "corr-1"
         assert imported_channel.provenance["Via"] == "legacy-channel"
         assert service.read_message_body(imported_channel.message_id) == "channel body"
+        imported_reply = service.get_message(result.message_ids[2])
+        assert imported_reply.in_reply_to == imported_channel.message_id
+        assert imported_reply.conversation_id == imported_channel.conversation_id
+        assert service.read_message_body(imported_reply.message_id) == "channel reply"
 
 
 def test_formal_review_refuses_head_mismatch_before_verdict_publication(tmp_path: Path) -> None:

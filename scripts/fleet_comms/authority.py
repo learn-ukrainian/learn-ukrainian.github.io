@@ -1948,6 +1948,7 @@ class AuthorityService:
         delivery_map: Mapping[str, tuple[str, ...]],
     ) -> dict[str, Any]:
         message_id = str(row["message_id"])
+        parent_id = row["parent_id"]
         return {
             "external_id": f"channel:{message_id}",
             "body": str(row["body"] or ""),
@@ -1956,7 +1957,10 @@ class AuthorityService:
             "recipients": delivery_map.get(message_id, ()),
             "kind": str(row["kind"] or "post"),
             "conversation_id": str(row["thread_id"]),
-            "in_reply_to": row["parent_id"],
+            # Channel records use a namespaced external identity. Apply the
+            # same namespace to their parent link so normalization resolves
+            # both sides to the same immutable authority message ID.
+            "in_reply_to": f"channel:{parent_id}" if parent_id else None,
             "correlation_id": row["correlation_id"],
             "context_revisions": {
                 "shared": str(row["context_rev_shared"] or ""),
