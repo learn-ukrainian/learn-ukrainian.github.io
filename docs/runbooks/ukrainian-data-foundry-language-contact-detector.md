@@ -105,14 +105,22 @@ dropped lexical words:
 | Processed records | 189,150 |
 | Processed lexical words | 50,298,925 |
 | Total bounded candidates | 739,564 |
-| Unresolved review queue | 304,951 |
+| Unresolved review queue | 307,988 |
 | Protected rescues | 297,791 |
-| Quoted Russian | 21,885 |
+| Quoted Russian | 18,848 |
 | Modern-interference candidates | 37,875 |
 | Other retained-language routes | 77,062 |
-| Candidate bytes | 2,172,971,624 |
-| Candidate SHA-256 | `5aaf0c4f511a51a0db41098ab11eab94946fc35be9098bcdbdfbeb1b38131f48` |
-| Receipt SHA-256 | `5cf5c8b16f04ded15deb84f387b53735e62b4af1fa17a47132358c39177b50c0` |
+| Candidate bytes | 2,172,929,106 |
+| Candidate SHA-256 | `3b051594a00477cde0c3001a82fe85861ac6afee5f12c51bf9281828aded83a8` |
+| Receipt SHA-256 | `86fa4342b0a19581220927bc5ab7d86f95b5243beaad19f4d6eebef686c4ca22` |
+
+The final proper-name self-corroboration correction changed exactly 3,037
+rows from `russian_quotation` / `quoted_russian` to `uncertain` /
+`unresolved_review`. The total candidate count and every non-category
+partition remained unchanged. This is a conservative routing correction, not
+a claim that those spans contain no Russian: names, titles, or mixed quoted
+phrases that lack independent lowercase evidence now require qualified human
+review instead of receiving an automatic Russian-quotation label.
 
 The high historical yield is explicit rather than collapsed into a modern
 error label: 195,722 rows are `historical_unresolved`; the run retained
@@ -130,9 +138,10 @@ estimate. No precision or correctness claim follows from these counts; they
 are review-routing measurements.
 
 Runtime observations are deliberately outside the deterministic receipt.
-Pass 1 took 2,039.92 seconds and reached 615,596,032 bytes maximum resident
-set according to macOS `/usr/bin/time -l`. An independent repeat produced
-byte-identical candidate and receipt artifacts.
+In the final concurrent paired run, pass 1 took 5,467.32 seconds and reached
+568,770,560 bytes maximum resident set according to macOS `/usr/bin/time -l`.
+The independent concurrent repeat produced byte-identical candidate and
+receipt artifacts.
 
 ## Phase 3 evidence boundary
 
