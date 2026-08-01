@@ -846,6 +846,38 @@ class AuthorityService:
         except Exception as exc:
             raise AuthorityServiceError("job_result_unreadable") from exc
 
+    def retry_job(
+        self,
+        job_id: str,
+        *,
+        now: str | None = None,
+        deadline_at: str | None = None,
+    ) -> AuthorityJob:
+        """Explicitly requeue a failed or expired job without losing attempt history."""
+        return self._requeue_terminal_job(
+            job_id,
+            allowed_states=frozenset({"failed", "expired"}),
+            event_type="retried",
+            now=now,
+            deadline_at=deadline_at,
+        )
+
+    def redrive_job(
+        self,
+        job_id: str,
+        *,
+        now: str | None = None,
+        deadline_at: str | None = None,
+    ) -> AuthorityJob:
+        """Explicitly redrive a dead-lettered job while retaining its DLQ receipt."""
+        return self._requeue_terminal_job(
+            job_id,
+            allowed_states=frozenset({"dead_lettered"}),
+            event_type="redriven",
+            now=now,
+            deadline_at=deadline_at,
+        )
+
     def finish_job(
         self,
         job_id: str,
@@ -892,8 +924,6 @@ class AuthorityService:
                 (state, artifact.artifact_id if artifact else None, terminal_sha, now_value, now_value, jid),
             )
             self._append_job_event_tx(jid, fence_token, "finished", state, {"worker_id": worker})
-            if state == "failed":
-                self._dead_letter_job_tx(jid, reason_code="worker_failed")
             return self.get_job(jid)
 
     def reclaim_expired_jobs(self, *, now: str | None = None) -> int:
@@ -901,6 +931,50 @@ class AuthorityService:
         now_value = self._now_string(now)
         with self._write_transaction():
             return self._reclaim_expired_jobs_tx(now_value)
+
+    def _requeue_terminal_job(
+        self,
+        job_id: str,
+        *,
+        allowed_states: frozenset[str],
+        event_type: str,
+        now: str | None,
+        deadline_at: str | None,
+    ) -> AuthorityJob:
+        jid = _nonempty(job_id, field="job_id")
+        now_value = self._now_string(now)
+        with self._write_transaction():
+            row = self._require_job_tx(jid)
+            previous_state = str(row["state"])
+            if previous_state not in allowed_states:
+                raise AuthorityServiceError("job_not_retryable")
+            deadline = (
+                self._normalize_deadline(deadline_at)
+                if deadline_at is not None
+                else row["deadline_at"]
+            )
+            if deadline is not None and str(deadline) <= now_value:
+                raise AuthorityServiceError("job_retry_deadline_expired")
+            self._conn.execute(
+                """UPDATE authority_jobs
+                   SET state = 'queued', deadline_at = ?, result_artifact_id = NULL,
+                       terminal_sha256 = NULL, lease_owner = NULL,
+                       lease_expires_at = NULL, updated_at = ?, completed_at = NULL
+                   WHERE job_id = ?""",
+                (deadline, now_value, jid),
+            )
+            self._append_job_event_tx(
+                jid,
+                int(row["fence_token"]),
+                event_type,
+                "queued",
+                {
+                    "previous_state": previous_state,
+                    "previous_result_artifact_id": row["result_artifact_id"],
+                    "previous_terminal_sha256": row["terminal_sha256"],
+                },
+            )
+            return self.get_job(jid)
 
     # ------------------------------------------------------------------
     # Delivery leases, acknowledgements, and wake receipts

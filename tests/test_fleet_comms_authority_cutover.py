@@ -154,6 +154,105 @@ def test_exact_claim_and_terminal_result_replay_do_not_take_unrelated_work(tmp_p
         assert service.get_job(older.job_id).state == "queued"
 
 
+def test_failed_job_retry_preserves_identity_and_attempt_history(tmp_path: Path) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        job = service.enqueue_request(
+            recipient="glm",
+            body="review immutable subject",
+            idempotency_key="retry-subject",
+        )
+        first = service.claim_job(
+            job.job_id,
+            "worker-a",
+            now="2036-06-01T00:00:00Z",
+        )
+        failed = service.finish_job(
+            job.job_id,
+            worker_id="worker-a",
+            fence_token=first.fence_token,
+            state="failed",
+            result=b"transport failed",
+            now="2036-06-01T00:00:01Z",
+        )
+        assert failed.state == "failed"
+        retried = service.retry_job(job.job_id, now="2036-06-01T00:00:02Z")
+        assert retried.job_id == job.job_id
+        assert retried.state == "queued"
+        assert retried.attempt_count == 1
+        assert retried.result_artifact_id is None
+        second = service.claim_job(
+            job.job_id,
+            "worker-b",
+            now="2036-06-01T00:00:03Z",
+        )
+        assert second.fence_token == first.fence_token + 1
+        assert second.job.attempt_count == 2
+        events = [
+            row[0]
+            for row in service.store.connection.execute(
+                "SELECT event_type FROM authority_job_events WHERE job_id = ? ORDER BY rowid",
+                (job.job_id,),
+            )
+        ]
+        assert events == ["enqueued", "claimed", "finished", "retried", "claimed"]
+
+
+def test_expired_job_retry_keeps_dead_letter_receipt(tmp_path: Path) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        job = service.enqueue_request(
+            recipient="glm",
+            body="time-bounded review",
+            deadline_at="2036-06-01T00:00:01Z",
+            idempotency_key="expired-subject",
+        )
+        assert service.reclaim_expired_jobs(now="2036-06-01T00:00:02Z") == 1
+        assert service.get_job(job.job_id).state == "expired"
+        retried = service.retry_job(
+            job.job_id,
+            now="2036-06-01T00:00:02Z",
+            deadline_at="2036-06-01T00:01:00Z",
+        )
+        assert retried.state == "queued"
+        assert retried.job_id == job.job_id
+        dead_letters = service.store.connection.execute(
+            "SELECT COUNT(*) FROM authority_dead_letters WHERE job_id = ?",
+            (job.job_id,),
+        ).fetchone()[0]
+        assert dead_letters == 1
+
+
+def test_formal_review_subject_is_exactly_once_across_key_versions(tmp_path: Path) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        first = service.enqueue_formal_review(
+            repository="owner/repo",
+            pr_number=42,
+            head_sha="a" * 40,
+            gate_kind="cross-family-review",
+            snapshot=b"sealed snapshot",
+            idempotency_key="formal-review:legacy-key",
+        )
+        replay = service.enqueue_formal_review(
+            repository="owner/repo",
+            pr_number=42,
+            head_sha="a" * 40,
+            gate_kind="cross-family-review",
+            snapshot=b"sealed snapshot",
+            idempotency_key="formal-review:safe-key",
+        )
+        assert replay.job_id == first.job_id
+        with pytest.raises(
+            AuthorityServiceError,
+            match="idempotency_key_reused_with_different_payload",
+        ):
+            service._enqueue_job_tx(
+                job_kind="formal_review",
+                subject_id=first.subject_id,
+                payload={"different": True},
+                deadline_at=None,
+                idempotency_key="formal-review:different-payload",
+            )
+
+
 def test_authority_message_rows_are_schema_immutable(tmp_path: Path) -> None:
     with AuthorityService(root=_root(tmp_path)) as service:
         message = service.publish_message(
