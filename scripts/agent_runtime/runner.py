@@ -52,7 +52,12 @@ from ai_llm.fallback import (
     run_gemini_fallback_ladder,
 )
 
-from .adapters.acpx import (
+# Registry adapter paths are canonicalized under ``scripts.agent_runtime``.
+# Import the ACP scope from that same module identity even when this runner is
+# reached through the historical top-level ``agent_runtime`` package alias;
+# otherwise ContextVar provenance is set on one module object and checked on
+# another.
+from scripts.agent_runtime.adapters.acpx import (
     ACPX_PARTICIPANT_CATALOG_TRANSPORTS,
     ACPX_PARTICIPANT_EFFORTS,
     ACPX_SUPPORTED_PARTICIPANTS,
@@ -60,7 +65,8 @@ from .adapters.acpx import (
     _require_local_metadata_field,
     active_communication_scope,
 )
-from .adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
+from scripts.agent_runtime.adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
+
 from .adapters.base import AgentAdapter
 from .attribution import InvocationAttribution, resolve_invocation_attribution
 from .env_sanitize import build_agent_env

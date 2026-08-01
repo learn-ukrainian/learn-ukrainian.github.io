@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib
 import threading
 import time
 
@@ -33,6 +34,23 @@ def _result(agent: str, response: str = "bounded response") -> Result:
 
 def _active_acp(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("LU_ACPX_TRANSPORT", "active")
+
+
+def test_top_level_runner_uses_canonical_adapter_scope() -> None:
+    top_level_runner = importlib.import_module("agent_runtime.runner")
+    canonical_acpx = importlib.import_module("scripts.agent_runtime.adapters.acpx")
+    with top_level_runner.active_communication_scope(
+        source="codex",
+        agent="glm",
+        target_agent="glm",
+    ):
+        provenance = canonical_acpx.current_communication_provenance()
+        assert provenance is not None
+        assert provenance.metadata() == {
+            "source": "codex",
+            "agent": "glm",
+            "via": "acp",
+        }
 
 
 def test_inter_agent_defaults_to_acp_and_seals_provenance(tmp_path, monkeypatch) -> None:
