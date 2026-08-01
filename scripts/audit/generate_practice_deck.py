@@ -411,6 +411,42 @@ def _plain(value: str) -> str:
     )
 
 
+def _surface_variants(value: str) -> tuple[str, ...]:
+    """Return safe VESUM lookup forms for a source-preserved surface."""
+    return tuple(dict.fromkeys((value, value.casefold(), _plain(value))))
+
+
+def _verified_surface_matches(
+    form: str,
+    verifier: VesumVerifier,
+    pos_filter: str | None = None,
+) -> list[dict[str, Any]]:
+    """Look up a source surface without weakening lemma/POS filtering.
+
+    Source sentences preserve capitalization and apostrophe spelling exactly,
+    while VESUM stores dictionary surfaces in normalized lowercase form. Query
+    both representations, but leave the emitted answer unchanged so the cloze
+    still reproduces the attested source token.
+    """
+    matches: list[dict[str, Any]] = []
+    seen: set[tuple[str, str, str]] = set()
+    for variant in _surface_variants(form):
+        for match in verifier.verify_words([variant], pos_filter).get(variant, []):
+            if not isinstance(match, dict):
+                continue
+            key = (
+                str(match.get("lemma") or ""),
+                str(match.get("pos") or ""),
+                str(match.get("tags") or ""),
+            )
+            if key not in seen:
+                seen.add(key)
+                matches.append(match)
+    if not matches and pos_filter:
+        return _verified_surface_matches(form, verifier)
+    return matches
+
+
 def _strip_stress(value: str) -> str:
     return unicodedata.normalize("NFC", unicodedata.normalize("NFD", value).replace(STRESS_MARK, ""))
 
@@ -809,7 +845,7 @@ def _verify_discriminative_form(
     case_name: str,
     verifier: VesumVerifier,
 ) -> bool:
-    matches = verifier.verify_words([form], _vesum_pos(pos)).get(form, [])
+    matches = _verified_surface_matches(form, verifier, _vesum_pos(pos))
     if len(matches) != 1:
         return False
     match = matches[0]
@@ -999,13 +1035,11 @@ def _inventory_form_details(
     are left for the caller to reject rather than guessed here.
     """
     pos_filter = _vesum_pos(pos)
-    matches = verifier.verify_words([form], pos_filter).get(form, [])
+    matches = _verified_surface_matches(form, verifier, pos_filter)
     # Manifest POS values include variants such as ``propn``, ``noun:f``, and
     # ``proper noun`` that are not VESUM ``pos`` values.  A filtered miss is
-    # not proof that the source form is absent; retry without the incompatible
-    # filter and retain only rows that resolve to the target lemma.
-    if not matches and pos_filter:
-        matches = verifier.verify_words([form]).get(form, [])
+    # not proof that the source form is absent; ``_verified_surface_matches``
+    # retries without the incompatible filter.
     matching = [
         match
         for match in matches
