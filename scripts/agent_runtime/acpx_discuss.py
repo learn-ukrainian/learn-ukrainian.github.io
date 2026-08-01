@@ -577,7 +577,11 @@ class AcpxDiscussionController:
             else observed_at.astimezone(UTC)
         )
         rows = self.conn.execute(
-            "SELECT conversation_id, deadline_at FROM acp_conversations"
+            """SELECT acp.conversation_id, acp.deadline_at
+               FROM acp_conversations AS acp
+               JOIN conversations AS conversation
+                 ON conversation.conversation_id = acp.conversation_id
+               WHERE conversation.source = 'acpx-discuss'"""
         ).fetchall()
         recovered: list[str] = []
         for row in rows:
