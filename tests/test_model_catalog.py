@@ -30,7 +30,7 @@ def test_committed_catalog_is_structurally_valid_and_current():
     assert catalog["schema_version"] == "model-catalog.v1"
     assert catalog["reviewed_on"] == "2026-08-01"
     assert catalog_age_days(catalog, as_of=date(2026, 8, 1)) == 0
-    assert not catalog_is_stale(catalog, as_of=date(2026, 8, 30))
+    assert not catalog_is_stale(catalog, as_of=date(2026, 8, 31))
     assert catalog_is_stale(catalog, as_of=date(2026, 9, 1))
 
 
