@@ -542,7 +542,12 @@ class ApprovedRailApprovalReceiptResolver:
         self.store = store
         self.now = now
 
-    def fetch(self, receipt_id: str) -> VerifiedRailApprovalReceipt:
+    def fetch(
+        self,
+        receipt_id: str,
+        *,
+        now: datetime | None = None,
+    ) -> VerifiedRailApprovalReceipt:
         """Re-fetch a receipt; any unreadable store is an authorization failure."""
         if not RAIL_APPROVAL_RECEIPT_ID.fullmatch(receipt_id):
             raise RailApprovalReceiptError(
@@ -565,7 +570,8 @@ class ApprovedRailApprovalReceiptResolver:
             raise RailApprovalReceiptError(
                 f"rail approval receipt issuer {receipt['issuer']!r} is not approved"
             )
-        if _parse_time(receipt["expires_at"], field="expires_at") <= self.now().astimezone(UTC):
+        checked_at = (now or self.now()).astimezone(UTC)
+        if _parse_time(receipt["expires_at"], field="expires_at") <= checked_at:
             raise RailApprovalReceiptError("rail approval receipt has expired")
         return VerifiedRailApprovalReceipt(
             payload=receipt,
@@ -686,7 +692,7 @@ def decide_rail_path_mutation_with_production_receipt(
     receipt_id: str | None,
     resolver: ApprovedRailApprovalReceiptResolver | None = None,
     path_binding: RailApprovalPathBinding = RailApprovalPathBinding.MUTATION_CONTAINMENT,
-    now: Callable[[], datetime] = _utc_now,
+    now: Callable[[], datetime] | None = None,
 ) -> RailPathDecision:
     """Resolve a receipt from the fixed source, then make the normal decision.
 
@@ -699,14 +705,19 @@ def decide_rail_path_mutation_with_production_receipt(
         candidate_paths=candidate_paths,
         head_sha=head_sha,
         path_binding=path_binding,
-        now=now,
+        now=now or _utc_now,
     )
     if preliminary.allowed or preliminary.reason != "rail_approval_receipt_required":
         return preliminary
     if receipt_id is None:
         return preliminary
+    receipt_resolver = resolver or build_production_rail_approval_receipt_resolver()
+    # Freeze one as-of time so resolution cannot accept a receipt that the
+    # immediately following authorization treats as expired.
+    clock = now or receipt_resolver.now
+    checked_at = clock()
     try:
-        receipt = (resolver or build_production_rail_approval_receipt_resolver()).fetch(receipt_id)
+        receipt = receipt_resolver.fetch(receipt_id, now=checked_at)
     except RailApprovalValidatorUnavailableError:
         return RailPathDecision(
             RailPathDecisionKind.DENY,
@@ -726,5 +737,5 @@ def decide_rail_path_mutation_with_production_receipt(
         head_sha=head_sha,
         receipt=receipt,
         path_binding=path_binding,
-        now=now,
+        now=lambda: checked_at,
     )
