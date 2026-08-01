@@ -119,6 +119,7 @@ SOURCES → LEXICAL CORE (lemmas / senses / attestations / rights)
 | Practice pool (union A1–C1 lemmaIds) | ~4.9k |
 | Curated private teacher-lesson v5 active seed | ~1.0k (not-in-VESUM skipped) |
 | Practice lexemes gzip budget / level | 180 KB gzip / 1.6 MB raw (headroom today) |
+| Practice cloze emit budget / level | 210 KB gzip / 2.0 MB raw after diagnostic-field compaction |
 
 Banner **“Not in the practice pool yet”** = not in `practice-index.*`, **not** “empty atlas page.”
 Example: `інвалідність` is a rich A2 atlas entry with morphology; it is simply out of the practice pool.
