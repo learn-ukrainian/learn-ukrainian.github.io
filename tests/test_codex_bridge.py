@@ -12,6 +12,7 @@ import sys
 from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
@@ -131,10 +132,12 @@ def test_handle_ask_codex_reads_stdin(monkeypatch):
         chain=None,
     )
     captured: dict[str, object] = {}
-    monkeypatch.setattr(
-        "ai_agent_bridge._acp_compat.run_compat_ask",
-        lambda *args, **kwargs: captured.update(args=args, kwargs=kwargs),
-    )
+
+    def fake_compat(*args, **kwargs):
+        captured.update(args=args, kwargs=kwargs)
+        return SimpleNamespace(ok=True)
+
+    monkeypatch.setattr("ai_agent_bridge._acp_compat.run_compat_ask", fake_compat)
     with patch("sys.stdin", io.StringIO("stdin prompt")):
         _handle_ask_codex(args)
     assert captured["args"] == ("codex", "stdin prompt")
