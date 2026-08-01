@@ -3,6 +3,7 @@ from __future__ import annotations
 import sqlite3
 
 from scripts.ai_agent_bridge import _db
+from scripts.fleet_comms.migrations import MIGRATIONS
 
 
 def test_bridge_upgrades_legacy_copy_without_mutating_legacy_rows(tmp_path, monkeypatch) -> None:
@@ -25,7 +26,10 @@ def test_bridge_upgrades_legacy_copy_without_mutating_legacy_rows(tmp_path, monk
     migrated = _db.get_db()
     try:
         assert migrated.execute("SELECT content FROM messages WHERE task_id = 'legacy'").fetchone()[0] == "body"
-        assert migrated.execute("SELECT MAX(version) FROM comms_schema_migrations").fetchone()[0] == 3
+        assert (
+            migrated.execute("SELECT MAX(version) FROM comms_schema_migrations").fetchone()[0]
+            == MIGRATIONS[-1].version
+        )
         tables = {row[0] for row in migrated.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
         assert {
             "comms_messages",

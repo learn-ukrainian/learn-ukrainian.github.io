@@ -188,6 +188,242 @@ _V3_STATEMENTS = (
     "CREATE INDEX IF NOT EXISTS idx_acp_conversation_events_conversation ON acp_conversation_events(conversation_id, sequence)",
 )
 
+# #6159: authority-mode durable message, fan-out, and work queue contracts.
+#
+# These tables deliberately extend the existing ``comms_messages`` /
+# ``conversations`` / ``artifacts`` primitives instead of creating another
+# database or file-owned source of truth.  Legacy bridge tables remain readable
+# during cutover, while authority writers use the same Fleet Comms SQLite file.
+_V4_STATEMENTS = (
+    """CREATE TABLE IF NOT EXISTS authority_channels (
+        channel_id TEXT PRIMARY KEY,
+        name TEXT NOT NULL UNIQUE,
+        metadata_json TEXT NOT NULL DEFAULT '{}',
+        current_context_revision_id TEXT,
+        created_at TEXT NOT NULL
+    )""",
+    """CREATE TABLE IF NOT EXISTS authority_channel_subscribers (
+        channel_id TEXT NOT NULL,
+        recipient TEXT NOT NULL,
+        metadata_json TEXT NOT NULL DEFAULT '{}',
+        created_at TEXT NOT NULL,
+        PRIMARY KEY (channel_id, recipient),
+        FOREIGN KEY (channel_id) REFERENCES authority_channels(channel_id)
+    )""",
+    """CREATE TABLE IF NOT EXISTS authority_context_revisions (
+        context_revision_id TEXT PRIMARY KEY,
+        channel_id TEXT NOT NULL,
+        sha256 TEXT NOT NULL,
+        artifact_id TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        UNIQUE (channel_id, sha256),
+        FOREIGN KEY (channel_id) REFERENCES authority_channels(channel_id),
+        FOREIGN KEY (artifact_id) REFERENCES artifacts(artifact_id)
+    )""",
+    """CREATE TABLE IF NOT EXISTS authority_message_metadata (
+        message_id TEXT PRIMARY KEY,
+        channel_id TEXT,
+        thread_id TEXT NOT NULL,
+        correlation_id TEXT,
+        context_revisions_json TEXT NOT NULL DEFAULT '{}',
+        provenance_json TEXT NOT NULL DEFAULT '{}',
+        imported_source TEXT,
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (message_id) REFERENCES comms_messages(message_id),
+        FOREIGN KEY (channel_id) REFERENCES authority_channels(channel_id)
+    )""",
+    "CREATE INDEX IF NOT EXISTS idx_authority_message_thread ON authority_message_metadata(thread_id, created_at)",
+    "CREATE INDEX IF NOT EXISTS idx_authority_message_channel ON authority_message_metadata(channel_id, created_at)",
+    """CREATE TABLE IF NOT EXISTS authority_idempotency (
+        namespace TEXT NOT NULL,
+        idempotency_key TEXT NOT NULL,
+        payload_sha256 TEXT NOT NULL,
+        subject_id TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        PRIMARY KEY (namespace, idempotency_key)
+    )""",
+    """CREATE TABLE IF NOT EXISTS authority_deliveries (
+        delivery_id TEXT PRIMARY KEY,
+        message_id TEXT NOT NULL,
+        recipient TEXT NOT NULL,
+        state TEXT NOT NULL CHECK (state IN ('queued', 'running', 'acknowledged', 'failed', 'expired', 'dead_lettered')),
+        deadline_at TEXT,
+        lease_owner TEXT,
+        lease_expires_at TEXT,
+        fence_token INTEGER NOT NULL DEFAULT 0,
+        attempt_count INTEGER NOT NULL DEFAULT 0,
+        acknowledgment_artifact_id TEXT,
+        terminal_sha256 TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        completed_at TEXT,
+        UNIQUE (message_id, recipient),
+        FOREIGN KEY (message_id) REFERENCES comms_messages(message_id),
+        FOREIGN KEY (acknowledgment_artifact_id) REFERENCES artifacts(artifact_id)
+    )""",
+    "CREATE INDEX IF NOT EXISTS idx_authority_delivery_claim ON authority_deliveries(recipient, state, deadline_at, lease_expires_at)",
+    """CREATE TABLE IF NOT EXISTS authority_delivery_attempts (
+        attempt_id TEXT PRIMARY KEY,
+        delivery_id TEXT NOT NULL,
+        fence_token INTEGER NOT NULL,
+        state TEXT NOT NULL,
+        started_at TEXT NOT NULL,
+        finished_at TEXT,
+        outcome_sha256 TEXT,
+        artifact_id TEXT,
+        UNIQUE (delivery_id, fence_token),
+        FOREIGN KEY (delivery_id) REFERENCES authority_deliveries(delivery_id),
+        FOREIGN KEY (artifact_id) REFERENCES artifacts(artifact_id)
+    )""",
+    """CREATE TABLE IF NOT EXISTS authority_dead_letters (
+        dead_letter_id TEXT PRIMARY KEY,
+        delivery_id TEXT UNIQUE,
+        job_id TEXT UNIQUE,
+        reason_code TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (delivery_id) REFERENCES authority_deliveries(delivery_id)
+    )""",
+    """CREATE TABLE IF NOT EXISTS authority_wake_receipts (
+        wake_id TEXT PRIMARY KEY,
+        delivery_id TEXT NOT NULL,
+        recipient TEXT NOT NULL,
+        fence_token INTEGER NOT NULL DEFAULT 0,
+        state TEXT NOT NULL CHECK (state IN ('emitted', 'received', 'consumed')),
+        emitted_at TEXT NOT NULL,
+        received_at TEXT,
+        UNIQUE (delivery_id, fence_token),
+        FOREIGN KEY (delivery_id) REFERENCES authority_deliveries(delivery_id)
+    )""",
+    """CREATE TABLE IF NOT EXISTS authority_jobs (
+        job_id TEXT PRIMARY KEY,
+        job_kind TEXT NOT NULL CHECK (job_kind IN ('request', 'discussion', 'formal_review')),
+        subject_id TEXT NOT NULL,
+        payload_artifact_id TEXT NOT NULL,
+        state TEXT NOT NULL CHECK (state IN ('queued', 'running', 'complete', 'failed', 'expired', 'dead_lettered')),
+        deadline_at TEXT,
+        lease_owner TEXT,
+        lease_expires_at TEXT,
+        fence_token INTEGER NOT NULL DEFAULT 0,
+        attempt_count INTEGER NOT NULL DEFAULT 0,
+        result_artifact_id TEXT,
+        terminal_sha256 TEXT,
+        idempotency_key TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        completed_at TEXT,
+        UNIQUE (job_kind, idempotency_key),
+        FOREIGN KEY (payload_artifact_id) REFERENCES artifacts(artifact_id),
+        FOREIGN KEY (result_artifact_id) REFERENCES artifacts(artifact_id)
+    )""",
+    "CREATE INDEX IF NOT EXISTS idx_authority_job_claim ON authority_jobs(job_kind, state, deadline_at, lease_expires_at)",
+    """CREATE TABLE IF NOT EXISTS authority_job_events (
+        event_id TEXT PRIMARY KEY,
+        job_id TEXT NOT NULL,
+        fence_token INTEGER NOT NULL,
+        event_type TEXT NOT NULL,
+        state TEXT NOT NULL,
+        metadata_json TEXT NOT NULL DEFAULT '{}',
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (job_id) REFERENCES authority_jobs(job_id)
+    )""",
+    "CREATE INDEX IF NOT EXISTS idx_authority_job_events_job ON authority_job_events(job_id, created_at)",
+    """CREATE TABLE IF NOT EXISTS authority_import_receipts (
+        source TEXT NOT NULL,
+        external_id TEXT NOT NULL,
+        payload_sha256 TEXT NOT NULL,
+        message_id TEXT NOT NULL,
+        imported_at TEXT NOT NULL,
+        PRIMARY KEY (source, external_id),
+        FOREIGN KEY (message_id) REFERENCES comms_messages(message_id)
+    )""",
+    """CREATE TABLE IF NOT EXISTS formal_review_snapshot_seals (
+        review_id TEXT PRIMARY KEY,
+        repository TEXT NOT NULL,
+        pr_number INTEGER NOT NULL,
+        head_sha TEXT NOT NULL,
+        gate_kind TEXT NOT NULL,
+        snapshot_artifact_id TEXT NOT NULL,
+        snapshot_sha256 TEXT NOT NULL,
+        sealed_at TEXT NOT NULL,
+        UNIQUE (repository, pr_number, head_sha, gate_kind),
+        FOREIGN KEY (review_id) REFERENCES formal_review_jobs(review_id),
+        FOREIGN KEY (snapshot_artifact_id) REFERENCES artifacts(artifact_id)
+    )""",
+    """CREATE TRIGGER IF NOT EXISTS authority_snapshot_seal_identity
+       BEFORE INSERT ON formal_review_snapshot_seals
+       BEGIN
+         SELECT CASE WHEN NOT EXISTS (
+           SELECT 1 FROM formal_review_jobs j
+           WHERE j.review_id = NEW.review_id
+             AND j.repository = NEW.repository
+             AND j.pr_number = NEW.pr_number
+             AND lower(j.head_sha) = lower(NEW.head_sha)
+             AND j.gate_kind = NEW.gate_kind
+             AND j.snapshot_artifact_id = NEW.snapshot_artifact_id
+         ) THEN RAISE(ABORT, 'formal_review_snapshot_identity_mismatch') END;
+         SELECT CASE WHEN NOT EXISTS (
+           SELECT 1 FROM artifacts a
+           WHERE a.artifact_id = NEW.snapshot_artifact_id
+             AND a.sha256 = NEW.snapshot_sha256
+         ) THEN RAISE(ABORT, 'formal_review_snapshot_integrity_mismatch') END;
+       END""",
+    """CREATE TRIGGER IF NOT EXISTS authority_snapshot_seal_immutable_update
+       BEFORE UPDATE ON formal_review_snapshot_seals
+       BEGIN
+         SELECT RAISE(ABORT, 'formal_review_snapshot_seal_immutable');
+       END""",
+    """CREATE TRIGGER IF NOT EXISTS authority_snapshot_seal_immutable_delete
+       BEFORE DELETE ON formal_review_snapshot_seals
+       BEGIN
+         SELECT RAISE(ABORT, 'formal_review_snapshot_seal_immutable');
+       END""",
+)
+
+# Keep v4 byte-for-byte compatible with the pre-cutover schema already applied
+# by soak environments. Immutability and subject uniqueness were added later,
+# so they belong in a forward-only migration instead of rewriting v4.
+_V5_STATEMENTS = (
+    "CREATE UNIQUE INDEX IF NOT EXISTS idx_authority_job_subject_unique ON authority_jobs(job_kind, subject_id)",
+    """CREATE TRIGGER IF NOT EXISTS authority_message_metadata_immutable_update
+       BEFORE UPDATE ON authority_message_metadata
+       BEGIN
+         SELECT RAISE(ABORT, 'authority_message_metadata_immutable');
+       END""",
+    """CREATE TRIGGER IF NOT EXISTS authority_message_metadata_immutable_delete
+       BEFORE DELETE ON authority_message_metadata
+       BEGIN
+         SELECT RAISE(ABORT, 'authority_message_metadata_immutable');
+       END""",
+    """CREATE TRIGGER IF NOT EXISTS authority_comms_message_immutable_update
+       BEFORE UPDATE ON comms_messages
+       WHEN EXISTS (
+         SELECT 1 FROM authority_message_metadata meta
+         WHERE meta.message_id = OLD.message_id
+       )
+       BEGIN
+         SELECT RAISE(ABORT, 'authority_message_immutable');
+       END""",
+    """CREATE TRIGGER IF NOT EXISTS authority_comms_message_immutable_delete
+       BEFORE DELETE ON comms_messages
+       WHEN EXISTS (
+         SELECT 1 FROM authority_message_metadata meta
+         WHERE meta.message_id = OLD.message_id
+       )
+       BEGIN
+         SELECT RAISE(ABORT, 'authority_message_immutable');
+       END""",
+    """CREATE TRIGGER IF NOT EXISTS authority_context_revision_immutable_update
+       BEFORE UPDATE ON authority_context_revisions
+       BEGIN
+         SELECT RAISE(ABORT, 'authority_context_revision_immutable');
+       END""",
+    """CREATE TRIGGER IF NOT EXISTS authority_context_revision_immutable_delete
+       BEFORE DELETE ON authority_context_revisions
+       BEGIN
+         SELECT RAISE(ABORT, 'authority_context_revision_immutable');
+       END""",
+)
+
 MIGRATIONS = (
     Migration(version=1, name="fleet-comms-v1-contracts", statements=_V1_STATEMENTS),
     Migration(
@@ -196,7 +432,30 @@ MIGRATIONS = (
         statements=_V2_STATEMENTS,
     ),
     Migration(version=3, name="fleet-comms-v3-acpx-discussions", statements=_V3_STATEMENTS),
+    Migration(
+        version=4,
+        name="fleet-comms-v4-authority-queue-and-seals",
+        statements=_V4_STATEMENTS,
+    ),
+    Migration(
+        version=5,
+        name="fleet-comms-v5-authority-immutability",
+        statements=_V5_STATEMENTS,
+    ),
 )
+
+# During the pre-merge #6159 soak, one development build applied the v5
+# constraints while they were still embedded in v4. Both checksums describe
+# the same authority contract after v5; accept only that exact observed hash
+# so live local history can advance without deleting or rewriting receipts.
+_COMPATIBLE_MIGRATION_CHECKSUMS = {
+    4: frozenset(
+        {
+            MIGRATIONS[3].checksum,
+            "a563b19a7a0cf84c5425a56f4338fc650ceb3266d26540aefe95cd64d371bb44",
+        }
+    )
+}
 
 
 def _table_exists(conn: sqlite3.Connection, table: str) -> bool:
@@ -261,7 +520,10 @@ def apply_migrations(conn: sqlite3.Connection) -> int:
         raise CommsMigrationError(f"Unsupported future communications schema version(s): {sorted(unknown)}")
     for version, (name, checksum) in applied.items():
         expected = known[version]
-        if name != expected.name or checksum != expected.checksum:
+        compatible = _COMPATIBLE_MIGRATION_CHECKSUMS.get(
+            version, frozenset({expected.checksum})
+        )
+        if name != expected.name or checksum not in compatible:
             raise CommsMigrationError(f"Communications migration {version} has an unexpected checksum")
     for migration in MIGRATIONS:
         if migration.version in applied:

@@ -7,7 +7,7 @@ import pytest
 
 from scripts.fleet_comms.contracts import AssistantSegment, CompletionState, ResponseEnvelope, new_id
 from scripts.fleet_comms.endpoints import load_endpoint_registry
-from scripts.fleet_comms.migrations import CommsMigrationError, apply_migrations
+from scripts.fleet_comms.migrations import MIGRATIONS, CommsMigrationError, apply_migrations
 
 
 def test_response_envelope_round_trips_every_completion_state() -> None:
@@ -51,8 +51,9 @@ def test_endpoint_registry_formal_review_eligibility_is_fail_closed() -> None:
 
     assert by_name["claude"].formal_review_eligible is True
     assert by_name["codex"].formal_review_eligible is True
+    assert by_name["glm"].formal_review_eligible is True
 
-    for name in ("agy", "grok", "kimi", "cursor", "gemini", "glm-local"):
+    for name in ("agy", "grok", "kimi", "cursor", "gemini"):
         assert name in by_name, f"missing registry endpoint: {name}"
         assert by_name[name].formal_review_eligible is False, name
 
@@ -61,6 +62,20 @@ def test_endpoint_registry_formal_review_eligibility_is_fail_closed() -> None:
         assert resolved == name
         assert endpoint.state == "live"
         assert endpoint.formal_review_eligible is False
+
+
+def test_every_live_provider_uses_only_acp_transport() -> None:
+    registry = load_endpoint_registry()
+    for endpoint in registry.endpoints:
+        if endpoint.state != "live":
+            continue
+        assert endpoint.transports == ("acp",), endpoint.name
+        assert "authority_receipt" in endpoint.completion_evidence
+
+    glm, requested = registry.resolve("glm-local")
+    assert requested == "glm"
+    assert glm.name == "glm"
+    assert glm.formal_review_eligible is True
 
 
 def test_endpoint_registry_rejects_duplicate_aliases(tmp_path: Path) -> None:
@@ -99,9 +114,9 @@ def test_migrations_are_idempotent_and_reject_unknown_future_version(tmp_path: P
     db_path = tmp_path / "messages.db"
     conn = sqlite3.connect(db_path)
     conn.execute("CREATE TABLE deliveries (delivery_id TEXT PRIMARY KEY, status TEXT)")
-    assert apply_migrations(conn) == 3
+    assert apply_migrations(conn) == MIGRATIONS[-1].version
     first = conn.execute("SELECT version, checksum FROM comms_schema_migrations").fetchall()
-    assert apply_migrations(conn) == 3
+    assert apply_migrations(conn) == MIGRATIONS[-1].version
     assert conn.execute("SELECT version, checksum FROM comms_schema_migrations").fetchall() == first
     assert {"request_id", "endpoint_id", "expires_at", "fence_token"}.issubset(
         {row[1] for row in conn.execute("PRAGMA table_info(deliveries)")}

@@ -1,15 +1,18 @@
 ---
 version: 1
-# Message plane production default (Gate A / #5512). Env FLEET_COMMS_MESSAGE_PLANE
-# always wins when set. Modes: off | shadow | dual_write.
-# Operator finish-mode 2026-07-23 + parity window 8/8 ok → default shadow.
-# dual_write remains opt-in (still not stream-authority cutover; files authoritative).
+# Message plane production default (#6159 authority cutover). Env
+# FLEET_COMMS_MESSAGE_PLANE always wins when set. Modes:
+# off | shadow | dual_write | authority.
+# Present-tense operator GO 2026-08-01 authorizes authority only after active
+# migration, reconciliation, crash/restart, replay, and orphan checks pass.
+# Keep the compatibility default through that gate; the final flip is a
+# separate reviewed release step.
 message_plane:
   default_mode: shadow
 
 # formal_review_eligible is fail-closed until sealed CF isolation is proven and
-# the matching isolation issue closes (#5555 AGY, #5556 Kimi, #5557 Grok). Only
-# claude|codex are proven formal CF seats today; unproven live lanes stay
+# the matching isolation issue closes (#5555 AGY, #5556 Kimi, #5557 Grok). GLM,
+# Claude, and Codex enter through the sealed exact-head ACP review path; other live lanes stay
 # eligible for advisory/implement work with formal_review_eligible: false.
 #
 # Formal CF model+effort pins (review-pr / model_catalog formal_cf_defaults):
@@ -30,8 +33,8 @@ endpoints:
   - name: claude
     aliases: [claude]
     state: live
-    transports: [native_cli]
-    completion_evidence: [terminal_event]
+    transports: [acp]
+    completion_evidence: [terminal_event, authority_receipt]
     default_ttl_seconds: 3600
     retry_class: standard
     concurrency_limit: 1
@@ -40,8 +43,8 @@ endpoints:
   - name: codex
     aliases: [codex]
     state: live
-    transports: [native_cli]
-    completion_evidence: [terminal_event]
+    transports: [acp]
+    completion_evidence: [terminal_event, authority_receipt]
     default_ttl_seconds: 3600
     retry_class: standard
     concurrency_limit: 1
@@ -50,8 +53,8 @@ endpoints:
   - name: agy
     aliases: [agy]
     state: live
-    transports: [project_bridge]
-    completion_evidence: [terminal_event]
+    transports: [acp]
+    completion_evidence: [terminal_event, authority_receipt]
     default_ttl_seconds: 3600
     retry_class: standard
     concurrency_limit: 2
@@ -65,8 +68,8 @@ endpoints:
   - name: grok
     aliases: [grok]
     state: live
-    transports: [native_cli]
-    completion_evidence: [terminal_event]
+    transports: [acp]
+    completion_evidence: [terminal_event, authority_receipt]
     default_ttl_seconds: 3600
     retry_class: standard
     concurrency_limit: 1
@@ -78,20 +81,20 @@ endpoints:
   - name: kimi
     aliases: [kimi]
     state: live
-    transports: [project_bridge]
-    completion_evidence: [terminal_event]
+    transports: [acp]
+    completion_evidence: [terminal_event, authority_receipt]
     default_ttl_seconds: 3600
     retry_class: standard
     concurrency_limit: 1
-    # Sealed formal CF isolation not proven. Live for implement/advisory bridge
+    # Sealed formal CF isolation not proven. Live for implement/advisory ACP
     # asks; formal CF via review-pr claude|glm|codex. See #5556.
     formal_review_eligible: false
     model_family_resolver: canonical-reviewer-resolver
   - name: cursor
     aliases: [cursor]
     state: live
-    transports: [native_cli]
-    completion_evidence: [terminal_event]
+    transports: [acp]
+    completion_evidence: [terminal_event, authority_receipt]
     default_ttl_seconds: 3600
     retry_class: standard
     concurrency_limit: 1
@@ -110,13 +113,13 @@ endpoints:
     concurrency_limit: 0
     formal_review_eligible: false
     model_family_resolver: canonical-reviewer-resolver
-  - name: glm-local
-    aliases: [glm-local]
-    state: local_only
-    transports: [local_cli]
-    completion_evidence: [terminal_event]
-    default_ttl_seconds: 1800
-    retry_class: local
+  - name: glm
+    aliases: [glm, glm-local]
+    state: live
+    transports: [acp]
+    completion_evidence: [terminal_event, authority_receipt, sealed_verdict]
+    default_ttl_seconds: 3600
+    retry_class: standard
     concurrency_limit: 1
-    formal_review_eligible: false
+    formal_review_eligible: true
     model_family_resolver: canonical-reviewer-resolver

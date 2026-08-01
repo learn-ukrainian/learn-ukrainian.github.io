@@ -19,7 +19,7 @@ from scripts.fleet_comms.cli import (
     get_formal_review_job,
     main,
 )
-from scripts.fleet_comms.migrations import apply_migrations
+from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
 
 def _seed_plane_db(root: Path) -> Path:
@@ -27,7 +27,7 @@ def _seed_plane_db(root: Path) -> Path:
     db_path = root / "comms.sqlite3"
     conn = sqlite3.connect(str(db_path))
     try:
-        assert apply_migrations(conn) == 3
+        assert apply_migrations(conn) == MIGRATIONS[-1].version
         conn.execute(
             """INSERT INTO formal_review_jobs(
                 review_id, repository, pr_number, head_sha, gate_kind,
@@ -208,6 +208,7 @@ def test_supported_bridge_command_defaults_to_durable_acp(
     )
     monkeypatch.delenv("LU_AGENT_COMM_TRANSPORT", raising=False)
     monkeypatch.setenv("CODEX_THREAD_ID", "thread-6159")
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "fleet"))
     _channels.create_channel("architecture", exist_ok=False)
     observed: dict[str, object] = {}
 
@@ -236,14 +237,14 @@ def test_supported_bridge_command_defaults_to_durable_acp(
 
     assert _channels_cli._handle_discuss(args) == 0
     assert observed["participants"] == ("kimicc", "pool")
-    assert observed["initiator"] == "codex"
+    assert observed["source"] == "codex"
     assert "Compare the bounded options." in str(observed["prompt"])
     assert "--- monitor: project state" not in str(observed["prompt"])
     output = capsys.readouterr().out
     assert "transport: ACP (kimicc, pool)" in output
-    assert "/acp.html?conversation=conversation_" in output
+    assert "/fleet.html?conversation=conversation_" in output
     messages = _channels.read("architecture", tail=10)
-    assert any("[ACP COMPLETE]" in message["body"] for message in messages)
+    assert not any("[ACP COMPLETE]" in message["body"] for message in messages)
 
 
 def test_acp_discuss_cli_busy_is_body_free_no_queue_json(
