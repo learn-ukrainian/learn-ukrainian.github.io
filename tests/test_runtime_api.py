@@ -796,6 +796,9 @@ def test_recent_limits_results(tmp_path, monkeypatch):
                 "ts": _iso(now - timedelta(minutes=2)),
                 "agent": "gemini",
                 "entrypoint": "bridge",
+                "initiator": "codex",
+                "attribution_source": "explicit",
+                "attribution_task_id": "review-6159",
                 "model": "gemini-3.1-pro-preview",
                 "outcome": "ok",
                 "duration_s": 5.0,
@@ -809,7 +812,22 @@ def test_recent_limits_results(tmp_path, monkeypatch):
     records = response.json()["records"]
     assert len(records) == 2
     assert records[0]["outcome"] == "timeout"
+    assert records[0]["source"] == "unknown"
+    assert records[0]["via"] == "dispatch"
     assert records[1]["agent"] == "gemini"
+    assert records[1]["source"] == "codex"
+    assert records[1]["source_provenance"] == "explicit"
+    assert records[1]["source_task_id"] == "review-6159"
+
+
+def test_runtime_page_labels_caller_source_separately_from_transport():
+    html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
+
+    assert "<th>Source</th>" in html
+    assert "<th>Agent</th>" in html
+    assert "<th>Via</th>" in html
+    assert "record.source || 'unknown'" in html
+    assert "record.via || record.entrypoint" in html
 
 
 def test_transport_health_returns_sanitized_cached_probe(tmp_path, monkeypatch):

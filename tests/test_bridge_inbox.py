@@ -116,6 +116,7 @@ def test_run_inbox_single_thread_single_delivery(mock_invoke):
     assert summary.replies_posted == 1
     assert mock_invoke.call_count == 1
     assert mock_invoke.call_args.kwargs["mode"] == "read-only"
+    assert mock_invoke.call_args.kwargs["initiator"] == "user"
     assert mock_invoke.call_args.kwargs["tool_config"]["discussion_readonly"] is True
     delivered = _delivery_rows(str(thread[0]["message_id"]))[0]
     assert delivered["status"] == "delivered"

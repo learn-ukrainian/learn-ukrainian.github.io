@@ -139,8 +139,9 @@ describe("lexicon static API routes", () => {
     expect(contract.surfaces.dailyWord.endpoint).toBe(contract.endpoints.dailyPool);
     expect(contract.surfaces.practice.totalLexemes).toBeGreaterThan(1000);
     expect(contract.surfaces.practice.levels).toEqual([...PRACTICE_LEVELS]);
-    // Inventory-fed cloze publishes a 70-item deck.
-    expect(contract.surfaces.cloze.totalItems).toBe(70);
+    // Hydrated practice deck after inventory-cloze scale (#6179/#6182): do not pin
+    // an exact historical total; assert the published contract is non-trivial.
+    expect(contract.surfaces.cloze.totalItems).toBeGreaterThanOrEqual(200);
     expect(contract.surfaces.cloze.reviewedSourceRows).toBeGreaterThan(0);
     expect(contract.endpoints.practiceIndexTemplate).toBe(
       "/api/lexicon/practice-index.{level}.json",
@@ -185,10 +186,11 @@ describe("lexicon static API routes", () => {
     expect(index.deckVersion).toBe(lexemes.deckVersion);
     expect(index.deckVersion).toBe(cloze.deckVersion);
     expect(index.counts.lexemes).toBe(lexemes.lexemes.length);
-  expect(index.counts.cloze).toBe(cloze.cloze.length);
-  expect(index.counts.lexemes).toBeGreaterThan(1000);
-    // A1 contributes 59 items to the published 70-item cloze deck.
-    expect(index.counts.cloze).toBe(59);
+    expect(index.counts.cloze).toBe(cloze.cloze.length);
+    expect(index.counts.lexemes).toBeGreaterThan(1000);
+    // A1 cloze is inventory+curriculum sourced; exact count floats with deck
+    // publish. Require index/cloze shard agreement (above) and a post-#6179 floor.
+    expect(index.counts.cloze).toBeGreaterThanOrEqual(100);
   });
 
   test("materializes search shards for static /lexicon/search/{shard}.json URLs", async () => {

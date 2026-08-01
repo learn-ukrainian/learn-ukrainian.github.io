@@ -325,6 +325,8 @@ def _puls_cefr_level(word: str, sources_db: Path | None = None) -> tuple[str, st
             "SELECT level FROM puls_cefr WHERE word = ? COLLATE NOCASE AND level != '' LIMIT 1",
             (word,),
         ).fetchone()
+    except sqlite3.Error:
+        return None
     finally:
         connection.close()
     if not row:

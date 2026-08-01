@@ -3149,6 +3149,8 @@ def test_dispatch_dry_run_records_and_reaps_runtime_tmp_lease(
             "codex",
             "--task-id",
             "dry/run tmp",
+            "--initiator",
+            "codex",
             "--prompt",
             "test",
             "--dry-run",
@@ -3161,6 +3163,8 @@ def test_dispatch_dry_run_records_and_reaps_runtime_tmp_lease(
     assert state is not None
     lease_root = tmp_path / "learn-ukrainian" / "dry-run-tmp"
     assert state["status"] == "dry_run"
+    assert state["initiator"] == "codex"
+    assert state["attribution_source"] == "explicit"
     assert state["runtime_tmp_root"] == str(lease_root)
     assert state["tmp_bytes_freed"] == 0
     assert state["tmp_reap_error"] is None

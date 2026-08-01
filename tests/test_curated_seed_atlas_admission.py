@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -13,6 +14,27 @@ from scripts.lexicon import curated_seed_atlas_admission as admission
 def _manifest(path: Path, entries: list[dict[str, object]]) -> Path:
     path.write_text(json.dumps({"entries": entries}, ensure_ascii=False), encoding="utf-8")
     return path
+
+
+def test_puls_cefr_lookup_fails_closed_when_optional_table_is_absent(
+    tmp_path: Path,
+) -> None:
+    database = tmp_path / "sources.db"
+    sqlite3.connect(database).close()
+
+    assert admission._puls_cefr_level("оренда", database) is None
+
+
+def test_puls_cefr_lookup_preserves_a_valid_local_result(tmp_path: Path) -> None:
+    database = tmp_path / "sources.db"
+    with sqlite3.connect(database) as connection:
+        connection.execute("CREATE TABLE puls_cefr (word TEXT, level TEXT)")
+        connection.execute(
+            "INSERT INTO puls_cefr(word, level) VALUES (?, ?)",
+            ("оренда", "B1"),
+        )
+
+    assert admission._puls_cefr_level("оренда", database) == ("B1", "PULS CEFR")
 
 
 def test_candidates_keep_explicit_verb_expression_type(tmp_path: Path, monkeypatch) -> None:

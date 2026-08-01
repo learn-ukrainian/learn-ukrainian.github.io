@@ -8,6 +8,7 @@ import inspect
 import ipaddress
 import json
 import os
+import re
 import sqlite3
 import sys
 from collections import defaultdict
@@ -53,6 +54,8 @@ router = APIRouter(tags=["runtime"])
 ADAPTERS_DIR = Path(__file__).resolve().parent.parent / "agent_runtime" / "adapters"
 USAGE_DIR = BATCH_STATE_DIR / "api_usage"
 _KNOWN_OUTCOMES = ("ok", "error", "timeout", "rate_limited")
+_RUNTIME_ATTRIBUTION_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,99}$")
+_RUNTIME_ATTRIBUTION_SOURCES = frozenset({"explicit", "session_env", "unknown"})
 _ACP_LEGACY_PARTICIPANTS = ("codex", "grok")
 _ACP_ENABLED_PARTICIPANTS = frozenset(ACPX_SUPPORTED_PARTICIPANTS)
 _ACP_STATES = frozenset({
@@ -441,10 +444,23 @@ def recent_runtime_records(*, limit: int = 50) -> dict[str, Any]:
     summaries: list[dict[str, Any]] = []
     for record in _iter_usage_records(_today_usage_files()):
         ts = _parse_iso_datetime(record.get("ts"))
+        initiator = record.get("initiator")
+        if not isinstance(initiator, str) or not _RUNTIME_ATTRIBUTION_ID.fullmatch(initiator):
+            initiator = "unknown"
+        source_provenance = record.get("attribution_source")
+        if source_provenance not in _RUNTIME_ATTRIBUTION_SOURCES or initiator == "unknown":
+            source_provenance = "unknown"
+        source_task_id = record.get("attribution_task_id")
+        if not isinstance(source_task_id, str) or not _RUNTIME_ATTRIBUTION_ID.fullmatch(source_task_id):
+            source_task_id = None
         summaries.append({
             "ts": _isoformat_z(ts) if ts else record.get("ts"),
             "agent": record.get("agent"),
             "entrypoint": record.get("entrypoint"),
+            "via": record.get("entrypoint"),
+            "source": initiator,
+            "source_provenance": source_provenance,
+            "source_task_id": source_task_id,
             "model": record.get("model"),
             "outcome": record.get("outcome"),
             "duration_s": record.get("duration_s"),

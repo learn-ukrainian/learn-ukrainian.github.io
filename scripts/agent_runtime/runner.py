@@ -28,6 +28,7 @@ Issue: #1184
 from __future__ import annotations
 
 import contextlib
+import contextvars
 import importlib
 import logging
 import os
@@ -53,6 +54,7 @@ from ai_llm.fallback import (
 
 from .adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 from .adapters.base import AgentAdapter
+from .attribution import InvocationAttribution, resolve_invocation_attribution
 from .env_sanitize import build_agent_env
 from .errors import (
     AgentRuntimeError,
@@ -112,10 +114,18 @@ _PRIVACY_LIMITED_USAGE_ENTRYPOINTS = frozenset(
     {"acpx-pilot-native", "acpx-pilot-shadow", "acpx-discuss", "acpx-discuss-synthesis"}
 )
 _ACPX_DIRECT_OUTPUT_LIMIT_BYTES = 256 * 1024
+# Native OpenCode ACP emits a larger JSON-RPC envelope than the text-only and
+# built-in seats. Keep it bounded, but above the production-observed 263,070
+# bytes that otherwise killed a valid concise GLM response before its terminal
+# frame arrived (#6159).
+_ACPX_GLM_OUTPUT_LIMIT_BYTES = 512 * 1024
 
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.
 _ADAPTER_CACHE: dict[str, AgentAdapter] = {}
+_INVOCATION_ATTRIBUTION: contextvars.ContextVar[InvocationAttribution | None] = (
+    contextvars.ContextVar("agent_runtime_invocation_attribution", default=None)
+)
 
 
 class AgentOutputLimitError(AgentRuntimeError):
@@ -138,6 +148,8 @@ def _streamed_output_limit(*, agent_name: str, entrypoint: str) -> int | None:
         agent_name in acpx_seats
         and entrypoint in {"acpx-pilot-shadow", "acpx-discuss"}
     ):
+        if agent_name == "acpx-glm-shadow":
+            return _ACPX_GLM_OUTPUT_LIMIT_BYTES
         return _ACPX_DIRECT_OUTPUT_LIMIT_BYTES
     return None
 
@@ -729,6 +741,9 @@ def _build_usage_record(
         None if privacy_limited else (session_id[:100] if session_id else None)
     )
     telemetry_source = None if privacy_limited else os.environ.get("LU_TELEMETRY_SOURCE")
+    attribution = _INVOCATION_ATTRIBUTION.get() or resolve_invocation_attribution(
+        task_id=task_id
+    )
 
     record = {
         "ts": datetime.now(UTC).isoformat(),
@@ -745,6 +760,9 @@ def _build_usage_record(
         "slug": None if privacy_limited else os.environ.get("LU_TELEMETRY_SLUG"),
         "track": None if privacy_limited else os.environ.get("LU_TELEMETRY_TRACK"),
         "source": telemetry_source[:100] if telemetry_source else None,
+        "initiator": attribution.initiator,
+        "attribution_source": attribution.source,
+        "attribution_task_id": attribution.task_id,
         "duration_s": round(duration_s, 2),
         "input_chars": input_chars,
         "output_chars": output_chars,
@@ -2663,6 +2681,7 @@ def invoke(
     initial_response_timeout: int | None = None,
     event_sink: Callable[..., None] | None = None,
     effort: str | None = None,
+    initiator: str | None = None,
 ) -> Result:
     """Invoke an agent CLI, provisioning trail isolation before any spawn.
 
@@ -2671,12 +2690,18 @@ def invoke(
     profiles receive a private one-server MCP configuration that is removed
     after success, refusal, timeout, or adapter error.
     """
-    launch = prepare_trail_isolation(
-        agent_name=agent_name,
-        mode=mode,
-        tool_config=tool_config,
+    attribution = resolve_invocation_attribution(
+        explicit=initiator,
+        task_id=task_id,
     )
+    attribution_token = _INVOCATION_ATTRIBUTION.set(attribution)
+    launch = None
     try:
+        launch = prepare_trail_isolation(
+            agent_name=agent_name,
+            mode=mode,
+            tool_config=tool_config,
+        )
         return _invoke_impl(
             agent_name,
             prompt,
@@ -2697,6 +2722,7 @@ def invoke(
     finally:
         if launch is not None:
             launch.cleanup()
+        _INVOCATION_ATTRIBUTION.reset(attribution_token)
 
 
 def _invoke_direct_only(
@@ -2710,6 +2736,7 @@ def _invoke_direct_only(
     hard_timeout: int = 300,
     effort: str | None = None,
     entrypoint: str = "acpx-pilot-shadow",
+    initiator: str | None = None,
 ) -> Result:
     """Invoke one explicitly marked direct-only, read-only shadow seat.
 
@@ -2728,21 +2755,27 @@ def _invoke_direct_only(
         )
     if entrypoint not in {"acpx-pilot-shadow", "acpx-discuss"}:
         raise ValueError("ACPX direct-only invocation entrypoint was altered")
-    return _invoke_impl(
-        agent_name,
-        prompt,
-        mode="read-only",
-        cwd=cwd,
-        model=model,
-        task_id=task_id,
-        session_id=None,
-        tool_config=tool_config,
-        entrypoint=entrypoint,
-        hard_timeout=hard_timeout,
-        effort=effort,
-        allow_direct_only=True,
-        allow_runner_failover=False,
+    attribution_token = _INVOCATION_ATTRIBUTION.set(
+        resolve_invocation_attribution(explicit=initiator, task_id=task_id)
     )
+    try:
+        return _invoke_impl(
+            agent_name,
+            prompt,
+            mode="read-only",
+            cwd=cwd,
+            model=model,
+            task_id=task_id,
+            session_id=None,
+            tool_config=tool_config,
+            entrypoint=entrypoint,
+            hard_timeout=hard_timeout,
+            effort=effort,
+            allow_direct_only=True,
+            allow_runner_failover=False,
+        )
+    finally:
+        _INVOCATION_ATTRIBUTION.reset(attribution_token)
 
 
 def _invoke_native_once(
@@ -2757,6 +2790,7 @@ def _invoke_native_once(
     entrypoint: str = "acpx-pilot-native",
     hard_timeout: int = 300,
     effort: str | None = None,
+    initiator: str | None = None,
 ) -> Result:
     """Invoke one native ACPX-pilot authority call without runner failover."""
     if agent_name not in {"codex", "grok"}:
@@ -2771,17 +2805,23 @@ def _invoke_native_once(
         or (entrypoint == "acpx-discuss-synthesis" and agent_name != "codex")
     ):
         raise ValueError("ACPX pilot native invocation contract was altered")
-    return _invoke_impl(
-        agent_name,
-        prompt,
-        mode=mode,
-        cwd=cwd,
-        model=model,
-        task_id=task_id,
-        session_id=None,
-        tool_config=None,
-        entrypoint=entrypoint,
-        hard_timeout=hard_timeout,
-        effort=effort,
-        allow_runner_failover=False,
+    attribution_token = _INVOCATION_ATTRIBUTION.set(
+        resolve_invocation_attribution(explicit=initiator, task_id=task_id)
     )
+    try:
+        return _invoke_impl(
+            agent_name,
+            prompt,
+            mode=mode,
+            cwd=cwd,
+            model=model,
+            task_id=task_id,
+            session_id=None,
+            tool_config=None,
+            entrypoint=entrypoint,
+            hard_timeout=hard_timeout,
+            effort=effort,
+            allow_runner_failover=False,
+        )
+    finally:
+        _INVOCATION_ATTRIBUTION.reset(attribution_token)
