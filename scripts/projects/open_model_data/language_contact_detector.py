@@ -348,8 +348,6 @@ def segment_structure(text: str) -> list[DetectionSpan]:
             continue
         if char in QUOTE_PAIRS:
             closer = QUOTE_PAIRS[char]
-            if char == '"' and stack and stack[-1][0] == '"':
-                continue
             stack.append((closer, index + 1))
     for _closer, content_start in stack:
         end = _paragraph_end(text, content_start)
@@ -1065,10 +1063,10 @@ def _classify_cluster(
     # enough to route quoted Russian.  Two Russian-morphology hits alone are
     # not: creative, dialectal, and historical Ukrainian frequently produces
     # that pattern and must stay explicitly uncertain.
-    if quoted_role and corroborated:
-        return _classification("russian_quotation", "russian", "standard_orthography", role, "mask_from_modern_ukrainian_loss", "high", "quoted_russian")
     if capitalized_specific and not lower_high_ru and quoted_role:
         return _classification("uncertain", "uncertain", "standard_orthography", role, "human_review_required", "low", "unresolved_review")
+    if quoted_role and corroborated:
+        return _classification("russian_quotation", "russian", "standard_orthography", role, "mask_from_modern_ukrainian_loss", "high", "quoted_russian")
     if capitalized_specific and not lower_high_ru:
         return _classification("proper_name", "uncertain", "standard_orthography", role, "retain_faithful", "medium", "proper_name_review")
     if not corroborated and not adjacent_corroborated:

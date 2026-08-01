@@ -317,6 +317,14 @@ def test_proper_name_other_language_and_ocr_require_positive_suspicion(config: d
     assert ocr[0]["classification"]["category"] == "ocr_or_encoding_candidate"
 
 
+def test_quoted_capitalized_russian_orthography_cannot_self_corroborate(config: dict, runtime) -> None:
+    candidates = _detect("Автор згадав назву «Ростовъ» у примітці.", config=config, runtime=runtime)
+    assert [item["classification"]["category"] for item in candidates] == ["uncertain"]
+    assert candidates[0]["classification"]["language_identity"] == "uncertain"
+    assert candidates[0]["classification"]["downstream_disposition"] == "human_review_required"
+    assert candidates[0]["automatic_error_label"] is False
+
+
 def test_vetted_valid_word_route_is_candidate_only(config: dict, runtime) -> None:
     candidates = _detect("Він хотів прийняти участь у події.", config=config, runtime=runtime)
     candidate = candidates[0]
