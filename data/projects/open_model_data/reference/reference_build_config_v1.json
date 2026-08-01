@@ -1,0 +1,62 @@
+{
+  "schema_version": "reference_build_config_v1",
+  "build_id": "ukrainian-data-foundry-reference-v1",
+  "fixture": {
+    "source_text": "Фраза «Я не мав на меті тебе образити» звучит значно вишуканіше.",
+    "incorrect_span": "звучит",
+    "accepted_correction": "звучить",
+    "origin": "machine_generated",
+    "test_fixture": true
+  },
+  "full_corpus_profile": {
+    "config_path": "data/projects/open_model_data/profiles/public_external_full_corpus_v1.json",
+    "committed_receipt_path": "data/projects/open_model_data/profiles/full_corpus_profile_v1.json"
+  },
+  "baseline": {
+    "research_question": "Does the frozen Gemma 4 reference run outperform the no-op identity baseline on the frozen 677-item targeted Ukrainian grammar-and-calque set?",
+    "decision_rule": "Validate the measurement interface only if source-only requests, saved responses, and reports reproduce exactly and Gemma is strictly higher on edit F0.5, headline-calque recall, and exact-sentence accuracy.",
+    "generation_requests_path": "data/projects/ua_eval_harness/baselines/v1/generation_requests.jsonl",
+    "identity_responses_path": "data/projects/ua_eval_harness/baselines/v1/identity.responses.jsonl",
+    "identity_report_path": "data/projects/ua_eval_harness/baselines/v1/identity.report.json",
+    "model_output_path": "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.model-output.jsonl",
+    "model_metadata_path": "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.metadata.json",
+    "model_responses_path": "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.responses.jsonl",
+    "model_report_path": "data/projects/ua_eval_harness/baselines/v2/gemma-4-31b-it.report.json"
+  },
+  "recipe_fixture": {
+    "base_model": {
+      "identifier": "reference-fixture/base-model-interface",
+      "revision": "26d83f9b4bf08908430fdf1ac8df7a74ad305bb4"
+    },
+    "tokenizer": {
+      "identifier": "reference-fixture/tokenizer-interface",
+      "revision": "f61c83cc0c671b5e95bdc8bd5fc92f30e90e57aa"
+    },
+    "implementation": {
+      "framework": "reference-validation-only",
+      "framework_version": "1",
+      "code_revision": "39e6ab27cc019ed47249e9160fc9b09667ac3f02",
+      "dependency_lock_sha256": "c9f8337146ccf1f22fcc6e671a4dc7376304cf3ce7a7e1348af2250e23f7012b"
+    },
+    "hyperparameters": {
+      "seed": 42,
+      "sequence_length": 1024,
+      "micro_batch_size": 1,
+      "gradient_accumulation_steps": 1,
+      "learning_rate": "2e-5",
+      "weight_decay": "0.1",
+      "epochs": "1",
+      "precision": "bf16",
+      "packing": false
+    }
+  },
+  "run_policy": {
+    "training_authorized": false,
+    "model_generation_authorized": false,
+    "upload_authorized": false,
+    "publication_authorized": false,
+    "outreach_authorized": false,
+    "private_data_authorized": false,
+    "ocr_authorized": false
+  }
+}

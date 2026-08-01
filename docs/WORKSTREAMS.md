@@ -9,7 +9,7 @@
 
 | Field | Value |
 | --- | --- |
-| **Last refreshed** | 2026-07-31 (Ukrainian Data Foundry chain #6119–#6123 replaces the superseded #6082 micro-pilot) |
+| **Last refreshed** | 2026-08-01 (Ukrainian Data Foundry reference chain #6119–#6123 implemented end to end) |
 | **Refresh trigger** | Every session handoff that lands a milestone; every stream-epic board change |
 | **Curriculum KPI** | Modules passing audit per week (curriculum streams; each milestone carries its own outcome measure) |
 | **Mission** | Help people and AI produce measurably better, authentically Ukrainian language through decolonized learning products and reusable, evidence-backed open-model infrastructure. Quality non-negotiable. |

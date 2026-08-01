@@ -254,6 +254,25 @@ status.
 6. Independently acquire and adjudicate the coverage-complete v0.2 evaluation
    inventory under its frozen evidence plan and qualified-review protocol.
 
+### First Foundry reference build
+
+The #6119–#6123 implementation chain now has an executable reference build. It
+reproduces the complete 189,150-record / 50,298,925-word morphology profile,
+joins source and language-span lineage through correction evidence and five
+separate consumer views, and re-scores the frozen 677-item saved baseline
+without a model call or gold leakage.
+
+The integration fixture is the observed `звучит` → `звучить` failure. It uses
+VESUM, Russian morphology, `r2u`, ULIF, a heritage source, per-dictionary
+`slovnyk.me` provenance, and Ukrainian corpus context. It remains synthetic:
+fixture reviewers are not qualified-human evidence, all four non-evaluation
+rows are training-ineligible, and the real corpus still has zero admitted
+training records.
+
+The reference build is proof that teams can run the Foundry interfaces and
+obtain reproducible evidence. It is not a released dataset, a trained model,
+or a claim that the 677-item benchmark measures general Ukrainian fluency.
+
 ### Later validation and collaboration
 
 After a usable reference build exists, it may be validated with Lapa,
