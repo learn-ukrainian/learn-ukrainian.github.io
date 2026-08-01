@@ -826,30 +826,55 @@ def _inventory_form_details(
     form: str,
     verifier: VesumVerifier,
 ) -> tuple[str, str] | None:
-    """Return the one VESUM-attested case and number for an inventory target.
+    """Return the VESUM-supported slot for an inventory target.
 
     Sentence-inventory rows deliberately preserve an attested surface form but
-    do not annotate morphology.  We only emit one when VESUM resolves that
-    exact form to one matching lemma and one case; no grammatical label is
-    inferred from sentence text.
+    do not annotate morphology.  Dictionary-form rows are safe to use as
+    identity clozes for any POS when VESUM confirms that the exact surface is
+    the target lemma.  This matters for invariant lemmas and for nouns whose
+    dictionary form has more than one VESUM analysis (for example, a
+    nominative/accusative syncretism): rejecting those rows merely because the
+    form has multiple analyses was the production thin-mode gate.
+
+    Inflected rows still need one matching lemma/case/number analysis.  No
+    grammatical label is inferred from sentence text, and unsupported cases
+    are left for the caller to reject rather than guessed here.
     """
-    matches = verifier.verify_words([form], _vesum_pos(pos)).get(form, [])
-    if len(matches) != 1:
+    pos_filter = _vesum_pos(pos)
+    matches = verifier.verify_words([form], pos_filter).get(form, [])
+    # Manifest POS values include variants such as ``propn``, ``noun:f``, and
+    # ``proper noun`` that are not VESUM ``pos`` values.  A filtered miss is
+    # not proof that the source form is absent; retry without the incompatible
+    # filter and retain only rows that resolve to the target lemma.
+    if not matches and pos_filter:
+        matches = verifier.verify_words([form]).get(form, [])
+    matching = [
+        match
+        for match in matches
+        if _plain(str(match.get("lemma") or "")) == lemma_plain
+    ]
+    if not matching:
         return None
-    match = matches[0]
-    if _plain(str(match.get("lemma") or "")) != lemma_plain:
-        return None
-    cases = _match_cases(match)
-    if len(cases) != 1:
-        return None
-    tokens = set(str(match.get("tags") or "").replace(":", " ").split())
-    if "p" in tokens:
-        number = "plural"
-    elif {"m", "f", "n"} & tokens:
-        number = "singular"
-    else:
-        return None
-    return (next(iter(cases)), number)
+
+    # The inventory target is an exact dictionary form.  Its sentence
+    # context supplies the example, while the cloze asks for the attested
+    # lemma; it is not a case exercise.  Do not force an arbitrary case when
+    # VESUM has several analyses for the same surface.
+    if _plain(form) == lemma_plain:
+        return ("nominative", "singular")
+
+    analyses: set[tuple[str, str]] = set()
+    for match in matching:
+        cases = _match_cases(match)
+        tokens = set(str(match.get("tags") or "").replace(":", " ").split())
+        if "p" in tokens:
+            number = "plural"
+        elif {"m", "f", "n"} & tokens:
+            number = "singular"
+        else:
+            continue
+        analyses.update((case_name, number) for case_name in cases)
+    return next(iter(analyses)) if len(analyses) == 1 else None
 
 
 def _eligible_decoys(
@@ -874,6 +899,74 @@ def _eligible_decoys(
             case_name == "nominative" or _plain(decoy_form) != _plain(lexeme["lemma"])
         ):
             candidates.append((lexeme, decoy_form))
+    return candidates
+
+
+def _option_pos_bucket(pos: Any) -> str:
+    """Map manifest POS variants into a safe option-comparison bucket."""
+    value = _clean_text(pos)
+    if not value:
+        return ""
+    normalized = value.casefold()
+    if "pronoun" in normalized or normalized in {"pron", "negative pronoun"}:
+        return "pronoun"
+    if "adverb" in normalized or normalized == "adv":
+        return "adverb"
+    if "noun" in normalized or normalized in {"propn", "proper noun"}:
+        return "noun"
+    if "verb" in normalized or normalized in {"passive", "participle", "gerund"}:
+        return "verb"
+    if "adject" in normalized or normalized in {"adj", "adjective"}:
+        return "adjective"
+    if "numeral" in normalized or normalized in {"num", "number"}:
+        return "numeral"
+    if normalized in {"preposition", "prep", "conjunction", "conj", "particle", "part"}:
+        return "function"
+    return normalized
+
+
+def _eligible_dictionary_decoys(
+    answer: dict[str, Any],
+    lexemes: list[dict[str, Any]],
+) -> list[tuple[dict[str, Any], str]]:
+    """Return same-POS dictionary forms for an inventory identity cloze.
+
+    Inventory examples are not authored case prompts.  Requiring every
+    distractor to have a verified paradigm would therefore throw away verbs,
+    adverbs, proper nouns, and other perfectly valid practice lexemes even
+    though the exercise only asks the learner to identify the source-backed
+    lemma.
+    """
+    answer_bucket = _option_pos_bucket(answer.get("pos"))
+    answer_head = _headword(answer["gloss"])
+    answer_label = _plain(answer["lemma"])
+    candidates: list[tuple[dict[str, Any], str]] = []
+    seen_labels: set[str] = {answer_label}
+    for lexeme in lexemes:
+        if lexeme["lemmaId"] == answer["lemmaId"]:
+            continue
+        if _option_pos_bucket(lexeme.get("pos")) != answer_bucket:
+            continue
+        if CEFR_RANK[lexeme["cefr"]] > CEFR_RANK[answer["cefr"]]:
+            continue
+        if _headword(lexeme["gloss"]) == answer_head:
+            continue
+        label = _clean_text(lexeme.get("lemma"))
+        if not label or _plain(label) in seen_labels:
+            continue
+        seen_labels.add(_plain(label))
+        candidates.append((lexeme, label))
+
+    # A capitalized source lemma should not be the only capitalized option;
+    # prefer decoys with the same initial-capital state when the pool allows.
+    answer_cap = _initial_capitalization(answer.get("lemma"))
+    same_capitalization = [
+        candidate
+        for candidate in candidates
+        if _initial_capitalization(candidate[1]) == answer_cap
+    ]
+    if len(same_capitalization) >= 3:
+        return same_capitalization
     return candidates
 
 
@@ -972,6 +1065,62 @@ def _make_no_pair_options(
     lexemes: list[dict[str, Any]],
     rng: random.Random,
 ) -> list[dict[str, str]]:
+    provenance = cloze.get("provenance")
+    case_rule = cloze.get("caseRule")
+    is_inventory_identity = (
+        isinstance(provenance, dict)
+        and provenance.get("status") == "sentence_inventory"
+        and isinstance(case_rule, dict)
+        and case_rule.get("ruleId") == "nominative_identification"
+        and _plain(str(cloze.get("form") or "")) == _plain(str(cloze.get("lemma") or ""))
+    )
+    if is_inventory_identity:
+        decoys = _eligible_dictionary_decoys(answer, lexemes)
+        answer_length = len(str(cloze.get("form") or ""))
+        decoys = [
+            candidate
+            for candidate in decoys
+            if abs(len(candidate[1]) - answer_length) <= 12
+        ]
+        decoys.sort(key=lambda candidate: (abs(len(candidate[1]) - answer_length), _plain(candidate[1])))
+        selected_decoys: list[tuple[dict[str, Any], str]] = []
+        for candidate in decoys:
+            labels = [cloze["form"], *(item[1] for item in selected_decoys), candidate[1]]
+            if max(map(len, labels)) - min(map(len, labels)) > 12:
+                continue
+            selected_decoys.append(candidate)
+            if len(selected_decoys) == 3:
+                break
+        if len(selected_decoys) < 3:
+            return []
+        rng.shuffle(selected_decoys)
+        option_pos = _option_pos_bucket(answer.get("pos"))
+        options = [
+            _option(
+                cloze["clozeId"],
+                "answer",
+                cloze["form"],
+                answer["lemmaId"],
+                "answer",
+                "nominative",
+                option_pos,
+            )
+        ]
+        for index, (decoy_lexeme, decoy_form) in enumerate(selected_decoys, start=1):
+            options.append(
+                _option(
+                    cloze["clozeId"],
+                    f"decoy-{index}",
+                    decoy_form,
+                    decoy_lexeme["lemmaId"],
+                    "decoy-lemma",
+                    "nominative",
+                    option_pos,
+                )
+            )
+        rng.shuffle(options)
+        return options
+
     decoys = _eligible_decoys(answer, lexemes, cloze["blankCase"], cloze["number"])
     rng.shuffle(decoys)
     if len(decoys) < 3:
@@ -1091,8 +1240,15 @@ def validate_option_set(cloze: dict[str, Any]) -> list[str]:
         if isinstance(option, dict)
         and option.get("case") not in {None, "", "nominative"}
     )
+    oblique_distractor_count = sum(
+        1
+        for option in options
+        if isinstance(option, dict)
+        and option.get("kind") != "answer"
+        and option.get("case") not in {None, "", "nominative"}
+    )
     blank_case = _clean_text(cloze.get("blankCase")) or "nominative"
-    if blank_case != "nominative" and oblique_count < 2:
+    if blank_case != "nominative" and (oblique_count < 2 or oblique_distractor_count < 1):
         errors.append("option set must contain at least two oblique-looking forms")
     pos_values = {
         str(option.get("pos") or "")
@@ -1193,6 +1349,12 @@ def _candidate_rule_id(candidate: dict[str, Any], case_name: str) -> str | None:
         if rule_id in CASE_RULES and CASE_RULES[rule_id]["case"] == case_name:
             return rule_id
         return None
+    # ``nominative_identification`` is reserved for the explicit dictionary-
+    # form identity branch.  A non-identity inventory form must not inherit
+    # its "dictionary form" feedback merely because nominative is the first
+    # available rule for that case.
+    if case_name == "nominative":
+        return None
     for fallback_id, rule in CASE_RULES.items():
         if rule["case"] == case_name:
             return fallback_id
@@ -1251,13 +1413,19 @@ def _build_cloze_items(
             if inventory_details is None:
                 continue
             case_name, number = inventory_details
-            # The inventory is a source-backed example asset.  It supplies no
-            # authored grammar cue, so only a VESUM-unambiguous nominative
-            # singular form is eligible for the generic dictionary-form cloze.
-            # Nominative plurals are not dictionary forms for this rule.
-            if case_name != "nominative" or number != "singular":
-                continue
-            rule_id = "nominative_identification"
+            if _plain(curated_form) == lexeme["lemmaPlain"]:
+                # The inventory is a source-backed example asset.  An exact
+                # dictionary form is an identity cloze, not an inferred case
+                # exercise; this remains valid for verbs, adverbs, proper
+                # nouns, and syncretic noun forms.
+                rule_id = "nominative_identification"
+            else:
+                # Future inventory rows may carry an inflected target form.
+                # Use it only when VESUM gives one case/number and the
+                # existing authored rule table can describe that case.
+                rule_id = _candidate_rule_id(candidate, case_name)
+                if not rule_id:
+                    continue
         else:
             case_name = _clean_text(candidate.get("blankCase"))
             if not case_name or case_name not in CASE_LABELS_UA:
@@ -1279,12 +1447,9 @@ def _build_cloze_items(
         form = curated_form or _case_form(lexeme["paradigm"], case_name, number)
         if not form or (not inventory_candidate and _plain(form) == lexeme["lemmaPlain"]):
             continue
-        if not _verify_discriminative_form(
-            lexeme["lemmaPlain"],
-            lexeme.get("pos"),
-            form,
-            case_name,
-            verifier,
+        inventory_identity = inventory_candidate and _plain(form) == lexeme["lemmaPlain"]
+        if not inventory_identity and not _verify_discriminative_form(
+            lexeme["lemmaPlain"], lexeme.get("pos"), form, case_name, verifier
         ):
             continue
         sentence = _clean_text(candidate.get("sentence"))
@@ -3553,90 +3718,251 @@ def apply_size_budgets(
     raw_limit: int,
     gzip_limit: int,
 ) -> None:
+    """Measure shards and trim only the payload that exceeds its own budget.
+
+    A previous implementation removed the last lexeme from the level index
+    whenever *any* mode was oversized.  That made a large recognition or
+    classify shard silently delete unrelated cloze cards, and the repeated
+    whole-level serialization made production regeneration unnecessarily
+    expensive.  Surface payloads (index + lexemes) are trimmed together when
+    they themselves exceed a limit; cloze and drill payloads are otherwise
+    trimmed independently.
+    """
+
+    def body_items(level_shards: dict[str, dict[str, Any]], kind: str) -> list[Any] | None:
+        payload = level_shards.get(kind)
+        if not isinstance(payload, dict):
+            return None
+        key = "items" if kind == "index" else "lexemes" if kind == "lexemes" else MODE_BODY_KEYS.get(kind)
+        if not key or not isinstance(payload.get(key), list):
+            return None
+        return payload[key]
+
+    def set_budget(payload: dict[str, Any]) -> dict[str, int | bool]:
+        budget = _size_budget(payload, raw_limit, gzip_limit)
+        payload["sizeBudget"] = budget
+        return budget
+
+    def refresh_level_metadata(level_shards: dict[str, dict[str, Any]]) -> None:
+        """Keep index counts and mode flags coherent after a local trim."""
+        index_items = body_items(level_shards, "index")
+        lexemes = body_items(level_shards, "lexemes")
+        cloze_items = body_items(level_shards, "cloze")
+        if index_items is None:
+            return
+        lexeme_count = len(lexemes) if lexemes is not None else 0
+        cloze_items = cloze_items or []
+        cloze_by_lemma: dict[str, list[str]] = {}
+        for item in cloze_items:
+            if not isinstance(item, dict):
+                continue
+            lemma_id = _clean_text(item.get("lemmaId"))
+            cloze_id = _clean_text(item.get("clozeId"))
+            if lemma_id and cloze_id:
+                cloze_by_lemma.setdefault(lemma_id, []).append(cloze_id)
+        mode_lemma_ids = {
+            mode: {
+                _clean_text(item.get("lemmaId"))
+                for item in (body_items(level_shards, mode) or [])
+                if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
+            }
+            for mode in DRILL_MODES
+        }
+        for item in index_items:
+            if not isinstance(item, dict):
+                continue
+            lemma_id = _clean_text(item.get("lemmaId"))
+            cloze_ids = cloze_by_lemma.get(lemma_id, [])
+            existing_modes = set(item.get("modes") or [])
+            modes = ["flashcards"]
+            if "matching" in existing_modes:
+                modes.append("matching")
+            if "choice" in existing_modes:
+                modes.append("choice")
+            if cloze_ids:
+                modes.append("cloze")
+            for mode in DRILL_MODES:
+                if lemma_id in mode_lemma_ids[mode]:
+                    modes.append(mode)
+            item["modes"] = modes
+            item["hasCloze"] = bool(cloze_ids)
+            item["clozeIds"] = cloze_ids
+
+        counts = level_shards.get("index", {}).get("counts")
+        if not isinstance(counts, dict):
+            return
+        counts["lexemes"] = lexeme_count
+        counts["cloze"] = len(cloze_items)
+        counts["clozeEligibleLexemes"] = len(cloze_by_lemma)
+        counts["clozeCoverage"] = round(
+            len(cloze_by_lemma) / lexeme_count, 4
+        ) if lexeme_count else 0
+        mode_counts = counts.setdefault("modeCounts", {})
+        mode_coverage = counts.setdefault("modeCoverage", {})
+        if not isinstance(mode_counts, dict) or not isinstance(mode_coverage, dict):
+            return
+        mode_counts["cloze"] = len(cloze_items)
+        mode_coverage["cloze"] = counts["clozeCoverage"]
+        for mode in DRILL_MODES:
+            mode_items = body_items(level_shards, mode) or []
+            mode_counts[mode] = len(mode_items)
+            mode_coverage[mode] = round(
+                len(mode_lemma_ids[mode]) / lexeme_count, 4
+            ) if lexeme_count else 0
+
+    def filter_to_lemma_ids(
+        level_shards: dict[str, dict[str, Any]],
+        original_bodies: dict[str, list[Any]],
+        kept_ids: set[str],
+    ) -> None:
+        for kind, original in original_bodies.items():
+            current = body_items(level_shards, kind)
+            if current is None:
+                continue
+            current[:] = [
+                item
+                for item in original
+                if not isinstance(item, dict) or _clean_text(item.get("lemmaId")) in kept_ids
+            ]
+
+    def trim_surface(
+        level: str,
+        level_shards: dict[str, dict[str, Any]],
+        oversized_surface: set[str],
+    ) -> bool:
+        index_items = body_items(level_shards, "index")
+        if index_items is None:
+            return False
+        original_index = list(index_items)
+        original_bodies = {
+            kind: list(items)
+            for kind in ("index", "lexemes", "cloze", *DRILL_MODES)
+            if (items := body_items(level_shards, kind)) is not None
+        }
+        if not original_index:
+            return False
+
+        def apply_prefix(count: int) -> None:
+            kept_index = original_index[:count]
+            index_items[:] = kept_index
+            kept_ids = {
+                _clean_text(item.get("lemmaId"))
+                for item in kept_index
+                if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
+            }
+            filter_to_lemma_ids(level_shards, original_bodies, kept_ids)
+
+        def surface_fits(count: int) -> bool:
+            apply_prefix(count)
+            return all(
+                set_budget(level_shards[kind])["ok"]
+                for kind in oversized_surface
+                if kind in level_shards
+            )
+
+        low, high = 0, len(original_index)
+        best: int | None = None
+        while low <= high:
+            midpoint = (low + high) // 2
+            if surface_fits(midpoint):
+                best = midpoint
+                low = midpoint + 1
+            else:
+                high = midpoint - 1
+        kept = best if best is not None else 0
+        apply_prefix(kept)
+        if kept == len(original_index):
+            return False
+        print(
+            f"WARN: {', '.join(level_shards[kind]['schema'] + '.' + level for kind in sorted(oversized_surface))} "
+            f"exceeds size budget; trimmed surface lexemes {len(original_index)} -> {kept}",
+            file=sys.stderr,
+        )
+        return True
+
+    def trim_mode(level: str, level_shards: dict[str, dict[str, Any]], kind: str) -> bool:
+        items = body_items(level_shards, kind)
+        if items is None or not items:
+            return False
+        payload = level_shards[kind]
+        original = list(items)
+
+        def mode_fits(count: int) -> bool:
+            items[:] = original[:count]
+            return bool(set_budget(payload)["ok"])
+
+        low, high = 0, len(original)
+        best: int | None = None
+        while low <= high:
+            midpoint = (low + high) // 2
+            if mode_fits(midpoint):
+                best = midpoint
+                low = midpoint + 1
+            else:
+                high = midpoint - 1
+        kept = best if best is not None else 0
+        items[:] = original[:kept]
+        if kept == len(original):
+            return False
+        print(
+            f"WARN: {payload['schema']}.{level} exceeds size budget; "
+            f"trimmed {kind} items {len(original)} -> {kept}",
+            file=sys.stderr,
+        )
+        return True
+
     for level, level_shards in shards.items():
         oversized_kinds: set[str] = set()
-        trimmed = False
         for kind, payload in level_shards.items():
-            payload["sizeBudget"] = _size_budget(payload, raw_limit, gzip_limit)
-            if not payload["sizeBudget"]["ok"]:
+            if not isinstance(payload, dict):
+                continue
+            if not set_budget(payload)["ok"]:
                 oversized_kinds.add(kind)
-        while True:
-            if not oversized_kinds:
-                break
+        if not oversized_kinds:
+            continue
+        oversized_surface = oversized_kinds & {"index", "lexemes"}
+        trimmed = trim_surface(level, level_shards, oversized_surface) if oversized_surface else False
+        if trimmed:
+            refresh_level_metadata(level_shards)
 
-            schemas = ", ".join(f"{level_shards[kind]['schema']}.{level}" for kind in sorted(oversized_kinds))
-            print(f"WARN: {schemas} exceeds size budget; trimming {level} shard", file=sys.stderr)
-            index_items = level_shards.get("index", {}).get("items", [])
-            if not isinstance(index_items, list) or not index_items:
-                break
-            removed = index_items.pop()
-            trimmed = True
-            removed_lemma_id = removed.get("lemmaId") if isinstance(removed, dict) else None
-            if not removed_lemma_id:
-                break
-            lexemes = level_shards.get("lexemes", {}).get("lexemes", [])
-            if isinstance(lexemes, list):
-                lexemes[:] = [
-                    lexeme
-                    for lexeme in lexemes
-                    if not isinstance(lexeme, dict) or lexeme.get("lemmaId") != removed_lemma_id
-                ]
-            cloze_items = level_shards.get("cloze", {}).get("cloze", [])
-            if isinstance(cloze_items, list):
-                cloze_items[:] = [
-                    item
-                    for item in cloze_items
-                    if not isinstance(item, dict) or item.get("lemmaId") != removed_lemma_id
-                ]
-            for mode in DRILL_MODES:
-                mode_items = level_shards.get(mode, {}).get(MODE_BODY_KEYS[mode], [])
-                if isinstance(mode_items, list):
-                    mode_items[:] = [
-                        item
-                        for item in mode_items
-                        if not isinstance(item, dict) or item.get("lemmaId") != removed_lemma_id
-                    ]
-            counts = level_shards.get("index", {}).get("counts")
-            if isinstance(counts, dict) and isinstance(lexemes, list) and isinstance(cloze_items, list):
-                counts["lexemes"] = len(lexemes)
-                counts["cloze"] = len(cloze_items)
-                counts["clozeEligibleLexemes"] = len(
-                    {item["lemmaId"] for item in cloze_items if isinstance(item, dict)}
-                )
-                counts["clozeCoverage"] = (
-                    round(counts["clozeEligibleLexemes"] / len(lexemes), 4) if lexemes else 0
-                )
-                mode_counts = counts.setdefault("modeCounts", {})
-                mode_coverage = counts.setdefault("modeCoverage", {})
-                if isinstance(mode_counts, dict) and isinstance(mode_coverage, dict):
-                    mode_counts["cloze"] = len(cloze_items)
-                    mode_coverage["cloze"] = counts["clozeCoverage"]
-                    for mode in DRILL_MODES:
-                        mode_items = level_shards.get(mode, {}).get(MODE_BODY_KEYS[mode], [])
-                        if not isinstance(mode_items, list):
-                            continue
-                        mode_counts[mode] = len(mode_items)
-                        mode_coverage[mode] = (
-                            round(
-                                len({item["lemmaId"] for item in mode_items if isinstance(item, dict)})
-                                / len(lexemes),
-                                4,
-                            )
-                            if lexemes
-                            else 0
-                        )
+        # Surface trimming can only reduce mode payloads.  Re-measure all
+        # payloads before the mode-local pass so the warning names the actual
+        # remaining offender.
+        if trimmed:
             oversized_kinds = set()
             for kind, payload in level_shards.items():
-                if payload.get("sizeBudget", {}).get("ok") is False:
-                    payload["sizeBudget"] = _size_budget(payload, raw_limit, gzip_limit)
-                    if not payload["sizeBudget"]["ok"]:
-                        oversized_kinds.add(kind)
-        if trimmed:
-            # Non-oversized shards were deliberately skipped in the trim loop:
-            # dropping lexemes cannot make them exceed a budget, but their final
-            # metadata must still describe the published payload.
-            for payload in level_shards.values():
-                payload["sizeBudget"] = _size_budget(payload, raw_limit, gzip_limit)
+                if isinstance(payload, dict) and not set_budget(payload)["ok"]:
+                    oversized_kinds.add(kind)
+        mode_trimmed = False
+        for kind in ("cloze", *DRILL_MODES):
+            if kind in oversized_kinds:
+                mode_trimmed = trim_mode(level, level_shards, kind) or mode_trimmed
+        if mode_trimmed:
+            refresh_level_metadata(level_shards)
+
+        if not trimmed and not mode_trimmed:
+            for kind in sorted(oversized_kinds):
+                payload = level_shards[kind]
+                print(
+                    f"WARN: {payload.get('schema', kind)}.{level} remains over size budget "
+                    "because its payload has no trim target",
+                    file=sys.stderr,
+                )
+            continue
+
+        # Keep the published metadata truthful.  If an empty payload still
+        # cannot fit, leave it intact and make the residual explicit instead
+        # of silently deleting unrelated lexemes.
+        for kind, payload in level_shards.items():
+            if not isinstance(payload, dict):
+                continue
+            budget = set_budget(payload)
+            if not budget["ok"]:
+                print(
+                    f"WARN: {payload.get('schema', kind)}.{level} remains over size budget "
+                    "after its payload was exhausted",
+                    file=sys.stderr,
+                )
 
 
 def write_shards(shards: dict[str, dict[str, dict[str, Any]]], out_dir: Path) -> list[Path]:

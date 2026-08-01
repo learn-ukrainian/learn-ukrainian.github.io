@@ -1934,7 +1934,7 @@ export function validateClozeOptions(cloze: PracticeClozeItem): string[] {
   const obliqueDistractors = cloze.options.filter(
     (option) => option.kind !== 'answer' && option.case && option.case !== 'nominative',
   ).length;
-  if (obliqueTotal < 2 || obliqueDistractors < 1) {
+  if (cloze.blankCase !== 'nominative' && (obliqueTotal < 2 || obliqueDistractors < 1)) {
     errors.push('option set must contain the answer plus at least one oblique distractor');
   }
   const posValues = new Set(cloze.options.map((option) => option.pos).filter(Boolean));
