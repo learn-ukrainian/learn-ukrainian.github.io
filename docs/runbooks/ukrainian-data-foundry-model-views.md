@@ -8,10 +8,13 @@
 > **Phase 2–4 status:** admitted-source continued pretraining is independent of
 > qualified correction review and may proceed as soon as its source/payload,
 > rights, privacy, origin, destination, and contamination gates pass. The
-> implemented correction-family path below accepts qualified-human records;
+> implemented correction-family path below accepts qualified-human records.
 > [#6168](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6168)
-> and [#6169](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6169)
-> own a distinct, explicitly non-human silver contract and exporter path.
+> now provides the distinct, explicitly non-human silver record and receipt;
+> [#6169](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6169)
+> owns the separate destination-specific exporter for those records. Until that
+> exporter passes, silver records remain investigation-only and cannot enter an
+> existing human-gold or continued-pretraining view.
 
 ## What this component does
 

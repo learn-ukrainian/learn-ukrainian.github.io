@@ -151,12 +151,13 @@ receipt artifacts.
 
 ## Phase 3 evidence boundary
 
-The full candidate stream is a deterministic sampling frame, not review gold.
-Phase 3 may build evidence-backed silver records from a frozen, source-aware
-selection without loading this 2.17 GB JSONL into memory. Only selected rows may
-receive bounded R2U and ULIF lookups or an identified underlying dictionary
-result from `slovnyk.me`. Receipts may retain response hashes and headword-match
-states; bulk crawling and raw dictionary redistribution remain prohibited.
+The full candidate stream is a deterministic evidence frame, not review gold.
+The Phase 3 silver factory streams it without loading the 2.17 GB JSONL into
+memory. It revalidates the detector receipt and every span hash, then attaches
+only bounded local/cache evidence. R2U, ULIF, Ukrainian corpus context, and an
+identified underlying dictionary from `slovnyk.me` are distinct evidence
+sources. Receipts retain response hashes and headword-match states; bulk
+crawling, network fallback, and raw dictionary redistribution are prohibited.
 
 Silver output must retain the detector context, independent evidence sources,
 uncertainty, and protected or unresolved route. No single VESUM miss, Russian
@@ -164,6 +165,14 @@ morphology hit, dictionary hit, aggregate score, or model vote is sufficient.
 Cross-family models may propose alternatives and expose disagreement, but every
 result is labelled non-human silver or model-only research evidence. This path
 does not claim native-speaker acceptance, reviewer reliability, or human gold.
+
+The implemented contract is
+`language_contact_silver_record_v1.schema.json`; its observation and receipt
+contracts have the same prefix. Evaluation text is rejected before any cache
+adapter sees a candidate. Model proposals and optional pseudonymous Hramatka
+feedback may expose alternatives or disagreement, but neither can promote its
+own proposal. The exact commands and production evidence are documented in the
+[correction-factory runbook](ukrainian-data-foundry-correction-factory.md#non-human-silver-production).
 
 The existing blind-human campaign remains available as an optional gold upgrade.
 If activated, its first pass hides detector categories, confidence, queue routes,

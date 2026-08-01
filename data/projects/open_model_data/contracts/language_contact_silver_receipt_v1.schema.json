@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_silver_receipt_v1.schema.json",
+  "title": "Ukrainian Data Foundry non-human silver production receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "policy_version", "detector_input", "detector_receipt_sha256",
+    "detector_config_sha256",
+    "implementation",
+    "observation_input", "output", "candidate_arithmetic", "counts",
+    "evaluation_exclusion", "source_admission", "evidence_adapters",
+    "hramatka", "claims", "determinism"
+  ],
+  "properties": {
+    "schema_version": {"const": "language_contact_silver_receipt_v1"},
+    "policy_version": {"const": "language-contact-silver-policy-v1"},
+    "detector_input": {"$ref": "#/$defs/artifact"},
+    "detector_receipt_sha256": {"$ref": "#/$defs/sha256"},
+    "detector_config_sha256": {"$ref": "#/$defs/sha256"},
+    "implementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["producer_logical_path", "producer_sha256", "contract_sha256"],
+      "properties": {
+        "producer_logical_path": {
+          "const": "scripts/projects/open_model_data/silver_evidence_factory.py"
+        },
+        "producer_sha256": {"$ref": "#/$defs/sha256"},
+        "contract_sha256": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["observation", "record", "receipt"],
+          "properties": {
+            "observation": {"$ref": "#/$defs/sha256"},
+            "record": {"$ref": "#/$defs/sha256"},
+            "receipt": {"$ref": "#/$defs/sha256"}
+          }
+        }
+      }
+    },
+    "observation_input": {"$ref": "#/$defs/artifact"},
+    "output": {"$ref": "#/$defs/artifact"},
+    "candidate_arithmetic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_candidates", "output_records", "evaluation_excluded"],
+      "properties": {
+        "input_candidates": {"$ref": "#/$defs/count"},
+        "output_records": {"$ref": "#/$defs/count"},
+        "evaluation_excluded": {"$ref": "#/$defs/count"}
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "by_evidence_grade", "by_disposition", "by_source_family", "by_period",
+        "by_genre", "by_register", "by_category", "by_protected_or_uncertain_route",
+        "observations_by_kind", "observations_by_source"
+      ],
+      "properties": {
+        "by_evidence_grade": {"$ref": "#/$defs/countMap"},
+        "by_disposition": {"$ref": "#/$defs/countMap"},
+        "by_source_family": {"$ref": "#/$defs/countMap"},
+        "by_period": {"$ref": "#/$defs/countMap"},
+        "by_genre": {"$ref": "#/$defs/countMap"},
+        "by_register": {"$ref": "#/$defs/countMap"},
+        "by_category": {"$ref": "#/$defs/countMap"},
+        "by_protected_or_uncertain_route": {"$ref": "#/$defs/countMap"},
+        "observations_by_kind": {"$ref": "#/$defs/countMap"},
+        "observations_by_source": {"$ref": "#/$defs/countMap"}
+      }
+    },
+    "evaluation_exclusion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm_version", "registry_sha256", "artifacts", "matches_by_method"],
+      "properties": {
+        "algorithm_version": {"const": "foundry-eval-exclusion-v1"},
+        "registry_sha256": {"$ref": "#/$defs/sha256"},
+        "artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["logical_path", "sha256"],
+            "properties": {
+              "logical_path": {"type": "string", "minLength": 1},
+              "sha256": {"$ref": "#/$defs/sha256"}
+            }
+          }
+        },
+        "matches_by_method": {"$ref": "#/$defs/countMap"}
+      }
+    },
+    "source_admission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["receipt_sha256", "operator_packet_sha256", "family_dispositions", "family_destinations"],
+      "properties": {
+        "receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "operator_packet_sha256": {"$ref": "#/$defs/sha256"},
+        "family_dispositions": {"$ref": "#/$defs/stringMap"},
+        "family_destinations": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {"type": "string", "minLength": 1},
+              {"type": "null"}
+            ]
+          }
+        }
+      }
+    },
+    "evidence_adapters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["vesum", "russian_morphology", "r2u", "heritage", "ukrainian_corpus", "ulif_dictua", "slovnyk_me", "network"],
+      "properties": {
+        "vesum": {"$ref": "#/$defs/adapter"},
+        "russian_morphology": {"$ref": "#/$defs/adapter"},
+        "r2u": {"$ref": "#/$defs/adapter"},
+        "heritage": {"$ref": "#/$defs/adapter"},
+        "ukrainian_corpus": {"$ref": "#/$defs/adapter"},
+        "ulif_dictua": {"$ref": "#/$defs/adapter"},
+        "slovnyk_me": {"$ref": "#/$defs/adapter"},
+        "network": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["performed", "prohibited"],
+          "properties": {
+            "performed": {"const": false},
+            "prohibited": {"const": true}
+          }
+        }
+      }
+    },
+    "hramatka": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "observations", "blocking"],
+      "properties": {
+        "state": {"enum": ["empty_valid", "bounded_feedback_ingested"]},
+        "observations": {"$ref": "#/$defs/count"},
+        "blocking": {"const": false}
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "human_gold_created", "human_review_claimed", "precision_or_recall_claimed",
+        "training_performed", "export_admission_created", "publication_performed"
+      ],
+      "properties": {
+        "human_gold_created": {"const": false},
+        "human_review_claimed": {"const": false},
+        "precision_or_recall_claimed": {"const": false},
+        "training_performed": {"const": false},
+        "export_admission_created": {"const": false},
+        "publication_performed": {"const": false}
+      }
+    },
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["serialization", "ordering", "timestamps_omitted", "runtime_observations_omitted"],
+      "properties": {
+        "serialization": {"const": "UTF-8 canonical JSON with sorted keys and LF"},
+        "ordering": {"const": "detector input order; observations sorted by observation_id"},
+        "timestamps_omitted": {"const": true},
+        "runtime_observations_omitted": {"const": true}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "count": {"type": "integer", "minimum": 0},
+    "countMap": {
+      "type": "object",
+      "propertyNames": {"minLength": 1},
+      "additionalProperties": {"$ref": "#/$defs/count"}
+    },
+    "stringMap": {
+      "type": "object",
+      "propertyNames": {"minLength": 1},
+      "additionalProperties": {"type": "string", "minLength": 1}
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["records", "bytes", "sha256"],
+      "properties": {
+        "records": {"$ref": "#/$defs/count"},
+        "bytes": {"$ref": "#/$defs/count"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter_id", "status", "source_snapshot", "lookups", "hits", "misses"],
+      "properties": {
+        "adapter_id": {"type": "string", "minLength": 1},
+        "status": {"enum": ["available", "bounded_cache", "adapter_unavailable"]},
+        "source_snapshot": {
+          "oneOf": [
+            {"$ref": "#/$defs/artifact"},
+            {"type": "null"}
+          ]
+        },
+        "lookups": {"$ref": "#/$defs/count"},
+        "hits": {"$ref": "#/$defs/count"},
+        "misses": {"$ref": "#/$defs/count"}
+      }
+    }
+  }
+}
