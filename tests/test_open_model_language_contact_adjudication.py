@@ -579,6 +579,13 @@ def test_prepare_wave_is_blind_capacity_bound_and_factory_valid(tmp_path: Path, 
     assert "language_contact_blind_response_v1" in workspace
     assert "reviewer.fixture-a" in workspace
     assert "detector_output_exposed:false" in workspace
+    assert '<option value="mixed_ukrainian_russian">Змішана українсько-російська</option>' in workspace
+    assert (
+        '<option value="ukrainian_phonetic_rendering_of_russian">'
+        "Українська фонетична передача російської</option>"
+    ) in workspace
+    assert '<option value="mask_span_from_loss">Замаскувати фрагмент для обчислення втрат</option>' in workspace
+    assert '<option value="dictionary">Словник</option>' in workspace
     assert receipt["claims"] == {
         "gold_created": False,
         "labels_created": False,
@@ -727,6 +734,25 @@ def test_prepare_wave_is_blind_capacity_bound_and_factory_valid(tmp_path: Path, 
     _write_candidates(resolver_responses_path, resolver_responses)
     resolved_decisions_path = tmp_path / "resolved-decisions.jsonl"
     resolution_summary_path = tmp_path / "resolution-summary.json"
+    colliding_plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    colliding_plan["reviewer_capacity"]["third_resolver_id"] = "reviewer.fixture-a"
+    colliding_plan_path = tmp_path / "colliding-resolver-plan.json"
+    colliding_plan_path.write_text(_canonical(colliding_plan) + "\n", encoding="utf-8")
+    rejected_decisions_path = tmp_path / "rejected-resolved-decisions.jsonl"
+    rejected_summary_path = tmp_path / "rejected-resolution-summary.json"
+    with pytest.raises(workflow.AdjudicationError, match="third resolver must be distinct"):
+        workflow.resolve_conflicts(
+            plan_path=colliding_plan_path,
+            packet_path=resolver_packet,
+            responses_path=resolver_responses_path,
+            decisions_path=decisions_path,
+            correction_packet_path=outputs["correction"],
+            decisions_output=rejected_decisions_path,
+            summary_output=rejected_summary_path,
+        )
+    assert not rejected_decisions_path.exists()
+    assert not rejected_summary_path.exists()
+
     resolution_summary = workflow.resolve_conflicts(
         plan_path=plan_path,
         packet_path=resolver_packet,
