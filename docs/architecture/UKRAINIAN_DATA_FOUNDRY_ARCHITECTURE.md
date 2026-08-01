@@ -254,6 +254,28 @@ manifests pin exact view and receipt hashes, immutable model/tokenizer/code
 revisions, and positive training hyperparameters, while recording
 `training_authorized: false` and `execution_state: not_run`.
 
+### 7. Reference validation and frozen measurement
+
+The implemented #6123 boundary is the
+[reference-build runbook](../runbooks/ukrainian-data-foundry-reference-build.md).
+It joins every versioned interface in one deterministic command. The local
+integration fixture uses the observed `звучит` → `звучить` case to prove
+Russian-interference evidence routing, language-span masking, correction
+reconstruction, and the separate view contracts without representing fixture
+reviewers as qualified humans or admitting the row to training.
+
+The same command can either validate the committed profile receipt or rerun all
+189,150 records and 50,298,925 lexical words. The fresh mode regenerates the
+6,646,916-row candidate artifact inside a temporary directory, verifies its
+exact hash, and deletes it. The deterministic manifest is identical across
+both modes; runtime and memory belong to a separate observation receipt.
+
+Frozen baseline validation rebuilds the source-only 677-item request packet,
+reimports saved Gemma outputs, and re-scores the identity and model arms. It
+performs no generation. Its only decision is whether the measurement interface
+reproduces and the saved model arm beats copying the source; it is not a causal
+Foundry-training result or a broad Ukrainian model ranking.
+
 ## Safety invariants
 
 ### Rights and provenance

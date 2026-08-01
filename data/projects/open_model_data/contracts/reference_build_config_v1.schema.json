@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/reference_build_config_v1.schema.json",
+  "title": "Ukrainian Data Foundry end-to-end reference build configuration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "build_id",
+    "fixture",
+    "full_corpus_profile",
+    "baseline",
+    "recipe_fixture",
+    "run_policy"
+  ],
+  "properties": {
+    "schema_version": {"const": "reference_build_config_v1"},
+    "build_id": {"$ref": "#/$defs/id"},
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_text",
+        "incorrect_span",
+        "accepted_correction",
+        "origin",
+        "test_fixture"
+      ],
+      "properties": {
+        "source_text": {"type": "string", "minLength": 1},
+        "incorrect_span": {"type": "string", "minLength": 1},
+        "accepted_correction": {"type": "string", "minLength": 1},
+        "origin": {"const": "machine_generated"},
+        "test_fixture": {"const": true}
+      }
+    },
+    "full_corpus_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["config_path", "committed_receipt_path"],
+      "properties": {
+        "config_path": {"$ref": "#/$defs/relativePath"},
+        "committed_receipt_path": {"$ref": "#/$defs/relativePath"}
+      }
+    },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "research_question",
+        "decision_rule",
+        "generation_requests_path",
+        "identity_responses_path",
+        "identity_report_path",
+        "model_output_path",
+        "model_metadata_path",
+        "model_responses_path",
+        "model_report_path"
+      ],
+      "properties": {
+        "research_question": {"type": "string", "minLength": 20},
+        "decision_rule": {"type": "string", "minLength": 20},
+        "generation_requests_path": {"$ref": "#/$defs/relativePath"},
+        "identity_responses_path": {"$ref": "#/$defs/relativePath"},
+        "identity_report_path": {"$ref": "#/$defs/relativePath"},
+        "model_output_path": {"$ref": "#/$defs/relativePath"},
+        "model_metadata_path": {"$ref": "#/$defs/relativePath"},
+        "model_responses_path": {"$ref": "#/$defs/relativePath"},
+        "model_report_path": {"$ref": "#/$defs/relativePath"}
+      }
+    },
+    "recipe_fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "base_model",
+        "tokenizer",
+        "implementation",
+        "hyperparameters"
+      ],
+      "properties": {
+        "base_model": {"$ref": "#/$defs/pinnedComponent"},
+        "tokenizer": {"$ref": "#/$defs/pinnedComponent"},
+        "implementation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "framework",
+            "framework_version",
+            "code_revision",
+            "dependency_lock_sha256"
+          ],
+          "properties": {
+            "framework": {"type": "string", "minLength": 1},
+            "framework_version": {"type": "string", "minLength": 1},
+            "code_revision": {"$ref": "#/$defs/revision"},
+            "dependency_lock_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "hyperparameters": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "seed",
+            "sequence_length",
+            "micro_batch_size",
+            "gradient_accumulation_steps",
+            "learning_rate",
+            "weight_decay",
+            "epochs",
+            "precision",
+            "packing"
+          ],
+          "properties": {
+            "seed": {"type": "integer", "minimum": 0},
+            "sequence_length": {"type": "integer", "minimum": 1},
+            "micro_batch_size": {"type": "integer", "minimum": 1},
+            "gradient_accumulation_steps": {"type": "integer", "minimum": 1},
+            "learning_rate": {"type": "string", "minLength": 1},
+            "weight_decay": {"type": "string", "minLength": 1},
+            "epochs": {"type": "string", "minLength": 1},
+            "precision": {"enum": ["fp32", "fp16", "bf16"]},
+            "packing": {"type": "boolean"}
+          }
+        }
+      }
+    },
+    "run_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "training_authorized",
+        "model_generation_authorized",
+        "upload_authorized",
+        "publication_authorized",
+        "outreach_authorized",
+        "private_data_authorized",
+        "ocr_authorized"
+      ],
+      "properties": {
+        "training_authorized": {"const": false},
+        "model_generation_authorized": {"const": false},
+        "upload_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "outreach_authorized": {"const": false},
+        "private_data_authorized": {"const": false},
+        "ocr_authorized": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "revision": {"type": "string", "pattern": "^[a-f0-9]{40,64}$"},
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "pinnedComponent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identifier", "revision"],
+      "properties": {
+        "identifier": {"type": "string", "minLength": 1},
+        "revision": {"$ref": "#/$defs/revision"}
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/reference_build_observation_v1.schema.json",
+  "title": "Ukrainian Data Foundry reference build runtime observation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "build_id", "execution", "manifest", "safety"],
+  "properties": {
+    "schema_version": {"const": "reference_build_observation_v1"},
+    "build_id": {"type": "string", "minLength": 3},
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["completed", "exit_code", "profile_evidence", "temporary_candidate_state", "wall_seconds", "maximum_rss_bytes"],
+      "properties": {
+        "completed": {"const": true},
+        "exit_code": {"const": 0},
+        "profile_evidence": {"enum": ["committed", "fresh"]},
+        "temporary_candidate_state": {"enum": ["not_generated_committed_receipt_mode", "deleted_after_verification"]},
+        "wall_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "maximum_rss_bytes": {"type": "integer", "minimum": 1}
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bytes", "records", "sha256"],
+      "properties": {
+        "bytes": {"type": "integer", "minimum": 1},
+        "records": {"const": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "training_authorized",
+        "model_generation_authorized",
+        "upload_authorized",
+        "publication_authorized",
+        "outreach_authorized",
+        "private_data_authorized",
+        "ocr_authorized",
+        "dataset_redistribution_performed",
+        "model_call_performed",
+        "training_performed"
+      ],
+      "properties": {
+        "training_authorized": {"const": false},
+        "model_generation_authorized": {"const": false},
+        "upload_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "outreach_authorized": {"const": false},
+        "private_data_authorized": {"const": false},
+        "ocr_authorized": {"const": false},
+        "dataset_redistribution_performed": {"const": false},
+        "model_call_performed": {"const": false},
+        "training_performed": {"const": false}
+      }
+    }
+  }
+}

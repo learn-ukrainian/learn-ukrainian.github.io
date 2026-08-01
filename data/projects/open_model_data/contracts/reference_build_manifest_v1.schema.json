@@ -1,0 +1,418 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/reference_build_manifest_v1.schema.json",
+  "title": "Ukrainian Data Foundry end-to-end reference build manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "build_id",
+    "config",
+    "interfaces",
+    "determinism",
+    "source_to_view_lineage",
+    "separation",
+    "profile",
+    "baseline",
+    "commands",
+    "safety",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {"const": "reference_build_manifest_v1"},
+    "build_id": {"$ref": "#/$defs/id"},
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_path", "sha256"],
+      "properties": {
+        "logical_path": {"$ref": "#/$defs/relativePath"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "interfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["implementation_hashes", "schema_hashes"],
+      "properties": {
+        "implementation_hashes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["evaluate_model.py", "reference_build.py"],
+          "properties": {
+            "evaluate_model.py": {"$ref": "#/$defs/sha256"},
+            "reference_build.py": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "schema_hashes": {
+          "type": "object",
+          "minProperties": 10,
+          "additionalProperties": {"$ref": "#/$defs/sha256"},
+          "propertyNames": {"pattern": "^[A-Za-z0-9_.-]+\\.schema\\.json$"}
+        }
+      }
+    },
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["serialization", "timestamps_omitted", "view_order"],
+      "properties": {
+        "serialization": {"const": "UTF-8 canonical JSON with sorted keys and LF"},
+        "timestamps_omitted": {"const": true},
+        "view_order": {"$ref": "#/$defs/viewOrder"}
+      }
+    },
+    "source_to_view_lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifacts", "fixture", "evidence_sources", "source_contract_admitted_records", "views"],
+      "properties": {
+        "artifacts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_records",
+            "source_payloads",
+            "review_candidates",
+            "correction_candidates",
+            "reviewer_decisions",
+            "correction_records"
+          ],
+          "properties": {
+            "source_records": {"$ref": "#/$defs/artifact"},
+            "source_payloads": {"$ref": "#/$defs/artifact"},
+            "review_candidates": {"$ref": "#/$defs/artifact"},
+            "correction_candidates": {"$ref": "#/$defs/artifact"},
+            "reviewer_decisions": {"$ref": "#/$defs/artifact"},
+            "correction_records": {"$ref": "#/$defs/artifact"}
+          }
+        },
+        "fixture": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_record_id",
+            "payload_id",
+            "candidate_id",
+            "correction_record_id",
+            "source_text_sha256",
+            "incorrect_span_sha256",
+            "accepted_correction_sha256",
+            "language_span_partition_complete",
+            "masked_character_spans",
+            "test_fixture"
+          ],
+          "properties": {
+            "source_record_id": {"$ref": "#/$defs/id"},
+            "payload_id": {"$ref": "#/$defs/id"},
+            "candidate_id": {"$ref": "#/$defs/id"},
+            "correction_record_id": {"type": "string", "pattern": "^correction:[a-f0-9]{64}$"},
+            "source_text_sha256": {"$ref": "#/$defs/sha256"},
+            "incorrect_span_sha256": {"$ref": "#/$defs/sha256"},
+            "accepted_correction_sha256": {"$ref": "#/$defs/sha256"},
+            "language_span_partition_complete": {"const": true},
+            "masked_character_spans": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["start", "end", "reason"],
+                "properties": {
+                  "start": {"type": "integer", "minimum": 0},
+                  "end": {"type": "integer", "minimum": 1},
+                  "reason": {"const": "russian_or_mixed_language"}
+                }
+              }
+            },
+            "test_fixture": {"const": true}
+          }
+        },
+        "evidence_sources": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "vesum",
+              "russian_morphology",
+              "r2u",
+              "ulif_dictua",
+              "slovnyk_me",
+              "heritage_dictionary",
+              "ukrainian_corpus"
+            ]
+          }
+        },
+        "source_contract_admitted_records": {"const": 1},
+        "views": {"$ref": "#/$defs/views"}
+      }
+    },
+    "separation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_ids_pairwise_disjoint",
+        "record_id_overlap_count",
+        "schema_homogeneous_views",
+        "view_artifact_hashes_pairwise_distinct",
+        "exact_and_near_evaluation_checks_applied",
+        "non_evaluation_text_fields_checked",
+        "evaluation_contamination_matches",
+        "evaluation_gold_in_non_evaluation_views"
+      ],
+      "properties": {
+        "record_ids_pairwise_disjoint": {"const": true},
+        "record_id_overlap_count": {"const": 0},
+        "schema_homogeneous_views": {"const": 5},
+        "view_artifact_hashes_pairwise_distinct": {"const": true},
+        "exact_and_near_evaluation_checks_applied": {"const": true},
+        "non_evaluation_text_fields_checked": {"type": "integer", "minimum": 4},
+        "evaluation_contamination_matches": {"const": 0},
+        "evaluation_gold_in_non_evaluation_views": {"const": false}
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["config", "receipt", "receipt_byte_identical", "coverage", "admission", "morphology", "candidate_artifact", "tokenizer_diagnostics"],
+      "properties": {
+        "config": {"$ref": "#/$defs/artifact"},
+        "receipt": {"$ref": "#/$defs/artifact"},
+        "receipt_byte_identical": {"const": true},
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["complete", "expected_rows", "processed_rows", "expected_lexical_words", "processed_lexical_words", "inaccessible_sources"],
+          "properties": {
+            "complete": {"const": true},
+            "expected_rows": {"type": "integer", "minimum": 1},
+            "processed_rows": {"type": "integer", "minimum": 1},
+            "expected_lexical_words": {"type": "integer", "minimum": 1},
+            "processed_lexical_words": {"type": "integer", "minimum": 1},
+            "inaccessible_sources": {"type": "array", "maxItems": 0}
+          }
+        },
+        "admission": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "excluded_lexical_words",
+            "excluded_rows",
+            "exclusion_reason_row_counts",
+            "training_eligible_lexical_words",
+            "training_eligible_rows",
+            "zero_current_admissions"
+          ],
+          "properties": {
+            "excluded_lexical_words": {"type": "integer", "minimum": 1},
+            "excluded_rows": {"type": "integer", "minimum": 1},
+            "exclusion_reason_row_counts": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {"type": "integer", "minimum": 1}
+            },
+            "training_eligible_lexical_words": {"const": 0},
+            "training_eligible_rows": {"const": 0},
+            "zero_current_admissions": {"const": true}
+          }
+        },
+        "morphology": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["interface", "snapshot_id", "tokens_attested", "tokens_unknown", "distinct_lemmas_observed", "unknown_distinct_normalized_forms"],
+          "properties": {
+            "interface": {"const": "scripts.verification.vesum.verify_words"},
+            "snapshot_id": {"$ref": "#/$defs/id"},
+            "tokens_attested": {"type": "integer", "minimum": 1},
+            "tokens_unknown": {"type": "integer", "minimum": 1},
+            "distinct_lemmas_observed": {"type": "integer", "minimum": 1},
+            "unknown_distinct_normalized_forms": {"type": "integer", "minimum": 1}
+          }
+        },
+        "candidate_artifact": {"$ref": "#/$defs/artifact"},
+        "tokenizer_diagnostics": {"const": "not_run; no approved tokenizer interface is required for this foundation"}
+      }
+    },
+    "baseline": {"$ref": "#/$defs/baseline"},
+    "commands": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fresh", "receipt_validation"],
+      "properties": {
+        "fresh": {"type": "string", "minLength": 20},
+        "receipt_validation": {"type": "string", "minLength": 20}
+      }
+    },
+    "safety": {"$ref": "#/$defs/safety"},
+    "limitations": {
+      "type": "array",
+      "minItems": 5,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 20}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+    "relativePath": {"type": "string", "minLength": 1, "pattern": "^(?!/).+$"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bytes", "records", "sha256"],
+      "properties": {
+        "bytes": {"type": "integer", "minimum": 1},
+        "records": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "viewOrder": {
+      "type": "array",
+      "prefixItems": [
+        {"const": "continued_pretraining"},
+        {"const": "correction_instruction"},
+        {"const": "preference"},
+        {"const": "quality_filter"},
+        {"const": "heldout_evaluation"}
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 5
+    },
+    "view": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "receipt", "recipe_config", "recipe_manifest", "schema_version", "permitted_destination", "model_training_eligible_records", "test_fixture_records"],
+      "properties": {
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "receipt": {"$ref": "#/$defs/artifact"},
+        "recipe_config": {"$ref": "#/$defs/artifact"},
+        "recipe_manifest": {"$ref": "#/$defs/artifact"},
+        "schema_version": {"type": "string", "minLength": 3},
+        "permitted_destination": {"enum": ["continued_pretraining", "supervised_correction", "pairwise_preference", "quality_filter", "heldout_evaluation"]},
+        "model_training_eligible_records": {"const": 0},
+        "test_fixture_records": {"type": "integer", "minimum": 0, "maximum": 1}
+      }
+    },
+    "views": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["continued_pretraining", "correction_instruction", "preference", "quality_filter", "heldout_evaluation"],
+      "properties": {
+        "continued_pretraining": {"$ref": "#/$defs/view"},
+        "correction_instruction": {"$ref": "#/$defs/view"},
+        "preference": {"$ref": "#/$defs/view"},
+        "quality_filter": {"$ref": "#/$defs/view"},
+        "heldout_evaluation": {"$ref": "#/$defs/view"}
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["edit_f0_5", "edit_precision", "edit_recall", "exact_sentence_accuracy", "headline_calque_recall"],
+      "properties": {
+        "edit_f0_5": {"type": "number", "minimum": 0, "maximum": 1},
+        "edit_precision": {"type": "number", "minimum": 0, "maximum": 1},
+        "edit_recall": {"type": "number", "minimum": 0, "maximum": 1},
+        "exact_sentence_accuracy": {"type": "number", "minimum": 0, "maximum": 1},
+        "headline_calque_recall": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["research_question", "decision_rule", "decision", "decision_passed", "gold_firewall", "reproduction", "identity", "model", "deltas", "artifacts"],
+      "properties": {
+        "research_question": {"type": "string", "minLength": 20},
+        "decision_rule": {"type": "string", "minLength": 20},
+        "decision": {"const": "measurement_interface_validated"},
+        "decision_passed": {"const": true},
+        "gold_firewall": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source_only_request_count", "input_fields", "gold_fields_supplied", "forbidden_gold_fields_detected", "model_generation_performed"],
+          "properties": {
+            "source_only_request_count": {"const": 677},
+            "input_fields": {
+              "type": "array",
+              "prefixItems": [
+                {"const": "item_id"},
+                {"const": "source"},
+                {"const": "source_sha256"},
+                {"const": "prompt_sha256"}
+              ],
+              "items": false,
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "gold_fields_supplied": {"type": "array", "maxItems": 0},
+            "forbidden_gold_fields_detected": {"type": "array", "maxItems": 0},
+            "model_generation_performed": {"const": false}
+          }
+        },
+        "reproduction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["generation_requests_byte_identical", "identity_frozen_header_provenance_preserved", "identity_responses_byte_identical", "identity_score_exact", "model_responses_byte_identical", "model_score_exact"],
+          "properties": {
+            "generation_requests_byte_identical": {"const": true},
+            "identity_frozen_header_provenance_preserved": {"const": true},
+            "identity_responses_byte_identical": {"const": true},
+            "identity_score_exact": {"const": true},
+            "model_responses_byte_identical": {"const": true},
+            "model_score_exact": {"const": true}
+          }
+        },
+        "identity": {"$ref": "#/$defs/metrics"},
+        "model": {"$ref": "#/$defs/metrics"},
+        "deltas": {"$ref": "#/$defs/metrics"},
+        "artifacts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["heldout_manifest", "scoring_dispositions", "generation_prompt", "generation_requests", "identity_responses", "identity_report", "model_outputs", "model_metadata", "model_responses", "model_report"],
+          "properties": {
+            "heldout_manifest": {"$ref": "#/$defs/artifact"},
+            "scoring_dispositions": {"$ref": "#/$defs/artifact"},
+            "generation_prompt": {"$ref": "#/$defs/artifact"},
+            "generation_requests": {"$ref": "#/$defs/artifact"},
+            "identity_responses": {"$ref": "#/$defs/artifact"},
+            "identity_report": {"$ref": "#/$defs/artifact"},
+            "model_outputs": {"$ref": "#/$defs/artifact"},
+            "model_metadata": {"$ref": "#/$defs/artifact"},
+            "model_responses": {"$ref": "#/$defs/artifact"},
+            "model_report": {"$ref": "#/$defs/artifact"}
+          }
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "training_authorized",
+        "model_generation_authorized",
+        "upload_authorized",
+        "publication_authorized",
+        "outreach_authorized",
+        "private_data_authorized",
+        "ocr_authorized",
+        "dataset_redistribution_performed",
+        "model_call_performed",
+        "training_performed"
+      ],
+      "properties": {
+        "training_authorized": {"const": false},
+        "model_generation_authorized": {"const": false},
+        "upload_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "outreach_authorized": {"const": false},
+        "private_data_authorized": {"const": false},
+        "ocr_authorized": {"const": false},
+        "dataset_redistribution_performed": {"const": false},
+        "model_call_performed": {"const": false},
+        "training_performed": {"const": false}
+      }
+    }
+  }
+}
