@@ -1,4 +1,4 @@
-"""Standalone TUI launchers must point at shared fleet-comms mid-cutover doctrine."""
+"""Standalone TUI launchers must point at shared fleet-comms authority doctrine."""
 
 from __future__ import annotations
 
@@ -29,7 +29,9 @@ def test_shared_fleet_comms_rule_and_helper_exist() -> None:
     assert "drive-epic" in body
     assert "-driver.sh" in body
     assert "authoritative" in body.lower()
-    assert "not implemented" in body.lower() or "shadow/mirror" in body.lower()
+    assert "fleet-comms is the durable source of truth" in body.lower()
+    assert "legacy stores are read-only" in body.lower()
+    assert "acp" in body.lower() and "provider transport" in body.lower()
     assert "PR_NUMBER" in body or "PR number" in body.lower()
     assert HELPER.is_file(), "missing shared launcher helper"
     helper = HELPER.read_text(encoding="utf-8")
