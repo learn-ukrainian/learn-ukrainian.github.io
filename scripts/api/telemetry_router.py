@@ -13,7 +13,7 @@ from collections import defaultdict
 from contextlib import closing
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 from uuid import uuid4
 
 from fastapi import APIRouter, HTTPException, Query
@@ -21,6 +21,7 @@ from pydantic import BaseModel, Field
 
 from .config import PROJECT_ROOT
 from .resilience import connect_sqlite
+from .telemetry.legacy_comms import legacy_comms_summary
 
 router = APIRouter(prefix="/api/telemetry", tags=["telemetry"])
 
@@ -373,6 +374,14 @@ def read_tool_timings(
         })
 
     return sorted(results, key=lambda item: (-item["count"], item["tool_name"]))
+
+
+@router.get("/legacy-comms-routes")
+def read_legacy_comms_routes(
+    window: Literal["1h", "24h", "7d", "30d", "90d"] = Query("7d"),
+):
+    """Return body-free legacy-route aggregates with explicit coverage truth."""
+    return legacy_comms_summary(window)
 
 
 @router.post("/module-builds")
