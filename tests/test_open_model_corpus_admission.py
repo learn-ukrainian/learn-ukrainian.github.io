@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import sqlite3
@@ -100,6 +101,28 @@ def test_missing_database_emits_empty_fail_closed_receipt(tmp_path: Path) -> Non
     assert result.receipt["outputs"]["manifest"]["records"] == 0
 
 
+def test_coverage_denominator_uses_only_configured_profile_families(tmp_path: Path) -> None:
+    _database(tmp_path / "sources.db", [("s1", "w1", "два слова", "Автор"), ("s2", "w2", "ще два", "Автор")])
+    profile = _profile(expected_rows=2, expected_words=4)
+    extra = copy.deepcopy(profile["sources"][0])  # type: ignore[index]
+    extra["source_family"] = "unconfigured_extra"
+    extra["expected"] = {"rows": 99, "lexical_words": 999}
+    profile["sources"].append(extra)  # type: ignore[union-attr]
+    _json(tmp_path / "profile.json", profile)
+    _json(tmp_path / "config.json", _config())
+
+    result = admission.admit_corpus(
+        config_path=tmp_path / "config.json",
+        input_root=tmp_path,
+        manifest_output=tmp_path / "manifest.jsonl",
+        receipt_output=tmp_path / "receipt.json",
+    )
+
+    assert result.complete is True
+    assert result.receipt["coverage"]["expected_rows"] == 2
+    assert result.receipt["coverage"]["expected_lexical_words"] == 4
+
+
 def test_duplicate_source_family_config_is_rejected(tmp_path: Path) -> None:
     _database(tmp_path / "sources.db", [("s1", "w1", "два слова", "Автор")])
     config = _config()
@@ -157,7 +180,7 @@ def _wikipedia_fixture(tmp_path: Path) -> tuple[Path, Path]:
     return tmp_path / "config.json", tmp_path / "source-records.jsonl"
 
 
-def test_wikipedia_source_records_are_contract_valid_complete_and_deterministic(tmp_path: Path) -> None:
+def test_wikipedia_source_records_are_contract_valid_pending_and_deterministic(tmp_path: Path) -> None:
     config, source_records = _wikipedia_fixture(tmp_path)
     first = admission.admit_corpus(config_path=config, input_root=tmp_path, manifest_output=tmp_path / "manifest-1.jsonl", receipt_output=tmp_path / "receipt-1.json", source_record_output=source_records)
     second = admission.admit_corpus(config_path=config, input_root=tmp_path, manifest_output=tmp_path / "manifest-2.jsonl", receipt_output=tmp_path / "receipt-2.json", source_record_output=tmp_path / "source-records-2.jsonl")
@@ -165,18 +188,54 @@ def test_wikipedia_source_records_are_contract_valid_complete_and_deterministic(
     assert first.receipt["dispositions"]["proposed_admission"] == {"rows": 2, "lexical_words": 4}
     assert first.receipt["outputs"]["source_records"]["records"] == 2
     assert first.receipt["families"][0]["source_record_evidence"] == {"capture_timestamps": 2, "code_cohorts": {"code.wikipedia_fixture": 2}, "first_retrieved_at": "2026-04-11T00:59:17+00:00", "last_retrieved_at": "2026-04-11T01:00:17+00:00", "matches_snapshot": True, "records": 2}
-    assert validate_path(source_records)["admitted_records"] == 2
+    validation = validate_path(source_records)
+    assert validation["admitted_records"] == 0
+    assert validation["rejected_records"] == 2
+    assert validation["rejection_reason_counts"] == {"record_marked_excluded": 2}
     records = [json.loads(line) for line in source_records.read_text(encoding="utf-8").splitlines()]
     assert records[0]["content"]["sha256"] == hashlib.sha256("два слова".encode()).hexdigest()
     assert records[0]["acquisition"]["source_or_catalog_url"].startswith("https://uk.wikipedia.org/wiki/")
     assert records[0]["bibliographic"]["translation_origin"] == "unknown"
     assert records[0]["description"]["register"] == "reference"
     assert records[0]["rights"]["model_training"]["legal_conclusion"] == "not_asserted"
+    assert {record["usage"]["role"] for record in records} == {"excluded"}
     assert first.receipt["training_eligible_emitted"] is False
     assert (tmp_path / "manifest-1.jsonl").read_bytes() == (tmp_path / "manifest-2.jsonl").read_bytes()
     assert source_records.read_bytes() == (tmp_path / "source-records-2.jsonl").read_bytes()
     assert (tmp_path / "receipt-1.json").read_bytes() == (tmp_path / "receipt-2.json").read_bytes()
     assert first.receipt == second.receipt
+
+
+def test_source_record_validation_failure_leaves_no_final_artifacts(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config, source_records = _wikipedia_fixture(tmp_path)
+    manifest = tmp_path / "manifest.jsonl"
+    receipt = tmp_path / "receipt.json"
+    monkeypatch.setattr(
+        admission,
+        "validate_source_record_path",
+        lambda _path: {
+            "admitted_records": 0,
+            "rejected_records": 2,
+            "input_sha256": "0" * 64,
+            "rejection_reason_counts": {"record_marked_excluded": 2},
+        },
+    )
+
+    with pytest.raises(admission.AdmissionError, match="pending source-record manifest"):
+        admission.admit_corpus(
+            config_path=config,
+            input_root=tmp_path,
+            manifest_output=manifest,
+            receipt_output=receipt,
+            source_record_output=source_records,
+        )
+
+    assert not manifest.exists()
+    assert not source_records.exists()
+    assert not receipt.exists()
 
 
 def test_real_wikipedia_terms_receipts_and_operator_gate_are_frozen() -> None:

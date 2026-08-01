@@ -115,14 +115,17 @@ results:
 | Artifact/disposition | Rows | Lexical words | SHA-256 |
 | --- | ---: | ---: | --- |
 | Full local disposition manifest | 189,150 | 50,298,925 | `c9d77b1428b44b0fd3f72d9d9ab809c81abdea7489c1ebb01fd81f88e0cc3205` |
-| Wikipedia `source_record_v1` manifest | 1,029 | 2,865,506 | `6b91e718622911a5a2c9a907e53dee7f3cf4c2805b0d3350c49e619f5422da68` |
-| Aggregate admission receipt | 189,150 | 50,298,925 | `a2c5e09e530e8765bb543cde5a8a687889ae63beca8461a314e3fc332a60ecc9` |
+| Wikipedia `source_record_v1` manifest | 1,029 | 2,865,506 | `855c9237fe0acd0145f5f406d25746bb76f31603d1abc46e71d94a6d29cf1a19` |
+| Aggregate admission receipt | 189,150 | 50,298,925 | `1ce9888c3d6dd17b67ed5f871e031a26d4d8dfdae215efd52ce4f77317b5b801` |
 | `proposed_admission` | 1,029 | 2,865,506 | Wikipedia only |
 | `unresolved` | 188,121 | 47,433,419 | Literary, public-textbook, and external-article families |
 | Evaluation exact/near exclusions | 0 | 0 | Frozen registry applied |
 
-The frozen source-record validator admitted all 1,029 generated records with
-zero rejection reasons. The runner still emitted
+All 1,029 generated source records satisfy the frozen JSON contract, but their
+`usage.role` is deliberately `excluded` while the operator decision is
+pending. The frozen semantic validator therefore reports zero admitted and
+1,029 rejected with only `record_marked_excluded`; this is the intended
+fail-closed state, not a data defect. The runner also emits
 `training_eligible_emitted: false`.
 
 ## Dispositions and the human gate

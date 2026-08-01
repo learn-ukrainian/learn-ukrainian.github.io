@@ -159,7 +159,7 @@ class AtomicJsonl:
         output.parent.mkdir(parents=True, exist_ok=True)
         handle = tempfile.NamedTemporaryFile(  # noqa: SIM115 - closed by finish/abort
             mode="w", encoding="utf-8", newline="", dir=output.parent,
-            prefix=output.name, suffix=".tmp", delete=False,
+            prefix=output.name, suffix=".tmp.jsonl", delete=False,
         )
         return cls(output, handle, Path(handle.name), hashlib.sha256())
 
@@ -376,8 +376,10 @@ def _source_record(
 
 
 def _empty_receipt(config: Mapping[str, Any], profile: Mapping[str, Any], inaccessible: list[dict[str, str]]) -> dict[str, Any]:
-    expected_rows = sum(int(source["expected"]["rows"]) for source in profile["sources"])
-    expected_words = sum(int(source["expected"]["lexical_words"]) for source in profile["sources"])
+    profile_sources = _profile_sources(profile)
+    configured_names = [str(family["source_family"]) for family in config["families"]]
+    expected_rows = sum(int(profile_sources[name]["expected"]["rows"]) for name in configured_names)
+    expected_words = sum(int(profile_sources[name]["expected"]["lexical_words"]) for name in configured_names)
     zero = {name: {"rows": 0, "lexical_words": 0} for name in ("excluded", "investigation_only", "proposed_admission", "unresolved")}
     return {
         "schema_version": "corpus_admission_receipt_v1", "admission_id": config["admission_id"],
@@ -505,7 +507,13 @@ def admit_corpus(
                             family=family,
                             evidence_source=evidence_source,
                             text=text,
-                            usage_role="excluded" if match.matched else "training_candidate",
+                            # The frozen source-record contract has no
+                            # pending-operator role.  Keep every proposal
+                            # mechanically excluded until the operator gate
+                            # is recorded; a later accepted pass may emit
+                            # training_candidate without changing this
+                            # evidence packet.
+                            usage_role="excluded",
                         )
                         _validate(source_record, source_record_validator, f"source record {record_id}")
                         assert source_records is not None
@@ -557,6 +565,16 @@ def admit_corpus(
             family_results.append(family_result)
         artifact = manifest.finish()
         source_record_artifact = source_records.finish() if source_records is not None else _empty_artifact()
+        if source_records is not None:
+            source_record_validation = validate_source_record_path(source_records.temporary)
+            rejection_counts = source_record_validation["rejection_reason_counts"]
+            if (
+                source_record_validation["admitted_records"] != 0
+                or source_record_validation["rejected_records"] != source_record_artifact["records"]
+                or source_record_validation["input_sha256"] != source_record_artifact["sha256"]
+                or rejection_counts != {"record_marked_excluded": source_record_artifact["records"]}
+            ):
+                raise AdmissionError("pending source-record manifest failed the frozen admission contract")
         manifest.replace()
         if source_records is not None:
             source_records.replace()
@@ -566,17 +584,8 @@ def admit_corpus(
             source_records.abort()
         raise
 
-    if source_record_output is not None:
-        source_record_validation = validate_source_record_path(source_record_output)
-        if (
-            source_record_validation["admitted_records"] != source_record_artifact["records"]
-            or source_record_validation["rejected_records"] != 0
-            or source_record_validation["input_sha256"] != source_record_artifact["sha256"]
-        ):
-            raise AdmissionError("generated source-record manifest failed the frozen admission contract")
-
-    expected_rows = sum(int(source["expected"]["rows"]) for source in profile["sources"])
-    expected_words = sum(int(source["expected"]["lexical_words"]) for source in profile["sources"])
+    expected_rows = sum(int(profile_sources[name]["expected"]["rows"]) for name in family_names)
+    expected_words = sum(int(profile_sources[name]["expected"]["lexical_words"]) for name in family_names)
     complete = processed_rows == expected_rows and processed_words == expected_words and all(item["matches_expected"] for item in family_results)
     receipt = {
         "schema_version": "corpus_admission_receipt_v1", "admission_id": config["admission_id"],
