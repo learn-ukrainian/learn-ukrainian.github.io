@@ -1399,12 +1399,16 @@ Quota gate for one `(agent, model)` pair.
 ### `GET /api/runtime/recent?limit=50`
 
 Newest usage records from today's runtime logs, newest first.
+`source` is the initiating orchestrator, while `agent` is the destination and
+`via` is the transport. The runtime persists only bounded identifiers and
+reports legacy or unattributable records as `unknown`; it never guesses the
+caller from the destination agent.
 
 ```json
 {
   "records": [
-    {"ts": "2026-04-11T00:10:00Z", "agent": "codex", "entrypoint": "dispatch", "outcome": "ok"},
-    {"ts": "2026-04-11T00:09:00Z", "agent": "gemini", "entrypoint": "bridge", "outcome": "timeout"}
+    {"ts": "2026-04-11T00:10:00Z", "source": "claude", "agent": "codex", "via": "delegate", "outcome": "ok"},
+    {"ts": "2026-04-11T00:09:00Z", "source": "codex", "agent": "gemini", "via": "bridge", "outcome": "timeout"}
   ]
 }
 ```

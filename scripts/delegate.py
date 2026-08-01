@@ -3585,9 +3585,18 @@ def _run_worker(
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately with the task-id."""
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
+    from agent_runtime.attribution import resolve_invocation_attribution
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
     task_id = args.task_id
+    try:
+        attribution = resolve_invocation_attribution(
+            explicit=getattr(args, "initiator", None),
+            task_id=task_id,
+        )
+    except ValueError as exc:
+        print(f"❌ invalid --initiator: {exc}", file=sys.stderr)
+        return 2
     try:
         requested_harness = _resolve_dispatch_harness(args.agent, getattr(args, "harness", None))
     except ValueError as exc:
@@ -3909,6 +3918,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         )
         dry_run_state = {
             "task_id": task_id,
+            "initiator": attribution.initiator,
+            "attribution_source": attribution.source,
             "agent": dispatch_agent,
             "model": start_telemetry.model,
             "effort": start_telemetry.effort,
@@ -4052,6 +4063,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     worktree_layout = worktree_telemetry.get("layout") if worktree_path else None
     initial_state = {
         "task_id": task_id,
+        "initiator": attribution.initiator,
+        "attribution_source": attribution.source,
         "agent": dispatch_agent,
         "model": start_telemetry.model,
         "effort": start_telemetry.effort,
@@ -4191,6 +4204,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # explicit rather than implicit. Callers that want to scrub
     # secrets from the worker's env can override this here.
     worker_env = os.environ.copy()
+    worker_env["LU_RUNTIME_INITIATOR"] = attribution.initiator
+    worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = attribution.source
     _inject_gh_token_for_agent(worker_env, dispatch_agent)
     worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
     worker_env["TMPDIR"] = str(runtime_tmp_root)
@@ -4890,6 +4905,14 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     d.add_argument("--task-id", required=True, help="Stable task identifier used for state/log files, e.g. review-123.")
+    d.add_argument(
+        "--initiator",
+        default=None,
+        help=(
+            "Initiating orchestrator identity for runtime attribution. Launcher "
+            "and Codex Desktop identity are detected automatically when omitted."
+        ),
+    )
     d.add_argument("--prompt", help="Prompt text, or '-' to read the prompt from stdin.")
     d.add_argument("--prompt-file", help="Read the prompt body from this file path.")
     d.add_argument(

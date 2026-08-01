@@ -376,13 +376,17 @@ function renderRecent(records) {
     return;
   }
   document.getElementById('recent-content').innerHTML = `<table>
-    <thead><tr><th>ts</th><th>agent</th><th>entrypoint</th><th>model</th><th>outcome</th><th>duration</th></tr></thead>
+    <thead><tr><th>Time</th><th>Source</th><th>Agent</th><th>Via</th><th>Model</th><th>Outcome</th><th>Duration</th></tr></thead>
     <tbody>${records.map(record => {
       const cls = record.outcome === 'ok' ? 'ok' : record.outcome === 'rate_limited' ? 'warn' : record.outcome === 'timeout' ? 'gray' : 'err';
       return `<tr>
         <td>${formatTs(record.ts)}</td>
+        <td>
+          <div>${escapeHtml(record.source || 'unknown')}</div>
+          ${record.source_task_id ? `<div class="muted mono">${escapeHtml(record.source_task_id)}</div>` : ''}
+        </td>
         <td>${escapeHtml(record.agent || '—')}</td>
-        <td class="mono">${escapeHtml(record.entrypoint || '—')}</td>
+        <td class="mono">${escapeHtml(record.via || record.entrypoint || '—')}</td>
         <td class="mono">${escapeHtml(record.model || '—')}</td>
         <td><span class="pill ${cls}">${escapeHtml(record.outcome || 'unknown')}</span></td>
         <td>${formatDuration(record.duration_s)}</td>
