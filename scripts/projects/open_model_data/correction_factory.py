@@ -50,6 +50,7 @@ SLOVNYK_DICTIONARY_LOCATOR_RE = re.compile(
     r"^https://slovnyk\.me/dict/(?P<dictionary_slug>[A-Za-z0-9_-]+)/.+$"
 )
 NEAR_DUPLICATE_THRESHOLD = 0.90
+MIN_CONTAINMENT_CHARACTERS = 32
 PROTECTED_PERIOD_MARKERS = (
     "historical",
     "middle_ukrainian",
@@ -249,6 +250,10 @@ def _near_duplicate(text: str, reference_texts: Sequence[str]) -> bool:
     for reference in reference_texts:
         if normalized == reference:
             return True
+        if min(len(normalized), len(reference)) >= MIN_CONTAINMENT_CHARACTERS and (
+            normalized in reference or reference in normalized
+        ):
+            return True
         length_ratio = min(len(normalized), len(reference)) / max(len(normalized), len(reference))
         if length_ratio < NEAR_DUPLICATE_THRESHOLD:
             continue
@@ -257,13 +262,22 @@ def _near_duplicate(text: str, reference_texts: Sequence[str]) -> bool:
     return False
 
 
-def contamination_states(text: str, registry: EvaluationRegistry) -> dict[str, str]:
+def contamination_states(
+    text: str,
+    registry: EvaluationRegistry,
+    *,
+    additional_sha256: Sequence[str] = (),
+) -> dict[str, str]:
     """Compute exact and near-duplicate dispositions for one bounded context."""
-    raw_hash = sha256_text(text)
+    exact_hashes = {sha256_text(text), *additional_sha256}
+    _require(
+        all(SHA256_RE.fullmatch(value) for value in exact_hashes),
+        "invalid additional contamination hash",
+    )
     return {
-        "v0_1_1_exact": "match" if raw_hash in registry.v011_exact else "clear",
+        "v0_1_1_exact": "match" if exact_hashes & registry.v011_exact else "clear",
         "v0_1_1_near": "match" if _near_duplicate(text, registry.v011_texts) else "clear",
-        "v0_2_exact": "match" if raw_hash in registry.v02_exact else "clear",
+        "v0_2_exact": "match" if exact_hashes & registry.v02_exact else "clear",
         "v0_2_near": "match" if _near_duplicate(text, registry.v02_texts) else "clear",
     }
 
@@ -374,7 +388,11 @@ def validate_candidate(
         _require(views["correction"] in {"protected", "not_applicable", "unresolved"}, "protected variation cannot be a correction candidate")
 
     contamination = candidate["safety"]["contamination"]
-    expected_states = contamination_states(context["text"], evaluation_registry)
+    expected_states = contamination_states(
+        context["text"],
+        evaluation_registry,
+        additional_sha256=(source["content_sha256"],),
+    )
     for field, expected in expected_states.items():
         _require(contamination[field] == expected, f"stale or false contamination state: {field}")
     expected_artifacts = {
@@ -382,6 +400,25 @@ def validate_candidate(
         "v0_2_packet": evaluation_registry.v02_packet_sha256,
     }
     _require(contamination["registry_artifact_sha256"] == expected_artifacts, "evaluation registry receipt mismatch")
+
+    source_origin = source["origin"]
+    safety_origin = candidate["safety"]["origin"]
+    expected_origin = {
+        "human_authored": "verified_human_authorship",
+        "machine_generated": "verified_synthetic",
+        "machine_translated": "verified_synthetic",
+        "human_revised_synthetic": "verified_synthetic",
+    }.get(source_origin)
+    if expected_origin is None:
+        _require(
+            safety_origin in {"unknown", "conflicting"},
+            "unknown source origin cannot be marked verified",
+        )
+    else:
+        _require(
+            safety_origin == expected_origin,
+            "source origin and safety evidence contradict each other",
+        )
 
 
 def _projection(review: Mapping[str, Any]) -> Mapping[str, Any]:

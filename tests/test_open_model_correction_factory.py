@@ -562,6 +562,30 @@ def test_evaluation_rights_and_private_data_gates_fail_closed(evaluation_registr
     blockers = factory._safety_blockers(near, decision)
     assert {"rights_not_granted", "private_data_not_clear"} <= set(blockers)
 
+    containing_context = f"Передмова до фрагмента. {source} Післямова до фрагмента."
+    contained = _candidate(
+        evaluation_registry,
+        candidate_id="candidate-evaluation-contained",
+        text=containing_context,
+        span_text=source,
+    )
+    _validate(contained, evaluation_registry)
+    assert contained["safety"]["contamination"]["v0_1_1_near"] == "match"
+
+
+def test_source_origin_and_safety_evidence_cannot_contradict(evaluation_registry) -> None:
+    candidate = _candidate(
+        evaluation_registry,
+        candidate_id="candidate-origin-consistency",
+        text="Синтетичний приклад потребує перевірки.",
+        span_text="потребує перевірки",
+        origin="machine_generated",
+    )
+    _validate(candidate, evaluation_registry)
+    candidate["safety"]["origin"] = "verified_human_authorship"
+    with pytest.raises(factory.FactoryError, match="source origin"):
+        _validate(candidate, evaluation_registry)
+
 
 def test_packet_and_receipt_are_byte_stable(evaluation_registry, tmp_path: Path) -> None:
     candidate = _candidate(
