@@ -80,6 +80,27 @@ def test_complete_evidence_is_only_proposed_until_operator_acceptance(tmp_path: 
     assert result.receipt["training_eligible_emitted"] is False
 
 
+def test_operator_rejection_is_terminal_before_evidence_or_destination_checks() -> None:
+    incomplete_evidence = {
+        "provenance": "complete",
+        "acquisition": "complete",
+        "snapshot": "complete",
+        "rights": "not_reconstructed",
+        "origin": "complete",
+        "contamination": "complete",
+    }
+
+    disposition, reasons = admission._disposition(
+        evidence=incomplete_evidence,
+        destination=None,
+        contamination=None,
+        operator_status="rejected",
+    )
+
+    assert disposition == "excluded"
+    assert reasons == ["operator_rejection_recorded"]
+
+
 def test_evaluation_isolation_and_denominator_mismatch_are_explicit(tmp_path: Path) -> None:
     evaluation_text = v011_items(DEFAULT_V011_MANIFEST)[0]["source"]
     _database(tmp_path / "sources.db", [("s1", "w1", evaluation_text, "Автор"), ("s2", "w2", "ще два", "Автор")])
@@ -198,6 +219,41 @@ def _wikipedia_fixture(tmp_path: Path) -> tuple[Path, Path]:
     return tmp_path / "config.json", tmp_path / "source-records.jsonl"
 
 
+def _accept_wikipedia_fixture(tmp_path: Path, config_path: Path) -> None:
+    packet = {
+        "schema_version": "corpus_admission_operator_packet_v1",
+        "admission_id": "fixture-wikipedia-v1",
+        "decision_required": False,
+        "advisor_verdict": "proposal_supported",
+        "operator_decision_status": "accepted",
+        "operator_decision": {
+            "decision": "accepted",
+            "decided_on": "2026-08-01",
+            "decision_reference": "https://example.invalid/issues/1#operator-decision",
+            "operator_id": "operator.fixture",
+            "source_families": ["wikipedia"],
+        },
+        "families": [{
+            "source_family": "wikipedia",
+            "current_disposition": "admitted",
+            "rows": 2,
+            "words": 4,
+            "blocked_by": [],
+            "proposed_destination": "open_weight_ukrainian_continued_pretraining_text_v1",
+            "evidence_packet_id": "evidence.wikipedia_fixture_v1",
+            "obligations": ["attribute and share alike"],
+            "material_ambiguities": ["other rights are not certified"],
+        }],
+        "operator_choices": ["ACCEPT the exact scope", "REJECT the exact scope"],
+        "total_rows": 2,
+        "total_words": 4,
+    }
+    _json(tmp_path / "operator.json", packet)
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    config["operator_packet"] = "operator.json"
+    _json(config_path, config)
+
+
 def test_wikipedia_source_records_are_contract_valid_pending_and_deterministic(tmp_path: Path) -> None:
     config, source_records = _wikipedia_fixture(tmp_path)
     first = admission.admit_corpus(config_path=config, input_root=tmp_path, manifest_output=tmp_path / "manifest-1.jsonl", receipt_output=tmp_path / "receipt-1.json", source_record_output=source_records)
@@ -224,6 +280,104 @@ def test_wikipedia_source_records_are_contract_valid_pending_and_deterministic(t
     assert first.receipt == second.receipt
 
 
+def test_accepted_wikipedia_emits_admitted_source_records_but_not_training_payload(tmp_path: Path) -> None:
+    config, source_records = _wikipedia_fixture(tmp_path)
+    _accept_wikipedia_fixture(tmp_path, config)
+
+    first = admission.admit_corpus(
+        config_path=config,
+        input_root=tmp_path,
+        manifest_output=tmp_path / "manifest-1.jsonl",
+        receipt_output=tmp_path / "receipt-1.json",
+        source_record_output=source_records,
+    )
+    second = admission.admit_corpus(
+        config_path=config,
+        input_root=tmp_path,
+        manifest_output=tmp_path / "manifest-2.jsonl",
+        receipt_output=tmp_path / "receipt-2.json",
+        source_record_output=tmp_path / "source-records-2.jsonl",
+    )
+
+    assert first.receipt["dispositions"]["admitted"] == {"rows": 2, "lexical_words": 4}
+    assert first.receipt["dispositions"]["proposed_admission"] == {"rows": 0, "lexical_words": 0}
+    assert first.receipt["operator_decision"] == {
+        "accepted_families": ["wikipedia"],
+        "packet_sha256": admission.sha256_file(tmp_path / "operator.json"),
+        "rejected_families": [],
+        "status": "accepted",
+    }
+    assert first.receipt["training_eligible_emitted"] is False
+    rows = [json.loads(line) for line in (tmp_path / "manifest-1.jsonl").read_text(encoding="utf-8").splitlines()]
+    assert {row["disposition"] for row in rows} == {"admitted"}
+    assert all(row["reasons"] == ["operator_acceptance_recorded"] for row in rows)
+    records = [json.loads(line) for line in source_records.read_text(encoding="utf-8").splitlines()]
+    assert {record["usage"]["role"] for record in records} == {"training_candidate"}
+    validation = validate_path(source_records)
+    assert validation["admitted_records"] == 2
+    assert validation["rejected_records"] == 0
+    assert validation["rejection_reason_counts"] == {}
+    assert (tmp_path / "manifest-1.jsonl").read_bytes() == (tmp_path / "manifest-2.jsonl").read_bytes()
+    assert source_records.read_bytes() == (tmp_path / "source-records-2.jsonl").read_bytes()
+    assert (tmp_path / "receipt-1.json").read_bytes() == (tmp_path / "receipt-2.json").read_bytes()
+    assert first.receipt == second.receipt
+
+
+def test_operator_packet_denominator_mismatch_is_rejected(tmp_path: Path) -> None:
+    config, source_records = _wikipedia_fixture(tmp_path)
+    _accept_wikipedia_fixture(tmp_path, config)
+    packet = json.loads((tmp_path / "operator.json").read_text(encoding="utf-8"))
+    packet["families"][0]["rows"] = 1
+    _json(tmp_path / "operator.json", packet)
+
+    with pytest.raises(admission.AdmissionError, match="family denominator mismatch"):
+        admission.admit_corpus(
+            config_path=config,
+            input_root=tmp_path,
+            manifest_output=tmp_path / "manifest.jsonl",
+            receipt_output=tmp_path / "receipt.json",
+            source_record_output=source_records,
+        )
+
+
+def test_operator_packet_rejects_terminal_state_on_an_undecided_family(tmp_path: Path) -> None:
+    config_path, _ = _wikipedia_fixture(tmp_path)
+    _accept_wikipedia_fixture(tmp_path, config_path)
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    archival_config = copy.deepcopy(config["families"][0])
+    archival_config.update({
+        "source_family": "archival_documents",
+        "proposed_destination": None,
+        "source_record": None,
+    })
+    archival_config["evidence"]["rights"] = "not_reconstructed"
+    config["families"].append(archival_config)
+    _json(config_path, config)
+
+    packet = json.loads((tmp_path / "operator.json").read_text(encoding="utf-8"))
+    packet["families"].append({
+        "source_family": "archival_documents",
+        "current_disposition": "excluded",
+        "rows": 1,
+        "words": 2,
+        "blocked_by": ["rights not reconstructed"],
+        "proposed_destination": None,
+        "evidence_packet_id": None,
+        "obligations": [],
+        "material_ambiguities": [],
+    })
+    packet["total_rows"] = 3
+    packet["total_words"] = 6
+    _json(tmp_path / "operator.json", packet)
+    profile_sources = {
+        "wikipedia": {"expected": {"rows": 2, "lexical_words": 4}},
+        "archival_documents": {"expected": {"rows": 1, "lexical_words": 2}},
+    }
+
+    with pytest.raises(admission.AdmissionError, match="terminal packet families"):
+        admission._operator_decision(config, tmp_path, profile_sources)
+
+
 def test_source_record_validation_failure_leaves_no_final_artifacts(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -242,7 +396,7 @@ def test_source_record_validation_failure_leaves_no_final_artifacts(
         },
     )
 
-    with pytest.raises(admission.AdmissionError, match="pending source-record manifest"):
+    with pytest.raises(admission.AdmissionError, match="source-record manifest"):
         admission.admit_corpus(
             config_path=config,
             input_root=tmp_path,
@@ -324,15 +478,35 @@ def test_real_wikipedia_terms_receipts_and_operator_gate_are_frozen() -> None:
     contracts = ROOT / "data/projects/open_model_data/contracts"
     evidence = json.loads((ROOT / "data/projects/open_model_data/admission/wikipedia_primary_rights_evidence_v1.json").read_text())
     packet = json.loads((ROOT / "data/projects/open_model_data/admission/public_external_operator_decision_packet_v1.json").read_text())
+    receipt = json.loads((ROOT / "data/projects/open_model_data/admission/public_external_accepted_admission_receipt_v1.json").read_text())
     evidence_schema = json.loads((contracts / "corpus_admission_evidence_v1.schema.json").read_text())
     packet_schema = json.loads((contracts / "corpus_admission_operator_packet_v1.schema.json").read_text())
+    receipt_schema = json.loads((contracts / "corpus_admission_receipt_v1.schema.json").read_text())
     assert not list(Draft202012Validator(evidence_schema, format_checker=FormatChecker()).iter_errors(evidence))
     assert not list(Draft202012Validator(packet_schema, format_checker=FormatChecker()).iter_errors(packet))
+    assert not list(Draft202012Validator(receipt_schema, format_checker=FormatChecker()).iter_errors(receipt))
     items = {item["evidence_id"]: item for item in evidence["sources"][0]["evidence"]}
     assert items["rights.wikimedia_terms_554852"]["sha256"] == "bbb5ebfb89700c0e4732109cddbd45e6d8d2ba5dc339b206c7c5089ec4a4812b"
     assert items["rights.cc_by_sa_4.0_legalcode"]["sha256"] == "28a9529c7d0bb4dc51f4bf5c116a3d16ef247a052f7591466768ddf563fd1cf5"
     assert evidence["sources"][0]["snapshot"] == {"capture_timestamps": 183, "content_hash_scope": "SHA-256 of the exact UTF-8 bytes of wikipedia.text as stored in data/sources.db", "first_retrieved_at": "2026-04-11T00:59:17.337039+00:00", "kind": "article_level_captured_snapshot", "last_retrieved_at": "2026-07-07T13:47:23.791310+00:00", "lexical_words": 2865506, "revision_id_required_by_contract": False, "rows": 1029}
-    assert packet["operator_decision_status"] == "pending"
-    assert packet["families"][-1]["current_disposition"] == "proposed_admission"
+    assert packet["operator_decision_status"] == "accepted"
+    assert packet["operator_decision"] == {
+        "decided_on": "2026-08-01",
+        "decision": "accepted",
+        "decision_reference": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6166#issuecomment-5151977634",
+        "operator_id": "operator.krisztiankoos",
+        "source_families": ["wikipedia"],
+    }
+    assert packet["families"][-1]["current_disposition"] == "admitted"
     assert packet["families"][-1]["proposed_destination"] == "open_weight_ukrainian_continued_pretraining_text_v1"
-    assert packet["decision_required"] is True
+    assert packet["decision_required"] is False
+    assert receipt["operator_decision"] == {
+        "accepted_families": ["wikipedia"],
+        "packet_sha256": "53b12ed59d06929ed3218b3243f07b4aa0724812935b725e2999d44c726444cd",
+        "rejected_families": [],
+        "status": "accepted",
+    }
+    assert receipt["dispositions"]["admitted"] == {"lexical_words": 2865506, "rows": 1029}
+    assert receipt["outputs"]["manifest"]["sha256"] == "69516568590be55f625a7884aaa293420dc102f331c8119bbc5f0d145ec9ccbd"
+    assert receipt["outputs"]["source_records"]["sha256"] == "6b91e718622911a5a2c9a907e53dee7f3cf4c2805b0d3350c49e619f5422da68"
+    assert receipt["training_eligible_emitted"] is False

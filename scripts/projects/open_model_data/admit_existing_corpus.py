@@ -40,6 +40,7 @@ from scripts.projects.open_model_data.validate_source_records import validate_pa
 CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
 CONFIG_SCHEMA = CONTRACTS / "corpus_admission_config_v1.schema.json"
 EVIDENCE_SCHEMA = CONTRACTS / "corpus_admission_evidence_v1.schema.json"
+OPERATOR_PACKET_SCHEMA = CONTRACTS / "corpus_admission_operator_packet_v1.schema.json"
 RECEIPT_SCHEMA = CONTRACTS / "corpus_admission_receipt_v1.schema.json"
 SOURCE_RECORD_SCHEMA = CONTRACTS / "source_record_v1.schema.json"
 
@@ -58,6 +59,31 @@ class AdmissionRun:
     @property
     def complete(self) -> bool:
         return bool(self.receipt["coverage"]["complete"])
+
+
+@dataclass(frozen=True)
+class OperatorDecision:
+    """Validated per-family operator disposition carried into every receipt."""
+
+    status: str
+    packet_sha256: str | None
+    accepted_families: frozenset[str]
+    rejected_families: frozenset[str]
+
+    def family_status(self, source_family: str) -> str:
+        if source_family in self.accepted_families:
+            return "accepted"
+        if source_family in self.rejected_families:
+            return "rejected"
+        return "pending"
+
+    def receipt(self) -> dict[str, Any]:
+        return {
+            "accepted_families": sorted(self.accepted_families),
+            "packet_sha256": self.packet_sha256,
+            "rejected_families": sorted(self.rejected_families),
+            "status": self.status,
+        }
 
 
 def canonical_json(value: Any) -> str:
@@ -294,6 +320,75 @@ def _evidence_sources(config: Mapping[str, Any], input_root: Path) -> dict[str, 
     return result
 
 
+def _operator_decision(
+    config: Mapping[str, Any],
+    input_root: Path,
+    profile_sources: Mapping[str, Mapping[str, Any]],
+) -> OperatorDecision:
+    """Load an explicit operator packet; omission always preserves pending state."""
+    logical_path = config.get("operator_packet")
+    if logical_path is None:
+        return OperatorDecision("pending", None, frozenset(), frozenset())
+    path = input_root / str(logical_path)
+    packet = _read_json(path)
+    _validate(packet, _validator(OPERATOR_PACKET_SCHEMA), "operator decision packet")
+    if packet["admission_id"] != config["admission_id"]:
+        raise AdmissionError("operator decision packet admission ID does not match configuration")
+
+    configured_families = {str(item["source_family"]): item for item in config["families"]}
+    packet_families = {str(item["source_family"]): item for item in packet["families"]}
+    if len(packet_families) != len(packet["families"]) or set(packet_families) != set(configured_families):
+        raise AdmissionError("operator decision packet family coverage does not match configuration")
+    expected_rows = sum(int(profile_sources[name]["expected"]["rows"]) for name in configured_families)
+    expected_words = sum(int(profile_sources[name]["expected"]["lexical_words"]) for name in configured_families)
+    if packet["total_rows"] != expected_rows or packet["total_words"] != expected_words:
+        raise AdmissionError("operator decision packet denominator does not match profile")
+    for name, item in packet_families.items():
+        expected = profile_sources[name]["expected"]
+        configured = configured_families[name]
+        if item["rows"] != expected["rows"] or item["words"] != expected["lexical_words"]:
+            raise AdmissionError(f"operator decision packet family denominator mismatch: {name}")
+        if item["proposed_destination"] != configured["proposed_destination"]:
+            raise AdmissionError(f"operator decision packet destination mismatch: {name}")
+
+    status = str(packet["operator_decision_status"])
+    decision = packet["operator_decision"]
+    if status == "pending":
+        return OperatorDecision(status, sha256_file(path), frozenset(), frozenset())
+    assert isinstance(decision, dict)
+    if decision["decision"] != status:
+        raise AdmissionError("operator decision and packet status disagree")
+    decided_families = frozenset(str(name) for name in decision["source_families"])
+    if not decided_families.issubset(configured_families):
+        raise AdmissionError("operator decision references an unconfigured source family")
+    packet_terminal_families = frozenset(
+        name
+        for name, item in packet_families.items()
+        if item["current_disposition"] in {"admitted", "excluded"}
+    )
+    if packet_terminal_families != decided_families:
+        raise AdmissionError("operator decision family set does not match terminal packet families")
+    required_disposition = "admitted" if status == "accepted" else "excluded"
+    direction_families = frozenset(
+        name for name, item in packet_families.items() if item["current_disposition"] == required_disposition
+    )
+    if direction_families != decided_families:
+        raise AdmissionError("operator decision family set does not match terminal packet dispositions")
+    for name in decided_families:
+        family = configured_families[name]
+        if packet_families[name]["current_disposition"] != required_disposition:
+            raise AdmissionError(f"operator decision disposition mismatch: {name}")
+        if status == "accepted" and (
+            _unresolved_reasons(family["evidence"])
+            or family["proposed_destination"] is None
+            or family["source_record"] is None
+        ):
+            raise AdmissionError(f"operator accepted a family without complete admission evidence: {name}")
+    accepted = decided_families if status == "accepted" else frozenset()
+    rejected = decided_families if status == "rejected" else frozenset()
+    return OperatorDecision(status, sha256_file(path), accepted, rejected)
+
+
 def _source_query(profile_source: Mapping[str, Any], family: Mapping[str, Any]) -> str:
     adapter = profile_source["adapter"]
     attributes = family["attributes"]
@@ -335,17 +430,23 @@ def _unresolved_reasons(evidence: Mapping[str, Any]) -> list[str]:
 
 
 def _disposition(
-    *, evidence: Mapping[str, Any], destination: str | None, contamination: str | None
+    *,
+    evidence: Mapping[str, Any],
+    destination: str | None,
+    contamination: str | None,
+    operator_status: str,
 ) -> tuple[str, list[str]]:
     if contamination is not None:
         return "excluded", [f"evaluation_contamination_{contamination}"]
+    if operator_status == "rejected":
+        return "excluded", ["operator_rejection_recorded"]
     reasons = _unresolved_reasons(evidence)
     if reasons:
         return "unresolved", reasons
     if destination is None:
         return "investigation_only", ["destination_not_declared"]
-    # Human acceptance is intentionally outside this runner.  A complete
-    # family can be proposed, but this program never emits training_eligible.
+    if operator_status == "accepted":
+        return "admitted", ["operator_acceptance_recorded"]
     return "proposed_admission", ["operator_acceptance_required"]
 
 
@@ -447,17 +548,23 @@ def _source_record(
     }
 
 
-def _empty_receipt(config: Mapping[str, Any], profile: Mapping[str, Any], inaccessible: list[dict[str, str]]) -> dict[str, Any]:
+def _empty_receipt(
+    config: Mapping[str, Any],
+    profile: Mapping[str, Any],
+    inaccessible: list[dict[str, str]],
+    operator_decision: OperatorDecision,
+) -> dict[str, Any]:
     profile_sources = _profile_sources(profile)
     configured_names = [str(family["source_family"]) for family in config["families"]]
     expected_rows = sum(int(profile_sources[name]["expected"]["rows"]) for name in configured_names)
     expected_words = sum(int(profile_sources[name]["expected"]["lexical_words"]) for name in configured_names)
-    zero = {name: {"rows": 0, "lexical_words": 0} for name in ("excluded", "investigation_only", "proposed_admission", "unresolved")}
+    zero = {name: {"rows": 0, "lexical_words": 0} for name in ("admitted", "excluded", "investigation_only", "proposed_admission", "unresolved")}
     return {
         "schema_version": "corpus_admission_receipt_v1", "admission_id": config["admission_id"],
         "coverage": {"complete": False, "expected_rows": expected_rows, "expected_lexical_words": expected_words,
                      "processed_rows": 0, "processed_lexical_words": 0, "inaccessible_families": inaccessible},
-        "dispositions": zero, "families": [], "evaluation_exclusion": {"applied": False, "reason": "source_database_inaccessible"},
+        "dispositions": zero, "families": [], "operator_decision": operator_decision.receipt(),
+        "evaluation_exclusion": {"applied": False, "reason": "source_database_inaccessible"},
         "outputs": {"manifest": _empty_artifact(), "source_records": _empty_artifact()},
         "determinism": {"manifest_order": "source family, SQLite record id", "serialization": "UTF-8 canonical JSON with sorted keys and LF", "timestamps_omitted": True},
         "training_eligible_emitted": False,
@@ -486,6 +593,7 @@ def admit_corpus(
     unknown = {family["source_family"] for family in families} - set(profile_sources)
     if unknown:
         raise AdmissionError(f"admission family absent from profile: {sorted(unknown)}")
+    operator_decision = _operator_decision(config, input_root, profile_sources)
     source_record_families = [family for family in families if family["source_record"] is not None]
     if source_record_families and source_record_output is None:
         raise AdmissionError("--source-record-output is required when source-record evidence is configured")
@@ -514,7 +622,12 @@ def admit_corpus(
         except (FileNotFoundError, sqlite3.Error, AdmissionError) as exc:
             inaccessible.append({"source_family": family["source_family"], "reason": type(exc).__name__})
     if inaccessible:
-        receipt = _empty_receipt(config, profile, sorted(inaccessible, key=lambda item: item["source_family"]))
+        receipt = _empty_receipt(
+            config,
+            profile,
+            sorted(inaccessible, key=lambda item: item["source_family"]),
+            operator_decision,
+        )
         _validate(receipt, _validator(RECEIPT_SCHEMA), "incomplete admission receipt")
         empty_manifest = AtomicJsonl.open(manifest_output)
         empty_manifest.finish()
@@ -542,7 +655,7 @@ def admit_corpus(
         v011_manifest=ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json",
         v02_packet=ROOT / "data/projects/ua_eval_harness/v0.2/review_packet_priority_v1.jsonl",
     )
-    disposition_counts: dict[str, Counter[str]] = {name: Counter() for name in ("excluded", "investigation_only", "proposed_admission", "unresolved")}
+    disposition_counts: dict[str, Counter[str]] = {name: Counter() for name in ("admitted", "excluded", "investigation_only", "proposed_admission", "unresolved")}
     family_results: list[dict[str, Any]] = []
     processed_rows = processed_words = 0
     seen_record_ids: set[str] = set()
@@ -550,6 +663,7 @@ def admit_corpus(
     source_records = AtomicJsonl.open(source_record_output) if source_record_output is not None else None
     source_record_validator = _validator(SOURCE_RECORD_SCHEMA)
     source_record_schema_sha256 = sha256_file(SOURCE_RECORD_SCHEMA)
+    expected_source_record_admissions = 0
     try:
         for family in families:
             source = profile_sources[family["source_family"]]
@@ -571,7 +685,10 @@ def admit_corpus(
                     word_count = len(WORD_RE.findall(text))
                     match = registry.match(text)
                     disposition, reasons = _disposition(
-                        evidence=family["evidence"], destination=family["proposed_destination"], contamination=match.method if match.matched else None,
+                        evidence=family["evidence"],
+                        destination=family["proposed_destination"],
+                        contamination=match.method if match.matched else None,
+                        operator_status=operator_decision.family_status(family["source_family"]),
                     )
                     attributes = {
                         name: _value(row, name, spec)
@@ -594,17 +711,12 @@ def admit_corpus(
                             evidence_source=evidence_source,
                             contract_schema_sha256=source_record_schema_sha256,
                             text=text,
-                            # The frozen source-record contract has no
-                            # pending-operator role.  Keep every proposal
-                            # mechanically excluded until the operator gate
-                            # is recorded; a later accepted pass may emit
-                            # training_candidate without changing this
-                            # evidence packet.
-                            usage_role="excluded",
+                            usage_role="training_candidate" if disposition == "admitted" else "excluded",
                         )
                         _validate(source_record, source_record_validator, f"source record {record_id}")
                         assert source_records is not None
                         source_records.write(source_record)
+                        expected_source_record_admissions += int(disposition == "admitted")
                         manifest_row["source_record_id"] = source_record["record_id"]
                         retrieved_at = str(row["source_record_retrieved_at"])
                         source_record_rows += 1
@@ -655,13 +767,15 @@ def admit_corpus(
         if source_records is not None:
             source_record_validation = validate_source_record_path(source_records.temporary)
             rejection_counts = source_record_validation["rejection_reason_counts"]
+            expected_rejections = source_record_artifact["records"] - expected_source_record_admissions
+            expected_rejection_counts = {"record_marked_excluded": expected_rejections} if expected_rejections else {}
             if (
-                source_record_validation["admitted_records"] != 0
-                or source_record_validation["rejected_records"] != source_record_artifact["records"]
+                source_record_validation["admitted_records"] != expected_source_record_admissions
+                or source_record_validation["rejected_records"] != expected_rejections
                 or source_record_validation["input_sha256"] != source_record_artifact["sha256"]
-                or rejection_counts != {"record_marked_excluded": source_record_artifact["records"]}
+                or rejection_counts != expected_rejection_counts
             ):
-                raise AdmissionError("pending source-record manifest failed the frozen admission contract")
+                raise AdmissionError("source-record manifest failed the frozen admission contract")
         expected_rows = sum(int(profile_sources[name]["expected"]["rows"]) for name in family_names)
         expected_words = sum(int(profile_sources[name]["expected"]["lexical_words"]) for name in family_names)
         complete = processed_rows == expected_rows and processed_words == expected_words and all(
@@ -673,6 +787,7 @@ def admit_corpus(
                          "processed_rows": processed_rows, "processed_lexical_words": processed_words, "inaccessible_families": []},
             "dispositions": {name: {"rows": disposition_counts[name]["rows"], "lexical_words": disposition_counts[name]["lexical_words"]} for name in sorted(disposition_counts)},
             "families": sorted(family_results, key=lambda item: item["source_family"]),
+            "operator_decision": operator_decision.receipt(),
             "evaluation_exclusion": {"applied": True, **registry_receipt(registry)},
             "outputs": {"manifest": artifact, "source_records": source_record_artifact},
             "determinism": {"manifest_order": "configuration source-family order, SQLite record id", "source_record_order": "configuration source-family order, SQLite record id", "source_record_contract_sha256": source_record_schema_sha256, "serialization": "UTF-8 canonical JSON with sorted keys and LF", "run_timestamps_omitted": True},
