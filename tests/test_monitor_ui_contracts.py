@@ -1,3 +1,5 @@
+import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -177,11 +179,18 @@ def test_acp_page_is_a_read_only_master_detail_conversation_reader():
     assert "/api/runtime/acp/conversations/" in html
     assert "const TRANSCRIPT_SUFFIX = '/transcript'" in html
     assert "Local-only transcript access." in html
-    assert "Chronological local transcript" in html
+    assert "Round-based conversation view" in html
     assert "Operational event rail" in html
     assert "make('details', 'event-rail')" in html
-    assert "message-body" in html
-    assert "body.textContent = message.body" in html
+    assert "function groupTranscript(messages)" in html
+    assert "Shared prompt" in html
+    assert "Participant responses" in html
+    assert "Final synthesis" in html
+    assert "Raw protocol messages" in html
+    assert "make('details', 'protocol-log')" in html
+    assert "text(value).toLowerCase() === 'root' ? 'Coordinator'" in html
+    assert "copy.textContent = body" in html
+    assert "transcript.setAttribute('aria-live', 'polite')" not in html
     assert "white-space: pre-wrap" in html
     assert "Transcript is local-only. Open this page at localhost on the API host." in html
     assert "Transcript is unavailable on this local Monitor instance." in html
@@ -200,6 +209,7 @@ def test_acp_page_is_a_read_only_master_detail_conversation_reader():
     assert "Malformed conversation data" in html
     assert "No recent ACP conversations." in html
     assert "@media (max-width: 880px)" in html
+    assert ".reader { order: 1; }.ledger { order: 2; }" in html
     assert ":focus-visible" in html
     assert "prefers-reduced-motion" in html
     for href in PRIMARY_NAV_HREFS:
@@ -223,6 +233,48 @@ def test_acp_page_is_a_read_only_master_detail_conversation_reader():
         "navigator.clipboard",
     ]:
         assert prohibited not in html
+
+
+def test_acp_page_groups_duplicate_fanout_and_keeps_protocol_order():
+    html_path = json.dumps(str(DASHBOARDS / "acp.html"))
+    script = f"""
+    const fs = require('fs');
+    const html = fs.readFileSync({html_path}, 'utf8');
+    const start = html.indexOf('function transcriptMessages');
+    const end = html.indexOf('function actorLabel');
+    if (start < 0 || end <= start) throw new Error('grouping helpers not found');
+    eval(html.slice(start, end));
+    const messages = transcriptMessages({{messages: [
+      {{kind: 'request', body: 'Shared question', sender: 'root', recipient: 'codex', created_at: '2026-01-01T00:00:00Z', ordinal: 1, round: 1}},
+      {{kind: 'request', body: 'Shared question', sender: 'root', recipient: 'grok', created_at: '2026-01-01T00:00:00Z', ordinal: 2, round: 1}},
+      {{kind: 'reply', body: 'Grok answer', sender: 'grok', recipient: 'root', created_at: '2026-01-01T00:00:02Z', ordinal: 3, round: 1}},
+      {{kind: 'reply', body: 'Codex answer', sender: 'codex', recipient: 'root', created_at: '2026-01-01T00:00:01Z', ordinal: 4, round: 1}},
+      {{kind: 'reply', body: 'Peer context', sender: 'grok', recipient: 'codex', created_at: '2026-01-01T00:00:03Z', ordinal: 5, round: 2}},
+      {{kind: 'reply', body: 'Refined answer', sender: 'codex', recipient: 'root', created_at: '2026-01-01T00:00:04Z', ordinal: 6, round: 2}},
+      {{kind: 'synthesis', body: 'Final answer', sender: 'codex', recipient: 'root', created_at: '2026-01-01T00:00:05Z', ordinal: 7}}
+    ]}});
+    console.log(JSON.stringify(groupTranscript(messages)));
+    """
+    result = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True)
+    grouped = json.loads(result.stdout)
+
+    assert [group["round"] for group in grouped["rounds"]] == [1, 2]
+    assert grouped["rounds"][0]["prompts"] == [
+        {
+            "body": "Shared question",
+            "sender": "root",
+            "recipients": ["codex", "grok"],
+            "createdAt": "2026-01-01T00:00:00Z",
+            "ordinal": 1,
+        }
+    ]
+    assert [reply["body"] for reply in grouped["rounds"][0]["replies"]] == [
+        "Grok answer",
+        "Codex answer",
+    ]
+    assert [item["body"] for item in grouped["rounds"][1]["contexts"]] == ["Peer context"]
+    assert [item["body"] for item in grouped["rounds"][1]["replies"]] == ["Refined answer"]
+    assert [item["body"] for item in grouped["finalization"]] == ["Final answer"]
 
 
 def test_routing_page_uses_live_monitor_sources():

@@ -18,15 +18,49 @@ a { color: var(--blue); }.topbar { display: flex; align-items: center; gap: 14px
 .message[data-role="request"]::before { border-color: var(--blue); }.message[data-role="reply"]::before { border-color: var(--cyan); }.message[data-role="synthesis"]::before { border-color: var(--yellow); }
 .event-rail { border: 1px solid var(--border); border-radius: 8px; background: rgba(13,17,23,.32); }.event-rail summary { cursor: pointer; padding: 12px; color: var(--text); font-size: 13px; font-weight: 800; }.event-rail-body { padding: 0 12px 12px; }.participants { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; padding: 0 0 13px; border-bottom: 1px solid var(--border); }.participants-label { color: var(--text3); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }.lane { color: var(--text2); border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; }.timeline { position: relative; display: grid; gap: 0; margin-top: 14px; padding-left: 25px; }.timeline::before { content: ""; position: absolute; left: 7px; top: 7px; bottom: 7px; width: 2px; background: linear-gradient(var(--cyan), rgba(57,210,192,.18)); }.event { position: relative; padding: 0 0 16px 11px; }.event:last-child { padding-bottom: 0; }.event::before { content: ""; position: absolute; left: -22px; top: 4px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--cyan); background: var(--bg2); }.event-top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }.event-flow { color: var(--cyan); font-size: 11px; font-weight: 800; }.event-time { color: var(--text3); font-size: 11px; }.event-type { color: var(--text); font-size: 11px; }.event-facts { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }.empty { padding: 18px 16px; color: var(--text3); font-size: 13px; line-height: 1.5; }
 @media (max-width: 1040px) { .reader-grid { grid-template-columns: 1fr; }.event-rail { max-width: none; } } @media (max-width: 880px) { .topbar, .intro { align-items: flex-start; flex-wrap: wrap; }.meta { text-align: left; }.workspace { grid-template-columns: 1fr; }.reader { min-height: 360px; }.privacy { max-width: none; }.conversation-row { padding: 13px; }.container { padding: 16px; } } @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
+.conversation-view { display: grid; gap: 18px; }
+.round-block { overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--bg2); }
+.round-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 15px; border-bottom: 1px solid var(--border); background: var(--bg3); }
+.round-title { display: flex; align-items: baseline; gap: 9px; margin: 0; font-size: 14px; }
+.round-number { color: var(--cyan); font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
+.round-count { color: var(--text2); font-size: 12px; }
+.round-content { display: grid; gap: 14px; padding: 15px; background: var(--bg); }
+.prompt-card { border-left: 3px solid var(--blue); background: var(--bg2); padding: 13px 15px; }
+.prompt-meta, .context-meta, .response-meta, .synthesis-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-bottom: 8px; color: var(--text2); font-size: 12px; }
+.prompt-label, .context-label, .response-label, .synthesis-label { color: var(--text); font-size: 12px; font-weight: 800; letter-spacing: .045em; text-transform: uppercase; }
+.prompt-copy, .context-copy, .response-copy, .synthesis-copy { margin: 0; color: var(--text); font: 14px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
+.context-stack { display: grid; gap: 8px; }
+.context-card { border: 1px dashed var(--purple); border-radius: 8px; background: var(--bg3); padding: 11px 13px; }
+.response-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 2px 0 9px; }
+.response-heading h5 { margin: 0; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+.response-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)); gap: 11px; }
+.response-card { border: 1px solid var(--border); border-top: 3px solid var(--cyan); border-radius: 8px; background: var(--bg2); padding: 13px 14px 15px; }
+.response-card.unknown { border-top-color: var(--purple); }
+.response-speaker { color: var(--cyan); font-weight: 850; }
+.message-time { margin-left: auto; }
+.synthesis-section { border: 1px solid var(--yellow); border-radius: 10px; background: var(--bg2); padding: 15px 16px; }
+.synthesis-title { margin: 0 0 11px; color: var(--yellow); font-size: 14px; letter-spacing: .03em; }
+.synthesis-card + .synthesis-card { margin-top: 13px; padding-top: 13px; border-top: 1px solid rgba(210,153,34,.3); }
+.synthesis-empty { margin: 0; color: var(--text2); font-size: 13px; }
+.protocol-log { border: 1px solid var(--border); border-radius: 8px; background: var(--bg2); }
+.protocol-log summary { cursor: pointer; padding: 12px 14px; color: var(--text2); font-size: 12px; font-weight: 800; }
+.protocol-body { display: grid; gap: 1px; padding: 0 12px 12px; }
+.protocol-message { padding: 11px 12px; border-top: 1px solid var(--border); }
+.protocol-message:first-child { border-top: 0; }
+.protocol-header { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-bottom: 6px; color: var(--text2); font-size: 11px; }
+.protocol-copy { margin: 0; color: var(--text2); font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
+@media (max-width: 1180px) { .reader-grid { grid-template-columns: 1fr; } }
+@media (max-width: 880px) { .reader { order: 1; }.ledger { order: 2; } }
+@media (max-width: 640px) { .round-heading, .response-heading, .reader-title { align-items: flex-start; flex-direction: column; }.round-content, .reader { padding: 13px; }.facts { gap: 5px; }.prompt-copy, .context-copy, .response-copy, .synthesis-copy { font-size: 13px; }.message-time { margin-left: 0; width: 100%; } }
 </style>
 <link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
 <header class="topbar"><div><h1>ACP Conversations</h1><div class="sub">Read-only local conversation reader</div></div><div class="spacer"></div><div class="meta"><div>Read-only observation</div><div id="last-refresh">Loading…</div></div><nav class="monitor-nav" aria-label="Monitor sections"><a href="/">Home</a><a href="/orient.html">Orient</a><a href="/channels.html">Channels</a><a href="/comms.html">Comms</a><a href="/artifacts/">Artifacts</a><a href="/runtime.html">Runtime</a><a class="active" href="/acp.html">Conversations</a><a href="/docs">API</a></nav></header>
 <main class="container">
-  <section class="intro" aria-labelledby="page-heading"><div><div class="eyebrow">Conversation reader</div><h2 id="page-heading">Read the exchange, retain the operational context.</h2><p>Choose a recent ACP conversation to read its chronological local transcript. The operational event rail remains available as secondary context.</p></div><aside class="privacy"><strong>Local-only transcript access.</strong> Message bodies are requested only from the loopback Monitor API. This reader has no send, edit, retry, cancel, route, or review controls.</aside></section>
+  <section class="intro" aria-labelledby="page-heading"><div><div class="eyebrow">Conversation reader</div><h2 id="page-heading">Read what the agents discussed.</h2><p>Each round shows one shared prompt, the participant responses, and the final synthesis. Raw protocol messages and operational events remain available as secondary evidence.</p></div><aside class="privacy"><strong>Local-only transcript access.</strong> Message bodies are requested only from the loopback Monitor API. This reader has no send, edit, retry, cancel, route, or review controls.</aside></section>
   <div class="banner" id="error-banner" role="status"></div>
-  <section class="workspace" aria-label="ACP conversation browser"><aside class="ledger" aria-labelledby="ledger-heading"><div class="section-head"><h3 id="ledger-heading">Recent conversations</h3><span class="count" id="conversation-count">Loading</span></div><nav class="conversation-list" id="conversation-list" aria-label="Recent ACP conversations" aria-live="polite"><div class="empty">Loading recent conversations…</div></nav></aside><section class="reader" aria-labelledby="detail-heading"><div id="conversation-detail" class="reader-empty"><div><strong id="detail-heading">Select a conversation</strong><br>Its local chronological transcript will appear here.</div></div></section></section>
+  <section class="workspace" aria-label="ACP conversation browser"><aside class="ledger" aria-labelledby="ledger-heading"><div class="section-head"><h3 id="ledger-heading">Recent conversations</h3><span class="count" id="conversation-count">Loading</span></div><nav class="conversation-list" id="conversation-list" aria-label="Recent ACP conversations" aria-live="polite"><div class="empty">Loading recent conversations…</div></nav></aside><section class="reader" aria-labelledby="detail-heading"><div id="conversation-detail" class="reader-empty"><div><strong id="detail-heading">Select a conversation</strong><br>Its round-by-round discussion will appear here.</div></div></section></section>
 </main>
 <script>
 const LIST_URL = '/api/runtime/acp/conversations?limit=50';
@@ -52,10 +86,180 @@ function showError(message) { const banner = document.getElementById('error-bann
 function setReaderState(title, message) { const detail = document.getElementById('conversation-detail'); detail.className = 'reader-empty'; detail.replaceChildren(make('div', '', undefined)); detail.firstChild.append(make('strong', '', title), document.createElement('br'), document.createTextNode(message)); }
 function renderList(conversations, activeId) { const content = document.getElementById('conversation-list'); document.getElementById('conversation-count').textContent = `${conversations.length} recent`; if (!conversations.length) { content.replaceChildren(empty('No recent ACP conversations. Run no action from this page; it observes persisted metadata only.')); return; } const fragment = document.createDocumentFragment(); for (const conversation of conversations) { const id = conversation && typeof conversation.conversation_id === 'string' ? conversation.conversation_id : null; if (!id) continue; const row = make('a', 'conversation-row'); row.href = `/acp.html?conversation=${encodeURIComponent(id)}`; if (id === activeId) row.setAttribute('aria-current', 'true'); const top = make('div', 'row-top'); top.append(make('span', 'conversation-id', id), pill(stateLabel(conversation.current_state), stateClass(conversation.current_state))); const meta = make('div', 'row-meta'); meta.append(make('span', '', (conversation.participants || []).map(label).join(' · ') || 'Participants unavailable'), make('span', '', `Rounds ${Number(conversation.rounds_completed) || 0}/${Number(conversation.rounds_requested) || 0}`), make('span', '', `Updated ${formatTs(conversation.updated_at)}`)); row.append(top, meta); fragment.append(row); } content.replaceChildren(fragment); }
 function renderEventRail(conversation) { const events = Array.isArray(conversation.events) ? conversation.events : []; const rail = make('details', 'event-rail'); const summary = make('summary', '', `Operational event rail · Event flow · ${events.length} allowlisted events`); const body = make('div', 'event-rail-body'); const participants = make('div', 'participants'); participants.append(make('span', 'participants-label', 'Participants')); const names = Array.isArray(conversation.participants) ? conversation.participants : []; if (names.length) names.forEach(participant => participants.append(make('span', 'lane', label(participant)))); else participants.append(make('span', 'muted', 'Not reported')); body.append(participants); if (!events.length) { body.append(empty('No allowlisted timeline events were recorded for this conversation.')); } else { const timeline = make('div', 'timeline'); for (const event of events) { const status = eventStatus(event); const item = make('article', 'event'); const top = make('div', 'event-top'); top.append(make('span', 'event-flow', eventFlow(event)), make('span', 'event-type', label(event.event_type)), pill(status.text, status.className), make('span', 'event-time', formatTs(event.created_at))); const facts = make('div', 'event-facts'); if (Number.isFinite(event.duration_ms)) facts.append(pill(`Duration ${formatDurationMs(event.duration_ms)}`)); if (Number.isFinite(event.token_count)) facts.append(pill(`Tokens ${event.token_count}`)); item.append(top); if (facts.childElementCount) item.append(facts); timeline.append(item); } body.append(timeline); } rail.append(summary, body); return rail; }
-function renderDetail(conversation) { const detail = document.getElementById('conversation-detail'); detail.className = ''; const heading = make('div', 'reader-title'); const title = make('div'); title.append(make('h3', 'conversation-id', conversation.conversation_id || 'Conversation')); title.firstChild.id = 'detail-heading'; title.append(make('p', 'reader-sub', 'Chronological local transcript with body-free operational context')); heading.append(title, pill(stateLabel(conversation.current_state), stateClass(conversation.current_state))); const facts = make('div', 'facts'); [`Rounds ${Number(conversation.rounds_completed) || 0}/${Number(conversation.rounds_requested) || 0}`, `Started ${formatTs(conversation.created_at)}`, `Updated ${formatTs(conversation.updated_at)}`, `Duration ${formatDurationMs(conversation.total_duration_ms)}`, `Tokens ${Number.isFinite(conversation.total_tokens) ? conversation.total_tokens : '—'}`, `Synthesis ${label(conversation.synthesis_state)}`].forEach(fact => facts.append(pill(fact))); const grid = make('div', 'reader-grid'); const transcriptPanel = make('section', 'transcript-panel'); transcriptPanel.setAttribute('aria-labelledby', 'transcript-heading'); const transcriptHeading = make('h4', 'transcript-heading', 'Transcript'); transcriptHeading.id = 'transcript-heading'; transcriptPanel.append(transcriptHeading, make('p', 'local-only', 'Local-only transcript access. Message bodies are rendered as inert text and are never placed in browser storage.'), make('div', 'transcript-state', 'Loading transcript…')); grid.append(transcriptPanel, renderEventRail(conversation)); detail.replaceChildren(heading, facts, grid); }
-function transcriptMessages(payload) { if (!payload || typeof payload !== 'object' || !Array.isArray(payload.messages)) return null; const normalized = []; for (const item of payload.messages) { if (!item || typeof item !== 'object' || typeof item.body !== 'string' || typeof item.kind !== 'string') return null; normalized.push({ kind: item.kind, body: item.body, sender: item.sender, recipient: item.recipient, createdAt: item.created_at, ordinal: item.ordinal, round: item.round }); } return normalized; }
+function renderDetail(conversation) {
+  const detail = document.getElementById('conversation-detail');
+  detail.className = '';
+  const heading = make('div', 'reader-title');
+  const title = make('div');
+  title.append(make('h3', 'conversation-id', conversation.conversation_id || 'Conversation'));
+  title.firstChild.id = 'detail-heading';
+  const participantNames = Array.isArray(conversation.participants) ? conversation.participants.map(actorLabel).join(' + ') : '';
+  title.append(make('p', 'reader-sub', `${participantNames || 'Participants unavailable'} · Round-based conversation view`));
+  heading.append(title, pill(stateLabel(conversation.current_state), stateClass(conversation.current_state)));
+  const facts = make('div', 'facts');
+  [`Rounds completed ${Number(conversation.rounds_completed) || 0} of ${Number(conversation.rounds_requested) || 0}`, `Started ${formatTs(conversation.created_at)}`, `Updated ${formatTs(conversation.updated_at)}`, `Duration ${formatDurationMs(conversation.total_duration_ms)}`, `Tokens ${Number.isFinite(conversation.total_tokens) ? conversation.total_tokens : '—'}`, `Synthesis ${label(conversation.synthesis_state)}`].forEach(fact => facts.append(pill(fact)));
+  const grid = make('div', 'reader-grid');
+  const transcriptPanel = make('section', 'transcript-panel');
+  transcriptPanel.setAttribute('aria-labelledby', 'transcript-heading');
+  const transcriptHeading = make('h4', 'transcript-heading', 'Conversation');
+  transcriptHeading.id = 'transcript-heading';
+  transcriptPanel.append(transcriptHeading, make('p', 'local-only', 'Local-only transcript access. The readable view groups protocol messages without changing their stored order or placing bodies in browser storage.'), make('div', 'transcript-state', 'Loading conversation…'));
+  grid.append(transcriptPanel, renderEventRail(conversation));
+  detail.replaceChildren(heading, facts, grid);
+}
+function transcriptMessages(payload) {
+  if (!payload || typeof payload !== 'object' || !Array.isArray(payload.messages)) return null;
+  const normalized = [];
+  for (const item of payload.messages) {
+    if (!item || typeof item !== 'object' || typeof item.body !== 'string' || typeof item.kind !== 'string') return null;
+    normalized.push({ kind: item.kind, body: item.body, sender: item.sender, recipient: item.recipient, createdAt: item.created_at, ordinal: item.ordinal, round: item.round });
+  }
+  return normalized;
+}
+function messageRound(message) { return Number.isInteger(message.round) && message.round > 0 ? message.round : null; }
+function groupTranscript(messages) {
+  const rounds = new Map();
+  const finalization = [];
+  for (const message of messages) {
+    const round = messageRound(message);
+    if (round === null) { finalization.push(message); continue; }
+    if (!rounds.has(round)) rounds.set(round, { round, prompts: [], contexts: [], replies: [], other: [], messages: [] });
+    const group = rounds.get(round);
+    group.messages.push(message);
+    const kind = message.kind.toLowerCase();
+    if (kind === 'request') {
+      let prompt = group.prompts.find(candidate => candidate.body === message.body && candidate.sender === message.sender);
+      if (!prompt) {
+        prompt = { body: message.body, sender: message.sender, recipients: [], createdAt: message.createdAt, ordinal: message.ordinal };
+        group.prompts.push(prompt);
+      }
+      if (typeof message.recipient === 'string' && !prompt.recipients.includes(message.recipient)) prompt.recipients.push(message.recipient);
+    } else if (kind === 'reply' && typeof message.recipient === 'string' && message.recipient.toLowerCase() !== 'root') {
+      group.contexts.push(message);
+    } else if (kind === 'reply') {
+      group.replies.push(message);
+    } else {
+      group.other.push(message);
+    }
+  }
+  return { rounds: Array.from(rounds.values()), finalization };
+}
+function actorLabel(value) { return text(value).toLowerCase() === 'root' ? 'Coordinator' : label(value); }
 function transcriptState(message) { const target = document.querySelector('.transcript-state'); if (target) target.replaceChildren(empty(message)); }
-function renderTranscript(payload) { const messages = transcriptMessages(payload); if (messages === null) { transcriptState('Transcript data was malformed and was not rendered.'); return; } if (!messages.length) { transcriptState('This conversation has no transcript messages.'); return; } const transcript = make('div', 'transcript'); transcript.setAttribute('aria-live', 'polite'); for (const message of messages) { const article = make('article', 'message'); const kind = message.kind.toLowerCase(); article.dataset.role = ['request', 'reply', 'synthesis'].includes(kind) ? kind : 'unknown'; const header = make('header', 'message-header'); header.append(make('span', 'message-role', label(message.kind))); if (typeof message.sender === 'string') header.append(make('span', 'muted', typeof message.recipient === 'string' ? `${message.sender} → ${message.recipient}` : message.sender)); if (Number.isInteger(message.round) && message.round > 0) header.append(pill(`Round ${message.round}`)); if (Number.isInteger(message.ordinal) && message.ordinal > 0) header.append(pill(`Message ${message.ordinal}`)); if (message.createdAt) header.append(make('time', 'message-time', formatTs(message.createdAt))); const body = make('pre', 'message-body'); body.textContent = message.body; article.append(header, body); transcript.append(article); } const target = document.querySelector('.transcript-state'); if (target) target.replaceWith(transcript); }
+function messageCopy(className, body) { const copy = make('div', className); copy.textContent = body; return copy; }
+function flowLabel(message) { const sender = actorLabel(message.sender); return typeof message.recipient === 'string' ? `${sender} → ${actorLabel(message.recipient)}` : sender; }
+function renderRound(group) {
+  const block = make('article', 'round-block');
+  const heading = make('header', 'round-heading');
+  const title = make('h4', 'round-title');
+  const headingId = `round-${group.round}-heading`;
+  title.id = headingId;
+  title.append(make('span', 'round-number', `Round ${group.round}`), document.createTextNode(group.round === 1 ? 'Initial assessments' : 'Exchange and refinement'));
+  const responseLabel = `${group.replies.length} participant ${group.replies.length === 1 ? 'response' : 'responses'}`;
+  heading.append(title, make('span', 'round-count', responseLabel));
+  block.setAttribute('aria-labelledby', headingId);
+  const content = make('div', 'round-content');
+  for (const prompt of group.prompts) {
+    const card = make('section', 'prompt-card');
+    const meta = make('div', 'prompt-meta');
+    meta.append(make('span', 'prompt-label', prompt.recipients.length > 1 ? 'Shared prompt' : 'Prompt'));
+    if (prompt.recipients.length) meta.append(make('span', '', `Sent to ${prompt.recipients.map(actorLabel).join(' and ')}`));
+    if (prompt.createdAt) meta.append(make('time', 'message-time', formatTs(prompt.createdAt)));
+    card.append(meta, messageCopy('prompt-copy', prompt.body));
+    content.append(card);
+  }
+  if (group.contexts.length) {
+    const stack = make('section', 'context-stack');
+    for (const message of group.contexts) {
+      const card = make('article', 'context-card');
+      const meta = make('div', 'context-meta');
+      meta.append(make('span', 'context-label', 'Peer context'), make('span', '', flowLabel(message)));
+      if (message.createdAt) meta.append(make('time', 'message-time', formatTs(message.createdAt)));
+      card.append(meta, messageCopy('context-copy', message.body));
+      stack.append(card);
+    }
+    content.append(stack);
+  }
+  const responses = make('section', 'responses');
+  const responseHeading = make('div', 'response-heading');
+  responseHeading.append(make('h5', '', 'Participant responses'), make('span', 'round-count', responseLabel));
+  responses.append(responseHeading);
+  if (group.replies.length) {
+    const grid = make('div', 'response-grid');
+    for (const message of group.replies) {
+      const card = make('article', 'response-card');
+      const meta = make('div', 'response-meta');
+      meta.append(make('span', 'response-speaker', actorLabel(message.sender)));
+      if (message.createdAt) meta.append(make('time', 'message-time', formatTs(message.createdAt)));
+      card.append(meta, messageCopy('response-copy', message.body));
+      grid.append(card);
+    }
+    responses.append(grid);
+  } else {
+    responses.append(empty('No participant response message was recorded for this round.'));
+  }
+  if (group.other.length) {
+    const grid = make('div', 'response-grid');
+    for (const message of group.other) {
+      const card = make('article', 'response-card unknown');
+      const meta = make('div', 'response-meta');
+      meta.append(make('span', 'response-label', label(message.kind)), make('span', '', flowLabel(message)));
+      if (message.createdAt) meta.append(make('time', 'message-time', formatTs(message.createdAt)));
+      card.append(meta, messageCopy('response-copy', message.body));
+      grid.append(card);
+    }
+    responses.append(grid);
+  }
+  content.append(responses);
+  block.append(heading, content);
+  return block;
+}
+function renderSynthesis(finalization) {
+  const section = make('section', 'synthesis-section');
+  section.append(make('h4', 'synthesis-title', 'Final synthesis'));
+  const syntheses = finalization.filter(message => message.kind.toLowerCase() === 'synthesis');
+  if (!syntheses.length) {
+    section.append(make('p', 'synthesis-empty', 'No final synthesis message was recorded. Check the operational event rail for outcome details.'));
+    return section;
+  }
+  for (const message of syntheses) {
+    const card = make('article', 'synthesis-card');
+    const meta = make('div', 'synthesis-meta');
+    meta.append(make('span', 'synthesis-label', `Prepared by ${actorLabel(message.sender)}`));
+    if (message.createdAt) meta.append(make('time', 'message-time', formatTs(message.createdAt)));
+    card.append(meta, messageCopy('synthesis-copy', message.body));
+    section.append(card);
+  }
+  return section;
+}
+function renderProtocolLog(messages) {
+  const details = make('details', 'protocol-log');
+  const summary = make('summary', '', `Raw protocol messages · ${messages.length}`);
+  const body = make('div', 'protocol-body');
+  for (const message of messages) {
+    const article = make('article', 'protocol-message');
+    const header = make('header', 'protocol-header');
+    header.append(make('span', 'message-role', label(message.kind)), make('span', '', flowLabel(message)));
+    if (messageRound(message) !== null) header.append(pill(`Round ${message.round}`));
+    if (Number.isInteger(message.ordinal) && message.ordinal > 0) header.append(pill(`Message ${message.ordinal}`));
+    if (message.createdAt) header.append(make('time', 'message-time', formatTs(message.createdAt)));
+    article.append(header, messageCopy('protocol-copy', message.body));
+    body.append(article);
+  }
+  details.append(summary, body);
+  return details;
+}
+function renderTranscript(payload) {
+  const messages = transcriptMessages(payload);
+  if (messages === null) { transcriptState('Transcript data was malformed and was not rendered.'); return; }
+  if (!messages.length) { transcriptState('This conversation has no transcript messages.'); return; }
+  const grouped = groupTranscript(messages);
+  const conversation = make('div', 'conversation-view');
+  grouped.rounds.forEach(group => conversation.append(renderRound(group)));
+  conversation.append(renderSynthesis(grouped.finalization), renderProtocolLog(messages));
+  const target = document.querySelector('.transcript-state');
+  if (target) target.replaceWith(conversation);
+}
 async function loadTranscript(activeId) { try { renderTranscript(await fetchJson(`${DETAIL_URL}${encodeURIComponent(activeId)}${TRANSCRIPT_SUFFIX}`)); } catch (error) { if (error instanceof ApiError && error.status === 403) transcriptState('Transcript is local-only. Open this page at localhost on the API host.'); else if (error instanceof ApiError && error.status === 404) transcriptState('Transcript is unavailable on this local Monitor instance.'); else { transcriptState('Transcript could not be loaded.'); showError(`Transcript load failure: ${error.message}`); } } }
 async function loadPage() { try { const snapshot = await fetchJson(LIST_URL); if (!snapshot || typeof snapshot !== 'object' || !Array.isArray(snapshot.conversations)) throw new Error('Malformed conversation data'); if (snapshot.availability === 'unavailable') { document.getElementById('conversation-count').textContent = 'Unavailable'; document.getElementById('conversation-list').replaceChildren(empty('Conversation storage is unavailable. No routing or provider health is inferred.')); setReaderState('Conversation reader unavailable', 'Restore read-only conversation storage, then refresh the page.'); return; } const conversations = snapshot.conversations.filter(item => item && typeof item.conversation_id === 'string'); const activeId = conversations.some(item => item.conversation_id === selectedId()) ? selectedId() : conversations[0]?.conversation_id; renderList(conversations, activeId); if (!activeId) { setReaderState('No recent conversations', 'There is no persisted conversation to display.'); return; } try { const conversation = await fetchJson(`${DETAIL_URL}${encodeURIComponent(activeId)}`); renderDetail(conversation); await loadTranscript(activeId); } catch (error) { setReaderState('Conversation detail unavailable', 'The selected conversation could not be loaded.'); showError(`Conversation detail unavailable: ${error.message}`); } } catch (error) { document.getElementById('conversation-count').textContent = 'Error'; document.getElementById('conversation-list').replaceChildren(empty('Recent conversations could not be loaded.')); setReaderState('Conversation reader unavailable', 'Check the read-only Runtime API and refresh.'); showError(`ACP conversations unavailable: ${error.message}`); } finally { document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()}`; } }
 loadPage();
