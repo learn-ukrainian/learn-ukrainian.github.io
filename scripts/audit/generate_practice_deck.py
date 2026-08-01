@@ -3552,7 +3552,9 @@ def read_sentence_inventory(path: Path | None) -> list[dict[str, Any]]:
             continue
         if not isinstance(source_provenance, dict) or not isinstance(license_info, dict):
             continue
-        pattern = re.compile(rf"(?<!\w){re.escape(target_form)}(?!\w)")
+        # Treat hyphenated and apostrophe-bearing words as one source token;
+        # ``сумка`` in ``сумка-пакет`` is not an independently blankable form.
+        pattern = re.compile(rf"(?<![\wʼ'’\u2010\u2011\u2012-]){re.escape(target_form)}(?![\wʼ'’\u2010\u2011\u2012-])")
         blanked_sentence, replacements = pattern.subn("___", sentence)
         if replacements != 1:
             continue

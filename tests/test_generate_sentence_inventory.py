@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import sqlite3
 
+import pytest
+
 from scripts.audit.generate_sentence_inventory import (
     build_inventory,
     load_daily_lemmas,
@@ -64,6 +66,64 @@ def test_ulp_provenance_never_exposes_private_locator(tmp_path) -> None:
     assert rows[0]["provenance"] == {"source": "ulp", "label": "Ukrainian Lessons Podcast"}
     assert "private-local-id" not in json.dumps(rows, ensure_ascii=False)
     assert "Private title" not in json.dumps(rows, ensure_ascii=False)
+
+
+def test_inventory_can_keep_multiple_unique_sentences_per_lemma(tmp_path) -> None:
+    db = _sources_db(tmp_path)
+    conn = sqlite3.connect(db)
+    conn.executescript(
+        """
+        INSERT INTO textbooks VALUES (
+            2,
+            'grade-1-p-5',
+            'Grade 1',
+            'Ми часто говоримо про Україну, але живемо в Україні.'
+        );
+        INSERT INTO textbooks_fts(rowid, title, text) VALUES (
+            2,
+            'Grade 1',
+            'Ми часто говоримо про Україну, але живемо в Україні.'
+        );
+        INSERT INTO textbooks VALUES (
+            3,
+            'grade-1-p-6',
+            'Grade 1',
+            'Україні добре, коли діти читають українською.'
+        );
+        INSERT INTO textbooks_fts(rowid, title, text) VALUES (
+            3,
+            'Grade 1',
+            'Україні добре, коли діти читають українською.'
+        );
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    rows = build_inventory(
+        [{"lemma": "Україні", "lemmaId": "ukraini", "cefr": "A1"}],
+        db,
+        max_per_lemma=2,
+    )
+
+    assert len(rows) == 2
+    assert len({row["sentence"] for row in rows}) == 2
+    assert {row["sentence"] for row in rows} <= {
+        "Ми живемо в Україні.",
+        "Ми часто говоримо про Україну, але живемо в Україні.",
+        "Україні добре, коли діти читають українською.",
+    }
+    assert all(row["targetForm"] == "Україні" for row in rows)
+    assert {row["provenance"]["locator"] for row in rows} <= {
+        "grade-1-p-4",
+        "grade-1-p-5",
+        "grade-1-p-6",
+    }
+
+
+def test_inventory_rejects_non_positive_sentence_cap(tmp_path) -> None:
+    with pytest.raises(ValueError, match="max_per_lemma"):
+        build_inventory([], _sources_db(tmp_path), max_per_lemma=0)
 
 
 def test_daily_lemmas_and_written_schema(tmp_path) -> None:
