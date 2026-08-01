@@ -23,6 +23,7 @@ from typing import Any
 
 from .model import (
     LOCATOR_ID_RE,
+    SCHEMA_VERSION,
     ContextLink,
     SchemaError,
     VerificationEvidence,
@@ -387,7 +388,7 @@ class ContextLinkStore:
                 "SELECT COUNT(*) AS n, MAX(recorded_at) AS last_at FROM link_events"
             ).fetchone()
         return {
-            "schema_version": 1,
+            "schema_version": SCHEMA_VERSION,
             "counts": {str(row["state"]): int(row["n"]) for row in counts},
             "events": int(events["n"]) if events else 0,
             "last_event_at": events["last_at"] if events else None,

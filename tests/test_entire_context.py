@@ -204,6 +204,23 @@ def test_non_facet_identity_fields_reject_delimiter_split_opaque_values(field: s
         ContextLink.from_dict(payload)
 
 
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("entire_checkpoint_id", 123),
+        ("entire_checkpoint_id", True),
+        ("git_sha", 123),
+        ("git_sha", True),
+    ],
+)
+def test_optional_identity_fields_reject_non_strings(field: str, value: object) -> None:
+    payload = make_link().to_dict()
+    payload.pop("locator_id")
+    payload[field] = value
+    with pytest.raises(SchemaError, match=field):
+        ContextLink.from_dict(payload)
+
+
 def test_canonical_namespace_rejects_long_opaque_path_component() -> None:
     payload = make_link().to_dict()
     payload.pop("locator_id")
@@ -719,6 +736,33 @@ def test_cli_admit_rejects_schema_violations(tmp_path: Path) -> None:
     code, out = run_cli(["admit", "--link", str(link_file), "--db", str(db)])
     assert code == cli.EXIT_REFUSED
     assert out["reason"] == "schema_invalid"
+    assert not db.exists()
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("entire_checkpoint_id", 123),
+        ("entire_checkpoint_id", True),
+        ("git_sha", 123),
+        ("git_sha", True),
+    ],
+)
+def test_cli_admit_rejects_non_string_optional_identifiers(
+    tmp_path: Path, field: str, value: object
+) -> None:
+    db = tmp_path / "schema.sqlite3"
+    link_file = tmp_path / "link.json"
+    payload = make_link().to_dict()
+    payload[field] = value
+    link_file.write_text(json.dumps(payload), encoding="utf-8")
+
+    code, out = run_cli(["admit", "--link", str(link_file), "--db", str(db)])
+
+    assert code == cli.EXIT_REFUSED
+    assert out["outcome"] == "refused"
+    assert out["reason"] == "schema_invalid"
+    assert field in out["detail"]
     assert not db.exists()
 
 

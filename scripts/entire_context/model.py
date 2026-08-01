@@ -238,11 +238,15 @@ class ContextLink:
         _validate_scalar("canonical_id", self.canonical_id, reject_long_opaque=True)
         if not SHA256_DIGEST_RE.fullmatch(self.canonical_digest):
             raise SchemaError("canonical_digest must be 'sha256:<64 hex>'")
-        if self.entire_checkpoint_id is not None and not OPAQUE_ID_RE.fullmatch(self.entire_checkpoint_id):
-            raise SchemaError("entire_checkpoint_id must be an opaque path-safe identifier")
         if self.entire_checkpoint_id is not None:
+            if not isinstance(self.entire_checkpoint_id, str) or not OPAQUE_ID_RE.fullmatch(
+                self.entire_checkpoint_id
+            ):
+                raise SchemaError("entire_checkpoint_id must be an opaque path-safe identifier")
             _validate_scalar("entire_checkpoint_id", self.entire_checkpoint_id, reject_long_opaque=True)
-        if self.git_sha is not None and not GIT_SHA_RE.fullmatch(self.git_sha):
+        if self.git_sha is not None and (
+            not isinstance(self.git_sha, str) or not GIT_SHA_RE.fullmatch(self.git_sha)
+        ):
             raise SchemaError("git_sha must be a full 40-hex commit SHA")
         validate_facets(self.facets)
 
