@@ -283,19 +283,29 @@ def explain_change(
     seed_ids = {str(seed["locator_id"]) for seed in seeds}
     nodes: dict[str, dict[str, Any]] = {str(seed["locator_id"]): seed for seed in seeds}
     edges: set[tuple[str, str, str]] = set()
+    relation_rows_examined = 0
+    truncation_reasons: set[str] = set()
     frontier = sorted(seed_ids)
     depth = 0
     while frontier and depth < MAX_EXPLAIN_DEPTH and len(nodes) < MAX_EXPLAIN_NODES:
         next_frontier: list[str] = []
         for current_id in frontier:
-            for related, join in store.find_related(nodes[current_id]):
+            related_scan = store.find_related(nodes[current_id])
+            relation_rows_examined += related_scan.examined
+            if related_scan.truncated:
+                truncation_reasons.add("relation_scan_cap")
+            for related, join in related_scan.items:
                 related_id = str(related["locator_id"])
                 edges.add((current_id, related_id, join))
                 if related_id not in nodes and len(nodes) < MAX_EXPLAIN_NODES:
                     nodes[related_id] = related
                     next_frontier.append(related_id)
+                elif related_id not in nodes:
+                    truncation_reasons.add("node_cap")
         frontier = next_frontier
         depth += 1
+    if frontier:
+        truncation_reasons.add("depth_cap")
 
     verified: dict[str, dict[str, Any]] = {}
     omitted: list[dict[str, str]] = []
@@ -317,6 +327,12 @@ def explain_change(
         "edges": kept_edges,
         "omitted": omitted,
         "depth": depth,
+        "relation_scan": {
+            "examined": relation_rows_examined,
+            "truncated": "relation_scan_cap" in truncation_reasons,
+        },
+        "complete": not truncation_reasons,
+        "truncation_reasons": sorted(truncation_reasons),
     }
 
 

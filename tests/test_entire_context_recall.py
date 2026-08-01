@@ -299,6 +299,19 @@ def admit(store: ContextLinkStore, resolution) -> str:
     return result.locator_id
 
 
+def promote_link(store: ContextLinkStore, link: ContextLink) -> str:
+    verification = VerificationEvidence(
+        verifier="test",
+        canonical_digest=link.canonical_digest,
+        status=VerificationStatus.VERIFIED,
+        evidence_locator="test:synthetic-link",
+        checked_at=isoformat_z(utc_now()),
+    )
+    result = store.admit(link, verification, actor="test")
+    assert result.outcome is AdmitOutcome.PROMOTED
+    return result.locator_id
+
+
 def bootstrap_git(store: ContextLinkStore, repo: Path, sha: str) -> str:
     return admit(store, resolve_git_commit(sha, repo=repo))
 
@@ -364,6 +377,7 @@ def test_git_projection_supports_merge_parents_and_rejects_tree(tmp_path: Path) 
 
     resolution = resolve_git_commit(merge_sha, repo=repo)
     assert resolution.excerpt["parents"] == sorted([left, right])
+    assert resolution.excerpt["touched_paths"] == ["left.txt"]
 
     tree_sha = git(repo, "rev-parse", "HEAD^{tree}")
     with pytest.raises(ResolutionError) as excinfo:
@@ -890,6 +904,9 @@ def test_explain_change_traverses_typed_joins(
         assert "excerpt" in node
         assert node["canonical_digest"].startswith("sha256:")
     assert payload["omitted"] == []
+    assert payload["relation_scan"]["truncated"] is False
+    assert payload["complete"] is True
+    assert payload["truncation_reasons"] == []
     assert_body_free(out)
 
     code, out = run_cli(
@@ -916,7 +933,36 @@ def test_find_related_limit_zero_is_empty(tmp_path: Path, git_repo: dict[str, ob
     bootstrap_acp(store, acp_root, git_sha=sha)
     seed = store.lookup(git_locator)
     assert seed is not None
-    assert store.find_related(seed, limit=0) == []
+    related = store.find_related(seed, limit=0)
+    assert related.items == ()
+    assert related.examined == 0
+    assert related.truncated is True
+
+
+def test_explain_change_reports_typed_join_truncation(tmp_path: Path, git_repo: dict[str, object]) -> None:
+    sha = str(git_repo["sha2"])
+    store = make_store(tmp_path)
+    seed_locator = bootstrap_git(store, git_repo["repo"], sha)
+    for index in range(51):
+        promote_link(
+            store,
+            ContextLink(
+                kind=LinkKind.GITHUB_ISSUE,
+                canonical_namespace="github:test/repo",
+                canonical_id=sha,
+                canonical_digest="sha256:" + hashlib.sha256(f"related-{index}".encode()).hexdigest(),
+            ),
+        )
+
+    result = recall.explain_change(
+        store,
+        locator_id=seed_locator,
+        repo=git_repo["repo"],
+        acp_root=None,
+    )
+    assert result["relation_scan"] == {"examined": 50, "truncated": True}
+    assert result["complete"] is False
+    assert "relation_scan_cap" in result["truncation_reasons"]
 
 
 def test_explain_change_omits_unverifiable_nodes(tmp_path: Path, git_repo: dict[str, object]) -> None:

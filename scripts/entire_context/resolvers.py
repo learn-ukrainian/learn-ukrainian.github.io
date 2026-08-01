@@ -151,14 +151,29 @@ def git_commit_projection(repo: Path, sha: str) -> dict[str, Any]:
     lines = header.split("\n")
     if len(lines) < 3:
         raise ResolutionError(REASON_RESOLUTION_ERROR, "unexpected git show output shape")
-    parents = sorted(parent for parent in lines[0].split() if parent)
+    parent_order = [parent for parent in lines[0].split() if parent]
+    parents = sorted(parent_order)
     try:
         commit_ts = int(lines[1].strip())
     except ValueError as exc:
         raise ResolutionError(REASON_RESOLUTION_ERROR, "unparseable commit timestamp") from exc
     author = lines[2].strip()
-    touched = _run_git(repo, "diff-tree", "--root", "--no-commit-id", "--name-only", "-r", sha)
-    touched_paths = sorted(path for path in touched.split("\n") if path.strip())
+    if parents:
+        # A commit's public touched-path projection is its change relative to
+        # the first parent. This is explicit for merges; plain `diff-tree SHA`
+        # suppresses merge diffs and would silently emit an empty path set.
+        touched = _run_git(
+            repo,
+            "diff-tree",
+            "--no-commit-id",
+            "--name-only",
+            "-r",
+            parent_order[0],
+            sha,
+        )
+    else:
+        touched = _run_git(repo, "diff-tree", "--root", "--no-commit-id", "--name-only", "-r", sha)
+    touched_paths = sorted({path for path in touched.split("\n") if path.strip()})
     return {
         "schema": "git-commit-projection.v1",
         "sha": sha,
