@@ -195,7 +195,9 @@ def test_acp_page_is_a_read_only_master_detail_conversation_reader():
     assert "copy.textContent = body" in html
     assert "transcript.setAttribute('aria-live', 'polite')" not in html
     assert 'id="conversation-load-status" role="status" aria-live="polite"' in html
-    assert "document.getElementById('conversation-load-status').textContent" in html
+    assert "function announceConversationStatus(message)" in html
+    assert "transcriptState(message)" in html
+    assert "announceConversationStatus(message)" in html
     assert "white-space: pre-wrap" in html
     assert "Transcript is local-only. Open this page at localhost on the API host." in html
     assert "Transcript is unavailable on this local Monitor instance." in html
