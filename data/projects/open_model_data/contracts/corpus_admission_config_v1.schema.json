@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/corpus_admission_config_v1.schema.json",
+  "title": "Ukrainian Data Foundry corpus admission configuration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "admission_id", "profile_config", "evidence_packet", "families"],
+  "properties": {
+    "schema_version": {"const": "corpus_admission_config_v1"},
+    "admission_id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$"},
+    "profile_config": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"},
+    "evidence_packet": {"type": ["string", "null"], "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"},
+    "families": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["source_family", "source_group_column", "work_group_column", "attributes", "evidence", "proposed_destination", "source_record"],
+        "properties": {
+          "source_family": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$"},
+          "source_group_column": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+          "work_group_column": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+          "attributes": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": false, "properties": {"column": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}, "constant": {"type": "string", "minLength": 1}}, "oneOf": [{"required": ["column"]}, {"required": ["constant"]}]}},
+          "evidence": {"type": "object", "additionalProperties": {"enum": ["complete", "partial", "missing", "not_reconstructed", "not_checked", "unknown", "not_applicable"]}},
+          "proposed_destination": {"type": ["string", "null"]},
+          "source_record": {
+            "type": ["object", "null"],
+            "additionalProperties": false,
+            "required": ["evidence_source_id", "title_column", "url_column", "retrieved_at_column"],
+            "properties": {
+              "evidence_source_id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$"},
+              "title_column": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+              "url_column": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+              "retrieved_at_column": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}
+            }
+          }
+        }
+      }
+    }
+  }
+}

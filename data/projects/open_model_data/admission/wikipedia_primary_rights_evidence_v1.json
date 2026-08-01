@@ -1,0 +1,187 @@
+{
+  "schema_version": "corpus_admission_evidence_v1",
+  "evidence_packet_id": "evidence.wikipedia_primary_rights_v1",
+  "retrieved_on": "2026-08-01",
+  "sources": [
+    {
+      "source_record_evidence_id": "source.wikipedia_article_captures_v1",
+      "source_family": "wikipedia",
+      "snapshot": {
+        "kind": "article_level_captured_snapshot",
+        "rows": 1029,
+        "lexical_words": 2865506,
+        "capture_timestamps": 183,
+        "first_retrieved_at": "2026-04-11T00:59:17.337039+00:00",
+        "last_retrieved_at": "2026-07-07T13:47:23.791310+00:00",
+        "content_hash_scope": "SHA-256 of the exact UTF-8 bytes of wikipedia.text as stored in data/sources.db",
+        "revision_id_required_by_contract": false
+      },
+      "acquisition": {
+        "method": "scripts/wiki/fetch_wikipedia.py Ukrainian MediaWiki API plaintext extract capture into the wikipedia SQLite table",
+        "api_endpoint": "https://uk.wikipedia.org/w/api.php",
+        "api_parameters": {
+          "action": "query",
+          "exlimit": "1",
+          "explaintext": "1",
+          "format": "json",
+          "prop": "extracts",
+          "titles": "per requested article title"
+        },
+        "code_cohorts": [
+          {
+            "evidence_id": "code.wikipedia_fetch_a902d06698e",
+            "rows": 165,
+            "first_retrieved_at": "2026-04-11T00:59:17.337039+00:00",
+            "last_retrieved_at": "2026-04-11T01:07:22.113262+00:00",
+            "commit": "a902d06698e113a065e09e93a12c9a0d8e2ca26a",
+            "git_blob_oid": "f18a6beec8b52d714d31b1136a56bfbc974be819",
+            "sha256": "68a6048dae85dbf9df13b4f25698a0731399a6e0b79238db89fcd58fc7762e86",
+            "url": "https://raw.githubusercontent.com/learn-ukrainian/learn-ukrainian.github.io/a902d06698e113a065e09e93a12c9a0d8e2ca26a/scripts/wiki/fetch_wikipedia.py"
+          },
+          {
+            "evidence_id": "code.wikipedia_fetch_79291ce6d8e",
+            "rows": 861,
+            "first_retrieved_at": "2026-04-11T01:21:06.374894+00:00",
+            "last_retrieved_at": "2026-04-11T02:03:57.297353+00:00",
+            "commit": "79291ce6d8ea83eee4b6a05deefbdf5afa9ebd88",
+            "git_blob_oid": "c8b0b2aade612f3ac860eef8c2afc20395c254d0",
+            "sha256": "645497c74852b26723f2fca33e3ed4952651aab4345190c30fad554cd3b791f4",
+            "url": "https://raw.githubusercontent.com/learn-ukrainian/learn-ukrainian.github.io/79291ce6d8ea83eee4b6a05deefbdf5afa9ebd88/scripts/wiki/fetch_wikipedia.py"
+          },
+          {
+            "evidence_id": "code.wikipedia_fetch_b92d82b434c",
+            "rows": 3,
+            "first_retrieved_at": "2026-07-07T13:47:13.159061+00:00",
+            "last_retrieved_at": "2026-07-07T13:47:23.791310+00:00",
+            "commit": "b92d82b434cc001e41e888daa8013ea2e3aa9958",
+            "git_blob_oid": "a256528fb4b4ab333bb0198979ea208a77ca7f42",
+            "sha256": "10fca065b79d9cf347c8192b331c5f97b21b7c408d6d77a2a832ab03fcf0bebf",
+            "url": "https://raw.githubusercontent.com/learn-ukrainian/learn-ukrainian.github.io/b92d82b434cc001e41e888daa8013ea2e3aa9958/scripts/wiki/fetch_wikipedia.py"
+          }
+        ]
+      },
+      "bibliographic": {
+        "editor": "Wikipedia contributors",
+        "publisher": "Ukrainian Wikipedia community, hosted by the Wikimedia Foundation",
+        "translation_origin": "unknown"
+      },
+      "description": {
+        "author": "Wikipedia contributors",
+        "genre": "encyclopedia",
+        "period": "modern",
+        "region": "unknown",
+        "register": "reference"
+      },
+      "rights": {
+        "status": "granted",
+        "jurisdiction": "CC BY-SA 4.0 International; Wikimedia Terms of Use governed as stated in those terms",
+        "license_expression": "CC-BY-SA-4.0",
+        "license_terms_evidence_id": "rights.cc_by_sa_4.0_legalcode",
+        "evidence_ids": [
+          "rights.cc_by_sa_3.0_deed",
+          "rights.cc_by_sa_3.0_legalcode",
+          "rights.cc_by_sa_4.0_deed",
+          "rights.cc_by_sa_4.0_legalcode",
+          "rights.ukwiki_copyright_47661434",
+          "rights.wikimedia_terms_554852"
+        ],
+        "legal_conclusion": "not_asserted",
+        "operational_permission": "The primary terms grant reproduction, sharing, and adaptation for any purpose, including commercial purposes, subject to attribution, share-alike, modification notice, license notice, and no-additional-restrictions conditions; this supports only a proposed local input view for open-weight Ukrainian continued pretraining.",
+        "obligations": [
+          "Retain each article title and canonical Ukrainian Wikipedia URL so the page history can supply contributor attribution.",
+          "Credit Wikipedia contributors and identify Ukrainian Wikipedia; include the CC BY-SA 4.0 license link and applicable disclaimer notices.",
+          "Mark extraction, normalization, filtering, or other modifications and retain indications of prior modifications where supplied.",
+          "If adapted material is shared, apply CC BY-SA 4.0 or a permitted compatible license and do not impose additional legal or technological restrictions.",
+          "Preserve any visible additional attribution or imported-source requirement discovered at the separately controlled export or publication gate.",
+          "Keep the source-record manifest and exact content hashes with every downstream view; operator acceptance does not itself authorize export, training, model release, or dataset publication."
+        ],
+        "material_ambiguities": [
+          "The Ukrainian Wikipedia local copyright policy revision still describes CC BY-SA 3.0 while the governing Wikimedia Terms identify CC BY-SA 4.0; title-level attribution is retained to satisfy the older notice as well.",
+          "Wikimedia warns that imported text can carry additional attribution requirements and that fair-use or similar exceptions can apply; this aggregate pass did not refetch article histories, talk pages, or banners, so those checks remain mandatory before redistribution or publication.",
+          "CC BY-SA grants only copyright and similar rights the licensor has authority to grant; privacy, publicity, moral, trademark, and other rights are not certified here.",
+          "The historical API request did not record MediaWiki revision IDs; the captured bytes are instead bound by article URL, UTC retrieval timestamp, exact content SHA-256, and acquisition-code cohort."
+        ]
+      },
+      "evidence": [
+        {
+          "evidence_id": "rights.ukwiki_copyright_47661434",
+          "citation": "Ukrainian Wikipedia copyright and attribution policy, revision 47661434",
+          "canonical_url": "https://uk.wikipedia.org/wiki/%D0%92%D1%96%D0%BA%D1%96%D0%BF%D0%B5%D0%B4%D1%96%D1%8F:%D0%90%D0%B2%D1%82%D0%BE%D1%80%D1%81%D1%8C%D0%BA%D1%96_%D0%BF%D1%80%D0%B0%D0%B2%D0%B0",
+          "receipt_url": "https://uk.wikipedia.org/w/index.php?title=%D0%92%D1%96%D0%BA%D1%96%D0%BF%D0%B5%D0%B4%D1%96%D1%8F%3A%D0%90%D0%B2%D1%82%D0%BE%D1%80%D1%81%D1%8C%D0%BA%D1%96_%D0%BF%D1%80%D0%B0%D0%B2%D0%B0&oldid=47661434&action=raw",
+          "retrieved_on": "2026-08-01",
+          "sha256": "39a3ba4f3b106b1a03d4000fc77190e1eeaca5cb64044222c1294c049dbe7b70"
+        },
+        {
+          "evidence_id": "rights.wikimedia_terms_554852",
+          "citation": "Wikimedia Foundation Terms of Use, English controlling version, revision 554852",
+          "canonical_url": "https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use/en",
+          "receipt_url": "https://foundation.wikimedia.org/w/index.php?title=Policy%3ATerms_of_Use%2Fen&oldid=554852&action=raw",
+          "retrieved_on": "2026-08-01",
+          "sha256": "bbb5ebfb89700c0e4732109cddbd45e6d8d2ba5dc339b206c7c5089ec4a4812b"
+        },
+        {
+          "evidence_id": "rights.cc_by_sa_4.0_deed",
+          "citation": "Creative Commons Attribution-ShareAlike 4.0 International deed",
+          "canonical_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "receipt_url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+          "retrieved_on": "2026-08-01",
+          "sha256": "17de6b7071e8f4816b103fb45aff75f71c94821f303534fc3e21cb68bd0f7148"
+        },
+        {
+          "evidence_id": "rights.cc_by_sa_4.0_legalcode",
+          "citation": "Creative Commons Attribution-ShareAlike 4.0 International legal code, plain text",
+          "canonical_url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode",
+          "receipt_url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode.txt",
+          "retrieved_on": "2026-08-01",
+          "sha256": "28a9529c7d0bb4dc51f4bf5c116a3d16ef247a052f7591466768ddf563fd1cf5"
+        },
+        {
+          "evidence_id": "rights.cc_by_sa_3.0_deed",
+          "citation": "Creative Commons Attribution-ShareAlike 3.0 Unported deed cited by the Ukrainian Wikipedia local policy",
+          "canonical_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+          "receipt_url": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+          "retrieved_on": "2026-08-01",
+          "sha256": "5d66bca8d914a4e7ce5ac18292ec69abc018f911578f685b7d86dac27607f535"
+        },
+        {
+          "evidence_id": "rights.cc_by_sa_3.0_legalcode",
+          "citation": "Creative Commons Attribution-ShareAlike 3.0 Unported legal code cited by the Ukrainian Wikipedia local policy",
+          "canonical_url": "https://creativecommons.org/licenses/by-sa/3.0/legalcode",
+          "receipt_url": "https://creativecommons.org/licenses/by-sa/3.0/legalcode",
+          "retrieved_on": "2026-08-01",
+          "sha256": "7e09ceffbcaa8dab3e66625f6264a7274912be272fc80e9cd94a29f94090b00c"
+        },
+        {
+          "evidence_id": "code.wikipedia_fetch_a902d06698e",
+          "citation": "Initial Wikipedia acquisition and SQLite storage implementation",
+          "canonical_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/blob/a902d06698e113a065e09e93a12c9a0d8e2ca26a/scripts/wiki/fetch_wikipedia.py",
+          "receipt_url": "https://raw.githubusercontent.com/learn-ukrainian/learn-ukrainian.github.io/a902d06698e113a065e09e93a12c9a0d8e2ca26a/scripts/wiki/fetch_wikipedia.py",
+          "retrieved_on": "2026-08-01",
+          "sha256": "68a6048dae85dbf9df13b4f25698a0731399a6e0b79238db89fcd58fc7762e86"
+        },
+        {
+          "evidence_id": "code.wikipedia_fetch_79291ce6d8e",
+          "citation": "Wikipedia acquisition implementation with paced API wrapper and unchanged extract/storage semantics",
+          "canonical_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/blob/79291ce6d8ea83eee4b6a05deefbdf5afa9ebd88/scripts/wiki/fetch_wikipedia.py",
+          "receipt_url": "https://raw.githubusercontent.com/learn-ukrainian/learn-ukrainian.github.io/79291ce6d8ea83eee4b6a05deefbdf5afa9ebd88/scripts/wiki/fetch_wikipedia.py",
+          "retrieved_on": "2026-08-01",
+          "sha256": "645497c74852b26723f2fca33e3ed4952651aab4345190c30fad554cd3b791f4"
+        },
+        {
+          "evidence_id": "code.wikipedia_fetch_b92d82b434c",
+          "citation": "Wikipedia acquisition implementation current for the July capture cohort",
+          "canonical_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/blob/b92d82b434cc001e41e888daa8013ea2e3aa9958/scripts/wiki/fetch_wikipedia.py",
+          "receipt_url": "https://raw.githubusercontent.com/learn-ukrainian/learn-ukrainian.github.io/b92d82b434cc001e41e888daa8013ea2e3aa9958/scripts/wiki/fetch_wikipedia.py",
+          "retrieved_on": "2026-08-01",
+          "sha256": "10fca065b79d9cf347c8192b331c5f97b21b7c408d6d77a2a832ab03fcf0bebf"
+        }
+      ],
+      "review": {
+        "reviewer_id": "advisor.sol_6166",
+        "qualification": "Designated Sol advisor operational provenance and license review; not legal advice",
+        "confidence": "medium",
+        "unresolved": false
+      }
+    }
+  ]
+}
