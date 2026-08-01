@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_campaign_receipt_v1.schema.json",
+  "title": "Language-contact campaign stop-evaluation receipt v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "plan_sha256", "frame_sha256", "waves", "production_wave_count", "accumulated_per_stratum", "stop_evaluation", "claims"],
+  "properties": {
+    "schema_version": {"const": "language_contact_campaign_receipt_v1"}, "plan_sha256": {"$ref": "#/$defs/sha256"}, "frame_sha256": {"$ref": "#/$defs/sha256"},
+    "waves": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/wave"}}, "production_wave_count": {"type": "integer", "minimum": 0},
+    "accumulated_per_stratum": {"type": "object", "minProperties": 10, "maxProperties": 10, "additionalProperties": {"$ref": "#/$defs/accumulated"}, "propertyNames": {"enum": ["modern_interference", "valid_word_contact", "false_positive_rescue", "historical", "regional_or_dialectal_candidate", "conversational_or_marked", "quoted_or_multilingual", "uncertain", "technical_or_ocr", "proper_name"]}},
+    "stop_evaluation": {"type": "object", "additionalProperties": false, "required": ["calibration_only", "category_coverage_met", "interval_width_met", "consecutive_stability_met", "learning_curve_met", "unresolved_conflicts", "stop_eligible", "reasons"], "properties": {"calibration_only": {"type": "boolean"}, "category_coverage_met": {"type": "boolean"}, "interval_width_met": {"type": "boolean"}, "consecutive_stability_met": {"type": "boolean"}, "learning_curve_met": {"type": "boolean"}, "unresolved_conflicts": {"type": "integer", "minimum": 0}, "stop_eligible": {"type": "boolean"}, "reasons": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}}},
+    "claims": {"type": "object", "additionalProperties": false, "required": ["campaign_complete", "gold_frozen", "training_performed", "publication_performed"], "properties": {"campaign_complete": {"type": "boolean"}, "gold_frozen": {"const": false}, "training_performed": {"const": false}, "publication_performed": {"const": false}}}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "artifact": {"type": "object", "additionalProperties": false, "required": ["records", "sha256"], "properties": {"records": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha256"}}},
+    "wave": {"type": "object", "additionalProperties": false, "required": ["stage", "wave_number", "wave_receipt", "summary"], "properties": {"stage": {"enum": ["calibration", "production"]}, "wave_number": {"type": "integer", "minimum": 1}, "wave_receipt": {"$ref": "#/$defs/artifact"}, "summary": {"$ref": "#/$defs/artifact"}}},
+    "accumulated": {"type": "object", "additionalProperties": false, "required": ["reviewed", "adjudicative_core_agreements", "conflicts", "corrections"], "properties": {"reviewed": {"type": "integer", "minimum": 0}, "adjudicative_core_agreements": {"type": "integer", "minimum": 0}, "conflicts": {"type": "integer", "minimum": 0}, "corrections": {"type": "integer", "minimum": 0}}}
+  }
+}

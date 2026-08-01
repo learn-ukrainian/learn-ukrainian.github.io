@@ -730,6 +730,35 @@ def test_two_humans_and_distinct_third_reviewer_are_enforced(evaluation_registry
         )
 
 
+def test_first_pass_core_agreement_merges_independent_evidence(evaluation_registry) -> None:
+    candidate = _candidate(
+        evaluation_registry,
+        candidate_id="candidate-core-agreement",
+        text="Це нормативний український вислів.",
+        span_text="український вислів",
+    )
+    projection = _projection(
+        decision="acceptable_as_is",
+        language="ukrainian",
+        representation="standard_orthography",
+        role="narration",
+    )
+    decision = _decision(candidate, projection)
+    decision["first_pass_reviews"][1]["projection"]["rationale"] = "Інше незалежне пояснення."
+    decision["first_pass_reviews"][1]["projection"]["uncertainty"] = ["інша примітка"]
+    decision["final"] = factory.merge_first_pass_agreement(decision["first_pass_reviews"])
+    _, validator = _validators()
+    factory.validate_decision(
+        decision,
+        candidate,
+        validator=validator,
+        allow_test_fixtures=True,
+    )
+    assert decision["final_resolution"]["kind"] == "first_pass_agreement"
+    assert decision["final"]["uncertainty"] == ["fixture_review_not_real_gold", "інша примітка"]
+    assert "Первинний рецензент B:" in decision["final"]["rationale"]
+
+
 def test_adjudication_rejects_reordered_or_mismatched_decisions(evaluation_registry, tmp_path: Path) -> None:
     candidates = [
         _candidate(

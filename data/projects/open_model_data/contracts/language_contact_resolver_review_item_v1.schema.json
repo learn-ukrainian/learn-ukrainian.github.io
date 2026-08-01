@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_resolver_review_item_v1.schema.json",
+  "title": "Language-contact conflict resolver item v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "packet_id", "item_id", "candidate_id", "order", "candidate_sha256", "source", "blind_context", "evidence_references", "review_form_seed", "hidden_authority", "first_pass_projections"],
+  "properties": {
+    "schema_version": {"const": "language_contact_resolver_review_item_v1"}, "packet_id": {"$ref": "#/$defs/id"}, "item_id": {"$ref": "#/$defs/id"}, "candidate_id": {"type": "string", "pattern": "^lcc\\.[a-f0-9]{64}$"}, "order": {"type": "integer", "minimum": 1}, "candidate_sha256": {"$ref": "#/$defs/sha256"},
+    "source": {"type": "object"}, "blind_context": {"type": "object"}, "evidence_references": {"type": "array"}, "review_form_seed": {"type": "object"}, "hidden_authority": {"type": "object"},
+    "first_pass_projections": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "object", "additionalProperties": false, "required": ["reviewer_slot", "projection"], "properties": {"reviewer_slot": {"enum": ["a", "b"]}, "projection": {"type": "object"}}}}
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$"}}
+}

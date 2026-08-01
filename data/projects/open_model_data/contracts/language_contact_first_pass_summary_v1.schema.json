@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_first_pass_summary_v1.schema.json",
+  "title": "Language-contact first-pass measurement summary v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "stage", "wave_number", "plan_sha256", "frame_sha256", "wave_receipt_sha256", "reviewer_ids", "inputs", "decisions", "overall", "per_stratum", "decision_counts", "first_pass_review_completed", "all_conflicts_resolved"],
+  "properties": {
+    "schema_version": {"const": "language_contact_first_pass_summary_v1"}, "stage": {"enum": ["calibration", "production"]}, "wave_number": {"type": "integer", "minimum": 1}, "plan_sha256": {"$ref": "#/$defs/sha256"}, "frame_sha256": {"$ref": "#/$defs/sha256"}, "wave_receipt_sha256": {"$ref": "#/$defs/sha256"},
+    "reviewer_ids": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "inputs": {"type": "object", "additionalProperties": false, "required": ["responses_a", "responses_b"], "properties": {"responses_a": {"$ref": "#/$defs/artifact"}, "responses_b": {"$ref": "#/$defs/artifact"}}},
+    "decisions": {"$ref": "#/$defs/artifact"}, "overall": {"$ref": "#/$defs/metrics"},
+    "per_stratum": {"type": "object", "minProperties": 10, "maxProperties": 10, "additionalProperties": {"$ref": "#/$defs/metrics"}, "propertyNames": {"enum": ["modern_interference", "valid_word_contact", "false_positive_rescue", "historical", "regional_or_dialectal_candidate", "conversational_or_marked", "quoted_or_multilingual", "uncertain", "technical_or_ocr", "proper_name"]}},
+    "decision_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "first_pass_review_completed": {"const": true}, "all_conflicts_resolved": {"type": "boolean"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$"},
+    "artifact": {"type": "object", "additionalProperties": false, "required": ["records", "sha256"], "properties": {"records": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha256"}}},
+    "interval": {"type": "object", "additionalProperties": false, "required": ["method", "confidence_level", "lower", "upper"], "properties": {"method": {"const": "wilson"}, "confidence_level": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}, "lower": {"type": "number", "minimum": 0, "maximum": 1}, "upper": {"type": "number", "minimum": 0, "maximum": 1}}},
+    "rate": {"type": "object", "additionalProperties": false, "required": ["numerator", "denominator", "value", "interval"], "properties": {"numerator": {"type": "integer", "minimum": 0}, "denominator": {"type": "integer", "minimum": 0}, "value": {"type": ["number", "null"], "minimum": 0, "maximum": 1}, "interval": {"anyOf": [{"$ref": "#/$defs/interval"}, {"type": "null"}]}}},
+    "metrics": {"type": "object", "additionalProperties": false, "required": ["reviewed", "adjudicative_core_agreement", "decision_agreement", "conflict_rate", "correction_yield_rate"], "properties": {"reviewed": {"type": "integer", "minimum": 0}, "adjudicative_core_agreement": {"$ref": "#/$defs/rate"}, "decision_agreement": {"$ref": "#/$defs/rate"}, "conflict_rate": {"$ref": "#/$defs/rate"}, "correction_yield_rate": {"$ref": "#/$defs/rate"}}}
+  }
+}
