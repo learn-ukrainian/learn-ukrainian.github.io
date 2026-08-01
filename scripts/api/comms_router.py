@@ -48,7 +48,7 @@ from scripts.fleet_comms.efficiency_metrics import (
     collect_delivery_backlog,
     collect_efficiency_metrics,
 )
-from scripts.fleet_comms.message_plane import read_plane_status
+from scripts.fleet_comms.message_plane import read_plane_status, resolve_plane_mode
 from scripts.fleet_comms.migrations import apply_migrations
 
 from .config import CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
@@ -122,15 +122,6 @@ def _get_db() -> sqlite3.Connection | None:
     return conn
 
 
-def _get_rw_db() -> sqlite3.Connection | None:
-    """Get read-write broker DB connection."""
-    if not MESSAGE_DB.exists():
-        return None
-    conn = connect_sqlite(str(MESSAGE_DB))
-    _tune_db_connection(conn, writable=True)
-    return conn
-
-
 def _table_exists(conn: sqlite3.Connection, table: str) -> bool:
     row = conn.execute(
         "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
@@ -173,7 +164,7 @@ def _maybe_run_delivery_expiry_sweep() -> None:
     router's DB happens to resemble (e.g. an older/synthetic fixture) is
     not — it must look exactly like a current, real broker DB first.
     """
-    if not MESSAGE_DB.exists():
+    if resolve_plane_mode(None) == "authority" or not MESSAGE_DB.exists():
         return
     if cache_get("bridge_expire_sweep", ttl=_EXPIRE_SWEEP_INTERVAL_S) is not None:
         return
@@ -1251,54 +1242,22 @@ async def live_activity(
 
 @router.post("/cleanup")
 async def cleanup_zombies(max_age_hours: float = Query(24.0)):
-    """Force-ack stale messages and clean orphan PIDs."""
-    cleaned = 0
-
-    # 1. Force-ack old unacked messages
-    conn = _get_rw_db()
-    if conn:
-        cursor = conn.execute("SELECT id, timestamp FROM messages WHERE acknowledged = 0")
-        now = datetime.now(UTC)
-        for row in cursor.fetchall():
-            try:
-                ts = datetime.fromisoformat(row["timestamp"].replace("Z", "+00:00"))
-                age_h = (now - ts).total_seconds() / 3600
-                if age_h > max_age_hours:
-                    conn.execute("UPDATE messages SET acknowledged = 1 WHERE id = ?", (row["id"],))
-                    cleaned += 1
-            except (ValueError, TypeError):
-                pass
-        conn.commit()
-        conn.close()
-
-    # 2. Clean orphan PIDs
-    if PID_DIR.exists():
-        for pf in PID_DIR.glob("*.json"):
-            try:
-                data = json.loads(pf.read_text())
-                pid = data.get("pid", 0)
-                os.kill(pid, 0)
-            except (ProcessLookupError, PermissionError):
-                pf.unlink(missing_ok=True)
-                cleaned += 1
-            except Exception:
-                pf.unlink(missing_ok=True)
-                cleaned += 1
-
-    return {"cleaned": cleaned}
+    """Retired legacy mutation endpoint."""
+    _ = max_age_hours
+    return JSONResponse(
+        status_code=410,
+        content={"error": "legacy comms writes retired; use fleet-comms authority tooling"},
+    )
 
 
 @router.post("/acknowledge/{message_id}")
 async def acknowledge_message(message_id: int):
-    """Acknowledge a single message."""
-    conn = _get_rw_db()
-    if not conn:
-        return JSONResponse(status_code=500, content={"error": "DB not available"})
-
-    conn.execute("UPDATE messages SET acknowledged = 1 WHERE id = ?", (message_id,))
-    conn.commit()
-    conn.close()
-    return {"acknowledged": message_id}
+    """Retired legacy mutation endpoint."""
+    _ = message_id
+    return JSONResponse(
+        status_code=410,
+        content={"error": "legacy acknowledge retired; use fleet-comms delivery receipts"},
+    )
 
 
 class SendMessageRequest(BaseModel):
@@ -1311,72 +1270,20 @@ class SendMessageRequest(BaseModel):
 
 @router.post("/send", deprecated=True)
 async def send_message(msg: SendMessageRequest):
-    """**Deprecated (#1190 B.5).** Send a raw broker message.
-
-    Use POST /api/comms/channels/{name}/post for channel-based
-    conversations. This endpoint stays live because the legacy
-    comms.html compose form still hits it, but nothing new should
-    grow on top of it.
-    """
-    conn = _get_rw_db()
-    if not conn:
-        return JSONResponse(status_code=500, content={"error": "DB not available"})
-
-    now = datetime.now(UTC).isoformat()
-    cursor = conn.execute(
-        "INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, timestamp, acknowledged) "
-        "VALUES (?, ?, ?, ?, ?, ?, 0)",
-        (msg.task_id or None, msg.from_llm, msg.to_llm, msg.message_type, msg.content, now),
+    """Retired raw broker mutation endpoint."""
+    _ = msg
+    return JSONResponse(
+        status_code=410,
+        content={"error": "legacy send retired; use fleet-comms authority"},
     )
-    conn.commit()
-    msg_id = cursor.lastrowid
-    conn.close()
-    return {"id": msg_id, "sent": True}
 
 
 # ══════════════════════════════════════════════════════════════════
-# Channel bridge endpoints (#1190 Phase B.3)
+# Legacy channel read projections (#1190 Phase B.3)
 # ══════════════════════════════════════════════════════════════════
 #
-# These endpoints expose the channel bridge to the web dashboard
-# (dashboards/channels.html). They reuse the same broker DB as the
-# legacy /api/comms/messages* endpoints but operate on the new
-# `channels`, `channel_messages`, `deliveries` tables.
-#
-# Security model: the FastAPI server is bound to 0.0.0.0 by default,
-# so we can't rely on binding alone. The POST endpoint enforces a
-# per-request client-host check (`_require_localhost`) that rejects
-# anything other than loopback. GET endpoints are read-only snapshots
-# of data that is already stored locally and are not gated.
-# Agents do NOT post via this API; only the human user (via the
-# browser or curl from the same machine). Agents use the CLI
-# (`ab p`, `ab post`, `ab discuss`) which has its own subprocess-
-# level invocation path.
-
-
-_LOCALHOST_HOSTS = {"127.0.0.1", "::1", "localhost"}
-
-
-def _require_localhost(request: Request) -> JSONResponse | None:
-    """Return a 403 JSONResponse if the request is not from loopback.
-
-    Returns None when the caller is local — the handler should proceed
-    normally. The check uses `request.client.host`, which FastAPI
-    populates from the accepted TCP socket, not from any client-
-    controllable header. X-Forwarded-For is deliberately ignored
-    because there is no trusted proxy in this deployment.
-    """
-    client = request.client
-    host = client.host if client else None
-    if host not in _LOCALHOST_HOSTS:
-        return JSONResponse(
-            status_code=403,
-            content={
-                "error": "channel POST endpoint is localhost-only",
-                "client_host": host,
-            },
-        )
-    return None
+# GET routes remain read-only compatibility evidence through soak. The old
+# POST route is a permanent 410; authority writes enter through fleet-comms.
 
 
 class ChannelPostRequest(BaseModel):
@@ -1658,56 +1565,12 @@ async def channel_deliveries(
 
 @router.post("/channels/{name}/post")
 async def post_to_channel(name: str, req: ChannelPostRequest, request: Request):
-    """Post a message to a channel (human-user only, localhost-gated).
-
-    Agents NEVER post via this endpoint — they use the CLI subprocess
-    path. This endpoint exists for (1) dashboard post forms, (2) future
-    click-to-ask affordances from other dashboards, (3) scripts that
-    want to drop messages without spawning a full CLI process.
-
-    The localhost gate rejects any client whose socket address isn't
-    127.0.0.1 / ::1. Since the API server binds to 0.0.0.0, this
-    per-request check is the only thing keeping LAN peers out.
-    """
-    gate = _require_localhost(request)
-    if gate is not None:
-        return gate
-    try:
-        # Import inside handler so the bridge package isn't a hard
-        # dependency for the rest of the API server startup.
-        from ai_agent_bridge import _channels as _ch  # noqa: PLC0415 — optional broker bridge
-    except ImportError:
-        return JSONResponse(
-            status_code=500,
-            content={"error": "ai_agent_bridge not importable"},
-        )
-
-    try:
-        result = _ch.post(
-            name,
-            req.from_agent,
-            req.body,
-            to_agents=req.to_agents,
-            parent_id=req.parent_id,
-            correlation_id=req.correlation_id,
-            auto_snapshot=req.auto_snapshot,
-        )
-    except ValueError as exc:
-        error_id = uuid.uuid4().hex
-        logger.warning(f"Validation error in channel post [{error_id}]: {exc}", exc_info=True)
-        return JSONResponse(status_code=400, content={"error": "invalid request", "error_id": error_id})
-    except Exception:
-        return JSONResponse(status_code=500, content={"error": "post failed"})
-
-    return {
-        "message_id": result["message_id"],
-        "thread_id": result["thread_id"],
-        "round_index": result["round_index"],
-        "delivery_ids": result["delivery_ids"],
-        "created_at": result["created_at"],
-        "posted": True,
-    }
-
+    """Retired browser channel mutation endpoint."""
+    _ = (name, req, request)
+    return JSONResponse(
+        status_code=410,
+        content={"error": "browser channel writes retired; /fleet.html is read-only"},
+    )
 
 @router.get("/by-module/{track}/{slug}")
 async def messages_by_module(track: str, slug: str, limit: int = 30):
