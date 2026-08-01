@@ -1228,8 +1228,24 @@ def fleet_discussion_detail(
     with _read_connection() as (connection, _availability):
         if connection is None or not _table_exists(connection, "conversations"):
             raise HTTPException(status_code=404, detail="Discussion not found")
+        message_summary = (
+            "(SELECT COUNT(*) FROM comms_messages AS summary_message "
+            "WHERE summary_message.conversation_id = conversation.conversation_id) AS message_count, "
+            "(SELECT MAX(summary_message.created_at) FROM comms_messages AS summary_message "
+            "WHERE summary_message.conversation_id = conversation.conversation_id) AS latest_message_at"
+            if _table_exists(connection, "comms_messages")
+            else "0 AS message_count, NULL AS latest_message_at"
+        )
+        rounds_summary = (
+            "(SELECT MAX(summary_acp.rounds_requested) FROM acp_conversations AS summary_acp "
+            "WHERE summary_acp.conversation_id = conversation.conversation_id) AS rounds_requested"
+            if _table_exists(connection, "acp_conversations")
+            else "NULL AS rounds_requested"
+        )
         row = connection.execute(
-            "SELECT conversation_id, source, title, created_at FROM conversations WHERE conversation_id = ?",
+            "SELECT conversation.conversation_id, conversation.source, conversation.title, "
+            f"conversation.created_at, {message_summary}, {rounds_summary} "
+            "FROM conversations AS conversation WHERE conversation.conversation_id = ?",
             (conversation_id,),
         ).fetchone()
         if row is None:

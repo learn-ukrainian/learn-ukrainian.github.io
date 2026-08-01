@@ -307,6 +307,8 @@ def test_discussion_review_and_dead_letter_metadata_stay_read_only(
     assert discussion_detail.status_code == 200
     assert discussion_detail.headers["cache-control"] == "no-store"
     assert discussion_detail.json()["body_policy"].startswith("redacted_inline")
+    assert discussion_detail.json()["discussion"]["message_count"] == 2
+    assert discussion_detail.json()["discussion"]["latest_message_at"] == "2026-08-01T12:02:00Z"
     assert len(discussion_detail.json()["messages"]["messages"]) == 2
 
     reviews = client.get(
