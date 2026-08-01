@@ -142,6 +142,95 @@ def test_local_practice_seed_requires_explicit_opt_in_and_never_creates_a_cloze_
     assert "practice_example" not in merged[0]
 
 
+def test_local_practice_seed_merges_public_route_soft_cefr_without_atlas_enrichment(
+    tmp_path: Path,
+) -> None:
+    """End-to-end: soft-admitted public-route teacher row must merge, not crash."""
+    seed_path = tmp_path / "local-public-soft-cefr.json"
+    seed_path.write_text(
+        json.dumps(
+            {
+                "schema": "curated-v5-practice-seed-v1",
+                "localOnly": True,
+                "entries": [
+                    {
+                        "seedRow": 820,
+                        "lemma": "кліщ",
+                        "slug": "кліщ",
+                        "cefr": "B1",
+                        "cefrSource": "public_route_unleveled:кліщ:local_practice_unleveled (guidance only)",
+                        "sentenceStatus": "has_candidates",
+                        "admissionMode": "local_practice_private_teacher",
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    atlas_entries = [
+        {
+            "lemma": "кліщ",
+            "url_slug": "кліщ",
+            "gloss": "tick",
+            "enrichment": {},
+        }
+    ]
+
+    merged = merge_practice_seed_entries(
+        atlas_entries,
+        read_practice_seed(seed_path, allow_local_private=True),
+    )
+
+    assert merged[0]["url_slug"] == "кліщ"
+    assert merged[0]["cefr"] == "B1"
+    assert merged[0]["local_practice_private_teacher"] is True
+    assert merged[0]["surface_admission"]["cloze"] is False
+    assert merged[0]["surface_admission"]["practice"] is True
+    assert "practice_example" not in merged[0]
+
+
+def test_local_practice_seed_materializes_attested_no_route_row_in_memory_only(tmp_path: Path) -> None:
+    seed_path = tmp_path / "local-no-route-seed.json"
+    seed_path.write_text(
+        json.dumps(
+            {
+                "schema": "curated-v5-practice-seed-v1",
+                "localOnly": True,
+                "entries": [
+                    {
+                        "seedRow": 9,
+                        "lemma": "виходити з ладу",
+                        "gloss": "to break down",
+                        "slug": "local-teacher-9",
+                        "cefr": "A2",
+                        "sentenceStatus": "has_candidates",
+                        "admissionMode": "local_practice_private_teacher",
+                        "localOnly": True,
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    merged = merge_practice_seed_entries([], read_practice_seed(seed_path, allow_local_private=True))
+
+    assert merged == [
+        {
+            "lemma": "виходити з ладу",
+            "url_slug": "local-teacher-9",
+            "gloss": "to break down",
+            "cefr": "A2",
+            "primary_source": "private_teacher_local_only",
+            "surface_admission": {"cloze": False, "practice": True},
+            "local_practice_private_teacher": True,
+            "local_only": True,
+        }
+    ]
+
+
 def test_local_practice_seed_accepts_attested_rows_alongside_local_recognition_rows(tmp_path: Path) -> None:
     seed_path = tmp_path / "mixed-seed.json"
     seed_path.write_text(

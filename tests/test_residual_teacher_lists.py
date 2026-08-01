@@ -43,6 +43,11 @@ def _write_jsonl_file(path: Path, rows: list[dict[str, object]]) -> Path:
 
 
 def test_classify_residuals_splits_missing_route_and_no_cefr(tmp_path: Path) -> None:
+    """Private local rows with a public route but empty CEFR soft-admit (batch #6160).
+
+    Residual ``no_cefr`` only remains for non-local practice modes (see
+    ``test_classify_residuals_no_cefr_records_url_slug_from_slug_matched_route``).
+    """
     manifest = _manifest(
         tmp_path / "manifest.json",
         [
@@ -53,17 +58,25 @@ def test_classify_residuals_splits_missing_route_and_no_cefr(tmp_path: Path) -> 
     rows = [
         _seed_row(1, "Справедливий"),  # clean: route + cefr
         _seed_row(2, "Оренда"),  # no manifest entry at all
-        _seed_row(3, "Витерти"),  # route but no cefr block
+        _seed_row(3, "Витерти"),  # route but no cefr → soft local guidance
     ]
 
     result = residual.classify_residuals(rows, manifest)
 
-    assert result["missing_route"] == [{"seedRow": 2, "lemma": "оренда", "mode": "local_practice_private_teacher"}]
-    assert result["no_cefr"] == [{"seedRow": 3, "lemma": "витерти", "url_slug": "витерти"}]
+    assert result["missing_route"] == [
+        {
+            "seedRow": 2,
+            "lemma": "оренда",
+            "mode": "local_practice_private_teacher",
+            "vesumAttestation": {},
+        }
+    ]
+    assert result["no_cefr"] == []
     assert result["summary"]["counts"]["missing_route"] == 1
-    assert result["summary"]["counts"]["no_cefr"] == 1
+    assert result["summary"]["counts"]["no_cefr"] == 0
     assert result["summary"]["counts"]["input_rows"] == 3
-    assert result["summary"]["counts"]["practice_admitted_rows"] == 1
+    assert result["summary"]["counts"]["practice_admitted_rows"] == 2
+    assert result["summary"]["counts"]["local_only_covered"] == 0
     assert "other_atlas_failures" not in result["summary"]
 
 
@@ -126,10 +139,11 @@ def test_classify_residuals_buckets_non_route_failures_separately(tmp_path: Path
     ]
 
 
-def test_write_residual_reports_writes_three_files(tmp_path: Path) -> None:
+def test_write_residual_reports_writes_local_coverage_separately(tmp_path: Path) -> None:
     result = {
         "missing_route": [{"seedRow": 2, "lemma": "оренда", "mode": "local_practice_private_teacher"}],
         "no_cefr": [{"seedRow": 3, "lemma": "витерти", "url_slug": "витерти"}],
+        "local_only_covered": [{"seedRow": 2, "lemma": "оренда", "headSlug": "орендувати"}],
         "summary": {"schema": residual.SUMMARY_SCHEMA, "counts": {"missing_route": 1, "no_cefr": 1}},
     }
     output_dir = tmp_path / "residual"
@@ -140,6 +154,8 @@ def test_write_residual_reports_writes_three_files(tmp_path: Path) -> None:
     assert [json.loads(line) for line in missing_route_lines] == result["missing_route"]
     no_cefr_lines = (output_dir / "no_cefr.jsonl").read_text(encoding="utf-8").splitlines()
     assert [json.loads(line) for line in no_cefr_lines] == result["no_cefr"]
+    local_covered_lines = (output_dir / "local_only_covered.jsonl").read_text(encoding="utf-8").splitlines()
+    assert [json.loads(line) for line in local_covered_lines] == result["local_only_covered"]
     summary = json.loads((output_dir / "summary.json").read_text(encoding="utf-8"))
     assert summary == result["summary"]
 

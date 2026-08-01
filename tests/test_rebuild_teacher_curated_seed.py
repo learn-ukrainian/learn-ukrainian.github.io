@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -186,6 +187,50 @@ def test_refresh_rights_ledger_mirrors_explicit_states(tmp_path: Path) -> None:
     assert refreshed_seed[1]["admission"]["reason"] == "no_document_hit_vesum_forms"
     assert refreshed_admission[0]["practice"] is True
     assert receipt["practice_admitted"] == 1
+    assert rebuild._tree_checksums(package) == rebuild._tree_checksums(mirror)
+
+
+def test_refresh_rights_ledger_recovers_attested_vesum_rows_before_admission(tmp_path: Path) -> None:
+    package = tmp_path / "package"
+    mirror = tmp_path / "drive" / "teacher-seed"
+    package.mkdir()
+    mirror.parent.mkdir(parents=True)
+    seed_rows = [
+        {
+            "seedRow": 1,
+            "lemma": "Вибухати",
+            "sentenceStatus": "no_hit_strict_vesum",
+            "formExpansionNotes": [],
+            "provenance": {"document": "teacher.docx", "table": "Current"},
+        },
+        {"seedRow": 2, "lemma": "Нініяково", "sentenceStatus": "no_hit_strict_vesum", "formExpansionNotes": []},
+    ]
+    ledger_rows = [
+        {"seedRow": 1, "lemma": "Вибухати", "sentenceStatus": "no_hit_strict_vesum", "locator": None},
+        {"seedRow": 2, "lemma": "Нініяково", "sentenceStatus": "no_hit_strict_vesum", "locator": "teacher:2"},
+    ]
+    for name, rows in (("curated-seed.jsonl", seed_rows), ("rights-ledger.jsonl", ledger_rows)):
+        _write(package / name, "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows))
+    _write(package / "practice-admission.jsonl", "")
+    _write(package / "package-manifest.json", json.dumps({"schema": "teacher-curated-seed-recovery-v1"}))
+    _write(package / "source-recon.json", "{}")
+    shutil.copytree(package, mirror)
+
+    vesum_db = tmp_path / "vesum.db"
+    with sqlite3.connect(vesum_db) as connection:
+        connection.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, tags TEXT, pos TEXT)")
+        connection.execute("INSERT INTO forms VALUES ('вибухати', 'вибухати', 'verb:imperf', 'verb')")
+
+    receipt = rebuild.refresh_rights_ledger(package_root=package, drive_root=mirror, vesum_db=vesum_db)
+
+    refreshed = [json.loads(line) for line in (package / "curated-seed.jsonl").read_text(encoding="utf-8").splitlines()]
+    assert receipt["rows_reclassified_vesum"] == 1
+    assert refreshed[0]["sentenceStatus"] == "has_candidates"
+    assert refreshed[0]["admission"]["practice"] is True
+    assert refreshed[0]["rights"]["redistributable"] is False
+    assert refreshed[0]["vesumAttestation"]["method"] == "full_string"
+    assert refreshed[0]["formExpansionNotes"] == ["vesum_attested:full_string"]
+    assert refreshed[1]["sentenceStatus"] == "no_hit_strict_vesum"
     assert rebuild._tree_checksums(package) == rebuild._tree_checksums(mirror)
 
 

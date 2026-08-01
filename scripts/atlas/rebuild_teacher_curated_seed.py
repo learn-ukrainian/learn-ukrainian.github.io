@@ -21,6 +21,8 @@ from pathlib import Path
 
 import yaml
 
+from scripts.atlas.teacher_vesum_attest import DEFAULT_VESUM_DB, VesumAttestation, attest_lemmas
+
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_SCHEMA = "teacher-curated-seed-recovery-v1"
 EXPECTED_ORIGINAL_ROWS = 1018
@@ -34,6 +36,7 @@ PACKAGE_FILES = (
 PRIVATE_LOCAL = "private_local"
 LOCAL_PRACTICE_PRIVATE_TEACHER = "local_practice_private_teacher"
 NO_HIT_REASON = "no_document_hit_vesum_forms"
+VESUM_ATTESTATION_FIELD = "vesumAttestation"
 
 
 def _read_jsonl(path: Path) -> list[dict[str, object]]:
@@ -322,11 +325,49 @@ def _restore_tree(backup: Path, destination: Path) -> None:
         raise RuntimeError(f"rollback checksum mismatch: {destination}")
 
 
-def refresh_rights_ledger(*, package_root: Path, drive_root: Path) -> dict[str, object]:
+def _recover_vesum_status(
+    seed: Mapping[str, object],
+    *,
+    attestation: VesumAttestation | None,
+) -> tuple[dict[str, object], int]:
+    """Copy and recover one strict-VESUM false miss when explicitly enabled.
+
+    This narrow recovery never derives an example, locator, CEFR value, or
+    redistribution permission. It only changes an existing ``no_hit`` status
+    after the shared VESUM helper returns positive lexical evidence.
+    """
+    refreshed = dict(seed)
+    if attestation is None:
+        return refreshed, 0
+    refreshed[VESUM_ATTESTATION_FIELD] = attestation
+    if refreshed.get("sentenceStatus") != "no_hit_strict_vesum":
+        return refreshed, 0
+    if not attestation["attested"]:
+        return refreshed, 0
+    refreshed["sentenceStatus"] = "has_candidates"
+    raw_notes = refreshed.get("formExpansionNotes")
+    notes = [str(note) for note in raw_notes] if isinstance(raw_notes, list) else []
+    recovery_note = f"vesum_attested:{attestation['method']}"
+    if recovery_note not in notes:
+        notes.append(recovery_note)
+    refreshed["formExpansionNotes"] = notes
+    return refreshed, 1
+
+
+def refresh_rights_ledger(
+    *,
+    package_root: Path,
+    drive_root: Path,
+    vesum_db: Path | None = None,
+    attest_all: bool = False,
+) -> dict[str, object]:
     """Refresh explicit rights/admission records and mirror the whole private package.
 
     This path never derives a sentence, locator, CEFR value, or redistribution
-    permission.  It only classifies the restored strict-VESUM retrieval states.
+    permission. With an explicit VESUM path it may first recover an attested
+    strict-VESUM false miss, then applies the existing rights gate. ``attest_all``
+    additionally records lexical evidence for existing candidate rows so the
+    local no-route Practice path can remain equally fail-closed.
     """
     if not package_root.is_dir():
         raise ValueError(f"package root does not exist: {package_root}")
@@ -345,18 +386,49 @@ def refresh_rights_ledger(*, package_root: Path, drive_root: Path) -> dict[str, 
     if {row.get("seedRow") for row in seed_rows} != set(ledger_by_row):
         raise ValueError("curated seed and rights ledger seedRow values differ")
 
+    vesum_attestations: dict[object, VesumAttestation] = {}
+    if vesum_db is not None:
+        attestation_rows = (
+            seed_rows
+            if attest_all
+            else [row for row in seed_rows if row.get("sentenceStatus") == "no_hit_strict_vesum"]
+        )
+        attestations = attest_lemmas(
+            [str(row.get("lemma") or "") for row in attestation_rows],
+            vesum_db=vesum_db,
+        )
+        vesum_attestations = {
+            row.get("seedRow"): attestation
+            for row, attestation in zip(attestation_rows, attestations, strict=True)
+        }
+
     refreshed_seed: list[dict[str, object]] = []
     refreshed_ledger: list[dict[str, object]] = []
     admissions: list[dict[str, object]] = []
     for seed in seed_rows:
-        seed_row = seed.get("seedRow")
+        refreshed, _recovered = _recover_vesum_status(
+            seed,
+            attestation=vesum_attestations.get(seed.get("seedRow")),
+        )
+        seed_row = refreshed.get("seedRow")
         ledger = dict(ledger_by_row[seed_row])
-        status = str(seed.get("sentenceStatus") or "").strip()
+        status = str(refreshed.get("sentenceStatus") or "").strip()
         ledger_status = str(ledger.get("sentenceStatus") or "").strip()
-        if ledger_status != status:
+        if ledger_status != str(seed.get("sentenceStatus") or "").strip():
             raise ValueError(f"seed row {seed_row} has mismatched rights-ledger sentence status")
-        rights, admission = classify_rights_admission(status, ledger.get("locator"))
-        refreshed = dict(seed)
+        ledger["sentenceStatus"] = status
+        if VESUM_ATTESTATION_FIELD in refreshed:
+            ledger[VESUM_ATTESTATION_FIELD] = refreshed[VESUM_ATTESTATION_FIELD]
+        locator = ledger.get("locator")
+        if not _has_locator(locator):
+            # The restored table's provenance is the authoritative document
+            # locator for this private package. Historic no-hit ledger rows did
+            # not duplicate it, so recovery must use the retained source
+            # locator rather than re-quarantine an attested row.
+            locator = refreshed.get("provenance")
+            if _has_locator(locator):
+                ledger["locator"] = locator
+        rights, admission = classify_rights_admission(status, locator)
         refreshed["rights"] = rights
         refreshed["admission"] = admission
         refreshed_seed.append(refreshed)
@@ -395,6 +467,11 @@ def refresh_rights_ledger(*, package_root: Path, drive_root: Path) -> dict[str, 
             "practice_admission": len(admissions),
             "rows_no_hit": sum(row.get("sentenceStatus") == "no_hit_strict_vesum" for row in refreshed_seed),
             "rows_with_candidates": sum(row.get("sentenceStatus") == "has_candidates" for row in refreshed_seed),
+            "rows_reclassified_vesum": sum(
+                any(str(note).startswith("vesum_attested:") for note in row.get("formExpansionNotes", []))
+                for row in refreshed_seed
+                if isinstance(row.get("formExpansionNotes"), list)
+            ),
             "rights_private_local": sum(row["rights"]["status"] == PRIVATE_LOCAL for row in refreshed_seed),
             "practice_admitted": sum(row["admission"]["practice"] is True for row in refreshed_seed),
             "quarantined_missing_document_locator": admission_modes["quarantined_missing_document_locator"],
@@ -424,6 +501,7 @@ def refresh_rights_ledger(*, package_root: Path, drive_root: Path) -> dict[str, 
             "rights_statuses": dict(sorted(rights_statuses.items())),
             "admission_modes": dict(sorted(admission_modes.items())),
             "practice_admitted": manifest["row_counts"]["practice_admitted"],
+            "rows_reclassified_vesum": manifest["row_counts"]["rows_reclassified_vesum"],
         }
         _write_json(source_recon_path, source_recon)
         receipt = {
@@ -434,6 +512,7 @@ def refresh_rights_ledger(*, package_root: Path, drive_root: Path) -> dict[str, 
             "row_count": len(refreshed_seed),
             "rows_no_hit": manifest["row_counts"]["rows_no_hit"],
             "rows_with_candidates": manifest["row_counts"]["rows_with_candidates"],
+            "rows_reclassified_vesum": manifest["row_counts"]["rows_reclassified_vesum"],
             "practice_admitted": manifest["row_counts"]["practice_admitted"],
             "drive_mirror": str(drive_root),
             "package_sha256": _tree_checksums(staged_root),
@@ -530,6 +609,22 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Refresh explicit local-only rights/admission states for a restored package.",
     )
+    parser.add_argument(
+        "--reclassify-vesum-attested",
+        action="store_true",
+        help="Recover no_hit_strict_vesum rows attested by the explicit VESUM database before refreshing rights.",
+    )
+    parser.add_argument(
+        "--vesum-db",
+        type=Path,
+        default=DEFAULT_VESUM_DB,
+        help="VESUM SQLite path used only with --reclassify-vesum-attested.",
+    )
+    parser.add_argument(
+        "--attest-all",
+        action="store_true",
+        help="Also retain VESUM evidence for existing candidate rows needed by local no-route Practice admission.",
+    )
     parser.add_argument("--source-inventory-root", type=Path, default=ROOT / "data/lexicon/source-inventory")
     parser.add_argument(
         "--decision-root", type=Path, default=ROOT / "data/lexicon/source-inventory-review-decisions"
@@ -537,10 +632,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--cloze-path", type=Path, default=ROOT / "site/src/data/lexicon-teacher-cloze.json")
     parser.add_argument("--drive-source-root", type=Path)
     args = parser.parse_args(argv)
+    if args.attest_all and not args.reclassify_vesum_attested:
+        parser.error("--attest-all requires --reclassify-vesum-attested")
     if args.refresh_rights_ledger:
         if args.drive_root is None:
             parser.error("--refresh-rights-ledger requires --drive-root")
-        receipt = refresh_rights_ledger(package_root=args.package_root, drive_root=args.drive_root)
+        receipt = refresh_rights_ledger(
+            package_root=args.package_root,
+            drive_root=args.drive_root,
+            vesum_db=args.vesum_db if args.reclassify_vesum_attested else None,
+            attest_all=args.attest_all,
+        )
         print(json.dumps(receipt, ensure_ascii=False, indent=2))
         return 0
     if args.drive_source_root is None:

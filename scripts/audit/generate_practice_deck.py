@@ -3166,11 +3166,11 @@ def read_manifest(path: Path) -> list[dict[str, Any]]:
 def read_practice_seed(path: Path, *, allow_local_private: bool = False) -> list[dict[str, Any]]:
     """Read a reviewed practice admission overlay.
 
-    The source Atlas entry remains authoritative for learner-facing lexical
-    metadata.  A seed can only admit an already-public Atlas slug and attach a
-    source-backed example; it cannot create a second Atlas entry or fabricate
-    a CEFR level. A local-only seed is accepted only through the explicit
-    local-private path and permits recognition drills without an example.
+    A normal seed can only admit an already-public Atlas slug and attach a
+    source-backed example. A local-only teacher seed may instead carry an
+    attested no-route phrase with a CEFR inherited from its public head lemma;
+    it is accepted only through the explicit local-private path and permits
+    recognition drills without an example or any public export.
     """
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict) or payload.get("schema") != "curated-v5-practice-seed-v1":
@@ -3196,6 +3196,7 @@ def read_practice_seed(path: Path, *, allow_local_private: bool = False) -> list
             and row.get("sentenceStatus") == "has_candidates"
             and row.get("admissionMode") == "local_practice_private_teacher"
         )
+        is_local_no_route = is_local_recognition and row.get("localOnly") is True
         if not lemma or not slug or not cefr:
             raise ValueError(
                 f"practice seed entries[{index}] requires lemma, slug, and CEFR: {path}"
@@ -3203,6 +3204,8 @@ def read_practice_seed(path: Path, *, allow_local_private: bool = False) -> list
         if is_local_recognition:
             if example or provenance is not None:
                 raise ValueError(f"local-only practice seed entries[{index}] must not contain example or provenance: {path}")
+            if is_local_no_route and _clean_text(row.get("gloss")) is None:
+                raise ValueError(f"local-only no-route practice seed entries[{index}] requires a private gloss: {path}")
             validated.append(row)
             continue
         if not example or not isinstance(provenance, dict):
@@ -3221,7 +3224,12 @@ def merge_practice_seed_entries(
     entries: list[dict[str, Any]],
     seed_rows: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    """Explicitly admit reviewed seed rows without changing Atlas metadata."""
+    """Admit reviewed rows without allowing local teacher rows into Atlas.
+
+    Public-route rows wrap their existing Atlas entry. An explicitly marked
+    local no-route row becomes an in-memory Practice-only entry: it never
+    receives a public route, manifest write, cloze example, or export flag.
+    """
     by_slug = {
         slug: index
         for index, entry in enumerate(entries)
@@ -3233,15 +3241,50 @@ def merge_practice_seed_entries(
         slug = str(seed["slug"])
         target_index = by_slug.get(slug)
         if target_index is None:
-            raise ValueError(f"practice seed slug is not a public Atlas entry: {slug}")
+            is_local_no_route = (
+                seed.get("admissionMode") == "local_practice_private_teacher"
+                and seed.get("localOnly") is True
+            )
+            if not is_local_no_route:
+                raise ValueError(f"practice seed slug is not a public Atlas entry: {slug}")
+            if slug in applied_slugs:
+                continue
+            gloss = _clean_text(seed.get("gloss"))
+            if gloss is None:
+                raise ValueError(f"local-only no-route practice seed requires gloss: {slug}")
+            applied_slugs.add(slug)
+            merged.append(
+                {
+                    "lemma": str(seed["lemma"]),
+                    "url_slug": slug,
+                    "gloss": gloss,
+                    "cefr": seed["cefr"],
+                    "primary_source": "private_teacher_local_only",
+                    "surface_admission": {SURFACE_CLOZE: False, SURFACE_PRACTICE: True},
+                    "local_practice_private_teacher": True,
+                    "local_only": True,
+                }
+            )
+            continue
         target = merged[target_index]
         if _plain(str(target.get("lemma") or "")) != _plain(str(seed["lemma"])):
             raise ValueError(f"practice seed lemma does not match Atlas slug {slug}")
+        is_local_recognition = seed.get("admissionMode") == "local_practice_private_teacher"
+        seed_cefr = _normalize_cefr(seed.get("cefr"))
         atlas_cefr = _cefr_level(target)
-        if atlas_cefr is None:
-            raise ValueError(f"practice seed Atlas entry has no CEFR level: {slug}")
-        if atlas_cefr != _normalize_cefr(seed.get("cefr")):
-            raise ValueError(f"practice seed CEFR differs from Atlas entry for {slug}")
+        if is_local_recognition:
+            # Private teacher recognition may carry soft/head/PULS guidance when
+            # the public Atlas entry has no enrichment CEFR. Never rewrite the
+            # public manifest; only stamp the in-memory practice view.
+            if seed_cefr is None:
+                raise ValueError(f"local-practice seed requires CEFR: {slug}")
+            if atlas_cefr is not None and atlas_cefr != seed_cefr:
+                raise ValueError(f"practice seed CEFR differs from Atlas entry for {slug}")
+        else:
+            if atlas_cefr is None:
+                raise ValueError(f"practice seed Atlas entry has no CEFR level: {slug}")
+            if atlas_cefr != seed_cefr:
+                raise ValueError(f"practice seed CEFR differs from Atlas entry for {slug}")
 
         # Several source-backed seed rows may attest one canonical Atlas route.
         # Validate every row above, but do not fabricate multiple cards for one
@@ -3252,7 +3295,6 @@ def merge_practice_seed_entries(
 
         admission = target.get("surface_admission")
         merged_admission = dict(admission) if isinstance(admission, dict) else {}
-        is_local_recognition = seed.get("admissionMode") == "local_practice_private_teacher"
         merged_admission[SURFACE_CLOZE] = False if is_local_recognition else bool(merged_admission.get(SURFACE_CLOZE))
         merged_admission["practice"] = True
         merged_entry = {
@@ -3261,6 +3303,10 @@ def merge_practice_seed_entries(
         }
         if is_local_recognition:
             merged_entry["local_practice_private_teacher"] = True
+            if atlas_cefr is None:
+                merged_entry["cefr"] = seed_cefr
+                source = _clean_text(seed.get("cefrSource")) or "local_practice_unleveled"
+                merged_entry["cefr_source"] = source
         else:
             merged_entry["practice_example"] = {
                 "text": seed["example"],

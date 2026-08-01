@@ -62,7 +62,10 @@ DRIVE_RECOVERY_ROOT="/absolute/path/to/My Drive/Projects/learn-ukrainian-inciden
 Run the admission helper directly against the checksum-verified Atlas manifest
 for a dry-run report. Its `practice_skipped_not_admitted` count is distinct from
 `practice_skipped_no_cefr`: a pending rights row must never be mislabeled as a
-missing-CEFR row.
+missing-CEFR row. A VESUM-attested multiword row without a public Atlas route
+may enter private local recognition only with the existing CEFR of its public
+head lemma. It receives a `local-teacher-<seedRow>` identifier in the ignored
+local seed, never a public Atlas route, cloze example, or redistribution right.
 
 ## Run the recovery scaffold
 

@@ -6,11 +6,13 @@ pipeline-derived CEFR level — those two gates are only evaluated later, by
 ``scripts.lexicon.curated_seed_atlas_admission.prepare_practice_seed``, when
 building the actual Practice seed. This module reuses that same classifier
 (it never re-derives route/CEFR membership itself) and splits its
-``atlas_failures`` / ``practice_skipped_no_cefr`` output into two named,
+``atlas_failures`` / ``practice_skipped_no_cefr`` output into named,
 deterministic residual lists so a teacher/operator can see what is left:
 
 - rows whose lemma has no public Atlas route at all (``missing_route.jsonl``)
 - rows whose lemma has a route but no pipeline CEFR (``no_cefr.jsonl``)
+- local-only rows covered through an attested phrase head despite no public
+  phrase route (``local_only_covered.jsonl``)
 
 Inputs are the private curated-seed package (gitignored; see
 ``.claude/atlas-epic/plans/curated-seed/`` — ``curated-seed.jsonl`` +
@@ -125,16 +127,33 @@ def classify_residuals(rows: list[dict[str, Any]], manifest_path: Path) -> dict[
     normalized = normalize_rows(rows)
     _seed, report = prepare_practice_seed(normalized, manifest_path)
     admission_by_seed_row = {row.get("seedRow"): row.get("admission") or {} for row in normalized}
+    attestation_by_seed_row = {
+        row.get("seedRow"): row.get("vesumAttestation") or {} for row in normalized
+    }
 
     missing_route: list[dict[str, Any]] = []
+    local_only_covered: list[dict[str, Any]] = []
     other_atlas_failures: list[dict[str, Any]] = []
     for failure in report["atlas_failures"]:
         if failure.get("reason") == MISSING_ROUTE_REASON:
             seed_row = failure.get("seedRow")
             mode = str(admission_by_seed_row.get(seed_row, {}).get("mode") or "")
-            missing_route.append({"seedRow": seed_row, "lemma": failure.get("lemma"), "mode": mode})
+            missing_route.append(
+                {
+                    "seedRow": seed_row,
+                    "lemma": failure.get("lemma"),
+                    "mode": mode,
+                    "vesumAttestation": attestation_by_seed_row.get(seed_row, {}),
+                }
+            )
         else:
             other_atlas_failures.append(failure)
+
+    # Local-only no-route rows that practice-admitted are covered residual, not
+    # open missing_route. Only true atlas_failures remain in missing_route.
+    for row in report["local_only_missing_public_route"]:
+        if row.get("practiceAdmitted") is True:
+            local_only_covered.append(row)
 
     no_cefr: list[dict[str, Any]] = [
         {
@@ -153,17 +172,24 @@ def classify_residuals(rows: list[dict[str, Any]], manifest_path: Path) -> dict[
             **report["counts"],
             "missing_route": len(missing_route),
             "no_cefr": len(no_cefr),
+            "local_only_covered": len(local_only_covered),
             "other_atlas_failures": len(other_atlas_failures),
         },
     }
     if other_atlas_failures:
         summary["other_atlas_failures"] = other_atlas_failures
-    return {"missing_route": missing_route, "no_cefr": no_cefr, "summary": summary}
+    return {
+        "missing_route": missing_route,
+        "no_cefr": no_cefr,
+        "local_only_covered": local_only_covered,
+        "summary": summary,
+    }
 
 
 def write_residual_reports(result: dict[str, Any], output_dir: Path) -> None:
     _write_jsonl(output_dir / "missing_route.jsonl", result["missing_route"])
     _write_jsonl(output_dir / "no_cefr.jsonl", result["no_cefr"])
+    _write_jsonl(output_dir / "local_only_covered.jsonl", result.get("local_only_covered", []))
     _write_json(output_dir / "summary.json", result["summary"])
 
 
@@ -195,7 +221,8 @@ def main(argv: list[str] | None = None) -> int:
     counts = result["summary"]["counts"]
     print(
         f"input_rows={counts['input_rows']} practice_admitted_rows={counts['practice_admitted_rows']} "
-        f"missing_route={counts['missing_route']} no_cefr={counts['no_cefr']} -> {args.output_dir}"
+        f"missing_route={counts['missing_route']} no_cefr={counts['no_cefr']} "
+        f"local_only_covered={counts['local_only_covered']} -> {args.output_dir}"
     )
     return 0
 
