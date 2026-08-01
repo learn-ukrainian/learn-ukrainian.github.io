@@ -608,6 +608,19 @@ def test_refresh_lock_file_is_owner_only(tmp_path, monkeypatch):
     assert lock_path.stat().st_mode & 0o077 == 0
 
 
+def test_refresh_lock_repairs_legacy_permissions(tmp_path, monkeypatch):
+    _refresh_paths(tmp_path, monkeypatch)
+    lock_path = tmp_path / "issue_stream_audit_refresh.lock"
+    lock_path.touch(mode=0o644)
+    lock_path.chmod(0o644)
+
+    fd = issue_stream_audit._try_lock_nb()
+
+    assert fd is not None
+    issue_stream_audit._release_lock(fd)
+    assert lock_path.stat().st_mode & 0o077 == 0
+
+
 def _scheduled_state(run_id="new-run", now=100):
     return {
         "schema_version": 1,

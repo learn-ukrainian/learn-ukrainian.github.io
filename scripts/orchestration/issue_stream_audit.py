@@ -235,10 +235,15 @@ def _write_refresh_state_atomic(state: dict) -> None:
 def _try_lock_nb() -> int | None:
     """Non-blocking ``LOCK_EX`` acquire. Returns an fd on success, ``None``
     when the lock is held by another process (or the file can't be opened)."""
+    fd: int | None = None
     try:
         REFRESH_LOCK_PATH.parent.mkdir(parents=True, exist_ok=True)
         fd = os.open(str(REFRESH_LOCK_PATH), os.O_CREAT | os.O_RDWR, 0o600)
+        os.fchmod(fd, 0o600)
     except OSError:
+        if fd is not None:
+            with contextlib.suppress(OSError):
+                os.close(fd)
         return None
     try:
         fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
