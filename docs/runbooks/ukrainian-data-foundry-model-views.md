@@ -1,7 +1,8 @@
 # Ukrainian Data Foundry Model Views and Recipes
 
-> **Owner:** [#6122](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6122)
-> under [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
+> **Owner:** [#6169](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6169)
+> under [#6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164),
+> extending the completed #6122 contract boundary
 > **Boundary:** local view construction and reproducible manifests, not training
 > or publication
 
@@ -44,6 +45,66 @@ counted and never cross separate origin artifacts.
 
 The CLI writes local artifacts. It does not upload, publish, redistribute, call
 a model, or run training.
+
+## Phase 3 real production result
+
+The first real production instantiation uses the operator-accepted Ukrainian
+Wikipedia continued-pretraining family. It does not replace the larger
+literary, textbook, historical, or external-article inventories; those remain
+separately gated until their exact rights and destination evidence is complete.
+
+`model_ready_view_production.py prepare-payloads` joins all 1,029 admitted
+source records to their exact `sources.db` content hashes and the complete
+issue #6167 detector and issue #6168 silver outputs. It produces a local payload artifact
+with a gap-free character partition for every article. The committed receipt
+contains no text. The measured partition contains:
+
+- 21,306 detector/silver spans across 982 articles;
+- 21,665,057 retained characters;
+- 564,381 characters masked from modern-Ukrainian loss; and
+- zero excluded source records or human-gold claims at payload preparation.
+
+Both continued-pretraining exporters process the complete admitted scope. One
+long near-duplicate is excluded from each arm, leaving 1,028 real,
+model-training-eligible records. The faithful artifact preserves all accepted
+source text with no character masks. The modern artifact preserves the same
+source bytes and projects the operational detector/silver spans to zero-loss
+character masks. Neither arm contains a frozen evaluation match.
+
+The diagnostic tokenizer is the official `google/gemma-4-31B` tokenizer at
+revision `5bbc2fb1c1b2c611d06e3d9f23c170ba21659d89`; its `tokenizer.json`
+SHA-256 is
+`12bac982b793c44b03d52a250a9f0d0b666813da566b910c24a6da0695fd11e6`.
+It is a diagnostic consumer pin, not a training authorization. On the 1,028
+records it produces:
+
+- 7,696,734 non-special model tokens;
+- 2,778,111 Ukrainian lexical-word occurrences;
+- mean lexical fertility of 2.145 pieces per lexical word (p50 2, p90 4,
+  p99 5);
+- 299 byte-fallback tokens, or 0.0039% of non-special tokens;
+- 2,448,405 VESUM-attested lexical words, or 88.13%; and
+- 183,640 modern-view tokens projected to zero loss, or 2.386% of
+  non-special tokens, with zero projection failures.
+
+VESUM attestation and the recorded paradigm-fragmentation values are lexical
+and inflectional proxies. They are not morpheme segmentation and do not prove
+that the model generates correct Ukrainian.
+
+The correction, preference, and quality-filter silver views are explicitly
+blocked and empty in this production receipt because #6168 yielded zero
+destination-eligible correction-grade records. The 739,503 silver records stay
+available as protected or unresolved evidence; none is relabeled as human gold.
+This is an evidence-grade result, not a reviewer-staffing dependency.
+
+The final phase-3 feasibility verdict is `REVISE`: real control and
+loss-masked continued-pretraining inputs, evaluation isolation, protected/no-
+change inventory, recipes, and tokenizer diagnostics exist, but an exact
+treatment preregistration and operator compute ceiling do not. #6170 may start
+only after those two present-tense gates are frozen. The current recipe
+manifests retain `training_authorized: false` and `execution_state: not_run`.
+Projected training runtime and cost remain null—not zero—until #6170 pins the
+hardware, treatment, and ceiling; local artifact storage is measured exactly.
 
 ## Required inputs
 
@@ -134,14 +195,23 @@ artifacts fail closed.
 
 The frozen algorithm combines normalized exact hashes, 32-character
 containment, character-sequence comparison, and three-token shingle Jaccard at
-`0.90`. Each text contributes at most 64 deterministic, evenly spaced
-eight-character anchors (including both endpoints) to the character candidate
-index. This keeps index growth bounded by record count rather than total
-character count; exact hashes and three-token shingles provide the primary
-exact and near-duplicate candidate paths. Raw evaluation text remains in memory
-only. Receipts record logical artifact paths, artifact hashes, algorithm
-version, thresholds, the anchor cap, and fingerprint counts—not evaluation
-content or private filesystem paths.
+`0.90`. Character-sequence matching is exact with `autojunk=False` through
+4,096 characters. Longer texts use a deterministic multiset overlap ladder:
+2-grams at `0.80`, 3-grams at `0.70`, 4-grams at `0.60`, and 5-grams at `0.50`.
+Those bounds preserve a 10% distributed-edit candidate without invoking
+`difflib`'s unbounded long-text path, which was measured taking more than ten
+minutes on a single pair of ordinary 48–50k-character Ukrainian articles.
+Tests cover the boundary, repetitive distributed edits, frequency-matched
+non-duplicates, containment, and exhaustive short binary strings.
+
+Each text contributes at most 64 deterministic, evenly spaced eight-character
+anchors (including both endpoints) to the character candidate index. This
+keeps index growth bounded by record count rather than total character count;
+exact hashes and three-token shingles provide the primary exact and near-
+duplicate candidate paths. Raw evaluation text remains in memory only.
+Receipts record logical artifact paths, artifact hashes, algorithm version,
+thresholds, the anchor cap, and fingerprint counts—not evaluation content or
+private filesystem paths.
 
 The same matching primitives power a separate intra-view deduplication gate.
 The export receipt distinguishes that gate from evaluation contamination and

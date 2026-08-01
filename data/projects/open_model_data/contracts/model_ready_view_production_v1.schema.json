@@ -1,0 +1,272 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/model_ready_view_production_v1.schema.json",
+  "title": "Ukrainian Data Foundry model-ready view production receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "production_id", "admission", "detectors", "silver", "source_payload", "continued_pretraining_views", "silver_lanes", "tokenizer_diagnostics", "recipe_manifests", "evaluation_firewall", "deduplication", "stratified_counts", "feasibility", "determinism", "safety"],
+  "properties": {
+    "schema_version": {"const": "model_ready_view_production_v1"},
+    "production_id": {"type": "string", "pattern": "^model-ready-production:[a-f0-9]{64}$"},
+    "admission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["receipt", "operator_packet", "source_records"],
+      "properties": {
+        "receipt": {"$ref": "#/$defs/artifact"},
+        "operator_packet": {"$ref": "#/$defs/artifact"},
+        "source_records": {"$ref": "#/$defs/artifact"}
+      }
+    },
+    "detectors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "receipt"],
+      "properties": {
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "receipt": {"$ref": "#/$defs/artifact"}
+      }
+    },
+    "silver": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "receipt"],
+      "properties": {
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "receipt": {"$ref": "#/$defs/artifact"}
+      }
+    },
+    "source_payload": {"$ref": "#/$defs/artifact"},
+    "continued_pretraining_views": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["faithful", "modern"],
+      "properties": {
+        "faithful": {"$ref": "#/$defs/viewBinding"},
+        "modern": {"$ref": "#/$defs/viewBinding"}
+      }
+    },
+    "silver_lanes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["correction_instruction", "pairwise_preference", "quality_filter"],
+      "properties": {
+        "correction_instruction": {"$ref": "#/$defs/silverLane"},
+        "pairwise_preference": {"$ref": "#/$defs/silverLane"},
+        "quality_filter": {"$ref": "#/$defs/silverLane"}
+      }
+    },
+    "tokenizer_diagnostics": {"$ref": "#/$defs/artifact"},
+    "recipe_manifests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["faithful_continued_pretraining", "modern_continued_pretraining", "correction_instruction", "pairwise_preference", "quality_filter"],
+      "properties": {
+        "faithful_continued_pretraining": {"$ref": "#/$defs/recipeManifest"},
+        "modern_continued_pretraining": {"$ref": "#/$defs/recipeManifest"},
+        "correction_instruction": {"$ref": "#/$defs/recipeManifest"},
+        "pairwise_preference": {"$ref": "#/$defs/recipeManifest"},
+        "quality_filter": {"$ref": "#/$defs/recipeManifest"}
+      }
+    },
+    "evaluation_firewall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "exclusion_registry", "heldout_evaluation_view", "exact_overlap_count", "near_overlap_count", "blocked_records", "policy"],
+      "properties": {
+        "state": {"const": "verified"},
+        "exclusion_registry": {"$ref": "#/$defs/artifact"},
+        "heldout_evaluation_view": {"$ref": "#/$defs/viewBinding"},
+        "exact_overlap_count": {"const": 0},
+        "near_overlap_count": {"const": 0},
+        "blocked_records": {"type": "integer", "minimum": 0},
+        "policy": {"const": "NFKC; casefold; collapse whitespace; exact and near duplicate matches are blocked from non-evaluation views"}
+      }
+    },
+    "deduplication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "artifact", "algorithm_version", "normalization", "near_duplicate_threshold", "input_records", "accepted_records", "blocked_records"],
+      "properties": {
+        "state": {"const": "verified"},
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "algorithm_version": {"const": "foundry-intra-view-dedup-v2"},
+        "normalization": {"const": "NFKC; casefold; collapse whitespace"},
+        "near_duplicate_threshold": {"const": 0.9},
+        "input_records": {"type": "integer", "minimum": 0},
+        "accepted_records": {"type": "integer", "minimum": 0},
+        "blocked_records": {"type": "integer", "minimum": 0}
+      }
+    },
+    "stratified_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "period", "genre", "register", "evidence_grade", "protected_unresolved"],
+      "properties": {
+        "source": {"$ref": "#/$defs/strata"},
+        "period": {"$ref": "#/$defs/strata"},
+        "genre": {"$ref": "#/$defs/strata"},
+        "register": {"$ref": "#/$defs/strata"},
+        "evidence_grade": {"$ref": "#/$defs/strata"},
+        "protected_unresolved": {"$ref": "#/$defs/strata"}
+      }
+    },
+    "feasibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "prerequisites", "blockers", "question", "decision_changing_scope", "estimates", "operator_ceiling_state"],
+      "properties": {
+        "decision": {"enum": ["PROCEED", "REVISE", "STOP"]},
+        "prerequisites": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/condition"}},
+        "blockers": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/condition"}},
+        "question": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["code", "state", "evidence_sha256"],
+          "properties": {
+            "code": {"$ref": "#/$defs/code"},
+            "state": {"enum": ["resolved", "open", "not_applicable"]},
+            "evidence_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+          }
+        },
+        "decision_changing_scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["additional_records", "additional_bytes", "additional_runtime_seconds", "additional_cost_usd", "condition_codes"],
+          "properties": {
+            "additional_records": {"type": "integer", "minimum": 0},
+            "additional_bytes": {"type": "integer", "minimum": 0},
+            "additional_runtime_seconds": {"type": "number", "minimum": 0},
+            "additional_cost_usd": {"type": "number", "minimum": 0},
+            "condition_codes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/code"}}
+          }
+        },
+        "estimates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["runtime_seconds", "storage_bytes", "cost_usd"],
+          "properties": {
+            "runtime_seconds": {
+              "anyOf": [
+                {"type": "number", "minimum": 0},
+                {"type": "null"}
+              ]
+            },
+            "storage_bytes": {"type": "integer", "minimum": 0},
+            "cost_usd": {
+              "anyOf": [
+                {"type": "number", "minimum": 0},
+                {"type": "null"}
+              ]
+            }
+          }
+        },
+        "operator_ceiling_state": {"enum": ["within_ceiling", "at_ceiling", "exceeds_ceiling", "ceiling_not_declared"]}
+      }
+    },
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["serialization", "source_order", "view_order", "timestamps_omitted"],
+      "properties": {
+        "serialization": {"const": "UTF-8 canonical JSON with sorted keys and LF"},
+        "source_order": {"const": "validated ascending source payload ID"},
+        "view_order": {"const": "canonical upstream packet order; unique output record ID"},
+        "timestamps_omitted": {"const": true}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["training_performed", "model_call_performed", "upload_performed", "publication_performed", "human_gold_created", "human_gold_used", "record_text_emitted"],
+      "properties": {
+        "training_performed": {"const": false},
+        "model_call_performed": {"const": false},
+        "upload_performed": {"const": false},
+        "publication_performed": {"const": false},
+        "human_gold_created": {"const": false},
+        "human_gold_used": {"const": false},
+        "record_text_emitted": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "code": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,127}$"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["records", "bytes", "sha256"],
+      "properties": {
+        "records": {"type": "integer", "minimum": 0},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "viewBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "receipt"],
+      "properties": {
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "receipt": {"$ref": "#/$defs/artifact"}
+      }
+    },
+    "silverLane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "eligible", "emitted", "blocked", "blocked_reasons", "artifact", "receipt"],
+      "properties": {
+        "state": {"enum": ["not_run", "blocked", "emitted"]},
+        "eligible": {"type": "integer", "minimum": 0},
+        "emitted": {"type": "integer", "minimum": 0},
+        "blocked": {"type": "integer", "minimum": 0},
+        "blocked_reasons": {"type": "array", "uniqueItems": true, "items": {"enum": ["no_eligible_records", "admission_denied", "evaluation_firewall", "deduplication", "missing_qualified_adjudication", "private_data_or_unknown", "origin_unresolved", "language_span_unresolved", "operator_hold", "other_contract_failure"]}},
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "receipt": {"$ref": "#/$defs/artifact"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"blocked": {"minimum": 1}}, "required": ["blocked"]},
+          "then": {"properties": {"blocked_reasons": {"minItems": 1}}},
+          "else": {"properties": {"blocked_reasons": {"maxItems": 0}}}
+        }
+      ]
+    },
+    "recipeManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "training_authorized", "model_call_performed", "training_performed"],
+      "properties": {
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "training_authorized": {"const": false},
+        "model_call_performed": {"const": false},
+        "training_performed": {"const": false}
+      }
+    },
+    "strata": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["category", "records", "bytes"],
+        "properties": {
+          "category": {"$ref": "#/$defs/code"},
+          "records": {"type": "integer", "minimum": 0},
+          "bytes": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "state", "evidence_sha256"],
+      "properties": {
+        "code": {"$ref": "#/$defs/code"},
+        "state": {"enum": ["satisfied", "pending", "blocked", "not_applicable"]},
+        "evidence_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+      }
+    }
+  }
+}

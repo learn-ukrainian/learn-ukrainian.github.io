@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/tokenizer_diagnostics_v1.schema.json",
+  "title": "Ukrainian Data Foundry tokenizer diagnostics receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "diagnostics_id", "tokenizer", "vesum", "source_views", "metrics", "determinism", "safety"],
+  "properties": {
+    "schema_version": {"const": "tokenizer_diagnostics_v1"},
+    "diagnostics_id": {"type": "string", "pattern": "^tokenizer-diagnostics:[a-f0-9]{64}$"},
+    "tokenizer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identifier", "revision", "tokenizer_json_sha256", "libraries"],
+      "properties": {
+        "identifier": {"type": "string", "pattern": "^[A-Za-z0-9._/-]{1,255}$"},
+        "revision": {"type": "string", "pattern": "^[a-f0-9]{40,64}$"},
+        "tokenizer_json_sha256": {"$ref": "#/$defs/sha256"},
+        "libraries": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tokenizers", "transformers", "python"],
+          "properties": {
+            "tokenizers": {"$ref": "#/$defs/version"},
+            "transformers": {"$ref": "#/$defs/version"},
+            "python": {"$ref": "#/$defs/version"}
+          }
+        }
+      }
+    },
+    "vesum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["snapshot_sha256", "interface"],
+      "properties": {
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "interface": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["version", "lookup_policy"],
+          "properties": {
+            "version": {"type": "string", "pattern": "^[A-Za-z0-9._-]{1,128}$"},
+            "lookup_policy": {"const": "NFC; Ukrainian casefold; exact surface lookup; report ambiguity without resolution"}
+          }
+        }
+      }
+    },
+    "source_views": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["faithful_continued_pretraining", "modern_continued_pretraining"],
+      "properties": {
+        "faithful_continued_pretraining": {"$ref": "#/$defs/boundView"},
+        "modern_continued_pretraining": {"$ref": "#/$defs/boundView"}
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["non_special_token_count", "lexical_word_count", "assigned_token_count", "byte_fallback_token_count", "record_length", "lexical_fertility", "characters_per_token", "vesum_attestation", "lexical_fragmentation_proxy", "paradigm_fragmentation_proxy", "mask_projection"],
+      "properties": {
+        "non_special_token_count": {"type": "integer", "minimum": 0},
+        "lexical_word_count": {"type": "integer", "minimum": 0},
+        "assigned_token_count": {"type": "integer", "minimum": 0},
+        "byte_fallback_token_count": {"type": "integer", "minimum": 0},
+        "record_length": {"$ref": "#/$defs/distribution"},
+        "lexical_fertility": {"$ref": "#/$defs/distribution"},
+        "characters_per_token": {"$ref": "#/$defs/distribution"},
+        "vesum_attestation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["lexical_words_considered", "attested_lexical_words", "unattested_lexical_words", "ambiguous_lexical_words", "ambiguity_histogram"],
+          "properties": {
+            "lexical_words_considered": {"type": "integer", "minimum": 0},
+            "attested_lexical_words": {"type": "integer", "minimum": 0},
+            "unattested_lexical_words": {"type": "integer", "minimum": 0},
+            "ambiguous_lexical_words": {"type": "integer", "minimum": 0},
+            "ambiguity_histogram": {"$ref": "#/$defs/histogram"}
+          }
+        },
+        "lexical_fragmentation_proxy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["attested_lexical_words", "assigned_tokens", "tokens_per_attested_lexical_word", "histogram", "percentiles"],
+          "properties": {
+            "attested_lexical_words": {"type": "integer", "minimum": 0},
+            "assigned_tokens": {"type": "integer", "minimum": 0},
+            "tokens_per_attested_lexical_word": {"type": "number", "minimum": 0},
+            "histogram": {"$ref": "#/$defs/histogram"},
+            "percentiles": {"$ref": "#/$defs/percentiles"}
+          }
+        },
+        "paradigm_fragmentation_proxy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["attested_lemma_paradigms", "paradigms_with_multiple_forms", "assigned_tokens", "tokens_per_paradigm", "histogram", "percentiles"],
+          "properties": {
+            "attested_lemma_paradigms": {"type": "integer", "minimum": 0},
+            "paradigms_with_multiple_forms": {"type": "integer", "minimum": 0},
+            "assigned_tokens": {"type": "integer", "minimum": 0},
+            "tokens_per_paradigm": {"type": "number", "minimum": 0},
+            "histogram": {"$ref": "#/$defs/histogram"},
+            "percentiles": {"$ref": "#/$defs/percentiles"}
+          }
+        },
+        "mask_projection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["counters", "histogram", "percentiles"],
+          "properties": {
+            "counters": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["records_considered", "records_with_character_masks", "character_mask_spans", "tokens_overlapping_masks", "tokens_fully_masked", "tokens_partially_masked", "zero_loss_tokens", "projection_failures"],
+              "properties": {
+                "records_considered": {"type": "integer", "minimum": 0},
+                "records_with_character_masks": {"type": "integer", "minimum": 0},
+                "character_mask_spans": {"type": "integer", "minimum": 0},
+                "tokens_overlapping_masks": {"type": "integer", "minimum": 0},
+                "tokens_fully_masked": {"type": "integer", "minimum": 0},
+                "tokens_partially_masked": {"type": "integer", "minimum": 0},
+                "zero_loss_tokens": {"type": "integer", "minimum": 0},
+                "projection_failures": {"type": "integer", "minimum": 0}
+              }
+            },
+            "histogram": {"$ref": "#/$defs/histogram"},
+            "percentiles": {"$ref": "#/$defs/percentiles"}
+          }
+        }
+      }
+    },
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["serialization", "view_order", "tokenization", "word_segmentation", "mask_projection", "timestamps_omitted"],
+      "properties": {
+        "serialization": {"const": "UTF-8 canonical JSON with sorted keys and LF"},
+        "view_order": {"const": "bound source-view artifact order"},
+        "tokenization": {"const": "exact tokenizer identifier, revision, tokenizer.json, and library versions recorded in this receipt"},
+        "word_segmentation": {"const": "Unicode letter runs after NFC; punctuation and whitespace excluded"},
+        "mask_projection": {"const": "token receives zero loss when its character interval overlaps a character_mask_span"},
+        "timestamps_omitted": {"const": true}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record_text_emitted", "surface_forms_emitted", "token_strings_emitted", "offset_arrays_emitted", "training_performed", "model_call_performed", "upload_performed", "publication_performed", "human_gold_created"],
+      "properties": {
+        "record_text_emitted": {"const": false},
+        "surface_forms_emitted": {"const": false},
+        "token_strings_emitted": {"const": false},
+        "offset_arrays_emitted": {"const": false},
+        "training_performed": {"const": false},
+        "model_call_performed": {"const": false},
+        "upload_performed": {"const": false},
+        "publication_performed": {"const": false},
+        "human_gold_created": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "version": {"type": "string", "pattern": "^[0-9]+(?:[.][0-9A-Za-z+-]+)*$"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["records", "bytes", "sha256"],
+      "properties": {
+        "records": {"type": "integer", "minimum": 0},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "boundView": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "receipt"],
+      "properties": {
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "receipt": {"$ref": "#/$defs/artifact"}
+      }
+    },
+    "histogram": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["lower_inclusive", "upper_exclusive", "count"],
+        "properties": {
+          "lower_inclusive": {"type": "number", "minimum": 0},
+          "upper_exclusive": {"type": "number", "exclusiveMinimum": 0},
+          "count": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "percentiles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["p50", "p90", "p95", "p99"],
+      "properties": {
+        "p50": {"type": "number", "minimum": 0},
+        "p90": {"type": "number", "minimum": 0},
+        "p95": {"type": "number", "minimum": 0},
+        "p99": {"type": "number", "minimum": 0}
+      }
+    },
+    "distribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["population", "sum", "mean", "minimum", "maximum", "histogram", "percentiles"],
+      "properties": {
+        "population": {"type": "integer", "minimum": 0},
+        "sum": {"type": "number", "minimum": 0},
+        "mean": {"type": "number", "minimum": 0},
+        "minimum": {"type": "number", "minimum": 0},
+        "maximum": {"type": "number", "minimum": 0},
+        "histogram": {"$ref": "#/$defs/histogram"},
+        "percentiles": {"$ref": "#/$defs/percentiles"}
+      }
+    }
+  }
+}
