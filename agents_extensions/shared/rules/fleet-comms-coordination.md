@@ -1,11 +1,11 @@
-# Fleet-comms coordination (binding mid-cutover)
+# Fleet-comms coordination (binding authority cutover)
 
 <critical>
 
-**Product epic:** #5512 · **Stream:** #4707 (infra-harness) · **Sol memo:** `SHIP-THIS-ARCHITECTURE`
+**Cutover issue:** #6159 · **Stream:** #4707 (infra-harness) · **Operator GO:** 2026-08-01
 **Applies to:** every standalone TUI/UI and epic-driver seat (Claude/Sonnet, Grok, AGY/Gemini, Kimi, Cursor, wrappers) — not only agents that load a skill.
 
-This is the **shared-context SSOT** for coordination during the fleet-comms cutover. It is
+This is the **shared-context SSOT** for coordination after the fleet-comms authority cutover. It is
 served in `GET /api/rules`. Launchers inject a short pointer; the **`drive-epic` skill**
 teaches the full method loop. Neither may invent a competing design or silently flip
 cutovers.
@@ -34,29 +34,29 @@ at the **onboarding contract** for ownership and experimental ACPX scope; this r
 | Half | Status | Surfaces |
 | --- | --- | --- |
 | **Session stream / lease** | Live | `claim_session_supervisor_env`, `SESSION_STREAM_*`, stream tail/digest, canary mint (hook-less seats) |
-| **Message plane + CF-comms** | Mid-cutover | `scripts.fleet_comms`, `review-pr`, `publish-review-verdict` |
+| **Message plane + CF-comms** | Authority | `scripts.fleet_comms`, `review-pr`, `publish-review-verdict` |
 
 Launchers already claim leases. Drivers must **also** speak the message-plane + CF half.
 
-## Plane modes (Sol-corrected — #5632 F003)
+## Plane modes
 
 ```bash
 .venv/bin/python -m scripts.fleet_comms plane-status
 ```
 
-Implemented modes are **only** `off` | `shadow` | `dual_write`. Production default is
-**`shadow`** after Gate A parity + operator finish GO (2026-07-23); override with
-`FLEET_COMMS_MESSAGE_PLANE=off|dual_write`.
+Implemented modes are `off` | `shadow` | `dual_write` | `authority`. Production
+default is **`authority`** after the present-tense operator GO in #6159. Override
+only for an explicit rollback or compatibility probe.
 
 | Fact | Binding |
 | --- | --- |
-| File dual-write / diary | **Stays authoritative in every plane mode** today |
-| `dual_write` mode | Shadow/mirror of plane traffic — **not** stream-authority cutover |
-| Post-cutover “plane-only authority” | **Not implemented** — do not claim a one-line yaml flip retires files |
-| Who may flip plane / retention apply / eligibility | **Infra/harness lane** after parity + present-tense operator/advisor GO |
+| `authority` mode | Fleet-comms is the durable source of truth; legacy stores are read-only migration/projection sources |
+| `dual_write` mode | Compatibility soak/rollback mode, not normal operation |
+| ACP | Provider transport only; durable queues, retries, conversations, artifacts, receipts, and formal jobs belong to fleet-comms |
+| Who may roll back authority / retention apply / eligibility | **Infra/harness lane** with present-tense operator/advisor approval |
 
-**Never drop the file handoff on your own.** Retiring file handoffs is a future infra step
-gated on an authority signal the plane does not yet expose.
+Do not create new authoritative bridge, channel, broker, or diary writes. Historical
+stores stay available through bounded read-only projections and idempotent migration.
 
 Forbidden: inventing a third message bus; encoding only file-handoff folklore in new
 cold-prompts; silent plane flips; “for now” cutovers.
@@ -90,9 +90,9 @@ Every epic driver session (any harness) MUST:
 
 1. Obey this rule (via `/api/rules` or offline fallback of this file).
 2. Run `plane-status` before assuming message-plane availability.
-3. Prefer plane/CF **command surfaces** for topology and formal review; **keep** the lane
-   diary dual-write current (`.claude/<epic>-epic/*-DRIVER-HANDOFF.md` and stream notes)
-   in **all** plane modes.
+3. Use fleet-comms for durable coordination, queues, messages, conversations, artifacts,
+   retries, dead letters, receipts, formal jobs, and session continuity. In authority
+   mode, never create a new legacy bridge/channel/broker/file coordination write.
 4. Use `review-pr <PR_NUMBER> …` / `publish-review-verdict` for formal PR CF — discussion
    and same-family chat are not the review gate.
 5. Treat launcher-claimed stream leases as held — do not open/resume the lease yourself.
@@ -135,28 +135,25 @@ Supported fleet seats cold-start through:
    KimiCC (K3 defaults `high`), rollback, and no-auth fresh-agent smoke.
 
 Discussion is never formal CF. Formal CF remains `review-pr` /
-`publish-review-verdict` only. ACPX is structured invocation transport, not a
-coordination authority. File dual-write stays authoritative in every plane mode.
+`publish-review-verdict` only. ACP is structured provider transport; fleet-comms
+owns the durable record and publication state.
 
-## Bounded ACP panel (approved selection)
+## ACP provider transport
 
-For eligible two-seat **read-only agent communication**, ACP is the routine
-transport. Fleet launchers make the project `discuss` command select the durable ACP controller
-automatically when both requested participants have enabled routes: Codex,
-Grok, Claude, Kimi, KimiCC K3, Cursor, or Pool. The direct
+For normal **read-only inter-agent communication**, ACP is the only provider
+transport. Fleet launchers make ordinary `ask-*`, 2–6 participant `discuss`, and
+sealed formal-review calls use the durable ACP controller for enabled routes:
+Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool, AGY, GLM, and DeepSeek. The direct
 `.venv/bin/python -m scripts.fleet_comms acp-discuss` surface remains available
 to operators. Selection starts no process at cold start and does not change
 `delegate.py`. The default is two rounds and the hard maximum is three.
 
-Bridge transport is an observable exception only: use it for an unsupported
-participant/count, a per-participant model override, formal review until
-separately migrated, write / dispatch / inbox semantics, or a typed ACP
-unhealthy or partial failure. Name
-the exception in the task handoff or other durable coordination evidence;
-never silently fall back. Admission is one conversation repository-wide:
-return `busy` when occupied, with zero queue and zero automatic retry. ACP
-output is deliberation evidence: a typed partial outcome is valid evidence but
-never a successful discussion, formal review, or coordination authority. The
+There is no bridge/provider-execution fallback. Unknown routes, invalid model or
+effort overrides, unavailable ACP, cancellation, timeout, and partial results are
+typed durable outcomes and never trigger a second provider call. Fleet-comms owns
+bounded queueing, leases, deadlines, retries, dead letters, idempotency, transcripts,
+and wake receipts. ACP output is deliberation evidence: a typed partial outcome is
+valid evidence but never a successful discussion or formal review. The
 exact command, primary-install and body-free `acp-verify` E2E/replay procedure
 are in the onboarding contract.
 
