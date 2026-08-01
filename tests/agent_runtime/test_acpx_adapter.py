@@ -1601,7 +1601,8 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
         lambda _path, _executable: version,
     )
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
-    monkeypatch.delenv("CI", raising=False)
+    for name in ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL"):
+        monkeypatch.delenv(name, raising=False)
 
     adapter = adapter_class()
     with acpx_module.active_discussion_scope():

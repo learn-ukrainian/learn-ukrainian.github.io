@@ -184,6 +184,13 @@ jobs:
           mapfile -t shard_files < <(.venv/bin/python -c "$split_py" "$SHARD")
           echo "shard $SHARD: ${#shard_files[@]} test files"
           if [ "${#shard_files[@]}" -eq 0 ]; then echo "::error::empty shard"; exit 1; fi
+          # The text ACP protocol test executes the project-owned Node server,
+          # which imports the exact SDK pinned in package-lock.json. Install
+          # Node dependencies only in the shard that owns that test file.
+          if printf '%s\n' "${shard_files[@]}" | grep -Fxq \
+            'tests/agent_runtime/test_acp_text_agent.py'; then
+            npm ci --ignore-scripts
+          fi
           # shellcheck disable=SC2086  # cov_args is a deliberate word-split argument list
           .venv/bin/python -m pytest "${shard_files[@]}" -n auto --strict-markers \
             --timeout=120 --timeout-method=thread --durations=25 $cov_args \
