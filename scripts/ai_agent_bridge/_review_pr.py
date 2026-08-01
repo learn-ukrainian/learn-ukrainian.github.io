@@ -5,7 +5,7 @@ Pointer-only: no embedded diffs or inventory YAML. Prefer sealed Codex
 opencode-family reviewers is GLM-5.2 (LOCAL-ONLY — never CI).
 
 Formal CF model + effort pins (operator 2026-07-21): practical seats @ high
-— Terra / Sonnet 5 / GLM — not Sol/Fable on routine PRs. Authority seats
+— Terra / Sonnet 5 / GLM, with pinned AGY as a quota substitution — not Sol/Fable on routine PRs. Authority seats
 remain on the critical review ladder only (see model_catalog.yaml).
 """
 
@@ -33,17 +33,20 @@ _PR_REF_RE = re.compile(r"^(?:#|pr-)?(?P<num>\d+)$", re.IGNORECASE)
 REVIEWER_CODEX = "codex"
 REVIEWER_GLM = "glm"
 REVIEWER_CLAUDE = "claude"
+REVIEWER_AGY = "agy"
 REVIEWER_AUTO = "auto"
 
 # Practical formal CF pins — keep in sync with model_catalog formal_cf_defaults.
 FORMAL_CF_MODEL: dict[str, str] = {
     REVIEWER_CODEX: "gpt-5.6-terra",
     REVIEWER_CLAUDE: "claude-sonnet-5",
+    REVIEWER_AGY: "gemini-3.6-flash-high",
     REVIEWER_GLM: "glm-5.2",
 }
 FORMAL_CF_EFFORT: dict[str, str] = {
     REVIEWER_CODEX: "high",
     REVIEWER_CLAUDE: "high",
+    REVIEWER_AGY: "high",
     REVIEWER_GLM: "high",
 }
 
@@ -184,11 +187,11 @@ def resolve_reviewer(selection: str, *, claude_available: bool | None = None) ->
     if choice == REVIEWER_AUTO:
         _ = claude_available  # retained as a compatibility-only CLI hint
         return REVIEWER_GLM
-    if choice in {REVIEWER_CODEX, REVIEWER_GLM, REVIEWER_CLAUDE}:
+    if choice in {REVIEWER_CODEX, REVIEWER_GLM, REVIEWER_CLAUDE, REVIEWER_AGY}:
         return choice
     raise ReviewSafetyError(
         f"unsupported_reviewer: {selection!r} "
-        f"(choose auto|codex|glm|claude)"
+        f"(choose auto|codex|glm|claude|agy)"
     )
 
 
@@ -264,11 +267,13 @@ def handle_review_pr(args: argparse.Namespace) -> int:
     participant = {
         REVIEWER_CODEX: "codex",
         REVIEWER_CLAUDE: "claude",
+        REVIEWER_AGY: "agy",
         REVIEWER_GLM: "glm",
     }[reviewer]
     family = {
         REVIEWER_CODEX: "openai",
         REVIEWER_CLAUDE: "anthropic",
+        REVIEWER_AGY: "google",
         REVIEWER_GLM: "zhipu",
     }[reviewer]
     target = ReviewTarget(pr_number=pr)
@@ -458,14 +463,15 @@ def register_review_pr_parser(subparsers: Any) -> None:
     parser.add_argument(
         "--reviewer",
         default=REVIEWER_AUTO,
-        help="auto|codex|glm|claude (default: auto → GLM sealed ACP path)",
+        help="auto|codex|glm|claude|agy (default: auto → GLM sealed ACP path)",
     )
     parser.add_argument(
         "--model",
         default=None,
         help=(
             "Override formal CF model pin "
-            "(default: codex→gpt-5.6-terra, claude→claude-sonnet-5, glm→glm-5.2; "
+            "(default: codex→gpt-5.6-terra, claude→claude-sonnet-5, "
+            "agy→gemini-3.6-flash-high, glm→glm-5.2; "
             "authority escalate: gpt-5.6-sol / claude-fable-5)"
         ),
     )
