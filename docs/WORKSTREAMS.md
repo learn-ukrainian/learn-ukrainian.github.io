@@ -9,7 +9,7 @@
 
 | Field | Value |
 | --- | --- |
-| **Last refreshed** | 2026-08-01 (Foundry #6164 realigned for a solo operator; paid human review removed from the critical path) |
+| **Last refreshed** | 2026-08-01 (Foundry #6170 Stage 0 frozen around one bounded Gemma 4 IT causal treatment) |
 | **Refresh trigger** | Every session handoff that lands a milestone; every stream-epic board change |
 | **Curriculum KPI** | Modules passing audit per week (curriculum streams; each milestone carries its own outcome measure) |
 | **Mission** | Help people and AI produce measurably better, authentically Ukrainian language through decolonized learning products and reusable, evidence-backed open-model infrastructure. Quality non-negotiable. |
@@ -97,7 +97,7 @@ epic-board state and bind only once that stream's driver (State: the operator) c
 | --- | --- | --- | --- |
 | infra-harness | ACTIVE *(proposed)* | Weak-driver rails T1 (T1.1 slot addressing ✅ #5878; T1.2 lease lifecycle; T1.3 glm canary lane) | T1.2 + T1.3 merged with mutation-checked tests. (The fleet-comms decision packet — dual-write parity + authority-signal evidence for any future plane change, file handoff never dropped unilaterally per `fleet-comms-coordination.md` — is the NEXT milestone, not this one.) |
 | eval-harness | *(operator to set)* | Internal product-quality machinery under #4913 *(driver to confirm)* | Current internal milestone is confirmed on #4913 without absorbing public gold or release work |
-| open-model-data | ACTIVE | #6168 full-frame non-human silver/protection production complete; emit admitted source-text and explicitly eligible or blocked silver views with tokenizer/loss-mask evidence under #6169 | #6169 emits at least the admitted real continued-pretraining view and reports every other view as eligible or explicitly blocked. A text-free feasibility receipt must stop or redirect work before expensive training if inputs, evaluation isolation, protected-variation probes, reproducibility, or the approved budget are inadequate. Hramatka and qualified-human review are optional later evidence upgrades, not pause gates. |
+| open-model-data | ACTIVE | #6169 real model-ready views complete; execute the preregistered Gemma 4 IT faithful-vs-modern-mask treatment under #6170 | Stage 0 binds the immutable checkpoint, common train/validation split, exact paired arms, 300 automated non-human safety probes, evaluation, aborts, and USD 100 ceiling. After exact operator authorization, Stage 1 proves the QLoRA path within USD 10; Stage 2 runs only if its frozen entry gate passes and reports causal efficacy, safety, runtime, and cost without post-hoc selection. Hramatka and qualified-human review remain optional evidence upgrades, not pause gates. |
 | atlas-practice | ACTIVE *(proposed)* | Practice Hub deck experience stable after the D10 wave (#5877–#5883) *(driver to confirm)* | A bounded soak: 7 days with no new daily-deck defect filed; then next #4700 item |
 | atlas-intake | ACTIVE *(proposed)* | 20k enrichment run with durable storage (#5884) *(driver to confirm)* | Enriched dataset persisted off-repo with a tracked pointer; refetch never needed |
 | corpus-channels | *(operator to set)* | *(VACANT — driver to set from #4706; the slot-addressing work formerly listed here is infra-harness scope)* | — |

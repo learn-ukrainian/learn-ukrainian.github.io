@@ -1,0 +1,113 @@
+{
+  "authorization_sha256": null,
+  "blockers": [
+    "operator_authorization_pending",
+    "immutable_model_snapshot_pending"
+  ],
+  "decision": "REVISE",
+  "experiment_id": "gemma4-it-wikipedia-mask-ablation-v1",
+  "preregistration_ready": true,
+  "preregistration_sha256": "274ea63558fbd50ccdfe352a44dadcac0c37e224c589b5f9244d3fffe24f9aee",
+  "safety": {
+    "model_call_performed": false,
+    "publication_performed": false,
+    "training_performed": false,
+    "upload_performed": false
+  },
+  "schema_version": "treatment_stage0_preflight_v1",
+  "verified_artifacts": [
+    {
+      "bytes": 41035325,
+      "records": 1028,
+      "role": "faithful_view",
+      "sha256": "0cf114d1b9982984f8666f5e856043a851084c6934dbb6ea7ea98486710e9ed1"
+    },
+    {
+      "bytes": 3450,
+      "records": 1,
+      "role": "faithful_view_receipt",
+      "sha256": "0da3e4f0ae2d976fcb462b695acd15af7c6bcdef8278be145522263aa3f2ef8c"
+    },
+    {
+      "bytes": 999435,
+      "records": 691,
+      "role": "heldout_evaluation_view",
+      "sha256": "c6150efaefd75da7e5db8f9d4aab7949a7261d14319318e905637748309b34f0"
+    },
+    {
+      "bytes": 896527,
+      "records": 1,
+      "role": "heldout_manifest",
+      "sha256": "56eb4fc17a5ed6967c5c13fbdc9fde964d1b8fb08bde7da7f15cf535486735dd"
+    },
+    {
+      "bytes": 846,
+      "records": 1,
+      "role": "minimal_edit_prompt",
+      "sha256": "f121546dcbaf602c58c7d85977ad792eb9be402dd1e01a6a556ba966dac2c96a"
+    },
+    {
+      "bytes": 1994,
+      "records": 1,
+      "role": "model_snapshot_manifest",
+      "sha256": "f0552bd6ee21764a0fc8c62b76d8458775f4f5e4969d701cf4c0d35c2f86fba1"
+    },
+    {
+      "bytes": 42522745,
+      "records": 1028,
+      "role": "modern_view",
+      "sha256": "c524a89cd2d37fd88cf3ce1e742583fe06252dd125f88b146b73c8453c7a0721"
+    },
+    {
+      "bytes": 3450,
+      "records": 1,
+      "role": "modern_view_receipt",
+      "sha256": "2a291bbadb4f02540e9c4381a7ae733f2c9c8df1f99d51b26364d408f87b504c"
+    },
+    {
+      "bytes": 7387,
+      "records": 1,
+      "role": "production_receipt",
+      "sha256": "699af193764a6616c35b3298b018ac41266fed9742dc3f789614acfbd161255d"
+    },
+    {
+      "bytes": 215820,
+      "records": 300,
+      "role": "safety_probe_inventory",
+      "sha256": "3d1aaaf274ce5bce60d6da52debf02314102641fa163721ba60f2fb49647faa1"
+    },
+    {
+      "bytes": 2009,
+      "records": 1,
+      "role": "safety_probe_receipt",
+      "sha256": "ebfaf64adc30a17ce0524a996183d661f131213a8ce477c897897f13c6ec8147"
+    },
+    {
+      "bytes": 4169,
+      "records": 1,
+      "role": "scoring_disposition_config",
+      "sha256": "ecda338a95aa8cc8fe862ba67556101be119ad9391766221616304ce5928218a"
+    },
+    {
+      "bytes": 241285,
+      "records": 1,
+      "role": "scoring_dispositions",
+      "sha256": "44498d4c2ffcf8c0d3afed51bc82fa482be6b68ff6f05a3bcda035adbf5311a8"
+    },
+    {
+      "bytes": 8401,
+      "records": 1,
+      "role": "tokenizer_diagnostics",
+      "sha256": "79891442c302c1f17c8099fd03b44b6c740434acd16249d580529763311d4517"
+    }
+  ],
+  "verified_conditions": [
+    "phase3_model_ready_views",
+    "exact_it_tokenizer_mask_projection",
+    "evaluation_firewall",
+    "common_training_validation_split",
+    "deterministic_non_human_safety_inventory",
+    "paired_arm_contract",
+    "bounded_compute_ladder"
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/treatment_stage0_preflight_v1.schema.json",
+  "title": "Ukrainian Data Foundry treatment Stage 0 preflight receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "experiment_id", "preregistration_sha256", "authorization_sha256", "preregistration_ready", "decision", "blockers", "verified_conditions", "verified_artifacts", "safety"],
+  "properties": {
+    "schema_version": {"const": "treatment_stage0_preflight_v1"},
+    "experiment_id": {"const": "gemma4-it-wikipedia-mask-ablation-v1"},
+    "preregistration_sha256": {"$ref": "#/$defs/sha256"},
+    "authorization_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "preregistration_ready": {"const": true},
+    "decision": {"enum": ["PROCEED", "REVISE"]},
+    "blockers": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["operator_authorization_pending", "immutable_model_snapshot_pending"]}
+    },
+    "verified_conditions": {
+      "const": [
+        "phase3_model_ready_views",
+        "exact_it_tokenizer_mask_projection",
+        "evaluation_firewall",
+        "common_training_validation_split",
+        "deterministic_non_human_safety_inventory",
+        "paired_arm_contract",
+        "bounded_compute_ladder"
+      ]
+    },
+    "verified_artifacts": {
+      "type": "array",
+      "minItems": 14,
+      "maxItems": 14,
+      "items": {"$ref": "#/$defs/artifact"}
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["training_performed", "model_call_performed", "upload_performed", "publication_performed"],
+      "properties": {
+        "training_performed": {"const": false},
+        "model_call_performed": {"const": false},
+        "upload_performed": {"const": false},
+        "publication_performed": {"const": false}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"decision": {"const": "PROCEED"}}, "required": ["decision"]},
+      "then": {"properties": {"blockers": {"maxItems": 0}, "authorization_sha256": {"$ref": "#/$defs/sha256"}}},
+      "else": {"properties": {"blockers": {"minItems": 1}}}
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "bytes", "records", "sha256"],
+      "properties": {
+        "role": {"type": "string", "minLength": 2},
+        "bytes": {"type": "integer", "minimum": 1},
+        "records": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

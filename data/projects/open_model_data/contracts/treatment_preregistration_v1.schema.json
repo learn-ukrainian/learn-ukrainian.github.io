@@ -1,0 +1,292 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/treatment_preregistration_v1.schema.json",
+  "title": "Ukrainian Data Foundry causal treatment preregistration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "experiment_id",
+    "issue",
+    "state",
+    "question",
+    "model",
+    "artifacts",
+    "arms",
+    "training",
+    "evaluation",
+    "compute",
+    "abort_conditions",
+    "claims"
+  ],
+  "properties": {
+    "schema_version": {"const": "treatment_preregistration_v1"},
+    "experiment_id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$"},
+    "issue": {"const": 6170},
+    "state": {"const": "frozen_pending_operator_authorization"},
+    "question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hypothesis", "sole_decision", "primary_contrast"],
+      "properties": {
+        "hypothesis": {"type": "string", "minLength": 20},
+        "sole_decision": {"const": "retain_or_reject_the_modern_loss_mask_policy_for_this_exact_cpt_recipe"},
+        "primary_contrast": {"const": "modern_mask_cpt_minus_faithful_cpt"}
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identifier", "revision", "loader_class", "processor_class", "initialization_policy", "historical_provider_baseline_role"],
+      "properties": {
+        "identifier": {"const": "google/gemma-4-31B-it"},
+        "revision": {"$ref": "#/$defs/revision"},
+        "loader_class": {"const": "transformers.AutoModelForMultimodalLM"},
+        "processor_class": {"const": "transformers.AutoProcessor"},
+        "initialization_policy": {"const": "all arms start from the same immutable local checkpoint snapshot"},
+        "historical_provider_baseline_role": {"const": "measurement_interface_reference_only_not_causal_control"}
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 11,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/artifact"}
+    },
+    "arms": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "allOf": [
+            {"$ref": "#/$defs/arm"},
+            {"properties": {"arm_id": {"const": "untreated_it"}, "training_performed": {"const": false}, "view_role": {"type": "null"}, "loss_policy": {"const": "not_applicable"}}}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/arm"},
+            {"properties": {"arm_id": {"const": "faithful_cpt"}, "training_performed": {"const": true}, "view_role": {"const": "faithful_view"}, "loss_policy": {"const": "all_non_special_non_padding_text_tokens"}}}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/arm"},
+            {"properties": {"arm_id": {"const": "modern_mask_cpt"}, "training_performed": {"const": true}, "view_role": {"const": "modern_view"}, "loss_policy": {"const": "zero_loss_for_every_token_offset_overlapping_a_character_mask_span"}}}
+          ]
+        }
+      ],
+      "items": false,
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "training": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "quantization", "adapter", "optimizer", "data", "environment"],
+      "properties": {
+        "method": {"const": "adapter_only_qlora_continued_pretraining"},
+        "quantization": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["bits", "type", "double_quantization", "compute_dtype"],
+          "properties": {
+            "bits": {"const": 4},
+            "type": {"const": "nf4"},
+            "double_quantization": {"const": true},
+            "compute_dtype": {"const": "bf16"}
+          }
+        },
+        "adapter": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rank", "alpha", "dropout", "bias", "target_modules"],
+          "properties": {
+            "rank": {"const": 16},
+            "alpha": {"const": 32},
+            "dropout": {"const": 0.05},
+            "bias": {"const": "none"},
+            "target_modules": {
+              "const": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+            }
+          }
+        },
+        "optimizer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "learning_rate", "weight_decay", "warmup_ratio", "micro_batch_size", "gradient_accumulation_steps", "gradient_checkpointing", "max_grad_norm"],
+          "properties": {
+            "name": {"const": "paged_adamw_8bit"},
+            "learning_rate": {"const": "1e-5"},
+            "weight_decay": {"const": "0.1"},
+            "warmup_ratio": {"const": "0.03"},
+            "micro_batch_size": {"const": 1},
+            "gradient_accumulation_steps": {"const": 16},
+            "gradient_checkpointing": {"const": true},
+            "max_grad_norm": {"const": "1.0"}
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sequence_length", "cross_record_packing", "split_key", "split_namespace", "split_modulus", "validation_buckets", "shuffle", "checkpoint_selection"],
+          "properties": {
+            "sequence_length": {"const": 4096},
+            "cross_record_packing": {"const": false},
+            "split_key": {"const": "lineage.source_payload_id"},
+            "split_namespace": {"const": "gemma4-it-wikipedia-mask-ablation-v1"},
+            "split_modulus": {"const": 1000},
+            "validation_buckets": {"const": 200},
+            "shuffle": {"const": "ascending_sha256_of_seed_nul_source_payload_id"},
+            "checkpoint_selection": {"const": "final_checkpoint_only_no_score_based_selection"}
+          }
+        },
+        "environment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["python", "packages"],
+          "properties": {
+            "python": {"const": "3.12.8"},
+            "packages": {
+              "const": [
+                "accelerate==1.14.0",
+                "bitsandbytes==0.50.0",
+                "datasets==5.0.1",
+                "peft==0.20.0",
+                "tokenizers==0.22.2",
+                "torch==2.13.0",
+                "transformers==5.14.1"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary", "secondary", "safety", "generation_constants", "decision_rule"],
+      "properties": {
+        "primary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["metric", "contrast", "uncertainty", "samples", "seed"],
+          "properties": {
+            "metric": {"const": "paired_sentence_edit_f0_5"},
+            "contrast": {"const": "modern_mask_cpt_minus_faithful_cpt"},
+            "uncertainty": {"const": "paired_sentence_bootstrap_percentile_95_ci"},
+            "samples": {"const": 10000},
+            "seed": {"const": 6170}
+          }
+        },
+        "secondary": {
+          "const": ["exact_sentence_accuracy", "edit_precision", "edit_recall", "headline_calque_recall", "per_tag_recall", "tokenizer_behavior", "runtime", "cost"]
+        },
+        "safety": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["inventory_role", "clean_no_change_minimum", "protected_span_minimum", "gold_status", "gate"],
+          "properties": {
+            "inventory_role": {"const": "safety_probe_receipt"},
+            "clean_no_change_minimum": {"const": 120},
+            "protected_span_minimum": {"const": 180},
+            "gold_status": {"const": "deterministic_non_human_proxy_not_linguistic_gold"},
+            "gate": {"const": "zero_protected_span_failures_and_modern_no_change_edit_rate_not_above_faithful"}
+          }
+        },
+        "generation_constants": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["prompt_role", "temperature", "top_p", "do_sample", "max_new_tokens", "batch_retry_policy"],
+          "properties": {
+            "prompt_role": {"const": "minimal_edit_prompt"},
+            "temperature": {"const": 0},
+            "top_p": {"const": 1},
+            "do_sample": {"const": false},
+            "max_new_tokens": {"const": 512},
+            "batch_retry_policy": {"const": "transport_retries_only_no_score_conditioned_retry"}
+          }
+        },
+        "decision_rule": {"const": "retain_modern_only_if_paired_f0_5_lower_95_ci_gt_0_and_all_safety_gates_pass_otherwise_no_advance"}
+      }
+    },
+    "compute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider_class", "hardware", "stage_1", "stage_2", "all_inclusive_ceiling_usd", "authorization_required"],
+      "properties": {
+        "provider_class": {"const": "ephemeral_gpu_rental"},
+        "hardware": {"const": ["A100_80GB", "H100_80GB"]},
+        "stage_1": {"$ref": "#/$defs/stage"},
+        "stage_2": {"$ref": "#/$defs/stage"},
+        "all_inclusive_ceiling_usd": {"const": 100},
+        "authorization_required": {"const": true}
+      }
+    },
+    "abort_conditions": {
+      "const": [
+        "artifact_or_schema_hash_drift",
+        "evaluation_contamination_or_firewall_failure",
+        "arm_drift_beyond_preregistered_loss_policy",
+        "tokenizer_or_mask_projection_mismatch",
+        "missing_or_mismatched_operator_authorization",
+        "nonfinite_loss_or_gradient",
+        "out_of_memory",
+        "checkpoint_reload_failure",
+        "runtime_or_cost_ceiling_breach",
+        "safety_regression",
+        "remote_upload_or_publication_attempt"
+      ]
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed", "prohibited"],
+      "properties": {
+        "allowed": {"const": ["causal_evidence_for_the_exact_modern_loss_mask_policy_under_this_frozen_recipe"]},
+        "prohibited": {"const": ["general_ukrainian_fluency", "human_acceptance_of_silver_labels", "deployment_readiness", "leaderboard_superiority", "dataset_or_weight_release"]}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "revision": {"type": "string", "pattern": "^[a-f0-9]{40,64}$"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "logical_path", "bytes", "records", "sha256"],
+      "properties": {
+        "role": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$"},
+        "logical_path": {"type": "string", "pattern": "^(batch_state|data)/[A-Za-z0-9._/-]+$"},
+        "bytes": {"type": "integer", "minimum": 1},
+        "records": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "arm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["arm_id", "training_performed", "view_role", "loss_policy", "initial_model_revision"],
+      "properties": {
+        "arm_id": {"type": "string", "minLength": 3},
+        "training_performed": {"type": "boolean"},
+        "view_role": {"anyOf": [{"type": "string"}, {"type": "null"}]},
+        "loss_policy": {"type": "string", "minLength": 3},
+        "initial_model_revision": {"$ref": "#/$defs/revision"}
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage_id", "trained_arms", "seeds", "token_budget_per_arm", "max_gpu_hours_per_run", "max_cost_usd", "entry_gate"],
+      "properties": {
+        "stage_id": {"enum": ["smoke", "bounded_causal"]},
+        "trained_arms": {"const": ["faithful_cpt", "modern_mask_cpt"]},
+        "seeds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 0}},
+        "token_budget_per_arm": {"type": "integer", "minimum": 1, "maximum": 7696734},
+        "max_gpu_hours_per_run": {"type": "number", "exclusiveMinimum": 0, "maximum": 9},
+        "max_cost_usd": {"type": "number", "exclusiveMinimum": 0, "maximum": 100},
+        "entry_gate": {"type": "string", "minLength": 10}
+      }
+    }
+  }
+}
