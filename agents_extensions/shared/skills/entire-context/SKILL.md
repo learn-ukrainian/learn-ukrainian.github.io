@@ -62,6 +62,9 @@ Without an ACP root, ACP links fail closed as `source_missing`. `--db` or
 `ENTIRE_CONTEXT_DB` overrides the projection path. `--consumer <label>` may be
 passed by any harness; it is validated, never persisted, and never echoed, so
 all harnesses receive byte-identical results for identical invocations.
+An ACP `--git-sha` join is admitted only when hashing that exact SHA matches
+the conversation's canonical correlation digest. Caller-asserted joins fail
+closed as `digest_mismatch`.
 
 ## Typed resolvers in this slice
 

@@ -32,6 +32,7 @@ MAX_HANDOFF_ITEMS = 5
 MAX_CAPSULE_BYTES = 8192
 MAX_EXPLAIN_DEPTH = 2
 MAX_EXPLAIN_NODES = 50
+MAX_HANDOFF_SEEDS = 500
 
 REASON_TOMBSTONED = "tombstoned"
 REASON_HANDOFF_ITEM_CAP = "handoff_item_cap"
@@ -226,18 +227,30 @@ def _resolve_seeds(
     git_sha: str | None,
 ) -> list[dict[str, Any]]:
     if locator_id is not None:
+        if not LOCATOR_ID_RE.fullmatch(locator_id):
+            raise RecallInputError("seed_invalid")
         found = store.lookup(locator_id)
         return [found] if found is not None else []
     candidates = store.candidates(limit=MAX_SCAN_ROWS)
     if canonical_id is not None:
-        return [link for link in candidates if link["canonical_id"] == canonical_id]
+        if not isinstance(canonical_id, str) or not canonical_id:
+            raise RecallInputError("seed_invalid")
+        return sorted(
+            (link for link in candidates if link["canonical_id"] == canonical_id),
+            key=lambda link: link["locator_id"],
+        )[:MAX_EXPLAIN_NODES]
     if git_sha is not None:
+        if (
+            not isinstance(git_sha, str)
+            or len(git_sha) != 40
+            or any(character not in "0123456789abcdef" for character in git_sha)
+        ):
+            raise RecallInputError("seed_invalid")
         needle = git_sha.lower()
-        return [
-            link
-            for link in candidates
-            if link.get("git_sha") == needle or link["canonical_id"] == needle
-        ]
+        return sorted(
+            (link for link in candidates if link.get("git_sha") == needle or link["canonical_id"] == needle),
+            key=lambda link: link["locator_id"],
+        )[:MAX_EXPLAIN_NODES]
     raise RecallInputError("seed_invalid")
 
 
@@ -258,15 +271,13 @@ def explain_change(
     shared canonical ID). Every visited node is re-verified before it enters
     the result; unverifiable nodes are omitted and their edges dropped.
     """
-    seeds = _resolve_seeds(
-        store, locator_id=locator_id, canonical_id=canonical_id, git_sha=git_sha
-    )
+    seeds = _resolve_seeds(store, locator_id=locator_id, canonical_id=canonical_id, git_sha=git_sha)
     if not seeds:
         return {"schema": "ec-explain.v1", "found": False}
     seed_ids = {str(seed["locator_id"]) for seed in seeds}
     nodes: dict[str, dict[str, Any]] = {str(seed["locator_id"]): seed for seed in seeds}
     edges: set[tuple[str, str, str]] = set()
-    frontier = list(seed_ids)
+    frontier = sorted(seed_ids)
     depth = 0
     while frontier and depth < MAX_EXPLAIN_DEPTH and len(nodes) < MAX_EXPLAIN_NODES:
         next_frontier: list[str] = []
@@ -284,9 +295,7 @@ def explain_change(
     omitted: list[dict[str, str]] = []
     for node_id in sorted(nodes):
         try:
-            verified[node_id] = _verified_card(
-                store, nodes[node_id], repo=repo, acp_root=acp_root, now=now
-            )
+            verified[node_id] = _verified_card(store, nodes[node_id], repo=repo, acp_root=acp_root, now=now)
         except GateReject as exc:
             omitted.append(_omitted(node_id, exc.reason))
     kept_edges = [
@@ -327,33 +336,48 @@ def prepare_handoff(
     for locator_id in locator_ids:
         if not isinstance(locator_id, str) or not LOCATOR_ID_RE.fullmatch(locator_id):
             raise RecallInputError("locator_id_invalid")
+    unique_locator_ids = sorted(set(locator_ids))
+    if len(unique_locator_ids) > MAX_HANDOFF_SEEDS:
+        raise RecallInputError("handoff_seed_limit")
     capsule: dict[str, Any] = {
         "schema": "ec-handoff.v1",
         "items": [],
         "omitted": [],
         "complete": True,
+        "omissions_truncated": False,
     }
     items: list[dict[str, Any]] = capsule["items"]
     omitted: list[dict[str, str]] = capsule["omitted"]
-    for locator_id in sorted(set(locator_ids)):
+
+    def append_omission(locator_id: str, reason: str) -> None:
+        capsule["complete"] = False
+        omitted.append(_omitted(locator_id, reason))
+        if len(canonical_json(capsule).encode("utf-8")) <= MAX_CAPSULE_BYTES:
+            return
+        omitted.pop()
+        capsule["omissions_truncated"] = True
+        while omitted and len(canonical_json(capsule).encode("utf-8")) > MAX_CAPSULE_BYTES:
+            omitted.pop()
+
+    for locator_id in unique_locator_ids:
         if len(items) >= MAX_HANDOFF_ITEMS:
-            omitted.append(_omitted(locator_id, REASON_HANDOFF_ITEM_CAP))
-            capsule["complete"] = False
+            append_omission(locator_id, REASON_HANDOFF_ITEM_CAP)
             continue
         link = store.lookup(locator_id)
         if link is None:
-            omitted.append(_omitted(locator_id, REASON_SOURCE_MISSING))
+            append_omission(locator_id, REASON_SOURCE_MISSING)
             continue
         try:
             card = _verified_card(store, link, repo=repo, acp_root=acp_root, now=now)
         except GateReject as exc:
-            omitted.append(_omitted(locator_id, exc.reason))
+            append_omission(locator_id, exc.reason)
             continue
         items.append(card)
         if len(canonical_json(capsule).encode("utf-8")) > MAX_CAPSULE_BYTES:
             items.pop()
-            omitted.append(_omitted(locator_id, REASON_CAPSULE_BUDGET))
-            capsule["complete"] = False
+            append_omission(locator_id, REASON_CAPSULE_BUDGET)
+    if len(canonical_json(capsule).encode("utf-8")) > MAX_CAPSULE_BYTES:
+        raise AssertionError("handoff capsule exceeded its hard byte cap")
     return capsule
 
 

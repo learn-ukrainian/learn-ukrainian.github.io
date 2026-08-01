@@ -37,6 +37,7 @@ from .model import (
 
 DEFAULT_VERIFICATION_MAX_AGE_SECONDS = 3600
 MAX_CLOCK_SKEW_SECONDS = 300
+MAX_RELATED_SCAN_ROWS = 500
 
 _DDL = """
 CREATE TABLE IF NOT EXISTS link_events (
@@ -402,7 +403,7 @@ class ContextLinkStore:
         Pending and tombstoned claims are never candidates. The order is fully
         derived from the stored locator IDs so recall ranking is reproducible.
         """
-        capped = max(0, int(limit))
+        capped = max(0, min(int(limit), MAX_RELATED_SCAN_ROWS))
         with self._connect(write=False) as connection:
             rows = connection.execute(
                 "SELECT * FROM context_links WHERE state = 'promoted'"
@@ -427,13 +428,13 @@ class ContextLinkStore:
         same-repository commit. The seed itself and any non-promoted claim are
         excluded. Order is deterministic and bounded by ``limit``.
         """
-        capped = max(0, int(limit))
+        capped = max(0, min(int(limit), MAX_RELATED_SCAN_ROWS))
         locator_id = str(link["locator_id"])
         with self._connect(write=False) as connection:
             rows = connection.execute(
                 "SELECT * FROM context_links WHERE state = 'promoted'"
-                " AND locator_id != ? ORDER BY locator_id",
-                (locator_id,),
+                " AND locator_id != ? ORDER BY locator_id LIMIT ?",
+                (locator_id, MAX_RELATED_SCAN_ROWS),
             ).fetchall()
         related: list[tuple[dict[str, Any], str]] = []
         seed_sha = link.get("git_sha")

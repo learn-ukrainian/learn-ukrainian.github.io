@@ -11,6 +11,7 @@ without invalid JSON.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import sqlite3
@@ -196,6 +197,7 @@ def make_acp_plane(
     conversation_id: str = CONV_ID,
     terminal: bool = True,
     name: str = "plane",
+    correlation_id: str | None = None,
 ) -> Path:
     root = tmp_path / name
     root.mkdir()
@@ -207,7 +209,9 @@ def make_acp_plane(
             (
                 conversation_id,
                 "task-digest",
-                "correlation-digest",
+                hashlib.sha256(correlation_id.encode("utf-8")).hexdigest()
+                if correlation_id is not None
+                else "correlation-digest",
                 f"idem-{conversation_id[-4:]}",
                 1,
                 json.dumps(["claude", "kimi"]),
@@ -298,12 +302,8 @@ def bootstrap_git(store: ContextLinkStore, repo: Path, sha: str) -> str:
     return admit(store, resolve_git_commit(sha, repo=repo))
 
 
-def bootstrap_acp(
-    store: ContextLinkStore, acp_root: Path, conversation_id: str = CONV_ID, **kwargs
-) -> str:
-    return admit(
-        store, resolve_acp_conversation(conversation_id, acp_root=acp_root, **kwargs)
-    )
+def bootstrap_acp(store: ContextLinkStore, acp_root: Path, conversation_id: str = CONV_ID, **kwargs) -> str:
+    return admit(store, resolve_acp_conversation(conversation_id, acp_root=acp_root, **kwargs))
 
 
 def run_cli(capsys: pytest.CaptureFixture, *args: str) -> tuple[int, str]:
@@ -343,9 +343,7 @@ def test_git_bootstrap_then_search_recall(
     assert card["excerpt"]["parents"] == [git_repo["sha1"]]
 
     # Facet needle finds the same verified card.
-    code, out = run_cli(
-        capsys, "search", "--query", "gamma.md", "--repo", repo, "--db", str(db)
-    )
+    code, out = run_cli(capsys, "search", "--query", "gamma.md", "--repo", repo, "--db", str(db))
     assert code == 0
     result = json.loads(out)
     assert [entry["locator_id"] for entry in result["results"]] == [card["locator_id"]]
@@ -353,9 +351,7 @@ def test_git_bootstrap_then_search_recall(
     assert_body_free(out)
 
 
-def test_acp_bootstrap_then_recall(
-    tmp_path: Path, capsys: pytest.CaptureFixture
-) -> None:
+def test_acp_bootstrap_then_recall(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
     acp_root = make_acp_plane(tmp_path)
     db = tmp_path / "db.sqlite3"
     code, out = run_cli(
@@ -439,8 +435,16 @@ def test_provider_consumer_labels_yield_identical_bytes(
     handoff_outputs = []
     for consumer in ("codex", "kimi", "glm"):
         code, out = run_cli(
-            capsys, "handoff", "--query", "alpha", "--repo", repo, "--db", db,
-            "--consumer", consumer,
+            capsys,
+            "handoff",
+            "--query",
+            "alpha",
+            "--repo",
+            repo,
+            "--db",
+            db,
+            "--consumer",
+            consumer,
         )
         assert code == 0
         handoff_outputs.append(out)
@@ -488,9 +492,7 @@ def _link_dict(locator_suffix: str, **overrides) -> dict[str, object]:
 
 def test_ranking_exact_id_first_casefold_and_tiebreak() -> None:
     exact = rank_candidate(_link_dict("b"), "ab" * 20)
-    facet = rank_candidate(
-        _link_dict("a", facets={"title": "Matching Alpha Work"}), "matching alpha work"
-    )
+    facet = rank_candidate(_link_dict("a", facets={"title": "Matching Alpha Work"}), "matching alpha work")
     assert exact.score == 0  # no match against zero-sha candidate
     exact = rank_candidate(_link_dict("b", canonical_id="cd" * 20, git_sha="cd" * 20), "CD" * 20)
     assert exact.score >= 1000
@@ -522,8 +524,16 @@ def test_search_deterministic_limit_and_scan(
 
     # Result cap: limit=1 keeps the deterministic top entry.
     code, out = run_cli(
-        capsys, "search", "--query", "learn-ukrainian", "--repo", repo, "--db", db,
-        "--limit", "1",
+        capsys,
+        "search",
+        "--query",
+        "learn-ukrainian",
+        "--repo",
+        repo,
+        "--db",
+        db,
+        "--limit",
+        "1",
     )
     top = json.loads(out)
     assert len(top["results"]) == 1
@@ -531,8 +541,16 @@ def test_search_deterministic_limit_and_scan(
 
     # Scan cap: only the first promoted row (locator_id order) is a candidate.
     code, out = run_cli(
-        capsys, "search", "--query", "learn-ukrainian", "--repo", repo, "--db", db,
-        "--scan-limit", "1",
+        capsys,
+        "search",
+        "--query",
+        "learn-ukrainian",
+        "--repo",
+        repo,
+        "--db",
+        db,
+        "--scan-limit",
+        "1",
     )
     scanned = json.loads(out)
     assert scanned["scanned"] == 1
@@ -540,9 +558,7 @@ def test_search_deterministic_limit_and_scan(
     assert [card["locator_id"] for card in scanned["results"]] == [expected_first]
 
     # Exact SHA outranks facet matches regardless of locator order.
-    code, out = run_cli(
-        capsys, "search", "--query", str(git_repo["sha2"]), "--repo", repo, "--db", db
-    )
+    code, out = run_cli(capsys, "search", "--query", str(git_repo["sha2"]), "--repo", repo, "--db", db)
     exact = json.loads(out)
     assert exact["results"][0]["canonical_id"] == git_repo["sha2"]
 
@@ -550,13 +566,9 @@ def test_search_deterministic_limit_and_scan(
 def test_result_cap_of_ten(tmp_path: Path, git_repo: dict[str, object]) -> None:
     store = make_store(tmp_path)
     for index in range(12):
-        sha = commit_files(
-            git_repo["repo"], {f"series/file-{index:02d}.txt": f"{index}\n"}, "series"
-        )
+        sha = commit_files(git_repo["repo"], {f"series/file-{index:02d}.txt": f"{index}\n"}, "series")
         bootstrap_git(store, git_repo["repo"], sha)
-    result = recall.search_past_work(
-        store, "series", repo=git_repo["repo"], acp_root=None, limit=50
-    )
+    result = recall.search_past_work(store, "series", repo=git_repo["repo"], acp_root=None, limit=50)
     assert result["scanned"] == 12
     assert len(result["results"]) == 10  # hard cap, not the requested 50
     assert result["limit"] == 10
@@ -588,18 +600,12 @@ def test_stale_digest_is_omitted(tmp_path: Path) -> None:
     locator_id = bootstrap_acp(store, acp_root)
     append_acp_state_event(acp_root)  # receipt moves on; stored digest is stale
 
-    result = recall.search_past_work(
-        store, CONV_ID, repo=tmp_path, acp_root=acp_root
-    )
+    result = recall.search_past_work(store, CONV_ID, repo=tmp_path, acp_root=acp_root)
     assert result["results"] == []
-    assert result["omitted"] == [
-        {"locator_id": locator_id, "reason": REASON_DIGEST_MISMATCH}
-    ]
+    assert result["omitted"] == [{"locator_id": locator_id, "reason": REASON_DIGEST_MISMATCH}]
     capsule = recall.prepare_handoff(store, [locator_id], repo=tmp_path, acp_root=acp_root)
     assert capsule["items"] == []
-    assert capsule["omitted"] == [
-        {"locator_id": locator_id, "reason": REASON_DIGEST_MISMATCH}
-    ]
+    assert capsule["omitted"] == [{"locator_id": locator_id, "reason": REASON_DIGEST_MISMATCH}]
 
 
 def test_missing_source_is_omitted_and_bootstrap_refused(
@@ -609,16 +615,17 @@ def test_missing_source_is_omitted_and_bootstrap_refused(
     locator_id = bootstrap_git(store, git_repo["repo"], str(git_repo["sha1"]))
     other = make_git_repo(tmp_path, name="other")  # no such commit here
 
-    result = recall.search_past_work(
-        store, str(git_repo["sha1"]), repo=other, acp_root=None
-    )
+    result = recall.search_past_work(store, str(git_repo["sha1"]), repo=other, acp_root=None)
     assert result["results"] == []
-    assert result["omitted"] == [
-        {"locator_id": locator_id, "reason": REASON_SOURCE_MISSING}
-    ]
+    assert result["omitted"] == [{"locator_id": locator_id, "reason": REASON_SOURCE_MISSING}]
 
     code, out = run_cli(
-        capsys, "bootstrap-git", "f" * 40, "--repo", str(other), "--db",
+        capsys,
+        "bootstrap-git",
+        "f" * 40,
+        "--repo",
+        str(other),
+        "--db",
         str(tmp_path / "other-db.sqlite3"),
     )
     assert code == 2
@@ -633,9 +640,7 @@ def test_acp_link_fails_closed_without_receipt_root(
     locator_id = bootstrap_acp(store, acp_root)
     result = recall.search_past_work(store, CONV_ID, repo=tmp_path, acp_root=None)
     assert result["results"] == []
-    assert result["omitted"] == [
-        {"locator_id": locator_id, "reason": REASON_SOURCE_MISSING}
-    ]
+    assert result["omitted"] == [{"locator_id": locator_id, "reason": REASON_SOURCE_MISSING}]
 
 
 def test_tombstoned_claim_never_recalled(tmp_path: Path) -> None:
@@ -657,9 +662,7 @@ def test_tombstoned_claim_never_recalled(tmp_path: Path) -> None:
 def test_partial_acp_receipt_fails_closed(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
     acp_root = make_acp_plane(tmp_path, terminal=False)
     db = tmp_path / "db.sqlite3"
-    code, out = run_cli(
-        capsys, "bootstrap-acp", CONV_ID, "--acp-root", str(acp_root), "--db", str(db)
-    )
+    code, out = run_cli(capsys, "bootstrap-acp", CONV_ID, "--acp-root", str(acp_root), "--db", str(db))
     assert code == 2
     assert json.loads(out)["reason"] == "partial_terminal"
     assert not db.exists()  # nothing was admitted
@@ -670,6 +673,17 @@ def test_unknown_acp_conversation_fails_closed(tmp_path: Path) -> None:
     with pytest.raises(ResolutionError) as excinfo:
         resolve_acp_conversation("conversation_" + "9" * 32, acp_root=acp_root)
     assert excinfo.value.reason == REASON_SOURCE_MISSING
+
+
+def test_acp_commit_join_requires_canonical_correlation(tmp_path: Path, git_repo: dict[str, object]) -> None:
+    acp_root = make_acp_plane(tmp_path)
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_acp_conversation(
+            CONV_ID,
+            acp_root=acp_root,
+            git_sha=str(git_repo["sha1"]),
+        )
+    assert excinfo.value.reason == REASON_DIGEST_MISMATCH
 
 
 def test_unsupported_kind_fails_closed(tmp_path: Path, git_repo: dict[str, object]) -> None:
@@ -701,9 +715,7 @@ def test_unsupported_kind_fails_closed(tmp_path: Path, git_repo: dict[str, objec
     assert admitted.outcome is AdmitOutcome.PROMOTED
     result = recall.search_past_work(store, "6183", repo=tmp_path, acp_root=None)
     assert result["results"] == []
-    assert result["omitted"] == [
-        {"locator_id": admitted.locator_id, "reason": REASON_UNSUPPORTED_KIND}
-    ]
+    assert result["omitted"] == [{"locator_id": admitted.locator_id, "reason": REASON_UNSUPPORTED_KIND}]
 
 
 def test_entire_cli_is_never_invoked(
@@ -717,9 +729,7 @@ def test_entire_cli_is_never_invoked(
     bin_dir.mkdir()
     marker = tmp_path / "entire-was-called"
     stub = bin_dir / "entire"
-    stub.write_text(
-        '#!/bin/sh\n/bin/touch "$ENTIRE_STUB_MARKER"\nexit 1\n', encoding="utf-8"
-    )
+    stub.write_text('#!/bin/sh\n/bin/touch "$ENTIRE_STUB_MARKER"\nexit 1\n', encoding="utf-8")
     stub.chmod(0o755)
     monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
     monkeypatch.setenv("ENTIRE_STUB_MARKER", str(marker))
@@ -727,8 +737,14 @@ def test_entire_cli_is_never_invoked(
     store = make_store(tmp_path)
     bootstrap_git(store, git_repo["repo"], str(git_repo["sha1"]))
     code, out = run_cli(
-        capsys, "search", "--query", "alpha", "--repo", str(git_repo["repo"]),
-        "--db", str(store.db_path),
+        capsys,
+        "search",
+        "--query",
+        "alpha",
+        "--repo",
+        str(git_repo["repo"]),
+        "--db",
+        str(store.db_path),
     )
     assert code == 0
     assert not marker.exists()
@@ -745,14 +761,26 @@ def test_query_over_256_bytes_refused_without_echo(
     bootstrap_git(store, git_repo["repo"], str(git_repo["sha1"]))
     needle = "q" * 257
     code, out = run_cli(
-        capsys, "search", "--query", needle, "--repo", str(git_repo["repo"]),
-        "--db", str(store.db_path),
+        capsys,
+        "search",
+        "--query",
+        needle,
+        "--repo",
+        str(git_repo["repo"]),
+        "--db",
+        str(store.db_path),
     )
     assert code == 2
     assert needle not in out
     code, out = run_cli(
-        capsys, "search", "--query", "   ", "--repo", str(git_repo["repo"]),
-        "--db", str(store.db_path),
+        capsys,
+        "search",
+        "--query",
+        "   ",
+        "--repo",
+        str(git_repo["repo"]),
+        "--db",
+        str(store.db_path),
     )
     assert code == 2
 
@@ -766,8 +794,14 @@ def test_query_is_never_echoed_or_persisted(
     # Uppercase needle matches the casefolded facet but never appears raw.
     needle = "ALPHA.TXT"
     code, out = run_cli(
-        capsys, "search", "--query", needle, "--repo", str(git_repo["repo"]),
-        "--db", str(store.db_path),
+        capsys,
+        "search",
+        "--query",
+        needle,
+        "--repo",
+        str(git_repo["repo"]),
+        "--db",
+        str(store.db_path),
     )
     assert code == 0
     assert needle not in out
@@ -782,16 +816,23 @@ def test_query_is_never_echoed_or_persisted(
 def test_explain_change_traverses_typed_joins(
     tmp_path: Path, git_repo: dict[str, object], capsys: pytest.CaptureFixture
 ) -> None:
-    acp_root = make_acp_plane(tmp_path)
-    store = make_store(tmp_path)
     sha = str(git_repo["sha2"])
+    acp_root = make_acp_plane(tmp_path, correlation_id=sha)
+    store = make_store(tmp_path)
     git_locator = bootstrap_git(store, git_repo["repo"], sha)
     acp_locator = bootstrap_acp(store, acp_root, git_sha=sha)
 
     code, out = run_cli(
-        capsys, "explain-change", "--sha", sha,
-        "--repo", str(git_repo["repo"]), "--acp-root", str(acp_root),
-        "--db", str(store.db_path),
+        capsys,
+        "explain-change",
+        "--sha",
+        sha,
+        "--repo",
+        str(git_repo["repo"]),
+        "--acp-root",
+        str(acp_root),
+        "--db",
+        str(store.db_path),
     )
     assert code == 0
     payload = json.loads(out)
@@ -809,25 +850,19 @@ def test_explain_change_traverses_typed_joins(
     assert_body_free(out)
 
 
-def test_explain_change_omits_unverifiable_nodes(
-    tmp_path: Path, git_repo: dict[str, object]
-) -> None:
-    acp_root = make_acp_plane(tmp_path)
-    store = make_store(tmp_path)
+def test_explain_change_omits_unverifiable_nodes(tmp_path: Path, git_repo: dict[str, object]) -> None:
     sha = str(git_repo["sha2"])
+    acp_root = make_acp_plane(tmp_path, correlation_id=sha)
+    store = make_store(tmp_path)
     bootstrap_git(store, git_repo["repo"], sha)
     acp_locator = bootstrap_acp(store, acp_root, git_sha=sha)
     append_acp_state_event(acp_root)  # ACP node goes stale
 
-    result = recall.explain_change(
-        store, git_sha=sha, repo=git_repo["repo"], acp_root=acp_root
-    )
+    result = recall.explain_change(store, git_sha=sha, repo=git_repo["repo"], acp_root=acp_root)
     assert result["found"] is True
     assert {node["kind"] for node in result["nodes"]} == {"git_commit"}
     assert result["edges"] == []  # edges to omitted nodes are dropped
-    assert result["omitted"] == [
-        {"locator_id": acp_locator, "reason": REASON_DIGEST_MISMATCH}
-    ]
+    assert result["omitted"] == [{"locator_id": acp_locator, "reason": REASON_DIGEST_MISMATCH}]
 
 
 def test_explain_change_unknown_seed_not_found(
@@ -836,8 +871,14 @@ def test_explain_change_unknown_seed_not_found(
     store = make_store(tmp_path)
     bootstrap_git(store, git_repo["repo"], str(git_repo["sha1"]))
     code, out = run_cli(
-        capsys, "explain-change", "--locator-id", "clink_" + "f" * 64,
-        "--repo", str(git_repo["repo"]), "--db", str(store.db_path),
+        capsys,
+        "explain-change",
+        "--locator-id",
+        "clink_" + "f" * 64,
+        "--repo",
+        str(git_repo["repo"]),
+        "--db",
+        str(store.db_path),
     )
     assert code == 1
     assert json.loads(out)["found"] is False
@@ -846,26 +887,18 @@ def test_explain_change_unknown_seed_not_found(
 # ── prepare-handoff capsule ──────────────────────────────────────────────────
 
 
-def test_handoff_item_cap_and_deterministic_order(
-    tmp_path: Path, git_repo: dict[str, object]
-) -> None:
+def test_handoff_item_cap_and_deterministic_order(tmp_path: Path, git_repo: dict[str, object]) -> None:
     store = make_store(tmp_path)
     locators = []
     for index in range(MAX_HANDOFF_ITEMS + 1):
-        sha = commit_files(
-            git_repo["repo"], {f"cap/item-{index:02d}.txt": f"{index}\n"}, "cap"
-        )
+        sha = commit_files(git_repo["repo"], {f"cap/item-{index:02d}.txt": f"{index}\n"}, "cap")
         locators.append(bootstrap_git(store, git_repo["repo"], sha))
-    capsule = recall.prepare_handoff(
-        store, list(reversed(locators)), repo=git_repo["repo"], acp_root=None
-    )
+    capsule = recall.prepare_handoff(store, list(reversed(locators)), repo=git_repo["repo"], acp_root=None)
     assert len(capsule["items"]) == MAX_HANDOFF_ITEMS
     assert capsule["complete"] is False
     ordered = sorted(locators)
     assert [item["locator_id"] for item in capsule["items"]] == ordered[:MAX_HANDOFF_ITEMS]
-    assert capsule["omitted"] == [
-        {"locator_id": ordered[MAX_HANDOFF_ITEMS], "reason": "handoff_item_cap"}
-    ]
+    assert capsule["omitted"] == [{"locator_id": ordered[MAX_HANDOFF_ITEMS], "reason": "handoff_item_cap"}]
 
 
 def test_handoff_byte_cap_never_emits_invalid_json(
@@ -876,8 +909,7 @@ def test_handoff_byte_cap_never_emits_invalid_json(
     for commit_index in range(3):
         files = {
             (
-                f"dir.{commit_index}/mod.{file_index:02d}.controller.component."
-                "extension.service.adapter.registry.txt"
+                f"dir.{commit_index}/mod.{file_index:02d}.controller.component.extension.service.adapter.registry.txt"
             ): "x\n"
             for file_index in range(30)
         }
@@ -899,20 +931,56 @@ def test_handoff_byte_cap_never_emits_invalid_json(
     assert_body_free(out)
 
 
+def test_handoff_many_omissions_stays_under_byte_cap(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    store.submit_claim(
+        ContextLink(
+            kind=LinkKind.GIT_COMMIT,
+            canonical_namespace=NAMESPACE,
+            canonical_id="f" * 40,
+            canonical_digest="sha256:" + "f" * 64,
+            git_sha="f" * 40,
+        ),
+        actor="test",
+    )
+    locator_ids = [f"clink_{index:064x}" for index in range(100)]
+    capsule = recall.prepare_handoff(store, locator_ids, repo=tmp_path, acp_root=None)
+    assert capsule["items"] == []
+    assert capsule["complete"] is False
+    assert capsule["omissions_truncated"] is True
+    assert len(canonical_json(capsule).encode("utf-8")) <= MAX_CAPSULE_BYTES
+
+
+def test_handoff_rejects_unbounded_seed_set(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    locator_ids = [f"clink_{index:064x}" for index in range(501)]
+    with pytest.raises(recall.RecallInputError, match="handoff_seed_limit"):
+        recall.prepare_handoff(store, locator_ids, repo=tmp_path, acp_root=None)
+
+
 def test_handoff_from_query_uses_only_verified_results(
     tmp_path: Path, git_repo: dict[str, object], capsys: pytest.CaptureFixture
 ) -> None:
-    acp_root = make_acp_plane(tmp_path)
-    store = make_store(tmp_path)
     sha = str(git_repo["sha2"])
+    acp_root = make_acp_plane(tmp_path, correlation_id=sha)
+    store = make_store(tmp_path)
     bootstrap_git(store, git_repo["repo"], sha)
     stale_locator = bootstrap_acp(store, acp_root, git_sha=sha)
     append_acp_state_event(acp_root)
 
     code, out = run_cli(
-        capsys, "handoff", "--locator-id", stale_locator, "--query", sha,
-        "--repo", str(git_repo["repo"]), "--acp-root", str(acp_root),
-        "--db", str(store.db_path),
+        capsys,
+        "handoff",
+        "--locator-id",
+        stale_locator,
+        "--query",
+        sha,
+        "--repo",
+        str(git_repo["repo"]),
+        "--acp-root",
+        str(acp_root),
+        "--db",
+        str(store.db_path),
     )
     assert code == 0
     capsule = json.loads(out)
@@ -923,14 +991,10 @@ def test_handoff_from_query_uses_only_verified_results(
     assert [item["canonical_id"] for item in capsule["items"]] == [sha]
 
 
-def test_handoff_requires_a_seed(
-    tmp_path: Path, git_repo: dict[str, object], capsys: pytest.CaptureFixture
-) -> None:
+def test_handoff_requires_a_seed(tmp_path: Path, git_repo: dict[str, object], capsys: pytest.CaptureFixture) -> None:
     store = make_store(tmp_path)
     bootstrap_git(store, git_repo["repo"], str(git_repo["sha1"]))
-    code, out = run_cli(
-        capsys, "handoff", "--repo", str(git_repo["repo"]), "--db", str(store.db_path)
-    )
+    code, out = run_cli(capsys, "handoff", "--repo", str(git_repo["repo"]), "--db", str(store.db_path))
     assert code == 2
     assert "seed_invalid" in out
 
@@ -941,8 +1005,14 @@ def test_handoff_rejects_malformed_locator_without_echo(
     store = make_store(tmp_path)
     bootstrap_git(store, git_repo["repo"], str(git_repo["sha1"]))
     code, out = run_cli(
-        capsys, "handoff", "--locator-id", "not-a-locator",
-        "--repo", str(git_repo["repo"]), "--db", str(store.db_path),
+        capsys,
+        "handoff",
+        "--locator-id",
+        "not-a-locator",
+        "--repo",
+        str(git_repo["repo"]),
+        "--db",
+        str(store.db_path),
     )
     assert code == 2
     assert "not-a-locator" not in out
@@ -952,9 +1022,7 @@ def test_handoff_rejects_malformed_locator_without_echo(
 
 
 def test_search_missing_projection_is_clean(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
-    code, out = run_cli(
-        capsys, "search", "--query", "alpha", "--db", str(tmp_path / "missing.sqlite3")
-    )
+    code, out = run_cli(capsys, "search", "--query", "alpha", "--db", str(tmp_path / "missing.sqlite3"))
     assert code == 0
     payload = json.loads(out)
     assert payload["available"] is False
@@ -964,8 +1032,12 @@ def test_search_missing_projection_is_clean(tmp_path: Path, capsys: pytest.Captu
 
 def test_handoff_missing_projection_is_clean(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
     code, out = run_cli(
-        capsys, "handoff", "--locator-id", "clink_" + "a" * 64,
-        "--db", str(tmp_path / "missing.sqlite3"),
+        capsys,
+        "handoff",
+        "--locator-id",
+        "clink_" + "a" * 64,
+        "--db",
+        str(tmp_path / "missing.sqlite3"),
     )
     assert code == 0
     assert json.loads(out)["available"] is False

@@ -26,6 +26,7 @@ network access or protected-rail mutation, so they fail closed with
 from __future__ import annotations
 
 import re
+import sqlite3
 import subprocess
 from dataclasses import dataclass
 from datetime import datetime
@@ -178,6 +179,7 @@ def git_projection_digest(projection: dict[str, Any]) -> str:
                 "parents": projection["parents"],
                 "touched_paths": projection["touched_paths"],
                 "commit_ts": projection["commit_ts"],
+                "author": projection["author"],
             }
         )
     )
@@ -235,9 +237,9 @@ def resolve_git_commit(
 # ── acp_conversation ─────────────────────────────────────────────────────────
 
 
-def acp_receipt_projection(receipt: dict[str, Any]) -> dict[str, Any]:
+def acp_receipt_projection(receipt: dict[str, Any], *, git_sha: str | None = None) -> dict[str, Any]:
     """Extract the body-free terminal metadata covered by the digest."""
-    return {
+    projection = {
         "schema": "acp-receipt-projection.v1",
         "conversation_id": receipt["conversation_id"],
         "state": receipt["state"],
@@ -253,6 +255,9 @@ def acp_receipt_projection(receipt: dict[str, Any]) -> dict[str, Any]:
         "duration_ms": receipt["duration_ms"],
         "token_count": receipt["token_count"],
     }
+    if git_sha is not None:
+        projection["git_sha_correlation"] = git_sha
+    return projection
 
 
 def acp_projection_digest(projection: dict[str, Any]) -> str:
@@ -275,6 +280,29 @@ def _verified_acp_receipt(acp_root: Path, conversation_id: str) -> dict[str, Any
     return receipt
 
 
+def _verify_acp_git_correlation(acp_root: Path, conversation_id: str, git_sha: str | None) -> None:
+    """Prove an optional ACP-to-commit join from canonical correlation metadata."""
+    if git_sha is None:
+        return
+    if not GIT_SHA_RE.fullmatch(git_sha):
+        raise ResolutionError(REASON_RESOLUTION_ERROR, "git_sha must be a full 40-hex commit SHA")
+    db_path = Path(acp_root).expanduser().resolve() / "comms.sqlite3"
+    if not db_path.is_file():
+        raise ResolutionError(REASON_SOURCE_MISSING)
+    try:
+        with sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True) as connection:
+            row = connection.execute(
+                "SELECT correlation_digest FROM acp_conversations WHERE conversation_id = ?",
+                (conversation_id,),
+            ).fetchone()
+    except sqlite3.Error as exc:
+        raise ResolutionError(REASON_RESOLUTION_ERROR, "ACP correlation metadata unreadable") from exc
+    if row is None:
+        raise ResolutionError(REASON_SOURCE_MISSING)
+    if not isinstance(row[0], str) or row[0] != sha256_text(git_sha):
+        raise ResolutionError(REASON_DIGEST_MISMATCH, "ACP correlation does not bind this commit")
+
+
 def resolve_acp_conversation(
     conversation_id: str,
     *,
@@ -284,10 +312,9 @@ def resolve_acp_conversation(
 ) -> Resolution:
     """Resolve an exact ACP conversation ID through the terminal receipt verifier."""
     receipt = _verified_acp_receipt(Path(acp_root), conversation_id)
-    projection = acp_receipt_projection(receipt)
+    _verify_acp_git_correlation(Path(acp_root), conversation_id, git_sha)
+    projection = acp_receipt_projection(receipt, git_sha=git_sha)
     digest = acp_projection_digest(projection)
-    if git_sha is not None and not GIT_SHA_RE.fullmatch(git_sha):
-        raise ResolutionError(REASON_RESOLUTION_ERROR, "git_sha must be a full 40-hex commit SHA")
     facets = {
         "source_kind": "acp_conversation",
         "state": str(receipt["state"]),
@@ -327,6 +354,8 @@ def resolve_acp_conversation(
         "token_bucket": _token_bucket(receipt["token_count"]),
         "content_included": False,
     }
+    if git_sha is not None:
+        excerpt["git_sha_correlation"] = git_sha
     return Resolution(link=link, verification=verification, excerpt=excerpt)
 
 
@@ -380,9 +409,6 @@ def reverify_link(
         now=now,
     )
     fresh = resolution.link
-    if (
-        fresh.canonical_digest != link["canonical_digest"]
-        or fresh.canonical_namespace != link["canonical_namespace"]
-    ):
+    if fresh.canonical_digest != link["canonical_digest"] or fresh.canonical_namespace != link["canonical_namespace"]:
         raise ResolutionError(REASON_DIGEST_MISMATCH)
     return resolution.excerpt

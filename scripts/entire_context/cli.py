@@ -494,7 +494,10 @@ def build_parser() -> argparse.ArgumentParser:
     bootstrap_acp.add_argument(
         "--git-sha",
         default=None,
-        help="Optional exact commit SHA this conversation is provenance for",
+        help=(
+            "Optional exact commit SHA; admitted only when it matches the ACP "
+            "conversation's canonical correlation digest"
+        ),
     )
     bootstrap_acp.add_argument("--actor", default="cli", help="Body-free actor identity")
     add_db_flag(bootstrap_acp)
