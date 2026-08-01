@@ -27,6 +27,13 @@ NAMESPACE_RE = re.compile(r"^[a-z][a-z0-9_-]{0,31}:[A-Za-z0-9][A-Za-z0-9._/-]{0,
 CANONICAL_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$")
 OPAQUE_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$")
 IDENTITY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$")
+ROLLOVER_NAMESPACE = "rollover:registry/v1"
+ROLLOVER_CANONICAL_ID_RE = re.compile(
+    r"^[a-z][a-z0-9-]*/[a-z][a-z0-9-]{0,63}/rollover-[a-z0-9]+(?:-[a-z0-9]+)*$"
+)
+ROLLOVER_EVIDENCE_LOCATOR_RE = re.compile(
+    rf"^{re.escape(ROLLOVER_NAMESPACE)}/{ROLLOVER_CANONICAL_ID_RE.pattern.removeprefix('^').removesuffix('$')}$"
+)
 
 ALLOWED_TOP_LEVEL_KEYS = frozenset(
     {
@@ -235,7 +242,19 @@ class ContextLink:
         _validate_scalar("canonical_namespace", self.canonical_namespace, reject_long_opaque=True)
         if not CANONICAL_ID_RE.fullmatch(self.canonical_id):
             raise SchemaError("canonical_id must be an exact, path-safe identity")
-        _validate_scalar("canonical_id", self.canonical_id, reject_long_opaque=True)
+        canonical_id_exemption = None
+        if self.kind is LinkKind.ROLLOVER:
+            if self.canonical_namespace != ROLLOVER_NAMESPACE:
+                raise SchemaError(f"rollover links must use canonical namespace {ROLLOVER_NAMESPACE!r}")
+            if not ROLLOVER_CANONICAL_ID_RE.fullmatch(self.canonical_id):
+                raise SchemaError("rollover canonical_id must be an exact registry identity")
+            canonical_id_exemption = ROLLOVER_CANONICAL_ID_RE
+        _validate_scalar(
+            "canonical_id",
+            self.canonical_id,
+            reject_long_opaque=True,
+            long_opaque_exemption=canonical_id_exemption,
+        )
         if not SHA256_DIGEST_RE.fullmatch(self.canonical_digest):
             raise SchemaError("canonical_digest must be 'sha256:<64 hex>'")
         if self.entire_checkpoint_id is not None:
@@ -339,10 +358,17 @@ class VerificationEvidence:
             raise SchemaError("status must be an allowlisted VerificationStatus")
         if not SHA256_DIGEST_RE.fullmatch(self.canonical_digest):
             raise SchemaError("canonical_digest must be 'sha256:<64 hex>'")
+        evidence_locator_exemption = GIT_EVIDENCE_LOCATOR_RE
+        if self.verifier == "rollover-registry":
+            if not ROLLOVER_EVIDENCE_LOCATOR_RE.fullmatch(self.evidence_locator):
+                raise SchemaError("rollover-registry evidence_locator must identify one exact registry record")
+            evidence_locator_exemption = ROLLOVER_EVIDENCE_LOCATOR_RE
+        elif self.evidence_locator.startswith(f"{ROLLOVER_NAMESPACE}/"):
+            raise SchemaError("rollover evidence locators require the rollover-registry verifier")
         validate_identity(
             self.evidence_locator,
             field_name="evidence_locator",
-            long_opaque_exemption=GIT_EVIDENCE_LOCATOR_RE,
+            long_opaque_exemption=evidence_locator_exemption,
         )
         try:
             parse_timestamp(self.checked_at)

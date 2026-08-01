@@ -56,6 +56,7 @@ from scripts.orchestration.task_family.rollover_registry import (
 
 from .model import (
     GIT_SHA_RE,
+    ROLLOVER_NAMESPACE,
     ContextLink,
     LinkKind,
     SchemaError,
@@ -391,8 +392,6 @@ def resolve_acp_conversation(
 
 # ── rollover ─────────────────────────────────────────────────────────────────
 
-
-ROLLOVER_NAMESPACE = "rollover:registry/v1"
 
 #: Sub-lifecycle objects whose ``state`` field is body-free and digest-covered.
 _ROLLOVER_SUB_STATE_KEYS = (

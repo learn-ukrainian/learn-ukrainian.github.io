@@ -17,6 +17,7 @@ import pytest
 
 from scripts.entire_context import cli
 from scripts.entire_context.model import (
+    ROLLOVER_NAMESPACE,
     ContextLink,
     LinkKind,
     SchemaError,
@@ -30,6 +31,10 @@ NOW = datetime(2026, 8, 1, 12, 0, 0, tzinfo=UTC)
 DIGEST_A = "sha256:" + "a" * 64
 DIGEST_B = "sha256:" + "b" * 64
 GIT_SHA = "0" * 40
+ROLLOVER_CANONICAL_ID = (
+    "claude-infra/lineage-2ec2efd78fd69eb61085db33/rollover-c88026bc03f24420976fbf17c9cda05a"
+)
+ROLLOVER_EVIDENCE_LOCATOR = f"{ROLLOVER_NAMESPACE}/{ROLLOVER_CANONICAL_ID}"
 
 # Tokens that must never appear in any CLI output (body-free contract).
 FORBIDDEN_OUTPUT_TOKENS = (
@@ -100,6 +105,81 @@ def test_valid_link_roundtrips_and_validates() -> None:
     link.validate()
     parsed = ContextLink.from_dict(link.to_dict())
     assert parsed.locator_id == link.locator_id
+
+
+def test_long_rollover_link_and_evidence_roundtrip() -> None:
+    link = make_link(
+        kind=LinkKind.ROLLOVER,
+        canonical_namespace=ROLLOVER_NAMESPACE,
+        canonical_id=ROLLOVER_CANONICAL_ID,
+        git_sha=None,
+    )
+    parsed = ContextLink.from_dict(link.to_dict())
+    assert parsed.canonical_id == ROLLOVER_CANONICAL_ID
+
+    verification = make_verification(
+        verifier="rollover-registry",
+        evidence_locator=ROLLOVER_EVIDENCE_LOCATOR,
+    )
+    assert VerificationEvidence.from_dict(verification.to_dict()) == verification
+
+
+@pytest.mark.parametrize(
+    ("kind", "namespace", "canonical_id"),
+    [
+        (LinkKind.GIT_COMMIT, "git:test/repo", ROLLOVER_CANONICAL_ID),
+        (LinkKind.ROLLOVER, "rollover:other/v1", ROLLOVER_CANONICAL_ID),
+        (LinkKind.ROLLOVER, ROLLOVER_NAMESPACE, "claude-infra/lineage-only"),
+        (LinkKind.ROLLOVER, ROLLOVER_NAMESPACE, ROLLOVER_CANONICAL_ID + "/extra"),
+        (LinkKind.ROLLOVER, ROLLOVER_NAMESPACE, ROLLOVER_CANONICAL_ID.upper()),
+    ],
+)
+def test_rollover_link_exemption_rejects_wrong_or_malformed_identity(
+    kind: LinkKind,
+    namespace: str,
+    canonical_id: str,
+) -> None:
+    link = make_link(
+        kind=kind,
+        canonical_namespace=namespace,
+        canonical_id=canonical_id,
+        git_sha=None,
+    )
+    with pytest.raises(SchemaError):
+        link.validate()
+
+
+def test_rollover_link_exemption_does_not_bypass_credential_scan() -> None:
+    credential_shaped_id = (
+        "sk-aaaaaaaaaaaaaaaaaaaa/lineage-2ec2efd78fd69eb61085db33/"
+        "rollover-c88026bc03f24420976fbf17c9cda05a"
+    )
+    link = make_link(
+        kind=LinkKind.ROLLOVER,
+        canonical_namespace=ROLLOVER_NAMESPACE,
+        canonical_id=credential_shaped_id,
+        git_sha=None,
+    )
+    with pytest.raises(SchemaError, match="credential-token"):
+        link.validate()
+
+
+@pytest.mark.parametrize(
+    ("verifier", "evidence_locator"),
+    [
+        ("git", ROLLOVER_EVIDENCE_LOCATOR),
+        ("rollover-registry", "rollover:other/v1/" + ROLLOVER_CANONICAL_ID),
+        ("rollover-registry", ROLLOVER_EVIDENCE_LOCATOR + "/extra"),
+        ("rollover-registry", ROLLOVER_EVIDENCE_LOCATOR.upper()),
+    ],
+)
+def test_rollover_evidence_exemption_requires_exact_typed_pair(
+    verifier: str,
+    evidence_locator: str,
+) -> None:
+    verification = make_verification(verifier=verifier, evidence_locator=evidence_locator)
+    with pytest.raises(SchemaError):
+        verification.validate()
 
 
 def test_locator_id_format() -> None:
