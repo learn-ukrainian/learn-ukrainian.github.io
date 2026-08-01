@@ -1447,7 +1447,7 @@ def test_codex_adapter_unchanged_still_targets_codex_only(tmp_path, monkeypatch)
 @pytest.mark.parametrize(
     ("adapter_class", "participant", "acpx_agent", "fixed_model", "auth_env"),
     [
-        (AcpxClaudeShadowAdapter, "claude", "claude", None, None),
+        (AcpxClaudeShadowAdapter, "claude", "claude", "claude-sonnet-5", None),
         (AcpxKimiShadowAdapter, "kimi", "kimi", None, "ACPX_AUTH_LOGIN"),
         (AcpxKimiCcShadowAdapter, "kimicc", "kimi", "kimi-code/k3", "ACPX_AUTH_LOGIN"),
         (AcpxCursorShadowAdapter, "cursor", "cursor", None, "ACPX_AUTH_CURSOR_LOGIN"),
@@ -1507,6 +1507,8 @@ def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
     else:
         assert ("--model", fixed_model) in zip(plan.cmd, plan.cmd[1:], strict=False)
         assert plan.metadata["model"] == fixed_model
+    if participant == "claude":
+        assert plan.metadata["effort"] == "high"
 
 
 def test_builtin_discussion_seat_rejects_shadow_marker_wrong_target_and_session(tmp_path, monkeypatch):
@@ -1557,7 +1559,11 @@ def test_supported_participant_registry_has_only_fixed_direct_seats():
     assert ACPX_SUPPORTED_PARTICIPANTS == {
         "codex": {"seat": "acpx-codex-shadow", "agent": "codex", "model": None},
         "grok": {"seat": "acpx-grok-shadow", "agent": "grok", "model": "grok-4.5"},
-        "claude": {"seat": "acpx-claude-shadow", "agent": "claude", "model": None},
+        "claude": {
+            "seat": "acpx-claude-shadow",
+            "agent": "claude",
+            "model": "claude-sonnet-5",
+        },
         "kimi": {"seat": "acpx-kimi-shadow", "agent": "kimi", "model": None},
         "kimicc": {"seat": "acpx-kimicc-shadow", "agent": "kimi", "model": "kimi-code/k3"},
         "cursor": {"seat": "acpx-cursor-shadow", "agent": "cursor", "model": None},

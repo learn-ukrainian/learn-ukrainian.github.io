@@ -122,6 +122,7 @@ PINNED_AGY_VERSION = "1.1.9"
 PINNED_OPENCODE_VERSION = "1.17.13"
 PINNED_HERMES_VERSION = "0.18.2"
 AGY_ACP_MODEL = "gemini-3.6-flash-high"
+CLAUDE_ACP_MODEL = "claude-sonnet-5"
 GLM_ACP_MODEL = "glm-5.2"
 GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.2"
 DEEPSEEK_ACP_MODEL = "deepseek-v4-pro"
@@ -194,7 +195,11 @@ _ALLOWED_TOOL_CONFIG_KEYS = frozenset(
 ACPX_SUPPORTED_PARTICIPANTS: dict[str, dict[str, str | None]] = {
     "codex": {"seat": "acpx-codex-shadow", "agent": "codex", "model": None},
     "grok": {"seat": "acpx-grok-shadow", "agent": "grok", "model": GROK_SHADOW_MODEL},
-    "claude": {"seat": "acpx-claude-shadow", "agent": "claude", "model": None},
+    "claude": {
+        "seat": "acpx-claude-shadow",
+        "agent": "claude",
+        "model": CLAUDE_ACP_MODEL,
+    },
     "kimi": {"seat": "acpx-kimi-shadow", "agent": "kimi", "model": None},
     "kimicc": {"seat": "acpx-kimicc-shadow", "agent": "kimi", "model": "kimi-code/k3"},
     "cursor": {"seat": "acpx-cursor-shadow", "agent": "cursor", "model": None},
@@ -227,6 +232,7 @@ ACPX_PARTICIPANT_CATALOG_TRANSPORTS: dict[str, str] = {
     "deepseek": "hermes",
 }
 ACPX_PARTICIPANT_EFFORTS: dict[str, str] = {
+    "claude": "high",
     "grok": GROK_SHADOW_EFFORT,
     "agy": "high",
     "glm": "high",
@@ -1304,6 +1310,9 @@ class _AcpxDiscussionAdapter:
 class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
     name = "acpx-claude-shadow"
     target_agent = "claude"
+    fixed_model = CLAUDE_ACP_MODEL
+    default_model = fixed_model
+    fixed_effort = "high"
 
 
 class AcpxKimiShadowAdapter(_AcpxDiscussionAdapter):
