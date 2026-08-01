@@ -1735,6 +1735,7 @@ def _handle_discuss(args) -> int:
                     models=agent_models or None,
                     efforts=agent_efforts or None,
                     source=runtime_initiator,
+                    initiator=runtime_initiator,
                 )
             finally:
                 if previous_transport is None:

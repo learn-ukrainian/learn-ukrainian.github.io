@@ -1438,9 +1438,10 @@ def _handle_acp_compat(args, target: str) -> None:
     task_id = getattr(args, "task_id", None)
     if not task_id:
         raise SystemExit(f"ask-{target} requires --task-id")
-    from ._acp_compat import run_compat_ask
+    from ._acp_compat import require_compat_target, run_compat_ask
 
     try:
+        require_compat_target(target)
         run_compat_ask(
             target,
             content,

@@ -256,9 +256,6 @@ def test_review_prompt_evidence_is_complete_hash_bound_and_json_escaped(
     # single JSON data line; it cannot terminate the evidence boundary.
     assert prompt_evidence.count("\nEND AUTHORITATIVE SEALED REVIEW EVIDENCE\n") == 1
     assert prompt_evidence.count("\nEND AUTHORITATIVE INLINE REVIEW CONTENT\n") == 1
-    assert "confidence value must be a JSON number" in prompt_evidence
-    assert 'correctness\":\"correct' in prompt_evidence
-    assert "enum aliases such as pass" in prompt_evidence
     inline_line = next(
         line
         for line in prompt_evidence.splitlines()

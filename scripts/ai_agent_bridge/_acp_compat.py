@@ -31,6 +31,16 @@ _TARGETS = {
 }
 
 
+def require_compat_target(command_target: str) -> str:
+    """Resolve a legacy command name before any sender or payload work."""
+    try:
+        return _TARGETS[command_target]
+    except KeyError as exc:
+        raise ValueError(
+            f"legacy ask target {command_target!r} has no enabled ACP route"
+        ) from exc
+
+
 def _result_receipt(result: object) -> bytes:
     payload = {
         "ok": bool(getattr(result, "ok", False)),
@@ -108,12 +118,7 @@ def run_compat_ask(
     """
     if review:
         raise ValueError("formal_review_requires_review_pr_acp_sealed_snapshot")
-    try:
-        participant = _TARGETS[command_target]
-    except KeyError as exc:
-        raise ValueError(
-            f"legacy ask target {command_target!r} has no enabled ACP route"
-        ) from exc
+    participant = require_compat_target(command_target)
     if not task_id or not task_id.strip():
         raise ValueError("ACP ask requires a non-empty task_id")
     prompt = content
