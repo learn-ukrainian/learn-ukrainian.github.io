@@ -170,10 +170,42 @@ def test_non_facet_identity_fields_reject_token_like_values(field: str) -> None:
         ContextLink.from_dict(payload)
 
 
+@pytest.mark.parametrize("field", ["canonical_id", "entire_checkpoint_id"])
+def test_non_facet_identity_fields_reject_long_opaque_values(field: str) -> None:
+    payload = make_link().to_dict()
+    payload.pop("locator_id")
+    payload[field] = "A" * 64
+    with pytest.raises(SchemaError, match="long-opaque-token"):
+        ContextLink.from_dict(payload)
+
+
+def test_canonical_namespace_rejects_long_opaque_path_component() -> None:
+    payload = make_link().to_dict()
+    payload.pop("locator_id")
+    payload["canonical_namespace"] = "github:" + "A" * 64
+    with pytest.raises(SchemaError, match="long-opaque-token"):
+        ContextLink.from_dict(payload)
+
+
 def test_verification_locator_rejects_token_like_values() -> None:
     payload = make_verification().to_dict()
     payload["evidence_locator"] = "ghp_" + "x" * 32
     with pytest.raises(SchemaError, match="credential-token"):
+        VerificationEvidence.from_dict(payload)
+
+
+@pytest.mark.parametrize("field", ["verifier", "evidence_locator"])
+def test_verification_identity_fields_reject_long_opaque_values(field: str) -> None:
+    payload = make_verification().to_dict()
+    payload[field] = "A" * 64
+    with pytest.raises(SchemaError, match="long-opaque-token"):
+        VerificationEvidence.from_dict(payload)
+
+
+def test_typed_verification_locator_rejects_long_opaque_path_component() -> None:
+    payload = make_verification().to_dict()
+    payload["evidence_locator"] = "github:" + "A" * 64
+    with pytest.raises(SchemaError, match="long-opaque-token"):
         VerificationEvidence.from_dict(payload)
 
 
@@ -530,6 +562,17 @@ def test_cli_corrupt_projection_fails_open(tmp_path: Path) -> None:
     db.write_bytes(b"not a sqlite database at all")
     code, payload = run_cli(["status", "--db", str(db)])
     assert code == cli.EXIT_OK
+    assert payload["available"] is False
+    assert payload["reason"] == "projection_unreadable"
+
+
+def test_cli_rebuild_corrupt_projection_refuses_without_traceback(tmp_path: Path) -> None:
+    db = tmp_path / "corrupt.sqlite3"
+    db.write_bytes(b"not a sqlite database at all")
+
+    code, payload = run_cli(["rebuild", "--db", str(db)])
+
+    assert code == cli.EXIT_REFUSED
     assert payload["available"] is False
     assert payload["reason"] == "projection_unreadable"
 

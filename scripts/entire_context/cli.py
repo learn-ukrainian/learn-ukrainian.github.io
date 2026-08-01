@@ -115,6 +115,13 @@ def cmd_explain(args: argparse.Namespace) -> int:
 
 
 def cmd_rebuild(args: argparse.Namespace) -> int:
+    """Replay projection state, refusing corrupt input because this command mutates state.
+
+    Observational commands report an unreadable optional projection with a
+    successful body-free status payload. Rebuild is a recovery mutation: if
+    the event log cannot be read, no repair was applied and callers receive
+    ``EXIT_REFUSED``.
+    """
     db_path, early = _guard(args)
     if early is not None:
         _emit(early)
@@ -204,7 +211,10 @@ def build_parser() -> argparse.ArgumentParser:
     add_db_flag(explain)
     explain.set_defaults(func=cmd_explain)
 
-    rebuild = sub.add_parser("rebuild", help="Replay the append-only event log into the projection")
+    rebuild = sub.add_parser(
+        "rebuild",
+        help="Replay the event log; refuse unreadable input because rebuild mutates projection state",
+    )
     add_db_flag(rebuild)
     rebuild.set_defaults(func=cmd_rebuild)
 

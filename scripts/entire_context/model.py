@@ -88,7 +88,7 @@ FORBIDDEN_VALUE_PATTERNS = (
     ("public-entire-ref", re.compile(r"refs/entire(?:/|$)")),
 )
 
-LONG_OPAQUE_FACET_RE = re.compile(r"^[A-Za-z0-9_+/-]{48,}={0,2}$")
+LONG_OPAQUE_COMPONENT_RE = re.compile(r"(?:^|[.:/])([A-Za-z0-9_+-]{48,})(?=$|[.:/])")
 
 MAX_STRING_BYTES = 1024
 MAX_LIST_ITEMS = 64
@@ -162,15 +162,15 @@ def _validate_scalar(path: str, value: Any, *, reject_long_opaque: bool = False)
     for rule, pattern in FORBIDDEN_VALUE_PATTERNS:
         if pattern.search(value):
             raise SchemaError(f"field {path!r} rejected by {rule} rule")
-    if reject_long_opaque and LONG_OPAQUE_FACET_RE.fullmatch(value):
+    if reject_long_opaque and LONG_OPAQUE_COMPONENT_RE.search(value):
         raise SchemaError(f"field {path!r} rejected by long-opaque-token rule")
 
 
-def validate_identity(value: str, *, field_name: str) -> None:
+def validate_identity(value: str, *, field_name: str, reject_long_opaque: bool = True) -> None:
     """Validate one body-free, path-safe externally supplied identity."""
     if not isinstance(value, str) or not IDENTITY_RE.fullmatch(value):
         raise SchemaError(f"{field_name} must be a path-safe identity")
-    _validate_scalar(field_name, value)
+    _validate_scalar(field_name, value, reject_long_opaque=reject_long_opaque)
 
 
 def validate_facets(facets: dict[str, Any]) -> None:
@@ -207,16 +207,16 @@ class ContextLink:
             raise SchemaError("kind must be an allowlisted LinkKind")
         if not NAMESPACE_RE.fullmatch(self.canonical_namespace):
             raise SchemaError("canonical_namespace must be a typed '<system>:<owner/path>' identity")
-        _validate_scalar("canonical_namespace", self.canonical_namespace)
+        _validate_scalar("canonical_namespace", self.canonical_namespace, reject_long_opaque=True)
         if not CANONICAL_ID_RE.fullmatch(self.canonical_id):
             raise SchemaError("canonical_id must be an exact, path-safe identity")
-        _validate_scalar("canonical_id", self.canonical_id)
+        _validate_scalar("canonical_id", self.canonical_id, reject_long_opaque=True)
         if not SHA256_DIGEST_RE.fullmatch(self.canonical_digest):
             raise SchemaError("canonical_digest must be 'sha256:<64 hex>'")
         if self.entire_checkpoint_id is not None and not OPAQUE_ID_RE.fullmatch(self.entire_checkpoint_id):
             raise SchemaError("entire_checkpoint_id must be an opaque path-safe identifier")
         if self.entire_checkpoint_id is not None:
-            _validate_scalar("entire_checkpoint_id", self.entire_checkpoint_id)
+            _validate_scalar("entire_checkpoint_id", self.entire_checkpoint_id, reject_long_opaque=True)
         if self.git_sha is not None and not GIT_SHA_RE.fullmatch(self.git_sha):
             raise SchemaError("git_sha must be a full 40-hex commit SHA")
         validate_facets(self.facets)
