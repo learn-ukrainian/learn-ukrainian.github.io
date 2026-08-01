@@ -37,6 +37,7 @@ from .model import (
 
 DEFAULT_VERIFICATION_MAX_AGE_SECONDS = 3600
 MAX_CLOCK_SKEW_SECONDS = 300
+MAX_RELATED_SCAN_ROWS = 500
 
 _DDL = """
 CREATE TABLE IF NOT EXISTS link_events (
@@ -88,6 +89,15 @@ class AdmitResult:
             "reason": self.reason,
             "state": self.state,
         }
+
+
+@dataclass(frozen=True, slots=True)
+class RelatedScan:
+    """Bounded typed-join scan with explicit completeness metadata."""
+
+    items: tuple[tuple[dict[str, Any], str], ...]
+    examined: int
+    truncated: bool
 
 
 class ContextLinkStore:
@@ -153,9 +163,7 @@ class ContextLinkStore:
 
     @staticmethod
     def _current_state(connection: sqlite3.Connection, locator_id: str) -> str | None:
-        row = connection.execute(
-            "SELECT state FROM context_links WHERE locator_id = ?", (locator_id,)
-        ).fetchone()
+        row = connection.execute("SELECT state FROM context_links WHERE locator_id = ?", (locator_id,)).fetchone()
         return None if row is None else str(row["state"])
 
     @staticmethod
@@ -235,9 +243,7 @@ class ContextLinkStore:
         with self._transaction() as connection:
             state = self._current_state(connection, locator_id)
             if state == "tombstoned":
-                return AdmitResult(
-                    locator_id, AdmitOutcome.ALREADY_TOMBSTONED, "tombstone_terminal", state
-                )
+                return AdmitResult(locator_id, AdmitOutcome.ALREADY_TOMBSTONED, "tombstone_terminal", state)
             if state is not None and not self._payload_matches(connection, link):
                 if state == "pending":
                     connection.execute(
@@ -351,9 +357,7 @@ class ContextLinkStore:
         if not LOCATOR_ID_RE.fullmatch(locator_id):
             return None
         with self._connect(write=False) as connection:
-            link_row = connection.execute(
-                "SELECT * FROM context_links WHERE locator_id = ?", (locator_id,)
-            ).fetchone()
+            link_row = connection.execute("SELECT * FROM context_links WHERE locator_id = ?", (locator_id,)).fetchone()
             if link_row is None:
                 return None
             events = connection.execute(
@@ -384,15 +388,89 @@ class ContextLinkStore:
             counts = connection.execute(
                 "SELECT state, COUNT(*) AS n FROM context_links GROUP BY state ORDER BY state"
             ).fetchall()
-            events = connection.execute(
-                "SELECT COUNT(*) AS n, MAX(recorded_at) AS last_at FROM link_events"
-            ).fetchone()
+            events = connection.execute("SELECT COUNT(*) AS n, MAX(recorded_at) AS last_at FROM link_events").fetchone()
         return {
             "schema_version": SCHEMA_VERSION,
             "counts": {str(row["state"]): int(row["n"]) for row in counts},
             "events": int(events["n"]) if events else 0,
             "last_event_at": events["last_at"] if events else None,
         }
+
+    # ── recall candidate scan and provenance joins ─────────────────────────────
+
+    def candidates(self, *, limit: int = 500) -> list[dict[str, Any]]:
+        """Body-free promoted candidate scan for ranking (deterministic order).
+
+        Pending and tombstoned claims are never candidates. The order is fully
+        derived from the stored locator IDs so recall ranking is reproducible.
+        """
+        capped = max(0, min(int(limit), MAX_RELATED_SCAN_ROWS))
+        with self._connect(write=False) as connection:
+            rows = connection.execute(
+                "SELECT * FROM context_links WHERE state = 'promoted' ORDER BY locator_id LIMIT ?",
+                (capped,),
+            ).fetchall()
+        return [self._row_to_link_dict(row) for row in rows]
+
+    def find_related(
+        self,
+        link: dict[str, Any],
+        *,
+        limit: int = 50,
+    ) -> RelatedScan:
+        """Body-free promoted provenance joins for explain-change traversal.
+
+        Returns ``(candidate, join)`` pairs using explicit typed joins only:
+        ``same_git_sha`` (commit-backed provenance), ``references_commit`` /
+        ``referenced_by_commit`` (commit ↔ receipt cross-reference), and
+        ``same_canonical_id`` (the same exact identifier in another kind).
+        Namespace equality is deliberately not a join: it would connect every
+        same-repository commit. The seed itself and any non-promoted claim are
+        excluded. SQL prefilters for typed joins before applying ``limit``, so
+        unrelated locator rows cannot hide a valid join. Order is deterministic
+        and truncation is explicit.
+        """
+        capped = max(0, min(int(limit), MAX_RELATED_SCAN_ROWS))
+        locator_id = str(link["locator_id"])
+        seed_sha = link.get("git_sha")
+        seed_id = link.get("canonical_id")
+        predicates: list[str] = []
+        predicate_values: list[str] = []
+        if seed_sha:
+            predicates.extend(("canonical_id = ?", "git_sha = ?"))
+            predicate_values.extend((str(seed_sha), str(seed_sha)))
+        if seed_id:
+            predicates.extend(("git_sha = ?", "canonical_id = ?"))
+            predicate_values.extend((str(seed_id), str(seed_id)))
+        if not predicates:
+            return RelatedScan(items=(), examined=0, truncated=False)
+        # Fetch one sentinel beyond the caller-visible cap so truncation is
+        # observable even when the requested limit is zero.
+        with self._connect(write=False) as connection:
+            rows = connection.execute(
+                "SELECT * FROM context_links WHERE state = 'promoted'"
+                f" AND locator_id != ? AND ({' OR '.join(predicates)})"
+                " ORDER BY locator_id LIMIT ?",
+                (locator_id, *predicate_values, capped + 1),
+            ).fetchall()
+        truncated = len(rows) > capped
+        rows = rows[:capped]
+        related: list[tuple[dict[str, Any], str]] = []
+        for row in rows:
+            candidate = self._row_to_link_dict(row)
+            candidate_sha = candidate.get("git_sha")
+            join: str | None = None
+            if seed_sha and candidate.get("canonical_id") == seed_sha:
+                join = "references_commit"
+            elif candidate_sha and candidate_sha == seed_id:
+                join = "referenced_by_commit"
+            elif seed_sha and candidate_sha == seed_sha:
+                join = "same_git_sha"
+            elif seed_id and candidate.get("canonical_id") == seed_id:
+                join = "same_canonical_id"
+            if join is not None:
+                related.append((candidate, join))
+        return RelatedScan(items=tuple(related), examined=len(rows), truncated=truncated)
 
     # ── rebuild ──────────────────────────────────────────────────────────────
 
