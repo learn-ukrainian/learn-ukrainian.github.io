@@ -19,6 +19,7 @@ import tempfile
 import time
 from collections import Counter
 from collections.abc import Mapping, Sequence
+from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, TextIO
@@ -373,6 +374,7 @@ def _source_record(
     raw_record_id: str,
     family: Mapping[str, Any],
     evidence_source: Mapping[str, Any],
+    contract_schema_sha256: str,
     text: str,
     usage_role: str,
 ) -> dict[str, Any]:
@@ -410,7 +412,7 @@ def _source_record(
     description = evidence_source["description"]
     return {
         "schema_version": "source_record_v1",
-        "contract_schema_sha256": sha256_file(SOURCE_RECORD_SCHEMA),
+        "contract_schema_sha256": contract_schema_sha256,
         "record_id": _opaque_id(f"record.{family['source_family']}", raw_record_id),
         "work_id": _opaque_id(f"work.{family['source_family']}", title),
         "source_id": _opaque_id(f"source.{family['source_family']}", url),
@@ -497,7 +499,7 @@ def admit_corpus(
         source = profile_sources[family["source_family"]]
         database = input_root / source["adapter"]["database"]
         try:
-            with _connect_read_only(database) as connection:
+            with closing(_connect_read_only(database)) as connection:
                 columns = {str(row[1]) for row in connection.execute(f"PRAGMA table_info({_identifier(source['adapter']['table'])})")}
                 needed = {source["adapter"]["id_column"], source["adapter"]["text_column"], family["source_group_column"], family["work_group_column"]}
                 needed.update(spec["column"] for spec in family["attributes"].values() if "column" in spec)
@@ -544,6 +546,7 @@ def admit_corpus(
     manifest = AtomicJsonl.open(manifest_output)
     source_records = AtomicJsonl.open(source_record_output) if source_record_output is not None else None
     source_record_validator = _validator(SOURCE_RECORD_SCHEMA)
+    source_record_schema_sha256 = sha256_file(SOURCE_RECORD_SCHEMA)
     try:
         for family in families:
             source = profile_sources[family["source_family"]]
@@ -553,7 +556,7 @@ def admit_corpus(
             source_record_rows = 0
             source_record_timestamps: set[str] = set()
             source_record_cohorts: Counter[str] = Counter()
-            with _connect_read_only(database) as connection:
+            with closing(_connect_read_only(database)) as connection:
                 cursor = connection.execute(_source_query(source, family), _query_parameters(source))
                 for row in cursor:
                     raw_record_id = str(row["record_id"])
@@ -586,6 +589,7 @@ def admit_corpus(
                             raw_record_id=raw_record_id,
                             family=family,
                             evidence_source=evidence_source,
+                            contract_schema_sha256=source_record_schema_sha256,
                             text=text,
                             # The frozen source-record contract has no
                             # pending-operator role.  Keep every proposal
